@@ -1,14 +1,26 @@
 require("dotenv").config();
 import { Application } from "express";
 import { ApolloServer, PubSub } from "apollo-server-express";
-import { UserModule, Person, Address} from '../../graphql_modules';
+import { 
+          UserModule, 
+          Person, 
+          Address,
+          DriverModule,
+          VehicleTypeModule
+       } from '../../graphql_modules';
 
 const baseUrl = `${process.env.PROTOCOL}://${process.env.HOST}:${process.env.PORT}/`;
 const pubsub = new PubSub();
 
 export const mountApolloOnExpressAndServer = (expressApp: Application, httpServer: any) => {
   const graphqlServer = new ApolloServer({
-    modules:[UserModule, Person, Address],
+    modules:[
+        UserModule, 
+        Person, 
+        Address,
+        DriverModule,
+        VehicleTypeModule
+    ],
     context: ({ req, connection }) => {
       // const accessToken = req ? req.user : "";
       // const ipAddress = req ? getRequestIP(req) : "";
