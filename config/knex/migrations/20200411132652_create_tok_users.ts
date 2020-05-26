@@ -4,7 +4,7 @@ export async function up(knex: Knex): Promise<any> {
   return knex.schema.createTable("tok_users", (table) => {
     table.increments();
     table.string("username", 45).notNullable();
-    table.string("password",45 ).notNullable();
+    table.string("password",100 ).notNullable();
     table.text("access");
     table.boolean("active").defaultTo(true);
     table.specificType("failed_login_attempts", "tinyint(1)");

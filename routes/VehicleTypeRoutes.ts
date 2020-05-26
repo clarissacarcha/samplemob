@@ -112,7 +112,10 @@ router.post(
 				.notEmpty()
 					.withMessage("offset is required")
 				.isInt()
-					.withMessage("Only numbers are allowed")
+					.withMessage("Only numbers are allowed"),
+			check("token")
+				.notEmpty()
+					.withMessage("Authentication token required")
 		],
 	VehicleType.list);
 

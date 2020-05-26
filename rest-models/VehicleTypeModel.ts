@@ -7,7 +7,7 @@ export class VehicleTypeModel{
 
   static create = async (req:any) => {
 
-    const date = dateFormat(new Date(), "yyyy-mm-dd h:MM:ss");
+    const date = dateFormat(new Date(), "yyyy-mm-dd HH:MM:ss");
 
     let query = MysqlUtility.mergeLines([
         "insert into tok_vehicle_types",
@@ -39,7 +39,7 @@ export class VehicleTypeModel{
 
   static update = async (req:any) => {
 
-    const date = dateFormat(new Date(), "yyyy-mm-dd h:MM:ss");
+    const date = dateFormat(new Date(), "yyyy-mm-dd HH:MM:ss");
 
     let query = MysqlUtility.mergeLines([
         "update tok_vehicle_types set",
@@ -67,7 +67,7 @@ export class VehicleTypeModel{
 
   static delete = async (id:number) => {
 
-    const date = dateFormat(new Date(), "yyyy-mm-dd h:MM:ss");
+    const date = dateFormat(new Date(), "yyyy-mm-dd HH:MM:ss");
 
     let query = "update tok_vehicle_types set status = 0, updated_at = ? where id = ?";
 

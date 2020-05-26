@@ -1,5 +1,7 @@
 import { VehicleTypeModel } from '../rest-models/VehicleTypeModel';
 
+import { AuthUtility } from '../util/AuthUtility';
+
 import {check, validationResult} from 'express-validator';
 
 export class VehicleType{
@@ -68,17 +70,32 @@ export class VehicleType{
 
   static list = async (req:any,res:any,next:any) =>{
 
-    //validate input
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(422).json({ errors: errors.array() });
+    //varify access
+    let ress = await AuthUtility.verifyAccess(req.body.token);
+
+    if(ress)
+    {
+      //validate input
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
+      }
+
+      let result = await VehicleTypeModel.list(req.body);
+
+      res.status(200).json({
+        result
+      });
     }
-
-    let result = await VehicleTypeModel.list(req.body);
-
-    res.status(200).json({
-      result
-    });
+    else{
+      let result = {
+        authError: 1,
+        message: "You are not logged in"
+      }
+      res.status(200).json({
+        result
+      });
+    }
 
   }
 
