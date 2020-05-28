@@ -1,21 +1,22 @@
 //@ts-nocheck
-require('dotenv').config();
-import Knex from 'knex';
+require("dotenv").config();
+import Knex from "knex";
+import { knexProfiler } from "../../util";
+import { knexSnakeCaseMappers } from "objection";
 
 // Initialize knex.
 const knex = Knex({
-  client: 'mysql2',
+  client: "mysql2",
   connection: {
-    host : process.env.DB_HOST,
-    user : process.env.DB_USER,
-    password : process.env.DB_PASSWORD,
-    database : process.env.DB_DATABASE,
-    port: process.env.DB_PORT
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE,
+    port: process.env.DB_PORT,
   },
-  debug: true
+  ...knexSnakeCaseMappers(),
 });
 
-export default knex;
+knexProfiler(knex);
 
-// // Give the knex instance to objection.
-// Model.knex(knex);
+export default knex;

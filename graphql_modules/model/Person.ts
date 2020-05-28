@@ -21,13 +21,23 @@ const typeDefs = gql`
   extend type User {
     person: Person
   }
+
+  extend type Query {
+    person: Person
+  }
 `;
 
 const resolvers = {
-
+  Query: {
+    person: () => {
+      return {
+        first_name: 'Alvir'
+      }
+    }
+  }
 };
 
-export const Person = {
+export default {
   typeDefs,
-  resolvers,
-};
+  resolvers
+}

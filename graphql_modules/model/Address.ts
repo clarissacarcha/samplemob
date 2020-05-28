@@ -21,7 +21,7 @@ const resolvers = {
 
 }
 
-export const Address = {
+export default {
   typeDefs,
   resolvers
 }

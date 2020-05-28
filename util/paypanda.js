@@ -6,6 +6,8 @@ import crypto from 'crypto';
 const merchantSecret = '12345'
 const merchantId = 'PAYGO'
 
+
+
 // String to be used for creating signature to request to paypanda transaction entry
 const generateRequestString = ({ amount, referenceNumber }) => {
     const str = `${merchantSecret}${merchantId}${referenceNumber}${Math.round(amount)}PHP`;

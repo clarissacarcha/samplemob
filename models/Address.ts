@@ -1,6 +1,6 @@
 import { Model } from "objection";
 
-export class Addess extends Model {
+export default class extends Model {
   static get tableName() {
     return "tok_addresses";
   }

@@ -1,14 +1,18 @@
 require("dotenv").config();
 import { Application } from "express";
-import { ApolloServer, PubSub } from "apollo-server-express";
-import { UserModule, Person, Address} from '../../graphql_modules';
+import { ApolloServer } from "apollo-server-express";
+import GraphQLModules from "../../graphql_modules";
+import Models from "../../models";
+import { pubsub } from "../pubsub";
 
 const baseUrl = `${process.env.PROTOCOL}://${process.env.HOST}:${process.env.PORT}/`;
-const pubsub = new PubSub();
 
-export const mountApolloOnExpressAndServer = (expressApp: Application, httpServer: any) => {
+export const mountApolloOnExpressAndServer = (
+  expressApp: Application,
+  httpServer: any
+) => {
   const graphqlServer = new ApolloServer({
-    modules:[UserModule, Person, Address],
+    modules: Object.values(GraphQLModules),
     context: ({ req, connection }) => {
       // const accessToken = req ? req.user : "";
       // const ipAddress = req ? getRequestIP(req) : "";
@@ -16,6 +20,7 @@ export const mountApolloOnExpressAndServer = (expressApp: Application, httpServe
       if (connection) {
         return {
           ...connection.context,
+          Models,
           pubsub,
           // accessToken,
           // ipAddress,
@@ -23,6 +28,7 @@ export const mountApolloOnExpressAndServer = (expressApp: Application, httpServe
         };
       } else {
         return {
+          Models,
           pubsub,
           // accessToken,
           // ipAddress,
@@ -31,8 +37,8 @@ export const mountApolloOnExpressAndServer = (expressApp: Application, httpServe
       }
     },
     // mocks: true,
-    introspection: process.env.NODE_ENV == 'production' ? false : true,
-    playground: process.env.NODE_ENV == 'production' ? false : true,
+    introspection: process.env.NODE_ENV == "production" ? false : true,
+    playground: process.env.NODE_ENV == "production" ? false : true,
     debug: false,
     formatError(error: any) {
       console.log(error);
@@ -40,14 +46,13 @@ export const mountApolloOnExpressAndServer = (expressApp: Application, httpServe
         code: error.extensions.code,
         message: error.message,
         path: error.path,
-        error: error,
+        // error: error,
       };
     },
     subscriptions: {
       path: "/graphql",
       onConnect: (connectionParams, websocket, context) => {
         console.log("---------- SOCKET CONNECTED ----------");
-        // throw new ForbiddenError('Forbidden eh.')
         return {
           context,
         };

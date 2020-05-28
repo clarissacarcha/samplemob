@@ -5,23 +5,26 @@ export async function up(knex: Knex): Promise<any> {
     table.increments();
     table.string("description", 150).nullable;
     table.string("notes", 150).nullable;
-    table.dateTime("book_time").defaultTo(knex.fn.now());
-    table.dateTime("pickup_time").defaultTo(knex.fn.now());
-    table.dateTime("drop_off_time").defaultTo(knex.fn.now());
-    table.string("pickup_location",45).notNullable;
-    table.string("destination",45).notNullable;
-    table.string("destination_contact",100).notNullable;
-    table.string("contact_number",20).notNullable;
-    table.specificType("distance_km","int(10)").notNullable;
+    table.decimal("distance", 10, 2);
+    table.integer("duration",5);
     table.specificType("price", "double");
     table.specificType("rating", "tinyint(1)");
+    /**
+     * 1 - Order Placed
+     * 2 - Delivery Scheduled
+     * 3 - Driver In Transit to Pick Up
+     * 4 - Item picked up
+     * 5 - Driver in Transit to Deliver
+     * 6 - Item delivered
+     */
     table.specificType("status", "tinyint(1)");
     table.timestamp("created_at").defaultTo(knex.fn.now());
     table.timestamp("updated_at").defaultTo(knex.fn.now());
     table.integer("tok_consumer_id").unsigned().references("id").inTable("tok_consumers");
     table.integer("tok_vehicle_id").unsigned().references("id").inTable("tok_vehicles");
     table.integer("tok_driver_id").unsigned().references("id").inTable("tok_drivers");
-    table.integer("tok_cargo_type_id").unsigned().references("id").inTable("tok_cargo_types");
+    table.integer("sender_tok_stop_id").unsigned().references("id").inTable("tok_stops");
+    table.integer("recipient_tok_stop_id").unsigned().references("id").inTable("tok_stops");
   });
   
 }

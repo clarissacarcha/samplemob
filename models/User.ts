@@ -1,21 +1,27 @@
 import { Model } from "objection";
-import knex from "../config/knex";
+import Driver from "./Driver";
+import Person from "./Person";
 
-export class User extends Model {
-  static get tableName() {
-    return "tok_users";
-  }
+export default class extends Model {
+  static tableName = "tok_users";
+  static idColumn = "id";
 
-  static get idColumn() {
-    return "id";
-  }
-
-  /**
-   * ------------------------------ QUERIES START ------------------------------
-   */
-  static getUsersFiltered = () => {
-    return knex.raw("SELECT * FROM tok_users WHERE username LIKE :username", {
-      username: `%quickBrownFox%`,
-    });
+  static relationMappings = {
+    driver: {
+      relation: Model.HasOneRelation,
+      modelClass: Driver,
+      join: {
+        from: "tok_users.id",
+        to: "tok_drivers.tokUserId",
+      },
+    },
+    person: {
+      relation: Model.HasOneRelation,
+      modelClass: Person,
+      join: {
+        from: "tok_users.id",
+        to: "tok_persons.tokUserId",
+      },
+    },
   };
 }

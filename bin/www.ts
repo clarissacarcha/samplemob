@@ -1,12 +1,18 @@
 #!/usr/bin/env node
-require('dotenv').config();
-import { createServer as createHttpServer } from 'http';
-import { createServer as createHttpsServer } from 'https';
-import { mountApolloOnExpressAndServer } from '../config/apollo_servers/graphql';
-import App from '../App';
+//@ts-nocheck
+require("dotenv").config();
+const colors = require("colors");
+import { createServer as createHttpServer } from "http";
+import { createServer as createHttpsServer } from "https";
+import { mountApolloOnExpressAndServer } from "../config/apollo_servers/graphql";
+import { deliveryDispatchCronJob } from "../util";
+import App from "../App";
+import testing from "./testing";
 
-const createServer = process.env.PROTOCOL === 'http' ? createHttpServer : createHttpsServer;
+testing();
 
+const createServer =
+  process.env.PROTOCOL === "http" ? createHttpServer : createHttpsServer;
 
 const server = createServer(App);
 
@@ -14,6 +20,10 @@ const server = createServer(App);
 mountApolloOnExpressAndServer(App, server);
 
 server.listen(process.env.PORT, () => {
-  console.log(`Server running on port ${process.env.PORT}`);
+  // deliveryDispatchCronJob().start();
+  console.log(
+    `${process.env.PROTOCOL} server running in ${process.env.NODE_ENV} mode on port ${process.env.PORT}`
+      .yellow.bold
+  );
   return null;
-})
+});
