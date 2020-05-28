@@ -3,6 +3,11 @@ import express, { Application } from "express";
 import { Model } from "objection";
 import knex from "./config/knex";
 import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
+import helmet from "helmet";
+import xss from "xss-clean";
+import rateLimit from "express-rate-limit";
+import hpp from "hpp";
 
 //import routes
 import indexroute from "./routes/index";
@@ -17,9 +22,30 @@ Model.knex(knex);
 
 export default app;
 
+// Body Parser
 app.use(bodyParser.json());
 
-//allow cors
+// Cookie Parser
+app.use(cookieParser());
+
+// Set Security Headers
+app.use(helmet());
+
+// Prevent XSS attacks
+app.use(xss());
+
+// Rate Limiting | 120 requests per minute
+app.use(
+  rateLimit({
+    windowMs: 60 * 1000, // 1 minute
+    max: 120,
+  })
+);
+
+// Prevent HTTP Param Pollution
+app.use(hpp());
+
+// Allow CORS
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
@@ -31,7 +57,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// assign routes
+// Assign Routes
 app.use("/sample", indexroute);
 
 app.use("/vehicletype", vehicletyperoute);
