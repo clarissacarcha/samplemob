@@ -6,7 +6,7 @@ const { Delivery, DeliveryLog, Stop } = Models;
 
 const typeDefs = gql`
   type Delivery {
-    id: ID
+    id: String
     tokConsumerId: String
     distance: String
     duration: String
@@ -18,11 +18,18 @@ const typeDefs = gql`
     recipientTokStopId: String
     senderStop: Stop
     recipientStop: Stop
+    logs: [DeliveryLog]
+  }
+
+  type StatusCount {
+    status: Int
+    count: Int
   }
 
   input deliveryFilter {
     tokConsumerId: String
     tokDriverId: String
+    status: Int
     statusIn: [Int]
   }
 
@@ -47,6 +54,7 @@ const typeDefs = gql`
 
   extend type Query {
     getDeliveries(filter: deliveryFilter): [Delivery]
+    getDeliveriesCountByStatus(filter: deliveryFilter): [StatusCount]
   }
 
   extend type Mutation {
@@ -60,27 +68,37 @@ const typeDefs = gql`
 
 const resolvers = {
   Delivery: {
-    senderStop: async (parent, _, { Models }) => {
+    senderStop: async (parent) => {
       return await Stop.query().findOne({
         id: parent.senderTokStopId,
       });
     },
-    recipientStop: async (parent, _, { Models }) => {
+    recipientStop: async (parent) => {
       return await Stop.query().findOne({
         id: parent.recipientTokStopId,
       });
     },
+    logs: async (parent) => {
+      return await DeliveryLog.query().where({
+        tokDeliveryId: parent.id,
+      });
+    },
   },
   Query: {
-    getDeliveries: async (_, { filter = {} }, { Models }) => {
+    getDeliveries: async (_, { filter = {} }) => {
       try {
-        const { tokConsumerId, tokDriverId, statusIn } = filter;
-        console.log(statusIn);
+        const { tokConsumerId, tokDriverId, status, statusIn } = filter;
 
         const result = await Delivery.query().modify((builder) => {
           // Filter by tokConsumerId
           if (tokConsumerId) {
-            builder.andWhere({ tokConsumerId });
+            builder.where({ tokConsumerId });
+          }
+
+          // Filter by tokConsumerId
+          // Compare to undefined as status = 0 would produce a falsy value
+          if (status !== undefined) {
+            builder.where({ status });
           }
 
           // Filter by tokDriverId
@@ -93,6 +111,27 @@ const resolvers = {
             builder.whereIn("status", statusIn);
           }
         });
+
+        return result;
+      } catch (e) {
+        throw e;
+      }
+    },
+
+    getDeliveriesCountByStatus: async (_, { filter = {} }) => {
+      try {
+        const { tokConsumerId } = filter;
+
+        const result = await Delivery.query()
+          .select("status")
+          .count("status as count")
+          .modify((builder) => {
+            // Filter by tokConsumerId
+            if (tokConsumerId) {
+              builder.where({ tokConsumerId });
+            }
+          })
+          .groupBy("status");
 
         return result;
       } catch (e) {
@@ -114,6 +153,7 @@ const resolvers = {
               ...input,
               recipientStop: input.recipientStop[index],
               notes, // insert the notes back
+              status: 1, // Order Placed
             });
 
             // Create delivery log with status = 1 || Order Placed
@@ -188,7 +228,7 @@ const resolvers = {
 
         // Create delivery log with status incremented status
         await DeliveryLog.query().insert({
-          status: delivery.status++,
+          status: delivery.status + 1,
           tokDeliveryId: input.deliveryId,
         });
 

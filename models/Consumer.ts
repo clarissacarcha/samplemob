@@ -1,6 +1,6 @@
 import { Model } from "objection";
 
 export default class extends Model {
-  static tableName = "tok_addresses";
+  static tableName = "tok_consumers";
   static idColumn = "id";
 }

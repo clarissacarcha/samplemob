@@ -9,7 +9,7 @@ import { deliveryDispatchCronJob } from "../util";
 import App from "../App";
 import testing from "./testing";
 
-testing();
+// testing();
 
 const createServer =
   process.env.PROTOCOL === "http" ? createHttpServer : createHttpsServer;
@@ -20,7 +20,7 @@ const server = createServer(App);
 mountApolloOnExpressAndServer(App, server);
 
 server.listen(process.env.PORT, () => {
-  // deliveryDispatchCronJob().start();
+  deliveryDispatchCronJob().start();
   console.log(
     `${process.env.PROTOCOL} server running in ${process.env.NODE_ENV} mode on port ${process.env.PORT}`
       .yellow.bold

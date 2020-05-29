@@ -1,12 +1,10 @@
 import { gql } from "apollo-server-express";
 
 const typeDefs = gql`
-  type DeliveryLog {
+  type Consumer {
     id: String
-    status: Int
-    image: String
-    createdAt: DateTime
-    tokDeliveryId: String
+    rating: Int
+    tokUserId: Int
   }
 `;
 

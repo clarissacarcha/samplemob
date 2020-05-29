@@ -20,8 +20,6 @@ const app: Application = express();
 //Sets the knex instance to be used by Objection models by default
 Model.knex(knex);
 
-export default app;
-
 // Body Parser
 app.use(bodyParser.json());
 
@@ -63,3 +61,5 @@ app.use("/sample", indexroute);
 app.use("/vehicletype", vehicletyperoute);
 
 app.use("/user", userroute);
+
+export default app;

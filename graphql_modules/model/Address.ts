@@ -2,7 +2,7 @@ import { gql } from "apollo-server-express";
 
 const typeDefs = gql`
   type Address {
-    id: Int
+    id: String
     line1: String
     line2: String
     barangay: String
@@ -17,16 +17,9 @@ const typeDefs = gql`
   }
 `;
 
-const resolvers = {
-
-}
+const resolvers = {};
 
 export default {
   typeDefs,
-  resolvers
-}
-
-
-
-
-
+  resolvers,
+};
