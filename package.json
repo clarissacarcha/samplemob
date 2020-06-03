@@ -1,7 +1,7 @@
 {
   "name": "toktok",
   "version": "1.0.0",
-  "description": "",
+  "description": "This README would normally document whatever steps are necessary to get your application up and running.",
   "main": "index.js",
   "scripts": {
     "serve": "node build/bin/www.js",
@@ -47,5 +47,10 @@
     "nodemon": "^2.0.3",
     "ts-node": "^8.8.2",
     "typescript": "^3.8.3"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://tonetcams@bitbucket.org/cloud-panda/toktok.git"
+  },
+  "homepage": "https://bitbucket.org/cloud-panda/toktok#readme"
 }

@@ -13,6 +13,9 @@ import hpp from "hpp";
 import indexroute from "./routes/index";
 import vehicletyperoute from "./routes/VehicleTypeRoutes";
 import userroute from "./routes/UserRoutes";
+import vehiclebrandroute from "./routes/VehicleBrandRoutes";
+import vehiclemodelroute from "./routes/VehicleModelRoutes";
+import cargotyperoute from "./routes/CargoTypeRoutes";
 
 // Initialize express instance
 const app: Application = express();
@@ -59,6 +62,12 @@ app.use((req, res, next) => {
 app.use("/sample", indexroute);
 
 app.use("/vehicletype", vehicletyperoute);
+
+app.use("/vehiclebrand", vehiclebrandroute);
+
+app.use("/vehiclemodel", vehiclemodelroute);
+
+app.use("/cargotype", cargotyperoute);
 
 app.use("/user", userroute);
 
