@@ -12,7 +12,7 @@ export class AuthTokenModel{
 
     let query = MysqlUtility.mergeLines([
         "insert into tok_auth_tokens",
-        "(token,tok_users_id, roles, permissions, created,last_activity)",
+        "(token,tok_users_id, roles, permissions, created_at,last_activity)",
         "values(?,?,?,?,?,?)"
     ]);
 
