@@ -16,6 +16,7 @@ import userroute from "./routes/UserRoutes";
 import vehiclebrandroute from "./routes/VehicleBrandRoutes";
 import vehiclemodelroute from "./routes/VehicleModelRoutes";
 import cargotyperoute from "./routes/CargoTypeRoutes";
+import useraccesscontrolroute from "./routes/UserAccessControlRoutes";
 
 // Initialize express instance
 const app: Application = express();
@@ -69,6 +70,10 @@ app.use("/vehiclemodel", vehiclemodelroute);
 
 app.use("/cargotype", cargotyperoute);
 
+app.use("/useraccesscontrol", useraccesscontrolroute);
+
 app.use("/user", userroute);
+
+
 
 export default app;
