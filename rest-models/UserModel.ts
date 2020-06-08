@@ -54,7 +54,7 @@ export class UserModel{
 
     let query = MysqlUtility.mergeLines([
         "select a.id, b.role from tok_user_roles as a",
-        "left join tok_roles as b on a.role = b.id",
+        "left join tok_roles as b on a.tok_roles_id = b.id",
         "where a.tok_users_id = ?"
     ]);
 
