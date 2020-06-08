@@ -13,6 +13,7 @@ const typeDefs = gql`
     price: String
     notes: String
     status: Int
+    createdAt: DateTime
     tokDriverId: String
     senderTokStopId: String
     recipientTokStopId: String

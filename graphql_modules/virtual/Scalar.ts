@@ -8,7 +8,7 @@ const typeDefs = gql`
 `;
 
 const resolvers = {
-  Upload: GraphQLUpload,
+  // Upload: GraphQLUpload,
   DateTime: new GraphQLScalarType({
     name: "DateTime",
     description: "Date custom scalar type",
