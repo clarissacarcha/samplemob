@@ -1,3 +1,4 @@
+import { GraphQLModule } from "@graphql-modules/core";
 import { gql } from "apollo-server-express";
 
 const typeDefs = gql`
@@ -19,7 +20,7 @@ const typeDefs = gql`
 
 const resolvers = {};
 
-export default {
+export default new GraphQLModule({
   typeDefs,
   resolvers,
-};
+});

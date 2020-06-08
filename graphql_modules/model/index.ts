@@ -6,12 +6,4 @@ import Person from "./Person";
 import Stop from "./Stop";
 import User from "./User";
 
-export default {
-  Address,
-  Consumer,
-  Delivery,
-  DeliveryLog,
-  Person,
-  Stop,
-  User,
-};
+export default [Address, Consumer, Delivery, DeliveryLog, Person, Stop, User];

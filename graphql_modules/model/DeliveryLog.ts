@@ -1,18 +1,32 @@
 import { gql } from "apollo-server-express";
+import Models from "../../models";
+
+const { Delivery, DeliveryLog, Stop } = Models;
 
 const typeDefs = gql`
   type DeliveryLog {
     id: String
     status: Int
-    image: String
+    image: S3File
     createdAt: DateTime
     tokDeliveryId: String
   }
+
+  type Query {
+    getDeliveryLogs: [DeliveryLog]
+  }
 `;
 
-const resolvers = {};
+const resolvers = {
+  Query: {
+    getDeliveryLogs: async () => {
+      return await DeliveryLog.query();
+    },
+  },
+};
 
-export default {
+import { GraphQLModule } from "@graphql-modules/core";
+export default new GraphQLModule({
   typeDefs,
   resolvers,
-};
+});

@@ -74,6 +74,4 @@ app.use("/useraccesscontrol", useraccesscontrolroute);
 
 app.use("/user", userroute);
 
-
-
 export default app;

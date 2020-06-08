@@ -1,5 +1,6 @@
 //@ts-nocheck
 import { gql, UserInputError } from "apollo-server-express";
+import fileUploadS3 from "../../util/FileUploadS3";
 import Models from "../../models";
 
 const { Delivery, DeliveryLog, Stop } = Models;
@@ -227,10 +228,21 @@ const resolvers = {
           .findById(input.deliveryId)
           .increment("status", 1);
 
+        let uploadedFile;
+
+        if (input.file) {
+          uploadedFile = await fileUploadS3({
+            file: input.file,
+            folder: "toktok/",
+            // thumbnailFolder: 'user_verification_documents/thumbnail/'
+          });
+        }
+
         // Create delivery log with status incremented status
         await DeliveryLog.query().insert({
           status: delivery.status + 1,
           tokDeliveryId: input.deliveryId,
+          ...(input.file ? { image: uploadedFile.filename } : {}),
         });
 
         // Return the delivery record
@@ -242,10 +254,11 @@ const resolvers = {
   },
 };
 
-export default {
+import { GraphQLModule } from "@graphql-modules/core";
+export default new GraphQLModule({
   typeDefs,
   resolvers,
-};
+});
 
 // // Filter by tokConsumerId
 // if (tokConsumerId) {

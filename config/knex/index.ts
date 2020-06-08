@@ -17,6 +17,8 @@ const knex = Knex({
   ...knexSnakeCaseMappers(),
 });
 
-knexProfiler(knex);
+if (process.env.NODE_ENV === "development") {
+  knexProfiler(knex);
+}
 
 export default knex;

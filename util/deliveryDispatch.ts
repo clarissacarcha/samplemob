@@ -15,7 +15,7 @@ export const deliveryDispatch = async () => {
       recipientStop: true,
     });
 
-  console.log("PLACED DELIVERIES: " + deliveries.length);
+  // console.log("PLACED DELIVERIES: " + deliveries.length);
 
   // Map through the deliveries, find available driver and call dispatch
   deliveries.forEach(async (delivery) => {

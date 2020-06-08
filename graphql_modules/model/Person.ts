@@ -21,7 +21,8 @@ const typeDefs = gql`
 
 const resolvers = {};
 
-export default {
+import { GraphQLModule } from "@graphql-modules/core";
+export default new GraphQLModule({
   typeDefs,
   resolvers,
-};
+});

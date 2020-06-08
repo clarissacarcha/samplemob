@@ -1,9 +1,18 @@
+//@ts-nocheck
 require("dotenv").config();
 import { Application } from "express";
 import { ApolloServer } from "apollo-server-express";
+import { GraphQLModule } from "@graphql-modules/core";
 import GraphQLModules from "../../graphql_modules";
 import Models from "../../models";
 import { pubsub } from "../pubsub";
+
+import DeliveryLogModule from "../../graphql_modules/model/DeliveryLog";
+import ScalarModule from "../../graphql_modules/virtual/Scalar";
+
+// const MyGraphQLModule = new GraphQLModule({
+//   imports: [DeliveryLogModule, ScalarModule],
+// });
 
 const baseUrl = `${process.env.PROTOCOL}://${process.env.HOST}:${process.env.PORT}/`;
 
@@ -13,6 +22,8 @@ export const mountApolloOnExpressAndServer = (
 ) => {
   const graphqlServer = new ApolloServer({
     modules: Object.values(GraphQLModules),
+    // schema: MyGraphQLModule.schema,
+    // context: MyGraphQLModule.context,
     context: ({ req, connection }) => {
       // const accessToken = req ? req.user : "";
       // const ipAddress = req ? getRequestIP(req) : "";

@@ -3,9 +3,4 @@ import Common from "./Common";
 import DeliveryDispatch from "./DeliveryDispatch";
 import Scalar from "./Scalar";
 
-export default {
-  Auth,
-  Common,
-  DeliveryDispatch,
-  Scalar,
-};
+export default [Auth, Common, DeliveryDispatch, Scalar];
