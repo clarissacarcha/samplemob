@@ -17,6 +17,10 @@ import vehiclebrandroute from "./routes/VehicleBrandRoutes";
 import vehiclemodelroute from "./routes/VehicleModelRoutes";
 import cargotyperoute from "./routes/CargoTypeRoutes";
 import useraccesscontrolroute from "./routes/UserAccessControlRoutes";
+import roleroute from "./routes/RoleRoutes";
+import requirementtyperoute from "./routes/RequirementTypeRoutes";
+import accountleveltyperoute from "./routes/AccountLevelTypeRoutes";
+import accountlevelroute from "./routes/AccountLevelRoutes";
 
 // Initialize express instance
 const app: Application = express();
@@ -71,6 +75,14 @@ app.use("/vehiclemodel", vehiclemodelroute);
 app.use("/cargotype", cargotyperoute);
 
 app.use("/useraccesscontrol", useraccesscontrolroute);
+
+app.use("/role", roleroute);
+
+app.use("/requirementtype", requirementtyperoute);
+
+app.use("/accountleveltype", accountleveltyperoute);
+
+app.use("/accountlevel", accountlevelroute);
 
 app.use("/user", userroute);
 
