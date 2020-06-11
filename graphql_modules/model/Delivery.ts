@@ -1,6 +1,11 @@
 //@ts-nocheck
 import { gql, UserInputError } from "apollo-server-express";
 import fileUploadS3 from "../../util/FileUploadS3";
+
+import DeliveryLogModule from "./DeliveryLog";
+import StopModule from "./Stop";
+import ScalarModule from "../virtual/Scalar";
+
 import Models from "../../models";
 
 const { Delivery, DeliveryLog, Stop } = Models;
@@ -13,6 +18,7 @@ const typeDefs = gql`
     duration: String
     price: String
     notes: String
+    cargo: String
     status: Int
     createdAt: DateTime
     tokDriverId: String
@@ -49,19 +55,34 @@ const typeDefs = gql`
     driverId: String!
   }
 
+  input PatchDeliveryCancelInput {
+    deliveryId: String!
+  }
+
+  input PatchDeliveryDeleteInput {
+    deliveryId: String!
+  }
+
+  input PatchDeliveryRebookInput {
+    deliveryId: String!
+  }
+
   input PatchDeliveryIncrementStatusInput {
     deliveryId: String!
     file: Upload
   }
 
-  extend type Query {
+  type Query {
     getDeliveries(filter: deliveryFilter): [Delivery]
     getDeliveriesCountByStatus(filter: deliveryFilter): [StatusCount]
   }
 
-  extend type Mutation {
+  type Mutation {
     postDelivery(input: PostDeliveryInput): String
     patchDeliveryAccepted(input: PatchDeliveryAcceptedInput!): String
+    patchDeliveryCancel(input: PatchDeliveryCancelInput!): Delivery
+    patchDeliveryDelete(input: PatchDeliveryDeleteInput!): String
+    patchDeliveryRebook(input: PatchDeliveryRebookInput!): String
     patchDeliveryIncrementStatus(
       input: PatchDeliveryIncrementStatusInput!
     ): Delivery
@@ -112,6 +133,9 @@ const resolvers = {
           if (statusIn) {
             builder.whereIn("status", statusIn);
           }
+
+          // Order by createdAt DESC
+          builder.orderBy("createdAt", "DESC");
         });
 
         return result;
@@ -148,13 +172,17 @@ const resolvers = {
         await Promise.all(
           input.recipientStop.map(async (item, index) => {
             const notes = input.recipientStop[index].notes; // save recipient notes before being deleted
+            const cargo = input.recipientStop[index].cargo;
+
             delete input.recipientStop[index].notes; //remove recipient notes. Notes is under Delivery, not Stop
+            delete input.recipientStop[index].cargo;
 
             // Create delivery record
             const insertedDelivery = await Delivery.query().insertGraph({
               ...input,
               recipientStop: input.recipientStop[index],
               notes, // insert the notes back
+              cargo,
               status: 1, // Order Placed
             });
 
@@ -178,7 +206,6 @@ const resolvers = {
     patchDeliveryAccepted: async (_, { input }, { Models }) => {
       try {
         // Find the delivery record using input.deliveryId
-
         const delivery = await Delivery.query().findById(input.deliveryId);
 
         // Throw error if delivery record does not exist
@@ -251,11 +278,121 @@ const resolvers = {
         throw e;
       }
     },
+
+    // Customer cancels a delivery order
+    patchDeliveryCancel: async (_, { input }) => {
+      try {
+        // Find the delivery record using input.deliveryId
+        const delivery = await Delivery.query().findById(input.deliveryId);
+
+        // Throw error if delivery record does not exist
+        if (!delivery) {
+          throw new UserInputError("Delivery record does not exist.");
+        }
+
+        // Update delivery status to 7 - Cancelled
+        await Delivery.query().findById(input.deliveryId).patch({ status: 7 });
+
+        // Create delivery log with status = 7
+        await DeliveryLog.query().insert({
+          status: 7,
+          tokDeliveryId: input.deliveryId,
+        });
+
+        return await Delivery.query().findById(input.deliveryId);
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    },
+
+    // Customer deletes a delivery order
+    patchDeliveryDelete: async (_, { input }) => {
+      try {
+        // Find the delivery record using input.deliveryId
+        const delivery = await Delivery.query().findById(input.deliveryId);
+
+        // Throw error if delivery record does not exist
+        if (!delivery) {
+          throw new UserInputError("Delivery record does not exist.");
+        }
+
+        // Update delivery status to 8 - Deleted
+        await Delivery.query().findById(input.deliveryId).patch({ status: 8 });
+
+        // Create delivery log with status = 8
+        await DeliveryLog.query().insert({
+          status: 8,
+          tokDeliveryId: input.deliveryId,
+        });
+
+        return "Order successfully deleted.";
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    },
+
+    // Customer rebooks a delivery order
+    patchDeliveryRebook: async (_, { input }) => {
+      try {
+        // Find the delivery record using input.deliveryId
+        const delivery = await Delivery.query()
+          .findById(input.deliveryId)
+          .withGraphFetched({
+            senderStop: true,
+            recipientStop: true,
+          });
+
+        // Throw error if delivery record does not exist
+        if (!delivery) {
+          throw new UserInputError("Delivery record does not exist.");
+        }
+
+        const {
+          tokConsumerId,
+          distance,
+          duration,
+          price,
+          senderStop,
+          recipientStop,
+          notes,
+        } = delivery;
+
+        delete senderStop.id;
+        delete recipientStop.id;
+
+        // Create delivery record
+        const insertedDelivery = await Delivery.query().insertGraph({
+          tokConsumerId,
+          distance,
+          duration,
+          price,
+          senderStop,
+          recipientStop,
+          notes,
+          status: 1, // Order Placed
+        });
+
+        // Create delivery log with status = 1 || Order Placed
+        await DeliveryLog.query().insert({
+          status: 1,
+          tokDeliveryId: insertedDelivery.id,
+          createdAt: insertedDelivery.createdAt,
+        });
+
+        return "Delivery successfully booked.";
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    },
   },
 };
 
 import { GraphQLModule } from "@graphql-modules/core";
 export default new GraphQLModule({
+  imports: [DeliveryLogModule, ScalarModule, StopModule],
   typeDefs,
   resolvers,
 });

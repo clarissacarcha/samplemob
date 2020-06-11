@@ -1,7 +1,11 @@
 //@ts-nocheck
+import { GraphQLModule } from "@graphql-modules/core";
 import { gql, UserInputError } from "apollo-server-express";
 import { REDIS_LOGIN_REGISTER } from "../../config/redis";
+import axios from "axios";
 import User from "../../models/User";
+
+import UserModule from "../model/User";
 
 const typeDefs = gql`
   type Auth {
@@ -9,22 +13,49 @@ const typeDefs = gql`
     accessToken: String
   }
 
+  input GetUserSessionInput {
+    userId: String
+  }
+
   input LoginRegisterInput {
     mobile: String
   }
 
   input VerifyLoginRegisterInput {
-    mobile: String
-    verificationCode: String
+    mobile: String!
+    verificationCode: String!
+    accountType: String!
   }
 
-  extend type Mutation {
+  type Query {
+    getUserSession(input: GetUserSessionInput!): Auth
+  }
+
+  type Mutation {
     loginRegister(input: LoginRegisterInput!): String
     verifyLoginRegister(input: VerifyLoginRegisterInput!): Auth
   }
 `;
 
 const resolvers = {
+  Query: {
+    getUserSession: async (_, { input }) => {
+      const user = await User.query()
+        .findOne({
+          id: input.userId,
+        })
+        .withGraphFetched({
+          driver: true,
+          person: true,
+          consumer: true,
+        });
+
+      return {
+        user,
+        accessToken: "ABC123",
+      };
+    },
+  },
   Mutation: {
     // User enters mobile number and requests verification code
     loginRegister: async (_: any, { input = {} }: any) => {
@@ -35,7 +66,19 @@ const resolvers = {
         }
 
         // Create a random 6 digit verification code
-        const verificationCode = Math.floor(100000 + Math.random() * 900000);
+        let verificationCode;
+        if (process.env.NODE_ENV == "development") {
+          verificationCode = "333333";
+        } else {
+          verificationCode = Math.floor(100000 + Math.random() * 900000);
+
+          //Send verification code to mobile number
+          axios.post("https://api.semaphore.co/api/v4/messages", {
+            apikey: process.env.SEMAPHORE_API_KEY,
+            number: input.mobile,
+            message: `<#> ${verificationCode} is your toktok activation code. N9w/lonc+z1`,
+          });
+        }
         const redisData = {
           mobile: input.mobile,
           verificationCode,
@@ -60,7 +103,7 @@ const resolvers = {
     // User enters verification and proceeds to login or register
     verifyLoginRegister: async (_: any, { input = {} }: any) => {
       try {
-        const { mobile, verificationCode } = input;
+        const { mobile, verificationCode, accountType } = input;
 
         console.log({ input });
 
@@ -88,20 +131,39 @@ const resolvers = {
         await REDIS_LOGIN_REGISTER().del(mobile);
 
         // Find an account for the given mobile number.
-        const user = await User.query().findOne({
-          username: mobile,
-        });
+        const user = await User.query()
+          .findOne({
+            username: mobile,
+          })
+          .withGraphFetched({
+            driver: true,
+            person: true,
+            consumer: true,
+          });
 
-        // If user account exist, proceed to login
-        if (user) {
-          return {
-            user,
-            accessToken: "ABC123",
-          };
-        }
+        console.log(JSON.stringify(user, null, 4));
 
-        // If user account doesn't exist, proceed to register
-        if (!user) {
+        // Check for consumer
+        if (accountType == "C") {
+          if (user) {
+            // Cannot proceed with registration
+            // Throw error if user has a driver record
+            if (user.driver !== null) {
+              throw new UserInputError(
+                "A driver account cannot be used to log in."
+              );
+            }
+
+            // If user has a consumer record, proceed to login
+            if (user.consumer !== null) {
+              return {
+                user,
+                accessToken: "ABC123",
+              };
+            }
+          }
+
+          //proceed with consumer registration if user account does not exist
           const createdUser = await User.query().insertGraph({
             username: mobile,
             password: "N/A",
@@ -111,15 +173,27 @@ const resolvers = {
             consumer: {},
           });
 
-          console.log({ createdUser });
-
           return {
             user: createdUser,
             accessToken: "XYZ123",
           };
         }
 
-        return "Okay";
+        if (accountType == "D") {
+          // Throw error if user has a customer record
+          // Cannot proceed with registration
+          if (user.customer !== null) {
+            throw new UserInputError("Account does not exist.");
+          }
+
+          // If user has a driver record, proceed to login
+          if (user.driver !== null) {
+            return {
+              user,
+              accessToken: "ABC123",
+            };
+          }
+        }
       } catch (e) {
         throw e;
       }
@@ -127,8 +201,8 @@ const resolvers = {
   },
 };
 
-import { GraphQLModule } from "@graphql-modules/core";
 export default new GraphQLModule({
+  imports: [UserModule],
   typeDefs,
   resolvers,
 });

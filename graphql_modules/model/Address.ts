@@ -13,7 +13,7 @@ const typeDefs = gql`
     postal: String
   }
 
-  extend type Person {
+  type Person {
     address: Address
   }
 `;

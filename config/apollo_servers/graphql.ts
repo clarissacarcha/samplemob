@@ -7,12 +7,9 @@ import GraphQLModules from "../../graphql_modules";
 import Models from "../../models";
 import { pubsub } from "../pubsub";
 
-import DeliveryLogModule from "../../graphql_modules/model/DeliveryLog";
-import ScalarModule from "../../graphql_modules/virtual/Scalar";
-
-// const MyGraphQLModule = new GraphQLModule({
-//   imports: [DeliveryLogModule, ScalarModule],
-// });
+const MyGraphQLModule = new GraphQLModule({
+  imports: Object.values(GraphQLModules),
+});
 
 const baseUrl = `${process.env.PROTOCOL}://${process.env.HOST}:${process.env.PORT}/`;
 
@@ -21,8 +18,8 @@ export const mountApolloOnExpressAndServer = (
   httpServer: any
 ) => {
   const graphqlServer = new ApolloServer({
-    modules: Object.values(GraphQLModules),
-    // schema: MyGraphQLModule.schema,
+    // modules: GraphQLModules,
+    schema: MyGraphQLModule.schema,
     // context: MyGraphQLModule.context,
     context: ({ req, connection }) => {
       // const accessToken = req ? req.user : "";

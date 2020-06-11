@@ -1,7 +1,10 @@
 import { gql } from "apollo-server-express";
+import { GraphQLModule } from "@graphql-modules/core";
 import Models from "../../models";
 
-const { Delivery, DeliveryLog, Stop } = Models;
+const { DeliveryLog } = Models;
+
+import ScalarModule from "../virtual/Scalar";
 
 const typeDefs = gql`
   type DeliveryLog {
@@ -25,8 +28,8 @@ const resolvers = {
   },
 };
 
-import { GraphQLModule } from "@graphql-modules/core";
 export default new GraphQLModule({
+  imports: [ScalarModule],
   typeDefs,
   resolvers,
 });

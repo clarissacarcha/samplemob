@@ -1,5 +1,8 @@
 //@ts-nocheck
+import { GraphQLModule } from "@graphql-modules/core";
 import { gql, withFilter } from "apollo-server-express";
+
+import DeliveryModule from "../model/Delivery";
 
 const typeDefs = gql`
   type DeliveryDispatch {
@@ -7,7 +10,7 @@ const typeDefs = gql`
     driverId: String
   }
 
-  extend type Subscription {
+  type Subscription {
     onDeliveryDispatch(userId: String!): DeliveryDispatch
   }
 `;
@@ -32,8 +35,8 @@ const resolvers = {
   },
 };
 
-import { GraphQLModule } from "@graphql-modules/core";
 export default new GraphQLModule({
+  imports: [DeliveryModule],
   typeDefs,
   resolvers,
 });

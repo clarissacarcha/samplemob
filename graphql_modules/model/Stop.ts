@@ -17,6 +17,7 @@ const typeDefs = gql`
     mobile: String
     landmark: String
     notes: String
+    cargo: String
     formattedAddress: String
     latitude: Float
     longitude: Float

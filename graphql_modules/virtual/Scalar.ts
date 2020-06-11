@@ -18,31 +18,29 @@ const resolvers = {
       return value; // value from the client
     },
     serialize: async (value) => {
-      // return `${process.env.AWS_S3_BASE_URL}${value}`; // value sent to the client
-      return "ABCDEFG";
+      return `${process.env.AWS_S3_BASE_URL}${value}`; // value sent to the client
     },
     parseLiteral: async (ast) => {
       return ast.value; // value from the client
     },
   }),
-  DateTime: new GraphQLScalarType({
-    name: "DateTime",
-    description: "Date custom scalar type",
-    parseValue(value) {
-      return new Date(value); // value from the client
-    },
-    serialize(value) {
-      console.log("REAL DATE: " + value + "CONVERTED: " + value.toISOString());
-      // return value.toISOString(); // value sent to the client
-      return "ABCDEFGHIJKL";
-    },
-    parseLiteral(ast) {
-      if (ast.kind === Kind.INT) {
-        return new Date(ast.value); // ast value is always in string format
-      }
-      return null;
-    },
-  }),
+  // DateTime: new GraphQLScalarType({
+  //   name: "DateTime",
+  //   description: "Date custom scalar type",
+  //   parseValue(value) {
+  //     return new Date(value); // value from the client
+  //   },
+  //   serialize(value) {
+  //     console.log("REAL DATE: " + value + "CONVERTED: " + value.toISOString());
+  //     return value.toISOString(); // value sent to the client
+  //   },
+  //   parseLiteral(ast) {
+  //     if (ast.kind === Kind.INT) {
+  //       return new Date(ast.value); // ast value is always in string format
+  //     }
+  //     return null;
+  //   },
+  // }),
 };
 
 export default new GraphQLModule({

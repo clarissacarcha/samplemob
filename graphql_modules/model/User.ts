@@ -1,8 +1,12 @@
 //@ts-nocheck
+import { GraphQLModule } from "@graphql-modules/core";
 import { gql } from "apollo-server-express";
 import Models from "../../models";
 
 const { Person, Consumer } = Models;
+
+import ConsumerModule from "./Consumer";
+import PersonModule from "./Person";
 
 const typeDefs = gql`
   type User {
@@ -29,8 +33,8 @@ const resolvers = {
   },
 };
 
-import { GraphQLModule } from "@graphql-modules/core";
 export default new GraphQLModule({
+  imports: [PersonModule, ConsumerModule],
   typeDefs,
   resolvers,
 });
