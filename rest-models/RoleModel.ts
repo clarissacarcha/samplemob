@@ -1,4 +1,4 @@
-const pool = require("../mysql");
+    const pool = require("../mysql");
 const dateFormat = require("dateformat");
 import { MysqlUtility } from "../util/MysqlUtility";
 

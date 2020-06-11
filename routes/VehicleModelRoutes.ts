@@ -13,13 +13,14 @@ router.post(
 		[
 		  	check("model")
 			  	.notEmpty()
+			  		.withMessage("This field is required. ")
 			  	.isLength({max: 45})
-			  		.withMessage("value should not exceed 45 characters"),
+			  		.withMessage("Value should not exceed 45 characters."),
 			check("model_year")
 			  	.notEmpty()
-			  		.withMessage("This field is required")
-			  	.isInt({gt: -1, lt: 10000})
-			  		.withMessage("valid value: 1 - 9999")
+			  		.withMessage("This field is required. ")
+			  	.isInt({gt: 0, lt: 10000})
+			  		.withMessage("Valid value: 1 - 9999.")
 		],
 	VehicleModel.create);
 
@@ -44,13 +45,14 @@ router.put(
 		  		.withMessage("ID is required"),
 		  	check("model")
 			  	.notEmpty()
+			  		.withMessage("This field is required. ")
 			  	.isLength({max: 45})
-			  		.withMessage("value should not exceed 45 characters"),
+			  		.withMessage("Value should not exceed 45 characters."),
 			check("model_year")
 			  	.notEmpty()
-			  		.withMessage("This field is required")
-			  	.isInt({gt: -1, lt: 10000})
-			  		.withMessage("valid value: 0 - 9999")
+			  		.withMessage("This field is required. ")
+			  	.isInt({gt: 0, lt: 10000})
+			  		.withMessage("Valid value: 1 - 9999")
 		],
 	VehicleModel.update);
 

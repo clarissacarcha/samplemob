@@ -13,23 +13,22 @@ router.post(
 		[
 		  check("level_name")
 		  	.notEmpty()
+		  		.withMessage("This field is required. ")
 		  	.isLength({max: 45})
-		  		.withMessage("value should not exceed 45 characters"),
+		  		.withMessage("Value should not exceed 45 characters."),
 		  check("account_level")
 		  	.notEmpty()
-		  		.withMessage("This field is required")
+		  		.withMessage("This field is required. ")
 		  	.isInt({gt: -1, lt: 101})
-		  		.withMessage("valid value: 1 - 100"),
+		  		.withMessage("Valid value: 1 - 100."),
 		  check("priority")
 		  	.notEmpty()
-		  		.withMessage("This field is required")
+		  		.withMessage("This field is required. ")
 		  	.isInt({gt: -1, lt: 101})
-		  		.withMessage("valid value: 1 - 100"),
+		  		.withMessage("Valid value: 1 - 100."),
 		  check("tok_account_level_type_id")
 		  	.notEmpty()
-		  		.withMessage("This field is required")
-		  	.isInt({gt: -1, lt: 101})
-		  		.withMessage("valid value: 1 - 100")
+		  		.withMessage("This field is required. ")
 		],
 	AccountLevel.create);
 
@@ -51,26 +50,27 @@ router.put(
 		[
 		  check("id")
 		  	.notEmpty()
-		  		.withMessage("ID is required"),
+		  		.withMessage("ID is required."),
 		  check("level_name")
 		  	.notEmpty()
+		  	.withMessage("This field is required. ")
 		  	.isLength({max: 45})
-		  		.withMessage("value should not exceed 45 characters"),
+		  		.withMessage("Value should not exceed 45 characters."),
 		  check("account_level")
 		  	.notEmpty()
-		  		.withMessage("This field is required")
+		  		.withMessage("This field is required. ")
 		  	.isInt({gt: -1, lt: 101})
-		  		.withMessage("valid value: 1 - 100"),
+		  		.withMessage("Valid value: 1 - 100."),
 		  check("priority")
 		  	.notEmpty()
-		  		.withMessage("This field is required")
+		  		.withMessage("This field is required. ")
 		  	.isInt({gt: -1, lt: 101})
-		  		.withMessage("valid value: 1 - 100"),
+		  		.withMessage("Valid value: 1 - 100."),
 		  check("tok_account_level_type_id")
 		  	.notEmpty()
-		  		.withMessage("This field is required")
-		  	.isInt({gt: -1, lt: 101})
-		  		.withMessage("valid value: 1 - 100")
+		  		.withMessage("This field is required. ")
+		  	.isInt({gt: 0})
+		  		.withMessage("This field is required. ")
 		],
 	AccountLevel.update);
 

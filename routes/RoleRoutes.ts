@@ -13,8 +13,9 @@ router.post(
 		[
 		  check("role")
 		  	.notEmpty()
+		  		.withMessage("This field is required. ")
 		  	.isLength({max: 45})
-		  		.withMessage("value should not exceed 45 characters")
+		  		.withMessage("Value should not exceed 45 characters.")
 		],
 	Role.create);
 
@@ -39,8 +40,9 @@ router.put(
 		  		.withMessage("ID is required"),
 		  check("role")
 		  	.notEmpty()
+		  		.withMessage("This field is required. ")
 		  	.isLength({max: 45})
-		  		.withMessage("value should not exceed 45 characters")
+		  		.withMessage("Value should not exceed 45 characters.")
 		],
 	Role.update);
 

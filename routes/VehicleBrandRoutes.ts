@@ -13,8 +13,9 @@ router.post(
 		[
 		  check("brand")
 		  	.notEmpty()
+		  		.withMessage("This field is required. ")
 		  	.isLength({max: 45})
-		  		.withMessage("value should not exceed 45 characters")
+		  		.withMessage("Value should not exceed 45 characters.")
 		],
 	VehicleBrand.create);
 
@@ -39,8 +40,9 @@ router.put(
 		  		.withMessage("ID is required"),
 		  check("brand")
 		  	.notEmpty()
+		  		.withMessage("This field is required. ")
 		  	.isLength({max: 45})
-		  		.withMessage("value should not exceed 45 characters")
+		  		.withMessage("Value should not exceed 45 characters.")
 		],
 	VehicleBrand.update);
 
