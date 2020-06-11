@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 //@ts-nocheck
 const core_1 = require("@graphql-modules/core");
 const apollo_server_express_1 = require("apollo-server-express");
+const pubsub_1 = require("../../config/pubsub");
 const Delivery_1 = __importDefault(require("../model/Delivery"));
 const typeDefs = apollo_server_express_1.gql `
   type DeliveryDispatch {
@@ -20,7 +21,7 @@ const typeDefs = apollo_server_express_1.gql `
 const resolvers = {
     Subscription: {
         onDeliveryDispatch: {
-            subscribe: apollo_server_express_1.withFilter((_, __, { pubsub }) => pubsub.asyncIterator("ON_DELIVERY_DISPATCH"), (payload, args) => {
+            subscribe: apollo_server_express_1.withFilter((_, __, context) => pubsub_1.pubsub.asyncIterator("ON_DELIVERY_DISPATCH"), (payload, args) => {
                 if (payload.userId == args.userId) {
                     return true;
                 }

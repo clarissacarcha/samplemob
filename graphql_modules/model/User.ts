@@ -3,10 +3,11 @@ import { GraphQLModule } from "@graphql-modules/core";
 import { gql } from "apollo-server-express";
 import Models from "../../models";
 
-const { Person, Consumer } = Models;
+const { Person, Consumer, Driver } = Models;
 
 import ConsumerModule from "./Consumer";
 import PersonModule from "./Person";
+import DriverModule from "./Driver";
 
 const typeDefs = gql`
   type User {
@@ -15,6 +16,7 @@ const typeDefs = gql`
     status: Int
     person: Person
     consumer: Consumer
+    driver: Driver
   }
 `;
 
@@ -30,11 +32,16 @@ const resolvers = {
         tokUserId: parent.id,
       });
     },
+    driver: async (parent) => {
+      return await Driver.query().findOne({
+        tokUserId: parent.id,
+      });
+    },
   },
 };
 
 export default new GraphQLModule({
-  imports: [PersonModule, ConsumerModule],
+  imports: [ConsumerModule, PersonModule, DriverModule],
   typeDefs,
   resolvers,
 });

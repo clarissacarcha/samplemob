@@ -28,7 +28,9 @@ export const deliveryDispatch = async () => {
 
     // Map through the drivers found and dispatch the delivery to them
     onlineDrivers.forEach((driverUser) => {
-      console.log(`Dispatched ${delivery.id} to ${driverUser.id}`);
+      // console.log(
+      //   `Dispatched DeliveryID: ${delivery.id} to Driver UserId: ${driverUser.id}`
+      // );
 
       // Publish the driver userId and delivery info on the dispatch channel
       pubsub.publish("ON_DELIVERY_DISPATCH", {

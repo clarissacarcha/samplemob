@@ -168,17 +168,22 @@ const resolvers = {
                     };
                 }
                 if (accountType == "D") {
-                    // Throw error if user has a customer record
-                    // Cannot proceed with registration
-                    if (user.customer !== null) {
-                        throw new apollo_server_express_1.UserInputError("Account does not exist.");
+                    if (user) {
+                        // Throw error if user has a consumer record
+                        // Cannot proceed with registration
+                        if (user.consumer !== null) {
+                            throw new apollo_server_express_1.UserInputError("Customer account cannot be used to log in on driver app.");
+                        }
+                        // If user has a driver record, proceed to login
+                        if (user.driver !== null) {
+                            return {
+                                user,
+                                accessToken: "ABC123",
+                            };
+                        }
                     }
-                    // If user has a driver record, proceed to login
-                    if (user.driver !== null) {
-                        return {
-                            user,
-                            accessToken: "ABC123",
-                        };
+                    else {
+                        throw new apollo_server_express_1.UserInputError("Driver account does not exist.");
                     }
                 }
             }

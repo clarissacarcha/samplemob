@@ -1,2 +1,2 @@
 export * from "./knexProfiler";
-export * from "./deliveryDispatch";
+export * from "./DeliveryDispatch";

@@ -18,7 +18,7 @@ const knex = Knex({
 });
 
 if (process.env.NODE_ENV === "development") {
-  knexProfiler(knex);
+  // knexProfiler(knex);
 }
 
 export default knex;

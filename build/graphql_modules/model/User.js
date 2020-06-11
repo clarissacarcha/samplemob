@@ -16,9 +16,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@graphql-modules/core");
 const apollo_server_express_1 = require("apollo-server-express");
 const models_1 = __importDefault(require("../../models"));
-const { Person, Consumer } = models_1.default;
+const { Person, Consumer, Driver } = models_1.default;
 const Consumer_1 = __importDefault(require("./Consumer"));
 const Person_1 = __importDefault(require("./Person"));
+const Driver_1 = __importDefault(require("./Driver"));
 const typeDefs = apollo_server_express_1.gql `
   type User {
     id: String
@@ -26,6 +27,7 @@ const typeDefs = apollo_server_express_1.gql `
     status: Int
     person: Person
     consumer: Consumer
+    driver: Driver
   }
 `;
 const resolvers = {
@@ -40,10 +42,15 @@ const resolvers = {
                 tokUserId: parent.id,
             });
         }),
+        driver: (parent) => __awaiter(void 0, void 0, void 0, function* () {
+            return yield Driver.query().findOne({
+                tokUserId: parent.id,
+            });
+        }),
     },
 };
 exports.default = new core_1.GraphQLModule({
-    imports: [Person_1.default, Consumer_1.default],
+    imports: [Consumer_1.default, Person_1.default, Driver_1.default],
     typeDefs,
     resolvers,
 });

@@ -1,6 +1,7 @@
 //@ts-nocheck
 import { GraphQLModule } from "@graphql-modules/core";
 import { gql, withFilter } from "apollo-server-express";
+import { pubsub } from "../../config/pubsub";
 
 import DeliveryModule from "../model/Delivery";
 
@@ -19,7 +20,7 @@ const resolvers = {
   Subscription: {
     onDeliveryDispatch: {
       subscribe: withFilter(
-        (_, __, { pubsub }) => pubsub.asyncIterator("ON_DELIVERY_DISPATCH"),
+        (_, __, context) => pubsub.asyncIterator("ON_DELIVERY_DISPATCH"),
         (payload, args) => {
           if (payload.userId == args.userId) {
             return true;
