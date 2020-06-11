@@ -29,36 +29,100 @@ static getUserRoles = async(userId:string) => {
 
     let query = MysqlUtility.mergeLines([
         "select a.id, b.role from tok_user_roles as a",
-        "left join tok_roles as b on a.role = b.id",
+        "left join tok_roles as b on a.tok_roles_id = b.id",
         "where a.tok_users_id = ?"
     ]);
 
     let userRolesResult = await pool.query(query,[userId]);
     let userRoleCodes = [];
+    let userRoleDetails = {};
 
     // extract just the role codes
     for(let a = 0; a< userRolesResult.length; a++)
     {
-      userRoleCodes.push(userRolesResult[a].role);
+      userRoleDetails ={
+          id:userRolesResult[a].id,
+          roles: userRolesResult[a].role
+      };
+
+      userRoleCodes.push(userRoleDetails);
     }
+    
     return userRoleCodes;
 
   }
 static getUserPermissions = async(userId:string) => {
 
     let query = MysqlUtility.mergeLines([
-        "select a.id, b.permission_code, b.desription from tok_user_permissions as a",
+        "select a.id, b.permission_code, b.description from tok_user_permissions as a",
         "left join tok_permissions as b on a.tok_permissions_id = b.id",
         "where a.tok_users_id = ?"
     ]);
 
     let userPermissionResult = await pool.query(query,[userId]);
     let userPermissionCodes = [];
+    let userPermDescription = {};
 
     // extract just the role codes
     for(let a = 0; a< userPermissionResult.length; a++)
     {
-      userPermissionCodes.push(userPermissionResult[a].permission_code);
+      userPermDescription ={
+          id:userPermissionResult[a].id,
+          permission_desc: userPermissionResult[a].description,
+          permission_code: userPermissionResult[a].permission_code
+      };
+
+      userPermissionCodes.push(userPermDescription);
+    }
+
+    return userPermissionCodes;
+
+  }
+
+  static getAllUserRoles = async () => {
+
+    let query = MysqlUtility.mergeLines([
+        "select id, role from tok_roles"
+    ]);
+
+    let userRolesResult = await pool.query(query);
+    let userRoleCodes = [];
+    let userRoleDetails = {};
+
+    // extract just the role codes
+    for(let a = 0; a< userRolesResult.length; a++)
+    {
+      userRoleDetails ={
+          id:userRolesResult[a].id,
+          role: userRolesResult[a].role
+      };
+
+      userRoleCodes.push(userRoleDetails);
+    }
+    
+    return userRoleCodes;
+
+  }
+static getAllUserPermissions = async () => {
+
+    let query = MysqlUtility.mergeLines([
+        "select id, permission_code, description from tok_permissions"
+    ]);
+
+    let userPermissionResult = await pool.query(query);
+    let userPermissionCodes = [];
+    let userPermDetails = {};
+
+    // extract just the perm codes
+    for(let a = 0; a< userPermissionResult.length; a++)
+    {
+      userPermDetails ={
+          id:userPermissionResult[a].id,
+          permission_desc: userPermissionResult[a].description,
+          permission_code: userPermissionResult[a].permission_code
+      };
+
+      userPermissionCodes.push(userPermDetails);
     }
 
     return userPermissionCodes;
@@ -163,10 +227,15 @@ static list = async (req: any) => {
       useraccesscontrol.push(user1);
     }
 
+    const allroles = await UserAccessControlModel.getAllUserRoles();
+    const allpermissions = await UserAccessControlModel.getAllUserPermissions();
+
     return {
       totalRows: totalRows[0].totalRows,
       totalFiltered: totalFiltered,
       resultSet: useraccesscontrol,
+      permissions:allpermissions,
+      roles:allroles
     };
   };
 }
