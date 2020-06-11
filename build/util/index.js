@@ -4,4 +4,4 @@ function __export(m) {
 }
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(require("./knexProfiler"));
-__export(require("./DeliveryDispatch"));
+__export(require("./deliveryDispatch"));
