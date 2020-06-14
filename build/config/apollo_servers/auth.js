@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.mountApolloOnExpressAndServer = void 0;
 //@ts-nocheck
 require("dotenv").config();
 const apollo_server_express_1 = require("apollo-server-express");

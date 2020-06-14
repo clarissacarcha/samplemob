@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.CustomerModel = void 0;
 const pool = require('../mysql');
 const dateFormat = require('dateformat');
 const MysqlUtility_1 = require("../util/MysqlUtility");

@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.deliveryDispatchCronJob = exports.deliveryDispatch = void 0;
 //@ts-nocheck
 const CronJob = require("cron").CronJob;
 const pubsub_1 = require("../config/pubsub");

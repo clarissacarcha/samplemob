@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.VehicleBrand = void 0;
 const VehicleBrandModel_1 = require("../rest-models/VehicleBrandModel");
 const AuthUtility_1 = require("../util/AuthUtility");
 const express_validator_1 = require("express-validator");

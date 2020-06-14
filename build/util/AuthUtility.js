@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.AuthUtility = void 0;
 const AuthTokenModel_1 = require("../rest-models/AuthTokenModel");
 const bcrypt = require('bcrypt');
 class AuthUtility {

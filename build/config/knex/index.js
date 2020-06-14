@@ -9,6 +9,7 @@ const knex_1 = __importDefault(require("knex"));
 const objection_1 = require("objection");
 // Initialize knex.
 const knex = knex_1.default(Object.assign({ client: "mysql2", connection: {
+        timezone: "+00:00",
         host: process.env.DB_HOST,
         user: process.env.DB_USER,
         password: process.env.DB_PASSWORD,

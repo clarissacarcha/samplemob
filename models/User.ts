@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { Model } from "objection";
 import Consumer from "./Consumer";
 import Driver from "./Driver";

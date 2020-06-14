@@ -1,5 +1,6 @@
-import { Model} from 'objection';
-import Delivery from './Delivery';
+//@ts-nocheck
+import { Model } from "objection";
+import Delivery from "./Delivery";
 
 export default class extends Model {
   static tableName = "tok_stops";

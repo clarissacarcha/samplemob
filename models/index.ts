@@ -1,3 +1,4 @@
+//@ts-nocheck
 import Address from "./Address";
 import Consumer from "./Consumer";
 import Delivery from "./Delivery";

@@ -19,6 +19,7 @@ export async function up(knex: Knex): Promise<any> {
      * 6 - Item delivered
      * 7 - Order Cancelled
      * 8 - Order Deleted
+     * 9 - Order Expired
      */
     table.specificType("status", "tinyint(1)");
     table.timestamp("created_at").defaultTo(knex.fn.now());

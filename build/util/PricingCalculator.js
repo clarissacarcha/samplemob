@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.calculateOrderPrice = void 0;
 const baseDistance = 10.0;
 const flatRate = 60.0;
 const perKm = 6.0;

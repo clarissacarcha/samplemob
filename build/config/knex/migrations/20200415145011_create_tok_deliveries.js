@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.down = exports.up = void 0;
 function up(knex) {
     return __awaiter(this, void 0, void 0, function* () {
         return knex.schema.createTable("tok_deliveries", (table) => {
@@ -29,6 +30,7 @@ function up(knex) {
              * 6 - Item delivered
              * 7 - Order Cancelled
              * 8 - Order Deleted
+             * 9 - Order Expired
              */
             table.specificType("status", "tinyint(1)");
             table.timestamp("created_at").defaultTo(knex.fn.now());

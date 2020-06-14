@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+//@ts-nocheck
 const objection_1 = require("objection");
 class default_1 extends objection_1.Model {
 }

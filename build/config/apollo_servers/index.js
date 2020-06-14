@@ -1,4 +1,3 @@
-"use strict";
 // require("dotenv").config();
 // import { Application } from "express";
 // import { ApolloServer, PubSub } from "apollo-server-express";

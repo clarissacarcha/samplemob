@@ -1,5 +1,6 @@
 //@ts-nocheck
 import { gql } from "apollo-server-express";
+import ScalarModule from "../virtual/Scalar";
 
 const typeDefs = gql`
   type Stop {
@@ -10,6 +11,9 @@ const typeDefs = gql`
     formattedAddress: String
     latitude: Float
     longitude: Float
+    schedule: Int
+    preferredFrom: DateTime
+    preferredTo: DateTime
   }
 
   input StopInput {
@@ -21,6 +25,9 @@ const typeDefs = gql`
     formattedAddress: String
     latitude: Float
     longitude: Float
+    schedule: Int
+    preferredFrom: String
+    preferredTo: String
 
     latitudeDelta: Float
     longitudeDelta: Float
@@ -32,6 +39,7 @@ const resolvers = {};
 
 import { GraphQLModule } from "@graphql-modules/core";
 export default new GraphQLModule({
+  imports: [ScalarModule],
   typeDefs,
   resolvers,
 });

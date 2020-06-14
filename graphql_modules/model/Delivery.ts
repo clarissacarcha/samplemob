@@ -3,12 +3,13 @@ import { gql, UserInputError } from "apollo-server-express";
 import fileUploadS3 from "../../util/FileUploadS3";
 
 import DeliveryLogModule from "./DeliveryLog";
+import DriverModule from "./Driver";
 import StopModule from "./Stop";
 import ScalarModule from "../virtual/Scalar";
 
 import Models from "../../models";
 
-const { Delivery, DeliveryLog, Stop } = Models;
+const { Delivery, DeliveryLog, Stop, Driver } = Models;
 
 const typeDefs = gql`
   type Delivery {
@@ -27,6 +28,7 @@ const typeDefs = gql`
     senderStop: Stop
     recipientStop: Stop
     logs: [DeliveryLog]
+    driver: Driver
   }
 
   type StatusCount {
@@ -105,6 +107,13 @@ const resolvers = {
       return await DeliveryLog.query().where({
         tokDeliveryId: parent.id,
       });
+    },
+    driver: async (parent) => {
+      const res = await Driver.query().findOne({
+        id: parent.tokDriverId,
+      });
+      console.log(JSON.stringify(res, null, 4));
+      return res;
     },
   },
   Query: {
@@ -392,7 +401,7 @@ const resolvers = {
 
 import { GraphQLModule } from "@graphql-modules/core";
 export default new GraphQLModule({
-  imports: [DeliveryLogModule, ScalarModule, StopModule],
+  imports: [DeliveryLogModule, ScalarModule, StopModule, DriverModule],
   typeDefs,
   resolvers,
 });

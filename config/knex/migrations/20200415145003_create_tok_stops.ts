@@ -9,8 +9,14 @@ export async function up(knex: Knex): Promise<any> {
     table.string("formatted_address", 255).notNullable;
     table.specificType("latitude", "decimal(18,15)").notNullable;
     table.specificType("longitude", "decimal(18,15)").notNullable;
+    /**
+     * 1 - ASAP
+     * 2 - Preferred
+     */
+    table.specificType("schedule", "tinyint(1)");
+    table.dateTime("preferred_from");
+    table.dateTime("preferred_to");
   });
-  
 }
 
 export async function down(knex: Knex): Promise<any> {

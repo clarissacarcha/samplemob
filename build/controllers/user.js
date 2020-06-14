@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.User = void 0;
 const usermodel_1 = require("../rest-models/usermodel");
 const AuthTokenModel_1 = require("../rest-models/AuthTokenModel");
 const express_validator_1 = require("express-validator");

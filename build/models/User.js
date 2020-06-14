@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+//@ts-nocheck
 const objection_1 = require("objection");
 const Consumer_1 = __importDefault(require("./Consumer"));
 const Driver_1 = __importDefault(require("./Driver"));

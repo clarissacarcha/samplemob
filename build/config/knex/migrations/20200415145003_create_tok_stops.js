@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.down = exports.up = void 0;
 function up(knex) {
     return __awaiter(this, void 0, void 0, function* () {
         return knex.schema.createTable("tok_stops", (table) => {
@@ -19,6 +20,13 @@ function up(knex) {
             table.string("formatted_address", 255).notNullable;
             table.specificType("latitude", "decimal(18,15)").notNullable;
             table.specificType("longitude", "decimal(18,15)").notNullable;
+            /**
+             * 1 - ASAP
+             * 2 - Preferred
+             */
+            table.specificType("schedule", "tinyint(1)");
+            table.timestamp("preferred_from");
+            table.timestamp("preferred_to");
         });
     });
 }

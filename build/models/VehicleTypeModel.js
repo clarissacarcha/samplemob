@@ -3,6 +3,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.VehicleTypeModel = void 0;
+//@ts-nocheck
 const objection_1 = require("objection");
 const knex_1 = __importDefault(require("../config/knex"));
 class VehicleTypeModel extends objection_1.Model {
@@ -27,7 +29,7 @@ VehicleTypeModel.get_users = () => {
 };
 VehicleTypeModel.getUser = (id) => {
     return knex_1.default.raw("SELECT * FROM tok_users WHERE id = :userId", {
-        userId: id
+        userId: id,
     });
 };
 VehicleTypeModel.create = (req) => {
@@ -74,7 +76,7 @@ VehicleTypeModel.create = (req) => {
     const res = {
         successful: false,
         message: "Something went wrong",
-        id: "1"
+        id: "1",
     };
     return res;
 };
@@ -82,16 +84,16 @@ VehicleTypeModel.get = () => {
     let vtypes = [
         {
             id: 1,
-            type: 'Sedan'
+            type: "Sedan",
         },
         {
             id: 2,
-            type: '6 seater'
+            type: "6 seater",
         },
         {
             id: 3,
-            type: 'truck'
-        }
+            type: "truck",
+        },
     ];
     return vtypes;
 };

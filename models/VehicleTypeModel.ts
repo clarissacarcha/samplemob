@@ -1,9 +1,9 @@
+//@ts-nocheck
 import { Model } from "objection";
 import knex from "../config/knex";
-import { Result } from '../common/interfaces/result';
+import { Result } from "../common/interfaces/result";
 
 export class VehicleTypeModel extends Model {
-
   static get tableName() {
     return "tok_vehicle_types";
   }
@@ -21,17 +21,16 @@ export class VehicleTypeModel extends Model {
   };
 
   static get_users = () => {
-    return "hahaha"
-  }
+    return "hahaha";
+  };
 
-  static getUser = (id:number) => {
+  static getUser = (id: number) => {
     return knex.raw("SELECT * FROM tok_users WHERE id = :userId", {
-      userId: id
+      userId: id,
     });
-  }
+  };
 
-  static create = (req:any) => {
-
+  static create = (req: any) => {
     //let query = "insert into tok_vehicle_types (id,type,seats,cargo_capacity,cargo_unit,status,created_at,updated_at) values (:id,:type,:seats,:cargo_capacity,:cargo_unit,:status,:created_at,:updated_at)";
 
     //return knex.raw(query);
@@ -77,32 +76,31 @@ export class VehicleTypeModel extends Model {
         //knex.destroy();
     });*/
 
-    const res:Result = {
+    const res: Result = {
       successful: false,
       message: "Something went wrong",
-      id: "1"
-    }
+      id: "1",
+    };
 
     return res;
-  }
+  };
 
-
-  static get = () =>{
+  static get = () => {
     let vtypes = [
       {
         id: 1,
-        type: 'Sedan'
+        type: "Sedan",
       },
       {
         id: 2,
-        type: '6 seater'
+        type: "6 seater",
       },
       {
         id: 3,
-        type: 'truck'
-      }
+        type: "truck",
+      },
     ];
 
     return vtypes;
-  }
+  };
 }

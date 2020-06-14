@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.MysqlUtility = void 0;
 class MysqlUtility {
     static bindValues(query, values) {
         let i = 0;
