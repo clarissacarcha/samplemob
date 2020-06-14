@@ -13,23 +13,24 @@ router.post(
 		[
 		  check("type")
 		  	.notEmpty()
+		  		.withMessage("This field is required. ")
 		  	.isLength({max: 45})
-		  		.withMessage("value should not exceed 45 characters"),
+		  		.withMessage("Value should not exceed 45 characters."),
 		  check("seats")
 		  	.notEmpty()
-		  		.withMessage("This field is required")
+		  		.withMessage("This field is required. ")
 		  	.isInt({gt: -1, lt: 101})
-		  		.withMessage("valid value: 1 - 100"),
+		  		.withMessage("Valid value: 1 - 100."),
 		  check("cargo_capacity")
 		  	.notEmpty()
-		  		.withMessage("This field is required")
+		  		.withMessage("This field is required. ")
 		  	.isInt({gt: -1, lt: 101})
-		  		.withMessage("valid value: 1 - 100"),
+		  		.withMessage("Valid value: 1 - 100."),
 		  check("cargo_unit")
 		  	.notEmpty()
-		  		.withMessage("This field is required")
+		  		.withMessage("This field is required. ")
 		  	.isLength({max:45})
-		  		.withMessage("Must not exceed 45 characters")
+		  		.withMessage("Must not exceed 45 characters. ")
 		],
 	VehicleType.create);
 
@@ -51,26 +52,27 @@ router.put(
 		[
 		  check("id")
 		  	.notEmpty()
-		  		.withMessage("ID is required"),
+		  		.withMessage("ID is required. "),
 		  check("type")
 		  	.notEmpty()
+		  		.withMessage("This field is required. ")
 		  	.isLength({max: 45})
-		  		.withMessage("value should not exceed 45 characters"),
+		  		.withMessage("Value should not exceed 45 characters."),
 		  check("seats")
 		  	.notEmpty()
-		  		.withMessage("This field is required")
+		  		.withMessage("This field is required. ")
 		  	.isInt({gt: -1, lt: 101})
-		  		.withMessage("valid value: 1 - 100"),
+		  		.withMessage("Valid value: 1 - 100. "),
 		  check("cargo_capacity")
 		  	.notEmpty()
-		  		.withMessage("This field is required")
+		  		.withMessage("This field is required. ")
 		  	.isInt({gt: -1, lt: 101})
-		  		.withMessage("valid value: 1 - 100"),
+		  		.withMessage("Valid value: 1 - 100. "),
 		  check("cargo_unit")
 		  	.notEmpty()
-		  		.withMessage("This field is required")
+		  		.withMessage("This field is required. ")
 		  	.isLength({max:45})
-		  		.withMessage("Must not exceed 45 characters")
+		  		.withMessage("Must not exceed 45 characters.")
 		],
 	VehicleType.update);
 
