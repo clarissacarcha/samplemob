@@ -25,8 +25,8 @@ function up(knex) {
              * 2 - Preferred
              */
             table.specificType("schedule", "tinyint(1)");
-            table.timestamp("preferred_from");
-            table.timestamp("preferred_to");
+            table.dateTime("preferred_from");
+            table.dateTime("preferred_to");
         });
     });
 }

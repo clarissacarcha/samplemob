@@ -1,7 +1,11 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 //@ts-nocheck
 const apollo_server_express_1 = require("apollo-server-express");
+const Scalar_1 = __importDefault(require("../virtual/Scalar"));
 const typeDefs = apollo_server_express_1.gql `
   type Stop {
     id: String
@@ -11,6 +15,9 @@ const typeDefs = apollo_server_express_1.gql `
     formattedAddress: String
     latitude: Float
     longitude: Float
+    schedule: Int
+    preferredFrom: DateTime
+    preferredTo: DateTime
   }
 
   input StopInput {
@@ -22,6 +29,9 @@ const typeDefs = apollo_server_express_1.gql `
     formattedAddress: String
     latitude: Float
     longitude: Float
+    schedule: Int
+    preferredFrom: String
+    preferredTo: String
 
     latitudeDelta: Float
     longitudeDelta: Float
@@ -31,6 +41,7 @@ const typeDefs = apollo_server_express_1.gql `
 const resolvers = {};
 const core_1 = require("@graphql-modules/core");
 exports.default = new core_1.GraphQLModule({
+    imports: [Scalar_1.default],
     typeDefs,
     resolvers,
 });

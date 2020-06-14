@@ -6,10 +6,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 //@ts-nocheck
 require("dotenv").config();
 const knex_1 = __importDefault(require("knex"));
+const util_1 = require("../../util");
 const objection_1 = require("objection");
 // Initialize knex.
 const knex = knex_1.default(Object.assign({ client: "mysql2", connection: {
-        timezone: "+00:00",
         host: process.env.DB_HOST,
         user: process.env.DB_USER,
         password: process.env.DB_PASSWORD,
@@ -17,6 +17,6 @@ const knex = knex_1.default(Object.assign({ client: "mysql2", connection: {
         port: process.env.DB_PORT,
     } }, objection_1.knexSnakeCaseMappers()));
 if (process.env.NODE_ENV === "development") {
-    // knexProfiler(knex);
+    util_1.knexProfiler(knex);
 }
 exports.default = knex;

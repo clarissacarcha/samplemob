@@ -16,10 +16,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const apollo_server_express_1 = require("apollo-server-express");
 const FileUploadS3_1 = __importDefault(require("../../util/FileUploadS3"));
 const DeliveryLog_1 = __importDefault(require("./DeliveryLog"));
+const Driver_1 = __importDefault(require("./Driver"));
 const Stop_1 = __importDefault(require("./Stop"));
 const Scalar_1 = __importDefault(require("../virtual/Scalar"));
 const models_1 = __importDefault(require("../../models"));
-const { Delivery, DeliveryLog, Stop } = models_1.default;
+const { Delivery, DeliveryLog, Stop, Driver } = models_1.default;
 const typeDefs = apollo_server_express_1.gql `
   type Delivery {
     id: String
@@ -37,6 +38,7 @@ const typeDefs = apollo_server_express_1.gql `
     senderStop: Stop
     recipientStop: Stop
     logs: [DeliveryLog]
+    driver: Driver
   }
 
   type StatusCount {
@@ -114,6 +116,13 @@ const resolvers = {
             return yield DeliveryLog.query().where({
                 tokDeliveryId: parent.id,
             });
+        }),
+        driver: (parent) => __awaiter(void 0, void 0, void 0, function* () {
+            const res = yield Driver.query().findOne({
+                id: parent.tokDriverId,
+            });
+            console.log(JSON.stringify(res, null, 4));
+            return res;
         }),
     },
     Query: {
@@ -345,7 +354,7 @@ const resolvers = {
 };
 const core_1 = require("@graphql-modules/core");
 exports.default = new core_1.GraphQLModule({
-    imports: [DeliveryLog_1.default, Scalar_1.default, Stop_1.default],
+    imports: [DeliveryLog_1.default, Scalar_1.default, Stop_1.default, Driver_1.default],
     typeDefs,
     resolvers,
 });

@@ -15,10 +15,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 //@ts-nocheck
 const apollo_server_express_1 = require("apollo-server-express");
 const models_1 = __importDefault(require("../../models"));
-const { Driver } = models_1.default;
+const Person_1 = __importDefault(require("./Person"));
+const { Driver, User, Person } = models_1.default;
 const typeDefs = apollo_server_express_1.gql `
   type Driver {
     id: String
+    status: Int
+    isOnline: Int
+    user: User
+  }
+
+  type User {
+    id: String
+    username: String
+    status: Int
+    person: Person
   }
 
   input PatchDriverGoOnlineOfflineInput {
@@ -31,6 +42,20 @@ const typeDefs = apollo_server_express_1.gql `
   }
 `;
 const resolvers = {
+    Driver: {
+        user: (parent) => __awaiter(void 0, void 0, void 0, function* () {
+            return yield User.query().findOne({
+                id: parent.tokUserId,
+            });
+        }),
+    },
+    User: {
+        person: (parent) => __awaiter(void 0, void 0, void 0, function* () {
+            return yield Person.query().findOne({
+                tokUserId: parent.id,
+            });
+        }),
+    },
     Mutation: {
         patchDriverGoOnline: (_, { input }) => __awaiter(void 0, void 0, void 0, function* () {
             const result = yield Driver.query().where({ id: input.driverId }).update({
@@ -48,6 +73,7 @@ const resolvers = {
 };
 const core_1 = require("@graphql-modules/core");
 exports.default = new core_1.GraphQLModule({
+    imports: [Person_1.default],
     typeDefs,
     resolvers,
 });
