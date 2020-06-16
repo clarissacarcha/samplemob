@@ -27,6 +27,24 @@ export class RoleModel {
     return await pool.query(query, [id]);
   };
 
+  static getRolePermissions = async (role: string) => {
+    let userPermissionCodes = [];
+
+    let query = MysqlUtility.mergeLines([ 
+    "select c.permission_code from tok_roles as a",
+    "left join tok_role_permissions as b on a.id = b.tok_roles_id",
+    "left join tok_permissions as c on b.tok_permissions_id = c.id ",
+    "where a.role = ?"
+    ]);
+
+    let rolePermissionResult = await pool.query(query, [role]);
+
+    for (var a = 0; a< rolePermissionResult.length; a++) {
+      userPermissionCodes.push(rolePermissionResult[a].permission_code);
+    }
+    return userPermissionCodes;
+  };
+
   static update = async (req: any) => {
     const date = dateFormat(new Date(), "yyyy-mm-dd HH:MM:ss");
 

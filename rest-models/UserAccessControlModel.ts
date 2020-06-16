@@ -91,7 +91,7 @@ static getUserPermissions = async(userId:string) => {
 
   }
 
-  static getAllUserRoles = async () => {
+  static getAllUserRoles = async () => {    
 
     let query = MysqlUtility.mergeLines([
         "select id, role from tok_roles"

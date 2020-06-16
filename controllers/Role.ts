@@ -132,4 +132,19 @@ export class Role{
 
   }
 
+  static getRolePermissions = async (req:any,res:any,next:any) =>{
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+
+    let result = await RoleModel.getRolePermissions(req.params.role);
+
+    res.status(200).json({
+        result
+    });
+
+  }
+
 }
