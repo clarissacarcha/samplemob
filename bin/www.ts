@@ -21,6 +21,7 @@ const server = createServer(App);
 
 server.listen(process.env.PORT, () => {
   //deliveryDispatchCronJob().start();
+
   console.log(
     `${process.env.PROTOCOL} server running in ${process.env.NODE_ENV} mode on port ${process.env.PORT}`
       .yellow.bold

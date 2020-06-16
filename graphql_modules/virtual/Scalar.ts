@@ -2,11 +2,13 @@
 import { gql, GraphQLUpload } from "apollo-server-express";
 import { GraphQLModule } from "@graphql-modules/core";
 import { GraphQLScalarType } from "graphql";
+import moment from "moment";
 
 const typeDefs = gql`
   scalar Upload
   scalar DateTime
   scalar S3File
+  scalar ISO2DateTime
 `;
 
 const resolvers = {
@@ -24,23 +26,22 @@ const resolvers = {
       return ast.value; // value from the client
     },
   }),
-  // DateTime: new GraphQLScalarType({
-  //   name: "DateTime",
-  //   description: "Date custom scalar type",
-  //   parseValue(value) {
-  //     return new Date(value); // value from the client
-  //   },
-  //   serialize(value) {
-  //     console.log("REAL DATE: " + value + "CONVERTED: " + value.toISOString());
-  //     return value.toISOString(); // value sent to the client
-  //   },
-  //   parseLiteral(ast) {
-  //     if (ast.kind === Kind.INT) {
-  //       return new Date(ast.value); // ast value is always in string format
-  //     }
-  //     return null;
-  //   },
-  // }),
+  ISO2DateTime: new GraphQLScalarType({
+    name: "ISO2DateTime",
+    description: "Date custom scalar type",
+    parseValue(value) {
+      return moment(value).format("YYYY-MM-DD hh:mm:ss"); // value from the client
+    },
+    serialize(value) {
+      return moment(value).format("MM/DD/YYYY - hh:mm A");
+    },
+    parseLiteral(ast) {
+      if (ast.kind === Kind.INT) {
+        return new Date(ast.value); // ast value is always in string format
+      }
+      return null;
+    },
+  }),
 };
 
 export default new GraphQLModule({
