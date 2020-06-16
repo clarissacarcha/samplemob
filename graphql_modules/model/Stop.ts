@@ -11,9 +11,9 @@ const typeDefs = gql`
     formattedAddress: String
     latitude: Float
     longitude: Float
-    schedule: Int
-    preferredFrom: DateTime
-    preferredTo: DateTime
+    orderType: Int
+    scheduledFrom: ISO2DateTime
+    scheduledTo: ISO2DateTime
   }
 
   input StopInput {
@@ -25,9 +25,9 @@ const typeDefs = gql`
     formattedAddress: String
     latitude: Float
     longitude: Float
-    schedule: Int
-    preferredFrom: String
-    preferredTo: String
+    orderType: Int
+    scheduledFrom: ISO2DateTime
+    scheduledTo: ISO2DateTime
 
     latitudeDelta: Float
     longitudeDelta: Float

@@ -10,12 +10,12 @@ export async function up(knex: Knex): Promise<any> {
     table.specificType("latitude", "decimal(18,15)").notNullable;
     table.specificType("longitude", "decimal(18,15)").notNullable;
     /**
-     * 1 - ASAP
-     * 2 - Preferred
+     * 1 - As Soon As Possible
+     * 2 - Scheduled
      */
-    table.specificType("schedule", "tinyint(1)");
-    table.dateTime("preferred_from");
-    table.dateTime("preferred_to");
+    table.specificType("order_type", "tinyint(1)");
+    table.dateTime("scheduled_from");
+    table.dateTime("scheduled_to");
   });
 }
 
