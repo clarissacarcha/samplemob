@@ -1,5 +1,6 @@
 //@ts-nocheck
 import Address from "./Address";
+import Announcement from "./Announcements";
 import Consumer from "./Consumer";
 import Delivery from "./Delivery";
 import DeliveryLog from "./DeliveryLog";
@@ -10,6 +11,7 @@ import User from "./User";
 
 export default {
   Address,
+  Announcement,
   Consumer,
   Delivery,
   DeliveryLog,

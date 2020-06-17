@@ -17,10 +17,11 @@ const createServer =
 const server = createServer(App);
 
 // Applies ApolloServer as middleware on App and installs subscriptionHandlers on server
-mountApolloOnExpressAndServer(App, server);
+//mountApolloOnExpressAndServer(App, server);
 
 server.listen(process.env.PORT, () => {
-  deliveryDispatchCronJob().start();
+  //deliveryDispatchCronJob().start();
+
   console.log(
     `${process.env.PROTOCOL} server running in ${process.env.NODE_ENV} mode on port ${process.env.PORT}`
       .yellow.bold

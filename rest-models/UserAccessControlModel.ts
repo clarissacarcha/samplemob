@@ -62,24 +62,36 @@ static getUserPermissions = async(userId:string) => {
     let userPermissionResult = await pool.query(query,[userId]);
     let userPermissionCodes = [];
     let userPermDescription = {};
-
-    // extract just the role codes
-    for(let a = 0; a< userPermissionResult.length; a++)
-    {
-      userPermDescription ={
-          id:userPermissionResult[a].id,
-          permission_desc: userPermissionResult[a].description,
-          permission_code: userPermissionResult[a].permission_code
-      };
-
+    const allpermissions = await UserAccessControlModel.getAllUserPermissions();
+   
+    for (var a = 0; a< allpermissions.length; a++) {
+      let perm = userPermissionResult.find((perm: any) => perm.id === allpermissions[a].id);
+      if(perm)
+      {
+        userPermDescription ={
+          id:allpermissions[a].id,
+          permission_desc: allpermissions[a].description,
+          permission_code: allpermissions[a].permission_code,
+          isChecked: true
+        };
+      }
+      else
+      {
+        userPermDescription ={
+          id:allpermissions[a].id,
+          permission_desc: allpermissions[a].description,
+          permission_code: allpermissions[a].permission_code,
+          isChecked: false
+        };
+      }
       userPermissionCodes.push(userPermDescription);
+      
     }
-
     return userPermissionCodes;
 
   }
 
-  static getAllUserRoles = async () => {
+  static getAllUserRoles = async () => {    
 
     let query = MysqlUtility.mergeLines([
         "select id, role from tok_roles"
@@ -125,7 +137,7 @@ static getAllUserPermissions = async () => {
       userPermissionCodes.push(userPermDetails);
     }
 
-    return userPermissionCodes;
+    return userPermissionResult;
 
   }
 

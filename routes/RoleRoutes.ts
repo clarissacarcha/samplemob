@@ -31,6 +31,15 @@ router.get(
 		], 
 	Role.read);
 
+router.get(
+	"/getRolePermissions/:role", 
+		[
+			check('role')
+				.notEmpty()
+					.withMessage("Role is required")
+		], 
+	Role.getRolePermissions);
+
 
 router.put(
 	"/update", 
