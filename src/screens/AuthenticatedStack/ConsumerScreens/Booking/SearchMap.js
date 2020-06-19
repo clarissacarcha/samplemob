@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, ActivityIndicator, TouchableHighlight} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
-import {HeaderBack, HeaderTitle} from '../../components';
-import {COLOR, DARK, MAP_DELTA} from '../../res/constants';
-import {reverseGeocode} from '../../helper';
+import {HeaderBack, HeaderTitle} from '../../../../components';
+import {COLOR, DARK, MAP_DELTA} from '../../../../res/constants';
+import {reverseGeocode} from '../../../../helper';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 
 const SearchMap = ({navigation, route}) => {
@@ -37,7 +37,7 @@ const SearchMap = ({navigation, route}) => {
   const onSubmit = () => {
     setData({...localData, ...MAP_DELTA});
     navigation.pop();
-  }
+  };
 
   return (
     <View style={styles.container}>
@@ -47,8 +47,7 @@ const SearchMap = ({navigation, route}) => {
         region={{
           ...localData,
         }}
-        onRegionChangeComplete={onMapScrollEnd}
-        >
+        onRegionChangeComplete={onMapScrollEnd}>
         {/*---------------------------------------- FOR CHECKING FLOATING PIN ACCURACY ----------------------------------------*/}
         {/* <Marker coordinate={localData}>
           <FA5Icon name="map-pin" size={24} color="red" />
@@ -116,5 +115,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-
 });

@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {Image, Text, View} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
+import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 // import {createFluidNavigator} from 'react-navigation-fluid-transitions';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
@@ -15,32 +15,41 @@ import {COLOR, MEDIUM, LIGHT} from '../res/constants';
 /*-------------------- IMPORT SCREENS START--------------------*/
 import Login from '../screens/UnauthenticatedStack/Login';
 import Verification from '../screens/UnauthenticatedStack/Verification';
+import PasswordVerification from '../screens/UnauthenticatedStack/PasswordVerification';
+
+// Landing
+import Landing from '../screens/Landing';
 
 // Authenticated Stack
-import PostRegistration from '../screens/AuthenticatedStack/PostRegistration';
-import Map from '../screens/AuthenticatedStack/Map';
-import SearchPlaces from '../screens/AuthenticatedStack/SearchPlaces';
-import SearchMap from '../screens/AuthenticatedStack/SearchMap';
+import TalkToUs from '../screens/AuthenticatedStack/CommonScreens/TalkToUs';
 
-import SenderDetails from '../screens/AuthenticatedStack/DeliveryBooking/SenderDetails';
-import RecipientDetails from '../screens/AuthenticatedStack/DeliveryBooking/RecipientDetails';
+/*---------- CONSUMER SCREENS ----------*/
+import PostRegistration from '../screens/AuthenticatedStack/ConsumerScreens/PostRegistration';
+import Map from '../screens/AuthenticatedStack/ConsumerScreens/ConsumerMap';
+import SearchPlaces from '../screens/AuthenticatedStack/ConsumerScreens/Booking/SearchPlaces';
+import SearchMap from '../screens/AuthenticatedStack/ConsumerScreens/Booking/SearchMap';
 
-import CustomerProfile from '../screens/AuthenticatedStack/CustomerProfile';
-import TalkToUs from '../screens/AuthenticatedStack/TalkToUs';
-import Announcements from '../screens/AuthenticatedStack/Announcements';
+import SenderDetails from '../screens/AuthenticatedStack/ConsumerScreens/Booking/SenderDetails';
+import RecipientDetails from '../screens/AuthenticatedStack/ConsumerScreens/Booking/RecipientDetails';
+
+import CustomerProfile from '../screens/AuthenticatedStack/ConsumerScreens/ConsumerProfile';
+import Announcements from '../screens/AuthenticatedStack/ConsumerScreens/Announcements';
+import Inbox from '../screens/AuthenticatedStack/ConsumerScreens/Inbox';
 import SelectedAnnouncement from '../screens/AuthenticatedStack/SelectedAnnouncement';
 
-import CustomerDeliveries from '../screens/AuthenticatedStack/CustomerDeliveries/MyDeliveries';
-import SelectedDeliveries from '../screens/AuthenticatedStack/CustomerDeliveries/SelectedDeliveries';
-import SelectedDelivery from '../screens/AuthenticatedStack/CustomerDeliveries/SelectedDelivery';
+import CustomerDeliveries from '../screens/AuthenticatedStack/ConsumerScreens/Deliveries/MyDeliveries';
+import SelectedDeliveries from '../screens/AuthenticatedStack/ConsumerScreens/Deliveries/SelectedDeliveries';
+import SelectedDelivery from '../screens/AuthenticatedStack/ConsumerScreens/Deliveries/SelectedDelivery';
 
 /*---------- DRIVER SCREENS ----------*/
-import DriverMap from '../screens/AuthenticatedStack/DriverMap';
-import Ongoing from '../screens/AuthenticatedStack/DriverDeliveries/Ongoing';
-import Completed from '../screens/AuthenticatedStack/DriverDeliveries/Completed';
-import Cancelled from '../screens/AuthenticatedStack/DriverDeliveries/Cancelled';
-import SelectedDriverDelivery from '../screens/AuthenticatedStack/DriverDeliveries/SelectedDriverDelivery';
-import ItemCamera from '../screens/AuthenticatedStack/DriverDeliveries/ItemCamera';
+import DriverMap from '../screens/AuthenticatedStack/DriverScreens/DriverMap';
+import DriverProfile from '../screens/AuthenticatedStack/DriverScreens/DriverProfile';
+
+import Ongoing from '../screens/AuthenticatedStack/DriverScreens/Deliveries/Ongoing';
+import Completed from '../screens/AuthenticatedStack/DriverScreens/Deliveries/Completed';
+import Cancelled from '../screens/AuthenticatedStack/DriverScreens/Deliveries/Cancelled';
+import SelectedDriverDelivery from '../screens/AuthenticatedStack/DriverScreens/Deliveries/SelectedDriverDelivery';
+import ItemCamera from '../screens/AuthenticatedStack/DriverScreens/Deliveries/ItemCamera';
 
 /*-------------------- IMPORT SCREENS END--------------------*/
 
@@ -71,6 +80,7 @@ const UnauthenticatedStack = () => (
   <Unauthenticated.Navigator headerMode="none">
     <Unauthenticated.Screen name="Login" component={Login} />
     <Unauthenticated.Screen name="Verification" component={Verification} />
+    <Unauthenticated.Screen name="PasswordVerification" component={PasswordVerification} />
   </Unauthenticated.Navigator>
 );
 
@@ -87,12 +97,17 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="TalkToUs" component={TalkToUs} />
     <Authenticated.Screen name="Announcements" component={Announcements} />
     <Authenticated.Screen name="SelectedAnnouncement" component={SelectedAnnouncement} />
+    <Authenticated.Screen name="Inbox" component={Inbox} />
 
     <Authenticated.Screen name="CustomerDeliveries" component={CustomerDeliveries} />
     <Authenticated.Screen name="SelectedDeliveries" component={SelectedDeliveries} />
     <Authenticated.Screen name="SelectedDelivery" component={SelectedDelivery} />
 
+    {/*---------- DRIVER SCREENS ----------*/}
     <Authenticated.Screen name="DriverMap" component={DriverMap} />
+    <Authenticated.Screen name="SelectedDriverDelivery" component={SelectedDriverDelivery} />
+    <Authenticated.Screen name="ItemCamera" component={ItemCamera} />
+    <Authenticated.Screen name="DriverProfile" component={DriverProfile} />
     <Authenticated.Screen
       name="DriverDeliveriesTab"
       component={DriverDeliveriesTab}
@@ -101,8 +116,6 @@ const AuthenticatedStack = () => (
         headerTitle: () => <HeaderTitle label={['My', 'Deliveries']} />,
       }}
     />
-    <Authenticated.Screen name="SelectedDriverDelivery" component={SelectedDriverDelivery} />
-    <Authenticated.Screen name="ItemCamera" component={ItemCamera} />
   </Authenticated.Navigator>
 );
 
@@ -126,12 +139,15 @@ const Drawer = connect(
   </RootDrawer.Navigator>
 ));
 
-const SwitchStack = ({initialRoute}) => (
-  <Switch.Navigator headerMode="none" initialRoute={initialRoute}>
-    <Switch.Screen name="UnauthenticatedStack" component={UnauthenticatedStack} />
-    <Switch.Screen name="RootDrawer" component={Drawer} />
-  </Switch.Navigator>
-);
+const SwitchStack = ({initialRoute}) => {
+  return (
+    <Switch.Navigator headerMode="none">
+      <Switch.Screen name="Landing" component={Landing} options={{animationEnabled: false}} />
+      <Switch.Screen name="UnauthenticatedStack" component={UnauthenticatedStack} />
+      <Switch.Screen name="RootDrawer" component={Drawer} />
+    </Switch.Navigator>
+  );
+};
 
 const Nav = ({initialRoute}) => {
   return (
@@ -141,9 +157,8 @@ const Nav = ({initialRoute}) => {
   );
 };
 
-// const mapStateToProps = state => ({
-//   session: state.session,
-//   nav: state.nav,
+// const mapDispatchToProps = dispatch => ({
+//   destroySession: () => dispatch({type: 'DESTROY_SESSION'}),
 // });
 
 // const mapDispatchToProps = dispatch => ({

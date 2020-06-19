@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text} from 'react-native';
-import {DARK, ORANGE} from '../../res/constants';
+import {DARK, ORANGE} from '../res/constants';
 
 export const HeaderTitle = ({label}) => {
   return (

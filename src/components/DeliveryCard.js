@@ -1,3 +1,7 @@
+/**
+ * Component used to display a delivery record in my deliveries, orders placed, delivery scheduled and the like
+ */
+
 import React from 'react';
 import {View, Text, StyleSheet, TouchableHighlight} from 'react-native';
 import {COLOR, DARK, MEDIUM, LIGHT, ORANGE, APP_FLAVOR} from '../res/constants';

@@ -1,10 +1,24 @@
 import React from 'react';
-import {View, Text, TouchableHighlight, StyleSheet} from 'react-native';
+import {View, Text, TouchableHighlight, StyleSheet, Image} from 'react-native';
 import {COLOR, DARK, MEDIUM, LIGHT, APP_FLAVOR} from '../res/constants';
 import FIcon from 'react-native-vector-icons/Feather';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 
 import {TouchableOpacity} from 'react-native-gesture-handler';
+
+const DrawerButton = ({label, onPress, restrict}) => {
+  if (restrict && restrict != APP_FLAVOR) {
+    return null;
+  }
+
+  return (
+    <TouchableHighlight onPress={onPress} underlayColor={COLOR} style={styles.submitBox}>
+      <View style={styles.submit}>
+        <Text style={styles.headerText}>{label}</Text>
+      </View>
+    </TouchableHighlight>
+  );
+};
 
 const Drawer = ({navigation, session, destroySession}) => {
   let fullName = '';
@@ -49,18 +63,32 @@ const Drawer = ({navigation, session, destroySession}) => {
         {/*------------------------------ PROFILE ------------------------------*/}
         <View style={{marginTop: 10, alignItems: 'center'}}>
           {/*--------------- AVATAR ---------------*/}
-          <View
-            style={{
-              height: 90,
-              width: 90,
-              backgroundColor: '#333',
-              borderRadius: 10,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <FAIcon name="user" size={70} color={MEDIUM} />
-          </View>
-
+          {/* TODO: If has driver avatar, show avatar, else show placeholder */}
+          {true ? (
+            <View
+              style={{
+                height: 90,
+                width: 90,
+                backgroundColor: '#333',
+                borderRadius: 10,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <FAIcon name="user" size={70} color={MEDIUM} />
+            </View>
+          ) : (
+            <View
+              style={{
+                height: 90,
+                width: 90,
+                backgroundColor: '#333',
+                borderRadius: 10,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <FAIcon name="user" size={70} color={MEDIUM} />
+            </View>
+          )}
           {/*--------------- FULL NAME ---------------*/}
           <Text style={[styles.headerText, {marginTop: 10, color: COLOR, textAlign: 'center'}]}>{fullName}</Text>
 
@@ -75,50 +103,32 @@ const Drawer = ({navigation, session, destroySession}) => {
           </TouchableOpacity> */}
         </View>
 
-        {/*------------------------------ MENU BUTTONS ------------------------------*/}
         {/*--------------- PROFILE ---------------*/}
-        <TouchableHighlight
-          onPress={() => navigation.navigate('CustomerProfile')}
-          underlayColor={COLOR}
-          style={styles.submitBox}>
-          <View style={styles.submit}>
-            <Text style={styles.headerText}>Profile</Text>
-          </View>
-        </TouchableHighlight>
+        <DrawerButton
+          label="Profile"
+          onPress={() => {
+            const route = APP_FLAVOR == 'C' ? 'CustomerProfile' : 'DriverProfile';
+            navigation.navigate(route);
+          }}
+        />
 
         {/*--------------- MY DELIVERIES ---------------*/}
-        <TouchableHighlight
+        <DrawerButton
+          label="My Deliveries"
           onPress={() => {
             const route = APP_FLAVOR == 'C' ? 'CustomerDeliveries' : 'DriverDeliveriesTab';
-            navigation.push(route);
-            navigation.closeDrawer();
+            navigation.navigate(route);
           }}
-          underlayColor={COLOR}
-          style={styles.submitBox}>
-          <View style={styles.submit}>
-            <Text style={styles.headerText}>My Deliveries</Text>
-          </View>
-        </TouchableHighlight>
+        />
 
-        {/*--------------- ANNOUNCEMENTS---------------*/}
-        <TouchableHighlight
-          onPress={() => navigation.navigate('Announcements')}
-          underlayColor={COLOR}
-          style={styles.submitBox}>
-          <View style={styles.submit}>
-            <Text style={styles.headerText}>Announcements</Text>
-          </View>
-        </TouchableHighlight>
+        {/*--------------- INBOX ---------------*/}
+        <DrawerButton label="Inbox" onPress={() => navigation.navigate('Inbox')} restrict="C" />
+
+        {/*--------------- ANNOUNCEMENTS ---------------*/}
+        <DrawerButton label="Announcements" onPress={() => navigation.navigate('Announcements')} restrict="C" />
 
         {/*--------------- TALK TO US ---------------*/}
-        <TouchableHighlight
-          onPress={() => navigation.navigate('TalkToUs')}
-          underlayColor={COLOR}
-          style={styles.submitBox}>
-          <View style={styles.submit}>
-            <Text style={styles.headerText}>Talk To Us</Text>
-          </View>
-        </TouchableHighlight>
+        <DrawerButton label="Talk To Us" onPress={() => navigation.navigate('TalkToUs')} restrict="C" />
       </View>
 
       {/*--------------- SIGN OUT ---------------*/}

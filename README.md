@@ -46,23 +46,26 @@ Customer
 2. (checkmark) Add "Looking for your rider, ka-toktok" on Delivery Card for Placed Orders
 3. (checkmark) Fix behavior issue in map
 4. (checkmark) Display username on Profile
-5. (checkmark) Add Talk to Us (get website and email from database)
-6. (checkmark) Change schedule to Order Type (As soon as possible, Scheduled) (We will arive within your scheduled time)
+5. (checkmark) Add Talk to Us (Website and Email)
+6. (checkmark) Change schedule to Order Type (As soon as possible, Scheduled)
 7. (checkmark) Fix Anytime-Anytime values
-8. (checkmark) Load selected schedule on sender and recipient details
-9. (checkmark) Add 1 hour minimum to Scheduled Order Type
-10. (checkmark) Display Order Type on Delivery Cards and Selected Delivery Details
-11. (checkmark) Add Announcements already connected to database
-12. Display rider picture on Selected Delivery Details
-13. (checkmark) Prevent booking when calculating and recalculating price
-14. (checkmark) Add GPS loading screen
-15. Add message prompt for GPS location can't be found
-16. (checkmark) Add Persistent Session
-17. Add Login process with password
-18. Add Push Notifications on Delivery Updates
-19. Add Inbox for Delivery Updates tied to Push Notifications
-20. Add CRON job to expire orders and create expiration log
-21. Handle network errors
+   7.1 (checkmark) Load selected schedule on sender and recipient edit
+8. (checkmark) Add 1 hour minimum to Scheduled Order Type
+9. (checkmark) Display Order Type on Delivery Cards and Selected Delivery Details
+10. (checkmark) Add GPS loading screen
+    10.1 (checkmark) Allow consumers to book without GPS location
+11. (checkmark) Add message prompt for GPS location can't be found (no message, goes straight to booking)
+12. (checkmark) Display rider picture on Selected Delivery Details
+13. (checkmark) Add Announcements already connected to database
+14. (checkmark) Add Persistent Session
+    14.1 (checkmark) Fix session error on newly created accounts
+15. Add Push Notifications on Delivery Updates
+16. Add Inbox for Delivery Updates tied to Push Notifications
+    16.1 Send messages to consumer upon driver delivery updates
+17. (checkmark) Add Login process with password
+    17.1 (checkmark) Add change password on profile
+18. Add CRON job to expire orders and create expiration log
+19. Handle network errors
 
 Driver
 
@@ -84,6 +87,11 @@ Readlly Next Patch:
 7. Avoid Toll Roads
 8. Routes for Motorcycles
 9. Share Delivery Link, Updated Driver Info
+10. Announcement No Data
 
 Check UI of Scheduled Order Type, but one stop is ASAP
 Constants
+
+TODO:
+
+1. Move checking if customer or rider account in platform on login

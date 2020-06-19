@@ -8,7 +8,7 @@ import {useLazyQuery} from '@apollo/react-hooks';
 import {APP_FLAVOR} from '../res/constants';
 import {GET_USER_SESSION} from '../graphql';
 
-import Splash from '../assets/images/Splash.png';
+import SplashImage from '../assets/images/Splash.png';
 
 import Nav from './Nav';
 
@@ -20,7 +20,7 @@ const mapKeyValueToObject = keyValueArray => {
   return result;
 };
 
-const Landing = ({createSession, destroySession, setConstants, navigation}) => {
+const Splash = ({createSession, destroySession, setConstants, navigation}) => {
   // destroySession();
   // AsyncStorage.removeItem('userId');
 
@@ -157,7 +157,7 @@ const Landing = ({createSession, destroySession, setConstants, navigation}) => {
   return getLanded ? (
     <Nav initialRoute={initialRoute} />
   ) : (
-    <ImageBackground style={styles.splash} source={Splash} resizeMode={'cover'} />
+    <ImageBackground style={styles.splash} source={SplashImage} resizeMode={'cover'} />
   );
 };
 
@@ -174,7 +174,7 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Landing);
+)(Splash);
 
 // export default Landing;
 

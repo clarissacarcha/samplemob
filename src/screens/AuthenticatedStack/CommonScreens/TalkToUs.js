@@ -1,13 +1,13 @@
 import React from 'react';
 import {View, Text, ScrollView, StyleSheet, TouchableHighlight, Linking, Dimensions, Image} from 'react-native';
 import {connect} from 'react-redux';
-import {COLOR, DARK, MEDIUM, LIGHT} from '../../res/constants';
-import {HeaderBack, HeaderTitle} from '../../components';
+import {COLOR, DARK, MEDIUM, LIGHT} from '../../../res/constants';
+import {HeaderBack, HeaderTitle} from '../../../components';
 
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import Logo from '../../assets/icons/ToktokLogo.png';
+import Logo from '../../../assets/icons/ToktokLogo.png';
 
 const imageWidth = Dimensions.get('window').width - 40;
 

@@ -2,12 +2,12 @@ import React, {useState} from 'react';
 import {View, FlatList, RefreshControl, Text, StyleSheet, Image, ActivityIndicator} from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {connect} from 'react-redux';
-import {HeaderBack, HeaderTitle, DeliveryCard} from '../../../components';
+import {HeaderBack, HeaderTitle, DeliveryCard} from '../../../../components';
 import {useQuery} from '@apollo/react-hooks';
-import {GET_DELIVERIES} from '../../../graphql';
-import {COLOR, DARK, MEDIUM, LIGHT} from '../../../res/constants';
+import {GET_DELIVERIES} from '../../../../graphql';
+import {COLOR, DARK, MEDIUM, LIGHT} from '../../../../res/constants';
 
-import NoData from '../../../assets/images/NoData.png';
+import NoData from '../../../../assets/images/NoData.png';
 
 const SelectedDeliveries = ({navigation, route, session}) => {
   const {headerTitleLabel, status} = route.params;

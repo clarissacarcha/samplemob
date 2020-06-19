@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, Text, TouchableHighlight} from 'react-native';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
-import {Button, HeaderBack, HeaderTitle} from '../../components';
-import {MAPS_API_KEY, DARK, COLOR} from '../../res/constants';
+import {Button, HeaderBack, HeaderTitle} from '../../../../components';
+import {MAPS_API_KEY, DARK, COLOR} from '../../../../res/constants';
 
 const GooglePlacesInput = ({onLocationSelect}) => {
   return (

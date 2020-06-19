@@ -37,6 +37,49 @@ export const VERIFY_LOGIN_REGISTER = gql`
           id
           rating
         }
+        driver {
+          id
+        }
+      }
+      accessToken
+    }
+  }
+`;
+
+export const VERIFY_LOGIN = gql`
+  mutation verifyLogin($input: VerifyLoginInput!) {
+    verifyLogin(input: $input) {
+      user {
+        id
+        username
+        status
+        person {
+          id
+          firstName
+          middleName
+          lastName
+          emailAddress
+          birthdate
+          gender
+          avatar
+          status
+          address {
+            line1
+            line2
+            barangay
+            city
+            provice
+            country
+            postal
+          }
+        }
+        consumer {
+          id
+          rating
+        }
+        driver {
+          id
+        }
       }
       accessToken
     }

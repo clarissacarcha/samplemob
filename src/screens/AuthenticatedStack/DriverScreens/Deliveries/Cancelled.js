@@ -1,17 +1,20 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, ActivityIndicator, FlatList, RefreshControl, Image, StyleSheet} from 'react-native';
+import {View, Text, ActivityIndicator, FlatList, RefreshControl, Image, StyleSheet, Dimensions} from 'react-native';
 import {useQuery} from '@apollo/react-hooks';
-import {COLOR, MEDIUM, FONT_FAMILY} from '../../../res/constants';
-import {BookingInfoCard} from '../../../components';
-import {GET_DELIVERIES} from '../../../graphql';
-import NoData from '../../../assets/images/NoData.png';
+import {connect} from 'react-redux';
+import {COLOR, MEDIUM, FONT_FAMILY} from '../../../../res/constants';
+import {BookingInfoCard} from '../../../../components';
+import {GET_DELIVERIES} from '../../../../graphql';
+import NoData from '../../../../assets/images/NoData.png';
 
-const CancelledDeliveries = ({navigation}) => {
+const imageWidth = Dimensions.get('window').width - 200;
+
+const CancelledDeliveries = ({navigation, session}) => {
   const {data, loading, error, refetch} = useQuery(GET_DELIVERIES, {
     fetchPolicy: 'network-only',
     variables: {
       filter: {
-        tokDriverId: '2',
+        tokDriverId: session.user.driver.id,
         statusIn: [0],
       },
     },
@@ -40,7 +43,6 @@ const CancelledDeliveries = ({navigation}) => {
     return (
       <View style={styles.center}>
         <Image source={NoData} style={styles.image} resizeMode={'contain'} />
-        <Text style={styles.text}>No Record</Text>
       </View>
     );
   }
@@ -64,7 +66,14 @@ const CancelledDeliveries = ({navigation}) => {
   );
 };
 
-export default CancelledDeliveries;
+const mapStateToProps = state => ({
+  session: state.session,
+});
+
+export default connect(
+  mapStateToProps,
+  null,
+)(CancelledDeliveries);
 
 const styles = StyleSheet.create({
   container: {
@@ -77,7 +86,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   image: {
-    height: 100,
+    height: imageWidth,
+    width: imageWidth,
   },
   text: {
     color: MEDIUM,

@@ -61,6 +61,7 @@ const Verification = ({navigation, route, createSession}) => {
       },
     },
     onCompleted: ({verifyLoginRegister}) => {
+      alert(JSON.stringify(verifyLoginRegister, null, 4));
       AsyncStorage.setItem('userId', verifyLoginRegister.user.id);
       createSession(verifyLoginRegister);
       const {user, accessToken} = verifyLoginRegister;

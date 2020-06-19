@@ -1,20 +1,33 @@
-import React, {useState} from 'react';
-import {View, Text, ScrollView, StyleSheet, TouchableHighlight, TextInput, Dimensions, Alert} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  TouchableHighlight,
+  TextInput,
+  Alert,
+  Dimensions,
+} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
+import {COLOR, DARK, MAP_DELTA_LOW, MEDIUM, LIGHT} from '../../../../res/constants';
+import {HeaderBack, HeaderTitle, ItemTypes, SchedulePicker} from '../../../../components';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
+import FAIcon from 'react-native-vector-icons/FontAwesome';
 import FIcon from 'react-native-vector-icons/Feather';
 
-import {HeaderBack, HeaderTitle, SchedulePicker} from '../../../components';
-import {COLOR, DARK, MAP_DELTA_LOW, MEDIUM, LIGHT, ORANGE} from '../../../res/constants';
+const width = Dimensions.get('window').width;
+const itemDimension = (width - 120) / 5;
 
-const SenderDetails = ({navigation, route}) => {
+const AboutRecipient = ({navigation, route}) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={['Sender', 'details']} />,
+    headerTitle: () => <HeaderTitle label={['Recipient', 'details']} />,
   });
 
-  const {data, setData, setPrice} = route.params;
-  const [localData, setLocalData] = useState(data);
+  const {data, setData, index, setPrice} = route.params;
+  const [localData, setLocalData] = useState(data[index]);
 
   const onSearchMap = () => {
     navigation.navigate('SearchMap', {data: {...localData, ...MAP_DELTA_LOW}, setData: setLocalData});
@@ -23,13 +36,16 @@ const SenderDetails = ({navigation, route}) => {
   const onSearchPlaces = () => {
     navigation.navigate('SearchPlaces', {data: localData, setData: setLocalData});
   };
-
   const onScheduleChange = value => setLocalData({...localData, ...value});
   const onLandmarkChange = value => setLocalData({...localData, landmark: value});
   const onNameChange = value => setLocalData({...localData, name: value});
   const onMobileChange = value => setLocalData({...localData, mobile: value});
+  const onNotesChange = value => setLocalData({...localData, notes: value});
+  const onCargoChange = value => setLocalData({...localData, cargo: value});
 
   const onSubmit = () => {
+    // alert(JSON.stringify(localData, null, 4));
+
     if (localData.latitude == 0 || localData.longitude == 0) {
       Alert.alert('', `Please enter recipient's location.`);
       return;
@@ -45,45 +61,56 @@ const SenderDetails = ({navigation, route}) => {
       return;
     }
 
-    delete localData.latitudeDelta;
-    delete localData.longitudeDelta;
+    if (localData.cargo == '') {
+      Alert.alert('', `Please select cargo type`);
+      return;
+    }
+
+    const sendBack = [...data];
+    sendBack[index] = localData;
+
+    delete sendBack[index].latitudeDelta;
+    delete sendBack[index].longitudeDelta;
+
+    setData(sendBack);
 
     setPrice('0'); // This triggers Map(screen) to recalculate pricing
 
-    setData(localData);
     navigation.pop();
   };
 
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        {/*---------------------------------------- MAP ----------------------------------------*/}
-        <TouchableHighlight onPress={onSearchMap}>
-          <View style={{height: 150}}>
-            <MapView
-              provider={PROVIDER_GOOGLE}
-              style={styles.map}
-              region={{
-                latitude: parseFloat(localData.latitude),
-                longitude: parseFloat(localData.longitude),
-                ...MAP_DELTA_LOW,
-              }}
-              scrollEnabled={false}
-              rotateEnabled={false}
-              zoomEnabled={false}
-            />
-            {/*-------------------- PIN --------------------*/}
-            <View style={styles.floatingPin}>
-              <FA5Icon name="map-pin" size={24} color={DARK} style={{marginTop: -20}} />
+        {localData.latitude != 0 && (
+          <TouchableHighlight onPress={onSearchMap}>
+            <View style={{height: 150}}>
+              {/*---------------------------------------- MAP ----------------------------------------*/}
+              <MapView
+                provider={PROVIDER_GOOGLE}
+                style={styles.map}
+                region={{
+                  latitude: parseFloat(localData.latitude),
+                  longitude: parseFloat(localData.longitude),
+                  ...MAP_DELTA_LOW,
+                }}
+                scrollEnabled={false}
+                rotateEnabled={false}
+                zoomEnabled={false}
+              />
+              {/*---------------------------------------- PIN ----------------------------------------*/}
+              <View style={styles.floatingPin}>
+                <FA5Icon name="map-marker-alt" size={24} color={COLOR} style={{marginTop: -20}} />
+              </View>
             </View>
-          </View>
-        </TouchableHighlight>
-        {/*-------------------- YOUR LOCATION BUTTON --------------------*/}
-        <TouchableHighlight onPress={onSearchPlaces} style={{marginHorizontal: 20, borderRadius: 10, marginTop: 20}}>
+          </TouchableHighlight>
+        )}
+        {/*---------------------------------------- ADDRESS ----------------------------------------*/}
+        <TouchableHighlight onPress={onSearchPlaces} style={{margin: 20, borderRadius: 10}}>
           <View style={styles.addressBox}>
-            <FA5Icon name="map-pin" size={16} color={COLOR} style={styles.iconBoxDark} />
+            <FA5Icon name="map-marker-alt" size={16} color={COLOR} style={styles.iconBoxDark} />
             <View style={{justifyContent: 'center', flex: 1}}>
-              <Text style={{fontWeight: 'bold'}}>Your Location</Text>
+              <Text style={{fontWeight: 'bold'}}>Going To</Text>
               <Text style={{color: 'white', fontSize: 10}} numberOfLines={1}>
                 {localData.formattedAddress}
               </Text>
@@ -109,22 +136,6 @@ const SenderDetails = ({navigation, route}) => {
         <Text style={styles.label}>Order Type</Text>
         <SchedulePicker onScheduleChange={onScheduleChange} initialData={localData} />
 
-        {/*-------------------- TEST START --------------------*/}
-        {/* <Text style={{margin: 20, backgroundColor: LIGHT, borderRadius: 10, padding: 20}}>
-          {JSON.stringify(
-            {
-              orderType: localData.orderType,
-              scheduledFrom: localData.scheduledFrom,
-              scheduledTo: localData.scheduledTo,
-              scheduledDayIndex: localData.scheduledDayIndex,
-            },
-            null,
-            4,
-          )}
-        </Text> */}
-        {/*-------------------- TEST END --------------------*/}
-
-        {/*-------------------- LANDMARK --------------------*/}
         <Text style={styles.label}>Landmark</Text>
         <TextInput
           value={localData.landmark}
@@ -134,16 +145,14 @@ const SenderDetails = ({navigation, route}) => {
           multiline
         />
 
-        {/*-------------------- NAME --------------------*/}
-        <Text style={styles.label}>Sender's name</Text>
+        <Text style={styles.label}>Recipient's Name</Text>
         <TextInput
           value={localData.name}
           onChangeText={onNameChange}
           style={styles.input}
-          placeholder="Sender's name"
+          placeholder="Recipient's name"
         />
 
-        {/*-------------------- MOBILE NUMBER --------------------*/}
         <Text style={styles.label}>Mobile Number</Text>
         <TextInput
           value={localData.mobile}
@@ -152,8 +161,18 @@ const SenderDetails = ({navigation, route}) => {
           placeholder="Mobile number"
           keyboardType="number-pad"
         />
+
+        <Text style={styles.label}>Notes</Text>
+        <TextInput
+          value={localData.notes}
+          onChangeText={onNotesChange}
+          style={styles.input}
+          placeholder="Notes"
+          multiline
+        />
+        <ItemTypes onSelect={onCargoChange} initialData={localData.cargo} />
       </ScrollView>
-      {/*-------------------- CONFIRM BUTTON --------------------*/}
+      {/*---------------------------------------- BUTTON ----------------------------------------*/}
       <TouchableHighlight onPress={onSubmit} underlayColor={COLOR} style={styles.submitBox}>
         <View style={styles.submit}>
           <Text style={{color: COLOR, fontSize: 20}}>Confirm</Text>
@@ -163,7 +182,7 @@ const SenderDetails = ({navigation, route}) => {
   );
 };
 
-export default SenderDetails;
+export default AboutRecipient;
 
 const styles = StyleSheet.create({
   container: {
@@ -185,12 +204,11 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     borderWidth: 1,
     borderColor: MEDIUM,
-    borderRadius: 10,
+    borderRadius: 5,
     paddingLeft: 20,
   },
   submitBox: {
-    marginHorizontal: 20,
-    marginBottom: 20,
+    margin: 20,
     borderRadius: 10,
   },
   submit: {
@@ -214,27 +232,6 @@ const styles = StyleSheet.create({
     textAlignVertical: 'center',
     marginRight: 20,
   },
-  pickerContainerStyle: {
-    height: 30,
-    flex: 1,
-  },
-  pickerStyle: {
-    backgroundColor: 'white',
-    borderColor: MEDIUM,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
-  },
-  pickerDropDown: {
-    backgroundColor: 'white',
-    width: '100%',
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
-    borderColor: MEDIUM,
-    zIndex: 9,
-  },
-
   label: {
     marginHorizontal: 20,
     marginTop: 20,
@@ -242,5 +239,14 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: DARK,
     fontWeight: 'bold',
+  },
+  itemType: {
+    height: itemDimension,
+    width: itemDimension,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: MEDIUM,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

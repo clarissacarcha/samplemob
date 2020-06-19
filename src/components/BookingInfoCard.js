@@ -1,3 +1,7 @@
+/**
+ * Component used in ConsumerMap to accept sender and recipient details
+ */
+
 import React from 'react';
 import {View, Text, StyleSheet, TouchableHighlight} from 'react-native';
 import {COLOR, DARK, MEDIUM, LIGHT} from '../res/constants';

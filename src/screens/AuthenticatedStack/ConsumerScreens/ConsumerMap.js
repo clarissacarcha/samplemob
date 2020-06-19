@@ -15,11 +15,11 @@ import {
 import MapView, {Marker, PROVIDER_GOOGLE, AnimatedRegion, Animated} from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import {connect} from 'react-redux';
-import {currentLocation} from '../../helper';
-import {BookingOverlay, LocationPermission} from '../../components';
-import {COLOR, DARK, MEDIUM, LIGHT, MAPS_API_KEY} from '../../res/constants';
+import {currentLocation} from '../../../helper';
+import {BookingOverlay, LocationPermission} from '../../../components';
+import {COLOR, DARK, MEDIUM, LIGHT, MAPS_API_KEY} from '../../../res/constants';
 import {useMutation} from '@apollo/react-hooks';
-import {CLIENT, POST_DELIVERY, GET_ORDER_PRICE} from '../../graphql';
+import {CLIENT, POST_DELIVERY, GET_ORDER_PRICE} from '../../../graphql';
 
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import EIcon from 'react-native-vector-icons/Entypo';
@@ -27,8 +27,7 @@ import FIcon from 'react-native-vector-icons/Feather';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 
-import ToktokLogo from '../../assets/icons/ToktokLogo.png';
-import {round} from 'lodash';
+import ToktokLogo from '../../../assets/icons/ToktokLogo.png';
 
 const toDateFormat = value => {
   return moment(value)

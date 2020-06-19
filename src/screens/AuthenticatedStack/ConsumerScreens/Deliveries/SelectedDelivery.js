@@ -9,13 +9,10 @@ import {
   DriverCard,
   AlertOverlay,
   OrderDetailsCard,
-} from '../../../components';
-import {COLOR, DARK, MEDIUM, LIGHT, ORANGE, APP_FLAVOR} from '../../../res/constants';
-import {PATCH_DELIVERY_CANCEL, PATCH_DELIVERY_DELETE, PATCH_DELIVERY_REBOOK} from '../../../graphql';
+} from '../../../../components';
+import {COLOR, DARK, MEDIUM, LIGHT, ORANGE, APP_FLAVOR} from '../../../../res/constants';
+import {PATCH_DELIVERY_CANCEL, PATCH_DELIVERY_DELETE, PATCH_DELIVERY_REBOOK} from '../../../../graphql';
 import Toast from 'react-native-simple-toast';
-
-import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import Ionicon from 'react-native-vector-icons/Ionicons';
 
 const SelectedDriverDelivery = ({navigation, route}) => {
   const {delivery, label} = route.params;
@@ -125,7 +122,7 @@ const SelectedDriverDelivery = ({navigation, route}) => {
           </TouchableHighlight>
         )}
 
-        {/*---------------------------------------- DELETE/REBOOK BUTTON ----------------------------------------*/}
+        {/*-------------------- DELETE/REBOOK BUTTON DETAILS --------------------*/}
         {getDelivery.status === 7 && (
           <View style={{flexDirection: 'row', marginBottom: 20}}>
             {/*-------------------- DELETE BUTTON --------------------*/}
@@ -150,6 +147,7 @@ const SelectedDriverDelivery = ({navigation, route}) => {
           </View>
         )}
 
+        {/*-------------------- ORDER DETAILS --------------------*/}
         <OrderDetailsCard delivery={getDelivery} />
 
         {/*---------------------------------------- DELIVERY DETAILS ----------------------------------------*/}

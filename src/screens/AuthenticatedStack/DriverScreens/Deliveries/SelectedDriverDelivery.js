@@ -2,9 +2,9 @@ import React, {useState} from 'react';
 import {View, Text, ScrollView, StyleSheet, TouchableHighlight, Modal, ActivityIndicator} from 'react-native';
 import {ReactNativeFile} from 'apollo-upload-client';
 import {useMutation} from '@apollo/react-hooks';
-import {HeaderBack, HeaderTitle, DeliveryStopCard, DeliveryLogsCard} from '../../../components';
-import {COLOR, DARK, MEDIUM, LIGHT, ORANGE} from '../../../res/constants';
-import {CLIENT, PATCH_DELIVERY_INCREMENT_STATUS} from '../../../graphql';
+import {HeaderBack, HeaderTitle, DeliveryStopCard, DeliveryLogsCard, OrderDetailsCard} from '../../../../components';
+import {COLOR, DARK, MEDIUM, LIGHT, ORANGE} from '../../../../res/constants';
+import {CLIENT, PATCH_DELIVERY_INCREMENT_STATUS} from '../../../../graphql';
 
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicon from 'react-native-vector-icons/Ionicons';
@@ -85,6 +85,7 @@ const SelectedDriverDelivery = ({navigation, route}) => {
 
   return (
     <View style={{flex: 1}}>
+      {/*-------------------- LOADING OVERLAY--------------------*/}
       <Modal animationType="fade" transparent={true} visible={PDISLoading} style={StyleSheet.absoluteFill}>
         <View style={styles.transparent}>
           <View style={styles.labelRow}>
@@ -97,7 +98,7 @@ const SelectedDriverDelivery = ({navigation, route}) => {
       </Modal>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{padding: 20}}>
-        {/*---------------------------------------- UPDATE STATUS BUTTON ----------------------------------------*/}
+        {/*-------------------- UPDATE STATUS BUTTON --------------------*/}
         {[2, 3, 4, 5].includes(getDelivery.status) && (
           <TouchableHighlight
             onPress={onStatusUpdate}
@@ -112,34 +113,8 @@ const SelectedDriverDelivery = ({navigation, route}) => {
           </TouchableHighlight>
         )}
 
-        {/*---------------------------------------- DELIVERY DETAILS ----------------------------------------*/}
-        <View style={styles.card}>
-          <View style={styles.cardShadow}>
-            <View style={styles.directionsBox}>
-              {/*-------------------- DISTANCE --------------------*/}
-              <View style={styles.directionDetail}>
-                <MCIcon name="map-marker-distance" size={16} color={'white'} style={styles.iconBox} />
-                <Text style={{fontWeight: 'bold', marginLeft: 10}}>
-                  {parseFloat(delivery.distance).toFixed(2)}
-                  <Text style={{color: MEDIUM}}> km</Text>
-                </Text>
-              </View>
-              {/*-------------------- DURATION --------------------*/}
-              <View style={styles.directionDetail}>
-                <MCIcon name="timelapse" size={16} color={'white'} style={styles.iconBox} />
-                <Text style={{fontWeight: 'bold', marginLeft: 10}}>
-                  {parseFloat(delivery.duration).toFixed(0)}
-                  <Text style={{color: MEDIUM}}> min</Text>
-                </Text>
-              </View>
-              {/*-------------------- PRICE --------------------*/}
-              <View style={styles.directionDetail}>
-                <Ionicon name="md-pricetag" size={16} color={'white'} style={styles.iconBox} />
-                <Text style={{fontWeight: 'bold', marginLeft: 10}}>₱{delivery.price}</Text>
-              </View>
-            </View>
-          </View>
-        </View>
+        {/*-------------------- ORDER DETAILS --------------------*/}
+        <OrderDetailsCard delivery={getDelivery} />
 
         {/*-------------------- SENDER DETAILS --------------------*/}
         <DeliveryStopCard stop={getDelivery.senderStop} index={0} />

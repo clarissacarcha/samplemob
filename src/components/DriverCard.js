@@ -1,3 +1,8 @@
+/**
+ * Displayed in Selected Delivery Details
+ * Used to display driver information
+ */
+
 import React from 'react';
 import {View, Text, StyleSheet, Platform, Linking} from 'react-native';
 import {COLOR, DARK, MEDIUM, ORANGE, LIGHT} from '../res/constants';

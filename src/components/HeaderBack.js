@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, TouchableHighlight} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {COLOR, DARK} from '../../res/constants';
+import {COLOR, DARK} from '../res/constants';
 import FIcon from 'react-native-vector-icons/Feather';
 
 export const HeaderBack = ({label}) => {

@@ -1,3 +1,8 @@
+/**
+ * Component used in sender and recipient details
+ * Used to let the user select schedule on order type = scheduled
+ */
+
 import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, TouchableWithoutFeedback, Dimensions} from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';

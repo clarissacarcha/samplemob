@@ -23,37 +23,6 @@ import Splash from '../../assets/images/Splash.png';
 import LoginBanner from '../../assets/images/LoginBanner.png';
 
 const Login = ({navigation, session}) => {
-  if (session.user) {
-    const {user, accessToken} = session;
-
-    if (APP_FLAVOR == 'C') {
-      if (user.person.firstName == null || user.person.lastName == null) {
-        navigation.navigate('RootDrawer', {
-          screen: 'AuthenticatedStack',
-          params: {
-            screen: 'PostRegistration',
-          },
-        });
-      } else {
-        navigation.navigate('RootDrawer', {
-          screen: 'AuthenticatedStack',
-          params: {
-            screen: 'Map',
-          },
-        });
-      }
-    }
-
-    if (APP_FLAVOR == 'D') {
-      navigation.navigate('RootDrawer', {
-        screen: 'AuthenticatedStack',
-        params: {
-          screen: 'DriverMap',
-        },
-      });
-    }
-  }
-
   // const [mobile, setMobile] = useState('9667682812'); // D
   // const [mobile, setMobile] = useState('9420434520'); // C
   const [mobile, setMobile] = useState('');
@@ -62,10 +31,17 @@ const Login = ({navigation, session}) => {
     variables: {
       input: {
         mobile,
+        accountType: APP_FLAVOR,
       },
     },
-    onCompleted: () => {
-      navigation.navigate('Verification', {mobile});
+    onCompleted: ({loginRegister}) => {
+      if (loginRegister == 'REGISTER') {
+        navigation.push('Verification', {mobile});
+      }
+
+      if (loginRegister == 'LOGIN') {
+        navigation.push('PasswordVerification', {mobile});
+      }
     },
     onError: ({graphQLErrors, networkError}) => {
       if (networkError) {
@@ -117,6 +93,7 @@ const Login = ({navigation, session}) => {
       Alert.alert('', 'Please enter a valid mobile number.');
       return;
     }
+
     loginRegister();
   };
 

@@ -4,9 +4,9 @@ import {View, Text, TouchableHighlight, ActivityIndicator, StyleSheet} from 'rea
 import {connect} from 'react-redux';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import {useQuery} from '@apollo/react-hooks';
-import {GET_DELIVERIES_COUNT_BY_STATUS} from '../../../graphql';
-import {COLOR, DARK, MEDIUM, LIGHT} from '../../../res/constants';
-import {HeaderBack, HeaderTitle} from '../../../components';
+import {GET_DELIVERIES_COUNT_BY_STATUS} from '../../../../graphql';
+import {COLOR, DARK, MEDIUM, LIGHT} from '../../../../res/constants';
+import {HeaderBack, HeaderTitle} from '../../../../components';
 
 import FIcon from 'react-native-vector-icons/Feather';
 

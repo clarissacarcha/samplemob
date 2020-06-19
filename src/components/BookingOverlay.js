@@ -1,10 +1,13 @@
+/**
+ * An overlay used to display successful booking
+ */
 import React from 'react';
 import {View, Text, Modal, StyleSheet, ActivityIndicator, TouchableHighlight, Image, Dimensions} from 'react-native';
 import {COLOR, DARK, MEDIUM} from '../res/constants';
 
-const screenWidth = Dimensions.get('window').width;
+const imageWidth = Dimensions.get('window').width - 80;
 
-import SuccessImage from '../assets/images/BookingSuccess.png';
+import OrderBooked from '../assets/images/OrderBooked.png';
 
 const Loader = () => (
   <View style={styles.labelRow}>
@@ -20,7 +23,7 @@ const Loader = () => (
 const BookingSuccess = ({onPress}) => (
   <View style={{height: '100%', backgroundColor: 'white', borderRadius: 10}}>
     <View style={{flex: 1, margin: 20, justifyContent: 'center', alignItems: 'center'}}>
-      <Image source={SuccessImage} style={{height: screenWidth - 80, width: screenWidth - 80}} resizeMode={'contain'} />
+      <Image source={OrderBooked} style={{height: imageWidth, width: imageWidth}} resizeMode={'contain'} />
       <Text style={{fontWeight: 'bold', color: MEDIUM}}>Your order has been booked.</Text>
     </View>
 

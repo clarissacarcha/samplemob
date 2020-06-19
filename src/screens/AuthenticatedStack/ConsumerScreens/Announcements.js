@@ -9,21 +9,19 @@ import {
   Image,
   Linking,
   FlatList,
+  Dimensions,
 } from 'react-native';
 import {connect} from 'react-redux';
-import {COLOR, DARK, ORANGE, MEDIUM, LIGHT} from '../../res/constants';
-import {HeaderBack, HeaderTitle} from '../../components';
+import {COLOR, DARK, ORANGE, MEDIUM, LIGHT} from '../../../res/constants';
+import {HeaderBack, HeaderTitle} from '../../../components';
 import {useQuery} from '@apollo/react-hooks';
 import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
 
-import {GET_ANNOUNCEMENTS} from '../../graphql';
+import {GET_ANNOUNCEMENTS} from '../../../graphql';
 
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
-
-import TempImage from '../../assets/images/BookGlass.jpg';
-// import TempImage from '../../assets/icons/ToktokLogo.png';
 
 const Announcement = ({announcement, lastItem}) => {
   const {title, thumbnail, createdAt} = announcement;

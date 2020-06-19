@@ -2,13 +2,13 @@ import React, {useState, useEffect, createRef, useRef} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, TouchableHighlight, ScrollView, Alert, Share} from 'react-native';
 import MapView, {Marker, Polyline, PROVIDER_GOOGLE} from 'react-native-maps';
 import {connect} from 'react-redux';
-import {currentLocation} from '../../helper';
-import {GoOnlineOverlay} from '../../components';
-import {COLOR, DARK, MEDIUM, LIGHT, MAPS_API_KEY} from '../../res/constants';
+import {currentLocation} from '../../../helper';
+import {GoOnlineOverlay} from '../../../components';
+import {COLOR, DARK, MEDIUM, LIGHT, MAPS_API_KEY} from '../../../res/constants';
 import {useSubscription, useMutation} from '@apollo/react-hooks';
 
 import FIcon from 'react-native-vector-icons/Feather';
-import {CLIENT, ON_DISPATCH} from '../../graphql';
+import {CLIENT, ON_DISPATCH} from '../../../graphql';
 
 const DriverMap = ({navigation, session}) => {
   navigation.setOptions({

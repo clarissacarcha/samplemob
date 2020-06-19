@@ -1,23 +1,22 @@
 import React, {useState} from 'react';
 import {View, Text, ScrollView, StyleSheet, TouchableHighlight, TextInput, Alert} from 'react-native';
 import {connect} from 'react-redux';
-import {COLOR, DARK, MAP_DELTA_LOW, MEDIUM} from '../../res/constants';
-import {HeaderBack, HeaderTitle} from '../../components';
+import {COLOR, DARK, MAP_DELTA_LOW, ORANGE, MEDIUM} from '../../../res/constants';
+import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../components';
 import {useMutation} from '@apollo/react-hooks';
+import Toast from 'react-native-simple-toast';
 
-import {PATCH_PERSON_POST_REGISTRATION} from '../../graphql';
+import {PATCH_PERSON_POST_REGISTRATION} from '../../../graphql';
 
-const PostRegistration = ({navigation, route, session, createSession}) => {
+const CustomerProfile = ({navigation, route, session, createSession}) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={['Post', 'Registration']} />,
+    headerTitle: () => <HeaderTitle label={['My', 'Profile']} />,
   });
 
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [emailAddress, setEmailAddress] = useState('');
-  const [password, setPassword] = useState('');
-  const [repeatPassword, setRepeatPassword] = useState('');
+  const [firstName, setFirstName] = useState(session.user.person.firstName);
+  const [lastName, setLastName] = useState(session.user.person.lastName);
+  const [emailAddress, setEmailAddress] = useState(session.user.person.emailAddress);
 
   const [patchPersonPostRegistration, {loading}] = useMutation(PATCH_PERSON_POST_REGISTRATION, {
     variables: {
@@ -26,7 +25,6 @@ const PostRegistration = ({navigation, route, session, createSession}) => {
         firstName,
         lastName,
         emailAddress,
-        password,
       },
     },
     onCompleted: ({patchPersonPostRegistration}) => {
@@ -35,20 +33,8 @@ const PostRegistration = ({navigation, route, session, createSession}) => {
       newSession.user.person.lastName = lastName;
       newSession.user.person.emailAddress = emailAddress;
       createSession(newSession);
-      navigation.navigate('Map');
 
-      // setTimeout(() => {
-      //   navigation.navigate(
-      //     'RootDrawer',
-      //     {
-      //       screen: 'AuthenticatedStack',
-      //       params: {
-      //         screen: 'Map',
-      //       },
-      //     },
-      //     100,
-      //   );
-      // });
+      Toast.show('Profile successfully updated.');
     },
     onError: ({graphQLErrors, networkError}) => {
       if (networkError) {
@@ -76,33 +62,19 @@ const PostRegistration = ({navigation, route, session, createSession}) => {
       return;
     }
 
-    if (password == '') {
-      Alert.alert('', `Please enter your password.`);
-      return;
-    }
-
-    if (password.length < 6 || repeatPassword.length < 6) {
-      Alert.alert('', `Password must have minimum length of 6 characters.`);
-      return;
-    }
-
-    if (repeatPassword == '') {
-      Alert.alert('', `Please repeat your password.`);
-      return;
-    }
-
-    if (password != repeatPassword) {
-      Alert.alert('', `Password does not match.`);
-      return;
-    }
-
     patchPersonPostRegistration();
   };
 
   return (
     <View style={styles.container}>
+      <AlertOverlay visible={loading} />
       <ScrollView showsVerticalScrollIndicator={false}>
         {/*---------------------------------------- FORM ----------------------------------------*/}
+        <Text style={styles.label}>Mobile Number</Text>
+        <Text style={[styles.input, {height: 50, textAlignVertical: 'center', color: MEDIUM}]}>
+          +63{session.user.username}
+        </Text>
+
         <Text style={styles.label}>First Name</Text>
         <TextInput
           value={firstName}
@@ -126,29 +98,11 @@ const PostRegistration = ({navigation, route, session, createSession}) => {
           style={styles.input}
           placeholder="Email Address"
         />
-
-        <Text style={styles.label}>Password</Text>
-        <TextInput
-          value={password}
-          onChangeText={value => setPassword(value)}
-          style={styles.input}
-          placeholder="Password"
-          secureTextEntry={true}
-        />
-
-        <Text style={styles.label}>Repeat Password</Text>
-        <TextInput
-          value={repeatPassword}
-          onChangeText={value => setRepeatPassword(value)}
-          style={styles.input}
-          placeholder="Repeat Password"
-          secureTextEntry={true}
-        />
       </ScrollView>
       {/*---------------------------------------- BUTTON ----------------------------------------*/}
       <TouchableHighlight onPress={onSubmit} underlayColor={COLOR} style={styles.submitBox}>
         <View style={styles.submit}>
-          <Text style={{color: COLOR, fontSize: 20}}>Confirm</Text>
+          <Text style={{color: COLOR, fontSize: 20}}>Update</Text>
         </View>
       </TouchableHighlight>
     </View>
@@ -166,7 +120,7 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(PostRegistration);
+)(CustomerProfile);
 
 const styles = StyleSheet.create({
   container: {
@@ -190,6 +144,14 @@ const styles = StyleSheet.create({
     borderColor: MEDIUM,
     borderRadius: 5,
     paddingLeft: 20,
+  },
+  label: {
+    marginHorizontal: 20,
+    marginTop: 20,
+    marginBottom: 5,
+    fontSize: 12,
+    color: DARK,
+    fontWeight: 'bold',
   },
   submitBox: {
     margin: 20,
@@ -215,13 +177,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     textAlignVertical: 'center',
     marginRight: 20,
-  },
-  label: {
-    marginHorizontal: 20,
-    marginTop: 20,
-    marginBottom: 5,
-    fontSize: 12,
-    color: DARK,
-    fontWeight: 'bold',
   },
 });

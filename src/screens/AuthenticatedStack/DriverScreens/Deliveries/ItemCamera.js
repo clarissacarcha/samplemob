@@ -2,9 +2,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import {StyleSheet, TouchableOpacity, View, Modal} from 'react-native';
 import {connect} from 'react-redux';
 import {RNCamera} from 'react-native-camera';
-import {HeaderBack, HeaderTitle} from '../../../components';
-// import Toast from 'react-native-simple-toast';
-// import {CLIENT, POST_DOCUMENT_BATCH} from '../../../graphql';
+import {HeaderBack, HeaderTitle} from '../../../../components';
 
 const ItemCamera = ({navigation, route, session, startLoading, finishLoading}) => {
   const {label, setTempImage, onStatusUpdateWithImage} = route.params;
