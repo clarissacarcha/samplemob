@@ -8,10 +8,15 @@ export class AuthUtility {
 		return await AuthTokenModel.verifyLogin(token);
 	}
 
+	static getUserId = async (token:string) =>{
+		return await AuthTokenModel.getUserId(token);
+	}
+
 	static generateHash = (password:string) => {
 		const saltRounds = 10;
 
 	    return bcrypt.hashSync(password, saltRounds);
 	}
+
 
 }

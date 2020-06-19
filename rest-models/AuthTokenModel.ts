@@ -55,5 +55,15 @@ export class AuthTokenModel{
 
   }
 
+  static getUserId = async(token:string) => {
+
+    let query = "select tok_users_id from tok_auth_tokens where token = ?";
+
+    const result = await pool.query(query,[token]);
+
+    return result[0].tok_users_id;
+
+  }
+
 }
 
