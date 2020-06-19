@@ -12,6 +12,9 @@ export class AuthUtility {
 
     return bcrypt.hashSync(password, saltRounds);
   };
+  static getUserId = async (token: string) => {
+    return await AuthTokenModel.getUserId(token);
+  };
 
   static generateHashAsync = async (password: string) => {
     const saltRounds = 10;
