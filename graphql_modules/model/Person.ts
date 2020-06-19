@@ -1,8 +1,10 @@
+//@ts-nocheck
 import { gql } from "apollo-server-express";
+import { AuthUtility } from "../../util/AuthUtility";
 
 import Models from "../../models";
 
-const { Person } = Models;
+const { Person, User } = Models;
 
 const typeDefs = gql`
   type Person {
@@ -27,6 +29,7 @@ const typeDefs = gql`
     firstName: String
     lastName: String
     emailAddress: String
+    password: String
   }
 
   type Mutation {
@@ -37,11 +40,17 @@ const typeDefs = gql`
 const resolvers = {
   Mutation: {
     patchPersonPostRegistration: async (_: any, { input }: any) => {
-      const result = await Person.query()
-        .where({ tokUserId: input.tokUserId })
-        .update(input);
+      const { tokUserId, firstName, lastName, emailAddress, password } = input;
 
-      console.log({ result });
+      const hashedPassword = await AuthUtility.generateHashAsync(password);
+
+      const personResult = await Person.query()
+        .where({ tokUserId })
+        .update({ firstName, lastName, emailAddress });
+
+      const userResult = await User.query()
+        .where({ id: tokUserId })
+        .update({ password: hashedPassword });
 
       return "Profile successfully updated";
     },

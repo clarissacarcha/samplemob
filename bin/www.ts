@@ -9,7 +9,7 @@ import { deliveryDispatchCronJob } from "../util";
 import App from "../App";
 import testing from "./testing";
 
-// testing();
+testing();
 
 const createServer =
   process.env.PROTOCOL === "http" ? createHttpServer : createHttpsServer;
@@ -17,7 +17,7 @@ const createServer =
 const server = createServer(App);
 
 // Applies ApolloServer as middleware on App and installs subscriptionHandlers on server
-//mountApolloOnExpressAndServer(App, server);
+mountApolloOnExpressAndServer(App, server);
 
 server.listen(process.env.PORT, () => {
   //deliveryDispatchCronJob().start();
