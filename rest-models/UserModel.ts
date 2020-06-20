@@ -72,8 +72,9 @@ export class UserModel{
   }
 
 
-  static getUserPermissions = async(userId:string) => {
+  static getUserPermissions = async(userId:string,roles:any) => {
 
+    // get all permissions tied to the user
     let query = MysqlUtility.mergeLines([
         "select a.id, b.permission_code from tok_user_permissions as a",
         "left join tok_permissions as b on a.tok_permissions_id = b.id",
@@ -89,7 +90,29 @@ export class UserModel{
       userPermissionCodes.push(userPermissionResult[a].permission_code);
     }
 
-    return userPermissionCodes;
+    let rolesString = JSON.stringify(roles);
+
+    rolesString = rolesString.replace('[','(');
+    rolesString = rolesString.replace(']',')');
+
+  
+    // get all permissions tied to user role/s
+    query = MysqlUtility.mergeLines([
+        "SELECT permission_code from tok_permissions where id in",
+        "(select tok_permissions_id from tok_role_permissions where",
+        "tok_roles_id in (select id from tok_roles where role in "+rolesString+"))"
+    ]);
+
+    let rolesPermissionResult = await pool.query(query);
+    let rolesPermissionCodes = [];
+
+    // extract just the role codes
+    for(let a = 0; a< rolesPermissionResult.length; a++)
+    {
+      rolesPermissionCodes.push(rolesPermissionResult[a].permission_code);
+    }
+
+    return userPermissionCodes.concat(rolesPermissionCodes);
 
   }
 

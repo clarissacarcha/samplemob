@@ -5,6 +5,7 @@ export async function up(knex: Knex): Promise<any> {
     table.increments();
     table.string("operator_name", 45).notNullable();
     table.string("permit_number", 45).notNullable();
+    table.specificType("com_rate", "double");
     table.specificType("status", "tinyint(1)");
     table.timestamp("created_at").defaultTo(knex.fn.now());
     table.timestamp("updated_at").defaultTo(knex.fn.now());

@@ -40,24 +40,34 @@ export async function seed(knex: Knex): Promise<any> {
         { id: 30, tok_roles_id: 1, tok_permissions_id: 30, status: "1", created: "0000-00-00 00:00:00", updated: "0000-00-00 00:00:00" },
         { id: 31, tok_roles_id: 1, tok_permissions_id: 31, status: "1", created: "0000-00-00 00:00:00", updated: "0000-00-00 00:00:00" },
         { id: 32, tok_roles_id: 1, tok_permissions_id: 32, status: "1", created: "0000-00-00 00:00:00", updated: "0000-00-00 00:00:00" },
+        { id: 33, tok_roles_id: 1, tok_permissions_id: 47, status: "1", created: "0000-00-00 00:00:00", updated: "0000-00-00 00:00:00" },
 
         //Driver
-        { id: 33, tok_roles_id: 2, tok_permissions_id: 31, status: "1", created: "0000-00-00 00:00:00", updated: "0000-00-00 00:00:00" },
-        { id: 34, tok_roles_id: 2, tok_permissions_id: 32, status: "1", created: "0000-00-00 00:00:00", updated: "0000-00-00 00:00:00" },
-        { id: 35, tok_roles_id: 2, tok_permissions_id: 35, status: "1", created: "0000-00-00 00:00:00", updated: "0000-00-00 00:00:00" },
-        { id: 36, tok_roles_id: 2, tok_permissions_id: 36, status: "1", created: "0000-00-00 00:00:00", updated: "0000-00-00 00:00:00" },
-        { id: 37, tok_roles_id: 2, tok_permissions_id: 37, status: "1", created: "0000-00-00 00:00:00", updated: "0000-00-00 00:00:00" },
+        { id: 34, tok_roles_id: 2, tok_permissions_id: 38, status: "1", created: "0000-00-00 00:00:00", updated: "0000-00-00 00:00:00" },
+        { id: 35, tok_roles_id: 2, tok_permissions_id: 39, status: "1", created: "0000-00-00 00:00:00", updated: "0000-00-00 00:00:00" },
+        { id: 36, tok_roles_id: 2, tok_permissions_id: 40, status: "1", created: "0000-00-00 00:00:00", updated: "0000-00-00 00:00:00" },
+        { id: 37, tok_roles_id: 2, tok_permissions_id: 41, status: "1", created: "0000-00-00 00:00:00", updated: "0000-00-00 00:00:00" },
+        { id: 38, tok_roles_id: 2, tok_permissions_id: 42, status: "1", created: "0000-00-00 00:00:00", updated: "0000-00-00 00:00:00" },
+        { id: 39, tok_roles_id: 2, tok_permissions_id: 47, status: "1", created: "0000-00-00 00:00:00", updated: "0000-00-00 00:00:00" },
+        { id: 40, tok_roles_id: 2, tok_permissions_id: 48, status: "1", created: "0000-00-00 00:00:00", updated: "0000-00-00 00:00:00" },
+
 
         //Operator
-        { id: 38, tok_roles_id: 3, tok_permissions_id: 31, status: "1", created: "0000-00-00 00:00:00", updated: "0000-00-00 00:00:00" },
-        { id: 39, tok_roles_id: 3, tok_permissions_id: 32, status: "1", created: "0000-00-00 00:00:00", updated: "0000-00-00 00:00:00" },
-        { id: 40, tok_roles_id: 3, tok_permissions_id: 33, status: "1", created: "0000-00-00 00:00:00", updated: "0000-00-00 00:00:00" },
-        { id: 41, tok_roles_id: 3, tok_permissions_id: 34, status: "1", created: "0000-00-00 00:00:00", updated: "0000-00-00 00:00:00" },
-        { id: 42, tok_roles_id: 3, tok_permissions_id: 35, status: "1", created: "0000-00-00 00:00:00", updated: "0000-00-00 00:00:00" },
+        { id: 41, tok_roles_id: 3, tok_permissions_id: 33, status: "1", created: "0000-00-00 00:00:00", updated: "0000-00-00 00:00:00" },
+        { id: 42, tok_roles_id: 3, tok_permissions_id: 34, status: "1", created: "0000-00-00 00:00:00", updated: "0000-00-00 00:00:00" },
+        { id: 43, tok_roles_id: 3, tok_permissions_id: 35, status: "1", created: "0000-00-00 00:00:00", updated: "0000-00-00 00:00:00" },
+        { id: 44, tok_roles_id: 3, tok_permissions_id: 36, status: "1", created: "0000-00-00 00:00:00", updated: "0000-00-00 00:00:00" },
+        { id: 45, tok_roles_id: 3, tok_permissions_id: 37, status: "1", created: "0000-00-00 00:00:00", updated: "0000-00-00 00:00:00" },
+        { id: 46, tok_roles_id: 3, tok_permissions_id: 47, status: "1", created: "0000-00-00 00:00:00", updated: "0000-00-00 00:00:00" },
+        { id: 47, tok_roles_id: 3, tok_permissions_id: 49, status: "1", created: "0000-00-00 00:00:00", updated: "0000-00-00 00:00:00" },
 
         //Regular
-        { id: 43, tok_roles_id: 4, tok_permissions_id: 36, status: "1", created: "0000-00-00 00:00:00", updated: "0000-00-00 00:00:00" },
-        { id: 44, tok_roles_id: 4, tok_permissions_id: 37, status: "1", created: "0000-00-00 00:00:00", updated: "0000-00-00 00:00:00" }
+        { id: 48, tok_roles_id: 4, tok_permissions_id: 43, status: "1", created: "0000-00-00 00:00:00", updated: "0000-00-00 00:00:00" },
+        { id: 49, tok_roles_id: 4, tok_permissions_id: 44, status: "1", created: "0000-00-00 00:00:00", updated: "0000-00-00 00:00:00" },
+        { id: 50, tok_roles_id: 4, tok_permissions_id: 45, status: "1", created: "0000-00-00 00:00:00", updated: "0000-00-00 00:00:00" },
+        { id: 51, tok_roles_id: 4, tok_permissions_id: 46, status: "1", created: "0000-00-00 00:00:00", updated: "0000-00-00 00:00:00" },
+        { id: 52, tok_roles_id: 4, tok_permissions_id: 47, status: "1", created: "0000-00-00 00:00:00", updated: "0000-00-00 00:00:00" }
+
 
       ]);
     });
