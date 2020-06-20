@@ -42,7 +42,7 @@ router.post(
 		  check("lastName")
 		  	.notEmpty()
 		  		.withMessage("Last name is required")
-		  	.isLength({max:45})
+		  	.isLength({max:45})	
 		  		.withMessage("Lastname cannot exceed 45 characters"),
 		  check("email")
 		  	.notEmpty()

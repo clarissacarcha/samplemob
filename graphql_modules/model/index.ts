@@ -1,6 +1,6 @@
 //@ts-nocheck
 import AddressModule from "./Address";
-import AnnouncementModule from "./Announcements";
+import AnnouncementModule from "./Announcement";
 import ConsumerModule from "./Consumer";
 import DeliveryModule from "./Delivery";
 import DeliveryLogModule from "./DeliveryLog";

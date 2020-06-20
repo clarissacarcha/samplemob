@@ -21,6 +21,7 @@ import roleroute from "./routes/RoleRoutes";
 import requirementtyperoute from "./routes/RequirementTypeRoutes";
 import accountleveltyperoute from "./routes/AccountLevelTypeRoutes";
 import accountlevelroute from "./routes/AccountLevelRoutes";
+import driverroute from "./routes/DriverRoutes";
 
 // Initialize express instance
 const app: Application = express();
@@ -83,6 +84,8 @@ app.use("/requirementtype", requirementtyperoute);
 app.use("/accountleveltype", accountleveltyperoute);
 
 app.use("/accountlevel", accountlevelroute);
+
+app.use("/driver", driverroute);
 
 app.use("/user", userroute);
 
