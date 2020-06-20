@@ -19,7 +19,7 @@ const typeDefs = gql`
     REGISTER
   }
 
-  enum AccountType {
+  enum AppFlavor {
     C
     D
   }
@@ -30,19 +30,19 @@ const typeDefs = gql`
 
   input LoginRegisterInput {
     mobile: String
-    accountType: AccountType
+    appFlavor: AppFlavor
   }
 
-  input VerifyLoginRegisterInput {
+  input VerifyRegistrationInput {
     mobile: String!
     verificationCode: String!
-    accountType: String!
+    appFlavor: String!
   }
 
   input VerifyLoginInput {
     mobile: String!
     password: String!
-    accountType: String!
+    appFlavor: String!
   }
 
   type Query {
@@ -51,7 +51,7 @@ const typeDefs = gql`
 
   type Mutation {
     loginRegister(input: LoginRegisterInput!): LoginRegister
-    verifyLoginRegister(input: VerifyLoginRegisterInput!): Auth
+    verifyRegistration(input: VerifyRegistrationInput!): Auth
     verifyLogin(input: VerifyLoginInput!): Auth
   }
 `;
@@ -79,7 +79,7 @@ const resolvers = {
     // User enters mobile number and requests verification code
     loginRegister: async (_: any, { input }: any) => {
       try {
-        const { mobile, accountType } = input;
+        const { mobile, appFlavor } = input;
 
         let response = "";
 
@@ -97,11 +97,11 @@ const resolvers = {
           response = "LOGIN";
         }
 
-        if (!user && accountType == "D") {
+        if (!user && appFlavor == "D") {
           throw new UserInputError("Rider account does not exist");
         }
 
-        if (!user && accountType == "C") {
+        if (!user && appFlavor == "C") {
           response = "REGISTER";
 
           // Create a random 6 digit verification code
@@ -146,9 +146,9 @@ const resolvers = {
 
     // User enters verification and proceeds to register
     // TODO: rename to verifyRegistration
-    verifyLoginRegister: async (_: any, { input = {} }: any) => {
+    verifyRegistration: async (_: any, { input = {} }: any) => {
       try {
-        const { mobile, verificationCode, accountType } = input;
+        const { mobile, verificationCode, appFlavor } = input;
 
         let loginRegisterData = await REDIS_LOGIN_REGISTER().get(mobile);
         loginRegisterData = JSON.parse(loginRegisterData);
@@ -210,7 +210,7 @@ const resolvers = {
 
     verifyLogin: async (_: any, { input = {} }: any) => {
       try {
-        const { mobile, password, accountType } = input;
+        const { mobile, password, appFlavor } = input;
 
         // Find an account for the given mobile number.
         const user = await User.query()
@@ -238,7 +238,7 @@ const resolvers = {
         }
 
         // Check for consumer
-        if (accountType == "C") {
+        if (appFlavor == "C") {
           if (user.driver != null) {
             throw new UserInputError(
               "A driver account cannot be used to log in."
@@ -251,7 +251,7 @@ const resolvers = {
           };
         }
 
-        if (accountType == "D") {
+        if (appFlavor == "D") {
           if (user.consumer != null) {
             throw new UserInputError(
               "Customer account cannot be used to log in on rider app."

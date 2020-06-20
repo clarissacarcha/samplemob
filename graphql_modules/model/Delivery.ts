@@ -239,6 +239,7 @@ const resolvers = {
           id: delivery.tokConsumerId,
         });
 
+        // Create a notification and send push notifs
         NotificationUtility.notifyUser({
           userId: consumer.tokUserId,
           deliveryId: delivery.id,
@@ -294,6 +295,7 @@ const resolvers = {
           id: delivery.tokConsumerId,
         });
 
+        // Create a notification and send push notifs
         NotificationUtility.notifyUser({
           userId: consumer.tokUserId,
           deliveryId: delivery.id,
@@ -325,6 +327,18 @@ const resolvers = {
         await DeliveryLog.query().insert({
           status: 7,
           tokDeliveryId: input.deliveryId,
+        });
+
+        // TODO: Detect if should send to user or driver. Add appFlavor in input
+        const consumer = await Consumer.query().findOne({
+          id: delivery.tokConsumerId,
+        });
+
+        // Create a notification and send push notifs
+        NotificationUtility.notifyUser({
+          userId: consumer.tokUserId,
+          deliveryId: delivery.id,
+          deliveryStatus: 7,
         });
 
         return await Delivery.query().findById(input.deliveryId);
