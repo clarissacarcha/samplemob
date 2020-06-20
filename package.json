@@ -42,6 +42,7 @@
     "react-native-location": "^2.5.0",
     "react-native-maps": "0.27.1",
     "react-native-maps-directions": "^1.8.0",
+    "react-native-onesignal": "^3.8.1",
     "react-native-permissions": "^2.1.5",
     "react-native-reanimated": "^1.8.0",
     "react-native-render-html": "^4.2.0",

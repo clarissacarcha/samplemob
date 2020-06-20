@@ -13,13 +13,14 @@ import {
   ScrollView,
 } from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE, AnimatedRegion, Animated} from 'react-native-maps';
+import OneSignal from 'react-native-onesignal';
 import MapViewDirections from 'react-native-maps-directions';
 import {connect} from 'react-redux';
-import {currentLocation} from '../../../helper';
-import {BookingOverlay, LocationPermission} from '../../../components';
-import {COLOR, DARK, MEDIUM, LIGHT, MAPS_API_KEY} from '../../../res/constants';
+import {currentLocation} from '../../../../helper';
+import {BookingOverlay, LocationPermission} from '../../../../components';
+import {COLOR, DARK, MEDIUM, LIGHT, MAPS_API_KEY} from '../../../../res/constants';
 import {useMutation} from '@apollo/react-hooks';
-import {CLIENT, POST_DELIVERY, GET_ORDER_PRICE} from '../../../graphql';
+import {CLIENT, POST_DELIVERY, GET_ORDER_PRICE} from '../../../../graphql';
 
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import EIcon from 'react-native-vector-icons/Entypo';
@@ -27,7 +28,7 @@ import FIcon from 'react-native-vector-icons/Feather';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 
-import ToktokLogo from '../../../assets/icons/ToktokLogo.png';
+import ToktokLogo from '../../../../assets/icons/ToktokLogo.png';
 
 const toDateFormat = value => {
   return moment(value)
@@ -75,6 +76,12 @@ const INITIAL_REGION = {
   latitudeDelta: 19.887065883877668,
   longitude: 121.97818368673325,
   longitudeDelta: 10.145791545510278,
+};
+
+const findNotificationRoute = type => {
+  if (type == 'N') {
+    return 'Inbox';
+  }
 };
 
 const Map = ({navigation, session}) => {
@@ -154,13 +161,35 @@ const Map = ({navigation, session}) => {
     },
   });
 
+  const onNotificationOpened = ({notification}) => {
+    type = notification.payload.additionalData.type;
+
+    setTimeout(() => {
+      navigation.push(findNotificationRoute(type));
+    }, 10);
+  };
+
+  const oneSignalInit = async () => {
+    OneSignal.init('711d41c0-8c05-4c37-9769-977a27de1ac5');
+    OneSignal.inFocusDisplaying(2);
+  };
+
   useEffect(() => {
-    // getCurrentLocation();
+    oneSignalInit();
+
+    OneSignal.addEventListener('opened', onNotificationOpened);
+
+    return () => {
+      OneSignal.removeEventListener('received');
+    };
 
     const backHandler = BackHandler.addEventListener('hardwareBackPress', function() {
       return true;
     });
-    return () => backHandler.remove();
+    return () => {
+      backHandler.remove();
+      OneSignal.removeEventListener('received');
+    };
   }, []);
 
   // If directions.distance or price change, calcuate for order price

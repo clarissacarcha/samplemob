@@ -191,7 +191,7 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
           </View>
 
           {/*-------------------- DRIVER INFO --------------------*/}
-          {delivery.driver && (
+          {delivery.driver && APP_FLAVOR == 'C' && (
             <View style={[styles.directionsBox, {borderBottomWidth: StyleSheet.hairlineWidth, borderColor: LIGHT}]}>
               <View style={styles.directionDetail}>
                 <Fontisto name="motorcycle" size={18} color={DARK} style={styles.iconBox} />

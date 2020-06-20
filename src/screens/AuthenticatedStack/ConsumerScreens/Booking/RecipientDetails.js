@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import {COLOR, DARK, MAP_DELTA_LOW, MEDIUM, LIGHT} from '../../../../res/constants';
-import {HeaderBack, HeaderTitle, ItemTypes, SchedulePicker} from '../../../../components';
+import {HeaderBack, HeaderTitle, ItemDescription, SchedulePicker} from '../../../../components';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 import FIcon from 'react-native-vector-icons/Feather';
@@ -20,7 +20,7 @@ import FIcon from 'react-native-vector-icons/Feather';
 const width = Dimensions.get('window').width;
 const itemDimension = (width - 120) / 5;
 
-const AboutRecipient = ({navigation, route}) => {
+const RecipientDetails = ({navigation, route}) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={['Recipient', 'details']} />,
@@ -170,7 +170,7 @@ const AboutRecipient = ({navigation, route}) => {
           placeholder="Notes"
           multiline
         />
-        <ItemTypes onSelect={onCargoChange} initialData={localData.cargo} />
+        <ItemDescription onSelect={onCargoChange} initialData={localData.cargo} />
       </ScrollView>
       {/*---------------------------------------- BUTTON ----------------------------------------*/}
       <TouchableHighlight onPress={onSubmit} underlayColor={COLOR} style={styles.submitBox}>
@@ -182,7 +182,7 @@ const AboutRecipient = ({navigation, route}) => {
   );
 };
 
-export default AboutRecipient;
+export default RecipientDetails;
 
 const styles = StyleSheet.create({
   container: {

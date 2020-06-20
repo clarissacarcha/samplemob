@@ -12,56 +12,75 @@ import {
   Dimensions,
 } from 'react-native';
 import {connect} from 'react-redux';
+import moment from 'moment';
+import 'moment-timezone';
 import {COLOR, DARK, ORANGE, MEDIUM, LIGHT} from '../../../res/constants';
 import {HeaderBack, HeaderTitle} from '../../../components';
 import {useQuery} from '@apollo/react-hooks';
 import {useNavigation} from '@react-navigation/native';
-import moment from 'moment';
 
-import {GET_ANNOUNCEMENTS} from '../../../graphql';
+import {GET_MESSAGES} from '../../../graphql';
 
-const imageWidth = Dimensions.get('window').width - 40;
+import NoData from '../../../assets/images/NoData.png';
+
+const imageWidth = Dimensions.get('window').width - 200;
 
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const MessageCard = ({announcement, lastItem}) => {
-  const {title, thumbnail, createdAt} = announcement;
+const MessageCard = ({message, lastItem}) => {
+  const {title, body, delivery, createdAt} = message;
   const navigation = useNavigation();
   return (
     <TouchableHighlight
       onPress={() => {
-        navigation.push('SelectedAnnouncement', {announcement});
+        navigation.push('SelectedDelivery', {delivery});
       }}
       underlayColor={COLOR}
-      style={styles.card}>
+      style={StyleSheet.flatten([styles.card, lastItem ? {marginBottom: 20} : null])}>
       <View style={styles.taskBox}>
         <View style={{flexDirection: 'row', marginHorizontal: 20, marginVertical: 10}}>
           <View style={{flex: 1}}>
             {/*-------------------- TITLE --------------------*/}
             <View style={styles.rowBox}>
               <View style={styles.row}>
-                <FA5Icon name="pen" size={14} color={'white'} style={styles.iconBox} />
+                <FA5Icon name="exclamation" size={14} color={'white'} style={styles.iconBox} />
                 <Text
                   numberOfLines={4}
                   style={{
-                    fontSize: 14,
+                    fontSize: 12,
                     color: DARK,
                     flex: 1,
                     paddingHorizontal: 10,
                     marginTop: 2,
                     fontWeight: 'bold',
                   }}>
-                  TITLE
+                  {title}
+                </Text>
+              </View>
+              <View style={styles.row}>
+                <FAIcon name="calendar" size={16} color={'white'} style={styles.iconBox} />
+
+                <Text
+                  style={{
+                    fontSize: 11,
+                    color: MEDIUM,
+                    flex: 1,
+                    paddingHorizontal: 10,
+                    marginTop: 2,
+                    fontWeight: 'bold',
+                  }}>
+                  {/* {moment.unix(createdAt / 1000).format('MMM DD YYYY - h:mm a')} */}
+                  {createdAt}
                 </Text>
               </View>
             </View>
 
             {/*-------------------- DATE --------------------*/}
             <View style={styles.rowBox}>
-              <View style={styles.row}>
-                <FAIcon name="calendar" size={16} color={'white'} style={styles.iconBox} />
+              <View style={styles.rowMessage}>
+                <MCIcon name="email" size={16} color={'white'} style={styles.iconBox} />
                 <Text
                   style={{
                     fontSize: 12,
@@ -70,8 +89,7 @@ const MessageCard = ({announcement, lastItem}) => {
                     flex: 1,
                     alignSelf: 'center',
                   }}>
-                  {/* {moment.unix(createdAt / 1000).format('MMM DD YYYY - h:mm a')} */}
-                  DATE
+                  {body}
                 </Text>
               </View>
             </View>
@@ -88,8 +106,13 @@ const Announcements = ({navigation, route, session, createSession}) => {
     headerTitle: () => <HeaderTitle label={['Inbox', '']} />,
   });
 
-  const {data, loading, error} = useQuery(GET_ANNOUNCEMENTS, {
+  const {data, loading, error} = useQuery(GET_MESSAGES, {
     fetchPolicy: 'network-only',
+    variables: {
+      input: {
+        userId: session.user.id,
+      },
+    },
   });
 
   if (loading) {
@@ -108,165 +131,35 @@ const Announcements = ({navigation, route, session, createSession}) => {
     );
   }
 
-  // if (data.getAnnouncements.length === 0) {
-  //   return (
-  //     <View style={styles.center}>
-  //       <Text style={styles.text}>Nothing Found</Text>
-  //     </View>
-  //   );
-  // }
+  if (data.getMessages.length === 0) {
+    return (
+      <View style={styles.center}>
+        <Image source={NoData} style={styles.image} resizeMode={'contain'} />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
-      {/* <FlatList
+      <FlatList
         showsVerticalScrollIndicator={false}
-        data={data.getAnnouncements}
+        data={data.getMessages}
         keyExtractor={item => item.id}
         renderItem={({item, index}) => {
-          const lastItem = index == data.getAnnouncements.length - 1 ? true : false;
+          const lastItem = index == data.getMessages.length - 1 ? true : false;
 
-          return <Announcement announcement={item} lastItem={lastItem} />;
+          return <MessageCard message={item} lastItem={lastItem} />;
         }}
-      /> */}
-      <TouchableHighlight
-        onPress={() => {
-          navigation.push('SelectedAnnouncement', {announcement});
-        }}
-        underlayColor={COLOR}
-        style={styles.card}>
-        <View style={styles.taskBox}>
-          <View style={{flexDirection: 'row', marginHorizontal: 20, marginVertical: 10}}>
-            <View style={{flex: 1}}>
-              {/*-------------------- TITLE --------------------*/}
-              <View style={styles.rowBox}>
-                <View style={styles.row}>
-                  <FA5Icon name="exclamation" size={14} color={'white'} style={styles.iconBox} />
-                  <Text
-                    numberOfLines={4}
-                    style={{
-                      fontSize: 12,
-                      color: DARK,
-                      flex: 1,
-                      paddingHorizontal: 10,
-                      marginTop: 2,
-                      fontWeight: 'bold',
-                    }}>
-                    Driver on the Way to Sender
-                  </Text>
-                </View>
-                <View style={styles.row}>
-                  <FAIcon name="calendar" size={16} color={'white'} style={styles.iconBox} />
-
-                  <Text
-                    style={{
-                      fontSize: 12,
-                      color: MEDIUM,
-                      flex: 1,
-                      paddingHorizontal: 10,
-                      marginTop: 2,
-                      fontWeight: 'bold',
-                    }}>
-                    Today - 10:49 pm
-                  </Text>
-                </View>
-              </View>
-
-              {/*-------------------- DATE --------------------*/}
-              <View style={styles.rowBox}>
-                <View style={styles.row}>
-                  <MCIcon name="email" size={16} color={'white'} style={styles.iconBox} />
-                  <Text
-                    numberOfLines={1}
-                    style={{
-                      fontSize: 12,
-                      marginLeft: 10,
-                      color: MEDIUM,
-                      flex: 1,
-                      alignSelf: 'center',
-                    }}>
-                    {/* {moment.unix(createdAt / 1000).format('MMM DD YYYY - h:mm a')} */}
-                    Your rider is on the way to pick up the item for your delivery with a reference
-                  </Text>
-                </View>
-              </View>
-            </View>
-          </View>
-        </View>
-      </TouchableHighlight>
-
-      <TouchableHighlight
-        onPress={() => {
-          navigation.push('SelectedAnnouncement', {announcement});
-        }}
-        underlayColor={COLOR}
-        style={styles.card}>
-        <View style={styles.taskBox}>
-          <View style={{flexDirection: 'row', marginHorizontal: 20, marginVertical: 10}}>
-            <View style={{flex: 1}}>
-              {/*-------------------- TITLE --------------------*/}
-              <View style={styles.rowBox}>
-                <View style={styles.row}>
-                  <FA5Icon name="exclamation" size={14} color={'white'} style={styles.iconBox} />
-                  <Text
-                    numberOfLines={4}
-                    style={{
-                      fontSize: 12,
-                      color: DARK,
-                      flex: 1,
-                      paddingHorizontal: 10,
-                      marginTop: 2,
-                      fontWeight: 'bold',
-                    }}>
-                    Delivery Scheduled
-                  </Text>
-                </View>
-                <View style={styles.row}>
-                  <FAIcon name="calendar" size={16} color={'white'} style={styles.iconBox} />
-
-                  <Text
-                    numberOfLines={4}
-                    style={{
-                      fontSize: 12,
-                      color: MEDIUM,
-                      flex: 1,
-                      paddingHorizontal: 10,
-                      marginTop: 2,
-                      fontWeight: 'bold',
-                    }}>
-                    Today - 10:48 pm
-                  </Text>
-                </View>
-              </View>
-
-              {/*-------------------- DATE --------------------*/}
-              <View style={styles.rowBox}>
-                <View style={styles.rowMessage}>
-                  <MCIcon name="email" size={16} color={'white'} style={styles.iconBox} />
-                  <Text
-                    // numberOfLines={2}
-                    style={{
-                      fontSize: 12,
-                      marginLeft: 10,
-                      color: MEDIUM,
-                      flex: 1,
-                      alignSelf: 'center',
-                    }}>
-                    {/* {moment.unix(createdAt / 1000).format('MMM DD YYYY - h:mm a')} */}
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae soluta dicta autem. Vitae fugit iusto
-                    molestias optio voluptas accusamus porro et aperiam! Nobis ducimus itaque vero harum, saepe
-                    similique aut. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eum exercitationem, at
-                    culpa, maxime omnis iste sapiente magnam ipsum, sint eligendi dicta ex assumenda recusandae soluta!
-                    Cupiditate tempora iste veniam laborum!
-                  </Text>
-                </View>
-              </View>
-            </View>
-          </View>
-        </View>
-      </TouchableHighlight>
+      />
+      {/* <Text>{JSON.stringify(data, null, 4)}</Text> */}
     </View>
   );
 };
+
+// {moment
+//   .tz(delivery.createdAt, 'Asia/Manila')
+//   .format('MM/DD/YYYY - hh:mm A')
+//   .toString()}
 
 const mapStateToProps = state => ({
   session: state.session,
@@ -360,5 +253,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     textAlignVertical: 'center',
     marginRight: 20,
+  },
+  image: {
+    height: imageWidth,
+    width: imageWidth,
   },
 });

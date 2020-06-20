@@ -1,189 +1,159 @@
-import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, ImageBackground} from 'react-native';
-import {connect} from 'react-redux';
-import AsyncStorage from '@react-native-community/async-storage';
-import {useLazyQuery} from '@apollo/react-hooks';
-// import {BarIndicator} from 'react-native-indicators';
+// import React, {useEffect, useState} from 'react';
+// import {View, StyleSheet, ImageBackground} from 'react-native';
+// import {connect} from 'react-redux';
+// import AsyncStorage from '@react-native-community/async-storage';
+// import {useLazyQuery} from '@apollo/react-hooks';
+// // import {BarIndicator} from 'react-native-indicators';
 // import OneSignal from 'react-native-onesignal';
-import {APP_FLAVOR} from '../res/constants';
-import {GET_USER_SESSION} from '../graphql';
+// import {APP_FLAVOR} from '../res/constants';
+// import {GET_USER_SESSION} from '../graphql';
 
-import SplashImage from '../assets/images/Splash.png';
+// import SplashImage from '../assets/images/Splash.png';
 
-import Nav from './Nav';
+// import Nav from './Nav';
 
-const mapKeyValueToObject = keyValueArray => {
-  const result = {};
-  keyValueArray.map(kv => {
-    result[kv.key] = kv.value;
-  });
-  return result;
-};
+// const mapKeyValueToObject = keyValueArray => {
+//   const result = {};
+//   keyValueArray.map(kv => {
+//     result[kv.key] = kv.value;
+//   });
+//   return result;
+// };
 
-const Splash = ({createSession, destroySession, setConstants, navigation}) => {
-  // destroySession();
-  // AsyncStorage.removeItem('userId');
+// const Splash = ({createSession, destroySession, setConstants, navigation}) => {
+//   // destroySession();
+//   // AsyncStorage.removeItem('userId');
 
-  const [getLanded, setLanded] = useState(false); // state to trigger if should switch
-  const [initialRoute, setInitialRoute] = useState('UnauthenticatedStack');
+//   // const [getLanded, setLanded] = useState(false); // state to trigger if should switch
+//   // const [initialRoute, setInitialRoute] = useState('UnauthenticatedStack');
 
-  const [getUserSession] = useLazyQuery(GET_USER_SESSION, {
-    fetchPolicy: 'network-only',
-    onError: e => {
-      alert(e);
-    },
-    onCompleted: ({getUserSession}) => {
-      createSession(getUserSession);
-      setInitialRoute('RootDrawer');
-      setTimeout(() => {
-        setLanded(true);
-      }, 200);
+//   // const [getUserSession] = useLazyQuery(GET_USER_SESSION, {
+//   //   fetchPolicy: 'network-only',
+//   //   onError: e => {
+//   //     alert(e);
+//   //   },
+//   //   onCompleted: ({getUserSession}) => {
+//   //     createSession(getUserSession);
+//   //     setInitialRoute('RootDrawer');
+//   //     setTimeout(() => {
+//   //       setLanded(true);
+//   //     }, 200);
+//   //   },
+//   // });
 
-      //   const {user, accessToken} = getUserSession;
+//   useEffect(() => {
+//     // destroySession();
+//     // awaitAll();
+//     // OneSignal.addEventListener('ids', onId);
+//     // return () => {
+//     //   OneSignal.removeEventListener('ids', onId);
+//     // };
+//   }, []);
 
-      //   if (APP_FLAVOR == 'C') {
-      //     if (user.person.firstName == null || user.person.lastName == null) {
-      //       navigation.navigate('RootDrawer', {
-      //         screen: 'AuthenticatedStack',
-      //         params: {
-      //           screen: 'PostRegistration',
-      //         },
-      //       });
-      //       return;
-      //     }
+//   // const onId = device => {
+//   //   // alert(JSON.stringify(device, null, 2))
+//   // };
 
-      //     navigation.navigate('RootDrawer', {
-      //       screen: 'AuthenticatedStack',
-      //       params: {
-      //         screen: 'Map',
-      //       },
-      //     });
-      //   }
+//   // const checkAsyncStorageSession = async () => {
+//   //   const storedUserId = await AsyncStorage.getItem('userId');
+//   //   if (storedUserId) {
+//   //     getUserSession({
+//   //       variables: {
+//   //         input: {
+//   //           userId: storedUserId,
+//   //         },
+//   //       },
+//   //     });
+//   //   } else {
+//   //     setLanded(true);
+//   //   }
+//   //   try {
+//   //   } catch (error) {
+//   //     console.log(error);
+//   //   }
+//   // };
 
-      //   if (APP_FLAVOR == 'D') {
-      //     navigation.navigate('RootDrawer', {
-      //       screen: 'AuthenticatedStack',
-      //       params: {
-      //         screen: 'DriverMap',
-      //       },
-      //     });
-      //   }
-    },
-  });
+//   // const checkAsyncStorageSession = async () => {
+//   //   try {
+//   //     const userId = await AsyncStorage.getItem('userId'); // Without this, there's no stored session.
+//   //     // const pin = await AsyncStorage.getItem('pin');
+//   //     // const accessToken = await AsyncStorage.getItem('accessToken');
+//   //     // const refreshToken = await AsyncStorage.getItem('refreshToken');
+//   //     // TODO: Middleware for invalid access token to delete stored session.
 
-  useEffect(() => {
-    // destroySession();
-    awaitAll();
-    // OneSignal.addEventListener('ids', onId);
-    // return () => {
-    //   OneSignal.removeEventListener('ids', onId);
-    // };
-  }, []);
+//   //     /**s
+//   //      * Fetch user data to create session
+//   //      */
 
-  // const onId = device => {
-  //   // alert(JSON.stringify(device, null, 2))
-  // };
+//   //     if(userId) {
+//   //       const record = await CLIENT.query({
+//   //         query: GET_USER,
+//   //         variables: {
+//   //           id: userId,
+//   //         },
+//   //       });
+//   //       createSession({user: record.data.getUser});
+//   //       setInitialRoute('EnterPin');
+//   //     }
 
-  const checkAsyncStorageSession = async () => {
-    const storedUserId = await AsyncStorage.getItem('userId');
-    if (storedUserId) {
-      getUserSession({
-        variables: {
-          input: {
-            userId: storedUserId,
-          },
-        },
-      });
-    } else {
-      setLanded(true);
-    }
-    try {
-    } catch (error) {
-      console.log(error);
-    }
-  };
+//   //   } catch (error) {
+//   //     destroySession();
+//   //   }
+//   // };
 
-  // const checkAsyncStorageSession = async () => {
-  //   try {
-  //     const userId = await AsyncStorage.getItem('userId'); // Without this, there's no stored session.
-  //     // const pin = await AsyncStorage.getItem('pin');
-  //     // const accessToken = await AsyncStorage.getItem('accessToken');
-  //     // const refreshToken = await AsyncStorage.getItem('refreshToken');
-  //     // TODO: Middleware for invalid access token to delete stored session.
+//   // const getConstants = async () => {
+//   //   try {
+//   //     const records = await CLIENT.query({
+//   //       query: GET_CONSTANTS,
+//   //       fetchPolicy: 'network-only',
+//   //     });
+//   //     setConstants(mapKeyValueToObject(records.data.getConstants));
+//   //   } catch (error) {
+//   //     console.log('Landing.js', error);
+//   //   }
+//   // };
 
-  //     /**s
-  //      * Fetch user data to create session
-  //      */
+//   // const oneSignalInit = async () => {
+//   //   try {
+//   //     OneSignal.init('711d41c0-8c05-4c37-9769-977a27de1ac5');
+//   //     OneSignal.inFocusDisplaying(2);
+//   //   } catch (error) {
+//   //     console.log(error);
+//   //   }
+//   // };
 
-  //     if(userId) {
-  //       const record = await CLIENT.query({
-  //         query: GET_USER,
-  //         variables: {
-  //           id: userId,
-  //         },
-  //       });
-  //       createSession({user: record.data.getUser});
-  //       setInitialRoute('EnterPin');
-  //     }
+//   const awaitAll = async () => {
+//     // oneSignalInit();
+//     // await Promise.all([checkAsyncStorageSession(), getConstants()]);
+//     // await checkAsyncStorageSession();
+//   };
 
-  //   } catch (error) {
-  //     destroySession();
-  //   }
-  // };
+//   return getLanded ? <Nav /> : <ImageBackground style={styles.splash} source={SplashImage} resizeMode={'cover'} />;
+// };
 
-  // const getConstants = async () => {
-  //   try {
-  //     const records = await CLIENT.query({
-  //       query: GET_CONSTANTS,
-  //       fetchPolicy: 'network-only',
-  //     });
-  //     setConstants(mapKeyValueToObject(records.data.getConstants));
-  //   } catch (error) {
-  //     console.log('Landing.js', error);
-  //   }
-  // };
+// const mapStateToProps = state => ({
+//   session: state.session,
+// });
 
-  // const oneSignalInit = async () => {
-  //   OneSignal.init('4152b91e-f370-4764-8c43-e2cb7f48e0a2');
-  //   OneSignal.inFocusDisplaying(2);
-  // };
+// const mapDispatchToProps = dispatch => ({
+//   createSession: payload => dispatch({type: 'CREATE_SESSION', payload}),
+//   destroySession: () => dispatch({type: 'DESTROY_SESSION'}),
+//   //setConstants: payload => dispatch({type: 'SET_CONSTANTS', payload}),
+// });
 
-  const awaitAll = async () => {
-    // oneSignalInit();
-    // await Promise.all([checkAsyncStorageSession(), getConstants()]);
-    await checkAsyncStorageSession();
-  };
+// export default connect(
+//   mapStateToProps,
+//   mapDispatchToProps,
+// )(Splash);
 
-  return getLanded ? (
-    <Nav initialRoute={initialRoute} />
-  ) : (
-    <ImageBackground style={styles.splash} source={SplashImage} resizeMode={'cover'} />
-  );
-};
+// // export default Landing;
 
-const mapStateToProps = state => ({
-  session: state.session,
-});
-
-const mapDispatchToProps = dispatch => ({
-  createSession: payload => dispatch({type: 'CREATE_SESSION', payload}),
-  destroySession: () => dispatch({type: 'DESTROY_SESSION'}),
-  //setConstants: payload => dispatch({type: 'SET_CONSTANTS', payload}),
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Splash);
-
-// export default Landing;
-
-const styles = StyleSheet.create({
-  splash: {
-    flex: 1,
-  },
-  barView: {
-    height: 50,
-    justifyContent: 'center',
-  },
-});
+// const styles = StyleSheet.create({
+//   splash: {
+//     flex: 1,
+//   },
+//   barView: {
+//     height: 50,
+//     justifyContent: 'center',
+//   },
+// });

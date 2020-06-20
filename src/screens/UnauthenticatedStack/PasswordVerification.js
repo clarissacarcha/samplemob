@@ -19,6 +19,7 @@ import {useMutation} from '@apollo/react-hooks';
 import {VERIFY_LOGIN} from '../../graphql';
 import {AlertOverlay} from '../../components';
 import AsyncStorage from '@react-native-community/async-storage';
+import OneSignal from 'react-native-onesignal';
 
 import timer from 'react-native-timer';
 
@@ -35,14 +36,19 @@ const PasswordVerification = ({navigation, route, createSession}) => {
       input: {
         mobile,
         password,
-        accountType: APP_FLAVOR,
+        appFlavor: APP_FLAVOR,
       },
     },
     onCompleted: ({verifyLogin}) => {
-      AsyncStorage.setItem('userId', verifyLogin.user.id);
-      createSession(verifyLogin);
-
       const {user, accessToken} = verifyLogin;
+
+      AsyncStorage.setItem('userId', user.id); // Set userId value in asyncStorage for persistent login
+
+      createSession(verifyLogin); // Create session in redux
+
+      OneSignal.sendTags({
+        userId: user.id,
+      }); // Set onesignal userId tag for the phone
 
       if (APP_FLAVOR == 'C') {
         if (user.person.firstName == null || user.person.lastName == null) {
@@ -58,7 +64,7 @@ const PasswordVerification = ({navigation, route, createSession}) => {
         navigation.navigate('RootDrawer', {
           screen: 'AuthenticatedStack',
           params: {
-            screen: 'Map',
+            screen: 'ConsumerMap',
           },
         });
       }

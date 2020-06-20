@@ -1,7 +1,7 @@
 - (checkmark) replace all 'driver' to 'toktok rider'.
 - (checkmark) replace 'how are you today?' to 'tara lets ka-toktok'
 - (checkmark) replace 'edit profile' to 'Profile' in navigation
-- replace 'No Records' to ''
+- (checkmark) replace 'No Records' to ''
 - (checkmark) SMS semaphore account
 - iOS build
 
@@ -15,14 +15,14 @@ NEXT PATCH:
 4.  (checkmark) Add Note: "Please describe your item"
 5.  Add COD option upon booking
 6.  Update dispatch by creating orders for pickup list
-7.  Add push notification
+7.  (checkmark) Add push notification
 8.  Add In-app chat functionality
 
 ASAP:
 
 1. (checkmark) Remove Total Gas Station
 2. (checkmark) Upon booking, pop-up modal. "Your order has been booked" with OK button. Redirect to 'My Deliveries' page upon button clicked.
-3. On Order Placed - Add 'Looking for your rider, ka-toktok.'
+3. (checkmark) On Order Placed - Add 'Looking for your rider, ka-toktok.'
 4. (checkmark) Add rider detail card on My Deliveries
 5. (checkmark) Add CANCEL functionality, until items are picked-up
 6. (checkmark) Scheduled pick-up, place date and time
@@ -59,13 +59,14 @@ Customer
 13. (checkmark) Add Announcements already connected to database
 14. (checkmark) Add Persistent Session
     14.1 (checkmark) Fix session error on newly created accounts
-15. Add Push Notifications on Delivery Updates
-16. Add Inbox for Delivery Updates tied to Push Notifications
-    16.1 Send messages to consumer upon driver delivery updates
+15. (checkmark) Add Push Notifications on Delivery Updates
+16. (checkmark)Add Inbox for Delivery Updates tied to Push Notifications
+    16.1 (checkmark)Send messages to consumer upon driver delivery updates
 17. (checkmark) Add Login process with password
     17.1 (checkmark) Add change password on profile
 18. Add CRON job to expire orders and create expiration log
 19. Handle network errors
+    19.1 Notification icon and small logo
 
 Driver
 
@@ -84,10 +85,11 @@ Readlly Next Patch:
 4. Image Loader
 5. Granular Security
 6. WYSIWYG/HTML for Announcements
-7. Avoid Toll Roads
-8. Routes for Motorcycles
+7. Google Maps - Avoid Toll Roads
+8. Google Maps - Routes for Motorcycles
 9. Share Delivery Link, Updated Driver Info
-10. Announcement No Data
+10. Priority Fee
+11. Booking a copy or order, take to map
 
 Check UI of Scheduled Order Type, but one stop is ASAP
 Constants
@@ -95,3 +97,11 @@ Constants
 TODO:
 
 1. Move checking if customer or rider account in platform on login
+2. Item Description Initial Data
+3. Post Registration Sign Out (HeaderBack with onPress)
+4. Validate 10 Digits mobile number
+5. Rider Pix
+6. Google API Consumption
+7. Regex
+
+Forgot password. Use email?

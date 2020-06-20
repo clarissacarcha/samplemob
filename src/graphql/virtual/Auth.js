@@ -6,9 +6,9 @@ export const LOGIN_REGISTER = gql`
   }
 `;
 
-export const VERIFY_LOGIN_REGISTER = gql`
-  mutation verifyLoginRegister($input: VerifyLoginRegisterInput!) {
-    verifyLoginRegister(input: $input) {
+export const VERIFY_REGISTRATION = gql`
+  mutation verifyRegistration($input: VerifyRegistrationInput!) {
+    verifyRegistration(input: $input) {
       user {
         id
         username

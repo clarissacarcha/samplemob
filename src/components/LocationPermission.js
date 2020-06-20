@@ -1,3 +1,7 @@
+/**
+ * Component used to check location permission
+ */
+
 import React, {useState, useEffect} from 'react';
 import {View, Alert, StyleSheet, Image, Dimensions, Text, TouchableHighlight} from 'react-native';
 import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';

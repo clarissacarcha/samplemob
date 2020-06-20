@@ -16,9 +16,10 @@ import SmsRetriever from 'react-native-sms-retriever';
 import {COLOR, DARK, APP_FLAVOR} from '../../res/constants';
 import {connect} from 'react-redux';
 import {useMutation} from '@apollo/react-hooks';
-import {VERIFY_LOGIN_REGISTER} from '../../graphql';
+import {VERIFY_REGISTRATION} from '../../graphql';
 import {AlertOverlay} from '../../components';
 import AsyncStorage from '@react-native-community/async-storage';
+import OneSignal from 'react-native-onesignal';
 
 import timer from 'react-native-timer';
 
@@ -52,19 +53,24 @@ const Verification = ({navigation, route, createSession}) => {
   const [verificationCode, setVerificationCode] = useState('');
   const [count, setCount] = useState(30);
 
-  const [verifyLoginRegister, {loading}] = useMutation(VERIFY_LOGIN_REGISTER, {
+  const [verifyRegistration, {loading}] = useMutation(VERIFY_REGISTRATION, {
     variables: {
       input: {
         mobile,
         verificationCode,
-        accountType: APP_FLAVOR,
+        appFlavor: APP_FLAVOR,
       },
     },
-    onCompleted: ({verifyLoginRegister}) => {
-      alert(JSON.stringify(verifyLoginRegister, null, 4));
-      AsyncStorage.setItem('userId', verifyLoginRegister.user.id);
-      createSession(verifyLoginRegister);
-      const {user, accessToken} = verifyLoginRegister;
+    onCompleted: ({verifyRegistration}) => {
+      const {user, accessToken} = verifyRegistration;
+
+      AsyncStorage.setItem('userId', user.id);
+
+      createSession(verifyRegistration);
+
+      OneSignal.sendTags({
+        userId: user.id,
+      }); // Set onesignal userId tag for the phone
 
       if (APP_FLAVOR == 'C') {
         if (user.person.firstName == null || user.person.lastName == null) {
@@ -80,7 +86,7 @@ const Verification = ({navigation, route, createSession}) => {
         navigation.navigate('RootDrawer', {
           screen: 'AuthenticatedStack',
           params: {
-            screen: 'Map',
+            screen: 'ConsumerMap',
           },
         });
       }
@@ -135,7 +141,7 @@ const Verification = ({navigation, route, createSession}) => {
   };
 
   const onSubmit = () => {
-    verifyLoginRegister();
+    verifyRegistration();
   };
 
   return (

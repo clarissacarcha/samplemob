@@ -31,12 +31,12 @@ const Login = ({navigation, session}) => {
     variables: {
       input: {
         mobile,
-        accountType: APP_FLAVOR,
+        appFlavor: APP_FLAVOR,
       },
     },
     onCompleted: ({loginRegister}) => {
       if (loginRegister == 'REGISTER') {
-        navigation.push('Verification', {mobile});
+        navigation.push('SmsVerification', {mobile});
       }
 
       if (loginRegister == 'LOGIN') {

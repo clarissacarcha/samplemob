@@ -14,7 +14,7 @@ import {COLOR, MEDIUM, LIGHT} from '../res/constants';
 
 /*-------------------- IMPORT SCREENS START--------------------*/
 import Login from '../screens/UnauthenticatedStack/Login';
-import Verification from '../screens/UnauthenticatedStack/Verification';
+import SmsVerification from '../screens/UnauthenticatedStack/SmsVerification';
 import PasswordVerification from '../screens/UnauthenticatedStack/PasswordVerification';
 
 // Landing
@@ -25,17 +25,18 @@ import TalkToUs from '../screens/AuthenticatedStack/CommonScreens/TalkToUs';
 
 /*---------- CONSUMER SCREENS ----------*/
 import PostRegistration from '../screens/AuthenticatedStack/ConsumerScreens/PostRegistration';
-import Map from '../screens/AuthenticatedStack/ConsumerScreens/ConsumerMap';
+
+import ConsumerMap from '../screens/AuthenticatedStack/ConsumerScreens/Booking/ConsumerMap';
 import SearchPlaces from '../screens/AuthenticatedStack/ConsumerScreens/Booking/SearchPlaces';
 import SearchMap from '../screens/AuthenticatedStack/ConsumerScreens/Booking/SearchMap';
-
 import SenderDetails from '../screens/AuthenticatedStack/ConsumerScreens/Booking/SenderDetails';
 import RecipientDetails from '../screens/AuthenticatedStack/ConsumerScreens/Booking/RecipientDetails';
 
+import Announcements from '../screens/AuthenticatedStack/ConsumerScreens/Announcement/Announcements';
+import SelectedAnnouncement from '../screens/AuthenticatedStack/ConsumerScreens/Announcement/SelectedAnnouncement';
+
 import CustomerProfile from '../screens/AuthenticatedStack/ConsumerScreens/ConsumerProfile';
-import Announcements from '../screens/AuthenticatedStack/ConsumerScreens/Announcements';
 import Inbox from '../screens/AuthenticatedStack/ConsumerScreens/Inbox';
-import SelectedAnnouncement from '../screens/AuthenticatedStack/SelectedAnnouncement';
 
 import CustomerDeliveries from '../screens/AuthenticatedStack/ConsumerScreens/Deliveries/MyDeliveries';
 import SelectedDeliveries from '../screens/AuthenticatedStack/ConsumerScreens/Deliveries/SelectedDeliveries';
@@ -79,7 +80,7 @@ const DriverDeliveriesTab = () => (
 const UnauthenticatedStack = () => (
   <Unauthenticated.Navigator headerMode="none">
     <Unauthenticated.Screen name="Login" component={Login} />
-    <Unauthenticated.Screen name="Verification" component={Verification} />
+    <Unauthenticated.Screen name="SmsVerification" component={SmsVerification} />
     <Unauthenticated.Screen name="PasswordVerification" component={PasswordVerification} />
   </Unauthenticated.Navigator>
 );
@@ -87,16 +88,19 @@ const UnauthenticatedStack = () => (
 const AuthenticatedStack = () => (
   <Authenticated.Navigator>
     <Authenticated.Screen name="PostRegistration" component={PostRegistration} />
-    <Authenticated.Screen name="Map" component={Map} />
+
+    <Authenticated.Screen name="ConsumerMap" component={ConsumerMap} />
     <Authenticated.Screen name="SearchPlaces" component={SearchPlaces} />
     <Authenticated.Screen name="SearchMap" component={SearchMap} />
     <Authenticated.Screen name="SenderDetails" component={SenderDetails} />
     <Authenticated.Screen name="RecipientDetails" component={RecipientDetails} />
 
-    <Authenticated.Screen name="CustomerProfile" component={CustomerProfile} />
-    <Authenticated.Screen name="TalkToUs" component={TalkToUs} />
     <Authenticated.Screen name="Announcements" component={Announcements} />
     <Authenticated.Screen name="SelectedAnnouncement" component={SelectedAnnouncement} />
+
+    <Authenticated.Screen name="CustomerProfile" component={CustomerProfile} />
+    <Authenticated.Screen name="TalkToUs" component={TalkToUs} />
+
     <Authenticated.Screen name="Inbox" component={Inbox} />
 
     <Authenticated.Screen name="CustomerDeliveries" component={CustomerDeliveries} />

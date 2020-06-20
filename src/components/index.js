@@ -8,7 +8,7 @@ export * from './DriverCard';
 export {default as GoOnlineOverlay} from './GoOnlineOverlay';
 export * from './HeaderBack';
 export * from './HeaderTitle';
-export * from './ItemTypes';
+export * from './ItemDescription';
 export * from './LocationPermission';
 export * from './OrderDetailsCard';
 export * from './SchedulePicker';

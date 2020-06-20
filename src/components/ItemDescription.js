@@ -32,7 +32,7 @@ const Item = ({index, data, selected, setSelected, onSelect}) => {
   );
 };
 
-export const ItemTypes = ({onSelect, initialData}) => {
+export const ItemDescription = ({onSelect, initialData}) => {
   const [selectedIndex, setSelectedIndex] = useState(null);
 
   const data = ['Food', 'Document', 'Clothing', 'Electronics', 'Others'];

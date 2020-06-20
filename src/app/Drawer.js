@@ -3,6 +3,7 @@ import {View, Text, TouchableHighlight, StyleSheet, Image} from 'react-native';
 import {COLOR, DARK, MEDIUM, LIGHT, APP_FLAVOR} from '../res/constants';
 import FIcon from 'react-native-vector-icons/Feather';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
+import OneSignal from 'react-native-onesignal';
 
 import {TouchableOpacity} from 'react-native-gesture-handler';
 
@@ -35,6 +36,9 @@ const Drawer = ({navigation, session, destroySession}) => {
 
   const onSignOut = () => {
     destroySession();
+
+    OneSignal.deleteTag('userId');
+
     navigation.navigate('UnauthenticatedStack', {
       screen: 'Login',
     });

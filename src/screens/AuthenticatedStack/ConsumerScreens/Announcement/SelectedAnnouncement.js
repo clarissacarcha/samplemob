@@ -12,12 +12,12 @@ import {
   Dimensions,
 } from 'react-native';
 import {connect} from 'react-redux';
-import {COLOR, DARK, ORANGE, MEDIUM, LIGHT} from '../../res/constants';
-import {HeaderBack, HeaderTitle} from '../../components';
+import {COLOR, DARK, ORANGE, MEDIUM, LIGHT} from '../../../../res/constants';
+import {HeaderBack, HeaderTitle} from '../../../../components';
 import {useQuery} from '@apollo/react-hooks';
 import moment from 'moment';
 
-import {GET_ANNOUNCEMENTS} from '../../graphql';
+import {GET_ANNOUNCEMENTS} from '../../../../graphql';
 
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import FAIcon from 'react-native-vector-icons/FontAwesome';

@@ -12,13 +12,16 @@ import {
   Dimensions,
 } from 'react-native';
 import {connect} from 'react-redux';
-import {COLOR, DARK, ORANGE, MEDIUM, LIGHT} from '../../../res/constants';
-import {HeaderBack, HeaderTitle} from '../../../components';
+import {COLOR, DARK, ORANGE, MEDIUM, LIGHT} from '../../../../res/constants';
+import {HeaderBack, HeaderTitle} from '../../../../components';
 import {useQuery} from '@apollo/react-hooks';
 import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
 
-import {GET_ANNOUNCEMENTS} from '../../../graphql';
+import {GET_ANNOUNCEMENTS} from '../../../../graphql';
+
+import NoData from '../../../../assets/images/NoData.png';
+const imageWidth = Dimensions.get('window').width - 200;
 
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
@@ -109,7 +112,7 @@ const Announcements = ({navigation, route, session, createSession}) => {
   if (data.getAnnouncements.length === 0) {
     return (
       <View style={styles.center}>
-        <Text style={styles.text}>Nothing Found</Text>
+        <Image source={NoData} style={styles.image} resizeMode={'contain'} />
       </View>
     );
   }
@@ -217,5 +220,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     textAlignVertical: 'center',
     marginRight: 20,
+  },
+  image: {
+    height: imageWidth,
+    width: imageWidth,
   },
 });
