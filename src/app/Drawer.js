@@ -23,6 +23,7 @@ const DrawerButton = ({label, onPress, restrict}) => {
 
 const Drawer = ({navigation, session, destroySession}) => {
   let fullName = '';
+  let avatar = '';
   if (session.user) {
     if (APP_FLAVOR == 'C') {
       const {firstName, lastName} = session.user.person;
@@ -30,7 +31,8 @@ const Drawer = ({navigation, session, destroySession}) => {
     }
 
     if (APP_FLAVOR == 'D') {
-      fullName = 'Driver Name';
+      const {firstName, lastName} = session.user.person;
+      fullName = `${firstName} ${lastName}`;
     }
   }
 

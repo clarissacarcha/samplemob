@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, Text, Image, TouchableHighlight, Alert} from 'react-native';
-import {HeaderBack, HeaderTitle} from '../../../../components';
+import {View, StyleSheet, Text, Image, TouchableHighlight, Alert, Dimensions} from 'react-native';
+import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../../components';
 import {COLOR, DARK, MAP_DELTA_LOW, ORANGE, MEDIUM} from '../../../../res/constants';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 import {connect} from 'react-redux';
@@ -8,6 +8,8 @@ import DocumentPicker from 'react-native-document-picker';
 import {ReactNativeFile} from 'apollo-upload-client';
 import {PATCH_PERSON_PROFILE_PICTURE} from '../../../../graphql';
 import {useMutation} from '@apollo/react-hooks';
+
+const imageWidth = Dimensions.get('window').width - 40;
 
 const ChangeProfilePicture = ({navigation, route, session}) => {
   const {label} = route.params;
@@ -19,7 +21,6 @@ const ChangeProfilePicture = ({navigation, route, session}) => {
   });
 
   const onCameraPress = () => {
-    const label = ['Change', 'Take a photo'];
     navigation.push('ProfileCamera', {label, setImage});
   };
 
@@ -39,10 +40,14 @@ const ChangeProfilePicture = ({navigation, route, session}) => {
   };
 
   const [patchPersonProfilePicture, {loading}] = useMutation(PATCH_PERSON_PROFILE_PICTURE, {
-    onCompleted: res => Alert.alert('', res),
-    // onError: error => {
-    //   console.log(error);
-    // },
+    onCompleted: res => {
+      Alert.alert('', 'Profile picture successfully updated', [
+        {
+          title: 'Ok',
+          onPress: () => navigation.pop(),
+        },
+      ]);
+    },
     onError: ({graphQLErrors, networkError}) => {
       if (networkError) {
         console.log(networkError);
@@ -54,10 +59,10 @@ const ChangeProfilePicture = ({navigation, route, session}) => {
     },
   });
 
-  const onConfirmPicture = fileUri => {
+  const onConfirmPicture = () => {
     try {
       const rnFile = new ReactNativeFile({
-        uri: fileUri,
+        uri: image.uri,
         name: 'document.jpg',
         type: 'image/jpeg',
       });
@@ -74,32 +79,44 @@ const ChangeProfilePicture = ({navigation, route, session}) => {
     }
   };
 
-  return !image ? (
+  if (image) {
+    return (
+      <>
+        <AlertOverlay visible={loading} />
+        <View style={styles.container}>
+          <Image
+            resizeMode="cover"
+            source={{uri: image.uri}}
+            style={{height: imageWidth, width: imageWidth, margin: 20, borderRadius: 10}}
+          />
+          <View style={{flexDirection: 'row', marginHorizontal: 20}}>
+            <TouchableHighlight onPress={() => setImage(null)} underlayColor={COLOR} style={styles.imageButtonBox}>
+              <View style={styles.submit}>
+                <Text style={{color: COLOR, fontSize: 20}}>Discard</Text>
+              </View>
+            </TouchableHighlight>
+            <View style={{width: 20}} />
+            <TouchableHighlight onPress={onConfirmPicture} underlayColor={COLOR} style={styles.imageButtonBox}>
+              <View style={styles.submit}>
+                <Text style={{color: COLOR, fontSize: 20}}>Use</Text>
+              </View>
+            </TouchableHighlight>
+          </View>
+        </View>
+      </>
+    );
+  }
+
+  return (
     <View style={styles.container}>
-      <TouchableHighlight style={styles.card} onPress={handleSelectFile}>
-        <View style={{justifyContent: 'center', alignItems:'center',}}>
-          <FAIcon name="image" size={100} color={MEDIUM} />
-          <Text style={{color: 'white'}}>Select from gallery</Text>
+      <TouchableHighlight onPress={onCameraPress} underlayColor={COLOR} style={styles.submitBox}>
+        <View style={styles.submit}>
+          <Text style={{color: COLOR, fontSize: 20}}>Take Picture</Text>
         </View>
       </TouchableHighlight>
-      <TouchableHighlight style={styles.card} onPress={onCameraPress}>
-        <View style={{justifyContent: 'center', alignItems:'center',}}>
-          <FAIcon name="camera" size={100} color={MEDIUM} />
-          <Text style={{color: 'white'}}>Take a photo</Text>
-        </View>
-      </TouchableHighlight>
-    </View>
-  ) : (
-    <View style={styles.imageContainer}>
-      <Image source={{uri: image.uri}} style={{flex:1, width: '100%', height: '100%',}} />
-      <TouchableHighlight style={[styles.button, {right: 50, bottom: 50}]} onPress={() => onConfirmPicture(image)}>
-        <View style={styles.button}>
-          <FAIcon name="check-circle" size={70} color={COLOR} />
-        </View>
-      </TouchableHighlight>
-      <TouchableHighlight style={[styles.button, {left: 50, bottom: 50}]} onPress={() => setImage(false)}>
-        <View style={styles.button}>
-          <FAIcon name="ban" size={70} color={COLOR} />
+      <TouchableHighlight onPress={handleSelectFile} underlayColor={COLOR} style={styles.submitBox}>
+        <View style={styles.submit}>
+          <Text style={{color: COLOR, fontSize: 20}}>Select From Gallery</Text>
         </View>
       </TouchableHighlight>
     </View>
@@ -122,17 +139,7 @@ export default connect(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'black',
-    // flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-  },
-  imageContainer: {
-    flex: 1,
-    height: '100%',
-    width: '100%',
-    backgroundColor: 'black',
-    alignItems: 'center',
+    backgroundColor: 'white',
   },
   card: {
     flex: 1,
@@ -143,11 +150,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  button: {
-    position: 'absolute',
-    borderRadius: 100,
-    height: 70,
-    width: 70,
+  submitBox: {
+    marginHorizontal: 20,
+    borderRadius: 10,
+    marginTop: 20,
+  },
+  imageButtonBox: {
+    borderRadius: 10,
+    flex: 1,
+  },
+  submit: {
+    backgroundColor: DARK,
+    height: 50,
+    borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
   },

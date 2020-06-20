@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {View, Text, ScrollView, StyleSheet, TouchableHighlight, TextInput, Alert} from 'react-native';
 import {connect} from 'react-redux';
-import {COLOR, DARK, MAP_DELTA_LOW, ORANGE, MEDIUM} from '../../../../res/constants';
+import {COLOR, DARK, MAP_DELTA_LOW, ORANGE, MEDIUM, LIGHT} from '../../../../res/constants';
 import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../../components';
 import {useMutation} from '@apollo/react-hooks';
 import Toast from 'react-native-simple-toast';
@@ -69,66 +69,48 @@ const DriverProfile = ({navigation, route, session, createSession}) => {
   const onProfilePress = () => {
     const label = ['Change', 'Profile Picture'];
     navigation.push('ChangeProfilePicture', {label});
-  }
+  };
 
   return (
     <View style={styles.container}>
       <AlertOverlay visible={loading} />
       <ScrollView showsVerticalScrollIndicator={false}>
         {/*---------------------------------------- FORM ----------------------------------------*/}
-        <View style={{marginTop: 10, alignItems: 'center'}}>
+        <View style={{marginTop: 20, alignItems: 'center'}}>
           {/*--------------- AVATAR ---------------*/}
           {/* TODO: If has driver avatar, show avatar, else show placeholder */}
           {true ? (
-            <TouchableHighlight onPress={onProfilePress}>
+            <TouchableHighlight onPress={onProfilePress} underlayColor={COLOR} style={{borderRadius: 10}}>
               <View
                 style={{
                   height: 120,
                   width: 120,
-                  backgroundColor: '#333',
+                  backgroundColor: MEDIUM,
                   borderRadius: 10,
                   justifyContent: 'center',
                   alignItems: 'center',
+                  position: 'relative',
                 }}>
-                  <FAIcon name="user" size={90} color={MEDIUM} />
-                  <View
-                  style={{
-                    height: 25,
-                    width: 25,
-                    position: 'absolute',
-                    backgroundColor: '#333',
-                    borderRadius: 10,
-                    bottom:0,
-                    right:0,
-                  }}>
-                  <FAIcon name="edit" size={16} color={MEDIUM} />
-                </View>
+                <FAIcon name="user" size={90} color={LIGHT} />
+                <FAIcon name="edit" size={20} color={LIGHT} style={{position: 'absolute', bottom: 5, right: 5}} />
               </View>
             </TouchableHighlight>
           ) : (
-            <View
-              style={{
-                height: 120,
-                width: 120,
-                backgroundColor: '#333',
-                borderRadius: 10,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <FAIcon name="user" size={90} color={MEDIUM} />
+            <TouchableHighlight onPress={onProfilePress} underlayColor={COLOR} style={{borderRadius: 10}}>
               <View
                 style={{
-                  height: 25,
-                  width: 25,
-                  position: 'absolute',
-                  backgroundColor: '#333',
+                  height: 120,
+                  width: 120,
+                  backgroundColor: MEDIUM,
                   borderRadius: 10,
-                  bottom:0,
-                  right:0,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  position: 'relative',
                 }}>
-                <FAIcon name="camera" size={16} color={MEDIUM} />
+                <FAIcon name="user" size={90} color={LIGHT} />
+                <FAIcon name="edit" size={20} color={LIGHT} style={{position: 'absolute', bottom: 5, right: 5}} />
               </View>
-            </View>
+            </TouchableHighlight>
           )}
         </View>
         <Text style={styles.label}>Mobile Number</Text>

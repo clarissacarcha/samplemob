@@ -4,12 +4,11 @@ import {connect} from 'react-redux';
 import {RNCamera} from 'react-native-camera';
 import {HeaderBack, HeaderTitle} from '../../../../components';
 
-const ProfileCamera = ({navigation, route, session, startLoading, finishLoading}) => {
-  const {label} = route.params;
+const ProfileCamera = ({navigation, route, session}) => {
   const {setImage} = route.params;
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={label} />,
+    headerTitle: () => <HeaderTitle label={['Take', 'Picture']} />,
   });
 
   let cameraRef = useRef(null);
@@ -32,25 +31,11 @@ const ProfileCamera = ({navigation, route, session, startLoading, finishLoading}
           fixOrientation: true,
         };
         const data = await cameraRef.current.takePictureAsync(options);
-        console.log(data.uri);
+
         setImage(data);
         navigation.pop();
-
-        // const result = await CLIENT.mutate({
-        //   mutation: POST_DOCUMENT_BATCH,
-        //   variables: {
-        //     userId: session.user.id,
-        //     verificationDocumentId: verification.id,
-        //     document: [oneImage],
-        //   },
-        // });
-        // console.log(result.data.postDocumentBatch);
-        // Toast.show('Verification sent for approval.');
-        // finishLoading();
-        // navigation.pop();
       }
     } catch (error) {
-      // finishLoading();
       alert(error);
     }
   };
