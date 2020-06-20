@@ -49,7 +49,8 @@ export class User{
         const sourceString = date+user[0].id;
         const token = crypto.createHash('sha256').update(sourceString).digest('hex');
         const roles = await UserModel.getUserRoles(user[0].id);
-        const permissions = await UserModel.getUserPermissions(user[0].id);
+        //combine all permissions (tied to roles and to the user itself) in a string, separated bu comma
+        const permissions = await UserModel.getUserPermissions(user[0].id,roles); 
 
         await AuthTokenModel.create(
           token,
@@ -140,7 +141,7 @@ export class User{
       const sourceString = date+createdUserId;
       token = crypto.createHash('sha256').update(sourceString).digest('hex');
       const roles = await UserModel.getUserRoles(createdUserId);
-      const permissions = await UserModel.getUserPermissions(createdUserId);
+      const permissions = await UserModel.getUserPermissions(createdUserId,roles);
 
       await AuthTokenModel.create(
         token,

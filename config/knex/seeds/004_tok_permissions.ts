@@ -227,7 +227,7 @@ export async function seed(knex: Knex): Promise<any> {
           created: "0000-00-00 00:00:00",
           updated: "0000-00-00 00:00:00"
         },
-        // Operators, admin and Drivers
+        // trips and deliveries
         { id: 31,
           permission_code: "delivery_history",
           description: null,
@@ -258,33 +258,119 @@ export async function seed(knex: Knex): Promise<any> {
           created: "0000-00-00 00:00:00",
           updated: "0000-00-00 00:00:00"
         },
-        
-        //Operators and Drivers
         { id: 35,
-          permission_code: "reload",
+          permission_code: "operator_delivery_history",
           description: null,
           status: 1,
           created: "0000-00-00 00:00:00",
           updated: "0000-00-00 00:00:00"
         },
-
         { id: 36,
-          permission_code: "book",
+          permission_code: "operator_trips_history",
+          description: null,
+          status: 1,
+          created: "0000-00-00 00:00:00",
+          updated: "0000-00-00 00:00:00"
+        },
+        { id: 37,
+          permission_code: "operator_reload",
           description: null,
           status: 1,
           created: "0000-00-00 00:00:00",
           updated: "0000-00-00 00:00:00"
         },
 
-        { id: 37,
-          permission_code: "cancel_booking",
+        //Drivers
+        { id: 38,
+          permission_code: "driver_reload",
+          description: null,
+          status: 1,
+          created: "0000-00-00 00:00:00",
+          updated: "0000-00-00 00:00:00"
+        },
+        { id: 39,
+          permission_code: "driver_book",
+          description: null,
+          status: 1,
+          created: "0000-00-00 00:00:00",
+          updated: "0000-00-00 00:00:00"
+        },
+        { id: 40,
+          permission_code: "driver_cancel_booking",
+          description: null,
+          status: 1,
+          created: "0000-00-00 00:00:00",
+          updated: "0000-00-00 00:00:00"
+        },
+        { id: 41,
+          permission_code: "driver_trips_history",
+          description: null,
+          status: 1,
+          created: "0000-00-00 00:00:00",
+          updated: "0000-00-00 00:00:00"
+        },
+        { id: 42,
+          permission_code: "driver_delivery_history",
+          description: null,
+          status: 1,
+          created: "0000-00-00 00:00:00",
+          updated: "0000-00-00 00:00:00"
+        },
+
+        // Customer
+        { id: 43,
+          permission_code: "customer_book",
+          description: null,
+          status: 1,
+          created: "0000-00-00 00:00:00",
+          updated: "0000-00-00 00:00:00"
+        },
+        { id: 44,
+          permission_code: "customer_cancel_booking",
+          description: null,
+          status: 1,
+          created: "0000-00-00 00:00:00",
+          updated: "0000-00-00 00:00:00"
+        },
+        { id: 45,
+          permission_code: "customer_trips_history",
+          description: null,
+          status: 1,
+          created: "0000-00-00 00:00:00",
+          updated: "0000-00-00 00:00:00"
+        },
+        { id: 46,
+          permission_code: "customer_delivery_history",
+          description: null,
+          status: 1,
+          created: "0000-00-00 00:00:00",
+          updated: "0000-00-00 00:00:00"
+        },
+
+        // ALL
+        { id: 47,
+          permission_code: "profile",
+          description: null,
+          status: 1,
+          created: "0000-00-00 00:00:00",
+          updated: "0000-00-00 00:00:00"
+        },
+        // driver
+        { id: 48,
+          permission_code: "driver_profile",
+          description: null,
+          status: 1,
+          created: "0000-00-00 00:00:00",
+          updated: "0000-00-00 00:00:00"
+        },
+        // operator
+        { id: 49,
+          permission_code: "operator_profile",
           description: null,
           status: 1,
           created: "0000-00-00 00:00:00",
           updated: "0000-00-00 00:00:00"
         }
-
-
 
       ]);
     });

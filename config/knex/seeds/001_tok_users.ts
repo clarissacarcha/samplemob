@@ -10,8 +10,10 @@ export async function seed(knex: Knex): Promise<any> {
         //root web app user
         { id: 1, 
           username: "root@gmail.com", 
-          password: "$2b$10$b44S2p6.oPFcjFx9ODQPOOJO2S2tlkglVXC/aDkBN.jd.4QTsheEe",
+          password: "$2y$12$aZOiI/eXlwrOIUICPGIsheOrspHcxSXdOGivvOZf79PNGxnHjHCSa",
           access: "access",
+          functions: "",
+          last_seen: "2020-06-17 14:07:57",
           active: "1",
           failed_login_attempts: "0",
           status: "1",
