@@ -1,12 +1,13 @@
 import React, {useState} from 'react';
 import {View, Text, ScrollView, StyleSheet, TouchableHighlight, TextInput, Alert} from 'react-native';
 import {connect} from 'react-redux';
-import {COLOR, DARK, MAP_DELTA_LOW, ORANGE, MEDIUM} from '../../../res/constants';
-import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../components';
+import {COLOR, DARK, MAP_DELTA_LOW, ORANGE, MEDIUM} from '../../../../res/constants';
+import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../../components';
 import {useMutation} from '@apollo/react-hooks';
 import Toast from 'react-native-simple-toast';
+import FAIcon from 'react-native-vector-icons/FontAwesome';
 
-import {PATCH_PERSON_POST_REGISTRATION} from '../../../graphql';
+import {PATCH_PERSON_POST_REGISTRATION} from '../../../../graphql';
 
 const DriverProfile = ({navigation, route, session, createSession}) => {
   navigation.setOptions({
@@ -65,11 +66,71 @@ const DriverProfile = ({navigation, route, session, createSession}) => {
     patchPersonPostRegistration();
   };
 
+  const onProfilePress = () => {
+    const label = ['Change', 'Profile Picture'];
+    navigation.push('ChangeProfilePicture', {label});
+  }
+
   return (
     <View style={styles.container}>
       <AlertOverlay visible={loading} />
       <ScrollView showsVerticalScrollIndicator={false}>
         {/*---------------------------------------- FORM ----------------------------------------*/}
+        <View style={{marginTop: 10, alignItems: 'center'}}>
+          {/*--------------- AVATAR ---------------*/}
+          {/* TODO: If has driver avatar, show avatar, else show placeholder */}
+          {true ? (
+            <TouchableHighlight onPress={onProfilePress}>
+              <View
+                style={{
+                  height: 120,
+                  width: 120,
+                  backgroundColor: '#333',
+                  borderRadius: 10,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                  <FAIcon name="user" size={90} color={MEDIUM} />
+                  <View
+                  style={{
+                    height: 25,
+                    width: 25,
+                    position: 'absolute',
+                    backgroundColor: '#333',
+                    borderRadius: 10,
+                    bottom:0,
+                    right:0,
+                  }}>
+                  <FAIcon name="edit" size={16} color={MEDIUM} />
+                </View>
+              </View>
+            </TouchableHighlight>
+          ) : (
+            <View
+              style={{
+                height: 120,
+                width: 120,
+                backgroundColor: '#333',
+                borderRadius: 10,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <FAIcon name="user" size={90} color={MEDIUM} />
+              <View
+                style={{
+                  height: 25,
+                  width: 25,
+                  position: 'absolute',
+                  backgroundColor: '#333',
+                  borderRadius: 10,
+                  bottom:0,
+                  right:0,
+                }}>
+                <FAIcon name="camera" size={16} color={MEDIUM} />
+              </View>
+            </View>
+          )}
+        </View>
         <Text style={styles.label}>Mobile Number</Text>
         <Text style={[styles.input, {height: 50, textAlignVertical: 'center', color: MEDIUM}]}>
           {session.user.username}
