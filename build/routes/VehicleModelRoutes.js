@@ -13,13 +13,14 @@ const express_validator_1 = require("express-validator");
 router.post("/create", [
     express_validator_1.check("model")
         .notEmpty()
+        .withMessage("This field is required. ")
         .isLength({ max: 45 })
-        .withMessage("value should not exceed 45 characters"),
+        .withMessage("Value should not exceed 45 characters."),
     express_validator_1.check("model_year")
         .notEmpty()
-        .withMessage("This field is required")
-        .isInt({ gt: -1, lt: 10000 })
-        .withMessage("valid value: 1 - 9999")
+        .withMessage("This field is required. ")
+        .isInt({ gt: 0, lt: 10000 })
+        .withMessage("Valid value: 1 - 9999.")
 ], vehicleModel_1.VehicleModel.create);
 router.get("/read/:id", [
     express_validator_1.check('id')
@@ -34,13 +35,14 @@ router.put("/update", [
         .withMessage("ID is required"),
     express_validator_1.check("model")
         .notEmpty()
+        .withMessage("This field is required. ")
         .isLength({ max: 45 })
-        .withMessage("value should not exceed 45 characters"),
+        .withMessage("Value should not exceed 45 characters."),
     express_validator_1.check("model_year")
         .notEmpty()
-        .withMessage("This field is required")
-        .isInt({ gt: -1, lt: 10000 })
-        .withMessage("valid value: 0 - 9999")
+        .withMessage("This field is required. ")
+        .isInt({ gt: 0, lt: 10000 })
+        .withMessage("Valid value: 1 - 9999")
 ], vehicleModel_1.VehicleModel.update);
 router.delete("/delete/:id", [
     express_validator_1.check('id')

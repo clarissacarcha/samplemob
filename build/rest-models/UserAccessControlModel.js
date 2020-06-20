@@ -59,13 +59,25 @@ UserAccessControlModel.getUserPermissions = (userId) => __awaiter(void 0, void 0
     let userPermissionResult = yield pool.query(query, [userId]);
     let userPermissionCodes = [];
     let userPermDescription = {};
-    // extract just the role codes
-    for (let a = 0; a < userPermissionResult.length; a++) {
-        userPermDescription = {
-            id: userPermissionResult[a].id,
-            permission_desc: userPermissionResult[a].description,
-            permission_code: userPermissionResult[a].permission_code
-        };
+    const allpermissions = yield UserAccessControlModel.getAllUserPermissions();
+    for (var a = 0; a < allpermissions.length; a++) {
+        let perm = userPermissionResult.find((perm) => perm.id === allpermissions[a].id);
+        if (perm) {
+            userPermDescription = {
+                id: allpermissions[a].id,
+                permission_desc: allpermissions[a].description,
+                permission_code: allpermissions[a].permission_code,
+                isChecked: true
+            };
+        }
+        else {
+            userPermDescription = {
+                id: allpermissions[a].id,
+                permission_desc: allpermissions[a].description,
+                permission_code: allpermissions[a].permission_code,
+                isChecked: false
+            };
+        }
         userPermissionCodes.push(userPermDescription);
     }
     return userPermissionCodes;
@@ -103,7 +115,7 @@ UserAccessControlModel.getAllUserPermissions = () => __awaiter(void 0, void 0, v
         };
         userPermissionCodes.push(userPermDetails);
     }
-    return userPermissionCodes;
+    return userPermissionResult;
 });
 UserAccessControlModel.list = (req) => __awaiter(void 0, void 0, void 0, function* () {
     let query = "";

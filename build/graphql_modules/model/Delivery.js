@@ -15,12 +15,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 //@ts-nocheck
 const apollo_server_express_1 = require("apollo-server-express");
 const FileUploadS3_1 = __importDefault(require("../../util/FileUploadS3"));
+const NotificationUtility_1 = __importDefault(require("../../util/NotificationUtility"));
 const DeliveryLog_1 = __importDefault(require("./DeliveryLog"));
 const Driver_1 = __importDefault(require("./Driver"));
 const Stop_1 = __importDefault(require("./Stop"));
 const Scalar_1 = __importDefault(require("../virtual/Scalar"));
 const models_1 = __importDefault(require("../../models"));
-const { Delivery, DeliveryLog, Stop, Driver } = models_1.default;
+const { Delivery, DeliveryLog, Stop, Driver, Consumer } = models_1.default;
 const typeDefs = apollo_server_express_1.gql `
   type Delivery {
     id: String
@@ -121,7 +122,6 @@ const resolvers = {
             const res = yield Driver.query().findOne({
                 id: parent.tokDriverId,
             });
-            console.log(JSON.stringify(res, null, 4));
             return res;
         }),
     },
@@ -222,6 +222,14 @@ const resolvers = {
                     status: 2,
                     tokDeliveryId: input.deliveryId,
                 });
+                const consumer = yield Consumer.query().findOne({
+                    id: delivery.tokConsumerId,
+                });
+                NotificationUtility_1.default.notifyUser({
+                    userId: consumer.tokUserId,
+                    deliveryId: delivery.id,
+                    deliveryStatus: 2,
+                });
                 return "Delivery successfully accepted.";
             }
             catch (e) {
@@ -232,7 +240,6 @@ const resolvers = {
         // Driver updates the status of a delivery order
         patchDeliveryIncrementStatus: (_, { input }) => __awaiter(void 0, void 0, void 0, function* () {
             try {
-                console.log(input.file);
                 // Find the delivery record.
                 let delivery = yield Delivery.query().findById(input.deliveryId);
                 // Throw error if delivery does not exist
@@ -256,6 +263,14 @@ const resolvers = {
                 }
                 // Create delivery log with status incremented status
                 yield DeliveryLog.query().insert(Object.assign({ status: delivery.status + 1, tokDeliveryId: input.deliveryId }, (input.file ? { image: uploadedFile.filename } : {})));
+                const consumer = yield Consumer.query().findOne({
+                    id: delivery.tokConsumerId,
+                });
+                NotificationUtility_1.default.notifyUser({
+                    userId: consumer.tokUserId,
+                    deliveryId: delivery.id,
+                    deliveryStatus: delivery.status + 1,
+                });
                 // Return the delivery record
                 return yield Delivery.query().findById(input.deliveryId);
             }

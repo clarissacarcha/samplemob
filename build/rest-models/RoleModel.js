@@ -34,6 +34,20 @@ RoleModel.read = (id) => __awaiter(void 0, void 0, void 0, function* () {
     let query = "select * from tok_roles where id = ?";
     return yield pool.query(query, [id]);
 });
+RoleModel.getRolePermissions = (role) => __awaiter(void 0, void 0, void 0, function* () {
+    let userPermissionCodes = [];
+    let query = MysqlUtility_1.MysqlUtility.mergeLines([
+        "select c.permission_code from tok_roles as a",
+        "left join tok_role_permissions as b on a.id = b.tok_roles_id",
+        "left join tok_permissions as c on b.tok_permissions_id = c.id ",
+        "where a.role = ?"
+    ]);
+    let rolePermissionResult = yield pool.query(query, [role]);
+    for (var a = 0; a < rolePermissionResult.length; a++) {
+        userPermissionCodes.push(rolePermissionResult[a].permission_code);
+    }
+    return userPermissionCodes;
+});
 RoleModel.update = (req) => __awaiter(void 0, void 0, void 0, function* () {
     const date = dateFormat(new Date(), "yyyy-mm-dd HH:MM:ss");
     let query = MysqlUtility_1.MysqlUtility.mergeLines([

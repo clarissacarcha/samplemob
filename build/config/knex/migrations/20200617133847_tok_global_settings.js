@@ -9,20 +9,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.seed = void 0;
-function seed(knex) {
+exports.down = exports.up = void 0;
+function up(knex) {
     return __awaiter(this, void 0, void 0, function* () {
-        // Deletes ALL existing entries
-        return knex("users")
-            .del()
-            .then(() => {
-            // Inserts seed entries
-            return knex("users").insert([
-                { id: 1, name: "Alvir", email: "alvir@gmail.com" },
-                { id: 2, name: "Melen", email: "melen@gmail.com" },
-                { id: 3, name: "Myutini", email: "myutini@gmail.com" },
-            ]);
+        return knex.schema.createTable("tok_global_settings", (table) => {
+            table.increments();
+            table.string("key", 100).notNullable();
+            table.string("key_value", 100).notNullable();
+            table.specificType("status", "tinyint(1)");
+            table.timestamp("created_at").defaultTo(knex.fn.now());
+            table.timestamp("updated_at").defaultTo(knex.fn.now());
         });
     });
 }
-exports.seed = seed;
+exports.up = up;
+function down(knex) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return knex.schema.dropTable("tok_global_settings");
+    });
+}
+exports.down = down;

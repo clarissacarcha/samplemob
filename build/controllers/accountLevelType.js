@@ -13,19 +13,24 @@ exports.AccountLevelType = void 0;
 const AccountLevelTypeModel_1 = require("../rest-models/AccountLevelTypeModel");
 const AuthUtility_1 = require("../util/AuthUtility");
 const express_validator_1 = require("express-validator");
+const ServerResponse_1 = require("../interfaces/ServerResponse");
 class AccountLevelType {
 }
 exports.AccountLevelType = AccountLevelType;
 AccountLevelType.create = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    let status = 200;
     //validate input
     const errors = express_validator_1.validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(422).json({ errors: errors.array() });
+        status = 422;
+        return res.status(200).json(new ServerResponse_1.ServerResponse(status, {
+            errors: errors.array()
+        }).sendResponse());
     }
     let result = yield AccountLevelTypeModel_1.AccountLevelTypeModel.create(req.body);
-    res.status(200).json({
+    res.status(200).json(new ServerResponse_1.ServerResponse(status, {
         result
-    });
+    }).sendResponse());
 });
 AccountLevelType.read = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const errors = express_validator_1.validationResult(req);
@@ -38,14 +43,19 @@ AccountLevelType.read = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
     });
 });
 AccountLevelType.update = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    let status = 200;
+    //validate input
     const errors = express_validator_1.validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(422).json({ errors: errors.array() });
+        status = 422;
+        return res.status(200).json(new ServerResponse_1.ServerResponse(status, {
+            errors: errors.array()
+        }).sendResponse());
     }
     let result = yield AccountLevelTypeModel_1.AccountLevelTypeModel.update(req.body);
-    res.status(200).json({
+    res.status(200).json(new ServerResponse_1.ServerResponse(status, {
         result
-    });
+    }).sendResponse());
 });
 AccountLevelType.delete = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const errors = express_validator_1.validationResult(req);

@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthUtility = void 0;
 const AuthTokenModel_1 = require("../rest-models/AuthTokenModel");
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 class AuthUtility {
 }
 exports.AuthUtility = AuthUtility;
@@ -22,3 +22,13 @@ AuthUtility.generateHash = (password) => {
     const saltRounds = 10;
     return bcrypt.hashSync(password, saltRounds);
 };
+AuthUtility.getUserId = (token) => __awaiter(void 0, void 0, void 0, function* () {
+    return yield AuthTokenModel_1.AuthTokenModel.getUserId(token);
+});
+AuthUtility.generateHashAsync = (password) => __awaiter(void 0, void 0, void 0, function* () {
+    const saltRounds = 10;
+    return yield bcrypt.hash(password, saltRounds);
+});
+AuthUtility.verifyHash = (value, hashString) => __awaiter(void 0, void 0, void 0, function* () {
+    return yield bcrypt.compare(value, hashString);
+});

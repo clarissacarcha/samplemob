@@ -13,14 +13,36 @@ exports.seed = void 0;
 function seed(knex) {
     return __awaiter(this, void 0, void 0, function* () {
         // Deletes ALL existing entries
-        return knex("todos")
+        return knex("tok_roles")
             .del()
             .then(() => {
             // Inserts seed entries
-            return knex("todos").insert([
-                { id: 1, title: "learn knex", user_id: 1 },
-                { id: 2, title: "learn objection", user_id: 1 },
-                { id: 3, title: "learn typescript", user_id: 1 },
+            return knex("tok_roles").insert([
+                //root web app user
+                { id: 1,
+                    role: "Root",
+                    status: "1",
+                    created: "0000-00-00 00:00:00",
+                    updated: "0000-00-00 00:00:00"
+                },
+                { id: 2,
+                    role: "Driver",
+                    status: "1",
+                    created: "0000-00-00 00:00:00",
+                    updated: "0000-00-00 00:00:00"
+                },
+                { id: 3,
+                    role: "Operator",
+                    status: "1",
+                    created: "0000-00-00 00:00:00",
+                    updated: "0000-00-00 00:00:00"
+                },
+                { id: 4,
+                    role: "Regular",
+                    status: "1",
+                    created: "0000-00-00 00:00:00",
+                    updated: "0000-00-00 00:00:00"
+                }
             ]);
         });
     });

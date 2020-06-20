@@ -24,7 +24,7 @@ function up(knex) {
 exports.up = up;
 function down(knex) {
     return __awaiter(this, void 0, void 0, function* () {
-        return knex.schema.dropTable("tok_permissions");
+        return knex.schema.dropTable("tok_roles");
     });
 }
 exports.down = down;

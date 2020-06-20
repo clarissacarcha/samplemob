@@ -15,9 +15,9 @@ const typeDefs = apollo_server_express_1.gql `
     formattedAddress: String
     latitude: Float
     longitude: Float
-    schedule: Int
-    preferredFrom: DateTime
-    preferredTo: DateTime
+    orderType: Int
+    scheduledFrom: ISO2DateTime
+    scheduledTo: ISO2DateTime
   }
 
   input StopInput {
@@ -29,9 +29,9 @@ const typeDefs = apollo_server_express_1.gql `
     formattedAddress: String
     latitude: Float
     longitude: Float
-    schedule: Int
-    preferredFrom: String
-    preferredTo: String
+    orderType: Int
+    scheduledFrom: ISO2DateTime
+    scheduledTo: ISO2DateTime
 
     latitudeDelta: Float
     longitudeDelta: Float

@@ -13,8 +13,9 @@ const express_validator_1 = require("express-validator");
 router.post("/create", [
     express_validator_1.check("role")
         .notEmpty()
+        .withMessage("This field is required. ")
         .isLength({ max: 45 })
-        .withMessage("value should not exceed 45 characters")
+        .withMessage("Value should not exceed 45 characters.")
 ], Role_1.Role.create);
 router.get("/read/:id", [
     express_validator_1.check('id')
@@ -23,14 +24,20 @@ router.get("/read/:id", [
         .isInt()
         .withMessage("Only number are allowed")
 ], Role_1.Role.read);
+router.get("/getRolePermissions/:role", [
+    express_validator_1.check('role')
+        .notEmpty()
+        .withMessage("Role is required")
+], Role_1.Role.getRolePermissions);
 router.put("/update", [
     express_validator_1.check("id")
         .notEmpty()
         .withMessage("ID is required"),
     express_validator_1.check("role")
         .notEmpty()
+        .withMessage("This field is required. ")
         .isLength({ max: 45 })
-        .withMessage("value should not exceed 45 characters")
+        .withMessage("Value should not exceed 45 characters.")
 ], Role_1.Role.update);
 router.delete("/delete/:id", [
     express_validator_1.check('id')

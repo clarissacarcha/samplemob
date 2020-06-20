@@ -9,25 +9,25 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.down = exports.up = void 0;
-function up(knex) {
+exports.seed = void 0;
+function seed(knex) {
     return __awaiter(this, void 0, void 0, function* () {
-        return knex.schema.createTable("tok_operators", (table) => {
-            table.increments();
-            table.string("operator_name", 45).notNullable();
-            table.string("permit_number", 45).notNullable();
-            table.specificType("com_rate", "double");
-            table.specificType("status", "tinyint(1)");
-            table.timestamp("created_at").defaultTo(knex.fn.now());
-            table.timestamp("updated_at").defaultTo(knex.fn.now());
-            table.integer("tok_user_id").unsigned().references("id").inTable("tok_users");
+        // Deletes ALL existing entries
+        return knex("tok_user_roles")
+            .del()
+            .then(() => {
+            // Inserts seed entries
+            return knex("tok_user_roles").insert([
+                //root web app user
+                { id: 1,
+                    tok_roles_id: 1,
+                    tok_users_id: 1,
+                    status: "1",
+                    created: "0000-00-00 00:00:00",
+                    updated: "0000-00-00 00:00:00"
+                }
+            ]);
         });
     });
 }
-exports.up = up;
-function down(knex) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return knex.schema.dropTable("tok_operators");
-    });
-}
-exports.down = down;
+exports.seed = seed;

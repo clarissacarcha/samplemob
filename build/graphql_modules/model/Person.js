@@ -12,9 +12,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+//@ts-nocheck
 const apollo_server_express_1 = require("apollo-server-express");
+const AuthUtility_1 = require("../../util/AuthUtility");
 const models_1 = __importDefault(require("../../models"));
-const { Person } = models_1.default;
+const { Person, User } = models_1.default;
 const typeDefs = apollo_server_express_1.gql `
   type Person {
     id: String
@@ -38,6 +40,7 @@ const typeDefs = apollo_server_express_1.gql `
     firstName: String
     lastName: String
     emailAddress: String
+    password: String
   }
 
   type Mutation {
@@ -47,10 +50,14 @@ const typeDefs = apollo_server_express_1.gql `
 const resolvers = {
     Mutation: {
         patchPersonPostRegistration: (_, { input }) => __awaiter(void 0, void 0, void 0, function* () {
-            const result = yield Person.query()
-                .where({ tokUserId: input.tokUserId })
-                .update(input);
-            console.log({ result });
+            const { tokUserId, firstName, lastName, emailAddress, password } = input;
+            const hashedPassword = yield AuthUtility_1.AuthUtility.generateHashAsync(password);
+            const personResult = yield Person.query()
+                .where({ tokUserId })
+                .update({ firstName, lastName, emailAddress });
+            const userResult = yield User.query()
+                .where({ id: tokUserId })
+                .update({ password: hashedPassword });
             return "Profile successfully updated";
         }),
     },

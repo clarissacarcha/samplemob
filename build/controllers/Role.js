@@ -13,19 +13,24 @@ exports.Role = void 0;
 const RoleModel_1 = require("../rest-models/RoleModel");
 const AuthUtility_1 = require("../util/AuthUtility");
 const express_validator_1 = require("express-validator");
+const ServerResponse_1 = require("../interfaces/ServerResponse");
 class Role {
 }
 exports.Role = Role;
 Role.create = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    let status = 200;
     //validate input
     const errors = express_validator_1.validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(422).json({ errors: errors.array() });
+        status = 422;
+        return res.status(200).json(new ServerResponse_1.ServerResponse(status, {
+            errors: errors.array()
+        }).sendResponse());
     }
     let result = yield RoleModel_1.RoleModel.create(req.body);
-    res.status(200).json({
+    res.status(200).json(new ServerResponse_1.ServerResponse(status, {
         result
-    });
+    }).sendResponse());
 });
 Role.read = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const errors = express_validator_1.validationResult(req);
@@ -38,14 +43,19 @@ Role.read = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     });
 });
 Role.update = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    let status = 200;
+    //validate input
     const errors = express_validator_1.validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(422).json({ errors: errors.array() });
+        status = 422;
+        return res.status(200).json(new ServerResponse_1.ServerResponse(status, {
+            errors: errors.array()
+        }).sendResponse());
     }
     let result = yield RoleModel_1.RoleModel.update(req.body);
-    res.status(200).json({
+    res.status(200).json(new ServerResponse_1.ServerResponse(status, {
         result
-    });
+    }).sendResponse());
 });
 Role.delete = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const errors = express_validator_1.validationResult(req);
@@ -80,4 +90,14 @@ Role.list = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
             result
         });
     }
+});
+Role.getRolePermissions = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const errors = express_validator_1.validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
+    }
+    let result = yield RoleModel_1.RoleModel.getRolePermissions(req.params.role);
+    res.status(200).json({
+        result
+    });
 });

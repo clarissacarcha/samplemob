@@ -12,28 +12,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.down = exports.up = void 0;
 function up(knex) {
     return __awaiter(this, void 0, void 0, function* () {
-        return knex.schema.createTable("tok_stops", (table) => {
+        return knex.schema.createTable("tok_reload_transactions", (table) => {
             table.increments();
-            table.string("name", 50).notNullable;
-            table.string("mobile", 50).notNullable;
-            table.string("landmark", 150).nullable;
-            table.string("formatted_address", 255).notNullable;
-            table.specificType("latitude", "decimal(18,15)").notNullable;
-            table.specificType("longitude", "decimal(18,15)").notNullable;
-            /**
-             * 1 - As Soon As Possible
-             * 2 - Scheduled
-             */
-            table.specificType("order_type", "tinyint(1)");
-            table.dateTime("scheduled_from");
-            table.dateTime("scheduled_to");
+            table.string("reference_number", 45).notNullable;
+            table.integer("tok_user_id").unsigned().references("id").inTable("tok_users");
+            table.dateTime("transation_date").defaultTo(knex.fn.now());
+            table.dateTime("payment_date").defaultTo(knex.fn.now());
+            table.specificType("amount", "double");
         });
     });
 }
 exports.up = up;
 function down(knex) {
     return __awaiter(this, void 0, void 0, function* () {
-        return knex.schema.dropTable("tok_stops");
+        return knex.schema.dropTable("tok_reload_transactions");
     });
 }
 exports.down = down;

@@ -14,8 +14,8 @@ function up(knex) {
     return __awaiter(this, void 0, void 0, function* () {
         return knex.schema.createTable("tok_permissions", (table) => {
             table.increments();
-            table.string("permission_code", 30).notNullable();
-            table.string("description", 45).nullable();
+            table.string("permission_code", 70).notNullable();
+            table.string("description", 100).nullable();
             table.specificType("status", "tinyint(1)");
             table.timestamp("created").defaultTo(knex.fn.now());
             table.timestamp("updated").defaultTo(knex.fn.now());

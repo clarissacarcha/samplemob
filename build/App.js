@@ -25,6 +25,7 @@ const RoleRoutes_1 = __importDefault(require("./routes/RoleRoutes"));
 const RequirementTypeRoutes_1 = __importDefault(require("./routes/RequirementTypeRoutes"));
 const AccountLevelTypeRoutes_1 = __importDefault(require("./routes/AccountLevelTypeRoutes"));
 const AccountLevelRoutes_1 = __importDefault(require("./routes/AccountLevelRoutes"));
+const DriverRoutes_1 = __importDefault(require("./routes/DriverRoutes"));
 // Initialize express instance
 const app = express_1.default();
 //Sets the knex instance to be used by Objection models by default
@@ -62,5 +63,6 @@ app.use("/role", RoleRoutes_1.default);
 app.use("/requirementtype", RequirementTypeRoutes_1.default);
 app.use("/accountleveltype", AccountLevelTypeRoutes_1.default);
 app.use("/accountlevel", AccountLevelRoutes_1.default);
+app.use("/driver", DriverRoutes_1.default);
 app.use("/user", UserRoutes_1.default);
 exports.default = app;

@@ -17,6 +17,8 @@ function up(knex) {
             table.string("username", 45).notNullable();
             table.string("password", 100).notNullable();
             table.text("access");
+            table.text("functions");
+            table.dateTime('last_seen').nullable();
             table.boolean("active").defaultTo(true);
             table.specificType("failed_login_attempts", "tinyint(1)");
             table.specificType("status", "tinyint(1)");

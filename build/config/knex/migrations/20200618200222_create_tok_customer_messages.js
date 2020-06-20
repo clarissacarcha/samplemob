@@ -12,28 +12,33 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.down = exports.up = void 0;
 function up(knex) {
     return __awaiter(this, void 0, void 0, function* () {
-        return knex.schema.createTable("tok_stops", (table) => {
+        return knex.schema.createTable("tok_messages", (table) => {
             table.increments();
-            table.string("name", 50).notNullable;
-            table.string("mobile", 50).notNullable;
-            table.string("landmark", 150).nullable;
-            table.string("formatted_address", 255).notNullable;
-            table.specificType("latitude", "decimal(18,15)").notNullable;
-            table.specificType("longitude", "decimal(18,15)").notNullable;
+            table.string("title", 255).notNullable; // Maximum 120 characters to not be truncated
+            table.text("body").notNullable;
             /**
-             * 1 - As Soon As Possible
-             * 2 - Scheduled
+             * 1 - Unread
+             * 2 - Read
              */
-            table.specificType("order_type", "tinyint(1)");
-            table.dateTime("scheduled_from");
-            table.dateTime("scheduled_to");
+            table.specificType("status", "tinyint(1)");
+            table.dateTime("created_at").defaultTo(knex.fn.now());
+            table
+                .integer("tok_user_id")
+                .unsigned()
+                .references("id")
+                .inTable("tok_users");
+            table
+                .integer("tok_delivery_id")
+                .unsigned()
+                .references("id")
+                .inTable("tok_deliveries");
         });
     });
 }
 exports.up = up;
 function down(knex) {
     return __awaiter(this, void 0, void 0, function* () {
-        return knex.schema.dropTable("tok_stops");
+        return knex.schema.dropTable("tok_messages");
     });
 }
 exports.down = down;

@@ -13,19 +13,24 @@ exports.RequirementType = void 0;
 const RequirementTypeModel_1 = require("../rest-models/RequirementTypeModel");
 const AuthUtility_1 = require("../util/AuthUtility");
 const express_validator_1 = require("express-validator");
+const ServerResponse_1 = require("../interfaces/ServerResponse");
 class RequirementType {
 }
 exports.RequirementType = RequirementType;
 RequirementType.create = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    let status = 200;
     //validate input
     const errors = express_validator_1.validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(422).json({ errors: errors.array() });
+        status = 422;
+        return res.status(200).json(new ServerResponse_1.ServerResponse(status, {
+            errors: errors.array()
+        }).sendResponse());
     }
     let result = yield RequirementTypeModel_1.RequirementTypeModel.create(req.body);
-    res.status(200).json({
+    res.status(200).json(new ServerResponse_1.ServerResponse(status, {
         result
-    });
+    }).sendResponse());
 });
 RequirementType.read = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const errors = express_validator_1.validationResult(req);
@@ -38,14 +43,19 @@ RequirementType.read = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
     });
 });
 RequirementType.update = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    let status = 200;
+    //validate input
     const errors = express_validator_1.validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(422).json({ errors: errors.array() });
+        status = 422;
+        return res.status(200).json(new ServerResponse_1.ServerResponse(status, {
+            errors: errors.array()
+        }).sendResponse());
     }
     let result = yield RequirementTypeModel_1.RequirementTypeModel.update(req.body);
-    res.status(200).json({
+    res.status(200).json(new ServerResponse_1.ServerResponse(status, {
         result
-    });
+    }).sendResponse());
 });
 RequirementType.delete = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const errors = express_validator_1.validationResult(req);

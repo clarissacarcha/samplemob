@@ -49,3 +49,8 @@ AuthTokenModel.verifyLogin = (token) => __awaiter(void 0, void 0, void 0, functi
         return false;
     }
 });
+AuthTokenModel.getUserId = (token) => __awaiter(void 0, void 0, void 0, function* () {
+    let query = "select tok_users_id from tok_auth_tokens where token = ?";
+    const result = yield pool.query(query, [token]);
+    return result[0].tok_users_id;
+});

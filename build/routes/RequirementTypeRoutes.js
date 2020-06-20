@@ -13,8 +13,9 @@ const express_validator_1 = require("express-validator");
 router.post("/create", [
     express_validator_1.check("requirements")
         .notEmpty()
+        .withMessage("This field is required. ")
         .isLength({ max: 45 })
-        .withMessage("value should not exceed 45 characters")
+        .withMessage("Value should not exceed 45 characters.")
 ], requirementType_1.RequirementType.create);
 router.get("/read/:id", [
     express_validator_1.check('id')
@@ -29,8 +30,9 @@ router.put("/update", [
         .withMessage("ID is required"),
     express_validator_1.check("requirements")
         .notEmpty()
+        .withMessage("This field is required. ")
         .isLength({ max: 45 })
-        .withMessage("value should not exceed 45 characters")
+        .withMessage("Value should not exceed 45 characters.")
 ], requirementType_1.RequirementType.update);
 router.delete("/delete/:id", [
     express_validator_1.check('id')

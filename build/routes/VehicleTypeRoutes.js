@@ -13,23 +13,24 @@ const express_validator_1 = require("express-validator");
 router.post("/create", [
     express_validator_1.check("type")
         .notEmpty()
+        .withMessage("This field is required. ")
         .isLength({ max: 45 })
-        .withMessage("value should not exceed 45 characters"),
+        .withMessage("Value should not exceed 45 characters."),
     express_validator_1.check("seats")
         .notEmpty()
-        .withMessage("This field is required")
+        .withMessage("This field is required. ")
         .isInt({ gt: -1, lt: 101 })
-        .withMessage("valid value: 1 - 100"),
+        .withMessage("Valid value: 1 - 100."),
     express_validator_1.check("cargo_capacity")
         .notEmpty()
-        .withMessage("This field is required")
+        .withMessage("This field is required. ")
         .isInt({ gt: -1, lt: 101 })
-        .withMessage("valid value: 1 - 100"),
+        .withMessage("Valid value: 1 - 100."),
     express_validator_1.check("cargo_unit")
         .notEmpty()
-        .withMessage("This field is required")
+        .withMessage("This field is required. ")
         .isLength({ max: 45 })
-        .withMessage("Must not exceed 45 characters")
+        .withMessage("Must not exceed 45 characters. ")
 ], vehicleType_1.VehicleType.create);
 router.get("/read/:id", [
     express_validator_1.check('id')
@@ -41,26 +42,27 @@ router.get("/read/:id", [
 router.put("/update", [
     express_validator_1.check("id")
         .notEmpty()
-        .withMessage("ID is required"),
+        .withMessage("ID is required. "),
     express_validator_1.check("type")
         .notEmpty()
+        .withMessage("This field is required. ")
         .isLength({ max: 45 })
-        .withMessage("value should not exceed 45 characters"),
+        .withMessage("Value should not exceed 45 characters."),
     express_validator_1.check("seats")
         .notEmpty()
-        .withMessage("This field is required")
+        .withMessage("This field is required. ")
         .isInt({ gt: -1, lt: 101 })
-        .withMessage("valid value: 1 - 100"),
+        .withMessage("Valid value: 1 - 100. "),
     express_validator_1.check("cargo_capacity")
         .notEmpty()
-        .withMessage("This field is required")
+        .withMessage("This field is required. ")
         .isInt({ gt: -1, lt: 101 })
-        .withMessage("valid value: 1 - 100"),
+        .withMessage("Valid value: 1 - 100. "),
     express_validator_1.check("cargo_unit")
         .notEmpty()
-        .withMessage("This field is required")
+        .withMessage("This field is required. ")
         .isLength({ max: 45 })
-        .withMessage("Must not exceed 45 characters")
+        .withMessage("Must not exceed 45 characters.")
 ], vehicleType_1.VehicleType.update);
 router.delete("/delete/:id", [
     express_validator_1.check('id')

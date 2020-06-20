@@ -19,10 +19,21 @@ const redis_1 = require("../../config/redis");
 const axios_1 = __importDefault(require("axios"));
 const User_1 = __importDefault(require("../../models/User"));
 const User_2 = __importDefault(require("../model/User"));
+const AuthUtility_1 = require("../../util/AuthUtility");
 const typeDefs = apollo_server_express_1.gql `
   type Auth {
     user: User
     accessToken: String
+  }
+
+  enum LoginRegister {
+    LOGIN
+    REGISTER
+  }
+
+  enum AccountType {
+    C
+    D
   }
 
   input GetUserSessionInput {
@@ -31,6 +42,7 @@ const typeDefs = apollo_server_express_1.gql `
 
   input LoginRegisterInput {
     mobile: String
+    accountType: AccountType
   }
 
   input VerifyLoginRegisterInput {
@@ -39,13 +51,20 @@ const typeDefs = apollo_server_express_1.gql `
     accountType: String!
   }
 
+  input VerifyLoginInput {
+    mobile: String!
+    password: String!
+    accountType: String!
+  }
+
   type Query {
     getUserSession(input: GetUserSessionInput!): Auth
   }
 
   type Mutation {
-    loginRegister(input: LoginRegisterInput!): String
+    loginRegister(input: LoginRegisterInput!): LoginRegister
     verifyLoginRegister(input: VerifyLoginRegisterInput!): Auth
+    verifyLogin(input: VerifyLoginInput!): Auth
   }
 `;
 const resolvers = {
@@ -68,49 +87,62 @@ const resolvers = {
     },
     Mutation: {
         // User enters mobile number and requests verification code
-        loginRegister: (_, { input = {} }) => __awaiter(void 0, void 0, void 0, function* () {
+        loginRegister: (_, { input }) => __awaiter(void 0, void 0, void 0, function* () {
             try {
+                const { mobile, accountType } = input;
+                let response = "";
                 // Throw error for empty input.mobile
-                if (!input.mobile) {
+                if (!mobile) {
                     throw new apollo_server_express_1.UserInputError("Please enter your mobile number.");
                 }
-                // Create a random 6 digit verification code
-                let verificationCode;
-                if (process.env.NODE_ENV == "development") {
-                    verificationCode = "123456";
+                //Check user with username of mobile. If exist, proceed to PostRegistration/Map. Else. Proceed to Register
+                const user = yield User_1.default.query().findOne({ username: mobile });
+                console.log({ input });
+                if (user) {
+                    response = "LOGIN";
                 }
-                else {
-                    verificationCode = Math.floor(100000 + Math.random() * 900000);
-                    //Send verification code to mobile number
-                    axios_1.default.post("https://api.semaphore.co/api/v4/messages", {
-                        apikey: process.env.SEMAPHORE_API_KEY,
-                        number: input.mobile,
-                        message: `<#> ${verificationCode} is your toktok activation code. N9w/lonc+z1`,
-                    });
+                if (!user && accountType == "D") {
+                    throw new apollo_server_express_1.UserInputError("Rider account does not exist");
                 }
-                const redisData = {
-                    mobile: input.mobile,
-                    verificationCode,
-                };
-                // Save to data to Redus using mobile as key | Expires in 5 minutes
-                redis_1.REDIS_LOGIN_REGISTER().set(input.mobile, // key
-                JSON.stringify(redisData), // value
-                "EX", 300);
-                console.log("Login/Registration Verification Code: ", verificationCode);
-                return "Okay";
+                if (!user && accountType == "C") {
+                    response = "REGISTER";
+                    // Create a random 6 digit verification code
+                    let verificationCode;
+                    if (process.env.NODE_ENV == "development") {
+                        verificationCode = "123456";
+                    }
+                    else {
+                        verificationCode = Math.floor(100000 + Math.random() * 900000);
+                        //Send verification code to mobile number
+                        axios_1.default.post("https://api.semaphore.co/api/v4/messages", {
+                            apikey: process.env.SEMAPHORE_API_KEY,
+                            number: mobile,
+                            message: `${verificationCode} is your toktok registration code. Thank you for registering ka-toktok.`,
+                        });
+                    }
+                    const redisData = {
+                        mobile,
+                        verificationCode,
+                    };
+                    // Save to data to Redus using mobile as key | Expires in 5 minutes
+                    redis_1.REDIS_LOGIN_REGISTER().set(input.mobile, // key
+                    JSON.stringify(redisData), // value
+                    "EX", 300);
+                    console.log("Login/Registration Verification Code: ", verificationCode);
+                }
+                return response;
             }
             catch (error) {
                 throw error;
             }
         }),
-        // User enters verification and proceeds to login or register
+        // User enters verification and proceeds to register
+        // TODO: rename to verifyRegistration
         verifyLoginRegister: (_, { input = {} }) => __awaiter(void 0, void 0, void 0, function* () {
             try {
                 const { mobile, verificationCode, accountType } = input;
-                console.log({ input });
                 let loginRegisterData = yield redis_1.REDIS_LOGIN_REGISTER().get(mobile);
                 loginRegisterData = JSON.parse(loginRegisterData);
-                console.log({ loginRegisterData });
                 /**
                  * Throw error if loginRegisterData doesn't exist
                  * Meaning the data has already expired and is deleted from Redis.
@@ -136,59 +168,71 @@ const resolvers = {
                     person: true,
                     consumer: true,
                 });
-                console.log(JSON.stringify(user, null, 4));
+                if (user) {
+                    throw new apollo_server_express_1.UserInputError("User account already exist. Please proceed to login instead.");
+                }
+                //proceed with consumer registration if user account does not exist
+                const createdUser = yield User_1.default.query().insertGraph({
+                    username: mobile,
+                    password: "NA",
+                    active: 1,
+                    status: 1,
+                    person: {},
+                    consumer: {},
+                    failedLoginAttempts: 0,
+                });
+                return {
+                    user: createdUser,
+                    accessToken: "XYZ123",
+                };
+            }
+            catch (e) {
+                throw e;
+            }
+        }),
+        verifyLogin: (_, { input = {} }) => __awaiter(void 0, void 0, void 0, function* () {
+            try {
+                const { mobile, password, accountType } = input;
+                // Find an account for the given mobile number.
+                const user = yield User_1.default.query()
+                    .findOne({
+                    username: mobile,
+                })
+                    .withGraphFetched({
+                    driver: true,
+                    person: true,
+                    consumer: true,
+                });
+                // Should always find a user record. Else login request was made manually
+                if (!user) {
+                    throw new apollo_server_express_1.UserInputError("Forbidden Action.");
+                }
+                const passwordResult = yield AuthUtility_1.AuthUtility.verifyHash(password, user.password);
+                if (!passwordResult) {
+                    throw new apollo_server_express_1.UserInputError("Incorrect password.");
+                }
                 // Check for consumer
                 if (accountType == "C") {
-                    if (user) {
-                        // Cannot proceed with registration
-                        // Throw error if user has a driver record
-                        if (user.driver !== null) {
-                            throw new apollo_server_express_1.UserInputError("A driver account cannot be used to log in.");
-                        }
-                        // If user has a consumer record, proceed to login
-                        if (user.consumer !== null) {
-                            return {
-                                user,
-                                accessToken: "ABC123",
-                            };
-                        }
+                    if (user.driver != null) {
+                        throw new apollo_server_express_1.UserInputError("A driver account cannot be used to log in.");
                     }
-                    //proceed with consumer registration if user account does not exist
-                    const createdUser = yield User_1.default.query().insertGraph({
-                        username: mobile,
-                        password: "N/A",
-                        active: 1,
-                        status: 1,
-                        person: {},
-                        consumer: {},
-                    });
                     return {
-                        user: createdUser,
+                        user: user,
                         accessToken: "XYZ123",
                     };
                 }
                 if (accountType == "D") {
-                    if (user) {
-                        // Throw error if user has a consumer record
-                        // Cannot proceed with registration
-                        if (user.consumer !== null) {
-                            throw new apollo_server_express_1.UserInputError("Customer account cannot be used to log in on driver app.");
-                        }
-                        // If user has a driver record, proceed to login
-                        if (user.driver !== null) {
-                            return {
-                                user,
-                                accessToken: "ABC123",
-                            };
-                        }
+                    if (user.consumer != null) {
+                        throw new apollo_server_express_1.UserInputError("Customer account cannot be used to log in on rider app.");
                     }
-                    else {
-                        throw new apollo_server_express_1.UserInputError("Driver account does not exist.");
-                    }
+                    return {
+                        user,
+                        accessToken: "XYZ123",
+                    };
                 }
             }
-            catch (e) {
-                throw e;
+            catch (error) {
+                throw error;
             }
         }),
     },

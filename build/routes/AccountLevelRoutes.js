@@ -13,23 +13,22 @@ const express_validator_1 = require("express-validator");
 router.post("/create", [
     express_validator_1.check("level_name")
         .notEmpty()
+        .withMessage("This field is required. ")
         .isLength({ max: 45 })
-        .withMessage("value should not exceed 45 characters"),
+        .withMessage("Value should not exceed 45 characters."),
     express_validator_1.check("account_level")
         .notEmpty()
-        .withMessage("This field is required")
+        .withMessage("This field is required. ")
         .isInt({ gt: -1, lt: 101 })
-        .withMessage("valid value: 1 - 100"),
+        .withMessage("Valid value: 1 - 100."),
     express_validator_1.check("priority")
         .notEmpty()
-        .withMessage("This field is required")
+        .withMessage("This field is required. ")
         .isInt({ gt: -1, lt: 101 })
-        .withMessage("valid value: 1 - 100"),
+        .withMessage("Valid value: 1 - 100."),
     express_validator_1.check("tok_account_level_type_id")
         .notEmpty()
-        .withMessage("This field is required")
-        .isInt({ gt: -1, lt: 101 })
-        .withMessage("valid value: 1 - 100")
+        .withMessage("This field is required. ")
 ], accountLevel_1.AccountLevel.create);
 router.get("/read/:id", [
     express_validator_1.check('id')
@@ -41,26 +40,27 @@ router.get("/read/:id", [
 router.put("/update", [
     express_validator_1.check("id")
         .notEmpty()
-        .withMessage("ID is required"),
+        .withMessage("ID is required."),
     express_validator_1.check("level_name")
         .notEmpty()
+        .withMessage("This field is required. ")
         .isLength({ max: 45 })
-        .withMessage("value should not exceed 45 characters"),
+        .withMessage("Value should not exceed 45 characters."),
     express_validator_1.check("account_level")
         .notEmpty()
-        .withMessage("This field is required")
+        .withMessage("This field is required. ")
         .isInt({ gt: -1, lt: 101 })
-        .withMessage("valid value: 1 - 100"),
+        .withMessage("Valid value: 1 - 100."),
     express_validator_1.check("priority")
         .notEmpty()
-        .withMessage("This field is required")
+        .withMessage("This field is required. ")
         .isInt({ gt: -1, lt: 101 })
-        .withMessage("valid value: 1 - 100"),
+        .withMessage("Valid value: 1 - 100."),
     express_validator_1.check("tok_account_level_type_id")
         .notEmpty()
-        .withMessage("This field is required")
-        .isInt({ gt: -1, lt: 101 })
-        .withMessage("valid value: 1 - 100")
+        .withMessage("This field is required. ")
+        .isInt({ gt: 0 })
+        .withMessage("This field is required. ")
 ], accountLevel_1.AccountLevel.update);
 router.delete("/delete/:id", [
     express_validator_1.check('id')

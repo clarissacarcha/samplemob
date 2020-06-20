@@ -12,28 +12,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.down = exports.up = void 0;
 function up(knex) {
     return __awaiter(this, void 0, void 0, function* () {
-        return knex.schema.createTable("tok_stops", (table) => {
+        return knex.schema.createTable("tok_announcements", (table) => {
             table.increments();
-            table.string("name", 50).notNullable;
-            table.string("mobile", 50).notNullable;
-            table.string("landmark", 150).nullable;
-            table.string("formatted_address", 255).notNullable;
-            table.specificType("latitude", "decimal(18,15)").notNullable;
-            table.specificType("longitude", "decimal(18,15)").notNullable;
-            /**
-             * 1 - As Soon As Possible
-             * 2 - Scheduled
-             */
-            table.specificType("order_type", "tinyint(1)");
-            table.dateTime("scheduled_from");
-            table.dateTime("scheduled_to");
+            table.string("title", 255).notNullable; // Maximum 120 characters to not be truncated
+            table.text("body").notNullable;
+            table.string("thumbnail", 255).notNullable;
+            table.string("image", 255).notNullable;
+            table.specificType("status", "tinyint(1)");
+            table.dateTime("created_at");
+            table.dateTime("updated_at");
         });
     });
 }
 exports.up = up;
 function down(knex) {
     return __awaiter(this, void 0, void 0, function* () {
-        return knex.schema.dropTable("tok_stops");
+        return knex.schema.dropTable("tok_announcements");
     });
 }
 exports.down = down;

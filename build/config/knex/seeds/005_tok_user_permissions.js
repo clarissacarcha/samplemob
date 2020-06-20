@@ -9,25 +9,28 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.down = exports.up = void 0;
-function up(knex) {
+exports.seed = void 0;
+function seed(knex) {
     return __awaiter(this, void 0, void 0, function* () {
-        return knex.schema.createTable("tok_operators", (table) => {
-            table.increments();
-            table.string("operator_name", 45).notNullable();
-            table.string("permit_number", 45).notNullable();
-            table.specificType("com_rate", "double");
-            table.specificType("status", "tinyint(1)");
-            table.timestamp("created_at").defaultTo(knex.fn.now());
-            table.timestamp("updated_at").defaultTo(knex.fn.now());
-            table.integer("tok_user_id").unsigned().references("id").inTable("tok_users");
+        // Deletes ALL existing entries
+        return knex("tok_user_permissions")
+            .del()
+            .then(() => {
+            // Inserts seed entries
+            /*return knex("tok_user_permissions").insert([
+              //root web app user
+              { id: 1,
+                username: "root@gmail.com",
+                password: "$2b$10$b44S2p6.oPFcjFx9ODQPOOJO2S2tlkglVXC/aDkBN.jd.4QTsheEe",
+                access: "access",
+                active: "1",
+                failed_login_attempts: "0",
+                status: "1",
+                created: "2020-06-17 14:07:57",
+                updated: "2020-06-17 14:07:57"
+              }
+            ]);*/
         });
     });
 }
-exports.up = up;
-function down(knex) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return knex.schema.dropTable("tok_operators");
-    });
-}
-exports.down = down;
+exports.seed = seed;

@@ -12,24 +12,33 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const models_1 = __importDefault(require("../models"));
-const { Driver, User, Person, Delivery } = models_1.default;
-exports.default = () => __awaiter(void 0, void 0, void 0, function* () {
-    // const result = await User.query()
-    //   .findOne({
-    //     username: "9667682812",
-    //   })
-    //   .withGraphFetched({
-    //     driver: true,
-    //     person: true,
-    //     consumer: true,
-    //   });
-    // console.log(JSON.stringify(result, null, 4));
-    // const hsh = await AuthUtility.generateHashAsync("123456");
-    // console.log(hsh);
-    // OneSignalUtility.pushToUserId({
-    //   userId: "2",
-    //   title: "Welcome to toktok",
-    //   body: "Kamusta mga ka-toktok",
-    // });
+const core_1 = require("@graphql-modules/core");
+const apollo_server_express_1 = require("apollo-server-express");
+const models_1 = __importDefault(require("../../models"));
+const { Announcement } = models_1.default;
+const typeDefs = apollo_server_express_1.gql `
+  type Announcement {
+    id: String
+    title: String
+    body: String
+    thumbnail: String
+    image: String
+    createdAt: String
+    updatedAt: String
+  }
+
+  type Query {
+    getAnnouncements: [Announcement]
+  }
+`;
+const resolvers = {
+    Query: {
+        getAnnouncements: () => __awaiter(void 0, void 0, void 0, function* () {
+            return yield Announcement.query();
+        }),
+    },
+};
+exports.default = new core_1.GraphQLModule({
+    typeDefs,
+    resolvers,
 });
