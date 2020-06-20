@@ -43,13 +43,15 @@ import SelectedDelivery from '../screens/AuthenticatedStack/ConsumerScreens/Deli
 
 /*---------- DRIVER SCREENS ----------*/
 import DriverMap from '../screens/AuthenticatedStack/DriverScreens/DriverMap';
-import DriverProfile from '../screens/AuthenticatedStack/DriverScreens/DriverProfile';
+import DriverProfile from '../screens/AuthenticatedStack/DriverScreens/Profile/DriverProfile';
 
 import Ongoing from '../screens/AuthenticatedStack/DriverScreens/Deliveries/Ongoing';
 import Completed from '../screens/AuthenticatedStack/DriverScreens/Deliveries/Completed';
 import Cancelled from '../screens/AuthenticatedStack/DriverScreens/Deliveries/Cancelled';
 import SelectedDriverDelivery from '../screens/AuthenticatedStack/DriverScreens/Deliveries/SelectedDriverDelivery';
 import ItemCamera from '../screens/AuthenticatedStack/DriverScreens/Deliveries/ItemCamera';
+import ProfileCamera from '../screens/AuthenticatedStack/DriverScreens/Profile/ProfileCamera';
+import ChangeProfilePicture from '../screens/AuthenticatedStack/DriverScreens/Profile/ChangeProfilePicture';
 
 /*-------------------- IMPORT SCREENS END--------------------*/
 
@@ -108,6 +110,8 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="SelectedDriverDelivery" component={SelectedDriverDelivery} />
     <Authenticated.Screen name="ItemCamera" component={ItemCamera} />
     <Authenticated.Screen name="DriverProfile" component={DriverProfile} />
+    <Authenticated.Screen name="ProfileCamera" component={ProfileCamera} />
+    <Authenticated.Screen name="ChangeProfilePicture" component={ChangeProfilePicture} />
     <Authenticated.Screen
       name="DriverDeliveriesTab"
       component={DriverDeliveriesTab}
