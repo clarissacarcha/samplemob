@@ -8,30 +8,34 @@ export async function seed(knex: Knex): Promise<any> {
       // Inserts seed entries
       return knex("tok_roles").insert([
         //root web app user
-        { id: 1,
+        {
+          id: 1,
           role: "Root",
           status: "1",
-          created: "0000-00-00 00:00:00",
-          updated: "0000-00-00 00:00:00"
+          created: knex.fn.now(),
+          updated: knex.fn.now(),
         },
-        { id: 2,
+        {
+          id: 2,
           role: "Driver",
           status: "1",
-          created: "0000-00-00 00:00:00",
-          updated: "0000-00-00 00:00:00"
+          created: knex.fn.now(),
+          updated: knex.fn.now(),
         },
-        { id: 3,
+        {
+          id: 3,
           role: "Operator",
           status: "1",
-          created: "0000-00-00 00:00:00",
-          updated: "0000-00-00 00:00:00"
+          created: knex.fn.now(),
+          updated: knex.fn.now(),
         },
-        { id: 4,
+        {
+          id: 4,
           role: "Regular",
           status: "1",
-          created: "0000-00-00 00:00:00",
-          updated: "0000-00-00 00:00:00"
-        }
+          created: knex.fn.now(),
+          updated: knex.fn.now(),
+        },
       ]);
     });
 }

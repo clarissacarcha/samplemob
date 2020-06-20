@@ -8,18 +8,20 @@ export async function seed(knex: Knex): Promise<any> {
       // Inserts seed entries
       return knex("tok_users").insert([
         //root web app user
-        { id: 1, 
-          username: "root@gmail.com", 
-          password: "$2y$12$aZOiI/eXlwrOIUICPGIsheOrspHcxSXdOGivvOZf79PNGxnHjHCSa",
+        {
+          id: 1,
+          username: "root@gmail.com",
+          password:
+            "$2y$12$aZOiI/eXlwrOIUICPGIsheOrspHcxSXdOGivvOZf79PNGxnHjHCSa",
           access: "access",
           functions: "",
           last_seen: "2020-06-17 14:07:57",
           active: "1",
           failed_login_attempts: "0",
           status: "1",
-          created: "2020-06-17 14:07:57",
-          updated: "2020-06-17 14:07:57"
-        }
+          created: knex.fn.now(),
+          updated: knex.fn.now(),
+        },
       ]);
     });
 }
