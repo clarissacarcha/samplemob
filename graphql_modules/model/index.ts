@@ -5,6 +5,7 @@ import ConsumerModule from "./Consumer";
 import DeliveryModule from "./Delivery";
 import DeliveryLogModule from "./DeliveryLog";
 import DriverModule from "./Driver";
+import MessageModule from "./Message";
 import PersonModule from "./Person";
 import StopModule from "./Stop";
 import UserModule from "./User";
@@ -16,6 +17,7 @@ export default {
   DeliveryModule,
   DeliveryLogModule,
   DriverModule,
+  MessageModule,
   PersonModule,
   StopModule,
   UserModule,

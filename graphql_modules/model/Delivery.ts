@@ -1,6 +1,7 @@
 //@ts-nocheck
 import { gql, UserInputError } from "apollo-server-express";
 import fileUploadS3 from "../../util/FileUploadS3";
+import NotificationUtility from "../../util/NotificationUtility";
 
 import DeliveryLogModule from "./DeliveryLog";
 import DriverModule from "./Driver";
@@ -9,7 +10,7 @@ import ScalarModule from "../virtual/Scalar";
 
 import Models from "../../models";
 
-const { Delivery, DeliveryLog, Stop, Driver } = Models;
+const { Delivery, DeliveryLog, Stop, Driver, Consumer } = Models;
 
 const typeDefs = gql`
   type Delivery {
@@ -112,7 +113,6 @@ const resolvers = {
       const res = await Driver.query().findOne({
         id: parent.tokDriverId,
       });
-      console.log(JSON.stringify(res, null, 4));
       return res;
     },
   },
@@ -235,6 +235,16 @@ const resolvers = {
           tokDeliveryId: input.deliveryId,
         });
 
+        const consumer = await Consumer.query().findOne({
+          id: delivery.tokConsumerId,
+        });
+
+        NotificationUtility.notifyUser({
+          userId: consumer.tokUserId,
+          deliveryId: delivery.id,
+          deliveryStatus: 2,
+        });
+
         return "Delivery successfully accepted.";
       } catch (e) {
         console.log(e);
@@ -245,7 +255,6 @@ const resolvers = {
     // Driver updates the status of a delivery order
     patchDeliveryIncrementStatus: async (_, { input }) => {
       try {
-        console.log(input.file);
         // Find the delivery record.
         let delivery = await Delivery.query().findById(input.deliveryId);
 
@@ -279,6 +288,16 @@ const resolvers = {
           status: delivery.status + 1,
           tokDeliveryId: input.deliveryId,
           ...(input.file ? { image: uploadedFile.filename } : {}),
+        });
+
+        const consumer = await Consumer.query().findOne({
+          id: delivery.tokConsumerId,
+        });
+
+        NotificationUtility.notifyUser({
+          userId: consumer.tokUserId,
+          deliveryId: delivery.id,
+          deliveryStatus: delivery.status + 1,
         });
 
         // Return the delivery record

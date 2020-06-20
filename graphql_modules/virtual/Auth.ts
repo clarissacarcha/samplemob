@@ -196,6 +196,7 @@ const resolvers = {
           status: 1,
           person: {},
           consumer: {},
+          failedLoginAttempts: 0,
         });
 
         return {
@@ -210,7 +211,6 @@ const resolvers = {
     verifyLogin: async (_: any, { input = {} }: any) => {
       try {
         const { mobile, password, accountType } = input;
-        console.log({ input });
 
         // Find an account for the given mobile number.
         const user = await User.query()

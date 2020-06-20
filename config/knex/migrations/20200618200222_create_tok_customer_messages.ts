@@ -10,7 +10,7 @@ export async function up(knex: Knex): Promise<any> {
      * 2 - Read
      */
     table.specificType("status", "tinyint(1)");
-    table.dateTime("created_at");
+    table.dateTime("created_at").defaultTo(knex.fn.now());
     table
       .integer("tok_user_id")
       .unsigned()
