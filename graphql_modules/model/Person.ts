@@ -1,6 +1,8 @@
 //@ts-nocheck
 import { gql } from "apollo-server-express";
 import { AuthUtility } from "../../util/AuthUtility";
+import fileUploadS3 from "../../util/FileUploadS3";
+import ScalarModule from "../virtual/Scalar";
 
 import Models from "../../models";
 
@@ -32,8 +34,14 @@ const typeDefs = gql`
     password: String
   }
 
+  input patchPersonProfilePictureInput {
+    tokUserId: String
+    file: Upload
+  }
+
   type Mutation {
     patchPersonPostRegistration(input: patchPersonPostRegistrationInput): String
+    patchPersonProfilePicture(input: patchPersonProfilePictureInput): String
   }
 `;
 
@@ -54,11 +62,28 @@ const resolvers = {
 
       return "Profile successfully updated";
     },
+
+    patchPersonProfilePicture: async(_, {input}) => {
+      const {tokUserId, file} = input;
+      let uploadedFile;
+      console.log(file)
+
+      if (file) {
+        uploadedFile = await fileUploadS3({
+          file: file,
+          folder: "toktok/",
+          // thumbnailFolder: 'user_verification_documents/thumbnail/'
+        });
+      }
+      await Person.query().findById(tokUserId).patch(file && { avatar: uploadedFile.filename });
+      return "Profile successfully updated";
+    }
   },
 };
 
 import { GraphQLModule } from "@graphql-modules/core";
 export default new GraphQLModule({
+  imports: [ScalarModule],
   typeDefs,
   resolvers,
 });
