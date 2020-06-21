@@ -103,5 +103,9 @@ TODO:
 5. Rider Pix
 6. Google API Consumption
 7. Regex
+8. Book Validation on Sender Details
 
 Forgot password. Use email?
+
+1. Hold - Can Login. Can't book. What happens to booked orders?
+2. Blocked. Can't login. Flush persistent login. What happens to booked orders?

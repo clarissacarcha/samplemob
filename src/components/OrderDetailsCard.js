@@ -22,6 +22,9 @@ const SchedulePhrase = ({stop}) => {
   const stopDate = moment(stop.scheduledFrom, 'MM/DD/YYYY - hh:mm A').format('MM/DD/YYYY');
 
   let displayDate = stopDate;
+  let fromDate = moment(stop.scheduledFrom, 'MM/DD/YYYY - hh:mm A').format('h:mm a');
+  let toDate = moment(stop.scheduledTo, 'MM/DD/YYYY - hh:mm A').format('h:mm a');
+
   if (stopDate === nowDate) {
     displayDate = 'Today';
   }
@@ -29,13 +32,22 @@ const SchedulePhrase = ({stop}) => {
     displayDate = 'Tomorrow';
   }
 
+  if (fromDate === '12:00 am') {
+    fromDate = 'Anytime';
+  }
+
+  if (toDate === '11:59 pm') {
+    toDate = 'Anytime';
+  }
+
+  //TODO if scheduledFrom 00:00 = Anytime | scheduledTo 23:59:59 = Anytime
   return (
-    <Text numberOfLines={1} style={{paddingRight: 10, color: DARK, fontSize: 11, fontWeight: 'bold'}}>
+    <Text numberOfLines={1} style={{paddingRight: 10, color: MEDIUM, fontSize: 11, fontWeight: 'bold'}}>
       {displayDate}
-      <Text style={{color: MEDIUM}}> From </Text>
-      {moment(stop.scheduledFrom, 'MM/DD/YYYY - hh:mm A').format('h:mm a')}
-      <Text style={{color: MEDIUM}}> To </Text>
-      {moment(stop.scheduledTo, 'MM/DD/YYYY - hh:mm A').format('h:mm a')}
+      <Text style={{color: COLOR}}> From </Text>
+      {fromDate}
+      <Text style={{color: COLOR}}> To </Text>
+      {toDate}
     </Text>
   );
 };
@@ -49,9 +61,14 @@ const DeliverySchedule = ({label, stop}) => {
         ) : (
           <FA5Icon name="hands-helping" size={12} color={'white'} style={styles.iconBox} />
         )}
+
         <View style={{marginLeft: 10}}>
           <Text style={{fontWeight: 'bold'}}>{label}</Text>
-          <SchedulePhrase stop={stop} />
+          {stop.orderType == 1 ? (
+            <Text style={{color: MEDIUM, fontSize: 11, fontWeight: 'bold'}}>As Soon As Possible</Text>
+          ) : (
+            <SchedulePhrase stop={stop} />
+          )}
         </View>
       </View>
     </View>

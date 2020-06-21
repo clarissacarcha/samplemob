@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import SmsRetriever from 'react-native-sms-retriever';
 import {connect} from 'react-redux';
-
+import {getUniqueId} from 'react-native-device-info';
 import {useMutation} from '@apollo/react-hooks';
 import {LOGIN_REGISTER} from '../../graphql';
 import {COLOR, DARK, MEDIUM, APP_FLAVOR} from '../../res/constants';

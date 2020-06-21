@@ -14,7 +14,7 @@ import {COLOR, DARK, MEDIUM, LIGHT, ORANGE, APP_FLAVOR} from '../../../../res/co
 import {PATCH_DELIVERY_CANCEL, PATCH_DELIVERY_DELETE, PATCH_DELIVERY_REBOOK} from '../../../../graphql';
 import Toast from 'react-native-simple-toast';
 
-const SelectedDriverDelivery = ({navigation, route}) => {
+const SelectedDelivery = ({navigation, route}) => {
   const {delivery, label} = route.params;
 
   navigation.setOptions({
@@ -192,7 +192,7 @@ const SelectedDriverDelivery = ({navigation, route}) => {
   );
 };
 
-export default SelectedDriverDelivery;
+export default SelectedDelivery;
 
 const styles = StyleSheet.create({
   card: {

@@ -5,8 +5,6 @@ import FIcon from 'react-native-vector-icons/Feather';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 import OneSignal from 'react-native-onesignal';
 
-import {TouchableOpacity} from 'react-native-gesture-handler';
-
 const DrawerButton = ({label, onPress, restrict}) => {
   if (restrict && restrict != APP_FLAVOR) {
     return null;

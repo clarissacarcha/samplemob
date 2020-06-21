@@ -1,6 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
-import {View, Text, TouchableHighlight, ActivityIndicator, StyleSheet} from 'react-native';
+import {View, Text, TouchableHighlight, ActivityIndicator, StyleSheet, ScrollView} from 'react-native';
 import {connect} from 'react-redux';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import {useQuery} from '@apollo/react-hooks';
@@ -75,7 +75,7 @@ const MyDeliveries = ({navigation, session}) => {
   const mappedData = _.mapKeys(data.getDeliveriesCountByStatus, 'status');
 
   return (
-    <View style={{paddingTop: 10}}>
+    <ScrollView contentContainerStyle={{paddingTop: 10}} showsVerticalScrollIndicator={false}>
       <RoundedButton data={mappedData['1']} label={['Placed', 'Orders']} />
       <RoundedButton data={mappedData['2']} label={['Delivery', 'Scheduled']} />
       <RoundedButton data={mappedData['3']} label={['Driver on the Way', 'to Sender']} />
@@ -88,7 +88,8 @@ const MyDeliveries = ({navigation, session}) => {
       <RoundedButton data={mappedData['6']} label={['Item', 'Delivered']} />
       <View style={{height: 100}} />
       <RoundedButton data={mappedData['7']} label={['Cancelled', 'Orders']} />
-    </View>
+      <RoundedButton data={mappedData['9']} label={['Expired', 'Orders']} />
+    </ScrollView>
   );
 };
 

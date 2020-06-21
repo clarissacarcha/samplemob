@@ -35,7 +35,7 @@ const PostRegistration = ({navigation, route, session, createSession}) => {
       newSession.user.person.lastName = lastName;
       newSession.user.person.emailAddress = emailAddress;
       createSession(newSession);
-      navigation.navigate('Map');
+      navigation.navigate('ConsumerMap');
 
       // setTimeout(() => {
       //   navigation.navigate(
