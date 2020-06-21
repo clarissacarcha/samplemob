@@ -8,12 +8,18 @@ import DocumentPicker from 'react-native-document-picker';
 import {ReactNativeFile} from 'apollo-upload-client';
 import {PATCH_PERSON_PROFILE_PICTURE} from '../../../../graphql';
 import {useMutation} from '@apollo/react-hooks';
+import ImageCropper from 'react-native-simple-image-cropper';
 
 const imageWidth = Dimensions.get('window').width - 40;
 
-const ChangeProfilePicture = ({navigation, route, session}) => {
+const CROP_AREA_WIDTH = imageWidth;
+const CROP_AREA_HEIGHT = imageWidth;
+
+const ChangeProfilePicture = ({navigation, route, session, createSession}) => {
   const {label} = route.params;
   const [image, setImage] = useState(false);
+  const [croppedImage, setCroppedImage] = useState(false);
+  const [cropperParams, setCropperParams] = useState({});
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
@@ -40,7 +46,10 @@ const ChangeProfilePicture = ({navigation, route, session}) => {
   };
 
   const [patchPersonProfilePicture, {loading}] = useMutation(PATCH_PERSON_PROFILE_PICTURE, {
-    onCompleted: res => {
+    onCompleted: ({patchPersonProfilePicture}) => {
+      const newSession = {...session};
+      newSession.user.person.avatar = patchPersonProfilePicture.avatar;
+      createSession(newSession);
       Alert.alert('', 'Profile picture successfully updated', [
         {
           title: 'Ok',
@@ -59,10 +68,28 @@ const ChangeProfilePicture = ({navigation, route, session}) => {
     },
   });
 
-  const onConfirmPicture = () => {
+  const cropSize = {
+    height: imageWidth,
+    width: imageWidth,
+  };
+
+  const cropAreaSize = {
+    width: CROP_AREA_WIDTH,
+    height: CROP_AREA_HEIGHT,
+  };
+
+  const onConfirmPicture = async () => {
     try {
+      // console.log(croppedImage);
+      const croppedResult = await ImageCropper.crop({
+        ...cropperParams,
+        imageUri: image.uri,
+        cropSize,
+        cropAreaSize,
+      });
+      // console.log(result);
       const rnFile = new ReactNativeFile({
-        uri: image.uri,
+        uri: croppedResult,
         name: 'document.jpg',
         type: 'image/jpeg',
       });
@@ -84,11 +111,16 @@ const ChangeProfilePicture = ({navigation, route, session}) => {
       <>
         <AlertOverlay visible={loading} />
         <View style={styles.container}>
-          <Image
-            resizeMode="cover"
-            source={{uri: image.uri}}
-            style={{height: imageWidth, width: imageWidth, margin: 20, borderRadius: 10}}
-          />
+          <View style={{height: imageWidth, width: imageWidth, margin: 20, borderRadius: 10}}>
+            <ImageCropper
+              imageUri={image.uri}
+              cropAreaWidth={CROP_AREA_WIDTH}
+              cropAreaHeight={CROP_AREA_HEIGHT}
+              containerColor="black"
+              areaColor="black"
+              setCropperParams={cropperParams => setCropperParams(cropperParams)}
+            />
+          </View>
           <View style={{flexDirection: 'row', marginHorizontal: 20}}>
             <TouchableHighlight onPress={() => setImage(null)} underlayColor={COLOR} style={styles.imageButtonBox}>
               <View style={styles.submit}>

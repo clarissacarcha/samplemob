@@ -78,7 +78,11 @@ const Drawer = ({navigation, session, destroySession}) => {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <FAIcon name="user" size={70} color={MEDIUM} />
+              <Image
+                  source={{uri: session.user.person.avatar}}
+                  resizeMode={'contain'}
+                  style={{width: 90, height: 90, backgroundColor:'black', borderRadius: 10}}
+                />
             </View>
           ) : (
             <View

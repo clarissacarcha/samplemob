@@ -8,6 +8,8 @@ export const PATCH_PERSON_POST_REGISTRATION = gql`
 
 export const PATCH_PERSON_PROFILE_PICTURE = gql`
   mutation patchPersonProfilePicture($input: patchPersonProfilePictureInput) {
-    patchPersonProfilePicture(input: $input)
+    patchPersonProfilePicture(input: $input) {
+      avatar
+    }
   }
 `;
