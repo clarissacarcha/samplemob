@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, ScrollView, StyleSheet, TouchableHighlight, TextInput, Alert} from 'react-native';
+import {View, Text, ScrollView, StyleSheet, TouchableHighlight, TextInput, Alert, Image} from 'react-native';
 import {connect} from 'react-redux';
 import {COLOR, DARK, MAP_DELTA_LOW, ORANGE, MEDIUM, LIGHT} from '../../../../res/constants';
 import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../../components';
@@ -91,7 +91,11 @@ const DriverProfile = ({navigation, route, session, createSession}) => {
                   alignItems: 'center',
                   position: 'relative',
                 }}>
-                <FAIcon name="user" size={90} color={LIGHT} />
+                <Image
+                  source={{uri: session.user.person.avatar}}
+                  resizeMode={'contain'}
+                  style={{width: 120, height: 120, borderRadius: 10}}
+                />
                 <FAIcon name="edit" size={20} color={LIGHT} style={{position: 'absolute', bottom: 5, right: 5}} />
               </View>
             </TouchableHighlight>
