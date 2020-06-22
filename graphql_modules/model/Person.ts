@@ -52,10 +52,12 @@ const resolvers = {
 
       const hashedPassword = await AuthUtility.generateHashAsync(password);
 
+      // Update Person record
       const personResult = await Person.query()
         .where({ tokUserId })
         .update({ firstName, lastName, emailAddress });
 
+      // Update User password
       const userResult = await User.query()
         .where({ id: tokUserId })
         .update({ password: hashedPassword });
@@ -63,10 +65,10 @@ const resolvers = {
       return "Profile successfully updated";
     },
 
-    patchPersonProfilePicture: async(_, {input}) => {
-      const {tokUserId, file} = input;
+    patchPersonProfilePicture: async (_, { input }) => {
+      const { tokUserId, file } = input;
       let uploadedFile;
-      console.log(file)
+      console.log(file);
 
       if (file) {
         uploadedFile = await fileUploadS3({
@@ -75,9 +77,11 @@ const resolvers = {
           // thumbnailFolder: 'user_verification_documents/thumbnail/'
         });
       }
-      await Person.query().findById(tokUserId).patch(file && { avatar: uploadedFile.filename });
+      await Person.query()
+        .findById(tokUserId)
+        .patch(file && { avatar: uploadedFile.filename });
       return await Person.query().findById(tokUserId);
-    }
+    },
   },
 };
 

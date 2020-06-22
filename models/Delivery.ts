@@ -44,4 +44,6 @@ export default class extends Model {
  * 4 - Item Picked Up
  * 5 - Driver on the Way to Recipient
  * 6 - Completed
+ * 7 - Cancelled
+ * 8 - Expired
  */
