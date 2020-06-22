@@ -18,7 +18,7 @@ const typeDefs = gql`
     emailAddress: String
     birthdate: String
     gender: String
-    avatar: String
+    avatar: S3File
     status: Int
     createdAt: String
     updatedAt: String
@@ -41,7 +41,7 @@ const typeDefs = gql`
 
   type Mutation {
     patchPersonPostRegistration(input: patchPersonPostRegistrationInput): String
-    patchPersonProfilePicture(input: patchPersonProfilePictureInput): String
+    patchPersonProfilePicture(input: patchPersonProfilePictureInput): Person
   }
 `;
 
@@ -76,7 +76,7 @@ const resolvers = {
         });
       }
       await Person.query().findById(tokUserId).patch(file && { avatar: uploadedFile.filename });
-      return "Profile successfully updated";
+      return await Person.query().findById(tokUserId);
     }
   },
 };
