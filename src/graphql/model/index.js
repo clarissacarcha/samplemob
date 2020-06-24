@@ -4,3 +4,4 @@ export * from './Driver';
 export * from './Message';
 export * from './Person';
 export * from './Wallet';
+export * from './Order';
