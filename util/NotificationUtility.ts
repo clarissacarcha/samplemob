@@ -3,7 +3,7 @@ import OneSignalUtility from "./OneSignalUtility";
 import Models from "../models";
 import moment from "moment";
 
-const { Message } = Models;
+const { Notification } = Models;
 
 const legend = {
   2: {
@@ -39,7 +39,7 @@ const legend = {
 export default class {
   static notifyUser = async ({ userId, deliveryId, deliveryStatus }) => {
     try {
-      const result = await Message.query().insert({
+      const result = await Notification.query().insert({
         title: legend[deliveryStatus].title,
         body: legend[deliveryStatus].body,
         status: 1,

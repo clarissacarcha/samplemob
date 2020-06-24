@@ -20,6 +20,7 @@ const typeDefs = gql`
     name: String
     mobile: String
     landmark: String
+    cashOnDelivery: String
     notes: String
     cargo: String
     formattedAddress: String

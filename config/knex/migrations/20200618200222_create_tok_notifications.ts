@@ -1,7 +1,7 @@
 import * as Knex from "knex";
 
 export async function up(knex: Knex): Promise<any> {
-  return knex.schema.createTable("tok_messages", (table) => {
+  return knex.schema.createTable("tok_notifications", (table) => {
     table.increments();
     table.string("title", 255).notNullable; // Maximum 120 characters to not be truncated
     table.text("body").notNullable;
@@ -25,5 +25,5 @@ export async function up(knex: Knex): Promise<any> {
 }
 
 export async function down(knex: Knex): Promise<any> {
-  return knex.schema.dropTable("tok_messages");
+  return knex.schema.dropTable("tok_notifications");
 }
