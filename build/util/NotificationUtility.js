@@ -16,7 +16,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const OneSignalUtility_1 = __importDefault(require("./OneSignalUtility"));
 const models_1 = __importDefault(require("../models"));
 const moment_1 = __importDefault(require("moment"));
-const { Message } = models_1.default;
+const { Notification } = models_1.default;
 const legend = {
     2: {
         title: "Delivery Scheduled",
@@ -52,7 +52,7 @@ class default_1 {
 exports.default = default_1;
 default_1.notifyUser = ({ userId, deliveryId, deliveryStatus }) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const result = yield Message.query().insert({
+        const result = yield Notification.query().insert({
             title: legend[deliveryStatus].title,
             body: legend[deliveryStatus].body,
             status: 1,

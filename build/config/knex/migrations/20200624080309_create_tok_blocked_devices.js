@@ -12,33 +12,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.down = exports.up = void 0;
 function up(knex) {
     return __awaiter(this, void 0, void 0, function* () {
-        return knex.schema.createTable("tok_messages", (table) => {
+        return knex.schema.createTable("tok_blocked_devices", (table) => {
             table.increments();
-            table.string("title", 255).notNullable; // Maximum 120 characters to not be truncated
-            table.text("body").notNullable;
-            /**
-             * 1 - Unread
-             * 2 - Read
-             */
-            table.specificType("status", "tinyint(1)");
+            table.string("device_type", 1).notNullable;
+            table.string("device_id", 100).notNullable;
+            table.text("reason");
             table.dateTime("created_at").defaultTo(knex.fn.now());
             table
                 .integer("tok_user_id")
                 .unsigned()
                 .references("id")
                 .inTable("tok_users");
-            table
-                .integer("tok_delivery_id")
-                .unsigned()
-                .references("id")
-                .inTable("tok_deliveries");
         });
     });
 }
 exports.up = up;
 function down(knex) {
     return __awaiter(this, void 0, void 0, function* () {
-        return knex.schema.dropTable("tok_messages");
+        return knex.schema.dropTable("tok_blocked_devices");
     });
 }
 exports.down = down;

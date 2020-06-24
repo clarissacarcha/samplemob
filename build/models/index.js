@@ -10,10 +10,13 @@ const Consumer_1 = __importDefault(require("./Consumer"));
 const Delivery_1 = __importDefault(require("./Delivery"));
 const DeliveryLog_1 = __importDefault(require("./DeliveryLog"));
 const Driver_1 = __importDefault(require("./Driver"));
-const Message_1 = __importDefault(require("./Message"));
+const GlobalSetting_1 = __importDefault(require("./GlobalSetting"));
+const Notification_1 = __importDefault(require("./Notification"));
 const Person_1 = __importDefault(require("./Person"));
 const Stop_1 = __importDefault(require("./Stop"));
 const User_1 = __importDefault(require("./User"));
+const Wallet_1 = __importDefault(require("./Wallet"));
+const WalletLog_1 = __importDefault(require("./WalletLog"));
 exports.default = {
     Address: Address_1.default,
     Announcement: Announcements_1.default,
@@ -21,8 +24,11 @@ exports.default = {
     Delivery: Delivery_1.default,
     DeliveryLog: DeliveryLog_1.default,
     Driver: Driver_1.default,
-    Message: Message_1.default,
+    GlobalSetting: GlobalSetting_1.default,
+    Notification: Notification_1.default,
     Person: Person_1.default,
     Stop: Stop_1.default,
     User: User_1.default,
+    Wallet: Wallet_1.default,
+    WalletLog: WalletLog_1.default,
 };

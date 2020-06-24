@@ -12,15 +12,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TEST = exports.REDIS_LOGIN_REGISTER = void 0;
+exports.TEST = exports.REDIS_FORGOT_PASSWORD = exports.REDIS_LOGIN_REGISTER = void 0;
 const ioredis_1 = __importDefault(require("ioredis"));
 const redis = new ioredis_1.default();
 redis.on("error", function (err) {
     console.log("REDIS ERROR: " + err);
 });
-// Used to store 6 digit verification code for registration and login
+// Used to store 6 digit verification code for registration
 exports.REDIS_LOGIN_REGISTER = () => {
     redis.select(1);
+    return redis;
+};
+// Used to store 6 digit verification code for password reset
+exports.REDIS_FORGOT_PASSWORD = () => {
+    redis.select(2);
     return redis;
 };
 exports.TEST = () => __awaiter(void 0, void 0, void 0, function* () {

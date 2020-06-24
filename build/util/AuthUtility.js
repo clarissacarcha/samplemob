@@ -26,7 +26,7 @@ AuthUtility.getUserId = (token) => __awaiter(void 0, void 0, void 0, function* (
     return yield AuthTokenModel_1.AuthTokenModel.getUserId(token);
 });
 AuthUtility.generateHashAsync = (password) => __awaiter(void 0, void 0, void 0, function* () {
-    const saltRounds = 10;
+    const saltRounds = 12;
     return yield bcrypt.hash(password, saltRounds);
 });
 AuthUtility.verifyHash = (value, hashString) => __awaiter(void 0, void 0, void 0, function* () {

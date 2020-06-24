@@ -15,8 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 //@ts-nocheck
 const core_1 = require("@graphql-modules/core");
 const apollo_server_express_1 = require("apollo-server-express");
+const AuthUtility_1 = require("../../util/AuthUtility");
 const models_1 = __importDefault(require("../../models"));
-const { Person, Consumer, Driver } = models_1.default;
+const { User, Person, Consumer, Driver } = models_1.default;
 const Consumer_1 = __importDefault(require("./Consumer"));
 const Person_1 = __importDefault(require("./Person"));
 const Driver_1 = __importDefault(require("./Driver"));
@@ -28,6 +29,16 @@ const typeDefs = apollo_server_express_1.gql `
     person: Person
     consumer: Consumer
     driver: Driver
+  }
+
+  input PatchUserChangePasswordInput {
+    userId: String!
+    currentPassword: String!
+    newPassword: String!
+  }
+
+  type Mutation {
+    patchUserChangePassword(input: PatchUserChangePasswordInput!): String
   }
 `;
 const resolvers = {
@@ -46,6 +57,27 @@ const resolvers = {
             return yield Driver.query().findOne({
                 tokUserId: parent.id,
             });
+        }),
+    },
+    Mutation: {
+        patchUserChangePassword: (_, { input }) => __awaiter(void 0, void 0, void 0, function* () {
+            const { userId, currentPassword, newPassword } = input;
+            const hashedCurrentPassword = yield AuthUtility_1.AuthUtility.generateHashAsync(currentPassword);
+            const userRecord = yield User.query().findOne({
+                id: userId,
+            });
+            if (!userRecord) {
+                throw new apollo_server_express_1.UserInputError("User does not exist.");
+            }
+            const passwordResult = yield AuthUtility_1.AuthUtility.verifyHash(currentPassword, userRecord.password);
+            if (!passwordResult) {
+                throw new apollo_server_express_1.UserInputError("Invalid current password.");
+            }
+            const hashedNewPassword = yield AuthUtility_1.AuthUtility.generateHashAsync(newPassword);
+            yield User.query().findOne({ id: userId }).patch({
+                password: hashedNewPassword,
+            });
+            return "Password changed successfully.";
         }),
     },
 };

@@ -5,8 +5,5 @@ const objection_1 = require("objection");
 class default_1 extends objection_1.Model {
 }
 exports.default = default_1;
-default_1.tableName = "tok_announcements";
+default_1.tableName = "tok_global_settings";
 default_1.idColumn = "id";
-default_1.afterInsert = (args) => {
-    console.log("ANNOUNCEMENT HAS BEEN MADE");
-};

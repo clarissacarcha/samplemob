@@ -29,9 +29,16 @@ const typeDefs = apollo_server_express_1.gql `
   enum LoginRegister {
     LOGIN
     REGISTER
+    BLOCK
   }
 
-  enum AccountType {
+  enum ForgotPassword {
+    FORGOT
+    NOPASSWORD
+    BLOCK
+  }
+
+  enum AppFlavor {
     C
     D
   }
@@ -42,19 +49,41 @@ const typeDefs = apollo_server_express_1.gql `
 
   input LoginRegisterInput {
     mobile: String
-    accountType: AccountType
+    appFlavor: AppFlavor
   }
 
-  input VerifyLoginRegisterInput {
+  input VerifyRegistrationInput {
     mobile: String!
     verificationCode: String!
-    accountType: String!
+    appFlavor: String!
+    deviceType: String
+    deviceId: String
   }
 
   input VerifyLoginInput {
     mobile: String!
     password: String!
-    accountType: String!
+    appFlavor: String!
+    deviceType: String
+    deviceId: String
+  }
+
+  input ForgotPasswordInput {
+    mobile: String!
+    appFlavor: String!
+    deviceType: String
+    deviceId: String
+  }
+
+  input ForgotPasswordVerificationInput {
+    mobile: String!
+    verificationCode: String!
+  }
+
+  input ForgotPasswordResetInput {
+    mobile: String!
+    verificationCode: String!
+    password: String!
   }
 
   type Query {
@@ -63,10 +92,46 @@ const typeDefs = apollo_server_express_1.gql `
 
   type Mutation {
     loginRegister(input: LoginRegisterInput!): LoginRegister
-    verifyLoginRegister(input: VerifyLoginRegisterInput!): Auth
+    verifyRegistration(input: VerifyRegistrationInput!): Auth
     verifyLogin(input: VerifyLoginInput!): Auth
+    forgotPassword(input: ForgotPasswordInput!): ForgotPassword
+    forgotPasswordVerification(input: ForgotPasswordVerificationInput): String
+    forgotPasswordReset(input: ForgotPasswordResetInput): String
   }
 `;
+const SendSmsVerification = (mobile, type) => {
+    // Create a random 6 digit verification code
+    let verificationCode;
+    if (process.env.NODE_ENV == "development") {
+        verificationCode = "123456";
+    }
+    else {
+        verificationCode = Math.floor(100000 + Math.random() * 900000);
+        //Send verification code to mobile number
+        axios_1.default.post("https://api.semaphore.co/api/v4/messages", {
+            apikey: process.env.SEMAPHORE_API_KEY,
+            number: mobile,
+            message: `${verificationCode} is your toktok registration code. Thank you for registering ka-toktok.`,
+        });
+    }
+    const redisData = {
+        mobile,
+        verificationCode,
+    };
+    // Save to data to Redus using mobile as key | Expires in 15 minutes
+    if (type == "REGISTER") {
+        redis_1.REDIS_LOGIN_REGISTER().set(mobile, // key
+        JSON.stringify(redisData), // value
+        "EX", 900);
+        console.log("Registration Verification Code: ", verificationCode);
+    }
+    if (type == "FORGOT") {
+        redis_1.REDIS_FORGOT_PASSWORD().set(mobile, // key
+        JSON.stringify(redisData), // value
+        "EX", 600);
+        console.log("Forgot Password Verification Code: ", verificationCode);
+    }
+};
 const resolvers = {
     Query: {
         getUserSession: (_, { input }) => __awaiter(void 0, void 0, void 0, function* () {
@@ -89,58 +154,55 @@ const resolvers = {
         // User enters mobile number and requests verification code
         loginRegister: (_, { input }) => __awaiter(void 0, void 0, void 0, function* () {
             try {
-                const { mobile, accountType } = input;
-                let response = "";
+                const { mobile, appFlavor } = input;
                 // Throw error for empty input.mobile
                 if (!mobile) {
                     throw new apollo_server_express_1.UserInputError("Please enter your mobile number.");
                 }
-                //Check user with username of mobile. If exist, proceed to PostRegistration/Map. Else. Proceed to Register
-                const user = yield User_1.default.query().findOne({ username: mobile });
-                console.log({ input });
-                if (user) {
-                    response = "LOGIN";
-                }
-                if (!user && accountType == "D") {
-                    throw new apollo_server_express_1.UserInputError("Rider account does not exist");
-                }
-                if (!user && accountType == "C") {
-                    response = "REGISTER";
-                    // Create a random 6 digit verification code
-                    let verificationCode;
-                    if (process.env.NODE_ENV == "development") {
-                        verificationCode = "123456";
+                const user = yield User_1.default.query()
+                    .findOne({ username: mobile })
+                    .withGraphFetched({
+                    driver: true,
+                    consumer: true,
+                });
+                // If consumer and user exist, check for password.
+                if (appFlavor == "C" && user) {
+                    console.log({ user });
+                    if (user.driver != null) {
+                        throw new apollo_server_express_1.UserInputError("A rider account cannot be used to log in.");
+                    }
+                    if (user.password == "NA") {
+                        SendSmsVerification(mobile, "REGISTER");
+                        return "REGISTER";
                     }
                     else {
-                        verificationCode = Math.floor(100000 + Math.random() * 900000);
-                        //Send verification code to mobile number
-                        axios_1.default.post("https://api.semaphore.co/api/v4/messages", {
-                            apikey: process.env.SEMAPHORE_API_KEY,
-                            number: mobile,
-                            message: `${verificationCode} is your toktok registration code. Thank you for registering ka-toktok.`,
-                        });
+                        return "LOGIN";
                     }
-                    const redisData = {
-                        mobile,
-                        verificationCode,
-                    };
-                    // Save to data to Redus using mobile as key | Expires in 5 minutes
-                    redis_1.REDIS_LOGIN_REGISTER().set(input.mobile, // key
-                    JSON.stringify(redisData), // value
-                    "EX", 300);
-                    console.log("Login/Registration Verification Code: ", verificationCode);
                 }
-                return response;
+                // If consumer and user does not exist, proceed to registration.
+                if (appFlavor == "C" && !user) {
+                    SendSmsVerification(mobile, "REGISTER");
+                    return "REGISTER";
+                }
+                // If driver and user does not exist, throw error
+                if (appFlavor == "D" && !user) {
+                    throw new apollo_server_express_1.UserInputError("Rider account does not exist");
+                }
+                if (appFlavor == "D" && user) {
+                    if (user.consumer != null) {
+                        throw new apollo_server_express_1.UserInputError("Customer account cannot be used to log in on rider app.");
+                    }
+                    return "LOGIN";
+                }
             }
             catch (error) {
                 throw error;
             }
         }),
         // User enters verification and proceeds to register
-        // TODO: rename to verifyRegistration
-        verifyLoginRegister: (_, { input = {} }) => __awaiter(void 0, void 0, void 0, function* () {
+        verifyRegistration: (_, { input = {} }) => __awaiter(void 0, void 0, void 0, function* () {
             try {
-                const { mobile, verificationCode, accountType } = input;
+                const { mobile, verificationCode, appFlavor, deviceType, deviceId, } = input;
                 let loginRegisterData = yield redis_1.REDIS_LOGIN_REGISTER().get(mobile);
                 loginRegisterData = JSON.parse(loginRegisterData);
                 /**
@@ -169,6 +231,20 @@ const resolvers = {
                     consumer: true,
                 });
                 if (user) {
+                    if (user.password == "NA") {
+                        yield User_1.default.query()
+                            .findOne({
+                            username: mobile,
+                        })
+                            .patch({
+                            deviceType,
+                            deviceId,
+                        });
+                        return {
+                            user,
+                            accessToken: "XYZ123",
+                        };
+                    }
                     throw new apollo_server_express_1.UserInputError("User account already exist. Please proceed to login instead.");
                 }
                 //proceed with consumer registration if user account does not exist
@@ -180,6 +256,8 @@ const resolvers = {
                     person: {},
                     consumer: {},
                     failedLoginAttempts: 0,
+                    deviceType,
+                    deviceId,
                 });
                 return {
                     user: createdUser,
@@ -192,7 +270,8 @@ const resolvers = {
         }),
         verifyLogin: (_, { input = {} }) => __awaiter(void 0, void 0, void 0, function* () {
             try {
-                const { mobile, password, accountType } = input;
+                const { mobile, password, appFlavor, deviceType, deviceId } = input;
+                console.log({ input });
                 // Find an account for the given mobile number.
                 const user = yield User_1.default.query()
                     .findOne({
@@ -203,37 +282,127 @@ const resolvers = {
                     person: true,
                     consumer: true,
                 });
-                // Should always find a user record. Else login request was made manually
+                // Should always find a user record. Else verifyLogin request was made manually
                 if (!user) {
                     throw new apollo_server_express_1.UserInputError("Forbidden Action.");
                 }
-                const passwordResult = yield AuthUtility_1.AuthUtility.verifyHash(password, user.password);
+                const phpHashedPassword = user.password;
+                const nodeHashedPassword = phpHashedPassword.replace("$2y$", "$2b$");
+                const passwordResult = yield AuthUtility_1.AuthUtility.verifyHash(password, nodeHashedPassword);
                 if (!passwordResult) {
                     throw new apollo_server_express_1.UserInputError("Incorrect password.");
                 }
                 // Check for consumer
-                if (accountType == "C") {
-                    if (user.driver != null) {
-                        throw new apollo_server_express_1.UserInputError("A driver account cannot be used to log in.");
-                    }
-                    return {
-                        user: user,
-                        accessToken: "XYZ123",
-                    };
+                if (appFlavor == "C" && user.driver != null) {
+                    throw new apollo_server_express_1.UserInputError("A driver account cannot be used to log in.");
                 }
-                if (accountType == "D") {
-                    if (user.consumer != null) {
-                        throw new apollo_server_express_1.UserInputError("Customer account cannot be used to log in on rider app.");
-                    }
-                    return {
-                        user,
-                        accessToken: "XYZ123",
-                    };
+                if (appFlavor == "D" && user.consumer != null) {
+                    throw new apollo_server_express_1.UserInputError("Customer account cannot be used to log in on rider app.");
                 }
+                yield User_1.default.query()
+                    .findOne({
+                    username: mobile,
+                })
+                    .patch({
+                    deviceType,
+                    deviceId,
+                });
+                return {
+                    user: user,
+                    accessToken: "XYZ123",
+                };
             }
             catch (error) {
                 throw error;
             }
+        }),
+        // Send verification code to registered number
+        forgotPassword: (_, { input }) => __awaiter(void 0, void 0, void 0, function* () {
+            try {
+                const { mobile, appFlavor } = input;
+                // Throw error for empty input.mobile
+                if (!mobile) {
+                    throw new apollo_server_express_1.UserInputError("Please enter your mobile number.");
+                }
+                //Check user with username of mobile. If exist, proceed to PostRegistration/Map. Else. Proceed to Register
+                const user = yield User_1.default.query()
+                    .findOne({ username: mobile })
+                    .withGraphFetched({
+                    driver: true,
+                    consumer: true,
+                });
+                if (!user) {
+                    throw new apollo_server_express_1.UserInputError("User account does not exist.");
+                }
+                if (user.status == 2) {
+                    throw new apollo_server_express_1.UserInputError("User account does not exist.");
+                }
+                if (user.status == 3) {
+                    return "BLOCK";
+                }
+                // If consumer
+                if (appFlavor == "C" && user.driver != null) {
+                    throw new apollo_server_express_1.UserInputError("This transaction cannot be processed in the customer app.");
+                }
+                // If driver
+                if (appFlavor == "D" && user.consumer != null) {
+                    throw new apollo_server_express_1.UserInputError("This transaction cannot be processed in the rider app.");
+                }
+                if (user.password == "NA") {
+                    return "NOPASSWORD";
+                }
+                SendSmsVerification(mobile, "FORGOT");
+                return "FORGOT";
+            }
+            catch (error) {
+                throw error;
+            }
+        }),
+        forgotPasswordVerification: (_, { input }) => __awaiter(void 0, void 0, void 0, function* () {
+            const { mobile, verificationCode } = input;
+            const forgotPasswordJson = yield redis_1.REDIS_FORGOT_PASSWORD().get(mobile);
+            const forgotPasswordData = JSON.parse(forgotPasswordJson);
+            console.log(forgotPasswordData);
+            /**
+             * Throw error if forgotPasswordData doesn't exist
+             * Meaning the data has already expired and is deleted from Redis.
+             */
+            if (!forgotPasswordData) {
+                throw new apollo_server_express_1.UserInputError("Verification already expired.");
+            }
+            /**
+             * Throw error if verificationCode provided doesn't match the code stored in Redis.
+             */
+            if (verificationCode != forgotPasswordData.verificationCode) {
+                throw new apollo_server_express_1.UserInputError("Invalid verification code.");
+            }
+            return "RESET";
+        }),
+        forgotPasswordReset: (_, { input }) => __awaiter(void 0, void 0, void 0, function* () {
+            const { mobile, verificationCode, password } = input;
+            const forgotPasswordJson = yield redis_1.REDIS_FORGOT_PASSWORD().get(mobile);
+            const forgotPasswordData = JSON.parse(forgotPasswordJson);
+            /**
+             * Throw error if forgotPasswordData doesn't exist
+             * Meaning the data has already expired and is deleted from Redis.
+             */
+            if (!forgotPasswordData) {
+                throw new apollo_server_express_1.UserInputError("Verification already expired.");
+            }
+            /**
+             * Throw error if verificationCode provided doesn't match the code stored in Redis.
+             */
+            if (verificationCode != forgotPasswordData.verificationCode) {
+                throw new apollo_server_express_1.UserInputError("Invalid verification code.");
+            }
+            const nodehashedPassword = yield AuthUtility_1.AuthUtility.generateHashAsync(password);
+            const phpHashedPassword = nodehashedPassword.replace("$2b$", "$2y$");
+            yield User_1.default.query()
+                .findOne({ username: mobile })
+                .patch({ password: phpHashedPassword });
+            // Delete Redis data
+            yield redis_1.REDIS_LOGIN_REGISTER().del(mobile);
+            return "Password reset successful.";
         }),
     },
 };

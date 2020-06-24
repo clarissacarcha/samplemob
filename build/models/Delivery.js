@@ -38,6 +38,9 @@ default_1.relationMappings = {
         },
     },
 };
+default_1.afterInsert = (args) => {
+    console.log("DELIVERY HAS BEEN MADE");
+};
 /**
  * status
  * 0 - Cancelled
@@ -47,4 +50,6 @@ default_1.relationMappings = {
  * 4 - Item Picked Up
  * 5 - Driver on the Way to Recipient
  * 6 - Completed
+ * 7 - Cancelled
+ * 8 - Expired
  */

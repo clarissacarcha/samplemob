@@ -12,32 +12,33 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.down = exports.up = void 0;
 function up(knex) {
     return __awaiter(this, void 0, void 0, function* () {
-        return knex.schema.createTable("tok_users", (table) => {
+        return knex.schema.createTable("tok_notifications", (table) => {
             table.increments();
-            table.string("username", 45).notNullable();
-            table.string("password", 100).notNullable();
-            table.text("access");
-            table.text("functions");
-            table.string("device_type", 1);
-            table.string("device_id", 100);
-            table.dateTime("last_seen").nullable();
-            table.boolean("active").defaultTo(true);
-            table.specificType("failed_login_attempts", "tinyint(1)");
+            table.string("title", 255).notNullable; // Maximum 120 characters to not be truncated
+            table.text("body").notNullable;
             /**
-             * 1 - Active
-             * 2 - Applicant
-             * 3 - Blocked
+             * 1 - Unread
+             * 2 - Read
              */
-            table.specificType("status", "tinyint(1)").notNullable();
-            table.timestamp("created").defaultTo(knex.fn.now());
-            table.timestamp("updated").defaultTo(knex.fn.now());
+            table.specificType("status", "tinyint(1)");
+            table.dateTime("created_at").defaultTo(knex.fn.now());
+            table
+                .integer("tok_user_id")
+                .unsigned()
+                .references("id")
+                .inTable("tok_users");
+            table
+                .integer("tok_delivery_id")
+                .unsigned()
+                .references("id")
+                .inTable("tok_deliveries");
         });
     });
 }
 exports.up = up;
 function down(knex) {
     return __awaiter(this, void 0, void 0, function* () {
-        return knex.schema.dropTable("tok_users");
+        return knex.schema.dropTable("tok_notifications");
     });
 }
 exports.down = down;

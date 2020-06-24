@@ -474,6 +474,8 @@ const resolvers = {
 
       // Delete Redis data
       await REDIS_LOGIN_REGISTER().del(mobile);
+
+      return "Password reset successful.";
     },
   },
 };

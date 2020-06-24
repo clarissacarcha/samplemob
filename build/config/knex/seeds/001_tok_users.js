@@ -19,7 +19,8 @@ function seed(knex) {
             // Inserts seed entries
             return knex("tok_users").insert([
                 //root web app user
-                { id: 1,
+                {
+                    id: 1,
                     username: "root@gmail.com",
                     password: "$2y$12$aZOiI/eXlwrOIUICPGIsheOrspHcxSXdOGivvOZf79PNGxnHjHCSa",
                     access: "access",
@@ -28,9 +29,9 @@ function seed(knex) {
                     active: "1",
                     failed_login_attempts: "0",
                     status: "1",
-                    created: "2020-06-17 14:07:57",
-                    updated: "2020-06-17 14:07:57"
-                }
+                    created: knex.fn.now(),
+                    updated: knex.fn.now(),
+                },
             ]);
         });
     });

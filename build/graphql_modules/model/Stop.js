@@ -24,6 +24,7 @@ const typeDefs = apollo_server_express_1.gql `
     name: String
     mobile: String
     landmark: String
+    cashOnDelivery: String
     notes: String
     cargo: String
     formattedAddress: String

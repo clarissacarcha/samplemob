@@ -28,6 +28,7 @@ const typeDefs = apollo_server_express_1.gql `
     tokConsumerId: String
     distance: String
     duration: String
+    cashOnDelivery: String
     price: String
     notes: String
     cargo: String
@@ -54,11 +55,17 @@ const typeDefs = apollo_server_express_1.gql `
     statusIn: [Int]
   }
 
+  input nearestFilter {
+    latitude: String
+    longitude: String
+  }
+
   input PostDeliveryInput {
     tokConsumerId: String
     distance: Float
     duration: Float
     price: String
+    cashOnDelivery: String
     senderStop: StopInput
     recipientStop: [StopInput]
   }
@@ -88,6 +95,7 @@ const typeDefs = apollo_server_express_1.gql `
   type Query {
     getDeliveries(filter: deliveryFilter): [Delivery]
     getDeliveriesCountByStatus(filter: deliveryFilter): [StatusCount]
+    getNearestOrderAvailable(filter: nearestFilter): [Delivery]
   }
 
   type Mutation {
@@ -175,6 +183,22 @@ const resolvers = {
                 throw e;
             }
         }),
+        getNearestOrderAvailable: (_, { filter = {} }) => __awaiter(void 0, void 0, void 0, function* () {
+            try {
+                const { latitude, longitude } = filter;
+                const result = yield Delivery.query()
+                    .select(["tok_deliveries.*", objection_1.raw("( 3959 * acos( cos( radians(?) ) * cos( radians( `sender_stop`.`latitude` ) ) * cos( radians( `sender_stop`.`longitude` ) - radians(?) ) + sin( radians(?) ) * sin(radians(`sender_stop`.`latitude`)) ) )", latitude, longitude, latitude).as("distance"), "senderStop.latitude", "senderStop.longitude"])
+                    .leftJoinRelated("[senderStop]")
+                    .where("status", 1)
+                    .where("tokDriverId", null)
+                    .orderBy("distance");
+                console.log(result);
+                return result;
+            }
+            catch (e) {
+                throw e;
+            }
+        })
     },
     Mutation: {
         postDelivery: (_, { input }, { Models }) => __awaiter(void 0, void 0, void 0, function* () {
@@ -183,11 +207,14 @@ const resolvers = {
                 yield Promise.all(input.recipientStop.map((item, index) => __awaiter(void 0, void 0, void 0, function* () {
                     const notes = input.recipientStop[index].notes; // save recipient notes before being deleted
                     const cargo = input.recipientStop[index].cargo;
+                    const cashOnDelivery = input.recipientStop[index].cashOnDelivery;
                     delete input.recipientStop[index].notes; //remove recipient notes. Notes is under Delivery, not Stop
                     delete input.recipientStop[index].cargo;
+                    delete input.recipientStop[index].cashOnDelivery;
                     // Create delivery record
                     const insertedDelivery = yield Delivery.query().insertGraph(Object.assign(Object.assign({}, input), { recipientStop: input.recipientStop[index], notes,
-                        cargo, status: 1 }));
+                        cargo,
+                        cashOnDelivery, status: 1 }));
                     // Create delivery log with status = 1 || Order Placed
                     yield DeliveryLog.query().insert({
                         status: 1,
@@ -225,6 +252,7 @@ const resolvers = {
                 const consumer = yield Consumer.query().findOne({
                     id: delivery.tokConsumerId,
                 });
+                // Create a notification and send push notifs
                 NotificationUtility_1.default.notifyUser({
                     userId: consumer.tokUserId,
                     deliveryId: delivery.id,
@@ -266,6 +294,7 @@ const resolvers = {
                 const consumer = yield Consumer.query().findOne({
                     id: delivery.tokConsumerId,
                 });
+                // Create a notification and send push notifs
                 NotificationUtility_1.default.notifyUser({
                     userId: consumer.tokUserId,
                     deliveryId: delivery.id,
@@ -293,6 +322,16 @@ const resolvers = {
                 yield DeliveryLog.query().insert({
                     status: 7,
                     tokDeliveryId: input.deliveryId,
+                });
+                // TODO: Detect if should send to user or driver. Add appFlavor in input
+                const consumer = yield Consumer.query().findOne({
+                    id: delivery.tokConsumerId,
+                });
+                // Create a notification and send push notifs
+                NotificationUtility_1.default.notifyUser({
+                    userId: consumer.tokUserId,
+                    deliveryId: delivery.id,
+                    deliveryStatus: 7,
                 });
                 return yield Delivery.query().findById(input.deliveryId);
             }
@@ -368,6 +407,7 @@ const resolvers = {
     },
 };
 const core_1 = require("@graphql-modules/core");
+const objection_1 = require("objection");
 exports.default = new core_1.GraphQLModule({
     imports: [DeliveryLog_1.default, Scalar_1.default, Stop_1.default, Driver_1.default],
     typeDefs,

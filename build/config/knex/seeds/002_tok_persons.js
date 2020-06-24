@@ -19,7 +19,8 @@ function seed(knex) {
             // Inserts seed entries
             return knex("tok_persons").insert([
                 //root web app user
-                { id: 1,
+                {
+                    id: 1,
                     first_name: "Root",
                     middle_name: "",
                     last_name: "User",
@@ -28,11 +29,11 @@ function seed(knex) {
                     gender: null,
                     avatar: "avatarplaceholder.png",
                     status: "1",
-                    created_at: "2020-06-17 14:07:57",
-                    updated_at: "2020-06-17 14:07:57",
+                    created_at: knex.fn.now(),
+                    updated_at: knex.fn.now(),
                     tok_user_id: "1",
-                    tok_address_id: null
-                }
+                    tok_address_id: null,
+                },
             ]);
         });
     });

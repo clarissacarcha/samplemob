@@ -12,50 +12,51 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const core_1 = require("@graphql-modules/core");
+//@ts-nocheck
 const apollo_server_express_1 = require("apollo-server-express");
-const Delivery_1 = __importDefault(require("./Delivery"));
-const Scalar_1 = __importDefault(require("../virtual/Scalar"));
+const WalletLog_1 = __importDefault(require("./WalletLog"));
+const core_1 = require("@graphql-modules/core");
 const models_1 = __importDefault(require("../../models"));
-const { Message } = models_1.default;
+const { Wallet, WalletLog } = models_1.default;
+const Scalar_1 = __importDefault(require("../virtual/Scalar"));
 const typeDefs = apollo_server_express_1.gql `
-  type Message {
+  type Wallet {
     id: String
-    title: String
-    body: String
+    tokUsersId: Int
+    walletLog: [WalletLog]
+    balance: String
     status: Int
-    createdAt: FormattedDateTime
-    tokUserId: String
-    tokDeliveryId: String
-    delivery: Delivery
+    updated: DateTime
   }
 
-  input GetMessagesInput {
-    userId: String!
+  input getWalletInput {
+    tokUsersId: String
   }
 
   type Query {
-    getMessages(input: GetMessagesInput!): [Message]
+    getWallet(input: getWalletInput): Wallet
   }
 `;
 const resolvers = {
-    Query: {
-        getMessages: (_, { input }) => __awaiter(void 0, void 0, void 0, function* () {
-            const result = yield Message.query()
+    Wallet: {
+        walletLog: (parent) => __awaiter(void 0, void 0, void 0, function* () {
+            return yield WalletLog.query()
                 .where({
-                tokUserId: input.userId,
+                tokWalletId: parent.id,
             })
-                .withGraphFetched({
-                delivery: true,
-            })
-                .orderBy("createdAt", "DESC");
-            console.log({ result });
+                .orderBy("transactionDate", "DESC");
+        }),
+    },
+    Query: {
+        getWallet: (_, { input = {} }) => __awaiter(void 0, void 0, void 0, function* () {
+            const { tokUsersId } = input;
+            const result = yield Wallet.query().findOne({ tokUsersId });
             return result;
         }),
     },
 };
 exports.default = new core_1.GraphQLModule({
-    imports: [Delivery_1.default, Scalar_1.default],
+    imports: [Scalar_1.default, WalletLog_1.default],
     typeDefs,
     resolvers,
 });
