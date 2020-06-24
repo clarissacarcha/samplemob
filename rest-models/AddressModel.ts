@@ -1,10 +1,10 @@
+//@ts-nocheck
 const pool = require("../mysql");
 const dateFormat = require("dateformat");
 import { MysqlUtility } from "../util/MysqlUtility";
 
 export class AddressModel {
   static create = async (req: any) => {
-
     let query = MysqlUtility.mergeLines([
       "insert into tok_addresses",
       "(line1,line2, barangay,city,province,country,postal)",
@@ -21,8 +21,8 @@ export class AddressModel {
       req.postal_code,
     ];
 
-    let addressResult = await pool.query(query,values);
-    
+    let addressResult = await pool.query(query, values);
+
     return addressResult.insertId;
   };
 
@@ -33,7 +33,6 @@ export class AddressModel {
   };
 
   static update = async (req: any) => {
-
     let query = MysqlUtility.mergeLines([
       "update tok_addresses set",
       "line1 = ? ,",

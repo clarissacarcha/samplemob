@@ -1,3 +1,4 @@
+//@ts-nocheck
 const pool = require("../mysql");
 const dateFormat = require("dateformat");
 import { MysqlUtility } from "../util/MysqlUtility";
@@ -156,12 +157,11 @@ export class AccountLevelModel {
     const totalFiltered = resultSet.length;
     const account_level_types = await AccountLevelModel.getAccountLevelTypes();
 
-
     return {
       totalRows: totalRows[0].totalRows,
       totalFiltered: totalFiltered,
       resultSet: resultSet,
-      account_level_types: account_level_types
+      account_level_types: account_level_types,
     };
   };
 
