@@ -6,7 +6,7 @@ import ScalarModule from "../virtual/Scalar";
 
 import Models from "../../models";
 
-const { Message } = Models;
+const { Notification } = Models;
 
 const typeDefs = gql`
   type Message {
@@ -20,19 +20,19 @@ const typeDefs = gql`
     delivery: Delivery
   }
 
-  input GetMessagesInput {
+  input GetNotificationsInput {
     userId: String!
   }
 
   type Query {
-    getMessages(input: GetMessagesInput!): [Message]
+    getNotifications(input: GetNotificationsInput!): [Message]
   }
 `;
 
 const resolvers = {
   Query: {
-    getMessages: async (_, { input }) => {
-      const result = await Message.query()
+    getNotifications: async (_, { input }) => {
+      const result = await Notification.query()
         .where({
           tokUserId: input.userId,
         })

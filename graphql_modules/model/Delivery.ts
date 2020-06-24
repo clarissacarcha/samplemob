@@ -18,6 +18,7 @@ const typeDefs = gql`
     tokConsumerId: String
     distance: String
     duration: String
+    cashOnDelivery: String
     price: String
     notes: String
     cargo: String
@@ -49,6 +50,7 @@ const typeDefs = gql`
     distance: Float
     duration: Float
     price: String
+    cashOnDelivery: String
     senderStop: StopInput
     recipientStop: [StopInput]
   }
@@ -182,9 +184,11 @@ const resolvers = {
           input.recipientStop.map(async (item, index) => {
             const notes = input.recipientStop[index].notes; // save recipient notes before being deleted
             const cargo = input.recipientStop[index].cargo;
+            const cashOnDelivery = input.recipientStop[index].cashOnDelivery;
 
             delete input.recipientStop[index].notes; //remove recipient notes. Notes is under Delivery, not Stop
             delete input.recipientStop[index].cargo;
+            delete input.recipientStop[index].cashOnDelivery;
 
             // Create delivery record
             const insertedDelivery = await Delivery.query().insertGraph({
@@ -192,6 +196,7 @@ const resolvers = {
               recipientStop: input.recipientStop[index],
               notes, // insert the notes back
               cargo,
+              cashOnDelivery,
               status: 1, // Order Placed
             });
 

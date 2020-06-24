@@ -48,21 +48,33 @@ const typeDefs = gql`
 const resolvers = {
   Mutation: {
     patchPersonPostRegistration: async (_: any, { input }: any) => {
-      const { tokUserId, firstName, lastName, emailAddress, password } = input;
+      try {
+        const {
+          tokUserId,
+          firstName,
+          lastName,
+          emailAddress,
+          password,
+        } = input;
 
-      const hashedPassword = await AuthUtility.generateHashAsync(password);
+        // Update Person record
+        const personResult = await Person.query()
+          .where({ tokUserId })
+          .patch({ firstName, lastName, emailAddress });
 
-      // Update Person record
-      const personResult = await Person.query()
-        .where({ tokUserId })
-        .update({ firstName, lastName, emailAddress });
+        // Update User password
+        if (password) {
+          const hashedPassword = await AuthUtility.generateHashAsync(password);
 
-      // Update User password
-      const userResult = await User.query()
-        .where({ id: tokUserId })
-        .update({ password: hashedPassword });
+          const userResult = await User.query()
+            .where({ id: tokUserId })
+            .patch({ password: hashedPassword });
+        }
 
-      return "Profile successfully updated";
+        return "Profile successfully updated";
+      } catch (error) {
+        throw error;
+      }
     },
 
     patchPersonProfilePicture: async (_, { input }) => {

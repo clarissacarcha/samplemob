@@ -33,6 +33,10 @@ export default class extends Model {
       },
     },
   };
+
+  static afterInsert = (args) => {
+    console.log("DELIVERY HAS BEEN MADE");
+  };
 }
 
 /**

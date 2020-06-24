@@ -17,7 +17,7 @@ export class AuthUtility {
   };
 
   static generateHashAsync = async (password: string) => {
-    const saltRounds = 10;
+    const saltRounds = 12;
 
     return await bcrypt.hash(password, saltRounds);
   };

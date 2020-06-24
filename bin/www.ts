@@ -22,7 +22,7 @@ mountApolloOnExpressAndServer(App, server);
 
 server.listen(process.env.PORT, () => {
   //deliveryDispatchCronJob().start();
-  startCronJobs();
+  // startCronJobs();
 
   console.log(
     `${process.env.PROTOCOL} server running in ${process.env.NODE_ENV} mode on port ${process.env.PORT}`

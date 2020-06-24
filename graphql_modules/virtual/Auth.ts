@@ -17,6 +17,7 @@ const typeDefs = gql`
   enum LoginRegister {
     LOGIN
     REGISTER
+    BLOCK
   }
 
   enum AppFlavor {
@@ -37,12 +38,16 @@ const typeDefs = gql`
     mobile: String!
     verificationCode: String!
     appFlavor: String!
+    deviceType: String
+    deviceId: String
   }
 
   input VerifyLoginInput {
     mobile: String!
     password: String!
     appFlavor: String!
+    deviceType: String
+    deviceId: String
   }
 
   type Query {
@@ -55,6 +60,38 @@ const typeDefs = gql`
     verifyLogin(input: VerifyLoginInput!): Auth
   }
 `;
+
+const SendSmsVerification = (mobile) => {
+  // Create a random 6 digit verification code
+  let verificationCode;
+  if (process.env.NODE_ENV == "development") {
+    verificationCode = "123456";
+  } else {
+    verificationCode = Math.floor(100000 + Math.random() * 900000);
+
+    //Send verification code to mobile number
+    axios.post("https://api.semaphore.co/api/v4/messages", {
+      apikey: process.env.SEMAPHORE_API_KEY,
+      number: mobile,
+      message: `${verificationCode} is your toktok registration code. Thank you for registering ka-toktok.`,
+      // message: `<#> ${verificationCode} is your toktok activation code. N9w/lonc+z1`,
+    });
+  }
+  const redisData = {
+    mobile,
+    verificationCode,
+  };
+
+  // Save to data to Redus using mobile as key | Expires in 5 minutes
+  REDIS_LOGIN_REGISTER().set(
+    mobile, // key
+    JSON.stringify(redisData), // value
+    "EX",
+    300
+  );
+
+  console.log("Login/Registration Verification Code: ", verificationCode);
+};
 
 const resolvers = {
   Query: {
@@ -81,64 +118,56 @@ const resolvers = {
       try {
         const { mobile, appFlavor } = input;
 
-        let response = "";
-
         // Throw error for empty input.mobile
         if (!mobile) {
           throw new UserInputError("Please enter your mobile number.");
         }
 
         //Check user with username of mobile. If exist, proceed to PostRegistration/Map. Else. Proceed to Register
-        const user = await User.query().findOne({ username: mobile });
+        const user = await User.query()
+          .findOne({ username: mobile })
+          .withGraphFetched({
+            driver: true,
+            consumer: true,
+          });
 
-        console.log({ input });
+        // If consumer and user exist, check for password.
+        if (appFlavor == "C" && user) {
+          console.log({ user });
+          if (user.driver != null) {
+            throw new UserInputError(
+              "A rider account cannot be used to log in."
+            );
+          }
 
-        if (user) {
-          response = "LOGIN";
+          if (user.password == "NA") {
+            SendSmsVerification(mobile);
+            return "REGISTER";
+          } else {
+            return "LOGIN";
+          }
         }
 
-        if (!user && appFlavor == "D") {
+        // If consumer and user does not exist, proceed to registration.
+        if (appFlavor == "C" && !user) {
+          SendSmsVerification(mobile);
+          return "REGISTER";
+        }
+
+        // If driver and user does not exist, throw error
+        if (appFlavor == "D" && !user) {
           throw new UserInputError("Rider account does not exist");
         }
 
-        if (!user && appFlavor == "C") {
-          response = "REGISTER";
-
-          // Create a random 6 digit verification code
-          let verificationCode;
-          if (process.env.NODE_ENV == "development") {
-            verificationCode = "123456";
-          } else {
-            verificationCode = Math.floor(100000 + Math.random() * 900000);
-
-            //Send verification code to mobile number
-            axios.post("https://api.semaphore.co/api/v4/messages", {
-              apikey: process.env.SEMAPHORE_API_KEY,
-              number: mobile,
-              message: `${verificationCode} is your toktok registration code. Thank you for registering ka-toktok.`,
-              // message: `<#> ${verificationCode} is your toktok activation code. N9w/lonc+z1`,
-            });
+        if (appFlavor == "D" && user) {
+          if (user.consumer != null) {
+            throw new UserInputError(
+              "Customer account cannot be used to log in on rider app."
+            );
           }
-          const redisData = {
-            mobile,
-            verificationCode,
-          };
 
-          // Save to data to Redus using mobile as key | Expires in 5 minutes
-          REDIS_LOGIN_REGISTER().set(
-            input.mobile, // key
-            JSON.stringify(redisData), // value
-            "EX",
-            300
-          );
-
-          console.log(
-            "Login/Registration Verification Code: ",
-            verificationCode
-          );
+          return "LOGIN";
         }
-
-        return response;
       } catch (error) {
         throw error;
       }
@@ -148,7 +177,13 @@ const resolvers = {
     // TODO: rename to verifyRegistration
     verifyRegistration: async (_: any, { input = {} }: any) => {
       try {
-        const { mobile, verificationCode, appFlavor } = input;
+        const {
+          mobile,
+          verificationCode,
+          appFlavor,
+          deviceType,
+          deviceId,
+        } = input;
 
         let loginRegisterData = await REDIS_LOGIN_REGISTER().get(mobile);
         loginRegisterData = JSON.parse(loginRegisterData);
@@ -183,6 +218,21 @@ const resolvers = {
           });
 
         if (user) {
+          if (user.password == "NA") {
+            await User.query()
+              .findOne({
+                username: mobile,
+              })
+              .patch({
+                deviceType,
+                deviceId,
+              });
+
+            return {
+              user,
+              accessToken: "XYZ123",
+            };
+          }
           throw new UserInputError(
             "User account already exist. Please proceed to login instead."
           );
@@ -197,6 +247,8 @@ const resolvers = {
           person: {},
           consumer: {},
           failedLoginAttempts: 0,
+          deviceType,
+          deviceId,
         });
 
         return {
@@ -210,7 +262,7 @@ const resolvers = {
 
     verifyLogin: async (_: any, { input = {} }: any) => {
       try {
-        const { mobile, password, appFlavor } = input;
+        const { mobile, password, appFlavor, deviceType, deviceId } = input;
 
         // Find an account for the given mobile number.
         const user = await User.query()
@@ -223,7 +275,7 @@ const resolvers = {
             consumer: true,
           });
 
-        // Should always find a user record. Else login request was made manually
+        // Should always find a user record. Else verifyLogin request was made manually
         if (!user) {
           throw new UserInputError("Forbidden Action.");
         }
@@ -238,31 +290,31 @@ const resolvers = {
         }
 
         // Check for consumer
-        if (appFlavor == "C") {
-          if (user.driver != null) {
-            throw new UserInputError(
-              "A driver account cannot be used to log in."
-            );
-          }
-
-          return {
-            user: user,
-            accessToken: "XYZ123",
-          };
+        if (appFlavor == "C" && user.driver != null) {
+          throw new UserInputError(
+            "A driver account cannot be used to log in."
+          );
         }
 
-        if (appFlavor == "D") {
-          if (user.consumer != null) {
-            throw new UserInputError(
-              "Customer account cannot be used to log in on rider app."
-            );
-          }
-
-          return {
-            user,
-            accessToken: "XYZ123",
-          };
+        if (appFlavor == "D" && user.consumer != null) {
+          throw new UserInputError(
+            "Customer account cannot be used to log in on rider app."
+          );
         }
+
+        await User.query()
+          .findOne({
+            username: mobile,
+          })
+          .patch({
+            deviceType,
+            deviceId,
+          });
+
+        return {
+          user: user,
+          accessToken: "XYZ123",
+        };
       } catch (error) {
         throw error;
       }
