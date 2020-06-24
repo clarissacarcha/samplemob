@@ -121,6 +121,14 @@ const Drawer = ({navigation, session, destroySession}) => {
             navigation.navigate(route);
           }}
         />
+        <DrawerButton
+          label="Wallet"
+          onPress={() => {
+            // const route = APP_FLAVOR == 'C' ? 'CustomerProfile' : 'DriverProfile';
+            const route = 'DriverWallet';
+            navigation.navigate(route);
+          }}
+        />
 
         {/*--------------- MY DELIVERIES ---------------*/}
         <DrawerButton
