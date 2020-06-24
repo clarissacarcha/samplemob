@@ -45,6 +45,11 @@ const typeDefs = gql`
     statusIn: [Int]
   }
 
+  input nearestFilter {
+    latitude: String
+    longitude: String
+  }
+
   input PostDeliveryInput {
     tokConsumerId: String
     distance: Float
@@ -80,6 +85,7 @@ const typeDefs = gql`
   type Query {
     getDeliveries(filter: deliveryFilter): [Delivery]
     getDeliveriesCountByStatus(filter: deliveryFilter): [StatusCount]
+    getNearestOrderAvailable(filter: nearestFilter): [Delivery]
   }
 
   type Mutation {
@@ -175,6 +181,24 @@ const resolvers = {
         throw e;
       }
     },
+
+    getNearestOrderAvailable: async (_, { filter = {} }) => {
+      try{
+        const { latitude, longitude } = filter;
+
+        const result = await Delivery.query()
+        .select(["tok_deliveries.*", raw("( 3959 * acos( cos( radians(?) ) * cos( radians( `sender_stop`.`latitude` ) ) * cos( radians( `sender_stop`.`longitude` ) - radians(?) ) + sin( radians(?) ) * sin(radians(`sender_stop`.`latitude`)) ) )", latitude, longitude, latitude).as("distance") , "senderStop.latitude", "senderStop.longitude"])
+        .leftJoinRelated("[senderStop]")
+        .where("status", 1)
+        .where("tokDriverId", null)
+        .orderBy("distance");
+        console.log(result);
+
+        return result;
+      } catch (e) {
+        throw e;
+      }
+    }
   },
   Mutation: {
     postDelivery: async (_, { input }, { Models }) => {
@@ -438,6 +462,8 @@ const resolvers = {
 };
 
 import { GraphQLModule } from "@graphql-modules/core";
+import DistanceCalculator from "../../util/DistanceCalculator";
+import { raw } from "objection";
 export default new GraphQLModule({
   imports: [DeliveryLogModule, ScalarModule, StopModule, DriverModule],
   typeDefs,
