@@ -9,6 +9,8 @@ import Message from "./Message";
 import Person from "./Person";
 import Stop from "./Stop";
 import User from "./User";
+import Wallet from "./Wallet";
+import WalletLog from "./WalletLog";
 
 export default {
   Address,
@@ -21,4 +23,6 @@ export default {
   Person,
   Stop,
   User,
+  Wallet,
+  WalletLog,
 };
