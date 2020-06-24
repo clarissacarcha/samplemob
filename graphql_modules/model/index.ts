@@ -10,6 +10,8 @@ import NotificationModule from "./Notification";
 import PersonModule from "./Person";
 import StopModule from "./Stop";
 import UserModule from "./User";
+import WalletModule from "./Wallet";
+import WalletLogModule from "./WalletLog";
 
 export default {
   AddressModule,
@@ -23,4 +25,6 @@ export default {
   PersonModule,
   StopModule,
   UserModule,
+  WalletModule,
+  WalletLogModule,
 };
