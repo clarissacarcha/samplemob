@@ -47,6 +47,7 @@ const typeDefs = gql`
 
 const resolvers = {
   Mutation: {
+    // Used for postRegistration and change password
     patchPersonPostRegistration: async (_: any, { input }: any) => {
       try {
         const {
@@ -64,11 +65,14 @@ const resolvers = {
 
         // Update User password
         if (password) {
-          const hashedPassword = await AuthUtility.generateHashAsync(password);
+          const nodehashedPassword = await AuthUtility.generateHashAsync(
+            password
+          );
+          const phpHashedPassword = nodehashedPassword.replace("$2b$", "$2y$");
 
           const userResult = await User.query()
             .where({ id: tokUserId })
-            .patch({ password: hashedPassword });
+            .patch({ password: phpHashedPassword });
         }
 
         return "Profile successfully updated";
