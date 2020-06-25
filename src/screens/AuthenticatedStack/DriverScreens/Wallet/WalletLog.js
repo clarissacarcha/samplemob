@@ -34,18 +34,18 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 100,
     flexDirection: 'row',
-    borderStyle: 'solid',
-    borderWidth: 1,
+    // borderStyle: 'solid',
+    // borderWidth: 1,
   },
   content: {
     flex: 1,
     justifyContent: 'center',
-    marginLeft: 15,
+    marginLeft: 10,
   },
   info: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'flex-end',
-    marginLeft: 14,
+    marginRight: 8,
   },
 });

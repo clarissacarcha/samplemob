@@ -69,7 +69,53 @@ export const POST_DELIVERY = gql`
 
 export const PATCH_DELIVERY_ACCEPTED = gql`
   mutation patchDeliveryAccepted($input: PatchDeliveryAcceptedInput!) {
-    patchDeliveryAccepted(input: $input)
+    patchDeliveryAccepted(input: $input) {
+      id
+      tokConsumerId
+      distance
+      duration
+      price
+      notes
+      status
+      createdAt
+      senderStop {
+        name
+        mobile
+        landmark
+        formattedAddress
+        latitude
+        longitude
+        orderType
+        scheduledFrom
+        scheduledTo
+      }
+      recipientStop {
+        name
+        mobile
+        landmark
+        formattedAddress
+        latitude
+        longitude
+        orderType
+        scheduledFrom
+        scheduledTo
+      }
+      logs {
+        status
+        image
+        createdAt
+      }
+      driver {
+        id
+        user {
+          username
+          person {
+            firstName
+            lastName
+          }
+        }
+      }
+    }
   }
 `;
 

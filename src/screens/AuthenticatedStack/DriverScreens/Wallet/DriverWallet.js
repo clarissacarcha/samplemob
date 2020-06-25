@@ -7,12 +7,12 @@ import {connect} from 'react-redux';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 import {GET_WALLET} from '../../../../graphql';
 import {useQuery} from '@apollo/react-hooks';
-import { useFocusEffect } from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 
 const DriverWallet = ({navigation, route, session, createSession}) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={['My', 'Wallet']} />,
+    headerTitle: () => <HeaderTitle label={['', 'Wallet']} />,
   });
 
   const [firstName, setFirstName] = useState(session.user.person.firstName);
@@ -31,26 +31,40 @@ const DriverWallet = ({navigation, route, session, createSession}) => {
     refetch();
   }, [session.user.id]);
 
-  if (loading) {
+  const renderBalance = () => {
+    if (loading) {
+      return (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <ActivityIndicator size={24} color={COLOR} />
+        </View>
+      );
+    }
+
+    if (error) {
+      return (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <Text>SOMETHING WENT WRONG</Text>
+        </View>
+      );
+    }
+
     return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <ActivityIndicator size={24} color={COLOR} />
+      <View style={{flex: 1}}>
+        <Text style={styles.label}>Balance</Text>
+        <Text style={[styles.input, {height: 50, textAlignVertical: 'center', color: MEDIUM}]}>
+          {data.getWallet.balance}
+        </Text>
+
+        <Text style={styles.label}>Floating</Text>
+        <Text style={[styles.input, {height: 50, textAlignVertical: 'center', color: MEDIUM}]}>
+          {data.getWallet.balance}
+        </Text>
       </View>
     );
-  }
-
-  if (error) {
-    return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <Text>SOMETHING WENT WRONG</Text>
-      </View>
-    );
-  }
-
-  console.log(data.getWallet.walletLog)
+  };
 
   const seeHistory = () => {
-    navigation.navigate('DriverWalletLog', {data: data.getWallet.walletLog});
+    navigation.navigate('DriverWalletLog');
   };
 
   return (
@@ -95,18 +109,10 @@ const DriverWallet = ({navigation, route, session, createSession}) => {
         </View>
         <Text style={styles.label}>Rider Name</Text>
         <Text style={[styles.input, {height: 50, textAlignVertical: 'center', color: MEDIUM}]}>
-          {session.user.person.firstName + ' ' + session.user.person.lastName}
+          {firstName + ' ' + lastName}
         </Text>
 
-        <Text style={styles.label}>Balance</Text>
-        <Text style={[styles.input, {height: 50, textAlignVertical: 'center', color: MEDIUM}]}>
-          {data.getWallet.balance}
-        </Text>
-
-        <Text style={styles.label}>Floating</Text>
-        <Text style={[styles.input, {height: 50, textAlignVertical: 'center', color: MEDIUM}]}>
-          {data.getWallet.balance}
-        </Text>
+        {renderBalance()}
 
         {/* <Text style={styles.label}>Email Address</Text>
         <TextInput

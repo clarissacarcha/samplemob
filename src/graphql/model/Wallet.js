@@ -18,3 +18,19 @@ export const GET_WALLET = gql`
     }
   }
 `;
+
+export const GET_WALLET_LOG = gql`
+  query getWallet($input: getWalletInput) {
+    getWallet(input: $input) {
+      id
+      walletLog {
+        id
+        type
+        balance
+        transactionDate
+        incoming
+        outgoing
+      }
+    }
+  }
+`;

@@ -1,10 +1,13 @@
 import React from 'react';
-import {View, StyleSheet, Text, Image, FlatList} from 'react-native';
+import {View, StyleSheet, Text, Image, FlatList, ActivityIndicator} from 'react-native';
 import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../../components';
 import {connect} from 'react-redux';
 import {COLOR, DARK, MAP_DELTA_LOW, ORANGE, MEDIUM, LIGHT} from '../../../../res/constants';
 import NoData from '../../../../assets/images/NoData.png';
 import WalletLog from './WalletLog';
+import {useQuery} from '@apollo/react-hooks';
+import {GET_WALLET_LOG} from '../../../../graphql';
+import {useFocusEffect} from '@react-navigation/native';
 
 const DriverWalletLog = ({navigation, route, session, createSession}) => {
   navigation.setOptions({
@@ -12,13 +15,39 @@ const DriverWalletLog = ({navigation, route, session, createSession}) => {
     headerTitle: () => <HeaderTitle label={['Wallet', 'History']} />,
   });
 
-  const {data} = route.params;
+  const {data, loading, error, refetch} = useQuery(GET_WALLET_LOG, {
+    fetchPolicy: 'network-only',
+    variables: {
+      input: {
+        tokUsersId: session.user.id,
+      },
+    },
+  });
 
-  if (data.length === 0) {
+  useFocusEffect(() => {
+    refetch();
+  }, [session.user.id]);
+
+  if (loading) {
+    return (
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <ActivityIndicator size={24} color={COLOR} />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <Text>SOMETHING WENT WRONG</Text>
+      </View>
+    );
+  }
+
+  if (data.getWallet.walletLog.length === 0) {
     return (
       <View style={styles.center}>
         <Image source={NoData} style={styles.image} resizeMode={'contain'} />
-        <Text style={styles.text}>No Record</Text>
       </View>
     );
   }
@@ -27,9 +56,11 @@ const DriverWalletLog = ({navigation, route, session, createSession}) => {
     <View style={styles.container}>
       <FlatList
         showsVerticalScrollIndicator={false}
-        data={data}
+        data={data.getWallet.walletLog}
         keyExtractor={item => item.id}
-        renderItem={({item, index}) => <WalletLog item={item} lastItem={data.length === index + 1 ? true : false} />}
+        renderItem={({item, index}) => (
+          <WalletLog item={item} lastItem={data.getWallet.walletLog.length === index + 1 ? true : false} />
+        )}
       />
     </View>
   );
