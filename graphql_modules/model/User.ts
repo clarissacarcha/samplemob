@@ -1,9 +1,10 @@
 //@ts-nocheck
 import { GraphQLModule } from "@graphql-modules/core";
-import { gql } from "apollo-server-express";
+import { gql, UserInputError } from "apollo-server-express";
+import { AuthUtility } from "../../util/AuthUtility";
 import Models from "../../models";
 
-const { Person, Consumer, Driver } = Models;
+const { User, Person, Consumer, Driver } = Models;
 
 import ConsumerModule from "./Consumer";
 import PersonModule from "./Person";
@@ -17,6 +18,16 @@ const typeDefs = gql`
     person: Person
     consumer: Consumer
     driver: Driver
+  }
+
+  input PatchUserChangePasswordInput {
+    userId: String!
+    currentPassword: String!
+    newPassword: String!
+  }
+
+  type Mutation {
+    patchUserChangePassword(input: PatchUserChangePasswordInput!): String
   }
 `;
 
@@ -36,6 +47,42 @@ const resolvers = {
       return await Driver.query().findOne({
         tokUserId: parent.id,
       });
+    },
+  },
+  Mutation: {
+    patchUserChangePassword: async (_, { input }) => {
+      const { userId, currentPassword, newPassword } = input;
+
+      const hashedCurrentPassword = await AuthUtility.generateHashAsync(
+        currentPassword
+      );
+
+      const userRecord = await User.query().findOne({
+        id: userId,
+      });
+
+      if (!userRecord) {
+        throw new UserInputError("User does not exist.");
+      }
+
+      const passwordResult = await AuthUtility.verifyHash(
+        currentPassword,
+        userRecord.password
+      );
+
+      if (!passwordResult) {
+        throw new UserInputError("Invalid current password.");
+      }
+
+      const hashedNewPassword = await AuthUtility.generateHashAsync(
+        newPassword
+      );
+
+      await User.query().findOne({ id: userId }).patch({
+        password: hashedNewPassword,
+      });
+
+      return "Password changed successfully.";
     },
   },
 };

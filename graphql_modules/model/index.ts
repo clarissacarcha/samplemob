@@ -5,9 +5,13 @@ import ConsumerModule from "./Consumer";
 import DeliveryModule from "./Delivery";
 import DeliveryLogModule from "./DeliveryLog";
 import DriverModule from "./Driver";
+import GlobalSettingModule from "./GlobalSetting";
+import NotificationModule from "./Notification";
 import PersonModule from "./Person";
 import StopModule from "./Stop";
 import UserModule from "./User";
+import WalletModule from "./Wallet";
+import WalletLogModule from "./WalletLog";
 
 export default {
   AddressModule,
@@ -16,7 +20,11 @@ export default {
   DeliveryModule,
   DeliveryLogModule,
   DriverModule,
+  GlobalSettingModule,
+  NotificationModule,
   PersonModule,
   StopModule,
   UserModule,
+  WalletModule,
+  WalletLogModule,
 };

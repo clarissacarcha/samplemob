@@ -1,6 +1,6 @@
 import Models from "../models";
 const { Driver, User, Person, Delivery } = Models;
-// import { AuthUtility } from "../util/AuthUtility";
+import OneSignalUtility from "../util/OneSignalUtility";
 
 export default async () => {
   // const result = await User.query()
@@ -15,4 +15,9 @@ export default async () => {
   // console.log(JSON.stringify(result, null, 4));
   // const hsh = await AuthUtility.generateHashAsync("123456");
   // console.log(hsh);
+  // OneSignalUtility.pushToUserId({
+  //   userId: "2",
+  //   title: "Welcome to toktok",
+  //   body: "Kamusta mga ka-toktok",
+  // });
 };

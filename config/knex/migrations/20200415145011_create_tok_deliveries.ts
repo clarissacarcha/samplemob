@@ -8,7 +8,7 @@ export async function up(knex: Knex): Promise<any> {
     table.decimal("distance", 10, 2);
     table.integer("duration", 5);
     table.specificType("price", "double");
-    table.specificType("rating", "tinyint(1)");
+    table.specificType("cash_on_delivery", "double");
     table.text("cargo");
     /**
      * 1 - Order Placed
@@ -22,6 +22,7 @@ export async function up(knex: Knex): Promise<any> {
      * 9 - Order Expired
      */
     table.specificType("status", "tinyint(1)");
+    table.specificType("rating", "tinyint(1)");
     table.timestamp("created_at").defaultTo(knex.fn.now());
     table.timestamp("updated_at").defaultTo(knex.fn.now());
     table

@@ -7,10 +7,17 @@ export async function up(knex: Knex): Promise<any> {
     table.string("password", 100).notNullable();
     table.text("access");
     table.text("functions");
-    table.dateTime('last_seen').nullable();
+    table.string("device_type", 1);
+    table.string("device_id", 100);
+    table.dateTime("last_seen").nullable();
     table.boolean("active").defaultTo(true);
     table.specificType("failed_login_attempts", "tinyint(1)");
-    table.specificType("status", "tinyint(1)");
+    /**
+     * 1 - Active
+     * 2 - Applicant
+     * 3 - Blocked
+     */
+    table.specificType("status", "tinyint(1)").notNullable();
     table.timestamp("created").defaultTo(knex.fn.now());
     table.timestamp("updated").defaultTo(knex.fn.now());
   });

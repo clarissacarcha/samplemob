@@ -1,6 +1,8 @@
 //@ts-nocheck
 import { gql } from "apollo-server-express";
 import { AuthUtility } from "../../util/AuthUtility";
+import fileUploadS3 from "../../util/FileUploadS3";
+import ScalarModule from "../virtual/Scalar";
 
 import Models from "../../models";
 
@@ -16,7 +18,7 @@ const typeDefs = gql`
     emailAddress: String
     birthdate: String
     gender: String
-    avatar: String
+    avatar: S3File
     status: Int
     createdAt: String
     updatedAt: String
@@ -32,33 +34,76 @@ const typeDefs = gql`
     password: String
   }
 
+  input patchPersonProfilePictureInput {
+    tokUserId: String
+    file: Upload
+  }
+
   type Mutation {
     patchPersonPostRegistration(input: patchPersonPostRegistrationInput): String
+    patchPersonProfilePicture(input: patchPersonProfilePictureInput): Person
   }
 `;
 
 const resolvers = {
   Mutation: {
+    // Used for postRegistration and change password
     patchPersonPostRegistration: async (_: any, { input }: any) => {
-      const { tokUserId, firstName, lastName, emailAddress, password } = input;
+      try {
+        const {
+          tokUserId,
+          firstName,
+          lastName,
+          emailAddress,
+          password,
+        } = input;
 
-      const hashedPassword = await AuthUtility.generateHashAsync(password);
+        // Update Person record
+        const personResult = await Person.query()
+          .where({ tokUserId })
+          .patch({ firstName, lastName, emailAddress });
 
-      const personResult = await Person.query()
-        .where({ tokUserId })
-        .update({ firstName, lastName, emailAddress });
+        // Update User password
+        if (password) {
+          const nodehashedPassword = await AuthUtility.generateHashAsync(
+            password
+          );
+          const phpHashedPassword = nodehashedPassword.replace("$2b$", "$2y$");
 
-      const userResult = await User.query()
-        .where({ id: tokUserId })
-        .update({ password: hashedPassword });
+          const userResult = await User.query()
+            .where({ id: tokUserId })
+            .patch({ password: phpHashedPassword });
+        }
 
-      return "Profile successfully updated";
+        return "Profile successfully updated";
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    patchPersonProfilePicture: async (_, { input }) => {
+      const { tokUserId, file } = input;
+      let uploadedFile;
+      console.log(file);
+
+      if (file) {
+        uploadedFile = await fileUploadS3({
+          file: file,
+          folder: "toktok/",
+          // thumbnailFolder: 'user_verification_documents/thumbnail/'
+        });
+      }
+      await Person.query()
+        .findById(tokUserId)
+        .patch(file && { avatar: uploadedFile.filename });
+      return await Person.query().findById(tokUserId);
     },
   },
 };
 
 import { GraphQLModule } from "@graphql-modules/core";
 export default new GraphQLModule({
+  imports: [ScalarModule],
   typeDefs,
   resolvers,
 });

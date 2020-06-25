@@ -1,6 +1,9 @@
 //@ts-nocheck
+import { GraphQLModule } from "@graphql-modules/core";
+import { raw } from "objection";
 import { gql, UserInputError } from "apollo-server-express";
 import fileUploadS3 from "../../util/FileUploadS3";
+import NotificationUtility from "../../util/NotificationUtility";
 
 import DeliveryLogModule from "./DeliveryLog";
 import DriverModule from "./Driver";
@@ -9,7 +12,7 @@ import ScalarModule from "../virtual/Scalar";
 
 import Models from "../../models";
 
-const { Delivery, DeliveryLog, Stop, Driver } = Models;
+const { Delivery, DeliveryLog, Stop, Driver, Consumer } = Models;
 
 const typeDefs = gql`
   type Delivery {
@@ -17,6 +20,7 @@ const typeDefs = gql`
     tokConsumerId: String
     distance: String
     duration: String
+    cashOnDelivery: String
     price: String
     notes: String
     cargo: String
@@ -43,13 +47,18 @@ const typeDefs = gql`
     statusIn: [Int]
   }
 
+  input nearestFilter {
+    latitude: String
+    longitude: String
+  }
+
   input PostDeliveryInput {
     tokConsumerId: String
     distance: Float
     duration: Float
     price: String
-    senderStop: StopInput
-    recipientStop: [StopInput]
+    senderStop: SenderStopInput
+    recipientStop: [RecipientStopInput]
   }
 
   input PatchDeliveryAcceptedInput {
@@ -77,6 +86,7 @@ const typeDefs = gql`
   type Query {
     getDeliveries(filter: deliveryFilter): [Delivery]
     getDeliveriesCountByStatus(filter: deliveryFilter): [StatusCount]
+    getNearestOrderAvailable(filter: nearestFilter): [Delivery]
   }
 
   type Mutation {
@@ -112,7 +122,6 @@ const resolvers = {
       const res = await Driver.query().findOne({
         id: parent.tokDriverId,
       });
-      console.log(JSON.stringify(res, null, 4));
       return res;
     },
   },
@@ -173,6 +182,34 @@ const resolvers = {
         throw e;
       }
     },
+
+    getNearestOrderAvailable: async (_, { filter = {} }) => {
+      try {
+        const { latitude, longitude } = filter;
+
+        const result = await Delivery.query()
+          .select([
+            "tok_deliveries.*",
+            raw(
+              "( 3959 * acos( cos( radians(?) ) * cos( radians( `sender_stop`.`latitude` ) ) * cos( radians( `sender_stop`.`longitude` ) - radians(?) ) + sin( radians(?) ) * sin(radians(`sender_stop`.`latitude`)) ) )",
+              latitude,
+              longitude,
+              latitude
+            ).as("distance"),
+            "senderStop.latitude",
+            "senderStop.longitude",
+          ])
+          .leftJoinRelated("[senderStop]")
+          .where("status", 1)
+          .where("tokDriverId", null)
+          .orderBy("distance");
+        console.log(result);
+
+        return result;
+      } catch (e) {
+        throw e;
+      }
+    },
   },
   Mutation: {
     postDelivery: async (_, { input }, { Models }) => {
@@ -182,9 +219,11 @@ const resolvers = {
           input.recipientStop.map(async (item, index) => {
             const notes = input.recipientStop[index].notes; // save recipient notes before being deleted
             const cargo = input.recipientStop[index].cargo;
+            const cashOnDelivery = input.recipientStop[index].cashOnDelivery;
 
             delete input.recipientStop[index].notes; //remove recipient notes. Notes is under Delivery, not Stop
             delete input.recipientStop[index].cargo;
+            delete input.recipientStop[index].cashOnDelivery;
 
             // Create delivery record
             const insertedDelivery = await Delivery.query().insertGraph({
@@ -192,6 +231,7 @@ const resolvers = {
               recipientStop: input.recipientStop[index],
               notes, // insert the notes back
               cargo,
+              cashOnDelivery,
               status: 1, // Order Placed
             });
 
@@ -235,6 +275,17 @@ const resolvers = {
           tokDeliveryId: input.deliveryId,
         });
 
+        const consumer = await Consumer.query().findOne({
+          id: delivery.tokConsumerId,
+        });
+
+        // Create a notification and send push notifs
+        NotificationUtility.notifyUser({
+          userId: consumer.tokUserId,
+          deliveryId: delivery.id,
+          deliveryStatus: 2,
+        });
+
         return "Delivery successfully accepted.";
       } catch (e) {
         console.log(e);
@@ -245,7 +296,6 @@ const resolvers = {
     // Driver updates the status of a delivery order
     patchDeliveryIncrementStatus: async (_, { input }) => {
       try {
-        console.log(input.file);
         // Find the delivery record.
         let delivery = await Delivery.query().findById(input.deliveryId);
 
@@ -281,6 +331,17 @@ const resolvers = {
           ...(input.file ? { image: uploadedFile.filename } : {}),
         });
 
+        const consumer = await Consumer.query().findOne({
+          id: delivery.tokConsumerId,
+        });
+
+        // Create a notification and send push notifs
+        NotificationUtility.notifyUser({
+          userId: consumer.tokUserId,
+          deliveryId: delivery.id,
+          deliveryStatus: delivery.status + 1,
+        });
+
         // Return the delivery record
         return await Delivery.query().findById(input.deliveryId);
       } catch (e) {
@@ -306,6 +367,18 @@ const resolvers = {
         await DeliveryLog.query().insert({
           status: 7,
           tokDeliveryId: input.deliveryId,
+        });
+
+        // TODO: Detect if should send to user or driver. Add appFlavor in input
+        const consumer = await Consumer.query().findOne({
+          id: delivery.tokConsumerId,
+        });
+
+        // Create a notification and send push notifs
+        NotificationUtility.notifyUser({
+          userId: consumer.tokUserId,
+          deliveryId: delivery.id,
+          deliveryStatus: 7,
         });
 
         return await Delivery.query().findById(input.deliveryId);
@@ -399,7 +472,6 @@ const resolvers = {
   },
 };
 
-import { GraphQLModule } from "@graphql-modules/core";
 export default new GraphQLModule({
   imports: [DeliveryLogModule, ScalarModule, StopModule, DriverModule],
   typeDefs,

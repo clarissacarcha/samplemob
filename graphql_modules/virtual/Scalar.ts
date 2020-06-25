@@ -9,6 +9,7 @@ const typeDefs = gql`
   scalar DateTime
   scalar S3File
   scalar ISO2DateTime
+  scalar FormattedDateTime
 `;
 
 const resolvers = {
@@ -33,7 +34,23 @@ const resolvers = {
       return moment(value).format("YYYY-MM-DD hh:mm:ss"); // value from the client
     },
     serialize(value) {
-      return moment(value).format("MM/DD/YYYY - hh:mm A");
+      return moment(value).format("MM/DD/YYYY - hh:mm a");
+    },
+    parseLiteral(ast) {
+      if (ast.kind === Kind.INT) {
+        return new Date(ast.value); // ast value is always in string format
+      }
+      return null;
+    },
+  }),
+  FormattedDateTime: new GraphQLScalarType({
+    name: "FormattedDateTime",
+    description: "Date custom scalar type",
+    parseValue(value) {
+      return value; // value from the client
+    },
+    serialize(value) {
+      return moment(value).format("MMM DD YYYY - h:mm a");
     },
     parseLiteral(ast) {
       if (ast.kind === Kind.INT) {

@@ -1,4 +1,5 @@
-    const pool = require("../mysql");
+//@ts-nocheck
+const pool = require("../mysql");
 const dateFormat = require("dateformat");
 import { MysqlUtility } from "../util/MysqlUtility";
 
@@ -12,11 +13,7 @@ export class RoleModel {
       "values(?,?,?)",
     ]);
 
-    let values = [
-      req.role,
-      1,
-      date
-    ];
+    let values = [req.role, 1, date];
 
     return await pool.query(query, values);
   };
@@ -30,16 +27,16 @@ export class RoleModel {
   static getRolePermissions = async (role: string) => {
     let userPermissionCodes = [];
 
-    let query = MysqlUtility.mergeLines([ 
-    "select c.permission_code from tok_roles as a",
-    "left join tok_role_permissions as b on a.id = b.tok_roles_id",
-    "left join tok_permissions as c on b.tok_permissions_id = c.id ",
-    "where a.role = ?"
+    let query = MysqlUtility.mergeLines([
+      "select c.permission_code from tok_roles as a",
+      "left join tok_role_permissions as b on a.id = b.tok_roles_id",
+      "left join tok_permissions as c on b.tok_permissions_id = c.id ",
+      "where a.role = ?",
     ]);
 
     let rolePermissionResult = await pool.query(query, [role]);
 
-    for (var a = 0; a< rolePermissionResult.length; a++) {
+    for (var a = 0; a < rolePermissionResult.length; a++) {
       userPermissionCodes.push(rolePermissionResult[a].permission_code);
     }
     return userPermissionCodes;
@@ -55,11 +52,7 @@ export class RoleModel {
       "where id = ?",
     ]);
 
-    let values = [
-      req.role,
-      date,
-      req.id,
-    ];
+    let values = [req.role, date, req.id];
 
     return await pool.query(query, values);
   };
@@ -67,8 +60,7 @@ export class RoleModel {
   static delete = async (id: number) => {
     const date = dateFormat(new Date(), "yyyy-mm-dd HH:MM:ss");
 
-    let query =
-      "update tok_roles set status = 0, updated = ? where id = ?";
+    let query = "update tok_roles set status = 0, updated = ? where id = ?";
 
     return await pool.query(query, [date, id]);
   };
@@ -81,12 +73,7 @@ export class RoleModel {
 
     const recordStatus = 1;
 
-    const orderColumns = [
-      "id",
-      "role",
-      "created_at",
-      "updated_at",
-    ];
+    const orderColumns = ["id", "role", "created_at", "updated_at"];
 
     const orderDirections = ["asc", "desc"];
 
@@ -113,14 +100,9 @@ export class RoleModel {
         "and status = ?",
       ]);
 
-      values = [
-        "%" + req.searchstring + "%"
-      ];
+      values = ["%" + req.searchstring + "%"];
 
-      counterQueryValues = [
-        "%" + req.searchstring + "%",
-        recordStatus,
-      ];
+      counterQueryValues = ["%" + req.searchstring + "%", recordStatus];
     } else {
       query = MysqlUtility.bindValues(
         MysqlUtility.mergeLines([
@@ -153,7 +135,7 @@ export class RoleModel {
     return {
       totalRows: totalRows[0].totalRows,
       totalFiltered: totalFiltered,
-      resultSet: resultSet
+      resultSet: resultSet,
     };
   };
 }

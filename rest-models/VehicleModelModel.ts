@@ -1,3 +1,4 @@
+//@ts-nocheck
 const pool = require("../mysql");
 const dateFormat = require("dateformat");
 import { MysqlUtility } from "../util/MysqlUtility";
@@ -12,12 +13,7 @@ export class VehicleModelModel {
       "values(?,?,?,?)",
     ]);
 
-    let values = [
-      req.model,
-      req.model_year,
-      1,
-      date
-    ];
+    let values = [req.model, req.model_year, 1, date];
 
     return await pool.query(query, values);
   };
@@ -39,12 +35,7 @@ export class VehicleModelModel {
       "where id = ?",
     ]);
 
-    let values = [
-      req.model,
-      req.model_year,
-      date,
-      req.id,
-    ];
+    let values = [req.model, req.model_year, date, req.id];
 
     return await pool.query(query, values);
   };
@@ -100,10 +91,7 @@ export class VehicleModelModel {
         "and status = ?",
       ]);
 
-      values = [
-        "%" + req.searchstring + "%",
-        req.searchstring
-      ];
+      values = ["%" + req.searchstring + "%", req.searchstring];
 
       counterQueryValues = [
         "%" + req.searchstring + "%",

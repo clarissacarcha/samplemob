@@ -8,7 +8,7 @@ export const calculateOrderPrice = ({ distance }: any) => {
     return flatRate;
   }
 
-  // Computer for price, deduct baseDistance from distance to use as final distance
+  // Compute for price, deduct baseDistance from distance to use as final distance
   const finalDistance = distance - baseDistance;
 
   return Math.floor(flatRate + finalDistance * perKm);
