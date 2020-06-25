@@ -120,17 +120,19 @@ REPORT
 18. (checkmark) Forgot Password
 19. (checkmark) Exposed API for Announcements, Deliveries, Announcement Consumer/Driver
 20. (checkmark) Normalize Date Formats (Scalar)
-21. Normalize ScheduledFrom / To Format
-22. Fix Order Type Schedule, Today Only
-23. Refactor Delivery Card to Show CashOnDelivery Price
-24. Constants
-25. Generalize On Error
-26. Driver UI for Cash On Delivery
-27. Driver Push Notifications (Order Cancel from Customer/Driver, New Orders)
-28. Version Control
+21. (checkmark) Normalize ScheduledFrom / To Format
+22. Announcement for Customer and Rider
+23. Fix Order Type Schedule, Today Only
+24. Refactor Delivery Card to Show CashOnDelivery Price
+25. Constants
+26. (checkmark) Generalize On Error
+27. Driver UI for Cash On Delivery
+28. Driver Push Notifications (Order Cancel from Customer/Driver, New Orders)
+29. Version Control
+30. SynerMaxx
 
-29. Handle Network Errors on Fetch
-30. Rider Interval Logs
+31. Handle Network Errors on Fetch
+32. Rider Interval Logs
 
 //
 
@@ -143,8 +145,6 @@ If device is blocked, no orders (block the account)
 
 Constants:
 Distance in km to search for drivers to send push notifications.
-Concurrent orders
-OneSignal App Id based on app flavor
 Support email
 website
 Rider logs interval

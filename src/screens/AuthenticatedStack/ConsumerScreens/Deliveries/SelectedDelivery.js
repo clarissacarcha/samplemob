@@ -11,7 +11,7 @@ import {
   OrderDetailsCard,
 } from '../../../../components';
 import {COLOR, DARK, MEDIUM, LIGHT, ORANGE, APP_FLAVOR} from '../../../../res/constants';
-import {PATCH_DELIVERY_CANCEL, PATCH_DELIVERY_DELETE, PATCH_DELIVERY_REBOOK} from '../../../../graphql';
+import {PATCH_DELIVERY_CUSTOMER_CANCEL, PATCH_DELIVERY_DELETE, PATCH_DELIVERY_REBOOK} from '../../../../graphql';
 import Toast from 'react-native-simple-toast';
 
 const SelectedDelivery = ({navigation, route}) => {
@@ -26,15 +26,15 @@ const SelectedDelivery = ({navigation, route}) => {
   const [getDelivery, setDelivery] = useState(delivery);
   const [loading, setLoading] = useState(false);
 
-  const [patchDeliveryCancel, {loading: loadingC}] = useMutation(PATCH_DELIVERY_CANCEL, {
+  const [patchDeliveryCustomerCancel, {loading: loadingC}] = useMutation(PATCH_DELIVERY_CUSTOMER_CANCEL, {
     variables: {
       input: {
         deliveryId: getDelivery.id,
       },
     },
-    onCompleted: ({patchDeliveryCancel}) => {
+    onCompleted: ({patchDeliveryCustomerCancel}) => {
       Toast.show('Order successfully cancelled');
-      setDelivery(patchDeliveryCancel);
+      setDelivery(patchDeliveryCustomerCancel);
     },
     onError: ({graphQLErrors, networkError}) => {
       if (networkError) {
@@ -52,7 +52,7 @@ const SelectedDelivery = ({navigation, route}) => {
         deliveryId: getDelivery.id,
       },
     },
-    onCompleted: ({patchDeliveryCancel}) => {
+    onCompleted: ({patchDeliveryDelete}) => {
       Toast.show('Order successfully deleted');
       navigation.pop();
     },
@@ -118,7 +118,7 @@ const SelectedDelivery = ({navigation, route}) => {
         {/*---------------------------------------- CANCEL ORDER BUTTON ----------------------------------------*/}
         {[1, 2, 3].includes(getDelivery.status) && (
           <TouchableHighlight
-            onPress={patchDeliveryCancel}
+            onPress={patchDeliveryCustomerCancel}
             underlayColor={COLOR}
             style={{borderRadius: 10, marginBottom: 20}}>
             <View style={styles.submit}>

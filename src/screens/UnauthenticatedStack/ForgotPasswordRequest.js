@@ -1,14 +1,12 @@
 import React, {useState, useRef, useEffect} from 'react';
 import {View, StyleSheet, Text, TextInput, TouchableHighlight, Image, Alert, Platform} from 'react-native';
 import SmsRetriever from 'react-native-sms-retriever';
-import AsyncStorage from '@react-native-community/async-storage';
 import {connect} from 'react-redux';
 import {useMutation} from '@apollo/react-hooks';
-import OneSignal from 'react-native-onesignal';
-import {getUniqueId} from 'react-native-device-info';
 import {COLOR, DARK, APP_FLAVOR, MEDIUM, LIGHT} from '../../res/constants';
 import {FORGOT_PASSWORD} from '../../graphql';
 import {AlertOverlay, HeaderBack, HeaderTitle} from '../../components';
+import {onError} from '../../util/ErrorUtility';
 
 import timer from 'react-native-timer';
 
@@ -53,6 +51,7 @@ const ForgotPassword = ({navigation, route, createSession}) => {
         // deviceType: Platform.select({ios: 'I', android: 'A'}),
       },
     },
+    onError: onError,
     onCompleted: ({forgotPassword}) => {
       if (forgotPassword == 'NOPASSWORD') {
         Alert.alert('', 'No nominated password. Please proceed to login instead.', [
@@ -69,14 +68,6 @@ const ForgotPassword = ({navigation, route, createSession}) => {
 
       if (forgotPassword == 'FORGOT') {
         navigation.navigate('ForgotPasswordVerification', {mobile});
-      }
-    },
-    onError: ({graphQLErrors, networkError}) => {
-      if (networkError) {
-        Alert.alert('', 'Network error occured. Please check your internet connection.');
-      }
-      if (graphQLErrors) {
-        Alert.alert('', graphQLErrors[0].message);
       }
     },
   });

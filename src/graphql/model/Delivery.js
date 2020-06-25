@@ -79,9 +79,9 @@ export const PATCH_DELIVERY_ACCEPTED = gql`
   }
 `;
 
-export const PATCH_DELIVERY_CANCEL = gql`
-  mutation patchDeliveryCancel($input: PatchDeliveryCancelInput!) {
-    patchDeliveryCancel(input: $input) {
+export const PATCH_DELIVERY_CUSTOMER_CANCEL = gql`
+  mutation patchDeliveryCustomerCancel($input: PatchDeliveryCustomerCancelInput!) {
+    patchDeliveryCustomerCancel(input: $input) {
       ${Delivery}
     }
   }

@@ -9,6 +9,7 @@ import {getUniqueId} from 'react-native-device-info';
 import {COLOR, DARK, APP_FLAVOR, MEDIUM, LIGHT} from '../../res/constants';
 import {VERIFY_LOGIN} from '../../graphql';
 import {AlertOverlay} from '../../components';
+import {onError} from '../../util/ErrorUtility';
 
 import timer from 'react-native-timer';
 
@@ -30,6 +31,7 @@ const PasswordVerification = ({navigation, route, createSession}) => {
         deviceType: Platform.select({ios: 'I', android: 'A'}),
       },
     },
+    onError: onError,
     onCompleted: ({verifyLogin}) => {
       const {user, accessToken} = verifyLogin;
 
@@ -74,14 +76,6 @@ const PasswordVerification = ({navigation, route, createSession}) => {
           },
         });
         return;
-      }
-    },
-    onError: ({graphQLErrors, networkError}) => {
-      if (networkError) {
-        Alert.alert('', 'Network error occured. Please check your internet connection.');
-      }
-      if (graphQLErrors) {
-        Alert.alert('', graphQLErrors[0].message);
       }
     },
   });

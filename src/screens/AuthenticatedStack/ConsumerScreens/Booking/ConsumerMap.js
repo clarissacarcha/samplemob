@@ -41,7 +41,6 @@ const INITIAL_SENDER = session => ({
   orderType: 1,
   scheduledFrom: null,
   scheduledTo: null,
-  scheduledDayIndex: '0',
 });
 
 const INITIAL_RECIPIENT = [
@@ -56,7 +55,6 @@ const INITIAL_RECIPIENT = [
     orderType: 1,
     scheduledFrom: null,
     scheduledTo: null,
-    scheduledDayIndex: '0',
     cashOnDelivery: null,
   },
 ];
@@ -80,7 +78,7 @@ const findNotificationRoute = type => {
   }
 };
 
-const ConsumerMap = ({navigation, session, route}) => {
+const ConsumerMap = ({navigation, session, route, constants}) => {
   navigation.setOptions({
     header: () => null,
   });
@@ -162,15 +160,16 @@ const ConsumerMap = ({navigation, session, route}) => {
 
     setTimeout(() => {
       navigation.push(findNotificationRoute(type));
-    }, 10);
+    }, 50);
   };
 
   const oneSignalInit = async () => {
-    OneSignal.init('711d41c0-8c05-4c37-9769-977a27de1ac5');
+    OneSignal.init(constants.consumerOneSignalAppId);
     OneSignal.inFocusDisplaying(2);
   };
 
   useEffect(() => {
+    alert(JSON.stringify(constants, null, 4));
     oneSignalInit();
 
     OneSignal.addEventListener('opened', onNotificationOpened);
@@ -279,12 +278,10 @@ const ConsumerMap = ({navigation, session, route}) => {
       delete input.senderStop.accuracy;
       delete input.senderStop.latitudeDelta;
       delete input.senderStop.longitudeDelta;
-      delete input.senderStop.scheduledDayIndex;
 
       delete input.recipientStop[0].accuracy;
       delete input.recipientStop[0].latitudeDelta;
       delete input.recipientStop[0].longitudeDelta;
-      delete input.recipientStop[0].scheduledDayIndex;
 
       postDelivery({
         variables: {
@@ -478,6 +475,7 @@ const ConsumerMap = ({navigation, session, route}) => {
 
 const mapStateToProps = state => ({
   session: state.session,
+  constants: state.constants,
 });
 
 export default connect(

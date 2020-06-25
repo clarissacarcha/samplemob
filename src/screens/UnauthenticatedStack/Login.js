@@ -13,11 +13,11 @@ import {
 } from 'react-native';
 import SmsRetriever from 'react-native-sms-retriever';
 import {connect} from 'react-redux';
-import {getUniqueId} from 'react-native-device-info';
 import {useMutation} from '@apollo/react-hooks';
 import {LOGIN_REGISTER} from '../../graphql';
 import {COLOR, DARK, MEDIUM, APP_FLAVOR} from '../../res/constants';
 import {AlertOverlay} from '../../components';
+import {onError} from '../../util/ErrorUtility';
 
 import Splash from '../../assets/images/Splash.png';
 import LoginBanner from '../../assets/images/LoginBanner.png';
@@ -32,6 +32,7 @@ const Login = ({navigation, session}) => {
         appFlavor: APP_FLAVOR,
       },
     },
+    onError: onError,
     onCompleted: ({loginRegister}) => {
       if (loginRegister == 'REGISTER') {
         navigation.push('SmsVerification', {mobile});
@@ -42,14 +43,6 @@ const Login = ({navigation, session}) => {
       }
 
       setMobile(''); //empty out the mobile number
-    },
-    onError: ({graphQLErrors, networkError}) => {
-      if (networkError) {
-        Alert.alert('', 'Network error occurred. Please check your internet connection.');
-      }
-      if (graphQLErrors) {
-        Alert.alert('', graphQLErrors[0].message);
-      }
     },
   });
 

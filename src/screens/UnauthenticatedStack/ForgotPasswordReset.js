@@ -2,9 +2,10 @@ import React, {useState, useEffect} from 'react';
 import {View, Text, ScrollView, StyleSheet, TouchableHighlight, TextInput, Alert, BackHandler} from 'react-native';
 import {connect} from 'react-redux';
 import validator from 'validator';
-import {COLOR, DARK, MAP_DELTA_LOW, MEDIUM} from '../../res/constants';
+import {COLOR, DARK, MEDIUM} from '../../res/constants';
 import {HeaderBack, HeaderTitle, AlertOverlay} from '../../components';
 import {useMutation} from '@apollo/react-hooks';
+import {onError} from '../../util/ErrorUtility';
 
 import {FORGOT_PASSWORD_RESET} from '../../graphql';
 
@@ -32,6 +33,7 @@ const PostRegistration = ({navigation, route}) => {
         password,
       },
     },
+    onError: onError,
     onCompleted: ({forgotPasswordReset}) => {
       Alert.alert('', forgotPasswordReset, [
         {
@@ -39,14 +41,6 @@ const PostRegistration = ({navigation, route}) => {
           onPress: goToLogin,
         },
       ]);
-    },
-    onError: ({graphQLErrors, networkError}) => {
-      if (networkError) {
-        Alert.alert('', 'Network error occurred. Please check your internet connection.');
-      }
-      if (graphQLErrors) {
-        Alert.alert('', graphQLErrors[0].message);
-      }
     },
   });
 

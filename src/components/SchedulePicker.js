@@ -8,10 +8,9 @@ import {View, Text, StyleSheet, TouchableWithoutFeedback, Dimensions} from 'reac
 import DropDownPicker from 'react-native-dropdown-picker';
 import FIcon from 'react-native-vector-icons/Feather';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {parseTime} from '../helper';
 import moment from 'moment';
 
-import {COLOR, DARK, MAP_DELTA_LOW, MEDIUM, LIGHT, ORANGE} from '../res/constants';
+import {COLOR, DARK, MEDIUM, LIGHT} from '../res/constants';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -21,76 +20,71 @@ const INITIAL_VISIBILITY = {
   to: false,
 };
 
-const timeToDate = value => {
-  return moment(value, 'HH:mm:ss').toISOString();
-};
+const TODAY_TIME = moment()
+  .tz('Asia/Manila')
+  .format('HH:mm:ss')
+  .toString();
 
-const toDateFormat = (value, numOfDays) => {
-  if (numOfDays > 0) {
-    return moment(value)
-      .add(numOfDays, 'days')
-      .toISOString();
-  }
-
-  return moment(value).toISOString();
-};
-
-const schedules = [
-  {label: '12:00 AM', value: timeToDate('00:00')},
-  {label: '12:30 AM', value: timeToDate('00:30')},
-  {label: '01:00 AM', value: timeToDate('01:00')},
-  {label: '01:30 AM', value: timeToDate('01:30')},
-  {label: '02:00 AM', value: timeToDate('02:00')},
-  {label: '02:30 AM', value: timeToDate('02:30')},
-  {label: '03:00 AM', value: timeToDate('03:00')},
-  {label: '03:30 AM', value: timeToDate('03:30')},
-  {label: '04:00 AM', value: timeToDate('04:00')},
-  {label: '04:30 AM', value: timeToDate('04:30')},
-  {label: '05:00 AM', value: timeToDate('05:00')},
-  {label: '05:30 AM', value: timeToDate('05:30')},
-  {label: '06:00 AM', value: timeToDate('06:00')},
-  {label: '06:30 AM', value: timeToDate('06:30')},
-  {label: '07:00 AM', value: timeToDate('07:00')},
-  {label: '07:30 AM', value: timeToDate('07:30')},
-  {label: '08:00 AM', value: timeToDate('08:00')},
-  {label: '08:30 AM', value: timeToDate('08:30')},
-  {label: '09:00 AM', value: timeToDate('09:00')},
-  {label: '09:30 AM', value: timeToDate('09:30')},
-  {label: '10:00 AM', value: timeToDate('10:00')},
-  {label: '10:30 AM', value: timeToDate('10:30')},
-  {label: '11:00 AM', value: timeToDate('11:00')},
-  {label: '11:30 AM', value: timeToDate('11:30')},
-  {label: '12:00 PM', value: timeToDate('12:00')},
-  {label: '12:30 PM', value: timeToDate('12:30')},
-  {label: '01:00 PM', value: timeToDate('13:00')},
-  {label: '01:30 PM', value: timeToDate('13:30')},
-  {label: '02:00 PM', value: timeToDate('14:00')},
-  {label: '02:30 PM', value: timeToDate('14:30')},
-  {label: '03:00 PM', value: timeToDate('15:00')},
-  {label: '03:30 PM', value: timeToDate('15:30')},
-  {label: '04:00 PM', value: timeToDate('16:00')},
-  {label: '04:30 PM', value: timeToDate('16:30')},
-  {label: '05:00 PM', value: timeToDate('17:00')},
-  {label: '05:30 PM', value: timeToDate('17:30')},
-  {label: '06:00 PM', value: timeToDate('18:00')},
-  {label: '06:30 PM', value: timeToDate('18:30')},
-  {label: '07:00 PM', value: timeToDate('19:00')},
-  {label: '07:30 PM', value: timeToDate('19:30')},
-  {label: '08:00 PM', value: timeToDate('20:00')},
-  {label: '08:30 PM', value: timeToDate('20:30')},
-  {label: '09:00 PM', value: timeToDate('21:00')},
-  {label: '09:30 PM', value: timeToDate('21:30')},
-  {label: '10:00 PM', value: timeToDate('22:00')},
-  {label: '10:30 PM', value: timeToDate('22:30')},
-  {label: '11:00 PM', value: timeToDate('23:00')},
-  {label: '11:30 PM', value: timeToDate('23:30')},
+const SCHEDULES = [
+  {label: '12:00 AM', value: '00:00:00'},
+  {label: '12:30 AM', value: '00:30:00'},
+  {label: '01:00 AM', value: '01:00:00'},
+  {label: '01:30 AM', value: '01:30:00'},
+  {label: '02:00 AM', value: '02:00:00'},
+  {label: '02:30 AM', value: '02:30:00'},
+  {label: '03:00 AM', value: '03:00:00'},
+  {label: '03:30 AM', value: '03:30:00'},
+  {label: '04:00 AM', value: '04:00:00'},
+  {label: '04:30 AM', value: '04:30:00'},
+  {label: '05:00 AM', value: '05:00:00'},
+  {label: '05:30 AM', value: '05:30:00'},
+  {label: '06:00 AM', value: '06:00:00'},
+  {label: '06:30 AM', value: '06:30:00'},
+  {label: '07:00 AM', value: '07:00:00'},
+  {label: '07:30 AM', value: '07:30:00'},
+  {label: '08:00 AM', value: '08:00:00'},
+  {label: '08:30 AM', value: '08:30:00'},
+  {label: '09:00 AM', value: '09:00:00'},
+  {label: '09:30 AM', value: '09:30:00'},
+  {label: '10:00 AM', value: '10:00:00'},
+  {label: '10:30 AM', value: '10:30:00'},
+  {label: '11:00 AM', value: '11:00:00'},
+  {label: '11:30 AM', value: '11:30:00'},
+  {label: '12:00 PM', value: '12:00:00'},
+  {label: '12:30 PM', value: '12:30:00'},
+  {label: '01:00 PM', value: '13:00:00'},
+  {label: '01:30 PM', value: '13:30:00'},
+  {label: '02:00 PM', value: '14:00:00'},
+  {label: '02:30 PM', value: '14:30:00'},
+  {label: '03:00 PM', value: '15:00:00'},
+  {label: '03:30 PM', value: '15:30:00'},
+  {label: '04:00 PM', value: '16:00:00'},
+  {label: '04:30 PM', value: '16:30:00'},
+  {label: '05:00 PM', value: '17:00:00'},
+  {label: '05:30 PM', value: '17:30:00'},
+  {label: '06:00 PM', value: '18:00:00'},
+  {label: '06:30 PM', value: '18:30:00'},
+  {label: '07:00 PM', value: '19:00:00'},
+  {label: '07:30 PM', value: '19:30:00'},
+  {label: '08:00 PM', value: '20:00:00'},
+  {label: '08:30 PM', value: '20:30:00'},
+  {label: '09:00 PM', value: '21:00:00'},
+  {label: '09:30 PM', value: '21:30:00'},
+  {label: '10:00 PM', value: '22:00:00'},
+  {label: '10:30 PM', value: '22:30:00'},
+  {label: '11:00 PM', value: '23:00:00'},
+  {label: '11:30 PM', value: '23:30:00'},
 ];
+
+const FROM_SCHEDULES = [{label: 'Anytime', value: '00:00:00'}, ...SCHEDULES];
+const TO_SCHEDULES = [{label: 'Anytime', value: '23:59:59'}, ...SCHEDULES];
 
 const createDays = () => {
   const output = [];
 
   for (let i = 0; i <= 7; i++) {
     const day = moment().add(i, 'days');
+    const value = day.tz('Asia/Manila').format('YYYY-MM-DD');
 
     let label = '';
     if (i === 0) {
@@ -103,162 +97,45 @@ const createDays = () => {
 
     output.push({
       label,
-      value: i.toString(),
+      value,
     });
   }
   return output;
 };
 
-const PickerRow = ({initialData, setscheduledFrom, setscheduledTo, setScheduledDayIndex}) => {
-  const TODAY_START = {label: 'Anytime', value: timeToDate('00:00')};
-  const TODAY_END = {label: 'Anytime', value: timeToDate('23:59:59')};
-  const TODAY_TIME = moment().toISOString();
+const createdFilteredTimes = () => {
+  const filteredFromSchedules = FROM_SCHEDULES.filter(sched => {
+    if (sched.label == 'Anytime') {
+      return true;
+    }
+    if (parseInt(sched.value.replace(':', '')) >= parseInt(TODAY_TIME.replace(':', ''))) {
+      return true;
+    }
+    return false;
+  });
 
-  const FROM_SCHEDULES = [{label: 'Anytime', value: TODAY_START.value}, ...schedules];
-  const TO_SCHEDULES = [{label: 'Anytime', value: TODAY_END.value}, ...schedules];
+  const filteredToSchedules = TO_SCHEDULES.filter(sched => {
+    if (sched.label == 'Anytime') {
+      return true;
+    }
+    if (parseInt(sched.value.replace(':', '')) >= parseInt(TODAY_TIME.replace(':', ''))) {
+      return true;
+    }
+    return false;
+  });
 
+  return {
+    filteredFromSchedules,
+    filteredToSchedules,
+  };
+};
+
+const PickerRow = ({initialData, setscheduledFrom, setscheduledTo, setScheduledDay}) => {
   const [visibility, setVisibility] = useState(INITIAL_VISIBILITY); // Picker Visibility State
 
-  // Set FROM and TO for TODAY
-  const createTodaySchedulesB = () => {
-    const remainingFromSchedules = FROM_SCHEDULES.filter(sched => {
-      if (sched.label == 'Anytime') {
-        return true;
-      }
-      if (sched.value >= TODAY_TIME) {
-        return true;
-      }
-      return false;
-    });
-
-    const remainingToSchedules = TO_SCHEDULES.filter(sched => {
-      if (sched.label == 'Anytime') {
-        return true;
-      }
-      if (sched.value >= TODAY_TIME) {
-        return true;
-      }
-      return false;
-    });
-
-    return {
-      from: remainingFromSchedules,
-      to: remainingToSchedules,
-    };
-  };
-
-  // Set FROM and TO for TOMORROW and BEYOND
-  const createdDatedSchedulesB = numOfDays => {
-    const datedFromSchedules = FROM_SCHEDULES.map(({label, value}) => {
-      return {
-        label,
-        value: moment(value)
-          .add(numOfDays, 'days')
-          .toISOString(),
-      };
-    });
-
-    const datedToSchedules = TO_SCHEDULES.map(({label, value}) => {
-      return {
-        label,
-        value: moment(value)
-          .add(numOfDays, 'days')
-          .toISOString(),
-      };
-    });
-
-    return {
-      from: datedFromSchedules,
-      to: datedToSchedules,
-    };
-  };
-  const [fromSchedules, setFromSchedules] = useState(
-    initialData.scheduledDayIndex == '0'
-      ? createTodaySchedulesB().from
-      : createdDatedSchedulesB(parseInt(initialData.scheduledDayIndex)).from,
-  );
-  const [toSchedules, setToSchedules] = useState(
-    initialData.scheduledDayIndex == '0'
-      ? createTodaySchedulesB().to
-      : createdDatedSchedulesB(parseInt(initialData.scheduledDayIndex)).to,
-  );
-
-  // alert(moment(initialData.scheduledFrom).toISOString());
-  const [selectedDay, setSelectedDay] = useState(initialData.scheduledDayIndex);
-
-  const [selectedFrom, setSelectedFrom] = useState(initialData.scheduledFrom);
-  const [selectedTo, setSelectedTo] = useState(initialData.scheduledTo);
-
-  // const [selectedFrom, setSelectedFrom] = useState(null);
-  // const [selectedTo, setSelectedTo] = useState(null);
-
-  // Set FROM and TO for TODAY
-  const createTodaySchedules = () => {
-    const remainingFromSchedules = FROM_SCHEDULES.filter(sched => {
-      if (sched.label == 'Anytime') {
-        return true;
-      }
-      if (sched.value >= TODAY_TIME) {
-        return true;
-      }
-      return false;
-    });
-
-    const remainingToSchedules = TO_SCHEDULES.filter(sched => {
-      if (sched.label == 'Anytime') {
-        return true;
-      }
-      if (sched.value >= TODAY_TIME) {
-        return true;
-      }
-      return false;
-    });
-    setFromSchedules(remainingFromSchedules);
-    setToSchedules(remainingToSchedules);
-
-    setscheduledFrom(toDateFormat(TODAY_START.value));
-    setscheduledTo(toDateFormat(TODAY_END.value));
-
-    setSelectedFrom(TODAY_START.value);
-    setSelectedTo(TODAY_END.value);
-  };
-
-  // Set FROM and TO for TOMORROW and BEYOND
-  const createdDatedSchedules = numOfDays => {
-    const datedFromSchedules = FROM_SCHEDULES.map(({label, value}) => {
-      return {
-        label,
-        value: moment(value)
-          .add(numOfDays, 'days')
-          .toISOString(),
-      };
-    });
-
-    const datedToSchedules = TO_SCHEDULES.map(({label, value}) => {
-      return {
-        label,
-        value: moment(value)
-          .add(numOfDays, 'days')
-          .toISOString(),
-      };
-    });
-
-    setFromSchedules(datedFromSchedules);
-    setToSchedules(datedToSchedules);
-
-    const THIS_DAY_START = moment('00:00', 'HH:mm:ss')
-      .add(numOfDays, 'days')
-      .toISOString();
-    const THIS_DAY_END = moment('23:59:59', 'HH:mm:ss')
-      .add(numOfDays, 'days')
-      .toISOString();
-
-    setSelectedFrom(THIS_DAY_START);
-    setSelectedTo(THIS_DAY_END);
-
-    setscheduledFrom(toDateFormat(THIS_DAY_START));
-    setscheduledTo(toDateFormat(THIS_DAY_END));
-  };
+  const daySchedules = createDays();
+  const [fromSchedules, setFromSchedules] = useState(FROM_SCHEDULES);
+  const [toSchedules, settoSchedules] = useState(TO_SCHEDULES);
 
   const onOpenPicker = state => {
     // Hides all picker dropdowns and shows selected
@@ -268,33 +145,33 @@ const PickerRow = ({initialData, setscheduledFrom, setscheduledTo, setScheduledD
     });
   };
 
-  const onDaySelect = ({label, value}, index) => {
-    // Hides all picker dropdowns
-    setVisibility(INITIAL_VISIBILITY);
-
-    setSelectedDay(value);
-    setScheduledDayIndex(value);
-
-    // If Today, use Today. Else, use Dated
-    if (label === 'Today') {
-      createTodaySchedules();
-    } else {
-      createdDatedSchedules(index);
-    }
-  };
-
   useEffect(() => {
-    // createTodaySchedules();
-    // setSelectedFrom(initialData.scheduledFrom);
-    // setSelectedTo(initialData.scheduledTo);
-  }, []);
+    if (
+      initialData.scheduledDay ==
+      moment()
+        .tz('Asia/Manila')
+        .format('YYYY-MM-DD')
+        .toString()
+    ) {
+      const {filteredFromSchedules, filteredToSchedules} = createdFilteredTimes();
+      setFromSchedules(filteredFromSchedules);
+      settoSchedules(filteredToSchedules);
+
+      //Reset Selected Times
+      setscheduledFrom('00:00:00');
+      setscheduledTo('23:59:59');
+    } else {
+      setFromSchedules(FROM_SCHEDULES);
+      settoSchedules(TO_SCHEDULES);
+    }
+  }, [initialData.scheduledDay]);
 
   return (
     <>
       <View style={{flexDirection: 'row', marginHorizontal: 20, marginTop: 10}}>
         <DropDownPicker
-          defaultValue={selectedDay}
-          items={createDays()}
+          defaultValue={initialData.scheduledDay}
+          items={daySchedules}
           containerStyle={styles.pickerContainerStyle}
           style={styles.pickerStyle}
           dropDownStyle={styles.pickerDropDown}
@@ -308,13 +185,16 @@ const PickerRow = ({initialData, setscheduledFrom, setscheduledTo, setScheduledD
           onOpen={() => {
             onOpenPicker({day: true});
           }}
-          onChangeItem={onDaySelect}
+          onChangeItem={({value}) => {
+            setVisibility(INITIAL_VISIBILITY);
+            setScheduledDay(value);
+          }}
         />
         <View style={{width: 40, justifyContent: 'center', alignItems: 'center'}}>
           <Text style={{fontSize: 10, fontWeight: 'bold', textAlign: 'right'}}>FROM</Text>
         </View>
         <DropDownPicker
-          defaultValue={selectedFrom}
+          defaultValue={initialData.scheduledFrom}
           placeholder="Anytime"
           items={fromSchedules}
           containerStyle={styles.pickerContainerStyle}
@@ -332,15 +212,14 @@ const PickerRow = ({initialData, setscheduledFrom, setscheduledTo, setScheduledD
           }}
           onChangeItem={({value}) => {
             setVisibility(INITIAL_VISIBILITY);
-            setSelectedFrom(value);
-            setscheduledFrom(toDateFormat(value));
+            setscheduledFrom(value);
           }}
         />
         <View style={{width: 30, justifyContent: 'center', alignItems: 'center'}}>
           <Text style={{fontSize: 10, fontWeight: 'bold', textAlign: 'right'}}>TO</Text>
         </View>
         <DropDownPicker
-          defaultValue={selectedTo}
+          defaultValue={initialData.scheduledTo}
           placeholder="Anytime"
           items={toSchedules}
           containerStyle={styles.pickerContainerStyle}
@@ -358,11 +237,13 @@ const PickerRow = ({initialData, setscheduledFrom, setscheduledTo, setScheduledD
           }}
           onChangeItem={({value}) => {
             setVisibility(INITIAL_VISIBILITY);
-            setSelectedTo(value);
-            setscheduledTo(toDateFormat(value));
+            setscheduledTo(value);
           }}
         />
       </View>
+      {/* <Text>{JSON.stringify({daySchedule: createDays()}, null, 4)}</Text> */}
+      {/* <Text>{JSON.stringify({fromSchedules}, null, 4)}</Text>
+      <Text>{JSON.stringify({toSchedules}, null, 4)}</Text> */}
     </>
   );
 };
@@ -372,30 +253,55 @@ export const SchedulePicker = ({initialData, onScheduleChange}) => {
 
   const [orderType, setOrderType] = useState(initialData.orderType);
 
-  const [scheduledDayIndex, setScheduledDayIndex] = useState(initialData.scheduledDayIndex);
+  const [scheduledDay, setScheduledDay] = useState(
+    orderType == 2
+      ? moment(initialData.scheduledFrom, 'YYYY-MM-DD')
+          .format('YYYY-MM-DD')
+          .toString()
+      : moment()
+          .tz('Asia/Manila')
+          .format('YYYY-MM-DD')
+          .toString(),
+  );
 
-  const [scheduledFrom, setscheduledFrom] = useState(initialData.scheduledFrom);
-  const [scheduledTo, setscheduledTo] = useState(initialData.scheduledTo);
+  const [scheduledFrom, setscheduledFrom] = useState(
+    orderType == 2
+      ? moment(initialData.scheduledFrom, 'YYYY-MM-DD HH:mm:ss')
+          .format('HH:mm:ss')
+          .toString()
+      : '00:00:00',
+  );
+  const [scheduledTo, setscheduledTo] = useState(
+    orderType == 2
+      ? moment(initialData.scheduledTo, 'YYYY-MM-DD HH:mm:ss')
+          .format('HH:mm:ss')
+          .toString()
+      : '23:59:59',
+  );
 
   useEffect(() => {
     if (orderType == 1) {
+      setScheduledDay(
+        moment()
+          .tz('Asia/Manila')
+          .format('YYYY-MM-DD')
+          .toString(),
+      );
       onScheduleChange({
         orderType,
         scheduledFrom: null,
         scheduledTo: null,
-        scheduledDayIndex,
       });
     }
 
     if (orderType == 2) {
       onScheduleChange({
         orderType,
-        scheduledFrom: scheduledFrom,
-        scheduledTo: scheduledTo,
-        scheduledDayIndex,
+        scheduledFrom: `${scheduledDay} ${scheduledFrom}`,
+        scheduledTo: `${scheduledDay} ${scheduledTo}`,
       });
     }
-  }, [orderType, scheduledFrom, scheduledTo]);
+  }, [orderType, scheduledFrom, scheduledTo, scheduledDay]);
 
   return (
     <View>
@@ -452,8 +358,8 @@ export const SchedulePicker = ({initialData, onScheduleChange}) => {
         <PickerRow
           setscheduledFrom={setscheduledFrom}
           setscheduledTo={setscheduledTo}
-          setScheduledDayIndex={setScheduledDayIndex}
-          initialData={{scheduledFrom, scheduledTo, scheduledDayIndex}}
+          setScheduledDay={setScheduledDay}
+          initialData={{scheduledFrom, scheduledTo, scheduledDay}}
         />
       )}
     </View>

@@ -11,7 +11,7 @@ import Logo from '../../../assets/icons/ToktokLogo.png';
 
 const imageWidth = Dimensions.get('window').width - 40;
 
-const TalkToUs = ({navigation}) => {
+const TalkToUs = ({navigation, constants}) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={['Talk', 'To Us']} />,
@@ -33,7 +33,7 @@ const TalkToUs = ({navigation}) => {
           />
           <TouchableHighlight
             onPress={() => {
-              Linking.openURL('http://www.youtube.com');
+              Linking.openURL(constants.websiteValidUrl);
             }}
             underlayColor={COLOR}
             style={styles.card}>
@@ -50,7 +50,9 @@ const TalkToUs = ({navigation}) => {
               <View style={styles.rowBox}>
                 <View style={styles.row}>
                   <MCIcon name="web" size={16} color={'white'} style={styles.iconBox} />
-                  <Text style={{fontSize: 14, marginLeft: 16, color: MEDIUM, fontWeight: 'bold'}}>www.toktok.ph</Text>
+                  <Text style={{fontSize: 14, marginLeft: 16, color: MEDIUM, fontWeight: 'bold'}}>
+                    {constants.websiteDisplayName}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -61,7 +63,9 @@ const TalkToUs = ({navigation}) => {
           <TouchableHighlight
             onPress={() => {
               Linking.openURL(
-                'mailto:support@toktok.ph?subject=Talk%20To%20Us&body=How%20can%20we%20help%20you%20ka-toktok?',
+                `mailto:${
+                  constants.talkToUsEmail
+                }?subject=Talk%20To%20Us&body=How%20can%20we%20help%20you%20ka-toktok?`,
               );
             }}
             underlayColor={COLOR}
@@ -80,7 +84,7 @@ const TalkToUs = ({navigation}) => {
                 <View style={styles.row}>
                   <MCIcon name="email" size={16} color={'white'} style={styles.iconBox} />
                   <Text style={{fontSize: 14, marginLeft: 16, color: MEDIUM, fontWeight: 'bold'}}>
-                    support@toktok.ph
+                    {constants.talkToUsEmail}
                   </Text>
                 </View>
               </View>
@@ -94,6 +98,7 @@ const TalkToUs = ({navigation}) => {
 
 const mapStateToProps = state => ({
   session: state.session,
+  constants: state.constants,
 });
 
 const mapDispatchToProps = dispatch => ({

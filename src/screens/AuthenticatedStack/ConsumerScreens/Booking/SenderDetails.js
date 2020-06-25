@@ -16,6 +16,9 @@ const SenderDetails = ({navigation, route}) => {
   const {data, setData, setPrice} = route.params;
   const [localData, setLocalData] = useState(data);
 
+  console.log(JSON.stringify({data}, null, 4));
+  console.log(JSON.stringify({localData}, null, 4));
+
   const onSearchMap = () => {
     navigation.navigate('SearchMap', {data: {...localData, ...MAP_DELTA_LOW}, setData: setLocalData});
   };
@@ -116,7 +119,6 @@ const SenderDetails = ({navigation, route}) => {
               orderType: localData.orderType,
               scheduledFrom: localData.scheduledFrom,
               scheduledTo: localData.scheduledTo,
-              scheduledDayIndex: localData.scheduledDayIndex,
             },
             null,
             4,

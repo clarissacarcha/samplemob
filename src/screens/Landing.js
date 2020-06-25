@@ -5,7 +5,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {useLazyQuery} from '@apollo/react-hooks';
 import OneSignal from 'react-native-onesignal';
 import {APP_FLAVOR} from '../res/constants';
-import {GET_USER_SESSION} from '../graphql';
+import {CLIENT, GET_USER_SESSION, GET_GLOBAL_SETTINGS} from '../graphql';
 import {onError} from '../util/ErrorUtility';
 
 import SplashImage from '../assets/images/Splash.png';
@@ -13,8 +13,9 @@ import SplashImage from '../assets/images/Splash.png';
 const mapKeyValueToObject = keyValueArray => {
   const result = {};
   keyValueArray.map(kv => {
-    result[kv.key] = kv.value;
+    result[kv.key] = kv.keyValue;
   });
+  console.log(JSON.stringify(result, null, 4));
   return result;
 };
 
@@ -69,17 +70,17 @@ const Landing = ({createSession, destroySession, setConstants, navigation}) => {
     },
   });
 
-  // const getConstants = async () => {
-  //   try {
-  //     const records = await CLIENT.query({
-  //       query: GET_CONSTANTS,
-  //       fetchPolicy: 'network-only',
-  //     });
-  //     setConstants(mapKeyValueToObject(records.data.getConstants));
-  //   } catch (error) {
-  //     console.log('Landing.js', error);
-  //   }
-  // };
+  const getConstants = async () => {
+    try {
+      const records = await CLIENT.query({
+        query: GET_GLOBAL_SETTINGS,
+        fetchPolicy: 'network-only',
+      });
+      setConstants(mapKeyValueToObject(records.data.getGlobalSettings));
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const checkAsyncStorageSession = async () => {
     const storedUserId = await AsyncStorage.getItem('userId');
@@ -105,7 +106,7 @@ const Landing = ({createSession, destroySession, setConstants, navigation}) => {
 
   const onMount = async () => {
     // destroySession();
-    // await getConstants();
+    await getConstants();
     await checkAsyncStorageSession();
   };
 
@@ -123,7 +124,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   createSession: payload => dispatch({type: 'CREATE_SESSION', payload}),
   destroySession: () => dispatch({type: 'DESTROY_SESSION'}),
-  //setConstants: payload => dispatch({type: 'SET_CONSTANTS', payload}),
+  setConstants: payload => dispatch({type: 'SET_CONSTANTS', payload}),
 });
 
 export default connect(

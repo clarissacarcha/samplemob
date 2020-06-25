@@ -2,13 +2,11 @@ import React, {useState, useRef, useEffect} from 'react';
 import {View, StyleSheet, Text, TextInput, TouchableHighlight, Image, Alert, Platform} from 'react-native';
 import SmsRetriever from 'react-native-sms-retriever';
 import {COLOR, DARK, APP_FLAVOR} from '../../res/constants';
-import {getUniqueId} from 'react-native-device-info';
 import {connect} from 'react-redux';
 import {useMutation} from '@apollo/react-hooks';
 import {FORGOT_PASSWORD_VERIFICATION} from '../../graphql';
 import {AlertOverlay, HeaderBack, HeaderTitle} from '../../components';
-import AsyncStorage from '@react-native-community/async-storage';
-import OneSignal from 'react-native-onesignal';
+import {onError} from '../../util/ErrorUtility';
 
 import timer from 'react-native-timer';
 
@@ -60,14 +58,10 @@ const Verification = ({navigation, route, createSession}) => {
         verificationCode,
       },
     },
+    onError: onError,
     onCompleted: ({forgotPasswordVerification}) => {
       if (forgotPasswordVerification == 'RESET') {
         navigation.push('ForgotPasswordReset', {verificationCode, mobile});
-      }
-    },
-    onError: ({graphQLErrors, networkError}) => {
-      if (graphQLErrors) {
-        Alert.alert('', graphQLErrors[0].message);
       }
     },
   });

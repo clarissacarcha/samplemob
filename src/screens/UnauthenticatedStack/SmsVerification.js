@@ -9,6 +9,7 @@ import {VERIFY_REGISTRATION} from '../../graphql';
 import {AlertOverlay} from '../../components';
 import AsyncStorage from '@react-native-community/async-storage';
 import OneSignal from 'react-native-onesignal';
+import {onError} from '../../util/ErrorUtility';
 
 import timer from 'react-native-timer';
 
@@ -52,6 +53,7 @@ const Verification = ({navigation, route, createSession}) => {
         deviceType: Platform.select({ios: 'I', android: 'A'}),
       },
     },
+    onError: onError,
     onCompleted: ({verifyRegistration}) => {
       const {user, accessToken} = verifyRegistration;
 
@@ -89,11 +91,6 @@ const Verification = ({navigation, route, createSession}) => {
             screen: 'DriverMap',
           },
         });
-      }
-    },
-    onError: ({graphQLErrors, networkError}) => {
-      if (graphQLErrors) {
-        Alert.alert('', graphQLErrors[0].message);
       }
     },
   });

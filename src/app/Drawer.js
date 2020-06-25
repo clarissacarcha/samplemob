@@ -119,15 +119,19 @@ const Drawer = ({navigation, session, destroySession}) => {
             navigation.navigate(route);
           }}
         />
+
         {/*--------------- WALLET ---------------*/}
-        <DrawerButton
-          label="Wallet"
-          onPress={() => {
-            // const route = APP_FLAVOR == 'C' ? 'CustomerProfile' : 'DriverProfile';
-            const route = 'DriverWallet';
-            navigation.navigate(route);
-          }}
-        />
+        {APP_FLAVOR == 'D' && (
+          <DrawerButton
+            label="Wallet"
+            onPress={() => {
+              // const route = APP_FLAVOR == 'C' ? 'CustomerProfile' : 'DriverProfile';
+              const route = 'DriverWallet';
+              navigation.navigate(route);
+            }}
+          />
+        )}
+
         {/*--------------- MY DELIVERIES ---------------*/}
         <DrawerButton
           label="My Deliveries"
@@ -136,15 +140,18 @@ const Drawer = ({navigation, session, destroySession}) => {
             navigation.navigate(route);
           }}
         />
+
         {/*--------------- ORDERS ---------------*/}
-        <DrawerButton
-          label="Orders"
-          onPress={() => {
-            // const route = APP_FLAVOR == 'C' ? 'CustomerProfile' : 'DriverProfile';
-            const route = 'Order';
-            navigation.navigate(route);
-          }}
-        />
+        {APP_FLAVOR == 'D' && (
+          <DrawerButton
+            label="Orders"
+            onPress={() => {
+              // const route = APP_FLAVOR == 'C' ? 'CustomerProfile' : 'DriverProfile';
+              const route = 'Order';
+              navigation.navigate(route);
+            }}
+          />
+        )}
 
         {/*--------------- Notifications ---------------*/}
         <DrawerButton label="Notifications" onPress={() => navigation.navigate('Notifications')} restrict="C" />
