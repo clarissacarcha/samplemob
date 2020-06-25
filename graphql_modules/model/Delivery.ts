@@ -1,4 +1,5 @@
 //@ts-nocheck
+import { gql, UserInputError, ApolloError } from "apollo-server-express";
 import { GraphQLModule } from "@graphql-modules/core";
 import { raw } from "objection";
 import { gql, UserInputError } from "apollo-server-express";
@@ -12,7 +13,7 @@ import ScalarModule from "../virtual/Scalar";
 
 import Models from "../../models";
 
-const { Delivery, DeliveryLog, Stop, Driver, Consumer } = Models;
+const { Delivery, DeliveryLog, Stop, Driver, Consumer, Wallet } = Models;
 
 const typeDefs = gql`
   type Delivery {
@@ -48,8 +49,8 @@ const typeDefs = gql`
   }
 
   input nearestFilter {
-    latitude: String
-    longitude: String
+    latitude: Float
+    longitude: Float
   }
 
   input PostDeliveryInput {
@@ -64,6 +65,7 @@ const typeDefs = gql`
   input PatchDeliveryAcceptedInput {
     deliveryId: String!
     driverId: String!
+    userId: String!
   }
 
   input PatchDeliveryCustomerCancelInput {
@@ -100,6 +102,7 @@ const typeDefs = gql`
       input: PatchDeliveryCustomerCancelInput!
     ): Delivery
     patchDeliveryDriverCancel(input: PatchDeliveryDriverCancelInput!): Delivery
+    patchDeliveryAccepted(input: PatchDeliveryAcceptedInput!): Delivery
     patchDeliveryDelete(input: PatchDeliveryDeleteInput!): String
     patchDeliveryRebook(input: PatchDeliveryRebookInput!): String
     patchDeliveryIncrementStatus(
@@ -269,6 +272,29 @@ const resolvers = {
           throw new UserInputError("Delivery record does not exist.");
         }
 
+        //Summarize price from all accepted orders
+        const floatingCredit = await Delivery.query()
+          .sum("price as floating")
+          .findOne("tokDriverId", input.driverId)
+          // .where("tokDriverId", driverId)
+          .groupBy("tokDriverId");
+
+        const balanceCredit = await Wallet.query().findOne({
+          tokUsersId: input.userId,
+        });
+
+        const remainingCredit =
+          balanceCredit.balance - floatingCredit ? floatingCredit.floating : 0;
+
+        const order = await Delivery.query().findById(input.deliveryId);
+
+        //Throw error if floating credit is not enough for the order price.
+        if (remainingCredit < order.price) {
+          throw new ApolloError(
+            "Cannot accept order. Not enough credit points."
+          );
+        }
+
         // Update delivery record and set driverId
         // Also update status = 2 | Delivery Scheduled
         // TODO: Get driverId from authentication header
@@ -296,7 +322,7 @@ const resolvers = {
           "C"
         );
 
-        return "Delivery successfully accepted.";
+        return await Delivery.query().findById(input.deliveryId);
       } catch (e) {
         console.log(e);
         throw e;
