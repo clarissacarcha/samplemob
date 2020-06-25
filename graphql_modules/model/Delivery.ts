@@ -97,7 +97,6 @@ const typeDefs = gql`
 
   type Mutation {
     postDelivery(input: PostDeliveryInput): String
-    patchDeliveryAccepted(input: PatchDeliveryAcceptedInput!): String
     patchDeliveryCustomerCancel(
       input: PatchDeliveryCustomerCancelInput!
     ): Delivery
@@ -205,15 +204,16 @@ const resolvers = {
               latitude,
               longitude,
               latitude
-            ).as("distance"),
+            ).as("distances"),
             "senderStop.latitude",
             "senderStop.longitude",
           ])
           .leftJoinRelated("[senderStop]")
           .where("status", 1)
           .where("tokDriverId", null)
-          .orderBy("distance");
-        console.log(result);
+          .orderBy("distances");
+
+        console.log({ NEAREST: result });
 
         return result;
       } catch (e) {
@@ -289,11 +289,11 @@ const resolvers = {
         const order = await Delivery.query().findById(input.deliveryId);
 
         //Throw error if floating credit is not enough for the order price.
-        if (remainingCredit < order.price) {
-          throw new ApolloError(
-            "Cannot accept order. Not enough credit points."
-          );
-        }
+        // if (remainingCredit < order.price) {
+        //   throw new ApolloError(
+        //     "Cannot accept order. Not enough credit points."
+        //   );
+        // }
 
         // Update delivery record and set driverId
         // Also update status = 2 | Delivery Scheduled
