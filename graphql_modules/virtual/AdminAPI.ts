@@ -97,11 +97,14 @@ const resolvers = {
         });
 
         // Create a notification and send push notifs
-        NotificationUtility.notifyUser({
-          userId: consumer.tokUserId,
-          deliveryId: delivery.id,
-          deliveryStatus: 7,
-        });
+        NotificationUtility.notifyUser(
+          {
+            userId: consumer.tokUserId,
+            deliveryId: delivery.id,
+            deliveryStatus: 7,
+          },
+          "D"
+        );
 
         return "Order successfully cancelled.";
       } catch (error) {

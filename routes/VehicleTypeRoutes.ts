@@ -3,7 +3,7 @@
 import express from "express";
 const router = express.Router();
 //import model
-import { VehicleType } from "../controllers/vehicleType";
+import { VehicleType } from "../controllers/VehicleType";
 
 import { check, validationResult } from "express-validator";
 

@@ -1,14 +1,25 @@
 const OneSignal = require("onesignal-node");
 
-const client = new OneSignal.Client(
-  process.env.CONSUMER_ONESIGNAL_APP_ID,
-  process.env.CONSUMER_ONESIGNAL_REST_API_KEY
-);
+// const client = new OneSignal.Client(
+//   process.env.CONSUMER_ONESIGNAL_APP_ID,
+//   process.env.CONSUMER_ONESIGNAL_REST_API_KEY
+// );
+
+const client = {
+  C: new OneSignal.Client(
+    process.env.CONSUMER_ONESIGNAL_APP_ID,
+    process.env.CONSUMER_ONESIGNAL_REST_API_KEY
+  ),
+  D: new OneSignal.Client(
+    process.env.DRIVER_ONESIGNAL_APP_ID,
+    process.env.DRIVER_ONESIGNAL_REST_API_KEY
+  ),
+};
 
 export default class {
-  static pushToUserId = async ({ userId, title, body, data }) => {
+  static pushToUserId = async ({ userId, title, body, data }, APP_FLAVOR) => {
     try {
-      const response = await client.createNotification({
+      const response = await client[APP_FLAVOR].createNotification({
         headings: {
           en: title,
         },
@@ -27,9 +38,9 @@ export default class {
     }
   };
 
-  static pushToSegments = async ({ segments, title, body }) => {
+  static pushToSegments = async ({ segments, title, body }, APP_FLAVOR) => {
     try {
-      const response = await client.createNotification({
+      const response = await client[APP_FLAVOR].createNotification({
         headings: {
           en: title,
         },
@@ -44,9 +55,9 @@ export default class {
     }
   };
 
-  static pushToPlayerIds = async ({ playerIds, title, body }) => {
+  static pushToPlayerIds = async ({ playerIds, title, body }, APP_FLAVOR) => {
     try {
-      const response = await client.createNotification({
+      const response = await client[APP_FLAVOR].createNotification({
         headings: {
           en: title,
         },

@@ -6,56 +6,83 @@ import moment from "moment";
 const { Notification } = Models;
 
 const legend = {
+  1: {
+    title: "New Order",
+    body: {
+      D: "A customer just placed an order.",
+    },
+  },
   2: {
     title: "Delivery Scheduled",
-    body: "We found a suitable rider for you.",
+    body: {
+      C: "We found a suitable rider for you.",
+    },
   },
   3: {
     title: "Driver on the Way to Sender",
-    body: "Your rider is on the way to pick up the item.",
+    body: {
+      C: "Your rider is on the way to pick up the item.",
+    },
   },
   4: {
     title: "Item Picked Up",
-    body: "Your item has been picked up.",
+    body: {
+      C: "Your item has been picked up.",
+    },
   },
   5: {
     title: "Driver on the Way to Recipient",
-    body: "Your rider is on the way to deliver the item.",
+    body: {
+      C: "Your rider is on the way to deliver the item.",
+    },
   },
   6: {
     title: "Item Delivered",
-    body: "Your item has been delivered.",
+    body: {
+      C: "Your item has been delivered.",
+    },
   },
   7: {
     title: "Order Cancelled",
-    body: "Your order has been cancelled.",
+    body: {
+      C: "Your order has been cancelled by your rider.",
+      D: "Your order has been cancelled by the customer.",
+    },
   },
   9: {
     title: "Order Expired",
-    body: "Your order has expired.",
+    body: {
+      C: "Your order has expired.",
+    },
   },
 };
 
 export default class {
-  static notifyUser = async ({ userId, deliveryId, deliveryStatus }) => {
+  static notifyUser = async (
+    { userId, deliveryId, deliveryStatus },
+    APP_FLAVOR
+  ) => {
     try {
-      const result = await Notification.query().insert({
+      await Notification.query().insert({
         title: legend[deliveryStatus].title,
-        body: legend[deliveryStatus].body,
+        body: legend[deliveryStatus].body[APP_FLAVOR],
         status: 1,
         tokUserId: userId,
         tokDeliveryId: deliveryId,
         createdAt: moment().format("YYYY-MM-DD HH:mm:ss"),
       });
 
-      await OneSignalUtility.pushToUserId({
-        title: legend[deliveryStatus].title,
-        body: legend[deliveryStatus].body,
-        userId: userId,
-        data: {
-          type: "N",
+      await OneSignalUtility.pushToUserId(
+        {
+          title: legend[deliveryStatus].title,
+          body: legend[deliveryStatus].body[APP_FLAVOR],
+          userId: userId,
+          data: {
+            type: "N",
+          },
         },
-      });
+        APP_FLAVOR
+      );
     } catch (error) {
       console.log(error);
     }

@@ -55,11 +55,14 @@ const deliveryExpiration = async () => {
 
   // Notify users on their expired orders
   expiredDeliveries.map((delivery) => {
-    NotificationUtility.notifyUser({
-      userId: delivery.consumerUserId,
-      deliveryId: delivery.deliveryId,
-      deliveryStatus: 9,
-    });
+    NotificationUtility.notifyUser(
+      {
+        userId: delivery.consumerUserId,
+        deliveryId: delivery.deliveryId,
+        deliveryStatus: 9,
+      },
+      "C"
+    );
   });
 
   console.log(JSON.stringify(expiredDeliveries, null, 4));

@@ -66,7 +66,11 @@ const typeDefs = gql`
     driverId: String!
   }
 
-  input PatchDeliveryCancelInput {
+  input PatchDeliveryCustomerCancelInput {
+    deliveryId: String!
+  }
+
+  input PatchDeliveryDriverCancelInput {
     deliveryId: String!
   }
 
@@ -92,7 +96,10 @@ const typeDefs = gql`
   type Mutation {
     postDelivery(input: PostDeliveryInput): String
     patchDeliveryAccepted(input: PatchDeliveryAcceptedInput!): String
-    patchDeliveryCancel(input: PatchDeliveryCancelInput!): Delivery
+    patchDeliveryCustomerCancel(
+      input: PatchDeliveryCustomerCancelInput!
+    ): Delivery
+    patchDeliveryDriverCancel(input: PatchDeliveryDriverCancelInput!): Delivery
     patchDeliveryDelete(input: PatchDeliveryDeleteInput!): String
     patchDeliveryRebook(input: PatchDeliveryRebookInput!): String
     patchDeliveryIncrementStatus(
@@ -280,11 +287,14 @@ const resolvers = {
         });
 
         // Create a notification and send push notifs
-        NotificationUtility.notifyUser({
-          userId: consumer.tokUserId,
-          deliveryId: delivery.id,
-          deliveryStatus: 2,
-        });
+        NotificationUtility.notifyUser(
+          {
+            userId: consumer.tokUserId,
+            deliveryId: delivery.id,
+            deliveryStatus: 2,
+          },
+          "C"
+        );
 
         return "Delivery successfully accepted.";
       } catch (e) {
@@ -336,11 +346,14 @@ const resolvers = {
         });
 
         // Create a notification and send push notifs
-        NotificationUtility.notifyUser({
-          userId: consumer.tokUserId,
-          deliveryId: delivery.id,
-          deliveryStatus: delivery.status + 1,
-        });
+        NotificationUtility.notifyUser(
+          {
+            userId: consumer.tokUserId,
+            deliveryId: delivery.id,
+            deliveryStatus: delivery.status + 1,
+          },
+          "C"
+        );
 
         // Return the delivery record
         return await Delivery.query().findById(input.deliveryId);
@@ -350,10 +363,12 @@ const resolvers = {
     },
 
     // Customer cancels a delivery order
-    patchDeliveryCancel: async (_, { input }) => {
+    patchDeliveryCustomerCancel: async (_, { input }) => {
       try {
+        const { deliveryId } = input;
+
         // Find the delivery record using input.deliveryId
-        const delivery = await Delivery.query().findById(input.deliveryId);
+        const delivery = await Delivery.query().findById(deliveryId);
 
         // Throw error if delivery record does not exist
         if (!delivery) {
@@ -361,27 +376,72 @@ const resolvers = {
         }
 
         // Update delivery status to 7 - Cancelled
-        await Delivery.query().findById(input.deliveryId).patch({ status: 7 });
+        await Delivery.query().findById(deliveryId).patch({ status: 7 });
 
         // Create delivery log with status = 7
         await DeliveryLog.query().insert({
           status: 7,
-          tokDeliveryId: input.deliveryId,
+          tokDeliveryId: deliveryId,
         });
 
-        // TODO: Detect if should send to user or driver. Add appFlavor in input
+        const driver = await Driver.query().findOne({
+          id: delivery.tokDriverId,
+        });
+
+        // Create a notification and send push notifs
+        NotificationUtility.notifyUser(
+          {
+            userId: driver.tokUserId,
+            deliveryId: delivery.id,
+            deliveryStatus: 7,
+          },
+          "D"
+        );
+
+        return await Delivery.query().findById(deliveryId);
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    },
+
+    // Driver cancels a delivery order
+    patchDeliveryDriverCancel: async (_, { input }) => {
+      try {
+        const { deliveryId } = input;
+
+        // Find the delivery record using input.deliveryId
+        const delivery = await Delivery.query().findById(deliveryId);
+
+        // Throw error if delivery record does not exist
+        if (!delivery) {
+          throw new UserInputError("Delivery record does not exist.");
+        }
+
+        // Update delivery status to 7 - Cancelled
+        await Delivery.query().findById(deliveryId).patch({ status: 7 });
+
+        // Create delivery log with status = 7
+        await DeliveryLog.query().insert({
+          status: 7,
+          tokDeliveryId: deliveryId,
+        });
+
         const consumer = await Consumer.query().findOne({
           id: delivery.tokConsumerId,
         });
 
         // Create a notification and send push notifs
-        NotificationUtility.notifyUser({
-          userId: consumer.tokUserId,
-          deliveryId: delivery.id,
-          deliveryStatus: 7,
-        });
+        NotificationUtility.notifyUser(
+          {
+            userId: consumer.tokUserId,
+            deliveryId: delivery.id,
+            deliveryStatus: 7,
+          },
+          "C"
+        );
 
-        return await Delivery.query().findById(input.deliveryId);
+        return await Delivery.query().findById(deliveryId);
       } catch (error) {
         console.log(error);
         throw error;
