@@ -91,21 +91,39 @@ const typeDefs = gql`
   }
 `;
 
-const SendSmsVerification = (mobile, type) => {
+const SendSmsVerification = async (mobile, type) => {
   // Create a random 6 digit verification code
   let verificationCode;
-  if (process.env.NODE_ENV == "development") {
+  if (process.env.NODE_ENV == "developmentX") {
     verificationCode = "123456";
   } else {
     verificationCode = Math.floor(100000 + Math.random() * 900000);
 
     //Send verification code to mobile number
-    axios.post("https://api.semaphore.co/api/v4/messages", {
-      apikey: process.env.SEMAPHORE_API_KEY,
-      number: mobile,
-      message: `${verificationCode} is your toktok registration code. Thank you for registering ka-toktok.`,
-      // message: `<#> ${verificationCode} is your toktok activation code. N9w/lonc+z1`,
-    });
+    // axios.post("https://api.semaphore.co/api/v4/messages", {
+    //   apikey: process.env.SEMAPHORE_API_KEY,
+    //   number: mobile,
+    //   message: `${verificationCode} is your toktok registration code. Thank you for registering ka-toktok.`,
+    //   // message: `<#> ${verificationCode} is your toktok activation code. N9w/lonc+z1`,
+    // });
+
+    //Send verification code to mobile number
+    // const smsResult = await axios.post(
+    //   "https://svr20.synermaxx.asia/vmobile/cloudpanda/api/sendnow.php",
+    //   {
+    //     username: "cloudpandaapi",
+    //     password: "f4b8a3dd9bf00cb0a7f1782975939d7d",
+    //     mobilenum: mobile,
+    //     fullmesg: `${verificationCode} is your toktok activation code.`,
+    //     originator: "toktok",
+    //   }
+    // );
+
+    // fullmessage = ``;
+
+    axios.get(
+      `https://svr20.synermaxx.asia/vmobile/cloudpanda/api/sendnow.php?username=cloudpandaapi&password=f4b8a3dd9bf00cb0a7f1782975939d7d&mobilenum=+63${mobile}&fullmesg=${verificationCode}%20is%20your%20toktok%20activation%20code.&originator=toktok`
+    );
   }
   const redisData = {
     mobile,
