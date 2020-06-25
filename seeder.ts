@@ -55,7 +55,7 @@ const importData = async () => {
       },
     ]);
 
-    console.log("SEEDS CREATED".green.inverse);
+    console.log("GLOBAL SETTINGS CREATED".green.inverse);
     process.exit();
   } catch (e) {
     console.log(e);
