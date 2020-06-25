@@ -47,9 +47,25 @@ const resolvers = {
     name: "FormattedDateTime",
     description: "Date custom scalar type",
     parseValue(value) {
-      return value; // value from the client
+      // return moment(value, "YYYY-MM-DD HH:mm:ss").format("YYYY-MM-DD hh:mm:ss"); // value from the client
+      return value;
     },
     serialize(value) {
+      const dateValue = moment(value).tz("Asia/Manila").format("YYYY-MM-DD");
+      const phTodayDate = moment().tz("Asia/Manila").format("YYYY-MM-DD");
+      const phTomorrowDate = moment()
+        .add(1, "days")
+        .tz("Asia/Manila")
+        .format("YYYY-MM-DD");
+
+      if (dateValue == phTodayDate) {
+        return `Today - ${moment(value).format("h:mm a")}`;
+      }
+
+      if (dateValue == phTomorrowDate) {
+        return `Tomorrow - ${moment(value).format("h:mm a")}`;
+      }
+
       return moment(value).format("MMM DD YYYY - h:mm a");
     },
     parseLiteral(ast) {

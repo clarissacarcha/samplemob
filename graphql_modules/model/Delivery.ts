@@ -25,7 +25,7 @@ const typeDefs = gql`
     notes: String
     cargo: String
     status: Int
-    createdAt: DateTime
+    createdAt: FormattedDateTime
     tokDriverId: String
     senderTokStopId: String
     recipientTokStopId: String

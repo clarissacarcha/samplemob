@@ -11,7 +11,7 @@ const typeDefs = gql`
     id: String
     status: Int
     image: S3File
-    createdAt: DateTime
+    createdAt: FormattedDateTime
     tokDeliveryId: String
   }
 

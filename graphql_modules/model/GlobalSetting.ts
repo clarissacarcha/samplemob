@@ -21,7 +21,18 @@ const resolvers = {
     getGlobalSettings: async () => {
       const result = await GlobalSetting.query();
 
-      return result;
+      const environmentConstants = [
+        {
+          key: "consumerOneSignalAppId",
+          keyValue: process.env.CONSUMER_ONESIGNAL_APP_ID,
+        },
+        {
+          key: "driverOneSignalAppId",
+          keyValue: process.env.DRIVER_ONESIGNAL_APP_ID,
+        },
+      ];
+
+      return [...result, ...environmentConstants];
     },
   },
 };

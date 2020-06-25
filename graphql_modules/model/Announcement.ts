@@ -3,6 +3,8 @@ import { gql } from "apollo-server-express";
 
 import Models from "../../models";
 
+import ScalarModule from "../virtual/Scalar";
+
 const { Announcement } = Models;
 
 const typeDefs = gql`
@@ -12,7 +14,7 @@ const typeDefs = gql`
     body: String
     thumbnail: String
     image: String
-    createdAt: String
+    createdAt: FormattedDateTime
     updatedAt: String
   }
 
@@ -30,6 +32,7 @@ const resolvers = {
 };
 
 export default new GraphQLModule({
+  imports: [ScalarModule],
   typeDefs,
   resolvers,
 });

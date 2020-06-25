@@ -16,25 +16,6 @@ const typeDefs = gql`
     scheduledTo: ISO2DateTime
   }
 
-  input StopInput {
-    name: String
-    mobile: String
-    landmark: String
-    cashOnDelivery: String
-    notes: String
-    cargo: String
-    formattedAddress: String
-    latitude: Float
-    longitude: Float
-    orderType: Int
-    scheduledFrom: ISO2DateTime
-    scheduledTo: ISO2DateTime
-
-    latitudeDelta: Float
-    longitudeDelta: Float
-    accuracy: Float
-  }
-
   input SenderStopInput {
     name: String
     mobile: String
@@ -43,8 +24,8 @@ const typeDefs = gql`
     latitude: Float
     longitude: Float
     orderType: Int
-    scheduledFrom: ISO2DateTime
-    scheduledTo: ISO2DateTime
+    scheduledFrom: FormattedDateTime
+    scheduledTo: FormattedDateTime
   }
 
   input RecipientStopInput {
@@ -58,8 +39,8 @@ const typeDefs = gql`
     latitude: Float
     longitude: Float
     orderType: Int
-    scheduledFrom: ISO2DateTime
-    scheduledTo: ISO2DateTime
+    scheduledFrom: FormattedDateTime
+    scheduledTo: FormattedDateTime
   }
 `;
 

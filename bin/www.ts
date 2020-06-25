@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 //@ts-nocheck
 require("dotenv").config();
+import "moment-timezone";
 const colors = require("colors");
 import { createServer as createHttpServer } from "http";
 import { createServer as createHttpsServer } from "https";

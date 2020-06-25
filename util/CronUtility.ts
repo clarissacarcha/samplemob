@@ -25,7 +25,7 @@ const deliveryExpiration = async () => {
     })
     .andWhereRaw(
       `(
-        (sender_stop.order_type = ? AND now() >= sender_stop.scheduled_from)
+        (sender_stop.order_type = ? AND now() >= sender_stop.scheduled_to)
         OR
         (recipient_stop.order_type = ? AND now() >= recipient_stop.scheduled_to)
       )`,
