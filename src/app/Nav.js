@@ -61,7 +61,6 @@ import ChangeProfilePicture from '../screens/AuthenticatedStack/DriverScreens/Pr
 import DriverWallet from '../screens/AuthenticatedStack/DriverScreens/Wallet/DriverWallet';
 import DriverWalletLog from '../screens/AuthenticatedStack/DriverScreens/Wallet/DriverWalletLog';
 import Order from '../screens/AuthenticatedStack/DriverScreens/Orders/Order';
-import SelectedOrder from '../screens/AuthenticatedStack/DriverScreens/Orders/SelectedOrder';
 
 /*-------------------- IMPORT SCREENS END--------------------*/
 
@@ -137,7 +136,6 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="DriverWallet" component={DriverWallet} />
     <Authenticated.Screen name="DriverWalletLog" component={DriverWalletLog} />
     <Authenticated.Screen name="Order" component={Order} />
-    <Authenticated.Screen name="SelectedOrder" component={SelectedOrder} />
     <Authenticated.Screen
       name="DriverDeliveriesTab"
       component={DriverDeliveriesTab}

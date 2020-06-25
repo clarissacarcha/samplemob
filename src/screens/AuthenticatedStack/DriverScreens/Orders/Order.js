@@ -3,31 +3,46 @@ import {View, Text, ActivityIndicator, FlatList, RefreshControl, Image, StyleShe
 import {useQuery} from '@apollo/react-hooks';
 import {connect} from 'react-redux';
 import {COLOR, MEDIUM, FONT_FAMILY} from '../../../../res/constants';
-import {BookingInfoCard, DeliveryCard, HeaderBack, HeaderTitle} from '../../../../components';
+import {DeliveryCard, HeaderBack, HeaderTitle} from '../../../../components';
 import {GET_ORDERS} from '../../../../graphql';
 import NoData from '../../../../assets/images/NoData.png';
+import {currentLocation} from '../../../../helper';
 
 const imageWidth = Dimensions.get('window').width - 200;
 
 const Order = ({navigation, session}) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={['Available', 'Deliveries']} />,
+    headerTitle: () => <HeaderTitle label={['Available', 'Orders']} />,
   });
+
+  const INITIAL_LOCATION = {latitude: null, longitude: null};
+
+  const [location, setLocation] = useState(INITIAL_LOCATION);
+
+  const getLocation = async () => {
+    try {
+      setLocation(await currentLocation(false));
+    } catch (e) {
+      console.warn(e);
+      setLocation(INITIAL_LOCATION);
+    }
+  };
+
+  useEffect(() => {
+    getLocation();
+  }, []);
 
   const {data, loading, error, refetch} = useQuery(GET_ORDERS, {
     fetchPolicy: 'network-only',
     variables: {
       filter: {
-        latitude: '14.819682',
-        longitude: '120.963334',
+        latitude: location.latitude,
+        longitude: location.longitude,
       },
     },
     onError: e => {
       console.log(e);
-    },
-    onCompleted: data => {
-      console.log(JSON.stringify(data, null, 4));
     },
   });
 
@@ -64,7 +79,7 @@ const Order = ({navigation, session}) => {
         renderItem={({item, index}) => (
           <DeliveryCard
             delivery={item}
-            onPress={() => navigation.push('SelectedOrder', {delivery: item, label: ['View', 'Delivery']})}
+            onPress={() => navigation.push('SelectedDriverDelivery', {delivery: item, label: ['View', 'Order']})}
             lastItem={data.getNearestOrderAvailable.length == index + 1 ? true : false}
           />
         )}

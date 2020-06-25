@@ -1,16 +1,18 @@
 import React, {useState} from 'react';
-import {View, Text, ScrollView, StyleSheet, TouchableHighlight, Modal, ActivityIndicator} from 'react-native';
+import {View, Text, ScrollView, StyleSheet, TouchableHighlight, Modal, ActivityIndicator, Alert} from 'react-native';
 import {ReactNativeFile} from 'apollo-upload-client';
 import {useMutation} from '@apollo/react-hooks';
 import {HeaderBack, HeaderTitle, DeliveryStopCard, DeliveryLogsCard, OrderDetailsCard} from '../../../../components';
 import {COLOR, DARK, MEDIUM, LIGHT, ORANGE} from '../../../../res/constants';
-import {CLIENT, PATCH_DELIVERY_INCREMENT_STATUS} from '../../../../graphql';
+import {CLIENT, PATCH_DELIVERY_INCREMENT_STATUS, PATCH_DELIVERY_ACCEPTED} from '../../../../graphql';
 
+import Toast from 'react-native-simple-toast';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
+import { connect } from 'react-redux';
 
-const SelectedDriverDelivery = ({navigation, route}) => {
+const SelectedDriverDelivery = ({navigation, route, session}) => {
   const {delivery, label} = route.params;
 
   navigation.setOptions({
@@ -37,6 +39,22 @@ const SelectedDriverDelivery = ({navigation, route}) => {
     },
   });
 
+  const [patchDeliveryAccepted, {loading: acceptLoading}] = useMutation(PATCH_DELIVERY_ACCEPTED, {
+    onCompleted: ({patchDeliveryAccepted}) => {
+      setDelivery(patchDeliveryAccepted);
+      // alert(JSON.stringify(patchDeliveryAccepted));
+      Toast.show('Order successfully accepted.');
+    },
+    onError: ({graphQLErrors, networkError}) => {
+      if (networkError) {
+        Alert.alert('', 'Network error occurred. Please check your internet connection.');
+      }
+      if (graphQLErrors) {
+        Alert.alert('', graphQLErrors[0].message);
+      }
+    },
+  });
+
   const status = [
     'Cancelled',
     'Order Placed',
@@ -46,6 +64,19 @@ const SelectedDriverDelivery = ({navigation, route}) => {
     'On My Way To Deliver The Item',
     'I Have Delivered The Item',
   ];
+
+  const onAccept = () => {
+    patchDeliveryAccepted({
+      variables: {
+        input: {
+          deliveryId: getDelivery.id,
+          // TODO: Replace with driverId from session
+          driverId: session.user.driver.id,
+          userId: session.user.id,
+        },
+      },
+    });
+  };
 
   const onStatusUpdateWithImage = fileUri => {
     try {
@@ -86,7 +117,11 @@ const SelectedDriverDelivery = ({navigation, route}) => {
   return (
     <View style={{flex: 1}}>
       {/*-------------------- LOADING OVERLAY--------------------*/}
-      <Modal animationType="fade" transparent={true} visible={PDISLoading} style={StyleSheet.absoluteFill}>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={PDISLoading || acceptLoading}
+        style={StyleSheet.absoluteFill}>
         <View style={styles.transparent}>
           <View style={styles.labelRow}>
             <View style={styles.labelBox}>
@@ -113,6 +148,17 @@ const SelectedDriverDelivery = ({navigation, route}) => {
           </TouchableHighlight>
         )}
 
+        {getDelivery.status === 1 && (
+          <TouchableHighlight onPress={onAccept} underlayColor={COLOR} style={{borderRadius: 10, marginBottom: 20}}>
+            <View style={styles.submit}>
+              <Text style={{color: COLOR, fontSize: 16}}>Accept Order</Text>
+              {[3, 5].includes(getDelivery.status) && (
+                <Ionicon name="ios-camera" size={40} color={COLOR} style={{position: 'absolute', right: 20}} />
+              )}
+            </View>
+          </TouchableHighlight>
+        )}
+
         {/*-------------------- ORDER DETAILS --------------------*/}
         <OrderDetailsCard delivery={getDelivery} />
 
@@ -123,13 +169,20 @@ const SelectedDriverDelivery = ({navigation, route}) => {
         <DeliveryStopCard stop={getDelivery.recipientStop} index={1} />
 
         {/*-------------------- DELIVERY LOGS --------------------*/}
-        <DeliveryLogsCard logs={getDelivery.logs} />
+        {getDelivery.status !== 1 && <DeliveryLogsCard logs={getDelivery.logs} />}
       </ScrollView>
     </View>
   );
 };
 
-export default SelectedDriverDelivery;
+const mapStateToProps = state => ({
+  session: state.session,
+});
+
+export default connect(
+  mapStateToProps,
+  null,
+)(SelectedDriverDelivery);
 
 const styles = StyleSheet.create({
   card: {
