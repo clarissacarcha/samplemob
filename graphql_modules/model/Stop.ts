@@ -34,6 +34,33 @@ const typeDefs = gql`
     longitudeDelta: Float
     accuracy: Float
   }
+
+  input SenderStopInput {
+    name: String
+    mobile: String
+    landmark: String
+    formattedAddress: String
+    latitude: Float
+    longitude: Float
+    orderType: Int
+    scheduledFrom: ISO2DateTime
+    scheduledTo: ISO2DateTime
+  }
+
+  input RecipientStopInput {
+    name: String
+    mobile: String
+    landmark: String
+    cashOnDelivery: String
+    notes: String
+    cargo: String
+    formattedAddress: String
+    latitude: Float
+    longitude: Float
+    orderType: Int
+    scheduledFrom: ISO2DateTime
+    scheduledTo: ISO2DateTime
+  }
 `;
 
 const resolvers = {};

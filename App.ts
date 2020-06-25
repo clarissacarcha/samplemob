@@ -65,28 +65,28 @@ app.use((req, res, next) => {
 });
 
 // Assign Routes
-app.use("/sample", indexroute);
+// app.use("/sample", indexroute);
 
-app.use("/vehicletype", vehicletyperoute);
+// app.use("/vehicletype", vehicletyperoute);
 
-app.use("/vehiclebrand", vehiclebrandroute);
+// app.use("/vehiclebrand", vehiclebrandroute);
 
-app.use("/vehiclemodel", vehiclemodelroute);
+// app.use("/vehiclemodel", vehiclemodelroute);
 
-app.use("/cargotype", cargotyperoute);
+// app.use("/cargotype", cargotyperoute);
 
-app.use("/useraccesscontrol", useraccesscontrolroute);
+// app.use("/useraccesscontrol", useraccesscontrolroute);
 
-app.use("/role", roleroute);
+// app.use("/role", roleroute);
 
-app.use("/requirementtype", requirementtyperoute);
+// app.use("/requirementtype", requirementtyperoute);
 
-app.use("/accountleveltype", accountleveltyperoute);
+// app.use("/accountleveltype", accountleveltyperoute);
 
-app.use("/accountlevel", accountlevelroute);
+// app.use("/accountlevel", accountlevelroute);
 
-app.use("/driver", driverroute);
+// app.use("/driver", driverroute);
 
-app.use("/user", userroute);
+// app.use("/user", userroute);
 
 export default app;

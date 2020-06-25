@@ -1,14 +1,14 @@
-import { VehicleTypeModel } from '../rest-models/VehicleTypeModel';
+//@ts-nocheck
+import { VehicleTypeModel } from "../rest-models/VehicleTypeModel";
 
-import { AuthUtility } from '../util/AuthUtility';
+import { AuthUtility } from "../util/AuthUtility";
 
-import {check, validationResult} from 'express-validator';
+import { check, validationResult } from "express-validator";
 
-import { ServerResponse } from '../interfaces/ServerResponse'; 
+import { ServerResponse } from "../interfaces/ServerResponse";
 
-export class VehicleType{
-
-  static create = async (req:any,res:any,next:any) =>{
+export class VehicleType {
+  static create = async (req: any, res: any, next: any) => {
     let status = 200;
 
     //validate input
@@ -16,12 +16,9 @@ export class VehicleType{
     if (!errors.isEmpty()) {
       status = 422;
       return res.status(200).json(
-         new ServerResponse(
-           status,
-           {
-             errors: errors.array()
-           }
-         ).sendResponse()
+        new ServerResponse(status, {
+          errors: errors.array(),
+        }).sendResponse()
       );
       /*return res.status(422).json({ errors: errors.array() });*/
     }
@@ -29,22 +26,17 @@ export class VehicleType{
     let result = await VehicleTypeModel.create(req.body);
 
     res.status(200).json(
-        new ServerResponse(
-           status,
-           {
-             result
-           }
-         ).sendResponse()
+      new ServerResponse(status, {
+        result,
+      }).sendResponse()
     );
 
     /*res.status(200).json({
         result
     });*/
+  };
 
-  }
-
-  static read = async (req:any,res:any,next:any) =>{
-
+  static read = async (req: any, res: any, next: any) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
@@ -53,12 +45,11 @@ export class VehicleType{
     let result = await VehicleTypeModel.read(req.params.id);
 
     res.status(200).json({
-        result
+      result,
     });
+  };
 
-  }
-
-  static update = async (req:any,res:any,next:any) =>{
+  static update = async (req: any, res: any, next: any) => {
     let status = 200;
 
     //validate input
@@ -66,30 +57,22 @@ export class VehicleType{
     if (!errors.isEmpty()) {
       status = 422;
       return res.status(200).json(
-         new ServerResponse(
-           status,
-           {
-             errors: errors.array()
-           }
-         ).sendResponse()
+        new ServerResponse(status, {
+          errors: errors.array(),
+        }).sendResponse()
       );
     }
 
     let result = await VehicleTypeModel.update(req.body);
 
     res.status(200).json(
-        new ServerResponse(
-           status,
-           {
-             result
-           }
-         ).sendResponse()
+      new ServerResponse(status, {
+        result,
+      }).sendResponse()
     );
+  };
 
-  }
-
-  static delete = async (req:any,res:any,next:any) =>{
-
+  static delete = async (req: any, res: any, next: any) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
@@ -98,19 +81,15 @@ export class VehicleType{
     let result = await VehicleTypeModel.delete(req.params.id);
 
     res.status(200).json({
-      result
+      result,
     });
+  };
 
-  }
-
-
-  static list = async (req:any,res:any,next:any) =>{
-
+  static list = async (req: any, res: any, next: any) => {
     //varify access
     let ress = await AuthUtility.verifyAccess(req.body.token);
 
-    if(ress)
-    {
+    if (ress) {
       //validate input
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -120,19 +99,16 @@ export class VehicleType{
       let result = await VehicleTypeModel.list(req.body);
 
       res.status(200).json({
-        result
+        result,
       });
-    }
-    else{
+    } else {
       let result = {
         authError: 1,
-        message: "You are not logged in"
-      }
+        message: "You are not logged in",
+      };
       res.status(200).json({
-        result
+        result,
       });
     }
-
-  }
-
+  };
 }

@@ -1,3 +1,4 @@
+//@ts-nocheck
 const pool = require("../mysql");
 const dateFormat = require("dateformat");
 import { MysqlUtility } from "../util/MysqlUtility";
@@ -12,11 +13,7 @@ export class VehicleBrandModel {
       "values(?,?,?)",
     ]);
 
-    let values = [
-      req.brand,
-      1,
-      date
-    ];
+    let values = [req.brand, 1, date];
 
     return await pool.query(query, values);
   };
@@ -37,11 +34,7 @@ export class VehicleBrandModel {
       "where id = ?",
     ]);
 
-    let values = [
-      req.brand,
-      date,
-      req.id,
-    ];
+    let values = [req.brand, date, req.id];
 
     return await pool.query(query, values);
   };
@@ -63,12 +56,7 @@ export class VehicleBrandModel {
 
     const recordStatus = 1;
 
-    const orderColumns = [
-      "id",
-      "brand",
-      "created_at",
-      "updated_at",
-    ];
+    const orderColumns = ["id", "brand", "created_at", "updated_at"];
 
     const orderDirections = ["asc", "desc"];
 
@@ -95,14 +83,9 @@ export class VehicleBrandModel {
         "and status = ?",
       ]);
 
-      values = [
-        "%" + req.searchstring + "%"
-      ];
+      values = ["%" + req.searchstring + "%"];
 
-      counterQueryValues = [
-        "%" + req.searchstring + "%",
-        recordStatus,
-      ];
+      counterQueryValues = ["%" + req.searchstring + "%", recordStatus];
     } else {
       query = MysqlUtility.bindValues(
         MysqlUtility.mergeLines([

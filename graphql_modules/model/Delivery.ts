@@ -1,5 +1,8 @@
 //@ts-nocheck
 import { gql, UserInputError, ApolloError } from "apollo-server-express";
+import { GraphQLModule } from "@graphql-modules/core";
+import { raw } from "objection";
+import { gql, UserInputError } from "apollo-server-express";
 import fileUploadS3 from "../../util/FileUploadS3";
 import NotificationUtility from "../../util/NotificationUtility";
 
@@ -55,9 +58,8 @@ const typeDefs = gql`
     distance: Float
     duration: Float
     price: String
-    cashOnDelivery: String
-    senderStop: StopInput
-    recipientStop: [StopInput]
+    senderStop: SenderStopInput
+    recipientStop: [RecipientStopInput]
   }
 
   input PatchDeliveryAcceptedInput {
@@ -184,22 +186,32 @@ const resolvers = {
     },
 
     getNearestOrderAvailable: async (_, { filter = {} }) => {
-      try{
+      try {
         const { latitude, longitude } = filter;
 
         const result = await Delivery.query()
-        .select(["tok_deliveries.*", raw("( 3959 * acos( cos( radians(?) ) * cos( radians( `sender_stop`.`latitude` ) ) * cos( radians( `sender_stop`.`longitude` ) - radians(?) ) + sin( radians(?) ) * sin(radians(`sender_stop`.`latitude`)) ) )", latitude, longitude, latitude).as("distance") , "senderStop.latitude", "senderStop.longitude"])
-        .leftJoinRelated("[senderStop]")
-        .where("status", 1)
-        .where("tokDriverId", null)
-        .orderBy("distance");
+          .select([
+            "tok_deliveries.*",
+            raw(
+              "( 3959 * acos( cos( radians(?) ) * cos( radians( `sender_stop`.`latitude` ) ) * cos( radians( `sender_stop`.`longitude` ) - radians(?) ) + sin( radians(?) ) * sin(radians(`sender_stop`.`latitude`)) ) )",
+              latitude,
+              longitude,
+              latitude
+            ).as("distance"),
+            "senderStop.latitude",
+            "senderStop.longitude",
+          ])
+          .leftJoinRelated("[senderStop]")
+          .where("status", 1)
+          .where("tokDriverId", null)
+          .orderBy("distance");
         console.log(result);
 
         return result;
       } catch (e) {
         throw e;
       }
-    }
+    },
   },
   Mutation: {
     postDelivery: async (_, { input }, { Models }) => {
@@ -480,9 +492,6 @@ const resolvers = {
   },
 };
 
-import { GraphQLModule } from "@graphql-modules/core";
-import DistanceCalculator from "../../util/DistanceCalculator";
-import { raw } from "objection";
 export default new GraphQLModule({
   imports: [DeliveryLogModule, ScalarModule, StopModule, DriverModule],
   typeDefs,

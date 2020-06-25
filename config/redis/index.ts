@@ -5,9 +5,15 @@ redis.on("error", function (err) {
   console.log("REDIS ERROR: " + err);
 });
 
-// Used to store 6 digit verification code for registration and login
+// Used to store 6 digit verification code for registration
 export const REDIS_LOGIN_REGISTER = () => {
   redis.select(1);
+  return redis;
+};
+
+// Used to store 6 digit verification code for password reset
+export const REDIS_FORGOT_PASSWORD = () => {
+  redis.select(2);
   return redis;
 };
 

@@ -1,7 +1,8 @@
-import express from 'express';
+//@ts-nocheck
+import express from "express";
 const router = express.Router();
-import  { VehicleType }  from '../controllers/vehicleType';
+import { VehicleType } from "../controllers/vehicleType";
 
-router.get('/sample', VehicleType.create);
+router.get("/sample", VehicleType.create);
 
 module.exports = router;
