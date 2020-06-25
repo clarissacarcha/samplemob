@@ -37,21 +37,10 @@ const StatusBar = ({number, label, log, tempFile}) => {
   let hasImage;
 
   if (log) {
-    ts = moment
-      .tz(log.createdAt, 'Asia/Manila')
-      .format('MM/DD/YYYY - h:mm A')
-      .toString();
+    ts = log.createdAt;
 
     hasImage = log.image !== null ? true : false;
   }
-
-  // const res = await imageDimensions(img.uri);
-  // const imgData = {
-  //   uri: img.uri,
-  //   height: res.height,
-  //   width: res.width,
-  // };
-  // return imgData;
 
   const getImage = async () => {
     const result = await getImageDimensions(log.image);

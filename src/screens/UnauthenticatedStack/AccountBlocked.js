@@ -1,63 +1,60 @@
-import React from 'react';
-import {View, Text, ScrollView, StyleSheet, TouchableHighlight, Linking, Dimensions, Image} from 'react-native';
+import React, {useState, useRef, useEffect} from 'react';
+import {
+  View,
+  Text,
+  Image,
+  Dimensions,
+  StyleSheet,
+  TouchableHighlight,
+  Linking,
+  BackHandler,
+  ScrollView,
+} from 'react-native';
 import {connect} from 'react-redux';
-import {COLOR, DARK, MEDIUM, LIGHT} from '../../../res/constants';
-import {HeaderBack, HeaderTitle} from '../../../components';
+import {HeaderBack, HeaderTitle} from '../../components';
+
+import {COLOR, DARK, APP_FLAVOR, MEDIUM, LIGHT} from '../../res/constants';
 
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import Logo from '../../../assets/icons/ToktokLogo.png';
-
 const imageWidth = Dimensions.get('window').width - 40;
 
-const TalkToUs = ({navigation}) => {
+const AccessDenied = require('../../assets/images/AccessDenied.png');
+
+const AccountBlocked = ({navigation, route, createSession}) => {
+  const goToLogin = () => {
+    navigation.navigate('UnauthenticatedStack', {
+      screen: 'Login',
+    });
+  };
+
   navigation.setOptions({
-    headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={['Talk', 'To Us']} />,
+    headerLeft: () => <HeaderBack onBack={goToLogin} />,
+    headerTitle: () => <HeaderTitle label={['Access', 'Denied']} />,
   });
 
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', function() {
+      goToLogin();
+      return true;
+    });
+    return () => {
+      backHandler.remove();
+    };
+  }, []);
+
   return (
-    <View style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{paddingHorizontal: 20, paddingTop: 20, marginBottom: 0}}>
-          <View />
-          <Image
-            source={Logo}
-            style={{
-              height: imageWidth,
-              width: imageWidth,
-              borderRadius: 50,
-              marginBottom: 20,
-            }}
-          />
-          <TouchableHighlight
-            onPress={() => {
-              Linking.openURL('http://www.youtube.com');
-            }}
-            underlayColor={COLOR}
-            style={styles.card}>
-            <View style={styles.taskBox}>
-              {/*-------------------- VISIT OUR WEBSITE LABEL --------------------*/}
-              <View style={styles.rowBox}>
-                <View style={styles.row}>
-                  <FAIcon name="info" size={16} color={'white'} style={styles.iconBox} />
-                  <Text style={{fontSize: 14, marginLeft: 16, color: DARK, fontWeight: 'bold'}}>Visit our website</Text>
-                </View>
-              </View>
-
-              {/*-------------------- WEBSITE --------------------*/}
-              <View style={styles.rowBox}>
-                <View style={styles.row}>
-                  <MCIcon name="web" size={16} color={'white'} style={styles.iconBox} />
-                  <Text style={{fontSize: 14, marginLeft: 16, color: MEDIUM, fontWeight: 'bold'}}>www.toktok.ph</Text>
-                </View>
-              </View>
-            </View>
-          </TouchableHighlight>
-        </View>
-
-        <View style={{paddingHorizontal: 20, paddingTop: 20, marginBottom: 10}}>
+    <View style={{flex: 1, backgroundColor: 'white', alignItems: 'center'}}>
+      <ScrollView contentContainerStyle={{alignItems: 'center'}} showsVerticalScrollIndicator={false}>
+        <Image
+          source={AccessDenied}
+          style={{height: imageWidth, width: imageWidth, marginHorizontal: 20, marginTop: 50}}
+          resizeMode="contain"
+        />
+        <Text style={{color: MEDIUM, fontWeight: 'bold'}}>Access denied. </Text>
+        <Text style={{color: MEDIUM, fontWeight: 'bold'}}>Contact us for additional information.</Text>
+        <View style={{paddingHorizontal: 20, marginTop: 20, marginBottom: 20, width: '100%'}}>
           <TouchableHighlight
             onPress={() => {
               Linking.openURL(
@@ -92,18 +89,14 @@ const TalkToUs = ({navigation}) => {
   );
 };
 
-const mapStateToProps = state => ({
-  session: state.session,
-});
-
 const mapDispatchToProps = dispatch => ({
   createSession: payload => dispatch({type: 'CREATE_SESSION', payload}),
 });
 
 export default connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps,
-)(TalkToUs);
+)(AccountBlocked);
 
 const styles = StyleSheet.create({
   container: {

@@ -16,6 +16,7 @@ import MapView, {Marker, PROVIDER_GOOGLE, AnimatedRegion, Animated} from 'react-
 import OneSignal from 'react-native-onesignal';
 import MapViewDirections from 'react-native-maps-directions';
 import {connect} from 'react-redux';
+import {useIsFocused, useFocusEffect} from '@react-navigation/native';
 import {currentLocation} from '../../../../helper';
 import {BookingOverlay, LocationPermission} from '../../../../components';
 import {COLOR, DARK, MEDIUM, LIGHT, MAPS_API_KEY} from '../../../../res/constants';
@@ -29,12 +30,6 @@ import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 
 import ToktokLogo from '../../../../assets/icons/ToktokLogo.png';
-
-const toDateFormat = value => {
-  return moment(value)
-    .format('YYYY-MM-DD HH:mm:ss')
-    .toString();
-};
 
 const INITIAL_SENDER = session => ({
   latitude: 0,
@@ -62,6 +57,7 @@ const INITIAL_RECIPIENT = [
     scheduledFrom: null,
     scheduledTo: null,
     scheduledDayIndex: '0',
+    cashOnDelivery: null,
   },
 ];
 
@@ -80,17 +76,17 @@ const INITIAL_REGION = {
 
 const findNotificationRoute = type => {
   if (type == 'N') {
-    return 'Inbox';
+    return 'Notifications';
   }
 };
 
-const Map = ({navigation, session}) => {
+const ConsumerMap = ({navigation, session, route}) => {
   navigation.setOptions({
     header: () => null,
   });
 
   const mapViewRef = useRef(null);
-
+  const isConsumerMapFocused = useIsFocused();
   const [bookingSuccess, setBookingSuccess] = useState(false);
   const [recipientIndex, setRecipientIndex] = useState(0); // Used for multiple recipients
   const [allowBooking, setAllowBooking] = useState(false);
@@ -179,11 +175,18 @@ const Map = ({navigation, session}) => {
 
     OneSignal.addEventListener('opened', onNotificationOpened);
 
-    return () => {
-      OneSignal.removeEventListener('received');
-    };
-
     const backHandler = BackHandler.addEventListener('hardwareBackPress', function() {
+      // if (isConsumerMapFocused) {
+      //   Alert.alert('', 'Do you want to exit the app?', [
+      //     {
+      //       text: 'Yes',
+      //       onPress: () => BackHandler.exitApp(),
+      //     },
+      //     {
+      //       text: 'No',
+      //     },
+      //   ]);
+      // }
       return true;
     });
     return () => {
@@ -243,42 +246,54 @@ const Map = ({navigation, session}) => {
   };
 
   const onSubmit = async () => {
-    let emptyRecipient = 0;
+    try {
+      let emptyRecipient = 0;
 
-    recipient.forEach(rec => {
-      if (
-        rec.latitude === 0 ||
-        rec.longitude === 0 ||
-        rec.formattedAddress === '' ||
-        rec.name === '' ||
-        rec.mobile === ''
-      ) {
-        emptyRecipient++;
+      recipient.forEach(rec => {
+        if (
+          rec.latitude === 0 ||
+          rec.longitude === 0 ||
+          rec.formattedAddress === '' ||
+          rec.name === '' ||
+          rec.mobile === ''
+        ) {
+          emptyRecipient++;
+        }
+      });
+
+      if (emptyRecipient > 0) {
+        Alert.alert('', 'Please enter recipient details.');
+        return;
       }
-    });
 
-    if (emptyRecipient > 0) {
-      Alert.alert('', 'Please enter recipient details.');
-      return;
-    }
+      const input = {
+        tokConsumerId: session.user.consumer.id,
+        distance: directions.distance,
+        duration: directions.duration,
+        price: price,
+        senderStop: senderStop,
+        recipientStop: recipient,
+      };
 
-    // Delete this field. Only used in mobile app.
-    delete senderStop.accuracy;
-    delete senderStop.scheduledDayIndex;
-    delete recipient[0].scheduledDayIndex;
+      // Delete this field. Only used in mobile app.
+      delete input.senderStop.accuracy;
+      delete input.senderStop.latitudeDelta;
+      delete input.senderStop.longitudeDelta;
+      delete input.senderStop.scheduledDayIndex;
 
-    postDelivery({
-      variables: {
-        input: {
-          tokConsumerId: session.user.consumer.id,
-          distance: directions.distance,
-          duration: directions.duration,
-          price: price,
-          senderStop: senderStop,
-          recipientStop: recipient,
+      delete input.recipientStop[0].accuracy;
+      delete input.recipientStop[0].latitudeDelta;
+      delete input.recipientStop[0].longitudeDelta;
+      delete input.recipientStop[0].scheduledDayIndex;
+
+      postDelivery({
+        variables: {
+          input,
         },
-      },
-    });
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const onBookSuccessOk = () => {
@@ -468,7 +483,7 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   null,
-)(Map);
+)(ConsumerMap);
 
 const styles = StyleSheet.create({
   container: {

@@ -2,61 +2,43 @@ import React, {useState, useEffect} from 'react';
 import {View, Text, ScrollView, StyleSheet, TouchableHighlight, TextInput, Alert, BackHandler} from 'react-native';
 import {connect} from 'react-redux';
 import validator from 'validator';
-import {COLOR, DARK, MAP_DELTA_LOW, MEDIUM} from '../../../res/constants';
-import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../components';
+import {COLOR, DARK, MAP_DELTA_LOW, MEDIUM} from '../../res/constants';
+import {HeaderBack, HeaderTitle, AlertOverlay} from '../../components';
 import {useMutation} from '@apollo/react-hooks';
 
-import {PATCH_PERSON_POST_REGISTRATION} from '../../../graphql';
+import {FORGOT_PASSWORD_RESET} from '../../graphql';
 
-const PostRegistration = ({navigation, route, session, createSession, destroySession}) => {
-  const signOut = () => {
-    destroySession();
+const PostRegistration = ({navigation, route}) => {
+  const goToLogin = () => {
     navigation.navigate('UnauthenticatedStack', {
       screen: 'Login',
     });
   };
 
   navigation.setOptions({
-    headerLeft: () => <HeaderBack onBack={signOut} />,
-    headerTitle: () => <HeaderTitle label={['Post', 'Registration']} />,
+    headerLeft: () => <HeaderBack onBack={goToLogin} />,
+    headerTitle: () => <HeaderTitle label={['Reset', 'Password']} />,
   });
 
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [emailAddress, setEmailAddress] = useState('');
+  const {mobile, verificationCode} = route.params;
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
 
-  const [patchPersonPostRegistration, {loading}] = useMutation(PATCH_PERSON_POST_REGISTRATION, {
+  const [forgotPasswordReset, {loading}] = useMutation(FORGOT_PASSWORD_RESET, {
     variables: {
       input: {
-        tokUserId: session.user.id,
-        firstName,
-        lastName,
-        emailAddress,
+        mobile,
+        verificationCode,
         password,
       },
     },
-    onCompleted: ({patchPersonPostRegistration}) => {
-      const newSession = {...session};
-      newSession.user.person.firstName = firstName;
-      newSession.user.person.lastName = lastName;
-      newSession.user.person.emailAddress = emailAddress;
-      createSession(newSession);
-      navigation.navigate('ConsumerMap');
-
-      // setTimeout(() => {
-      //   navigation.navigate(
-      //     'RootDrawer',
-      //     {
-      //       screen: 'AuthenticatedStack',
-      //       params: {
-      //         screen: 'Map',
-      //       },
-      //     },
-      //     100,
-      //   );
-      // });
+    onCompleted: ({forgotPasswordReset}) => {
+      Alert.alert('', forgotPasswordReset, [
+        {
+          title: 'Ok',
+          onPress: goToLogin,
+        },
+      ]);
     },
     onError: ({graphQLErrors, networkError}) => {
       if (networkError) {
@@ -69,26 +51,6 @@ const PostRegistration = ({navigation, route, session, createSession, destroySes
   });
 
   const onSubmit = () => {
-    if (firstName == '') {
-      Alert.alert('', `Please enter your first name`);
-      return;
-    }
-
-    if (lastName == '') {
-      Alert.alert('', `Please enter your last name.`);
-      return;
-    }
-
-    if (emailAddress == '') {
-      Alert.alert('', `Please enter your email address.`);
-      return;
-    }
-
-    if (!validator.isEmail(emailAddress)) {
-      Alert.alert('', `Please enter a valid email address.`);
-      return;
-    }
-
     if (password == '') {
       Alert.alert('', `Please enter your password.`);
       return;
@@ -114,12 +76,12 @@ const PostRegistration = ({navigation, route, session, createSession, destroySes
       return;
     }
 
-    patchPersonPostRegistration();
+    forgotPasswordReset();
   };
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener('hardwareBackPress', function() {
-      signOut();
+      goToLogin();
       return true;
     });
     return () => {
@@ -131,43 +93,18 @@ const PostRegistration = ({navigation, route, session, createSession, destroySes
     <View style={styles.container}>
       <AlertOverlay visible={loading} />
       <ScrollView showsVerticalScrollIndicator={false}>
-        {/*---------------------------------------- FORM ----------------------------------------*/}
-        <Text style={styles.label}>First Name</Text>
-        <TextInput
-          value={firstName}
-          onChangeText={value => setFirstName(value)}
-          style={styles.input}
-          placeholder="First Name"
-        />
-
-        <Text style={styles.label}>Last Name</Text>
-        <TextInput
-          value={lastName}
-          onChangeText={value => setLastName(value)}
-          style={styles.input}
-          placeholder="Last Name"
-        />
-
-        <Text style={styles.label}>Email Address</Text>
-        <TextInput
-          value={emailAddress}
-          onChangeText={value => setEmailAddress(value)}
-          style={styles.input}
-          placeholder="Email Address"
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
-
-        <Text style={styles.label}>Password</Text>
+        {/*-------------------- PASSWORD --------------------*/}
+        <Text style={styles.label}>New Password</Text>
         <TextInput
           value={password}
           onChangeText={value => setPassword(value)}
           style={styles.input}
-          placeholder="Password"
+          placeholder="New Password"
           secureTextEntry={true}
           autoCapitalize="none"
         />
 
+        {/*-------------------- REPEAT PASSWORD --------------------*/}
         <Text style={styles.label}>Repeat Password</Text>
         <TextInput
           value={repeatPassword}
@@ -207,17 +144,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
   },
-  map: {
-    flex: 1,
-  },
-  addressBox: {
-    height: 60,
-    flexDirection: 'row',
-    paddingHorizontal: 20,
-    backgroundColor: COLOR,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
+
   input: {
     marginHorizontal: 20,
     borderWidth: 1,
@@ -235,20 +162,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  floatingPin: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  iconBoxDark: {
-    backgroundColor: DARK,
-    height: 24,
-    width: 24,
-    borderRadius: 5,
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    marginRight: 20,
   },
   label: {
     marginHorizontal: 20,

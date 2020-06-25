@@ -5,8 +5,6 @@ import FIcon from 'react-native-vector-icons/Feather';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 import OneSignal from 'react-native-onesignal';
 
-import {TouchableOpacity} from 'react-native-gesture-handler';
-
 const DrawerButton = ({label, onPress, restrict}) => {
   if (restrict && restrict != APP_FLAVOR) {
     return null;
@@ -70,7 +68,7 @@ const Drawer = ({navigation, session, destroySession}) => {
         <View style={{marginTop: 10, alignItems: 'center'}}>
           {/*--------------- AVATAR ---------------*/}
           {/* TODO: If has driver avatar, show avatar, else show placeholder */}
-          {true ? (
+          {false ? (
             <View
               style={{
                 height: 90,
@@ -81,10 +79,10 @@ const Drawer = ({navigation, session, destroySession}) => {
                 alignItems: 'center',
               }}>
               <Image
-                  source={{uri: session.user.person.avatar}}
-                  resizeMode={'contain'}
-                  style={{width: 90, height: 90, backgroundColor:'black', borderRadius: 10}}
-                />
+                source={{uri: session.user.person.avatar}}
+                resizeMode={'contain'}
+                style={{width: 90, height: 90, backgroundColor: 'black', borderRadius: 10}}
+              />
             </View>
           ) : (
             <View
@@ -103,7 +101,7 @@ const Drawer = ({navigation, session, destroySession}) => {
           <Text style={[styles.headerText, {marginTop: 10, color: COLOR, textAlign: 'center'}]}>{fullName}</Text>
 
           {/*--------------- OLD EDIT PROFILE BUTTON ---------------*/}
-          {/* <TouchableOpacity onPress={() => navigation.navigate('CustomerProfile')}>
+          {/* <TouchableOpacity onPress={() => navigation.navigate('ConsumerProfile')}>
             <View style={{flexDirection: 'row', padding: 10}}>
               <Text style={[styles.headerText, {fontWeight: 'normal', fontSize: 10, marginRight: 5}]}>
                 Edit Profile
@@ -117,7 +115,7 @@ const Drawer = ({navigation, session, destroySession}) => {
         <DrawerButton
           label="Profile"
           onPress={() => {
-            const route = APP_FLAVOR == 'C' ? 'CustomerProfile' : 'DriverProfile';
+            const route = APP_FLAVOR == 'C' ? 'ConsumerProfile' : 'DriverProfile';
             navigation.navigate(route);
           }}
         />
@@ -148,8 +146,8 @@ const Drawer = ({navigation, session, destroySession}) => {
           }}
         />
 
-        {/*--------------- INBOX ---------------*/}
-        <DrawerButton label="Inbox" onPress={() => navigation.navigate('Inbox')} restrict="C" />
+        {/*--------------- Notifications ---------------*/}
+        <DrawerButton label="Notifications" onPress={() => navigation.navigate('Notifications')} restrict="C" />
 
         {/*--------------- ANNOUNCEMENTS ---------------*/}
         <DrawerButton label="Announcements" onPress={() => navigation.navigate('Announcements')} restrict="C" />

@@ -19,7 +19,7 @@ import {HeaderBack, HeaderTitle} from '../../../components';
 import {useQuery} from '@apollo/react-hooks';
 import {useNavigation} from '@react-navigation/native';
 
-import {GET_MESSAGES} from '../../../graphql';
+import {GET_NOTIFICATIONS} from '../../../graphql';
 
 import NoData from '../../../assets/images/NoData.png';
 
@@ -71,7 +71,6 @@ const MessageCard = ({message, lastItem}) => {
                     marginTop: 2,
                     fontWeight: 'bold',
                   }}>
-                  {/* {moment.unix(createdAt / 1000).format('MMM DD YYYY - h:mm a')} */}
                   {createdAt}
                 </Text>
               </View>
@@ -100,13 +99,13 @@ const MessageCard = ({message, lastItem}) => {
   );
 };
 
-const Announcements = ({navigation, route, session, createSession}) => {
+const Notifications = ({navigation, route, session, createSession}) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={['Inbox', '']} />,
+    headerTitle: () => <HeaderTitle label={['Notifications', '']} />,
   });
 
-  const {data, loading, error} = useQuery(GET_MESSAGES, {
+  const {data, loading, error} = useQuery(GET_NOTIFICATIONS, {
     fetchPolicy: 'network-only',
     variables: {
       input: {
@@ -131,7 +130,7 @@ const Announcements = ({navigation, route, session, createSession}) => {
     );
   }
 
-  if (data.getMessages.length === 0) {
+  if (data.getNotifications.length === 0) {
     return (
       <View style={styles.center}>
         <Image source={NoData} style={styles.image} resizeMode={'contain'} />
@@ -143,23 +142,17 @@ const Announcements = ({navigation, route, session, createSession}) => {
     <View style={styles.container}>
       <FlatList
         showsVerticalScrollIndicator={false}
-        data={data.getMessages}
+        data={data.getNotifications}
         keyExtractor={item => item.id}
         renderItem={({item, index}) => {
-          const lastItem = index == data.getMessages.length - 1 ? true : false;
+          const lastItem = index == data.getNotifications.length - 1 ? true : false;
 
           return <MessageCard message={item} lastItem={lastItem} />;
         }}
       />
-      {/* <Text>{JSON.stringify(data, null, 4)}</Text> */}
     </View>
   );
 };
-
-// {moment
-//   .tz(delivery.createdAt, 'Asia/Manila')
-//   .format('MM/DD/YYYY - hh:mm A')
-//   .toString()}
 
 const mapStateToProps = state => ({
   session: state.session,
@@ -172,7 +165,7 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Announcements);
+)(Notifications);
 
 const styles = StyleSheet.create({
   container: {

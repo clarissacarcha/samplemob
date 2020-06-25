@@ -79,29 +79,73 @@ Driver
 
 Readlly Next Patch:
 
-1. Schedule Validation (Recipient schedule must be greater than Sender schedule)
-2. Code Refactoring
-3. Paginations
-4. Image Loader
-5. Granular Security
-6. WYSIWYG/HTML for Announcements
-7. Google Maps - Avoid Toll Roads
-8. Google Maps - Routes for Motorcycles
-9. Share Delivery Link, Updated Driver Info
-10. Priority Fee
-11. Booking a copy or order, take to map
+1. Code Refactoring
+2. Granular Security
+3. WYSIWYG/HTML for Announcements
+4. Google Maps - Avoid Toll Roads
+5. Google Maps - Routes for Motorcycles
+6. Share Delivery Link, Updated Driver Info
+7. Priority Fee
+8. Notification Read/Unread
+9. Fix Navigation to enable Android back
+10. Google API Consumption
 
-Check UI of Scheduled Order Type, but one stop is ASAP
-Constants
+NEXT PATCH
 
-TODO:
+1. Image Loader
+2. Paginations
+3. Blocked Users Stage 2 (If has delivery, continue to login)
+4. SecureTextInput (component for passwords)
+5. Booking Copy
 
-1. Move checking if customer or rider account in platform on login
-2. Item Description Initial Data
-3. Post Registration Sign Out (HeaderBack with onPress)
-4. Validate 10 Digits mobile number
-5. Rider Pix
-6. Google API Consumption
-7. Regex
+REPORT
 
-Forgot password. Use email?
+1. (checkmark) Enlarge Driver Pix
+2. (checkmark) Booking Copy (HIDDEN, ON HOLD)
+3. (checkmark) Validate 10 Digits mobile number on press
+4. (checkmark) Post Registration and Profile Update email and password validation
+5. (checkmark) Upon Login, if User doesn't have a nominated Password, continue with SMS Verification.
+6. (checkmark) Post Registration sign out on header back and android back press
+7. (checkmark) Booking sender name remains from last session
+8. (checkmark) Constants
+9. (checkmark) Item Description Initial Data
+10. (checkmark) Move checking if customer or rider account in platform on login
+11. (checkmark) Post Registration Loading
+12. (checkmark) Device ID
+13. (checkmark) COD
+14. (checkmark) Inbox to Notifications
+15. (checkmark) Blocked Users Stage 1 (On login, show blocked.)
+16. (checkmark) Change Password
+17. (checkmark) Check PHP Password
+18. (checkmark) Forgot Password
+19. (checkmark) Exposed API for Announcements, Deliveries, Announcement Consumer/Driver
+20. (checkmark) Normalize Date Formats (Scalar)
+21. Normalize ScheduledFrom / To Format
+22. Fix Order Type Schedule, Today Only
+23. Refactor Delivery Card to Show CashOnDelivery Price
+24. Constants
+25. Generalize On Error
+26. Driver UI for Cash On Delivery
+27. Driver Push Notifications (Order Cancel from Customer/Driver, New Orders)
+28. Version Control
+
+29. Handle Network Errors on Fetch
+30. Rider Interval Logs
+
+//
+
+1. Turn On Cron Job
+
+//
+If user is blocked, can't log in. (if has orders, go)
+If device is blocked, can't login. (if has orders, go)
+If device is blocked, no orders (block the account)
+
+Constants:
+Distance in km to search for drivers to send push notifications.
+Concurrent orders
+OneSignal App Id based on app flavor
+Support email
+website
+Rider logs interval
+Verification Code Expiration in seconds

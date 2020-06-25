@@ -3,17 +3,47 @@
  * Used to display driver information
  */
 
-import React from 'react';
-import {View, Text, StyleSheet, Platform, Linking} from 'react-native';
-import {COLOR, DARK, MEDIUM, ORANGE, LIGHT} from '../res/constants';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Platform,
+  Linking,
+  TouchableHighlight,
+  Image,
+  Modal,
+  Dimensions,
+  TouchableWithoutFeedback,
+} from 'react-native';
+import {COLOR, DARK, MEDIUM, ORANGE, LIGHT, COLOR_UNDERLAY} from '../res/constants';
 
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 
+const imageWidth = Dimensions.get('window').width - 40;
+
+const AvatarOverlay = ({avatar, visible, onPress}) => {
+  return (
+    <Modal visible={visible} transparent={true} animationType="fade" style={{position: 'relative'}}>
+      <TouchableWithoutFeedback onPress={onPress}>
+        <View style={{flex: 1, justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.75)', zIndex: 9}} />
+      </TouchableWithoutFeedback>
+      <View style={{...StyleSheet.absoluteFillObject, justifyContent: 'center'}}>
+        <Image
+          source={{uri: avatar}}
+          style={{height: imageWidth, width: imageWidth, borderRadius: 10, marginHorizontal: 20, zIndex: 9999}}
+        />
+      </View>
+    </Modal>
+  );
+};
+
 export const DriverCard = ({driver}) => {
   const labels = ['Rider', 'Info'];
 
+  const [showLargeAvatar, setShowLargeAvatar] = useState(false);
   const {firstName, lastName} = driver.user.person;
   const mobileNumber = `+63${driver.user.username}`;
 
@@ -25,63 +55,61 @@ export const DriverCard = ({driver}) => {
   return (
     <View style={styles.card}>
       <View style={styles.cardShadow}>
-        {/*------------------- STOP LABEL-------------------*/}
-        <View style={{flexDirection: 'row', alignItems: 'center', padding: 20}}>
+        {/*------------------- RIDER INFO LABEL-------------------*/}
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            padding: 20,
+            borderBottomWidth: StyleSheet.hairlineWidth,
+            borderColor: MEDIUM,
+          }}>
           <Fontisto name="motorcycle" size={18} color={DARK} style={styles.iconBox} />
           <Text style={{marginLeft: 10, color: DARK, fontWeight: 'bold'}}>
             {labels[0]} <Text style={{color: ORANGE}}>{labels[1]}</Text>
           </Text>
         </View>
-        {/*------------------- ADDRESS -------------------*/}
-        <View
-          style={{
-            flexDirection: 'row',
-            borderTopWidth: StyleSheet.hairlineWidth,
-            borderColor: MEDIUM,
-            // padding: 20,
-            paddingBottom: 0,
-          }}>
-          {/* <Text style={{color: MEDIUM, fontSize: 14, flex: 1}}>ADDRESS?</Text> */}
-          {/*------------------- ROUTE BUTTON -------------------*/}
-          {/* <MCIcon
-            name="directions"
-            size={24}
-            color={COLOR}
-            style={styles.actionIconBox}
-            onPress={() => {
-              const scheme = Platform.select({ios: 'maps:0,0?q=', android: 'geo:0,0?q='});
-              const latLng = `14.560668065523032,121.055769827216860`;
-              const label = DRIVER NAME;
-              const url = Platform.select({
-                ios: `${scheme}${label}@${latLng}`,
-                android: `${scheme}${latLng}(${label})`,
-              });
 
-              Linking.openURL(
-                'https://www.waze.com/ul?ll=14.560668065523032%2C121.055769827216860&navigate=yes&zoom=17',
-              );
-            }}
-          />*/}
-        </View>
-        {/*------------------- NAME -------------------*/}
         <View style={{flexDirection: 'row', padding: 20}}>
-          <View style={{flex: 1}}>
-            <Text style={{fontWeight: 'bold', flex: 1}}>{`${firstName} ${lastName}`}</Text>
-            <Text numberOfLines={1} style={{paddingRight: 10, color: MEDIUM, fontSize: 10}}>
-              {`+63${driver.user.username}`}
-            </Text>
+          {/*------------------- AVATAR -------------------*/}
+
+          {driver.user.person.avatar ? (
+            <>
+              <AvatarOverlay
+                avatar={driver.user.person.avatar}
+                visible={showLargeAvatar}
+                onPress={() => setShowLargeAvatar(false)}
+              />
+              <TouchableHighlight
+                onPress={() => setShowLargeAvatar(true)}
+                underlayColor={COLOR}
+                style={{marginRight: 10, borderRadius: 10}}>
+                <Image source={{uri: driver.user.person.avatar}} style={{height: 60, width: 60, borderRadius: 10}} />
+              </TouchableHighlight>
+            </>
+          ) : (
+            <View style={{height: 60, width: 60, borderRadius: 10}} />
+          )}
+
+          {/*------------------- NAME -------------------*/}
+          <View style={{flex: 1, marginRight: 10}}>
+            <Text style={{fontWeight: 'bold'}}>{`${firstName} ${lastName}`}</Text>
+            <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 10}}>{`+63${driver.user.username}`}</Text>
           </View>
+
           {/*------------------- DIALER BUTTON -------------------*/}
           <MIcon
             name="call"
             size={24}
             color={COLOR}
-            style={[styles.actionIconBox, {marginHorizontal: 20}]}
+            style={[styles.actionIconBox, {marginRight: 20}]}
             onPress={() => {
               const link = Platform.OS === 'android' ? `tel:${mobileNumber}` : `telprompt:${mobileNumber}`;
               Linking.openURL(link);
             }}
           />
+
+          {/*------------------- SMS BUTTON -------------------*/}
           <MIcon
             name="sms"
             size={22}
@@ -92,6 +120,11 @@ export const DriverCard = ({driver}) => {
             }}
           />
         </View>
+
+        {/* ------------------- AVATAR -------------------
+        <View style={{flexDirection: 'row', padding: 20}}>
+          <Text>{driver.user.person.avatar}</Text>
+        </View> */}
       </View>
     </View>
   );

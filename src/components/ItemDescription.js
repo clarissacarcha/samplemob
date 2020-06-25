@@ -4,6 +4,7 @@ import {COLOR, DARK, MAP_DELTA_LOW, MEDIUM, LIGHT} from '../res/constants';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 import FIcon from 'react-native-vector-icons/Feather';
+import _ from 'lodash';
 
 const width = Dimensions.get('window').width;
 const itemDimension = (width - 120) / 5;
@@ -27,24 +28,25 @@ const Item = ({index, data, selected, setSelected, onSelect}) => {
         </View>
       </TouchableHighlight>
 
-      <Text style={{fontWeight: 'bold', fontSize: 11.5}}>{data[index]}</Text>
+      <Text style={{fontWeight: 'bold', fontSize: 11, color: isSelected ? DARK : MEDIUM}}>{data[index]}</Text>
     </View>
   );
 };
 
 export const ItemDescription = ({onSelect, initialData}) => {
-  const [selectedIndex, setSelectedIndex] = useState(null);
-
   const data = ['Food', 'Document', 'Clothing', 'Electronics', 'Others'];
 
-  // if (initialData) {
-  //   alert(initialData);
-  //   if (data.includes(initialData)) {
-  //     alert('1-4');
-  //   } else {
-  //     setSelectedIndex(4);
-  //   }
-  // }
+  let initialDataIndex = null;
+
+  if (initialData != '') {
+    const index = data.findIndex(cargo => {
+      return cargo == initialData;
+    });
+
+    initialDataIndex = index == -1 ? 4 : index;
+  }
+
+  const [selectedIndex, setSelectedIndex] = useState(initialDataIndex);
 
   return (
     <View>
@@ -58,6 +60,7 @@ export const ItemDescription = ({onSelect, initialData}) => {
       </View>
       {selectedIndex == 4 && (
         <TextInput
+          value={initialData}
           style={[styles.input, {marginTop: 20}]}
           placeholder="Please describe your item"
           onChangeText={onSelect}

@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import SmsRetriever from 'react-native-sms-retriever';
 import {connect} from 'react-redux';
-
+import {getUniqueId} from 'react-native-device-info';
 import {useMutation} from '@apollo/react-hooks';
 import {LOGIN_REGISTER} from '../../graphql';
 import {COLOR, DARK, MEDIUM, APP_FLAVOR} from '../../res/constants';
@@ -23,8 +23,6 @@ import Splash from '../../assets/images/Splash.png';
 import LoginBanner from '../../assets/images/LoginBanner.png';
 
 const Login = ({navigation, session}) => {
-  // const [mobile, setMobile] = useState('9667682812'); // D
-  // const [mobile, setMobile] = useState('9420434520'); // C
   const [mobile, setMobile] = useState('');
   const [delay, setDelay] = useState(true);
   const [loginRegister, {loading}] = useMutation(LOGIN_REGISTER, {
@@ -42,6 +40,8 @@ const Login = ({navigation, session}) => {
       if (loginRegister == 'LOGIN') {
         navigation.push('PasswordVerification', {mobile});
       }
+
+      setMobile(''); //empty out the mobile number
     },
     onError: ({graphQLErrors, networkError}) => {
       if (networkError) {
@@ -52,6 +52,20 @@ const Login = ({navigation, session}) => {
       }
     },
   });
+
+  const onMobileChange = value => {
+    if (value.length == 1 && value == '0') {
+      setMobile('');
+      return;
+    }
+
+    if (value.length > 10) {
+      setMobile(mobile);
+      return;
+    }
+
+    setMobile(value);
+  };
 
   useEffect(() => {
     setTimeout(() => {
@@ -141,14 +155,25 @@ const Login = ({navigation, session}) => {
           </View>
           <TextInput
             value={mobile}
-            onChangeText={value => setMobile(value)}
+            onChangeText={onMobileChange}
             style={styles.input}
             placeholder="9876543210"
             keyboardType="number-pad"
             returnKeyType="next"
             onSubmitEditing={() => onSubmit(mobile)}
+            returnKeyType="go"
           />
         </View>
+
+        {/* -------------------- FORGOT PASSWORD BUTTON--------------------*/}
+        <TouchableHighlight
+          onPress={() => navigation.push('ForgotPasswordRequest')}
+          underlayColor={COLOR}
+          style={styles.autoFillBox}>
+          <View style={styles.autoFill}>
+            <Text style={{color: COLOR, fontSize: 12}}>Forgot Password?</Text>
+          </View>
+        </TouchableHighlight>
 
         {/*-------------------- AUTO Fill BUTTON --------------------*/}
         {/* <TouchableHighlight onPress={onRequestAutoFill} underlayColor={COLOR} style={styles.autoFillBox}>
@@ -179,16 +204,18 @@ export default connect(
 
 const styles = StyleSheet.create({
   inputView: {
-    borderWidth: StyleSheet.hairlineWidth,
-    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: MEDIUM,
+    borderRadius: 10,
     paddingHorizontal: 20,
     justifyContent: 'center',
     marginRight: 20,
   },
   input: {
     flex: 1,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: MEDIUM,
+    borderRadius: 10,
     paddingHorizontal: 20,
     fontSize: 25,
     color: DARK,
@@ -200,7 +227,7 @@ const styles = StyleSheet.create({
   autoFillBox: {
     margin: 20,
     borderRadius: 10,
-    width: 100,
+    // width: 100,
     alignSelf: 'flex-end',
   },
   submit: {
@@ -212,11 +239,12 @@ const styles = StyleSheet.create({
   },
   autoFill: {
     backgroundColor: DARK,
-    height: 40,
+    height: 30,
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    width: 100,
+    // width: 50,
+    paddingHorizontal: 10,
     alignSelf: 'flex-end',
   },
 });

@@ -23,8 +23,6 @@ const INITIAL_VISIBILITY = {
 
 const timeToDate = value => {
   return moment(value, 'HH:mm:ss').toISOString();
-  // .format('YYYY-MM-DD HH:mm:ss')
-  // .toString();
 };
 
 const toDateFormat = (value, numOfDays) => {

@@ -14,7 +14,7 @@ import {COLOR, DARK, MEDIUM, LIGHT, ORANGE, APP_FLAVOR} from '../../../../res/co
 import {PATCH_DELIVERY_CANCEL, PATCH_DELIVERY_DELETE, PATCH_DELIVERY_REBOOK} from '../../../../graphql';
 import Toast from 'react-native-simple-toast';
 
-const SelectedDriverDelivery = ({navigation, route}) => {
+const SelectedDelivery = ({navigation, route}) => {
   const {delivery, label} = route.params;
 
   navigation.setOptions({
@@ -85,6 +85,11 @@ const SelectedDriverDelivery = ({navigation, route}) => {
     },
   });
 
+  const onRebook = () => {
+    // patchDeliveryRebook();
+    // navigation.navigate('ConsumerMap', {rebookDelivery: delivery});
+  };
+
   // Syncrhonize all loading states
   useEffect(() => {
     if (loadingC || loadingD) {
@@ -136,14 +141,14 @@ const SelectedDriverDelivery = ({navigation, route}) => {
             </TouchableHighlight>
 
             {/*-------------------- REBOOK BUTTON --------------------*/}
-            <TouchableHighlight
-              onPress={patchDeliveryRebook}
+            {/* <TouchableHighlight
+              onPress={onRebook}
               underlayColor={COLOR}
               style={{borderRadius: 10, flex: 1, marginLeft: 10}}>
               <View style={styles.submit}>
                 <Text style={{color: COLOR, fontSize: 16}}>Book a Copy</Text>
               </View>
-            </TouchableHighlight>
+            </TouchableHighlight> */}
           </View>
         )}
 
@@ -192,7 +197,7 @@ const SelectedDriverDelivery = ({navigation, route}) => {
   );
 };
 
-export default SelectedDriverDelivery;
+export default SelectedDelivery;
 
 const styles = StyleSheet.create({
   card: {

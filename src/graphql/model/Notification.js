@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
-export const GET_MESSAGES = gql`
-  query getMessages($input: GetMessagesInput!) {
-    getMessages(input: $input) {
+export const GET_NOTIFICATIONS = gql`
+  query getNotifications($input: GetNotificationsInput!) {
+    getNotifications(input: $input) {
       id
       title
       body

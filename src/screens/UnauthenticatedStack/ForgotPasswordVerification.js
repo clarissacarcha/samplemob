@@ -5,8 +5,8 @@ import {COLOR, DARK, APP_FLAVOR} from '../../res/constants';
 import {getUniqueId} from 'react-native-device-info';
 import {connect} from 'react-redux';
 import {useMutation} from '@apollo/react-hooks';
-import {VERIFY_REGISTRATION} from '../../graphql';
-import {AlertOverlay} from '../../components';
+import {FORGOT_PASSWORD_VERIFICATION} from '../../graphql';
+import {AlertOverlay, HeaderBack, HeaderTitle} from '../../components';
 import AsyncStorage from '@react-native-community/async-storage';
 import OneSignal from 'react-native-onesignal';
 
@@ -36,59 +36,33 @@ const NumberBoxes = ({verificationCode, onNumPress}) => {
 };
 
 const Verification = ({navigation, route, createSession}) => {
+  const goToLogin = () => {
+    navigation.navigate('UnauthenticatedStack', {
+      screen: 'Login',
+    });
+  };
+
+  navigation.setOptions({
+    headerLeft: () => <HeaderBack onBack={goToLogin} />,
+    headerTitle: () => <HeaderTitle label={['Forgot Password', 'Verification']} />,
+  });
+
   const {mobile} = route.params;
   const inputRef = useRef();
 
   const [verificationCode, setVerificationCode] = useState('');
   const [count, setCount] = useState(30);
 
-  const [verifyRegistration, {loading}] = useMutation(VERIFY_REGISTRATION, {
+  const [forgotPasswordVerification, {loading}] = useMutation(FORGOT_PASSWORD_VERIFICATION, {
     variables: {
       input: {
         mobile,
         verificationCode,
-        appFlavor: APP_FLAVOR,
-        deviceId: getUniqueId(),
-        deviceType: Platform.select({ios: 'I', android: 'A'}),
       },
     },
-    onCompleted: ({verifyRegistration}) => {
-      const {user, accessToken} = verifyRegistration;
-
-      AsyncStorage.setItem('userId', user.id);
-
-      createSession(verifyRegistration);
-
-      OneSignal.sendTags({
-        userId: user.id,
-      }); // Set onesignal userId tag for the phone
-
-      if (APP_FLAVOR == 'C') {
-        if (user.person.firstName == null || user.person.lastName == null) {
-          navigation.navigate('RootDrawer', {
-            screen: 'AuthenticatedStack',
-            params: {
-              screen: 'PostRegistration',
-            },
-          });
-          return;
-        }
-
-        navigation.navigate('RootDrawer', {
-          screen: 'AuthenticatedStack',
-          params: {
-            screen: 'ConsumerMap',
-          },
-        });
-      }
-
-      if (APP_FLAVOR == 'D') {
-        navigation.navigate('RootDrawer', {
-          screen: 'AuthenticatedStack',
-          params: {
-            screen: 'DriverMap',
-          },
-        });
+    onCompleted: ({forgotPasswordVerification}) => {
+      if (forgotPasswordVerification == 'RESET') {
+        navigation.push('ForgotPasswordReset', {verificationCode, mobile});
       }
     },
     onError: ({graphQLErrors, networkError}) => {
@@ -132,7 +106,7 @@ const Verification = ({navigation, route, createSession}) => {
   };
 
   const onSubmit = () => {
-    verifyRegistration();
+    forgotPasswordVerification();
   };
 
   return (

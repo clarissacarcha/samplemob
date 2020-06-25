@@ -1,5 +1,9 @@
 import gql from 'graphql-tag';
 
+const Session = `
+
+`;
+
 export const LOGIN_REGISTER = gql`
   mutation loginRegister($input: LoginRegisterInput!) {
     loginRegister(input: $input)
@@ -123,5 +127,23 @@ export const GET_USER_SESSION = gql`
       }
       accessToken
     }
+  }
+`;
+
+export const FORGOT_PASSWORD = gql`
+  mutation forgotPassword($input: ForgotPasswordInput!) {
+    forgotPassword(input: $input)
+  }
+`;
+
+export const FORGOT_PASSWORD_VERIFICATION = gql`
+  mutation forgotPasswordVerification($input: ForgotPasswordVerificationInput!) {
+    forgotPasswordVerification(input: $input)
+  }
+`;
+
+export const FORGOT_PASSWORD_RESET = gql`
+  mutation forgotPasswordReset($input: ForgotPasswordResetInput!) {
+    forgotPasswordReset(input: $input)
   }
 `;

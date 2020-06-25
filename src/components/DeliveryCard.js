@@ -16,13 +16,16 @@ import Ionicon from 'react-native-vector-icons/Ionicons';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 
 const SchedulePhrase = ({stop}) => {
-  const nowDate = moment().format('MM/DD/YYYY');
+  const nowDate = moment().format('MMM DD YYYY');
   const tomorrowDate = moment()
     .add(1, 'days')
-    .format('MM/DD/YYYY');
-  const stopDate = moment(stop.scheduledFrom, 'MM/DD/YYYY - hh:mm A').format('MM/DD/YYYY');
+    .format('MMM DD YYYY');
+  const stopDate = moment(stop.scheduledFrom, 'MM/DD/YYYY - hh:mm A').format('MMM D YYYY');
 
   let displayDate = stopDate;
+  let fromDate = moment(stop.scheduledFrom, 'MM/DD/YYYY - hh:mm A').format('h:mm a');
+  let toDate = moment(stop.scheduledTo, 'MM/DD/YYYY - hh:mm A').format('h:mm a');
+
   if (stopDate === nowDate) {
     displayDate = 'Today';
   }
@@ -30,13 +33,21 @@ const SchedulePhrase = ({stop}) => {
     displayDate = 'Tomorrow';
   }
 
+  if (fromDate === '12:00 am') {
+    fromDate = 'Anytime';
+  }
+
+  if (toDate === '11:59 pm') {
+    toDate = 'Anytime';
+  }
+
   return (
-    <Text numberOfLines={1} style={{paddingRight: 10, color: DARK, fontSize: 11, fontWeight: 'bold'}}>
+    <Text numberOfLines={1} style={{paddingRight: 10, color: MEDIUM, fontSize: 11, fontWeight: 'bold'}}>
       {displayDate}
-      <Text style={{color: MEDIUM}}> From </Text>
-      {moment(stop.scheduledFrom, 'MM/DD/YYYY - hh:mm A').format('h:mm a')}
-      <Text style={{color: MEDIUM}}> To </Text>
-      {moment(stop.scheduledTo, 'MM/DD/YYYY - hh:mm A').format('h:mm a')}
+      <Text style={{color: COLOR}}> From </Text>
+      {fromDate}
+      <Text style={{color: COLOR}}> To </Text>
+      {toDate}
     </Text>
   );
 };
@@ -48,11 +59,16 @@ const DeliverySchedule = ({label, stop}) => {
         {label == 'Pick Up' ? (
           <EIcon name="hand" size={14} color={'white'} style={styles.iconBox} />
         ) : (
-          <FA5Icon name="hands-helping" size={14} color={'white'} style={styles.iconBox} />
+          <FA5Icon name="hands-helping" size={12} color={'white'} style={styles.iconBox} />
         )}
-        <View style={{marginLeft: 16}}>
+
+        <View style={{marginLeft: 10}}>
           <Text style={{fontWeight: 'bold'}}>{label}</Text>
-          <SchedulePhrase stop={stop} />
+          {stop.orderType == 1 ? (
+            <Text style={{color: MEDIUM, fontSize: 11, fontWeight: 'bold'}}>As Soon As Possible</Text>
+          ) : (
+            <SchedulePhrase stop={stop} />
+          )}
         </View>
       </View>
     </View>
@@ -88,10 +104,7 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
                 <View style={{marginLeft: 16}}>
                   <Text style={{fontWeight: 'bold', fontSize: 14}}>Order Date</Text>
                   <Text numberOfLines={1} style={{paddingRight: 10, color: MEDIUM, fontSize: 11, fontWeight: 'bold'}}>
-                    {moment
-                      .tz(delivery.createdAt, 'Asia/Manila')
-                      .format('MM/DD/YYYY - hh:mm A')
-                      .toString()}
+                    {delivery.createdAt}
                   </Text>
                 </View>
               </View>

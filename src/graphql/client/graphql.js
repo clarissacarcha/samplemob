@@ -10,10 +10,10 @@ import {Alert} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 
 // const hostPort = '192.168.43.241:3080'; // Myutini BB
-// const hostPort = '192.168.254.108:3080'; // Myutini BB
+const hostPort = '192.168.254.108:3080'; // Myutini BB
 // const hostPort = '192.168.0.101:3080'; // MDC
 // const hostPort = '35.173.0.77:3080';
-const hostPort = '192.168.100.29:3080';
+// const hostPort = '192.168.100.29:3080';
 
 const baseUrl = `http://${hostPort}/`;
 const wsUrl = `ws://${hostPort}/graphql`;
