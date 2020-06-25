@@ -22,36 +22,49 @@ const Landing = ({createSession, destroySession, setConstants, navigation}) => {
   const [getUserSession] = useLazyQuery(GET_USER_SESSION, {
     onError: onError,
     onCompleted: ({getUserSession}) => {
-      createSession(getUserSession);
-      const {user, accessToken} = getUserSession;
+      try {
+        const {user, accessToken} = getUserSession;
 
-      //TODO: Check for valid user status and access token. Also check for existing user record
-
-      if (APP_FLAVOR == 'C') {
-        if (user.person.firstName == null || user.person.lastName == null) {
-          navigation.navigate('RootDrawer', {
-            screen: 'AuthenticatedStack',
-            params: {
-              screen: 'PostRegistration',
-            },
+        if (user.status == 3) {
+          destroySession();
+          navigation.navigate('UnauthenticatedStack', {
+            screen: 'AccountBlocked',
           });
-        } else {
+          return;
+        }
+
+        createSession(getUserSession);
+
+        //TODO: Check for valid user status and access token. Also check for existing user record
+
+        if (APP_FLAVOR == 'C') {
+          if (user.person.firstName == null || user.person.lastName == null) {
+            navigation.navigate('RootDrawer', {
+              screen: 'AuthenticatedStack',
+              params: {
+                screen: 'PostRegistration',
+              },
+            });
+          } else {
+            navigation.navigate('RootDrawer', {
+              screen: 'AuthenticatedStack',
+              params: {
+                screen: 'ConsumerMap',
+              },
+            });
+          }
+        }
+
+        if (APP_FLAVOR == 'D') {
           navigation.navigate('RootDrawer', {
             screen: 'AuthenticatedStack',
             params: {
-              screen: 'ConsumerMap',
+              screen: 'DriverMap',
             },
           });
         }
-      }
-
-      if (APP_FLAVOR == 'D') {
-        navigation.navigate('RootDrawer', {
-          screen: 'AuthenticatedStack',
-          params: {
-            screen: 'DriverMap',
-          },
-        });
+      } catch (error) {
+        console.log(error);
       }
     },
   });
@@ -70,7 +83,9 @@ const Landing = ({createSession, destroySession, setConstants, navigation}) => {
 
   const checkAsyncStorageSession = async () => {
     const storedUserId = await AsyncStorage.getItem('userId');
+
     if (storedUserId) {
+      console.log('STORED SESSION');
       getUserSession({
         variables: {
           input: {
@@ -79,6 +94,7 @@ const Landing = ({createSession, destroySession, setConstants, navigation}) => {
         },
       });
     } else {
+      console.log('EMPTY SESSION');
       navigation.navigate('UnauthenticatedStack');
     }
     try {
@@ -88,15 +104,9 @@ const Landing = ({createSession, destroySession, setConstants, navigation}) => {
   };
 
   const onMount = async () => {
-    // oneSignalInit();
+    // destroySession();
     // await getConstants();
     await checkAsyncStorageSession();
-    // destroySession();
-    // OneSignal.addEventListener('opened', onNotificationOpened);
-
-    // return () => {
-    //   OneSignal.removeEventListener('received');
-    // };
   };
 
   useEffect(() => {

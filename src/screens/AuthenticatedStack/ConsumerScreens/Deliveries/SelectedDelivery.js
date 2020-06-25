@@ -85,6 +85,11 @@ const SelectedDelivery = ({navigation, route}) => {
     },
   });
 
+  const onRebook = () => {
+    // patchDeliveryRebook();
+    // navigation.navigate('ConsumerMap', {rebookDelivery: delivery});
+  };
+
   // Syncrhonize all loading states
   useEffect(() => {
     if (loadingC || loadingD) {
@@ -136,14 +141,14 @@ const SelectedDelivery = ({navigation, route}) => {
             </TouchableHighlight>
 
             {/*-------------------- REBOOK BUTTON --------------------*/}
-            <TouchableHighlight
-              onPress={patchDeliveryRebook}
+            {/* <TouchableHighlight
+              onPress={onRebook}
               underlayColor={COLOR}
               style={{borderRadius: 10, flex: 1, marginLeft: 10}}>
               <View style={styles.submit}>
                 <Text style={{color: COLOR, fontSize: 16}}>Book a Copy</Text>
               </View>
-            </TouchableHighlight>
+            </TouchableHighlight> */}
           </View>
         )}
 

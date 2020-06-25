@@ -9,9 +9,10 @@ import {
   TextInput,
   Alert,
   Dimensions,
+  Switch,
 } from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
-import {COLOR, DARK, MAP_DELTA_LOW, MEDIUM, LIGHT} from '../../../../res/constants';
+import {COLOR, DARK, MAP_DELTA_LOW, MEDIUM, LIGHT, ORANGE} from '../../../../res/constants';
 import {HeaderBack, HeaderTitle, ItemDescription, SchedulePicker} from '../../../../components';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
@@ -27,7 +28,9 @@ const RecipientDetails = ({navigation, route}) => {
   });
 
   const {data, setData, index, setPrice} = route.params;
+
   const [localData, setLocalData] = useState(data[index]);
+  const [codSwitch, setCodSwitch] = useState(data[index].cashOnDelivery ? true : false);
 
   const onSearchMap = () => {
     navigation.navigate('SearchMap', {data: {...localData, ...MAP_DELTA_LOW}, setData: setLocalData});
@@ -40,6 +43,7 @@ const RecipientDetails = ({navigation, route}) => {
   const onLandmarkChange = value => setLocalData({...localData, landmark: value});
   const onNameChange = value => setLocalData({...localData, name: value});
   const onMobileChange = value => setLocalData({...localData, mobile: value});
+  const onCashOnDeliveryChange = value => setLocalData({...localData, cashOnDelivery: value});
   const onNotesChange = value => setLocalData({...localData, notes: value});
   const onCargoChange = value => setLocalData({...localData, cargo: value});
 
@@ -58,6 +62,11 @@ const RecipientDetails = ({navigation, route}) => {
 
     if (localData.mobile == '') {
       Alert.alert('', `Please enter recipient's mobile number.`);
+      return;
+    }
+
+    if (codSwitch && (!localData.cashOnDelivery || localData.cashOnDelivery == 0)) {
+      Alert.alert('', `Please enter cash on delivery amount.`);
       return;
     }
 
@@ -136,6 +145,7 @@ const RecipientDetails = ({navigation, route}) => {
         <Text style={styles.label}>Order Type</Text>
         <SchedulePicker onScheduleChange={onScheduleChange} initialData={localData} />
 
+        {/*-------------------- LANDMARK --------------------*/}
         <Text style={styles.label}>Landmark</Text>
         <TextInput
           value={localData.landmark}
@@ -145,6 +155,7 @@ const RecipientDetails = ({navigation, route}) => {
           multiline
         />
 
+        {/*-------------------- NAME --------------------*/}
         <Text style={styles.label}>Recipient's Name</Text>
         <TextInput
           value={localData.name}
@@ -153,6 +164,7 @@ const RecipientDetails = ({navigation, route}) => {
           placeholder="Recipient's name"
         />
 
+        {/*-------------------- MOBILE NUMBER --------------------*/}
         <Text style={styles.label}>Mobile Number</Text>
         <TextInput
           value={localData.mobile}
@@ -162,14 +174,50 @@ const RecipientDetails = ({navigation, route}) => {
           keyboardType="number-pad"
         />
 
+        {/*-------------------- CASH ON DELIVERY --------------------*/}
+        <View
+          style={{
+            margin: 20,
+            marginBottom: 0,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}>
+          <View>
+            <Text style={{fontSize: 12, color: DARK, fontWeight: 'bold'}}>Cash On Delivery</Text>
+            <Text style={{fontSize: 10, color: MEDIUM, fontWeight: 'bold'}}>
+              Rider will collect cash from recipient
+            </Text>
+          </View>
+          <Switch
+            trackColor={{false: LIGHT, true: LIGHT}}
+            thumbColor={codSwitch ? COLOR : MEDIUM}
+            onValueChange={value => setCodSwitch(value)}
+            value={codSwitch}
+          />
+        </View>
+        {codSwitch && (
+          <TextInput
+            value={localData.cashOnDelivery}
+            onChangeText={onCashOnDeliveryChange}
+            placeholder="Amount"
+            keyboardType="numeric"
+            style={{
+              marginHorizontal: 20,
+              borderWidth: 1,
+              borderColor: MEDIUM,
+              borderRadius: 5,
+              paddingLeft: 20,
+              marginTop: 10,
+            }}
+          />
+        )}
+
+        {/*-------------------- NOTES --------------------*/}
         <Text style={styles.label}>Notes</Text>
-        <TextInput
-          value={localData.notes}
-          onChangeText={onNotesChange}
-          style={styles.input}
-          placeholder="Notes"
-          multiline
-        />
+        <TextInput value={localData.notes} onChangeText={onNotesChange} style={styles.input} placeholder="Notes" />
+
+        {/*-------------------- ITEM DESCRIPTION --------------------*/}
         <ItemDescription onSelect={onCargoChange} initialData={localData.cargo} />
       </ScrollView>
       {/*---------------------------------------- BUTTON ----------------------------------------*/}

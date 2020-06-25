@@ -7,73 +7,68 @@ import {useMutation} from '@apollo/react-hooks';
 import OneSignal from 'react-native-onesignal';
 import {getUniqueId} from 'react-native-device-info';
 import {COLOR, DARK, APP_FLAVOR, MEDIUM, LIGHT} from '../../res/constants';
-import {VERIFY_LOGIN} from '../../graphql';
-import {AlertOverlay} from '../../components';
+import {FORGOT_PASSWORD} from '../../graphql';
+import {AlertOverlay, HeaderBack, HeaderTitle} from '../../components';
 
 import timer from 'react-native-timer';
 
 const VerificationBanner = require('../../assets/images/VerificationBanner.png');
 
-const PasswordVerification = ({navigation, route, createSession}) => {
-  const {mobile} = route.params;
-  const inputRef = useRef();
+const ForgotPassword = ({navigation, route, createSession}) => {
+  const goToLogin = () => {
+    navigation.navigate('UnauthenticatedStack', {
+      screen: 'Login',
+    });
+  };
 
-  const [password, setPassword] = useState('');
+  navigation.setOptions({
+    headerLeft: () => <HeaderBack onBack={goToLogin} />,
+    headerTitle: () => <HeaderTitle label={['Forgot', 'Password']} />,
+  });
 
-  const [verifyLogin, {loading}] = useMutation(VERIFY_LOGIN, {
+  // const inputRef = useRef();
+
+  const [mobile, setMobile] = useState('');
+
+  const onMobileChange = value => {
+    if (value.length == 1 && value == '0') {
+      setMobile('');
+      return;
+    }
+
+    if (value.length > 10) {
+      setMobile(mobile);
+      return;
+    }
+
+    setMobile(value);
+  };
+
+  const [forgotPassword, {loading}] = useMutation(FORGOT_PASSWORD, {
     variables: {
       input: {
         mobile,
-        password,
         appFlavor: APP_FLAVOR,
-        deviceId: getUniqueId(),
-        deviceType: Platform.select({ios: 'I', android: 'A'}),
+        // deviceId: getUniqueId(),
+        // deviceType: Platform.select({ios: 'I', android: 'A'}),
       },
     },
-    onCompleted: ({verifyLogin}) => {
-      const {user, accessToken} = verifyLogin;
-
-      if (user.status == 3) {
-        navigation.push('AccountBlocked');
-        return;
+    onCompleted: ({forgotPassword}) => {
+      if (forgotPassword == 'NOPASSWORD') {
+        Alert.alert('', 'No nominated password. Please proceed to login instead.', [
+          {
+            title: 'Ok',
+            onPress: () => navigation.pop(),
+          },
+        ]);
       }
 
-      AsyncStorage.setItem('userId', user.id); // Set userId value in asyncStorage for persistent login
-
-      createSession(verifyLogin); // Create session in redux
-
-      OneSignal.sendTags({
-        userId: user.id,
-      }); // Set onesignal userId tag for the phone
-
-      if (APP_FLAVOR == 'C') {
-        if (user.person.firstName == null || user.person.lastName == null) {
-          navigation.push('RootDrawer', {
-            screen: 'AuthenticatedStack',
-            params: {
-              screen: 'PostRegistration',
-            },
-          });
-          return;
-        }
-
-        navigation.push('RootDrawer', {
-          screen: 'AuthenticatedStack',
-          params: {
-            screen: 'ConsumerMap',
-          },
-        });
-        return;
+      if (forgotPassword == 'BLOCK') {
+        navigation.navigate('AccountBlocked');
       }
 
-      if (APP_FLAVOR == 'D') {
-        navigation.push('RootDrawer', {
-          screen: 'AuthenticatedStack',
-          params: {
-            screen: 'DriverMap',
-          },
-        });
-        return;
+      if (forgotPassword == 'FORGOT') {
+        navigation.navigate('ForgotPasswordVerification', {mobile});
       }
     },
     onError: ({graphQLErrors, networkError}) => {
@@ -87,16 +82,15 @@ const PasswordVerification = ({navigation, route, createSession}) => {
   });
 
   useEffect(() => {
-    inputRef.current.focus();
+    // inputRef.current.focus();
   }, []);
 
   const onSubmit = () => {
-    if (!password) {
-      Alert.alert('', 'Please enter your password to continue.');
+    if (!mobile) {
+      Alert.alert('', 'Please enter your mobile number to continue.');
       return;
     }
-
-    verifyLogin();
+    forgotPassword();
   };
 
   return (
@@ -107,8 +101,24 @@ const PasswordVerification = ({navigation, route, createSession}) => {
         <Image source={VerificationBanner} style={{height: 200, width: '100%'}} resizeMode="cover" />
 
         {/*-------------------- PASSWORD INPUT --------------------*/}
-        <Text style={styles.label}>Enter your password to continue</Text>
-        <TextInput
+        <Text style={styles.label}>Enter your mobile number to continue</Text>
+
+        <View style={{flexDirection: 'row', marginHorizontal: 20, marginTop: 10}}>
+          <View style={styles.inputView}>
+            <Text style={{fontSize: 25, color: DARK}}>+63</Text>
+          </View>
+          <TextInput
+            value={mobile}
+            onChangeText={onMobileChange}
+            style={styles.input}
+            placeholder="9876543210"
+            keyboardType="number-pad"
+            returnKeyType="next"
+            onSubmitEditing={() => onSubmit(mobile)}
+            returnKeyType="go"
+          />
+        </View>
+        {/* <TextInput
           ref={inputRef}
           value={password}
           onChangeText={value => setPassword(value)}
@@ -118,7 +128,7 @@ const PasswordVerification = ({navigation, route, createSession}) => {
           returnKeyType="go"
           autoCapitalize="none"
           onSubmitEditing={onSubmit}
-        />
+        /> */}
       </View>
 
       {/*-------------------- SUBMIT INPUT --------------------*/}
@@ -138,26 +148,25 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   null,
   mapDispatchToProps,
-)(PasswordVerification);
+)(ForgotPassword);
 
 const styles = StyleSheet.create({
   inputView: {
-    backgroundColor: 'white',
-    borderWidth: StyleSheet.hairlineWidth,
+    borderWidth: 1,
+    borderColor: MEDIUM,
     borderRadius: 10,
-    height: 50,
-    width: 50,
+    paddingHorizontal: 20,
     justifyContent: 'center',
-    alignItems: 'center',
+    marginRight: 20,
   },
   input: {
     flex: 1,
-    borderWidth: StyleSheet.hairlineWidth,
+    borderWidth: 1,
+    borderColor: MEDIUM,
     borderRadius: 10,
     paddingHorizontal: 20,
     fontSize: 25,
     color: DARK,
-    width: 30,
   },
   submitBox: {
     margin: 20,
@@ -181,12 +190,5 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: MEDIUM,
     fontWeight: 'bold',
-  },
-  input: {
-    marginHorizontal: 20,
-    borderWidth: 1,
-    borderColor: MEDIUM,
-    borderRadius: 5,
-    paddingLeft: 20,
   },
 });

@@ -16,6 +16,10 @@ import {COLOR, MEDIUM, LIGHT} from '../res/constants';
 import Login from '../screens/UnauthenticatedStack/Login';
 import SmsVerification from '../screens/UnauthenticatedStack/SmsVerification';
 import PasswordVerification from '../screens/UnauthenticatedStack/PasswordVerification';
+import AccountBlocked from '../screens/UnauthenticatedStack/AccountBlocked';
+import ForgotPasswordRequest from '../screens/UnauthenticatedStack/ForgotPasswordRequest';
+import ForgotPasswordVerification from '../screens/UnauthenticatedStack/ForgotPasswordVerification';
+import ForgotPasswordReset from '../screens/UnauthenticatedStack/ForgotPasswordReset';
 
 // Landing
 import Landing from '../screens/Landing';
@@ -35,8 +39,9 @@ import RecipientDetails from '../screens/AuthenticatedStack/ConsumerScreens/Book
 import Announcements from '../screens/AuthenticatedStack/ConsumerScreens/Announcement/Announcements';
 import SelectedAnnouncement from '../screens/AuthenticatedStack/ConsumerScreens/Announcement/SelectedAnnouncement';
 
-import CustomerProfile from '../screens/AuthenticatedStack/ConsumerScreens/ConsumerProfile';
-import Inbox from '../screens/AuthenticatedStack/ConsumerScreens/Inbox';
+import ConsumerProfile from '../screens/AuthenticatedStack/ConsumerScreens/Profile/ConsumerProfile';
+import ConsumerChangePassword from '../screens/AuthenticatedStack/ConsumerScreens/Profile/ConsumerChangePassword';
+import Notifications from '../screens/AuthenticatedStack/ConsumerScreens/Notifications';
 
 import CustomerDeliveries from '../screens/AuthenticatedStack/ConsumerScreens/Deliveries/MyDeliveries';
 import SelectedDeliveries from '../screens/AuthenticatedStack/ConsumerScreens/Deliveries/SelectedDeliveries';
@@ -80,10 +85,18 @@ const DriverDeliveriesTab = () => (
 );
 
 const UnauthenticatedStack = () => (
-  <Unauthenticated.Navigator headerMode="none">
-    <Unauthenticated.Screen name="Login" component={Login} />
-    <Unauthenticated.Screen name="SmsVerification" component={SmsVerification} />
-    <Unauthenticated.Screen name="PasswordVerification" component={PasswordVerification} />
+  <Unauthenticated.Navigator>
+    <Unauthenticated.Screen name="Login" component={Login} options={{header: () => <View />}} />
+    <Unauthenticated.Screen name="SmsVerification" component={SmsVerification} options={{header: () => <View />}} />
+    <Unauthenticated.Screen
+      name="PasswordVerification"
+      component={PasswordVerification}
+      options={{header: () => <View />}}
+    />
+    <Unauthenticated.Screen name="AccountBlocked" component={AccountBlocked} />
+    <Unauthenticated.Screen name="ForgotPasswordRequest" component={ForgotPasswordRequest} />
+    <Unauthenticated.Screen name="ForgotPasswordVerification" component={ForgotPasswordVerification} />
+    <Unauthenticated.Screen name="ForgotPasswordReset" component={ForgotPasswordReset} />
   </Unauthenticated.Navigator>
 );
 
@@ -100,10 +113,11 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="Announcements" component={Announcements} />
     <Authenticated.Screen name="SelectedAnnouncement" component={SelectedAnnouncement} />
 
-    <Authenticated.Screen name="CustomerProfile" component={CustomerProfile} />
+    <Authenticated.Screen name="ConsumerProfile" component={ConsumerProfile} />
+    <Authenticated.Screen name="ConsumerChangePassword" component={ConsumerChangePassword} />
     <Authenticated.Screen name="TalkToUs" component={TalkToUs} />
 
-    <Authenticated.Screen name="Inbox" component={Inbox} />
+    <Authenticated.Screen name="Notifications" component={Notifications} />
 
     <Authenticated.Screen name="CustomerDeliveries" component={CustomerDeliveries} />
     <Authenticated.Screen name="SelectedDeliveries" component={SelectedDeliveries} />

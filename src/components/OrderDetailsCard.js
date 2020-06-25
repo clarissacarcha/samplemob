@@ -15,11 +15,11 @@ import Ionicon from 'react-native-vector-icons/Ionicons';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 
 const SchedulePhrase = ({stop}) => {
-  const nowDate = moment().format('MM/DD/YYYY');
+  const nowDate = moment().format('MMM DD YYYY');
   const tomorrowDate = moment()
     .add(1, 'days')
-    .format('MM/DD/YYYY');
-  const stopDate = moment(stop.scheduledFrom, 'MM/DD/YYYY - hh:mm A').format('MM/DD/YYYY');
+    .format('MMM DD YYYY');
+  const stopDate = moment(stop.scheduledFrom, 'MM/DD/YYYY - hh:mm A').format('MMM DD YYYY');
 
   let displayDate = stopDate;
   let fromDate = moment(stop.scheduledFrom, 'MM/DD/YYYY - hh:mm A').format('h:mm a');
@@ -40,7 +40,6 @@ const SchedulePhrase = ({stop}) => {
     toDate = 'Anytime';
   }
 
-  //TODO if scheduledFrom 00:00 = Anytime | scheduledTo 23:59:59 = Anytime
   return (
     <Text numberOfLines={1} style={{paddingRight: 10, color: MEDIUM, fontSize: 11, fontWeight: 'bold'}}>
       {displayDate}
@@ -98,6 +97,32 @@ export const OrderDetailsCard = ({delivery}) => {
           </Text>
         </View>
 
+        {/*-------------------- ORDER AMOUNT --------------------*/}
+        <View style={[styles.directionsBox, {borderBottomWidth: StyleSheet.hairlineWidth, borderColor: LIGHT}]}>
+          <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+            <Ionicon name="md-pricetag" size={16} color={'white'} style={styles.iconBox} />
+
+            <View style={{marginLeft: 10}}>
+              <Text style={{fontWeight: 'bold'}}>Amount</Text>
+              <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
+                <Text style={{fontWeight: 'bold', marginLeft: 10}}>₱ {delivery.price}.00</Text>
+              </Text>
+            </View>
+          </View>
+          {delivery.cashOnDelivery && (
+            <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+              <Ionicon name="md-pricetags" size={16} color={'white'} style={styles.iconBox} />
+
+              <View style={{marginLeft: 10}}>
+                <Text style={{fontWeight: 'bold'}}>Cash On Delivery</Text>
+                <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
+                  <Text style={{fontWeight: 'bold', marginLeft: 10}}>₱ {delivery.cashOnDelivery}.00</Text>
+                </Text>
+              </View>
+            </View>
+          )}
+        </View>
+
         <View
           style={[
             styles.directionsBox,
@@ -112,7 +137,7 @@ export const OrderDetailsCard = ({delivery}) => {
                 <Text numberOfLines={1} style={{paddingRight: 10, color: MEDIUM, fontSize: 11, fontWeight: 'bold'}}>
                   {moment
                     .tz(delivery.createdAt, 'Asia/Manila')
-                    .format('MM/DD/YYYY - hh:mm A')
+                    .format('MMM DD YYYY - hh:mm A')
                     .toString()}
                 </Text>
               </View>
@@ -141,20 +166,6 @@ export const OrderDetailsCard = ({delivery}) => {
             <DeliverySchedule label="Deliver" stop={recipientStop} />
           </>
         )}
-
-        {/*-------------------- ORDER AMOUNT --------------------*/}
-        <View style={[styles.directionsBox, {borderBottomWidth: StyleSheet.hairlineWidth, borderColor: LIGHT}]}>
-          <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-            <Ionicon name="md-pricetag" size={16} color={'white'} style={styles.iconBox} />
-
-            <View style={{marginLeft: 10}}>
-              <Text style={{fontWeight: 'bold'}}>Amount</Text>
-              <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
-                <Text style={{fontWeight: 'bold', marginLeft: 10}}>₱ {delivery.price}.00</Text>
-              </Text>
-            </View>
-          </View>
-        </View>
 
         {/*-------------------- DISTANCE DURATION ROW --------------------*/}
         <View

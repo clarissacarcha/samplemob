@@ -1,14 +1,15 @@
 import React, {useState} from 'react';
 import {View, Text, ScrollView, StyleSheet, TouchableHighlight, TextInput, Alert} from 'react-native';
 import {connect} from 'react-redux';
-import {COLOR, DARK, MAP_DELTA_LOW, ORANGE, MEDIUM} from '../../../res/constants';
-import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../components';
-import {useMutation} from '@apollo/react-hooks';
 import Toast from 'react-native-simple-toast';
+import validator from 'validator';
+import {COLOR, DARK, MAP_DELTA_LOW, ORANGE, MEDIUM} from '../../../../res/constants';
+import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../../components';
+import {useMutation} from '@apollo/react-hooks';
 
-import {PATCH_PERSON_POST_REGISTRATION} from '../../../graphql';
+import {PATCH_PERSON_POST_REGISTRATION} from '../../../../graphql';
 
-const CustomerProfile = ({navigation, route, session, createSession}) => {
+const ConsumerProfile = ({navigation, route, session, createSession}) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={['My', 'Profile']} />,
@@ -62,6 +63,11 @@ const CustomerProfile = ({navigation, route, session, createSession}) => {
       return;
     }
 
+    if (!validator.isEmail(emailAddress)) {
+      Alert.alert('', `Please enter a valid email address.`);
+      return;
+    }
+
     patchPersonPostRegistration();
   };
 
@@ -69,12 +75,14 @@ const CustomerProfile = ({navigation, route, session, createSession}) => {
     <View style={styles.container}>
       <AlertOverlay visible={loading} />
       <ScrollView showsVerticalScrollIndicator={false}>
-        {/*---------------------------------------- FORM ----------------------------------------*/}
+        {/*-------------------- MOBILE NUMBER --------------------*/}
+
         <Text style={styles.label}>Mobile Number</Text>
         <Text style={[styles.input, {height: 50, textAlignVertical: 'center', color: MEDIUM}]}>
           +63{session.user.username}
         </Text>
 
+        {/*-------------------- FIRST NAME --------------------*/}
         <Text style={styles.label}>First Name</Text>
         <TextInput
           value={firstName}
@@ -83,6 +91,7 @@ const CustomerProfile = ({navigation, route, session, createSession}) => {
           placeholder="First Name"
         />
 
+        {/*-------------------- LAST NAME --------------------*/}
         <Text style={styles.label}>Last Name</Text>
         <TextInput
           value={lastName}
@@ -91,18 +100,31 @@ const CustomerProfile = ({navigation, route, session, createSession}) => {
           placeholder="Last Name"
         />
 
+        {/*-------------------- EMAIL --------------------*/}
         <Text style={styles.label}>Email Address</Text>
         <TextInput
           value={emailAddress}
           onChangeText={value => setEmailAddress(value)}
           style={styles.input}
           placeholder="Email Address"
+          keyboardType="email-address"
+          autoCapitalize="none"
         />
       </ScrollView>
-      {/*---------------------------------------- BUTTON ----------------------------------------*/}
+      {/*-------------------- UPDATE BUTTON --------------------*/}
       <TouchableHighlight onPress={onSubmit} underlayColor={COLOR} style={styles.submitBox}>
         <View style={styles.submit}>
-          <Text style={{color: COLOR, fontSize: 20}}>Update</Text>
+          <Text style={{color: COLOR, fontSize: 20}}>Update Profile</Text>
+        </View>
+      </TouchableHighlight>
+
+      {/*-------------------- UPDATE BUTTON --------------------*/}
+      <TouchableHighlight
+        onPress={() => navigation.push('ConsumerChangePassword')}
+        underlayColor={COLOR}
+        style={[styles.submitBox, {marginTop: 0}]}>
+        <View style={styles.submit}>
+          <Text style={{color: COLOR, fontSize: 20}}>Change Password</Text>
         </View>
       </TouchableHighlight>
     </View>
@@ -120,7 +142,7 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(CustomerProfile);
+)(ConsumerProfile);
 
 const styles = StyleSheet.create({
   container: {

@@ -4,15 +4,19 @@ import {useNavigation} from '@react-navigation/native';
 import {COLOR, DARK} from '../res/constants';
 import FIcon from 'react-native-vector-icons/Feather';
 
-export const HeaderBack = ({label}) => {
+export const HeaderBack = ({onBack}) => {
   const navigation = useNavigation();
 
-  const onSubmit = () => {
-    navigation.pop();
+  const onPress = () => {
+    if (onBack) {
+      onBack();
+    } else {
+      navigation.pop();
+    }
   };
 
   return (
-    <TouchableHighlight onPress={onSubmit} underlayColor={COLOR} style={styles.iconBox}>
+    <TouchableHighlight onPress={onPress} underlayColor={COLOR} style={styles.iconBox}>
       <FIcon name="chevron-left" size={24} color={COLOR} style={styles.icon} />
     </TouchableHighlight>
   );

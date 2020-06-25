@@ -71,7 +71,7 @@ const Announcement = ({announcement, lastItem}) => {
                     flex: 1,
                     alignSelf: 'center',
                   }}>
-                  {moment.unix(createdAt / 1000).format('MMM DD YYYY - h:mm a')}
+                  {createdAt}
                 </Text>
               </View>
             </View>
