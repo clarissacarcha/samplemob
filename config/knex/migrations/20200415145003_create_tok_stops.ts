@@ -16,6 +16,12 @@ export async function up(knex: Knex): Promise<any> {
     table.specificType("order_type", "tinyint(1)");
     table.dateTime("scheduled_from");
     table.dateTime("scheduled_to");
+    table.timestamp("created_at").defaultTo(knex.fn.now());
+    table
+      .integer("tok_address_id")
+      .unsigned()
+      .references("id")
+      .inTable("tok_addresses");
   });
 }
 

@@ -94,7 +94,7 @@ const typeDefs = gql`
 const SendSmsVerification = async (mobile, type) => {
   // Create a random 6 digit verification code
   let verificationCode;
-  if (process.env.NODE_ENV == "developmentX") {
+  if (process.env.NODE_ENV == "development") {
     verificationCode = "123456";
   } else {
     verificationCode = Math.floor(100000 + Math.random() * 900000);
@@ -122,7 +122,7 @@ const SendSmsVerification = async (mobile, type) => {
     // fullmessage = ``;
 
     axios.get(
-      `https://svr20.synermaxx.asia/vmobile/cloudpanda/api/sendnow.php?username=cloudpandaapi&password=f4b8a3dd9bf00cb0a7f1782975939d7d&mobilenum=+63${mobile}&fullmesg=${verificationCode}%20is%20your%20toktok%20activation%20code.&originator=toktok`
+      `https://svr20.synermaxx.asia/vmobile/cloudpanda/api/sendnow.php?username=cloudpandaapi&password=f4b8a3dd9bf00cb0a7f1782975939d7d&mobilenum=${mobile}&fullmesg=${verificationCode}%20is%20your%20toktok%20activation%20code.&originator=toktok`
     );
   }
   const redisData = {
@@ -208,6 +208,7 @@ const resolvers = {
 
         // If consumer and user does not exist, proceed to registration.
         if (appFlavor == "C" && !user) {
+          console.log({ mobile });
           SendSmsVerification(mobile, "REGISTER");
           return "REGISTER";
         }

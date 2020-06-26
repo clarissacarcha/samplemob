@@ -53,6 +53,13 @@ const importData = async () => {
         unit: "km",
         status: "1",
       },
+      {
+        description: "Maximum amount for Cash on Delivery orders.",
+        key: "maxCashOnDelivery",
+        keyValue: "2000",
+        unit: "Philippine Peso",
+        status: "1",
+      },
     ]);
 
     console.log("GLOBAL SETTINGS CREATED".green.inverse);
