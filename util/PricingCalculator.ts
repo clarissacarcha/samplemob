@@ -11,5 +11,5 @@ export const calculateOrderPrice = ({ distance }: any) => {
   // Compute for price, deduct baseDistance from distance to use as final distance
   const finalDistance = distance - baseDistance;
 
-  return Math.floor(flatRate + finalDistance * perKm);
+  return Math.ceil(flatRate + finalDistance * perKm);
 };

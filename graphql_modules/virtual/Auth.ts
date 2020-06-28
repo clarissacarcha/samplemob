@@ -10,6 +10,7 @@ import User from "../../models/User";
 
 import UserModule from "../model/User";
 import { AuthUtility } from "../../util/AuthUtility";
+import UniqueIdUtility from "../../util/UniqueIdUtility";
 
 const typeDefs = gql`
   type Auth {
@@ -208,7 +209,6 @@ const resolvers = {
 
         // If consumer and user does not exist, proceed to registration.
         if (appFlavor == "C" && !user) {
-          console.log({ mobile });
           SendSmsVerification(mobile, "REGISTER");
           return "REGISTER";
         }
@@ -298,12 +298,16 @@ const resolvers = {
 
         //proceed with consumer registration if user account does not exist
         const createdUser = await User.query().insertGraph({
+          userId: await UniqueIdUtility.generateVerifiedUserId(),
           username: mobile,
           password: "NA",
           active: 1,
           status: 1,
           person: {},
           consumer: {},
+          wallet: {
+            status: 1,
+          },
           failedLoginAttempts: 0,
           deviceType,
           deviceId,

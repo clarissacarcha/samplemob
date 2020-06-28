@@ -13,6 +13,7 @@ import DriverModule from "./Driver";
 const typeDefs = gql`
   type User {
     id: String
+    userId: String
     username: String
     status: Int
     person: Person

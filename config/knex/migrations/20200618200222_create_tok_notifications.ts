@@ -3,8 +3,8 @@ import * as Knex from "knex";
 export async function up(knex: Knex): Promise<any> {
   return knex.schema.createTable("tok_notifications", (table) => {
     table.increments();
-    table.string("title", 255).notNullable; // Maximum 120 characters to not be truncated
-    table.text("body").notNullable;
+    table.string("title", 255).notNullable(); // Maximum 120 characters to not be truncated
+    table.text("body").notNullable();
     /**
      * 1 - Unread
      * 2 - Read

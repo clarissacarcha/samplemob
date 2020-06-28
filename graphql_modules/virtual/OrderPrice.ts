@@ -7,6 +7,14 @@ import { calculateOrderPrice } from "../../util/PricingCalculator";
 const typeDefs = gql`
   input GetOrderPriceInput {
     distance: Float!
+    senderAddress: AddressInput
+    recipientAddress: AddressInput
+  }
+
+  input AddressInput {
+    city: String
+    province: String
+    country: String
   }
 
   type Mutation {
@@ -17,7 +25,8 @@ const typeDefs = gql`
 const resolvers = {
   Mutation: {
     getOrderPrice: async (_, { input }) => {
-      const price = calculateOrderPrice({ distance: input.distance });
+      const { senderAddress, recipientAddress, distance } = input;
+      const price = calculateOrderPrice({ distance });
 
       return price;
     },
