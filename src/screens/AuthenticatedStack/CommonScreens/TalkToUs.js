@@ -14,7 +14,7 @@ const imageWidth = Dimensions.get('window').width - 40;
 const TalkToUs = ({navigation, constants}) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={['Talk', 'To Us']} />,
+    headerTitle: () => <HeaderTitle label={['Talk', 'to Us']} />,
   });
 
   return (

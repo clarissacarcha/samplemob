@@ -13,9 +13,9 @@ import SplashImage from '../assets/images/Splash.png';
 const mapKeyValueToObject = keyValueArray => {
   const result = {};
   keyValueArray.map(kv => {
-    result[kv.key] = kv.keyValue;
+    result[kv.settingKey] = kv.keyValue;
   });
-  console.log(JSON.stringify(result, null, 4));
+
   return result;
 };
 

@@ -8,8 +8,8 @@ export const getDirections = async ({latitude, longitude}) => {
 
     const result = await axios.get(url);
     return {
-      formattedAddress: result.data.results[0].formattedAddress
-    }
+      formattedAddress: result.data.results[0].formattedAddress,
+    };
   } catch (error) {
     console.log(error);
   }

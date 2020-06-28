@@ -24,7 +24,7 @@ const PasswordVerification = ({navigation, route, createSession}) => {
   const [verifyLogin, {loading}] = useMutation(VERIFY_LOGIN, {
     variables: {
       input: {
-        mobile,
+        mobile: `+63${mobile}`,
         password,
         appFlavor: APP_FLAVOR,
         deviceId: getUniqueId(),

@@ -28,7 +28,7 @@ const PostRegistration = ({navigation, route}) => {
   const [forgotPasswordReset, {loading}] = useMutation(FORGOT_PASSWORD_RESET, {
     variables: {
       input: {
-        mobile,
+        mobile: `+63${mobile}`,
         verificationCode,
         password,
       },

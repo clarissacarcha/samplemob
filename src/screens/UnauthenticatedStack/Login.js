@@ -28,7 +28,7 @@ const Login = ({navigation, session}) => {
   const [loginRegister, {loading}] = useMutation(LOGIN_REGISTER, {
     variables: {
       input: {
-        mobile,
+        mobile: `+63${mobile}`,
         appFlavor: APP_FLAVOR,
       },
     },

@@ -135,10 +135,11 @@ export const OrderDetailsCard = ({delivery}) => {
               <View style={{marginLeft: 10}}>
                 <Text style={{fontWeight: 'bold', fontSize: 14}}>Order Date</Text>
                 <Text numberOfLines={1} style={{paddingRight: 10, color: MEDIUM, fontSize: 11, fontWeight: 'bold'}}>
-                  {moment
+                  {/* {moment
                     .tz(delivery.createdAt, 'Asia/Manila')
                     .format('MMM DD YYYY - hh:mm A')
-                    .toString()}
+                    .toString()} */}
+                  {delivery.createdAt}
                 </Text>
               </View>
             </View>

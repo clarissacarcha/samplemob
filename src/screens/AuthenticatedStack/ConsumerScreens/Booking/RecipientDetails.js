@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   View,
   Text,
@@ -11,9 +11,11 @@ import {
   Dimensions,
   Switch,
 } from 'react-native';
+import {connect} from 'react-redux';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
-import {COLOR, DARK, MAP_DELTA_LOW, MEDIUM, LIGHT, ORANGE} from '../../../../res/constants';
-import {HeaderBack, HeaderTitle, ItemDescription, SchedulePicker} from '../../../../components';
+import {numberFormatInteger, reverseGeocode} from '../../../../helper';
+import {COLOR, DARK, MAP_DELTA_LOW, MEDIUM, LIGHT, ORANGE, COLOR_UNDERLAY} from '../../../../res/constants';
+import {HeaderBack, HeaderTitle, ItemDescription, SchedulePicker, AlertOverlay} from '../../../../components';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 import FIcon from 'react-native-vector-icons/Feather';
@@ -21,14 +23,17 @@ import FIcon from 'react-native-vector-icons/Feather';
 const width = Dimensions.get('window').width;
 const itemDimension = (width - 120) / 5;
 
-const RecipientDetails = ({navigation, route}) => {
+const RecipientDetails = ({navigation, route, constants}) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={['Recipient', 'details']} />,
   });
 
+  const scrollRef = useRef(null);
+
   const {data, setData, index, setPrice} = route.params;
 
+  const [loading, setLoading] = useState(false);
   const [localData, setLocalData] = useState(data[index]);
   const [codSwitch, setCodSwitch] = useState(data[index].cashOnDelivery ? true : false);
 
@@ -43,13 +48,34 @@ const RecipientDetails = ({navigation, route}) => {
   const onLandmarkChange = value => setLocalData({...localData, landmark: value});
   const onNameChange = value => setLocalData({...localData, name: value});
   const onMobileChange = value => setLocalData({...localData, mobile: value});
-  const onCashOnDeliveryChange = value => setLocalData({...localData, cashOnDelivery: value});
   const onNotesChange = value => setLocalData({...localData, notes: value});
   const onCargoChange = value => setLocalData({...localData, cargo: value});
 
-  const onSubmit = () => {
-    // alert(JSON.stringify(localData, null, 4));
+  const scrollToEnd = () => {
+    setTimeout(() => {
+      scrollRef.current.scrollToEnd();
+    }, 50);
+  };
 
+  const onCashOnDeliveryChange = value => {
+    const decimal = value.split('.')[1];
+
+    if (value && decimal) {
+      if (decimal.toString().length > 2) {
+        setLocalData({...localData, cashOnDelivery: localData.cashOnDelivery}); //force no change
+        return;
+      }
+    }
+
+    if (parseFloat(value) >= parseFloat(constants.maxCashOnDelivery)) {
+      setLocalData({...localData, cashOnDelivery: constants.maxCashOnDelivery}); //force max amount
+      return;
+    }
+
+    setLocalData({...localData, cashOnDelivery: value});
+  };
+
+  const onSubmit = async () => {
     if (localData.latitude == 0 || localData.longitude == 0) {
       Alert.alert('', `Please enter recipient's location.`);
       return;
@@ -65,8 +91,23 @@ const RecipientDetails = ({navigation, route}) => {
       return;
     }
 
+    if (isNaN(localData.mobile)) {
+      Alert.alert('', `Please enter a valid recipient's mobile number.`);
+      return;
+    }
+
     if (codSwitch && (!localData.cashOnDelivery || localData.cashOnDelivery == 0)) {
-      Alert.alert('', `Please enter cash on delivery amount.`);
+      Alert.alert('', `Please enter Cash on Delivery amount.`);
+      return;
+    }
+
+    if (codSwitch && isNaN(localData.cashOnDelivery)) {
+      Alert.alert('', `Please enter a valid Cash on Delivery amount.`);
+      return;
+    }
+
+    if (codSwitch && localData.cashOnDelivery > constants.maxCashOnDelivery) {
+      Alert.alert('', `Please enter a Cash on Delivery amount between 1 and ${constants.maxCashOnDelivery}.`);
       return;
     }
 
@@ -75,8 +116,13 @@ const RecipientDetails = ({navigation, route}) => {
       return;
     }
 
+    setLoading(true);
+    const {addressBreakdown} = await reverseGeocode({latitude: localData.latitude, longitude: localData.longitude});
+    setLoading(false);
+
     const sendBack = [...data];
     sendBack[index] = localData;
+    sendBack[index].address = addressBreakdown;
 
     delete sendBack[index].latitudeDelta;
     delete sendBack[index].longitudeDelta;
@@ -90,7 +136,8 @@ const RecipientDetails = ({navigation, route}) => {
 
   return (
     <View style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <AlertOverlay visible={loading} />
+      <ScrollView showsVerticalScrollIndicator={false} ref={scrollRef}>
         {localData.latitude != 0 && (
           <TouchableHighlight onPress={onSearchMap}>
             <View style={{height: 150}}>
@@ -197,20 +244,53 @@ const RecipientDetails = ({navigation, route}) => {
           />
         </View>
         {codSwitch && (
-          <TextInput
-            value={localData.cashOnDelivery}
-            onChangeText={onCashOnDeliveryChange}
-            placeholder="Amount"
-            keyboardType="numeric"
-            style={{
-              marginHorizontal: 20,
-              borderWidth: 1,
-              borderColor: MEDIUM,
-              borderRadius: 5,
-              paddingLeft: 20,
-              marginTop: 10,
-            }}
-          />
+          <>
+            <View
+              style={{
+                marginHorizontal: 20,
+                borderWidth: 1,
+                borderColor: MEDIUM,
+                borderRadius: 5,
+                marginTop: 10,
+                flexDirection: 'row',
+                alignItems: 'center',
+                overflow: 'hidden',
+              }}>
+              <Text
+                style={{
+                  color: MEDIUM,
+                  paddingHorizontal: 20,
+                  borderRightWidth: 1,
+                  borderRightColor: MEDIUM,
+                  height: '100%',
+                  textAlignVertical: 'center',
+                  backgroundColor: COLOR_UNDERLAY,
+                }}>
+                {`Max: ${numberFormatInteger(constants.maxCashOnDelivery)}`}
+              </Text>
+              <TextInput
+                value={localData.cashOnDelivery}
+                onChangeText={onCashOnDeliveryChange}
+                placeholder="Amount"
+                keyboardType="numeric"
+                style={{paddingLeft: 20, flex: 1}}
+              />
+            </View>
+            {/* <TextInput
+              value={localData.cashOnDelivery}
+              onChangeText={onCashOnDeliveryChange}
+              placeholder="Amount"
+              keyboardType="numeric"
+              style={{
+                marginHorizontal: 20,
+                borderWidth: 1,
+                borderColor: MEDIUM,
+                borderRadius: 5,
+                paddingLeft: 20,
+                marginTop: 10,
+              }} 
+            />*/}
+          </>
         )}
 
         {/*-------------------- NOTES --------------------*/}
@@ -218,7 +298,7 @@ const RecipientDetails = ({navigation, route}) => {
         <TextInput value={localData.notes} onChangeText={onNotesChange} style={styles.input} placeholder="Notes" />
 
         {/*-------------------- ITEM DESCRIPTION --------------------*/}
-        <ItemDescription onSelect={onCargoChange} initialData={localData.cargo} />
+        <ItemDescription onSelect={onCargoChange} initialData={localData.cargo} scrollToEnd={scrollToEnd} />
       </ScrollView>
       {/*---------------------------------------- BUTTON ----------------------------------------*/}
       <TouchableHighlight onPress={onSubmit} underlayColor={COLOR} style={styles.submitBox}>
@@ -230,7 +310,15 @@ const RecipientDetails = ({navigation, route}) => {
   );
 };
 
-export default RecipientDetails;
+const mapStateToProps = state => ({
+  session: state.session,
+  constants: state.constants,
+});
+
+export default connect(
+  mapStateToProps,
+  null,
+)(RecipientDetails);
 
 const styles = StyleSheet.create({
   container: {

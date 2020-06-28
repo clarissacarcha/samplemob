@@ -12,7 +12,7 @@ export const currentLocation = async ({showsReverseGeocode}) => {
 
     // Return false is permission isn't granted
     if (!granted) {
-      console.log('CURRENT LOCATION: PERMISSION DENIED')
+      console.log('CURRENT LOCATION: PERMISSION DENIED');
       return false;
     }
 
@@ -20,27 +20,25 @@ export const currentLocation = async ({showsReverseGeocode}) => {
     const {latitude, longitude, accuracy} = await RNLocation.getLatestLocation({
       timeout: 2000,
     });
-    
-    // console.log(JSON.stringify({latitude}))
-    // console.log(JSON.stringify({longitude}))
 
     // If not asking for reverseGeocode, return an object with latitude and longitude
     if (!showsReverseGeocode) {
       return {
         latitude,
         longitude,
-        accuracy
+        accuracy,
       };
     }
 
     const result = await reverseGeocode({latitude, longitude});
 
-    const { address_components, formattedAddress } = result;
+    const {addressBreakdown, formattedAddress} = result;
     return {
       latitude,
       longitude,
       accuracy,
-      formattedAddress: formattedAddress
+      formattedAddress: formattedAddress,
+      address: addressBreakdown,
     };
   } catch (error) {
     console.log(error);

@@ -1,6 +1,6 @@
 export const MAPS_API_KEY = 'AIzaSyDdyxr5CWmuPB2iFwDNFlU1rnS4NhjFeoY';
 
-export const APP_FLAVOR = 'C'; // C -customer || D - driver
+export const APP_FLAVOR = 'D'; // C -customer || D - driver
 export const COLOR = '#FDBA1C'; //YELLOW
 export const COLOR_UNDERLAY = 'rgba(256,186,28, 0.1)';
 export const ORANGE = '#F5841F';

@@ -62,7 +62,7 @@ const DeliverySchedule = ({label, stop}) => {
           <FA5Icon name="hands-helping" size={12} color={'white'} style={styles.iconBox} />
         )}
 
-        <View style={{marginLeft: 10}}>
+        <View style={{marginLeft: 16}}>
           <Text style={{fontWeight: 'bold'}}>{label}</Text>
           {stop.orderType == 1 ? (
             <Text style={{color: MEDIUM, fontSize: 11, fontWeight: 'bold'}}>As Soon As Possible</Text>
@@ -76,7 +76,7 @@ const DeliverySchedule = ({label, stop}) => {
 };
 
 export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
-  const {senderStop, recipientStop} = delivery;
+  const {senderStop, recipientStop, createdAt} = delivery;
   const legend = ['', 'As Soon As Possible', 'Scheduled'];
   const orderType = senderStop.orderType === 2 || recipientStop.orderType == 2 ? 2 : 1;
 
@@ -104,7 +104,7 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
                 <View style={{marginLeft: 16}}>
                   <Text style={{fontWeight: 'bold', fontSize: 14}}>Order Date</Text>
                   <Text numberOfLines={1} style={{paddingRight: 10, color: MEDIUM, fontSize: 11, fontWeight: 'bold'}}>
-                    {delivery.createdAt}
+                    {createdAt}
                   </Text>
                 </View>
               </View>

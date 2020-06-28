@@ -8,8 +8,10 @@ export const GET_ORDERS = gql`
       distance
       duration
       price
+      cashOnDelivery
       notes
       status
+      createdAt
       senderStop {
         name
         mobile
@@ -44,6 +46,7 @@ export const GET_ORDERS = gql`
           person {
             firstName
             lastName
+            avatar
           }
         }
       }

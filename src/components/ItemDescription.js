@@ -9,7 +9,7 @@ import _ from 'lodash';
 const width = Dimensions.get('window').width;
 const itemDimension = (width - 120) / 5;
 
-const Item = ({index, data, selected, setSelected, onSelect}) => {
+const Item = ({index, data, selected, setSelected, onSelect, scrollToEnd}) => {
   const isSelected = index == selected;
 
   return (
@@ -19,6 +19,9 @@ const Item = ({index, data, selected, setSelected, onSelect}) => {
           setSelected(index);
           if (index != 4) {
             onSelect(data[index]);
+          } else {
+            scrollToEnd();
+            onSelect('');
           }
         }}
         style={{borderRadius: 10}}
@@ -33,7 +36,7 @@ const Item = ({index, data, selected, setSelected, onSelect}) => {
   );
 };
 
-export const ItemDescription = ({onSelect, initialData}) => {
+export const ItemDescription = ({onSelect, initialData, scrollToEnd}) => {
   const data = ['Food', 'Document', 'Clothing', 'Electronics', 'Others'];
 
   let initialDataIndex = null;
@@ -56,7 +59,14 @@ export const ItemDescription = ({onSelect, initialData}) => {
         <Item index={1} data={data} selected={selectedIndex} setSelected={setSelectedIndex} onSelect={onSelect} />
         <Item index={2} data={data} selected={selectedIndex} setSelected={setSelectedIndex} onSelect={onSelect} />
         <Item index={3} data={data} selected={selectedIndex} setSelected={setSelectedIndex} onSelect={onSelect} />
-        <Item index={4} data={data} selected={selectedIndex} setSelected={setSelectedIndex} onSelect={onSelect} />
+        <Item
+          index={4}
+          data={data}
+          selected={selectedIndex}
+          setSelected={setSelectedIndex}
+          onSelect={onSelect}
+          scrollToEnd={scrollToEnd}
+        />
       </View>
       {selectedIndex == 4 && (
         <TextInput

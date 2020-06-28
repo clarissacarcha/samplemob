@@ -54,7 +54,7 @@ const Verification = ({navigation, route, createSession}) => {
   const [forgotPasswordVerification, {loading}] = useMutation(FORGOT_PASSWORD_VERIFICATION, {
     variables: {
       input: {
-        mobile,
+        mobile: `+63${mobile}`,
         verificationCode,
       },
     },

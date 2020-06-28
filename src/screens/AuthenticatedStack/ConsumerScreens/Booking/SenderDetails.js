@@ -1,11 +1,13 @@
 import React, {useState} from 'react';
 import {View, Text, ScrollView, StyleSheet, TouchableHighlight, TextInput, Dimensions, Alert} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
+
+import {reverseGeocode} from '../../../../helper';
+import {HeaderBack, HeaderTitle, SchedulePicker, AlertOverlay} from '../../../../components';
+import {COLOR, DARK, MAP_DELTA_LOW, MEDIUM, LIGHT, ORANGE} from '../../../../res/constants';
+
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import FIcon from 'react-native-vector-icons/Feather';
-
-import {HeaderBack, HeaderTitle, SchedulePicker} from '../../../../components';
-import {COLOR, DARK, MAP_DELTA_LOW, MEDIUM, LIGHT, ORANGE} from '../../../../res/constants';
 
 const SenderDetails = ({navigation, route}) => {
   navigation.setOptions({
@@ -14,6 +16,7 @@ const SenderDetails = ({navigation, route}) => {
   });
 
   const {data, setData, setPrice} = route.params;
+  const [loading, setLoading] = useState(false);
   const [localData, setLocalData] = useState(data);
 
   console.log(JSON.stringify({data}, null, 4));
@@ -32,7 +35,7 @@ const SenderDetails = ({navigation, route}) => {
   const onNameChange = value => setLocalData({...localData, name: value});
   const onMobileChange = value => setLocalData({...localData, mobile: value});
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     if (localData.latitude == 0 || localData.longitude == 0) {
       Alert.alert('', `Please enter recipient's location.`);
       return;
@@ -48,6 +51,12 @@ const SenderDetails = ({navigation, route}) => {
       return;
     }
 
+    setLoading(true);
+    const {addressBreakdown} = await reverseGeocode({latitude: localData.latitude, longitude: localData.longitude});
+    setLoading(false);
+
+    localData.address = addressBreakdown;
+
     delete localData.latitudeDelta;
     delete localData.longitudeDelta;
 
@@ -59,6 +68,7 @@ const SenderDetails = ({navigation, route}) => {
 
   return (
     <View style={styles.container}>
+      <AlertOverlay visible={loading} />
       <ScrollView showsVerticalScrollIndicator={false}>
         {/*---------------------------------------- MAP ----------------------------------------*/}
         <TouchableHighlight onPress={onSearchMap}>

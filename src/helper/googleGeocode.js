@@ -1,14 +1,32 @@
 import {MAPS_API_KEY} from '../res/constants';
 import axios from 'axios';
 
+const mapAddressComponentsToObject = addressComponents => {
+  const result = {};
+  addressComponents.map(component => {
+    result[component.types[0]] = component.long_name;
+  });
+
+  const formattedResult = {
+    city: result.locality,
+    province: result.administrative_area_level_2,
+    country: result.country,
+  };
+
+  return formattedResult;
+};
+
 export const reverseGeocode = async ({latitude, longitude}) => {
   try {
     const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${MAPS_API_KEY}`;
 
     const result = await axios.get(url);
+    const addressBreakdown = mapAddressComponentsToObject(result.data.results[0].address_components);
+
     return {
-      formattedAddress: result.data.results[0].formatted_address
-    }
+      formattedAddress: result.data.results[0].formatted_address,
+      addressBreakdown,
+    };
   } catch (error) {
     console.log(error);
   }
@@ -48,8 +66,7 @@ const sampleResponse = {
           types: ['country', 'political'],
         },
       ],
-      formatted_address:
-        'Santa Maria-San Jose Rd, Santa Maria, Bulacan, Philippines',
+      formatted_address: 'Santa Maria-San Jose Rd, Santa Maria, Bulacan, Philippines',
       geometry: {
         bounds: {
           northeast: {

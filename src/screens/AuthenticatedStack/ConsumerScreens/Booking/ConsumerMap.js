@@ -41,6 +41,11 @@ const INITIAL_SENDER = session => ({
   orderType: 1,
   scheduledFrom: null,
   scheduledTo: null,
+  address: {
+    city: '',
+    province: '',
+    country: '',
+  },
 });
 
 const INITIAL_RECIPIENT = [
@@ -56,6 +61,11 @@ const INITIAL_RECIPIENT = [
     scheduledFrom: null,
     scheduledTo: null,
     cashOnDelivery: null,
+    address: {
+      city: '',
+      province: '',
+      country: '',
+    },
   },
 ];
 
@@ -160,7 +170,7 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
 
     setTimeout(() => {
       navigation.push(findNotificationRoute(type));
-    }, 50);
+    }, 10);
   };
 
   const oneSignalInit = async () => {
@@ -169,7 +179,7 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
   };
 
   useEffect(() => {
-    alert(JSON.stringify(constants, null, 4));
+    // alert(JSON.stringify(constants, null, 4));
     oneSignalInit();
 
     OneSignal.addEventListener('opened', onNotificationOpened);
@@ -204,6 +214,8 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
           variables: {
             input: {
               distance: directions.distance,
+              senderAddress: senderStop.address,
+              recipientAddress: recipient[recipientIndex].address,
             },
           },
         });
@@ -346,21 +358,21 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
       )} */}
       <View style={styles.footer}>
         {/*---------------------------------------- TESTING BOX START----------------------------------------*/}
-        {/* {!postDeliveryLoading && (
+        {!postDeliveryLoading && (
           <View style={styles.taskBox}>
             <View style={{height: 300}}>
               <ScrollView>
                 <Text style={{fontSize: 8}}>{JSON.stringify({senderStop}, null, 4)}</Text>
                 <Text style={{fontSize: 8}}>{JSON.stringify({recipient}, null, 4)}</Text>
-                <Text style={{fontSize: 8}}>{senderStop.name != '' ? 'T' : 'F'}</Text>
+                {/* <Text style={{fontSize: 8}}>{senderStop.name != '' ? 'T' : 'F'}</Text>
                 <Text style={{fontSize: 8}}>{recipient[recipientIndex].name != '' ? 'T' : 'F'}</Text>
                 <Text style={{fontSize: 8}}>{JSON.stringify({directions}, null, 4)}</Text>
                 <Text style={{fontSize: 8}}>{JSON.stringify({price}, null, 4)}</Text>
-                <Text style={{fontSize: 8}}>{JSON.stringify({session}, null, 4)}</Text>
+                <Text style={{fontSize: 8}}>{JSON.stringify({session}, null, 4)}</Text> */}
               </ScrollView>
             </View>
           </View>
-        )} */}
+        )}
         {/*---------------------------------------- TESTING BOX END----------------------------------------*/}
 
         {/*---------------------------------------- DELIVERY DETAILS ----------------------------------------*/}

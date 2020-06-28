@@ -45,7 +45,7 @@ const ForgotPassword = ({navigation, route, createSession}) => {
   const [forgotPassword, {loading}] = useMutation(FORGOT_PASSWORD, {
     variables: {
       input: {
-        mobile,
+        mobile: `+63${mobile}`,
         appFlavor: APP_FLAVOR,
         // deviceId: getUniqueId(),
         // deviceType: Platform.select({ios: 'I', android: 'A'}),

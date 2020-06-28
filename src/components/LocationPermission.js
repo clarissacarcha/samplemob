@@ -11,6 +11,8 @@ import LocationRequest from '../assets/images/LocationRequest.png';
 const imageWidth = Dimensions.get('window').width - 40;
 
 export const LocationPermission = ({onGrant, onDeny}) => {
+  const [hasRequestedLocation, setHasRequestedLocation] = useState(false);
+
   const checkAndroid = async () => {
     const result = await check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
 
@@ -47,7 +49,10 @@ export const LocationPermission = ({onGrant, onDeny}) => {
   };
 
   useEffect(() => {
-    setTimeout(() => checkAndroid(), 100); //Set minimal timeout for screen to properly display before request dialog is shown
+    setTimeout(() => {
+      checkAndroid();
+      setHasRequestedLocation(true);
+    }, 600); //Set minimal timeout for screen to properly display before request dialog is shown
   }, []);
 
   return (
@@ -65,11 +70,13 @@ export const LocationPermission = ({onGrant, onDeny}) => {
         </Text>
       </View>
 
-      <TouchableHighlight onPress={onDeny} underlayColor={COLOR} style={styles.submitBox}>
-        <View style={styles.submit}>
-          <Text style={{color: COLOR, fontSize: 20}}>Proceed</Text>
-        </View>
-      </TouchableHighlight>
+      {hasRequestedLocation && (
+        <TouchableHighlight onPress={onDeny} underlayColor={COLOR} style={styles.submitBox}>
+          <View style={styles.submit}>
+            <Text style={{color: COLOR, fontSize: 20}}>Proceed</Text>
+          </View>
+        </TouchableHighlight>
+      )}
     </View>
   );
 };

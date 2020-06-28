@@ -160,7 +160,7 @@ const Drawer = ({navigation, session, destroySession}) => {
         <DrawerButton label="Announcements" onPress={() => navigation.navigate('Announcements')} restrict="C" />
 
         {/*--------------- TALK TO US ---------------*/}
-        <DrawerButton label="Talk To Us" onPress={() => navigation.navigate('TalkToUs')} restrict="C" />
+        <DrawerButton label="Talk to Us" onPress={() => navigation.navigate('TalkToUs')} restrict="C" />
       </View>
 
       {/*--------------- SIGN OUT ---------------*/}

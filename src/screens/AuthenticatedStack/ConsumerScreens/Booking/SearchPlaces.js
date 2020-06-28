@@ -61,13 +61,6 @@ const SearchLocation = ({navigation, route}) => {
   });
 
   const onLocationSelect = (data, details = null) => {
-    // setLocalData({
-    //   ...localData,
-    //   latitude: details.geometry.location.lat,
-    //   longitude: details.geometry.location.lng,
-    //   formattedAddress: data.description,
-    // });
-
     setData({
       ...localData,
       latitude: details.geometry.location.lat,

@@ -46,7 +46,7 @@ const Verification = ({navigation, route, createSession}) => {
   const [verifyRegistration, {loading}] = useMutation(VERIFY_REGISTRATION, {
     variables: {
       input: {
-        mobile,
+        mobile: `+63${mobile}`,
         verificationCode,
         appFlavor: APP_FLAVOR,
         deviceId: getUniqueId(),
