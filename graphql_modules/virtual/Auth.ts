@@ -182,7 +182,7 @@ const resolvers = {
         if (!mobile) {
           throw new UserInputError("Please enter your mobile number.");
         }
-
+        console.log(mobile)
         const user = await User.query()
           .findOne({ username: mobile })
           .withGraphFetched({
