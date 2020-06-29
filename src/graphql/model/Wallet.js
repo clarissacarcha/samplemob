@@ -4,33 +4,24 @@ export const GET_WALLET = gql`
   query getWallet($input: getWalletInput) {
     getWallet(input: $input) {
       id
-      walletLog {
-        id
-        type
-        balance
-        transactionDate
-        incoming
-        outgoing
-      }
       balance
       status
       updated
+      toBeDeducted
+      available
     }
   }
 `;
 
-export const GET_WALLET_LOG = gql`
-  query getWallet($input: getWalletInput) {
-    getWallet(input: $input) {
+export const GET_WALLET_LOGS = gql`
+  query getWalletLogs($input: GetWalletLogsInput) {
+    getWalletLogs(input: $input) {
       id
-      walletLog {
-        id
-        type
-        balance
-        transactionDate
-        incoming
-        outgoing
-      }
+      type
+      balance
+      transactionDate
+      incoming
+      outgoing
     }
   }
 `;

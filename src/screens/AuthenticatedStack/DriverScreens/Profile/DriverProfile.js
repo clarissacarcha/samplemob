@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {View, Text, ScrollView, StyleSheet, TouchableHighlight, TextInput, Alert, Image} from 'react-native';
 import {connect} from 'react-redux';
 import {COLOR, DARK, MAP_DELTA_LOW, ORANGE, MEDIUM, LIGHT} from '../../../../res/constants';
-import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../../components';
+import {AlertOverlay, BottomTabHeader, HeaderTitle, HeaderBack} from '../../../../components';
 import {useMutation} from '@apollo/react-hooks';
 import Toast from 'react-native-simple-toast';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
@@ -12,7 +12,7 @@ import {PATCH_PERSON_POST_REGISTRATION} from '../../../../graphql';
 const DriverProfile = ({navigation, route, session, createSession}) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={['My', 'Profile']} />,
+    headerTitle: () => <HeaderTitle label={['Profile', '']} />,
   });
 
   const [firstName, setFirstName] = useState(session.user.person.firstName);
@@ -162,7 +162,7 @@ export default connect(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    // backgroundColor: 'white',
   },
   map: {
     flex: 1,

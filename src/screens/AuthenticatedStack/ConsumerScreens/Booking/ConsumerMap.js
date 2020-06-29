@@ -353,26 +353,18 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
           />
         )}
       </MapView>
-      {/* }) : (
-        <View style={{...StyleSheet.absoluteFillObject, backgroundColor: COLOR}} />
-      )} */}
       <View style={styles.footer}>
         {/*---------------------------------------- TESTING BOX START----------------------------------------*/}
-        {!postDeliveryLoading && (
+        {/* {!postDeliveryLoading && (
           <View style={styles.taskBox}>
             <View style={{height: 300}}>
               <ScrollView>
                 <Text style={{fontSize: 8}}>{JSON.stringify({senderStop}, null, 4)}</Text>
                 <Text style={{fontSize: 8}}>{JSON.stringify({recipient}, null, 4)}</Text>
-                {/* <Text style={{fontSize: 8}}>{senderStop.name != '' ? 'T' : 'F'}</Text>
-                <Text style={{fontSize: 8}}>{recipient[recipientIndex].name != '' ? 'T' : 'F'}</Text>
-                <Text style={{fontSize: 8}}>{JSON.stringify({directions}, null, 4)}</Text>
-                <Text style={{fontSize: 8}}>{JSON.stringify({price}, null, 4)}</Text>
-                <Text style={{fontSize: 8}}>{JSON.stringify({session}, null, 4)}</Text> */}
               </ScrollView>
             </View>
           </View>
-        )}
+        )} */}
         {/*---------------------------------------- TESTING BOX END----------------------------------------*/}
 
         {/*---------------------------------------- DELIVERY DETAILS ----------------------------------------*/}

@@ -10,7 +10,7 @@ import Toast from 'react-native-simple-toast';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 
 const SelectedDriverDelivery = ({navigation, route, session}) => {
   const {delivery, label} = route.params;
@@ -88,6 +88,7 @@ const SelectedDriverDelivery = ({navigation, route, session}) => {
       patchDeliveryIncrementStatus({
         variables: {
           input: {
+            userId: session.user.id,
             deliveryId: getDelivery.id,
             file: rnFile,
           },

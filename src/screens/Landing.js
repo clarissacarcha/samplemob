@@ -60,7 +60,7 @@ const Landing = ({createSession, destroySession, setConstants, navigation}) => {
           navigation.navigate('RootDrawer', {
             screen: 'AuthenticatedStack',
             params: {
-              screen: 'DriverMap',
+              screen: 'DriverHomeBottomTab',
             },
           });
         }

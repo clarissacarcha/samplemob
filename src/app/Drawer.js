@@ -68,7 +68,7 @@ const Drawer = ({navigation, session, destroySession}) => {
         <View style={{marginTop: 10, alignItems: 'center'}}>
           {/*--------------- AVATAR ---------------*/}
           {/* TODO: If has driver avatar, show avatar, else show placeholder */}
-          {false ? (
+          {session.user.person.avatar ? (
             <View
               style={{
                 height: 90,
@@ -121,37 +121,23 @@ const Drawer = ({navigation, session, destroySession}) => {
         />
 
         {/*--------------- WALLET ---------------*/}
-        {APP_FLAVOR == 'D' && (
-          <DrawerButton
-            label="Wallet"
-            onPress={() => {
-              // const route = APP_FLAVOR == 'C' ? 'CustomerProfile' : 'DriverProfile';
-              const route = 'DriverWallet';
-              navigation.navigate(route);
-            }}
-          />
-        )}
+        {/* <DrawerButton
+          label="Wallet"
+          onPress={() => {
+            // const route = APP_FLAVOR == 'C' ? 'CustomerProfile' : 'DriverProfile';
+            const route = 'DriverWallet';
+            navigation.navigate(route);
+          }}
+        /> */}
 
         {/*--------------- MY DELIVERIES ---------------*/}
         <DrawerButton
           label="My Deliveries"
           onPress={() => {
-            const route = APP_FLAVOR == 'C' ? 'CustomerDeliveries' : 'DriverDeliveriesTab';
-            navigation.navigate(route);
+            navigation.navigate('CustomerDeliveries');
           }}
+          restrict="C"
         />
-
-        {/*--------------- ORDERS ---------------*/}
-        {APP_FLAVOR == 'D' && (
-          <DrawerButton
-            label="Orders"
-            onPress={() => {
-              // const route = APP_FLAVOR == 'C' ? 'CustomerProfile' : 'DriverProfile';
-              const route = 'Order';
-              navigation.navigate(route);
-            }}
-          />
-        )}
 
         {/*--------------- Notifications ---------------*/}
         <DrawerButton label="Notifications" onPress={() => navigation.navigate('Notifications')} restrict="C" />
@@ -160,7 +146,7 @@ const Drawer = ({navigation, session, destroySession}) => {
         <DrawerButton label="Announcements" onPress={() => navigation.navigate('Announcements')} restrict="C" />
 
         {/*--------------- TALK TO US ---------------*/}
-        <DrawerButton label="Talk to Us" onPress={() => navigation.navigate('TalkToUs')} restrict="C" />
+        <DrawerButton label="Talk to Us" onPress={() => navigation.navigate('TalkToUs')} />
       </View>
 
       {/*--------------- SIGN OUT ---------------*/}

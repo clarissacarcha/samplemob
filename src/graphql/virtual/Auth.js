@@ -1,7 +1,42 @@
 import gql from 'graphql-tag';
 
 const Session = `
-
+user {
+  id
+  username
+  status
+  person {
+    id
+    firstName
+    middleName
+    lastName
+    emailAddress
+    birthdate
+    gender
+    avatar
+    status
+    address {
+      line1
+      line2
+      barangay
+      city
+      provice
+      country
+      postal
+    }
+  }
+  consumer {
+    id
+    rating
+  }
+  driver {
+    id
+  }
+  wallet {
+    id
+  }
+}
+accessToken
 `;
 
 export const LOGIN_REGISTER = gql`
@@ -13,39 +48,7 @@ export const LOGIN_REGISTER = gql`
 export const VERIFY_REGISTRATION = gql`
   mutation verifyRegistration($input: VerifyRegistrationInput!) {
     verifyRegistration(input: $input) {
-      user {
-        id
-        username
-        status
-        person {
-          id
-          firstName
-          middleName
-          lastName
-          emailAddress
-          birthdate
-          gender
-          avatar
-          status
-          address {
-            line1
-            line2
-            barangay
-            city
-            provice
-            country
-            postal
-          }
-        }
-        consumer {
-          id
-          rating
-        }
-        driver {
-          id
-        }
-      }
-      accessToken
+      ${Session}
     }
   }
 `;
@@ -53,39 +56,7 @@ export const VERIFY_REGISTRATION = gql`
 export const VERIFY_LOGIN = gql`
   mutation verifyLogin($input: VerifyLoginInput!) {
     verifyLogin(input: $input) {
-      user {
-        id
-        username
-        status
-        person {
-          id
-          firstName
-          middleName
-          lastName
-          emailAddress
-          birthdate
-          gender
-          avatar
-          status
-          address {
-            line1
-            line2
-            barangay
-            city
-            provice
-            country
-            postal
-          }
-        }
-        consumer {
-          id
-          rating
-        }
-        driver {
-          id
-        }
-      }
-      accessToken
+      ${Session}
     }
   }
 `;
@@ -93,39 +64,7 @@ export const VERIFY_LOGIN = gql`
 export const GET_USER_SESSION = gql`
   query getUserSession($input: GetUserSessionInput!) {
     getUserSession(input: $input) {
-      user {
-        id
-        username
-        status
-        person {
-          id
-          firstName
-          middleName
-          lastName
-          emailAddress
-          birthdate
-          gender
-          avatar
-          status
-          address {
-            line1
-            line2
-            barangay
-            city
-            provice
-            country
-            postal
-          }
-        }
-        consumer {
-          id
-          rating
-        }
-        driver {
-          id
-        }
-      }
-      accessToken
+      ${Session}
     }
   }
 `;

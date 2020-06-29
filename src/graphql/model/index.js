@@ -1,6 +1,7 @@
 export * from './Announcement';
 export * from './Delivery';
 export * from './Driver';
+export * from './DriverLocationLog';
 export * from './GlobalSetting';
 export * from './Notification';
 export * from './Order';

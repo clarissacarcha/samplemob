@@ -23,27 +23,20 @@ NEXT PATCH
 
 Customer Pending
 
-1. (checked) Standardize +63 username
 2. Generalize On Error Query
 3. Fix Order Type Schedule, Today Only
-4. (checked)City on Price Calculation
-5. (checked)Address Breakdown on Sender and Recipient Stop
-6. Version Control
-7. (checked) Customer Wallet Upon Registration
-8. (checked) Pricing Calculator ceiling instead of floor
-9. Item Description API
-10. API for Post Delivery and Rider Deligation
-11. API Announcement for Customer and Rider With Push Notifs
-12. Catch all on search location (Also add loading)
-13. (checked) Maximum COD
-14. Booking Success New Logo
-15. (checked) Talk to Us lowercase T
-16. Toktok Logo on Image Profile
-17. (checked) Unique UserId on registration
-18. Notifs Clicked Delivery Driver Pix
-19. Driver Location Map
-20. API Security
-21. OneSignal PlayerID on login.
+4. Version Control
+5. Item Description API
+6. API for Post Delivery and Rider Deligation
+7. API Announcement for Customer and Rider With Push Notifs
+8. Catch all on search location (Also add loading)
+9. Booking Success New Logo
+10. Toktok Logo on Image Profile
+11. Notifs Clicked Delivery Driver Pix
+12. Driver Location Map
+13. API Security
+14. OneSignal PlayerID on login.
+15. Notes, Landmark, Item Description/Cargo Type on Delivery Details
 
 Ongoing
 
@@ -53,20 +46,25 @@ Ongoing
 
 Driver Pending
 
-1. No Go Online
-2. Deduction of Credits on Completed Orders
-3. UI for Wallet and Wallet History
+1. (checked) Replace Go Online Map
+2. (checked) Deduction of Credits on Completed Orders
+3. (checked)UI for Wallet and Wallet History
 4. Interval location update
 5. Delivery Card show Cash On Delivery
-6. Bottom Navigation
+6. (checked) Bottom Navigation
 7. Driver Push Notifications (Order Cancel from Customer/Driver, New Orders)
 8. Middle Name in Profile
 9. Change Password
 10. Display all driver details
-11. Wallet To be deducted
+11. (checked) Wallet To be deducted
 12. Auto Refresh of Ongoing, Completed, Cancelled
 13. Rider maximum concurrent delivery orders
 14. Don't get orders from blocked account.
+15. Driver Ongoing Order Count (Increment/Decrement on Accept and Complete)
+16. Select announcements status = 1 and AppFlavor
+17. Change Password Php / Node
+18. Folder Name for Uploaded Images
+19. Notify Riders in 100km and is-online
 
 Constants:
 Rider logs interval
@@ -79,3 +77,17 @@ Good To Have
 3. SecureTextInput (component for passwords)
 4. Booking Copy
 5. Can't Type dots and dashes on mobile number fields.
+
+Approach A (20% cut)
+
+1. Rider buy 1,000 credits for 1,000 php
+2. Rider completed delivery worth 183 php
+3. Rider wallet deduction 36.6 credits (20% of 183)
+4. Remaining wallet credits 963.4
+
+Approach B (20% cut)
+
+1. Rider buy 5,000 credits for 1,000 peso (1000 / .20)
+2. Rider completed delivery worth 183 peso
+3. Rider wallet deduction 183 credits
+4. Remaining wallet credits 4,817

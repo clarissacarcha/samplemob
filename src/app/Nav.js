@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {Image, Text, View} from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
+import {Image, Text, View, TouchableWithoutFeedback} from 'react-native';
+import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 // import {createFluidNavigator} from 'react-navigation-fluid-transitions';
 import {createDrawerNavigator} from '@react-navigation/drawer';
@@ -9,8 +9,15 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import DrawerContent from './Drawer';
-import {HeaderBack, HeaderTitle} from '../components';
+import {HeaderBack, HeaderTitle, BottomTabHeader} from '../components';
 import {COLOR, MEDIUM, LIGHT} from '../res/constants';
+
+import FA5Icon from 'react-native-vector-icons/FontAwesome5';
+import FAIcon from 'react-native-vector-icons/FontAwesome';
+import EIcon from 'react-native-vector-icons/Entypo';
+import FIcon from 'react-native-vector-icons/Feather';
+import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Ionicon from 'react-native-vector-icons/Ionicons';
 
 /*-------------------- IMPORT SCREENS START--------------------*/
 import Login from '../screens/UnauthenticatedStack/Login';
@@ -59,8 +66,11 @@ import ItemCamera from '../screens/AuthenticatedStack/DriverScreens/Deliveries/I
 import ProfileCamera from '../screens/AuthenticatedStack/DriverScreens/Profile/ProfileCamera';
 import ChangeProfilePicture from '../screens/AuthenticatedStack/DriverScreens/Profile/ChangeProfilePicture';
 import DriverWallet from '../screens/AuthenticatedStack/DriverScreens/Wallet/DriverWallet';
-import DriverWalletLog from '../screens/AuthenticatedStack/DriverScreens/Wallet/DriverWalletLog';
+import DriverWalletLog from '../screens/AuthenticatedStack/DriverScreens/Wallet/DriverWalletHistory';
 import Order from '../screens/AuthenticatedStack/DriverScreens/Orders/Order';
+
+/*---------- DRIVER BOTTOM TAB ----------*/
+import DriverSettings from '../screens/AuthenticatedStack/DriverScreens/DriverHomeBottomTab/DriverSettings';
 
 /*-------------------- IMPORT SCREENS END--------------------*/
 
@@ -68,23 +78,27 @@ const Switch = createStackNavigator();
 const Unauthenticated = createStackNavigator();
 const Authenticated = createStackNavigator();
 const RootDrawer = createDrawerNavigator();
+const DriverHome = createBottomTabNavigator();
 const DriverDeliveries = createMaterialTopTabNavigator();
 
 const DriverDeliveriesTab = () => (
-  <DriverDeliveries.Navigator
-    tabBarOptions={{
-      activeTintColor: COLOR,
-      inactiveTintColor: LIGHT,
-      allowFontScaling: false,
-      indicatorStyle: {backgroundColor: COLOR},
-      labelStyle: {
-        fontWeight: 'bold',
-      },
-    }}>
-    <DriverDeliveries.Screen name="Ongoing" component={Ongoing} />
-    <DriverDeliveries.Screen name="Completed" component={Completed} />
-    <DriverDeliveries.Screen name="Cancelled" component={Cancelled} />
-  </DriverDeliveries.Navigator>
+  <>
+    <BottomTabHeader label={['', 'Deliveries']} />
+    <DriverDeliveries.Navigator
+      tabBarOptions={{
+        activeTintColor: COLOR,
+        inactiveTintColor: MEDIUM,
+        allowFontScaling: false,
+        indicatorStyle: {backgroundColor: COLOR},
+        labelStyle: {
+          fontWeight: 'bold',
+        },
+      }}>
+      <DriverDeliveries.Screen name="Ongoing" component={Ongoing} />
+      <DriverDeliveries.Screen name="Completed" component={Completed} />
+      <DriverDeliveries.Screen name="Cancelled" component={Cancelled} />
+    </DriverDeliveries.Navigator>
+  </>
 );
 
 const UnauthenticatedStack = () => (
@@ -101,6 +115,60 @@ const UnauthenticatedStack = () => (
     <Unauthenticated.Screen name="ForgotPasswordVerification" component={ForgotPasswordVerification} />
     <Unauthenticated.Screen name="ForgotPasswordReset" component={ForgotPasswordReset} />
   </Unauthenticated.Navigator>
+);
+
+const DriverHomeBottomTab = ({navigation}) => (
+  <DriverHome.Navigator tabBarOptions={{activeTintColor: COLOR, inactiveTintColor: MEDIUM, showLabel: false}}>
+    <DriverHome.Screen
+      name="Order"
+      component={Order}
+      options={{
+        // tabBarLabel: 'Orders',
+        tabBarIcon: ({color}) => <MCIcon name="clipboard-text" color={color} size={26} />,
+      }}
+    />
+    <Authenticated.Screen
+      name="DriverDeliveriesTab"
+      component={DriverDeliveriesTab}
+      options={{
+        headerLeft: () => <HeaderBack />,
+        headerTitle: () => <HeaderTitle label={['My', 'Deliveries']} />,
+      }}
+      options={{
+        tabBarIcon: ({color}) => <MCIcon name="map-marker-distance" color={color} size={26} />,
+      }}
+    />
+    <DriverHome.Screen
+      name="DriverWallet"
+      component={DriverWallet}
+      options={{
+        tabBarIcon: ({color}) => <EIcon name="wallet" color={color} size={26} />,
+      }}
+    />
+    {/* <DriverHome.Screen
+      name="DriverProfile"
+      component={DriverProfile}
+      options={{
+        tabBarIcon: ({color}) => <FAIcon name="user" color={color} size={26} />,
+      }}
+    /> */}
+    <DriverHome.Screen
+      name="DriverSettings"
+      component={DriverSettings}
+      options={{
+        tabBarIcon: ({color}) => (
+          <EIcon
+            name="menu"
+            color={color}
+            size={26}
+            onPress={() => navigation.openDrawer()}
+            style={{paddingVertical: 12, paddingHorizontal: 20}}
+          />
+        ),
+        tabBarButton: props => <TouchableWithoutFeedback {...props} onPress={() => navigation.openDrawer()} />,
+      }}
+    />
+  </DriverHome.Navigator>
 );
 
 const AuthenticatedStack = () => (
@@ -127,6 +195,12 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="SelectedDelivery" component={SelectedDelivery} />
 
     {/*---------- DRIVER SCREENS ----------*/}
+    <Authenticated.Screen
+      name="DriverHomeBottomTab"
+      component={DriverHomeBottomTab}
+      options={{header: () => <View />}}
+    />
+
     <Authenticated.Screen name="DriverMap" component={DriverMap} />
     <Authenticated.Screen name="SelectedDriverDelivery" component={SelectedDriverDelivery} />
     <Authenticated.Screen name="ItemCamera" component={ItemCamera} />
@@ -136,14 +210,7 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="DriverWallet" component={DriverWallet} />
     <Authenticated.Screen name="DriverWalletLog" component={DriverWalletLog} />
     <Authenticated.Screen name="Order" component={Order} />
-    <Authenticated.Screen
-      name="DriverDeliveriesTab"
-      component={DriverDeliveriesTab}
-      options={{
-        headerLeft: () => <HeaderBack />,
-        headerTitle: () => <HeaderTitle label={['My', 'Deliveries']} />,
-      }}
-    />
+    <Authenticated.Screen name="DriverDeliveriesTab" component={DriverDeliveriesTab} />
   </Authenticated.Navigator>
 );
 

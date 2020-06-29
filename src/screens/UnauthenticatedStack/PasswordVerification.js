@@ -72,7 +72,7 @@ const PasswordVerification = ({navigation, route, createSession}) => {
         navigation.push('RootDrawer', {
           screen: 'AuthenticatedStack',
           params: {
-            screen: 'DriverMap',
+            screen: 'DriverHomeBottomTab',
           },
         });
         return;
