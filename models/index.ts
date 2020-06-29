@@ -5,6 +5,7 @@ import Consumer from "./Consumer";
 import Delivery from "./Delivery";
 import DeliveryLog from "./DeliveryLog";
 import Driver from "./Driver";
+import DriverLocationLog from "./DriverLocationLog";
 import GlobalSetting from "./GlobalSetting";
 import Notification from "./Notification";
 import Person from "./Person";
@@ -20,6 +21,7 @@ export default {
   Delivery,
   DeliveryLog,
   Driver,
+  DriverLocationLog,
   GlobalSetting,
   Notification,
   Person,
