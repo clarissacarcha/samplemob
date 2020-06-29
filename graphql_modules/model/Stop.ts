@@ -16,6 +16,12 @@ const typeDefs = gql`
     scheduledTo: ISO2DateTime
   }
 
+  input AddressInput {
+    city: String
+    province: String
+    country: String
+  }
+
   input SenderStopInput {
     name: String
     mobile: String
@@ -26,6 +32,7 @@ const typeDefs = gql`
     orderType: Int
     scheduledFrom: FormattedDateTime
     scheduledTo: FormattedDateTime
+    address: AddressInput
   }
 
   input RecipientStopInput {
@@ -41,6 +48,7 @@ const typeDefs = gql`
     orderType: Int
     scheduledFrom: FormattedDateTime
     scheduledTo: FormattedDateTime
+    address: AddressInput
   }
 `;
 

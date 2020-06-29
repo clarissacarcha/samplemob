@@ -10,6 +10,7 @@ import User from "../../models/User";
 
 import UserModule from "../model/User";
 import { AuthUtility } from "../../util/AuthUtility";
+import UniqueIdUtility from "../../util/UniqueIdUtility";
 
 const typeDefs = gql`
   type Auth {
@@ -94,7 +95,7 @@ const typeDefs = gql`
 const SendSmsVerification = async (mobile, type) => {
   // Create a random 6 digit verification code
   let verificationCode;
-  if (process.env.NODE_ENV == "developmentX") {
+  if (process.env.NODE_ENV == "development") {
     verificationCode = "123456";
   } else {
     verificationCode = Math.floor(100000 + Math.random() * 900000);
@@ -122,7 +123,7 @@ const SendSmsVerification = async (mobile, type) => {
     // fullmessage = ``;
 
     axios.get(
-      `https://svr20.synermaxx.asia/vmobile/cloudpanda/api/sendnow.php?username=cloudpandaapi&password=f4b8a3dd9bf00cb0a7f1782975939d7d&mobilenum=+63${mobile}&fullmesg=${verificationCode}%20is%20your%20toktok%20activation%20code.&originator=toktok`
+      `https://svr20.synermaxx.asia/vmobile/cloudpanda/api/sendnow.php?username=cloudpandaapi&password=f4b8a3dd9bf00cb0a7f1782975939d7d&mobilenum=${mobile}&fullmesg=${verificationCode}%20is%20your%20toktok%20activation%20code.&originator=toktok`
     );
   }
   const redisData = {
@@ -297,12 +298,16 @@ const resolvers = {
 
         //proceed with consumer registration if user account does not exist
         const createdUser = await User.query().insertGraph({
+          userId: await UniqueIdUtility.generateVerifiedUserId(),
           username: mobile,
           password: "NA",
           active: 1,
           status: 1,
           person: {},
           consumer: {},
+          wallet: {
+            status: 1,
+          },
           failedLoginAttempts: 0,
           deviceType,
           deviceId,

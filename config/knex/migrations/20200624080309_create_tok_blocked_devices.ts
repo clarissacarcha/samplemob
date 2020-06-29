@@ -3,8 +3,8 @@ import * as Knex from "knex";
 export async function up(knex: Knex): Promise<any> {
   return knex.schema.createTable("tok_blocked_devices", (table) => {
     table.increments();
-    table.string("device_type", 1).notNullable;
-    table.string("device_id", 100).notNullable;
+    table.string("device_type", 1).notNullable();
+    table.string("device_id", 100).notNullable();
     table.text("reason");
     table.dateTime("created_at").defaultTo(knex.fn.now());
     table

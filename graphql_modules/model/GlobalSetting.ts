@@ -7,7 +7,7 @@ const { GlobalSetting } = Models;
 
 const typeDefs = gql`
   type GlobalSetting {
-    key: String
+    settingKey: String
     keyValue: String
   }
 

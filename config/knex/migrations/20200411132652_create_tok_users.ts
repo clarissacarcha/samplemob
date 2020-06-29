@@ -3,6 +3,7 @@ import * as Knex from "knex";
 export async function up(knex: Knex): Promise<any> {
   return knex.schema.createTable("tok_users", (table) => {
     table.increments();
+    table.string("user_id", 10).unique();
     table.string("username", 45).notNullable();
     table.string("password", 100).notNullable();
     table.text("access");

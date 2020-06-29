@@ -3,6 +3,7 @@ import { Model } from "objection";
 import Consumer from "./Consumer";
 import Driver from "./Driver";
 import Person from "./Person";
+import Wallet from "./Wallet";
 
 export default class extends Model {
   static tableName = "tok_users";
@@ -31,6 +32,14 @@ export default class extends Model {
       join: {
         from: "tok_users.id",
         to: "tok_consumers.tokUserId",
+      },
+    },
+    wallet: {
+      relation: Model.HasOneRelation,
+      modelClass: Wallet,
+      join: {
+        from: "tok_users.id",
+        to: "tok_user_wallet.tok_users_id",
       },
     },
   };
