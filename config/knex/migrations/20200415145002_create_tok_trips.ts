@@ -3,8 +3,8 @@ import * as Knex from "knex";
 export async function up(knex: Knex): Promise<any> {
   return knex.schema.createTable("tok_trips", (table) => {
     table.increments();
-    table.string("description", 150).nullable;
-    table.string("notes", 150).nullable;
+    table.string("description", 150).nullable();
+    table.string("notes", 150).nullable();
     table.dateTime("book_time").defaultTo(knex.fn.now());
     table.dateTime("pickup_time").defaultTo(knex.fn.now());
     table.dateTime("drop_off_time").defaultTo(knex.fn.now());

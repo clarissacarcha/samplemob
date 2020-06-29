@@ -13,7 +13,15 @@ import ScalarModule from "../virtual/Scalar";
 
 import Models from "../../models";
 
-const { Delivery, DeliveryLog, Stop, Driver, Consumer, Wallet, WalletLog } = Models;
+const {
+  Delivery,
+  DeliveryLog,
+  Stop,
+  Driver,
+  Consumer,
+  Wallet,
+  WalletLog,
+} = Models;
 
 const typeDefs = gql`
   type Delivery {
@@ -371,24 +379,27 @@ const resolvers = {
           id: delivery.tokConsumerId,
         });
 
-        if(delivery.status + 1 == 5) {
+        // Deduct wallet credits on completed orders
+        if (delivery.status + 1 == 5) {
           const driver = await Driver.query().findOne({
-            id: delivery.tokDriverId
+            id: delivery.tokDriverId,
           });
           const wallet = await Wallet.query().findOne({
-            tokUsersId: driver.tokUserId
+            tokUsersId: driver.tokUserId,
           });
 
           const newBalance = wallet.balance - delivery.price;
 
-          await Wallet.query().findOne({id: wallet.id}).patch({balance: newBalance});
+          await Wallet.query()
+            .findOne({ id: wallet.id })
+            .patch({ balance: newBalance });
 
           await WalletLog.query().insert({
             tokWalletId: wallet.id,
-            type: 'Delivery fee',
+            type: "Delivery fee",
             balance: newBalance,
             incoming: 0,
-            outgoing: delivery.price
+            outgoing: delivery.price,
           });
         }
 

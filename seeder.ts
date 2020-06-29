@@ -60,6 +60,13 @@ const importData = async () => {
         unit: "Philippine Peso",
         status: "1",
       },
+      {
+        description: "Interval ",
+        settingKey: "driverLocationLogInterval",
+        keyValue: "600000",
+        unit: "seconds",
+        status: "1",
+      },
     ]);
 
     console.log("GLOBAL SETTINGS CREATED".green.inverse);

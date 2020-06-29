@@ -3,8 +3,9 @@ import * as Knex from "knex";
 export async function up(knex: Knex): Promise<any> {
   return knex.schema.createTable("tok_deliveries", (table) => {
     table.increments();
-    table.string("description", 150).nullable;
-    table.string("notes", 150).nullable;
+    table.string("delivery_id", 12).unique();
+    table.string("description", 150).nullable();
+    table.string("notes", 150).nullable();
     table.decimal("distance", 10, 2);
     table.integer("duration", 5);
     table.specificType("price", "double");
