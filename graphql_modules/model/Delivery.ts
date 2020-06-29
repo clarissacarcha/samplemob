@@ -13,7 +13,7 @@ import ScalarModule from "../virtual/Scalar";
 
 import Models from "../../models";
 
-const { Delivery, DeliveryLog, Stop, Driver, Consumer, Wallet } = Models;
+const { Delivery, DeliveryLog, Stop, Driver, Consumer, Wallet, WalletLog } = Models;
 
 const typeDefs = gql`
   type Delivery {
@@ -370,6 +370,27 @@ const resolvers = {
         const consumer = await Consumer.query().findOne({
           id: delivery.tokConsumerId,
         });
+
+        if(delivery.status + 1 == 5) {
+          const driver = await Driver.query().findOne({
+            id: delivery.tokDriverId
+          });
+          const wallet = await Wallet.query().findOne({
+            tokUsersId: driver.tokUserId
+          });
+
+          const newBalance = wallet.balance - delivery.price;
+
+          await Wallet.query().findOne({id: wallet.id}).patch({balance: newBalance});
+
+          await WalletLog.query().insert({
+            tokWalletId: wallet.id,
+            type: 'Delivery fee',
+            balance: newBalance,
+            incoming: 0,
+            outgoing: delivery.price
+          });
+        }
 
         // Create a notification and send push notifs
         NotificationUtility.notifyUser(
