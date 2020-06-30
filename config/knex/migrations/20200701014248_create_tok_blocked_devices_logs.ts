@@ -1,10 +1,12 @@
 import * as Knex from "knex";
 
 export async function up(knex: Knex): Promise<any> {
-  return knex.schema.createTable("tok_blocked_devices", (table) => {
+  return knex.schema.createTable("tok_blocked_devices_logs", (table) => {
     table.increments();
     table.string("device_type", 1).notNullable();
     table.string("device_id", 100).notNullable();
+    table.text("log");
+    table.dateTime("created_at").defaultTo(knex.fn.now());
     table
       .integer("tok_user_id")
       .unsigned()
@@ -14,5 +16,5 @@ export async function up(knex: Knex): Promise<any> {
 }
 
 export async function down(knex: Knex): Promise<any> {
-  return knex.schema.dropTable("tok_blocked_devices");
+  return knex.schema.dropTable("tok_blocked_devices_logs");
 }

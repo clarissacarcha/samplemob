@@ -22,6 +22,11 @@ export async function up(knex: Knex): Promise<any> {
       .unsigned()
       .references("id")
       .inTable("tok_account_levels");
+    table
+      .integer("tok_vehicle_id")
+      .unsigned()
+      .references("id")
+      .inTable("tok_vehicles");
   });
 }
 
