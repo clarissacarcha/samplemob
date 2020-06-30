@@ -156,15 +156,15 @@ const SendSmsVerification = async (mobile, type) => {
 const resolvers = {
   Query: {
     getUserSession: async (_, { input }) => {
-      const user = await User.query()
-        .findOne({
-          id: input.userId,
-        })
-        .withGraphFetched({
-          driver: true,
-          person: true,
-          consumer: true,
-        });
+      const user = await User.query().findOne({
+        id: input.userId,
+      });
+      // .withGraphFetched({
+      //   driver: true,
+      //   person: true,
+      //   consumer: true,
+      //   wallet: true,
+      // });
 
       return {
         user,
@@ -182,7 +182,6 @@ const resolvers = {
         if (!mobile) {
           throw new UserInputError("Please enter your mobile number.");
         }
-        console.log(mobile)
         const user = await User.query()
           .findOne({ username: mobile })
           .withGraphFetched({
@@ -202,9 +201,13 @@ const resolvers = {
           if (user.password == "NA") {
             SendSmsVerification(mobile, "REGISTER");
             return "REGISTER";
-          } else {
-            return "LOGIN";
           }
+
+          if (user.userId[0] != "T") {
+            throw new UserInputError("Invalid account.");
+          }
+
+          return "LOGIN";
         }
 
         // If consumer and user does not exist, proceed to registration.
@@ -223,6 +226,10 @@ const resolvers = {
             throw new UserInputError(
               "Customer account cannot be used to log in on rider app."
             );
+          }
+
+          if (user.userId[0] != "R") {
+            throw new UserInputError("Invalid account.");
           }
 
           return "LOGIN";
@@ -273,6 +280,7 @@ const resolvers = {
             driver: true,
             person: true,
             consumer: true,
+            wallet: true,
           });
 
         if (user) {
@@ -307,6 +315,7 @@ const resolvers = {
           consumer: {},
           wallet: {
             status: 1,
+            balance: 0,
           },
           failedLoginAttempts: 0,
           deviceType,
@@ -337,6 +346,7 @@ const resolvers = {
             driver: true,
             person: true,
             consumer: true,
+            wallet: true,
           });
 
         // Should always find a user record. Else verifyLogin request was made manually
@@ -356,11 +366,8 @@ const resolvers = {
           throw new UserInputError("Incorrect password.");
         }
 
-        // Check for consumer
         if (appFlavor == "C" && user.driver != null) {
-          throw new UserInputError(
-            "A driver account cannot be used to log in."
-          );
+          throw new UserInputError("A rider account cannot be used to log in.");
         }
 
         if (appFlavor == "D" && user.consumer != null) {

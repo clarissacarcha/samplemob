@@ -63,6 +63,7 @@ const typeDefs = gql`
 
   input PostDeliveryInput {
     tokConsumerId: String
+    tokDriverId: String
     distance: Float
     duration: Float
     price: String
@@ -94,6 +95,7 @@ const typeDefs = gql`
 
   input PatchDeliveryIncrementStatusInput {
     deliveryId: String!
+    userId: String
     file: Upload
   }
 
@@ -118,7 +120,7 @@ const typeDefs = gql`
   }
 `;
 
-const resolvers = {
+export const resolvers = {
   Delivery: {
     senderStop: async (parent) => {
       return await Stop.query().findOne({
@@ -230,18 +232,24 @@ const resolvers = {
     },
   },
   Mutation: {
-    postDelivery: async (_, { input }, { Models }) => {
+    postDelivery: async (_, { input }) => {
       try {
         // Insert a delivery record for each recipient.
         await Promise.all(
           input.recipientStop.map(async (item, index) => {
-            const notes = input.recipientStop[index].notes; // save recipient notes before being deleted
+            // Save fields to be deleted from recipientStop
+            const notes = input.recipientStop[index].notes;
             const cargo = input.recipientStop[index].cargo;
             const cashOnDelivery = input.recipientStop[index].cashOnDelivery;
 
-            delete input.recipientStop[index].notes; //remove recipient notes. Notes is under Delivery, not Stop
+            // Delete these fields. Placed in recipient for multiple recipientStops
+            delete input.recipientStop[index].notes;
             delete input.recipientStop[index].cargo;
             delete input.recipientStop[index].cashOnDelivery;
+
+            if (input.tokDriverId) {
+              console.log("AUTO ASSIGNING DELIVERY TO RIDER");
+            }
 
             // Create delivery record
             const insertedDelivery = await Delivery.query().insertGraph({
@@ -340,8 +348,10 @@ const resolvers = {
     // Driver updates the status of a delivery order
     patchDeliveryIncrementStatus: async (_, { input }) => {
       try {
+        const { deliveryId, userId, file } = input;
+
         // Find the delivery record.
-        let delivery = await Delivery.query().findById(input.deliveryId);
+        let delivery = await Delivery.query().findById(deliveryId);
 
         // Throw error if delivery does not exist
         if (!delivery) {
@@ -354,15 +364,13 @@ const resolvers = {
         }
 
         // Update/Increment the delivery status
-        await Delivery.query()
-          .findById(input.deliveryId)
-          .increment("status", 1);
+        await Delivery.query().findById(deliveryId).increment("status", 1);
 
         let uploadedFile;
 
-        if (input.file) {
+        if (file) {
           uploadedFile = await fileUploadS3({
-            file: input.file,
+            file,
             folder: "toktok/",
             // thumbnailFolder: 'user_verification_documents/thumbnail/'
           });
@@ -380,12 +388,9 @@ const resolvers = {
         });
 
         // Deduct wallet credits on completed orders
-        if (delivery.status + 1 == 5) {
-          const driver = await Driver.query().findOne({
-            id: delivery.tokDriverId,
-          });
+        if (delivery.status + 1 == 6) {
           const wallet = await Wallet.query().findOne({
-            tokUsersId: driver.tokUserId,
+            tokUsersId: userId,
           });
 
           const newBalance = wallet.balance - delivery.price;
@@ -396,7 +401,7 @@ const resolvers = {
 
           await WalletLog.query().insert({
             tokWalletId: wallet.id,
-            type: "Delivery fee",
+            type: "Delivery Completion",
             balance: newBalance,
             incoming: 0,
             outgoing: delivery.price,

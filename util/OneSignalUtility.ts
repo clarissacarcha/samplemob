@@ -17,9 +17,9 @@ const client = {
 };
 
 export default class {
-  static pushToUserId = async ({ userId, title, body, data }, APP_FLAVOR) => {
+  static pushToUserId = async ({ userId, title, body, data }, appFlavor) => {
     try {
-      const response = await client[APP_FLAVOR].createNotification({
+      const response = await client[appFlavor].createNotification({
         headings: {
           en: title,
         },
@@ -32,6 +32,24 @@ export default class {
         ...(data ? { data } : null),
       });
       //response.body.id
+      console.log("OneSignal: " + response.body.id);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  static broadcast = async ({ appFlavor, title, body, data }) => {
+    try {
+      const response = await client[appFlavor].createNotification({
+        headings: {
+          en: title,
+        },
+        contents: {
+          en: body,
+        },
+        ...(data ? { data } : null),
+        included_segments: ["Subscribed Users"],
+      });
       console.log("OneSignal: " + response.body.id);
     } catch (error) {
       console.log(error);

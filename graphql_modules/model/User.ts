@@ -4,11 +4,12 @@ import { gql, UserInputError } from "apollo-server-express";
 import { AuthUtility } from "../../util/AuthUtility";
 import Models from "../../models";
 
-const { User, Person, Consumer, Driver } = Models;
+const { User, Person, Consumer, Driver, Wallet } = Models;
 
 import ConsumerModule from "./Consumer";
 import PersonModule from "./Person";
 import DriverModule from "./Driver";
+import WalletModule from "./Wallet";
 
 const typeDefs = gql`
   type User {
@@ -19,6 +20,7 @@ const typeDefs = gql`
     person: Person
     consumer: Consumer
     driver: Driver
+    wallet: Wallet
   }
 
   input PatchUserChangePasswordInput {
@@ -49,14 +51,15 @@ const resolvers = {
         tokUserId: parent.id,
       });
     },
+    wallet: async (parent) => {
+      return await Wallet.query().findOne({
+        tokUsersId: parent.id,
+      });
+    },
   },
   Mutation: {
     patchUserChangePassword: async (_, { input }) => {
       const { userId, currentPassword, newPassword } = input;
-
-      const hashedCurrentPassword = await AuthUtility.generateHashAsync(
-        currentPassword
-      );
 
       const userRecord = await User.query().findOne({
         id: userId,
@@ -89,7 +92,7 @@ const resolvers = {
 };
 
 export default new GraphQLModule({
-  imports: [ConsumerModule, PersonModule, DriverModule],
+  imports: [ConsumerModule, PersonModule, DriverModule, WalletModule],
   typeDefs,
   resolvers,
 });

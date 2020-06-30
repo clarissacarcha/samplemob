@@ -18,15 +18,25 @@ const typeDefs = gql`
     tokWalletId: String
   }
 
+  input GetWalletLogsInput {
+    walletId: String
+  }
+
   type Query {
-    getWalletLog: [WalletLog]
+    getWalletLogs(input: GetWalletLogsInput): [WalletLog]
   }
 `;
 
 const resolvers = {
   Query: {
-    getWalletLog: async () => {
-      return await WalletLog.query();
+    getWalletLogs: async (_, { input }) => {
+      const { walletId } = input;
+
+      return await WalletLog.query()
+        .where({
+          tokWalletId: walletId,
+        })
+        .orderBy("transactionDate", "DESC");
     },
   },
 };

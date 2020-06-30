@@ -6,6 +6,6 @@ export default class extends Model {
   static idColumn = "id";
 
   static afterInsert = (args) => {
-    console.log("ANNOUNCEMENT HAS BEEN MADE");
+    // console.log("ANNOUNCEMENT HAS BEEN MADE");
   };
 }

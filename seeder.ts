@@ -11,13 +11,6 @@ const importData = async () => {
   try {
     await knex("tok_global_settings").insert([
       {
-        description: "Maximum number of ongoing deliveries a rider can have.",
-        settingKey: "maxConcurrentOrders",
-        keyValue: "2",
-        unit: "Number",
-        status: "1",
-      },
-      {
         description: "Website Display Name",
         settingKey: "websiteDisplayName",
         keyValue: "www.toktok.ph",
@@ -36,6 +29,13 @@ const importData = async () => {
         settingKey: "talkToUsEmail",
         keyValue: "support@cloudpanda.ph",
         unit: "String",
+        status: "1",
+      },
+      {
+        description: "Maximum number of ongoing deliveries a rider can have.",
+        settingKey: "riderMaxOngoingOrders",
+        keyValue: "2",
+        unit: "Number",
         status: "1",
       },
       {
@@ -61,10 +61,17 @@ const importData = async () => {
         status: "1",
       },
       {
-        description: "Interval ",
+        description: "Interval for rider location update logs",
         settingKey: "driverLocationLogInterval",
-        keyValue: "600000",
-        unit: "seconds",
+        keyValue: "600000", // 600 seconds, 10 minutes
+        unit: "miliseconds",
+        status: "1",
+      },
+      {
+        description: "toktok commission from completed orders.  ",
+        settingKey: "toktokOrderCommission",
+        keyValue: "0.20", // 20%
+        unit: "decimal",
         status: "1",
       },
     ]);

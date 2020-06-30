@@ -4,15 +4,12 @@ import OneSignalUtility from "../util/OneSignalUtility";
 import moment from "moment";
 
 export default async () => {
-  const milimoment = moment().valueOf().toString();
-  // const id = parseInt(milimoment, 10).toString(32).toUpperCase();
-  console.log(
-    parseInt(moment().valueOf().toString(), 10).toString(32).toUpperCase()
-  );
-  console.log(
-    parseInt(moment().valueOf().toString(), 10).toString(32).toUpperCase()
-  );
-  console.log(
-    parseInt(moment().valueOf().toString(), 10).toString(32).toUpperCase()
-  );
+  // console.log(
+  //   parseInt(moment("3083-12-31", "YYYY-MM-DD").valueOf().toString(), 10)
+  //     .toString(32)
+  //     .toUpperCase()
+  // );
+  // console.log(
+  //   parseInt(moment().valueOf().toString(), 10).toString(32).toUpperCase()
+  // );
 };

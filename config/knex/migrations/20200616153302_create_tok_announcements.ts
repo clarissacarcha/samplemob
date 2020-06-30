@@ -13,8 +13,8 @@ export async function up(knex: Knex): Promise<any> {
     table.string("thumbnail", 255).notNullable();
     table.string("image", 255).notNullable();
     table.specificType("status", "tinyint(1)");
-    table.dateTime("created_at");
-    table.dateTime("updated_at");
+    table.dateTime("created_at").defaultTo(knex.fn.now());
+    table.dateTime("updated_at").defaultTo(knex.fn.now());
   });
 }
 

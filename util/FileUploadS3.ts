@@ -25,7 +25,9 @@ export default async ({ file, folder, thumbnailFolder }) => {
   const { createReadStream, filename, mimetype } = await file;
 
   //create a name for the file
-  const timestamp = moment.now();
+  const timestamp = parseInt(moment().valueOf().toString(), 10)
+    .toString(32)
+    .toUpperCase();
   const generatedName = `${timestamp}${short.generate().toUpperCase()}`;
   const extension = Path.extname(filename);
   const finalFilename = `${generatedName}${extension}`;

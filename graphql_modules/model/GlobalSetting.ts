@@ -23,11 +23,11 @@ const resolvers = {
 
       const environmentConstants = [
         {
-          key: "consumerOneSignalAppId",
+          settingKey: "consumerOneSignalAppId",
           keyValue: process.env.CONSUMER_ONESIGNAL_APP_ID,
         },
         {
-          key: "driverOneSignalAppId",
+          settingKey: "driverOneSignalAppId",
           keyValue: process.env.DRIVER_ONESIGNAL_APP_ID,
         },
       ];

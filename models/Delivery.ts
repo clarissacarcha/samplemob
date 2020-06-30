@@ -35,7 +35,7 @@ export default class extends Model {
   };
 
   static afterInsert = (args) => {
-    console.log("AFTER INSERT DELIVERY");
+    // console.log("AFTER INSERT DELIVERY");
   };
 }
 

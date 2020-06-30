@@ -10,7 +10,7 @@ const typeDefs = gql`
   type Driver {
     id: String
     status: Int
-    isOnline: Int
+    isOnline: Boolean
     user: User
   }
 
@@ -48,14 +48,14 @@ const resolvers = {
   },
   Mutation: {
     patchDriverGoOnline: async (_: any, { input }: any) => {
-      const result = await Driver.query().where({ id: input.driverId }).update({
+      await Driver.query().where({ id: input.driverId }).update({
         isOnline: true,
       });
 
       return "Successfully gone online.";
     },
     patchDriverGoOffline: async (_: any, { input }: any) => {
-      const result = await Driver.query().where({ id: input.driverId }).update({
+      await Driver.query().where({ id: input.driverId }).update({
         isOnline: false,
       });
 

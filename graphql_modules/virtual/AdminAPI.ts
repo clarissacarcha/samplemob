@@ -7,10 +7,11 @@ import StopModule from "../model/Stop";
 
 import Models from "../../models";
 
-const { Delivery, DeliveryLog, Consumer } = Models;
+const { Delivery, DeliveryLog, Consumer, Driver, GlobalSetting } = Models;
 
 const typeDefs = gql`
   input AdminPostDeliveryInput {
+    tokDriverId: String
     tokConsumerId: String
     distance: Float
     duration: Int
@@ -32,18 +33,52 @@ const typeDefs = gql`
 
 const resolvers = {
   Mutation: {
-    adminPostDelivery: async (_, { input }, { Models }) => {
+    adminPostDelivery: async (_, { input }) => {
       try {
         // Insert a delivery record for each recipient.
         await Promise.all(
           input.recipientStop.map(async (item, index) => {
-            const notes = input.recipientStop[index].notes; // save recipient notes before being deleted
+            // Save fields to be deleted from recipientStop
+            const notes = input.recipientStop[index].notes;
             const cargo = input.recipientStop[index].cargo;
             const cashOnDelivery = input.recipientStop[index].cashOnDelivery;
 
-            delete input.recipientStop[index].notes; //remove recipient notes. Notes is under Delivery, not Stop
+            // Delete these fields. Placed in recipient for multiple recipientStops
+            delete input.recipientStop[index].notes;
             delete input.recipientStop[index].cargo;
             delete input.recipientStop[index].cashOnDelivery;
+
+            // Check for Auto Assign Deliveries
+            if (input.tokDriverId) {
+              const { isOnline } = await Driver.query().findOne({
+                id: input.tokDriverId,
+              });
+
+              if (!isOnline) {
+                throw new UserInputError(
+                  "Rider is offline. Cannot assign delivery."
+                );
+              }
+
+              const [{ ongoingCount }] = await Delivery.query()
+                .where({
+                  tokDriverId: input.tokDriverId,
+                })
+                .whereIn("status", [2, 3, 4, 5])
+                .count("* as ongoingCount");
+
+              const globalSetting = await GlobalSetting.query().findOne({
+                settingKey: "riderMaxOngoingOrders",
+              });
+
+              const maxOngoingCount = globalSetting.keyValue;
+
+              if (ongoingCount >= maxOngoingCount) {
+                throw new UserInputError(
+                  "Rider reached the maximum number of ongoing orders."
+                );
+              }
+            }
 
             // Create delivery record
             const insertedDelivery = await Delivery.query().insertGraph({
@@ -52,7 +87,7 @@ const resolvers = {
               notes, // insert the notes back
               cargo,
               cashOnDelivery,
-              status: 1, // Order Placed
+              status: input.tokDriverId ? 2 : 1, // Order Placed
             });
 
             // Create delivery log with status = 1 || Order Placed
@@ -61,6 +96,16 @@ const resolvers = {
               tokDeliveryId: insertedDelivery.id,
               createdAt: insertedDelivery.createdAt,
             });
+
+            if (input.tokDriverId) {
+              await DeliveryLog.query().insert({
+                status: 2,
+                tokDeliveryId: insertedDelivery.id,
+                createdAt: insertedDelivery.createdAt,
+              });
+
+              //TODO: NOTIFY DRIVER
+            }
           })
         );
 
@@ -70,6 +115,44 @@ const resolvers = {
         throw e;
       }
     },
+    // adminPostDelivery: async (_, { input }, { Models }) => {
+    //   try {
+    //     // Insert a delivery record for each recipient.
+    //     await Promise.all(
+    //       input.recipientStop.map(async (item, index) => {
+    //         const notes = input.recipientStop[index].notes; // save recipient notes before being deleted
+    //         const cargo = input.recipientStop[index].cargo;
+    //         const cashOnDelivery = input.recipientStop[index].cashOnDelivery;
+
+    //         delete input.recipientStop[index].notes; //remove recipient notes. Notes is under Delivery, not Stop
+    //         delete input.recipientStop[index].cargo;
+    //         delete input.recipientStop[index].cashOnDelivery;
+
+    //         // Create delivery record
+    //         const insertedDelivery = await Delivery.query().insertGraph({
+    //           ...input,
+    //           recipientStop: input.recipientStop[index],
+    //           notes, // insert the notes back
+    //           cargo,
+    //           cashOnDelivery,
+    //           status: 1, // Order Placed
+    //         });
+
+    //         // Create delivery log with status = 1 || Order Placed
+    //         await DeliveryLog.query().insert({
+    //           status: 1,
+    //           tokDeliveryId: insertedDelivery.id,
+    //           createdAt: insertedDelivery.createdAt,
+    //         });
+    //       })
+    //     );
+
+    //     return "Delivery Posted";
+    //   } catch (e) {
+    //     console.log(e);
+    //     throw e;
+    //   }
+    // },
 
     // Customer cancels a delivery order
     adminPatchDeliveryCancel: async (_, { input }) => {
