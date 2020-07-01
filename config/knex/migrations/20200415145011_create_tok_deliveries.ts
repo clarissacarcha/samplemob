@@ -24,6 +24,7 @@ export async function up(knex: Knex): Promise<any> {
      */
     table.specificType("status", "tinyint(1)");
     table.specificType("rating", "tinyint(1)");
+    table.specificType("com_rate", "double");
     table.timestamp("created_at").defaultTo(knex.fn.now());
     table.timestamp("updated_at").defaultTo(knex.fn.now());
     table

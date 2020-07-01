@@ -296,7 +296,7 @@ export const resolvers = {
           .groupBy("tokDriverId");
 
         const balanceCredit = await Wallet.query().findOne({
-          tokUsersId: input.userId,
+          tokUserId: input.userId,
         });
 
         const remainingCredit =
@@ -390,7 +390,7 @@ export const resolvers = {
         // Deduct wallet credits on completed orders
         if (delivery.status + 1 == 6) {
           const wallet = await Wallet.query().findOne({
-            tokUsersId: userId,
+            tokUserId: userId,
           });
 
           const newBalance = wallet.balance - delivery.price;

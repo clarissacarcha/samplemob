@@ -48,13 +48,15 @@ const resolvers = {
             delete input.recipientStop[index].cargo;
             delete input.recipientStop[index].cashOnDelivery;
 
+            let driverUserId = "";
+
             // Check for Auto Assign Deliveries
             if (input.tokDriverId) {
-              const { isOnline } = await Driver.query().findOne({
+              const driverRecord = await Driver.query().findOne({
                 id: input.tokDriverId,
               });
 
-              if (!isOnline) {
+              if (!driverRecord.isOnline) {
                 throw new UserInputError(
                   "Rider is offline. Cannot assign delivery."
                 );
@@ -78,6 +80,8 @@ const resolvers = {
                   "Rider reached the maximum number of ongoing orders."
                 );
               }
+
+              driverUserId = driverRecord.tokUserId;
             }
 
             // Create delivery record
@@ -105,6 +109,10 @@ const resolvers = {
               });
 
               //TODO: NOTIFY DRIVER
+              NotificationUtility.notifyRiderAssignedOrder({
+                deliveryId: insertedDelivery.id,
+                userId: driverUserId,
+              });
             }
           })
         );

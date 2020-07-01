@@ -87,4 +87,31 @@ export default class {
       console.log(error);
     }
   };
+
+  static notifyRiderAssignedOrder = async ({ userId, deliveryId }) => {
+    try {
+      await Notification.query().insert({
+        title: "Order Assigned",
+        body: "An order has been assigned to you.",
+        status: 1,
+        tokUserId: userId,
+        tokDeliveryId: deliveryId,
+        createdAt: moment().format("YYYY-MM-DD HH:mm:ss"),
+      });
+
+      await OneSignalUtility.pushToUserId(
+        {
+          title: "Order Assigned",
+          body: "An order has been assigned to you.",
+          userId: userId,
+          data: {
+            type: "N",
+          },
+        },
+        "D"
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
 }

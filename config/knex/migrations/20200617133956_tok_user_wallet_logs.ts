@@ -10,9 +10,14 @@ export async function up(knex: Knex): Promise<any> {
       .inTable("tok_user_wallet");
     table.string("type", 45).notNullable();
     table.specificType("balance", "double");
-   	table.timestamp("transaction_date").defaultTo(knex.fn.now());
-   	table.specificType("incoming", "double");
-   	table.specificType("outgoing", "double");
+    table.timestamp("transaction_date").defaultTo(knex.fn.now());
+    table.specificType("incoming", "double");
+    table.specificType("outgoing", "double");
+    table
+      .integer("tok_delivery_id")
+      .unsigned()
+      .references("id")
+      .inTable("tok_deliveries");
   });
 }
 

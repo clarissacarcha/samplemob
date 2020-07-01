@@ -68,10 +68,46 @@ const importData = async () => {
         status: "1",
       },
       {
+        description: "Flatrate for order price calculation",
+        settingKey: "orderPriceFlatRate",
+        keyValue: "60",
+        unit: "Philippine Peso",
+        status: "1",
+      },
+      {
+        description:
+          "Number of kilometers before adding per km price to order price calculation.",
+        settingKey: "orderPriceThreshold",
+        keyValue: "10",
+        unit: "km",
+        status: "1",
+      },
+      {
+        description: "Per kilometer price exceeding threshold",
+        settingKey: "orderPricePerKm",
+        keyValue: "6",
+        unit: "Philippine Peso",
+        status: "1",
+      },
+      {
         description: "toktok commission from completed orders.  ",
         settingKey: "toktokOrderCommission",
         keyValue: "0.20", // 20%
         unit: "decimal",
+        status: "1",
+      },
+      {
+        description: "toktok operator user id.",
+        settingKey: "toktokOperatorUserId",
+        keyValue: "1",
+        unit: "number",
+        status: "1",
+      },
+      {
+        description: "toktok operator wallet id.",
+        settingKey: "toktokOperatorWalletId",
+        keyValue: "1",
+        unit: "number",
         status: "1",
       },
     ]);

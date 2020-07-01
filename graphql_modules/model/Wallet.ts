@@ -11,7 +11,7 @@ import ScalarModule from "../virtual/Scalar";
 const typeDefs = gql`
   type Wallet {
     id: String
-    tokUsersId: Int
+    tokUserId: Int
     balance: Float
     status: Int
     updated: DateTime
@@ -32,7 +32,7 @@ const resolvers = {
   Query: {
     getWallet: async (_, { input = {} }) => {
       const { userId } = input;
-      const walletResult = await Wallet.query().findOne({ tokUsersId: userId });
+      const walletResult = await Wallet.query().findOne({ tokUserId: userId });
 
       const user = await User.query().findOne({ id: userId }).withGraphFetched({
         consumer: true,

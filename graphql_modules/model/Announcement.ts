@@ -48,7 +48,9 @@ const resolvers = {
   Query: {
     getAnnouncements: async (_, { filter }) => {
       const { appFlavor } = filter;
-      return await Announcement.query().where({ status: 1, appFlavor });
+      return await Announcement.query()
+        .where({ status: 1, appFlavor })
+        .orderBy("createdAt", "DESC");
     },
   },
   Mutation: {

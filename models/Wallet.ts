@@ -4,7 +4,7 @@ import WalletLog from "./WalletLog";
 import User from "./User";
 
 export default class extends Model {
-  static tableName = "tok_user_wallet";
+  static tableName = "tok_user_wallets";
   static idColumn = "id";
 
   static relationMappings = {
