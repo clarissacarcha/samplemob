@@ -13,3 +13,8 @@ export default {
   OrderPrice,
   ScalarModule,
 };
+
+export const adminVirtualModules = {
+  AdminAPIModule,
+  ScalarModule,
+};

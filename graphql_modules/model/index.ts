@@ -32,3 +32,7 @@ export default {
   WalletModule,
   WalletLogModule,
 };
+
+export const adminModelModules = {
+  StopModule,
+};

@@ -6,6 +6,7 @@ const colors = require("colors");
 import { createServer as createHttpServer } from "http";
 import { createServer as createHttpsServer } from "https";
 import { mountApolloOnExpressAndServer } from "../config/apollo_servers/graphql";
+import { mountAdminApolloOnExpressAndServer } from "../config/apollo_servers/admin";
 import { deliveryDispatchCronJob } from "../util";
 import { startCronJobs } from "../util/CronUtility";
 import App from "../App";
@@ -20,6 +21,7 @@ const server = createServer(App);
 
 // Applies ApolloServer as middleware on App and installs subscriptionHandlers on server
 mountApolloOnExpressAndServer(App, server);
+mountAdminApolloOnExpressAndServer(App, server);
 
 server.listen(process.env.PORT, () => {
   //deliveryDispatchCronJob().start();
