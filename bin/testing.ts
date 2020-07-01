@@ -1,3 +1,4 @@
+//@ts-nocheck
 import Models from "../models";
 const { Driver, User, Person, Delivery } = Models;
 import OneSignalUtility from "../util/OneSignalUtility";
@@ -13,5 +14,7 @@ export default async () => {
   // console.log(
   //   parseInt(moment().valueOf().toString(), 10).toString(32).toUpperCase()
   // );
-  // DU.processCompletion();
+  DU.processCompletion({
+    deliveryId: "1",
+  });
 };

@@ -1,7 +1,7 @@
 //@ts-nocheck
 import { gql, GraphQLUpload } from "apollo-server-express";
 import { GraphQLModule } from "@graphql-modules/core";
-import { GraphQLScalarType } from "graphql";
+import { GraphQLScalarType, Kind } from "graphql";
 import moment from "moment";
 
 const typeDefs = gql`
@@ -69,10 +69,10 @@ const resolvers = {
       return moment(value).format("MMM DD YYYY - h:mm a");
     },
     parseLiteral(ast) {
-      if (ast.kind === Kind.INT) {
-        return new Date(ast.value); // ast value is always in string format
-      }
-      return null;
+      // if (ast.kind === Kind.INT) {
+      //   return new Date(ast.value); // ast value is always in string format
+      // }
+      return ast.value;
     },
   }),
 };

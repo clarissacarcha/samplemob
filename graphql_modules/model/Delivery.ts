@@ -5,6 +5,7 @@ import { raw } from "objection";
 import { gql, UserInputError } from "apollo-server-express";
 import fileUploadS3 from "../../util/FileUploadS3";
 import NotificationUtility from "../../util/NotificationUtility";
+import DeliveryUtility from "../../util/DeliveryUtility";
 
 import DeliveryLogModule from "./DeliveryLog";
 import DriverModule from "./Driver";
@@ -417,22 +418,8 @@ export const resolvers = {
 
         // Deduct wallet credits on completed orders
         if (delivery.status + 1 == 6) {
-          const wallet = await Wallet.query().findOne({
-            tokUserId: userId,
-          });
-
-          const newBalance = wallet.balance - delivery.price;
-
-          await Wallet.query()
-            .findOne({ id: wallet.id })
-            .patch({ balance: newBalance });
-
-          await WalletLog.query().insert({
-            tokWalletId: wallet.id,
-            type: "Delivery Completion",
-            balance: newBalance,
-            incoming: 0,
-            outgoing: delivery.price,
+          DeliveryUtility.processCompletion({
+            deliveryId: delivery.id,
           });
         }
 

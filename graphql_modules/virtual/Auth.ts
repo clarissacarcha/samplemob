@@ -95,8 +95,8 @@ const typeDefs = gql`
 const SendSmsVerification = async (mobile, type) => {
   // Create a random 6 digit verification code
   let verificationCode;
-  // if (process.env.NODE_ENV == "development") {
-  if (false) {
+  if (process.env.NODE_ENV == "development") {
+    // if (false) {
     verificationCode = "123456";
   } else {
     verificationCode = Math.floor(100000 + Math.random() * 900000);
@@ -224,9 +224,7 @@ const resolvers = {
 
         if (appFlavor == "D" && user) {
           if (user.consumer != null) {
-            throw new UserInputError(
-              "Customer account cannot be used to log in on rider app."
-            );
+            throw new UserInputError("Rider account does not exist."); //Customer account cannot be used to log in on rider app.
           }
 
           if (user.userId[0] != "R") {
@@ -372,9 +370,7 @@ const resolvers = {
         }
 
         if (appFlavor == "D" && user.consumer != null) {
-          throw new UserInputError(
-            "Customer account cannot be used to log in on rider app."
-          );
+          throw new UserInputError("Rider account does not exist"); // Customer account cannot be used to log in on rider app
         }
 
         await User.query()
