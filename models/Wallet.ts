@@ -12,7 +12,7 @@ export default class extends Model {
       relation: Model.HasManyRelation,
       modelClass: WalletLog,
       join: {
-        from: "tok_user_wallet.id",
+        from: "tok_user_wallets.id",
         to: "tok_user_wallet_logs.tok_wallet_id",
       },
     },
@@ -20,7 +20,7 @@ export default class extends Model {
       relation: Model.HasManyRelation,
       modelClass: User,
       join: {
-        from: "tok_user_wallet.tok_users_id",
+        from: "tok_user_wallets.tok_users_id",
         to: "tok_users.id",
       },
     },

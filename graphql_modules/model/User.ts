@@ -53,7 +53,7 @@ const resolvers = {
     },
     wallet: async (parent) => {
       return await Wallet.query().findOne({
-        tokUsersId: parent.id,
+        tokUserId: parent.id,
       });
     },
   },

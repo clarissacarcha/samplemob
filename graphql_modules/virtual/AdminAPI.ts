@@ -3,6 +3,8 @@ import { gql, UserInputError } from "apollo-server-express";
 import { GraphQLModule } from "@graphql-modules/core";
 import NotificationUtility from "../../util/NotificationUtility";
 
+import { calculateOrderPrice } from "../../util/PricingCalculator";
+
 import StopModule from "../model/Stop";
 
 import Models from "../../models";
@@ -25,6 +27,16 @@ const typeDefs = gql`
     deliveryId: String!
   }
 
+  input GetAdminOrderPriceInput {
+    distance: Float!
+    senderAddress: AddressInput
+    recipientAddress: AddressInput
+  }
+
+  type Query {
+    getAdminOrderPrice(input: GetAdminOrderPriceInput!): Float
+  }
+
   type Mutation {
     adminPostDelivery(input: AdminPostDeliveryInput): String
     adminPatchDeliveryCancel(input: AdminPatchDeliveryCancelInput!): String
@@ -32,6 +44,14 @@ const typeDefs = gql`
 `;
 
 const resolvers = {
+  Query: {
+    getAdminOrderPrice: async (_, { input }) => {
+      const { senderAddress, recipientAddress, distance } = input;
+      const price = await calculateOrderPrice({ distance });
+
+      return price;
+    },
+  },
   Mutation: {
     adminPostDelivery: async (_, { input }) => {
       try {
@@ -84,6 +104,11 @@ const resolvers = {
               driverUserId = driverRecord.tokUserId;
             }
 
+            //Get current commission rate
+            const comRate = await GlobalSetting.query().findOne({
+              settingKey: "toktokCommissionRate",
+            });
+
             // Create delivery record
             const insertedDelivery = await Delivery.query().insertGraph({
               ...input,
@@ -91,6 +116,7 @@ const resolvers = {
               notes, // insert the notes back
               cargo,
               cashOnDelivery,
+              comRate: comRate.keyValue,
               status: input.tokDriverId ? 2 : 1, // Order Placed
             });
 
@@ -123,44 +149,6 @@ const resolvers = {
         throw e;
       }
     },
-    // adminPostDelivery: async (_, { input }, { Models }) => {
-    //   try {
-    //     // Insert a delivery record for each recipient.
-    //     await Promise.all(
-    //       input.recipientStop.map(async (item, index) => {
-    //         const notes = input.recipientStop[index].notes; // save recipient notes before being deleted
-    //         const cargo = input.recipientStop[index].cargo;
-    //         const cashOnDelivery = input.recipientStop[index].cashOnDelivery;
-
-    //         delete input.recipientStop[index].notes; //remove recipient notes. Notes is under Delivery, not Stop
-    //         delete input.recipientStop[index].cargo;
-    //         delete input.recipientStop[index].cashOnDelivery;
-
-    //         // Create delivery record
-    //         const insertedDelivery = await Delivery.query().insertGraph({
-    //           ...input,
-    //           recipientStop: input.recipientStop[index],
-    //           notes, // insert the notes back
-    //           cargo,
-    //           cashOnDelivery,
-    //           status: 1, // Order Placed
-    //         });
-
-    //         // Create delivery log with status = 1 || Order Placed
-    //         await DeliveryLog.query().insert({
-    //           status: 1,
-    //           tokDeliveryId: insertedDelivery.id,
-    //           createdAt: insertedDelivery.createdAt,
-    //         });
-    //       })
-    //     );
-
-    //     return "Delivery Posted";
-    //   } catch (e) {
-    //     console.log(e);
-    //     throw e;
-    //   }
-    // },
 
     // Customer cancels a delivery order
     adminPatchDeliveryCancel: async (_, { input }) => {

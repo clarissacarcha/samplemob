@@ -91,7 +91,7 @@ const importData = async () => {
       },
       {
         description: "toktok commission from completed orders.  ",
-        settingKey: "toktokOrderCommission",
+        settingKey: "toktokCommissionRate",
         keyValue: "0.20", // 20%
         unit: "decimal",
         status: "1",

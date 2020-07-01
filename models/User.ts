@@ -39,7 +39,7 @@ export default class extends Model {
       modelClass: Wallet,
       join: {
         from: "tok_users.id",
-        to: "tok_user_wallet.tok_users_id",
+        to: "tok_user_wallets.tok_user_id",
       },
     },
   };

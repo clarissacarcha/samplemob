@@ -21,6 +21,7 @@ const {
   Consumer,
   Wallet,
   WalletLog,
+  GlobalSetting,
 } = Models;
 
 const typeDefs = gql`
@@ -251,6 +252,11 @@ export const resolvers = {
               console.log("AUTO ASSIGNING DELIVERY TO RIDER");
             }
 
+            //Get current commission rate
+            const comRate = await GlobalSetting.query().findOne({
+              settingKey: "toktokCommissionRate",
+            });
+
             // Create delivery record
             const insertedDelivery = await Delivery.query().insertGraph({
               ...input,
@@ -258,6 +264,7 @@ export const resolvers = {
               notes, // insert the notes back
               cargo,
               cashOnDelivery,
+              comRate: comRate.keyValue,
               status: 1, // Order Placed
             });
 
@@ -280,12 +287,33 @@ export const resolvers = {
     // Driver accepts a delivery order
     patchDeliveryAccepted: async (_, { input }, { Models }) => {
       try {
+        const { deliveryId, driverId, userId } = input;
         // Find the delivery record using input.deliveryId
         const delivery = await Delivery.query().findById(input.deliveryId);
 
         // Throw error if delivery record does not exist
         if (!delivery) {
           throw new UserInputError("Delivery record does not exist.");
+        }
+
+        // Check for maximum ongoing orders count
+        const [{ ongoingCount }] = await Delivery.query()
+          .where({
+            tokDriverId: driverId,
+          })
+          .whereIn("status", [2, 3, 4, 5])
+          .count("* as ongoingCount");
+
+        const globalSetting = await GlobalSetting.query().findOne({
+          settingKey: "riderMaxOngoingOrders",
+        });
+
+        const maxOngoingCount = globalSetting.keyValue;
+
+        if (ongoingCount >= maxOngoingCount) {
+          throw new UserInputError(
+            "You have reached the maximum number of ongoing orders. Please complete your ongoing orders first."
+          );
         }
 
         //Summarize price from all accepted orders
