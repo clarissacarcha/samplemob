@@ -95,7 +95,8 @@ const typeDefs = gql`
 const SendSmsVerification = async (mobile, type) => {
   // Create a random 6 digit verification code
   let verificationCode;
-  if (process.env.NODE_ENV == "development") {
+  // if (process.env.NODE_ENV == "development") {
+  if (false) {
     verificationCode = "123456";
   } else {
     verificationCode = Math.floor(100000 + Math.random() * 900000);
