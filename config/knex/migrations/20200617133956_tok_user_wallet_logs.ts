@@ -7,7 +7,7 @@ export async function up(knex: Knex): Promise<any> {
       .integer("tok_wallet_id")
       .unsigned()
       .references("id")
-      .inTable("tok_user_wallet");
+      .inTable("tok_user_wallets");
     table.string("type", 45).notNullable();
     table.specificType("balance", "double");
     table.timestamp("transaction_date").defaultTo(knex.fn.now());
