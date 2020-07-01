@@ -6,7 +6,6 @@ import OrderPrice from "./OrderPrice";
 import ScalarModule from "./Scalar";
 
 export default {
-  AdminAPIModule,
   AuthModule,
   CommonModule,
   DeliveryDispatchModule,

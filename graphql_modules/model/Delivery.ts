@@ -67,7 +67,7 @@ const typeDefs = gql`
     tokConsumerId: String
     tokDriverId: String
     distance: Float
-    duration: Float
+    duration: Int
     price: String
     senderStop: SenderStopInput
     recipientStop: [RecipientStopInput]

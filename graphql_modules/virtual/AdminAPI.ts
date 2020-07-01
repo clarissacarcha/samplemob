@@ -2,17 +2,35 @@
 import { gql, UserInputError } from "apollo-server-express";
 import { GraphQLModule } from "@graphql-modules/core";
 import NotificationUtility from "../../util/NotificationUtility";
-
+import AnnouncementUtilty from "../../util/AnnouncementUtility";
 import { calculateOrderPrice } from "../../util/PricingCalculator";
 
 import StopModule from "../model/Stop";
 
 import Models from "../../models";
 
-const { Delivery, DeliveryLog, Consumer, Driver, GlobalSetting } = Models;
+const {
+  Delivery,
+  DeliveryLog,
+  Consumer,
+  Driver,
+  GlobalSetting,
+  Announcement,
+} = Models;
 
 const typeDefs = gql`
-  input AdminPostDeliveryInput {
+  enum AppFlavor {
+    C
+    D
+  }
+
+  input GetOrderPriceInput {
+    distance: Float!
+    senderAddress: AddressInput
+    recipientAddress: AddressInput
+  }
+
+  input PostDeliveryInput {
     tokDriverId: String
     tokConsumerId: String
     distance: Float
@@ -23,29 +41,32 @@ const typeDefs = gql`
     recipientStop: [RecipientStopInput]
   }
 
-  input AdminPatchDeliveryCancelInput {
+  input PatchDeliveryCancelInput {
     deliveryId: String!
   }
 
-  input GetAdminOrderPriceInput {
-    distance: Float!
-    senderAddress: AddressInput
-    recipientAddress: AddressInput
+  input PostAnnouncementInput {
+    appFlavor: AppFlavor!
+    title: String!
+    body: String!
+    image: String!
+    thumbnail: String!
   }
 
   type Query {
-    getAdminOrderPrice(input: GetAdminOrderPriceInput!): Float
+    getOrderPrice(input: GetOrderPriceInput!): Float
   }
 
   type Mutation {
-    adminPostDelivery(input: AdminPostDeliveryInput): String
-    adminPatchDeliveryCancel(input: AdminPatchDeliveryCancelInput!): String
+    postDelivery(input: PostDeliveryInput): String
+    postAnnouncement(input: PostAnnouncementInput): String
+    patchDeliveryCancel(input: PatchDeliveryCancelInput!): String
   }
 `;
 
 const resolvers = {
   Query: {
-    getAdminOrderPrice: async (_, { input }) => {
+    getOrderPrice: async (_, { input }) => {
       const { senderAddress, recipientAddress, distance } = input;
       const price = await calculateOrderPrice({ distance });
 
@@ -53,7 +74,7 @@ const resolvers = {
     },
   },
   Mutation: {
-    adminPostDelivery: async (_, { input }) => {
+    postDelivery: async (_, { input }) => {
       try {
         // Insert a delivery record for each recipient.
         await Promise.all(
@@ -151,7 +172,7 @@ const resolvers = {
     },
 
     // Customer cancels a delivery order
-    adminPatchDeliveryCancel: async (_, { input }) => {
+    patchDeliveryCancel: async (_, { input }) => {
       try {
         // Find the delivery record using input.deliveryId
         const delivery = await Delivery.query().findById(input.deliveryId);
@@ -190,6 +211,24 @@ const resolvers = {
         console.log(error);
         throw error;
       }
+    },
+
+    postAnnouncement: async (_, { input }) => {
+      const { title, body, appFlavor } = input;
+      await Announcement.query().insert({
+        ...input,
+        status: 1,
+      });
+
+      if (appFlavor == "C") {
+        AnnouncementUtilty.notifyConsumers({ title, body });
+      }
+
+      if (appFlavor == "D") {
+        AnnouncementUtilty.notifyDrivers({ title, body });
+      }
+
+      return "Announcement successfully created.";
     },
   },
 };
