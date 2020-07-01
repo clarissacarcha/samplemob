@@ -89,7 +89,7 @@ const resolvers = {
       if (file) {
         uploadedFile = await fileUploadS3({
           file: file,
-          folder: "toktok/",
+          folder: "",
           // thumbnailFolder: 'user_verification_documents/thumbnail/'
         });
       }

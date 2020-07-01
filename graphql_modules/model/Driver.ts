@@ -3,6 +3,7 @@ import { gql } from "apollo-server-express";
 import Models from "../../models";
 
 import PersonModule from "./Person";
+import ScalarModule from "../virtual/Scalar";
 
 const { Driver, User, Person } = Models;
 
@@ -14,6 +15,10 @@ const typeDefs = gql`
     user: User
   }
 
+  input GetDriverLocationFilter {
+    driverId: String
+  }
+
   type User {
     id: String
     username: String
@@ -23,6 +28,16 @@ const typeDefs = gql`
 
   input PatchDriverGoOnlineOfflineInput {
     driverId: String!
+  }
+
+  type DriverLocation {
+    latitude: Float
+    longitude: Float
+    lastUpdate: FormattedDateTime
+  }
+
+  type Query {
+    getDriverLocation(filter: GetDriverLocationFilter): DriverLocation
   }
 
   type Mutation {
@@ -46,6 +61,21 @@ const resolvers = {
       });
     },
   },
+  Query: {
+    getDriverLocation: async (_, { filter }) => {
+      const { driverId } = filter;
+
+      const driverRecord = await Driver.query().findOne({
+        id: driverId,
+      });
+
+      return {
+        latitude: driverRecord.lastLatitude,
+        longitude: driverRecord.lastLongitude,
+        lastUpdate: driverRecord.lastLocationUpdate,
+      };
+    },
+  },
   Mutation: {
     patchDriverGoOnline: async (_: any, { input }: any) => {
       await Driver.query().where({ id: input.driverId }).update({
@@ -66,7 +96,7 @@ const resolvers = {
 
 import { GraphQLModule } from "@graphql-modules/core";
 export default new GraphQLModule({
-  imports: [PersonModule],
+  imports: [PersonModule, ScalarModule],
   typeDefs,
   resolvers,
 });

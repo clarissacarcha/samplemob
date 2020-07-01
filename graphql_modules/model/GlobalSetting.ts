@@ -3,7 +3,7 @@ import { gql } from "apollo-server-express";
 
 import Models from "../../models";
 
-const { GlobalSetting } = Models;
+const { GlobalSetting, CargoType } = Models;
 
 const typeDefs = gql`
   type GlobalSetting {

@@ -1,6 +1,7 @@
 //@ts-nocheck
 import AddressModule from "./Address";
 import AnnouncementModule from "./Announcement";
+import CargoTypeModule from "./CargoType";
 import ConsumerModule from "./Consumer";
 import DeliveryModule from "./Delivery";
 import DeliveryLogModule from "./DeliveryLog";
@@ -17,6 +18,7 @@ import WalletLogModule from "./WalletLog";
 export default {
   AddressModule,
   AnnouncementModule,
+  CargoTypeModule,
   ConsumerModule,
   DeliveryModule,
   DeliveryLogModule,
