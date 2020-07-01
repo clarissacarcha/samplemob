@@ -14,7 +14,7 @@ export default async () => {
   // console.log(
   //   parseInt(moment().valueOf().toString(), 10).toString(32).toUpperCase()
   // );
-  DU.processCompletion({
-    deliveryId: "1",
-  });
+  // DU.processCompletion({
+  //   deliveryId: "1",
+  // });
 };
