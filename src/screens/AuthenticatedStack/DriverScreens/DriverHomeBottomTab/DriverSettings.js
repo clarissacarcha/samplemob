@@ -5,33 +5,8 @@ import {COLOR, DARK, MAP_DELTA_LOW, ORANGE, MEDIUM, LIGHT} from '../../../../res
 import {AlertOverlay, BottomTabHeader} from '../../../../components';
 
 const DriverSettings = ({navigation, route, session, createSession}) => {
-  return (
-    <View style={styles.container}>
-      <BottomTabHeader label={['', 'Settings']} />
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {/*-------------------- BUTTON --------------------*/}
-        <TouchableHighlight onPress={() => {}} underlayColor={COLOR} style={styles.submitBox}>
-          <View style={styles.submit}>
-            <Text style={{color: COLOR, fontSize: 20}}>Announcements</Text>
-          </View>
-        </TouchableHighlight>
-
-        {/*-------------------- BUTTON --------------------*/}
-        <TouchableHighlight onPress={() => {}} underlayColor={COLOR} style={styles.submitBox}>
-          <View style={styles.submit}>
-            <Text style={{color: COLOR, fontSize: 20}}>Talk to Us</Text>
-          </View>
-        </TouchableHighlight>
-
-        {/*-------------------- BUTTON --------------------*/}
-        <TouchableHighlight onPress={() => {}} underlayColor={COLOR} style={styles.submitBox}>
-          <View style={styles.submit}>
-            <Text style={{color: COLOR, fontSize: 20}}>Sign Out</Text>
-          </View>
-        </TouchableHighlight>
-      </ScrollView>
-    </View>
-  );
+  alert('OLA');
+  return <View style={styles.container} />;
 };
 
 const mapStateToProps = state => ({

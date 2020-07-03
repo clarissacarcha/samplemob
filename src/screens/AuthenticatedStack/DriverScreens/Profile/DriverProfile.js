@@ -1,13 +1,15 @@
 import React, {useState} from 'react';
 import {View, Text, ScrollView, StyleSheet, TouchableHighlight, TextInput, Alert, Image} from 'react-native';
 import {connect} from 'react-redux';
-import {COLOR, DARK, MAP_DELTA_LOW, ORANGE, MEDIUM, LIGHT} from '../../../../res/constants';
-import {AlertOverlay, BottomTabHeader, HeaderTitle, HeaderBack} from '../../../../components';
 import {useMutation} from '@apollo/react-hooks';
 import Toast from 'react-native-simple-toast';
-import FAIcon from 'react-native-vector-icons/FontAwesome';
-
+import moment from 'moment';
+import {COLOR, DARK, MAP_DELTA_LOW, ORANGE, MEDIUM, LIGHT} from '../../../../res/constants';
+import {AlertOverlay, BottomTabHeader, HeaderTitle, HeaderBack} from '../../../../components';
+import {onError} from '../../../../util/ErrorUtility';
 import {PATCH_PERSON_POST_REGISTRATION} from '../../../../graphql';
+
+import FAIcon from 'react-native-vector-icons/FontAwesome';
 
 const DriverProfile = ({navigation, route, session, createSession}) => {
   navigation.setOptions({
@@ -28,6 +30,7 @@ const DriverProfile = ({navigation, route, session, createSession}) => {
         emailAddress,
       },
     },
+    onError: onError,
     onCompleted: ({patchPersonPostRegistration}) => {
       const newSession = {...session};
       newSession.user.person.firstName = firstName;
@@ -36,14 +39,6 @@ const DriverProfile = ({navigation, route, session, createSession}) => {
       createSession(newSession);
 
       Toast.show('Profile successfully updated.');
-    },
-    onError: ({graphQLErrors, networkError}) => {
-      if (networkError) {
-        Alert.alert('', 'Network error occurred. Please check your internet connection.');
-      }
-      if (graphQLErrors) {
-        Alert.alert('', graphQLErrors[0].message);
-      }
     },
   });
 
@@ -92,8 +87,8 @@ const DriverProfile = ({navigation, route, session, createSession}) => {
                   position: 'relative',
                 }}>
                 <Image
-                  source={{uri: session.user.person.avatar}}
-                  resizeMode={'contain'}
+                  source={{uri: session.user.person.avatarThumbnail}}
+                  resizeMode={'cover'}
                   style={{width: 120, height: 120, borderRadius: 10}}
                 />
                 <FAIcon name="edit" size={20} color={LIGHT} style={{position: 'absolute', bottom: 5, right: 5}} />
@@ -117,6 +112,16 @@ const DriverProfile = ({navigation, route, session, createSession}) => {
             </TouchableHighlight>
           )}
         </View>
+        {/*---------------------------------------- BUTTON ----------------------------------------*/}
+        <TouchableHighlight
+          onPress={() => navigation.navigate('ConsumerChangePassword')}
+          underlayColor={COLOR}
+          style={styles.submitBox}>
+          <View style={styles.submit}>
+            <Text style={{color: COLOR, fontSize: 20}}>Change Password</Text>
+          </View>
+        </TouchableHighlight>
+
         <Text style={styles.label}>Mobile Number</Text>
         <Text style={[styles.input, {height: 50, textAlignVertical: 'center', color: MEDIUM}]}>
           {session.user.username}
@@ -125,8 +130,30 @@ const DriverProfile = ({navigation, route, session, createSession}) => {
         <Text style={styles.label}>First Name</Text>
         <Text style={[styles.input, {height: 50, textAlignVertical: 'center', color: MEDIUM}]}>{firstName}</Text>
 
+        <Text style={styles.label}>Middle Name</Text>
+        <Text style={[styles.input, {height: 50, textAlignVertical: 'center', color: MEDIUM}]}>
+          {session.user.person.middleName}
+        </Text>
+
         <Text style={styles.label}>Last Name</Text>
         <Text style={[styles.input, {height: 50, textAlignVertical: 'center', color: MEDIUM}]}>{lastName}</Text>
+
+        <Text style={styles.label}>Email Address</Text>
+        <Text style={[styles.input, {height: 50, textAlignVertical: 'center', color: MEDIUM}]}>
+          {session.user.person.emailAddress}
+        </Text>
+
+        <Text style={styles.label}>Birthdate</Text>
+        <Text style={[styles.input, {height: 50, textAlignVertical: 'center', color: MEDIUM}]}>
+          {moment.unix(session.user.person.birthdate / 1000).format('MMM DD YYYY')}
+        </Text>
+
+        <Text style={styles.label}>Gender</Text>
+        <Text style={[styles.input, {height: 50, textAlignVertical: 'center', color: MEDIUM}]}>
+          {session.user.person.gender == 1 ? 'Male' : 'Female'}
+        </Text>
+
+        <View style={{height: 20}} />
 
         {/* <Text style={styles.label}>Email Address</Text>
         <TextInput
@@ -136,12 +163,6 @@ const DriverProfile = ({navigation, route, session, createSession}) => {
           placeholder="Email Address"
         /> */}
       </ScrollView>
-      {/*---------------------------------------- BUTTON ----------------------------------------*/}
-      {/* <TouchableHighlight onPress={onSubmit} underlayColor={COLOR} style={styles.submitBox}>
-        <View style={styles.submit}>
-          <Text style={{color: COLOR, fontSize: 20}}>Update</Text>
-        </View>
-      </TouchableHighlight> */}
     </View>
   );
 };
@@ -192,6 +213,7 @@ const styles = StyleSheet.create({
   },
   submitBox: {
     margin: 20,
+    marginBottom: 0,
     borderRadius: 10,
   },
   submit: {

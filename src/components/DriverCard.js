@@ -19,6 +19,7 @@ import {
 import {COLOR, DARK, MEDIUM, ORANGE, LIGHT, COLOR_UNDERLAY} from '../res/constants';
 
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
+import FAIcon from 'react-native-vector-icons/FontAwesome';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 
@@ -45,7 +46,7 @@ export const DriverCard = ({driver}) => {
 
   const [showLargeAvatar, setShowLargeAvatar] = useState(false);
   const {firstName, lastName} = driver.user.person;
-  const mobileNumber = `+63${driver.user.username}`;
+  const mobileNumber = driver.user.username;
 
   const icons = [
     <FA5Icon name="map-pin" size={16} color={DARK} style={styles.iconBox} />,
@@ -73,7 +74,7 @@ export const DriverCard = ({driver}) => {
         <View style={{flexDirection: 'row', padding: 20}}>
           {/*------------------- AVATAR -------------------*/}
 
-          {driver.user.person.avatar ? (
+          {driver.user.person.avatarThumbnail ? (
             <>
               <AvatarOverlay
                 avatar={driver.user.person.avatar}
@@ -84,17 +85,31 @@ export const DriverCard = ({driver}) => {
                 onPress={() => setShowLargeAvatar(true)}
                 underlayColor={COLOR}
                 style={{marginRight: 10, borderRadius: 10}}>
-                <Image source={{uri: driver.user.person.avatar}} style={{height: 60, width: 60, borderRadius: 10}} />
+                <Image
+                  source={{uri: driver.user.person.avatarThumbnail}}
+                  style={{height: 60, width: 60, borderRadius: 10}}
+                />
               </TouchableHighlight>
             </>
           ) : (
-            <View style={{height: 60, width: 60, borderRadius: 10}} />
+            <View
+              style={{
+                height: 60,
+                width: 60,
+                borderRadius: 10,
+                backgroundColor: MEDIUM,
+                marginRight: 10,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <FAIcon name="user" size={50} color={LIGHT} />
+            </View>
           )}
 
           {/*------------------- NAME -------------------*/}
           <View style={{flex: 1, marginRight: 10}}>
             <Text style={{fontWeight: 'bold'}}>{`${firstName} ${lastName}`}</Text>
-            <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 10}}>{`+63${driver.user.username}`}</Text>
+            <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 10}}>{driver.user.username}</Text>
           </View>
 
           {/*------------------- DIALER BUTTON -------------------*/}

@@ -11,6 +11,7 @@ import {
   Dimensions,
   Switch,
 } from 'react-native';
+import validator from 'validator';
 import {connect} from 'react-redux';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import {numberFormatInteger, reverseGeocode} from '../../../../helper';
@@ -81,12 +82,12 @@ const RecipientDetails = ({navigation, route, constants}) => {
       return;
     }
 
-    if (localData.name == '') {
+    if (validator.isEmpty(localData.name, {ignore_whitespace: true})) {
       Alert.alert('', `Please enter recipient's name.`);
       return;
     }
 
-    if (localData.mobile == '') {
+    if (validator.isEmpty(localData.mobile, {ignore_whitespace: true})) {
       Alert.alert('', `Please enter recipient's mobile number.`);
       return;
     }
@@ -111,8 +112,8 @@ const RecipientDetails = ({navigation, route, constants}) => {
       return;
     }
 
-    if (localData.cargo == '') {
-      Alert.alert('', `Please select cargo type`);
+    if (validator.isEmpty(localData.cargo, {ignore_whitespace: true})) {
+      Alert.alert('', `Please select item description type.`);
       return;
     }
 
@@ -199,7 +200,6 @@ const RecipientDetails = ({navigation, route, constants}) => {
           onChangeText={onLandmarkChange}
           style={styles.input}
           placeholder="Location details (landmark, number etc)"
-          multiline
         />
 
         {/*-------------------- NAME --------------------*/}

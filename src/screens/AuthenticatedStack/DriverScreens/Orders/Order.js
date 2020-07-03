@@ -10,26 +10,24 @@ import {
   Dimensions,
   TouchableHighlight,
   Alert,
+  BackHandler,
 } from 'react-native';
 import {useQuery} from '@apollo/react-hooks';
 import {connect} from 'react-redux';
+import {useFocusEffect} from '@react-navigation/native';
 import {COLOR, MEDIUM, FONT_FAMILY, DARK, ORANGE} from '../../../../res/constants';
-import {DeliveryCard} from '../../../../components';
+import {DeliveryCard, DriverGoOnlineButton, SomethingWentWrong} from '../../../../components';
 import {GET_ORDERS} from '../../../../graphql';
-import NoData from '../../../../assets/images/NoData.png';
 import {currentLocation} from '../../../../helper';
 
-import FAIcon from 'react-native-vector-icons/FontAwesome';
-
-import BackgroundTimer from 'react-native-background-timer';
-
-BackgroundTimer.runBackgroundTimer(() => {
-  console.log('BACKGROUND');
-}, 3000);
+import NoData from '../../../../assets/images/NoData.png';
+import GoOnline from '../../../../assets/images/GoOnline.png';
 
 const imageWidth = Dimensions.get('window').width - 200;
+const largeImageWidth = Dimensions.get('window').width - 40;
+const INITIAL_LOCATION = {latitude: null, longitude: null};
 
-const OrderTabHeader = ({label, onGoOnlineOffline}) => {
+const OrderTabHeader = ({label}) => {
   return (
     <View style={styles.header}>
       <Text style={styles.outer}>
@@ -37,50 +35,53 @@ const OrderTabHeader = ({label, onGoOnlineOffline}) => {
         <Text style={styles.inner}> {label[1]}</Text>
       </Text>
 
-      <TouchableHighlight onPress={onGoOnlineOffline} underlayColor={COLOR} style={styles.submitBox}>
-        <View style={styles.submit}>
-          <Text style={{color: COLOR, fontSize: 16, fontWeight: 'bold'}}>Go Online</Text>
-        </View>
-      </TouchableHighlight>
-
-      {/* <View style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', paddingRight: 20}}>
-        <Text style={{fontSize: 18, color: DARK, marginRight: 10, fontWeight: 'bold'}}>(0/2)</Text>
-        <FAIcon
-          name="question-circle"
-          size={20}
-          color={MEDIUM}
-          onPress={() =>
-            Alert.alert(
-              'Maximum Ongoing Deliveries',
-              'The maximum order of ongoing deliveries you can have at any point in time.',
-            )
-          }
-        />
-      </View> */}
+      <DriverGoOnlineButton />
     </View>
   );
 };
 
-const Order = ({navigation, session}) => {
-  const INITIAL_LOCATION = {latitude: null, longitude: null};
+const Order = ({navigation, session, constants}) => {
+  // const onNotificationOpened = ({notification}) => {
+  //   type = notification.payload.additionalData.type;
+
+  //   const legend = {
+  //     ANNOUNCEMENT: 'Announcements',
+  //   };
+
+  //   setTimeout(() => {
+  //     navigation.push(legend[type]);
+  //   }, 10);
+  // };
+
+  // useEffect(() => {
+  //   OneSignal.addEventListener('opened', onNotificationOpened);
+  // }, []);
+
+  if (!session.user.driver.isOnline) {
+    return (
+      <>
+        <OrderTabHeader label={['Available', 'Orders']} />
+        <View style={styles.center}>
+          <Image source={GoOnline} style={styles.imageLarge} resizeMode={'contain'} />
+
+          <Text style={{fontWeight: 'bold', color: MEDIUM, marginTop: 20}}>To view and accept orders, Go Online.</Text>
+        </View>
+      </>
+    );
+  }
 
   const [location, setLocation] = useState(INITIAL_LOCATION);
 
   const getLocation = async () => {
     try {
-      setLocation(await currentLocation(false));
+      const detectedLocation = await currentLocation({
+        showsReverseGeocode: false,
+      });
+
+      setLocation(detectedLocation);
     } catch (e) {
-      console.warn(e);
       setLocation(INITIAL_LOCATION);
     }
-  };
-
-  useEffect(() => {
-    getLocation();
-  }, []);
-
-  const onGoOnlineOffline = () => {
-    //
   };
 
   const {data, loading, error, refetch} = useQuery(GET_ORDERS, {
@@ -91,15 +92,27 @@ const Order = ({navigation, session}) => {
         longitude: location.longitude,
       },
     },
-    onError: e => {
-      console.log(e);
-    },
   });
+
+  useEffect(() => {
+    getLocation();
+
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', function() {
+      return true;
+    });
+    return () => {
+      backHandler.remove();
+    };
+  }, []);
+
+  useFocusEffect(() => {
+    refetch();
+  }, []);
 
   if (loading) {
     return (
       <>
-        <OrderTabHeader label={['', 'Orders']} onGoOnlineOffline={onGoOnlineOffline} />
+        <OrderTabHeader label={['Available', 'Orders']} />
         <View style={styles.center}>
           <ActivityIndicator size={24} color={COLOR} />
         </View>
@@ -110,10 +123,8 @@ const Order = ({navigation, session}) => {
   if (error) {
     return (
       <>
-        <OrderTabHeader label={['', 'Orders']} onGoOnlineOffline={onGoOnlineOffline} />
-        <View style={styles.center}>
-          <Text>Something went wrong...</Text>
-        </View>
+        <OrderTabHeader label={['Available', 'Orders']} />
+        <SomethingWentWrong />
       </>
     );
   }
@@ -121,7 +132,7 @@ const Order = ({navigation, session}) => {
   if (data.getNearestOrderAvailable.length === 0) {
     return (
       <>
-        <OrderTabHeader label={['', 'Orders']} onGoOnlineOffline={onGoOnlineOffline} />
+        <OrderTabHeader label={['Available', 'Orders']} />
         <View style={styles.center}>
           <Image source={NoData} style={styles.image} resizeMode={'contain'} />
         </View>
@@ -131,7 +142,7 @@ const Order = ({navigation, session}) => {
 
   return (
     <View style={styles.container}>
-      <OrderTabHeader label={['', 'Orders']} onGoOnlineOffline={onGoOnlineOffline} />
+      <OrderTabHeader label={['Available', 'Orders']} />
       <FlatList
         data={data.getNearestOrderAvailable}
         keyExtractor={item => item.id}
@@ -150,6 +161,7 @@ const Order = ({navigation, session}) => {
 
 const mapStateToProps = state => ({
   session: state.session,
+  constants: state.constants,
 });
 
 export default connect(
@@ -169,6 +181,10 @@ const styles = StyleSheet.create({
   image: {
     height: imageWidth,
     width: imageWidth,
+  },
+  imageLarge: {
+    height: largeImageWidth,
+    width: largeImageWidth,
   },
   text: {
     color: MEDIUM,

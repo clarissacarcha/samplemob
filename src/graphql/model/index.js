@@ -1,4 +1,6 @@
 export * from './Announcement';
+export * from './AppVersion';
+export * from './CargoType';
 export * from './Delivery';
 export * from './Driver';
 export * from './DriverLocationLog';

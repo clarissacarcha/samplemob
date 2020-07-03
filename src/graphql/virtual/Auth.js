@@ -3,6 +3,7 @@ import gql from 'graphql-tag';
 const Session = `
 user {
   id
+  userId
   username
   status
   person {
@@ -14,6 +15,7 @@ user {
     birthdate
     gender
     avatar
+    avatarThumbnail
     status
     address {
       line1
@@ -31,6 +33,7 @@ user {
   }
   driver {
     id
+    isOnline
   }
   wallet {
     id

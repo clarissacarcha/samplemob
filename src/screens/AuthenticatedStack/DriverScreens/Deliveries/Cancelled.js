@@ -2,8 +2,9 @@ import React, {useState, useEffect} from 'react';
 import {View, Text, ActivityIndicator, FlatList, RefreshControl, Image, StyleSheet, Dimensions} from 'react-native';
 import {useQuery} from '@apollo/react-hooks';
 import {connect} from 'react-redux';
+import {useFocusEffect} from '@react-navigation/native';
 import {COLOR, MEDIUM, FONT_FAMILY} from '../../../../res/constants';
-import {BookingInfoCard} from '../../../../components';
+import {DeliveryCard, SomethingWentWrong} from '../../../../components';
 import {GET_DELIVERIES} from '../../../../graphql';
 import NoData from '../../../../assets/images/NoData.png';
 
@@ -15,13 +16,17 @@ const CancelledDeliveries = ({navigation, session}) => {
     variables: {
       filter: {
         tokDriverId: session.user.driver.id,
-        statusIn: [0],
+        statusIn: [7],
       },
     },
     onError: e => {
       console.log(e);
     },
   });
+
+  useFocusEffect(() => {
+    refetch();
+  }, []);
 
   if (loading) {
     return (
@@ -32,11 +37,7 @@ const CancelledDeliveries = ({navigation, session}) => {
   }
 
   if (error) {
-    return (
-      <View style={styles.center}>
-        <Text>Something went wrong...</Text>
-      </View>
-    );
+    return <SomethingWentWrong />;
   }
 
   if (data.getDeliveries.length === 0) {
@@ -53,12 +54,11 @@ const CancelledDeliveries = ({navigation, session}) => {
         data={data.getDeliveries}
         keyExtractor={item => item.id}
         refreshControl={<RefreshControl refreshing={loading} onRefresh={refetch} colors={[COLOR]} tintColor={COLOR} />}
-        renderItem={({item}) => (
-          <BookingInfoCard
-            onPress={() =>
-              navigation.push('SelectedDriverDelivery', {delivery: item, label: ['Cancelled', 'Delivery']})
-            }
+        renderItem={({item, index}) => (
+          <DeliveryCard
             delivery={item}
+            onPress={() => navigation.push('SelectedDriverDelivery', {delivery: item, label: ['Ongoing', 'Delivery']})}
+            lastItem={data.getDeliveries.length == index + 1 ? true : false}
           />
         )}
       />

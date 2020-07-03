@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, Text, Image, FlatList, ActivityIndicator} from 'react-native';
+import {View, StyleSheet, Text, Image, FlatList, ActivityIndicator, Dimensions} from 'react-native';
 import {HeaderBack, HeaderTitle} from '../../../../components';
 import {connect} from 'react-redux';
 import {COLOR, DARK, ORANGE, MEDIUM, LIGHT} from '../../../../res/constants';
@@ -7,6 +7,8 @@ import NoData from '../../../../assets/images/NoData.png';
 import {useQuery} from '@apollo/react-hooks';
 import {GET_WALLET_LOGS} from '../../../../graphql';
 import {numberFormat} from '../../../../helper';
+
+const imageWidth = Dimensions.get('window').width - 200;
 
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
@@ -46,10 +48,17 @@ const WalletLog = ({item, lastItem}) => (
           {item.transactionDate}
         </Text>
       </View>
-      <EIcon name={item.incoming != 0 ? 'plus' : 'minus'} size={14} color={item.incoming != 0 ? 'green' : 'red'} />
-      <Text style={{color: item.incoming != 0 ? 'green' : 'red', fontSize: 14, fontWeight: 'bold'}}>
-        {item.incoming != 0 ? numberFormat(item.incoming) : numberFormat(item.outgoing)}
-      </Text>
+      {!(item.incoming == 0 && item.outgoing == 0) && (
+        <EIcon name={item.incoming != 0 ? 'plus' : 'minus'} size={14} color={item.incoming != 0 ? 'green' : 'red'} />
+      )}
+
+      {!(item.incoming == 0 && item.outgoing == 0) ? (
+        <Text style={{color: item.incoming != 0 ? 'green' : 'red', fontSize: 14, fontWeight: 'bold'}}>
+          {item.incoming != 0 ? numberFormat(item.incoming) : numberFormat(item.outgoing)}
+        </Text>
+      ) : (
+        <Text style={{color: MEDIUM, fontSize: 14, fontWeight: 'bold'}}>0.00</Text>
+      )}
     </View>
   </View>
 );
@@ -126,6 +135,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   center: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -137,7 +147,8 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
   },
   image: {
-    height: 100,
+    height: imageWidth,
+    width: imageWidth,
   },
   iconBox: {
     backgroundColor: COLOR,

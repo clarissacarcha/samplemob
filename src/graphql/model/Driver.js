@@ -11,3 +11,13 @@ export const PATCH_DRIVER_GO_OFFLINE = gql`
     patchDriverGoOffline(input: $input)
   }
 `;
+
+export const GET_DRIVER_LOCATION = gql`
+  query getDriverLocation($filter: GetDriverLocationFilter) {
+    getDriverLocation(filter: $filter) {
+      latitude
+      longitude
+      lastUpdate
+    }
+  }
+`;

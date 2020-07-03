@@ -32,7 +32,11 @@ import ForgotPasswordReset from '../screens/UnauthenticatedStack/ForgotPasswordR
 import Landing from '../screens/Landing';
 
 // Authenticated Stack
+/*---------- COMMON SCREENS ----------*/
 import TalkToUs from '../screens/AuthenticatedStack/CommonScreens/TalkToUs';
+import Announcements from '../screens/AuthenticatedStack/CommonScreens/Announcement/Announcements';
+import SelectedAnnouncement from '../screens/AuthenticatedStack/CommonScreens/Announcement/SelectedAnnouncement';
+import Notifications from '../screens/AuthenticatedStack/CommonScreens/Notifications';
 
 /*---------- CONSUMER SCREENS ----------*/
 import PostRegistration from '../screens/AuthenticatedStack/ConsumerScreens/PostRegistration';
@@ -43,16 +47,13 @@ import SearchMap from '../screens/AuthenticatedStack/ConsumerScreens/Booking/Sea
 import SenderDetails from '../screens/AuthenticatedStack/ConsumerScreens/Booking/SenderDetails';
 import RecipientDetails from '../screens/AuthenticatedStack/ConsumerScreens/Booking/RecipientDetails';
 
-import Announcements from '../screens/AuthenticatedStack/ConsumerScreens/Announcement/Announcements';
-import SelectedAnnouncement from '../screens/AuthenticatedStack/ConsumerScreens/Announcement/SelectedAnnouncement';
-
 import ConsumerProfile from '../screens/AuthenticatedStack/ConsumerScreens/Profile/ConsumerProfile';
 import ConsumerChangePassword from '../screens/AuthenticatedStack/ConsumerScreens/Profile/ConsumerChangePassword';
-import Notifications from '../screens/AuthenticatedStack/ConsumerScreens/Notifications';
 
 import CustomerDeliveries from '../screens/AuthenticatedStack/ConsumerScreens/Deliveries/MyDeliveries';
 import SelectedDeliveries from '../screens/AuthenticatedStack/ConsumerScreens/Deliveries/SelectedDeliveries';
 import SelectedDelivery from '../screens/AuthenticatedStack/ConsumerScreens/Deliveries/SelectedDelivery';
+import DeliveryTracking from '../screens/AuthenticatedStack/ConsumerScreens/Deliveries/DeliveryTracking';
 
 /*---------- DRIVER SCREENS ----------*/
 import DriverMap from '../screens/AuthenticatedStack/DriverScreens/DriverMap';
@@ -83,15 +84,20 @@ const DriverDeliveries = createMaterialTopTabNavigator();
 
 const DriverDeliveriesTab = () => (
   <>
-    <BottomTabHeader label={['', 'Deliveries']} />
+    <BottomTabHeader label={['My', 'Deliveries']} />
     <DriverDeliveries.Navigator
+      swipeEnabled={false}
+      upperCaseLabel={false}
       tabBarOptions={{
         activeTintColor: COLOR,
         inactiveTintColor: MEDIUM,
         allowFontScaling: false,
         indicatorStyle: {backgroundColor: COLOR},
+
         labelStyle: {
           fontWeight: 'bold',
+          textTransform: 'none',
+          fontSize: 16,
         },
       }}>
       <DriverDeliveries.Screen name="Ongoing" component={Ongoing} />
@@ -193,6 +199,7 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="CustomerDeliveries" component={CustomerDeliveries} />
     <Authenticated.Screen name="SelectedDeliveries" component={SelectedDeliveries} />
     <Authenticated.Screen name="SelectedDelivery" component={SelectedDelivery} />
+    <Authenticated.Screen name="DeliveryTracking" component={DeliveryTracking} />
 
     {/*---------- DRIVER SCREENS ----------*/}
     <Authenticated.Screen

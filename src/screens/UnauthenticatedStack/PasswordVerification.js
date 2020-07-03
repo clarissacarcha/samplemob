@@ -7,7 +7,7 @@ import {useMutation} from '@apollo/react-hooks';
 import OneSignal from 'react-native-onesignal';
 import {getUniqueId} from 'react-native-device-info';
 import {COLOR, DARK, APP_FLAVOR, MEDIUM, LIGHT} from '../../res/constants';
-import {VERIFY_LOGIN} from '../../graphql';
+import {AUTH_CLIENT, VERIFY_LOGIN} from '../../graphql';
 import {AlertOverlay} from '../../components';
 import {onError} from '../../util/ErrorUtility';
 
@@ -22,6 +22,7 @@ const PasswordVerification = ({navigation, route, createSession}) => {
   const [password, setPassword] = useState('');
 
   const [verifyLogin, {loading}] = useMutation(VERIFY_LOGIN, {
+    client: AUTH_CLIENT,
     variables: {
       input: {
         mobile: `+63${mobile}`,
@@ -41,9 +42,10 @@ const PasswordVerification = ({navigation, route, createSession}) => {
       }
 
       AsyncStorage.setItem('userId', user.id); // Set userId value in asyncStorage for persistent login
+      AsyncStorage.setItem('accessToken', accessToken);
 
       createSession(verifyLogin); // Create session in redux
-
+      console.log(`SENDING TAG:${user.id}`);
       OneSignal.sendTags({
         userId: user.id,
       }); // Set onesignal userId tag for the phone

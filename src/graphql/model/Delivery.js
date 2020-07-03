@@ -6,7 +6,9 @@ const Delivery = `
   distance
   duration
   price
+  comRate
   cashOnDelivery
+  cargo
   notes
   status
   createdAt
@@ -45,6 +47,7 @@ const Delivery = `
         firstName
         lastName
         avatar
+        avatarThumbnail
       }
     }
   }

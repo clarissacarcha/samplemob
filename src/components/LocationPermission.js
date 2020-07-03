@@ -29,7 +29,6 @@ export const LocationPermission = ({onGrant, onDeny}) => {
     // IF GPS Request Granted
     if (result === RESULTS.GRANTED) {
       onGrant();
-      console.log('GRANTED ON RESULT');
     }
 
     // IF GPS Request Denied

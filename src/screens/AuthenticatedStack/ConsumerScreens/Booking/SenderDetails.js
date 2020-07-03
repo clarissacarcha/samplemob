@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {View, Text, ScrollView, StyleSheet, TouchableHighlight, TextInput, Dimensions, Alert} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
+import validator from 'validator';
 
 import {reverseGeocode} from '../../../../helper';
 import {HeaderBack, HeaderTitle, SchedulePicker, AlertOverlay} from '../../../../components';
@@ -19,8 +20,8 @@ const SenderDetails = ({navigation, route}) => {
   const [loading, setLoading] = useState(false);
   const [localData, setLocalData] = useState(data);
 
-  console.log(JSON.stringify({data}, null, 4));
-  console.log(JSON.stringify({localData}, null, 4));
+  // console.log(JSON.stringify({data}, null, 4));
+  // console.log(JSON.stringify({localData}, null, 4));
 
   const onSearchMap = () => {
     navigation.navigate('SearchMap', {data: {...localData, ...MAP_DELTA_LOW}, setData: setLocalData});
@@ -41,12 +42,12 @@ const SenderDetails = ({navigation, route}) => {
       return;
     }
 
-    if (localData.name == '') {
+    if (validator.isEmpty(localData.name, {ignore_whitespace: true})) {
       Alert.alert('', `Please enter recipient's name.`);
       return;
     }
 
-    if (localData.mobile == '') {
+    if (validator.isEmpty(localData.mobile, {ignore_whitespace: true})) {
       Alert.alert('', `Please enter recipient's mobile number.`);
       return;
     }
@@ -143,7 +144,6 @@ const SenderDetails = ({navigation, route}) => {
           onChangeText={onLandmarkChange}
           style={styles.input}
           placeholder="Location details (landmark, number etc)"
-          multiline
         />
 
         {/*-------------------- NAME --------------------*/}

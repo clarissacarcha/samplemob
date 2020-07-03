@@ -79,8 +79,8 @@ const Drawer = ({navigation, session, destroySession}) => {
                 alignItems: 'center',
               }}>
               <Image
-                source={{uri: session.user.person.avatar}}
-                resizeMode={'contain'}
+                source={{uri: session.user.person.avatarThumbnail}}
+                resizeMode={'cover'}
                 style={{width: 90, height: 90, backgroundColor: 'black', borderRadius: 10}}
               />
             </View>
@@ -116,7 +116,8 @@ const Drawer = ({navigation, session, destroySession}) => {
           label="Profile"
           onPress={() => {
             const route = APP_FLAVOR == 'C' ? 'ConsumerProfile' : 'DriverProfile';
-            navigation.navigate(route);
+            navigation.closeDrawer();
+            navigation.push(route);
           }}
         />
 
@@ -134,19 +135,38 @@ const Drawer = ({navigation, session, destroySession}) => {
         <DrawerButton
           label="My Deliveries"
           onPress={() => {
-            navigation.navigate('CustomerDeliveries');
+            navigation.closeDrawer();
+            navigation.push('CustomerDeliveries');
           }}
           restrict="C"
         />
 
         {/*--------------- Notifications ---------------*/}
-        <DrawerButton label="Notifications" onPress={() => navigation.navigate('Notifications')} restrict="C" />
+        <DrawerButton
+          label="Notifications"
+          onPress={() => {
+            navigation.push('Notifications');
+            navigation.closeDrawer();
+          }}
+        />
 
         {/*--------------- ANNOUNCEMENTS ---------------*/}
-        <DrawerButton label="Announcements" onPress={() => navigation.navigate('Announcements')} restrict="C" />
+        <DrawerButton
+          label="Announcements"
+          onPress={() => {
+            navigation.push('Announcements');
+            navigation.closeDrawer();
+          }}
+        />
 
         {/*--------------- TALK TO US ---------------*/}
-        <DrawerButton label="Talk to Us" onPress={() => navigation.navigate('TalkToUs')} />
+        <DrawerButton
+          label="Talk to Us"
+          onPress={() => {
+            navigation.push('TalkToUs');
+            navigation.closeDrawer();
+          }}
+        />
       </View>
 
       {/*--------------- SIGN OUT ---------------*/}

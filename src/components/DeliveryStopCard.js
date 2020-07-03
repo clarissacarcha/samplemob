@@ -9,6 +9,7 @@ import {COLOR, DARK, MEDIUM, ORANGE, LIGHT} from '../res/constants';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import SLIcon from 'react-native-vector-icons/SimpleLineIcons';
 
 export const DeliveryStopCard = ({stop, index}) => {
   const labels = [['Sender', 'Details'], ['Recipient', 'Details']];
@@ -46,16 +47,14 @@ export const DeliveryStopCard = ({stop, index}) => {
             style={styles.actionIconBox}
             onPress={() => {
               const scheme = Platform.select({ios: 'maps:0,0?q=', android: 'geo:0,0?q='});
-              const latLng = `14.560668065523032,121.055769827216860`;
+              const latLng = `${stop.latitude},${stop.longitude}`;
               const label = stop.name;
               const url = Platform.select({
                 ios: `${scheme}${label}@${latLng}`,
                 android: `${scheme}${latLng}(${label})`,
               });
 
-              Linking.openURL(
-                'https://www.waze.com/ul?ll=14.560668065523032%2C121.055769827216860&navigate=yes&zoom=17',
-              );
+              Linking.openURL(url);
             }}
           />
         </View>
@@ -83,6 +82,19 @@ export const DeliveryStopCard = ({stop, index}) => {
             }}
           />
         </View>
+        {stop.landmark && (
+          <View style={[styles.rowFlexibleHeight, {borderTopWidth: StyleSheet.hairlineWidth, borderColor: LIGHT}]}>
+            <View style={{flex: 1, flexDirection: 'row', marginTop: 8}}>
+              <SLIcon name="note" size={16} color={'white'} style={[styles.iconBox, {marginTop: 4}]} />
+              <View style={{marginLeft: 10}}>
+                <Text style={{fontWeight: 'bold'}}>Landmark</Text>
+                <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
+                  <Text style={{fontWeight: 'bold', marginLeft: 10}}>{stop.landmark}</Text>
+                </Text>
+              </View>
+            </View>
+          </View>
+        )}
       </View>
     </View>
   );
@@ -129,5 +141,13 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     textAlign: 'center',
     textAlignVertical: 'center',
+  },
+  rowFlexibleHeight: {
+    height: 50,
+    marginHorizontal: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingBottom: 10,
   },
 });

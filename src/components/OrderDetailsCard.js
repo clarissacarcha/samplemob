@@ -4,7 +4,8 @@
  */
 import React from 'react';
 import {View, Text, StyleSheet, Platform, Linking} from 'react-native';
-import {COLOR, DARK, MEDIUM, ORANGE, LIGHT} from '../res/constants';
+import {COLOR, DARK, MEDIUM, ORANGE, LIGHT, APP_FLAVOR} from '../res/constants';
+import {numberFormat} from '../helper';
 import moment from 'moment';
 
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
@@ -13,6 +14,7 @@ import EIcon from 'react-native-vector-icons/Entypo';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import Fontisto from 'react-native-vector-icons/Fontisto';
+import SLIcon from 'react-native-vector-icons/SimpleLineIcons';
 
 const SchedulePhrase = ({stop}) => {
   const nowDate = moment().format('MMM DD YYYY');
@@ -87,17 +89,34 @@ export const OrderDetailsCard = ({delivery}) => {
           style={{
             flexDirection: 'row',
             alignItems: 'center',
-            padding: 20,
+            paddingHorizontal: 20,
             borderBottomWidth: StyleSheet.hairlineWidth,
             borderColor: MEDIUM,
           }}>
-          <FA5Icon name="file-alt" size={16} color={DARK} style={styles.iconBox} />
-          <Text style={{marginLeft: 10, color: DARK, fontWeight: 'bold'}}>
-            Order <Text style={{color: ORANGE}}>Details</Text>
-          </Text>
+          <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', paddingVertical: 20}}>
+            <FA5Icon name="file-alt" size={16} color={DARK} style={styles.iconBox} />
+            <Text style={{marginLeft: 10, color: DARK, fontWeight: 'bold'}}>
+              Order <Text style={{color: ORANGE}}>Details</Text>
+            </Text>
+          </View>
+
+          {APP_FLAVOR == 'D' && (
+            <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+              <MCIcon name="credit-card" size={16} color={'white'} style={styles.iconBox} />
+
+              <View style={{marginLeft: 10}}>
+                <Text style={{fontWeight: 'bold'}}>Credit Cost</Text>
+                <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
+                  <Text style={{fontWeight: 'bold', marginLeft: 10}}>
+                    {numberFormat(delivery.price * delivery.comRate)}
+                  </Text>
+                </Text>
+              </View>
+            </View>
+          )}
         </View>
 
-        {/*-------------------- ORDER AMOUNT --------------------*/}
+        {/*-------------------- ORDER PRICE AND COD ROW --------------------*/}
         <View style={[styles.directionsBox, {borderBottomWidth: StyleSheet.hairlineWidth, borderColor: LIGHT}]}>
           <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
             <Ionicon name="md-pricetag" size={16} color={'white'} style={styles.iconBox} />
@@ -111,7 +130,7 @@ export const OrderDetailsCard = ({delivery}) => {
           </View>
           {delivery.cashOnDelivery && (
             <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-              <Ionicon name="md-pricetags" size={16} color={'white'} style={styles.iconBox} />
+              <MCIcon name="cash" size={22} color={'white'} style={styles.iconBox} />
 
               <View style={{marginLeft: 10}}>
                 <Text style={{fontWeight: 'bold'}}>Cash On Delivery</Text>
@@ -200,6 +219,33 @@ export const OrderDetailsCard = ({delivery}) => {
             </View>
           </View>
         </View>
+
+        {/*-------------------- ITEM DESCRIPTION --------------------*/}
+        <View style={[styles.rowFlexibleHeight]}>
+          <View style={{flex: 1, flexDirection: 'row', marginTop: 8}}>
+            <EIcon name="box" size={16} color={'white'} style={[styles.iconBox, {marginTop: 4}]} />
+            <View style={{marginLeft: 10}}>
+              <Text style={{fontWeight: 'bold'}}>Item Description</Text>
+              <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
+                <Text style={{fontWeight: 'bold', marginLeft: 10}}>{delivery.cargo}</Text>
+              </Text>
+            </View>
+          </View>
+        </View>
+        {/*-------------------- DELIVERY NOTES --------------------*/}
+        {delivery.notes && (
+          <View style={[styles.rowFlexibleHeight, {borderTopWidth: StyleSheet.hairlineWidth, borderColor: LIGHT}]}>
+            <View style={{flex: 1, flexDirection: 'row', marginTop: 8}}>
+              <SLIcon name="note" size={16} color={'white'} style={[styles.iconBox, {marginTop: 4}]} />
+              <View style={{marginLeft: 10}}>
+                <Text style={{fontWeight: 'bold'}}>Notes</Text>
+                <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
+                  <Text style={{fontWeight: 'bold', marginLeft: 10}}>{delivery.notes}</Text>
+                </Text>
+              </View>
+            </View>
+          </View>
+        )}
       </View>
     </View>
   );
@@ -259,5 +305,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     // backgroundColor: 'red',
+  },
+  rowFlexibleHeight: {
+    marginHorizontal: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingBottom: 10,
   },
 });

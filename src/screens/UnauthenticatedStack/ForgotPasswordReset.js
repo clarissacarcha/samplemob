@@ -7,7 +7,7 @@ import {HeaderBack, HeaderTitle, AlertOverlay} from '../../components';
 import {useMutation} from '@apollo/react-hooks';
 import {onError} from '../../util/ErrorUtility';
 
-import {FORGOT_PASSWORD_RESET} from '../../graphql';
+import {AUTH_CLIENT, FORGOT_PASSWORD_RESET} from '../../graphql';
 
 const PostRegistration = ({navigation, route}) => {
   const goToLogin = () => {
@@ -26,6 +26,7 @@ const PostRegistration = ({navigation, route}) => {
   const [repeatPassword, setRepeatPassword] = useState('');
 
   const [forgotPasswordReset, {loading}] = useMutation(FORGOT_PASSWORD_RESET, {
+    client: AUTH_CLIENT,
     variables: {
       input: {
         mobile: `+63${mobile}`,

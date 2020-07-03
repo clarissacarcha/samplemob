@@ -14,7 +14,7 @@ import {
 import SmsRetriever from 'react-native-sms-retriever';
 import {connect} from 'react-redux';
 import {useMutation} from '@apollo/react-hooks';
-import {LOGIN_REGISTER} from '../../graphql';
+import {AUTH_CLIENT, LOGIN_REGISTER} from '../../graphql';
 import {COLOR, DARK, MEDIUM, APP_FLAVOR} from '../../res/constants';
 import {AlertOverlay} from '../../components';
 import {onError} from '../../util/ErrorUtility';
@@ -26,6 +26,7 @@ const Login = ({navigation, session}) => {
   const [mobile, setMobile] = useState('');
   const [delay, setDelay] = useState(true);
   const [loginRegister, {loading}] = useMutation(LOGIN_REGISTER, {
+    client: AUTH_CLIENT,
     variables: {
       input: {
         mobile: `+63${mobile}`,
@@ -217,12 +218,6 @@ const styles = StyleSheet.create({
     margin: 20,
     borderRadius: 10,
   },
-  autoFillBox: {
-    margin: 20,
-    borderRadius: 10,
-    // width: 100,
-    alignSelf: 'flex-end',
-  },
   submit: {
     backgroundColor: DARK,
     height: 50,
@@ -230,6 +225,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  autoFillBox: {
+    margin: 20,
+    borderRadius: 10,
+    // width: 100,
+    alignSelf: 'flex-end',
+  },
+
   autoFill: {
     backgroundColor: DARK,
     height: 30,

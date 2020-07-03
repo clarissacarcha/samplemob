@@ -3,10 +3,10 @@ import {View, Text, ScrollView, StyleSheet, TouchableHighlight, TextInput, Alert
 import {connect} from 'react-redux';
 import Toast from 'react-native-simple-toast';
 import validator from 'validator';
+import {useMutation} from '@apollo/react-hooks';
 import {COLOR, DARK, MAP_DELTA_LOW, ORANGE, MEDIUM} from '../../../../res/constants';
 import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../../components';
-import {useMutation} from '@apollo/react-hooks';
-
+import {onError} from '../../../../util/ErrorUtility';
 import {PATCH_PERSON_POST_REGISTRATION} from '../../../../graphql';
 
 const ConsumerProfile = ({navigation, route, session, createSession}) => {
@@ -28,6 +28,7 @@ const ConsumerProfile = ({navigation, route, session, createSession}) => {
         emailAddress,
       },
     },
+    onError: onError,
     onCompleted: ({patchPersonPostRegistration}) => {
       const newSession = {...session};
       newSession.user.person.firstName = firstName;
@@ -37,28 +38,20 @@ const ConsumerProfile = ({navigation, route, session, createSession}) => {
 
       Toast.show('Profile successfully updated.');
     },
-    onError: ({graphQLErrors, networkError}) => {
-      if (networkError) {
-        Alert.alert('', 'Network error occurred. Please check your internet connection.');
-      }
-      if (graphQLErrors) {
-        Alert.alert('', graphQLErrors[0].message);
-      }
-    },
   });
 
   const onSubmit = () => {
-    if (firstName == '') {
-      Alert.alert('', `Please enter your first name`);
+    if (validator.isEmpty(firstName, {ignore_whitespace: true})) {
+      Alert.alert('', `Please enter your first name.`);
       return;
     }
 
-    if (lastName == '') {
+    if (validator.isEmpty(lastName, {ignore_whitespace: true})) {
       Alert.alert('', `Please enter your last name.`);
       return;
     }
 
-    if (emailAddress == '') {
+    if (validator.isEmpty(emailAddress, {ignore_whitespace: true})) {
       Alert.alert('', `Please enter your email address.`);
       return;
     }
@@ -79,7 +72,7 @@ const ConsumerProfile = ({navigation, route, session, createSession}) => {
 
         <Text style={styles.label}>Mobile Number</Text>
         <Text style={[styles.input, {height: 50, textAlignVertical: 'center', color: MEDIUM}]}>
-          +63{session.user.username}
+          {session.user.username}
         </Text>
 
         {/*-------------------- FIRST NAME --------------------*/}

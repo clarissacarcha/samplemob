@@ -5,6 +5,7 @@ import {useMutation} from '@apollo/react-hooks';
 import {HeaderBack, HeaderTitle, DeliveryStopCard, DeliveryLogsCard, OrderDetailsCard} from '../../../../components';
 import {COLOR, DARK, MEDIUM, LIGHT, ORANGE} from '../../../../res/constants';
 import {CLIENT, PATCH_DELIVERY_INCREMENT_STATUS, PATCH_DELIVERY_ACCEPTED} from '../../../../graphql';
+import {onError} from '../../../../util/ErrorUtility';
 
 import Toast from 'react-native-simple-toast';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -25,33 +26,16 @@ const SelectedDriverDelivery = ({navigation, route, session}) => {
   const [tempImage, setTempImage] = useState(null);
 
   const [patchDeliveryIncrementStatus, {loading: PDISLoading}] = useMutation(PATCH_DELIVERY_INCREMENT_STATUS, {
-    onError: error => {
-      alert(error);
-    },
+    onError: onError,
     onCompleted: res => setDelivery(res.patchDeliveryIncrementStatus),
-    onError: ({graphQLErrors, networkError}) => {
-      if (networkError) {
-        Alert.alert('', 'Network error occurred. Please check your internet connection.');
-      }
-      if (graphQLErrors) {
-        Alert.alert('', graphQLErrors[0].message);
-      }
-    },
   });
 
   const [patchDeliveryAccepted, {loading: acceptLoading}] = useMutation(PATCH_DELIVERY_ACCEPTED, {
+    onError: onError,
     onCompleted: ({patchDeliveryAccepted}) => {
       setDelivery(patchDeliveryAccepted);
-      // alert(JSON.stringify(patchDeliveryAccepted));
+
       Toast.show('Order successfully accepted.');
-    },
-    onError: ({graphQLErrors, networkError}) => {
-      if (networkError) {
-        Alert.alert('', 'Network error occurred. Please check your internet connection.');
-      }
-      if (graphQLErrors) {
-        Alert.alert('', graphQLErrors[0].message);
-      }
     },
   });
 

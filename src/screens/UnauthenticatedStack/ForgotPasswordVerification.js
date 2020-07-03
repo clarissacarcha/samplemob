@@ -4,7 +4,7 @@ import SmsRetriever from 'react-native-sms-retriever';
 import {COLOR, DARK, APP_FLAVOR} from '../../res/constants';
 import {connect} from 'react-redux';
 import {useMutation} from '@apollo/react-hooks';
-import {FORGOT_PASSWORD_VERIFICATION} from '../../graphql';
+import {AUTH_CLIENT, FORGOT_PASSWORD_VERIFICATION} from '../../graphql';
 import {AlertOverlay, HeaderBack, HeaderTitle} from '../../components';
 import {onError} from '../../util/ErrorUtility';
 
@@ -52,6 +52,7 @@ const Verification = ({navigation, route, createSession}) => {
   const [count, setCount] = useState(30);
 
   const [forgotPasswordVerification, {loading}] = useMutation(FORGOT_PASSWORD_VERIFICATION, {
+    client: AUTH_CLIENT,
     variables: {
       input: {
         mobile: `+63${mobile}`,

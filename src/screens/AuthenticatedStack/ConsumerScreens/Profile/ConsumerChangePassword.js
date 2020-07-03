@@ -3,10 +3,10 @@ import {View, Text, ScrollView, StyleSheet, TouchableHighlight, TextInput, Alert
 import {connect} from 'react-redux';
 import Toast from 'react-native-simple-toast';
 import validator from 'validator';
+import {useMutation} from '@apollo/react-hooks';
 import {COLOR, DARK, MAP_DELTA_LOW, ORANGE, MEDIUM} from '../../../../res/constants';
 import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../../components';
-import {useMutation} from '@apollo/react-hooks';
-
+import {onError} from '../../../../util/ErrorUtility';
 import {PATCH_USER_CHANGE_PASSWORD} from '../../../../graphql';
 
 const ChangePassword = ({navigation, session}) => {
@@ -27,17 +27,10 @@ const ChangePassword = ({navigation, session}) => {
         newPassword,
       },
     },
+    onError: onError,
     onCompleted: ({patchUserChangePassword}) => {
       navigation.pop();
       Toast.show(patchUserChangePassword);
-    },
-    onError: ({graphQLErrors, networkError}) => {
-      if (networkError) {
-        Alert.alert('', 'Network error occurred. Please check your internet connection.');
-      }
-      if (graphQLErrors) {
-        Alert.alert('', graphQLErrors[0].message);
-      }
     },
   });
 

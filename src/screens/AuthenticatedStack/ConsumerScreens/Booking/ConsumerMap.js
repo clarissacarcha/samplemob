@@ -21,7 +21,8 @@ import {currentLocation} from '../../../../helper';
 import {BookingOverlay, LocationPermission} from '../../../../components';
 import {COLOR, DARK, MEDIUM, LIGHT, MAPS_API_KEY} from '../../../../res/constants';
 import {useMutation} from '@apollo/react-hooks';
-import {CLIENT, POST_DELIVERY, GET_ORDER_PRICE} from '../../../../graphql';
+import {POST_DELIVERY, GET_ORDER_PRICE} from '../../../../graphql';
+import {onError} from '../../../../util/ErrorUtility';
 
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import EIcon from 'react-native-vector-icons/Entypo';
@@ -36,7 +37,7 @@ const INITIAL_SENDER = session => ({
   longitude: 0,
   formattedAddress: '',
   name: session.user ? `${session.user.person.firstName} ${session.user.person.lastName}` : '',
-  mobile: session.user ? `+63${session.user.username}` : '',
+  mobile: session.user ? session.user.username : '',
   landmark: '',
   orderType: 1,
   scheduledFrom: null,
@@ -94,7 +95,6 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
   });
 
   const mapViewRef = useRef(null);
-  const isConsumerMapFocused = useIsFocused();
   const [bookingSuccess, setBookingSuccess] = useState(false);
   const [recipientIndex, setRecipientIndex] = useState(0); // Used for multiple recipients
   const [allowBooking, setAllowBooking] = useState(false);
@@ -103,7 +103,29 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
   const [senderStop, setSender] = useState(INITIAL_SENDER(session));
   const [recipient, setRecipient] = useState(INITIAL_RECIPIENT);
   const [directions, setDirections] = useState(INITIAL_DIRECTIONS);
-  const [price, setPrice] = useState('0');
+  const [price, setPrice] = useState(0);
+
+  const onResetLocation = async () => {
+    try {
+      const location = await currentLocation({
+        showsReverseGeocode: true,
+      });
+
+      setSender({
+        ...senderStop,
+        ...location,
+      });
+      setRegion({
+        latitude: location.latitude,
+        longitude: location.longitude,
+        latitudeDelta: 0.015,
+        longitudeDelta: 0.0121,
+      });
+    } catch {
+      console.log('GPS Location Turned Off Or Location Cannot Be Detected');
+      setAllowBooking(true);
+    }
+  };
 
   const onGrantLocation = async () => {
     try {
@@ -138,19 +160,17 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
   };
 
   const [postDelivery, {loading: postDeliveryLoading}] = useMutation(POST_DELIVERY, {
+    onError: onError,
     onCompleted: () => {
-      setBookingSuccess(true);
-      setRecipient(INITIAL_RECIPIENT);
-      setDirections(INITIAL_DIRECTIONS);
-    },
-    onError: ({graphQLErrors, networkError}) => {
-      Alert.alert('', 'Something went wrong.');
-      // if (graphQLErrors) {
-      //   Alert.alert('', graphQLErrors[0].message);
-      // }
-      // if (networkError) {
-      //   Alert.alert('', 'Network error occurred. Please check your internet connection.');
-      // }
+      try {
+        setBookingSuccess(true);
+        setRecipient(INITIAL_RECIPIENT);
+        setSender(INITIAL_SENDER(session));
+        setDirections(INITIAL_DIRECTIONS);
+        onResetLocation();
+      } catch (error) {
+        console.log(error);
+      }
     },
   });
 
@@ -158,7 +178,7 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
     ignoreResults: true,
     onCompleted: ({getOrderPrice}) => {
       console.log(`Setting Price at: ${getOrderPrice.toString()}`);
-      setPrice(getOrderPrice.toString());
+      setPrice(getOrderPrice);
     },
     onError: ({graphQLErrors, networkError}) => {
       Alert.alert('', 'Something went wrong.');
@@ -166,7 +186,7 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
   });
 
   const onNotificationOpened = ({notification}) => {
-    type = notification.payload.additionalData.type;
+    const type = notification.payload.additionalData.type;
 
     setTimeout(() => {
       navigation.push(findNotificationRoute(type));
@@ -179,23 +199,12 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
   };
 
   useEffect(() => {
-    // alert(JSON.stringify(constants, null, 4));
     oneSignalInit();
 
+    OneSignal.getTags(tags => console.log(`ONESIGNAL USER ID TAG: ${tags.userId}`));
     OneSignal.addEventListener('opened', onNotificationOpened);
 
     const backHandler = BackHandler.addEventListener('hardwareBackPress', function() {
-      // if (isConsumerMapFocused) {
-      //   Alert.alert('', 'Do you want to exit the app?', [
-      //     {
-      //       text: 'Yes',
-      //       onPress: () => BackHandler.exitApp(),
-      //     },
-      //     {
-      //       text: 'No',
-      //     },
-      //   ]);
-      // }
       return true;
     });
     return () => {
@@ -280,7 +289,7 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
       const input = {
         tokConsumerId: session.user.consumer.id,
         distance: directions.distance,
-        duration: directions.duration,
+        duration: parseInt(directions.duration),
         price: price,
         senderStop: senderStop,
         recipientStop: recipient,

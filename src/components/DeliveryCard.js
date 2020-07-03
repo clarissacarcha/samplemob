@@ -5,6 +5,7 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableHighlight} from 'react-native';
 import {COLOR, DARK, MEDIUM, LIGHT, ORANGE, APP_FLAVOR} from '../res/constants';
+import {numberFormat} from '../helper/numberFormat';
 import moment from 'moment';
 import 'moment-timezone';
 
@@ -84,6 +85,22 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
     <View style={{paddingHorizontal: 20, paddingTop: 20, marginBottom: lastItem ? 20 : 0}}>
       <TouchableHighlight onPress={onPress} underlayColor={COLOR} style={styles.card}>
         <View style={styles.taskBox}>
+          {/*-------------------- RIDER CASH ON DELIVERY --------------------*/}
+          {APP_FLAVOR == 'D' && delivery.cashOnDelivery && (
+            <View style={styles.driverCodBox}>
+              <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+                <MCIcon name="cash" size={24} color={COLOR} style={styles.iconBoxWhite} />
+
+                <View style={{marginLeft: 16}}>
+                  <Text style={{fontWeight: 'bold'}}>Cash On Delivery</Text>
+                  <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
+                    <Text style={{fontWeight: 'bold', marginLeft: 10}}>₱ {delivery.cashOnDelivery}.00</Text>
+                  </Text>
+                </View>
+              </View>
+            </View>
+          )}
+
           {/*-------------------- LOOKING FOR YOUR RIDER, KA-TOKTOK --------------------*/}
           {APP_FLAVOR == 'C' && (
             <View style={[styles.directionsBox, {borderBottomWidth: StyleSheet.hairlineWidth, borderColor: LIGHT}]}>
@@ -96,6 +113,55 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
             </View>
           )}
 
+          {/*-------------------- ORDER PRICE AND CREDIT COST --------------------*/}
+          <View
+            style={[
+              styles.directionsBox,
+              {borderBottomWidth: StyleSheet.hairlineWidth, borderColor: LIGHT, borderTopWidth: 0},
+            ]}>
+            <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+              <Ionicon name="md-pricetag" size={16} color={'white'} style={styles.iconBox} />
+
+              <View style={{marginLeft: 16}}>
+                <Text style={{fontWeight: 'bold'}}>Amount</Text>
+                <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
+                  <Text style={{fontWeight: 'bold', marginLeft: 10}}>₱ {delivery.price}.00</Text>
+                </Text>
+              </View>
+            </View>
+            {APP_FLAVOR == 'D' && (
+              <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+                <MCIcon name="credit-card" size={16} color={'white'} style={styles.iconBox} />
+
+                <View style={{marginLeft: 16}}>
+                  <Text style={{fontWeight: 'bold'}}>Credit Cost</Text>
+                  <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
+                    <Text style={{fontWeight: 'bold', marginLeft: 10}}>
+                      {numberFormat(delivery.price * delivery.comRate)}
+                    </Text>
+                  </Text>
+                </View>
+              </View>
+            )}
+          </View>
+
+          {/*-------------------- CASH ON DELIVERY--------------------*/}
+          {delivery.cashOnDelivery && APP_FLAVOR == 'C' && (
+            <View style={[styles.directionsBox, {borderBottomWidth: StyleSheet.hairlineWidth, borderColor: LIGHT}]}>
+              <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+                <MCIcon name="cash" size={22} color={'white'} style={styles.iconBox} />
+
+                <View style={{marginLeft: 16}}>
+                  <Text style={{fontWeight: 'bold'}}>Cash On Delivery</Text>
+                  <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
+                    <Text style={{fontWeight: 'bold', marginLeft: 10}}>₱ {numberFormat(delivery.cashOnDelivery)}</Text>
+                  </Text>
+                </View>
+              </View>
+            </View>
+          )}
+
+          {/*-------------------- SENDER RECIPIENT ADDRESS ROW --------------------*/}
           <View style={[styles.directionsBox, {borderBottomWidth: StyleSheet.hairlineWidth, borderColor: LIGHT}]}>
             <View style={styles.directionDetail}>
               {/*-------------------- ORDER DATE --------------------*/}
@@ -131,41 +197,6 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
             </>
           )}
 
-          {/*-------------------- PICK UP --------------------*/}
-          {/* <View style={[styles.directionsBox, {borderBottomWidth: StyleSheet.hairlineWidth, borderColor: LIGHT}]}>
-            <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-              <EIcon name="hand" size={14} color={'white'} style={styles.iconBox} />
-              <View style={{marginLeft: 16}}>
-                <Text style={{fontWeight: 'bold'}}>Pick Up</Text>
-                <SchedulePhrase stop={senderStop} />
-              </View>
-            </View>
-          </View> */}
-
-          {/*-------------------- DELIVER --------------------*/}
-          {/* <View style={[styles.directionsBox, {borderBottomWidth: StyleSheet.hairlineWidth, borderColor: LIGHT}]}>
-            <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-              <FA5Icon name="hands-helping" size={14} color={'white'} style={styles.iconBox} />
-              <View style={{marginLeft: 16}}>
-                <Text style={{fontWeight: 'bold'}}>Deliver</Text>
-                <SchedulePhrase stop={recipientStop} />
-              </View>
-            </View>
-          </View> */}
-
-          {/*-------------------- DATE CREATED --------------------*/}
-          {/* <View style={[styles.directionsBox, {borderBottomWidth: StyleSheet.hairlineWidth, borderColor: LIGHT}]}>
-            <View style={styles.directionDetail}>
-              <FAIcon name="calendar" size={14} color={'white'} style={styles.iconBox} />
-
-              <Text style={{fontSize: 12, marginLeft: 16, color: MEDIUM, fontWeight: 'bold'}}>
-                {moment
-                  .tz(delivery.createdAt, 'Asia/Manila')
-                  .format('MM/DD/YYYY - hh:mm A')
-                  .toString()}
-              </Text>
-            </View>
-          </View> */}
           <View style={{flexDirection: 'row', marginHorizontal: 20}}>
             {/*-------------------- ICONS --------------------*/}
             <View style={{width: 40, justifyContent: 'center'}}>
@@ -213,36 +244,43 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
                     {`${delivery.driver.user.person.firstName} ${delivery.driver.user.person.lastName}`}
                   </Text>
                   <Text numberOfLines={1} style={{paddingRight: 10, color: MEDIUM, fontSize: 10}}>
-                    {`+63${delivery.driver.user.username}`}
+                    {delivery.driver.user.username}
                   </Text>
                 </View>
               </View>
             </View>
           )}
 
-          {/*---------------------------------------- ROUTE DETAILS ----------------------------------------*/}
-          <View style={styles.directionsBox}>
-            {/*-------------------- DISTANCE --------------------*/}
+          {/*---------------------------------------- DISTANCE DURATION ROW ----------------------------------------*/}
+          <View
+            style={[
+              styles.directionsBox,
+              {borderBottomWidth: StyleSheet.hairlineWidth, borderColor: LIGHT, paddingVertical: 10},
+            ]}>
             <View style={styles.directionDetail}>
-              <MCIcon name="map-marker-distance" size={16} color={'white'} style={styles.iconBox} />
-              <Text style={{fontWeight: 'bold', marginLeft: 16}}>
-                {parseFloat(delivery.distance).toFixed(2)}
-                <Text style={{color: MEDIUM}}> km</Text>
-              </Text>
-            </View>
-            {/*-------------------- DURATION --------------------*/}
-            <View style={styles.directionDetail}>
-              <MCIcon name="timer" size={18} color={'white'} style={styles.iconBox} />
+              {/*-------------------- DISTANCE --------------------*/}
+              <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+                <MCIcon name="map-marker-distance" size={16} color={'white'} style={styles.iconBox} />
+                <View style={{marginLeft: 16}}>
+                  <Text style={{fontWeight: 'bold', fontSize: 14}}>Distance</Text>
+                  <Text style={{fontWeight: 'bold', color: MEDIUM, fontSize: 11}}>
+                    {parseFloat(delivery.distance).toFixed(2)}
+                    <Text style={{color: MEDIUM}}> km</Text>
+                  </Text>
+                </View>
+              </View>
 
-              <Text style={{fontWeight: 'bold', marginLeft: 16}}>
-                {parseFloat(delivery.duration).toFixed(0)}
-                <Text style={{color: MEDIUM}}> min</Text>
-              </Text>
-            </View>
-            {/*-------------------- PRICE --------------------*/}
-            <View style={styles.directionDetail}>
-              <Ionicon name="md-pricetag" size={16} color={'white'} style={styles.iconBox} />
-              <Text style={{fontWeight: 'bold', marginLeft: 16}}>₱{delivery.price}</Text>
+              {/*-------------------- DURATION --------------------*/}
+              <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+                <MCIcon name="timer" size={18} color={'white'} style={styles.iconBox} />
+                <View style={{marginLeft: 16}}>
+                  <Text style={{fontWeight: 'bold'}}>Duration</Text>
+                  <Text style={{fontWeight: 'bold', color: MEDIUM, fontSize: 11}}>
+                    {parseFloat(delivery.duration).toFixed(0)}
+                    <Text style={{color: MEDIUM}}> minutes</Text>
+                  </Text>
+                </View>
+              </View>
             </View>
           </View>
         </View>
@@ -294,10 +332,30 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     borderTopColor: LIGHT,
     alignItems: 'center',
+    borderTopWidth: StyleSheet.hairlineWidth,
   },
   directionDetail: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  iconBoxWhite: {
+    backgroundColor: 'white',
+    height: 24,
+    width: 24,
+    borderRadius: 5,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+  },
+
+  driverCodBox: {
+    height: 50,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: COLOR,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    paddingHorizontal: 20,
   },
 });

@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler';
 import React from 'react';
 import {StyleSheet, SafeAreaView, StatusBar} from 'react-native';
-// import Splash from './Splash';
+import Splash from './Splash';
 import Nav from './Nav';
 
 import {
@@ -22,7 +22,7 @@ const App = () => {
       <SafeAreaView style={styles.safeArea}>
         <ReduxProvider>
           <ApolloProvider>
-            <Nav />
+            <Splash />
           </ApolloProvider>
         </ReduxProvider>
       </SafeAreaView>

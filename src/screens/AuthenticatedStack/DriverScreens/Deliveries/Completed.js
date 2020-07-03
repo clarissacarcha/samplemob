@@ -2,8 +2,9 @@ import React, {useState, useEffect} from 'react';
 import {View, Text, ActivityIndicator, FlatList, RefreshControl, Image, StyleSheet, Dimensions} from 'react-native';
 import {useQuery} from '@apollo/react-hooks';
 import {connect} from 'react-redux';
+import {useFocusEffect} from '@react-navigation/native';
 import {COLOR, MEDIUM, FONT_FAMILY} from '../../../../res/constants';
-import {BookingInfoCard} from '../../../../components';
+import {SomethingWentWrong, DeliveryCard} from '../../../../components';
 import {GET_DELIVERIES} from '../../../../graphql';
 import NoData from '../../../../assets/images/NoData.png';
 
@@ -23,6 +24,10 @@ const CompletedDeliveries = ({navigation, session}) => {
     },
   });
 
+  useFocusEffect(() => {
+    refetch();
+  }, []);
+
   if (loading) {
     return (
       <View style={styles.center}>
@@ -32,11 +37,7 @@ const CompletedDeliveries = ({navigation, session}) => {
   }
 
   if (error) {
-    return (
-      <View style={styles.center}>
-        <Text>Something went wrong...</Text>
-      </View>
-    );
+    return <SomethingWentWrong />;
   }
 
   if (data.getDeliveries.length === 0) {
@@ -53,12 +54,11 @@ const CompletedDeliveries = ({navigation, session}) => {
         data={data.getDeliveries}
         keyExtractor={item => item.id}
         refreshControl={<RefreshControl refreshing={loading} onRefresh={refetch} colors={[COLOR]} tintColor={COLOR} />}
-        renderItem={({item}) => (
-          <BookingInfoCard
-            onPress={() =>
-              navigation.push('SelectedDriverDelivery', {delivery: item, label: ['Completed', 'Delivery']})
-            }
+        renderItem={({item, index}) => (
+          <DeliveryCard
             delivery={item}
+            onPress={() => navigation.push('SelectedDriverDelivery', {delivery: item, label: ['Ongoing', 'Delivery']})}
+            lastItem={data.getDeliveries.length == index + 1 ? true : false}
           />
         )}
       />

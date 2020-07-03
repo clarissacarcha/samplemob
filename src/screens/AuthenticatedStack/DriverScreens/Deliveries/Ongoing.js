@@ -2,8 +2,9 @@ import React, {useState, useEffect} from 'react';
 import {View, Text, ActivityIndicator, FlatList, RefreshControl, Image, StyleSheet, Dimensions} from 'react-native';
 import {useQuery} from '@apollo/react-hooks';
 import {connect} from 'react-redux';
+import {useFocusEffect} from '@react-navigation/native';
 import {COLOR, MEDIUM, FONT_FAMILY} from '../../../../res/constants';
-import {BookingInfoCard, DeliveryCard} from '../../../../components';
+import {SomethingWentWrong, DeliveryCard} from '../../../../components';
 import {GET_DELIVERIES} from '../../../../graphql';
 import NoData from '../../../../assets/images/NoData.png';
 
@@ -26,6 +27,10 @@ const Ongoing = ({navigation, session}) => {
     },
   });
 
+  useFocusEffect(() => {
+    refetch();
+  }, []);
+
   if (loading) {
     return (
       <View style={styles.center}>
@@ -35,11 +40,7 @@ const Ongoing = ({navigation, session}) => {
   }
 
   if (error) {
-    return (
-      <View style={styles.center}>
-        <Text>Something went wrong...</Text>
-      </View>
-    );
+    return <SomethingWentWrong />;
   }
 
   if (data.getDeliveries.length === 0) {

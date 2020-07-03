@@ -8,7 +8,9 @@ export const GET_ORDERS = gql`
       distance
       duration
       price
+      comRate
       cashOnDelivery
+      cargo
       notes
       status
       createdAt
@@ -47,6 +49,7 @@ export const GET_ORDERS = gql`
             firstName
             lastName
             avatar
+            avatarThumbnail
           }
         }
       }

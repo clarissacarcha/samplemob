@@ -5,7 +5,7 @@ import {COLOR, DARK, APP_FLAVOR} from '../../res/constants';
 import {getUniqueId} from 'react-native-device-info';
 import {connect} from 'react-redux';
 import {useMutation} from '@apollo/react-hooks';
-import {VERIFY_REGISTRATION} from '../../graphql';
+import {AUTH_CLIENT, VERIFY_REGISTRATION} from '../../graphql';
 import {AlertOverlay} from '../../components';
 import AsyncStorage from '@react-native-community/async-storage';
 import OneSignal from 'react-native-onesignal';
@@ -44,6 +44,7 @@ const Verification = ({navigation, route, createSession}) => {
   const [count, setCount] = useState(30);
 
   const [verifyRegistration, {loading}] = useMutation(VERIFY_REGISTRATION, {
+    client: AUTH_CLIENT,
     variables: {
       input: {
         mobile: `+63${mobile}`,
@@ -58,6 +59,7 @@ const Verification = ({navigation, route, createSession}) => {
       const {user, accessToken} = verifyRegistration;
 
       AsyncStorage.setItem('userId', user.id);
+      AsyncStorage.setItem('accessToken', accessToken);
 
       createSession(verifyRegistration);
 

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, Text, TouchableHighlight} from 'react-native';
+import {View, StyleSheet, Text, TouchableHighlight, Alert} from 'react-native';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import {Button, HeaderBack, HeaderTitle} from '../../../../components';
 import {MAPS_API_KEY, DARK, COLOR} from '../../../../res/constants';
@@ -61,13 +61,19 @@ const SearchLocation = ({navigation, route}) => {
   });
 
   const onLocationSelect = (data, details = null) => {
-    setData({
-      ...localData,
-      latitude: details.geometry.location.lat,
-      longitude: details.geometry.location.lng,
-      formattedAddress: data.description,
-    });
-    navigation.pop();
+    try {
+      setData({
+        ...localData,
+        latitude: details.geometry.location.lat,
+        longitude: details.geometry.location.lng,
+        formattedAddress: data.description,
+      });
+      navigation.pop();
+    } catch (error) {
+      console.log(error);
+      Alert.alert('', 'Something went wrong. Please try again.');
+      navigation.pop();
+    }
   };
 
   const onSubmit = () => {

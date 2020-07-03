@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, ScrollView, StyleSheet, TouchableHighlight, Modal, ActivityIndicator} from 'react-native';
 import {useMutation} from '@apollo/react-hooks';
+import Toast from 'react-native-simple-toast';
 import {
   HeaderBack,
   HeaderTitle,
@@ -9,10 +10,11 @@ import {
   DriverCard,
   AlertOverlay,
   OrderDetailsCard,
+  DriverLocationCard,
 } from '../../../../components';
 import {COLOR, DARK, MEDIUM, LIGHT, ORANGE, APP_FLAVOR} from '../../../../res/constants';
 import {PATCH_DELIVERY_CUSTOMER_CANCEL, PATCH_DELIVERY_DELETE, PATCH_DELIVERY_REBOOK} from '../../../../graphql';
-import Toast from 'react-native-simple-toast';
+import {onError} from '../../../../util/ErrorUtility';
 
 const SelectedDelivery = ({navigation, route}) => {
   const {delivery, label} = route.params;
@@ -27,6 +29,7 @@ const SelectedDelivery = ({navigation, route}) => {
   const [loading, setLoading] = useState(false);
 
   const [patchDeliveryCustomerCancel, {loading: loadingC}] = useMutation(PATCH_DELIVERY_CUSTOMER_CANCEL, {
+    onError: onError,
     variables: {
       input: {
         deliveryId: getDelivery.id,
@@ -36,17 +39,10 @@ const SelectedDelivery = ({navigation, route}) => {
       Toast.show('Order successfully cancelled');
       setDelivery(patchDeliveryCustomerCancel);
     },
-    onError: ({graphQLErrors, networkError}) => {
-      if (networkError) {
-        Alert.alert('', 'Network error occurred. Please check your internet connection.');
-      }
-      if (graphQLErrors) {
-        Alert.alert('', graphQLErrors[0].message);
-      }
-    },
   });
 
   const [patchDeliveryDelete, {loading: loadingD}] = useMutation(PATCH_DELIVERY_DELETE, {
+    onError: onError,
     variables: {
       input: {
         deliveryId: getDelivery.id,
@@ -56,17 +52,10 @@ const SelectedDelivery = ({navigation, route}) => {
       Toast.show('Order successfully deleted');
       navigation.pop();
     },
-    onError: ({graphQLErrors, networkError}) => {
-      if (networkError) {
-        Alert.alert('', 'Network error occurred. Please check your internet connection.');
-      }
-      if (graphQLErrors) {
-        Alert.alert('', graphQLErrors[0].message);
-      }
-    },
   });
 
   const [patchDeliveryRebook, {loading: loadingR}] = useMutation(PATCH_DELIVERY_REBOOK, {
+    onError: onError,
     variables: {
       input: {
         deliveryId: getDelivery.id,
@@ -74,14 +63,6 @@ const SelectedDelivery = ({navigation, route}) => {
     },
     onCompleted: ({patchDeliveryRebook}) => {
       Toast.show(patchDeliveryRebook);
-    },
-    onError: ({graphQLErrors, networkError}) => {
-      if (networkError) {
-        Alert.alert('', 'Network error occurred. Please check your internet connection.');
-      }
-      if (graphQLErrors) {
-        Alert.alert('', graphQLErrors[0].message);
-      }
     },
   });
 
@@ -126,6 +107,9 @@ const SelectedDelivery = ({navigation, route}) => {
             </View>
           </TouchableHighlight>
         )}
+
+        {/*---------------------------------------- DELIVERY TRACKING ----------------------------------------*/}
+        {[2, 3, 4, 5].includes(getDelivery.status) && <DriverLocationCard driver={getDelivery.driver} />}
 
         {/*-------------------- DELETE/REBOOK BUTTON DETAILS --------------------*/}
         {getDelivery.status === 7 && (

@@ -16,7 +16,7 @@ import {COLOR, DARK, ORANGE, MEDIUM, LIGHT} from '../../../../res/constants';
 import {HeaderBack, HeaderTitle} from '../../../../components';
 import {useQuery} from '@apollo/react-hooks';
 import {useNavigation} from '@react-navigation/native';
-import moment from 'moment';
+import {APP_FLAVOR} from '../../../../res/constants';
 
 import {GET_ANNOUNCEMENTS} from '../../../../graphql';
 
@@ -91,6 +91,11 @@ const Announcements = ({navigation, route, session, createSession}) => {
 
   const {data, loading, error} = useQuery(GET_ANNOUNCEMENTS, {
     fetchPolicy: 'network-only',
+    variables: {
+      filter: {
+        appFlavor: APP_FLAVOR,
+      },
+    },
   });
 
   if (loading) {

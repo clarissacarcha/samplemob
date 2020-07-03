@@ -24,7 +24,7 @@ const BookingSuccess = ({onPress}) => (
   <View style={{height: '100%', backgroundColor: 'white', borderRadius: 10}}>
     <View style={{flex: 1, margin: 20, justifyContent: 'center', alignItems: 'center'}}>
       <Image source={OrderBooked} style={{height: imageWidth, width: imageWidth}} resizeMode={'contain'} />
-      <Text style={{fontWeight: 'bold', color: MEDIUM}}>Your order has been booked.</Text>
+      <Text style={{fontWeight: 'bold', color: MEDIUM, marginTop: 20}}>Your order has been booked.</Text>
     </View>
 
     <TouchableHighlight onPress={onPress} underlayColor={COLOR} style={styles.submitBox}>

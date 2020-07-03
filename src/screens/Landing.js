@@ -1,26 +1,18 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, ImageBackground, Alert} from 'react-native';
+import {View, StyleSheet, ImageBackground} from 'react-native';
 import {connect} from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
 import {useLazyQuery} from '@apollo/react-hooks';
 import OneSignal from 'react-native-onesignal';
 import {APP_FLAVOR} from '../res/constants';
-import {CLIENT, GET_USER_SESSION, GET_GLOBAL_SETTINGS} from '../graphql';
+import {AUTH_CLIENT, GET_USER_SESSION, GET_GLOBAL_SETTINGS} from '../graphql';
 import {onError} from '../util/ErrorUtility';
 
 import SplashImage from '../assets/images/Splash.png';
 
-const mapKeyValueToObject = keyValueArray => {
-  const result = {};
-  keyValueArray.map(kv => {
-    result[kv.settingKey] = kv.keyValue;
-  });
-
-  return result;
-};
-
-const Landing = ({createSession, destroySession, setConstants, navigation}) => {
+const Landing = ({createSession, destroySession, navigation}) => {
   const [getUserSession] = useLazyQuery(GET_USER_SESSION, {
+    client: AUTH_CLIENT,
     onError: onError,
     onCompleted: ({getUserSession}) => {
       try {
@@ -35,6 +27,14 @@ const Landing = ({createSession, destroySession, setConstants, navigation}) => {
         }
 
         createSession(getUserSession);
+
+        OneSignal.sendTags(
+          {
+            userId: user.id,
+          },
+          () => console.log('LALA'),
+          () => console.log('MOVE'),
+        );
 
         //TODO: Check for valid user status and access token. Also check for existing user record
 
@@ -70,23 +70,10 @@ const Landing = ({createSession, destroySession, setConstants, navigation}) => {
     },
   });
 
-  const getConstants = async () => {
-    try {
-      const records = await CLIENT.query({
-        query: GET_GLOBAL_SETTINGS,
-        fetchPolicy: 'network-only',
-      });
-      setConstants(mapKeyValueToObject(records.data.getGlobalSettings));
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const checkAsyncStorageSession = async () => {
     const storedUserId = await AsyncStorage.getItem('userId');
 
     if (storedUserId) {
-      console.log('STORED SESSION');
       getUserSession({
         variables: {
           input: {
@@ -95,7 +82,6 @@ const Landing = ({createSession, destroySession, setConstants, navigation}) => {
         },
       });
     } else {
-      console.log('EMPTY SESSION');
       navigation.navigate('UnauthenticatedStack');
     }
     try {
@@ -104,14 +90,8 @@ const Landing = ({createSession, destroySession, setConstants, navigation}) => {
     }
   };
 
-  const onMount = async () => {
-    // destroySession();
-    await getConstants();
-    await checkAsyncStorageSession();
-  };
-
   useEffect(() => {
-    onMount();
+    checkAsyncStorageSession();
   }, []);
 
   return <ImageBackground style={styles.splash} source={SplashImage} resizeMode={'cover'} />;
@@ -124,7 +104,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   createSession: payload => dispatch({type: 'CREATE_SESSION', payload}),
   destroySession: () => dispatch({type: 'DESTROY_SESSION'}),
-  setConstants: payload => dispatch({type: 'SET_CONSTANTS', payload}),
 });
 
 export default connect(
@@ -132,14 +111,8 @@ export default connect(
   mapDispatchToProps,
 )(Landing);
 
-// export default Landing;
-
 const styles = StyleSheet.create({
   splash: {
     flex: 1,
-  },
-  barView: {
-    height: 50,
-    justifyContent: 'center',
   },
 });

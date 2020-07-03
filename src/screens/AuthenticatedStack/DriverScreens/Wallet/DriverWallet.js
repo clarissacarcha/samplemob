@@ -40,7 +40,7 @@ const DriverWallet = ({navigation, route, session, createSession}) => {
 
   return (
     <View style={styles.container}>
-      <BottomTabHeader label={['', 'Wallet']} />
+      <BottomTabHeader label={['Rider', 'Wallet']} />
       <ScrollView showsVerticalScrollIndicator={false}>
         {/*---------------------------------------- FORM ----------------------------------------*/}
         <View style={{marginTop: 20, alignItems: 'center'}}>
@@ -56,8 +56,8 @@ const DriverWallet = ({navigation, route, session, createSession}) => {
                 position: 'relative',
               }}>
               <Image
-                source={{uri: session.user.person.avatar}}
-                resizeMode={'contain'}
+                source={{uri: session.user.person.avatarThumbnail}}
+                resizeMode={'cover'}
                 style={{width: 120, height: 120, borderRadius: 10}}
               />
             </View>
@@ -95,16 +95,14 @@ const DriverWallet = ({navigation, route, session, createSession}) => {
           }}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <FAIcon name="user" style={styles.iconBox} size={16} color="white" />
-            <Text style={{flex: 1, color: DARK, fontSize: 12, fontWeight: 'bold', marginHorizontal: 10}}>
-              Rider Name
-            </Text>
-            <Text style={{fontSize: 12, color: DARK, fontWeight: 'bold'}}> {firstName + ' ' + lastName}</Text>
+            <Text style={{flex: 1, color: DARK, fontSize: 12, fontWeight: 'bold', marginHorizontal: 10}}>Rider ID</Text>
+            <Text style={{fontSize: 12, color: DARK, fontWeight: 'bold'}}> {session.user.userId}</Text>
           </View>
 
           <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 20}}>
             <MCIcon name="credit-card-multiple" style={styles.iconBox} size={16} color="white" />
             <Text style={{flex: 1, color: DARK, fontSize: 12, fontWeight: 'bold', marginHorizontal: 10}}>
-              Current Balance
+              Rider Credits
             </Text>
             {!data.getWallet.balance ? (
               <ActivityIndicator size={24} color={COLOR} />
@@ -126,7 +124,7 @@ const DriverWallet = ({navigation, route, session, createSession}) => {
               onPress={() =>
                 Alert.alert(
                   'To Be Deducted',
-                  'Total credits for ongoing deliveries. Will be be deducted from your balance upon completion of delivery.',
+                  'Total credits for ongoing deliveries. Will be be deducted from your credits upon completion of delivery.',
                 )
               }
             />
@@ -142,7 +140,7 @@ const DriverWallet = ({navigation, route, session, createSession}) => {
 
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <MCIcon name="credit-card" style={styles.iconBox} size={16} color="white" />
-            <Text style={{color: DARK, fontSize: 12, fontWeight: 'bold', marginHorizontal: 10}}>Available Balance</Text>
+            <Text style={{color: DARK, fontSize: 12, fontWeight: 'bold', marginHorizontal: 10}}>Available Credits</Text>
             <FAIcon
               name="question-circle"
               size={20}
@@ -150,8 +148,8 @@ const DriverWallet = ({navigation, route, session, createSession}) => {
               style={{flex: 1}}
               onPress={() =>
                 Alert.alert(
-                  'Available Balance',
-                  "Your Current Balance less To Be Deducted. You can't accept orders when your Available Balance is not enough for the order.",
+                  'Available Credits',
+                  "Credits used to accept orders. Your Rider Credits less To Be deducted. You can't accept orders with credit cost higher than your Available Credits.",
                 )
               }
             />

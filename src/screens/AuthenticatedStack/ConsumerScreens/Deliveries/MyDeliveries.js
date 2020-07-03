@@ -6,7 +6,7 @@ import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import {useQuery} from '@apollo/react-hooks';
 import {GET_DELIVERIES_COUNT_BY_STATUS} from '../../../../graphql';
 import {COLOR, DARK, MEDIUM, LIGHT} from '../../../../res/constants';
-import {HeaderBack, HeaderTitle} from '../../../../components';
+import {HeaderBack, HeaderTitle, SomethingWentWrong} from '../../../../components';
 
 import FIcon from 'react-native-vector-icons/Feather';
 
@@ -65,11 +65,7 @@ const MyDeliveries = ({navigation, session}) => {
   }
 
   if (error) {
-    return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <Text>SOMETHING WENT WRONG</Text>
-      </View>
-    );
+    return <SomethingWentWrong />;
   }
 
   const mappedData = _.mapKeys(data.getDeliveriesCountByStatus, 'status');

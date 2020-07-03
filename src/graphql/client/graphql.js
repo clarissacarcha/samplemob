@@ -9,12 +9,18 @@ import {getMainDefinition} from 'apollo-utilities';
 import {Alert} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 
-const hostPort = '192.168.254.108:3080'; // Myutini BB
+const protocol = 'http';
+
+// const hostPort = '192.168.254.108:3080'; // Myutini BB
+const hostPort = '192.168.43.241:3080'; // Myutini HS
 // const hostPort = '192.168.0.106:3080'; // MDC
 // const hostPort = '35.173.0.77:3085';
 // const hostPort = '192.168.100.29:3080';
 
-const baseUrl = `http://${hostPort}/`;
+// const protocol = 'https';
+// const hostPort = 'toktok.ph:3000'; // Live Server
+
+const baseUrl = `${protocol}://${hostPort}/`;
 const wsUrl = `ws://${hostPort}/graphql`;
 
 const errorLink = onError(({graphQLErrors, networkError}) => {
@@ -63,10 +69,20 @@ const uploadLink = createUploadLink({
   uri: `${baseUrl}graphql/`,
 });
 
+const authUploadLink = createUploadLink({
+  uri: `${baseUrl}auth/graphql/`,
+});
+
 // const link = ApolloLink.from([errorLink, authLink, splitLink, uploadLink]);
 const link = ApolloLink.from([errorLink, authLink, uploadLink]);
+const authClientlink = ApolloLink.from([errorLink, authLink, authUploadLink]);
 
 export const CLIENT = new ApolloClient({
   cache: new InMemoryCache(),
   link,
+});
+
+export const AUTH_CLIENT = new ApolloClient({
+  cache: new InMemoryCache(),
+  link: authClientlink,
 });
