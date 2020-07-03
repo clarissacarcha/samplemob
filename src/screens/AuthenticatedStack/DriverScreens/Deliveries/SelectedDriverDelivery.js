@@ -4,7 +4,12 @@ import {ReactNativeFile} from 'apollo-upload-client';
 import {useMutation} from '@apollo/react-hooks';
 import {HeaderBack, HeaderTitle, DeliveryStopCard, DeliveryLogsCard, OrderDetailsCard} from '../../../../components';
 import {COLOR, DARK, MEDIUM, LIGHT, ORANGE} from '../../../../res/constants';
-import {CLIENT, PATCH_DELIVERY_INCREMENT_STATUS, PATCH_DELIVERY_ACCEPTED} from '../../../../graphql';
+import {
+  CLIENT,
+  PATCH_DELIVERY_INCREMENT_STATUS,
+  PATCH_DELIVERY_ACCEPTED,
+  PATCH_DELIVERY_DRIVER_CANCEL,
+} from '../../../../graphql';
 import {onError} from '../../../../util/ErrorUtility';
 
 import Toast from 'react-native-simple-toast';
@@ -30,12 +35,21 @@ const SelectedDriverDelivery = ({navigation, route, session}) => {
     onCompleted: res => setDelivery(res.patchDeliveryIncrementStatus),
   });
 
-  const [patchDeliveryAccepted, {loading: acceptLoading}] = useMutation(PATCH_DELIVERY_ACCEPTED, {
+  const [patchDeliveryAccepted, {loading: PDALoading}] = useMutation(PATCH_DELIVERY_ACCEPTED, {
     onError: onError,
     onCompleted: ({patchDeliveryAccepted}) => {
       setDelivery(patchDeliveryAccepted);
 
       Toast.show('Order successfully accepted.');
+    },
+  });
+
+  const [patchDeliveryDriverCancel, {loading: PDDCLoading}] = useMutation(PATCH_DELIVERY_DRIVER_CANCEL, {
+    onError: onError,
+    onCompleted: ({patchDeliveryDriverCancel}) => {
+      setDelivery(patchDeliveryDriverCancel);
+
+      Toast.show('Order successfully cancelled.');
     },
   });
 
@@ -57,6 +71,16 @@ const SelectedDriverDelivery = ({navigation, route, session}) => {
           // TODO: Replace with driverId from session
           driverId: session.user.driver.id,
           userId: session.user.id,
+        },
+      },
+    });
+  };
+
+  const onCancel = () => {
+    patchDeliveryDriverCancel({
+      variables: {
+        input: {
+          deliveryId: getDelivery.id,
         },
       },
     });
@@ -105,7 +129,7 @@ const SelectedDriverDelivery = ({navigation, route, session}) => {
       <Modal
         animationType="fade"
         transparent={true}
-        visible={PDISLoading || acceptLoading}
+        visible={PDISLoading || PDALoading || PDDCLoading}
         style={StyleSheet.absoluteFill}>
         <View style={styles.transparent}>
           <View style={styles.labelRow}>
@@ -155,6 +179,15 @@ const SelectedDriverDelivery = ({navigation, route, session}) => {
 
         {/*-------------------- DELIVERY LOGS --------------------*/}
         {getDelivery.status !== 1 && <DeliveryLogsCard logs={getDelivery.logs} />}
+
+        {/*-------------------- CANCEL ORDER --------------------*/}
+        {[2, 3].includes(getDelivery.status) && (
+          <TouchableHighlight onPress={onCancel} underlayColor={COLOR} style={{borderRadius: 10, marginTop: 20}}>
+            <View style={styles.submit}>
+              <Text style={{color: COLOR, fontSize: 16}}>Cancel Order</Text>
+            </View>
+          </TouchableHighlight>
+        )}
       </ScrollView>
     </View>
   );

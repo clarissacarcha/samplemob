@@ -32,22 +32,28 @@ import Ionicon from 'react-native-vector-icons/Ionicons';
 
 import ToktokLogo from '../../../../assets/icons/ToktokLogo.png';
 
-const INITIAL_SENDER = session => ({
-  latitude: 0,
-  longitude: 0,
-  formattedAddress: '',
-  name: session.user ? `${session.user.person.firstName} ${session.user.person.lastName}` : '',
-  mobile: session.user ? session.user.username : '',
-  landmark: '',
-  orderType: 1,
-  scheduledFrom: null,
-  scheduledTo: null,
-  address: {
-    city: '',
-    province: '',
-    country: '',
-  },
-});
+const INITIAL_SENDER = session => {
+  const consumerName = session.user ? `${session.user.person.firstName} ${session.user.person.lastName}` : '';
+  const consumerMobile = session.user ? session.user.username : '';
+  const minus63 = consumerMobile.replace('+63', '');
+
+  return {
+    latitude: 0,
+    longitude: 0,
+    formattedAddress: '',
+    name: consumerName,
+    mobile: minus63,
+    landmark: '',
+    orderType: 1,
+    scheduledFrom: null,
+    scheduledTo: null,
+    address: {
+      city: '',
+      province: '',
+      country: '',
+    },
+  };
+};
 
 const INITIAL_RECIPIENT = [
   {
@@ -294,6 +300,9 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
         senderStop: senderStop,
         recipientStop: recipient,
       };
+
+      input.senderStop.mobile = `+63${input.senderStop.mobile}`;
+      input.recipientStop[0].mobile = `+63${input.recipientStop[0].mobile}`;
 
       // Delete this field. Only used in mobile app.
       delete input.senderStop.accuracy;

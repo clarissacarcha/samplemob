@@ -44,7 +44,7 @@ const DriverWallet = ({navigation, route, session, createSession}) => {
       <ScrollView showsVerticalScrollIndicator={false}>
         {/*---------------------------------------- FORM ----------------------------------------*/}
         <View style={{marginTop: 20, alignItems: 'center'}}>
-          {true ? (
+          {session.user.person.avatar ? (
             <View
               style={{
                 height: 120,

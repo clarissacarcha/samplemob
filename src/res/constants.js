@@ -1,6 +1,6 @@
 export const APP_VERSION = '1.0.0';
 
-export const APP_FLAVOR = 'C'; // C -customer || D - driver
+export const APP_FLAVOR = 'D'; // C -customer || D - driver
 export const COLOR = '#FDBA1C'; //YELLOW
 export const COLOR_UNDERLAY = 'rgba(256,186,28, 0.1)';
 export const ORANGE = '#F5841F';
@@ -25,4 +25,4 @@ export const MAP_DELTA_LOW = {
   longitudeDelta: 0.002014003694029043,
 };
 
-export const MAPS_API_KEY = 'AIzaSyDdyxr5CWmuPB2iFwDNFlU1rnS4NhjFeoY';
+export const MAPS_API_KEY = 'AIzaSyDhlw6pbriuwr_Mb6KYkVlBar7KD1KTrOs';

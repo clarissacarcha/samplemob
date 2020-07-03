@@ -92,6 +92,14 @@ export const PATCH_DELIVERY_CUSTOMER_CANCEL = gql`
   }
 `;
 
+export const PATCH_DELIVERY_DRIVER_CANCEL = gql`
+  mutation patchDeliveryDriverCancel($input: PatchDeliveryDriverCancelInput!) {
+    patchDeliveryDriverCancel(input: $input) {
+        ${Delivery}
+    }
+  }
+`;
+
 export const PATCH_DELIVERY_DELETE = gql`
   mutation patchDeliveryDelete($input: PatchDeliveryDeleteInput!) {
     patchDeliveryDelete(input: $input)

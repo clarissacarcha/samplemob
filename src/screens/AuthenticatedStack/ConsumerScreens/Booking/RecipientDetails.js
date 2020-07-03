@@ -48,9 +48,23 @@ const RecipientDetails = ({navigation, route, constants}) => {
   const onScheduleChange = value => setLocalData({...localData, ...value});
   const onLandmarkChange = value => setLocalData({...localData, landmark: value});
   const onNameChange = value => setLocalData({...localData, name: value});
-  const onMobileChange = value => setLocalData({...localData, mobile: value});
+  // const onMobileChange = value => setLocalData({...localData, mobile: value});
   const onNotesChange = value => setLocalData({...localData, notes: value});
   const onCargoChange = value => setLocalData({...localData, cargo: value});
+
+  const onMobileChange = value => {
+    if (value.length == 1 && value == '0') {
+      setLocalData({...localData, mobile: ''});
+      return;
+    }
+
+    if (value.length > 10) {
+      setLocalData({...localData, mobile: localData.mobile});
+      return;
+    }
+
+    setLocalData({...localData, mobile: value});
+  };
 
   const scrollToEnd = () => {
     setTimeout(() => {
@@ -93,6 +107,11 @@ const RecipientDetails = ({navigation, route, constants}) => {
     }
 
     if (isNaN(localData.mobile)) {
+      Alert.alert('', `Please enter a valid recipient's mobile number.`);
+      return;
+    }
+
+    if (localData.mobile.length != 10) {
       Alert.alert('', `Please enter a valid recipient's mobile number.`);
       return;
     }
@@ -213,13 +232,44 @@ const RecipientDetails = ({navigation, route, constants}) => {
 
         {/*-------------------- MOBILE NUMBER --------------------*/}
         <Text style={styles.label}>Mobile Number</Text>
-        <TextInput
+        {/* <TextInput
           value={localData.mobile}
           onChangeText={onMobileChange}
           style={styles.input}
           placeholder="Mobile number"
           keyboardType="number-pad"
-        />
+        /> */}
+        <View
+          style={{
+            marginHorizontal: 20,
+            borderWidth: 1,
+            borderColor: MEDIUM,
+            borderRadius: 5,
+            marginTop: 10,
+            flexDirection: 'row',
+            alignItems: 'center',
+            overflow: 'hidden',
+          }}>
+          <Text
+            style={{
+              color: MEDIUM,
+              paddingHorizontal: 20,
+              borderRightWidth: 1,
+              borderRightColor: MEDIUM,
+              height: '100%',
+              textAlignVertical: 'center',
+              backgroundColor: COLOR_UNDERLAY,
+            }}>
+            +63
+          </Text>
+          <TextInput
+            value={localData.mobile}
+            onChangeText={onMobileChange}
+            placeholder="Mobile Number"
+            keyboardType="numeric"
+            style={{paddingLeft: 20, flex: 1}}
+          />
+        </View>
 
         {/*-------------------- CASH ON DELIVERY --------------------*/}
         <View

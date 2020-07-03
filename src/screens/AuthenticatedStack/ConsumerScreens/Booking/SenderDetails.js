@@ -5,7 +5,7 @@ import validator from 'validator';
 
 import {reverseGeocode} from '../../../../helper';
 import {HeaderBack, HeaderTitle, SchedulePicker, AlertOverlay} from '../../../../components';
-import {COLOR, DARK, MAP_DELTA_LOW, MEDIUM, LIGHT, ORANGE} from '../../../../res/constants';
+import {COLOR, DARK, MAP_DELTA_LOW, MEDIUM, LIGHT, ORANGE, COLOR_UNDERLAY} from '../../../../res/constants';
 
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import FIcon from 'react-native-vector-icons/Feather';
@@ -34,7 +34,21 @@ const SenderDetails = ({navigation, route}) => {
   const onScheduleChange = value => setLocalData({...localData, ...value});
   const onLandmarkChange = value => setLocalData({...localData, landmark: value});
   const onNameChange = value => setLocalData({...localData, name: value});
-  const onMobileChange = value => setLocalData({...localData, mobile: value});
+  // const onMobileChange = value => setLocalData({...localData, mobile: value});
+
+  const onMobileChange = value => {
+    if (value.length == 1 && value == '0') {
+      setLocalData({...localData, mobile: ''});
+      return;
+    }
+
+    if (value.length > 10) {
+      setLocalData({...localData, mobile: localData.mobile});
+      return;
+    }
+
+    setLocalData({...localData, mobile: value});
+  };
 
   const onSubmit = async () => {
     if (localData.latitude == 0 || localData.longitude == 0) {
@@ -49,6 +63,16 @@ const SenderDetails = ({navigation, route}) => {
 
     if (validator.isEmpty(localData.mobile, {ignore_whitespace: true})) {
       Alert.alert('', `Please enter recipient's mobile number.`);
+      return;
+    }
+
+    if (isNaN(localData.mobile)) {
+      Alert.alert('', `Please enter a valid recipient's mobile number.`);
+      return;
+    }
+
+    if (localData.mobile.length != 10) {
+      Alert.alert('', `Please enter a valid recipient's mobile number.`);
       return;
     }
 
@@ -157,13 +181,44 @@ const SenderDetails = ({navigation, route}) => {
 
         {/*-------------------- MOBILE NUMBER --------------------*/}
         <Text style={styles.label}>Mobile Number</Text>
-        <TextInput
+        {/* <TextInput
           value={localData.mobile}
           onChangeText={onMobileChange}
           style={styles.input}
           placeholder="Mobile number"
           keyboardType="number-pad"
-        />
+        /> */}
+        <View
+          style={{
+            marginHorizontal: 20,
+            borderWidth: 1,
+            borderColor: MEDIUM,
+            borderRadius: 5,
+            marginTop: 10,
+            flexDirection: 'row',
+            alignItems: 'center',
+            overflow: 'hidden',
+          }}>
+          <Text
+            style={{
+              color: MEDIUM,
+              paddingHorizontal: 20,
+              borderRightWidth: 1,
+              borderRightColor: MEDIUM,
+              height: '100%',
+              textAlignVertical: 'center',
+              backgroundColor: COLOR_UNDERLAY,
+            }}>
+            +63
+          </Text>
+          <TextInput
+            value={localData.mobile}
+            onChangeText={onMobileChange}
+            placeholder="Mobile Number"
+            keyboardType="numeric"
+            style={{paddingLeft: 20, flex: 1}}
+          />
+        </View>
       </ScrollView>
       {/*-------------------- CONFIRM BUTTON --------------------*/}
       <TouchableHighlight onPress={onSubmit} underlayColor={COLOR} style={styles.submitBox}>

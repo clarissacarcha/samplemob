@@ -51,13 +51,16 @@ const CompletedDeliveries = ({navigation, session}) => {
   return (
     <View style={styles.container}>
       <FlatList
+        showsVerticalScrollIndicator={false}
         data={data.getDeliveries}
         keyExtractor={item => item.id}
         refreshControl={<RefreshControl refreshing={loading} onRefresh={refetch} colors={[COLOR]} tintColor={COLOR} />}
         renderItem={({item, index}) => (
           <DeliveryCard
             delivery={item}
-            onPress={() => navigation.push('SelectedDriverDelivery', {delivery: item, label: ['Ongoing', 'Delivery']})}
+            onPress={() =>
+              navigation.push('SelectedDriverDelivery', {delivery: item, label: ['Completed', 'Delivery']})
+            }
             lastItem={data.getDeliveries.length == index + 1 ? true : false}
           />
         )}

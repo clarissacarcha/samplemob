@@ -144,13 +144,14 @@ const Order = ({navigation, session, constants}) => {
     <View style={styles.container}>
       <OrderTabHeader label={['Available', 'Orders']} />
       <FlatList
+        showsVerticalScrollIndicator={false}
         data={data.getNearestOrderAvailable}
         keyExtractor={item => item.id}
         refreshControl={<RefreshControl refreshing={loading} onRefresh={refetch} colors={[COLOR]} tintColor={COLOR} />}
         renderItem={({item, index}) => (
           <DeliveryCard
             delivery={item}
-            onPress={() => navigation.push('SelectedDriverDelivery', {delivery: item, label: ['View', 'Order']})}
+            onPress={() => navigation.push('SelectedDriverDelivery', {delivery: item, label: ['Delivery', 'Details']})}
             lastItem={data.getNearestOrderAvailable.length == index + 1 ? true : false}
           />
         )}

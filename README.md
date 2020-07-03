@@ -15,12 +15,14 @@ NEXT PATCH
 13. Google API Consumption
 14. Blocked Account Chain
 15. If Blocked Account has ongoing orders, continue.
+16. Customer Loader and Prompt
 
 Customer Pending
 
-2. Generalize On Error Mutation (INTERNAL_SERVER_ERROR)
-3. Fix Order Type Schedule, Today Only
-4. Toktok Logo on Image Profile
+1. Fix Order Type Schedule, Today Only
+2. Toktok Logo on Image Profile
+3. Delivery Details -> Delivery Status
+4. (Checked)Generalize On Error Mutation (INTERNAL_SERVER_ERROR)
 5. (Checked) Generalize Something Went Wrong
 6. (Checked) Post Registration Trim White Space. LandMark,
 7. (Checked) Notifs Clicked Delivery Driver Pix
@@ -39,29 +41,33 @@ Customer Pending
 Driver Pending
 
 1. Can't Go Offline with Ongoing Orders
-2. Don't get orders from blocked consumer account.
-3. Notify Riders in 100km and is-online
-4. Driver Vehicle ID on Delivery on Accept
-5. Rider Can Cancel Order
-6. (checked) Driver Push Notifications (Order Cancel from Customer/Driver)
-7. (checked) Change Password
-8. (checked) Change Password Php / Node
-9. (checked) Replace Go Online Map
-10. (checked) Delivery Card show Cash On Delivery
-11. (checked) Can't Accept Not Enough Credits (To Check)
-12. (checked) Display all driver details
-13. (checked) Middle Name in Profile
-14. (checked) Deduction of Credits on Completed Orders (NEED to Deduct 20% Only)
-15. (checked) UI for Wallet and Wallet History
-16. (checked) Interval location update
-17. (checked) Bottom Navigation
-18. (checked) Wallet To be deducted
-19. (checked) Auto Refresh of Ongoing, Completed, Cancelled
-20. (checked) Rider maximum concurrent delivery orders on Accept
-21. (checked) Select announcements status = 1 and AppFlavor
-22. (checked) Folder Name for Uploaded Images/Thumbnail
-23. (checked) Commission Rate on Delivery Table
-24. Add Rider Location on Go Online
+2. Validate Accept Orders Only Status = 1 and consumer user.status = 1
+3. Save Avatar Thumbnail on Update Profile
+4. Rider Check Location and Camera Permission
+5. Don't get orders from blocked consumer account.
+6. Notify Riders in 100km and is-online
+7. Driver Vehicle ID on Delivery on Accept
+8. Ongoing Order Column on Driver
+9. (checked) Rider Can Cancel Order
+10. (checked) Driver Push Notifications (Order Cancel from Customer/Driver)
+11. (checked) Change Password
+12. (checked) Change Password Php / Node
+13. (checked) Replace Go Online Map
+14. (checked) Delivery Card show Cash On Delivery
+15. (checked) Can't Accept Not Enough Credits (To Check)
+16. (checked) Display all driver details
+17. (checked) Middle Name in Profile
+18. (checked) Deduction of Credits on Completed Orders (NEED to Deduct 20% Only)
+19. (checked) UI for Wallet and Wallet History
+20. (checked) Interval location update
+21. (checked) Bottom Navigation
+22. (checked) Wallet To be deducted
+23. (checked) Auto Refresh of Ongoing, Completed, Cancelled
+24. (checked) Rider maximum concurrent delivery orders on Accept
+25. (checked) Select announcements status = 1 and AppFlavor
+26. (checked) Folder Name for Uploaded Images/Thumbnail
+27. (checked) Commission Rate on Delivery Table
+28. Add Rider Location on Go Online
 
 Good To Have
 

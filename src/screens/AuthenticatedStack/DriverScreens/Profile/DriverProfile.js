@@ -73,8 +73,7 @@ const DriverProfile = ({navigation, route, session, createSession}) => {
         {/*---------------------------------------- FORM ----------------------------------------*/}
         <View style={{marginTop: 20, alignItems: 'center'}}>
           {/*--------------- AVATAR ---------------*/}
-          {/* TODO: If has driver avatar, show avatar, else show placeholder */}
-          {true ? (
+          {session.user.person.avatar ? (
             <TouchableHighlight onPress={onProfilePress} underlayColor={COLOR} style={{borderRadius: 10}}>
               <View
                 style={{

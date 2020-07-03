@@ -77,7 +77,7 @@ const DeliverySchedule = ({label, stop}) => {
 };
 
 export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
-  const {senderStop, recipientStop, createdAt} = delivery;
+  const {senderStop, recipientStop, createdAt, status} = delivery;
   const legend = ['', 'As Soon As Possible', 'Scheduled'];
   const orderType = senderStop.orderType === 2 || recipientStop.orderType == 2 ? 2 : 1;
 
@@ -102,7 +102,7 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
           )}
 
           {/*-------------------- LOOKING FOR YOUR RIDER, KA-TOKTOK --------------------*/}
-          {APP_FLAVOR == 'C' && (
+          {APP_FLAVOR == 'C' && status == 1 && (
             <View style={[styles.directionsBox, {borderBottomWidth: StyleSheet.hairlineWidth, borderColor: LIGHT}]}>
               <View style={styles.directionDetail}>
                 <FAIcon name="search" size={14} color={'white'} style={styles.iconBox} />

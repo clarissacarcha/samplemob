@@ -14,7 +14,7 @@ import {
 import {connect} from 'react-redux';
 import moment from 'moment';
 import 'moment-timezone';
-import {COLOR, DARK, ORANGE, MEDIUM, LIGHT} from '../../../res/constants';
+import {COLOR, DARK, ORANGE, MEDIUM, LIGHT, APP_FLAVOR} from '../../../res/constants';
 import {HeaderBack, HeaderTitle} from '../../../components';
 import {useQuery} from '@apollo/react-hooks';
 import {useNavigation} from '@react-navigation/native';
@@ -32,11 +32,15 @@ import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 const MessageCard = ({message, lastItem}) => {
   const {title, body, delivery, createdAt} = message;
   const navigation = useNavigation();
+
+  const pushConsumerRoute = () => navigation.push('SelectedDelivery', {delivery});
+  const pushDriverRoute = () => navigation.push('SelectedDriverDelivery', {delivery, label: ['Delivery', 'Details']});
+
+  const pushRoute = APP_FLAVOR == 'C' ? pushConsumerRoute : pushDriverRoute;
+
   return (
     <TouchableHighlight
-      onPress={() => {
-        navigation.push('SelectedDelivery', {delivery});
-      }}
+      onPress={pushRoute}
       underlayColor={COLOR}
       style={StyleSheet.flatten([styles.card, lastItem ? {marginBottom: 20} : null])}>
       <View style={styles.taskBox}>

@@ -8,8 +8,12 @@ export const onError = ({graphQLErrors, networkError}) => {
     graphQLErrors.map(({message, locations, path, code}) => {
       if (code === 'INTERNAL_SERVER_ERROR') {
         Alert.alert('', 'Something went wrong.');
-      } else {
+      } else if (code === 'USER_INPUT_ERROR') {
         Alert.alert('', message);
+      } else if (code === 'BAD_USER_INPUT') {
+        Alert.alert('', message);
+      } else {
+        Alert.alert('', 'Something went wrong...');
       }
     });
   }
