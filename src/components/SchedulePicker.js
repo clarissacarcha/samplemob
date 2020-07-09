@@ -4,7 +4,7 @@
  */
 
 import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet, TouchableWithoutFeedback, Dimensions} from 'react-native';
+import {View, Text, StyleSheet, TouchableWithoutFeedback, Dimensions, Platform} from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import FIcon from 'react-native-vector-icons/Feather';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -88,7 +88,7 @@ const createDays = () => {
 
     let label = '';
     if (i === 0) {
-      label = 'Today';
+      label = 'Today   ';
     } else if (i === 1) {
       label = 'Tomorrow';
     } else {
@@ -168,7 +168,12 @@ const PickerRow = ({initialData, setscheduledFrom, setscheduledTo, setScheduledD
 
   return (
     <>
-      <View style={{flexDirection: 'row', marginHorizontal: 20, marginTop: 10}}>
+      <View
+        style={{
+          flexDirection: 'row',
+          marginHorizontal: 20,
+          marginTop: 10,
+        }}>
         <DropDownPicker
           defaultValue={initialData.scheduledDay}
           items={daySchedules}
@@ -177,9 +182,9 @@ const PickerRow = ({initialData, setscheduledFrom, setscheduledTo, setScheduledD
           dropDownStyle={styles.pickerDropDown}
           arrowColor={COLOR}
           labelStyle={{alignItems: 'flex-end'}}
-          itemStyle={{marginLeft: 8}} //
+          itemStyle={{marginLeft: 0}}
           activeItemStyle={{alignItems: 'flex-start'}}
-          zIndex={1000}
+          // zIndex={1000}
           dropDownMaxHeight={250}
           isVisible={visibility.day}
           onOpen={() => {
@@ -202,9 +207,9 @@ const PickerRow = ({initialData, setscheduledFrom, setscheduledTo, setScheduledD
           dropDownStyle={styles.pickerDropDown}
           arrowColor={COLOR}
           labelStyle={{alignItems: 'flex-end'}}
-          itemStyle={{marginLeft: 8}} //
+          itemStyle={{marginLeft: 0}} //
           activeItemStyle={{alignItems: 'flex-start'}}
-          zIndex={1000}
+          // zIndex={5}
           dropDownMaxHeight={250}
           isVisible={visibility.from}
           onOpen={() => {
@@ -227,9 +232,9 @@ const PickerRow = ({initialData, setscheduledFrom, setscheduledTo, setScheduledD
           dropDownStyle={styles.pickerDropDown}
           arrowColor={COLOR}
           labelStyle={{alignItems: 'flex-end'}}
-          itemStyle={{marginLeft: 8}} //
+          itemStyle={{marginLeft: 0}} //
           activeItemStyle={{alignItems: 'flex-start', color: COLOR}}
-          zIndex={1000}
+          // zIndex={1000}
           dropDownMaxHeight={250}
           isVisible={visibility.to}
           onOpen={() => {
@@ -304,8 +309,13 @@ export const SchedulePicker = ({initialData, onScheduleChange}) => {
   }, [orderType, scheduledFrom, scheduledTo, scheduledDay]);
 
   return (
-    <View>
-      {/*-------------------- URGENCY PICKER --------------------*/}
+    <View
+      style={{
+        ...(Platform.OS !== 'android' && {
+          zIndex: 10,
+        }),
+      }}>
+      {/*-------------------- ORDER TYPE PICKER --------------------*/}
       <View style={{flexDirection: 'row', marginHorizontal: 20}}>
         <TouchableWithoutFeedback onPress={() => setOrderType(1)}>
           <View
@@ -316,12 +326,13 @@ export const SchedulePicker = ({initialData, onScheduleChange}) => {
               alignItems: 'center',
               height: 50,
               borderRadius: 10,
-              paddingLeft: 20,
-              paddingRight: 10,
+              paddingHorizontal: 20,
               borderWidth: orderType === 1 ? 2 : 1,
               borderColor: orderType === 1 ? COLOR : LIGHT,
             }}>
-            <Text style={{fontSize: 12}}>As Soon As Possible</Text>
+            <Text style={{fontSize: 12}} numberOfLines={2}>
+              {`As Soon\nAs Possible`}
+            </Text>
             <MCIcon name="run-fast" size={24} color={orderType === 1 ? COLOR : LIGHT} />
           </View>
         </TouchableWithoutFeedback>
@@ -350,7 +361,7 @@ export const SchedulePicker = ({initialData, onScheduleChange}) => {
 
       {/*-------------------- FINE PRINT --------------------*/}
       <View style={{marginHorizontal: 20, marginTop: 10}}>
-        <Text style={{color: DARK, fontSize: 9, fontWeight: 'bold'}}>{finePrint[orderType]}</Text>
+        <Text style={{color: DARK, fontSize: 10, fontWeight: 'bold'}}>{finePrint[orderType]}</Text>
       </View>
 
       {/*-------------------- TIME PICKER --------------------*/}
@@ -385,7 +396,6 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
     borderColor: MEDIUM,
-    zIndex: 9,
   },
 
   label: {

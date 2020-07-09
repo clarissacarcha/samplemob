@@ -6,6 +6,7 @@ import validator from 'validator';
 import {useMutation} from '@apollo/react-hooks';
 import {COLOR, DARK, MAP_DELTA_LOW, ORANGE, MEDIUM} from '../../../../res/constants';
 import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../../components';
+import {BlackButton} from '../../../../components/ui';
 import {onError} from '../../../../util/ErrorUtility';
 import {PATCH_PERSON_POST_REGISTRATION} from '../../../../graphql';
 
@@ -71,9 +72,9 @@ const ConsumerProfile = ({navigation, route, session, createSession}) => {
         {/*-------------------- MOBILE NUMBER --------------------*/}
 
         <Text style={styles.label}>Mobile Number</Text>
-        <Text style={[styles.input, {height: 50, textAlignVertical: 'center', color: MEDIUM}]}>
-          {session.user.username}
-        </Text>
+        <View style={[styles.input, {justifyContent: 'center'}]}>
+          <Text style={{color: MEDIUM}}>{session.user.username}</Text>
+        </View>
 
         {/*-------------------- FIRST NAME --------------------*/}
         <Text style={styles.label}>First Name</Text>
@@ -105,21 +106,10 @@ const ConsumerProfile = ({navigation, route, session, createSession}) => {
         />
       </ScrollView>
       {/*-------------------- UPDATE BUTTON --------------------*/}
-      <TouchableHighlight onPress={onSubmit} underlayColor={COLOR} style={styles.submitBox}>
-        <View style={styles.submit}>
-          <Text style={{color: COLOR, fontSize: 20}}>Update Profile</Text>
-        </View>
-      </TouchableHighlight>
+      <BlackButton onPress={onSubmit} label="Update Profile" containerStyle={{marginBottom: 0}} />
 
-      {/*-------------------- UPDATE BUTTON --------------------*/}
-      <TouchableHighlight
-        onPress={() => navigation.push('ConsumerChangePassword')}
-        underlayColor={COLOR}
-        style={[styles.submitBox, {marginTop: 0}]}>
-        <View style={styles.submit}>
-          <Text style={{color: COLOR, fontSize: 20}}>Change Password</Text>
-        </View>
-      </TouchableHighlight>
+      {/*-------------------- CHANGE PASSWORD BUTTON --------------------*/}
+      <BlackButton onPress={() => navigation.push('ConsumerChangePassword')} label="Change Password" />
     </View>
   );
 };
@@ -159,6 +149,8 @@ const styles = StyleSheet.create({
     borderColor: MEDIUM,
     borderRadius: 5,
     paddingLeft: 20,
+    height: 50,
+    color: DARK,
   },
   label: {
     marginHorizontal: 20,

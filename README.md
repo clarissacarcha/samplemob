@@ -20,54 +20,27 @@ NEXT PATCH
 Customer Pending
 
 1. Fix Order Type Schedule, Today Only
-2. Toktok Logo on Image Profile
-3. Delivery Details -> Delivery Status
-4. (Checked)Generalize On Error Mutation (INTERNAL_SERVER_ERROR)
-5. (Checked) Generalize Something Went Wrong
-6. (Checked) Post Registration Trim White Space. LandMark,
-7. (Checked) Notifs Clicked Delivery Driver Pix
-8. (Checked) API Security
-9. (Checked) Version Control
-10. (HALF) Item Description API (HARD CODE)
-11. (Checked) Catch all on search location (Also add loading)
-12. (Checked) API for Post Delivery with provision to assign Rider
-13. (Checked) API Announcement for Customer and Rider With Push Notifs
-14. (Checked) Booking Success New Logo
-15. (Checked) Driver Location Map
-16. (Checked) Notes, Landmark, Item Description/Cargo Type on Delivery Details
-17. (Checked) Check Server Time
-18. Cant Cancel If Picked Up IN API
+2. Location Permission iOS
+3. iOS icons and splash screen
+4. Push Notifications
+5. Notifications/Announcement Icons
+6. Toktok Logo on Image Profile
+7. Delivery Details -> Delivery Status
+8. (HALF) Item Description API (HARD CODE)
+9. Cant Cancel If Picked Up IN API
 
 Driver Pending
 
 1. Can't Go Offline with Ongoing Orders
-2. Validate Accept Orders Only Status = 1 and consumer user.status = 1
-3. Save Avatar Thumbnail on Update Profile
-4. Rider Check Location and Camera Permission
-5. Don't get orders from blocked consumer account.
-6. Notify Riders in 100km and is-online
-7. Driver Vehicle ID on Delivery on Accept
-8. Ongoing Order Column on Driver
-9. (checked) Rider Can Cancel Order
-10. (checked) Driver Push Notifications (Order Cancel from Customer/Driver)
-11. (checked) Change Password
-12. (checked) Change Password Php / Node
-13. (checked) Replace Go Online Map
-14. (checked) Delivery Card show Cash On Delivery
-15. (checked) Can't Accept Not Enough Credits (To Check)
-16. (checked) Display all driver details
-17. (checked) Middle Name in Profile
-18. (checked) Deduction of Credits on Completed Orders (NEED to Deduct 20% Only)
-19. (checked) UI for Wallet and Wallet History
-20. (checked) Interval location update
-21. (checked) Bottom Navigation
-22. (checked) Wallet To be deducted
-23. (checked) Auto Refresh of Ongoing, Completed, Cancelled
-24. (checked) Rider maximum concurrent delivery orders on Accept
-25. (checked) Select announcements status = 1 and AppFlavor
-26. (checked) Folder Name for Uploaded Images/Thumbnail
-27. (checked) Commission Rate on Delivery Table
-28. Add Rider Location on Go Online
+2. Wallet Logs when Operator is Toktok
+3. Validate Accept Orders Only Status = 1 and consumer user.status = 1
+4. Save Avatar Thumbnail on Update Profile
+5. Rider Check Location and Camera Permission
+6. Don't get orders from blocked consumer account.
+7. Notify Riders in 100km and is-online
+8. Driver Vehicle ID on Delivery on Accept
+9. Ongoing Order Column on Driver
+10. Add Rider Location on Go Online
 
 Good To Have
 
@@ -78,3 +51,15 @@ Good To Have
 5. Booking Copy
 6. Can't Type dots and dashes on mobile number fields.
 7. Driver Ongoing Order Count (Increment/Decrement on Accept and Complete)
+
+Current
+
+1. On Booking Map, auto detection of sender location
+2. On Search Places, on keyboard type, debounce of 1 second
+3. On Map pinpoint location, on every move
+4. On Confirm Sender or Recipient Details
+
+Proposed
+
+1. On Confirm Sender or Recipient (Detect changes to not invoke Google API on same location)
+2. On Search Places, add Search Button no not trigger search on keyboard type

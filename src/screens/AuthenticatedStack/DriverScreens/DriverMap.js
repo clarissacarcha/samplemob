@@ -11,10 +11,6 @@ import FIcon from 'react-native-vector-icons/Feather';
 import {CLIENT, ON_DISPATCH} from '../../../graphql';
 
 const DriverMap = ({navigation, session}) => {
-  navigation.setOptions({
-    header: () => null,
-  });
-
   const mapViewRef = useRef(null);
   const [isOnline, setIsOnline] = useState(false);
   const [sender, setSender] = useState({

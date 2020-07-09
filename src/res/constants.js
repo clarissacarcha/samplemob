@@ -1,6 +1,6 @@
 export const APP_VERSION = '1.0.0';
 
-export const APP_FLAVOR = 'D'; // C -customer || D - driver
+export const APP_FLAVOR = 'C'; // C -customer || D - driver
 export const COLOR = '#FDBA1C'; //YELLOW
 export const COLOR_UNDERLAY = 'rgba(256,186,28, 0.1)';
 export const ORANGE = '#F5841F';

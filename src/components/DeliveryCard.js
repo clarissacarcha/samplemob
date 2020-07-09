@@ -5,6 +5,7 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableHighlight} from 'react-native';
 import {COLOR, DARK, MEDIUM, LIGHT, ORANGE, APP_FLAVOR} from '../res/constants';
+import {YellowIcon} from '../components/ui';
 import {numberFormat} from '../helper/numberFormat';
 import moment from 'moment';
 import 'moment-timezone';
@@ -58,12 +59,12 @@ const DeliverySchedule = ({label, stop}) => {
     <View style={[styles.directionsBox, {borderBottomWidth: StyleSheet.hairlineWidth, borderColor: LIGHT}]}>
       <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
         {label == 'Pick Up' ? (
-          <EIcon name="hand" size={14} color={'white'} style={styles.iconBox} />
+          <YellowIcon set="Entypo" name="hand" />
         ) : (
-          <FA5Icon name="hands-helping" size={12} color={'white'} style={styles.iconBox} />
+          <YellowIcon set="FontAwesome5" name="hands-helping" size={14} />
         )}
 
-        <View style={{marginLeft: 16}}>
+        <View style={{marginLeft: 10}}>
           <Text style={{fontWeight: 'bold'}}>{label}</Text>
           {stop.orderType == 1 ? (
             <Text style={{color: MEDIUM, fontSize: 11, fontWeight: 'bold'}}>As Soon As Possible</Text>
@@ -91,7 +92,7 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
               <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
                 <MCIcon name="cash" size={24} color={COLOR} style={styles.iconBoxWhite} />
 
-                <View style={{marginLeft: 16}}>
+                <View style={{marginLeft: 10}}>
                   <Text style={{fontWeight: 'bold'}}>Cash On Delivery</Text>
                   <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
                     <Text style={{fontWeight: 'bold', marginLeft: 10}}>₱ {delivery.cashOnDelivery}.00</Text>
@@ -105,8 +106,8 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
           {APP_FLAVOR == 'C' && status == 1 && (
             <View style={[styles.directionsBox, {borderBottomWidth: StyleSheet.hairlineWidth, borderColor: LIGHT}]}>
               <View style={styles.directionDetail}>
-                <FAIcon name="search" size={14} color={'white'} style={styles.iconBox} />
-                <Text style={{fontSize: 14, marginLeft: 16, color: DARK, fontWeight: 'bold'}}>
+                <YellowIcon set="FontAwesome" name="search" />
+                <Text style={{fontSize: 14, marginLeft: 10, color: DARK, fontWeight: 'bold'}}>
                   Looking for your rider,<Text style={{color: ORANGE}}> ka-toktok</Text>
                 </Text>
               </View>
@@ -120,9 +121,8 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
               {borderBottomWidth: StyleSheet.hairlineWidth, borderColor: LIGHT, borderTopWidth: 0},
             ]}>
             <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-              <Ionicon name="md-pricetag" size={16} color={'white'} style={styles.iconBox} />
-
-              <View style={{marginLeft: 16}}>
+              <YellowIcon set="Ionicon" name="md-pricetag" />
+              <View style={{marginLeft: 10}}>
                 <Text style={{fontWeight: 'bold'}}>Amount</Text>
                 <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
                   <Text style={{fontWeight: 'bold', marginLeft: 10}}>₱ {delivery.price}.00</Text>
@@ -131,9 +131,8 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
             </View>
             {APP_FLAVOR == 'D' && (
               <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-                <MCIcon name="credit-card" size={16} color={'white'} style={styles.iconBox} />
-
-                <View style={{marginLeft: 16}}>
+                <YellowIcon set="MaterialCommunity" name="credit-card" />
+                <View style={{marginLeft: 10}}>
                   <Text style={{fontWeight: 'bold'}}>Credit Cost</Text>
                   <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
                     <Text style={{fontWeight: 'bold', marginLeft: 10}}>
@@ -149,9 +148,8 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
           {delivery.cashOnDelivery && APP_FLAVOR == 'C' && (
             <View style={[styles.directionsBox, {borderBottomWidth: StyleSheet.hairlineWidth, borderColor: LIGHT}]}>
               <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-                <MCIcon name="cash" size={22} color={'white'} style={styles.iconBox} />
-
-                <View style={{marginLeft: 16}}>
+                <YellowIcon set="MaterialCommunity" name="cash" size={22} />
+                <View style={{marginLeft: 10}}>
                   <Text style={{fontWeight: 'bold'}}>Cash On Delivery</Text>
                   <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
                     <Text style={{fontWeight: 'bold', marginLeft: 10}}>₱ {numberFormat(delivery.cashOnDelivery)}</Text>
@@ -166,10 +164,10 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
             <View style={styles.directionDetail}>
               {/*-------------------- ORDER DATE --------------------*/}
               <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-                <FAIcon name="calendar" size={14} color={'white'} style={styles.iconBox} />
-                <View style={{marginLeft: 16}}>
+                <YellowIcon set="FontAwesome" name="calendar" />
+                <View style={{marginLeft: 10}}>
                   <Text style={{fontWeight: 'bold', fontSize: 14}}>Order Date</Text>
-                  <Text numberOfLines={1} style={{paddingRight: 10, color: MEDIUM, fontSize: 11, fontWeight: 'bold'}}>
+                  <Text numberOfLines={1} style={{paddingRight: 10, color: MEDIUM, fontSize: 10}}>
                     {createdAt}
                   </Text>
                 </View>
@@ -177,10 +175,10 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
 
               {/*-------------------- ORDER TYPE --------------------*/}
               <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-                <Fontisto name="sitemap" size={14} color={'white'} style={styles.iconBox} />
-                <View style={{marginLeft: 16}}>
+                <YellowIcon set="Fontisto" name="sitemap" />
+                <View style={{marginLeft: 10}}>
                   <Text style={{fontWeight: 'bold'}}>Order Type</Text>
-                  <Text numberOfLines={1} style={{paddingRight: 10, color: MEDIUM, fontSize: 11, fontWeight: 'bold'}}>
+                  <Text numberOfLines={1} style={{paddingRight: 10, color: MEDIUM, fontSize: 10}}>
                     {legend[orderType]}
                   </Text>
                 </View>
@@ -199,10 +197,10 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
 
           <View style={{flexDirection: 'row', marginHorizontal: 20}}>
             {/*-------------------- ICONS --------------------*/}
-            <View style={{width: 40, justifyContent: 'center'}}>
-              <FA5Icon name="map-pin" size={16} color={DARK} style={styles.iconBox} />
-              <EIcon name="flow-line" size={26} color={DARK} />
-              <FA5Icon name="map-marker-alt" size={16} color={DARK} style={styles.iconBox} />
+            <View style={{width: 34, justifyContent: 'center'}}>
+              <YellowIcon set="FontAwesome5" name="map-pin" darkIcon />
+              <EIcon name="flow-line" size={26} color={DARK} style={{right: 1}} />
+              <YellowIcon set="FontAwesome5" name="map-marker-alt" darkIcon />
             </View>
             <View style={{flex: 1}}>
               {/*-------------------- SENDER DETAILS --------------------*/}
@@ -235,21 +233,22 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
           </View>
 
           {/*-------------------- DRIVER INFO --------------------*/}
-          {delivery.driver && APP_FLAVOR == 'C' && (
-            <View style={[styles.directionsBox, {borderBottomWidth: StyleSheet.hairlineWidth, borderColor: LIGHT}]}>
-              <View style={styles.directionDetail}>
-                <Fontisto name="motorcycle" size={18} color={DARK} style={styles.iconBox} />
-                <View style={{marginLeft: 16}}>
-                  <Text style={{fontWeight: 'bold'}}>
-                    {`${delivery.driver.user.person.firstName} ${delivery.driver.user.person.lastName}`}
-                  </Text>
-                  <Text numberOfLines={1} style={{paddingRight: 10, color: MEDIUM, fontSize: 10}}>
-                    {delivery.driver.user.username}
-                  </Text>
+          {delivery.driver &&
+            (APP_FLAVOR == 'C' && (
+              <View style={[styles.directionsBox, {borderBottomWidth: StyleSheet.hairlineWidth, borderColor: LIGHT}]}>
+                <View style={styles.directionDetail}>
+                  <YellowIcon set="Fontisto" name="motorcycle" />
+                  <View style={{marginLeft: 10}}>
+                    <Text style={{fontWeight: 'bold'}}>
+                      {`${delivery.driver.user.person.firstName} ${delivery.driver.user.person.lastName}`}
+                    </Text>
+                    <Text numberOfLines={1} style={{paddingRight: 10, color: MEDIUM, fontSize: 10}}>
+                      {delivery.driver.user.username}
+                    </Text>
+                  </View>
                 </View>
               </View>
-            </View>
-          )}
+            ))}
 
           {/*---------------------------------------- DISTANCE DURATION ROW ----------------------------------------*/}
           <View
@@ -260,8 +259,8 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
             <View style={styles.directionDetail}>
               {/*-------------------- DISTANCE --------------------*/}
               <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-                <MCIcon name="map-marker-distance" size={16} color={'white'} style={styles.iconBox} />
-                <View style={{marginLeft: 16}}>
+                <YellowIcon set="MaterialCommunity" name="map-marker-distance" />
+                <View style={{marginLeft: 10}}>
                   <Text style={{fontWeight: 'bold', fontSize: 14}}>Distance</Text>
                   <Text style={{fontWeight: 'bold', color: MEDIUM, fontSize: 11}}>
                     {parseFloat(delivery.distance).toFixed(2)}
@@ -272,8 +271,8 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
 
               {/*-------------------- DURATION --------------------*/}
               <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-                <MCIcon name="timer" size={18} color={'white'} style={styles.iconBox} />
-                <View style={{marginLeft: 16}}>
+                <YellowIcon set="MaterialCommunity" name="timer" size={18} />
+                <View style={{marginLeft: 10}}>
                   <Text style={{fontWeight: 'bold'}}>Duration</Text>
                   <Text style={{fontWeight: 'bold', color: MEDIUM, fontSize: 11}}>
                     {parseFloat(delivery.duration).toFixed(0)}
@@ -346,6 +345,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     textAlign: 'center',
     textAlignVertical: 'center',
+    overflow: 'hidden',
   },
 
   driverCodBox: {

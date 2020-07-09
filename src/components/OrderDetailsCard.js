@@ -5,6 +5,7 @@
 import React from 'react';
 import {View, Text, StyleSheet, Platform, Linking} from 'react-native';
 import {COLOR, DARK, MEDIUM, ORANGE, LIGHT, APP_FLAVOR} from '../res/constants';
+import {YellowIcon} from '../components/ui';
 import {numberFormat} from '../helper';
 import moment from 'moment';
 
@@ -58,9 +59,9 @@ const DeliverySchedule = ({label, stop}) => {
     <View style={[styles.directionsBox, {borderBottomWidth: StyleSheet.hairlineWidth, borderColor: LIGHT}]}>
       <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
         {label == 'Pick Up' ? (
-          <EIcon name="hand" size={14} color={'white'} style={styles.iconBox} />
+          <YellowIcon set="Entypo" name="hand" />
         ) : (
-          <FA5Icon name="hands-helping" size={12} color={'white'} style={styles.iconBox} />
+          <YellowIcon set="FontAwesome5" name="hands-helping" size={14} />
         )}
 
         <View style={{marginLeft: 10}}>
@@ -94,7 +95,8 @@ export const OrderDetailsCard = ({delivery}) => {
             borderColor: MEDIUM,
           }}>
           <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', paddingVertical: 20}}>
-            <FA5Icon name="file-alt" size={16} color={DARK} style={styles.iconBox} />
+            <YellowIcon set="FontAwesome5" name="file-alt" size={16} darkIcon />
+
             <Text style={{marginLeft: 10, color: DARK, fontWeight: 'bold'}}>
               Order <Text style={{color: ORANGE}}>Details</Text>
             </Text>
@@ -102,7 +104,7 @@ export const OrderDetailsCard = ({delivery}) => {
 
           {APP_FLAVOR == 'D' && (
             <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-              <MCIcon name="credit-card" size={16} color={'white'} style={styles.iconBox} />
+              <YellowIcon set="MaterialCommunity" name="credit-card" size={16} />
 
               <View style={{marginLeft: 10}}>
                 <Text style={{fontWeight: 'bold'}}>Credit Cost</Text>
@@ -119,7 +121,7 @@ export const OrderDetailsCard = ({delivery}) => {
         {/*-------------------- ORDER PRICE AND COD ROW --------------------*/}
         <View style={[styles.directionsBox, {borderBottomWidth: StyleSheet.hairlineWidth, borderColor: LIGHT}]}>
           <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-            <Ionicon name="md-pricetag" size={16} color={'white'} style={styles.iconBox} />
+            <YellowIcon set="Ionicon" name="md-pricetag" size={16} />
 
             <View style={{marginLeft: 10}}>
               <Text style={{fontWeight: 'bold'}}>Amount</Text>
@@ -130,7 +132,7 @@ export const OrderDetailsCard = ({delivery}) => {
           </View>
           {delivery.cashOnDelivery && (
             <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-              <MCIcon name="cash" size={22} color={'white'} style={styles.iconBox} />
+              <YellowIcon set="MaterialCommunity" name="cash" size={22} />
 
               <View style={{marginLeft: 10}}>
                 <Text style={{fontWeight: 'bold'}}>Cash On Delivery</Text>
@@ -150,10 +152,10 @@ export const OrderDetailsCard = ({delivery}) => {
           <View style={styles.directionDetail}>
             {/*-------------------- ORDER DATE --------------------*/}
             <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-              <FAIcon name="calendar" size={14} color={'white'} style={styles.iconBox} />
+              <YellowIcon set="FontAwesome" name="calendar" />
               <View style={{marginLeft: 10}}>
                 <Text style={{fontWeight: 'bold', fontSize: 14}}>Order Date</Text>
-                <Text numberOfLines={1} style={{paddingRight: 10, color: MEDIUM, fontSize: 11, fontWeight: 'bold'}}>
+                <Text numberOfLines={1} style={{paddingRight: 10, color: MEDIUM, fontSize: 10}}>
                   {/* {moment
                     .tz(delivery.createdAt, 'Asia/Manila')
                     .format('MMM DD YYYY - hh:mm A')
@@ -165,10 +167,10 @@ export const OrderDetailsCard = ({delivery}) => {
 
             {/*-------------------- ORDER TYPE --------------------*/}
             <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-              <Fontisto name="sitemap" size={14} color={'white'} style={styles.iconBox} />
+              <YellowIcon set="Fontisto" name="sitemap" />
               <View style={{marginLeft: 10}}>
                 <Text style={{fontWeight: 'bold'}}>Order Type</Text>
-                <Text numberOfLines={1} style={{paddingRight: 10, color: MEDIUM, fontSize: 11, fontWeight: 'bold'}}>
+                <Text numberOfLines={1} style={{paddingRight: 10, color: MEDIUM, fontSize: 10}}>
                   {legend[orderType]}
                 </Text>
               </View>
@@ -196,7 +198,7 @@ export const OrderDetailsCard = ({delivery}) => {
           <View style={styles.directionDetail}>
             {/*-------------------- DISTANCE --------------------*/}
             <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-              <MCIcon name="map-marker-distance" size={16} color={'white'} style={styles.iconBox} />
+              <YellowIcon set="MaterialCommunity" name="map-marker-distance" size={16} />
               <View style={{marginLeft: 10}}>
                 <Text style={{fontWeight: 'bold', fontSize: 14}}>Distance</Text>
                 <Text style={{fontWeight: 'bold', color: MEDIUM, fontSize: 11}}>
@@ -208,7 +210,7 @@ export const OrderDetailsCard = ({delivery}) => {
 
             {/*-------------------- DURATION --------------------*/}
             <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-              <MCIcon name="timer" size={18} color={'white'} style={styles.iconBox} />
+              <YellowIcon set="MaterialCommunity" name="timer" size={18} />
               <View style={{marginLeft: 10}}>
                 <Text style={{fontWeight: 'bold'}}>Duration</Text>
                 <Text style={{fontWeight: 'bold', color: MEDIUM, fontSize: 11}}>
@@ -223,7 +225,7 @@ export const OrderDetailsCard = ({delivery}) => {
         {/*-------------------- ITEM DESCRIPTION --------------------*/}
         <View style={[styles.rowFlexibleHeight]}>
           <View style={{flex: 1, flexDirection: 'row', marginTop: 8}}>
-            <EIcon name="box" size={16} color={'white'} style={[styles.iconBox, {marginTop: 4}]} />
+            <YellowIcon set="Entypo" name="box" size={16} containerStyle={{marginTop: 4}} />
             <View style={{marginLeft: 10}}>
               <Text style={{fontWeight: 'bold'}}>Item Description</Text>
               <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
@@ -236,7 +238,7 @@ export const OrderDetailsCard = ({delivery}) => {
         {delivery.notes && (
           <View style={[styles.rowFlexibleHeight, {borderTopWidth: StyleSheet.hairlineWidth, borderColor: LIGHT}]}>
             <View style={{flex: 1, flexDirection: 'row', marginTop: 8}}>
-              <SLIcon name="note" size={16} color={'white'} style={[styles.iconBox, {marginTop: 4}]} />
+              <YellowIcon set="SimpleLine" name="note" size={14} containerStyle={{marginTop: 4}} />
               <View style={{marginLeft: 10}}>
                 <Text style={{fontWeight: 'bold'}}>Notes</Text>
                 <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>

@@ -79,10 +79,23 @@ target 'toktok' do
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
+  # For React Native Permissions on iOS
+  permissions_path = '../node_modules/react-native-permissions/ios'
+  pod 'Permission-Camera', :path => "#{permissions_path}/Camera.podspec"
+  pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse.podspec"
+  pod 'Permission-Notifications', :path => "#{permissions_path}/Notifications.podspec"
+  pod 'Permission-PhotoLibrary', :path => "#{permissions_path}/PhotoLibrary.podspec"
+
   target 'toktokTests' do
     inherit! :complete
     # Pods for testing
   end
+
+  # React Native Maps dependencies
+  rn_maps_path = '../node_modules/react-native-maps'
+  pod 'react-native-google-maps', :path => rn_maps_path
+  pod 'GoogleMaps'
+  pod 'Google-Maps-iOS-Utils'
 
   use_native_modules!
 

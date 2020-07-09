@@ -10,16 +10,21 @@ import {
   Alert,
   Dimensions,
   Switch,
+  Keyboard,
 } from 'react-native';
 import validator from 'validator';
 import {connect} from 'react-redux';
+import InputScrollView from 'react-native-input-scroll-view';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import {numberFormatInteger, reverseGeocode} from '../../../../helper';
 import {COLOR, DARK, MAP_DELTA_LOW, MEDIUM, LIGHT, ORANGE, COLOR_UNDERLAY} from '../../../../res/constants';
 import {HeaderBack, HeaderTitle, ItemDescription, SchedulePicker, AlertOverlay} from '../../../../components';
+import {YellowIcon, BlackIcon, BlackButton} from '../../../../components/ui';
+
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 import FIcon from 'react-native-vector-icons/Feather';
+import {useSafeArea} from 'react-native-safe-area-context';
 
 const width = Dimensions.get('window').width;
 const itemDimension = (width - 120) / 5;
@@ -34,6 +39,7 @@ const RecipientDetails = ({navigation, route, constants}) => {
 
   const {data, setData, index, setPrice} = route.params;
 
+  // const [isKeyboardShown, setIsKeyboardShown] = useState(false);
   const [loading, setLoading] = useState(false);
   const [localData, setLocalData] = useState(data[index]);
   const [codSwitch, setCodSwitch] = useState(data[index].cashOnDelivery ? true : false);
@@ -126,7 +132,11 @@ const RecipientDetails = ({navigation, route, constants}) => {
       return;
     }
 
-    if (codSwitch && localData.cashOnDelivery > constants.maxCashOnDelivery) {
+    if (
+      codSwitch &&
+      (parseFloat(localData.cashOnDelivery) > parseFloat(constants.maxCashOnDelivery) ||
+        parseFloat(localData.cashOnDelivery) < 1.0)
+    ) {
       Alert.alert('', `Please enter a Cash on Delivery amount between 1 and ${constants.maxCashOnDelivery}.`);
       return;
     }
@@ -154,208 +164,197 @@ const RecipientDetails = ({navigation, route, constants}) => {
     navigation.pop();
   };
 
+  // useEffect(() => {
+  //   const onKeyboardShow = Keyboard.addListener('keyboardDidShow', () => setIsKeyboardShown(true));
+  //   const onKeyboardHide = Keyboard.addListener('keyboardDidHide', () => setIsKeyboardShown(false));
+
+  //   return () => {
+  //     Keyboard.removeAllListeners();
+  //   };
+  // }, []);
+
   return (
     <View style={styles.container}>
       <AlertOverlay visible={loading} />
-      <ScrollView showsVerticalScrollIndicator={false} ref={scrollRef}>
-        {localData.latitude != 0 && (
-          <TouchableHighlight onPress={onSearchMap}>
-            <View style={{height: 150}}>
-              {/*---------------------------------------- MAP ----------------------------------------*/}
-              <MapView
-                provider={PROVIDER_GOOGLE}
-                style={styles.map}
-                region={{
-                  latitude: parseFloat(localData.latitude),
-                  longitude: parseFloat(localData.longitude),
-                  ...MAP_DELTA_LOW,
-                }}
-                scrollEnabled={false}
-                rotateEnabled={false}
-                zoomEnabled={false}
-              />
-              {/*---------------------------------------- PIN ----------------------------------------*/}
-              <View style={styles.floatingPin}>
-                <FA5Icon name="map-marker-alt" size={24} color={COLOR} style={{marginTop: -20}} />
+      <View style={{flex: 1}}>
+        <InputScrollView showsVerticalScrollIndicator={false} ref={scrollRef} keyboardOffset={20}>
+          {localData.latitude != 0 && (
+            <TouchableHighlight onPress={onSearchMap}>
+              <View style={{height: 150}}>
+                {/*---------------------------------------- MAP ----------------------------------------*/}
+                <MapView
+                  provider={PROVIDER_GOOGLE}
+                  style={styles.map}
+                  region={{
+                    latitude: parseFloat(localData.latitude),
+                    longitude: parseFloat(localData.longitude),
+                    ...MAP_DELTA_LOW,
+                  }}
+                  scrollEnabled={false}
+                  rotateEnabled={false}
+                  zoomEnabled={false}
+                />
+                {/*---------------------------------------- PIN ----------------------------------------*/}
+                <View style={styles.floatingPin}>
+                  <FA5Icon name="map-marker-alt" size={24} color={COLOR} style={{marginTop: -20}} />
+                </View>
               </View>
+            </TouchableHighlight>
+          )}
+          {/*---------------------------------------- ADDRESS ----------------------------------------*/}
+          <TouchableHighlight onPress={onSearchPlaces} style={{margin: 20, borderRadius: 10}}>
+            <View style={styles.addressBox}>
+              <BlackIcon set="FontAwesome5" name="map-pin" />
+
+              <View style={{justifyContent: 'center', flex: 1, marginHorizontal: 20}}>
+                <Text style={{fontWeight: 'bold'}}>Going To</Text>
+                <Text style={{color: 'white', fontSize: 10}} numberOfLines={1}>
+                  {localData.formattedAddress}
+                </Text>
+              </View>
+              <BlackIcon set="Feather" name="chevron-right" size={20} />
             </View>
           </TouchableHighlight>
-        )}
-        {/*---------------------------------------- ADDRESS ----------------------------------------*/}
-        <TouchableHighlight onPress={onSearchPlaces} style={{margin: 20, borderRadius: 10}}>
-          <View style={styles.addressBox}>
-            <FA5Icon name="map-marker-alt" size={16} color={COLOR} style={styles.iconBoxDark} />
-            <View style={{justifyContent: 'center', flex: 1}}>
-              <Text style={{fontWeight: 'bold'}}>Going To</Text>
-              <Text style={{color: 'white', fontSize: 10}} numberOfLines={1}>
-                {localData.formattedAddress}
-              </Text>
-            </View>
-            <FIcon
-              name="chevron-right"
-              size={18}
-              color={COLOR}
-              style={{
-                height: 20,
-                width: 20,
-                backgroundColor: DARK,
-                borderRadius: 10,
-                textAlignVertical: 'center',
-                textAlign: 'center',
-                marginLeft: 10,
-              }}
-            />
-          </View>
-        </TouchableHighlight>
 
-        {/*-------------------- ORDER TYPE --------------------*/}
-        <Text style={styles.label}>Order Type</Text>
-        <SchedulePicker onScheduleChange={onScheduleChange} initialData={localData} />
+          {/*-------------------- ORDER TYPE --------------------*/}
+          <Text style={styles.label}>Order Type</Text>
+          <SchedulePicker onScheduleChange={onScheduleChange} initialData={localData} />
 
-        {/*-------------------- LANDMARK --------------------*/}
-        <Text style={styles.label}>Landmark</Text>
-        <TextInput
-          value={localData.landmark}
-          onChangeText={onLandmarkChange}
-          style={styles.input}
-          placeholder="Location details (landmark, number etc)"
-        />
-
-        {/*-------------------- NAME --------------------*/}
-        <Text style={styles.label}>Recipient's Name</Text>
-        <TextInput
-          value={localData.name}
-          onChangeText={onNameChange}
-          style={styles.input}
-          placeholder="Recipient's name"
-        />
-
-        {/*-------------------- MOBILE NUMBER --------------------*/}
-        <Text style={styles.label}>Mobile Number</Text>
-        {/* <TextInput
-          value={localData.mobile}
-          onChangeText={onMobileChange}
-          style={styles.input}
-          placeholder="Mobile number"
-          keyboardType="number-pad"
-        /> */}
-        <View
-          style={{
-            marginHorizontal: 20,
-            borderWidth: 1,
-            borderColor: MEDIUM,
-            borderRadius: 5,
-            marginTop: 10,
-            flexDirection: 'row',
-            alignItems: 'center',
-            overflow: 'hidden',
-          }}>
-          <Text
-            style={{
-              color: MEDIUM,
-              paddingHorizontal: 20,
-              borderRightWidth: 1,
-              borderRightColor: MEDIUM,
-              height: '100%',
-              textAlignVertical: 'center',
-              backgroundColor: COLOR_UNDERLAY,
-            }}>
-            +63
-          </Text>
+          {/*-------------------- LANDMARK --------------------*/}
+          <Text style={styles.label}>Landmark</Text>
           <TextInput
-            value={localData.mobile}
-            onChangeText={onMobileChange}
-            placeholder="Mobile Number"
-            keyboardType="numeric"
-            style={{paddingLeft: 20, flex: 1}}
+            value={localData.landmark}
+            onChangeText={onLandmarkChange}
+            style={styles.input}
+            placeholder="Location details (landmark, number etc)"
+            placeholderTextColor={LIGHT}
+            returnKeyType="next"
           />
-        </View>
 
-        {/*-------------------- CASH ON DELIVERY --------------------*/}
-        <View
-          style={{
-            margin: 20,
-            marginBottom: 0,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}>
-          <View>
-            <Text style={{fontSize: 12, color: DARK, fontWeight: 'bold'}}>Cash On Delivery</Text>
-            <Text style={{fontSize: 10, color: MEDIUM, fontWeight: 'bold'}}>
-              Rider will collect cash from recipient
-            </Text>
-          </View>
-          <Switch
-            trackColor={{false: LIGHT, true: LIGHT}}
-            thumbColor={codSwitch ? COLOR : MEDIUM}
-            onValueChange={value => setCodSwitch(value)}
-            value={codSwitch}
+          {/*-------------------- NAME --------------------*/}
+          <Text style={styles.label}>Recipient's Name</Text>
+          <TextInput
+            value={localData.name}
+            onChangeText={onNameChange}
+            style={styles.input}
+            placeholder="Recipient's name"
+            placeholderTextColor={LIGHT}
+            returnKeyType="next"
           />
-        </View>
-        {codSwitch && (
-          <>
+
+          {/*-------------------- MOBILE NUMBER --------------------*/}
+          <Text style={styles.label}>Mobile Number</Text>
+          <View
+            style={{
+              marginHorizontal: 20,
+              borderWidth: 1,
+              borderColor: MEDIUM,
+              borderRadius: 10,
+              flexDirection: 'row',
+              alignItems: 'center',
+              overflow: 'hidden',
+              height: 50,
+            }}>
             <View
               style={{
-                marginHorizontal: 20,
-                borderWidth: 1,
+                paddingHorizontal: 20,
+                backgroundColor: COLOR_UNDERLAY,
+                height: 50,
+                justifyContent: 'center',
                 borderColor: MEDIUM,
-                borderRadius: 5,
-                marginTop: 10,
-                flexDirection: 'row',
-                alignItems: 'center',
-                overflow: 'hidden',
+                borderRightWidth: 1,
               }}>
-              <Text
-                style={{
-                  color: MEDIUM,
-                  paddingHorizontal: 20,
-                  borderRightWidth: 1,
-                  borderRightColor: MEDIUM,
-                  height: '100%',
-                  textAlignVertical: 'center',
-                  backgroundColor: COLOR_UNDERLAY,
-                }}>
-                {`Max: ${numberFormatInteger(constants.maxCashOnDelivery)}`}
-              </Text>
-              <TextInput
-                value={localData.cashOnDelivery}
-                onChangeText={onCashOnDeliveryChange}
-                placeholder="Amount"
-                keyboardType="numeric"
-                style={{paddingLeft: 20, flex: 1}}
-              />
+              <Text style={{color: MEDIUM}}>+63</Text>
             </View>
-            {/* <TextInput
-              value={localData.cashOnDelivery}
-              onChangeText={onCashOnDeliveryChange}
-              placeholder="Amount"
+            <TextInput
+              value={localData.mobile}
+              onChangeText={onMobileChange}
+              placeholder="Mobile Number"
               keyboardType="numeric"
-              style={{
-                marginHorizontal: 20,
-                borderWidth: 1,
-                borderColor: MEDIUM,
-                borderRadius: 5,
-                paddingLeft: 20,
-                marginTop: 10,
-              }} 
-            />*/}
-          </>
-        )}
+              returnKeyType="done"
+              style={{paddingLeft: 20, flex: 1, color: DARK, height: 50}}
+              placeholderTextColor={LIGHT}
+            />
+          </View>
 
-        {/*-------------------- NOTES --------------------*/}
-        <Text style={styles.label}>Notes</Text>
-        <TextInput value={localData.notes} onChangeText={onNotesChange} style={styles.input} placeholder="Notes" />
+          {/*-------------------- CASH ON DELIVERY --------------------*/}
+          <View
+            style={{
+              margin: 20,
+              marginBottom: 0,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}>
+            <View>
+              <Text style={{fontSize: 12, color: DARK, fontWeight: 'bold'}}>Cash On Delivery</Text>
+              <Text style={{fontSize: 10, color: MEDIUM, fontWeight: 'bold'}}>
+                Rider pays sender and collect cash from recipient
+              </Text>
+            </View>
+            <Switch
+              trackColor={{false: LIGHT, true: LIGHT}}
+              thumbColor={codSwitch ? COLOR : MEDIUM}
+              onValueChange={value => setCodSwitch(value)}
+              value={codSwitch}
+            />
+          </View>
+          {codSwitch && (
+            <>
+              <View
+                style={{
+                  marginHorizontal: 20,
+                  borderWidth: 1,
+                  borderColor: MEDIUM,
+                  borderRadius: 10,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  overflow: 'hidden',
+                  height: 50,
+                  marginTop: 10,
+                }}>
+                <View
+                  style={{
+                    paddingHorizontal: 20,
+                    backgroundColor: COLOR_UNDERLAY,
+                    height: 50,
+                    justifyContent: 'center',
+                    borderColor: MEDIUM,
+                    borderRightWidth: 1,
+                  }}>
+                  <Text style={{color: MEDIUM}}> {`Max: ${numberFormatInteger(constants.maxCashOnDelivery)}`}</Text>
+                </View>
+                <TextInput
+                  value={localData.cashOnDelivery}
+                  onChangeText={onCashOnDeliveryChange}
+                  placeholder="Amount"
+                  keyboardType="numeric"
+                  returnKeyType="done"
+                  style={{paddingLeft: 20, flex: 1, height: 50, color: DARK}}
+                  placeholderTextColor={LIGHT}
+                />
+              </View>
+            </>
+          )}
 
-        {/*-------------------- ITEM DESCRIPTION --------------------*/}
-        <ItemDescription onSelect={onCargoChange} initialData={localData.cargo} scrollToEnd={scrollToEnd} />
-      </ScrollView>
-      {/*---------------------------------------- BUTTON ----------------------------------------*/}
-      <TouchableHighlight onPress={onSubmit} underlayColor={COLOR} style={styles.submitBox}>
-        <View style={styles.submit}>
-          <Text style={{color: COLOR, fontSize: 20}}>Confirm</Text>
-        </View>
-      </TouchableHighlight>
+          {/*-------------------- NOTES --------------------*/}
+          <Text style={styles.label}>Notes</Text>
+          <TextInput
+            value={localData.notes}
+            onChangeText={onNotesChange}
+            style={styles.input}
+            placeholder="Notes to rider"
+            placeholderTextColor={LIGHT}
+            keyboardType="default"
+          />
+
+          {/*-------------------- ITEM DESCRIPTION --------------------*/}
+          <ItemDescription onSelect={onCargoChange} initialData={localData.cargo} scrollToEnd={scrollToEnd} />
+          <View style={{height: 20}} />
+          {/*-------------------- BUTTON --------------------*/}
+          <BlackButton onPress={onSubmit} label="Confirm" containerStyle={{marginTop: 0}} />
+        </InputScrollView>
+      </View>
     </View>
   );
 };
@@ -390,8 +389,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     borderWidth: 1,
     borderColor: MEDIUM,
-    borderRadius: 5,
+    borderRadius: 10,
     paddingLeft: 20,
+    height: 50,
+    color: DARK,
   },
   submitBox: {
     margin: 20,

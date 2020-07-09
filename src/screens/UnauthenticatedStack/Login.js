@@ -155,7 +155,7 @@ const Login = ({navigation, session}) => {
             keyboardType="number-pad"
             returnKeyType="next"
             onSubmitEditing={() => onSubmit(mobile)}
-            returnKeyType="go"
+            returnKeyType="done"
           />
         </View>
 
@@ -204,6 +204,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     justifyContent: 'center',
     marginRight: 20,
+    height: 50,
   },
   input: {
     flex: 1,

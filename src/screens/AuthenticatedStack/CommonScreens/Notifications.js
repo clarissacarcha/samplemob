@@ -16,6 +16,7 @@ import moment from 'moment';
 import 'moment-timezone';
 import {COLOR, DARK, ORANGE, MEDIUM, LIGHT, APP_FLAVOR} from '../../../res/constants';
 import {HeaderBack, HeaderTitle} from '../../../components';
+import {YellowIcon} from '../../../components/ui';
 import {useQuery} from '@apollo/react-hooks';
 import {useNavigation} from '@react-navigation/native';
 
@@ -29,7 +30,7 @@ import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const MessageCard = ({message, lastItem}) => {
+const NotificationCard = ({message, lastItem}) => {
   const {title, body, delivery, createdAt} = message;
   const navigation = useNavigation();
 
@@ -49,7 +50,7 @@ const MessageCard = ({message, lastItem}) => {
             {/*-------------------- TITLE --------------------*/}
             <View style={styles.rowBox}>
               <View style={styles.row}>
-                <FA5Icon name="exclamation" size={14} color={'white'} style={styles.iconBox} />
+                <YellowIcon set="FontAwesome5" name="exclamation" />
                 <Text
                   numberOfLines={4}
                   style={{
@@ -64,8 +65,7 @@ const MessageCard = ({message, lastItem}) => {
                 </Text>
               </View>
               <View style={styles.row}>
-                <FAIcon name="calendar" size={16} color={'white'} style={styles.iconBox} />
-
+                <YellowIcon set="FontAwesome" name="calendar" />
                 <Text
                   style={{
                     fontSize: 11,
@@ -83,7 +83,8 @@ const MessageCard = ({message, lastItem}) => {
             {/*-------------------- DATE --------------------*/}
             <View style={styles.rowBox}>
               <View style={styles.rowMessage}>
-                <MCIcon name="email" size={16} color={'white'} style={styles.iconBox} />
+                <YellowIcon set="MaterialCommunity" name="email" />
+
                 <Text
                   style={{
                     fontSize: 12,
@@ -151,7 +152,7 @@ const Notifications = ({navigation, route, session, createSession}) => {
         renderItem={({item, index}) => {
           const lastItem = index == data.getNotifications.length - 1 ? true : false;
 
-          return <MessageCard message={item} lastItem={lastItem} />;
+          return <NotificationCard message={item} lastItem={lastItem} />;
         }}
       />
     </View>

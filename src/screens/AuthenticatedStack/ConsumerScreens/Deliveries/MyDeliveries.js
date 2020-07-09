@@ -7,6 +7,7 @@ import {useQuery} from '@apollo/react-hooks';
 import {GET_DELIVERIES_COUNT_BY_STATUS} from '../../../../graphql';
 import {COLOR, DARK, MEDIUM, LIGHT} from '../../../../res/constants';
 import {HeaderBack, HeaderTitle, SomethingWentWrong} from '../../../../components';
+import {YellowIcon} from '../../../../components/ui';
 
 import FIcon from 'react-native-vector-icons/Feather';
 
@@ -31,7 +32,7 @@ const RoundedButton = ({label, data = {}}) => {
             {`${label[0]} ${label[1]}`}
           </Text>
         </View>
-        {hasItems && <FIcon name="chevron-right" size={18} color="white" style={styles.icon} />}
+        {hasItems && <YellowIcon set="Feather" name="chevron-right" size={18} />}
       </View>
     </TouchableHighlight>
   );
@@ -75,11 +76,7 @@ const MyDeliveries = ({navigation, session}) => {
       <RoundedButton data={mappedData['1']} label={['Placed', 'Orders']} />
       <RoundedButton data={mappedData['2']} label={['Delivery', 'Scheduled']} />
       <RoundedButton data={mappedData['3']} label={['Driver on the Way', 'to Sender']} />
-      <RoundedButton
-        data={mappedData['4']}
-        label={['Item', 'Picked Up']}
-        // onPress={() => onPress({headerTitleLabel: ['Item', 'Picked Up']})}
-      />
+      <RoundedButton data={mappedData['4']} label={['Item', 'Picked Up']} />
       <RoundedButton data={mappedData['5']} label={['Driver on the Way', 'to Recipient']} />
       <RoundedButton data={mappedData['6']} label={['Item', 'Delivered']} />
       <View style={{height: 100}} />
@@ -103,6 +100,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginVertical: 10,
     borderRadius: 10,
+
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
     elevation: 5,
   },
   submit: {

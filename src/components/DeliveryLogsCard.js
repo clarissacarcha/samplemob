@@ -6,12 +6,10 @@ import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, Image, Dimensions} from 'react-native';
 import _ from 'lodash';
 import {COLOR, DARK, MEDIUM, LIGHT, ORANGE} from '../res/constants';
+import {YellowIcon} from '../components/ui';
 
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import Ionicon from 'react-native-vector-icons/Ionicons';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
-import moment from 'moment';
-import 'moment-timezone';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -120,7 +118,7 @@ export const DeliveryLogsCard = ({logs}) => {
             borderBottomWidth: StyleSheet.hairlineWidth,
             borderColor: MEDIUM,
           }}>
-          <MCIcon name="format-list-bulleted" size={20} color={DARK} style={styles.iconBoxDark} />
+          <YellowIcon set="MaterialCommunity" name="format-list-bulleted" size={20} darkIcon />
           <Text style={{marginLeft: 10, color: DARK, fontWeight: 'bold'}}>
             Delivery <Text style={{color: ORANGE}}>Logs</Text>
           </Text>

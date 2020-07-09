@@ -11,14 +11,16 @@ import {
   BackHandler,
   Image,
   ScrollView,
+  Platform,
 } from 'react-native';
-import MapView, {Marker, PROVIDER_GOOGLE, AnimatedRegion, Animated} from 'react-native-maps';
+import MapView, {Marker, PROVIDER_GOOGLE, AnimatedRegion, Animated, PROVIDER_DEFAULT} from 'react-native-maps';
 import OneSignal from 'react-native-onesignal';
 import MapViewDirections from 'react-native-maps-directions';
 import {connect} from 'react-redux';
 import {useIsFocused, useFocusEffect} from '@react-navigation/native';
 import {currentLocation} from '../../../../helper';
 import {BookingOverlay, LocationPermission} from '../../../../components';
+import {YellowIcon} from '../../../../components/ui';
 import {COLOR, DARK, MEDIUM, LIGHT, MAPS_API_KEY} from '../../../../res/constants';
 import {useMutation} from '@apollo/react-hooks';
 import {POST_DELIVERY, GET_ORDER_PRICE} from '../../../../graphql';
@@ -96,10 +98,6 @@ const findNotificationRoute = type => {
 };
 
 const ConsumerMap = ({navigation, session, route, constants}) => {
-  navigation.setOptions({
-    header: () => null,
-  });
-
   const mapViewRef = useRef(null);
   const [bookingSuccess, setBookingSuccess] = useState(false);
   const [recipientIndex, setRecipientIndex] = useState(0); // Used for multiple recipients
@@ -255,7 +253,7 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
           top: 150,
         },
       });
-    }, 0);
+    }, 2000);
   };
 
   const onSenderPress = () => {
@@ -336,11 +334,12 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
       {/* {senderStop.latitude != 0 ? ( */}
       <MapView
         provider={PROVIDER_GOOGLE}
+        // provider={Platform.OS == 'android' ? PROVIDER_GOOGLE : PROVIDER_DEFAULT}
         ref={mapViewRef}
         style={styles.container}
         region={region}
         onRegionChangeComplete={data => {
-          setRegion(data);
+          // setRegion(data);
         }}>
         {/*---------------------------------------- SENDER MARKER ----------------------------------------*/}
         {senderStop.latitude != 0 && (
@@ -368,6 +367,11 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
             strokeWidth={3}
             strokeColor={'#EA4335'}
             onReady={onDirectionsReady}
+            // directionsServiceBaseUrl={`https://maps.googleapis.com/maps/api/directions/json?origin=${
+            //   senderStop.latitude
+            // },${senderStop.longitude}&destination=${recipient[recipientIndex].latitude},${
+            //   recipient[recipientIndex].longitude
+            // }&avoid=tolls|highways`}
           />
         )}
       </MapView>
@@ -390,10 +394,10 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
         <View style={styles.taskBox}>
           <View style={{flexDirection: 'row', marginHorizontal: 20}}>
             {/*-------------------- ICONS --------------------*/}
-            <View style={{width: 40, justifyContent: 'center'}}>
-              <FA5Icon name="map-pin" size={16} color={DARK} style={styles.iconBox} />
-              <EIcon name="flow-line" size={26} color={DARK} />
-              <FA5Icon name="map-marker-alt" size={16} color={DARK} style={styles.iconBox} />
+            <View style={{width: 34, justifyContent: 'center'}}>
+              <YellowIcon set="FontAwesome5" name="map-pin" darkIcon />
+              <EIcon name="flow-line" size={26} color={DARK} style={{right: 1}} />
+              <YellowIcon set="FontAwesome5" name="map-marker-alt" darkIcon />
             </View>
             <View style={{flex: 1}}>
               {/*-------------------- SENDER DETAILS --------------------*/}
@@ -432,28 +436,26 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
             <View style={styles.directionsBox}>
               {/*-------------------- DISTANCE --------------------*/}
               <View style={styles.directionDetail}>
-                <MCIcon name="map-marker-distance" size={16} color={'white'} style={styles.iconBox} />
-                <Text style={{fontWeight: 'bold', marginLeft: 10}}>
+                <YellowIcon set="MaterialCommunity" name="map-marker-distance" />
+                <Text style={{fontWeight: 'bold', marginLeft: 10, fontSize: 12}}>
                   {directions.distance.toFixed(2)}
                   <Text style={{color: MEDIUM}}> km</Text>
                 </Text>
               </View>
               {/*-------------------- DURATION --------------------*/}
               <View style={styles.directionDetail}>
-                <MCIcon name="timelapse" size={16} color={'white'} style={styles.iconBox} />
-                <Text style={{fontWeight: 'bold', marginLeft: 10}}>
+                <YellowIcon set="MaterialCommunity" name="timelapse" />
+                <Text style={{fontWeight: 'bold', marginLeft: 10, fontSize: 12}}>
                   {directions.duration.toFixed(0)}
                   <Text style={{color: MEDIUM}}> min</Text>
                 </Text>
               </View>
               {/*-------------------- PRICE --------------------*/}
               <View style={styles.directionDetail}>
-                <Ionicon name="md-pricetag" size={16} color={'white'} style={styles.iconBox} />
+                <YellowIcon set="Ionicon" name="md-pricetag" />
                 {price == 0 || price == '0' ? (
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Text style={{fontSize: 10, marginLeft: 10, fontWeight: 'bold', color: MEDIUM}}>
-                      Calculating...
-                    </Text>
+                    <Text style={{fontSize: 12, marginHorizontal: 10, fontWeight: 'bold', color: MEDIUM}}>Price</Text>
                     <ActivityIndicator size={20} color={COLOR} />
                   </View>
                 ) : (
@@ -463,9 +465,7 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
             </View>
           )}
         </View>
-        {/* )} */}
         {/*---------------------------------------- SUBMIT BUTTON ----------------------------------------*/}
-        {/* {senderStop.latitude != 0 && ( */}
         <TouchableHighlight
           onPress={onSubmit}
           underlayColor={COLOR}
@@ -475,10 +475,8 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
             <Text style={{color: COLOR, fontSize: 20}}>
               {directions.distance != 0 && price == 0 ? 'Please Wait' : 'Book'}
             </Text>
-            {/* <Text style={{color: COLOR, fontSize: 20}}>{session.user.consumer.id}</Text> */}
           </View>
         </TouchableHighlight>
-        {/* )} */}
       </View>
       {/*---------------------------------------- DRAWER BUTTON ----------------------------------------*/}
       <TouchableHighlight onPress={() => navigation.openDrawer()} underlayColor={COLOR} style={styles.menuBox}>
@@ -577,14 +575,17 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     textAlign: 'center',
     textAlignVertical: 'center',
+    overflow: 'hidden',
   },
   iconBoxDark: {
     backgroundColor: DARK,
+    overflow: 'hidden',
     height: 24,
     width: 24,
     borderRadius: 5,
     textAlign: 'center',
     textAlignVertical: 'center',
+    alignSelf: 'center',
   },
   directionsBox: {
     height: 50,

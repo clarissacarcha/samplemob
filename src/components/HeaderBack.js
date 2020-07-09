@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import {StyleSheet, TouchableHighlight} from 'react-native';
+import React from 'react';
+import {StyleSheet, View, TouchableHighlight} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {COLOR, DARK} from '../res/constants';
 import FIcon from 'react-native-vector-icons/Feather';
@@ -16,23 +16,28 @@ export const HeaderBack = ({onBack}) => {
   };
 
   return (
-    <TouchableHighlight onPress={onPress} underlayColor={COLOR} style={styles.iconBox}>
-      <FIcon name="chevron-left" size={24} color={COLOR} style={styles.icon} />
+    <TouchableHighlight onPress={onPress} underlayColor={COLOR} style={styles.button}>
+      <View style={styles.iconBox}>
+        <FIcon name="chevron-left" size={24} color={COLOR} />
+      </View>
     </TouchableHighlight>
   );
 };
 
 const styles = StyleSheet.create({
-  iconBox: {
+  button: {
     borderRadius: 10,
     marginLeft: 10,
-  },
-  icon: {
-    textAlign: 'center',
-    textAlignVertical: 'center',
+    overflow: 'hidden',
+
     height: 30,
     width: 30,
+  },
+  iconBox: {
     backgroundColor: DARK,
-    borderRadius: 10,
+    height: 30,
+    width: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

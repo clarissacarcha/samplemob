@@ -109,12 +109,12 @@ const DriverDeliveriesTab = () => (
 
 const UnauthenticatedStack = () => (
   <Unauthenticated.Navigator>
-    <Unauthenticated.Screen name="Login" component={Login} options={{header: () => <View />}} />
-    <Unauthenticated.Screen name="SmsVerification" component={SmsVerification} options={{header: () => <View />}} />
+    <Unauthenticated.Screen name="Login" component={Login} options={{headerShown: false}} />
+    <Unauthenticated.Screen name="SmsVerification" component={SmsVerification} options={{headerShown: false}} />
     <Unauthenticated.Screen
       name="PasswordVerification"
       component={PasswordVerification}
-      options={{header: () => <View />}}
+      options={{headerShown: false}}
     />
     <Unauthenticated.Screen name="AccountBlocked" component={AccountBlocked} />
     <Unauthenticated.Screen name="ForgotPasswordRequest" component={ForgotPasswordRequest} />
@@ -181,7 +181,7 @@ const AuthenticatedStack = () => (
   <Authenticated.Navigator>
     <Authenticated.Screen name="PostRegistration" component={PostRegistration} />
 
-    <Authenticated.Screen name="ConsumerMap" component={ConsumerMap} />
+    <Authenticated.Screen name="ConsumerMap" component={ConsumerMap} options={{headerShown: false}} />
     <Authenticated.Screen name="SearchPlaces" component={SearchPlaces} />
     <Authenticated.Screen name="SearchMap" component={SearchMap} />
     <Authenticated.Screen name="SenderDetails" component={SenderDetails} />
@@ -202,11 +202,7 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="DeliveryTracking" component={DeliveryTracking} />
 
     {/*---------- DRIVER SCREENS ----------*/}
-    <Authenticated.Screen
-      name="DriverHomeBottomTab"
-      component={DriverHomeBottomTab}
-      options={{header: () => <View />}}
-    />
+    <Authenticated.Screen name="DriverHomeBottomTab" component={DriverHomeBottomTab} options={{headerShown: false}} />
 
     <Authenticated.Screen name="DriverMap" component={DriverMap} />
     <Authenticated.Screen name="SelectedDriverDelivery" component={SelectedDriverDelivery} />

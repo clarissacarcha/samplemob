@@ -1,14 +1,15 @@
 import React, {useState} from 'react';
 import {View, Text, ScrollView, StyleSheet, TouchableHighlight, TextInput, Dimensions, Alert} from 'react-native';
+import InputScrollView from 'react-native-input-scroll-view';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import validator from 'validator';
 
 import {reverseGeocode} from '../../../../helper';
 import {HeaderBack, HeaderTitle, SchedulePicker, AlertOverlay} from '../../../../components';
+import {YellowIcon, BlackIcon, BlackButton} from '../../../../components/ui';
 import {COLOR, DARK, MAP_DELTA_LOW, MEDIUM, LIGHT, ORANGE, COLOR_UNDERLAY} from '../../../../res/constants';
 
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
-import FIcon from 'react-native-vector-icons/Feather';
 
 const SenderDetails = ({navigation, route}) => {
   navigation.setOptions({
@@ -52,27 +53,27 @@ const SenderDetails = ({navigation, route}) => {
 
   const onSubmit = async () => {
     if (localData.latitude == 0 || localData.longitude == 0) {
-      Alert.alert('', `Please enter recipient's location.`);
+      Alert.alert('', `Please enter sender's location.`);
       return;
     }
 
     if (validator.isEmpty(localData.name, {ignore_whitespace: true})) {
-      Alert.alert('', `Please enter recipient's name.`);
+      Alert.alert('', `Please enter sender's name.`);
       return;
     }
 
     if (validator.isEmpty(localData.mobile, {ignore_whitespace: true})) {
-      Alert.alert('', `Please enter recipient's mobile number.`);
+      Alert.alert('', `Please enter sender's mobile number.`);
       return;
     }
 
     if (isNaN(localData.mobile)) {
-      Alert.alert('', `Please enter a valid recipient's mobile number.`);
+      Alert.alert('', `Please enter a valid sender's mobile number.`);
       return;
     }
 
     if (localData.mobile.length != 10) {
-      Alert.alert('', `Please enter a valid recipient's mobile number.`);
+      Alert.alert('', `Please enter a valid sender's mobile number.`);
       return;
     }
 
@@ -94,61 +95,49 @@ const SenderDetails = ({navigation, route}) => {
   return (
     <View style={styles.container}>
       <AlertOverlay visible={loading} />
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {/*---------------------------------------- MAP ----------------------------------------*/}
-        <TouchableHighlight onPress={onSearchMap}>
-          <View style={{height: 150}}>
-            <MapView
-              provider={PROVIDER_GOOGLE}
-              style={styles.map}
-              region={{
-                latitude: parseFloat(localData.latitude),
-                longitude: parseFloat(localData.longitude),
-                ...MAP_DELTA_LOW,
-              }}
-              scrollEnabled={false}
-              rotateEnabled={false}
-              zoomEnabled={false}
-            />
-            {/*-------------------- PIN --------------------*/}
-            <View style={styles.floatingPin}>
-              <FA5Icon name="map-pin" size={24} color={DARK} style={{marginTop: -20}} />
+      <View style={{flex: 1}}>
+        <InputScrollView showsVerticalScrollIndicator={false} keyboardOffset={20}>
+          {/*---------------------------------------- MAP ----------------------------------------*/}
+          <TouchableHighlight onPress={onSearchMap}>
+            <View style={{height: 150}}>
+              <MapView
+                provider={PROVIDER_GOOGLE}
+                style={styles.map}
+                region={{
+                  latitude: parseFloat(localData.latitude),
+                  longitude: parseFloat(localData.longitude),
+                  ...MAP_DELTA_LOW,
+                }}
+                scrollEnabled={false}
+                rotateEnabled={false}
+                zoomEnabled={false}
+              />
+              {/*-------------------- PIN --------------------*/}
+              <View style={styles.floatingPin}>
+                <FA5Icon name="map-pin" size={24} color={DARK} style={{marginTop: -20}} />
+              </View>
             </View>
-          </View>
-        </TouchableHighlight>
-        {/*-------------------- YOUR LOCATION BUTTON --------------------*/}
-        <TouchableHighlight onPress={onSearchPlaces} style={{marginHorizontal: 20, borderRadius: 10, marginTop: 20}}>
-          <View style={styles.addressBox}>
-            <FA5Icon name="map-pin" size={16} color={COLOR} style={styles.iconBoxDark} />
-            <View style={{justifyContent: 'center', flex: 1}}>
-              <Text style={{fontWeight: 'bold'}}>Your Location</Text>
-              <Text style={{color: 'white', fontSize: 10}} numberOfLines={1}>
-                {localData.formattedAddress}
-              </Text>
+          </TouchableHighlight>
+          {/*-------------------- YOUR LOCATION BUTTON --------------------*/}
+          <TouchableHighlight onPress={onSearchPlaces} style={{marginHorizontal: 20, borderRadius: 10, marginTop: 20}}>
+            <View style={styles.addressButton}>
+              <BlackIcon set="FontAwesome5" name="map-pin" />
+              <View style={{justifyContent: 'center', flex: 1, marginLeft: 20}}>
+                <Text style={{fontWeight: 'bold'}}>Your Location</Text>
+                <Text style={{color: 'white', fontSize: 10}} numberOfLines={1}>
+                  {localData.formattedAddress}
+                </Text>
+              </View>
+              <BlackIcon set="Feather" name="chevron-right" size={20} />
             </View>
-            <FIcon
-              name="chevron-right"
-              size={18}
-              color={COLOR}
-              style={{
-                height: 20,
-                width: 20,
-                backgroundColor: DARK,
-                borderRadius: 10,
-                textAlignVertical: 'center',
-                textAlign: 'center',
-                marginLeft: 10,
-              }}
-            />
-          </View>
-        </TouchableHighlight>
+          </TouchableHighlight>
 
-        {/*-------------------- ORDER TYPE --------------------*/}
-        <Text style={styles.label}>Order Type</Text>
-        <SchedulePicker onScheduleChange={onScheduleChange} initialData={localData} />
+          {/*-------------------- ORDER TYPE --------------------*/}
+          <Text style={styles.label}>Order Type</Text>
+          <SchedulePicker onScheduleChange={onScheduleChange} initialData={localData} />
 
-        {/*-------------------- TEST START --------------------*/}
-        {/* <Text style={{margin: 20, backgroundColor: LIGHT, borderRadius: 10, padding: 20}}>
+          {/*-------------------- TEST START --------------------*/}
+          {/* <Text style={{margin: 20, backgroundColor: LIGHT, borderRadius: 10, padding: 20}}>
           {JSON.stringify(
             {
               orderType: localData.orderType,
@@ -159,73 +148,69 @@ const SenderDetails = ({navigation, route}) => {
             4,
           )}
         </Text> */}
-        {/*-------------------- TEST END --------------------*/}
+          {/*-------------------- TEST END --------------------*/}
 
-        {/*-------------------- LANDMARK --------------------*/}
-        <Text style={styles.label}>Landmark</Text>
-        <TextInput
-          value={localData.landmark}
-          onChangeText={onLandmarkChange}
-          style={styles.input}
-          placeholder="Location details (landmark, number etc)"
-        />
-
-        {/*-------------------- NAME --------------------*/}
-        <Text style={styles.label}>Sender's name</Text>
-        <TextInput
-          value={localData.name}
-          onChangeText={onNameChange}
-          style={styles.input}
-          placeholder="Sender's name"
-        />
-
-        {/*-------------------- MOBILE NUMBER --------------------*/}
-        <Text style={styles.label}>Mobile Number</Text>
-        {/* <TextInput
-          value={localData.mobile}
-          onChangeText={onMobileChange}
-          style={styles.input}
-          placeholder="Mobile number"
-          keyboardType="number-pad"
-        /> */}
-        <View
-          style={{
-            marginHorizontal: 20,
-            borderWidth: 1,
-            borderColor: MEDIUM,
-            borderRadius: 5,
-            marginTop: 10,
-            flexDirection: 'row',
-            alignItems: 'center',
-            overflow: 'hidden',
-          }}>
-          <Text
-            style={{
-              color: MEDIUM,
-              paddingHorizontal: 20,
-              borderRightWidth: 1,
-              borderRightColor: MEDIUM,
-              height: '100%',
-              textAlignVertical: 'center',
-              backgroundColor: COLOR_UNDERLAY,
-            }}>
-            +63
-          </Text>
+          {/*-------------------- LANDMARK --------------------*/}
+          <Text style={styles.label}>Landmark</Text>
           <TextInput
-            value={localData.mobile}
-            onChangeText={onMobileChange}
-            placeholder="Mobile Number"
-            keyboardType="numeric"
-            style={{paddingLeft: 20, flex: 1}}
+            value={localData.landmark}
+            onChangeText={onLandmarkChange}
+            style={styles.input}
+            placeholder="Location details (landmark, number, etc...)"
+            returnKeyType="next"
+            placeholderTextColor={LIGHT}
           />
-        </View>
-      </ScrollView>
-      {/*-------------------- CONFIRM BUTTON --------------------*/}
-      <TouchableHighlight onPress={onSubmit} underlayColor={COLOR} style={styles.submitBox}>
-        <View style={styles.submit}>
-          <Text style={{color: COLOR, fontSize: 20}}>Confirm</Text>
-        </View>
-      </TouchableHighlight>
+
+          {/*-------------------- NAME --------------------*/}
+          <Text style={styles.label}>Sender's name</Text>
+          <TextInput
+            value={localData.name}
+            onChangeText={onNameChange}
+            style={styles.input}
+            placeholder="Sender's name"
+            returnKeyType="next"
+            placeholderTextColor={LIGHT}
+          />
+
+          {/*-------------------- MOBILE NUMBER --------------------*/}
+          <Text style={styles.label}>Mobile Number</Text>
+          <View
+            style={{
+              marginHorizontal: 20,
+              borderWidth: 1,
+              borderColor: MEDIUM,
+              borderRadius: 10,
+              flexDirection: 'row',
+              alignItems: 'center',
+              overflow: 'hidden',
+              height: 50,
+            }}>
+            <View
+              style={{
+                paddingHorizontal: 20,
+                backgroundColor: COLOR_UNDERLAY,
+                height: 50,
+                justifyContent: 'center',
+                borderColor: MEDIUM,
+                borderRightWidth: 1,
+              }}>
+              <Text style={{color: DARK}}>+63</Text>
+            </View>
+            <TextInput
+              value={localData.mobile}
+              onChangeText={onMobileChange}
+              placeholder="Mobile Number"
+              keyboardType="numeric"
+              returnKeyType="done"
+              style={{paddingLeft: 20, flex: 1, color: DARK, height: 50}}
+              placeholderTextColor={LIGHT}
+            />
+          </View>
+          <View style={{height: 20}} />
+          {/*-------------------- CONFIRM --------------------*/}
+          <BlackButton onPress={onSubmit} label="Confirm" containerStyle={{marginTop: 0}} />
+        </InputScrollView>
+      </View>
     </View>
   );
 };
@@ -240,7 +225,7 @@ const styles = StyleSheet.create({
   map: {
     flex: 1,
   },
-  addressBox: {
+  addressButton: {
     height: 60,
     flexDirection: 'row',
     paddingHorizontal: 20,
@@ -249,37 +234,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   input: {
+    height: 50,
     marginHorizontal: 20,
     borderWidth: 1,
     borderColor: MEDIUM,
     borderRadius: 10,
     paddingLeft: 20,
-  },
-  submitBox: {
-    marginHorizontal: 20,
-    marginBottom: 20,
-    borderRadius: 10,
-  },
-  submit: {
-    backgroundColor: DARK,
-    height: 50,
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
+    color: DARK,
+    fontSize: 14,
   },
   floatingPin: {
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  iconBoxDark: {
-    backgroundColor: DARK,
-    height: 24,
-    width: 24,
-    borderRadius: 5,
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    marginRight: 20,
   },
   pickerContainerStyle: {
     height: 30,
@@ -292,6 +259,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 10,
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
+    zIndex: 9,
   },
   pickerDropDown: {
     backgroundColor: 'white',

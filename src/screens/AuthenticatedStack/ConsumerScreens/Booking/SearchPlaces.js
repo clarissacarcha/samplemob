@@ -31,6 +31,9 @@ const GooglePlacesInput = ({onLocationSelect}) => {
         listView: {
           backgroundColor: '#FFF',
         },
+        textInput: {
+          color: DARK,
+        },
       }}
       nearbyPlacesAPI="GooglePlacesSearch"
       debounce={500}

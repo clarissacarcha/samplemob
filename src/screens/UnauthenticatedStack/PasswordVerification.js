@@ -61,7 +61,7 @@ const PasswordVerification = ({navigation, route, createSession}) => {
           return;
         }
 
-        navigation.push('RootDrawer', {
+        navigation.replace('RootDrawer', {
           screen: 'AuthenticatedStack',
           params: {
             screen: 'ConsumerMap',
@@ -184,5 +184,7 @@ const styles = StyleSheet.create({
     borderColor: MEDIUM,
     borderRadius: 5,
     paddingLeft: 20,
+    height: 50,
+    color: DARK,
   },
 });

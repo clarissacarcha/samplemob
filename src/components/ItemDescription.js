@@ -28,9 +28,9 @@ const Item = ({index, data, selected, setSelected, onSelect, scrollToEnd}) => {
           if (index != 4) {
             onSelect(data[index]);
           } else {
-            scrollToEnd();
             onSelect('');
           }
+          scrollToEnd();
         }}
         style={{borderRadius: 10}}
         underlayColor={'rgba(253, 186, 28, 0.5)'}>
@@ -67,10 +67,38 @@ const Component = ({onSelect, initialData, scrollToEnd, constants}) => {
     <View>
       <Text style={styles.label}>Item Description</Text>
       <View style={{marginHorizontal: 20, flexDirection: 'row', justifyContent: 'space-between'}}>
-        <Item index={0} data={data} selected={selectedIndex} setSelected={setSelectedIndex} onSelect={onSelect} />
-        <Item index={1} data={data} selected={selectedIndex} setSelected={setSelectedIndex} onSelect={onSelect} />
-        <Item index={2} data={data} selected={selectedIndex} setSelected={setSelectedIndex} onSelect={onSelect} />
-        <Item index={3} data={data} selected={selectedIndex} setSelected={setSelectedIndex} onSelect={onSelect} />
+        <Item
+          index={0}
+          data={data}
+          selected={selectedIndex}
+          setSelected={setSelectedIndex}
+          onSelect={onSelect}
+          scrollToEnd={scrollToEnd}
+        />
+        <Item
+          index={1}
+          data={data}
+          selected={selectedIndex}
+          setSelected={setSelectedIndex}
+          onSelect={onSelect}
+          scrollToEnd={scrollToEnd}
+        />
+        <Item
+          index={2}
+          data={data}
+          selected={selectedIndex}
+          setSelected={setSelectedIndex}
+          onSelect={onSelect}
+          scrollToEnd={scrollToEnd}
+        />
+        <Item
+          index={3}
+          data={data}
+          selected={selectedIndex}
+          setSelected={setSelectedIndex}
+          onSelect={onSelect}
+          scrollToEnd={scrollToEnd}
+        />
         <Item
           index={4}
           data={data}
@@ -86,6 +114,7 @@ const Component = ({onSelect, initialData, scrollToEnd, constants}) => {
           style={[styles.input, {marginTop: 20}]}
           placeholder="Please describe your item"
           onChangeText={onSelect}
+          placeholderTextColor={LIGHT}
         />
       )}
     </View>
@@ -107,8 +136,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     borderWidth: 1,
     borderColor: MEDIUM,
-    borderRadius: 5,
+    borderRadius: 10,
     paddingLeft: 20,
+    height: 50,
+    color: DARK,
   },
   label: {
     marginHorizontal: 20,

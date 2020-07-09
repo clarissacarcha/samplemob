@@ -39,7 +39,7 @@ const Drawer = ({navigation, session, destroySession}) => {
 
     OneSignal.deleteTag('userId');
 
-    navigation.navigate('UnauthenticatedStack', {
+    navigation.replace('UnauthenticatedStack', {
       screen: 'Login',
     });
   };

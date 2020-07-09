@@ -3,7 +3,7 @@
  */
 
 import React, {useState, useEffect} from 'react';
-import {View, Alert, StyleSheet, Image, Dimensions, Text, TouchableHighlight} from 'react-native';
+import {View, Alert, StyleSheet, Image, Dimensions, Text, TouchableHighlight, Platform} from 'react-native';
 import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import {COLOR, COLOR_UNDERLAY, MEDIUM, DARK} from '../res/constants';
 
@@ -37,6 +37,30 @@ export const LocationPermission = ({onGrant, onDeny}) => {
     }
   };
 
+  const checkIOS = async () => {
+    const result = await check(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+
+    // Location Unavailable In Device. Proceed and use INITIAL_REGION as region
+    if (result === RESULTS.UNAVAILABLE) {
+      onDeny();
+    }
+
+    // Location Request Denied. Proceed and use INITIAL_REGION as region
+    if (result === RESULTS.BLOCKED) {
+      onDeny();
+    }
+
+    // IF GPS Request Granted
+    if (result === RESULTS.GRANTED) {
+      onGrant();
+    }
+
+    // IF GPS Request Denied
+    if (result === RESULTS.DENIED) {
+      requestIOS();
+    }
+  };
+
   const requestAndroid = async () => {
     const result = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
 
@@ -47,9 +71,25 @@ export const LocationPermission = ({onGrant, onDeny}) => {
     }
   };
 
+  const requestIOS = async () => {
+    const result = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+
+    if (result === RESULTS.GRANTED) {
+      onGrant();
+    } else {
+      onDeny();
+    }
+  };
+
   useEffect(() => {
     setTimeout(() => {
-      checkAndroid();
+      const checkFunction = Platform.select({
+        ios: checkIOS,
+        android: checkAndroid,
+      });
+
+      checkFunction();
+
       setHasRequestedLocation(true);
     }, 600); //Set minimal timeout for screen to properly display before request dialog is shown
   }, []);
