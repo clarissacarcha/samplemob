@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {View, Text, ScrollView, StyleSheet, TouchableHighlight, TextInput, Alert, BackHandler} from 'react-native';
 import {connect} from 'react-redux';
 import validator from 'validator';
-import {COLOR, DARK, MEDIUM} from '../../res/constants';
+import {COLOR, DARK, MEDIUM, LIGHT} from '../../res/constants';
 import {HeaderBack, HeaderTitle, AlertOverlay} from '../../components';
 import {useMutation} from '@apollo/react-hooks';
 import {onError} from '../../util/ErrorUtility';
@@ -97,6 +97,7 @@ const PostRegistration = ({navigation, route}) => {
           placeholder="New Password"
           secureTextEntry={true}
           autoCapitalize="none"
+          placeholderTextColor={LIGHT}
         />
 
         {/*-------------------- REPEAT PASSWORD --------------------*/}
@@ -108,6 +109,7 @@ const PostRegistration = ({navigation, route}) => {
           placeholder="Repeat Password"
           secureTextEntry={true}
           autoCapitalize="none"
+          placeholderTextColor={LIGHT}
         />
       </ScrollView>
       {/*---------------------------------------- BUTTON ----------------------------------------*/}
@@ -146,6 +148,8 @@ const styles = StyleSheet.create({
     borderColor: MEDIUM,
     borderRadius: 5,
     paddingLeft: 20,
+    height: 50,
+    color: DARK,
   },
   submitBox: {
     margin: 20,

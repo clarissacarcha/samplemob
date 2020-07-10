@@ -105,22 +105,11 @@ const ForgotPassword = ({navigation, route, createSession}) => {
             style={styles.input}
             placeholder="9876543210"
             keyboardType="number-pad"
-            returnKeyType="next"
+            returnKeyType="done"
             onSubmitEditing={() => onSubmit(mobile)}
-            returnKeyType="go"
+            placeholderTextColor={LIGHT}
           />
         </View>
-        {/* <TextInput
-          ref={inputRef}
-          value={password}
-          onChangeText={value => setPassword(value)}
-          style={styles.input}
-          placeholder="Password"
-          secureTextEntry
-          returnKeyType="go"
-          autoCapitalize="none"
-          onSubmitEditing={onSubmit}
-        /> */}
       </View>
 
       {/*-------------------- SUBMIT INPUT --------------------*/}
@@ -159,6 +148,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     fontSize: 25,
     color: DARK,
+    height: 50,
   },
   submitBox: {
     margin: 20,

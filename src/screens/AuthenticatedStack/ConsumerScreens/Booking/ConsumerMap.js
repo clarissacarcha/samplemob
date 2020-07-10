@@ -192,14 +192,19 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
   const onNotificationOpened = ({notification}) => {
     const type = notification.payload.additionalData.type;
 
+    const legend = {
+      ANNOUNCEMENT: 'Announcements',
+      N: 'Notifications',
+    };
+
     setTimeout(() => {
-      navigation.push(findNotificationRoute(type));
+      navigation.push(legend[type]);
     }, 10);
   };
 
   const oneSignalInit = async () => {
     OneSignal.init(constants.consumerOneSignalAppId);
-    OneSignal.inFocusDisplaying(2);
+    OneSignal.inFocusDisplaying(0);
   };
 
   useEffect(() => {

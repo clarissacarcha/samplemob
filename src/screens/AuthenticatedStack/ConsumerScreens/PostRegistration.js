@@ -3,7 +3,7 @@ import {View, Text, ScrollView, StyleSheet, TouchableHighlight, TextInput, Alert
 import {connect} from 'react-redux';
 import validator from 'validator';
 import {useMutation} from '@apollo/react-hooks';
-import {COLOR, DARK, MAP_DELTA_LOW, MEDIUM} from '../../../res/constants';
+import {COLOR, DARK, MAP_DELTA_LOW, MEDIUM, LIGHT} from '../../../res/constants';
 import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../components';
 import {onError} from '../../../util/ErrorUtility';
 import {PATCH_PERSON_POST_REGISTRATION} from '../../../graphql';
@@ -11,7 +11,7 @@ import {PATCH_PERSON_POST_REGISTRATION} from '../../../graphql';
 const PostRegistration = ({navigation, route, session, createSession, destroySession}) => {
   const signOut = () => {
     destroySession();
-    navigation.navigate('UnauthenticatedStack', {
+    navigation.replace('UnauthenticatedStack', {
       screen: 'Login',
     });
   };
@@ -44,7 +44,7 @@ const PostRegistration = ({navigation, route, session, createSession, destroySes
       newSession.user.person.lastName = lastName;
       newSession.user.person.emailAddress = emailAddress;
       createSession(newSession);
-      navigation.navigate('ConsumerMap');
+      navigation.replace('ConsumerMap');
     },
   });
 
@@ -118,6 +118,7 @@ const PostRegistration = ({navigation, route, session, createSession, destroySes
           onChangeText={value => setFirstName(value)}
           style={styles.input}
           placeholder="First Name"
+          placeholderTextColor={LIGHT}
         />
 
         <Text style={styles.label}>Last Name</Text>
@@ -126,6 +127,7 @@ const PostRegistration = ({navigation, route, session, createSession, destroySes
           onChangeText={value => setLastName(value)}
           style={styles.input}
           placeholder="Last Name"
+          placeholderTextColor={LIGHT}
         />
 
         <Text style={styles.label}>Email Address</Text>
@@ -136,6 +138,7 @@ const PostRegistration = ({navigation, route, session, createSession, destroySes
           placeholder="Email Address"
           keyboardType="email-address"
           autoCapitalize="none"
+          placeholderTextColor={LIGHT}
         />
 
         <Text style={styles.label}>Password</Text>
@@ -146,6 +149,7 @@ const PostRegistration = ({navigation, route, session, createSession, destroySes
           placeholder="Password"
           secureTextEntry={true}
           autoCapitalize="none"
+          placeholderTextColor={LIGHT}
         />
 
         <Text style={styles.label}>Repeat Password</Text>
@@ -156,6 +160,7 @@ const PostRegistration = ({navigation, route, session, createSession, destroySes
           placeholder="Repeat Password"
           secureTextEntry={true}
           autoCapitalize="none"
+          placeholderTextColor={LIGHT}
         />
       </ScrollView>
       {/*---------------------------------------- BUTTON ----------------------------------------*/}
@@ -204,6 +209,8 @@ const styles = StyleSheet.create({
     borderColor: MEDIUM,
     borderRadius: 5,
     paddingLeft: 20,
+    height: 50,
+    color: DARK,
   },
   submitBox: {
     margin: 20,

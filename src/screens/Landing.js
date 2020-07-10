@@ -20,7 +20,7 @@ const Landing = ({createSession, destroySession, navigation}) => {
 
         if (user.status == 3) {
           destroySession();
-          navigation.navigate('UnauthenticatedStack', {
+          navigation.replace('UnauthenticatedStack', {
             screen: 'AccountBlocked',
           });
           return;
@@ -40,14 +40,14 @@ const Landing = ({createSession, destroySession, navigation}) => {
 
         if (APP_FLAVOR == 'C') {
           if (user.person.firstName == null || user.person.lastName == null) {
-            navigation.navigate('RootDrawer', {
+            navigation.replace('RootDrawer', {
               screen: 'AuthenticatedStack',
               params: {
                 screen: 'PostRegistration',
               },
             });
           } else {
-            navigation.navigate('RootDrawer', {
+            navigation.replace('RootDrawer', {
               screen: 'AuthenticatedStack',
               params: {
                 screen: 'ConsumerMap',
@@ -57,7 +57,7 @@ const Landing = ({createSession, destroySession, navigation}) => {
         }
 
         if (APP_FLAVOR == 'D') {
-          navigation.navigate('RootDrawer', {
+          navigation.replace('RootDrawer', {
             screen: 'AuthenticatedStack',
             params: {
               screen: 'DriverHomeBottomTab',
@@ -82,7 +82,7 @@ const Landing = ({createSession, destroySession, navigation}) => {
         },
       });
     } else {
-      navigation.navigate('UnauthenticatedStack');
+      navigation.replace('UnauthenticatedStack');
     }
     try {
     } catch (error) {

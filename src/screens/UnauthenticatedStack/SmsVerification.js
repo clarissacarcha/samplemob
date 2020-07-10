@@ -69,7 +69,7 @@ const Verification = ({navigation, route, createSession}) => {
 
       if (APP_FLAVOR == 'C') {
         if (user.person.firstName == null || user.person.lastName == null) {
-          navigation.navigate('RootDrawer', {
+          navigation.replace('RootDrawer', {
             screen: 'AuthenticatedStack',
             params: {
               screen: 'PostRegistration',
@@ -78,7 +78,7 @@ const Verification = ({navigation, route, createSession}) => {
           return;
         }
 
-        navigation.navigate('RootDrawer', {
+        navigation.replace('RootDrawer', {
           screen: 'AuthenticatedStack',
           params: {
             screen: 'ConsumerMap',
@@ -87,7 +87,7 @@ const Verification = ({navigation, route, createSession}) => {
       }
 
       if (APP_FLAVOR == 'D') {
-        navigation.navigate('RootDrawer', {
+        navigation.replace('RootDrawer', {
           screen: 'AuthenticatedStack',
           params: {
             screen: 'DriverMap',
@@ -158,7 +158,7 @@ const Verification = ({navigation, route, createSession}) => {
             ref={inputRef}
             style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent'}}
             keyboardType="number-pad"
-            returnKeyType="next"
+            returnKeyType="done"
             onChangeText={value => {
               if (value.length <= 6) {
                 setVerificationCode(value);

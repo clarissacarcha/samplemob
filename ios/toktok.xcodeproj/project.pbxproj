@@ -61,6 +61,7 @@
 		2FFE2FBFCEFA4B0E90CC954F /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		33516931D0465B75F4466309 /* Pods-toktok-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-toktok-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-toktok-tvOSTests/Pods-toktok-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		3EFD295A4F4C35769D4978A0 /* Pods-toktok-toktokTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-toktok-toktokTests.release.xcconfig"; path = "Target Support Files/Pods-toktok-toktokTests/Pods-toktok-toktokTests.release.xcconfig"; sourceTree = "<group>"; };
+		50CA3E8424B73BC00017B60C /* toktok.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = toktok.entitlements; path = toktok/toktok.entitlements; sourceTree = "<group>"; };
 		5BC4CD3E711344AF95533B2F /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		5D2628C549D54DC991656EF2 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		5E08FD95B3ABD967F535C172 /* Pods-toktok-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-toktok-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-toktok-tvOSTests/Pods-toktok-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -141,6 +142,7 @@
 		13B07FAE1A68108700A75B9A /* toktok */ = {
 			isa = PBXGroup;
 			children = (
+				50CA3E8424B73BC00017B60C /* toktok.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -771,7 +773,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CODE_SIGN_ENTITLEMENTS = toktok/toktok.entitlements;
+				CURRENT_PROJECT_VERSION = 1000001;
 				DEVELOPMENT_TEAM = GB5B4BE7QP;
 				ENABLE_BITCODE = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -780,6 +783,7 @@
 				);
 				INFOPLIST_FILE = toktok/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.0.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -789,6 +793,7 @@
 				PRODUCT_NAME = toktok;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -799,10 +804,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CODE_SIGN_ENTITLEMENTS = toktok/toktok.entitlements;
+				CURRENT_PROJECT_VERSION = 1000001;
 				DEVELOPMENT_TEAM = GB5B4BE7QP;
 				INFOPLIST_FILE = toktok/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.0.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -811,6 +818,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = ph.cloudpanda.toktok;
 				PRODUCT_NAME = toktok;
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

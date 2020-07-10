@@ -36,7 +36,7 @@ const Splash = ({setConstants}) => {
 
   const oneSignalInit = async oneSignalAppId => {
     OneSignal.init(oneSignalAppId);
-    OneSignal.inFocusDisplaying(2);
+    OneSignal.inFocusDisplaying(0);
   };
 
   const fetchInitialData = async () => {

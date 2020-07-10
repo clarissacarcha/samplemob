@@ -20,14 +20,13 @@ NEXT PATCH
 Customer Pending
 
 1. Fix Order Type Schedule, Today Only
-2. Location Permission iOS
-3. iOS icons and splash screen
+2. (done) Location Permission iOS
+3. (done) iOS icons and splash screen
 4. Push Notifications
-5. Notifications/Announcement Icons
+5. (done) Notifications/Announcement Icons
 6. Toktok Logo on Image Profile
-7. Delivery Details -> Delivery Status
-8. (HALF) Item Description API (HARD CODE)
-9. Cant Cancel If Picked Up IN API
+7. (HALF) Item Description API (HARD CODE)
+8. Cant Cancel If Picked Up IN API
 
 Driver Pending
 

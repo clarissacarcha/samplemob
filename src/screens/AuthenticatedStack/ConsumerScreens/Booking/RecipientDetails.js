@@ -202,7 +202,7 @@ const RecipientDetails = ({navigation, route, constants}) => {
             </TouchableHighlight>
           )}
           {/*---------------------------------------- ADDRESS ----------------------------------------*/}
-          <TouchableHighlight onPress={onSearchPlaces} style={{margin: 20, borderRadius: 10}}>
+          <TouchableHighlight onPress={onSearchPlaces} style={{margin: 20, borderRadius: 10, marginBottom: 0}}>
             <View style={styles.addressBox}>
               <BlackIcon set="FontAwesome5" name="map-pin" />
 

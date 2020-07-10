@@ -128,7 +128,7 @@ const Verification = ({navigation, route, createSession}) => {
             ref={inputRef}
             style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent'}}
             keyboardType="number-pad"
-            returnKeyType="next"
+            returnKeyType="done"
             onChangeText={value => {
               if (value.length <= 6) {
                 setVerificationCode(value);

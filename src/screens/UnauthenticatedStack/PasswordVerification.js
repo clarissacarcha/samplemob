@@ -37,7 +37,7 @@ const PasswordVerification = ({navigation, route, createSession}) => {
       const {user, accessToken} = verifyLogin;
 
       if (user.status == 3) {
-        navigation.push('AccountBlocked');
+        navigation.replace('AccountBlocked');
         return;
       }
 
@@ -52,7 +52,7 @@ const PasswordVerification = ({navigation, route, createSession}) => {
 
       if (APP_FLAVOR == 'C') {
         if (user.person.firstName == null || user.person.lastName == null) {
-          navigation.push('RootDrawer', {
+          navigation.replace('RootDrawer', {
             screen: 'AuthenticatedStack',
             params: {
               screen: 'PostRegistration',
@@ -71,7 +71,7 @@ const PasswordVerification = ({navigation, route, createSession}) => {
       }
 
       if (APP_FLAVOR == 'D') {
-        navigation.push('RootDrawer', {
+        navigation.replace('RootDrawer', {
           screen: 'AuthenticatedStack',
           params: {
             screen: 'DriverHomeBottomTab',

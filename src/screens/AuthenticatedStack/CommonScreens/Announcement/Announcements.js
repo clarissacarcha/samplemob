@@ -14,6 +14,7 @@ import {
 import {connect} from 'react-redux';
 import {COLOR, DARK, ORANGE, MEDIUM, LIGHT} from '../../../../res/constants';
 import {HeaderBack, HeaderTitle} from '../../../../components';
+import {YellowIcon} from '../../../../components/ui';
 import {useQuery} from '@apollo/react-hooks';
 import {useNavigation} from '@react-navigation/native';
 import {APP_FLAVOR} from '../../../../res/constants';
@@ -43,7 +44,7 @@ const Announcement = ({announcement, lastItem}) => {
             {/*-------------------- TITLE --------------------*/}
             <View style={styles.rowBox}>
               <View style={styles.row}>
-                <FA5Icon name="pen" size={14} color={'white'} style={styles.iconBox} />
+                <YellowIcon set="FontAwesome5" name="pen" size={14} />
                 <Text
                   numberOfLines={4}
                   style={{
@@ -62,7 +63,8 @@ const Announcement = ({announcement, lastItem}) => {
             {/*-------------------- DATE --------------------*/}
             <View style={styles.rowBox}>
               <View style={styles.row}>
-                <FAIcon name="calendar" size={16} color={'white'} style={styles.iconBox} />
+                <YellowIcon set="FontAwesome" name="calendar" />
+
                 <Text
                   style={{
                     fontSize: 12,
