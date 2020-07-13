@@ -34,12 +34,13 @@ const PasswordVerification = ({navigation, route, createSession}) => {
     },
     onError: onError,
     onCompleted: ({verifyLogin}) => {
-      const {user, accessToken} = verifyLogin;
-
-      if (user.status == 3) {
-        navigation.replace('AccountBlocked');
+      alert(verifyLogin);
+      if (verifyLogin.user.status == 3) {
+        navigation.push('AccountBlocked');
         return;
       }
+
+      const {user, accessToken} = verifyLogin;
 
       AsyncStorage.setItem('userId', user.id); // Set userId value in asyncStorage for persistent login
       AsyncStorage.setItem('accessToken', accessToken);

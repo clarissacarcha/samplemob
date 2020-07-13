@@ -3,29 +3,28 @@ NEXT PATCH
 1.  Add bookmark
 2.  Connect Mobile Number to Phone Contacts
 3.  Add In-app chat functionality
-4.  Code Refactoring
-5.  Granular Security
-6.  WYSIWYG/HTML for Announcements
-7.  Google Maps - Avoid Toll Roads
-8.  Google Maps - Routes for Motorcycles
-9.  Share Delivery Link, Updated Driver Info
-10. Priority Fee
-11. Notification Read/Unread
-12. Fix Navigation to enable Android back
-13. Google API Consumption
-14. Blocked Account Chain
-15. If Blocked Account has ongoing orders, continue.
-16. Customer Loader and Prompt
+4.  Granular Security
+5.  WYSIWYG/HTML for Announcements
+6.  Google Maps - Avoid Toll Roads
+7.  Google Maps - Routes for Motorcycles
+8.  Share Delivery Link, Updated Driver Info
+9.  Priority Fee
+10. Notification Read/Unread
+11. Fix Navigation to enable Android back
+12. Google API Consumption
+13. Blocked Account Chain
+14. If Blocked Account has ongoing orders, continue.
+15. Customer Loader and Prompt
 
 Customer Pending
 
 1. Fix Order Type Schedule, Today Only
-2. (done) Location Permission iOS
-3. (done) iOS icons and splash screen
-4. Push Notifications
-5. (done) Notifications/Announcement Icons
-6. Toktok Logo on Image Profile
-7. (HALF) Item Description API (HARD CODE)
+2. (done) Handle BLOCKED after PASSWORD
+3. (done) Handle Rider pending application
+4. Fix Keyboard Issue on iOS Post Registration, Edit Profile, Forgot Password etc...
+5. Toktok Logo on Image Profile
+6. (HALF) Item Description API (HARD CODE)
+7. Check Rider Profile Black
 8. Cant Cancel If Picked Up IN API
 
 Driver Pending
@@ -53,12 +52,12 @@ Good To Have
 
 Current
 
-1. On Booking Map, auto detection of sender location
-2. On Search Places, on keyboard type, debounce of 1 second
-3. On Map pinpoint location, on every move
-4. On Confirm Sender or Recipient Details
+1. (Reverse Geocode) On Booking Map, after auto detection of sender location
+2. (Places API) On Search Places, on keyboard type, debounce of 1 second
+3. (Reverse Geocode) On Map pinpoint location, on every move
+4. (Reverse Geocode) On Confirm Sender or Recipient Details
 
 Proposed
 
 1. On Confirm Sender or Recipient (Detect changes to not invoke Google API on same location)
-2. On Search Places, add Search Button no not trigger search on keyboard type
+2. On Search Places, Search Button to call Google API instead of every type.

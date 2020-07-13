@@ -20,7 +20,7 @@ const Landing = ({createSession, destroySession, navigation}) => {
 
         if (user.status == 3) {
           destroySession();
-          navigation.replace('UnauthenticatedStack', {
+          navigation.push('UnauthenticatedStack', {
             screen: 'AccountBlocked',
           });
           return;
@@ -36,7 +36,7 @@ const Landing = ({createSession, destroySession, navigation}) => {
           () => console.log('MOVE'),
         );
 
-        //TODO: Check for valid user status and access token. Also check for existing user record
+        //TODO: Check for valid user status and access token. Also check for existing user record is valid
 
         if (APP_FLAVOR == 'C') {
           if (user.person.firstName == null || user.person.lastName == null) {

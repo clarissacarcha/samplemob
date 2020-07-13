@@ -11,14 +11,14 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 // const hostPort = '192.168.254.108:3080'; // Myutini BB
 // const hostPort = '192.168.43.241:3080'; // Myutini HS
-// const hostPort = '192.168.0.106:3080'; // MDC
+const hostPort = '192.168.0.107:3080'; // MDC
 // const hostPort = '192.168.100.29:3080';
 
-// const protocol = 'http';
+const protocol = 'http';
 // const hostPort = '35.173.0.77:3085'; // Dev Server
 
-const protocol = 'https';
-const hostPort = 'toktok.ph:3000'; // Live Server
+// const protocol = 'https';
+// const hostPort = 'toktok.ph:3000'; // Live Server
 
 const baseUrl = `${protocol}://${hostPort}/`;
 const wsUrl = `ws://${hostPort}/graphql`;
