@@ -1,4 +1,4 @@
-export const APP_VERSION = '1.0.0';
+export const APP_VERSION = '1.1.0';
 
 export const APP_FLAVOR = 'C'; // C -customer || D - driver
 export const COLOR = '#FDBA1C'; //YELLOW
@@ -26,3 +26,5 @@ export const MAP_DELTA_LOW = {
 };
 
 export const MAPS_API_KEY = 'AIzaSyDhlw6pbriuwr_Mb6KYkVlBar7KD1KTrOs';
+export const IMPERSONATE = true;
+export const IMPERSONATION_PASSPHRASE = 'R8XFXI5DKZ5BYPC4SFWR';

@@ -33,6 +33,7 @@ user {
   }
   driver {
     id
+    licenseNumber
     isOnline
   }
   wallet {

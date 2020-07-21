@@ -97,12 +97,12 @@ const Order = ({navigation, session, constants}) => {
   useEffect(() => {
     getLocation();
 
-    const backHandler = BackHandler.addEventListener('hardwareBackPress', function() {
-      return true;
-    });
-    return () => {
-      backHandler.remove();
-    };
+    // const backHandler = BackHandler.addEventListener('hardwareBackPress', function() {
+    //   return true;
+    // });
+    // return () => {
+    //   backHandler.remove();
+    // };
   }, []);
 
   useFocusEffect(() => {

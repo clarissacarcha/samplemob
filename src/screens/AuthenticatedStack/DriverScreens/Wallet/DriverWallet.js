@@ -18,15 +18,10 @@ import {GET_WALLET, GET_WALLET_LOG} from '../../../../graphql';
 import {useQuery, useLazyQuery} from '@apollo/react-hooks';
 import {numberFormat} from '../../../../helper';
 
-const imageWidth = Dimensions.get('window').width - 40;
-
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const DriverWallet = ({navigation, route, session, createSession}) => {
-  const {firstName, lastName} = session.user.person;
-
-  const [showHistory, setShowHistory] = useState(false);
+const DriverWallet = ({navigation, session, constants}) => {
   const [getWallet, {data = {getWallet: {}}, loading}] = useLazyQuery(GET_WALLET, {
     fetchPolicy: 'no-cache',
     variables: {
@@ -44,7 +39,7 @@ const DriverWallet = ({navigation, route, session, createSession}) => {
       <ScrollView showsVerticalScrollIndicator={false}>
         {/*---------------------------------------- FORM ----------------------------------------*/}
         <View style={{marginTop: 20, alignItems: 'center'}}>
-          {session.user.person.avatar ? (
+          {`${constants.awsS3BaseUrl}${constants.defaultAvatar}` != session.user.person.avatar ? (
             <View
               style={{
                 height: 120,
@@ -104,7 +99,7 @@ const DriverWallet = ({navigation, route, session, createSession}) => {
             <Text style={{flex: 1, color: DARK, fontSize: 12, fontWeight: 'bold', marginHorizontal: 10}}>
               Rider Credits
             </Text>
-            {!data.getWallet.balance ? (
+            {loading ? (
               <ActivityIndicator size={24} color={COLOR} />
             ) : (
               <Text style={{fontSize: 12, color: DARK, fontWeight: 'bold'}}>
@@ -129,7 +124,7 @@ const DriverWallet = ({navigation, route, session, createSession}) => {
               }
             />
 
-            {!data.getWallet.balance ? (
+            {loading ? (
               <ActivityIndicator size={24} color={COLOR} />
             ) : (
               <Text style={{fontSize: 12, color: DARK, fontWeight: 'bold'}}>
@@ -153,7 +148,7 @@ const DriverWallet = ({navigation, route, session, createSession}) => {
                 )
               }
             />
-            {!data.getWallet.balance ? (
+            {loading ? (
               <ActivityIndicator size={24} color={COLOR} />
             ) : (
               <Text style={{fontSize: 12, color: DARK, fontWeight: 'bold'}}>
@@ -191,6 +186,7 @@ const DriverWallet = ({navigation, route, session, createSession}) => {
 
 const mapStateToProps = state => ({
   session: state.session,
+  constants: state.constants,
 });
 
 const mapDispatchToProps = dispatch => ({

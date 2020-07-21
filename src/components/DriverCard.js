@@ -109,7 +109,7 @@ export const DriverCard = ({driver}) => {
           {/*------------------- NAME -------------------*/}
           <View style={{flex: 1, marginRight: 10}}>
             <Text style={{fontWeight: 'bold'}}>{`${firstName} ${lastName}`}</Text>
-            <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 10}}>{driver.user.username}</Text>
+            <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 12}}>{driver.user.username}</Text>
           </View>
 
           {/*------------------- DIALER BUTTON -------------------*/}

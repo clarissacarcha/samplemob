@@ -49,6 +49,7 @@ const ChangeProfilePicture = ({navigation, route, session, createSession}) => {
     onCompleted: ({patchPersonProfilePicture}) => {
       const newSession = {...session};
       newSession.user.person.avatar = patchPersonProfilePicture.avatar;
+      newSession.user.person.avatarThumbnail = patchPersonProfilePicture.avatar;
       createSession(newSession);
       Alert.alert('', 'Profile picture successfully updated', [
         {

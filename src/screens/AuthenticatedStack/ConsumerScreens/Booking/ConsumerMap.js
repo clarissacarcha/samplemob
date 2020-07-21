@@ -6,18 +6,15 @@ import {
   TouchableOpacity,
   TouchableHighlight,
   Alert,
-  Share,
   ActivityIndicator,
-  BackHandler,
   Image,
   ScrollView,
-  Platform,
 } from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE, AnimatedRegion, Animated, PROVIDER_DEFAULT} from 'react-native-maps';
 import OneSignal from 'react-native-onesignal';
 import MapViewDirections from 'react-native-maps-directions';
 import {connect} from 'react-redux';
-import {useIsFocused, useFocusEffect} from '@react-navigation/native';
+import {check, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import {currentLocation} from '../../../../helper';
 import {BookingOverlay, LocationPermission} from '../../../../components';
 import {YellowIcon} from '../../../../components/ui';
@@ -29,8 +26,6 @@ import {onError} from '../../../../util/ErrorUtility';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import EIcon from 'react-native-vector-icons/Entypo';
 import FIcon from 'react-native-vector-icons/Feather';
-import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import Ionicon from 'react-native-vector-icons/Ionicons';
 
 import ToktokLogo from '../../../../assets/icons/ToktokLogo.png';
 
@@ -70,6 +65,7 @@ const INITIAL_RECIPIENT = [
     scheduledFrom: null,
     scheduledTo: null,
     cashOnDelivery: null,
+    collectPaymentFrom: 'S',
     address: {
       city: '',
       province: '',
@@ -91,9 +87,66 @@ const INITIAL_REGION = {
   longitudeDelta: 10.145791545510278,
 };
 
-const findNotificationRoute = type => {
-  if (type == 'N') {
-    return 'Notifications';
+const getLocationPermissionAfterBooking = async () => {
+  try {
+    const checkAndroid = async () => {
+      const result = await check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+
+      // Location Unavailable In Device. Proceed and use INITIAL_REGION as region
+      if (result === RESULTS.UNAVAILABLE) {
+        return false;
+      }
+
+      // Location Request Denied. Proceed and use INITIAL_REGION as region
+      if (result === RESULTS.BLOCKED) {
+        return false;
+      }
+
+      // IF GPS Request Granted
+      if (result === RESULTS.GRANTED) {
+        return true;
+      }
+
+      // IF GPS Request Denied
+      if (result === RESULTS.DENIED) {
+        return false;
+      }
+    };
+
+    const checkIOS = async () => {
+      const result = await check(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+
+      // Location Unavailable In Device. Proceed and use INITIAL_REGION as region
+      if (result === RESULTS.UNAVAILABLE) {
+        return false;
+      }
+
+      // Location Request Denied. Proceed and use INITIAL_REGION as region
+      if (result === RESULTS.BLOCKED) {
+        return false;
+      }
+
+      // IF GPS Request Granted
+      if (result === RESULTS.GRANTED) {
+        return true;
+      }
+
+      // IF GPS Request Denied
+      if (result === RESULTS.DENIED) {
+        return false;
+      }
+    };
+
+    const checkFunction = Platform.select({
+      ios: checkIOS,
+      android: checkAndroid,
+    });
+
+    const permissionResult = await checkFunction();
+
+    return permissionResult;
+  } catch (error) {
+    console.log(error);
   }
 };
 
@@ -109,22 +162,38 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
   const [directions, setDirections] = useState(INITIAL_DIRECTIONS);
   const [price, setPrice] = useState(0);
 
-  const onResetLocation = async () => {
+  const onResetAfterBooking = async () => {
     try {
-      const location = await currentLocation({
-        showsReverseGeocode: true,
-      });
+      setDirections(INITIAL_DIRECTIONS);
 
-      setSender({
-        ...senderStop,
-        ...location,
-      });
-      setRegion({
-        latitude: location.latitude,
-        longitude: location.longitude,
-        latitudeDelta: 0.015,
-        longitudeDelta: 0.0121,
-      });
+      const permissionResult = await getLocationPermissionAfterBooking();
+
+      if (permissionResult) {
+        const location = await currentLocation({
+          showsReverseGeocode: true,
+        });
+
+        mapViewRef.current.animateToRegion({
+          latitude: location.latitude,
+          longitude: location.longitude,
+          latitudeDelta: 0.015,
+          longitudeDelta: 0.0121,
+        });
+
+        setSender({
+          ...INITIAL_SENDER(session),
+          ...location,
+        });
+      } else {
+        // setRegion(INITIAL_REGION);
+        mapViewRef.current.animateToRegion(INITIAL_REGION);
+
+        setSender({
+          ...INITIAL_SENDER(session),
+        });
+      }
+
+      setRecipient(INITIAL_RECIPIENT);
     } catch {
       console.log('GPS Location Turned Off Or Location Cannot Be Detected');
       setAllowBooking(true);
@@ -142,7 +211,8 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
           ...senderStop,
           ...location,
         });
-        setRegion({
+
+        mapViewRef.current.animateToRegion({
           latitude: location.latitude,
           longitude: location.longitude,
           latitudeDelta: 0.015,
@@ -158,8 +228,8 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
   };
 
   const onDenyLocation = async () => {
-    // No Location. Set Region to INITIAL_REGION and allow booking
-    setRegion(INITIAL_REGION);
+    // No Location. animate mapView to INITIAL_REGION and allow booking
+    mapViewRef.current.animateToRegion(INITIAL_REGION);
     setAllowBooking(true);
   };
 
@@ -168,38 +238,34 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
     onCompleted: () => {
       try {
         setBookingSuccess(true);
-        setRecipient(INITIAL_RECIPIENT);
-        setSender(INITIAL_SENDER(session));
-        setDirections(INITIAL_DIRECTIONS);
-        onResetLocation();
+        onResetAfterBooking();
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     },
   });
 
   const [getOrderPrice, {loading: getOrderPriceLoading}] = useMutation(GET_ORDER_PRICE, {
+    onError: onError,
     ignoreResults: true,
     onCompleted: ({getOrderPrice}) => {
-      console.log(`Setting Price at: ${getOrderPrice.toString()}`);
       setPrice(getOrderPrice);
-    },
-    onError: ({graphQLErrors, networkError}) => {
-      Alert.alert('', 'Something went wrong.');
     },
   });
 
   const onNotificationOpened = ({notification}) => {
     const type = notification.payload.additionalData.type;
+    if (type) {
+      const legend = {
+        ANNOUNCEMENT: 'Announcements',
+        NOTIFICATION: 'Notifications',
+        N: 'Notifications',
+      };
 
-    const legend = {
-      ANNOUNCEMENT: 'Announcements',
-      N: 'Notifications',
-    };
-
-    setTimeout(() => {
-      navigation.push(legend[type]);
-    }, 10);
+      setTimeout(() => {
+        navigation.push(legend[type]);
+      }, 10);
+    }
   };
 
   const oneSignalInit = async () => {
@@ -213,11 +279,11 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
     OneSignal.getTags(tags => console.log(`ONESIGNAL USER ID TAG: ${tags.userId}`));
     OneSignal.addEventListener('opened', onNotificationOpened);
 
-    const backHandler = BackHandler.addEventListener('hardwareBackPress', function() {
-      return true;
-    });
+    // const backHandler = BackHandler.addEventListener('hardwareBackPress', function() {
+    //   return true;
+    // });
     return () => {
-      backHandler.remove();
+      // backHandler.remove();
       OneSignal.removeEventListener('received');
     };
   }, []);
@@ -248,17 +314,14 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
       duration,
     });
 
-    // Timeout needed to trigger fitToCoordinates
-    setTimeout(() => {
-      mapViewRef.current.fitToCoordinates(coordinates, {
-        edgePadding: {
-          right: 20,
-          bottom: 650,
-          left: 20,
-          top: 150,
-        },
-      });
-    }, 2000);
+    mapViewRef.current.fitToCoordinates(coordinates, {
+      edgePadding: {
+        right: 20,
+        bottom: 650,
+        left: 20,
+        top: 150,
+      },
+    });
   };
 
   const onSenderPress = () => {
@@ -276,7 +339,18 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
 
   const onSubmit = async () => {
     try {
-      let emptyRecipient = 0;
+      if (
+        senderStop.latitude === 0 ||
+        senderStop.longitude === 0 ||
+        senderStop.formattedAddress === '' ||
+        senderStop.name === '' ||
+        senderStop.mobile === ''
+      ) {
+        Alert.alert('', 'Please complete sender details.');
+        return;
+      }
+
+      let emptyRecipient = false;
 
       recipient.forEach(rec => {
         if (
@@ -286,11 +360,11 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
           rec.name === '' ||
           rec.mobile === ''
         ) {
-          emptyRecipient++;
+          emptyRecipient = true;
         }
       });
 
-      if (emptyRecipient > 0) {
+      if (emptyRecipient) {
         Alert.alert('', 'Please enter recipient details.');
         return;
       }
@@ -304,9 +378,6 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
         recipientStop: recipient,
       };
 
-      input.senderStop.mobile = `+63${input.senderStop.mobile}`;
-      input.recipientStop[0].mobile = `+63${input.recipientStop[0].mobile}`;
-
       // Delete this field. Only used in mobile app.
       delete input.senderStop.accuracy;
       delete input.senderStop.latitudeDelta;
@@ -315,6 +386,9 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
       delete input.recipientStop[0].accuracy;
       delete input.recipientStop[0].latitudeDelta;
       delete input.recipientStop[0].longitudeDelta;
+
+      input.senderStop.mobile = `${input.senderStop.mobile}`;
+      input.recipientStop[0].mobile = `${input.recipientStop[0].mobile}`;
 
       postDelivery({
         variables: {
@@ -336,16 +410,12 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
       <BookingOverlay visible={postDeliveryLoading || bookingSuccess} done={bookingSuccess} onOkay={onBookSuccessOk} />
       {!allowBooking && <LocationPermission onGrant={onGrantLocation} onDeny={onDenyLocation} />}
       {/*---------------------------------------- MAP ----------------------------------------*/}
-      {/* {senderStop.latitude != 0 ? ( */}
       <MapView
         provider={PROVIDER_GOOGLE}
         // provider={Platform.OS == 'android' ? PROVIDER_GOOGLE : PROVIDER_DEFAULT}
         ref={mapViewRef}
         style={styles.container}
-        region={region}
-        onRegionChangeComplete={data => {
-          // setRegion(data);
-        }}>
+        initialRegion={INITIAL_REGION}>
         {/*---------------------------------------- SENDER MARKER ----------------------------------------*/}
         {senderStop.latitude != 0 && (
           <Marker coordinate={{latitude: senderStop.latitude, longitude: senderStop.longitude}}>
@@ -372,11 +442,11 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
             strokeWidth={3}
             strokeColor={'#EA4335'}
             onReady={onDirectionsReady}
-            // directionsServiceBaseUrl={`https://maps.googleapis.com/maps/api/directions/json?origin=${
-            //   senderStop.latitude
-            // },${senderStop.longitude}&destination=${recipient[recipientIndex].latitude},${
-            //   recipient[recipientIndex].longitude
-            // }&avoid=tolls|highways`}
+            directionsServiceBaseUrl={`https://maps.googleapis.com/maps/api/directions/json?origin=${
+              senderStop.latitude
+            },${senderStop.longitude}&destination=${recipient[recipientIndex].latitude},${
+              recipient[recipientIndex].longitude
+            }&avoid=tolls|highways`}
           />
         )}
       </MapView>

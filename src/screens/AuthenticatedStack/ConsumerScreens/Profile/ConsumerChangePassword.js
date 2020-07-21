@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import Toast from 'react-native-simple-toast';
 import validator from 'validator';
 import {useMutation} from '@apollo/react-hooks';
-import {COLOR, DARK, MAP_DELTA_LOW, ORANGE, MEDIUM} from '../../../../res/constants';
+import {COLOR, DARK, MAP_DELTA_LOW, LIGHT, ORANGE, MEDIUM} from '../../../../res/constants';
 import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../../components';
 import {onError} from '../../../../util/ErrorUtility';
 import {PATCH_USER_CHANGE_PASSWORD} from '../../../../graphql';
@@ -80,6 +80,7 @@ const ChangePassword = ({navigation, session}) => {
           style={styles.input}
           placeholder="Current Password"
           secureTextEntry
+          placeholderTextColor={LIGHT}
         />
 
         {/*-------------------- NEW PASSWORD --------------------*/}
@@ -90,6 +91,7 @@ const ChangePassword = ({navigation, session}) => {
           style={styles.input}
           placeholder="New Password"
           secureTextEntry
+          placeholderTextColor={LIGHT}
         />
 
         {/*-------------------- REPEAT PASSWORD --------------------*/}
@@ -100,6 +102,7 @@ const ChangePassword = ({navigation, session}) => {
           style={styles.input}
           placeholder="Repeat Password"
           secureTextEntry
+          placeholderTextColor={LIGHT}
         />
       </ScrollView>
       {/*-------------------- CONFIRM BUTTON --------------------*/}
@@ -147,6 +150,8 @@ const styles = StyleSheet.create({
     borderColor: MEDIUM,
     borderRadius: 5,
     paddingLeft: 20,
+    height: 50,
+    color: DARK,
   },
   label: {
     marginHorizontal: 20,

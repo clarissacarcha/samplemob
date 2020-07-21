@@ -8,6 +8,7 @@ const Delivery = `
   price
   comRate
   cashOnDelivery
+  collectPaymentFrom
   cargo
   notes
   status

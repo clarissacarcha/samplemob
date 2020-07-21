@@ -85,14 +85,17 @@ const Component = ({session, constants, createSession}) => {
   const onNotificationOpened = ({notification}) => {
     type = notification.payload.additionalData.type;
 
-    const legend = {
-      ANNOUNCEMENT: 'Announcements',
-      N: 'Notifications',
-    };
+    if (type) {
+      const legend = {
+        ANNOUNCEMENT: 'Announcements',
+        NOTIFICATION: 'Notifications',
+        N: 'Notifications',
+      };
 
-    setTimeout(() => {
-      navigation.push(legend[type]);
-    }, 10);
+      setTimeout(() => {
+        navigation.push(legend[type]);
+      }, 10);
+    }
   };
 
   useEffect(() => {

@@ -2,6 +2,7 @@ export * from './AlertOverlay';
 export * from './BookingInfoCard';
 export * from './BookingOverlay';
 export * from './BottomTabHeader';
+export * from './CollectPaymentFrom';
 export * from './DeliveryCard';
 export * from './DeliveryLogsCard';
 export * from './DeliveryStopCard';

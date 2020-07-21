@@ -219,6 +219,7 @@ const AuthenticatedStack = () => (
 
 const mapStateToProps = state => ({
   session: state.session,
+  constants: state.constants,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -228,10 +229,10 @@ const mapDispatchToProps = dispatch => ({
 const Drawer = connect(
   mapStateToProps,
   mapDispatchToProps,
-)(({session, destroySession}) => (
+)(({session, constants, destroySession}) => (
   <RootDrawer.Navigator
     drawerContent={({navigation}) => (
-      <DrawerContent navigation={navigation} session={session} destroySession={destroySession} />
+      <DrawerContent navigation={navigation} session={session} constants={constants} destroySession={destroySession} />
     )}>
     <RootDrawer.Screen name="AuthenticatedStack" component={AuthenticatedStack} />
   </RootDrawer.Navigator>

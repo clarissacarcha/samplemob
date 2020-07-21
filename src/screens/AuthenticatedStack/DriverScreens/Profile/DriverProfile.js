@@ -11,7 +11,7 @@ import {PATCH_PERSON_POST_REGISTRATION} from '../../../../graphql';
 
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 
-const DriverProfile = ({navigation, route, session, createSession}) => {
+const DriverProfile = ({navigation, session, constants, createSession}) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={['Profile', '']} />,
@@ -73,7 +73,7 @@ const DriverProfile = ({navigation, route, session, createSession}) => {
         {/*---------------------------------------- FORM ----------------------------------------*/}
         <View style={{marginTop: 20, alignItems: 'center'}}>
           {/*--------------- AVATAR ---------------*/}
-          {session.user.person.avatar ? (
+          {`${constants.awsS3BaseUrl}${constants.defaultAvatar}` != session.user.person.avatar ? (
             <TouchableHighlight onPress={onProfilePress} underlayColor={COLOR} style={{borderRadius: 10}}>
               <View
                 style={{
@@ -142,7 +142,12 @@ const DriverProfile = ({navigation, route, session, createSession}) => {
           {session.user.person.emailAddress}
         </Text>
 
-        <Text style={styles.label}>Birthdate</Text>
+        <Text style={styles.label}>License Number</Text>
+        <Text style={[styles.input, {height: 50, textAlignVertical: 'center', color: MEDIUM}]}>
+          {session.user.driver.licenseNumber}
+        </Text>
+
+        {/* <Text style={styles.label}>Birthdate</Text>
         <Text style={[styles.input, {height: 50, textAlignVertical: 'center', color: MEDIUM}]}>
           {moment.unix(session.user.person.birthdate / 1000).format('MMM DD YYYY')}
         </Text>
@@ -150,7 +155,7 @@ const DriverProfile = ({navigation, route, session, createSession}) => {
         <Text style={styles.label}>Gender</Text>
         <Text style={[styles.input, {height: 50, textAlignVertical: 'center', color: MEDIUM}]}>
           {session.user.person.gender == 1 ? 'Male' : 'Female'}
-        </Text>
+        </Text> */}
 
         <View style={{height: 20}} />
 
@@ -168,6 +173,7 @@ const DriverProfile = ({navigation, route, session, createSession}) => {
 
 const mapStateToProps = state => ({
   session: state.session,
+  constants: state.constants,
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -18,7 +18,14 @@ import InputScrollView from 'react-native-input-scroll-view';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import {numberFormatInteger, reverseGeocode} from '../../../../helper';
 import {COLOR, DARK, MAP_DELTA_LOW, MEDIUM, LIGHT, ORANGE, COLOR_UNDERLAY} from '../../../../res/constants';
-import {HeaderBack, HeaderTitle, ItemDescription, SchedulePicker, AlertOverlay} from '../../../../components';
+import {
+  HeaderBack,
+  HeaderTitle,
+  ItemDescription,
+  SchedulePicker,
+  AlertOverlay,
+  CollectPaymentFrom,
+} from '../../../../components';
 import {YellowIcon, BlackIcon, BlackButton} from '../../../../components/ui';
 
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
@@ -54,7 +61,7 @@ const RecipientDetails = ({navigation, route, constants}) => {
   const onScheduleChange = value => setLocalData({...localData, ...value});
   const onLandmarkChange = value => setLocalData({...localData, landmark: value});
   const onNameChange = value => setLocalData({...localData, name: value});
-  // const onMobileChange = value => setLocalData({...localData, mobile: value});
+  const onCollectPaymentFromChange = value => setLocalData({...localData, collectPaymentFrom: value});
   const onNotesChange = value => setLocalData({...localData, notes: value});
   const onCargoChange = value => setLocalData({...localData, cargo: value});
 
@@ -164,15 +171,6 @@ const RecipientDetails = ({navigation, route, constants}) => {
     navigation.pop();
   };
 
-  // useEffect(() => {
-  //   const onKeyboardShow = Keyboard.addListener('keyboardDidShow', () => setIsKeyboardShown(true));
-  //   const onKeyboardHide = Keyboard.addListener('keyboardDidHide', () => setIsKeyboardShown(false));
-
-  //   return () => {
-  //     Keyboard.removeAllListeners();
-  //   };
-  // }, []);
-
   return (
     <View style={styles.container}>
       <AlertOverlay visible={loading} />
@@ -276,6 +274,15 @@ const RecipientDetails = ({navigation, route, constants}) => {
               placeholderTextColor={LIGHT}
             />
           </View>
+
+          {/*-------------------- COLLECT PAYMENT FROM --------------------*/}
+
+          <Text style={styles.label}>Collect Payment From</Text>
+          <CollectPaymentFrom
+            initialValue={localData.collectPaymentFrom}
+            onSelect={onCollectPaymentFromChange}
+            isCOD={codSwitch}
+          />
 
           {/*-------------------- CASH ON DELIVERY --------------------*/}
           <View

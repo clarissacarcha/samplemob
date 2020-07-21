@@ -61,7 +61,10 @@ export const DeliveryStopCard = ({stop, index}) => {
         </View>
         {/*------------------- NAME -------------------*/}
         <View style={{flexDirection: 'row', padding: 20}}>
-          <Text style={{fontWeight: 'bold', flex: 1}}>{stop.name}</Text>
+          <View style={{flex: 1}}>
+            <Text style={{fontWeight: 'bold'}}>{stop.name}</Text>
+            <Text style={{fontSize: 12, color: MEDIUM}}>{stop.mobile}</Text>
+          </View>
           {/*------------------- DIALER BUTTON -------------------*/}
           <View style={styles.actionIconBox}>
             <MIcon

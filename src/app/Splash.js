@@ -10,6 +10,7 @@ import {
   Platform,
   Linking,
 } from 'react-native';
+import NetInfo from '@react-native-community/netinfo';
 import {connect} from 'react-redux';
 import OneSignal from 'react-native-onesignal';
 import {APP_FLAVOR, APP_VERSION, MEDIUM, COLOR, DARK} from '../res/constants';
@@ -18,6 +19,8 @@ import {AUTH_CLIENT, GET_APP_VERSION_STATUS, GET_GLOBAL_SETTINGS} from '../graph
 import Nav from './Nav';
 import SplashImage from '../assets/images/Splash.png';
 import Maintenance from '../assets/images/Maintenance.png';
+import NoNetworkConnection from '../assets/images/NoNetworkConnection.png';
+import ServerDown from '../assets/images/ServerDown.png';
 
 const imageWidth = Dimensions.get('window').width - 80;
 
@@ -52,12 +55,20 @@ const Splash = ({setConstants}) => {
       const constantsObject = mapKeyValueToObject(globalSettingRecords.data.getGlobalSettings);
       setConstants(constantsObject);
 
-      const {appStoreDeepLink, playStoreDeepLink} = constantsObject;
+      const {appStoreDeepLink, playStoreDeepLink, playStoreRiderDeepLink} = constantsObject;
 
-      const deepLinkUrl = Platform.select({
-        ios: appStoreDeepLink,
-        android: playStoreDeepLink,
-      });
+      let deepLinkUrl = '';
+
+      if (APP_FLAVOR == 'C') {
+        deepLinkUrl = Platform.select({
+          ios: appStoreDeepLink,
+          android: playStoreDeepLink,
+        });
+      }
+
+      if (APP_FLAVOR == 'D') {
+        deepLinkUrl = playStoreRiderDeepLink;
+      }
 
       setDeepLink(deepLinkUrl);
 
@@ -88,9 +99,9 @@ const Splash = ({setConstants}) => {
 
       const {isCurrent, enabled} = result.data.getAppVersionStatus;
 
-      if (isCurrent && enabled) {
-        setcheckPoint('A');
-      }
+      // if (isCurrent && enabled) {
+      setcheckPoint('A');
+      // }
 
       if (!isCurrent && enabled) {
         setcheckPoint('S');
@@ -101,23 +112,46 @@ const Splash = ({setConstants}) => {
       }
     } catch (error) {
       console.log(error);
-      setcheckPoint('M');
+      setcheckPoint('MAINTENANCE');
     }
   };
 
-  useEffect(() => {
+  const checkNetworkConnection = async () => {
+    const netResult = await NetInfo.fetch();
+
+    if (!netResult.isConnected) {
+      setcheckPoint('NO_NETWORK_CONNECTION');
+      return;
+    }
+
     fetchInitialData();
+  };
+
+  useEffect(() => {
+    checkNetworkConnection();
   }, []);
 
   if (checkPoint == 'A') {
     return <Nav />;
   }
 
+  if (checkPoint == 'NO_NETWORK_CONNECTION') {
+    return (
+      <ImageBackground style={styles.splash} source={SplashImage} resizeMode={'cover'}>
+        <View style={styles.imageBox}>
+          <Image source={NoNetworkConnection} style={styles.image} resizeMode="contain" />
+          <Text style={styles.text}>{`Hey ka-toktok, please check\nyour internet connection`}.</Text>
+        </View>
+      </ImageBackground>
+    );
+  }
+
+  // New Version Optional
   if (checkPoint == 'S') {
     return (
       <ImageBackground style={styles.splash} source={SplashImage} resizeMode={'cover'}>
         <View style={styles.imageBox}>
-          <Image source={Maintenance} style={styles.image} />
+          <Image source={Maintenance} style={styles.image} resizeMode="contain" />
           <Text style={styles.text}>We have added something new for you.</Text>
           <TouchableHighlight onPress={() => Linking.openURL(deepLink)} underlayColor={COLOR} style={styles.submitBox}>
             <View style={styles.submit}>
@@ -134,11 +168,12 @@ const Splash = ({setConstants}) => {
     );
   }
 
+  //New Version Required
   if (checkPoint == 'B') {
     return (
       <ImageBackground style={styles.splash} source={SplashImage} resizeMode={'cover'}>
         <View style={styles.imageBox}>
-          <Image source={Maintenance} style={styles.image} />
+          <Image source={Maintenance} style={styles.image} resizeMode="contain" />
           <Text style={styles.text}>We have added something new for you.</Text>
           <TouchableHighlight onPress={() => Linking.openURL(deepLink)} underlayColor={COLOR} style={styles.submitBox}>
             <View style={styles.submit}>
@@ -150,11 +185,12 @@ const Splash = ({setConstants}) => {
     );
   }
 
-  if (checkPoint == 'M') {
+  // Maintenance/Server Issue
+  if (checkPoint == 'MAINTENANCE') {
     return (
       <ImageBackground style={styles.splash} source={SplashImage} resizeMode={'cover'}>
         <View style={styles.imageBox}>
-          <Image source={Maintenance} style={styles.image} />
+          <Image source={Maintenance} style={styles.image} resizeMode="contain" />
           <Text style={styles.text}>We're adding new features. Come back again later.</Text>
         </View>
       </ImageBackground>
@@ -180,11 +216,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   image: {
-    height: imageWidth,
-    width: imageWidth,
+    height: imageWidth - 40,
+    width: imageWidth - 40,
   },
   imageBox: {
     borderRadius: 10,
+    padding: 20,
+    paddingBottom: 0,
     backgroundColor: 'white',
     overflow: 'hidden',
     shadowColor: '#000',

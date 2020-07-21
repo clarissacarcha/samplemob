@@ -82,6 +82,8 @@ export const OrderDetailsCard = ({delivery}) => {
   const legend = ['', 'As Soon As Possible', 'Scheduled'];
   const orderType = senderStop.orderType === 2 || recipientStop.orderType == 2 ? 2 : 1;
 
+  const collectFromString = delivery.collectPaymentFrom == 'S' ? 'Sender' : 'Recipient';
+
   return (
     <View style={styles.card}>
       <View style={styles.cardShadow}>
@@ -230,6 +232,15 @@ export const OrderDetailsCard = ({delivery}) => {
               <Text style={{fontWeight: 'bold'}}>Item Description</Text>
               <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
                 <Text style={{fontWeight: 'bold', marginLeft: 10}}>{delivery.cargo}</Text>
+              </Text>
+            </View>
+          </View>
+          <View style={{flex: 1, flexDirection: 'row', marginTop: 8}}>
+            <YellowIcon set="FontAwesome5" name="hand-holding" size={16} containerStyle={{marginTop: 4}} />
+            <View style={{marginLeft: 10}}>
+              <Text style={{fontWeight: 'bold'}}>Collect From</Text>
+              <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
+                <Text style={{fontWeight: 'bold', marginLeft: 10}}>{collectFromString}</Text>
               </Text>
             </View>
           </View>

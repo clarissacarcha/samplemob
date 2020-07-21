@@ -6,7 +6,7 @@ import {connect} from 'react-redux';
 import {useMutation} from '@apollo/react-hooks';
 import OneSignal from 'react-native-onesignal';
 import {getUniqueId} from 'react-native-device-info';
-import {COLOR, DARK, APP_FLAVOR, MEDIUM, LIGHT} from '../../res/constants';
+import {COLOR, DARK, APP_FLAVOR, MEDIUM, LIGHT, IMPERSONATE, IMPERSONATION_PASSPHRASE} from '../../res/constants';
 import {AUTH_CLIENT, VERIFY_LOGIN} from '../../graphql';
 import {AlertOverlay} from '../../components';
 import {onError} from '../../util/ErrorUtility';
@@ -30,11 +30,11 @@ const PasswordVerification = ({navigation, route, createSession}) => {
         appFlavor: APP_FLAVOR,
         deviceId: getUniqueId(),
         deviceType: Platform.select({ios: 'I', android: 'A'}),
+        ...(IMPERSONATE ? {impersonationPassphrase: IMPERSONATION_PASSPHRASE} : {}),
       },
     },
     onError: onError,
     onCompleted: ({verifyLogin}) => {
-      alert(verifyLogin);
       if (verifyLogin.user.status == 3) {
         navigation.push('AccountBlocked');
         return;

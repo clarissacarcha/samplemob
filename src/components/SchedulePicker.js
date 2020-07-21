@@ -348,8 +348,7 @@ export const SchedulePicker = ({initialData, onScheduleChange}) => {
               alignItems: 'center',
               height: 50,
               borderRadius: 10,
-              paddingLeft: 20,
-              paddingRight: 10,
+              paddingHorizontal: 20,
               borderWidth: orderType === 2 ? 2 : 1,
               borderColor: orderType === 2 ? COLOR : LIGHT,
             }}>

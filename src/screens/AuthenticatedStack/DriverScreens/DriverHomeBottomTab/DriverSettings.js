@@ -5,7 +5,6 @@ import {COLOR, DARK, MAP_DELTA_LOW, ORANGE, MEDIUM, LIGHT} from '../../../../res
 import {AlertOverlay, BottomTabHeader} from '../../../../components';
 
 const DriverSettings = ({navigation, route, session, createSession}) => {
-  alert('OLA');
   return <View style={styles.container} />;
 };
 

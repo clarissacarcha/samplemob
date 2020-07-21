@@ -7,6 +7,7 @@ buildscript {
         compileSdkVersion = 29 // change from 28 -> 29 for react-native-webview
         targetSdkVersion = 29 // change from 28 -> 29 for react-native-webview
         playServicesVersion = "17.0.0" // or find latest version // for react-native-maps
+        supportLibVersion = "28.0.0" //required by netinfo
     }
     repositories {
         google()

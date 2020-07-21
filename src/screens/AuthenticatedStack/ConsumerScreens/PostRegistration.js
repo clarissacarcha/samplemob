@@ -3,6 +3,7 @@ import {View, Text, ScrollView, StyleSheet, TouchableHighlight, TextInput, Alert
 import {connect} from 'react-redux';
 import validator from 'validator';
 import {useMutation} from '@apollo/react-hooks';
+import InputScrollView from 'react-native-input-scroll-view';
 import {COLOR, DARK, MAP_DELTA_LOW, MEDIUM, LIGHT} from '../../../res/constants';
 import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../components';
 import {onError} from '../../../util/ErrorUtility';
@@ -110,7 +111,7 @@ const PostRegistration = ({navigation, route, session, createSession, destroySes
   return (
     <View style={styles.container}>
       <AlertOverlay visible={loading} />
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <InputScrollView showsVerticalScrollIndicator={false} keyboardOffset={50}>
         {/*---------------------------------------- FORM ----------------------------------------*/}
         <Text style={styles.label}>First Name</Text>
         <TextInput
@@ -162,13 +163,14 @@ const PostRegistration = ({navigation, route, session, createSession, destroySes
           autoCapitalize="none"
           placeholderTextColor={LIGHT}
         />
-      </ScrollView>
-      {/*---------------------------------------- BUTTON ----------------------------------------*/}
-      <TouchableHighlight onPress={onSubmit} underlayColor={COLOR} style={styles.submitBox}>
-        <View style={styles.submit}>
-          <Text style={{color: COLOR, fontSize: 20}}>Confirm</Text>
-        </View>
-      </TouchableHighlight>
+
+        {/*---------------------------------------- BUTTON ----------------------------------------*/}
+        <TouchableHighlight onPress={onSubmit} underlayColor={COLOR} style={styles.submitBox}>
+          <View style={styles.submit}>
+            <Text style={{color: COLOR, fontSize: 20}}>Confirm</Text>
+          </View>
+        </TouchableHighlight>
+      </InputScrollView>
     </View>
   );
 };

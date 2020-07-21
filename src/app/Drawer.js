@@ -19,7 +19,7 @@ const DrawerButton = ({label, onPress, restrict}) => {
   );
 };
 
-const Drawer = ({navigation, session, destroySession}) => {
+const Drawer = ({navigation, session, constants, destroySession}) => {
   let fullName = '';
   let avatar = '';
   if (session.user) {
@@ -68,7 +68,7 @@ const Drawer = ({navigation, session, destroySession}) => {
         <View style={{marginTop: 10, alignItems: 'center'}}>
           {/*--------------- AVATAR ---------------*/}
           {/* TODO: If has driver avatar, show avatar, else show placeholder */}
-          {session.user.person.avatar ? (
+          {`${constants.awsS3BaseUrl}${constants.defaultAvatar}` != session.user.person.avatar ? (
             <View
               style={{
                 height: 90,
