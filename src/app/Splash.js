@@ -20,6 +20,7 @@ import Nav from './Nav';
 import SplashImage from '../assets/images/Splash.png';
 import Maintenance from '../assets/images/Maintenance.png';
 import NoNetworkConnection from '../assets/images/NoNetworkConnection.png';
+import ToktokMotorcycle from '../assets/images/ToktokMotorcycle.png';
 import ServerDown from '../assets/images/ServerDown.png';
 
 const imageWidth = Dimensions.get('window').width - 80;
@@ -39,7 +40,7 @@ const Splash = ({setConstants}) => {
 
   const oneSignalInit = async oneSignalAppId => {
     OneSignal.init(oneSignalAppId);
-    OneSignal.inFocusDisplaying(0);
+    OneSignal.inFocusDisplaying(2);
   };
 
   const fetchInitialData = async () => {
@@ -190,14 +191,18 @@ const Splash = ({setConstants}) => {
     return (
       <ImageBackground style={styles.splash} source={SplashImage} resizeMode={'cover'}>
         <View style={styles.imageBox}>
-          <Image source={Maintenance} style={styles.image} resizeMode="contain" />
-          <Text style={styles.text}>We're adding new features. Come back again later.</Text>
+          <Image source={ServerDown} style={styles.image} resizeMode="contain" />
+          <Text style={styles.text}>Cannot connect to server. Come back again later.</Text>
         </View>
       </ImageBackground>
     );
   }
 
-  return <ImageBackground style={styles.splash} source={SplashImage} resizeMode={'cover'} />;
+  return (
+    <ImageBackground style={styles.splash} source={SplashImage} resizeMode={'cover'}>
+      <Image source={ToktokMotorcycle} style={styles.image} resizeMode="contain" />
+    </ImageBackground>
+  );
 };
 
 const mapDispatchToProps = dispatch => ({

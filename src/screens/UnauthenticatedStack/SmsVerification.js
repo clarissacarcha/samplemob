@@ -131,6 +131,7 @@ const Verification = ({navigation, route, createSession}) => {
   };
 
   const onSubmit = () => {
+    alert(verificationCode);
     verifyRegistration();
   };
 

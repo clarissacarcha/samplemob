@@ -18,28 +18,39 @@ NEXT PATCH
 
 Customer Pending (FIX WALLET LOGS IF TOKTOK OPERATOR FIRST)
 
+1. Consumer Profile Pix
+2. Ratings
+3. Priority Fee
+4. Saved Locations
+
+#
+
 1. Fix Order Type Schedule, Today Only
 2. Handle sender/recipient location change when other is empty. Focus on location
 3. Handle skip location still invoked after Proceed
-4. Toktok Logo on Image Profile
+4. (done) Toktok Logo on Image Profile
 5. Toktok Consumer App Change Profile
 6. (HALF) Item Description API (HARD CODE)
 7. Cant Cancel If Picked Up IN API
+8. (done) Toktok Logo on Splash
+9. (done) Delivery ID in Delivery Details
+10. (done) Announcement Overlay
+11. Ratings
+12. Error on Splash, retry button
 
 Driver Pending
 
 1. Can't Go Offline with Ongoing Orders
 2. Don't get orders from blocked consumer account.
-3. Validate Accept Orders Only Status = 1 and consumer user.status = 1
+3. Validate Accept Orders Only delivery.Status = 1 and consumer user.status = 1
 4. Rider Check Location and Camera Permission
 5. Notify Riders in 100km and is-online
 6. Driver Vehicle ID on Delivery on Accept
-7. Ongoing Order Column on Driver
-8. Add Rider Location on Go Online
-9. Wallet Logs when Operator is Toktok (IF OperatorWalletID and ToktokWallet Id = same, don't insert for toktok)
-10. Notify Rider of assigned order
-
-# No operator, 0 balance. Give all to toktok.
+7. Add Rider Location on Go Online
+8. (done) Notify Rider of assigned order
+9. (done) Operator Details
+10. (done) Push Notifs on Recharge
+11. Better Update Profile
 
 # Finalize Timestamp
 
@@ -89,7 +100,8 @@ Customer Done
 10. (done) Add Mobile Number under Sender/Recipient in Delivery Details
 11. (done) Fix Keyboard Issue on iOS Post Registration, Edit Profile, Forgot Password etc...
 12. (done) Fix input fields for iOS Change Password
-13. (done) Fix no auth token when loggin in without password
+13. (done) Fix push notification not displayed when app is in focus.
+    <!-- 15. (done) Fix app crashes on push notification without payload/additional data -->
 
 Driver Done
 
@@ -99,3 +111,23 @@ Driver Done
 4. (done) Remove birthdate and gender
 5. (done) Show license number
 6. (done) Fix rider wallet when 0 balance
+
+# PIPELINE
+
+1. Bookmarked Locations.
+2. Priority Booking
+
+# DONE
+
+1. (done) Referral System referral code validation after registreation and one time profile update
+2. (done) Rider notification API for top up/reload credits
+3. (done) Welcome Message
+4. (ongoing) Referral System JC API call after delivery completion.
+5. Customer/Rider Rating
+
+#
+
+1. (done) Rider Profile Icon to Toktok Icon
+2. (done) Rider Operator Details
+3. (done) Check JC Logs API
+4. Queries for fetching orders, expiration

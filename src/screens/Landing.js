@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, ImageBackground} from 'react-native';
+import {View, StyleSheet, ImageBackground, Dimensions, Image} from 'react-native';
 import {connect} from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
 import {useLazyQuery} from '@apollo/react-hooks';
@@ -8,7 +8,10 @@ import {APP_FLAVOR} from '../res/constants';
 import {AUTH_CLIENT, GET_USER_SESSION, GET_GLOBAL_SETTINGS} from '../graphql';
 import {onError} from '../util/ErrorUtility';
 
+const imageWidth = Dimensions.get('window').width - 80;
+
 import SplashImage from '../assets/images/Splash.png';
+import ToktokMotorcycle from '../assets/images/ToktokMotorcycle.png';
 
 const Landing = ({createSession, destroySession, navigation}) => {
   const [getUserSession] = useLazyQuery(GET_USER_SESSION, {
@@ -28,13 +31,9 @@ const Landing = ({createSession, destroySession, navigation}) => {
 
         createSession(getUserSession);
 
-        OneSignal.sendTags(
-          {
-            userId: user.id,
-          },
-          () => console.log('LALA'),
-          () => console.log('MOVE'),
-        );
+        OneSignal.sendTags({
+          userId: user.id,
+        });
 
         //TODO: Check for valid user status and access token. Also check for existing user record is valid
 
@@ -94,7 +93,11 @@ const Landing = ({createSession, destroySession, navigation}) => {
     checkAsyncStorageSession();
   }, []);
 
-  return <ImageBackground style={styles.splash} source={SplashImage} resizeMode={'cover'} />;
+  return (
+    <ImageBackground style={styles.splash} source={SplashImage} resizeMode={'cover'}>
+      <Image source={ToktokMotorcycle} style={styles.image} resizeMode="contain" />
+    </ImageBackground>
+  );
 };
 
 const mapStateToProps = state => ({
@@ -114,5 +117,11 @@ export default connect(
 const styles = StyleSheet.create({
   splash: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  image: {
+    height: imageWidth - 40,
+    width: imageWidth - 40,
   },
 });

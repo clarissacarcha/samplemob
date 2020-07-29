@@ -16,11 +16,11 @@ import MapViewDirections from 'react-native-maps-directions';
 import {connect} from 'react-redux';
 import {check, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import {currentLocation} from '../../../../helper';
-import {BookingOverlay, LocationPermission} from '../../../../components';
+import {BookingOverlay, LocationPermission, WelcomeMessage} from '../../../../components';
 import {YellowIcon} from '../../../../components/ui';
 import {COLOR, DARK, MEDIUM, LIGHT, MAPS_API_KEY} from '../../../../res/constants';
-import {useMutation} from '@apollo/react-hooks';
-import {POST_DELIVERY, GET_ORDER_PRICE} from '../../../../graphql';
+import {useMutation, useQuery} from '@apollo/react-hooks';
+import {POST_DELIVERY, GET_ORDER_PRICE, GET_WELCOME_MESSAGE} from '../../../../graphql';
 import {onError} from '../../../../util/ErrorUtility';
 
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
@@ -233,6 +233,20 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
     setAllowBooking(true);
   };
 
+  const {data: welcomeData, loading: welcomeLoading, error: welcomeError} = useQuery(GET_WELCOME_MESSAGE);
+  const [showWelcome, setShowWelcome] = useState(false);
+  const hideWelcomeMessage = () => {
+    setShowWelcome(false);
+  };
+  useEffect(() => {
+    console.log(welcomeData);
+    if (welcomeData) {
+      if (welcomeData.getWelcomeMessage) {
+        setShowWelcome(true);
+      }
+    }
+  }, [welcomeData]);
+
   const [postDelivery, {loading: postDeliveryLoading}] = useMutation(POST_DELIVERY, {
     onError: onError,
     onCompleted: () => {
@@ -254,29 +268,39 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
   });
 
   const onNotificationOpened = ({notification}) => {
-    const type = notification.payload.additionalData.type;
-    if (type) {
-      const legend = {
-        ANNOUNCEMENT: 'Announcements',
-        NOTIFICATION: 'Notifications',
-        N: 'Notifications',
-      };
+    try {
+      const type = notification.payload.additionalData.type;
+      if (type) {
+        const legend = {
+          ANNOUNCEMENT: 'Announcements',
+          NOTIFICATION: 'Notifications',
+          N: 'Notifications',
+        };
 
-      setTimeout(() => {
-        navigation.push(legend[type]);
-      }, 10);
+        const route = legend[type];
+
+        if (route) {
+          setTimeout(() => {
+            navigation.push(route);
+          }, 10);
+        } else {
+          console.warn('Notification on opened route undefined.');
+        }
+      }
+    } catch (error) {
+      console.warn('Notification no additional data.');
     }
   };
 
   const oneSignalInit = async () => {
     OneSignal.init(constants.consumerOneSignalAppId);
-    OneSignal.inFocusDisplaying(0);
+    OneSignal.inFocusDisplaying(2);
   };
 
   useEffect(() => {
     oneSignalInit();
 
-    OneSignal.getTags(tags => console.log(`ONESIGNAL USER ID TAG: ${tags.userId}`));
+    // OneSignal.getTags(tags => console.log(`ONESIGNAL USER ID TAG: ${tags.userId}`));
     OneSignal.addEventListener('opened', onNotificationOpened);
 
     // const backHandler = BackHandler.addEventListener('hardwareBackPress', function() {
@@ -374,6 +398,7 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
         distance: directions.distance,
         duration: parseInt(directions.duration),
         price: price,
+        referralCode: session.user.consumer.referralCode,
         senderStop: senderStop,
         recipientStop: recipient,
       };
@@ -407,6 +432,8 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
 
   return (
     <View style={styles.container}>
+      {showWelcome && <WelcomeMessage data={welcomeData.getWelcomeMessage} onOkay={hideWelcomeMessage} />}
+
       <BookingOverlay visible={postDeliveryLoading || bookingSuccess} done={bookingSuccess} onOkay={onBookSuccessOk} />
       {!allowBooking && <LocationPermission onGrant={onGrantLocation} onDeny={onDenyLocation} />}
       {/*---------------------------------------- MAP ----------------------------------------*/}

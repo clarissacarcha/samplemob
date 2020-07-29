@@ -31,7 +31,7 @@ import FAIcon from 'react-native-vector-icons/FontAwesome';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const NotificationCard = ({message, lastItem}) => {
-  const {title, body, delivery, createdAt} = message;
+  const {title, body, type, payload, delivery, createdAt} = message;
   const navigation = useNavigation();
 
   const pushConsumerRoute = () => navigation.push('SelectedDelivery', {delivery});
@@ -39,9 +39,21 @@ const NotificationCard = ({message, lastItem}) => {
 
   const pushRoute = APP_FLAVOR == 'C' ? pushConsumerRoute : pushDriverRoute;
 
+  const onNotificationSelect = () => {
+    if (delivery) {
+      pushRoute();
+      return;
+    }
+
+    if (type == 'W') {
+      navigation.push('DriverWalletLog');
+      return;
+    }
+  };
+
   return (
     <TouchableHighlight
-      onPress={pushRoute}
+      onPress={onNotificationSelect}
       underlayColor={COLOR}
       style={StyleSheet.flatten([styles.card, lastItem ? {marginBottom: 20} : null])}>
       <View style={styles.taskBox}>

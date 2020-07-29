@@ -7,7 +7,7 @@ import InputScrollView from 'react-native-input-scroll-view';
 import {COLOR, DARK, MAP_DELTA_LOW, MEDIUM, LIGHT} from '../../../res/constants';
 import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../components';
 import {onError} from '../../../util/ErrorUtility';
-import {PATCH_PERSON_POST_REGISTRATION} from '../../../graphql';
+import {CLIENT, PATCH_PERSON_POST_REGISTRATION, GET_USER_SESSION, AUTH_CLIENT} from '../../../graphql';
 
 const PostRegistration = ({navigation, route, session, createSession, destroySession}) => {
   const signOut = () => {
@@ -22,6 +22,7 @@ const PostRegistration = ({navigation, route, session, createSession, destroySes
     headerTitle: () => <HeaderTitle label={['Post', 'Registration']} />,
   });
 
+  const [referralCode, setReferralCode] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [emailAddress, setEmailAddress] = useState('');
@@ -30,20 +31,12 @@ const PostRegistration = ({navigation, route, session, createSession, destroySes
 
   const [patchPersonPostRegistration, {loading}] = useMutation(PATCH_PERSON_POST_REGISTRATION, {
     onError: onError,
-    variables: {
-      input: {
-        tokUserId: session.user.id,
-        firstName,
-        lastName,
-        emailAddress,
-        password,
-      },
-    },
-    onCompleted: ({patchPersonPostRegistration}) => {
+    onCompleted: () => {
       const newSession = {...session};
       newSession.user.person.firstName = firstName;
       newSession.user.person.lastName = lastName;
       newSession.user.person.emailAddress = emailAddress;
+      newSession.user.consumer.referralCode = referralCode;
       createSession(newSession);
       navigation.replace('ConsumerMap');
     },
@@ -95,7 +88,18 @@ const PostRegistration = ({navigation, route, session, createSession, destroySes
       return;
     }
 
-    patchPersonPostRegistration();
+    patchPersonPostRegistration({
+      variables: {
+        input: {
+          tokUserId: session.user.id,
+          referralCode,
+          firstName,
+          lastName,
+          emailAddress,
+          password,
+        },
+      },
+    });
   };
 
   useEffect(() => {
@@ -113,6 +117,18 @@ const PostRegistration = ({navigation, route, session, createSession, destroySes
       <AlertOverlay visible={loading} />
       <InputScrollView showsVerticalScrollIndicator={false} keyboardOffset={50}>
         {/*---------------------------------------- FORM ----------------------------------------*/}
+        <View style={{flexDirection: 'row'}}>
+          <Text style={styles.label}>Referral Code</Text>
+          <Text style={[styles.label, {color: LIGHT, marginLeft: 5}]}>(Optional)</Text>
+        </View>
+        <TextInput
+          value={referralCode}
+          onChangeText={value => setReferralCode(value)}
+          style={styles.input}
+          placeholder="Referral Code"
+          placeholderTextColor={LIGHT}
+        />
+
         <Text style={styles.label}>First Name</Text>
         <TextInput
           value={firstName}
@@ -240,7 +256,7 @@ const styles = StyleSheet.create({
     marginRight: 20,
   },
   label: {
-    marginHorizontal: 20,
+    marginLeft: 20,
     marginTop: 20,
     marginBottom: 5,
     fontSize: 12,

@@ -5,6 +5,8 @@ import FIcon from 'react-native-vector-icons/Feather';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 import OneSignal from 'react-native-onesignal';
 
+import ToktokWashed from '../assets/images/ToktokWashed.png';
+
 const DrawerButton = ({label, onPress, restrict}) => {
   if (restrict && restrict != APP_FLAVOR) {
     return null;
@@ -21,7 +23,6 @@ const DrawerButton = ({label, onPress, restrict}) => {
 
 const Drawer = ({navigation, session, constants, destroySession}) => {
   let fullName = '';
-  let avatar = '';
   if (session.user) {
     if (APP_FLAVOR == 'C') {
       const {firstName, lastName} = session.user.person;
@@ -67,7 +68,6 @@ const Drawer = ({navigation, session, constants, destroySession}) => {
         {/*------------------------------ PROFILE ------------------------------*/}
         <View style={{marginTop: 10, alignItems: 'center'}}>
           {/*--------------- AVATAR ---------------*/}
-          {/* TODO: If has driver avatar, show avatar, else show placeholder */}
           {`${constants.awsS3BaseUrl}${constants.defaultAvatar}` != session.user.person.avatar ? (
             <View
               style={{
@@ -94,12 +94,17 @@ const Drawer = ({navigation, session, constants, destroySession}) => {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <FAIcon name="user" size={70} color={MEDIUM} />
+              <Image
+                source={ToktokWashed}
+                resizeMode={'contain'}
+                tintColor={MEDIUM}
+                style={{width: 60, height: 60, borderRadius: 10}}
+              />
+              {/* <FAIcon name="user" size={70} color={MEDIUM} /> */}
             </View>
           )}
           {/*--------------- FULL NAME ---------------*/}
           <Text style={[styles.headerText, {marginTop: 10, color: COLOR, textAlign: 'center'}]}>{fullName}</Text>
-
           {/*--------------- OLD EDIT PROFILE BUTTON ---------------*/}
           {/* <TouchableOpacity onPress={() => navigation.navigate('ConsumerProfile')}>
             <View style={{flexDirection: 'row', padding: 10}}>

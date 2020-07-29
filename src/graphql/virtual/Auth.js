@@ -30,11 +30,18 @@ user {
   consumer {
     id
     rating
+    referralCode
   }
   driver {
     id
     licenseNumber
     isOnline
+    operatorPerson {
+      firstName
+      lastName
+      mobileNumber
+      emailAddress
+    }
   }
   wallet {
     id

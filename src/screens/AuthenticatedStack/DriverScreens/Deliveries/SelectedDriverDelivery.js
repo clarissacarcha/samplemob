@@ -3,6 +3,7 @@ import {View, Text, ScrollView, StyleSheet, TouchableHighlight, Modal, ActivityI
 import {ReactNativeFile} from 'apollo-upload-client';
 import {useMutation} from '@apollo/react-hooks';
 import {HeaderBack, HeaderTitle, DeliveryStopCard, DeliveryLogsCard, OrderDetailsCard} from '../../../../components';
+import {YellowIcon} from '../../../../components/ui';
 import {COLOR, DARK, MEDIUM, LIGHT, ORANGE} from '../../../../res/constants';
 import {
   CLIENT,
@@ -167,6 +168,20 @@ const SelectedDriverDelivery = ({navigation, route, session}) => {
             </View>
           </TouchableHighlight>
         )}
+
+        {/*-------------------- DELIVERY ID --------------------*/}
+        <View style={[styles.cardShadow, {marginBottom: 20}]}>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <View style={{flexDirection: 'row'}}>
+              <YellowIcon set="FontAwesome5" name="pen" size={14} darkIcon />
+
+              <Text style={{marginLeft: 10, color: DARK, fontWeight: 'bold'}}>
+                Delivery <Text style={{color: ORANGE}}>ID</Text>
+              </Text>
+            </View>
+            <Text style={{color: DARK, fontWeight: 'bold'}}>{delivery.deliveryId}</Text>
+          </View>
+        </View>
 
         {/*-------------------- ORDER DETAILS --------------------*/}
         <OrderDetailsCard delivery={getDelivery} />

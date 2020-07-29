@@ -17,9 +17,11 @@ export const currentLocation = async ({showsReverseGeocode}) => {
     }
 
     // Fetch current location, destructure latitude and longitude
-    const {latitude, longitude, accuracy} = await RNLocation.getLatestLocation({
-      timeout: 2000,
+    const locRes = await RNLocation.getLatestLocation({
+      timeout: 3000,
     });
+
+    const {latitude, longitude, accuracy} = locRes;
 
     // If not asking for reverseGeocode, return an object with latitude and longitude
     if (!showsReverseGeocode) {

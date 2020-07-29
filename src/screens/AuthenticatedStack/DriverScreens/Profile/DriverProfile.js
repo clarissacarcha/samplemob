@@ -1,5 +1,15 @@
 import React, {useState} from 'react';
-import {View, Text, ScrollView, StyleSheet, TouchableHighlight, TextInput, Alert, Image} from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  TouchableHighlight,
+  TextInput,
+  Alert,
+  Image,
+  ImageBackground,
+} from 'react-native';
 import {connect} from 'react-redux';
 import {useMutation} from '@apollo/react-hooks';
 import Toast from 'react-native-simple-toast';
@@ -8,6 +18,8 @@ import {COLOR, DARK, MAP_DELTA_LOW, ORANGE, MEDIUM, LIGHT} from '../../../../res
 import {AlertOverlay, BottomTabHeader, HeaderTitle, HeaderBack} from '../../../../components';
 import {onError} from '../../../../util/ErrorUtility';
 import {PATCH_PERSON_POST_REGISTRATION} from '../../../../graphql';
+
+import ToktokWashed from '../../../../assets/images/ToktokWashed.png';
 
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 
@@ -99,13 +111,18 @@ const DriverProfile = ({navigation, session, constants, createSession}) => {
                 style={{
                   height: 120,
                   width: 120,
-                  backgroundColor: MEDIUM,
+                  backgroundColor: '#333',
                   borderRadius: 10,
                   justifyContent: 'center',
                   alignItems: 'center',
                   position: 'relative',
                 }}>
-                <FAIcon name="user" size={90} color={LIGHT} />
+                <Image
+                  source={ToktokWashed}
+                  resizeMode={'contain'}
+                  tintColor={MEDIUM}
+                  style={{width: 80, height: 80, borderRadius: 10}}
+                />
                 <FAIcon name="edit" size={20} color={LIGHT} style={{position: 'absolute', bottom: 5, right: 5}} />
               </View>
             </TouchableHighlight>
@@ -146,6 +163,33 @@ const DriverProfile = ({navigation, session, constants, createSession}) => {
         <Text style={[styles.input, {height: 50, textAlignVertical: 'center', color: MEDIUM}]}>
           {session.user.driver.licenseNumber}
         </Text>
+
+        {session.user.driver.operatorPerson.firstName && (
+          <>
+            <Text style={styles.label}>Operator Name</Text>
+            <Text style={[styles.input, {height: 50, textAlignVertical: 'center', color: MEDIUM}]}>
+              {`${session.user.driver.operatorPerson.firstName} ${session.user.driver.operatorPerson.lastName}`}
+            </Text>
+          </>
+        )}
+
+        {session.user.driver.operatorPerson.mobileNumber && (
+          <>
+            <Text style={styles.label}>Operator Mobile Number</Text>
+            <Text style={[styles.input, {height: 50, textAlignVertical: 'center', color: MEDIUM}]}>
+              {session.user.driver.operatorPerson.mobileNumber}
+            </Text>
+          </>
+        )}
+
+        {session.user.driver.operatorPerson.emailAddress && (
+          <>
+            <Text style={styles.label}>Operator Email Address</Text>
+            <Text style={[styles.input, {height: 50, textAlignVertical: 'center', color: MEDIUM}]}>
+              {session.user.driver.operatorPerson.emailAddress}
+            </Text>
+          </>
+        )}
 
         {/* <Text style={styles.label}>Birthdate</Text>
         <Text style={[styles.input, {height: 50, textAlignVertical: 'center', color: MEDIUM}]}>

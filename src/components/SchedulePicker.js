@@ -254,7 +254,7 @@ const PickerRow = ({initialData, setscheduledFrom, setscheduledTo, setScheduledD
 };
 
 export const SchedulePicker = ({initialData, onScheduleChange}) => {
-  const finePrint = ['', 'We will assign a suitable rider for you.', 'We will arrive within your scheduled time.'];
+  const finePrint = ['', 'We will get you a rider ka-toktok.', 'We will arrive within your scheduled time.'];
 
   const [orderType, setOrderType] = useState(initialData.orderType);
 

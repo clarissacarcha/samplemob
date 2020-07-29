@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import Toast from 'react-native-simple-toast';
 import validator from 'validator';
 import {useMutation} from '@apollo/react-hooks';
+import InputScrollView from 'react-native-input-scroll-view';
 import {COLOR, DARK, MAP_DELTA_LOW, ORANGE, MEDIUM} from '../../../../res/constants';
 import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../../components';
 import {BlackButton} from '../../../../components/ui';
@@ -16,6 +17,7 @@ const ConsumerProfile = ({navigation, route, session, createSession}) => {
     headerTitle: () => <HeaderTitle label={['My', 'Profile']} />,
   });
 
+  const [referralCode, setReferralCode] = useState(session.user.consumer.referralCode);
   const [firstName, setFirstName] = useState(session.user.person.firstName);
   const [lastName, setLastName] = useState(session.user.person.lastName);
   const [emailAddress, setEmailAddress] = useState(session.user.person.emailAddress);
@@ -27,6 +29,7 @@ const ConsumerProfile = ({navigation, route, session, createSession}) => {
         firstName,
         lastName,
         emailAddress,
+        referralCode,
       },
     },
     onError: onError,
@@ -35,6 +38,7 @@ const ConsumerProfile = ({navigation, route, session, createSession}) => {
       newSession.user.person.firstName = firstName;
       newSession.user.person.lastName = lastName;
       newSession.user.person.emailAddress = emailAddress;
+      newSession.user.consumer.referralCode = referralCode;
       createSession(newSession);
 
       Toast.show('Profile successfully updated.');
@@ -68,9 +72,28 @@ const ConsumerProfile = ({navigation, route, session, createSession}) => {
   return (
     <View style={styles.container}>
       <AlertOverlay visible={loading} />
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {/*-------------------- MOBILE NUMBER --------------------*/}
+      <InputScrollView showsVerticalScrollIndicator={false}>
+        {/*-------------------- REFERRAL CODE --------------------*/}
+        {session.user.consumer.referralCode ? (
+          <View>
+            <Text style={styles.label}>Referral Code</Text>
+            <View style={[styles.input, {justifyContent: 'center'}]}>
+              <Text style={{color: MEDIUM}}>{referralCode}</Text>
+            </View>
+          </View>
+        ) : (
+          <View>
+            <Text style={styles.label}>Referral Code</Text>
+            <TextInput
+              value={referralCode}
+              onChangeText={value => setReferralCode(value)}
+              style={styles.input}
+              placeholder="Referral Code"
+            />
+          </View>
+        )}
 
+        {/*-------------------- MOBILE NUMBER --------------------*/}
         <Text style={styles.label}>Mobile Number</Text>
         <View style={[styles.input, {justifyContent: 'center'}]}>
           <Text style={{color: MEDIUM}}>{session.user.username}</Text>
@@ -104,12 +127,12 @@ const ConsumerProfile = ({navigation, route, session, createSession}) => {
           keyboardType="email-address"
           autoCapitalize="none"
         />
-      </ScrollView>
-      {/*-------------------- UPDATE BUTTON --------------------*/}
-      <BlackButton onPress={onSubmit} label="Update Profile" containerStyle={{marginBottom: 0}} />
+        {/*-------------------- UPDATE BUTTON --------------------*/}
+        <BlackButton onPress={onSubmit} label="Update Profile" containerStyle={{marginBottom: 0, marginTop: 40}} />
 
-      {/*-------------------- CHANGE PASSWORD BUTTON --------------------*/}
-      <BlackButton onPress={() => navigation.push('ConsumerChangePassword')} label="Change Password" />
+        {/*-------------------- CHANGE PASSWORD BUTTON --------------------*/}
+        <BlackButton onPress={() => navigation.push('ConsumerChangePassword')} label="Change Password" />
+      </InputScrollView>
     </View>
   );
 };

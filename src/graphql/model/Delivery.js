@@ -2,6 +2,7 @@ import gql from 'graphql-tag';
 
 const Delivery = `
   id
+  deliveryId
   tokConsumerId
   distance
   duration

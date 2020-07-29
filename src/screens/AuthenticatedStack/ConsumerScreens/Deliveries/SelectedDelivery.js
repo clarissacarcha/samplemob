@@ -12,6 +12,7 @@ import {
   OrderDetailsCard,
   DriverLocationCard,
 } from '../../../../components';
+import {YellowIcon} from '../../../../components/ui';
 import {COLOR, DARK, MEDIUM, LIGHT, ORANGE, APP_FLAVOR} from '../../../../res/constants';
 import {PATCH_DELIVERY_CUSTOMER_CANCEL, PATCH_DELIVERY_DELETE, PATCH_DELIVERY_REBOOK} from '../../../../graphql';
 import {onError} from '../../../../util/ErrorUtility';
@@ -135,6 +136,20 @@ const SelectedDelivery = ({navigation, route}) => {
             </TouchableHighlight> */}
           </View>
         )}
+
+        {/*-------------------- DELIVERY ID --------------------*/}
+        <View style={[styles.cardShadow, {marginBottom: 20}]}>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <View style={{flexDirection: 'row'}}>
+              <YellowIcon set="FontAwesome5" name="pen" size={14} darkIcon />
+
+              <Text style={{marginLeft: 10, color: DARK, fontWeight: 'bold'}}>
+                Delivery <Text style={{color: ORANGE}}>ID</Text>
+              </Text>
+            </View>
+            <Text style={{color: DARK, fontWeight: 'bold'}}>{delivery.deliveryId}</Text>
+          </View>
+        </View>
 
         {/*-------------------- ORDER DETAILS --------------------*/}
         <OrderDetailsCard delivery={getDelivery} />

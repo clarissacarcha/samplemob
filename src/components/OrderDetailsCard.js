@@ -9,14 +9,6 @@ import {YellowIcon} from '../components/ui';
 import {numberFormat} from '../helper';
 import moment from 'moment';
 
-import FA5Icon from 'react-native-vector-icons/FontAwesome5';
-import FAIcon from 'react-native-vector-icons/FontAwesome';
-import EIcon from 'react-native-vector-icons/Entypo';
-import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import Ionicon from 'react-native-vector-icons/Ionicons';
-import Fontisto from 'react-native-vector-icons/Fontisto';
-import SLIcon from 'react-native-vector-icons/SimpleLineIcons';
-
 const SchedulePhrase = ({stop}) => {
   const nowDate = moment().format('MMM DD YYYY');
   const tomorrowDate = moment()

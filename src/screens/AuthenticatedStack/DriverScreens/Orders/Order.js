@@ -11,8 +11,10 @@ import {
   TouchableHighlight,
   Alert,
   BackHandler,
+  Linking,
 } from 'react-native';
-import {useQuery} from '@apollo/react-hooks';
+import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
+import {useQuery, useLazyQuery} from '@apollo/react-hooks';
 import {connect} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
 import {COLOR, MEDIUM, FONT_FAMILY, DARK, ORANGE} from '../../../../res/constants';
@@ -20,6 +22,7 @@ import {DeliveryCard, DriverGoOnlineButton, SomethingWentWrong} from '../../../.
 import {GET_ORDERS} from '../../../../graphql';
 import {currentLocation} from '../../../../helper';
 
+import LocationRequest from '../../../../assets/images/LocationRequest.png';
 import NoData from '../../../../assets/images/NoData.png';
 import GoOnline from '../../../../assets/images/GoOnline.png';
 
@@ -41,22 +44,6 @@ const OrderTabHeader = ({label}) => {
 };
 
 const Order = ({navigation, session, constants}) => {
-  // const onNotificationOpened = ({notification}) => {
-  //   type = notification.payload.additionalData.type;
-
-  //   const legend = {
-  //     ANNOUNCEMENT: 'Announcements',
-  //   };
-
-  //   setTimeout(() => {
-  //     navigation.push(legend[type]);
-  //   }, 10);
-  // };
-
-  // useEffect(() => {
-  //   OneSignal.addEventListener('opened', onNotificationOpened);
-  // }, []);
-
   if (!session.user.driver.isOnline) {
     return (
       <>
@@ -71,45 +58,80 @@ const Order = ({navigation, session, constants}) => {
   }
 
   const [location, setLocation] = useState(INITIAL_LOCATION);
+  const [noGPS, setNoGPS] = useState(false);
+  const [manualLoading, setManualLoading] = useState(false);
+
+  // const {data, loading, error, refetch} = useQuery(GET_ORDERS, {
+  //   fetchPolicy: 'network-only',
+  //   variables: {
+  //     filter: {
+  //       latitude: location.latitude,
+  //       longitude: location.longitude,
+  //     },
+  //   },
+  // });
+
+  const [getOrders, {data = {getNearestOrderAvailable: []}, loading, error}] = useLazyQuery(GET_ORDERS, {
+    fetchPolicy: 'network-only',
+  });
 
   const getLocation = async () => {
     try {
+      console.log('FETCHING...');
+      setManualLoading(true);
+      setNoGPS(false);
       const detectedLocation = await currentLocation({
         showsReverseGeocode: false,
       });
 
-      setLocation(detectedLocation);
+      if (detectedLocation) {
+        getOrders({
+          variables: {
+            filter: {
+              latitude: detectedLocation.latitude,
+              longitude: detectedLocation.longitude,
+            },
+          },
+        });
+        // setLocation(detectedLocation);
+        setManualLoading(false);
+      } else {
+        setNoGPS(true);
+        setManualLoading(false);
+      }
     } catch (e) {
+      setManualLoading(false);
+
       setLocation(INITIAL_LOCATION);
     }
   };
 
-  const {data, loading, error, refetch} = useQuery(GET_ORDERS, {
-    fetchPolicy: 'network-only',
-    variables: {
-      filter: {
-        latitude: location.latitude,
-        longitude: location.longitude,
-      },
-    },
-  });
+  const retryFromNoGPS = async () => {
+    // try {
+    //   setNoGPS(false);
+    //   const detectedLocation = await currentLocation({
+    //     showsReverseGeocode: false,
+    //   });
+    //   if (detectedLocation) {
+    //     setLocation(detectedLocation);
+    //     refetch();
+    //   } else {
+    //     setNoGPS(true);
+    //   }
+    // } catch (e) {
+    //   setLocation(INITIAL_LOCATION);
+    // }
+  };
 
   useEffect(() => {
     getLocation();
-
-    // const backHandler = BackHandler.addEventListener('hardwareBackPress', function() {
-    //   return true;
-    // });
-    // return () => {
-    //   backHandler.remove();
-    // };
   }, []);
 
   useFocusEffect(() => {
-    refetch();
+    // refetch();
   }, []);
 
-  if (loading) {
+  if (loading || manualLoading) {
     return (
       <>
         <OrderTabHeader label={['Available', 'Orders']} />
@@ -125,6 +147,31 @@ const Order = ({navigation, session, constants}) => {
       <>
         <OrderTabHeader label={['Available', 'Orders']} />
         <SomethingWentWrong />
+      </>
+    );
+  }
+
+  if (noGPS) {
+    return (
+      <>
+        <OrderTabHeader label={['Available', 'Orders']} />
+        <View style={styles.center}>
+          <Image source={LocationRequest} style={styles.imageLarge} resizeMode={'contain'} />
+
+          <Text style={{fontWeight: 'bold', color: MEDIUM, marginTop: 20}}>
+            Ka-toktok, please turn on your GPS/Location Service.
+          </Text>
+          <Text
+            style={{
+              fontWeight: 'bold',
+              color: MEDIUM,
+            }}>{`You can find it under your phone's Settings > Location`}</Text>
+          <TouchableHighlight onPress={getLocation} underlayColor={COLOR} style={styles.submitBox}>
+            <View style={styles.submit}>
+              <Text style={{color: COLOR, fontSize: 20}}>Retry</Text>
+            </View>
+          </TouchableHighlight>
+        </View>
       </>
     );
   }
@@ -147,7 +194,9 @@ const Order = ({navigation, session, constants}) => {
         showsVerticalScrollIndicator={false}
         data={data.getNearestOrderAvailable}
         keyExtractor={item => item.id}
-        refreshControl={<RefreshControl refreshing={loading} onRefresh={refetch} colors={[COLOR]} tintColor={COLOR} />}
+        refreshControl={
+          <RefreshControl refreshing={loading} onRefresh={getLocation} colors={[COLOR]} tintColor={COLOR} />
+        }
         renderItem={({item, index}) => (
           <DeliveryCard
             delivery={item}

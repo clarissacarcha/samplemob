@@ -83,18 +83,30 @@ const Component = ({session, constants, createSession}) => {
   }, []);
 
   const onNotificationOpened = ({notification}) => {
-    type = notification.payload.additionalData.type;
+    try {
+      type = notification.payload.additionalData.type;
 
-    if (type) {
-      const legend = {
-        ANNOUNCEMENT: 'Announcements',
-        NOTIFICATION: 'Notifications',
-        N: 'Notifications',
-      };
+      if (type) {
+        const legend = {
+          ANNOUNCEMENT: 'Announcements',
+          NOTIFICATION: 'Notifications',
+          WALLET: 'DriverWalletLog',
+          N: 'Notifications',
+        };
 
-      setTimeout(() => {
-        navigation.push(legend[type]);
-      }, 10);
+        const route = legend[type];
+
+        if (route) {
+          setTimeout(() => {
+            navigation.push(route);
+          }, 10);
+        } else {
+          console.warn('Notification on opened route undefined.');
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      console.warn('Notification no additional data.');
     }
   };
 

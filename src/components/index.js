@@ -17,3 +17,4 @@ export * from './LocationPermission';
 export * from './OrderDetailsCard';
 export * from './SchedulePicker';
 export * from './SomethingWentWrong';
+export * from './WelcomeMessage';
