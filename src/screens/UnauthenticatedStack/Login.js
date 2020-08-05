@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     justifyContent: 'center',
     marginRight: 20,
-    height: 50,
+    height: 56,
   },
   input: {
     flex: 1,
@@ -213,6 +213,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 20,
     fontSize: 25,
+    height: 56,
     color: DARK,
   },
   submitBox: {

@@ -104,13 +104,31 @@ export const OrderDetailsCard = ({delivery}) => {
                 <Text style={{fontWeight: 'bold'}}>Credit Cost</Text>
                 <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
                   <Text style={{fontWeight: 'bold', marginLeft: 10}}>
-                    {numberFormat(delivery.price * delivery.comRate)}
+                    {numberFormat((parseFloat(delivery.price) + parseFloat(delivery.expressFee)) * delivery.comRate)}
                   </Text>
                 </Text>
               </View>
             </View>
           )}
         </View>
+
+        {/*-------------------- EXPRESS DELIVERY ROW --------------------*/}
+        {delivery.expressFee != 0 && (
+          <View style={[styles.directionsBox, {borderBottomWidth: StyleSheet.hairlineWidth, borderColor: LIGHT}]}>
+            <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+              <YellowIcon set="MaterialCommunity" name="clock-fast" size={16} />
+
+              <View style={{marginLeft: 10}}>
+                <Text style={{fontWeight: 'bold'}}>Express Delivery</Text>
+                <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
+                  <Text style={{fontWeight: 'bold', marginLeft: 10}}>
+                    This delivery is placed at a higher priority.
+                  </Text>
+                </Text>
+              </View>
+            </View>
+          </View>
+        )}
 
         {/*-------------------- ORDER PRICE AND COD ROW --------------------*/}
         <View style={[styles.directionsBox, {borderBottomWidth: StyleSheet.hairlineWidth, borderColor: LIGHT}]}>
@@ -120,7 +138,9 @@ export const OrderDetailsCard = ({delivery}) => {
             <View style={{marginLeft: 10}}>
               <Text style={{fontWeight: 'bold'}}>Amount</Text>
               <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
-                <Text style={{fontWeight: 'bold', marginLeft: 10}}>₱ {delivery.price}.00</Text>
+                <Text style={{fontWeight: 'bold', marginLeft: 10}}>
+                  ₱ {parseFloat(delivery.price) + parseFloat(delivery.expressFee)}.00
+                </Text>
               </Text>
             </View>
           </View>
@@ -138,6 +158,7 @@ export const OrderDetailsCard = ({delivery}) => {
           )}
         </View>
 
+        {/*-------------------- ORDER DATE AND TYPE ROW --------------------*/}
         <View
           style={[
             styles.directionsBox,
@@ -149,7 +170,7 @@ export const OrderDetailsCard = ({delivery}) => {
               <YellowIcon set="FontAwesome" name="calendar" />
               <View style={{marginLeft: 10}}>
                 <Text style={{fontWeight: 'bold', fontSize: 14}}>Order Date</Text>
-                <Text numberOfLines={1} style={{paddingRight: 10, color: MEDIUM, fontSize: 10}}>
+                <Text numberOfLines={1} style={{paddingRight: 10, color: MEDIUM, fontSize: 10, fontWeight: 'bold'}}>
                   {/* {moment
                     .tz(delivery.createdAt, 'Asia/Manila')
                     .format('MMM DD YYYY - hh:mm A')
@@ -164,7 +185,7 @@ export const OrderDetailsCard = ({delivery}) => {
               <YellowIcon set="Fontisto" name="sitemap" />
               <View style={{marginLeft: 10}}>
                 <Text style={{fontWeight: 'bold'}}>Order Type</Text>
-                <Text numberOfLines={1} style={{paddingRight: 10, color: MEDIUM, fontSize: 10}}>
+                <Text numberOfLines={1} style={{paddingRight: 10, color: MEDIUM, fontSize: 10, fontWeight: 'bold'}}>
                   {legend[orderType]}
                 </Text>
               </View>
@@ -217,7 +238,7 @@ export const OrderDetailsCard = ({delivery}) => {
         </View>
 
         {/*-------------------- ITEM DESCRIPTION --------------------*/}
-        <View style={[styles.rowFlexibleHeight]}>
+        <View style={[styles.rowFlexibleHeightTop]}>
           <View style={{flex: 1, flexDirection: 'row', marginTop: 8}}>
             <YellowIcon set="Entypo" name="box" size={16} containerStyle={{marginTop: 4}} />
             <View style={{marginLeft: 10}}>
@@ -316,6 +337,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    paddingBottom: 10,
+  },
+  rowFlexibleHeightTop: {
+    marginHorizontal: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     paddingBottom: 10,
   },
 });

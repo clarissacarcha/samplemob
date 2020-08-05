@@ -3,6 +3,7 @@ import {View, Text, ScrollView, StyleSheet, TouchableHighlight, Linking, Dimensi
 import {connect} from 'react-redux';
 import {COLOR, DARK, MEDIUM, LIGHT} from '../../../res/constants';
 import {HeaderBack, HeaderTitle} from '../../../components';
+import {YellowIcon} from '../../../components/ui';
 
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -41,7 +42,7 @@ const TalkToUs = ({navigation, constants}) => {
               {/*-------------------- VISIT OUR WEBSITE LABEL --------------------*/}
               <View style={styles.rowBox}>
                 <View style={styles.row}>
-                  <FAIcon name="info" size={16} color={'white'} style={styles.iconBox} />
+                  <YellowIcon set="FontAwesome" name="info" />
                   <Text style={{fontSize: 14, marginLeft: 16, color: DARK, fontWeight: 'bold'}}>Visit our website</Text>
                 </View>
               </View>
@@ -49,7 +50,7 @@ const TalkToUs = ({navigation, constants}) => {
               {/*-------------------- WEBSITE --------------------*/}
               <View style={styles.rowBox}>
                 <View style={styles.row}>
-                  <MCIcon name="web" size={16} color={'white'} style={styles.iconBox} />
+                  <YellowIcon set="MaterialCommunity" name="web" />
                   <Text style={{fontSize: 14, marginLeft: 16, color: MEDIUM, fontWeight: 'bold'}}>
                     {constants.websiteDisplayName}
                   </Text>
@@ -74,7 +75,7 @@ const TalkToUs = ({navigation, constants}) => {
               {/*-------------------- EMAIL US LABEL --------------------*/}
               <View style={styles.rowBox}>
                 <View style={styles.row}>
-                  <FAIcon name="info" size={16} color={'white'} style={styles.iconBox} />
+                  <YellowIcon set="FontAwesome" name="info" />
                   <Text style={{fontSize: 14, marginLeft: 16, color: DARK, fontWeight: 'bold'}}>Email Us</Text>
                 </View>
               </View>
@@ -82,7 +83,7 @@ const TalkToUs = ({navigation, constants}) => {
               {/*-------------------- SUPPORT EMAIL --------------------*/}
               <View style={styles.rowBox}>
                 <View style={styles.row}>
-                  <MCIcon name="email" size={16} color={'white'} style={styles.iconBox} />
+                  <YellowIcon set="MaterialCommunity" name="email" />
                   <Text style={{fontSize: 14, marginLeft: 16, color: MEDIUM, fontWeight: 'bold'}}>
                     {constants.talkToUsEmail}
                   </Text>

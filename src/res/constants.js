@@ -1,9 +1,9 @@
-export const APP_VERSION = '1.2.0';
-export const PROTOCOL = 'https';
-export const HOST_PORT = 'toktok.ph:3000';
+export const APP_VERSION = '1.3.0';
+// export const PROTOCOL = 'https';
+// export const HOST_PORT = 'toktok.ph:3000';
 
-// export const PROTOCOL = 'http';
-// export const HOST_PORT = '192.168.43.241:3080'; // Myutini BB
+export const PROTOCOL = 'http';
+export const HOST_PORT = '192.168.43.241:3080'; // Myutini HS
 // export const HOST_PORT = '35.173.0.77:3085'; // Dev Server
 // export const HOST_PORT = '35.173.0.77:3080'; // Test Server
 // export const HOST_PORT = '35.173.0.77:3088'; // Marketing Server

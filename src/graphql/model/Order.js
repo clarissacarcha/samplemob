@@ -7,6 +7,7 @@ const Delivery = `
   distance
   duration
   price
+  expressFee
   comRate
   cashOnDelivery
   collectPaymentFrom

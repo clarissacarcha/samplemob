@@ -44,50 +44,52 @@ const SelectedAnnouncement = ({navigation, route}) => {
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <Shadow>
-          <Image source={{uri: image}} style={{height: imageWidth, width: imageWidth}} resizeMode="cover" />
+          <View style={{borderRadius: 10, overflow: 'hidden'}}>
+            <Image source={{uri: image}} style={{height: imageWidth, width: imageWidth}} resizeMode="cover" />
 
-          {/*-------------------- TITLE --------------------*/}
-          <View style={styles.row}>
-            <YellowIcon set="FontAwesome5" name="pen" size={14} />
-            <Text
-              numberOfLines={4}
-              style={{
-                fontSize: 14,
-                color: DARK,
-                flex: 1,
-                paddingHorizontal: 10,
-                fontWeight: 'bold',
-                marginTop: 2,
-              }}>
-              {title}
-            </Text>
-          </View>
+            {/*-------------------- TITLE --------------------*/}
+            <View style={styles.row}>
+              <YellowIcon set="FontAwesome5" name="pen" size={14} />
+              <Text
+                numberOfLines={4}
+                style={{
+                  fontSize: 14,
+                  color: DARK,
+                  flex: 1,
+                  paddingHorizontal: 10,
+                  fontWeight: 'bold',
+                  marginTop: 2,
+                }}>
+                {title}
+              </Text>
+            </View>
 
-          {/*-------------------- DATE --------------------*/}
-          <View style={styles.row}>
-            <YellowIcon set="FontAwesome" name="calendar" />
-            <Text
-              style={{
-                fontSize: 12,
-                marginLeft: 10,
-                color: MEDIUM,
-                flex: 1,
-                alignSelf: 'center',
-              }}>
-              {createdAt}
-            </Text>
-          </View>
+            {/*-------------------- DATE --------------------*/}
+            <View style={styles.row}>
+              <YellowIcon set="FontAwesome" name="calendar" />
+              <Text
+                style={{
+                  fontSize: 12,
+                  marginLeft: 10,
+                  color: MEDIUM,
+                  flex: 1,
+                  alignSelf: 'center',
+                }}>
+                {createdAt}
+              </Text>
+            </View>
 
-          {/*-------------------- DATE --------------------*/}
-          <View style={{paddingHorizontal: 20, paddingBottom: 20}}>
-            <Text
-              style={{
-                fontSize: 12,
-                color: DARK,
-                alignSelf: 'center',
-              }}>
-              {body}
-            </Text>
+            {/*-------------------- DATE --------------------*/}
+            <View style={{paddingHorizontal: 20, paddingBottom: 20}}>
+              <Text
+                style={{
+                  fontSize: 12,
+                  color: DARK,
+                  alignSelf: 'center',
+                }}>
+                {body}
+              </Text>
+            </View>
           </View>
         </Shadow>
       </ScrollView>
@@ -125,7 +127,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   shadow: {
-    overflow: 'hidden',
+    // overflow: 'hidden',
     backgroundColor: 'white',
     borderRadius: 10,
     shadowColor: '#000',

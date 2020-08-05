@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   Image,
   ScrollView,
+  Switch,
 } from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE, AnimatedRegion, Animated, PROVIDER_DEFAULT} from 'react-native-maps';
 import OneSignal from 'react-native-onesignal';
@@ -66,6 +67,7 @@ const INITIAL_RECIPIENT = [
     scheduledTo: null,
     cashOnDelivery: null,
     collectPaymentFrom: 'S',
+    expressFee: 0,
     address: {
       city: '',
       province: '',
@@ -161,6 +163,21 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
   const [recipient, setRecipient] = useState(INITIAL_RECIPIENT);
   const [directions, setDirections] = useState(INITIAL_DIRECTIONS);
   const [price, setPrice] = useState(0);
+  const [isExpress, setIsExpress] = useState(false);
+
+  const onExpressDeliveryChange = value => {
+    setIsExpress(value);
+
+    if (value) {
+      const expressData = recipient;
+      expressData[recipientIndex].expressFee = parseFloat(constants.expressDeliveryFee);
+      setRecipient(expressData);
+    } else {
+      const expressData = recipient;
+      expressData[recipientIndex].expressFee = 0;
+      setRecipient(expressData);
+    }
+  };
 
   const onResetAfterBooking = async () => {
     try {
@@ -338,14 +355,16 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
       duration,
     });
 
-    mapViewRef.current.fitToCoordinates(coordinates, {
-      edgePadding: {
-        right: 20,
-        bottom: 650,
-        left: 20,
-        top: 150,
-      },
-    });
+    setTimeout(() => {
+      mapViewRef.current.fitToCoordinates(coordinates, {
+        edgePadding: {
+          right: 20,
+          bottom: 350,
+          left: 20,
+          top: 100,
+        },
+      });
+    }, 0);
   };
 
   const onSenderPress = () => {
@@ -561,11 +580,39 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
                     <ActivityIndicator size={20} color={COLOR} />
                   </View>
                 ) : (
-                  <Text style={{fontWeight: 'bold', marginLeft: 10}}>₱{price}.00</Text>
+                  <Text style={{fontWeight: 'bold', marginLeft: 10}}>
+                    ₱{price + recipient[recipientIndex].expressFee}.00
+                  </Text>
                 )}
               </View>
             </View>
           )}
+          {/*-------------------- Express Delivery --------------------*/}
+          <View
+            style={{
+              marginHorizontal: 20,
+              marginBottom: 10,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}>
+            <YellowIcon set="MaterialCommunity" name="clock-fast" />
+
+            <View style={{flex: 1, marginHorizontal: 10}}>
+              <Text style={{fontSize: 12, color: DARK, fontWeight: 'bold'}}>Express Delivery</Text>
+              <Text style={{fontSize: 10, color: MEDIUM, fontWeight: 'bold'}}>
+                Pay an additional P40.00 for express delivery. Your order will be placed at a higher priority.
+              </Text>
+            </View>
+            <View>
+              <Switch
+                trackColor={{isExpress: LIGHT, true: LIGHT}}
+                thumbColor={isExpress ? COLOR : MEDIUM}
+                onValueChange={onExpressDeliveryChange}
+                value={isExpress}
+              />
+            </View>
+          </View>
         </View>
         {/*---------------------------------------- SUBMIT BUTTON ----------------------------------------*/}
         <TouchableHighlight
