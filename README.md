@@ -32,6 +32,13 @@ NEXT PATCH
 8. (HALF) Item Description API (HARD CODE)
 9. Cant Cancel If Picked Up IN API
 10. Error on Splash, retry button
+11. Add Booking, Vehicle Type ID (Just in the backend)
+12. (DONE) Password minimum 8 characters
+13. (DONE) Rating validation. Required star rating
+14. (DONE) Login page. Differentiate customer with rider.
+15. Change welcome message to welcome banners.
+16. Notification on Rating
+17. Limit viewable history to 15 days. Set in global settings
 
 # Driver Pending
 
@@ -43,6 +50,12 @@ NEXT PATCH
 6. Driver Vehicle ID on Delivery on Accept
 7. Add Rider Location on Go Online
 8. Better Update Profile
+9. Cannot accept order if has Express Delivery Ongoing
+10. Handle when operator account is put on hold.
+11. On Cancel Delivery, Have a confirmation button first
+12. Order Delivery Express Delivery First
+13. Express Delivery Change Text to price.
+14. Font family
 
 # Backend Pending
 
@@ -65,3 +78,23 @@ Proposed
 
 1. On Confirm Sender or Recipient (Detect changes to not invoke Google API on same location)
 2. On Search Places, Search Button to call Google API instead of every type.
+
+https://oauth2.googleapis.com/tokeninfo?id_token=
+
+1. (Delivery Rating Done)
+2. Delivery Rating refactoring (New Table to support edit)
+3. Edit Rating (No Edit)
+4. Notification on Rating
+5. (Wag Muna Itanong) Rating Tags
+6. (?) How to Rate Drivers From Web Portal?
+7. (?) How to Rate Customers From Web Portal?
+8. (?) Show Completed Number Of Deliveries in Driver Profile
+9. (?) QR Code
+10. (?Marketing) Wrong Location
+11. (?Marketing) No Show Recipient
+12. (?Marketing) Bearing of Cancellation
+13. Changes for Express Delivery (Show Breakdrown, Highlight, First in Order By)
+14. Fix Notification
+15. Fix Map Zooming Out,,,
+
+PUNCH GACCESS KEYSTORE FILE

@@ -1,6 +1,10 @@
 import AsyncStorage from '@react-native-community/async-storage';
 
-const INITIAL_STATE = {};
+const INITIAL_STATE = {
+  user: {
+    person: {},
+  },
+};
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
@@ -9,6 +13,7 @@ export default (state = INITIAL_STATE, action) => {
       return {...state, ...action.payload};
     case 'DESTROY_SESSION':
       AsyncStorage.removeItem('userId');
+      AsyncStorage.removeItem('accessToken');
       // return INITIAL_STATE;
       return state;
     default:

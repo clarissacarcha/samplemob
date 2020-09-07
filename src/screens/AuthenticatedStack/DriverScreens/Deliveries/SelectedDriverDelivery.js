@@ -2,9 +2,16 @@ import React, {useState} from 'react';
 import {View, Text, ScrollView, StyleSheet, TouchableHighlight, Modal, ActivityIndicator, Alert} from 'react-native';
 import {ReactNativeFile} from 'apollo-upload-client';
 import {useMutation} from '@apollo/react-hooks';
-import {HeaderBack, HeaderTitle, DeliveryStopCard, DeliveryLogsCard, OrderDetailsCard} from '../../../../components';
+import {
+  HeaderBack,
+  HeaderTitle,
+  DeliveryStopCard,
+  DeliveryLogsCard,
+  OrderDetailsCard,
+  RiderRatingCard,
+} from '../../../../components';
 import {YellowIcon} from '../../../../components/ui';
-import {COLOR, DARK, MEDIUM, LIGHT, ORANGE} from '../../../../res/constants';
+import {COLOR, DARK, MEDIUM, LIGHT, ORANGE, APP_FLAVOR} from '../../../../res/constants';
 import {
   CLIENT,
   PATCH_DELIVERY_INCREMENT_STATUS,
@@ -124,6 +131,28 @@ const SelectedDriverDelivery = ({navigation, route, session}) => {
     });
   };
 
+  const onDeliveryRated = rating => {
+    setDelivery({
+      ...getDelivery,
+      ...rating,
+    });
+  };
+
+  const isRateButtonShown = () => {
+    if (getDelivery.status == 6) {
+      if (APP_FLAVOR == 'C' && !getDelivery.driverRating) {
+        return true;
+      }
+
+      if (APP_FLAVOR == 'D' && !getDelivery.consumerRating) {
+        return true;
+      }
+
+      return false;
+    }
+    return false;
+  };
+
   return (
     <View style={{flex: 1}}>
       {/*-------------------- LOADING OVERLAY--------------------*/}
@@ -154,6 +183,17 @@ const SelectedDriverDelivery = ({navigation, route, session}) => {
               {[3, 5].includes(getDelivery.status) && (
                 <Ionicon name="ios-camera" size={40} color={COLOR} style={{position: 'absolute', right: 20}} />
               )}
+            </View>
+          </TouchableHighlight>
+        )}
+
+        {isRateButtonShown() && (
+          <TouchableHighlight
+            onPress={() => navigation.push('DeliveryRating', {delivery, setDelivery, onDeliveryRated})}
+            underlayColor={COLOR}
+            style={{borderRadius: 10, marginBottom: 20}}>
+            <View style={styles.submit}>
+              <Text style={{color: COLOR, fontSize: 16}}>Rate This Delivery</Text>
             </View>
           </TouchableHighlight>
         )}
@@ -194,6 +234,12 @@ const SelectedDriverDelivery = ({navigation, route, session}) => {
 
         {/*-------------------- DELIVERY LOGS --------------------*/}
         {getDelivery.status !== 1 && <DeliveryLogsCard logs={getDelivery.logs} />}
+
+        {/*-------------------- RIDER RATING --------------------*/}
+        <RiderRatingCard driverRating={getDelivery.driverRating} ratingFor="D" />
+
+        {/*-------------------- CUSTOMER RATING --------------------*/}
+        <RiderRatingCard driverRating={getDelivery.consumerRating} ratingFor="C" />
 
         {/*-------------------- CANCEL ORDER --------------------*/}
         {[2, 3].includes(getDelivery.status) && (

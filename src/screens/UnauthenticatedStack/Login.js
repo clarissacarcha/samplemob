@@ -139,7 +139,9 @@ const Login = ({navigation, session}) => {
           resizeMode="cover"
         />
         <View style={{height: 50, paddingHorizontal: 20, justifyContent: 'flex-end', marginBottom: 10}}>
-          <Text style={{fontWeight: 'bold', color: MEDIUM}}>Enter your mobile number to continue.</Text>
+          <Text style={{fontWeight: 'bold', color: MEDIUM}}>{`Enter your ${
+            APP_FLAVOR == 'C' ? 'mobile' : 'rider'
+          } number to continue.`}</Text>
         </View>
 
         {/*-------------------- INPUT ROW --------------------*/}

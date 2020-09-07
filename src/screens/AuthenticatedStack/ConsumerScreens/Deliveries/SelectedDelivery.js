@@ -11,11 +11,35 @@ import {
   AlertOverlay,
   OrderDetailsCard,
   DriverLocationCard,
+  RiderRatingCard,
 } from '../../../../components';
 import {YellowIcon} from '../../../../components/ui';
 import {COLOR, DARK, MEDIUM, LIGHT, ORANGE, APP_FLAVOR} from '../../../../res/constants';
 import {PATCH_DELIVERY_CUSTOMER_CANCEL, PATCH_DELIVERY_DELETE, PATCH_DELIVERY_REBOOK} from '../../../../graphql';
 import {onError} from '../../../../util/ErrorUtility';
+
+import FAIcon from 'react-native-vector-icons/FontAwesome';
+import {FlatList} from 'react-native-gesture-handler';
+
+const StarRating = ({rating}) => {
+  const starColor = index => {
+    if (index <= rating) {
+      return COLOR;
+    } else {
+      return LIGHT;
+    }
+  };
+
+  return (
+    <View style={{justifyContent: 'center', alignItems: 'center', flexDirection: 'row', padding: 20}}>
+      <FAIcon name="star" size={35} style={{marginRight: 15}} color={starColor(1)} />
+      <FAIcon name="star" size={35} style={{marginRight: 15}} color={starColor(2)} />
+      <FAIcon name="star" size={35} style={{marginRight: 15}} color={starColor(3)} />
+      <FAIcon name="star" size={35} style={{marginRight: 15}} color={starColor(4)} />
+      <FAIcon name="star" size={35} color={starColor(5)} />
+    </View>
+  );
+};
 
 const SelectedDelivery = ({navigation, route}) => {
   const {delivery, label} = route.params;
@@ -67,10 +91,10 @@ const SelectedDelivery = ({navigation, route}) => {
     },
   });
 
-  const onRebook = () => {
-    // patchDeliveryRebook();
-    // navigation.navigate('ConsumerMap', {rebookDelivery: delivery});
-  };
+  // const onRebook = () => {
+  // patchDeliveryRebook();
+  // navigation.navigate('ConsumerMap', {rebookDelivery: delivery});
+  // };
 
   // Syncrhonize all loading states
   useEffect(() => {
@@ -81,19 +105,30 @@ const SelectedDelivery = ({navigation, route}) => {
     }
   }, [loadingC, loadingD, loadingR]);
 
+  const onDeliveryRated = rating => {
+    setDelivery({
+      ...getDelivery,
+      ...rating,
+    });
+  };
+
+  const isRateButtonShown = () => {
+    if (getDelivery.status == 6) {
+      if (APP_FLAVOR == 'C' && !getDelivery.driverRating) {
+        return true;
+      }
+
+      if (APP_FLAVOR == 'D' && !getDelivery.consumerRating) {
+        return true;
+      }
+
+      return false;
+    }
+    return false;
+  };
+
   return (
     <View style={{flex: 1}}>
-      {/* <Modal animationType="fade" transparent={true} visible={loading} style={StyleSheet.absoluteFill}>
-        <View style={styles.transparent}>
-          <View style={styles.labelRow}>
-            <View style={styles.labelBox}>
-              <Text style={{fontWeight: 'bold'}}>Processing...</Text>
-              <ActivityIndicator color={DARK} />
-            </View>
-          </View>
-        </View>
-      </Modal> */}
-
       <AlertOverlay visible={loading} />
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{padding: 20}}>
@@ -105,6 +140,17 @@ const SelectedDelivery = ({navigation, route}) => {
             style={{borderRadius: 10, marginBottom: 20}}>
             <View style={styles.submit}>
               <Text style={{color: COLOR, fontSize: 16}}>Cancel Order</Text>
+            </View>
+          </TouchableHighlight>
+        )}
+
+        {isRateButtonShown() && (
+          <TouchableHighlight
+            onPress={() => navigation.push('DeliveryRating', {delivery, setDelivery, onDeliveryRated})}
+            underlayColor={COLOR}
+            style={{borderRadius: 10, marginBottom: 20}}>
+            <View style={styles.submit}>
+              <Text style={{color: COLOR, fontSize: 16}}>Rate This Delivery</Text>
             </View>
           </TouchableHighlight>
         )}
@@ -191,6 +237,12 @@ const SelectedDelivery = ({navigation, route}) => {
 
         {/*-------------------- DELIVERY LOGS --------------------*/}
         <DeliveryLogsCard logs={getDelivery.logs} />
+
+        {/*-------------------- RIDER RATING --------------------*/}
+        <RiderRatingCard driverRating={getDelivery.driverRating} ratingFor="D" />
+
+        {/*-------------------- CUSTOMER RATING --------------------*/}
+        <RiderRatingCard driverRating={getDelivery.consumerRating} ratingFor="C" />
       </ScrollView>
     </View>
   );

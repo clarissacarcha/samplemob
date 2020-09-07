@@ -36,10 +36,8 @@ const Drawer = ({navigation, session, constants, destroySession}) => {
   }
 
   const onSignOut = () => {
-    destroySession();
-
     OneSignal.deleteTag('userId');
-
+    destroySession();
     navigation.replace('UnauthenticatedStack', {
       screen: 'Login',
     });
@@ -142,6 +140,16 @@ const Drawer = ({navigation, session, constants, destroySession}) => {
           onPress={() => {
             navigation.closeDrawer();
             navigation.push('CustomerDeliveries');
+          }}
+          restrict="C"
+        />
+
+        {/*--------------- MY DELIVERIES ---------------*/}
+        <DrawerButton
+          label="My Saved Locations"
+          onPress={() => {
+            navigation.closeDrawer();
+            navigation.push('SavedLocations');
           }}
           restrict="C"
         />

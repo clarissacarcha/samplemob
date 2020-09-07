@@ -4,6 +4,7 @@ const Delivery = `
   id
   deliveryId
   tokConsumerId
+  tokDriverId
   distance
   duration
   price
@@ -53,6 +54,16 @@ const Delivery = `
         avatarThumbnail
       }
     }
+  }
+  driverRating {
+    rating
+    feedback
+    createdAt
+  }
+  consumerRating {
+    rating
+    feedback
+    createdAt
   }
 `;
 
@@ -120,5 +131,11 @@ export const PATCH_DELIVERY_INCREMENT_STATUS = gql`
     patchDeliveryIncrementStatus(input: $input) {
       ${Delivery}
     }
+  }
+`;
+
+export const PATCH_DELIVERY_RATING = gql`
+  mutation patchDeliveryRating($input: PatchDeliveryRatingInput!) {
+    patchDeliveryRating(input: $input)
   }
 `;

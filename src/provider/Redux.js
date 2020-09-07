@@ -9,6 +9,4 @@ Text.defaultProps.allowFontScaling = false;
 if (TextInput.defaultProps == null) TextInput.defaultProps = {};
 TextInput.defaultProps.allowFontScaling = false;
 
-export const ReduxProvider = ({children}) => (
-  <Provider store={configureStore()}>{children}</Provider>
-);
+export const ReduxProvider = ({children}) => <Provider store={configureStore()}>{children}</Provider>;

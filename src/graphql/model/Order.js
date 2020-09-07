@@ -56,9 +56,9 @@ const Delivery = `
   }
 `;
 
-export const GET_ORDERS = gql`
-  query getNearestOrderAvailable($filter: nearestFilter) {
-    getNearestOrderAvailable(filter: $filter) {
+export const GET_DELIVERIES_AVAILABLE = gql`
+  query getDeliveriesAvailable($filter: GetDeliveriesAvailableFilter) {
+    getDeliveriesAvailable(filter: $filter) {
       ${Delivery}
     }
   }

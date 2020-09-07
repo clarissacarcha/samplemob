@@ -150,7 +150,6 @@ const styles = StyleSheet.create({
   submitBox: {
     marginVertical: 20,
     borderRadius: 10,
-    marginRight: 20,
   },
   submit: {
     backgroundColor: DARK,

@@ -55,15 +55,15 @@ const ChangePassword = ({navigation, session}) => {
       return;
     }
 
-    if (newPassword.length < 6) {
-      Alert.alert('', `Password must have minimum length of 6 characters.`);
+    if (newPassword.length < 8) {
+      Alert.alert('', `Password must have minimum length of 8 characters.`);
       return;
     }
 
-    if (!validator.isAlphanumeric(newPassword)) {
-      Alert.alert('', `Password can only contain letters and numbers.`);
-      return;
-    }
+    // if (!validator.isAlphanumeric(newPassword)) {
+    //   Alert.alert('', `Password can only contain letters and numbers.`);
+    //   return;
+    // }
 
     patchUserChangePassword();
   };

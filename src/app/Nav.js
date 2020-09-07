@@ -37,6 +37,7 @@ import TalkToUs from '../screens/AuthenticatedStack/CommonScreens/TalkToUs';
 import Announcements from '../screens/AuthenticatedStack/CommonScreens/Announcement/Announcements';
 import SelectedAnnouncement from '../screens/AuthenticatedStack/CommonScreens/Announcement/SelectedAnnouncement';
 import Notifications from '../screens/AuthenticatedStack/CommonScreens/Notifications';
+import DeliveryRating from '../screens/AuthenticatedStack/CommonScreens/DeliveryRating';
 
 /*---------- CONSUMER SCREENS ----------*/
 import PostRegistration from '../screens/AuthenticatedStack/ConsumerScreens/PostRegistration';
@@ -54,6 +55,9 @@ import CustomerDeliveries from '../screens/AuthenticatedStack/ConsumerScreens/De
 import SelectedDeliveries from '../screens/AuthenticatedStack/ConsumerScreens/Deliveries/SelectedDeliveries';
 import SelectedDelivery from '../screens/AuthenticatedStack/ConsumerScreens/Deliveries/SelectedDelivery';
 import DeliveryTracking from '../screens/AuthenticatedStack/ConsumerScreens/Deliveries/DeliveryTracking';
+
+import SavedLocations from '../screens/AuthenticatedStack/ConsumerScreens/SavedLocations/SavedLocations';
+import AddLocation from '../screens/AuthenticatedStack/ConsumerScreens/SavedLocations/AddLocation';
 
 /*---------- DRIVER SCREENS ----------*/
 import DriverMap from '../screens/AuthenticatedStack/DriverScreens/DriverMap';
@@ -189,6 +193,7 @@ const AuthenticatedStack = () => (
 
     <Authenticated.Screen name="Announcements" component={Announcements} />
     <Authenticated.Screen name="SelectedAnnouncement" component={SelectedAnnouncement} />
+    <Authenticated.Screen name="DeliveryRating" component={DeliveryRating} />
 
     <Authenticated.Screen name="ConsumerProfile" component={ConsumerProfile} />
     <Authenticated.Screen name="ConsumerChangePassword" component={ConsumerChangePassword} />
@@ -200,6 +205,9 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="SelectedDeliveries" component={SelectedDeliveries} />
     <Authenticated.Screen name="SelectedDelivery" component={SelectedDelivery} />
     <Authenticated.Screen name="DeliveryTracking" component={DeliveryTracking} />
+
+    <Authenticated.Screen name="SavedLocations" component={SavedLocations} />
+    <Authenticated.Screen name="AddLocation" component={AddLocation} />
 
     {/*---------- DRIVER SCREENS ----------*/}
     <Authenticated.Screen name="DriverHomeBottomTab" component={DriverHomeBottomTab} options={{headerShown: false}} />

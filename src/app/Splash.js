@@ -56,6 +56,25 @@ const Splash = ({setConstants}) => {
       const constantsObject = mapKeyValueToObject(globalSettingRecords.data.getGlobalSettings);
       setConstants(constantsObject);
 
+      // [
+      //   {
+      //     settingKey: 'XYZ',
+      //     keyValue: 'alvir'
+      //   },
+      //   {
+      //     settingKey: 'lastName',
+      //     keyValue: 'marquez'
+      //   },
+
+      // ]
+
+      // constants = {
+      //   XYZ: 'alvir',
+      //   lastName: 'marquez'
+      // };
+
+      // constants.XYZ =
+
       const {appStoreDeepLink, playStoreDeepLink, playStoreRiderDeepLink} = constantsObject;
 
       let deepLinkUrl = '';

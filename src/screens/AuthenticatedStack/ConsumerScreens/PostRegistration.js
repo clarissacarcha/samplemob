@@ -78,15 +78,15 @@ const PostRegistration = ({navigation, route, session, createSession, destroySes
       return;
     }
 
-    if (password.length < 6) {
-      Alert.alert('', `Password must have minimum length of 6 characters.`);
+    if (password.length < 8) {
+      Alert.alert('', `Password must have minimum length of 8 characters.`);
       return;
     }
 
-    if (!validator.isAlphanumeric(password)) {
-      Alert.alert('', `Password can only contain letters and numbers.`);
-      return;
-    }
+    // if (!validator.isAlphanumeric(password)) {
+    //   Alert.alert('', `Password can only contain letters and numbers.`);
+    //   return;
+    // }
 
     patchPersonPostRegistration({
       variables: {
