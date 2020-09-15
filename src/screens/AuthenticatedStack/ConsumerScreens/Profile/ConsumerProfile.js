@@ -5,6 +5,7 @@ import Toast from 'react-native-simple-toast';
 import validator from 'validator';
 import {useMutation} from '@apollo/react-hooks';
 import InputScrollView from 'react-native-input-scroll-view';
+import QRCode from 'react-native-qrcode-svg';
 import {COLOR, DARK, MAP_DELTA_LOW, ORANGE, MEDIUM} from '../../../../res/constants';
 import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../../components';
 import {BlackButton} from '../../../../components/ui';
@@ -73,6 +74,18 @@ const ConsumerProfile = ({navigation, route, session, createSession}) => {
     <View style={styles.container}>
       <AlertOverlay visible={loading} />
       <InputScrollView showsVerticalScrollIndicator={false}>
+        <View style={{marginTop: 20}}>
+          {/* <Text style={styles.label}>QR Code</Text> */}
+          <View style={{alignItems: 'center'}}>
+            <QRCode
+              value={session.user.userId} //Give value when there's no session as it will throw an error if value is empty.
+              size={150}
+              color={COLOR}
+              // onPress={() => alert('Pressed')}
+            />
+          </View>
+        </View>
+
         {/*-------------------- REFERRAL CODE --------------------*/}
         {session.user.consumer.referralCode ? (
           <View>

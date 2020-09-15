@@ -81,7 +81,6 @@ export default connect(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
   },
   center: {
     flex: 1,

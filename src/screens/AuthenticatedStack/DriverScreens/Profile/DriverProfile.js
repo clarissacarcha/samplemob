@@ -13,6 +13,7 @@ import {
 import {connect} from 'react-redux';
 import {useMutation} from '@apollo/react-hooks';
 import Toast from 'react-native-simple-toast';
+import QRCode from 'react-native-qrcode-svg';
 import moment from 'moment';
 import {COLOR, DARK, MAP_DELTA_LOW, ORANGE, MEDIUM, LIGHT} from '../../../../res/constants';
 import {AlertOverlay, BottomTabHeader, HeaderTitle, HeaderBack} from '../../../../components';
@@ -83,14 +84,27 @@ const DriverProfile = ({navigation, session, constants, createSession}) => {
       <AlertOverlay visible={loading} />
       <ScrollView showsVerticalScrollIndicator={false}>
         {/*---------------------------------------- FORM ----------------------------------------*/}
+        <View style={{marginTop: 20}}>
+          {/* <Text style={styles.label}>QR Code</Text> */}
+          <View style={{alignItems: 'center'}}>
+            <QRCode
+              value={session.user.userId} //Give value when there's no session as it will throw an error if value is empty.
+              size={150}
+              color={COLOR}
+              backgroundColor="transparent"
+              // onPress={() => alert('Pressed')}
+            />
+          </View>
+        </View>
+
         <View style={{marginTop: 20, alignItems: 'center'}}>
           {/*--------------- AVATAR ---------------*/}
           {`${constants.awsS3BaseUrl}${constants.defaultAvatar}` != session.user.person.avatar ? (
             <TouchableHighlight onPress={onProfilePress} underlayColor={COLOR} style={{borderRadius: 10}}>
               <View
                 style={{
-                  height: 120,
-                  width: 120,
+                  height: 150,
+                  width: 150,
                   backgroundColor: MEDIUM,
                   borderRadius: 10,
                   justifyContent: 'center',
@@ -100,7 +114,7 @@ const DriverProfile = ({navigation, session, constants, createSession}) => {
                 <Image
                   source={{uri: session.user.person.avatarThumbnail}}
                   resizeMode={'cover'}
-                  style={{width: 120, height: 120, borderRadius: 10}}
+                  style={{width: 150, height: 150, borderRadius: 10}}
                 />
                 <FAIcon name="edit" size={20} color={LIGHT} style={{position: 'absolute', bottom: 5, right: 5}} />
               </View>

@@ -53,18 +53,19 @@ const SelectedDelivery = ({navigation, route}) => {
   const [getDelivery, setDelivery] = useState(delivery);
   const [loading, setLoading] = useState(false);
 
-  const [patchDeliveryCustomerCancel, {loading: loadingC}] = useMutation(PATCH_DELIVERY_CUSTOMER_CANCEL, {
-    onError: onError,
-    variables: {
-      input: {
-        deliveryId: getDelivery.id,
-      },
-    },
-    onCompleted: ({patchDeliveryCustomerCancel}) => {
-      Toast.show('Order successfully cancelled');
-      setDelivery(patchDeliveryCustomerCancel);
-    },
-  });
+  // const [patchDeliveryCustomerCancel, {loading: loadingC}] = useMutation(PATCH_DELIVERY_CUSTOMER_CANCEL, {
+  //   onError: onError,
+  //   variables: {
+  //     input: {
+  //       deliveryId: getDelivery.id,
+  //     },
+  //   },
+  //   onCompleted: ({patchDeliveryCustomerCancel}) => {
+  //     setDelivery(patchDeliveryCustomerCancel);
+  //     Toast.show('Order successfully cancelled');
+
+  //   },
+  // });
 
   const [patchDeliveryDelete, {loading: loadingD}] = useMutation(PATCH_DELIVERY_DELETE, {
     onError: onError,
@@ -79,31 +80,44 @@ const SelectedDelivery = ({navigation, route}) => {
     },
   });
 
-  const [patchDeliveryRebook, {loading: loadingR}] = useMutation(PATCH_DELIVERY_REBOOK, {
-    onError: onError,
-    variables: {
-      input: {
-        deliveryId: getDelivery.id,
-      },
-    },
-    onCompleted: ({patchDeliveryRebook}) => {
-      Toast.show(patchDeliveryRebook);
-    },
-  });
+  // const [patchDeliveryRebook, {loading: loadingR}] = useMutation(PATCH_DELIVERY_REBOOK, {
+  //   onError: onError,
+  //   variables: {
+  //     input: {
+  //       deliveryId: getDelivery.id,
+  //     },
+  //   },
+  //   onCompleted: ({patchDeliveryRebook}) => {
+  //     Toast.show(patchDeliveryRebook);
+  //   },
+  // });
 
   // const onRebook = () => {
   // patchDeliveryRebook();
   // navigation.navigate('ConsumerMap', {rebookDelivery: delivery});
   // };
 
+  const onCancelCallback = returnData => {
+    setDelivery(returnData);
+
+    Toast.show('Order successfully cancelled.');
+  };
+
+  const onCancelPress = () => {
+    navigation.push('OrderCancellation', {
+      deliveryId: getDelivery.id,
+      onCancelCallback: onCancelCallback,
+    });
+  };
+
   // Syncrhonize all loading states
-  useEffect(() => {
-    if (loadingC || loadingD) {
-      setLoading(true);
-    } else {
-      setLoading(false);
-    }
-  }, [loadingC, loadingD, loadingR]);
+  // useEffect(() => {
+  //   if (loadingC || loadingD) {
+  //     setLoading(true);
+  //   } else {
+  //     setLoading(false);
+  //   }
+  // }, [loadingD]);
 
   const onDeliveryRated = rating => {
     setDelivery({
@@ -135,7 +149,7 @@ const SelectedDelivery = ({navigation, route}) => {
         {/*---------------------------------------- CANCEL ORDER BUTTON ----------------------------------------*/}
         {[1, 2, 3].includes(getDelivery.status) && (
           <TouchableHighlight
-            onPress={patchDeliveryCustomerCancel}
+            onPress={onCancelPress}
             underlayColor={COLOR}
             style={{borderRadius: 10, marginBottom: 20}}>
             <View style={styles.submit}>

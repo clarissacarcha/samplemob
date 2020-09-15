@@ -66,7 +66,7 @@ const createDays = () => {
       value,
     });
   }
-  console.log(JSON.stringify(output, null, 4));
+  // console.log(JSON.stringify(output, null, 4));
   return output;
 };
 

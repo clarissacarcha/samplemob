@@ -61,26 +61,47 @@ const Component = ({session, constants, createSession}) => {
   };
 
   useEffect(() => {
+    // postLocationLog();
+
     BackgroundTimer.runBackgroundTimer(async () => {
-      if (isOnline) {
-        const {latitude, longitude} = await currentLocation({showsReverseGeocode: false});
-        console.log(`Logging ${latitude} | ${longitude}`);
-        postDriverLocationLog({
-          variables: {
-            input: {
-              tokDriverId: session.user.driver.id,
-              latitude,
-              longitude,
-            },
-          },
-        });
-      } else {
-        console.log('OFFLINE');
-      }
+      postLocationLog();
+      // if (isOnline) {
+      //   const {latitude, longitude} = await currentLocation({showsReverseGeocode: false});
+      //   console.log(`Logging ${latitude} | ${longitude}`);
+      //   postDriverLocationLog({
+      //     variables: {
+      //       input: {
+      //         tokDriverId: session.user.driver.id,
+      //         latitude,
+      //         longitude,
+      //       },
+      //     },
+      //   });
+      // } else {
+      //   console.log('OFFLINE');
+      // }
     }, parseFloat(constants.driverLocationLogInterval));
 
     return () => BackgroundTimer.stopBackgroundTimer();
   }, []);
+
+  const postLocationLog = async () => {
+    if (isOnline) {
+      const {latitude, longitude} = await currentLocation({showsReverseGeocode: false});
+      console.log(`Logging ${latitude} | ${longitude}`);
+      postDriverLocationLog({
+        variables: {
+          input: {
+            tokDriverId: session.user.driver.id,
+            latitude,
+            longitude,
+          },
+        },
+      });
+    } else {
+      console.log('OFFLINE');
+    }
+  };
 
   const onNotificationOpened = ({notification}) => {
     try {

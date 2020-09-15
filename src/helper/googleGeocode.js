@@ -21,7 +21,7 @@ export const reverseGeocode = async ({latitude, longitude}) => {
     const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${MAPS_API_KEY}`;
 
     const result = await axios.get(url);
-    console.log(JSON.stringify(result, null, 4));
+    // console.log(JSON.stringify(result, null, 4));
     const addressBreakdown = mapAddressComponentsToObject(result.data.results[0].address_components);
 
     return {

@@ -84,13 +84,26 @@ const SelectedDriverDelivery = ({navigation, route, session}) => {
     });
   };
 
-  const onCancel = () => {
-    patchDeliveryDriverCancel({
-      variables: {
-        input: {
-          deliveryId: getDelivery.id,
-        },
-      },
+  // const onCancel = () => {
+  //   patchDeliveryDriverCancel({
+  //     variables: {
+  //       input: {
+  //         deliveryId: getDelivery.id,
+  //       },
+  //     },
+  //   });
+  // };
+
+  const onCancelCallback = returnData => {
+    setDelivery(returnData);
+
+    Toast.show('Order successfully cancelled.');
+  };
+
+  const onCancelPress = () => {
+    navigation.push('OrderCancellation', {
+      deliveryId: getDelivery.id,
+      onCancelCallback: onCancelCallback,
     });
   };
 
@@ -243,7 +256,7 @@ const SelectedDriverDelivery = ({navigation, route, session}) => {
 
         {/*-------------------- CANCEL ORDER --------------------*/}
         {[2, 3].includes(getDelivery.status) && (
-          <TouchableHighlight onPress={onCancel} underlayColor={COLOR} style={{borderRadius: 10, marginTop: 20}}>
+          <TouchableHighlight onPress={onCancelPress} underlayColor={COLOR} style={{borderRadius: 10, marginTop: 20}}>
             <View style={styles.submit}>
               <Text style={{color: COLOR, fontSize: 16}}>Cancel Order</Text>
             </View>

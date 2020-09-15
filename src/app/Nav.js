@@ -38,6 +38,7 @@ import Announcements from '../screens/AuthenticatedStack/CommonScreens/Announcem
 import SelectedAnnouncement from '../screens/AuthenticatedStack/CommonScreens/Announcement/SelectedAnnouncement';
 import Notifications from '../screens/AuthenticatedStack/CommonScreens/Notifications';
 import DeliveryRating from '../screens/AuthenticatedStack/CommonScreens/DeliveryRating';
+import OrderCancellation from '../screens/AuthenticatedStack/CommonScreens/OrderCancellation';
 
 /*---------- CONSUMER SCREENS ----------*/
 import PostRegistration from '../screens/AuthenticatedStack/ConsumerScreens/PostRegistration';
@@ -198,6 +199,7 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="ConsumerProfile" component={ConsumerProfile} />
     <Authenticated.Screen name="ConsumerChangePassword" component={ConsumerChangePassword} />
     <Authenticated.Screen name="TalkToUs" component={TalkToUs} />
+    <Authenticated.Screen name="OrderCancellation" component={OrderCancellation} />
 
     <Authenticated.Screen name="Notifications" component={Notifications} />
 

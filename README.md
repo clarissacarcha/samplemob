@@ -23,22 +23,20 @@ NEXT PATCH
 # Customer Pending
 
 1. Consumer Profile Pix
-2. Ratings
-3. Saved Locations
-4. Fix Order Type Schedule, Today Only
-5. Handle sender/recipient location change when other is empty. Focus on location
-6. Handle skip location still invoked after Proceed
-7. Toktok Consumer App Change Profile
-8. (HALF) Item Description API (HARD CODE)
-9. Cant Cancel If Picked Up IN API
-10. Error on Splash, retry button
-11. Add Booking, Vehicle Type ID (Just in the backend)
-12. (DONE) Password minimum 8 characters
-13. (DONE) Rating validation. Required star rating
-14. (DONE) Login page. Differentiate customer with rider.
-15. Change welcome message to welcome banners.
-16. Notification on Rating
-17. Limit viewable history to 15 days. Set in global settings
+2. Fix Order Type Schedule, Today Only
+3. Handle sender/recipient location change when other is empty. Focus on location
+4. Handle skip location still invoked after Proceed
+5. Toktok Consumer App Change Profile
+6. (HALF) Item Description API (HARD CODE)
+7. Cant Cancel If Picked Up IN API
+8. Error on Splash, retry button
+9. Add Booking, Vehicle Type ID (Just in the backend)
+10. Change welcome message to welcome banners.
+11. Notification on Rating
+12. Limit viewable history to 15 days. Set in global settings. Also limit related modules like notifications to 15 days
+13. POGI rating, conditional render
+14. Going back from details to placed orders, place a loading indicator
+15. Check if User is blocked by driver or consumer status.
 
 # Driver Pending
 
@@ -56,10 +54,9 @@ NEXT PATCH
 12. Order Delivery Express Delivery First
 13. Express Delivery Change Text to price.
 14. Font family
+15. Operator ID when Driver accepts orders, update on deliveries record
 
 # Backend Pending
-
-# Finalize Timestamp
 
 # Font Family
 
@@ -98,3 +95,16 @@ https://oauth2.googleapis.com/tokeninfo?id_token=
 15. Fix Map Zooming Out,,,
 
 PUNCH GACCESS KEYSTORE FILE
+
+1. Clusters
+2. Express Delivery
+3. QR
+4. Cancellation Reason (Confirm if customer needs cancel reason)
+
+5. Notify Riders of New Deliveries (Once in 5 minutes)(View details with Accept Button)
+6. Notify Customers of Their Orders (Notification > Click > Details > Track. Doesn't exist in My Deliveries)
+7. Limit viewing of history 15 days
+8. Delegated Booking, make not instant. Have rider accept delegated orders.
+9. Sender/Recipient icons in map.
+
+pogi rating conditional

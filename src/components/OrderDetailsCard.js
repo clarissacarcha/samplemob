@@ -121,9 +121,7 @@ export const OrderDetailsCard = ({delivery}) => {
               <View style={{marginLeft: 10}}>
                 <Text style={{fontWeight: 'bold'}}>Express Delivery</Text>
                 <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
-                  <Text style={{fontWeight: 'bold', marginLeft: 10}}>
-                    This delivery is placed at a higher priority.
-                  </Text>
+                  <Text style={{fontWeight: 'bold', marginLeft: 10}}>₱ {delivery.expressFee}.00</Text>
                 </Text>
               </View>
             </View>

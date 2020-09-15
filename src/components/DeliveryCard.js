@@ -86,16 +86,16 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
     <View style={{paddingHorizontal: 20, paddingTop: 20, marginBottom: lastItem ? 20 : 0}}>
       <TouchableHighlight onPress={onPress} underlayColor={COLOR} style={styles.card}>
         <View style={styles.taskBox}>
-          {/*-------------------- RIDER CASH ON DELIVERY --------------------*/}
-          {APP_FLAVOR == 'D' && delivery.cashOnDelivery && (
+          {/*-------------------- RIDER EXPRESS DELIVERY --------------------*/}
+          {APP_FLAVOR == 'D' && delivery.expressFee > 0 && (
             <View style={styles.driverCodBox}>
               <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-                <MCIcon name="cash" size={24} color={COLOR} style={styles.iconBoxWhite} />
+                <MCIcon name="clock-fast" size={20} color={COLOR} style={styles.iconBoxWhite} />
 
                 <View style={{marginLeft: 10}}>
-                  <Text style={{fontWeight: 'bold'}}>Cash On Delivery</Text>
+                  <Text style={{fontWeight: 'bold'}}>Express Delivery</Text>
                   <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
-                    <Text style={{fontWeight: 'bold', marginLeft: 10}}>₱ {delivery.cashOnDelivery}.00</Text>
+                    <Text style={{fontWeight: 'bold', marginLeft: 10}}>₱ {delivery.expressFee}.00</Text>
                   </Text>
                 </View>
               </View>
@@ -280,6 +280,22 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
               </View>
             </View>
           </View>
+
+          {/*-------------------- RIDER CASH ON DELIVERY --------------------*/}
+          {APP_FLAVOR == 'D' && delivery.cashOnDelivery && (
+            <View style={styles.bottomYellowRow}>
+              <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+                <MCIcon name="cash" size={24} color={COLOR} style={styles.iconBoxWhite} />
+
+                <View style={{marginLeft: 10}}>
+                  <Text style={{fontWeight: 'bold'}}>Cash On Delivery</Text>
+                  <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
+                    <Text style={{fontWeight: 'bold', marginLeft: 10}}>₱ {delivery.cashOnDelivery}.00</Text>
+                  </Text>
+                </View>
+              </View>
+            </View>
+          )}
         </View>
       </TouchableHighlight>
     </View>
@@ -354,6 +370,26 @@ const styles = StyleSheet.create({
     backgroundColor: COLOR,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
+    paddingHorizontal: 20,
+  },
+  topYellowRow: {
+    height: 50,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: COLOR,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    paddingHorizontal: 20,
+  },
+  bottomYellowRow: {
+    height: 50,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: COLOR,
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
     paddingHorizontal: 20,
   },
 });

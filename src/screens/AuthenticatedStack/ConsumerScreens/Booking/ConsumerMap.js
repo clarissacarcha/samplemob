@@ -751,3 +751,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
+
+// const Buffer = require('buffer').Buffer;
+
+// const token = 'eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ';
+// const decodedString = new Buffer(token, 'base64').toString('ascii');
+// const decodedObject = JSON.parse(decodedString);
+
+// console.log(decodedObject);
