@@ -30,6 +30,7 @@ import ForgotPasswordReset from '../screens/UnauthenticatedStack/ForgotPasswordR
 
 // Landing
 import Landing from '../screens/Landing';
+import OrdersTesting from './OrdersTesting';
 
 // Authenticated Stack
 /*---------- COMMON SCREENS ----------*/
@@ -141,10 +142,10 @@ const DriverHomeBottomTab = ({navigation}) => (
     <Authenticated.Screen
       name="DriverDeliveriesTab"
       component={DriverDeliveriesTab}
-      options={{
-        headerLeft: () => <HeaderBack />,
-        headerTitle: () => <HeaderTitle label={['My', 'Deliveries']} />,
-      }}
+      // options={{
+      //   headerLeft: () => <HeaderBack />,
+      //   headerTitle: () => <HeaderTitle label={['My', 'Deliveries']} />,
+      // }}
       options={{
         tabBarIcon: ({color}) => <MCIcon name="map-marker-distance" color={color} size={26} />,
       }}
@@ -261,7 +262,8 @@ const SwitchStack = ({initialRoute}) => {
 const Nav = ({initialRoute}) => {
   return (
     <NavigationContainer>
-      <SwitchStack initialRoute={initialRoute} />
+      {/*<SwitchStack initialRoute={initialRoute} />*/}
+      <OrdersTesting />
     </NavigationContainer>
   );
 };

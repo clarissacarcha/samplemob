@@ -149,7 +149,7 @@ const Splash = ({setConstants}) => {
 
   useEffect(() => {
     checkNetworkConnection();
-  }, []);
+  }, [checkNetworkConnection]);
 
   if (checkPoint == 'A') {
     return <Nav />;
@@ -160,7 +160,7 @@ const Splash = ({setConstants}) => {
       <ImageBackground style={styles.splash} source={SplashImage} resizeMode={'cover'}>
         <View style={styles.imageBox}>
           <Image source={NoNetworkConnection} style={styles.image} resizeMode="contain" />
-          <Text style={styles.text}>{`Hey ka-toktok, please check\nyour internet connection`}.</Text>
+          <Text style={styles.text}>{'Hey ka-toktok, please check\nyour internet connection'}.</Text>
         </View>
       </ImageBackground>
     );

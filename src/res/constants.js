@@ -4,7 +4,7 @@ export const APP_VERSION = '1.4.0';
 
 export const PROTOCOL = 'http';
 export const HOST_PORT = '192.168.43.241:3080'; // Myutini HS
-// export const HOST_PORT = '192.168.0.104:3080'; // MDC
+// export const HOST_PORT = '192.168.0.105:3080'; // MDC
 // export const HOST_PORT = '35.173.0.77:3085'; // Dev Server
 // export const HOST_PORT = '35.173.0.77:3080'; // Test Server
 // export const HOST_PORT = '35.173.0.77:3088'; // Marketing Server
@@ -35,5 +35,5 @@ export const MAP_DELTA_LOW = {
 };
 
 export const MAPS_API_KEY = 'AIzaSyDhlw6pbriuwr_Mb6KYkVlBar7KD1KTrOs';
-export const IMPERSONATE = true;
+export const IMPERSONATE = false;
 export const IMPERSONATION_PASSPHRASE = 'R8XFXI5DKZ5BYPC4SFWR';

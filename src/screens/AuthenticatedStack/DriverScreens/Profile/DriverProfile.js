@@ -9,6 +9,7 @@ import {
   Alert,
   Image,
   ImageBackground,
+  Dimensions,
 } from 'react-native';
 import {connect} from 'react-redux';
 import {useMutation} from '@apollo/react-hooks';
@@ -20,9 +21,10 @@ import {AlertOverlay, BottomTabHeader, HeaderTitle, HeaderBack} from '../../../.
 import {onError} from '../../../../util/ErrorUtility';
 import {PATCH_PERSON_POST_REGISTRATION} from '../../../../graphql';
 
+import FAIcon from 'react-native-vector-icons/FontAwesome';
 import ToktokWashed from '../../../../assets/images/ToktokWashed.png';
 
-import FAIcon from 'react-native-vector-icons/FontAwesome';
+const ImageWidth = (Dimensions.get('window').width - 60) / 2;
 
 const DriverProfile = ({navigation, session, constants, createSession}) => {
   navigation.setOptions({
@@ -84,63 +86,65 @@ const DriverProfile = ({navigation, session, constants, createSession}) => {
       <AlertOverlay visible={loading} />
       <ScrollView showsVerticalScrollIndicator={false}>
         {/*---------------------------------------- FORM ----------------------------------------*/}
-        <View style={{marginTop: 20}}>
-          {/* <Text style={styles.label}>QR Code</Text> */}
-          <View style={{alignItems: 'center'}}>
-            <QRCode
-              value={session.user.userId} //Give value when there's no session as it will throw an error if value is empty.
-              size={150}
-              color={COLOR}
-              backgroundColor="transparent"
-              // onPress={() => alert('Pressed')}
-            />
-          </View>
-        </View>
-
-        <View style={{marginTop: 20, alignItems: 'center'}}>
+        <View style={{flexDirection: 'row', marginHorizontal: 20, justifyContent: 'space-between'}}>
           {/*--------------- AVATAR ---------------*/}
-          {`${constants.awsS3BaseUrl}${constants.defaultAvatar}` != session.user.person.avatar ? (
-            <TouchableHighlight onPress={onProfilePress} underlayColor={COLOR} style={{borderRadius: 10}}>
-              <View
-                style={{
-                  height: 150,
-                  width: 150,
-                  backgroundColor: MEDIUM,
-                  borderRadius: 10,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  position: 'relative',
-                }}>
-                <Image
-                  source={{uri: session.user.person.avatarThumbnail}}
-                  resizeMode={'cover'}
-                  style={{width: 150, height: 150, borderRadius: 10}}
-                />
-                <FAIcon name="edit" size={20} color={LIGHT} style={{position: 'absolute', bottom: 5, right: 5}} />
-              </View>
-            </TouchableHighlight>
-          ) : (
-            <TouchableHighlight onPress={onProfilePress} underlayColor={COLOR} style={{borderRadius: 10}}>
-              <View
-                style={{
-                  height: 120,
-                  width: 120,
-                  backgroundColor: '#333',
-                  borderRadius: 10,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  position: 'relative',
-                }}>
-                <Image
-                  source={ToktokWashed}
-                  resizeMode={'contain'}
-                  tintColor={MEDIUM}
-                  style={{width: 80, height: 80, borderRadius: 10}}
-                />
-                <FAIcon name="edit" size={20} color={LIGHT} style={{position: 'absolute', bottom: 5, right: 5}} />
-              </View>
-            </TouchableHighlight>
-          )}
+          <View style={{marginTop: 20, alignItems: 'center'}}>
+            {`${constants.awsS3BaseUrl}${constants.defaultAvatar}` != session.user.person.avatar ? (
+              <TouchableHighlight onPress={onProfilePress} underlayColor={COLOR} style={{borderRadius: 10}}>
+                <View
+                  style={{
+                    height: ImageWidth,
+                    width: ImageWidth,
+                    backgroundColor: MEDIUM,
+                    borderRadius: 10,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    position: 'relative',
+                  }}>
+                  <Image
+                    source={{uri: session.user.person.avatarThumbnail}}
+                    resizeMode={'cover'}
+                    style={{width: ImageWidth, height: ImageWidth, borderRadius: 10}}
+                  />
+                  <FAIcon name="edit" size={20} color={LIGHT} style={{position: 'absolute', bottom: 5, right: 5}} />
+                </View>
+              </TouchableHighlight>
+            ) : (
+              <TouchableHighlight onPress={onProfilePress} underlayColor={COLOR} style={{borderRadius: 10}}>
+                <View
+                  style={{
+                    height: ImageWidth,
+                    width: ImageWidth,
+                    backgroundColor: '#333',
+                    borderRadius: 10,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    position: 'relative',
+                  }}>
+                  <Image
+                    source={ToktokWashed}
+                    resizeMode={'contain'}
+                    tintColor={MEDIUM}
+                    style={{width: 80, height: 80, borderRadius: 10}}
+                  />
+                  <FAIcon name="edit" size={20} color={LIGHT} style={{position: 'absolute', bottom: 5, right: 5}} />
+                </View>
+              </TouchableHighlight>
+            )}
+          </View>
+
+          {/*-------------------- QR CODE --------------------*/}
+          <View style={{marginTop: 20}}>
+            <View style={{alignItems: 'center'}}>
+              <QRCode
+                value={session.user.userId} //Give value when there's no session as it will throw an error if value is empty.
+                size={ImageWidth}
+                color={COLOR}
+                backgroundColor="transparent"
+                // onPress={() => alert('Pressed')}
+              />
+            </View>
+          </View>
         </View>
         {/*---------------------------------------- BUTTON ----------------------------------------*/}
         <TouchableHighlight

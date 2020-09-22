@@ -22,20 +22,20 @@ NEXT PATCH
 
 # Customer Pending
 
-1. Consumer Profile Pix
+1. (Done) Consumer Profile Pix
 2. Fix Order Type Schedule, Today Only
 3. Handle sender/recipient location change when other is empty. Focus on location
 4. Handle skip location still invoked after Proceed
-5. Toktok Consumer App Change Profile
+5. (Done) Toktok Consumer App Change Profile
 6. (HALF) Item Description API (HARD CODE)
 7. Cant Cancel If Picked Up IN API
 8. Error on Splash, retry button
-9. Add Booking, Vehicle Type ID (Just in the backend)
+9. Add Booking, Vehicle Type ID (Just in the backend) Default to Motorcycle
 10. Change welcome message to welcome banners.
 11. Notification on Rating
 12. Limit viewable history to 15 days. Set in global settings. Also limit related modules like notifications to 15 days
 13. POGI rating, conditional render
-14. Going back from details to placed orders, place a loading indicator
+14. Going back from details to placed orders, place a loading indicator.
 15. Check if User is blocked by driver or consumer status.
 
 # Driver Pending
@@ -45,16 +45,20 @@ NEXT PATCH
 3. Validate Accept Orders Only delivery.Status = 1 and consumer user.status = 1
 4. Rider Check Location and Camera Permission
 5. Notify Riders in 100km and is-online
-6. Driver Vehicle ID on Delivery on Accept
+6. (Done) Driver Vehicle ID on Delivery on Accept
 7. Add Rider Location on Go Online
 8. Better Update Profile
-9. Cannot accept order if has Express Delivery Ongoing
+9. Cannot accept order if has Express Delivery ongoing
 10. Handle when operator account is put on hold.
-11. On Cancel Delivery, Have a confirmation button first
+11. (Done) On Cancel Delivery, Have a confirmation button first
 12. Order Delivery Express Delivery First
-13. Express Delivery Change Text to price.
+13. (Done) Express Delivery Change Text to price.
 14. Font family
-15. Operator ID when Driver accepts orders, update on deliveries record
+15. (Done) Operator ID when Driver accepts orders, update on deliveries record
+16. Retry button or filter button on empty available orders
+17. On going back from Selected Order from available orders, refresh available orders
+18. Move ConsumerChangeProfile to Common
+19. Create Range and Price validation in the backend.
 
 # Backend Pending
 
@@ -96,15 +100,33 @@ https://oauth2.googleapis.com/tokeninfo?id_token=
 
 PUNCH GACCESS KEYSTORE FILE
 
-1. Clusters
-2. Express Delivery
-3. QR
-4. Cancellation Reason (Confirm if customer needs cancel reason)
+1. Notify Riders of New Deliveries (Once in 5 minutes)(View details with Accept Button)
+2. Notify Customers of Their Orders (Notification > Click > Details > Track. Doesn't exist in My Deliveries)
+3. Limit viewing of history 15 days
+4. Delegated Booking, make not instant. Have rider accept delegated orders.
+5. Sender/Recipient icons in map.
 
-5. Notify Riders of New Deliveries (Once in 5 minutes)(View details with Accept Button)
-6. Notify Customers of Their Orders (Notification > Click > Details > Track. Doesn't exist in My Deliveries)
-7. Limit viewing of history 15 days
-8. Delegated Booking, make not instant. Have rider accept delegated orders.
-9. Sender/Recipient icons in map.
+Done.
 
-pogi rating conditional
+1. Cancellation with reason customer and rider.
+2. Customer update profile pictures.
+3. Refactor Notification.
+4. Notifying Riders of new delivery.
+
+# PENDING
+
+1. Notification on New Orders
+2. Notification on All Customers
+3. Enterprise Delegation
+
+Search Near Restaurants
+Select
+See Menu
+Add To Cart
+Check Out
+Un
+
+
+Fix Loop Issue on no network when getting orders
+When accepting order, make sure that is its not expired, cancelled, or deleted
+

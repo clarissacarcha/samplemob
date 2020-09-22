@@ -155,9 +155,8 @@ const Login = ({navigation, session}) => {
             style={styles.input}
             placeholder="9876543210"
             keyboardType="number-pad"
-            returnKeyType="next"
-            onSubmitEditing={() => onSubmit(mobile)}
             returnKeyType="done"
+            onSubmitEditing={() => onSubmit(mobile)}
           />
         </View>
 

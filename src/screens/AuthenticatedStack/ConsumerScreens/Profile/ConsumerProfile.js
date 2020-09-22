@@ -1,18 +1,33 @@
 import React, {useState} from 'react';
-import {View, Text, ScrollView, StyleSheet, TouchableHighlight, TextInput, Alert} from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  TouchableHighlight,
+  TextInput,
+  Alert,
+  Image,
+  Dimensions,
+} from 'react-native';
 import {connect} from 'react-redux';
 import Toast from 'react-native-simple-toast';
 import validator from 'validator';
 import {useMutation} from '@apollo/react-hooks';
 import InputScrollView from 'react-native-input-scroll-view';
 import QRCode from 'react-native-qrcode-svg';
-import {COLOR, DARK, MAP_DELTA_LOW, ORANGE, MEDIUM} from '../../../../res/constants';
+import {COLOR, DARK, MAP_DELTA_LOW, ORANGE, LIGHT, MEDIUM} from '../../../../res/constants';
 import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../../components';
 import {BlackButton} from '../../../../components/ui';
 import {onError} from '../../../../util/ErrorUtility';
 import {PATCH_PERSON_POST_REGISTRATION} from '../../../../graphql';
 
-const ConsumerProfile = ({navigation, route, session, createSession}) => {
+const ImageWidth = (Dimensions.get('window').width - 60) / 2;
+
+import FAIcon from 'react-native-vector-icons/FontAwesome';
+import ToktokWashed from '../../../../assets/images/ToktokWashed.png';
+
+const ConsumerProfile = ({navigation, constants, session, createSession}) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={['My', 'Profile']} />,
@@ -70,22 +85,75 @@ const ConsumerProfile = ({navigation, route, session, createSession}) => {
     patchPersonPostRegistration();
   };
 
+  const onProfilePress = () => {
+    const label = ['Change', 'Profile Picture'];
+    navigation.push('ChangeProfilePicture', {label});
+  };
+
   return (
     <View style={styles.container}>
       <AlertOverlay visible={loading} />
       <InputScrollView showsVerticalScrollIndicator={false}>
-        <View style={{marginTop: 20}}>
-          {/* <Text style={styles.label}>QR Code</Text> */}
-          <View style={{alignItems: 'center'}}>
-            <QRCode
-              value={session.user.userId} //Give value when there's no session as it will throw an error if value is empty.
-              size={150}
-              color={COLOR}
-              // onPress={() => alert('Pressed')}
-            />
+        <View style={{flexDirection: 'row', marginHorizontal: 20, justifyContent: 'space-between'}}>
+          {/*--------------- AVATAR ---------------*/}
+          <View style={{marginTop: 20, alignItems: 'center'}}>
+            {`${constants.awsS3BaseUrl}${constants.defaultAvatar}` != session.user.person.avatar ? (
+              <TouchableHighlight onPress={onProfilePress} underlayColor={COLOR} style={{borderRadius: 10}}>
+                <View
+                  style={{
+                    height: ImageWidth,
+                    width: ImageWidth,
+                    backgroundColor: MEDIUM,
+                    borderRadius: 10,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    position: 'relative',
+                  }}>
+                  <Image
+                    source={{uri: session.user.person.avatarThumbnail}}
+                    resizeMode={'cover'}
+                    style={{width: ImageWidth, height: ImageWidth, borderRadius: 10}}
+                  />
+                  <FAIcon name="edit" size={20} color={LIGHT} style={{position: 'absolute', bottom: 5, right: 5}} />
+                </View>
+              </TouchableHighlight>
+            ) : (
+              <TouchableHighlight onPress={onProfilePress} underlayColor={COLOR} style={{borderRadius: 10}}>
+                <View
+                  style={{
+                    height: ImageWidth,
+                    width: ImageWidth,
+                    backgroundColor: '#333',
+                    borderRadius: 10,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    position: 'relative',
+                  }}>
+                  <Image
+                    source={ToktokWashed}
+                    resizeMode={'contain'}
+                    tintColor={MEDIUM}
+                    style={{width: 80, height: 80, borderRadius: 10}}
+                  />
+                  <FAIcon name="edit" size={20} color={LIGHT} style={{position: 'absolute', bottom: 5, right: 5}} />
+                </View>
+              </TouchableHighlight>
+            )}
+          </View>
+
+          {/*-------------------- QR CODE --------------------*/}
+          <View style={{marginTop: 20}}>
+            <View style={{alignItems: 'center'}}>
+              <QRCode
+                value={session.user.userId} //Give value when there's no session as it will throw an error if value is empty.
+                size={ImageWidth}
+                color={COLOR}
+                backgroundColor="transparent"
+                // onPress={() => alert('Pressed')}
+              />
+            </View>
           </View>
         </View>
-
         {/*-------------------- REFERRAL CODE --------------------*/}
         {session.user.consumer.referralCode ? (
           <View>
@@ -152,6 +220,7 @@ const ConsumerProfile = ({navigation, route, session, createSession}) => {
 
 const mapStateToProps = state => ({
   session: state.session,
+  constants: state.constants,
 });
 
 const mapDispatchToProps = dispatch => ({

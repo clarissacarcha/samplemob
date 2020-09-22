@@ -11,8 +11,6 @@ import {AUTH_CLIENT, VERIFY_LOGIN} from '../../graphql';
 import {AlertOverlay} from '../../components';
 import {onError} from '../../util/ErrorUtility';
 
-import timer from 'react-native-timer';
-
 const VerificationBanner = require('../../assets/images/VerificationBanner.png');
 
 const PasswordVerification = ({navigation, route, createSession}) => {
@@ -112,7 +110,7 @@ const PasswordVerification = ({navigation, route, createSession}) => {
           style={styles.input}
           placeholder="Password"
           secureTextEntry
-          returnKeyType="go"
+          returnKeyType="done"
           autoCapitalize="none"
           onSubmitEditing={onSubmit}
         />
@@ -147,15 +145,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  input: {
-    flex: 1,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderRadius: 10,
-    paddingHorizontal: 20,
-    fontSize: 25,
-    color: DARK,
-    width: 30,
-  },
+  // input: {
+  //   flex: 1,
+  //   borderWidth: StyleSheet.hairlineWidth,
+  //   borderRadius: 10,
+  //   paddingHorizontal: 20,
+  //   fontSize: 25,
+  //   color: DARK,
+  //   width: 30,
+  // },
   submitBox: {
     margin: 20,
     borderRadius: 10,
