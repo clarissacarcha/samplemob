@@ -30,7 +30,7 @@ export const BookingInfoCard = ({delivery, onPress}) => {
                   height: 50,
                   justifyContent: 'center',
                 }}>
-                <Text style={{fontWeight: 'bold'}}>{delivery.senderStop.name}</Text>
+                <Text style={{fontFamily: 'Rubik-Medium'}}>{delivery.senderStop.name}</Text>
                 <Text numberOfLines={1} style={{color: MEDIUM, fontSize: 10}}>
                   {delivery.senderStop.formattedAddress}
                 </Text>
@@ -40,13 +40,13 @@ export const BookingInfoCard = ({delivery, onPress}) => {
               <View style={{height: 50, justifyContent: 'center'}}>
                 {delivery.recipientStop.name ? (
                   <>
-                    <Text style={{fontWeight: 'bold'}}>{delivery.recipientStop.name}</Text>
+                    <Text style={{fontFamily: 'Rubik-Medium'}}>{delivery.recipientStop.name}</Text>
                     <Text numberOfLines={1} style={{paddingRight: 10, color: MEDIUM, fontSize: 10}}>
                       {delivery.recipientStop.formattedAddress}
                     </Text>
                   </>
                 ) : (
-                  <Text style={{fontWeight: 'bold'}}>Recipient</Text>
+                  <Text style={{fontFamily: 'Rubik-Medium'}}>Recipient</Text>
                 )}
               </View>
             </View>
@@ -56,7 +56,7 @@ export const BookingInfoCard = ({delivery, onPress}) => {
             {/*-------------------- DISTANCE --------------------*/}
             <View style={styles.directionDetail}>
               <MCIcon name="map-marker-distance" size={16} color={'white'} style={styles.iconBox} />
-              <Text style={{fontWeight: 'bold', marginLeft: 10}}>
+              <Text style={{fontFamily: 'Rubik-Medium', marginLeft: 10}}>
                 {parseFloat(delivery.distance).toFixed(2)}
                 <Text style={{color: MEDIUM}}> km</Text>
               </Text>
@@ -64,7 +64,7 @@ export const BookingInfoCard = ({delivery, onPress}) => {
             {/*-------------------- DURATION --------------------*/}
             <View style={styles.directionDetail}>
               <MCIcon name="timelapse" size={16} color={'white'} style={styles.iconBox} />
-              <Text style={{fontWeight: 'bold', marginLeft: 10}}>
+              <Text style={{fontFamily: 'Rubik-Medium', marginLeft: 10}}>
                 {parseFloat(delivery.duration).toFixed(0)}
                 <Text style={{color: MEDIUM}}> min</Text>
               </Text>
@@ -72,7 +72,7 @@ export const BookingInfoCard = ({delivery, onPress}) => {
             {/*-------------------- PRICE --------------------*/}
             <View style={styles.directionDetail}>
               <Ionicon name="md-pricetag" size={16} color={'white'} style={styles.iconBox} />
-              <Text style={{fontWeight: 'bold', marginLeft: 10}}>₱{delivery.price}</Text>
+              <Text style={{fontFamily: 'Rubik-Medium', marginLeft: 10}}>₱{delivery.price}</Text>
             </View>
           </View>
         </View>

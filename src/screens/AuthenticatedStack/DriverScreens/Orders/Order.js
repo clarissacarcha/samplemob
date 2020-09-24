@@ -215,22 +215,6 @@ const SearchOverlay = ({visible, setIsSearching, onSearchPress, searchFilter, se
 };
 
 const AvailableOrders = ({navigation, session, constants}) => {
-  if (!session.user.driver.isOnline) {
-    return (
-      <>
-        <OrderTabHeader
-          label={['Available', 'Orders']}
-          setIsSearching={setIsSearching}
-          isOnline={session.user.driver.isOnline}
-        />
-        <View style={styles.center}>
-          <Image source={GoOnline} style={styles.imageLarge} resizeMode={'contain'} />
-
-          <Text style={{fontWeight: 'bold', color: MEDIUM, marginTop: 20}}>To view and accept orders, Go Online.</Text>
-        </View>
-      </>
-    );
-  }
   const [location, setLocation] = useState(INITIAL_LOCATION);
   const [noGPS, setNoGPS] = useState(false);
   const [manualLoading, setManualLoading] = useState(false);
@@ -330,9 +314,28 @@ const AvailableOrders = ({navigation, session, constants}) => {
     getLocation();
   }, []);
 
-  useFocusEffect(() => {
-    // refetch();
-  }, []);
+  // useFocusEffect(() => {
+  //   // refetch();
+  // }, []);
+
+  if (!session.user.driver.isOnline) {
+    return (
+      <>
+        <OrderTabHeader
+          label={['Available', 'Orders']}
+          setIsSearching={setIsSearching}
+          isOnline={session.user.driver.isOnline}
+        />
+        <View style={styles.center}>
+          <Image source={GoOnline} style={styles.imageLarge} resizeMode={'contain'} />
+
+          <Text style={{fontFamily: 'Rubik-Medium', color: MEDIUM, marginTop: 20}}>
+            To view and accept orders, Go Online.
+          </Text>
+        </View>
+      </>
+    );
+  }
 
   if (loading || manualLoading) {
     return (
@@ -365,14 +368,16 @@ const AvailableOrders = ({navigation, session, constants}) => {
         <View style={styles.center}>
           <Image source={LocationRequest} style={styles.imageLarge} resizeMode={'contain'} />
 
-          <Text style={{fontWeight: 'bold', color: MEDIUM, marginTop: 20}}>
+          <Text style={{fontFamily: 'Rubik-Medium', color: MEDIUM, marginTop: 20}}>
             Ka-toktok, please turn on your GPS/Location Service.
           </Text>
           <Text
             style={{
-              fontWeight: 'bold',
+              fontFamily: 'Rubik-Medium',
               color: MEDIUM,
-            }}>{`You can find it under your phone's Settings > Location`}</Text>
+            }}>
+            {"You can find it under your phone's Settings > Location"}
+          </Text>
           <TouchableHighlight onPress={getLocation} underlayColor={COLOR} style={styles.submitBox}>
             <View style={styles.submit}>
               <Text style={{color: COLOR, fontSize: 20}}>Retry</Text>
@@ -472,13 +477,12 @@ const styles = StyleSheet.create({
   text: {
     color: MEDIUM,
     marginTop: 20,
-    fontFamily: FONT_FAMILY,
-    fontWeight: 'bold',
+    fontFamily: 'Rubik-Medium',
   },
   outer: {
     flex: 1,
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'Rubik-Medium',
     color: DARK,
   },
   inner: {
@@ -537,7 +541,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     fontSize: 14,
     color: DARK,
-    fontWeight: 'bold',
+    fontFamily: 'Rubik-Medium',
   },
   input: {
     borderWidth: 1,

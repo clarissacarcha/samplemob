@@ -90,19 +90,21 @@ const DriverWallet = ({navigation, session, constants}) => {
           }}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <FAIcon name="user" style={styles.iconBox} size={16} color="white" />
-            <Text style={{flex: 1, color: DARK, fontSize: 12, fontWeight: 'bold', marginHorizontal: 10}}>Rider ID</Text>
-            <Text style={{fontSize: 12, color: DARK, fontWeight: 'bold'}}> {session.user.userId}</Text>
+            <Text style={{flex: 1, color: DARK, fontSize: 12, fontFamily: 'Rubik-Medium', marginHorizontal: 10}}>
+              Rider ID
+            </Text>
+            <Text style={{fontSize: 12, color: DARK, fontFamily: 'Rubik-Medium'}}> {session.user.userId}</Text>
           </View>
 
           <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 20}}>
             <MCIcon name="credit-card-multiple" style={styles.iconBox} size={16} color="white" />
-            <Text style={{flex: 1, color: DARK, fontSize: 12, fontWeight: 'bold', marginHorizontal: 10}}>
+            <Text style={{flex: 1, color: DARK, fontSize: 12, fontFamily: 'Rubik-Medium', marginHorizontal: 10}}>
               Rider Credits
             </Text>
             {loading ? (
               <ActivityIndicator size={24} color={COLOR} />
             ) : (
-              <Text style={{fontSize: 12, color: DARK, fontWeight: 'bold'}}>
+              <Text style={{fontSize: 12, color: DARK, fontFamily: 'Rubik-Medium'}}>
                 {numberFormat(data.getWallet.balance)}
               </Text>
             )}
@@ -110,7 +112,9 @@ const DriverWallet = ({navigation, session, constants}) => {
 
           <View style={{flexDirection: 'row', alignItems: 'center', marginVertical: 20}}>
             <MCIcon name="credit-card-off" style={styles.iconBox} size={16} color="white" />
-            <Text style={{color: DARK, fontSize: 12, fontWeight: 'bold', marginHorizontal: 10}}>To Be Deducted</Text>
+            <Text style={{color: DARK, fontSize: 12, fontFamily: 'Rubik-Medium', marginHorizontal: 10}}>
+              To Be Deducted
+            </Text>
             <FAIcon
               name="question-circle"
               size={20}
@@ -127,7 +131,7 @@ const DriverWallet = ({navigation, session, constants}) => {
             {loading ? (
               <ActivityIndicator size={24} color={COLOR} />
             ) : (
-              <Text style={{fontSize: 12, color: DARK, fontWeight: 'bold'}}>
+              <Text style={{fontSize: 12, color: DARK, fontFamily: 'Rubik-Medium'}}>
                 {numberFormat(data.getWallet.toBeDeducted)}
               </Text>
             )}
@@ -135,7 +139,9 @@ const DriverWallet = ({navigation, session, constants}) => {
 
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <MCIcon name="credit-card" style={styles.iconBox} size={16} color="white" />
-            <Text style={{color: DARK, fontSize: 12, fontWeight: 'bold', marginHorizontal: 10}}>Available Credits</Text>
+            <Text style={{color: DARK, fontSize: 12, fontFamily: 'Rubik-Medium', marginHorizontal: 10}}>
+              Available Credits
+            </Text>
             <FAIcon
               name="question-circle"
               size={20}
@@ -151,7 +157,7 @@ const DriverWallet = ({navigation, session, constants}) => {
             {loading ? (
               <ActivityIndicator size={24} color={COLOR} />
             ) : (
-              <Text style={{fontSize: 12, color: DARK, fontWeight: 'bold'}}>
+              <Text style={{fontSize: 12, color: DARK, fontFamily: 'Rubik-Medium'}}>
                 {numberFormat(data.getWallet.available)}
               </Text>
             )}
@@ -219,7 +225,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     fontSize: 12,
     color: DARK,
-    fontWeight: 'bold',
+    fontFamily: 'Rubik-Medium',
   },
   submitBox: {
     margin: 20,

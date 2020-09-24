@@ -149,7 +149,7 @@ const Splash = ({setConstants}) => {
 
   useEffect(() => {
     checkNetworkConnection();
-  }, [checkNetworkConnection]);
+  }, []);
 
   if (checkPoint == 'A') {
     return <Nav />;
@@ -262,7 +262,7 @@ const styles = StyleSheet.create({
   text: {
     marginVertical: 20,
     textAlign: 'center',
-    fontWeight: 'bold',
+    fontFamily: 'Rubik-Medium',
     color: MEDIUM,
   },
   submitBox: {

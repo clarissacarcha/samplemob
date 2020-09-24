@@ -203,11 +203,11 @@ const SelectedDelivery = ({navigation, route}) => {
             <View style={{flexDirection: 'row'}}>
               <YellowIcon set="FontAwesome5" name="pen" size={14} darkIcon />
 
-              <Text style={{marginLeft: 10, color: DARK, fontWeight: 'bold'}}>
+              <Text style={{marginLeft: 10, color: DARK, fontFamily: 'Rubik-Medium'}}>
                 Delivery <Text style={{color: ORANGE}}>ID</Text>
               </Text>
             </View>
-            <Text style={{color: DARK, fontWeight: 'bold'}}>{delivery.deliveryId}</Text>
+            <Text style={{color: DARK, fontFamily: 'Rubik-Medium'}}>{delivery.deliveryId}</Text>
           </View>
         </View>
 
@@ -220,21 +220,21 @@ const SelectedDelivery = ({navigation, route}) => {
             <View style={styles.directionsBox}>
               <View style={styles.directionDetail}>
                 <MCIcon name="map-marker-distance" size={16} color={'white'} style={styles.iconBox} />
-                <Text style={{fontWeight: 'bold', marginLeft: 10}}>
+                <Text style={{fontFamily: 'Rubik-Medium', marginLeft: 10}}>
                   {parseFloat(delivery.distance).toFixed(2)}
                   <Text style={{color: MEDIUM}}> km</Text>
                 </Text>
               </View>
               <View style={styles.directionDetail}>
                 <MCIcon name="timelapse" size={16} color={'white'} style={styles.iconBox} />
-                <Text style={{fontWeight: 'bold', marginLeft: 10}}>
+                <Text style={{fontFamily: 'Rubik-Medium', marginLeft: 10}}>
                   {parseFloat(delivery.duration).toFixed(0)}
                   <Text style={{color: MEDIUM}}> min</Text>
                 </Text>
               </View>
               <View style={styles.directionDetail}>
                 <Ionicon name="md-pricetag" size={16} color={'white'} style={styles.iconBox} />
-                <Text style={{fontWeight: 'bold', marginLeft: 10}}>₱{delivery.price}</Text>
+                <Text style={{fontFamily: 'Rubik-Medium', marginLeft: 10}}>₱{delivery.price}</Text>
               </View>
             </View>
           </View>

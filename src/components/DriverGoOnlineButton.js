@@ -105,14 +105,14 @@ const Component = ({session, constants, createSession}) => {
 
   const onNotificationOpened = ({notification}) => {
     try {
-      type = notification.payload.additionalData.type;
+      const type = notification.payload.additionalData.type;
 
       if (type) {
         const legend = {
           ANNOUNCEMENT: 'Announcements',
           NOTIFICATION: 'Notifications',
           WALLET: 'DriverWalletLog',
-          N: 'Notifications',
+          N: 'Notifications', // Backwards Compatibility
         };
 
         const route = legend[type];
@@ -143,7 +143,7 @@ const Component = ({session, constants, createSession}) => {
           {loading ? (
             <ActivityIndicator size={24} color={COLOR} />
           ) : (
-            <Text style={{color: COLOR, fontSize: 16, fontWeight: 'bold'}}>
+            <Text style={{color: COLOR, fontSize: 16, fontFamily: 'Rubik-Medium'}}>
               {isOnline ? 'Go Offline' : 'Go Online'}
             </Text>
           )}

@@ -14,7 +14,7 @@ export const HeaderTitle = ({label}) => {
 const styles = StyleSheet.create({
   outer: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'Rubik-Medium',
     color: DARK,
     marginLeft: -20,
   },

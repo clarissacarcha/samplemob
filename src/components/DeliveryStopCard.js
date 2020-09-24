@@ -24,7 +24,7 @@ export const DeliveryStopCard = ({stop, index}) => {
         {/*------------------- STOP LABEL-------------------*/}
         <View style={{flexDirection: 'row', alignItems: 'center', padding: 20}}>
           {icons[index]}
-          <Text style={{marginLeft: 10, color: DARK, fontWeight: 'bold'}}>
+          <Text style={{marginLeft: 10, color: DARK, fontFamily: 'Rubik-Medium'}}>
             {labels[index][0]} <Text style={{color: ORANGE}}>{labels[index][1]}</Text>
           </Text>
         </View>
@@ -62,7 +62,7 @@ export const DeliveryStopCard = ({stop, index}) => {
         {/*------------------- NAME -------------------*/}
         <View style={{flexDirection: 'row', padding: 20}}>
           <View style={{flex: 1}}>
-            <Text style={{fontWeight: 'bold'}}>{stop.name}</Text>
+            <Text style={{fontFamily: 'Rubik-Medium'}}>{stop.name}</Text>
             <Text style={{fontSize: 12, color: MEDIUM}}>{stop.mobile}</Text>
           </View>
           {/*------------------- DIALER BUTTON -------------------*/}
@@ -94,9 +94,9 @@ export const DeliveryStopCard = ({stop, index}) => {
             <View style={{flex: 1, flexDirection: 'row', marginTop: 8}}>
               <YellowIcon set="FontAwesome5" name="landmark" size={16} containerStyle={{marginTop: 4}} />
               <View style={{marginLeft: 10}}>
-                <Text style={{fontWeight: 'bold'}}>Landmark</Text>
+                <Text style={{fontFamily: 'Rubik-Medium'}}>Landmark</Text>
                 <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
-                  <Text style={{fontWeight: 'bold', marginLeft: 10}}>{stop.landmark}</Text>
+                  <Text style={{fontFamily: 'Rubik-Medium', marginLeft: 10}}>{stop.landmark}</Text>
                 </Text>
               </View>
             </View>

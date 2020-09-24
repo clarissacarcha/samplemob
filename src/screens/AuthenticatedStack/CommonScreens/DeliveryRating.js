@@ -144,7 +144,7 @@ const RateDelivery = ({navigation, route}) => {
           }}>
           <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', paddingVertical: 20}}>
             <YellowIcon set="FontAwesome" name="star" size={16} darkIcon />
-            <Text style={{marginLeft: 10, color: DARK, fontWeight: 'bold'}}>
+            <Text style={{marginLeft: 10, color: DARK, fontFamily: 'Rubik-Medium'}}>
               POGI <Text style={{color: ORANGE}}>Rating</Text>
             </Text>
           </View>
@@ -169,7 +169,7 @@ const RateDelivery = ({navigation, route}) => {
           }}>
           <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', paddingVertical: 20}}>
             <YellowIcon set="FontAwesome5" name="file-alt" size={16} darkIcon />
-            <Text style={{marginLeft: 10, color: DARK, fontWeight: 'bold'}}>
+            <Text style={{marginLeft: 10, color: DARK, fontFamily: 'Rubik-Medium'}}>
               Share Your <Text style={{color: ORANGE}}>POGI Experience</Text>
             </Text>
           </View>

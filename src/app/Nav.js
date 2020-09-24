@@ -1,23 +1,18 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {Image, Text, View, TouchableWithoutFeedback} from 'react-native';
-import {NavigationContainer, useNavigation} from '@react-navigation/native';
-import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
-// import {createFluidNavigator} from 'react-navigation-fluid-transitions';
+import {TouchableWithoutFeedback} from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import DrawerContent from './Drawer';
-import {HeaderBack, HeaderTitle, BottomTabHeader} from '../components';
-import {COLOR, MEDIUM, LIGHT} from '../res/constants';
+import {BottomTabHeader} from '../components';
+import {COLOR, MEDIUM} from '../res/constants';
 
-import FA5Icon from 'react-native-vector-icons/FontAwesome5';
-import FAIcon from 'react-native-vector-icons/FontAwesome';
 import EIcon from 'react-native-vector-icons/Entypo';
-import FIcon from 'react-native-vector-icons/Feather';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import Ionicon from 'react-native-vector-icons/Ionicons';
 
 /*-------------------- IMPORT SCREENS START--------------------*/
 import Login from '../screens/UnauthenticatedStack/Login';
@@ -30,7 +25,6 @@ import ForgotPasswordReset from '../screens/UnauthenticatedStack/ForgotPasswordR
 
 // Landing
 import Landing from '../screens/Landing';
-import OrdersTesting from './OrdersTesting';
 
 // Authenticated Stack
 /*---------- COMMON SCREENS ----------*/
@@ -101,12 +95,13 @@ const DriverDeliveriesTab = () => (
         indicatorStyle: {backgroundColor: COLOR},
 
         labelStyle: {
-          fontWeight: 'bold',
+          fontFamily: 'Rubik-Regular',
           textTransform: 'none',
-          fontSize: 16,
+          fontSize: 14,
         },
       }}>
       <DriverDeliveries.Screen name="Ongoing" component={Ongoing} />
+      <DriverDeliveries.Screen name="Delegated" component={Ongoing} />
       <DriverDeliveries.Screen name="Completed" component={Completed} />
       <DriverDeliveries.Screen name="Cancelled" component={Cancelled} />
     </DriverDeliveries.Navigator>
@@ -249,7 +244,7 @@ const Drawer = connect(
   </RootDrawer.Navigator>
 ));
 
-const SwitchStack = ({initialRoute}) => {
+const SwitchStack = () => {
   return (
     <Switch.Navigator headerMode="none">
       <Switch.Screen name="Landing" component={Landing} options={{animationEnabled: false}} />
@@ -262,27 +257,9 @@ const SwitchStack = ({initialRoute}) => {
 const Nav = ({initialRoute}) => {
   return (
     <NavigationContainer>
-      {/*<SwitchStack initialRoute={initialRoute} />*/}
-      <OrdersTesting />
+      <SwitchStack initialRoute={initialRoute} />
     </NavigationContainer>
   );
 };
-
-// const mapDispatchToProps = dispatch => ({
-//   destroySession: () => dispatch({type: 'DESTROY_SESSION'}),
-// });
-
-// const mapDispatchToProps = dispatch => ({
-//   destroySession: () => dispatch({type: 'DESTROY_SESSION'}),
-//   createSession: payload => dispatch({type: 'CREATE_SESSION', payload}),
-//   startLoading: () => dispatch({type: 'START_LOADING'}),
-//   finishLoading: () => dispatch({type: 'FINISH_LOADING'}),
-//   setConstants: payload => dispatch({type: 'SET_CONSTANTS', payload}),
-// });
-
-// export default connect(
-//   mapStateToProps,
-//   mapDispatchToProps,
-// )(Nav);
 
 export default Nav;

@@ -53,27 +53,27 @@ const SenderDetails = ({navigation, route}) => {
 
   const onSubmit = async () => {
     if (localData.latitude == 0 || localData.longitude == 0) {
-      Alert.alert('', `Please enter sender's location.`);
+      Alert.alert('', "Please enter sender's location.");
       return;
     }
 
     if (validator.isEmpty(localData.name, {ignore_whitespace: true})) {
-      Alert.alert('', `Please enter sender's name.`);
+      Alert.alert('', "Please enter sender's name.");
       return;
     }
 
     if (validator.isEmpty(localData.mobile, {ignore_whitespace: true})) {
-      Alert.alert('', `Please enter sender's mobile number.`);
+      Alert.alert('', "Please enter sender's mobile number.");
       return;
     }
 
     if (isNaN(localData.mobile)) {
-      Alert.alert('', `Please enter a valid sender's mobile number.`);
+      Alert.alert('', "Please enter a valid sender's mobile number.");
       return;
     }
 
     if (localData.mobile.length != 10) {
-      Alert.alert('', `Please enter a valid sender's mobile number.`);
+      Alert.alert('', "Please enter a valid sender's mobile number.");
       return;
     }
 
@@ -123,7 +123,7 @@ const SenderDetails = ({navigation, route}) => {
             <View style={styles.addressButton}>
               <BlackIcon set="FontAwesome5" name="map-pin" />
               <View style={{justifyContent: 'center', flex: 1, marginLeft: 20}}>
-                <Text style={{fontWeight: 'bold'}}>Your Location</Text>
+                <Text style={{fontFamily: 'Rubik-Medium'}}>Your Location</Text>
                 <Text style={{color: 'white', fontSize: 10}} numberOfLines={1}>
                   {localData.formattedAddress}
                 </Text>
@@ -276,6 +276,6 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     fontSize: 12,
     color: DARK,
-    fontWeight: 'bold',
+    fontFamily: 'Rubik-Medium',
   },
 });

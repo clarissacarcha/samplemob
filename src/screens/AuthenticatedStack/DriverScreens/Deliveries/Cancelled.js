@@ -93,6 +93,6 @@ const styles = StyleSheet.create({
     color: MEDIUM,
     marginTop: 20,
     fontFamily: FONT_FAMILY,
-    fontWeight: 'bold',
+    fontFamily: 'Rubik-Medium',
   },
 });

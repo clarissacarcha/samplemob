@@ -1,8 +1,7 @@
 import React from 'react';
 import {View, FlatList, StyleSheet, ScrollView} from 'react-native';
 
-import DeliveryCard from './DeliveryCard';
-import DeliveryCardNoBold from './DeliveryCardNoBold';
+import DeliveryCardTesting from './DeliveryCardTesting';
 
 const OrdersTesting = ({navigation}) => {
   const data = {
@@ -22,8 +21,8 @@ const OrdersTesting = ({navigation}) => {
     status: 2,
     createdAt: 'Sep 16 2020 - 10:46 am',
     senderStop: {
-      name: 'Alvir Marquez',
-      mobile: '+639667682812',
+      name: 'Juan dela Cruz',
+      mobile: '+639667688262',
       landmark: null,
       formattedAddress: 'Mogpog - Balanacan Port Rd, Mogpog, Marinduque, Philippines',
       latitude: 13.5236030637247,
@@ -33,7 +32,7 @@ const OrdersTesting = ({navigation}) => {
       scheduledTo: null,
     },
     recipientStop: {
-      name: 'Juan',
+      name: 'Pedro dela Cruz',
       mobile: '+639151234567',
       landmark: null,
       formattedAddress: 'Marinduque, Philippines',
@@ -84,8 +83,8 @@ const OrdersTesting = ({navigation}) => {
   return (
     <View style={styles.container}>
       <ScrollView>
-        <DeliveryCard delivery={data} onPress={() => {}} lastItem={true} />
-        <DeliveryCardNoBold delivery={data} onPress={() => {}} lastItem={true} />
+        <DeliveryCardTesting delivery={data} onPress={() => {}} lastItem={false} />
+        <DeliveryCardTesting delivery={data} onPress={() => {}} lastItem={true} />
       </ScrollView>
     </View>
   );

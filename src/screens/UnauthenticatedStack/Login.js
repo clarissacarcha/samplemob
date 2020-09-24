@@ -47,6 +47,17 @@ const Login = ({navigation, session}) => {
     },
   });
 
+  // const ws = new WebSocket('wss://echo.websocket.org');
+  //
+  // ws.onopen = () => {
+  //   ws.send('Sent Message!');
+  // };
+  //
+  // ws.onmessage = e => {
+  //   alert(e.data);
+  // };
+
+
   const onMobileChange = value => {
     if (value.length == 1 && value == '0') {
       setMobile('');
@@ -139,7 +150,7 @@ const Login = ({navigation, session}) => {
           resizeMode="cover"
         />
         <View style={{height: 50, paddingHorizontal: 20, justifyContent: 'flex-end', marginBottom: 10}}>
-          <Text style={{fontWeight: 'bold', color: MEDIUM}}>{`Enter your ${
+          <Text style={{fontFamily: 'Rubik-Medium', color: MEDIUM}}>{`Enter your ${
             APP_FLAVOR == 'C' ? 'mobile' : 'rider'
           } number to continue.`}</Text>
         </View>

@@ -146,7 +146,7 @@ const Verification = ({navigation, route, createSession}) => {
         {/*---------------------------------------- ENTERED MOBILE NUMBER ----------------------------------------*/}
         <View style={{paddingHorizontal: 20, paddingVertical: 10, justifyContent: 'flex-end'}}>
           <Text>Enter the 6-digit code sent to</Text>
-          <Text style={{fontWeight: 'bold'}}>{`+63 ${mobile}`}</Text>
+          <Text style={{fontFamily: 'Rubik-Medium'}}>{`+63 ${mobile}`}</Text>
         </View>
 
         {/*---------------------------------------- NUMBER BOXES ----------------------------------------*/}
@@ -170,7 +170,7 @@ const Verification = ({navigation, route, createSession}) => {
 
         {/*---------------------------------------- RESEND CODE ----------------------------------------*/}
         {/* <Text style={styles.resend}>Didn't received it?</Text>
-        <Text style={[styles.resend, {fontWeight: 'bold'}]}>{`Request new code in ${count}`}</Text> */}
+        <Text style={[styles.resend, {fontFamily: 'Rubik-Medium'}]}>{`Request new code in ${count}`}</Text> */}
       </View>
 
       {/*---------------------------------------- SUBMIT BUTTON ----------------------------------------*/}

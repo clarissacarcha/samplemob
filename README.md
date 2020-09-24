@@ -22,11 +22,9 @@ NEXT PATCH
 
 # Customer Pending
 
-1. (Done) Consumer Profile Pix
-2. Fix Order Type Schedule, Today Only
+1. Fix Order Type Schedule, Today Only
 3. Handle sender/recipient location change when other is empty. Focus on location
 4. Handle skip location still invoked after Proceed
-5. (Done) Toktok Consumer App Change Profile
 6. (HALF) Item Description API (HARD CODE)
 7. Cant Cancel If Picked Up IN API
 8. Error on Splash, retry button
@@ -50,11 +48,9 @@ NEXT PATCH
 8. Better Update Profile
 9. Cannot accept order if has Express Delivery ongoing
 10. Handle when operator account is put on hold.
-11. (Done) On Cancel Delivery, Have a confirmation button first
 12. Order Delivery Express Delivery First
-13. (Done) Express Delivery Change Text to price.
+13. Express Delivery Change price breakdown
 14. Font family
-15. (Done) Operator ID when Driver accepts orders, update on deliveries record
 16. Retry button or filter button on empty available orders
 17. On going back from Selected Order from available orders, refresh available orders
 18. Move ConsumerChangeProfile to Common
@@ -126,7 +122,17 @@ Add To Cart
 Check Out
 Un
 
-
+Express Delivery Order
+Dataloader
+API check for user validation on every request. SESSION_EXPIRED = logout
 Fix Loop Issue on no network when getting orders
 When accepting order, make sure that is its not expired, cancelled, or deleted
+Error Logs on Server. 
+Search Locations from cluster filter
+Welcome Banners
+Fix Location Log subscription on Refresh of Orders
+Nearby Orders Notification, last 5 mins only
+Hide Delivery Details for Driver When Delivery.tokDriverId is not him
 
+Cant refetch orders when empty orders
+OPEN SSL URL IN LIVE

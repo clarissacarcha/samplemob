@@ -12,6 +12,7 @@ import {
   ReduxProvider,
   // SubscriptionProvider,
 } from '../provider';
+import OrdersTesting from './OrdersTesting';
 
 console.disableYellowBox = true;
 
@@ -23,6 +24,7 @@ const App = () => {
         <ReduxProvider>
           <ApolloProvider>
             <Splash />
+            {/*<OrdersTesting />*/}
           </ApolloProvider>
         </ReduxProvider>
       </SafeAreaView>

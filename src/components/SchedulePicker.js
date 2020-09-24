@@ -196,7 +196,7 @@ const PickerRow = ({initialData, setscheduledFrom, setscheduledTo, setScheduledD
           }}
         />
         <View style={{width: 40, justifyContent: 'center', alignItems: 'center'}}>
-          <Text style={{fontSize: 10, fontWeight: 'bold', textAlign: 'right'}}>FROM</Text>
+          <Text style={{fontSize: 10, fontFamily: 'Rubik-Medium', textAlign: 'right'}}>FROM</Text>
         </View>
         <DropDownPicker
           defaultValue={initialData.scheduledFrom}
@@ -221,7 +221,7 @@ const PickerRow = ({initialData, setscheduledFrom, setscheduledTo, setScheduledD
           }}
         />
         <View style={{width: 30, justifyContent: 'center', alignItems: 'center'}}>
-          <Text style={{fontSize: 10, fontWeight: 'bold', textAlign: 'right'}}>TO</Text>
+          <Text style={{fontSize: 10, fontFamily: 'Rubik-Medium', textAlign: 'right'}}>TO</Text>
         </View>
         <DropDownPicker
           defaultValue={initialData.scheduledTo}
@@ -331,7 +331,7 @@ export const SchedulePicker = ({initialData, onScheduleChange}) => {
               borderColor: orderType === 1 ? COLOR : LIGHT,
             }}>
             <Text style={{fontSize: 12}} numberOfLines={2}>
-              {`As Soon\nAs Possible`}
+              {'As Soon\nAs Possible'}
             </Text>
             <MCIcon name="run-fast" size={24} color={orderType === 1 ? COLOR : LIGHT} />
           </View>
@@ -360,7 +360,7 @@ export const SchedulePicker = ({initialData, onScheduleChange}) => {
 
       {/*-------------------- FINE PRINT --------------------*/}
       <View style={{marginHorizontal: 20, marginTop: 10}}>
-        <Text style={{color: DARK, fontSize: 10, fontWeight: 'bold'}}>{finePrint[orderType]}</Text>
+        <Text style={{color: DARK, fontSize: 10, fontFamily: 'Rubik-Medium'}}>{finePrint[orderType]}</Text>
       </View>
 
       {/*-------------------- TIME PICKER --------------------*/}
@@ -403,6 +403,6 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     fontSize: 12,
     color: DARK,
-    fontWeight: 'bold',
+    fontFamily: 'Rubik-Medium',
   },
 });

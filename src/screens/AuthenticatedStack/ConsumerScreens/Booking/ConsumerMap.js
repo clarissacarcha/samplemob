@@ -8,7 +8,7 @@ import {
   Alert,
   ActivityIndicator,
   Image,
-  ScrollView,
+  Platform,
   Switch,
 } from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE, AnimatedRegion, Animated, PROVIDER_DEFAULT} from 'react-native-maps';
@@ -329,7 +329,7 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
     };
   }, []);
 
-  // If directions.distance or price change, calcuate for order price
+  // If directions.distance or price change, calculate for order price
   useEffect(() => {
     console.log(`EFFECT Distance: ${directions.distance} || Price: ${price}`);
 
@@ -528,7 +528,7 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
                     height: 50,
                     justifyContent: 'center',
                   }}>
-                  <Text style={{fontWeight: 'bold'}}>{senderStop.name}</Text>
+                  <Text style={{fontFamily: 'Rubik-Medium'}}>{senderStop.name}</Text>
                   <Text numberOfLines={1} style={{color: MEDIUM, fontSize: 10}}>
                     {senderStop.formattedAddress}
                   </Text>
@@ -540,13 +540,13 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
                 <View style={{height: 50, justifyContent: 'center'}}>
                   {recipient[recipientIndex].name ? (
                     <>
-                      <Text style={{fontWeight: 'bold'}}>{recipient[recipientIndex].name}</Text>
+                      <Text style={{fontFamily: 'Rubik-Medium'}}>{recipient[recipientIndex].name}</Text>
                       <Text numberOfLines={1} style={{paddingRight: 10, color: MEDIUM, fontSize: 10}}>
                         {recipient[recipientIndex].formattedAddress}
                       </Text>
                     </>
                   ) : (
-                    <Text style={{fontWeight: 'bold'}}>Recipient</Text>
+                    <Text style={{fontFamily: 'Rubik-Medium'}}>Recipient</Text>
                   )}
                 </View>
               </TouchableOpacity>
@@ -558,7 +558,7 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
               {/*-------------------- DISTANCE --------------------*/}
               <View style={styles.directionDetail}>
                 <YellowIcon set="MaterialCommunity" name="map-marker-distance" />
-                <Text style={{fontWeight: 'bold', marginLeft: 10, fontSize: 12}}>
+                <Text style={{fontFamily: 'Rubik-Medium', marginLeft: 10, fontSize: 12}}>
                   {directions.distance.toFixed(2)}
                   <Text style={{color: MEDIUM}}> km</Text>
                 </Text>
@@ -566,7 +566,7 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
               {/*-------------------- DURATION --------------------*/}
               <View style={styles.directionDetail}>
                 <YellowIcon set="MaterialCommunity" name="timelapse" />
-                <Text style={{fontWeight: 'bold', marginLeft: 10, fontSize: 12}}>
+                <Text style={{fontFamily: 'Rubik-Medium', marginLeft: 10, fontSize: 12}}>
                   {directions.duration.toFixed(0)}
                   <Text style={{color: MEDIUM}}> min</Text>
                 </Text>
@@ -576,11 +576,13 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
                 <YellowIcon set="Ionicon" name="md-pricetag" />
                 {price == 0 || price == '0' ? (
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Text style={{fontSize: 12, marginHorizontal: 10, fontWeight: 'bold', color: MEDIUM}}>Price</Text>
+                    <Text style={{fontSize: 12, marginHorizontal: 10, fontFamily: 'Rubik-Medium', color: MEDIUM}}>
+                      Price
+                    </Text>
                     <ActivityIndicator size={20} color={COLOR} />
                   </View>
                 ) : (
-                  <Text style={{fontWeight: 'bold', marginLeft: 10}}>
+                  <Text style={{fontFamily: 'Rubik-Medium', marginLeft: 10}}>
                     ₱{price + recipient[recipientIndex].expressFee}.00
                   </Text>
                 )}
@@ -599,9 +601,9 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
             <YellowIcon set="MaterialCommunity" name="clock-fast" />
 
             <View style={{flex: 1, marginHorizontal: 10}}>
-              <Text style={{fontSize: 12, color: DARK, fontWeight: 'bold'}}>Express Delivery</Text>
-              <Text style={{fontSize: 10, color: MEDIUM, fontWeight: 'bold'}}>
-                Pay an additional P40.00 for express delivery. Your order will be placed at a higher priority.
+              <Text style={{fontSize: 12, color: DARK, fontFamily: 'Rubik-Medium'}}>Express Delivery</Text>
+              <Text style={{fontSize: 10, color: MEDIUM, fontFamily: 'Rubik-Medium'}}>
+                Add P40.00, your order will be placed in a high priority.
               </Text>
             </View>
             <View>

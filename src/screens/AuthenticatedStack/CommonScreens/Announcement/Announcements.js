@@ -53,7 +53,7 @@ const Announcement = ({announcement, lastItem}) => {
                     flex: 1,
                     paddingHorizontal: 10,
                     marginTop: 2,
-                    fontWeight: 'bold',
+                    fontFamily: 'Rubik-Medium',
                   }}>
                   {title}
                 </Text>
@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     fontSize: 12,
     color: DARK,
-    fontWeight: 'bold',
+    fontFamily: 'Rubik-Medium',
   },
 
   iconBox: {

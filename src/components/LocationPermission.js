@@ -98,13 +98,13 @@ export const LocationPermission = ({onGrant, onDeny}) => {
     <View style={styles.absolute}>
       <View style={{marginBottom: 50}}>
         <Image source={LocationRequest} style={{height: imageWidth, width: imageWidth, marginBottom: 20}} />
-        <Text style={{fontWeight: 'bold', fontSize: 12, color: MEDIUM, textAlign: 'center', marginBottom: 20}}>
+        <Text style={{fontFamily: 'Rubik-Medium', fontSize: 12, color: MEDIUM, textAlign: 'center', marginBottom: 20}}>
           Finding your location.
         </Text>
-        <Text style={{fontWeight: 'bold', fontSize: 12, color: MEDIUM, textAlign: 'center', marginBottom: 20}}>
+        <Text style={{fontFamily: 'Rubik-Medium', fontSize: 12, color: MEDIUM, textAlign: 'center', marginBottom: 20}}>
           Your location will be used as {'\n'} the default sender location.
         </Text>
-        <Text style={{fontWeight: 'bold', fontSize: 12, color: MEDIUM, textAlign: 'center'}}>
+        <Text style={{fontFamily: 'Rubik-Medium', fontSize: 12, color: MEDIUM, textAlign: 'center'}}>
           You may also proceed now and enter{'\n'}the sender location instead.
         </Text>
       </View>

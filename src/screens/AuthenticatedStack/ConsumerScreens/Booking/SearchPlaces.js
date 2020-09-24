@@ -31,7 +31,7 @@ const GooglePlacesInput = ({onLocationSelect, savedLocations}) => {
           width: '100%',
         },
         description: {
-          fontWeight: 'bold',
+          fontFamily: 'Rubik-Medium',
         },
         listView: {
           backgroundColor: '#FFF',

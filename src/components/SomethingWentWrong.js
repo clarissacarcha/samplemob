@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     width: imageWidth,
   },
   text: {
-    fontWeight: 'bold',
+    fontFamily: 'Rubik-Medium',
     color: MEDIUM,
     marginVertical: 20,
   },

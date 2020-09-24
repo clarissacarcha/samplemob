@@ -29,7 +29,7 @@ const SavedLocation = ({location}) => {
       <View style={styles.cardShadow}>
         <View style={{flexDirection: 'row', alignContent: 'center'}}>
           <YellowIcon set="FontAwesome5" name="pen" size={13} />
-          <Text style={{marginLeft: 10, color: DARK, fontWeight: 'bold'}}>{location.name}</Text>
+          <Text style={{marginLeft: 10, color: DARK, fontFamily: 'Rubik-Medium'}}>{location.name}</Text>
         </View>
         <View style={{height: 10}} />
         <View style={{flexDirection: 'row', alignContent: 'center'}}>

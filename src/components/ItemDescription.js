@@ -43,7 +43,7 @@ const Item = ({index, data, selected, setSelected, onSelect, scrollToEnd}) => {
         </View>
       </TouchableHighlight>
 
-      <Text style={{fontWeight: 'bold', fontSize: 11, color: isSelected ? DARK : MEDIUM}}>{data[index]}</Text>
+      <Text style={{fontFamily: 'Rubik-Medium', fontSize: 11, color: isSelected ? DARK : MEDIUM}}>{data[index]}</Text>
     </View>
   );
 };
@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     fontSize: 12,
     color: DARK,
-    fontWeight: 'bold',
+    fontFamily: 'Rubik-Medium',
   },
   itemType: {
     height: itemDimension,

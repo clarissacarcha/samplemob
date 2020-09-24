@@ -59,17 +59,17 @@ const DriverProfile = ({navigation, session, constants, createSession}) => {
 
   const onSubmit = () => {
     if (firstName == '') {
-      Alert.alert('', `Please enter your first name`);
+      Alert.alert('', 'Please enter your first name');
       return;
     }
 
     if (lastName == '') {
-      Alert.alert('', `Please enter your last name.`);
+      Alert.alert('', 'Please enter your last name.');
       return;
     }
 
     if (emailAddress == '') {
-      Alert.alert('', `Please enter your email address.`);
+      Alert.alert('', 'Please enter your email address.');
       return;
     }
 
@@ -276,7 +276,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     fontSize: 12,
     color: DARK,
-    fontWeight: 'bold',
+    fontFamily: 'Rubik-Medium',
   },
   submitBox: {
     margin: 20,

@@ -52,8 +52,8 @@ const AccountBlocked = ({navigation, route, createSession}) => {
           style={{height: imageWidth, width: imageWidth, marginHorizontal: 20, marginTop: 50}}
           resizeMode="contain"
         />
-        <Text style={{color: MEDIUM, fontWeight: 'bold'}}>Access denied. </Text>
-        <Text style={{color: MEDIUM, fontWeight: 'bold'}}>Contact us for additional information.</Text>
+        <Text style={{color: MEDIUM, fontFamily: 'Rubik-Medium'}}>Access denied. </Text>
+        <Text style={{color: MEDIUM, fontFamily: 'Rubik-Medium'}}>Contact us for additional information.</Text>
         <View style={{paddingHorizontal: 20, marginTop: 20, marginBottom: 20, width: '100%'}}>
           <TouchableHighlight
             onPress={() => {
@@ -68,7 +68,7 @@ const AccountBlocked = ({navigation, route, createSession}) => {
               <View style={styles.rowBox}>
                 <View style={styles.row}>
                   <FAIcon name="info" size={16} color={'white'} style={styles.iconBox} />
-                  <Text style={{fontSize: 14, marginLeft: 16, color: DARK, fontWeight: 'bold'}}>Email Us</Text>
+                  <Text style={{fontSize: 14, marginLeft: 16, color: DARK, fontFamily: 'Rubik-Medium'}}>Email Us</Text>
                 </View>
               </View>
 
@@ -76,7 +76,7 @@ const AccountBlocked = ({navigation, route, createSession}) => {
               <View style={styles.rowBox}>
                 <View style={styles.row}>
                   <MCIcon name="email" size={16} color={'white'} style={styles.iconBox} />
-                  <Text style={{fontSize: 14, marginLeft: 16, color: MEDIUM, fontWeight: 'bold'}}>
+                  <Text style={{fontSize: 14, marginLeft: 16, color: MEDIUM, fontFamily: 'Rubik-Medium'}}>
                     support@toktok.ph
                   </Text>
                 </View>
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     fontSize: 12,
     color: DARK,
-    fontWeight: 'bold',
+    fontFamily: 'Rubik-Medium',
   },
 
   iconBox: {

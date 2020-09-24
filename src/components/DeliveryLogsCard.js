@@ -56,16 +56,16 @@ const StatusBar = ({number, label, log, tempFile}) => {
     if (hasImage) {
       getImage();
     }
-  }, []);
+  }, [hasImage]);
 
   return (
     <View style={{marginBottom: 20}}>
       <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <View style={[styles.numberBox, {borderRadius: 100}]}>
-            <Text style={{color: 'white', fontWeight: 'bold'}}>{number}</Text>
+            <Text style={{color: 'white', fontFamily: 'Rubik-Medium'}}>{number}</Text>
           </View>
-          <Text style={{marginLeft: 10, color: DARK, fontWeight: 'bold'}}>
+          <Text style={{marginLeft: 10, color: DARK, fontFamily: 'Rubik-Medium'}}>
             {label[0]}
             <Text style={{color: ORANGE}}> {label[1]}</Text>
           </Text>
@@ -119,7 +119,7 @@ export const DeliveryLogsCard = ({logs}) => {
             borderColor: MEDIUM,
           }}>
           <YellowIcon set="MaterialCommunity" name="format-list-bulleted" size={20} darkIcon />
-          <Text style={{marginLeft: 10, color: DARK, fontWeight: 'bold'}}>
+          <Text style={{marginLeft: 10, color: DARK, fontFamily: 'Rubik-Medium'}}>
             Delivery <Text style={{color: ORANGE}}>Logs</Text>
           </Text>
         </View>

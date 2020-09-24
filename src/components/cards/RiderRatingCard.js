@@ -86,7 +86,7 @@ export const RiderRatingCard = ({driverRating, ratingFor}) => {
         <View style={{flexDirection: 'row'}}>
           <YellowIcon set="FontAwesome" name="star" size={14} darkIcon />
 
-          <Text style={{marginLeft: 10, color: DARK, fontWeight: 'bold'}}>
+          <Text style={{marginLeft: 10, color: DARK, fontFamily: 'Rubik-Medium'}}>
             {accountType} <Text style={{color: ORANGE}}>Rating</Text>
           </Text>
         </View>

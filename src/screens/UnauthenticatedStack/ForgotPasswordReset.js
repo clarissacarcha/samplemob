@@ -47,22 +47,22 @@ const PostRegistration = ({navigation, route}) => {
 
   const onSubmit = () => {
     if (password == '') {
-      Alert.alert('', `Please enter your password.`);
+      Alert.alert('', 'Please enter your password.');
       return;
     }
 
     if (repeatPassword == '') {
-      Alert.alert('', `Please repeat your password.`);
+      Alert.alert('', 'Please repeat your password.');
       return;
     }
 
     if (password != repeatPassword) {
-      Alert.alert('', `Password does not match.`);
+      Alert.alert('', 'Password does not match.');
       return;
     }
 
     if (password.length < 8) {
-      Alert.alert('', `Password must have minimum length of 8 characters.`);
+      Alert.alert('', 'Password must have minimum length of 8 characters.');
       return;
     }
 
@@ -168,6 +168,6 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     fontSize: 12,
     color: DARK,
-    fontWeight: 'bold',
+    fontFamily: 'Rubik-Medium',
   },
 });

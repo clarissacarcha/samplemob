@@ -55,8 +55,12 @@ const GoOnlineOverlay = ({onDismiss, session}) => {
   });
 
   const onDispatchReceived = ({subscriptionData, client}) => {
-    if (subscriptionData.error) return;
-    if (!subscriptionData.data) return;
+    if (subscriptionData.error) {
+      return;
+    }
+    if (!subscriptionData.data) {
+      return;
+    }
 
     if (!deliveryOrder) {
       setDeliveryOrder(subscriptionData.data.onDeliveryDispatch.delivery);
@@ -106,7 +110,7 @@ const GoOnlineOverlay = ({onDismiss, session}) => {
         <View style={styles.labelRow}>
           {/*-------------------- STATUS LABEL --------------------*/}
           <View style={styles.labelBox}>
-            <Text style={{fontWeight: 'bold'}}>
+            <Text style={{fontFamily: 'Rubik-Medium'}}>
               {!deliveryOrder ? 'Waiting for a Delivery Order' : 'New Delivery Order Found'}
             </Text>
             {!deliveryOrder && <ActivityIndicator color={DARK} />}
@@ -114,7 +118,7 @@ const GoOnlineOverlay = ({onDismiss, session}) => {
 
           {/*-------------------- GO OFFLINE BUTTON --------------------*/}
           <TouchableOpacity style={styles.offlineTouchable} onPress={onGoOffline} activeOpacity={0.5}>
-            <Text style={{color: COLOR, fontWeight: 'bold'}}>Go Offline</Text>
+            <Text style={{color: COLOR, fontFamily: 'Rubik-Medium'}}>Go Offline</Text>
           </TouchableOpacity>
         </View>
 
@@ -204,7 +208,7 @@ const styles = StyleSheet.create({
   acceptText: {
     color: DARK,
     fontSize: 20,
-    fontWeight: 'bold',
+    fontFamily: 'Rubik-Medium',
   },
   rejectTouchable: {
     backgroundColor: DARK,
@@ -218,6 +222,6 @@ const styles = StyleSheet.create({
   rejectText: {
     color: COLOR,
     fontSize: 20,
-    fontWeight: 'bold',
+    fontFamily: 'Rubik-Medium',
   },
 });

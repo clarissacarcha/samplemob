@@ -105,37 +105,37 @@ const RecipientDetails = ({navigation, route, constants}) => {
 
   const onSubmit = async () => {
     if (localData.latitude == 0 || localData.longitude == 0) {
-      Alert.alert('', `Please enter recipient's location.`);
+      Alert.alert('', "Please enter recipient's location.");
       return;
     }
 
     if (validator.isEmpty(localData.name, {ignore_whitespace: true})) {
-      Alert.alert('', `Please enter recipient's name.`);
+      Alert.alert('', "Please enter recipient's name.");
       return;
     }
 
     if (validator.isEmpty(localData.mobile, {ignore_whitespace: true})) {
-      Alert.alert('', `Please enter recipient's mobile number.`);
+      Alert.alert('', "Please enter recipient's mobile number.");
       return;
     }
 
     if (isNaN(localData.mobile)) {
-      Alert.alert('', `Please enter a valid recipient's mobile number.`);
+      Alert.alert('', "Please enter a valid recipient's mobile number.");
       return;
     }
 
     if (localData.mobile.length != 10) {
-      Alert.alert('', `Please enter a valid recipient's mobile number.`);
+      Alert.alert('', "Please enter a valid recipient's mobile number.");
       return;
     }
 
     if (codSwitch && (!localData.cashOnDelivery || localData.cashOnDelivery == 0)) {
-      Alert.alert('', `Please enter Cash on Delivery amount.`);
+      Alert.alert('', 'Please enter Cash on Delivery amount.');
       return;
     }
 
     if (codSwitch && isNaN(localData.cashOnDelivery)) {
-      Alert.alert('', `Please enter a valid Cash on Delivery amount.`);
+      Alert.alert('', 'Please enter a valid Cash on Delivery amount.');
       return;
     }
 
@@ -149,7 +149,7 @@ const RecipientDetails = ({navigation, route, constants}) => {
     }
 
     if (validator.isEmpty(localData.cargo, {ignore_whitespace: true})) {
-      Alert.alert('', `Please select item description type.`);
+      Alert.alert('', 'Please select item description type.');
       return;
     }
 
@@ -205,7 +205,7 @@ const RecipientDetails = ({navigation, route, constants}) => {
               <BlackIcon set="FontAwesome5" name="map-pin" />
 
               <View style={{justifyContent: 'center', flex: 1, marginHorizontal: 20}}>
-                <Text style={{fontWeight: 'bold'}}>Going To</Text>
+                <Text style={{fontFamily: 'Rubik-Medium'}}>Going To</Text>
                 <Text style={{color: 'white', fontSize: 10}} numberOfLines={1}>
                   {localData.formattedAddress}
                 </Text>
@@ -294,8 +294,8 @@ const RecipientDetails = ({navigation, route, constants}) => {
               alignItems: 'center',
             }}>
             <View>
-              <Text style={{fontSize: 12, color: DARK, fontWeight: 'bold'}}>Cash On Delivery</Text>
-              <Text style={{fontSize: 10, color: MEDIUM, fontWeight: 'bold'}}>
+              <Text style={{fontSize: 12, color: DARK, fontFamily: 'Rubik-Medium'}}>Cash On Delivery</Text>
+              <Text style={{fontSize: 10, color: MEDIUM, fontFamily: 'Rubik-Medium'}}>
                 Rider pays sender and collect cash from recipient
               </Text>
             </View>
@@ -432,7 +432,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     fontSize: 12,
     color: DARK,
-    fontWeight: 'bold',
+    fontFamily: 'Rubik-Medium',
   },
   itemType: {
     height: itemDimension,

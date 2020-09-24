@@ -56,7 +56,7 @@ export const DriverLocationCard = ({driver}) => {
               borderColor: MEDIUM,
             }}>
             <FA5Icon name="map-marked" size={14} color={DARK} style={styles.iconBox} />
-            <Text style={{marginLeft: 10, color: DARK, fontWeight: 'bold'}}>
+            <Text style={{marginLeft: 10, color: DARK, fontFamily: 'Rubik-Medium'}}>
               {labels[0]} <Text style={{color: ORANGE}}>{labels[1]}</Text>
             </Text>
           </View>
@@ -81,7 +81,7 @@ export const DriverLocationCard = ({driver}) => {
             borderColor: MEDIUM,
           }}>
           <FA5Icon name="map-marked" size={14} color={DARK} style={styles.iconBox} />
-          <Text style={{marginLeft: 10, color: DARK, fontWeight: 'bold'}}>
+          <Text style={{marginLeft: 10, color: DARK, fontFamily: 'Rubik-Medium'}}>
             {labels[0]} <Text style={{color: ORANGE}}>{labels[1]}</Text>
           </Text>
         </View>

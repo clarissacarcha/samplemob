@@ -66,7 +66,7 @@ export const DriverCard = ({driver}) => {
             borderColor: MEDIUM,
           }}>
           <Fontisto name="motorcycle" size={18} color={DARK} style={styles.iconBox} />
-          <Text style={{marginLeft: 10, color: DARK, fontWeight: 'bold'}}>
+          <Text style={{marginLeft: 10, color: DARK, fontFamily: 'Rubik-Medium'}}>
             {labels[0]} <Text style={{color: ORANGE}}>{labels[1]}</Text>
           </Text>
         </View>
@@ -108,7 +108,7 @@ export const DriverCard = ({driver}) => {
 
           {/*------------------- NAME -------------------*/}
           <View style={{flex: 1, marginRight: 10}}>
-            <Text style={{fontWeight: 'bold'}}>{`${firstName} ${lastName}`}</Text>
+            <Text style={{fontFamily: 'Rubik-Medium'}}>{`${firstName} ${lastName}`}</Text>
             <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 12}}>{driver.user.username}</Text>
           </View>
 

@@ -43,8 +43,8 @@ const WalletLog = ({item, lastItem}) => (
         color="white"
       />
       <View style={{flex: 1}}>
-        <Text style={{color: DARK, fontSize: 12, fontWeight: 'bold', marginHorizontal: 10}}>{item.type}</Text>
-        <Text style={{color: MEDIUM, fontSize: 10, fontWeight: 'bold', marginHorizontal: 10}}>
+        <Text style={{color: DARK, fontSize: 12, fontFamily: 'Rubik-Medium', marginHorizontal: 10}}>{item.type}</Text>
+        <Text style={{color: MEDIUM, fontSize: 10, fontFamily: 'Rubik-Medium', marginHorizontal: 10}}>
           {item.transactionDate}
         </Text>
       </View>
@@ -53,11 +53,11 @@ const WalletLog = ({item, lastItem}) => (
       )}
 
       {!(item.incoming == 0 && item.outgoing == 0) ? (
-        <Text style={{color: item.incoming != 0 ? 'green' : 'red', fontSize: 14, fontWeight: 'bold'}}>
+        <Text style={{color: item.incoming != 0 ? 'green' : 'red', fontSize: 14, fontFamily: 'Rubik-Medium'}}>
           {item.incoming != 0 ? numberFormat(item.incoming) : numberFormat(item.outgoing)}
         </Text>
       ) : (
-        <Text style={{color: MEDIUM, fontSize: 14, fontWeight: 'bold'}}>0.00</Text>
+        <Text style={{color: MEDIUM, fontSize: 14, fontFamily: 'Rubik-Medium'}}>0.00</Text>
       )}
     </View>
   </View>

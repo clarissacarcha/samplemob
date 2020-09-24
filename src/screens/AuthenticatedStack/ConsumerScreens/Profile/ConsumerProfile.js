@@ -63,22 +63,22 @@ const ConsumerProfile = ({navigation, constants, session, createSession}) => {
 
   const onSubmit = () => {
     if (validator.isEmpty(firstName, {ignore_whitespace: true})) {
-      Alert.alert('', `Please enter your first name.`);
+      Alert.alert('', 'Please enter your first name.');
       return;
     }
 
     if (validator.isEmpty(lastName, {ignore_whitespace: true})) {
-      Alert.alert('', `Please enter your last name.`);
+      Alert.alert('', 'Please enter your last name.');
       return;
     }
 
     if (validator.isEmpty(emailAddress, {ignore_whitespace: true})) {
-      Alert.alert('', `Please enter your email address.`);
+      Alert.alert('', 'Please enter your email address.');
       return;
     }
 
     if (!validator.isEmail(emailAddress)) {
-      Alert.alert('', `Please enter a valid email address.`);
+      Alert.alert('', 'Please enter a valid email address.');
       return;
     }
 
@@ -154,25 +154,7 @@ const ConsumerProfile = ({navigation, constants, session, createSession}) => {
             </View>
           </View>
         </View>
-        {/*-------------------- REFERRAL CODE --------------------*/}
-        {session.user.consumer.referralCode ? (
-          <View>
-            <Text style={styles.label}>Referral Code</Text>
-            <View style={[styles.input, {justifyContent: 'center'}]}>
-              <Text style={{color: MEDIUM}}>{referralCode}</Text>
-            </View>
-          </View>
-        ) : (
-          <View>
-            <Text style={styles.label}>Referral Code</Text>
-            <TextInput
-              value={referralCode}
-              onChangeText={value => setReferralCode(value)}
-              style={styles.input}
-              placeholder="Referral Code"
-            />
-          </View>
-        )}
+
 
         {/*-------------------- MOBILE NUMBER --------------------*/}
         <Text style={styles.label}>Mobile Number</Text>
@@ -208,6 +190,26 @@ const ConsumerProfile = ({navigation, constants, session, createSession}) => {
           keyboardType="email-address"
           autoCapitalize="none"
         />
+
+        {/*-------------------- REFERRAL CODE --------------------*/}
+        {session.user.consumer.referralCode ? (
+          <View>
+            <Text style={styles.label}>Referral Code</Text>
+            <View style={[styles.input, {justifyContent: 'center'}]}>
+              <Text style={{color: MEDIUM}}>{referralCode}</Text>
+            </View>
+          </View>
+        ) : (
+          <View>
+            <Text style={styles.label}>Referral Code</Text>
+            <TextInput
+              value={referralCode}
+              onChangeText={value => setReferralCode(value)}
+              style={styles.input}
+              placeholder="Referral Code"
+            />
+          </View>
+        )}
         {/*-------------------- UPDATE BUTTON --------------------*/}
         <BlackButton onPress={onSubmit} label="Update Profile" containerStyle={{marginBottom: 0, marginTop: 40}} />
 
@@ -263,7 +265,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     fontSize: 12,
     color: DARK,
-    fontWeight: 'bold',
+    fontFamily: 'Rubik-Medium',
   },
   submitBox: {
     margin: 20,

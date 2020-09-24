@@ -43,7 +43,9 @@ const TalkToUs = ({navigation, constants}) => {
               <View style={styles.rowBox}>
                 <View style={styles.row}>
                   <YellowIcon set="FontAwesome" name="info" />
-                  <Text style={{fontSize: 14, marginLeft: 16, color: DARK, fontWeight: 'bold'}}>Visit our website</Text>
+                  <Text style={{fontSize: 14, marginLeft: 16, color: DARK, fontFamily: 'Rubik-Medium'}}>
+                    Visit our website
+                  </Text>
                 </View>
               </View>
 
@@ -51,7 +53,7 @@ const TalkToUs = ({navigation, constants}) => {
               <View style={styles.rowBox}>
                 <View style={styles.row}>
                   <YellowIcon set="MaterialCommunity" name="web" />
-                  <Text style={{fontSize: 14, marginLeft: 16, color: MEDIUM, fontWeight: 'bold'}}>
+                  <Text style={{fontSize: 14, marginLeft: 16, color: MEDIUM, fontFamily: 'Rubik-Medium'}}>
                     {constants.websiteDisplayName}
                   </Text>
                 </View>
@@ -76,7 +78,7 @@ const TalkToUs = ({navigation, constants}) => {
               <View style={styles.rowBox}>
                 <View style={styles.row}>
                   <YellowIcon set="FontAwesome" name="info" />
-                  <Text style={{fontSize: 14, marginLeft: 16, color: DARK, fontWeight: 'bold'}}>Email Us</Text>
+                  <Text style={{fontSize: 14, marginLeft: 16, color: DARK, fontFamily: 'Rubik-Medium'}}>Email Us</Text>
                 </View>
               </View>
 
@@ -84,7 +86,7 @@ const TalkToUs = ({navigation, constants}) => {
               <View style={styles.rowBox}>
                 <View style={styles.row}>
                   <YellowIcon set="MaterialCommunity" name="email" />
-                  <Text style={{fontSize: 14, marginLeft: 16, color: MEDIUM, fontWeight: 'bold'}}>
+                  <Text style={{fontSize: 14, marginLeft: 16, color: MEDIUM, fontFamily: 'Rubik-Medium'}}>
                     {constants.talkToUsEmail}
                   </Text>
                 </View>
@@ -161,7 +163,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     fontSize: 12,
     color: DARK,
-    fontWeight: 'bold',
+    fontFamily: 'Rubik-Medium',
   },
 
   iconBox: {

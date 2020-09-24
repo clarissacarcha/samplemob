@@ -18,6 +18,7 @@ import {APP_FLAVOR, COLOR, DARK, MEDIUM, LIGHT} from '../../../res/constants';
 import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../components';
 import {GET_DELIVERY_CANCELLATION_CATEGORIES, POST_DELIVERY_CANCELLATION} from '../../../graphql';
 import {onError} from '../../../util/ErrorUtility';
+import _ from 'lodash';
 
 const TalkToUs = ({navigation, route}) => {
   navigation.setOptions({
@@ -61,6 +62,10 @@ const TalkToUs = ({navigation, route}) => {
           value: '0',
         },
         ...mappedReasons,
+        {
+          label: 'Others (Please Specify)',
+          value: '999',
+        },
       ]);
     },
   });
@@ -77,8 +82,13 @@ const TalkToUs = ({navigation, route}) => {
   });
 
   const onConfirm = () => {
-    if (selectedReason == '0') {
+    if (selectedReason === '0') {
       Alert.alert('', 'Please select a reason.');
+      return;
+    }
+
+    if (selectedReason === '999' && _.trim(description) === '') {
+      Alert.alert('', 'Please specify a description.');
       return;
     }
 
@@ -87,8 +97,8 @@ const TalkToUs = ({navigation, route}) => {
         input: {
           appFlavor: APP_FLAVOR,
           deliveryId: deliveryId,
-          deliveryCancellationCategoryId: selectedReason,
-          description: description,
+          deliveryCancellationCategoryId: selectedReason === '999' ? null : selectedReason,
+          description: _.trim(description),
         },
       },
     });
@@ -137,7 +147,7 @@ const TalkToUs = ({navigation, route}) => {
         }}
       />
       <View style={{height: 20}} />
-      <Text style={styles.label}>Description (Optional)</Text>
+      <Text style={styles.label}>Description ({selectedReason === '999' ? 'Required' : 'Optional'})</Text>
       <TextInput
         ref={dropDownRef}
         value={description}
@@ -254,7 +264,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     fontSize: 14,
     color: DARK,
-    fontWeight: 'bold',
+    fontFamily: 'Rubik-Medium',
   },
   input: {
     borderWidth: 1,

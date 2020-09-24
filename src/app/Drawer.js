@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
   headerText: {
     color: 'white',
     fontSize: 14,
-    fontWeight: 'bold',
+    fontFamily: 'Rubik-Medium',
     marginLeft: 10,
   },
   borderHidden: {

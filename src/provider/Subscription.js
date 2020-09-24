@@ -11,9 +11,9 @@ const Screen = ({children, navigation, session, updateBalance}) => {
       setCurrent(session.user.id);
       subscribe();
     }
-  }, [session]);
+  }, []);
 
-  useEffect(() => {}, [getService]);
+  useEffect(() => {}, []);
 
   const subscribe = () => {
     getTransactionFeed();

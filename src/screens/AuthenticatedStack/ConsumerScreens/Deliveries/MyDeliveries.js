@@ -27,7 +27,7 @@ const RoundedButton = ({label, data = {}}) => {
             style={{
               color: count > 0 ? DARK : MEDIUM,
               fontSize: 14,
-              fontWeight: 'bold',
+              fontFamily: 'Rubik-Medium',
             }}>
             {`${label[0]} ${label[1]}`}
           </Text>
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
   text: {
     color: DARK,
     fontSize: 14,
-    fontWeight: 'bold',
+    fontFamily: 'Rubik-Medium',
   },
   darkIcon: {
     height: 20,

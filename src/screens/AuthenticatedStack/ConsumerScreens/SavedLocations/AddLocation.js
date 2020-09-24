@@ -67,7 +67,7 @@ const GooglePlacesInput = ({onLocationSelect}) => {
           width: '100%',
         },
         description: {
-          fontWeight: 'bold',
+          fontFamily: 'Rubik-Medium',
         },
         listView: {
           backgroundColor: '#FFF',
@@ -271,7 +271,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     fontSize: 12,
     color: DARK,
-    fontWeight: 'bold',
+    fontFamily: 'Rubik-Medium',
   },
   map: {
     flex: 1,

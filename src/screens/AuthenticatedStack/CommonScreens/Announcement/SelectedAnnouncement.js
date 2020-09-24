@@ -57,7 +57,7 @@ const SelectedAnnouncement = ({navigation, route}) => {
                   color: DARK,
                   flex: 1,
                   paddingHorizontal: 10,
-                  fontWeight: 'bold',
+                  fontFamily: 'Rubik-Medium',
                   marginTop: 2,
                 }}>
                 {title}

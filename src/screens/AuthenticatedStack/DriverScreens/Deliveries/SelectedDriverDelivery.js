@@ -177,7 +177,7 @@ const SelectedDriverDelivery = ({navigation, route, session}) => {
         <View style={styles.transparent}>
           <View style={styles.labelRow}>
             <View style={styles.labelBox}>
-              <Text style={{fontWeight: 'bold'}}>Processing...</Text>
+              <Text style={{fontFamily: 'Rubik-Medium'}}>Processing...</Text>
               <ActivityIndicator color={DARK} />
             </View>
           </View>
@@ -228,11 +228,11 @@ const SelectedDriverDelivery = ({navigation, route, session}) => {
             <View style={{flexDirection: 'row'}}>
               <YellowIcon set="FontAwesome5" name="pen" size={14} darkIcon />
 
-              <Text style={{marginLeft: 10, color: DARK, fontWeight: 'bold'}}>
+              <Text style={{marginLeft: 10, color: DARK, fontFamily: 'Rubik-Medium'}}>
                 Delivery <Text style={{color: ORANGE}}>ID</Text>
               </Text>
             </View>
-            <Text style={{color: DARK, fontWeight: 'bold'}}>{delivery.deliveryId}</Text>
+            <Text style={{color: DARK, fontFamily: 'Rubik-Medium'}}>{delivery.deliveryId}</Text>
           </View>
         </View>
 

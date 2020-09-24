@@ -36,27 +36,27 @@ const ChangePassword = ({navigation, session}) => {
 
   const onSubmit = () => {
     if (currentPassword == '') {
-      Alert.alert('', `Please enter your current password`);
+      Alert.alert('', 'Please enter your current password');
       return;
     }
 
     if (newPassword == '') {
-      Alert.alert('', `Please enter your new password.`);
+      Alert.alert('', 'Please enter your new password.');
       return;
     }
 
     if (repeatPassword == '') {
-      Alert.alert('', `Please repeat your password.`);
+      Alert.alert('', 'Please repeat your password.');
       return;
     }
 
     if (newPassword != repeatPassword) {
-      Alert.alert('', `Password does not match.`);
+      Alert.alert('', 'Password does not match.');
       return;
     }
 
     if (newPassword.length < 8) {
-      Alert.alert('', `Password must have minimum length of 8 characters.`);
+      Alert.alert('', 'Password must have minimum length of 8 characters.');
       return;
     }
 
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     fontSize: 12,
     color: DARK,
-    fontWeight: 'bold',
+    fontFamily: 'Rubik-Medium',
   },
   submitBox: {
     margin: 20,

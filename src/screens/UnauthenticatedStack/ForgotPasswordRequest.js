@@ -171,6 +171,6 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     fontSize: 12,
     color: MEDIUM,
-    fontWeight: 'bold',
+    fontFamily: 'Rubik-Medium',
   },
 });
