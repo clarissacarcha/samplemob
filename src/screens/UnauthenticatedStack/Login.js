@@ -1,26 +1,26 @@
-import React, {useEffect, useState} from 'react';
+import {APP_FLAVOR, COLOR, DARK, MEDIUM} from '../../res/constants';
+import {AUTH_CLIENT, LOGIN_REGISTER} from '../../graphql';
 import {
-  View,
+  Alert,
+  Image,
+  ImageBackground,
+  KeyboardAvoidingView,
+  Platform,
   StyleSheet,
   Text,
   TextInput,
   TouchableHighlight,
-  Alert,
-  Image,
-  KeyboardAvoidingView,
-  Platform,
-  ImageBackground,
+  View,
 } from 'react-native';
-import SmsRetriever from 'react-native-sms-retriever';
-import {connect} from 'react-redux';
-import {useMutation} from '@apollo/react-hooks';
-import {AUTH_CLIENT, LOGIN_REGISTER} from '../../graphql';
-import {COLOR, DARK, MEDIUM, APP_FLAVOR} from '../../res/constants';
-import {AlertOverlay} from '../../components';
-import {onError} from '../../util/ErrorUtility';
+import React, {useEffect, useState} from 'react';
 
-import Splash from '../../assets/images/Splash.png';
+import {AlertOverlay} from '../../components';
 import LoginBanner from '../../assets/images/LoginBanner.png';
+import SmsRetriever from 'react-native-sms-retriever';
+import Splash from '../../assets/images/Splash.png';
+import {connect} from 'react-redux';
+import {onError} from '../../util/ErrorUtility';
+import {useMutation} from '@apollo/react-hooks';
 
 const Login = ({navigation, session}) => {
   const [mobile, setMobile] = useState('');
@@ -57,8 +57,7 @@ const Login = ({navigation, session}) => {
   //   alert(e.data);
   // };
 
-
-  const onMobileChange = value => {
+  const onMobileChange = (value) => {
     if (value.length == 1 && value == '0') {
       setMobile('');
       return;
@@ -95,7 +94,7 @@ const Login = ({navigation, session}) => {
       const registered = await SmsRetriever.startSmsRetriever();
       if (registered) {
         alert('Started Listener');
-        SmsRetriever.addSmsListener(event => {
+        SmsRetriever.addSmsListener((event) => {
           alert('EVENT: ' + JSON.stringify(event, null, 4));
           SmsRetriever.removeSmsListener();
         });
@@ -107,7 +106,7 @@ const Login = ({navigation, session}) => {
     }
   };
 
-  const onSubmit = phoneNumber => {
+  const onSubmit = (phoneNumber) => {
     if (phoneNumber.length !== 10) {
       Alert.alert('', 'Please enter a valid mobile number.');
       return;
@@ -199,14 +198,11 @@ const Login = ({navigation, session}) => {
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   session: state.session,
 });
 
-export default connect(
-  mapStateToProps,
-  null,
-)(Login);
+export default connect(mapStateToProps, null)(Login);
 
 const styles = StyleSheet.create({
   inputView: {

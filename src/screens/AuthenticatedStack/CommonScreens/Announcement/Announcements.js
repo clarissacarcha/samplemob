@@ -1,31 +1,31 @@
-import React, {useState} from 'react';
 import {
-  View,
-  Text,
-  ScrollView,
-  StyleSheet,
-  TouchableHighlight,
   ActivityIndicator,
+  Dimensions,
+  FlatList,
   Image,
   Linking,
-  FlatList,
-  Dimensions,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  View,
 } from 'react-native';
-import {connect} from 'react-redux';
-import {COLOR, DARK, ORANGE, MEDIUM, LIGHT} from '../../../../res/constants';
+import {COLOR, DARK, LIGHT, MEDIUM, ORANGE} from '../../../../res/constants';
 import {HeaderBack, HeaderTitle} from '../../../../components';
-import {YellowIcon} from '../../../../components/ui';
-import {useQuery} from '@apollo/react-hooks';
-import {useNavigation} from '@react-navigation/native';
+import React, {useState} from 'react';
+
 import {APP_FLAVOR} from '../../../../res/constants';
-
-import {GET_ANNOUNCEMENTS} from '../../../../graphql';
-
-import NoData from '../../../../assets/images/NoData.png';
-const imageWidth = Dimensions.get('window').width - 200;
-
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
+import {GET_ANNOUNCEMENTS} from '../../../../graphql';
+import NoData from '../../../../assets/images/NoData.png';
+import {YellowIcon} from '../../../../components/ui';
+import {connect} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
+import {useQuery} from '@apollo/react-hooks';
+
+const imageWidth = Dimensions.get('window').width - 200;
+
 
 const Announcement = ({announcement, lastItem}) => {
   const {title, thumbnail, createdAt} = announcement;
@@ -129,7 +129,7 @@ const Announcements = ({navigation, route, session, createSession}) => {
       <FlatList
         showsVerticalScrollIndicator={false}
         data={data.getAnnouncements}
-        keyExtractor={item => item.id}
+        keyExtractor={(item) => item.id}
         renderItem={({item, index}) => {
           const lastItem = index == data.getAnnouncements.length - 1 ? true : false;
 
@@ -140,18 +140,15 @@ const Announcements = ({navigation, route, session, createSession}) => {
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   session: state.session,
 });
 
-const mapDispatchToProps = dispatch => ({
-  createSession: payload => dispatch({type: 'CREATE_SESSION', payload}),
+const mapDispatchToProps = (dispatch) => ({
+  createSession: (payload) => dispatch({type: 'CREATE_SESSION', payload}),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Announcements);
+export default connect(mapStateToProps, mapDispatchToProps)(Announcements);
 
 const styles = StyleSheet.create({
   container: {

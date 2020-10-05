@@ -75,9 +75,9 @@ const MyDeliveries = ({navigation, session}) => {
     <ScrollView contentContainerStyle={{paddingTop: 10}} showsVerticalScrollIndicator={false}>
       <RoundedButton data={mappedData['1']} label={['Placed', 'Orders']} />
       <RoundedButton data={mappedData['2']} label={['Delivery', 'Scheduled']} />
-      <RoundedButton data={mappedData['3']} label={['Driver on the Way', 'to Sender']} />
+      <RoundedButton data={mappedData['3']} label={['On the Way', 'to Sender']} />
       <RoundedButton data={mappedData['4']} label={['Item', 'Picked Up']} />
-      <RoundedButton data={mappedData['5']} label={['Driver on the Way', 'to Recipient']} />
+      <RoundedButton data={mappedData['5']} label={['On the Way', 'to Recipient']} />
       <RoundedButton data={mappedData['6']} label={['Item', 'Delivered']} />
       <View style={{height: 100}} />
       <RoundedButton data={mappedData['7']} label={['Cancelled', 'Orders']} />

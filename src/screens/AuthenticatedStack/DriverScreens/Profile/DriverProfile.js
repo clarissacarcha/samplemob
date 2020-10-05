@@ -1,28 +1,28 @@
-import React, {useState} from 'react';
 import {
-  View,
-  Text,
-  ScrollView,
-  StyleSheet,
-  TouchableHighlight,
-  TextInput,
   Alert,
+  Dimensions,
   Image,
   ImageBackground,
-  Dimensions,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableHighlight,
+  View,
 } from 'react-native';
-import {connect} from 'react-redux';
-import {useMutation} from '@apollo/react-hooks';
-import Toast from 'react-native-simple-toast';
-import QRCode from 'react-native-qrcode-svg';
-import moment from 'moment';
-import {COLOR, DARK, MAP_DELTA_LOW, ORANGE, MEDIUM, LIGHT} from '../../../../res/constants';
-import {AlertOverlay, BottomTabHeader, HeaderTitle, HeaderBack} from '../../../../components';
-import {onError} from '../../../../util/ErrorUtility';
-import {PATCH_PERSON_POST_REGISTRATION} from '../../../../graphql';
+import {AlertOverlay, BottomTabHeader, HeaderBack, HeaderTitle} from '../../../../components';
+import {COLOR, DARK, LIGHT, MAP_DELTA_LOW, MEDIUM, ORANGE} from '../../../../res/constants';
+import React, {useState} from 'react';
 
 import FAIcon from 'react-native-vector-icons/FontAwesome';
+import {PATCH_PERSON_POST_REGISTRATION} from '../../../../graphql';
+import QRCode from 'react-native-qrcode-svg';
+import Toast from 'react-native-simple-toast';
 import ToktokWashed from '../../../../assets/images/ToktokWashed.png';
+import {connect} from 'react-redux';
+import moment from 'moment';
+import {onError} from '../../../../util/ErrorUtility';
+import {useMutation} from '@apollo/react-hooks';
 
 const ImageWidth = (Dimensions.get('window').width - 60) / 2;
 
@@ -79,6 +79,39 @@ const DriverProfile = ({navigation, session, constants, createSession}) => {
   const onProfilePress = () => {
     const label = ['Change', 'Profile Picture'];
     navigation.push('ChangeProfilePicture', {label});
+  };
+
+  const OperatorData = () => {
+    return (
+      <>
+        {session.user.driver.operatorPerson.firstName && (
+          <>
+            <Text style={styles.label}>Operator Name</Text>
+            <Text style={[styles.input, {height: 50, textAlignVertical: 'center', color: MEDIUM}]}>
+              {`${session.user.driver.operatorPerson.firstName} ${session.user.driver.operatorPerson.lastName}`}
+            </Text>
+          </>
+        )}
+
+        {session.user.driver.operatorPerson.mobileNumber && (
+          <>
+            <Text style={styles.label}>Operator Mobile Number</Text>
+            <Text style={[styles.input, {height: 50, textAlignVertical: 'center', color: MEDIUM}]}>
+              {session.user.driver.operatorPerson.mobileNumber}
+            </Text>
+          </>
+        )}
+
+        {session.user.driver.operatorPerson.emailAddress && (
+          <>
+            <Text style={styles.label}>Operator Email Address</Text>
+            <Text style={[styles.input, {height: 50, textAlignVertical: 'center', color: MEDIUM}]}>
+              {session.user.driver.operatorPerson.emailAddress}
+            </Text>
+          </>
+        )}
+      </>
+    );
   };
 
   return (
@@ -182,32 +215,7 @@ const DriverProfile = ({navigation, session, constants, createSession}) => {
           {session.user.driver.licenseNumber}
         </Text>
 
-        {session.user.driver.operatorPerson.firstName && (
-          <>
-            <Text style={styles.label}>Operator Name</Text>
-            <Text style={[styles.input, {height: 50, textAlignVertical: 'center', color: MEDIUM}]}>
-              {`${session.user.driver.operatorPerson.firstName} ${session.user.driver.operatorPerson.lastName}`}
-            </Text>
-          </>
-        )}
-
-        {session.user.driver.operatorPerson.mobileNumber && (
-          <>
-            <Text style={styles.label}>Operator Mobile Number</Text>
-            <Text style={[styles.input, {height: 50, textAlignVertical: 'center', color: MEDIUM}]}>
-              {session.user.driver.operatorPerson.mobileNumber}
-            </Text>
-          </>
-        )}
-
-        {session.user.driver.operatorPerson.emailAddress && (
-          <>
-            <Text style={styles.label}>Operator Email Address</Text>
-            <Text style={[styles.input, {height: 50, textAlignVertical: 'center', color: MEDIUM}]}>
-              {session.user.driver.operatorPerson.emailAddress}
-            </Text>
-          </>
-        )}
+        {session.user.driver.operatorPerson && <OperatorData />}
 
         {/* <Text style={styles.label}>Birthdate</Text>
         <Text style={[styles.input, {height: 50, textAlignVertical: 'center', color: MEDIUM}]}>
@@ -233,19 +241,16 @@ const DriverProfile = ({navigation, session, constants, createSession}) => {
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   session: state.session,
   constants: state.constants,
 });
 
-const mapDispatchToProps = dispatch => ({
-  createSession: payload => dispatch({type: 'CREATE_SESSION', payload}),
+const mapDispatchToProps = (dispatch) => ({
+  createSession: (payload) => dispatch({type: 'CREATE_SESSION', payload}),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(DriverProfile);
+export default connect(mapStateToProps, mapDispatchToProps)(DriverProfile);
 
 const styles = StyleSheet.create({
   container: {

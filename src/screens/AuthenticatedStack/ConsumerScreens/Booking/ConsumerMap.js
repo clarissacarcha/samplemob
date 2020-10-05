@@ -1,36 +1,35 @@
-import React, {useState, useEffect, useRef} from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  TouchableHighlight,
-  Alert,
   ActivityIndicator,
+  Alert,
   Image,
   Platform,
+  StyleSheet,
   Switch,
+  Text,
+  TouchableHighlight,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import MapView, {Marker, PROVIDER_GOOGLE, AnimatedRegion, Animated, PROVIDER_DEFAULT} from 'react-native-maps';
-import OneSignal from 'react-native-onesignal';
-import MapViewDirections from 'react-native-maps-directions';
-import {connect} from 'react-redux';
-import {check, PERMISSIONS, RESULTS} from 'react-native-permissions';
-import {currentLocation} from '../../../../helper';
-import {BookingOverlay, LocationPermission, WelcomeMessage} from '../../../../components';
-import {YellowIcon} from '../../../../components/ui';
-import {COLOR, DARK, MEDIUM, LIGHT, MAPS_API_KEY} from '../../../../res/constants';
+import {BookingOverlay, LocationPermission, WelcomeBanner, WelcomeMessage} from '../../../../components';
+import {COLOR, DARK, LIGHT, MAPS_API_KEY, MEDIUM} from '../../../../res/constants';
+import {GET_ORDER_PRICE, GET_WELCOME_MESSAGE, POST_DELIVERY} from '../../../../graphql';
+import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
+import {PERMISSIONS, RESULTS, check} from 'react-native-permissions';
+import React, {useEffect, useRef, useState} from 'react';
 import {useMutation, useQuery} from '@apollo/react-hooks';
-import {POST_DELIVERY, GET_ORDER_PRICE, GET_WELCOME_MESSAGE} from '../../../../graphql';
+
+import EIcon from 'react-native-vector-icons/Entypo';
+import FA5Icon from 'react-native-vector-icons/FontAwesome5';
+import FIcon from 'react-native-vector-icons/Feather';
+import MapViewDirections from 'react-native-maps-directions';
+import OneSignal from 'react-native-onesignal';
+import ToktokLogo from '../../../../assets/icons/ToktokLogo.png';
+import {YellowIcon} from '../../../../components/ui';
+import {connect} from 'react-redux';
+import {currentLocation} from '../../../../helper';
 import {onError} from '../../../../util/ErrorUtility';
 
-import FA5Icon from 'react-native-vector-icons/FontAwesome5';
-import EIcon from 'react-native-vector-icons/Entypo';
-import FIcon from 'react-native-vector-icons/Feather';
-
-import ToktokLogo from '../../../../assets/icons/ToktokLogo.png';
-
-const INITIAL_SENDER = session => {
+const INITIAL_SENDER = (session) => {
   const consumerName = session.user ? `${session.user.person.firstName} ${session.user.person.lastName}` : '';
   const consumerMobile = session.user ? session.user.username : '';
   const minus63 = consumerMobile.replace('+63', '');
@@ -165,7 +164,7 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
   const [price, setPrice] = useState(0);
   const [isExpress, setIsExpress] = useState(false);
 
-  const onExpressDeliveryChange = value => {
+  const onExpressDeliveryChange = (value) => {
     setIsExpress(value);
 
     if (value) {
@@ -250,19 +249,20 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
     setAllowBooking(true);
   };
 
-  const {data: welcomeData, loading: welcomeLoading, error: welcomeError} = useQuery(GET_WELCOME_MESSAGE);
-  const [showWelcome, setShowWelcome] = useState(false);
-  const hideWelcomeMessage = () => {
-    setShowWelcome(false);
-  };
-  useEffect(() => {
-    console.log(welcomeData);
-    if (welcomeData) {
-      if (welcomeData.getWelcomeMessage) {
-        setShowWelcome(true);
-      }
-    }
-  }, [welcomeData]);
+  // const {data: welcomeData, loading: welcomeLoading, error: welcomeError} = useQuery(GET_WELCOME_MESSAGE);
+  // const [showWelcome, setShowWelcome] = useState(false);
+  // const hideWelcomeMessage = () => {
+  //   setShowWelcome(false);
+  // };
+
+  // useEffect(() => {
+  //   console.log(welcomeData);
+  //   if (welcomeData) {
+  //     if (welcomeData.getWelcomeMessage) {
+  //       setShowWelcome(true);
+  //     }
+  //   }
+  // }, [welcomeData]);
 
   const [postDelivery, {loading: postDeliveryLoading}] = useMutation(POST_DELIVERY, {
     onError: onError,
@@ -395,7 +395,7 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
 
       let emptyRecipient = false;
 
-      recipient.forEach(rec => {
+      recipient.forEach((rec) => {
         if (
           rec.latitude === 0 ||
           rec.longitude === 0 ||
@@ -451,7 +451,8 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
 
   return (
     <View style={styles.container}>
-      {showWelcome && <WelcomeMessage data={welcomeData.getWelcomeMessage} onOkay={hideWelcomeMessage} />}
+      <WelcomeBanner />
+      {/* {showWelcome && <WelcomeMessage data={welcomeData.getWelcomeMessage} onOkay={hideWelcomeMessage} />} */}
 
       <BookingOverlay visible={postDeliveryLoading || bookingSuccess} done={bookingSuccess} onOkay={onBookSuccessOk} />
       {!allowBooking && <LocationPermission onGrant={onGrantLocation} onDeny={onDenyLocation} />}
@@ -488,11 +489,7 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
             strokeWidth={3}
             strokeColor={'#EA4335'}
             onReady={onDirectionsReady}
-            directionsServiceBaseUrl={`https://maps.googleapis.com/maps/api/directions/json?origin=${
-              senderStop.latitude
-            },${senderStop.longitude}&destination=${recipient[recipientIndex].latitude},${
-              recipient[recipientIndex].longitude
-            }&avoid=tolls|highways`}
+            directionsServiceBaseUrl={`https://maps.googleapis.com/maps/api/directions/json?origin=${senderStop.latitude},${senderStop.longitude}&destination=${recipient[recipientIndex].latitude},${recipient[recipientIndex].longitude}&avoid=tolls|highways`}
           />
         )}
       </MapView>
@@ -644,15 +641,12 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   session: state.session,
   constants: state.constants,
 });
 
-export default connect(
-  mapStateToProps,
-  null,
-)(ConsumerMap);
+export default connect(mapStateToProps, null)(ConsumerMap);
 
 const styles = StyleSheet.create({
   container: {
@@ -753,11 +747,3 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
-
-// const Buffer = require('buffer').Buffer;
-
-// const token = 'eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ';
-// const decodedString = new Buffer(token, 'base64').toString('ascii');
-// const decodedObject = JSON.parse(decodedString);
-
-// console.log(decodedObject);

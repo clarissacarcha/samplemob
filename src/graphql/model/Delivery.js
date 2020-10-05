@@ -68,10 +68,16 @@ const Delivery = `
 `;
 
 export const GET_DELIVERIES = gql`
-  query getDeliveries($filter: deliveryFilter) {
-    getDeliveries(filter: $filter) {
-      ${Delivery}
+    query getDeliveries($filter: deliveryFilter) {
+        getDeliveries(filter: $filter) {
+            ${Delivery}
+        }
     }
+`;
+
+export const GET_DELIVERY_LOCATION_FILTERS = gql`
+  query {
+    getDeliveryLocationFilters
   }
 `;
 

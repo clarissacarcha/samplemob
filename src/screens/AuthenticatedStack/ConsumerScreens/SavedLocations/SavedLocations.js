@@ -1,47 +1,75 @@
-import React, {useState} from 'react';
 import {
-  View,
-  Text,
-  ScrollView,
-  StyleSheet,
-  TouchableHighlight,
   ActivityIndicator,
-  Image,
-  FlatList,
+  Alert,
   Dimensions,
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  View,
 } from 'react-native';
-import {connect} from 'react-redux';
-import {COLOR, DARK, ORANGE, MEDIUM, LIGHT} from '../../../../res/constants';
+import {BlackIcon, YellowIcon} from '../../../../components/ui';
+import {COLOR, DARK, LIGHT, MEDIUM, ORANGE} from '../../../../res/constants';
+import {DELETE_SAVED_LOCATION, GET_SAVED_LOCATIONS} from '../../../../graphql';
 import {HeaderBack, HeaderTitle} from '../../../../components';
-import {YellowIcon} from '../../../../components/ui';
-import {useQuery} from '@apollo/react-hooks';
-import {GET_SAVED_LOCATIONS} from '../../../../graphql';
+import React, {useEffect, useState} from 'react';
+import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 
 import NoData from '../../../../assets/images/NoData.png';
+import {connect} from 'react-redux';
+import {onError} from '../../../../util/ErrorUtility';
+
 const imageWidth = Dimensions.get('window').width - 200;
 
-const SavedLocation = ({location}) => {
+const SavedLocation = ({location, deleteSavedLocation}) => {
   return (
-    <TouchableHighlight
-      // onPress={() => {}}
-      underlayColor={COLOR}
-      style={{borderRadius: 10, marginHorizontal: 20, marginBottom: 20}}>
+    <TouchableHighlight underlayColor={COLOR} style={{borderRadius: 10, marginHorizontal: 20, marginBottom: 20}}>
       <View style={styles.cardShadow}>
-        <View style={{flexDirection: 'row', alignContent: 'center'}}>
-          <YellowIcon set="FontAwesome5" name="pen" size={13} />
-          <Text style={{marginLeft: 10, color: DARK, fontFamily: 'Rubik-Medium'}}>{location.name}</Text>
+        <View style={{flex: 1}}>
+          <View style={{flexDirection: 'row', alignContent: 'center'}}>
+            <YellowIcon set="FontAwesome5" name="pen" size={13} />
+            <Text style={{marginLeft: 10, color: DARK, fontFamily: 'Rubik-Medium'}}>{location.name}</Text>
+          </View>
+          <View style={{height: 10}} />
+          <View style={{flexDirection: 'row', alignContent: 'center'}}>
+            <YellowIcon set="FontAwesome5" name="map-marker-alt" size={14} />
+            <View style={{flex: 1, paddingHorizontal: 10}}>
+              <Text style={{color: MEDIUM}}>{location.formattedAddress}</Text>
+            </View>
+          </View>
         </View>
-        <View style={{height: 10}} />
-        <View style={{flexDirection: 'row', alignContent: 'center'}}>
-          <YellowIcon set="FontAwesome5" name="map-marker-alt" size={14} />
-          <Text style={{marginHorizontal: 10, color: MEDIUM}}>{location.formattedAddress}</Text>
+
+        <View>
+          <TouchableHighlight
+            underlayColor={COLOR}
+            onPress={() =>
+              Alert.alert('', `Are you sure you want to delete ${location.name}?`, [
+                {
+                  text: 'Delete',
+                  onPress: () =>
+                    deleteSavedLocation({
+                      variables: {
+                        input: {
+                          savedLocationId: location.id,
+                        },
+                      },
+                    }),
+                },
+                {
+                  text: 'Cancel',
+                },
+              ])
+            }>
+            <BlackIcon set="MaterialCommunity" name="delete" size={18} />
+          </TouchableHighlight>
         </View>
       </View>
     </TouchableHighlight>
   );
 };
 
-const SavedLocations = ({navigation, route, session, createSession}) => {
+const SavedLocations = ({navigation, session}) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={['Saved', 'Locations']} />,
@@ -49,7 +77,7 @@ const SavedLocations = ({navigation, route, session, createSession}) => {
 
   const [savedLocations, setSavedLocations] = useState([]);
 
-  const {loading, error} = useQuery(GET_SAVED_LOCATIONS, {
+  const [getSavedLocations, {loading, error}] = useLazyQuery(GET_SAVED_LOCATIONS, {
     fetchPolicy: 'network-only',
     variables: {
       filter: {
@@ -61,9 +89,20 @@ const SavedLocations = ({navigation, route, session, createSession}) => {
     },
   });
 
-  const onSavedLocationAdded = newlyAddedLocation => {
+  const [deleteSavedLocation] = useMutation(DELETE_SAVED_LOCATION, {
+    onError: onError,
+    onCompleted: (data) => {
+      getSavedLocations();
+    },
+  });
+
+  const onSavedLocationAdded = (newlyAddedLocation) => {
     setSavedLocations([...savedLocations, newlyAddedLocation]);
   };
+
+  useEffect(() => {
+    getSavedLocations();
+  }, []);
 
   if (loading) {
     return (
@@ -115,11 +154,9 @@ const SavedLocations = ({navigation, route, session, createSession}) => {
         <FlatList
           showsVerticalScrollIndicator={false}
           data={savedLocations}
-          keyExtractor={item => item.id}
+          keyExtractor={(item) => item.id}
           renderItem={({item, index}) => {
-            // const lastItem = index == data.getAnnouncements.length - 1 ? true : false;
-
-            return <SavedLocation location={item} />;
+            return <SavedLocation location={item} deleteSavedLocation={deleteSavedLocation} />;
           }}
         />
       </View>
@@ -127,18 +164,15 @@ const SavedLocations = ({navigation, route, session, createSession}) => {
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   session: state.session,
 });
 
-const mapDispatchToProps = dispatch => ({
-  createSession: payload => dispatch({type: 'CREATE_SESSION', payload}),
+const mapDispatchToProps = (dispatch) => ({
+  createSession: (payload) => dispatch({type: 'CREATE_SESSION', payload}),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(SavedLocations);
+export default connect(mapStateToProps, mapDispatchToProps)(SavedLocations);
 
 const styles = StyleSheet.create({
   container: {
@@ -160,6 +194,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+
+    flexDirection: 'row',
   },
   submitBox: {
     position: 'absolute',

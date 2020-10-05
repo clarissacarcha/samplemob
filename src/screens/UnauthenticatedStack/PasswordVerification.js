@@ -31,12 +31,31 @@ const PasswordVerification = ({navigation, route, createSession}) => {
         ...(IMPERSONATE ? {impersonationPassphrase: IMPERSONATION_PASSPHRASE} : {}),
       },
     },
-    onError: onError,
-    onCompleted: ({verifyLogin}) => {
-      if (verifyLogin.user.status == 3) {
-        navigation.push('AccountBlocked');
-        return;
+    onError: error => {
+      console.log(error);
+      const {graphQLErrors, networkError} = error;
+
+      if (networkError) {
+        Alert.alert('', 'Network error occurred. Please check your internet connection.');
+      } else if (graphQLErrors.length > 0) {
+        graphQLErrors.map(({message, locations, path, code}) => {
+          if (code === 'INTERNAL_SERVER_ERROR') {
+            Alert.alert('', 'Something went wrong.');
+          } else if (code === 'BAD_USER_INPUT') {
+            Alert.alert('', message);
+          } else if (code === 'AUTHENTICATION_ERROR') {
+            navigation.push('AccountBlocked');
+          } else {
+            Alert.alert('', 'Something went wrong...');
+          }
+        });
       }
+    },
+    onCompleted: ({verifyLogin}) => {
+      // if (verifyLogin.user.status == 3) {
+      //   navigation.push('AccountBlocked');
+      //   return;
+      // }
 
       const {user, accessToken} = verifyLogin;
 

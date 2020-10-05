@@ -2,15 +2,9 @@ import React, {useState} from 'react';
 import {
   View,
   Text,
-  ScrollView,
   StyleSheet,
   TouchableHighlight,
-  ActivityIndicator,
-  Image,
-  Linking,
-  FlatList,
   TextInput,
-  Dimensions,
   Alert,
 } from 'react-native';
 import {connect} from 'react-redux';
@@ -65,6 +59,7 @@ const GooglePlacesInput = ({onLocationSelect}) => {
       styles={{
         textInputContainer: {
           width: '100%',
+          borderRadius: 10,
         },
         description: {
           fontFamily: 'Rubik-Medium',
@@ -153,12 +148,9 @@ const AddLocation = ({navigation, route, session}) => {
   return (
     <View style={{flex: 1, backgroundColor: '#FFF'}}>
       <AlertOverlay visible={loading} />
-      <View style={{flex: 1}}>
-        <GooglePlacesInput onLocationSelect={onLocationSelect} />
-      </View>
 
       {locationData.latitude && (
-        <TouchableHighlight onPress={onSearchMap} style={[{marginHorizontal: 20}, styles.cardShadow]}>
+        <TouchableHighlight onPress={onSearchMap} style={[{marginHorizontal: 20, marginTop: 20}, styles.cardShadow]}>
           <View style={{height: 150}}>
             {/*---------------------------------------- MAP ----------------------------------------*/}
             <MapView
@@ -188,8 +180,14 @@ const AddLocation = ({navigation, route, session}) => {
         style={styles.input}
         placeholder="Location name"
         placeholderTextColor={LIGHT}
-        returnKeyType="next"
+        returnKeyType="done"
       />
+      <View style={{height: 20}} />
+      <View style={{flex: 1, marginHorizontal: 20}}>
+        <GooglePlacesInput onLocationSelect={onLocationSelect} />
+      </View>
+
+
 
       <TouchableHighlight onPress={onSave} underlayColor={COLOR} style={{borderRadius: 10, margin: 20}}>
         <View style={styles.submit}>

@@ -1,32 +1,31 @@
-import {onError} from 'apollo-link-error';
-import {setContext} from 'apollo-link-context';
 import {ApolloLink, split} from 'apollo-link';
-import {createUploadLink} from 'apollo-upload-client';
+import {HOST_PORT, PROTOCOL} from '../../res/constants';
+
 import {ApolloClient} from 'apollo-client';
+import AsyncStorage from '@react-native-community/async-storage';
 import {InMemoryCache} from 'apollo-cache-inmemory';
 import {WebSocketLink} from 'apollo-link-ws';
+import {createUploadLink} from 'apollo-upload-client';
 import {getMainDefinition} from 'apollo-utilities';
-import {Alert} from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
-import {PROTOCOL, HOST_PORT} from '../../res/constants';
+import {setContext} from 'apollo-link-context';
 
 const baseUrl = `${PROTOCOL}://${HOST_PORT}/`;
 const wsUrl = `ws://${HOST_PORT}/graphql`;
 
-const errorLink = onError(({graphQLErrors, networkError}) => {
-  // if (graphQLErrors) {
-  //   graphQLErrors.map(({message, locations, path, code}) => {
-  //     if (code === 'INTERNAL_SERVER_ERROR') {
-  //       Alert.alert('', 'Something went wrong.');
-  //     } else {
-  //       Alert.alert('', message);
-  //     }
-  //   });
-  // }
-  // if (networkError) {
-  //   console.log(`[Network error]: ${networkError}`);
-  // }
-});
+// const errorLink = onError(({graphQLErrors, networkError}) => {
+//   if (graphQLErrors) {
+//     graphQLErrors.map(({message, locations, path, code}) => {
+//       if (code === 'INTERNAL_SERVER_ERROR') {
+//         Alert.alert('', 'Something went wrong.');
+//       } else {
+//         Alert.alert('', message);
+//       }
+//     });
+//   }
+//   if (networkError) {
+//     console.log(`[Network error]: ${networkError}`);
+//   }
+// });
 
 const setTokenLink = setContext(async (_, {headers}) => {
   try {

@@ -29,3 +29,9 @@ export const POST_SAVED_LOCATION = gql`
     }
   }
 `;
+
+export const DELETE_SAVED_LOCATION = gql`
+  mutation deleteSavedLocation($input: DeleteSavedLocationInput!) {
+    deleteSavedLocation(input: $input)
+  }
+`;

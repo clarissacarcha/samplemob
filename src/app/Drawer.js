@@ -1,10 +1,10 @@
-import React from 'react';
-import {View, Text, TouchableHighlight, StyleSheet, Image} from 'react-native';
-import {COLOR, DARK, MEDIUM, LIGHT, APP_FLAVOR} from '../res/constants';
-import FIcon from 'react-native-vector-icons/Feather';
-import FAIcon from 'react-native-vector-icons/FontAwesome';
-import OneSignal from 'react-native-onesignal';
+import {APP_FLAVOR, COLOR, DARK, LIGHT, MEDIUM} from '../res/constants';
+import {Image, ScrollView, StyleSheet, Text, TouchableHighlight, View} from 'react-native';
 
+import FAIcon from 'react-native-vector-icons/FontAwesome';
+import FIcon from 'react-native-vector-icons/Feather';
+import OneSignal from 'react-native-onesignal';
+import React from 'react';
 import ToktokWashed from '../assets/images/ToktokWashed.png';
 
 const DrawerButton = ({label, onPress, restrict}) => {
@@ -45,7 +45,7 @@ const Drawer = ({navigation, session, constants, destroySession}) => {
 
   return (
     <View style={{flex: 1, backgroundColor: '#222222', justifyContent: 'space-between'}}>
-      <View>
+      <View style={{flex: 1}}>
         {/*------------------------------ DRAWER HEADER------------------------------*/}
         <View style={styles.header}>
           {/*--------------- HEADER BUTTON ---------------*/}
@@ -62,7 +62,6 @@ const Drawer = ({navigation, session, constants, destroySession}) => {
             Tara lets <Text style={{color: COLOR}}>ka-toktok</Text>
           </Text>
         </View>
-
         {/*------------------------------ PROFILE ------------------------------*/}
         <View style={{marginTop: 10, alignItems: 'center'}}>
           {/*--------------- AVATAR ---------------*/}
@@ -113,19 +112,20 @@ const Drawer = ({navigation, session, constants, destroySession}) => {
             </View>
           </TouchableOpacity> */}
         </View>
+        <View style={{flex: 1}}>
+          <ScrollView>
+            {/*--------------- PROFILE ---------------*/}
+            <DrawerButton
+              label="Profile"
+              onPress={() => {
+                const route = APP_FLAVOR == 'C' ? 'ConsumerProfile' : 'DriverProfile';
+                navigation.closeDrawer();
+                navigation.push(route);
+              }}
+            />
 
-        {/*--------------- PROFILE ---------------*/}
-        <DrawerButton
-          label="Profile"
-          onPress={() => {
-            const route = APP_FLAVOR == 'C' ? 'ConsumerProfile' : 'DriverProfile';
-            navigation.closeDrawer();
-            navigation.push(route);
-          }}
-        />
-
-        {/*--------------- WALLET ---------------*/}
-        {/* <DrawerButton
+            {/*--------------- WALLET ---------------*/}
+            {/* <DrawerButton
           label="Wallet"
           onPress={() => {
             // const route = APP_FLAVOR == 'C' ? 'CustomerProfile' : 'DriverProfile';
@@ -134,60 +134,65 @@ const Drawer = ({navigation, session, constants, destroySession}) => {
           }}
         /> */}
 
-        {/*--------------- MY DELIVERIES ---------------*/}
-        <DrawerButton
-          label="My Deliveries"
-          onPress={() => {
-            navigation.closeDrawer();
-            navigation.push('CustomerDeliveries');
-          }}
-          restrict="C"
-        />
+            {/*--------------- MY DELIVERIES ---------------*/}
+            <DrawerButton
+              label="My Deliveries"
+              onPress={() => {
+                navigation.closeDrawer();
+                navigation.push('CustomerDeliveries');
+              }}
+              restrict="C"
+            />
 
-        {/*--------------- MY DELIVERIES ---------------*/}
-        <DrawerButton
-          label="My Saved Locations"
-          onPress={() => {
-            navigation.closeDrawer();
-            navigation.push('SavedLocations');
-          }}
-          restrict="C"
-        />
+            {/*--------------- MY DELIVERIES ---------------*/}
+            <DrawerButton
+              label="My Saved Locations"
+              onPress={() => {
+                navigation.closeDrawer();
+                navigation.push('SavedLocations');
+              }}
+              restrict="C"
+            />
 
-        {/*--------------- Notifications ---------------*/}
-        <DrawerButton
-          label="Notifications"
-          onPress={() => {
-            navigation.push('Notifications');
-            navigation.closeDrawer();
-          }}
-        />
+            {/*--------------- Notifications ---------------*/}
+            <DrawerButton
+              label="Notifications"
+              onPress={() => {
+                navigation.push('Notifications');
+                navigation.closeDrawer();
+              }}
+            />
 
-        {/*--------------- ANNOUNCEMENTS ---------------*/}
-        <DrawerButton
-          label="Announcements"
-          onPress={() => {
-            navigation.push('Announcements');
-            navigation.closeDrawer();
-          }}
-        />
+            {/*--------------- ANNOUNCEMENTS ---------------*/}
+            <DrawerButton
+              label="Announcements"
+              onPress={() => {
+                navigation.push('Announcements');
+                navigation.closeDrawer();
+              }}
+            />
 
-        {/*--------------- TALK TO US ---------------*/}
-        <DrawerButton
-          label="Talk to Us"
-          onPress={() => {
-            navigation.push('TalkToUs');
-            navigation.closeDrawer();
-          }}
-        />
-      </View>
+            {/*--------------- TALK TO US ---------------*/}
+            <DrawerButton
+              label="Talk to Us"
+              onPress={() => {
+                navigation.push('TalkToUs');
+                navigation.closeDrawer();
+              }}
+            />
 
-      {/*--------------- SIGN OUT ---------------*/}
-      <TouchableHighlight onPress={onSignOut} underlayColor={COLOR} style={[styles.submitBox, {marginBottom: 20}]}>
-        <View style={styles.submit}>
-          <Text style={styles.headerText}>Sign Out</Text>
+            <TouchableHighlight
+              onPress={onSignOut}
+              underlayColor={COLOR}
+              style={[styles.submitBox, {marginBottom: 20, marginTop: 60}]}>
+              <View style={styles.submit}>
+                <Text style={styles.headerText}>Sign Out</Text>
+              </View>
+            </TouchableHighlight>
+          </ScrollView>
         </View>
-      </TouchableHighlight>
+      </View>
+      {/*--------------- SIGN OUT ---------------*/}
     </View>
   );
 };

@@ -15,3 +15,4 @@ export * from './SavedLocation';
 export * from './User';
 export * from './Wallet';
 export * from './WelcomeMessage';
+export * from './WelcomeBanner';

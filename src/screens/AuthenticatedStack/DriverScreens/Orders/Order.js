@@ -1,44 +1,49 @@
-import React, {useState, useEffect} from 'react';
 import {
-  View,
-  Text,
   ActivityIndicator,
-  FlatList,
-  RefreshControl,
-  Image,
-  StyleSheet,
   Dimensions,
+  FlatList,
+  Image,
+  Modal,
+  RefreshControl,
+  StyleSheet,
+  Text,
+  TextInput,
   TouchableHighlight,
   TouchableOpacity,
-  Alert,
-  BackHandler,
-  Linking,
-  Modal,
-  TextInput,
   TouchableWithoutFeedback,
+  View,
 } from 'react-native';
-// import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
-import {useQuery, useLazyQuery} from '@apollo/react-hooks';
-import {connect} from 'react-redux';
-import {useFocusEffect} from '@react-navigation/native';
-import DropDownPicker from 'react-native-dropdown-picker';
-import moment from 'moment';
-import InputScrollView from 'react-native-input-scroll-view';
-import {COLOR, MEDIUM, FONT_FAMILY, DARK, ORANGE, LIGHT} from '../../../../res/constants';
+import {COLOR, COLOR_UNDERLAY, DARK, LIGHT, MAP_DELTA, MEDIUM, ORANGE} from '../../../../res/constants';
 import {DeliveryCard, DriverGoOnlineButton, SomethingWentWrong} from '../../../../components';
-import {BlackButton} from '../../../../components/ui';
-import {GET_DELIVERIES_AVAILABLE} from '../../../../graphql';
-import {currentLocation} from '../../../../helper';
+import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
+import React, {useEffect, useState} from 'react';
+import {useLazyQuery, useQuery} from '@apollo/react-hooks';
 
+import {BlackButton} from '../../../../components/ui';
+import DropDownPicker from 'react-native-dropdown-picker';
+import FA5Icon from 'react-native-vector-icons/FontAwesome5';
+import FAIcon from 'react-native-vector-icons/FontAwesome';
+import {GET_DELIVERIES_AVAILABLE} from '../../../../graphql';
+import GoOnline from '../../../../assets/images/GoOnline.png';
+import InputScrollView from 'react-native-input-scroll-view';
 import LocationRequest from '../../../../assets/images/LocationRequest.png';
 import NoData from '../../../../assets/images/NoData.png';
-import GoOnline from '../../../../assets/images/GoOnline.png';
-
-import FAIcon from 'react-native-vector-icons/FontAwesome';
+import {connect} from 'react-redux';
+import {currentLocation} from '../../../../helper';
+import moment from 'moment';
+import {useNavigation} from '@react-navigation/native';
 
 const imageWidth = Dimensions.get('window').width - 200;
 const largeImageWidth = Dimensions.get('window').width - 40;
 const INITIAL_LOCATION = {latitude: null, longitude: null};
+
+// Region for Philippine Map
+const INITIAL_REGION = {
+  latitude: 11.22309004847093,
+  latitudeDelta: 19.887065883877668,
+  longitude: 121.97818368673325,
+  longitudeDelta: 10.145791545510278,
+};
 
 const createDays = () => {
   const output = [
@@ -92,15 +97,18 @@ const OrderTabHeader = ({label, setIsSearching, isOnline}) => {
 const SearchOverlay = ({visible, setIsSearching, onSearchPress, searchFilter, setSearchFilter}) => {
   const daySchedules = createDays();
 
+  const navigation = useNavigation();
   const [orderDate, setOrderDate] = useState(searchFilter.orderDate == null ? 'AllValue' : searchFilter.orderDate);
   const [senderName, setSenderName] = useState(searchFilter.senderName);
   const [recipientName, setRecipientName] = useState(searchFilter.recipientName);
+  const [locationFilter, setLocationFilter] = useState(searchFilter.location);
 
   const onClear = () => {
     setSearchFilter({
       orderDate: null,
       senderName: '',
       recipientName: '',
+      location: '',
     });
 
     onSearchPress({
@@ -108,6 +116,7 @@ const SearchOverlay = ({visible, setIsSearching, onSearchPress, searchFilter, se
         orderDate: null,
         senderName: '',
         recipientName: '',
+        location: '',
       },
     });
 
@@ -123,6 +132,7 @@ const SearchOverlay = ({visible, setIsSearching, onSearchPress, searchFilter, se
       orderDate: orderDate == 'AllValue' ? null : orderDate,
       senderName,
       recipientName,
+      location: locationFilter,
     });
 
     onSearchPress({
@@ -130,10 +140,16 @@ const SearchOverlay = ({visible, setIsSearching, onSearchPress, searchFilter, se
         orderDate: orderDate == 'AllValue' ? null : orderDate,
         senderName,
         recipientName,
+        location: locationFilter,
       },
     });
 
     setIsSearching(false);
+  };
+
+  const onSelectLocationCallback = (value) => {
+    setLocationFilter(value);
+    setIsSearching(true);
   };
 
   return (
@@ -177,7 +193,7 @@ const SearchOverlay = ({visible, setIsSearching, onSearchPress, searchFilter, se
               <Text style={styles.label}>Sender's name</Text>
               <TextInput
                 value={senderName}
-                onChangeText={value => {
+                onChangeText={(value) => {
                   setSenderName(value);
                 }}
                 style={styles.input}
@@ -186,18 +202,36 @@ const SearchOverlay = ({visible, setIsSearching, onSearchPress, searchFilter, se
                 returnKeyType="next"
               />
 
-              <Text style={styles.label}>Recipeint's name</Text>
+              <Text style={styles.label}>Recipient's name</Text>
               <TextInput
                 value={recipientName}
-                onChangeText={value => {
+                onChangeText={(value) => {
                   setRecipientName(value);
                 }}
                 style={styles.input}
-                placeholder="Recipeint's name"
+                placeholder="Recipient's name"
                 placeholderTextColor={LIGHT}
                 returnKeyType="next"
               />
-              <View style={{height: 100}} />
+              <Text style={styles.label}>Location</Text>
+              <TouchableHighlight
+                onPress={() => {
+                  navigation.navigate('SearchLocationFilter', {
+                    setLocationFilter,
+                    onSelectLocationCallback,
+                    setIsSearching,
+                  });
+                  setIsSearching(false);
+                }}
+                underlayColor={COLOR_UNDERLAY}
+                style={{borderRadius: 10}}>
+                <View style={[styles.input, {justifyContent: 'center'}]}>
+                  <Text>{locationFilter === '' ? 'Search Location' : locationFilter}</Text>
+                </View>
+              </TouchableHighlight>
+
+              <View style={{height: 20}} />
+
               <View style={{flexDirection: 'row', justifyContent: 'space-between', width: '100%'}}>
                 <BlackButton onPress={onClear} label="Clear" containerStyle={{margin: 0, flex: 1}} />
                 <View style={{width: 20}} />
@@ -215,6 +249,7 @@ const SearchOverlay = ({visible, setIsSearching, onSearchPress, searchFilter, se
 };
 
 const AvailableOrders = ({navigation, session, constants}) => {
+  const [showMapView, setShowMapView] = useState(false);
   const [location, setLocation] = useState(INITIAL_LOCATION);
   const [noGPS, setNoGPS] = useState(false);
   const [manualLoading, setManualLoading] = useState(false);
@@ -223,6 +258,7 @@ const AvailableOrders = ({navigation, session, constants}) => {
     orderDate: null,
     senderName: '',
     recipientName: '',
+    location: '',
   });
 
   const [getDeliveriesAvailable, {data = {getDeliveriesAvailable: []}, loading, error}] = useLazyQuery(
@@ -253,7 +289,7 @@ const AvailableOrders = ({navigation, session, constants}) => {
             },
           },
         });
-        // setLocation(detectedLocation);
+        setLocation(detectedLocation);
         setManualLoading(false);
       } else {
         setNoGPS(true);
@@ -268,6 +304,7 @@ const AvailableOrders = ({navigation, session, constants}) => {
 
   const onSearchPress = async ({filter}) => {
     console.log('FETCHING FROM SEARCH...');
+
     setManualLoading(true);
     setNoGPS(false);
     const detectedLocation = await currentLocation({
@@ -283,6 +320,7 @@ const AvailableOrders = ({navigation, session, constants}) => {
             orderDate: filter.orderDate,
             senderName: filter.senderName,
             recipientName: filter.recipientName,
+            location: filter.location,
           },
         },
       });
@@ -410,6 +448,92 @@ const AvailableOrders = ({navigation, session, constants}) => {
     );
   }
 
+  if (showMapView) {
+    const initialRegion =
+      location.latitude == null
+        ? INITIAL_REGION
+        : {
+            ...location,
+            ...MAP_DELTA,
+          };
+
+    console.log(JSON.stringify(data.getDeliveriesAvailable, null, 4));
+
+    const deliveryMarkers = data.getDeliveriesAvailable.map((delivery) => {
+      return (
+        <>
+          <Marker
+            onPress={() => alert(delivery.id)}
+            coordinate={{
+              latitude: delivery.senderStop.latitude,
+              longitude: delivery.senderStop.longitude,
+            }}>
+            <FA5Icon name="map-marker-alt" size={24} color={'green'} />
+          </Marker>
+          <Marker
+            onPress={() => alert(delivery.id)}
+            coordinate={{
+              latitude: delivery.recipientStop.latitude,
+              longitude: delivery.recipientStop.longitude,
+            }}>
+            <FA5Icon name="map-marker-alt" size={24} color={'red'} />
+          </Marker>
+        </>
+      );
+    });
+
+    return (
+      <View style={{flex: 1, backgroundColor: 'cyan'}}>
+        <OrderTabHeader
+          label={['Available', 'Orders']}
+          setIsSearching={setIsSearching}
+          isOnline={session.user.driver.isOnline}
+        />
+        <SearchOverlay
+          visible={isSearching}
+          setIsSearching={setIsSearching}
+          onSearchPress={onSearchPress}
+          searchFilter={searchFilter}
+          setSearchFilter={setSearchFilter}
+        />
+        <View style={{flex: 1}}>
+          <MapView provider={PROVIDER_GOOGLE} style={StyleSheet.absoluteFill} initialRegion={initialRegion}>
+            {deliveryMarkers}
+          </MapView>
+          <View style={{flex: 1}}>
+            <TouchableHighlight
+              underlayColor={COLOR_UNDERLAY}
+              onPress={() => {
+                setShowMapView(!showMapView);
+              }}
+              style={{
+                position: 'absolute',
+                bottom: 20,
+                right: 20,
+                borderRadius: 25,
+              }}>
+              <View
+                style={{
+                  height: 50,
+                  width: 50,
+                  borderRadius: 25,
+                  backgroundColor: DARK,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                {showMapView ? (
+                  <FA5Icon name="list" size={24} color={COLOR} />
+                ) : (
+                  <FA5Icon name="map" size={24} color={COLOR} />
+                )}
+              </View>
+            </TouchableHighlight>
+          </View>
+        </View>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <OrderTabHeader
@@ -427,7 +551,7 @@ const AvailableOrders = ({navigation, session, constants}) => {
       <FlatList
         showsVerticalScrollIndicator={false}
         data={data.getDeliveriesAvailable}
-        keyExtractor={item => item.id}
+        keyExtractor={(item) => item.id}
         refreshControl={
           <RefreshControl refreshing={loading} onRefresh={getLocation} colors={[COLOR]} tintColor={COLOR} />
         }
@@ -439,19 +563,45 @@ const AvailableOrders = ({navigation, session, constants}) => {
           />
         )}
       />
+      <View style={{flex: 1}}>
+        <TouchableHighlight
+          underlayColor={COLOR_UNDERLAY}
+          onPress={() => {
+            setShowMapView(!showMapView);
+          }}
+          style={{
+            position: 'absolute',
+            bottom: 20,
+            right: 20,
+            borderRadius: 25,
+          }}>
+          <View
+            style={{
+              height: 50,
+              width: 50,
+              borderRadius: 25,
+              backgroundColor: DARK,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            {showMapView ? (
+              <FA5Icon name="list" size={24} color={COLOR} />
+            ) : (
+              <FA5Icon name="map" size={24} color={COLOR} />
+            )}
+          </View>
+        </TouchableHighlight>
+      </View>
     </View>
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   session: state.session,
   constants: state.constants,
 });
 
-export default connect(
-  mapStateToProps,
-  null,
-)(AvailableOrders);
+export default connect(mapStateToProps, null)(AvailableOrders);
 
 const styles = StyleSheet.create({
   transparent: {

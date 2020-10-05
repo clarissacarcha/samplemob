@@ -1,13 +1,13 @@
-import React, {useState, useEffect} from 'react';
-import {View, Text, ScrollView, StyleSheet, TouchableHighlight, TextInput, Alert, BackHandler} from 'react-native';
-import {connect} from 'react-redux';
-import validator from 'validator';
-import {COLOR, DARK, MEDIUM, LIGHT} from '../../res/constants';
-import {HeaderBack, HeaderTitle, AlertOverlay} from '../../components';
-import {useMutation} from '@apollo/react-hooks';
-import {onError} from '../../util/ErrorUtility';
-
 import {AUTH_CLIENT, FORGOT_PASSWORD_RESET} from '../../graphql';
+import {Alert, BackHandler, ScrollView, StyleSheet, Text, TextInput, TouchableHighlight, View} from 'react-native';
+import {AlertOverlay, HeaderBack, HeaderTitle} from '../../components';
+import {COLOR, DARK, LIGHT, MEDIUM} from '../../res/constants';
+import React, {useEffect, useState} from 'react';
+
+import {connect} from 'react-redux';
+import {onError} from '../../util/ErrorUtility';
+import {useMutation} from '@apollo/react-hooks';
+import validator from 'validator';
 
 const PostRegistration = ({navigation, route}) => {
   const goToLogin = () => {
@@ -75,7 +75,7 @@ const PostRegistration = ({navigation, route}) => {
   };
 
   useEffect(() => {
-    const backHandler = BackHandler.addEventListener('hardwareBackPress', function() {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', function () {
       goToLogin();
       return true;
     });
@@ -92,7 +92,7 @@ const PostRegistration = ({navigation, route}) => {
         <Text style={styles.label}>New Password</Text>
         <TextInput
           value={password}
-          onChangeText={value => setPassword(value)}
+          onChangeText={(value) => setPassword(value)}
           style={styles.input}
           placeholder="New Password"
           secureTextEntry={true}
@@ -104,7 +104,7 @@ const PostRegistration = ({navigation, route}) => {
         <Text style={styles.label}>Repeat Password</Text>
         <TextInput
           value={repeatPassword}
-          onChangeText={value => setRepeatPassword(value)}
+          onChangeText={(value) => setRepeatPassword(value)}
           style={styles.input}
           placeholder="Repeat Password"
           secureTextEntry={true}
@@ -122,19 +122,16 @@ const PostRegistration = ({navigation, route}) => {
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   session: state.session,
 });
 
-const mapDispatchToProps = dispatch => ({
-  createSession: payload => dispatch({type: 'CREATE_SESSION', payload}),
+const mapDispatchToProps = (dispatch) => ({
+  createSession: (payload) => dispatch({type: 'CREATE_SESSION', payload}),
   destroySession: () => dispatch({type: 'DESTROY_SESSION'}),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(PostRegistration);
+export default connect(mapStateToProps, mapDispatchToProps)(PostRegistration);
 
 const styles = StyleSheet.create({
   container: {

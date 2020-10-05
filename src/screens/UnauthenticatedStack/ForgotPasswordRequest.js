@@ -52,9 +52,28 @@ const ForgotPassword = ({navigation, route, createSession}) => {
         // deviceType: Platform.select({ios: 'I', android: 'A'}),
       },
     },
-    onError: onError,
-    onCompleted: ({forgotPassword}) => {
-      if (forgotPassword == 'NOPASSWORD') {
+    onError: error => {
+      console.log(error);
+      const {graphQLErrors, networkError} = error;
+
+      if (networkError) {
+        Alert.alert('', 'Network error occurred. Please check your internet connection.');
+      } else if (graphQLErrors.length > 0) {
+        graphQLErrors.map(({message, locations, path, code}) => {
+          if (code === 'INTERNAL_SERVER_ERROR') {
+            Alert.alert('', 'Something went wrong.');
+          } else if (code === 'BAD_USER_INPUT') {
+            Alert.alert('', message);
+          } else if (code === 'AUTHENTICATION_ERROR') {
+            navigation.push('AccountBlocked');
+          } else {
+            Alert.alert('', 'Something went wrong...');
+          }
+        });
+      }
+    },
+    onCompleted: ({forgotPassword: forgotResult}) => {
+      if (forgotResult === 'NOPASSWORD') {
         Alert.alert('', 'No nominated password. Please proceed to login instead.', [
           {
             title: 'Ok',
@@ -63,13 +82,7 @@ const ForgotPassword = ({navigation, route, createSession}) => {
         ]);
       }
 
-      if (forgotPassword == 'BLOCK') {
-        navigation.navigate('AccountBlocked');
-      }
-
-      if (forgotPassword == 'FORGOT') {
-        navigation.navigate('ForgotPasswordVerification', {mobile});
-      }
+      navigation.navigate('ForgotPasswordVerification', {mobile});
     },
   });
 

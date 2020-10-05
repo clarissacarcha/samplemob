@@ -1,33 +1,12 @@
-import React, {useState, useEffect} from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  ScrollView,
-  StyleSheet,
-  TouchableHighlight,
-  Modal,
-  ActivityIndicator,
-  Alert,
-} from 'react-native';
+import React, {useState} from 'react';
+import {View, Text, TextInput, StyleSheet, TouchableHighlight, Alert} from 'react-native';
 import {useMutation} from '@apollo/react-hooks';
-import Toast from 'react-native-simple-toast';
 import InputScrollView from 'react-native-input-scroll-view';
-import {Rating, AirbnbRating} from 'react-native-ratings';
-import {
-  HeaderBack,
-  HeaderTitle,
-  DeliveryStopCard,
-  DeliveryLogsCard,
-  DriverCard,
-  AlertOverlay,
-  OrderDetailsCard,
-  DriverLocationCard,
-} from '../../../components';
+import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../components';
 import {YellowIcon} from '../../../components/ui';
 import {COLOR, DARK, MEDIUM, LIGHT, ORANGE, APP_FLAVOR} from '../../../res/constants';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
-import {PATCH_DELIVERY_RATING, POST_CONSUMER_DELIVERY_RATING, POST_DRIVER_DELIVERY_RATING} from '../../../graphql';
+import {POST_CONSUMER_DELIVERY_RATING, POST_DRIVER_DELIVERY_RATING} from '../../../graphql';
 import {onError} from '../../../util/ErrorUtility';
 
 const StarRating = ({onChange}) => {
@@ -99,7 +78,7 @@ const RateDelivery = ({navigation, route}) => {
       return;
     }
 
-    if (APP_FLAVOR == 'C') {
+    if (APP_FLAVOR === 'C') {
       // Post rating for driver
       postDriverDeliveryRating({
         variables: {
@@ -113,7 +92,7 @@ const RateDelivery = ({navigation, route}) => {
       });
     }
 
-    if (APP_FLAVOR == 'D') {
+    if (APP_FLAVOR === 'D') {
       // Post rating for customer
       postConsumerDeliveryRating({
         variables: {
@@ -145,13 +124,12 @@ const RateDelivery = ({navigation, route}) => {
           <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', paddingVertical: 20}}>
             <YellowIcon set="FontAwesome" name="star" size={16} darkIcon />
             <Text style={{marginLeft: 10, color: DARK, fontFamily: 'Rubik-Medium'}}>
-              POGI <Text style={{color: ORANGE}}>Rating</Text>
+              {`${APP_FLAVOR === 'C' ? 'POGI' : 'Overall'}`} <Text style={{color: ORANGE}}>Rating</Text>
             </Text>
           </View>
         </View>
         <View style={{padding: 20}}>
-          {/* <AirbnbRating selectedColor={COLOR} reviewColor={ORANGE} showRating={false} size={30} /> */}
-          <StarRating onChange={rating => setRating(rating)} />
+          <StarRating onChange={value => setRating(value)} />
         </View>
       </View>
 
@@ -170,7 +148,7 @@ const RateDelivery = ({navigation, route}) => {
           <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', paddingVertical: 20}}>
             <YellowIcon set="FontAwesome5" name="file-alt" size={16} darkIcon />
             <Text style={{marginLeft: 10, color: DARK, fontFamily: 'Rubik-Medium'}}>
-              Share Your <Text style={{color: ORANGE}}>POGI Experience</Text>
+              Share Your <Text style={{color: ORANGE}}>{`${APP_FLAVOR === 'C' ? 'POGI ' : ''}`}Experience</Text>
             </Text>
           </View>
         </View>
@@ -178,7 +156,7 @@ const RateDelivery = ({navigation, route}) => {
           value={feedback}
           onChangeText={value => setFeedback(value)}
           style={{margin: 20}}
-          placeholder="Share your POGI experience with this delivery."
+          placeholder={`Share your ${APP_FLAVOR === 'C' ? 'POGI ' : ''}experience with this delivery.`}
           placeholderTextColor={LIGHT}
           multiline
           numberOfLines={10}

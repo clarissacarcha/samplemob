@@ -1,77 +1,67 @@
-import React from 'react';
-import {connect} from 'react-redux';
-import {TouchableWithoutFeedback} from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
-import {createDrawerNavigator} from '@react-navigation/drawer';
-import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-
-import DrawerContent from './Drawer';
-import {BottomTabHeader} from '../components';
 import {COLOR, MEDIUM} from '../res/constants';
 
-import EIcon from 'react-native-vector-icons/Entypo';
-import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-
-/*-------------------- IMPORT SCREENS START--------------------*/
-import Login from '../screens/UnauthenticatedStack/Login';
-import SmsVerification from '../screens/UnauthenticatedStack/SmsVerification';
-import PasswordVerification from '../screens/UnauthenticatedStack/PasswordVerification';
 import AccountBlocked from '../screens/UnauthenticatedStack/AccountBlocked';
-import ForgotPasswordRequest from '../screens/UnauthenticatedStack/ForgotPasswordRequest';
-import ForgotPasswordVerification from '../screens/UnauthenticatedStack/ForgotPasswordVerification';
-import ForgotPasswordReset from '../screens/UnauthenticatedStack/ForgotPasswordReset';
-
-// Landing
-import Landing from '../screens/Landing';
-
-// Authenticated Stack
-/*---------- COMMON SCREENS ----------*/
-import TalkToUs from '../screens/AuthenticatedStack/CommonScreens/TalkToUs';
-import Announcements from '../screens/AuthenticatedStack/CommonScreens/Announcement/Announcements';
-import SelectedAnnouncement from '../screens/AuthenticatedStack/CommonScreens/Announcement/SelectedAnnouncement';
-import Notifications from '../screens/AuthenticatedStack/CommonScreens/Notifications';
-import DeliveryRating from '../screens/AuthenticatedStack/CommonScreens/DeliveryRating';
-import OrderCancellation from '../screens/AuthenticatedStack/CommonScreens/OrderCancellation';
-
-/*---------- CONSUMER SCREENS ----------*/
-import PostRegistration from '../screens/AuthenticatedStack/ConsumerScreens/PostRegistration';
-
-import ConsumerMap from '../screens/AuthenticatedStack/ConsumerScreens/Booking/ConsumerMap';
-import SearchPlaces from '../screens/AuthenticatedStack/ConsumerScreens/Booking/SearchPlaces';
-import SearchMap from '../screens/AuthenticatedStack/ConsumerScreens/Booking/SearchMap';
-import SenderDetails from '../screens/AuthenticatedStack/ConsumerScreens/Booking/SenderDetails';
-import RecipientDetails from '../screens/AuthenticatedStack/ConsumerScreens/Booking/RecipientDetails';
-
-import ConsumerProfile from '../screens/AuthenticatedStack/ConsumerScreens/Profile/ConsumerProfile';
-import ConsumerChangePassword from '../screens/AuthenticatedStack/ConsumerScreens/Profile/ConsumerChangePassword';
-
-import CustomerDeliveries from '../screens/AuthenticatedStack/ConsumerScreens/Deliveries/MyDeliveries';
-import SelectedDeliveries from '../screens/AuthenticatedStack/ConsumerScreens/Deliveries/SelectedDeliveries';
-import SelectedDelivery from '../screens/AuthenticatedStack/ConsumerScreens/Deliveries/SelectedDelivery';
-import DeliveryTracking from '../screens/AuthenticatedStack/ConsumerScreens/Deliveries/DeliveryTracking';
-
-import SavedLocations from '../screens/AuthenticatedStack/ConsumerScreens/SavedLocations/SavedLocations';
 import AddLocation from '../screens/AuthenticatedStack/ConsumerScreens/SavedLocations/AddLocation';
-
+import Announcements from '../screens/AuthenticatedStack/CommonScreens/Announcement/Announcements';
+import {BottomTabHeader} from '../components';
+import Cancelled from '../screens/AuthenticatedStack/DriverScreens/Deliveries/Cancelled';
+import ChangeProfilePicture from '../screens/AuthenticatedStack/DriverScreens/Profile/ChangeProfilePicture';
+import Completed from '../screens/AuthenticatedStack/DriverScreens/Deliveries/Completed';
+import ConsumerChangePassword from '../screens/AuthenticatedStack/ConsumerScreens/Profile/ConsumerChangePassword';
+import ConsumerMap from '../screens/AuthenticatedStack/ConsumerScreens/Booking/ConsumerMap';
+import ConsumerProfile from '../screens/AuthenticatedStack/ConsumerScreens/Profile/ConsumerProfile';
+import CustomerDeliveries from '../screens/AuthenticatedStack/ConsumerScreens/Deliveries/MyDeliveries';
+import DeliveryRating from '../screens/AuthenticatedStack/CommonScreens/DeliveryRating';
+import DeliveryTracking from '../screens/AuthenticatedStack/ConsumerScreens/Deliveries/DeliveryTracking';
+import DrawerContent from './Drawer';
 /*---------- DRIVER SCREENS ----------*/
 import DriverMap from '../screens/AuthenticatedStack/DriverScreens/DriverMap';
 import DriverProfile from '../screens/AuthenticatedStack/DriverScreens/Profile/DriverProfile';
-
-import Ongoing from '../screens/AuthenticatedStack/DriverScreens/Deliveries/Ongoing';
-import Completed from '../screens/AuthenticatedStack/DriverScreens/Deliveries/Completed';
-import Cancelled from '../screens/AuthenticatedStack/DriverScreens/Deliveries/Cancelled';
-import SelectedDriverDelivery from '../screens/AuthenticatedStack/DriverScreens/Deliveries/SelectedDriverDelivery';
-import ItemCamera from '../screens/AuthenticatedStack/DriverScreens/Deliveries/ItemCamera';
-import ProfileCamera from '../screens/AuthenticatedStack/DriverScreens/Profile/ProfileCamera';
-import ChangeProfilePicture from '../screens/AuthenticatedStack/DriverScreens/Profile/ChangeProfilePicture';
-import DriverWallet from '../screens/AuthenticatedStack/DriverScreens/Wallet/DriverWallet';
-import DriverWalletLog from '../screens/AuthenticatedStack/DriverScreens/Wallet/DriverWalletHistory';
-import Order from '../screens/AuthenticatedStack/DriverScreens/Orders/Order';
-
 /*---------- DRIVER BOTTOM TAB ----------*/
 import DriverSettings from '../screens/AuthenticatedStack/DriverScreens/DriverHomeBottomTab/DriverSettings';
+import DriverWallet from '../screens/AuthenticatedStack/DriverScreens/Wallet/DriverWallet';
+import DriverWalletLog from '../screens/AuthenticatedStack/DriverScreens/Wallet/DriverWalletHistory';
+import EIcon from 'react-native-vector-icons/Entypo';
+import ForgotPasswordRequest from '../screens/UnauthenticatedStack/ForgotPasswordRequest';
+import ForgotPasswordReset from '../screens/UnauthenticatedStack/ForgotPasswordReset';
+import ForgotPasswordVerification from '../screens/UnauthenticatedStack/ForgotPasswordVerification';
+import ItemCamera from '../screens/AuthenticatedStack/DriverScreens/Deliveries/ItemCamera';
+// Landing
+import Landing from '../screens/Landing';
+/*-------------------- IMPORT SCREENS START--------------------*/
+import Login from '../screens/UnauthenticatedStack/Login';
+import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {NavigationContainer} from '@react-navigation/native';
+import Notifications from '../screens/AuthenticatedStack/CommonScreens/Notifications';
+import Ongoing from '../screens/AuthenticatedStack/DriverScreens/Deliveries/Ongoing';
+import Order from '../screens/AuthenticatedStack/DriverScreens/Orders/Order';
+import OrderCancellation from '../screens/AuthenticatedStack/CommonScreens/OrderCancellation';
+import PasswordVerification from '../screens/UnauthenticatedStack/PasswordVerification';
+import Pending from '../screens/AuthenticatedStack/DriverScreens/Deliveries/Pending';
+/*---------- CONSUMER SCREENS ----------*/
+import PostRegistration from '../screens/AuthenticatedStack/ConsumerScreens/PostRegistration';
+import ProfileCamera from '../screens/AuthenticatedStack/DriverScreens/Profile/ProfileCamera';
+import React from 'react';
+import RecipientDetails from '../screens/AuthenticatedStack/ConsumerScreens/Booking/RecipientDetails';
+import SavedLocations from '../screens/AuthenticatedStack/ConsumerScreens/SavedLocations/SavedLocations';
+import SearchLocationFilter from '../screens/AuthenticatedStack/DriverScreens/Orders/SearchLocationFilter';
+import SearchMap from '../screens/AuthenticatedStack/ConsumerScreens/Booking/SearchMap';
+import SearchPlaces from '../screens/AuthenticatedStack/ConsumerScreens/Booking/SearchPlaces';
+import SelectedAnnouncement from '../screens/AuthenticatedStack/CommonScreens/Announcement/SelectedAnnouncement';
+import SelectedDeliveries from '../screens/AuthenticatedStack/ConsumerScreens/Deliveries/SelectedDeliveries';
+import SelectedDelivery from '../screens/AuthenticatedStack/ConsumerScreens/Deliveries/SelectedDelivery';
+import SelectedDriverDelivery from '../screens/AuthenticatedStack/DriverScreens/Deliveries/SelectedDriverDelivery';
+import SenderDetails from '../screens/AuthenticatedStack/ConsumerScreens/Booking/SenderDetails';
+import SmsVerification from '../screens/UnauthenticatedStack/SmsVerification';
+// Authenticated Stack
+/*---------- COMMON SCREENS ----------*/
+import TalkToUs from '../screens/AuthenticatedStack/CommonScreens/TalkToUs';
+import {TouchableWithoutFeedback} from 'react-native';
+import {connect} from 'react-redux';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createDrawerNavigator} from '@react-navigation/drawer';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import {createStackNavigator} from '@react-navigation/stack';
 
 /*-------------------- IMPORT SCREENS END--------------------*/
 
@@ -101,7 +91,7 @@ const DriverDeliveriesTab = () => (
         },
       }}>
       <DriverDeliveries.Screen name="Ongoing" component={Ongoing} />
-      <DriverDeliveries.Screen name="Delegated" component={Ongoing} />
+      <DriverDeliveries.Screen name="Pending" component={Pending} />
       <DriverDeliveries.Screen name="Completed" component={Completed} />
       <DriverDeliveries.Screen name="Cancelled" component={Cancelled} />
     </DriverDeliveries.Navigator>
@@ -172,7 +162,7 @@ const DriverHomeBottomTab = ({navigation}) => (
             style={{paddingVertical: 12, paddingHorizontal: 20}}
           />
         ),
-        tabBarButton: props => <TouchableWithoutFeedback {...props} onPress={() => navigation.openDrawer()} />,
+        tabBarButton: (props) => <TouchableWithoutFeedback {...props} onPress={() => navigation.openDrawer()} />,
       }}
     />
   </DriverHome.Navigator>
@@ -219,16 +209,17 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="DriverWallet" component={DriverWallet} />
     <Authenticated.Screen name="DriverWalletLog" component={DriverWalletLog} />
     <Authenticated.Screen name="Order" component={Order} />
+    <Authenticated.Screen name="SearchLocationFilter" component={SearchLocationFilter} />
     <Authenticated.Screen name="DriverDeliveriesTab" component={DriverDeliveriesTab} />
   </Authenticated.Navigator>
 );
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   session: state.session,
   constants: state.constants,
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   destroySession: () => dispatch({type: 'DESTROY_SESSION'}),
 });
 

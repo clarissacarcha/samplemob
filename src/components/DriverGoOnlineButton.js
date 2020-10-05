@@ -1,16 +1,17 @@
-import React, {useState, useEffect} from 'react';
-import {StyleSheet, Text, View, TouchableHighlight, ActivityIndicator} from 'react-native';
-import {connect} from 'react-redux';
-import {useNavigation} from '@react-navigation/native';
-import BackgroundTimer from 'react-native-background-timer';
-import AsyncStorage from '@react-native-community/async-storage';
-import {useMutation} from '@apollo/react-hooks';
-import OneSignal from 'react-native-onesignal';
-import {currentLocation} from '../helper';
-import {DARK, ORANGE, COLOR, MEDIUM} from '../res/constants';
+import {ActivityIndicator, StyleSheet, Text, TouchableHighlight, View} from 'react-native';
+import {COLOR, DARK, MEDIUM, ORANGE} from '../res/constants';
+import {PATCH_DRIVER_GO_OFFLINE, PATCH_DRIVER_GO_ONLINE, POST_DRIVER_LOCATION_LOG} from '../graphql';
+import React, {useEffect, useState} from 'react';
+
 import {AlertOverlay} from '../components';
+import AsyncStorage from '@react-native-community/async-storage';
+import BackgroundTimer from 'react-native-background-timer';
+import OneSignal from 'react-native-onesignal';
+import {connect} from 'react-redux';
+import {currentLocation} from '../helper';
 import {onError} from '../util/ErrorUtility';
-import {PATCH_DRIVER_GO_ONLINE, PATCH_DRIVER_GO_OFFLINE, POST_DRIVER_LOCATION_LOG} from '../graphql';
+import {useMutation} from '@apollo/react-hooks';
+import {useNavigation} from '@react-navigation/native';
 
 const Component = ({session, constants, createSession}) => {
   const {isOnline} = session.user.driver;
@@ -19,7 +20,7 @@ const Component = ({session, constants, createSession}) => {
   const [loading, setLoading] = useState(false);
 
   const [postDriverLocationLog] = useMutation(POST_DRIVER_LOCATION_LOG, {
-    onError: error => console.log(`LOCATION LOG ERROR: ${error}`),
+    onError: (error) => console.log(`LOCATION LOG ERROR: ${error}`),
   });
 
   const [patchDriverGoOnline] = useMutation(PATCH_DRIVER_GO_ONLINE, {
@@ -153,19 +154,16 @@ const Component = ({session, constants, createSession}) => {
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   session: state.session,
   constants: state.constants,
 });
 
-const mapDispatchToProps = dispatch => ({
-  createSession: payload => dispatch({type: 'CREATE_SESSION', payload}),
+const mapDispatchToProps = (dispatch) => ({
+  createSession: (payload) => dispatch({type: 'CREATE_SESSION', payload}),
 });
 
-export const DriverGoOnlineButton = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Component);
+export const DriverGoOnlineButton = connect(mapStateToProps, mapDispatchToProps)(Component);
 
 const styles = StyleSheet.create({
   submitBox: {
