@@ -47,6 +47,7 @@ end
 
 target 'toktok' do
   # Pods for toktok
+  pod 'react-native-contacts', :path => '../node_modules/react-native-contacts'
   pod 'FBLazyVector', :path => "../node_modules/react-native/Libraries/FBLazyVector"
   pod 'FBReactNativeSpec', :path => "../node_modules/react-native/Libraries/FBReactNativeSpec"
   pod 'RCTRequired', :path => "../node_modules/react-native/Libraries/RCTRequired"
@@ -86,6 +87,7 @@ target 'toktok' do
   pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse.podspec"
   pod 'Permission-Notifications', :path => "#{permissions_path}/Notifications.podspec"
   pod 'Permission-PhotoLibrary', :path => "#{permissions_path}/PhotoLibrary.podspec"
+  pod 'Permission-Contacts', :path => "#{permissions_path}/Contacts.podspec"
 
   target 'toktokTests' do
     inherit! :complete

@@ -94,6 +94,8 @@ PODS:
   - OpenSSL-Universal/Static (1.0.2.19)
   - Permission-Camera (2.1.5):
     - RNPermissions
+  - Permission-Contacts (2.1.5):
+    - RNPermissions
   - Permission-LocationWhenInUse (2.1.5):
     - RNPermissions
   - Permission-Notifications (2.1.5):
@@ -273,6 +275,8 @@ PODS:
     - React
   - react-native-camera/RN (3.28.0):
     - React
+  - react-native-contacts (5.2.8):
+    - React-Core
   - react-native-document-picker (3.5.2):
     - React
   - react-native-google-maps (0.27.1):
@@ -408,6 +412,7 @@ DEPENDENCIES:
   - Google-Maps-iOS-Utils
   - GoogleMaps
   - Permission-Camera (from `../node_modules/react-native-permissions/ios/Camera.podspec`)
+  - Permission-Contacts (from `../node_modules/react-native-permissions/ios/Contacts.podspec`)
   - Permission-LocationWhenInUse (from `../node_modules/react-native-permissions/ios/LocationWhenInUse.podspec`)
   - Permission-Notifications (from `../node_modules/react-native-permissions/ios/Notifications.podspec`)
   - Permission-PhotoLibrary (from `../node_modules/react-native-permissions/ios/PhotoLibrary.podspec`)
@@ -424,6 +429,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - react-native-background-timer (from `../node_modules/react-native-background-timer`)
   - react-native-camera (from `../node_modules/react-native-camera`)
+  - react-native-contacts (from `../node_modules/react-native-contacts`)
   - react-native-document-picker (from `../node_modules/react-native-document-picker`)
   - react-native-google-maps (from `../node_modules/react-native-maps`)
   - "react-native-image-editor (from `../node_modules/@react-native-community/image-editor`)"
@@ -488,6 +494,8 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
   Permission-Camera:
     :path: "../node_modules/react-native-permissions/ios/Camera.podspec"
+  Permission-Contacts:
+    :path: "../node_modules/react-native-permissions/ios/Contacts.podspec"
   Permission-LocationWhenInUse:
     :path: "../node_modules/react-native-permissions/ios/LocationWhenInUse.podspec"
   Permission-Notifications:
@@ -516,6 +524,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-background-timer"
   react-native-camera:
     :path: "../node_modules/react-native-camera"
+  react-native-contacts:
+    :path: "../node_modules/react-native-contacts"
   react-native-document-picker:
     :path: "../node_modules/react-native-document-picker"
   react-native-google-maps:
@@ -598,6 +608,7 @@ SPEC CHECKSUMS:
   OneSignal: 1dcb1fd96f9c15a5c352dcfcab9106a7c15eced7
   OpenSSL-Universal: 8b48cc0d10c1b2923617dfe5c178aa9ed2689355
   Permission-Camera: afad27bf90337684d4a86f3825112d648c8c4d3b
+  Permission-Contacts: edde2d433382b3118f0d4c9ebc7708d5d87c4f17
   Permission-LocationWhenInUse: 3624cf08c12c6019926aba3054efee7f4f8ee91e
   Permission-Notifications: 231d0e1db2300b686548587d384ba414e6a93332
   Permission-PhotoLibrary: 4d2eff62c8f4b8a27bcf045c0e36f5047efbbf20
@@ -612,6 +623,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 512e560d0e985d0e8c479a54a4e5c147a9c83493
   react-native-background-timer: 53c0e028a95d58b1f4498ef7ce152b6c6b337595
   react-native-camera: 8ab02aac456a7db830980cef5f3772644fe96e1f
+  react-native-contacts: 7b5e16196278636030c3fbbb9505543984b01697
   react-native-document-picker: 3026780fc04e7ad27534a0f35d5daefb550aa03a
   react-native-google-maps: 0a989abda71059db2caa98b9dacca7a8f38a47d0
   react-native-image-editor: 9361a215c3991cafbe5e7f28cbbad6e72c9c2705
@@ -645,6 +657,6 @@ SPEC CHECKSUMS:
   Yoga: 3ebccbdd559724312790e7742142d062476b698e
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 051fd1ac839f3913f9e259e434d05cb41115e4ff
+PODFILE CHECKSUM: 103e823e5136e5858490ca6cef6312da736909e5
 
 COCOAPODS: 1.9.3

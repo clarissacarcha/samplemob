@@ -1,23 +1,12 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {
-  View,
-  Text,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  TouchableHighlight,
-  TextInput,
-  Alert,
-  Dimensions,
-  Switch,
-  Keyboard,
-} from 'react-native';
+import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
+import {View, Text, StyleSheet, TouchableHighlight, TextInput, Alert, Dimensions, Switch, Platform} from 'react-native';
 import validator from 'validator';
 import {connect} from 'react-redux';
 import InputScrollView from 'react-native-input-scroll-view';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import {numberFormatInteger, reverseGeocode} from '../../../../helper';
-import {COLOR, DARK, MAP_DELTA_LOW, MEDIUM, LIGHT, ORANGE, COLOR_UNDERLAY} from '../../../../res/constants';
+import {COLOR, DARK, MAP_DELTA_LOW, MEDIUM, LIGHT, COLOR_UNDERLAY} from '../../../../res/constants';
 import {
   HeaderBack,
   HeaderTitle,
@@ -29,9 +18,7 @@ import {
 import {YellowIcon, BlackIcon, BlackButton} from '../../../../components/ui';
 
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
-import FAIcon from 'react-native-vector-icons/FontAwesome';
-import FIcon from 'react-native-vector-icons/Feather';
-import {useSafeArea} from 'react-native-safe-area-context';
+import AntIcon from 'react-native-vector-icons/AntDesign';
 
 const width = Dimensions.get('window').width;
 const itemDimension = (width - 120) / 5;
@@ -39,14 +26,13 @@ const itemDimension = (width - 120) / 5;
 const RecipientDetails = ({navigation, route, constants}) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={['Recipient', 'details']} />,
+    headerTitle: () => <HeaderTitle label={['Recipient', 'Details']} />,
   });
 
   const scrollRef = useRef(null);
 
   const {data, setData, index, setPrice} = route.params;
 
-  // const [isKeyboardShown, setIsKeyboardShown] = useState(false);
   const [loading, setLoading] = useState(false);
   const [localData, setLocalData] = useState(data[index]);
   const [codSwitch, setCodSwitch] = useState(data[index].cashOnDelivery ? true : false);
@@ -58,15 +44,15 @@ const RecipientDetails = ({navigation, route, constants}) => {
   const onSearchPlaces = () => {
     navigation.navigate('SearchPlaces', {data: localData, setData: setLocalData});
   };
-  const onScheduleChange = value => setLocalData({...localData, ...value});
-  const onLandmarkChange = value => setLocalData({...localData, landmark: value});
-  const onNameChange = value => setLocalData({...localData, name: value});
-  const onCollectPaymentFromChange = value => setLocalData({...localData, collectPaymentFrom: value});
-  const onNotesChange = value => setLocalData({...localData, notes: value});
-  const onCargoChange = value => setLocalData({...localData, cargo: value});
+  const onScheduleChange = (value) => setLocalData({...localData, ...value});
+  const onLandmarkChange = (value) => setLocalData({...localData, landmark: value});
+  const onNameChange = (value) => setLocalData({...localData, name: value});
+  const onCollectPaymentFromChange = (value) => setLocalData({...localData, collectPaymentFrom: value});
+  const onNotesChange = (value) => setLocalData({...localData, notes: value});
+  const onCargoChange = (value) => setLocalData({...localData, cargo: value});
 
-  const onMobileChange = value => {
-    if (value.length == 1 && value == '0') {
+  const onMobileChange = (value) => {
+    if (value.length === 1 && value === '0') {
       setLocalData({...localData, mobile: ''});
       return;
     }
@@ -79,13 +65,116 @@ const RecipientDetails = ({navigation, route, constants}) => {
     setLocalData({...localData, mobile: value});
   };
 
+  const onContactSelectCallback = ({name, number}) => {
+    setLocalData({
+      ...localData,
+      name: name,
+      mobile: number,
+    });
+  };
+
+  const goToContacts = async () => {
+    const checkAndRequest = Platform.select({
+      android: async () => {
+        const checkResult = await check(PERMISSIONS.ANDROID.READ_CONTACTS);
+        console.log({checkResult});
+
+        if (checkResult === RESULTS.GRANTED) {
+          return true;
+        }
+
+        if (checkResult === RESULTS.BLOCKED) {
+          Alert.alert(
+            '',
+            "Contacts access have been blocked. Please allow toktok to access your contacts in your phone's settings.",
+          );
+          return false;
+        }
+
+        if (checkResult === RESULTS.UNAVAILABLE) {
+          Alert.alert('', 'Access to contacts is unavailable.');
+          return false;
+        }
+
+        if (checkResult === RESULTS.DENIED) {
+          const requestResult = await request(PERMISSIONS.ANDROID.READ_CONTACTS);
+
+          if (requestResult === RESULTS.GRANTED) {
+            return true;
+          }
+
+          if (requestResult === RESULTS.BLOCKED) {
+            Alert.alert(
+              '',
+              "Contacts access have been blocked. Please allow toktok to access your contacts in your phone's settings.",
+            );
+            return false;
+          }
+
+          if (requestResult === RESULTS.DENIED) {
+            Alert.alert('', "Sorry, we can't access your contacts without sufficient permission.");
+            return false;
+          }
+        }
+      },
+      ios: async () => {
+        const checkResult = await check(PERMISSIONS.IOS.CONTACTS);
+        console.log({checkResult});
+
+        if (checkResult === RESULTS.GRANTED) {
+          return true;
+        }
+
+        if (checkResult === RESULTS.BLOCKED) {
+          Alert.alert(
+            '',
+            "Contacts access have been blocked. Please allow toktok to access your contacts in your phone's settings.",
+          );
+          return false;
+        }
+
+        // if (checkResult === RESULTS.UNAVAILABLE) {
+        //   Alert.alert('', 'Access to contacts is unavailable.');
+        //   return false;
+        // }
+
+        if (checkResult === RESULTS.UNAVAILABLE) {
+          const requestResult = await request(PERMISSIONS.IOS.CONTACTS);
+          console.log({requestResult});
+          if (requestResult === RESULTS.GRANTED) {
+            return true;
+          }
+
+          if (requestResult === RESULTS.BLOCKED) {
+            Alert.alert(
+              '',
+              "Contacts access have been blocked. Please allow toktok to access your contacts in your phone's settings.",
+            );
+            return false;
+          }
+
+          // if (requestResult === RESULTS.DENIED) {
+          //   Alert.alert('', "Sorry, we can't access your contacts without sufficient permission.");
+          //   return false;
+          // }
+        }
+      },
+    });
+
+    const result = await checkAndRequest();
+
+    if (result) {
+      navigation.push('SearchContact', {onContactSelectCallback});
+    }
+  };
+
   const scrollToEnd = () => {
     setTimeout(() => {
       scrollRef.current.scrollToEnd();
     }, 50);
   };
 
-  const onCashOnDeliveryChange = value => {
+  const onCashOnDeliveryChange = (value) => {
     const decimal = value.split('.')[1];
 
     if (value && decimal) {
@@ -255,10 +344,11 @@ const RecipientDetails = ({navigation, route, constants}) => {
             }}>
             <View
               style={{
-                paddingHorizontal: 20,
+                width: 60,
                 backgroundColor: COLOR_UNDERLAY,
                 height: 50,
                 justifyContent: 'center',
+                alignItems: 'center',
                 borderColor: MEDIUM,
                 borderRightWidth: 1,
               }}>
@@ -273,6 +363,20 @@ const RecipientDetails = ({navigation, route, constants}) => {
               style={{paddingLeft: 20, flex: 1, color: DARK, height: 50}}
               placeholderTextColor={LIGHT}
             />
+            <TouchableHighlight onPress={goToContacts} underlayColor={COLOR}>
+              <View
+                style={{
+                  backgroundColor: DARK,
+                  width: 60,
+                  height: 50,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  // borderColor: MEDIUM,
+                  // borderLeftWidth: 1,
+                }}>
+                <AntIcon name="contacts" size={28} color={COLOR} />
+              </View>
+            </TouchableHighlight>
           </View>
 
           {/*-------------------- COLLECT PAYMENT FROM --------------------*/}
@@ -302,7 +406,7 @@ const RecipientDetails = ({navigation, route, constants}) => {
             <Switch
               trackColor={{false: LIGHT, true: LIGHT}}
               thumbColor={codSwitch ? COLOR : MEDIUM}
-              onValueChange={value => setCodSwitch(value)}
+              onValueChange={(value) => setCodSwitch(value)}
               value={codSwitch}
             />
           </View>
@@ -366,15 +470,12 @@ const RecipientDetails = ({navigation, route, constants}) => {
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   session: state.session,
   constants: state.constants,
 });
 
-export default connect(
-  mapStateToProps,
-  null,
-)(RecipientDetails);
+export default connect(mapStateToProps, null)(RecipientDetails);
 
 const styles = StyleSheet.create({
   container: {

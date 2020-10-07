@@ -1,28 +1,27 @@
 import React, {useState} from 'react';
-import {View, Text, ScrollView, StyleSheet, TouchableHighlight, TextInput, Dimensions, Alert} from 'react-native';
+import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
+import {View, Text, StyleSheet, TouchableHighlight, TextInput, Platform, Alert} from 'react-native';
 import InputScrollView from 'react-native-input-scroll-view';
-import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
+import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import validator from 'validator';
 
 import {reverseGeocode} from '../../../../helper';
 import {HeaderBack, HeaderTitle, SchedulePicker, AlertOverlay} from '../../../../components';
-import {YellowIcon, BlackIcon, BlackButton} from '../../../../components/ui';
-import {COLOR, DARK, MAP_DELTA_LOW, MEDIUM, LIGHT, ORANGE, COLOR_UNDERLAY} from '../../../../res/constants';
+import {BlackIcon, BlackButton} from '../../../../components/ui';
+import {COLOR, DARK, MAP_DELTA_LOW, MEDIUM, LIGHT, COLOR_UNDERLAY} from '../../../../res/constants';
 
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
+import AntIcon from 'react-native-vector-icons/AntDesign';
 
 const SenderDetails = ({navigation, route}) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={['Sender', 'details']} />,
+    headerTitle: () => <HeaderTitle label={['Sender', 'Details']} />,
   });
 
   const {data, setData, setPrice} = route.params;
   const [loading, setLoading] = useState(false);
   const [localData, setLocalData] = useState(data);
-
-  // console.log(JSON.stringify({data}, null, 4));
-  // console.log(JSON.stringify({localData}, null, 4));
 
   const onSearchMap = () => {
     navigation.navigate('SearchMap', {data: {...localData, ...MAP_DELTA_LOW}, setData: setLocalData});
@@ -32,13 +31,13 @@ const SenderDetails = ({navigation, route}) => {
     navigation.navigate('SearchPlaces', {data: localData, setData: setLocalData});
   };
 
-  const onScheduleChange = value => setLocalData({...localData, ...value});
-  const onLandmarkChange = value => setLocalData({...localData, landmark: value});
-  const onNameChange = value => setLocalData({...localData, name: value});
+  const onScheduleChange = (value) => setLocalData({...localData, ...value});
+  const onLandmarkChange = (value) => setLocalData({...localData, landmark: value});
+  const onNameChange = (value) => setLocalData({...localData, name: value});
   // const onMobileChange = value => setLocalData({...localData, mobile: value});
 
-  const onMobileChange = value => {
-    if (value.length == 1 && value == '0') {
+  const onMobileChange = (value) => {
+    if (value.length === 1 && value === '0') {
       setLocalData({...localData, mobile: ''});
       return;
     }
@@ -49,6 +48,67 @@ const SenderDetails = ({navigation, route}) => {
     }
 
     setLocalData({...localData, mobile: value});
+  };
+
+  const onContactSelectCallback = ({name, number}) => {
+    setLocalData({
+      ...localData,
+      name: name,
+      mobile: number,
+    });
+  };
+
+  const goToContacts = async () => {
+    const checkAndRequest = Platform.select({
+      android: async () => {
+        const checkResult = await check(PERMISSIONS.ANDROID.READ_CONTACTS);
+        console.log({checkResult});
+
+        if (checkResult === RESULTS.GRANTED) {
+          return true;
+        }
+
+        if (checkResult === RESULTS.BLOCKED) {
+          Alert.alert(
+            '',
+            "Contacts access have been blocked. Please allow toktok to access your contacts in your phone's settings.",
+          );
+          return false;
+        }
+
+        if (checkResult === RESULTS.UNAVAILABLE) {
+          Alert.alert('', 'Access to contacts is unavailable.');
+          return false;
+        }
+
+        if (checkResult === RESULTS.DENIED) {
+          const requestResult = await request(PERMISSIONS.ANDROID.READ_CONTACTS);
+
+          if (requestResult === RESULTS.GRANTED) {
+            return true;
+          }
+
+          if (requestResult === RESULTS.BLOCKED) {
+            Alert.alert(
+              '',
+              "Contacts access have been blocked. Please allow toktok to access your contacts in your phone's settings.",
+            );
+            return false;
+          }
+
+          if (requestResult === RESULTS.DENIED) {
+            Alert.alert('', "Sorry, we can't access your contacts without sufficient permission.");
+            return false;
+          }
+        }
+      },
+    });
+
+    const result = await checkAndRequest();
+
+    if (result) {
+      navigation.push('SearchContact', {onContactSelectCallback});
+    }
   };
 
   const onSubmit = async () => {
@@ -187,6 +247,54 @@ const SenderDetails = ({navigation, route}) => {
             }}>
             <View
               style={{
+                width: 60,
+                backgroundColor: COLOR_UNDERLAY,
+                height: 50,
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderColor: MEDIUM,
+                borderRightWidth: 1,
+              }}>
+              <Text style={{color: MEDIUM}}>+63</Text>
+            </View>
+            <TextInput
+              value={localData.mobile}
+              onChangeText={onMobileChange}
+              placeholder="Mobile Number"
+              keyboardType="numeric"
+              returnKeyType="done"
+              style={{paddingLeft: 20, flex: 1, color: DARK, height: 50}}
+              placeholderTextColor={LIGHT}
+            />
+            <TouchableHighlight onPress={goToContacts} underlayColor={COLOR}>
+              <View
+                style={{
+                  backgroundColor: DARK,
+                  width: 60,
+                  height: 50,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  // borderColor: MEDIUM,
+                  // borderLeftWidth: 1,
+                }}>
+                <AntIcon name="contacts" size={28} color={COLOR} />
+              </View>
+            </TouchableHighlight>
+          </View>
+          {/* <Text style={styles.label}>Mobile Number</Text>
+          <View
+            style={{
+              marginHorizontal: 20,
+              borderWidth: 1,
+              borderColor: MEDIUM,
+              borderRadius: 10,
+              flexDirection: 'row',
+              alignItems: 'center',
+              overflow: 'hidden',
+              height: 50,
+            }}>
+            <View
+              style={{
                 paddingHorizontal: 20,
                 backgroundColor: COLOR_UNDERLAY,
                 height: 50,
@@ -205,7 +313,7 @@ const SenderDetails = ({navigation, route}) => {
               style={{paddingLeft: 20, flex: 1, color: DARK, height: 50}}
               placeholderTextColor={LIGHT}
             />
-          </View>
+          </View> */}
           <View style={{height: 20}} />
           {/*-------------------- CONFIRM --------------------*/}
           <BlackButton onPress={onSubmit} label="Confirm" containerStyle={{marginTop: 0}} />

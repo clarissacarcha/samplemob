@@ -23,6 +23,7 @@ import {BlackButton} from '../../../../components/ui';
 import DropDownPicker from 'react-native-dropdown-picker';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
+import FontistoIcon from 'react-native-vector-icons/Fontisto';
 import {GET_DELIVERIES_AVAILABLE} from '../../../../graphql';
 import GoOnline from '../../../../assets/images/GoOnline.png';
 import InputScrollView from 'react-native-input-scroll-view';
@@ -264,7 +265,7 @@ const AvailableOrders = ({navigation, session, constants}) => {
   const [getDeliveriesAvailable, {data = {getDeliveriesAvailable: []}, loading, error}] = useLazyQuery(
     GET_DELIVERIES_AVAILABLE,
     {
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'no-cache',
     },
   );
 
@@ -329,23 +330,6 @@ const AvailableOrders = ({navigation, session, constants}) => {
       setNoGPS(true);
       setManualLoading(false);
     }
-  };
-
-  const retryFromNoGPS = async () => {
-    // try {
-    //   setNoGPS(false);
-    //   const detectedLocation = await currentLocation({
-    //     showsReverseGeocode: false,
-    //   });
-    //   if (detectedLocation) {
-    //     setLocation(detectedLocation);
-    //     refetch();
-    //   } else {
-    //     setNoGPS(true);
-    //   }
-    // } catch (e) {
-    //   setLocation(INITIAL_LOCATION);
-    // }
   };
 
   useEffect(() => {
@@ -457,33 +441,37 @@ const AvailableOrders = ({navigation, session, constants}) => {
             ...MAP_DELTA,
           };
 
-    console.log(JSON.stringify(data.getDeliveriesAvailable, null, 4));
+    // console.log(JSON.stringify(data.getDeliveriesAvailable, null, 4));
 
     const deliveryMarkers = data.getDeliveriesAvailable.map((delivery) => {
       return (
         <>
           <Marker
-            onPress={() => alert(delivery.id)}
+            onPress={() =>
+              navigation.push('SelectedDriverDelivery', {delivery: delivery, label: ['Delivery', 'Details']})
+            }
             coordinate={{
               latitude: delivery.senderStop.latitude,
               longitude: delivery.senderStop.longitude,
             }}>
-            <FA5Icon name="map-marker-alt" size={24} color={'green'} />
+            <FA5Icon name="map-pin" size={24} color={'green'} />
           </Marker>
           <Marker
-            onPress={() => alert(delivery.id)}
+            onPress={() =>
+              navigation.push('SelectedDriverDelivery', {delivery: delivery, label: ['Delivery', 'Details']})
+            }
             coordinate={{
               latitude: delivery.recipientStop.latitude,
               longitude: delivery.recipientStop.longitude,
             }}>
-            <FA5Icon name="map-marker-alt" size={24} color={'red'} />
+            <FA5Icon name="map-pin" size={24} color={'red'} />
           </Marker>
         </>
       );
     });
 
     return (
-      <View style={{flex: 1, backgroundColor: 'cyan'}}>
+      <View style={{flex: 1}}>
         <OrderTabHeader
           label={['Available', 'Orders']}
           setIsSearching={setIsSearching}
@@ -498,6 +486,13 @@ const AvailableOrders = ({navigation, session, constants}) => {
         />
         <View style={{flex: 1}}>
           <MapView provider={PROVIDER_GOOGLE} style={StyleSheet.absoluteFill} initialRegion={initialRegion}>
+            <Marker
+              coordinate={{
+                latitude: initialRegion.latitude,
+                longitude: initialRegion.longitude,
+              }}>
+              <FontistoIcon name="motorcycle" size={24} color={COLOR} />
+            </Marker>
             {deliveryMarkers}
           </MapView>
           <View style={{flex: 1}}>
@@ -528,6 +523,26 @@ const AvailableOrders = ({navigation, session, constants}) => {
                 )}
               </View>
             </TouchableHighlight>
+
+            <View
+              style={{
+                position: 'absolute',
+                top: 20,
+                left: 20,
+                borderRadius: 10,
+                backgroundColor: LIGHT,
+                padding: 10,
+              }}>
+              <View style={{flexDirection: 'row'}}>
+                <FA5Icon name="map-pin" size={16} color={'green'} style={{marginRight: 10}} />
+                <Text>Sender</Text>
+              </View>
+              <View style={{height: 10}} />
+              <View style={{flexDirection: 'row'}}>
+                <FA5Icon name="map-pin" size={16} color={'red'} style={{marginRight: 10}} />
+                <Text>Recipient</Text>
+              </View>
+            </View>
           </View>
         </View>
       </View>

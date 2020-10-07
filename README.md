@@ -24,6 +24,8 @@
 5. Handle when operator account is put on hold.
 6. Limit viewing of history 15 days. Also related modules like notification
 7. On checking number of ongoing orders, dont include delegated (to just check)
+8. Synermaxx Logs
+9. Dataloader
 
 # App TODO
 
@@ -35,14 +37,15 @@
 
 # Customer TODO
 
-1. Sender/Recipient icons in tracking map with directions.
-2. Google Search Places Refactor
-3. Fix Order Type Schedule, Today Only
-4. Handle sender/recipient location change when other is empty. Focus on location
-5. Handle skip location still invoked after Proceed
-6. (HALF) Item Description API (HARD CODE)
-7. Going back from details to placed orders, place a loading indicator.
-8. Move vehicle type for order in front end.
+1. Fix Cargo Icons
+2. Sender/Recipient icons in tracking map with directions.
+3. Google Search Places Refactor
+4. Fix Order Type Schedule, Today Only
+5. Handle sender/recipient location change when other is empty. Focus on location
+6. Handle skip location still invoked after Proceed
+7. (HALF) Item Description API (HARD CODE)
+8. Going back from details to placed orders, place a loading indicator.
+9. Move vehicle type for order in front end.
 
 # Rider TODO
 
@@ -58,28 +61,25 @@
 
 # ASAP TODO
 
-1. MapView of Orders
-2. Contact numbers for sender and recipient mobile (Overide contact name and number.)
-3. Synermaxx Logs
-4. Dataloader
-5. Fix Cargo Icons
-6. ~~Express Delivery Sorting~~
-7. ~~Welcome Banners~~
-8. ~~Scrollable Sidebar~~
-9. ~~REDIS~~
-10. ~~5 minis limit for nearby order notification.~~
-11. ~~Add Saved Location Delete~~
-12. ~~Add Booking, Vehicle Type ID (Just in the backend) Default to Motorcycle~~
-13. ~~Fix TimeStamp~~
-14. ~~Variable kilometers in sending riders of new order notification~~
-15. ~~Fix IOS Saved Location~~
-16. ~~Search Locations of Available Orders~~
-17. ~~Check if User is blocked by driver or consumer status.~~
-18. ~~When accepting order, make sure that is its not expired, cancelled, or deleted~~
-19. ~~Don't get orders from blocked consumer account.~~
-20. ~~Don't accept orders if consumer is blocked.~~
-21. ~~Cannot accept order if has Express Delivery ongoing.~~
-22. ~~POGI rating, conditional render~~
+1. Contact numbers for sender and recipient mobile (Overide contact name and number.)
+2. ~~MapView of Orders~~
+3. ~~Express Delivery Sorting~~
+4. ~~Welcome Banners~~
+5. ~~Scrollable Sidebar~~
+6. ~~REDIS~~
+7. ~~5 minis limit for nearby order notification.~~
+8. ~~Add Saved Location Delete~~
+9. ~~Add Booking, Vehicle Type ID (Just in the backend) Default to Motorcycle~~
+10. ~~Fix TimeStamp~~
+11. ~~Variable kilometers in sending riders of new order notification~~
+12. ~~Fix IOS Saved Location~~
+13. ~~Search Locations of Available Orders~~
+14. ~~Check if User is blocked by driver or consumer status.~~
+15. ~~When accepting order, make sure that is its not expired, cancelled, or deleted~~
+16. ~~Don't get orders from blocked consumer account.~~
+17. ~~Don't accept orders if consumer is blocked.~~
+18. ~~Cannot accept order if has Express Delivery ongoing.~~
+19. ~~POGI rating, conditional render~~
 
 #Toktok x Gogome
 
