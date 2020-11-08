@@ -2,7 +2,17 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>phcloudpandatoktok</string>
+			</array>
+			<key>CFBundleURLName</key>
+			<string>ph.cloudpanda.toktok</string>
+		</dict>
+	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -38,10 +48,10 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>NSContactsUsageDescription</key>
-	<string>Used to auto fill contact numbers.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Used to take images for profile and deliveries.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>Used to auto fill contact numbers.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Used to auto fill location in sender details.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>

@@ -172,6 +172,16 @@ const Drawer = ({navigation, session, constants, destroySession}) => {
               }}
             />
 
+            {/*--------------- ACCOUNTS ---------------*/}
+            <DrawerButton
+              label="Accounts"
+              onPress={() => {
+                navigation.push('GCashAccount');
+                navigation.closeDrawer();
+              }}
+              restrict="D"
+            />
+
             {/*--------------- TALK TO US ---------------*/}
             <DrawerButton
               label="Talk to Us"
@@ -184,7 +194,7 @@ const Drawer = ({navigation, session, constants, destroySession}) => {
             <TouchableHighlight
               onPress={onSignOut}
               underlayColor={COLOR}
-              style={[styles.submitBox, {marginBottom: 20, marginTop: 60}]}>
+              style={[styles.submitBox, {marginVertical: 20}]}>
               <View style={styles.submit}>
                 <Text style={styles.headerText}>Sign Out</Text>
               </View>

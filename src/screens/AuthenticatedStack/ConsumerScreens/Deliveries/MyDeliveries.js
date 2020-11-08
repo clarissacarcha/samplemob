@@ -74,7 +74,7 @@ const MyDeliveries = ({navigation, session}) => {
   return (
     <ScrollView contentContainerStyle={{paddingTop: 10}} showsVerticalScrollIndicator={false}>
       <RoundedButton data={mappedData['1']} label={['Placed', 'Orders']} />
-      <RoundedButton data={mappedData['2']} label={['Delivery', 'Scheduled']} />
+      <RoundedButton data={mappedData['2']} label={['Scheduled', 'for Delivery']} />
       <RoundedButton data={mappedData['3']} label={['On the Way', 'to Sender']} />
       <RoundedButton data={mappedData['4']} label={['Item', 'Picked Up']} />
       <RoundedButton data={mappedData['5']} label={['On the Way', 'to Recipient']} />
@@ -86,14 +86,11 @@ const MyDeliveries = ({navigation, session}) => {
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   session: state.session,
 });
 
-export default connect(
-  mapStateToProps,
-  null,
-)(MyDeliveries);
+export default connect(mapStateToProps, null)(MyDeliveries);
 
 const styles = StyleSheet.create({
   submitBox: {

@@ -17,7 +17,7 @@ import {COLOR, COLOR_UNDERLAY, DARK, LIGHT, MAP_DELTA, MEDIUM, ORANGE} from '../
 import {DeliveryCard, DriverGoOnlineButton, SomethingWentWrong} from '../../../../components';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import React, {useEffect, useState} from 'react';
-import {useLazyQuery, useQuery} from '@apollo/react-hooks';
+import {useLazyQuery} from '@apollo/react-hooks';
 
 import {BlackButton} from '../../../../components/ui';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -426,7 +426,10 @@ const AvailableOrders = ({navigation, session, constants}) => {
           setSearchFilter={setSearchFilter}
         />
         <View style={styles.center}>
-          <Image source={NoData} style={styles.image} resizeMode={'contain'} />
+          <View>
+            <Image source={NoData} style={styles.image} resizeMode={'contain'} />
+            <BlackButton onPress={getLocation} label="Refresh" containerStyle={{margin: 20}} />
+          </View>
         </View>
       </>
     );

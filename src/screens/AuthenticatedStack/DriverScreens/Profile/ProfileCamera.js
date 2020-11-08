@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {StyleSheet, TouchableOpacity, View, Modal} from 'react-native';
+import {StyleSheet, TouchableOpacity, View, Modal, Alert} from 'react-native';
 import {connect} from 'react-redux';
 import {RNCamera} from 'react-native-camera';
 import {HeaderBack, HeaderTitle} from '../../../../components';
@@ -36,7 +36,7 @@ const ProfileCamera = ({navigation, route, session}) => {
         navigation.pop();
       }
     } catch (error) {
-      alert(error);
+      Alert.alert('Something went wrong with taking a picture.');
     }
   };
 
@@ -81,14 +81,11 @@ const ProfileCamera = ({navigation, route, session}) => {
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   session: state.session,
 });
 
-export default connect(
-  mapStateToProps,
-  null,
-)(ProfileCamera);
+export default connect(mapStateToProps, null)(ProfileCamera);
 
 const styles = StyleSheet.create({
   container: {

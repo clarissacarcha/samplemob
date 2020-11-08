@@ -10,18 +10,12 @@ import {numberFormat} from '../helper/numberFormat';
 import moment from 'moment';
 import 'moment-timezone';
 
-import FA5Icon from 'react-native-vector-icons/FontAwesome5';
-import FAIcon from 'react-native-vector-icons/FontAwesome';
 import EIcon from 'react-native-vector-icons/Entypo';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import Ionicon from 'react-native-vector-icons/Ionicons';
-import Fontisto from 'react-native-vector-icons/Fontisto';
 
 const SchedulePhrase = ({stop}) => {
   const nowDate = moment().format('MMM DD YYYY');
-  const tomorrowDate = moment()
-    .add(1, 'days')
-    .format('MMM DD YYYY');
+  const tomorrowDate = moment().add(1, 'days').format('MMM DD YYYY');
   const stopDate = moment(stop.scheduledFrom, 'MM/DD/YYYY - hh:mm A').format('MMM D YYYY');
 
   let displayDate = stopDate;
@@ -239,22 +233,21 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
           </View>
 
           {/*-------------------- DRIVER INFO --------------------*/}
-          {delivery.driver &&
-            (APP_FLAVOR == 'C' && (
-              <View style={[styles.directionsBox, {borderBottomWidth: StyleSheet.hairlineWidth, borderColor: LIGHT}]}>
-                <View style={styles.directionDetail}>
-                  <YellowIcon set="Fontisto" name="motorcycle" />
-                  <View style={{marginLeft: 10}}>
-                    <Text style={{fontFamily: 'Rubik-Medium'}}>
-                      {`${delivery.driver.user.person.firstName} ${delivery.driver.user.person.lastName}`}
-                    </Text>
-                    <Text numberOfLines={1} style={{paddingRight: 10, color: MEDIUM, fontSize: 10}}>
-                      {delivery.driver.user.username}
-                    </Text>
-                  </View>
+          {delivery.driver && APP_FLAVOR == 'C' && (
+            <View style={[styles.directionsBox, {borderBottomWidth: StyleSheet.hairlineWidth, borderColor: LIGHT}]}>
+              <View style={styles.directionDetail}>
+                <YellowIcon set="Fontisto" name="motorcycle" />
+                <View style={{marginLeft: 10}}>
+                  <Text style={{fontFamily: 'Rubik-Medium'}}>
+                    {`${delivery.driver.user.person.firstName} ${delivery.driver.user.person.lastName}`}
+                  </Text>
+                  <Text numberOfLines={1} style={{paddingRight: 10, color: MEDIUM, fontSize: 10}}>
+                    {delivery.driver.user.username}
+                  </Text>
                 </View>
               </View>
-            ))}
+            </View>
+          )}
 
           {/*---------------------------------------- DISTANCE DURATION ROW ----------------------------------------*/}
           <View

@@ -25,9 +25,9 @@ import ServerDown from '../assets/images/ServerDown.png';
 
 const imageWidth = Dimensions.get('window').width - 80;
 
-const mapKeyValueToObject = keyValueArray => {
+const mapKeyValueToObject = (keyValueArray) => {
   const result = {};
-  keyValueArray.map(kv => {
+  keyValueArray.map((kv) => {
     result[kv.settingKey] = kv.keyValue;
   });
 
@@ -38,7 +38,7 @@ const Splash = ({setConstants}) => {
   const [checkPoint, setcheckPoint] = useState(''); // A-Allow, S-Suggest, B-Block, M-Maintenance
   const [deepLink, setDeepLink] = useState('');
 
-  const oneSignalInit = async oneSignalAppId => {
+  const oneSignalInit = async (oneSignalAppId) => {
     OneSignal.init(oneSignalAppId);
     OneSignal.inFocusDisplaying(2);
   };
@@ -56,49 +56,30 @@ const Splash = ({setConstants}) => {
       const constantsObject = mapKeyValueToObject(globalSettingRecords.data.getGlobalSettings);
       setConstants(constantsObject);
 
-      // [
-      //   {
-      //     settingKey: 'XYZ',
-      //     keyValue: 'alvir'
-      //   },
-      //   {
-      //     settingKey: 'lastName',
-      //     keyValue: 'marquez'
-      //   },
-
-      // ]
-
-      // constants = {
-      //   XYZ: 'alvir',
-      //   lastName: 'marquez'
-      // };
-
-      // constants.XYZ =
-
       const {appStoreDeepLink, playStoreDeepLink, playStoreRiderDeepLink} = constantsObject;
 
       let deepLinkUrl = '';
 
-      if (APP_FLAVOR == 'C') {
+      if (APP_FLAVOR === 'C') {
         deepLinkUrl = Platform.select({
           ios: appStoreDeepLink,
           android: playStoreDeepLink,
         });
       }
 
-      if (APP_FLAVOR == 'D') {
+      if (APP_FLAVOR === 'D') {
         deepLinkUrl = playStoreRiderDeepLink;
       }
 
       setDeepLink(deepLinkUrl);
 
       // Set OneSignalAppId for Consumer
-      if (APP_FLAVOR == 'C') {
+      if (APP_FLAVOR === 'C') {
         oneSignalInit(constantsObject.consumerOneSignalAppId);
       }
 
       // Set OneSignalAppId for Driver
-      if (APP_FLAVOR == 'D') {
+      if (APP_FLAVOR === 'D') {
         oneSignalInit(constantsObject.driverOneSignalAppId);
       }
 
@@ -131,7 +112,7 @@ const Splash = ({setConstants}) => {
         setcheckPoint('B');
       }
     } catch (error) {
-      console.log(error);
+      console.log('fetchInitialData', error);
       setcheckPoint('MAINTENANCE');
     }
   };
@@ -224,14 +205,11 @@ const Splash = ({setConstants}) => {
   );
 };
 
-const mapDispatchToProps = dispatch => ({
-  setConstants: payload => dispatch({type: 'SET_CONSTANTS', payload}),
+const mapDispatchToProps = (dispatch) => ({
+  setConstants: (payload) => dispatch({type: 'SET_CONSTANTS', payload}),
 });
 
-export default connect(
-  null,
-  mapDispatchToProps,
-)(Splash);
+export default connect(null, mapDispatchToProps)(Splash);
 
 const styles = StyleSheet.create({
   splash: {

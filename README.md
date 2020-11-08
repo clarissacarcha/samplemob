@@ -24,8 +24,9 @@
 5. Handle when operator account is put on hold.
 6. Limit viewing of history 15 days. Also related modules like notification
 7. On checking number of ongoing orders, dont include delegated (to just check)
-8. Synermaxx Logs
-9. Dataloader
+8. Sender receiver distance duration total amount (After JC Referral, SMS and Email)
+9. Synermaxx Logs
+10. Dataloader
 
 # App TODO
 
@@ -33,7 +34,7 @@
 2. Session invalid. Flushing of session based on error.
 3. Go back button in password confirmation.
 4. Notification on Rating
-5. JC API SMS and Email
+5. App crashing on consecutive incorrect password
 
 # Customer TODO
 
@@ -45,79 +46,49 @@
 6. Handle skip location still invoked after Proceed
 7. (HALF) Item Description API (HARD CODE)
 8. Going back from details to placed orders, place a loading indicator.
-9. Move vehicle type for order in front end.
+9. Move vehicle type(Motorcycle, Van) for order in front end.
 
 # Rider TODO
 
 1. Refactor TopTab to show icons only.
-2. Fix Location Log subscription on Refresh of Orders (Looping)
-3. Hide Delivery Details for Driver When Delivery.tokDriverId is not him
-4. Fix Loop Issue on no network when getting orders
-5. Cant refetch orders when empty orders
-6. Rider Check Location and Camera Permission
-7. Add Rider Location on Go Online
-8. Rider Check Location and Camera Permission
-9. Can't Go Offline with Ongoing Orders today
+2. Fix Loop Issue on no network when getting orders
+3. Rider Check Location and Camera Permission
+4. Add Rider Location on Go Online
+5. Can't Go Offline with Ongoing Orders today
 
 # ASAP TODO
 
-1. Contact numbers for sender and recipient mobile (Overide contact name and number.)
-2. ~~MapView of Orders~~
-3. ~~Express Delivery Sorting~~
-4. ~~Welcome Banners~~
-5. ~~Scrollable Sidebar~~
-6. ~~REDIS~~
-7. ~~5 minis limit for nearby order notification.~~
-8. ~~Add Saved Location Delete~~
-9. ~~Add Booking, Vehicle Type ID (Just in the backend) Default to Motorcycle~~
-10. ~~Fix TimeStamp~~
-11. ~~Variable kilometers in sending riders of new order notification~~
-12. ~~Fix IOS Saved Location~~
-13. ~~Search Locations of Available Orders~~
-14. ~~Check if User is blocked by driver or consumer status.~~
-15. ~~When accepting order, make sure that is its not expired, cancelled, or deleted~~
-16. ~~Don't get orders from blocked consumer account.~~
-17. ~~Don't accept orders if consumer is blocked.~~
-18. ~~Cannot accept order if has Express Delivery ongoing.~~
-19. ~~POGI rating, conditional render~~
-
-#Toktok x Gogome
-
-1. Confirming Orders. Able to bypass confirmation or have number of stocks to consume.
-2. Payment, credit card, visa master, JC wallet.
-3. Create toktok wallet. Reloading. (toktok wallet)
-4. Limited top up amounts. 1000, 2000, 5000. Note cannot be encashed.
-5. Order hold payment until item delivered.
-6. Fixed Delivery Fee?
-7. Use toktok price calculation.
-8. Location permission allow disable. Allow searching for location first.
-
-Tokwa Rider. (encashable)
-Tokwa User. ()
-Tokwa Operator
-
-#
-
-1. Fixed cannot scroll in pinpoint location on iOS
-
-PAYKASH ACCESS
-
-If has referral code and item delivered, text to referral code user's mobile number.
-Also send email.
-Can be injected in JC api?
-
-Sender receiver distance duration total amount
-
-1. Customer
-2. Rider
-3. Operator
-
-4. Tanung kay boss kung magsesend ng sms kay sender and recipient upon booking.
-
-.Check announcement
+1. Fix Location Log subscription on Refresh of Orders (Looping)
+2. Cargo Items
 
 # SQL TODO on Live
 
-1. Check for cancellation reasons
-2. Check for rates of clusters
-3. tok_consumers.status default value 1
+1. tok_notifications payload and type varchar(50)
+
+# TODO
+
+1. Multiple Drop Offs
+   1.1 Limited to Sender for Multiple Drop Offs
+2. Global Settings. Limit 150 km booking distance.
+3. Limit Searching of Places in Google Places Autocomplete.
+4. Auto Cancel Accepted Orders at 12:00 AM
+
+# Final R1 TODO
+
+1. Hold rider on 3rd return to sender.
+2. Radius for searching SOS.
+3. Piso Padala Maximum Rider Accepted.
+4. Debounce
+
+# 1.7.0 Changelogs
+
+1. Added Refresh button on Rider Orders
+
+# Notes
+
+1 user number/device, 1 booking per day
+For ASAP deliveries only
+
+Rider SideMenu - Accounts
+Gcash verification. Mobile Number. Name... coming from record. Type address.
+delivery discountedPrice = Ibabawas sa delivery price.

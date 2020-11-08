@@ -13,14 +13,14 @@ import FAIcon from 'react-native-vector-icons/FontAwesome';
 
 const screenWidth = Dimensions.get('window').width;
 
-const getImageDimensions = uri => {
+const getImageDimensions = (uri) => {
   return new Promise((resolve, reject) => {
     Image.getSize(
       uri,
       (width, height) => {
         resolve({width: width, height: height});
       },
-      error => {
+      (error) => {
         reject(error);
       },
     );
@@ -126,10 +126,10 @@ export const DeliveryLogsCard = ({logs}) => {
 
         <View style={{padding: 20, paddingBottom: 0}}>
           <StatusBar number={1} label={['Order', 'Placed']} log={mappedLogs['1']} />
-          <StatusBar number={2} label={['Delivery', 'Scheduled']} log={mappedLogs['2']} />
-          <StatusBar number={3} label={['On The Way', 'To Sender']} log={mappedLogs['3']} />
+          <StatusBar number={2} label={['Scheduled', 'for Delivery']} log={mappedLogs['2']} />
+          <StatusBar number={3} label={['On the Way', 'to Sender']} log={mappedLogs['3']} />
           <StatusBar number={4} label={['Item', 'Picked Up']} log={mappedLogs['4']} />
-          <StatusBar number={5} label={['On The Way', 'To Recipient']} log={mappedLogs['5']} />
+          <StatusBar number={5} label={['On the Way', 'to Recipient']} log={mappedLogs['5']} />
           <StatusBar number={6} label={['Item', 'Delivered']} log={mappedLogs['6']} />
         </View>
       </View>

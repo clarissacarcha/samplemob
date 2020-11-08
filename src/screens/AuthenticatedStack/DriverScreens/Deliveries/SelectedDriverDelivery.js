@@ -40,7 +40,7 @@ const SelectedDriverDelivery = ({navigation, route, session}) => {
 
   const [patchDeliveryIncrementStatus, {loading: PDISLoading}] = useMutation(PATCH_DELIVERY_INCREMENT_STATUS, {
     onError: onError,
-    onCompleted: res => setDelivery(res.patchDeliveryIncrementStatus),
+    onCompleted: (res) => setDelivery(res.patchDeliveryIncrementStatus),
   });
 
   const [patchDeliveryAccepted, {loading: PDALoading}] = useMutation(PATCH_DELIVERY_ACCEPTED, {
@@ -64,7 +64,7 @@ const SelectedDriverDelivery = ({navigation, route, session}) => {
   const status = [
     'Cancelled',
     'Order Placed',
-    'Delivery Scheduled',
+    'Scheduled for Delivery',
     'On My Way To Pick Up The Item',
     'I Have Picked Up The Item',
     'On My Way To Deliver The Item',
@@ -76,7 +76,6 @@ const SelectedDriverDelivery = ({navigation, route, session}) => {
       variables: {
         input: {
           deliveryId: getDelivery.id,
-          // TODO: Replace with driverId from session
           driverId: session.user.driver.id,
           userId: session.user.id,
         },
@@ -94,7 +93,7 @@ const SelectedDriverDelivery = ({navigation, route, session}) => {
   //   });
   // };
 
-  const onCancelCallback = returnData => {
+  const onCancelCallback = (returnData) => {
     setDelivery(returnData);
 
     Toast.show('Order successfully cancelled.');
@@ -107,7 +106,7 @@ const SelectedDriverDelivery = ({navigation, route, session}) => {
     });
   };
 
-  const onStatusUpdateWithImage = fileUri => {
+  const onStatusUpdateWithImage = (fileUri) => {
     try {
       const rnFile = new ReactNativeFile({
         uri: fileUri,
@@ -124,7 +123,7 @@ const SelectedDriverDelivery = ({navigation, route, session}) => {
         },
       });
     } catch (error) {
-      alert(error);
+      Alert.alert('', error);
     }
   };
 
@@ -144,7 +143,7 @@ const SelectedDriverDelivery = ({navigation, route, session}) => {
     });
   };
 
-  const onDeliveryRated = rating => {
+  const onDeliveryRated = (rating) => {
     setDelivery({
       ...getDelivery,
       ...rating,
@@ -267,14 +266,11 @@ const SelectedDriverDelivery = ({navigation, route, session}) => {
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   session: state.session,
 });
 
-export default connect(
-  mapStateToProps,
-  null,
-)(SelectedDriverDelivery);
+export default connect(mapStateToProps, null)(SelectedDriverDelivery);
 
 const styles = StyleSheet.create({
   card: {

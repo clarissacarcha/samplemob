@@ -20,10 +20,7 @@ const INITIAL_VISIBILITY = {
   to: false,
 };
 
-const TODAY_TIME = moment()
-  .tz('Asia/Manila')
-  .format('HH:mm:ss')
-  .toString();
+const TODAY_TIME = moment().tz('Asia/Manila').format('HH:mm:ss').toString();
 
 const SCHEDULES = [
   {label: '12:00 AM', value: '00:00:00'},
@@ -104,7 +101,7 @@ const createDays = () => {
 };
 
 const createdFilteredTimes = () => {
-  const filteredFromSchedules = FROM_SCHEDULES.filter(sched => {
+  const filteredFromSchedules = FROM_SCHEDULES.filter((sched) => {
     if (sched.label == 'Anytime') {
       return true;
     }
@@ -114,7 +111,7 @@ const createdFilteredTimes = () => {
     return false;
   });
 
-  const filteredToSchedules = TO_SCHEDULES.filter(sched => {
+  const filteredToSchedules = TO_SCHEDULES.filter((sched) => {
     if (sched.label == 'Anytime') {
       return true;
     }
@@ -137,7 +134,7 @@ const PickerRow = ({initialData, setscheduledFrom, setscheduledTo, setScheduledD
   const [fromSchedules, setFromSchedules] = useState(FROM_SCHEDULES);
   const [toSchedules, settoSchedules] = useState(TO_SCHEDULES);
 
-  const onOpenPicker = state => {
+  const onOpenPicker = (state) => {
     // Hides all picker dropdowns and shows selected
     setVisibility({
       ...INITIAL_VISIBILITY,
@@ -146,13 +143,7 @@ const PickerRow = ({initialData, setscheduledFrom, setscheduledTo, setScheduledD
   };
 
   useEffect(() => {
-    if (
-      initialData.scheduledDay ==
-      moment()
-        .tz('Asia/Manila')
-        .format('YYYY-MM-DD')
-        .toString()
-    ) {
+    if (initialData.scheduledDay == moment().tz('Asia/Manila').format('YYYY-MM-DD').toString()) {
       const {filteredFromSchedules, filteredToSchedules} = createdFilteredTimes();
       setFromSchedules(filteredFromSchedules);
       settoSchedules(filteredToSchedules);
@@ -260,38 +251,22 @@ export const SchedulePicker = ({initialData, onScheduleChange}) => {
 
   const [scheduledDay, setScheduledDay] = useState(
     orderType == 2
-      ? moment(initialData.scheduledFrom, 'YYYY-MM-DD')
-          .format('YYYY-MM-DD')
-          .toString()
-      : moment()
-          .tz('Asia/Manila')
-          .format('YYYY-MM-DD')
-          .toString(),
+      ? moment(initialData.scheduledFrom, 'YYYY-MM-DD').format('YYYY-MM-DD').toString()
+      : moment().tz('Asia/Manila').format('YYYY-MM-DD').toString(),
   );
 
   const [scheduledFrom, setscheduledFrom] = useState(
     orderType == 2
-      ? moment(initialData.scheduledFrom, 'YYYY-MM-DD HH:mm:ss')
-          .format('HH:mm:ss')
-          .toString()
+      ? moment(initialData.scheduledFrom, 'YYYY-MM-DD HH:mm:ss').format('HH:mm:ss').toString()
       : '00:00:00',
   );
   const [scheduledTo, setscheduledTo] = useState(
-    orderType == 2
-      ? moment(initialData.scheduledTo, 'YYYY-MM-DD HH:mm:ss')
-          .format('HH:mm:ss')
-          .toString()
-      : '23:59:59',
+    orderType == 2 ? moment(initialData.scheduledTo, 'YYYY-MM-DD HH:mm:ss').format('HH:mm:ss').toString() : '23:59:59',
   );
 
   useEffect(() => {
     if (orderType == 1) {
-      setScheduledDay(
-        moment()
-          .tz('Asia/Manila')
-          .format('YYYY-MM-DD')
-          .toString(),
-      );
+      setScheduledDay(moment().tz('Asia/Manila').format('YYYY-MM-DD').toString());
       onScheduleChange({
         orderType,
         scheduledFrom: null,

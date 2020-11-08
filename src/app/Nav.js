@@ -55,6 +55,7 @@ import OrderCancellation from '../screens/AuthenticatedStack/CommonScreens/Order
 import Notifications from '../screens/AuthenticatedStack/CommonScreens/Notifications';
 import DeliveryRating from '../screens/AuthenticatedStack/CommonScreens/DeliveryRating';
 import Announcements from '../screens/AuthenticatedStack/CommonScreens/Announcement/Announcements';
+import GCashAccount from '../screens/AuthenticatedStack/CommonScreens/GCashAccount';
 
 /*---------- Unauthenticated Stack ----------*/
 import AccountBlocked from '../screens/UnauthenticatedStack/AccountBlocked';
@@ -184,6 +185,8 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="Announcements" component={Announcements} />
     <Authenticated.Screen name="SelectedAnnouncement" component={SelectedAnnouncement} />
     <Authenticated.Screen name="DeliveryRating" component={DeliveryRating} />
+
+    <Authenticated.Screen name="GCashAccount" component={GCashAccount} />
 
     <Authenticated.Screen name="ConsumerProfile" component={ConsumerProfile} />
     <Authenticated.Screen name="ConsumerChangePassword" component={ConsumerChangePassword} />

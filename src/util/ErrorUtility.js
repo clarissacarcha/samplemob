@@ -1,7 +1,7 @@
 // import React, {useEffect, useState} from 'react';
 import {Alert} from 'react-native';
 
-export const onError = error => {
+export const onError = (error) => {
   console.log(error);
   const {graphQLErrors, networkError} = error;
 
@@ -16,6 +16,7 @@ export const onError = error => {
       } else if (code === 'BAD_USER_INPUT') {
         Alert.alert('', message);
       } else {
+        console.log('ELSE ERROR:', error);
         Alert.alert('', 'Something went wrong...');
       }
     });

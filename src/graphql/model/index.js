@@ -7,6 +7,7 @@ export * from './DeliveryCancellationCategory';
 export * from './DeliveryRating';
 export * from './Driver';
 export * from './DriverLocationLog';
+export * from './GCashAccount';
 export * from './GlobalSetting';
 export * from './Notification';
 export * from './Order';

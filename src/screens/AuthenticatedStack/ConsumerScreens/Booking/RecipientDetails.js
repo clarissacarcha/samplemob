@@ -133,12 +133,12 @@ const RecipientDetails = ({navigation, route, constants}) => {
           return false;
         }
 
-        // if (checkResult === RESULTS.UNAVAILABLE) {
-        //   Alert.alert('', 'Access to contacts is unavailable.');
-        //   return false;
-        // }
-
         if (checkResult === RESULTS.UNAVAILABLE) {
+          Alert.alert('', 'Access to contacts is unavailable.');
+          return false;
+        }
+
+        if (checkResult === RESULTS.DENIED) {
           const requestResult = await request(PERMISSIONS.IOS.CONTACTS);
           console.log({requestResult});
           if (requestResult === RESULTS.GRANTED) {
@@ -152,11 +152,6 @@ const RecipientDetails = ({navigation, route, constants}) => {
             );
             return false;
           }
-
-          // if (requestResult === RESULTS.DENIED) {
-          //   Alert.alert('', "Sorry, we can't access your contacts without sufficient permission.");
-          //   return false;
-          // }
         }
       },
     });

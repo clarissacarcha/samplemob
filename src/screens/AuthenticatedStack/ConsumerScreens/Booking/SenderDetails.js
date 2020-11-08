@@ -102,6 +102,43 @@ const SenderDetails = ({navigation, route}) => {
           }
         }
       },
+      ios: async () => {
+        const checkResult = await check(PERMISSIONS.IOS.CONTACTS);
+        console.log({checkResult});
+
+        if (checkResult === RESULTS.GRANTED) {
+          return true;
+        }
+
+        if (checkResult === RESULTS.BLOCKED) {
+          Alert.alert(
+            '',
+            "Contacts access have been blocked. Please allow toktok to access your contacts in your phone's settings.",
+          );
+          return false;
+        }
+
+        if (checkResult === RESULTS.UNAVAILABLE) {
+          Alert.alert('', 'Access to contacts is unavailable.');
+          return false;
+        }
+
+        if (checkResult === RESULTS.DENIED) {
+          const requestResult = await request(PERMISSIONS.IOS.CONTACTS);
+          console.log({requestResult});
+          if (requestResult === RESULTS.GRANTED) {
+            return true;
+          }
+
+          if (requestResult === RESULTS.BLOCKED) {
+            Alert.alert(
+              '',
+              "Contacts access have been blocked. Please allow toktok to access your contacts in your phone's settings.",
+            );
+            return false;
+          }
+        }
+      },
     });
 
     const result = await checkAndRequest();
