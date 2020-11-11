@@ -77,8 +77,43 @@
 
 1. Hold rider on 3rd return to sender.
 2. Radius for searching SOS.
-3. Piso Padala Maximum Rider Accepted.
-4. Debounce
+3. Debounce
+
+# After Group Call
+
+1. Limit Rider number orders.
+2. First 1000 bookings.
+
+3. Input Promo Code. Piso Fair Or First 1000/P70. (Placed, Ongoing)
+
+Piso Per KM on launch.
+Message for Invalid Promo Code. Pop Up Message.
+
+Take Note.
+
+1. Voucher Wallet
+
+1. Piso Fare, Piso Padala
+1. Same day scheduled
+1. Blocking users
+
+# Who can bypass ongoing placed order count?
+
+1. Enterprise
+2. Operator
+
+# Can refactor UI vertical
+
+# Supported Promo
+
+1. FIXED | DISCOUNT | PERKM
+2.
+
+# TOK PROMOS
+
+1. Add current_count
+2. Max Avail per user/device
+3. Promos are for ASAP deliveries only
 
 # 1.7.0 Changelogs
 
@@ -86,9 +121,26 @@
 
 # Notes
 
-1 user number/device, 1 booking per day
-For ASAP deliveries only
+1. https://codesandbox.io/s/rn-hide-vader-question-9k79f
+2. https://codesandbox.io/s/rn-components-question-6tv34
 
-Rider SideMenu - Accounts
-Gcash verification. Mobile Number. Name... coming from record. Type address.
-delivery discountedPrice = Ibabawas sa delivery price.
+# Add consumerId on getOrderPriceAndDirections only relevant for promo code
+
+# Need to Add
+
+1. Enterprise API Logs
+2. Synermaxx Logs
+
+# GCash Verification
+
+1.
+
+# Handle promos
+
+1. Piso Fare once per customer, rider 15 per day. first 10,000.
+2. Dec 1 - 31, flat rate + 1 per KM for first 1000 bookings everday.
+3. Promo if payable to rider. is_discount_payable
+
+tok_disbursement_logs
+tok_disbursement_riders
+toK_disbursement_deliveries

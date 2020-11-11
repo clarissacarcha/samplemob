@@ -18,7 +18,7 @@ const SearchMap = ({navigation, route}) => {
     ...data,
   });
 
-  const onMapScrollEnd = async data => {
+  const onMapScrollEnd = async (data) => {
     if (!loading) {
       loading = true;
       const result = await reverseGeocode(data);
@@ -99,7 +99,6 @@ const styles = StyleSheet.create({
     // ...StyleSheet.absoluteFillObject,
     // justifyContent: 'center',
     // alignItems: 'center',
-
     // bottom: 0,
     // left: 0,
     // right: 0,

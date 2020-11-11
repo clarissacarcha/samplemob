@@ -18,6 +18,7 @@ import Landing from '../screens/Landing';
 /*---------- CONSUMER SCREENS ----------*/
 import PostRegistration from '../screens/AuthenticatedStack/ConsumerScreens/PostRegistration';
 import RecipientDetails from '../screens/AuthenticatedStack/ConsumerScreens/Booking/RecipientDetails';
+import DeliveryDetails from '../screens/AuthenticatedStack/ConsumerScreens/Booking/DeliveryDetails';
 import SavedLocations from '../screens/AuthenticatedStack/ConsumerScreens/SavedLocations/SavedLocations';
 import SearchMap from '../screens/AuthenticatedStack/ConsumerScreens/Booking/SearchMap';
 import SearchPlaces from '../screens/AuthenticatedStack/ConsumerScreens/Booking/SearchPlaces';
@@ -180,6 +181,7 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="SearchMap" component={SearchMap} />
     <Authenticated.Screen name="SenderDetails" component={SenderDetails} />
     <Authenticated.Screen name="RecipientDetails" component={RecipientDetails} />
+    <Authenticated.Screen name="DeliveryDetails" component={DeliveryDetails} />
     <Authenticated.Screen name="SearchContact" component={SearchContact} />
 
     <Authenticated.Screen name="Announcements" component={Announcements} />
