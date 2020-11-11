@@ -22,7 +22,7 @@ import FAIcon from 'react-native-vector-icons/FontAwesome';
 import {FlatList} from 'react-native-gesture-handler';
 
 const StarRating = ({rating}) => {
-  const starColor = index => {
+  const starColor = (index) => {
     if (index <= rating) {
       return COLOR;
     } else {
@@ -94,10 +94,9 @@ const SelectedDelivery = ({navigation, route}) => {
 
   // const onRebook = () => {
   // patchDeliveryRebook();
-  // navigation.navigate('ConsumerMap', {rebookDelivery: delivery});
   // };
 
-  const onCancelCallback = returnData => {
+  const onCancelCallback = (returnData) => {
     setDelivery(returnData);
 
     Toast.show('Order successfully cancelled.');
@@ -119,7 +118,7 @@ const SelectedDelivery = ({navigation, route}) => {
   //   }
   // }, [loadingD]);
 
-  const onDeliveryRated = rating => {
+  const onDeliveryRated = (rating) => {
     setDelivery({
       ...getDelivery,
       ...rating,

@@ -144,3 +144,8 @@ Take Note.
 tok_disbursement_logs
 tok_disbursement_riders
 toK_disbursement_deliveries
+
+# Refactor Notes
+
+1. Check collectPaymentFrom Value R | S
+2. Check if senderStop and recipientStop has formattedAddress

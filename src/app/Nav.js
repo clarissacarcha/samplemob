@@ -17,6 +17,8 @@ import Landing from '../screens/Landing';
 
 /*---------- CONSUMER SCREENS ----------*/
 import PostRegistration from '../screens/AuthenticatedStack/ConsumerScreens/PostRegistration';
+import CheckConsumerLocation from '../screens/AuthenticatedStack/ConsumerScreens/Booking/CheckConsumerLocation';
+import ConsumerMap from '../screens/AuthenticatedStack/ConsumerScreens/Booking/ConsumerMap';
 import RecipientDetails from '../screens/AuthenticatedStack/ConsumerScreens/Booking/RecipientDetails';
 import DeliveryDetails from '../screens/AuthenticatedStack/ConsumerScreens/Booking/DeliveryDetails';
 import SavedLocations from '../screens/AuthenticatedStack/ConsumerScreens/SavedLocations/SavedLocations';
@@ -27,7 +29,7 @@ import SelectedDelivery from '../screens/AuthenticatedStack/ConsumerScreens/Deli
 import SenderDetails from '../screens/AuthenticatedStack/ConsumerScreens/Booking/SenderDetails';
 import AddLocation from '../screens/AuthenticatedStack/ConsumerScreens/SavedLocations/AddLocation';
 import ConsumerChangePassword from '../screens/AuthenticatedStack/ConsumerScreens/Profile/ConsumerChangePassword';
-import ConsumerMap from '../screens/AuthenticatedStack/ConsumerScreens/Booking/ConsumerMap';
+
 import ConsumerProfile from '../screens/AuthenticatedStack/ConsumerScreens/Profile/ConsumerProfile';
 import CustomerDeliveries from '../screens/AuthenticatedStack/ConsumerScreens/Deliveries/MyDeliveries';
 import DeliveryTracking from '../screens/AuthenticatedStack/ConsumerScreens/Deliveries/DeliveryTracking';
@@ -176,7 +178,16 @@ const AuthenticatedStack = () => (
   <Authenticated.Navigator>
     <Authenticated.Screen name="PostRegistration" component={PostRegistration} />
 
-    <Authenticated.Screen name="ConsumerMap" component={ConsumerMap} options={{headerShown: false}} />
+    <Authenticated.Screen
+      name="CheckConsumerLocation"
+      component={CheckConsumerLocation}
+      options={{headerShown: false, animationEnabled: false}}
+    />
+    <Authenticated.Screen
+      name="ConsumerMap"
+      component={ConsumerMap}
+      options={{headerShown: false, animationEnabled: false}}
+    />
     <Authenticated.Screen name="SearchPlaces" component={SearchPlaces} />
     <Authenticated.Screen name="SearchMap" component={SearchMap} />
     <Authenticated.Screen name="SenderDetails" component={SenderDetails} />

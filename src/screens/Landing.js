@@ -49,7 +49,8 @@ const Landing = ({createSession, destroySession, navigation}) => {
             navigation.replace('RootDrawer', {
               screen: 'AuthenticatedStack',
               params: {
-                screen: 'ConsumerMap',
+                screen: 'CheckConsumerLocation',
+                // screen: 'ConsumerMap',
               },
             });
           }
@@ -100,19 +101,16 @@ const Landing = ({createSession, destroySession, navigation}) => {
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   session: state.session,
 });
 
-const mapDispatchToProps = dispatch => ({
-  createSession: payload => dispatch({type: 'CREATE_SESSION', payload}),
+const mapDispatchToProps = (dispatch) => ({
+  createSession: (payload) => dispatch({type: 'CREATE_SESSION', payload}),
   destroySession: () => dispatch({type: 'DESTROY_SESSION'}),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Landing);
+export default connect(mapStateToProps, mapDispatchToProps)(Landing);
 
 const styles = StyleSheet.create({
   splash: {

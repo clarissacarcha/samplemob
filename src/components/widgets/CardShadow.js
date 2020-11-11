@@ -1,0 +1,30 @@
+import React from 'react';
+import {View, StyleSheet, TouchableHighlight} from 'react-native';
+import {COLOR} from '../../res/constants';
+
+export const CardShadow = ({onPress, children}) => {
+  return (
+    <TouchableHighlight onPress={onPress} underlayColor={COLOR} style={styles.touchable}>
+      <View style={styles.cardShadow}>{children}</View>
+    </TouchableHighlight>
+  );
+};
+
+const styles = StyleSheet.create({
+  touchable: {
+    borderRadius: 10,
+  },
+  cardShadow: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    shadowColor: '#000',
+
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+});
