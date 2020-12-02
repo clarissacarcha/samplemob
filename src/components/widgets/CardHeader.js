@@ -5,7 +5,7 @@ import {YellowIcon} from '../../components/ui';
 
 export const CardHeader = ({label, iconSet, iconName, iconSize = 16}) => {
   return (
-    <View style={styles.headerContainer}>
+    <View style={[styles.headerContainer]}>
       <YellowIcon set={iconSet} name={iconName} size={iconSize} darkIcon />
 
       <Text style={styles.headerTitle}>
@@ -17,9 +17,10 @@ export const CardHeader = ({label, iconSet, iconName, iconSize = 16}) => {
 
 const styles = StyleSheet.create({
   headerContainer: {
+    height: 50,
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 20,
+    paddingHorizontal: 20,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderColor: MEDIUM,
   },

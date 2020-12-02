@@ -27,6 +27,7 @@
 8. Sender receiver distance duration total amount (After JC Referral, SMS and Email)
 9. Synermaxx Logs
 10. Dataloader
+11. Validate Enterprise Cancel if delivery is owned by Enterprise Account
 
 # App TODO
 
@@ -58,8 +59,9 @@
 
 # ASAP TODO
 
-1. Fix Location Log subscription on Refresh of Orders (Looping)
-2. Cargo Items
+1. New Referral ID Endpoint
+2. Fix Location Log subscription on Refresh of Orders (Looping)
+3. Cargo Items
 
 # SQL TODO on Live
 
@@ -72,80 +74,94 @@
 2. Global Settings. Limit 150 km booking distance.
 3. Limit Searching of Places in Google Places Autocomplete.
 4. Auto Cancel Accepted Orders at 12:00 AM
+5. Radius for searching SOS.
+6. Hold rider on 3rd return to sender.
 
 # Final R1 TODO
 
-1. Hold rider on 3rd return to sender.
-2. Radius for searching SOS.
-3. Debounce
+1. Promo redeem/accept count validation
+2. Hold consumer/rider account on 5th cancel of the day
+3. Provide Push Notifs to Riders with gcash, pending or rejected.
+4. Enterprise API Logs
+5. Message for Invalid Promo Code. Pop Up Message.
+6. ***
+7. Double check Account Holding
+8. Debounce
+9. Synermaxx Logs
+10. Try Catch In API Calls. S3 Upload. Enterprise Postbacks. JC REFERRAL and PROCESS. Synnermaxx
+11. Worker Threads for OneSignal Loop
 
-# After Group Call
+# 1.7.0 Changelogs SQL SCRIPT
 
-1. Limit Rider number orders.
-2. First 1000 bookings.
-
-3. Input Promo Code. Piso Fair Or First 1000/P70. (Placed, Ongoing)
-
-Piso Per KM on launch.
-Message for Invalid Promo Code. Pop Up Message.
-
-Take Note.
-
-1. Voucher Wallet
-
-1. Piso Fare, Piso Padala
-1. Same day scheduled
-1. Blocking users
-
-# Who can bypass ongoing placed order count?
-
-1. Enterprise
-2. Operator
-
-# Can refactor UI vertical
-
-# Supported Promo
-
-1. FIXED | DISCOUNT | PERKM
-2.
-
-# TOK PROMOS
-
-1. Add current_count
-2. Max Avail per user/device
-3. Promos are for ASAP deliveries only
+1. tok_notifications type (VARCHAR50)
+2. tok_deliveries cash_on_delivery DEFAULT 0
 
 # 1.7.0 Changelogs
 
 1. Added Refresh button on Rider Orders
 
-# Notes
-
-1. https://codesandbox.io/s/rn-hide-vader-question-9k79f
-2. https://codesandbox.io/s/rn-components-question-6tv34
-
-# Add consumerId on getOrderPriceAndDirections only relevant for promo code
-
-# Need to Add
-
-1. Enterprise API Logs
-2. Synermaxx Logs
-
-# GCash Verification
-
-1.
-
-# Handle promos
-
-1. Piso Fare once per customer, rider 15 per day. first 10,000.
-2. Dec 1 - 31, flat rate + 1 per KM for first 1000 bookings everday.
-3. Promo if payable to rider. is_discount_payable
-
-tok_disbursement_logs
-tok_disbursement_riders
-toK_disbursement_deliveries
+# Add consumerId on getOrderPriceAndDirections only relevant for promo code. Also add mobileNumber
 
 # Refactor Notes
 
 1. Check collectPaymentFrom Value R | S
 2. Check if senderStop and recipientStop has formattedAddress
+3. Default Cash On Delivery to 0
+4. Add Pick Up Drop Off in StopCard
+5. Changing Scheduled Date when scheduled To and From is already set
+6. OrderType === 1 or 2 to SCHEDULED
+7. Change PHPOPENSSLENCRYPT
+
+#Wallet 2 menu
+
+Rider Wallet
+
+Toktok Wallet
+Toktok Wallet Balance Display
+-Refresh, See History, Encash
+-Encash: Encash all balance to gcash.
+
+Incoming Data.
+Remittances from promo Code.
+Deliveries from Josh, Paul.
+"Promo Code Delivery ID, pangalan, datetime, magkano"
+"Gogome Transaction, Delivery ID'
+
+Viewing Limit,
+-default today
+-date range 90 days
+
+# Create Toktok_wallet
+
+# CHANGE API tok toktok api
+
+# Credit Cost Computation. Remove Express Fee
+
+Toktok JC API
+
+1. Target migrate API till Friday.
+2. Check Price and Discounts
+3. Referral Com in App
+4. By Thursday, remove all account with referral code.
+5. Display referral code and referral code name.
+
+#Picture on Google Play and AppStore
+
+1. With Alden and Main
+2. Terms and Conditions
+3. API
+4. Wallet
+5. Toktok Operator as Default
+
+# Restructuring Plans
+
+1. Project has to have one of each
+
+- BA
+- Web Project Lead
+- Mobile Project Lead
+- Web Dev Lead
+- Mobile Dev Lead
+
+2. Feature branch and code review
+3. Pair programming

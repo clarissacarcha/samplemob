@@ -12,6 +12,10 @@ const Delivery = `
   comRate
   cashOnDelivery
   collectPaymentFrom
+  discount
+  isDiscountPayable
+  isDiscountProcessed
+  isDiscountExported
   cargo
   notes
   status
@@ -75,6 +79,49 @@ export const GET_DELIVERIES = gql`
     }
 `;
 
+export const GET_DELIVERY_PRICE_AND_DIRECTIONS = gql`
+  query getDeliveryPriceAndDirections($input: GetDeliveryPriceAndDirectionsInput!) {
+    getDeliveryPriceAndDirections(input: $input) {
+      hash
+      pricing {
+        price
+        discount
+        expressFee
+        distance
+        duration
+      }
+      directions {
+        bounds {
+          northeast {
+            latitude
+            longitude
+          }
+          southwest {
+            latitude
+            longitude
+          }
+        }
+        legs {
+          startAddress
+          endAddress
+          startLocation {
+            latitude
+            longitude
+          }
+          endLocation {
+            latitude
+            longitude
+          }
+          polyline {
+            latitude
+            longitude
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const GET_DELIVERY_LOCATION_FILTERS = gql`
   query {
     getDeliveryLocationFilters
@@ -93,6 +140,14 @@ export const GET_DELIVERIES_COUNT_BY_STATUS = gql`
 export const POST_DELIVERY = gql`
   mutation postDelivery($input: PostDeliveryInput) {
     postDelivery(input: $input)
+  }
+`;
+
+export const POST_DELIVERY_V2 = gql`
+  mutation postDeliveryV2($input: PostDeliveryV2Input!) {
+    postDeliveryV2(input: $input) {
+      message
+    }
   }
 `;
 

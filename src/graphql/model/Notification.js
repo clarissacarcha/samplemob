@@ -11,6 +11,10 @@ const Delivery = `
   comRate
   cashOnDelivery
   collectPaymentFrom
+  discount
+  isDiscountPayable
+  isDiscountProcessed
+  isDiscountExported
   cargo
   notes
   status

@@ -18,6 +18,7 @@ import Landing from '../screens/Landing';
 /*---------- CONSUMER SCREENS ----------*/
 import PostRegistration from '../screens/AuthenticatedStack/ConsumerScreens/PostRegistration';
 import CheckConsumerLocation from '../screens/AuthenticatedStack/ConsumerScreens/Booking/CheckConsumerLocation';
+import StopDetails from '../screens/AuthenticatedStack/ConsumerScreens/Booking/StopDetails';
 import ConsumerMap from '../screens/AuthenticatedStack/ConsumerScreens/Booking/ConsumerMap';
 import RecipientDetails from '../screens/AuthenticatedStack/ConsumerScreens/Booking/RecipientDetails';
 import DeliveryDetails from '../screens/AuthenticatedStack/ConsumerScreens/Booking/DeliveryDetails';
@@ -42,6 +43,7 @@ import Pending from '../screens/AuthenticatedStack/DriverScreens/Deliveries/Pend
 import DriverProfile from '../screens/AuthenticatedStack/DriverScreens/Profile/DriverProfile';
 import DriverWallet from '../screens/AuthenticatedStack/DriverScreens/Wallet/DriverWallet';
 import DriverWalletLog from '../screens/AuthenticatedStack/DriverScreens/Wallet/DriverWalletHistory';
+import ToktokWalletHistory from '../screens/AuthenticatedStack/DriverScreens/Wallet/ToktokWalletHistory';
 import ItemCamera from '../screens/AuthenticatedStack/DriverScreens/Deliveries/ItemCamera';
 import DriverSettings from '../screens/AuthenticatedStack/DriverScreens/DriverHomeBottomTab/DriverSettings';
 import SelectedDriverDelivery from '../screens/AuthenticatedStack/DriverScreens/Deliveries/SelectedDriverDelivery';
@@ -193,6 +195,7 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="SenderDetails" component={SenderDetails} />
     <Authenticated.Screen name="RecipientDetails" component={RecipientDetails} />
     <Authenticated.Screen name="DeliveryDetails" component={DeliveryDetails} />
+    <Authenticated.Screen name="StopDetails" component={StopDetails} />
     <Authenticated.Screen name="SearchContact" component={SearchContact} />
 
     <Authenticated.Screen name="Announcements" component={Announcements} />
@@ -227,6 +230,7 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="ChangeProfilePicture" component={ChangeProfilePicture} />
     <Authenticated.Screen name="DriverWallet" component={DriverWallet} />
     <Authenticated.Screen name="DriverWalletLog" component={DriverWalletLog} />
+    <Authenticated.Screen name="ToktokWalletHistory" component={ToktokWalletHistory} />
     <Authenticated.Screen name="Order" component={Order} />
     <Authenticated.Screen name="SearchLocationFilter" component={SearchLocationFilter} />
     <Authenticated.Screen name="DriverDeliveriesTab" component={DriverDeliveriesTab} />

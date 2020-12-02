@@ -5,7 +5,8 @@ import {connect} from 'react-redux';
 import {COLOR, DARK, ORANGE, MEDIUM, LIGHT} from '../../../../res/constants';
 import NoData from '../../../../assets/images/NoData.png';
 import {useQuery} from '@apollo/react-hooks';
-import {GET_WALLET_LOGS} from '../../../../graphql';
+import {GET_TOKTOK_WALLET_LOGS} from '../../../../graphql/model/ToktokWallet';
+
 import {numberFormat} from '../../../../helper';
 
 const imageWidth = Dimensions.get('window').width - 200;
@@ -45,7 +46,7 @@ const WalletLog = ({item, lastItem}) => (
       <View style={{flex: 1}}>
         <Text style={{color: DARK, fontSize: 12, fontFamily: 'Rubik-Medium', marginHorizontal: 10}}>{item.type}</Text>
         <Text style={{color: MEDIUM, fontSize: 10, fontFamily: 'Rubik-Medium', marginHorizontal: 10}}>
-          {item.transactionDate}
+          {item.createdAt}
         </Text>
       </View>
       {!(item.incoming == 0 && item.outgoing == 0) && (
@@ -63,17 +64,19 @@ const WalletLog = ({item, lastItem}) => (
   </View>
 );
 
-const DriverWalletLog = ({navigation, session}) => {
+const DriverWalletLog = ({navigation, session, route}) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={['Rider Wallet', 'History']} />,
+    headerTitle: () => <HeaderTitle label={['Toktok Wallet', 'History']} />,
   });
 
-  const {data, loading, error, refetch} = useQuery(GET_WALLET_LOGS, {
+  const {toktokWalletId} = route.params;
+
+  const {data, loading, error, refetch} = useQuery(GET_TOKTOK_WALLET_LOGS, {
     fetchPolicy: 'network-only',
     variables: {
       input: {
-        walletId: session.user.wallet.id,
+        toktokWalletId,
       },
     },
   });
@@ -94,7 +97,7 @@ const DriverWalletLog = ({navigation, session}) => {
     );
   }
 
-  if (data.getWalletLogs.length === 0) {
+  if (data.getToktokWalletLogs.records.length === 0) {
     return (
       <View style={styles.center}>
         <Image source={NoData} style={styles.image} resizeMode={'contain'} />
@@ -106,10 +109,10 @@ const DriverWalletLog = ({navigation, session}) => {
     <View style={styles.container}>
       <FlatList
         showsVerticalScrollIndicator={false}
-        data={data.getWalletLogs}
+        data={data.getToktokWalletLogs.records}
         keyExtractor={(item) => item.id}
         renderItem={({item, index}) => (
-          <WalletLog item={item} lastItem={data.getWalletLogs.length === index + 1 ? true : false} />
+          <WalletLog item={item} lastItem={data.getToktokWalletLogs.records.length === index + 1 ? true : false} />
         )}
       />
     </View>

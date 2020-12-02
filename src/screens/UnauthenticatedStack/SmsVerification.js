@@ -67,7 +67,7 @@ const Verification = ({navigation, route, createSession}) => {
         userId: user.id,
       }); // Set onesignal userId tag for the phone
 
-      if (APP_FLAVOR == 'C') {
+      if (APP_FLAVOR === 'C') {
         if (user.person.firstName == null || user.person.lastName == null) {
           navigation.replace('RootDrawer', {
             screen: 'AuthenticatedStack',
@@ -81,7 +81,7 @@ const Verification = ({navigation, route, createSession}) => {
         navigation.replace('RootDrawer', {
           screen: 'AuthenticatedStack',
           params: {
-            screen: 'ConsumerMap',
+            screen: 'CheckConsumerLocation',
           },
         });
       }
@@ -159,7 +159,7 @@ const Verification = ({navigation, route, createSession}) => {
             style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent'}}
             keyboardType="number-pad"
             returnKeyType="done"
-            onChangeText={value => {
+            onChangeText={(value) => {
               if (value.length <= 6) {
                 setVerificationCode(value);
               }
@@ -183,14 +183,11 @@ const Verification = ({navigation, route, createSession}) => {
   );
 };
 
-const mapDispatchToProps = dispatch => ({
-  createSession: payload => dispatch({type: 'CREATE_SESSION', payload}),
+const mapDispatchToProps = (dispatch) => ({
+  createSession: (payload) => dispatch({type: 'CREATE_SESSION', payload}),
 });
 
-export default connect(
-  null,
-  mapDispatchToProps,
-)(Verification);
+export default connect(null, mapDispatchToProps)(Verification);
 
 const styles = StyleSheet.create({
   inputView: {

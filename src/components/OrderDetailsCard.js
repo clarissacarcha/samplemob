@@ -11,9 +11,7 @@ import moment from 'moment';
 
 const SchedulePhrase = ({stop}) => {
   const nowDate = moment().format('MMM DD YYYY');
-  const tomorrowDate = moment()
-    .add(1, 'days')
-    .format('MMM DD YYYY');
+  const tomorrowDate = moment().add(1, 'days').format('MMM DD YYYY');
   const stopDate = moment(stop.scheduledFrom, 'MM/DD/YYYY - hh:mm A').format('MMM DD YYYY');
 
   let displayDate = stopDate;
@@ -72,9 +70,9 @@ const DeliverySchedule = ({label, stop}) => {
 export const OrderDetailsCard = ({delivery}) => {
   const {senderStop, recipientStop} = delivery;
   const legend = ['', 'As Soon As Possible', 'Scheduled'];
-  const orderType = senderStop.orderType === 2 || recipientStop.orderType == 2 ? 2 : 1;
+  const orderType = senderStop.orderType === 2 || recipientStop.orderType === 2 ? 2 : 1;
 
-  const collectFromString = delivery.collectPaymentFrom == 'S' ? 'Sender' : 'Recipient';
+  const collectFromString = delivery.collectPaymentFrom === 'S' ? 'Sender' : 'Recipient';
 
   return (
     <View style={styles.card}>
@@ -104,7 +102,7 @@ export const OrderDetailsCard = ({delivery}) => {
                 <Text style={{fontFamily: 'Rubik-Medium'}}>Credit Cost</Text>
                 <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
                   <Text style={{fontFamily: 'Rubik-Medium', marginLeft: 10}}>
-                    {numberFormat((parseFloat(delivery.price) + parseFloat(delivery.expressFee)) * delivery.comRate)}
+                    {numberFormat(parseFloat(delivery.price) * parseFloat(delivery.comRate))}
                   </Text>
                 </Text>
               </View>
@@ -121,30 +119,80 @@ export const OrderDetailsCard = ({delivery}) => {
               <View style={{marginLeft: 10}}>
                 <Text style={{fontFamily: 'Rubik-Medium'}}>Express Delivery</Text>
                 <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
-                  <Text style={{fontFamily: 'Rubik-Medium', marginLeft: 10}}>{`(${delivery.price}+${
-                    delivery.expressFee
-                  }) = ₱ ${parseFloat(delivery.price) + parseFloat(delivery.expressFee)}.00`}</Text>
+                  <Text style={{fontFamily: 'Rubik-Medium', marginLeft: 10}}>{`(${
+                    parseFloat(delivery.price) - parseFloat(delivery.expressFee)
+                  }+${parseFloat(delivery.expressFee)}) = ₱ ${parseFloat(delivery.price)}.00`}</Text>
                 </Text>
               </View>
             </View>
           </View>
         )}
 
-        {/*-------------------- ORDER PRICE AND COD ROW --------------------*/}
-        <View style={[styles.directionsBox, {borderBottomWidth: StyleSheet.hairlineWidth, borderColor: LIGHT}]}>
-          <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-            <YellowIcon set="Ionicon" name="md-pricetag" size={16} />
-
-            <View style={{marginLeft: 10}}>
-              <Text style={{fontFamily: 'Rubik-Medium'}}>Amount</Text>
-              <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
-                <Text style={{fontFamily: 'Rubik-Medium', marginLeft: 10}}>
-                  ₱ {parseFloat(delivery.price) + parseFloat(delivery.expressFee)}.00
+        {/*-------------------- CUSTOMER AMOUNT AND DISCOUNT --------------------*/}
+        {APP_FLAVOR === 'C' && (
+          <View
+            style={[
+              styles.directionsBox,
+              {borderBottomWidth: 0, borderColor: LIGHT, borderTopWidth: StyleSheet.hairlineWidth},
+            ]}>
+            <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+              <YellowIcon set="Ionicon" name="ios-pricetag" size={20} />
+              <View style={{marginLeft: 10}}>
+                <Text style={{fontFamily: 'Rubik-Medium'}}>Amount</Text>
+                <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
+                  <Text style={{fontFamily: 'Rubik-Medium', marginLeft: 10}}>₱ {delivery.price}.00</Text>
                 </Text>
-              </Text>
+              </View>
+            </View>
+            {delivery.discount !== 0 && (
+              <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+                <YellowIcon set="Ionicon" name="ios-pricetags" size={20} />
+                <View style={{marginLeft: 10}}>
+                  <Text style={{fontFamily: 'Rubik-Medium'}}>Discount</Text>
+                  <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
+                    <Text style={{fontFamily: 'Rubik-Medium', marginLeft: 10}}>₱ {delivery.discount}.00</Text>
+                  </Text>
+                </View>
+              </View>
+            )}
+          </View>
+        )}
+
+        {/*-------------------- RIDER COLLECT FROM SENDER/RECIPIENT--------------------*/}
+        {APP_FLAVOR === 'D' && (
+          <View style={[styles.directionsBox, {borderBottomWidth: StyleSheet.hairlineWidth, borderColor: LIGHT}]}>
+            <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+              <YellowIcon set="FontAwesome5" name="hand-holding" />
+              <View style={{marginLeft: 10}}>
+                <Text style={{fontFamily: 'Rubik-Medium'}}>
+                  Collect From {delivery.collectPaymentFrom === 'S' ? 'Sender' : 'Recipient'}
+                </Text>
+                <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
+                  <Text style={{fontFamily: 'Rubik-Medium', marginLeft: 10}}>₱ {parseFloat(delivery.price)}.00</Text>
+                </Text>
+              </View>
             </View>
           </View>
-          {delivery.cashOnDelivery && (
+        )}
+
+        {/*-------------------- RIDER COLLECT FROM WALLET --------------------*/}
+        {APP_FLAVOR === 'D' && delivery.discount != 0 && delivery.isDiscountPayable == 1 && (
+          <View style={[styles.directionsBox, {borderBottomWidth: StyleSheet.hairlineWidth, borderColor: LIGHT}]}>
+            <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+              <YellowIcon set="FontAwesome5" name="wallet" />
+              <View style={{marginLeft: 10}}>
+                <Text style={{fontFamily: 'Rubik-Medium'}}>Collect From Wallet</Text>
+                <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
+                  <Text style={{fontFamily: 'Rubik-Medium', marginLeft: 10}}>₱ {parseFloat(delivery.discount)}.00</Text>
+                </Text>
+              </View>
+            </View>
+          </View>
+        )}
+
+        {/*-------------------- COD ROW --------------------*/}
+        {![null, 0, '0'].includes(delivery.cashOnDelivery) && (
+          <View style={[styles.directionsBox, {borderBottomWidth: StyleSheet.hairlineWidth, borderColor: LIGHT}]}>
             <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
               <YellowIcon set="MaterialCommunity" name="cash" size={22} />
 
@@ -155,8 +203,8 @@ export const OrderDetailsCard = ({delivery}) => {
                 </Text>
               </View>
             </View>
-          )}
-        </View>
+          </View>
+        )}
 
         {/*-------------------- ORDER DATE AND TYPE ROW --------------------*/}
         <View
@@ -198,7 +246,7 @@ export const OrderDetailsCard = ({delivery}) => {
         </View>
 
         {/*------------------- SCHEDULE | DISPLAY ON ORDER TYPE = 2 -------------------*/}
-        {orderType == 2 && (
+        {orderType === 2 && (
           <>
             {/*-------------------- PICK UP --------------------*/}
             <DeliverySchedule label="Pick Up" stop={senderStop} />
@@ -247,17 +295,8 @@ export const OrderDetailsCard = ({delivery}) => {
             <YellowIcon set="Entypo" name="box" size={16} containerStyle={{marginTop: 4}} />
             <View style={{marginLeft: 10}}>
               <Text style={{fontFamily: 'Rubik-Medium'}}>Item Description</Text>
-              <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
+              <Text style={{paddingRight: 20, color: MEDIUM, fontSize: 11}}>
                 <Text style={{fontFamily: 'Rubik-Medium', marginLeft: 10}}>{delivery.cargo}</Text>
-              </Text>
-            </View>
-          </View>
-          <View style={{flex: 1, flexDirection: 'row', marginTop: 8}}>
-            <YellowIcon set="FontAwesome5" name="hand-holding" size={16} containerStyle={{marginTop: 4}} />
-            <View style={{marginLeft: 10}}>
-              <Text style={{fontFamily: 'Rubik-Medium'}}>Collect From</Text>
-              <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
-                <Text style={{fontFamily: 'Rubik-Medium', marginLeft: 10}}>{collectFromString}</Text>
               </Text>
             </View>
           </View>

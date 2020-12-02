@@ -1,56 +1,64 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, TouchableWithoutFeedback, Alert, Dimensions} from 'react-native';
-import {COLOR, DARK, MAP_DELTA_LOW, MEDIUM, LIGHT, ORANGE, COLOR_UNDERLAY} from '../../res/constants';
+import {COLOR, DARK, LIGHT} from '../../res/constants';
+import {SizedBox} from '../../components/widgets';
 
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
-import FAIcon from 'react-native-vector-icons/FontAwesome';
-import FIcon from 'react-native-vector-icons/Feather';
 
 const screenWidth = Dimensions.get('window').width;
 
-export const CollectPaymentFromInput = ({initialValue, onSelect, isCashOnDelivery}) => {
+const Widget = ({initialValue, isCashOnDelivery, onChange, marginTop, marginBottom}) => {
   const [collectFrom, setCollectFrom] = useState(initialValue);
 
   const onPress = (value) => {
     if (!isCashOnDelivery) {
       setCollectFrom(value);
-      onSelect(value);
+      onChange(value);
     } else {
-      if (value == 'S') {
+      if (value === 'SENDER') {
         Alert.alert('', 'Cannot collect payment from Sender for Cash on Deliveries.');
       }
     }
   };
 
+  // Force collect from Recipient if isCashOnDelivery true
   useEffect(() => {
-    if (collectFrom == 'S' && isCashOnDelivery) {
-      setCollectFrom('R');
-      onSelect('R');
+    if (collectFrom === 'SENDER' && isCashOnDelivery) {
+      setCollectFrom('RECIPIENT');
+      onChange('RECIPIENT');
     }
   }, [isCashOnDelivery]);
 
   return (
     <>
+      {marginTop && <SizedBox />}
       <Text style={styles.label}>Collect Payment From</Text>
-      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-        <TouchableWithoutFeedback onPress={() => onPress('S')}>
-          <View style={collectFrom == 'S' ? styles.selectedButton : styles.button}>
-            <Text>Sender</Text>
-            <FA5Icon name="map-marker-alt" size={20} color={collectFrom == 'S' ? COLOR : LIGHT} />
+      <View style={styles.container}>
+        <TouchableWithoutFeedback onPress={() => onPress('SENDER')}>
+          <View style={collectFrom === 'SENDER' ? styles.selectedButton : styles.button}>
+            <Text style={styles.selectionLabel}>Sender</Text>
+            <FA5Icon name="map-marker-alt" size={20} color={collectFrom === 'SENDER' ? COLOR : LIGHT} />
           </View>
         </TouchableWithoutFeedback>
-        <TouchableWithoutFeedback onPress={() => onPress('R')}>
-          <View style={collectFrom == 'R' ? styles.selectedButton : styles.button}>
-            <Text>Recipient</Text>
-            <FA5Icon name="map-pin" size={20} color={collectFrom == 'R' ? COLOR : LIGHT} />
+        <TouchableWithoutFeedback onPress={() => onPress('RECIPIENT')}>
+          <View style={collectFrom === 'RECIPIENT' ? styles.selectedButton : styles.button}>
+            <Text style={styles.selectionLabel}>Recipient</Text>
+            <FA5Icon name="map-pin" size={20} color={collectFrom === 'RECIPIENT' ? COLOR : LIGHT} />
           </View>
         </TouchableWithoutFeedback>
       </View>
+      {marginBottom && <SizedBox />}
     </>
   );
 };
 
+export const CollectPaymentFromInput = Widget;
+
 const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   selectedButton: {
     width: (screenWidth - 60) / 2,
     flexDirection: 'row',
@@ -80,5 +88,10 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: DARK,
     fontFamily: 'Rubik-Medium',
+  },
+  selectionLabel: {
+    fontSize: 12,
+    fontFamily: 'Rubik-Regular',
+    color: DARK,
   },
 });

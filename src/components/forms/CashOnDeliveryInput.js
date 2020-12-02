@@ -1,22 +1,30 @@
 import React, {useState} from 'react';
+import {connect} from 'react-redux';
 import {StyleSheet, Switch, Text, View, TextInput} from 'react-native';
 
 import {COLOR, DARK, LIGHT, MEDIUM, COLOR_UNDERLAY} from '../../res/constants';
+import {SizedBox} from '../../components/widgets';
 
 import {numberFormatInteger} from '../../helper';
 
-export const CashOnDeliveryInput = ({
+const Widget = ({
   onAmountChange = () => {},
   onSwitchChange = () => {},
   initialValue = 0,
-  maxValue = 1500,
+  constants,
+  marginTop,
+  marginBottom,
 }) => {
+  const maxValue = constants.maxCashOnDelivery;
   const [isCOD, setIsCOD] = useState(initialValue ? true : false);
   const [amount, setAmount] = useState(initialValue);
 
   const onIsCODChange = (value) => {
     setIsCOD(value);
     onSwitchChange(value);
+    if (!value) {
+      onAmountChange(0);
+    }
   };
 
   const onCashOnDeliveryValueChange = (value) => {
@@ -25,23 +33,26 @@ export const CashOnDeliveryInput = ({
     if (value && decimal) {
       if (decimal.toString().length > 2) {
         setAmount(amount); //force no change
+        onAmountChange(amount);
         return;
       }
     }
 
-    if (parseFloat(value) >= maxValue) {
-      setAmount(maxValue.toString()); //force max amount
-      console.log('Setting Max');
+    if (parseFloat(value) >= parseFloat(maxValue)) {
+      setAmount(maxValue); //force max amount
+      onAmountChange(maxValue);
+
       return;
     }
-    console.log('Setting Value');
 
     setAmount(value);
+    onAmountChange(value);
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.switchRow}>
+    <>
+      {marginTop && <SizedBox />}
+      <View style={styles.switchContainer}>
         <View>
           <Text style={styles.switchTitle}>Cash On Delivery</Text>
           <Text style={styles.switchDescription}>Rider pays sender and collect cash from recipient</Text>
@@ -57,7 +68,7 @@ export const CashOnDeliveryInput = ({
 
       {isCOD && (
         <>
-          <View style={styles.inputBox}>
+          <View style={styles.inputContainer}>
             <View style={styles.inputLabel}>
               <Text style={{color: MEDIUM}}> {`Max: ${numberFormatInteger(maxValue)}`}</Text>
             </View>
@@ -73,16 +84,23 @@ export const CashOnDeliveryInput = ({
           </View>
         </>
       )}
-    </View>
+      {marginBottom && <SizedBox />}
+    </>
   );
 };
 
+const mapStateToProps = (state) => ({
+  constants: state.constants,
+});
+
+export const CashOnDeliveryInput = connect(mapStateToProps, null)(Widget);
+
 const styles = StyleSheet.create({
-  container: {},
-  switchRow: {
+  switchContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    height: 50,
   },
   switchTitle: {
     fontSize: 12,
@@ -94,7 +112,7 @@ const styles = StyleSheet.create({
     color: MEDIUM,
     fontFamily: 'Rubik-Medium',
   },
-  inputBox: {
+  inputContainer: {
     borderWidth: 1,
     borderColor: MEDIUM,
     borderRadius: 10,
@@ -102,8 +120,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     overflow: 'hidden',
     height: 50,
-    marginTop: 10,
     backgroundColor: 'white',
+    marginTop: -8,
   },
   inputLabel: {
     paddingHorizontal: 20,

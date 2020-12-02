@@ -1,71 +1,64 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {
-  ActivityIndicator,
-  Alert,
-  Image,
-  Platform,
-  StyleSheet,
-  Switch,
-  Text,
-  TouchableHighlight,
-  TouchableOpacity,
-  Dimensions,
-  View,
-  TextInput,
-} from 'react-native';
-import {
-  BookingOverlay,
-  LocationPermission,
-  WelcomeBanner,
-  WelcomeMessage,
-  HeaderBack,
-  HeaderTitle,
-} from '../../../../../components';
-import InputScrollView from 'react-native-input-scroll-view';
-import {COLOR, DARK, LIGHT, MAPS_API_KEY, MEDIUM, COLOR_UNDERLAY} from '../../../../../res/constants';
-import {GET_ORDER_PRICE, GET_WELCOME_MESSAGE, POST_DELIVERY} from '../../../../../graphql';
-import MapView, {Marker, PROVIDER_GOOGLE, Polyline} from 'react-native-maps';
-import MapBoxPolyline from '@mapbox/polyline';
-import {PERMISSIONS, RESULTS, check} from 'react-native-permissions';
-import {useMutation, useQuery} from '@apollo/react-hooks';
-
-import EIcon from 'react-native-vector-icons/Entypo';
-import FA5Icon from 'react-native-vector-icons/FontAwesome5';
-import FIcon from 'react-native-vector-icons/Feather';
-import MapViewDirections from 'react-native-maps-directions';
-import OneSignal from 'react-native-onesignal';
-import ToktokLogo from '../../../../../assets/icons/ToktokLogo.png';
-import {SizedBox} from '../../../../../components/widgets/SizedBox';
-
+import {StyleSheet, Dimensions, View, Alert} from 'react-native';
 import {connect} from 'react-redux';
-import {currentLocation, numberFormatInteger} from '../../../../../helper';
+
+import InputScrollView from 'react-native-input-scroll-view';
+import {useLazyQuery} from '@apollo/react-hooks';
+
+import {GET_DELIVERY_PRICE_AND_DIRECTIONS} from '../../../../../graphql';
+import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../../../components';
+import {COLOR, DARK, MEDIUM} from '../../../../../res/constants';
 import {onError} from '../../../../../util/ErrorUtility';
 
 import {
+  BlackButton,
   CollectPaymentFromInput,
   CashOnDeliveryInput,
+  ExpressFeeSwitch,
   ItemDescriptionInput,
-  BlackButton,
+  LabelTextInput,
+  OrderTypeInput,
 } from '../../../../../components/forms';
 
 //SELF IMPORTS
-import StopCard from './StopCard';
+import SenderDetailsCard from './SenderDetailsCard';
+import RecipientDetailsCard from './RecipientDetailsCard';
 
 const width = Dimensions.get('window').width;
 const itemDimension = (width - 120) / 5;
 
-const SearchMap = ({navigation, route}) => {
+const DeliveryDetails = ({navigation, route, session}) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={['Delivery', 'Details']} />,
+    headerTitle: () => <HeaderTitle label={['Order', 'Details']} />,
   });
-
-  const {bookingData} = route.params;
-
-  console.log(JSON.stringify(bookingData, null, 4));
-
   const scrollRef = useRef(null);
-  const [isCashOnDelivery, setIsCashOnDelivery] = useState(false);
+  const [bookingData, setBookingData] = useState(route.params.bookingData);
+
+  const [getDeliveryPriceAndDirections, {loading}] = useLazyQuery(GET_DELIVERY_PRICE_AND_DIRECTIONS, {
+    fetchPolicy: 'no-cache',
+
+    onError: onError,
+    onCompleted: (data) => {
+      const {hash, pricing, directions} = data.getDeliveryPriceAndDirections;
+
+      const {price, distance, duration, discount, expressFee} = pricing;
+
+      console.log({hash});
+
+      const updatedBookingData = {
+        ...bookingData,
+        hash,
+        price,
+        discount,
+        distance,
+        duration,
+        directions,
+      };
+
+      navigation.navigate('ConsumerMap', {callbackData: updatedBookingData});
+    },
+  });
 
   const scrollToEnd = () => {
     setTimeout(() => {
@@ -73,78 +66,187 @@ const SearchMap = ({navigation, route}) => {
     }, 50);
   };
 
+  const onBookingDataChange = (value) => {
+    setBookingData((prevState) => ({...prevState, ...value}));
+  };
+
+  const onUpdatedSenderStop = (value) => {
+    const updatedSenderStop = {
+      ...bookingData,
+      senderStop: value,
+    };
+
+    setBookingData(updatedSenderStop);
+  };
+
+  const onUpdatedRecipientStop = ({recipientStop, index}) => {
+    const updatedRecipientStop = {
+      ...bookingData,
+    };
+    updatedRecipientStop.recipientStop[index] = recipientStop;
+    setBookingData(updatedRecipientStop);
+  };
+
+  console.log(JSON.stringify(session, null, 4));
+
+  // See changes in bookingData
+  // useEffect(() => {
+  //   const dx = {...bookingData};
+  //   delete dx.directions;
+  //   console.log(JSON.stringify(dx, null, 4));
+  // }, [bookingData]);
+
+  //Handles navigating back with data
+  useEffect(() => {
+    const {updatedSenderStop, updatedRecipientStop} = route.params;
+
+    if (updatedSenderStop) {
+      onUpdatedSenderStop(updatedSenderStop);
+    }
+
+    if (updatedRecipientStop) {
+      onUpdatedRecipientStop(updatedRecipientStop);
+    }
+  }, [route.params]);
+
+  const onOrderTypeChange = ({orderType, scheduledDate}) => {
+    const updatedBookingData = {...bookingData, orderType, scheduledDate};
+    if (orderType === 'SCHEDULED') {
+      updatedBookingData.senderStop.scheduledFrom = `${scheduledDate} 00:00:00`;
+      updatedBookingData.senderStop.scheduledTo = `${scheduledDate} 23:59:59`;
+      updatedBookingData.recipientStop[0].scheduledFrom = `${scheduledDate} 00:00:00`;
+      updatedBookingData.recipientStop[0].scheduledTo = `${scheduledDate} 23:59:59`;
+    }
+    if (orderType === 'ASAP') {
+      updatedBookingData.senderStop.scheduledFrom = null;
+      updatedBookingData.senderStop.scheduledTo = null;
+      updatedBookingData.recipientStop[0].scheduledFrom = null;
+      updatedBookingData.recipientStop[0].scheduledTo = null;
+    }
+    updatedBookingData.senderStop.orderType = orderType;
+    updatedBookingData.recipientStop[0].orderType = orderType;
+    setBookingData(updatedBookingData);
+  };
+
+  const onConfirm = () => {
+    if (!bookingData.recipientStop[0].formattedAddress) {
+      Alert.alert('', 'Please enter recipient details');
+      return;
+    }
+
+    if (!bookingData.cargo) {
+      Alert.alert('', 'Please select item description');
+      return;
+    }
+    console.log({promoCode: bookingData.promoCode});
+    getDeliveryPriceAndDirections({
+      variables: {
+        input: {
+          consumerId: session.user.consumer.id,
+          senderNumber: bookingData.senderStop.mobile,
+          referralCode: session.user.consumer.referralCode ? session.user.consumer.referralCode : '',
+          promoCode: bookingData.promoCode,
+          isExpress: bookingData.isExpress,
+          origin: {
+            latitude: bookingData.senderStop.latitude,
+            longitude: bookingData.senderStop.longitude,
+          },
+          destinations: [
+            {
+              latitude: bookingData.recipientStop[0].latitude,
+              longitude: bookingData.recipientStop[0].longitude,
+            },
+          ],
+        },
+      },
+    });
+  };
+
   return (
     <View style={styles.container}>
+      <AlertOverlay visible={loading} />
       <InputScrollView
         ref={scrollRef}
         showsVerticalScrollIndicator={false}
         keyboardOffset={20}
         contentContainerStyle={styles.scrollView}>
-        <StopCard
-          onPress={() => alert('Holla')}
-          label={['Sender', 'Details']}
-          headerIconSet="FontAwesome5"
-          headerIconName="map-pin"
+        <SenderDetailsCard bookingData={bookingData} marginBottom />
+
+        <RecipientDetailsCard bookingData={bookingData} marginBottom />
+
+        <OrderTypeInput
+          initialData={{orderType: bookingData.orderType, scheduledDate: bookingData.scheduledDate}}
+          onChange={onOrderTypeChange}
+          marginBottom
         />
 
-        <SizedBox />
-
-        <StopCard
-          onPress={() => alert('Holla')}
-          label={['Recipient', 'Details']}
-          headerIconSet="FontAwesome5"
-          headerIconName="map-marker-alt"
+        <CollectPaymentFromInput
+          initialValue={bookingData.collectPaymentFrom}
+          isCashOnDelivery={bookingData.isCashOnDelivery}
+          onChange={(value) => onBookingDataChange({collectPaymentFrom: value})}
+          marginBottom
         />
 
-        <SizedBox />
+        <ExpressFeeSwitch
+          initialValue={bookingData.isExpress}
+          onChange={(value) => onBookingDataChange({isExpress: value})}
+          marginBottom
+        />
 
-        <CollectPaymentFromInput initialValue={'S'} onSelect={() => alert('ola')} isCashOnDelivery={isCashOnDelivery} />
+        <CashOnDeliveryInput
+          initialValue={bookingData.cashOnDelivery}
+          onSwitchChange={(value) => onBookingDataChange({isCashOnDelivery: value})}
+          onAmountChange={(value) => onBookingDataChange({cashOnDelivery: value})}
+          marginBottom
+        />
 
-        <SizedBox />
+        {/*-------------------- ITEM DESCRIPTION --------------------*/}
+        <ItemDescriptionInput
+          onChange={(value) => onBookingDataChange({cargo: value})}
+          initialValue={bookingData.cargo}
+          scrollToEnd={scrollToEnd}
+          marginBottom
+        />
 
-        <CashOnDeliveryInput onSwitchChange={(value) => setIsCashOnDelivery(value)} />
-
-        <SizedBox />
-
-        <ItemDescriptionInput onSelect={() => {}} initialData={'Document'} scrollToEnd={scrollToEnd} />
-
-        <SizedBox />
-
-        <Text style={styles.label}>Notes</Text>
-        <TextInput
-          value={''}
-          onChangeText={() => {}}
-          style={styles.input}
+        {/*-------------------- NOTES --------------------*/}
+        <LabelTextInput
+          label="Notes"
+          value={bookingData.notes}
+          onChange={(value) => onBookingDataChange({notes: value})}
           placeholder="Notes to rider"
-          placeholderTextColor={LIGHT}
-          keyboardType="default"
+          marginBottom
         />
 
-        <SizedBox />
-
-        <Text style={styles.label}>Promo Code</Text>
-        <TextInput
-          value={''}
-          onChangeText={() => {}}
-          style={styles.input}
+        {/*-------------------- PROMO CODE --------------------*/}
+        <LabelTextInput
+          label="Promo Code"
+          value={bookingData.promoCode}
+          onChange={(value) => onBookingDataChange({promoCode: value})}
           placeholder="Enter Promo Code"
-          placeholderTextColor={LIGHT}
-          keyboardType="default"
+          marginBottom
         />
 
-        <SizedBox />
-
-        <BlackButton onPress={() => {}} label="Confirm" containerStyle={{marginTop: 0}} />
+        {/*-------------------- CONFIRM --------------------*/}
+        <BlackButton onPress={onConfirm} label="Confirm" containerStyle={styles.blackButton} />
       </InputScrollView>
     </View>
   );
 };
 
-export default SearchMap;
+const mapStateToProps = (state) => ({
+  session: state.session,
+  constants: state.constants,
+});
+
+export default connect(mapStateToProps, null)(DeliveryDetails);
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'white',
+  },
+  blackButton: {
+    marginTop: 0,
   },
   scrollView: {
     padding: 20,

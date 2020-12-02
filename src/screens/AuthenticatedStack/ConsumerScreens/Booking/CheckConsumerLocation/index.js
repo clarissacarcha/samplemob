@@ -11,29 +11,36 @@ const imageWidth = Dimensions.get('window').width - 40;
 
 export default ({navigation, route}) => {
   const [hasRequestedLocation, setHasRequestedLocation] = useState(false);
+  const [hasProceed, setHasProceed] = useState(false);
 
   const onGrant = async () => {
     const {latitude, longitude, formattedAddress} = await getCurrentLocation({
       showsReverseGeocode: true,
     });
-
-    navigation.replace('ConsumerMap', {
-      detectedLocation: {
-        latitude,
-        longitude,
-        formattedAddress,
-      },
-    });
+    console.log({hasProceed});
+    if (!hasProceed) {
+      console.log('RUNNING EVEN: ', hasProceed);
+      navigation.replace('ConsumerMap', {
+        detectedLocation: {
+          latitude,
+          longitude,
+          formattedAddress,
+        },
+      });
+    }
   };
 
   const onDeny = () => {
-    navigation.replace('ConsumerMap', {
-      detectedLocation: {
-        latitude: null,
-        longitude: null,
-        formattedAddress: null,
-      },
-    });
+    setHasProceed(true);
+    setTimeout(() => {
+      navigation.replace('ConsumerMap', {
+        detectedLocation: {
+          latitude: null,
+          longitude: null,
+          formattedAddress: null,
+        },
+      });
+    }, 200);
   };
 
   const checkAndroid = async () => {
@@ -160,11 +167,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   buttonVisible: {
-    padding: 20,
+    margin: 20,
     opacity: 1,
   },
   buttonHidden: {
-    padding: 20,
+    margin: 20,
     opacity: 0,
   },
 });

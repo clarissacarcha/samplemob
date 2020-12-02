@@ -1,7 +1,6 @@
 import React from 'react';
 import {View, StyleSheet, Text, TouchableHighlight} from 'react-native';
 import {COLOR, DARK} from '../../res/constants';
-import {isLocationEnabledSync} from 'react-native-device-info';
 
 export const BlackButton = ({label, onPress, containerStyle = {}}) => {
   return (

@@ -2,7 +2,6 @@ import 'react-native-gesture-handler';
 import React from 'react';
 import {StyleSheet, SafeAreaView, StatusBar} from 'react-native';
 import Splash from './Splash';
-import Nav from './Nav';
 
 import {
   ApolloProvider,
@@ -12,7 +11,6 @@ import {
   ReduxProvider,
   // SubscriptionProvider,
 } from '../provider';
-import OrdersTesting from './OrdersTesting';
 
 console.disableYellowBox = true;
 

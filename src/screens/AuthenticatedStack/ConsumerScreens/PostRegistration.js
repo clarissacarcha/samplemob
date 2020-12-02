@@ -38,7 +38,7 @@ const PostRegistration = ({navigation, route, session, createSession, destroySes
       newSession.user.person.emailAddress = emailAddress;
       newSession.user.consumer.referralCode = referralCode;
       createSession(newSession);
-      navigation.replace('ConsumerMap');
+      navigation.replace('CheckConsumerLocation');
     },
   });
 
@@ -103,7 +103,7 @@ const PostRegistration = ({navigation, route, session, createSession, destroySes
   };
 
   useEffect(() => {
-    const backHandler = BackHandler.addEventListener('hardwareBackPress', function() {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', function () {
       signOut();
       return true;
     });
@@ -123,7 +123,7 @@ const PostRegistration = ({navigation, route, session, createSession, destroySes
         </View>
         <TextInput
           value={referralCode}
-          onChangeText={value => setReferralCode(value)}
+          onChangeText={(value) => setReferralCode(value)}
           style={styles.input}
           placeholder="Referral Code"
           placeholderTextColor={LIGHT}
@@ -132,7 +132,7 @@ const PostRegistration = ({navigation, route, session, createSession, destroySes
         <Text style={styles.label}>First Name</Text>
         <TextInput
           value={firstName}
-          onChangeText={value => setFirstName(value)}
+          onChangeText={(value) => setFirstName(value)}
           style={styles.input}
           placeholder="First Name"
           placeholderTextColor={LIGHT}
@@ -141,7 +141,7 @@ const PostRegistration = ({navigation, route, session, createSession, destroySes
         <Text style={styles.label}>Last Name</Text>
         <TextInput
           value={lastName}
-          onChangeText={value => setLastName(value)}
+          onChangeText={(value) => setLastName(value)}
           style={styles.input}
           placeholder="Last Name"
           placeholderTextColor={LIGHT}
@@ -150,7 +150,7 @@ const PostRegistration = ({navigation, route, session, createSession, destroySes
         <Text style={styles.label}>Email Address</Text>
         <TextInput
           value={emailAddress}
-          onChangeText={value => setEmailAddress(value)}
+          onChangeText={(value) => setEmailAddress(value)}
           style={styles.input}
           placeholder="Email Address"
           keyboardType="email-address"
@@ -161,7 +161,7 @@ const PostRegistration = ({navigation, route, session, createSession, destroySes
         <Text style={styles.label}>Password</Text>
         <TextInput
           value={password}
-          onChangeText={value => setPassword(value)}
+          onChangeText={(value) => setPassword(value)}
           style={styles.input}
           placeholder="Password"
           secureTextEntry={true}
@@ -172,7 +172,7 @@ const PostRegistration = ({navigation, route, session, createSession, destroySes
         <Text style={styles.label}>Repeat Password</Text>
         <TextInput
           value={repeatPassword}
-          onChangeText={value => setRepeatPassword(value)}
+          onChangeText={(value) => setRepeatPassword(value)}
           style={styles.input}
           placeholder="Repeat Password"
           secureTextEntry={true}
@@ -191,19 +191,16 @@ const PostRegistration = ({navigation, route, session, createSession, destroySes
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   session: state.session,
 });
 
-const mapDispatchToProps = dispatch => ({
-  createSession: payload => dispatch({type: 'CREATE_SESSION', payload}),
+const mapDispatchToProps = (dispatch) => ({
+  createSession: (payload) => dispatch({type: 'CREATE_SESSION', payload}),
   destroySession: () => dispatch({type: 'DESTROY_SESSION'}),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(PostRegistration);
+export default connect(mapStateToProps, mapDispatchToProps)(PostRegistration);
 
 const styles = StyleSheet.create({
   container: {

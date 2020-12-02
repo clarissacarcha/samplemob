@@ -1,6 +1,6 @@
-import {ApolloLink, split} from 'apollo-link';
+import {ApolloLink, split, fromPromise} from 'apollo-link';
 import {HOST_PORT, PROTOCOL} from '../../res/constants';
-
+import {onError} from 'apollo-link-error';
 import {ApolloClient} from 'apollo-client';
 import AsyncStorage from '@react-native-community/async-storage';
 import {InMemoryCache} from 'apollo-cache-inmemory';
@@ -8,6 +8,8 @@ import {WebSocketLink} from 'apollo-link-ws';
 import {createUploadLink} from 'apollo-upload-client';
 import {getMainDefinition} from 'apollo-utilities';
 import {setContext} from 'apollo-link-context';
+
+import axios from 'axios';
 
 const baseUrl = `${PROTOCOL}://${HOST_PORT}/`;
 const wsUrl = `ws://${HOST_PORT}/graphql`;
@@ -24,6 +26,25 @@ const wsUrl = `ws://${HOST_PORT}/graphql`;
 //   }
 //   if (networkError) {
 //     console.log(`[Network error]: ${networkError}`);
+//   }
+// });
+
+// const refetch = async () => {
+//   const res = await axios.get('https://toktok.ph');
+//   console.log(res);
+// };
+
+// const errorLink = onError(({graphQLErrors, networkError, operation, forward}) => {
+//   if (graphQLErrors) {
+//     if (graphQLErrors[0].code === 'BAD_USER_INPUT') {
+//       refetch();
+//     }
+//   }
+//   if (networkError) {
+//     console.log(`[Network error]: ${networkError}`);
+//     // if you would also like to retry automatically on
+//     // network errors, we recommend that you use
+//     // apollo-link-retry
 //   }
 // });
 

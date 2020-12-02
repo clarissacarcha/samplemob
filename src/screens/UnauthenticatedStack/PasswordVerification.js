@@ -31,38 +31,38 @@ const PasswordVerification = ({navigation, route, createSession}) => {
         ...(IMPERSONATE ? {impersonationPassphrase: IMPERSONATION_PASSPHRASE} : {}),
       },
     },
-    onError: error => {
-      console.log(error);
-      const {graphQLErrors, networkError} = error;
-
-      if (networkError) {
-        Alert.alert('', 'Network error occurred. Please check your internet connection.');
-      } else if (graphQLErrors.length > 0) {
-        graphQLErrors.map(({message, locations, path, code}) => {
-          if (code === 'INTERNAL_SERVER_ERROR') {
-            Alert.alert('', 'Something went wrong.');
-          } else if (code === 'BAD_USER_INPUT') {
-            Alert.alert('', message);
-          } else if (code === 'AUTHENTICATION_ERROR') {
-            navigation.push('AccountBlocked');
-          } else {
-            Alert.alert('', 'Something went wrong...');
-          }
-        });
-      }
-    },
-    onCompleted: ({verifyLogin}) => {
+    onError,
+    // onError: (error) => {
+    //   console.log('ERROR IN VERIFICATION');
+    //   // const {graphQLErrors, networkError} = error;
+    //   // if (networkError) {
+    //   //   Alert.alert('', 'Network error occurred. Please check your internet connection.');
+    //   // } else if (graphQLErrors.length > 0) {
+    //   //   graphQLErrors.map(({message, locations, path, code}) => {
+    //   //     if (code === 'INTERNAL_SERVER_ERROR') {
+    //   //       Alert.alert('', 'Something went wrong.');
+    //   //     } else if (code === 'BAD_USER_INPUT') {
+    //   //       Alert.alert('', message);
+    //   //     } else if (code === 'AUTHENTICATION_ERROR') {
+    //   //       navigation.push('AccountBlocked');
+    //   //     } else {
+    //   //       Alert.alert('', 'Something went wrong...');
+    //   //     }
+    //   //   });
+    //   // }
+    // },
+    onCompleted: (data) => {
       // if (verifyLogin.user.status == 3) {
       //   navigation.push('AccountBlocked');
       //   return;
       // }
 
-      const {user, accessToken} = verifyLogin;
+      const {user, accessToken} = data.verifyLogin;
 
       AsyncStorage.setItem('userId', user.id); // Set userId value in asyncStorage for persistent login
       AsyncStorage.setItem('accessToken', accessToken);
 
-      createSession(verifyLogin); // Create session in redux
+      createSession(data.verifyLogin); // Create session in redux
       console.log(`SENDING TAG:${user.id}`);
       OneSignal.sendTags({
         userId: user.id,
@@ -82,7 +82,7 @@ const PasswordVerification = ({navigation, route, createSession}) => {
         navigation.replace('RootDrawer', {
           screen: 'AuthenticatedStack',
           params: {
-            screen: 'ConsumerMap',
+            screen: 'CheckConsumerLocation',
           },
         });
         return;
@@ -125,7 +125,7 @@ const PasswordVerification = ({navigation, route, createSession}) => {
         <TextInput
           ref={inputRef}
           value={password}
-          onChangeText={value => setPassword(value)}
+          onChangeText={(value) => setPassword(value)}
           style={styles.input}
           placeholder="Password"
           secureTextEntry
@@ -145,14 +145,11 @@ const PasswordVerification = ({navigation, route, createSession}) => {
   );
 };
 
-const mapDispatchToProps = dispatch => ({
-  createSession: payload => dispatch({type: 'CREATE_SESSION', payload}),
+const mapDispatchToProps = (dispatch) => ({
+  createSession: (payload) => dispatch({type: 'CREATE_SESSION', payload}),
 });
 
-export default connect(
-  null,
-  mapDispatchToProps,
-)(PasswordVerification);
+export default connect(null, mapDispatchToProps)(PasswordVerification);
 
 const styles = StyleSheet.create({
   inputView: {

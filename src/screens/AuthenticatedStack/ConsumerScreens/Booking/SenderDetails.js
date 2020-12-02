@@ -62,7 +62,6 @@ const SenderDetails = ({navigation, route}) => {
     const checkAndRequest = Platform.select({
       android: async () => {
         const checkResult = await check(PERMISSIONS.ANDROID.READ_CONTACTS);
-        console.log({checkResult});
 
         if (checkResult === RESULTS.GRANTED) {
           return true;
@@ -104,7 +103,6 @@ const SenderDetails = ({navigation, route}) => {
       },
       ios: async () => {
         const checkResult = await check(PERMISSIONS.IOS.CONTACTS);
-        console.log({checkResult});
 
         if (checkResult === RESULTS.GRANTED) {
           return true;
@@ -125,7 +123,6 @@ const SenderDetails = ({navigation, route}) => {
 
         if (checkResult === RESULTS.DENIED) {
           const requestResult = await request(PERMISSIONS.IOS.CONTACTS);
-          console.log({requestResult});
           if (requestResult === RESULTS.GRANTED) {
             return true;
           }

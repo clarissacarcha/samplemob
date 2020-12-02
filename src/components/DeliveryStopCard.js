@@ -11,7 +11,10 @@ import MIcon from 'react-native-vector-icons/MaterialIcons';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export const DeliveryStopCard = ({stop, index}) => {
-  const labels = [['Sender', 'Details'], ['Recipient', 'Details']];
+  const labels = [
+    ['Sender', 'Details'],
+    ['Recipient', 'Details'],
+  ];
 
   const icons = [
     <YellowIcon set="FontAwesome5" name="map-pin" size={16} darkIcon />,

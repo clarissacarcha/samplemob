@@ -23,9 +23,6 @@ export const getCurrentLocation = async ({showsReverseGeocode}) => {
 
     const {latitude, longitude, accuracy} = locRes;
 
-    console.log({latitude});
-    console.log({longitude});
-
     // If not asking for reverseGeocode, return an object with latitude and longitude
     if (!showsReverseGeocode) {
       return {

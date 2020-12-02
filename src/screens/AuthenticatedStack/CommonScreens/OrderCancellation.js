@@ -47,9 +47,7 @@ const TalkToUs = ({navigation, route}) => {
       },
     },
     onCompleted: ({getDeliveryCancellationCategories}) => {
-      console.log(getDeliveryCancellationCategories);
-
-      const mappedReasons = getDeliveryCancellationCategories.map(reason => {
+      const mappedReasons = getDeliveryCancellationCategories.map((reason) => {
         return {
           label: reason.name,
           value: reason.id,
@@ -73,9 +71,6 @@ const TalkToUs = ({navigation, route}) => {
   const [postDeliveryCancellation, {loading: postLoading}] = useMutation(POST_DELIVERY_CANCELLATION, {
     onError,
     onCompleted: ({postDeliveryCancellation}) => {
-      //
-      // console.log(JSON.stringify(postDeliveryCancellation, null, 4));
-
       onCancelCallback(postDeliveryCancellation);
       navigation.pop();
     },
@@ -151,7 +146,7 @@ const TalkToUs = ({navigation, route}) => {
       <TextInput
         ref={dropDownRef}
         value={description}
-        onChangeText={value => setDescription(value)}
+        onChangeText={(value) => setDescription(value)}
         style={styles.input}
         placeholder="Description"
         placeholderTextColor={LIGHT}
@@ -173,19 +168,16 @@ const TalkToUs = ({navigation, route}) => {
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   session: state.session,
   constants: state.constants,
 });
 
-const mapDispatchToProps = dispatch => ({
-  createSession: payload => dispatch({type: 'CREATE_SESSION', payload}),
+const mapDispatchToProps = (dispatch) => ({
+  createSession: (payload) => dispatch({type: 'CREATE_SESSION', payload}),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(TalkToUs);
+export default connect(mapStateToProps, mapDispatchToProps)(TalkToUs);
 
 const styles = StyleSheet.create({
   container: {

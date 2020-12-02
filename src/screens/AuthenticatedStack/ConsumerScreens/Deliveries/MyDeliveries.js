@@ -2,6 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 import {View, Text, TouchableHighlight, ActivityIndicator, StyleSheet, ScrollView} from 'react-native';
 import {connect} from 'react-redux';
+import {throttle} from 'lodash';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import {useQuery} from '@apollo/react-hooks';
 import {GET_DELIVERIES_COUNT_BY_STATUS} from '../../../../graphql';
@@ -17,7 +18,9 @@ const RoundedButton = ({label, data = {}}) => {
   const {count, status} = data;
   const hasItems = count > 0;
 
-  const onPress = () => navigation.push('SelectedDeliveries', {headerTitleLabel: label, status});
+  const onPress = throttle(() => navigation.push('SelectedDeliveries', {headerTitleLabel: label, status}), 1000, {
+    trailing: false,
+  });
 
   return (
     <TouchableHighlight onPress={hasItems ? onPress : null} underlayColor={COLOR} style={styles.submitBox}>

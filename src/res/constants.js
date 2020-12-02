@@ -1,9 +1,8 @@
-export const APP_VERSION = '1.4.0';
+export const APP_VERSION = '1.7.0';
+export const APP_FLAVOR = 'C'; // C = Customer | D = Driver
+
 // export const PROTOCOL = 'https';
 // export const HOST_PORT = 'toktok.ph:2096';
-
-// Change PHPOPENSSLENCRYPT
-// Try Catch In API Calls. S3 Upload. Enterprise Postbacks. JC REFERRAL and PROCESS. Synnermaxx
 
 // export const PROTOCOL = 'https';
 // export const HOST_PORT = 'paykash.ph:2096';
@@ -16,8 +15,6 @@ export const HOST_PORT = '192.168.43.241:3080'; // Myutini HS
 // export const HOST_PORT = '35.173.0.77:3085'; // Dev Server
 // export const HOST_PORT = '35.173.0.77:3080'; // Test Server
 // export const HOST_PORT = '35.173.0.77:3088'; // Marketing Server
-
-export const APP_FLAVOR = 'C'; // C -customer || D - driver
 
 export const COLOR = '#FDBA1C'; //YELLOW
 export const COLOR_UNDERLAY = 'rgba(256,186,28, 0.1)';

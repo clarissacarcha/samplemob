@@ -1,10 +1,11 @@
 import {Alert, Image, Platform, StyleSheet, Text, ScrollView, TouchableHighlight, View} from 'react-native';
 import {BookingOverlay, LocationPermission, WelcomeBanner, WelcomeMessage} from '../../../../../components';
-import {COLOR, DARK, LIGHT, MAPS_API_KEY, MEDIUM} from '../../../../../res/constants';
-import {GET_ORDER_PRICE, GET_WELCOME_MESSAGE, POST_DELIVERY} from '../../../../../graphql';
+import {COLOR, DARK, LIGHT, MAPS_API_KEY, MEDIUM, ENVIRONMENT} from '../../../../../res/constants';
+import {POST_DELIVERY, POST_DELIVERY_V2} from '../../../../../graphql';
 import {PERMISSIONS, RESULTS, check} from 'react-native-permissions';
 import React, {useEffect, useRef, useState} from 'react';
 import {useMutation, useQuery} from '@apollo/react-hooks';
+import moment from 'moment';
 
 import FIcon from 'react-native-vector-icons/Feather';
 import OneSignal from 'react-native-onesignal';
@@ -147,52 +148,49 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
     hash: '',
     consumerId: session.user.consumer.id,
     price: 0,
+    discount: 0,
     distance: 0,
     duration: 0,
+    directions: null,
     collectPaymentFrom: 'SENDER',
     isCashOnDelivery: false,
     cashOnDelivery: 0,
-    expressFee: 0,
+    isExpress: false,
     cargo: '',
     notes: '',
     promoCode: '',
+    orderType: 'ASAP',
+    scheduledDate: moment().format('YYYY-MM-DD').toString(),
     senderStop: {
-      name: `${session.user.person.firstName} ${session.user.person.lastName}`,
-      mobile: session.user.username.replace('+63', ''),
       latitude: detectedLocation.latitude,
       longitude: detectedLocation.longitude,
       formattedAddress: detectedLocation.formattedAddress,
+      name: `${session.user.person.firstName} ${session.user.person.lastName}`,
+      mobile: session.user.username.replace('+63', ''),
+      landmark: '',
       orderType: 'ASAP',
-      landmark: 'Sa gilid gilid.',
+      scheduledFrom: null,
+      scheduledTo: null,
     },
     recipientStop: [
       {
-        name: '',
-        mobile: '',
         latitude: null,
         longitude: null,
-        formattedAddress: null,
+        formattedAddress: '',
+        name: '',
+        mobile: '',
+        landmark: '',
         orderType: 'ASAP',
-        landmark: 'Sa tabi tabi.',
+        scheduledFrom: null,
+        scheduledTo: null,
       },
     ],
   };
 
   const mapViewRef = useRef(null);
   const [bookingData, setBookingData] = useState(INITIAL_BOOKING_DATA);
-  const [bookingRoute, setBookingRoute] = useState(null);
-
-  const onBookingDataConfirmed = () => {};
 
   const [bookingSuccess, setBookingSuccess] = useState(false);
-  const [recipientIndex, setRecipientIndex] = useState(0); // Used for multiple recipients
-  const [allowBooking, setAllowBooking] = useState(false);
-
-  const [region, setRegion] = useState(INITIAL_REGION);
-  const [senderStop, setSender] = useState(INITIAL_SENDER(session));
-  const [recipient, setRecipient] = useState(INITIAL_RECIPIENT);
-  const [directions, setDirections] = useState(INITIAL_DIRECTIONS);
-  const [price, setPrice] = useState(0);
 
   const onResetAfterBooking = async () => {
     try {
@@ -229,11 +227,10 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
     } catch (error) {
       console.log('GPS Location Turned Off Or Location Cannot Be Detected');
       console.log(error);
-      setAllowBooking(true);
     }
   };
 
-  const [postDelivery, {loading: postDeliveryLoading}] = useMutation(POST_DELIVERY, {
+  const [postDeliveryV2, {loading: postDeliveryV2Loading}] = useMutation(POST_DELIVERY_V2, {
     onError: onError,
     onCompleted: () => {
       try {
@@ -270,37 +267,7 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
     }
   };
 
-  const oneSignalInit = async () => {
-    // OneSignal.init(constants.consumerOneSignalAppId);
-    // OneSignal.inFocusDisplaying(2);
-  };
-
   useEffect(() => {
-    oneSignalInit();
-
-    // setTimeout(() => {
-    //   mapViewRef.current.fitToCoordinates(
-    //     [
-    //       {
-    //         latitude: 14.8088456,
-    //         longitude: 121.0872078,
-    //       },
-    //       {
-    //         latitude: 14.5564054,
-    //         longitude: 120.9935436,
-    //       },
-    //     ],
-    //     {
-    //       edgePadding: {
-    //         right: 20,
-    //         bottom: 850,
-    //         left: 20,
-    //         top: 100,
-    //       },
-    //     },
-    //   );
-    // }, 3000);
-
     // OneSignal.getTags(tags => console.log(`ONESIGNAL USER ID TAG: ${tags.userId}`));
     OneSignal.addEventListener('opened', onNotificationOpened);
 
@@ -313,14 +280,22 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
     };
   }, []);
 
+  //Handles navigating back with data
+  useEffect(() => {
+    if (route.params.callbackData) {
+      console.log({callbackData: route.params.callbackData});
+      setBookingData(route.params.callbackData);
+    }
+  }, [route.params]);
+
   const onSubmit = async () => {
     try {
       if (
-        senderStop.latitude === 0 ||
-        senderStop.longitude === 0 ||
-        senderStop.formattedAddress === '' ||
-        senderStop.name === '' ||
-        senderStop.mobile === ''
+        bookingData.senderStop.latitude === 0 ||
+        bookingData.senderStop.longitude === 0 ||
+        bookingData.senderStop.formattedAddress === '' ||
+        bookingData.senderStop.name === '' ||
+        bookingData.senderStop.mobile === ''
       ) {
         Alert.alert('', 'Please complete sender details.');
         return;
@@ -328,7 +303,7 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
 
       let emptyRecipient = false;
 
-      recipient.forEach((rec) => {
+      bookingData.recipientStop.forEach((rec) => {
         if (
           rec.latitude === 0 ||
           rec.longitude === 0 ||
@@ -345,29 +320,23 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
         return;
       }
 
-      const input = {
-        tokConsumerId: session.user.consumer.id,
-        distance: directions.distance,
-        duration: parseInt(directions.duration),
-        price: price,
-        referralCode: session.user.consumer.referralCode,
-        senderStop: senderStop,
-        recipientStop: recipient,
-      };
+      const input = {...bookingData};
 
-      // Delete this field. Only used in mobile app.
-      delete input.senderStop.accuracy;
-      delete input.senderStop.latitudeDelta;
-      delete input.senderStop.longitudeDelta;
+      delete input.directions;
+      delete input.scheduledDate;
+      delete input.isCashOnDelivery;
+      delete input.pricing;
+      delete input.price;
+      delete input.distance;
+      delete input.discount;
+      delete input.duration;
+      delete input.orderType;
+      delete input.promoCode;
+      delete input.isExpress;
 
-      delete input.recipientStop[0].accuracy;
-      delete input.recipientStop[0].latitudeDelta;
-      delete input.recipientStop[0].longitudeDelta;
-
-      input.senderStop.mobile = `${input.senderStop.mobile}`;
-      input.recipientStop[0].mobile = `${input.recipientStop[0].mobile}`;
-
-      postDelivery({
+      input.cashOnDelivery = parseFloat(bookingData.cashOnDelivery);
+      console.log({input});
+      postDeliveryV2({
         variables: {
           input,
         },
@@ -382,14 +351,21 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
     navigation.navigate('CustomerDeliveries');
   };
 
+  const cleanBookingData = {...bookingData};
+  delete cleanBookingData.directions;
+
   return (
     <View style={styles.container}>
       <WelcomeBanner />
       {/* {showWelcome && <WelcomeMessage data={welcomeData.getWelcomeMessage} onOkay={hideWelcomeMessage} />} */}
 
-      <BookingOverlay visible={postDeliveryLoading || bookingSuccess} done={bookingSuccess} onOkay={onBookSuccessOk} />
+      <BookingOverlay
+        visible={postDeliveryV2Loading || bookingSuccess}
+        done={bookingSuccess}
+        onOkay={onBookSuccessOk}
+      />
 
-      <BookingMap bookingData={bookingData} bookingRoute={bookingRoute} />
+      <BookingMap bookingData={bookingData} />
 
       <View style={styles.footer}>
         {/* ---------------------------------------- TESTING BOX START----------------------------------------*/}
@@ -399,8 +375,8 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
               <ScrollView>
                 {/* <Text style={{fontSize: 8}}>{JSON.stringify({senderStop}, null, 4)}</Text>
               <Text style={{fontSize: 8}}>{JSON.stringify({recipient}, null, 4)}</Text> */}
-                <Text style={{fontSize: 10}}>{JSON.stringify({detectedLocation}, null, 4)}</Text>
-                <Text style={{fontSize: 10}}>{JSON.stringify({bookingData}, null, 4)}</Text>
+                {/* <Text style={{fontSize: 10}}>{JSON.stringify({detectedLocation}, null, 4)}</Text> */}
+                <Text style={{fontSize: 10}}>{JSON.stringify({cleanBookingData}, null, 4)}</Text>
               </ScrollView>
             </View>
           </View>

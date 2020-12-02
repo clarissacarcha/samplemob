@@ -42,7 +42,6 @@ const Splash = ({setConstants}) => {
     OneSignal.init(oneSignalAppId);
     OneSignal.inFocusDisplaying(2);
   };
-
   const fetchInitialData = async () => {
     try {
       /**
@@ -132,11 +131,12 @@ const Splash = ({setConstants}) => {
     checkNetworkConnection();
   }, []);
 
-  if (checkPoint == 'A') {
+  // New Version Optional = SUGGEST
+  if (checkPoint === 'A') {
     return <Nav />;
   }
 
-  if (checkPoint == 'NO_NETWORK_CONNECTION') {
+  if (checkPoint === 'NO_NETWORK_CONNECTION') {
     return (
       <ImageBackground style={styles.splash} source={SplashImage} resizeMode={'cover'}>
         <View style={styles.imageBox}>
@@ -147,8 +147,8 @@ const Splash = ({setConstants}) => {
     );
   }
 
-  // New Version Optional
-  if (checkPoint == 'S') {
+  // New Version Optional = SUGGEST
+  if (checkPoint === 'S') {
     return (
       <ImageBackground style={styles.splash} source={SplashImage} resizeMode={'cover'}>
         <View style={styles.imageBox}>
@@ -169,7 +169,7 @@ const Splash = ({setConstants}) => {
     );
   }
 
-  //New Version Required
+  //New Version Required = BLOCK
   if (checkPoint == 'B') {
     return (
       <ImageBackground style={styles.splash} source={SplashImage} resizeMode={'cover'}>

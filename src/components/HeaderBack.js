@@ -1,19 +1,25 @@
 import React from 'react';
 import {StyleSheet, View, TouchableHighlight} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import {throttle} from 'lodash';
+
 import {COLOR, DARK} from '../res/constants';
 import FIcon from 'react-native-vector-icons/Feather';
 
 export const HeaderBack = ({onBack}) => {
   const navigation = useNavigation();
 
-  const onPress = () => {
-    if (onBack) {
-      onBack();
-    } else {
-      navigation.pop();
-    }
-  };
+  const onPress = throttle(
+    () => {
+      if (onBack) {
+        onBack();
+      } else {
+        navigation.pop();
+      }
+    },
+    1000,
+    {trailing: false},
+  );
 
   return (
     <TouchableHighlight onPress={onPress} underlayColor={COLOR} style={styles.button}>

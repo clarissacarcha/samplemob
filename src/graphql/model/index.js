@@ -13,6 +13,7 @@ export * from './Notification';
 export * from './Order';
 export * from './Person';
 export * from './SavedLocation';
+export * from './ToktokWallet';
 export * from './User';
 export * from './Wallet';
 export * from './WelcomeMessage';

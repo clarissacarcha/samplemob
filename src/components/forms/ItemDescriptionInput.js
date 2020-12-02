@@ -1,7 +1,9 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet, TextInput, Alert, Dimensions, TouchableHighlight, Image} from 'react-native';
+import {View, Text, StyleSheet, TextInput, Dimensions, TouchableHighlight, Image} from 'react-native';
 import {connect} from 'react-redux';
 import {COLOR, DARK, MAP_DELTA_LOW, MEDIUM, LIGHT} from '../../res/constants';
+import {SizedBox} from '../../components/widgets';
+
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 import FIcon from 'react-native-vector-icons/Feather';
@@ -43,81 +45,87 @@ const Item = ({index, data, selected, setSelected, onSelect, scrollToEnd}) => {
         </View>
       </TouchableHighlight>
 
-      <Text style={{fontFamily: 'Rubik-Medium', fontSize: 11, color: isSelected ? DARK : MEDIUM}}>{data[index]}</Text>
+      <Text style={{fontFamily: 'Rubik-Medium', fontSize: 10, marginTop: 5, color: isSelected ? DARK : MEDIUM}}>
+        {data[index]}
+      </Text>
     </View>
   );
 };
 
-const Component = ({onSelect, initialData, scrollToEnd, constants}) => {
+const Widget = ({initialValue, onChange, scrollToEnd, marginTop, marginBottom, constants}) => {
   const data = ['Document', 'Food', 'Clothing', 'Large', 'Others'];
 
-  let initialDataIndex = null;
+  let initialValueIndex = null;
 
-  if (initialData !== '') {
+  if (initialValue !== '') {
     const index = data.findIndex((cargo) => {
-      return cargo === initialData;
+      return cargo === initialValue;
     });
 
-    initialDataIndex = index === -1 ? 4 : index;
+    initialValueIndex = index === -1 ? 4 : index;
   }
 
-  const [selectedIndex, setSelectedIndex] = useState(initialDataIndex);
+  const [selectedIndex, setSelectedIndex] = useState(initialValueIndex);
 
   return (
-    <View>
-      <Text style={styles.label}>Item Description</Text>
-      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-        <Item
-          index={0}
-          data={data}
-          selected={selectedIndex}
-          setSelected={setSelectedIndex}
-          onSelect={onSelect}
-          scrollToEnd={scrollToEnd}
-        />
-        <Item
-          index={1}
-          data={data}
-          selected={selectedIndex}
-          setSelected={setSelectedIndex}
-          onSelect={onSelect}
-          scrollToEnd={scrollToEnd}
-        />
-        <Item
-          index={2}
-          data={data}
-          selected={selectedIndex}
-          setSelected={setSelectedIndex}
-          onSelect={onSelect}
-          scrollToEnd={scrollToEnd}
-        />
-        <Item
-          index={3}
-          data={data}
-          selected={selectedIndex}
-          setSelected={setSelectedIndex}
-          onSelect={onSelect}
-          scrollToEnd={scrollToEnd}
-        />
-        <Item
-          index={4}
-          data={data}
-          selected={selectedIndex}
-          setSelected={setSelectedIndex}
-          onSelect={onSelect}
-          scrollToEnd={scrollToEnd}
-        />
+    <>
+      {marginTop && <SizedBox />}
+      <View>
+        <Text style={styles.label}>Item Description</Text>
+        <View style={styles.container}>
+          <Item
+            index={0}
+            data={data}
+            selected={selectedIndex}
+            setSelected={setSelectedIndex}
+            onSelect={onChange}
+            scrollToEnd={scrollToEnd}
+          />
+          <Item
+            index={1}
+            data={data}
+            selected={selectedIndex}
+            setSelected={setSelectedIndex}
+            onSelect={onChange}
+            scrollToEnd={scrollToEnd}
+          />
+          <Item
+            index={2}
+            data={data}
+            selected={selectedIndex}
+            setSelected={setSelectedIndex}
+            onSelect={onChange}
+            scrollToEnd={scrollToEnd}
+          />
+          <Item
+            index={3}
+            data={data}
+            selected={selectedIndex}
+            setSelected={setSelectedIndex}
+            onSelect={onChange}
+            scrollToEnd={scrollToEnd}
+          />
+          <Item
+            index={4}
+            data={data}
+            selected={selectedIndex}
+            setSelected={setSelectedIndex}
+            onSelect={onChange}
+            scrollToEnd={scrollToEnd}
+          />
+        </View>
+        {selectedIndex == 4 && (
+          <TextInput
+            value={initialValue}
+            style={[styles.input, {marginTop: 5}]}
+            placeholder="Please describe your item"
+            onChangeText={onChange}
+            placeholderTextColor={LIGHT}
+          />
+        )}
       </View>
-      {selectedIndex == 4 && (
-        <TextInput
-          value={initialData}
-          style={[styles.input, {marginTop: 5}]}
-          placeholder="Please describe your item"
-          onChangeText={onSelect}
-          placeholderTextColor={LIGHT}
-        />
-      )}
-    </View>
+      {marginBottom && <SizedBox />}
+    </>
   );
 };
 
@@ -126,9 +134,13 @@ const mapStateToProps = (state) => ({
   constants: state.constants,
 });
 
-export const ItemDescriptionInput = connect(mapStateToProps, null)(Component);
+export const ItemDescriptionInput = connect(mapStateToProps, null)(Widget);
 
 const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   input: {
     borderWidth: 1,
     borderColor: MEDIUM,

@@ -52,7 +52,6 @@ const ItemCamera = ({navigation, route, session, startLoading, finishLoading}) =
           fixOrientation: true,
         };
         const data = await cameraRef.current.takePictureAsync(options);
-        console.log(data.uri);
         onStatusUpdateWithImage(data.uri);
         navigation.pop();
 
@@ -116,14 +115,11 @@ const ItemCamera = ({navigation, route, session, startLoading, finishLoading}) =
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   session: state.session,
 });
 
-export default connect(
-  mapStateToProps,
-  null,
-)(ItemCamera);
+export default connect(mapStateToProps, null)(ItemCamera);
 
 const styles = StyleSheet.create({
   container: {

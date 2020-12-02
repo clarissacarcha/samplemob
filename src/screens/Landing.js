@@ -37,7 +37,7 @@ const Landing = ({createSession, destroySession, navigation}) => {
 
         //TODO: Check for valid user status and access token. Also check for existing user record is valid
 
-        if (APP_FLAVOR == 'C') {
+        if (APP_FLAVOR === 'C') {
           if (user.person.firstName == null || user.person.lastName == null) {
             navigation.replace('RootDrawer', {
               screen: 'AuthenticatedStack',
@@ -50,13 +50,12 @@ const Landing = ({createSession, destroySession, navigation}) => {
               screen: 'AuthenticatedStack',
               params: {
                 screen: 'CheckConsumerLocation',
-                // screen: 'ConsumerMap',
               },
             });
           }
         }
 
-        if (APP_FLAVOR == 'D') {
+        if (APP_FLAVOR === 'D') {
           navigation.replace('RootDrawer', {
             screen: 'AuthenticatedStack',
             params: {

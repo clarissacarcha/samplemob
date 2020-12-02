@@ -1,14 +1,10 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {StyleSheet} from 'react-native';
-import {COLOR, DARK, LIGHT, MAPS_API_KEY, MEDIUM} from '../../../../../res/constants';
-import MapView, {Marker, PROVIDER_GOOGLE, Polyline} from 'react-native-maps';
-import MapBoxPolyline from '@mapbox/polyline';
-
-import EIcon from 'react-native-vector-icons/Entypo';
-import FA5Icon from 'react-native-vector-icons/FontAwesome5';
-import FIcon from 'react-native-vector-icons/Feather';
-import MapViewDirections from 'react-native-maps-directions';
 import {connect} from 'react-redux';
+import {COLOR, DARK, LIGHT} from '../../../../../res/constants';
+import MapView, {Marker, PROVIDER_GOOGLE, Polyline} from 'react-native-maps';
+
+import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 
 // Region for Philippine Map
 const PHILIPPINE_REGION = {
@@ -28,7 +24,7 @@ const polylineCoordinates = () => {
   return coordinates;
 };
 
-const BookingMap = ({bookingData, bookingRoute}) => {
+const BookingMap = ({bookingData}) => {
   const {senderStop, recipientStop} = bookingData;
   const mapViewRef = useRef(null);
 
@@ -41,6 +37,36 @@ const BookingMap = ({bookingData, bookingRoute}) => {
   //     top: 100,
   //   },
   // });
+
+  useEffect(() => {
+    if (bookingData.directions) {
+      const {northeast, southwest} = bookingData.directions.bounds;
+
+      const coordinates = [
+        {
+          ...northeast,
+        },
+        {
+          ...southwest,
+        },
+      ];
+
+      console.log('DIRECTIONS DATA CHANGED');
+      //Use effect bookingRoute. animateToBounds
+      mapViewRef.current.fitToCoordinates(
+        coordinates,
+        {
+          edgePadding: {
+            right: 20,
+            bottom: 200,
+            left: 20,
+            top: 100,
+          },
+        },
+        3000,
+      );
+    }
+  }, [bookingData]);
 
   const onMapReady = () => {
     if (senderStop.latitude) {
@@ -68,34 +94,22 @@ const BookingMap = ({bookingData, bookingRoute}) => {
         </Marker>
       )}
       {/*---------------------------------------- RECIPIENT MARKER ----------------------------------------*/}
-      {/* {recipient[recipientIndex].name != '' && (
+      {bookingData.directions && (
         <Marker
           coordinate={{
-            latitude: recipient[recipientIndex].latitude,
-            longitude: recipient[recipientIndex].longitude,
+            latitude: bookingData.recipientStop[0].latitude,
+            longitude: bookingData.recipientStop[0].longitude,
           }}>
           <FA5Icon name="map-marker-alt" size={24} color={DARK} />
         </Marker>
-      )} */}
-      {/*---------------------------------------- DIRECTIONS POLYLINE ----------------------------------------*/}
-      {/* {recipient[recipientIndex].name != '' && (
-        <MapViewDirections
-          apikey={MAPS_API_KEY}
-          splitWaypoints={true}
-          origin={senderStop}
-          destination={recipient[recipientIndex]}
+      )}
+      {bookingData.directions && (
+        <Polyline
+          coordinates={bookingData.directions.legs[0].polyline}
+          strokeColor="#FF0000" // fallback for when `strokeColors` is not supported by the map-provider
           strokeWidth={3}
-          strokeColor={'#EA4335'}
-          onReady={onDirectionsReady}
-          directionsServiceBaseUrl={`https://maps.googleapis.com/maps/api/directions/json?origin=${senderStop.latitude},${senderStop.longitude}&destination=${recipient[recipientIndex].latitude},${recipient[recipientIndex].longitude}&avoid=tolls|highways`}
         />
-      )} */}
-
-      <Polyline
-        coordinates={polylineCoordinates()}
-        strokeColor="#FF0000" // fallback for when `strokeColors` is not supported by the map-provider
-        strokeWidth={3}
-      />
+      )}
     </MapView>
   );
 };

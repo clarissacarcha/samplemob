@@ -2,7 +2,7 @@
 import {Alert} from 'react-native';
 
 export const onError = (error) => {
-  console.log(error);
+  console.log(JSON.stringify(error));
   const {graphQLErrors, networkError} = error;
 
   if (networkError) {
