@@ -31,11 +31,13 @@ user {
     id
     rating
     referralCode
+    status
   }
   driver {
     id
     licenseNumber
     isOnline
+    status
     operatorPerson {
       firstName
       lastName

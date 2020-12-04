@@ -31,33 +31,53 @@ const PasswordVerification = ({navigation, route, createSession}) => {
         ...(IMPERSONATE ? {impersonationPassphrase: IMPERSONATION_PASSPHRASE} : {}),
       },
     },
-    onError,
-    // onError: (error) => {
-    //   console.log('ERROR IN VERIFICATION');
-    //   // const {graphQLErrors, networkError} = error;
-    //   // if (networkError) {
-    //   //   Alert.alert('', 'Network error occurred. Please check your internet connection.');
-    //   // } else if (graphQLErrors.length > 0) {
-    //   //   graphQLErrors.map(({message, locations, path, code}) => {
-    //   //     if (code === 'INTERNAL_SERVER_ERROR') {
-    //   //       Alert.alert('', 'Something went wrong.');
-    //   //     } else if (code === 'BAD_USER_INPUT') {
-    //   //       Alert.alert('', message);
-    //   //     } else if (code === 'AUTHENTICATION_ERROR') {
-    //   //       navigation.push('AccountBlocked');
-    //   //     } else {
-    //   //       Alert.alert('', 'Something went wrong...');
-    //   //     }
-    //   //   });
-    //   // }
-    // },
+    // onError,
+    onError: (error) => {
+      const {graphQLErrors, networkError} = error;
+
+      if (networkError) {
+        Alert.alert('', 'Network error occurred. Please check your internet connection.');
+      } else if (graphQLErrors.length > 0) {
+        graphQLErrors.map(({message, locations, path, code}) => {
+          if (code === 'INTERNAL_SERVER_ERROR') {
+            Alert.alert('', 'Something went wrong.');
+          } else if (code === 'USER_INPUT_ERROR') {
+            Alert.alert('', message);
+          } else if (code === 'BAD_USER_INPUT') {
+            Alert.alert('', message);
+          } else if (code === 'AUTHENTICATION_ERROR') {
+            navigation.push('UnauthenticatedStack', {
+              screen: 'AccountBlocked',
+            });
+          } else {
+            console.log('ELSE ERROR:', error);
+            Alert.alert('', 'Something went wrong...');
+          }
+        });
+      }
+    },
     onCompleted: (data) => {
-      // if (verifyLogin.user.status == 3) {
-      //   navigation.push('AccountBlocked');
-      //   return;
+      const {user, accessToken} = data.verifyLogin;
+
+      // console.log(JSON.stringify({user}, null, 4));
+
+      // if (APP_FLAVOR === 'C') {
+      //   if (user.consumer.status === 3) {
+      //     navigation.push('UnauthenticatedStack', {
+      //       screen: 'AccountBlocked',
+      //     });
+      //     return;
+      //   }
       // }
 
-      const {user, accessToken} = data.verifyLogin;
+      // if (APP_FLAVOR === 'D') {
+      //   if (user.driver.status === 3) {
+      //     navigation.push('UnauthenticatedStack', {
+      //       screen: 'AccountBlocked',
+      //     });
+      //     return;
+      //   }
+      // }
 
       AsyncStorage.setItem('userId', user.id); // Set userId value in asyncStorage for persistent login
       AsyncStorage.setItem('accessToken', accessToken);

@@ -10,11 +10,11 @@ export const APP_FLAVOR = 'C'; // C = Customer | D = Driver
 // export const HOST_PORT = '3.21.131.21:2096'; // Auto Scaling Image
 
 export const PROTOCOL = 'http';
-export const HOST_PORT = '192.168.43.241:3080'; // Myutini HS
+// export const HOST_PORT = '192.168.43.241:3080'; // Myutini HS
 // export const HOST_PORT = '192.168.0.116:3080'; // MDC
 // export const HOST_PORT = '35.173.0.77:3085'; // Dev Server
 // export const HOST_PORT = '35.173.0.77:3080'; // Test Server
-// export const HOST_PORT = '35.173.0.77:3088'; // Marketing Server
+export const HOST_PORT = '35.173.0.77:3088'; // Marketing Server
 
 export const COLOR = '#FDBA1C'; //YELLOW
 export const COLOR_UNDERLAY = 'rgba(256,186,28, 0.1)';

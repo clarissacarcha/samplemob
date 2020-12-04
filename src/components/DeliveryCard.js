@@ -188,7 +188,7 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
                 {borderBottomWidth: 0, borderColor: LIGHT, borderTopWidth: StyleSheet.hairlineWidth},
               ]}>
               <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-                <YellowIcon set="Ionicon" name="ios-pricetag" size={20} />
+                <YellowIcon set="Ionicon" name="ios-pricetag" size={18} />
                 <View style={{marginLeft: 10}}>
                   <Text style={{fontFamily: 'Rubik-Medium'}}>Amount</Text>
                   <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
@@ -198,7 +198,7 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
               </View>
               {delivery.discount !== 0 && (
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-                  <YellowIcon set="Ionicon" name="ios-pricetags" size={20} />
+                  <YellowIcon set="Ionicon" name="ios-pricetags" size={18} />
                   <View style={{marginLeft: 10}}>
                     <Text style={{fontFamily: 'Rubik-Medium'}}>Discount</Text>
                     <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
@@ -230,7 +230,7 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
           )}
 
           {/*-------------------- CUSTOMER ORDER PRICE --------------------*/}
-          {APP_FLAVOR === 'C' && (
+          {/* {APP_FLAVOR === 'C' && (
             <View style={[styles.directionsBox, {borderBottomWidth: 0, borderColor: LIGHT, borderTopWidth: 0}]}>
               <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
                 <YellowIcon set="Ionicon" name="md-pricetag" />
@@ -242,7 +242,7 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
                 </View>
               </View>
             </View>
-          )}
+          )} */}
 
           {/*-------------------- CASH ON DELIVERY--------------------*/}
           {![null, 0, '0'].includes(delivery.cashOnDelivery) && APP_FLAVOR == 'C' && (

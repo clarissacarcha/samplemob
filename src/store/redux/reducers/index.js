@@ -7,5 +7,5 @@ export default {
   application: Application,
   session: Session,
   constants: Constants,
-  nav: Nav
+  nav: Nav,
 };

@@ -15,6 +15,8 @@ export const onError = (error) => {
         Alert.alert('', message);
       } else if (code === 'BAD_USER_INPUT') {
         Alert.alert('', message);
+      } else if (code === 'AUTHENTICATION_ERROR') {
+        // Do Nothing. Error handling should be done on the scren
       } else {
         console.log('ELSE ERROR:', error);
         Alert.alert('', 'Something went wrong...');

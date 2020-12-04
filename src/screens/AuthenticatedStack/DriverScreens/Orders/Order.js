@@ -16,7 +16,7 @@ import {
 import {COLOR, COLOR_UNDERLAY, DARK, LIGHT, MAP_DELTA, MEDIUM, ORANGE} from '../../../../res/constants';
 import {DeliveryCard, DriverGoOnlineButton, SomethingWentWrong} from '../../../../components';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {useLazyQuery} from '@apollo/react-hooks';
 
 import {BlackButton} from '../../../../components/ui';
@@ -269,7 +269,7 @@ const AvailableOrders = ({navigation, session, constants}) => {
     },
   );
 
-  const getLocation = async () => {
+  const getLocation = useCallback(async () => {
     try {
       console.log('FETCHING...');
       setManualLoading(true);
@@ -301,7 +301,41 @@ const AvailableOrders = ({navigation, session, constants}) => {
 
       setLocation(INITIAL_LOCATION);
     }
-  };
+  }, []);
+
+  // const getLocation = async () => {
+  //   try {
+  //     console.log('FETCHING...');
+  //     setManualLoading(true);
+  //     setNoGPS(false);
+  //     const detectedLocation = await currentLocation({
+  //       showsReverseGeocode: false,
+  //     });
+
+  //     if (detectedLocation) {
+  //       getDeliveriesAvailable({
+  //         variables: {
+  //           filter: {
+  //             latitude: detectedLocation.latitude,
+  //             longitude: detectedLocation.longitude,
+  //             orderDate: searchFilter.orderDate,
+  //             senderName: searchFilter.senderName,
+  //             recipientName: searchFilter.recipientName,
+  //           },
+  //         },
+  //       });
+  //       setLocation(detectedLocation);
+  //       setManualLoading(false);
+  //     } else {
+  //       setNoGPS(true);
+  //       setManualLoading(false);
+  //     }
+  //   } catch (e) {
+  //     setManualLoading(false);
+
+  //     setLocation(INITIAL_LOCATION);
+  //   }
+  // };
 
   const onSearchPress = async ({filter}) => {
     console.log('FETCHING FROM SEARCH...');

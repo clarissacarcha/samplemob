@@ -8,8 +8,8 @@ import {COLOR, LIGHT, MEDIUM, DARK} from '../../../../../res/constants';
 import {YellowIcon} from '../../../../../components/ui';
 
 const SchedulePhrase = ({bookingData}) => {
-  let fromDate = moment(bookingData.senderStop.scheduledFrom, 'YYYY-MM-DD - HH:mm:ss').format('h:mm A');
-  let toDate = moment(bookingData.senderStop.scheduledTo, 'YYYY-MM-DD - HH:mm:ss').format('h:mm A');
+  let fromDate = moment(bookingData.recipientStop[0].scheduledFrom, 'YYYY-MM-DD - HH:mm:ss').format('h:mm A');
+  let toDate = moment(bookingData.recipientStop[0].scheduledTo, 'YYYY-MM-DD - HH:mm:ss').format('h:mm A');
 
   if (fromDate === '12:00 AM') {
     fromDate = 'Anytime';
@@ -132,7 +132,6 @@ const RecipientDetailsCard = ({bookingData, marginTop, marginBottom}) => {
           iconName={'map-marker-alt'}
           iconSize={16}
         />
-
         {renderRecipientCards()}
       </CardShadow>
       {marginBottom && <SizedBox />}

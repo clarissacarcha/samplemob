@@ -131,7 +131,7 @@ const Splash = ({setConstants}) => {
     checkNetworkConnection();
   }, []);
 
-  // New Version Optional = SUGGEST
+  // Updated Version = ALLOW
   if (checkPoint === 'A') {
     return <Nav />;
   }

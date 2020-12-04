@@ -87,8 +87,6 @@ const DeliveryDetails = ({navigation, route, session}) => {
     setBookingData(updatedRecipientStop);
   };
 
-  console.log(JSON.stringify(session, null, 4));
-
   // See changes in bookingData
   // useEffect(() => {
   //   const dx = {...bookingData};
@@ -99,6 +97,9 @@ const DeliveryDetails = ({navigation, route, session}) => {
   //Handles navigating back with data
   useEffect(() => {
     const {updatedSenderStop, updatedRecipientStop} = route.params;
+
+    console.log(JSON.stringify({SENDER: route.params.updatedSenderStop}, null, 4));
+    console.log(JSON.stringify({RECIPIENT: route.params.updatedRecipientStop}, null, 4));
 
     if (updatedSenderStop) {
       onUpdatedSenderStop(updatedSenderStop);
@@ -138,7 +139,12 @@ const DeliveryDetails = ({navigation, route, session}) => {
       Alert.alert('', 'Please select item description');
       return;
     }
-    console.log({promoCode: bookingData.promoCode});
+
+    if (bookingData.orderType === 'SCHEDULED' && bookingData.promoCode !== '') {
+      Alert.alert('', 'Promo Codes can only be used on As Soon As Possible Order Type.');
+      return;
+    }
+
     getDeliveryPriceAndDirections({
       variables: {
         input: {

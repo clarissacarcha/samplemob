@@ -13,7 +13,14 @@ import {onError} from '../util/ErrorUtility';
 import {useMutation} from '@apollo/react-hooks';
 import {useNavigation} from '@react-navigation/native';
 
-const Component = ({session, constants, createSession}) => {
+const Component = ({
+  session,
+  constants,
+  createSession,
+  application,
+  startBackgroundLocation,
+  endBackgroundLocation,
+}) => {
   const {isOnline} = session.user.driver;
   const navigation = useNavigation();
 
@@ -62,11 +69,15 @@ const Component = ({session, constants, createSession}) => {
   };
 
   useEffect(() => {
-    BackgroundTimer.runBackgroundTimer(async () => {
-      postLocationLog();
-    }, parseFloat(constants.driverLocationLogInterval));
+    console.log(application.backgroundLocation);
+    if (!application.backgroundLocation) {
+      startBackgroundLocation();
+      BackgroundTimer.runBackgroundTimer(async () => {
+        postLocationLog();
+      }, parseFloat(constants.driverLocationLogInterval));
 
-    return () => BackgroundTimer.stopBackgroundTimer();
+      // return () => BackgroundTimer.stopBackgroundTimer();
+    }
   }, []);
 
   const postLocationLog = async () => {
@@ -139,10 +150,13 @@ const Component = ({session, constants, createSession}) => {
 const mapStateToProps = (state) => ({
   session: state.session,
   constants: state.constants,
+  application: state.application,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   createSession: (payload) => dispatch({type: 'CREATE_SESSION', payload}),
+  startBackgroundLocation: () => dispatch({type: 'START_BACKGROUND_LOCATION'}),
+  endBackgroundLocation: () => dispatch({type: 'END_BACKGROUND_LOCATION'}),
 });
 
 export const DriverGoOnlineButton = connect(mapStateToProps, mapDispatchToProps)(Component);

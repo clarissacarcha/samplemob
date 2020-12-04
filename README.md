@@ -14,60 +14,14 @@
 7. WYSIWYG/HTML for Announcements
 8. Notification Read/Unread
 9. Blocked Account Chain
+10. Account status check on API. Create error codes.
+11. API check for user validation on every request.
+12. Fetch Data something went wrong Refetch Button
+13. Session invalid. Flushing of session based on error.
+14. Google Search Places Refactor
+15. Refactor Rider TopTab to show icons only.
 
-# Backend TODO
-
-1. Enterprise Booking API with PostbackURL
-2. Account status check on API. Create error codes.
-3. API check for user validation on every request.
-4. Move getting price, distance, duration, address breakdown in backend
-5. Handle when operator account is put on hold.
-6. Limit viewing of history 15 days. Also related modules like notification
-7. On checking number of ongoing orders, dont include delegated (to just check)
-8. Sender receiver distance duration total amount (After JC Referral, SMS and Email)
-9. Synermaxx Logs
-10. Dataloader
-11. Validate Enterprise Cancel if delivery is owned by Enterprise Account
-
-# App TODO
-
-1. Fetch Data something went wrong Refetch Button
-2. Session invalid. Flushing of session based on error.
-3. Go back button in password confirmation.
-4. Notification on Rating
-5. App crashing on consecutive incorrect password
-
-# Customer TODO
-
-1. Fix Cargo Icons
-2. Sender/Recipient icons in tracking map with directions.
-3. Google Search Places Refactor
-4. Fix Order Type Schedule, Today Only
-5. Handle sender/recipient location change when other is empty. Focus on location
-6. Handle skip location still invoked after Proceed
-7. (HALF) Item Description API (HARD CODE)
-8. Going back from details to placed orders, place a loading indicator.
-9. Move vehicle type(Motorcycle, Van) for order in front end.
-
-# Rider TODO
-
-1. Refactor TopTab to show icons only.
-2. Fix Loop Issue on no network when getting orders
-3. Rider Check Location and Camera Permission
-4. Add Rider Location on Go Online
-5. Can't Go Offline with Ongoing Orders today
-
-# ASAP TODO
-
-1. New Referral ID Endpoint
-2. Fix Location Log subscription on Refresh of Orders (Looping)
-3. Cargo Items
-
-# SQL TODO on Live
-
-1. tok_notifications payload and type varchar(50)
-
-# TODO
+# Pipeline
 
 1. Multiple Drop Offs
    1.1 Limited to Sender for Multiple Drop Offs
@@ -76,31 +30,45 @@
 4. Auto Cancel Accepted Orders at 12:00 AM
 5. Radius for searching SOS.
 6. Hold rider on 3rd return to sender.
+7. Add Rider Location on Go Online
+8. Can't Go Offline with Ongoing Orders today
+9. Validate Enterprise Cancel if delivery is owned by Enterprise Account
+10. Notification on Rating
+11. Fix Loop Issue on no network when getting orders
+12. Rider Check Location and Camera Permission
+13. Sender/Recipient icons in tracking rider location, add directions
+14. Going back from details to placed orders, place a loading indicator.
+15. Move vehicle type(Motorcycle, Van) for order in front end.
+16. Handle sender/recipient location change when other is empty. Focus on location
+17. (HALF) Item Description API (HARD CODE)
+18. Handle when operator account is put on hold.
 
-# Final R1 TODO
+-- Backend TODO
 
-1. Promo redeem/accept count validation
+1. Limit viewing of history 90 days. Also related modules like notification
+2. On checking number of ongoing orders, dont include delegated (to just check)
+3. Sender receiver distance duration total amount (After JC Referral, SMS and Email)
+4. Dataloader
+
+-- ASAP TODO
+
+1. Fix Location Log subscription on Refresh of Orders (Looping)
+
+-- Final R1 TODO
+
+1. \*\*\* Promo redeem/accept count validation, Validate in delegation also
 2. Hold consumer/rider account on 5th cancel of the day
 3. Provide Push Notifs to Riders with gcash, pending or rejected.
 4. Enterprise API Logs
-5. Message for Invalid Promo Code. Pop Up Message.
-6. ***
-7. Double check Account Holding
-8. Debounce
-9. Synermaxx Logs
-10. Try Catch In API Calls. S3 Upload. Enterprise Postbacks. JC REFERRAL and PROCESS. Synnermaxx
-11. Worker Threads for OneSignal Loop
+5. \*\*\* Message for Invalid Promo Code. Pop Up Message.
+6. \*\*\*Debounce
+7. Try Catch In API Calls. S3 Upload. Enterprise Postbacks. JC REFERRAL and PROCESS
+8. Worker Threads for OneSignal Loop
 
 # 1.7.0 Changelogs SQL SCRIPT
 
-1. tok_notifications type (VARCHAR50)
+1. tok_notifications type and payload (VARCHAR50)
 2. tok_deliveries cash_on_delivery DEFAULT 0
-
-# 1.7.0 Changelogs
-
-1. Added Refresh button on Rider Orders
-
-# Add consumerId on getOrderPriceAndDirections only relevant for promo code. Also add mobileNumber
 
 # Refactor Notes
 
@@ -109,10 +77,8 @@
 3. Default Cash On Delivery to 0
 4. Add Pick Up Drop Off in StopCard
 5. Changing Scheduled Date when scheduled To and From is already set
-6. OrderType === 1 or 2 to SCHEDULED
-7. Change PHPOPENSSLENCRYPT
 
-#Wallet 2 menu
+# Wallet 2 menu
 
 Rider Wallet
 

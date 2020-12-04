@@ -28,7 +28,7 @@ const ForgotPassword = ({navigation, route, createSession}) => {
 
   const [mobile, setMobile] = useState('');
 
-  const onMobileChange = value => {
+  const onMobileChange = (value) => {
     if (value.length == 1 && value == '0') {
       setMobile('');
       return;
@@ -52,7 +52,7 @@ const ForgotPassword = ({navigation, route, createSession}) => {
         // deviceType: Platform.select({ios: 'I', android: 'A'}),
       },
     },
-    onError: error => {
+    onError: (error) => {
       console.log(error);
       const {graphQLErrors, networkError} = error;
 
@@ -65,7 +65,9 @@ const ForgotPassword = ({navigation, route, createSession}) => {
           } else if (code === 'BAD_USER_INPUT') {
             Alert.alert('', message);
           } else if (code === 'AUTHENTICATION_ERROR') {
-            navigation.push('AccountBlocked');
+            navigation.push('UnauthenticatedStack', {
+              screen: 'AccountBlocked',
+            });
           } else {
             Alert.alert('', 'Something went wrong...');
           }
@@ -135,14 +137,11 @@ const ForgotPassword = ({navigation, route, createSession}) => {
   );
 };
 
-const mapDispatchToProps = dispatch => ({
-  createSession: payload => dispatch({type: 'CREATE_SESSION', payload}),
+const mapDispatchToProps = (dispatch) => ({
+  createSession: (payload) => dispatch({type: 'CREATE_SESSION', payload}),
 });
 
-export default connect(
-  null,
-  mapDispatchToProps,
-)(ForgotPassword);
+export default connect(null, mapDispatchToProps)(ForgotPassword);
 
 const styles = StyleSheet.create({
   inputView: {

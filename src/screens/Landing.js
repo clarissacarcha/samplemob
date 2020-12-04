@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, ImageBackground, Dimensions, Image} from 'react-native';
+import {View, StyleSheet, ImageBackground, Dimensions, Image, Alert} from 'react-native';
 import {connect} from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
 import {useLazyQuery} from '@apollo/react-hooks';
@@ -16,7 +16,30 @@ import ToktokMotorcycle from '../assets/images/ToktokMotorcycle.png';
 const Landing = ({createSession, destroySession, navigation}) => {
   const [getUserSession] = useLazyQuery(GET_USER_SESSION, {
     client: AUTH_CLIENT,
-    onError: onError,
+    onError: (error) => {
+      const {graphQLErrors, networkError} = error;
+      console.log(error);
+      if (networkError) {
+        Alert.alert('', 'Network error occurred. Please check your internet connection.');
+      } else if (graphQLErrors.length > 0) {
+        graphQLErrors.map(({message, locations, path, code}) => {
+          if (code === 'INTERNAL_SERVER_ERROR') {
+            Alert.alert('', 'Something went wrong.');
+          } else if (code === 'USER_INPUT_ERROR') {
+            Alert.alert('', message);
+          } else if (code === 'BAD_USER_INPUT') {
+            Alert.alert('', message);
+          } else if (code === 'AUTHENTICATION_ERROR') {
+            navigation.push('UnauthenticatedStack', {
+              screen: 'AccountBlocked',
+            });
+          } else {
+            console.log('ELSE ERROR:', error);
+            Alert.alert('', 'Something went wrong...');
+          }
+        });
+      }
+    },
     onCompleted: ({getUserSession}) => {
       try {
         const {user, accessToken} = getUserSession;

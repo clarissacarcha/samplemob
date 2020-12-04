@@ -230,11 +230,16 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
     }
   };
 
+  const resetDataAfterSuccess = () => {
+    setBookingData(INITIAL_BOOKING_DATA);
+  };
+
   const [postDeliveryV2, {loading: postDeliveryV2Loading}] = useMutation(POST_DELIVERY_V2, {
     onError: onError,
     onCompleted: () => {
       try {
         setBookingSuccess(true);
+        resetDataAfterSuccess();
         // onResetAfterBooking();
       } catch (error) {
         // console.log(error);
@@ -335,7 +340,7 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
       delete input.isExpress;
 
       input.cashOnDelivery = parseFloat(bookingData.cashOnDelivery);
-      console.log({input});
+      // console.log({input});
       postDeliveryV2({
         variables: {
           input,
