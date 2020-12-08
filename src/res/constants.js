@@ -1,20 +1,21 @@
 export const APP_VERSION = '1.7.0';
-export const APP_FLAVOR = 'C'; // C = Customer | D = Driver
+export const APP_FLAVOR = 'D'; // C = Customer | D = Driver
 
 // export const PROTOCOL = 'https';
 // export const HOST_PORT = 'toktok.ph:2096';
+// export const HOST_PORT = 'graphql.toktok.ph:2096';
+
+// Live Auto Scale Image
+// export const PROTOCOL = 'http';
+// export const HOST_PORT = '54.168.147.32:2096';
 
 // export const PROTOCOL = 'https';
 // export const HOST_PORT = 'paykash.ph:2096';
-// export const HOST_PORT = '18.218.249.85:2096'; // Auto Scaling EC2
-// export const HOST_PORT = '3.21.131.21:2096'; // Auto Scaling Image
 
 export const PROTOCOL = 'http';
-// export const HOST_PORT = '192.168.43.241:3080'; // Myutini HS
+export const HOST_PORT = '192.168.43.241:3080'; // Myutini HS
 // export const HOST_PORT = '192.168.0.116:3080'; // MDC
-// export const HOST_PORT = '35.173.0.77:3085'; // Dev Server
-// export const HOST_PORT = '35.173.0.77:3080'; // Test Server
-export const HOST_PORT = '35.173.0.77:3088'; // Marketing Server
+// export const HOST_PORT = '35.173.0.77:3088'; // Marketing Server
 
 export const COLOR = '#FDBA1C'; //YELLOW
 export const COLOR_UNDERLAY = 'rgba(256,186,28, 0.1)';

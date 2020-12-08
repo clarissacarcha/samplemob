@@ -61,10 +61,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 5,
   },
-  pickerContainerStyle: {
-    height: 50,
-    flex: 1,
-  },
   pickerLabelBox: {
     justifyContent: 'center',
     paddingHorizontal: 20,
@@ -75,6 +71,11 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,
   },
+  pickerContainerStyle: {
+    height: 50,
+    flex: 1,
+  },
+
   pickerLabel: {
     fontSize: 12,
     fontFamily: 'Rubik-Regular',

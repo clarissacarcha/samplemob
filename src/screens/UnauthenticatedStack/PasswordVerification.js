@@ -31,31 +31,33 @@ const PasswordVerification = ({navigation, route, createSession}) => {
         ...(IMPERSONATE ? {impersonationPassphrase: IMPERSONATION_PASSPHRASE} : {}),
       },
     },
-    // onError,
-    onError: (error) => {
-      const {graphQLErrors, networkError} = error;
+    onError,
+    // onError: (error) => {
+    //   console.log('LALA');
+    //   console.log(error);
+    //   const {graphQLErrors, networkError} = error;
 
-      if (networkError) {
-        Alert.alert('', 'Network error occurred. Please check your internet connection.');
-      } else if (graphQLErrors.length > 0) {
-        graphQLErrors.map(({message, locations, path, code}) => {
-          if (code === 'INTERNAL_SERVER_ERROR') {
-            Alert.alert('', 'Something went wrong.');
-          } else if (code === 'USER_INPUT_ERROR') {
-            Alert.alert('', message);
-          } else if (code === 'BAD_USER_INPUT') {
-            Alert.alert('', message);
-          } else if (code === 'AUTHENTICATION_ERROR') {
-            navigation.push('UnauthenticatedStack', {
-              screen: 'AccountBlocked',
-            });
-          } else {
-            console.log('ELSE ERROR:', error);
-            Alert.alert('', 'Something went wrong...');
-          }
-        });
-      }
-    },
+    //   if (networkError) {
+    //     Alert.alert('', 'Network error occurred. Please check your internet connection.');
+    //   } else if (graphQLErrors.length > 0) {
+    //     graphQLErrors.map(({message, locations, path, code}) => {
+    //       if (code === 'INTERNAL_SERVER_ERROR') {
+    //         Alert.alert('', 'Something went wrong.');
+    //       } else if (code === 'USER_INPUT_ERROR') {
+    //         Alert.alert('', message);
+    //       } else if (code === 'BAD_USER_INPUT') {
+    //         Alert.alert('', message);
+    //       } else if (code === 'AUTHENTICATION_ERROR') {
+    //         navigation.push('UnauthenticatedStack', {
+    //           screen: 'AccountBlocked',
+    //         });
+    //       } else {
+    //         console.log('ELSE ERROR:', error);
+    //         Alert.alert('', 'Something went wrong...');
+    //       }
+    //     });
+    //   }
+    // },
     onCompleted: (data) => {
       const {user, accessToken} = data.verifyLogin;
 

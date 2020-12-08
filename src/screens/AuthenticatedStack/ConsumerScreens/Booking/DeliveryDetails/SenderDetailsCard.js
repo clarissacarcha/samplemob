@@ -69,45 +69,52 @@ const SenderDetailsCard = ({bookingData, marginTop, marginBottom}) => {
   return (
     <>
       {marginTop && <SizedBox />}
-      <CardShadow>
-        <CardHeader label={['Sender', 'Details']} iconSet={'FontAwesome5'} iconName={'map-marker-alt'} iconSize={16} />
-
-        <CardBody onPress={onPress}>
-          <CardRow
-            title={bookingData.senderStop.name ? bookingData.senderStop.name : 'Contact Person'}
-            value={bookingData.senderStop.mobile ? `+63${bookingData.senderStop.mobile}` : 'Mobile Number'}
-            iconSet="Material"
-            iconName="person"
-            iconSize={22}
-            minHeight={40}
-            iconMarginTop={6}
-          />
-          <Hairline />
-          <CardRow
-            value={bookingData.senderStop.formattedAddress ? bookingData.senderStop.formattedAddress : 'Address'}
-            iconSet="Entypo"
-            iconName="location"
-            minHeight={40}
-            iconMarginTop={6}
+      <View style={styles.summaryCard}>
+        <CardShadow>
+          <CardHeader
+            label={['Sender', 'Details']}
+            iconSet={'FontAwesome5'}
+            iconName={'map-marker-alt'}
+            iconSize={16}
           />
 
-          <DeliverySchedule label="Pick Up" bookingData={bookingData} />
+          <CardBody onPress={onPress}>
+            <CardRow
+              title={bookingData.senderStop.name ? bookingData.senderStop.name : 'Contact Person'}
+              value={bookingData.senderStop.mobile ? `+63${bookingData.senderStop.mobile}` : 'Mobile Number'}
+              iconSet="Material"
+              iconName="person"
+              iconSize={22}
+              minHeight={40}
+              iconMarginTop={6}
+            />
+            <Hairline />
+            <CardRow
+              value={bookingData.senderStop.formattedAddress ? bookingData.senderStop.formattedAddress : 'Address'}
+              iconSet="Entypo"
+              iconName="location"
+              minHeight={40}
+              iconMarginTop={6}
+            />
 
-          {bookingData.senderStop.landmark !== '' && (
-            <>
-              <Hairline />
-              <CardRow
-                value={bookingData.senderStop.landmark}
-                iconSet="FontAwesome5"
-                iconName="landmark"
-                iconSize={14}
-                minHeight={40}
-                iconMarginTop={6}
-              />
-            </>
-          )}
-        </CardBody>
-      </CardShadow>
+            <DeliverySchedule label="Pick Up" bookingData={bookingData} />
+
+            {bookingData.senderStop.landmark !== '' && (
+              <>
+                <Hairline />
+                <CardRow
+                  value={bookingData.senderStop.landmark}
+                  iconSet="FontAwesome5"
+                  iconName="landmark"
+                  iconSize={14}
+                  minHeight={40}
+                  iconMarginTop={6}
+                />
+              </>
+            )}
+          </CardBody>
+        </CardShadow>
+      </View>
       {marginBottom && <SizedBox />}
     </>
   );
@@ -121,5 +128,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  summaryCard: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
 });

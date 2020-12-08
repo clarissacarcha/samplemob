@@ -34,12 +34,12 @@ const Login = ({navigation, session}) => {
       },
     },
     onError: onError,
-    onCompleted: ({loginRegister}) => {
-      if (loginRegister == 'REGISTER') {
+    onCompleted: (data) => {
+      if (data.loginRegister === 'REGISTER') {
         navigation.push('SmsVerification', {mobile});
       }
 
-      if (loginRegister == 'LOGIN') {
+      if (data.loginRegister === 'LOGIN') {
         navigation.push('PasswordVerification', {mobile});
       }
 
@@ -111,7 +111,6 @@ const Login = ({navigation, session}) => {
       Alert.alert('', 'Please enter a valid mobile number.');
       return;
     }
-
     loginRegister();
   };
 

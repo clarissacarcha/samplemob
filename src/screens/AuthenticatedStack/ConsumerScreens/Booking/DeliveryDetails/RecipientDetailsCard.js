@@ -125,15 +125,17 @@ const RecipientDetailsCard = ({bookingData, marginTop, marginBottom}) => {
   return (
     <>
       {marginTop && <SizedBox />}
-      <CardShadow>
-        <CardHeader
-          label={['Recipient', 'Details']}
-          iconSet={'FontAwesome5'}
-          iconName={'map-marker-alt'}
-          iconSize={16}
-        />
-        {renderRecipientCards()}
-      </CardShadow>
+      <View style={styles.summaryCard}>
+        <CardShadow>
+          <CardHeader
+            label={['Recipient', 'Details']}
+            iconSet={'FontAwesome5'}
+            iconName={'map-marker-alt'}
+            iconSize={16}
+          />
+          {renderRecipientCards()}
+        </CardShadow>
+      </View>
       {marginBottom && <SizedBox />}
     </>
   );
@@ -147,5 +149,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  summaryCard: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
 });

@@ -22,6 +22,7 @@ export const GET_TOKTOK_WALLET_LOGS = gql`
         outgoing
         balance
         type
+        status
         createdAt
       }
     }
@@ -31,6 +32,14 @@ export const GET_TOKTOK_WALLET_LOGS = gql`
 export const POST_TOKTOK_WALLET = gql`
   mutation postToktokWallet($input: PostToktokWalletInput!) {
     postToktokWallet(input: $input) {
+      message
+    }
+  }
+`;
+
+export const TOKTOK_WALLET_ENCASH = gql`
+  mutation toktokWalletEncash($input: ToktokWalletEncashInput!) {
+    toktokWalletEncash(input: $input) {
       message
     }
   }

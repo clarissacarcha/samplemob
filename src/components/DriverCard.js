@@ -34,7 +34,7 @@ const AvatarOverlay = ({avatar, visible, onPress}) => {
       <View style={{...StyleSheet.absoluteFillObject, justifyContent: 'center'}}>
         <Image
           source={{uri: avatar}}
-          style={{height: imageWidth, width: imageWidth, borderRadius: 10, marginHorizontal: 20, zIndex: 9999}}
+          style={{height: imageWidth, width: imageWidth, borderRadius: 10, marginHorizontal: 20, zIndex: 999}}
         />
       </View>
     </Modal>
@@ -73,7 +73,6 @@ export const DriverCard = ({driver}) => {
 
         <View style={{flexDirection: 'row', padding: 20}}>
           {/*------------------- AVATAR -------------------*/}
-
           {driver.user.person.avatarThumbnail ? (
             <>
               <AvatarOverlay
@@ -86,8 +85,8 @@ export const DriverCard = ({driver}) => {
                 underlayColor={COLOR}
                 style={{marginRight: 10, borderRadius: 10}}>
                 <Image
-                  source={{uri: driver.user.person.avatarThumbnail}}
-                  style={{height: 60, width: 60, borderRadius: 10}}
+                  source={{uri: driver.user.person.avatar}}
+                  style={{height: 60, width: 60, borderRadius: 10, zIndex: 999}}
                 />
               </TouchableHighlight>
             </>
@@ -113,27 +112,31 @@ export const DriverCard = ({driver}) => {
           </View>
 
           {/*------------------- DIALER BUTTON -------------------*/}
-          <MIcon
-            name="call"
-            size={24}
-            color={COLOR}
-            style={[styles.actionIconBox, {marginRight: 20}]}
-            onPress={() => {
-              const link = Platform.OS === 'android' ? `tel:${mobileNumber}` : `telprompt:${mobileNumber}`;
-              Linking.openURL(link);
-            }}
-          />
+          <View style={styles.actionIconBox}>
+            <MIcon
+              name="call"
+              size={24}
+              color={COLOR}
+              onPress={() => {
+                const link = Platform.OS === 'android' ? `tel:${mobileNumber}` : `telprompt:${mobileNumber}`;
+                Linking.openURL(link);
+              }}
+            />
+          </View>
+
+          <View style={{width: 20}} />
 
           {/*------------------- SMS BUTTON -------------------*/}
-          <MIcon
-            name="sms"
-            size={22}
-            color={COLOR}
-            style={styles.actionIconBox}
-            onPress={() => {
-              Linking.openURL(`sms:${mobileNumber}`);
-            }}
-          />
+          <View style={styles.actionIconBox}>
+            <MIcon
+              name="sms"
+              size={22}
+              color={COLOR}
+              onPress={() => {
+                Linking.openURL(`sms:${mobileNumber}`);
+              }}
+            />
+          </View>
         </View>
 
         {/* ------------------- AVATAR -------------------
@@ -168,8 +171,8 @@ const styles = StyleSheet.create({
     height: 30,
     width: 30,
     borderRadius: 5,
-    textAlign: 'center',
-    textAlignVertical: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   iconBox: {
     backgroundColor: COLOR,

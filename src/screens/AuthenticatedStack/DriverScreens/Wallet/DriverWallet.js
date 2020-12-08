@@ -4,13 +4,14 @@ import {View, Text, Image, StyleSheet, ScrollView, TouchableHighlight, ActivityI
 import {useNavigation} from '@react-navigation/native';
 import {BottomTabHeader, AlertOverlay} from '../../../../components';
 import {COLOR, DARK, MEDIUM, LIGHT} from '../../../../res/constants';
-import {GET_WALLET, GET_TOKTOK_WALLET, POST_TOKTOK_WALLET} from '../../../../graphql';
+import {GET_WALLET, GET_TOKTOK_WALLET, POST_TOKTOK_WALLET, TOKTOK_WALLET_ENCASH} from '../../../../graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import {numberFormat} from '../../../../helper';
 import {onError} from '../../../../util/ErrorUtility';
 
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import ENIcon from 'react-native-vector-icons/Entypo';
 
 const ToktokWalletCardButton = ({session}) => {
   const [initialLoading, setInitialLoading] = useState(true);
@@ -28,6 +29,19 @@ const ToktokWalletCardButton = ({session}) => {
   });
 
   const [postToktokWallet, {loading: postLoading}] = useMutation(POST_TOKTOK_WALLET, {
+    fetchPolicy: 'no-cache',
+    onError: onError,
+    variables: {
+      input: {
+        userId: session.user.id,
+      },
+    },
+    onCompleted: (result) => {
+      getToktokWallet();
+    },
+  });
+
+  const [toktokWalletEncash, {loading: encashLoading}] = useMutation(TOKTOK_WALLET_ENCASH, {
     fetchPolicy: 'no-cache',
     onError: onError,
     variables: {
@@ -61,7 +75,7 @@ const ToktokWalletCardButton = ({session}) => {
   if (!data.getToktokWallet.record) {
     return (
       <>
-        <AlertOverlay visible={postLoading} />
+        <AlertOverlay visible={postLoading || encashLoading} />
         <View style={{height: 20}} />
         <TouchableHighlight onPress={onPost} underlayColor={COLOR} style={[styles.submitBox, {margin: 20}]}>
           <View style={styles.submit}>
@@ -84,7 +98,7 @@ const ToktokWalletCardButton = ({session}) => {
             marginHorizontal: -20,
             paddingHorizontal: 20,
           }}>
-          <FAIcon name="user" style={styles.iconBox} size={16} color="white" />
+          <ENIcon name="wallet" style={styles.iconBox} size={16} color="white" />
           <Text style={{flex: 1, color: DARK, fontSize: 14, fontFamily: 'Rubik-Medium', marginHorizontal: 10}}>
             Toktok Wallet
           </Text>
@@ -156,6 +170,15 @@ const ToktokWalletCardButton = ({session}) => {
           </View>
         </TouchableHighlight>
       </View>
+      <View style={{height: 20}} />
+      <View style={{flexDirection: 'row', paddingHorizontal: 20}}>
+        <TouchableHighlight onPress={toktokWalletEncash} underlayColor={COLOR} style={styles.submitBox}>
+          <View style={styles.submit}>
+            <Text style={{color: COLOR, fontSize: 20}}>Encash Available Balance</Text>
+          </View>
+        </TouchableHighlight>
+      </View>
+      <View style={{height: 20}} />
     </>
   );
 };
@@ -222,7 +245,7 @@ const DriverWallet = ({navigation, session, constants}) => {
               marginHorizontal: -20,
               paddingHorizontal: 20,
             }}>
-            <FAIcon name="user" style={styles.iconBox} size={16} color="white" />
+            <ENIcon name="wallet" style={styles.iconBox} size={16} color="white" />
             <Text style={{flex: 1, color: DARK, fontSize: 14, fontFamily: 'Rubik-Medium', marginHorizontal: 10}}>
               Rider Wallet
             </Text>

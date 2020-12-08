@@ -1,5 +1,15 @@
 import React from 'react';
-import {View, Text, ScrollView, StyleSheet, TouchableHighlight, Linking, Dimensions, Image} from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  TouchableHighlight,
+  Linking,
+  Dimensions,
+  Image,
+  Platform,
+} from 'react-native';
 import {connect} from 'react-redux';
 import {COLOR, DARK, MEDIUM, LIGHT} from '../../../res/constants';
 import {HeaderBack, HeaderTitle} from '../../../components';
@@ -32,86 +42,115 @@ const TalkToUs = ({navigation, constants}) => {
               marginBottom: 20,
             }}
           />
-          <TouchableHighlight
-            onPress={() => {
-              Linking.openURL(constants.websiteValidUrl);
-            }}
-            underlayColor={COLOR}
-            style={styles.card}>
-            <View style={styles.taskBox}>
-              {/*-------------------- VISIT OUR WEBSITE LABEL --------------------*/}
-              <View style={styles.rowBox}>
-                <View style={styles.row}>
-                  <YellowIcon set="FontAwesome" name="info" />
-                  <Text style={{fontSize: 14, marginLeft: 16, color: DARK, fontFamily: 'Rubik-Medium'}}>
-                    Visit our website
-                  </Text>
+          <View style={{marginBottom: 20}}>
+            <TouchableHighlight
+              onPress={() => {
+                const link = Platform.OS === 'android' ? 'tel:0284248617' : 'telprompt:0284248617';
+                Linking.openURL(link);
+              }}
+              underlayColor={COLOR}
+              style={styles.card}>
+              <View style={styles.taskBox}>
+                {/*-------------------- TALK TO US LABEL --------------------*/}
+                <View style={styles.rowBox}>
+                  <View style={styles.row}>
+                    <YellowIcon set="FontAwesome" name="info" />
+                    <Text style={{fontSize: 14, marginLeft: 16, color: DARK, fontFamily: 'Rubik-Medium'}}>
+                      Talk To Us
+                    </Text>
+                  </View>
                 </View>
-              </View>
 
-              {/*-------------------- WEBSITE --------------------*/}
-              <View style={styles.rowBox}>
-                <View style={styles.row}>
-                  <YellowIcon set="MaterialCommunity" name="web" />
-                  <Text style={{fontSize: 14, marginLeft: 16, color: MEDIUM, fontFamily: 'Rubik-Medium'}}>
-                    {constants.websiteDisplayName}
-                  </Text>
+                {/*-------------------- TRUNK NUMBER --------------------*/}
+                <View style={styles.rowBox}>
+                  <View style={styles.row}>
+                    <YellowIcon set="FontAwesome5" name="phone" />
+                    <Text style={{fontSize: 14, marginLeft: 16, color: MEDIUM, fontFamily: 'Rubik-Medium'}}>
+                      (02) 84-248-617
+                    </Text>
+                  </View>
                 </View>
               </View>
-            </View>
-          </TouchableHighlight>
-        </View>
+            </TouchableHighlight>
+          </View>
+          <View style={{marginBottom: 20}}>
+            <TouchableHighlight
+              onPress={() => {
+                Linking.openURL(constants.websiteValidUrl);
+              }}
+              underlayColor={COLOR}
+              style={styles.card}>
+              <View style={styles.taskBox}>
+                {/*-------------------- VISIT OUR WEBSITE LABEL --------------------*/}
+                <View style={styles.rowBox}>
+                  <View style={styles.row}>
+                    <YellowIcon set="FontAwesome" name="info" />
+                    <Text style={{fontSize: 14, marginLeft: 16, color: DARK, fontFamily: 'Rubik-Medium'}}>
+                      Visit our website
+                    </Text>
+                  </View>
+                </View>
 
-        <View style={{paddingHorizontal: 20, paddingTop: 20, marginBottom: 10}}>
-          <TouchableHighlight
-            onPress={() => {
-              Linking.openURL(
-                `mailto:${
-                  constants.talkToUsEmail
-                }?subject=Talk%20To%20Us&body=How%20can%20we%20help%20you%20ka-toktok?`,
-              );
-            }}
-            underlayColor={COLOR}
-            style={styles.card}>
-            <View style={styles.taskBox}>
-              {/*-------------------- EMAIL US LABEL --------------------*/}
-              <View style={styles.rowBox}>
-                <View style={styles.row}>
-                  <YellowIcon set="FontAwesome" name="info" />
-                  <Text style={{fontSize: 14, marginLeft: 16, color: DARK, fontFamily: 'Rubik-Medium'}}>Email Us</Text>
+                {/*-------------------- WEBSITE --------------------*/}
+                <View style={styles.rowBox}>
+                  <View style={styles.row}>
+                    <YellowIcon set="MaterialCommunity" name="web" />
+                    <Text style={{fontSize: 14, marginLeft: 16, color: MEDIUM, fontFamily: 'Rubik-Medium'}}>
+                      {constants.websiteDisplayName}
+                    </Text>
+                  </View>
                 </View>
               </View>
+            </TouchableHighlight>
+          </View>
+          <View style={{marginBottom: 20}}>
+            <TouchableHighlight
+              onPress={() => {
+                Linking.openURL(
+                  `mailto:${constants.talkToUsEmail}?subject=Talk%20To%20Us&body=How%20can%20we%20help%20you%20ka-toktok?`,
+                );
+              }}
+              underlayColor={COLOR}
+              style={styles.card}>
+              <View style={styles.taskBox}>
+                {/*-------------------- EMAIL US LABEL --------------------*/}
+                <View style={styles.rowBox}>
+                  <View style={styles.row}>
+                    <YellowIcon set="FontAwesome" name="info" />
+                    <Text style={{fontSize: 14, marginLeft: 16, color: DARK, fontFamily: 'Rubik-Medium'}}>
+                      Email Us
+                    </Text>
+                  </View>
+                </View>
 
-              {/*-------------------- SUPPORT EMAIL --------------------*/}
-              <View style={styles.rowBox}>
-                <View style={styles.row}>
-                  <YellowIcon set="MaterialCommunity" name="email" />
-                  <Text style={{fontSize: 14, marginLeft: 16, color: MEDIUM, fontFamily: 'Rubik-Medium'}}>
-                    {constants.talkToUsEmail}
-                  </Text>
+                {/*-------------------- SUPPORT EMAIL --------------------*/}
+                <View style={styles.rowBox}>
+                  <View style={styles.row}>
+                    <YellowIcon set="MaterialCommunity" name="email" />
+                    <Text style={{fontSize: 14, marginLeft: 16, color: MEDIUM, fontFamily: 'Rubik-Medium'}}>
+                      {constants.talkToUsEmail}
+                    </Text>
+                  </View>
                 </View>
               </View>
-            </View>
-          </TouchableHighlight>
+            </TouchableHighlight>
+          </View>
         </View>
       </ScrollView>
     </View>
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   session: state.session,
   constants: state.constants,
 });
 
-const mapDispatchToProps = dispatch => ({
-  createSession: payload => dispatch({type: 'CREATE_SESSION', payload}),
+const mapDispatchToProps = (dispatch) => ({
+  createSession: (payload) => dispatch({type: 'CREATE_SESSION', payload}),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(TalkToUs);
+export default connect(mapStateToProps, mapDispatchToProps)(TalkToUs);
 
 const styles = StyleSheet.create({
   container: {
@@ -124,7 +163,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   rowBox: {
-    height: 40,
+    height: 30,
     marginHorizontal: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',

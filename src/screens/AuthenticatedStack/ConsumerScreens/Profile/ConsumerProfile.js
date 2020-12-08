@@ -209,8 +209,19 @@ const ConsumerProfile = ({navigation, constants, session, createSession}) => {
             />
           </View>
         )}
+
+        {/*-------------------- REFERRAL Name --------------------*/}
+        {session.user.consumer.referralName && (
+          <View>
+            <Text style={styles.label}>Referral Name</Text>
+            <View style={[styles.input, {justifyContent: 'center'}]}>
+              <Text style={{color: MEDIUM}}>{session.user.consumer.referralName}</Text>
+            </View>
+          </View>
+        )}
+
         {/*-------------------- UPDATE BUTTON --------------------*/}
-        <BlackButton onPress={onSubmit} label="Update Profile" containerStyle={{marginBottom: 0, marginTop: 40}} />
+        <BlackButton onPress={onSubmit} label="Update Profile" containerStyle={{marginBottom: 0, marginTop: 20}} />
 
         {/*-------------------- CHANGE PASSWORD BUTTON --------------------*/}
         <BlackButton onPress={() => navigation.push('ConsumerChangePassword')} label="Change Password" />

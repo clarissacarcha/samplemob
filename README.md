@@ -56,27 +56,24 @@
 
 -- Final R1 TODO
 
-1. \*\*\* Promo redeem/accept count validation, Validate in delegation also
-2. Hold consumer/rider account on 5th cancel of the day
-3. Provide Push Notifs to Riders with gcash, pending or rejected.
-4. Enterprise API Logs
-5. \*\*\* Message for Invalid Promo Code. Pop Up Message.
-6. \*\*\*Debounce
-7. Try Catch In API Calls. S3 Upload. Enterprise Postbacks. JC REFERRAL and PROCESS
-8. Worker Threads for OneSignal Loop
-
-# 1.7.0 Changelogs SQL SCRIPT
-
-1. tok_notifications type and payload (VARCHAR50)
-2. tok_deliveries cash_on_delivery DEFAULT 0
+1. \*\*\* Referral Name in Referral Code
+2. \*\*\* Process Delivery Logs
+3. \*\*\* CRON JOB ENV
+4. \*\*\* Promo redeem/accept count validation, Validate in delegation also
+5. Hold consumer/rider account on 5th cancel of the day
+6. Provide Push Notifs to Riders with gcash, pending or rejected.
+7. Enterprise API Logs
+8. \*\*\* Message for Invalid Promo Code. Pop Up Message.
+9. \*\*\* Debounce
+10. Try Catch In API Calls. S3 Upload. Enterprise Postbacks. JC REFERRAL and PROCESS
+11. Worker Threads for OneSignal Loop
 
 # Refactor Notes
 
 1. Check collectPaymentFrom Value R | S
 2. Check if senderStop and recipientStop has formattedAddress
-3. Default Cash On Delivery to 0
-4. Add Pick Up Drop Off in StopCard
-5. Changing Scheduled Date when scheduled To and From is already set
+3. Add Pick Up Drop Off in StopCard
+4. Changing Scheduled Date when scheduled To and From is already set
 
 # Wallet 2 menu
 

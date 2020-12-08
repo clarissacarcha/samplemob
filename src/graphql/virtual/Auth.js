@@ -31,6 +31,7 @@ user {
     id
     rating
     referralCode
+    referralName
     status
   }
   driver {

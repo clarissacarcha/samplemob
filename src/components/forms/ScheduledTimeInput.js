@@ -114,7 +114,7 @@ const Component = ({initialData, onChangeFrom, onChangeTo, scheduledDate, visibl
   return (
     <>
       <Text style={styles.label}>Schedule </Text>
-      <View style={styles.container}>
+      <View style={[styles.container, {...(Platform.OS === 'ios' ? {zIndex: 999} : {})}]}>
         <View style={styles.scheduledDate}>
           <Text style={{color: MEDIUM}}>{moment(scheduledDate, 'YYYY-MM-DD').format('ddd, MMM D')}</Text>
         </View>
