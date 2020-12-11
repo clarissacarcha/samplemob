@@ -15,7 +15,7 @@ import {
 import React, {useEffect, useState} from 'react';
 import {useAlert} from '../../hooks/useAlert';
 
-import {AlertOverlay} from '../../components';
+import {AlertOverlay, AlertModal} from '../../components';
 import LoginBanner from '../../assets/images/LoginBanner.png';
 import SmsRetriever from 'react-native-sms-retriever';
 import Splash from '../../assets/images/Splash.png';
@@ -147,6 +147,7 @@ const Login = ({navigation, session}) => {
         justifyContent: 'space-between',
       }}>
       <AlertOverlay visible={loading} />
+      {/* <AlertModal visible={true} /> */}
       <View>
         <Image
           source={LoginBanner}
@@ -172,6 +173,7 @@ const Login = ({navigation, session}) => {
             keyboardType="number-pad"
             returnKeyType="done"
             onSubmitEditing={() => onSubmit(mobile)}
+            placeholderTextColor={MEDIUM}
           />
         </View>
 

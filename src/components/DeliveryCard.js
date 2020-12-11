@@ -220,7 +220,7 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
               <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
                 <YellowIcon set="FontAwesome5" name="wallet" />
                 <View style={{marginLeft: 10}}>
-                  <Text style={{fontFamily: 'Rubik-Medium'}}>Collect From Wallet</Text>
+                  <Text style={{fontFamily: 'Rubik-Medium'}}>Collect From Toktok Wallet</Text>
                   <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
                     <Text style={{fontFamily: 'Rubik-Medium', marginLeft: 10}}>₱ {delivery.discount}.00</Text>
                   </Text>

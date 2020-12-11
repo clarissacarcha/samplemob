@@ -129,12 +129,12 @@ Toktok JC API
 2. Feature branch and code review
 3. Pair programming
 
-# Promo Credits (instead of discount credits)
+# Promo Credits (instead of discount credits) DONE
 
 # Toktok Wallet, Rider Wallet
 
 - Delivery ID: DID
-- Collet From Toktok Wallet
+- Collet From Toktok Wallet DONE
 
 # 10 ongoing at a time? (To prevent spam bookings)
 

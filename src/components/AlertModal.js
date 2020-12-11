@@ -32,25 +32,33 @@ export const AlertModal = (props) => {
     return <SingleButton {...props} />;
   };
 
+  if (!visible) {
+    return null;
+  }
+
   return (
-    <Modal animationType="fade" transparent={true} visible={visible}>
-      <View style={styles.transparent}>
-        <View style={styles.labelBox}>
-          <Text style={{color: DARK}}>{message}</Text>
-        </View>
-        <View style={styles.divider} />
-        {RenderButton()}
+    <View style={styles.transparent}>
+      <View style={styles.labelBox}>
+        <Text style={{color: DARK}}>{message}</Text>
       </View>
-    </Modal>
+      <View style={styles.divider} />
+      {RenderButton()}
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   transparent: {
-    flex: 1,
+    // flex: 1,
+    zIndex: 999999,
     backgroundColor: 'rgba(0,0,0,0.75)',
     padding: 20,
     justifyContent: 'center',
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
   labelBox: {
     backgroundColor: 'white',

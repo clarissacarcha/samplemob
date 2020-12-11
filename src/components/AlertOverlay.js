@@ -4,7 +4,7 @@ import {COLOR, DARK} from '../res/constants';
 
 export const AlertOverlay = ({visible}) => {
   return (
-    <Modal animationType="fade" transparent={true} visible={visible}>
+    <Modal transparent={true} visible={visible}>
       <View style={styles.transparent}>
         <View style={styles.labelRow}>
           <View style={styles.labelBox}>
