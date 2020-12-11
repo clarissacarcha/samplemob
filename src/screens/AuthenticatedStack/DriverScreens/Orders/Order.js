@@ -683,12 +683,14 @@ const styles = StyleSheet.create({
   },
   outer: {
     flex: 1,
+    color: DARK,
     fontSize: 16,
     fontFamily: 'Rubik-Medium',
-    color: DARK,
   },
   inner: {
     color: ORANGE,
+    fontSize: 16,
+    fontFamily: 'Rubik-Medium',
   },
   header: {
     paddingLeft: 14,

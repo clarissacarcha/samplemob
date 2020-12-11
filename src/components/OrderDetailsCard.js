@@ -102,7 +102,9 @@ export const OrderDetailsCard = ({delivery}) => {
                 <Text style={{fontFamily: 'Rubik-Medium'}}>Credit Cost</Text>
                 <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
                   <Text style={{fontFamily: 'Rubik-Medium', marginLeft: 10}}>
-                    {numberFormat(parseFloat(delivery.price) * parseFloat(delivery.comRate))}
+                    {numberFormat(
+                      (parseFloat(delivery.price) + parseFloat(delivery.discount)) * parseFloat(delivery.comRate),
+                    )}
                   </Text>
                 </Text>
               </View>

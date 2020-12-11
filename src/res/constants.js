@@ -1,5 +1,5 @@
-export const APP_VERSION = '1.7.0';
-export const APP_FLAVOR = 'D'; // C = Customer | D = Driver
+export const APP_VERSION = '1.8.0';
+export const APP_FLAVOR = 'C'; // C = Customer | D = Driver
 
 // export const PROTOCOL = 'https';
 // export const HOST_PORT = 'toktok.ph:2096';
@@ -14,8 +14,8 @@ export const APP_FLAVOR = 'D'; // C = Customer | D = Driver
 
 export const PROTOCOL = 'http';
 export const HOST_PORT = '192.168.43.241:3080'; // Myutini HS
-// export const HOST_PORT = '192.168.0.116:3080'; // MDC
 // export const HOST_PORT = '35.173.0.77:3088'; // Marketing Server
+// export const HOST_PORT = '192.168.0.116:3080'; // MDC
 
 export const COLOR = '#FDBA1C'; //YELLOW
 export const COLOR_UNDERLAY = 'rgba(256,186,28, 0.1)';

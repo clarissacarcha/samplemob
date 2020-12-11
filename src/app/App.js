@@ -11,6 +11,7 @@ import {
   ReduxProvider,
   // SubscriptionProvider,
 } from '../provider';
+import AlertProvider from '../provider/AlertProvider';
 
 console.disableYellowBox = true;
 
@@ -21,8 +22,10 @@ const App = () => {
       <SafeAreaView style={styles.safeArea}>
         <ReduxProvider>
           <ApolloProvider>
-            <Splash />
-            {/*<OrdersTesting />*/}
+            <AlertProvider>
+              <Splash />
+              {/*<OrdersTesting />*/}
+            </AlertProvider>
           </ApolloProvider>
         </ReduxProvider>
       </SafeAreaView>

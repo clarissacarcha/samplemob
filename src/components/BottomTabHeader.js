@@ -15,12 +15,14 @@ export const BottomTabHeader = ({label}) => {
 
 const styles = StyleSheet.create({
   outer: {
+    color: DARK,
     fontSize: 16,
     fontFamily: 'Rubik-Medium',
-    color: DARK,
   },
   inner: {
     color: ORANGE,
+    fontSize: 16,
+    fontFamily: 'Rubik-Medium',
   },
   header: {
     height: 50,

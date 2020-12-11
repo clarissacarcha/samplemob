@@ -19,7 +19,8 @@ import QRCode from 'react-native-qrcode-svg';
 import {COLOR, DARK, MAP_DELTA_LOW, ORANGE, LIGHT, MEDIUM} from '../../../../res/constants';
 import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../../components';
 import {BlackButton} from '../../../../components/ui';
-import {onError} from '../../../../util/ErrorUtility';
+import {useAlert} from '../../../../hooks/useAlert';
+import {onError, onErrorAlert} from '../../../../util/ErrorUtility';
 import {PATCH_PERSON_POST_REGISTRATION} from '../../../../graphql';
 
 const ImageWidth = (Dimensions.get('window').width - 60) / 2;
@@ -33,6 +34,7 @@ const ConsumerProfile = ({navigation, constants, session, createSession}) => {
     headerTitle: () => <HeaderTitle label={['My', 'Profile']} />,
   });
 
+  const alert = useAlert();
   const [referralCode, setReferralCode] = useState(session.user.consumer.referralCode);
   const [firstName, setFirstName] = useState(session.user.person.firstName);
   const [lastName, setLastName] = useState(session.user.person.lastName);
@@ -48,8 +50,10 @@ const ConsumerProfile = ({navigation, constants, session, createSession}) => {
         referralCode,
       },
     },
-    onError: onError,
-    onCompleted: ({patchPersonPostRegistration}) => {
+    onError: (error) => {
+      onErrorAlert({alert, error});
+    },
+    onCompleted: ({res}) => {
       const newSession = {...session};
       newSession.user.person.firstName = firstName;
       newSession.user.person.lastName = lastName;
@@ -81,7 +85,6 @@ const ConsumerProfile = ({navigation, constants, session, createSession}) => {
       Alert.alert('', 'Please enter a valid email address.');
       return;
     }
-
     patchPersonPostRegistration();
   };
 

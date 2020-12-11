@@ -4,7 +4,7 @@ import {useQuery} from '@apollo/react-hooks';
 import {connect} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
 import {COLOR, MEDIUM, FONT_FAMILY} from '../../../../res/constants';
-import {SomethingWentWrong, DeliveryCard} from '../../../../components';
+import {SomethingWentWrong, DeliveryCard, DeliveriesTopTabHeader} from '../../../../components';
 import {GET_DELIVERIES} from '../../../../graphql';
 import NoData from '../../../../assets/images/NoData.png';
 
@@ -19,11 +19,8 @@ const Ongoing = ({navigation, session}) => {
         statusIn: [2, 3, 4, 5],
       },
     },
-    onError: e => {
+    onError: (e) => {
       console.log(e);
-    },
-    onCompleted: data => {
-      console.log(JSON.stringify(data, null, 4));
     },
   });
 
@@ -56,7 +53,7 @@ const Ongoing = ({navigation, session}) => {
       <FlatList
         showsVerticalScrollIndicator={false}
         data={data.getDeliveries}
-        keyExtractor={item => item.id}
+        keyExtractor={(item) => item.id}
         refreshControl={<RefreshControl refreshing={loading} onRefresh={refetch} colors={[COLOR]} tintColor={COLOR} />}
         renderItem={({item, index}) => (
           <DeliveryCard
@@ -70,14 +67,11 @@ const Ongoing = ({navigation, session}) => {
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   session: state.session,
 });
 
-export default connect(
-  mapStateToProps,
-  null,
-)(Ongoing);
+export default connect(mapStateToProps, null)(Ongoing);
 
 const styles = StyleSheet.create({
   container: {

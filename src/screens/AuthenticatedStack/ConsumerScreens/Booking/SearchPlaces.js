@@ -19,7 +19,7 @@ const GooglePlacesInput = ({onLocationSelect, savedLocations}) => {
       keyboardAppearance={'light'} // Can be left out for default keyboardAppearance https://facebook.github.io/react-native/docs/textinput.html#keyboardappearance
       listViewDisplayed="true" // true/false/undefined
       fetchDetails={true}
-      renderDescription={row => row.description} // custom description render
+      renderDescription={(row) => row.description} // custom description render
       onPress={onLocationSelect}
       getDefaultValue={() => ''}
       query={{
@@ -87,7 +87,7 @@ const SearchLocation = ({navigation, route, session}) => {
       },
     },
     onCompleted: ({getSavedLocations}) => {
-      const mappedSavedLocations = getSavedLocations.map(location => {
+      const mappedSavedLocations = getSavedLocations.map((location) => {
         return {
           description: location.name,
           formattedAddress: location.formattedAddress,
@@ -163,14 +163,11 @@ const SearchLocation = ({navigation, route, session}) => {
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   session: state.session,
 });
 
-export default connect(
-  mapStateToProps,
-  null,
-)(SearchLocation);
+export default connect(mapStateToProps, null)(SearchLocation);
 
 const styles = StyleSheet.create({
   cardShadow: {

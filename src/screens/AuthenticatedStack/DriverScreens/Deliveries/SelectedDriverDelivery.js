@@ -223,8 +223,8 @@ const SelectedDriverDelivery = ({navigation, route, session}) => {
 
         {/*-------------------- DELIVERY ID --------------------*/}
         <View style={[styles.cardShadow, {marginBottom: 20}]}>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <View style={{flexDirection: 'row'}}>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <YellowIcon set="FontAwesome5" name="pen" size={14} darkIcon />
 
               <Text style={{marginLeft: 10, color: DARK, fontFamily: 'Rubik-Medium'}}>

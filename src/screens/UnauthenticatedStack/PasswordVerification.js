@@ -9,13 +9,16 @@ import {getUniqueId} from 'react-native-device-info';
 import {COLOR, DARK, APP_FLAVOR, MEDIUM, LIGHT, IMPERSONATE, IMPERSONATION_PASSPHRASE} from '../../res/constants';
 import {AUTH_CLIENT, VERIFY_LOGIN} from '../../graphql';
 import {AlertOverlay} from '../../components';
-import {onError} from '../../util/ErrorUtility';
+import {onError, onErrorAlert} from '../../util/ErrorUtility';
+import {useAlert} from '../../hooks/useAlert';
 
 const VerificationBanner = require('../../assets/images/VerificationBanner.png');
 
 const PasswordVerification = ({navigation, route, createSession}) => {
   const {mobile} = route.params;
   const inputRef = useRef();
+
+  const alert = useAlert();
 
   const [password, setPassword] = useState('');
 
@@ -31,55 +34,12 @@ const PasswordVerification = ({navigation, route, createSession}) => {
         ...(IMPERSONATE ? {impersonationPassphrase: IMPERSONATION_PASSPHRASE} : {}),
       },
     },
-    onError,
-    // onError: (error) => {
-    //   console.log('LALA');
-    //   console.log(error);
-    //   const {graphQLErrors, networkError} = error;
+    onError: (error) => {
+      onErrorAlert({alert, error});
+    },
 
-    //   if (networkError) {
-    //     Alert.alert('', 'Network error occurred. Please check your internet connection.');
-    //   } else if (graphQLErrors.length > 0) {
-    //     graphQLErrors.map(({message, locations, path, code}) => {
-    //       if (code === 'INTERNAL_SERVER_ERROR') {
-    //         Alert.alert('', 'Something went wrong.');
-    //       } else if (code === 'USER_INPUT_ERROR') {
-    //         Alert.alert('', message);
-    //       } else if (code === 'BAD_USER_INPUT') {
-    //         Alert.alert('', message);
-    //       } else if (code === 'AUTHENTICATION_ERROR') {
-    //         navigation.push('UnauthenticatedStack', {
-    //           screen: 'AccountBlocked',
-    //         });
-    //       } else {
-    //         console.log('ELSE ERROR:', error);
-    //         Alert.alert('', 'Something went wrong...');
-    //       }
-    //     });
-    //   }
-    // },
     onCompleted: (data) => {
       const {user, accessToken} = data.verifyLogin;
-
-      // console.log(JSON.stringify({user}, null, 4));
-
-      // if (APP_FLAVOR === 'C') {
-      //   if (user.consumer.status === 3) {
-      //     navigation.push('UnauthenticatedStack', {
-      //       screen: 'AccountBlocked',
-      //     });
-      //     return;
-      //   }
-      // }
-
-      // if (APP_FLAVOR === 'D') {
-      //   if (user.driver.status === 3) {
-      //     navigation.push('UnauthenticatedStack', {
-      //       screen: 'AccountBlocked',
-      //     });
-      //     return;
-      //   }
-      // }
 
       AsyncStorage.setItem('userId', user.id); // Set userId value in asyncStorage for persistent login
       AsyncStorage.setItem('accessToken', accessToken);
@@ -122,9 +82,9 @@ const PasswordVerification = ({navigation, route, createSession}) => {
     },
   });
 
-  useEffect(() => {
-    inputRef.current.focus();
-  }, []);
+  // useEffect(() => {
+  //   inputRef.current.focus();
+  // }, []);
 
   const onSubmit = () => {
     if (!password) {

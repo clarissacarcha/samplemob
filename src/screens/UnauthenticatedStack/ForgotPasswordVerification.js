@@ -6,7 +6,8 @@ import {connect} from 'react-redux';
 import {useMutation} from '@apollo/react-hooks';
 import {AUTH_CLIENT, FORGOT_PASSWORD_VERIFICATION} from '../../graphql';
 import {AlertOverlay, HeaderBack, HeaderTitle} from '../../components';
-import {onError} from '../../util/ErrorUtility';
+import {onError, onErrorAlert} from '../../util/ErrorUtility';
+import {useAlert} from '../../hooks/useAlert';
 
 import timer from 'react-native-timer';
 
@@ -48,6 +49,7 @@ const Verification = ({navigation, route, createSession}) => {
   const {mobile} = route.params;
   const inputRef = useRef();
 
+  const alert = useAlert();
   const [verificationCode, setVerificationCode] = useState('');
   const [count, setCount] = useState(30);
 
@@ -59,9 +61,11 @@ const Verification = ({navigation, route, createSession}) => {
         verificationCode,
       },
     },
-    onError: onError,
-    onCompleted: ({forgotPasswordVerification}) => {
-      if (forgotPasswordVerification == 'RESET') {
+    onError: (error) => {
+      onErrorAlert({alert, error});
+    },
+    onCompleted: (res) => {
+      if (res.forgotPasswordVerification == 'RESET') {
         navigation.push('ForgotPasswordReset', {verificationCode, mobile});
       }
     },
@@ -129,7 +133,7 @@ const Verification = ({navigation, route, createSession}) => {
             style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent'}}
             keyboardType="number-pad"
             returnKeyType="done"
-            onChangeText={value => {
+            onChangeText={(value) => {
               if (value.length <= 6) {
                 setVerificationCode(value);
               }
@@ -153,14 +157,11 @@ const Verification = ({navigation, route, createSession}) => {
   );
 };
 
-const mapDispatchToProps = dispatch => ({
-  createSession: payload => dispatch({type: 'CREATE_SESSION', payload}),
+const mapDispatchToProps = (dispatch) => ({
+  createSession: (payload) => dispatch({type: 'CREATE_SESSION', payload}),
 });
 
-export default connect(
-  null,
-  mapDispatchToProps,
-)(Verification);
+export default connect(null, mapDispatchToProps)(Verification);
 
 const styles = StyleSheet.create({
   inputView: {

@@ -13,18 +13,22 @@ import {
   View,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
+import {useAlert} from '../../hooks/useAlert';
 
 import {AlertOverlay} from '../../components';
 import LoginBanner from '../../assets/images/LoginBanner.png';
 import SmsRetriever from 'react-native-sms-retriever';
 import Splash from '../../assets/images/Splash.png';
 import {connect} from 'react-redux';
-import {onError} from '../../util/ErrorUtility';
+import {onError, onErrorAlert} from '../../util/ErrorUtility';
 import {useMutation} from '@apollo/react-hooks';
 
 const Login = ({navigation, session}) => {
   const [mobile, setMobile] = useState('');
   const [delay, setDelay] = useState(true);
+
+  const alert = useAlert();
+
   const [loginRegister, {loading}] = useMutation(LOGIN_REGISTER, {
     client: AUTH_CLIENT,
     variables: {
@@ -33,7 +37,9 @@ const Login = ({navigation, session}) => {
         appFlavor: APP_FLAVOR,
       },
     },
-    onError: onError,
+    onError: (error) => {
+      onErrorAlert({alert, error});
+    },
     onCompleted: (data) => {
       if (data.loginRegister === 'REGISTER') {
         navigation.push('SmsVerification', {mobile});

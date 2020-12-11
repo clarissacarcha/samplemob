@@ -1,9 +1,9 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {View, Text, ActivityIndicator, FlatList, RefreshControl, Image, StyleSheet, Dimensions} from 'react-native';
 import {useQuery} from '@apollo/react-hooks';
 import {connect} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
-import {COLOR, MEDIUM, FONT_FAMILY} from '../../../../res/constants';
+import {COLOR, MEDIUM} from '../../../../res/constants';
 import {DeliveryCard, SomethingWentWrong} from '../../../../components';
 import {GET_DELIVERIES} from '../../../../graphql';
 import NoData from '../../../../assets/images/NoData.png';
@@ -19,7 +19,7 @@ const CancelledDeliveries = ({navigation, session}) => {
         statusIn: [7],
       },
     },
-    onError: e => {
+    onError: (e) => {
       console.log(e);
     },
   });
@@ -53,7 +53,7 @@ const CancelledDeliveries = ({navigation, session}) => {
       <FlatList
         showsVerticalScrollIndicator={false}
         data={data.getDeliveries}
-        keyExtractor={item => item.id}
+        keyExtractor={(item) => item.id}
         refreshControl={<RefreshControl refreshing={loading} onRefresh={refetch} colors={[COLOR]} tintColor={COLOR} />}
         renderItem={({item, index}) => (
           <DeliveryCard
@@ -67,14 +67,11 @@ const CancelledDeliveries = ({navigation, session}) => {
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   session: state.session,
 });
 
-export default connect(
-  mapStateToProps,
-  null,
-)(CancelledDeliveries);
+export default connect(mapStateToProps, null)(CancelledDeliveries);
 
 const styles = StyleSheet.create({
   container: {
@@ -92,7 +89,6 @@ const styles = StyleSheet.create({
   text: {
     color: MEDIUM,
     marginTop: 20,
-    fontFamily: FONT_FAMILY,
     fontFamily: 'Rubik-Medium',
   },
 });

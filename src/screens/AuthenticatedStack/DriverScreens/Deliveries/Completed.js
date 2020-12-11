@@ -19,7 +19,7 @@ const CompletedDeliveries = ({navigation, session}) => {
         statusIn: [6],
       },
     },
-    onError: e => {
+    onError: (e) => {
       console.log(e);
     },
   });
@@ -53,7 +53,7 @@ const CompletedDeliveries = ({navigation, session}) => {
       <FlatList
         showsVerticalScrollIndicator={false}
         data={data.getDeliveries}
-        keyExtractor={item => item.id}
+        keyExtractor={(item) => item.id}
         refreshControl={<RefreshControl refreshing={loading} onRefresh={refetch} colors={[COLOR]} tintColor={COLOR} />}
         renderItem={({item, index}) => (
           <DeliveryCard
@@ -69,14 +69,11 @@ const CompletedDeliveries = ({navigation, session}) => {
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   session: state.session,
 });
 
-export default connect(
-  mapStateToProps,
-  null,
-)(CompletedDeliveries);
+export default connect(mapStateToProps, null)(CompletedDeliveries);
 
 const styles = StyleSheet.create({
   container: {

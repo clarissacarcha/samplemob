@@ -20,5 +20,7 @@ const styles = StyleSheet.create({
   },
   inner: {
     color: ORANGE,
+    fontSize: 16,
+    fontFamily: 'Rubik-Medium',
   },
 });

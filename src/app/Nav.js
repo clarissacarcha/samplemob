@@ -1,9 +1,11 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {COLOR, MEDIUM} from '../res/constants';
-import {BottomTabHeader} from '../components';
+import {DeliveriesTopTabHeader} from '../components';
 import EIcon from 'react-native-vector-icons/Entypo';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import FAIcon from 'react-native-vector-icons/FontAwesome';
+import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {NavigationContainer} from '@react-navigation/native';
 import {TouchableWithoutFeedback} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -80,31 +82,69 @@ const RootDrawer = createDrawerNavigator();
 const DriverHome = createBottomTabNavigator();
 const DriverDeliveries = createMaterialTopTabNavigator();
 
-const DriverDeliveriesTab = () => (
-  <>
-    <BottomTabHeader label={['My', 'Deliveries']} />
-    <DriverDeliveries.Navigator
-      swipeEnabled={false}
-      upperCaseLabel={false}
-      tabBarOptions={{
-        activeTintColor: COLOR,
-        inactiveTintColor: MEDIUM,
-        allowFontScaling: false,
-        indicatorStyle: {backgroundColor: COLOR},
+const DriverDeliveriesTab = () => {
+  return (
+    <>
+      <DeliveriesTopTabHeader />
+      <DriverDeliveries.Navigator
+        swipeEnabled={false}
+        upperCaseLabel={false}
+        tabBarOptions={{
+          activeTintColor: COLOR,
+          inactiveTintColor: MEDIUM,
+          allowFontScaling: false,
+          indicatorStyle: {backgroundColor: COLOR},
 
-        labelStyle: {
-          fontFamily: 'Rubik-Regular',
-          textTransform: 'none',
-          fontSize: 14,
-        },
-      }}>
-      <DriverDeliveries.Screen name="Ongoing" component={Ongoing} />
-      <DriverDeliveries.Screen name="Pending" component={Pending} />
-      <DriverDeliveries.Screen name="Completed" component={Completed} />
-      <DriverDeliveries.Screen name="Cancelled" component={Cancelled} />
-    </DriverDeliveries.Navigator>
-  </>
-);
+          labelStyle: {
+            fontFamily: 'Rubik-Regular',
+            textTransform: 'none',
+            fontSize: 14,
+          },
+        }}>
+        <DriverDeliveries.Screen
+          name="Ongoing"
+          component={Ongoing}
+          options={() => ({
+            tabBarLabel: ({focused}) => {
+              const iconColor = focused ? COLOR : MEDIUM;
+              return <EIcon name="time-slot" color={iconColor} size={20} />;
+            },
+          })}
+        />
+        <DriverDeliveries.Screen
+          name="Pending"
+          component={Pending}
+          options={() => ({
+            tabBarLabel: ({focused}) => {
+              const iconColor = focused ? COLOR : MEDIUM;
+              return <FAIcon name="refresh" color={iconColor} size={20} />;
+            },
+          })}
+        />
+        <DriverDeliveries.Screen
+          name="Completed"
+          component={Completed}
+          options={() => ({
+            tabBarLabel: ({focused}) => {
+              const iconColor = focused ? COLOR : MEDIUM;
+              return <FA5Icon name="check" color={iconColor} size={20} />;
+            },
+          })}
+        />
+        <DriverDeliveries.Screen
+          name="Cancelled"
+          component={Cancelled}
+          options={() => ({
+            tabBarLabel: ({focused}) => {
+              const iconColor = focused ? COLOR : MEDIUM;
+              return <FA5Icon name="times" color={iconColor} size={22} />;
+            },
+          })}
+        />
+      </DriverDeliveries.Navigator>
+    </>
+  );
+};
 
 const UnauthenticatedStack = () => (
   <Unauthenticated.Navigator>

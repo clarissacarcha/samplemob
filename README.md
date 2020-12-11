@@ -128,3 +128,54 @@ Toktok JC API
 
 2. Feature branch and code review
 3. Pair programming
+
+# Promo Credits (instead of discount credits)
+
+# Toktok Wallet, Rider Wallet
+
+- Delivery ID: DID
+- Collet From Toktok Wallet
+
+# 10 ongoing at a time? (To prevent spam bookings)
+
+# Global Settings
+
+- Maximum Distance for Booking
+
+# John
+
+- Projects that haved worked
+- assess skills based on work exp
+- reason for looking for another job (freelancer, looking for a stable job)
+- we're currently wfh until further notice, shoud have good internet at home, (yes)
+- ok to work at the office if needed? (okay)
+- ok to handle clients? can lead? (team freelance)
+- ok to work overtime? weekends? holidays? if any? (yes na yes)
+- can work under pressure? tight deadlines? (yes)
+- how early can start if hired? (as soon as possible)
+- willing to be deployed in react native project (yes)
+
+Then based on your assessment, passed or failed? why?
+
+- rate (lowest)1-10(highest)
+- how early can he/she start in a project?
+- can work will less supervision?
+
+# Angelo
+
+- Projects that haved worked
+- assess skills based on work exp
+- reason for looking for another job ()
+- we're currently wfh until further notice, shoud have good internet at home, (yes)
+- ok to work at the office if needed? (yes)
+- ok to handle clients? can lead? (yes)
+- ok to work overtime? weekends? holidays? if any? (yes)
+- can work under pressure? tight deadlines? (yes)
+- how early can start if hired? (january first or 2nd week)
+- willing to be deployed in react native project (yes)
+
+Then based on your assessment, passed or failed? why?
+
+- rate (lowest)1-10(highest)
+- how early can he/she start in a project?
+- can work will less supervision?

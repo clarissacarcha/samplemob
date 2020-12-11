@@ -6,8 +6,9 @@ import {useMutation} from '@apollo/react-hooks';
 import InputScrollView from 'react-native-input-scroll-view';
 import {COLOR, DARK, MAP_DELTA_LOW, MEDIUM, LIGHT} from '../../../res/constants';
 import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../components';
-import {onError} from '../../../util/ErrorUtility';
+import {onError, onErrorAlert} from '../../../util/ErrorUtility';
 import {CLIENT, PATCH_PERSON_POST_REGISTRATION, GET_USER_SESSION, AUTH_CLIENT} from '../../../graphql';
+import {useAlert} from '../../../hooks/useAlert';
 
 const PostRegistration = ({navigation, route, session, createSession, destroySession}) => {
   const signOut = () => {
@@ -22,6 +23,8 @@ const PostRegistration = ({navigation, route, session, createSession, destroySes
     headerTitle: () => <HeaderTitle label={['Post', 'Registration']} />,
   });
 
+  const alert = useAlert();
+
   const [referralCode, setReferralCode] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -30,7 +33,9 @@ const PostRegistration = ({navigation, route, session, createSession, destroySes
   const [repeatPassword, setRepeatPassword] = useState('');
 
   const [patchPersonPostRegistration, {loading}] = useMutation(PATCH_PERSON_POST_REGISTRATION, {
-    onError: onError,
+    onError: (error) => {
+      onErrorAlert({alert, error});
+    },
     onCompleted: () => {
       const newSession = {...session};
       newSession.user.person.firstName = firstName;
@@ -53,7 +58,7 @@ const PostRegistration = ({navigation, route, session, createSession, destroySes
       return;
     }
 
-    if (emailAddress == '') {
+    if (emailAddress === '') {
       Alert.alert('', 'Please enter your email address.');
       return;
     }
@@ -63,17 +68,17 @@ const PostRegistration = ({navigation, route, session, createSession, destroySes
       return;
     }
 
-    if (password == '') {
+    if (password === '') {
       Alert.alert('', 'Please enter your password.');
       return;
     }
 
-    if (repeatPassword == '') {
+    if (repeatPassword === '') {
       Alert.alert('', 'Please repeat your password.');
       return;
     }
 
-    if (password != repeatPassword) {
+    if (password !== repeatPassword) {
       Alert.alert('', 'Password does not match.');
       return;
     }

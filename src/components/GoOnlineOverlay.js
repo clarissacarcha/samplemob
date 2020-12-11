@@ -1,5 +1,14 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, Modal, StyleSheet, ActivityIndicator, TouchableHighlight, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  Modal,
+  StyleSheet,
+  ActivityIndicator,
+  TouchableHighlight,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import {connect} from 'react-redux';
 import {useSubscription, useMutation} from '@apollo/react-hooks';
 import {
@@ -145,14 +154,11 @@ const GoOnlineOverlay = ({onDismiss, session}) => {
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   session: state.session,
 });
 
-export default connect(
-  mapStateToProps,
-  null,
-)(GoOnlineOverlay);
+export default connect(mapStateToProps, null)(GoOnlineOverlay);
 
 const styles = StyleSheet.create({
   transparent: {

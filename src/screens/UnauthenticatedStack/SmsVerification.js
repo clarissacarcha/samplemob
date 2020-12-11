@@ -1,5 +1,5 @@
 import React, {useState, useRef, useEffect} from 'react';
-import {View, StyleSheet, Text, TextInput, TouchableHighlight, Image, Alert, Platform} from 'react-native';
+import {View, StyleSheet, Text, TextInput, TouchableHighlight, Image, Platform} from 'react-native';
 import SmsRetriever from 'react-native-sms-retriever';
 import {COLOR, DARK, APP_FLAVOR} from '../../res/constants';
 import {getUniqueId} from 'react-native-device-info';
@@ -9,7 +9,8 @@ import {AUTH_CLIENT, VERIFY_REGISTRATION} from '../../graphql';
 import {AlertOverlay} from '../../components';
 import AsyncStorage from '@react-native-community/async-storage';
 import OneSignal from 'react-native-onesignal';
-import {onError} from '../../util/ErrorUtility';
+import {onError, onErrorAlert} from '../../util/ErrorUtility';
+import {useAlert} from '../../hooks';
 
 import timer from 'react-native-timer';
 
@@ -40,6 +41,8 @@ const Verification = ({navigation, route, createSession}) => {
   const {mobile} = route.params;
   const inputRef = useRef();
 
+  const alert = useAlert();
+
   const [verificationCode, setVerificationCode] = useState('');
   const [count, setCount] = useState(30);
 
@@ -54,14 +57,22 @@ const Verification = ({navigation, route, createSession}) => {
         deviceType: Platform.select({ios: 'I', android: 'A'}),
       },
     },
-    onError: onError,
-    onCompleted: ({verifyRegistration}) => {
-      const {user, accessToken} = verifyRegistration;
+    // onError: (error) => {
+    //   // onErrorAlert({alert, error});
+    //   console.log({FuckingError: error});
+    // },
+    onError: (error) => {
+      console.log({FuckingError: error});
+
+      onErrorAlert({alert, error});
+    },
+    onCompleted: (res) => {
+      const {user, accessToken} = res.verifyRegistration;
 
       AsyncStorage.setItem('userId', user.id);
       AsyncStorage.setItem('accessToken', accessToken);
 
-      createSession(verifyRegistration);
+      createSession(res.verifyRegistration);
 
       OneSignal.sendTags({
         userId: user.id,
@@ -116,11 +127,10 @@ const Verification = ({navigation, route, createSession}) => {
   };
 
   useEffect(() => {
-    setTimeout(() => {
-      inputRef.current.focus();
-    }, 0);
+    // setTimeout(() => {
+    //   inputRef.current.focus();
+    // }, 0);
     // smsListen();
-
     // return SmsRetriever.removeSmsListener();
   }, []);
 
