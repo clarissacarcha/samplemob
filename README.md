@@ -142,6 +142,8 @@ Toktok JC API
 
 - Maximum Distance for Booking
 
+# Privacy Policy
+
 # John
 
 - Projects that haved worked
@@ -173,6 +175,25 @@ Then based on your assessment, passed or failed? why?
 - can work under pressure? tight deadlines? (yes)
 - how early can start if hired? (january first or 2nd week)
 - willing to be deployed in react native project (yes)
+
+Then based on your assessment, passed or failed? why?
+
+- rate (lowest)1-10(highest)
+- how early can he/she start in a project?
+- can work will less supervision?
+
+# KAYE
+
+- assess skills based on work exp
+- what projects have you created (Jollibee foodpanda)
+- reason for looking for another job (project based)
+- we're currently wfh until further notice, shoud have good internet at home, (yes)
+- ok to work at the office if needed? (okay)
+- ok to handle clients? can lead? (lead )
+- ok to work overtime? weekends? holidays? if any? (yes)
+- can work under pressure? tight deadlines? (yes)
+- how early can start if hired? (as soon as possible)
+- willing to be deployed in react native project ()
 
 Then based on your assessment, passed or failed? why?
 

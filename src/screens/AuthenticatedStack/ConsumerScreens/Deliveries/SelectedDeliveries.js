@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, FlatList, RefreshControl, Text, StyleSheet, Image, ActivityIndicator} from 'react-native';
+import {View, FlatList, RefreshControl, Text, StyleSheet, Image, ActivityIndicator, ScrollView} from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {connect} from 'react-redux';
 import {HeaderBack, HeaderTitle, DeliveryCard, SomethingWentWrong} from '../../../../components';
@@ -31,7 +31,7 @@ const SelectedDeliveries = ({navigation, route, session}) => {
     refetch();
   }, [session.user.id]);
 
-  const onPress = delivery => navigation.push('SelectedDelivery', {delivery});
+  const onPress = (delivery) => navigation.push('SelectedDelivery', {delivery});
 
   if (loading) {
     return (
@@ -58,7 +58,7 @@ const SelectedDeliveries = ({navigation, route, session}) => {
       <FlatList
         showsVerticalScrollIndicator={false}
         data={data.getDeliveries}
-        keyExtractor={item => item.id}
+        keyExtractor={(item) => item.id}
         renderItem={({item, index}) => (
           <DeliveryCard
             delivery={item}
@@ -71,14 +71,11 @@ const SelectedDeliveries = ({navigation, route, session}) => {
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   session: state.session,
 });
 
-export default connect(
-  mapStateToProps,
-  null,
-)(SelectedDeliveries);
+export default connect(mapStateToProps, null)(SelectedDeliveries);
 
 const styles = StyleSheet.create({
   center: {

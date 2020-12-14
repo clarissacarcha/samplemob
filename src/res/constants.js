@@ -1,9 +1,9 @@
-export const APP_VERSION = '1.8.0';
+export const APP_VERSION = '1.10.0';
 export const APP_FLAVOR = 'C'; // C = Customer | D = Driver
 
 // export const PROTOCOL = 'https';
-// export const HOST_PORT = 'toktok.ph:2096';
 // export const HOST_PORT = 'graphql.toktok.ph:2096';
+// export const HOST_PORT = 'toktok.ph:2096';
 
 // Live Auto Scale Image
 // export const PROTOCOL = 'http';
