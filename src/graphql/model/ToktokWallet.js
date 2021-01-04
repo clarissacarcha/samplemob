@@ -29,6 +29,10 @@ export const GET_TOKTOK_WALLET_LOGS = gql`
   }
 `;
 
+// delivery {
+//   deliveryId
+// }
+
 export const POST_TOKTOK_WALLET = gql`
   mutation postToktokWallet($input: PostToktokWalletInput!) {
     postToktokWallet(input: $input) {

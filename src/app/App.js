@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import {StyleSheet, SafeAreaView, StatusBar} from 'react-native';
+import {StyleSheet, SafeAreaView, StatusBar, View} from 'react-native';
 import Splash from './Splash';
 
 import {
@@ -24,7 +24,6 @@ const App = () => {
           <ApolloProvider>
             <AlertProvider>
               <Splash />
-              {/*<OrdersTesting />*/}
             </AlertProvider>
           </ApolloProvider>
         </ReduxProvider>

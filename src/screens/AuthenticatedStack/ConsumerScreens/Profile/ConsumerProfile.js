@@ -150,7 +150,7 @@ const ConsumerProfile = ({navigation, constants, session, createSession}) => {
               <QRCode
                 value={session.user.userId} //Give value when there's no session as it will throw an error if value is empty.
                 size={ImageWidth}
-                color={COLOR}
+                color={DARK}
                 backgroundColor="transparent"
                 // onPress={() => alert('Pressed')}
               />

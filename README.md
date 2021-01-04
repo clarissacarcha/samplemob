@@ -61,12 +61,10 @@
 3. \*\*\* CRON JOB ENV
 4. \*\*\* Promo redeem/accept count validation, Validate in delegation also
 5. Hold consumer/rider account on 5th cancel of the day
-6. Provide Push Notifs to Riders with gcash, pending or rejected.
-7. Enterprise API Logs
-8. \*\*\* Message for Invalid Promo Code. Pop Up Message.
-9. \*\*\* Debounce
-10. Try Catch In API Calls. S3 Upload. Enterprise Postbacks. JC REFERRAL and PROCESS
-11. Worker Threads for OneSignal Loop
+6. \*\*\* Message for Invalid Promo Code. Pop Up Message.
+7. \*\*\* Debounce
+8. Try Catch In API Calls. S3 Upload. Enterprise Postbacks. JC REFERRAL and PROCESS
+9. Worker Threads for OneSignal Loop
 
 # Refactor Notes
 
@@ -129,14 +127,7 @@ Toktok JC API
 2. Feature branch and code review
 3. Pair programming
 
-# Promo Credits (instead of discount credits) DONE
-
-# Toktok Wallet, Rider Wallet
-
-- Delivery ID: DID
-- Collet From Toktok Wallet DONE
-
-# 10 ongoing at a time? (To prevent spam bookings)
+# 10 customer deliveries ongoing at a time? (To prevent spam bookings)
 
 # Global Settings
 
@@ -144,59 +135,40 @@ Toktok JC API
 
 # Privacy Policy
 
-# John
+- Run scripts to increment price with express fee for deliveries Before 2020-12-15 00:00:00
 
-- Projects that haved worked
-- assess skills based on work exp
-- reason for looking for another job (freelancer, looking for a stable job)
-- we're currently wfh until further notice, shoud have good internet at home, (yes)
-- ok to work at the office if needed? (okay)
-- ok to handle clients? can lead? (team freelance)
-- ok to work overtime? weekends? holidays? if any? (yes na yes)
-- can work under pressure? tight deadlines? (yes)
-- how early can start if hired? (as soon as possible)
-- willing to be deployed in react native project (yes)
+# Catch in process delivery referral
 
-Then based on your assessment, passed or failed? why?
+# Create Driver ID QR Scan
 
-- rate (lowest)1-10(highest)
-- how early can he/she start in a project?
-- can work will less supervision?
+# Move to backend the location
 
-# Angelo
+# Enterprise Postback Logs
 
-- Projects that haved worked
-- assess skills based on work exp
-- reason for looking for another job ()
-- we're currently wfh until further notice, shoud have good internet at home, (yes)
-- ok to work at the office if needed? (yes)
-- ok to handle clients? can lead? (yes)
-- ok to work overtime? weekends? holidays? if any? (yes)
-- can work under pressure? tight deadlines? (yes)
-- how early can start if hired? (january first or 2nd week)
-- willing to be deployed in react native project (yes)
+# Password Eye
 
-Then based on your assessment, passed or failed? why?
+# PerformanceLogs
 
-- rate (lowest)1-10(highest)
-- how early can he/she start in a project?
-- can work will less supervision?
+# Admin Push Notification
 
-# KAYE
+# Allow same number to be used for Customer and Rider
 
-- assess skills based on work exp
-- what projects have you created (Jollibee foodpanda)
-- reason for looking for another job (project based)
-- we're currently wfh until further notice, shoud have good internet at home, (yes)
-- ok to work at the office if needed? (okay)
-- ok to handle clients? can lead? (lead )
-- ok to work overtime? weekends? holidays? if any? (yes)
-- can work under pressure? tight deadlines? (yes)
-- how early can start if hired? (as soon as possible)
-- willing to be deployed in react native project ()
+# Consumer ID Checking on getPriceAndDirections
 
-Then based on your assessment, passed or failed? why?
+- id
+- function
+- request
+- response
+- success
+- error
+- startAt
+- endAt
+- duration
+- errorCode
+- Something went wrong. (0x0000123)
 
-- rate (lowest)1-10(highest)
-- how early can he/she start in a project?
-- can work will less supervision?
+# Fields if Conditional, null, else empty string
+
+# Tok Operator Id on rider accept.
+
+# Refactor to refetch Delivery data on selecting delivery

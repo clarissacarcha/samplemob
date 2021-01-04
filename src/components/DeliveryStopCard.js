@@ -4,13 +4,13 @@
  */
 import React from 'react';
 import {View, Text, StyleSheet, Platform, Linking} from 'react-native';
-import {COLOR, DARK, MEDIUM, ORANGE, LIGHT} from '../res/constants';
+import {COLOR, DARK, MEDIUM, ORANGE, LIGHT, APP_FLAVOR} from '../res/constants';
 import {YellowIcon, BlackIcon} from '../components/ui';
 
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-export const DeliveryStopCard = ({stop, index}) => {
+export const DeliveryStopCard = ({stop, index, status = 0}) => {
   const labels = [
     ['Sender', 'Details'],
     ['Recipient', 'Details'],
@@ -20,6 +20,17 @@ export const DeliveryStopCard = ({stop, index}) => {
     <YellowIcon set="FontAwesome5" name="map-pin" size={16} darkIcon />,
     <YellowIcon set="FontAwesome5" name="map-marker-alt" size={16} darkIcon />,
   ];
+
+  const showNumber = () => {
+    if (APP_FLAVOR === 'C') {
+      return true;
+    }
+    if (APP_FLAVOR === 'D' && status == 1) {
+      return false;
+    } else {
+      return true;
+    }
+  };
 
   return (
     <View style={styles.card}>
@@ -66,31 +77,37 @@ export const DeliveryStopCard = ({stop, index}) => {
         <View style={{flexDirection: 'row', padding: 20}}>
           <View style={{flex: 1}}>
             <Text style={{fontFamily: 'Rubik-Medium'}}>{stop.name}</Text>
-            <Text style={{fontSize: 12, color: MEDIUM}}>{stop.mobile}</Text>
+            {showNumber() && <Text style={{fontSize: 12, color: MEDIUM}}>{stop.mobile}</Text>}
           </View>
           {/*------------------- DIALER BUTTON -------------------*/}
-          <View style={styles.actionIconBox}>
-            <MIcon
-              name="call"
-              size={24}
-              color={COLOR}
-              onPress={() => {
-                const link = Platform.OS === 'android' ? `tel:${stop.mobile}` : `telprompt:${stop.mobile}`;
-                Linking.openURL(link);
-              }}
-            />
-          </View>
+          {showNumber() && (
+            <View style={styles.actionIconBox}>
+              <MIcon
+                name="call"
+                size={24}
+                color={COLOR}
+                onPress={() => {
+                  const link = Platform.OS === 'android' ? `tel:${stop.mobile}` : `telprompt:${stop.mobile}`;
+                  Linking.openURL(link);
+                }}
+              />
+            </View>
+          )}
+
           <View style={{width: 20}} />
-          <View style={styles.actionIconBox}>
-            <MIcon
-              name="sms"
-              size={22}
-              color={COLOR}
-              onPress={() => {
-                Linking.openURL(`sms:${stop.mobile}`);
-              }}
-            />
-          </View>
+
+          {showNumber() && (
+            <View style={styles.actionIconBox}>
+              <MIcon
+                name="sms"
+                size={22}
+                color={COLOR}
+                onPress={() => {
+                  Linking.openURL(`sms:${stop.mobile}`);
+                }}
+              />
+            </View>
+          )}
         </View>
         {stop.landmark && (
           <View style={[styles.rowFlexibleHeight, {borderTopWidth: StyleSheet.hairlineWidth, borderColor: LIGHT}]}>

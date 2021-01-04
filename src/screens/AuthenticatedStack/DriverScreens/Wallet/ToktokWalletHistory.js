@@ -11,18 +11,13 @@ import {numberFormat} from '../../../../helper';
 
 const imageWidth = Dimensions.get('window').width - 200;
 
-import FA5Icon from 'react-native-vector-icons/FontAwesome5';
-import FAIcon from 'react-native-vector-icons/FontAwesome';
 import EIcon from 'react-native-vector-icons/Entypo';
-import FIcon from 'react-native-vector-icons/Feather';
-import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import Ionicon from 'react-native-vector-icons/Ionicons';
 
 const WalletLog = ({item, lastItem}) => (
   <View
     style={{
       backgroundColor: 'white',
-      padding: 20,
+      paddingHorizontal: 20,
       margin: 20,
       marginBottom: lastItem ? 20 : 0,
       borderRadius: 10,
@@ -35,6 +30,8 @@ const WalletLog = ({item, lastItem}) => (
       shadowOpacity: 0.25,
       shadowRadius: 3.84,
       elevation: 5,
+      justifyContent: 'center',
+      height: 60,
     }}>
     <View style={{flexDirection: 'row', alignItems: 'center'}}>
       <EIcon
@@ -48,6 +45,11 @@ const WalletLog = ({item, lastItem}) => (
         <Text style={{color: MEDIUM, fontSize: 10, fontFamily: 'Rubik-Medium', marginHorizontal: 10}}>
           {item.createdAt}
         </Text>
+        {/* {item.delivery && (
+          <Text style={{color: MEDIUM, fontSize: 10, fontFamily: 'Rubik-Medium', marginHorizontal: 10}}>
+            Delivery ID: {item.delivery.deliveryId}
+          </Text>
+        )} */}
       </View>
       {!(item.incoming == 0 && item.outgoing == 0) && (
         <EIcon name={item.incoming != 0 ? 'plus' : 'minus'} size={14} color={item.incoming != 0 ? 'green' : 'red'} />

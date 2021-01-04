@@ -19,6 +19,7 @@ import {
   PATCH_DELIVERY_DRIVER_CANCEL,
 } from '../../../../graphql';
 import {onError} from '../../../../util/ErrorUtility';
+import {throttle} from 'lodash';
 
 import Toast from 'react-native-simple-toast';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -127,10 +128,36 @@ const SelectedDriverDelivery = ({navigation, route, session}) => {
     }
   };
 
+  const onStatusUpdateThrottled = throttle(
+    () => {
+      if ([3, 5].includes(getDelivery.status)) {
+        const labelValue = getDelivery.status === 3 ? ['Item', 'Picked Up'] : ['Item', 'Delivered'];
+        navigation.push('ItemCamera', {
+          label: labelValue,
+          setTempImage,
+          onStatusUpdateWithImage,
+        });
+        return;
+      }
+
+      patchDeliveryIncrementStatus({
+        variables: {
+          input: {
+            deliveryId: getDelivery.id,
+          },
+        },
+      });
+    },
+    2000,
+    {
+      trailing: false,
+    },
+  );
+
   const onStatusUpdate = () => {
     if ([3, 5].includes(getDelivery.status)) {
-      const label = getDelivery.status === 3 ? ['Item', 'Picked Up'] : ['Item', 'Delivered'];
-      navigation.push('ItemCamera', {label, setTempImage, onStatusUpdateWithImage});
+      const labelValue = getDelivery.status === 3 ? ['Item', 'Picked Up'] : ['Item', 'Delivered'];
+      navigation.push('ItemCamera', {label: labelValue, setTempImage, onStatusUpdateWithImage});
       return;
     }
 
@@ -187,7 +214,7 @@ const SelectedDriverDelivery = ({navigation, route, session}) => {
         {/*-------------------- UPDATE STATUS BUTTON --------------------*/}
         {[2, 3, 4, 5].includes(getDelivery.status) && (
           <TouchableHighlight
-            onPress={onStatusUpdate}
+            onPress={onStatusUpdateThrottled}
             underlayColor={COLOR}
             style={{borderRadius: 10, marginBottom: 20}}>
             <View style={styles.submit}>
@@ -239,10 +266,10 @@ const SelectedDriverDelivery = ({navigation, route, session}) => {
         <OrderDetailsCard delivery={getDelivery} />
 
         {/*-------------------- SENDER DETAILS --------------------*/}
-        <DeliveryStopCard stop={getDelivery.senderStop} index={0} />
+        <DeliveryStopCard stop={getDelivery.senderStop} index={0} status={getDelivery.status} />
 
         {/*-------------------- RECIPIENT DETAILS --------------------*/}
-        <DeliveryStopCard stop={getDelivery.recipientStop} index={1} />
+        <DeliveryStopCard stop={getDelivery.recipientStop} index={1} status={getDelivery.status} />
 
         {/*-------------------- DELIVERY LOGS --------------------*/}
         {getDelivery.status !== 1 && <DeliveryLogsCard logs={getDelivery.logs} />}

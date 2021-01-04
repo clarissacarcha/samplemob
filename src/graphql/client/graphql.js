@@ -48,6 +48,11 @@ const wsUrl = `ws://${HOST_PORT}/graphql`;
 //   }
 // });
 
+const errorLinkLogger = onError((err) => {
+  console.log('ERROR LINK LOG');
+  console.log(err);
+});
+
 const setTokenLink = setContext(async (_, {headers}) => {
   try {
     const accessToken = await AsyncStorage.getItem('accessToken');
@@ -84,7 +89,7 @@ const authUploadLink = createUploadLink({
 });
 
 // const link = ApolloLink.from([errorLink, setTokenLink, splitLink, uploadLink]);
-const link = ApolloLink.from([setTokenLink, uploadLink]);
+const link = ApolloLink.from([errorLinkLogger, setTokenLink, uploadLink]);
 const authClientlink = ApolloLink.from([setTokenLink, authUploadLink]);
 
 export const CLIENT = new ApolloClient({
