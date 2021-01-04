@@ -36,7 +36,7 @@ const SearchContact = ({navigation, route}) => {
           setFetchError(true);
         }
 
-        console.log(JSON.stringify(contacts, null, 4));
+        // console.log(JSON.stringify(contacts, null, 4));
 
         const mappedContacts = contacts
           .filter((contact) => {

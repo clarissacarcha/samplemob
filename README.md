@@ -137,11 +137,9 @@ Toktok JC API
 
 - Run scripts to increment price with express fee for deliveries Before 2020-12-15 00:00:00
 
-# Catch in process delivery referral
+# Try Catch in process delivery referral. Catch error from API
 
 # Create Driver ID QR Scan
-
-# Move to backend the location
 
 # Enterprise Postback Logs
 
@@ -172,3 +170,14 @@ Toktok JC API
 # Tok Operator Id on rider accept.
 
 # Refactor to refetch Delivery data on selecting delivery
+
+# Fix Updating delivery status.
+
+# Search Places, allow typing while loading saved locations
+
+# Updates Done
+
+1. (Done) Delivery cannot be cancelled when accepter or rider is on the way.
+2. (Done) Use address displayed upon booking.
+3. Fix Delivery Multiple Updates pumapasok
+4. QR Code

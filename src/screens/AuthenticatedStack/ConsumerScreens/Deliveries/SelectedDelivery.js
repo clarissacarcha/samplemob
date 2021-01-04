@@ -109,15 +109,6 @@ const SelectedDelivery = ({navigation, route}) => {
     });
   };
 
-  // Syncrhonize all loading states
-  // useEffect(() => {
-  //   if (loadingC || loadingD) {
-  //     setLoading(true);
-  //   } else {
-  //     setLoading(false);
-  //   }
-  // }, [loadingD]);
-
   const onDeliveryRated = (rating) => {
     setDelivery({
       ...getDelivery,
@@ -146,7 +137,7 @@ const SelectedDelivery = ({navigation, route}) => {
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{padding: 20}}>
         {/*---------------------------------------- CANCEL ORDER BUTTON ----------------------------------------*/}
-        {[1, 2, 3].includes(getDelivery.status) && (
+        {getDelivery.status == 1 && (
           <TouchableHighlight
             onPress={onCancelPress}
             underlayColor={COLOR}

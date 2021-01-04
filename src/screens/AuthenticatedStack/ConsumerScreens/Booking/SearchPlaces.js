@@ -106,6 +106,7 @@ const SearchLocation = ({navigation, route, session}) => {
 
   const onLocationSelect = (data, details = null) => {
     try {
+      console.log(JSON.stringify(details, null, 4));
       setData({
         ...localData,
         latitude: details.geometry.location.lat,
@@ -146,19 +147,6 @@ const SearchLocation = ({navigation, route, session}) => {
       <View style={{height: 350}}>
         <GooglePlacesInput onLocationSelect={onLocationSelect} savedLocations={savedLocations} />
       </View>
-
-      {/* <TouchableHighlight onPress={onSubmit} underlayColor={COLOR} style={styles.submitBox}>
-        <View style={styles.submit}>
-          <Text style={{color: COLOR, fontSize: 20}}>Confirm</Text>
-        </View>
-      </TouchableHighlight> */}
-
-      {/* <Button
-        title="CONFIRM"
-        onPress={onConfirm}
-        containerStyle={{padding: 20}}
-        {...(!localData.formattedAddress ? {disabled: true} : null)}
-      /> */}
     </View>
   );
 };

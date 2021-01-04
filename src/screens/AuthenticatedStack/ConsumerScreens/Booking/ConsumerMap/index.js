@@ -288,7 +288,7 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
   //Handles navigating back with data
   useEffect(() => {
     if (route.params.callbackData) {
-      console.log({callbackData: route.params.callbackData});
+      // console.log({callbackData: route.params.callbackData});
       setBookingData(route.params.callbackData);
     }
   }, [route.params]);
