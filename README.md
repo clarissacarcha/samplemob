@@ -28,14 +28,3 @@ This README would normally document whatever steps are necessary to get your app
 - Repo owner or admin
 - Other community or team contact
 
-AWS_ACCESS_KEY_ID=AKIAICVEZUFAPM3JLWOA
-AWS_SECRET_ACCESS_KEY=eqtid53eNC6RADBgKC7JKC5pxdRd
-AWS_BUCKET=margel
-AWS_REGION=us-east-1
-AWS_S3_BASE_URL=https://s3.us-east-1.amazonaws.com/margel/
-
-AWS_ACCESS_KEY_ID=AKIAX36XPR2DNBXUZMFT
-AWS_SECRET_ACCESS_KEY=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
-AWS_BUCKET=ph.cloudpanda.paygo
-AWS_REGION=ap-southeast-1
-AWS_S3_BASE_URL=https://s3.ap-southeast-1.amazonaws.com/ph.cloudpanda.paygo/toktok/
