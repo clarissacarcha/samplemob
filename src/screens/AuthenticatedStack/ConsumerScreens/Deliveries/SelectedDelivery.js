@@ -137,7 +137,7 @@ const SelectedDelivery = ({navigation, route}) => {
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{padding: 20}}>
         {/*---------------------------------------- CANCEL ORDER BUTTON ----------------------------------------*/}
-        {getDelivery.status == 1 && (
+        {[1, 2].includes(getDelivery.status) && (
           <TouchableHighlight
             onPress={onCancelPress}
             underlayColor={COLOR}
