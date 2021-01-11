@@ -612,11 +612,11 @@ SPEC CHECKSUMS:
   GoogleMaps: 32ca02de09de357a10ac773f2c70f1986751392d
   OneSignal: 1dcb1fd96f9c15a5c352dcfcab9106a7c15eced7
   OpenSSL-Universal: 8b48cc0d10c1b2923617dfe5c178aa9ed2689355
-  Permission-Camera: 375576c57ea625c88137d2cc52ba6dfeb21db036
-  Permission-Contacts: aebb06102f13f0e76a057dfc8859332154112e4a
-  Permission-LocationWhenInUse: bed1bcdd4e98aa956e69f1e41281aa608930055e
-  Permission-Notifications: 1e154e50f5b3bbd0bd2b688621e8f23a7a6cacfd
-  Permission-PhotoLibrary: bb20a7ac8aec0f7459558e5fbe2bd0a6f2744be3
+  Permission-Camera: 5d2aaf95592660b6dcb5e8d1d90ed5d0156cad02
+  Permission-Contacts: 295b2f26e7607801e73b0fd35a56ec63cfd52dc4
+  Permission-LocationWhenInUse: 871e81c06c1fc578353fce962d5d8e6efa697f1a
+  Permission-Notifications: 9c6b5cc4f0e6599e9fc3395b77cebddc48f1be41
+  Permission-PhotoLibrary: 8227a6ed9f6a971537afe63742d54f5f23a38fe2
   RCTRequired: cec6a34b3ac8a9915c37e7e4ad3aa74726ce4035
   RCTTypeSafety: 93006131180074cffa227a1075802c89a49dd4ce
   React: 29a8b1a02bd764fb7644ef04019270849b9a7ac3
@@ -626,7 +626,7 @@ SPEC CHECKSUMS:
   React-jsi: b6dc94a6a12ff98e8877287a0b7620d365201161
   React-jsiexecutor: 1540d1c01bb493ae3124ed83351b1b6a155db7da
   React-jsinspector: 512e560d0e985d0e8c479a54a4e5c147a9c83493
-  react-native-background-timer: 53c0e028a95d58b1f4498ef7ce152b6c6b337595
+  react-native-background-timer: 1f7d560647b40e6a60b01c452ba29c54bf581fc4
   react-native-camera: 8ab02aac456a7db830980cef5f3772644fe96e1f
   react-native-contacts: 7b5e16196278636030c3fbbb9505543984b01697
   react-native-date-picker: 7b03feaea96db983f1de449e9d6d1dea4fa61010
@@ -635,7 +635,7 @@ SPEC CHECKSUMS:
   react-native-image-editor: 9361a215c3991cafbe5e7f28cbbad6e72c9c2705
   react-native-location: 5a40ec1cc6abf2f6d94df979f98ec76c3a415681
   react-native-maps: f4b89da81626ad7f151a8bfcb79733295d31ce5c
-  react-native-netinfo: eed0fb1d6a9424e98ce686f92aad62ff427d4bc9
+  react-native-netinfo: cd479ab1b67cdd1cb1403a99ecdb24190a6dd7ef
   react-native-onesignal: 01fa850b002d60568a5a85857e1cbe643b58bdd2
   react-native-safe-area-context: e200d4433aba6b7e60b52da5f37af11f7a0b0392
   react-native-simple-toast: 58b71ef003f01d2c0bf5dcd2fdccc75861dabade
@@ -654,7 +654,7 @@ SPEC CHECKSUMS:
   RNCMaskedView: 71fc32d971f03b7f03d6ab6b86b730c4ee64f5b6
   RNDeviceInfo: b6e650fbd234732c759544218657d549b4339038
   RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
-  RNPermissions: 067727df624665d4a6c8e2cffcc172ba608b96ed
+  RNPermissions: 5df468064df661a4c8c017e2791ce90d7695eea5
   RNReanimated: b5ccb50650ba06f6e749c7c329a1bc3ae0c88b43
   RNScreens: ac02d0e4529f08ced69f5580d416f968a6ec3a1d
   RNSVG: ce9d996113475209013317e48b05c21ee988d42e
@@ -665,4 +665,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 103e823e5136e5858490ca6cef6312da736909e5
 
-COCOAPODS: 1.9.3
+COCOAPODS: 1.10.1

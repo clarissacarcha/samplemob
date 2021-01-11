@@ -1,7 +1,8 @@
 # Consumers and Drivers
 
+0. Incomplete Registration (Consumers)
 1. Active
-2. Pending(Drivers)
+2. Pending (Drivers)
 3. Blocked
 4. On Hold(Can't Book, Accept)
 
@@ -106,11 +107,9 @@
 - errorCode
 - Something went wrong. (0x0000123)
 
-# Fields if Conditional, null, else empty string
+# Fields if Conditional, null, else empty string. Create Scalar NullString
 
-# Refactor to refetch Delivery data on selecting delivery
-
-# Fix Updating delivery status.
+# Fix Updating delivery status. Crosscheck with Delivery Logs
 
 # Search Places, allow typing while loading saved locations
 
