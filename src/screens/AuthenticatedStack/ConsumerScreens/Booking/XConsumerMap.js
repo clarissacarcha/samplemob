@@ -310,14 +310,7 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
     }
   };
 
-  const oneSignalInit = async () => {
-    // OneSignal.init(constants.consumerOneSignalAppId);
-    // OneSignal.inFocusDisplaying(2);
-  };
-
   useEffect(() => {
-    oneSignalInit();
-
     setTimeout(() => {
       mapViewRef.current.fitToCoordinates(
         [
@@ -341,15 +334,11 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
       );
     }, 3000);
 
-    // OneSignal.getTags(tags => console.log(`ONESIGNAL USER ID TAG: ${tags.userId}`));
-    OneSignal.addEventListener('opened', onNotificationOpened);
-
     // const backHandler = BackHandler.addEventListener('hardwareBackPress', function() {
     //   return true;
     // });
     return () => {
       // backHandler.remove();
-      OneSignal.removeEventListener('received');
     };
   }, []);
 

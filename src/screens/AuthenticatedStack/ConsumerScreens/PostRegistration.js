@@ -161,6 +161,7 @@ const PostRegistration = ({navigation, route, session, createSession, destroySes
           keyboardType="email-address"
           autoCapitalize="none"
           placeholderTextColor={LIGHT}
+          caretHidden
         />
 
         <Text style={styles.label}>Password</Text>

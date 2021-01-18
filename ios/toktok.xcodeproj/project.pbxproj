@@ -22,12 +22,15 @@
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* toktokTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* toktokTests.m */; };
 		39670FC581DD4F029763FAE6 /* Rubik-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AFABA08D9EED457CBBE6CED7 /* Rubik-SemiBoldItalic.ttf */; };
+		4D9CA1074CC4CF587A2627A3 /* libPods-OneSignalNotificationServiceExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E2185F94223A93CC25B8E2D /* libPods-OneSignalNotificationServiceExtension.a */; };
 		7B1DB1C62E52407F44014B50 /* libPods-toktok-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 87B2466C3F6DF8D5D3138DB3 /* libPods-toktok-tvOSTests.a */; };
 		8A40AA2E6CD74F449163883E /* Rubik-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6567E73D3AE44F7E9AD051CC /* Rubik-BoldItalic.ttf */; };
 		967B7FD981BB4C27AF423B6C /* Rubik-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D22EE8F8A01C4BAB907BC29C /* Rubik-LightItalic.ttf */; };
 		9ACBD6E58476408DA5D615CC /* Satisfy-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CF1371E7922C4FD6840D4906 /* Satisfy-Regular.ttf */; };
 		B15F9C8EA41F489E9B8BFDF3 /* Rubik-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B2A24D02662A44A5A9A2CD5C /* Rubik-BlackItalic.ttf */; };
 		B32D14DDC87F4EE6AC1F77C8 /* Rubik-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 84CF7F93D02D4283BEC1FF3F /* Rubik-Bold.ttf */; };
+		BE9FA7EA25AC5CBA00107ABB /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9FA7E925AC5CBA00107ABB /* NotificationService.swift */; };
+		BE9FA7EE25AC5CBA00107ABB /* OneSignalNotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = BE9FA7E725AC5CBA00107ABB /* OneSignalNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		BF5DB1CACC8842DF820E1601 /* Rubik-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF9F317F86B045D3950D47D2 /* Rubik-Regular.ttf */; };
 		C2E789A1BABA4C8CB6793C55 /* Rubik-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5E275F99C3B141538B9C5E7B /* Rubik-ExtraBold.ttf */; };
 		C441BC814B1B4ABB8C1F50A7 /* Rubik-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0DF3D6A4EA76479B9C60F6DC /* Rubik-Medium.ttf */; };
@@ -52,7 +55,28 @@
 			remoteGlobalIDString = 2D02E47A1E0B4A5D006451C7;
 			remoteInfo = "toktok-tvOS";
 		};
+		BE9FA7EC25AC5CBA00107ABB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BE9FA7E625AC5CBA00107ABB;
+			remoteInfo = OneSignalNotificationServiceExtension;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		BE9FA7F225AC5CBA00107ABB /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				BE9FA7EE25AC5CBA00107ABB /* OneSignalNotificationServiceExtension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
@@ -77,6 +101,7 @@
 		2FFE2FBFCEFA4B0E90CC954F /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		33516931D0465B75F4466309 /* Pods-toktok-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-toktok-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-toktok-tvOSTests/Pods-toktok-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		3EFD295A4F4C35769D4978A0 /* Pods-toktok-toktokTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-toktok-toktokTests.release.xcconfig"; path = "Target Support Files/Pods-toktok-toktokTests/Pods-toktok-toktokTests.release.xcconfig"; sourceTree = "<group>"; };
+		45B5C295CB7D541D612CE671 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.release.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.release.xcconfig"; sourceTree = "<group>"; };
 		50CA3E8424B73BC00017B60C /* toktok.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = toktok.entitlements; path = toktok/toktok.entitlements; sourceTree = "<group>"; };
 		5BC4CD3E711344AF95533B2F /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		5D2628C549D54DC991656EF2 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
@@ -84,6 +109,7 @@
 		5E275F99C3B141538B9C5E7B /* Rubik-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-ExtraBold.ttf"; path = "../src/assets/fonts/Rubik-ExtraBold.ttf"; sourceTree = "<group>"; };
 		6373E049A72443E084A4EEB2 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		6567E73D3AE44F7E9AD051CC /* Rubik-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-BoldItalic.ttf"; path = "../src/assets/fonts/Rubik-BoldItalic.ttf"; sourceTree = "<group>"; };
+		7E2185F94223A93CC25B8E2D /* libPods-OneSignalNotificationServiceExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OneSignalNotificationServiceExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7FB1883B37304F5D93DE3F8B /* Rubik-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-ExtraBoldItalic.ttf"; path = "../src/assets/fonts/Rubik-ExtraBoldItalic.ttf"; sourceTree = "<group>"; };
 		800A015A200E4872BC47B19B /* Rubik-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-SemiBold.ttf"; path = "../src/assets/fonts/Rubik-SemiBold.ttf"; sourceTree = "<group>"; };
 		819D39CBD55A4AF7B62A8943 /* Rubik-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Light.ttf"; path = "../src/assets/fonts/Rubik-Light.ttf"; sourceTree = "<group>"; };
@@ -99,8 +125,13 @@
 		B2A24D02662A44A5A9A2CD5C /* Rubik-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-BlackItalic.ttf"; path = "../src/assets/fonts/Rubik-BlackItalic.ttf"; sourceTree = "<group>"; };
 		B33675D045B2981FAFCA41FA /* libPods-toktok-toktokTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-toktok-toktokTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB1771BE7A4E6F715B088F6F /* Pods-toktok.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-toktok.debug.xcconfig"; path = "Target Support Files/Pods-toktok/Pods-toktok.debug.xcconfig"; sourceTree = "<group>"; };
+		BE9FA7E725AC5CBA00107ABB /* OneSignalNotificationServiceExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = OneSignalNotificationServiceExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		BE9FA7E925AC5CBA00107ABB /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		BE9FA7EB25AC5CBA00107ABB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BE9FA89B25AC8E9200107ABB /* OneSignalNotificationServiceExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OneSignalNotificationServiceExtension.entitlements; sourceTree = "<group>"; };
 		C039FBFE165F4AD5B6B250F4 /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf"; sourceTree = "<group>"; };
 		C6DFC60BFECF4A19B760B0B6 /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
+		C864CE2B4ED0234261AAB323 /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; sourceTree = "<group>"; };
 		CAAB68DB961A4966B227363B /* Rubik-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Italic.ttf"; path = "../src/assets/fonts/Rubik-Italic.ttf"; sourceTree = "<group>"; };
 		CC9C69126165444AA7A31B36 /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
 		CF1371E7922C4FD6840D4906 /* Satisfy-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Satisfy-Regular.ttf"; path = "../src/assets/fonts/Satisfy-Regular.ttf"; sourceTree = "<group>"; };
@@ -149,6 +180,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		BE9FA7E425AC5CBA00107ABB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4D9CA1074CC4CF587A2627A3 /* libPods-OneSignalNotificationServiceExtension.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -193,6 +232,7 @@
 				B33675D045B2981FAFCA41FA /* libPods-toktok-toktokTests.a */,
 				AFEA49430A81623465CD7DD9 /* libPods-toktok-tvOS.a */,
 				87B2466C3F6DF8D5D3138DB3 /* libPods-toktok-tvOSTests.a */,
+				7E2185F94223A93CC25B8E2D /* libPods-OneSignalNotificationServiceExtension.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -246,6 +286,8 @@
 				AFB88D3C5D53FDDC0532BB09 /* Pods-toktok-tvOS.release.xcconfig */,
 				5E08FD95B3ABD967F535C172 /* Pods-toktok-tvOSTests.debug.xcconfig */,
 				33516931D0465B75F4466309 /* Pods-toktok-tvOSTests.release.xcconfig */,
+				C864CE2B4ED0234261AAB323 /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */,
+				45B5C295CB7D541D612CE671 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -263,6 +305,7 @@
 				13B07FAE1A68108700A75B9A /* toktok */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* toktokTests */,
+				BE9FA7E825AC5CBA00107ABB /* OneSignalNotificationServiceExtension */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				83216911443B749325C0CA8A /* Pods */,
@@ -280,8 +323,19 @@
 				00E356EE1AD99517003FC87E /* toktokTests.xctest */,
 				2D02E47B1E0B4A5D006451C7 /* toktok-tvOS.app */,
 				2D02E4901E0B4A5D006451C7 /* toktok-tvOSTests.xctest */,
+				BE9FA7E725AC5CBA00107ABB /* OneSignalNotificationServiceExtension.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		BE9FA7E825AC5CBA00107ABB /* OneSignalNotificationServiceExtension */ = {
+			isa = PBXGroup;
+			children = (
+				BE9FA89B25AC8E9200107ABB /* OneSignalNotificationServiceExtension.entitlements */,
+				BE9FA7E925AC5CBA00107ABB /* NotificationService.swift */,
+				BE9FA7EB25AC5CBA00107ABB /* Info.plist */,
+			);
+			path = OneSignalNotificationServiceExtension;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -318,10 +372,12 @@
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				64E786FFE7726B606D926682 /* [CP] Copy Pods Resources */,
+				BE9FA7F225AC5CBA00107ABB /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				BE9FA7ED25AC5CBA00107ABB /* PBXTargetDependency */,
 			);
 			name = toktok;
 			productName = toktok;
@@ -367,12 +423,31 @@
 			productReference = 2D02E4901E0B4A5D006451C7 /* toktok-tvOSTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		BE9FA7E625AC5CBA00107ABB /* OneSignalNotificationServiceExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BE9FA7EF25AC5CBA00107ABB /* Build configuration list for PBXNativeTarget "OneSignalNotificationServiceExtension" */;
+			buildPhases = (
+				EF2A08C015B3A322D250BD51 /* [CP] Check Pods Manifest.lock */,
+				BE9FA7E325AC5CBA00107ABB /* Sources */,
+				BE9FA7E425AC5CBA00107ABB /* Frameworks */,
+				BE9FA7E525AC5CBA00107ABB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OneSignalNotificationServiceExtension;
+			productName = OneSignalNotificationServiceExtension;
+			productReference = BE9FA7E725AC5CBA00107ABB /* OneSignalNotificationServiceExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		83CBB9F71A601CBA00E9B192 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 1230;
 				LastUpgradeCheck = 1130;
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
@@ -393,6 +468,11 @@
 						ProvisioningStyle = Automatic;
 						TestTargetID = 2D02E47A1E0B4A5D006451C7;
 					};
+					BE9FA7E625AC5CBA00107ABB = {
+						CreatedOnToolsVersion = 12.3;
+						DevelopmentTeam = GB5B4BE7QP;
+						ProvisioningStyle = Automatic;
+					};
 				};
 			};
 			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "toktok" */;
@@ -412,6 +492,7 @@
 				00E356ED1AD99517003FC87E /* toktokTests */,
 				2D02E47A1E0B4A5D006451C7 /* toktok-tvOS */,
 				2D02E48F1E0B4A5D006451C7 /* toktok-tvOSTests */,
+				BE9FA7E625AC5CBA00107ABB /* OneSignalNotificationServiceExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -457,6 +538,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		2D02E48E1E0B4A5D006451C7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BE9FA7E525AC5CBA00107ABB /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -682,6 +770,28 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		EF2A08C015B3A322D250BD51 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-OneSignalNotificationServiceExtension-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -757,6 +867,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		BE9FA7E325AC5CBA00107ABB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BE9FA7EA25AC5CBA00107ABB /* NotificationService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -769,6 +887,11 @@
 			isa = PBXTargetDependency;
 			target = 2D02E47A1E0B4A5D006451C7 /* toktok-tvOS */;
 			targetProxy = 2D02E4911E0B4A5D006451C7 /* PBXContainerItemProxy */;
+		};
+		BE9FA7ED25AC5CBA00107ABB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BE9FA7E625AC5CBA00107ABB /* OneSignalNotificationServiceExtension */;
+			targetProxy = BE9FA7EC25AC5CBA00107ABB /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1113,6 +1236,67 @@
 			};
 			name = Release;
 		};
+		BE9FA7F025AC5CBA00107ABB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C864CE2B4ED0234261AAB323 /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = OneSignalNotificationServiceExtension/OneSignalNotificationServiceExtension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = GB5B4BE7QP;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = ph.cloudpanda.toktok.OneSignalNotificationServiceExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		BE9FA7F125AC5CBA00107ABB /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 45B5C295CB7D541D612CE671 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = OneSignalNotificationServiceExtension/OneSignalNotificationServiceExtension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = GB5B4BE7QP;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = ph.cloudpanda.toktok.OneSignalNotificationServiceExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1157,6 +1341,15 @@
 			buildConfigurations = (
 				83CBBA201A601CBA00E9B192 /* Debug */,
 				83CBBA211A601CBA00E9B192 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BE9FA7EF25AC5CBA00107ABB /* Build configuration list for PBXNativeTarget "OneSignalNotificationServiceExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BE9FA7F025AC5CBA00107ABB /* Debug */,
+				BE9FA7F125AC5CBA00107ABB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

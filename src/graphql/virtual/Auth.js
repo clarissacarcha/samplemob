@@ -39,6 +39,7 @@ user {
     licenseNumber
     isOnline
     status
+    driverIdLink
     operatorPerson {
       firstName
       lastName

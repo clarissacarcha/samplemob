@@ -170,7 +170,7 @@ const DriverProfile = ({navigation, session, constants, createSession}) => {
           <View style={{marginTop: 20}}>
             <View style={{alignItems: 'center'}}>
               <QRCode
-                value={session.user.userId} //Give value when there's no session as it will throw an error if value is empty.
+                value={session.user.driver.driverIdLink} //Give value when there's no session as it will throw an error if value is empty.
                 size={ImageWidth}
                 color={DARK}
                 backgroundColor="transparent"

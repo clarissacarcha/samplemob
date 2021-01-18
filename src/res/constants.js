@@ -36,10 +36,3 @@ export const MAP_DELTA_LOW = {
 export const MAPS_API_KEY = 'AIzaSyDhlw6pbriuwr_Mb6KYkVlBar7KD1KTrOs';
 export const IMPERSONATE = false;
 export const IMPERSONATION_PASSPHRASE = 'R8XFXI5DKZ5BYPC4SFWR';
-
-// 9163987603
-// 1234claris
-
-// SELECT SUM(price) from tok_deliveries WHERE com_rate = 0.2 AND status = 6 AND DATE(created_at) = "2020-12-16"
-
-// 30 grams coffee for 400 ml

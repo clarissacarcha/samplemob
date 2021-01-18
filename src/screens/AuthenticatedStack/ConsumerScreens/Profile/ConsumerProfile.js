@@ -191,6 +191,7 @@ const ConsumerProfile = ({navigation, constants, session, createSession}) => {
           placeholder="Email Address"
           keyboardType="email-address"
           autoCapitalize="none"
+          caretHidden
         />
 
         {/*-------------------- REFERRAL CODE --------------------*/}

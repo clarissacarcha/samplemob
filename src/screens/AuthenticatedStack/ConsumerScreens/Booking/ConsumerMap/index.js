@@ -274,14 +274,13 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
 
   useEffect(() => {
     // OneSignal.getTags(tags => console.log(`ONESIGNAL USER ID TAG: ${tags.userId}`));
-    OneSignal.addEventListener('opened', onNotificationOpened);
+    OneSignal.setNotificationOpenedHandler(onNotificationOpened);
 
     // const backHandler = BackHandler.addEventListener('hardwareBackPress', function() {
     //   return true;
     // });
     return () => {
       // backHandler.remove();
-      OneSignal.removeEventListener('received');
     };
   }, []);
 

@@ -264,15 +264,6 @@ const StopDetails = ({navigation, route}) => {
           visible={deliveryOrderType === 'SCHEDULED'}
         />
 
-        {/*--------------- Street Address ---------------*/}
-        <LabelTextInput
-          label="Street Address"
-          value={''}
-          onChange={(value) => onStopChange({name: value})}
-          placeholder="House number and Street Address"
-          marginBottom
-        />
-
         {/*--------------- Name ---------------*/}
         <LabelTextInput
           label="Contact Person"
