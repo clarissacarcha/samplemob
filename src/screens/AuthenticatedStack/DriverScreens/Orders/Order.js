@@ -303,40 +303,6 @@ const AvailableOrders = ({navigation, session, constants}) => {
     }
   }, []);
 
-  // const getLocation = async () => {
-  //   try {
-  //     console.log('FETCHING...');
-  //     setManualLoading(true);
-  //     setNoGPS(false);
-  //     const detectedLocation = await currentLocation({
-  //       showsReverseGeocode: false,
-  //     });
-
-  //     if (detectedLocation) {
-  //       getDeliveriesAvailable({
-  //         variables: {
-  //           filter: {
-  //             latitude: detectedLocation.latitude,
-  //             longitude: detectedLocation.longitude,
-  //             orderDate: searchFilter.orderDate,
-  //             senderName: searchFilter.senderName,
-  //             recipientName: searchFilter.recipientName,
-  //           },
-  //         },
-  //       });
-  //       setLocation(detectedLocation);
-  //       setManualLoading(false);
-  //     } else {
-  //       setNoGPS(true);
-  //       setManualLoading(false);
-  //     }
-  //   } catch (e) {
-  //     setManualLoading(false);
-
-  //     setLocation(INITIAL_LOCATION);
-  //   }
-  // };
-
   const onSearchPress = async ({filter}) => {
     console.log('FETCHING FROM SEARCH...');
 

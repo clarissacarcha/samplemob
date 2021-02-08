@@ -1,5 +1,8 @@
 import {APP_FLAVOR, COLOR, DARK, LIGHT, MEDIUM} from '../res/constants';
 import {Image, ScrollView, StyleSheet, Text, TouchableHighlight, View} from 'react-native';
+import {useMutation} from '@apollo/react-hooks';
+
+import {PATCH_DELIVERY_ON_THE_WAY_TO_SENDER} from '../graphql';
 
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 import FIcon from 'react-native-vector-icons/Feather';
@@ -42,6 +45,10 @@ const Drawer = ({navigation, session, constants, destroySession}) => {
       screen: 'Login',
     });
   };
+
+  const [testButtonResolve] = useMutation(PATCH_DELIVERY_ON_THE_WAY_TO_SENDER, {
+    onCompleted: (data) => console.log({data}),
+  });
 
   return (
     <View style={{flex: 1, backgroundColor: '#222222', justifyContent: 'space-between'}}>
@@ -197,6 +204,15 @@ const Drawer = ({navigation, session, constants, destroySession}) => {
               style={[styles.submitBox, {marginVertical: 20}]}>
               <View style={styles.submit}>
                 <Text style={styles.headerText}>Sign Out</Text>
+              </View>
+            </TouchableHighlight>
+
+            <TouchableHighlight
+              onPress={testButtonResolve}
+              underlayColor={COLOR}
+              style={[styles.submitBox, {marginVertical: 20}]}>
+              <View style={styles.submit}>
+                <Text style={styles.headerText}>TEST BUTTON</Text>
               </View>
             </TouchableHighlight>
           </ScrollView>

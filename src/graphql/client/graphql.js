@@ -29,28 +29,8 @@ const wsUrl = `ws://${HOST_PORT}/graphql`;
 //   }
 // });
 
-// const refetch = async () => {
-//   const res = await axios.get('https://toktok.ph');
-//   console.log(res);
-// };
-
-// const errorLink = onError(({graphQLErrors, networkError, operation, forward}) => {
-//   if (graphQLErrors) {
-//     if (graphQLErrors[0].code === 'BAD_USER_INPUT') {
-//       refetch();
-//     }
-//   }
-//   if (networkError) {
-//     console.log(`[Network error]: ${networkError}`);
-//     // if you would also like to retry automatically on
-//     // network errors, we recommend that you use
-//     // apollo-link-retry
-//   }
-// });
-
 const errorLinkLogger = onError((err) => {
-  console.log('ERROR LINK LOG');
-  console.log(err);
+  console.log({ERROR_LINK: err});
 });
 
 const setTokenLink = setContext(async (_, {headers}) => {
@@ -71,13 +51,15 @@ const wsLink = new WebSocketLink({
   uri: wsUrl,
   options: {
     reconnect: true,
+    connectionParams: async () => {
+      const accessToken = await AsyncStorage.getItem('accessToken');
+      console.log({accessToken});
+      return {
+        Authorization: accessToken ? `Bearer ${accessToken}` : '',
+      };
+    },
   },
 });
-
-const splitLink = split(({query}) => {
-  const definition = getMainDefinition(query);
-  return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
-}, wsLink);
 
 // Terminating Link
 const uploadLink = createUploadLink({
@@ -88,8 +70,13 @@ const authUploadLink = createUploadLink({
   uri: `${baseUrl}auth/graphql/`,
 });
 
+const splitLink = split(({query}) => {
+  const definition = getMainDefinition(query);
+  return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
+}, wsLink);
+
 // const link = ApolloLink.from([errorLink, setTokenLink, splitLink, uploadLink]);
-const link = ApolloLink.from([errorLinkLogger, setTokenLink, uploadLink]);
+const link = ApolloLink.from([errorLinkLogger, setTokenLink, splitLink, uploadLink]);
 const authClientlink = ApolloLink.from([setTokenLink, authUploadLink]);
 
 export const CLIENT = new ApolloClient({

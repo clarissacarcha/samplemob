@@ -455,7 +455,7 @@ const RecipientDetails = ({navigation, route, constants}) => {
           <ItemDescription onSelect={onCargoChange} initialData={localData.cargo} scrollToEnd={scrollToEnd} />
           <View style={{height: 20}} />
           {/*-------------------- BUTTON --------------------*/}
-          <BlackButton onPress={onSubmit} label="Confirm" containerStyle={{marginTop: 0}} />
+          <BlackButton onPress={onSubmit} label="Next" containerStyle={{marginTop: 0}} />
         </InputScrollView>
       </View>
     </View>

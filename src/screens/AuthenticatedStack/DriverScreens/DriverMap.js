@@ -5,7 +5,6 @@ import {connect} from 'react-redux';
 import {currentLocation} from '../../../helper';
 import {GoOnlineOverlay} from '../../../components';
 import {COLOR, DARK, MEDIUM, LIGHT, MAPS_API_KEY} from '../../../res/constants';
-import {useSubscription, useMutation} from '@apollo/react-hooks';
 
 import FIcon from 'react-native-vector-icons/Feather';
 import {CLIENT, ON_DISPATCH} from '../../../graphql';
@@ -62,7 +61,7 @@ const DriverMap = ({navigation, session}) => {
             longitudeDelta: 0.0121,
           }}
           showsUserLocation={true}
-          onRegionChangeComplete={data => {}}
+          onRegionChangeComplete={(data) => {}}
         />
       ) : (
         <View style={{...StyleSheet.absoluteFillObject, backgroundColor: COLOR}} />
@@ -89,14 +88,11 @@ const DriverMap = ({navigation, session}) => {
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   session: state.session,
 });
 
-export default connect(
-  mapStateToProps,
-  null,
-)(DriverMap);
+export default connect(mapStateToProps, null)(DriverMap);
 
 const styles = StyleSheet.create({
   container: {

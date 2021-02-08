@@ -10,7 +10,6 @@ export default (state = INITIAL_STATE, action) => {
     case 'FINISH_LOADING':
       return {...state, loading: false};
     case 'START_BACKGROUND_LOCATION':
-      console.log('STARTING BACKGROUND LOCATION');
       return {...state, backgroundLocation: true};
     case 'END_BACKGROUND_LOCATION':
       return {...state, backgroundLocation: false};

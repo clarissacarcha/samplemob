@@ -32,6 +32,8 @@ const DriverProfile = ({navigation, session, constants, createSession}) => {
     headerTitle: () => <HeaderTitle label={['Profile', '']} />,
   });
 
+  console.log(session.user.driver.driverIdLink);
+
   const [firstName, setFirstName] = useState(session.user.person.firstName);
   const [lastName, setLastName] = useState(session.user.person.lastName);
   const [emailAddress, setEmailAddress] = useState(session.user.person.emailAddress);

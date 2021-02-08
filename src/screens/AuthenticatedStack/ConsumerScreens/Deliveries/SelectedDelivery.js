@@ -1,7 +1,8 @@
-import React, {useState, useEffect} from 'react';
-import {View, Text, ScrollView, StyleSheet, TouchableHighlight, Modal, ActivityIndicator} from 'react-native';
+import React, {useState} from 'react';
+import {View, Text, ScrollView, StyleSheet, TouchableHighlight} from 'react-native';
 import {useMutation} from '@apollo/react-hooks';
 import Toast from 'react-native-simple-toast';
+import {throttle} from 'lodash';
 import {
   HeaderBack,
   HeaderTitle,
@@ -14,32 +15,9 @@ import {
   RiderRatingCard,
 } from '../../../../components';
 import {YellowIcon} from '../../../../components/ui';
-import {COLOR, DARK, MEDIUM, LIGHT, ORANGE, APP_FLAVOR} from '../../../../res/constants';
-import {PATCH_DELIVERY_CUSTOMER_CANCEL, PATCH_DELIVERY_DELETE, PATCH_DELIVERY_REBOOK} from '../../../../graphql';
+import {COLOR, DARK, ORANGE, APP_FLAVOR} from '../../../../res/constants';
+import {PATCH_DELIVERY_DELETE} from '../../../../graphql';
 import {onError} from '../../../../util/ErrorUtility';
-
-import FAIcon from 'react-native-vector-icons/FontAwesome';
-import {FlatList} from 'react-native-gesture-handler';
-
-const StarRating = ({rating}) => {
-  const starColor = (index) => {
-    if (index <= rating) {
-      return COLOR;
-    } else {
-      return LIGHT;
-    }
-  };
-
-  return (
-    <View style={{justifyContent: 'center', alignItems: 'center', flexDirection: 'row', padding: 20}}>
-      <FAIcon name="star" size={35} style={{marginRight: 15}} color={starColor(1)} />
-      <FAIcon name="star" size={35} style={{marginRight: 15}} color={starColor(2)} />
-      <FAIcon name="star" size={35} style={{marginRight: 15}} color={starColor(3)} />
-      <FAIcon name="star" size={35} style={{marginRight: 15}} color={starColor(4)} />
-      <FAIcon name="star" size={35} color={starColor(5)} />
-    </View>
-  );
-};
 
 const SelectedDelivery = ({navigation, route}) => {
   const {delivery, label} = route.params;
@@ -51,23 +29,8 @@ const SelectedDelivery = ({navigation, route}) => {
 
   // Create a delivery state from router.params.delivery
   const [getDelivery, setDelivery] = useState(delivery);
-  const [loading, setLoading] = useState(false);
 
-  // const [patchDeliveryCustomerCancel, {loading: loadingC}] = useMutation(PATCH_DELIVERY_CUSTOMER_CANCEL, {
-  //   onError: onError,
-  //   variables: {
-  //     input: {
-  //       deliveryId: getDelivery.id,
-  //     },
-  //   },
-  //   onCompleted: ({patchDeliveryCustomerCancel}) => {
-  //     setDelivery(patchDeliveryCustomerCancel);
-  //     Toast.show('Order successfully cancelled');
-
-  //   },
-  // });
-
-  const [patchDeliveryDelete, {loading: loadingD}] = useMutation(PATCH_DELIVERY_DELETE, {
+  const [patchDeliveryDelete, {loading: loadingDelete}] = useMutation(PATCH_DELIVERY_DELETE, {
     onError: onError,
     variables: {
       input: {
@@ -80,25 +43,8 @@ const SelectedDelivery = ({navigation, route}) => {
     },
   });
 
-  // const [patchDeliveryRebook, {loading: loadingR}] = useMutation(PATCH_DELIVERY_REBOOK, {
-  //   onError: onError,
-  //   variables: {
-  //     input: {
-  //       deliveryId: getDelivery.id,
-  //     },
-  //   },
-  //   onCompleted: ({patchDeliveryRebook}) => {
-  //     Toast.show(patchDeliveryRebook);
-  //   },
-  // });
-
-  // const onRebook = () => {
-  // patchDeliveryRebook();
-  // };
-
   const onCancelCallback = (returnData) => {
     setDelivery(returnData);
-
     Toast.show('Order successfully cancelled.');
   };
 
@@ -131,9 +77,15 @@ const SelectedDelivery = ({navigation, route}) => {
     return false;
   };
 
+  const onRateDeliveryButtonClick = throttle(
+    () => navigation.push('DeliveryRating', {delivery, setDelivery, onDeliveryRated}),
+    2000,
+    {leading: true, trailing: false},
+  );
+
   return (
     <View style={{flex: 1}}>
-      <AlertOverlay visible={loading} />
+      <AlertOverlay visible={loadingDelete} />
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{padding: 20}}>
         {/*---------------------------------------- CANCEL ORDER BUTTON ----------------------------------------*/}
@@ -148,9 +100,10 @@ const SelectedDelivery = ({navigation, route}) => {
           </TouchableHighlight>
         )}
 
+        {/*-------------------- RATE DELIVIERY BUTTON --------------------*/}
         {isRateButtonShown() && (
           <TouchableHighlight
-            onPress={() => navigation.push('DeliveryRating', {delivery, setDelivery, onDeliveryRated})}
+            onPress={onRateDeliveryButtonClick}
             underlayColor={COLOR}
             style={{borderRadius: 10, marginBottom: 20}}>
             <View style={styles.submit}>
@@ -174,16 +127,6 @@ const SelectedDelivery = ({navigation, route}) => {
                 <Text style={{color: COLOR, fontSize: 16}}>Delete Order</Text>
               </View>
             </TouchableHighlight>
-
-            {/*-------------------- REBOOK BUTTON --------------------*/}
-            {/* <TouchableHighlight
-              onPress={onRebook}
-              underlayColor={COLOR}
-              style={{borderRadius: 10, flex: 1, marginLeft: 10}}>
-              <View style={styles.submit}>
-                <Text style={{color: COLOR, fontSize: 16}}>Book a Copy</Text>
-              </View>
-            </TouchableHighlight> */}
           </View>
         )}
 
@@ -203,32 +146,6 @@ const SelectedDelivery = ({navigation, route}) => {
 
         {/*-------------------- ORDER DETAILS --------------------*/}
         <OrderDetailsCard delivery={getDelivery} />
-
-        {/*---------------------------------------- DELIVERY DETAILS ----------------------------------------*/}
-        {/* <View style={styles.card}>
-          <View style={styles.cardShadow}>
-            <View style={styles.directionsBox}>
-              <View style={styles.directionDetail}>
-                <MCIcon name="map-marker-distance" size={16} color={'white'} style={styles.iconBox} />
-                <Text style={{fontFamily: 'Rubik-Medium', marginLeft: 10}}>
-                  {parseFloat(delivery.distance).toFixed(2)}
-                  <Text style={{color: MEDIUM}}> km</Text>
-                </Text>
-              </View>
-              <View style={styles.directionDetail}>
-                <MCIcon name="timelapse" size={16} color={'white'} style={styles.iconBox} />
-                <Text style={{fontFamily: 'Rubik-Medium', marginLeft: 10}}>
-                  {parseFloat(delivery.duration).toFixed(0)}
-                  <Text style={{color: MEDIUM}}> min</Text>
-                </Text>
-              </View>
-              <View style={styles.directionDetail}>
-                <Ionicon name="md-pricetag" size={16} color={'white'} style={styles.iconBox} />
-                <Text style={{fontFamily: 'Rubik-Medium', marginLeft: 10}}>₱{delivery.price}</Text>
-              </View>
-            </View>
-          </View>
-        </View> */}
 
         {/*-------------------- SENDER DETAILS --------------------*/}
         <DeliveryStopCard stop={getDelivery.senderStop} index={0} />
@@ -255,10 +172,6 @@ const SelectedDelivery = ({navigation, route}) => {
 export default SelectedDelivery;
 
 const styles = StyleSheet.create({
-  card: {
-    borderRadius: 10,
-    marginBottom: 20,
-  },
   cardShadow: {
     padding: 20,
     backgroundColor: 'white',
@@ -273,24 +186,6 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
-  iconBox: {
-    backgroundColor: COLOR,
-    height: 24,
-    width: 24,
-    borderRadius: 5,
-    textAlign: 'center',
-    textAlignVertical: 'center',
-  },
-  directionsBox: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  directionDetail: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
   submit: {
     flexDirection: 'row',
     backgroundColor: DARK,
@@ -299,25 +194,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  transparent: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.6)',
-    padding: 20,
-  },
-  labelRow: {
-    marginTop: 150,
-    marginBottom: 20,
-    height: 40,
-    flexDirection: 'row',
-  },
-  labelBox: {
-    flex: 1,
-    backgroundColor: COLOR,
-    borderRadius: 10,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    flexDirection: 'row',
   },
 });

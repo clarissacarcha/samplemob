@@ -63,33 +63,33 @@ const GoOnlineOverlay = ({onDismiss, session}) => {
     },
   });
 
-  const onDispatchReceived = ({subscriptionData, client}) => {
-    if (subscriptionData.error) {
-      return;
-    }
-    if (!subscriptionData.data) {
-      return;
-    }
+  // const onDispatchReceived = ({subscriptionData, client}) => {
+  //   if (subscriptionData.error) {
+  //     return;
+  //   }
+  //   if (!subscriptionData.data) {
+  //     return;
+  //   }
 
-    if (!deliveryOrder) {
-      setDeliveryOrder(subscriptionData.data.onDeliveryDispatch.delivery);
-    } else {
-      // Do nothing. The user has already a delivery on his screen.
-    }
-  };
+  //   if (!deliveryOrder) {
+  //     setDeliveryOrder(subscriptionData.data.onDeliveryDispatch.delivery);
+  //   } else {
+  //     // Do nothing. The user has already a delivery on his screen.
+  //   }
+  // };
 
   useEffect(() => {
     patchDriverGoOnline();
   }, []);
 
-  const {data, loading, error} = useSubscription(ON_DELIVERY_DISPATCH, {
-    client: CLIENT,
-    fetchPolicy: 'network-only',
-    onSubscriptionData: onDispatchReceived,
-    variables: {
-      userId: session.user.id,
-    },
-  });
+  // const {data, loading, error} = useSubscription(ON_DELIVERY_DISPATCH, {
+  //   client: CLIENT,
+  //   fetchPolicy: 'network-only',
+  //   onSubscriptionData: onDispatchReceived,
+  //   variables: {
+  //     userId: session.user.id,
+  //   },
+  // });
 
   const onAccept = () => {
     patchDeliveryAccepted({

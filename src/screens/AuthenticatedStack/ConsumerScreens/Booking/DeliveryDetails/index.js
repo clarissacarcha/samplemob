@@ -233,7 +233,7 @@ const DeliveryDetails = ({navigation, route, session}) => {
         />
 
         {/*-------------------- CONFIRM --------------------*/}
-        <BlackButton onPress={onConfirm} label="Confirm" containerStyle={styles.blackButton} />
+        <BlackButton onPress={onConfirm} label="Next" containerStyle={styles.blackButton} />
       </InputScrollView>
     </View>
   );

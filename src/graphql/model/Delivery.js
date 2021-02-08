@@ -137,12 +137,6 @@ export const GET_DELIVERIES_COUNT_BY_STATUS = gql`
   }
 `;
 
-export const POST_DELIVERY = gql`
-  mutation postDelivery($input: PostDeliveryInput) {
-    postDelivery(input: $input)
-  }
-`;
-
 export const POST_DELIVERY_V2 = gql`
   mutation postDeliveryV2($input: PostDeliveryV2Input!) {
     postDeliveryV2(input: $input) {
@@ -181,12 +175,6 @@ export const PATCH_DELIVERY_DELETE = gql`
   }
 `;
 
-export const PATCH_DELIVERY_REBOOK = gql`
-  mutation patchDeliveryRebook($input: PatchDeliveryRebookInput!) {
-    patchDeliveryRebook(input: $input)
-  }
-`;
-
 export const PATCH_DELIVERY_INCREMENT_STATUS = gql`
   mutation patchDeliveryIncrementStatus($input: PatchDeliveryIncrementStatusInput!) {
     patchDeliveryIncrementStatus(input: $input) {
@@ -195,8 +183,21 @@ export const PATCH_DELIVERY_INCREMENT_STATUS = gql`
   }
 `;
 
-export const PATCH_DELIVERY_RATING = gql`
-  mutation patchDeliveryRating($input: PatchDeliveryRatingInput!) {
-    patchDeliveryRating(input: $input)
+export const PATCH_DELIVERY_ON_THE_WAY_TO_SENDER = gql`
+  mutation {
+    patchDeliveryOnTheWayToSender(input: {delivery: {}}) {
+      id
+    }
+  }
+`;
+
+export const ON_DELIVERY_STATUS_CHANGE = gql`
+  subscription onDeliveryStatusChange($input: OnDeliveryStatusChangeInput!) {
+    onDeliveryStatusChange(input: $input) {
+      message
+      delivery {
+        ${Delivery}
+      }
+    }
   }
 `;

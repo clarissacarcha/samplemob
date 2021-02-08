@@ -143,15 +143,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  // input: {
-  //   flex: 1,
-  //   borderWidth: StyleSheet.hairlineWidth,
-  //   borderRadius: 10,
-  //   paddingHorizontal: 20,
-  //   fontSize: 25,
-  //   color: DARK,
-  //   width: 30,
-  // },
   submitBox: {
     margin: 20,
     borderRadius: 10,

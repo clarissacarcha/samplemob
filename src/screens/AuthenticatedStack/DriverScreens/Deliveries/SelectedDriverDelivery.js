@@ -1,7 +1,21 @@
 import React, {useState} from 'react';
-import {View, Text, ScrollView, StyleSheet, TouchableHighlight, Modal, ActivityIndicator, Alert} from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  TouchableHighlight,
+  Modal,
+  ActivityIndicator,
+  Alert,
+  Dimensions,
+} from 'react-native';
 import {ReactNativeFile} from 'apollo-upload-client';
-import {useMutation} from '@apollo/react-hooks';
+import {useMutation, useSubscription} from '@apollo/react-hooks';
+import {connect} from 'react-redux';
+import {throttle} from 'lodash';
+import Toast from 'react-native-simple-toast';
+
 import {
   HeaderBack,
   HeaderTitle,
@@ -11,24 +25,23 @@ import {
   RiderRatingCard,
 } from '../../../../components';
 import {YellowIcon} from '../../../../components/ui';
-import {COLOR, DARK, MEDIUM, LIGHT, ORANGE, APP_FLAVOR} from '../../../../res/constants';
+import {COLOR, DARK, MEDIUM, LIGHT, ORANGE, APP_FLAVOR, COLOR_UNDERLAY} from '../../../../res/constants';
 import {
   CLIENT,
   PATCH_DELIVERY_INCREMENT_STATUS,
   PATCH_DELIVERY_ACCEPTED,
   PATCH_DELIVERY_DRIVER_CANCEL,
+  ON_DELIVERY_STATUS_CHANGE,
 } from '../../../../graphql';
 import {onError} from '../../../../util/ErrorUtility';
-import {throttle} from 'lodash';
+import {CaptchaOverlay} from '../../../../components/overlays/CaptchaOverlay';
 
-import Toast from 'react-native-simple-toast';
-import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicon from 'react-native-vector-icons/Ionicons';
-import FA5Icon from 'react-native-vector-icons/FontAwesome5';
-import {connect} from 'react-redux';
 
 const SelectedDriverDelivery = ({navigation, route, session}) => {
   const {delivery, label} = route.params;
+
+  const [captchaVisible, setCaptchaVisible] = useState(false);
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
@@ -62,6 +75,30 @@ const SelectedDriverDelivery = ({navigation, route, session}) => {
     },
   });
 
+  const {dataSub, loadingSub, errorSub} = useSubscription(ON_DELIVERY_STATUS_CHANGE, {
+    client: CLIENT,
+    fetchPolicy: 'network-only',
+    variables: {
+      input: {
+        delivery: {
+          id: delivery.id,
+        },
+      },
+    },
+    onSubscriptionData: ({subscriptionData}) => {
+      // console.log(JSON.stringify(subscriptionData));
+
+      if (subscriptionData.error) {
+        return;
+      }
+      if (!subscriptionData.data.onDeliveryStatusChange) {
+        return;
+      }
+
+      setDelivery(subscriptionData.data.onDeliveryStatusChange.delivery);
+    },
+  });
+
   const status = [
     'Cancelled',
     'Order Placed',
@@ -73,6 +110,7 @@ const SelectedDriverDelivery = ({navigation, route, session}) => {
   ];
 
   const onAccept = () => {
+    setCaptchaVisible(false);
     patchDeliveryAccepted({
       variables: {
         input: {
@@ -83,16 +121,6 @@ const SelectedDriverDelivery = ({navigation, route, session}) => {
       },
     });
   };
-
-  // const onCancel = () => {
-  //   patchDeliveryDriverCancel({
-  //     variables: {
-  //       input: {
-  //         deliveryId: getDelivery.id,
-  //       },
-  //     },
-  //   });
-  // };
 
   const onCancelCallback = (returnData) => {
     setDelivery(returnData);
@@ -209,6 +237,8 @@ const SelectedDriverDelivery = ({navigation, route, session}) => {
           </View>
         </View>
       </Modal>
+      {/*-------------------- PIN Overlay--------------------*/}
+      <CaptchaOverlay visible={captchaVisible} onSuccess={onAccept} onCancel={() => setCaptchaVisible(false)} />
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{padding: 20}}>
         {/*-------------------- UPDATE STATUS BUTTON --------------------*/}
@@ -238,15 +268,24 @@ const SelectedDriverDelivery = ({navigation, route, session}) => {
         )}
 
         {getDelivery.status === 1 && (
-          <TouchableHighlight onPress={onAccept} underlayColor={COLOR} style={{borderRadius: 10, marginBottom: 20}}>
+          <TouchableHighlight
+            onPress={() => setCaptchaVisible(true)}
+            underlayColor={COLOR}
+            style={{borderRadius: 10, marginBottom: 20}}>
             <View style={styles.submit}>
               <Text style={{color: COLOR, fontSize: 16}}>Accept Order</Text>
-              {[3, 5].includes(getDelivery.status) && (
-                <Ionicon name="ios-camera" size={40} color={COLOR} style={{position: 'absolute', right: 20}} />
-              )}
             </View>
           </TouchableHighlight>
         )}
+
+        {/*-------------------- Display 3 Digit Pin --------------------*/}
+        {/* {getDelivery.status === 1 && (
+          <TouchableHighlight onPress={onAccept} underlayColor={COLOR} style={{borderRadius: 10, marginBottom: 20}}>
+            <View style={styles.submit}>
+              <Text style={{color: COLOR, fontSize: 16}}>Accept Order</Text>
+            </View>
+          </TouchableHighlight>
+        )} */}
 
         {/*-------------------- DELIVERY ID --------------------*/}
         <View style={[styles.cardShadow, {marginBottom: 20}]}>

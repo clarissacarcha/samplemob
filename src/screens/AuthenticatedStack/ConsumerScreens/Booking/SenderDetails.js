@@ -350,7 +350,7 @@ const SenderDetails = ({navigation, route}) => {
           </View> */}
           <View style={{height: 20}} />
           {/*-------------------- CONFIRM --------------------*/}
-          <BlackButton onPress={onSubmit} label="Confirm" containerStyle={{marginTop: 0}} />
+          <BlackButton onPress={onSubmit} label="Next" containerStyle={{marginTop: 0}} />
         </InputScrollView>
       </View>
     </View>

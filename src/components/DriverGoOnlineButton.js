@@ -69,10 +69,14 @@ const Component = ({
   };
 
   useEffect(() => {
-    console.log(application.backgroundLocation);
     if (!application.backgroundLocation) {
       startBackgroundLocation();
-      BackgroundTimer.runBackgroundTimer(async () => {
+      console.log('BACKGROUND LOCATION LOG');
+      // BackgroundTimer.runBackgroundTimer(async () => {
+      //   postLocationLog();
+      // }, parseFloat(constants.driverLocationLogInterval));
+
+      BackgroundTimer.setInterval(() => {
         postLocationLog();
       }, parseFloat(constants.driverLocationLogInterval));
 
