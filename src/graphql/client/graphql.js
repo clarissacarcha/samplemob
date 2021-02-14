@@ -30,7 +30,7 @@ const wsUrl = `ws://${HOST_PORT}/graphql`;
 // });
 
 const errorLinkLogger = onError((err) => {
-  console.log({ERROR_LINK: err});
+  console.log({ERROR_LINK: JSON.stringify(err.message)});
 });
 
 const setTokenLink = setContext(async (_, {headers}) => {
@@ -53,7 +53,6 @@ const wsLink = new WebSocketLink({
     reconnect: true,
     connectionParams: async () => {
       const accessToken = await AsyncStorage.getItem('accessToken');
-      console.log({accessToken});
       return {
         Authorization: accessToken ? `Bearer ${accessToken}` : '',
       };

@@ -14,6 +14,8 @@ import {
   DriverLocationCard,
   RiderRatingCard,
 } from '../../../../components';
+import {useAlert} from '../../../../hooks/useAlert';
+import {OnDeliveryStatusChangeSubscriber, OnDeliveryAcceptedSubscriber} from '../../../../components/subscribers';
 import {YellowIcon} from '../../../../components/ui';
 import {COLOR, DARK, ORANGE, APP_FLAVOR} from '../../../../res/constants';
 import {PATCH_DELIVERY_DELETE} from '../../../../graphql';
@@ -21,6 +23,8 @@ import {onError} from '../../../../util/ErrorUtility';
 
 const SelectedDelivery = ({navigation, route}) => {
   const {delivery, label} = route.params;
+
+  const Notify = useAlert();
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
@@ -86,6 +90,20 @@ const SelectedDelivery = ({navigation, route}) => {
   return (
     <View style={{flex: 1}}>
       <AlertOverlay visible={loadingDelete} />
+      <OnDeliveryStatusChangeSubscriber
+        delivery={getDelivery}
+        onFeedReceived={({feed}) => {
+          Notify({message: feed.message});
+          setDelivery(feed.delivery);
+        }}
+      />
+      <OnDeliveryAcceptedSubscriber
+        delivery={getDelivery}
+        onFeedReceived={({feed}) => {
+          Notify({message: feed.message});
+          setDelivery(feed.delivery);
+        }}
+      />
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{padding: 20}}>
         {/*---------------------------------------- CANCEL ORDER BUTTON ----------------------------------------*/}

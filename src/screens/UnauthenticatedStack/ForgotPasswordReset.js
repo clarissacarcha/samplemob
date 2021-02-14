@@ -1,7 +1,7 @@
 import {AUTH_CLIENT, FORGOT_PASSWORD_RESET} from '../../graphql';
 import {Alert, BackHandler, ScrollView, StyleSheet, Text, TextInput, TouchableHighlight, View} from 'react-native';
 import {AlertOverlay, HeaderBack, HeaderTitle} from '../../components';
-import {COLOR, DARK, LIGHT, MEDIUM} from '../../res/constants';
+import {COLOR, DARK, LIGHT, MEDIUM, ACCOUNT_TYPE} from '../../res/constants';
 import React, {useEffect, useState} from 'react';
 
 import {connect} from 'react-redux';
@@ -29,6 +29,7 @@ const PostRegistration = ({navigation, route}) => {
     client: AUTH_CLIENT,
     variables: {
       input: {
+        accountType: ACCOUNT_TYPE,
         mobile: `+63${mobile}`,
         verificationCode,
         password,

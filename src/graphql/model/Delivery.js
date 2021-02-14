@@ -137,9 +137,9 @@ export const GET_DELIVERIES_COUNT_BY_STATUS = gql`
   }
 `;
 
-export const POST_DELIVERY_V2 = gql`
-  mutation postDeliveryV2($input: PostDeliveryV2Input!) {
-    postDeliveryV2(input: $input) {
+export const POST_DELIVERY = gql`
+  mutation postDelivery($input: PostDeliveryInput!) {
+    postDelivery(input: $input) {
       message
     }
   }
@@ -194,6 +194,17 @@ export const PATCH_DELIVERY_ON_THE_WAY_TO_SENDER = gql`
 export const ON_DELIVERY_STATUS_CHANGE = gql`
   subscription onDeliveryStatusChange($input: OnDeliveryStatusChangeInput!) {
     onDeliveryStatusChange(input: $input) {
+      message
+      delivery {
+        ${Delivery}
+      }
+    }
+  }
+`;
+
+export const ON_DELIVERY_ACCEPTED = gql`
+  subscription onDeliveryAccepted($input: OnDeliveryAcceptedInput!) {
+    onDeliveryAccepted(input: $input) {
       message
       delivery {
         ${Delivery}

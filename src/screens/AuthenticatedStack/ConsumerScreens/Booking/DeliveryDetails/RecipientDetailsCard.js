@@ -3,7 +3,7 @@ import {View, Text, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
 import {throttle} from 'lodash';
-import {CardShadow, CardHeader, CardBody, CardRow, Hairline, SizedBox} from '../../../../../components/widgets';
+import {CardShadow, CardHeader, CardBodyView, CardRow, Hairline, SizedBox} from '../../../../../components/widgets';
 import {COLOR, LIGHT, MEDIUM, DARK} from '../../../../../res/constants';
 import {YellowIcon} from '../../../../../components/ui';
 
@@ -52,24 +52,24 @@ const DeliverySchedule = ({bookingData}) => {
 const RecipientCard = ({bookingData, stopData, deliveryOrderType, scheduledDate, index}) => {
   const {name, mobile, landmark, formattedAddress} = stopData;
 
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
 
-  const onPress = throttle(
-    () => {
-      navigation.push('StopDetails', {
-        stopData,
-        deliveryOrderType,
-        scheduledDate,
-        index,
-        headerLabel: 'Recipient',
-      });
-    },
-    1000,
-    {trailing: false},
-  );
+  // const onPress = throttle(
+  //   () => {
+  //     navigation.push('StopDetails', {
+  //       stopData,
+  //       deliveryOrderType,
+  //       scheduledDate,
+  //       index,
+  //       headerLabel: 'Recipient',
+  //     });
+  //   },
+  //   2000,
+  //   {trailing: false},
+  // );
 
   return (
-    <CardBody onPress={onPress}>
+    <CardBodyView>
       <CardRow
         title={name ? name : 'Contact Person'}
         value={mobile ? `+63${mobile}` : 'Mobile Number'}
@@ -103,12 +103,28 @@ const RecipientCard = ({bookingData, stopData, deliveryOrderType, scheduledDate,
           />
         </>
       )}
-    </CardBody>
+    </CardBodyView>
   );
 };
 
 const RecipientDetailsCard = ({bookingData, marginTop, marginBottom}) => {
   const {recipientStop, orderType, scheduledDate} = bookingData;
+
+  const navigation = useNavigation();
+
+  const onPress = throttle(
+    () => {
+      navigation.push('StopDetails', {
+        stopData: recipientStop[0],
+        deliveryOrderType: orderType,
+        scheduledDate: scheduledDate,
+        index: 0,
+        headerLabel: 'Recipient',
+      });
+    },
+    2000,
+    {trailing: false},
+  );
 
   const renderRecipientCards = () => {
     return recipientStop.map((stop, index) => (
@@ -126,7 +142,7 @@ const RecipientDetailsCard = ({bookingData, marginTop, marginBottom}) => {
     <>
       {marginTop && <SizedBox />}
       <View style={styles.summaryCard}>
-        <CardShadow>
+        <CardShadow onPress={onPress}>
           <CardHeader
             label={['Recipient', 'Details']}
             iconSet={'FontAwesome5'}

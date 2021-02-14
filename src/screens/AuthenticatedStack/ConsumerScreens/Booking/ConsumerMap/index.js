@@ -1,7 +1,7 @@
 import {Alert, Image, Platform, StyleSheet, Text, ScrollView, TouchableHighlight, View} from 'react-native';
 import {BookingOverlay, LocationPermission, WelcomeBanner, WelcomeMessage} from '../../../../../components';
-import {COLOR, DARK, LIGHT, MAPS_API_KEY, MEDIUM, ENVIRONMENT} from '../../../../../res/constants';
-import {POST_DELIVERY, POST_DELIVERY_V2} from '../../../../../graphql';
+import {COLOR, DARK, LIGHT, MAPS_API_KEY, MEDIUM} from '../../../../../res/constants';
+import {POST_DELIVERY} from '../../../../../graphql';
 import {PERMISSIONS, RESULTS, check} from 'react-native-permissions';
 import React, {useEffect, useRef, useState} from 'react';
 import {useMutation, useQuery} from '@apollo/react-hooks';
@@ -234,7 +234,7 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
     setBookingData(INITIAL_BOOKING_DATA);
   };
 
-  const [postDeliveryV2, {loading: postDeliveryV2Loading}] = useMutation(POST_DELIVERY_V2, {
+  const [postDelivery, {loading: postDeliveryLoading}] = useMutation(POST_DELIVERY, {
     onError: onError,
     onCompleted: () => {
       try {
@@ -339,8 +339,9 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
       delete input.isExpress;
 
       input.cashOnDelivery = parseFloat(bookingData.cashOnDelivery);
-      // console.log({input});
-      postDeliveryV2({
+      input.referralCode = '';
+
+      postDelivery({
         variables: {
           input,
         },
@@ -363,11 +364,7 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
       <WelcomeBanner />
       {/* {showWelcome && <WelcomeMessage data={welcomeData.getWelcomeMessage} onOkay={hideWelcomeMessage} />} */}
 
-      <BookingOverlay
-        visible={postDeliveryV2Loading || bookingSuccess}
-        done={bookingSuccess}
-        onOkay={onBookSuccessOk}
-      />
+      <BookingOverlay visible={postDeliveryLoading || bookingSuccess} done={bookingSuccess} onOkay={onBookSuccessOk} />
 
       <BookingMap bookingData={bookingData} />
 

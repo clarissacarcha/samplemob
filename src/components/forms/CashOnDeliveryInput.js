@@ -16,6 +16,7 @@ const Widget = ({
   marginBottom,
 }) => {
   const maxValue = constants.maxCashOnDelivery;
+  const CODFee = constants.cashOnDeliveryFee;
   const [isCOD, setIsCOD] = useState(initialValue ? true : false);
   const [amount, setAmount] = useState(initialValue);
 
@@ -55,7 +56,8 @@ const Widget = ({
       <View style={styles.switchContainer}>
         <View>
           <Text style={styles.switchTitle}>Cash On Delivery</Text>
-          <Text style={styles.switchDescription}>Rider pays sender and collect cash from recipient</Text>
+          <Text style={styles.switchDescription}>Rider pays sender and collect cash from recipient.</Text>
+          <Text style={styles.switchDescription}>{`Additional P${CODFee}.00 on top of delivery fee.`}</Text>
         </View>
 
         <Switch
@@ -121,7 +123,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     height: 50,
     backgroundColor: 'white',
-    marginTop: -8,
+    marginTop: 0,
   },
   inputLabel: {
     paddingHorizontal: 20,

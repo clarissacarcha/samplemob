@@ -206,15 +206,6 @@ const Drawer = ({navigation, session, constants, destroySession}) => {
                 <Text style={styles.headerText}>Sign Out</Text>
               </View>
             </TouchableHighlight>
-
-            <TouchableHighlight
-              onPress={testButtonResolve}
-              underlayColor={COLOR}
-              style={[styles.submitBox, {marginVertical: 20}]}>
-              <View style={styles.submit}>
-                <Text style={styles.headerText}>TEST BUTTON</Text>
-              </View>
-            </TouchableHighlight>
           </ScrollView>
         </View>
       </View>

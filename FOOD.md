@@ -27,3 +27,70 @@
 6. Upon opening app, set last_session_at
 
 # Add COD ON TOP
+
+require("dotenv").config();
+
+module.exports = {
+development: {
+client: "mysql2",
+connection: {
+database: process.env.DB_DATABASE,
+user: process.env.DB_USER,
+password: process.env.DB_PASSWORD,
+port: process.env.DB_PORT,
+},
+pool: {
+min: 2,
+max: 10,
+},
+migrations: {
+tableName: "knex_migrations",
+directory: **dirname + "/config/knex/migrations",
+},
+seeds: {
+directory: **dirname + "/config/knex/seeds",
+},
+},
+
+staging: {
+client: "mysql2",
+connection: {
+database: process.env.DB_DATABASE,
+user: process.env.DB_USER,
+password: process.env.DB_PASSWORD,
+port: process.env.DB_PORT,
+},
+pool: {
+min: 2,
+max: 10,
+},
+migrations: {
+tableName: "knex_migrations",
+directory: **dirname + "/config/knex/migrations",
+},
+seeds: {
+directory: **dirname + "/config/knex/seeds",
+},
+},
+
+production: {
+client: "mysql2",
+connection: {
+database: process.env.DB_DATABASE,
+user: process.env.DB_USER,
+password: process.env.DB_PASSWORD,
+port: process.env.DB_PORT,
+},
+pool: {
+min: 2,
+max: 10,
+},
+migrations: {
+tableName: "knex_migrations",
+directory: **dirname + "/config/knex/migrations",
+},
+seeds: {
+directory: **dirname + "/config/knex/seeds",
+},
+},
+};

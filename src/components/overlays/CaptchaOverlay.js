@@ -39,8 +39,6 @@ const AnswerBox = ({number, answer}) => {
     }
   }
 
-  console.log({number});
-  console.log({answer});
   return (
     <TouchableHighlight onPress={() => {}} underlayColor={COLOR_UNDERLAY} style={styles.answerButton}>
       <Text style={{fontFamily: 'Rubik-Medium', fontSize: 25, color}}>{number}</Text>
@@ -97,7 +95,6 @@ const CaptchaOverlayRender = ({visible, onSuccess, onCancel}) => {
 
   const onNumberPress = ({number}) => {
     setAnswer(`${answer}${number}`);
-    console.log(`${answer}${number}`);
   };
 
   const onDelete = () => {

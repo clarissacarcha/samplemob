@@ -3,7 +3,7 @@ import {View, Text, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
 import {throttle} from 'lodash';
-import {CardShadow, CardHeader, CardBody, CardRow, Hairline, SizedBox} from '../../../../../components/widgets';
+import {CardShadow, CardHeader, CardBodyView, CardRow, Hairline, SizedBox} from '../../../../../components/widgets';
 import {COLOR, LIGHT, MEDIUM, DARK} from '../../../../../res/constants';
 import {YellowIcon} from '../../../../../components/ui';
 
@@ -62,7 +62,7 @@ const SenderDetailsCard = ({bookingData, marginTop, marginBottom}) => {
         headerLabel: 'Sender',
       });
     },
-    1000,
+    2000,
     {trailing: false},
   );
 
@@ -70,7 +70,7 @@ const SenderDetailsCard = ({bookingData, marginTop, marginBottom}) => {
     <>
       {marginTop && <SizedBox />}
       <View style={styles.summaryCard}>
-        <CardShadow>
+        <CardShadow onPress={onPress}>
           <CardHeader
             label={['Sender', 'Details']}
             iconSet={'FontAwesome5'}
@@ -78,7 +78,7 @@ const SenderDetailsCard = ({bookingData, marginTop, marginBottom}) => {
             iconSize={16}
           />
 
-          <CardBody onPress={onPress}>
+          <CardBodyView>
             <CardRow
               title={bookingData.senderStop.name ? bookingData.senderStop.name : 'Contact Person'}
               value={bookingData.senderStop.mobile ? `+63${bookingData.senderStop.mobile}` : 'Mobile Number'}
@@ -112,7 +112,7 @@ const SenderDetailsCard = ({bookingData, marginTop, marginBottom}) => {
                 />
               </>
             )}
-          </CardBody>
+          </CardBodyView>
         </CardShadow>
       </View>
       {marginBottom && <SizedBox />}

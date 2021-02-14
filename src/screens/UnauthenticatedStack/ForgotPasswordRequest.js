@@ -3,16 +3,19 @@ import {View, StyleSheet, Text, TextInput, TouchableHighlight, Image, Alert, Pla
 import SmsRetriever from 'react-native-sms-retriever';
 import {connect} from 'react-redux';
 import {useMutation} from '@apollo/react-hooks';
-import {COLOR, DARK, APP_FLAVOR, MEDIUM, LIGHT} from '../../res/constants';
+import {COLOR, DARK, APP_FLAVOR, MEDIUM, LIGHT, ACCOUNT_TYPE} from '../../res/constants';
 import {AUTH_CLIENT, FORGOT_PASSWORD} from '../../graphql';
 import {AlertOverlay, HeaderBack, HeaderTitle} from '../../components';
-import {onError} from '../../util/ErrorUtility';
+import {onError, onErrorAlert} from '../../util/ErrorUtility';
+import {useAlert} from '../../hooks/useAlert';
 
 import timer from 'react-native-timer';
 
 const VerificationBanner = require('../../assets/images/VerificationBanner.png');
 
 const ForgotPassword = ({navigation, route, createSession}) => {
+  const Notify = useAlert();
+
   const goToLogin = () => {
     navigation.navigate('UnauthenticatedStack', {
       screen: 'Login',
@@ -48,6 +51,7 @@ const ForgotPassword = ({navigation, route, createSession}) => {
       input: {
         mobile: `+63${mobile}`,
         appFlavor: APP_FLAVOR,
+        accountType: ACCOUNT_TYPE,
         // deviceId: getUniqueId(),
         // deviceType: Platform.select({ios: 'I', android: 'A'}),
       },
@@ -61,36 +65,33 @@ const ForgotPassword = ({navigation, route, createSession}) => {
       } else if (graphQLErrors.length > 0) {
         graphQLErrors.map(({message, locations, path, code}) => {
           if (code === 'INTERNAL_SERVER_ERROR') {
-            Alert.alert('', 'Something went wrong.');
+            Notify({message: 'Something went wrong.'});
           } else if (code === 'BAD_USER_INPUT') {
-            Alert.alert('', message);
+            Notify({message});
           } else if (code === 'AUTHENTICATION_ERROR') {
             navigation.push('UnauthenticatedStack', {
               screen: 'AccountBlocked',
             });
           } else {
-            Alert.alert('', 'Something went wrong...');
+            Notify({message: 'Something went wrong.'});
           }
         });
       }
     },
-    onCompleted: ({forgotPassword: forgotResult}) => {
-      if (forgotResult === 'NOPASSWORD') {
-        Alert.alert('', 'No nominated password. Please proceed to login instead.', [
+    onCompleted: (data) => {
+      if (data.forgotPassword.payload.code === 'PASSWORD_EMPTY') {
+        Alert.alert('', data.forgotPassword.message, [
           {
             title: 'Ok',
             onPress: () => navigation.pop(),
           },
         ]);
+        return;
       }
 
       navigation.navigate('ForgotPasswordVerification', {mobile});
     },
   });
-
-  useEffect(() => {
-    // inputRef.current.focus();
-  }, []);
 
   const onSubmit = () => {
     if (!mobile) {

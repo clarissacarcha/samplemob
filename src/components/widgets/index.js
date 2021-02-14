@@ -1,4 +1,5 @@
 export * from './CardBody';
+export * from './CardBodyView';
 export * from './CardHeader';
 export * from './CardRow';
 export * from './CardShadow';

@@ -86,7 +86,10 @@ export const GET_USER_SESSION = gql`
 
 export const FORGOT_PASSWORD = gql`
   mutation forgotPassword($input: ForgotPasswordInput!) {
-    forgotPassword(input: $input)
+    forgotPassword(input: $input) {
+      message
+      payload
+    }
   }
 `;
 

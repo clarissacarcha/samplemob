@@ -145,14 +145,25 @@ const DeliveryDetails = ({navigation, route, session}) => {
       return;
     }
 
+    if (bookingData.isCashOnDelivery && !bookingData.cashOnDelivery) {
+      Alert.alert('', 'Please input Cash on Delivery value.');
+      return;
+    }
+
+    if (bookingData.isCashOnDelivery && bookingData.cashOnDelivery < 1) {
+      Alert.alert('', 'Cash on Delivery value must be greater than or equal to 1.00');
+      return;
+    }
+
     getDeliveryPriceAndDirections({
       variables: {
         input: {
           consumerId: session.user.consumer.id,
-          senderNumber: bookingData.senderStop.mobile,
-          referralCode: session.user.consumer.referralCode ? session.user.consumer.referralCode : '',
+          // senderNumber: bookingData.senderStop.mobile,
+          // referralCode: session.user.consumer.referralCode ? session.user.consumer.referralCode : '',
           promoCode: bookingData.promoCode,
           isExpress: bookingData.isExpress,
+          isCashOnDelivery: bookingData.isCashOnDelivery,
           origin: {
             latitude: bookingData.senderStop.latitude,
             longitude: bookingData.senderStop.longitude,

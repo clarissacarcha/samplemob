@@ -16,6 +16,9 @@ import {connect} from 'react-redux';
 import {throttle} from 'lodash';
 import Toast from 'react-native-simple-toast';
 
+import {useAlert} from '../../../../hooks/useAlert';
+import {OnDeliveryAcceptedSubscriber} from '../../../../components/subscribers';
+
 import {
   HeaderBack,
   HeaderTitle,
@@ -27,11 +30,9 @@ import {
 import {YellowIcon} from '../../../../components/ui';
 import {COLOR, DARK, MEDIUM, LIGHT, ORANGE, APP_FLAVOR, COLOR_UNDERLAY} from '../../../../res/constants';
 import {
-  CLIENT,
   PATCH_DELIVERY_INCREMENT_STATUS,
   PATCH_DELIVERY_ACCEPTED,
   PATCH_DELIVERY_DRIVER_CANCEL,
-  ON_DELIVERY_STATUS_CHANGE,
 } from '../../../../graphql';
 import {onError} from '../../../../util/ErrorUtility';
 import {CaptchaOverlay} from '../../../../components/overlays/CaptchaOverlay';
@@ -39,7 +40,7 @@ import {CaptchaOverlay} from '../../../../components/overlays/CaptchaOverlay';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 
 const SelectedDriverDelivery = ({navigation, route, session}) => {
-  const {delivery, label} = route.params;
+  const {delivery, label, refreshList} = route.params;
 
   const [captchaVisible, setCaptchaVisible] = useState(false);
 
@@ -72,30 +73,6 @@ const SelectedDriverDelivery = ({navigation, route, session}) => {
       setDelivery(patchDeliveryDriverCancel);
 
       Toast.show('Order successfully cancelled.');
-    },
-  });
-
-  const {dataSub, loadingSub, errorSub} = useSubscription(ON_DELIVERY_STATUS_CHANGE, {
-    client: CLIENT,
-    fetchPolicy: 'network-only',
-    variables: {
-      input: {
-        delivery: {
-          id: delivery.id,
-        },
-      },
-    },
-    onSubscriptionData: ({subscriptionData}) => {
-      // console.log(JSON.stringify(subscriptionData));
-
-      if (subscriptionData.error) {
-        return;
-      }
-      if (!subscriptionData.data.onDeliveryStatusChange) {
-        return;
-      }
-
-      setDelivery(subscriptionData.data.onDeliveryStatusChange.delivery);
     },
   });
 
@@ -222,6 +199,25 @@ const SelectedDriverDelivery = ({navigation, route, session}) => {
 
   return (
     <View style={{flex: 1}}>
+      {/*-------------------- SUBSCRIBERS --------------------*/}
+      <OnDeliveryAcceptedSubscriber
+        delivery={getDelivery}
+        onFeedReceived={({feed}) => {
+          if (session.user.driver.id != feed.delivery.tokDriverId) {
+            setCaptchaVisible(false);
+            // Notify({message: 'Delivery accepted by other rider.'});
+            Alert.alert('', 'Delivery accepted by other rider.', [
+              {
+                title: 'OK',
+                onPress: () => {
+                  refreshList();
+                  navigation.pop();
+                },
+              },
+            ]);
+          }
+        }}
+      />
       {/*-------------------- LOADING OVERLAY--------------------*/}
       <Modal
         animationType="fade"

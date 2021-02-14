@@ -32,7 +32,7 @@ import NoData from '../../../../assets/images/NoData.png';
 import {connect} from 'react-redux';
 import {currentLocation} from '../../../../helper';
 import moment from 'moment';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useFocusEffect} from '@react-navigation/native';
 
 const imageWidth = Dimensions.get('window').width - 200;
 const largeImageWidth = Dimensions.get('window').width - 40;
@@ -337,8 +337,9 @@ const AvailableOrders = ({navigation, session, constants}) => {
   }, []);
 
   // useFocusEffect(() => {
-  //   // refetch();
-  // }, []);
+  //   // console.log('FOCUSED AVAILABLE ORDERS');
+  //   // getLocation();
+  // }, [session.user.id]);
 
   if (!session.user.driver.isOnline) {
     return (
@@ -576,7 +577,13 @@ const AvailableOrders = ({navigation, session, constants}) => {
         renderItem={({item, index}) => (
           <DeliveryCard
             delivery={item}
-            onPress={() => navigation.push('SelectedDriverDelivery', {delivery: item, label: ['Delivery', 'Details']})}
+            onPress={() =>
+              navigation.push('SelectedDriverDelivery', {
+                delivery: item,
+                label: ['Delivery', 'Details'],
+                refreshList: getLocation,
+              })
+            }
             lastItem={data.getDeliveriesAvailable.length == index + 1 ? true : false}
           />
         )}

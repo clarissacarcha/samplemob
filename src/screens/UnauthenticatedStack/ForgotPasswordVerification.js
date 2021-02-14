@@ -1,7 +1,7 @@
 import React, {useState, useRef, useEffect} from 'react';
 import {View, StyleSheet, Text, TextInput, TouchableHighlight, Image, Alert, Platform} from 'react-native';
 import SmsRetriever from 'react-native-sms-retriever';
-import {COLOR, DARK, APP_FLAVOR} from '../../res/constants';
+import {COLOR, DARK, ACCOUNT_TYPE} from '../../res/constants';
 import {connect} from 'react-redux';
 import {useMutation} from '@apollo/react-hooks';
 import {AUTH_CLIENT, FORGOT_PASSWORD_VERIFICATION} from '../../graphql';
@@ -57,6 +57,7 @@ const Verification = ({navigation, route, createSession}) => {
     client: AUTH_CLIENT,
     variables: {
       input: {
+        accountType: ACCOUNT_TYPE,
         mobile: `+63${mobile}`,
         verificationCode,
       },
