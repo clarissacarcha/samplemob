@@ -48,3 +48,15 @@ export const TOKTOK_WALLET_ENCASH = gql`
     }
   }
 `;
+
+
+export const INITIALIZE_WALLET_CASHIN_DATA = gql`
+  mutation initializeWalletCashinData($input: getInitialCashInInput) {
+    initializeWalletCashinData(input: $input) {
+      signature
+      merchantId
+      refNo
+    }
+  }
+`;
+

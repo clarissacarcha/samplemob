@@ -37,6 +37,13 @@ import ConsumerProfile from '../screens/AuthenticatedStack/ConsumerScreens/Profi
 import CustomerDeliveries from '../screens/AuthenticatedStack/ConsumerScreens/Deliveries/MyDeliveries';
 import DeliveryTracking from '../screens/AuthenticatedStack/ConsumerScreens/Deliveries/DeliveryTracking';
 import SearchContact from '../screens/AuthenticatedStack/ConsumerScreens/Booking/SearchContact';
+
+
+import WalletComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/WalletComponent';
+import PaymentOptions from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/CashIn/PaymentOptions';
+import PayPandaComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/CashIn/PayPanda/PayPandaComponent';
+import PayPandaWebViewComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/CashIn/PayPanda/WebViewComponent';
+
 /*---------- DRIVER SCREENS ----------*/
 import DriverMap from '../screens/AuthenticatedStack/DriverScreens/DriverMap';
 import Ongoing from '../screens/AuthenticatedStack/DriverScreens/Deliveries/Ongoing';
@@ -258,6 +265,11 @@ const AuthenticatedStack = () => (
 
     <Authenticated.Screen name="SavedLocations" component={SavedLocations} />
     <Authenticated.Screen name="AddLocation" component={AddLocation} />
+
+    <Authenticated.Screen name="TokTokWallet" component={WalletComponent}/>
+    <Authenticated.Screen name="TokTokWalletCashIn" component={PaymentOptions}/>
+    <Authenticated.Screen name="TokTokWalletCashInPaypanda" component={PayPandaComponent}/>
+    <Authenticated.Screen name="TokTokWalletCashINPaypandaWebView" component={PayPandaWebViewComponent}/> 
 
     {/*---------- DRIVER SCREENS ----------*/}
     <Authenticated.Screen name="DriverHomeBottomTab" component={DriverHomeBottomTab} options={{headerShown: false}} />
