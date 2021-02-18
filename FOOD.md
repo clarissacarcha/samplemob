@@ -5,17 +5,6 @@
 5. Show referral code. (Show referral code of operator in database.)
 6. Booking from web, account already created, prompt for password. Forgot Password? Send OTP? Reset Password and Book. (Forgot Password.)
 
-7. Check if customer has referral code. If so, use it. If not, use referralCode from params if available.
-
-# Promos
-
-1. Add maximum kilometers for perKm or all types of promos.
-2. If distance exceeds maximum, prompt user he cannot use the promo.
-
-# TODO
-
-1. Find a way para sa mandadaya.
-
 # TODO
 
 1. Customer provide picture after 5 deliveries.
@@ -25,72 +14,3 @@
 5. Transfer Orders via Rider Scan QR
 
 6. Upon opening app, set last_session_at
-
-# Add COD ON TOP
-
-require("dotenv").config();
-
-module.exports = {
-development: {
-client: "mysql2",
-connection: {
-database: process.env.DB_DATABASE,
-user: process.env.DB_USER,
-password: process.env.DB_PASSWORD,
-port: process.env.DB_PORT,
-},
-pool: {
-min: 2,
-max: 10,
-},
-migrations: {
-tableName: "knex_migrations",
-directory: **dirname + "/config/knex/migrations",
-},
-seeds: {
-directory: **dirname + "/config/knex/seeds",
-},
-},
-
-staging: {
-client: "mysql2",
-connection: {
-database: process.env.DB_DATABASE,
-user: process.env.DB_USER,
-password: process.env.DB_PASSWORD,
-port: process.env.DB_PORT,
-},
-pool: {
-min: 2,
-max: 10,
-},
-migrations: {
-tableName: "knex_migrations",
-directory: **dirname + "/config/knex/migrations",
-},
-seeds: {
-directory: **dirname + "/config/knex/seeds",
-},
-},
-
-production: {
-client: "mysql2",
-connection: {
-database: process.env.DB_DATABASE,
-user: process.env.DB_USER,
-password: process.env.DB_PASSWORD,
-port: process.env.DB_PORT,
-},
-pool: {
-min: 2,
-max: 10,
-},
-migrations: {
-tableName: "knex_migrations",
-directory: **dirname + "/config/knex/migrations",
-},
-seeds: {
-directory: **dirname + "/config/knex/seeds",
-},
-},
-};

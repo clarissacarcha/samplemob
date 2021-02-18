@@ -10,7 +10,20 @@ import {YellowIcon, BlackIcon} from '../components/ui';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-export const DeliveryStopCard = ({stop, index, status = 0}) => {
+const getDisplayAddress = ({stop}) => {
+  if (stop.addressBreakdown) {
+    const {city, province} = stop.addressBreakdown;
+    if (province) {
+      return `${city}, ${province}`;
+    } else {
+      return city;
+    }
+  } else {
+    return stop.formattedAddress;
+  }
+};
+
+export const DeliveryStopCard = ({stop, index, status = 0, delivery}) => {
   const labels = [
     ['Sender', 'Details'],
     ['Recipient', 'Details'],
@@ -51,27 +64,33 @@ export const DeliveryStopCard = ({stop, index, status = 0}) => {
             padding: 20,
             paddingBottom: 0,
           }}>
-          <Text style={{color: MEDIUM, fontSize: 14, flex: 1}}>{stop.formattedAddress}</Text>
+          <Text style={{color: MEDIUM, fontSize: 14, flex: 1}}>
+            {/* {stop.formattedAddress} */}
+            {APP_FLAVOR === 'D' && delivery.status === 1 && delivery.tokDriverId === null
+              ? getDisplayAddress({stop: stop})
+              : stop.formattedAddress}
+          </Text>
           {/*------------------- ROUTE BUTTON -------------------*/}
+          {showNumber() && (
+            <View style={styles.actionIconBox}>
+              <MCIcon
+                name="directions"
+                size={24}
+                color={COLOR}
+                onPress={() => {
+                  const scheme = Platform.select({ios: 'maps:0,0?q=', android: 'geo:0,0?q='});
+                  const latLng = `${stop.latitude},${stop.longitude}`;
+                  const label = stop.name;
+                  const url = Platform.select({
+                    ios: `${scheme}${label}@${latLng}`,
+                    android: `${scheme}${latLng}(${label})`,
+                  });
 
-          <View style={styles.actionIconBox}>
-            <MCIcon
-              name="directions"
-              size={24}
-              color={COLOR}
-              onPress={() => {
-                const scheme = Platform.select({ios: 'maps:0,0?q=', android: 'geo:0,0?q='});
-                const latLng = `${stop.latitude},${stop.longitude}`;
-                const label = stop.name;
-                const url = Platform.select({
-                  ios: `${scheme}${label}@${latLng}`,
-                  android: `${scheme}${latLng}(${label})`,
-                });
-
-                Linking.openURL(url);
-              }}
-            />
-          </View>
+                  Linking.openURL(url);
+                }}
+              />
+            </View>
+          )}
         </View>
         {/*------------------- NAME -------------------*/}
         <View style={{flexDirection: 'row', padding: 20}}>

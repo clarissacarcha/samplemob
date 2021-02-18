@@ -4,6 +4,7 @@ const Delivery = `
   id
   deliveryId
   tokConsumerId
+  tokDriverId
   distance
   duration
   price
@@ -29,6 +30,10 @@ const Delivery = `
     orderType
     scheduledFrom
     scheduledTo
+    addressBreakdown {
+      city
+      province
+    }
   }
   recipientStop {
     name
@@ -40,6 +45,10 @@ const Delivery = `
     orderType
     scheduledFrom
     scheduledTo
+    addressBreakdown {
+      city
+      province
+    }
   }
   logs {
     status
