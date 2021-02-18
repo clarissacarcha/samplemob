@@ -301,10 +301,10 @@ const SelectedDriverDelivery = ({navigation, route, session}) => {
         <OrderDetailsCard delivery={getDelivery} />
 
         {/*-------------------- SENDER DETAILS --------------------*/}
-        <DeliveryStopCard stop={getDelivery.senderStop} index={0} status={getDelivery.status} />
+        <DeliveryStopCard stop={getDelivery.senderStop} index={0} status={getDelivery.status} delivery={delivery} />
 
         {/*-------------------- RECIPIENT DETAILS --------------------*/}
-        <DeliveryStopCard stop={getDelivery.recipientStop} index={1} status={getDelivery.status} />
+        <DeliveryStopCard stop={getDelivery.recipientStop} index={1} status={getDelivery.status} delivery={delivery} />
 
         {/*-------------------- DELIVERY LOGS --------------------*/}
         {getDelivery.status !== 1 && <DeliveryLogsCard logs={getDelivery.logs} />}
