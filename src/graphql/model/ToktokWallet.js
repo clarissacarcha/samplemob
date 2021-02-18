@@ -60,3 +60,11 @@ export const INITIALIZE_WALLET_CASHIN_DATA = gql`
   }
 `;
 
+export const UPDATE_FROM_PAYPANDA_RETURN_URL = gql`
+  mutation updateFromPayPandaReturnUrl($input: getPayPandaReturnurl){
+    updateFromPayPandaReturnUrl(input: $input){
+      message
+    }
+  }
+`;
+

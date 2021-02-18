@@ -13,7 +13,7 @@ import {
     KeyboardAvoidingView,
     Platform
 } from 'react-native'
-import {useNavigation} from '@react-navigation/native'
+import {useNavigation,useRoute} from '@react-navigation/native'
 import {useSelector} from 'react-redux'
 import {HeaderBack, HeaderTitle} from '../../../../../../components'
 import {MEDIUM,DARK,COLOR,ORANGE} from '../../../../../../res/constants'
@@ -25,6 +25,7 @@ const {width,height} = Dimensions.get('window')
 
 const PayPandaComponent = ()=> {
     const navigation = useNavigation()
+    const routehook = useRoute()
     const webviewRef = useRef()
     navigation.setOptions({
         headerLeft: () => <HeaderBack />,
@@ -49,6 +50,7 @@ const PayPandaComponent = ()=> {
                 mobile_number: userstate.username,
                 amount_to_pay: amount,
                 currency: "PHP",
+                walletId: routehook.params.walletId
             })
         }
     })
@@ -58,16 +60,12 @@ const PayPandaComponent = ()=> {
             variables: {
                 input: {
                     amount: +amount,
-                    walletId: userstate.wallet.id
+                    walletId: routehook.params.walletId
                 }
             }
         })
     }
 
-    const keyboardAvoidingBehavior = Platform.select({
-        ios: "padding",
-        android: "height"
-    })
 
     return (
         <>

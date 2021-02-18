@@ -3,7 +3,8 @@ import {StyleSheet,View,Modal,Button, Text , ActivityIndicator , Dimensions , To
 import {useNavigation,useRoute} from '@react-navigation/native'
 import {MEDIUM,DARK,COLOR,ORANGE} from '../../../../../../res/constants'
 import WebView from 'react-native-webview'
-import { join } from 'lodash'
+import {useMutation} from '@apollo/react-hooks'
+import {UPDATE_FROM_PAYPANDA_RETURN_URL} from '../../../../../../graphql'
 
 
 const {width,height} = Dimensions.get('window')
@@ -19,6 +20,7 @@ const WebViewComponent = ()=> {
     const [cangoBack,setCanGoBack] = useState(false)
     const [cangoForward,setCanGoForward] = useState(false)
     const [mounted, setMounted] = useState(true)
+    const [checkurl,setCheckurl] = useState("")
 
     const initialpaymentData = {
         merchant_id: route.params.merchantId,
@@ -43,6 +45,13 @@ const WebViewComponent = ()=> {
     } 
 
     let generatedInitialPaymentData = generateInitialPostPaymentDataString(initialpaymentData)
+
+    const [updateFromPayPandaReturnUrl, {data,error,loading}] = useMutation(UPDATE_FROM_PAYPANDA_RETURN_URL,{
+        // fetchPolicy: 'network-only',
+        onCompleted: ()=>{
+
+        }
+    })
 
 
     useEffect(()=> {
@@ -118,22 +127,32 @@ const WebViewComponent = ()=> {
                         setCanGoForward(event.canGoForward)
                         let checkreturnurl = event.url.search("http://toktokreturnurl.ph")
                         if(checkreturnurl != - 1){
-                            console.log(event.url)
-                            // get info then update db or direct nav to wallet and pass in arguments
-                            Alert.alert("Successful","", [
-                                // {
-                                //     text: "Cancel",
-                                //     onPress: ()=> null,
-                                //     style: 'cancel'
-                                // },
-                                {
-                                    text: "Ok",
-                                    onPress: ()=> navigation.navigate("TokTokWallet") // navigation.pop() 
-                                }
-                            ],
-                            {
-                                cancelable: false,
-                            })
+                            const {url} = event
+                            let reference_number = /(?:\?refno=).*(?=\&paypanda_refno)/g.exec(url)
+                            let paypanda_refno = /(?:\&paypanda_refno=).*(?=\&status)/.exec(url)
+                            let payment_status = /(?:\&status=).*(?=\&signature)/.exec(url)
+                            let signature = /(?:\&signature=).*/.exec(url)
+                            let paid_amount = route.params.amount_to_pay
+                            let walletId = route.params.walletId
+
+                            if(checkurl != url){       
+                                updateFromPayPandaReturnUrl({
+                                    variables: {
+                                        input: {
+                                            reference_number: reference_number[0].slice(7),
+                                            paypanda_refno: paypanda_refno[0].slice(16),
+                                            payment_status: payment_status[0].slice(8),
+                                            signature: signature[0].slice(11),
+                                            paid_amount: +paid_amount,
+                                            walletId: walletId
+                                        }
+                                    }
+                                })
+
+                                navigation.navigate("TokTokWallet")
+                            }
+
+                            setCheckurl(url)
                          
                         }   
                     }}
