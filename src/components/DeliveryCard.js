@@ -74,13 +74,25 @@ const DeliverySchedule = ({label, stop}) => {
   );
 };
 
+const getDisplayAddress = ({stop}) => {
+  if (stop.addressBreakdown) {
+    const {city, province} = stop.addressBreakdown;
+    if (province) {
+      return `${city}, ${province}`;
+    } else {
+      return city;
+    }
+  } else {
+    return stop.formattedAddress;
+  }
+};
+
 export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
   const {senderStop, recipientStop, createdAt, status} = delivery;
   const legend = ['', 'As Soon As Possible', 'Scheduled'];
   const orderType = senderStop.orderType === 2 || recipientStop.orderType == 2 ? 2 : 1;
 
   const onPressThrottled = throttle(onPress, 1000, {trailing: false});
-
   const getDisplayAmount = () => {
     if (APP_FLAVOR === 'D') {
       if (delivery.discount == 0) {
@@ -315,9 +327,15 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
                   height: 50,
                   justifyContent: 'center',
                 }}>
-                <Text style={{fontFamily: 'Rubik-Medium'}}>{delivery.senderStop.name}</Text>
+                <Text style={{fontFamily: 'Rubik-Medium'}}>
+                  {APP_FLAVOR === 'D' && delivery.status === 1 && delivery.tokDriverId === null
+                    ? getDisplayAddress({stop: delivery.senderStop})
+                    : delivery.senderStop.name}
+                </Text>
                 <Text numberOfLines={1} style={{color: MEDIUM, fontSize: 10}}>
-                  {delivery.senderStop.formattedAddress}
+                  {APP_FLAVOR === 'D' && delivery.status === 1 && delivery.tokDriverId === null
+                    ? delivery.senderStop.name
+                    : delivery.senderStop.formattedAddress}
                 </Text>
               </View>
               <View style={{borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: LIGHT}} />
@@ -326,9 +344,15 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
               <View style={{height: 50, justifyContent: 'center'}}>
                 {delivery.recipientStop.name ? (
                   <>
-                    <Text style={{fontFamily: 'Rubik-Medium'}}>{delivery.recipientStop.name}</Text>
+                    <Text style={{fontFamily: 'Rubik-Medium'}}>
+                      {APP_FLAVOR === 'D' && delivery.status === 1 && delivery.tokDriverId === null
+                        ? getDisplayAddress({stop: delivery.recipientStop})
+                        : delivery.recipientStop.name}
+                    </Text>
                     <Text numberOfLines={1} style={{paddingRight: 10, color: MEDIUM, fontSize: 10}}>
-                      {delivery.recipientStop.formattedAddress}
+                      {APP_FLAVOR === 'D' && delivery.status === 1 && delivery.tokDriverId === null
+                        ? delivery.recipientStop.name
+                        : delivery.recipientStop.formattedAddress}
                     </Text>
                   </>
                 ) : (
