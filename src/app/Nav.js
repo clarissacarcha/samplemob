@@ -43,6 +43,7 @@ import WalletComponent from '../screens/AuthenticatedStack/ConsumerScreens/Walle
 import PaymentOptions from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/CashIn/PaymentOptions';
 import PayPandaComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/CashIn/PayPanda/PayPandaComponent';
 import PayPandaWebViewComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/CashIn/PayPanda/WebViewComponent';
+import HistoryLogsComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Transactions/HistoryLogsComponent';
 
 /*---------- DRIVER SCREENS ----------*/
 import DriverMap from '../screens/AuthenticatedStack/DriverScreens/DriverMap';
@@ -270,6 +271,7 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="TokTokWalletCashIn" component={PaymentOptions}/>
     <Authenticated.Screen name="TokTokWalletCashInPaypanda" component={PayPandaComponent}/>
     <Authenticated.Screen name="TokTokWalletCashINPaypandaWebView" component={PayPandaWebViewComponent}/> 
+    <Authenticated.Screen name="TokTokWalletTransactionLogs" component={HistoryLogsComponent}/>
 
     {/*---------- DRIVER SCREENS ----------*/}
     <Authenticated.Screen name="DriverHomeBottomTab" component={DriverHomeBottomTab} options={{headerShown: false}} />

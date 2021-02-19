@@ -8,6 +8,18 @@ export const GET_TOKTOK_WALLET = gql`
         balance
         status
         pendingEncashment
+        latestTransactions {
+          id
+          incoming
+          outgoing
+          balance
+          type
+          status
+          createdAt
+          delivery {
+            id
+          }
+        }
       }
     }
   }
