@@ -55,7 +55,11 @@ const WalletComponent = ()=> {
       
      
     // useFocusEffect(useCallback(()=>{
+    //     setMounted(true)
     //     getToktokWallet()
+    //     return ()=> {
+    //         setMounted(false)
+    //     }
     //  },[]))
 
     useEffect(()=>{

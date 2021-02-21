@@ -39,10 +39,10 @@ import DeliveryTracking from '../screens/AuthenticatedStack/ConsumerScreens/Deli
 import SearchContact from '../screens/AuthenticatedStack/ConsumerScreens/Booking/SearchContact';
 
 
-import WalletComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/WalletComponent';
-import PaymentOptions from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/CashIn/PaymentOptions';
-import PayPandaComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/CashIn/PayPanda/PayPandaComponent';
-import PayPandaWebViewComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/CashIn/PayPanda/WebViewComponent';
+import WalletComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet2/WalletComponent';
+import PaymentOptions from '../screens/AuthenticatedStack/ConsumerScreens/Wallet2/CashIn/PaymentOptions';
+import PayPandaComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet2/CashIn/PayPanda/PayPandaComponent';
+import PayPandaWebViewComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet2/CashIn/PayPanda/WebViewComponent';
 import HistoryLogsComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Transactions/HistoryLogsComponent';
 
 /*---------- DRIVER SCREENS ----------*/
