@@ -2,7 +2,7 @@ import React from 'react'
 import {View,Text,StyleSheet,TouchableOpacity} from 'react-native'
 
 
-const RecentTransactions = ()=> {
+const RecentTransactions = ({seeAll})=> {
 
 
 
@@ -20,11 +20,11 @@ const RecentTransactions = ()=> {
                             </View>
                             <View style={styles.transactionDetails}>
                                 <Text>Delivery</Text>
-                                <Text style={{color: "gray",fontSize: 10,}}>sf skdlfsdklf sdklfjdklsjflsdjf</Text>
+                                <Text style={{color: "gray",fontSize: 12,marginTop: 5}}>sf skdlfsdklf sdklfjdklsjflsdjf</Text>
                             </View>
                             <View style={styles.transactionAmount}>
                                 <Text>- {'\u20B1'} 60</Text>
-                                <Text style={{color: "gray",fontSize: 10,alignSelf: "flex-start"}}>Feb 18</Text>
+                                <Text style={{color: "gray",fontSize: 12,alignSelf: "flex-end",marginTop: 5}}>Feb 18</Text>
                             </View>
                         </View>
                     )
@@ -38,7 +38,7 @@ const RecentTransactions = ()=> {
         <View style={styles.recentTransactions}>
             <View style={styles.recentTransactionsTitle}>
                 <Text style={{fontSize: 16,color: "#212529",fontWeight: "500"}}>Recent Transactions</Text>
-                <TouchableOpacity style={styles.transactionSeeAllbtn}>
+                <TouchableOpacity onPress={seeAll} style={styles.transactionSeeAllbtn}>
                     <Text style={{fontSize: 14 ,color: "#F6841F"}}>See All</Text>
                 </TouchableOpacity>
             </View>

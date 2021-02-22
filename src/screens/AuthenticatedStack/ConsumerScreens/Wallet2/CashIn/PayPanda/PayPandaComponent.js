@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,Image,Modal,TextInput,Platform,KeyboardAvoidingView,ActivityIndicator} from 'react-native'
+import {View,Text,StyleSheet,TouchableOpacity,Image,Modal,TextInput,Platform,KeyboardAvoidingView,ActivityIndicator,Alert} from 'react-native'
 import {HeaderBack, HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../../../components'
 import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM} from '../../../../../../res/constants'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
@@ -59,6 +59,7 @@ const PayPandaComponent = ({navigation,route})=> {
 
     const ConfirmModal = ()=> (
         <Modal
+            animationType="fade"
             visible={showModal}
             transparent={true}
             onRequestClose={() => {
@@ -90,7 +91,7 @@ const PayPandaComponent = ({navigation,route})=> {
                                 <Text style={{color: "gray",fontSize: 12}}>Cash-in amount</Text>
                             </View>
                             <View style={{flex: 1}}>   
-                                 <Text style={{color: "gray",fontSize: 12,alignSelf: "flex-end"}}>{'\u20B1'} {amount}</Text>
+                                 <Text style={{color: "gray",fontSize: 12,alignSelf: "flex-end"}}>{'\u20B1'} {numberFormat(amount)}</Text>
                             </View>  
                         </View>
                         <View style={{flexDirection: "row",paddingVertical: 12,}}>
@@ -98,7 +99,7 @@ const PayPandaComponent = ({navigation,route})=> {
                                 <Text style={{fontWeight:"bold"}}>Total</Text>
                             </View>
                             <View style={{flex: 1}}>   
-                                <Text style={{fontWeight:"bold",alignSelf: "flex-end"}}>{'\u20B1'} {amount}</Text>
+                                <Text style={{fontWeight:"bold",alignSelf: "flex-end"}}>{'\u20B1'} {numberFormat(amount)}</Text>
                             </View>  
                         </View>
 
@@ -115,7 +116,7 @@ const PayPandaComponent = ({navigation,route})=> {
     )
 
     const confirmAmount = ()=> {
-        setShowModal(true)
+        amount === "" ? Alert.alert("Enter Amount") : setShowModal(true)
     }
 
 
@@ -130,14 +131,16 @@ const PayPandaComponent = ({navigation,route})=> {
             {
                 !loading
                 ? <KeyboardAvoidingView  behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.amountcontent}>
+                        
                         <View style={{flexDirection: "row"}}>
-                                <TextInput 
-                                        value={amount}
-                                        onChangeText={value=>changeAmount(value)}
-                                        keyboardType="numeric"
-                                        style={styles.input}
-                                        placeholder="0.00"
-                                    />
+                            <Text style={{fontSize: 50}}>{'\u20B1'}</Text>
+                            <TextInput 
+                                    value={amount}
+                                    onChangeText={value=>changeAmount(value)}
+                                    keyboardType="numeric"
+                                    style={styles.input}
+                                    placeholder="0.00"
+                                />
                         </View>
                         <Text style={{color:"gray"}}>Current Balance {'\u20B1'} {numberFormat(balance)}</Text>
                  </KeyboardAvoidingView>

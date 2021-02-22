@@ -10,6 +10,7 @@ import {onError} from '../../../../util/ErrorUtility'
 import {useQuery,useLazyQuery,useMutation} from '@apollo/react-hooks'
 import {useSelector,useDispatch} from 'react-redux'
 import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM} from '../../../../res/constants'
+import TransactionsModal from './TransactionsModal'
 
 const WalletComponent = ()=> {
     const navigation = useNavigation()
@@ -19,12 +20,13 @@ const WalletComponent = ()=> {
     })
     const session = useSelector(state=> state.session)
     const [mounted, setMounted] = useState(true)
+    const [modalVisible,setModalVisible] = useState(false)
 
     const rotateY = new Animated.Value(0)
 
     const animation = Animated.timing(rotateY,{
         toValue: 200,
-        duration: 1000,
+        duration: 500,
         useNativeDriver: false
     })
 
@@ -77,6 +79,8 @@ const WalletComponent = ()=> {
     //     }
     // },[])
 
+    const OpenCloseTransactionsModal = ()=> setModalVisible(!modalVisible)
+
     if (loading) {
         return (
           <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -115,8 +119,8 @@ const WalletComponent = ()=> {
                 <TouchableOpacity style={styles.walletSettings} onPress={()=>{
                     // rotateY.setValue(0)
                     animation.start(()=> {
-                        console.log("test")
                         animation.reset()
+                        navigation.navigate("TokTokWalletSettings")
                     })
 
                 }}>
@@ -134,7 +138,8 @@ const WalletComponent = ()=> {
     return (
         <View style={styles.container}>
             <WalletCardInfo />
-            <WalletRecentTransactions />
+            <WalletRecentTransactions seeAll={OpenCloseTransactionsModal}/>
+            <TransactionsModal modalVisible={modalVisible} closeModal={OpenCloseTransactionsModal}/>
         </View>
     )
 }
