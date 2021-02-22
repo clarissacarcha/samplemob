@@ -1,6 +1,6 @@
 export const APP_VERSION = '1.13.1';
-export const APP_FLAVOR = 'D'; // C = Customer | D = Driver
-export const ACCOUNT_TYPE = 2; // 1 = Customer | 2 = Driver
+export const APP_FLAVOR = 'C'; // C = Customer | D = Driver
+export const ACCOUNT_TYPE = 1; // 1 = Customer | 2 = Driver
 
 export const PROTOCOL = 'https';
 export const HOST_PORT = 'graphql.toktok.ph:2096';
