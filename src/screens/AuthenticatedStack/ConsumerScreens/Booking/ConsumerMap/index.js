@@ -3,9 +3,10 @@ import {BookingOverlay, LocationPermission, WelcomeBanner, WelcomeMessage} from 
 import {COLOR, DARK, LIGHT, MAPS_API_KEY, MEDIUM} from '../../../../../res/constants';
 import {POST_DELIVERY} from '../../../../../graphql';
 import {PERMISSIONS, RESULTS, check} from 'react-native-permissions';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState, useCallback} from 'react';
 import {useMutation, useQuery} from '@apollo/react-hooks';
 import moment from 'moment';
+import {throttle} from 'lodash';
 
 import FIcon from 'react-native-vector-icons/Feather';
 import OneSignal from 'react-native-onesignal';
@@ -143,6 +144,19 @@ const getLocationPermissionAfterBooking = async () => {
 
 const ConsumerMap = ({navigation, session, route, constants}) => {
   const {detectedLocation} = route.params;
+
+  const useThrottle = (cb, delay) => {
+    const options = {leading: true, trailing: false}; // add custom lodash options
+    const cbRef = useRef(cb);
+    // use mutable ref to make useCallback/throttle not depend on `cb` dep
+    useEffect(() => {
+      cbRef.current = cb;
+    });
+    return useCallback(
+      throttle((...args) => cbRef.current(...args), delay, options),
+      [delay],
+    );
+  };
 
   const INITIAL_BOOKING_DATA = {
     hash: '',
@@ -292,7 +306,7 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
     }
   }, [route.params]);
 
-  const onSubmit = async () => {
+  const onSubmit = () => {
     try {
       if (
         bookingData.senderStop.latitude === 0 ||
@@ -351,6 +365,8 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
     }
   };
 
+  const onSubmitThrottled = useThrottle(onSubmit, 10000);
+
   const onBookSuccessOk = () => {
     setBookingSuccess(false);
     navigation.navigate('CustomerDeliveries');
@@ -386,7 +402,7 @@ const ConsumerMap = ({navigation, session, route, constants}) => {
 
         <BookingSummaryCard bookingData={bookingData} />
 
-        <BlackButton onPress={onSubmit} label="Book" containerStyle={{margin: 20}} />
+        <BlackButton onPress={onSubmitThrottled} label="Book" containerStyle={{margin: 20}} />
       </View>
       {/*---------------------------------------- DRAWER BUTTON ----------------------------------------*/}
       <TouchableHighlight onPress={() => navigation.openDrawer()} underlayColor={COLOR} style={styles.menuBox}>
