@@ -48,7 +48,7 @@ const PayPandaComponent = ({navigation,route})=> {
             variables: {
                 input: {
                     amount: +amount,
-                    walletId: walletId
+                    userId: userstate.id
                 }
             }
         })
@@ -205,6 +205,7 @@ const styles = StyleSheet.create({
         height: 60,
         width: "100%",
         paddingVertical: 10,
+        marginBottom: 20,
     },
     input: {
         marginHorizontal: 20,

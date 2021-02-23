@@ -1,5 +1,5 @@
 import React , {useState} from 'react'
-import {View,Text,StyleSheet,TouchableOpacity} from 'react-native'
+import {View,Text,StyleSheet,TouchableOpacity,Image} from 'react-native'
 import {HeaderBack, HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../components'
 import moment from 'moment'
 
@@ -28,7 +28,7 @@ const CashInLogs = ({navigation})=> {
                     return (
                         <View style={styles.transaction}>
                             <View style={styles.transactionIcon}>
-        
+                              <Image source={require('../../../../assets/icons/walletCashinLog.png')} style={{height: 30, width: 30}} resizeMode="contain"/>
                             </View>
                             <View style={styles.transactionDetails}>
                                 <Text>Delivery</Text>
@@ -106,6 +106,9 @@ const styles = StyleSheet.create({
     },
     transactionIcon: {
         flexBasis: 50,
+        justifyContent: "center",
+        alignItems: "flex-start",
+        paddingLeft: 5,
     },
     transactionDetails: {
         flex: 1,

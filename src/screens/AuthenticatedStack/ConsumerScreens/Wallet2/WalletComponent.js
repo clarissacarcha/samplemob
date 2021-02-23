@@ -1,5 +1,5 @@
 import React, {useRef,useState,useEffect,useCallback} from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,TouchableHighlight,Animated,ActivityIndicator} from 'react-native'
+import {View,Text,StyleSheet,TouchableOpacity,TouchableHighlight,Animated,ActivityIndicator,ImageBackground} from 'react-native'
 import {HeaderBack, HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../components'
 import {useNavigation,useFocusEffect} from '@react-navigation/native'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
@@ -111,27 +111,31 @@ const WalletComponent = ()=> {
 
     const WalletCardInfo = ()=> (
         <View style={[styles.walletCard]}>
-            <View style={styles.walletInfo}>
-                <View>
-                    <Text style={{fontSize: 24,fontWeight: "500",color: "white"}}>{'\u20B1'} {numberFormat(data.getToktokWallet.record.balance)}</Text>
-                    <Text style={{fontSize: 14,color: "white"}}>Available Balance</Text>
-                </View>
-                <TouchableOpacity style={styles.walletSettings} onPress={()=>{
-                    // rotateY.setValue(0)
-                    animation.start(()=> {
-                        animation.reset()
-                        navigation.navigate("TokTokWalletSettings")
-                    })
+            <ImageBackground  imageStyle={{ borderRadius: 10}} style={styles.walletbackgroundimage} source={require('../../../../assets/images/walletcard.png')}>
+            <View style={{padding: 30}}>
+                <View style={styles.walletInfo}>
+                    <View>
+                        <Text style={{fontSize: 24,fontWeight: "500",color: "white"}}>{'\u20B1'} {numberFormat(data.getToktokWallet.record.balance)}</Text>
+                        <Text style={{fontSize: 14,color: "white"}}>Available Balance</Text>
+                    </View>
+                    <TouchableOpacity style={styles.walletSettings} onPress={()=>{
+                        // rotateY.setValue(0)
+                        animation.start(()=> {
+                            animation.reset()
+                            navigation.navigate("TokTokWalletSettings")
+                        })
 
-                }}>
-                    <Animated.View style={[{transform: [{rotate: rotateanimation}]}]}>
-                        <FIcon5 name={'cog'} size={30} color="white"/>
-                    </Animated.View>
+                    }}>
+                        <Animated.View style={[{transform: [{rotate: rotateanimation}]}]}>
+                            <FIcon5 name={'cog'} size={30} color="white"/>
+                        </Animated.View>
+                    </TouchableOpacity>
+                </View>
+                <TouchableOpacity style={styles.topUp} onPress={()=>navigation.navigate("TokTokWalletCashIn",{walletId: data.getToktokWallet.record.id,balance: data.getToktokWallet.record.balance})}>
+                        <Text style={{fontSize: 12,color: "white"}}>+ Top up</Text>
                 </TouchableOpacity>
-            </View>
-            <TouchableOpacity style={styles.topUp} onPress={()=>navigation.navigate("TokTokWalletCashIn",{walletId: data.getToktokWallet.record.id,balance: data.getToktokWallet.record.balance})}>
-                    <Text style={{fontSize: 12,color: "white"}}>+ Top up</Text>
-            </TouchableOpacity>
+             </View>
+            </ImageBackground>
         </View>
     )
 
@@ -155,8 +159,12 @@ const styles = StyleSheet.create({
         width: "100%",
         backgroundColor: "#FCB91A",
         borderRadius: 10,
-        padding: 30,
+        // padding: 30,
    
+    },
+    walletbackgroundimage: {
+        flex: 1,
+        resizeMode: "cover",
     },
     walletInfo: {
         justifyContent: "flex-start",

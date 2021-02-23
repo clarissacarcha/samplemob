@@ -1,5 +1,5 @@
 import React from 'react'
-import {View,Text,StyleSheet,TouchableOpacity} from 'react-native'
+import {View,Text,StyleSheet,TouchableOpacity,Image} from 'react-native'
 import {HeaderBack, HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../components'
 
 const Settings = ({navigation})=> {
@@ -11,7 +11,7 @@ const Settings = ({navigation})=> {
         <View style={styles.container}>
                  <TouchableOpacity style={styles.settingoption} onPress={()=>navigation.navigate("TokTokWalletCashInLogs")}>
                     <View style={styles.logo}>
-                        
+                         <Image source={require('../../../../assets/icons/walletCashinLog.png')} style={{height: 30, width: 30}} resizeMode="contain"/>
                     </View>
                     <View style={styles.name}>
                         <Text style={{fontSize:16}}>Cash in Logs</Text>
