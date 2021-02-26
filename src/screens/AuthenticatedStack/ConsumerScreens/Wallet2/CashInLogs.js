@@ -1,5 +1,5 @@
 import React , {useState} from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,Image} from 'react-native'
+import {View,Text,StyleSheet,TouchableOpacity,Image,RefreshControl} from 'react-native'
 import {HeaderBack, HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../components'
 import moment from 'moment'
 
@@ -9,6 +9,7 @@ const CashInLogs = ({navigation})=> {
         headerLeft: ()=> <HeaderBack/>,
         headerTitle: ()=> <HeaderTitle label={['Cash In Logs','']}/>,
     })
+
 
     const minDate = new Date('1900-01-01');
     const todayDate = new Date();

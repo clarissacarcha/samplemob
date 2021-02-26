@@ -1,5 +1,5 @@
 import React , {useState} from 'react'
-import {View,Text,Modal,StyleSheet,TouchableOpacity,Dimensions} from 'react-native'
+import {View,Text,Modal,StyleSheet,TouchableOpacity,Dimensions,ScrollView} from 'react-native'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import DatePicker from 'react-native-date-picker'
 import moment from 'moment'
@@ -140,9 +140,13 @@ const TransactionsModal = ({modalVisible,closeModal})=> {
                     </View>
 
                     <View style={{marginTop: 10}}>
-                        <TransactionLog transactionDate="Today" transactionItems={[1,2]}></TransactionLog>
-                        <TransactionLog transactionDate="Yesterday" transactionItems={[1]}></TransactionLog>
-                        <TransactionLog transactionDate="17 Feb 2021" transactionItems={[1,2,3]}></TransactionLog>
+                        <ScrollView showsVerticalScrollIndicator={false}>
+                            <TransactionLog transactionDate="Today" transactionItems={[1,2]}></TransactionLog>
+                            <TransactionLog transactionDate="Yesterday" transactionItems={[1]}></TransactionLog>
+                            <TransactionLog transactionDate="17 Feb 2021" transactionItems={[1,2,3]}></TransactionLog>
+                            <TransactionLog transactionDate="17 Feb 2021" transactionItems={[1,2,3]}></TransactionLog>
+                            <TransactionLog transactionDate="17 Feb 2021" transactionItems={[1,2,3]}></TransactionLog>
+                        </ScrollView>
                     </View>
 
                 </View>

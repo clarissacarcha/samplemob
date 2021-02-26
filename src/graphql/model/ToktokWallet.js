@@ -68,3 +68,19 @@ export const UPDATE_FROM_PAYPANDA_RETURN_URL = gql`
   }
 `;
 
+export const GET_TOKTOK_WALLET_RECENT_TRANSACTIONS = gql`
+  query getToktokWalletRecentTransactions($input: GetToktokWalletRecentTransactionsInput){
+    getToktokWalletRecentTransactions(input: $input){
+      title
+      logs {
+        id
+        incoming
+        outgoing
+        balance
+        type
+        status
+        createdAt
+      }
+    }
+  }
+`;

@@ -7,20 +7,26 @@ const Settings = ({navigation})=> {
         headerLeft: ()=> <HeaderBack/>,
         headerTitle: ()=> <HeaderTitle label={['Settings','']}/>,
     })
-    return (    
-        <View style={styles.container}>
-                 <TouchableOpacity style={styles.settingoption} onPress={()=>navigation.navigate("TokTokWalletCashInLogs")}>
+
+    const SettingOption = ({route,icon,title,subtitle})=> (
+        <TouchableOpacity style={styles.settingoption} onPress={()=>navigation.navigate(route)}>
                     <View style={styles.logo}>
-                         <Image source={require('../../../../assets/icons/walletCashinLog.png')} style={{height: 30, width: 30}} resizeMode="contain"/>
+                         <Image source={icon} style={{height: 30, width: 30}} resizeMode="contain"/>
                     </View>
                     <View style={styles.name}>
-                        <Text style={{fontSize:16}}>Cash in Logs</Text>
-                        <Text style={{fontSize: 12, color: "gray"}}>View your cash in logs</Text>
+                        <Text style={{fontSize:16}}>{title}</Text>
+                        <Text style={{fontSize: 12, color: "gray"}}>{subtitle}</Text>
                     </View>
                     <View style={styles.arrowright}>
                            <Text style={{fontSize: 16,color: "gray"}}>{'>'}</Text>
                     </View>
-                </TouchableOpacity>
+        </TouchableOpacity>
+    )
+
+    return (    
+        <View style={styles.container}>
+            <SettingOption route="TokTokWalletCashInLogs" icon={require('../../../../assets/icons/walletCashinLog.png')} title="Cash in logs" subtitle="View your cash in logs"/>
+            <SettingOption route="TokTokWalletVerifyUser" icon={require('../../../../assets/icons/walletVerify.png')} title="Verify User" subtitle="Verify your toktok wallet"/>
         </View>
     )
 }

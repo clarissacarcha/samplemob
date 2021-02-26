@@ -1,15 +1,60 @@
 import React from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,Image} from 'react-native'
+import {View,Text,StyleSheet,TouchableOpacity,Image,ActivityIndicator} from 'react-native'
+import {SomethingWentWrong} from '../../../../components'
+import {GET_TOKTOK_WALLET_RECENT_TRANSACTIONS} from '../../../../graphql'
+import {useQuery} from '@apollo/react-hooks'
+import { COLOR } from '../../../../res/constants'
+import { numberFormat } from '../../../../helper'
+import moment from 'moment'
+
+const RecentTransactions = ({seeAll,walletId})=> {
 
 
-const RecentTransactions = ({seeAll})=> {
+    const {data, error ,loading } = useQuery(GET_TOKTOK_WALLET_RECENT_TRANSACTIONS, {
+        fetchPolicy: 'network-only',
+        // fetchPolicy: 'cache-and-network',
+        variables: {
+            input: {
+                toktokWalletId: walletId
+            }
+        },
+        onCompleted: ({getToktokWalletRecentTransactions})=>{
 
+        },
+        onError: (err)=>{
+            console.log(err)
+        }
+    })
 
+    if (loading) {
+        return (
+          <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <ActivityIndicator size={24} color={COLOR} />
+          </View>
+        );
+    }
+
+    if (error) {
+        return <SomethingWentWrong />;
+    }
 
     const TransactionLog = ({transactionDate , transactionItems })=> {
+
+      const dateValue = moment(transactionDate).tz("Asia/Manila").format("YYYY-MM-DD");
+      const phTodayDate = moment().tz("Asia/Manila").format("YYYY-MM-DD");
+      const phYesterdayDate = moment().subtract(1,"days").tz("Asia/Manila").format("YYYY-MM-DD");
+      let datedisplay = ''
+      if(dateValue == phTodayDate){
+        datedisplay = "Today"
+      }else if(dateValue == phYesterdayDate){
+          datedisplay = "Yesterday"
+      }else{
+          datedisplay = moment(transactionDate).tz("Asia/Manila").format('DD MMM YYYY');
+      }
+
         return (
             <View style={styles.transactionLogsContainer}>
-                <Text>{transactionDate}</Text>
+                <Text>{datedisplay}</Text>
                {
                    transactionItems.map((item)=>{
 
@@ -19,12 +64,12 @@ const RecentTransactions = ({seeAll})=> {
                                 <Image source={require('../../../../assets/icons/walletDelivery.png')} style={{height: 30, width: 30}} resizeMode="contain"/>
                             </View>
                             <View style={styles.transactionDetails}>
-                                <Text>Delivery</Text>
-                                <Text style={{color: "gray",fontSize: 12,marginTop: 5}}>sf skdlfsdklf sdklfjdklsjflsdjf</Text>
+                                <Text>{item.type}</Text>
+                                <Text style={{color: "gray",fontSize: 12,marginTop: 5}}>Cash in from Paypanda</Text>
                             </View>
                             <View style={styles.transactionAmount}>
-                                <Text>- {'\u20B1'} 60</Text>
-                                <Text style={{color: "gray",fontSize: 12,alignSelf: "flex-end",marginTop: 5}}>Feb 18</Text>
+                                <Text>+ {'\u20B1'} {numberFormat(item.incoming)}</Text>
+                                <Text style={{color: "gray",fontSize: 12,alignSelf: "flex-end",marginTop: 5}}>{moment(transactionDate).tz('Asia/Manila').format('MMM DD')}</Text>
                             </View>
                         </View>
                     )
@@ -43,8 +88,13 @@ const RecentTransactions = ({seeAll})=> {
                 </TouchableOpacity>
             </View>
             <View style={styles.recentLogs}>
-                    <TransactionLog transactionDate="Today" transactionItems={[1,2]}></TransactionLog>
-                    <TransactionLog transactionDate="Yesterday" transactionItems={[1]}></TransactionLog>
+
+                {
+                    data.getToktokWalletRecentTransactions.map((item)=> (
+                        <TransactionLog transactionDate={item.title} transactionItems={item.logs}></TransactionLog>
+                    ))
+                }
+                   
             </View>
         </View>
     )

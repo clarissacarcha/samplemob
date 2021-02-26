@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,Image,Modal,TextInput,Platform,KeyboardAvoidingView,ActivityIndicator,Alert} from 'react-native'
+import {View,Text,StyleSheet,TouchableOpacity,Image,Modal,TextInput,Platform,KeyboardAvoidingView,ActivityIndicator,Alert,Dimensions} from 'react-native'
 import {HeaderBack, HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../../../components'
 import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM} from '../../../../../../res/constants'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
@@ -9,11 +9,14 @@ import {INITIALIZE_WALLET_CASHIN_DATA} from '../../../../../../graphql/model'
 import {onError} from '../../../../../../util/ErrorUtility';
 import {numberFormat} from '../../../../../../helper'
 
+const {height,width} = Dimensions.get("window")
+
 const PayPandaComponent = ({navigation,route})=> {
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack/>,
         headerTitle: ()=> <HeaderTitle label={['Enter Amount','']}/>,
     })
+
 
     const walletId = route.params.walletId
     const balance = route.params.balance
@@ -140,6 +143,7 @@ const PayPandaComponent = ({navigation,route})=> {
                                     keyboardType="numeric"
                                     style={styles.input}
                                     placeholder="0.00"
+                                    onSubmitEditing={confirmAmount}
                                 />
                         </View>
                         <Text style={{color:"gray"}}>Current Balance {'\u20B1'} {numberFormat(balance)}</Text>
@@ -147,6 +151,7 @@ const PayPandaComponent = ({navigation,route})=> {
                 : <View style={{flex: 1,justifyContent: "center",alignItems: "center"}}><ActivityIndicator size={50}/></View>
                 
             }
+
             <View style={styles.cashinbutton}>
                     <TouchableOpacity onPress={confirmAmount} style={{height: "100%",width: "100%",backgroundColor: DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
                         <Text style={{color: COLOR}}>Cash In</Text>

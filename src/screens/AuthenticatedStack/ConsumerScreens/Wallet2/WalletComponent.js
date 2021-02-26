@@ -1,16 +1,17 @@
 import React, {useRef,useState,useEffect,useCallback} from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,TouchableHighlight,Animated,ActivityIndicator,ImageBackground} from 'react-native'
-import {HeaderBack, HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../components'
+import {View,Text,StyleSheet,TouchableOpacity,TouchableHighlight,Animated,ActivityIndicator,ImageBackground,ScrollView,Image} from 'react-native'
+import {HeaderBack, HeaderTitle, SomethingWentWrong} from '../../../../components'
 import {useNavigation,useFocusEffect} from '@react-navigation/native'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import WalletRecentTransactions from './RecentTransactions'
 import {GET_TOKTOK_WALLET, POST_TOKTOK_WALLET} from '../../../../graphql'
 import {numberFormat} from '../../../../helper'
-import {onError} from '../../../../util/ErrorUtility'
 import {useQuery,useLazyQuery,useMutation} from '@apollo/react-hooks'
 import {useSelector,useDispatch} from 'react-redux'
 import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM} from '../../../../res/constants'
 import TransactionsModal from './TransactionsModal'
+import CreateWallet from './VerifyUser/CreateWallet'
+import { RefreshControl } from 'react-native';
 
 const WalletComponent = ()=> {
     const navigation = useNavigation()
@@ -21,6 +22,7 @@ const WalletComponent = ()=> {
     const session = useSelector(state=> state.session)
     const [mounted, setMounted] = useState(true)
     const [modalVisible,setModalVisible] = useState(false)
+    const [refreshing,setRefreshing] = useState(false)
 
     const rotateY = new Animated.Value(0)
 
@@ -49,35 +51,31 @@ const WalletComponent = ()=> {
     });
 
 
-    const [postToktokWallet, {loading: postLoading}] = useMutation(POST_TOKTOK_WALLET, {
-        fetchPolicy: 'no-cache',
-        onError: onError,
-        variables: {
-          input: {
-            userId: session.user.id,
-          },
-        },
-        onCompleted: (result) => {
-          getToktokWallet();
-        },
-      });
-
-     useFocusEffect(useCallback(()=>{
-            //setMounted(true)
+    const onRefresh = useCallback(()=>{
+        setRefreshing(true)
+        setTimeout(() => {
             getToktokWallet()
-            return ()=> {
-             //   setMounted(false)
-            }
-     },[]))
+            setRefreshing(false)
+        }, 200);
+
+    },[])
+
+    //  useFocusEffect(useCallback(()=>{
+    //         //setMounted(true)
+    //         getToktokWallet()
+    //         return ()=> {
+    //          //   setMounted(false)
+    //         }
+    //  },[]))
 
 
-    // useEffect(()=>{
-    //     setMounted(true)
-    //     getToktokWallet()
-    //     return ()=> {
-    //         setMounted(false)
-    //     }
-    // },[])
+    useEffect(()=>{
+        setMounted(true)
+        getToktokWallet()
+        return ()=> {
+            setMounted(false)
+        }
+    },[])
 
     const OpenCloseTransactionsModal = ()=> setModalVisible(!modalVisible)
 
@@ -94,20 +92,8 @@ const WalletComponent = ()=> {
     }
 
     if (!data.getToktokWallet.record) {
-        return (
-          <>
-            <AlertOverlay visible={postLoading} />
-            <View style={{height: 20}} />
-            <TouchableHighlight onPress={onPost} underlayColor={COLOR} style={[styles.submitBox, {margin: 20}]}>
-              <View style={styles.submit}>
-                <Text style={{color: COLOR, fontSize: 20}}>Create My Toktok Wallet</Text>
-              </View>
-            </TouchableHighlight>
-          </>
-        );
+        return <CreateWallet getWallet={getToktokWallet} session={session}/>
       }
-
-
 
     const WalletCardInfo = ()=> (
         <View style={[styles.walletCard]}>
@@ -139,11 +125,56 @@ const WalletComponent = ()=> {
         </View>
     )
 
+    const WalletMethods = ()=> (
+        <View style={styles.walletMethodsContainer}>
+            <View style={[styles.walletMethod]}>
+                <TouchableOpacity style={styles.methodItem}>
+                    <Image style={{height: 30,width: 30}} source={require('../../../../assets/icons/walletSend.png')} resizeMode="contain" />
+                </TouchableOpacity>
+
+                <Text style={{alignSelf: "center",marginTop: 10,color: "gray"}}>Send</Text>
+            </View>
+            <View style={[styles.walletMethod]}>
+                <TouchableOpacity style={styles.methodItem}>
+                    <Image style={{height: 30,width: 30}} source={require('../../../../assets/icons/walletRequest.png')} resizeMode="contain" />
+                </TouchableOpacity>
+
+                <Text style={{alignSelf: "center",marginTop: 10,color: "gray"}}>Request</Text>
+            </View>
+            <View style={[styles.walletMethod]}>
+                <TouchableOpacity style={styles.methodItem}>
+                    <Image style={{height: 30,width: 30}} source={require('../../../../assets/icons/walletScan.png')} resizeMode="contain" />
+                </TouchableOpacity>
+
+                <Text style={{alignSelf: "center",marginTop: 10,color: "gray"}}>Scan</Text>
+            </View>
+            <View style={[styles.walletMethod]}>
+                <TouchableOpacity style={styles.methodItem}>
+                    <Image style={{height: 30,width: 30}} source={require('../../../../assets/icons/walletTransfer.png')} resizeMode="contain" />
+                </TouchableOpacity>
+
+                <Text style={{alignSelf: "center",marginTop: 10,color: "gray"}}>Transfer</Text>
+            </View>
+        </View>
+    )
+
     return (
         <View style={styles.container}>
-            <WalletCardInfo />
-            <WalletRecentTransactions seeAll={OpenCloseTransactionsModal}/>
-            <TransactionsModal modalVisible={modalVisible} closeModal={OpenCloseTransactionsModal}/>
+            <ScrollView
+                scrollEnabled={true}
+                showsVerticalScrollIndicator={false}
+                refreshControl={
+                    <RefreshControl 
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                    />
+                }
+            >
+                <WalletCardInfo />
+                <WalletMethods />
+                <WalletRecentTransactions seeAll={OpenCloseTransactionsModal} walletId={data.getToktokWallet.record.id}/>
+                <TransactionsModal modalVisible={modalVisible} closeModal={OpenCloseTransactionsModal}/>
+            </ScrollView>
         </View>
     )
 }
@@ -185,6 +216,24 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center"
     },
+    walletMethodsContainer: {
+        flex: 1,
+        flexDirection: "row",
+        height: 120,
+        marginTop: 10
+    },
+    walletMethod: {
+        flex: 1,
+        padding:10,
+    },
+    methodItem: {
+        flex: 1,
+        borderColor: "silver",
+        borderWidth:0.5,
+        borderRadius: 10,
+        justifyContent: "center",
+        alignItems: "center"
+    }
 })
 
 export default WalletComponent
