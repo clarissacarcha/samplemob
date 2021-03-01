@@ -39,13 +39,7 @@ const TransactionsModal = ({modalVisible,closeModal})=> {
            onRequestClose={()=>setShowFilterDate(false)}
           >
 
-              <View style={{flex: 1 ,justifyContent: "center",alignItems: "center"}}>
-                  <Text>I AM MODAL</Text>
-                  <TouchableOpacity onPress={()=>setShowFilterDate(false)}>
-                      <Text>close</Text>
-                  </TouchableOpacity>
-
-                
+              <View style={{flex: 1 ,justifyContent: "center",alignItems: "center"}}> 
                   <View style={{width: width * 0.8 , height: height * 0.8 , backgroundColor: "white",padding: 10,borderRadius: 20,  shadowColor: '#000',
                                 justifyContent: "center",
                                 alignItems: "center",
@@ -59,7 +53,7 @@ const TransactionsModal = ({modalVisible,closeModal})=> {
                     >
                         <Text style={{fontWeight: "400",fontSize: 20}}>From</Text>
                         <DatePicker date={new Date(filterDate.from)} mode="date" maximumDate={todayDate} minimumDate={minDate} />
-                        <Text style={{fontWeight: "400",fontSize: 20}}>To</Text>
+                        <Text style={{fontWeight: "400",fontSize: 20,marginTop: 20}}>To</Text>
                         <DatePicker date={filterDate.to} onDateChange={(date)=>console.log(date)} mode="date" maximumDate={todayDate} minimumDate={minDate} />
 
                         <TouchableOpacity onPress={()=>setShowFilterDate(false)} style={{marginTop: 10, padding: 20,backgroundColor: DARK, width: "90%",borderRadius: 10, alignItems: "center"}}>

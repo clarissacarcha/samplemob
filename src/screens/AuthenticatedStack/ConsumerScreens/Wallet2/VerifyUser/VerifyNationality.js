@@ -17,8 +17,8 @@ const VerifyNationality = ({nationality , setNationality , setCurrentIndex , cha
 
     const renderCountry = ({item,index})=> {
         return (
-            <TouchableOpacity onPress={()=>selectCountry(index)} style={[styles.country,{borderBottomWidth:  index == countryIndex ? 1 : .5,borderTopWidth:  index == countryIndex ? 1 : .5, borderColor: index == countryIndex ? "orange" : "silver"}]}>
-                    <Text>{item.name}</Text>
+            <TouchableOpacity onPress={()=>selectCountry(index)} style={[styles.country,{backgroundColor: index == countryIndex ? "#FCB91A" : "transparent"}]}>
+                    <Text style={{color:  index == countryIndex ? "white" : "black"}}>{item.name}</Text>
             </TouchableOpacity>
         )
     }
@@ -98,7 +98,8 @@ const styles = StyleSheet.create({
     country: {
         paddingVertical: 20,
         borderBottomWidth: .5,
-        borderColor: "silver"
+        borderColor: "silver",
+        paddingHorizontal:10,
     },
     button: {
         borderRadius: 10,

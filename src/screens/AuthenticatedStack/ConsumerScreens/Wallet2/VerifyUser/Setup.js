@@ -1,5 +1,5 @@
-import React, {useState,useMemo} from 'react'
-import {StyleSheet,View,Text,TextInput,Image,TouchableOpacity,Alert,ActivityIndicator,FlatList,Animated} from 'react-native'
+import React, {useState,useMemo, useEffect} from 'react'
+import {StyleSheet,View,Text,TextInput,Image,TouchableOpacity,Alert,ActivityIndicator,FlatList,Animated,Dimensions} from 'react-native'
 import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM,ORANGE} from '../../../../../res/constants'
 import {onError} from '../../../../../util/ErrorUtility'
 import {HeaderBack, HeaderTitle} from '../../../../../components'
@@ -9,6 +9,8 @@ import VerifyBirth from './VerifyBirth'
 import VerifyAddress from './VerifyAddress'
 import VerifyID from './VerifyID'
 import VerifySelfie from './VerifySelfie'
+
+const {height,width} = Dimensions.get("window")
 
 const SetupVerify = ({navigation})=> {
     navigation.setOptions({
@@ -31,6 +33,8 @@ const SetupVerify = ({navigation})=> {
         region: "",
         zipCode: ""
     })
+    const [idImage,setIDImage] = useState(null)
+    const [selfieImage,setSelfieImage] = useState(null)
     const [screenSlides,setScreenSlides] = useState(["Fullname","Nationality","Birthday","Address","IDPic","SelfiePic"])
 
     const changeBirthInfo = (key,value)=> {
@@ -47,8 +51,6 @@ const SetupVerify = ({navigation})=> {
         }))
     }
 
-
-
     const DisplayComponents = ()=> {
         switch(currentIndex){
             case 0:
@@ -60,9 +62,9 @@ const SetupVerify = ({navigation})=> {
             case 3:
                 return <VerifyAddress setCurrentIndex={setCurrentIndex} address={address} changeAddress={changeAddress}/>
             case 4:
-                return <VerifyID setCurrentIndex={setCurrentIndex}/>
+                return <VerifyID image={idImage} setImage={setIDImage} setCurrentIndex={setCurrentIndex}/>
             default:
-                return <VerifySelfie setCurrentIndex={setCurrentIndex}/>
+                return <VerifySelfie image={selfieImage} setImage={setSelfieImage} setCurrentIndex={setCurrentIndex}/>
         }
     }
 
@@ -75,7 +77,9 @@ const SetupVerify = ({navigation})=> {
                     })
                 }
             </View>
-           {DisplayComponents()}
+      
+             {DisplayComponents()}
+
         </View>
     )
 }

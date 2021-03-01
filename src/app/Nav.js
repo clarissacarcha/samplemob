@@ -48,6 +48,11 @@ import WalletSettingsComponent from '../screens/AuthenticatedStack/ConsumerScree
 import CashInLogsComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet2/CashInLogs';
 import WalletVerifyUserComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet2/VerifyUser/VerifyUser'
 import WalletVerifyUserSetupComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet2/VerifyUser/Setup'
+import WalletActionsRequestComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet2/Actions/Request/RequestWalletComponent'
+import WalletActionsSendComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet2/Actions/Send/SendWalletComponent'
+import WalletActionsScantoPayComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet2/Actions/ScantoPay/ScantoPayWalletComponent'
+import WalletActionsTranferComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet2/Actions/Transfer/TransferWalletComponent'
+
 
 /*---------- DRIVER SCREENS ----------*/
 import DriverMap from '../screens/AuthenticatedStack/DriverScreens/DriverMap';
@@ -280,6 +285,10 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="TokTokWalletCashInLogs" component={CashInLogsComponent}/>
     <Authenticated.Screen name="TokTokWalletVerifyUser" component={WalletVerifyUserComponent}/>
     <Authenticated.Screen name="TokTokWalletVerifyUserSetup" component={WalletVerifyUserSetupComponent}/>
+    <Authenticated.Screen name="TokTokWalletActionsRequest" component={WalletActionsRequestComponent} />
+    <Authenticated.Screen name="TokTokWalletActionsSend" component={WalletActionsSendComponent} />
+    <Authenticated.Screen name="TokTokWalletActionsScantoPay" component={WalletActionsScantoPayComponent}/>
+    <Authenticated.Screen name="TokTokWalletActionsTransfer" component={WalletActionsTranferComponent}/>
 
     {/*---------- DRIVER SCREENS ----------*/}
     <Authenticated.Screen name="DriverHomeBottomTab" component={DriverHomeBottomTab} options={{headerShown: false}} />

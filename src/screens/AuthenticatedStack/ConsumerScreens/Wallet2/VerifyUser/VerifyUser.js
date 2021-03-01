@@ -1,5 +1,5 @@
-import React , {memo} from 'react'
-import {StyleSheet,View,Text,Image,TouchableOpacity,ActivityIndicator} from 'react-native'
+import React, { useRef , useEffect} from 'react'
+import {StyleSheet,View,Text,Image,TouchableOpacity,ActivityIndicator,Animated} from 'react-native'
 import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM,ORANGE} from '../../../../../res/constants'
 import {onError} from '../../../../../util/ErrorUtility'
 import {HeaderBack, HeaderTitle} from '../../../../../components'
@@ -9,8 +9,9 @@ const VerifyUser = ({navigation})=> {
         headerLeft: ()=> <HeaderBack/>,
         headerTitle: ()=> <HeaderTitle label={['',]}/>,
     })
+
     return (
-        <View style={styles.container}>
+        <View style={[styles.container]}>
                 <View style={styles.content}>
                     <Image style={{height: 80,width: 80, alignSelf: "center",marginVertical: 30}} source={require('../../../../../assets/icons/ToktokLogo.png')} resizeMode="contain" />
                     <View style={{marginTop: 50}}>
@@ -43,4 +44,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default memo(VerifyUser)
+export default VerifyUser

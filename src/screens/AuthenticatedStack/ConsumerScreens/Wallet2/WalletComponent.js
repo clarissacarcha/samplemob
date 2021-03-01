@@ -128,28 +128,28 @@ const WalletComponent = ()=> {
     const WalletMethods = ()=> (
         <View style={styles.walletMethodsContainer}>
             <View style={[styles.walletMethod]}>
-                <TouchableOpacity style={styles.methodItem}>
+                <TouchableOpacity onPress={()=>navigation.navigate("TokTokWalletActionsSend")} style={styles.methodItem}>
                     <Image style={{height: 30,width: 30}} source={require('../../../../assets/icons/walletSend.png')} resizeMode="contain" />
                 </TouchableOpacity>
 
                 <Text style={{alignSelf: "center",marginTop: 10,color: "gray"}}>Send</Text>
             </View>
             <View style={[styles.walletMethod]}>
-                <TouchableOpacity style={styles.methodItem}>
+                <TouchableOpacity onPress={()=>navigation.navigate("TokTokWalletActionsRequest")} style={styles.methodItem}>
                     <Image style={{height: 30,width: 30}} source={require('../../../../assets/icons/walletRequest.png')} resizeMode="contain" />
                 </TouchableOpacity>
 
                 <Text style={{alignSelf: "center",marginTop: 10,color: "gray"}}>Request</Text>
             </View>
             <View style={[styles.walletMethod]}>
-                <TouchableOpacity style={styles.methodItem}>
+                <TouchableOpacity onPress={()=>navigation.navigate("TokTokWalletActionsScantoPay",{walletId: data.getToktokWallet.record.id,balance: data.getToktokWallet.record.balance})} style={styles.methodItem}>
                     <Image style={{height: 30,width: 30}} source={require('../../../../assets/icons/walletScan.png')} resizeMode="contain" />
                 </TouchableOpacity>
 
                 <Text style={{alignSelf: "center",marginTop: 10,color: "gray"}}>Scan</Text>
             </View>
             <View style={[styles.walletMethod]}>
-                <TouchableOpacity style={styles.methodItem}>
+                <TouchableOpacity onPress={()=>navigation.navigate("TokTokWalletActionsTransfer")} style={styles.methodItem}>
                     <Image style={{height: 30,width: 30}} source={require('../../../../assets/icons/walletTransfer.png')} resizeMode="contain" />
                 </TouchableOpacity>
 

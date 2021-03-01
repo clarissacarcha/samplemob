@@ -56,7 +56,7 @@ const VerifyAddress = ({address, setCurrentIndex , changeAddress})=> {
                             />
                         </View>
 
-                        <View style={{marginTop: 20,marginBottom: 20}}>
+                        <View style={{marginTop: 20}}>
                             <Text style={{fontSize: 14, fontWeight: '400'}}>Zip Code</Text>
                             <TextInput 
                                 style={styles.input} 
@@ -64,9 +64,12 @@ const VerifyAddress = ({address, setCurrentIndex , changeAddress})=> {
                             />
                         </View>
 
-                  
+                    </ScrollView>
+                        
+                </KeyboardAvoidingView>
 
-                    <View style={styles.proceedBtn}>
+
+                <View style={styles.proceedBtn}>
                                 <TouchableOpacity onPress={()=>{
                                     setCurrentIndex(oldval => oldval - 1)
                                 }} style={{height: "100%",flex: 1,marginRight: 5,backgroundColor: DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
@@ -80,10 +83,6 @@ const VerifyAddress = ({address, setCurrentIndex , changeAddress})=> {
                                     <Text style={{color: COLOR}}>Next</Text>
                                 </TouchableOpacity>
                     </View>
-
-                    </ScrollView>
-                        
-                </KeyboardAvoidingView>
    
 
             
@@ -103,7 +102,8 @@ const styles = StyleSheet.create({
     proceedBtn: {
         height: 40,
         width: "100%",
-        flexDirection: "row"
+        flexDirection: "row",
+        marginTop: 20,
     },
     input: {
         padding: 10,
