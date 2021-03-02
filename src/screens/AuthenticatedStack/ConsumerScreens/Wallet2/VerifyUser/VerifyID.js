@@ -16,6 +16,7 @@ const VerifyID = ({setCurrentIndex, image, setImage})=> {
     const [showCamera,setShowCamera] = useState(false)
     const cameraRef = useRef(null)
     const [cropperParams, setCropperParams] = useState({})
+    const [isBarcodeRead, setIsBarcodeRead] = useState(false)
 
     const takePicture = async () => {
         try {
@@ -35,7 +36,13 @@ const VerifyID = ({setCurrentIndex, image, setImage})=> {
         //   Alert.alert('Something went wrong with taking a picture.');
         }
       };
-    
+
+    // const barcodeRecognized = (e)=> {
+    //     console.log(e)
+    //     setIsBarcodeRead(true)
+    //     setShowCamera(false)
+    //     setIsBarcodeRead(false)
+    // }
 
     const CameraModal = ()=> (
         <Modal
@@ -60,6 +67,7 @@ const VerifyID = ({setCurrentIndex, image, setImage})=> {
                     buttonPositive: 'Ok',
                     buttonNegative: 'Cancel',
                 }}
+              //  onBarCodeRead={!isBarcodeRead ? barcodeRecognized : null}
             />
                  <View
                     style={{

@@ -21,11 +21,53 @@ const ScantoPayWalletComponent = ({navigation,route})=> {
 
     const onSuccess = (e)=> {
         console.log(e)
+        navigation.navigate("TokTokWalletActionsScantoPayConfirmPayment")
     }
 
     const customMarker = ()=> (
         <View style={styles.customMarker}>
             <View style={styles.centerBox}>
+
+                    <View
+                        style={[styles.borderEdges,{
+                            borderTopWidth: 5,
+                            borderLeftWidth: 5,
+                            top: 0,
+                            left: 0,
+                        }]}
+                    />
+
+                    <View
+                        style={[styles.borderEdges,{
+                            borderTopWidth: 5,
+                            borderRightWidth: 5,
+                            top: 0,
+                            right: 0,
+                        }]}
+                    />
+
+
+                    <View
+                        style={[styles.borderEdges,{
+                            borderBottomWidth: 5,
+                            borderLeftWidth: 5,
+                            bottom: 0,
+                            left: 0,
+                        }]}
+                    />
+
+
+                    <View
+                        style={[styles.borderEdges,{
+                            borderBottomWidth: 5,
+                            borderRightWidth: 5,
+                            bottom: 0,
+                            right: 0,
+                        }]}
+                    />
+
+
+
                     <View style={styles.TorchView}>
                             <TouchableHighlight 
                                 onPress={()=>setTorch(!torch)}
@@ -36,7 +78,15 @@ const ScantoPayWalletComponent = ({navigation,route})=> {
 
                             <Text style={{color: "white",fontWeight: "400",fontSize: 18}}>Tap to turn {torch ? 'off' : 'on' }</Text>
                     </View>
+
+                    <View style={{
+                        position: 'absolute',
+                        bottom: -50,
+                    }}>
+                        <Text style={{color: "white",fontWeight: "400",fontSize: 16}}>Position the QR code within the frame.</Text>
+                    </View>
             </View>
+        
         </View>
     )
 
@@ -138,6 +188,12 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         justifyContent: "center",
         alignItems: "center"
+    },
+    borderEdges: {
+        height: 50,
+        width: 50,
+        position: "absolute",
+        borderColor: "#F6841F",
     }
   });
   

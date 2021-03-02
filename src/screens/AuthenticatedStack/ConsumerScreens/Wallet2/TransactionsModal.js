@@ -1,5 +1,5 @@
 import React , {useState} from 'react'
-import {View,Text,Modal,StyleSheet,TouchableOpacity,Dimensions,ScrollView} from 'react-native'
+import {View,Text,Modal,StyleSheet,TouchableOpacity,Dimensions,ScrollView,Image} from 'react-native'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import DatePicker from 'react-native-date-picker'
 import moment from 'moment'
@@ -78,7 +78,7 @@ const TransactionsModal = ({modalVisible,closeModal})=> {
                     return (
                         <View style={styles.transaction}>
                             <View style={styles.transactionIcon}>
-        
+                                <Image source={require('../../../../assets/icons/walletDelivery.png')} style={{height: 30, width: 30}} resizeMode="contain"/>
                             </View>
                             <View style={styles.transactionDetails}>
                                 <Text>Delivery</Text>

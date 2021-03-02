@@ -25,6 +25,10 @@ const Settings = ({navigation})=> {
 
     return (    
         <View style={styles.container}>
+            <SettingOption route="TokTokWalletSettingsCreatePIN" icon={require('../../../../assets/icons/walletPin.png')} title="Create a PIN" subtitle="keep your account secure"/>
+            <SettingOption route="TokTokWalletVerifyUser" icon={require('../../../../assets/icons/walletAutocashin.png')} title="Manage Auto Cash-in" subtitle="Keep your wallet without running out of balance"/>
+            <SettingOption route="TokTokWalletVerifyUser" icon={require('../../../../assets/icons/walletCreditcard.png')} title="Add Credit/Debit Card" subtitle="Cash in from your card"/>
+            <SettingOption route="TokTokWalletVerifyUser" icon={require('../../../../assets/icons/walletBank.png')} title="Link Bank Account" subtitle="Link your bank account for fastest cash-in"/>
             <SettingOption route="TokTokWalletCashInLogs" icon={require('../../../../assets/icons/walletCashinLog.png')} title="Cash in logs" subtitle="View your cash in logs"/>
             <SettingOption route="TokTokWalletVerifyUser" icon={require('../../../../assets/icons/walletVerify.png')} title="Verify User" subtitle="Verify your toktok wallet"/>
         </View>

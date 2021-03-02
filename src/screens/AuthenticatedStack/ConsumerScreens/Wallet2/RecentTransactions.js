@@ -61,7 +61,7 @@ const RecentTransactions = ({seeAll,walletId})=> {
                     return (
                         <View style={styles.transaction}>
                             <View style={styles.transactionIcon}>
-                                <Image source={require('../../../../assets/icons/walletDelivery.png')} style={{height: 30, width: 30}} resizeMode="contain"/>
+                                <Image source={require('../../../../assets/icons/walletCashin.png')} style={{height: 30, width: 30}} resizeMode="contain"/>
                             </View>
                             <View style={styles.transactionDetails}>
                                 <Text>{item.type}</Text>
