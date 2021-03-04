@@ -2,6 +2,7 @@ import React, { useState ,useRef } from 'react'
 import {View,Text,StyleSheet,TouchableHighlight,TouchableOpacity,TextInput,Modal,Image} from 'react-native'
 import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM,ORANGE} from '../../../../../res/constants'
 import {useNavigation} from '@react-navigation/native'
+import {HeaderBack, HeaderTitle} from '../../../../../components'
 
 const SuccessModal = ({modalVisible,closeModal})=> {
     const navigation = useNavigation()
@@ -24,15 +25,15 @@ const SuccessModal = ({modalVisible,closeModal})=> {
                      }}>
                          <Image style={{height: 100,width: 100}} source={require('../../../../../assets/icons/walletVerify.png')}/>
                      </View>
-                     <Text style={{fontSize: 18,fontWeight: "400"}}>Toktok PIN Set Up Successfully</Text>
-                     <Text style={{color: "gray",marginTop:10}}>Your ToktokPay Wallet is now safe!</Text>
+                     <Text style={{fontSize: 20,fontWeight: "400"}}>Toktok PIN Set Up Successfully</Text>
+                     <Text style={{color: "#212529",marginTop:5}}>Your ToktokPay Wallet is now safe!</Text>
                  </View>
       
                  <TouchableOpacity
                      onPress={()=>navigation.navigate("TokTokWallet")}
                      style={{alignItems: "center",height: 40,backgroundColor: DARK,margin: 20,justifyContent: "center",borderRadius: 10,}}
                  >
-                         <Text style={{color: COLOR}}>Done</Text>
+                         <Text style={{color: COLOR,fontSize: 12}}>Done</Text>
                  </TouchableOpacity>
             </View>
      
@@ -42,6 +43,11 @@ const SuccessModal = ({modalVisible,closeModal})=> {
 
 
 const ConfirmEmail = ({navigation,route})=> {
+
+    navigation.setOptions({
+        headerLeft: ()=> <HeaderBack/>,
+        headerTitle: ()=> <HeaderTitle label={['Set up a PIN','']}/>,
+    })
 
     const {pinCode} = route.params
     const [modalVisible,setModalVisible] = useState(false)
@@ -57,14 +63,14 @@ const ConfirmEmail = ({navigation,route})=> {
         <SuccessModal modalVisible={modalVisible} closeModal={closeModal}/>
        <View style={styles.container}>
             <View style={styles.content}>
-                <Text style={{fontSize: 16,fontWeight:"400",marginTop: 20,}}>Confirm Your Email Address</Text>
+                <Text style={{fontSize: 14,fontWeight:"400",marginTop: 20,}}>Confirm Your Email Address</Text>
                 <View style={{alignSelf: "flex-start",width: "100%",marginTop: 20,}}>
-                    <Text>Email Address</Text>    
+                    <Text style={{fontSize: 12}}>Email Address</Text>    
                     <TextInput 
                         placeholder="Email"
                         style={styles.input} 
                     /> 
-                    <Text style={{fontSize: 11,}}>This Email address will be used to regain access to ToktokPay if you experience issues logging in.</Text>
+                    <Text style={{fontSize: 12,}}>This Email address will be used to regain access to ToktokPay if you experience issues logging in.</Text>
                 </View>
             </View>
  
@@ -72,7 +78,7 @@ const ConfirmEmail = ({navigation,route})=> {
                 onPress={CompleteSetup}
                 style={{alignItems: "center",height: 40,backgroundColor: DARK,margin: 20,justifyContent: "center",borderRadius: 10,}}
             >
-                    <Text style={{color: COLOR}}>Submit</Text>
+                    <Text style={{color: COLOR,fontSize: 12}}>Submit</Text>
             </TouchableOpacity>
        </View>
        </>
@@ -92,9 +98,10 @@ const styles = StyleSheet.create({
     input: {
         borderWidth: 0.5,
         borderColor: "silver",
-        padding: 10,
+        padding: 5,
         marginVertical:10,
         borderRadius: 5,
+        fontSize: 12,
     },
 })
 

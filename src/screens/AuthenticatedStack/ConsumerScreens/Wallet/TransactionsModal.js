@@ -7,6 +7,36 @@ import { DARK, COLOR } from '../../../../res/constants'
 
 const {height,width} = Dimensions.get("window")
 
+
+
+const TransactionLog = ({transactionDate , transactionItems })=> {
+    return (
+        <View style={styles.transactionLogsContainer}>
+            <Text style={{fontSize: 12}}>{transactionDate}</Text>
+           {
+               transactionItems.map((item)=>{
+
+                return (
+                    <View style={styles.transaction}>
+                        <View style={styles.transactionIcon}>
+                            <Image source={require('../../../../assets/icons/walletDelivery.png')} style={{height: 30, width: 30}} resizeMode="contain"/>
+                        </View>
+                        <View style={styles.transactionDetails}>
+                            <Text style={{fontSize: 12}}>Delivery</Text>
+                            <Text style={{color: "#909294",fontSize: 10,marginTop: 5}}>sf skdlfsdklf sdklfjdklsjflsdjf</Text>
+                        </View>
+                        <View style={styles.transactionAmount}>
+                            <Text style={{fontSize: 12}}>- {'\u20B1'} 60</Text>
+                            <Text style={{color: "gray",fontSize: 10,alignSelf: "flex-end",marginTop: 5}}>Feb 18</Text>
+                        </View>
+                    </View>
+                )
+               })
+           }
+        </View>
+    )
+}
+
 const TransactionsModal = ({modalVisible,closeModal})=> {
 
     const [filtertype, setFilterType] = useState("All")
@@ -67,35 +97,6 @@ const TransactionsModal = ({modalVisible,closeModal})=> {
     }
 
 
-
-    const TransactionLog = ({transactionDate , transactionItems })=> {
-        return (
-            <View style={styles.transactionLogsContainer}>
-                <Text>{transactionDate}</Text>
-               {
-                   transactionItems.map((item)=>{
-
-                    return (
-                        <View style={styles.transaction}>
-                            <View style={styles.transactionIcon}>
-                                <Image source={require('../../../../assets/icons/walletDelivery.png')} style={{height: 30, width: 30}} resizeMode="contain"/>
-                            </View>
-                            <View style={styles.transactionDetails}>
-                                <Text>Delivery</Text>
-                                <Text style={{color: "gray",fontSize: 12,marginTop: 5}}>sf skdlfsdklf sdklfjdklsjflsdjf</Text>
-                            </View>
-                            <View style={styles.transactionAmount}>
-                                <Text>- {'\u20B1'} 60</Text>
-                                <Text style={{color: "gray",fontSize: 12,alignSelf: "flex-end",marginTop: 5}}>Feb 18</Text>
-                            </View>
-                        </View>
-                    )
-                   })
-               }
-            </View>
-        )
-    }
-
     return (
        <Modal
             animationType="slide"
@@ -112,10 +113,10 @@ const TransactionsModal = ({modalVisible,closeModal})=> {
                 </TouchableOpacity>
                 <View style={styles.content}>
                     <View style={{flexDirection: "row"}}>
-                        <Text style={{fontSize: 16 ,fontWeight: "400"}}>Transactions</Text>
+                        <Text style={{fontSize: 14 ,fontWeight: "bold"}}>Transactions</Text>
                         <View style={{flex: 1}}>
-                           <TouchableOpacity onPress={()=>setShowFilterDate(true)} style={{alignSelf: "flex-end", padding: 5, paddingHorizontal: 20, borderRadius: 10, backgroundColor: "#FCB91A"}}>
-                                    <Text style={{color: "white"}}>{moment(filterDate.from).format('D MMM')} - {moment(filterDate.to).format('D MMM')}</Text>
+                           <TouchableOpacity onPress={()=>setShowFilterDate(true)} style={{alignSelf: "flex-end", padding: 5, paddingHorizontal: 15, borderRadius: 10, backgroundColor: "#FCB91A"}}>
+                                    <Text style={{color: "white",fontSize: 12}}>{moment(filterDate.from).format('D MMM')} - {moment(filterDate.to).format('D MMM')}</Text>
                            </TouchableOpacity>
                         </View>
                     </View>
@@ -127,7 +128,7 @@ const TransactionsModal = ({modalVisible,closeModal})=> {
                                 <TouchableOpacity onPress={()=>setFilterType(type)} style={[styles.filterType, {
                                     borderColor: filtertype === type ? "#FCB91A" : "silver"
                                 }]}>
-                                        <Text style={{color: "black"}}>{type}</Text>
+                                        <Text style={{color: "black",fontSize: 11}}>{type}</Text>
                                 </TouchableOpacity>
                             ))
                         }
@@ -137,8 +138,6 @@ const TransactionsModal = ({modalVisible,closeModal})=> {
                         <ScrollView showsVerticalScrollIndicator={false}>
                             <TransactionLog transactionDate="Today" transactionItems={[1,2]}></TransactionLog>
                             <TransactionLog transactionDate="Yesterday" transactionItems={[1]}></TransactionLog>
-                            <TransactionLog transactionDate="17 Feb 2021" transactionItems={[1,2,3]}></TransactionLog>
-                            <TransactionLog transactionDate="17 Feb 2021" transactionItems={[1,2,3]}></TransactionLog>
                             <TransactionLog transactionDate="17 Feb 2021" transactionItems={[1,2,3]}></TransactionLog>
                         </ScrollView>
                     </View>

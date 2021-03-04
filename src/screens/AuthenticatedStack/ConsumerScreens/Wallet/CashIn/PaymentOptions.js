@@ -10,7 +10,7 @@ const PaymentOptions = ({navigation,route})=> {
         // headerLeft: ()=> <View style={{width: 50, justifyContent: "center", marginLeft: 10}}>
         //                     <FIcon5 name="times" size={25}/>
         //                 </View>,
-        headerLeft: ()=> <HeaderBack/>,
+        headerLeft: ()=> <HeaderBack icon="x"/>,
         headerTitle: ()=> <HeaderTitle label={['Cash In','']}/>,
     })
 
@@ -21,7 +21,7 @@ const PaymentOptions = ({navigation,route})=> {
                         <Image style={{height: 30,width: 30}} resizeMode="contain" source={require('../../../../../assets/images/paypanda.png')} />
                     </View>
                     <View style={styles.name}>
-                        <Text style={{fontSize:16}}>PayPanda</Text>
+                        <Text style={{fontSize:14,fontWeight:"bold"}}>PayPanda</Text>
                         <Text style={{fontSize: 12, color: "gray"}}>Use PayPanda to cash-in</Text>
                     </View>
                     <View style={styles.arrowright}>

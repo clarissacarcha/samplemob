@@ -54,7 +54,7 @@ const RecentTransactions = ({seeAll,walletId})=> {
 
         return (
             <View style={styles.transactionLogsContainer}>
-                <Text>{datedisplay}</Text>
+                <Text style={{fontSize: 12}}>{datedisplay}</Text>
                {
                    transactionItems.map((item)=>{
 
@@ -64,12 +64,12 @@ const RecentTransactions = ({seeAll,walletId})=> {
                                 <Image source={require('../../../../assets/icons/walletCashin.png')} style={{height: 30, width: 30}} resizeMode="contain"/>
                             </View>
                             <View style={styles.transactionDetails}>
-                                <Text>{item.type}</Text>
-                                <Text style={{color: "gray",fontSize: 12,marginTop: 5}}>Cash in from Paypanda</Text>
+                                <Text style={{fontSize: 12}}>{item.type}</Text>
+                                <Text style={{color: "#909294",fontSize: 10,marginTop: 5}}>Cash in from Paypanda</Text>
                             </View>
                             <View style={styles.transactionAmount}>
-                                <Text>+ {'\u20B1'} {numberFormat(item.incoming)}</Text>
-                                <Text style={{color: "gray",fontSize: 12,alignSelf: "flex-end",marginTop: 5}}>{moment(transactionDate).tz('Asia/Manila').format('MMM DD')}</Text>
+                                <Text style={{fontSize: 12}}>+ {'\u20B1'} {numberFormat(item.incoming)}</Text>
+                                <Text style={{color: "gray",fontSize: 10,alignSelf: "flex-end",marginTop: 5}}>{moment(transactionDate).tz('Asia/Manila').format('MMM DD')}</Text>
                             </View>
                         </View>
                     )
@@ -82,9 +82,9 @@ const RecentTransactions = ({seeAll,walletId})=> {
     return (
         <View style={styles.recentTransactions}>
             <View style={styles.recentTransactionsTitle}>
-                <Text style={{fontSize: 16,color: "#212529",fontWeight: "500"}}>Recent Transactions</Text>
+                <Text style={{fontSize: 14,color: "#212529",fontWeight: "500"}}>Recent Transactions</Text>
                 <TouchableOpacity onPress={seeAll} style={styles.transactionSeeAllbtn}>
-                    <Text style={{fontSize: 14 ,color: "#F6841F"}}>See All</Text>
+                    <Text style={{fontSize: 12 ,color: "#F6841F"}}>See All</Text>
                 </TouchableOpacity>
             </View>
             <View style={styles.recentLogs}>

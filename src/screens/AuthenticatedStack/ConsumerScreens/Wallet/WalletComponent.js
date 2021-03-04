@@ -98,11 +98,11 @@ const WalletComponent = ()=> {
     const WalletCardInfo = ()=> (
         <View style={[styles.walletCard]}>
             <ImageBackground  imageStyle={{ borderRadius: 10}} style={styles.walletbackgroundimage} source={require('../../../../assets/images/walletcard.png')}>
-            <View style={{padding: 30}}>
+            <View style={{padding: 25}}>
                 <View style={styles.walletInfo}>
                     <View>
-                        <Text style={{fontSize: 24,fontWeight: "500",color: "white"}}>{'\u20B1'} {numberFormat(data.getToktokWallet.record.balance)}</Text>
-                        <Text style={{fontSize: 14,color: "white"}}>Available Balance</Text>
+                        <Text style={{fontSize: 20,fontWeight: "bold",color: "white"}}>{'\u20B1'} {numberFormat(data.getToktokWallet.record.balance)}</Text>
+                        <Text style={{fontSize: 12,color: "white"}}>Available Balance</Text>
                     </View>
                     <TouchableOpacity style={styles.walletSettings} onPress={()=>{
                         // rotateY.setValue(0)
@@ -113,7 +113,7 @@ const WalletComponent = ()=> {
 
                     }}>
                         <Animated.View style={[{transform: [{rotate: rotateanimation}]}]}>
-                            <FIcon5 name={'cog'} size={30} color="white"/>
+                            <FIcon5 name={'cog'} size={25} color="white"/>
                         </Animated.View>
                     </TouchableOpacity>
                 </View>
@@ -129,31 +129,31 @@ const WalletComponent = ()=> {
         <View style={styles.walletMethodsContainer}>
             <View style={[styles.walletMethod]}>
                 <TouchableOpacity onPress={()=>navigation.navigate("TokTokWalletActionsSend")} style={styles.methodItem}>
-                    <Image style={{height: 30,width: 30}} source={require('../../../../assets/icons/walletSend.png')} resizeMode="contain" />
+                    <Image style={{height: 26,width: 20}} source={require('../../../../assets/icons/walletSend.png')} resizeMode="contain" />
                 </TouchableOpacity>
 
-                <Text style={{alignSelf: "center",marginTop: 10,color: "gray"}}>Send</Text>
+                <Text style={{alignSelf: "center",marginTop: 10,color: "gray",fontSize: 12}}>Send</Text>
             </View>
             <View style={[styles.walletMethod]}>
                 <TouchableOpacity onPress={()=>navigation.navigate("TokTokWalletActionsRequest")} style={styles.methodItem}>
-                    <Image style={{height: 30,width: 30}} source={require('../../../../assets/icons/walletRequest.png')} resizeMode="contain" />
+                    <Image style={{height: 26,width: 20}} source={require('../../../../assets/icons/walletRequest.png')} resizeMode="contain" />
                 </TouchableOpacity>
 
-                <Text style={{alignSelf: "center",marginTop: 10,color: "gray"}}>Request</Text>
+                <Text style={{alignSelf: "center",marginTop: 10,color: "gray",fontSize: 12}}>Request</Text>
             </View>
             <View style={[styles.walletMethod]}>
                 <TouchableOpacity onPress={()=>navigation.navigate("TokTokWalletActionsScantoPay",{walletId: data.getToktokWallet.record.id,balance: data.getToktokWallet.record.balance})} style={styles.methodItem}>
-                    <Image style={{height: 30,width: 30}} source={require('../../../../assets/icons/walletScan.png')} resizeMode="contain" />
+                    <Image style={{height: 26,width: 20}} source={require('../../../../assets/icons/walletScan.png')} resizeMode="contain" />
                 </TouchableOpacity>
 
-                <Text style={{alignSelf: "center",marginTop: 10,color: "gray"}}>Scan</Text>
+                <Text style={{alignSelf: "center",marginTop: 10,color: "gray",fontSize: 12}}>Scan</Text>
             </View>
             <View style={[styles.walletMethod]}>
                 <TouchableOpacity onPress={()=>navigation.navigate("TokTokWalletActionsTransfer")} style={styles.methodItem}>
-                    <Image style={{height: 30,width: 30}} source={require('../../../../assets/icons/walletTransfer.png')} resizeMode="contain" />
+                    <Image style={{height: 26,width: 20}} source={require('../../../../assets/icons/walletTransfer.png')} resizeMode="contain" />
                 </TouchableOpacity>
 
-                <Text style={{alignSelf: "center",marginTop: 10,color: "gray"}}>Transfer</Text>
+                <Text style={{alignSelf: "center",marginTop: 10,color: "gray",fontSize: 12}}>Transfer</Text>
             </View>
         </View>
     )
@@ -227,7 +227,9 @@ const styles = StyleSheet.create({
         padding:10,
     },
     methodItem: {
-        flex: 1,
+        // flex: 1,
+        height: 65,
+        width: 65,
         borderColor: "silver",
         borderWidth:0.5,
         borderRadius: 10,

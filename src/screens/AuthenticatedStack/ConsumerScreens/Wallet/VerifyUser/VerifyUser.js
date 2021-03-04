@@ -22,7 +22,7 @@ const VerifyUser = ({navigation})=> {
 
                 <View style={styles.proceedBtn}>
                      <TouchableOpacity onPress={()=>navigation.navigate("TokTokWalletVerifyUserSetup")} style={{height: "100%",width: "100%",backgroundColor: DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
-                        <Text style={{color: COLOR}}>Get Started</Text>
+                        <Text style={{color: COLOR,fontSize: 12}}>Get Started</Text>
                     </TouchableOpacity>
                 </View>
         </View>

@@ -1,6 +1,7 @@
 import React, { useState ,useRef } from 'react'
 import {View,Text,StyleSheet,TouchableHighlight,TouchableOpacity,TextInput} from 'react-native'
 import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM,ORANGE} from '../../../../../res/constants'
+import {HeaderBack, HeaderTitle} from '../../../../../components'
 
 const NumberBox = ({onPress, value , showPin}) => (
     <TouchableHighlight onPress={onPress} underlayColor={COLOR} style={{borderRadius: 10,marginHorizontal: 5,}}>
@@ -27,6 +28,11 @@ const NumberBoxes = ({pinCode, onNumPress, showPin}) => {
 
 const CreatePin = ({navigation})=> {
 
+    navigation.setOptions({
+        headerLeft: ()=> <HeaderBack/>,
+        headerTitle: ()=> <HeaderTitle label={['Set up a PIN','']}/>,
+    })
+
     const [pinCode,setPinCode] = useState("")
     const [showPin,setShowPin] = useState(false)
     const inputRef = useRef();
@@ -45,7 +51,7 @@ const CreatePin = ({navigation})=> {
     return (
        <View style={styles.container}>
             <View style={styles.content}>
-                    <Text style={{fontSize: 16,fontWeight:"400",marginTop: 20,}}>Enter your PIN</Text>
+                    <Text style={{fontSize: 14,fontWeight:"400",marginTop: 20,}}>Enter your PIN</Text>
                     <View style={{position: 'relative',marginTop: 50,}}>
                         <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={showPin}/>
                         <TextInput
@@ -67,7 +73,7 @@ const CreatePin = ({navigation})=> {
                                 style={{marginTop: 20,alignItems: "center"}}
                                 onPress={()=>setShowPin(!showPin)}
                         >
-                                <Text style={{color: "#F6841F"}}>{showPin ? "HIDE PIN" : "SHOW PIN"}</Text>
+                                <Text style={{color: "#F6841F",fontSize: 12}}>{showPin ? "HIDE PIN" : "SHOW PIN"}</Text>
                         </TouchableOpacity>
                     </View>
             </View>
@@ -75,7 +81,7 @@ const CreatePin = ({navigation})=> {
                 onPress={onSubmit}
                 style={{alignItems: "center",height: 40,backgroundColor: DARK,margin: 20,justifyContent: "center",borderRadius: 10,}}
             >
-                    <Text style={{color: COLOR}}>Next</Text>
+                    <Text style={{color: COLOR,fontSize: 12}}>Next</Text>
             </TouchableOpacity>
        </View>
     )

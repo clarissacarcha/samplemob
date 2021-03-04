@@ -4,7 +4,7 @@ import {HeaderBack, HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../
 
 const Settings = ({navigation})=> {
     navigation.setOptions({
-        headerLeft: ()=> <HeaderBack/>,
+        headerLeft: ()=> <HeaderBack icon="x"/>,
         headerTitle: ()=> <HeaderTitle label={['Settings','']}/>,
     })
 
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     settingoption: {
         padding: 10,
         paddingVertical: 20,
-        borderWidth: 0.5,
+        borderWidth: 0.2,
         borderColor: "silver",
         flexDirection: "row"
     },

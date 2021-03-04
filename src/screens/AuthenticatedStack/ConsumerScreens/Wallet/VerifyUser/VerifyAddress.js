@@ -11,21 +11,21 @@ const VerifyAddress = ({address, setCurrentIndex , changeAddress})=> {
        
                 <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.mainInput}>
                 <ScrollView showsVerticalScrollIndicator={false}>
-                        <Text style={{fontSize: 18, fontWeight: '400'}}>Where do you live?</Text>
-                        <Text style={{color: 'gray',marginTop: 8}}>Please enter your current address</Text>  
+                        <Text style={{fontSize: 14, fontWeight: '400'}}>Where do you live?</Text>
+                        <Text style={{color: 'gray',marginTop: 8,fontSize: 12}}>Please enter your current address</Text>  
                
                         <View style={{marginTop: 20,}}>
-                            <Text style={{fontSize: 14, fontWeight: '400'}}>Country</Text>
-                            <View style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center",paddingVertical: 14}]}>
-                                <Text style={{flex: 1,color: "gray"}}>{address.country}</Text>
+                            <Text style={{fontSize: 12, fontWeight: '400'}}>Country</Text>
+                            <View style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center",paddingVertical: 11}]}>
+                                <Text style={{flex: 1,color: "gray",fontSize: 12,}}>{address.country}</Text>
                                 <TouchableOpacity>
-                                    <Text style={{color: ORANGE,fontWeight: "bold"}}>Change</Text>
+                                    <Text style={{color: ORANGE,fontWeight: "bold",fontSize: 12}}>Change</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
 
                         <View style={{marginTop: 20,}}>
-                            <Text style={{fontSize: 14, fontWeight: '400'}}>Street Address</Text>
+                            <Text style={{fontSize: 12, fontWeight: '400'}}>Street Address</Text>
                             <TextInput 
                                 style={styles.input} 
                                 placeholder="E.g 111 Street / Unit 120"
@@ -33,7 +33,7 @@ const VerifyAddress = ({address, setCurrentIndex , changeAddress})=> {
                         </View>
 
                         <View style={{marginTop: 20,}}>
-                            <Text style={{fontSize: 14, fontWeight: '400'}}>Village / Barangay</Text>
+                            <Text style={{fontSize: 12, fontWeight: '400'}}>Village / Barangay</Text>
                             <TextInput 
                                 style={styles.input} 
                                 placeholder="E.g Palo-Alto / Palao"
@@ -41,7 +41,7 @@ const VerifyAddress = ({address, setCurrentIndex , changeAddress})=> {
                         </View>
 
                         <View style={{marginTop: 20,}}>
-                            <Text style={{fontSize: 14, fontWeight: '400'}}>City / Municipality</Text>
+                            <Text style={{fontSize: 12, fontWeight: '400'}}>City / Municipality</Text>
                             <TextInput 
                                 style={styles.input} 
                                 placeholder="E.g Calamba City / Taguig City"
@@ -49,7 +49,7 @@ const VerifyAddress = ({address, setCurrentIndex , changeAddress})=> {
                         </View>
 
                         <View style={{marginTop: 20,}}>
-                            <Text style={{fontSize: 14, fontWeight: '400'}}>Region / Province</Text>
+                            <Text style={{fontSize: 12, fontWeight: '400'}}>Region / Province</Text>
                             <TextInput 
                                 style={styles.input} 
                                 placeholder="E.g Metro Manila / Laguna / Bulacan"
@@ -57,7 +57,7 @@ const VerifyAddress = ({address, setCurrentIndex , changeAddress})=> {
                         </View>
 
                         <View style={{marginTop: 20}}>
-                            <Text style={{fontSize: 14, fontWeight: '400'}}>Zip Code</Text>
+                            <Text style={{fontSize: 12, fontWeight: '400'}}>Zip Code</Text>
                             <TextInput 
                                 style={styles.input} 
                                 placeholder="E.g 1630"
@@ -73,14 +73,14 @@ const VerifyAddress = ({address, setCurrentIndex , changeAddress})=> {
                                 <TouchableOpacity onPress={()=>{
                                     setCurrentIndex(oldval => oldval - 1)
                                 }} style={{height: "100%",flex: 1,marginRight: 5,backgroundColor: DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
-                                    <Text style={{color: COLOR}}>Back</Text>
+                                    <Text style={{color: COLOR,fontSize: 12}}>Back</Text>
                                 </TouchableOpacity>
 
                                 <TouchableOpacity onPress={()=>{
                                     // if(nationality == "") return Alert.alert("Please provide Nationality")
                                     setCurrentIndex(oldval => oldval + 1)
                                 }} style={{height: "100%",flex: 1,marginLeft: 5,backgroundColor: DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
-                                    <Text style={{color: COLOR}}>Next</Text>
+                                    <Text style={{color: COLOR,fontSize: 12}}>Next</Text>
                                 </TouchableOpacity>
                     </View>
    
@@ -106,11 +106,12 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     input: {
-        padding: 10,
+        padding: 5,
         borderRadius: 5,
         borderWidth: 1,
         borderColor: "silver",
-        marginTop: 20,
+        marginTop: 10,
+        fontSize: 12,
     },
 })
 

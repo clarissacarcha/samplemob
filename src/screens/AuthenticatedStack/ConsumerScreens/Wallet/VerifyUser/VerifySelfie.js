@@ -87,16 +87,16 @@ const VerifySelfie = ({setCurrentIndex , image, setImage})=> {
             <CameraModal />
             <View style={styles.content}>
                 <View style={styles.mainInput}>
-                        <Text style={{fontSize: 18, fontWeight: '400'}}>One last step before you get a Premium Wallet!</Text>
-                        <Text style={{color: 'gray',marginTop: 8}}>Take a photo to verify your identity.</Text>  
+                        <Text style={{fontSize: 14, fontWeight: '400'}}>One last step before you get a Premium Wallet!</Text>
+                        <Text style={{color: 'gray',marginTop: 8,fontSize: 12}}>Take a photo to verify your identity.</Text>  
                         
                        
                         <View style={[styles.input,{padding: 20,}]}>
-                            <Text style={{fontSize: 18, fontWeight: '400'}}>Take a selfie</Text>
-                            <Text style={{color: 'gray',marginTop: 8}}>Show us that you match your photo ID with a live selfie</Text>  
+                            <Text style={{fontSize: 14, fontWeight: '400'}}>Take a selfie</Text>
+                            <Text style={{color: 'gray',marginTop: 8,fontSize: 12}}>Show us that you match your photo ID with a live selfie</Text>  
 
-                            <TouchableOpacity onPress={()=>setShowCamera(true)} style={[styles.input,{borderColor: "#F6841F",justifyContent: "center",alignItems: "center",marginTop: 40,}]}>
-                                <Text style={{color: "#F6841F"}}>Start Now</Text>
+                            <TouchableOpacity onPress={()=>setShowCamera(true)} style={[styles.input,{borderColor: "#F6841F",justifyContent: "center",alignItems: "center",marginTop: 20,}]}>
+                                <Text style={{color: "#F6841F",fontSize: 12}}>Start Now</Text>
                             </TouchableOpacity>
                         </View>
 
@@ -113,13 +113,13 @@ const VerifySelfie = ({setCurrentIndex , image, setImage})=> {
                     <TouchableOpacity onPress={()=>{
                         setCurrentIndex(oldval => oldval - 1)
                     }} style={{height: "100%",flex: 1,marginRight: 5,backgroundColor: DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
-                        <Text style={{color: COLOR}}>Back</Text>
+                        <Text style={{color: COLOR,fontSize: 12}}>Back</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity onPress={()=>{
                         // start saving to DB
                     }} style={{height: "100%",flex: 1,marginLeft: 5,backgroundColor: DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
-                        <Text style={{color: COLOR}}>Next</Text>
+                        <Text style={{color: COLOR,fontSize: 12}}>Next</Text>
                     </TouchableOpacity>
                 </View>
             </View>

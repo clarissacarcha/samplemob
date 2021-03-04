@@ -8,17 +8,17 @@ const VerifyFullname = ({fullname , setFullname , setCurrentIndex})=> {
         <>
         <View style={{flexDirection: "row",backgroundColor: "#F6F6F6",paddingHorizontal: 20,paddingVertical: 18,}}>
                 <View style={{flexBasis: "auto"}}>
-                <Image style={{height: 40,width: 40, alignSelf: "center"}} source={require('../../../../../assets/icons/walletVerify.png')} resizeMode="contain" />
+                <Image style={{height: 30,width: 30, alignSelf: "center"}} source={require('../../../../../assets/icons/walletVerify.png')} resizeMode="contain" />
                 </View>
                 <View style={{justifyContent: "center", alignItems: "center",marginRight: 10,}}>
-                    <Text style={{marginHorizontal: 10,}}>All your details are protected in accordance with our privacy policy</Text>
+                    <Text style={{marginHorizontal: 10,fontSize: 12}}>All your details are protected in accordance with our privacy policy</Text>
                 </View>
         </View>
         <View style={styles.content}>
 
             <View style={styles.mainInput}>
-                    <Text style={{fontSize: 18, fontWeight: '400'}}>What's your full name?</Text>
-                    <Text style={{color: 'gray',marginTop: 8,}}>Please enter the name that appears on your government ID</Text>
+                    <Text style={{fontSize: 14, fontWeight: '400'}}>What's your full name?</Text>
+                    <Text style={{color: 'gray',marginTop: 8,fontSize: 12}}>Please enter the name that appears on your government ID</Text>
                     <TextInput 
                         style={styles.input}
                         value={fullname}
@@ -31,7 +31,7 @@ const VerifyFullname = ({fullname , setFullname , setCurrentIndex})=> {
                     if(fullname == "") return Alert.alert("Please provide Fullname")
                     setCurrentIndex(oldval => oldval + 1)
                 }} style={{height: "100%",width: "100%",backgroundColor: DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
-                    <Text style={{color: COLOR}}>Next</Text>
+                    <Text style={{color: COLOR,fontSize: 12}}>Next</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -65,11 +65,12 @@ const styles = StyleSheet.create({
         width: "100%",
     },
     input: {
-        padding: 10,
+        padding: 5,
         borderRadius: 5,
         borderWidth: 1,
         borderColor: "silver",
         marginTop: 20,
+
     }
 })
 

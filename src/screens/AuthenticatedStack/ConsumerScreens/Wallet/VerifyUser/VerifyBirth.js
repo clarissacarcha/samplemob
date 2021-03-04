@@ -10,22 +10,22 @@ const VerifyBirth = ({birthInfo, setCurrentIndex , changeBirthInfo})=> {
         <>
             <View style={styles.content}>
                 <View style={styles.mainInput}>
-                        <Text style={{fontSize: 18, fontWeight: '400'}}>When and where were you born?</Text>
-                        <Text style={{color: 'gray',marginTop: 8}}>Make sure the information matches your government-issued ID.</Text>  
+                        <Text style={{fontSize: 14, fontWeight: '400'}}>When and where were you born?</Text>
+                        <Text style={{color: 'gray',marginTop: 8,fontSize: 10.5}}>Make sure the information matches your government-issued ID.</Text>  
                         <View style={{marginTop: 20,}}>
-                            <Text style={{fontSize: 14, fontWeight: '400'}}>Date of Birth?</Text>
+                            <Text style={{fontSize: 12, fontWeight: '400'}}>Date of Birth?</Text>
                             <View style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center"}]}>
-                                <Text style={{flex: 1,color: "gray"}}>MM/DD/YY</Text>
+                                <Text style={{flex: 1,color: "gray",fontSize: 12}}>MM/DD/YY</Text>
                                 <FIcon5 name="calendar" size={24}/>
                             </View>
                         </View>
 
                         <View style={{marginTop: 20,}}>
-                            <Text style={{fontSize: 14, fontWeight: '400'}}>Place of Birth?</Text>
-                            <View style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center",paddingVertical: 14}]}>
-                                <Text style={{flex: 1,color: "gray"}}>{birthInfo.birthPlace}</Text>
+                            <Text style={{fontSize: 12, fontWeight: '400'}}>Place of Birth?</Text>
+                            <View style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center",paddingVertical: 10}]}>
+                                <Text style={{flex: 1,color: "gray",fontSize: 12}}>{birthInfo.birthPlace}</Text>
                                 <TouchableOpacity>
-                                    <Text style={{color: ORANGE,fontWeight: "bold"}}>Change</Text>
+                                    <Text style={{color: ORANGE,fontWeight: "bold",fontSize: 12}}>Change</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -35,14 +35,14 @@ const VerifyBirth = ({birthInfo, setCurrentIndex , changeBirthInfo})=> {
                     <TouchableOpacity onPress={()=>{
                         setCurrentIndex(oldval => oldval - 1)
                     }} style={{height: "100%",flex: 1,marginRight: 5,backgroundColor: DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
-                        <Text style={{color: COLOR}}>Back</Text>
+                        <Text style={{color: COLOR,fontSize: 12}}>Back</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity onPress={()=>{
                         // if(nationality == "") return Alert.alert("Please provide Nationality")
                         setCurrentIndex(oldval => oldval + 1)
                     }} style={{height: "100%",flex: 1,marginLeft: 5,backgroundColor: DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
-                        <Text style={{color: COLOR}}>Next</Text>
+                        <Text style={{color: COLOR,fontSize: 12}}>Next</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -64,11 +64,11 @@ const styles = StyleSheet.create({
         flexDirection: "row"
     },
     input: {
-        padding: 10,
+        padding: 5,
         borderRadius: 5,
         borderWidth: 1,
         borderColor: "silver",
-        marginTop: 20,
+        marginTop: 10,
     },
 })
 

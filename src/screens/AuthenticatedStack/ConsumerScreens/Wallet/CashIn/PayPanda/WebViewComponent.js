@@ -170,7 +170,7 @@ const WebViewComponent = ()=> {
                     </View>
                     <View style={styles.donetransactionButton}>
                         <TouchableOpacity onPress={()=>navigation.navigate("TokTokWallet")} style={{height: "100%",width: "100%",backgroundColor: DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
-                            <Text style={{color: COLOR}}>Done</Text>
+                            <Text style={{color: COLOR,fontSize: 12}}>Done</Text>
                         </TouchableOpacity>
                      </View>
                 </View>

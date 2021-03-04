@@ -22,7 +22,7 @@ const CashInLogs = ({navigation})=> {
     const CashInLog = ({transactionDate , transactionItems })=> {
         return (
             <View style={styles.transactionLogsContainer}>
-                <Text>{transactionDate}</Text>
+                <Text style={{fontSize: 12}}>{transactionDate}</Text>
                {
                    transactionItems.map((item)=>{
 
@@ -32,12 +32,12 @@ const CashInLogs = ({navigation})=> {
                               <Image source={require('../../../../assets/icons/walletCashinLog.png')} style={{height: 30, width: 30}} resizeMode="contain"/>
                             </View>
                             <View style={styles.transactionDetails}>
-                                <Text>Delivery</Text>
-                                <Text style={{color: "gray",fontSize: 12,marginTop: 5}}>sf skdlfsdklf sdklfjdklsjflsdjf</Text>
+                                <Text style={{fontSize: 12}}>Delivery</Text>
+                                <Text style={{color: "#909294",fontSize: 10,marginTop: 5}}>sf skdlfsdklf sdklfjdklsjflsdjf</Text>
                             </View>
                             <View style={styles.transactionAmount}>
-                                <Text style={{color: "#FCB91A"}}>+ {'\u20B1'} 650</Text>
-                                <Text style={{color: "gray",fontSize: 12,alignSelf: "flex-end",marginTop: 5}}>Feb 18</Text>
+                                <Text style={{color: "#FCB91A",fontSize: 12}}>+ {'\u20B1'} 650</Text>
+                                <Text style={{color: "#909294",fontSize: 10,alignSelf: "flex-end",marginTop: 5}}>Feb 18</Text>
                             </View>
                         </View>
                     )
@@ -53,8 +53,8 @@ const CashInLogs = ({navigation})=> {
             <View style={{flexDirection: "row"}}>
                 <Text style={{fontSize: 16 ,fontWeight: "400"}}></Text>
                 <View style={{flex: 1}}>
-                   <TouchableOpacity style={{alignSelf: "flex-end", padding: 5, paddingHorizontal: 20, borderRadius: 10, backgroundColor: "#FCB91A"}}>
-                            <Text style={{color: "white"}}>{moment(filterDate.from).format('D MMM')} - {moment(filterDate.to).format('D MMM')}</Text>
+                   <TouchableOpacity style={{alignSelf: "flex-end", padding: 5, paddingHorizontal: 15, borderRadius: 10, backgroundColor: "#FCB91A"}}>
+                            <Text style={{color: "white",fontSize: 12}}>{moment(filterDate.from).format('D MMM')} - {moment(filterDate.to).format('D MMM')}</Text>
                    </TouchableOpacity>
                 </View>
             </View>

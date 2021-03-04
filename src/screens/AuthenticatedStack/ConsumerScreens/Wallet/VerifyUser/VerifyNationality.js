@@ -18,7 +18,7 @@ const VerifyNationality = ({nationality , setNationality , setCurrentIndex , cha
     const renderCountry = ({item,index})=> {
         return (
             <TouchableOpacity onPress={()=>selectCountry(index)} style={[styles.country,{backgroundColor: index == countryIndex ? "#FCB91A" : "transparent"}]}>
-                    <Text style={{color:  index == countryIndex ? "white" : "black"}}>{item.name}</Text>
+                    <Text style={{fontSize: 12, color:  index == countryIndex ? "white" : "black"}}>{item.name}</Text>
             </TouchableOpacity>
         )
     }
@@ -28,10 +28,10 @@ const VerifyNationality = ({nationality , setNationality , setCurrentIndex , cha
         <View style={styles.content}>
 
             <View style={styles.mainInput}>
-                    <Text style={{fontSize: 18, fontWeight: '400'}}>What's your Nationality?</Text>
-                    <Text style={{color: 'gray',marginTop: 8}}>Please select your Country</Text>
+                    <Text style={{fontSize: 14, fontWeight: '400'}}>What's your Nationality?</Text>
+                    <Text style={{color: 'gray',marginTop: 8,fontSize: 12}}>Please select your Country</Text>
                     <FlatList
-                        style={{marginVertical: 20,}}
+                        style={{marginVertical: 15,}}
                         data={countries}
                         keyExtractor={country=>country.code}
                         renderItem={renderCountry}
@@ -47,14 +47,14 @@ const VerifyNationality = ({nationality , setNationality , setCurrentIndex , cha
                 <TouchableOpacity onPress={()=>{
                     setCurrentIndex(oldval => oldval - 1)
                 }} style={{height: "100%",flex: 1,marginRight: 5,backgroundColor: DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
-                    <Text style={{color: COLOR}}>Back</Text>
+                    <Text style={{color: COLOR,fontSize: 12}}>Back</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={()=>{
                     if(nationality == "") return Alert.alert("Please provide Nationality")
                     setCurrentIndex(oldval => oldval + 1)
                 }} style={{height: "100%",flex: 1,marginLeft: 5,backgroundColor: DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
-                    <Text style={{color: COLOR}}>Next</Text>
+                    <Text style={{color: COLOR,fontSize: 12}}>Next</Text>
                 </TouchableOpacity>
             </View>
         </View>

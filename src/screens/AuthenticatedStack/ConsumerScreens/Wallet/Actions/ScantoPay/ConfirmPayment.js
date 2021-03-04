@@ -1,10 +1,18 @@
 import React from 'react'
-import {View,Text,StyleSheet,Image} from 'react-native'
+import {View,Text,StyleSheet,Image,Alert} from 'react-native'
 import SwipeButton from 'rn-swipe-button';
-const ConfirmPayment = ()=> {
+import {HeaderBack, HeaderTitle} from '../../../../../../components'
+
+const ConfirmPayment = ({navigation})=> {
+
+    navigation.setOptions({
+        headerLeft: ()=> <HeaderBack />,
+        headerTitle: ()=> <HeaderTitle label={['Choose a Recipient','']}/>,
+    })
 
     const onSwipeSuccess = ()=> {
         console.log("Success")
+        Alert.alert("Success")
     }
 
     const onSwipeFail = (e)=> {
@@ -23,19 +31,19 @@ const ConfirmPayment = ()=> {
         <View style={styles.container}>
             <View style={styles.content}>
                     <View style={styles.receiverInfo}>
-                        <Image />
+                        <Image style={{height: 50,width: 50,marginRight: 10}} resizeMode="contain" source={require('../../../../../../assets/icons/ToktokLogo.png')}/>
                         <View>
-                            <Text style={{fontWeight:"bold"}}>Noctic Lucis Caelum</Text>
-                            <Text style={{fontSize:11,color:"gray",marginTop:5,}}>+639123456789</Text>
+                            <Text style={{fontWeight:"bold",fontSize: 14}}>Alvin Sison Raquem</Text>
+                            <Text style={{fontSize:12,color:"gray",marginTop:5,}}>+639123456789</Text>
                         </View>
                     </View>
                     <View style={{padding: 20}}>
-                        <Text style={{fontWeight:"bold"}}>Amount: {'\u20B1'} 500.00</Text>
+                        <Text style={{fontWeight:"bold",fontSize: 16}}>Amount: {'\u20B1'} 500.00</Text>
                     </View>
             </View>
             <SwipeButton 
                     containerStyles={styles.swipeContainer}
-                    width={300}
+                    width={250}
                     title={`Swipe to Pay ${'\u20B1'} 500.00`}
                     titleFontSize={12}
                     titleColor="white"
@@ -70,7 +78,8 @@ const styles = StyleSheet.create({
        marginBottom: 20,
     },
     receiverInfo: {
-        padding: 20,
+        paddingHorizontal: 20,
+        paddingVertical: 15,
         flexDirection:"row",
         borderBottomWidth: 0.5,
         borderColor:"silver"

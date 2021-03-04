@@ -7,7 +7,7 @@ import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM} from '../../../../../../res/
 
 const RequestWalletComponent = ({navigation})=> {
     navigation.setOptions({
-        headerLeft: ()=> <HeaderBack />,
+        headerLeft: ()=> <HeaderBack icon="x"/>,
         headerTitle: ()=> <HeaderTitle label={['Request Money','']} />,
     })
 
@@ -19,7 +19,7 @@ const RequestWalletComponent = ({navigation})=> {
                 marginTop: 20,
                 flex: 1,
             }}>
-                    <Text style={{fontSize: 18}}>Ask sender to scan QR code</Text>
+                    <Text style={{fontSize: 16}}>Ask sender to scan QR code</Text>
                     <View style={styles.QRContainer}>
                     <QRCode
                         value={session.user.userId} //Give value when there's no session as it will throw an error if value is empty.
@@ -33,7 +33,7 @@ const RequestWalletComponent = ({navigation})=> {
             </View>
             <View style={{justifyContent: "flex-end"}}>
                 <TouchableOpacity style={{padding: 10,justifyContent: "center",alignItems: "center",backgroundColor: DARK,borderRadius: 10}}>
-                    <Text style={{color: COLOR}}>REQUEST MONEY VIA LINK</Text>
+                    <Text style={{color: COLOR,fontSize: 12}}>REQUEST MONEY VIA LINK</Text>
                 </TouchableOpacity>
             </View>
         </View>

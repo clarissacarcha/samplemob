@@ -14,7 +14,7 @@ const {height,width} = Dimensions.get("window")
 
 const SetupVerify = ({navigation})=> {
     navigation.setOptions({
-        headerLeft: ()=> <HeaderBack/>,
+        headerLeft: ()=> <HeaderBack icon="x"/>,
         headerTitle: ()=> <HeaderTitle label={['Verify ToktokPay Wallet','']}/>,
     })
 

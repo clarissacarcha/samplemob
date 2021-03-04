@@ -1,31 +1,43 @@
-import React, {useState} from 'react'
+import React, {useState,useCallback, useEffect} from 'react'
 import {StyleSheet,View,Text,TouchableOpacity,Dimensions,Image,TouchableHighlight} from 'react-native'
 import {HeaderBack, HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../../../components'
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import { RNCamera } from 'react-native-camera';
 import {numberFormat} from '../../../../../../helper'
 import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM} from '../../../../../../res/constants'
+import FIcon from 'react-native-vector-icons/Feather';
+import {useFocusEffect} from '@react-navigation/native'
 
 const {height,width} = Dimensions.get('window')
 
 const ScantoPayWalletComponent = ({navigation,route})=> {
 
     navigation.setOptions({
-        headerLeft: ()=> <HeaderBack />,
-        headerTitle: ()=> <HeaderTitle label={['','']} />,
+        header: ()=> null,
     })
 
     const {walletId , balance} = route.params
 
     const [torch,setTorch] = useState(false)
+    const [focusCamera,setFocusCamera] = useState(false)
+
+
+    useFocusEffect(useCallback(()=>{
+        setFocusCamera(true)
+        return ()=> setFocusCamera(false)
+    },[]))
 
     const onSuccess = (e)=> {
         console.log(e)
+        setTorch(false)
         navigation.navigate("TokTokWalletActionsScantoPayConfirmPayment")
     }
 
     const customMarker = ()=> (
         <View style={styles.customMarker}>
+            <TouchableOpacity onPress={()=>navigation.goBack()} style={{top: 60, left: 0,position:"absolute"}}>
+             <FIcon name="chevron-left" size={30} color={'white'} /> 
+            </TouchableOpacity>
             <View style={styles.centerBox}>
 
                     <View
@@ -76,49 +88,51 @@ const ScantoPayWalletComponent = ({navigation,route})=> {
                                 <Image source={torch ? require('../../../../../../assets/icons/walletScanTorchOn.png') : require('../../../../../../assets/icons/walletScanTorchOff.png')} />                      
                             </TouchableHighlight>
 
-                            <Text style={{color: "white",fontWeight: "400",fontSize: 18}}>Tap to turn {torch ? 'off' : 'on' }</Text>
+                            <Text style={{color: "white",fontWeight: "400",fontSize: 15}}>Tap to turn {torch ? 'off' : 'on' }</Text>
                     </View>
 
-                    <View style={{
-                        position: 'absolute',
-                        bottom: -50,
-                    }}>
-                        <Text style={{color: "white",fontWeight: "400",fontSize: 16}}>Position the QR code within the frame.</Text>
-                    </View>
+                
             </View>
+
+            <View style={{marginTop: 25}}>
+                        <Text style={{color: "white",fontWeight: "400",fontSize: 15}}>Position the QR code within the frame.</Text>
+                    </View>
         
         </View>
     )
 
     return (
         <>
-            <QRCodeScanner
-                onRead={onSuccess}
-                flashMode={torch ? RNCamera.Constants.FlashMode.on : RNCamera.Constants.FlashMode.off}
-                fadeIn={false}
-                showMarker={true}
-                markerStyle={{
-                    borderColor: "red"
-                }}
-                reactivate={false}
-                customMarker={customMarker}
-                containerStyle={{
-                    backgroundColor: "rgba(0,0,0,0.5)"
-                }}
-                cameraStyle={{
-                    height: "100%",
-                    backgroundColor: "rgba(0,0,0,0.5)"
-                }}
-            />
+           {
+               focusCamera &&  <QRCodeScanner
+               onRead={onSuccess}
+               flashMode={torch ? RNCamera.Constants.FlashMode.torch : RNCamera.Constants.FlashMode.off}
+               fadeIn={false}
+               showMarker={true}
+               markerStyle={{
+                   borderColor: "red"
+               }}
+               // reactivate={true}
+               // reactivateTimeout={5000}
+               customMarker={customMarker}
+               containerStyle={{
+                   backgroundColor: "rgba(0,0,0,0.5)"
+               }}
+               cameraStyle={{
+                   height: "100%",
+                   backgroundColor: "rgba(0,0,0,0.5)"
+               }}
+           />
+           }
             <View style={{
-                height:80,
+                height:65,
                 backgroundColor: "white",
                 padding: 20,
                 flexDirection: "row",
                 alignItems: 'center'
             }}>
                 <Image style={{width: 50,height: 25}} resizeMode="contain" source={require('../../../../../../assets/icons/walletMoney.png')} />
-                <Text style={{marginLeft: 10, fontSize: 22, fontWeight: "400"}}>{'\u20B1'} {numberFormat(balance)}</Text>
+                <Text style={{marginLeft: 10, fontSize: 16, fontWeight: "400"}}>{'\u20B1'} {numberFormat(balance)}</Text>
                 <View style={{
                     flex: 1,
                     justifyContent: "flex-end",
@@ -126,14 +140,14 @@ const ScantoPayWalletComponent = ({navigation,route})=> {
                 }}>
                     <TouchableOpacity
                         style={{
-                            paddingVertical: 10,
-                            paddingHorizontal: 20,
+                            paddingVertical: 8,
+                            paddingHorizontal: 15,
                             backgroundColor: DARK,
                             borderRadius: 10,
                         }}
                         onPress={()=>navigation.navigate("TokTokWalletCashIn",{walletId,balance})}
                     >
-                            <Text style={{color: COLOR,fontSize: 16}}>Cash In</Text>
+                            <Text style={{color: COLOR,fontSize: 12}}>Cash In</Text>
                     </TouchableOpacity>
                     
                 </View>
