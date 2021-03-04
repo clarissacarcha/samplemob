@@ -93,6 +93,7 @@ const SendWalletComponent = ()=> {
           });
       
           const result = await checkAndRequest();
+          if(result) getContacts()
     }
 
     const getContacts = async ()=>{
@@ -139,8 +140,7 @@ const SendWalletComponent = ()=> {
 
 
     useEffect(()=>{
-        let checkcontact = goToContacts()
-        if(checkcontact) getContacts()
+        goToContacts()
     },[])
 
     if (!filteredData) {

@@ -39,21 +39,22 @@ import DeliveryTracking from '../screens/AuthenticatedStack/ConsumerScreens/Deli
 import SearchContact from '../screens/AuthenticatedStack/ConsumerScreens/Booking/SearchContact';
 
 
-import WalletComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet2/WalletComponent';
-import PaymentOptions from '../screens/AuthenticatedStack/ConsumerScreens/Wallet2/CashIn/PaymentOptions';
-import PayPandaComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet2/CashIn/PayPanda/PayPandaComponent';
-import PayPandaWebViewComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet2/CashIn/PayPanda/WebViewComponent';
-import HistoryLogsComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Transactions/HistoryLogsComponent';
-import WalletSettingsComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet2/Settings';
-import CashInLogsComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet2/CashInLogs';
-import WalletSettingsCreatePIN from '../screens/AuthenticatedStack/ConsumerScreens/Wallet2/CreatePin/CreatePin'
-import WalletVerifyUserComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet2/VerifyUser/VerifyUser'
-import WalletVerifyUserSetupComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet2/VerifyUser/Setup'
-import WalletActionsRequestComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet2/Actions/Request/RequestWalletComponent'
-import WalletActionsSendComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet2/Actions/Send/SendWalletComponent'
-import WalletActionsScantoPayComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet2/Actions/ScantoPay/ScantoPayWalletComponent'
-import WalletActionsScantoPayConfirmPaymentComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet2/Actions/ScantoPay/ConfirmPayment'
-import WalletActionsTranferComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet2/Actions/Transfer/TransferWalletComponent'
+import WalletComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/WalletComponent';
+import PaymentOptions from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/CashIn/PaymentOptions';
+import PayPandaComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/CashIn/PayPanda/PayPandaComponent';
+import PayPandaWebViewComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/CashIn/PayPanda/WebViewComponent';
+import WalletSettingsComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Settings'
+import CashInLogsComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/CashInLogs';
+import WalletSettingsCreatePIN from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/CreatePin/CreatePin'
+import WalletSettingsConfirmPIN from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/CreatePin/ConfirmPin'
+import WalletSettingsConfirmEmail from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/CreatePin/ConfirmEmail'
+import WalletVerifyUserComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/VerifyUser/VerifyUser'
+import WalletVerifyUserSetupComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/VerifyUser/Setup'
+import WalletActionsRequestComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Actions/Request/RequestWalletComponent'
+import WalletActionsSendComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Actions/Send/SendWalletComponent'
+import WalletActionsScantoPayComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Actions/ScantoPay/ScantoPayWalletComponent'
+import WalletActionsScantoPayConfirmPaymentComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Actions/ScantoPay/ConfirmPayment'
+import WalletActionsTranferComponent from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Actions/Transfer/TransferWalletComponent'
 
 
 /*---------- DRIVER SCREENS ----------*/
@@ -282,15 +283,17 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="TokTokWalletCashIn" component={PaymentOptions}/>
     <Authenticated.Screen name="TokTokWalletCashInPaypanda" component={PayPandaComponent}/>
     <Authenticated.Screen name="TokTokWalletCashINPaypandaWebView" component={PayPandaWebViewComponent}/> 
-    <Authenticated.Screen name="TokTokWalletTransactionLogs" component={HistoryLogsComponent}/>
     <Authenticated.Screen name="TokTokWalletSettings" component={WalletSettingsComponent}/>
     <Authenticated.Screen name="TokTokWalletCashInLogs" component={CashInLogsComponent}/>
     <Authenticated.Screen name="TokTokWalletSettingsCreatePIN" component={WalletSettingsCreatePIN}/>
+    <Authenticated.Screen name="TokTokWalletSettingsConfirmPIN" component={WalletSettingsConfirmPIN}/>
+    <Authenticated.Screen name="TokTokWalletSettingsConfirmEmail" component={WalletSettingsConfirmEmail}/>
     <Authenticated.Screen name="TokTokWalletVerifyUser" component={WalletVerifyUserComponent}/>
     <Authenticated.Screen name="TokTokWalletVerifyUserSetup" component={WalletVerifyUserSetupComponent}/>
     <Authenticated.Screen name="TokTokWalletActionsRequest" component={WalletActionsRequestComponent} />
     <Authenticated.Screen name="TokTokWalletActionsSend" component={WalletActionsSendComponent} />
     <Authenticated.Screen name="TokTokWalletActionsScantoPay" component={WalletActionsScantoPayComponent}/>
+    {/* <Authenticated.Screen name="TokTokWalletActionsScantoPay" component={WalletActionsScantoPayConfirmPaymentComponent}/> */}
     <Authenticated.Screen name="TokTokWalletActionsScantoPayConfirmPayment" component={WalletActionsScantoPayConfirmPaymentComponent}/>
     <Authenticated.Screen name="TokTokWalletActionsTransfer" component={WalletActionsTranferComponent}/>
     

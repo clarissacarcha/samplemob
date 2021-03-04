@@ -5,6 +5,7 @@ import {MEDIUM,DARK,COLOR,ORANGE} from '../../../../../../res/constants'
 import WebView from 'react-native-webview'
 import {useMutation} from '@apollo/react-hooks'
 import {UPDATE_FROM_PAYPANDA_RETURN_URL} from '../../../../../../graphql'
+import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 
 
 const {width,height} = Dimensions.get('window')
@@ -21,6 +22,7 @@ const WebViewComponent = ()=> {
     const [cangoForward,setCanGoForward] = useState(false)
     const [mounted, setMounted] = useState(true)
     const [checkurl,setCheckurl] = useState("")
+    const [donetransaction,setDoneTransaction] = useState(false)
 
     const initialpaymentData = {
         merchant_id: route.params.merchantId,
@@ -110,14 +112,14 @@ const WebViewComponent = ()=> {
         <>
             <View style={styles.container}> 
             {
-                mounted && 
+                mounted & !donetransaction ? 
                 <WebView
                     style={{flex: 1}}
                     ref={webviewRef}
                     source={{
                         uri: 'http://35.173.0.77/dev/paypanda/api/payment/transaction_entry',
                         method: 'POST',
-                        // headers: { 'Content-Type': 'application/x-www-form-urlencoded', },
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded', },
                         body: generatedInitialPaymentData
                     }}
                     startInLoadingState
@@ -149,7 +151,7 @@ const WebViewComponent = ()=> {
                                     }
                                 })
 
-                                navigation.navigate("TokTokWallet")
+                                setDoneTransaction(true)
                             }
 
                             setCheckurl(url)
@@ -157,6 +159,21 @@ const WebViewComponent = ()=> {
                         }   
                     }}
                 />  
+                : mounted &&
+                <View style={styles.donetransaction}>
+                    <View style={styles.donetransactioncontent}>
+                        <View style={{height: 100,width: 100,borderRadius: 100, backgroundColor: "#21CD36",justifyContent: "center", alignItems: "center"}}>
+                            <FIcon5 name="check" color="white" size={40}/>
+                        </View>
+
+                        <Text style={{marginTop: 20,fontWeight: "400",fontSize: 20}}>Transaction Completed</Text>
+                    </View>
+                    <View style={styles.donetransactionButton}>
+                        <TouchableOpacity onPress={()=>navigation.navigate("TokTokWallet")} style={{height: "100%",width: "100%",backgroundColor: DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
+                            <Text style={{color: COLOR}}>Done</Text>
+                        </TouchableOpacity>
+                     </View>
+                </View>
             }
                 {/* <NavigationWebView cangoBackProp={cangoBack} cangoForwardProp={cangoForward} /> */}
             </View>
@@ -167,6 +184,7 @@ const WebViewComponent = ()=> {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: "white"
     },
     navigationWebview: {
         height: 50,
@@ -181,6 +199,20 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center"
+    },
+    donetransaction: {
+        flex: 1,
+        
+    },
+    donetransactioncontent: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    donetransactionButton: {
+        height: 60,
+        width: "100%",
+        padding: 10,
     }
 })
 

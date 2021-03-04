@@ -6,11 +6,11 @@ import {onError} from '../../../../../util/ErrorUtility'
 const VerifyFullname = ({fullname , setFullname , setCurrentIndex})=> {
     return (
         <>
-        <View style={{flexDirection: "row",backgroundColor: "lightgray",paddingHorizontal: 20,paddingVertical: 18,}}>
+        <View style={{flexDirection: "row",backgroundColor: "#F6F6F6",paddingHorizontal: 20,paddingVertical: 18,}}>
                 <View style={{flexBasis: "auto"}}>
                 <Image style={{height: 40,width: 40, alignSelf: "center"}} source={require('../../../../../assets/icons/walletVerify.png')} resizeMode="contain" />
                 </View>
-                <View style={{justifyContent: "center", alignItems: "center"}}>
+                <View style={{justifyContent: "center", alignItems: "center",marginRight: 10,}}>
                     <Text style={{marginHorizontal: 10,}}>All your details are protected in accordance with our privacy policy</Text>
                 </View>
         </View>

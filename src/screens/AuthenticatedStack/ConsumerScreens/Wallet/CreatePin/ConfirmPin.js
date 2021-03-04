@@ -25,9 +25,9 @@ const NumberBoxes = ({pinCode, onNumPress, showPin}) => {
   };
 
 
-const CreatePin = ()=> {
-
-    const [pinCode,setPinCode] = useState("")
+const ConfirmPin = ({navigation,route})=> {
+    const {pinCode} = route.params
+    const [confirmpinCode,setConfirmPinCode] = useState("")
     const [showPin,setShowPin] = useState(false)
     const inputRef = useRef();
 
@@ -39,24 +39,25 @@ const CreatePin = ()=> {
     
     const onSubmit = () => {
         console.log("submit",pinCode)
+        navigation.navigate("TokTokWalletSettingsConfirmEmail", {pinCode: pinCode})
     };
 
     return (
        <View style={styles.container}>
             <View style={styles.content}>
-                    <Text style={{fontSize: 18,fontWeight:"400",marginTop: 20,}}>Enter your PIN</Text>
+                    <Text style={{fontSize: 16,fontWeight:"400",marginTop: 20,}}>Confirm your PIN</Text>
                     <View style={{position: 'relative',marginTop: 50,}}>
-                        <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={showPin}/>
+                        <NumberBoxes pinCode={confirmpinCode} onNumPress={onNumPress} showPin={showPin}/>
                         <TextInput
                             caretHidden
-                            value={pinCode}
+                            value={confirmpinCode}
                             ref={inputRef}
                             style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent'}}
                             keyboardType="number-pad"
                             returnKeyType="done"
                             onChangeText={(value) => {
                             if (value.length <= 6) {
-                                setPinCode(value);
+                                setConfirmPinCode(value);
                             }
                             }}
                             onSubmitEditing={onSubmit}
@@ -74,7 +75,7 @@ const CreatePin = ()=> {
                 onPress={onSubmit}
                 style={{alignItems: "center",height: 40,backgroundColor: DARK,margin: 20,justifyContent: "center",borderRadius: 10,}}
             >
-                    <Text style={{color: COLOR}}>Next</Text>
+                    <Text style={{color: COLOR}}>Confirm</Text>
             </TouchableOpacity>
        </View>
     )
@@ -92,10 +93,9 @@ const styles = StyleSheet.create({
     },
     inputView: {
         backgroundColor: 'white',
-        borderWidth: StyleSheet.hairlineWidth,
-        borderRadius: 5,
-        height: 50,
-        width: 50,
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        height: 40,
+        width: 40,
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -110,4 +110,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default CreatePin
+export default ConfirmPin

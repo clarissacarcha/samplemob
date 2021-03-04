@@ -22,13 +22,22 @@ const ConfirmPayment = ()=> {
     return (
         <View style={styles.container}>
             <View style={styles.content}>
-
+                    <View style={styles.receiverInfo}>
+                        <Image />
+                        <View>
+                            <Text style={{fontWeight:"bold"}}>Noctic Lucis Caelum</Text>
+                            <Text style={{fontSize:11,color:"gray",marginTop:5,}}>+639123456789</Text>
+                        </View>
+                    </View>
+                    <View style={{padding: 20}}>
+                        <Text style={{fontWeight:"bold"}}>Amount: {'\u20B1'} 500.00</Text>
+                    </View>
             </View>
             <SwipeButton 
                     containerStyles={styles.swipeContainer}
                     width={300}
                     title={`Swipe to Pay ${'\u20B1'} 500.00`}
-                    titleFontSize={14}
+                    titleFontSize={12}
                     titleColor="white"
                     railBackgroundColor="black"
                     railStyles={{
@@ -59,6 +68,12 @@ const styles = StyleSheet.create({
     swipeContainer: {
        alignSelf:"center",
        marginBottom: 20,
+    },
+    receiverInfo: {
+        padding: 20,
+        flexDirection:"row",
+        borderBottomWidth: 0.5,
+        borderColor:"silver"
     }
 
 })
