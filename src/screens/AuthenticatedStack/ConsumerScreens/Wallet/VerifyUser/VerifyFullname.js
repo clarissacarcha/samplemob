@@ -1,9 +1,13 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import {Text,View,StyleSheet,Alert,Image,TextInput,TouchableOpacity} from 'react-native'
-import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM,ORANGE} from '../../../../../res/constants'
+import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM,ORANGE, FONT_REGULAR, FONT_MEDIUM, FONT_LIGHT} from '../../../../../res/constants'
 import {onError} from '../../../../../util/ErrorUtility'
+import {VerifyContext} from './Context/VerifyContextProvider'
 
-const VerifyFullname = ({fullname , setFullname , setCurrentIndex})=> {
+const VerifyFullname = ()=> {
+
+    const {fullname, setFullname, setCurrentIndex } = useContext(VerifyContext)
+
     return (
         <>
         <View style={{flexDirection: "row",backgroundColor: "#F6F6F6",paddingHorizontal: 20,paddingVertical: 18,}}>
@@ -11,14 +15,14 @@ const VerifyFullname = ({fullname , setFullname , setCurrentIndex})=> {
                 <Image style={{height: 30,width: 30, alignSelf: "center"}} source={require('../../../../../assets/icons/walletVerify.png')} resizeMode="contain" />
                 </View>
                 <View style={{justifyContent: "center", alignItems: "center",marginRight: 10,}}>
-                    <Text style={{marginHorizontal: 10,fontSize: 12}}>All your details are protected in accordance with our privacy policy</Text>
+                    <Text style={{marginHorizontal: 10,fontSize: 12,fontFamily: FONT_REGULAR}}>All your details are protected in accordance with our privacy policy</Text>
                 </View>
         </View>
         <View style={styles.content}>
 
             <View style={styles.mainInput}>
-                    <Text style={{fontSize: 14, fontWeight: '400'}}>What's your full name?</Text>
-                    <Text style={{color: 'gray',marginTop: 8,fontSize: 12}}>Please enter the name that appears on your government ID</Text>
+                    <Text style={{fontSize: 14, fontFamily: FONT_MEDIUM}}>What's your full name?</Text>
+                    <Text style={{fontFamily: FONT_LIGHT,marginTop: 8,fontSize: 12}}>Please enter the name that appears on your government ID</Text>
                     <TextInput 
                         style={styles.input}
                         value={fullname}
@@ -31,7 +35,7 @@ const VerifyFullname = ({fullname , setFullname , setCurrentIndex})=> {
                     if(fullname == "") return Alert.alert("Please provide Fullname")
                     setCurrentIndex(oldval => oldval + 1)
                 }} style={{height: "100%",width: "100%",backgroundColor: DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
-                    <Text style={{color: COLOR,fontSize: 12}}>Next</Text>
+                    <Text style={{color: COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Next</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -70,7 +74,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: "silver",
         marginTop: 20,
-
+        fontFamily: FONT_REGULAR
     }
 })
 

@@ -1,6 +1,8 @@
 import React from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,Image} from 'react-native'
 import {HeaderBack, HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../components'
+import FIcon from 'react-native-vector-icons/Feather';
+import { FONT_LIGHT, FONT_MEDIUM } from '../../../../res/constants';
 
 const Settings = ({navigation})=> {
     navigation.setOptions({
@@ -14,11 +16,12 @@ const Settings = ({navigation})=> {
                          <Image source={icon} style={{height: 30, width: 30}} resizeMode="contain"/>
                     </View>
                     <View style={styles.name}>
-                        <Text style={{fontSize:16}}>{title}</Text>
-                        <Text style={{fontSize: 12, color: "gray"}}>{subtitle}</Text>
+                        <Text style={{fontSize:14,fontFamily: FONT_MEDIUM}}>{title}</Text>
+                        <Text style={{fontSize: 12, fontFamily: FONT_LIGHT}}>{subtitle}</Text>
                     </View>
                     <View style={styles.arrowright}>
-                           <Text style={{fontSize: 16,color: "gray"}}>{'>'}</Text>
+                           {/* <Text style={{fontSize: 16,color: "gray"}}>{'>'}</Text> */}
+                           <FIcon name="chevron-right" size={16} color={'#A6A8A9'}/> 
                     </View>
         </TouchableOpacity>
     )

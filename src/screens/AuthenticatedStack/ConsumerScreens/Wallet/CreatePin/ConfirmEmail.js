@@ -1,6 +1,6 @@
 import React, { useState ,useRef } from 'react'
 import {View,Text,StyleSheet,TouchableHighlight,TouchableOpacity,TextInput,Modal,Image} from 'react-native'
-import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM,ORANGE} from '../../../../../res/constants'
+import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM,ORANGE, FONT_MEDIUM, FONT_REGULAR} from '../../../../../res/constants'
 import {useNavigation} from '@react-navigation/native'
 import {HeaderBack, HeaderTitle} from '../../../../../components'
 
@@ -25,15 +25,15 @@ const SuccessModal = ({modalVisible,closeModal})=> {
                      }}>
                          <Image style={{height: 100,width: 100}} source={require('../../../../../assets/icons/walletVerify.png')}/>
                      </View>
-                     <Text style={{fontSize: 20,fontWeight: "400"}}>Toktok PIN Set Up Successfully</Text>
-                     <Text style={{color: "#212529",marginTop:5}}>Your ToktokPay Wallet is now safe!</Text>
+                     <Text style={{fontSize: 20,fontFamily: FONT_MEDIUM}}>Toktok PIN Set Up Successfully</Text>
+                     <Text style={{color: "#212529",marginTop:5,fontFamily: FONT_REGULAR}}>Your ToktokPay Wallet is now safe!</Text>
                  </View>
       
                  <TouchableOpacity
                      onPress={()=>navigation.navigate("TokTokWallet")}
                      style={{alignItems: "center",height: 40,backgroundColor: DARK,margin: 20,justifyContent: "center",borderRadius: 10,}}
                  >
-                         <Text style={{color: COLOR,fontSize: 12}}>Done</Text>
+                         <Text style={{color: COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Done</Text>
                  </TouchableOpacity>
             </View>
      
@@ -63,14 +63,14 @@ const ConfirmEmail = ({navigation,route})=> {
         <SuccessModal modalVisible={modalVisible} closeModal={closeModal}/>
        <View style={styles.container}>
             <View style={styles.content}>
-                <Text style={{fontSize: 14,fontWeight:"400",marginTop: 20,}}>Confirm Your Email Address</Text>
+                <Text style={{fontSize: 14,fontFamily: FONT_MEDIUM,marginTop: 20,}}>Confirm Your Email Address</Text>
                 <View style={{alignSelf: "flex-start",width: "100%",marginTop: 20,}}>
-                    <Text style={{fontSize: 12}}>Email Address</Text>    
+                    <Text style={{fontSize: 12,fontFamily: FONT_MEDIUM}}>Email Address</Text>    
                     <TextInput 
                         placeholder="Email"
                         style={styles.input} 
                     /> 
-                    <Text style={{fontSize: 12,}}>This Email address will be used to regain access to ToktokPay if you experience issues logging in.</Text>
+                    <Text style={{fontSize: 12,fontFamily: FONT_REGULAR}}>This Email address will be used to regain access to ToktokPay if you experience issues logging in.</Text>
                 </View>
             </View>
  
@@ -78,7 +78,7 @@ const ConfirmEmail = ({navigation,route})=> {
                 onPress={CompleteSetup}
                 style={{alignItems: "center",height: 40,backgroundColor: DARK,margin: 20,justifyContent: "center",borderRadius: 10,}}
             >
-                    <Text style={{color: COLOR,fontSize: 12}}>Submit</Text>
+                    <Text style={{color: COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Submit</Text>
             </TouchableOpacity>
        </View>
        </>
@@ -102,6 +102,7 @@ const styles = StyleSheet.create({
         marginVertical:10,
         borderRadius: 5,
         fontSize: 12,
+        fontFamily: FONT_REGULAR
     },
 })
 

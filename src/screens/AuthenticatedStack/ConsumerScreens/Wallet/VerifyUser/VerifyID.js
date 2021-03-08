@@ -1,9 +1,10 @@
-import React, { useState , useRef } from 'react'
+import React, { useState , useRef , useContext } from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,Modal,Dimensions,Alert,Image} from 'react-native'
-import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM,ORANGE} from '../../../../../res/constants'
+import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM,ORANGE, FONT_MEDIUM, FONT_LIGHT, FONT_REGULAR, FONT_SEMIBOLD} from '../../../../../res/constants'
 import EIcon from 'react-native-vector-icons/EvilIcons'
 import {RNCamera} from 'react-native-camera';
 import ImageCropper from 'react-native-simple-image-cropper';
+import {VerifyContext} from './Context/VerifyContextProvider'
 
 const imageWidth = Dimensions.get('window').width - 40;
 
@@ -11,7 +12,9 @@ const CROP_AREA_WIDTH = imageWidth;
 const CROP_AREA_HEIGHT = imageWidth;
 
 
-const VerifyID = ({setCurrentIndex, image, setImage})=> {
+const VerifyID = ()=> {
+
+    const {setCurrentIndex, idImage: image, setIDImage: setImage} = useContext(VerifyContext)
 
     const [showCamera,setShowCamera] = useState(false)
     const cameraRef = useRef(null)
@@ -104,7 +107,7 @@ const VerifyID = ({setCurrentIndex, image, setImage})=> {
                 justifyContent: "center",
                 alignItems: "center"
             }}>
-                <Text style={{color:"#FCB91A",marginBottom: 10,}}>Add a photo</Text>
+                <Text style={{color:"#FCB91A",marginBottom:5,fontFamily: FONT_SEMIBOLD}}>Add a photo</Text>
                 <EIcon name="camera" color="#FCB91A" size={40} />
         </TouchableOpacity>
     )
@@ -136,29 +139,29 @@ const VerifyID = ({setCurrentIndex, image, setImage})=> {
             <CameraModal />
             <View style={styles.content}>
                 <View style={styles.mainInput}>
-                        <Text style={{fontSize: 14, fontWeight: '400'}}>Take a photo of your ID?</Text>
-                        <Text style={{color: 'gray',marginTop: 8,fontSize: 12}}>Make sure the information matches your government-issued ID.</Text>  
+                        <Text style={{fontSize: 14, fontFamily: FONT_MEDIUM}}>Take a photo of your ID?</Text>
+                        <Text style={{fontFamily: FONT_LIGHT,marginTop: 5,fontSize: 12}}>Help us verify your identity with a photo of your valid government-issued ID, as required by local regulations.</Text>  
                   
                         <View style={{marginTop: 20,}}>
-                            <Text style={{fontSize: 12, fontWeight: '400'}}>Country?</Text>
+                            <Text style={{fontSize: 12, fontFamily: FONT_MEDIUM}}>Country?</Text>
                             <View style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center",paddingVertical: 10}]}>
-                                <Text style={{flex: 1,color: "gray",fontSize: 12}}></Text>
+                                <Text style={{flex: 1,color: "gray",fontSize: 12,fontFamily: FONT_REGULAR}}></Text>
                                 <TouchableOpacity>
-                                    <Text style={{color: ORANGE,fontWeight: "bold",fontSize: 12}}>Change</Text>
+                                    <Text style={{color: ORANGE,fontWeight: "bold",fontSize: 12,fontFamily: FONT_MEDIUM}}>Change</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
 
-                        <View style={{marginTop: 20,}}>
-                            <Text style={{fontSize: 12, fontWeight: '400'}}>ID Type?</Text>
+                        <View style={{marginTop: 15,}}>
+                            <Text style={{fontSize: 12, fontFamily: FONT_MEDIUM}}>ID Type?</Text>
                             <View style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center"}]}>
-                                <Text style={{flex: 1,color: "gray",fontSize: 12,}}>MM/DD/YY</Text>
+                                <Text style={{flex: 1,color: "gray",fontSize: 12,fontFamily: FONT_REGULAR}}>MM/DD/YY</Text>
                                 <EIcon name="calendar" size={24}/>
                             </View>
                         </View>
 
-                        <View style={{flex: 1,paddingVertical: 20}}>
-                                <Text style={{fontSize: 12, fontWeight: '400'}}>Photo of your ID?</Text>
+                        <View style={{flex: 1,paddingVertical: 25}}>
+                                <Text style={{fontSize: 12, fontFamily: FONT_MEDIUM}}>Photo of your ID?</Text>
                                 { image ? <ImageIDSet/> : <ChooseImage/> }
                         </View>
 
@@ -169,15 +172,15 @@ const VerifyID = ({setCurrentIndex, image, setImage})=> {
                 <View style={styles.proceedBtn}>
                     <TouchableOpacity onPress={()=>{
                         setCurrentIndex(oldval => oldval - 1)
-                    }} style={{height: "100%",flex: 1,marginRight: 5,backgroundColor: DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
-                        <Text style={{color: COLOR,fontSize: 12}}>Back</Text>
+                    }} style={{height: "100%",flex: 1,marginRight: 5,backgroundColor: "transparent" ,borderColor: "gray", borderWidth: 1, borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
+                        <Text style={{color: "gray",fontSize: 12,fontFamily: FONT_MEDIUM}}>Back</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity onPress={()=>{
                         // if(nationality == "") return Alert.alert("Please provide Nationality")
                         setCurrentIndex(oldval => oldval + 1)
                     }} style={{height: "100%",flex: 1,marginLeft: 5,backgroundColor: DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
-                        <Text style={{color: COLOR,fontSize: 12}}>Next</Text>
+                        <Text style={{color: COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Next</Text>
                     </TouchableOpacity>
                 </View>
             </View>

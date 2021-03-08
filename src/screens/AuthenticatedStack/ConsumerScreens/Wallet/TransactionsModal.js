@@ -3,7 +3,7 @@ import {View,Text,Modal,StyleSheet,TouchableOpacity,Dimensions,ScrollView,Image}
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import DatePicker from 'react-native-date-picker'
 import moment from 'moment'
-import { DARK, COLOR } from '../../../../res/constants'
+import { DARK, COLOR, FONT_MEDIUM, FONT_REGULAR } from '../../../../res/constants'
 
 const {height,width} = Dimensions.get("window")
 
@@ -12,7 +12,7 @@ const {height,width} = Dimensions.get("window")
 const TransactionLog = ({transactionDate , transactionItems })=> {
     return (
         <View style={styles.transactionLogsContainer}>
-            <Text style={{fontSize: 12}}>{transactionDate}</Text>
+            <Text style={{fontSize: 12,fontFamily: FONT_MEDIUM}}>{transactionDate}</Text>
            {
                transactionItems.map((item)=>{
 
@@ -22,12 +22,12 @@ const TransactionLog = ({transactionDate , transactionItems })=> {
                             <Image source={require('../../../../assets/icons/walletDelivery.png')} style={{height: 30, width: 30}} resizeMode="contain"/>
                         </View>
                         <View style={styles.transactionDetails}>
-                            <Text style={{fontSize: 12}}>Delivery</Text>
-                            <Text style={{color: "#909294",fontSize: 10,marginTop: 5}}>sf skdlfsdklf sdklfjdklsjflsdjf</Text>
+                            <Text style={{fontSize: 12,fontFamily: FONT_MEDIUM}}>Delivery</Text>
+                            <Text style={{color: "#909294",fontSize: 10,marginTop: 5,fontFamily: FONT_MEDIUM}}>sf skdlfsdklf sdklfjdklsjflsdjf</Text>
                         </View>
                         <View style={styles.transactionAmount}>
-                            <Text style={{fontSize: 12}}>- {'\u20B1'} 60</Text>
-                            <Text style={{color: "gray",fontSize: 10,alignSelf: "flex-end",marginTop: 5}}>Feb 18</Text>
+                            <Text style={{fontSize: 12,fontFamily: FONT_MEDIUM}}>- {'\u20B1'} 60</Text>
+                            <Text style={{color: "gray",fontSize: 10,fontFamily: FONT_REGULAR, alignSelf: "flex-end",marginTop: 5}}>Feb 18</Text>
                         </View>
                     </View>
                 )
@@ -113,10 +113,10 @@ const TransactionsModal = ({modalVisible,closeModal})=> {
                 </TouchableOpacity>
                 <View style={styles.content}>
                     <View style={{flexDirection: "row"}}>
-                        <Text style={{fontSize: 14 ,fontWeight: "bold"}}>Transactions</Text>
+                        <Text style={{fontSize: 14 ,fontFamily: FONT_MEDIUM}}>Transactions</Text>
                         <View style={{flex: 1}}>
-                           <TouchableOpacity onPress={()=>setShowFilterDate(true)} style={{alignSelf: "flex-end", padding: 5, paddingHorizontal: 15, borderRadius: 10, backgroundColor: "#FCB91A"}}>
-                                    <Text style={{color: "white",fontSize: 12}}>{moment(filterDate.from).format('D MMM')} - {moment(filterDate.to).format('D MMM')}</Text>
+                           <TouchableOpacity onPress={()=>setShowFilterDate(true)} style={{alignSelf: "flex-end", padding: 2, paddingHorizontal: 15, borderRadius: 10, backgroundColor: "#FCB91A"}}>
+                                    <Text style={{color: "white",fontSize: 12,fontFamily: FONT_MEDIUM}}>{moment(filterDate.from).format('D MMM')} - {moment(filterDate.to).format('D MMM')}</Text>
                            </TouchableOpacity>
                         </View>
                     </View>
@@ -128,7 +128,7 @@ const TransactionsModal = ({modalVisible,closeModal})=> {
                                 <TouchableOpacity onPress={()=>setFilterType(type)} style={[styles.filterType, {
                                     borderColor: filtertype === type ? "#FCB91A" : "silver"
                                 }]}>
-                                        <Text style={{color: "black",fontSize: 11}}>{type}</Text>
+                                        <Text style={{color: "black",fontSize: 11,fontFamily: FONT_REGULAR}}>{type}</Text>
                                 </TouchableOpacity>
                             ))
                         }
@@ -138,7 +138,7 @@ const TransactionsModal = ({modalVisible,closeModal})=> {
                         <ScrollView showsVerticalScrollIndicator={false}>
                             <TransactionLog transactionDate="Today" transactionItems={[1,2]}></TransactionLog>
                             <TransactionLog transactionDate="Yesterday" transactionItems={[1]}></TransactionLog>
-                            <TransactionLog transactionDate="17 Feb 2021" transactionItems={[1,2,3]}></TransactionLog>
+                            <TransactionLog transactionDate="17 Feb 2021" transactionItems={[1]}></TransactionLog>
                         </ScrollView>
                     </View>
 
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
     },
     filterType: {
         alignSelf: "flex-end",
-        padding: 5, 
+        padding: 2, 
         paddingHorizontal: 15, 
         borderRadius: 10,
         borderWidth: 1,

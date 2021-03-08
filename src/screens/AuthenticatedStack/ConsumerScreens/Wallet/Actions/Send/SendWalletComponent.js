@@ -4,8 +4,14 @@ import {check,request,PERMISSIONS,RESULTS} from 'react-native-permissions'
 import Contacts from 'react-native-contacts';
 import {sortBy} from 'lodash'
 import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM} from '../../../../../../res/constants'
+import {HeaderBack, HeaderTitle} from '../../../../../../components'
 
-const SendWalletComponent = ()=> {
+const SendWalletComponent = ({navigation})=> {
+
+    navigation.setOptions({
+      headerLeft: ()=> <HeaderBack />,
+      headerTitle: ()=> <HeaderTitle label={['Choose a Recipient']} />,
+    })
 
     const [data, setData] = useState(null);
     const [fetchError, setFetchError] = useState(false);

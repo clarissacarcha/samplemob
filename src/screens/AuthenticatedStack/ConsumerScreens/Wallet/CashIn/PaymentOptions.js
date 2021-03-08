@@ -1,8 +1,9 @@
 import React from 'react'
 import {View,StyleSheet,Text,Image} from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-import FIcon5 from 'react-native-vector-icons/FontAwesome5'
+import FIcon from 'react-native-vector-icons/Feather'
 import {HeaderBack, HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../../components'
+import { FONT_LIGHT, FONT_MEDIUM } from '../../../../../res/constants'
 
 const PaymentOptions = ({navigation,route})=> {
 
@@ -21,11 +22,11 @@ const PaymentOptions = ({navigation,route})=> {
                         <Image style={{height: 30,width: 30}} resizeMode="contain" source={require('../../../../../assets/images/paypanda.png')} />
                     </View>
                     <View style={styles.name}>
-                        <Text style={{fontSize:14,fontWeight:"bold"}}>PayPanda</Text>
-                        <Text style={{fontSize: 12, color: "gray"}}>Use PayPanda to cash-in</Text>
+                        <Text style={{fontSize:14,fontFamily: FONT_MEDIUM}}>PayPanda</Text>
+                        <Text style={{fontSize: 12, fontFamily: FONT_LIGHT}}>Use PayPanda to cash-in</Text>
                     </View>
                     <View style={styles.arrowright}>
-                           <Text style={{fontSize: 16,color: "gray"}}>{'>'}</Text>
+                           <FIcon name={'chevron-right'} color={"#A6A8A9"}/>
                     </View>
                 </TouchableOpacity>
         </View>

@@ -4,7 +4,7 @@ import {HeaderBack, HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import { RNCamera } from 'react-native-camera';
 import {numberFormat} from '../../../../../../helper'
-import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM} from '../../../../../../res/constants'
+import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM, FONT_MEDIUM, FONT_REGULAR} from '../../../../../../res/constants'
 import FIcon from 'react-native-vector-icons/Feather';
 import {useFocusEffect} from '@react-navigation/native'
 
@@ -88,14 +88,14 @@ const ScantoPayWalletComponent = ({navigation,route})=> {
                                 <Image source={torch ? require('../../../../../../assets/icons/walletScanTorchOn.png') : require('../../../../../../assets/icons/walletScanTorchOff.png')} />                      
                             </TouchableHighlight>
 
-                            <Text style={{color: "white",fontWeight: "400",fontSize: 15}}>Tap to turn {torch ? 'off' : 'on' }</Text>
+                            <Text style={{color: "white",fontFamily: FONT_MEDIUM,fontSize: 15}}>Tap to turn {torch ? 'off' : 'on' }</Text>
                     </View>
 
                 
             </View>
 
             <View style={{marginTop: 25}}>
-                        <Text style={{color: "white",fontWeight: "400",fontSize: 15}}>Position the QR code within the frame.</Text>
+                        <Text style={{color: "white",fontFamily: FONT_REGULAR,fontSize: 15}}>Position the QR code within the frame.</Text>
                     </View>
         
         </View>
@@ -132,7 +132,7 @@ const ScantoPayWalletComponent = ({navigation,route})=> {
                 alignItems: 'center'
             }}>
                 <Image style={{width: 50,height: 25}} resizeMode="contain" source={require('../../../../../../assets/icons/walletMoney.png')} />
-                <Text style={{marginLeft: 10, fontSize: 16, fontWeight: "400"}}>{'\u20B1'} {numberFormat(balance)}</Text>
+                <Text style={{marginLeft: 10, fontSize: 16, fontFamily: FONT_MEDIUM}}>{'\u20B1'} {numberFormat(balance)}</Text>
                 <View style={{
                     flex: 1,
                     justifyContent: "flex-end",
@@ -147,7 +147,7 @@ const ScantoPayWalletComponent = ({navigation,route})=> {
                         }}
                         onPress={()=>navigation.navigate("TokTokWalletCashIn",{walletId,balance})}
                     >
-                            <Text style={{color: COLOR,fontSize: 12}}>Cash In</Text>
+                            <Text style={{color: COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Cash In</Text>
                     </TouchableOpacity>
                     
                 </View>
@@ -204,8 +204,8 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     borderEdges: {
-        height: 50,
-        width: 50,
+        height: 40,
+        width: 40,
         position: "absolute",
         borderColor: "#F6841F",
     }

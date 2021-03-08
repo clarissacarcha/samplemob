@@ -1,11 +1,15 @@
-import React, { useState ,useRef } from 'react'
+import React, { useState ,useRef , useContext } from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,Alert,Dimensions,Modal,Image} from 'react-native'
-import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM,ORANGE} from '../../../../../res/constants'
+import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM,ORANGE, FONT_MEDIUM, FONT_LIGHT, FONT_REGULAR} from '../../../../../res/constants'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import {RNCamera} from 'react-native-camera';
 import ImageCropper from 'react-native-simple-image-cropper';
+import {VerifyContext} from './Context/VerifyContextProvider'
 
-const VerifySelfie = ({setCurrentIndex , image, setImage})=> {
+const VerifySelfie = ()=> {
+
+    const VerifyUserData = useContext(VerifyContext)
+    const {setCurrentIndex , selfieImage: image, setSelfieImage: setImage} = VerifyUserData
 
     const [showCamera,setShowCamera] = useState(false)
     const cameraRef = useRef(null)
@@ -87,16 +91,16 @@ const VerifySelfie = ({setCurrentIndex , image, setImage})=> {
             <CameraModal />
             <View style={styles.content}>
                 <View style={styles.mainInput}>
-                        <Text style={{fontSize: 14, fontWeight: '400'}}>One last step before you get a Premium Wallet!</Text>
-                        <Text style={{color: 'gray',marginTop: 8,fontSize: 12}}>Take a photo to verify your identity.</Text>  
+                        <Text style={{fontSize: 14, fontFamily: FONT_MEDIUM}}>One last step before you get a Premium Wallet!</Text>
+                        <Text style={{fontFamily: FONT_LIGHT,marginTop: 8,fontSize: 12}}>Take a photo to verify your identity.</Text>  
                         
                        
                         <View style={[styles.input,{padding: 20,}]}>
-                            <Text style={{fontSize: 14, fontWeight: '400'}}>Take a selfie</Text>
-                            <Text style={{color: 'gray',marginTop: 8,fontSize: 12}}>Show us that you match your photo ID with a live selfie</Text>  
+                            <Text style={{fontSize: 14, fontFamily: FONT_MEDIUM}}>Take a selfie</Text>
+                            <Text style={{color: 'gray',marginTop: 8,fontSize: 12,fontFamily: FONT_REGULAR}}>Show us that you match your photo ID with a live selfie</Text>  
 
                             <TouchableOpacity onPress={()=>setShowCamera(true)} style={[styles.input,{borderColor: "#F6841F",justifyContent: "center",alignItems: "center",marginTop: 20,}]}>
-                                <Text style={{color: "#F6841F",fontSize: 12}}>Start Now</Text>
+                                <Text style={{color: "#F6841F",fontSize: 12,fontFamily: FONT_MEDIUM}}>Start Now</Text>
                             </TouchableOpacity>
                         </View>
 
@@ -112,14 +116,15 @@ const VerifySelfie = ({setCurrentIndex , image, setImage})=> {
                 <View style={styles.proceedBtn}>
                     <TouchableOpacity onPress={()=>{
                         setCurrentIndex(oldval => oldval - 1)
-                    }} style={{height: "100%",flex: 1,marginRight: 5,backgroundColor: DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
-                        <Text style={{color: COLOR,fontSize: 12}}>Back</Text>
+                    }} style={{height: "100%",flex: 1,marginRight: 5,backgroundColor: "transparent" ,borderColor: "gray", borderWidth: 1, borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
+                        <Text style={{color: "gray",fontSize: 12,fontFamily: FONT_MEDIUM}}>Back</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity onPress={()=>{
                         // start saving to DB
+                        console.log(VerifyUserData)
                     }} style={{height: "100%",flex: 1,marginLeft: 5,backgroundColor: DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
-                        <Text style={{color: COLOR,fontSize: 12}}>Next</Text>
+                        <Text style={{color: COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Next</Text>
                     </TouchableOpacity>
                 </View>
             </View>

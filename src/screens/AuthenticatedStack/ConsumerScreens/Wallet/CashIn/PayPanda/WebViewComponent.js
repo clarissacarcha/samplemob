@@ -1,7 +1,7 @@
 import React, { useState , useRef , useEffect} from 'react'
 import {StyleSheet,View,Modal,Button, Text , ActivityIndicator , Dimensions , TouchableOpacity , Alert , Platform} from 'react-native'
 import {useNavigation,useRoute} from '@react-navigation/native'
-import {MEDIUM,DARK,COLOR,ORANGE} from '../../../../../../res/constants'
+import {MEDIUM,DARK,COLOR,ORANGE, FONT_MEDIUM} from '../../../../../../res/constants'
 import WebView from 'react-native-webview'
 import {useMutation} from '@apollo/react-hooks'
 import {UPDATE_FROM_PAYPANDA_RETURN_URL} from '../../../../../../graphql'
@@ -166,11 +166,11 @@ const WebViewComponent = ()=> {
                             <FIcon5 name="check" color="white" size={40}/>
                         </View>
 
-                        <Text style={{marginTop: 20,fontWeight: "400",fontSize: 20}}>Transaction Completed</Text>
+                        <Text style={{marginTop: 20,fontFamily: FONT_MEDIUM,fontSize: 20}}>Transaction Completed</Text>
                     </View>
                     <View style={styles.donetransactionButton}>
                         <TouchableOpacity onPress={()=>navigation.navigate("TokTokWallet")} style={{height: "100%",width: "100%",backgroundColor: DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
-                            <Text style={{color: COLOR,fontSize: 12}}>Done</Text>
+                            <Text style={{color: COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Done</Text>
                         </TouchableOpacity>
                      </View>
                 </View>

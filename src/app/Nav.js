@@ -293,7 +293,6 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="TokTokWalletActionsRequest" component={WalletActionsRequestComponent} />
     <Authenticated.Screen name="TokTokWalletActionsSend" component={WalletActionsSendComponent} />
     <Authenticated.Screen name="TokTokWalletActionsScantoPay" component={WalletActionsScantoPayComponent}/>
-    {/* <Authenticated.Screen name="TokTokWalletActionsScantoPay" component={WalletActionsScantoPayConfirmPaymentComponent}/> */}
     <Authenticated.Screen name="TokTokWalletActionsScantoPayConfirmPayment" component={WalletActionsScantoPayConfirmPaymentComponent}/>
     <Authenticated.Screen name="TokTokWalletActionsTransfer" component={WalletActionsTranferComponent}/>
     

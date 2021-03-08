@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,Image,Modal,TextInput,Platform,KeyboardAvoidingView,ActivityIndicator,Alert,Dimensions} from 'react-native'
 import {HeaderBack, HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../../../components'
-import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM} from '../../../../../../res/constants'
+import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM, FONT_MEDIUM, FONT_REGULAR} from '../../../../../../res/constants'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import {useSelector} from 'react-redux'
 import {useMutation} from '@apollo/react-hooks'
@@ -78,38 +78,38 @@ const PayPandaComponent = ({navigation,route})=> {
                         <TouchableOpacity onPress={()=>setShowModal(!showModal)} style={{position: "absolute",left: 0}}>
                             <FIcon5 name="times" size={20}/>
                         </TouchableOpacity>   
-                        <Text style={{fontSize: 14,fontWeight:"bold"}}>Review and confirm</Text>
+                        <Text style={{fontSize: 14,fontFamily: FONT_MEDIUM}}>Review and confirm</Text>
                     </View>
                     <View style={styles.modalconfirmdetails}>
                         <View style={{flexDirection: "row",paddingVertical: 12,borderBottomWidth: 0.5,borderColor: "silver",width: "100%"}}>
                             <View style={{flex: 1}}>    
-                                <Text style={{color: "gray",fontSize: 12}}>Payment Method</Text>
+                                <Text style={{color: "gray",fontSize: 12,fontFamily: FONT_REGULAR}}>Payment Method</Text>
                             </View>
                             <View style={{flex: 1}}>   
-                                 <Text style={{color: "gray",fontSize: 12,alignSelf: "flex-end"}}>PayPanda</Text>
+                                 <Text style={{color: "gray",fontSize: 12,alignSelf: "flex-end",fontFamily: FONT_REGULAR}}>PayPanda</Text>
                             </View>  
                         </View>
                         <View style={{flexDirection: "row",paddingVertical: 12,borderBottomWidth: 0.5,borderColor: "silver"}}>
                             <View style={{flex: 1}}>    
-                                <Text style={{color: "gray",fontSize: 12}}>Cash-in amount</Text>
+                                <Text style={{color: "gray",fontSize: 12,fontFamily: FONT_REGULAR}}>Cash-in amount</Text>
                             </View>
                             <View style={{flex: 1}}>   
-                                 <Text style={{color: "gray",fontSize: 12,alignSelf: "flex-end"}}>{'\u20B1'} {numberFormat(amount)}</Text>
+                                 <Text style={{color: "gray",fontSize: 12,alignSelf: "flex-end",fontFamily: FONT_REGULAR}}>{'\u20B1'} {numberFormat(amount)}</Text>
                             </View>  
                         </View>
                         <View style={{flexDirection: "row",paddingVertical: 12,}}>
                             <View style={{flex: 1}}>    
-                                <Text style={{fontWeight:"bold"}}>Total</Text>
+                                <Text style={{fontFamily: FONT_MEDIUM}}>Total</Text>
                             </View>
                             <View style={{flex: 1}}>   
-                                <Text style={{fontWeight:"bold",alignSelf: "flex-end"}}>{'\u20B1'} {numberFormat(amount)}</Text>
+                                <Text style={{fontFamily: FONT_MEDIUM,alignSelf: "flex-end"}}>{'\u20B1'} {numberFormat(amount)}</Text>
                             </View>  
                         </View>
 
                     </View>
                     <View style={styles.modalconfirmbtn}>
                         <TouchableOpacity onPress={()=>proceedToPaypandaPortal()} style={{height: "100%",width: "100%",backgroundColor: DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
-                            <Text style={{color: COLOR,fontSize: 12}}>Confirm</Text>
+                            <Text style={{color: COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Confirm</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -128,15 +128,15 @@ const PayPandaComponent = ({navigation,route})=> {
        <ConfirmModal/>
        <View style={styles.container}>
             <View style={styles.paypandaLogo}>
-                <Image style={{height: 50,width: 50,alignSelf: "center"}} source={require('../../../../../../assets/images/paypanda.png')}/>
-                <Text style={{alignSelf: "center",marginLeft: 15,fontSize: 14,fontWeight:"bold"}}>PayPanda</Text>
+                <Image style={{height: 40,width: 40,alignSelf: "center"}} source={require('../../../../../../assets/images/paypanda.png')}/>
+                <Text style={{alignSelf: "center",marginLeft: 15,fontSize: 14,fontFamily: FONT_MEDIUM}}>PayPanda</Text>
             </View>
             {
                 !loading
                 ? <KeyboardAvoidingView  behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.amountcontent}>
                         
                         <View style={{flexDirection: "row"}}>
-                            <Text style={{fontSize: 50}}>{'\u20B1'}</Text>
+                            <Text style={{fontSize: 50,fontFamily: FONT_MEDIUM}}>{'\u20B1'}</Text>
                             <TextInput 
                                     value={amount}
                                     onChangeText={value=>changeAmount(value)}
@@ -146,7 +146,7 @@ const PayPandaComponent = ({navigation,route})=> {
                                     onSubmitEditing={confirmAmount}
                                 />
                         </View>
-                        <Text style={{color:"gray",fontSize: 14}}>Current Balance {'\u20B1'} {numberFormat(balance)}</Text>
+                        <Text style={{color:"gray",fontSize: 14,fontFamily: FONT_REGULAR}}>Current Balance {'\u20B1'} {numberFormat(balance)}</Text>
                  </KeyboardAvoidingView>
                 : <View style={{flex: 1,justifyContent: "center",alignItems: "center"}}><ActivityIndicator size={50}/></View>
                 
@@ -154,7 +154,7 @@ const PayPandaComponent = ({navigation,route})=> {
 
             <View style={styles.cashinbutton}>
                     <TouchableOpacity onPress={confirmAmount} style={{height: "100%",width: "100%",backgroundColor: DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
-                        <Text style={{color: COLOR,fontSize: 12}}>Cash In</Text>
+                        <Text style={{color: COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Cash In</Text>
                     </TouchableOpacity>
             </View>
        </View>
@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
         flexShrink: 1,
         width: 150,
         color: DARK,
-        fontWeight: "400",
+        fontFamily: FONT_MEDIUM,
         fontSize: 30,
         marginBottom: 10,
         textAlign: "center"

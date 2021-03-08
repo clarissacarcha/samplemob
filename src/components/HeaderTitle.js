@@ -14,13 +14,13 @@ export const HeaderTitle = ({label}) => {
 const styles = StyleSheet.create({
   outer: {
     fontSize: 16,
-    fontFamily: 'Rubik-Medium',
+    fontFamily: 'Jost-Medium',
     color: DARK,
     marginLeft: -20,
   },
   inner: {
     color: ORANGE,
     fontSize: 16,
-    fontFamily: 'Rubik-Medium',
+    fontFamily: 'Jost-Medium',
   },
 });

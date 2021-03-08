@@ -2,6 +2,7 @@ import React from 'react'
 import {View,Text,StyleSheet,Image,Alert} from 'react-native'
 import SwipeButton from 'rn-swipe-button';
 import {HeaderBack, HeaderTitle} from '../../../../../../components'
+import { FONT_MEDIUM, FONT_REGULAR } from '../../../../../../res/constants';
 
 const ConfirmPayment = ({navigation})=> {
 
@@ -33,26 +34,35 @@ const ConfirmPayment = ({navigation})=> {
                     <View style={styles.receiverInfo}>
                         <Image style={{height: 50,width: 50,marginRight: 10}} resizeMode="contain" source={require('../../../../../../assets/icons/ToktokLogo.png')}/>
                         <View>
-                            <Text style={{fontWeight:"bold",fontSize: 14}}>Alvin Sison Raquem</Text>
-                            <Text style={{fontSize:12,color:"gray",marginTop:5,}}>+639123456789</Text>
+                            <Text style={{fontFamily: FONT_MEDIUM,fontSize: 14}}>Alvin Sison Raquem</Text>
+                            <Text style={{fontSize:12,color:"#A6A8A9",fontFamily: FONT_REGULAR, marginTop:5,}}>+639123456789</Text>
                         </View>
                     </View>
                     <View style={{padding: 20}}>
-                        <Text style={{fontWeight:"bold",fontSize: 16}}>Amount: {'\u20B1'} 500.00</Text>
+                        <Text style={{fontFamily: FONT_MEDIUM,fontSize: 16}}>Amount: {'\u20B1'} 500.00</Text>
                     </View>
             </View>
             <SwipeButton 
                     containerStyles={styles.swipeContainer}
                     width={250}
                     title={`Swipe to Pay ${'\u20B1'} 500.00`}
-                    titleFontSize={12}
+                    titleStyles={{
+                        fontSize: 12,
+                        fontFamily: FONT_MEDIUM
+                    }}
                     titleColor="white"
                     railBackgroundColor="black"
                     railStyles={{
                         backgroundColor: "white",
-                        margin: 2,
+                        margin: 0,
+                        borderColor: "black"
                     }}
                     thumbIconBackgroundColor="white"
+                    thumbIconBorderColor="black"
+                    thumbIconStyles={{
+                        borderWidth: 1,
+                        borderColor:"black"
+                    }}
                     thumbIconComponent={thumbIconComponent}
                     onSwipeFail={onSwipeFail}
                     onSwipeSuccess={onSwipeSuccess}

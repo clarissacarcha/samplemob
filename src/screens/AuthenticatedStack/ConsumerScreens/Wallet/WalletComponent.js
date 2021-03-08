@@ -8,7 +8,7 @@ import {GET_TOKTOK_WALLET, POST_TOKTOK_WALLET} from '../../../../graphql'
 import {numberFormat} from '../../../../helper'
 import {useQuery,useLazyQuery,useMutation} from '@apollo/react-hooks'
 import {useSelector,useDispatch} from 'react-redux'
-import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM} from '../../../../res/constants'
+import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM,FONT_MEDIUM, FONT_REGULAR} from '../../../../res/constants'
 import TransactionsModal from './TransactionsModal'
 import CreateWallet from './VerifyUser/CreateWallet'
 import { RefreshControl } from 'react-native';
@@ -101,8 +101,8 @@ const WalletComponent = ()=> {
             <View style={{padding: 25}}>
                 <View style={styles.walletInfo}>
                     <View>
-                        <Text style={{fontSize: 20,fontWeight: "bold",color: "white"}}>{'\u20B1'} {numberFormat(data.getToktokWallet.record.balance)}</Text>
-                        <Text style={{fontSize: 12,color: "white"}}>Available Balance</Text>
+                        <Text style={{fontSize: 20,fontFamily: FONT_MEDIUM, color: "white"}}>{'\u20B1'} {numberFormat(data.getToktokWallet.record.balance)}</Text>
+                        <Text style={{fontSize: 12,color: "white",fontFamily: FONT_REGULAR}}>Available Balance</Text>
                     </View>
                     <TouchableOpacity style={styles.walletSettings} onPress={()=>{
                         // rotateY.setValue(0)
@@ -118,7 +118,7 @@ const WalletComponent = ()=> {
                     </TouchableOpacity>
                 </View>
                 <TouchableOpacity style={styles.topUp} onPress={()=>navigation.navigate("TokTokWalletCashIn",{walletId: data.getToktokWallet.record.id,balance: data.getToktokWallet.record.balance})}>
-                        <Text style={{fontSize: 12,color: "white"}}>+ Top up</Text>
+                        <Text style={{fontSize: 12,color: "white",fontFamily: FONT_REGULAR}}>+ Top up</Text>
                 </TouchableOpacity>
              </View>
             </ImageBackground>
@@ -132,28 +132,28 @@ const WalletComponent = ()=> {
                     <Image style={{height: 26,width: 20}} source={require('../../../../assets/icons/walletSend.png')} resizeMode="contain" />
                 </TouchableOpacity>
 
-                <Text style={{alignSelf: "center",marginTop: 10,color: "gray",fontSize: 12}}>Send</Text>
+                <Text style={styles.walletMethodText}>Send</Text>
             </View>
             <View style={[styles.walletMethod]}>
                 <TouchableOpacity onPress={()=>navigation.navigate("TokTokWalletActionsRequest")} style={styles.methodItem}>
                     <Image style={{height: 26,width: 20}} source={require('../../../../assets/icons/walletRequest.png')} resizeMode="contain" />
                 </TouchableOpacity>
 
-                <Text style={{alignSelf: "center",marginTop: 10,color: "gray",fontSize: 12}}>Request</Text>
+                <Text style={styles.walletMethodText}>Request</Text>
             </View>
             <View style={[styles.walletMethod]}>
                 <TouchableOpacity onPress={()=>navigation.navigate("TokTokWalletActionsScantoPay",{walletId: data.getToktokWallet.record.id,balance: data.getToktokWallet.record.balance})} style={styles.methodItem}>
                     <Image style={{height: 26,width: 20}} source={require('../../../../assets/icons/walletScan.png')} resizeMode="contain" />
                 </TouchableOpacity>
 
-                <Text style={{alignSelf: "center",marginTop: 10,color: "gray",fontSize: 12}}>Scan</Text>
+                <Text style={styles.walletMethodText}>Scan</Text>
             </View>
             <View style={[styles.walletMethod]}>
                 <TouchableOpacity onPress={()=>navigation.navigate("TokTokWalletActionsTransfer")} style={styles.methodItem}>
                     <Image style={{height: 26,width: 20}} source={require('../../../../assets/icons/walletTransfer.png')} resizeMode="contain" />
                 </TouchableOpacity>
 
-                <Text style={{alignSelf: "center",marginTop: 10,color: "gray",fontSize: 12}}>Transfer</Text>
+                <Text style={styles.walletMethodText}>Transfer</Text>
             </View>
         </View>
     )
@@ -235,6 +235,13 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         justifyContent: "center",
         alignItems: "center"
+    },
+    walletMethodText: {
+        alignSelf: "center",
+        marginTop: 10,
+        color: "gray",
+        fontSize: 12,
+        fontFamily: FONT_REGULAR
     }
 })
 

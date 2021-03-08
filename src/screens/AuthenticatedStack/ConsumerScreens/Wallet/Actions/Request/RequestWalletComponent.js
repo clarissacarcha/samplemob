@@ -3,7 +3,7 @@ import {View,Text,StyleSheet,TouchableOpacity} from 'react-native'
 import {HeaderBack, HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../../../components'
 import QRCode from 'react-native-qrcode-svg'
 import {useSelector} from 'react-redux'
-import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM} from '../../../../../../res/constants'
+import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM, FONT_REGULAR, FONT_MEDIUM} from '../../../../../../res/constants'
 
 const RequestWalletComponent = ({navigation})=> {
     navigation.setOptions({
@@ -19,7 +19,7 @@ const RequestWalletComponent = ({navigation})=> {
                 marginTop: 20,
                 flex: 1,
             }}>
-                    <Text style={{fontSize: 16}}>Ask sender to scan QR code</Text>
+                    <Text style={{fontSize: 16,fontFamily: FONT_REGULAR}}>Ask sender to scan QR code</Text>
                     <View style={styles.QRContainer}>
                     <QRCode
                         value={session.user.userId} //Give value when there's no session as it will throw an error if value is empty.
@@ -33,7 +33,7 @@ const RequestWalletComponent = ({navigation})=> {
             </View>
             <View style={{justifyContent: "flex-end"}}>
                 <TouchableOpacity style={{padding: 10,justifyContent: "center",alignItems: "center",backgroundColor: DARK,borderRadius: 10}}>
-                    <Text style={{color: COLOR,fontSize: 12}}>REQUEST MONEY VIA LINK</Text>
+                    <Text style={{color: COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>REQUEST MONEY VIA LINK</Text>
                 </TouchableOpacity>
             </View>
         </View>
