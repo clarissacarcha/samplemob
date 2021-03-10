@@ -214,10 +214,9 @@ const styles = StyleSheet.create({
     },
     input: {
         marginHorizontal: 20,
-        borderWidth: 1,
+        borderBottomWidth: 1,
         borderColor: MEDIUM,
         borderRadius: 5,
-        paddingLeft: 20,
         height: 60,
         flexShrink: 1,
         width: 150,

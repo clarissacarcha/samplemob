@@ -34,8 +34,8 @@ const TransferWalletComponent = ({navigation})=> {
                 <Text style={{fontSize: 12,color:"gray",fontFamily: FONT_REGULAR}}>Total ToktokPay  balance {'\u20B1'} 2500.00</Text>
           </View>
           <View style={styles.transferOptions}>
-                <SettingOption route="TokTokWalletSettingsCreatePIN" icon={require('../../../../../../assets/icons/walletPin.png')} title="Send to Contacts"/>
-                <SettingOption route="TokTokWalletSettingsCreatePIN" icon={require('../../../../../../assets/icons/walletSendEwallet.png')} title="Send to E-wallet"/>
+                <SettingOption route="TokTokWalletActionsSend" icon={require('../../../../../../assets/icons/walletPin.png')} title="Send to Contacts"/>
+                <SettingOption route="TokTokWalletActionsTransferEwallet" icon={require('../../../../../../assets/icons/walletSendEwallet.png')} title="Send to E-wallet"/>
                 <SettingOption route="TokTokWalletSettingsCreatePIN" icon={require('../../../../../../assets/icons/walletSendBank.png')} title="Send to Bank Account"/>
           </View>
       </View>
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     },
     transferOptions: {
         flex: 1,
-        paddingHorizontal: 20,
+        paddingHorizontal: 15,
     },
     settingoption: {
         padding: 10,

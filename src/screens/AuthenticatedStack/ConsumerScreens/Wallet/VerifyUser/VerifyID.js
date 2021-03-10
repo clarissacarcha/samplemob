@@ -5,6 +5,7 @@ import EIcon from 'react-native-vector-icons/EvilIcons'
 import {RNCamera} from 'react-native-camera';
 import ImageCropper from 'react-native-simple-image-cropper';
 import {VerifyContext} from './Context/VerifyContextProvider'
+import ModalCountry from './ModalCountry'
 
 const imageWidth = Dimensions.get('window').width - 40;
 
@@ -14,7 +15,7 @@ const CROP_AREA_HEIGHT = imageWidth;
 
 const VerifyID = ()=> {
 
-    const {setCurrentIndex, idImage: image, setIDImage: setImage} = useContext(VerifyContext)
+    const {setCurrentIndex, idImage: image, setIDImage: setImage , idCountry , setModalCountryVisible} = useContext(VerifyContext)
 
     const [showCamera,setShowCamera] = useState(false)
     const cameraRef = useRef(null)
@@ -137,26 +138,29 @@ const VerifyID = ()=> {
     return (
         <>
             <CameraModal />
+            <ModalCountry type="validID"/>
             <View style={styles.content}>
                 <View style={styles.mainInput}>
                         <Text style={{fontSize: 14, fontFamily: FONT_MEDIUM}}>Take a photo of your ID?</Text>
                         <Text style={{fontFamily: FONT_LIGHT,marginTop: 5,fontSize: 12}}>Help us verify your identity with a photo of your valid government-issued ID, as required by local regulations.</Text>  
                   
                         <View style={{marginTop: 20,}}>
-                            <Text style={{fontSize: 12, fontFamily: FONT_MEDIUM}}>Country?</Text>
+                            <Text style={{fontSize: 12, fontFamily: FONT_MEDIUM}}>Countr</Text>
                             <View style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center",paddingVertical: 10}]}>
-                                <Text style={{flex: 1,color: "gray",fontSize: 12,fontFamily: FONT_REGULAR}}></Text>
-                                <TouchableOpacity>
+                                <Text style={{flex: 1,color: "gray",fontSize: 12,fontFamily: FONT_REGULAR}}>{idCountry}</Text>
+                                <TouchableOpacity
+                                    onPress={()=>setModalCountryVisible(true)}
+                                >
                                     <Text style={{color: ORANGE,fontWeight: "bold",fontSize: 12,fontFamily: FONT_MEDIUM}}>Change</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
 
                         <View style={{marginTop: 15,}}>
-                            <Text style={{fontSize: 12, fontFamily: FONT_MEDIUM}}>ID Type?</Text>
+                            <Text style={{fontSize: 12, fontFamily: FONT_MEDIUM}}>ID Type</Text>
                             <View style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center"}]}>
-                                <Text style={{flex: 1,color: "gray",fontSize: 12,fontFamily: FONT_REGULAR}}>MM/DD/YY</Text>
-                                <EIcon name="calendar" size={24}/>
+                                <Text style={{flex: 1,color: "gray",fontSize: 12,fontFamily: FONT_REGULAR}}>Select one</Text>
+                                <EIcon name="chevron-down" size={24} color="#FCB91A"/>
                             </View>
                         </View>
 

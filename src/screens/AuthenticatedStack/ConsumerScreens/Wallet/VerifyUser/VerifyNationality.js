@@ -8,15 +8,22 @@ import {VerifyContext} from './Context/VerifyContextProvider'
 
 const VerifyNationality = ()=> {
 
-    const {nationality , setNationality , setCurrentIndex , changeBirthInfo, changeAddress} = useContext(VerifyContext)
-    const [countryIndex,setCountryIndex] = useState(nationality == "" ? -1 : countries.findIndex((country)=>{return country.name === nationality}))
+    const {nationality , setNationality , setCurrentIndex , changeBirthInfo, changeAddress , setIdCountry} = useContext(VerifyContext)
     const [search,setSearch] = useState(false)
+    const [filteredCountries,setFilteredCountries] = useState(countries)
+    const [countryIndex,setCountryIndex] = useState(nationality == "" ? -1 : filteredCountries.findIndex((country)=>{return country.name === nationality}))
 
     const selectCountry = (index)=> {
         setCountryIndex(index)
-        setNationality(countries[index].name)
-        changeBirthInfo("birthPlace",countries[index].name)
-        changeAddress("country",countries[index].name)
+        setNationality(filteredCountries[index].name)
+        changeBirthInfo("birthPlace",filteredCountries[index].name)
+        changeAddress("country",filteredCountries[index].name)
+        setIdCountry(filteredCountries[index].name)
+    }
+
+    const filterSearch = (value) => {
+        const filtered = countries.filter(country=> country.name.toLowerCase().includes(value.toLowerCase()))
+        setFilteredCountries(filtered)
     }
 
     const renderCountry = ({item,index})=> {
@@ -39,8 +46,9 @@ const VerifyNationality = ()=> {
                                     <TextInput 
                                         placeholder="Search Country"
                                         style={{flex: 1,fontFamily: FONT_REGULAR}}
+                                        onChangeText={filterSearch}
                                     />
-                                    <TouchableOpacity onPress={()=>setSearch(!search)} style={{flexBasis:"auto",alignItems:"flex-end",justifyContent:"flex-start"}}>
+                                    <TouchableOpacity onPress={()=>setSearch(!search)} style={{flexBasis:"auto",alignItems:"flex-end",justifyContent:"center"}}>
                                         <FIcon name={'x'} size={30}/>
                                     </TouchableOpacity>
                               </View>
@@ -49,7 +57,7 @@ const VerifyNationality = ()=> {
                                     <Text style={{fontSize: 14, fontFamily: FONT_MEDIUM}}>What's your Nationality?</Text>
                                     <Text style={{fontFamily: FONT_LIGHT,marginTop: 5,fontSize: 12}}>Please select your Country</Text>
                                 </View>
-                                <TouchableOpacity onPress={()=>setSearch(!search)} style={{flexBasis:"auto",alignItems:"flex-end",justifyContent:"flex-start"}}>
+                                <TouchableOpacity onPress={()=>setSearch(!search)} style={{flexBasis:"auto",alignItems:"flex-end",justifyContent:"center"}}>
                                     <FIcon name={'search'} size={30}/>
                                 </TouchableOpacity>
                             </>
@@ -59,7 +67,7 @@ const VerifyNationality = ()=> {
                  
                     <FlatList
                         style={{marginVertical: 15,}}
-                        data={countries}
+                        data={filteredCountries}
                         keyExtractor={country=>country.code}
                         renderItem={renderCountry}
                         showsVerticalScrollIndicator={false}

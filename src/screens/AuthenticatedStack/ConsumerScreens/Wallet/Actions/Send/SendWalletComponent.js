@@ -1,10 +1,26 @@
 import React, { useEffect , useState } from 'react'
-import {View,Text,StyleSheet,Platform,Alert,TextInput,FlatList,ActivityIndicator} from 'react-native'
+import {View,Text,StyleSheet,Platform,Alert,TextInput,FlatList,ActivityIndicator,TouchableOpacity} from 'react-native'
 import {check,request,PERMISSIONS,RESULTS} from 'react-native-permissions'
 import Contacts from 'react-native-contacts';
 import {sortBy} from 'lodash'
-import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM} from '../../../../../../res/constants'
+import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM, FONT_REGULAR, FONT_MEDIUM} from '../../../../../../res/constants'
 import {HeaderBack, HeaderTitle} from '../../../../../../components'
+import {useNavigation} from '@react-navigation/native'
+
+const ContactInfoRender = ({item,index})=> { 
+  const navigation = useNavigation()
+  return (
+    <TouchableOpacity
+      key={`contactInfo-${index}`}
+      style={styles.contactInfo}
+      onPress={()=>navigation.navigate("TokTokWalletActionsSendConfirmPayment")}
+    >
+      <Text style={styles.contactInfoName}>{item.name}</Text>
+      <Text style={styles.contactInfoNumber}>{item.number}</Text>
+      
+    </TouchableOpacity>
+  )
+}
 
 const SendWalletComponent = ({navigation})=> {
 
@@ -16,7 +32,6 @@ const SendWalletComponent = ({navigation})=> {
     const [data, setData] = useState(null);
     const [fetchError, setFetchError] = useState(false);
     const [filteredData, setFilteredData] = useState(null);
-    const [searchString, setSearchString] = useState('');
 
     const goToContacts = async ()=> {
         const checkAndRequest = Platform.select({
@@ -144,6 +159,11 @@ const SendWalletComponent = ({navigation})=> {
           }
     }
 
+    const filterSearch = (value)=> {
+        const filteredContacts = data.filter((contact) => contact.name.toLowerCase().includes(value.toLowerCase()));
+        setFilteredData(filteredContacts);
+    }
+
 
     useEffect(()=>{
         goToContacts()
@@ -179,12 +199,22 @@ const SendWalletComponent = ({navigation})=> {
                 <TextInput 
                     style={styles.input} 
                     placeholder="Search Contact"
+                    onChangeText={filterSearch}
                 />
            </View>
 
            <View style={styles.contactlist}>
-                <Text>{JSON.stringify(data)}</Text>
-                <Text>{JSON.stringify(filteredData)}</Text>
+                <FlatList
+                    showsVerticalScrollIndicator={true}
+                    data={filteredData}
+                    keyExtractor={(item)=>item.number}
+                    style={{flex: 1}}
+                    renderItem={({item,index})=>{
+                      return <ContactInfoRender item={item} index={index}/>
+                    }}
+                >
+
+                </FlatList>
            </View>
        </View>
     )
@@ -204,20 +234,34 @@ const styles = StyleSheet.create({
     searchField: {
         borderBottomColor: "silver",
         borderBottomWidth: 0.5,
-        padding: 20,
+        paddingHorizontal: 20,
+        paddingVertical: 15,
     },
     contactlist: {
         flex: 1,
         padding: 20,
     },
     input: {
-        borderWidth: 1,
-        borderColor: "silver",
-        borderRadius: 10,
-        paddingLeft: 20,
-        height: 50,
-        color: "black",
-      },
+      padding: 5,
+      borderRadius: 5,
+      borderWidth: 1,
+      borderColor: "silver",
+      fontFamily: FONT_REGULAR
+    },
+    contactInfo: {
+      paddingVertical: 10,
+      borderBottomColor: "silver",
+      borderBottomWidth: 0.5
+    },
+    contactInfoName: {
+      fontFamily: FONT_MEDIUM,
+      fontSize: 14,
+    },
+    contactInfoNumber: {
+      color: "#A6A8A9",
+      fontFamily: FONT_REGULAR,
+      fontSize: 12,
+    }
 })
 
 export default SendWalletComponent

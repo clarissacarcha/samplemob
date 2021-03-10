@@ -5,6 +5,7 @@ const {Provider} = VerifyContext
 
 const VerifyContextProvider = ({children})=> {
 
+    const [modalCountryVisible,setModalCountryVisible] = useState(false)
     const [currentIndex,setCurrentIndex] = useState(0)
     const [fullname,setFullname] = useState("")
     const [nationality,setNationality] = useState("")
@@ -21,6 +22,7 @@ const VerifyContextProvider = ({children})=> {
         zipCode: ""
     })
     const [idImage,setIDImage] = useState(null)
+    const [idCountry,setIdCountry] = useState("")
     const [selfieImage,setSelfieImage] = useState(null)
 
     const changeBirthInfo = (key,value)=> {
@@ -52,8 +54,12 @@ const VerifyContextProvider = ({children})=> {
                 changeAddress,
                 idImage,
                 setIDImage,
+                idCountry,
+                setIdCountry,
                 selfieImage,
                 setSelfieImage,
+                modalCountryVisible,
+                setModalCountryVisible,
             }}
         >
             {children}

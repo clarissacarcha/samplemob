@@ -3,12 +3,14 @@ import {View,Text,StyleSheet,TouchableOpacity,TextInput,KeyboardAvoidingView,Pla
 import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM,ORANGE, FONT_MEDIUM, FONT_LIGHT, FONT_REGULAR} from '../../../../../res/constants'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import {VerifyContext} from './Context/VerifyContextProvider'
+import ModalCountry from './ModalCountry'
 
 const VerifyAddress = ()=> {
 
-    const {address, setCurrentIndex , changeAddress} = useContext(VerifyContext)
+    const {address, setCurrentIndex , changeAddress,setModalCountryVisible} = useContext(VerifyContext)
     return (
         <>
+            <ModalCountry type="address" />
             <View style={styles.content}>
        
                 <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.mainInput}>
@@ -20,7 +22,9 @@ const VerifyAddress = ()=> {
                             <Text style={{fontSize: 12, fontFamily: FONT_MEDIUM}}>Country</Text>
                             <View style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center",paddingVertical: 11}]}>
                                 <Text style={{flex: 1,color: "gray",fontSize: 12,fontFamily: FONT_REGULAR}}>{address.country}</Text>
-                                <TouchableOpacity>
+                                <TouchableOpacity
+                                    onPress={()=>setModalCountryVisible(true)}
+                                >
                                     <Text style={{color: ORANGE,fontFamily: FONT_MEDIUM,fontSize: 12}}>Change</Text>
                                 </TouchableOpacity>
                             </View>
