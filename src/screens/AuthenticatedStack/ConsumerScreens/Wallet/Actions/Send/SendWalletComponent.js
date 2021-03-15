@@ -1,26 +1,15 @@
 import React, { useEffect , useState } from 'react'
-import {View,Text,StyleSheet,Platform,Alert,TextInput,FlatList,ActivityIndicator,TouchableOpacity} from 'react-native'
+import {View,Text,StyleSheet,Platform,Alert,TextInput,FlatList,ActivityIndicator,Image} from 'react-native'
 import {check,request,PERMISSIONS,RESULTS} from 'react-native-permissions'
 import Contacts from 'react-native-contacts';
 import {sortBy} from 'lodash'
-import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM, FONT_REGULAR, FONT_MEDIUM} from '../../../../../../res/constants'
+import {COLOR,FONT_REGULAR} from '../../../../../../res/constants'
 import {HeaderBack, HeaderTitle} from '../../../../../../components'
-import {useNavigation} from '@react-navigation/native'
-
-const ContactInfoRender = ({item,index})=> { 
-  const navigation = useNavigation()
-  return (
-    <TouchableOpacity
-      key={`contactInfo-${index}`}
-      style={styles.contactInfo}
-      onPress={()=>navigation.navigate("TokTokWalletActionsSendConfirmPayment")}
-    >
-      <Text style={styles.contactInfoName}>{item.name}</Text>
-      <Text style={styles.contactInfoNumber}>{item.number}</Text>
-      
-    </TouchableOpacity>
-  )
-}
+import ContactInfoRender from './ContactInfoRender'
+import SendtoOthers from './SendtoOthers'
+import MessageModal from './MessageModal'
+import {useLazyQuery} from '@apollo/react-hooks'
+import {CHECK_USER_ACCOUNT_WALLET,CLIENT} from '../../../../../../graphql'
 
 const SendWalletComponent = ({navigation})=> {
 
@@ -32,6 +21,10 @@ const SendWalletComponent = ({navigation})=> {
     const [data, setData] = useState(null);
     const [fetchError, setFetchError] = useState(false);
     const [filteredData, setFilteredData] = useState(null);
+    const [searchString,setSearchString] = useState("");
+    const [sendToOther,setSendToOther] = useState(false)
+    const [msgModalVisible,setMsgModalVisible] = useState(false)
+    const [modalMessage, setModalMessage] = useState("")
 
     const goToContacts = async ()=> {
         const checkAndRequest = Platform.select({
@@ -160,8 +153,49 @@ const SendWalletComponent = ({navigation})=> {
     }
 
     const filterSearch = (value)=> {
-        const filteredContacts = data.filter((contact) => contact.name.toLowerCase().includes(value.toLowerCase()));
+        setSearchString(value)
+        const filteredContacts = data.filter((contact) => {
+          return contact.name.toLowerCase().includes(value.toLowerCase()) || contact.number.toLowerCase().includes(value.toLowerCase())
+        });
         setFilteredData(filteredContacts);
+        if(filteredContacts.length == 0){
+          setSendToOther(true)
+        }else{
+          setSendToOther(false)
+        }
+    }
+
+
+    const [checkUserAccount, {data: userInfo, error, loading}] = useLazyQuery(CHECK_USER_ACCOUNT_WALLET, {
+        fetchPolicy: 'network-only',
+        onError: (err) => {
+       
+          if(err.networkError && err.networkError.result.errors[0].code == "GRAPHQL_VALIDATION_FAILED"){
+              Alert.alert("Invalid Mobile Number Format")
+          }
+
+          if(err.graphQLErrors.length > 0){
+            err.graphQLErrors.map((error)=> {
+                setModalMessage(error.message)
+                setMsgModalVisible(true)
+            })
+          }
+
+        },
+        onCompleted: (response) => {
+            navigation.navigate("TokTokWalletActionsSendConfirmPayment", {recipientInfo: response.checkUserAccount})
+        },
+    })
+
+    const checkAccount = async (mobileNo)=> {
+      const trimmedMobile = mobileNo.replace(/[. ]/gi,"")
+      checkUserAccount({
+        variables: {
+          input: {
+            mobileNo: trimmedMobile
+          }
+        },
+      })
     }
 
 
@@ -184,39 +218,40 @@ const SendWalletComponent = ({navigation})=> {
           </View>
         );
       }
-    
-      if (filteredData.length === 0 && searchString === '') {
-        return (
-          <View style={styles.center}>
-            <Text>No contact information found.</Text>
-          </View>
-        );
-      }
 
     return (
+      <><MessageModal msgModalVisible={msgModalVisible} setMsgModalVisible={setMsgModalVisible} modalMessage={modalMessage}/>
        <View style={styles.container}>
            <View style={styles.searchField}>
-                <TextInput 
-                    style={styles.input} 
-                    placeholder="Search Contact"
-                    onChangeText={filterSearch}
-                />
+                <View style={[styles.input,{flexDirection: "row"}]}>
+                    <Image style={{height: 25,width: 40,alignSelf: "center"}} resizeMode="center" source={require('../../../../../../assets/icons/ph.png')}/>
+                    <TextInput 
+                        style={{fontSize: 12,fontFamily: FONT_REGULAR,padding: 0,marginLeft: 5,alignSelf: "center",flex: 1}}
+                        placeholder="Enter a Name or mobile number"
+                        onChangeText={filterSearch}
+                        value={searchString}
+                    />
+                </View>
            </View>
 
            <View style={styles.contactlist}>
-                <FlatList
-                    showsVerticalScrollIndicator={true}
-                    data={filteredData}
-                    keyExtractor={(item)=>item.number}
-                    style={{flex: 1}}
-                    renderItem={({item,index})=>{
-                      return <ContactInfoRender item={item} index={index}/>
-                    }}
-                >
+               {
+                 !sendToOther
+                 ?  <FlatList
+                          showsVerticalScrollIndicator={false}
+                          data={filteredData}
+                          keyExtractor={(item)=>item.number}
+                          style={{flex: 1}}
+                          renderItem={({item,index})=>{
+                            return <ContactInfoRender item={item} index={index} setSearchString={setSearchString} checkAccount={checkAccount}/>
+                          }}
+                      />
+                  : <SendtoOthers searchString={searchString} checkAccount={checkAccount} />
+               }
 
-                </FlatList>
            </View>
        </View>
+      </>
     )
 }
 
@@ -248,20 +283,6 @@ const styles = StyleSheet.create({
       borderColor: "silver",
       fontFamily: FONT_REGULAR
     },
-    contactInfo: {
-      paddingVertical: 10,
-      borderBottomColor: "silver",
-      borderBottomWidth: 0.5
-    },
-    contactInfoName: {
-      fontFamily: FONT_MEDIUM,
-      fontSize: 14,
-    },
-    contactInfoNumber: {
-      color: "#A6A8A9",
-      fontFamily: FONT_REGULAR,
-      fontSize: 12,
-    }
 })
 
 export default SendWalletComponent

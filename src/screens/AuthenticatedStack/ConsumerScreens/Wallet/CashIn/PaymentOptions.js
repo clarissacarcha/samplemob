@@ -1,34 +1,74 @@
 import React from 'react'
-import {View,StyleSheet,Text,Image} from 'react-native'
+import {View,StyleSheet,Text,Image,FlatList,Alert} from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import FIcon from 'react-native-vector-icons/Feather'
 import {HeaderBack, HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../../components'
 import { FONT_LIGHT, FONT_MEDIUM } from '../../../../../res/constants'
+import {useQuery} from '@apollo/react-hooks'
+import {GET_CASH_IN_METHODS} from '../../../../../graphql'
 
 const PaymentOptions = ({navigation,route})=> {
 
     navigation.setOptions({
-        // headerLeft: ()=> <View style={{width: 50, justifyContent: "center", marginLeft: 10}}>
-        //                     <FIcon5 name="times" size={25}/>
-        //                 </View>,
         headerLeft: ()=> <HeaderBack icon="x"/>,
         headerTitle: ()=> <HeaderTitle label={['Cash In','']}/>,
     })
 
+    const {data: cashinmethods,error,loading} = useQuery(GET_CASH_IN_METHODS,{
+            fetchPolicy: 'network-only',
+            variables: {
+                input: {
+                    sourceAccountType: 9,
+                    destinationAccountType: 1,
+                    transferType: "CI"
+                }
+            },
+    })
+
+    if(loading) return null
+    if(error){
+        console.log(error)
+    }
+    console.log(cashinmethods)
+
+    const CashInMethod = ({item,index})=> {
+        let image , navigateLink
+        if(item.name.toLowerCase() == "paypanda"){
+            image = require('../../../../../assets/images/walletcashin/paypanda.png')
+            navigateLink = "TokTokWalletCashInPaypanda"
+        }else{
+            navigateLink = ""
+        }
+        return (
+            <TouchableOpacity 
+                key={`cashin-${index}`}
+                style={styles.cashinoption} onPress={()=> navigateLink != "" ? navigation.navigate(navigateLink,{
+                        walletId: route.params.walletId,
+                        balance: route.params.balance, 
+                        transactionType: item
+                    }
+                ) : Alert.alert("Temporary Unavailable")}>
+                <View style={styles.logo}>
+                    <Image style={{height: 30,width: 30}} resizeMode="contain" source={image} />
+                </View>
+                <View style={styles.name}>
+                    <Text style={{fontSize:14,fontFamily: FONT_MEDIUM}}>{item.name}</Text>
+                    <Text style={{fontSize: 12, fontFamily: FONT_LIGHT}}>Use {item.name} to cash-in</Text>
+                </View>
+                <View style={styles.arrowright}>
+                    <FIcon name={'chevron-right'} color={"#A6A8A9"}/>
+                </View>
+            </TouchableOpacity>
+        )
+    }
+
     return (
         <View style={styles.container}>
-                <TouchableOpacity style={styles.cashinoption} onPress={()=>navigation.navigate("TokTokWalletCashInPaypanda",{walletId: route.params.walletId,balance: route.params.balance})}>
-                    <View style={styles.logo}>
-                        <Image style={{height: 30,width: 30}} resizeMode="contain" source={require('../../../../../assets/images/paypanda.png')} />
-                    </View>
-                    <View style={styles.name}>
-                        <Text style={{fontSize:14,fontFamily: FONT_MEDIUM}}>PayPanda</Text>
-                        <Text style={{fontSize: 12, fontFamily: FONT_LIGHT}}>Use PayPanda to cash-in</Text>
-                    </View>
-                    <View style={styles.arrowright}>
-                           <FIcon name={'chevron-right'} color={"#A6A8A9"}/>
-                    </View>
-                </TouchableOpacity>
+                <FlatList 
+                    data={cashinmethods.getCashInMethods}
+                    keyExtractor={(item)=>item.id}
+                    renderItem={CashInMethod}
+                />
         </View>
     )
 }

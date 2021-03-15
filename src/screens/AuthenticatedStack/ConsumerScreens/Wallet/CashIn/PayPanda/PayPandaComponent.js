@@ -5,7 +5,7 @@ import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM, FONT_MEDIUM, FONT_REGULAR} f
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import {useSelector} from 'react-redux'
 import {useMutation} from '@apollo/react-hooks'
-import {INITIALIZE_WALLET_CASHIN_DATA} from '../../../../../../graphql/model'
+import {INITIALIZE_WALLET_CASHIN_PAYPANDA} from '../../../../../../graphql/model'
 import {onError} from '../../../../../../util/ErrorUtility';
 import {numberFormat} from '../../../../../../helper'
 
@@ -20,6 +20,7 @@ const PayPandaComponent = ({navigation,route})=> {
 
     const walletId = route.params.walletId
     const balance = route.params.balance
+    const transactionType = route.params.transactionType
     const userstate = useSelector(state=>state.session.user)
     const [showModal,setShowModal] = useState(false)
     const [amount,setAmount] = useState("")
@@ -29,13 +30,14 @@ const PayPandaComponent = ({navigation,route})=> {
         setAmount(num.substring(0,1) == 0 ? num.slice(1) : num)
     }
 
-    const [initializeWalletCashinData , {data,error,loading}] = useMutation(INITIALIZE_WALLET_CASHIN_DATA, {
+    const [initializeWalletCashinPayPanda , {data,error,loading}] = useMutation(INITIALIZE_WALLET_CASHIN_PAYPANDA, {
         // fetchPolicy: 'network-only',
         onError: onError,
-        onCompleted: ({initializeWalletCashinData})=> {
-            
+        onCompleted: ({initializeWalletCashinPayPanda})=> {
             navigation.navigate("TokTokWalletCashINPaypandaWebView", {
-                ...initializeWalletCashinData,
+                merchantId: initializeWalletCashinPayPanda.merchantId,
+                refNo: initializeWalletCashinPayPanda.refNo,
+                signature: initializeWalletCashinPayPanda.signature,
                 email_address: userstate.person.emailAddress,
                 payer_name: `${userstate.person.firstName}${userstate.person.middleName ? " " + userstate.person.middleName : ""} ${userstate.person.lastName}`,
                 mobile_number: userstate.username,
@@ -47,11 +49,13 @@ const PayPandaComponent = ({navigation,route})=> {
     })
 
     const proceedToPaypandaPortal = ()=> {
-        initializeWalletCashinData({
+        initializeWalletCashinPayPanda({
             variables: {
                 input: {
                     amount: +amount,
-                    userId: userstate.id
+                    destinationUserId: userstate.id,
+                    sourceUserId: transactionType.sourceUserId,
+                    transactionTypeId: transactionType.id
                 }
             }
         })

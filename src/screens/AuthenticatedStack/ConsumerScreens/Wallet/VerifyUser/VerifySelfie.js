@@ -80,7 +80,7 @@ const VerifySelfie = ()=> {
 
     const ImageIDSet = ()=> (
         <TouchableOpacity onPress={()=>setShowCamera(true)}>
-                <Image style={{height: "100%",width: "100%"}} source={{uri: image.uri}} />
+                <Image resizeMode="contain" style={{height: "100%",width: "100%"}} source={{uri: image.uri}} />
         </TouchableOpacity>
     )
 

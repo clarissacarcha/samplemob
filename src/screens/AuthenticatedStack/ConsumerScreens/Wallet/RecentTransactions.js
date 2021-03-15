@@ -18,7 +18,7 @@ const RecentTransactions = ({seeAll,walletId})=> {
                 toktokWalletId: walletId
             }
         },
-        onCompleted: ({getToktokWalletRecentTransactions})=>{
+        onCompleted: ({getWalletRecentTransactions})=>{
 
         },
         onError: (err)=>{
@@ -58,6 +58,10 @@ const RecentTransactions = ({seeAll,walletId})=> {
                {
                    transactionItems.map((item)=>{
 
+                    let amount = item.incoming > 0 ? item.incoming : item.outgoing
+                    let color = item.incoming > 0 ? "green" : "red"
+                    let sign = item.incoming > 0 ? "+" : "-"
+
                     return (
                         <View style={styles.transaction}>
                             <View style={styles.transactionIcon}>
@@ -68,7 +72,7 @@ const RecentTransactions = ({seeAll,walletId})=> {
                                 <Text style={{color: "#909294",fontSize: 10,marginTop: 5,fontFamily: FONT_MEDIUM}}>Cash in from Paypanda</Text>
                             </View>
                             <View style={styles.transactionAmount}>
-                                <Text style={{fontSize: 12,fontFamily: FONT_MEDIUM}}>+ {'\u20B1'} {numberFormat(item.incoming)}</Text>
+                                <Text style={{fontSize: 12,fontFamily: FONT_MEDIUM ,color}}>{sign} {'\u20B1'} {numberFormat(amount)}</Text>
                                 <Text style={{color: "gray",fontSize: 10,alignSelf: "flex-end",marginTop: 5,fontFamily: FONT_REGULAR}}>{moment(transactionDate).tz('Asia/Manila').format('MMM DD')}</Text>
                             </View>
                         </View>
@@ -90,7 +94,7 @@ const RecentTransactions = ({seeAll,walletId})=> {
             <View style={styles.recentLogs}>
 
                 {
-                    data.getToktokWalletRecentTransactions.map((item)=> (
+                    data.getWalletRecentTransactions.map((item)=> (
                         <TransactionLog transactionDate={item.title} transactionItems={item.logs}></TransactionLog>
                     ))
                 }

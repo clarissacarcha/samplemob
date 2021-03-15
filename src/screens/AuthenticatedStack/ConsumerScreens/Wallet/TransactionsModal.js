@@ -37,6 +37,50 @@ const TransactionLog = ({transactionDate , transactionItems })=> {
     )
 }
 
+const FilterDateModal = ({showFilterDate,setShowFilterDate, filterDate , changeFilterDate,minDate , todayDate})=> {
+    return (
+        <Modal
+           visible={showFilterDate}
+           animationType="fade"
+           transparent={true}
+           onRequestClose={()=>setShowFilterDate(false)}
+          >
+
+              <View style={{flex: 1 ,justifyContent: "center",alignItems: "center"}}> 
+                  <View style={{width: "90%" , height: height * 0.8 , backgroundColor: "white",padding: 10,borderRadius: 20,  shadowColor: '#000',
+                                justifyContent: "center",
+                                alignItems: "center",
+                                shadowOffset: {
+                                width: 0,
+                                height: 2,
+                                },
+                                shadowOpacity: 0.25,
+                                shadowRadius: 3.84,
+                                elevation: 5,}}
+                    >
+                        <Text style={{fontFamily: FONT_MEDIUM,fontSize: 18}}>From</Text>
+                        <DatePicker date={new Date(filterDate.from)} onDateChange={(date)=>changeFilterDate("from",date)} mode="date" maximumDate={todayDate} minimumDate={minDate} />
+                        <Text style={{fontFamily: FONT_MEDIUM,fontSize: 18,marginTop: 20}}>To</Text>
+                        <DatePicker date={filterDate.to} onDateChange={(date)=>changeFilterDate("to",date)} mode="date" maximumDate={todayDate} minimumDate={minDate} />
+                        
+                        <View style={{flexDirection: "row", marginTop: 20,padding: 10}}>
+                           <TouchableOpacity onPress={()=>setShowFilterDate(false)} style={{marginRight: 5, padding: 10,borderColor:"gray",borderWidth: 1, flex: 1,borderRadius: 10, alignItems: "center"}}>
+                                <Text style={{color: "gray",fontFamily: FONT_REGULAR,fontSize: 12}}>Close</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={()=>setShowFilterDate(false)} style={{marginLeft: 5,padding: 10,backgroundColor: DARK, flex: 1,borderRadius: 10, alignItems: "center"}}>
+                                <Text style={{color: COLOR,fontFamily: FONT_REGULAR,fontSize: 12}}>Ok</Text>
+                            </TouchableOpacity>
+                        </View>
+                       
+                        
+                  </View>
+              </View>
+
+          </Modal>
+        )
+    }
+
+
 const TransactionsModal = ({modalVisible,closeModal})=> {
 
     const [filtertype, setFilterType] = useState("All")
@@ -60,42 +104,6 @@ const TransactionsModal = ({modalVisible,closeModal})=> {
         })
     }
 
-    const FilterDateModal = ()=> {
-    return (
-        <Modal
-           visible={showFilterDate}
-           animationType="fade"
-           transparent={true}
-           onRequestClose={()=>setShowFilterDate(false)}
-          >
-
-              <View style={{flex: 1 ,justifyContent: "center",alignItems: "center"}}> 
-                  <View style={{width: width * 0.8 , height: height * 0.8 , backgroundColor: "white",padding: 10,borderRadius: 20,  shadowColor: '#000',
-                                justifyContent: "center",
-                                alignItems: "center",
-                                shadowOffset: {
-                                width: 0,
-                                height: 2,
-                                },
-                                shadowOpacity: 0.25,
-                                shadowRadius: 3.84,
-                                elevation: 5,}}
-                    >
-                        <Text style={{fontWeight: "400",fontSize: 20}}>From</Text>
-                        <DatePicker date={new Date(filterDate.from)} mode="date" maximumDate={todayDate} minimumDate={minDate} />
-                        <Text style={{fontWeight: "400",fontSize: 20,marginTop: 20}}>To</Text>
-                        <DatePicker date={filterDate.to} onDateChange={(date)=>console.log(date)} mode="date" maximumDate={todayDate} minimumDate={minDate} />
-
-                        <TouchableOpacity onPress={()=>setShowFilterDate(false)} style={{marginTop: 10, padding: 20,backgroundColor: DARK, width: "90%",borderRadius: 10, alignItems: "center"}}>
-                            <Text style={{color: COLOR}}>Ok</Text>
-                        </TouchableOpacity>
-                  </View>
-              </View>
-
-          </Modal>
-        )
-    }
-
 
     return (
        <Modal
@@ -105,7 +113,14 @@ const TransactionsModal = ({modalVisible,closeModal})=> {
             onRequestClose={closeModal}
        >
 
-           <FilterDateModal/>
+           <FilterDateModal 
+                    showFilterDate={showFilterDate} 
+                    changeFilterDate={changeFilterDate} 
+                    filterDate={filterDate} 
+                    setShowFilterDate={setShowFilterDate}
+                    minDate={minDate}
+                    todayDate={todayDate}
+            />
 
            <View style={styles.container}>
                 <TouchableOpacity onPress={closeModal} style={styles.header}>
