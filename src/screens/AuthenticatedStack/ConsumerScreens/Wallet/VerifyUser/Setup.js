@@ -17,20 +17,34 @@ const MainSetupComponent = ()=> {
 
     const {currentIndex,setCurrentIndex} = useContext(VerifyContext)
 
-    const [screenSlides,setScreenSlides] = useState(["Fullname","Nationality","Birthday","Address","IDPic","SelfiePic"])
+    // const [screenSlides,setScreenSlides] = useState(["Fullname","Nationality","Birthday","Address","IDPic","SelfiePic"])
+    const [screenSlides,setScreenSlides] = useState(["Fullname","Birthday","Address","IDPic","SelfiePic"])
 
     const DisplayComponents = ()=> {
+        // switch(currentIndex){
+        //     case 0:
+        //         return <VerifyFullname/>
+        //     case 1:
+        //         return <VerifyNationality/>
+        //     case 2:
+        //         return <VerifyBirth/>
+        //     case 3:
+        //         return <VerifyAddress/>
+        //     case 4:
+        //          return <VerifyID/>
+        //     default:
+        //         return <VerifySelfie/>
+        // }
+
         switch(currentIndex){
             case 0:
                 return <VerifyFullname/>
             case 1:
-                return <VerifyNationality/>
-            case 2:
                 return <VerifyBirth/>
-            case 3:
+            case 2:
                 return <VerifyAddress/>
-            case 4:
-                 return <VerifyID/>
+            case 3:
+                return <VerifyID/>
             default:
                 return <VerifySelfie/>
         }
@@ -58,7 +72,7 @@ const MainSetupComponent = ()=> {
 const SetupVerify = ({navigation})=> {
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack icon="x"/>,
-        headerTitle: ()=> <HeaderTitle label={['Verify ToktokPay Wallet','']}/>,
+        headerTitle: ()=> <HeaderTitle label={['Verify toktok wallet','']}/>,
     })
 
     return (

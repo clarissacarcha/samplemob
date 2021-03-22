@@ -91,7 +91,7 @@ const VerifySelfie = ()=> {
             <CameraModal />
             <View style={styles.content}>
                 <View style={styles.mainInput}>
-                        <Text style={{fontSize: 14, fontFamily: FONT_MEDIUM}}>One last step before you get a Premium Wallet!</Text>
+                        <Text style={{fontSize: 14, fontFamily: FONT_MEDIUM}}>One last step before you get a verified toktok wallet!</Text>
                         <Text style={{fontFamily: FONT_LIGHT,marginTop: 8,fontSize: 12}}>Take a photo to verify your identity.</Text>  
                         
                        
@@ -100,7 +100,8 @@ const VerifySelfie = ()=> {
                             <Text style={{color: 'gray',marginTop: 8,fontSize: 12,fontFamily: FONT_REGULAR}}>Show us that you match your photo ID with a live selfie</Text>  
 
                             <TouchableOpacity onPress={()=>setShowCamera(true)} style={[styles.input,{borderColor: "#F6841F",justifyContent: "center",alignItems: "center",marginTop: 20,}]}>
-                                <Text style={{color: "#F6841F",fontSize: 12,fontFamily: FONT_MEDIUM}}>Start Now</Text>
+                                {/* <Text style={{color: "#F6841F",fontSize: 12,fontFamily: FONT_MEDIUM}}>Start Now</Text> */}
+                                <FIcon5 name="camera" size={18} color="#F6841F" />
                             </TouchableOpacity>
                         </View>
 

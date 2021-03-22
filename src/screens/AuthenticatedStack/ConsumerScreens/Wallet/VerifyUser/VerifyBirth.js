@@ -1,27 +1,62 @@
 import React, { useContext, useState } from 'react'
-import {View,Text,StyleSheet,TouchableOpacity} from 'react-native'
+import {View,Text,StyleSheet,TouchableOpacity,Modal} from 'react-native'
 import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM,ORANGE, FONT_MEDIUM, FONT_LIGHT, FONT_REGULAR} from '../../../../../res/constants'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import {VerifyContext} from './Context/VerifyContextProvider'
 import ModalCountry from './ModalCountry'
+import DatePicker from 'react-native-date-picker'
+import moment from 'moment'
+
+
+const DateBirthModal = ({modalVisible, setModalVisible , birthInfo ,changeBirthInfo})=> {
+
+    const minDate = new Date('1900-01-01');
+    const todayDate = new Date();
+
+    const [bday,setBday] = useState(birthInfo.birthdate == "" ? todayDate : birthInfo.birthdate)
+
+    return (
+        <Modal
+            visible={modalVisible}
+            onRequestClose={()=>setModalVisible(false)}
+            transparent={true}
+        >
+            <View style={styles.dateModalContent}>
+                <View style={{padding: 20,backgroundColor: "white",width: "90%",justifyContent:"center",alignItems:"center",borderRadius: 10}}>
+                     <DatePicker date={bday} onDateChange={date=>setBday(date)} mode="date" maximumDate={todayDate} minimumDate={minDate} />
+                     <TouchableOpacity onPress={()=>{
+                            changeBirthInfo("birthdate",bday)
+                            setModalVisible(false)
+                     }} style={{width: "100%", marginTop: 20,padding: 10,backgroundColor: DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
+                            <Text style={{color: COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Ok</Text>
+                    </TouchableOpacity>
+                </View>   
+                
+            </View>
+
+        </Modal>
+    )
+}
 
 const VerifyBirth = ()=> {
     const {birthInfo, setCurrentIndex , changeBirthInfo , setModalCountryVisible} = useContext(VerifyContext)
-    const [bday,setBday] = useState("")
+    const [modalVisible,setModalVisible] = useState(false)
+    console.log(birthInfo)
 
     return (
         <>
             <ModalCountry type="birthinfo"/>
+            <DateBirthModal modalVisible={modalVisible} setModalVisible={setModalVisible} birthInfo={birthInfo} changeBirthInfo={changeBirthInfo}/>
             <View style={styles.content}>
                 <View style={styles.mainInput}>
                         <Text style={{fontSize: 14, fontFamily: FONT_MEDIUM}}>When and where were you born?</Text>
                         <Text style={{fontFamily: FONT_LIGHT,marginTop: 5,fontSize: 10.5}}>Make sure the information matches your government-issued ID.</Text>  
                         <View style={{marginTop: 20,}}>
                             <Text style={{fontSize: 12, fontFamily: FONT_MEDIUM}}>Date of Birth</Text>
-                            <View style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center"}]}>
-                                <Text style={{flex: 1,fontFamily: FONT_REGULAR,color: "gray",fontSize: 12}}>MM/DD/YY</Text>
+                            <TouchableOpacity onPress={()=>setModalVisible(true)} style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center"}]}>
+                                <Text style={{flex: 1,fontFamily: FONT_REGULAR,color: "gray",fontSize: 12}}>{birthInfo.birthdate == "" ? "MM/DD/YY" : moment(birthInfo.birthdate).format("MM/DD/YYYY")}</Text>
                                 <FIcon5 name="calendar" size={24}/>
-                            </View>
+                            </TouchableOpacity>
                         </View>
 
                         <View style={{marginTop: 20,}}>
@@ -76,6 +111,12 @@ const styles = StyleSheet.create({
         borderColor: "silver",
         marginTop: 10,
     },
+    dateModalContent: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "rgba(0,0,0,0.5)"
+    }
 })
 
 export default VerifyBirth

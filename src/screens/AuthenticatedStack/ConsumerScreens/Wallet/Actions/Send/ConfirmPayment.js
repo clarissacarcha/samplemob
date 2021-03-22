@@ -14,7 +14,7 @@ const ConfirmPayment = ({navigation,route})=> {
 
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack />,
-        headerTitle: ()=> <HeaderTitle label={['Choose a Recipient','']}/>,
+        headerTitle: ()=> <HeaderTitle label={['Send money using toktok wallet','']}/>,
     })
 
     const recipientInfo = route.params.recipientInfo
@@ -57,16 +57,16 @@ const ConfirmPayment = ({navigation,route})=> {
         );
       }
     
-      if (error) {
-        return (
-          <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            <Text>Something Went Wrong</Text>
-          </View>
-        );
-      }
+    if (error) {
+    return (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <Text>Something Went Wrong</Text>
+        </View>
+    );
+    }
 
     const changeAmount = (value)=>{
-        let num = value.replace(/[^0-9]/g, '')
+        let num = value.replace(/[^0-9.]/g, '')
         let finalnum = num.substring(0,1) == 0 ? num.slice(1) : num
         setAmount(finalnum)
         finalnum > 0 && finalnum <= data.getToktokWalletCurrent.balance ? setSwipeEnabled(true) : setSwipeEnabled(false)
@@ -95,6 +95,7 @@ const ConfirmPayment = ({navigation,route})=> {
         />
         <View style={styles.container}>
             <View style={styles.content}>
+                    <Text style={{marginLeft: 20, marginTop: 20, fontFamily: FONT_MEDIUM ,fontSize: 16}}>Send to</Text>
                     <View style={styles.receiverInfo}>
                         <Image style={{height: 50,width: 50,marginRight: 10}} resizeMode="contain" source={{uri: recipientInfo.person.avatar}}/>
                         <View style={{justifyContent: "center"}}>
@@ -133,6 +134,7 @@ const ConfirmPayment = ({navigation,route})=> {
                     </View>
             </View>
             <SwipeButton 
+                    //enableReverseSwipe={true}
                     disabled={!swipeEnabled}
                     disabledRailBackgroundColor="dimgray"
                     containerStyles={styles.swipeContainer}

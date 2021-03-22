@@ -35,6 +35,8 @@ const VerifyAddress = ()=> {
                             <TextInput 
                                 style={styles.input} 
                                 placeholder="E.g 111 Street / Unit 120"
+                                value={address.streetAddress}
+                                onChangeText={text=>changeAddress("streetAddress", text)}
                             />
                         </View>
 
@@ -43,6 +45,8 @@ const VerifyAddress = ()=> {
                             <TextInput 
                                 style={styles.input} 
                                 placeholder="E.g Palo-Alto / Palao"
+                                value={address.village}
+                                onChangeText={text=>changeAddress("village", text)}
                             />
                         </View>
 
@@ -51,6 +55,8 @@ const VerifyAddress = ()=> {
                             <TextInput 
                                 style={styles.input} 
                                 placeholder="E.g Calamba City / Taguig City"
+                                value={address.city}
+                                onChangeText={text=>changeAddress("city",text)}
                             />
                         </View>
 
@@ -59,6 +65,8 @@ const VerifyAddress = ()=> {
                             <TextInput 
                                 style={styles.input} 
                                 placeholder="E.g Metro Manila / Laguna / Bulacan"
+                                value={address.region}
+                                onChangeText={text=>changeAddress("region",text)}
                             />
                         </View>
 
@@ -67,6 +75,8 @@ const VerifyAddress = ()=> {
                             <TextInput 
                                 style={styles.input} 
                                 placeholder="E.g 1630"
+                                value={address.zipCode}
+                                onChangeText={text=>changeAddress("zipCode",text)}
                             />
                         </View>
 

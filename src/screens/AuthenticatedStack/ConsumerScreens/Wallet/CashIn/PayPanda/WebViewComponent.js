@@ -6,6 +6,7 @@ import WebView from 'react-native-webview'
 import {useMutation} from '@apollo/react-hooks'
 import {UPDATE_FROM_PAYPANDA_RETURN_URL} from '../../../../../../graphql'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
+import {useSelector} from 'react-redux'
 
 
 const {width,height} = Dimensions.get('window')
@@ -23,6 +24,8 @@ const WebViewComponent = ()=> {
     const [mounted, setMounted] = useState(true)
     const [checkurl,setCheckurl] = useState("")
     const [donetransaction,setDoneTransaction] = useState(false)
+
+    const session = useSelector(state=>state.session)
 
     const initialpaymentData = {
         merchant_id: route.params.merchantId,
@@ -51,10 +54,9 @@ const WebViewComponent = ()=> {
     const [updateFromPayPandaReturnUrl, {data,error,loading}] = useMutation(UPDATE_FROM_PAYPANDA_RETURN_URL,{
         // fetchPolicy: 'network-only',
         onCompleted: ()=>{
-
+            setDoneTransaction(true)
         }
     })
-
 
     useEffect(()=> {
         setMounted(true)
@@ -135,7 +137,7 @@ const WebViewComponent = ()=> {
                             let payment_status = /(?:\&status=).*(?=\&signature)/.exec(url)
                             let signature = /(?:\&signature=).*/.exec(url)
                             let paid_amount = route.params.amount_to_pay
-                            let walletId = route.params.walletId
+        
 
                             if(checkurl != url){       
                                 updateFromPayPandaReturnUrl({
@@ -146,12 +148,10 @@ const WebViewComponent = ()=> {
                                             payment_status: payment_status[0].slice(8),
                                             signature: signature[0].slice(11),
                                             paid_amount: +paid_amount,
-                                            walletId: walletId
+                                            userId: session.user.id
                                         }
                                     }
                                 })
-
-                                setDoneTransaction(true)
                             }
 
                             setCheckurl(url)

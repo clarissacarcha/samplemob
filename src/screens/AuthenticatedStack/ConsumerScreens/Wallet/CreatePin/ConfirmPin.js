@@ -1,7 +1,8 @@
 import React, { useState ,useRef } from 'react'
-import {View,Text,StyleSheet,TouchableHighlight,TouchableOpacity,TextInput} from 'react-native'
+import {View,Text,StyleSheet,TouchableHighlight,TouchableOpacity,TextInput,Alert} from 'react-native'
 import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM,ORANGE, FONT_MEDIUM} from '../../../../../res/constants'
 import {HeaderBack, HeaderTitle} from '../../../../../components'
+
 
 const NumberBox = ({onPress, value , showPin}) => (
     <TouchableHighlight onPress={onPress} underlayColor={COLOR} style={{borderRadius: 10,marginHorizontal: 5,}}>
@@ -15,7 +16,7 @@ const NumberBoxes = ({pinCode, onNumPress, showPin}) => {
 
     const numberBoxes = [];
     var i;
-    for (i = 0; i <= 5; i++) {
+    for (i = 0; i <= 3; i++) {
       numberBoxes.push(<NumberBox onPress={onNumPress} value={pinCode[i]} showPin={showPin}/>);
     }
     return (
@@ -46,8 +47,11 @@ const ConfirmPin = ({navigation,route})=> {
     };
     
     const onSubmit = () => {
-        console.log("submit",pinCode)
-        navigation.navigate("TokTokWalletSettingsConfirmEmail", {pinCode: pinCode})
+        if(pinCode != confirmpinCode){
+            Alert.alert("Pin code does not match!")
+        }else {
+            navigation.navigate("TokTokWalletSettingsConfirmEmail", {pinCode: pinCode})
+        }
     };
 
     return (
@@ -64,7 +68,7 @@ const ConfirmPin = ({navigation,route})=> {
                             keyboardType="number-pad"
                             returnKeyType="done"
                             onChangeText={(value) => {
-                            if (value.length <= 6) {
+                            if (value.length <= 4) {
                                 setConfirmPinCode(value);
                             }
                             }}

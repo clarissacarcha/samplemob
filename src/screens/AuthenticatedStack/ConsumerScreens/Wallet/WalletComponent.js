@@ -3,13 +3,13 @@ import {View,Text,StyleSheet,TouchableOpacity,TouchableHighlight,Animated,Activi
 import {HeaderBack, HeaderTitle, SomethingWentWrong} from '../../../../components'
 import {useNavigation,useFocusEffect} from '@react-navigation/native'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
-import WalletRecentTransactions from './RecentTransactions'
+import WalletRecentTransactions from './Records/RecentTransactions'
 import {GET_TOKTOK_WALLET, POST_TOKTOK_WALLET} from '../../../../graphql'
 import {numberFormat} from '../../../../helper'
 import {useQuery,useLazyQuery,useMutation} from '@apollo/react-hooks'
 import {useSelector,useDispatch} from 'react-redux'
 import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM,FONT_MEDIUM, FONT_REGULAR} from '../../../../res/constants'
-import TransactionsModal from './TransactionsModal'
+import TransactionsModal from './Records/TransactionsModal'
 import CreateWallet from './VerifyUser/CreateWallet'
 import { RefreshControl } from 'react-native';
 
@@ -17,7 +17,7 @@ const WalletComponent = ()=> {
     const navigation = useNavigation()
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack/>,
-        headerTitle: ()=> <HeaderTitle label={['My Wallet','']}/>,
+        headerTitle: ()=> <HeaderTitle label={['toktok wallet','']}/>,
     })
     const session = useSelector(state=> state.session)
     const [mounted, setMounted] = useState(true)
@@ -46,7 +46,7 @@ const WalletComponent = ()=> {
             },
         },
         onCompleted: ({getToktokWallet}) => {
-           
+           console.log(getToktokWallet)
         },
     });
 
@@ -108,7 +108,7 @@ const WalletComponent = ()=> {
                         // rotateY.setValue(0)
                         animation.start(()=> {
                             animation.reset()
-                            navigation.navigate("TokTokWalletSettings")
+                            navigation.navigate("TokTokWalletSettings", {isVerified: data.getToktokWallet.record.isVerified , isPinSet: data.getToktokWallet.record.isPinSet})
                         })
 
                     }}>
@@ -117,44 +117,38 @@ const WalletComponent = ()=> {
                         </Animated.View>
                     </TouchableOpacity>
                 </View>
-                <TouchableOpacity style={styles.topUp} onPress={()=>navigation.navigate("TokTokWalletCashIn",{walletId: data.getToktokWallet.record.id,balance: data.getToktokWallet.record.balance})}>
-                        <Text style={{fontSize: 12,color: "white",fontFamily: FONT_REGULAR}}>+ Top up</Text>
-                </TouchableOpacity>
+              
+                <View style={styles.toktoklogo}>
+                    {/* <Image style={{height: 50, width: 50}} source={require('../../../../assets/icons/ToktokLogo.png')} /> */}
+                </View>
              </View>
             </ImageBackground>
         </View>
     )
 
+    const WalletMethod = ({onPress , imageSource , label , imageSize})=> (
+        <View style={[styles.walletMethod]}>
+            <TouchableOpacity onPress={onPress} style={styles.methodItem}>
+                <Image style={{height: imageSize.height,width: imageSize.width}} source={imageSource} resizeMode="contain" />
+            </TouchableOpacity>
+
+            <Text style={styles.walletMethodText}>{label}</Text>
+        </View>
+    )
+
     const WalletMethods = ()=> (
         <View style={styles.walletMethodsContainer}>
-            <View style={[styles.walletMethod]}>
-                <TouchableOpacity onPress={()=>navigation.navigate("TokTokWalletActionsSend")} style={styles.methodItem}>
-                    <Image style={{height: 26,width: 20}} source={require('../../../../assets/icons/walletSend.png')} resizeMode="contain" />
-                </TouchableOpacity>
-
-                <Text style={styles.walletMethodText}>Send</Text>
-            </View>
-            <View style={[styles.walletMethod]}>
-                <TouchableOpacity onPress={()=>navigation.navigate("TokTokWalletActionsRequest")} style={styles.methodItem}>
-                    <Image style={{height: 26,width: 20}} source={require('../../../../assets/icons/walletRequest.png')} resizeMode="contain" />
-                </TouchableOpacity>
-
-                <Text style={styles.walletMethodText}>Request</Text>
-            </View>
-            <View style={[styles.walletMethod]}>
-                <TouchableOpacity onPress={()=>navigation.navigate("TokTokWalletActionsScantoPay",{walletId: data.getToktokWallet.record.id,balance: data.getToktokWallet.record.balance})} style={styles.methodItem}>
-                    <Image style={{height: 26,width: 20}} source={require('../../../../assets/icons/walletScan.png')} resizeMode="contain" />
-                </TouchableOpacity>
-
-                <Text style={styles.walletMethodText}>Scan</Text>
-            </View>
-            <View style={[styles.walletMethod]}>
-                <TouchableOpacity onPress={()=>navigation.navigate("TokTokWalletActionsTransfer")} style={styles.methodItem}>
-                    <Image style={{height: 26,width: 20}} source={require('../../../../assets/icons/walletTransfer.png')} resizeMode="contain" />
-                </TouchableOpacity>
-
-                <Text style={styles.walletMethodText}>Transfer</Text>
-            </View>
+            {/* <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+            > */}
+               
+                <WalletMethod label="Send" imageSize={{height: 26, width: 26}} onPress={()=>navigation.navigate("TokTokWalletActionsSend")} imageSource={require('../../../../assets/icons/walletSend.png')}/>
+                {/* <WalletMethod label="Request" imageSize={{height: 26, width: 26}} onPress={()=>navigation.navigate("TokTokWalletActionsRequest")} imageSource={require('../../../../assets/icons/walletRequest.png')}/> */}
+                <WalletMethod label="Scan" imageSize={{height: 25, width: 23}} onPress={()=>navigation.navigate("TokTokWalletActionsScantoPay",{balance: data.getToktokWallet.record.balance})} imageSource={require('../../../../assets/icons/walletScan.png')}/>
+                <WalletMethod label="Cash in" imageSize={{height: 26, width: 26}} onPress={()=>navigation.navigate("TokTokWalletCashIn",{balance: data.getToktokWallet.record.balance})} imageSource={require('../../../../assets/icons/methodCashin.png')}/>
+                <WalletMethod label="Cash out" imageSize={{height: 26, width: 26}} onPress={()=>navigation.navigate("TokTokWalletCashout",{balance: data.getToktokWallet.record.balance})} imageSource={require('../../../../assets/icons/walletTransfer.png')}/>
+            {/* </ScrollView> */}
         </View>
     )
 
@@ -172,8 +166,8 @@ const WalletComponent = ()=> {
             >
                 <WalletCardInfo />
                 <WalletMethods />
-                <WalletRecentTransactions seeAll={OpenCloseTransactionsModal} walletId={data.getToktokWallet.record.id}/>
-                <TransactionsModal modalVisible={modalVisible} closeModal={OpenCloseTransactionsModal}/>
+                <WalletRecentTransactions session={session} seeAll={OpenCloseTransactionsModal} walletId={data.getToktokWallet.record.id}/>
+                <TransactionsModal session={session} modalVisible={modalVisible} closeModal={OpenCloseTransactionsModal}/>
             </ScrollView>
         </View>
     )
@@ -206,25 +200,25 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "flex-end"
     },
-    topUp: {
-        height: 23,
-        width: 81,
-        borderWidth: 1,
-        borderColor: "white",
-        borderRadius: 10,
-        marginTop: 18,
+    toktoklogo: {
+        marginTop: 10,
         justifyContent: "center",
-        alignItems: "center"
     },
     walletMethodsContainer: {
-        flex: 1,
         flexDirection: "row",
         height: 120,
-        marginTop: 10
+        marginTop: 10,
+        flexWrap: "nowrap",
+        flex: 1,
+       // paddingHorizontal: 5,
     },
     walletMethod: {
         flex: 1,
         padding:10,
+        // height: 65,
+        // width: 65,
+        // marginRight: 10,
+        // alignItems:"center"
     },
     methodItem: {
         // flex: 1,

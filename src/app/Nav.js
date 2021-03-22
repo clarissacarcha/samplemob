@@ -44,7 +44,7 @@ import PaymentOptions from '../screens/AuthenticatedStack/ConsumerScreens/Wallet
 import PayPanda from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/CashIn/PayPanda/PayPandaComponent';
 import PayPandaWebView from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/CashIn/PayPanda/WebViewComponent';
 import WalletSettings from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Settings'
-import CashInLogs from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/CashInLogs';
+import CashInLogs from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/CashIn/CashInLogs';
 import WalletSettingsCreatePIN from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/CreatePin/CreatePin'
 import WalletSettingsConfirmPIN from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/CreatePin/ConfirmPin'
 import WalletSettingsConfirmEmail from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/CreatePin/ConfirmEmail'
@@ -57,6 +57,7 @@ import WalletActionsScantoPay from '../screens/AuthenticatedStack/ConsumerScreen
 import WalletActionsScantoPayConfirmPayment from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Actions/ScantoPay/ConfirmPayment'
 import WalletActionsTranfer from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Actions/Transfer/TransferWalletComponent'
 import WalletActionsTranferEWallet from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Actions/Transfer/EWallet/TransferEwallet'
+import WalletCashout from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Cashout/Cashout'
 
 
 /*---------- DRIVER SCREENS ----------*/
@@ -297,8 +298,9 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="TokTokWalletActionsSendConfirmPayment" component={WalletActionsSendConfirm}/>
     <Authenticated.Screen name="TokTokWalletActionsScantoPay" component={WalletActionsScantoPay}/>
     <Authenticated.Screen name="TokTokWalletActionsScantoPayConfirmPayment" component={WalletActionsScantoPayConfirmPayment}/>
-    <Authenticated.Screen name="TokTokWalletActionsTransfer" component={WalletActionsTranfer}/>
-    <Authenticated.Screen name="TokTokWalletActionsTransferEwallet" component={WalletActionsTranferEWallet}/>
+    {/* <Authenticated.Screen name="TokTokWalletActionsTransfer" component={WalletActionsTranfer}/>
+    <Authenticated.Screen name="TokTokWalletActionsTransferEwallet" component={WalletActionsTranferEWallet}/> */}
+    <Authenticated.Screen name="TokTokWalletCashout"component={WalletCashout} />
     
 
     {/*---------- DRIVER SCREENS ----------*/}

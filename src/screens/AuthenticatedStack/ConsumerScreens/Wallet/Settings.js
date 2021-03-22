@@ -4,7 +4,7 @@ import {HeaderBack, HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../
 import FIcon from 'react-native-vector-icons/Feather';
 import { FONT_LIGHT, FONT_MEDIUM } from '../../../../res/constants';
 
-const Settings = ({navigation})=> {
+const Settings = ({navigation , route })=> {
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack icon="x"/>,
         headerTitle: ()=> <HeaderTitle label={['Settings','']}/>,
@@ -28,12 +28,10 @@ const Settings = ({navigation})=> {
 
     return (    
         <View style={styles.container}>
-            <SettingOption route="TokTokWalletSettingsCreatePIN" icon={require('../../../../assets/icons/walletPin.png')} title="Create a PIN" subtitle="keep your account secure"/>
-            {/* <SettingOption route="TokTokWalletVerifyUser" icon={require('../../../../assets/icons/walletAutocashin.png')} title="Manage Auto Cash-in" subtitle="Keep your wallet without running out of balance"/>
-            <SettingOption route="TokTokWalletVerifyUser" icon={require('../../../../assets/icons/walletCreditcard.png')} title="Add Credit/Debit Card" subtitle="Cash in from your card"/>
-            <SettingOption route="TokTokWalletVerifyUser" icon={require('../../../../assets/icons/walletBank.png')} title="Link Bank Account" subtitle="Link your bank account for fastest cash-in"/> */}
-            <SettingOption route="TokTokWalletCashInLogs" icon={require('../../../../assets/icons/walletCashinLog.png')} title="Cash in logs" subtitle="View your cash in logs"/>
+            <SettingOption route={route.params.isPinSet ? "" : "TokTokWalletSettingsCreatePIN"} icon={require('../../../../assets/icons/walletPin.png')} title={route.params.isPinSet ? "Change PIN" : "Create a PIN"} subtitle="keep your account secure"/>
             <SettingOption route="TokTokWalletVerifyUser" icon={require('../../../../assets/icons/walletVerify.png')} title="Verify User" subtitle="Verify your toktok wallet"/>
+            <SettingOption route="TokTokWalletCashInLogs" icon={require('../../../../assets/icons/walletCashinLog.png')} title="Cash in logs" subtitle="View your cash in logs"/>
+            <SettingOption route="TokTokWalletCashInLogs" icon={require('../../../../assets/icons/walletCashinLog.png')} title="Cash out logs" subtitle="View your cash out logs"/>
         </View>
     )
 }

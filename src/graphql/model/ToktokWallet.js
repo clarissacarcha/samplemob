@@ -8,6 +8,8 @@ export const GET_TOKTOK_WALLET = gql`
         balance
         status
         pendingEncashment
+        isVerified
+        isPinSet
       }
     }
   }
@@ -49,7 +51,6 @@ export const TOKTOK_WALLET_ENCASH = gql`
   }
 `;
 
-
 export const CREATE_TOKTOK_WALLET = gql`
   mutation createToktokWallet($input: PostToktokWalletInput!){
     createToktokWallet(input: $input){
@@ -57,8 +58,6 @@ export const CREATE_TOKTOK_WALLET = gql`
     }
   }
 `
-
-
 export const GET_CASH_IN_METHODS = gql`
     query getCashInMethods($input: CashInMethodInput){
         getCashInMethods(input: $input){
@@ -71,7 +70,6 @@ export const GET_CASH_IN_METHODS = gql`
         }
     }
 `
-
 export const GET_TOKTOK_WALLET_CURRENT = gql`
    query getToktokWalletCurrent($input: ToktokWalletInput){
       getToktokWalletCurrent(input: $input){
@@ -79,10 +77,11 @@ export const GET_TOKTOK_WALLET_CURRENT = gql`
           balance
           status
           tokUserId
+          isVerified
+          isPinSet
       }
    }
 `
-
 export const INITIALIZE_WALLET_CASHIN_PAYPANDA = gql`
     mutation initializeWalletCashinPayPanda($input: InitialPayPandaCashInInput){
         initializeWalletCashinPayPanda(input: $input){
@@ -92,7 +91,6 @@ export const INITIALIZE_WALLET_CASHIN_PAYPANDA = gql`
         }
     }
 `
-
 export const UPDATE_FROM_PAYPANDA_RETURN_URL = gql`
   mutation updateFromPayPandaReturnUrl($input: PayPandaReturnUrlInput){
     updateFromPayPandaReturnUrl(input: $input){
@@ -101,24 +99,51 @@ export const UPDATE_FROM_PAYPANDA_RETURN_URL = gql`
   }
 `;
 
+export const WALLET_LOG_OUTPUT = `title
+logs {
+  id
+  referenceNumber
+  amount
+  type
+  createdAt
+  sourceUserId
+  destinationUserId
+  logType {
+    transferType
+    sourceAccountType
+    destinationAccountType
+  }
+  sourceInfo {
+    username
+    firstName
+    middleName
+    lastName
+    internalAccount
+  }
+  destinationInfo {
+    username
+    firstName
+    middleName
+    lastName
+    internalAccount
+  }
+}`
+
 export const GET_TOKTOK_WALLET_RECENT_TRANSACTIONS = gql`
   query getWalletRecentTransactions($input: ToktokWalletTransactionsInput){
     getWalletRecentTransactions(input: $input){
-      title
-      logs {
-        id
-        incoming
-        outgoing
-        balance
-        type
-        status
-        createdAt
-      }
+      ${WALLET_LOG_OUTPUT}
     }
   }
 `;
 
-
+export const GET_TOKTOK_WALLET_TRANSACTIONS = gql`
+  query getWalletTransactions($input: ToktokWalletTransactionsInput){
+    getWalletTransactions(input: $input){
+      ${WALLET_LOG_OUTPUT}
+    }
+  }
+`
 export const CHECK_USER_ACCOUNT_WALLET = gql`
   query checkUserAccount($input: UserNumberInput){
     checkUserAccount(input: $input){
@@ -133,12 +158,44 @@ export const CHECK_USER_ACCOUNT_WALLET = gql`
     }
   }
 `
-
-
 export const FUND_TRANSFER_FROM_CONSUMER_TO_CONSUMER = gql`
   mutation fundTransferFromCtoC($input: FundTransferCtoCInput){
     fundTransferFromCtoC(input: $input){
       message
     }
   } 
+`
+export const CHECK_QR_CODE = gql`
+  query checkQRCode($input: QRCodeInput){
+    checkQRCode(input: $input){
+      id
+      name
+      image
+      contactNo
+      type
+    }
+  }
+`
+
+export const GET_WALLET_CASH_IN_LOGS = gql`
+  query getCashInLogs($input: CashInLogsInput){
+      getCashInLogs(input: $input){
+          id
+          referenceNumber
+          amount
+          paypandaReferenceNumber
+          createdAt
+          tokUserId
+          tokToktokWalletLogId
+      }
+  }
+`
+
+
+export const CREATE_PINCODE_WALLET =gql`
+  mutation createPincodeToktokWallet($input: CreatePinInput){
+    createPincodeToktokWallet(input: $input){
+      message
+    }
+  }
 `

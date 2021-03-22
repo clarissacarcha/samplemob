@@ -1,5 +1,5 @@
 import React, { useState , useRef , useContext } from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,Modal,Dimensions,Alert,Image} from 'react-native'
+import {View,Text,StyleSheet,TouchableOpacity,Modal,Dimensions,Alert,Image,ScrollView,TextInput,FlatList} from 'react-native'
 import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM,ORANGE, FONT_MEDIUM, FONT_LIGHT, FONT_REGULAR, FONT_SEMIBOLD} from '../../../../../res/constants'
 import EIcon from 'react-native-vector-icons/EvilIcons'
 import {RNCamera} from 'react-native-camera';
@@ -7,18 +7,73 @@ import ImageCropper from 'react-native-simple-image-cropper';
 import {VerifyContext} from './Context/VerifyContextProvider'
 import ModalCountry from './ModalCountry'
 
-const imageWidth = Dimensions.get('window').width - 40;
+const {height,width} = Dimensions.get("window")
+
+const imageWidth = width - 40;
 
 const CROP_AREA_WIDTH = imageWidth;
 const CROP_AREA_HEIGHT = imageWidth;
 
 
+
+const ValidIDModal = ({validIdModal,setValidIdModal,changeVerifyID})=> {
+
+    const ValidIDList = [
+        "Passport",
+        "Driver's Licence",
+        "SSS UMID Card",
+        "Philhealth ID",
+        "TIN Card",
+        "Postal ID",
+        "Voter's ID",
+        "Professional Regulation Commission ID",
+        "Senior Citizen ID",
+        "OFW ID",
+        "School ID",
+    ]
+
+
+    return (
+        <Modal
+            visible={validIdModal}
+            onRequestClose={()=>setValidIdModal(false)}
+            transparent={true}
+        >
+
+            <View style={{flex: 1,justifyContent:"center",alignItems:"center",backgroundColor:"rgba(0,0,0,0.5)"}}> 
+                <View style={{height: "90%", width: "85%",backgroundColor:"white",paddingVertical: 20,borderRadius: 10}}>
+                    <FlatList
+                        showsVerticalScrollIndicator={false}
+                        data={ValidIDList}
+                        keyExtractor={item=>item}
+                        renderItem={({item,index})=>{
+                            return (
+                                <TouchableOpacity
+                                        onPress={()=> {
+                                            changeVerifyID("idType", item)
+                                            setValidIdModal(false)
+                                        }}
+                                >
+                                    <Text style={{fontFamily: FONT_REGULAR,fontSize:14,padding: 15,}}>{item}</Text>
+                                </TouchableOpacity>
+                            )
+                        }}
+                    />
+                </View>
+            </View>
+
+        </Modal>
+    )
+}
+
+
 const VerifyID = ()=> {
 
-    const {setCurrentIndex, idImage: image, setIDImage: setImage , idCountry , setModalCountryVisible} = useContext(VerifyContext)
+    const {setCurrentIndex , setModalCountryVisible  , verifyID, changeVerifyID} = useContext(VerifyContext)
 
     const [showCamera,setShowCamera] = useState(false)
     const cameraRef = useRef(null)
+    const [validIdModal,setValidIdModal] = useState(false)
     const [cropperParams, setCropperParams] = useState({})
     const [isBarcodeRead, setIsBarcodeRead] = useState(false)
 
@@ -32,7 +87,7 @@ const VerifyID = ()=> {
               fixOrientation: true,
             };
             const data = await cameraRef.current.takePictureAsync(options);
-            setImage(data);
+            changeVerifyID("idImage",data);
             setShowCamera(false)
           }
         } catch (error) {
@@ -63,7 +118,7 @@ const VerifyID = ()=> {
                 style={styles.preview}
                 // type={showFrontCam ? RNCamera.Constants.Type.front : RNCamera.Constants.Type.back}
                 type={RNCamera.Constants.Type.back}
-                flashMode={RNCamera.Constants.FlashMode.on}
+                flashMode={RNCamera.Constants.FlashMode.off}
                 captureAudio={false}
                 androidCameraPermissionOptions={{
                     title: 'Permission to use camera',
@@ -101,7 +156,7 @@ const VerifyID = ()=> {
                 marginTop: 10,
                 borderRadius: 5,
                 borderStyle: "dashed",
-                flex: 1,
+                height: width,
                 width: "100%",
                 borderWidth: 2,
                 borderColor: "#FCB91A",
@@ -130,8 +185,8 @@ const VerifyID = ()=> {
     // )
 
     const ImageIDSet = ()=> (
-        <TouchableOpacity style={{marginTop: 10,}} onPress={()=>setShowCamera(true)}>
-                <Image resizeMode="contain" style={{height: "100%",width: "100%"}} source={{uri: image.uri}} />
+        <TouchableOpacity style={{marginTop: 10,width: width , height: width}} onPress={()=>setShowCamera(true)}>
+                <Image resizeMode="contain" style={{height: "100%",width: "100%"}} source={{uri: verifyID.idImage.uri}} />
         </TouchableOpacity>
     )
 
@@ -139,15 +194,19 @@ const VerifyID = ()=> {
         <>
             <CameraModal />
             <ModalCountry type="validID"/>
+            <ValidIDModal validIdModal={validIdModal} setValidIdModal={setValidIdModal} changeVerifyID={changeVerifyID}/>
             <View style={styles.content}>
-                <View style={styles.mainInput}>
+                <ScrollView
+                         showsVerticalScrollIndicator={false}
+                         style={styles.mainInput}
+                >
                         <Text style={{fontSize: 14, fontFamily: FONT_MEDIUM}}>Take a photo of your ID?</Text>
                         <Text style={{fontFamily: FONT_LIGHT,marginTop: 5,fontSize: 12}}>Help us verify your identity with a photo of your valid government-issued ID, as required by local regulations.</Text>  
                   
                         <View style={{marginTop: 20,}}>
-                            <Text style={{fontSize: 12, fontFamily: FONT_MEDIUM}}>Countr</Text>
+                            <Text style={{fontSize: 12, fontFamily: FONT_MEDIUM}}>Country</Text>
                             <View style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center",paddingVertical: 10}]}>
-                                <Text style={{flex: 1,color: "gray",fontSize: 12,fontFamily: FONT_REGULAR}}>{idCountry}</Text>
+                                <Text style={{flex: 1,color: "gray",fontSize: 12,fontFamily: FONT_REGULAR}}>{verifyID.idCountry}</Text>
                                 <TouchableOpacity
                                     onPress={()=>setModalCountryVisible(true)}
                                 >
@@ -158,20 +217,32 @@ const VerifyID = ()=> {
 
                         <View style={{marginTop: 15,}}>
                             <Text style={{fontSize: 12, fontFamily: FONT_MEDIUM}}>ID Type</Text>
-                            <View style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center"}]}>
-                                <Text style={{flex: 1,color: "gray",fontSize: 12,fontFamily: FONT_REGULAR}}>Select one</Text>
+                            <TouchableOpacity onPress={()=>setValidIdModal(true)} style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center"}]}>
+                                <Text style={{flex: 1,color: "gray",fontSize: 12,fontFamily: FONT_REGULAR}}>{verifyID.idType == "" ? "Select one" : verifyID.idType}</Text>
                                 <EIcon name="chevron-down" size={24} color="#FCB91A"/>
-                            </View>
+
+                            </TouchableOpacity>
+                            
                         </View>
 
-                        <View style={{flex: 1,paddingVertical: 25}}>
-                                <Text style={{fontSize: 12, fontFamily: FONT_MEDIUM}}>Photo of your ID?</Text>
-                                { image ? <ImageIDSet/> : <ChooseImage/> }
+                        <View style={{marginTop: 15,}}>
+                            <Text style={{fontSize: 12, fontFamily: FONT_MEDIUM}}>ID Number</Text>
+                            <TextInput 
+                                    value={verifyID.idNumber}
+                                    onChangeText={text=>changeVerifyID("idNumber",text)}
+                                    placeholder="0000-000"
+                                    style={[styles.input,{padding: 5,paddingLeft: 10, color: "gray",fontSize: 12,fontFamily: FONT_REGULAR}]} 
+                            />
+                        </View>
+
+                        <View style={{flex: 1,paddingVertical: 25, alignItems: "center"}}>
+                                <Text style={{fontSize: 12, fontFamily: FONT_MEDIUM,alignSelf: "flex-start"}}>Photo of your ID?</Text>
+                                { verifyID.idImage ? <ImageIDSet/> : <ChooseImage/> }
                         </View>
 
                   
 
-                </View>
+                </ScrollView>
 
                 <View style={styles.proceedBtn}>
                     <TouchableOpacity onPress={()=>{

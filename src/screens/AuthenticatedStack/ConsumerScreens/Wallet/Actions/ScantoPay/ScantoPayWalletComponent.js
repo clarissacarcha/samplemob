@@ -1,12 +1,14 @@
 import React, {useState,useCallback, useEffect} from 'react'
 import {StyleSheet,View,Text,TouchableOpacity,Dimensions,Image,TouchableHighlight} from 'react-native'
-import {HeaderBack, HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../../../components'
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import { RNCamera } from 'react-native-camera';
 import {numberFormat} from '../../../../../../helper'
 import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM, FONT_MEDIUM, FONT_REGULAR} from '../../../../../../res/constants'
 import FIcon from 'react-native-vector-icons/Feather';
 import {useFocusEffect} from '@react-navigation/native'
+import {useLazyQuery} from '@apollo/react-hooks'
+import {CHECK_QR_CODE} from '../../../../../../graphql'
+import {onError} from '../../../../../../util/ErrorUtility'
 
 const {height,width} = Dimensions.get('window')
 
@@ -16,21 +18,80 @@ const ScantoPayWalletComponent = ({navigation,route})=> {
         header: ()=> null,
     })
 
-    const {walletId , balance} = route.params
+    const {balance} = route.params
 
     const [torch,setTorch] = useState(false)
     const [focusCamera,setFocusCamera] = useState(false)
-
 
     useFocusEffect(useCallback(()=>{
         setFocusCamera(true)
         return ()=> setFocusCamera(false)
     },[]))
 
+    const [checkQRCode] = useLazyQuery(CHECK_QR_CODE,{
+        fetchPolicy: "network-only",
+        onError: (error) => {
+            onError(error)
+            setTimeout(()=>{
+                navigation.replace("TokTokWalletActionsScantoPay",{balance: balance})
+            },1000) 
+        },
+        onCompleted: (response)=> navigation.navigate("TokTokWalletActionsScantoPayConfirmPayment", {recipientInfo: response.checkQRCode, balance: balance})
+    })
+
     const onSuccess = (e)=> {
-        console.log(e)
-        setTorch(false)
-        navigation.navigate("TokTokWalletActionsScantoPayConfirmPayment")
+        // size of center Box
+        const ViewFinderHeight = width * 0.7
+        const ViewFinderWidth = width * 0.7
+
+        const boundary = {
+            height: ViewFinderHeight,
+            width: ViewFinderWidth,
+            x: ( e.bounds.width - ViewFinderWidth ) / 2,
+            y: ( e.bounds.height - ViewFinderHeight ) / 2
+        }
+
+        let rXAve = 0
+        let rYAve = 0
+        let x = 0
+        e.bounds.origin.forEach((bound)=>{
+            rXAve = rXAve + +bound.x
+            rYAve = rYAve + +bound.y
+            x++
+        })
+
+        rXAve = rXAve / x
+        rYAve = rYAve / x
+
+        const resultBounds = {
+            height: e.bounds.height,
+            width: e.bounds.width,
+            x: rXAve,
+            y: rYAve 
+        }
+
+
+        if(ifInsideBox(boundary,resultBounds)){
+             checkQRCode({
+                variables: {
+                    input: {
+                        qrCode: e.data
+                    }
+                }
+            })
+            setTorch(false)
+        }else{
+            console.log("OUT OF BOUNDS")
+        }
+
+    }
+  
+
+    const ifInsideBox = (boundary , resultBounds)=> {
+       return boundary.x < (resultBounds.x + resultBounds.width)
+       && ( boundary.x + boundary.width ) > resultBounds.x
+       && boundary.y < ( resultBounds.y + resultBounds.height )
+       && ( boundary.y + boundary.height ) > resultBounds.y
     }
 
     const customMarker = ()=> (
@@ -112,8 +173,9 @@ const ScantoPayWalletComponent = ({navigation,route})=> {
                markerStyle={{
                    borderColor: "red"
                }}
-               // reactivate={true}
+               reactivate={true}
                // reactivateTimeout={5000}
+               vibrate={false}
                customMarker={customMarker}
                containerStyle={{
                    backgroundColor: "rgba(0,0,0,0.5)"
@@ -145,7 +207,7 @@ const ScantoPayWalletComponent = ({navigation,route})=> {
                             backgroundColor: DARK,
                             borderRadius: 10,
                         }}
-                        onPress={()=>navigation.navigate("TokTokWalletCashIn",{walletId,balance})}
+                        onPress={()=>navigation.navigate("TokTokWalletCashIn",{balance})}
                     >
                             <Text style={{color: COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Cash In</Text>
                     </TouchableOpacity>
@@ -178,7 +240,7 @@ const styles = StyleSheet.create({
     customMarker: {
         height: height,
         width: width,
-        backgroundColor: "rgba(0,0,0,0.2)",
+//backgroundColor: "rgba(0,0,0,0.2)",
         justifyContent: "center",
         alignItems: "center",
     },

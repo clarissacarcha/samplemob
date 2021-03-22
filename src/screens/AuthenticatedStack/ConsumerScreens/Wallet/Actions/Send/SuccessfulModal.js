@@ -14,7 +14,7 @@ const SuccessfulModal = ({successModalVisible , amount , recipient})=> {
                             <FIcon5 name="check" color="white" size={40}/>
                 </View>
                 <Text style={{fontFamily: FONT_BOLD, fontSize: 18,marginVertical: 10,}}>Transaction Completed</Text>
-                <Text style={{fontFamily: FONT_MEDIUM,fontSize: 12, color:"gray"}}>Successfully Transfered {'\u20B1'} {numberFormat(amount)} to {recipient}</Text>
+                <Text style={{fontFamily: FONT_MEDIUM,fontSize: 12, color:"gray"}}>Successfully Transferred {'\u20B1'} {numberFormat(amount)} to {recipient}</Text>
         </View>
     )
 

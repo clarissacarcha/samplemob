@@ -15,7 +15,7 @@ const NumberBoxes = ({pinCode, onNumPress, showPin}) => {
 
     const numberBoxes = [];
     var i;
-    for (i = 0; i <= 5; i++) {
+    for (i = 0; i <= 3; i++) {
       numberBoxes.push(<NumberBox onPress={onNumPress} value={pinCode[i]} showPin={showPin}/>);
     }
     return (
@@ -62,7 +62,7 @@ const CreatePin = ({navigation})=> {
                             keyboardType="number-pad"
                             returnKeyType="done"
                             onChangeText={(value) => {
-                            if (value.length <= 6) {
+                            if (value.length <= 4) {
                                 setPinCode(value);
                             }
                             }}

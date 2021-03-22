@@ -15,7 +15,7 @@ const VerifyUser = ({navigation})=> {
                 <View style={styles.content}>
                     <Image style={{height: 80,width: 80, alignSelf: "center",marginVertical: 30}} source={require('../../../../../assets/icons/ToktokLogo.png')} resizeMode="contain" />
                     <View style={{marginTop: 50}}>
-                            <Text style={{fontSize: 20,fontFamily: FONT_MEDIUM}}>Go cashless with <Text style={{color: COLOR}}>Toktok</Text><Text style={{color: ORANGE}}>Pay!</Text></Text>
+                            <Text style={{fontSize: 20,fontFamily: FONT_MEDIUM}}>Go cashless with <Text style={{color: COLOR}}>toktok</Text><Text style={{color: ORANGE}}> wallet!</Text></Text>
                             <Text style={{fontSize: 14,marginTop: 5,fontFamily: FONT_REGULAR}}>Enjoy a secure and convenient payment experience</Text>
                     </View>
                 </View>

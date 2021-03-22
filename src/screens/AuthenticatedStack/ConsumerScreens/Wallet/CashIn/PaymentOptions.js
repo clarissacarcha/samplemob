@@ -29,7 +29,6 @@ const PaymentOptions = ({navigation,route})=> {
     if(error){
         console.log(error)
     }
-    console.log(cashinmethods)
 
     const CashInMethod = ({item,index})=> {
         let image , navigateLink
@@ -43,7 +42,6 @@ const PaymentOptions = ({navigation,route})=> {
             <TouchableOpacity 
                 key={`cashin-${index}`}
                 style={styles.cashinoption} onPress={()=> navigateLink != "" ? navigation.navigate(navigateLink,{
-                        walletId: route.params.walletId,
                         balance: route.params.balance, 
                         transactionType: item
                     }
