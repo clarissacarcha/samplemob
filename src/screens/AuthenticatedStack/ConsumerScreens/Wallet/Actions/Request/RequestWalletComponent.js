@@ -1,13 +1,13 @@
 import React from 'react'
 import {View,Text,StyleSheet,TouchableOpacity} from 'react-native'
-import {HeaderBack, HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../../../components'
+import {HeaderBackClose, HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../../../components'
 import QRCode from 'react-native-qrcode-svg'
 import {useSelector} from 'react-redux'
 import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM, FONT_REGULAR, FONT_MEDIUM} from '../../../../../../res/constants'
 
 const RequestWalletComponent = ({navigation})=> {
     navigation.setOptions({
-        headerLeft: ()=> <HeaderBack icon="x"/>,
+        headerLeft: ()=> <HeaderBackClose/>,
         headerTitle: ()=> <HeaderTitle label={['Request Money','']} />,
     })
 

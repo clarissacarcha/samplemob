@@ -1,4 +1,4 @@
-import React, { useState ,useRef } from 'react'
+import React, { useState ,useRef , useEffect } from 'react'
 import {View,Text,StyleSheet,TouchableHighlight,TouchableOpacity,TextInput} from 'react-native'
 import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM,ORANGE, FONT_MEDIUM} from '../../../../../res/constants'
 import {HeaderBack, HeaderTitle} from '../../../../../components'
@@ -29,7 +29,7 @@ const NumberBoxes = ({pinCode, onNumPress, showPin}) => {
 const CreatePin = ({navigation})=> {
 
     navigation.setOptions({
-        headerLeft: ()=> <HeaderBack/>,
+        // headerLeft: ()=> <HeaderBack/>,
         headerTitle: ()=> <HeaderTitle label={['Set up a PIN','']}/>,
     })
 
@@ -44,9 +44,12 @@ const CreatePin = ({navigation})=> {
     };
     
     const onSubmit = () => {
-        console.log("submit",pinCode)
         navigation.navigate("TokTokWalletSettingsConfirmPIN",{pinCode: pinCode})
     };
+
+    // useEffect(()=>{
+    //     if(pinCode.length == 4)  navigation.navigate("TokTokWalletSettingsConfirmPIN",{pinCode: pinCode})
+    // },[pinCode])
 
     return (
        <View style={styles.container}>
@@ -78,6 +81,7 @@ const CreatePin = ({navigation})=> {
                     </View>
             </View>
             <TouchableOpacity
+                disabled={pinCode.length < 4}
                 onPress={onSubmit}
                 style={{alignItems: "center",height: 40,backgroundColor: DARK,margin: 20,justifyContent: "center",borderRadius: 10,}}
             >

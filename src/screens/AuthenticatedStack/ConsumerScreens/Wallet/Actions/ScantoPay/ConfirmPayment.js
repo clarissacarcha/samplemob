@@ -9,18 +9,19 @@ import {useQuery,useMutation} from '@apollo/react-hooks'
 import {useSelector} from 'react-redux'
 import { onError } from '../../../../../../util/ErrorUtility';
 import SuccessfulModal from '../Send/SuccessfulModal'
+import PincodeModal from '../../Notification/PincodeModal'
 
 const ConfirmPayment = ({navigation,route})=> {
 
     navigation.setOptions({
-        headerLeft: ()=> <HeaderBack />,
         headerTitle: ()=> <HeaderTitle label={['Send money using toktok wallet','']}/>,
     })
-    const { recipientInfo, balance } = route.params
+    const { recipientInfo, walletinfo } = route.params
     const session = useSelector(state=>state.session)
     const [amount,setAmount] = useState("")
     const [swipeEnabled,setSwipeEnabled] = useState(false)
     const [successModalVisible, setSuccessModalVisible] = useState(false)
+    const [showpinModal,setShowPinModal] = useState(false)
 
     const [fundTransferFromCtoC] = useMutation(FUND_TRANSFER_FROM_CONSUMER_TO_CONSUMER, {
         variables: {
@@ -38,7 +39,11 @@ const ConfirmPayment = ({navigation,route})=> {
 
     const onSwipeSuccess = ()=> {
         if(recipientInfo.type === "personal"){
-            fundTransferFromCtoC()
+            if(walletinfo.isPinSet){
+                setShowPinModal(true)
+            }else{
+                fundTransferFromCtoC()
+            }
         }
     }
 
@@ -50,7 +55,7 @@ const ConfirmPayment = ({navigation,route})=> {
         let num = value.replace(/[^0-9.]/g, '')
         let finalnum = num.substring(0,1) == 0 ? num.slice(1) : num
         setAmount(finalnum)
-        finalnum > 0 && finalnum <= balance ? setSwipeEnabled(true) : setSwipeEnabled(false)
+        finalnum > 0 && finalnum <= walletinfo.balance ? setSwipeEnabled(true) : setSwipeEnabled(false)
     }
 
 
@@ -69,6 +74,7 @@ const ConfirmPayment = ({navigation,route})=> {
                 amount={amount} 
                 recipient={`${recipientInfo.name}`}
         />
+         <PincodeModal showpinModal={showpinModal} setShowPinModal={setShowPinModal} onConfirm={fundTransferFromCtoC}/>
         <View style={styles.container}>
             <View style={styles.content}>
                     <Text style={{marginLeft: 20, marginTop: 20, fontFamily: FONT_MEDIUM ,fontSize: 16}}>Send to</Text>
@@ -81,7 +87,7 @@ const ConfirmPayment = ({navigation,route})=> {
                     </View>
 
                     <View style={{padding: 20}}>
-                        <Text style={{fontFamily: FONT_MEDIUM,fontSize: 16}}>Balance: {'\u20B1'} {numberFormat(balance)}</Text>
+                        <Text style={{fontFamily: FONT_MEDIUM,fontSize: 16}}>Balance: {'\u20B1'} {numberFormat(walletinfo.balance)}</Text>
                         <View style={styles.amount}>
                                 <Text style={{fontSize: 16,fontFamily: FONT_MEDIUM,alignSelf:"center"}}>{'\u20B1'} </Text>
                                 <TextInput
@@ -122,7 +128,7 @@ const ConfirmPayment = ({navigation,route})=> {
                     onSwipeSuccess={onSwipeSuccess}
                     resetAfterSuccessAnimDelay={0}
                     resetAfterSuccessAnimDuration={0}
-                    shouldResetAfterSuccess={false}
+                    shouldResetAfterSuccess={true}
                 />
           
         </View>

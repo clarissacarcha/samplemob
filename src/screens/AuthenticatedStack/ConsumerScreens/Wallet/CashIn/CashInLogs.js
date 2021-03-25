@@ -1,19 +1,33 @@
 import React , {useState , useEffect} from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,Image,RefreshControl} from 'react-native'
+import {View,Text,StyleSheet,TouchableOpacity,Image,RefreshControl , FlatList} from 'react-native'
 import {HeaderBack, HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../../components'
 import moment from 'moment'
 import { FONT_MEDIUM, FONT_REGULAR } from '../../../../../res/constants'
 import FilterDateModal from '../Records/FilterDateModal'
 import {useLazyQuery} from '@apollo/react-hooks'
-import {GET_WALLET_CASH_IN_LOGS} from '../../../../../graphql'
+import {GET_CASH_IN_LOGS} from '../../../../../graphql'
 import {onError} from '../../../../../util/ErrorUtility'
 import {useSelector} from 'react-redux'
+import { numberFormat } from '../../../../../helper'
 
 
-const CashInLog = ({transactionDate , transactionItems })=> {
+const CashInLog = ({transactionDate , transactionItems , index , itemsLength })=> {
+
+    const dateValue = moment(transactionDate).tz("Asia/Manila").format("YYYY-MM-DD");
+    const phTodayDate = moment().tz("Asia/Manila").format("YYYY-MM-DD");
+    const phYesterdayDate = moment().subtract(1,"days").tz("Asia/Manila").format("YYYY-MM-DD");
+    let datedisplay = ''
+    if(dateValue == phTodayDate){
+      datedisplay = "Today"
+    }else if(dateValue == phYesterdayDate){
+        datedisplay = "Yesterday"
+    }else{
+        datedisplay = moment(transactionDate).tz("Asia/Manila").format('MMM DD YYYY');
+    }
+
     return (
-        <View style={styles.transactionLogsContainer}>
-            <Text style={{fontSize: 12,fontFamily: FONT_MEDIUM}}>{transactionDate}</Text>
+        <View style={[styles.transactionLogsContainer, {marginBottom: index == itemsLength - 1 ? 100 : 0}]}>
+            <Text style={{fontSize: 12,fontFamily: FONT_MEDIUM}}>{datedisplay}</Text>
            {
                transactionItems.map((item)=>{
 
@@ -23,12 +37,12 @@ const CashInLog = ({transactionDate , transactionItems })=> {
                           <Image source={require('../../../../../assets/icons/walletLogCashin.png')} style={{height: 30, width: 30}} resizeMode="contain"/>
                         </View>
                         <View style={styles.transactionDetails}>
-                            <Text style={{fontSize: 12,fontFamily: FONT_MEDIUM}}>Cash - <Text>Pending</Text></Text>
-                            <Text style={{color: "#909294",fontSize: 10,marginTop: 5,fontFamily: FONT_MEDIUM}}>from PayPanda</Text>
+                            <Text style={{fontSize: 12,fontFamily: FONT_MEDIUM}}>Ref # {item.referenceNumber}</Text>
+                            <Text style={{color: "#909294",fontSize: 10,marginTop: 5,fontFamily: FONT_MEDIUM}}>Cash in from PayPanda {item.status}</Text>
                         </View>
                         <View style={styles.transactionAmount}>
-                            <Text style={{color: "#FCB91A",fontSize: 12,fontFamily: FONT_MEDIUM}}>{'\u20B1'} 650</Text>
-                            <Text style={{color: "#909294",fontSize: 10,alignSelf: "flex-end",marginTop: 5,fontFamily: FONT_REGULAR}}>Feb 18</Text>
+                            <Text style={{color: "#FCB91A",fontSize: 12,fontFamily: FONT_MEDIUM}}>{'\u20B1'} {numberFormat(item.amount)}</Text>
+                            <Text style={{color: "#909294",fontSize: 10,alignSelf: "flex-end",marginTop: 5,fontFamily: FONT_REGULAR}}>{moment(item.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')}</Text>
                         </View>
                     </View>
                 )
@@ -41,7 +55,7 @@ const CashInLog = ({transactionDate , transactionItems })=> {
 const CashInLogs = ({navigation})=> {
 
     navigation.setOptions({
-        headerLeft: ()=> <HeaderBack/>,
+        // headerLeft: ()=> <HeaderBack/>,
         headerTitle: ()=> <HeaderTitle label={['Cash In Logs','']}/>,
     })
 
@@ -67,7 +81,7 @@ const CashInLogs = ({navigation})=> {
         setFilterType("All")
     }
 
-    const [getCashInLogs , {data,error,loading}] = useLazyQuery(GET_WALLET_CASH_IN_LOGS,{
+    const [getCashInLogs , {data,error,loading}] = useLazyQuery(GET_CASH_IN_LOGS,{
         fetchPolicy: "network-only",
         variables: {
             input: {
@@ -108,7 +122,14 @@ const CashInLogs = ({navigation})=> {
                     </View>
 
                     <View style={{marginTop: 10}}>
-                        <Text>{JSON.stringify(filteredLogs)}</Text>
+                        <FlatList
+                            showsVerticalScrollIndicator={false}
+                            data={filteredLogs}
+                            keyExtractor={item=>item.title}
+                            renderItem={({item,index})=>(
+                                <CashInLog key={`cashin-log${index}`} transactionDate={item.logDate} transactionItems={item.logs}  index={index} itemsLength={filteredLogs.length}/>
+                            )}
+                        />
                     </View>
 
                 </View>

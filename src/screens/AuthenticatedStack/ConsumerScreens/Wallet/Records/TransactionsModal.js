@@ -3,7 +3,7 @@ import {View,Text,Modal,StyleSheet,TouchableOpacity,Dimensions,ScrollView,Image,
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import moment from 'moment'
 import { DARK, COLOR, FONT_MEDIUM, FONT_REGULAR } from '../../../../../res/constants'
-import {GET_TOKTOK_WALLET_TRANSACTIONS} from '../../../../../graphql'
+import {GET_WALLET_TRANSACTIONS} from '../../../../../graphql'
 import {useLazyQuery} from '@apollo/react-hooks'
 import {onError} from '../../../../../util/ErrorUtility'
 import WalletLog from './WalletLog'
@@ -38,14 +38,14 @@ const TransactionsModal = ({modalVisible,closeModal,session})=> {
         if(filtertype === "Incoming"){
             transactions.map((transaction)=>{
                 data.push({
-                    title: transaction.title,
+                    logDate: transaction.logDate,
                     logs: transaction.logs.filter((log)=> log.destinationUserId == session.user.id)
                 })
             })
         }else if(filtertype == "Outgoing"){
             transactions.map((transaction)=>{
                 data.push({
-                    title: transaction.title,
+                    logDate: transaction.logDate,
                     logs: transaction.logs.filter((log)=> log.sourceUserId == session.user.id)
                 })
             })
@@ -55,7 +55,7 @@ const TransactionsModal = ({modalVisible,closeModal,session})=> {
         setFilteredData(data)
     }
 
-    const [getWalletTransactions, {data, error, loading}] = useLazyQuery(GET_TOKTOK_WALLET_TRANSACTIONS,{
+    const [getWalletTransactions, {data, error, loading}] = useLazyQuery(GET_WALLET_TRANSACTIONS,{
         fetchPolicy: "network-only",
         variables: {
             input: {
@@ -130,7 +130,7 @@ const TransactionsModal = ({modalVisible,closeModal,session})=> {
                             data={filteredData}
                             keyExtractor={(item)=>item.title}
                             renderItem={({item,index})=>(
-                                <WalletLog key={`log-${index}`} transactionDate={item.title} transactionItems={item.logs} index={index} itemsLength={filteredData.length}/>
+                                <WalletLog key={`log-${index}`} transactionDate={item.logDate} transactionItems={item.logs} index={index} itemsLength={filteredData.length}/>
                             )}
                         />
 

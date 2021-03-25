@@ -1,5 +1,5 @@
 import React, {useState,useEffect} from 'react'
-import {View,Text,StyleSheet,Image,Alert,TouchableOpacity,TextInput,ActivityIndicator} from 'react-native'
+import {View,Text,StyleSheet,Image,Alert,TouchableOpacity,TextInput,ActivityIndicator,KeyboardAvoidingView,Platform} from 'react-native'
 import SwipeButton from 'rn-swipe-button';
 import {HeaderBack, HeaderTitle} from '../../../../../../components'
 import { COLOR, FONT_MEDIUM, FONT_REGULAR } from '../../../../../../res/constants';
@@ -9,11 +9,12 @@ import {useQuery,useMutation} from '@apollo/react-hooks'
 import {useSelector} from 'react-redux'
 import { onError } from '../../../../../../util/ErrorUtility';
 import SuccessfulModal from './SuccessfulModal'
+import PincodeModal from '../../Notification/PincodeModal'
 
 const ConfirmPayment = ({navigation,route})=> {
 
     navigation.setOptions({
-        headerLeft: ()=> <HeaderBack />,
+        // headerLeft: ()=> <HeaderBack />,
         headerTitle: ()=> <HeaderTitle label={['Send money using toktok wallet','']}/>,
     })
 
@@ -23,6 +24,7 @@ const ConfirmPayment = ({navigation,route})=> {
     const [note,setNote] = useState("")
     const [swipeEnabled,setSwipeEnabled] = useState(false)
     const [successModalVisible, setSuccessModalVisible] = useState(false)
+    const [showpinModal,setShowPinModal] = useState(false)
 
     const [fundTransferFromCtoC] = useMutation(FUND_TRANSFER_FROM_CONSUMER_TO_CONSUMER, {
         variables: {
@@ -73,7 +75,12 @@ const ConfirmPayment = ({navigation,route})=> {
     }
 
     const onSwipeSuccess = ()=> {
-        fundTransferFromCtoC()
+        if(data.getToktokWalletCurrent.isPinSet){
+            setShowPinModal(true)
+        }else{
+            fundTransferFromCtoC()
+        }
+       
     }
 
     const onSwipeFail = (e)=> {
@@ -93,6 +100,7 @@ const ConfirmPayment = ({navigation,route})=> {
                 amount={amount} 
                 recipient={`${recipientInfo.person.firstName} ${recipientInfo.person.middleName ? recipientInfo.person.middleName + "" : ""}${recipientInfo.person.lastName}`}
         />
+        <PincodeModal showpinModal={showpinModal} setShowPinModal={setShowPinModal} onConfirm={fundTransferFromCtoC}/>
         <View style={styles.container}>
             <View style={styles.content}>
                     <Text style={{marginLeft: 20, marginTop: 20, fontFamily: FONT_MEDIUM ,fontSize: 16}}>Send to</Text>
@@ -119,7 +127,7 @@ const ConfirmPayment = ({navigation,route})=> {
                                 />
                         </View>
                     </View>
-                    <View style={{paddingHorizontal: 20}}>
+                    <View behavior={Platform.OS === "ios" ? "padding" : "height"} style={{paddingHorizontal: 20}}>
                         <Text style={{fontFamily: FONT_MEDIUM,fontSize: 14}}>Note</Text>
                         <View style={styles.amount}>
                                 <TextInput
@@ -128,6 +136,7 @@ const ConfirmPayment = ({navigation,route})=> {
                                         height={100}
                                         onChangeText={value=>setNote(value)}
                                         placeholder="Remarks" 
+                                        returnKeyType="done"
                                         style={{fontSize: 12,fontFamily: FONT_REGULAR,padding: 0,marginLeft: 5,alignSelf: "center",flex: 1}}
                                 />
                         </View>
@@ -163,7 +172,7 @@ const ConfirmPayment = ({navigation,route})=> {
                     onSwipeSuccess={onSwipeSuccess}
                     resetAfterSuccessAnimDelay={0}
                     resetAfterSuccessAnimDuration={0}
-                    shouldResetAfterSuccess={false}
+                    shouldResetAfterSuccess={true}
                 />
           
         </View>

@@ -1,7 +1,7 @@
 import React from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,Image,ActivityIndicator} from 'react-native'
 import {SomethingWentWrong} from '../../../../../components'
-import {GET_TOKTOK_WALLET_RECENT_TRANSACTIONS} from '../../../../../graphql'
+import {GET_WALLET_RECENT_TRANSACTIONS} from '../../../../../graphql'
 import {useQuery} from '@apollo/react-hooks'
 import { COLOR, FONT_MEDIUM, FONT_REGULAR } from '../../../../../res/constants'
 import WalletLog from './WalletLog'
@@ -9,7 +9,7 @@ import WalletLog from './WalletLog'
 const RecentTransactions = ({seeAll,walletId,session})=> {
 
 
-    const {data, error ,loading } = useQuery(GET_TOKTOK_WALLET_RECENT_TRANSACTIONS, {
+    const {data, error ,loading } = useQuery(GET_WALLET_RECENT_TRANSACTIONS, {
         fetchPolicy: 'network-only',
         // fetchPolicy: 'cache-and-network',
         variables: {
@@ -49,7 +49,7 @@ const RecentTransactions = ({seeAll,walletId,session})=> {
 
                 {
                     data.getWalletRecentTransactions.map((item,index)=> (
-                        <WalletLog key={`recentLog${index}`} transactionDate={item.title} transactionItems={item.logs} index={index}/>
+                        <WalletLog key={`recentLog${index}`} transactionDate={item.logDate} transactionItems={item.logs} index={index}/>
                     ))
                 }
                    

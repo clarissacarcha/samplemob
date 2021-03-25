@@ -1,5 +1,5 @@
 import React, {useState,useCallback, useEffect} from 'react'
-import {StyleSheet,View,Text,TouchableOpacity,Dimensions,Image,TouchableHighlight} from 'react-native'
+import {StyleSheet,View,Text,TouchableOpacity,Dimensions,Image,TouchableHighlight,Alert} from 'react-native'
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import { RNCamera } from 'react-native-camera';
 import {numberFormat} from '../../../../../../helper'
@@ -9,6 +9,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import {useLazyQuery} from '@apollo/react-hooks'
 import {CHECK_QR_CODE} from '../../../../../../graphql'
 import {onError} from '../../../../../../util/ErrorUtility'
+import {useSelector} from 'react-redux'
 
 const {height,width} = Dimensions.get('window')
 
@@ -18,10 +19,11 @@ const ScantoPayWalletComponent = ({navigation,route})=> {
         header: ()=> null,
     })
 
-    const {balance} = route.params
+    const {walletinfo} = route.params
 
     const [torch,setTorch] = useState(false)
     const [focusCamera,setFocusCamera] = useState(false)
+    const session = useSelector(state=>state.session)
 
     useFocusEffect(useCallback(()=>{
         setFocusCamera(true)
@@ -30,13 +32,14 @@ const ScantoPayWalletComponent = ({navigation,route})=> {
 
     const [checkQRCode] = useLazyQuery(CHECK_QR_CODE,{
         fetchPolicy: "network-only",
-        onError: (error) => {
-            onError(error)
-            setTimeout(()=>{
-                navigation.replace("TokTokWalletActionsScantoPay",{balance: balance})
-            },1000) 
-        },
-        onCompleted: (response)=> navigation.navigate("TokTokWalletActionsScantoPayConfirmPayment", {recipientInfo: response.checkQRCode, balance: balance})
+        onError: onError,
+        onCompleted: (response)=> {
+            if(response.checkQRCode.contactNo === session.user.username){
+                Alert.alert("You cannot send money to yourself!")
+            }else{
+                navigation.navigate("TokTokWalletActionsScantoPayConfirmPayment", {recipientInfo: response.checkQRCode, walletinfo: walletinfo})
+            }
+        }
     })
 
     const onSuccess = (e)=> {
@@ -174,7 +177,7 @@ const ScantoPayWalletComponent = ({navigation,route})=> {
                    borderColor: "red"
                }}
                reactivate={true}
-               // reactivateTimeout={5000}
+               reactivateTimeout={2000}
                vibrate={false}
                customMarker={customMarker}
                containerStyle={{
@@ -194,7 +197,7 @@ const ScantoPayWalletComponent = ({navigation,route})=> {
                 alignItems: 'center'
             }}>
                 <Image style={{width: 50,height: 25}} resizeMode="contain" source={require('../../../../../../assets/icons/walletMoney.png')} />
-                <Text style={{marginLeft: 10, fontSize: 16, fontFamily: FONT_MEDIUM}}>{'\u20B1'} {numberFormat(balance)}</Text>
+                <Text style={{marginLeft: 10, fontSize: 16, fontFamily: FONT_MEDIUM}}>{'\u20B1'} {numberFormat(walletinfo.balance)}</Text>
                 <View style={{
                     flex: 1,
                     justifyContent: "flex-end",
@@ -207,7 +210,7 @@ const ScantoPayWalletComponent = ({navigation,route})=> {
                             backgroundColor: DARK,
                             borderRadius: 10,
                         }}
-                        onPress={()=>navigation.navigate("TokTokWalletCashIn",{balance})}
+                        onPress={()=>navigation.navigate("TokTokWalletCashIn",{walletinfo: walletinfo})}
                     >
                             <Text style={{color: COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Cash In</Text>
                     </TouchableOpacity>

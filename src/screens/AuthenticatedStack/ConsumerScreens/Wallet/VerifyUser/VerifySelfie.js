@@ -5,82 +5,39 @@ import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import {RNCamera} from 'react-native-camera';
 import ImageCropper from 'react-native-simple-image-cropper';
 import {VerifyContext} from './Context/VerifyContextProvider'
+import {SAVE_VERIFICATION_INFO} from '../../../../../graphql'
+import {useMutation} from '@apollo/react-hooks'
+import {onError} from '../../../../../util/ErrorUtility'
+import {AlertOverlay} from '../../../../../components';
+import {ReactNativeFile} from 'apollo-upload-client';
+import {useNavigation} from '@react-navigation/native'
+import ModalCamera from './ModalCamera';
 
 const VerifySelfie = ()=> {
 
     const VerifyUserData = useContext(VerifyContext)
-    const {setCurrentIndex , selfieImage: image, setSelfieImage: setImage} = VerifyUserData
+    const {setCurrentIndex , selfieImage, setSelfieImage} = VerifyUserData
 
     const [showCamera,setShowCamera] = useState(false)
     const cameraRef = useRef(null)
 
-    const takePicture = async () => {
-        try {
-          if (cameraRef) {
-            const options = {
-              quality: 0.5,
-              // base64: true,
-              width: 1024,
-              fixOrientation: true,
-            };
-            const data = await cameraRef.current.takePictureAsync(options);
-            setImage(data);
-            setShowCamera(false)
-          }
-        } catch (error) {
-          console.log(error)
-        //   Alert.alert('Something went wrong with taking a picture.');
+    const navigation = useNavigation()
+
+    const [saveVerificationInfo,{data,error,loading}] = useMutation(SAVE_VERIFICATION_INFO, {
+        onError: onError,
+        onCompleted: (response)=> {
+            navigation.navigate("TokTokWalletVerifyUser")
         }
-      };
+    })
 
-      const CameraModal = ()=> (
-        <Modal
-            transparent={false}
-            visible={showCamera}
-            style={styles.camera}
-            onRequestClose={()=>{
-                setShowCamera(false)
-            }}
-        >
-            <View style={styles.cameraContainer}>
-            <RNCamera
-                ref={cameraRef}
-                style={styles.preview}
-                // type={showFrontCam ? RNCamera.Constants.Type.front : RNCamera.Constants.Type.back}
-                type={RNCamera.Constants.Type.front}
-                flashMode={RNCamera.Constants.FlashMode.on}
-                captureAudio={false}
-                androidCameraPermissionOptions={{
-                    title: 'Permission to use camera',
-                    message: 'We need your permission to use your camera',
-                    buttonPositive: 'Ok',
-                    buttonNegative: 'Cancel',
-                }}
-            />
-                 <View
-                    style={{
-                        flexDirection: 'row',
-                        justifyContent: 'center',
-                        position: 'absolute',
-                        bottom: 0,
-                        width: '100%',
-                        marginBottom: 20,
-                    }}>
-                    <TouchableOpacity onPress={() => takePicture()} style={styles.capture}>
-                        <View style={styles.inCapture} />
-                    </TouchableOpacity>
-                </View>
+    const setImage = (data)=> {
+        setSelfieImage(data);
+    }
 
     
-    
-            </View>
-
-        </Modal>
-    )
-
     const ImageIDSet = ()=> (
         <TouchableOpacity onPress={()=>setShowCamera(true)}>
-                <Image resizeMode="contain" style={{height: "100%",width: "100%"}} source={{uri: image.uri}} />
+                <Image resizeMode="contain" style={{height: "100%",width: "100%"}} source={{uri: selfieImage.uri}} />
         </TouchableOpacity>
     )
 
@@ -88,7 +45,8 @@ const VerifySelfie = ()=> {
 
     return (
         <>
-            <CameraModal />
+            <ModalCamera showCamera={showCamera} setShowCamera={setShowCamera} setImage={setImage} showFrontCam/>
+            <AlertOverlay visible={loading} />
             <View style={styles.content}>
                 <View style={styles.mainInput}>
                         <Text style={{fontSize: 14, fontFamily: FONT_MEDIUM}}>One last step before you get a verified toktok wallet!</Text>
@@ -97,7 +55,7 @@ const VerifySelfie = ()=> {
                        
                         <View style={[styles.input,{padding: 20,}]}>
                             <Text style={{fontSize: 14, fontFamily: FONT_MEDIUM}}>Take a selfie</Text>
-                            <Text style={{color: 'gray',marginTop: 8,fontSize: 12,fontFamily: FONT_REGULAR}}>Show us that you match your photo ID with a live selfie</Text>  
+                            <Text style={{color: 'gray',marginTop: 8,fontSize: 12,fontFamily: FONT_REGULAR}}>Show us that you match your photo ID with a selfie</Text>  
 
                             <TouchableOpacity onPress={()=>setShowCamera(true)} style={[styles.input,{borderColor: "#F6841F",justifyContent: "center",alignItems: "center",marginTop: 20,}]}>
                                 {/* <Text style={{color: "#F6841F",fontSize: 12,fontFamily: FONT_MEDIUM}}>Start Now</Text> */}
@@ -109,7 +67,7 @@ const VerifySelfie = ()=> {
                             flex: 1,
                             paddingVertical: 20,
                         }}> 
-                             { image && <ImageIDSet/>}
+                             { selfieImage && <ImageIDSet/>}
                         </View>
 
                 </View>
@@ -122,8 +80,36 @@ const VerifySelfie = ()=> {
                     </TouchableOpacity>
 
                     <TouchableOpacity onPress={()=>{
-                        // start saving to DB
-                        console.log(VerifyUserData)
+         
+                        if(selfieImage == null) return Alert.alert("Selfie Image is required")
+
+                        const rnValidIDFile = new ReactNativeFile({
+                            ...VerifyUserData.verifyID.idImage,
+                            name: 'documentValidID.jpg',
+                            type: 'image/jpeg',
+                        });
+
+                        const rnSelfieFile = new ReactNativeFile({
+                            ...VerifyUserData.selfieImage,
+                            name: 'documentSelfie.jpg',
+                            type: 'image/jpeg'
+                        })
+
+                        saveVerificationInfo({
+                            variables: {
+                                input: {
+                                    fullname: VerifyUserData.fullname,
+                                    nationality: VerifyUserData.nationality,
+                                    address: `${VerifyUserData.address.streetAddress} ${VerifyUserData.address.village} ${VerifyUserData.address.city} ${VerifyUserData.address.region}, ${VerifyUserData.address.country} ${VerifyUserData.address.zipCode}`,
+                                    birthdate: VerifyUserData.birthInfo.birthdate,
+                                    validIdType: VerifyUserData.verifyID.idType,
+                                    validIdNumber: VerifyUserData.verifyID.idNumber,
+                                    validIdCountry: VerifyUserData.verifyID.idCountry,
+                                    validIdPicture: rnValidIDFile,
+                                    picture: rnSelfieFile
+                                }
+                            }
+                        })
                     }} style={{height: "100%",flex: 1,marginLeft: 5,backgroundColor: DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
                         <Text style={{color: COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Next</Text>
                     </TouchableOpacity>

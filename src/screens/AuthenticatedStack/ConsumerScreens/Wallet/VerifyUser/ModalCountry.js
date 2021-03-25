@@ -8,7 +8,7 @@ import { FONT_REGULAR } from '../../../../../res/constants';
 
 
 const ModalCountry = ({type})=> {
-    const {modalCountryVisible,setModalCountryVisible,changeBirthInfo,changeAddress,changeVerifyID} = useContext(VerifyContext)
+    const {modalCountryVisible,setModalCountryVisible,changeBirthInfo,changeAddress,changeVerifyID,setNationality} = useContext(VerifyContext)
     const [filteredCountries,setFilteredCountries] = useState(countries)
 
     const selectCountry = (index) => {
@@ -17,9 +17,11 @@ const ModalCountry = ({type})=> {
             changeBirthInfo("birthPlace", country)
         }else if(type == "address"){
             changeAddress("country", country)
-        }else{
+        }else if(type == "validID"){
             changeVerifyID("idCountry",country)
-        }
+        }else{
+            setNationality(country)
+        }   
         setModalCountryVisible(false)
         setFilteredCountries(countries)
     }

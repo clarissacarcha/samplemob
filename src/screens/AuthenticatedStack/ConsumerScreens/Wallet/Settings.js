@@ -1,12 +1,12 @@
 import React from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,Image} from 'react-native'
-import {HeaderBack, HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../components'
+import {HeaderBackClose, HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../components'
 import FIcon from 'react-native-vector-icons/Feather';
 import { FONT_LIGHT, FONT_MEDIUM } from '../../../../res/constants';
 
 const Settings = ({navigation , route })=> {
     navigation.setOptions({
-        headerLeft: ()=> <HeaderBack icon="x"/>,
+        headerLeft: ()=> <HeaderBackClose/>,
         headerTitle: ()=> <HeaderTitle label={['Settings','']}/>,
     })
 
@@ -28,10 +28,10 @@ const Settings = ({navigation , route })=> {
 
     return (    
         <View style={styles.container}>
-            <SettingOption route={route.params.isPinSet ? "" : "TokTokWalletSettingsCreatePIN"} icon={require('../../../../assets/icons/walletPin.png')} title={route.params.isPinSet ? "Change PIN" : "Create a PIN"} subtitle="keep your account secure"/>
+            <SettingOption route={route.params.isPinSet ? "TokTokWalletSettingsChangePIN" : "TokTokWalletSettingsCreatePIN"} icon={require('../../../../assets/icons/walletPin.png')} title={route.params.isPinSet ? "Change PIN" : "Create a PIN"} subtitle="keep your account secure"/>
             <SettingOption route="TokTokWalletVerifyUser" icon={require('../../../../assets/icons/walletVerify.png')} title="Verify User" subtitle="Verify your toktok wallet"/>
             <SettingOption route="TokTokWalletCashInLogs" icon={require('../../../../assets/icons/walletCashinLog.png')} title="Cash in logs" subtitle="View your cash in logs"/>
-            <SettingOption route="TokTokWalletCashInLogs" icon={require('../../../../assets/icons/walletCashinLog.png')} title="Cash out logs" subtitle="View your cash out logs"/>
+            {/* <SettingOption route="TokTokWalletCashInLogs" icon={require('../../../../assets/icons/walletCashinLog.png')} title="Cash out logs" subtitle="View your cash out logs"/> */}
         </View>
     )
 }

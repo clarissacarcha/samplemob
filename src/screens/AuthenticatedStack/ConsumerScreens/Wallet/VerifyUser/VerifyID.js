@@ -6,152 +6,35 @@ import {RNCamera} from 'react-native-camera';
 import ImageCropper from 'react-native-simple-image-cropper';
 import {VerifyContext} from './Context/VerifyContextProvider'
 import ModalCountry from './ModalCountry'
+import ValidIDModal from './ValidIDModal'
+import {useNavigation} from '@react-navigation/native'
 
 const {height,width} = Dimensions.get("window")
 
-const imageWidth = width - 40;
 
-const CROP_AREA_WIDTH = imageWidth;
-const CROP_AREA_HEIGHT = imageWidth;
-
-
-
-const ValidIDModal = ({validIdModal,setValidIdModal,changeVerifyID})=> {
-
-    const ValidIDList = [
-        "Passport",
-        "Driver's Licence",
-        "SSS UMID Card",
-        "Philhealth ID",
-        "TIN Card",
-        "Postal ID",
-        "Voter's ID",
-        "Professional Regulation Commission ID",
-        "Senior Citizen ID",
-        "OFW ID",
-        "School ID",
-    ]
-
-
-    return (
-        <Modal
-            visible={validIdModal}
-            onRequestClose={()=>setValidIdModal(false)}
-            transparent={true}
-        >
-
-            <View style={{flex: 1,justifyContent:"center",alignItems:"center",backgroundColor:"rgba(0,0,0,0.5)"}}> 
-                <View style={{height: "90%", width: "85%",backgroundColor:"white",paddingVertical: 20,borderRadius: 10}}>
-                    <FlatList
-                        showsVerticalScrollIndicator={false}
-                        data={ValidIDList}
-                        keyExtractor={item=>item}
-                        renderItem={({item,index})=>{
-                            return (
-                                <TouchableOpacity
-                                        onPress={()=> {
-                                            changeVerifyID("idType", item)
-                                            setValidIdModal(false)
-                                        }}
-                                >
-                                    <Text style={{fontFamily: FONT_REGULAR,fontSize:14,padding: 15,}}>{item}</Text>
-                                </TouchableOpacity>
-                            )
-                        }}
-                    />
-                </View>
-            </View>
-
-        </Modal>
-    )
-}
+const CROP_AREA_WIDTH = width * 0.90;
+const CROP_AREA_HEIGHT = height * 0.35;
 
 
 const VerifyID = ()=> {
 
     const {setCurrentIndex , setModalCountryVisible  , verifyID, changeVerifyID} = useContext(VerifyContext)
-
-    const [showCamera,setShowCamera] = useState(false)
-    const cameraRef = useRef(null)
     const [validIdModal,setValidIdModal] = useState(false)
-    const [cropperParams, setCropperParams] = useState({})
-    const [isBarcodeRead, setIsBarcodeRead] = useState(false)
+  
+    const navigation = useNavigation()
 
-    const takePicture = async () => {
-        try {
-          if (cameraRef) {
-            const options = {
-              quality: 0.5,
-              // base64: true,
-              width: 1024,
-              fixOrientation: true,
-            };
-            const data = await cameraRef.current.takePictureAsync(options);
-            changeVerifyID("idImage",data);
-            setShowCamera(false)
-          }
-        } catch (error) {
-            console.log(error)
-        //   Alert.alert('Something went wrong with taking a picture.');
-        }
-      };
+    const setImage = (data)=> {
+        changeVerifyID("idImage",data);
+    }
 
-    // const barcodeRecognized = (e)=> {
-    //     console.log(e)
-    //     setIsBarcodeRead(true)
-    //     setShowCamera(false)
-    //     setIsBarcodeRead(false)
-    // }
-
-    const CameraModal = ()=> (
-        <Modal
-            transparent={false}
-            visible={showCamera}
-            style={styles.camera}
-            onRequestClose={()=>{
-                setShowCamera(false)
-            }}
-        >
-            <View style={styles.cameraContainer}>
-            <RNCamera
-                ref={cameraRef}
-                style={styles.preview}
-                // type={showFrontCam ? RNCamera.Constants.Type.front : RNCamera.Constants.Type.back}
-                type={RNCamera.Constants.Type.back}
-                flashMode={RNCamera.Constants.FlashMode.off}
-                captureAudio={false}
-                androidCameraPermissionOptions={{
-                    title: 'Permission to use camera',
-                    message: 'We need your permission to use your camera',
-                    buttonPositive: 'Ok',
-                    buttonNegative: 'Cancel',
-                }}
-              //  onBarCodeRead={!isBarcodeRead ? barcodeRecognized : null}
-            />
-                 <View
-                    style={{
-                        flexDirection: 'row',
-                        justifyContent: 'center',
-                        position: 'absolute',
-                        bottom: 0,
-                        width: '100%',
-                        marginBottom: 20,
-                    }}>
-                    <TouchableOpacity onPress={() => takePicture()} style={styles.capture}>
-                        <View style={styles.inCapture} />
-                    </TouchableOpacity>
-                </View>
-
-    
-    
-            </View>
-
-        </Modal>
-    )
 
     const ChooseImage = ()=> (
         <TouchableOpacity 
-            onPress={()=>setShowCamera(true)}
+            onPress={()=>{
+               //setShowCamera(true)
+                navigation.push("TokTokWalletValidIDCamera",{setImage})
+              // navigation.push('ProfileCamera', {label: ["Take","Picture"], setImage});
+            }}
             style={{
                 marginTop: 10,
                 borderRadius: 5,
@@ -168,31 +51,18 @@ const VerifyID = ()=> {
         </TouchableOpacity>
     )
 
-    // const ImageIDSet = ()=> (
-    //     <>
-    //     <View style={{backgroundColor: "green",flex: 1}}>
-    //     <Text>{image.uri}</Text>
-    //     <ImageCropper
-    //         imageUri={image.uri}
-    //         cropAreaWidth={CROP_AREA_WIDTH}
-    //         cropAreaHeight={CROP_AREA_HEIGHT}
-    //         containerColor="black"
-    //         areaColor="black"
-    //         setCropperParams={cropperParams => setCropperParams(cropperParams)}
-    //         />
-    //     </View>
-    //     </>
-    // )
 
     const ImageIDSet = ()=> (
-        <TouchableOpacity style={{marginTop: 10,width: width , height: width}} onPress={()=>setShowCamera(true)}>
-                <Image resizeMode="contain" style={{height: "100%",width: "100%"}} source={{uri: verifyID.idImage.uri}} />
+        <TouchableOpacity style={{marginTop: 10,width: CROP_AREA_WIDTH , height: CROP_AREA_HEIGHT}} onPress={()=>{
+            navigation.push("TokTokWalletValidIDCamera",{setImage})
+        }}>
+                <Image resizeMode="contain" style={{height: CROP_AREA_HEIGHT ,width: CROP_AREA_WIDTH}} source={{uri: verifyID.idImage.uri}} />
         </TouchableOpacity>
     )
 
+
     return (
         <>
-            <CameraModal />
             <ModalCountry type="validID"/>
             <ValidIDModal validIdModal={validIdModal} setValidIdModal={setValidIdModal} changeVerifyID={changeVerifyID}/>
             <View style={styles.content}>
@@ -216,7 +86,7 @@ const VerifyID = ()=> {
                         </View>
 
                         <View style={{marginTop: 15,}}>
-                            <Text style={{fontSize: 12, fontFamily: FONT_MEDIUM}}>ID Type</Text>
+                            <Text style={{fontSize: 12, fontFamily: FONT_MEDIUM}}>ID Type <Text style={{color:"red"}}>*</Text></Text>
                             <TouchableOpacity onPress={()=>setValidIdModal(true)} style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center"}]}>
                                 <Text style={{flex: 1,color: "gray",fontSize: 12,fontFamily: FONT_REGULAR}}>{verifyID.idType == "" ? "Select one" : verifyID.idType}</Text>
                                 <EIcon name="chevron-down" size={24} color="#FCB91A"/>
@@ -226,21 +96,20 @@ const VerifyID = ()=> {
                         </View>
 
                         <View style={{marginTop: 15,}}>
-                            <Text style={{fontSize: 12, fontFamily: FONT_MEDIUM}}>ID Number</Text>
+                            <Text style={{fontSize: 12, fontFamily: FONT_MEDIUM}}>ID Number <Text style={{color:"red"}}>*</Text></Text>
                             <TextInput 
                                     value={verifyID.idNumber}
                                     onChangeText={text=>changeVerifyID("idNumber",text)}
-                                    placeholder="0000-000"
+                                    placeholder="0000000"
                                     style={[styles.input,{padding: 5,paddingLeft: 10, color: "gray",fontSize: 12,fontFamily: FONT_REGULAR}]} 
                             />
                         </View>
 
                         <View style={{flex: 1,paddingVertical: 25, alignItems: "center"}}>
-                                <Text style={{fontSize: 12, fontFamily: FONT_MEDIUM,alignSelf: "flex-start"}}>Photo of your ID?</Text>
-                                { verifyID.idImage ? <ImageIDSet/> : <ChooseImage/> }
+                            <Text style={{fontSize: 12, fontFamily: FONT_MEDIUM,alignSelf: "flex-start"}}>Photo of your ID?</Text>
+                            {verifyID.idImage ? <ImageIDSet/>:  <ChooseImage/>}
                         </View>
 
-                  
 
                 </ScrollView>
 
@@ -253,6 +122,9 @@ const VerifyID = ()=> {
 
                     <TouchableOpacity onPress={()=>{
                         // if(nationality == "") return Alert.alert("Please provide Nationality")
+                        if(verifyID.idType == "") return Alert.alert("ID type is required")
+                        if(verifyID.idNumber == "") return Alert.alert("ID number is required")
+                        if(verifyID.idImage == null) return Alert.alert("Please take a picture of your valid ID")
                         setCurrentIndex(oldval => oldval + 1)
                     }} style={{height: "100%",flex: 1,marginLeft: 5,backgroundColor: DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
                         <Text style={{color: COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Next</Text>

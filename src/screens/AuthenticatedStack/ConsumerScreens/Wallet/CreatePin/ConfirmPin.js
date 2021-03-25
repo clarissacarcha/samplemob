@@ -31,7 +31,7 @@ const ConfirmPin = ({navigation,route})=> {
 
 
     navigation.setOptions({
-        headerLeft: ()=> <HeaderBack/>,
+        // headerLeft: ()=> <HeaderBack/>,
         headerTitle: ()=> <HeaderTitle label={['Set up a PIN','']}/>,
     })
 
@@ -84,6 +84,7 @@ const ConfirmPin = ({navigation,route})=> {
                     </View>
             </View>
             <TouchableOpacity
+                disabled={confirmpinCode.length < 4}
                 onPress={onSubmit}
                 style={{alignItems: "center",height: 40,backgroundColor: DARK,margin: 20,justifyContent: "center",borderRadius: 10,}}
             >

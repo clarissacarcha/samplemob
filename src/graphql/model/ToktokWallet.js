@@ -99,7 +99,8 @@ export const UPDATE_FROM_PAYPANDA_RETURN_URL = gql`
   }
 `;
 
-export const WALLET_LOG_OUTPUT = `title
+export const WALLET_LOG_OUTPUT = `
+logDate
 logs {
   id
   referenceNumber
@@ -129,7 +130,7 @@ logs {
   }
 }`
 
-export const GET_TOKTOK_WALLET_RECENT_TRANSACTIONS = gql`
+export const GET_WALLET_RECENT_TRANSACTIONS = gql`
   query getWalletRecentTransactions($input: ToktokWalletTransactionsInput){
     getWalletRecentTransactions(input: $input){
       ${WALLET_LOG_OUTPUT}
@@ -137,14 +138,14 @@ export const GET_TOKTOK_WALLET_RECENT_TRANSACTIONS = gql`
   }
 `;
 
-export const GET_TOKTOK_WALLET_TRANSACTIONS = gql`
+export const GET_WALLET_TRANSACTIONS = gql`
   query getWalletTransactions($input: ToktokWalletTransactionsInput){
     getWalletTransactions(input: $input){
       ${WALLET_LOG_OUTPUT}
     }
   }
 `
-export const CHECK_USER_ACCOUNT_WALLET = gql`
+export const CHECK_USER_ACCOUNT = gql`
   query checkUserAccount($input: UserNumberInput){
     checkUserAccount(input: $input){
       id
@@ -177,9 +178,11 @@ export const CHECK_QR_CODE = gql`
   }
 `
 
-export const GET_WALLET_CASH_IN_LOGS = gql`
+export const GET_CASH_IN_LOGS = gql`
   query getCashInLogs($input: CashInLogsInput){
       getCashInLogs(input: $input){
+        logDate
+        logs {
           id
           referenceNumber
           amount
@@ -187,15 +190,40 @@ export const GET_WALLET_CASH_IN_LOGS = gql`
           createdAt
           tokUserId
           tokToktokWalletLogId
+          status
+          # trails {
+          #   id
+          #   status
+          #   paypandaPostback
+          #   createdAt
+          # }
+        }
       }
   }
 `
 
 
-export const CREATE_PINCODE_WALLET =gql`
+export const CREATE_PINCODE_TOKTOK_WALLET =gql`
   mutation createPincodeToktokWallet($input: CreatePinInput){
     createPincodeToktokWallet(input: $input){
       message
+    }
+  }
+`
+
+export const CONFIRM_TOKTOK_WALLET_PIN = gql`
+  query confirmToktokWalletPIN($input: ConfirmPinInput){
+    confirmToktokWalletPIN(input: $input){
+      message
+    }
+  }
+`
+
+export const SAVE_VERIFICATION_INFO = gql`
+  mutation saveVerificationInfo($input: VerificationInput){
+    saveVerificationInfo(input: $input){
+      id
+      status
     }
   }
 `

@@ -16,7 +16,7 @@ import { RefreshControl } from 'react-native';
 const WalletComponent = ()=> {
     const navigation = useNavigation()
     navigation.setOptions({
-        headerLeft: ()=> <HeaderBack/>,
+        // headerLeft: ()=> <HeaderBack/>,
         headerTitle: ()=> <HeaderTitle label={['toktok wallet','']}/>,
     })
     const session = useSelector(state=> state.session)
@@ -59,15 +59,6 @@ const WalletComponent = ()=> {
         }, 200);
 
     },[])
-
-    //  useFocusEffect(useCallback(()=>{
-    //         //setMounted(true)
-    //         getToktokWallet()
-    //         return ()=> {
-    //          //   setMounted(false)
-    //         }
-    //  },[]))
-
 
     useEffect(()=>{
         setMounted(true)
@@ -145,9 +136,9 @@ const WalletComponent = ()=> {
                
                 <WalletMethod label="Send" imageSize={{height: 26, width: 26}} onPress={()=>navigation.navigate("TokTokWalletActionsSend")} imageSource={require('../../../../assets/icons/walletSend.png')}/>
                 {/* <WalletMethod label="Request" imageSize={{height: 26, width: 26}} onPress={()=>navigation.navigate("TokTokWalletActionsRequest")} imageSource={require('../../../../assets/icons/walletRequest.png')}/> */}
-                <WalletMethod label="Scan" imageSize={{height: 25, width: 23}} onPress={()=>navigation.navigate("TokTokWalletActionsScantoPay",{balance: data.getToktokWallet.record.balance})} imageSource={require('../../../../assets/icons/walletScan.png')}/>
-                <WalletMethod label="Cash in" imageSize={{height: 26, width: 26}} onPress={()=>navigation.navigate("TokTokWalletCashIn",{balance: data.getToktokWallet.record.balance})} imageSource={require('../../../../assets/icons/methodCashin.png')}/>
-                <WalletMethod label="Cash out" imageSize={{height: 26, width: 26}} onPress={()=>navigation.navigate("TokTokWalletCashout",{balance: data.getToktokWallet.record.balance})} imageSource={require('../../../../assets/icons/walletTransfer.png')}/>
+                <WalletMethod label="Scan" imageSize={{height: 25, width: 23}} onPress={()=>navigation.navigate("TokTokWalletActionsScantoPay",{walletinfo: data.getToktokWallet.record})} imageSource={require('../../../../assets/icons/walletScan.png')}/>
+                <WalletMethod label="Cash in" imageSize={{height: 26, width: 26}} onPress={()=>navigation.navigate("TokTokWalletCashIn",{walletinfo: data.getToktokWallet.record})} imageSource={require('../../../../assets/icons/methodCashin.png')}/>
+                <WalletMethod label="Cash out" imageSize={{height: 26, width: 26}} onPress={()=>navigation.navigate("TokTokWalletCashout",{walletinfo: data.getToktokWallet.record})} imageSource={require('../../../../assets/icons/walletTransfer.png')}/>
             {/* </ScrollView> */}
         </View>
     )

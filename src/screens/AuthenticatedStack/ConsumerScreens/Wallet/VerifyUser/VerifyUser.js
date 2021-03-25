@@ -6,7 +6,7 @@ import {HeaderBack, HeaderTitle} from '../../../../../components'
 
 const VerifyUser = ({navigation})=> {
     navigation.setOptions({
-        headerLeft: ()=> <HeaderBack/>,
+        // headerLeft: ()=> <HeaderBack/>,
         headerTitle: ()=> <HeaderTitle label={['',]}/>,
     })
 

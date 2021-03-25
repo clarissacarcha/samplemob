@@ -1,6 +1,6 @@
 import React from 'react'
 import {View,StyleSheet,Text,TouchableOpacity,Image} from 'react-native'
-import {HeaderBack, HeaderTitle} from '../../../../../../components'
+import {HeaderBackClose, HeaderTitle} from '../../../../../../components'
 import FIcon from 'react-native-vector-icons/Feather';
 import { FONT_MEDIUM, FONT_REGULAR } from '../../../../../../res/constants';
 import { numberFormat } from '../../../../../../helper';
@@ -8,7 +8,7 @@ import { numberFormat } from '../../../../../../helper';
 const TransferWalletComponent = ({navigation,route})=> {
 
     navigation.setOptions({
-        headerLeft: ()=> <HeaderBack icon="x"/>,
+        headerLeft: ()=> <HeaderBackClose/>,
         headerTitle: ()=> <HeaderTitle label={['Transfer','']}/>,
     })
 

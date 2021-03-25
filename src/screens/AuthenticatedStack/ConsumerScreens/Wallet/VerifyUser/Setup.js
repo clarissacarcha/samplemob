@@ -1,7 +1,7 @@
 import React, {useState, useContext} from 'react'
 import {StyleSheet,View,Dimensions} from 'react-native'
 import VerifyContextProvider from './Context/VerifyContextProvider'
-import {HeaderBack, HeaderTitle} from '../../../../../components'
+import {HeaderBackClose, HeaderTitle} from '../../../../../components'
 import VerifyFullname from './VerifyFullname'
 import VerifyNationality from './VerifyNationality'
 import VerifyBirth from './VerifyBirth'
@@ -71,7 +71,7 @@ const MainSetupComponent = ()=> {
 
 const SetupVerify = ({navigation})=> {
     navigation.setOptions({
-        headerLeft: ()=> <HeaderBack icon="x"/>,
+        headerLeft: ()=> <HeaderBackClose/>,
         headerTitle: ()=> <HeaderTitle label={['Verify toktok wallet','']}/>,
     })
 

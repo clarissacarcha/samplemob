@@ -1,5 +1,5 @@
 import React, { useState , useContext } from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,TextInput,KeyboardAvoidingView,Platform,ScrollView} from 'react-native'
+import {View,Text,StyleSheet,TouchableOpacity,TextInput,KeyboardAvoidingView,Platform,ScrollView,Alert} from 'react-native'
 import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM,ORANGE, FONT_MEDIUM, FONT_LIGHT, FONT_REGULAR} from '../../../../../res/constants'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import {VerifyContext} from './Context/VerifyContextProvider'
@@ -31,50 +31,50 @@ const VerifyAddress = ()=> {
                         </View>
 
                         <View style={{marginTop: 15,}}>
-                            <Text style={{fontSize: 12, fontFamily: FONT_MEDIUM}}>Street Address</Text>
+                            <Text style={{fontSize: 12, fontFamily: FONT_MEDIUM}}>Street Address <Text style={{color:"red"}}>*</Text></Text>
                             <TextInput 
                                 style={styles.input} 
-                                placeholder="E.g 111 Street / Unit 120"
+                                placeholder="E.g 10F Inoza Tower, 40th Street"
                                 value={address.streetAddress}
                                 onChangeText={text=>changeAddress("streetAddress", text)}
                             />
                         </View>
 
                         <View style={{marginTop: 15,}}>
-                            <Text style={{fontSize: 12, fontFamily: FONT_MEDIUM}}>Village / Barangay</Text>
+                            <Text style={{fontSize: 12, fontFamily: FONT_MEDIUM}}>Village / Barangay <Text style={{color:"red"}}>*</Text></Text>
                             <TextInput 
                                 style={styles.input} 
-                                placeholder="E.g Palo-Alto / Palao"
+                                placeholder="E.g Bonifacio Global City"
                                 value={address.village}
                                 onChangeText={text=>changeAddress("village", text)}
                             />
                         </View>
 
                         <View style={{marginTop: 15,}}>
-                            <Text style={{fontSize: 12, fontFamily: FONT_MEDIUM}}>City / Municipality</Text>
+                            <Text style={{fontSize: 12, fontFamily: FONT_MEDIUM}}>City / Municipality <Text style={{color:"red"}}>*</Text></Text>
                             <TextInput 
                                 style={styles.input} 
-                                placeholder="E.g Calamba City / Taguig City"
+                                placeholder="E.g Taguig City"
                                 value={address.city}
                                 onChangeText={text=>changeAddress("city",text)}
                             />
                         </View>
 
                         <View style={{marginTop: 15,}}>
-                            <Text style={{fontSize: 12, fontFamily: FONT_MEDIUM}}>Region / Province</Text>
+                            <Text style={{fontSize: 12, fontFamily: FONT_MEDIUM}}>Region / Province <Text style={{color:"red"}}>*</Text></Text>
                             <TextInput 
                                 style={styles.input} 
-                                placeholder="E.g Metro Manila / Laguna / Bulacan"
+                                placeholder="E.g Metro Manila"
                                 value={address.region}
                                 onChangeText={text=>changeAddress("region",text)}
                             />
                         </View>
 
                         <View style={{marginTop: 15}}>
-                            <Text style={{fontSize: 12, fontFamily: FONT_MEDIUM}}>Zip Code</Text>
+                            <Text style={{fontSize: 12, fontFamily: FONT_MEDIUM}}>Zip Code <Text style={{color:"red"}}>*</Text></Text>
                             <TextInput 
                                 style={styles.input} 
-                                placeholder="E.g 1630"
+                                placeholder="E.g 1634"
                                 value={address.zipCode}
                                 onChangeText={text=>changeAddress("zipCode",text)}
                             />
@@ -93,7 +93,16 @@ const VerifyAddress = ()=> {
                                 </TouchableOpacity>
 
                                 <TouchableOpacity onPress={()=>{
-                                    // if(nationality == "") return Alert.alert("Please provide Nationality")
+                                    let showAlert = false
+                                    for(const [key,value] of Object.entries(address)){
+                                        if(value === ""){
+                                            showAlert = true
+                                            break
+                                        }
+                                    }
+
+                                    if(showAlert) return Alert.alert("Please fill up all required fields")
+     
                                     setCurrentIndex(oldval => oldval + 1)
                                 }} style={{height: "100%",flex: 1,marginLeft: 5,backgroundColor: DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
                                     <Text style={{color: COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Next</Text>

@@ -2,7 +2,7 @@ import React from 'react'
 import {View,StyleSheet,Text,Image,FlatList,Alert} from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import FIcon from 'react-native-vector-icons/Feather'
-import {HeaderBack, HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../../components'
+import {HeaderBackClose, HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../../components'
 import { FONT_LIGHT, FONT_MEDIUM } from '../../../../../res/constants'
 import {useQuery} from '@apollo/react-hooks'
 import {GET_CASH_IN_METHODS} from '../../../../../graphql'
@@ -10,7 +10,7 @@ import {GET_CASH_IN_METHODS} from '../../../../../graphql'
 const PaymentOptions = ({navigation,route})=> {
 
     navigation.setOptions({
-        headerLeft: ()=> <HeaderBack icon="x"/>,
+        headerLeft: ()=> <HeaderBackClose/>,
         headerTitle: ()=> <HeaderTitle label={['Cash In','']}/>,
     })
 
@@ -42,7 +42,7 @@ const PaymentOptions = ({navigation,route})=> {
             <TouchableOpacity 
                 key={`cashin-${index}`}
                 style={styles.cashinoption} onPress={()=> navigateLink != "" ? navigation.navigate(navigateLink,{
-                        balance: route.params.balance, 
+                        walletinfo: route.params.walletinfo,
                         transactionType: item
                     }
                 ) : Alert.alert("Temporary Unavailable")}>

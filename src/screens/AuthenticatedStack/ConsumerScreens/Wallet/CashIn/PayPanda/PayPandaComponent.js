@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,Image,Modal,TextInput,Platform,KeyboardAvoidingView,ActivityIndicator,Alert,Dimensions} from 'react-native'
-import {HeaderBack, HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../../../components'
+import {HeaderBackClose, HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../../../components'
 import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM, FONT_MEDIUM, FONT_REGULAR} from '../../../../../../res/constants'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import {useSelector} from 'react-redux'
@@ -13,13 +13,13 @@ const {height,width} = Dimensions.get("window")
 
 const PayPandaComponent = ({navigation,route})=> {
     navigation.setOptions({
-        headerLeft: ()=> <HeaderBack icon="x"/>,
+        headerLeft: ()=> <HeaderBackClose/>,
         headerTitle: ()=> <HeaderTitle label={['Enter Amount','']}/>,
     })
 
 
     const walletId = route.params.walletId
-    const balance = route.params.balance
+    const balance = route.params.walletinfo.balance
     const transactionType = route.params.transactionType
     const userstate = useSelector(state=>state.session.user)
     const [showModal,setShowModal] = useState(false)

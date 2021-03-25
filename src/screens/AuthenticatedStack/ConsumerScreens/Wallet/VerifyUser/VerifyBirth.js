@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,Modal} from 'react-native'
+import {View,Text,StyleSheet,TouchableOpacity,Modal,Alert} from 'react-native'
 import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM,ORANGE, FONT_MEDIUM, FONT_LIGHT, FONT_REGULAR} from '../../../../../res/constants'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import {VerifyContext} from './Context/VerifyContextProvider'
@@ -11,7 +11,8 @@ import moment from 'moment'
 const DateBirthModal = ({modalVisible, setModalVisible , birthInfo ,changeBirthInfo})=> {
 
     const minDate = new Date('1900-01-01');
-    const todayDate = new Date();
+    const maxDate = moment().add(1,"year")
+    const todayDate = new Date()
 
     const [bday,setBday] = useState(birthInfo.birthdate == "" ? todayDate : birthInfo.birthdate)
 
@@ -23,7 +24,7 @@ const DateBirthModal = ({modalVisible, setModalVisible , birthInfo ,changeBirthI
         >
             <View style={styles.dateModalContent}>
                 <View style={{padding: 20,backgroundColor: "white",width: "90%",justifyContent:"center",alignItems:"center",borderRadius: 10}}>
-                     <DatePicker date={bday} onDateChange={date=>setBday(date)} mode="date" maximumDate={todayDate} minimumDate={minDate} />
+                     <DatePicker date={bday} onDateChange={date=>setBday(date)} mode="date" maximumDate={maxDate} minimumDate={minDate} />
                      <TouchableOpacity onPress={()=>{
                             changeBirthInfo("birthdate",bday)
                             setModalVisible(false)
@@ -39,20 +40,20 @@ const DateBirthModal = ({modalVisible, setModalVisible , birthInfo ,changeBirthI
 }
 
 const VerifyBirth = ()=> {
-    const {birthInfo, setCurrentIndex , changeBirthInfo , setModalCountryVisible} = useContext(VerifyContext)
+    const {birthInfo, setCurrentIndex , changeBirthInfo , setModalCountryVisible , nationality} = useContext(VerifyContext)
     const [modalVisible,setModalVisible] = useState(false)
-    console.log(birthInfo)
+    const [modaltype,setModaltype] = useState("")
 
     return (
         <>
-            <ModalCountry type="birthinfo"/>
+            <ModalCountry type={modaltype}/>
             <DateBirthModal modalVisible={modalVisible} setModalVisible={setModalVisible} birthInfo={birthInfo} changeBirthInfo={changeBirthInfo}/>
             <View style={styles.content}>
                 <View style={styles.mainInput}>
                         <Text style={{fontSize: 14, fontFamily: FONT_MEDIUM}}>When and where were you born?</Text>
                         <Text style={{fontFamily: FONT_LIGHT,marginTop: 5,fontSize: 10.5}}>Make sure the information matches your government-issued ID.</Text>  
                         <View style={{marginTop: 20,}}>
-                            <Text style={{fontSize: 12, fontFamily: FONT_MEDIUM}}>Date of Birth</Text>
+                            <Text style={{fontSize: 12, fontFamily: FONT_MEDIUM}}>Date of Birth <Text style={{color:"red"}}>*</Text></Text>
                             <TouchableOpacity onPress={()=>setModalVisible(true)} style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center"}]}>
                                 <Text style={{flex: 1,fontFamily: FONT_REGULAR,color: "gray",fontSize: 12}}>{birthInfo.birthdate == "" ? "MM/DD/YY" : moment(birthInfo.birthdate).format("MM/DD/YYYY")}</Text>
                                 <FIcon5 name="calendar" size={24}/>
@@ -64,7 +65,26 @@ const VerifyBirth = ()=> {
                             <View style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center",paddingVertical: 10}]}>
                                 <Text style={{flex: 1,color: "gray",fontSize: 12,fontFamily: FONT_REGULAR}}>{birthInfo.birthPlace}</Text>
                                 <TouchableOpacity
-                                    onPress={()=>setModalCountryVisible(true)}
+                                    onPress={()=>{
+                                        setModaltype("birthinfo")
+                                        setModalCountryVisible(true)
+                                    }}
+                                >
+                                    <Text style={{color: ORANGE,fontFamily: FONT_MEDIUM,fontSize: 12}}>Change</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+
+
+                        <View style={{marginTop: 20,}}>
+                            <Text style={{fontSize: 12, fontFamily: FONT_MEDIUM}}>Nationality</Text>
+                            <View style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center",paddingVertical: 10}]}>
+                                <Text style={{flex: 1,color: "gray",fontSize: 12,fontFamily: FONT_REGULAR}}>{nationality}</Text>
+                                <TouchableOpacity
+                                    onPress={()=>{
+                                        setModaltype("Nationality")
+                                        setModalCountryVisible(true)
+                                    }}
                                 >
                                     <Text style={{color: ORANGE,fontFamily: FONT_MEDIUM,fontSize: 12}}>Change</Text>
                                 </TouchableOpacity>
@@ -80,7 +100,7 @@ const VerifyBirth = ()=> {
                     </TouchableOpacity>
 
                     <TouchableOpacity onPress={()=>{
-                        // if(nationality == "") return Alert.alert("Please provide Nationality")
+                        if(birthInfo.birthdate == "") return Alert.alert("Please provide your Birthdate")
                         setCurrentIndex(oldval => oldval + 1)
                     }} style={{height: "100%",flex: 1,marginLeft: 5,backgroundColor: DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
                         <Text style={{color: COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Next</Text>
