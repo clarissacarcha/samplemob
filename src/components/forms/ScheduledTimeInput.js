@@ -67,8 +67,12 @@ const SCHEDULES = [
 const FROM_SCHEDULES = [{label: 'Anytime', value: '00:00:00'}, ...SCHEDULES];
 const TO_SCHEDULES = [{label: 'Anytime', value: '23:59:59'}, ...SCHEDULES];
 
-const createdFilteredTimes = () => {
+const createdFilteredTimes = (scheduledDate) => {
   const filteredFromSchedules = FROM_SCHEDULES.filter((sched) => {
+    if (scheduledDate !== moment().format('YYYY-MM-DD').toString()) {
+      return true;
+    }
+
     if (sched.label === 'Anytime') {
       return true;
     }
@@ -79,6 +83,10 @@ const createdFilteredTimes = () => {
   });
 
   const filteredToSchedules = TO_SCHEDULES.filter((sched) => {
+    if (scheduledDate !== moment().format('YYYY-MM-DD').toString()) {
+      return true;
+    }
+
     if (sched.label === 'Anytime') {
       return true;
     }
@@ -124,7 +132,7 @@ const Component = ({initialData, onChangeFrom, onChangeTo, scheduledDate, visibl
         <DropDownPicker
           defaultValue={moment(data.scheduledFrom, 'YYYY-MM-DD HH:mm:ss').format('HH:mm:ss').toString()}
           placeholder="Anytime"
-          items={createdFilteredTimes().filteredFromSchedules}
+          items={createdFilteredTimes(scheduledDate).filteredFromSchedules}
           containerStyle={styles.pickerContainer}
           style={styles.pickerStyle}
           dropDownStyle={styles.pickerDropDown}
@@ -147,7 +155,7 @@ const Component = ({initialData, onChangeFrom, onChangeTo, scheduledDate, visibl
         <DropDownPicker
           defaultValue={moment(data.scheduledTo, 'YYYY-MM-DD HH:mm:ss').format('HH:mm:ss').toString()}
           placeholder="Anytime"
-          items={createdFilteredTimes().filteredToSchedules}
+          items={createdFilteredTimes(scheduledDate).filteredToSchedules}
           containerStyle={styles.pickerContainer}
           style={styles.pickerStyle}
           dropDownStyle={styles.pickerDropDown}
