@@ -18,6 +18,10 @@ import DrawerContent from './Drawer';
 import Landing from '../screens/Landing';
 
 /*---------- CONSUMER SCREENS ----------*/
+
+import ConsumerLanding from '../screens/AuthenticatedStack/ConsumerScreens/ConsumerLanding';
+import SenderRecipientDetails from '../screens/AuthenticatedStack/ConsumerScreens/DeliveryScreens/SenderRecipientDetails';
+
 import PostRegistration from '../screens/AuthenticatedStack/ConsumerScreens/PostRegistration';
 import CheckConsumerLocation from '../screens/AuthenticatedStack/ConsumerScreens/Booking/CheckConsumerLocation';
 import StopDetails from '../screens/AuthenticatedStack/ConsumerScreens/Booking/StopDetails';
@@ -218,6 +222,9 @@ const DriverHomeBottomTab = ({navigation}) => (
 
 const AuthenticatedStack = () => (
   <Authenticated.Navigator>
+    <Authenticated.Screen name="ConsumerLanding" component={ConsumerLanding} options={{headerShown: false}} />
+    <Authenticated.Screen name="SenderRecipientDetails" component={SenderRecipientDetails} />
+
     <Authenticated.Screen name="PostRegistration" component={PostRegistration} />
 
     <Authenticated.Screen
