@@ -1,58 +1,17 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, Text, TouchableHighlight, ScrollView, Alert, ActivityIndicator, Image} from 'react-native';
-import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
+import {View, StyleSheet, Text, Alert, ActivityIndicator} from 'react-native';
 import {connect} from 'react-redux';
 import {useQuery} from '@apollo/react-hooks';
-import {Button, HeaderBack, HeaderTitle} from '../../../../components';
-import {YellowIcon} from '../../../../components/ui';
-import {MAPS_API_KEY, DARK, COLOR, MEDIUM, ORANGE} from '../../../../res/constants';
-import {GET_SAVED_LOCATIONS} from '../../../../graphql';
+import {HeaderBack, HeaderTitle} from '../../../../../components';
+import {DARK, COLOR} from '../../../../../res/constants';
+import {GET_SAVED_LOCATIONS} from '../../../../../graphql';
 
-const GooglePlacesInput = ({onLocationSelect, savedLocations}) => {
-  return (
-    <GooglePlacesAutocomplete
-      placeholder="Search Location"
-      predefinedPlaces={savedLocations}
-      minLength={2} // minimum length of text to search
-      autoFocus={true}
-      returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
-      keyboardAppearance={'light'} // Can be left out for default keyboardAppearance https://facebook.github.io/react-native/docs/textinput.html#keyboardappearance
-      listViewDisplayed="true" // true/false/undefined
-      fetchDetails={true}
-      renderDescription={(row) => row.description} // custom description render
-      onPress={onLocationSelect}
-      getDefaultValue={() => ''}
-      query={{
-        key: MAPS_API_KEY,
-        components: 'country:PH',
-      }}
-      styles={{
-        textInputContainer: {
-          width: '100%',
-        },
-        description: {
-          fontFamily: 'Rubik-Medium',
-        },
-        listView: {
-          backgroundColor: '#FFF',
-        },
-        textInput: {
-          color: DARK,
-        },
-        predefinedPlacesDescription: {
-          color: ORANGE,
-        },
-      }}
-      nearbyPlacesAPI="GooglePlacesSearch"
-      debounce={500}
-    />
-  );
-};
+import GooglePlacesAutocomplete from './GooglePlacesAutocomplete';
 
-const SearchLocation = ({navigation, route, session}) => {
+const SearchLocation = ({navigation, route, session, constants}) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={['Search', 'places']} />,
+    headerTitle: () => <HeaderTitle label={['Search', 'Places']} />,
   });
 
   const {data, setData} = route.params;
@@ -71,13 +30,13 @@ const SearchLocation = ({navigation, route, session}) => {
     formattedAddress: '',
   });
 
-  const [savedLocations, setSavedLocations] = useState([]);
-
   // const homePlace = {
   //   description: 'Home',
   //   formattedAddress: 'Formatted Home Address',
   //   geometry: {location: {lat: 48.8152937, lng: 2.4597668}},
   // };
+
+  const [savedLocations, setSavedLocations] = useState([]);
 
   const {loading, error} = useQuery(GET_SAVED_LOCATIONS, {
     fetchPolicy: 'network-only',
@@ -93,8 +52,8 @@ const SearchLocation = ({navigation, route, session}) => {
           formattedAddress: location.formattedAddress,
           geometry: {
             location: {
-              lat: location.latitude,
-              lng: location.longitude,
+              latitude: location.latitude,
+              longitude: location.longitude,
             },
           },
         };
@@ -102,28 +61,41 @@ const SearchLocation = ({navigation, route, session}) => {
 
       setSavedLocations(mappedSavedLocations);
     },
+    onError: () => {
+      // Do Nothing
+    },
   });
 
-  const onLocationSelect = (data, details = null) => {
+  // data and details
+  //   {
+  //     "description": "My Malolos",
+  //     "formattedAddress": "Malolos, Bulacan, Philippines",
+  //     "geometry": {
+  //         "location": {
+  //             "lat": 14.8527393,
+  //             "lng": 120.8160376
+  //         }
+  //     }
+  // }
+
+  const onLocationSelect = (args) => {
     try {
-      console.log(JSON.stringify(details, null, 4));
+      console.log(JSON.stringify({args}, null, 4));
+
       setData({
         ...localData,
-        latitude: details.geometry.location.lat,
-        longitude: details.geometry.location.lng,
-        formattedAddress: data.formattedAddress ? data.formattedAddress : data.description,
+        latitude: args.location.latitude,
+        longitude: args.location.longitude,
+        formattedAddress: args.formattedAddress,
+        addressBreakdownHash: args.addressBreakdownHash,
       });
+
       navigation.pop();
     } catch (error) {
       console.log(error);
       Alert.alert('', 'Something went wrong. Please try again.');
       navigation.pop();
     }
-  };
-
-  const onSubmit = () => {
-    setData(localData);
-    navigation.pop();
   };
 
   if (loading) {
@@ -145,7 +117,7 @@ const SearchLocation = ({navigation, route, session}) => {
   return (
     <View style={{flex: 1}}>
       <View style={{height: 350}}>
-        <GooglePlacesInput onLocationSelect={onLocationSelect} savedLocations={savedLocations} />
+        <GooglePlacesAutocomplete onLocationSelect={onLocationSelect} savedLocations={savedLocations} />
       </View>
     </View>
   );
@@ -153,6 +125,7 @@ const SearchLocation = ({navigation, route, session}) => {
 
 const mapStateToProps = (state) => ({
   session: state.session,
+  constants: state.constants,
 });
 
 export default connect(mapStateToProps, null)(SearchLocation);
