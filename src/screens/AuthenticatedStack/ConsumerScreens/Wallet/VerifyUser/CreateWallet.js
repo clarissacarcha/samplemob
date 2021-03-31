@@ -41,7 +41,7 @@ const CreateWallet = ({getWallet: getToktokWallet,session})=> {
         <AlertOverlay visible={postLoading} />
         <View style={styles.container}>
                 <View style={styles.content}>
-                    <Image style={{height: 80,width: 80, alignSelf: "center",marginVertical: 20}} source={require('../../../../../assets/icons/ToktokLogo.png')} resizeMode="contain" />
+                    <Image style={{height: 120,width: 120, alignSelf: "center",marginVertical: 20}} source={require('../../../../../assets/images/toktokwallet.png')} resizeMode="contain" />
                     <View style={{marginTop: 50}}>
                             <Text style={{fontSize: 20,fontWeight:"400"}}>Go cashless with <Text style={{color: COLOR}}>Toktok</Text><Text style={{color: ORANGE}}>Pay!</Text></Text>
                             <Text style={{fontSize: 14,marginTop: 10}}>Enjoy a secure and convenient payment experience</Text>

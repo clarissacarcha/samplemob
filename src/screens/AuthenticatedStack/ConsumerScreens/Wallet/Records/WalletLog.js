@@ -29,27 +29,24 @@ const WalletLog = ({transactionDate , transactionItems ,index , itemsLength }) =
                 transactionItems.map((item)=>{
 
                     let icon , title , details , amountcolor = "black", amountprefix
+                    title = item.logType.label
+                    amountcolor = item.sourceUserId == session.user.id ? "red" : "green"
+                    amountprefix = item.sourceUserId == session.user.id ? "-" : "+"
                     switch (item.logType.transferType){
                         case "T":
                             icon = require('../../../../../assets/icons/walletLogTransfer.png')
-                            title = "Transfer"
+                            //title = "Transfer"
                             if(item.sourceUserId == session.user.id){
                                 const recipient = `${item.destinationInfo.firstName} ${item.destinationInfo.lastName}`
                                 details = `Send money to ${recipient}`
-                                amountcolor = "red"
-                                amountprefix = "-"
                             }else{
                                 const sender = `${item.sourceInfo.firstName} ${item.sourceInfo.lastName}`
                                 details = `Receive money from ${sender}`
-                                amountcolor = "green"
-                                amountprefix = "+"
                             }
                             break
                         case "CI":
                             icon = require('../../../../../assets/icons/walletLogCashin.png')
-                            amountcolor = "green"
-                            amountprefix = "+"
-                            title = "Cash In"
+                            //title = "Cash In"
                             details = `Cash in from ${item.sourceInfo.internalAccount}`
                             break
                         default:

@@ -18,7 +18,10 @@ const ConfirmPayment = ({navigation,route})=> {
         headerTitle: ()=> <HeaderTitle label={['Send money using toktok wallet','']}/>,
     })
 
+    
+
     const recipientInfo = route.params.recipientInfo
+    const walletinfo = route.params.walletinfo
     const session = useSelector(state=>state.session)
     const [amount,setAmount] = useState("")
     const [note,setNote] = useState("")
@@ -41,41 +44,41 @@ const ConfirmPayment = ({navigation,route})=> {
         }
     })
 
-    const {data,error,loading} = useQuery(GET_TOKTOK_WALLET_CURRENT, {
-        fetchPolicy: "network-only",
-        variables: {
-            input: {
-                userId: session.user.id
-            }
-        }
-    })
+    // const {data,error,loading} = useQuery(GET_TOKTOK_WALLET_CURRENT, {
+    //     fetchPolicy: "network-only",
+    //     variables: {
+    //         input: {
+    //             userId: session.user.id
+    //         }
+    //     }
+    // })
 
   
-    if (loading) {
-        return (
-          <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            <ActivityIndicator size={24} color={COLOR} />
-          </View>
-        );
-      }
+    // if (loading) {
+    //     return (
+    //       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+    //         <ActivityIndicator size={24} color={COLOR} />
+    //       </View>
+    //     );
+    //   }
     
-    if (error) {
-    return (
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <Text>Something Went Wrong</Text>
-        </View>
-    );
-    }
+    // if (error) {
+    // return (
+    //     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+    //     <Text>Something Went Wrong</Text>
+    //     </View>
+    // );
+    // }
 
     const changeAmount = (value)=>{
         let num = value.replace(/[^0-9.]/g, '')
         let finalnum = num.substring(0,1) == 0 ? num.slice(1) : num
         setAmount(finalnum)
-        finalnum > 0 && finalnum <= data.getToktokWalletCurrent.balance ? setSwipeEnabled(true) : setSwipeEnabled(false)
+        finalnum > 0 && finalnum <= walletinfo.balance ? setSwipeEnabled(true) : setSwipeEnabled(false)
     }
 
     const onSwipeSuccess = ()=> {
-        if(data.getToktokWalletCurrent.isPinSet){
+        if(walletinfo.isPinSet){
             setShowPinModal(true)
         }else{
             fundTransferFromCtoC()
@@ -115,7 +118,7 @@ const ConfirmPayment = ({navigation,route})=> {
                         </TouchableOpacity>
                     </View>
                     <View style={{padding: 20}}>
-                        <Text style={{fontFamily: FONT_MEDIUM,fontSize: 16}}>Balance: {'\u20B1'} {numberFormat(data.getToktokWalletCurrent.balance)}</Text>
+                        <Text style={{fontFamily: FONT_MEDIUM,fontSize: 16}}>Balance: {'\u20B1'} {numberFormat(walletinfo.balance)}</Text>
                         <View style={styles.amount}>
                                 <Text style={{fontSize: 16,fontFamily: FONT_MEDIUM,alignSelf:"center"}}>{'\u20B1'} </Text>
                                 <TextInput

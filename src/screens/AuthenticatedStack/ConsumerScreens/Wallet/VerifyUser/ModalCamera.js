@@ -7,17 +7,6 @@ const ModalCamera = ({showCamera , setShowCamera , setImage , showFrontCam})=> {
     const cameraRef = useRef(null)
     const [isBarcodeRead, setIsBarcodeRead] = useState(false)
 
-      // const barcodeRecognized = (e)=> {
-    //     console.log(e)
-    //     setIsBarcodeRead(true)
-    //     setShowCamera(false)
-    //     setIsBarcodeRead(false)
-    // }
-
-    // const onFacesDetected = (data)=> {
-    //     console.log(JSON.stringify(data))
-    //   }
-
     const takePicture = async () => {
         try {
           if (cameraRef) {
@@ -28,7 +17,6 @@ const ModalCamera = ({showCamera , setShowCamera , setImage , showFrontCam})=> {
               fixOrientation: true,
             };
             const data = await cameraRef.current.takePictureAsync(options);
-            // changeVerifyID("idImage",data);
             setImage(data)
             setShowCamera(false)
           }
@@ -53,7 +41,6 @@ const ModalCamera = ({showCamera , setShowCamera , setImage , showFrontCam})=> {
             ref={cameraRef}
             style={styles.preview}
             type={showFrontCam ? RNCamera.Constants.Type.front : RNCamera.Constants.Type.back}
-            // type={RNCamera.Constants.Type.back}
             flashMode={RNCamera.Constants.FlashMode.off}
             captureAudio={false}
             androidCameraPermissionOptions={{
@@ -62,9 +49,7 @@ const ModalCamera = ({showCamera , setShowCamera , setImage , showFrontCam})=> {
                 buttonPositive: 'Ok',
                 buttonNegative: 'Cancel',
             }}
-            //  onBarCodeRead={!isBarcodeRead ? barcodeRecognized : null}
-            //   faceDetectionMode={RNCamera.Constants.FaceDetection.Mode.fast}
-            //   onFacesDetected={onFacesDetected}
+
         />
              <View
                 style={{

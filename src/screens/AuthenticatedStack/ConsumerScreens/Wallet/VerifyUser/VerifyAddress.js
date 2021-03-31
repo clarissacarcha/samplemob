@@ -70,7 +70,7 @@ const VerifyAddress = ()=> {
                             />
                         </View>
 
-                        <View style={{marginTop: 15}}>
+                        <View style={{marginTop: 15, marginBottom: 20}}>
                             <Text style={{fontSize: 12, fontFamily: FONT_MEDIUM}}>Zip Code <Text style={{color:"red"}}>*</Text></Text>
                             <TextInput 
                                 style={styles.input} 

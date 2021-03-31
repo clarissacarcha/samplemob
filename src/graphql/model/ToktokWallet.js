@@ -8,8 +8,6 @@ export const GET_TOKTOK_WALLET = gql`
         balance
         status
         pendingEncashment
-        isVerified
-        isPinSet
       }
     }
   }
@@ -73,15 +71,48 @@ export const GET_CASH_IN_METHODS = gql`
 export const GET_TOKTOK_WALLET_CURRENT = gql`
    query getToktokWalletCurrent($input: ToktokWalletInput){
       getToktokWalletCurrent(input: $input){
-          id
-          balance
-          status
-          tokUserId
-          isVerified
-          isPinSet
+          record {
+            id
+            balance
+            status
+            tokUserId
+            isVerified
+            isPinSet
+          }
       }
    }
 `
+
+export const GET_TOKTOK_WALLET_KYC = gql`
+   query getToktokWalletCurrent($input: ToktokWalletInput){
+      getToktokWalletCurrent(input: $input){
+          record {
+            id
+            balance
+            status
+            tokUserId
+            isVerified
+            isPinSet
+            verifyKYC{
+              id
+              fullname
+              nationality
+              address
+              birthdate
+              validIdType
+              validIdNumber
+              validIdCountry
+              validIdPicture
+              picture
+              tokUserId
+              status
+              createdAt
+            }
+          }
+      }
+   }
+`
+
 export const INITIALIZE_WALLET_CASHIN_PAYPANDA = gql`
     mutation initializeWalletCashinPayPanda($input: InitialPayPandaCashInInput){
         initializeWalletCashinPayPanda(input: $input){
@@ -113,6 +144,9 @@ logs {
     transferType
     sourceAccountType
     destinationAccountType
+    label
+    key
+    phrase
   }
   sourceInfo {
     username
@@ -191,12 +225,12 @@ export const GET_CASH_IN_LOGS = gql`
           tokUserId
           tokToktokWalletLogId
           status
-          # trails {
-          #   id
-          #   status
-          #   paypandaPostback
-          #   createdAt
-          # }
+          trails {
+            id
+            status
+            paypandaPostback
+            createdAt
+          }
         }
       }
   }

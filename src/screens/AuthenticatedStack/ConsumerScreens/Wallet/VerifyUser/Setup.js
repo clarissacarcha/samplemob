@@ -8,6 +8,7 @@ import VerifyBirth from './VerifyBirth'
 import VerifyAddress from './VerifyAddress'
 import VerifyID from './VerifyID'
 import VerifySelfie from './VerifySelfie'
+import Confirm from './Confirm'
 import {VerifyContext} from './Context/VerifyContextProvider'
 
 const {height,width} = Dimensions.get("window")
@@ -17,8 +18,8 @@ const MainSetupComponent = ()=> {
 
     const {currentIndex,setCurrentIndex} = useContext(VerifyContext)
 
-    // const [screenSlides,setScreenSlides] = useState(["Fullname","Nationality","Birthday","Address","IDPic","SelfiePic"])
-    const [screenSlides,setScreenSlides] = useState(["Fullname","Birthday","Address","IDPic","SelfiePic"])
+    // const [screenSlides,setScreenSlides] = useState(["Fullname","Nationality","Birthday","Address","IDPic","SelfiePic","Confirm"])
+    const [screenSlides,setScreenSlides] = useState(["Fullname","Birthday","Address","IDPic","SelfiePic","Confirm"])
 
     const DisplayComponents = ()=> {
         // switch(currentIndex){
@@ -32,8 +33,10 @@ const MainSetupComponent = ()=> {
         //         return <VerifyAddress/>
         //     case 4:
         //          return <VerifyID/>
+        //     case 5:
+        //          return <VerifySelfie/>
         //     default:
-        //         return <VerifySelfie/>
+        //         return <Confirm/>
         // }
 
         switch(currentIndex){
@@ -45,8 +48,10 @@ const MainSetupComponent = ()=> {
                 return <VerifyAddress/>
             case 3:
                 return <VerifyID/>
-            default:
+            case 4: 
                 return <VerifySelfie/>
+            default:
+                return <Confirm/>
         }
     }
     

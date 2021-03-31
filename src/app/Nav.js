@@ -52,6 +52,7 @@ import WalletSettingsChangePIN from '../screens/AuthenticatedStack/ConsumerScree
 import WalletVerifyUser from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/VerifyUser/VerifyUser'
 import WalletVerifyUserSetup from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/VerifyUser/Setup'
 import WalletValidIDCamera from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/VerifyUser/ValidIDCamera'
+import WalletSelfieCamera from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/VerifyUser/SelfieCamera'
 import WalletActionsRequest from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Actions/Request/RequestWalletComponent'
 import WalletActionsSend from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Actions/Send/SendWalletComponent'
 import WalletActionsSendConfirm from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Actions/Send/ConfirmPayment'
@@ -296,6 +297,7 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="TokTokWalletVerifyUser" component={WalletVerifyUser}/>
     <Authenticated.Screen name="TokTokWalletVerifyUserSetup" component={WalletVerifyUserSetup}/>
     <Authenticated.Screen name="TokTokWalletValidIDCamera" component={WalletValidIDCamera}/>
+    <Authenticated.Screen name="TokTokWalletSelfieCamera" component={WalletSelfieCamera}/>
     <Authenticated.Screen name="TokTokWalletActionsRequest" component={WalletActionsRequest} />
     <Authenticated.Screen name="TokTokWalletActionsSend" component={WalletActionsSend} />
     <Authenticated.Screen name="TokTokWalletActionsSendConfirmPayment" component={WalletActionsSendConfirm}/>

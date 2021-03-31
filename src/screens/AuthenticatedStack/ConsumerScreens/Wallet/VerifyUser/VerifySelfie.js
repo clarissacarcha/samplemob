@@ -2,14 +2,9 @@ import React, { useState ,useRef , useContext } from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,Alert,Dimensions,Modal,Image} from 'react-native'
 import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM,ORANGE, FONT_MEDIUM, FONT_LIGHT, FONT_REGULAR} from '../../../../../res/constants'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
-import {RNCamera} from 'react-native-camera';
 import ImageCropper from 'react-native-simple-image-cropper';
 import {VerifyContext} from './Context/VerifyContextProvider'
-import {SAVE_VERIFICATION_INFO} from '../../../../../graphql'
-import {useMutation} from '@apollo/react-hooks'
-import {onError} from '../../../../../util/ErrorUtility'
 import {AlertOverlay} from '../../../../../components';
-import {ReactNativeFile} from 'apollo-upload-client';
 import {useNavigation} from '@react-navigation/native'
 import ModalCamera from './ModalCamera';
 
@@ -23,29 +18,24 @@ const VerifySelfie = ()=> {
 
     const navigation = useNavigation()
 
-    const [saveVerificationInfo,{data,error,loading}] = useMutation(SAVE_VERIFICATION_INFO, {
-        onError: onError,
-        onCompleted: (response)=> {
-            navigation.navigate("TokTokWalletVerifyUser")
-        }
-    })
 
     const setImage = (data)=> {
         setSelfieImage(data);
+        setCurrentIndex(oldval => oldval + 1)
     }
 
     
     const ImageIDSet = ()=> (
-        <TouchableOpacity onPress={()=>setShowCamera(true)}>
+        <View>
                 <Image resizeMode="contain" style={{height: "100%",width: "100%"}} source={{uri: selfieImage.uri}} />
-        </TouchableOpacity>
+        </View>
     )
 
 
 
     return (
         <>
-            <ModalCamera showCamera={showCamera} setShowCamera={setShowCamera} setImage={setImage} showFrontCam/>
+            {/* <ModalCamera showCamera={showCamera} setShowCamera={setShowCamera} setImage={setImage} showFrontCam/> */}
             <AlertOverlay visible={loading} />
             <View style={styles.content}>
                 <View style={styles.mainInput}>
@@ -57,7 +47,10 @@ const VerifySelfie = ()=> {
                             <Text style={{fontSize: 14, fontFamily: FONT_MEDIUM}}>Take a selfie</Text>
                             <Text style={{color: 'gray',marginTop: 8,fontSize: 12,fontFamily: FONT_REGULAR}}>Show us that you match your photo ID with a selfie</Text>  
 
-                            <TouchableOpacity onPress={()=>setShowCamera(true)} style={[styles.input,{borderColor: "#F6841F",justifyContent: "center",alignItems: "center",marginTop: 20,}]}>
+                            <TouchableOpacity onPress={()=>{
+                                //setShowCamera(true)
+                                navigation.push("TokTokWalletSelfieCamera", {setImage})
+                            }} style={[styles.input,{borderColor: "#F6841F",justifyContent: "center",alignItems: "center",marginTop: 20,}]}>
                                 {/* <Text style={{color: "#F6841F",fontSize: 12,fontFamily: FONT_MEDIUM}}>Start Now</Text> */}
                                 <FIcon5 name="camera" size={18} color="#F6841F" />
                             </TouchableOpacity>
@@ -80,36 +73,11 @@ const VerifySelfie = ()=> {
                     </TouchableOpacity>
 
                     <TouchableOpacity onPress={()=>{
+
+                        if(selfieImage == null) return navigation.push("TokTokWalletSelfieCamera", {setImage})
+                        return setCurrentIndex(oldval => oldval + 1)
          
-                        if(selfieImage == null) return Alert.alert("Selfie Image is required")
-
-                        const rnValidIDFile = new ReactNativeFile({
-                            ...VerifyUserData.verifyID.idImage,
-                            name: 'documentValidID.jpg',
-                            type: 'image/jpeg',
-                        });
-
-                        const rnSelfieFile = new ReactNativeFile({
-                            ...VerifyUserData.selfieImage,
-                            name: 'documentSelfie.jpg',
-                            type: 'image/jpeg'
-                        })
-
-                        saveVerificationInfo({
-                            variables: {
-                                input: {
-                                    fullname: VerifyUserData.fullname,
-                                    nationality: VerifyUserData.nationality,
-                                    address: `${VerifyUserData.address.streetAddress} ${VerifyUserData.address.village} ${VerifyUserData.address.city} ${VerifyUserData.address.region}, ${VerifyUserData.address.country} ${VerifyUserData.address.zipCode}`,
-                                    birthdate: VerifyUserData.birthInfo.birthdate,
-                                    validIdType: VerifyUserData.verifyID.idType,
-                                    validIdNumber: VerifyUserData.verifyID.idNumber,
-                                    validIdCountry: VerifyUserData.verifyID.idCountry,
-                                    validIdPicture: rnValidIDFile,
-                                    picture: rnSelfieFile
-                                }
-                            }
-                        })
+    
                     }} style={{height: "100%",flex: 1,marginLeft: 5,backgroundColor: DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
                         <Text style={{color: COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Next</Text>
                     </TouchableOpacity>
@@ -130,7 +98,7 @@ const styles = StyleSheet.create({
     proceedBtn: {
         height: 40,
         width: "100%",
-        flexDirection: "row"
+        flexDirection: "row",
     },
     input: {
         padding: 10,

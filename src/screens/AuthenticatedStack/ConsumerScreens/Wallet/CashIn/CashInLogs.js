@@ -31,6 +31,22 @@ const CashInLog = ({transactionDate , transactionItems , index , itemsLength })=
            {
                transactionItems.map((item)=>{
 
+                let status
+                switch (item.trails[0].status) {
+                    case 0:
+                        status = "Cancelled"
+                        break;
+                    case 1:
+                        status = "Pending"
+                        break
+                    case 2:
+                        status = "Successful"
+                        break
+                    default:
+                        status = "Rejected"
+                        break;
+                }
+
                 return (
                     <View style={styles.transaction}>
                         <View style={styles.transactionIcon}>
@@ -38,7 +54,7 @@ const CashInLog = ({transactionDate , transactionItems , index , itemsLength })=
                         </View>
                         <View style={styles.transactionDetails}>
                             <Text style={{fontSize: 12,fontFamily: FONT_MEDIUM}}>Ref # {item.referenceNumber}</Text>
-                            <Text style={{color: "#909294",fontSize: 10,marginTop: 5,fontFamily: FONT_MEDIUM}}>Cash in from PayPanda {item.status}</Text>
+                            <Text style={{color: "#909294",fontSize: 10,marginTop: 5,fontFamily: FONT_MEDIUM}}>{status}</Text>
                         </View>
                         <View style={styles.transactionAmount}>
                             <Text style={{color: "#FCB91A",fontSize: 12,fontFamily: FONT_MEDIUM}}>{'\u20B1'} {numberFormat(item.amount)}</Text>

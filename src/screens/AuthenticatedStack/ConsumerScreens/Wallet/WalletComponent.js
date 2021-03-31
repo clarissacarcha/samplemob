@@ -1,10 +1,10 @@
 import React, {useRef,useState,useEffect,useCallback} from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,TouchableHighlight,Animated,ActivityIndicator,ImageBackground,ScrollView,Image} from 'react-native'
+import {View,Text,StyleSheet,TouchableOpacity,TouchableHighlight,Animated,ActivityIndicator,ImageBackground,ScrollView,Image,Dimensions} from 'react-native'
 import {HeaderBack, HeaderTitle, SomethingWentWrong} from '../../../../components'
 import {useNavigation,useFocusEffect} from '@react-navigation/native'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import WalletRecentTransactions from './Records/RecentTransactions'
-import {GET_TOKTOK_WALLET, POST_TOKTOK_WALLET} from '../../../../graphql'
+import {GET_TOKTOK_WALLET, GET_TOKTOK_WALLET_CURRENT} from '../../../../graphql'
 import {numberFormat} from '../../../../helper'
 import {useQuery,useLazyQuery,useMutation} from '@apollo/react-hooks'
 import {useSelector,useDispatch} from 'react-redux'
@@ -12,6 +12,8 @@ import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM,FONT_MEDIUM, FONT_REGULAR} fr
 import TransactionsModal from './Records/TransactionsModal'
 import CreateWallet from './VerifyUser/CreateWallet'
 import { RefreshControl } from 'react-native';
+
+const {width,height} = Dimensions.get("window")
 
 const WalletComponent = ()=> {
     const navigation = useNavigation()
@@ -38,15 +40,15 @@ const WalletComponent = ()=> {
     })
 
 
-    const [getToktokWallet, {data = {getToktokWallet: {record: {}}}, loading , error}] = useLazyQuery(GET_TOKTOK_WALLET, {
+    const [getToktokWalletCurrent, {data = {getToktokWalletCurrent: {record: {}}}, loading , error}] = useLazyQuery(GET_TOKTOK_WALLET_CURRENT, {
         fetchPolicy: 'network-only',
         variables: {
             input: {
                 userId: session.user.id,
             },
         },
-        onCompleted: ({getToktokWallet}) => {
-           console.log(getToktokWallet)
+        onCompleted: ({getToktokWalletCurrent}) => {
+           console.log(getToktokWalletCurrent)
         },
     });
 
@@ -54,7 +56,7 @@ const WalletComponent = ()=> {
     const onRefresh = useCallback(()=>{
         setRefreshing(true)
         setTimeout(() => {
-            getToktokWallet()
+            getToktokWalletCurrent()
             setRefreshing(false)
         }, 200);
 
@@ -62,7 +64,7 @@ const WalletComponent = ()=> {
 
     useEffect(()=>{
         setMounted(true)
-        getToktokWallet()
+        getToktokWalletCurrent()
         return ()=> {
             setMounted(false)
         }
@@ -82,8 +84,8 @@ const WalletComponent = ()=> {
         return <SomethingWentWrong />;
     }
 
-    if (!data.getToktokWallet.record) {
-        return <CreateWallet getWallet={getToktokWallet} session={session}/>
+    if (!data.getToktokWalletCurrent.record) {
+        return <CreateWallet getWallet={getToktokWalletCurrent} session={session}/>
       }
 
     const WalletCardInfo = ()=> (
@@ -92,14 +94,14 @@ const WalletComponent = ()=> {
             <View style={{padding: 25}}>
                 <View style={styles.walletInfo}>
                     <View>
-                        <Text style={{fontSize: 20,fontFamily: FONT_MEDIUM, color: "white"}}>{'\u20B1'} {numberFormat(data.getToktokWallet.record.balance)}</Text>
+                        <Text style={{fontSize: 20,fontFamily: FONT_MEDIUM, color: "white"}}>{'\u20B1'} {numberFormat(data.getToktokWalletCurrent.record.balance)}</Text>
                         <Text style={{fontSize: 12,color: "white",fontFamily: FONT_REGULAR}}>Available Balance</Text>
                     </View>
                     <TouchableOpacity style={styles.walletSettings} onPress={()=>{
                         // rotateY.setValue(0)
                         animation.start(()=> {
                             animation.reset()
-                            navigation.navigate("TokTokWalletSettings", {isVerified: data.getToktokWallet.record.isVerified , isPinSet: data.getToktokWallet.record.isPinSet})
+                            navigation.navigate("TokTokWalletSettings", {walletinfo: data.getToktokWalletCurrent.record})
                         })
 
                     }}>
@@ -110,7 +112,7 @@ const WalletComponent = ()=> {
                 </View>
               
                 <View style={styles.toktoklogo}>
-                    {/* <Image style={{height: 50, width: 50}} source={require('../../../../assets/icons/ToktokLogo.png')} /> */}
+                    <Image style={{height: 50, width: 50}} resizeMode="contain" source={require('../../../../assets/images/toktokwalletlanding.png')} />
                 </View>
              </View>
             </ImageBackground>
@@ -132,13 +134,13 @@ const WalletComponent = ()=> {
             {/* <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
-            > */}
-               
-                <WalletMethod label="Send" imageSize={{height: 26, width: 26}} onPress={()=>navigation.navigate("TokTokWalletActionsSend")} imageSource={require('../../../../assets/icons/walletSend.png')}/>
+            >
+                */}
+                <WalletMethod label="Send" imageSize={{height: 26, width: 26}} onPress={()=>navigation.navigate("TokTokWalletActionsSend",{walletinfo: data.getToktokWalletCurrent.record})} imageSource={require('../../../../assets/icons/walletSend.png')}/>
                 {/* <WalletMethod label="Request" imageSize={{height: 26, width: 26}} onPress={()=>navigation.navigate("TokTokWalletActionsRequest")} imageSource={require('../../../../assets/icons/walletRequest.png')}/> */}
-                <WalletMethod label="Scan" imageSize={{height: 25, width: 23}} onPress={()=>navigation.navigate("TokTokWalletActionsScantoPay",{walletinfo: data.getToktokWallet.record})} imageSource={require('../../../../assets/icons/walletScan.png')}/>
-                <WalletMethod label="Cash in" imageSize={{height: 26, width: 26}} onPress={()=>navigation.navigate("TokTokWalletCashIn",{walletinfo: data.getToktokWallet.record})} imageSource={require('../../../../assets/icons/methodCashin.png')}/>
-                <WalletMethod label="Cash out" imageSize={{height: 26, width: 26}} onPress={()=>navigation.navigate("TokTokWalletCashout",{walletinfo: data.getToktokWallet.record})} imageSource={require('../../../../assets/icons/walletTransfer.png')}/>
+                <WalletMethod label="Scan" imageSize={{height: 25, width: 23}} onPress={()=>navigation.navigate("TokTokWalletActionsScantoPay",{walletinfo: data.getToktokWalletCurrent.record})} imageSource={require('../../../../assets/icons/walletScan.png')}/>
+                <WalletMethod label="Cash in" imageSize={{height: 26, width: 26}} onPress={()=>navigation.navigate("TokTokWalletCashIn",{walletinfo: data.getToktokWalletCurrent.record})} imageSource={require('../../../../assets/icons/methodCashin.png')}/>
+                <WalletMethod label="Cash out" imageSize={{height: 26, width: 26}} onPress={()=>navigation.navigate("TokTokWalletCashout",{walletinfo: data.getToktokWalletCurrent.record})} imageSource={require('../../../../assets/icons/walletTransfer.png')}/>
             {/* </ScrollView> */}
         </View>
     )
@@ -157,7 +159,7 @@ const WalletComponent = ()=> {
             >
                 <WalletCardInfo />
                 <WalletMethods />
-                <WalletRecentTransactions session={session} seeAll={OpenCloseTransactionsModal} walletId={data.getToktokWallet.record.id}/>
+                <WalletRecentTransactions session={session} seeAll={OpenCloseTransactionsModal} walletId={data.getToktokWalletCurrent.record.id}/>
                 <TransactionsModal session={session} modalVisible={modalVisible} closeModal={OpenCloseTransactionsModal}/>
             </ScrollView>
         </View>
@@ -209,12 +211,13 @@ const styles = StyleSheet.create({
         // height: 65,
         // width: 65,
         // marginRight: 10,
-        // alignItems:"center"
+         alignItems:"center"
     },
     methodItem: {
         // flex: 1,
         height: 65,
-        width: 65,
+        // width: 65,
+        width: (width / 4 ) - 30,
         borderColor: "silver",
         borderWidth:0.5,
         borderRadius: 10,

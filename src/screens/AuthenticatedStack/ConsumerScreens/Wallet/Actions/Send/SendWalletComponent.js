@@ -12,7 +12,7 @@ import {useLazyQuery} from '@apollo/react-hooks'
 import {CHECK_USER_ACCOUNT,CLIENT} from '../../../../../../graphql'
 import {useSelector} from 'react-redux'
 
-const SendWalletComponent = ({navigation})=> {
+const SendWalletComponent = ({navigation,route})=> {
 
     navigation.setOptions({
       // headerLeft: ()=> <HeaderBack />,
@@ -171,7 +171,7 @@ const SendWalletComponent = ({navigation})=> {
     const [checkUserAccount, {data: userInfo, error, loading}] = useLazyQuery(CHECK_USER_ACCOUNT, {
         fetchPolicy: 'network-only',
         onError: (err) => {
-       
+          
           if(err.networkError && err.networkError.result.errors[0].code == "GRAPHQL_VALIDATION_FAILED"){
               Alert.alert("Invalid Mobile Number Format")
           }
@@ -188,7 +188,7 @@ const SendWalletComponent = ({navigation})=> {
           if(response.checkUserAccount.username === session.user.username){
             Alert.alert("You cannot send money to yourself!")
           }else{
-            navigation.navigate("TokTokWalletActionsSendConfirmPayment", {recipientInfo: response.checkUserAccount})
+            navigation.navigate("TokTokWalletActionsSendConfirmPayment", {recipientInfo: response.checkUserAccount , walletinfo: route.params.walletinfo})
           }
         },
     })
