@@ -20,14 +20,16 @@ import Landing from '../screens/Landing';
 /*---------- CONSUMER SCREENS ----------*/
 
 import ConsumerLanding from '../screens/AuthenticatedStack/ConsumerScreens/ConsumerLanding';
-import SenderRecipientDetails from '../screens/AuthenticatedStack/ConsumerScreens/DeliveryScreens/SenderRecipientDetails';
+import ToktokDelivery from '../screens/AuthenticatedStack/ConsumerScreens/DeliveryScreens/ToktokDelivery';
+import StopDetails from '../screens/AuthenticatedStack/ConsumerScreens/DeliveryScreens/StopDetails';
+import DeliveryDetails from '../screens/AuthenticatedStack/ConsumerScreens/DeliveryScreens/DeliveryDetails';
 
 import PostRegistration from '../screens/AuthenticatedStack/ConsumerScreens/PostRegistration';
 import CheckConsumerLocation from '../screens/AuthenticatedStack/ConsumerScreens/Booking/CheckConsumerLocation';
-import StopDetails from '../screens/AuthenticatedStack/ConsumerScreens/Booking/StopDetails';
+// import StopDetails from '../screens/AuthenticatedStack/ConsumerScreens/Booking/StopDetails';
 import ConsumerMap from '../screens/AuthenticatedStack/ConsumerScreens/Booking/ConsumerMap';
 import RecipientDetails from '../screens/AuthenticatedStack/ConsumerScreens/Booking/RecipientDetails';
-import DeliveryDetails from '../screens/AuthenticatedStack/ConsumerScreens/Booking/DeliveryDetails';
+// import DeliveryDetails from '../screens/AuthenticatedStack/ConsumerScreens/Booking/DeliveryDetails';
 import SavedLocations from '../screens/AuthenticatedStack/ConsumerScreens/SavedLocations/SavedLocations';
 import SearchMap from '../screens/AuthenticatedStack/ConsumerScreens/Booking/SearchMap';
 import SearchPlaces from '../screens/AuthenticatedStack/ConsumerScreens/Booking/SearchPlaces';
@@ -223,7 +225,9 @@ const DriverHomeBottomTab = ({navigation}) => (
 const AuthenticatedStack = () => (
   <Authenticated.Navigator>
     <Authenticated.Screen name="ConsumerLanding" component={ConsumerLanding} options={{headerShown: false}} />
-    <Authenticated.Screen name="SenderRecipientDetails" component={SenderRecipientDetails} />
+    <Authenticated.Screen name="ToktokDelivery" component={ToktokDelivery} />
+    <Authenticated.Screen name="StopDetails" component={StopDetails} />
+    <Authenticated.Screen name="DeliveryDetails" component={DeliveryDetails} />
 
     <Authenticated.Screen name="PostRegistration" component={PostRegistration} />
 
@@ -241,8 +245,8 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="SearchMap" component={SearchMap} />
     <Authenticated.Screen name="SenderDetails" component={SenderDetails} />
     <Authenticated.Screen name="RecipientDetails" component={RecipientDetails} />
-    <Authenticated.Screen name="DeliveryDetails" component={DeliveryDetails} />
-    <Authenticated.Screen name="StopDetails" component={StopDetails} />
+    {/* <Authenticated.Screen name="DeliveryDetails" component={DeliveryDetails} /> */}
+    {/* <Authenticated.Screen name="StopDetails" component={StopDetails} /> */}
     <Authenticated.Screen name="SearchContact" component={SearchContact} />
 
     <Authenticated.Screen name="Announcements" component={Announcements} />

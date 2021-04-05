@@ -1,6 +1,7 @@
-import React from 'react';
+import React, {useRef, useEffect, useCallback} from 'react';
 import {View, Text, StyleSheet, TouchableHighlight} from 'react-native';
-import {COLOR, DARK, COLOR_UNDERLAY} from '../../res/constants';
+import {throttle} from 'lodash';
+import {COLOR, DARK, COLOR_UNDERLAY, LIGHT, MEDIUM} from '../../res/constants';
 
 import Entypo from 'react-native-vector-icons/Entypo';
 import Feather from 'react-native-vector-icons/Feather';
@@ -26,15 +27,36 @@ const ICON_SET = {
 
 export const WhiteButton = ({
   label,
+  labelColor = DARK,
+  description = null,
   onPress,
+  delay = 2000,
   style,
+  borderless = false,
   prefixSet = null,
   prefixName,
   prefixSize = 24,
+  prefixColor = COLOR,
   suffixSet = null,
   suffixName,
   suffixSize = 24,
+  suffixColor = DARK,
 }) => {
+  const useThrottle = (cb, delayDuration) => {
+    const options = {leading: true, trailing: false}; // add custom lodash options
+    const cbRef = useRef(cb);
+    // use mutable ref to make useCallback/throttle not depend on `cb` dep
+    useEffect(() => {
+      cbRef.current = cb;
+    });
+    return useCallback(
+      throttle((...args) => cbRef.current(...args), delayDuration, options),
+      [delayDuration],
+    );
+  };
+
+  const onPressThrottled = useThrottle(onPress, delay);
+
   const PrefixIcon = () => {
     if (!prefixSet) {
       return null;
@@ -42,7 +64,7 @@ export const WhiteButton = ({
 
     const Icon = ICON_SET[prefixSet];
 
-    return <Icon name={prefixName} size={prefixSize} style={{paddingLeft: 10}} color={COLOR} />;
+    return <Icon name={prefixName} size={prefixSize} style={borderless ? {} : {paddingLeft: 10}} color={prefixColor} />;
   };
 
   const SuffixIcon = () => {
@@ -52,14 +74,23 @@ export const WhiteButton = ({
 
     const Icon = ICON_SET[suffixSet];
 
-    return <Icon name={suffixName} size={suffixSize} style={{paddingRight: 10}} color={DARK} />;
+    return <Icon name={suffixName} size={suffixSize} style={{paddingRight: 10}} color={suffixColor} />;
   };
 
   return (
-    <TouchableHighlight onPress={onPress} style={styles.whiteButton} underlayColor={COLOR_UNDERLAY}>
-      <View style={[styles.whiteButtonBox, style]}>
+    <TouchableHighlight onPress={onPressThrottled} style={styles.whiteButton} underlayColor={COLOR_UNDERLAY}>
+      <View style={[styles.whiteButtonBox, style, borderless ? styles.borderless : {}]}>
         <PrefixIcon />
-        <Text style={styles.label}>{label}</Text>
+        <View style={{flex: 1}}>
+          <Text style={[styles.label, {color: labelColor}]} numberOfLines={1}>
+            {label}
+          </Text>
+          {description && (
+            <Text style={styles.description} numberOfLines={1}>
+              {description}
+            </Text>
+          )}
+        </View>
         <SuffixIcon />
       </View>
     </TouchableHighlight>
@@ -78,8 +109,16 @@ const styles = StyleSheet.create({
     borderColor: COLOR,
     borderRadius: 5,
   },
+  borderless: {
+    borderWidth: 0,
+  },
   label: {
-    flex: 1,
     paddingHorizontal: 10,
+    fontSize: 14,
+  },
+  description: {
+    paddingHorizontal: 10,
+    fontSize: 12,
+    color: MEDIUM,
   },
 });

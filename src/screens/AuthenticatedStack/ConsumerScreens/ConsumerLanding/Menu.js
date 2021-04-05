@@ -22,7 +22,7 @@ const Menu = ({session}) => {
 
   return (
     <View style={styles.menuBox}>
-      <MenuIcon label={'Delivery'} icon={DeliveryIcon} onPress={() => navigation.push('SenderRecipientDetails')} />
+      <MenuIcon label={'Delivery'} icon={DeliveryIcon} onPress={() => navigation.push('ToktokDelivery')} />
       <MenuIcon label={'Delivery'} icon={DeliveryIcon} />
       <MenuIcon label={'Delivery'} icon={DeliveryIcon} />
       <MenuIcon label={'Delivery'} icon={DeliveryIcon} />
