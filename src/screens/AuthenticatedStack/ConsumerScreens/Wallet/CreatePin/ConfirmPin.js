@@ -31,7 +31,7 @@ const ConfirmPin = ({navigation,route})=> {
 
 
     navigation.setOptions({
-        // headerLeft: ()=> <HeaderBack/>,
+        headerLeft: ()=> <HeaderBack />,
         headerTitle: ()=> <HeaderTitle label={['Set up a PIN','']}/>,
     })
 

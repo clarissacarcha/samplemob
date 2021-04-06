@@ -4,7 +4,7 @@ import {useNavigation,useRoute} from '@react-navigation/native'
 import {MEDIUM,DARK,COLOR,ORANGE, FONT_MEDIUM} from '../../../../../../res/constants'
 import WebView from 'react-native-webview'
 import {useMutation} from '@apollo/react-hooks'
-import {UPDATE_FROM_PAYPANDA_RETURN_URL} from '../../../../../../graphql'
+import {PATCH_PAYPANDA_RETURN_URL} from '../../../../../../graphql'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import {useSelector} from 'react-redux'
 
@@ -51,7 +51,7 @@ const WebViewComponent = ()=> {
 
     let generatedInitialPaymentData = generateInitialPostPaymentDataString(initialpaymentData)
 
-    const [updateFromPayPandaReturnUrl, {data,error,loading}] = useMutation(UPDATE_FROM_PAYPANDA_RETURN_URL,{
+    const [patchPayPandaReturnUrl, {data,error,loading}] = useMutation(PATCH_PAYPANDA_RETURN_URL,{
         // fetchPolicy: 'network-only',
         onCompleted: ()=>{
             setDoneTransaction(true)
@@ -137,10 +137,11 @@ const WebViewComponent = ()=> {
                             let payment_status = /(?:\&status=).*(?=\&signature)/.exec(url)
                             let signature = /(?:\&signature=).*/.exec(url)
                             let paid_amount = route.params.amount_to_pay
+                            let transactionTypeId = route.params.transactionTypeId
         
 
                             if(checkurl != url){       
-                                updateFromPayPandaReturnUrl({
+                                patchPayPandaReturnUrl({
                                     variables: {
                                         input: {
                                             reference_number: reference_number[0].slice(7),
@@ -148,7 +149,8 @@ const WebViewComponent = ()=> {
                                             payment_status: payment_status[0].slice(8),
                                             signature: signature[0].slice(11),
                                             paid_amount: +paid_amount,
-                                            userId: session.user.id
+                                            userId: session.user.id,
+                                            transactionTypeId: transactionTypeId,
                                         }
                                     }
                                 })

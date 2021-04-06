@@ -1,6 +1,6 @@
 import React, {useRef,useState , useEffect} from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,Dimensions,ActivityIndicator} from 'react-native'
-import { HeaderTitle } from '../../../../../components'
+import { HeaderTitle , HeaderBack } from '../../../../../components'
 import ImageCropper from 'react-native-simple-image-cropper';
 import {RNCamera} from 'react-native-camera';
 import { COLOR, FONT_MEDIUM } from '../../../../../res/constants';
@@ -15,6 +15,7 @@ const CROP_AREA_HEIGHT = CROP_AREA_WIDTH;
 const SelfieCamera = ({navigation,route})=> {
 
     navigation.setOptions({
+        headerLeft: ()=> <HeaderBack/>,
         headerTitle: ()=> <HeaderTitle label={["Scan face",""]}/>
     })
 
@@ -27,6 +28,7 @@ const SelfieCamera = ({navigation,route})=> {
         msg: "Position your face within the frame",
         icon: "bullseye"
     })
+    const [canDetectFaces,setCanDetectFaces] = useState(null)
   
     const takePicture = () => {
         setCheck(true)
@@ -106,9 +108,6 @@ const SelfieCamera = ({navigation,route})=> {
   
     }
 
-
-
-
     return (
         <View style={styles.container}>
             <View style={{position:"absolute",top:0,marginTop: 50,justifyContent:"center",alignItems:"center"}}>
@@ -150,13 +149,14 @@ const SelfieCamera = ({navigation,route})=> {
                         buttonPositive: 'Ok',
                         buttonNegative: 'Cancel',
                     }}
-                    faceDetectionMode={RNCamera.Constants.FaceDetection.Mode.fast}
-                    // faceDetectionLandmarks={RNCamera.Constants.FaceDetection.Landmarks.all}
-                    // faceDetectionClassifications={RNCamera.Constants.FaceDetection.Classifications.all}
-                    onFacesDetected={onFacesDetected}
+                    // faceDetectionMode={RNCamera.Constants.FaceDetection.Mode.fast}
+                    // // faceDetectionLandmarks={RNCamera.Constants.FaceDetection.Landmarks.all}
+                    // // faceDetectionClassifications={RNCamera.Constants.FaceDetection.Classifications.all}
+                    onFacesDetected={canDetectFaces ? onFacesDetected : null}
                     onFaceDetectionError={(err)=>{
                         console.log(err)
                     }}
+                    onCameraReady={()=>setCanDetectFaces(true)}
                 />
 
             </View>

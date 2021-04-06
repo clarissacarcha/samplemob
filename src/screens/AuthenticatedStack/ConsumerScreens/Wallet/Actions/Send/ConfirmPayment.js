@@ -4,7 +4,7 @@ import SwipeButton from 'rn-swipe-button';
 import {HeaderBack, HeaderTitle} from '../../../../../../components'
 import { COLOR, FONT_MEDIUM, FONT_REGULAR } from '../../../../../../res/constants';
 import {numberFormat} from '../../../../../../helper'
-import {GET_TOKTOK_WALLET_CURRENT,FUND_TRANSFER_FROM_CONSUMER_TO_CONSUMER} from '../../../../../../graphql'
+import { PATCH_FUND_TRANSFER} from '../../../../../../graphql'
 import {useQuery,useMutation} from '@apollo/react-hooks'
 import {useSelector} from 'react-redux'
 import { onError } from '../../../../../../util/ErrorUtility';
@@ -14,7 +14,7 @@ import PincodeModal from '../../Notification/PincodeModal'
 const ConfirmPayment = ({navigation,route})=> {
 
     navigation.setOptions({
-        // headerLeft: ()=> <HeaderBack />,
+        headerLeft: ()=> <HeaderBack />,
         headerTitle: ()=> <HeaderTitle label={['Send money using toktok wallet','']}/>,
     })
 
@@ -29,22 +29,33 @@ const ConfirmPayment = ({navigation,route})=> {
     const [successModalVisible, setSuccessModalVisible] = useState(false)
     const [showpinModal,setShowPinModal] = useState(false)
 
-    const [fundTransferFromCtoC] = useMutation(FUND_TRANSFER_FROM_CONSUMER_TO_CONSUMER, {
+    const [patchFundTransfer] = useMutation(PATCH_FUND_TRANSFER, {
         variables: {
             input: {
                 amount: +amount,
                 note: note,
-                sourceUserId: session.user.id,
-                destinationUserId: recipientInfo.id
+                // sourceUserId: session.user.id,
+                // destinationUserId: recipientInfo.id,
+                sourceUser: {
+                    id: session.user.id,
+                },
+                destinationUser: {
+                    id: recipientInfo.id,
+                    isLogTypeDestinationUserIdNull: true,
+                    isAccountInternal: false,
+                }
             }
         },
-        onError: onError,
+        onError: (error)=> {
+            onError(error)
+            setShowPinModal(false)
+        },
         onCompleted: (response)=> {
             setSuccessModalVisible(true)
         }
     })
 
-    // const {data,error,loading} = useQuery(GET_TOKTOK_WALLET_CURRENT, {
+    // const {data,error,loading} = useQuery(GET_TOKTOK_WALLET, {
     //     fetchPolicy: "network-only",
     //     variables: {
     //         input: {
@@ -78,10 +89,10 @@ const ConfirmPayment = ({navigation,route})=> {
     }
 
     const onSwipeSuccess = ()=> {
-        if(walletinfo.isPinSet){
+        if(walletinfo.pincode != null){
             setShowPinModal(true)
         }else{
-            fundTransferFromCtoC()
+            patchFundTransfer()
         }
        
     }
@@ -103,7 +114,7 @@ const ConfirmPayment = ({navigation,route})=> {
                 amount={amount} 
                 recipient={`${recipientInfo.person.firstName} ${recipientInfo.person.middleName ? recipientInfo.person.middleName + "" : ""}${recipientInfo.person.lastName}`}
         />
-        <PincodeModal showpinModal={showpinModal} setShowPinModal={setShowPinModal} onConfirm={fundTransferFromCtoC}/>
+        <PincodeModal showpinModal={showpinModal} setShowPinModal={setShowPinModal} onConfirm={patchFundTransfer}/>
         <View style={styles.container}>
             <View style={styles.content}>
                     <Text style={{marginLeft: 20, marginTop: 20, fontFamily: FONT_MEDIUM ,fontSize: 16}}>Send to</Text>

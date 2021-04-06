@@ -71,7 +71,7 @@ const CashInLog = ({transactionDate , transactionItems , index , itemsLength })=
 const CashInLogs = ({navigation})=> {
 
     navigation.setOptions({
-        // headerLeft: ()=> <HeaderBack/>,
+        headerLeft: ()=> <HeaderBack />,
         headerTitle: ()=> <HeaderTitle label={['Cash In Logs','']}/>,
     })
 

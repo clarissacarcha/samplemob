@@ -4,7 +4,7 @@ import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM,ORANGE, FONT_MEDIUM, FONT_REG
 import {useNavigation} from '@react-navigation/native'
 import {HeaderBack, HeaderTitle} from '../../../../../components'
 import {useSelector} from 'react-redux'
-import {CREATE_PINCODE_TOKTOK_WALLET} from '../../../../../graphql'
+import {PATCH_PINCODE_TOKTOK_WALLET} from '../../../../../graphql'
 import {useMutation} from '@apollo/react-hooks'
 
 const SuccessModal = ({modalVisible})=> {
@@ -53,7 +53,7 @@ const SuccessModal = ({modalVisible})=> {
 const ConfirmEmail = ({navigation,route})=> {
 
     navigation.setOptions({
-        // headerLeft: ()=> <HeaderBack/>,
+        headerLeft: ()=> <HeaderBack />,
         headerTitle: ()=> <HeaderTitle label={['Set up a PIN','']}/>,
     })
 
@@ -64,23 +64,22 @@ const ConfirmEmail = ({navigation,route})=> {
     const [modalVisible,setModalVisible] = useState(false)
 
 
-    const [createPincodeToktokWallet, {data,error,loading}] = useMutation(CREATE_PINCODE_TOKTOK_WALLET, {
+    const [patchPincodeToktokWallet, {data,error,loading}] = useMutation(PATCH_PINCODE_TOKTOK_WALLET, {
         variables: {
             input: {
-                userId: session.user.id,
                 pincode: pinCode
             }
         },
         onError: (err)=> {
 
         },
-        onCompleted: ({createPincodeToktokWallet})=> {
+        onCompleted: ({patchPincodeToktokWallet})=> {
             setModalVisible(!modalVisible)
         }
     })
 
     const CompleteSetup = ()=> {
-        createPincodeToktokWallet()
+        patchPincodeToktokWallet()
     }
 
     return (

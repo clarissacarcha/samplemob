@@ -18,8 +18,8 @@ const MainSetupComponent = ()=> {
 
     const {currentIndex,setCurrentIndex} = useContext(VerifyContext)
 
-    // const [screenSlides,setScreenSlides] = useState(["Fullname","Nationality","Birthday","Address","IDPic","SelfiePic","Confirm"])
-    const [screenSlides,setScreenSlides] = useState(["Fullname","Birthday","Address","IDPic","SelfiePic","Confirm"])
+    // const [screenSlides,setScreenSlides] = useState(["Fullname","Nationality","Birthday","Address","IDPic","SelfiePic"])
+    const [screenSlides,setScreenSlides] = useState(["Fullname","Birthday","Address","IDPic","SelfiePic"])
 
     const DisplayComponents = ()=> {
         // switch(currentIndex){

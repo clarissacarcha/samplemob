@@ -9,13 +9,13 @@ import ContactInfoRender from './ContactInfoRender'
 import SendtoOthers from './SendtoOthers'
 import MessageModal from './MessageModal'
 import {useLazyQuery} from '@apollo/react-hooks'
-import {CHECK_USER_ACCOUNT,CLIENT} from '../../../../../../graphql'
+import {CLIENT,GET_USER_ACCOUNT} from '../../../../../../graphql'
 import {useSelector} from 'react-redux'
 
 const SendWalletComponent = ({navigation,route})=> {
 
     navigation.setOptions({
-      // headerLeft: ()=> <HeaderBack />,
+      headerLeft: ()=> <HeaderBack />,
       headerTitle: ()=> <HeaderTitle label={['Choose a Recipient']} />,
     })
 
@@ -168,7 +168,7 @@ const SendWalletComponent = ({navigation,route})=> {
     }
 
 
-    const [checkUserAccount, {data: userInfo, error, loading}] = useLazyQuery(CHECK_USER_ACCOUNT, {
+    const [getUserAccount, {data: userInfo, error, loading}] = useLazyQuery(GET_USER_ACCOUNT, {
         fetchPolicy: 'network-only',
         onError: (err) => {
           
@@ -185,17 +185,17 @@ const SendWalletComponent = ({navigation,route})=> {
 
         },
         onCompleted: (response) => {
-          if(response.checkUserAccount.username === session.user.username){
+          if(response.getUserAccount.username === session.user.username){
             Alert.alert("You cannot send money to yourself!")
           }else{
-            navigation.navigate("TokTokWalletActionsSendConfirmPayment", {recipientInfo: response.checkUserAccount , walletinfo: route.params.walletinfo})
+            navigation.navigate("TokTokWalletActionsSendConfirmPayment", {recipientInfo: response.getUserAccount , walletinfo: route.params.walletinfo})
           }
         },
     })
 
     const checkAccount = async (mobileNo)=> {
       const trimmedMobile = mobileNo.replace(/[. ]/gi,"")
-      checkUserAccount({
+      getUserAccount({
         variables: {
           input: {
             mobileNo: trimmedMobile

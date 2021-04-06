@@ -1,15 +1,15 @@
 import React from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,Image,ActivityIndicator} from 'react-native'
 import {SomethingWentWrong} from '../../../../../components'
-import {GET_WALLET_RECENT_TRANSACTIONS} from '../../../../../graphql'
+import {GET_TOKTOK_WALLET_RECENT_LOGS} from '../../../../../graphql'
 import {useQuery} from '@apollo/react-hooks'
-import { COLOR, FONT_MEDIUM, FONT_REGULAR } from '../../../../../res/constants'
+import { COLOR, FONT_BOLD, FONT_MEDIUM, FONT_REGULAR } from '../../../../../res/constants'
 import WalletLog from './WalletLog'
 
 const RecentTransactions = ({seeAll,walletId,session})=> {
 
 
-    const {data, error ,loading } = useQuery(GET_WALLET_RECENT_TRANSACTIONS, {
+    const {data, error ,loading } = useQuery(GET_TOKTOK_WALLET_RECENT_LOGS, {
         fetchPolicy: 'network-only',
         // fetchPolicy: 'cache-and-network',
         variables: {
@@ -17,13 +17,14 @@ const RecentTransactions = ({seeAll,walletId,session})=> {
                 userId: session.user.id
             }
         },
-        onCompleted: ({getWalletRecentTransactions})=>{
-          
+        onCompleted: ({getToktokWalletRecentLogs})=>{
+            // console.log(JSON.stringify(getToktokWalletRecentLogs))
         },
         onError: (err)=>{
             console.log(err)
         }
     })
+
 
     if (loading) {
         return (
@@ -37,8 +38,9 @@ const RecentTransactions = ({seeAll,walletId,session})=> {
         return <SomethingWentWrong />;
     }
 
-    return (
-        <View style={styles.recentTransactions}>
+    const TransactionsData = ()=> {
+        return (
+            <>
             <View style={styles.recentTransactionsTitle}>
                 <Text style={{fontSize: 14,color: "#212529",fontFamily: FONT_MEDIUM}}>Recent Transactions</Text>
                 <TouchableOpacity onPress={seeAll} style={styles.transactionSeeAllbtn}>
@@ -48,12 +50,26 @@ const RecentTransactions = ({seeAll,walletId,session})=> {
             <View style={styles.recentLogs}>
 
                 {
-                    data.getWalletRecentTransactions.map((item,index)=> (
+                    data.getToktokWalletRecentLogs.map((item,index)=> (
                         <WalletLog key={`recentLog${index}`} transactionDate={item.logDate} transactionItems={item.logs} index={index}/>
                     ))
                 }
                    
             </View>
+            </>
+        )
+    }
+
+    return (
+        <View style={styles.recentTransactions}>
+                {
+                    data.getToktokWalletRecentLogs.length > 0
+                    ? <TransactionsData />
+                    : <View style={{flex: 1 , justifyContent:"center",alignItems: "center"}}> 
+                            <Text style={{fontFamily: FONT_MEDIUM}}>No Records</Text>
+                            <Image resizeMode="contain" style={{height: 150, width: 150,marginTop: 10}} source={require('../../../../../assets/images/NoData.png')} />
+                      </View>
+                }
         </View>
     )
 }

@@ -61,6 +61,7 @@ const NumberBoxes = ({pinCode}) => {
 const Pincode = ({navigation})=> {
 
     navigation.setOptions({
+        headerLeft: ()=> <HeaderBack />,
         headerTitle: ()=> <HeaderTitle  label={['Change PIN']}/>
     })
 

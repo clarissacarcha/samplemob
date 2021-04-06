@@ -3,7 +3,7 @@ import {View,Text,StyleSheet,TouchableOpacity,ScrollView,CheckBox} from 'react-n
 import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM,ORANGE, FONT_MEDIUM, FONT_LIGHT, FONT_REGULAR} from '../../../../../res/constants'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import {VerifyContext} from './Context/VerifyContextProvider'
-import {SAVE_VERIFICATION_INFO} from '../../../../../graphql'
+import {POST_TOKTOK_WALLET_KYC} from '../../../../../graphql'
 import {useMutation} from '@apollo/react-hooks'
 import {onError} from '../../../../../util/ErrorUtility'
 import {AlertOverlay} from '../../../../../components';
@@ -30,7 +30,7 @@ const Confirm = ()=> {
 
     const [isSelected,setSelection] = useState(false)
 
-    const [saveVerificationInfo,{data,error,loading}] = useMutation(SAVE_VERIFICATION_INFO, {
+    const [postToktokWalletKYC,{data,error,loading}] = useMutation(POST_TOKTOK_WALLET_KYC, {
         onError: onError,
         onCompleted: (response)=> {
             navigation.pop()
@@ -119,7 +119,7 @@ const Confirm = ()=> {
                             type: 'image/jpeg'
                         })
 
-                        saveVerificationInfo({
+                        postToktokWalletKYC({
                             variables: {
                                 input: {
                                     fullname: VerifyUserData.fullname,

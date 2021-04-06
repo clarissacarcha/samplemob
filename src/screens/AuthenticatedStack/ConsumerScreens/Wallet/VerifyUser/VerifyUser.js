@@ -40,7 +40,7 @@ const MainComponent = ({children , route})=> {
 
 const VerifyUser = ({navigation,route})=> {
     navigation.setOptions({
-        // headerLeft: ()=> <HeaderBack/>,
+        headerLeft: ()=> <HeaderBack />,
         headerTitle: ()=> <HeaderTitle label={['',]}/>,
     })
 
@@ -67,7 +67,7 @@ const VerifyUser = ({navigation,route})=> {
         return <SomethingWentWrong />;
     }
 
-    if(data.getToktokWalletCurrent.record.verifyKYC.length == 0) {
+    if(data.getToktokWallet.record.toktokWalletKYC.length == 0) {
         return (
             <MainComponent route="TokTokWalletVerifyUserSetup">
                 <Text style={{fontSize: 20,fontFamily: FONT_MEDIUM}}>Go cashless with <Text style={{color: COLOR}}>toktok</Text><Text style={{color: ORANGE}}> wallet!</Text></Text>
@@ -76,7 +76,7 @@ const VerifyUser = ({navigation,route})=> {
         )
     }
 
-    if(data.getToktokWalletCurrent.record.verifyKYC[0].status == 0){
+    if(data.getToktokWallet.record.toktokWalletKYC[0].status == 0){
         return (
             <MainComponent>
                 <Text style={{fontSize: 20,fontFamily: FONT_MEDIUM}}>Waiting for approval of <Text style={{color: COLOR}}>toktok</Text><Text style={{color: ORANGE}}> wallet!</Text></Text>
@@ -85,7 +85,7 @@ const VerifyUser = ({navigation,route})=> {
         )
     }
 
-    if(data.getToktokWalletCurrent.record.verifyKYC[0].status == 1){
+    if(data.getToktokWallet.record.toktokWalletKYC[0].status == 1){
         return (
             <MainComponent>
                 <Text style={{fontSize: 20,fontFamily: FONT_MEDIUM}}>Your <Text style={{color: COLOR}}>toktok</Text><Text style={{color: ORANGE}}> wallet</Text> is now verified!</Text>
@@ -94,7 +94,7 @@ const VerifyUser = ({navigation,route})=> {
         )
     }
 
-    if(data.getToktokWalletCurrent.record.verifyKYC[0].status == 2) {
+    if(data.getToktokWallet.record.toktokWalletKYC[0].status == 2) {
         return (
             <MainComponent route="TokTokWalletVerifyUserSetup">
                 <Text style={{fontSize: 20,fontFamily: FONT_MEDIUM}}>Verification of your <Text style={{color: COLOR}}>toktok</Text><Text style={{color: ORANGE}}> wallet!</Text> Failed!</Text>

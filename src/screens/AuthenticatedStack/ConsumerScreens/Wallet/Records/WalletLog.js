@@ -28,28 +28,40 @@ const WalletLog = ({transactionDate , transactionItems ,index , itemsLength }) =
             {
                 transactionItems.map((item)=>{
 
-                    let icon , title , details , amountcolor = "black", amountprefix
+                    let icon , title , phrase , amountcolor = "black", amountprefix , sender , recipient
                     title = item.logType.label
                     amountcolor = item.sourceUserId == session.user.id ? "red" : "green"
                     amountprefix = item.sourceUserId == session.user.id ? "-" : "+"
+
+                    // Sender
+                    if(item.sourceInfo.firstName != null) sender = `${item.sourceInfo.firstName} ${item.sourceInfo.lastName}`
+                    if(item.sourceInfo.internalAccount != null) sender = `${item.sourceInfo.internalAccount}`
+                 
+
+                    // Recipient
+                    if(item.destinationInfo.firstName != null) recipient = `${item.destinationInfo.firstName} ${item.destinationInfo.lastName}`
+                    if(item.destinationInfo.internalAccount != null) recipient = `${item.destinationInfo.internalAccount}`
+
+                    // Delivery
+                    if(item.delivery != null){
+                        sender = `${item.delivery.deliveryId}`
+                        recipient = sender
+                    }
+                    
+
+                    phrase = item.sourceUserId == session.user.id ? `${item.logType.sourcePhrase.replace("[:replace]",recipient)}` : `${item.logType.destinationPhrase.replace("[:replace]",sender)}`
+    
+    
+                    // transaction icons / images
                     switch (item.logType.transferType){
                         case "T":
-                            icon = require('../../../../../assets/icons/walletLogTransfer.png')
-                            //title = "Transfer"
-                            if(item.sourceUserId == session.user.id){
-                                const recipient = `${item.destinationInfo.firstName} ${item.destinationInfo.lastName}`
-                                details = `Send money to ${recipient}`
-                            }else{
-                                const sender = `${item.sourceInfo.firstName} ${item.sourceInfo.lastName}`
-                                details = `Receive money from ${sender}`
-                            }
+                            icon = require('../../../../../assets/icons/walletLogTransfer.png') // Fund Transfer
                             break
                         case "CI":
-                            icon = require('../../../../../assets/icons/walletLogCashin.png')
-                            //title = "Cash In"
-                            details = `Cash in from ${item.sourceInfo.internalAccount}`
+                            icon = require('../../../../../assets/icons/walletLogCashin.png') // Cash in
                             break
                         default:
+                            icon = require('../../../../../assets/icons/walletDelivery.png') // Delivery
                             break
                     }
 
@@ -60,7 +72,7 @@ const WalletLog = ({transactionDate , transactionItems ,index , itemsLength }) =
                             </View>
                             <View style={styles.transactionDetails}>
                                 <Text style={{fontSize: 12,fontFamily: FONT_MEDIUM}}>{title}</Text>
-                                <Text style={{color: "#909294",fontSize: 10,marginTop: 2,fontFamily: FONT_MEDIUM}}>{details}</Text>
+                                <Text style={{color: "#909294",fontSize: 10,marginTop: 2,fontFamily: FONT_MEDIUM}}>{phrase}</Text>
                             </View>
                             <View style={styles.transactionAmount}>
                                 <Text style={{fontSize: 12,fontFamily: FONT_MEDIUM , color: amountcolor}}>{amountprefix} {'\u20B1'} {numberFormat(item.amount)}</Text>

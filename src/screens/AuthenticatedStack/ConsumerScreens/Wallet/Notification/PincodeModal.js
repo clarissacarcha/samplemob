@@ -1,7 +1,7 @@
 import React , {useState,useRef , useEffect} from 'react'
 import {View,Text,Modal,StyleSheet,TouchableOpacity,TextInput,TouchableHighlight,Image} from 'react-native'
 import { COLOR, DARK, FONT_MEDIUM } from '../../../../../res/constants';
-import {CONFIRM_TOKTOK_WALLET_PIN} from '../../../../../graphql'
+import {GET_VERIFY_TOKTOK_WALLET_PIN} from '../../../../../graphql'
 import {useLazyQuery} from '@apollo/react-hooks'
 import {onError} from '../../../../../util/ErrorUtility'
 
@@ -31,11 +31,14 @@ const PincodeModal = ({showpinModal,setShowPinModal , onConfirm})=> {
 
     const [pinCode,setPinCode] = useState("")
     const inputRef = useRef();
-    const [confirmToktokWalletPIN, {data,error,loading}] = useLazyQuery(CONFIRM_TOKTOK_WALLET_PIN,{
+    const [getVerifyToktokWalletPIN, {data,error,loading}] = useLazyQuery(GET_VERIFY_TOKTOK_WALLET_PIN,{
         fetchPolicy: 'network-only',
         onError: onError,
         onCompleted: (response)=> {
             onConfirm()
+            setTimeout(()=>{
+                setPinCode("")
+            },2000)
         }
     })
 
@@ -46,7 +49,7 @@ const PincodeModal = ({showpinModal,setShowPinModal , onConfirm})=> {
     };
     
     const onSubmit = () => {
-       confirmToktokWalletPIN({
+       getVerifyToktokWalletPIN({
             variables: {
                 input: {
                     pincode: pinCode
@@ -57,7 +60,7 @@ const PincodeModal = ({showpinModal,setShowPinModal , onConfirm})=> {
 
     useEffect(()=>{
         if(pinCode.length == 4){
-            confirmToktokWalletPIN({
+            getVerifyToktokWalletPIN({
                 variables: {
                     input: {
                         pincode: pinCode

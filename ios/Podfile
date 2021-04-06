@@ -89,6 +89,7 @@ target 'toktok' do
   pod 'Permission-PhotoLibrary', :path => "#{permissions_path}/PhotoLibrary.podspec"
   pod 'Permission-Contacts', :path => "#{permissions_path}/Contacts.podspec"
 
+  pod 'react-native-camera', :path => '../node_modules/react-native-camera'
   target 'toktokTests' do
     inherit! :complete
     # Pods for testing

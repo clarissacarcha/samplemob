@@ -1,5 +1,5 @@
 import React, {useState,useCallback, useEffect} from 'react'
-import {StyleSheet,View,Text,TouchableOpacity,Dimensions,Image,TouchableHighlight,Alert} from 'react-native'
+import {StyleSheet,View,Text,TouchableOpacity,Dimensions,Image,TouchableHighlight,Alert,Platform} from 'react-native'
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import { RNCamera } from 'react-native-camera';
 import {numberFormat} from '../../../../../../helper'
@@ -7,7 +7,7 @@ import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM, FONT_MEDIUM, FONT_REGULAR} f
 import FIcon from 'react-native-vector-icons/Feather';
 import {useFocusEffect} from '@react-navigation/native'
 import {useLazyQuery} from '@apollo/react-hooks'
-import {CHECK_QR_CODE} from '../../../../../../graphql'
+import {GET_QR_CODE} from '../../../../../../graphql'
 import {onError} from '../../../../../../util/ErrorUtility'
 import {useSelector} from 'react-redux'
 
@@ -30,14 +30,14 @@ const ScantoPayWalletComponent = ({navigation,route})=> {
         return ()=> setFocusCamera(false)
     },[]))
 
-    const [checkQRCode] = useLazyQuery(CHECK_QR_CODE,{
+    const [getQRCode] = useLazyQuery(GET_QR_CODE,{
         fetchPolicy: "network-only",
         onError: onError,
         onCompleted: (response)=> {
-            if(response.checkQRCode.contactNo === session.user.username){
+            if(response.getQRCode.contactNo === session.user.username){
                 Alert.alert("You cannot send money to yourself!")
             }else{
-                navigation.navigate("TokTokWalletActionsScantoPayConfirmPayment", {recipientInfo: response.checkQRCode, walletinfo: walletinfo})
+                navigation.navigate("TokTokWalletActionsScantoPayConfirmPayment", {recipientInfo: response.getQRCode, walletinfo: walletinfo})
             }
         }
     })
@@ -75,7 +75,7 @@ const ScantoPayWalletComponent = ({navigation,route})=> {
 
 
         if(ifInsideBox(boundary,resultBounds)){
-             checkQRCode({
+             getQRCode({
                 variables: {
                     input: {
                         qrCode: e.data
@@ -99,7 +99,7 @@ const ScantoPayWalletComponent = ({navigation,route})=> {
 
     const customMarker = ()=> (
         <View style={styles.customMarker}>
-            <TouchableOpacity onPress={()=>navigation.goBack()} style={{top: 60, left: 0,position:"absolute"}}>
+            <TouchableOpacity onPress={()=>navigation.goBack()} style={{top: Platform.OS === "android" ? 60 : 80, left: 0,position:"absolute"}}>
              <FIcon name="chevron-left" size={30} color={'white'} /> 
             </TouchableOpacity>
             <View style={styles.centerBox}>

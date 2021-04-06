@@ -22,9 +22,9 @@ export const HeaderBack = ({onBack}) => {
   );
 
   return (
-    <TouchableHighlight onPress={onPress} underlayColor={COLOR} style={styles.button}>
+    <TouchableHighlight onPress={onPress} underlayColor={'white'} style={styles.button}>
       <View style={styles.iconBox}>
-        <FIcon name="chevron-left" size={24} color={COLOR} />
+        <FIcon name="arrow-left" size={24} color={'#212529'} />
       </View>
     </TouchableHighlight>
   );
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     width: 30,
   },
   iconBox: {
-    backgroundColor: DARK,
+    // backgroundColor: DARK,
     height: 30,
     width: 30,
     justifyContent: 'center',

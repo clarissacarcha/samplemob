@@ -50,9 +50,6 @@ user {
   wallet {
     id
   }
-  toktokwallet {
-    id
-  }
 }
 accessToken
 `;

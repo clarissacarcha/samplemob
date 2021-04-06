@@ -3,7 +3,7 @@ import {View,Text,Modal,StyleSheet,TouchableOpacity,Dimensions,ScrollView,Image,
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import moment from 'moment'
 import { DARK, COLOR, FONT_MEDIUM, FONT_REGULAR } from '../../../../../res/constants'
-import {GET_WALLET_TRANSACTIONS} from '../../../../../graphql'
+import {GET_TOKTOK_WALLET_LOGS} from '../../../../../graphql'
 import {useLazyQuery} from '@apollo/react-hooks'
 import {onError} from '../../../../../util/ErrorUtility'
 import WalletLog from './WalletLog'
@@ -55,7 +55,7 @@ const TransactionsModal = ({modalVisible,closeModal,session})=> {
         setFilteredData(data)
     }
 
-    const [getWalletTransactions, {data, error, loading}] = useLazyQuery(GET_WALLET_TRANSACTIONS,{
+    const [getToktokWalletLogs, {data, error, loading}] = useLazyQuery(GET_TOKTOK_WALLET_LOGS,{
         fetchPolicy: "network-only",
         variables: {
             input: {
@@ -66,13 +66,13 @@ const TransactionsModal = ({modalVisible,closeModal,session})=> {
         },
         onError: onError,
         onCompleted: (response)=>{
-            setTransactions(response.getWalletTransactions)
-            setFilteredData(response.getWalletTransactions)
+            setTransactions(response.getToktokWalletLogs)
+            setFilteredData(response.getToktokWalletLogs)
         }
     })
 
     useEffect(()=>{
-        getWalletTransactions()
+        getToktokWalletLogs()
     },[filterDate])
 
     useEffect(()=>{

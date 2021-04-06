@@ -11,8 +11,11 @@ import moment from 'moment'
 const DateBirthModal = ({modalVisible, setModalVisible , birthInfo ,changeBirthInfo})=> {
 
     const minDate = new Date('1900-01-01');
-    const maxDate = moment().add(1,"year")
     const todayDate = new Date()
+    const year = todayDate.getFullYear()
+    const month = todayDate.getMonth()
+    const day = todayDate.getDate()
+    const maxDate = new Date(year + 1, month ,day)
 
     const [bday,setBday] = useState(birthInfo.birthdate == "" ? todayDate : birthInfo.birthdate)
 
@@ -24,7 +27,7 @@ const DateBirthModal = ({modalVisible, setModalVisible , birthInfo ,changeBirthI
         >
             <View style={styles.dateModalContent}>
                 <View style={{padding: 20,backgroundColor: "white",width: "90%",justifyContent:"center",alignItems:"center",borderRadius: 10}}>
-                     <DatePicker date={bday} onDateChange={date=>setBday(date)} mode="date" maximumDate={maxDate} minimumDate={minDate} />
+                     <DatePicker date={bday} onDateChange={(date)=>setBday(date)} mode="date" maximumDate={maxDate} minimumDate={minDate} />
                      <TouchableOpacity onPress={()=>{
                             changeBirthInfo("birthdate",bday)
                             setModalVisible(false)

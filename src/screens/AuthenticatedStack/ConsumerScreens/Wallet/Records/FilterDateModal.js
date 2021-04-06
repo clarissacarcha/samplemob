@@ -18,7 +18,7 @@ const FilterDateModal = ({showFilterDate,setShowFilterDate, filterDate , changeF
            onRequestClose={()=>setShowFilterDate(false)}
           >
 
-              <View style={{flex: 1 ,justifyContent: "center",alignItems: "center"}}> 
+              <View style={{flex: 1 ,justifyContent: "center",alignItems: "center" ,backgroundColor: "rgba(0,0,0,0.7)"}}> 
                   <View style={{width: "90%" , height: height * 0.8 , backgroundColor: "white",padding: 10,borderRadius: 20,  shadowColor: '#000',
                                 justifyContent: "center",
                                 alignItems: "center",

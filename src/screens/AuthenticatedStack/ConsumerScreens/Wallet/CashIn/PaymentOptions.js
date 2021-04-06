@@ -1,9 +1,9 @@
 import React from 'react'
-import {View,StyleSheet,Text,Image,FlatList,Alert} from 'react-native'
+import {View,StyleSheet,Text,Image,FlatList,Alert,ActivityIndicator} from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import FIcon from 'react-native-vector-icons/Feather'
 import {HeaderBackClose, HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../../components'
-import { FONT_LIGHT, FONT_MEDIUM } from '../../../../../res/constants'
+import { COLOR, FONT_LIGHT, FONT_MEDIUM } from '../../../../../res/constants'
 import {useQuery} from '@apollo/react-hooks'
 import {GET_CASH_IN_METHODS} from '../../../../../graphql'
 
@@ -20,12 +20,18 @@ const PaymentOptions = ({navigation,route})=> {
                 input: {
                     sourceAccountType: 9,
                     destinationAccountType: 1,
-                    transferType: "CI"
                 }
             },
     })
 
-    if(loading) return null
+    if (loading) {
+        return (
+          <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <ActivityIndicator size={24} color={COLOR} />
+          </View>
+        );
+    }
+
     if(error){
         console.log(error)
     }

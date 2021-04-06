@@ -5,7 +5,7 @@ import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM, FONT_MEDIUM, FONT_REGULAR} f
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import {useSelector} from 'react-redux'
 import {useMutation} from '@apollo/react-hooks'
-import {INITIALIZE_WALLET_CASHIN_PAYPANDA} from '../../../../../../graphql/model'
+import {POST_WALLET_CASH_IN} from '../../../../../../graphql/model'
 import {onError} from '../../../../../../util/ErrorUtility';
 import {numberFormat} from '../../../../../../helper'
 
@@ -22,6 +22,7 @@ const PayPandaComponent = ({navigation,route})=> {
     const balance = route.params.walletinfo.balance
     const transactionType = route.params.transactionType
     const userstate = useSelector(state=>state.session.user)
+    const globalsettings = useSelector(state=>state.constants)
     const [showModal,setShowModal] = useState(false)
     const [amount,setAmount] = useState("")
 
@@ -30,26 +31,27 @@ const PayPandaComponent = ({navigation,route})=> {
         setAmount(num.substring(0,1) == 0 ? num.slice(1) : num)
     }
 
-    const [initializeWalletCashinPayPanda , {data,error,loading}] = useMutation(INITIALIZE_WALLET_CASHIN_PAYPANDA, {
+    const [postWalletCashIn , {data,error,loading}] = useMutation(POST_WALLET_CASH_IN, {
         // fetchPolicy: 'network-only',
         onError: onError,
-        onCompleted: ({initializeWalletCashinPayPanda})=> {
+        onCompleted: ({postWalletCashIn})=> {
             navigation.navigate("TokTokWalletCashINPaypandaWebView", {
-                merchantId: initializeWalletCashinPayPanda.merchantId,
-                refNo: initializeWalletCashinPayPanda.refNo,
-                signature: initializeWalletCashinPayPanda.signature,
+                merchantId: postWalletCashIn.merchantId,
+                refNo: postWalletCashIn.refNo,
+                signature: postWalletCashIn.signature,
                 email_address: userstate.person.emailAddress,
                 payer_name: `${userstate.person.firstName}${userstate.person.middleName ? " " + userstate.person.middleName : ""} ${userstate.person.lastName}`,
                 mobile_number: userstate.username,
                 amount_to_pay: amount,
                 currency: "PHP",
-                walletId: walletId
+                walletId: walletId,
+                transactionTypeId: transactionType.id
             })
         }
     })
 
     const proceedToPaypandaPortal = ()=> {
-        initializeWalletCashinPayPanda({
+        postWalletCashIn({
             variables: {
                 input: {
                     amount: +amount,
@@ -123,7 +125,11 @@ const PayPandaComponent = ({navigation,route})=> {
     )
 
     const confirmAmount = ()=> {
-        amount === "" ? Alert.alert("Enter Amount") : setShowModal(true)
+        if(amount === "") return Alert.alert("Enter Amount");
+        if((+amount + +balance ) > +globalsettings.maxToktokWalletBalance){
+            return Alert.alert(`Maximum balance limit is. ${numberFormat(globalsettings.maxToktokWalletBalance)}`)
+        }
+        setShowModal(true)
     }
 
 

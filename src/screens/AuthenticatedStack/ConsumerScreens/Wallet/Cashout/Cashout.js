@@ -1,16 +1,27 @@
-import React from 'react'
-import {View,StyleSheet,Text,TouchableOpacity,Image} from 'react-native'
-import {HeaderBackClose, HeaderTitle} from '../../../../../components'
+import React , {useState, useEffect} from 'react'
+import {View,StyleSheet,Text,TouchableOpacity,Image,Dimensions} from 'react-native'
+import {HeaderBack, HeaderTitle} from '../../../../../components'
 import FIcon from 'react-native-vector-icons/Feather';
 import { FONT_MEDIUM, FONT_REGULAR } from '../../../../../res/constants';
 import { numberFormat } from '../../../../../helper';
 
+const {height,width} = Dimensions.get("window")
+
 const Cashout = ({navigation,route})=> {
 
     navigation.setOptions({
-        // headerLeft: ()=> <HeaderBackClose/>,
+        headerLeft: ()=> <HeaderBack />,
         headerTitle: ()=> <HeaderTitle label={['Cash out','']}/>,
     })
+
+    const [percentage,setPercentage] = useState(100)
+
+    useEffect(()=>{
+        setPercentage(()=>{
+            let rawPercentage = (( route.params.walletinfo.balance - route.params.walletinfo.balance ) / route.params.walletinfo.balance ) * 100
+            return 100 - rawPercentage
+        })
+    },[])
 
     const SettingOption = ({route,icon,title,iconSize})=> (
         <TouchableOpacity style={styles.settingoption} onPress={()=>navigation.navigate(route)}>
@@ -30,9 +41,29 @@ const Cashout = ({navigation,route})=> {
     return (
       <View style={styles.container}>
           <View style={styles.transferDetails}>
-                <Text style={{fontSize: 14,fontFamily: FONT_MEDIUM}}>Available Balance</Text>
+                <Text style={{fontSize: 14,fontFamily: FONT_MEDIUM}}>Transferable Balance</Text>
                 <Text style={{fontSize: 20,color:"#F6841F",marginVertical: 5,fontFamily: FONT_MEDIUM}}>{'\u20B1'} {numberFormat(route.params.walletinfo.balance)}</Text>
-                <Text style={{fontSize: 12,color:"gray",fontFamily: FONT_REGULAR}}>Total toktok encash available balance {'\u20B1'} {numberFormat(route.params.walletinfo.balance)}</Text>
+
+                <View style={{
+                    width: width * 0.7,
+                    height: 6,
+                    borderRadius: 6,
+                    backgroundColor:'#CFCFCF',
+                    marginVertical: 5,
+                    position:"relative"
+                }}>
+
+                    <View style={{
+                        position:"absolute",
+                        height:"100%",
+                        width:`${percentage}%`,
+                        borderRadius: 6,
+                        backgroundColor:"orange"
+                    }}/>
+
+                </View>
+
+                <Text style={{fontSize: 12,color:"gray",fontFamily: FONT_REGULAR}}>Total toktok wallet balance {'\u20B1'} {numberFormat(route.params.walletinfo.balance)}</Text>
           </View>
           <View style={styles.transferOptions}>
                 <SettingOption route="TokTokWalletGcashEncashment" iconSize={{height: 40, width: 40}} icon={require('../../../../../assets/icons/gcash.png')} title="Encash to Gcash"/>

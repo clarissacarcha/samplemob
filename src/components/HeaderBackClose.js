@@ -24,7 +24,7 @@ export const HeaderBackClose = ({onBack}) => {
   return (
     <TouchableHighlight onPress={onPress} underlayColor={'white'} style={styles.button}>
       <View style={styles.iconBox}>
-            <FIcon name={'x'} size={24} color={'gray'} />
+            <FIcon name={'x'} size={24} color={'#212529'} />
       </View>
     </TouchableHighlight>
   );

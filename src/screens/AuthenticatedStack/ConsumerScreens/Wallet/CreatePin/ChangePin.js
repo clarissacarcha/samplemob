@@ -4,7 +4,7 @@ import {HeaderBack, HeaderTitle} from '../../../../../components'
 import { COLOR, COLOR_UNDERLAY, DARK, FONT_MEDIUM, MEDIUM } from '../../../../../res/constants';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FIcon from 'react-native-vector-icons/Feather';
-import {CONFIRM_TOKTOK_WALLET_PIN} from '../../../../../graphql'
+import {GET_VERIFY_TOKTOK_WALLET_PIN} from '../../../../../graphql'
 import {useLazyQuery} from '@apollo/react-hooks'
 import {onError} from '../../../../../util/ErrorUtility'
 
@@ -64,12 +64,13 @@ const NumberBoxes = ({pinCode}) => {
 const ChangePin = ({navigation})=> {
 
     navigation.setOptions({
+        headerLeft: ()=> <HeaderBack />,
         headerTitle: ()=> <HeaderTitle  label={['Change PIN']}/>
     })
 
     const [pinCode,setPinCode] = useState("")
 
-    const [confirmToktokWalletPIN, {data,error,loading}] = useLazyQuery(CONFIRM_TOKTOK_WALLET_PIN,{
+    const [getVerifyToktokWalletPIN, {data,error,loading}] = useLazyQuery(GET_VERIFY_TOKTOK_WALLET_PIN,{
         fetchPolicy: 'network-only',
         onError: onError,
         onCompleted: (response)=> {
@@ -86,7 +87,7 @@ const ChangePin = ({navigation})=> {
     };
 
     const onConfirm = ()=> {
-        confirmToktokWalletPIN({
+        getVerifyToktokWalletPIN({
             variables: {
                 input: {
                     pincode: pinCode

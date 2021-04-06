@@ -1,12 +1,17 @@
 import React , {useRef , useState} from 'react'
 import { Modal , StyleSheet , Text , View , TouchableOpacity , } from 'react-native'
 import {RNCamera} from 'react-native-camera';
+import { HeaderBack , HeaderTitle } from '../../../../../components';
 
-const ModalCamera = ({showCamera , setShowCamera , setImage , showFrontCam})=> {
+const SelfieImageCamera = ({navigation,route})=> {
+
+    navigation.setOptions({
+        headerLeft: ()=> <HeaderBack/>,
+        headerTitle: ()=> <HeaderTitle label={["Take Selfie",""]}/>
+    })
 
     const cameraRef = useRef(null)
-    const [isBarcodeRead, setIsBarcodeRead] = useState(false)
-
+  
     const takePicture = async () => {
         try {
           if (cameraRef) {
@@ -17,8 +22,8 @@ const ModalCamera = ({showCamera , setShowCamera , setImage , showFrontCam})=> {
               fixOrientation: true,
             };
             const data = await cameraRef.current.takePictureAsync(options);
-            setImage(data)
-            setShowCamera(false)
+            route.params.setImage(data)
+            navigation.pop()
           }
         } catch (error) {
             console.log(error)
@@ -28,19 +33,12 @@ const ModalCamera = ({showCamera , setShowCamera , setImage , showFrontCam})=> {
 
 
     return (
-        <Modal
-        transparent={false}
-        visible={showCamera}
-        style={styles.camera}
-        onRequestClose={()=>{
-            setShowCamera(false)
-        }}
-    >
+        <View style={styles.camera}>
         <View style={styles.cameraContainer}>
         <RNCamera
             ref={cameraRef}
             style={styles.preview}
-            type={showFrontCam ? RNCamera.Constants.Type.front : RNCamera.Constants.Type.back}
+            type={RNCamera.Constants.Type.front}
             flashMode={RNCamera.Constants.FlashMode.off}
             captureAudio={false}
             androidCameraPermissionOptions={{
@@ -69,7 +67,7 @@ const ModalCamera = ({showCamera , setShowCamera , setImage , showFrontCam})=> {
 
         </View>
 
-    </Modal>
+    </View>
     )
 }
 
@@ -106,4 +104,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default ModalCamera
+export default SelfieImageCamera

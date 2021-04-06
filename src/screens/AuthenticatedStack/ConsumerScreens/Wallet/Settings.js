@@ -30,10 +30,13 @@ const Settings = ({navigation , route })=> {
 
     return (    
         <View style={styles.container}>
-            <SettingOption route={walletinfo.isPinSet ? "TokTokWalletSettingsChangePIN" : "TokTokWalletSettingsCreatePIN"} icon={require('../../../../assets/icons/walletPin.png')} title={walletinfo.isPinSet ? "Change PIN" : "Create a PIN"} subtitle="keep your account secure"/>
             <SettingOption route="TokTokWalletVerifyUser" icon={require('../../../../assets/icons/walletVerify.png')} title="Verify User" subtitle="Verify your toktok wallet"/>
-            <SettingOption route="TokTokWalletCashInLogs" icon={require('../../../../assets/icons/walletCashinLog.png')} title="Cash in logs" subtitle="View your cash in logs"/>
-            {/* <SettingOption route="TokTokWalletCashInLogs" icon={require('../../../../assets/icons/walletCashinLog.png')} title="Cash out logs" subtitle="View your cash out logs"/> */}
+            {
+                walletinfo.isVerified ? <>
+                    <SettingOption route={walletinfo.pincode != null ? "TokTokWalletSettingsChangePIN" : "TokTokWalletSettingsCreatePIN"} icon={require('../../../../assets/icons/walletPin.png')} title={walletinfo.pincode != null ? "Change PIN" : "Create a PIN"} subtitle="keep your account secure"/>
+                    <SettingOption route="TokTokWalletCashInLogs" icon={require('../../../../assets/icons/walletCashinLog.png')} title="Cash in logs" subtitle="View your cash in logs"/>
+                </> : null
+            }
         </View>
     )
 }

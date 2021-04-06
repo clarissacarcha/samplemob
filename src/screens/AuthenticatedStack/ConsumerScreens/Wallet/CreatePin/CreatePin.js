@@ -29,7 +29,7 @@ const NumberBoxes = ({pinCode, onNumPress, showPin}) => {
 const CreatePin = ({navigation})=> {
 
     navigation.setOptions({
-        // headerLeft: ()=> <HeaderBack/>,
+        headerLeft: ()=> <HeaderBack />,
         headerTitle: ()=> <HeaderTitle label={['Set up a PIN','']}/>,
     })
 
