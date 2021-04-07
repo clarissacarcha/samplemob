@@ -34,7 +34,8 @@ const NotVerifiedComponent = ()=> {
         return <SomethingWentWrong />;
     }
 
-    if(data.getToktokWallet.record.toktokWalletKYC.length == 0) {
+
+    if(!data.getToktokWallet.record.toktokWalletKYC) {
         return (
             <View style={styles.container}>
                 <Text style={{fontSize: 16,fontFamily: FONT_MEDIUM}}>Go cashless with <Text style={{color: COLOR}}>toktok</Text><Text style={{color: ORANGE}}> wallet!</Text></Text>
@@ -49,7 +50,7 @@ const NotVerifiedComponent = ()=> {
         )
     }
 
-    if(data.getToktokWallet.record.toktokWalletKYC[0].status == 0){
+    if(data.getToktokWallet.record.toktokWalletKYC.status == 0){
         return (
             <View style={styles.container}>
                     <Text style={{fontSize: 16,fontFamily: FONT_MEDIUM}}>Waiting for approval of <Text style={{color: COLOR}}>toktok</Text><Text style={{color: ORANGE}}> wallet!</Text></Text>
@@ -59,13 +60,13 @@ const NotVerifiedComponent = ()=> {
         )
     }
 
-    if(data.getToktokWallet.record.toktokWalletKYC[0].status == 2){
+    if(data.getToktokWallet.record.toktokWalletKYC.status == 2){
         return (
             <View style={styles.container}>
                   <Text style={{fontSize: 16,fontFamily: FONT_MEDIUM}}>Verification of your <Text style={{color: COLOR}}>toktok</Text><Text style={{color: ORANGE}}> wallet</Text> Failed!</Text>
                   <Text style={{fontSize: 14,marginTop: 5,fontFamily: FONT_REGULAR}}>Click verify now to try again</Text>
                   <View style={styles.proceedBtn}>
-                    <TouchableOpacity onPress={()=>navigation.navigate("TokTokWalletVerifyUserSetup")} style={{height: "100%",width: "100%",backgroundColor: "transparent", borderWidth: 1, borderColor: COLOR , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
+                    <TouchableOpacity onPress={()=>navigation.navigate("TokTokWalletVerifyUserSetup")} style={{height: "100%",width: "100%",backgroundColor: DARK, borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
                         <Text style={{color: COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Verify Now</Text>
                     </TouchableOpacity>
                 </View>

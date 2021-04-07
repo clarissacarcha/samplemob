@@ -3,6 +3,7 @@ import {Text,View,StyleSheet,Alert,Image,TextInput,TouchableOpacity} from 'react
 import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM,ORANGE, FONT_REGULAR, FONT_MEDIUM, FONT_LIGHT} from '../../../../../res/constants'
 import {onError} from '../../../../../util/ErrorUtility'
 import {VerifyContext} from './Context/VerifyContextProvider'
+import validator from 'validator';
 
 const VerifyFullname = ()=> {
 
@@ -32,7 +33,9 @@ const VerifyFullname = ()=> {
 
             <View style={styles.proceedBtn}>
                 <TouchableOpacity onPress={()=>{
-                    if(fullname == "") return Alert.alert("Please provide Fullname")
+                    if (validator.isEmpty(fullname, {ignore_whitespace: true})) {
+                        return Alert.alert("","Please provide Fullname")
+                     }
                     setCurrentIndex(oldval => oldval + 1)
                 }} style={{height: "100%",width: "100%",backgroundColor: DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
                     <Text style={{color: COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Next</Text>

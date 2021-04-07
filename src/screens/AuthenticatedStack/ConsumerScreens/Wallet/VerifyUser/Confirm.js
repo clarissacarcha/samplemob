@@ -33,12 +33,11 @@ const Confirm = ()=> {
     const [postToktokWalletKYC,{data,error,loading}] = useMutation(POST_TOKTOK_WALLET_KYC, {
         onError: onError,
         onCompleted: (response)=> {
-            navigation.pop()
-            navigation.replace("TokTokWalletVerifyUser")
+            // navigation.pop()
+            navigation.replace("TokTokWallet")
         }
     })
 
- 
 
     return (
         <>

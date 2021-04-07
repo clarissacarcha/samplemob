@@ -169,25 +169,25 @@ const ScantoPayWalletComponent = ({navigation,route})=> {
         <>
            {
                focusCamera &&  <QRCodeScanner
-               onRead={onSuccess}
-               flashMode={torch ? RNCamera.Constants.FlashMode.torch : RNCamera.Constants.FlashMode.off}
-               fadeIn={false}
-               showMarker={true}
-               markerStyle={{
-                   borderColor: "red"
-               }}
-               reactivate={true}
-               reactivateTimeout={2000}
-               vibrate={false}
-               customMarker={customMarker}
-               containerStyle={{
-                   backgroundColor: "rgba(0,0,0,0.5)"
-               }}
-               cameraStyle={{
-                   height: "100%",
-                   backgroundColor: "rgba(0,0,0,0.5)"
-               }}
-           />
+                                    onRead={onSuccess}
+                                    flashMode={torch ? RNCamera.Constants.FlashMode.torch : RNCamera.Constants.FlashMode.off}
+                                    fadeIn={false}
+                                    showMarker={true}
+                                    markerStyle={{
+                                        borderColor: "red"
+                                    }}
+                                    reactivate={true}
+                                    reactivateTimeout={3000}
+                                    vibrate={false}
+                                    customMarker={customMarker}
+                                    containerStyle={{
+                                        backgroundColor: "rgba(0,0,0,0.5)"
+                                    }}
+                                    cameraStyle={{
+                                        height: "100%",
+                                        backgroundColor: "rgba(0,0,0,0.5)"
+                                    }}
+                                />
            }
             <View style={{
                 height:65,

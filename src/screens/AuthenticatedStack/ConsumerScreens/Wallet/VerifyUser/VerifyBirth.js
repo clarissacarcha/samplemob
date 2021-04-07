@@ -103,7 +103,7 @@ const VerifyBirth = ()=> {
                     </TouchableOpacity>
 
                     <TouchableOpacity onPress={()=>{
-                        if(birthInfo.birthdate == "") return Alert.alert("Please provide your Birthdate")
+                        if(birthInfo.birthdate == "") return Alert.alert("","Please provide your Birthdate")
                         setCurrentIndex(oldval => oldval + 1)
                     }} style={{height: "100%",flex: 1,marginLeft: 5,backgroundColor: DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
                         <Text style={{color: COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Next</Text>

@@ -60,7 +60,7 @@ import WalletActionsSendConfirm from '../screens/AuthenticatedStack/ConsumerScre
 import WalletActionsScantoPay from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Actions/ScantoPay/ScantoPayWalletComponent'
 import WalletActionsScantoPayConfirmPayment from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Actions/ScantoPay/ConfirmPayment'
 import WalletCashout from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Cashout/Cashout'
-import WalletGcashEncashment from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Cashout/GcashEncashment'
+import WalletGcashEncashment from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Cashout/Gcash/GcashEncashment'
 
 
 /*---------- DRIVER SCREENS ----------*/

@@ -8,6 +8,7 @@ import {VerifyContext} from './Context/VerifyContextProvider'
 import ModalCountry from './ModalCountry'
 import ValidIDModal from './ValidIDModal'
 import {useNavigation} from '@react-navigation/native'
+import validator from 'validator'
 
 const {height,width} = Dimensions.get("window")
 
@@ -122,9 +123,11 @@ const VerifyID = ()=> {
 
                     <TouchableOpacity onPress={()=>{
                         // if(nationality == "") return Alert.alert("Please provide Nationality")
-                        if(verifyID.idType == "") return Alert.alert("ID type is required")
-                        if(verifyID.idNumber == "") return Alert.alert("ID number is required")
-                        if(verifyID.idImage == null) return Alert.alert("Please take a picture of your valid ID")
+                        if(verifyID.idType == "") return Alert.alert("","ID type is required")
+                        if (validator.isEmpty(verifyID.idNumber, {ignore_whitespace: true})) {
+                            return Alert.alert("","ID number is required")
+                         }
+                        if(verifyID.idImage == null) return Alert.alert("","Please take a picture of your valid ID")
                         setCurrentIndex(oldval => oldval + 1)
                     }} style={{height: "100%",flex: 1,marginLeft: 5,backgroundColor: DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
                         <Text style={{color: COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Next</Text>

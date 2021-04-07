@@ -4,6 +4,7 @@ import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM,ORANGE, FONT_MEDIUM, FONT_LIG
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import {VerifyContext} from './Context/VerifyContextProvider'
 import ModalCountry from './ModalCountry'
+import validator from 'validator'
 
 const VerifyAddress = ()=> {
 
@@ -93,16 +94,14 @@ const VerifyAddress = ()=> {
                                 </TouchableOpacity>
 
                                 <TouchableOpacity onPress={()=>{
-                                    let showAlert = false
+
                                     for(const [key,value] of Object.entries(address)){
-                                        if(value === ""){
-                                            showAlert = true
-                                            break
-                                        }
+
+                                        if (validator.isEmpty(value, {ignore_whitespace: true})) {
+                                            return Alert.alert("",`Please Provide ${key.toLowerCase()}`)
+                                         }
                                     }
 
-                                    if(showAlert) return Alert.alert("Please fill up all required fields")
-     
                                     setCurrentIndex(oldval => oldval + 1)
                                 }} style={{height: "100%",flex: 1,marginLeft: 5,backgroundColor: DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
                                     <Text style={{color: COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Next</Text>

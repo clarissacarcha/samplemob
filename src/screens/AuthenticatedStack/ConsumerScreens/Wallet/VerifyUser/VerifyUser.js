@@ -67,37 +67,37 @@ const VerifyUser = ({navigation,route})=> {
         return <SomethingWentWrong />;
     }
 
-    if(data.getToktokWallet.record.toktokWalletKYC.length == 0) {
+    if(!data.getToktokWallet.record.toktokWalletKYC) {
         return (
             <MainComponent route="TokTokWalletVerifyUserSetup">
-                <Text style={{fontSize: 20,fontFamily: FONT_MEDIUM}}>Go cashless with <Text style={{color: COLOR}}>toktok</Text><Text style={{color: ORANGE}}> wallet!</Text></Text>
+                <Text style={{fontSize: 16,fontFamily: FONT_MEDIUM}}>Go cashless with <Text style={{color: COLOR}}>toktok</Text><Text style={{color: ORANGE}}> wallet!</Text></Text>
                 <Text style={{fontSize: 14,marginTop: 5,fontFamily: FONT_REGULAR}}>Enjoy a secure and convenient payment experience</Text>
             </MainComponent>
         )
     }
 
-    if(data.getToktokWallet.record.toktokWalletKYC[0].status == 0){
+    if(data.getToktokWallet.record.toktokWalletKYC.status == 0){
         return (
             <MainComponent>
-                <Text style={{fontSize: 20,fontFamily: FONT_MEDIUM}}>Waiting for approval of <Text style={{color: COLOR}}>toktok</Text><Text style={{color: ORANGE}}> wallet!</Text></Text>
+                <Text style={{fontSize: 16,fontFamily: FONT_MEDIUM}}>Waiting for approval of <Text style={{color: COLOR}}>toktok</Text><Text style={{color: ORANGE}}> wallet!</Text></Text>
                 <Text style={{fontSize: 14,marginTop: 5,fontFamily: FONT_REGULAR}}>toktok wallet verification is on pending</Text>
             </MainComponent>
         )
     }
 
-    if(data.getToktokWallet.record.toktokWalletKYC[0].status == 1){
+    if(data.getToktokWallet.record.toktokWalletKYC.status == 1){
         return (
             <MainComponent>
-                <Text style={{fontSize: 20,fontFamily: FONT_MEDIUM}}>Your <Text style={{color: COLOR}}>toktok</Text><Text style={{color: ORANGE}}> wallet</Text> is now verified!</Text>
+                <Text style={{fontSize: 16,fontFamily: FONT_MEDIUM}}>Your <Text style={{color: COLOR}}>toktok</Text><Text style={{color: ORANGE}}> wallet</Text> is now verified!</Text>
                 <Text style={{fontSize: 14,marginTop: 5,fontFamily: FONT_REGULAR}}>toktok wallet verification is approved</Text>
             </MainComponent>
         )
     }
 
-    if(data.getToktokWallet.record.toktokWalletKYC[0].status == 2) {
+    if(data.getToktokWallet.record.toktokWalletKYC.status == 2) {
         return (
             <MainComponent route="TokTokWalletVerifyUserSetup">
-                <Text style={{fontSize: 20,fontFamily: FONT_MEDIUM}}>Verification of your <Text style={{color: COLOR}}>toktok</Text><Text style={{color: ORANGE}}> wallet!</Text> Failed!</Text>
+                <Text style={{fontSize: 16,fontFamily: FONT_MEDIUM}}>Verification of your <Text style={{color: COLOR}}>toktok</Text><Text style={{color: ORANGE}}> wallet!</Text> Failed!</Text>
                 <Text style={{fontSize: 14,marginTop: 5,fontFamily: FONT_REGULAR}}>Click verify now to try again</Text>
             </MainComponent>
         )

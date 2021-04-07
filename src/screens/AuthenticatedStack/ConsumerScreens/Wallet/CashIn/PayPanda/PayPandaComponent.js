@@ -11,6 +11,64 @@ import {numberFormat} from '../../../../../../helper'
 
 const {height,width} = Dimensions.get("window")
 
+const ConfirmModal = ({showModal,setShowModal,amount,onPress})=> (
+    <Modal
+        animationType="fade"
+        visible={showModal}
+        transparent={true}
+        onRequestClose={() => {
+            setShowModal(!showModal);
+        }}
+    >
+          <View style={{flex: 1, backgroundColor: "rgba(0,0,0,0.7)"}}>
+
+          </View>
+          <View style={styles.modalContent}>
+             <View style={styles.modalbody}>
+                <View style={styles.modalHeader}>
+                    <TouchableOpacity onPress={()=>setShowModal(!showModal)} style={{position: "absolute",left: 0}}>
+                        <FIcon5 name="times" size={20}/>
+                    </TouchableOpacity>   
+                    <Text style={{fontSize: 14,fontFamily: FONT_MEDIUM}}>Review and confirm</Text>
+                </View>
+                <View style={styles.modalconfirmdetails}>
+                    <View style={{flexDirection: "row",paddingVertical: 12,borderBottomWidth: 0.5,borderColor: "silver",width: "100%"}}>
+                        <View style={{flex: 1}}>    
+                            <Text style={{color: "gray",fontSize: 12,fontFamily: FONT_REGULAR}}>Payment Method</Text>
+                        </View>
+                        <View style={{flex: 1}}>   
+                             <Text style={{color: "gray",fontSize: 12,alignSelf: "flex-end",fontFamily: FONT_REGULAR}}>PayPanda</Text>
+                        </View>  
+                    </View>
+                    <View style={{flexDirection: "row",paddingVertical: 12,borderBottomWidth: 0.5,borderColor: "silver"}}>
+                        <View style={{flex: 1}}>    
+                            <Text style={{color: "gray",fontSize: 12,fontFamily: FONT_REGULAR}}>Cash-in amount</Text>
+                        </View>
+                        <View style={{flex: 1}}>   
+                             <Text style={{color: "gray",fontSize: 12,alignSelf: "flex-end",fontFamily: FONT_REGULAR}}>{'\u20B1'} {numberFormat(amount)}</Text>
+                        </View>  
+                    </View>
+                    <View style={{flexDirection: "row",paddingVertical: 12,}}>
+                        <View style={{flex: 1}}>    
+                            <Text style={{fontFamily: FONT_MEDIUM}}>Total</Text>
+                        </View>
+                        <View style={{flex: 1}}>   
+                            <Text style={{fontFamily: FONT_MEDIUM,alignSelf: "flex-end"}}>{'\u20B1'} {numberFormat(amount)}</Text>
+                        </View>  
+                    </View>
+
+                </View>
+                <View style={styles.modalconfirmbtn}>
+                    <TouchableOpacity onPress={onPress} style={{height: "100%",width: "100%",backgroundColor: DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
+                        <Text style={{color: COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Confirm</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+          </View>
+        
+    </Modal>
+)
+
 const PayPandaComponent = ({navigation,route})=> {
     navigation.setOptions({
         headerLeft: ()=> <HeaderBackClose/>,
@@ -66,63 +124,6 @@ const PayPandaComponent = ({navigation,route})=> {
        
     }
 
-    const ConfirmModal = ()=> (
-        <Modal
-            animationType="fade"
-            visible={showModal}
-            transparent={true}
-            onRequestClose={() => {
-                setShowModal(!showModal);
-            }}
-        >
-              <View style={{flex: 1, backgroundColor: "rgba(0,0,0,0.7)"}}>
-
-              </View>
-              <View style={styles.modalContent}>
-                 <View style={styles.modalbody}>
-                    <View style={styles.modalHeader}>
-                        <TouchableOpacity onPress={()=>setShowModal(!showModal)} style={{position: "absolute",left: 0}}>
-                            <FIcon5 name="times" size={20}/>
-                        </TouchableOpacity>   
-                        <Text style={{fontSize: 14,fontFamily: FONT_MEDIUM}}>Review and confirm</Text>
-                    </View>
-                    <View style={styles.modalconfirmdetails}>
-                        <View style={{flexDirection: "row",paddingVertical: 12,borderBottomWidth: 0.5,borderColor: "silver",width: "100%"}}>
-                            <View style={{flex: 1}}>    
-                                <Text style={{color: "gray",fontSize: 12,fontFamily: FONT_REGULAR}}>Payment Method</Text>
-                            </View>
-                            <View style={{flex: 1}}>   
-                                 <Text style={{color: "gray",fontSize: 12,alignSelf: "flex-end",fontFamily: FONT_REGULAR}}>PayPanda</Text>
-                            </View>  
-                        </View>
-                        <View style={{flexDirection: "row",paddingVertical: 12,borderBottomWidth: 0.5,borderColor: "silver"}}>
-                            <View style={{flex: 1}}>    
-                                <Text style={{color: "gray",fontSize: 12,fontFamily: FONT_REGULAR}}>Cash-in amount</Text>
-                            </View>
-                            <View style={{flex: 1}}>   
-                                 <Text style={{color: "gray",fontSize: 12,alignSelf: "flex-end",fontFamily: FONT_REGULAR}}>{'\u20B1'} {numberFormat(amount)}</Text>
-                            </View>  
-                        </View>
-                        <View style={{flexDirection: "row",paddingVertical: 12,}}>
-                            <View style={{flex: 1}}>    
-                                <Text style={{fontFamily: FONT_MEDIUM}}>Total</Text>
-                            </View>
-                            <View style={{flex: 1}}>   
-                                <Text style={{fontFamily: FONT_MEDIUM,alignSelf: "flex-end"}}>{'\u20B1'} {numberFormat(amount)}</Text>
-                            </View>  
-                        </View>
-
-                    </View>
-                    <View style={styles.modalconfirmbtn}>
-                        <TouchableOpacity onPress={()=>proceedToPaypandaPortal()} style={{height: "100%",width: "100%",backgroundColor: DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
-                            <Text style={{color: COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Confirm</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-              </View>
-            
-        </Modal>
-    )
 
     const confirmAmount = ()=> {
         if(amount === "") return Alert.alert("Enter Amount");
@@ -135,7 +136,7 @@ const PayPandaComponent = ({navigation,route})=> {
 
     return (
       <>
-       <ConfirmModal/>
+       <ConfirmModal showModal={showModal} setShowModal={setShowModal} amount={amount} onPress={proceedToPaypandaPortal}/>
        <View style={styles.container}>
             <View style={styles.paypandaLogo}>
                 <Image style={{height: 40,width: 40,alignSelf: "center"}} source={require('../../../../../../assets/images/paypanda.png')}/>

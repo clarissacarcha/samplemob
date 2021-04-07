@@ -23,8 +23,8 @@ const Cashout = ({navigation,route})=> {
         })
     },[])
 
-    const SettingOption = ({route,icon,title,iconSize})=> (
-        <TouchableOpacity style={styles.settingoption} onPress={()=>navigation.navigate(route)}>
+    const SettingOption = ({route,icon,title,iconSize , params={}})=> (
+        <TouchableOpacity style={styles.settingoption} onPress={()=>navigation.navigate(route, params)}>
                     <View style={styles.logo}>
                          <Image source={icon} style={{height: iconSize.height, width: iconSize.width}} resizeMode="contain"/>
                     </View>
@@ -66,7 +66,7 @@ const Cashout = ({navigation,route})=> {
                 <Text style={{fontSize: 12,color:"gray",fontFamily: FONT_REGULAR}}>Total toktok wallet balance {'\u20B1'} {numberFormat(route.params.walletinfo.balance)}</Text>
           </View>
           <View style={styles.transferOptions}>
-                <SettingOption route="TokTokWalletGcashEncashment" iconSize={{height: 40, width: 40}} icon={require('../../../../../assets/icons/gcash.png')} title="Encash to Gcash"/>
+                <SettingOption route="TokTokWalletGcashEncashment" params={{walletinfo: route.params.walletinfo}} iconSize={{height: 40, width: 40}} icon={require('../../../../../assets/icons/gcash.png')} title="Encash to Gcash"/>
                 {/* <SettingOption route="TokTokWalletActionsSend" icon={require('../../../../../assets/icons/walletPin.png')} title="Send to Contacts"/>
                 <SettingOption route="TokTokWalletActionsTransferEwallet" icon={require('../../../../../assets/icons/walletSendEwallet.png')} title="Send to E-wallet"/>
                 <SettingOption route="TokTokWalletSettingsCreatePIN" icon={require('../../../../../assets/icons/walletSendBank.png')} title="Send to Bank Account"/> */}

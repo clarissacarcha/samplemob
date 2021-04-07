@@ -28,7 +28,7 @@ const WalletLog = ({transactionDate , transactionItems ,index , itemsLength }) =
             {
                 transactionItems.map((item)=>{
 
-                    let icon , title , phrase , amountcolor = "black", amountprefix , sender , recipient
+                    let icon , title , phrase , amountcolor = "black", amountprefix , sender = "" , recipient = ""
                     title = item.logType.label
                     amountcolor = item.sourceUserId == session.user.id ? "red" : "green"
                     amountprefix = item.sourceUserId == session.user.id ? "-" : "+"
