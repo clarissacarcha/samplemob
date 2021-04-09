@@ -23,17 +23,41 @@ const GcashEnchashment = ({navigation,route})=> {
     const [amount,setAmount] = useState(walletinfo.balance.toString())
     const [showModal,setShowModal] = useState(false)
     const [data,setData] = useState({getGCashAccount: {record: null}})
+    const [errorMessage,setErrorMessage] = useState("")
 
     const changeAmount = (value)=>{
-        let num = value.replace(/[^0-9]/g, '')
-        setAmount(num.substring(0,1) == 0 ? num.slice(1) : num)
+        let num = value.replace(/[^0-9.]/g, '')
+        let finalnum = num.substring(0,1) == 0 ? num.slice(1) : num
+
+
+        // used if decimals are allowed
+        let numberRegexPattern = /^[0-9]*(\.{1}\d{1,2})?$/g
+        let checkPattern = finalnum.match(numberRegexPattern)
+        if(!checkPattern){
+            if(finalnum.slice(-2) == ".." || finalnum.slice(-1) != "."){
+                finalnum = finalnum.slice(0, -1)
+            }
+            let doubleDecimalpoint = finalnum.match(/[.]/g)
+            if(doubleDecimalpoint.length == 2){
+                let amountaRRay = finalnum.split(".")
+                finalnum = amountaRRay[1].length > 2 ? `${amountaRRay[0]}.${amountaRRay[1].slice(0,2)}` : `${amountaRRay[0]}.${amountaRRay[1]}`
+            }
+        }
+        
+        setAmount(finalnum)
+        if(finalnum > 0 && finalnum <= walletinfo.balance){
+            setErrorMessage("")
+        }else{
+            setErrorMessage(finalnum == "" ? "" : "You do not have enough balance")
+        }
     }
 
     const confirmAmount = ()=> {
+        if(amount.slice(-1) == ".") setAmount(amount.slice(0,-1))
         if(amount === "") return Alert.alert("Enter Amount");
         if(amount > +walletinfo.balance){
             setAmount(walletinfo.balance.toString())
-            return Alert.alert("Amount should not be greater than wallet balance")
+            return Alert.alert("","Amount should not be greater than wallet balance")
         }
         setShowModal(true)
     }
@@ -127,7 +151,11 @@ const GcashEnchashment = ({navigation,route})=> {
     return (
         <>
         <ConfirmModal showModal={showModal} setShowModal={setShowModal} amount={amount} walletinfo={walletinfo} session={session} navigation={navigation}/>
-        <View style={styles.container}>
+        <KeyboardAvoidingView  
+            keyboardVerticalOffset={Platform.OS == "ios" ? 0 : 90}  
+            behavior={Platform.OS === "ios" ? "padding" : "height"}  
+            style={styles.container}
+        >
             <View style={styles.gcashAccountInfo}>
                 <Image style={{height: 50,width: 50,alignSelf: "center"}} source={require('../../../../../../assets/icons/gcash.png')}/>
                 <View style={styles.details}>
@@ -137,28 +165,34 @@ const GcashEnchashment = ({navigation,route})=> {
                 </View>
             </View>
 
-            <KeyboardAvoidingView  behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.amountcontent}>
-                        
+            <View style={styles.amountcontent}>
+                         {
+                             errorMessage != "" && <Text style={{fontFamily: FONT_REGULAR , color: "red",fontSize: 12,marginBottom: 5}}>{errorMessage}</Text>
+                         }
                         <View style={{flexDirection: "row"}}>
-                            <Text style={{fontSize: 50,fontFamily: FONT_MEDIUM}}>{'\u20B1'}</Text>
+                            <Text style={{fontSize: 40,fontFamily: FONT_MEDIUM , alignSelf:"center"}}>{'\u20B1'}</Text>
                             <TextInput 
                                     value={amount}
                                     onChangeText={value=>changeAmount(value)}
                                     keyboardType="numeric"
                                     style={styles.input}
                                     placeholder="0.00"
-                                    onSubmitEditing={confirmAmount}
+                                    // onSubmitEditing={confirmAmount}
                                 />
                         </View>
                         <Text style={{color:"gray",fontSize: 14,fontFamily: FONT_REGULAR}}>Current Balance {'\u20B1'} {numberFormat(walletinfo.balance)}</Text>
-            </KeyboardAvoidingView>
+            </View>
 
             <View style={styles.cashinbutton}>
-                    <TouchableOpacity onPress={confirmAmount} style={{height: "100%",width: "100%",backgroundColor: DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
-                        <Text style={{color: COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Encash</Text>
+                    <TouchableOpacity 
+                        disabled={(amount != "" && amount <= walletinfo.balance ) ? false : true}
+                        onPress={confirmAmount} 
+                        style={{height: "100%",width: "100%",backgroundColor: (amount != "" && amount <= walletinfo.balance ) ? DARK : "gray", borderRadius: 10, justifyContent: "center",alignItems: "center"}}
+                    >
+                        <Text style={{color: (amount != "" && amount <= walletinfo.balance ) ? COLOR : "white",fontSize: 12,fontFamily: FONT_MEDIUM}}>Encash</Text>
                     </TouchableOpacity>
             </View>
-        </View> 
+        </KeyboardAvoidingView> 
         </>
     )
 }

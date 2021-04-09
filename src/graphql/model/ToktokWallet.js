@@ -82,8 +82,6 @@ export const GET_QR_CODE = gql`
       name
       image
       contactNo
-      isLogTypeDestinationUserIdNull
-      isAccountInternal
     }
   }
 `

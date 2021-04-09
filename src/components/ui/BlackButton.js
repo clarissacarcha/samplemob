@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, StyleSheet, Text, TouchableHighlight} from 'react-native';
-import {COLOR, DARK} from '../../res/constants';
+import {COLOR, DARK, FONT_REGULAR} from '../../res/constants';
 
 export const BlackButton = ({label, onPress, containerStyle = {}}) => {
   return (
@@ -25,6 +25,7 @@ const styles = StyleSheet.create({
   },
   label: {
     color: COLOR,
-    fontSize: 20,
+    fontSize: 14,
+    fontFamily: FONT_REGULAR
   },
 });

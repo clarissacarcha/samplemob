@@ -18,7 +18,7 @@ const TransferEwallet = ({navigation})=> {
                 <Text style={{fontSize: 12,fontFamily: FONT_REGULAR,color: "#909294"}}>Transferable balance: PHP 2000.00</Text>
                 <TextInput 
                         style={styles.input}
-                        placeholder="0.00"
+                        placeholder="0"
                 />
            </View>
            <View style={styles.EwalletList}>

@@ -159,7 +159,10 @@ const WalletComponent = ()=> {
                 }
             >
                 <WalletCardInfo />
-            
+                <WalletMethods />
+                <WalletRecentTransactions session={session} seeAll={OpenCloseTransactionsModal} walletId={data.getToktokWallet.record.id}/>
+                <TransactionsModal session={session} modalVisible={modalVisible} closeModal={OpenCloseTransactionsModal}/>
+{/*     
                 {
                     data.getToktokWallet.record.isVerified
                     ?  
@@ -169,7 +172,7 @@ const WalletComponent = ()=> {
                         <TransactionsModal session={session} modalVisible={modalVisible} closeModal={OpenCloseTransactionsModal}/>
                     </>
                     : <NotVerifiedComponent />
-                }
+                } */}
                
             </ScrollView>
         </View>
@@ -183,7 +186,8 @@ const styles = StyleSheet.create({
         backgroundColor: "white"
     },
     walletCard: {
-        height: 194,
+        height: 150,
+        // height: 194,
         width: "100%",
         backgroundColor: "#FCB91A",
         borderRadius: 10,

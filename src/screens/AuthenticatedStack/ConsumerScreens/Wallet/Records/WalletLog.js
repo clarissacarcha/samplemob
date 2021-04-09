@@ -60,6 +60,9 @@ const WalletLog = ({transactionDate , transactionItems ,index , itemsLength }) =
                         case "CI":
                             icon = require('../../../../../assets/icons/walletLogCashin.png') // Cash in
                             break
+                        case "CO":
+                            icon = require('../../../../../assets/icons/walletLogTransfer.png') // Cash in
+                            break
                         default:
                             icon = require('../../../../../assets/icons/walletDelivery.png') // Delivery
                             break

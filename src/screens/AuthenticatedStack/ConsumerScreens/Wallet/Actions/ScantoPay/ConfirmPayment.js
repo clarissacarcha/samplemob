@@ -9,7 +9,6 @@ import {useQuery,useMutation} from '@apollo/react-hooks'
 import {useSelector} from 'react-redux'
 import { onError } from '../../../../../../util/ErrorUtility';
 import SuccessfulModal from '../Send/SuccessfulModal'
-import PincodeModal from '../../Notification/PincodeModal'
 
 const ConfirmPayment = ({navigation,route})=> {
 
@@ -23,21 +22,14 @@ const ConfirmPayment = ({navigation,route})=> {
     const [swipeEnabled,setSwipeEnabled] = useState(false)
     const [successModalVisible, setSuccessModalVisible] = useState(false)
     const [showpinModal,setShowPinModal] = useState(false)
+    const [errorMessage,setErrorMessage] = useState("")
 
     const [patchFundTransfer] = useMutation(PATCH_FUND_TRANSFER, {
         variables: {
             input: {
                 amount: +amount,
-                // sourceUserId: session.user.id,
-                // destinationUserId: recipientInfo.id,
-                sourceUser: {
-                    id: session.user.id,
-                },
-                destinationUser: {
-                    id: recipientInfo.id,
-                    isLogTypeDestinationUserIdNull: recipientInfo.isLogTypeDestinationUserIdNull,
-                    isAccountInternal: recipientInfo.isAccountInternal,
-                }
+                sourceUserId: session.user.id,
+                destinationUserId: recipientInfo.id,
             }
         },
         onError: (error)=> {
@@ -50,8 +42,9 @@ const ConfirmPayment = ({navigation,route})=> {
     })
 
     const onSwipeSuccess = ()=> {
+        if(amount.slice(-1) == ".") setAmount(amount.slice(0,-1))
         if(walletinfo.pincode != null){
-            setShowPinModal(true)
+            navigation.push("TokTokWalletPinCodeSecurity", {onConfirm: ()=> patchFundTransfer()})
         }else{
             patchFundTransfer()
         }
@@ -64,8 +57,29 @@ const ConfirmPayment = ({navigation,route})=> {
     const changeAmount = (value)=>{
         let num = value.replace(/[^0-9.]/g, '')
         let finalnum = num.substring(0,1) == 0 ? num.slice(1) : num
+
+        // used if decimals are allowed
+        let numberRegexPattern = /^[0-9]*(\.{1}\d{1,2})?$/g
+        let checkPattern = finalnum.match(numberRegexPattern)
+        if(!checkPattern){
+            if(finalnum.slice(-2) == ".." || finalnum.slice(-1) != "."){
+                finalnum = finalnum.slice(0, -1)
+            }
+            let doubleDecimalpoint = finalnum.match(/[.]/g)
+            if(doubleDecimalpoint.length == 2){
+                let amountaRRay = finalnum.split(".")
+                finalnum = amountaRRay[1].length > 2 ? `${amountaRRay[0]}.${amountaRRay[1].slice(0,2)}` : `${amountaRRay[0]}.${amountaRRay[1]}`
+            }
+        }
+
         setAmount(finalnum)
-        finalnum > 0 && finalnum <= walletinfo.balance ? setSwipeEnabled(true) : setSwipeEnabled(false)
+        if(finalnum > 0 && finalnum <= walletinfo.balance){
+            setSwipeEnabled(true)
+            setErrorMessage("")
+        }else{
+            setSwipeEnabled(false)
+            setErrorMessage(finalnum == "" ? "" : "You do not have enough balance")
+        }
     }
 
 
@@ -84,7 +98,6 @@ const ConfirmPayment = ({navigation,route})=> {
                 amount={amount} 
                 recipient={`${recipientInfo.name}`}
         />
-         <PincodeModal showpinModal={showpinModal} setShowPinModal={setShowPinModal} onConfirm={patchFundTransfer}/>
         <View style={styles.container}>
             <View style={styles.content}>
                     <Text style={{marginLeft: 20, marginTop: 20, fontFamily: FONT_MEDIUM ,fontSize: 16}}>Send to</Text>
@@ -108,13 +121,17 @@ const ConfirmPayment = ({navigation,route})=> {
                                         style={{fontSize: 12,fontFamily: FONT_REGULAR,padding: 0,marginLeft: 5,alignSelf: "center",flex: 1}}
                                 />
                         </View>
+                         {
+                             errorMessage != "" && <Text style={{fontFamily: FONT_REGULAR , color: "red",fontSize: 12,marginTop: 5}}>{errorMessage}</Text>
+                         }
                     </View>
             </View>
             <SwipeButton 
                     disabled={!swipeEnabled}
+                    disabledRailBackgroundColor="dimgray"
                     containerStyles={styles.swipeContainer}
                     width={250}
-                    title={`Swipe to Pay ${'\u20B1'} ${amount != "" ? numberFormat(amount) : "0.00"}`}
+                    title={`Swipe to Pay ${'\u20B1'} ${amount != "" ? numberFormat(amount) : "0"}`}
                     titleStyles={{
                         fontSize: 12,
                         fontFamily: FONT_MEDIUM,

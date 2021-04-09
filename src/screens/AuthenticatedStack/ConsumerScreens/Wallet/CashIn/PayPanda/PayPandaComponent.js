@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,Image,Modal,TextInput,Platform,KeyboardAvoidingView,ActivityIndicator,Alert,Dimensions} from 'react-native'
+import {View,Text,StyleSheet,TouchableOpacity,Image,Modal,TextInput,Platform,KeyboardAvoidingView,ActivityIndicator,Alert,Dimensions,ScrollView} from 'react-native'
 import {HeaderBackClose, HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../../../components'
 import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM, FONT_MEDIUM, FONT_REGULAR} from '../../../../../../res/constants'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
@@ -126,9 +126,9 @@ const PayPandaComponent = ({navigation,route})=> {
 
 
     const confirmAmount = ()=> {
-        if(amount === "") return Alert.alert("Enter Amount");
+        if(amount === "") return Alert.alert("","Enter Amount");
         if((+amount + +balance ) > +globalsettings.maxToktokWalletBalance){
-            return Alert.alert(`Maximum balance limit is. ${numberFormat(globalsettings.maxToktokWalletBalance)}`)
+            return Alert.alert("",`Maximum balance limit is. ${numberFormat(globalsettings.maxToktokWalletBalance)}`)
         }
         setShowModal(true)
     }
@@ -137,38 +137,43 @@ const PayPandaComponent = ({navigation,route})=> {
     return (
       <>
        <ConfirmModal showModal={showModal} setShowModal={setShowModal} amount={amount} onPress={proceedToPaypandaPortal}/>
-       <View style={styles.container}>
+       <KeyboardAvoidingView  
+            keyboardVerticalOffset={Platform.OS == "ios" ? 0 : 90}  
+            behavior={Platform.OS === "ios" ? "padding" : "height"} 
+            style={styles.container}
+        >
             <View style={styles.paypandaLogo}>
                 <Image style={{height: 40,width: 40,alignSelf: "center"}} source={require('../../../../../../assets/images/paypanda.png')}/>
                 <Text style={{alignSelf: "center",marginLeft: 15,fontSize: 14,fontFamily: FONT_MEDIUM}}>PayPanda</Text>
             </View>
+          
             {
                 !loading
-                ? <KeyboardAvoidingView  behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.amountcontent}>
-                        
+                ? <View style={styles.amountcontent}>
                         <View style={{flexDirection: "row"}}>
-                            <Text style={{fontSize: 50,fontFamily: FONT_MEDIUM}}>{'\u20B1'}</Text>
+                            <Text style={{fontSize: 40,fontFamily: FONT_MEDIUM , alignSelf:"center"}}>{'\u20B1'}</Text>
                             <TextInput 
                                     value={amount}
                                     onChangeText={value=>changeAmount(value)}
                                     keyboardType="numeric"
                                     style={styles.input}
-                                    placeholder="0.00"
+                                    placeholder="0"
                                     onSubmitEditing={confirmAmount}
                                 />
                         </View>
                         <Text style={{color:"gray",fontSize: 14,fontFamily: FONT_REGULAR}}>Current Balance {'\u20B1'} {numberFormat(balance)}</Text>
-                 </KeyboardAvoidingView>
+              
+                 </View>
                 : <View style={{flex: 1,justifyContent: "center",alignItems: "center"}}><ActivityIndicator size={50}/></View>
                 
             }
-
+          
             <View style={styles.cashinbutton}>
                     <TouchableOpacity onPress={confirmAmount} style={{height: "100%",width: "100%",backgroundColor: DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
                         <Text style={{color: COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Cash In</Text>
                     </TouchableOpacity>
             </View>
-       </View>
+       </KeyboardAvoidingView>
        </>
     )
 }

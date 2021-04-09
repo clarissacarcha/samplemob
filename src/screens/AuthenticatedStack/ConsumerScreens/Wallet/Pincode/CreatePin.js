@@ -1,7 +1,8 @@
 import React, { useState ,useRef , useEffect } from 'react'
-import {View,Text,StyleSheet,TouchableHighlight,TouchableOpacity,TextInput} from 'react-native'
+import {View,Text,StyleSheet,TouchableHighlight,TouchableOpacity,TextInput,KeyboardAvoidingView,Platform,ScrollView} from 'react-native'
 import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM,ORANGE, FONT_MEDIUM} from '../../../../../res/constants'
 import {HeaderBack, HeaderTitle} from '../../../../../components'
+import Pincode from '.';
 
 const NumberBox = ({onPress, value , showPin}) => (
     <TouchableHighlight onPress={onPress} underlayColor={COLOR} style={{borderRadius: 10,marginHorizontal: 5,}}>
@@ -26,14 +27,8 @@ const NumberBoxes = ({pinCode, onNumPress, showPin}) => {
   };
 
 
-const CreatePin = ({navigation})=> {
+const CreatePin = ({pinCode,setPinCode,pageIndex,setPageIndex})=> {
 
-    navigation.setOptions({
-        headerLeft: ()=> <HeaderBack />,
-        headerTitle: ()=> <HeaderTitle label={['Set up a PIN','']}/>,
-    })
-
-    const [pinCode,setPinCode] = useState("")
     const [showPin,setShowPin] = useState(false)
     const inputRef = useRef();
 
@@ -44,20 +39,18 @@ const CreatePin = ({navigation})=> {
     };
     
     const onSubmit = () => {
-        navigation.navigate("TokTokWalletSettingsConfirmPIN",{pinCode: pinCode})
+       setPageIndex(oldstate=>oldstate+1)
     };
 
-    // useEffect(()=>{
-    //     if(pinCode.length == 4)  navigation.navigate("TokTokWalletSettingsConfirmPIN",{pinCode: pinCode})
-    // },[pinCode])
 
     return (
-       <View style={styles.container}>
-            <View style={styles.content}>
-                    <Text style={{fontSize: 14,fontFamily: FONT_MEDIUM,marginTop: 20,}}>Enter your PIN</Text>
+        <View style={styles.container}>
+            <ScrollView style={styles.content}>
+                    <Text style={{fontSize: 14,fontFamily: FONT_MEDIUM,marginTop: 20,alignSelf:"center"}}>Enter your PIN</Text>
                     <View style={{position: 'relative',marginTop: 50,}}>
                         <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={showPin}/>
                         <TextInput
+                            autoFocus={true}
                             caretHidden
                             value={pinCode}
                             ref={inputRef}
@@ -73,19 +66,19 @@ const CreatePin = ({navigation})=> {
                         />
 
                         <TouchableOpacity
-                                style={{marginTop: 20,alignItems: "center"}}
+                                style={{marginTop: 40,paddingVertical: 10,alignItems: "center"}}
                                 onPress={()=>setShowPin(!showPin)}
                         >
                                 <Text style={{color: "#F6841F",fontSize: 12,fontFamily: FONT_MEDIUM}}>{showPin ? "HIDE PIN" : "SHOW PIN"}</Text>
                         </TouchableOpacity>
                     </View>
-            </View>
+            </ScrollView>
             <TouchableOpacity
                 disabled={pinCode.length < 4}
                 onPress={onSubmit}
-                style={{alignItems: "center",height: 40,backgroundColor: DARK,margin: 20,justifyContent: "center",borderRadius: 10,}}
+                style={{alignItems: "center",height: 40,backgroundColor: pinCode.length < 4 ? "gray" : DARK,margin: 20,justifyContent: "center",borderRadius: 10,}}
             >
-                    <Text style={{color: COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Next</Text>
+                    <Text style={{color: pinCode.length < 4 ? "white" : COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Next</Text>
             </TouchableOpacity>
        </View>
     )
@@ -97,7 +90,7 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
     },
     content: {
-        alignItems: "center",
+        // alignItems: "center",
         padding: 20,
         flex: 1,
     },

@@ -3,7 +3,7 @@ import {View,Text,StyleSheet,Platform,Alert,TextInput,FlatList,ActivityIndicator
 import {check,request,PERMISSIONS,RESULTS} from 'react-native-permissions'
 import Contacts from 'react-native-contacts';
 import {sortBy} from 'lodash'
-import {COLOR,FONT_REGULAR} from '../../../../../../res/constants'
+import {COLOR,DARK,FONT_REGULAR} from '../../../../../../res/constants'
 import {HeaderBack, HeaderTitle} from '../../../../../../components'
 import ContactInfoRender from './ContactInfoRender'
 import SendtoOthers from './SendtoOthers'
@@ -11,6 +11,7 @@ import MessageModal from './MessageModal'
 import {useLazyQuery} from '@apollo/react-hooks'
 import {CLIENT,GET_USER_ACCOUNT} from '../../../../../../graphql'
 import {useSelector} from 'react-redux'
+import FundTransferMessageModal from '../../Notification/FundTransferMessageModal'
 
 const SendWalletComponent = ({navigation,route})=> {
 
@@ -26,6 +27,12 @@ const SendWalletComponent = ({navigation,route})=> {
     const [sendToOther,setSendToOther] = useState(false)
     const [msgModalVisible,setMsgModalVisible] = useState(false)
     const [modalMessage, setModalMessage] = useState("")
+    const [isFundTransferMessageModalVisible , setIsFundTransferMessageModalVisible] = useState(false)
+    const [fundTransferModalParams,setFundTransferModalParams] = useState({
+        message: "",
+        submessage: "",
+        actionButtons: []
+    })
     const session = useSelector(state=>state.session)
 
     const goToContacts = async ()=> {
@@ -173,20 +180,63 @@ const SendWalletComponent = ({navigation,route})=> {
         onError: (err) => {
           
           if(err.networkError && err.networkError.result.errors[0].code == "GRAPHQL_VALIDATION_FAILED"){
-              Alert.alert("Invalid Mobile Number Format")
+              setFundTransferModalParams({
+                message: "Invalid Mobile Number",
+                submessage: "the number you entered is not supported",
+                actionButtons: [{
+                    label: "close",
+                    onPress: ()=> setIsFundTransferMessageModalVisible(false),
+                    textStyle: {
+                        color: COLOR
+                    },
+                    btnStyle: {
+                        backgroundColor: DARK
+                    }
+                }]
+            })
+            setIsFundTransferMessageModalVisible(true)
           }
 
           if(err.graphQLErrors.length > 0){
             err.graphQLErrors.map((error)=> {
-                setModalMessage(error.message)
-                setMsgModalVisible(true)
+                // setModalMessage(error.message)
+                // setMsgModalVisible(true)
+                setFundTransferModalParams({
+                  message: error.message == "Wallet not found" ? "Recipient does not have toktok wallet" : "Recipient does not have toktok app",
+                  submessage: error.message == "Wallet not found"? 'Tell your recipient to create their toktok wallet first' : 'Tell them to download and install toktok app',
+                  actionButtons: [{
+                      label: "ok",
+                      onPress: ()=> setIsFundTransferMessageModalVisible(false),
+                      textStyle: {
+                          color: COLOR
+                      },
+                      btnStyle: {
+                          backgroundColor: DARK
+                      }
+                  }]
+                })
+                setIsFundTransferMessageModalVisible(true)
             })
           }
 
         },
         onCompleted: (response) => {
           if(response.getUserAccount.username === session.user.username){
-            Alert.alert("You cannot send money to yourself!")
+            setFundTransferModalParams({
+              message: "You can't send money to yourself",
+              submessage: "Try other mobile number",
+              actionButtons: [{
+                  label: "ok",
+                  onPress: ()=> setIsFundTransferMessageModalVisible(false),
+                  textStyle: {
+                      color: COLOR
+                  },
+                  btnStyle: {
+                      backgroundColor: DARK
+                  }
+              }]
+            })
+            setIsFundTransferMessageModalVisible(true)
           }else{
             navigation.navigate("TokTokWalletActionsSendConfirmPayment", {recipientInfo: response.getUserAccount , walletinfo: route.params.walletinfo})
           }
@@ -226,7 +276,13 @@ const SendWalletComponent = ({navigation,route})=> {
       }
 
     return (
-      <><MessageModal msgModalVisible={msgModalVisible} setMsgModalVisible={setMsgModalVisible} modalMessage={modalMessage}/>
+      <>
+        {/* <MessageModal msgModalVisible={msgModalVisible} setMsgModalVisible={setMsgModalVisible} modalMessage={modalMessage}/> */}
+        <FundTransferMessageModal 
+           isVisible={isFundTransferMessageModalVisible} 
+           setIsVisible={setIsFundTransferMessageModalVisible} 
+           modalMessageParams={fundTransferModalParams}
+        />
        <View style={styles.container}>
            <View style={styles.searchField}>
                 <View style={[styles.input,{flexDirection: "row"}]}>

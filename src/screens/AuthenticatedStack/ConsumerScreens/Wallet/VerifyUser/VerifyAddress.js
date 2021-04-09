@@ -13,8 +13,6 @@ const VerifyAddress = ()=> {
         <>
             <ModalCountry type="address" />
             <View style={styles.content}>
-       
-                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.mainInput}>
                 <ScrollView showsVerticalScrollIndicator={false}>
                         <Text style={{fontSize: 14, fontFamily: FONT_MEDIUM}}>Where do you live?</Text>
                         <Text style={{fontFamily: FONT_LIGHT,marginTop: 5,fontSize: 12}}>Please enter your current address</Text>  
@@ -82,11 +80,8 @@ const VerifyAddress = ()=> {
                         </View>
 
                     </ScrollView>
-                        
-                </KeyboardAvoidingView>
 
-
-                <View style={styles.proceedBtn}>
+                    <View style={styles.proceedBtn}>
                                 <TouchableOpacity onPress={()=>{
                                     setCurrentIndex(oldval => oldval - 1)
                                 }} style={{height: "100%",flex: 1,marginRight: 5,backgroundColor: "transparent" ,borderColor: "gray", borderWidth: 1, borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
@@ -107,9 +102,7 @@ const VerifyAddress = ()=> {
                                     <Text style={{color: COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Next</Text>
                                 </TouchableOpacity>
                     </View>
-   
 
-            
             </View>
         </>
     )

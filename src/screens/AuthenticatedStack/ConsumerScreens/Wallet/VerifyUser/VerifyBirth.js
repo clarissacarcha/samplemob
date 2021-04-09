@@ -15,9 +15,10 @@ const DateBirthModal = ({modalVisible, setModalVisible , birthInfo ,changeBirthI
     const year = todayDate.getFullYear()
     const month = todayDate.getMonth()
     const day = todayDate.getDate()
-    const maxDate = new Date(year + 1, month ,day)
+    const maxDate = todayDate
+    const initialDate = new Date(year - 25, month ,day)
 
-    const [bday,setBday] = useState(birthInfo.birthdate == "" ? todayDate : birthInfo.birthdate)
+    const [bday,setBday] = useState(birthInfo.birthdate == "" ? initialDate : birthInfo.birthdate)
 
     return (
         <Modal

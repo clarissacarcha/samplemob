@@ -164,7 +164,7 @@ const WebViewComponent = ()=> {
                 : mounted &&
                 <View style={styles.donetransaction}>
                     <View style={styles.donetransactioncontent}>
-                        <View style={{height: 100,width: 100,borderRadius: 100, backgroundColor: "#21CD36",justifyContent: "center", alignItems: "center"}}>
+                        <View style={{height: 100,width: 100,borderRadius: 100, backgroundColor: "#FCB91A",justifyContent: "center", alignItems: "center"}}>
                             <FIcon5 name="check" color="white" size={40}/>
                         </View>
 

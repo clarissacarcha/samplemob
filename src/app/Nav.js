@@ -45,10 +45,9 @@ import PayPanda from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/CashI
 import PayPandaWebView from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/CashIn/PayPanda/WebViewComponent';
 import WalletSettings from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Settings'
 import CashInLogs from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/CashIn/CashInLogs';
-import WalletSettingsCreatePIN from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/CreatePin/CreatePin'
-import WalletSettingsConfirmPIN from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/CreatePin/ConfirmPin'
-import WalletSettingsConfirmEmail from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/CreatePin/ConfirmEmail'
-import WalletSettingsChangePIN from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/CreatePin/ChangePin'
+import WalletSettingsPinCode from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Pincode';
+import WalletPinCodeSecurity from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Notification/PincodeSecurity'
+import WalletForgotPincode from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Pincode/ForgotPin'
 import WalletVerifyUser from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/VerifyUser/VerifyUser'
 import WalletVerifyUserSetup from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/VerifyUser/Setup'
 import WalletValidIDCamera from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/VerifyUser/ValidIDCamera'
@@ -291,10 +290,11 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="TokTokWalletCashINPaypandaWebView" component={PayPandaWebView}/> 
     <Authenticated.Screen name="TokTokWalletSettings" component={WalletSettings}/>
     <Authenticated.Screen name="TokTokWalletCashInLogs" component={CashInLogs}/>
-    <Authenticated.Screen name="TokTokWalletSettingsCreatePIN" component={WalletSettingsCreatePIN}/>
-    <Authenticated.Screen name="TokTokWalletSettingsConfirmPIN" component={WalletSettingsConfirmPIN}/>
-    <Authenticated.Screen name="TokTokWalletSettingsConfirmEmail" component={WalletSettingsConfirmEmail}/>
-    <Authenticated.Screen name="TokTokWalletSettingsChangePIN" component={WalletSettingsChangePIN} />
+    <Authenticated.Screen name="TokTokWalletSettingsPinCode" component={WalletSettingsPinCode}/>
+    <Authenticated.Screen name="TokTokWalletPinCodeSecurity" component={WalletPinCodeSecurity} options={{
+      headerShown: false
+    }}/>
+    <Authenticated.Screen name="TokToKWalletForgotPin" component={WalletForgotPincode}/>
     <Authenticated.Screen name="TokTokWalletVerifyUser" component={WalletVerifyUser}/>
     <Authenticated.Screen name="TokTokWalletVerifyUserSetup" component={WalletVerifyUserSetup}/>
     <Authenticated.Screen name="TokTokWalletValidIDCamera" component={WalletValidIDCamera}/>

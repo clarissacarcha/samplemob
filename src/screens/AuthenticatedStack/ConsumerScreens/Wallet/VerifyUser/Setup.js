@@ -1,7 +1,7 @@
-import React, {useState, useContext} from 'react'
-import {StyleSheet,View,Dimensions} from 'react-native'
+import React, {useState, useContext , useEffect} from 'react'
+import {StyleSheet,View,Dimensions,BackHandler,TouchableHighlight,KeyboardAvoidingView,Platform} from 'react-native'
 import VerifyContextProvider from './Context/VerifyContextProvider'
-import {HeaderBackClose, HeaderTitle} from '../../../../../components'
+import { HeaderTitle} from '../../../../../components'
 import VerifyFullname from './VerifyFullname'
 import VerifyNationality from './VerifyNationality'
 import VerifyBirth from './VerifyBirth'
@@ -10,14 +10,61 @@ import VerifyID from './VerifyID'
 import VerifySelfie from './VerifySelfie'
 import Confirm from './Confirm'
 import {VerifyContext} from './Context/VerifyContextProvider'
+import {useNavigation} from '@react-navigation/native'
+import FIcon from 'react-native-vector-icons/Feather';
 
 const {height,width} = Dimensions.get("window")
+
+const HeaderBackClose = ({currentIndex,setCurrentIndex})=> {
+
+    const navigation = useNavigation()
+
+    const backAction = () => {
+        closeScreen()
+        return true;
+    };
+  
+
+     const closeScreen = ()=> {
+        if(currentIndex == 0){
+          navigation.pop();
+        }else{
+            setCurrentIndex(oldstate=>oldstate-1);
+        }
+      }
+
+      useEffect(()=>{
+
+        const backHandler = BackHandler.addEventListener(
+            "hardwareBackPress",
+            backAction
+        );
+
+        return ()=> backHandler.remove()
+
+      },[currentIndex])
+
+      return (
+        <TouchableHighlight onPress={closeScreen} underlayColor={'white'} style={styles.button}>
+            <View style={styles.iconBox}>
+                <FIcon name={'x'} size={24} color={'#212529'} />
+            </View>
+        </TouchableHighlight>
+      )
+}
 
 
 const MainSetupComponent = ()=> {
 
     const {currentIndex,setCurrentIndex} = useContext(VerifyContext)
+    const navigation = useNavigation()
 
+    navigation.setOptions({
+        headerLeft: ()=> <HeaderBackClose currentIndex={currentIndex} setCurrentIndex={setCurrentIndex}/>,
+        headerTitle: ()=> <HeaderTitle label={['Verify toktok wallet','']}/>,
+    })
+
+ 
     // const [screenSlides,setScreenSlides] = useState(["Fullname","Nationality","Birthday","Address","IDPic","SelfiePic"])
     const [screenSlides,setScreenSlides] = useState(["Fullname","Birthday","Address","IDPic","SelfiePic"])
 
@@ -57,7 +104,11 @@ const MainSetupComponent = ()=> {
     
 
     return (
-        <View style={styles.container}>
+        <KeyboardAvoidingView 
+            keyboardVerticalOffset={Platform.OS == "ios" ? 0 : 80}  
+            behavior={Platform.OS == "ios" ? "padding" : "height"}
+            style={styles.container}
+        >
             <View style={styles.progressBar}>
                 {
                     screenSlides.map((item,index)=> {
@@ -68,18 +119,13 @@ const MainSetupComponent = ()=> {
 
             {DisplayComponents()}
 
-        </View>
+        </KeyboardAvoidingView>
     )
 
 
 }
 
-const SetupVerify = ({navigation})=> {
-    navigation.setOptions({
-        headerLeft: ()=> <HeaderBackClose/>,
-        headerTitle: ()=> <HeaderTitle label={['Verify toktok wallet','']}/>,
-    })
-
+const SetupVerify = ()=> {
     return (
         <VerifyContextProvider>
              <MainSetupComponent/>

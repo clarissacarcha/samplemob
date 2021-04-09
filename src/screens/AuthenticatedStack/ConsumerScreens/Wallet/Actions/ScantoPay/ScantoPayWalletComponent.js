@@ -10,6 +10,7 @@ import {useLazyQuery} from '@apollo/react-hooks'
 import {GET_QR_CODE} from '../../../../../../graphql'
 import {onError} from '../../../../../../util/ErrorUtility'
 import {useSelector} from 'react-redux'
+import FundTransferMessageModal from '../../Notification/FundTransferMessageModal'
 
 const {height,width} = Dimensions.get('window')
 
@@ -23,6 +24,12 @@ const ScantoPayWalletComponent = ({navigation,route})=> {
 
     const [torch,setTorch] = useState(false)
     const [focusCamera,setFocusCamera] = useState(false)
+    const [isModalMessageVisible , setIsModalMessageVisible] = useState(false)
+    const [modalMessageParams,setModalMessageParams] = useState({
+        message: "",
+        submessage: "",
+        actionButtons: []
+    })
     const session = useSelector(state=>state.session)
 
     useFocusEffect(useCallback(()=>{
@@ -32,11 +39,45 @@ const ScantoPayWalletComponent = ({navigation,route})=> {
 
     const [getQRCode] = useLazyQuery(GET_QR_CODE,{
         fetchPolicy: "network-only",
-        onError: onError,
+        onError: (error)=>{
+            if(error.graphQLErrors){
+                setModalMessageParams({
+                    message: "This QR code is invalid",
+                    submessage: "Try to scan other QR code",
+                    actionButtons: [{
+                        label: "ok",
+                        onPress: ()=> setIsModalMessageVisible(false),
+                        textStyle: {
+                            color: COLOR
+                        },
+                        btnStyle: {
+                            backgroundColor: DARK
+                        }
+                    }]
+                })
+                return setIsModalMessageVisible(true)
+            }
+            onError(error)
+        },
         onCompleted: (response)=> {
             if(response.getQRCode.contactNo === session.user.username){
-                Alert.alert("You cannot send money to yourself!")
+                setModalMessageParams({
+                    message: "You can't send money to yourself",
+                    submessage: "Try to scan other QR code",
+                    actionButtons: [{
+                        label: "ok",
+                        onPress: ()=> setIsModalMessageVisible(false),
+                        textStyle: {
+                            color: COLOR
+                        },
+                        btnStyle: {
+                            backgroundColor: DARK
+                        }
+                    }]
+                })
+                setIsModalMessageVisible(true)
             }else{
+                setIsModalMessageVisible(false)
                 navigation.navigate("TokTokWalletActionsScantoPayConfirmPayment", {recipientInfo: response.getQRCode, walletinfo: walletinfo})
             }
         }
@@ -167,6 +208,11 @@ const ScantoPayWalletComponent = ({navigation,route})=> {
 
     return (
         <>
+            <FundTransferMessageModal 
+                isVisible={isModalMessageVisible} 
+                setIsVisible={setIsModalMessageVisible} 
+                modalMessageParams={modalMessageParams}
+            />
            {
                focusCamera &&  <QRCodeScanner
                                     onRead={onSuccess}
@@ -177,7 +223,7 @@ const ScantoPayWalletComponent = ({navigation,route})=> {
                                         borderColor: "red"
                                     }}
                                     reactivate={true}
-                                    reactivateTimeout={3000}
+                                    reactivateTimeout={1000}
                                     vibrate={false}
                                     customMarker={customMarker}
                                     containerStyle={{

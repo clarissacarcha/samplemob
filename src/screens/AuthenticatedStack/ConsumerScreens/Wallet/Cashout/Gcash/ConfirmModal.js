@@ -27,7 +27,7 @@ const ConfirmModal = ({showModal,setShowModal, amount , walletinfo , session , n
     })
 
     const proceedToEncashment = ()=> {
-        if(walletinfo.isVerified){
+        if(walletinfo.pincode != null){
             return setShowPinModal(true)
         }
 

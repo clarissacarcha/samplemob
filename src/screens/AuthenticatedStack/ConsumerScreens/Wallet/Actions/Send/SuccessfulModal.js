@@ -10,7 +10,7 @@ const SuccessfulModal = ({successModalVisible , amount , recipient})=> {
 
     const ModalContent = ()=> (
         <View style={{justifyContent: "center",alignItems:"center",flex: 1}}>
-                <View style={{height: 80,width: 80,borderRadius: 100, backgroundColor: "#21CD36",justifyContent: "center", alignItems: "center",marginBottom: 20}}>
+                <View style={{height: 80,width: 80,borderRadius: 100, backgroundColor: "#FCB91A",justifyContent: "center", alignItems: "center",marginBottom: 20}}>
                             <FIcon5 name="check" color="white" size={40}/>
                 </View>
                 <Text style={{fontFamily: FONT_BOLD, fontSize: 18,marginVertical: 10,}}>Transaction Completed</Text>
@@ -19,7 +19,7 @@ const SuccessfulModal = ({successModalVisible , amount , recipient})=> {
     )
 
     const Proceed = ()=>  {
-        navigation.pop(2)
+        navigation.pop(3)
         navigation.replace("TokTokWallet")
     }
 
