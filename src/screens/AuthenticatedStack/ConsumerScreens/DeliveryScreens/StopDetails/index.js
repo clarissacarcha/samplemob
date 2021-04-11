@@ -19,7 +19,6 @@ import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIc
 //SELF IMPORTS
 import AutocompleteResult from './AutocompleteResult';
 import SearchBar from './SearchBar';
-import {useSafeArea} from 'react-native-safe-area-context';
 
 const INITIAL_RESULT = {
   payload: {
@@ -28,18 +27,20 @@ const INITIAL_RESULT = {
   predictions: [],
 };
 
-const SearchAddress = ({navigation, route}) => {
-  const [searchText, setSearchText] = useState('');
+const StopDetails = ({navigation, route}) => {
+  const [stopData, setStopData] = useState(route.params.stopData);
+
+  const [searchText, setSearchText] = useState(stopData.formattedAddress);
   const [landmark, setLandmark] = useState(route.params.stopData.landmark);
   const [person, setPerson] = useState(route.params.stopData.name);
   const [mobile, setMobile] = useState(route.params.stopData.mobile);
 
   const [searchResult, setSearchResult] = useState(INITIAL_RESULT);
   const [sessionToken, setSessionToken] = useState(uuid.v4());
-  const [showMap, setShowMap] = useState(false);
 
   const {onStopConfirm} = route.params;
-  const [stopData, setStopData] = useState(route.params.stopData);
+
+  const [showMap, setShowMap] = useState(stopData.latitude ? true : false);
 
   const inputRef = useRef();
   const bottomSheetRef = useRef();
@@ -58,13 +59,18 @@ const SearchAddress = ({navigation, route}) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
     headerTitle: () => (
-      <SearchBar
-        sessionToken={sessionToken}
-        searchText={searchText}
-        onSearchTextChange={(value) => setSearchText(value)}
-        onSearchResultChange={(value) => setSearchResult(value)}
-        searchEnabled={!showMap}
-      />
+      <View>
+        {!showMap && (
+          <SearchBar
+            sessionToken={sessionToken}
+            placeholder={route.params.searchPlaceholder}
+            searchText={searchText}
+            onSearchTextChange={(value) => setSearchText(value)}
+            onSearchResultChange={(value) => setSearchResult(value)}
+            searchEnabled={!showMap}
+          />
+        )}
+      </View>
     ),
   });
 
@@ -99,7 +105,7 @@ const SearchAddress = ({navigation, route}) => {
 
       <BottomSheet
         ref={bottomSheetRef}
-        index={-1}
+        index={showMap ? 1 : -1}
         snapPoints={snapPoints}
         handleComponent={() => (
           <View
@@ -128,21 +134,21 @@ const SearchAddress = ({navigation, route}) => {
             <View style={{width: 25, height: 25, alignItems: 'center', justifyContent: 'center'}}>
               <FA5Icon name="landmark" size={16} color={ORANGE} />
             </View>
-            <TextInput placeholder="Landmark" value={landmark} style={{flex: 1}} />
+            <TextInput placeholder="Landmark" value={landmark} style={{flex: 1}} onChangeText={setLandmark} />
           </View>
           <View style={{flexDirection: 'row', alignItems: 'center', height: 50}}>
             <View style={{width: 25, height: 25, alignItems: 'center', justifyContent: 'center'}}>
               <MaterialIcon name="person-outline" size={20} color={ORANGE} />
             </View>
 
-            <TextInput placeholder="Contact Person" value={person} style={{flex: 1}} />
+            <TextInput placeholder="Contact Person" value={person} style={{flex: 1}} onChangeText={setPerson} />
           </View>
           <View style={{flexDirection: 'row', alignItems: 'center', height: 50}}>
             <View style={{width: 25, height: 25, alignItems: 'center', justifyContent: 'center'}}>
               <MaterialIcon name="phone-android" size={20} color={ORANGE} />
             </View>
 
-            <TextInput placeholder="Contact Number" value={mobile} style={{flex: 1}} />
+            <TextInput placeholder="Contact Number" value={mobile} style={{flex: 1}} onChangeText={setMobile} />
           </View>
 
           <View style={{height: 10}} />
@@ -165,7 +171,7 @@ const SearchAddress = ({navigation, route}) => {
   );
 };
 
-export default SearchAddress;
+export default StopDetails;
 
 const styles = StyleSheet.create({
   screenBox: {

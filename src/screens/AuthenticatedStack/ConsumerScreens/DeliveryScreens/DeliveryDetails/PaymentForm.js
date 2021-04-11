@@ -5,8 +5,8 @@ import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet';
 import {COLOR, LIGHT, MEDIUM, ORANGE} from '../../../../../res/constants';
 import {WhiteButton, BlackButton} from '../../../../../revamp';
 
-export const PaymentSheet = forwardRef(({}, ref) => {
-  const snapPoints = useMemo(() => [0, 200], []);
+export const PaymentSheet = forwardRef(({onChange}, ref) => {
+  const snapPoints = useMemo(() => [0, 140], []);
 
   return (
     <BottomSheet
@@ -31,21 +31,35 @@ export const PaymentSheet = forwardRef(({}, ref) => {
       <View style={styles.sheet}>
         <Text>Collect Payment From</Text>
         <View style={{height: 10}} />
-        <WhiteButton label="Sender" borderless onPress={() => {}} />
-        <WhiteButton label="Recipient" borderless onPress={() => {}} />
-        <WhiteButton label="toktok Wallet" borderless onPress={() => {}} />
+        <WhiteButton
+          label="Sender"
+          borderless
+          onPress={() => {
+            onChange('SENDER');
+            ref.current.collapse();
+          }}
+        />
+        <WhiteButton
+          label="Recipient"
+          borderless
+          onPress={() => {
+            onChange('RECIPIENT');
+            ref.current.collapse();
+          }}
+        />
+        {/* <WhiteButton label="toktok Wallet" borderless onPress={() => {}} /> */}
       </View>
     </BottomSheet>
   );
 });
 
-export const PaymentForm = ({value, onChange, bottomSheetRef}) => {
+export const PaymentForm = ({value, bottomSheetRef}) => {
   return (
     <View style={styles.box}>
       <Text>Collect Payment From</Text>
       <View style={styles.spacing} />
       <WhiteButton
-        label="Sender"
+        label={value}
         labelColor={MEDIUM}
         suffixSet="Material"
         suffixName="arrow-forward"

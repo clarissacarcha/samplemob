@@ -5,7 +5,7 @@ import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet';
 import {COLOR, LIGHT, ORANGE, MEDIUM} from '../../../../../res/constants';
 import {WhiteButton, BlackButton} from '../../../../../revamp';
 
-export const ItemSheet = forwardRef(({}, ref) => {
+export const ItemSheet = forwardRef(({onChange}, ref) => {
   const snapPoints = useMemo(() => [0, 280], []);
 
   return (
@@ -31,28 +31,63 @@ export const ItemSheet = forwardRef(({}, ref) => {
       <View style={styles.sheet}>
         <Text>Item Description</Text>
         <View style={{height: 10}} />
-        <WhiteButton label="Food" borderless onPress={() => {}} />
-        <WhiteButton label="Document" borderless onPress={() => {}} />
-        <WhiteButton label="Clothing" borderless onPress={() => {}} />
-        <WhiteButton label="Large" borderless onPress={() => {}} />
-        <WhiteButton label="Others" borderless onPress={() => {}} />
+        <WhiteButton
+          label="Food"
+          borderless
+          onPress={() => {
+            onChange('Food');
+            ref.current.collapse();
+          }}
+        />
+        <WhiteButton
+          label="Document"
+          borderless
+          onPress={() => {
+            onChange('Document');
+            ref.current.collapse();
+          }}
+        />
+        <WhiteButton
+          label="Clothing"
+          borderless
+          onPress={() => {
+            onChange('Clothing');
+            ref.current.collapse();
+          }}
+        />
+        <WhiteButton
+          label="Large"
+          borderless
+          onPress={() => {
+            onChange('Large');
+            ref.current.collapse();
+          }}
+        />
+        <WhiteButton
+          label="Others"
+          borderless
+          onPress={() => {
+            onChange('Others');
+            ref.current.collapse();
+          }}
+        />
       </View>
     </BottomSheet>
   );
 });
 
 export const ItemForm = ({value, onChange, bottomSheetRef}) => {
-  const [itemDescription, setItemDescription] = useState('');
-
   const placeholder = 'ex. Food, Document, Clothing etc.';
+
+  const label = value ? value : placeholder;
 
   return (
     <View style={styles.box}>
       <Text>Item Description</Text>
       <View style={styles.spacing} />
       <WhiteButton
-        label={placeholder}
-        labelColor={itemDescription ? MEDIUM : LIGHT}
+        label={label}
+        labelColor={label ? MEDIUM : LIGHT}
         suffixSet="Material"
         suffixName="arrow-forward"
         suffixColor={LIGHT}

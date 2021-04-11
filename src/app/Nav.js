@@ -23,6 +23,7 @@ import ConsumerLanding from '../screens/AuthenticatedStack/ConsumerScreens/Consu
 import ToktokDelivery from '../screens/AuthenticatedStack/ConsumerScreens/DeliveryScreens/ToktokDelivery';
 import StopDetails from '../screens/AuthenticatedStack/ConsumerScreens/DeliveryScreens/StopDetails';
 import DeliveryDetails from '../screens/AuthenticatedStack/ConsumerScreens/DeliveryScreens/DeliveryDetails';
+import DeliverySummary from '../screens/AuthenticatedStack/ConsumerScreens/DeliveryScreens/DeliverySummary';
 
 import PostRegistration from '../screens/AuthenticatedStack/ConsumerScreens/PostRegistration';
 import CheckConsumerLocation from '../screens/AuthenticatedStack/ConsumerScreens/Booking/CheckConsumerLocation';
@@ -228,6 +229,7 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="ToktokDelivery" component={ToktokDelivery} />
     <Authenticated.Screen name="StopDetails" component={StopDetails} />
     <Authenticated.Screen name="DeliveryDetails" component={DeliveryDetails} />
+    <Authenticated.Screen name="DeliverySummary" component={DeliverySummary} />
 
     <Authenticated.Screen name="PostRegistration" component={PostRegistration} />
 

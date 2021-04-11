@@ -64,7 +64,8 @@ const PasswordVerification = ({navigation, route, createSession}) => {
         navigation.replace('RootDrawer', {
           screen: 'AuthenticatedStack',
           params: {
-            screen: 'CheckConsumerLocation',
+            // screen: 'CheckConsumerLocation',
+            screen: 'ConsumerLanding',
           },
         });
         return;

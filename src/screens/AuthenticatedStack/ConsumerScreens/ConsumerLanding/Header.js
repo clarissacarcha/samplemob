@@ -27,8 +27,9 @@ const SearchInput = () => {
 };
 
 const NotificationButton = () => {
+  const navigation = useNavigation();
   return (
-    <TouchableOpacity style={styles.notificationBox}>
+    <TouchableOpacity style={styles.notificationBox} onPress={() => navigation.push('Notifications')}>
       <MaterialCommunityIcon name="bell-outline" size={30} color={'white'} />
     </TouchableOpacity>
   );

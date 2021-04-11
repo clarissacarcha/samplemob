@@ -4,11 +4,11 @@ import {View, StyleSheet, Text, TextInput, Switch} from 'react-native';
 import {LIGHT, COLOR, MEDIUM} from '../../../../../res/constants';
 
 const ExpressForm = ({value, onChange}) => {
-  const [switchState, setSwitchState] = useState(false);
+  const [switchState, setSwitchState] = useState(value);
 
-  const onValueChange = (value) => {
-    setSwitchState(value);
-    onChange(value);
+  const onValueChange = (boolValue) => {
+    setSwitchState(boolValue);
+    onChange(boolValue);
   };
 
   return (
