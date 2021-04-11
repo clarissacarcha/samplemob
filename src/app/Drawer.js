@@ -122,14 +122,14 @@ const Drawer = ({navigation, session, constants, destroySession}) => {
         <View style={{flex: 1}}>
           <ScrollView>
             {/*--------------- PROFILE ---------------*/}
-            <DrawerButton
+            {/* <DrawerButton
               label="Profile"
               onPress={() => {
                 const route = APP_FLAVOR == 'C' ? 'ConsumerProfile' : 'DriverProfile';
                 navigation.closeDrawer();
                 navigation.push(route);
               }}
-            />
+            /> */}
 
             {/*--------------- WALLET ---------------*/}
             {/* <DrawerButton
@@ -162,13 +162,13 @@ const Drawer = ({navigation, session, constants, destroySession}) => {
             />
 
             {/*--------------- Notifications ---------------*/}
-            <DrawerButton
+            {/* <DrawerButton
               label="Notifications"
               onPress={() => {
                 navigation.push('Notifications');
                 navigation.closeDrawer();
               }}
-            />
+            /> */}
 
             {/*--------------- ANNOUNCEMENTS ---------------*/}
             <DrawerButton

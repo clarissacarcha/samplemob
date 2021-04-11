@@ -6,7 +6,7 @@ export const ACCOUNT_TYPE = 1; // 1 = Customer | 2 = Driver
 // export const HOST_PORT = 'graphql.toktok.ph:2096';
 
 export const PROTOCOL = 'http';
-export const HOST_PORT = '192.168.0.101:3000'; // Myutini
+export const HOST_PORT = '192.168.0.102:3000'; // Myutini
 // export const HOST_PORT = '35.173.0.77:3088'; // Marketing Server
 
 export const COLOR = '#FDBA1C'; //YELLOW
@@ -15,8 +15,14 @@ export const ORANGE = '#F5841F';
 export const DARK = '#222222';
 export const MEDIUM = 'gray';
 export const LIGHT = '#D3D3D3';
+export const DIRTY_WHITE = 'rgba(204,204,204,0.2)';
 export const FONT_COLOR = '#2E2D32';
+
 export const FONT_SIZE = 10;
+export const FONT_SIZE_SMALL = 10;
+export const FONT_SIZE_MEDIUM = 12;
+export const FONT_SIZE_LARGE = 14;
+
 export const FONT_FAMILY = 'Rubik-Regular';
 export const FONT_STYLE = {
   fontSize: FONT_SIZE,
