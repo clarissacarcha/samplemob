@@ -1,4 +1,4 @@
-import React , {useState,useCallback} from 'react'
+import React , {useState,useCallback,useRef,useEffect} from 'react'
 import {View,Text,StyleSheet,Image,Platform,KeyboardAvoidingView,TextInput,TouchableOpacity,Alert} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import { HeaderTitle , HeaderBackClose } from '../../../../../../components'
@@ -20,45 +20,29 @@ const GcashEnchashment = ({navigation,route})=> {
 
     const walletinfo = route.params.walletinfo
     const session = useSelector(state=>state.session)
-    const [amount,setAmount] = useState(walletinfo.balance.toString())
+    const [tempAmount,setTempAmount] = useState("")
+    const [amount,setAmount] = useState(0)
     const [showModal,setShowModal] = useState(false)
     const [data,setData] = useState({getGCashAccount: {record: null}})
     const [errorMessage,setErrorMessage] = useState("")
+    const inputRef = useRef()
 
     const changeAmount = (value)=>{
-        let num = value.replace(/[^0-9.]/g, '')
-        let finalnum = num.substring(0,1) == 0 ? num.slice(1) : num
-
-
-        // used if decimals are allowed
-        let numberRegexPattern = /^[0-9]*(\.{1}\d{1,2})?$/g
-        let checkPattern = finalnum.match(numberRegexPattern)
-        if(!checkPattern){
-            if(finalnum.slice(-2) == ".." || finalnum.slice(-1) != "."){
-                finalnum = finalnum.slice(0, -1)
-            }
-            let doubleDecimalpoint = finalnum.match(/[.]/g)
-            if(doubleDecimalpoint.length == 2){
-                let amountaRRay = finalnum.split(".")
-                finalnum = amountaRRay[1].length > 2 ? `${amountaRRay[0]}.${amountaRRay[1].slice(0,2)}` : `${amountaRRay[0]}.${amountaRRay[1]}`
-            }
-        }
-        
-        setAmount(finalnum)
-        if(finalnum > 0 && finalnum <= walletinfo.balance){
-            setErrorMessage("")
+        let num = value.replace(/[^0-9]/g, '')
+        setTempAmount(num)
+        setAmount(num * 0.01)
+        if(num == "") return setErrorMessage("")
+        if((num * 0.01) < 1 && num != ""){
+            return setErrorMessage(`Enter atleast ${'\u20B1'} 1.00`)
+        }else if((num * 0.01) > walletinfo.balance){
+            return setErrorMessage(`You do not have enough balance`)
         }else{
-            setErrorMessage(finalnum == "" ? "" : "You do not have enough balance")
+            return setErrorMessage("")
         }
     }
 
+
     const confirmAmount = ()=> {
-        if(amount.slice(-1) == ".") setAmount(amount.slice(0,-1))
-        if(amount === "") return Alert.alert("Enter Amount");
-        if(amount > +walletinfo.balance){
-            setAmount(walletinfo.balance.toString())
-            return Alert.alert("","Amount should not be greater than wallet balance")
-        }
         setShowModal(true)
     }
 
@@ -166,30 +150,35 @@ const GcashEnchashment = ({navigation,route})=> {
             </View>
 
             <View style={styles.amountcontent}>
-                         {
-                             errorMessage != "" && <Text style={{fontFamily: FONT_REGULAR , color: "red",fontSize: 12,marginBottom: 5}}>{errorMessage}</Text>
-                         }
                         <View style={{flexDirection: "row"}}>
+                            <TextInput
+                                    autoFocus={true}
+                                    caretHidden
+                                    value={tempAmount}
+                                    ref={inputRef}
+                                    style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent',zIndex: 1}}
+                                    keyboardType="number-pad"
+                                    returnKeyType="done"
+                                    onChangeText={changeAmount}
+                                    // onSubmitEditing={onSubmit}
+                            />
                             <Text style={{fontSize: 40,fontFamily: FONT_MEDIUM , alignSelf:"center"}}>{'\u20B1'}</Text>
-                            <TextInput 
-                                    value={amount}
-                                    onChangeText={value=>changeAmount(value)}
-                                    keyboardType="numeric"
-                                    style={styles.input}
-                                    placeholder="0.00"
-                                    // onSubmitEditing={confirmAmount}
-                                />
+                                <View style={styles.input}>
+                                    <Text style={{fontFamily: FONT_MEDIUM,fontSize: 30}}>{amount ? numberFormat(amount) : "0.00"}</Text>
+                                </View>
+                                <FIcon5 name="pen" style={{alignSelf:"center"}} size={18} color="gray"/>
                         </View>
                         <Text style={{color:"gray",fontSize: 14,fontFamily: FONT_REGULAR}}>Current Balance {'\u20B1'} {numberFormat(walletinfo.balance)}</Text>
+                        <Text style={{fontFamily: FONT_REGULAR, color: "red",marginTop: 5}}>{errorMessage}</Text>
             </View>
 
             <View style={styles.cashinbutton}>
                     <TouchableOpacity 
-                        disabled={(amount != "" && amount <= walletinfo.balance ) ? false : true}
+                        disabled={(amount != "" && amount <= walletinfo.balance && amount >= 1 ) ? false : true}
                         onPress={confirmAmount} 
-                        style={{height: "100%",width: "100%",backgroundColor: (amount != "" && amount <= walletinfo.balance ) ? DARK : "gray", borderRadius: 10, justifyContent: "center",alignItems: "center"}}
+                        style={{height: "100%",width: "100%",backgroundColor: (amount != "" && amount <= walletinfo.balance && amount >= 1 ) ? DARK : "gray", borderRadius: 10, justifyContent: "center",alignItems: "center"}}
                     >
-                        <Text style={{color: (amount != "" && amount <= walletinfo.balance ) ? COLOR : "white",fontSize: 12,fontFamily: FONT_MEDIUM}}>Encash</Text>
+                        <Text style={{color: (amount != "" && amount <= walletinfo.balance && amount >= 1 ) ? COLOR : "white",fontSize: 12,fontFamily: FONT_MEDIUM}}>Encash</Text>
                     </TouchableOpacity>
             </View>
         </KeyboardAvoidingView> 
@@ -227,10 +216,9 @@ const styles = StyleSheet.create({
         flexShrink: 1,
         width: 150,
         color: DARK,
-        fontFamily: FONT_MEDIUM,
-        fontSize: 30,
         marginBottom: 10,
-        textAlign: "center"
+        justifyContent:"center",
+        alignItems:"center"
     },
     cashinbutton: {
         height: 60,

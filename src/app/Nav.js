@@ -45,6 +45,7 @@ import PayPanda from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/CashI
 import PayPandaWebView from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/CashIn/PayPanda/WebViewComponent';
 import WalletSettings from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Settings'
 import CashInLogs from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/CashIn/CashInLogs';
+import CashOutLogs from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Cashout/CashOutLogs';
 import WalletSettingsPinCode from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Pincode';
 import WalletPinCodeSecurity from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Notification/PincodeSecurity'
 import WalletForgotPincode from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Pincode/ForgotPin'
@@ -306,6 +307,7 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="TokTokWalletActionsScantoPay" component={WalletActionsScantoPay}/>
     <Authenticated.Screen name="TokTokWalletActionsScantoPayConfirmPayment" component={WalletActionsScantoPayConfirmPayment}/>
     <Authenticated.Screen name="TokTokWalletCashout" component={WalletCashout} />
+    <Authenticated.Screen name="TokTokWalletCashoutLogs" component={CashOutLogs}/>
     <Authenticated.Screen name="TokTokWalletGcashEncashment" component={WalletGcashEncashment} />
     
 

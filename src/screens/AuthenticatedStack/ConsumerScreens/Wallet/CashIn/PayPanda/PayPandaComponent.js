@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState,useRef,useEffect} from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,Image,Modal,TextInput,Platform,KeyboardAvoidingView,ActivityIndicator,Alert,Dimensions,ScrollView} from 'react-native'
 import {HeaderBackClose, HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../../../components'
 import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM, FONT_MEDIUM, FONT_REGULAR} from '../../../../../../res/constants'
@@ -82,12 +82,10 @@ const PayPandaComponent = ({navigation,route})=> {
     const userstate = useSelector(state=>state.session.user)
     const globalsettings = useSelector(state=>state.constants)
     const [showModal,setShowModal] = useState(false)
+    const [tempAmount,setTempAmount] = useState("")
     const [amount,setAmount] = useState("")
-
-    const changeAmount = (value)=>{
-        let num = value.replace(/[^0-9]/g, '')
-        setAmount(num.substring(0,1) == 0 ? num.slice(1) : num)
-    }
+    const [message,setMessage] = useState("")
+    const inputRef = useRef()
 
     const [postWalletCashIn , {data,error,loading}] = useMutation(POST_WALLET_CASH_IN, {
         // fetchPolicy: 'network-only',
@@ -126,11 +124,19 @@ const PayPandaComponent = ({navigation,route})=> {
 
 
     const confirmAmount = ()=> {
-        if(amount === "") return Alert.alert("","Enter Amount");
-        if((+amount + +balance ) > +globalsettings.maxToktokWalletBalance){
-            return Alert.alert("",`Maximum balance limit is. ${numberFormat(globalsettings.maxToktokWalletBalance)}`)
-        }
         setShowModal(true)
+    }
+
+    const changeAmountText = (value)=> {
+        let num = value.replace(/[^0-9]/g, '')
+        setTempAmount(num)
+        setAmount(num * 0.01)
+        if(num == "") return setMessage("")
+        if((num * 0.01) < 1){
+           return setMessage(`Please Enter atleast ${'\u20B1'} 1.00`)
+        }else{
+           return setMessage("")
+        }
     }
 
 
@@ -151,17 +157,25 @@ const PayPandaComponent = ({navigation,route})=> {
                 !loading
                 ? <View style={styles.amountcontent}>
                         <View style={{flexDirection: "row"}}>
+                            <TextInput
+                                    autoFocus={true}
+                                    caretHidden
+                                    value={tempAmount}
+                                    // ref={inputRef}
+                                    style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent',zIndex: 1}}
+                                    keyboardType="number-pad"
+                                    returnKeyType="done"
+                                    onChangeText={changeAmountText}
+                                    // onSubmitEditing={onSubmit}
+                            />
                             <Text style={{fontSize: 40,fontFamily: FONT_MEDIUM , alignSelf:"center"}}>{'\u20B1'}</Text>
-                            <TextInput 
-                                    value={amount}
-                                    onChangeText={value=>changeAmount(value)}
-                                    keyboardType="numeric"
-                                    style={styles.input}
-                                    placeholder="0"
-                                    onSubmitEditing={confirmAmount}
-                                />
+                            <View style={styles.input}>
+                                <Text style={{fontFamily: FONT_MEDIUM,fontSize: 30}}>{amount ? numberFormat(amount) : "0.00"}</Text>
+                            </View>
+                            <FIcon5 name="pen" style={{alignSelf:"center"}} size={18} color="gray"/>
                         </View>
                         <Text style={{color:"gray",fontSize: 14,fontFamily: FONT_REGULAR}}>Current Balance {'\u20B1'} {numberFormat(balance)}</Text>
+                        <Text style={{fontFamily: FONT_REGULAR, color: "red",marginTop: 5}}>{message}</Text>
               
                  </View>
                 : <View style={{flex: 1,justifyContent: "center",alignItems: "center"}}><ActivityIndicator size={50}/></View>
@@ -169,8 +183,8 @@ const PayPandaComponent = ({navigation,route})=> {
             }
           
             <View style={styles.cashinbutton}>
-                    <TouchableOpacity onPress={confirmAmount} style={{height: "100%",width: "100%",backgroundColor: DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
-                        <Text style={{color: COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Cash In</Text>
+                    <TouchableOpacity disabled={amount < 1} onPress={confirmAmount} style={{height: "100%",width: "100%",backgroundColor: amount < 1 ? "gray" : DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
+                        <Text style={{color: amount < 1 ? "white" : COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Cash In</Text>
                     </TouchableOpacity>
             </View>
        </KeyboardAvoidingView>
@@ -195,7 +209,9 @@ const styles = StyleSheet.create({
     amountcontent: {
         flex: 1,
         justifyContent: "center",
-        alignItems: "center"
+        alignItems: "center",
+        // width:width * 0.7,
+        // alignSelf:"center"
     },
     cashinbutton: {
         height: 60,
@@ -235,12 +251,12 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         height: 60,
         flexShrink: 1,
+        // flexGrow: 1,
         width: 150,
         color: DARK,
-        fontFamily: FONT_MEDIUM,
-        fontSize: 30,
         marginBottom: 10,
-        textAlign: "center"
+        justifyContent:"center",
+        alignItems:"center"
       },
 })
 

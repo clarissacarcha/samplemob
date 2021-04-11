@@ -18,6 +18,7 @@ const ConfirmPayment = ({navigation,route})=> {
     })
     const { recipientInfo, walletinfo } = route.params
     const session = useSelector(state=>state.session)
+    const [tempAmount,setTempAmount] = useState("")
     const [amount,setAmount] = useState("")
     const [swipeEnabled,setSwipeEnabled] = useState(false)
     const [successModalVisible, setSuccessModalVisible] = useState(false)
@@ -42,7 +43,6 @@ const ConfirmPayment = ({navigation,route})=> {
     })
 
     const onSwipeSuccess = ()=> {
-        if(amount.slice(-1) == ".") setAmount(amount.slice(0,-1))
         if(walletinfo.pincode != null){
             navigation.push("TokTokWalletPinCodeSecurity", {onConfirm: ()=> patchFundTransfer()})
         }else{
@@ -55,33 +55,20 @@ const ConfirmPayment = ({navigation,route})=> {
     }
 
     const changeAmount = (value)=>{
-        let num = value.replace(/[^0-9.]/g, '')
-        let finalnum = num.substring(0,1) == 0 ? num.slice(1) : num
-
-        // used if decimals are allowed
-        let numberRegexPattern = /^[0-9]*(\.{1}\d{1,2})?$/g
-        let checkPattern = finalnum.match(numberRegexPattern)
-        if(!checkPattern){
-            if(finalnum.slice(-2) == ".." || finalnum.slice(-1) != "."){
-                finalnum = finalnum.slice(0, -1)
-            }
-            let doubleDecimalpoint = finalnum.match(/[.]/g)
-            if(doubleDecimalpoint.length == 2){
-                let amountaRRay = finalnum.split(".")
-                finalnum = amountaRRay[1].length > 2 ? `${amountaRRay[0]}.${amountaRRay[1].slice(0,2)}` : `${amountaRRay[0]}.${amountaRRay[1]}`
-            }
-        }
-
-        setAmount(finalnum)
-        if(finalnum > 0 && finalnum <= walletinfo.balance){
+        let num = value.replace(/[^0-9]/g, '')
+        setTempAmount(num)
+        setAmount(num * 0.01)
+        if((num * 0.01) >= 1 && (num * 0.01) <= walletinfo.balance){
             setSwipeEnabled(true)
             setErrorMessage("")
+        }else if((num * 0.01) < 1 && num != ""){
+            setSwipeEnabled(false)
+            setErrorMessage(`Please Enter atleast ${'\u20B1'} 1.00`)
         }else{
             setSwipeEnabled(false)
-            setErrorMessage(finalnum == "" ? "" : "You do not have enough balance")
+            setErrorMessage(num == "" ? "" : "You do not have enough balance")
         }
     }
-
 
 
     const thumbIconComponent = ()=> (
@@ -110,16 +97,21 @@ const ConfirmPayment = ({navigation,route})=> {
                     </View>
 
                     <View style={{padding: 20}}>
-                        <Text style={{fontFamily: FONT_MEDIUM,fontSize: 16}}>Balance: {'\u20B1'} {numberFormat(walletinfo.balance)}</Text>
+                        <Text style={{fontFamily: FONT_MEDIUM,fontSize: 16,marginBottom: 10}}>Balance: {'\u20B1'} {numberFormat(walletinfo.balance)}</Text>
+                        <Text style={{fontFamily: FONT_MEDIUM,fontSize: 14}}>Enter Amount</Text>
                         <View style={styles.amount}>
                                 <Text style={{fontSize: 16,fontFamily: FONT_MEDIUM,alignSelf:"center"}}>{'\u20B1'} </Text>
                                 <TextInput
-                                        value={amount}
-                                        onChangeText={value=>changeAmount(value)}
+                                        caretHidden
+                                        value={tempAmount}
+                                        onChangeText={changeAmount}
+                                        style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent',zIndex: 1}}
                                         keyboardType="numeric"
-                                        placeholder="Enter Amount" 
-                                        style={{fontSize: 12,fontFamily: FONT_REGULAR,padding: 0,marginLeft: 5,alignSelf: "center",flex: 1}}
+                                        returnKeyType="done"
                                 />
+                                <View style={{fontSize: 12,fontFamily: FONT_REGULAR,paddingVertical: 5,marginLeft: 5,alignSelf: "center",flex: 1}}>
+                                    <Text style={{fontFamily: FONT_MEDIUM}}>{amount ? numberFormat(amount) : "0.00"}</Text>
+                                </View>
                         </View>
                          {
                              errorMessage != "" && <Text style={{fontFamily: FONT_REGULAR , color: "red",fontSize: 12,marginTop: 5}}>{errorMessage}</Text>

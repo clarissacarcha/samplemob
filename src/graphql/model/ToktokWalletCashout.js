@@ -8,3 +8,33 @@ export const POST_GCASH_ENCASHMENT = gql`
         }
     }
 `
+
+export const GET_CASH_OUT_LOGS = gql`
+    query getCashOutLogs($input: GetCashOutLogsInput){
+        getCashOutLogs(input: $input){
+            logDate
+            logs {
+                id
+                tokDisbursementBatchId
+                tokUserId
+                totalAmount
+                gcashMobileNumber
+                gcashFirstName
+                gcashLastName
+                gcashStreetAddress
+                gcashBirthdate
+                status    
+                remarks
+                createdAt
+                updatedAt
+                trails {
+                    id
+                    status
+                    tokToktokWalletLogTypeId
+                    tokToktokWalletCashOutId
+                    createdAt
+                }
+            }
+        }
+    }
+`

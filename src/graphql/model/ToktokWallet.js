@@ -11,6 +11,22 @@ export const GET_TOKTOK_WALLET = gql`
         pendingEncashment
         isVerified
         pincode
+        toktokWalletKYC{
+              id
+              fullname
+              nationality
+              address
+              birthdate
+              validIdType
+              validIdNumber
+              validIdCountry
+              validIdPicture
+              picture
+              tokUserId
+              status
+              createdAt
+              remarks
+            }
       }
     }
   }

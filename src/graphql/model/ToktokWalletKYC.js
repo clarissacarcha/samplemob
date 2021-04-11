@@ -23,6 +23,7 @@ export const GET_TOKTOK_WALLET_KYC = gql`
               tokUserId
               status
               createdAt
+              remarks
             }
           }
       }

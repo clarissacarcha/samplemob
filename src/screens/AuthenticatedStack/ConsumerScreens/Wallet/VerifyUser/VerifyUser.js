@@ -3,7 +3,7 @@ import {StyleSheet,View,Text,Image,TouchableOpacity,ActivityIndicator,Animated} 
 import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM,ORANGE, FONT_MEDIUM, FONT_REGULAR} from '../../../../../res/constants'
 import {onError} from '../../../../../util/ErrorUtility'
 import {HeaderBack, HeaderTitle, SomethingWentWrong} from '../../../../../components'
-import {GET_TOKTOK_WALLET_KYC} from '../../../../../graphql'
+import {GET_TOKTOK_WALLET_KYC, GET_TOKTOK_WALLET} from '../../../../../graphql'
 import {useQuery} from '@apollo/react-hooks'
 import {useSelector} from 'react-redux'
 import {useNavigation} from '@react-navigation/native'
@@ -46,7 +46,7 @@ const VerifyUser = ({navigation,route})=> {
 
     const session = useSelector(state=>state.session)
 
-    const {data,error,loading} = useQuery(GET_TOKTOK_WALLET_KYC,{
+    const {data,error,loading} = useQuery(GET_TOKTOK_WALLET,{
         fetchPolicy: 'network-only',
         variables: {
             input: {

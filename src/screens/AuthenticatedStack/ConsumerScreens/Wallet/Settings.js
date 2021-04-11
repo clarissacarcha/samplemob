@@ -33,6 +33,7 @@ const Settings = ({navigation , route })=> {
             <SettingOption route="TokTokWalletVerifyUser" icon={require('../../../../assets/icons/walletVerify.png')} title="Verify User" subtitle="Verify your toktok wallet"/>
             <SettingOption route="TokTokWalletSettingsPinCode" params={{walletinfo: walletinfo}} icon={require('../../../../assets/icons/walletPin.png')} title={walletinfo.pincode != null ? "Change PIN" : "Create a PIN"} subtitle="keep your account secure"/>
             <SettingOption route="TokTokWalletCashInLogs" icon={require('../../../../assets/icons/walletCashinLog.png')} title="Cash in logs" subtitle="View your cash in logs"/>
+            <SettingOption route="TokTokWalletCashoutLogs" icon={require('../../../../assets/icons/walletCashinLog.png')} title="Cash out logs" subtitle="View your cash out logs"/>
             {/* {
                 walletinfo.isVerified ? <>
                     <SettingOption route={walletinfo.pincode != null ? "TokTokWalletSettingsChangePIN" : "TokTokWalletSettingsCreatePIN"} icon={require('../../../../assets/icons/walletPin.png')} title={walletinfo.pincode != null ? "Change PIN" : "Create a PIN"} subtitle="keep your account secure"/>

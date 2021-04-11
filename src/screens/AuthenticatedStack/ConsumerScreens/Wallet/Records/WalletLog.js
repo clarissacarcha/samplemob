@@ -1,7 +1,7 @@
 import React from 'react'
 import moment from 'moment'
 import {View,Text,TouchableOpacity,StyleSheet,Image} from 'react-native'
-import { FONT_MEDIUM, FONT_REGULAR } from '../../../../../res/constants';
+import { FONT_LIGHT, FONT_MEDIUM, FONT_REGULAR } from '../../../../../res/constants';
 import {useSelector} from 'react-redux'
 import { numberFormat } from '../../../../../helper';
 
@@ -28,19 +28,35 @@ const WalletLog = ({transactionDate , transactionItems ,index , itemsLength }) =
             {
                 transactionItems.map((item)=>{
 
-                    let icon , title , phrase , amountcolor = "black", amountprefix , sender = "" , recipient = ""
+                    let icon , title , status , phrase , amountcolor = "black", amountprefix , sender = "" , recipient = ""
                     title = item.logType.label
                     amountcolor = item.sourceUserId == session.user.id ? "red" : "green"
                     amountprefix = item.sourceUserId == session.user.id ? "-" : "+"
 
+                    switch(item.status){
+                        case 0:
+                            status = "Pending"
+                            break
+                        case 1:
+                            status ="Success"
+                            break
+                        case 2:
+                            status = "Rejected"
+                            break
+                        default:
+                            break
+                    }
+
                     // Sender
                     if(item.sourceInfo.firstName != null) sender = `${item.sourceInfo.firstName} ${item.sourceInfo.lastName}`
                     if(item.sourceInfo.internalAccount != null) sender = `${item.sourceInfo.internalAccount}`
+                    if(item.sourceInfo.enterpriseAccount != null) sender = `${item.sourceInfo.enterpriseAccount}`
                  
 
                     // Recipient
                     if(item.destinationInfo.firstName != null) recipient = `${item.destinationInfo.firstName} ${item.destinationInfo.lastName}`
                     if(item.destinationInfo.internalAccount != null) recipient = `${item.destinationInfo.internalAccount}`
+                    if(item.destinationInfo.enterpriseAccount != null) recipient = `${item.destinationInfo.enterpriseAccount}`
 
                     // Delivery
                     if(item.delivery != null){
@@ -74,6 +90,7 @@ const WalletLog = ({transactionDate , transactionItems ,index , itemsLength }) =
                                 <Image source={icon} style={{height: 30, width: 30}} resizeMode="contain"/>
                             </View>
                             <View style={styles.transactionDetails}>
+                                {/* <Text style={{fontSize: 12,fontFamily: FONT_MEDIUM}}>{title} <Text style={{fontFamily: FONT_LIGHT,fontSize: 10}}> ( {status} )</Text></Text> */}
                                 <Text style={{fontSize: 12,fontFamily: FONT_MEDIUM}}>{title}</Text>
                                 <Text style={{color: "#909294",fontSize: 10,marginTop: 2,fontFamily: FONT_MEDIUM}}>{phrase}</Text>
                             </View>

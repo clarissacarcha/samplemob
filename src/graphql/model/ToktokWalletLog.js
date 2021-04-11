@@ -11,6 +11,7 @@ logs {
     createdAt
     sourceUserId
     destinationUserId
+    status
     logType {
         transferType
         sourceAccountType
