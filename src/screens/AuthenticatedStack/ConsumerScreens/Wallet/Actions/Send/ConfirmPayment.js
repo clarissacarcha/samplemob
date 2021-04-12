@@ -29,6 +29,11 @@ const ConfirmPayment = ({navigation,route})=> {
     const [successModalVisible, setSuccessModalVisible] = useState(false)
     const [showpinModal,setShowPinModal] = useState(false)
     const [errorMessage,setErrorMessage] = useState("")
+    const [walletinfoParams,setWalletinfoParams] = useState({
+        id: "",
+        referenceNumber: "",
+        createdAt: ""
+    })
     
     const [patchFundTransfer] = useMutation(PATCH_FUND_TRANSFER, {
         variables: {
@@ -44,6 +49,7 @@ const ConfirmPayment = ({navigation,route})=> {
             setShowPinModal(false)
         },
         onCompleted: (response)=> {
+            setWalletinfoParams(response.patchFundTransfer.walletLog)
             setSuccessModalVisible(true)
         }
     })
@@ -115,7 +121,11 @@ const ConfirmPayment = ({navigation,route})=> {
         <SuccessfulModal 
                 successModalVisible={successModalVisible}
                 amount={amount} 
-                recipient={`${recipientInfo.person.firstName} ${recipientInfo.person.middleName ? recipientInfo.person.middleName + "" : ""}${recipientInfo.person.lastName}`}
+                recipient={{
+                    name: `${recipientInfo.person.firstName} ${recipientInfo.person.middleName ? recipientInfo.person.middleName + " " : ""}${recipientInfo.person.lastName}`,
+                    mobileNo: recipientInfo.username
+                }}
+                walletinfoParams={walletinfoParams}
         />
         <View style={styles.container}>
             <View style={styles.content}>
