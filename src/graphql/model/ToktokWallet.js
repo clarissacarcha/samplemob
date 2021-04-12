@@ -53,7 +53,9 @@ export const TOKTOK_WALLET_ENCASH = gql`
 export const GET_VERIFY_TOKTOK_WALLET_PIN = gql`
   query getVerifyToktokWalletPIN($input: GetVerifyPinInput){
     getVerifyToktokWalletPIN(input: $input){
+      result
       message
+      attempts
     }
   }
 `
@@ -71,6 +73,11 @@ export const PATCH_FUND_TRANSFER = gql`
   mutation patchFundTransfer($input: PatchFundTransferInput){
     patchFundTransfer(input: $input){
       message
+      walletLog {
+        id
+        referenceNumber
+        createdAt
+      }
     }
   } 
 `

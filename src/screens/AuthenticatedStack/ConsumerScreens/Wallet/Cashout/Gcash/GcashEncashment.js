@@ -33,7 +33,7 @@ const GcashEnchashment = ({navigation,route})=> {
         setAmount(num * 0.01)
         if(num == "") return setErrorMessage("")
         if((num * 0.01) < 1 && num != ""){
-            return setErrorMessage(`Enter atleast ${'\u20B1'} 1.00`)
+            return setErrorMessage(`Please Enter atleast ${'\u20B1'} 1.00`)
         }else if((num * 0.01) > walletinfo.balance){
             return setErrorMessage(`You do not have enough balance`)
         }else{
