@@ -72,7 +72,8 @@ const Landing = ({createSession, destroySession, navigation}) => {
             navigation.replace('RootDrawer', {
               screen: 'AuthenticatedStack',
               params: {
-                screen: 'CheckConsumerLocation',
+                // screen: 'CheckConsumerLocation',
+                screen: 'ConsumerLanding',
               },
             });
           }

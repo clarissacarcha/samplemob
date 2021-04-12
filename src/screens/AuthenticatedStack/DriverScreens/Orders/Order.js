@@ -445,8 +445,6 @@ const AvailableOrders = ({navigation, session, constants}) => {
             ...MAP_DELTA,
           };
 
-    // console.log(JSON.stringify(data.getDeliveriesAvailable, null, 4));
-
     const deliveryMarkers = data.getDeliveriesAvailable.map((delivery) => {
       return (
         <>

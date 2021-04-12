@@ -23,6 +23,7 @@ const INITIAL_VISIBILITY = {
 const TODAY_TIME = moment().tz('Asia/Manila').format('HH:mm:ss').toString();
 
 const SCHEDULES = [
+  {label: 'Anytime', value: '23:59:59'},
   {label: '12:00 AM', value: '00:00:00'},
   {label: '12:30 AM', value: '00:30:00'},
   {label: '01:00 AM', value: '01:00:00'},

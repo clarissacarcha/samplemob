@@ -166,10 +166,10 @@ const SelectedDelivery = ({navigation, route}) => {
         <OrderDetailsCard delivery={getDelivery} />
 
         {/*-------------------- SENDER DETAILS --------------------*/}
-        <DeliveryStopCard stop={getDelivery.senderStop} index={0} />
+        <DeliveryStopCard stop={getDelivery.senderStop} index={0} delivery={getDelivery} />
 
         {/*-------------------- RECIPIENT DETAILS --------------------*/}
-        <DeliveryStopCard stop={getDelivery.recipientStop} index={1} />
+        <DeliveryStopCard stop={getDelivery.recipientStop} index={1} delivery={getDelivery} />
 
         {/*-------------------- DRIVER INFO --------------------*/}
         {getDelivery.driver && <DriverCard driver={getDelivery.driver} />}

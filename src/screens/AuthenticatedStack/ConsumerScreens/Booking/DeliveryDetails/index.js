@@ -159,8 +159,6 @@ const DeliveryDetails = ({navigation, route, session}) => {
       variables: {
         input: {
           consumerId: session.user.consumer.id,
-          // senderNumber: bookingData.senderStop.mobile,
-          // referralCode: session.user.consumer.referralCode ? session.user.consumer.referralCode : '',
           promoCode: bookingData.promoCode,
           isExpress: bookingData.isExpress,
           isCashOnDelivery: bookingData.isCashOnDelivery,

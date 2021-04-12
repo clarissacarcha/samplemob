@@ -1,7 +1,0 @@
-create migration for:
-
-sys_permissions
-sys_roles
-tok_user_permissions
-tok_user_roles
-tok_auth_tokens

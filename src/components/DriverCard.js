@@ -28,15 +28,16 @@ const imageWidth = Dimensions.get('window').width - 40;
 const AvatarOverlay = ({avatar, visible, onPress}) => {
   return (
     <Modal visible={visible} transparent={true} animationType="fade" style={{position: 'relative'}}>
-      <TouchableWithoutFeedback onPress={onPress}>
-        <View style={{flex: 1, justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.75)', zIndex: 9}} />
+      <TouchableWithoutFeedback onPress={onPress} style={StyleSheet.absoluteFillObject}>
+        <View style={{flex: 1, justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.75)', zIndex: 9}}>
+          <TouchableWithoutFeedback style={StyleSheet.absoluteFillObject}>
+            <Image
+              source={{uri: avatar}}
+              style={{height: imageWidth, width: imageWidth, borderRadius: 10, marginHorizontal: 20}}
+            />
+          </TouchableWithoutFeedback>
+        </View>
       </TouchableWithoutFeedback>
-      <View style={{...StyleSheet.absoluteFillObject, justifyContent: 'center'}}>
-        <Image
-          source={{uri: avatar}}
-          style={{height: imageWidth, width: imageWidth, borderRadius: 10, marginHorizontal: 20, zIndex: 999}}
-        />
-      </View>
     </Modal>
   );
 };
