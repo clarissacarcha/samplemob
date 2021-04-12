@@ -13,6 +13,7 @@ export * from './DriverGoOnlineButton';
 export * from './DriverLocationCard';
 export {default as GoOnlineOverlay} from './GoOnlineOverlay';
 export * from './HeaderBack';
+export * from './HeaderBackClose';
 export * from './HeaderTitle';
 export * from './ItemDescription';
 export * from './LocationPermission';

@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, ScrollView, StyleSheet, TextInput} from 'react-native';
 
-import {COLOR, DARK, MEDIUM} from '../../../../res/constants';
+import {COLOR, DARK, FONT_MEDIUM, FONT_REGULAR, MEDIUM} from '../../../../res/constants';
 
 export default ({data, status}) => {
   const {mobileNumber, firstName, middleName, lastName, streetAddress, birthdate} = data;
@@ -49,6 +49,7 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     height: 50,
     color: MEDIUM,
+    fontFamily: FONT_REGULAR,
   },
   header: {
     marginHorizontal: 20,
@@ -81,7 +82,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     fontSize: 12,
     color: DARK,
-    fontFamily: 'Rubik-Medium',
+    fontFamily: FONT_MEDIUM,
   },
 
   pickerContainerStyle: {

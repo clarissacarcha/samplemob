@@ -20,12 +20,12 @@ const styles = StyleSheet.create({
   },
   outer: {
     fontSize: 16,
-    fontFamily: 'Rubik-Medium',
+    fontFamily: 'Jost-Medium',
     color: DARK,
   },
   inner: {
     color: DARK,
     fontSize: 16,
-    fontFamily: 'Rubik-Medium',
+    fontFamily: 'Jost-Medium',
   },
 });

@@ -141,6 +141,16 @@ const Drawer = ({navigation, session, constants, destroySession}) => {
           }}
         /> */}
 
+            {/*--------------- TOKTOK WALLET ---------------*/}
+            {/* <DrawerButton
+              label="toktok wallet"
+              onPress={() => {
+                navigation.push('TokTokWallet');
+                navigation.closeDrawer();
+              }}
+              restrict="C"
+            /> */}
+
             {/*--------------- MY DELIVERIES ---------------*/}
             <DrawerButton
               label="My Deliveries"

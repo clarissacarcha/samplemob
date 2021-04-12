@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {FONT_SIZE_LARGE, FONT_SIZE_SMALL, DIRTY_WHITE, APP_FLAVOR} from '../../../../res/constants';
+import {FONT_SIZE_LARGE, FONT_SIZE_SMALL, DIRTY_WHITE, APP_FLAVOR, FONT_REGULAR} from '../../../../res/constants';
 
 import DeliveryIcon from '../../../../assets/icons/DeliveryIcon.png';
 import WalletIcon from '../../../../assets/icons/WalletIcon.png';
@@ -15,7 +15,7 @@ const MenuIcon = ({label, icon, onPress}) => {
       <View style={styles.menuIconBox}>
         <Image style={styles.menuIcon} source={icon} />
       </View>
-      <Text>{label}</Text>
+      <Text style={styles.label}>{label}</Text>
     </TouchableOpacity>
   );
 };
@@ -26,7 +26,13 @@ const Menu = ({session}) => {
   return (
     <View style={styles.menuBox}>
       <MenuIcon label={'Delivery'} icon={DeliveryIcon} onPress={() => navigation.push('ToktokDelivery')} />
-      <MenuIcon label={'Wallet'} icon={WalletIcon} />
+      <MenuIcon
+        label={'Wallet'}
+        icon={WalletIcon}
+        onPress={() => {
+          navigation.push('TokTokWallet');
+        }}
+      />
       <MenuIcon
         label={'Profile'}
         icon={ProfileIcon}
@@ -57,7 +63,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-
+  label: {
+    fontSize: 14,
+    fontFamily: FONT_REGULAR,
+  },
   menuIconBox: {
     height: 50,
     width: 50,

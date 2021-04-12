@@ -29,6 +29,12 @@ export const FONT_STYLE = {
   fontFamily: FONT_FAMILY,
   color: FONT_COLOR,
 };
+export const FONT_DEFAULT = 'Jost';
+export const FONT_REGULAR = `${FONT_DEFAULT}-Regular`;
+export const FONT_MEDIUM = `${FONT_DEFAULT}-Medium`;
+export const FONT_LIGHT = `${FONT_DEFAULT}-Light`;
+export const FONT_BOLD = `${FONT_DEFAULT}-Bold`;
+export const FONT_SEMIBOLD = `${FONT_DEFAULT}-SemiBold`;
 
 export const MAP_DELTA = {
   latitudeDelta: 0.015,
