@@ -30,6 +30,16 @@ export const PATCH_PAYPANDA_RETURN_URL = gql`
   mutation patchPayPandaReturnUrl($input: PatchPayPandaReturnUrlInput){
     patchPayPandaReturnUrl(input: $input){
       message
+      cashinLog {
+        id
+        referenceNumber
+        amount
+        paypandaReferenceNumber
+        status
+        createdAt
+        tokUserId
+        tokToktokWalletLogId
+      }
     }
   }
 `;

@@ -1,31 +1,7 @@
 import React, { useState ,useRef , useEffect } from 'react'
 import {View,Text,StyleSheet,TouchableHighlight,TouchableOpacity,TextInput,KeyboardAvoidingView,Platform,ScrollView} from 'react-native'
 import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM,ORANGE, FONT_MEDIUM} from '../../../../../res/constants'
-import {HeaderBack, HeaderTitle} from '../../../../../components'
-import Pincode from '.';
-
-const NumberBox = ({onPress, value , showPin}) => (
-    <TouchableHighlight onPress={onPress} underlayColor={COLOR} style={{borderRadius: 10,marginHorizontal: 5,}}>
-      <View style={styles.inputView}>
-        <Text style={{fontSize: 25}}>{value ? showPin ? value : "*" : '_'}</Text>
-      </View>
-    </TouchableHighlight>
-);
-
-const NumberBoxes = ({pinCode, onNumPress, showPin}) => {
-
-    const numberBoxes = [];
-    var i;
-    for (i = 0; i <= 3; i++) {
-      numberBoxes.push(<NumberBox onPress={onNumPress} value={pinCode[i]} showPin={showPin}/>);
-    }
-    return (
-        <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20, marginBottom: 20}}>
-            {numberBoxes}
-        </View>
-    );
-  };
-
+import NumberBoxes from './Components/NumberBoxes'
 
 const CreatePin = ({pinCode,setPinCode,pageIndex,setPageIndex})=> {
 
@@ -58,7 +34,7 @@ const CreatePin = ({pinCode,setPinCode,pageIndex,setPageIndex})=> {
                             keyboardType="number-pad"
                             returnKeyType="done"
                             onChangeText={(value) => {
-                            if (value.length <= 4) {
+                            if (value.length <= 6) {
                                 setPinCode(value);
                             }
                             }}
@@ -74,11 +50,11 @@ const CreatePin = ({pinCode,setPinCode,pageIndex,setPageIndex})=> {
                     </View>
             </ScrollView>
             <TouchableOpacity
-                disabled={pinCode.length < 4}
+                disabled={pinCode.length < 6}
                 onPress={onSubmit}
-                style={{alignItems: "center",height: 40,backgroundColor: pinCode.length < 4 ? "gray" : DARK,margin: 20,justifyContent: "center",borderRadius: 10,}}
+                style={{alignItems: "center",height: 40,backgroundColor: pinCode.length < 6 ? "gray" : DARK,margin: 20,justifyContent: "center",borderRadius: 10,}}
             >
-                    <Text style={{color: pinCode.length < 4 ? "white" : COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Next</Text>
+                    <Text style={{color: pinCode.length < 6 ? "white" : COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Next</Text>
             </TouchableOpacity>
        </View>
     )

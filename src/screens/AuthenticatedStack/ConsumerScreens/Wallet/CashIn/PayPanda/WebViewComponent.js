@@ -7,6 +7,7 @@ import {useMutation} from '@apollo/react-hooks'
 import {PATCH_PAYPANDA_RETURN_URL} from '../../../../../../graphql'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import {useSelector} from 'react-redux'
+import SuccessfulModal from './SuccessfulModal'
 
 
 const {width,height} = Dimensions.get('window')
@@ -24,6 +25,7 @@ const WebViewComponent = ()=> {
     const [mounted, setMounted] = useState(true)
     const [checkurl,setCheckurl] = useState("")
     const [donetransaction,setDoneTransaction] = useState(false)
+    const [cashInLogParams,setCashInLogParams] = useState(null)
 
     const session = useSelector(state=>state.session)
 
@@ -49,11 +51,12 @@ const WebViewComponent = ()=> {
         return datastring.slice(1)
     } 
 
-    let generatedInitialPaymentData = generateInitialPostPaymentDataString(initialpaymentData)
+    const generatedInitialPaymentData = generateInitialPostPaymentDataString(initialpaymentData)
 
     const [patchPayPandaReturnUrl, {data,error,loading}] = useMutation(PATCH_PAYPANDA_RETURN_URL,{
         // fetchPolicy: 'network-only',
-        onCompleted: ()=>{
+        onCompleted: ({patchPayPandaReturnUrl})=>{
+            setCashInLogParams(patchPayPandaReturnUrl.cashinLog)
             setDoneTransaction(true)
         }
     })
@@ -129,15 +132,15 @@ const WebViewComponent = ()=> {
                     onNavigationStateChange={(event)=> {
                         setCanGoBack(event.canGoBack)
                         setCanGoForward(event.canGoForward)
-                        let checkreturnurl = event.url.search("http://toktokreturnurl.ph")
+                        const checkreturnurl = event.url.search("http://toktokreturnurl.ph")
                         if(checkreturnurl != - 1){
                             const {url} = event
-                            let reference_number = /(?:\?refno=).*(?=\&paypanda_refno)/g.exec(url)
-                            let paypanda_refno = /(?:\&paypanda_refno=).*(?=\&status)/.exec(url)
-                            let payment_status = /(?:\&status=).*(?=\&signature)/.exec(url)
-                            let signature = /(?:\&signature=).*/.exec(url)
-                            let paid_amount = route.params.amount_to_pay
-                            let transactionTypeId = route.params.transactionTypeId
+                            const reference_number = /(?:\?refno=).*(?=\&paypanda_refno)/g.exec(url)
+                            const paypanda_refno = /(?:\&paypanda_refno=).*(?=\&status)/.exec(url)
+                            const payment_status = /(?:\&status=).*(?=\&signature)/.exec(url)
+                            const signature = /(?:\&signature=).*/.exec(url)
+                            const paid_amount = route.params.amount_to_pay
+                            const transactionTypeId = route.params.transactionTypeId
         
 
                             if(checkurl != url){       
@@ -162,23 +165,11 @@ const WebViewComponent = ()=> {
                     }}
                 />  
                 : mounted &&
-                <View style={styles.donetransaction}>
-                    <View style={styles.donetransactioncontent}>
-                        <View style={{height: 100,width: 100,borderRadius: 100, backgroundColor: "#FCB91A",justifyContent: "center", alignItems: "center"}}>
-                            <FIcon5 name="check" color="white" size={40}/>
-                        </View>
-
-                        <Text style={{marginTop: 20,fontFamily: FONT_MEDIUM,fontSize: 20}}>Transaction Completed</Text>
-                    </View>
-                    <View style={styles.donetransactionButton}>
-                        <TouchableOpacity onPress={()=>{
-                            navigation.pop(3)
-                            navigation.replace("TokTokWallet")
-                        }} style={{height: "100%",width: "100%",backgroundColor: DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
-                            <Text style={{color: COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Done</Text>
-                        </TouchableOpacity>
-                     </View>
-                </View>
+                <SuccessfulModal
+                    amount={route.params.amount_to_pay}
+                    successModalVisible={true}
+                    cashInLogParams={cashInLogParams}
+                />
             }
                 {/* <NavigationWebView cangoBackProp={cangoBack} cangoForwardProp={cangoForward} /> */}
             </View>

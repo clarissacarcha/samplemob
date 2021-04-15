@@ -18,7 +18,7 @@ const Cashout = ({navigation,route})=> {
 
     useEffect(()=>{
         setPercentage(()=>{
-            let rawPercentage = (( route.params.walletinfo.balance - route.params.walletinfo.balance ) / route.params.walletinfo.balance ) * 100
+            const rawPercentage = (( route.params.walletinfo.balance - route.params.walletinfo.balance ) / route.params.walletinfo.balance ) * 100
             return 100 - rawPercentage
         })
     },[])

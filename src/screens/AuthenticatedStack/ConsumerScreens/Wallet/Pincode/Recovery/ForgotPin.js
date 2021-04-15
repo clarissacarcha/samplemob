@@ -1,13 +1,13 @@
 import React from 'react'
 import {View,Text,StyleSheet,TouchableOpacity} from 'react-native'
-import { HeaderBackClose , HeaderTitle} from '../../../../../components'
-import { COLOR, FONT_LIGHT, FONT_MEDIUM, FONT_REGULAR } from '../../../../../res/constants'
+import { HeaderBackClose , HeaderTitle} from '../../../../../../components'
+import { COLOR, FONT_LIGHT, FONT_MEDIUM, FONT_REGULAR } from '../../../../../../res/constants'
 import FIcon from 'react-native-vector-icons/Feather'
 import {useSelector} from 'react-redux'
 
 const RecoveryMethod = ({title,message,onPress})=> {
     return (
-        <TouchableOpacity style={styles.recoveryMethod}>
+        <TouchableOpacity onPress={onPress} style={styles.recoveryMethod}>
           <View style={styles.recoveryMethodText}>
                 <Text style={{fontFamily: FONT_MEDIUM}}>{title}</Text>
                 <Text style={{fontFamily: FONT_LIGHT,fontSize: 12}}>{message}</Text>
@@ -36,9 +36,13 @@ const ForgotPin = ({navigation})=> {
         return char
     }
 
-    let emailLeft = emails[0]
+    const emailLeft = emails[0]
     const maskedchars = maskedchar(emailLeft.length - 1 )
-    let email = `${emailLeft[0]}${maskedchars}@${emails[1]}`
+    const email = `${emailLeft[0]}${maskedchars}@${emails[1]}`
+
+    const recoverWallet = ()=> {
+        return navigation.navigate("TokTokWalletRecoverPin")
+    }
 
 
     return (
@@ -46,7 +50,7 @@ const ForgotPin = ({navigation})=> {
             <View style={{paddingHorizontal: 20,paddingVertical: 15}}>
                 <Text style={{fontFamily: FONT_LIGHT, fontSize: 14}}>Authenticate yourself via</Text>
             </View>
-            <RecoveryMethod title={"Email"} message={`Use your verified email address ${email}`}/>
+            <RecoveryMethod title={"Registered Mobile No."} message={`Use your verified mobile no. ${session.user.username}`} onPress={recoverWallet}/>
         </View>
     )
 }

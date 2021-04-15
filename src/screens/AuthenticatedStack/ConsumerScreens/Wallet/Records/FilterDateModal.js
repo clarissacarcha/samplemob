@@ -35,9 +35,9 @@ const FilterDateModal = ({showFilterDate,setShowFilterDate, filterDate , changeF
                                 elevation: 5,}}
                     >
                         {/* <Text style={{fontFamily: FONT_MEDIUM, marginVertical: 10,fontSize: 16, color:"orange"}}>Filter last 3 months transactions</Text> */}
-                        <Text style={{fontFamily: FONT_MEDIUM,fontSize: 14}}>From</Text>
+                        <Text style={{fontFamily: FONT_MEDIUM,fontSize: 18}}>Date From</Text>
                         <DatePicker date={new Date(filterDate.from)} onDateChange={(date)=>changeFilterDate("from",date)} mode="date" maximumDate={todayDate} minimumDate={minDate} />
-                        <Text style={{fontFamily: FONT_MEDIUM,fontSize: 14,marginTop: 20}}>To</Text>
+                        <Text style={{fontFamily: FONT_MEDIUM,fontSize: 18,marginTop: 20}}>Date To</Text>
                         <DatePicker date={filterDate.to} onDateChange={(date)=>changeFilterDate("to",date)} mode="date" maximumDate={todayDate} minimumDate={minDate} />
                         
                         <View style={{flexDirection: "row", marginTop: 20,padding: 10}}>

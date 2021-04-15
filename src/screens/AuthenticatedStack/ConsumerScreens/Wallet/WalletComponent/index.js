@@ -1,7 +1,6 @@
-import React, {useState,useEffect,useCallback} from 'react'
+import React, {useState,useEffect,useCallback, useContext} from 'react'
 import {View,StyleSheet,ActivityIndicator,ScrollView} from 'react-native'
 import {HeaderBack, HeaderTitle, SomethingWentWrong} from '../../../../../components'
-import {useNavigation} from '@react-navigation/native'
 import WalletRecentTransactions from '../Records/RecentTransactions'
 import {GET_TOKTOK_WALLET} from '../../../../../graphql'
 import {useLazyQuery} from '@apollo/react-hooks'
@@ -13,12 +12,17 @@ import { RefreshControl } from 'react-native';
 import WalletCardInfo from './WalletCardInfo'
 import WalletMethods from './WalletMethods'
 import WalletVerificationStatus from './WalletVerficationStatus'
+import WalletHoldMessageModal from '../Notification/WalletHoldMessageModal'
+import Advertisements from './Advertisements'
+import RecentOutgoingTransfer from './RecentOutgoingTransfer'
+import CheckWalletRestrictionProvider from './Context/CheckWalletRestrictionProvider'
 
-export default ()=> {
-    const navigation = useNavigation()
+
+export default ({navigation,route})=> {
+
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack/>,
-        headerTitle: ()=> <HeaderTitle label={['toktok wallet','']}/>,
+        headerTitle: ()=> <HeaderTitle label={['toktok Wallet','']}/>,
     })
     const session = useSelector(state=> state.session)
     const [mounted, setMounted] = useState(true)
@@ -33,7 +37,7 @@ export default ()=> {
             },
         },
         onCompleted: ({getToktokWallet}) => {
-           console.log(getToktokWallet)
+
         },
     });
 
@@ -41,7 +45,8 @@ export default ()=> {
     const onRefresh = useCallback(()=>{
         setRefreshing(true)
         setTimeout(() => {
-            getToktokWallet()
+            // getToktokWallet()
+            navigation.replace("TokTokWallet")
             setRefreshing(false)
         }, 200);
 
@@ -50,6 +55,12 @@ export default ()=> {
     useEffect(()=>{
         setMounted(true)
         getToktokWallet()
+
+        if(route.params){
+            if(route.params.isHold){
+                return navigation.push("TokTokWalletRestricted", {component: "onHold"})
+            }
+        }
         return ()=> {
             setMounted(false)
         }
@@ -74,25 +85,30 @@ export default ()=> {
     }
 
     return (
-        <View style={styles.container}>
-        <ScrollView
-            scrollEnabled={true}
-            showsVerticalScrollIndicator={false}
-            refreshControl={
-                <RefreshControl 
-                    refreshing={refreshing}
-                    onRefresh={onRefresh}
-                />
-            }
-        >
-            <WalletCardInfo walletinfo={data.getToktokWallet.record}/>
-            <WalletVerificationStatus walletinfo={data.getToktokWallet.record}/>
-            <WalletMethods walletinfo={data.getToktokWallet.record}/>
-            <WalletRecentTransactions session={session} seeAll={OpenCloseTransactionsModal} walletId={data.getToktokWallet.record.id}/>
-            <TransactionsModal session={session} modalVisible={modalVisible} closeModal={OpenCloseTransactionsModal}/>
-           
-        </ScrollView>
-    </View>
+        <CheckWalletRestrictionProvider walletinfo={data.getToktokWallet.record}>
+            <View style={styles.container}>
+                <ScrollView
+                    scrollEnabled={true}
+                    showsVerticalScrollIndicator={false}
+                    refreshControl={
+                        <RefreshControl 
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                        />
+                    }
+                >
+                    <WalletCardInfo walletinfo={data.getToktokWallet.record}>
+                        <WalletMethods walletinfo={data.getToktokWallet.record}/>
+                    </WalletCardInfo>
+                    <WalletVerificationStatus walletinfo={data.getToktokWallet.record}/>
+                    <Advertisements />
+                    <RecentOutgoingTransfer walletinfo={data.getToktokWallet.record}/>
+                    <WalletRecentTransactions session={session} seeAll={OpenCloseTransactionsModal} walletId={data.getToktokWallet.record.id}/>
+                    <TransactionsModal session={session} modalVisible={modalVisible} closeModal={OpenCloseTransactionsModal}/>
+                
+                </ScrollView>
+            </View>
+        </CheckWalletRestrictionProvider>
     )
 }
 

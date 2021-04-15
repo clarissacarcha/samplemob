@@ -1,20 +1,38 @@
 import React from 'react'
 import { Modal , StyleSheet , View , Text , TouchableOpacity} from 'react-native'
-import { COLOR, FONT_REGULAR , DARK, FONT_MEDIUM, FONT_BOLD} from '../../../../../../res/constants'
+import { COLOR, FONT_REGULAR , DARK, FONT_MEDIUM, FONT_BOLD, FONT_LIGHT} from '../../../../../../res/constants'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import { numberFormat } from '../../../../../../helper'
 import {useNavigation} from '@react-navigation/native'
+import moment from 'moment'
 
-const SuccessfulModal = ({successModalVisible , amount , recipient})=> {
+const RecipientInfo = ({label,value})=> (
+    <View style={styles.recipientInfoView}>
+        <View style={{flex: 1,justifyContent:"center",alignItems:"flex-start"}}>
+            <Text style={{fontFamily: FONT_REGULAR,color:"dimgray",fontSize: 12}}>{label}</Text>
+        </View>
+        <View style={{flex: 1,justifyContent:"center",alignItems:"flex-end"}}>
+            <Text style={{fontFamily: FONT_MEDIUM,fontSize:12}}>{value}</Text>
+        </View>
+    </View>
+)
+const SuccessfulModal = ({successModalVisible , amount , recipient , walletinfoParams})=> {
     const navigation = useNavigation()
 
     const ModalContent = ()=> (
-        <View style={{justifyContent: "center",alignItems:"center",flex: 1}}>
+        <View style={{justifyContent: "flex-start",alignItems:"center",flex: 1,marginTop: 30}}>
                 <View style={{height: 80,width: 80,borderRadius: 100, backgroundColor: "#FCB91A",justifyContent: "center", alignItems: "center",marginBottom: 20}}>
                             <FIcon5 name="check" color="white" size={40}/>
                 </View>
-                <Text style={{fontFamily: FONT_BOLD, fontSize: 18,marginVertical: 10,}}>Transaction Completed</Text>
-                <Text style={{fontFamily: FONT_MEDIUM,fontSize: 12, color:"gray"}}>Successfully Transferred {'\u20B1'} {numberFormat(amount)} to {recipient.name}</Text>
+                <Text style={{fontFamily: FONT_BOLD, fontSize: 18,marginTop: 15}}>Transaction Completed</Text>
+                <Text style={{fontFamily: FONT_MEDIUM, fontSize: 12,marginVertical: 2,marginTop: 5}}>Ref. No. {walletinfoParams.referenceNumber}</Text>
+                <Text style={{fontFamily: FONT_LIGHT,fontSize: 10}}>{moment(walletinfoParams.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')}</Text>
+
+                <View style={styles.recipientInfo}>
+                        <RecipientInfo label="Payment Method" value="toktok wallet"/>
+                        <RecipientInfo label="Recipient" value={recipient.name}/>
+                        <RecipientInfo label="Fund Transfered" value={`${'\u20b1'} ${numberFormat(amount)}`}/>
+                </View>
         </View>
     )
 
@@ -67,6 +85,16 @@ const styles = StyleSheet.create({
     },
     buttons: {
         flexDirection: "row"
+    },
+    recipientInfo: {
+        marginTop: 40,
+    },
+    recipientInfoView: {
+        width:"100%",
+        borderBottomWidth: .3,
+        borderColor:"silver",
+        flexDirection:"row",
+        paddingVertical: 12
     }
 })
 

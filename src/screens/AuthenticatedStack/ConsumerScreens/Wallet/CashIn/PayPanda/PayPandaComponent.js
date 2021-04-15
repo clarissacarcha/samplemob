@@ -8,66 +8,10 @@ import {useMutation} from '@apollo/react-hooks'
 import {POST_WALLET_CASH_IN} from '../../../../../../graphql/model'
 import {onError} from '../../../../../../util/ErrorUtility';
 import {numberFormat} from '../../../../../../helper'
+import ConfirmModal from './ConfirmModal'
 
 const {height,width} = Dimensions.get("window")
 
-const ConfirmModal = ({showModal,setShowModal,amount,onPress})=> (
-    <Modal
-        animationType="fade"
-        visible={showModal}
-        transparent={true}
-        onRequestClose={() => {
-            setShowModal(!showModal);
-        }}
-    >
-          <View style={{flex: 1, backgroundColor: "rgba(0,0,0,0.7)"}}>
-
-          </View>
-          <View style={styles.modalContent}>
-             <View style={styles.modalbody}>
-                <View style={styles.modalHeader}>
-                    <TouchableOpacity onPress={()=>setShowModal(!showModal)} style={{position: "absolute",left: 0}}>
-                        <FIcon5 name="times" size={20}/>
-                    </TouchableOpacity>   
-                    <Text style={{fontSize: 14,fontFamily: FONT_MEDIUM}}>Review and confirm</Text>
-                </View>
-                <View style={styles.modalconfirmdetails}>
-                    <View style={{flexDirection: "row",paddingVertical: 12,borderBottomWidth: 0.5,borderColor: "silver",width: "100%"}}>
-                        <View style={{flex: 1}}>    
-                            <Text style={{color: "gray",fontSize: 12,fontFamily: FONT_REGULAR}}>Payment Method</Text>
-                        </View>
-                        <View style={{flex: 1}}>   
-                             <Text style={{color: "gray",fontSize: 12,alignSelf: "flex-end",fontFamily: FONT_REGULAR}}>PayPanda</Text>
-                        </View>  
-                    </View>
-                    <View style={{flexDirection: "row",paddingVertical: 12,borderBottomWidth: 0.5,borderColor: "silver"}}>
-                        <View style={{flex: 1}}>    
-                            <Text style={{color: "gray",fontSize: 12,fontFamily: FONT_REGULAR}}>Cash-in amount</Text>
-                        </View>
-                        <View style={{flex: 1}}>   
-                             <Text style={{color: "gray",fontSize: 12,alignSelf: "flex-end",fontFamily: FONT_REGULAR}}>{'\u20B1'} {numberFormat(amount)}</Text>
-                        </View>  
-                    </View>
-                    <View style={{flexDirection: "row",paddingVertical: 12,}}>
-                        <View style={{flex: 1}}>    
-                            <Text style={{fontFamily: FONT_MEDIUM}}>Total</Text>
-                        </View>
-                        <View style={{flex: 1}}>   
-                            <Text style={{fontFamily: FONT_MEDIUM,alignSelf: "flex-end"}}>{'\u20B1'} {numberFormat(amount)}</Text>
-                        </View>  
-                    </View>
-
-                </View>
-                <View style={styles.modalconfirmbtn}>
-                    <TouchableOpacity onPress={onPress} style={{height: "100%",width: "100%",backgroundColor: DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
-                        <Text style={{color: COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Confirm</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-          </View>
-        
-    </Modal>
-)
 
 const PayPandaComponent = ({navigation,route})=> {
     navigation.setOptions({
@@ -122,13 +66,18 @@ const PayPandaComponent = ({navigation,route})=> {
        
     }
 
+    const openSecurityPIN = ()=> {
+        setShowModal(false)
+        return navigation.push("TokTokWalletPinCodeSecurity", {onConfirm: proceedToPaypandaPortal})
+    }
+
 
     const confirmAmount = ()=> {
         setShowModal(true)
     }
 
     const changeAmountText = (value)=> {
-        let num = value.replace(/[^0-9]/g, '')
+        const num = value.replace(/[^0-9]/g, '')
         setTempAmount(num)
         setAmount(num * 0.01)
         if(num == "") return setMessage("")
@@ -142,7 +91,7 @@ const PayPandaComponent = ({navigation,route})=> {
 
     return (
       <>
-       <ConfirmModal showModal={showModal} setShowModal={setShowModal} amount={amount} onPress={proceedToPaypandaPortal}/>
+       <ConfirmModal showModal={showModal} setShowModal={setShowModal} amount={amount} onPress={openSecurityPIN}/>
        <KeyboardAvoidingView  
             keyboardVerticalOffset={Platform.OS == "ios" ? 0 : 90}  
             behavior={Platform.OS === "ios" ? "padding" : "height"} 
@@ -158,7 +107,7 @@ const PayPandaComponent = ({navigation,route})=> {
                 ? <View style={styles.amountcontent}>
                         <View style={{flexDirection: "row"}}>
                             <TextInput
-                                    autoFocus={true}
+                                    // autoFocus={true}
                                     caretHidden
                                     value={tempAmount}
                                     // ref={inputRef}
@@ -175,7 +124,7 @@ const PayPandaComponent = ({navigation,route})=> {
                             <FIcon5 name="pen" style={{alignSelf:"center"}} size={18} color="gray"/>
                         </View>
                         <Text style={{color:"gray",fontSize: 14,fontFamily: FONT_REGULAR}}>Current Balance {'\u20B1'} {numberFormat(balance)}</Text>
-                        <Text style={{fontFamily: FONT_REGULAR, color: "red",marginTop: 5}}>{message}</Text>
+                        <Text style={{fontFamily: FONT_REGULAR, color: "red",marginTop: 5,fontSize: 12}}>{message}</Text>
               
                  </View>
                 : <View style={{flex: 1,justifyContent: "center",alignItems: "center"}}><ActivityIndicator size={50}/></View>
@@ -217,32 +166,6 @@ const styles = StyleSheet.create({
         height: 60,
         width: "100%",
         padding: 10,
-    },
-    modalContent: {
-        flex: 1,
-        backgroundColor: "rgba(0,0,0,0.7)",
-    },
-    modalbody: {
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20,
-        backgroundColor: "white",
-        flex: 1,
-        paddingHorizontal: 20,
-    },
-    modalHeader: {
-        height: 50,
-        position: "relative",
-        justifyContent: "center",
-        alignItems: "center"
-    },
-    modalconfirmdetails: {
-        flex: 1,
-    },
-    modalconfirmbtn: {
-        height: 60,
-        width: "100%",
-        paddingVertical: 10,
-        marginBottom: 20,
     },
     input: {
         marginHorizontal: 20,

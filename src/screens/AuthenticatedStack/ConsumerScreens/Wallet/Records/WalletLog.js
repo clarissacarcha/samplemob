@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
         paddingVertical: 15,
         borderWidth: 0.5 ,
         borderColor:"silver",
-        marginVertical: 10,
+        marginVertical: 5,
         borderRadius: 5,
         flexDirection: "row"
     },

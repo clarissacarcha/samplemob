@@ -55,3 +55,21 @@ export const GET_TOKTOK_WALLET_LOGS = gql`
     }
   }
 `
+
+export const GET_RECENT_OUTGOING_TRANSFER = gql`
+  query {
+    getRecentOutgoingTransfer {
+      id
+      referenceNumber
+      amount
+      createdAt
+      destinationInfo {
+        username
+        firstName
+        middleName
+        lastName
+        internalAccount
+    }
+    }
+  }
+`

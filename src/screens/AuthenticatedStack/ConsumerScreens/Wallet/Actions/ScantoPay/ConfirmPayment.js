@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {View,Text,StyleSheet,Image,Alert,TextInput} from 'react-native'
+import {View,Text,StyleSheet,Image,Alert,TextInput,KeyboardAvoidingView,Platform,ScrollView} from 'react-native'
 import SwipeButton from 'rn-swipe-button';
 import {HeaderBack, HeaderTitle} from '../../../../../../components'
 import { FONT_MEDIUM, FONT_REGULAR } from '../../../../../../res/constants'
@@ -8,7 +8,7 @@ import { PATCH_FUND_TRANSFER} from '../../../../../../graphql'
 import {useQuery,useMutation} from '@apollo/react-hooks'
 import {useSelector} from 'react-redux'
 import { onError } from '../../../../../../util/ErrorUtility';
-import SuccessfulModal from '../Send/SuccessfulModal'
+import SuccessfulModal from '../SendMoney/SuccessfulModal'
 
 const ConfirmPayment = ({navigation,route})=> {
 
@@ -49,11 +49,7 @@ const ConfirmPayment = ({navigation,route})=> {
     })
 
     const onSwipeSuccess = ()=> {
-        if(walletinfo.pincode != null){
-            navigation.push("TokTokWalletPinCodeSecurity", {onConfirm: ()=> patchFundTransfer()})
-        }else{
-            patchFundTransfer()
-        }
+        return navigation.push("TokTokWalletPinCodeSecurity", {onConfirm: patchFundTransfer})
     }
 
     const onSwipeFail = (e)=> {
@@ -61,7 +57,7 @@ const ConfirmPayment = ({navigation,route})=> {
     }
 
     const changeAmount = (value)=>{
-        let num = value.replace(/[^0-9]/g, '')
+        const num = value.replace(/[^0-9]/g, '')
         setTempAmount(num)
         setAmount(num * 0.01)
         if((num * 0.01) >= 1 && (num * 0.01) <= walletinfo.balance){
@@ -95,8 +91,12 @@ const ConfirmPayment = ({navigation,route})=> {
                 }}
                 walletinfoParams={walletinfoParams}
         />
-        <View style={styles.container}>
-            <View style={styles.content}>
+        <KeyboardAvoidingView  
+                keyboardVerticalOffset={Platform.OS == "ios" ? 0 : 90}  
+                behavior={Platform.OS === "ios" ? "padding" : "height"} 
+                style={styles.container}
+        >
+            <ScrollView style={styles.content}>
                     <Text style={{marginLeft: 20, marginTop: 20, fontFamily: FONT_MEDIUM ,fontSize: 16}}>Send to</Text>
                     <View style={styles.receiverInfo}>
                         <Image style={{height: 50,width: 50,marginRight: 10}} resizeMode="contain" source={{uri: recipientInfo.image}}/>
@@ -127,7 +127,7 @@ const ConfirmPayment = ({navigation,route})=> {
                              errorMessage != "" && <Text style={{fontFamily: FONT_REGULAR , color: "red",fontSize: 12,marginTop: 5}}>{errorMessage}</Text>
                          }
                     </View>
-            </View>
+            </ScrollView>
             <SwipeButton 
                     disabled={!swipeEnabled}
                     disabledRailBackgroundColor="dimgray"
@@ -160,7 +160,7 @@ const ConfirmPayment = ({navigation,route})=> {
                     shouldResetAfterSuccess={true}
                 />
           
-        </View>
+        </KeyboardAvoidingView>
       </>
     )
 }

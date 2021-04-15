@@ -10,6 +10,7 @@ import { COLOR, DARK, FONT_LIGHT, FONT_MEDIUM, FONT_REGULAR, MEDIUM } from '../.
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import { numberFormat } from '../../../../../../helper';
 import ConfirmModal from './ConfirmModal'
+import SuccessfulModal from './SuccessfulModal'
 
 const GcashEnchashment = ({navigation,route})=> {
 
@@ -26,9 +27,14 @@ const GcashEnchashment = ({navigation,route})=> {
     const [data,setData] = useState({getGCashAccount: {record: null}})
     const [errorMessage,setErrorMessage] = useState("")
     const inputRef = useRef()
+    const [successModalVisible,setSuccessModalVisible] = useState(false)
+    const [cashoutLogParams,setCashoutLogParams] = useState({
+        status: 0
+    })
+
 
     const changeAmount = (value)=>{
-        let num = value.replace(/[^0-9]/g, '')
+        const num = value.replace(/[^0-9]/g, '')
         setTempAmount(num)
         setAmount(num * 0.01)
         if(num == "") return setErrorMessage("")
@@ -134,7 +140,21 @@ const GcashEnchashment = ({navigation,route})=> {
 
     return (
         <>
-        <ConfirmModal showModal={showModal} setShowModal={setShowModal} amount={amount} walletinfo={walletinfo} session={session} navigation={navigation}/>
+        <SuccessfulModal
+            successModalVisible={successModalVisible}
+            amount={amount}
+            cashoutLogParams={cashoutLogParams}
+        />
+        <ConfirmModal 
+            showModal={showModal} 
+            setShowModal={setShowModal} 
+            amount={amount} 
+            walletinfo={walletinfo} 
+            session={session} 
+            navigation={navigation} 
+            setSuccessModalVisible={setSuccessModalVisible}
+            setCashoutLogParams={setCashoutLogParams}
+        />
         <KeyboardAvoidingView  
             keyboardVerticalOffset={Platform.OS == "ios" ? 0 : 90}  
             behavior={Platform.OS === "ios" ? "padding" : "height"}  
@@ -169,7 +189,7 @@ const GcashEnchashment = ({navigation,route})=> {
                                 <FIcon5 name="pen" style={{alignSelf:"center"}} size={18} color="gray"/>
                         </View>
                         <Text style={{color:"gray",fontSize: 14,fontFamily: FONT_REGULAR}}>Current Balance {'\u20B1'} {numberFormat(walletinfo.balance)}</Text>
-                        <Text style={{fontFamily: FONT_REGULAR, color: "red",marginTop: 5}}>{errorMessage}</Text>
+                        <Text style={{fontFamily: FONT_REGULAR, color: "red",marginTop: 5,fontSize: 12}}>{errorMessage}</Text>
             </View>
 
             <View style={styles.cashinbutton}>

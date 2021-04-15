@@ -12,7 +12,7 @@ const ModalCountry = ({type})=> {
     const [filteredCountries,setFilteredCountries] = useState(countries)
 
     const selectCountry = (index) => {
-        let country = filteredCountries[index].name
+        const country = filteredCountries[index].name
         if(type == "birthinfo"){
             changeBirthInfo("birthPlace", country)
         }else if(type == "address"){

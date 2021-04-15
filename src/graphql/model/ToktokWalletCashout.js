@@ -5,6 +5,21 @@ export const POST_GCASH_ENCASHMENT = gql`
     mutation postGcashEncashment($input: PostEncashmentInput){
         postGcashEncashment(input: $input){
             message
+            cashoutLog {
+                id
+                tokDisbursementBatchId
+                tokUserId
+                totalAmount
+                gcashMobileNumber
+                gcashFirstName
+                gcashLastName
+                gcashStreetAddress
+                gcashBirthdate
+                status  
+                remarks
+                createdAt
+                updatedAt
+            }
         }
     }
 `
