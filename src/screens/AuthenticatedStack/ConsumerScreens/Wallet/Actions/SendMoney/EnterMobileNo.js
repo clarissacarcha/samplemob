@@ -2,10 +2,10 @@ import React , {useState, useEffect} from 'react'
 import {View,Text,StyleSheet,TextInput,TouchableOpacity} from 'react-native'
 import { FONT_MEDIUM, FONT_REGULAR } from '../../../../../../res/constants'
 import {useLazyQuery} from '@apollo/react-hooks'
-import {CLIENT,GET_USER_ACCOUNT} from '../../../../../../graphql'
+import {CLIENT,GET_USER_ACCOUNT,GET_DAILY_MONTHLY_YEARLY_INCOMING} from '../../../../../../graphql'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 
-const EnterMobileNo = ({session , navigation , setProceed , setRecipientDetails , mobileNo , setMobileNo})=> {
+const EnterMobileNo = ({session , navigation , setProceed , setRecipientDetails , mobileNo , setMobileNo , recipientDetails})=> {
 
     const [errorMessage,setErrorMessage] = useState("")
 
@@ -25,9 +25,36 @@ const EnterMobileNo = ({session , navigation , setProceed , setRecipientDetails 
             }
         },
         onCompleted: (response) => {
-            setRecipientDetails(response.getUserAccount)
+            setRecipientDetails(oldstate=> {
+                return {
+                    ...oldstate,
+                    ...response.getUserAccount
+                }
+            })
             checkIFSameNumber(response.getUserAccount.username.replace("+63","0"))
+            getDailyMonthlyYearlyIncoming({
+                variables: {
+                    input: {
+                        userID: response.getUserAccount.id
+                    }
+                }
+            })
             // return navigation.push("TokTokWalletPinCodeSecurity", {onConfirm: patchFundTransfer})
+        }
+    })
+
+    const [getDailyMonthlyYearlyIncoming] = useLazyQuery(GET_DAILY_MONTHLY_YEARLY_INCOMING , {
+        fetchPolicy: 'network-only',
+        onError: (error)=>{
+
+        },
+        onCompleted: (response)=>{
+            setRecipientDetails(oldstate=> {
+                return {
+                    ...oldstate,
+                    incomingRecords: response.getDailyMonthlyYearlyIncoming
+                }
+            })
         }
     })
 
@@ -105,7 +132,6 @@ const EnterMobileNo = ({session , navigation , setProceed , setRecipientDetails 
             setProceed(false)
         }
     },[mobileNo])
-
 
     return (
         <>

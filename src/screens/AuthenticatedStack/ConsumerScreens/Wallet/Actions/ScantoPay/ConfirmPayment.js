@@ -1,14 +1,15 @@
-import React, {useState} from 'react'
+import React, {useState,useEffect} from 'react'
 import {View,Text,StyleSheet,Image,Alert,TextInput,KeyboardAvoidingView,Platform,ScrollView} from 'react-native'
 import SwipeButton from 'rn-swipe-button';
 import {HeaderBack, HeaderTitle} from '../../../../../../components'
 import { FONT_MEDIUM, FONT_REGULAR } from '../../../../../../res/constants'
 import {numberFormat} from '../../../../../../helper'
-import { PATCH_FUND_TRANSFER} from '../../../../../../graphql'
-import {useQuery,useMutation} from '@apollo/react-hooks'
+import { PATCH_FUND_TRANSFER , GET_DAILY_MONTHLY_YEARLY_INCOMING , GET_DAILY_MONTHLY_YEARLY_OUTGOING} from '../../../../../../graphql'
+import {useQuery,useMutation,useLazyQuery} from '@apollo/react-hooks'
 import {useSelector} from 'react-redux'
-import { onError } from '../../../../../../util/ErrorUtility';
+import { onError , onErrorAlert} from '../../../../../../util/ErrorUtility';
 import SuccessfulModal from '../SendMoney/SuccessfulModal'
+import {useAlert} from '../../../../../../hooks/useAlert'
 
 const ConfirmPayment = ({navigation,route})=> {
 
@@ -16,19 +17,21 @@ const ConfirmPayment = ({navigation,route})=> {
         headerLeft: ()=> <HeaderBack />,
         headerTitle: ()=> <HeaderTitle label={['Send money using toktok wallet','']}/>,
     })
+    const alert = useAlert()
     const { recipientInfo, walletinfo } = route.params
     const session = useSelector(state=>state.session)
     const [tempAmount,setTempAmount] = useState("")
     const [amount,setAmount] = useState("")
     const [swipeEnabled,setSwipeEnabled] = useState(false)
     const [successModalVisible, setSuccessModalVisible] = useState(false)
-    const [showpinModal,setShowPinModal] = useState(false)
     const [errorMessage,setErrorMessage] = useState("")
     const [walletinfoParams,setWalletinfoParams] = useState({
         id: "",
         referenceNumber: "",
         createdAt: ""
     })
+    const [recipientDetails,setRecipientDetails] = useState(null)
+    const [senderDetails,setSenderDetails] = useState(null)
 
     const [patchFundTransfer] = useMutation(PATCH_FUND_TRANSFER, {
         variables: {
@@ -39,14 +42,52 @@ const ConfirmPayment = ({navigation,route})=> {
             }
         },
         onError: (error)=> {
-            onError(error)
-            setShowPinModal(false)
+            onErrorAlert({alert , error})
         },
         onCompleted: (response)=> {
             setWalletinfoParams(response.patchFundTransfer.walletLog)
             setSuccessModalVisible(true)
         }
     })
+
+
+    const [getDailyMonthlyYearlyIncoming] = useLazyQuery(GET_DAILY_MONTHLY_YEARLY_INCOMING, {
+        fetchPolicy: 'network-only',
+        onError: (error)=>{
+
+        },
+        onCompleted: (response)=> {
+            setRecipientDetails(response.getDailyMonthlyYearlyIncoming)
+        }
+    })
+
+    const [getDailyMonthlyYearlyOutgoing] = useLazyQuery(GET_DAILY_MONTHLY_YEARLY_OUTGOING, {
+        fetchPolicy: 'network-only',
+        onError: (error)=>{
+
+        },
+        onCompleted: (response)=> {
+            setSenderDetails(response.getDailyMonthlyYearlyOutgoing)
+        }
+    })
+
+    useEffect(()=>{
+        getDailyMonthlyYearlyIncoming({
+            variables: {
+                input: {
+                    userID: recipientInfo.id
+                }
+            }
+        })
+
+        getDailyMonthlyYearlyOutgoing({
+            variables: {
+                input: {
+                    userID: session.user.id
+                }
+            }
+        })
+    },[])
 
     const onSwipeSuccess = ()=> {
         return navigation.push("TokTokWalletPinCodeSecurity", {onConfirm: patchFundTransfer})
@@ -60,6 +101,7 @@ const ConfirmPayment = ({navigation,route})=> {
         const num = value.replace(/[^0-9]/g, '')
         setTempAmount(num)
         setAmount(num * 0.01)
+
         if((num * 0.01) >= 1 && (num * 0.01) <= walletinfo.balance){
             setSwipeEnabled(true)
             setErrorMessage("")
@@ -67,9 +109,82 @@ const ConfirmPayment = ({navigation,route})=> {
             setSwipeEnabled(false)
             setErrorMessage(`Please Enter atleast ${'\u20B1'} 1.00`)
         }else{
-            setSwipeEnabled(false)
-            setErrorMessage(num == "" ? "" : "You do not have enough balance")
+            setErrorMessage("")
         }
+
+        checkSenderWalletLimitation(num * 0.01)
+        checkRecipientWalletLimitation(num * 0.01)
+
+        if((num * 0.01) > walletinfo.balance){
+            setSwipeEnabled(false)
+            return setErrorMessage("You do not have enough balance")
+        }
+
+    }
+
+    const checkRecipientWalletLimitation = (amount)=> {
+        const incomingRecords = recipientDetails
+        const walletLimit = incomingRecords.walletlimit
+
+
+        if(walletLimit.walletSize){
+            if((incomingRecords.walletbalance + +amount ) > walletLimit.walletSize){
+                setSwipeEnabled(false)
+                return setErrorMessage("Recipient wallet size limit is reached.")
+            }
+        }
+
+        if(walletLimit.incomingValueDailyLimit){
+            if((incomingRecords.daily + +amount ) > walletLimit.incomingValueDailyLimit){
+                setSwipeEnabled(false)
+                return setErrorMessage("Recipient daily incoming wallet limit is reached.")
+            }
+        }
+
+        if(walletLimit.incomingValueMonthlyLimit){
+            if((incomingRecords.monthly + +amount ) > walletLimit.incomingValueMonthlyLimit){
+                setSwipeEnabled(false)
+                return setErrorMessage("Recipient monthly incoming wallet limit is reached.")
+            }
+        }
+
+        if(walletLimit.incomingValueAnnualLimit){
+            if((incomingRecords.yearly + +amount ) > walletLimit.incomingValueAnnualLimit){
+                setSwipeEnabled(false)
+                return setErrorMessage("Recipient annual incoming wallet limit is reached.")
+            }
+        }
+
+ 
+        return 
+    }
+
+    const checkSenderWalletLimitation = (amount)=> {
+        const outgoingRecords = senderDetails
+        const walletLimit = outgoingRecords.walletlimit
+
+        if(walletLimit.outgoingValueDailyLimit){
+            if((outgoingRecords.daily + +amount ) > walletLimit.outgoingValueDailyLimit){
+                setSwipeEnabled(false)
+                return setErrorMessage("Your daily outgoing wallet is reached.")
+            }
+        }
+
+        if(walletLimit.outgoingValueMonthlyLimit){
+            if((outgoingRecords.monthly + +amount ) > walletLimit.outgoingValueMonthlyLimit){
+                setSwipeEnabled(false)
+                return setErrorMessage("Your monthly outgoing wallet limit is reached.")
+            }
+        }
+
+        if(walletLimit.outgoingValueAnnualLimit){
+            if((outgoingRecords.yearly + +amount ) > walletLimit.outgoingValueAnnualLimit){
+                setSwipeEnabled(false)
+                return setErrorMessage("Your annual outgoing wallet limit is reached.")
+            }
+        }
+
+        return
     }
 
 

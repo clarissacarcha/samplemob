@@ -48,6 +48,8 @@ import SearchContact from '../screens/AuthenticatedStack/ConsumerScreens/Booking
 /*---------- CONSUMER TOKTOK WALLET SCREENS ----------*/
 import Wallet from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/WalletComponent';
 import WalletRestrictedScreen from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/WalletComponent/RestrictedScreen';
+import WalletSecurityAndPrivacy from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/WalletComponent/SecurityAndPrivacy';
+
 import PaymentOptions from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/CashIn/PaymentOptions';
 import PayPanda from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/CashIn/PayPanda/PayPandaComponent';
 import PayPandaWebView from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/CashIn/PayPanda/WebViewComponent';
@@ -305,6 +307,7 @@ const AuthenticatedStack = () => (
 
     <Authenticated.Screen name="TokTokWallet" component={Wallet}/>
     <Authenticated.Screen name="TokTokWalletRestricted" component={WalletRestrictedScreen}/>
+    <Authenticated.Screen name="TokTokWalletSecurityAndPrivacy" component={WalletSecurityAndPrivacy}/>
     <Authenticated.Screen name="TokTokWalletCashIn" component={PaymentOptions}/>
     <Authenticated.Screen name="TokTokWalletCashInPaypanda" component={PayPanda}/>
     <Authenticated.Screen name="TokTokWalletCashINPaypandaWebView" component={PayPandaWebView}/> 

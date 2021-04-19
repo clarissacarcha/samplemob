@@ -20,8 +20,6 @@ const WebViewComponent = ()=> {
         headerShown: false,
     }); 
 
-    const [cangoBack,setCanGoBack] = useState(false)
-    const [cangoForward,setCanGoForward] = useState(false)
     const [mounted, setMounted] = useState(true)
     const [checkurl,setCheckurl] = useState("")
     const [donetransaction,setDoneTransaction] = useState(false)
@@ -56,6 +54,9 @@ const WebViewComponent = ()=> {
     const [patchPayPandaReturnUrl, {data,error,loading}] = useMutation(PATCH_PAYPANDA_RETURN_URL,{
         // fetchPolicy: 'network-only',
         onCompleted: ({patchPayPandaReturnUrl})=>{
+
+            console.log(JSON.stringify(patchPayPandaReturnUrl))
+
             setCashInLogParams(patchPayPandaReturnUrl.cashinLog)
             setDoneTransaction(true)
         }
@@ -68,13 +69,6 @@ const WebViewComponent = ()=> {
         }
     },[])
 
-    const webviewGoBack = ()=> {
-        webviewRef.current.goBack()
-    }
-
-    const webviewGoForward = ()=> {
-        webviewRef.current.goForward()
-    }
 
     const LoadingIndicator = ()=> (
         <View style={{
@@ -88,29 +82,7 @@ const WebViewComponent = ()=> {
     )
 
 
-    const NavigationWebView = ({cangoBackProp,cangoForwardProp})=> {
 
-        return (
-            <>
-                <View style={[styles.navigationWebview,!cangoBackProp && !cangoForwardProp && {display: "none"}]}>
-                    {
-                        cangoBackProp &&
-                        <TouchableOpacity onPress={webviewGoBack} style={styles.navigationWebbtn}>
-                                <Text style={styles.webviewnavLabel}>Back</Text>
-                        </TouchableOpacity>
-                    }
-
-                    {
-                        cangoForwardProp &&
-                        <TouchableOpacity onPress={webviewGoForward} style={styles.navigationWebbtn}>
-                                <Text style={styles.webviewnavLabel}>Forward</Text>
-                        </TouchableOpacity>
-                    }
-                  
-               </View>
-            </>
-        )
-    }
     
 
     return (
@@ -130,8 +102,6 @@ const WebViewComponent = ()=> {
                     startInLoadingState
                     renderLoading={()=> <LoadingIndicator/>}
                     onNavigationStateChange={(event)=> {
-                        setCanGoBack(event.canGoBack)
-                        setCanGoForward(event.canGoForward)
                         const checkreturnurl = event.url.search("http://toktokreturnurl.ph")
                         if(checkreturnurl != - 1){
                             const {url} = event
@@ -171,7 +141,6 @@ const WebViewComponent = ()=> {
                     cashInLogParams={cashInLogParams}
                 />
             }
-                {/* <NavigationWebView cangoBackProp={cangoBack} cangoForwardProp={cangoForward} /> */}
             </View>
         </>
     )

@@ -98,7 +98,6 @@ const RecentOutgoingTransfer = ({walletinfo})=> {
 
     const onPress = (recentTransfer)=> {
         setConfirmModalVisible(false)
-        console.log(JSON.stringify(recentTransfer))
         return navigation.navigate("TokTokWalletSendMoney", {walletinfo , recentTransfer})
     }
 
@@ -114,6 +113,10 @@ const RecentOutgoingTransfer = ({walletinfo})=> {
     }
 
     if(error){
+        return null
+    }
+
+    if(!data.getRecentOutgoingTransfer){
         return null
     }
 

@@ -73,3 +73,36 @@ export const GET_RECENT_OUTGOING_TRANSFER = gql`
     }
   }
 `
+
+const dailyMonthlyYearly = `
+  daily
+  monthly
+  yearly
+  walletbalance
+  walletlimit {
+    id
+    walletSize
+    incomingValueDailyLimit
+    incomingValueMonthlyLimit
+    incomingValueAnnualLimit
+    outgoingValueDailyLimit
+    outgoingValueMonthlyLimit
+    outgoingValueAnnualLimit
+  }
+`
+
+export const GET_DAILY_MONTHLY_YEARLY_INCOMING = gql`
+  query getDailyMonthlyYearlyIncoming($input: GetDailyMonthlyYearlyInput){
+      getDailyMonthlyYearlyIncoming(input: $input){
+        ${dailyMonthlyYearly}
+      }
+  }
+`
+
+export const GET_DAILY_MONTHLY_YEARLY_OUTGOING= gql`
+  query getDailyMonthlyYearlyOutgoing($input: GetDailyMonthlyYearlyInput){
+    getDailyMonthlyYearlyOutgoing(input: $input){
+         ${dailyMonthlyYearly}
+      }
+  }
+`

@@ -28,7 +28,6 @@ export const onError = (error) => {
 
 export const onErrorAlert = ({alert, error}) => {
   try {
-    console.log(JSON.stringify(error));
 
     const {graphQLErrors, networkError} = error;
 

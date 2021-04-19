@@ -6,7 +6,7 @@ import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 const SampleAdvertisementsData = [
     {key: 0,image: require('../../../../../assets/images/sampleAds/ad1.png')},
     {key: 1,image: require('../../../../../assets/images/sampleAds/ad2.png')},
-    {key: 2,image: require('../../../../../assets/images/sampleAds/ad1.png')},
+    {key: 2,image: require('../../../../../assets/images/sampleAds/ad3.png')},
     // {key: 3,image: require('../../../../../assets/images/sampleAds/ad3.png')},
 ]
 
@@ -39,7 +39,7 @@ const RenderAdvertisement = ({item,index,onPress})=> {
 
     return (
         <TouchableHighlight underlayColor onPress={()=>onPress(index)} style={styles.adContent} key={`ad-${index}`}>
-               <Image resizeMode="contain" style={styles.adImage} source={SampleAdvertisementsData[index].image}/>
+               <Image resizeMode="stretch" style={styles.adImage} source={SampleAdvertisementsData[index].image}/>
         </TouchableHighlight>
     )
 }

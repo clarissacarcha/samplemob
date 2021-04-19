@@ -1,14 +1,15 @@
 import React, {useState,useRef,useEffect} from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,Image,Modal,TextInput,Platform,KeyboardAvoidingView,ActivityIndicator,Alert,Dimensions,ScrollView} from 'react-native'
 import {HeaderBackClose, HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../../../components'
-import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM, FONT_MEDIUM, FONT_REGULAR} from '../../../../../../res/constants'
+import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM, FONT_MEDIUM, FONT_REGULAR, FONT_LIGHT} from '../../../../../../res/constants'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import {useSelector} from 'react-redux'
-import {useMutation} from '@apollo/react-hooks'
-import {POST_WALLET_CASH_IN} from '../../../../../../graphql/model'
-import {onError} from '../../../../../../util/ErrorUtility';
+import {useMutation,useLazyQuery} from '@apollo/react-hooks'
+import {POST_WALLET_CASH_IN,GET_DAILY_MONTHLY_YEARLY_INCOMING} from '../../../../../../graphql/model'
+import {onError,onErrorAlert} from '../../../../../../util/ErrorUtility';
 import {numberFormat} from '../../../../../../helper'
 import ConfirmModal from './ConfirmModal'
+import {useAlert} from '../../../../../../hooks/useAlert'
 
 const {height,width} = Dimensions.get("window")
 
@@ -18,6 +19,8 @@ const PayPandaComponent = ({navigation,route})=> {
         headerLeft: ()=> <HeaderBackClose/>,
         headerTitle: ()=> <HeaderTitle label={['Enter Amount','']}/>,
     })
+
+    const alert = useAlert()
 
 
     const walletId = route.params.walletId
@@ -29,11 +32,16 @@ const PayPandaComponent = ({navigation,route})=> {
     const [tempAmount,setTempAmount] = useState("")
     const [amount,setAmount] = useState("")
     const [message,setMessage] = useState("")
+    const [recipientDetails,setRecipientDetails] = useState(null)
+    const [disablebtn,setDisablebtn] = useState(false)
+    const [maxLimitMessage,setMaxLimitMessage] = useState("")
     const inputRef = useRef()
 
     const [postWalletCashIn , {data,error,loading}] = useMutation(POST_WALLET_CASH_IN, {
         // fetchPolicy: 'network-only',
-        onError: onError,
+        onError: (error)=>{
+            onErrorAlert({alert,error})
+        },
         onCompleted: ({postWalletCashIn})=> {
             navigation.navigate("TokTokWalletCashINPaypandaWebView", {
                 merchantId: postWalletCashIn.merchantId,
@@ -49,6 +57,63 @@ const PayPandaComponent = ({navigation,route})=> {
             })
         }
     })
+
+    const [getDailyMonthlyYearlyIncoming] = useLazyQuery(GET_DAILY_MONTHLY_YEARLY_INCOMING, {
+        fetchPolicy: 'network-only',
+        onError: (error)=>{
+
+        },
+        onCompleted: (response)=> {
+                setRecipientDetails(response.getDailyMonthlyYearlyIncoming)
+        }
+    })
+
+    const checkRecipientWalletLimitation = (amount)=> {
+        const incomingRecords = recipientDetails
+        const walletLimit = incomingRecords.walletlimit
+
+
+        if(walletLimit.walletSize){
+            if((incomingRecords.walletbalance + +amount ) > walletLimit.walletSize){
+                setDisablebtn(true)
+                return setMessage("Your wallet size limit is reached.")
+            }
+        }
+
+        if(walletLimit.incomingValueDailyLimit){
+            if((incomingRecords.daily + +amount ) > walletLimit.incomingValueDailyLimit){
+                setDisablebtn(true)
+                return setMessage("Your daily incoming wallet limit is reached.")
+            }
+        }
+
+        if(walletLimit.incomingValueMonthlyLimit){
+            if((incomingRecords.monthly + +amount ) > walletLimit.incomingValueMonthlyLimit){
+                setDisablebtn(true)
+                return setMessage("Your monthly incoming wallet limit is reached.")
+            }
+        }
+
+        if(walletLimit.incomingValueAnnualLimit){
+            if((incomingRecords.yearly + +amount ) > walletLimit.incomingValueAnnualLimit){
+                setDisablebtn(true)
+                return setMessage("Your annual incoming wallet limit is reached.")
+            }
+        }
+
+        setDisablebtn(false)
+        return setMessage("")
+    }
+
+    useEffect(()=>{
+        getDailyMonthlyYearlyIncoming({
+            variables: {
+                input: {
+                    userID: userstate.id
+                }
+            }
+        })
+    },[])
 
     const proceedToPaypandaPortal = ()=> {
         postWalletCashIn({
@@ -77,17 +142,22 @@ const PayPandaComponent = ({navigation,route})=> {
     }
 
     const changeAmountText = (value)=> {
+        setMaxLimitMessage("")
         const num = value.replace(/[^0-9]/g, '')
         setTempAmount(num)
         setAmount(num * 0.01)
         if(num == "") return setMessage("")
         if((num * 0.01) < 1){
            return setMessage(`Please Enter atleast ${'\u20B1'} 1.00`)
-        }else{
-           return setMessage("")
+        }else if((num * 0.01) > transactionType.cashInLimit){
+            setTempAmount(`${transactionType.cashInLimit}00`)
+            setAmount(transactionType.cashInLimit)
+            setMaxLimitMessage(`Maximum cash in limit is ${'\u20B1'} ${numberFormat(transactionType.cashInLimit)}`)
+            return
         }
+        checkRecipientWalletLimitation(num * 0.01)
+        
     }
-
 
     return (
       <>
@@ -99,7 +169,12 @@ const PayPandaComponent = ({navigation,route})=> {
         >
             <View style={styles.paypandaLogo}>
                 <Image style={{height: 40,width: 40,alignSelf: "center"}} source={require('../../../../../../assets/images/paypanda.png')}/>
-                <Text style={{alignSelf: "center",marginLeft: 15,fontSize: 14,fontFamily: FONT_MEDIUM}}>PayPanda</Text>
+                <View style={{justifyContent:"center"}}>
+                     <Text style={{marginLeft: 15,fontSize: 14,fontFamily: FONT_MEDIUM}}>PayPanda</Text>
+                     {/* <Text style={{fontFamily: FONT_LIGHT}}>Maximum cash in amount is {'\u20b1'}</Text> */}
+                </View>
+                
+               
             </View>
           
             {
@@ -117,14 +192,17 @@ const PayPandaComponent = ({navigation,route})=> {
                                     onChangeText={changeAmountText}
                                     // onSubmitEditing={onSubmit}
                             />
-                            <Text style={{fontSize: 40,fontFamily: FONT_MEDIUM , alignSelf:"center"}}>{'\u20B1'}</Text>
+                            {/* <Text style={{fontSize: 40,fontFamily: FONT_MEDIUM , alignSelf:"center"}}></Text> */}
                             <View style={styles.input}>
+                                <Text style={{fontFamily: FONT_MEDIUM,fontSize: 30,marginRight: 20}}>{'\u20B1'}</Text>
                                 <Text style={{fontFamily: FONT_MEDIUM,fontSize: 30}}>{amount ? numberFormat(amount) : "0.00"}</Text>
+                                <FIcon5 name="pen" style={{alignSelf:"center",marginLeft: 25}} size={18} color="gray"/>
                             </View>
-                            <FIcon5 name="pen" style={{alignSelf:"center"}} size={18} color="gray"/>
+                            
                         </View>
                         <Text style={{color:"gray",fontSize: 14,fontFamily: FONT_REGULAR}}>Current Balance {'\u20B1'} {numberFormat(balance)}</Text>
                         <Text style={{fontFamily: FONT_REGULAR, color: "red",marginTop: 5,fontSize: 12}}>{message}</Text>
+                        <Text style={{fontFamily: FONT_REGULAR, color: "red",marginTop: 5,fontSize: 12}}>{maxLimitMessage}</Text>
               
                  </View>
                 : <View style={{flex: 1,justifyContent: "center",alignItems: "center"}}><ActivityIndicator size={50}/></View>
@@ -132,8 +210,8 @@ const PayPandaComponent = ({navigation,route})=> {
             }
           
             <View style={styles.cashinbutton}>
-                    <TouchableOpacity disabled={amount < 1} onPress={confirmAmount} style={{height: "100%",width: "100%",backgroundColor: amount < 1 ? "gray" : DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
-                        <Text style={{color: amount < 1 ? "white" : COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Cash In</Text>
+                    <TouchableOpacity disabled={amount < 1 || amount > transactionType.cashInLimit || disablebtn} onPress={confirmAmount} style={{height: "100%",width: "100%",backgroundColor: amount < 1 || amount > transactionType.cashInLimit  || disablebtn ? "gray" : DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
+                        <Text style={{color: amount < 1 || amount > transactionType.cashInLimit  || disablebtn ? "white" : COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Cash In</Text>
                     </TouchableOpacity>
             </View>
        </KeyboardAvoidingView>
@@ -169,17 +247,16 @@ const styles = StyleSheet.create({
     },
     input: {
         marginHorizontal: 20,
-        borderBottomWidth: 1,
-        borderColor: MEDIUM,
         borderRadius: 5,
         height: 60,
-        flexShrink: 1,
-        // flexGrow: 1,
+        // flexShrink: 1,
+        // // flexGrow: 1,
+        flex: 1,
         width: 150,
         color: DARK,
-        marginBottom: 10,
         justifyContent:"center",
-        alignItems:"center"
+        alignItems:"center",
+        flexDirection:"row"
       },
 })
 

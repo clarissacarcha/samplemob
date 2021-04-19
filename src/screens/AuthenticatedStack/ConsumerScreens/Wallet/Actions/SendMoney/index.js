@@ -7,6 +7,8 @@ import {useSelector} from 'react-redux'
 import SwipeProceedButton from './SwipeProceedButton'
 import EnterMobileNo from './EnterMobileNo'
 import EnterAmount from './EnterAmount'
+import {GET_DAILY_MONTHLY_YEARLY_OUTGOING} from '../../../../../../graphql'
+import {useLazyQuery} from '@apollo/react-hooks'
 
 const SendMoneyComponent = ({children , walletinfo})=> (
     <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
@@ -41,17 +43,68 @@ export default ({navigation,route})=> {
             firstName: "",
             middleName: "",
             lastName: ""
+        },
+        incomingRecords: {
+            daily: 0,
+            monthly: 0,
+            yearly: 0,
+            walletlimit: {
+                id: null,
+                walletSize: null,
+                incomingValueDailyLimit: null,
+                incomingValueMonthlyLimit: null,
+                incomingValueAnnualLimit: null,
+              }
+        }
+    })
+
+    const [senderDetails , setSenderDetails] = useState({
+        outgoingRecords: {
+            daily: 0,
+            monthly: 0,
+            yearly: 0,
+            walletlimit: {
+                id: null,
+                walletSize: null,
+                outgoingValueDailyLimit: null,
+                outgoingValueMonthlyLimit: null,
+                outgoingValueAnnualLimit: null,
+              }
+        }
+    })
+
+    const [getDailyMonthlyYearlyOutgoing] = useLazyQuery(GET_DAILY_MONTHLY_YEARLY_OUTGOING, {
+        fetchPolicy: 'network-only',
+        onError: (error)=>{
+
+        },
+        onCompleted: (response)=> {
+            setSenderDetails({
+                outgoingRecords: {
+                    ...response.getDailyMonthlyYearlyOutgoing
+                }
+            })
         }
     })
 
     useEffect(()=>{
+
+        getDailyMonthlyYearlyOutgoing({
+            variables: {
+                input: {
+                    userID: session.user.id
+                }
+            }
+        })
+
         if(route.params){
             if(route.params.recentTransfer){
                 setAmount(route.params.recentTransfer.amount)
                 setMobileNo(route.params.recentTransfer.destinationInfo.username.replace("+63","0"))
-                setSwipeEnabled(true)
+                setSwipeEnabled(route.params.recentTransfer.amount <= walletinfo.balance)
             }
         }
+        
 
         return ()=> {
 
@@ -72,7 +125,8 @@ export default ({navigation,route})=> {
                     navigation={navigation} 
                     session={session} 
                     setProceed={setProceed} 
-                    setRecipientDetails={setRecipientDetails} 
+                    setRecipientDetails={setRecipientDetails}
+                    recipientDetails={recipientDetails}
                 />
                 { 
                     proceed
@@ -83,6 +137,8 @@ export default ({navigation,route})=> {
                             note={note}
                             setAmount={setAmount}
                             setNote={setNote}
+                            recipientDetails={recipientDetails}
+                            senderDetails={senderDetails}
                      />
                     : <View style={{marginTop: 19}}>
                         <Text style={{fontFamily: FONT_MEDIUM,fontSize: 13}}>Enter number to transfer.</Text>

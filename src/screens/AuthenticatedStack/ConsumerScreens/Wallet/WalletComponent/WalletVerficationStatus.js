@@ -19,7 +19,7 @@ const WalletVerificationStatus = ({walletinfo})=> {
                 <View style={styles.content}>
                         <Image style={styles.iconImage} resizeMode="contain" source={require('../../../../../assets/icons/walletVerify.png')}/>
                         <View style={styles.description}>
-                            <Text style={{fontFamily: FONT_BOLD,fontSize: 14,color:"white"}}>Verifaction is under review</Text>
+                            <Text style={{fontFamily: FONT_BOLD,fontSize: 14,color:"white"}}>Verification is under review</Text>
                             <Text style={{fontFamily: FONT_REGULAR,fontSize: 12,color:"white"}}>Waiting for approval</Text>
                         </View>
                 </View>
@@ -33,7 +33,7 @@ const WalletVerificationStatus = ({walletinfo})=> {
                 <View style={styles.content}>
                         <Image style={styles.iconImage} resizeMode="contain" source={require('../../../../../assets/icons/walletVerify.png')}/>
                         <View style={styles.description}>
-                            <Text style={{fontFamily: FONT_BOLD,fontSize: 14,color:"white"}}>Verifaction of your toktok wallet Failed!</Text>
+                            <Text style={{fontFamily: FONT_BOLD,fontSize: 14,color:"white"}}>Verification of your toktok wallet Failed!</Text>
                             <Text style={{fontFamily: FONT_REGULAR,fontSize: 12,color:"white"}}>Please review your details and verify again</Text>
                             {
                                 walletinfo.toktokWalletKYC.remarks != null && <Text style={{fontFamily: FONT_REGULAR,fontSize: 13,color:"white"}}>{walletinfo.toktokWalletKYC.remarks}</Text>

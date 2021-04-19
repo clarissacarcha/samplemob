@@ -1,31 +1,118 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {View,Text,StyleSheet,TextInput} from 'react-native'
 import { numberFormat } from '../../../../../../helper'
 import { FONT_MEDIUM, FONT_REGULAR , FONT_LIGHT } from '../../../../../../res/constants'
+import {CHECK_WALLET_LIMITS} from '../../../../../../graphql'
+import {useLazyQuery} from '@apollo/react-hooks'
 
 
-const EnterAmount = ({walletinfo , setSwipeEnabled , amount , note ,setAmount, setNote}) => {
+const EnterAmount = ({walletinfo , setSwipeEnabled , amount , note ,setAmount, setNote , recipientDetails , senderDetails}) => {
 
     const [errorAmountMessage,setErrorAmountMessage] = useState("")
     const [tempAmount,setTempAmount] = useState("")
+
+    const [checkWalletLimits] = useLazyQuery(CHECK_WALLET_LIMITS, {
+        fetchPolicy:"network-only",
+        onError: (error)=>{
+
+        },
+        onCompleted: (response)=> {
+
+        }
+    })
 
     const changeAmount = (value)=>{
         const num = value.replace(/[^0-9]/g, '')
         setTempAmount(num)
         setAmount(num * 0.01)
-        if((num * 0.01) >= 1 && (num * 0.01) <= walletinfo.balance){
-            setSwipeEnabled(true)
-            setErrorAmountMessage("")
-        }else if((num * 0.01) < 1 && num != ""){
-            setSwipeEnabled(false)
-            setErrorAmountMessage(`Please Enter atleast ${'\u20B1'} 1.00`)
-        }else{
-            setSwipeEnabled(false)
-            setErrorAmountMessage(num == "" ? "" : "You do not have enough balance")
-        }
-
     }
 
+    const checkSenderWalletLimitation = ()=> {
+        const outgoingRecords = senderDetails.outgoingRecords
+        const walletLimit = outgoingRecords.walletlimit
+
+
+        if(walletLimit.outgoingValueDailyLimit){
+            if((outgoingRecords.daily + +amount ) > walletLimit.outgoingValueDailyLimit){
+                setSwipeEnabled(false)
+                return setErrorAmountMessage("Your daily outgoing wallet limit is reached.")
+            }
+        }
+
+        if(walletLimit.outgoingValueMonthlyLimit){
+            if((outgoingRecords.monthly + +amount ) > walletLimit.outgoingValueMonthlyLimit){
+                setSwipeEnabled(false)
+                return setErrorAmountMessage("Your monthly outgoing wallet limit is reached.")
+            }
+        }
+
+        if(walletLimit.outgoingValueAnnualLimit){
+            if((outgoingRecords.yearly + +amount ) > walletLimit.outgoingValueAnnualLimit){
+                setSwipeEnabled(false)
+                return setErrorAmountMessage("Your annual outgoing wallet limit is reached.")
+            }
+        }
+
+        return
+    }
+
+    const checkRecipientWalletLimitation = ()=> {
+
+        const incomingRecords = recipientDetails.incomingRecords
+        const walletLimit = incomingRecords.walletlimit
+
+        if(walletLimit.walletSize){
+            if((incomingRecords.walletbalance + +amount ) > walletLimit.walletSize){
+                setSwipeEnabled(false)
+                return setErrorAmountMessage("Recipient wallet size limit is reached.")
+            }
+        }
+
+        if(walletLimit.incomingValueDailyLimit){
+            if((incomingRecords.daily + +amount ) > walletLimit.incomingValueDailyLimit){
+                setSwipeEnabled(false)
+                return setErrorAmountMessage("Recipient daily incoming wallet limit is reached.")
+            }
+        }
+
+        if(walletLimit.incomingValueMonthlyLimit){
+            if((incomingRecords.monthly + +amount ) > walletLimit.incomingValueMonthlyLimit){
+                setSwipeEnabled(false)
+                return setErrorAmountMessage("Recipient monthly incoming wallet limit is reached.")
+            }
+        }
+
+        if(walletLimit.incomingValueAnnualLimit){
+            if((incomingRecords.yearly + +amount ) > walletLimit.incomingValueAnnualLimit){
+                setSwipeEnabled(false)
+                return setErrorAmountMessage("Recipient annual incoming wallet limit is reached.")
+            }
+        }
+
+        return
+    }
+
+    useEffect(()=>{
+   
+            if(amount >= 1 && amount <= walletinfo.balance){
+                setSwipeEnabled(true)
+                setErrorAmountMessage("")
+                checkSenderWalletLimitation()
+                checkRecipientWalletLimitation()
+                
+            }else if(amount < 1 && amount != ""){
+                setSwipeEnabled(false)
+                setErrorAmountMessage(`Please Enter atleast ${'\u20B1'} 1.00`)
+            }else{
+                setSwipeEnabled(false)
+                setErrorAmountMessage(amount == "" ? "" : "You do not have enough balance")
+            }
+
+
+        return ()=> {
+            setErrorAmountMessage("")
+        }
+    },[amount,recipientDetails])
 
     return (
         <>

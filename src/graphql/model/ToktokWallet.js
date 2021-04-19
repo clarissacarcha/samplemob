@@ -128,5 +128,13 @@ export const CHECK_VERIFICATION_CODE = gql`
   }
 `
 
+export const CHECK_WALLET_LIMITS = gql`
+   query checkWalletLimits($input: CheckWalletLimitsInput){
+     checkWalletLimits(input: $input){
+       result
+     }
+   }
+`
+
 
 

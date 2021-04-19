@@ -53,3 +53,17 @@ export const GET_CASH_OUT_LOGS = gql`
         }
     }
 `
+
+export const GET_INTERNAL_ACCOUNT = gql`
+    query getInternalAccount($input: GetToktokWalletInternalAccountInput){
+        getInternalAccount(input: $input){
+            id
+            name
+            isProvider
+            image
+            tokUserId
+            cashInLimit
+            cashOutLimit
+        }
+    }
+`

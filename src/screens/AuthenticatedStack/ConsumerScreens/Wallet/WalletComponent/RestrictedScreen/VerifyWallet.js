@@ -7,7 +7,7 @@ const VerifyWallet = ({navigation,walletinfo})=> {
 
     return (
         <>
-            <Image style={{height: 120,width: 120}} resizeMode="contain" source={require('../../../../../../assets/images/toktokwallet.png')} />
+            <Image style={{height: 160,width: 160}} resizeMode="contain" source={require('../../../../../../assets/images/toktokwallet.png')} />
             <Text style={{fontFamily: FONT_MEDIUM,fontSize: 20,marginTop: 35}}>Verify your toktok wallet</Text>
             <Text style={{fontFamily: FONT_REGULAR,fontSize: 12}}>Click the "Verify now" button to verify wallet.</Text>
 

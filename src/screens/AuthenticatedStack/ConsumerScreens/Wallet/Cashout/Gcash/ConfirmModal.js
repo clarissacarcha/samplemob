@@ -5,18 +5,22 @@ import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import { numberFormat } from '../../../../../../helper';
 import {useMutation} from '@apollo/react-hooks'
 import {POST_GCASH_ENCASHMENT} from '../../../../../../graphql'
-import {onError} from '../../../../../../util/ErrorUtility'
+import {onError , onErrorAlert} from '../../../../../../util/ErrorUtility'
+import {useAlert} from  '../../../../../../hooks/useAlert'
 
 const ConfirmModal = ({showModal,setShowModal, amount , walletinfo , session , navigation , setSuccessModalVisible , setCashoutLogParams})=> {
 
- 
+    const alert = useAlert()
+
     const [postGcashEncashment] = useMutation(POST_GCASH_ENCASHMENT,{
         variables: {
             input: {
                 amount: +amount
             }
         },
-        onError: onError,
+        onError: (error)=>{
+            onErrorAlert({alert,error})
+        },
         onCompleted: (response)=>{
             setCashoutLogParams(response.postGcashEncashment.cashoutLog)
             setSuccessModalVisible(true)

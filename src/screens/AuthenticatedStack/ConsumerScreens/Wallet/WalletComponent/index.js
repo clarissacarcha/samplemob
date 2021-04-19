@@ -1,11 +1,11 @@
 import React, {useState,useEffect,useCallback, useContext} from 'react'
-import {View,StyleSheet,ActivityIndicator,ScrollView} from 'react-native'
+import {View,StyleSheet,ActivityIndicator,ScrollView,Image,Text,TouchableOpacity} from 'react-native'
 import {HeaderBack, HeaderTitle, SomethingWentWrong} from '../../../../../components'
 import WalletRecentTransactions from '../Records/RecentTransactions'
 import {GET_TOKTOK_WALLET} from '../../../../../graphql'
 import {useLazyQuery} from '@apollo/react-hooks'
 import {useSelector} from 'react-redux'
-import {COLOR} from '../../../../../res/constants'
+import {COLOR, FONT_REGULAR} from '../../../../../res/constants'
 import TransactionsModal from '../Records/TransactionsModal'
 import CreateWallet from '../VerifyUser/CreateWallet'
 import { RefreshControl } from 'react-native';
@@ -16,7 +16,6 @@ import WalletHoldMessageModal from '../Notification/WalletHoldMessageModal'
 import Advertisements from './Advertisements'
 import RecentOutgoingTransfer from './RecentOutgoingTransfer'
 import CheckWalletRestrictionProvider from './Context/CheckWalletRestrictionProvider'
-
 
 export default ({navigation,route})=> {
 
@@ -97,6 +96,10 @@ export default ({navigation,route})=> {
                         />
                     }
                 >
+                    <TouchableOpacity onPress={()=>navigation.navigate("TokTokWalletSecurityAndPrivacy")} underlayColor="transparent" style={styles.securityAndPrivacy}>
+                        <Image style={{height: 10,width: 9,marginRight: 5}} source={require('../../../../../assets/icons/walletVerify.png')}/>
+                        <Text style={{fontSize: 11,fontFamily: FONT_REGULAR}}>Your toktok Wallet is <Text style={{color:"#F6841F"}}>encrypted and secure.</Text></Text>
+                    </TouchableOpacity>
                     <WalletCardInfo walletinfo={data.getToktokWallet.record}>
                         <WalletMethods walletinfo={data.getToktokWallet.record}/>
                     </WalletCardInfo>
@@ -118,4 +121,12 @@ const styles = StyleSheet.create({
         padding: 15,
         backgroundColor: "white"
     },
+    securityAndPrivacy: {
+        flexDirection:"row",
+        flex: 1,
+        marginBottom: 5,
+        justifyContent:"center",
+        alignItems:"center",
+        paddingBottom: 5,
+    }
 })

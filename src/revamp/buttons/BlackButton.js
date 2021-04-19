@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableHighlight} from 'react-native';
-import {COLOR, DARK, COLOR_UNDERLAY} from '../../res/constants';
+import {COLOR, DARK, COLOR_UNDERLAY, FONT_REGULAR} from '../../res/constants';
 
 export const BlackButton = ({label, onPress, style}) => {
   return (
@@ -19,13 +19,14 @@ const styles = StyleSheet.create({
   blackButtonBox: {
     justifyContent: 'center',
     alignItems: 'center',
-    height: 50,
+    height: 45,
     backgroundColor: DARK,
     borderRadius: 5,
   },
   label: {
     color: COLOR,
-    fontSize: 18,
+    fontSize: 14 ,
     paddingHorizontal: 10,
+    fontFamily: FONT_REGULAR
   },
 });

@@ -7,10 +7,13 @@ import {useMutation} from '@apollo/react-hooks'
 import {CLIENT,PATCH_FUND_TRANSFER} from '../../../../../../graphql'
 import SuccessfulModal from './SuccessfulModal'
 import {useNavigation} from '@react-navigation/native'
+import {useAlert} from '../../../../../../hooks/useAlert'
+import {onErrorAlert} from '../../../../../../util/ErrorUtility'
 
 const SwipeProceedButton = ({amount, note, swipeEnabled , session, recipientDetails})=> {
 
     const navigation = useNavigation()
+    const alert = useAlert()
 
     const [successModalVisible, setSuccessModalVisible] = useState(false)
     const [walletinfoParams,setWalletinfoParams] = useState({
@@ -29,7 +32,7 @@ const SwipeProceedButton = ({amount, note, swipeEnabled , session, recipientDeta
             }
         },
         onError: (error)=> {
-            onError(error)
+            onErrorAlert({alert,error})
         },
         onCompleted: (response)=> {
             setWalletinfoParams(response.patchFundTransfer.walletLog)

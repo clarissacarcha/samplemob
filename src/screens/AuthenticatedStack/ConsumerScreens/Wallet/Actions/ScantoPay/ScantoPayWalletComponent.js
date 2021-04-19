@@ -1,16 +1,16 @@
 import React, {useState,useCallback, useEffect} from 'react'
-import {StyleSheet,View,Text,TouchableOpacity,Dimensions,Image,TouchableHighlight,Alert,Platform} from 'react-native'
+import {StyleSheet,View,Text,TouchableOpacity,Dimensions,Image,TouchableHighlight,Platform} from 'react-native'
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import { RNCamera } from 'react-native-camera';
 import {numberFormat} from '../../../../../../helper'
-import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM, FONT_MEDIUM, FONT_REGULAR} from '../../../../../../res/constants'
+import {COLOR, DARK, FONT_MEDIUM, FONT_REGULAR} from '../../../../../../res/constants'
 import FIcon from 'react-native-vector-icons/Feather';
 import {useFocusEffect} from '@react-navigation/native'
 import {useLazyQuery} from '@apollo/react-hooks'
 import {GET_QR_CODE} from '../../../../../../graphql'
 import {onError} from '../../../../../../util/ErrorUtility'
 import {useSelector} from 'react-redux'
-import FundTransferMessageModal from '../../Notification/FundTransferMessageModal'
+import {useAlert} from '../../../../../../hooks/useAlert';
 
 const {height,width} = Dimensions.get('window')
 
@@ -20,16 +20,10 @@ const ScantoPayWalletComponent = ({navigation,route})=> {
         header: ()=> null,
     })
 
+    const alertHook = useAlert()
     const {walletinfo} = route.params
-
     const [torch,setTorch] = useState(false)
     const [focusCamera,setFocusCamera] = useState(false)
-    const [isModalMessageVisible , setIsModalMessageVisible] = useState(false)
-    const [modalMessageParams,setModalMessageParams] = useState({
-        message: "",
-        submessage: "",
-        actionButtons: []
-    })
     const session = useSelector(state=>state.session)
 
     useFocusEffect(useCallback(()=>{
@@ -41,43 +35,14 @@ const ScantoPayWalletComponent = ({navigation,route})=> {
         fetchPolicy: "network-only",
         onError: (error)=>{
             if(error.graphQLErrors){
-                setModalMessageParams({
-                    message: "This QR code is invalid",
-                    submessage: "Try to scan other QR code",
-                    actionButtons: [{
-                        label: "ok",
-                        onPress: ()=> setIsModalMessageVisible(false),
-                        textStyle: {
-                            color: COLOR
-                        },
-                        btnStyle: {
-                            backgroundColor: DARK
-                        }
-                    }]
-                })
-                return setIsModalMessageVisible(true)
+                return alertHook({message: "This QR code is invalid"})
             }
             onError(error)
         },
         onCompleted: (response)=> {
             if(response.getQRCode.contactNo === session.user.username){
-                setModalMessageParams({
-                    message: "You can't send money to yourself",
-                    submessage: "Try to scan other QR code",
-                    actionButtons: [{
-                        label: "ok",
-                        onPress: ()=> setIsModalMessageVisible(false),
-                        textStyle: {
-                            color: COLOR
-                        },
-                        btnStyle: {
-                            backgroundColor: DARK
-                        }
-                    }]
-                })
-                setIsModalMessageVisible(true)
+                return alertHook({message: "You cannot send money to yourself"})
             }else{
-                setIsModalMessageVisible(false)
                 navigation.navigate("TokTokWalletActionsScantoPayConfirmPayment", {recipientInfo: response.getQRCode, walletinfo: walletinfo})
             }
         }
@@ -199,7 +164,7 @@ const ScantoPayWalletComponent = ({navigation,route})=> {
                 
             </View>
 
-            <View style={{marginTop: 25}}>
+                     <View style={{marginTop: 25}}>
                         <Text style={{color: "white",fontFamily: FONT_REGULAR,fontSize: 15}}>Position the QR code within the frame.</Text>
                     </View>
         
@@ -208,11 +173,6 @@ const ScantoPayWalletComponent = ({navigation,route})=> {
 
     return (
         <>
-            <FundTransferMessageModal 
-                isVisible={isModalMessageVisible} 
-                setIsVisible={setIsModalMessageVisible} 
-                modalMessageParams={modalMessageParams}
-            />
            {
                focusCamera &&  <QRCodeScanner
                                     onRead={onSuccess}

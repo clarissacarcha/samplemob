@@ -10,6 +10,8 @@ export const GET_CASH_IN_METHODS = gql`
           destinationUserId
           name
           image
+          cashInLimit
+          cashOutLimit
           tokUserId
         }
     }

@@ -7,6 +7,7 @@ import {GET_TOKTOK_WALLET_KYC, GET_TOKTOK_WALLET} from '../../../../../graphql'
 import {useQuery} from '@apollo/react-hooks'
 import {useSelector} from 'react-redux'
 import {useNavigation} from '@react-navigation/native'
+import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 
 const ProceedButton = ({route})=> {
     const navigation = useNavigation()
@@ -24,8 +25,8 @@ const MainComponent = ({children , route})=> {
     return (
         <View style={[styles.container]}>
             <View style={styles.content}>
-                <Image style={{height: 120, width: 120, alignSelf: "center",marginVertical: 30}} source={require('../../../../../assets/images/toktokwallet.png')} resizeMode="contain" />
-                <View style={{marginTop: 50,alignItems:"center"}}>
+                <Image style={{height: 160, width: 160, alignSelf: "center",marginTop: 30}} source={require('../../../../../assets/images/toktokwallet.png')} resizeMode="contain" />
+                <View style={{alignItems:"center"}}>
                         {children}
                 </View>
             </View>
@@ -70,8 +71,17 @@ const VerifyUser = ({navigation,route})=> {
     if(!data.getToktokWallet.record.toktokWalletKYC) {
         return (
             <MainComponent route="TokTokWalletVerifyUserSetup">
-                <Text style={{fontSize: 16,fontFamily: FONT_MEDIUM}}>Go cashless with <Text style={{color: COLOR}}>toktok</Text><Text style={{color: ORANGE}}> wallet!</Text></Text>
-                <Text style={{fontSize: 14,marginTop: 5,fontFamily: FONT_REGULAR}}>Enjoy a secure and convenient payment experience</Text>
+                {/* <Text style={{fontSize: 16,fontFamily: FONT_MEDIUM}}>Go cashless with <Text style={{color: COLOR}}>toktok</Text><Text style={{color: ORANGE}}> wallet!</Text></Text>
+                <Text style={{fontSize: 14,marginTop: 5,fontFamily: FONT_REGULAR}}>Enjoy a secure and convenient payment experience</Text> */}
+                 <Text style={{fontFamily: FONT_MEDIUM,fontSize: 20,marginTop: 35}}>Verify your toktok wallet</Text>
+            <Text style={{fontFamily: FONT_REGULAR,fontSize: 12}}>Click the "Verify now" button to verify wallet.</Text>
+
+            <View style={{marginTop: 20}}>
+                <Text style={{fontFamily: FONT_REGULAR,marginBottom: 1,fontSize: 12}}><FIcon5 color="orange" name="check" />  Go cashless with toktok wallet</Text>
+                <Text style={{fontFamily: FONT_REGULAR,fontSize: 12,marginBottom: 1}}><FIcon5 color="orange" name="check" />  Secure your wallet</Text>
+                <Text style={{fontFamily: FONT_REGULAR,fontSize: 12,marginBottom: 1}}><FIcon5 color="orange" name="check" />  Enjoy convenient payment experience</Text>
+                <Text style={{fontFamily: FONT_REGULAR,fontSize: 12,marginBottom: 1}}><FIcon5 color="orange" name="check" />  Unlock walllet features</Text>
+            </View>
             </MainComponent>
         )
     }
