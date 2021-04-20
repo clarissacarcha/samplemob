@@ -11,6 +11,8 @@ export const GET_TOKTOK_WALLET = gql`
         pendingEncashment
         isVerified
         pincode
+        isHold
+        pinCodeAttempts
         toktokWalletKYC{
               id
               fullname
@@ -107,6 +109,31 @@ export const GET_QR_CODE = gql`
       contactNo
     }
   }
+`
+
+
+export const GET_VERIFICATION_CODE = gql`
+  query {
+    getVerificationCode {
+        message
+    }
+  }
+`
+
+export const CHECK_VERIFICATION_CODE = gql`
+  query checkVerificationCode($input: CheckVerificationCodeInput){
+      checkVerificationCode(input: $input){
+        message
+      }
+  }
+`
+
+export const CHECK_WALLET_LIMITS = gql`
+   query checkWalletLimits($input: CheckWalletLimitsInput){
+     checkWalletLimits(input: $input){
+       result
+     }
+   }
 `
 
 

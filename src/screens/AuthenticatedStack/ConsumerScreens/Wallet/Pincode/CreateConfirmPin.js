@@ -1,31 +1,7 @@
 import React, { useState ,useRef , useEffect } from 'react'
 import {View,Text,StyleSheet,TouchableHighlight,TouchableOpacity,TextInput,Alert,ScrollView} from 'react-native'
 import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM,ORANGE, FONT_MEDIUM, FONT_REGULAR} from '../../../../../res/constants'
-import {HeaderBack, HeaderTitle} from '../../../../../components'
-
-
-const NumberBox = ({onPress, value , showPin}) => (
-    <TouchableHighlight onPress={onPress} underlayColor={COLOR} style={{borderRadius: 10,marginHorizontal: 5,}}>
-      <View style={styles.inputView}>
-        <Text style={{fontSize: 25}}>{value ? showPin ? value : "*" : '_'}</Text>
-      </View>
-    </TouchableHighlight>
-);
-
-const NumberBoxes = ({pinCode, onNumPress, showPin}) => {
-
-    const numberBoxes = [];
-    var i;
-    for (i = 0; i <= 3; i++) {
-      numberBoxes.push(<NumberBox onPress={onNumPress} value={pinCode[i]} showPin={showPin}/>);
-    }
-    return (
-        <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20, marginBottom: 20}}>
-            {numberBoxes}
-        </View>
-    );
-  };
-
+import NumberBoxes from './Components/NumberBoxes'
 
 const ConfirmPin = ({pinCode,setPageIndex,walletinfo,patchPincodeToktokWallet})=> {
 
@@ -48,7 +24,7 @@ const ConfirmPin = ({pinCode,setPageIndex,walletinfo,patchPincodeToktokWallet})=
     };
 
     useEffect(()=>{
-        if(confirmpinCode.length == 4){
+        if(confirmpinCode.length == 6){
             if(pinCode != confirmpinCode){
                 return setMessage("Pin code does not match! Please try again")
             }
@@ -76,7 +52,7 @@ const ConfirmPin = ({pinCode,setPageIndex,walletinfo,patchPincodeToktokWallet})=
                             keyboardType="number-pad"
                             returnKeyType="done"
                             onChangeText={(value) => {
-                            if (value.length <= 4) {
+                            if (value.length <= 6) {
                                 setConfirmPinCode(value);
                             }
                             }}

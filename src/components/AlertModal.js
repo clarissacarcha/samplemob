@@ -1,7 +1,8 @@
 import React from 'react';
 import {View, Text, Modal, StyleSheet} from 'react-native';
-import {BlackButton} from './forms/BlackButton';
-import {COLOR, DARK} from '../res/constants';
+// import {BlackButton} from './forms/BlackButton';
+import {BlackButton} from '../revamp';
+import {COLOR, DARK, FONT_MEDIUM, FONT_REGULAR} from '../res/constants';
 
 const aButtons = [
   {
@@ -39,7 +40,7 @@ export const AlertModal = (props) => {
   return (
     <View style={styles.transparent}>
       <View style={styles.labelBox}>
-        <Text style={{color: DARK}}>{message}</Text>
+        <Text style={{color: DARK,fontFamily: FONT_MEDIUM}}>{message}</Text>
       </View>
       <View style={styles.divider} />
       {RenderButton()}

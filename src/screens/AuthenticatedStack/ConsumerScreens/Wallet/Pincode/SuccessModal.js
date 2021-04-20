@@ -9,7 +9,8 @@ const SuccessModal = ({modalVisible})=> {
     const navigation = useNavigation()
 
     const closeModal = ()=> {
-        navigation.pop()
+       // navigation.pop()
+        navigation.navigate("TokTokWallet")
         navigation.replace("TokTokWallet")
     }
 

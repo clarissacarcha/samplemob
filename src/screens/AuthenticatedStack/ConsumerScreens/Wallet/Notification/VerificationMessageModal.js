@@ -1,7 +1,8 @@
 import React from 'react'
 import {Modal,View,Text,StyleSheet,Dimensions,Image,TouchableOpacity} from 'react-native'
-import { FONT_MEDIUM, FONT_REGULAR } from '../../../../../res/constants'
+import { COLOR, DARK, FONT_MEDIUM, FONT_REGULAR } from '../../../../../res/constants'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
+import {useNavigation} from '@react-navigation/native'
 
 const {width,height} = Dimensions.get("window")
 
@@ -13,9 +14,14 @@ const ActionButton = ({onPress,label, textStyle, btnStyle})=> {
     )
 }
 
-const VerificationMessageModal = ({isVisible,setIsVisible,modalMessageParams})=> {
+const VerificationMessageModal = ({isVisible,setIsVisible})=> {
 
-    const {message, submessage , actionButtons } = modalMessageParams
+    const navigation = useNavigation()
+
+    const verifyUser = ()=> {
+        setIsVisible(false)
+        return navigation.navigate("TokTokWalletVerifyUser")
+    }
 
     return (
         <Modal
@@ -33,8 +39,8 @@ const VerificationMessageModal = ({isVisible,setIsVisible,modalMessageParams})=>
                          <View style={{flexDirection:"column"}}>
                                 <Image style={{height: 100,width:100, alignSelf:"center"}} resizeMode="contain" source={require('../../../../../assets/images/toktokwallet.png')} />
                                 <View style={{justifyContent:"center"}}>
-                                    <Text style={{fontFamily: FONT_MEDIUM,fontSize: 16}}>{message}</Text>
-                                    <Text style={{fontFamily:FONT_REGULAR,fontSize:12}}>{submessage}</Text>
+                                    <Text style={{fontFamily: FONT_MEDIUM,fontSize: 16}}>Verify Your Wallet</Text>
+                                    <Text style={{fontFamily:FONT_REGULAR,fontSize:12}}></Text>
                                     <View>
                                         <Text style={{fontFamily: FONT_REGULAR,marginBottom: 1}}><FIcon5 color="orange" name="check" /> Secure your account</Text>
                                         <Text style={{fontFamily: FONT_REGULAR,marginBottom: 15}}><FIcon5 color="orange" name="check" /> Unlock Walllet features</Text>
@@ -44,11 +50,9 @@ const VerificationMessageModal = ({isVisible,setIsVisible,modalMessageParams})=>
 
 
                           <View style={styles.actionButtons}>
-                              {
-                                  actionButtons.map((action,index)=>{
-                                    return  <ActionButton onPress={action.onPress} label={action.label} textStyle={action.textStyle} btnStyle={action.btnStyle}/>
-                                  })
-                              }
+
+                          <ActionButton onPress={()=>setIsVisible(false)} label={'Do it later'} textStyle={{color: "gray"}} btnStyle={{  borderWidth: 1, borderColor: "gray" }}/>
+                          <ActionButton onPress={verifyUser} label={'Verify Now'} textStyle={{color: COLOR}} btnStyle={{backgroundColor: DARK}}/>
   
                           </View>
                     </View>

@@ -19,7 +19,7 @@ const HeaderBack = ({pageIndex,setPageIndex,navigation,walletinfo})=> {
     };
 
     const closeScreen = ()=> {
-      let landingIndex = walletinfo.pincode == null ? 1 :0
+      const landingIndex = walletinfo.pincode == null ? 1 :0
       if(pageIndex == landingIndex){
         navigation.pop();
       }else{

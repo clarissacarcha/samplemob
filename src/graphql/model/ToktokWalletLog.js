@@ -55,3 +55,54 @@ export const GET_TOKTOK_WALLET_LOGS = gql`
     }
   }
 `
+
+export const GET_RECENT_OUTGOING_TRANSFER = gql`
+  query {
+    getRecentOutgoingTransfer {
+      id
+      referenceNumber
+      amount
+      createdAt
+      destinationInfo {
+        username
+        firstName
+        middleName
+        lastName
+        internalAccount
+    }
+    }
+  }
+`
+
+const dailyMonthlyYearly = `
+  daily
+  monthly
+  yearly
+  walletbalance
+  walletlimit {
+    id
+    walletSize
+    incomingValueDailyLimit
+    incomingValueMonthlyLimit
+    incomingValueAnnualLimit
+    outgoingValueDailyLimit
+    outgoingValueMonthlyLimit
+    outgoingValueAnnualLimit
+  }
+`
+
+export const GET_DAILY_MONTHLY_YEARLY_INCOMING = gql`
+  query getDailyMonthlyYearlyIncoming($input: GetDailyMonthlyYearlyInput){
+      getDailyMonthlyYearlyIncoming(input: $input){
+        ${dailyMonthlyYearly}
+      }
+  }
+`
+
+export const GET_DAILY_MONTHLY_YEARLY_OUTGOING= gql`
+  query getDailyMonthlyYearlyOutgoing($input: GetDailyMonthlyYearlyInput){
+    getDailyMonthlyYearlyOutgoing(input: $input){
+         ${dailyMonthlyYearly}
+      }
+  }
+`

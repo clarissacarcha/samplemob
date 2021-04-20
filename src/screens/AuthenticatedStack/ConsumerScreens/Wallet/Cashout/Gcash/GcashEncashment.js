@@ -2,7 +2,7 @@ import React , {useState,useCallback,useRef,useEffect} from 'react'
 import {View,Text,StyleSheet,Image,Platform,KeyboardAvoidingView,TextInput,TouchableOpacity,Alert} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import { HeaderTitle , HeaderBackClose } from '../../../../../../components'
-import {GET_GCASH_ACCOUNT} from '../../../../../../graphql';
+import {GET_GCASH_ACCOUNT,GET_DAILY_MONTHLY_YEARLY_OUTGOING ,GET_INTERNAL_ACCOUNT} from '../../../../../../graphql';
 import { useLazyQuery } from '@apollo/react-hooks';
 import Loader from '../../../../CommonScreens/GCashAccount/Loader';
 import {useSelector} from 'react-redux'
@@ -10,6 +10,7 @@ import { COLOR, DARK, FONT_LIGHT, FONT_MEDIUM, FONT_REGULAR, MEDIUM } from '../.
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import { numberFormat } from '../../../../../../helper';
 import ConfirmModal from './ConfirmModal'
+import SuccessfulModal from './SuccessfulModal'
 
 const GcashEnchashment = ({navigation,route})=> {
 
@@ -26,9 +27,41 @@ const GcashEnchashment = ({navigation,route})=> {
     const [data,setData] = useState({getGCashAccount: {record: null}})
     const [errorMessage,setErrorMessage] = useState("")
     const inputRef = useRef()
+    const [successModalVisible,setSuccessModalVisible] = useState(false)
+    const [cashoutLogParams,setCashoutLogParams] = useState({
+        status: 0
+    })
+    const [senderDetails,setSenderDetails] = useState(null)
+    const [cashOutGcashInternal , setCashOutGcashInternal] = useState(null)
+
+
+    const checkSenderWalletLimitation = (amount)=> {
+        const outgoingRecords = senderDetails
+        const walletLimit = outgoingRecords.walletlimit
+
+        if(walletLimit.outgoingValueDailyLimit){
+            if((outgoingRecords.daily + +amount ) > walletLimit.outgoingValueDailyLimit){
+                return setErrorMessage("Your daily outgoing wallet limit is reached.")
+            }
+        }
+
+        if(walletLimit.outgoingValueMonthlyLimit){
+            if((outgoingRecords.monthly + +amount ) > walletLimit.outgoingValueMonthlyLimit){
+                return setErrorMessage("Your monthly outgoing wallet limit is reached.")
+            }
+        }
+
+        if(walletLimit.outgoingValueAnnualLimit){
+            if((outgoingRecords.yearly + +amount ) > walletLimit.outgoingValueAnnualLimit){
+                return setErrorMessage("Your annual outgoing wallet limit is reached.")
+            }
+        }
+
+        return setErrorMessage("")
+    }
 
     const changeAmount = (value)=>{
-        let num = value.replace(/[^0-9]/g, '')
+        const num = value.replace(/[^0-9]/g, '')
         setTempAmount(num)
         setAmount(num * 0.01)
         if(num == "") return setErrorMessage("")
@@ -36,10 +69,19 @@ const GcashEnchashment = ({navigation,route})=> {
             return setErrorMessage(`Please Enter atleast ${'\u20B1'} 1.00`)
         }else if((num * 0.01) > walletinfo.balance){
             return setErrorMessage(`You do not have enough balance`)
-        }else{
-            return setErrorMessage("")
         }
+        checkSenderWalletLimitation(num * 0.01)
     }
+
+    const [getDailyMonthlyYearlyOutgoing] = useLazyQuery(GET_DAILY_MONTHLY_YEARLY_OUTGOING, {
+        fetchPolicy: 'network-only',
+        onError: (error)=>{
+
+        },
+        onCompleted: (response)=> {
+            setSenderDetails(response.getDailyMonthlyYearlyOutgoing)
+        }
+    })
 
 
     const confirmAmount = ()=> {
@@ -58,8 +100,30 @@ const GcashEnchashment = ({navigation,route})=> {
       onCompleted: (res) => setData(res),
     });
 
+    const [getInternalAccount] = useLazyQuery(GET_INTERNAL_ACCOUNT , {
+        fetchPolicy: "network-only",
+        onError: (e) => console.log(e),
+        onCompleted: (response)=>{
+            setCashOutGcashInternal(response.getInternalAccount)
+        }
+    })
+
     useFocusEffect(useCallback(()=>{
         getGCashAccount()
+        getDailyMonthlyYearlyOutgoing({
+            variables: {
+                input: {
+                    userID: session.user.id
+                }
+            }
+        })
+        getInternalAccount({
+            variables: {
+                input: {
+                    name: "gcash"
+                }
+            }
+        })
     },[]))
 
     if (loading) {
@@ -134,7 +198,21 @@ const GcashEnchashment = ({navigation,route})=> {
 
     return (
         <>
-        <ConfirmModal showModal={showModal} setShowModal={setShowModal} amount={amount} walletinfo={walletinfo} session={session} navigation={navigation}/>
+        <SuccessfulModal
+            successModalVisible={successModalVisible}
+            amount={amount}
+            cashoutLogParams={cashoutLogParams}
+        />
+        <ConfirmModal 
+            showModal={showModal} 
+            setShowModal={setShowModal} 
+            amount={amount} 
+            walletinfo={walletinfo} 
+            session={session} 
+            navigation={navigation} 
+            setSuccessModalVisible={setSuccessModalVisible}
+            setCashoutLogParams={setCashoutLogParams}
+        />
         <KeyboardAvoidingView  
             keyboardVerticalOffset={Platform.OS == "ios" ? 0 : 90}  
             behavior={Platform.OS === "ios" ? "padding" : "height"}  
@@ -148,11 +226,10 @@ const GcashEnchashment = ({navigation,route})=> {
                      <Text style={{marginLeft: 15,fontSize: 10,fontFamily: FONT_LIGHT}}>Gcash Account verified <FIcon5 style={{color:"green"}} name="check"/></Text>
                 </View>
             </View>
-
             <View style={styles.amountcontent}>
                         <View style={{flexDirection: "row"}}>
                             <TextInput
-                                    autoFocus={true}
+                                    // autoFocus={true}
                                     caretHidden
                                     value={tempAmount}
                                     ref={inputRef}
@@ -162,14 +239,19 @@ const GcashEnchashment = ({navigation,route})=> {
                                     onChangeText={changeAmount}
                                     // onSubmitEditing={onSubmit}
                             />
-                            <Text style={{fontSize: 40,fontFamily: FONT_MEDIUM , alignSelf:"center"}}>{'\u20B1'}</Text>
+                            {/* <Text style={{fontSize: 40,fontFamily: FONT_MEDIUM , alignSelf:"center"}}>{'\u20B1'}</Text>
                                 <View style={styles.input}>
                                     <Text style={{fontFamily: FONT_MEDIUM,fontSize: 30}}>{amount ? numberFormat(amount) : "0.00"}</Text>
                                 </View>
-                                <FIcon5 name="pen" style={{alignSelf:"center"}} size={18} color="gray"/>
+                                <FIcon5 name="pen" style={{alignSelf:"center"}} size={18} color="gray"/> */}
+                            <View style={styles.input}>
+                                <Text style={{fontFamily: FONT_MEDIUM,fontSize: 30,marginRight: 20}}>{'\u20B1'}</Text>
+                                <Text style={{fontFamily: FONT_MEDIUM,fontSize: 30}}>{amount ? numberFormat(amount) : "0.00"}</Text>
+                                <FIcon5 name="pen" style={{alignSelf:"center",marginLeft: 25}} size={18} color="gray"/>
+                            </View>
                         </View>
                         <Text style={{color:"gray",fontSize: 14,fontFamily: FONT_REGULAR}}>Current Balance {'\u20B1'} {numberFormat(walletinfo.balance)}</Text>
-                        <Text style={{fontFamily: FONT_REGULAR, color: "red",marginTop: 5}}>{errorMessage}</Text>
+                        <Text style={{fontFamily: FONT_REGULAR, color: "red",marginTop: 5,fontSize: 12}}>{errorMessage}</Text>
             </View>
 
             <View style={styles.cashinbutton}>
@@ -209,14 +291,13 @@ const styles = StyleSheet.create({
     },
     input: {
         marginHorizontal: 20,
-        borderBottomWidth: 1,
-        borderColor: MEDIUM,
         borderRadius: 5,
         height: 60,
-        flexShrink: 1,
+        // flexShrink: 1,
+        flex: 1,
+        flexDirection:"row",
         width: 150,
         color: DARK,
-        marginBottom: 10,
         justifyContent:"center",
         alignItems:"center"
     },

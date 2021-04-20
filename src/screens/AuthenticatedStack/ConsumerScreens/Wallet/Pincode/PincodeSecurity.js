@@ -1,6 +1,6 @@
 import React , {useState,useRef , useEffect} from 'react'
 import {View,Text,Modal,StyleSheet,TouchableOpacity,TextInput,TouchableHighlight,Image,KeyboardAvoidingView,Platform} from 'react-native'
-import { COLOR, DARK, FONT_MEDIUM } from '../../../../../res/constants';
+import { COLOR, DARK, FONT_MEDIUM, FONT_REGULAR } from '../../../../../res/constants';
 import {GET_VERIFY_TOKTOK_WALLET_PIN} from '../../../../../graphql'
 import {useLazyQuery} from '@apollo/react-hooks'
 import {onError} from '../../../../../util/ErrorUtility'
@@ -17,7 +17,7 @@ const NumberBoxes = ({pinCode, onNumPress}) => {
 
     const numberBoxes = [];
     var i;
-    for (i = 0; i <= 3; i++) {
+    for (i = 0; i <= 5; i++) {
       numberBoxes.push(<NumberBox onPress={onNumPress} value={pinCode[i]}/>);
     }
     return (
@@ -31,10 +31,34 @@ const PincodeSecurity = ({navigation,route})=> {
 
     const [pinCode,setPinCode] = useState("")
     const inputRef = useRef();
+
+    const [pinCodeAttempts,setPinCodeAttempts] = useState({
+        visible: false,
+        attempts: "",
+    })
+
     const [getVerifyToktokWalletPIN, {data,error,loading}] = useLazyQuery(GET_VERIFY_TOKTOK_WALLET_PIN,{
         fetchPolicy: 'network-only',
         onError: onError,
         onCompleted: (response)=> {
+
+            if(!response.getVerifyToktokWalletPIN.result){
+                if(response.getVerifyToktokWalletPIN.attempts == 0) {
+                    navigation.navigate("TokTokWallet")
+                    return navigation.replace("TokTokWallet",{isHold: true})
+                }
+
+                return setPinCodeAttempts({
+                    visible: true,
+                    attempts: response.getVerifyToktokWalletPIN.attempts
+                })
+            }   
+
+            setPinCodeAttempts({
+                visible: false,
+                attempts: response.getVerifyToktokWalletPIN.attempts
+            })
+
             route.params.onConfirm()
             setTimeout(()=>{
                 setPinCode("")
@@ -59,7 +83,7 @@ const PincodeSecurity = ({navigation,route})=> {
     };
 
     useEffect(()=>{
-        if(pinCode.length == 4){
+        if(pinCode.length == 6){
             getVerifyToktokWalletPIN({
                 variables: {
                     input: {
@@ -92,12 +116,19 @@ const PincodeSecurity = ({navigation,route})=> {
                             keyboardType="numeric"
                             returnKeyType="done"
                             onChangeText={(value) => {
-                            if (value.length <= 4) {
+                            setPinCodeAttempts(oldstate=>({
+                                ...oldstate,
+                                visible: false
+                            }))
+                            if (value.length <= 6) {
                                 setPinCode(value);
                             }
                             }}
                             //onSubmitEditing={onSubmit}
                         />
+                        {
+                            pinCodeAttempts.visible && <Text style={{fontFamily: FONT_REGULAR,color:"red",alignSelf:"center",fontSize: 12}}>Invalid PIN , You can try {pinCodeAttempts.attempts} more times</Text>
+                        }
                     </View>
                </View>
 

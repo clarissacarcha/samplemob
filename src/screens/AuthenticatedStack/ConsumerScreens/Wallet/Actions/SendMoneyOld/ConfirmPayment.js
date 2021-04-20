@@ -1,5 +1,5 @@
 import React, {useState,useEffect} from 'react'
-import {View,Text,StyleSheet,Image,Alert,TouchableOpacity,TextInput,ActivityIndicator,KeyboardAvoidingView,Platform} from 'react-native'
+import {View,Text,StyleSheet,Image,Alert,TouchableOpacity,TextInput,ActivityIndicator,KeyboardAvoidingView,Platform,ScrollView} from 'react-native'
 import SwipeButton from 'rn-swipe-button';
 import {HeaderBack, HeaderTitle} from '../../../../../../components'
 import { COLOR, FONT_LIGHT, FONT_MEDIUM, FONT_REGULAR } from '../../../../../../res/constants';
@@ -81,7 +81,7 @@ const ConfirmPayment = ({navigation,route})=> {
     // }
 
     const changeAmount = (value)=>{
-        let num = value.replace(/[^0-9]/g, '')
+        const num = value.replace(/[^0-9]/g, '')
         setTempAmount(num)
         setAmount(num * 0.01)
         if((num * 0.01) >= 1 && (num * 0.01) <= walletinfo.balance){
@@ -98,12 +98,7 @@ const ConfirmPayment = ({navigation,route})=> {
     }
 
     const onSwipeSuccess = ()=> {
-        if(walletinfo.pincode != null){
-            navigation.push("TokTokWalletPinCodeSecurity", {onConfirm: ()=> patchFundTransfer()})
-        }else{
-            patchFundTransfer()
-        }
-       
+        return navigation.push("TokTokWalletPinCodeSecurity", {onConfirm: patchFundTransfer})
     }
 
     const onSwipeFail = (e)=> {
@@ -127,8 +122,12 @@ const ConfirmPayment = ({navigation,route})=> {
                 }}
                 walletinfoParams={walletinfoParams}
         />
-        <View style={styles.container}>
-            <View style={styles.content}>
+          <KeyboardAvoidingView  
+                keyboardVerticalOffset={Platform.OS == "ios" ? 0 : 90}  
+                behavior={Platform.OS === "ios" ? "padding" : "height"} 
+                style={styles.container}
+            >
+            <ScrollView style={styles.content}>
                     <Text style={{marginLeft: 20, marginTop: 20, fontFamily: FONT_MEDIUM ,fontSize: 16}}>Send to</Text>
                     <View style={styles.receiverInfo}>
                         <Image style={{height: 50,width: 50,marginRight: 10}} resizeMode="contain" source={{uri: recipientInfo.person.avatar}}/>
@@ -161,7 +160,7 @@ const ConfirmPayment = ({navigation,route})=> {
                              errorMessage != "" && <Text style={{fontFamily: FONT_REGULAR , color: "red",fontSize: 12,marginTop: 5}}>{errorMessage}</Text>
                          }
                     </View>
-                    <View behavior={Platform.OS === "ios" ? "padding" : "height"} style={{paddingHorizontal: 20}}>
+                    <View style={{paddingHorizontal: 20}}>
                         <Text style={{fontFamily: FONT_MEDIUM,fontSize: 14}}>Note <Text style={{fontFamily: FONT_REGULAR,fontSize: 11}}>( Optional )</Text></Text>
                         <View style={styles.amount}>
                                 <TextInput
@@ -169,7 +168,7 @@ const ConfirmPayment = ({navigation,route})=> {
                                         multiline={true}
                                         height={50}
                                         onChangeText={value=>setNote(value)}
-                                        placeholder="Remarks" 
+                                        placeholder="Enter note here..." 
                                         returnKeyType="done"
                                         maxLength={60}
                                         style={{fontSize: 12,fontFamily: FONT_REGULAR,padding: 0,marginLeft: 5,alignSelf: "center",flex: 1}}
@@ -177,7 +176,7 @@ const ConfirmPayment = ({navigation,route})=> {
                         </View>
                         <Text style={{fontFamily: FONT_LIGHT,marginTop: 5,fontSize: 12}}>{note.length}/60</Text>
                     </View>
-            </View>
+            </ScrollView>
             <SwipeButton 
                     //enableReverseSwipe={true}
                     disabled={!swipeEnabled}
@@ -211,7 +210,7 @@ const ConfirmPayment = ({navigation,route})=> {
                     shouldResetAfterSuccess={true}
                 />
           
-        </View>
+        </KeyboardAvoidingView>
         </>
     )
 }
@@ -226,7 +225,7 @@ const styles = StyleSheet.create({
     },
     swipeContainer: {
        alignSelf:"center",
-       marginBottom: 20,
+       marginBottom: 0,
     },
     receiverInfo: {
         paddingHorizontal: 20,

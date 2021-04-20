@@ -93,7 +93,26 @@ const VerifyAddress = ()=> {
                                     for(const [key,value] of Object.entries(address)){
 
                                         if (validator.isEmpty(value, {ignore_whitespace: true})) {
-                                            return Alert.alert("",`Please Provide ${key.toLowerCase()}`)
+                                            let field
+                                            switch(key.toLowerCase()){
+                                                case "streetaddress":
+                                                    field = "street address"
+                                                    break
+                                                case "village":
+                                                    field = "village / barangay"
+                                                    break
+                                                case "city":
+                                                    field = "city / municipality"
+                                                    break
+                                                case "region":
+                                                    field = "region / province"
+                                                    break
+                                                case "zipcode":
+                                                    field = "zip code"
+                                                default:
+                                                    break
+                                            }
+                                            return Alert.alert("",`Please provide ${field}`)
                                          }
                                     }
 

@@ -5,6 +5,21 @@ export const POST_GCASH_ENCASHMENT = gql`
     mutation postGcashEncashment($input: PostEncashmentInput){
         postGcashEncashment(input: $input){
             message
+            cashoutLog {
+                id
+                tokDisbursementBatchId
+                tokUserId
+                totalAmount
+                gcashMobileNumber
+                gcashFirstName
+                gcashLastName
+                gcashStreetAddress
+                gcashBirthdate
+                status  
+                remarks
+                createdAt
+                updatedAt
+            }
         }
     }
 `
@@ -35,6 +50,20 @@ export const GET_CASH_OUT_LOGS = gql`
                     createdAt
                 }
             }
+        }
+    }
+`
+
+export const GET_INTERNAL_ACCOUNT = gql`
+    query getInternalAccount($input: GetToktokWalletInternalAccountInput){
+        getInternalAccount(input: $input){
+            id
+            name
+            isProvider
+            image
+            tokUserId
+            cashInLimit
+            cashOutLimit
         }
     }
 `

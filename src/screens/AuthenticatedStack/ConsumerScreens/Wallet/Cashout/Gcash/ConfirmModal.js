@@ -2,17 +2,15 @@ import React , {useState} from 'react'
 import {Text,View,StyleSheet,Modal,Alert,TouchableOpacity} from 'react-native'
 import { COLOR, DARK, FONT_LIGHT, FONT_MEDIUM, FONT_REGULAR, MEDIUM } from '../../../../../../res/constants';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
-import PincodeModal from '../../Notification/PincodeModal'
 import { numberFormat } from '../../../../../../helper';
-import SuccessfulModal from './SuccessfulModal'
 import {useMutation} from '@apollo/react-hooks'
 import {POST_GCASH_ENCASHMENT} from '../../../../../../graphql'
-import {onError} from '../../../../../../util/ErrorUtility'
+import {onError , onErrorAlert} from '../../../../../../util/ErrorUtility'
+import {useAlert} from  '../../../../../../hooks/useAlert'
 
-const ConfirmModal = ({showModal,setShowModal, amount , walletinfo , session , navigation})=> {
+const ConfirmModal = ({showModal,setShowModal, amount , walletinfo , session , navigation , setSuccessModalVisible , setCashoutLogParams})=> {
 
-    const [showpinModal,setShowPinModal] = useState(false)
-    const [successModalVisible,setSuccessModalVisible] = useState(false)
+    const alert = useAlert()
 
     const [postGcashEncashment] = useMutation(POST_GCASH_ENCASHMENT,{
         variables: {
@@ -20,18 +18,18 @@ const ConfirmModal = ({showModal,setShowModal, amount , walletinfo , session , n
                 amount: +amount
             }
         },
-        onError: onError,
+        onError: (error)=>{
+            onErrorAlert({alert,error})
+        },
         onCompleted: (response)=>{
+            setCashoutLogParams(response.postGcashEncashment.cashoutLog)
             setSuccessModalVisible(true)
         }
     })
 
     const proceedToEncashment = ()=> {
-        if(walletinfo.pincode != null){
-            return setShowPinModal(true)
-        }
-
-        return postGcashEncashment()
+        setShowModal(false)
+        return navigation.push("TokTokWalletPinCodeSecurity", {onConfirm: postGcashEncashment})
     }
 
     return (
@@ -43,19 +41,14 @@ const ConfirmModal = ({showModal,setShowModal, amount , walletinfo , session , n
                 setShowModal(!showModal);
             }}
         >
-            <SuccessfulModal
-                successModalVisible={successModalVisible}
-                amount={amount}
-            />
 
-            <PincodeModal showpinModal={showpinModal} setShowPinModal={setShowPinModal} onConfirm={postGcashEncashment}/> 
             <View style={{flex: 1, backgroundColor: "rgba(0,0,0,0.7)"}}>
 
              </View>
             <View style={styles.modalContent}>
                     <View style={styles.modalbody}>
                         <View style={styles.modalHeader}>
-                            <TouchableOpacity onPress={()=>setShowModal(!showModal)} style={{position: "absolute",left: 0}}>
+                            <TouchableOpacity onPress={()=>setShowModal(!showModal)} style={{position: "absolute",left: 0,paddingVertical: 10}}>
                                 <FIcon5 name="times" size={20}/>
                             </TouchableOpacity>   
                             <Text style={{fontSize: 14,fontFamily: FONT_MEDIUM}}>Review and confirm</Text>
