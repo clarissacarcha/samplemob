@@ -34,7 +34,7 @@ const VerifyFullname = ()=> {
             <View style={styles.proceedBtn}>
                 <TouchableOpacity onPress={()=>{
                     if (validator.isEmpty(fullname, {ignore_whitespace: true})) {
-                        return Alert.alert("","Please provide Fullname")
+                        return Alert.alert("","Please provide full name")
                      }
                     setCurrentIndex(oldval => oldval + 1)
                 }} style={{height: "100%",width: "100%",backgroundColor: DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
