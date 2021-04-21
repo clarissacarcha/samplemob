@@ -3,9 +3,6 @@ import {StyleSheet,View,Modal,Button, Text , ActivityIndicator , Dimensions , To
 import {useNavigation,useRoute} from '@react-navigation/native'
 import {MEDIUM,DARK,COLOR,ORANGE, FONT_MEDIUM} from '../../../../../../res/constants'
 import WebView from 'react-native-webview'
-import {useMutation} from '@apollo/react-hooks'
-import {PATCH_PAYPANDA_RETURN_URL} from '../../../../../../graphql'
-import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import {useSelector} from 'react-redux'
 import SuccessfulModal from './SuccessfulModal'
 
@@ -26,6 +23,7 @@ const WebViewComponent = ()=> {
     const [cashInLogParams,setCashInLogParams] = useState(null)
 
     const session = useSelector(state=>state.session)
+    const constants = useSelector(state=>state.constants)
 
     const initialpaymentData = {
         merchant_id: route.params.merchantId,
@@ -39,7 +37,6 @@ const WebViewComponent = ()=> {
         signature: route.params.signature,
     }
 
-  
     const generateInitialPostPaymentDataString = (objectdata)=> {
       
         let datastring = ''
@@ -50,17 +47,6 @@ const WebViewComponent = ()=> {
     } 
 
     const generatedInitialPaymentData = generateInitialPostPaymentDataString(initialpaymentData)
-
-    const [patchPayPandaReturnUrl, {data,error,loading}] = useMutation(PATCH_PAYPANDA_RETURN_URL,{
-        // fetchPolicy: 'network-only',
-        onCompleted: ({patchPayPandaReturnUrl})=>{
-
-            console.log(JSON.stringify(patchPayPandaReturnUrl))
-
-            setCashInLogParams(patchPayPandaReturnUrl.cashinLog)
-            setDoneTransaction(true)
-        }
-    })
 
     useEffect(()=> {
         setMounted(true)
@@ -82,9 +68,6 @@ const WebViewComponent = ()=> {
     )
 
 
-
-    
-
     return (
         <>
             <View style={styles.container}> 
@@ -94,7 +77,7 @@ const WebViewComponent = ()=> {
                     style={{flex: 1}}
                     ref={webviewRef}
                     source={{
-                        uri: 'http://35.173.0.77/dev/paypanda/api/payment/transaction_entry',
+                        uri: constants.paypandaTransactionEndpoint,
                         method: 'POST',
                         headers: { 'Content-Type': 'application/x-www-form-urlencoded', },
                         body: generatedInitialPaymentData
@@ -114,19 +97,14 @@ const WebViewComponent = ()=> {
         
 
                             if(checkurl != url){       
-                                patchPayPandaReturnUrl({
-                                    variables: {
-                                        input: {
-                                            reference_number: reference_number[0].slice(7),
-                                            paypanda_refno: paypanda_refno[0].slice(16),
-                                            payment_status: payment_status[0].slice(8),
-                                            signature: signature[0].slice(11),
-                                            paid_amount: +paid_amount,
-                                            userId: session.user.id,
-                                            transactionTypeId: transactionTypeId,
-                                        }
-                                    }
+                                setCashInLogParams({
+                                    status: payment_status[0].slice(8),
+                                    referenceNumber: reference_number[0].slice(7),
+                                    paypandaReferenceNumber: paypanda_refno[0].slice(16),
+                                    amount: +paid_amount,
+                                    createdAt: new Date(),
                                 })
+                                setDoneTransaction(true)
                             }
 
                             setCheckurl(url)

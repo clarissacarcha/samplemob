@@ -89,13 +89,13 @@ export default ({navigation,route})=> {
 
     useEffect(()=>{
 
-        getDailyMonthlyYearlyOutgoing({
-            variables: {
-                input: {
-                    userID: session.user.id
-                }
-            }
-        })
+        // getDailyMonthlyYearlyOutgoing({
+        //     variables: {
+        //         input: {
+        //             userID: session.user.id
+        //         }
+        //     }
+        // })
 
         if(route.params){
             if(route.params.recentTransfer){
@@ -125,6 +125,7 @@ export default ({navigation,route})=> {
                     navigation={navigation} 
                     session={session} 
                     setProceed={setProceed} 
+                    proceed={proceed}
                     setRecipientDetails={setRecipientDetails}
                     recipientDetails={recipientDetails}
                 />

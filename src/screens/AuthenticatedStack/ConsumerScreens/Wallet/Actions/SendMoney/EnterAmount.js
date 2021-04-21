@@ -2,27 +2,16 @@ import React, {useEffect, useState} from 'react'
 import {View,Text,StyleSheet,TextInput} from 'react-native'
 import { numberFormat } from '../../../../../../helper'
 import { FONT_MEDIUM, FONT_REGULAR , FONT_LIGHT } from '../../../../../../res/constants'
-import {CHECK_WALLET_LIMITS} from '../../../../../../graphql'
-import {useLazyQuery} from '@apollo/react-hooks'
-
 
 const EnterAmount = ({walletinfo , setSwipeEnabled , amount , note ,setAmount, setNote , recipientDetails , senderDetails}) => {
 
     const [errorAmountMessage,setErrorAmountMessage] = useState("")
     const [tempAmount,setTempAmount] = useState("")
 
-    const [checkWalletLimits] = useLazyQuery(CHECK_WALLET_LIMITS, {
-        fetchPolicy:"network-only",
-        onError: (error)=>{
-
-        },
-        onCompleted: (response)=> {
-
-        }
-    })
 
     const changeAmount = (value)=>{
         const num = value.replace(/[^0-9]/g, '')
+        if(num.length > 8) return
         setTempAmount(num)
         setAmount(num * 0.01)
     }
@@ -97,8 +86,8 @@ const EnterAmount = ({walletinfo , setSwipeEnabled , amount , note ,setAmount, s
             if(amount >= 1 && amount <= walletinfo.balance){
                 setSwipeEnabled(true)
                 setErrorAmountMessage("")
-                checkSenderWalletLimitation()
-                checkRecipientWalletLimitation()
+                // checkSenderWalletLimitation()
+                // checkRecipientWalletLimitation()
                 
             }else if(amount < 1 && amount != ""){
                 setSwipeEnabled(false)

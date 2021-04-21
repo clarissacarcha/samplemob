@@ -21,7 +21,7 @@ export default ({navigation,route})=> {
 
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack/>,
-        headerTitle: ()=> <HeaderTitle label={['toktok Wallet','']}/>,
+        headerTitle: ()=> <HeaderTitle label={['toktokwallet','']}/>,
     })
     const session = useSelector(state=> state.session)
     const [mounted, setMounted] = useState(true)
@@ -98,7 +98,7 @@ export default ({navigation,route})=> {
                 >
                     <TouchableOpacity onPress={()=>navigation.navigate("TokTokWalletSecurityAndPrivacy")} underlayColor="transparent" style={styles.securityAndPrivacy}>
                         <Image style={{height: 10,width: 9,marginRight: 5}} source={require('../../../../../assets/icons/walletVerify.png')}/>
-                        <Text style={{fontSize: 11,fontFamily: FONT_REGULAR}}>Your toktok Wallet is <Text style={{color:"#F6841F"}}>encrypted and secure.</Text></Text>
+                        <Text style={{fontSize: 11,fontFamily: FONT_REGULAR}}>Your toktokwallet is <Text style={{color:"#F6841F"}}>encrypted and secure.</Text></Text>
                     </TouchableOpacity>
                     <WalletCardInfo walletinfo={data.getToktokWallet.record}>
                         <WalletMethods walletinfo={data.getToktokWallet.record}/>

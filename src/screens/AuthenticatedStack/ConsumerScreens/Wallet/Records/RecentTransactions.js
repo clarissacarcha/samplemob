@@ -65,10 +65,7 @@ const RecentTransactions = ({seeAll,walletId,session})=> {
                 {
                     data.getToktokWalletRecentLogs.length > 0
                     ? <TransactionsData />
-                    : <View style={{flex: 1 , justifyContent:"center",alignItems: "center"}}> 
-                            <Text style={{fontFamily: FONT_MEDIUM}}>No Records</Text>
-                            <Image resizeMode="contain" style={{height: 150, width: 150,marginTop: 10}} source={require('../../../../../assets/images/NoData.png')} />
-                      </View>
+                    : null
                 }
         </View>
     )

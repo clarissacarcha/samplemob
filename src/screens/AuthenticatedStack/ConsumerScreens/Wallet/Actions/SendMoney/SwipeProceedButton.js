@@ -33,6 +33,7 @@ const SwipeProceedButton = ({amount, note, swipeEnabled , session, recipientDeta
         },
         onError: (error)=> {
             onErrorAlert({alert,error})
+            navigation.pop()
         },
         onCompleted: (response)=> {
             setWalletinfoParams(response.patchFundTransfer.walletLog)

@@ -43,6 +43,7 @@ const ConfirmPayment = ({navigation,route})=> {
         },
         onError: (error)=> {
             onErrorAlert({alert , error})
+            navigation.pop()
         },
         onCompleted: (response)=> {
             setWalletinfoParams(response.patchFundTransfer.walletLog)
@@ -72,21 +73,21 @@ const ConfirmPayment = ({navigation,route})=> {
     })
 
     useEffect(()=>{
-        getDailyMonthlyYearlyIncoming({
-            variables: {
-                input: {
-                    userID: recipientInfo.id
-                }
-            }
-        })
+        // getDailyMonthlyYearlyIncoming({
+        //     variables: {
+        //         input: {
+        //             userID: recipientInfo.id
+        //         }
+        //     }
+        // })
 
-        getDailyMonthlyYearlyOutgoing({
-            variables: {
-                input: {
-                    userID: session.user.id
-                }
-            }
-        })
+        // getDailyMonthlyYearlyOutgoing({
+        //     variables: {
+        //         input: {
+        //             userID: session.user.id
+        //         }
+        //     }
+        // })
     },[])
 
     const onSwipeSuccess = ()=> {
@@ -99,6 +100,7 @@ const ConfirmPayment = ({navigation,route})=> {
 
     const changeAmount = (value)=>{
         const num = value.replace(/[^0-9]/g, '')
+        if(num.length > 8) return
         setTempAmount(num)
         setAmount(num * 0.01)
 
@@ -112,8 +114,8 @@ const ConfirmPayment = ({navigation,route})=> {
             setErrorMessage("")
         }
 
-        checkSenderWalletLimitation(num * 0.01)
-        checkRecipientWalletLimitation(num * 0.01)
+        // checkSenderWalletLimitation(num * 0.01)
+        // checkRecipientWalletLimitation(num * 0.01)
 
         if((num * 0.01) > walletinfo.balance){
             setSwipeEnabled(false)

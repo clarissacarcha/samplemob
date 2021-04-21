@@ -5,7 +5,16 @@ import {useLazyQuery} from '@apollo/react-hooks'
 import {CLIENT,GET_USER_ACCOUNT,GET_DAILY_MONTHLY_YEARLY_INCOMING} from '../../../../../../graphql'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 
-const EnterMobileNo = ({session , navigation , setProceed , setRecipientDetails , mobileNo , setMobileNo , recipientDetails})=> {
+const EnterMobileNo = ({
+    session , 
+    navigation , 
+    setProceed , 
+    proceed ,
+    setRecipientDetails , 
+    mobileNo , 
+    setMobileNo , 
+    recipientDetails
+})=> {
 
     const [errorMessage,setErrorMessage] = useState("")
 
@@ -32,13 +41,13 @@ const EnterMobileNo = ({session , navigation , setProceed , setRecipientDetails 
                 }
             })
             checkIFSameNumber(response.getUserAccount.username.replace("+63","0"))
-            getDailyMonthlyYearlyIncoming({
-                variables: {
-                    input: {
-                        userID: response.getUserAccount.id
-                    }
-                }
-            })
+            // getDailyMonthlyYearlyIncoming({
+            //     variables: {
+            //         input: {
+            //             userID: response.getUserAccount.id
+            //         }
+            //     }
+            // })
             // return navigation.push("TokTokWalletPinCodeSecurity", {onConfirm: patchFundTransfer})
         }
     })
@@ -72,6 +81,8 @@ const EnterMobileNo = ({session , navigation , setProceed , setRecipientDetails 
 
     const changeMobileNo = (value)=> {
         const mobile = value.replace(/[^0-9]/g,"")
+
+        if(mobile.length > 11) return
         
         if(checkMobileFormat(mobile)) {
             checkIFSameNumber(mobile)
@@ -144,7 +155,8 @@ const EnterMobileNo = ({session , navigation , setProceed , setRecipientDetails 
                         <View style={{
                             flex: 1,
                         }}>
-                            <Text style={{fontFamily: FONT_REGULAR,fontSize: 12,color:"dimgray"}}>{mobileNo == "" ? "Enter mobile number" : mobileNo}</Text>
+                             { recipientDetails.id && proceed && <Text style={{fontFamily: FONT_MEDIUM,fontSize: 10}}>{`${recipientDetails.person.firstName} ${recipientDetails.person.lastName[0]}.`}</Text>}
+                            <Text style={{fontFamily: FONT_REGULAR,fontSize: recipientDetails.id && proceed ? 8 : 12,color:"dimgray"}}>{mobileNo == "" ? "Enter mobile number" : mobileNo}</Text>
                             <TextInput
                                     // autoFocus={true}
                                     caretHidden

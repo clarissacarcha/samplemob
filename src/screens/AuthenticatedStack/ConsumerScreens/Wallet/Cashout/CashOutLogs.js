@@ -50,7 +50,7 @@ const CashOutLog = ({transactionDate , transactionItems , index , itemsLength })
                           <Image source={require('../../../../../assets/icons/walletLogCashin.png')} style={{height: 30, width: 30}} resizeMode="contain"/>
                         </View>
                         <View style={styles.transactionDetails}>
-                            <Text style={{fontSize: 12,fontFamily: FONT_MEDIUM}}>Ref # {item.id}</Text>
+                            <Text style={{fontSize: 12,fontFamily: FONT_MEDIUM}}>Ref # {item.referenceNumber}</Text>
                             <Text style={{color: "#909294",fontSize: 10,marginTop: 5,fontFamily: FONT_MEDIUM}}>{status}</Text>
                         </View>
                         <View style={styles.transactionAmount}>
