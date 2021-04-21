@@ -24,7 +24,7 @@ export const HeaderBack = ({onBack}) => {
   return (
     <View style={styles.box}>
       <TouchableOpacity onPress={onPress}>
-        <MaterialIcon name="arrow-back" size={30} color={DARK} />
+        <MaterialIcon name="chevron-left" size={30} color={DARK} />
       </TouchableOpacity>
     </View>
   );

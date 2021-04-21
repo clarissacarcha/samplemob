@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import {View, StyleSheet, Text, TextInput, Switch} from 'react-native';
-import {LIGHT, COLOR, MEDIUM} from '../../../../../res/constants';
+import {LIGHT, COLOR, FONT_REGULAR, FONT_MEDIUM} from '../../../../../res/constants';
 
 const PabiliForm = ({value, onChange}) => {
   const [switchState, setSwitchState] = useState(false);
@@ -15,8 +15,10 @@ const PabiliForm = ({value, onChange}) => {
     <>
       <View style={styles.box}>
         <View style={{flex: 1}}>
-          <Text>Cash on Delivery</Text>
-          <Text style={{fontSize: 10, color: LIGHT}}>Rider pays on pick up and collect payment on drop off.</Text>
+          <Text style={{fontFamily: FONT_MEDIUM}}>Cash on Delivery</Text>
+          <Text style={{fontSize: 10, color: LIGHT, fontFamily: FONT_REGULAR}}>
+            Rider pays on pick up and collect payment on drop off.
+          </Text>
         </View>
         <Switch
           trackColor={{false: LIGHT, true: LIGHT}}
@@ -59,6 +61,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     fontSize: 14,
     paddingHorizontal: 10,
+    fontFamily: FONT_REGULAR,
   },
   spacing: {height: 5},
 });

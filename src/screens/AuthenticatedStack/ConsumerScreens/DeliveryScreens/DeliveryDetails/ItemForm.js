@@ -2,7 +2,7 @@ import React, {useCallback, useMemo, forwardRef, useState} from 'react';
 import {connect} from 'react-redux';
 import {View, StyleSheet, Text, TextInput} from 'react-native';
 import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet';
-import {COLOR, LIGHT, ORANGE, MEDIUM} from '../../../../../res/constants';
+import {COLOR, LIGHT, ORANGE, MEDIUM, FONT_REGULAR, FONT_MEDIUM} from '../../../../../res/constants';
 import {WhiteButton, BlackButton} from '../../../../../revamp';
 
 export const ItemSheet = forwardRef(({onChange}, ref) => {
@@ -29,7 +29,7 @@ export const ItemSheet = forwardRef(({onChange}, ref) => {
       )}
       backdropComponent={BottomSheetBackdrop}>
       <View style={styles.sheet}>
-        <Text>Item Description</Text>
+        <Text style={{fontFamily: FONT_MEDIUM}}>Item Description</Text>
         <View style={{height: 10}} />
         <WhiteButton
           label="Food"
@@ -83,7 +83,7 @@ export const ItemForm = ({value, onChange, bottomSheetRef}) => {
 
   return (
     <View style={styles.box}>
-      <Text>Item Description</Text>
+      <Text style={{fontFamily: FONT_MEDIUM}}>Item Description</Text>
       <View style={styles.spacing} />
       <WhiteButton
         label={label}

@@ -2,7 +2,7 @@ import React, {useCallback, useMemo, forwardRef, useState} from 'react';
 import {connect} from 'react-redux';
 import {View, StyleSheet, Text, TextInput} from 'react-native';
 import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet';
-import {COLOR, LIGHT, MEDIUM, ORANGE} from '../../../../../res/constants';
+import {COLOR, LIGHT, MEDIUM, ORANGE, FONT_REGULAR, FONT_MEDIUM} from '../../../../../res/constants';
 import {WhiteButton, BlackButton} from '../../../../../revamp';
 
 export const PaymentSheet = forwardRef(({onChange}, ref) => {
@@ -29,7 +29,7 @@ export const PaymentSheet = forwardRef(({onChange}, ref) => {
       )}
       backdropComponent={BottomSheetBackdrop}>
       <View style={styles.sheet}>
-        <Text>Collect Payment From</Text>
+        <Text style={{fontFamily: FONT_MEDIUM}}>Collect Payment From</Text>
         <View style={{height: 10}} />
         <WhiteButton
           label="Sender"
@@ -56,7 +56,7 @@ export const PaymentSheet = forwardRef(({onChange}, ref) => {
 export const PaymentForm = ({value, bottomSheetRef}) => {
   return (
     <View style={styles.box}>
-      <Text>Collect Payment From</Text>
+      <Text style={{fontFamily: FONT_MEDIUM}}>Collect Payment From</Text>
       <View style={styles.spacing} />
       <WhiteButton
         label={value}

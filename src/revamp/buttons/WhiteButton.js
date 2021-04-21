@@ -1,7 +1,7 @@
 import React, {useRef, useEffect, useCallback} from 'react';
 import {View, Text, StyleSheet, TouchableHighlight} from 'react-native';
 import {throttle} from 'lodash';
-import {COLOR, DARK, COLOR_UNDERLAY, LIGHT, MEDIUM} from '../../res/constants';
+import {COLOR, DARK, COLOR_UNDERLAY, FONT_REGULAR, MEDIUM} from '../../res/constants';
 
 import Entypo from 'react-native-vector-icons/Entypo';
 import Feather from 'react-native-vector-icons/Feather';
@@ -115,10 +115,12 @@ const styles = StyleSheet.create({
   label: {
     paddingHorizontal: 10,
     fontSize: 14,
+    fontFamily: FONT_REGULAR,
   },
   description: {
     paddingHorizontal: 10,
     fontSize: 12,
     color: MEDIUM,
+    fontFamily: FONT_REGULAR,
   },
 });

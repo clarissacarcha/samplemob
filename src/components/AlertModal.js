@@ -40,7 +40,7 @@ export const AlertModal = (props) => {
   return (
     <View style={styles.transparent}>
       <View style={styles.labelBox}>
-        <Text style={{color: DARK,fontFamily: FONT_MEDIUM}}>{message}</Text>
+        <Text style={{color: DARK, fontFamily: FONT_MEDIUM}}>{message}</Text>
       </View>
       <View style={styles.divider} />
       {RenderButton()}
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     // flex: 1,
     zIndex: 999999,
     backgroundColor: 'rgba(0,0,0,0.75)',
-    padding: 20,
+    paddingHorizontal: 10,
     justifyContent: 'center',
     position: 'absolute',
     top: 0,
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
   },
   labelBox: {
     backgroundColor: 'white',
-    borderRadius: 10,
+    borderRadius: 5,
     paddingHorizontal: 20,
     paddingVertical: 40,
   },
