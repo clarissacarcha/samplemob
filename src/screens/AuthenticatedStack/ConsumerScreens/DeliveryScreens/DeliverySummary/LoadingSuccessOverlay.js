@@ -3,11 +3,11 @@
  */
 import React from 'react';
 import {View, Text, Modal, StyleSheet, ActivityIndicator, TouchableHighlight, Image, Dimensions} from 'react-native';
-import {COLOR, DARK, MEDIUM, FONT_REGULAR, FONT_MEDIUM} from '../res/constants';
+import {COLOR, DARK, MEDIUM, FONT_REGULAR, FONT_MEDIUM} from '../../../../../res/constants';
 
 const imageWidth = Dimensions.get('window').width - 80;
 
-import OrderBooked from '../assets/images/OrderBooked.png';
+import OrderBooked from '../../../../../assets/images/OrderBooked.png';
 
 const Loader = () => (
   <View style={styles.labelRow}>
@@ -35,7 +35,7 @@ const BookingSuccess = ({onPress}) => (
   </View>
 );
 
-export const BookingOverlay = ({visible, done = false, onOkay}) => {
+export default ({visible, done = false, onOkay}) => {
   return (
     <Modal animationType="fade" transparent={true} visible={visible}>
       <View style={styles.transparent}>

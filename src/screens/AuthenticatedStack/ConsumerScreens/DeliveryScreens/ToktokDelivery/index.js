@@ -7,7 +7,7 @@ import ScrollPicker from 'react-native-wheel-scrollview-picker';
 // import BottomSheet from 'reanimated-bottom-sheet';
 import {HeaderBack, HeaderTitle} from '../../../../../components';
 import {useAlert} from '../../../../../hooks';
-import {COLOR, LIGHT, ORANGE} from '../../../../../res/constants';
+import {COLOR, LIGHT, ORANGE, FONT_REGULAR} from '../../../../../res/constants';
 
 import {WhiteButton, BlackButton} from '../../../../../revamp';
 
@@ -246,20 +246,20 @@ const ToktokDelivery = ({navigation, session}) => {
       <BlackButton
         label="Next"
         onPress={() => {
-          // if (!orderData.senderStop.formattedAddress && !orderData.recipientStop[0].formattedAddress) {
-          //   alertHook({message: 'Please select a pick up and drop off location.'});
-          //   return;
-          // }
+          if (!orderData.senderStop.formattedAddress && !orderData.recipientStop[0].formattedAddress) {
+            alertHook({message: 'Please select a pick up and drop off location.'});
+            return;
+          }
 
-          // if (!orderData.senderStop.formattedAddress) {
-          //   alertHook({message: 'Please select a pick up location.'});
-          //   return;
-          // }
+          if (!orderData.senderStop.formattedAddress) {
+            alertHook({message: 'Please select a pick up location.'});
+            return;
+          }
 
-          // if (!orderData.recipientStop[0].formattedAddress) {
-          //   alertHook({message: 'Please select a drop off location.'});
-          //   return;
-          // }
+          if (!orderData.recipientStop[0].formattedAddress) {
+            alertHook({message: 'Please select a drop off location.'});
+            return;
+          }
 
           navigation.push('DeliveryDetails', {orderData, setOrderData});
         }}

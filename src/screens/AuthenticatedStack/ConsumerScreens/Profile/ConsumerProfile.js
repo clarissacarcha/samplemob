@@ -235,12 +235,7 @@ const ConsumerProfile = ({navigation, constants, session, createSession}) => {
         )}
 
         {/*-------------------- UPDATE BUTTON --------------------*/}
-        <BlackButton
-          onPress={onSubmit}
-          label="Update Profile"
-          style={{height: 40}}
-          touchableStyle={{marginHorizontal: 10, marginTop: 20}}
-        />
+        <BlackButton onPress={onSubmit} label="Update Profile" touchableStyle={{marginHorizontal: 10, marginTop: 20}} />
 
         {/*-------------------- CHANGE PASSWORD BUTTON --------------------*/}
         <BlackButton

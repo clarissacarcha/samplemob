@@ -3,7 +3,7 @@ import {View, Text, StyleSheet, TouchableOpacity, TextInput} from 'react-native'
 import {useNavigation} from '@react-navigation/native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {COLOR, DARK, DIRTY_WHITE, LIGHT, MEDIUM} from '../../../../res/constants';
+import {COLOR, DARK, DIRTY_WHITE, LIGHT, MEDIUM, FONT_REGULAR} from '../../../../res/constants';
 
 const MenuButton = () => {
   const navigation = useNavigation();
@@ -20,7 +20,11 @@ const MenuButton = () => {
 const SearchInput = () => {
   return (
     <View style={styles.inputBox}>
-      <TextInput placeholder="Search" placeholderTextColor={LIGHT} style={{flex: 1}} />
+      <TextInput
+        placeholder="Search in toktok"
+        placeholderTextColor={LIGHT}
+        style={{flex: 1, fontFamily: FONT_REGULAR}}
+      />
       <FeatherIcon name="search" size={25} color={MEDIUM} />
     </View>
   );

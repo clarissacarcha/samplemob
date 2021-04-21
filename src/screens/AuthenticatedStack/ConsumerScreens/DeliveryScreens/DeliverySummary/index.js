@@ -5,11 +5,23 @@ import {useLazyQuery} from '@apollo/react-hooks';
 import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet';
 import MapView, {Marker, PROVIDER_GOOGLE, Polyline} from 'react-native-maps';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import {DARK, MEDIUM, ORANGE, onError, LIGHT, DIRTY_WHITE, COLOR} from '../../../../../res/constants';
-import {WhiteButton, BlackButton} from '../../../../../revamp';
+import {
+  DARK,
+  MEDIUM,
+  ORANGE,
+  onError,
+  LIGHT,
+  DIRTY_WHITE,
+  COLOR,
+  FONT_REGULAR,
+  FONT_MEDIUM,
+} from '../../../../../res/constants';
+import {BlackButton} from '../../../../../revamp';
+import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {POST_DELIVERY} from '../../../../../graphql';
 
-import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+//SELF IMPORTS
+import LoadingSuccessOverlay from './LoadingSuccessOverlay';
 
 // Region for Philippine Map
 const PHILIPPINE_REGION = {
@@ -29,6 +41,8 @@ const StopDetails = ({navigation, route}) => {
   const snapPoints = useMemo(() => [220], []);
 
   const orderData = route.params.orderData;
+
+  const [booked, setBooked] = useState(false);
 
   const onMapReady = () => {
     const {northeast, southwest} = orderData.directions.bounds;
@@ -87,6 +101,7 @@ const StopDetails = ({navigation, route}) => {
 
   return (
     <View style={styles.screenBox}>
+      <LoadingSuccessOverlay visible={booked} done={booked} onOkay={() => setBooked(false)} />
       <MapView
         ref={mapViewRef}
         provider={PROVIDER_GOOGLE}
@@ -134,18 +149,18 @@ const StopDetails = ({navigation, route}) => {
         // backdropComponent={BottomSheetBackdrop}
       >
         <View style={styles.sheet}>
-          <Text style={{alignSelf: 'center'}}>Delivery Summary</Text>
+          <Text style={{alignSelf: 'center', fontFamily: FONT_MEDIUM}}>Delivery Summary</Text>
           <View style={{flex: 1}} />
           <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <MaterialCommunityIcon name="map-marker-distance" size={16} color={COLOR} style={{marginHorizontal: 5}} />
 
-              <Text>{orderData.distance} km</Text>
+              <Text style={{fontFamily: FONT_REGULAR}}>{orderData.distance} km</Text>
             </View>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <MaterialCommunityIcon name="clock-outline" size={16} color={COLOR} style={{marginHorizontal: 5}} />
 
-              <Text>{orderData.duration} mins</Text>
+              <Text style={{fontFamily: FONT_REGULAR}}>{orderData.duration} mins</Text>
             </View>
           </View>
           <View style={{flex: 1}} />
@@ -153,25 +168,30 @@ const StopDetails = ({navigation, route}) => {
             style={{height: 60, borderWidth: 1, borderRadius: 5, borderColor: LIGHT, justifyContent: 'space-evenly'}}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <MaterialCommunityIcon name="circle-outline" size={10} color={COLOR} style={{marginHorizontal: 5}} />
-              <Text numberOfLines={1} style={{fontSize: 12, flex: 1}}>
+              <Text numberOfLines={1} style={{fontSize: 12, flex: 1, fontFamily: FONT_REGULAR}}>
                 {orderData.senderStop.formattedAddress}
               </Text>
             </View>
             <View style={{borderBottomWidth: 1, borderColor: DIRTY_WHITE, marginHorizontal: 10}} />
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <MaterialCommunityIcon name="circle-outline" size={10} color={COLOR} style={{marginHorizontal: 5}} />
-              <Text numberOfLines={1} style={{fontSize: 12, flex: 1}}>
+              <Text numberOfLines={1} style={{fontSize: 12, flex: 1, fontFamily: FONT_REGULAR}}>
                 {orderData.recipientStop[0].formattedAddress}
               </Text>
             </View>
           </View>
-          <View style={{flex: 1}} />
+          <View style={{flex: 1, fontFamily: FONT_REGULAR}} />
           <View style={styles.priceRow}>
-            <Text style={{color: ORANGE, fontSize: 16}}>TOTAL</Text>
-            <Text style={{color: ORANGE, fontSize: 16}}>₱ {orderData.price}.00</Text>
+            <Text style={{color: ORANGE, fontSize: 16, fontFamily: FONT_REGULAR}}>TOTAL</Text>
+            <Text style={{color: ORANGE, fontSize: 16, fontFamily: FONT_REGULAR}}>₱ {orderData.price}.00</Text>
           </View>
           <View style={{height: 10}} />
-          <BlackButton label="Book" onPress={() => {}} />
+          <BlackButton
+            label="Book Now"
+            onPress={() => {
+              setBooked(true);
+            }}
+          />
           <View style={{height: 10}} />
         </View>
       </BottomSheet>

@@ -67,15 +67,14 @@ import WalletValidIDCamera from '../screens/AuthenticatedStack/ConsumerScreens/W
 import WalletSelfieCamera from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/VerifyUser/SelfieCamera';
 import WalletSelfieImageCamera from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/VerifyUser/SelfieImageCamera';
 
-import WalletSendMoney from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Actions/SendMoney'
-import WalletContacts from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Actions/SendMoney/WalletContacts'
+import WalletSendMoney from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Actions/SendMoney';
+import WalletContacts from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Actions/SendMoney/WalletContacts';
 
 import WalletActionsRequest from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Actions/Request/RequestWalletComponent';
 import WalletActionsScantoPay from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Actions/ScantoPay/ScantoPayWalletComponent';
 import WalletActionsScantoPayConfirmPayment from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Actions/ScantoPay/ConfirmPayment';
 import WalletCashout from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Cashout/Cashout';
 import WalletGcashEncashment from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Cashout/Gcash/GcashEncashment';
-
 
 /*---------- DRIVER SCREENS ----------*/
 import DriverMap from '../screens/AuthenticatedStack/DriverScreens/DriverMap';
@@ -120,6 +119,7 @@ const Unauthenticated = createStackNavigator();
 const Authenticated = createStackNavigator();
 const RootDrawer = createDrawerNavigator();
 const DriverHome = createBottomTabNavigator();
+const ConsumerHome = createBottomTabNavigator();
 const DriverDeliveries = createMaterialTopTabNavigator();
 
 const DriverDeliveriesTab = () => {
@@ -256,9 +256,57 @@ const DriverHomeBottomTab = ({navigation}) => (
   </DriverHome.Navigator>
 );
 
+const ConsumerHomeBottomTab = ({navigation}) => (
+  <ConsumerHome.Navigator tabBarOptions={{activeTintColor: COLOR, inactiveTintColor: MEDIUM, showLabel: false}}>
+    <ConsumerHome.Screen
+      name="ConsumerHome"
+      component={ConsumerLanding}
+      options={{
+        // tabBarLabel: 'Orders',
+        tabBarIcon: ({color}) => <MCIcon name="home" color={color} size={26} />,
+      }}
+    />
+    <ConsumerHome.Screen
+      name="ConsumerHome2"
+      component={CustomerDeliveries}
+      // options={{
+      //   headerLeft: () => <HeaderBack />,
+      //   headerTitle: () => <HeaderTitle label={['My', 'Deliveries']} />,
+      // }}
+      options={{
+        tabBarIcon: ({color}) => <MCIcon name="map-marker-distance" color={color} size={26} />,
+      }}
+    />
+    <ConsumerHome.Screen
+      name="ConsumerHome3"
+      component={ConsumerProfile}
+      options={{
+        tabBarIcon: ({color}) => <MCIcon name="account-circle" color={color} size={26} />,
+      }}
+    />
+    <ConsumerHome.Screen
+      name="ConsumerHome4"
+      component={DriverSettings}
+      options={{
+        tabBarIcon: ({color}) => (
+          <EIcon
+            name="menu"
+            color={color}
+            size={26}
+            onPress={() => navigation.openDrawer()}
+            style={{paddingVertical: 12, paddingHorizontal: 20}}
+          />
+        ),
+        tabBarButton: (props) => <TouchableWithoutFeedback {...props} onPress={() => navigation.openDrawer()} />,
+      }}
+    />
+  </ConsumerHome.Navigator>
+);
+
 const AuthenticatedStack = () => (
   <Authenticated.Navigator>
-    <Authenticated.Screen name="ConsumerLanding" component={ConsumerLanding} options={{headerShown: false}} />
+    {/* <Authenticated.Screen name="ConsumerLanding" component={ConsumerLanding} options={{headerShown: false}} /> */}
+    <Authenticated.Screen name="ConsumerLanding" component={ConsumerHomeBottomTab} options={{headerShown: false}} />
     <Authenticated.Screen name="ToktokDelivery" component={ToktokDelivery} />
     <Authenticated.Screen name="StopDetails" component={StopDetails} />
     <Authenticated.Screen name="DeliveryDetails" component={DeliveryDetails} />
@@ -305,37 +353,43 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="SavedLocations" component={SavedLocations} />
     <Authenticated.Screen name="AddLocation" component={AddLocation} />
 
-    <Authenticated.Screen name="TokTokWallet" component={Wallet}/>
-    <Authenticated.Screen name="TokTokWalletRestricted" component={WalletRestrictedScreen}/>
-    <Authenticated.Screen name="TokTokWalletSecurityAndPrivacy" component={WalletSecurityAndPrivacy}/>
-    <Authenticated.Screen name="TokTokWalletCashIn" component={PaymentOptions}/>
-    <Authenticated.Screen name="TokTokWalletCashInPaypanda" component={PayPanda}/>
-    <Authenticated.Screen name="TokTokWalletCashINPaypandaWebView" component={PayPandaWebView}/> 
-    <Authenticated.Screen name="TokTokWalletSettings" component={WalletSettings}/>
-    <Authenticated.Screen name="TokTokWalletCashInLogs" component={CashInLogs}/>
-    <Authenticated.Screen name="TokTokWalletSettingsPinCode" component={WalletSettingsPinCode}/>
-    <Authenticated.Screen name="TokTokWalletPinCodeSecurity" component={WalletPinCodeSecurity} options={{
-      headerShown: false
-    }}/>
-    <Authenticated.Screen name="TokToKWalletForgotPin" component={WalletForgotPincode}/>
-    <Authenticated.Screen name="TokTokWalletRecoverPin" component={WalletRecoverPincode}/>
-    <Authenticated.Screen name="TokTokWalletRecoverUpdatePin" component={WalletRecoverUpdatePincode}/>
-    <Authenticated.Screen name="TokTokWalletVerifyUser" component={WalletVerifyUser}/>
-    <Authenticated.Screen name="TokTokWalletVerifyUserSetup" component={WalletVerifyUserSetup}/>
-    <Authenticated.Screen name="TokTokWalletValidIDCamera" component={WalletValidIDCamera}/>
-    <Authenticated.Screen name="TokTokWalletSelfieCamera" component={WalletSelfieCamera}/>
-    <Authenticated.Screen name="TokTokWalletSelfieImageCamera" component={WalletSelfieImageCamera}/>
+    <Authenticated.Screen name="TokTokWallet" component={Wallet} />
+    <Authenticated.Screen name="TokTokWalletRestricted" component={WalletRestrictedScreen} />
+    <Authenticated.Screen name="TokTokWalletSecurityAndPrivacy" component={WalletSecurityAndPrivacy} />
+    <Authenticated.Screen name="TokTokWalletCashIn" component={PaymentOptions} />
+    <Authenticated.Screen name="TokTokWalletCashInPaypanda" component={PayPanda} />
+    <Authenticated.Screen name="TokTokWalletCashINPaypandaWebView" component={PayPandaWebView} />
+    <Authenticated.Screen name="TokTokWalletSettings" component={WalletSettings} />
+    <Authenticated.Screen name="TokTokWalletCashInLogs" component={CashInLogs} />
+    <Authenticated.Screen name="TokTokWalletSettingsPinCode" component={WalletSettingsPinCode} />
+    <Authenticated.Screen
+      name="TokTokWalletPinCodeSecurity"
+      component={WalletPinCodeSecurity}
+      options={{
+        headerShown: false,
+      }}
+    />
+    <Authenticated.Screen name="TokToKWalletForgotPin" component={WalletForgotPincode} />
+    <Authenticated.Screen name="TokTokWalletRecoverPin" component={WalletRecoverPincode} />
+    <Authenticated.Screen name="TokTokWalletRecoverUpdatePin" component={WalletRecoverUpdatePincode} />
+    <Authenticated.Screen name="TokTokWalletVerifyUser" component={WalletVerifyUser} />
+    <Authenticated.Screen name="TokTokWalletVerifyUserSetup" component={WalletVerifyUserSetup} />
+    <Authenticated.Screen name="TokTokWalletValidIDCamera" component={WalletValidIDCamera} />
+    <Authenticated.Screen name="TokTokWalletSelfieCamera" component={WalletSelfieCamera} />
+    <Authenticated.Screen name="TokTokWalletSelfieImageCamera" component={WalletSelfieImageCamera} />
     <Authenticated.Screen name="TokTokWalletActionsRequest" component={WalletActionsRequest} />
 
     <Authenticated.Screen name="TokTokWalletSendMoney" component={WalletSendMoney} />
     <Authenticated.Screen name="TokTokWalletContacts" component={WalletContacts} />
 
-    <Authenticated.Screen name="TokTokWalletActionsScantoPay" component={WalletActionsScantoPay}/>
-    <Authenticated.Screen name="TokTokWalletActionsScantoPayConfirmPayment" component={WalletActionsScantoPayConfirmPayment}/>
+    <Authenticated.Screen name="TokTokWalletActionsScantoPay" component={WalletActionsScantoPay} />
+    <Authenticated.Screen
+      name="TokTokWalletActionsScantoPayConfirmPayment"
+      component={WalletActionsScantoPayConfirmPayment}
+    />
     <Authenticated.Screen name="TokTokWalletCashout" component={WalletCashout} />
-    <Authenticated.Screen name="TokTokWalletCashoutLogs" component={CashOutLogs}/>
+    <Authenticated.Screen name="TokTokWalletCashoutLogs" component={CashOutLogs} />
     <Authenticated.Screen name="TokTokWalletGcashEncashment" component={WalletGcashEncashment} />
-    
 
     {/*---------- DRIVER SCREENS ----------*/}
     <Authenticated.Screen name="DriverHomeBottomTab" component={DriverHomeBottomTab} options={{headerShown: false}} />

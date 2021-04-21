@@ -1,12 +1,12 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {View, StyleSheet, Text, TextInput} from 'react-native';
-import {LIGHT, DIRTY_WHITE} from '../../../../../res/constants';
+import {LIGHT, FONT_REGULAR, FONT_MEDIUM} from '../../../../../res/constants';
 
 const NotesForm = ({value, onChange}) => {
   return (
     <View style={styles.box}>
-      <Text>Notes to Rider</Text>
+      <Text style={{fontFamily: FONT_MEDIUM}}>Notes to Rider</Text>
       <View style={styles.spacing} />
       <TextInput
         style={styles.input}
@@ -36,6 +36,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     fontSize: 14,
     paddingHorizontal: 10,
+    fontFamily: FONT_REGULAR,
   },
   spacing: {height: 5},
 });

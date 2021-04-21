@@ -10,7 +10,7 @@ import MapView, {Marker, PROVIDER_GOOGLE, Callout, Overlay} from 'react-native-m
 import {GET_GOOGLE_PLACE_DETAILS} from '../../../../../graphql';
 import {HeaderBack, HeaderTitle} from '../../../../../components';
 import {WhiteButton, BlackButton, TouchableIcon} from '../../../../../revamp';
-import {LIGHT, ORANGE, PROTOCOL, HOST_PORT} from '../../../../../res/constants';
+import {LIGHT, ORANGE, PROTOCOL, FONT_REGULAR} from '../../../../../res/constants';
 
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
@@ -122,33 +122,48 @@ const StopDetails = ({navigation, route}) => {
           />
         )}>
         <View style={styles.bottomSheetBox}>
-          <Text>Pick Up Details</Text>
+          <Text style={{fontFamily: FONT_REGULAR}}>Pick Up Details</Text>
           <View style={{height: 10}} />
           <View style={{flexDirection: 'row', alignItems: 'center', height: 50}}>
             <View style={{width: 25, height: 25, alignItems: 'center', justifyContent: 'center'}}>
               <MaterialCommunityIcon name="map-marker-outline" size={20} color={ORANGE} />
             </View>
-            <Text style={{flex: 1}}>{searchText}</Text>
+            <Text style={{flex: 1, fontFamily: FONT_REGULAR}}>{searchText}</Text>
           </View>
           <View style={{flexDirection: 'row', alignItems: 'center', height: 50}}>
             <View style={{width: 25, height: 25, alignItems: 'center', justifyContent: 'center'}}>
               <FA5Icon name="landmark" size={16} color={ORANGE} />
             </View>
-            <TextInput placeholder="Landmark" value={landmark} style={{flex: 1}} onChangeText={setLandmark} />
+            <TextInput
+              placeholder="Landmark"
+              value={landmark}
+              style={{flex: 1, fontFamily: FONT_REGULAR}}
+              onChangeText={setLandmark}
+            />
           </View>
           <View style={{flexDirection: 'row', alignItems: 'center', height: 50}}>
             <View style={{width: 25, height: 25, alignItems: 'center', justifyContent: 'center'}}>
               <MaterialIcon name="person-outline" size={20} color={ORANGE} />
             </View>
 
-            <TextInput placeholder="Contact Person" value={person} style={{flex: 1}} onChangeText={setPerson} />
+            <TextInput
+              placeholder="Contact Person"
+              value={person}
+              style={{flex: 1, fontFamily: FONT_REGULAR}}
+              onChangeText={setPerson}
+            />
           </View>
           <View style={{flexDirection: 'row', alignItems: 'center', height: 50}}>
             <View style={{width: 25, height: 25, alignItems: 'center', justifyContent: 'center'}}>
               <MaterialIcon name="phone-android" size={20} color={ORANGE} />
             </View>
 
-            <TextInput placeholder="Contact Number" value={mobile} style={{flex: 1}} onChangeText={setMobile} />
+            <TextInput
+              placeholder="Contact Number"
+              value={mobile}
+              style={{flex: 1, fontFamily: FONT_REGULAR}}
+              onChangeText={setMobile}
+            />
           </View>
 
           <View style={{height: 10}} />

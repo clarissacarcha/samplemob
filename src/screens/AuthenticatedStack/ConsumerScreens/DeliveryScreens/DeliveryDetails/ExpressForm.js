@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import {View, StyleSheet, Text, TextInput, Switch} from 'react-native';
-import {LIGHT, COLOR, MEDIUM} from '../../../../../res/constants';
+import {LIGHT, COLOR, FONT_MEDIUM, FONT_REGULAR} from '../../../../../res/constants';
 
 const ExpressForm = ({value, onChange}) => {
   const [switchState, setSwitchState] = useState(value);
@@ -15,8 +15,8 @@ const ExpressForm = ({value, onChange}) => {
     <View>
       <View style={styles.box}>
         <View style={{flex: 1}}>
-          <Text>Express Delivery</Text>
-          <Text style={{fontSize: 10, color: LIGHT}}>
+          <Text style={{fontFamily: FONT_MEDIUM}}>Express Delivery</Text>
+          <Text style={{fontSize: 10, color: LIGHT, fontFamily: FONT_REGULAR}}>
             Add PHP 40.00. Your order will be placed at a higher priority.
           </Text>
         </View>

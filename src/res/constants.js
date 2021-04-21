@@ -1,13 +1,13 @@
 export const APP_VERSION = '1.14.0';
-export const APP_FLAVOR = 'C'; // C = Customer | D = Driver
-export const ACCOUNT_TYPE = 1; // 1 = Customer | 2 = Driver
+export const APP_FLAVOR = 'D'; // C = Customer | D = Driver
+export const ACCOUNT_TYPE = 2; // 1 = Customer | 2 = Driver
 
 // export const PROTOCOL = 'https';
 // export const HOST_PORT = 'graphql.toktok.ph:2096';
 
 export const PROTOCOL = 'http';
-export const HOST_PORT = '192.168.0.102:3000'; // Myutini
-// export const HOST_PORT = '35.173.0.77:3088'; // Marketing Server
+// export const HOST_PORT = '192.168.0.102:3000'; // Myutini
+export const HOST_PORT = '35.173.0.77:3088'; // Marketing Server
 
 export const COLOR = '#FDBA1C'; //YELLOW
 export const COLOR_UNDERLAY = 'rgba(256,186,28, 0.1)';

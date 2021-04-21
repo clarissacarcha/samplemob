@@ -287,6 +287,8 @@ const AvailableOrders = ({navigation, session, constants}) => {
               orderDate: searchFilter.orderDate,
               senderName: searchFilter.senderName,
               recipientName: searchFilter.recipientName,
+              userId: session.user.id,
+              driverId: session.user.driver.id,
             },
           },
         });
@@ -322,6 +324,8 @@ const AvailableOrders = ({navigation, session, constants}) => {
             senderName: filter.senderName,
             recipientName: filter.recipientName,
             location: filter.location,
+            userId: session.user.id,
+            driverId: session.user.driver.id,
           },
         },
       });
