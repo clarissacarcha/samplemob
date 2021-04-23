@@ -38,7 +38,7 @@ const SuccessfulModal = ({successModalVisible , amount , cashoutLogParams})=> {
                             <FIcon5 name="check" color="white" size={40}/>
                 </View>
                 <Text style={{fontFamily: FONT_BOLD, fontSize: 18,marginTop: 15,}}>Transaction Completed</Text>
-                <Text style={{fontFamily: FONT_MEDIUM, fontSize: 12,marginVertical: 2,marginTop: 5}}>Ref. No. {cashoutLogParams.id}</Text>
+                <Text style={{fontFamily: FONT_MEDIUM, fontSize: 12,marginVertical: 2,marginTop: 5}}>Ref. No. {cashoutLogParams.referenceNumber}</Text>
                 <Text style={{fontFamily: FONT_LIGHT,fontSize: 10}}>{moment(cashoutLogParams.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')}</Text>
                 <View style={styles.transactionInfo}>
                      <TransactionInfo label="Cash out Method" value="GCash"/>

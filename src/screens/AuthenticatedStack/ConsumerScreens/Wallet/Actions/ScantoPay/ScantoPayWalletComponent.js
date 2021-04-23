@@ -11,6 +11,10 @@ import {GET_QR_CODE} from '../../../../../../graphql'
 import {onError} from '../../../../../../util/ErrorUtility'
 import {useSelector} from 'react-redux'
 import {useAlert} from '../../../../../../hooks/useAlert';
+import DocumentPicker from 'react-native-document-picker';
+import RNQRGenerator from 'rn-qr-generator';
+import {ReactNativeFile} from 'apollo-upload-client';
+import { QRreader } from "react-native-qr-decode-image-camera";
 
 const {height,width} = Dimensions.get('window')
 
@@ -25,6 +29,8 @@ const ScantoPayWalletComponent = ({navigation,route})=> {
     const [torch,setTorch] = useState(false)
     const [focusCamera,setFocusCamera] = useState(false)
     const session = useSelector(state=>state.session)
+    const [image, setImage] = useState(null);
+
 
     useFocusEffect(useCallback(()=>{
         setFocusCamera(true)
@@ -34,8 +40,15 @@ const ScantoPayWalletComponent = ({navigation,route})=> {
     const [getQRCode] = useLazyQuery(GET_QR_CODE,{
         fetchPolicy: "network-only",
         onError: (error)=>{
-            if(error.graphQLErrors){
-                return alertHook({message: "This QR code is invalid"})
+            if(error.graphQLErrors.length > 0){
+                error.graphQLErrors.map((err)=> {
+                    if(err.message == "Wallet not found"){
+                       return alertHook({message:"Recipient does not have toktok wallet"})
+                    }else{
+                       return alertHook({message:"This QR code is invalid"})
+                    }
+                })
+            return
             }
             onError(error)
         },
@@ -47,6 +60,55 @@ const ScantoPayWalletComponent = ({navigation,route})=> {
             }
         }
     })
+
+    const detectQRCodeInUploadedImage =async (res)=> {
+
+        const path = res.uri
+
+        console.log(res)
+
+
+        // QRreader(path)
+        // .then(data => {
+        //     console.log(data)
+        // })
+        // .catch(err => {
+        //     console.log(err)
+        // });
+
+        // const rnQRCode = new ReactNativeFile({
+        //     ...image,
+        //     name: 'UploadedQRCode.jpg',
+        //     type: 'image/jpeg'
+        // })
+
+        // console.log(rnQRCode)
+
+            // RNQRGenerator.detect({
+            //     uri: path
+            // })
+            // .then(response => {
+            //     const { values } = response; // Array of detected QR code values. Empty if nothing found.
+            // })
+            // .catch(error => console.log(error));
+}
+
+
+    const handleSelectFile = async () => {
+        try {
+          const res = await DocumentPicker.pick({
+            type: [DocumentPicker.types.images],
+          });
+          setImage(res)
+          await detectQRCodeInUploadedImage(res)
+        } catch (err) {
+          if (DocumentPicker.isCancel(err)) {
+            // User cancelled the picker, exit any dialogs or menus and move on
+          } else {
+            throw err;
+          }
+        }
+      };
 
     const onSuccess = (e)=> {
         // size of center Box
@@ -167,7 +229,19 @@ const ScantoPayWalletComponent = ({navigation,route})=> {
                      <View style={{marginTop: 25}}>
                         <Text style={{color: "white",fontFamily: FONT_REGULAR,fontSize: 15}}>Position the QR code within the frame.</Text>
                     </View>
-        
+{/* 
+                <View style={{position:"absolute",height: 100, width: width, bottom: 40,flexDirection:"row",zIndex: 1}}>
+                    <View style={{flex: 1,justifyContent:"center",alignItems:"center",zIndex: 9999}}>
+                        <TouchableOpacity onPress={handleSelectFile} style={{paddingHorizontal: 20,paddingVertical: 10,backgroundColor:"white",borderRadius: 5,justifyContent:"center",alignItems:"center"}}>
+                                <FIcon color={COLOR} size={20} style={{marginBottom: 5}} name="upload" />
+                                <Text style={{fontFamily: FONT_REGULAR,fontSize: 10}}>Upload QR code</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{flex: 1,justifyContent:"center",alignItems:"center"}}>
+                        
+                    </View>
+                </View>
+         */}
         </View>
     )
 
@@ -200,8 +274,11 @@ const ScantoPayWalletComponent = ({navigation,route})=> {
                 backgroundColor: "white",
                 padding: 20,
                 flexDirection: "row",
-                alignItems: 'center'
+                alignItems: 'center',
+
             }}>
+
+
                 <Image style={{width: 50,height: 25}} resizeMode="contain" source={require('../../../../../../assets/icons/walletMoney.png')} />
                 <Text style={{marginLeft: 10, fontSize: 16, fontFamily: FONT_MEDIUM}}>{'\u20B1'} {numberFormat(walletinfo.balance)}</Text>
                 <View style={{

@@ -4,6 +4,7 @@ import {COLOR, MEDIUM} from '../res/constants';
 import {DeliveriesTopTabHeader} from '../components';
 import EIcon from 'react-native-vector-icons/Entypo';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import MIcon from 'react-native-vector-icons/MaterialIcons';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {NavigationContainer} from '@react-navigation/native';
@@ -257,7 +258,13 @@ const DriverHomeBottomTab = ({navigation}) => (
 );
 
 const ConsumerHomeBottomTab = ({navigation}) => (
-  <ConsumerHome.Navigator tabBarOptions={{activeTintColor: COLOR, inactiveTintColor: MEDIUM, showLabel: false}}>
+  <ConsumerHome.Navigator
+    tabBarOptions={{
+      activeTintColor: COLOR,
+      inactiveTintColor: MEDIUM,
+      showLabel: false,
+      // style: {marginBottom: -10},
+    }}>
     <ConsumerHome.Screen
       name="ConsumerHome"
       component={ConsumerLanding}
@@ -279,9 +286,9 @@ const ConsumerHomeBottomTab = ({navigation}) => (
     />
     <ConsumerHome.Screen
       name="ConsumerHome3"
-      component={ConsumerProfile}
+      component={Notifications}
       options={{
-        tabBarIcon: ({color}) => <MCIcon name="account-circle" color={color} size={26} />,
+        tabBarIcon: ({color}) => <MIcon name="notifications" color={color} size={26} />,
       }}
     />
     <ConsumerHome.Screen

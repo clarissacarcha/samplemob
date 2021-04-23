@@ -7,6 +7,7 @@ export const POST_GCASH_ENCASHMENT = gql`
             message
             cashoutLog {
                 id
+                referenceNumber
                 tokDisbursementBatchId
                 tokUserId
                 totalAmount
@@ -30,6 +31,7 @@ export const GET_CASH_OUT_LOGS = gql`
             logDate
             logs {
                 id
+                referenceNumber
                 tokDisbursementBatchId
                 tokUserId
                 totalAmount

@@ -23,14 +23,17 @@ const SuccessfulModal = ({successModalVisible , amount , cashInLogParams})=> {
 
     let status
     switch (cashInLogParams.status) {
-        case 0:
+        case "P":
             status = "Pending"
             break;
-        case 1:
+        case "S":
             status ="Successful"
             break;
+        case "F":
+            status = "Failed"
+            break
         default:
-            status = "Rejected"
+            status = "Cancelled"
             break;
     }
 

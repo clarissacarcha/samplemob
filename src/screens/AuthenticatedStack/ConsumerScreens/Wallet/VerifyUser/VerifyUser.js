@@ -73,8 +73,8 @@ const VerifyUser = ({navigation,route})=> {
             <MainComponent route="TokTokWalletVerifyUserSetup">
                 {/* <Text style={{fontSize: 16,fontFamily: FONT_MEDIUM}}>Go cashless with <Text style={{color: COLOR}}>toktok</Text><Text style={{color: ORANGE}}> wallet!</Text></Text>
                 <Text style={{fontSize: 14,marginTop: 5,fontFamily: FONT_REGULAR}}>Enjoy a secure and convenient payment experience</Text> */}
-                 <Text style={{fontFamily: FONT_MEDIUM,fontSize: 20,marginTop: 35}}>Verify your toktok wallet</Text>
-            <Text style={{fontFamily: FONT_REGULAR,fontSize: 12}}>Click the "Verify now" button to verify wallet.</Text>
+                 <Text style={{fontFamily: FONT_MEDIUM,fontSize: 20,marginTop: 35}}>Verify your toktokwallet</Text>
+            <Text style={{fontFamily: FONT_REGULAR,fontSize: 12}}>Click the "Verify Now" button to verify wallet.</Text>
 
             <View style={{marginTop: 20}}>
                 <Text style={{fontFamily: FONT_REGULAR,marginBottom: 1,fontSize: 12}}><FIcon5 color="orange" name="check" />  Go cashless with toktok wallet</Text>

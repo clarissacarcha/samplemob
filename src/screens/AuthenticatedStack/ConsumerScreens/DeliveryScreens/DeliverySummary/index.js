@@ -1,7 +1,7 @@
 import React, {useState, useRef, useMemo, useEffect, useCallback} from 'react';
 import {Text, View, TextInput, StyleSheet, TouchableOpacity} from 'react-native';
 import {throttle, debounce} from 'lodash';
-import {useLazyQuery} from '@apollo/react-hooks';
+import {useMutation, useQuery} from '@apollo/react-hooks';
 import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet';
 import MapView, {Marker, PROVIDER_GOOGLE, Polyline} from 'react-native-maps';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
@@ -40,9 +40,18 @@ const StopDetails = ({navigation, route}) => {
 
   const snapPoints = useMemo(() => [220], []);
 
-  const orderData = route.params.orderData;
+  const [orderData, setOrderData] = useState(route.params.orderData);
 
   const [booked, setBooked] = useState(false);
+
+  const [postDelivery, {loading: postDeliveryLoading}] = useMutation(POST_DELIVERY, {
+    onError: onError,
+    onCompleted: () => {
+      try {
+        setBooked(true);
+      } catch (error) {}
+    },
+  });
 
   const onMapReady = () => {
     const {northeast, southwest} = orderData.directions.bounds;
@@ -72,7 +81,7 @@ const StopDetails = ({navigation, route}) => {
 
   const onSubmit = () => {
     try {
-      const input = orderData;
+      const input = {...orderData};
 
       delete input.directions;
       delete input.scheduledDate;
@@ -86,8 +95,12 @@ const StopDetails = ({navigation, route}) => {
       delete input.promoCode;
       delete input.isExpress;
 
-      input.cashOnDelivery = parseFloat(bookingData.cashOnDelivery);
+      input.cashOnDelivery = parseFloat(input.cashOnDelivery);
       input.referralCode = '';
+
+      console.log(JSON.stringify(input, null, 4));
+
+      console.log(orderData);
 
       postDelivery({
         variables: {
@@ -119,11 +132,14 @@ const StopDetails = ({navigation, route}) => {
         {/* <Marker ref={markerRef} coordinate={stopData}>
             <FA5Icon name="map-pin" size={24} color="red" />
           </Marker> */}
-        <Polyline
-          coordinates={orderData.directions.legs[0].polyline}
-          strokeColor="#FF0000" // fallback for when `strokeColors` is not supported by the map-provider
-          strokeWidth={3}
-        />
+
+        {orderData.directions.legs && (
+          <Polyline
+            coordinates={orderData.directions.legs[0].polyline}
+            strokeColor="#FF0000" // fallback for when `strokeColors` is not supported by the map-provider
+            strokeWidth={3}
+          />
+        )}
       </MapView>
       <TouchableOpacity style={styles.back} onPress={() => navigation.pop()}>
         <MaterialIcon name="arrow-back" size={30} color={DARK} />
@@ -186,12 +202,7 @@ const StopDetails = ({navigation, route}) => {
             <Text style={{color: ORANGE, fontSize: 16, fontFamily: FONT_REGULAR}}>₱ {orderData.price}.00</Text>
           </View>
           <View style={{height: 10}} />
-          <BlackButton
-            label="Book Now"
-            onPress={() => {
-              setBooked(true);
-            }}
-          />
+          <BlackButton label="Book Now" onPress={onSubmit} />
           <View style={{height: 10}} />
         </View>
       </BottomSheet>

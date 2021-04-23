@@ -62,6 +62,7 @@ const PayPandaComponent = ({navigation, route}) => {
     // fetchPolicy: 'network-only',
     onError: (error) => {
       onErrorAlert({alert, error});
+      navigation.pop();
     },
     onCompleted: ({postWalletCashIn}) => {
       navigation.navigate('TokTokWalletCashINPaypandaWebView', {
@@ -126,13 +127,13 @@ const PayPandaComponent = ({navigation, route}) => {
   };
 
   useEffect(() => {
-    getDailyMonthlyYearlyIncoming({
-      variables: {
-        input: {
-          userID: userstate.id,
-        },
-      },
-    });
+    // getDailyMonthlyYearlyIncoming({
+    //     variables: {
+    //         input: {
+    //             userID: userstate.id
+    //         }
+    //     }
+    // })
   }, []);
 
   const proceedToPaypandaPortal = () => {
@@ -162,6 +163,7 @@ const PayPandaComponent = ({navigation, route}) => {
   const changeAmountText = (value) => {
     setMaxLimitMessage('');
     const num = value.replace(/[^0-9]/g, '');
+    if (num.length > 8) return;
     setTempAmount(num);
     setAmount(num * 0.01);
     if (num == '') return setMessage('');
@@ -173,7 +175,9 @@ const PayPandaComponent = ({navigation, route}) => {
       setMaxLimitMessage(`Maximum cash in limit is ${'\u20B1'} ${numberFormat(transactionType.cashInLimit)}`);
       return;
     }
-    checkRecipientWalletLimitation(num * 0.01);
+    // checkRecipientWalletLimitation(num * 0.01)
+    setDisablebtn(false);
+    setMessage('');
   };
 
   return (

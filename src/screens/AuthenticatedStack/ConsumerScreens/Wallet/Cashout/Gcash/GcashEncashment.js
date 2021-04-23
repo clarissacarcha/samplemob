@@ -62,6 +62,7 @@ const GcashEnchashment = ({navigation,route})=> {
 
     const changeAmount = (value)=>{
         const num = value.replace(/[^0-9]/g, '')
+        if(num.length > 8) return
         setTempAmount(num)
         setAmount(num * 0.01)
         if(num == "") return setErrorMessage("")
@@ -70,7 +71,8 @@ const GcashEnchashment = ({navigation,route})=> {
         }else if((num * 0.01) > walletinfo.balance){
             return setErrorMessage(`You do not have enough balance`)
         }
-        checkSenderWalletLimitation(num * 0.01)
+        // checkSenderWalletLimitation(num * 0.01)
+        setErrorMessage("")
     }
 
     const [getDailyMonthlyYearlyOutgoing] = useLazyQuery(GET_DAILY_MONTHLY_YEARLY_OUTGOING, {
@@ -110,17 +112,17 @@ const GcashEnchashment = ({navigation,route})=> {
 
     useFocusEffect(useCallback(()=>{
         getGCashAccount()
-        getDailyMonthlyYearlyOutgoing({
-            variables: {
-                input: {
-                    userID: session.user.id
-                }
-            }
-        })
+        // getDailyMonthlyYearlyOutgoing({
+        //     variables: {
+        //         input: {
+        //             userID: session.user.id
+        //         }
+        //     }
+        // })
         getInternalAccount({
             variables: {
                 input: {
-                    name: "gcash"
+                    name: "Gcash"
                 }
             }
         })

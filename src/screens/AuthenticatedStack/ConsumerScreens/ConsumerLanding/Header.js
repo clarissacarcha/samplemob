@@ -42,9 +42,9 @@ const NotificationButton = () => {
 const Header = () => {
   return (
     <View style={styles.headerBox}>
-      <MenuButton />
+      {/* <MenuButton /> */}
       <SearchInput />
-      <NotificationButton />
+      {/* <NotificationButton /> */}
     </View>
   );
 };
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     height: 40,
-    marginHorizontal: 10,
+    // marginHorizontal: 10,
     paddingHorizontal: 10,
     borderRadius: 10,
     backgroundColor: DIRTY_WHITE,

@@ -34,7 +34,7 @@ const CashInLog = ({transactionDate , transactionItems , index , itemsLength })=
                 let status
                 switch (item.trails[0].status) {
                     case 0:
-                        status = "Cancelled"
+                        status = "Initialized"
                         break;
                     case 1:
                         status = "Pending"
@@ -48,19 +48,25 @@ const CashInLog = ({transactionDate , transactionItems , index , itemsLength })=
                 }
 
                 return (
-                    <View style={styles.transaction}>
-                        <View style={styles.transactionIcon}>
-                          <Image source={require('../../../../../assets/icons/walletLogCashin.png')} style={{height: 30, width: 30}} resizeMode="contain"/>
+                    <>
+                    {
+                        // item.trails[0].status != 0 &&
+                        <View style={styles.transaction}>
+                            <View style={styles.transactionIcon}>
+                            <Image source={require('../../../../../assets/icons/walletLogCashin.png')} style={{height: 30, width: 30}} resizeMode="contain"/>
+                            </View>
+                            <View style={styles.transactionDetails}>
+                                <Text style={{fontSize: 12,fontFamily: FONT_MEDIUM}}>Ref # {item.referenceNumber}</Text>
+                                <Text style={{color: "#909294",fontSize: 10,marginTop: 5,fontFamily: FONT_MEDIUM}}>{status}</Text>
+                            </View>
+                            <View style={styles.transactionAmount}>
+                                <Text style={{color: "#FCB91A",fontSize: 12,fontFamily: FONT_MEDIUM}}>{'\u20B1'} {numberFormat(item.amount)}</Text>
+                                <Text style={{color: "#909294",fontSize: 10,alignSelf: "flex-end",marginTop: 5,fontFamily: FONT_REGULAR}}>{moment(item.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')}</Text>
+                            </View>
                         </View>
-                        <View style={styles.transactionDetails}>
-                            <Text style={{fontSize: 12,fontFamily: FONT_MEDIUM}}>Ref # {item.referenceNumber}</Text>
-                            <Text style={{color: "#909294",fontSize: 10,marginTop: 5,fontFamily: FONT_MEDIUM}}>{status}</Text>
-                        </View>
-                        <View style={styles.transactionAmount}>
-                            <Text style={{color: "#FCB91A",fontSize: 12,fontFamily: FONT_MEDIUM}}>{'\u20B1'} {numberFormat(item.amount)}</Text>
-                            <Text style={{color: "#909294",fontSize: 10,alignSelf: "flex-end",marginTop: 5,fontFamily: FONT_REGULAR}}>{moment(item.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')}</Text>
-                        </View>
-                    </View>
+                    }
+                
+                    </>
                 )
                })
            }

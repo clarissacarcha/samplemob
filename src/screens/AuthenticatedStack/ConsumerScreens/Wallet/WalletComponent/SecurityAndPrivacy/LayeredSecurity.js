@@ -38,7 +38,6 @@ const styles = StyleSheet.create({
         height: 140,
         width: 80,
         alignSelf:"center",
-        backgroundColor:"red"
     },
     content: {
         marginTop: 25,

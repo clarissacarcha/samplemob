@@ -20,6 +20,7 @@ const ConfirmModal = ({showModal,setShowModal, amount , walletinfo , session , n
         },
         onError: (error)=>{
             onErrorAlert({alert,error})
+            navigation.pop()
         },
         onCompleted: (response)=>{
             setCashoutLogParams(response.postGcashEncashment.cashoutLog)
