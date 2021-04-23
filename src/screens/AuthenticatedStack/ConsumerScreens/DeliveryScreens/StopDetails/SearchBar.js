@@ -7,7 +7,7 @@ import axios from 'axios';
 import {GET_GOOGLE_PLACE_DETAILS} from '../../../../../graphql';
 import {HeaderBack, HeaderTitle} from '../../../../../components';
 import {WhiteButton, TouchableIcon} from '../../../../../revamp';
-import {LIGHT, PROTOCOL, HOST_PORT} from '../../../../../res/constants';
+import {LIGHT, PROTOCOL, HOST_PORT, FONT_REGULAR} from '../../../../../res/constants';
 
 const INITIAL_RESULT = {
   payload: {
@@ -129,7 +129,7 @@ const SearchBar = ({
             value={searchText}
             placeholder={placeholder}
             onChangeText={onChangeText}
-            style={{flex: 1, marginRight: 0}}
+            style={{flex: 1, marginRight: 0, fontFamily: FONT_REGULAR}}
           />
           {/* <TouchableIcon iconSet="MaterialCommunity" iconName="close" onPress={() => {}} /> */}
         </>

@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {View, Text, StyleSheet, TouchableOpacity, TextInput} from 'react-native';
-import {FONT_SIZE_LARGE, COLOR} from '../../../../../res/constants';
+import {FONT_REGULAR, COLOR} from '../../../../../res/constants';
 
 const Greeting = ({session}) => {
   return (
@@ -10,7 +10,7 @@ const Greeting = ({session}) => {
         <Text style={{fontSize: 20, marginBottom: 5}}>
           Hello, <Text style={{color: COLOR}}>{session.user.person.firstName}</Text>!
         </Text>
-        <Text style={{fontSize: 12}}>Do you need to deliver a package?</Text>
+        <Text style={{fontSize: 12, fontFamily: FONT_REGULAR}}>Basta may ipapadala, ipa-toktok mo na yan!</Text>
       </View>
     </View>
   );
@@ -30,5 +30,6 @@ const styles = StyleSheet.create({
   },
   greetingText: {
     fontSize: 40,
+    fontFamily: FONT_REGULAR,
   },
 });

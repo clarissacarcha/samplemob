@@ -1,12 +1,12 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {View, StyleSheet, Text, TextInput} from 'react-native';
-import {LIGHT} from '../../../../../res/constants';
+import {LIGHT, FONT_REGULAR, FONT_MEDIUM} from '../../../../../res/constants';
 
 const PromoForm = ({value, onChange}) => {
   return (
     <View>
-      <Text>Promo Code</Text>
+      <Text style={{fontFamily: FONT_MEDIUM}}>Promo Code</Text>
       <View style={styles.spacing} />
       <TextInput
         style={styles.input}
@@ -34,6 +34,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     paddingHorizontal: 10,
     marginBottom: 20,
+    fontFamily: FONT_REGULAR,
   },
   spacing: {height: 5},
 });

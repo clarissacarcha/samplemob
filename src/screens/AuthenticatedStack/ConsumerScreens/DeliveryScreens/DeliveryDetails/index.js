@@ -52,7 +52,7 @@ const DeliveryDetails = ({navigation, route, session}) => {
         orderData: {
           ...route.params.orderData,
           collectPaymentFrom,
-          itemDescription,
+          cargo: itemDescription,
           notes,
           isExpress,
           isCashOnDelivery,

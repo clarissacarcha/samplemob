@@ -4,8 +4,8 @@ import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {FONT_SIZE_LARGE, FONT_SIZE_SMALL, DIRTY_WHITE, APP_FLAVOR, FONT_REGULAR} from '../../../../res/constants';
 
-import DeliveryIcon from '../../../../assets/icons/DeliveryIcon.png';
-import WalletIcon from '../../../../assets/icons/WalletIcon.png';
+import DeliveryIcon from '../../../../assets/toktok/icons/menu/Toktok.png';
+import WalletIcon from '../../../../assets/toktok/icons/menu/ToktokWallet.png';
 import ProfileIcon from '../../../../assets/icons/ProfileIcon.png';
 import OthersIcon from '../../../../assets/icons/OthersIcon.png';
 
@@ -27,7 +27,7 @@ const Menu = ({session}) => {
     <View style={styles.menuBox}>
       <MenuIcon label={'Delivery'} icon={DeliveryIcon} onPress={() => navigation.push('ToktokDelivery')} />
       <MenuIcon
-        label={'Wallet'}
+        label={'toktokwallet'}
         icon={WalletIcon}
         onPress={() => {
           navigation.push('TokTokWallet');
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     backgroundColor: DIRTY_WHITE,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 25,
+    borderRadius: 10,
     marginBottom: 10,
   },
   menuIcon: {
