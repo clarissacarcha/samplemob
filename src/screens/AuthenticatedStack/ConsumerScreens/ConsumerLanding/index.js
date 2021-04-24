@@ -1,5 +1,5 @@
-import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import React, {useState} from 'react';
+import {View, Text, StyleSheet} from 'react-native';
 
 //SELF IMPORTS
 import Greeting from './Greeting';
@@ -7,11 +7,21 @@ import Header from './Header';
 import Menu from './Menu';
 
 const ConsumerLanding = () => {
+  // const userLocation = {
+  //   latitude,
+  //   longitude,
+  //   formattedAddress,
+  //   formattedAddressHash
+  // }
+
+  const [userLocation, setUserLocation] = useState(null);
+
   return (
     <View style={styles.screenBox}>
       <Header />
       <Greeting />
-      <Menu />
+      <Menu setUserLocation={setUserLocation} />
+      <Text>{JSON.stringify(userLocation, null, 4)}</Text>
     </View>
   );
 };

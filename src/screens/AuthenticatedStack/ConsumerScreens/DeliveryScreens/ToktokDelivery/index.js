@@ -100,7 +100,7 @@ const SCHEDULE_DAYS = createDays().map((item) => {
   return item.label;
 });
 
-const ToktokDelivery = ({navigation, session}) => {
+const ToktokDelivery = ({navigation, session, route}) => {
   const INITIAL_ORDER_DATA = {
     hash: '',
     consumerId: session.user.consumer.id,
@@ -156,6 +156,10 @@ const ToktokDelivery = ({navigation, session}) => {
     headerTitle: () => <HeaderTitle label={['toktok', 'Delivery']} />,
   });
 
+  const setUserLocation = route.params.setUserLocation;
+
+  setUserLocation({location: 'Location'});
+
   const bottomSheetRef = useRef();
 
   const snapPoints = useMemo(() => [0, 130, 345], []);
@@ -173,8 +177,6 @@ const ToktokDelivery = ({navigation, session}) => {
       recipientStop: [value],
     });
   };
-
-  useEffect(() => {}, []);
 
   return (
     <>

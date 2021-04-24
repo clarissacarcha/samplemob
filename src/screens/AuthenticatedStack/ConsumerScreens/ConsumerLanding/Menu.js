@@ -20,12 +20,16 @@ const MenuIcon = ({label, icon, onPress}) => {
   );
 };
 
-const Menu = ({session}) => {
+const Menu = ({session, setUserLocation}) => {
   const navigation = useNavigation();
 
   return (
     <View style={styles.menuBox}>
-      <MenuIcon label={'Delivery'} icon={DeliveryIcon} onPress={() => navigation.push('ToktokDelivery')} />
+      <MenuIcon
+        label={'Delivery'}
+        icon={DeliveryIcon}
+        onPress={() => navigation.push('ToktokDelivery', {setUserLocation})}
+      />
       <MenuIcon
         label={'toktokwallet'}
         icon={WalletIcon}
