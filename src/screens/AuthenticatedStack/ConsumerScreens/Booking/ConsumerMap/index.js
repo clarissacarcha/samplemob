@@ -1,6 +1,6 @@
 import {Alert, Image, Platform, StyleSheet, Text, ScrollView, TouchableHighlight, View} from 'react-native';
 import {BookingOverlay, LocationPermission, WelcomeBanner, WelcomeMessage} from '../../../../../components';
-import {COLOR, DARK, LIGHT, MAPS_API_KEY, MEDIUM} from '../../../../../res/constants';
+import {COLOR, DARK} from '../../../../../res/constants';
 import {POST_DELIVERY} from '../../../../../graphql';
 import {PERMISSIONS, RESULTS, check} from 'react-native-permissions';
 import React, {useEffect, useRef, useState, useCallback} from 'react';

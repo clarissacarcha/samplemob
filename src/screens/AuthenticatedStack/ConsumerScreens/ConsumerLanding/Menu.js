@@ -41,7 +41,8 @@ const Menu = ({session}) => {
           navigation.push(route);
         }}
       />
-      <MenuIcon label={'Others'} icon={OthersIcon} />
+      <MenuIcon label={'Pabili'} icon={OthersIcon} onPress={() => navigation.push('Pabili')} />
+      {/* <MenuIcon label={'Others'} icon={OthersIcon} /> */}
     </View>
   );
 };

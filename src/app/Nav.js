@@ -45,6 +45,7 @@ import ConsumerProfile from '../screens/AuthenticatedStack/ConsumerScreens/Profi
 import CustomerDeliveries from '../screens/AuthenticatedStack/ConsumerScreens/Deliveries/MyDeliveries';
 import DeliveryTracking from '../screens/AuthenticatedStack/ConsumerScreens/Deliveries/DeliveryTracking';
 import SearchContact from '../screens/AuthenticatedStack/ConsumerScreens/Booking/SearchContact';
+import Pabili from '../screens/AuthenticatedStack/ConsumerScreens/PabiliScreens/Pabili';
 
 /*---------- CONSUMER TOKTOK WALLET SCREENS ----------*/
 import Wallet from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/WalletComponent';
@@ -57,6 +58,7 @@ import PayPandaWebView from '../screens/AuthenticatedStack/ConsumerScreens/Walle
 import WalletSettings from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Settings';
 import CashInLogs from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/CashIn/CashInLogs';
 import CashOutLogs from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Cashout/CashOutLogs';
+
 import WalletSettingsPinCode from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Pincode';
 import WalletPinCodeSecurity from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Pincode/PincodeSecurity';
 import WalletForgotPincode from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/Pincode/Recovery/ForgotPin';
@@ -318,6 +320,7 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="StopDetails" component={StopDetails} />
     <Authenticated.Screen name="DeliveryDetails" component={DeliveryDetails} />
     <Authenticated.Screen name="DeliverySummary" component={DeliverySummary} />
+    <Authenticated.Screen name="Pabili" component={Pabili} />
 
     <Authenticated.Screen name="PostRegistration" component={PostRegistration} />
 
