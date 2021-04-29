@@ -12,7 +12,7 @@ const {height,width} = Dimensions.get("window")
 const NumberBox = ({onPress,value}) => (
     <TouchableHighlight onPress={onPress} underlayColor={COLOR} style={{borderRadius: 10,marginHorizontal: 5,}}>
       <View style={styles.inputView}>
-        <Text style={{fontSize: 25}}>{value ? "*" : ""}</Text>
+        <Text style={{fontSize: 25, fontFamily: FONTS.BOLD}}>{value ? "*" : ""}</Text>
       </View>
     </TouchableHighlight>
 );

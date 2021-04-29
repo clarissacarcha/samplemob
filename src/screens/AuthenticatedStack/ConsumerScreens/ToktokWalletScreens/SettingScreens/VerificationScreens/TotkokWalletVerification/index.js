@@ -82,7 +82,7 @@ const MainSetupComponent = ()=> {
     })
 
  
-    const [screenSlides,setScreenSlides] = useState(["Fullname","Birthday","Address","IDPic","SelfiePic"])
+    const [screenSlides,setScreenSlides] = useState(["Fullname","Address","IDPic","SelfiePic"])
 
     const DisplayComponents = ()=> {
 
@@ -90,12 +90,10 @@ const MainSetupComponent = ()=> {
             case 0:
                 return <VerifyFullname/>
             case 1:
-                return <VerifyBirth/>
-            case 2:
                 return <VerifyAddress/>
-            case 3:
+            case 2:
                 return <VerifyID/>
-            case 4: 
+            case 3:
                 return <VerifySelfie/>
             default:
                 return <Confirm/>

@@ -1,11 +1,11 @@
 import React from 'react'
 import {TouchableHighlight,View,Text,StyleSheet} from 'react-native'
-import { COLOR } from '../../../../../res/constants'
+import { COLOR, FONTS } from '../../../../../res/constants'
 
 const NumberBox = ({onPress, value , showPin}) => (
     <TouchableHighlight onPress={onPress} underlayColor={COLOR} style={{borderRadius: 10,marginHorizontal: 5,}}>
       <View style={styles.inputView}>
-        <Text style={{fontSize: 25}}>{value ? showPin ? value : "*" : '_'}</Text>
+        <Text style={{fontSize: 25, fontFamily: FONTS.BOLD}}>{value ? showPin ? value : "*" : ''}</Text>
       </View>
     </TouchableHighlight>
 );
@@ -27,9 +27,9 @@ const NumberBoxes = ({pinCode, onNumPress, showPin}) => {
 
 const styles = StyleSheet.create({
     inputView: {
-        backgroundColor: 'white',
-        borderWidth: StyleSheet.hairlineWidth,
-        height: 40,
+        backgroundColor: '#F7F7FA',
+        borderRadius: 5,
+        height: 48,
         width: 40,
         justifyContent: 'center',
         alignItems: 'center',

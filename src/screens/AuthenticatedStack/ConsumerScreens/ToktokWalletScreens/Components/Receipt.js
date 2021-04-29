@@ -28,6 +28,7 @@ const Receipt = ({children, format, refNo ,refDate, onPress})=> {
             android: async ()=>{
                 const checkResult = await check(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE);
                 if (checkResult === RESULTS.GRANTED) {
+                    DownloadReceipt()
                     return true;
                 }
                 if (checkResult === RESULTS.BLOCKED) {
@@ -44,8 +45,9 @@ const Receipt = ({children, format, refNo ,refDate, onPress})=> {
 
                     if (checkResult === RESULTS.DENIED) {
                         const requestResult = await request(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE);
-                        console.log(requestResult)
+
                         if (checkResult === RESULTS.GRANTED) {
+                            DownloadReceipt()
                             return true;
                         }
                         if (checkResult === RESULTS.BLOCKED) {
@@ -105,16 +107,21 @@ const Receipt = ({children, format, refNo ,refDate, onPress})=> {
         const result = await checkAndRequest();
 
         if(result){
-            viewshotRef.current.capture().then(uri => {
-                const timestamp = +moment()
-                const filename = `${timestamp.toString()}_${refNo}.${format ? format : "jpg"}`
-                // RNFS.copyFile(uri, path + `/${filename}`)
-                RNFS.moveFile(uri, path + `/${filename}`)
-                Toast.show(`Receipt ${filename} has been downloaded.`)
-            });
+            DownloadReceipt()
         }
     
     }
+
+    const DownloadReceipt = ()=> {
+        viewshotRef.current.capture().then(uri => {
+            const timestamp = +moment()
+            const filename = `${timestamp.toString()}_${refNo}.${format ? format : "jpg"}`
+            // RNFS.copyFile(uri, path + `/${filename}`)
+            RNFS.moveFile(uri, path + `/${filename}`)
+            Toast.show(`Receipt ${filename} has been downloaded.`)
+        });
+    }
+
 
     return (
         <View style={styles.container}>

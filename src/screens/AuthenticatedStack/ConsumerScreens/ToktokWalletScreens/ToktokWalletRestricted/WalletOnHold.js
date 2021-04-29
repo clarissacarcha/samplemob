@@ -1,28 +1,28 @@
 import React from 'react'
 import {View,Text,StyleSheet,Image,TouchableOpacity} from 'react-native'
-import {BUTTON_HEIGHT, COLOR, DARK, FONT_MEDIUM, FONT_REGULAR, SIZES} from '../../../../../res/constants'
+import {BUTTON_HEIGHT, COLORS, FONTS, SIZES} from '../../../../../res/constants'
 
 const WalletOnHold = ({navigation,walletinfo})=> {
 
     return (
         <View style={styles.container}>
-            <View style={{flex:1,justifyContent:"flex-start",alignItems:"center",marginTop: 30}}>
+            <View style={{flex:1,justifyContent:"flex-start",alignItems:"center",marginTop: 60}}>
                 <View style={styles.lockIcon}>
                         {/* <FIcon5 name="lock" /> */}
                         <Image style={{height: 40,width: 40}} resizeMode="contain" source={require('../../../../../assets/icons/lock.png')} />
                 </View>
-                <Text style={{fontFamily: FONT_MEDIUM,fontSize: 20,marginTop: 35}}>Wallet is on hold</Text>
-                <Text style={{fontFamily: FONT_REGULAR,fontSize: SIZES.M}}>Click the "Recover" button to recover toktokwallet.</Text>
+                <Text style={{fontFamily: FONTS.BOLD,fontSize: 20,marginTop: 35}}>Wallet is on hold</Text>
+                <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.M}}>Click the "Recover" button to recover toktokwallet.</Text>
             </View>
 
             <View style={{flex: 1}}>
                 <View style={styles.btns}>
-                    <TouchableOpacity onPress={()=>navigation.pop()} style={[styles.btn,{borderWidth: 1,borderColor:"gray", marginRight: 10}]}>
-                        <Text style={{fontFamily: FONT_REGULAR,fontSize:SIZES.M,color:"gray"}}>Do it later</Text>
+                    <TouchableOpacity onPress={()=>navigation.pop()} style={[styles.btn,{backgroundColor:"#F7F7FA", marginRight: 10}]}>
+                        <Text style={{fontFamily: FONTS.BOLD,fontSize:SIZES.L,color:"gray"}}>Do it later</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={()=>navigation.replace("ToktokWalletRecoveryMethods")} style={[styles.btn,{backgroundColor:DARK,marginLeft: 10}]}>
-                    <Text style={{fontFamily: FONT_REGULAR,fontSize:SIZES.M,color:COLOR}}>Recover</Text>
+                    <TouchableOpacity onPress={()=>navigation.replace("ToktokWalletRecoveryMethods")} style={[styles.btn,{backgroundColor:COLORS.YELLOW,marginLeft: 10}]}>
+                    <Text style={{fontFamily: FONTS.BOLD,fontSize:SIZES.L,color:COLORS.DARK}}>Recover</Text>
                     </TouchableOpacity>
                 </View>
             </View>

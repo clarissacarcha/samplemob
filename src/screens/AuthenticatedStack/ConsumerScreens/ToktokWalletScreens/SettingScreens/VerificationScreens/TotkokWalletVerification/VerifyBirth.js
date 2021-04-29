@@ -11,7 +11,7 @@ import ModalCountry from './ModalCountry'
 import { YellowButton } from '../../../../../../../revamp'
 
 
-const DateBirthModal = ({modalVisible, setModalVisible , birthInfo ,changeBirthInfo})=> {
+export const DateBirthModal = ({modalVisible, setModalVisible , birthInfo ,changeBirthInfo})=> {
 
     const minDate = new Date('1900-01-01');
     const todayDate = new Date()

@@ -4,6 +4,7 @@ import { HeaderTitle } from '../../../../../../../components'
 import FIcon from 'react-native-vector-icons/Feather';
 import {PATCH_PINCODE_TOKTOK_WALLET} from '../../../../../../../graphql'
 import {useMutation} from '@apollo/react-hooks'
+import Separator from '../../../Components/Separator'
 
 
 //SELF IMPORTS
@@ -95,6 +96,7 @@ export default ({navigation,route})=> {
     return (
       <>
         <SuccessModal modalVisible={successModalVisible} />
+        <Separator />
         <KeyboardAvoidingView 
             keyboardVerticalOffset={Platform.OS == "ios" ? 0 : 80}  
             style={styles.container} 

@@ -1,6 +1,6 @@
 import React, { useState , useRef , useContext } from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,Modal,Dimensions,Alert,Image,ScrollView,TextInput,FlatList} from 'react-native'
-import { MEDIUM,ORANGE, FONTS, INPUT_HEIGHT, BUTTON_HEIGHT, SIZES, COLORS} from '../../../../../../../res/constants'
+import { FONTS, INPUT_HEIGHT, BUTTON_HEIGHT, SIZES, COLORS} from '../../../../../../../res/constants'
 import EIcon from 'react-native-vector-icons/EvilIcons'
 import {VerifyContext} from './VerifyContextProvider'
 import {useNavigation} from '@react-navigation/native'
@@ -181,11 +181,11 @@ const VerifyID = ()=> {
                         <TouchableOpacity onPress={()=>{
                             setCurrentIndex(oldval => oldval - 1)
                         }} style={{height: BUTTON_HEIGHT,flex: 1,marginRight: 10,backgroundColor: "#F7F7FA" , borderRadius: 5, justifyContent: "center",alignItems: "center"}}>
-                            <Text style={{color: "gray",fontSize: SIZES.M,fontFamily: FONTS.BOLD}}>Back</Text>
+                            <Text style={{color: "gray",fontSize: SIZES.L,fontFamily: FONTS.BOLD}}>Back</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity onPress={Proceed} style={{height: BUTTON_HEIGHT,flex: 1,marginLeft: 10,backgroundColor: COLORS.YELLOW , borderRadius: 5, justifyContent: "center",alignItems: "center"}}>
-                            <Text style={{color: COLORS.DARK,fontSize: SIZES.M,fontFamily: FONTS.BOLD}}>Next</Text>
+                            <Text style={{color: COLORS.DARK,fontSize: SIZES.L,fontFamily: FONTS.BOLD}}>Next</Text>
                         </TouchableOpacity>
                     </View>
 
@@ -266,7 +266,7 @@ const styles = StyleSheet.create({
         width: '100%',
         borderBottomLeftRadius: 10,
         borderBottomRightRadius: 10,
-        borderColor: MEDIUM,
+        borderColor: COLORS.MEDIUM,
       },
       pickerLabel: {
         alignItems: 'flex-end',

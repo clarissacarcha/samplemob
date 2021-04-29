@@ -1,6 +1,6 @@
 import React, { useState ,useRef , useEffect } from 'react'
 import {View,Text,StyleSheet,TouchableHighlight,TouchableOpacity,TextInput,KeyboardAvoidingView,Platform,ScrollView} from 'react-native'
-import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM,ORANGE, FONT_MEDIUM, FONT_REGULAR, SIZES, BUTTON_HEIGHT} from '../../../../../../../res/constants'
+import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM,ORANGE, FONT_MEDIUM, FONT_REGULAR, SIZES, BUTTON_HEIGHT, FONTS, COLORS} from '../../../../../../../res/constants'
 import { GET_VERIFY_TOKTOK_WALLET_PIN } from '../../../../../../../graphql';
 import {useLazyQuery} from '@apollo/react-hooks'
 import {onError} from '../../../../../../../util/ErrorUtility'
@@ -63,7 +63,7 @@ const VerifyPin = ({pageIndex,setPageIndex})=> {
     return (
         <View style={styles.container}>
             <ScrollView style={styles.content}>
-                    <Text style={{fontSize: SIZES.M,fontFamily: FONT_MEDIUM,marginTop: 20,alignSelf:"center"}}>Enter old PIN</Text>
+                    <Text style={{fontSize: SIZES.M,fontFamily: FONTS.BOLD,marginTop: 20,alignSelf:"center"}}>Enter old PIN</Text>
                     <View style={{position: 'relative',marginTop: 50,}}>
                         <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={showPin}/>
                         <TextInput
@@ -82,23 +82,23 @@ const VerifyPin = ({pageIndex,setPageIndex})=> {
                             onSubmitEditing={onSubmit}
                         />
                          {
-                            pinCodeAttempts.visible && <Text style={{fontFamily: FONT_REGULAR,color:"red",alignSelf:"center",fontSize: 12}}>Invalid PIN , You can try {pinCodeAttempts.attempts} more times</Text>
+                            pinCodeAttempts.visible && <Text style={{fontFamily: FONTS.REGULAR,color:"red",alignSelf:"center",fontSize: 12}}>Invalid PIN , You can try {pinCodeAttempts.attempts} more times</Text>
                         }
 
                         <TouchableOpacity
-                                style={{marginTop: 40,paddingVertical: 10,alignItems: "center"}}
+                                style={{marginTop: 18,paddingVertical: 10,alignItems: "center"}}
                                 onPress={forgotPIN}
                         >
-                                <Text style={{color: "#F6841F",fontSize: SIZES.M,fontFamily: FONT_MEDIUM}}>Forgot PIN?</Text>
+                                <Text style={{color: "#F6841F",fontSize: SIZES.M,fontFamily: FONTS.BOLD}}>Forgot PIN?</Text>
                         </TouchableOpacity>
                     </View>
             </ScrollView>
             <TouchableOpacity
                 disabled={pinCode.length < 6}
                 onPress={onSubmit}
-                style={{alignItems: "center",height: BUTTON_HEIGHT,backgroundColor: pinCode.length < 6 ? "gray" : DARK,margin: 10,justifyContent: "center",borderRadius: 5,}}
+                style={{alignItems: "center",height: BUTTON_HEIGHT,backgroundColor: pinCode.length < 6 ? "gray" : COLORS.YELLOW,margin: 10,justifyContent: "center",borderRadius: 5,}}
             >
-                    <Text style={{color: pinCode.length < 6 ? "white" : COLOR,fontSize: SIZES.M,fontFamily: FONT_MEDIUM}}>Next</Text>
+                    <Text style={{color: pinCode.length < 6 ? "white" : COLORS.DARK,fontSize: SIZES.M,fontFamily: FONT_MEDIUM}}>Next</Text>
             </TouchableOpacity>
        </View>
     )
