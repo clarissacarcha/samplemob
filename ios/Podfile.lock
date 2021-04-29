@@ -283,6 +283,8 @@ PODS:
     - React-Core
   - react-native-document-picker (3.5.2):
     - React
+  - react-native-geolocation-service (5.3.0-beta.1):
+    - React
   - react-native-google-maps (0.27.1):
     - Google-Maps-iOS-Utils (= 2.1.0)
     - GoogleMaps (= 3.5.0)
@@ -440,6 +442,7 @@ DEPENDENCIES:
   - react-native-contacts (from `../node_modules/react-native-contacts`)
   - react-native-date-picker (from `../node_modules/react-native-date-picker`)
   - react-native-document-picker (from `../node_modules/react-native-document-picker`)
+  - react-native-geolocation-service (from `../node_modules/react-native-geolocation-service`)
   - react-native-google-maps (from `../node_modules/react-native-maps`)
   - "react-native-image-editor (from `../node_modules/@react-native-community/image-editor`)"
   - react-native-location (from `../node_modules/react-native-location`)
@@ -542,6 +545,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-date-picker"
   react-native-document-picker:
     :path: "../node_modules/react-native-document-picker"
+  react-native-geolocation-service:
+    :path: "../node_modules/react-native-geolocation-service"
   react-native-google-maps:
     :path: "../node_modules/react-native-maps"
   react-native-image-editor:
@@ -643,6 +648,7 @@ SPEC CHECKSUMS:
   react-native-contacts: 7b5e16196278636030c3fbbb9505543984b01697
   react-native-date-picker: 7b03feaea96db983f1de449e9d6d1dea4fa61010
   react-native-document-picker: 3026780fc04e7ad27534a0f35d5daefb550aa03a
+  react-native-geolocation-service: 4030de78cdeb93ebef1fdc1971668bea6c0bc59b
   react-native-google-maps: 0a989abda71059db2caa98b9dacca7a8f38a47d0
   react-native-image-editor: 9361a215c3991cafbe5e7f28cbbad6e72c9c2705
   react-native-location: 5a40ec1cc6abf2f6d94df979f98ec76c3a415681
@@ -667,7 +673,7 @@ SPEC CHECKSUMS:
   RNDeviceInfo: b6e650fbd234732c759544218657d549b4339038
   RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
   RNPermissions: 5df468064df661a4c8c017e2791ce90d7695eea5
-  RNQrGenerator: 124c207c2a789e79eb892d87e61581f6cb4cb42a
+  RNQrGenerator: d88c426dc358ceb043296a80f6fe482ccf985bc4
   RNReanimated: b5ccb50650ba06f6e749c7c329a1bc3ae0c88b43
   RNScreens: ac02d0e4529f08ced69f5580d416f968a6ec3a1d
   RNSVG: ce9d996113475209013317e48b05c21ee988d42e

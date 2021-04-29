@@ -1,14 +1,15 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {View, Text, StyleSheet, TouchableOpacity, TextInput} from 'react-native';
-import {FONT_SIZE_LARGE, FONT_SIZE_SMALL, FONT_REGULAR} from '../../../../res/constants';
+import {FONT_SIZE_LARGE, COLOR} from '../../../../../res/constants';
 
 const Greeting = ({session}) => {
   return (
     <View style={styles.greetingBox}>
-      <Text style={styles.greetingText}>
-        Hello, {session.user.person.firstName} {session.user.person.lastName}
-      </Text>
+      <View>
+        {/* <Text style={{fontSize: 18, marginBottom: 5}}>Delivery Details</Text> */}
+        <Text style={{fontSize: 14}}>Please fill out the required fields.</Text>
+      </View>
     </View>
   );
 };
@@ -23,10 +24,9 @@ const styles = StyleSheet.create({
   greetingBox: {
     height: 50,
     justifyContent: 'center',
-    paddingHorizontal: 20,
+    // marginVertical: 10,
   },
   greetingText: {
-    fontSize: 14,
-    fontFamily: FONT_REGULAR,
+    fontSize: 40,
   },
 });

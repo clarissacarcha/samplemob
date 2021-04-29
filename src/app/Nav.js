@@ -46,6 +46,9 @@ import CustomerDeliveries from '../screens/AuthenticatedStack/ConsumerScreens/De
 import DeliveryTracking from '../screens/AuthenticatedStack/ConsumerScreens/Deliveries/DeliveryTracking';
 import SearchContact from '../screens/AuthenticatedStack/ConsumerScreens/Booking/SearchContact';
 import Pabili from '../screens/AuthenticatedStack/ConsumerScreens/PabiliScreens/Pabili';
+import PabiliSearchAddress from '../screens/AuthenticatedStack/ConsumerScreens/PabiliScreens/PabiliSearchAddress';
+import PabiliDetails from '../screens/AuthenticatedStack/ConsumerScreens/PabiliScreens/PabiliDetails';
+import NearbyStores from '../screens/AuthenticatedStack/ConsumerScreens/PabiliScreens/NearbyStores';
 
 /*---------- CONSUMER TOKTOK WALLET SCREENS ----------*/
 import Wallet from '../screens/AuthenticatedStack/ConsumerScreens/Wallet/WalletComponent';
@@ -124,6 +127,8 @@ const RootDrawer = createDrawerNavigator();
 const DriverHome = createBottomTabNavigator();
 const ConsumerHome = createBottomTabNavigator();
 const DriverDeliveries = createMaterialTopTabNavigator();
+
+const ConsumerBottomTabStack = createStackNavigator();
 
 const DriverDeliveriesTab = () => {
   return (
@@ -312,6 +317,18 @@ const ConsumerHomeBottomTab = ({navigation}) => (
   </ConsumerHome.Navigator>
 );
 
+const ConsumerLandingStack = () => (
+  <ConsumerBottomTabStack.Navigator>
+    <ConsumerBottomTabStack.Screen
+      name="ConsumerBottomTabScreen"
+      component={ConsumerHomeBottomTab}
+      options={{
+        headerShown: false,
+      }}
+    />
+  </ConsumerBottomTabStack.Navigator>
+);
+
 const AuthenticatedStack = () => (
   <Authenticated.Navigator>
     {/* <Authenticated.Screen name="ConsumerLanding" component={ConsumerLanding} options={{headerShown: false}} /> */}
@@ -320,7 +337,10 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="StopDetails" component={StopDetails} />
     <Authenticated.Screen name="DeliveryDetails" component={DeliveryDetails} />
     <Authenticated.Screen name="DeliverySummary" component={DeliverySummary} />
-    <Authenticated.Screen name="Pabili" component={Pabili} />
+    <Authenticated.Screen name="Pabili" component={Pabili} options={{headerShown: false}} />
+    <Authenticated.Screen name="PabiliSearchAddress" component={PabiliSearchAddress} />
+    <Authenticated.Screen name="PabiliDetails" component={PabiliDetails} />
+    <Authenticated.Screen name="NearbyStores" component={NearbyStores} />
 
     <Authenticated.Screen name="PostRegistration" component={PostRegistration} />
 

@@ -1,13 +1,15 @@
 import React, {useCallback, useMemo, useRef, useState, useEffect} from 'react';
-import {View, StyleSheet, Text, TextInput, KeyboardAvoidingView, ScrollView} from 'react-native';
+import {View, StyleSheet, Text} from 'react-native';
+import {useLazyQuery} from '@apollo/react-hooks';
 import {connect} from 'react-redux';
 import moment from 'moment';
-import BottomSheet, {BottomSheetBackdrop, BottomSheetScrollView, BottomSheetView} from '@gorhom/bottom-sheet';
+import BottomSheet, {BottomSheetBackdrop, BottomSheetView} from '@gorhom/bottom-sheet';
 import ScrollPicker from 'react-native-wheel-scrollview-picker';
-// import BottomSheet from 'reanimated-bottom-sheet';
 import {HeaderBack, HeaderTitle} from '../../../../../components';
 import {useAlert} from '../../../../../hooks';
 import {COLOR, LIGHT, ORANGE, FONT_REGULAR} from '../../../../../res/constants';
+import {GeolocationUtility, PermissionUtility} from '../../../../../util';
+import {GET_GOOGLE_GEOCODE_REVERSE} from '../../../../../graphql';
 
 import {WhiteButton, BlackButton} from '../../../../../revamp';
 
@@ -151,6 +153,14 @@ const ToktokDelivery = ({navigation, session, route}) => {
   const [scheduledDate, setScheduledDate] = useState('Today');
   const [scheduledTime, setScheduledTime] = useState('Anytime');
 
+  const [getGoogleGeocodeReverse, {loading, error}] = useLazyQuery(GET_GOOGLE_GEOCODE_REVERSE, {
+    fetchPolicy: 'network-only',
+    onCompleted: (data) => {
+      console.log({data});
+    },
+    onError: (error) => console.log({error}),
+  });
+
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={['toktok', 'Delivery']} />,
@@ -177,6 +187,30 @@ const ToktokDelivery = ({navigation, session, route}) => {
       recipientStop: [value],
     });
   };
+
+  const getLocationHash = async () => {
+    console.log('FETCHING LOCATION');
+    const currentLocation = await GeolocationUtility.getCurrentLocation();
+    console.log({currentLocation});
+
+    if (currentLocation) {
+      console.log('GEOCODING');
+      getGoogleGeocodeReverse({
+        variables: {
+          input: {
+            coordinates: {
+              latitude: currentLocation.coords.latitude,
+              longitude: currentLocation.coords.longitude,
+            },
+          },
+        },
+      });
+    }
+  };
+
+  useEffect(() => {
+    getLocationHash();
+  }, []);
 
   return (
     <>

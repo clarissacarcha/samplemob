@@ -6,8 +6,8 @@ export const MAPS_API_KEY = 'AIzaSyDhlw6pbriuwr_Mb6KYkVlBar7KD1KTrOs';
 // export const HOST_PORT = 'graphql.toktok.ph:2096';
 
 export const PROTOCOL = 'http';
-// export const HOST_PORT = '192.168.0.102:3000'; // Myutini
-export const HOST_PORT = '35.173.0.77:3088'; // Marketing Server
+export const HOST_PORT = '192.168.0.102:3000'; // Myutini
+// export const HOST_PORT = '35.173.0.77:3088'; // Marketing Server
 
 export const COLORS = {
   YELLOW: '#FDBA1C',
@@ -15,9 +15,10 @@ export const COLORS = {
   LIGHT: '#D3D3D3',
   MEDIUM: '#808080',
   DARK: '#222222',
-  LIGHT_YELLOW: 'rgba(256,186,28, 0.1)',
-  LIGHT_GRAY: 'rgba(204,204,204,0.2)',
   WHITE: '#FFFFFF',
+  TRANSPARENT_YELLOW: 'rgba(256,186,28, 0.1)',
+  TRANSPARENT_GRAY: 'rgba(204,204,204,0.2)',
+  LIGHT_YELLOW: '#F9C344',
 };
 
 export const FONTS = {
@@ -34,6 +35,21 @@ export const SIZES = {
   M: 14,
   L: 16,
   XL: 18,
+};
+
+export const NUMBERS = {
+  BORDER_RADIUS: 5,
+  MARGIN_HORIZONTAL: 20,
+  SHADOW: {
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
 };
 
 /**
