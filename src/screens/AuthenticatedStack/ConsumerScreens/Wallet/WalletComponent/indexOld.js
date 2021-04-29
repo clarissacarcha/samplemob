@@ -46,7 +46,7 @@ export default ({navigation,route})=> {
         setRefreshing(true)
         setTimeout(() => {
             // getToktokWallet()
-            navigation.replace("TokTokWallet")
+            navigation.replace("ToktokWalletHomePage")
             setRefreshing(false)
         }, 200);
 

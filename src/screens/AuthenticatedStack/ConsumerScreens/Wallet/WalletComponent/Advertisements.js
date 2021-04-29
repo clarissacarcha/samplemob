@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import {View,Text,StyleSheet , FlatList , Image , Modal , Dimensions , TouchableHighlight , TouchableOpacity} from 'react-native'
-import { FONT_MEDIUM } from '../../../../../res/constants'
+import { FONT_MEDIUM, SIZES } from '../../../../../res/constants'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 
 const SampleAdvertisementsData = [
@@ -58,7 +58,7 @@ const Advertisements = ()=> {
         <>
         <AdvertisementModal isVisible={isVisible} setIsVisible={setIsVisible} index={adIndex} />
         <View style={styles.container}>
-                <Text style={{fontSize: 14,color: "#212529",fontFamily: FONT_MEDIUM}}>Promos and Freebies</Text>
+                <Text style={{fontSize: SIZES.M,color: "#212529",fontFamily: FONT_MEDIUM}}>Promos and Freebies</Text>
                 <FlatList 
                         style={styles.adsContainer}
                         data={SampleAdvertisementsData}

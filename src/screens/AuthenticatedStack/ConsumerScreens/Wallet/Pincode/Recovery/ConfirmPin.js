@@ -84,14 +84,14 @@ const styles = StyleSheet.create({
     },
     content: {
         // alignItems: "center",
-        padding: 20,
+        padding: 10,
         flex: 1,
     },
     input: {
         flex: 1,
         borderWidth: StyleSheet.hairlineWidth,
         borderRadius: 5,
-        paddingHorizontal: 20,
+        paddingHorizontal: 10,
         fontSize: 25,
         color: DARK,
         width: 30,

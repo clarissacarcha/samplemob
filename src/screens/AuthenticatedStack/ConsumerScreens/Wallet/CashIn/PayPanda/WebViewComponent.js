@@ -85,6 +85,7 @@ const WebViewComponent = ()=> {
                     startInLoadingState
                     renderLoading={()=> <LoadingIndicator/>}
                     onNavigationStateChange={(event)=> {
+                        console.log(event)
                         const checkreturnurl = event.url.search("http://toktokreturnurl.ph")
                         if(checkreturnurl != - 1){
                             const {url} = event

@@ -3,7 +3,7 @@
 buildscript {
     ext {
         buildToolsVersion = "28.0.3"
-        minSdkVersion = 16
+        minSdkVersion = 21 // change from 16 -> 21 for react-native-image-picker
         compileSdkVersion = 29 // change from 28 -> 29 for react-native-webview
         targetSdkVersion = 29 // change from 28 -> 29 for react-native-webview
         playServicesVersion = "17.0.0" // or find latest version // for react-native-maps

@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, StyleSheet, Text} from 'react-native';
-import {DARK, ORANGE} from '../res/constants';
+import {DARK, FONTS, ORANGE} from '../res/constants';
 
 export const HeaderTitle = ({label}) => {
   return (
@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
   },
   outer: {
     fontSize: 16,
-    fontFamily: 'Jost-Medium',
+    fontFamily: FONTS.BOLD,
     color: DARK,
   },
   inner: {

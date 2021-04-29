@@ -1,14 +1,15 @@
-import React, {useState,useRef,useEffect} from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,Image,Modal,TextInput,Platform,KeyboardAvoidingView,ActivityIndicator,Alert,Dimensions,ScrollView} from 'react-native'
+import React, {useState,useRef,useEffect,useMemo} from 'react'
+import {View,Text,StyleSheet,TouchableOpacity,Image,Modal,TextInput,Platform,KeyboardAvoidingView,ActivityIndicator,Alert,Dimensions,ScrollView,Keyboard} from 'react-native'
 import {HeaderBackClose, HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../../../components'
-import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM, FONT_MEDIUM, FONT_REGULAR, FONT_LIGHT} from '../../../../../../res/constants'
+import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM, FONT_MEDIUM, FONT_REGULAR, FONT_LIGHT, SIZES, ORANGE} from '../../../../../../res/constants'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import {useSelector} from 'react-redux'
 import {useMutation,useLazyQuery} from '@apollo/react-hooks'
 import {POST_WALLET_CASH_IN,GET_DAILY_MONTHLY_YEARLY_INCOMING} from '../../../../../../graphql/model'
 import {onError,onErrorAlert} from '../../../../../../util/ErrorUtility';
 import {numberFormat} from '../../../../../../helper'
-import ConfirmModal from './ConfirmModal'
+import ConfirmBottomSheet from '../../Components/ConfirmBottomSheet'
+import ConfirmModalContent from './ConfirmModalContent'
 import {useAlert} from '../../../../../../hooks/useAlert'
 
 const {height,width} = Dimensions.get("window")
@@ -28,14 +29,13 @@ const PayPandaComponent = ({navigation,route})=> {
     const transactionType = route.params.transactionType
     const userstate = useSelector(state=>state.session.user)
     const globalsettings = useSelector(state=>state.constants)
-    const [showModal,setShowModal] = useState(false)
     const [tempAmount,setTempAmount] = useState("")
     const [amount,setAmount] = useState("")
     const [message,setMessage] = useState("")
     const [recipientDetails,setRecipientDetails] = useState(null)
     const [disablebtn,setDisablebtn] = useState(false)
     const [maxLimitMessage,setMaxLimitMessage] = useState("")
-    const inputRef = useRef()
+    const bottomSheetRef = useRef();
 
     const [postWalletCashIn , {data,error,loading}] = useMutation(POST_WALLET_CASH_IN, {
         // fetchPolicy: 'network-only',
@@ -44,7 +44,7 @@ const PayPandaComponent = ({navigation,route})=> {
             navigation.pop()
         },
         onCompleted: ({postWalletCashIn})=> {
-            navigation.navigate("TokTokWalletCashINPaypandaWebView", {
+            navigation.navigate("ToktokWalletPayPandaWebView", {
                 merchantId: postWalletCashIn.merchantId,
                 refNo: postWalletCashIn.refNo,
                 signature: postWalletCashIn.signature,
@@ -127,19 +127,20 @@ const PayPandaComponent = ({navigation,route})=> {
                 }
             }
         })
-        setShowModal(false)
         // Alert.alert("test")
        
     }
 
     const openSecurityPIN = ()=> {
-        setShowModal(false)
-        return navigation.push("TokTokWalletPinCodeSecurity", {onConfirm: proceedToPaypandaPortal})
+        bottomSheetRef.current.snapTo(0);
+        return navigation.push("ToktokWalletSecurityPinCode", {onConfirm: proceedToPaypandaPortal})
     }
 
 
     const confirmAmount = ()=> {
-        setShowModal(true)
+        Keyboard.dismiss()
+        bottomSheetRef.current.snapTo(1);
+       
     }
 
     const changeAmountText = (value)=> {
@@ -165,21 +166,22 @@ const PayPandaComponent = ({navigation,route})=> {
 
     return (
       <>
-       <ConfirmModal showModal={showModal} setShowModal={setShowModal} amount={amount} onPress={openSecurityPIN}/>
        <KeyboardAvoidingView  
             keyboardVerticalOffset={Platform.OS == "ios" ? 0 : 90}  
             behavior={Platform.OS === "ios" ? "padding" : "height"} 
             style={styles.container}
         >
-            <View style={styles.paypandaLogo}>
+             <View style={styles.paypandaLogo}>
                 <Image style={{height: 40,width: 40,alignSelf: "center"}} source={require('../../../../../../assets/images/paypanda.png')}/>
                 <View style={{justifyContent:"center"}}>
-                     <Text style={{marginLeft: 15,fontSize: 14,fontFamily: FONT_MEDIUM}}>PayPanda</Text>
+                     <Text style={{marginLeft: 15,fontSize: SIZES.M,fontFamily: FONT_MEDIUM}}>PayPanda</Text>
                      {/* <Text style={{fontFamily: FONT_LIGHT}}>Maximum cash in amount is {'\u20b1'}</Text> */}
                 </View>
                 
                
             </View>
+
+            <View style={styles.content}>
           
             {
                 !loading
@@ -198,13 +200,13 @@ const PayPandaComponent = ({navigation,route})=> {
                             />
                             {/* <Text style={{fontSize: 40,fontFamily: FONT_MEDIUM , alignSelf:"center"}}></Text> */}
                             <View style={styles.input}>
-                                <Text style={{fontFamily: FONT_MEDIUM,fontSize: 30,marginRight: 20}}>{'\u20B1'}</Text>
+                                <Text style={{fontFamily: FONT_MEDIUM,fontSize: 30,marginRight: 15}}>PHP</Text>
                                 <Text style={{fontFamily: FONT_MEDIUM,fontSize: 30}}>{amount ? numberFormat(amount) : "0.00"}</Text>
                                 <FIcon5 name="pen" style={{alignSelf:"center",marginLeft: 25}} size={18} color="gray"/>
                             </View>
                             
                         </View>
-                        <Text style={{color:"gray",fontSize: 14,fontFamily: FONT_REGULAR}}>Current Balance {'\u20B1'} {numberFormat(balance)}</Text>
+                        <Text style={{color:"gray",fontSize: SIZES.M,fontFamily: FONT_REGULAR}}>Current Balance PHP {numberFormat(balance)}</Text>
                         <Text style={{fontFamily: FONT_REGULAR, color: "red",marginTop: 5,fontSize: 12}}>{message}</Text>
                         <Text style={{fontFamily: FONT_REGULAR, color: "red",marginTop: 5,fontSize: 12}}>{maxLimitMessage}</Text>
               
@@ -215,10 +217,21 @@ const PayPandaComponent = ({navigation,route})=> {
           
             <View style={styles.cashinbutton}>
                     <TouchableOpacity disabled={amount < 1 || amount > transactionType.cashInLimit || disablebtn} onPress={confirmAmount} style={{height: "100%",width: "100%",backgroundColor: amount < 1 || amount > transactionType.cashInLimit  || disablebtn ? "gray" : DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
-                        <Text style={{color: amount < 1 || amount > transactionType.cashInLimit  || disablebtn ? "white" : COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Cash In</Text>
+                        <Text style={{color: amount < 1 || amount > transactionType.cashInLimit  || disablebtn ? "white" : COLOR,fontSize: SIZES.M,fontFamily: FONT_MEDIUM}}>Cash In</Text>
                     </TouchableOpacity>
             </View>
+        </View>
        </KeyboardAvoidingView>
+
+       <ConfirmBottomSheet
+            bottomSheetRef={bottomSheetRef}
+            onPress={openSecurityPIN}
+            headerTitle="Review and Confirm" 
+            btnLabel="Confirm"
+        >
+                <ConfirmModalContent amount={amount} />
+        </ConfirmBottomSheet>
+
        </>
     )
 }
@@ -227,8 +240,13 @@ const PayPandaComponent = ({navigation,route})=> {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "white"
+        backgroundColor: "white",
     },
+    content: {
+        flex: 1,
+        paddingHorizontal: 10,
+        paddingBottom: 10,
+    }, 
     paypandaLogo: {
         height: 80,
         width: "100%",
@@ -245,9 +263,8 @@ const styles = StyleSheet.create({
         // alignSelf:"center"
     },
     cashinbutton: {
-        height: 60,
+        height: 50,
         width: "100%",
-        padding: 10,
     },
     input: {
         marginHorizontal: 20,

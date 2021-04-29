@@ -6,7 +6,7 @@ export const ACCOUNT_TYPE = 1; // 1 = Customer | 2 = Driver
 // export const HOST_PORT = 'graphql.toktok.ph:2096';
 
 export const PROTOCOL = 'http';
-export const HOST_PORT = '192.168.0.105:3000'; // Myutini
+export const HOST_PORT = '192.168.0.107:3000'; // Myutini
 // export const HOST_PORT = '35.173.0.77:3088'; // Marketing Server
 
 export const COLOR = '#FDBA1C'; //YELLOW
@@ -18,14 +18,14 @@ export const LIGHT = '#D3D3D3';
 export const DIRTY_WHITE = 'rgba(204,204,204,0.2)';
 export const FONT_COLOR = '#2E2D32';
 
-export const FONT_SIZE = 10;
+// export const SIZES = 10;
 export const FONT_SIZE_SMALL = 10;
 export const FONT_SIZE_MEDIUM = 12;
 export const FONT_SIZE_LARGE = 14;
 
 export const FONT_FAMILY = 'Rubik-Regular';
 export const FONT_STYLE = {
-  fontSize: FONT_SIZE,
+  fontSize: SIZES,
   fontFamily: FONT_FAMILY,
   color: FONT_COLOR,
 };
@@ -35,6 +35,65 @@ export const FONT_MEDIUM = `${FONT_DEFAULT}-Medium`;
 export const FONT_LIGHT = `${FONT_DEFAULT}-Light`;
 export const FONT_BOLD = `${FONT_DEFAULT}-Bold`;
 export const FONT_SEMIBOLD = `${FONT_DEFAULT}-SemiBold`;
+
+export const BUTTON_HEIGHT = 50
+export const INPUT_HEIGHT = 50
+
+export const COLORS = {
+  YELLOW: '#FDBA1C',
+  ORANGE: '#F5841F',
+  LIGHT: '#D3D3D3',
+  MEDIUM: '#808080',
+  DARK: '#222222',
+  WHITE: '#FFFFFF',
+  TRANSPARENT_YELLOW: 'rgba(256,186,28, 0.1)',
+  TRANSPARENT_GRAY: 'rgba(204,204,204,0.2)',
+  LIGHT_YELLOW: '#F9C344',
+};
+
+export const FONTS = {
+  LIGHT: 'Jost-Light',
+ // REGULAR: 'Jost-Regular',
+  MEDIUM: 'Jost-Medium',
+  SEMIBOLD: 'Jost-SemiBold',
+ // BOLD: 'Jost-Bold',
+  REGULAR: 'FiraSans-Regular',
+  BOLD: 'FiraSans-Bold',
+};
+
+
+// export const SIZES = {
+//   XS: 10,
+//   S: 12,
+//   M: 14,
+//   L: 16,
+//   XL: 18,
+// };
+
+export const SIZES = {
+  XS: 9,
+  S: 11,
+  M: 13,
+  L: 15,
+  XL: 17,
+};
+
+export const NUMBERS = {
+  BORDER_RADIUS: 5,
+  MARGIN_HORIZONTAL: 20,
+  SHADOW: {
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+};
+
+export const BUTTON_ORANGE = "#FDBA1C"
 
 export const MAP_DELTA = {
   latitudeDelta: 0.015,

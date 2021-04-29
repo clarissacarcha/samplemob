@@ -29,7 +29,7 @@ const SuccessfulModal = ({successModalVisible , amount , recipient , walletinfoP
                 <Text style={{fontFamily: FONT_LIGHT,fontSize: 10}}>{moment(walletinfoParams.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')}</Text>
 
                 <View style={styles.recipientInfo}>
-                        <RecipientInfo label="Payment Method" value="toktok wallet"/>
+                        <RecipientInfo label="Payment Method" value="toktokwallet"/>
                         <RecipientInfo label="Recipient" value={recipient.name}/>
                         <RecipientInfo label="Fund Transfered" value={`${'\u20b1'} ${numberFormat(amount)}`}/>
                 </View>
@@ -38,7 +38,7 @@ const SuccessfulModal = ({successModalVisible , amount , recipient , walletinfoP
 
     const Proceed = ()=>  {
         navigation.pop(3)
-        navigation.replace("TokTokWallet")
+        navigation.replace("ToktokWalletHomePage")
     }
 
 

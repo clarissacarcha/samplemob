@@ -14,7 +14,7 @@ const VerifyContextProvider = ({children})=> {
     const [nationality,setNationality] = useState("Philippines")
     const [birthInfo,setBirthInfo] = useState({
         birthdate: "",
-        birthPlace: "Philippines",
+        birthPlace: "",
     })
     const [address,setAddress] = useState({
         country: "Philippines",

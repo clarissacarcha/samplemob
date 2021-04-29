@@ -2,7 +2,7 @@ import React , {useState , useEffect} from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,Image,RefreshControl , FlatList} from 'react-native'
 import {HeaderBack, HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../../components'
 import moment from 'moment'
-import { FONT_MEDIUM, FONT_REGULAR } from '../../../../../res/constants'
+import { FONT_MEDIUM, FONT_REGULAR, SIZES } from '../../../../../res/constants'
 import FilterDateModal from '../Records/FilterDateModal'
 import {useLazyQuery} from '@apollo/react-hooks'
 import {GET_CASH_IN_LOGS, GET_CASH_OUT_LOGS} from '../../../../../graphql'
@@ -27,7 +27,7 @@ const CashOutLog = ({transactionDate , transactionItems , index , itemsLength })
 
     return (
         <View style={[styles.transactionLogsContainer, {marginBottom: index == itemsLength - 1 ? 100 : 0}]}>
-            <Text style={{fontSize: 12,fontFamily: FONT_MEDIUM}}>{datedisplay}</Text>
+            <Text style={{fontSize: SIZES.M,fontFamily: FONT_MEDIUM}}>{datedisplay}</Text>
            {
                transactionItems.map((item)=>{
 
@@ -46,16 +46,16 @@ const CashOutLog = ({transactionDate , transactionItems , index , itemsLength })
 
                 return (
                     <View style={styles.transaction}>
-                        <View style={styles.transactionIcon}>
-                          <Image source={require('../../../../../assets/icons/walletLogCashin.png')} style={{height: 30, width: 30}} resizeMode="contain"/>
-                        </View>
+                        {/* <View style={styles.transactionIcon}>
+                          <Image source={require('../../../../../assets/icons/walletLogCashin.png')} style={{height: 35, width: 35}} resizeMode="contain"/>
+                        </View> */}
                         <View style={styles.transactionDetails}>
-                            <Text style={{fontSize: 12,fontFamily: FONT_MEDIUM}}>Ref # {item.referenceNumber}</Text>
-                            <Text style={{color: "#909294",fontSize: 10,marginTop: 5,fontFamily: FONT_MEDIUM}}>{status}</Text>
+                            <Text style={{fontSize: SIZES.M,fontFamily: FONT_MEDIUM}}>Ref # {item.referenceNumber}</Text>
+                            <Text style={{color: "#909294",fontSize: SIZES.S,marginTop: 0,fontFamily: FONT_MEDIUM}}>{status}</Text>
                         </View>
                         <View style={styles.transactionAmount}>
-                            <Text style={{color: "#FCB91A",fontSize: 12,fontFamily: FONT_MEDIUM}}>{'\u20B1'} {numberFormat(item.totalAmount)}</Text>
-                            <Text style={{color: "#909294",fontSize: 10,alignSelf: "flex-end",marginTop: 5,fontFamily: FONT_REGULAR}}>{moment(item.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')}</Text>
+                            <Text style={{color: "#FCB91A",fontSize: SIZES.M,fontFamily: FONT_MEDIUM}}>PHP {numberFormat(item.totalAmount)}</Text>
+                            <Text style={{color: "#909294",fontSize: SIZES.S,alignSelf: "flex-end",marginTop: 0,fontFamily: FONT_REGULAR}}>{moment(item.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')}</Text>
                         </View>
                     </View>
                 )
@@ -129,12 +129,12 @@ const CashOutLogs = ({navigation})=> {
                         <Text style={{fontSize: 16 ,fontWeight: "400"}}></Text>
                         <View style={{flex: 1}}>
                         <TouchableOpacity onPress={()=>setShowFilterDate(true)} style={{alignSelf: "flex-end", padding: 2, paddingHorizontal: 15, borderRadius: 10, backgroundColor: "#FCB91A"}}>
-                                    <Text style={{color: "white",fontSize: 12,fontFamily: FONT_MEDIUM}}>{moment(filterDate.from).format('D MMM')} - {moment(filterDate.to).format('D MMM')}</Text>
+                                    <Text style={{color: "white",fontSize: SIZES.M,fontFamily: FONT_MEDIUM}}>{moment(filterDate.from).format('D MMM')} - {moment(filterDate.to).format('D MMM')}</Text>
                         </TouchableOpacity>
                         </View>
                     </View>
 
-                    <View style={{marginTop: 10}}>
+                    <View style={{marginTop: 5}}>
                         <FlatList
                             showsVerticalScrollIndicator={false}
                             data={filteredLogs}
@@ -155,7 +155,7 @@ const CashOutLogs = ({navigation})=> {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 20,
+        padding:10,
         backgroundColor: "white"
     },
     header: {
@@ -178,10 +178,10 @@ const styles = StyleSheet.create({
     },
     transaction: {
         padding: 10,
-        paddingVertical: 15,
+        paddingVertical: 10,
         borderWidth: 0.5 ,
         borderColor:"silver",
-        marginVertical: 10,
+        marginVertical: 5,
         borderRadius: 5,
         flexDirection: "row"
     },

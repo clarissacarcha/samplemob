@@ -1,6 +1,6 @@
 import React from 'react'
 import {StyleSheet,Text,View,TouchableOpacity} from 'react-native'
-import { FONT_MEDIUM, FONT_REGULAR } from '../../../../../../res/constants'
+import { FONT_MEDIUM, FONT_REGULAR, SIZES } from '../../../../../../res/constants'
 
 const ContactInfoRender = ({item,index,checkAccount})=> {
     
@@ -25,16 +25,16 @@ const styles = StyleSheet.create({
     contactInfo: {
         paddingVertical: 10,
         borderBottomColor: "silver",
-        borderBottomWidth: 0.5
+        borderBottomWidth: 0.2
       },
       contactInfoName: {
         fontFamily: FONT_MEDIUM,
-        fontSize: 14,
+        fontSize: SIZES.M,
       },
       contactInfoNumber: {
         color: "#A6A8A9",
         fontFamily: FONT_REGULAR,
-        fontSize: 12,
+        fontSize: SIZES.S,
       },
 })
 

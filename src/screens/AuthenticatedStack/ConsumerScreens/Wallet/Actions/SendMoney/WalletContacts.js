@@ -2,7 +2,7 @@ import React , {useState , useEffect} from 'react'
 import {View,Text,StyleSheet,TextInput,TouchableOpacity,Platform,FlatList,ActivityIndicator,Image} from 'react-native'
 import {check,request,PERMISSIONS,RESULTS} from 'react-native-permissions'
 import { HeaderBack, HeaderTitle } from '../../../../../../components'
-import { COLOR, FONT_REGULAR } from '../../../../../../res/constants'
+import { COLOR, FONT_REGULAR, SIZES, INPUT_HEIGHT } from '../../../../../../res/constants'
 import ContactInfoRender from './ContactInfoRender'
 import {useSelector} from 'react-redux'
 import Contacts from 'react-native-contacts'
@@ -160,7 +160,7 @@ const WalletContacts = ({navigation,route})=> {
 
     const setRecipient = (recipient) => {
       route.params.setRecipientInfo(recipient)
-      return navigation.navigate("TokTokWalletSendMoney")
+      return navigation.navigate("ToktokWalletSendMoney")
     }
 
 
@@ -193,7 +193,7 @@ const WalletContacts = ({navigation,route})=> {
             <View style={[styles.input,{flexDirection: "row"}]}>
                 {/* <Image style={{height: 25,width: 40,alignSelf: "center"}} resizeMode="center" source={require('../../../../../../assets/icons/ph.png')}/> */}
                 <TextInput 
-                    style={{fontSize: 12,fontFamily: FONT_REGULAR,padding: 0,marginLeft: 5,alignSelf: "center",flex: 1}}
+                    style={{fontSize: SIZES.M,fontFamily: FONT_REGULAR,padding: 0,marginLeft: 5,alignSelf: "center",flex: 1}}
                     placeholder="Enter a Name or mobile number"
                     onChangeText={filterSearch}
                     value={searchString}
@@ -238,7 +238,9 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     input: {
-      padding: 5,
+      paddingHorizontal: 5,
+      height: INPUT_HEIGHT,
+      fontSize: SIZES.M,
       borderRadius: 5,
       borderWidth: 1,
       borderColor: "silver",

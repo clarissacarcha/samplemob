@@ -21,7 +21,7 @@ const CreateConfirmEmail = ({patchPincodeToktokWallet})=> {
                         value={email}
                         editable={false}
                     /> 
-                    <Text style={{fontSize: 12,fontFamily: FONT_REGULAR}}>This email address will be used to regain access to toktok wallet if you experience issues logging in.</Text>
+                    <Text style={{fontSize: 12,fontFamily: FONT_REGULAR}}>This email address will be used to regain access to toktokwallet if you experience issues logging in.</Text>
                 </View>
             </View>
  

@@ -2,7 +2,7 @@ import React , {useEffect, useState} from 'react'
 import {View,Text,Modal,StyleSheet,TouchableOpacity,Dimensions,ScrollView,Image,FlatList} from 'react-native'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import moment from 'moment'
-import { DARK, COLOR, FONT_MEDIUM, FONT_REGULAR } from '../../../../../res/constants'
+import { DARK, COLOR, FONT_MEDIUM, FONT_REGULAR, SIZES } from '../../../../../res/constants'
 import {GET_TOKTOK_WALLET_LOGS} from '../../../../../graphql'
 import {useLazyQuery} from '@apollo/react-hooks'
 import {onError} from '../../../../../util/ErrorUtility'
@@ -100,7 +100,7 @@ const TransactionsModal = ({modalVisible,closeModal,session})=> {
                 </TouchableOpacity>
                 <View style={styles.content}>
                     <View style={{flexDirection: "row"}}>
-                        <Text style={{fontSize: 14 ,fontFamily: FONT_MEDIUM}}>Transactions</Text>
+                        <Text style={{fontSize: SIZES.M ,fontFamily: FONT_MEDIUM}}>Transactions</Text>
                         <View style={{flex: 1}}>
                            <TouchableOpacity onPress={()=>setShowFilterDate(true)} style={{alignSelf: "flex-end", padding: 2, paddingHorizontal: 15, borderRadius: 10, backgroundColor: "#FCB91A"}}>
                                     <Text style={{color: "white",fontSize: 12,fontFamily: FONT_MEDIUM}}>{moment(filterDate.from).format('D MMM')} - {moment(filterDate.to).format('D MMM')}</Text>
@@ -115,7 +115,7 @@ const TransactionsModal = ({modalVisible,closeModal,session})=> {
                                 <TouchableOpacity onPress={()=>setFilterType(type)} style={[styles.filterType, {
                                     borderColor: filtertype === type ? "#FCB91A" : "silver"
                                 }]}>
-                                        <Text style={{color: "black",fontSize: 11,fontFamily: FONT_REGULAR}}>{type}</Text>
+                                        <Text style={{color: "black",fontSize: SIZES.S,fontFamily: FONT_REGULAR}}>{type}</Text>
                                 </TouchableOpacity>
                             ))
                         }
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         marginTop: 30,
-        padding: 20,
+        padding: 10,
     },
     header: {
         justifyContent: "center",

@@ -1,6 +1,6 @@
 import React , {useRef, useState} from 'react'
 import {View,Text,StyleSheet,ScrollView,TextInput,TouchableOpacity} from 'react-native'
-import { COLOR, DARK, FONT_MEDIUM } from '../../../../../../res/constants'
+import { BUTTON_HEIGHT, COLOR, DARK, FONT_MEDIUM, SIZES } from '../../../../../../res/constants'
 import NumberBoxes from '../Components/NumberBoxes'
 
 const NewPin = ({pinCode,setPinCode , pageIndex, setPageIndex})=> {
@@ -52,9 +52,9 @@ const NewPin = ({pinCode,setPinCode , pageIndex, setPageIndex})=> {
             <TouchableOpacity
                 disabled={pinCode.length < 6}
                 onPress={onSubmit}
-                style={{alignItems: "center",height: 40,backgroundColor: pinCode.length < 6 ? "gray" : DARK,margin: 20,justifyContent: "center",borderRadius: 10,}}
+                style={{alignItems: "center",height: BUTTON_HEIGHT,backgroundColor: pinCode.length < 6 ? "gray" : DARK,margin: 20,justifyContent: "center",borderRadius: 5,}}
             >
-                    <Text style={{color: pinCode.length < 6 ? "white" : COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Next</Text>
+                    <Text style={{color: pinCode.length < 6 ? "white" : COLOR,fontSize: SIZES.M,fontFamily: FONT_MEDIUM}}>Next</Text>
             </TouchableOpacity>
         </View>
     )
@@ -67,14 +67,14 @@ const styles = StyleSheet.create({
     },
     content: {
         // alignItems: "center",
-        padding: 20,
+        padding: 10,
         flex: 1,
     },
     input: {
         flex: 1,
         borderWidth: StyleSheet.hairlineWidth,
         borderRadius: 5,
-        paddingHorizontal: 20,
+        paddingHorizontal: 10,
         fontSize: 25,
         color: DARK,
         width: 30,

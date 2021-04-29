@@ -2,7 +2,7 @@ import React, { useState , useEffect} from 'react'
 import {View,Text,StyleSheet,TextInput,TouchableOpacity,KeyboardAvoidingView,Platform,ScrollView,Image,Alert} from 'react-native'
 import { HeaderBack, HeaderTitle } from '../../../../../../components'
 import { numberFormat } from '../../../../../../helper'
-import { FONT_LIGHT, FONT_MEDIUM, FONT_REGULAR } from '../../../../../../res/constants'
+import { FONT_LIGHT, FONT_MEDIUM, FONT_REGULAR, SIZES } from '../../../../../../res/constants'
 import {useSelector} from 'react-redux'
 import SwipeProceedButton from './SwipeProceedButton'
 import EnterMobileNo from './EnterMobileNo'
@@ -11,9 +11,9 @@ import {GET_DAILY_MONTHLY_YEARLY_OUTGOING} from '../../../../../../graphql'
 import {useLazyQuery} from '@apollo/react-hooks'
 
 const SendMoneyComponent = ({children , walletinfo})=> (
-    <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
+    <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1,marginTop: 10}}>
         <View style={styles.balance}>
-            <Text style={{fontFamily: FONT_MEDIUM,fontSize: 16}}>Balance: {'\u20B1'} {numberFormat(walletinfo.balance)}</Text>
+            <Text style={{fontFamily: FONT_MEDIUM,fontSize: SIZES.XL}}>Current Balance: PHP {numberFormat(walletinfo.balance)}</Text>
         </View>
 
         <View style={styles.recipient}>
@@ -113,9 +113,9 @@ export default ({navigation,route})=> {
 
     return (
     <>    
-    <KeyboardAvoidingView  
-            keyboardVerticalOffset={Platform.OS == "ios" ? 0 : 90}  
-            behavior={Platform.OS === "ios" ? "padding" : "height"} 
+    <View  
+            // keyboardVerticalOffset={Platform.OS == "ios" ? 0 : 90}  
+            // behavior={Platform.OS === "ios" ? "padding" : "height"} 
             style={styles.container}
         >
             <SendMoneyComponent walletinfo={walletinfo}>
@@ -141,15 +141,15 @@ export default ({navigation,route})=> {
                             recipientDetails={recipientDetails}
                             senderDetails={senderDetails}
                      />
-                    : <View style={{marginTop: 19}}>
-                        <Text style={{fontFamily: FONT_MEDIUM,fontSize: 13}}>Enter number to transfer.</Text>
-                        <Text style={{fontFamily: FONT_LIGHT,fontSize: 10}}>You can click the "Address Book" to open your contact list.</Text>
+                    : <View style={{marginTop: 10}}>
+                        <Text style={{fontFamily: FONT_MEDIUM,fontSize: SIZES.M}}>Enter number to transfer</Text>
+                        <Text style={{fontFamily: FONT_LIGHT,fontSize: SIZES.S}}>You can click the "Address Book" to open your contact list.</Text>
                     </View>
                 }
 
             </SendMoneyComponent>
            { proceed && <SwipeProceedButton amount={amount} note={note} swipeEnabled={swipeEnabled} session={session} recipientDetails={recipientDetails}/> }
-       </KeyboardAvoidingView>
+       </View>
        </>
     )
 }
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor:"white",
-        padding:20
+        padding:10
     },
     balance: {
        justifyContent:"center",

@@ -30,7 +30,7 @@ const Menu = ({session}) => {
         label={'Wallet'}
         icon={WalletIcon}
         onPress={() => {
-          navigation.push('TokTokWallet');
+          navigation.push('ToktokWalletHomePage');
         }}
       />
       <MenuIcon

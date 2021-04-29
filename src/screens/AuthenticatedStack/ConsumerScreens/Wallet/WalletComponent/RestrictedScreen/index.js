@@ -1,7 +1,6 @@
 import React from 'react'
 import {View,StyleSheet,Image} from 'react-native'
 import WalletOnHold from './WalletOnHold'
-import VerifyWallet from './VerifyWallet'
 import SecurewithPIN from './SecurewithPIN'
 
 export default ({navigation,route})=> {
@@ -17,7 +16,8 @@ export default ({navigation,route})=> {
             case "noPin":
                 return <SecurewithPIN navigation={navigation} walletinfo={route.params.walletinfo}/>
             case "notVerified":
-                return <VerifyWallet navigation={navigation} walletinfo={route.params.walletinfo}/>
+                navigation.pop()
+                return navigation.navigate("ToktokWalletVerifySetup")
             default:
                 break
         }
@@ -33,9 +33,8 @@ export default ({navigation,route})=> {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent:"center",
-        alignItems:"center",
-        backgroundColor:"white"
+        backgroundColor:"white",
+        padding: 10,
     },
 
 })

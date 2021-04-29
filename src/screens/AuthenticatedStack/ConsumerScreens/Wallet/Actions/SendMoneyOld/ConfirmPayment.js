@@ -14,7 +14,7 @@ const ConfirmPayment = ({navigation,route})=> {
 
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack />,
-        headerTitle: ()=> <HeaderTitle label={['Send money using toktok wallet','']}/>,
+        headerTitle: ()=> <HeaderTitle label={['Send money using toktokwallet','']}/>,
     })
 
     
@@ -98,7 +98,7 @@ const ConfirmPayment = ({navigation,route})=> {
     }
 
     const onSwipeSuccess = ()=> {
-        return navigation.push("TokTokWalletPinCodeSecurity", {onConfirm: patchFundTransfer})
+        return navigation.push("ToktokWalletSecurityPinCode", {onConfirm: patchFundTransfer})
     }
 
     const onSwipeFail = (e)=> {

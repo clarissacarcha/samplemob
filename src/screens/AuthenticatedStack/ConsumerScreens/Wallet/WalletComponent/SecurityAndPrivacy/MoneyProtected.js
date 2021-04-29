@@ -14,8 +14,8 @@ const MoneyProtected = ()=> {
                     <Text style={{fontFamily: FONT_MEDIUM,fontSize: 16}}>Your Money is protected</Text>
                     <Text style={{fontFamily: FONT_LIGHT,fontSize: 14,marginTop: 5}}>Your wallet balance is stored and protected by a trusted partner bank</Text>
                     <View style={{marginTop: 20,paddingBottom: 20}}>
-                            <ContentItem message="Your toktok wallet balance is held in a dedicated customer account" label="Separated for your security" icon={require('../../../../../../assets/icons/magnifying.png')}/>
-                            <ContentItem message="toktok wallet is regulated by Bangko Sentral ng Pilipinas (BSP)." label="Regulated by the local monetary authority" icon={require('../../../../../../assets/icons/magnifying.png')}/>
+                            <ContentItem message="Your toktokwallet balance is held in a dedicated customer account" label="Separated for your security" icon={require('../../../../../../assets/icons/magnifying.png')}/>
+                            <ContentItem message="toktokwallet is regulated by Bangko Sentral ng Pilipinas (BSP)." label="Regulated by the local monetary authority" icon={require('../../../../../../assets/icons/magnifying.png')}/>
                     </View>
                 </View>
           

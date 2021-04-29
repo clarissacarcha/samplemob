@@ -1,29 +1,30 @@
 import React , {useState,useCallback,useRef,useEffect} from 'react'
-import {View,Text,StyleSheet,Image,Platform,KeyboardAvoidingView,TextInput,TouchableOpacity,Alert} from 'react-native'
+import {View,Text,StyleSheet,Image,Platform,KeyboardAvoidingView,TextInput,TouchableOpacity,Alert,Keyboard} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import { HeaderTitle , HeaderBackClose } from '../../../../../../components'
-import {GET_GCASH_ACCOUNT,GET_DAILY_MONTHLY_YEARLY_OUTGOING ,GET_INTERNAL_ACCOUNT} from '../../../../../../graphql';
-import { useLazyQuery } from '@apollo/react-hooks';
+import {GET_GCASH_ACCOUNT,GET_DAILY_MONTHLY_YEARLY_OUTGOING ,GET_INTERNAL_ACCOUNT , POST_GCASH_ENCASHMENT} from '../../../../../../graphql';
+import { useLazyQuery , useMutation} from '@apollo/react-hooks';
 import Loader from '../../../../CommonScreens/GCashAccount/Loader';
 import {useSelector} from 'react-redux'
-import { COLOR, DARK, FONT_LIGHT, FONT_MEDIUM, FONT_REGULAR, MEDIUM } from '../../../../../../res/constants';
+import { COLOR, DARK, FONT_LIGHT, FONT_MEDIUM, FONT_REGULAR, SIZES, MEDIUM } from '../../../../../../res/constants';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import { numberFormat } from '../../../../../../helper';
-import ConfirmModal from './ConfirmModal'
+import ConfirmModalContent from './ConfirmModalContent'
 import SuccessfulModal from './SuccessfulModal'
+import ConfirmBottomSheet from '../../Components/ConfirmBottomSheet'
+import {useAlert} from  '../../../../../../hooks/useAlert'
 
 const GcashEnchashment = ({navigation,route})=> {
 
     navigation.setOptions({
         headerLeft: ()=> <HeaderBackClose/>,
-        headerTitle: ()=> <HeaderTitle label={['Gcash Encashment','']}/>,
+        headerTitle: ()=> <HeaderTitle label={['Gcash','']}/>,
     })
 
     const walletinfo = route.params.walletinfo
     const session = useSelector(state=>state.session)
     const [tempAmount,setTempAmount] = useState("")
     const [amount,setAmount] = useState(0)
-    const [showModal,setShowModal] = useState(false)
     const [data,setData] = useState({getGCashAccount: {record: null}})
     const [errorMessage,setErrorMessage] = useState("")
     const inputRef = useRef()
@@ -33,6 +34,8 @@ const GcashEnchashment = ({navigation,route})=> {
     })
     const [senderDetails,setSenderDetails] = useState(null)
     const [cashOutGcashInternal , setCashOutGcashInternal] = useState(null)
+    const bottomSheetRef = useRef();
+    const alert = useAlert()
 
 
     const checkSenderWalletLimitation = (amount)=> {
@@ -87,7 +90,8 @@ const GcashEnchashment = ({navigation,route})=> {
 
 
     const confirmAmount = ()=> {
-        setShowModal(true)
+        Keyboard.dismiss()
+        bottomSheetRef.current.snapTo(1)
     }
 
 
@@ -109,6 +113,29 @@ const GcashEnchashment = ({navigation,route})=> {
             setCashOutGcashInternal(response.getInternalAccount)
         }
     })
+
+    const [postGcashEncashment] = useMutation(POST_GCASH_ENCASHMENT,{
+        variables: {
+            input: {
+                amount: +amount
+            }
+        },
+        onError: (error)=>{
+            onErrorAlert({alert,error})
+            navigation.pop()
+        },
+        onCompleted: (response)=>{
+            setCashoutLogParams(response.postGcashEncashment.cashoutLog)
+            setSuccessModalVisible(true)
+        }
+    })
+
+    const proceedToEncashment = ()=> {
+        bottomSheetRef.current.snapTo(0)
+        Keyboard.dismiss()
+        return navigation.push("ToktokWalletSecurityPinCode", {onConfirm: postGcashEncashment})
+    }
+
 
     useFocusEffect(useCallback(()=>{
         getGCashAccount()
@@ -144,7 +171,7 @@ const GcashEnchashment = ({navigation,route})=> {
                 <View style={styles.gcashAccountInfo}>
                     <Image style={{height: 50,width: 50,alignSelf: "center"}} source={require('../../../../../../assets/icons/gcash.png')}/>
                     <View style={[styles.details,{flex: 1}]}>
-                            <Text style={{marginHorizontal: 15,fontSize: 14,fontFamily: FONT_MEDIUM}}>Register and Verify your Gcash Account Details</Text>
+                            <Text style={{marginHorizontal: 15,fontSize: 14,fontFamily: FONT_MEDIUM}}>Register and verify your Gcash account details</Text>
                     </View>
                 </View>
                 <View style={styles.registerBtnView}>
@@ -205,16 +232,6 @@ const GcashEnchashment = ({navigation,route})=> {
             amount={amount}
             cashoutLogParams={cashoutLogParams}
         />
-        <ConfirmModal 
-            showModal={showModal} 
-            setShowModal={setShowModal} 
-            amount={amount} 
-            walletinfo={walletinfo} 
-            session={session} 
-            navigation={navigation} 
-            setSuccessModalVisible={setSuccessModalVisible}
-            setCashoutLogParams={setCashoutLogParams}
-        />
         <KeyboardAvoidingView  
             keyboardVerticalOffset={Platform.OS == "ios" ? 0 : 90}  
             behavior={Platform.OS === "ios" ? "padding" : "height"}  
@@ -223,11 +240,12 @@ const GcashEnchashment = ({navigation,route})=> {
             <View style={styles.gcashAccountInfo}>
                 <Image style={{height: 50,width: 50,alignSelf: "center"}} source={require('../../../../../../assets/icons/gcash.png')}/>
                 <View style={styles.details}>
-                     <Text style={{marginLeft: 15,fontSize: 14,fontFamily: FONT_MEDIUM}}>{`${data.getGCashAccount.record.firstName} ${data.getGCashAccount.record.middleName ? data.getGCashAccount.record.middleName + " " : ""}${data.getGCashAccount.record.lastName}`}</Text>
-                     <Text style={{marginLeft: 15,fontSize: 12,fontFamily: FONT_REGULAR}}>{data.getGCashAccount.record.mobileNumber}</Text>
-                     <Text style={{marginLeft: 15,fontSize: 10,fontFamily: FONT_LIGHT}}>Gcash Account verified <FIcon5 style={{color:"green"}} name="check"/></Text>
+                     <Text style={{marginLeft: 15,fontSize: SIZES.M,fontFamily: FONT_MEDIUM}}>{`${data.getGCashAccount.record.firstName} ${data.getGCashAccount.record.middleName ? data.getGCashAccount.record.middleName + " " : ""}${data.getGCashAccount.record.lastName}`}</Text>
+                     <Text style={{marginLeft: 15,fontSize: SIZES.S,fontFamily: FONT_REGULAR}}>{data.getGCashAccount.record.mobileNumber}</Text>
+                     <Text style={{marginLeft: 15,fontSize: SIZES.XS,fontFamily: FONT_LIGHT}}>Gcash account verified <FIcon5 style={{color:"green"}} name="check"/></Text>
                 </View>
             </View>
+            <View style={styles.content}>
             <View style={styles.amountcontent}>
                         <View style={{flexDirection: "row"}}>
                             <TextInput
@@ -247,25 +265,35 @@ const GcashEnchashment = ({navigation,route})=> {
                                 </View>
                                 <FIcon5 name="pen" style={{alignSelf:"center"}} size={18} color="gray"/> */}
                             <View style={styles.input}>
-                                <Text style={{fontFamily: FONT_MEDIUM,fontSize: 30,marginRight: 20}}>{'\u20B1'}</Text>
+                                <Text style={{fontFamily: FONT_MEDIUM,fontSize: 30,marginRight: 15}}>PHP</Text>
                                 <Text style={{fontFamily: FONT_MEDIUM,fontSize: 30}}>{amount ? numberFormat(amount) : "0.00"}</Text>
                                 <FIcon5 name="pen" style={{alignSelf:"center",marginLeft: 25}} size={18} color="gray"/>
                             </View>
                         </View>
-                        <Text style={{color:"gray",fontSize: 14,fontFamily: FONT_REGULAR}}>Current Balance {'\u20B1'} {numberFormat(walletinfo.balance)}</Text>
+                        <Text style={{color:"gray",fontSize: 14,fontFamily: FONT_REGULAR}}>Current Balance PHP {numberFormat(walletinfo.balance)}</Text>
                         <Text style={{fontFamily: FONT_REGULAR, color: "red",marginTop: 5,fontSize: 12}}>{errorMessage}</Text>
             </View>
 
-            <View style={styles.cashinbutton}>
+            <View style={styles.cashoutbutton}>
                     <TouchableOpacity 
                         disabled={(amount != "" && amount <= walletinfo.balance && amount >= 1 ) ? false : true}
                         onPress={confirmAmount} 
                         style={{height: "100%",width: "100%",backgroundColor: (amount != "" && amount <= walletinfo.balance && amount >= 1 ) ? DARK : "gray", borderRadius: 10, justifyContent: "center",alignItems: "center"}}
                     >
-                        <Text style={{color: (amount != "" && amount <= walletinfo.balance && amount >= 1 ) ? COLOR : "white",fontSize: 12,fontFamily: FONT_MEDIUM}}>Encash</Text>
+                        <Text style={{color: (amount != "" && amount <= walletinfo.balance && amount >= 1 ) ? COLOR : "white",fontSize: SIZES.M,fontFamily: FONT_MEDIUM}}>Cash Out</Text>
                     </TouchableOpacity>
             </View>
+            </View>
         </KeyboardAvoidingView> 
+
+        <ConfirmBottomSheet
+            bottomSheetRef={bottomSheetRef}
+            onPress={proceedToEncashment}
+            headerTitle="Review and Confirm" 
+            btnLabel="Confirm"
+        >
+              <ConfirmModalContent amount={amount}/>
+        </ConfirmBottomSheet>
         </>
     )
 }
@@ -274,6 +302,11 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "white"
+    },
+    content: {
+        flex: 1,
+        paddingHorizontal: 10,
+        paddingBottom: 10,
     },
     gcashAccountInfo: {
         height: 80,
@@ -303,10 +336,9 @@ const styles = StyleSheet.create({
         justifyContent:"center",
         alignItems:"center"
     },
-    cashinbutton: {
-        height: 60,
+    cashoutbutton: {
+        height: 50,
         width: "100%",
-        padding: 10,
     },
     registerBtnView: {
         padding: 10,

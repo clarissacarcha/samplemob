@@ -3,7 +3,7 @@ import {StyleSheet,View,Text,TouchableOpacity,Dimensions,Image,TouchableHighligh
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import { RNCamera } from 'react-native-camera';
 import {numberFormat} from '../../../../../../helper'
-import {COLOR, DARK, FONT_MEDIUM, FONT_REGULAR} from '../../../../../../res/constants'
+import {COLOR, DARK, FONT_MEDIUM, FONT_REGULAR, SIZES} from '../../../../../../res/constants'
 import FIcon from 'react-native-vector-icons/Feather';
 import {useFocusEffect} from '@react-navigation/native'
 import {useLazyQuery} from '@apollo/react-hooks'
@@ -12,9 +12,7 @@ import {onError} from '../../../../../../util/ErrorUtility'
 import {useSelector} from 'react-redux'
 import {useAlert} from '../../../../../../hooks/useAlert';
 import DocumentPicker from 'react-native-document-picker';
-import RNQRGenerator from 'rn-qr-generator';
 import {ReactNativeFile} from 'apollo-upload-client';
-import { QRreader } from "react-native-qr-decode-image-camera";
 
 const {height,width} = Dimensions.get('window')
 
@@ -43,7 +41,7 @@ const ScantoPayWalletComponent = ({navigation,route})=> {
             if(error.graphQLErrors.length > 0){
                 error.graphQLErrors.map((err)=> {
                     if(err.message == "Wallet not found"){
-                       return alertHook({message:"Recipient does not have toktok wallet"})
+                       return alertHook({message:"Recipient does not have toktokwallet"})
                     }else{
                        return alertHook({message:"This QR code is invalid"})
                     }
@@ -56,58 +54,32 @@ const ScantoPayWalletComponent = ({navigation,route})=> {
             if(response.getQRCode.contactNo === session.user.username){
                 return alertHook({message: "You cannot send money to yourself"})
             }else{
-                navigation.navigate("TokTokWalletActionsScantoPayConfirmPayment", {recipientInfo: response.getQRCode, walletinfo: walletinfo})
+                navigation.navigate("ToktokWalletScanQRConfirm", {recipientInfo: response.getQRCode, walletinfo: walletinfo})
             }
         }
     })
 
     const detectQRCodeInUploadedImage =async (res)=> {
 
-        const path = res.uri
-
-        console.log(res)
-
-
-        // QRreader(path)
-        // .then(data => {
-        //     console.log(data)
-        // })
-        // .catch(err => {
-        //     console.log(err)
-        // });
-
-        // const rnQRCode = new ReactNativeFile({
-        //     ...image,
-        //     name: 'UploadedQRCode.jpg',
-        //     type: 'image/jpeg'
-        // })
-
-        // console.log(rnQRCode)
-
-            // RNQRGenerator.detect({
-            //     uri: path
-            // })
-            // .then(response => {
-            //     const { values } = response; // Array of detected QR code values. Empty if nothing found.
-            // })
-            // .catch(error => console.log(error));
-}
+        
+    }
 
 
     const handleSelectFile = async () => {
-        try {
-          const res = await DocumentPicker.pick({
-            type: [DocumentPicker.types.images],
-          });
-          setImage(res)
-          await detectQRCodeInUploadedImage(res)
-        } catch (err) {
-          if (DocumentPicker.isCancel(err)) {
-            // User cancelled the picker, exit any dialogs or menus and move on
-          } else {
-            throw err;
-          }
-        }
+
+        // try {
+        //   const res = await DocumentPicker.pick({
+        //     type: [DocumentPicker.types.images],
+        //   });
+        //   setImage(res)
+        //   detectQRCodeInUploadedImage(res)
+        // } catch (err) {
+        //   if (DocumentPicker.isCancel(err)) {
+        //     // User cancelled the picker, exit any dialogs or menus and move on
+        //   } else {
+        //     throw err;
+        //   }
+        // }
       };
 
     const onSuccess = (e)=> {
@@ -141,7 +113,6 @@ const ScantoPayWalletComponent = ({navigation,route})=> {
             y: rYAve 
         }
 
-
         if(ifInsideBox(boundary,resultBounds)){
              getQRCode({
                 variables: {
@@ -163,6 +134,8 @@ const ScantoPayWalletComponent = ({navigation,route})=> {
        && ( boundary.x + boundary.width ) > resultBounds.x
        && boundary.y < ( resultBounds.y + resultBounds.height )
        && ( boundary.y + boundary.height ) > resultBounds.y
+       && resultBounds.y > boundary.y
+       && resultBounds.x > boundary.x
     }
 
     const customMarker = ()=> (
@@ -171,48 +144,13 @@ const ScantoPayWalletComponent = ({navigation,route})=> {
              <FIcon name="chevron-left" size={30} color={'white'} /> 
             </TouchableOpacity>
             <View style={styles.centerBox}>
-
-                    <View
-                        style={[styles.borderEdges,{
-                            borderTopWidth: 5,
-                            borderLeftWidth: 5,
-                            top: 0,
-                            left: 0,
-                        }]}
-                    />
-
-                    <View
-                        style={[styles.borderEdges,{
-                            borderTopWidth: 5,
-                            borderRightWidth: 5,
-                            top: 0,
-                            right: 0,
-                        }]}
-                    />
-
-
-                    <View
-                        style={[styles.borderEdges,{
-                            borderBottomWidth: 5,
-                            borderLeftWidth: 5,
-                            bottom: 0,
-                            left: 0,
-                        }]}
-                    />
-
-
-                    <View
-                        style={[styles.borderEdges,{
-                            borderBottomWidth: 5,
-                            borderRightWidth: 5,
-                            bottom: 0,
-                            right: 0,
-                        }]}
-                    />
-
-
+                        <View style={[styles.borderEdges,{borderTopWidth: 5,borderLeftWidth: 5,top: 0,left: 0,}]}/>
+                        <View style={[styles.borderEdges,{borderTopWidth: 5,borderRightWidth: 5,top: 0,right: 0,}]}/>
+                        <View style={[styles.borderEdges,{borderBottomWidth: 5,borderLeftWidth: 5,bottom:0,left: 0,}]}/>
+                        <View style={[styles.borderEdges,{borderBottomWidth: 5,borderRightWidth: 5,bottom:0,right:0,}]}/>
 
                     <View style={styles.TorchView}>
+                      { image  ? <Image source={{uri: image.uri}}  style={{height: 100,width: 100}}/> : null}
                             <TouchableHighlight 
                                 onPress={()=>setTorch(!torch)}
                                 style={styles.torch}
@@ -240,8 +178,8 @@ const ScantoPayWalletComponent = ({navigation,route})=> {
                     <View style={{flex: 1,justifyContent:"center",alignItems:"center"}}>
                         
                     </View>
-                </View>
-         */}
+                </View> */}
+        
         </View>
     )
 
@@ -288,14 +226,16 @@ const ScantoPayWalletComponent = ({navigation,route})=> {
                 }}>
                     <TouchableOpacity
                         style={{
-                            paddingVertical: 8,
+                            height: 35,
+                            justifyContent:"center",
+                            alignItems:"center",
                             paddingHorizontal: 15,
                             backgroundColor: DARK,
-                            borderRadius: 10,
+                            borderRadius: 5,
                         }}
-                        onPress={()=>navigation.navigate("TokTokWalletCashIn",{walletinfo: walletinfo})}
+                        onPress={()=>navigation.navigate("ToktokWalletPaymentOptions",{walletinfo: walletinfo})}
                     >
-                            <Text style={{color: COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Cash In</Text>
+                            <Text style={{color: COLOR,fontSize: SIZES.S,fontFamily: FONT_MEDIUM}}>Cash In</Text>
                     </TouchableOpacity>
                     
                 </View>

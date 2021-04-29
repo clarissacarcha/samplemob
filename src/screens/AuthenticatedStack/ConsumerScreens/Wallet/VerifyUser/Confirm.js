@@ -1,6 +1,6 @@
 import React, { useState ,useRef , useContext } from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,ScrollView,CheckBox} from 'react-native'
-import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM,ORANGE, FONT_MEDIUM, FONT_LIGHT, FONT_REGULAR} from '../../../../../res/constants'
+import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM,ORANGE, FONT_MEDIUM, FONT_LIGHT, FONT_REGULAR, SIZES} from '../../../../../res/constants'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import {VerifyContext} from './Context/VerifyContextProvider'
 import {POST_TOKTOK_WALLET_KYC} from '../../../../../graphql'
@@ -14,9 +14,9 @@ import moment from 'moment'
 const UserInfo = ({label,value})=> {
 
     return (
-        <View style={{paddingVertical: 10,width:"100%",borderTopWidth: .5, borderColor:"silver"}}>
-            <Text style={{marginBottom: 2, fontFamily: FONT_MEDIUM,color:"gray",fontSize: 12}}>{label}</Text>
-            <Text style={{fontFamily: FONT_REGULAR,fontSize: 12}}>{value}</Text>
+        <View style={{paddingVertical: 10,width:"100%",borderTopWidth: 0, borderColor:"silver"}}>
+            <Text style={{marginBottom: 2, fontFamily: FONT_MEDIUM,color:"gray",fontSize: SIZES.S}}>{label}</Text>
+            <Text style={{fontFamily: FONT_REGULAR,fontSize: SIZES.M}}>{value}</Text>
         </View>
     )
 }
@@ -44,16 +44,16 @@ const Confirm = ()=> {
             <AlertOverlay visible={loading} />
             <View style={styles.content}>
                 <ScrollView style={styles.mainInput} showsVerticalScrollIndicator={false}>
-                        <Text style={{fontSize: 14, fontFamily: FONT_MEDIUM}}>Review Information</Text>
-                        <Text style={{fontFamily: FONT_LIGHT,marginTop: 8,fontSize: 12}}>Make sure your details are all correct.</Text>  
+                        <Text style={{fontSize: SIZES.M, fontFamily: FONT_MEDIUM}}>Review Information</Text>
+                        <Text style={{fontFamily: FONT_LIGHT,marginTop: 8,fontSize: SIZES.S}}>Make sure your details are all correct.</Text>  
 
-                        <UserInfo label="FULL NAME" value={VerifyUserData.fullname}/>
-                        <UserInfo label="DATE OF BIRTH" value={moment(VerifyUserData.birthInfo.birthdate).format("MMM DD YYYY")}/>
-                        <UserInfo label="PLACE OF BIRTH" value={VerifyUserData.birthInfo.birthPlace}/>
-                        <UserInfo label="NATIONALITY" value={VerifyUserData.nationality}/>
-                        <UserInfo label="CURRENT ADDRESS" value={`${VerifyUserData.address.streetAddress} ${VerifyUserData.address.village} ${VerifyUserData.address.city} ${VerifyUserData.address.region}, ${VerifyUserData.address.country} ${VerifyUserData.address.zipCode}`}/>
-                        <UserInfo label="VALID ID" value={VerifyUserData.verifyID.idType}/>
-                        <UserInfo label="VALID ID NUMBER" value={VerifyUserData.verifyID.idNumber}/>
+                        <UserInfo label="Fullname" value={VerifyUserData.fullname}/>
+                        <UserInfo label="Date of birth" value={moment(VerifyUserData.birthInfo.birthdate).format("MMM DD YYYY")}/>
+                        <UserInfo label="Place of birth" value={VerifyUserData.birthInfo.birthPlace}/>
+                        <UserInfo label="Nationality" value={VerifyUserData.nationality}/>
+                        <UserInfo label="Address" value={`${VerifyUserData.address.streetAddress} ${VerifyUserData.address.village} ${VerifyUserData.address.city} ${VerifyUserData.address.region}, ${VerifyUserData.address.country} ${VerifyUserData.address.zipCode}`}/>
+                        <UserInfo label="Valid ID" value={VerifyUserData.verifyID.idType}/>
+                        <UserInfo label="Valid ID number" value={VerifyUserData.verifyID.idNumber}/>
                 </ScrollView>
 
                 <View style={styles.proceedBtn}>
@@ -67,16 +67,11 @@ const Confirm = ()=> {
                             onValueChange={setSelection}
                         />
                         <View style={{paddingHorizontal: 10,marginRight: 20}}>
-                            <Text style={{fontFamily: FONT_REGULAR,fontSize: 12}}>By clicking the checkbox, I hereby certify that I accept the Terms and Conditions.</Text>
+                            <Text style={{fontFamily: FONT_REGULAR,fontSize: SIZES.S}}>By clicking the checkbox, I hereby certify that I accept the Terms and Conditions.</Text>
                         </View>
                         
                     </View>
-
-                    <View style={{marginVertical: 10,justifyContent:"center",alignItems:"center"}}>
-                        <Text style={{fontSize: 12 ,fontFamily: FONT_LIGHT}}>Go back if you need to change some details</Text>
-                    </View>
-
-                    <View style={{flexDirection:"row",height: 40}}>
+                    <View style={{flexDirection:"row",height: 50}}>
                     <TouchableOpacity onPress={()=>{
                         setCurrentIndex(oldval => oldval - 1)
                     }} style={{
@@ -86,11 +81,11 @@ const Confirm = ()=> {
                         backgroundColor: "transparent" ,
                         borderColor: "gray",
                         borderWidth: 1,
-                        borderRadius: 10, 
+                        borderRadius: 5, 
                         justifyContent: "center",
                         alignItems: "center"
                     }}>
-                        <Text style={{color: "gray",fontSize: 12,fontFamily: FONT_MEDIUM}}>Back</Text>
+                        <Text style={{color: "gray",fontSize: SIZES.M,fontFamily: FONT_MEDIUM}}>Back</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity 
@@ -99,7 +94,7 @@ const Confirm = ()=> {
                         flex: 1,
                         marginLeft: 5,
                         backgroundColor: isSelected ? DARK : "dimgray" , 
-                        borderRadius: 10, 
+                        borderRadius: 5, 
                         justifyContent: "center",
                         alignItems: "center"
                     }}
@@ -135,7 +130,7 @@ const Confirm = ()=> {
                             }
                         })
                     }}>
-                        <Text style={{color: isSelected ? COLOR : "white",fontSize: 12,fontFamily: FONT_MEDIUM}}>Confirm</Text>
+                        <Text style={{color: isSelected ? COLOR : "white",fontSize: SIZES.M,fontFamily: FONT_MEDIUM}}>Confirm</Text>
                     </TouchableOpacity>
 
                     </View>
@@ -148,7 +143,7 @@ const Confirm = ()=> {
 
 const styles = StyleSheet.create({
     content: {
-        padding: 20,
+        padding: 10,
         flex: 1,
     },
     mainInput: {

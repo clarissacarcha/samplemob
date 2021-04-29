@@ -113,6 +113,8 @@
 		<string>Jost-SemiBoldItalic.ttf</string>
 		<string>Jost-Thin.ttf</string>
 		<string>Jost-ThinItalic.ttf</string>
+		<string>FiraSans-Bold.ttf</string>
+		<string>FiraSans-Regular.ttf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>

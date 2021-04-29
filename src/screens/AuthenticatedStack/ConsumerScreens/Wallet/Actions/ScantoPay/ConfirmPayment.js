@@ -1,8 +1,7 @@
-import React, {useState,useEffect} from 'react'
+import React, {useState,useEffect,useRef} from 'react'
 import {View,Text,StyleSheet,Image,Alert,TextInput,KeyboardAvoidingView,Platform,ScrollView} from 'react-native'
-import SwipeButton from 'rn-swipe-button';
 import {HeaderBack, HeaderTitle} from '../../../../../../components'
-import { FONT_MEDIUM, FONT_REGULAR } from '../../../../../../res/constants'
+import { BUTTON_HEIGHT, FONT_MEDIUM, FONT_REGULAR, SIZES, INPUT_HEIGHT } from '../../../../../../res/constants'
 import {numberFormat} from '../../../../../../helper'
 import { PATCH_FUND_TRANSFER , GET_DAILY_MONTHLY_YEARLY_INCOMING , GET_DAILY_MONTHLY_YEARLY_OUTGOING} from '../../../../../../graphql'
 import {useQuery,useMutation,useLazyQuery} from '@apollo/react-hooks'
@@ -10,12 +9,15 @@ import {useSelector} from 'react-redux'
 import { onError , onErrorAlert} from '../../../../../../util/ErrorUtility';
 import SuccessfulModal from '../SendMoney/SuccessfulModal'
 import {useAlert} from '../../../../../../hooks/useAlert'
+import { BlackButton } from '../../../../../../revamp';
+import ConfirmBottomSheet from '../../Components/ConfirmBottomSheet';
+import ConfirmModalContent from './ConfirmModalContent'
 
 const ConfirmPayment = ({navigation,route})=> {
 
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack />,
-        headerTitle: ()=> <HeaderTitle label={['Send money using toktok wallet','']}/>,
+        headerTitle: ()=> <HeaderTitle label={['Send Money','']}/>,
     })
     const alert = useAlert()
     const { recipientInfo, walletinfo } = route.params
@@ -32,6 +34,7 @@ const ConfirmPayment = ({navigation,route})=> {
     })
     const [recipientDetails,setRecipientDetails] = useState(null)
     const [senderDetails,setSenderDetails] = useState(null)
+    const bottomSheetRef = useRef()
 
     const [patchFundTransfer] = useMutation(PATCH_FUND_TRANSFER, {
         variables: {
@@ -91,7 +94,7 @@ const ConfirmPayment = ({navigation,route})=> {
     },[])
 
     const onSwipeSuccess = ()=> {
-        return navigation.push("TokTokWalletPinCodeSecurity", {onConfirm: patchFundTransfer})
+        return navigation.push("ToktokWalletSecurityPinCode", {onConfirm: patchFundTransfer})
     }
 
     const onSwipeFail = (e)=> {
@@ -208,31 +211,31 @@ const ConfirmPayment = ({navigation,route})=> {
                 }}
                 walletinfoParams={walletinfoParams}
         />
-        <KeyboardAvoidingView  
-                keyboardVerticalOffset={Platform.OS == "ios" ? 0 : 90}  
-                behavior={Platform.OS === "ios" ? "padding" : "height"} 
+        <View  
+                // keyboardVerticalOffset={Platform.OS == "ios" ? 0 : 90}  
+                // behavior={Platform.OS === "ios" ? "padding" : "height"} 
                 style={styles.container}
         >
             <ScrollView style={styles.content}>
-                    <Text style={{marginLeft: 20, marginTop: 20, fontFamily: FONT_MEDIUM ,fontSize: 16}}>Send to</Text>
+                    <Text style={{marginLeft: 10, marginTop: 20, fontFamily: FONT_MEDIUM ,fontSize: 16}}>Send to</Text>
                     <View style={styles.receiverInfo}>
                         <Image style={{height: 50,width: 50,marginRight: 10}} resizeMode="contain" source={{uri: recipientInfo.image}}/>
                         <View>
-                            <Text style={{fontFamily: FONT_MEDIUM,fontSize: 14}}>{recipientInfo.name}</Text>
-                            <Text style={{fontSize:12,color:"#A6A8A9",fontFamily: FONT_REGULAR, marginTop:5,}}>{recipientInfo.contactNo}</Text>
+                            <Text style={{fontFamily: FONT_MEDIUM,fontSize: SIZES.M}}>{recipientInfo.name}</Text>
+                            <Text style={{fontSize:SIZES.S,color:"#A6A8A9",fontFamily: FONT_REGULAR, marginTop:5,}}>{recipientInfo.contactNo}</Text>
                         </View>
                     </View>
 
-                    <View style={{padding: 20}}>
-                        <Text style={{fontFamily: FONT_MEDIUM,fontSize: 16,marginBottom: 10}}>Balance: {'\u20B1'} {numberFormat(walletinfo.balance)}</Text>
+                    <View style={{padding: 10,paddingTop: 20,}}>
+                        <Text style={{fontFamily: FONT_MEDIUM,fontSize: 16,marginBottom: 10}}>Current Balance: PHP {numberFormat(walletinfo.balance)}</Text>
                         <Text style={{fontFamily: FONT_MEDIUM,fontSize: 14}}>Enter Amount</Text>
                         <View style={styles.amount}>
-                                <Text style={{fontSize: 16,fontFamily: FONT_MEDIUM,alignSelf:"center"}}>{'\u20B1'} </Text>
+                                <Text style={{fontSize: SIZES.M,fontFamily: FONT_MEDIUM,alignSelf:"center",marginLeft: 5,}}>PHP </Text>
                                 <TextInput
                                         caretHidden
                                         value={tempAmount}
                                         onChangeText={changeAmount}
-                                        style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent',zIndex: 1}}
+                                        style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent',zIndex: 1,fontSize: SIZES.M}}
                                         keyboardType="numeric"
                                         returnKeyType="done"
                                 />
@@ -245,39 +248,35 @@ const ConfirmPayment = ({navigation,route})=> {
                          }
                     </View>
             </ScrollView>
-            <SwipeButton 
-                    disabled={!swipeEnabled}
-                    disabledRailBackgroundColor="dimgray"
-                    containerStyles={styles.swipeContainer}
-                    width={250}
-                    title={`Swipe to Pay ${'\u20B1'} ${amount != "" ? numberFormat(amount) : "0"}`}
-                    titleStyles={{
-                        fontSize: 12,
-                        fontFamily: FONT_MEDIUM,
-                        paddingLeft: 20,
-                    }}
-                    titleColor="white"
-                    railBackgroundColor="black"
-                    railStyles={{
-                        backgroundColor: "white",
-                        margin: 0,
-                        borderColor: "black"
-                    }}
-                    thumbIconBackgroundColor="white"
-                    thumbIconBorderColor="black"
-                    thumbIconStyles={{
-                        borderWidth: 1,
-                        borderColor:"black"
-                    }}
-                    thumbIconComponent={thumbIconComponent}
-                    onSwipeFail={onSwipeFail}
-                    onSwipeSuccess={onSwipeSuccess}
-                    resetAfterSuccessAnimDelay={0}
-                    resetAfterSuccessAnimDuration={0}
-                    shouldResetAfterSuccess={true}
-                />
-          
-        </KeyboardAvoidingView>
+
+            <View style={{paddingHorizontal: 10}}> 
+            {
+                swipeEnabled
+                ? <BlackButton label="Send" onPress={()=>bottomSheetRef.current.snapTo(1)} />
+                : <View style={{width: "100%", height: BUTTON_HEIGHT,justifyContent:"center",alignItems: "center", backgroundColor:"gray",borderRadius: 5}}>
+                        <Text style={{fontFamily: FONT_MEDIUM, fontSize: SIZES.M,color:"white"}}>Send</Text>
+                </View>
+            }
+            </View>   
+
+             
+            <ConfirmBottomSheet
+                 bottomSheetRef={bottomSheetRef}
+                 headerTitle="Review and Confirm" 
+                 btnLabel="Confirm"
+                 SwipeButtonEnabled
+                 SwipeButtonArgs={
+                  {
+                    enabled: swipeEnabled,
+                    title: `Swipe to send PHP ${amount != "" ? numberFormat(amount) : "0"}`,
+                    onSwipeFail: onSwipeFail,
+                    onSwipeSuccess: onSwipeSuccess
+                  }
+                 }
+            >
+                    <ConfirmModalContent amount={amount} recipientDetails={recipientInfo}/>
+            </ConfirmBottomSheet>
+        </View>
       </>
     )
 }
@@ -295,18 +294,18 @@ const styles = StyleSheet.create({
        marginBottom: 20,
     },
     receiverInfo: {
-        paddingHorizontal: 20,
+        paddingHorizontal: 10,
         paddingVertical: 15,
         flexDirection:"row",
         borderBottomWidth: 0.5,
         borderColor:"silver"
     },
     amount: {
-        padding: 5,
+        height: INPUT_HEIGHT,
         width: "100%",
         borderColor: "silver",
         borderWidth: .5,
-        marginTop: 10,
+        marginTop: 5,
         borderRadius: 5,
         flexDirection: "row",
     }
