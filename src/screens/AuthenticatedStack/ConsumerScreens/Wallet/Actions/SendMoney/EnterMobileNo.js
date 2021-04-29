@@ -1,9 +1,10 @@
 import React , {useState, useEffect} from 'react'
 import {View,Text,StyleSheet,TextInput,TouchableOpacity} from 'react-native'
-import { FONT_MEDIUM, FONT_REGULAR } from '../../../../../../res/constants'
+import { BUTTON_HEIGHT, FONT_MEDIUM, FONT_REGULAR, SIZES, INPUT_HEIGHT } from '../../../../../../res/constants'
 import {useLazyQuery} from '@apollo/react-hooks'
 import {CLIENT,GET_USER_ACCOUNT,GET_DAILY_MONTHLY_YEARLY_INCOMING} from '../../../../../../graphql'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
+import ConfirmModal from '../../Components/ConfirmModal'
 
 const EnterMobileNo = ({
     session , 
@@ -25,7 +26,7 @@ const EnterMobileNo = ({
                 err.graphQLErrors.map((error)=> {
                     if(error.message == "Wallet not found"){
                        setProceed(false)
-                       return setErrorMessage("Recipient does not have toktok wallet")
+                       return setErrorMessage("Recipient does not have toktokwallet")
                     }else{
                         setProceed(false)
                         return setErrorMessage("Recipient does not have toktok app")
@@ -146,17 +147,17 @@ const EnterMobileNo = ({
 
     return (
         <>
-            <Text style={{fontFamily: FONT_MEDIUM,fontSize: 13}}>Enter mobile number</Text>
+            <Text style={{fontFamily: FONT_MEDIUM,fontSize: SIZES.M}}>Enter mobile number</Text>
 
                 <View style={styles.mobileno}>
                         <View style={styles.mobileIcon}>
-                            <FIcon5 size={14} name="mobile-alt" />
+                            <FIcon5 size={SIZES.XL} name="mobile-alt" />
                         </View>
                         <View style={{
                             flex: 1,
                         }}>
-                             { recipientDetails.id && proceed && <Text style={{fontFamily: FONT_MEDIUM,fontSize: 10}}>{`${recipientDetails.person.firstName} ${recipientDetails.person.lastName[0]}.`}</Text>}
-                            <Text style={{fontFamily: FONT_REGULAR,fontSize: recipientDetails.id && proceed ? 8 : 12,color:"dimgray"}}>{mobileNo == "" ? "Enter mobile number" : mobileNo}</Text>
+                             { recipientDetails.id && proceed && <Text style={{fontFamily: FONT_MEDIUM,fontSize: SIZES.S}}>{`${recipientDetails.person.firstName} ${recipientDetails.person.lastName[0]}.`}</Text>}
+                            <Text style={{fontFamily: FONT_REGULAR,fontSize: recipientDetails.id && proceed ? SIZES.S : SIZES.M,color:"dimgray"}}>{mobileNo == "" ? "Enter mobile number" : mobileNo}</Text>
                             <TextInput
                                     // autoFocus={true}
                                     caretHidden
@@ -172,9 +173,9 @@ const EnterMobileNo = ({
                             />
 
                         </View>
-                        <TouchableOpacity onPress={()=>navigation.navigate("TokTokWalletContacts", {setRecipientInfo: setRecipientMobileNo})} style={styles.contactAddress}>
+                        <TouchableOpacity onPress={()=>navigation.navigate("ToktokWalletContacts", {setRecipientInfo: setRecipientMobileNo})} style={styles.contactAddress}>
                             <View style={styles.addressbtn}>
-                                    <Text style={{fontFamily: FONT_REGULAR,fontSize: 8,color: "#F6841F"}}>Address Book</Text>
+                                    <Text style={{fontFamily: FONT_REGULAR,fontSize: SIZES.XS,color: "#F6841F"}}>Address Book</Text>
                             </View>
                         </TouchableOpacity>
                 </View>
@@ -193,18 +194,23 @@ const styles = StyleSheet.create({
         borderWidth: .5,
         borderColor:"silver",
         borderRadius:5,
-        padding: 10,
-        marginTop: 5
+        paddingHorizontal: 10,
+        marginTop: 5,
+        height: INPUT_HEIGHT,
+        justifyContent:"center",
+        alignItems:"center"
     },
     mobileIcon: {
         width: 22,
         justifyContent:"center"
     },
     contactAddress: {
-        width:65,
+        // width:65,
+        paddingHorizontal: 10,
         borderWidth: 1,
         borderColor: "#F6841F",
         borderRadius: 2,
+        height: INPUT_HEIGHT - 20
     },
     addressbtn: {
         flex: 1,

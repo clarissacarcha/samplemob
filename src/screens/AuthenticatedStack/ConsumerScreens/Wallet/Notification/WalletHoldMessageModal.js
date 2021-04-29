@@ -20,7 +20,7 @@ const WalletHoldMessageModal = ({isVisible,setIsVisible})=> {
 
     const recoverWallet = ()=> {
         setIsVisible(false)
-        return  navigation.navigate("TokToKWalletForgotPin")
+        return  navigation.navigate("ToktokWalletRecoveryMethods")
     }
 
 

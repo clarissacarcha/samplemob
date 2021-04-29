@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableHighlight} from 'react-native';
-import {COLOR, DARK, COLOR_UNDERLAY, FONT_REGULAR, FONT_MEDIUM, FONT_BOLD, FONT_SEMIBOLD} from '../../res/constants';
+import {COLOR, DARK, COLOR_UNDERLAY, FONT_REGULAR, FONT_MEDIUM} from '../../res/constants';
 
 export const BlackButton = ({label, onPress, style, touchableStyle = {}}) => {
   return (

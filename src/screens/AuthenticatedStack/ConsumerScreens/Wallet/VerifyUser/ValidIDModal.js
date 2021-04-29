@@ -29,7 +29,7 @@ const ValidIDModal = ({validIdModal,setValidIdModal,changeVerifyID})=> {
             <View style={{height: "90%", width: "85%",backgroundColor:"white",paddingVertical: 20,borderRadius: 10}}>
                 <FlatList
                     showsVerticalScrollIndicator={false}
-                    data={ValidIDList}
+                    data={ValidIDList.sort()}
                     keyExtractor={item=>item}
                     renderItem={({item,index})=>{
                         return (

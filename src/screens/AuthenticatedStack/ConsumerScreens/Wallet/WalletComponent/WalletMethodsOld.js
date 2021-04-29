@@ -63,9 +63,9 @@ const WalletMethods = ({walletinfo})=> {
             >
                 */}
                 <WalletMethod label="Send" imageSize={{height: 26, width: 26}} onPress={()=>onPress("TokTokWalletActionsSend" , {checkifVerified: true})} imageSource={require('../../../../../assets/icons/walletSend.png')}/>
-                <WalletMethod label="Scan" imageSize={{height: 25, width: 23}} onPress={()=>onPress("TokTokWalletActionsScantoPay", {checkifVerified: true})} imageSource={require('../../../../../assets/icons/walletScan.png')}/>
-                <WalletMethod label="Cash in" imageSize={{height: 26, width: 26}} onPress={()=>onPress("TokTokWalletCashIn" , {checkifVerified: true})} imageSource={require('../../../../../assets/icons/methodCashin.png')}/>
-                <WalletMethod label="Cash out" imageSize={{height: 26, width: 26}} onPress={()=>onPress("TokTokWalletCashout", {checkifVerified: true})} imageSource={require('../../../../../assets/icons/walletTransfer.png')}/>
+                <WalletMethod label="Scan" imageSize={{height: 25, width: 23}} onPress={()=>onPress("ToktokWalletScanQR", {checkifVerified: true})} imageSource={require('../../../../../assets/icons/walletScan.png')}/>
+                <WalletMethod label="Cash in" imageSize={{height: 26, width: 26}} onPress={()=>onPress("ToktokWalletPaymentOptions" , {checkifVerified: true})} imageSource={require('../../../../../assets/icons/methodCashin.png')}/>
+                <WalletMethod label="Cash out" imageSize={{height: 26, width: 26}} onPress={()=>onPress("ToktokWalletCashOut", {checkifVerified: true})} imageSource={require('../../../../../assets/icons/walletTransfer.png')}/>
             {/* </ScrollView> */}
         </View>
          </>

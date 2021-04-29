@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import {View,Text,StyleSheet,TextInput} from 'react-native'
 import { numberFormat } from '../../../../../../helper'
-import { FONT_MEDIUM, FONT_REGULAR , FONT_LIGHT } from '../../../../../../res/constants'
+import { FONT_MEDIUM, FONT_REGULAR , FONT_LIGHT, INPUT_HEIGHT, SIZES } from '../../../../../../res/constants'
 
 const EnterAmount = ({walletinfo , setSwipeEnabled , amount , note ,setAmount, setNote , recipientDetails , senderDetails}) => {
 
@@ -105,9 +105,9 @@ const EnterAmount = ({walletinfo , setSwipeEnabled , amount , note ,setAmount, s
 
     return (
         <>
-        <Text style={{fontFamily: FONT_MEDIUM,fontSize: 13}}>Enter Amount</Text>
+        <Text style={{fontFamily: FONT_MEDIUM,fontSize: SIZES.M}}>Enter Amount</Text>
                     <View style={styles.amount}>
-                            <Text style={{fontSize: 16,fontFamily: FONT_MEDIUM,alignSelf:"center"}}>{'\u20B1'} </Text>
+                            <Text style={{fontSize: SIZES.M,fontFamily: FONT_MEDIUM,alignSelf:"center"}}>PHP </Text>
                             <TextInput
                                     caretHidden
                                     value={tempAmount}
@@ -116,20 +116,20 @@ const EnterAmount = ({walletinfo , setSwipeEnabled , amount , note ,setAmount, s
                                     keyboardType="numeric"
                                     returnKeyType="done"
                             />
-                            <View style={{fontSize: 12,fontFamily: FONT_REGULAR,paddingVertical: 5,marginLeft: 5,alignSelf: "center",flex: 1}}>
-                                <Text style={{fontFamily: FONT_REGULAR,fontSize: 12}}>{amount ? numberFormat(amount) : "0.00"}</Text>
+                            <View style={{marginLeft: 5,alignSelf: "center",flex: 1}}>
+                                <Text style={{fontFamily: FONT_REGULAR,fontSize: SIZES.M}}>{amount ? numberFormat(amount) : "0.00"}</Text>
                             </View>
                     </View>
                     <View>
-                        <Text style={{fontFamily:FONT_REGULAR,fontSize: 11,color:"red",marginTop: 5}}>{errorAmountMessage}</Text>
+                        <Text style={{fontFamily:FONT_REGULAR,fontSize: SIZES.S,color:"red",marginTop: 5}}>{errorAmountMessage}</Text>
                     </View>
 
                     <View>
-                        <Text style={{fontFamily: FONT_MEDIUM,fontSize: 13}}>Note <Text style={{fontFamily: FONT_REGULAR,fontSize: 11}}>( Optional )</Text></Text>
+                        <Text style={{fontFamily: FONT_MEDIUM,fontSize: SIZES.M}}>Note <Text style={{fontFamily: FONT_REGULAR,fontSize: 11}}>( Optional )</Text></Text>
                         <View style={styles.amount}>
                                 <TextInput
                                         value={note}
-                                        multiline={true}
+                                        multiline={false}
                                         height={50}
                                         onChangeText={value=>setNote(value)}
                                         placeholder="Enter note here..." 
@@ -146,13 +146,15 @@ const EnterAmount = ({walletinfo , setSwipeEnabled , amount , note ,setAmount, s
 
 const styles = StyleSheet.create({
      amount: {
-        padding: 5,
+        height: INPUT_HEIGHT,
+        paddingHorizontal: 5,
         width: "100%",
         borderColor: "silver",
         borderWidth: .5,
         marginTop: 5,
         borderRadius: 5,
         flexDirection: "row",
+        fontSize: SIZES.M
     }
 })
 

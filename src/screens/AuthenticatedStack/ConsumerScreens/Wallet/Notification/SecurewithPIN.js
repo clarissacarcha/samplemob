@@ -20,7 +20,7 @@ const SecurewithPIN = ({isVisible,setIsVisible,walletinfo})=> {
 
     const setUpPIN = ()=> {
         setIsVisible(false)
-        return navigation.navigate("TokTokWalletSettingsPinCode",{walletinfo})
+        return navigation.navigate("ToktokWalletCreatePin",{walletinfo})
     }
 
     return (

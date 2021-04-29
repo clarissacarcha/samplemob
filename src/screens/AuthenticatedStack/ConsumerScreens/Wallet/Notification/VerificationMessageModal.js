@@ -20,7 +20,7 @@ const VerificationMessageModal = ({isVisible,setIsVisible})=> {
 
     const verifyUser = ()=> {
         setIsVisible(false)
-        return navigation.navigate("TokTokWalletVerifyUser")
+        return navigation.navigate("ToktokWalletVerifySetup")
     }
 
     return (

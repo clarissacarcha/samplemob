@@ -11,7 +11,7 @@ const SecurewithPIN = ({navigation,walletinfo})=> {
                      <Image style={{height: 50,width: 50}} source={require('../../../../../../assets/icons/walletVerify.png')}/>
             </View>
             <Text style={{fontFamily: FONT_MEDIUM,fontSize: 20,marginTop: 40}}>Setup your wallet PIN</Text>
-            <Text style={{fontFamily: FONT_REGULAR,fontSize: 12}}>Click the "Set up PIN" button to create your toktok wallet PIN.</Text>
+            <Text style={{fontFamily: FONT_REGULAR,fontSize: 12}}>Click the "Set up PIN" button to create your toktokwallet PIN.</Text>
             <View style={{marginTop: 20}}>
                 <Text style={{fontFamily: FONT_REGULAR,marginBottom: 1,fontSize: 12}}><FIcon5 color="orange" name="check" />  Cashless transactions will be enabled after updating your PIN</Text>
             </View>
@@ -20,7 +20,7 @@ const SecurewithPIN = ({navigation,walletinfo})=> {
                     <Text style={{fontFamily: FONT_REGULAR,fontSize:12,color:"gray"}}>Do it later</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={()=>navigation.replace("TokTokWalletSettingsPinCode", {walletinfo})} style={[styles.btn,{backgroundColor:DARK}]}>
+                <TouchableOpacity onPress={()=>navigation.replace("ToktokWalletCreatePin", {walletinfo})} style={[styles.btn,{backgroundColor:DARK}]}>
                 <Text style={{fontFamily: FONT_REGULAR,fontSize:12,color:COLOR}}>Set up PIN</Text>
                 </TouchableOpacity>
             </View>

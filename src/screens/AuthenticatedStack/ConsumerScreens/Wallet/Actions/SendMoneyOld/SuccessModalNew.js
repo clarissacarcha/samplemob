@@ -25,7 +25,7 @@ const SuccessfulModal = ({successModalVisible , amount , recipient , walletinfoP
 
     const Proceed = ()=>  {
         navigation.pop(3)
-        navigation.replace("TokTokWallet")
+        navigation.replace("ToktokWalletHomePage")
     }
 
 

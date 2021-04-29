@@ -1,6 +1,6 @@
 import React , {useState,useRef , useEffect} from 'react'
 import {View,Text,Modal,StyleSheet,TouchableOpacity,TextInput,TouchableHighlight,Image,KeyboardAvoidingView,Platform} from 'react-native'
-import { COLOR, DARK, FONT_MEDIUM, FONT_REGULAR } from '../../../../../res/constants';
+import { COLOR, DARK, FONT_MEDIUM, FONT_REGULAR, SIZES } from '../../../../../res/constants';
 import {GET_VERIFY_TOKTOK_WALLET_PIN} from '../../../../../graphql'
 import {useLazyQuery} from '@apollo/react-hooks'
 import {onError} from '../../../../../util/ErrorUtility'
@@ -44,8 +44,8 @@ const PincodeSecurity = ({navigation,route})=> {
 
             if(!response.getVerifyToktokWalletPIN.result){
                 if(response.getVerifyToktokWalletPIN.attempts == 0) {
-                    navigation.navigate("TokTokWallet")
-                    return navigation.replace("TokTokWallet",{isHold: true})
+                    navigation.navigate("ToktokWalletHomePage")
+                    return navigation.replace("ToktokWalletHomePage",{isHold: true})
                 }
 
                 return setPinCodeAttempts({
@@ -104,7 +104,7 @@ const PincodeSecurity = ({navigation,route})=> {
             <View style={styles.content}>
                 <View style={{flex: 1,justifyContent:"center",alignItems:"center"}}>
                     <Image style={{height: 100,width: 100}} source={require('../../../../../assets/icons/walletVerify.png')}/>
-                    <Text style={{fontSize: 14,fontFamily: FONT_MEDIUM,marginTop: 20,}}>Enter your PIN</Text>
+                    <Text style={{fontSize: SIZES.M,fontFamily: FONT_MEDIUM,marginTop: 20,}}>Enter your PIN</Text>
                     <View style={{position: 'relative',marginTop: 50,}}>
                         <NumberBoxes pinCode={pinCode} onNumPress={onNumPress}/>
                         <TextInput
@@ -127,7 +127,7 @@ const PincodeSecurity = ({navigation,route})=> {
                             //onSubmitEditing={onSubmit}
                         />
                         {
-                            pinCodeAttempts.visible && <Text style={{fontFamily: FONT_REGULAR,color:"red",alignSelf:"center",fontSize: 12}}>Invalid PIN , You can try {pinCodeAttempts.attempts} more times</Text>
+                            pinCodeAttempts.visible && <Text style={{fontFamily: FONT_REGULAR,color:"red",alignSelf:"center",fontSize: SIZES.S}}>Invalid PIN , You can try {pinCodeAttempts.attempts} more times</Text>
                         }
                     </View>
                </View>

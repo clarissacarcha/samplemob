@@ -1,6 +1,6 @@
 import React from 'react'
 import {View,Text,TouchableOpacity,Modal,Dimensions} from 'react-native'
-import { FONT_REGULAR , FONT_MEDIUM, DARK, COLOR } from '../../../../../res/constants'
+import { FONT_REGULAR , FONT_MEDIUM, DARK, COLOR, BUTTON_HEIGHT, SIZES } from '../../../../../res/constants'
 import DatePicker from 'react-native-date-picker'
 
 const {height,width} = Dimensions.get("window")
@@ -23,7 +23,7 @@ const FilterDateModal = ({showFilterDate,setShowFilterDate, filterDate , changeF
           >
 
               <View style={{flex: 1 ,justifyContent: "center",alignItems: "center" ,backgroundColor: "rgba(0,0,0,0.7)"}}> 
-                  <View style={{width: "90%" , height: height * 0.8 , backgroundColor: "white",padding: 10,borderRadius: 20,  shadowColor: '#000',
+                  <View style={{width: "90%"  , backgroundColor: "white",padding: 10,borderRadius: 20,  shadowColor: '#000',
                                 justifyContent: "center",
                                 alignItems: "center",
                                 shadowOffset: {
@@ -41,11 +41,11 @@ const FilterDateModal = ({showFilterDate,setShowFilterDate, filterDate , changeF
                         <DatePicker date={filterDate.to} onDateChange={(date)=>changeFilterDate("to",date)} mode="date" maximumDate={todayDate} minimumDate={minDate} />
                         
                         <View style={{flexDirection: "row", marginTop: 20,padding: 10}}>
-                           <TouchableOpacity onPress={()=>setShowFilterDate(false)} style={{marginRight: 5, padding: 10,borderColor:"gray",borderWidth: 1, flex: 1,borderRadius: 10, alignItems: "center"}}>
-                                <Text style={{color: "gray",fontFamily: FONT_REGULAR,fontSize: 12}}>Close</Text>
+                           <TouchableOpacity onPress={()=>setShowFilterDate(false)} style={{marginRight: 5, height: BUTTON_HEIGHT,borderColor:"gray",borderWidth: 1, flex: 1,justifyContent:"center",alignItems:"center",borderRadius: 5, alignItems: "center"}}>
+                                <Text style={{color: "gray",fontFamily: FONT_MEDIUM,fontSize: SIZES.M}}>Close</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={()=>setShowFilterDate(false)} style={{marginLeft: 5,padding: 10,backgroundColor: DARK, flex: 1,borderRadius: 10, alignItems: "center"}}>
-                                <Text style={{color: COLOR,fontFamily: FONT_REGULAR,fontSize: 12}}>Ok</Text>
+                            <TouchableOpacity onPress={()=>setShowFilterDate(false)} style={{marginLeft: 5,paddingHorizontal: 10, height: BUTTON_HEIGHT, justifyContent:"center",alignItems:"center",backgroundColor: DARK, flex: 1,borderRadius: 5, alignItems: "center"}}>
+                                <Text style={{color: COLOR,fontFamily: FONT_MEDIUM,fontSize: SIZES.M}}>Ok</Text>
                             </TouchableOpacity>
                         </View>
                        
