@@ -2,16 +2,17 @@ import React , {useEffect,useState,useRef} from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,KeyboardAvoidingView,Platform,TextInput, TouchableHighlight} from 'react-native'
 import {useSelector} from 'react-redux'
 import { HeaderBackClose , HeaderTitle} from '../../../../../../../components'
-import { COLOR, DARK, FONT_MEDIUM, FONT_REGULAR, SIZES } from '../../../../../../../res/constants'
+import { COLORS, FONTS, SIZES } from '../../../../../../../res/constants'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import {useQuery,useLazyQuery} from '@apollo/react-hooks'
 import {GET_VERIFICATION_CODE,CHECK_VERIFICATION_CODE} from '../../../../../../../graphql'
 import { onError } from '../../../../../../../util/ErrorUtility'
+import Separator from '../../../Components/Separator'
 
 const NumberBox = ({onPress, value , showPin}) => (
-    <TouchableHighlight onPress={onPress} underlayColor={COLOR} style={{borderRadius: 10,marginHorizontal: 5,}}>
+    <TouchableHighlight onPress={onPress} underlayColor={COLORS.YELLOW} style={{borderRadius: 10,marginHorizontal: 5,}}>
       <View style={styles.inputView}>
-        <Text style={{fontSize: 25}}>{value ? showPin ? value : "*" : '_'}</Text>
+        <Text style={{fontSize: 25,fontFamily: FONTS.BOLD}}>{value ? showPin ? value : "*" : ''}</Text>
       </View>
     </TouchableHighlight>
 );
@@ -86,14 +87,16 @@ export default ({navigation})=> {
     },[])
 
     return (
+        <>
+        <Separator />
         <KeyboardAvoidingView 
             style={styles.container}
             keyboardVerticalOffset={Platform.OS == "ios" ? 0 : 90}  
             behavior={Platform.OS === "ios" ? "padding" : "height"} 
         >
-                <View style={{flex: 1,alignItems:"center"}}>
-                    <Text style={{fontFamily: FONT_MEDIUM,fontSize: 16,color:"gray"}}>Enter verification code sent to</Text>
-                    <Text style={{fontFamily: FONT_MEDIUM,fontSize: 16}}>{session.user.username}</Text>
+                <View style={{flex: 1,alignItems:"center",marginTop: 40}}>
+                    <Text style={{fontFamily: FONTS.BOLD,fontSize: 16,color:"gray"}}>Enter verification code sent to</Text>
+                    <Text style={{fontFamily: FONTS.REGULAR,fontSize: 16}}>{session.user.username}</Text>
                     {/* <TextInput 
                         // autoFocus={true}
                         style={styles.input}
@@ -126,18 +129,19 @@ export default ({navigation})=> {
                 </View>
                 <View style={styles.bottomActions}>
                     <View style={{flex: 1,justifyContent:"center"}}>
-                        <Text style={{fontFamily: FONT_REGULAR,fontSize: SIZES.M}}>Didn't receive it?</Text>
+                        <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.M}}>Didn't receive it?</Text>
                         <TouchableOpacity onPress={getVerificationCode}>
-                            <Text style={{fontFamily: FONT_MEDIUM,fontSize: SIZES.M}}>Request a new code</Text>
+                            <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.M}}>Request a new code</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={{flex: 1,alignItems:"flex-end",justifyContent:"center"}}>
-                            <TouchableOpacity onPress={confirmCode} style={{borderRadius: 100,backgroundColor:DARK,height: 50,width: 50,justifyContent:"center",alignItems:"center"}}>
-                                    <FIcon5 size={20} color={COLOR} name="chevron-right"/>
+                            <TouchableOpacity onPress={confirmCode} style={{borderRadius: 100,backgroundColor:COLORS.YELLOW,height: 50,width: 50,justifyContent:"center",alignItems:"center"}}>
+                                    <FIcon5 size={20} color={COLORS.DARK} name="chevron-right"/>
                             </TouchableOpacity>
                     </View>
                 </View>
         </KeyboardAvoidingView>
+        </>
     )
 }
 
@@ -151,7 +155,7 @@ const styles = StyleSheet.create({
         backgroundColor:"white",
         width:"100%",
         paddingVertical: 10,
-        fontFamily: FONT_MEDIUM,
+        fontFamily: FONTS.BOLD,
         fontSize: 20,
         marginTop: 10,
         borderRadius: 10,
@@ -161,11 +165,12 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         width:"100%",
         height: 50,
+        padding: 16,
     },
     inputView: {
-        backgroundColor: 'white',
-        borderWidth: StyleSheet.hairlineWidth,
-        height: 40,
+        backgroundColor: '#F7F7FA',
+        borderRadius: 5,
+        height: 48,
         width: 40,
         justifyContent: 'center',
         alignItems: 'center',

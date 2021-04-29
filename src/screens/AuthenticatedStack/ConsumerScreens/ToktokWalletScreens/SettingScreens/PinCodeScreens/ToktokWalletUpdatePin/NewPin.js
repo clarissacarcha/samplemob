@@ -1,6 +1,6 @@
 import React , {useRef, useState} from 'react'
 import {View,Text,StyleSheet,ScrollView,TextInput,TouchableOpacity} from 'react-native'
-import { BUTTON_HEIGHT, COLOR, DARK, FONT_MEDIUM, SIZES } from '../../../../../../../res/constants'
+import { BUTTON_HEIGHT, COLORS, DARK, FONTS, SIZES } from '../../../../../../../res/constants'
 import NumberBoxes from '../../../Components/NumberBoxes'
 
 const NewPin = ({pinCode,setPinCode , pageIndex, setPageIndex})=> {
@@ -21,7 +21,7 @@ const NewPin = ({pinCode,setPinCode , pageIndex, setPageIndex})=> {
     return (
         <View style={styles.container}>
         <ScrollView style={styles.content}>
-                <Text style={{fontSize: 14,fontFamily: FONT_MEDIUM,marginTop: 20,alignSelf:"center"}}>Enter your new PIN</Text>
+                <Text style={{fontSize: SIZES.M,fontFamily: FONTS.BOLD,marginTop: 20,alignSelf:"center"}}>Enter your new PIN</Text>
                 <View style={{position: 'relative',marginTop: 50,}}>
                     <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={showPin}/>
                     <TextInput
@@ -41,10 +41,10 @@ const NewPin = ({pinCode,setPinCode , pageIndex, setPageIndex})=> {
                         />
 
                         <TouchableOpacity
-                                style={{marginTop: 40,paddingVertical: 10,alignItems: "center"}}
+                                style={{marginTop: 18,paddingVertical: 10,alignItems: "center"}}
                                 onPress={()=>setShowPin(!showPin)}
                         >
-                                <Text style={{color: "#F6841F",fontSize: 12,fontFamily: FONT_MEDIUM}}>{showPin ? "HIDE PIN" : "SHOW PIN"}</Text>
+                                <Text style={{color: COLORS.ORANGE,fontSize: SIZES.M,fontFamily: FONTS.BOLD}}>{showPin ? "HIDE PIN" : "SHOW PIN"}</Text>
                         </TouchableOpacity>
 
                 </View>
@@ -52,9 +52,9 @@ const NewPin = ({pinCode,setPinCode , pageIndex, setPageIndex})=> {
             <TouchableOpacity
                 disabled={pinCode.length < 6}
                 onPress={onSubmit}
-                style={{alignItems: "center",height: BUTTON_HEIGHT,backgroundColor: pinCode.length < 6 ? "gray" : DARK,margin: 10,justifyContent: "center",borderRadius: 5,}}
+                style={{alignItems: "center",height: BUTTON_HEIGHT,backgroundColor: pinCode.length < 6 ? "gray" : COLORS.YELLOW,margin: 16,justifyContent: "center",borderRadius: 5,}}
             >
-                    <Text style={{color: pinCode.length < 6 ? "white" : COLOR,fontSize: SIZES.M,fontFamily: FONT_MEDIUM}}>Next</Text>
+                    <Text style={{color: pinCode.length < 6 ? "white" : COLORS.DARK,fontSize: SIZES.L,fontFamily: FONTS.BOLD}}>Next</Text>
             </TouchableOpacity>
         </View>
     )
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     },
     content: {
         // alignItems: "center",
-        padding: 10,
+        padding: 16,
         flex: 1,
     },
     input: {

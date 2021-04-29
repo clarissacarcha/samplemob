@@ -34,7 +34,7 @@ const VerifySelfie = ()=> {
                         <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.S}}>Take a photo to verify your identity.</Text>  
                         
                        
-                        <View style={[styles.input,{padding: 20,}]}>
+                        <View style={{marginTop: 20,}}>
                             <Text style={{fontSize: SIZES.M, fontFamily: FONTS.BOLD}}>Take a selfie</Text>
                             <Text style={{color: 'gray',fontSize: SIZES.S,fontFamily: FONTS.REGULAR}}>Show us that you match your photo ID with a selfie.</Text>  
 
@@ -60,7 +60,7 @@ const VerifySelfie = ()=> {
                     <TouchableOpacity onPress={()=>{
                         setCurrentIndex(oldval => oldval - 1)
                     }} style={{height: "100%",flex: 1,marginRight: 10,backgroundColor: "#F7F7FA" , borderRadius: 5, justifyContent: "center",alignItems: "center"}}>
-                        <Text style={{color: "gray",fontSize: SIZES.M,fontFamily: FONTS.BOLD}}>Back</Text>
+                        <Text style={{color: "gray",fontSize: SIZES.L,fontFamily: FONTS.BOLD}}>Back</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity onPress={()=>{
@@ -73,7 +73,7 @@ const VerifySelfie = ()=> {
          
     
                     }} style={{height: "100%",flex: 1,marginLeft: 10,backgroundColor: COLORS.YELLOW , borderRadius: 5, justifyContent: "center",alignItems: "center"}}>
-                        <Text style={{color: COLORS.DARK,fontSize: SIZES.M,fontFamily: FONTS.BOLD}}>Next</Text>
+                        <Text style={{color: COLORS.DARK,fontSize: SIZES.L,fontFamily: FONTS.BOLD}}>Next</Text>
                     </TouchableOpacity>
                 </View>
             </View>

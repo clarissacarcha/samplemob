@@ -1,6 +1,6 @@
 import React, { useState ,useRef , useEffect } from 'react'
 import {View,Text,StyleSheet,TouchableHighlight,TouchableOpacity,TextInput,Alert,ScrollView} from 'react-native'
-import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM,ORANGE, FONT_MEDIUM, FONT_REGULAR, SIZES} from '../../../../../../../res/constants'
+import {DARK, SIZES, FONTS, COLORS} from '../../../../../../../res/constants'
 import NumberBoxes from '../../../Components/NumberBoxes'
 
 const ConfirmPin = ({pinCode,setPageIndex,walletinfo,patchPincodeToktokWallet})=> {
@@ -37,7 +37,7 @@ const ConfirmPin = ({pinCode,setPageIndex,walletinfo,patchPincodeToktokWallet})=
     return (
        <View style={styles.container}>
             <ScrollView style={styles.content}>
-                    <Text style={{fontSize: SIZES.M,fontFamily: FONT_MEDIUM,marginTop: 20,alignSelf:"center"}}>Confirm your PIN</Text>
+                    <Text style={{fontSize: SIZES.M,fontFamily: FONTS.BOLD,marginTop: 20,alignSelf:"center"}}>Confirm your PIN</Text>
                     <View style={{position: 'relative',marginTop: 50,}}>
                         <NumberBoxes pinCode={confirmpinCode} onNumPress={onNumPress} showPin={showPin}/>
                         <TextInput
@@ -57,14 +57,14 @@ const ConfirmPin = ({pinCode,setPageIndex,walletinfo,patchPincodeToktokWallet})=
                         />
 
                         {
-                            message != "" &&  <Text style={{fontFamily: FONT_REGULAR,fontSize: 12,color:"red",alignSelf:"center"}}>{message}</Text>   
+                            message != "" &&  <Text style={{fontFamily: FONTS.REGULAR,fontSize: 12,color:"red",alignSelf:"center"}}>{message}</Text>   
                         }
 
                             <TouchableOpacity
-                                    style={{marginTop: 40,paddingVertical: 10, alignItems: "center"}}
+                                    style={{marginTop: 18,paddingVertical: 10, alignItems: "center"}}
                                     onPress={()=>setShowPin(!showPin)}
                             >
-                                    <Text style={{color: "#F6841F",fontSize:SIZES.S,fontFamily: FONT_MEDIUM}}>{showPin ? "HIDE PIN" : "SHOW PIN"}</Text>
+                                    <Text style={{color: COLORS.ORANGE,fontSize:SIZES.M,fontFamily: FONTS.BOLD}}>{showPin ? "HIDE PIN" : "SHOW PIN"}</Text>
                             </TouchableOpacity>
 
                       

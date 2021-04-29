@@ -78,7 +78,7 @@ const VerifyUser = ({navigation,route})=> {
                  <Text style={styles.clickVerifyText}>Click the "Verify Now" button.</Text>
 
             <View style={{marginTop: 20}}>
-                <Text style={styles.listItem}><FIcon5 color="orange" name="check" />  Secure your toktokwallet</Text>
+                <Text style={styles.listItem}><FIcon5 color="orange" name="check" />  Secure your account and payments</Text>
                 <Text style={styles.listItem}><FIcon5 color="orange" name="check" />  Enjoy convenient payment experience</Text>
                 <Text style={styles.listItem}><FIcon5 color="orange" name="check" />  Unlock toktokwallet features</Text>
             </View>
@@ -88,19 +88,29 @@ const VerifyUser = ({navigation,route})=> {
 
     if(data.getToktokWallet.record.toktokWalletKYC.status == 0){
         return (
+            <>
             <MainComponent>
-                <Text style={styles.verifyWalletText}>Waiting for approval of <Text style={{color: COLORS.YELLOW}}>toktok</Text><Text style={{color: COLORS.ORANGE}}>wallet</Text></Text>
-                <Text style={styles.clickVerifyText}>toktokwallet verification is on pending.</Text>
+                    <Text style={styles.verifyWalletText}>Waiting for approval of <Text style={{color: COLORS.YELLOW}}>toktok</Text><Text style={{color: COLORS.ORANGE}}>wallet</Text></Text>
+                    <Text style={styles.clickVerifyText}>toktokwallet verification is on pending.</Text>
             </MainComponent>
+            <View style={{justifyContent:"flex-end",padding: 16,backgroundColor:"white"}}>
+                <YellowButton label="Back" onPress={()=>navigation.pop()}/>
+            </View>
+            </>
         )
     }
 
     if(data.getToktokWallet.record.toktokWalletKYC.status == 1){
         return (
+            <>
             <MainComponent>
                 <Text style={styles.verifyWalletText}>Your <Text style={{color: COLORS.YELLOW}}>toktok</Text><Text style={{color: COLORS.ORANGE}}>wallet</Text> is now verified</Text>
                 <Text style={styles.clickVerifyText}>toktokwallet verification is approved.</Text>
             </MainComponent>
+            <View style={{justifyContent:"flex-end",padding: 16,backgroundColor:"white"}}>
+                <YellowButton label="Back" onPress={()=>navigation.pop()}/>
+            </View>
+          </>
         )
     }
 

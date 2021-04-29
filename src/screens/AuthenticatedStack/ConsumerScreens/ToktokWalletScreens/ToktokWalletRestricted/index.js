@@ -4,6 +4,7 @@ import {View,StyleSheet,Image} from 'react-native'
 //SELF IMPORTS
 import WalletOnHold from './WalletOnHold'
 import SecurewithPIN from './SecurewithPIN'
+import HeadingBannerLogo from '../Components/HeadingBannerLogo'
 
 export default ({navigation,route})=> {
     
@@ -26,9 +27,12 @@ export default ({navigation,route})=> {
     }
 
     return (
+        <>
+        {/* <HeadingBannerLogo/> */}
        <View style={styles.container}>
            {DisplayComponent()}
        </View>
+       </>
     )
 }
 
@@ -36,7 +40,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor:"white",
-        padding: 10,
+        padding: 16,
     },
 
 })

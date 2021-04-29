@@ -1,7 +1,6 @@
 import React, { useState ,useRef , useContext } from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,ScrollView,CheckBox,Linking} from 'react-native'
-import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM,ORANGE, FONT_MEDIUM, FONT_LIGHT, FONT_REGULAR, SIZES, BUTTON_HEIGHT} from '../../../../../../../res/constants'
-import FIcon5 from 'react-native-vector-icons/FontAwesome5'
+import {SIZES, BUTTON_HEIGHT, FONTS, COLORS} from '../../../../../../../res/constants'
 import {VerifyContext} from './VerifyContextProvider'
 import {POST_TOKTOK_WALLET_KYC} from '../../../../../../../graphql'
 import {useMutation} from '@apollo/react-hooks'
@@ -15,8 +14,10 @@ const UserInfo = ({label,value})=> {
 
     return (
         <View style={{paddingVertical: 6,width:"100%",borderBottomWidth: 0, borderColor:"silver"}}>
-            <Text style={{marginBottom: 2, fontFamily: FONT_MEDIUM,fontSize: SIZES.M}}>{label}</Text>
-            <Text style={{fontFamily: FONT_LIGHT,fontSize: SIZES.M}}>{value}</Text>
+            <Text style={{marginBottom: 2, fontFamily: FONTS.BOLD,fontSize: SIZES.M}}>{label}</Text>
+            <View style={{paddingHorizontal: 10, height: 50, justifyContent:"center",backgroundColor:"#F7F7FA"}}>
+                    <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.M}}>{value}</Text>
+            </View>
         </View>
     )
 }
@@ -38,16 +39,46 @@ const Confirm = ()=> {
         }
     })
 
+    const confirm = ()=> {
+        const rnValidIDFile = new ReactNativeFile({
+            ...VerifyUserData.verifyID.idImage,
+            name: 'documentValidID.jpg',
+            type: 'image/jpeg',
+        });
+
+        const rnSelfieFile = new ReactNativeFile({
+            ...VerifyUserData.selfieImage,
+            name: 'documentSelfie.jpg',
+            type: 'image/jpeg'
+        })
+
+        postToktokWalletKYC({
+            variables: {
+                input: {
+                    fullname: `${VerifyUserData.person.lastName}, ${VerifyUserData.person.firstName}${VerifyUserData.person.middleName ? " " + VerifyUserData.person.middleName : ""}`,
+                    nationality: VerifyUserData.nationality,
+                    address: `${VerifyUserData.address.streetAddress} ${VerifyUserData.address.village} ${VerifyUserData.address.city} ${VerifyUserData.address.region}, ${VerifyUserData.address.country} ${VerifyUserData.address.zipCode}`,
+                    birthdate: VerifyUserData.birthInfo.birthdate,
+                    birthPlace: VerifyUserData.birthInfo.birthPlace,
+                    validIdType: VerifyUserData.verifyID.idType,
+                    validIdNumber: VerifyUserData.verifyID.idNumber,
+                    validIdCountry: VerifyUserData.verifyID.idCountry,
+                    validIdPicture: rnValidIDFile,
+                    picture: rnSelfieFile
+                }
+            }
+        })
+    }
+
 
     return (
         <>
             <AlertOverlay visible={loading} />
             <View style={styles.content}>
                 <ScrollView style={styles.mainInput} showsVerticalScrollIndicator={false}>
-                        <Text style={{fontSize: SIZES.M, fontFamily: FONT_MEDIUM}}>Review Information</Text>
-                        <Text style={{fontFamily: FONT_LIGHT,marginBottom: 10,fontSize: SIZES.M}}>Make sure your details are all correct.</Text>  
-
-                        <UserInfo label="Full Name" value={VerifyUserData.fullname}/>
+                        <Text style={{fontSize: SIZES.M, fontFamily: FONTS.BOLD}}>Review Information</Text>
+                        <Text style={{fontFamily: FONTS.REGULAR,marginBottom: 10,fontSize: SIZES.M}}>Make sure your details are all correct.</Text>  
+                        <UserInfo label="Full Name" value={`${VerifyUserData.person.lastName}, ${VerifyUserData.person.firstName}${VerifyUserData.person.middleName ? " " + VerifyUserData.person.middleName : ""}`}/>
                         <UserInfo label="Date of Birth" value={moment(VerifyUserData.birthInfo.birthdate).format("MMM DD YYYY")}/>
                         <UserInfo label="Place of Birth" value={VerifyUserData.birthInfo.birthPlace}/>
                         <UserInfo label="Nationality" value={VerifyUserData.nationality}/>
@@ -73,7 +104,7 @@ const Confirm = ()=> {
                     </View> */}
                     
                     <TouchableOpacity onPress={()=>Linking.openURL("https://toktok.ph/terms-and-conditions")} style={{justifyContent:"flex-end",alignItems:"center",flexGrow: 1,marginBottom: 15}}>
-                            <Text style={{fontFamily: FONT_REGULAR,fontSize: SIZES.M}}>I hereby certify that I accept the <Text style={{color: ORANGE,fontFamily: FONT_REGULAR,fontSize: SIZES.M}}>Terms and Conditions.</Text></Text>
+                            <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.M}}>I hereby certify that I accept the <Text style={{color: COLORS.ORANGE,fontFamily: FONTS.REGULAR,fontSize: SIZES.M}}>Terms and Conditions.</Text></Text>
                     </TouchableOpacity>
                     <View style={{flexDirection:"row",height: BUTTON_HEIGHT}}>
                     <TouchableOpacity onPress={()=>{
@@ -82,14 +113,12 @@ const Confirm = ()=> {
                         height: "100%",
                         flex: 1,
                         marginRight: 10,
-                        backgroundColor: "transparent" ,
-                        borderColor: "gray",
-                        borderWidth: 1,
+                        backgroundColor: "#F7F7FA" ,
                         borderRadius: 5, 
                         justifyContent: "center",
                         alignItems: "center"
                     }}>
-                        <Text style={{color: "gray",fontSize: SIZES.M,fontFamily: FONT_MEDIUM}}>Back</Text>
+                        <Text style={{color: "gray",fontSize: SIZES.L,fontFamily: FONTS.BOLD}}>Back</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity 
@@ -98,47 +127,17 @@ const Confirm = ()=> {
                         flex: 1,
                         marginLeft: 10,
                         // backgroundColor: isSelected ? DARK : "dimgray" , 
-                        backgroundColor: DARK,
+                        backgroundColor: COLORS.YELLOW,
                         borderRadius: 5, 
                         justifyContent: "center",
                         alignItems: "center"
                     }}
-                    onPress={()=>{
-
-                        const rnValidIDFile = new ReactNativeFile({
-                            ...VerifyUserData.verifyID.idImage,
-                            name: 'documentValidID.jpg',
-                            type: 'image/jpeg',
-                        });
-
-                        const rnSelfieFile = new ReactNativeFile({
-                            ...VerifyUserData.selfieImage,
-                            name: 'documentSelfie.jpg',
-                            type: 'image/jpeg'
-                        })
-
-                        postToktokWalletKYC({
-                            variables: {
-                                input: {
-                                    fullname: VerifyUserData.fullname,
-                                    nationality: VerifyUserData.nationality,
-                                    address: `${VerifyUserData.address.streetAddress} ${VerifyUserData.address.village} ${VerifyUserData.address.city} ${VerifyUserData.address.region}, ${VerifyUserData.address.country} ${VerifyUserData.address.zipCode}`,
-                                    birthdate: VerifyUserData.birthInfo.birthdate,
-                                    birthPlace: VerifyUserData.birthInfo.birthPlace,
-                                    validIdType: VerifyUserData.verifyID.idType,
-                                    validIdNumber: VerifyUserData.verifyID.idNumber,
-                                    validIdCountry: VerifyUserData.verifyID.idCountry,
-                                    validIdPicture: rnValidIDFile,
-                                    picture: rnSelfieFile
-                                }
-                            }
-                        })
-                    }}>
+                    onPress={confirm}>
                         <Text style={{
                             // color: isSelected ? COLOR : "white",
-                            color: COLOR,
-                            fontSize: SIZES.M,
-                            fontFamily: FONT_MEDIUM}
+                            color: COLORS.DARK,
+                            fontSize: SIZES.L,
+                            fontFamily: FONTS.BOLD}
                         }>
                             Confirm
                         </Text>
@@ -154,7 +153,7 @@ const Confirm = ()=> {
 
 const styles = StyleSheet.create({
     content: {
-        padding: 10,
+        padding: 16,
         flex: 1,
     },
     mainInput: {
