@@ -1,6 +1,6 @@
 import React, { useState ,useRef , useEffect } from 'react'
 import {View,Text,StyleSheet,TouchableHighlight,TouchableOpacity,TextInput,Alert,ScrollView} from 'react-native'
-import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM,ORANGE, FONT_MEDIUM, FONT_REGULAR} from '../../../../../res/constants'
+import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM,ORANGE, FONT_MEDIUM, FONT_REGULAR, SIZES} from '../../../../../res/constants'
 import NumberBoxes from './Components/NumberBoxes'
 
 const ConfirmPin = ({pinCode,setPageIndex,walletinfo,patchPincodeToktokWallet})=> {
@@ -28,9 +28,6 @@ const ConfirmPin = ({pinCode,setPageIndex,walletinfo,patchPincodeToktokWallet})=
             if(pinCode != confirmpinCode){
                 return setMessage("Pin code does not match! Please try again")
             }
-            if(walletinfo.pincode == null){
-                return setPageIndex(oldstate=>oldstate+1)
-            }
             return patchPincodeToktokWallet()
         }else{
             return setMessage("")
@@ -40,7 +37,7 @@ const ConfirmPin = ({pinCode,setPageIndex,walletinfo,patchPincodeToktokWallet})=
     return (
        <View style={styles.container}>
             <ScrollView style={styles.content}>
-                    <Text style={{fontSize: 14,fontFamily: FONT_MEDIUM,marginTop: 20,alignSelf:"center"}}>Confirm your PIN</Text>
+                    <Text style={{fontSize: SIZES.M,fontFamily: FONT_MEDIUM,marginTop: 20,alignSelf:"center"}}>Confirm your PIN</Text>
                     <View style={{position: 'relative',marginTop: 50,}}>
                         <NumberBoxes pinCode={confirmpinCode} onNumPress={onNumPress} showPin={showPin}/>
                         <TextInput
@@ -67,7 +64,7 @@ const ConfirmPin = ({pinCode,setPageIndex,walletinfo,patchPincodeToktokWallet})=
                                     style={{marginTop: 40,paddingVertical: 10, alignItems: "center"}}
                                     onPress={()=>setShowPin(!showPin)}
                             >
-                                    <Text style={{color: "#F6841F",fontSize: 12,fontFamily: FONT_MEDIUM}}>{showPin ? "HIDE PIN" : "SHOW PIN"}</Text>
+                                    <Text style={{color: "#F6841F",fontSize:SIZES.S,fontFamily: FONT_MEDIUM}}>{showPin ? "HIDE PIN" : "SHOW PIN"}</Text>
                             </TouchableOpacity>
 
                       
@@ -84,7 +81,7 @@ const styles = StyleSheet.create({
     },
     content: {
         // alignItems: "center",
-        padding: 20,
+        padding: 10,
         flex: 1,
     },
     inputView: {
@@ -99,7 +96,7 @@ const styles = StyleSheet.create({
         flex: 1,
         borderWidth: StyleSheet.hairlineWidth,
         borderRadius: 5,
-        paddingHorizontal: 20,
+        paddingHorizontal: 10,
         fontSize: 25,
         color: DARK,
         width: 30,

@@ -32,7 +32,7 @@ const TransferWalletComponent = ({navigation,route})=> {
           <View style={styles.transferDetails}>
                 <Text style={{fontSize: 14,fontFamily: FONT_MEDIUM}}>Transferable Balance</Text>
                 <Text style={{fontSize: 20,color:"#F6841F",marginVertical: 5,fontFamily: FONT_MEDIUM}}>{'\u20B1'} {numberFormat(route.params.balance)}</Text>
-                <Text style={{fontSize: 12,color:"gray",fontFamily: FONT_REGULAR}}>Total ToktokPay  balance {'\u20B1'} {numberFormat(route.params.balance)}</Text>
+                <Text style={{fontSize: 12,color:"gray",fontFamily: FONT_REGULAR}}>Total toktokwallet  balance {'\u20B1'} {numberFormat(route.params.balance)}</Text>
           </View>
           <View style={styles.transferOptions}>
                 <SettingOption route="TokTokWalletActionsSend" icon={require('../../../../../../assets/icons/walletPin.png')} title="Send to Contacts"/>

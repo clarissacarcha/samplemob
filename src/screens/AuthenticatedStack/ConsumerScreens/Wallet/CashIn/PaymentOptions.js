@@ -3,7 +3,7 @@ import {View,StyleSheet,Text,Image,FlatList,Alert,ActivityIndicator} from 'react
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import FIcon from 'react-native-vector-icons/Feather'
 import {HeaderBackClose, HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../../components'
-import { COLOR, FONT_LIGHT, FONT_MEDIUM } from '../../../../../res/constants'
+import { COLOR, FONT_LIGHT, FONT_MEDIUM, SIZES } from '../../../../../res/constants'
 import {useQuery} from '@apollo/react-hooks'
 import {GET_CASH_IN_METHODS} from '../../../../../graphql'
 
@@ -40,7 +40,7 @@ const PaymentOptions = ({navigation,route})=> {
         let image , navigateLink
         if(item.name.toLowerCase() == "paypanda"){
             image = require('../../../../../assets/images/walletcashin/paypanda.png')
-            navigateLink = "TokTokWalletCashInPaypanda"
+            navigateLink = "ToktokWalletPayPandaForm"
         }else{
             navigateLink = ""
         }
@@ -53,11 +53,11 @@ const PaymentOptions = ({navigation,route})=> {
                     }
                 ) : Alert.alert("Temporary Unavailable")}>
                 <View style={styles.logo}>
-                    <Image style={{height: 30,width: 30}} resizeMode="contain" source={image} />
+                    <Image style={{height: 35,width: 35}} resizeMode="contain" source={image} />
                 </View>
                 <View style={styles.name}>
-                    <Text style={{fontSize:14,fontFamily: FONT_MEDIUM}}>{item.name}</Text>
-                    <Text style={{fontSize: 12, fontFamily: FONT_LIGHT}}>Use {item.name} to cash-in</Text>
+                    <Text style={{fontSize:SIZES.M,fontFamily: FONT_MEDIUM}}>{item.name}</Text>
+                    <Text style={{fontSize: SIZES.S, fontFamily: FONT_LIGHT}}>Use {item.name.toLowerCase()} to cash in</Text>
                 </View>
                 <View style={styles.arrowright}>
                     <FIcon name={'chevron-right'} color={"#A6A8A9"}/>

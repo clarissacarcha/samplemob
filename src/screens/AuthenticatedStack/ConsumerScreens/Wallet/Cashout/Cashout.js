@@ -2,7 +2,7 @@ import React , {useState, useEffect} from 'react'
 import {View,StyleSheet,Text,TouchableOpacity,Image,Dimensions} from 'react-native'
 import {HeaderBack, HeaderTitle} from '../../../../../components'
 import FIcon from 'react-native-vector-icons/Feather';
-import { FONT_MEDIUM, FONT_REGULAR } from '../../../../../res/constants';
+import { FONT_MEDIUM, FONT_REGULAR, SIZES } from '../../../../../res/constants';
 import { numberFormat } from '../../../../../helper';
 
 const {height,width} = Dimensions.get("window")
@@ -11,7 +11,7 @@ const Cashout = ({navigation,route})=> {
 
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack />,
-        headerTitle: ()=> <HeaderTitle label={['Cash out','']}/>,
+        headerTitle: ()=> <HeaderTitle label={['Cash Out','']}/>,
     })
 
     const [percentage,setPercentage] = useState(100)
@@ -29,7 +29,7 @@ const Cashout = ({navigation,route})=> {
                          <Image source={icon} style={{height: iconSize.height, width: iconSize.width}} resizeMode="contain"/>
                     </View>
                     <View style={styles.name}>
-                        <Text style={{fontSize:14,fontFamily: FONT_MEDIUM}}>{title}</Text>
+                        <Text style={{fontSize:SIZES.M,fontFamily: FONT_MEDIUM}}>{title}</Text>
                     </View>
                     <View style={styles.arrowright}>
                            {/* <Text style={{fontSize: 16,color: "gray"}}>{'>'}</Text> */}
@@ -41,10 +41,10 @@ const Cashout = ({navigation,route})=> {
     return (
       <View style={styles.container}>
           <View style={styles.transferDetails}>
-                <Text style={{fontSize: 14,fontFamily: FONT_MEDIUM}}>Transferable Balance</Text>
-                <Text style={{fontSize: 20,color:"#F6841F",marginVertical: 5,fontFamily: FONT_MEDIUM}}>{'\u20B1'} {numberFormat(route.params.walletinfo.balance)}</Text>
+                <Text style={{fontSize: SIZES.L,fontFamily: FONT_MEDIUM}}>Current Balance</Text>
+                <Text style={{fontSize: 20,color:"#F6841F",marginVertical: 5,fontFamily: FONT_MEDIUM}}>PHP {numberFormat(route.params.walletinfo.balance)}</Text>
 
-                <View style={{
+                {/* <View style={{
                     width: width * 0.7,
                     height: 6,
                     borderRadius: 6,
@@ -63,10 +63,16 @@ const Cashout = ({navigation,route})=> {
 
                 </View>
 
-                <Text style={{fontSize: 12,color:"gray",fontFamily: FONT_REGULAR}}>Total toktok wallet balance {'\u20B1'} {numberFormat(route.params.walletinfo.balance)}</Text>
+                <Text style={{fontSize: SIZES.S,color:"gray",fontFamily: FONT_REGULAR}}>Total toktokwallet balance PHP {numberFormat(route.params.walletinfo.balance)}</Text> */}
           </View>
           <View style={styles.transferOptions}>
-                <SettingOption route="TokTokWalletGcashEncashment" params={{walletinfo: route.params.walletinfo}} iconSize={{height: 40, width: 40}} icon={require('../../../../../assets/icons/gcash.png')} title="Encash to Gcash"/>
+                <SettingOption 
+                    route="ToktokWalletGcashCashOut" 
+                    params={{walletinfo: route.params.walletinfo}} 
+                    iconSize={{height: 40, width: 40}} 
+                    icon={require('../../../../../assets/icons/gcash.png')} 
+                    title="Cash out to Gcash"
+                />
                 {/* <SettingOption route="TokTokWalletActionsSend" icon={require('../../../../../assets/icons/walletPin.png')} title="Send to Contacts"/>
                 <SettingOption route="TokTokWalletActionsTransferEwallet" icon={require('../../../../../assets/icons/walletSendEwallet.png')} title="Send to E-wallet"/>
                 <SettingOption route="TokTokWalletSettingsCreatePIN" icon={require('../../../../../assets/icons/walletSendBank.png')} title="Send to Bank Account"/> */}

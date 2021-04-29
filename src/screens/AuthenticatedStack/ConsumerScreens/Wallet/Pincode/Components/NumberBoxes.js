@@ -28,7 +28,7 @@ const NumberBoxes = ({pinCode, onNumPress, showPin}) => {
 const styles = StyleSheet.create({
     inputView: {
         backgroundColor: 'white',
-        borderBottomWidth: StyleSheet.hairlineWidth,
+        borderWidth: StyleSheet.hairlineWidth,
         height: 40,
         width: 40,
         justifyContent: 'center',

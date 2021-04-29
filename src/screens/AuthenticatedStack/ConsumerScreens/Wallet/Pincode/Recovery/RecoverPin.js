@@ -2,7 +2,7 @@ import React , {useEffect,useState,useRef} from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,KeyboardAvoidingView,Platform,TextInput, TouchableHighlight} from 'react-native'
 import {useSelector} from 'react-redux'
 import { HeaderBackClose , HeaderTitle} from '../../../../../../components'
-import { COLOR, DARK, FONT_MEDIUM, FONT_REGULAR } from '../../../../../../res/constants'
+import { COLOR, DARK, FONT_MEDIUM, FONT_REGULAR, SIZES } from '../../../../../../res/constants'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import {useQuery,useLazyQuery} from '@apollo/react-hooks'
 import {GET_VERIFICATION_CODE,CHECK_VERIFICATION_CODE} from '../../../../../../graphql'
@@ -55,7 +55,7 @@ const RecoverPin = ({navigation})=> {
         onCompleted: (response)=> {
             console.log(response)
             if(response.checkVerificationCode.message){
-                navigation.navigate("TokTokWalletRecoverUpdatePin")
+                navigation.navigate("ToktokWalletUpdatePin")
             }
         }
     })
@@ -91,7 +91,7 @@ const RecoverPin = ({navigation})=> {
             keyboardVerticalOffset={Platform.OS == "ios" ? 0 : 90}  
             behavior={Platform.OS === "ios" ? "padding" : "height"} 
         >
-                <View style={{flex: 1}}>
+                <View style={{flex: 1,alignItems:"center"}}>
                     <Text style={{fontFamily: FONT_MEDIUM,fontSize: 16,color:"gray"}}>Enter verification code sent to</Text>
                     <Text style={{fontFamily: FONT_MEDIUM,fontSize: 16}}>{session.user.username}</Text>
                     {/* <TextInput 
@@ -126,9 +126,9 @@ const RecoverPin = ({navigation})=> {
                 </View>
                 <View style={styles.bottomActions}>
                     <View style={{flex: 1,justifyContent:"center"}}>
-                        <Text style={{fontFamily: FONT_REGULAR}}>Didn't receive it?</Text>
+                        <Text style={{fontFamily: FONT_REGULAR,fontSize: SIZES.M}}>Didn't receive it?</Text>
                         <TouchableOpacity onPress={getVerificationCode}>
-                            <Text style={{fontFamily: FONT_MEDIUM}}>Request a new code</Text>
+                            <Text style={{fontFamily: FONT_MEDIUM,fontSize: SIZES.M}}>Request a new code</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={{flex: 1,alignItems:"flex-end",justifyContent:"center"}}>
@@ -144,8 +144,8 @@ const RecoverPin = ({navigation})=> {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 20,
-        // backgroundColor:"white"
+        padding: 10,
+        backgroundColor:"white"
     },
     input: {
         backgroundColor:"white",
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     },
     inputView: {
         backgroundColor: 'white',
-        borderBottomWidth: StyleSheet.hairlineWidth,
+        borderWidth: StyleSheet.hairlineWidth,
         height: 40,
         width: 40,
         justifyContent: 'center',

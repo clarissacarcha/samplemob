@@ -1,5 +1,5 @@
 import React, {useState, useContext , useEffect} from 'react'
-import {StyleSheet,View,Dimensions,BackHandler,TouchableHighlight,KeyboardAvoidingView,Platform} from 'react-native'
+import {StyleSheet,View,Dimensions,BackHandler,TouchableHighlight,KeyboardAvoidingView,Platform,Alert} from 'react-native'
 import VerifyContextProvider from './Context/VerifyContextProvider'
 import { HeaderTitle} from '../../../../../components'
 import VerifyFullname from './VerifyFullname'
@@ -12,6 +12,7 @@ import Confirm from './Confirm'
 import {VerifyContext} from './Context/VerifyContextProvider'
 import {useNavigation} from '@react-navigation/native'
 import FIcon from 'react-native-vector-icons/Feather';
+import {useFocusEffect} from '@react-navigation/native'
 
 const {height,width} = Dimensions.get("window")
 
@@ -19,33 +20,47 @@ const HeaderBackClose = ({currentIndex,setCurrentIndex})=> {
 
     const navigation = useNavigation()
 
-    const backAction = () => {
-        closeScreen()
-        return true;
-    };
-  
 
      const closeScreen = ()=> {
         if(currentIndex == 0){
-          navigation.pop();
+            PromptQuestionCloseMessage()
         }else{
             setCurrentIndex(oldstate=>oldstate-1);
         }
       }
 
-      useEffect(()=>{
+      const PromptQuestionCloseMessage = ()=>{
+        Alert.alert(
+            "",
+            "Are you sure you want to leave?",
+            [
+              {
+                text: "No",
+                onPress: () => null,
+                style: "cancel"
+              },
+              { text: "Yes", onPress: () =>navigation.goBack() }
+            ]
+          );
+      
+      }
 
+      useFocusEffect(() => {
+        const backAction = () => {
+            closeScreen() 
+          return true;
+        };
+    
         const backHandler = BackHandler.addEventListener(
-            "hardwareBackPress",
-            backAction
+          "hardwareBackPress",
+          backAction
         );
-
-        return ()=> backHandler.remove()
-
-      },[currentIndex])
+    
+        return () => backHandler.remove();
+      }, []);
 
       return (
-        <TouchableHighlight onPress={closeScreen} underlayColor={'white'} style={styles.button}>
+        <TouchableHighlight onPress={PromptQuestionCloseMessage} underlayColor={'white'} style={styles.button}>
             <View style={styles.iconBox}>
                 <FIcon name={'x'} size={24} color={'#212529'} />
             </View>
@@ -61,30 +76,13 @@ const MainSetupComponent = ()=> {
 
     navigation.setOptions({
         headerLeft: ()=> <HeaderBackClose currentIndex={currentIndex} setCurrentIndex={setCurrentIndex}/>,
-        headerTitle: ()=> <HeaderTitle label={['Verify toktok wallet','']}/>,
+        headerTitle: ()=> <HeaderTitle label={['Verification','']}/>,
     })
 
  
-    // const [screenSlides,setScreenSlides] = useState(["Fullname","Nationality","Birthday","Address","IDPic","SelfiePic"])
     const [screenSlides,setScreenSlides] = useState(["Fullname","Birthday","Address","IDPic","SelfiePic"])
 
     const DisplayComponents = ()=> {
-        // switch(currentIndex){
-        //     case 0:
-        //         return <VerifyFullname/>
-        //     case 1:
-        //         return <VerifyNationality/>
-        //     case 2:
-        //         return <VerifyBirth/>
-        //     case 3:
-        //         return <VerifyAddress/>
-        //     case 4:
-        //          return <VerifyID/>
-        //     case 5:
-        //          return <VerifySelfie/>
-        //     default:
-        //         return <Confirm/>
-        // }
 
         switch(currentIndex){
             case 0:
@@ -104,9 +102,7 @@ const MainSetupComponent = ()=> {
     
 
     return (
-        <KeyboardAvoidingView 
-            keyboardVerticalOffset={Platform.OS == "ios" ? 0 : 80}  
-            behavior={Platform.OS == "ios" ? "padding" : "height"}
+        <View 
             style={styles.container}
         >
             <View style={styles.progressBar}>
@@ -119,7 +115,7 @@ const MainSetupComponent = ()=> {
 
             {DisplayComponents()}
 
-        </KeyboardAvoidingView>
+        </View>
     )
 
 
@@ -146,6 +142,21 @@ const styles = StyleSheet.create({
     progressBarItem: {
         flex: 1,
     },
+    button: {
+        borderRadius: 10,
+        marginLeft: 10,
+        overflow: 'hidden',
+    
+        height: 30,
+        width: 30,
+      },
+      iconBox: {
+        // backgroundColor: DARK,
+        height: 30,
+        width: 30,
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
 })
 
 export default SetupVerify

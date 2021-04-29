@@ -202,8 +202,8 @@ const SendWalletComponent = ({navigation,route})=> {
                 // setModalMessage(error.message)
                 // setMsgModalVisible(true)
                 setFundTransferModalParams({
-                  message: error.message == "Wallet not found" ? "Recipient does not have toktok wallet" : "Recipient does not have toktok app",
-                  submessage: error.message == "Wallet not found"? 'Tell your recipient to create their toktok wallet first' : 'Tell them to download and install toktok app',
+                  message: error.message == "Wallet not found" ? "Recipient does not have toktokwallet" : "Recipient does not have toktok app",
+                  submessage: error.message == "Wallet not found"? 'Tell your recipient to create their toktokwallet first' : 'Tell them to download and install toktok app',
                   actionButtons: [{
                       label: "ok",
                       onPress: ()=> setIsFundTransferMessageModalVisible(false),

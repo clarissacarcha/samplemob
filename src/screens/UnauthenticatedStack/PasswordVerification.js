@@ -31,7 +31,6 @@ const PasswordVerification = ({navigation, route, createSession}) => {
         appFlavor: APP_FLAVOR,
         deviceId: getUniqueId(),
         deviceType: Platform.select({ios: 'I', android: 'A'}),
-        ...(IMPERSONATE ? {impersonationPassphrase: IMPERSONATION_PASSPHRASE} : {}),
       },
     },
     onError: (error) => {

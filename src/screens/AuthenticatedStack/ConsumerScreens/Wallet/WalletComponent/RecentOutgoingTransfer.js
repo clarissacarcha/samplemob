@@ -1,6 +1,6 @@
-import React , {useState,useContext} from 'react'
+import React , {useState,useContext,useRef} from 'react'
 import {View,Text,StyleSheet,Modal,TouchableOpacity,TouchableHighlight,Alert} from 'react-native'
-import { FONT_LIGHT, FONT_MEDIUM, FONT_REGULAR , DARK , COLOR } from '../../../../../res/constants'
+import { FONT_LIGHT, FONT_MEDIUM, FONT_REGULAR , DARK , COLOR, SIZES } from '../../../../../res/constants'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import { numberFormat } from '../../../../../helper'
 import moment from 'moment'
@@ -8,98 +8,31 @@ import {CheckWalletRestrictionContext} from './Context/CheckWalletRestrictionPro
 import {GET_RECENT_OUTGOING_TRANSFER} from '../../../../../graphql'
 import {useQuery} from '@apollo/react-hooks'
 import {useNavigation} from '@react-navigation/native'
+import ConfirmBottomSheet from '../Components/ConfirmBottomSheet'
 
 
-const ConfirmModal = ({isVisible,setIsvisible, recipient, onPress , transactionInfo}) => {
-
-    return (
-        <Modal
-            visible={isVisible}
-            transparent={true}
-            onRequestClose={()=>setIsvisible(false)}
-        >
-
-            <View style={styles.confirmModalContent}>
-                    <TouchableHighlight underlayColor onPress={()=>setIsvisible(false)} style={{flex: 1}}>
-                            <View>
-
-                            </View>
-                    </TouchableHighlight>
-
-                    <View style={styles.confirmModalBody}>
-                        <View style={styles.confirmModalHeader}>
-                            <TouchableOpacity onPress={()=>setIsvisible(false)} style={{position: "absolute",left: 0,paddingVertical: 10}}>
-                                <FIcon5 name="times" size={20}/>
-                            </TouchableOpacity>   
-                            <Text style={{fontSize: 14,fontFamily: FONT_MEDIUM}}>Do fund transfer again?</Text>
-                        </View>
-                        <View style={styles.modalconfirmdetails}>
-                            <View style={{flexDirection: "row",paddingVertical: 12,borderBottomWidth: 0.5,borderColor: "silver",width: "100%"}}>
-                                <View style={{flex: 1}}>    
-                                    <Text style={{color: "gray",fontSize: 12,fontFamily: FONT_REGULAR}}>Payment Method</Text>
-                                </View>
-                                <View style={{flex: 1}}>   
-                                    <Text style={{fontSize: 12,alignSelf: "flex-end",fontFamily: FONT_MEDIUM}}>toktok Wallet</Text>
-                                </View>  
-                            </View>
-                            <View style={{flexDirection: "row",paddingVertical: 12,borderBottomWidth: 0.5,borderColor: "silver"}}>
-                                <View style={{flex: 1}}>    
-                                    <Text style={{color: "gray",fontSize: 12,fontFamily: FONT_REGULAR}}>Recipient</Text>
-                                </View>
-                                <View style={{flex: 1}}>   
-                                    <Text style={{fontSize: 12,alignSelf: "flex-end",fontFamily: FONT_MEDIUM}}>{recipient}</Text>
-                                </View>  
-                            </View>
-
-                            {/* <View style={{flexDirection: "row",paddingVertical: 12,borderBottomWidth: 0.5,borderColor: "silver"}}>
-                                <View style={{flex: 1}}>    
-                                    <Text style={{color: "gray",fontSize: 12,fontFamily: FONT_REGULAR}}>Mobile No</Text>
-                                </View>
-                                <View style={{flex: 1}}>   
-                                    <Text style={{fontSize: 12,alignSelf: "flex-end",fontFamily: FONT_MEDIUM}}>{transactionInfo.destinationInfo.username}</Text>
-                                </View>  
-                            </View> */}
-
-                            <View style={{flexDirection: "row",paddingVertical: 12,borderBottomWidth: 0.5,borderColor: "silver"}}>
-                                <View style={{flex: 1}}>    
-                                    <Text style={{color: "gray",fontSize: 12,fontFamily: FONT_REGULAR}}>Fund Transfered</Text>
-                                </View>
-                                <View style={{flex: 1}}>   
-                                    <Text style={{fontSize: 12,alignSelf: "flex-end",fontFamily: FONT_MEDIUM}}> {'\u20b1'} {numberFormat(transactionInfo.amount)}</Text>
-                                </View>  
-                            </View>
-                        </View>
-
-                        <View style={styles.modalconfirmbtn}>
-                            <TouchableOpacity onPress={onPress} style={{height: "100%",width: "100%",backgroundColor: DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
-                                <Text style={{color: COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Confirm</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>               
-
-            </View>
-
-        </Modal>
-    )
-}
-
-const RecentOutgoingTransfer = ({walletinfo})=> {
+const RecentOutgoingTransfer = ({walletinfo , onPress , ProceedTransfer})=> {
 
 
     const navigation = useNavigation()
-    const [confirmModalVisible,setConfirmModalVisible] = useState(false)
     const {checkIfResctricted} = useContext(CheckWalletRestrictionContext)
+
+    const bottomSheetRef = useRef()
 
     const proceedTransaction = ()=> {
         if(!checkIfResctricted()){
-            return setConfirmModalVisible(true)
+            onPress(recentTransfer)
         }
     }
 
-    const onPress = (recentTransfer)=> {
-        setConfirmModalVisible(false)
-        return navigation.navigate("TokTokWalletSendMoney", {walletinfo , recentTransfer})
-    }
+    // const ProceedTransfer = ()=> {
+
+    // }
+
+    // const onPress = (recentTransfer)=> {
+    //     setConfirmModalVisible(false)
+    //     return navigation.navigate("TokTokWalletSendMoney", {walletinfo , recentTransfer})
+    // }
 
     const {data,error,loading} = useQuery(GET_RECENT_OUTGOING_TRANSFER, {
         fetchPolicy:"network-only",
@@ -126,13 +59,6 @@ const RecentOutgoingTransfer = ({walletinfo})=> {
 
     return (
         <>
-        <ConfirmModal 
-                isVisible={confirmModalVisible} 
-                setIsvisible={setConfirmModalVisible} 
-                recipient={destinationFullname} 
-                transactionInfo={recentTransfer} 
-                onPress={()=>onPress(recentTransfer)}
-        />
         {
             data.getRecentOutgoingTransfer &&  
             <View style={styles.container}>
@@ -140,19 +66,20 @@ const RecentOutgoingTransfer = ({walletinfo})=> {
 
                 <TouchableOpacity onPress={proceedTransaction} style={styles.recent}>
                         <View style={[styles.recentInfo,{backgroundColor:"white",justifyContent:"center",alignItems:"flex-start"}]}>
-                                <Text style={{fontFamily: FONT_MEDIUM,fontSize: 16,color:"#F6841F"}}>{'\u20b1'} {numberFormat(recentTransfer.amount)}</Text>
+                                <Text style={{fontFamily: FONT_MEDIUM,fontSize: SIZES.L,color:"#F6841F"}}>PHP {numberFormat(recentTransfer.amount)}</Text>
                         </View>
                         <View style={[{flex: .5,justifyContent:"center",alignItems:"center",}]}>
                                 <FIcon5 name="arrow-right" size={18} color="#F6841F"/>
                         </View>
                         <View style={[styles.recentInfo,{backgroundColor:"white",alignItems:"flex-end"}]}>
-                            <Text style={{fontFamily: FONT_MEDIUM,fontSize: 12}}>{destinationFullname}</Text>
-                            <Text style={{fontFamily: FONT_LIGHT,fontSize: 10}}>{moment(recentTransfer.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')}</Text>
+                            <Text style={{fontFamily: FONT_MEDIUM,fontSize: SIZES.M}}>{destinationFullname}</Text>
+                            <Text style={{fontFamily: FONT_LIGHT,fontSize: SIZES.XS}}>{moment(recentTransfer.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')}</Text>
                         </View>
                 </TouchableOpacity>
-             </View>
+
+             </View> 
         }
-       
+
         </>
     )
 }

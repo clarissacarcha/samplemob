@@ -1,6 +1,6 @@
 import React , {useState,useContext} from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,TouchableHighlight,Animated,ActivityIndicator,ImageBackground,ScrollView,Image,Dimensions} from 'react-native'
-import { FONT_MEDIUM, FONT_REGULAR } from '../../../../../res/constants'
+import { FONT_MEDIUM, FONT_REGULAR, SIZES } from '../../../../../res/constants'
 import { useNavigation } from '@react-navigation/native'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import { numberFormat } from '../../../../../helper';
@@ -28,7 +28,7 @@ const WalletCardInfo = ({walletinfo , children})=> {
 
     const cashIn = ()=> {
         if(!checkIfResctricted()){
-            return navigation.navigate("TokTokWalletCashIn" , {walletinfo})
+            return navigation.navigate("ToktokWalletPaymentOptions" , {walletinfo})
         }
     }
 
@@ -39,8 +39,8 @@ const WalletCardInfo = ({walletinfo , children})=> {
         <View style={{padding: 25}}>
             <View style={styles.walletInfo}>
                 <View>
-                    <Text style={{fontSize: 20,fontFamily: FONT_MEDIUM, color: "white"}}>{'\u20B1'} {numberFormat(walletinfo.balance ? walletinfo.balance : 0)}</Text>
-                    <Text style={{fontSize: 12,color: "white",fontFamily: FONT_REGULAR}}>Available Balance</Text>
+                    <Text style={{fontSize: 20,fontFamily: FONT_MEDIUM, color: "white"}}>PHP {numberFormat(walletinfo.balance ? walletinfo.balance : 0)}</Text>
+                    <Text style={{fontSize: SIZES.S,color: "white",fontFamily: FONT_REGULAR}}>Available Balance</Text>
                 </View>
                 <TouchableOpacity onPress={cashIn} style={styles.topUp}>
                     <View style={styles.topUpbtn}>
@@ -51,7 +51,7 @@ const WalletCardInfo = ({walletinfo , children})=> {
                     // rotateY.setValue(0)
                     animation.start(()=> {
                         animation.reset()
-                        navigation.navigate("TokTokWalletSettings", {walletinfo})
+                        navigation.navigate("ToktokWalletSettings", {walletinfo})
                     })
 
                 }}>

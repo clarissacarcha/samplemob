@@ -1,11 +1,12 @@
 import React, { useContext, useState } from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,Modal,Alert} from 'react-native'
-import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM,ORANGE, FONT_MEDIUM, FONT_LIGHT, FONT_REGULAR} from '../../../../../res/constants'
+import {View,Text,StyleSheet,TouchableOpacity,Modal,Alert,TextInput} from 'react-native'
+import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM,ORANGE, FONT_MEDIUM, FONT_LIGHT, FONT_REGULAR, SIZES, INPUT_HEIGHT, BUTTON_HEIGHT} from '../../../../../res/constants'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import {VerifyContext} from './Context/VerifyContextProvider'
 import ModalCountry from './ModalCountry'
 import DatePicker from 'react-native-date-picker'
 import moment from 'moment'
+import { BlackButton } from '../../../../../revamp'
 
 
 const DateBirthModal = ({modalVisible, setModalVisible , birthInfo ,changeBirthInfo})=> {
@@ -32,8 +33,8 @@ const DateBirthModal = ({modalVisible, setModalVisible , birthInfo ,changeBirthI
                      <TouchableOpacity onPress={()=>{
                             changeBirthInfo("birthdate",bday)
                             setModalVisible(false)
-                     }} style={{width: "100%", marginTop: 20,padding: 10,backgroundColor: DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
-                            <Text style={{color: COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Ok</Text>
+                     }} style={{width: "100%", marginTop: 20,height: 50,backgroundColor: DARK , borderRadius: 5, justifyContent: "center",alignItems: "center"}}>
+                            <Text style={{color: COLOR,fontSize: SIZES.M,fontFamily: FONT_MEDIUM}}>Ok</Text>
                     </TouchableOpacity>
                 </View>   
                 
@@ -44,9 +45,15 @@ const DateBirthModal = ({modalVisible, setModalVisible , birthInfo ,changeBirthI
 }
 
 const VerifyBirth = ()=> {
-    const {birthInfo, setCurrentIndex , changeBirthInfo , setModalCountryVisible , nationality} = useContext(VerifyContext)
+    const {birthInfo,  setCurrentIndex , changeBirthInfo , setModalCountryVisible , nationality} = useContext(VerifyContext)
     const [modalVisible,setModalVisible] = useState(false)
     const [modaltype,setModaltype] = useState("")
+
+    const Proceed = ()=>{
+        if(birthInfo.birthdate == "") return Alert.alert("","Please provide your date of birth")
+        if(birthInfo.birthPlace == "") return Alert.alert("","Please provide your place of birth")
+        setCurrentIndex(oldval => oldval + 1)
+    }
 
     return (
         <>
@@ -54,19 +61,26 @@ const VerifyBirth = ()=> {
             <DateBirthModal modalVisible={modalVisible} setModalVisible={setModalVisible} birthInfo={birthInfo} changeBirthInfo={changeBirthInfo}/>
             <View style={styles.content}>
                 <View style={styles.mainInput}>
-                        <Text style={{fontSize: 14, fontFamily: FONT_MEDIUM}}>When and where were you born?</Text>
-                        <Text style={{fontFamily: FONT_LIGHT,marginTop: 5,fontSize: 10.5}}>Make sure the information matches your government-issued ID.</Text>  
+                        <Text style={styles.labelText}>When and where were you born?</Text>
+                        <Text style={[styles.labelSmall]}>Make sure the information matches your government-issued ID.</Text>  
                         <View style={{marginTop: 20,}}>
-                            <Text style={{fontSize: 12, fontFamily: FONT_MEDIUM}}>Date of Birth <Text style={{color:"red"}}>*</Text></Text>
+                            <Text style={styles.labelText}>Date of Birth <Text style={{color:"red"}}>*</Text></Text>
                             <TouchableOpacity onPress={()=>setModalVisible(true)} style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center"}]}>
-                                <Text style={{flex: 1,fontFamily: FONT_REGULAR,color: "gray",fontSize: 12}}>{birthInfo.birthdate == "" ? "MM/DD/YY" : moment(birthInfo.birthdate).format("MM/DD/YYYY")}</Text>
+                                <Text style={{flex: 1,fontFamily: FONT_REGULAR,color: "gray",fontSize: SIZES.M}}>{birthInfo.birthdate == "" ? "MM/DD/YY" : moment(birthInfo.birthdate).format("MM/DD/YYYY")}</Text>
                                 <FIcon5 name="calendar" size={24}/>
                             </TouchableOpacity>
                         </View>
 
                         <View style={{marginTop: 20,}}>
-                            <Text style={{fontSize: 12, fontFamily: FONT_MEDIUM}}>Place of Birth</Text>
-                            <View style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center",paddingVertical: 10}]}>
+                            <Text style={styles.labelText}>Place of Birth <Text style={{color:"red"}}>*</Text></Text>
+                            <TextInput 
+                                    style={styles.input}
+                                    value={birthInfo.birthPlace}
+                                    onChangeText={(value)=>changeBirthInfo("birthPlace", value)}
+                                    // onSubmitEditing={Proceed}
+                                    placeholder={"Place of Birth"}
+                                />
+                            {/* <View style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center",paddingVertical: 10}]}>
                                 <Text style={{flex: 1,color: "gray",fontSize: 12,fontFamily: FONT_REGULAR}}>{birthInfo.birthPlace}</Text>
                                 <TouchableOpacity
                                     onPress={()=>{
@@ -76,21 +90,34 @@ const VerifyBirth = ()=> {
                                 >
                                     <Text style={{color: ORANGE,fontFamily: FONT_MEDIUM,fontSize: 12}}>Change</Text>
                                 </TouchableOpacity>
-                            </View>
+                            </View> */}
                         </View>
 
 
                         <View style={{marginTop: 20,}}>
-                            <Text style={{fontSize: 12, fontFamily: FONT_MEDIUM}}>Nationality</Text>
+                            <Text style={styles.labelText}>Nationality</Text>
                             <View style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center",paddingVertical: 10}]}>
-                                <Text style={{flex: 1,color: "gray",fontSize: 12,fontFamily: FONT_REGULAR}}>{nationality}</Text>
+                                <Text style={{flex: 1,color: "gray",fontSize: SIZES.M,fontFamily: FONT_REGULAR}}>{nationality}</Text>
                                 <TouchableOpacity
                                     onPress={()=>{
                                         setModaltype("Nationality")
                                         setModalCountryVisible(true)
                                     }}
+                                    style={{
+                                        paddingHorizontal: 10,
+                                        borderWidth: 1,
+                                        borderColor: "#F6841F",
+                                        borderRadius: 2,
+                                        height: INPUT_HEIGHT - 20
+                                    }}
                                 >
-                                    <Text style={{color: ORANGE,fontFamily: FONT_MEDIUM,fontSize: 12}}>Change</Text>
+                                    <View style={{
+                                         flex: 1,
+                                         justifyContent:"center",
+                                         alignItems:"center",
+                                    }}>
+                                        <Text style={{color: ORANGE,fontFamily: FONT_MEDIUM,fontSize: 12}}>Change</Text>
+                                    </View>
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -99,15 +126,12 @@ const VerifyBirth = ()=> {
                 <View style={styles.proceedBtn}>
                     <TouchableOpacity onPress={()=>{
                         setCurrentIndex(oldval => oldval - 1)
-                    }} style={{height: "100%",flex: 1,marginRight: 5,backgroundColor: "transparent" ,borderColor: "gray", borderWidth: 1, borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
-                        <Text style={{color: "gray",fontSize: 12,fontFamily: FONT_MEDIUM}}>Back</Text>
+                    }} style={{height: BUTTON_HEIGHT,flex: 1,marginRight: 10,backgroundColor: "transparent" ,borderColor: "gray", borderWidth: 1, borderRadius: 5, justifyContent: "center",alignItems: "center"}}>
+                        <Text style={{color: "gray",fontSize: SIZES.M,fontFamily: FONT_MEDIUM}}>Back</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={()=>{
-                        if(birthInfo.birthdate == "") return Alert.alert("","Please provide your date of birth")
-                        setCurrentIndex(oldval => oldval + 1)
-                    }} style={{height: "100%",flex: 1,marginLeft: 5,backgroundColor: DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
-                        <Text style={{color: COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Next</Text>
+                    <TouchableOpacity onPress={Proceed} style={{height: BUTTON_HEIGHT,flex: 1,marginLeft: 10,backgroundColor: DARK , borderRadius: 5, justifyContent: "center",alignItems: "center"}}>
+                        <Text style={{color: COLOR,fontSize: SIZES.M,fontFamily: FONT_MEDIUM}}>Next</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -117,23 +141,31 @@ const VerifyBirth = ()=> {
 
 const styles = StyleSheet.create({
     content: {
-        padding: 20,
+        padding: 10,
         flex: 1,
     },
     mainInput: {
         flex: 1,
     },
+    labelSmall: {
+        fontFamily: FONT_LIGHT,
+        fontSize: SIZES.S
+    },
+    labelText: {
+        fontSize: SIZES.M, 
+        fontFamily: FONT_MEDIUM,
+    },
     proceedBtn: {
-        height: 40,
         width: "100%",
         flexDirection: "row"
     },
     input: {
-        padding: 5,
+        paddingHorizontal: 10,
         borderRadius: 5,
         borderWidth: 1,
         borderColor: "silver",
-        marginTop: 10,
+        marginTop: 5,
+        height: INPUT_HEIGHT
     },
     dateModalContent: {
         flex: 1,

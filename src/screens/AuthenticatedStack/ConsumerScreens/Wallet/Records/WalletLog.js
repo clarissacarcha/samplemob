@@ -1,7 +1,7 @@
 import React from 'react'
 import moment from 'moment'
 import {View,Text,TouchableOpacity,StyleSheet,Image} from 'react-native'
-import { FONT_LIGHT, FONT_MEDIUM, FONT_REGULAR } from '../../../../../res/constants';
+import { FONT_LIGHT, FONT_MEDIUM, FONT_REGULAR, SIZES } from '../../../../../res/constants';
 import {useSelector} from 'react-redux'
 import { numberFormat } from '../../../../../helper';
 
@@ -24,7 +24,7 @@ const WalletLog = ({transactionDate , transactionItems ,index , itemsLength }) =
 
     return (
             <View style={[styles.transactionLogsContainer, {marginBottom: index == itemsLength - 1 ? 100 : 0}]}>
-                { transactionItems.length > 0 && <Text style={{fontSize: 12,fontFamily: FONT_MEDIUM}}>{datedisplay}</Text> }
+                { transactionItems.length > 0 && <Text style={{fontSize: SIZES.M,fontFamily: FONT_MEDIUM}}>{datedisplay}</Text> }
             {
                 transactionItems.map((item)=>{
 
@@ -86,17 +86,17 @@ const WalletLog = ({transactionDate , transactionItems ,index , itemsLength }) =
 
                     return (
                         <View style={styles.transaction}>
-                            <View style={styles.transactionIcon}>
-                                <Image source={icon} style={{height: 30, width: 30}} resizeMode="contain"/>
-                            </View>
+                            {/* <View style={styles.transactionIcon}>
+                                <Image source={icon} style={{height: 35, width: 35}} resizeMode="contain"/>
+                            </View> */}
                             <View style={styles.transactionDetails}>
                                 {/* <Text style={{fontSize: 12,fontFamily: FONT_MEDIUM}}>{title} <Text style={{fontFamily: FONT_LIGHT,fontSize: 10}}> ( {status} )</Text></Text> */}
-                                <Text style={{fontSize: 12,fontFamily: FONT_MEDIUM}}>{title}</Text>
-                                <Text style={{color: "#909294",fontSize: 10,marginTop: 2,fontFamily: FONT_MEDIUM}}>{phrase}</Text>
+                                <Text style={{fontSize: SIZES.M,fontFamily: FONT_MEDIUM}}>{title}</Text>
+                                <Text style={{color: "#909294",fontSize: SIZES.S,fontFamily: FONT_MEDIUM}}>{phrase}</Text>
                             </View>
                             <View style={styles.transactionAmount}>
-                                <Text style={{fontSize: 12,fontFamily: FONT_MEDIUM , color: amountcolor}}>{amountprefix} {'\u20B1'} {numberFormat(item.amount)}</Text>
-                                <Text style={{color: "gray",fontSize: 10,fontFamily: FONT_REGULAR, alignSelf: "flex-end",marginTop: 2}}>{moment(item.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')}</Text>
+                                <Text style={{fontSize: SIZES.M,fontFamily: FONT_MEDIUM , color: amountcolor}}>{amountprefix} PHP {numberFormat(item.amount)}</Text>
+                                <Text style={{color: "gray",fontSize: SIZES.S,fontFamily: FONT_REGULAR, alignSelf: "flex-end"}}>{moment(item.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')}</Text>
                             </View>
                         </View>
                     )
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     },
     transaction: {
         padding: 10,
-        paddingVertical: 15,
+        paddingVertical: 10,
         borderWidth: 0.5 ,
         borderColor:"silver",
         marginVertical: 5,

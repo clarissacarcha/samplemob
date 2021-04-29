@@ -1,7 +1,8 @@
 import React from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,Modal,Image} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
-import { COLOR, DARK, FONT_MEDIUM, FONT_REGULAR } from '../../../../../res/constants'
+import { COLOR, DARK, FONT_MEDIUM, FONT_REGULAR, SIZES } from '../../../../../res/constants'
+import { BlackButton } from '../../../../../revamp'
 
 
 
@@ -10,8 +11,8 @@ const SuccessModal = ({modalVisible})=> {
 
     const closeModal = ()=> {
        // navigation.pop()
-        navigation.navigate("TokTokWallet")
-        navigation.replace("TokTokWallet")
+        navigation.navigate("ToktokWalletHomePage")
+        navigation.replace("ToktokWalletHomePage")
     }
 
     return (
@@ -24,24 +25,20 @@ const SuccessModal = ({modalVisible})=> {
                      <View style={{
                          justifyContent: "center",
                          alignItems: "center",
-                         height: 150,
-                         width: 150,
+                         height: 100,
+                         width: 100,
                          backgroundColor: "#FEEABA",
                          borderRadius: 100,
-                         marginVertical: 40,
+                         marginTop: 30,
+                         marginBottom: 40,
                      }}>
-                         <Image style={{height: 100,width: 100}} source={require('../../../../../assets/icons/walletVerify.png')}/>
+                         <Image style={{height: 55,width: 45}} source={require('../../../../../assets/icons/walletVerify.png')}/>
                      </View>
-                     <Text style={{fontSize: 20,fontFamily: FONT_MEDIUM}}>toktok wallet PIN set up successfully</Text>
-                     <Text style={{color: "#212529",marginTop:5,fontFamily: FONT_REGULAR}}>Your toktok wallet is now safe!</Text>
+                     <Text style={{fontSize: 20,fontFamily: FONT_MEDIUM}}>toktokwallet PIN set up successfully</Text>
+                     <Text style={{color: "#212529",marginTop:5,fontFamily: FONT_REGULAR,fontSize: SIZES.M}}>Your toktokwallet is now safe!</Text>
                  </View>
       
-                 <TouchableOpacity
-                     onPress={closeModal}
-                     style={{alignItems: "center",height: 40,backgroundColor: DARK,margin: 20,justifyContent: "center",borderRadius: 10,}}
-                 >
-                         <Text style={{color: COLOR,fontSize: 12,fontFamily: FONT_MEDIUM}}>Done</Text>
-                 </TouchableOpacity>
+                 <BlackButton label="Done" onPress={closeModal}/>
             </View>
      
         </Modal>
@@ -53,10 +50,11 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "white",
+        padding: 10,
     },
     content: {
         alignItems: "center",
-        padding: 20,
+       
         flex: 1,
     },
 })

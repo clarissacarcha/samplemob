@@ -1,7 +1,7 @@
 import React , {useState, useContext } from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,TouchableHighlight,Animated,ActivityIndicator,ImageBackground,ScrollView,Image,Dimensions} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
-import { COLOR, DARK, FONT_REGULAR } from '../../../../../res/constants'
+import { COLOR, DARK, FONT_REGULAR, SIZES } from '../../../../../res/constants'
 import VerificationMessageModal from '../Notification/VerificationMessageModal'
 import SecurewithPIN from '../Notification/SecurewithPIN'
 import WalletHoldMessageModal from '../Notification/WalletHoldMessageModal'
@@ -70,10 +70,10 @@ const WalletMethods = ({walletinfo})=> {
                 showsHorizontalScrollIndicator={false}
             >
                 */}
-                <WalletMethod label="Send" imageSize={{height: 26, width: (width / 4 )}} onPress={()=>onPress("TokTokWalletSendMoney" , {checkifVerified: true})} imageSource={require('../../../../../assets/icons/walletSend.png')}/>
-                <WalletMethod label="Scan" imageSize={{height: 26, width: (width / 4 ) - 70}} onPress={()=>onPress("TokTokWalletActionsScantoPay", {checkifVerified: true})} imageSource={require('../../../../../assets/icons/walletScan.png')}/>
-                <WalletMethod label="Cash in" imageSize={{height: 26, width: (width / 4 )}} onPress={()=>onPress("TokTokWalletCashIn" , {checkifVerified: true})} imageSource={require('../../../../../assets/icons/methodCashin.png')}/>
-                <WalletMethod label="Cash out" imageSize={{height: 26, width: (width / 4 )}} onPress={()=>onPress("TokTokWalletCashout", {checkifVerified: true})} imageSource={require('../../../../../assets/icons/walletTransfer.png')}/>
+                <WalletMethod label="Send" imageSize={{height: 26, width: (width / 4 )}} onPress={()=>onPress("ToktokWalletSendMoney" , {checkifVerified: true})} imageSource={require('../../../../../assets/icons/walletSend.png')}/>
+                <WalletMethod label="Scan" imageSize={{height: 26, width: (width / 4 ) - 70}} onPress={()=>onPress("ToktokWalletScanQR", {checkifVerified: true})} imageSource={require('../../../../../assets/icons/walletScan.png')}/>
+                <WalletMethod label="Cash In" imageSize={{height: 26, width: (width / 4 )}} onPress={()=>onPress("ToktokWalletPaymentOptions" , {checkifVerified: true})} imageSource={require('../../../../../assets/icons/methodCashin.png')}/>
+                <WalletMethod label="Cash Out" imageSize={{height: 26, width: (width / 4 )}} onPress={()=>onPress("ToktokWalletCashOut", {checkifVerified: true})} imageSource={require('../../../../../assets/icons/walletTransfer.png')}/>
             {/* </ScrollView> */}
         </View>
          </>
@@ -83,7 +83,7 @@ const WalletMethods = ({walletinfo})=> {
 const styles = StyleSheet.create({
     walletMethodsContainer: {
        flexDirection: "row",
-       height: 60,
+       height: 65,
        marginTop: 10,
        flexWrap: "nowrap",
        flex: 1,
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
         alignSelf: "center",
         marginTop: 5,
         color: "gray",
-        fontSize: 10,
+        fontSize: SIZES.S,
         fontFamily: FONT_REGULAR
     }
 })

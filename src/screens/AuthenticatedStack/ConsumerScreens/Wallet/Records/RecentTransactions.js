@@ -3,7 +3,7 @@ import {View,Text,StyleSheet,TouchableOpacity,Image,ActivityIndicator} from 'rea
 import {SomethingWentWrong} from '../../../../../components'
 import {GET_TOKTOK_WALLET_RECENT_LOGS} from '../../../../../graphql'
 import {useQuery} from '@apollo/react-hooks'
-import { COLOR, FONT_BOLD, FONT_MEDIUM, FONT_REGULAR } from '../../../../../res/constants'
+import { COLOR, FONT_BOLD, FONT_MEDIUM, FONT_REGULAR, SIZES } from '../../../../../res/constants'
 import WalletLog from './WalletLog'
 
 const RecentTransactions = ({seeAll,walletId,session})=> {
@@ -42,9 +42,9 @@ const RecentTransactions = ({seeAll,walletId,session})=> {
         return (
             <>
             <View style={styles.recentTransactionsTitle}>
-                <Text style={{fontSize: 14,color: "#212529",fontFamily: FONT_MEDIUM}}>Recent Transactions</Text>
+                <Text style={{fontSize: SIZES.M,color: "#212529",fontFamily: FONT_MEDIUM}}>Recent Transactions</Text>
                 <TouchableOpacity onPress={seeAll} style={styles.transactionSeeAllbtn}>
-                    <Text style={{fontSize: 12 ,color: "#F6841F",fontFamily: FONT_MEDIUM}}>See All</Text>
+                    <Text style={{fontSize: SIZES.M ,color: "#F6841F",fontFamily: FONT_MEDIUM}}>See All</Text>
                 </TouchableOpacity>
             </View>
             <View style={styles.recentLogs}>

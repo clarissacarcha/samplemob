@@ -1,19 +1,23 @@
-import React, {useState , useEffect} from 'react'
+import React, {useState , useEffect , useRef} from 'react'
 import {View,Text,StyleSheet,Image} from 'react-native'
-import SwipeButton from 'rn-swipe-button';
 import { numberFormat } from '../../../../../../helper';
-import { FONT_MEDIUM } from '../../../../../../res/constants';
 import {useMutation} from '@apollo/react-hooks'
 import {CLIENT,PATCH_FUND_TRANSFER} from '../../../../../../graphql'
 import SuccessfulModal from './SuccessfulModal'
 import {useNavigation} from '@react-navigation/native'
 import {useAlert} from '../../../../../../hooks/useAlert'
 import {onErrorAlert} from '../../../../../../util/ErrorUtility'
+import { BlackButton } from '../../../../../../revamp';
+import ConfirmBottomSheet from '../../Components/ConfirmBottomSheet'
+import ConfirmModalContent from './ConfirmModalContent'
+import { BUTTON_HEIGHT, FONT_MEDIUM, SIZES } from '../../../../../../res/constants';
+
 
 const SwipeProceedButton = ({amount, note, swipeEnabled , session, recipientDetails})=> {
 
     const navigation = useNavigation()
     const alert = useAlert()
+    const bottomSheetRef = useRef()
 
     const [successModalVisible, setSuccessModalVisible] = useState(false)
     const [walletinfoParams,setWalletinfoParams] = useState({
@@ -47,14 +51,9 @@ const SwipeProceedButton = ({amount, note, swipeEnabled , session, recipientDeta
     }
 
     const onSwipeSuccess = ()=> {
-        return navigation.push("TokTokWalletPinCodeSecurity", {onConfirm: patchFundTransfer})
+        bottomSheetRef.current.snapTo(0)
+        return navigation.push("ToktokWalletSecurityPinCode", {onConfirm: patchFundTransfer})
     }
-
-    const thumbIconComponent = ()=> (
-        <View>
-            <Image style={{height: 15,width: 20}} source={require('../../../../../../assets/icons/walletSwipenext.png')}/>
-        </View>
-    )
 
     return (
         <>
@@ -67,38 +66,30 @@ const SwipeProceedButton = ({amount, note, swipeEnabled , session, recipientDeta
                 }}
                 walletinfoParams={walletinfoParams}
             />
-        <SwipeButton 
-            //enableReverseSwipe={true}
-                disabled={!swipeEnabled}
-                disabledRailBackgroundColor="dimgray"
-                containerStyles={styles.swipeContainer}
-                width={250}
-                title={`Swipe to Send ${'\u20B1'} ${amount != "" ? numberFormat(amount) : "0"}`}
-                titleStyles={{
-                    fontSize: 12,
-                    fontFamily: FONT_MEDIUM,
-                    paddingLeft: 20,
-                }}
-                titleColor="white"
-                railBackgroundColor="black"
-                railStyles={{
-                    backgroundColor: "white",
-                    margin: 0,
-                    borderColor: "black"
-                }}
-                thumbIconBackgroundColor="white"
-                thumbIconBorderColor="black"
-                thumbIconStyles={{
-                    borderWidth: 1,
-                    borderColor:"black"
-                }}
-                thumbIconComponent={thumbIconComponent}
-                onSwipeFail={onSwipeFail}
-                onSwipeSuccess={onSwipeSuccess}
-                resetAfterSuccessAnimDelay={0}
-                resetAfterSuccessAnimDuration={0}
-                shouldResetAfterSuccess={true}
-            />
+            {
+                swipeEnabled
+                ?   <BlackButton label="Send" onPress={()=>bottomSheetRef.current.snapTo(1)}/>
+                : <View style={{width: "100%", height: BUTTON_HEIGHT,justifyContent:"center",alignItems: "center", backgroundColor:"gray",borderRadius: 5}}>
+                        <Text style={{fontFamily: FONT_MEDIUM, fontSize: SIZES.M,color:"white"}}>Send</Text>
+                  </View>
+            }
+          
+            <ConfirmBottomSheet
+                 bottomSheetRef={bottomSheetRef}
+                 headerTitle="Review and Confirm" 
+                 btnLabel="Confirm"
+                 SwipeButtonEnabled
+                 SwipeButtonArgs={
+                  {
+                    enabled: swipeEnabled,
+                    title: `Swipe to send PHP ${amount != "" ? numberFormat(amount) : "0"}`,
+                    onSwipeFail: onSwipeFail,
+                    onSwipeSuccess: onSwipeSuccess
+                  }
+                 }
+            >
+                    <ConfirmModalContent amount={amount} recipientDetails={recipientDetails} />
+            </ConfirmBottomSheet>
         </>
     )
 }

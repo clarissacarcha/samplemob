@@ -4,8 +4,8 @@ import { COLOR, FONT_REGULAR , DARK, FONT_MEDIUM, FONT_BOLD} from '../../../../.
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 
 const MessageModal = ({msgModalVisible, setMsgModalVisible, modalMessage})=> {
-    const title = modalMessage == "Wallet not found" ? "Recipient does not have toktok wallet" : "Recipient does not have toktok app"
-    const message = modalMessage == "Wallet not found"? 'Tell your recipient to create their toktok wallet first' : 'Tell them to download and install toktok app'
+    const title = modalMessage == "Wallet not found" ? "Recipient does not have toktokwallet" : "Recipient does not have toktok app"
+    const message = modalMessage == "Wallet not found"? 'Tell your recipient to create their toktokwallet first' : 'Tell them to download and install toktok app'
 
     const ModalContent = ()=> (
         <View style={{justifyContent: "center",alignItems:"center",flex: 1}}>

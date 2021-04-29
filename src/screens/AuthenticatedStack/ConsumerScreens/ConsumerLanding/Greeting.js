@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
   greetingBox: {
     height: 50,
     justifyContent: 'center',
+    paddingHorizontal: 20,
   },
   greetingText: {
     fontSize: 14,

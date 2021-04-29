@@ -54,7 +54,7 @@ export default ({navigation,route})=> {
 
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack pageIndex={pageIndex} setPageIndex={setPageIndex} navigation={navigation} walletinfo={walletinfo}/>,
-        headerTitle: ()=> <HeaderTitle label={['Set up a PIN','']}/>,
+        headerTitle: ()=> <HeaderTitle label={['Set up PIN','']}/>,
     })
 
      const [patchPincodeToktokWallet, {data,error,loading}] = useMutation(PATCH_PINCODE_TOKTOK_WALLET, {
@@ -81,7 +81,7 @@ export default ({navigation,route})=> {
             case 0:
                 return <VerifyPin pageIndex={pageIndex} setPageIndex={setPageIndex}/>
             case 1:
-                return <CreatePin pinCode={pinCode} setPinCode={setPinCode} pageIndex={pageIndex} setPageIndex={setPageIndex}/>
+                return <CreatePin pinCode={pinCode} setPinCode={setPinCode} walletinfo={walletinfo} pageIndex={pageIndex} setPageIndex={setPageIndex}/>
             case 2:
                 return <CreateConfirmPin pinCode={pinCode} setPinCode={setPinCode} pageIndex={pageIndex} setPageIndex={setPageIndex} walletinfo={walletinfo} patchPincodeToktokWallet={proceed}/>
             default: 

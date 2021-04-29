@@ -3,7 +3,7 @@ import {Modal,View,Text,StyleSheet,FlatList,TouchableOpacity,TextInput} from 're
 import countries from '../../../../../assets/JSON/countries.json'
 import {VerifyContext} from './Context/VerifyContextProvider'
 import FIcon from 'react-native-vector-icons/Feather';
-import { FONT_REGULAR } from '../../../../../res/constants';
+import { FONT_MEDIUM, FONT_REGULAR, SIZES, INPUT_HEIGHT } from '../../../../../res/constants';
 
 
 
@@ -29,7 +29,7 @@ const ModalCountry = ({type})=> {
     const renderCountry = ({item,index})=> {
         return (
             <TouchableOpacity onPress={()=>selectCountry(index)} style={[styles.country]}>
-                    <Text style={{fontFamily: FONT_REGULAR, fontSize: 12}}>{item.name}</Text>
+                    <Text style={{fontFamily: FONT_REGULAR, fontSize: SIZES.M}}>{item.name}</Text>
             </TouchableOpacity>
         )
     }
@@ -93,10 +93,13 @@ const styles = StyleSheet.create({
     input: {
         fontFamily: FONT_REGULAR,
         flex: 1,
+        height: INPUT_HEIGHT,
+        fontSize: SIZES.M
     
     },
     country: {
-        paddingVertical: 20,
+        height: INPUT_HEIGHT,
+        justifyContent:"center",
         borderBottomWidth: .2,
         borderColor: "silver",
         paddingHorizontal:10,

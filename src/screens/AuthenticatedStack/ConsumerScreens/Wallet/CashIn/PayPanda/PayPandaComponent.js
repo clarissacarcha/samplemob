@@ -1,38 +1,16 @@
-import React, {useState, useRef, useEffect} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  Modal,
-  TextInput,
-  Platform,
-  KeyboardAvoidingView,
-  ActivityIndicator,
-  Alert,
-  Dimensions,
-  ScrollView,
-} from 'react-native';
-import {HeaderBackClose, HeaderTitle, SomethingWentWrong, AlertOverlay} from '../../../../../../components';
-import {
-  COLOR,
-  FONT_FAMILY,
-  DARK,
-  FONT_COLOR,
-  MEDIUM,
-  FONT_MEDIUM,
-  FONT_REGULAR,
-  FONT_LIGHT,
-} from '../../../../../../res/constants';
-import FIcon5 from 'react-native-vector-icons/FontAwesome5';
-import {useSelector} from 'react-redux';
-import {useMutation, useLazyQuery} from '@apollo/react-hooks';
-import {POST_WALLET_CASH_IN, GET_DAILY_MONTHLY_YEARLY_INCOMING} from '../../../../../../graphql/model';
-import {onError, onErrorAlert} from '../../../../../../util/ErrorUtility';
-import {numberFormat} from '../../../../../../helper';
-import ConfirmModal from './ConfirmModal';
-import {useAlert} from '../../../../../../hooks/useAlert';
+import React, {useState,useRef,useEffect,useMemo} from 'react'
+import {View,Text,StyleSheet,TouchableOpacity,Image,Modal,TextInput,Platform,KeyboardAvoidingView,ActivityIndicator,Alert,Dimensions,ScrollView,Keyboard} from 'react-native'
+import {HeaderBackClose, HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../../../components'
+import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM, FONT_MEDIUM, FONT_REGULAR, FONT_LIGHT, SIZES, ORANGE} from '../../../../../../res/constants'
+import FIcon5 from 'react-native-vector-icons/FontAwesome5'
+import {useSelector} from 'react-redux'
+import {useMutation,useLazyQuery} from '@apollo/react-hooks'
+import {POST_WALLET_CASH_IN,GET_DAILY_MONTHLY_YEARLY_INCOMING} from '../../../../../../graphql/model'
+import {onError,onErrorAlert} from '../../../../../../util/ErrorUtility';
+import {numberFormat} from '../../../../../../helper'
+import ConfirmBottomSheet from '../../Components/ConfirmBottomSheet'
+import ConfirmModalContent from './ConfirmModalContent'
+import {useAlert} from '../../../../../../hooks/useAlert'
 
 const {height, width} = Dimensions.get('window');
 
@@ -82,6 +60,7 @@ const PayPandaComponent = ({navigation, route}) => {
     },
   });
 
+<<<<<<< HEAD
   const [getDailyMonthlyYearlyIncoming] = useLazyQuery(GET_DAILY_MONTHLY_YEARLY_INCOMING, {
     fetchPolicy: 'network-only',
     onError: (error) => {},
@@ -89,6 +68,57 @@ const PayPandaComponent = ({navigation, route}) => {
       setRecipientDetails(response.getDailyMonthlyYearlyIncoming);
     },
   });
+=======
+    const walletId = route.params.walletId
+    const balance = route.params.walletinfo.balance
+    const transactionType = route.params.transactionType
+    const userstate = useSelector(state=>state.session.user)
+    const globalsettings = useSelector(state=>state.constants)
+    const [tempAmount,setTempAmount] = useState("")
+    const [amount,setAmount] = useState("")
+    const [message,setMessage] = useState("")
+    const [recipientDetails,setRecipientDetails] = useState(null)
+    const [disablebtn,setDisablebtn] = useState(false)
+    const [maxLimitMessage,setMaxLimitMessage] = useState("")
+    const bottomSheetRef = useRef();
+
+    const [postWalletCashIn , {data,error,loading}] = useMutation(POST_WALLET_CASH_IN, {
+        // fetchPolicy: 'network-only',
+        onError: (error)=>{
+            onErrorAlert({alert,error})
+            navigation.pop()
+        },
+        onCompleted: ({postWalletCashIn})=> {
+            navigation.navigate("ToktokWalletPayPandaWebView", {
+                merchantId: postWalletCashIn.merchantId,
+                refNo: postWalletCashIn.refNo,
+                signature: postWalletCashIn.signature,
+                email_address: userstate.person.emailAddress,
+                payer_name: `${userstate.person.firstName}${userstate.person.middleName ? " " + userstate.person.middleName : ""} ${userstate.person.lastName}`,
+                mobile_number: userstate.username,
+                amount_to_pay: amount,
+                currency: "PHP",
+                walletId: walletId,
+                transactionTypeId: transactionType.id
+            })
+        }
+    })
+
+    const [getDailyMonthlyYearlyIncoming] = useLazyQuery(GET_DAILY_MONTHLY_YEARLY_INCOMING, {
+        fetchPolicy: 'network-only',
+        onError: (error)=>{
+
+        },
+        onCompleted: (response)=> {
+                setRecipientDetails(response.getDailyMonthlyYearlyIncoming)
+        }
+    })
+
+    const checkRecipientWalletLimitation = (amount)=> {
+        const incomingRecords = recipientDetails
+        const walletLimit = incomingRecords.walletlimit
+
+>>>>>>> f5c830258a4cf07fa71e2739917147910c8d87ec
 
   const checkRecipientWalletLimitation = (amount) => {
     const incomingRecords = recipientDetails;
@@ -126,39 +156,36 @@ const PayPandaComponent = ({navigation, route}) => {
     return setMessage('');
   };
 
-  useEffect(() => {
-    // getDailyMonthlyYearlyIncoming({
-    //     variables: {
-    //         input: {
-    //             userID: userstate.id
-    //         }
-    //     }
-    // })
-  }, []);
+    const proceedToPaypandaPortal = ()=> {
+        postWalletCashIn({
+            variables: {
+                input: {
+                    amount: +amount,
+                    destinationUserId: userstate.id,
+                    sourceUserId: transactionType.sourceUserId,
+                    transactionTypeId: transactionType.id
+                }
+            }
+        })
+        // Alert.alert("test")
+       
+    }
 
-  const proceedToPaypandaPortal = () => {
-    postWalletCashIn({
-      variables: {
-        input: {
-          amount: +amount,
-          destinationUserId: userstate.id,
-          sourceUserId: transactionType.sourceUserId,
-          transactionTypeId: transactionType.id,
-        },
-      },
-    });
-    setShowModal(false);
-    // Alert.alert("test")
-  };
+    const openSecurityPIN = ()=> {
+        bottomSheetRef.current.snapTo(0);
+        return navigation.push("ToktokWalletSecurityPinCode", {onConfirm: proceedToPaypandaPortal})
+    }
 
   const openSecurityPIN = () => {
     setShowModal(false);
     return navigation.push('TokTokWalletPinCodeSecurity', {onConfirm: proceedToPaypandaPortal});
   };
 
-  const confirmAmount = () => {
-    setShowModal(true);
-  };
+    const confirmAmount = ()=> {
+        Keyboard.dismiss()
+        bottomSheetRef.current.snapTo(1);
+       
+    }
 
   const changeAmountText = (value) => {
     setMaxLimitMessage('');
@@ -180,56 +207,77 @@ const PayPandaComponent = ({navigation, route}) => {
     setMessage('');
   };
 
-  return (
-    <>
-      <ConfirmModal showModal={showModal} setShowModal={setShowModal} amount={amount} onPress={openSecurityPIN} />
-      <KeyboardAvoidingView
-        keyboardVerticalOffset={Platform.OS == 'ios' ? 0 : 90}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.container}>
-        <View style={styles.paypandaLogo}>
-          <Image
-            style={{height: 40, width: 40, alignSelf: 'center'}}
-            source={require('../../../../../../assets/images/paypanda.png')}
-          />
-          <View style={{justifyContent: 'center'}}>
-            <Text style={{marginLeft: 15, fontSize: 14, fontFamily: FONT_MEDIUM}}>PayPanda</Text>
-            {/* <Text style={{fontFamily: FONT_LIGHT}}>Maximum cash in amount is {'\u20b1'}</Text> */}
-          </View>
-        </View>
-
-        {!loading ? (
-          <View style={styles.amountcontent}>
-            <View style={{flexDirection: 'row'}}>
-              <TextInput
-                // autoFocus={true}
-                caretHidden
-                value={tempAmount}
-                // ref={inputRef}
-                style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent', zIndex: 1}}
-                keyboardType="number-pad"
-                returnKeyType="done"
-                onChangeText={changeAmountText}
-                // onSubmitEditing={onSubmit}
-              />
-              {/* <Text style={{fontSize: 40,fontFamily: FONT_MEDIUM , alignSelf:"center"}}></Text> */}
-              <View style={styles.input}>
-                <Text style={{fontFamily: FONT_MEDIUM, fontSize: 30, marginRight: 20}}>{'\u20B1'}</Text>
-                <Text style={{fontFamily: FONT_MEDIUM, fontSize: 30}}>{amount ? numberFormat(amount) : '0.00'}</Text>
-                <FIcon5 name="pen" style={{alignSelf: 'center', marginLeft: 25}} size={18} color="gray" />
-              </View>
+    return (
+      <>
+       <KeyboardAvoidingView  
+            keyboardVerticalOffset={Platform.OS == "ios" ? 0 : 90}  
+            behavior={Platform.OS === "ios" ? "padding" : "height"} 
+            style={styles.container}
+        >
+             <View style={styles.paypandaLogo}>
+                <Image style={{height: 40,width: 40,alignSelf: "center"}} source={require('../../../../../../assets/images/paypanda.png')}/>
+                <View style={{justifyContent:"center"}}>
+                     <Text style={{marginLeft: 15,fontSize: SIZES.M,fontFamily: FONT_MEDIUM}}>PayPanda</Text>
+                     {/* <Text style={{fontFamily: FONT_LIGHT}}>Maximum cash in amount is {'\u20b1'}</Text> */}
+                </View>
+                
+               
             </View>
-            <Text style={{color: 'gray', fontSize: 14, fontFamily: FONT_REGULAR}}>
-              Current Balance {'\u20B1'} {numberFormat(balance)}
-            </Text>
-            <Text style={{fontFamily: FONT_REGULAR, color: 'red', marginTop: 5, fontSize: 12}}>{message}</Text>
-            <Text style={{fontFamily: FONT_REGULAR, color: 'red', marginTop: 5, fontSize: 12}}>{maxLimitMessage}</Text>
-          </View>
-        ) : (
-          <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            <ActivityIndicator size={50} />
-          </View>
-        )}
+
+            <View style={styles.content}>
+          
+            {
+                !loading
+                ? <View style={styles.amountcontent}>
+                        <View style={{flexDirection: "row"}}>
+                            <TextInput
+                                    // autoFocus={true}
+                                    caretHidden
+                                    value={tempAmount}
+                                    // ref={inputRef}
+                                    style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent',zIndex: 1}}
+                                    keyboardType="number-pad"
+                                    returnKeyType="done"
+                                    onChangeText={changeAmountText}
+                                    // onSubmitEditing={onSubmit}
+                            />
+                            {/* <Text style={{fontSize: 40,fontFamily: FONT_MEDIUM , alignSelf:"center"}}></Text> */}
+                            <View style={styles.input}>
+                                <Text style={{fontFamily: FONT_MEDIUM,fontSize: 30,marginRight: 15}}>PHP</Text>
+                                <Text style={{fontFamily: FONT_MEDIUM,fontSize: 30}}>{amount ? numberFormat(amount) : "0.00"}</Text>
+                                <FIcon5 name="pen" style={{alignSelf:"center",marginLeft: 25}} size={18} color="gray"/>
+                            </View>
+                            
+                        </View>
+                        <Text style={{color:"gray",fontSize: SIZES.M,fontFamily: FONT_REGULAR}}>Current Balance PHP {numberFormat(balance)}</Text>
+                        <Text style={{fontFamily: FONT_REGULAR, color: "red",marginTop: 5,fontSize: 12}}>{message}</Text>
+                        <Text style={{fontFamily: FONT_REGULAR, color: "red",marginTop: 5,fontSize: 12}}>{maxLimitMessage}</Text>
+              
+                 </View>
+                : <View style={{flex: 1,justifyContent: "center",alignItems: "center"}}><ActivityIndicator size={50}/></View>
+                
+            }
+          
+            <View style={styles.cashinbutton}>
+                    <TouchableOpacity disabled={amount < 1 || amount > transactionType.cashInLimit || disablebtn} onPress={confirmAmount} style={{height: "100%",width: "100%",backgroundColor: amount < 1 || amount > transactionType.cashInLimit  || disablebtn ? "gray" : DARK , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
+                        <Text style={{color: amount < 1 || amount > transactionType.cashInLimit  || disablebtn ? "white" : COLOR,fontSize: SIZES.M,fontFamily: FONT_MEDIUM}}>Cash In</Text>
+                    </TouchableOpacity>
+            </View>
+        </View>
+       </KeyboardAvoidingView>
+
+       <ConfirmBottomSheet
+            bottomSheetRef={bottomSheetRef}
+            onPress={openSecurityPIN}
+            headerTitle="Review and Confirm" 
+            btnLabel="Confirm"
+        >
+                <ConfirmModalContent amount={amount} />
+        </ConfirmBottomSheet>
+
+       </>
+    )
+}
 
         <View style={styles.cashinbutton}>
           <TouchableOpacity
@@ -259,43 +307,47 @@ const PayPandaComponent = ({navigation, route}) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  paypandaLogo: {
-    height: 80,
-    width: '100%',
-    flexDirection: 'row',
-    padding: 10,
-    borderWidth: 0.5,
-    borderColor: 'silver',
-  },
-  amountcontent: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    // width:width * 0.7,
-    // alignSelf:"center"
-  },
-  cashinbutton: {
-    height: 60,
-    width: '100%',
-    padding: 10,
-  },
-  input: {
-    marginHorizontal: 20,
-    borderRadius: 5,
-    height: 60,
-    // flexShrink: 1,
-    // // flexGrow: 1,
-    flex: 1,
-    width: 150,
-    color: DARK,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-});
+    container: {
+        flex: 1,
+        backgroundColor: "white",
+    },
+    content: {
+        flex: 1,
+        paddingHorizontal: 10,
+        paddingBottom: 10,
+    }, 
+    paypandaLogo: {
+        height: 80,
+        width: "100%",
+        flexDirection: "row",
+        padding: 10,
+        borderWidth: 0.5,
+        borderColor: "silver"
+    },
+    amountcontent: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        // width:width * 0.7,
+        // alignSelf:"center"
+    },
+    cashinbutton: {
+        height: 50,
+        width: "100%",
+    },
+    input: {
+        marginHorizontal: 20,
+        borderRadius: 5,
+        height: 60,
+        // flexShrink: 1,
+        // // flexGrow: 1,
+        flex: 1,
+        width: 150,
+        color: DARK,
+        justifyContent:"center",
+        alignItems:"center",
+        flexDirection:"row"
+      },
+})
 
 export default PayPandaComponent;

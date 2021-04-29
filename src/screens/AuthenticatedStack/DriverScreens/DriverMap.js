@@ -4,7 +4,7 @@ import MapView, {Marker, Polyline, PROVIDER_GOOGLE} from 'react-native-maps';
 import {connect} from 'react-redux';
 import {currentLocation} from '../../../helper';
 import {GoOnlineOverlay} from '../../../components';
-import {COLOR, DARK, MEDIUM, LIGHT, MAPS_API_KEY} from '../../../res/constants';
+import {COLOR, DARK} from '../../../res/constants';
 
 import FIcon from 'react-native-vector-icons/Feather';
 import {CLIENT, ON_DISPATCH} from '../../../graphql';

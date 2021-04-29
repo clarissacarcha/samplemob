@@ -20,17 +20,21 @@ const MenuIcon = ({label, icon, onPress}) => {
   );
 };
 
-const Menu = ({session}) => {
+const Menu = ({session, setUserLocation}) => {
   const navigation = useNavigation();
 
   return (
     <View style={styles.menuBox}>
-      <MenuIcon label={'Delivery'} icon={DeliveryIcon} onPress={() => navigation.push('ToktokDelivery')} />
+      <MenuIcon
+        label={'Delivery'}
+        icon={DeliveryIcon}
+        onPress={() => navigation.push('ToktokDelivery', {setUserLocation})}
+      />
       <MenuIcon
         label={'toktokwallet'}
         icon={WalletIcon}
         onPress={() => {
-          navigation.push('TokTokWallet');
+          navigation.push('ToktokWalletHomePage');
         }}
       />
       <MenuIcon
@@ -41,7 +45,8 @@ const Menu = ({session}) => {
           navigation.push(route);
         }}
       />
-      <MenuIcon label={'Others'} icon={OthersIcon} />
+      <MenuIcon label={'Pabili'} icon={OthersIcon} onPress={() => navigation.push('Pabili')} />
+      {/* <MenuIcon label={'Others'} icon={OthersIcon} /> */}
     </View>
   );
 };
