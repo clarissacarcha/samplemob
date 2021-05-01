@@ -12,7 +12,7 @@ export const currentLocation = async ({showsReverseGeocode}) => {
 
     // Return false is permission isn't granted
     if (!granted) {
-      console.log('CURRENT LOCATION: PERMISSION DENIED');
+      //CURRENT LOCATION: PERMISSION DENIED
       return false;
     }
 

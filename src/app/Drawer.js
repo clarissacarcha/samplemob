@@ -46,10 +46,6 @@ const Drawer = ({navigation, session, constants, destroySession}) => {
     });
   };
 
-  const [testButtonResolve] = useMutation(PATCH_DELIVERY_ON_THE_WAY_TO_SENDER, {
-    onCompleted: (data) => console.log({data}),
-  });
-
   return (
     <View style={{flex: 1, backgroundColor: '#222222', justifyContent: 'space-between'}}>
       <View style={{flex: 1}}>

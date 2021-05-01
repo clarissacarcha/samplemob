@@ -1,7 +1,8 @@
 import React, {useRef, useEffect, useCallback} from 'react';
 import {View, Text, StyleSheet, TouchableHighlight} from 'react-native';
 import {throttle} from 'lodash';
-import {COLOR, DARK, COLOR_UNDERLAY, FONT_REGULAR, MEDIUM} from '../../res/constants';
+import {DARK, COLOR_UNDERLAY, FONT_REGULAR, MEDIUM} from '../../res/constants';
+import {FONT, COLOR} from '../../res/variables';
 
 import Entypo from 'react-native-vector-icons/Entypo';
 import Feather from 'react-native-vector-icons/Feather';
@@ -32,11 +33,12 @@ export const WhiteButton = ({
   onPress,
   delay = 2000,
   style,
+  labelStyle = {},
   borderless = false,
   prefixSet = null,
   prefixName,
   prefixSize = 24,
-  prefixColor = COLOR,
+  prefixColor = COLOR.YELLOW,
   suffixSet = null,
   suffixName,
   suffixSize = 24,
@@ -82,7 +84,7 @@ export const WhiteButton = ({
       <View style={[styles.whiteButtonBox, style, borderless ? styles.borderless : {}]}>
         <PrefixIcon />
         <View style={{flex: 1}}>
-          <Text style={[styles.label, {color: labelColor}]} numberOfLines={1}>
+          <Text style={[styles.label, {color: labelColor}, labelStyle]} numberOfLines={1}>
             {label}
           </Text>
           {description && (
@@ -106,7 +108,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 50,
     borderWidth: 1,
-    borderColor: COLOR,
+    borderColor: COLOR.YELLOW,
     borderRadius: 5,
   },
   borderless: {
@@ -114,13 +116,14 @@ const styles = StyleSheet.create({
   },
   label: {
     paddingHorizontal: 10,
-    fontSize: 14,
-    fontFamily: FONT_REGULAR,
+    fontSize: 13,
+    fontFamily: FONT.BOLD,
+    color: COLOR.MEDIUM,
   },
   description: {
     paddingHorizontal: 10,
-    fontSize: 12,
+    fontSize: 11,
     color: MEDIUM,
-    fontFamily: FONT_REGULAR,
+    // fontFamily: FONT_REGULAR,
   },
 });

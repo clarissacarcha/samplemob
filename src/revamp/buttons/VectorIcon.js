@@ -3,6 +3,7 @@ import {View, StyleSheet} from 'react-native';
 import {COLORS, DARK} from '../../res/constants';
 
 import Entypo from 'react-native-vector-icons/Entypo';
+import Evil from 'react-native-vector-icons/EvilIcons';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -14,6 +15,7 @@ import SimpleLine from 'react-native-vector-icons/SimpleLineIcons';
 
 export const ICON_SET = {
   Entypo,
+  Evil,
   Feather,
   FontAwesome,
   FontAwesome5,

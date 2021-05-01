@@ -18,6 +18,7 @@ const Delivery = `
   isDiscountExported
   cargo
   notes
+  description
   status
   createdAt
   senderStop {

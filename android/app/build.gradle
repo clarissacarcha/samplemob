@@ -144,7 +144,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "ph.cloudpanda.toktok.rider.dev"
+        applicationId "ph.cloudpanda.toktok.dev"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1150000

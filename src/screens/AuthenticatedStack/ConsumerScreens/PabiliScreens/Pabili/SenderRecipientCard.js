@@ -3,12 +3,11 @@ import {View, Text, TouchableHighlight, StyleSheet} from 'react-native';
 import {useSelector} from 'react-redux';
 import ContentLoader from 'react-native-easy-content-loader';
 import {useLazyQuery} from '@apollo/react-hooks';
-import {COLOR, COLORS, FONTS, NUMBERS, SIZES} from '../../../../../res/constants';
+import {COLORS, FONTS, NUMBERS, SIZES} from '../../../../../res/constants';
+import {FONT, FONT_SIZE, COLOR} from '../../../../../res/variables';
 import {WhiteButton, VectorIcon, Shadow, ICON_SET} from '../../../../../revamp';
 import {GET_GOOGLE_GEOCODE_REVERSE} from '../../../../../graphql';
-import {GeolocationUtility} from '../../../../../util';
-
-const SideIcons = () => {};
+import {GeolocationUtility, GoogleUtility} from '../../../../../util';
 
 const SenderRecipientCard = ({
   senderStop,
@@ -45,9 +44,7 @@ const SenderRecipientCard = ({
   });
 
   const getLocationHash = async () => {
-    // console.log('FETCHING LOCATION');
     const currentLocation = await GeolocationUtility.getCurrentLocation();
-    // console.log({currentLocation});
 
     if (currentLocation) {
       setUserStop([
@@ -118,21 +115,23 @@ const SenderRecipientCard = ({
             <View style={{height: 50, justifyContent: 'center', backgroundColor: 'white', paddingLeft: 10}}>
               {senderStop.formattedAddress ? (
                 <>
-                  <Text>Alvir Marquez</Text>
-                  <Text numberOfLines={1}>10F Inoza Tower, 40th Street, Bonifacio Global City</Text>
+                  <Text numberOfLines={1} style={{fontFamily: FONT.BOLD}}>
+                    {senderStop.name}
+                  </Text>
+                  <Text numberOfLines={1} style={{color: COLOR.MEDIUM}}>
+                    {senderStop.formattedAddress}
+                  </Text>
                 </>
               ) : (
                 <Text
                   numberOfLines={1}
                   style={{
-                    color: COLORS.MEDIUM,
+                    fontFamily: FONT.BOLD,
                   }}>{`Hi ${session.user.person.firstName}, saan mo gusto magpabili?`}</Text>
               )}
             </View>
           </TouchableHighlight>
-          <View
-            style={{borderBottomWidth: 1, borderColor: COLORS.TRANSPARENT_GRAY, marginVertical: 10, marginLeft: -5}}
-          />
+          <View style={{borderBottomWidth: 1, borderColor: COLOR.ATHENS_GRAY, marginVertical: 10, marginLeft: -5}} />
           <TouchableHighlight
             // onPress={searchRecipientAddress}
             onPress={onRecipientPress}
@@ -141,8 +140,12 @@ const SenderRecipientCard = ({
             <View style={{height: 50, justifyContent: 'center', backgroundColor: 'white'}}>
               {recipientStop[0].formattedAddress ? (
                 <View style={{paddingLeft: 10}}>
-                  <Text>{recipientStop[0].name}</Text>
-                  <Text numberOfLines={1}>{recipientStop[0].formattedAddress}</Text>
+                  <Text numberOfLines={1} style={{fontFamily: FONT.BOLD}}>
+                    {recipientStop[0].name}
+                  </Text>
+                  <Text numberOfLines={1} style={{color: COLOR.MEDIUM}}>
+                    {recipientStop[0].formattedAddress}
+                  </Text>
                 </View>
               ) : (
                 <View style={{}}>
@@ -182,16 +185,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: FONTS.REGULAR,
   },
-  menuIconBox: {
-    height: 50,
-    width: 50,
-    backgroundColor: COLORS.TRANSPARENT_GRAY,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 10,
-    marginBottom: 10,
-    overflow: 'hidden',
-  },
+
   menuIcon: {
     height: 50,
     width: 50,

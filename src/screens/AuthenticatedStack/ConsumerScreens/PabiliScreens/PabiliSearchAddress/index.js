@@ -7,7 +7,6 @@ import uuid from 'react-native-uuid';
 import axios from 'axios';
 import MapView, {Marker, PROVIDER_GOOGLE, Callout, Overlay} from 'react-native-maps';
 
-import {GET_GOOGLE_PLACE_DETAILS} from '../../../../../graphql';
 import {HeaderBack, HeaderTitle} from '../../../../../components';
 import {WhiteButton, BlackButton, TouchableIcon} from '../../../../../revamp';
 import {LIGHT, ORANGE, PROTOCOL, FONT_REGULAR} from '../../../../../res/constants';

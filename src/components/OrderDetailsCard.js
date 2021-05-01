@@ -44,6 +44,24 @@ const SchedulePhrase = ({stop}) => {
   );
 };
 
+const ItemsToPurchase = ({itemString, partnerBranchTenant}) => {
+  const parsedItemString = JSON.parse(itemString);
+  const renderItemsToPurchase = parsedItemString.orders.map((item) => {
+    return (
+      <View>
+        <Text>{item}</Text>
+      </View>
+    );
+  });
+
+  return (
+    <View>
+      {partnerBranchTenant && <Text>{`Tenant: ${partnerBranchTenant.name}`}</Text>}
+      {renderItemsToPurchase}
+    </View>
+  );
+};
+
 const DeliverySchedule = ({label, stop}) => {
   return (
     <View style={[styles.directionsBox, {borderBottomWidth: StyleSheet.hairlineWidth, borderColor: LIGHT}]}>
@@ -291,7 +309,7 @@ export const OrderDetailsCard = ({delivery}) => {
           </View>
         </View>
 
-        {/*-------------------- ITEM DESCRIPTION --------------------*/}
+        {/*-------------------- CARGO AS ITEM DESCRIPTION --------------------*/}
         <View style={[styles.rowFlexibleHeightTop]}>
           <View style={{flex: 1, flexDirection: 'row', marginTop: 8}}>
             <YellowIcon set="Entypo" name="box" size={16} containerStyle={{marginTop: 4}} />
@@ -303,6 +321,20 @@ export const OrderDetailsCard = ({delivery}) => {
             </View>
           </View>
         </View>
+
+        {/*-------------------- ITEMS TO PURCHASE --------------------*/}
+        {delivery.description && (
+          <View style={[styles.rowFlexibleHeightTop]}>
+            <View style={{flex: 1, flexDirection: 'row', marginTop: 8}}>
+              <YellowIcon set="Entypo" name="box" size={16} containerStyle={{marginTop: 4}} />
+              <View style={{marginLeft: 10}}>
+                <Text style={{fontFamily: 'Rubik-Medium'}}>Items to Purchase</Text>
+                <ItemsToPurchase itemString={delivery.description} partnerBranchTenant={delivery.partnerBranchTenant} />
+              </View>
+            </View>
+          </View>
+        )}
+
         {/*-------------------- DELIVERY NOTES --------------------*/}
         {delivery.notes && (
           <View style={[styles.rowFlexibleHeight, {borderTopWidth: StyleSheet.hairlineWidth, borderColor: LIGHT}]}>

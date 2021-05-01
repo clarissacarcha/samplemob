@@ -21,13 +21,11 @@ const ConsumerLanding = () => {
 
   return (
     <>
-      {/* <FocusAwareStatusBar barStyle="light-content" backgroundColor="#6a51ae" /> */}
+      <StatusBar barStyle="dark-content" backgroundColor={'transparent'} translucent />
       <SafeAreaView>
         <View style={styles.screenBox}>
-          <FocusAwareStatusBar barStyle="dark-content" backgroundColor={'transparent'} translucent />
-
           <Header />
-          <Greeting />
+          {/* <Greeting /> */}
           <Menu setUserLocation={setUserLocation} />
           {/* <Text>{JSON.stringify(userLocation, null, 4)}</Text> */}
         </View>

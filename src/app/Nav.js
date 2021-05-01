@@ -49,6 +49,7 @@ import Pabili from '../screens/AuthenticatedStack/ConsumerScreens/PabiliScreens/
 import PabiliSearchAddress from '../screens/AuthenticatedStack/ConsumerScreens/PabiliScreens/PabiliSearchAddress';
 import PabiliDetails from '../screens/AuthenticatedStack/ConsumerScreens/PabiliScreens/PabiliDetails';
 import NearbyStores from '../screens/AuthenticatedStack/ConsumerScreens/PabiliScreens/NearbyStores';
+import PartnerBranches from '../screens/AuthenticatedStack/ConsumerScreens/PabiliScreens/PartnerBranches';
 
 /*---------- CONSUMER TOKTOK WALLET SCREENS ----------*/
 import ToktokWalletHomePage from '../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/ToktokWalletHomePage';
@@ -339,6 +340,7 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="PabiliSearchAddress" component={PabiliSearchAddress} />
     <Authenticated.Screen name="PabiliDetails" component={PabiliDetails} />
     <Authenticated.Screen name="NearbyStores" component={NearbyStores} />
+    <Authenticated.Screen name="PartnerBranches" component={PartnerBranches} />
 
     <Authenticated.Screen name="PostRegistration" component={PostRegistration} />
 

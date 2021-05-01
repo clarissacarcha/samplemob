@@ -8,7 +8,7 @@ const aButtons = [
   {
     message: 'Something happened.',
     buttonLabel: 'Okie Doks',
-    onPress: () => console.log('BUTTON IS PRESSED...'),
+    onPress: () => {},
   },
 ];
 

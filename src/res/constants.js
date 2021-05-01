@@ -2,12 +2,13 @@ export const APP_VERSION = '1.15.0';
 export const APP_FLAVOR = 'C'; // C = Customer | D = Driver
 export const ACCOUNT_TYPE = 1; // 1 = Customer | 2 = Driver
 export const MAPS_API_KEY = 'AIzaSyDhlw6pbriuwr_Mb6KYkVlBar7KD1KTrOs';
-// export const PROTOCOL = 'https';
+export const PROTOCOL = 'https';
 // export const HOST_PORT = 'graphql.toktok.ph:2096';
+export const HOST_PORT = 'stg-graphql.toktok.ph:2096';
 
-export const PROTOCOL = 'http';
+// export const PROTOCOL = 'http';
 // export const HOST_PORT = '192.168.0.102:3000'; // Myutini
-export const HOST_PORT = '35.173.0.77:3088'; // Marketing Server
+// export const HOST_PORT = '35.173.0.77:3088'; // Marketing Server
 
 export const COLORS = {
   YELLOW: '#FDBA1C',
@@ -18,7 +19,7 @@ export const COLORS = {
   WHITE: '#FFFFFF',
   TRANSPARENT_YELLOW: 'rgba(256,186,28, 0.1)',
   TRANSPARENT_GRAY: 'rgba(204,204,204,0.2)',
-  LIGHT_YELLOW: '#F9C344',
+  LIGHT_YELLOW: '#F9C344', //Use WHITE UNDERLAY from variables
 };
 
 export const FONTS = {

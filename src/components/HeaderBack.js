@@ -4,7 +4,7 @@ import {useNavigation} from '@react-navigation/native';
 import {throttle} from 'lodash';
 
 import {DARK} from '../res/constants';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import EntypoIcon from 'react-native-vector-icons/Entypo';
 
 export const HeaderBack = ({onBack}) => {
   const navigation = useNavigation();
@@ -24,12 +24,11 @@ export const HeaderBack = ({onBack}) => {
   return (
     <View style={styles.box}>
       <TouchableOpacity onPress={onPress}>
-        <MaterialIcon name="chevron-left" size={30} color={DARK} />
+        <EntypoIcon name="chevron-thin-left" size={20} color={DARK} />
       </TouchableOpacity>
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   box: {
     height: 50,

@@ -1,40 +1,59 @@
 import React, {useCallback, useMemo, useRef, useState} from 'react';
-import {View, StyleSheet, Text, TextInput} from 'react-native';
+import {View, StyleSheet, Text, TextInput, ScrollView} from 'react-native';
 import {connect} from 'react-redux';
 import {useLazyQuery} from '@apollo/react-hooks';
 import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../../../components';
-import {COLOR, LIGHT, ORANGE, FONT_MEDIUM, onError, FONT_REGULAR} from '../../../../../res/constants';
+import {LIGHT, FONT_MEDIUM, onError, FONT_REGULAR} from '../../../../../res/constants';
+import {COLOR, FONT, FONT_SIZE} from '../../../../../res/variables';
 import {GET_DELIVERY_PRICE_AND_DIRECTIONS} from '../../../../../graphql';
 import {WhiteButton, BlackButton} from '../../../../../revamp';
 //SELF IMPORTS
 import {PaymentForm, PaymentSheet} from './PaymentForm';
 import ExpressForm from './ExpressForm';
-import {ItemForm, ItemSheet} from './ItemForm';
+import {ItemDescriptionForm, ItemSheet} from './ItemDescriptionForm';
+import {
+  PartnerBranchItemDescriptionForm,
+  PartnerBranchItemDescriptionBottomSheet,
+} from './PartnerBranchItemDescriptionForm';
+import {PartnerBranchTenantForm, PartnerBranchTenantBottomSheet} from './PartnerBranchTenantForm';
 import NotesForm from './NotesForm';
 import PabiliForm from './PabiliForm';
 import PromoForm from './PromoForm';
+import ItemsToPurchaseForm from './ItemsToPurchaseForm';
+import {string} from 'prop-types';
+
+const FORM_DATA = {description: '', quantity: ''};
 
 const PabiliDetails = ({navigation, route, session}) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={['Pabili', 'Details']} />,
+    headerTitle: () => <HeaderTitle label={['Pabili', 'Information']} />,
   });
 
   const [collectPaymentFrom, setCollectPaymentFrom] = useState(route.params.orderData.collectPaymentFrom);
   const [itemDescription, setItemDescription] = useState(route.params.orderData.cargo);
   const [notes, setNotes] = useState(route.params.orderData.notes);
   const [isExpress, setIsExpress] = useState(route.params.orderData.isExpress);
-  const [isCashOnDelivery, setIsCashOnDelivery] = useState(route.params.orderData.isCashOnDelivery);
+  // const [isCashOnDelivery, setIsCashOnDelivery] = useState(route.params.orderData.isCashOnDelivery);
   const [cashOnDelivery, setCashOnDelivery] = useState(route.params.orderData.cashOnDelivery);
+  const [itemsToPurchase, setItemsToPurchase] = useState([FORM_DATA]);
+  const [selectedTenant, setSelectedTenant] = useState({name: ''});
+  const [tenants, setTenants] = useState(null);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [stringDescription, setStringDescription] = useState(null);
+
+  const partnerBranch = route.params.partnerBranch;
 
   const paymentSheetRef = useRef();
+  const partnerItemSheefRef = useRef();
   const itemSheetRef = useRef();
+  const tenantSheetRef = useRef();
 
   const [getDeliveryPriceAndDirections, {loading}] = useLazyQuery(GET_DELIVERY_PRICE_AND_DIRECTIONS, {
     fetchPolicy: 'no-cache',
     onError: onError,
     onCompleted: (data) => {
-      console.log(JSON.stringify(data.getDeliveryPriceAndDirections, null, 4));
+      // console.log(JSON.stringify(data.getDeliveryPriceAndDirections, null, 4));
       const {hash, pricing, directions} = data.getDeliveryPriceAndDirections;
       const {price, distance, duration, discount, expressFee} = pricing;
       // const updatedBookingData = {
@@ -53,8 +72,9 @@ const PabiliDetails = ({navigation, route, session}) => {
           collectPaymentFrom,
           cargo: itemDescription,
           notes,
+          description: stringDescription,
           isExpress,
-          isCashOnDelivery,
+          isCashOnDelivery: true,
           cashOnDelivery,
           hash,
           price,
@@ -67,18 +87,75 @@ const PabiliDetails = ({navigation, route, session}) => {
     },
   });
 
-  const onNext = () => {
+  const cleanEmptyItemsToPurchase = (value) => {
+    return value.filter((item) => item.description || item.quantity);
+  };
+
+  const verifyItemsToPurchase = (value) => {
+    let verified = true;
+
+    value.map((item) => {
+      if (!item.description) verified = false;
+      if (!item.quantity) verified = false;
+    });
+
+    return verified;
+  };
+
+  const formatItemsToPurchase = (value) => {
+    return value.map((item) => `${item.quantity} - ${item.description}`);
+  };
+
+  const onConfirmPabiliInformation = () => {
+    const cleanedItems = cleanEmptyItemsToPurchase(itemsToPurchase);
+
+    if (cleanedItems.length < 1) {
+      alert('Add item to purchase.');
+      return;
+    }
+
+    const isItemsVerified = verifyItemsToPurchase(cleanedItems);
+
+    if (!isItemsVerified) {
+      alert('Complete item to purchase information.');
+      return;
+    }
+
+    if (!cashOnDelivery) {
+      alert('Enter estimated price.');
+      return;
+    }
+
+    if (!itemDescription) {
+      alert('Select item description.');
+      return;
+    }
+
+    const formattedItems = formatItemsToPurchase(cleanedItems);
+
+    const stringifiedItems = JSON.stringify({orders: formattedItems});
+
+    setStringDescription(stringifiedItems);
+
+    // console.log({stringifiedItems});
+
     route.params.setOrderData({
       ...route.params.orderData,
       collectPaymentFrom,
       itemDescription,
       notes,
       isExpress,
-      isCashOnDelivery,
+      isCashOnDelivery: true,
       cashOnDelivery,
+      description: stringifiedItems,
     });
 
     const orderData = route.params.orderData;
+
+    console.log({
+      partnerBranchOrderId: selectedOrder.id,
+      partnerBranchTenantId: selectedTenant.id,
+    });
 
     getDeliveryPriceAndDirections({
       variables: {
@@ -87,7 +164,9 @@ const PabiliDetails = ({navigation, route, session}) => {
           promoCode: '',
           // promoCode: bookingData.promoCode,
           isExpress: isExpress,
-          isCashOnDelivery: isCashOnDelivery,
+          isCashOnDelivery: true,
+          partnerBranchOrderId: selectedOrder.id,
+          partnerBranchTenantId: selectedTenant.id,
           origin: {
             latitude: orderData.senderStop.latitude,
             longitude: orderData.senderStop.longitude,
@@ -103,58 +182,66 @@ const PabiliDetails = ({navigation, route, session}) => {
     });
   };
 
+  const onPartnerBranchOrderSelect = (order) => {
+    setItemDescription(order.cargo.type);
+    setTenants(order.cargo.tenants);
+    setSelectedOrder(order);
+  };
+
   return (
-    <View style={styles.screenBox}>
-      <AlertOverlay visible={loading} />
-      <View style={{height: 10}} />
-      {/* <PaymentForm value={collectPaymentFrom === 'SENDER' ? 'Sender' : 'Recipient'} bottomSheetRef={paymentSheetRef} /> */}
-      <ItemForm value={itemDescription} bottomSheetRef={itemSheetRef} />
+    <>
+      <ScrollView style={styles.screenBox} showsVerticalScrollIndicator={false}>
+        <AlertOverlay visible={loading} />
+        <View style={{height: 20}} />
+        {/* <PromoForm /> */}
+        {/* <PaymentForm value={collectPaymentFrom === 'SENDER' ? 'Sender' : 'Recipient'} bottomSheetRef={paymentSheetRef} /> */}
+        {!partnerBranch && <ItemDescriptionForm value={itemDescription} bottomSheetRef={itemSheetRef} />}
+        {partnerBranch && (
+          <PartnerBranchItemDescriptionForm value={itemDescription} bottomSheetRef={partnerItemSheefRef} />
+        )}
+        {partnerBranch && <PartnerBranchTenantForm value={selectedTenant.name} bottomSheetRef={tenantSheetRef} />}
 
-      <NotesForm value={notes} onChange={setNotes} />
-
-      <View style={{height: 10}} />
-      <PaymentSheet onChange={setCollectPaymentFrom} ref={paymentSheetRef} />
-      <View>
-        <Text style={{fontFamily: FONT_MEDIUM}}>Items</Text>
-        <View style={styles.spacing} />
-        <TextInput
-          style={styles.input}
-          // onChangeText={onChange}
-          placeholder="ex. 5 Apples, 5 Oranges"
-          placeholderTextColor={LIGHT}
-        />
-      </View>
-
-      <View style={{height: 10}} />
-      <PaymentSheet onChange={setCollectPaymentFrom} ref={paymentSheetRef} />
-      <View>
-        <Text style={{fontFamily: FONT_MEDIUM}}>Estimated Amount of Items</Text>
-        <View style={styles.spacing} />
-        <TextInput
-          style={styles.input}
-          keyboardType="numeric"
-          // onChangeText={onChange}
-          placeholder="Maximum: 2,000"
-          placeholderTextColor={LIGHT}
-        />
-      </View>
-
-      <PromoForm />
-
-      <ExpressForm value={isExpress} onChange={setIsExpress} />
-
-      {/* <PabiliForm
+        {/* <Text> {JSON.stringify(partnerBranch, null, 4)}</Text> */}
+        <ItemsToPurchaseForm initialData={itemsToPurchase} onDataChange={setItemsToPurchase} />
+        <View style={{marginTop: 20}}>
+          <Text style={{fontFamily: FONT.BOLD}}>Estimated Price of Items</Text>
+          <View style={styles.spacing} />
+          <TextInput
+            style={styles.input}
+            keyboardType="numeric"
+            onChangeText={setCashOnDelivery}
+            placeholder="Maximum: 2,000"
+            placeholderTextColor={LIGHT}
+          />
+        </View>
+        <NotesForm value={notes} onChange={setNotes} />
+        <ExpressForm value={isExpress} onChange={setIsExpress} />
+        {/* <PabiliForm
         value={isCashOnDelivery}
         amount={cashOnDelivery}
         onChange={setIsCashOnDelivery}
         onAmountChange={setCashOnDelivery}
       /> */}
-      <Text>{}</Text>
-      <View style={{flex: 1}} />
-      <BlackButton label="Next" onPress={onNext} />
-      <View style={{height: 10}} />
+      </ScrollView>
+      <View style={{backgroundColor: 'white'}}>
+        <View style={{backgroundColor: COLOR.ATHENS_GRAY, padding: 10}}>
+          <BlackButton label="Confirm Pabili Information" onPress={onConfirmPabiliInformation} />
+        </View>
+      </View>
+      <PaymentSheet onChange={setCollectPaymentFrom} ref={paymentSheetRef} />
       <ItemSheet onChange={setItemDescription} ref={itemSheetRef} />
-    </View>
+      {partnerBranch && (
+        <PartnerBranchItemDescriptionBottomSheet
+          partnerOrders={partnerBranch.orders}
+          onChange={onPartnerBranchOrderSelect}
+          ref={partnerItemSheefRef}
+        />
+      )}
+
+      {partnerBranch && (
+        <PartnerBranchTenantBottomSheet tenants={tenants} ref={tenantSheetRef} onChange={setSelectedTenant} />
+      )}
+    </>
   );
 };
 
@@ -166,7 +253,7 @@ export default connect(mapStateToProps, null)(PabiliDetails);
 
 const styles = StyleSheet.create({
   screenBox: {
-    paddingHorizontal: 10,
+    paddingHorizontal: 20,
     backgroundColor: 'white',
     flex: 1,
   },
@@ -177,13 +264,10 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 50,
-    borderWidth: 1,
-    borderColor: LIGHT,
+    backgroundColor: COLOR.ATHENS_GRAY,
     borderRadius: 5,
-    fontSize: 14,
     paddingHorizontal: 10,
     marginBottom: 20,
-    fontFamily: FONT_REGULAR,
   },
-  spacing: {height: 5},
+  spacing: {height: 2},
 });

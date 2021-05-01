@@ -343,7 +343,7 @@ const DriverWallet = ({navigation, session, constants}) => {
           </TouchableHighlight>
         </View>
         {/*---------------------------------------- TOKTOK WALLET ----------------------------------------*/}
-        <ToktokWalletCardButton session={session} />
+        {/* <ToktokWalletCardButton session={session} /> */}
       </ScrollView>
       {/*---------------------------------------- BUTTON ----------------------------------------*/}
       {/* <TouchableHighlight

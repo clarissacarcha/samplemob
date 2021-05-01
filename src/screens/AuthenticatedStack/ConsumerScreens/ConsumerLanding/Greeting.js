@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {View, Text, StyleSheet, TouchableOpacity, TextInput} from 'react-native';
-import {FONT_SIZE_LARGE, FONT_SIZE_SMALL, FONT_REGULAR} from '../../../../res/constants';
+import {FONT, FONT_SIZE} from '../../../../res/variables';
 
 const Greeting = ({session}) => {
   return (
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   greetingText: {
-    fontSize: 14,
-    fontFamily: FONT_REGULAR,
+    fontSize: FONT_SIZE.XL,
+    fontFamily: FONT.BOLD,
   },
 });

@@ -10,22 +10,25 @@ import {
   Image,
   StyleSheet,
   StatusBar,
+  ImageBackground,
 } from 'react-native';
 import ContentLoader from 'react-native-easy-content-loader';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import moment from 'moment';
-import {COLOR, COLORS, FONTS, NUMBERS, SIZES} from '../../../../../res/constants';
-import {WhiteButton, BlackButton, ORANGE, VectorIcon, Shadow, ICON_SET} from '../../../../../revamp';
+import {COLORS, FONTS, NUMBERS, SIZES, MEDIUM} from '../../../../../res/constants';
+import {FONT, COLOR, SIZE} from '../../../../../res/variables';
+import {WhiteButton, BlackButton, ORANGE, VectorIcon, ICON_SET, Shadow, ImageHeader} from '../../../../../revamp';
 
 import BottomSheet, {BottomSheetBackdrop, BottomSheetView} from '@gorhom/bottom-sheet';
 import ScrollPicker from 'react-native-wheel-scrollview-picker';
 
 import SMIcon from '../../../../../assets/toktok/dummy/SM.png';
+import ToktokHeader from '../../../../../assets/toktok/images/ToktokHeader.png';
 
 //SELF IMPORTS
+import PabiliPartners from './PabiliPartners';
 import SenderRecipientCard from './SenderRecipientCard';
 import DeliveryScheduleFormButton from './DeliveryScheduleFormButton';
-import NearbyStores from './NearbyStores';
 
 const SCHEDULES = [
   {label: 'Anytime', value: '23:59:59'},
@@ -122,7 +125,7 @@ const Pabili = ({navigation, session}) => {
     distance: 0,
     duration: 0,
     directions: null,
-    collectPaymentFrom: 'SENDER',
+    collectPaymentFrom: 'RECIPIENT',
     isCashOnDelivery: false,
     cashOnDelivery: 0,
     isExpress: false,
@@ -158,14 +161,14 @@ const Pabili = ({navigation, session}) => {
   };
   const [orderData, setOrderData] = useState(INITIAL_ORDER_DATA);
 
-  const onSenderConfirm = (value, nav) => {
+  const onSenderConfirm = (value) => {
     setOrderData({
       ...orderData,
       senderStop: value,
     });
 
-    nav.pop();
-    nav.push('PabiliDetails', {
+    navigation.pop();
+    navigation.push('PabiliDetails', {
       orderData: {
         ...orderData,
         senderStop: value,
@@ -174,12 +177,12 @@ const Pabili = ({navigation, session}) => {
     });
   };
 
-  const onRecipientConfirm = (value, nav) => {
+  const onRecipientConfirm = (value) => {
     setOrderData({
       ...orderData,
       recipientStop: [value],
     });
-    nav.pop();
+    navigation.pop();
   };
 
   const onSenderPress = () => {
@@ -216,19 +219,72 @@ const Pabili = ({navigation, session}) => {
   const storesBottomSheetRef = useRef();
 
   const snapPoints = useMemo(() => [0, 130, 345], []);
-  const storesSnapPoints = useMemo(() => [0, 440], []);
+  const storesSnapPoints = useMemo(() => [0, 390], []);
 
-  const pushToNearbyStores = ({label, placeType}) => {
-    navigation.push('NearbyStores', {label, placeType});
+  const onNearbySelect = ({value, nav, storeData}) => {
+    console.log('NEARBY SELECTED');
+    console.log({value});
+
+    setOrderData({
+      ...orderData,
+      senderStop: {
+        ...orderData.senderStop,
+        name: storeData.name,
+        formattedAddress: storeData.vicinity,
+        latitude: value.location.latitude,
+        longitude: value.location.longitude,
+      },
+    });
+
+    nav.pop();
+    nav.push('PabiliDetails', {
+      orderData: {
+        ...orderData,
+        senderStop: {
+          ...orderData.senderStop,
+          name: storeData.name,
+          formattedAddress: storeData.vicinity,
+          latitude: value.location.latitude,
+          longitude: value.location.longitude,
+        },
+      },
+      setOrderData,
+    });
   };
 
+  const pushToNearbyStores = ({label, plural, placeType, coordinates}) => {
+    navigation.push('NearbyStores', {label, plural, placeType, coordinates, onNearbySelect});
+  };
   return (
     <>
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
+      {/* <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent /> */}
       <View style={{flex: 1, backgroundColor: 'white'}}>
-        <View style={{backgroundColor: COLORS.YELLOW, height: 220}} />
+        <ImageHeader />
 
-        <View style={{height: 20, marginTop: -150}} />
+        <View style={{marginTop: -(220 - StatusBar.currentHeight)}} />
+        <View style={{flexDirection: 'row'}}>
+          <TouchableOpacity onPress={() => navigation.pop()}>
+            <View
+              style={{
+                height: 50,
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingHorizontal: 20,
+                width: 105,
+              }}>
+              <View style={{height: 30, width: 25, justifyContent: 'center'}}>
+                <VectorIcon iconSet={ICON_SET.Entypo} name="chevron-thin-left" color={COLORS.DARK} size={20} />
+              </View>
+
+              <View style={{height: 20, justifyContent: 'center'}}>
+                <Text style={{fontFamily: FONT.BOLD, fontSize: 15}}>Home</Text>
+              </View>
+            </View>
+          </TouchableOpacity>
+          <Image source={ToktokHeader} resizeMode="contain" style={{height: 25, flex: 1, alignSelf: 'center'}} />
+          <View style={{width: 105}} />
+        </View>
+
         <Shadow style={{marginHorizontal: NUMBERS.MARGIN_HORIZONTAL, borderRadius: NUMBERS.BORDER_RADIUS}}>
           {/* <View style={{height: 50, backgroundColor: 'white', borderRadius: NUMBERS.BORDER_RADIUS}} /> */}
           <TouchableHighlight
@@ -247,7 +303,10 @@ const Pabili = ({navigation, session}) => {
                 borderRadius: NUMBERS.BORDER_RADIUS,
                 paddingHorizontal: 20,
               }}>
-              <Text>Pick Up Time: ASAP </Text>
+              <Text style={{fontFamily: FONT.BOLD}}>
+                Pick Up Time:
+                <Text style={{color: COLOR.ORANGE}}> ASAP</Text>
+              </Text>
             </View>
           </TouchableHighlight>
         </Shadow>
@@ -265,135 +324,32 @@ const Pabili = ({navigation, session}) => {
           }}
         />
         <View style={{height: 20}} />
-        <Shadow style={{marginHorizontal: NUMBERS.MARGIN_HORIZONTAL, borderRadius: NUMBERS.BORDER_RADIUS}}>
-          {/* <View style={{height: 50, backgroundColor: 'white', borderRadius: NUMBERS.BORDER_RADIUS}} /> */}
-          <TouchableHighlight
-            onPress={() => {
-              storesBottomSheetRef.current.snapTo(1);
-            }}
-            style={{
-              borderRadius: NUMBERS.BORDER_RADIUS,
-            }}
-            underlayColor={COLORS.LIGHT_YELLOW}>
-            <View
+        {userCoordinates && (
+          <Shadow style={{marginHorizontal: NUMBERS.MARGIN_HORIZONTAL, borderRadius: NUMBERS.BORDER_RADIUS}}>
+            {/* <View style={{height: 50, backgroundColor: 'white', borderRadius: NUMBERS.BORDER_RADIUS}} /> */}
+            <TouchableHighlight
+              onPress={() => {
+                storesBottomSheetRef.current.snapTo(1);
+              }}
               style={{
-                height: 50,
-                justifyContent: 'center',
-                backgroundColor: 'white',
                 borderRadius: NUMBERS.BORDER_RADIUS,
-                paddingHorizontal: 20,
-              }}>
-              <Text>Nearby Stores</Text>
-            </View>
-          </TouchableHighlight>
-        </Shadow>
-        {/* <NearbyStores userCoordinates={userCoordinates} /> */}
-
-        {/* <Text>{JSON.stringify(orderData.recipientStop, null, 4)}</Text> */}
-        {/* <Shadow style={{marginHorizontal: NUMBERS.MARGIN_HORIZONTAL, borderRadius: NUMBERS.BORDER_RADIUS}}>
-          <View
-            style={{
-              flexDirection: 'row',
-              height: 140,
-              borderRadius: NUMBERS.BORDER_RADIUS,
-              backgroundColor: 'white',
-            }}>
-            <View style={{width: 50, alignItems: 'center', paddingVertical: 20}}>
-              <VectorIcon iconSet={ICON_SET.FontAwesome5} name="map-pin" color={COLORS.YELLOW} size={22} />
+              }}
+              underlayColor={COLORS.LIGHT_YELLOW}>
               <View
                 style={{
-                  flex: 1,
-                  overflow: 'hidden',
-                  marginVertical: 5,
+                  height: 50,
+                  justifyContent: 'center',
+                  backgroundColor: 'white',
+                  borderRadius: NUMBERS.BORDER_RADIUS,
+                  paddingHorizontal: 20,
                 }}>
-                <View style={{height: 4, width: 4, backgroundColor: COLORS.LIGHT, borderRadius: 4, marginBottom: 4}} />
-                <View style={{height: 4, width: 4, backgroundColor: COLORS.LIGHT, borderRadius: 4, marginBottom: 4}} />
-                <View style={{height: 4, width: 4, backgroundColor: COLORS.LIGHT, borderRadius: 4, marginBottom: 4}} />
-                <View style={{height: 4, width: 4, backgroundColor: COLORS.LIGHT, borderRadius: 4, marginBottom: 4}} />
-                <View style={{height: 4, width: 4, backgroundColor: COLORS.LIGHT, borderRadius: 4, marginBottom: 4}} />
-                <View style={{height: 4, width: 4, backgroundColor: COLORS.LIGHT, borderRadius: 4, marginBottom: 4}} />
-                <View style={{height: 4, width: 4, backgroundColor: COLORS.LIGHT, borderRadius: 4, marginBottom: 4}} />
-                <View style={{height: 4, width: 4, backgroundColor: COLORS.LIGHT, borderRadius: 4, marginBottom: 4}} />
+                <Text style={{fontFamily: FONT.BOLD}}>Nearby Establishments</Text>
               </View>
-              <VectorIcon iconSet={ICON_SET.FontAwesome5} name="map-marker-alt" color={COLORS.ORANGE} size={22} />
-            </View>
-            <View style={{flex: 1, justifyContent: 'center', marginRight: 10}}>
-              <TouchableHighlight
-                onPress={() => {}}
-                style={{borderRadius: NUMBERS.BORDER_RADIUS, paddingHorizontal: 10, marginLeft: -10}}
-                underlayColor={COLORS.TRANSPARENT_YELLOW}>
-                <View style={{height: 50, justifyContent: 'center'}}>
-                  {orderData.senderStop.formattedAddress ? (
-                    <>
-                      {' '}
-                      <Text>Alvir Marquez</Text>
-                      <Text numberOfLines={1}>10F Inoza Tower, 40th Street, Bonifacio Global City</Text>
-                    </>
-                  ) : (
-                    <Text style={{color: COLORS.MEDIUM}}>Where should we start off from?</Text>
-                  )}
-                </View>
-              </TouchableHighlight>
-              <View
-                style={{borderBottomWidth: 1, borderColor: COLORS.TRANSPARENT_GRAY, marginVertical: 10, marginLeft: -5}}
-              />
-              <TouchableHighlight
-                onPress={searchRecipientAddress}
-                style={{borderRadius: NUMBERS.BORDER_RADIUS, paddingHorizontal: 10, marginLeft: -10}}
-                underlayColor={COLORS.TRANSPARENT_YELLOW}>
-                <View style={{height: 50, justifyContent: 'center'}}>
-                  <View style={{marginHorizontal: -10}}>
-                    <ContentLoader
-                      active
-                      pRows={2}
-                      pWidth={['40%', '100%']}
-                      title={false}
-                      primaryColor="rgba(256,186,28,0.2)"
-                      secondaryColor="rgba(256,186,28,0.4)"
-                    />
-                  </View>
-                  <Text>Juan dela Cruz</Text>
-                  <Text numberOfLines={1}>10F Inoza Tower, 40th Street, Bonifacio Global City</Text>
-                </View>
-              </TouchableHighlight>
-            </View>
-          </View>
-        </Shadow> */}
-        {/* <View
-          style={{
-            height: 100,
-            justifyContent: 'center',
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}>
-          <MenuIcon label={'SM Supermalls'} icon={SMIcon} onPress={() => {}} />
-          <MenuIcon label={'SM Supermalls'} icon={SMIcon} onPress={() => {}} />
-          <MenuIcon label={'SM Supermalls'} icon={SMIcon} onPress={() => {}} />
-          <MenuIcon label={'SM Supermalls'} icon={SMIcon} onPress={() => {}} />
-        </View> */}
-        {/* <View style={{height: 250, justifyContent: 'space-evenly', paddingHorizontal: 20}}>
-          <WhiteButton onPress={() => {}} />
-          <WhiteButton onPress={() => {}} />
-          <TouchableHighlight onPress={() => {}} style={{borderRadius: 10}} underlayColor={COLORS.TRANSPARENT_YELLOW}>
-            <View style={{height: 50, borderRadius: 10, flexDirection: 'row', justifyContent: 'space-between'}}>
-              <Text>Hello</Text>
-              <TouchableHighlight
-                onPress={() => console.log('PRESS')}
-                style={{borderRadius: 10, height: 50, width: 50, justifyContent: 'center', alignItems: 'center'}}
-                underlayColor={COLORS.TRANSPARENT_YELLOW}>
-                <VectorIcon iconSet={ICON_SET.Material} name="gps-fixed" color={COLORS.DARK} size={20} />
-              </TouchableHighlight>
-            </View>
-          </TouchableHighlight>
-        </View> */}
-        {/* <TabView
-          navigationState={{index, routes}}
-          renderScene={renderScene}
-          onIndexChange={setIndex}
-          initialLayout={{width: layout.width}}
-          renderTabBar={renderTabBar}
-          render
-        /> */}
+            </TouchableHighlight>
+          </Shadow>
+        )}
+        <View style={{height: 10, backgroundColor: COLOR.ATHENS_GRAY, marginTop: 20, marginBottom: 10}} />
+        <PabiliPartners orderData={orderData} setOrderData={setOrderData} />
       </View>
       <BottomSheet
         ref={bottomSheetRef}
@@ -521,85 +477,104 @@ const Pabili = ({navigation, session}) => {
         enableHandlePanningGesture={false}
         backdropComponent={BottomSheetBackdrop}>
         <BottomSheetView style={styles.contentContainer}>
-          <Text>Nearby Stores</Text>
+          <Text style={{fontFamily: FONT.BOLD, marginLeft: 10}}>Select Establishment Type</Text>
           <View style={{height: 10}} />
           <WhiteButton
             label="Bakery"
             borderless
+            labelColor={MEDIUM}
             onPress={() => {
+              storesBottomSheetRef.current.snapTo(0);
               pushToNearbyStores({
                 label: 'Bakery',
+                plural: 'Bakeries',
                 placeType: 'bakery',
+                coordinates: userCoordinates,
               });
             }}
           />
           <WhiteButton
             label="Cafe"
             borderless
+            labelColor={MEDIUM}
             onPress={() => {
+              storesBottomSheetRef.current.snapTo(0);
               pushToNearbyStores({
                 label: 'Cafe',
+                plural: 'Cafes',
                 placeType: 'cafe',
+                coordinates: userCoordinates,
               });
             }}
           />
           <WhiteButton
             label="Convenience Store"
             borderless
+            labelColor={MEDIUM}
             onPress={() => {
+              storesBottomSheetRef.current.snapTo(0);
               pushToNearbyStores({
                 label: 'Convenience Store',
+                plural: 'Convenience Stores',
                 placeType: 'convenience_store',
+                coordinates: userCoordinates,
               });
             }}
           />
-          <WhiteButton
-            label="Drugstore"
-            borderless
-            onPress={() => {
-              pushToNearbyStores({
-                label: 'Drugstore',
-                placeType: 'drugstore',
-              });
-            }}
-          />
+
           <WhiteButton
             label="Hardware Store"
             borderless
+            labelColor={MEDIUM}
             onPress={() => {
               pushToNearbyStores({
                 label: 'Hardware Store',
+                plural: 'Hardware Stores',
                 placeType: 'hardware_store',
+                coordinates: userCoordinates,
+              });
+            }}
+          />
+          <WhiteButton
+            label="Pharmacy"
+            borderless
+            labelColor={MEDIUM}
+            onPress={() => {
+              storesBottomSheetRef.current.snapTo(0);
+              pushToNearbyStores({
+                label: 'Pharmacy',
+                plural: 'Pharmacies',
+                placeType: 'pharmacy',
+                coordinates: userCoordinates,
               });
             }}
           />
           <WhiteButton
             label="Restaurant"
             borderless
+            labelColor={MEDIUM}
             onPress={() => {
+              storesBottomSheetRef.current.snapTo(0);
               pushToNearbyStores({
                 label: 'Restaurant',
+                plural: 'Restaurants',
                 placeType: 'restaurant',
+                coordinates: userCoordinates,
               });
             }}
           />
-          <WhiteButton
-            label="Shopping Mall"
-            borderless
-            onPress={() => {
-              pushToNearbyStores({
-                label: 'Shopping Mall',
-                placeType: 'shopping_mall',
-              });
-            }}
-          />
+
           <WhiteButton
             label="Supermarket"
             borderless
+            labelColor={MEDIUM}
             onPress={() => {
+              storesBottomSheetRef.current.snapTo(0);
               pushToNearbyStores({
                 label: 'Supermarket',
+                plural: 'Supermarkets',
                 placeType: 'supermarket',
+                coordinates: userCoordinates,
               });
             }}
           />
@@ -633,16 +608,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: FONTS.REGULAR,
   },
-  menuIconBox: {
-    height: 50,
-    width: 50,
-    backgroundColor: COLORS.TRANSPARENT_GRAY,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 10,
-    marginBottom: 10,
-    overflow: 'hidden',
-  },
+
   menuIcon: {
     height: 50,
     width: 50,
@@ -652,91 +618,3 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
 });
-
-// const MenuIcon = ({label, icon, onPress}) => {
-//   return (
-//     <TouchableOpacity style={styles.menuButton} onPress={onPress}>
-//       <View style={styles.menuIconBox}>
-//         <Image style={styles.menuIcon} source={icon} />
-//       </View>
-//       <Text style={styles.label}>{label}</Text>
-//     </TouchableOpacity>
-//   );
-// };
-
-// const NEARBY_DATA = [
-//   {label: 'One'},
-//   {label: 'Two'},
-//   {label: 'Three'},
-//   {label: 'Four'},
-//   {label: 'Five'},
-//   {label: 'Six'},
-//   {label: 'Seven'},
-//   {label: 'Eight'},
-//   {label: 'Nine'},
-//   {label: 'Ten'},
-// ];
-
-// const renderNearBy = ({item, index}) => {
-//   return (
-//     <TouchableHighlight
-//       onPress={() => {}}
-//       style={{
-//         height: 50,
-//         justifyContent: 'center',
-//         marginHorizontal: 10,
-//         borderRadius: 5,
-//         paddingHorizontal: 10,
-//         borderBottomWidth: 1,
-//         borderColor: COLORS.TRANSPARENT_GRAY,
-//       }}
-//       underlayColor={COLORS.TRANSPARENT_YELLOW}>
-//       <View>
-//         <Text style={{fontFamily: FONTS.REGULAR}}>{item.label}</Text>
-//       </View>
-//     </TouchableHighlight>
-//   );
-// };
-
-// const FirstRoute = () => (
-//   <View style={{flex: 1, backgroundColor: COLORS.WHITE}}>
-//     <FlatList data={NEARBY_DATA} renderItem={renderNearBy} showsVerticalScrollIndicator={false} />
-//   </View>
-// );
-
-// const SecondRoute = () => (
-//   <View style={{flex: 1, backgroundColor: COLORS.WHITE}}>
-//     <FlatList data={NEARBY_DATA} renderItem={renderNearBy} showsVerticalScrollIndicator={false} />
-//   </View>
-// );
-// const ThirdRoute = () => (
-//   <View style={{flex: 1, backgroundColor: COLORS.WHITE}}>
-//     <FlatList data={NEARBY_DATA} renderItem={renderNearBy} showsVerticalScrollIndicator={false} />
-//   </View>
-// );
-
-// const layout = useWindowDimensions();
-
-// const [index, setIndex] = React.useState(0);
-// const [routes] = React.useState([
-//   {key: 'first', title: 'All'},
-//   {key: 'second', title: 'Grocery'},
-//   {key: 'third', title: 'Pharmacy'},
-// ]);
-
-// const renderScene = SceneMap({
-//   first: FirstRoute,
-//   second: SecondRoute,
-//   third: ThirdRoute,
-// });
-
-// const renderTabBar = (props) => (
-//   <TabBar
-//     {...props}
-//     indicatorStyle={{backgroundColor: COLORS.YELLOW}}
-//     style={{backgroundColor: 'white'}}
-//     renderLabel={({route, focused, color}) => (
-//       <Text style={{fontFamily: FONTS.REGULAR, fontSize: SIZES.M}}>{route.title} (10)</Text>
-//     )}
-//   />
-// );

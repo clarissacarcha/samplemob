@@ -34,6 +34,7 @@ const PasswordVerification = ({navigation, route, createSession}) => {
       },
     },
     onError: (error) => {
+      console.log(error);
       onErrorAlert({alert, error});
     },
 

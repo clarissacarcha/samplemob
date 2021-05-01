@@ -4,7 +4,6 @@ import {throttle, debounce} from 'lodash';
 import {useLazyQuery} from '@apollo/react-hooks';
 import uuid from 'react-native-uuid';
 import axios from 'axios';
-import {GET_GOOGLE_PLACE_DETAILS} from '../../../../../graphql';
 import {HeaderBack, HeaderTitle} from '../../../../../components';
 import {WhiteButton, TouchableIcon} from '../../../../../revamp';
 import {LIGHT, PROTOCOL, HOST_PORT, FONT_REGULAR} from '../../../../../res/constants';
