@@ -1,12 +1,14 @@
 import React from 'react';
 import _ from 'lodash';
-import {View, Text, TouchableHighlight, ActivityIndicator, StyleSheet, ScrollView} from 'react-native';
+import {View, Text, TouchableHighlight, ActivityIndicator, StyleSheet, ScrollView, StatusBar} from 'react-native';
 import {connect} from 'react-redux';
 import {throttle} from 'lodash';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import {useQuery} from '@apollo/react-hooks';
 import {GET_DELIVERIES_COUNT_BY_STATUS} from '../../../../graphql';
-import {COLOR, DARK, MEDIUM, LIGHT} from '../../../../res/constants';
+import {DARK, MEDIUM, LIGHT} from '../../../../res/constants';
+import {FONT, COLOR, FONT_SIZE, SIZE} from '../../../../res/variables';
+import {Shadow, VectorIcon, ICON_SET} from '../../../../revamp';
 import {HeaderBack, HeaderTitle, SomethingWentWrong} from '../../../../components';
 import {YellowIcon} from '../../../../components/ui';
 
@@ -23,19 +25,28 @@ const RoundedButton = ({label, data = {}}) => {
   });
 
   return (
-    <TouchableHighlight onPress={hasItems ? onPress : null} underlayColor={COLOR} style={styles.submitBox}>
-      <View style={[styles.submit, {backgroundColor: count > 0 ? 'white' : LIGHT}]}>
+    <TouchableHighlight
+      onPress={hasItems ? onPress : null}
+      underlayColor={COLOR.WHITE_UNDERLAY}
+      style={styles.submitBox}>
+      <View style={[styles.submit]}>
         <View style={{flexDirection: 'row'}}>
           <Text
             style={{
-              color: count > 0 ? DARK : MEDIUM,
-              fontSize: 14,
-              fontFamily: 'Rubik-Medium',
+              color: count > 0 ? COLOR.BLACK : COLOR.MEDIUM,
             }}>
             {`${label[0]} ${label[1]}`}
           </Text>
         </View>
-        {hasItems && <YellowIcon set="Feather" name="chevron-right" size={18} />}
+        {hasItems && (
+          <VectorIcon
+            iconSet={ICON_SET.Entypo}
+            name="chevron-thin-right"
+            color={COLOR.BLACK}
+            size={16}
+            style={{marginRight: 2}}
+          />
+        )}
       </View>
     </TouchableHighlight>
   );
@@ -56,14 +67,14 @@ const MyDeliveries = ({navigation, session}) => {
     },
   });
 
-  useFocusEffect(() => {
-    refetch();
-  }, [session.user.id]);
+  // useFocusEffect(() => {
+  //   refetch();
+  // }, [session.user.id]);
 
   if (loading) {
     return (
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <ActivityIndicator size={24} color={COLOR} />
+        <ActivityIndicator size={24} color={COLOR.YELLOW} />
       </View>
     );
   }
@@ -75,17 +86,31 @@ const MyDeliveries = ({navigation, session}) => {
   const mappedData = _.mapKeys(data.getDeliveriesCountByStatus, 'status');
 
   return (
-    <ScrollView contentContainerStyle={{paddingTop: 10}} showsVerticalScrollIndicator={false}>
-      <RoundedButton data={mappedData['1']} label={['Placed', 'Orders']} />
-      <RoundedButton data={mappedData['2']} label={['Scheduled', 'for Delivery']} />
-      <RoundedButton data={mappedData['3']} label={['On the Way', 'to Sender']} />
-      <RoundedButton data={mappedData['4']} label={['Item', 'Picked Up']} />
-      <RoundedButton data={mappedData['5']} label={['On the Way', 'to Recipient']} />
-      <RoundedButton data={mappedData['6']} label={['Item', 'Delivered']} />
-      <View style={{height: 100}} />
-      <RoundedButton data={mappedData['7']} label={['Cancelled', 'Orders']} />
-      <RoundedButton data={mappedData['9']} label={['Expired', 'Orders']} />
-    </ScrollView>
+    <View style={styles.container}>
+      <Shadow style={{borderRadius: 0}}>
+        <View
+          style={{
+            height: 50 + StatusBar.currentHeight,
+            backgroundColor: 'white',
+            paddingTop: StatusBar.currentHeight,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Text style={{fontSize: FONT_SIZE.L, fontFamily: FONT.BOLD}}>Deliveries</Text>
+        </View>
+      </Shadow>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <RoundedButton data={mappedData['1']} label={['Placed', 'Orders']} />
+        <RoundedButton data={mappedData['2']} label={['Scheduled', 'for Delivery']} />
+        <RoundedButton data={mappedData['3']} label={['On the Way', 'to Sender']} />
+        <RoundedButton data={mappedData['4']} label={['Item', 'Picked Up']} />
+        <RoundedButton data={mappedData['5']} label={['On the Way', 'to Recipient']} />
+        <RoundedButton data={mappedData['6']} label={['Item', 'Delivered']} />
+        <View style={{height: SIZE.MARGIN / 2, backgroundColor: COLOR.LIGHT}} />
+        <RoundedButton data={mappedData['7']} label={['Cancelled', 'Orders']} />
+        <RoundedButton data={mappedData['9']} label={['Expired', 'Orders']} />
+      </ScrollView>
+    </View>
   );
 };
 
@@ -96,28 +121,22 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, null)(MyDeliveries);
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
   submitBox: {
-    marginHorizontal: 20,
-    marginVertical: 10,
-    borderRadius: 10,
-
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    marginHorizontal: SIZE.MARGIN,
+    borderRadius: 5,
   },
   submit: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingRight: 20,
-    paddingLeft: 10,
-    // backgroundColor: LIGHT,
-    height: 45,
-    borderRadius: 10,
+    paddingRight: 2,
+    paddingLeft: SIZE.MARGIN,
+    backgroundColor: COLOR.WHITE,
+    height: 50,
+    borderRadius: 5,
     alignItems: 'center',
   },
   text: {
@@ -137,7 +156,7 @@ const styles = StyleSheet.create({
   icon: {
     height: 20,
     width: 20,
-    backgroundColor: COLOR,
+    backgroundColor: COLOR.YELLOW,
     borderRadius: 10,
     textAlignVertical: 'center',
     textAlign: 'center',

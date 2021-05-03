@@ -1,3 +1,4 @@
+export * from './Advertisement';
 export * from './Announcement';
 export * from './AppVersion';
 export * from './CargoType';

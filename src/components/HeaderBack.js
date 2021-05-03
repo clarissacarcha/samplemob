@@ -3,7 +3,7 @@ import {StyleSheet, View, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {throttle} from 'lodash';
 
-import {DARK} from '../res/constants';
+import {DARK, COLOR} from '../res/constants';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 
 export const HeaderBack = ({onBack}) => {
@@ -22,11 +22,9 @@ export const HeaderBack = ({onBack}) => {
   );
 
   return (
-    <View style={styles.box}>
-      <TouchableOpacity onPress={onPress}>
-        <EntypoIcon name="chevron-thin-left" size={20} color={DARK} />
-      </TouchableOpacity>
-    </View>
+    <TouchableOpacity onPress={onPress} style={styles.box}>
+      <EntypoIcon name="chevron-thin-left" size={20} color={COLOR} />
+    </TouchableOpacity>
   );
 };
 const styles = StyleSheet.create({

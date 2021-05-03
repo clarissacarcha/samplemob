@@ -9,7 +9,7 @@ import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../../../components';
 const NearbyStore = ({store, onStoreSelect}) => {
   return (
     <TouchableHighlight
-      style={{marginHorizontal: SIZE.SIDE_MARGIN, borderRadius: SIZE.BORDER_RADIUS}}
+      style={{marginHorizontal: SIZE.MARGIN, borderRadius: SIZE.BORDER_RADIUS}}
       onPress={() => {
         onStoreSelect(store);
       }}
@@ -25,7 +25,7 @@ const NearbyStore = ({store, onStoreSelect}) => {
         <Text numberOfLines={1} style={{fontFamily: FONT.BOLD}}>
           {store.name}
         </Text>
-        <Text numberOfLines={1} style={{color: COLOR.MEDIUM}}>
+        <Text numberOfLines={1} style={{color: COLOR.DARK}}>
           {store.vicinity}
         </Text>
       </View>

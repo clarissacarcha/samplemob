@@ -1,13 +1,9 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, SafeAreaView} from 'react-native';
-import {FocusAwareStatusBar} from '../../../../revamp/ui/';
-import {COLORS} from '../../../../res/constants';
+import {StyleSheet, SafeAreaView, StatusBar, ScrollView} from 'react-native';
+import {COLOR} from '../../../../res/variables';
 
 //SELF IMPORTS
-import Greeting from './Greeting';
-import Header from './Header';
-import Menu from './Menu';
-import {StatusBar} from 'react-native';
+import {Header, Menu, Advertisements} from './Components';
 
 const ConsumerLanding = () => {
   // const userLocation = {
@@ -22,13 +18,12 @@ const ConsumerLanding = () => {
   return (
     <>
       <StatusBar barStyle="dark-content" backgroundColor={'transparent'} translucent />
-      <SafeAreaView>
-        <View style={styles.screenBox}>
+      <SafeAreaView style={styles.screen}>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <Header />
-          {/* <Greeting /> */}
           <Menu setUserLocation={setUserLocation} />
-          {/* <Text>{JSON.stringify(userLocation, null, 4)}</Text> */}
-        </View>
+          <Advertisements />
+        </ScrollView>
       </SafeAreaView>
     </>
   );
@@ -37,8 +32,8 @@ const ConsumerLanding = () => {
 export default ConsumerLanding;
 
 const styles = StyleSheet.create({
-  screenBox: {
-    backgroundColor: 'white',
-    marginTop: StatusBar.currentHeight,
+  screen: {
+    backgroundColor: COLOR.WHITE,
+    flex: 1,
   },
 });

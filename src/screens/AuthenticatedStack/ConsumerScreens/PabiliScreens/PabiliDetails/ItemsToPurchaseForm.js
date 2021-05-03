@@ -32,7 +32,7 @@ const PurchaseForm = ({item, length, index, onRemovePress, onItemChange, onQuant
         <TouchableOpacity
           onPress={() => onRemovePress(index)}
           style={{height: 50, width: 45, justifyContent: 'center', alignItems: 'flex-end'}}>
-          <VectorIcon iconSet={ICON_SET.Evil} name="close" size={35} color={COLOR.MEDIUM} />
+          <VectorIcon iconSet={ICON_SET.Evil} name="close" size={35} color={COLOR.DARK} />
         </TouchableOpacity>
       ) : (
         <View style={{height: 50, width: 45}} />
@@ -165,20 +165,20 @@ export default connect(mapStateToProps, null)(PromoForm);
 const styles = StyleSheet.create({
   input: {
     height: 50,
-    backgroundColor: COLOR.ATHENS_GRAY,
+    backgroundColor: COLOR.LIGHT,
     borderRadius: 5,
     paddingHorizontal: 10,
   },
   description: {
     height: 50,
-    backgroundColor: COLOR.ATHENS_GRAY,
+    backgroundColor: COLOR.LIGHT,
     borderRadius: 5,
     paddingHorizontal: 10,
     flex: 3,
   },
   quantity: {
     height: 50,
-    backgroundColor: COLOR.ATHENS_GRAY,
+    backgroundColor: COLOR.LIGHT,
     borderRadius: 5,
     paddingHorizontal: 10,
     flex: 1,

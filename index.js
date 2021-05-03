@@ -14,7 +14,7 @@ const customTextProps = {
   style: {
     fontFamily: FONT.REGULAR,
     fontSize: FONT_SIZE.M,
-    color: COLOR.DARK,
+    color: COLOR.BLACK,
   },
 };
 

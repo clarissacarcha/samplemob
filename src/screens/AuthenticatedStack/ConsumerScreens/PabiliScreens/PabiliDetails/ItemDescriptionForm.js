@@ -36,7 +36,7 @@ export const ItemSheet = forwardRef(({onChange}, ref) => {
         <WhiteButton
           label="Food"
           borderless
-          labelColor={COLOR.MEDIUM}
+          labelColor={COLOR.DARK}
           onPress={() => {
             onChange('Food');
             ref.current.collapse();
@@ -45,7 +45,7 @@ export const ItemSheet = forwardRef(({onChange}, ref) => {
         <WhiteButton
           label="Document"
           borderless
-          labelColor={COLOR.MEDIUM}
+          labelColor={COLOR.DARK}
           onPress={() => {
             onChange('Document');
             ref.current.collapse();
@@ -54,7 +54,7 @@ export const ItemSheet = forwardRef(({onChange}, ref) => {
         <WhiteButton
           label="Clothing"
           borderless
-          labelColor={COLOR.MEDIUM}
+          labelColor={COLOR.DARK}
           onPress={() => {
             onChange('Clothing');
             ref.current.collapse();
@@ -63,7 +63,7 @@ export const ItemSheet = forwardRef(({onChange}, ref) => {
         <WhiteButton
           label="Large"
           borderless
-          labelColor={COLOR.MEDIUM}
+          labelColor={COLOR.DARK}
           onPress={() => {
             onChange('Large');
             ref.current.collapse();
@@ -72,7 +72,7 @@ export const ItemSheet = forwardRef(({onChange}, ref) => {
         <WhiteButton
           label="Others"
           borderless
-          labelColor={COLOR.MEDIUM}
+          labelColor={COLOR.DARK}
           onPress={() => {
             onChange('Others');
             ref.current.collapse();
@@ -99,7 +99,7 @@ export const ItemDescriptionForm = ({value, onChange, bottomSheetRef}) => {
         suffixName="arrow-forward"
         suffixColor={LIGHT}
         delay={0}
-        labelStyle={{color: COLOR.DARK, fontFamily: FONT.REGULAR}}
+        labelStyle={{color: COLOR.BLACK, fontFamily: FONT.REGULAR}}
         onPress={() => {
           bottomSheetRef.current.expand();
         }}

@@ -41,7 +41,7 @@ export const PartnerBranchTenantBottomSheet = forwardRef(({onChange, tenants}, r
             <WhiteButton
               label={item.name}
               borderless
-              labelColor={COLOR.MEDIUM}
+              labelColor={COLOR.DARK}
               onPress={() => {
                 onChange(item);
                 ref.current.collapse();
@@ -70,7 +70,7 @@ export const PartnerBranchTenantForm = ({value, onChange, bottomSheetRef}) => {
         suffixName="arrow-forward"
         suffixColor={LIGHT}
         delay={0}
-        labelStyle={{color: COLOR.DARK, fontFamily: FONT.REGULAR}}
+        labelStyle={{color: COLOR.BLACK, fontFamily: FONT.REGULAR}}
         onPress={() => {
           bottomSheetRef.current.expand();
         }}

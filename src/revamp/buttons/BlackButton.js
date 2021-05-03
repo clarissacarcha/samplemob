@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   label: {
-    color: COLOR.DARK,
+    color: COLOR.BLACK,
     paddingHorizontal: 10,
     fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.XL,

@@ -224,7 +224,7 @@ const PabiliDetails = ({navigation, route, session}) => {
       /> */}
       </ScrollView>
       <View style={{backgroundColor: 'white'}}>
-        <View style={{backgroundColor: COLOR.ATHENS_GRAY, padding: 10}}>
+        <View style={{backgroundColor: COLOR.LIGHT, padding: 10}}>
           <BlackButton label="Confirm Pabili Information" onPress={onConfirmPabiliInformation} />
         </View>
       </View>
@@ -264,7 +264,7 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 50,
-    backgroundColor: COLOR.ATHENS_GRAY,
+    backgroundColor: COLOR.LIGHT,
     borderRadius: 5,
     paddingHorizontal: 10,
     marginBottom: 20,

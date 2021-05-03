@@ -4,7 +4,7 @@ import {useSelector} from 'react-redux';
 import ContentLoader from 'react-native-easy-content-loader';
 import {useLazyQuery} from '@apollo/react-hooks';
 import {COLORS, FONTS, NUMBERS, SIZES} from '../../../../../res/constants';
-import {FONT, FONT_SIZE, COLOR} from '../../../../../res/variables';
+import {FONT, FONT_SIZE, COLOR, SIZE} from '../../../../../res/variables';
 import {WhiteButton, VectorIcon, Shadow, ICON_SET} from '../../../../../revamp';
 import {GET_GOOGLE_GEOCODE_REVERSE} from '../../../../../graphql';
 import {GeolocationUtility, GoogleUtility} from '../../../../../util';
@@ -80,7 +80,7 @@ const SenderRecipientCard = ({
   }, []);
 
   return (
-    <Shadow style={{marginHorizontal: NUMBERS.MARGIN_HORIZONTAL, borderRadius: NUMBERS.BORDER_RADIUS}}>
+    <Shadow style={{marginHorizontal: SIZE.MARGIN, borderRadius: SIZE.BORDER_RADIUS}}>
       <View
         style={{
           flexDirection: 'row',
@@ -127,7 +127,7 @@ const SenderRecipientCard = ({
                   numberOfLines={1}
                   style={{
                     fontFamily: FONT.BOLD,
-                  }}>{`Hi ${session.user.person.firstName}, saan mo gusto magpabili?`}</Text>
+                  }}>{`May ipapadala? Ipa-toktok mo na yan!`}</Text>
               )}
             </View>
           </TouchableHighlight>

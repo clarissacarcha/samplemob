@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 50,
     borderWidth: 1,
-    borderColor: COLOR.YELLOW,
+    borderColor: COLOR.BLACK,
     borderRadius: 5,
   },
   borderless: {
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     fontSize: 13,
     fontFamily: FONT.BOLD,
-    color: COLOR.MEDIUM,
+    color: COLOR.DARK,
   },
   description: {
     paddingHorizontal: 10,

@@ -17,7 +17,7 @@ import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import moment from 'moment';
 import {COLORS, FONTS, NUMBERS, SIZES, MEDIUM} from '../../../../../res/constants';
 import {FONT, COLOR, SIZE} from '../../../../../res/variables';
-import {WhiteButton, BlackButton, ORANGE, VectorIcon, ICON_SET, Shadow, ImageHeader} from '../../../../../revamp';
+import {WhiteButton, BlackButton, VectorIcon, ICON_SET, Shadow, ImageHeader} from '../../../../../revamp';
 
 import BottomSheet, {BottomSheetBackdrop, BottomSheetView} from '@gorhom/bottom-sheet';
 import ScrollPicker from 'react-native-wheel-scrollview-picker';
@@ -28,7 +28,6 @@ import ToktokHeader from '../../../../../assets/toktok/images/ToktokHeader.png';
 //SELF IMPORTS
 import PabiliPartners from './PabiliPartners';
 import SenderRecipientCard from './SenderRecipientCard';
-import DeliveryScheduleFormButton from './DeliveryScheduleFormButton';
 
 const SCHEDULES = [
   {label: 'Anytime', value: '23:59:59'},
@@ -260,7 +259,6 @@ const Pabili = ({navigation, session}) => {
       {/* <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent /> */}
       <View style={{flex: 1, backgroundColor: 'white'}}>
         <ImageHeader />
-
         <View style={{marginTop: -(220 - StatusBar.currentHeight)}} />
         <View style={{flexDirection: 'row'}}>
           <TouchableOpacity onPress={() => navigation.pop()}>
@@ -311,7 +309,6 @@ const Pabili = ({navigation, session}) => {
           </TouchableHighlight>
         </Shadow>
 
-        {/* <DeliveryScheduleFormButton /> */}
         <View style={{height: 10}} />
         <SenderRecipientCard
           senderStop={orderData.senderStop}
@@ -348,7 +345,7 @@ const Pabili = ({navigation, session}) => {
             </TouchableHighlight>
           </Shadow>
         )}
-        <View style={{height: 10, backgroundColor: COLOR.ATHENS_GRAY, marginTop: 20, marginBottom: 10}} />
+        <View style={{height: 10, backgroundColor: COLOR.LIGHT, marginTop: 20, marginBottom: 10}} />
         <PabiliPartners orderData={orderData} setOrderData={setOrderData} />
       </View>
       <BottomSheet

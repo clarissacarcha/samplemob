@@ -11,7 +11,9 @@ import Fontisto from 'react-native-vector-icons/Fontisto';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import Material from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunity from 'react-native-vector-icons/MaterialCommunityIcons';
+import Octicons from 'react-native-vector-icons/Octicons';
 import SimpleLine from 'react-native-vector-icons/SimpleLineIcons';
+import Zocial from 'react-native-vector-icons/Zocial';
 
 export const ICON_SET = {
   Entypo,
@@ -23,7 +25,9 @@ export const ICON_SET = {
   Ionicon,
   Material,
   MaterialCommunity,
+  Octicons,
   SimpleLine,
+  Zocial,
 };
 
 export const VectorIcon = ({

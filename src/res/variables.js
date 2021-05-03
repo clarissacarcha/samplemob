@@ -6,14 +6,13 @@ export const MAPS_API_KEY = 'AIzaSyDhlw6pbriuwr_Mb6KYkVlBar7KD1KTrOs';
 // export const HOST_PORT = 'graphql.toktok.ph:2096';
 
 export const COLOR = {
-  BLACK: '#222222',
-  WHITE: '#FFFFFF',
+  WHITE: '#FFFFFF', // View backgroundColor
+  LIGHT: '#F7F7FA', // Form backgroundColor and item separator
+  MEDIUM: '#D3D3D3', // Placeholder Color
+  DARK: '#808080', // Text and Icons
+  BLACK: '#222222', // Text and Icons
   YELLOW: '#FDBA1C',
   ORANGE: '#F5841F',
-  LIGHT: '#D3D3D3',
-  MEDIUM: '#808080',
-  DARK: '#222222',
-  ATHENS_GRAY: '#F7F7FA', //TextInput background color
   YELLOW_UNDERLAY: '#96641e', //TouchableHightlight underlayColor for YELLOW background
   WHITE_UNDERLAY: '#FDBA1C', //TouchableHightlight underlayColor for WHITE background
 };
@@ -35,7 +34,7 @@ export const SIZE = {
   BUTTON_HEIGHT: 50,
   FORM_HEIGHT: 50,
   BORDER_RADIUS: 5,
-  SIDE_MARGIN: 20,
+  MARGIN: 16,
 };
 
 export const SHADOW = {

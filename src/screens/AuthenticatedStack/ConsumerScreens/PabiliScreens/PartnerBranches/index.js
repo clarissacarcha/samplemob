@@ -9,7 +9,7 @@ import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../../../components';
 const PartnerBranch = ({branch, onBranchSelect}) => {
   return (
     <TouchableHighlight
-      style={{marginHorizontal: SIZE.SIDE_MARGIN, borderRadius: SIZE.BORDER_RADIUS}}
+      style={{marginHorizontal: SIZE.MARGIN, borderRadius: SIZE.BORDER_RADIUS}}
       onPress={() => {
         onBranchSelect(branch);
       }}
@@ -108,7 +108,7 @@ const PartnerBranches = ({navigation, route}) => {
         showsVerticalScrollIndicator={false}
         keyExtractor={(item) => item.place_id}
         ItemSeparatorComponent={() => (
-          <View style={{borderBottomWidth: 1, marginHorizontal: 20, borderColor: COLOR.ATHENS_GRAY}} />
+          <View style={{borderBottomWidth: 1, marginHorizontal: 20, borderColor: COLOR.LIGHT}} />
         )}
       />
     </View>

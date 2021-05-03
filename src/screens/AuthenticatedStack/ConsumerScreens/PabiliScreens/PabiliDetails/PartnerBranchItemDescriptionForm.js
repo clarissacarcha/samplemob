@@ -10,8 +10,6 @@ import {ItemDescription} from '../../../../../components/ItemDescription';
 export const PartnerBranchItemDescriptionBottomSheet = forwardRef(({onChange, partnerOrders}, ref) => {
   const snapPoints = useMemo(() => [0, 500], []);
 
-  // console.log(JSON.stringify(partnerOrders, null, 4));
-
   return (
     <BottomSheet
       ref={ref}
@@ -41,7 +39,7 @@ export const PartnerBranchItemDescriptionBottomSheet = forwardRef(({onChange, pa
             <WhiteButton
               label={item.cargo.type}
               borderless
-              labelColor={COLOR.MEDIUM}
+              labelColor={COLOR.DARK}
               onPress={() => {
                 onChange(item);
                 ref.current.collapse();
@@ -49,54 +47,6 @@ export const PartnerBranchItemDescriptionBottomSheet = forwardRef(({onChange, pa
             />
           )}
         />
-        {/* {renderOrderSelection} */}
-        {/* <Text> {JSON.stringify(partnerOrders, null, 4)}</Text> */}
-
-        {/* <WhiteButton
-          label="Food"
-          borderless
-          labelColor={COLOR.MEDIUM}
-          onPress={() => {
-            onChange('Food');
-            ref.current.collapse();
-          }}
-        />
-        <WhiteButton
-          label="Document"
-          borderless
-          labelColor={COLOR.MEDIUM}
-          onPress={() => {
-            onChange('Document');
-            ref.current.collapse();
-          }}
-        />
-        <WhiteButton
-          label="Clothing"
-          borderless
-          labelColor={COLOR.MEDIUM}
-          onPress={() => {
-            onChange('Clothing');
-            ref.current.collapse();
-          }}
-        />
-        <WhiteButton
-          label="Large"
-          borderless
-          labelColor={COLOR.MEDIUM}
-          onPress={() => {
-            onChange('Large');
-            ref.current.collapse();
-          }}
-        />
-        <WhiteButton
-          label="Others"
-          borderless
-          labelColor={COLOR.MEDIUM}
-          onPress={() => {
-            onChange('Others');
-            ref.current.collapse();
-          }}
-        /> */}
       </View>
     </BottomSheet>
   );
@@ -118,7 +68,7 @@ export const PartnerBranchItemDescriptionForm = ({value, onChange, bottomSheetRe
         suffixName="arrow-forward"
         suffixColor={LIGHT}
         delay={0}
-        labelStyle={{color: COLOR.DARK, fontFamily: FONT.REGULAR}}
+        labelStyle={{color: COLOR.BLACK, fontFamily: FONT.REGULAR}}
         onPress={() => {
           bottomSheetRef.current.expand();
         }}

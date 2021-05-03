@@ -11,7 +11,7 @@ const Greeting = ({session}) => {
         <Text style={{fontSize: 17, marginBottom: 5, fontFamily: FONT.BOLD}}>
           Hello, <Text style={{color: COLOR.YELLOW, fontSize: 17}}>{session.user.person.firstName}</Text>!
         </Text>
-        <Text style={{fontSize: 13, fontFamily: FONT.BOLD, color: COLOR.MEDIUM}}>
+        <Text style={{fontSize: 13, fontFamily: FONT.BOLD, color: COLOR.DARK}}>
           Basta may ipapadala, ipa-toktok mo na yan!
         </Text>
       </View>
