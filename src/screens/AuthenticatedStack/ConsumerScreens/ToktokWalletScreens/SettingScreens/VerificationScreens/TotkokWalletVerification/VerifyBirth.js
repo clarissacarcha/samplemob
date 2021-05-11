@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,Modal,Alert,TextInput} from 'react-native'
-import {FONTS, SIZES, INPUT_HEIGHT, BUTTON_HEIGHT, BUTTON_ORANGE, COLORS} from '../../../../../../../res/constants'
+import {FONTS, SIZES, INPUT_HEIGHT, BUTTON_HEIGHT, COLORS} from '../../../../../../../res/constants'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import {VerifyContext} from './VerifyContextProvider'
 import DatePicker from 'react-native-date-picker'
@@ -132,7 +132,7 @@ const VerifyBirth = ()=> {
                         <Text style={{color: "gray",fontSize: SIZES.M,fontFamily: FONTS.BOLD}}>Back</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={Proceed} style={{height: BUTTON_HEIGHT,flex: 1,marginLeft: 10,backgroundColor: BUTTON_ORANGE , borderRadius: 5, justifyContent: "center",alignItems: "center"}}>
+                    <TouchableOpacity onPress={Proceed} style={{height: BUTTON_HEIGHT,flex: 1,marginLeft: 10,backgroundColor: COLORS.YELLOW , borderRadius: 5, justifyContent: "center",alignItems: "center"}}>
                         <Text style={{color: "black",fontSize: SIZES.M,fontFamily: FONTS.BOLD}}>Next</Text>
                     </TouchableOpacity>
                 </View>

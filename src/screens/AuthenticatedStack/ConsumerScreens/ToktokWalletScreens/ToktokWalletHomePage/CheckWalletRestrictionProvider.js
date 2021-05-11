@@ -13,13 +13,13 @@ const CheckWalletRestrictionProvider = ({children, walletinfo})=>{
     const checkIfResctricted = ()=> {
         // checking if wallet is not verified
         if(!walletinfo.isVerified){
-            navigation.push("ToktokWalletRestricted" , {component: "notVerified" , walletinfo: walletinfo})
+            navigation.replace("ToktokWalletRestricted" , {component: "notVerified" , walletinfo: walletinfo})
             return true
         }
 
         // checking if pin is set
         if(!walletinfo.pincode || walletinfo.pincode == null){
-            navigation.push("ToktokWalletRestricted" , {component: "noPin", walletinfo: walletinfo})
+            navigation.replace("ToktokWalletRestricted" , {component: "noPin", walletinfo: walletinfo})
             return true
         }
 
@@ -32,6 +32,15 @@ const CheckWalletRestrictionProvider = ({children, walletinfo})=>{
         return false
 
     }
+
+
+    if(walletinfo.id){
+        if(!walletinfo.isVerified || !walletinfo.pincode){
+            //  navigation.pop()
+             return checkIfResctricted()
+        }
+    }
+ 
 
     return (
         <Provider

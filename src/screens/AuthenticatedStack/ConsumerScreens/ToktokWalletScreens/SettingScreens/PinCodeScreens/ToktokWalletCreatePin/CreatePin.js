@@ -1,7 +1,8 @@
 import React, { useState ,useRef , useEffect } from 'react'
 import {View,Text,StyleSheet,TouchableHighlight,TouchableOpacity,TextInput,KeyboardAvoidingView,Platform,ScrollView} from 'react-native'
 import { DARK,SIZES, BUTTON_HEIGHT, COLORS, FONTS} from '../../../../../../../res/constants'
-import NumberBoxes from '../../../Components/NumberBoxes'
+import { YellowButton } from '../../../../../../../revamp'
+import {DisabledButton, NumberBoxes} from '../../../Components'
 
 const CreatePin = ({pinCode,setPinCode,pageIndex,setPageIndex,walletinfo})=> {
 
@@ -26,7 +27,6 @@ const CreatePin = ({pinCode,setPinCode,pageIndex,setPageIndex,walletinfo})=> {
                     <View style={{position: 'relative',marginTop: 50,}}>
                         <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={showPin}/>
                         <TextInput
-                            autoFocus={true}
                             caretHidden
                             value={pinCode}
                             ref={inputRef}
@@ -35,7 +35,8 @@ const CreatePin = ({pinCode,setPinCode,pageIndex,setPageIndex,walletinfo})=> {
                             returnKeyType="done"
                             onChangeText={(value) => {
                             if (value.length <= 6) {
-                                setPinCode(value);
+                                const num = value.replace(/[^0-9]/g, '')
+                                setPinCode(num);
                             }
                             }}
                             onSubmitEditing={onSubmit}
@@ -49,13 +50,20 @@ const CreatePin = ({pinCode,setPinCode,pageIndex,setPageIndex,walletinfo})=> {
                         </TouchableOpacity>
                     </View>
             </ScrollView>
-            <TouchableOpacity
+            {/* <TouchableOpacity
                 disabled={pinCode.length < 6}
                 onPress={onSubmit}
-                style={{alignItems: "center",height: BUTTON_HEIGHT,backgroundColor: pinCode.length < 6 ? "gray" : COLORS.YELLOW,margin: 16,justifyContent: "center",borderRadius: 10,}}
+                style={{alignItems: "center",height: BUTTON_HEIGHT,backgroundColor: pinCode.length < 6 ? "#F7F7FA" : COLORS.YELLOW,margin: 16,justifyContent: "center",borderRadius: 10,}}
             >
-                    <Text style={{color: pinCode.length < 6 ? "white" : COLORS.DARK,fontSize: SIZES.L,fontFamily: FONTS.BOLD}}>Next</Text>
-            </TouchableOpacity>
+                    <Text style={{color: pinCode.length < 6 ? "gray" : COLORS.DARK,fontSize: SIZES.L,fontFamily: FONTS.BOLD}}>Next</Text>
+            </TouchableOpacity> */}
+             <View style={{padding: 16}}>
+                {
+                    pinCode.length < 6
+                    ? <DisabledButton label="Next"/>
+                    : <YellowButton label="Next" onPress={onSubmit}/>
+                }
+            </View>
        </View>
     )
 }

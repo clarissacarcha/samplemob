@@ -4,9 +4,9 @@ import {View,StyleSheet,Image} from 'react-native'
 //SELF IMPORTS
 import WalletOnHold from './WalletOnHold'
 import SecurewithPIN from './SecurewithPIN'
-import HeadingBannerLogo from '../Components/HeadingBannerLogo'
+import { HeadingBannerLogo }from '../Components'
 
-export default ({navigation,route})=> {
+const ToktokWalletRestricted = ({navigation,route})=> {
     
     navigation.setOptions({
         headerShown: false
@@ -44,3 +44,5 @@ const styles = StyleSheet.create({
     },
 
 })
+
+export default ToktokWalletRestricted

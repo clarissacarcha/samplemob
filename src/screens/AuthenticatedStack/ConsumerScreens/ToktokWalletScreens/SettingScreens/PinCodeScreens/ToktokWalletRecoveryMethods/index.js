@@ -1,10 +1,11 @@
 import React from 'react'
 import {View,Text,StyleSheet,TouchableOpacity} from 'react-native'
 import { HeaderBackClose , HeaderTitle} from '../../../../../../../components'
-import { COLOR, FONTS, FONT_LIGHT, FONT_MEDIUM, FONT_REGULAR, SIZES } from '../../../../../../../res/constants'
+import { COLORS, FONTS, SIZES } from '../../../../../../../res/constants'
 import FIcon from 'react-native-vector-icons/Feather'
 import {useSelector} from 'react-redux'
-import Separator from '../../../Components/Separator'
+import {Separator} from '../../../Components'
+import { HeaderBack } from '../../../../../../../revamp'
 
 const RecoveryMethod = ({title,message,onPress})=> {
     return (
@@ -20,10 +21,10 @@ const RecoveryMethod = ({title,message,onPress})=> {
     )
 }
 
-export default ({navigation})=> {
+const ToktokWalletRecoveryMethods = ({navigation})=> {
 
     navigation.setOptions({
-        headerLeft: ()=> <HeaderBackClose/>,
+        headerLeft: ()=> <HeaderBack color={COLORS.YELLOW}/>,
         headerTitle: ()=> <HeaderTitle label={['Recovery Methods','']}/>,
     })
 
@@ -71,3 +72,5 @@ const styles = StyleSheet.create({
         flex: 1,
     }
 })
+
+export default ToktokWalletRecoveryMethods

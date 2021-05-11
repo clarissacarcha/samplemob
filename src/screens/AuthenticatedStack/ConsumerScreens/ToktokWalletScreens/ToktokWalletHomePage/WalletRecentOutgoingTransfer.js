@@ -7,7 +7,7 @@ import { numberFormat } from '../../../../../helper'
 import {GET_RECENT_OUTGOING_TRANSFER} from '../../../../../graphql'
 import {useQuery} from '@apollo/react-hooks'
 import {useNavigation} from '@react-navigation/native'
-import Separator from '../Components/Separator'
+import {Separator} from '../Components'
 
 const WalletRecentOutgoingTransfer = ({walletinfo})=> {
 

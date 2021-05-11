@@ -6,12 +6,12 @@ import { COLOR, FONT_REGULAR, SIZES, INPUT_HEIGHT, FONTS } from '../../../../../
 import {useSelector} from 'react-redux'
 import Contacts from 'react-native-contacts'
 import {sortBy} from 'lodash'
+import {Separator} from '../../Components'
 
 //SELF IMPORTS 
 import ContactInfoRender from './ContactInfoRender'
-import Separator from '../../Components/Separator'
 
-const WalletContacts = ({navigation,route})=> {
+const ToktokWalletContacts = ({navigation,route})=> {
 
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack />,
@@ -252,4 +252,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default WalletContacts
+export default ToktokWalletContacts

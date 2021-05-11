@@ -1,12 +1,9 @@
 import React from 'react'
-import { Modal , StyleSheet , View , Text , TouchableOpacity} from 'react-native'
-import { COLOR, FONT_REGULAR , DARK, FONT_MEDIUM, FONT_BOLD, FONT_LIGHT, SIZES, FONTS, COLORS} from '../../../../../../res/constants'
-import FIcon5 from 'react-native-vector-icons/FontAwesome5'
+import { Modal , StyleSheet , View , Text } from 'react-native'
+import { SIZES, FONTS, COLORS} from '../../../../../../res/constants'
 import { numberFormat } from '../../../../../../helper'
 import {useNavigation} from '@react-navigation/native'
-import moment from 'moment'
-import { BlackButton } from '../../../../../../revamp'
-import Receipt from '../../Components/Receipt'
+import {Receipt} from '../../Components'
 
 const TransactionInfo = ({label,value})=> (
     <View style={styles.transactionInfoView}>

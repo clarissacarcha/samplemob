@@ -12,7 +12,7 @@ const {height,width} = Dimensions.get("window")
 const NumberBox = ({onPress,value}) => (
     <TouchableHighlight onPress={onPress} underlayColor={COLOR} style={{borderRadius: 10,marginHorizontal: 5,}}>
       <View style={styles.inputView}>
-        <Text style={{fontSize: 25, fontFamily: FONTS.BOLD}}>{value ? "*" : ""}</Text>
+        <Text style={{fontSize: 25, fontFamily: FONTS.BOLD}}>{value ? "•" : ""}</Text>
       </View>
     </TouchableHighlight>
 );
@@ -31,7 +31,7 @@ const NumberBoxes = ({pinCode, onNumPress}) => {
     );
  };
 
- export default ({navigation,route})=> {
+const ToktokWalletSecurityPinCode = ({navigation,route})=> {
 
     const [pinCode,setPinCode] = useState("")
     const inputRef = useRef();
@@ -67,6 +67,7 @@ const NumberBoxes = ({pinCode, onNumPress}) => {
             })
 
             route.params.onConfirm()
+           
             setTimeout(()=>{
                 setPinCode("")
             },2000)
@@ -106,7 +107,7 @@ const NumberBoxes = ({pinCode, onNumPress}) => {
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS == "ios" ? "padding" : "height"}
-            keyboardVerticalOffset={Platform.OS == "ios" ? 0 : 40}  
+            keyboardVerticalOffset={Platform.OS == "ios" ? 50 : 10} 
             style={styles.container}
         >
 
@@ -118,7 +119,6 @@ const NumberBoxes = ({pinCode, onNumPress}) => {
                                     <NumberBoxes pinCode={pinCode} onNumPress={onNumPress}/>
                                     <TextInput
                                         caretHidden
-                                        autoFocus={true}
                                         value={pinCode}
                                         ref={inputRef}
                                         style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent'}}
@@ -190,3 +190,4 @@ const styles = StyleSheet.create({
     },
 })
 
+export default ToktokWalletSecurityPinCode

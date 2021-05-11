@@ -6,7 +6,7 @@ import { YellowButton } from '../../../../../revamp'
 
 const {height,width} = Dimensions.get("window")
 
-const FilterDateModal = ({showFilterDate,setShowFilterDate, filterDate , changeFilterDate})=> {
+export const FilterDateModal = ({showFilterDate,setShowFilterDate, filterDate , changeFilterDate})=> {
     
     // const minDate = new Date('1900-01-01');
     const todayDate = new Date();
@@ -54,4 +54,3 @@ const FilterDateModal = ({showFilterDate,setShowFilterDate, filterDate , changeF
         )
 }
 
-export default FilterDateModal

@@ -5,12 +5,12 @@ import { COLOR, FONTS } from '../../../../../res/constants'
 const NumberBox = ({onPress, value , showPin}) => (
     <TouchableHighlight onPress={onPress} underlayColor={COLOR} style={{borderRadius: 10,marginHorizontal: 5,}}>
       <View style={styles.inputView}>
-        <Text style={{fontSize: 25, fontFamily: FONTS.BOLD}}>{value ? showPin ? value : "*" : ''}</Text>
+        <Text style={{fontSize: 25, fontFamily: FONTS.BOLD}}>{value ? showPin ? value : "•" : ''}</Text>
       </View>
     </TouchableHighlight>
 );
 
-const NumberBoxes = ({pinCode, onNumPress, showPin}) => {
+export const NumberBoxes = ({pinCode, onNumPress, showPin}) => {
 
     const numberBoxes = [];
     var i;
@@ -36,6 +36,5 @@ const styles = StyleSheet.create({
     },
 })
 
-export default NumberBoxes
 
 

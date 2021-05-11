@@ -2,10 +2,10 @@ import React from 'react'
 import {View,StyleSheet,Text} from 'react-native'
 import { HeaderBackClose,HeaderTitle } from '../../../../../components'
 import { COLORS, FONTS, FONT_MEDIUM, FONT_REGULAR, SIZES } from '../../../../../res/constants'
-import Separator from '../Components/Separator'
+import {Separator} from '../Components'
 import moment from 'moment'
 import { numberFormat } from '../../../../../helper'
-import { YellowButton } from '../../../../../revamp'
+import { HeaderBack, YellowButton } from '../../../../../revamp'
 
 
 const Details = ({label,value})=> {
@@ -21,10 +21,10 @@ const Details = ({label,value})=> {
     )
 }
 
-export default ({navigation,route})=> {
+const ToktokWalletRecentTransferView = ({navigation,route})=> {
 
     navigation.setOptions({
-        headerLeft: ()=> <HeaderBackClose />,
+        headerLeft: ()=> <HeaderBack color={COLORS.YELLOW}/>,
         headerTitle: ()=> <HeaderTitle label={['Recent Outgoing Transfer']} />,
     })
 
@@ -46,7 +46,7 @@ export default ({navigation,route})=> {
                         <Details label="Recipient" value={`${recentTransfer.destinationInfo.firstName} ${recentTransfer.destinationInfo.middleName ? recentTransfer.destinationInfo.middleName + " " : ""}${recentTransfer.destinationInfo.lastName}`}/>
                         <Details label="Fund Transferred" value={`PHP ${numberFormat(recentTransfer.amount)}`}/>
                     </View>
-                    <View style={{flex: 1,height: 70,justifyContent:"flex-end"}}>
+                    <View style={{flex: 1,height: 70,justifyContent:"flex-end",paddingBottom: 16,}}>
                             <YellowButton label="Transfer Again" onPress={TransferAgain} />
                     </View>
                    
@@ -88,3 +88,5 @@ const styles = StyleSheet.create({
         color: COLORS.DARK
     }
 })
+
+export default ToktokWalletRecentTransferView

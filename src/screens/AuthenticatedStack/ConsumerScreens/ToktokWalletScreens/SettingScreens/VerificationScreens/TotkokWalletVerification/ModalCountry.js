@@ -4,13 +4,14 @@ import countries from '../../../../../../../assets/JSON/countries.json'
 import {VerifyContext} from './VerifyContextProvider'
 import FIcon from 'react-native-vector-icons/Feather';
 import {SIZES, INPUT_HEIGHT, FONTS, COLORS } from '../../../../../../../res/constants';
-import Separator from '../../../Components/Separator';
+import {Separator} from '../../../Components';
 
+console.log(countries.length)
 
 
 const ModalCountry = ({type})=> {
     const {modalCountryVisible,setModalCountryVisible,changeBirthInfo,changeAddress,changeVerifyID,setNationality} = useContext(VerifyContext)
-    const [filteredCountries,setFilteredCountries] = useState(countries)
+    const [filteredCountries,setFilteredCountries] = useState(countries.sort((a,b)=> -1))
 
     const selectCountry = (index) => {
         const country = filteredCountries[index].name
@@ -56,7 +57,7 @@ const ModalCountry = ({type})=> {
                 </TouchableOpacity>
                 <View style={styles.search}>
                     <TextInput 
-                        placeholder="Search Country"
+                        placeholder="Search country"
                         style={styles.input}
                         onChangeText={filterSearch}
                     />

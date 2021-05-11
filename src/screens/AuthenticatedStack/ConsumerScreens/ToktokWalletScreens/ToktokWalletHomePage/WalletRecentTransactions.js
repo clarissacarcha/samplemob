@@ -5,7 +5,7 @@ import {GET_TOKTOK_WALLET_RECENT_LOGS} from '../../../../../graphql'
 import {useQuery} from '@apollo/react-hooks'
 import { COLOR, FONTS, FONT_BOLD, FONT_MEDIUM, FONT_REGULAR, SIZES } from '../../../../../res/constants'
 import {useNavigation} from '@react-navigation/native'
-import WalletLog from '../Components/WalletLog'
+import {WalletLog} from '../Components'
 
 const WalletRecentTransactions = ({session})=> {
 

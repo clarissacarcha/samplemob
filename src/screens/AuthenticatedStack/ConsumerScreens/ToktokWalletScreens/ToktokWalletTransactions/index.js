@@ -1,19 +1,18 @@
 import React, {useState,useEffect} from 'react'
 import {View,Text,Modal,StyleSheet,TouchableOpacity,FlatList,ActivityIndicator} from 'react-native'
-import { HeaderBack , HeaderBackClose, HeaderTitle, SomethingWentWrong} from '../../../../../components'
+import {  HeaderTitle, SomethingWentWrong} from '../../../../../components'
 import { COLOR, COLORS, FONTS, FONT_MEDIUM, FONT_REGULAR, SIZES } from '../../../../../res/constants'
 import {GET_TOKTOK_WALLET_LOGS} from '../../../../../graphql'
 import {useLazyQuery} from '@apollo/react-hooks'
 import moment from 'moment'
 import {onError} from '../../../../../util/ErrorUtility'
 import {useSelector} from 'react-redux'
-import Separator from '../Components/Separator'
-import WalletLog from '../Components/WalletLog'
-import FilterDateModal from '../Components/FilterDateModal'
+import {Separator,WalletLog,FilterDateModal} from '../Components'
+import { HeaderBack } from '../../../../../revamp'
 
-export default ({navigation,route})=> {
+const ToktokWalletTransactions = ({navigation,route})=> {
     navigation.setOptions({
-        headerLeft: ()=> <HeaderBackClose />,
+        headerLeft: ()=> <HeaderBack color={COLORS.YELLOW}/>,
         headerTitle: ()=> <HeaderTitle label={['Transactions']} />,
     })
 
@@ -161,3 +160,5 @@ const styles = StyleSheet.create({
         marginRight: 5
     },
 })
+
+export default ToktokWalletTransactions

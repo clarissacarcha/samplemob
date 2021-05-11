@@ -37,8 +37,11 @@ const SuccessModal = ({modalVisible})=> {
                      <Text style={{fontSize: SIZES.XL,fontFamily: FONTS.BOLD}}>toktokwallet PIN has been updated</Text>
                      <Text style={{color: "#212529",marginTop:5,fontFamily: FONTS.REGULAR,fontSize: SIZES.M}}>Your toktokwallet is now safe.</Text>
                  </View>
-      
-                 <YellowButton label="Done" onPress={closeModal}/>
+                
+                <View>
+                    <YellowButton label="Done" onPress={closeModal}/>
+                </View>
+                
             </View>
      
         </Modal>

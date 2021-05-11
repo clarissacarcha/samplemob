@@ -1,28 +1,32 @@
 import React, {useState,useRef,useEffect,useMemo} from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,Image,Modal,TextInput,Platform,KeyboardAvoidingView,ActivityIndicator,Alert,Dimensions,ScrollView,Keyboard} from 'react-native'
 import {HeaderBackClose, HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../../../components'
-import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM, FONT_MEDIUM, FONT_REGULAR, FONT_LIGHT, SIZES, ORANGE, BUTTON_ORANGE} from '../../../../../../res/constants'
+import { DARK, SIZES, COLORS, FONTS} from '../../../../../../res/constants'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import {useSelector} from 'react-redux'
 import {useMutation,useLazyQuery} from '@apollo/react-hooks'
 import {POST_WALLET_CASH_IN,GET_DAILY_MONTHLY_YEARLY_INCOMING} from '../../../../../../graphql/model'
 import {onError,onErrorAlert} from '../../../../../../util/ErrorUtility';
 import {numberFormat} from '../../../../../../helper'
-import ConfirmBottomSheet from '../../Components/ConfirmBottomSheet'
 import {useAlert} from '../../../../../../hooks/useAlert'
-import Separator from '../../Components/Separator'
+import { HeaderBack, YellowButton } from '../../../../../../revamp'
+
+import {
+    ConfirmBottomSheet,
+    DisabledButton,
+    Separator
+} from '../../Components'
 
 //SELF IMPORTS
 import ConfirmModalContent from './ConfirmModalContent'
 
-
 const {height,width} = Dimensions.get("window")
 
 
-export default ({navigation,route})=> {
+const ToktokWalletPayPandaForm = ({navigation,route})=> {
     navigation.setOptions({
-        headerLeft: ()=> <HeaderBackClose/>,
-        headerTitle: ()=> <HeaderTitle label={['Enter Amount','']}/>,
+        headerLeft: ()=> <HeaderBack color={COLORS.YELLOW}/>,
+        headerTitle: ()=> <HeaderTitle label={['Cash In','']}/>,
     })
 
     const alert = useAlert()
@@ -142,8 +146,16 @@ export default ({navigation,route})=> {
 
 
     const confirmAmount = ()=> {
-        Keyboard.dismiss()
-        bottomSheetRef.current.snapTo(1);
+        // Keyboard.dismiss()
+        // bottomSheetRef.current.snapTo(1);
+        navigation.navigate("ToktokWalletReviewAndConfirm", {
+            label:"Cash In" , 
+            data: {
+                    method: "PayPanda" , 
+                    amount: amount
+                },
+            onConfirm: proceedToPaypandaPortal,
+        })
        
     }
 
@@ -160,6 +172,7 @@ export default ({navigation,route})=> {
             setTempAmount(`${transactionType.cashInLimit}00`)
             setAmount(transactionType.cashInLimit)
             setMaxLimitMessage(`Maximum cash in limit is ${'\u20B1'} ${numberFormat(transactionType.cashInLimit)}`)
+            setDisablebtn(true)
             return
         }
         // checkRecipientWalletLimitation(num * 0.01)
@@ -172,18 +185,15 @@ export default ({navigation,route})=> {
       <>
       <Separator />
        <KeyboardAvoidingView  
-            keyboardVerticalOffset={Platform.OS == "ios" ? 0 : 90}  
+            // keyboardVerticalOffset={Platform.OS == "ios" ? 90 : 90} 
+            keyboardVerticalOffset={90} 
             behavior={Platform.OS === "ios" ? "padding" : "height"} 
             style={styles.container}
         >
-             <View style={styles.paypandaLogo}>
-                <Image style={{height: 40,width: 40,alignSelf: "center"}} source={require('../../../../../../assets/images/paypanda.png')}/>
-                <View style={{justifyContent:"center"}}>
-                     <Text style={{marginLeft: 15,fontSize: SIZES.M,fontFamily: FONT_MEDIUM}}>PayPanda</Text>
-                     {/* <Text style={{fontFamily: FONT_LIGHT}}>Maximum cash in amount is {'\u20b1'}</Text> */}
-                </View>
-                
-               
+
+            <View style={styles.paypandaLogo}>
+                     <Image style={{height: 90,width: 90,alignSelf: "center",marginBottom: 10}} source={require('../../../../../../assets/toktokwallet-assets/paypanda.png')}/>
+                     <Text style={{fontSize: SIZES.L,fontFamily: FONTS.BOLD}}>PayPanda</Text>
             </View>
 
             <View style={styles.content}>
@@ -193,27 +203,23 @@ export default ({navigation,route})=> {
                 ? <View style={styles.amountcontent}>
                         <View style={{flexDirection: "row"}}>
                             <TextInput
-                                    // autoFocus={true}
                                     caretHidden
                                     value={tempAmount}
-                                    // ref={inputRef}
                                     style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent',zIndex: 1}}
                                     keyboardType="number-pad"
                                     returnKeyType="done"
                                     onChangeText={changeAmountText}
-                                    // onSubmitEditing={onSubmit}
                             />
-                            {/* <Text style={{fontSize: 40,fontFamily: FONT_MEDIUM , alignSelf:"center"}}></Text> */}
                             <View style={styles.input}>
-                                <Text style={{fontFamily: FONT_MEDIUM,fontSize: 30,marginRight: 15}}>PHP</Text>
-                                <Text style={{fontFamily: FONT_MEDIUM,fontSize: 30}}>{amount ? numberFormat(amount) : "0.00"}</Text>
-                                <FIcon5 name="pen" style={{alignSelf:"center",marginLeft: 25}} size={18} color="gray"/>
+                                <Text style={{fontFamily: FONTS.BOLD,fontSize: 32,marginRight: 10,color:COLORS.YELLOW}}>PHP</Text>
+                                <Text style={{fontFamily: FONTS.BOLD,fontSize: 32,color: COLORS>DARK}}>{amount ? numberFormat(amount) : "0.00"}</Text>
+                                <FIcon5 name="pen" style={{alignSelf:"center",marginLeft: 20}} size={20} color={COLORS.DARK}/>
                             </View>
                             
                         </View>
-                        <Text style={{color:"gray",fontSize: SIZES.M,fontFamily: FONT_REGULAR}}>Current Balance PHP {numberFormat(balance)}</Text>
-                        <Text style={{fontFamily: FONT_REGULAR, color: "red",marginTop: 5,fontSize: 12}}>{message}</Text>
-                        <Text style={{fontFamily: FONT_REGULAR, color: "red",marginTop: 5,fontSize: 12}}>{maxLimitMessage}</Text>
+                        <Text style={{color:COLORS.DARK,fontSize: SIZES.M,fontFamily: FONTS.BOLD}}>Available Balance PHP {numberFormat(balance)}</Text>
+                        <Text style={{fontFamily: FONTS.REGULAR, color: "red",marginTop: 5,fontSize: SIZES.S}}>{message}</Text>
+                        <Text style={{fontFamily: FONTS.REGULAR, color: "red",marginTop: 5,fontSize: SIZES.S}}>{maxLimitMessage}</Text>
               
                  </View>
                 : <View style={{flex: 1,justifyContent: "center",alignItems: "center"}}><ActivityIndicator size={50}/></View>
@@ -221,21 +227,15 @@ export default ({navigation,route})=> {
             }
           
             <View style={styles.cashinbutton}>
-                    <TouchableOpacity disabled={amount < 1 || amount > transactionType.cashInLimit || disablebtn} onPress={confirmAmount} style={{height: "100%",width: "100%",backgroundColor: amount < 1 || amount > transactionType.cashInLimit  || disablebtn ? "gray" : BUTTON_ORANGE , borderRadius: 10, justifyContent: "center",alignItems: "center"}}>
-                        <Text style={{color: amount < 1 || amount > transactionType.cashInLimit  || disablebtn ? "white" : "black",fontSize: SIZES.M,fontFamily: FONT_MEDIUM}}>Cash In</Text>
-                    </TouchableOpacity>
+                    {
+                        (amount < 1 || amount > transactionType.cashInLimit || disablebtn)
+                        ? <DisabledButton label="Cash In"/>
+                        : <YellowButton label="Cash In" onPress={confirmAmount}/>
+                    }
             </View>
         </View>
        </KeyboardAvoidingView>
 
-       <ConfirmBottomSheet
-            bottomSheetRef={bottomSheetRef}
-            onPress={openSecurityPIN}
-            headerTitle="Review and Confirm" 
-            btnLabel="Confirm"
-        >
-                <ConfirmModalContent amount={amount} />
-        </ConfirmBottomSheet>
 
        </>
     )
@@ -249,21 +249,20 @@ const styles = StyleSheet.create({
     },
     content: {
         flex: 1,
-        paddingHorizontal: 10,
-        paddingBottom: 10,
+        paddingHorizontal: 16,
+        paddingBottom: 16,
     }, 
     paypandaLogo: {
-        height: 80,
         width: "100%",
-        flexDirection: "row",
-        padding: 10,
-        borderBottomWidth: 0.2,
-        borderColor: "silver"
+        justifyContent:"center",
+        alignItems:"center",
+        marginTop: 30,
     },
     amountcontent: {
         flex: 1,
-        justifyContent: "center",
+        justifyContent: "flex-start",
         alignItems: "center",
+        paddingTop: 30,
         // width:width * 0.7,
         // alignSelf:"center"
     },
@@ -285,3 +284,5 @@ const styles = StyleSheet.create({
         flexDirection:"row"
       },
 })
+
+export default ToktokWalletPayPandaForm

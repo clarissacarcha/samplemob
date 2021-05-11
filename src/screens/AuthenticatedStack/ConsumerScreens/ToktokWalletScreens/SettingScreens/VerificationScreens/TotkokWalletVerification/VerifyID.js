@@ -10,6 +10,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 //SELF IMPORTS 
 import ModalCountry from './ModalCountry'
 import ModalValidID from './ModalValidID'
+import { YellowButton } from '../../../../../../../revamp'
 
 const {height,width} = Dimensions.get("window")
 
@@ -72,25 +73,44 @@ const VerifyID = ()=> {
                 marginTop: 5,
                 borderRadius: 5,
                 borderStyle: "dashed",
-                height: CROP_AREA_HEIGHT,
-                width: CROP_AREA_WIDTH,
+                // height: CROP_AREA_HEIGHT,
+                // width: CROP_AREA_WIDTH,
+                height: 175,
+                width: 283,
                 borderWidth: 2,
-                borderColor: "#FCB91A",
+                borderColor: "#CCCCCC",
                 justifyContent: "center",
-                alignItems: "center"
+                alignItems: "center",
+                backgroundColor:"#F7F7FA"
             }}>
-                <Text style={{color:"#FCB91A",marginBottom:5,fontFamily: FONTS.BOLD}}>Add a photo</Text>
-                <EIcon name="camera" color="#FCB91A" size={40} />
+                
+                <EIcon name="camera" color="#CCCCCC" size={40} />
+                <Text style={{color:"#CCCCCC",marginBottom:5,fontFamily: FONTS.BOLD}}>Take a photo</Text>
         </TouchableOpacity>
     )
 
 
     const ImageIDSet = ()=> (
-        <TouchableOpacity style={{marginTop: 5,width: CROP_AREA_WIDTH , height: CROP_AREA_HEIGHT}} onPress={()=>{
-            navigation.push("ToktokWalletValidIDCamera",{setImage})
-        }}>
-                <Image resizeMode="contain" style={{height: CROP_AREA_HEIGHT ,width: CROP_AREA_WIDTH}} source={{uri: verifyID.idImage.uri}} />
-        </TouchableOpacity>
+        <View style={{
+            alignSelf:"center",
+            marginTop: 7,
+            padding: 2,
+            borderStyle: "dashed",
+            borderColor: COLORS.YELLOW,
+            borderWidth: 2,
+            borderRadius: 5,
+            marginBottom: 5,
+        }} 
+        // onPress={()=>{
+        //     navigation.push("ToktokWalletValidIDCamera",{setImage})
+        // }}
+        >
+                <Image resizeMode="cover" style={{height: 175 ,width: 283}} source={{uri: verifyID.idImage.uri}} />
+                <TouchableOpacity onPress={()=> navigation.push("ToktokWalletValidIDCamera",{setImage})} style={{position:"absolute",bottom: 15,width: 283,height: 20, justifyContent:"center",alignItems:"center"}}>
+                    <EIcon name="camera" color={COLORS.YELLOW} size={20} />
+                    <Text style={{color: COLORS.YELLOW,fontFamily: FONTS.REGULAR,fontSize: SIZES.S,marginTop: -2}}>Change Photo</Text>
+                </TouchableOpacity>
+        </View>
     )
 
 
@@ -104,9 +124,9 @@ const VerifyID = ()=> {
                          style={styles.mainInput}
                 >
                         <Text style={styles.labelText}>Upload your Valid ID</Text>
-                        <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.S}}>Help us verify your identity with a photo of your valid government-issued ID. Make sure your valid ID is not expired.</Text>  
+                        <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.S,color:"#929191"}}>Help us verify your identity with a photo of your valid government-issued ID. Make sure your valid ID is not expired.</Text>  
                   
-                        <View style={{marginTop: 20,}}>
+                        {/* <View style={{marginTop: 20,}}>
                             <Text style={styles.labelText}>Country</Text>
                             <View style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center",paddingVertical: 10}]}>
                                 <Text style={{flex: 1,color: "gray",fontSize: SIZES.M,fontFamily: FONTS.REGULAR}}>{verifyID.idCountry}</Text>
@@ -129,12 +149,12 @@ const VerifyID = ()=> {
                                     </View>
                                 </TouchableOpacity>
                             </View>
-                        </View>
+                        </View> */}
 
                         <View style={{marginTop: 20,}}>
-                            <Text style={styles.labelText}>ID Type <Text style={{color:"red"}}>*</Text></Text>
+                            <Text style={styles.labelText}>ID Type</Text>
                             <TouchableOpacity onPress={()=>setValidIDVisible(true)} style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center"}]}>
-                                <Text style={{flex: 1,color: "gray",fontSize: SIZES.M,fontFamily: FONTS.REGULAR}}>{verifyID.idType == "" ? "Select one" : verifyID.idType}</Text>
+                                <Text style={{flex: 1,color: "gray",fontSize: SIZES.M,fontFamily: FONTS.REGULAR}}>{verifyID.idType == "" ? "Select ID type" : verifyID.idType}</Text>
                                 <EIcon name="chevron-right" size={24} color="#FCB91A"/>
 
                             </TouchableOpacity>
@@ -162,11 +182,11 @@ const VerifyID = ()=> {
                         </View>
 
                         <View style={{marginTop: 20,}}>
-                            <Text style={styles.labelText}>ID Number <Text style={{color:"red"}}>*</Text></Text>
+                            <Text style={styles.labelText}>ID Number</Text>
                             <TextInput 
                                     value={verifyID.idNumber}
                                     onChangeText={text=>changeVerifyID("idNumber",text)}
-                                    placeholder="Valid ID Number"
+                                    placeholder="Enter valid id number here"
                                     // onSubmitEditing={Proceed}
                                     style={[styles.input,{padding: 5,paddingLeft: 10, color: "gray",fontSize: 12,fontFamily: FONTS.REGULAR}]} 
                             />
@@ -177,20 +197,12 @@ const VerifyID = ()=> {
                             {verifyID.idImage ? <ImageIDSet/>:  <ChooseImage/>}
                         </View>
 
-                    <View style={styles.proceedBtn}>
-                        <TouchableOpacity onPress={()=>{
-                            setCurrentIndex(oldval => oldval - 1)
-                        }} style={{height: BUTTON_HEIGHT,flex: 1,marginRight: 10,backgroundColor: "#F7F7FA" , borderRadius: 5, justifyContent: "center",alignItems: "center"}}>
-                            <Text style={{color: "gray",fontSize: SIZES.L,fontFamily: FONTS.BOLD}}>Back</Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity onPress={Proceed} style={{height: BUTTON_HEIGHT,flex: 1,marginLeft: 10,backgroundColor: COLORS.YELLOW , borderRadius: 5, justifyContent: "center",alignItems: "center"}}>
-                            <Text style={{color: COLORS.DARK,fontSize: SIZES.L,fontFamily: FONTS.BOLD}}>Next</Text>
-                        </TouchableOpacity>
-                    </View>
-
+                   
                 </ScrollView>
 
+                <View style={styles.proceedBtn}>
+                       <YellowButton label="Next" onPress={Proceed} />
+                </View>
                
             </View>
         </>
@@ -211,8 +223,7 @@ const styles = StyleSheet.create({
     },
     proceedBtn: {
         width: "100%",
-        flexDirection: "row",
-        marginBottom: 10,
+        // marginBottom: 10,
         marginTop: 20,
     },
     input: {

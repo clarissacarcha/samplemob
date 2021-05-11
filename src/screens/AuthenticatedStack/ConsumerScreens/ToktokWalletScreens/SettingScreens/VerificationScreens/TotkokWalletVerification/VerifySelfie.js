@@ -1,9 +1,10 @@
 import React, { useState ,useRef , useContext } from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,Alert,Dimensions,Modal,Image} from 'react-native'
 import {FONTS, SIZES, BUTTON_HEIGHT, COLORS} from '../../../../../../../res/constants'
-import FIcon5 from 'react-native-vector-icons/FontAwesome5'
+import EIcon from 'react-native-vector-icons/EvilIcons'
 import {VerifyContext} from './VerifyContextProvider'
 import {useNavigation} from '@react-navigation/native'
+import { YellowButton } from '../../../../../../../revamp'
 
 const VerifySelfie = ()=> {
 
@@ -17,10 +18,31 @@ const VerifySelfie = ()=> {
         // setCurrentIndex(oldval => oldval + 1)
     }
 
+    const Proceed = ()=> {
+        if(selfieImage == null){
+            // return navigation.push("ToktokWalletSelfieCamera", {setImage})
+            return navigation.push("ToktokWalletSelfieImageCamera", {setImage})
+        }
+        return setCurrentIndex(oldval => oldval + 1)
+
+    }
     
     const ImageIDSet = ()=> (
-        <View>
-                <Image resizeMode="contain" style={{height: "100%",width: "100%"}} source={{uri: selfieImage.uri}} />
+        <View style={{
+            alignSelf:"center",
+            marginTop: 7,
+            padding: 2,
+            borderStyle: "dashed",
+            borderColor: COLORS.YELLOW,
+            borderWidth: 2,
+            borderRadius: 5,
+            marginBottom: 5,
+        }}>
+                <Image resizeMode="cover" style={{height: 180 ,width: 180,backgroundColor:"green"}} source={{uri: selfieImage.uri}} />
+                <TouchableOpacity onPress={()=>navigation.push("ToktokWalletSelfieImageCamera", {setImage})} style={{position:"absolute",bottom: 15,width: 180,height: 20, justifyContent:"center",alignItems:"center"}}>
+                    <EIcon name="camera" color={COLORS.YELLOW} size={20} />
+                    <Text style={{color: COLORS.YELLOW,fontFamily: FONTS.REGULAR,fontSize: SIZES.S,marginTop: -2}}>Change Photo</Text>
+                </TouchableOpacity>
         </View>
     )
 
@@ -30,51 +52,40 @@ const VerifySelfie = ()=> {
         <>
             <View style={styles.content}>
                 <View style={styles.mainInput}>
-                        <Text style={{fontSize: SIZES.M, fontFamily: FONTS.BOLD}}>One last step before you get a verified toktokwallet</Text>
-                        <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.S}}>Take a photo to verify your identity.</Text>  
+                        <Text style={{fontSize: SIZES.M, fontFamily: FONTS.BOLD,color: COLORS.DARK}}>One last step before you get a verified toktokwallet</Text>
+                        <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.S,color:"#929191"}}>Take a photo to verify your identity.</Text>  
                         
                        
                         <View style={{marginTop: 20,}}>
-                            <Text style={{fontSize: SIZES.M, fontFamily: FONTS.BOLD}}>Take a selfie</Text>
-                            <Text style={{color: 'gray',fontSize: SIZES.S,fontFamily: FONTS.REGULAR}}>Show us that you match your photo ID with a selfie.</Text>  
+                            <Text style={{fontSize: SIZES.M, fontFamily: FONTS.BOLD,color:COLORS.DARK}}>Take a selfie</Text>
 
-                            <TouchableOpacity onPress={()=>{
-                                // navigation.push("ToktokWalletSelfieCamera", {setImage})
-                                navigation.push("ToktokWalletSelfieImageCamera", {setImage})
-                            }} style={[styles.input,{height: BUTTON_HEIGHT, paddingHorizontal: 10,paddingVertical: 0, borderColor: "#F6841F",justifyContent: "center",alignItems: "center",marginTop: 10,}]}>
-                                {/* <Text style={{color: "#F6841F",fontSize: 12,fontFamily: FONTS.BOLD}}>Start Now</Text> */}
-                                <FIcon5 name="camera" size={18} color="#F6841F" />
-                            </TouchableOpacity>
+                            { selfieImage 
+                              ? <ImageIDSet/>
+                              : <TouchableOpacity onPress={()=>{
+                                    // navigation.push("ToktokWalletSelfieCamera", {setImage})
+                                    navigation.push("ToktokWalletSelfieImageCamera", {setImage})
+                                }} style={styles.selfieBtn}>
+                                    <EIcon name="camera" color="#CCCCCC" size={25} />
+                                    <Text style={{color:"#CCCCCC",marginBottom:5,fontFamily: FONTS.BOLD,fontSize: SIZES.S}}>Take a photo</Text>
+                                </TouchableOpacity>
+                            }
+                     
+                            
+
+                            <Text style={{fontSize: SIZES.M, fontFamily: FONTS.REGULAR,color:"#929191",alignSelf:"center"}}>Show us that you match your photo ID with a selfie.</Text>
                         </View>
 
-                        <View style={{
+                        {/* <View style={{
                             flex: 1,
                             paddingVertical: 20,
                         }}> 
                              { selfieImage && <ImageIDSet/>}
-                        </View>
+                        </View> */}
 
                 </View>
 
                 <View style={styles.proceedBtn}>
-                    <TouchableOpacity onPress={()=>{
-                        setCurrentIndex(oldval => oldval - 1)
-                    }} style={{height: "100%",flex: 1,marginRight: 10,backgroundColor: "#F7F7FA" , borderRadius: 5, justifyContent: "center",alignItems: "center"}}>
-                        <Text style={{color: "gray",fontSize: SIZES.L,fontFamily: FONTS.BOLD}}>Back</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity onPress={()=>{
-
-                        if(selfieImage == null){
-                            // return navigation.push("ToktokWalletSelfieCamera", {setImage})
-                            return navigation.push("ToktokWalletSelfieImageCamera", {setImage})
-                        }
-                        return setCurrentIndex(oldval => oldval + 1)
-         
-    
-                    }} style={{height: "100%",flex: 1,marginLeft: 10,backgroundColor: COLORS.YELLOW , borderRadius: 5, justifyContent: "center",alignItems: "center"}}>
-                        <Text style={{color: COLORS.DARK,fontSize: SIZES.L,fontFamily: FONTS.BOLD}}>Next</Text>
-                    </TouchableOpacity>
+                    <YellowButton label="Next" onPress={Proceed}/>
                 </View>
             </View>
         </>
@@ -92,7 +103,6 @@ const styles = StyleSheet.create({
     proceedBtn: {
         height: 50,
         width: "100%",
-        flexDirection: "row",
     },
     input: {
         padding: 10,
@@ -127,6 +137,20 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         backgroundColor: 'white',
     },
+    selfieBtn: {
+        height: 180,
+        width: 180,
+        justifyContent:'center',
+        alignItems:'center',
+        backgroundColor: "#F7F7FA",
+        alignSelf:"center",
+        marginTop: 7,
+        borderStyle: "dashed",
+        borderColor: "#CCCCCC",
+        borderWidth: 2,
+        borderRadius: 5,
+        marginBottom: 10,
+    }
 })
 
 export default VerifySelfie

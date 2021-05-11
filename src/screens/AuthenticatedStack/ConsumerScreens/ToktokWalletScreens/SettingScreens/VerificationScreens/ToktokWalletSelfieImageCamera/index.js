@@ -7,11 +7,11 @@ import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 
 const {width,height} = Dimensions.get("window")
 
-const CROP_AREA_WIDTH = width * 0.65;
+const CROP_AREA_WIDTH = width * 0.70;
 const CROP_AREA_HEIGHT = CROP_AREA_WIDTH;
 
 
-export default ({navigation,route})=> {
+const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
 
     navigation.setOptions({
         headerShown: false
@@ -60,9 +60,9 @@ export default ({navigation,route})=> {
       const onFacesDetected = async (e)=> {
 
         const result = {
-            x: e.faces[0].bounds.origin.x,
+            x: e.faces[0].bounds.origin.x / 2,
             y: e.faces[0].bounds.origin.y,
-            width: e.faces[0].bounds.size.width,
+            width: e.faces[0].bounds.size.width + ( e.faces[0].bounds.origin.x / 2),
             height: e.faces[0].bounds.size.height,
             rotateX: e.faces[0].yawAngle,
             rotateY: e.faces[0].rollAngle,
@@ -77,34 +77,36 @@ export default ({navigation,route})=> {
         //     y:  ( height - 200 - CROP_AREA_HEIGHT) / 2
         // }
 
-
-        if(checkifOutsideBox(boundary,result)){
-           console.log("Outside the box")
-           setMessage({
-                msg: "Position your face within the frame",
-                icon: "bullseye"
-            })
-            return 
+        if(message.icon){
+            if(checkifOutsideBox(boundary,result)){
+                console.log("Outside the box")
+                setMessage({
+                     msg: "Position your face within the frame",
+                     icon: "bullseye"
+                 })
+                 return 
+             }
+     
+             if(e.faces[0].bounds.size.height < ((CROP_AREA_HEIGHT - 50))){
+                 setMessage({
+                     msg: "Bring your phone closer to you",
+                     icon: "mobile-alt"
+                 })
+                 return 
+             }
+     
         }
 
-        if(e.faces[0].bounds.size.height < ((CROP_AREA_HEIGHT - 100))){
-            setMessage({
-                msg: "Bring your phone closer to you",
-                icon: "mobile-alt"
-            })
-            return 
-        }else{
-            setMessage({
-                msg: `Don't move , Scanning Face`,
-                icon: null
-            })
-    
-            if(!check){
-                setBoxColor(COLOR)
-                takePicture()
-            }
-        }
+        setMessage({
+            msg: `Don't move , Scanning Face`,
+            icon: null
+        })
 
+        if(!check){
+            setBoxColor(COLOR)
+            takePicture()
+        }
+        
     
      
       }
@@ -122,8 +124,8 @@ export default ({navigation,route})=> {
     return (
         <View style={styles.camera}>
 
-            <TouchableOpacity onPress={()=>navigation.goBack()} style={{top: Platform.OS === "android" ? 20 : 40, left: 5,position:"absolute",zIndex: 1}}>
-                <FIcon name="chevron-left" size={35} color={'white'} /> 
+            <TouchableOpacity onPress={()=>navigation.pop()} style={styles.backBtn}>
+                <FIcon name="chevron-left" size={20} color={'#222222'} /> 
             </TouchableOpacity>
    
         <RNCamera
@@ -145,19 +147,24 @@ export default ({navigation,route})=> {
             onFaceDetectionError={(err)=>{
                 console.log(err)
             }}
-            onCameraReady={()=>setCanDetectFaces(true)}
+            onCameraReady={()=>{
+                setTimeout(()=>{
+                    setCanDetectFaces(true)
+                },2000)
+            }}
 
         >   
 
                     {
                         box && <View style={{
                             // borderRadius: box.width,
+                            justifyContent:"flex-end",
                             position:'absolute',
                             backgroundColor:"transparent",
                             borderWidth: 1,
                             borderColor:boxColor,
                             zIndex:9999, 
-                            width: box.width ,
+                            width: box.width,
                             height: box.height,
                             transform: [{
                               translateX: box.x,
@@ -165,11 +172,13 @@ export default ({navigation,route})=> {
                             translateY: box.y,
                             },{
                             rotateX: `${box.rotateX}deg`
-                        }]}}/>
+                        }]}}>
+                    
+                        </View>
                     }
 
 
-                <View style={{flex: 1,justifyContent:"center",alignItems:"center",backgroundColor:"transparent"}}>
+                <View style={{flex: 1,justifyContent:"center",alignItems:"center",backgroundColor:"transparent",marginBottom: 150,}}>
                     <View style={styles.cameraBox} onLayout={(event)=>{
                          const layout = event.nativeEvent.layout;
                          setBoundary(layout)
@@ -179,21 +188,30 @@ export default ({navigation,route})=> {
                                 <View style={[styles.borderEdges,{borderBottomWidth: 5,borderLeftWidth: 5,bottom:0,left: 0,}]}/>
                                 <View style={[styles.borderEdges,{borderBottomWidth: 5,borderRightWidth: 5,bottom:0,right:0,}]}/>
 
-                
+                        <View style={{paddingVertical: 10, position:"absolute",bottom: -80,justifyContent:"center",alignItems:"center",width: "100%",backgroundColor:"rgba(255,255,255,0.2)"}}>
+                            <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.L,color:"white"}}>{message.msg}</Text>
+                            {
+                                message.icon == null
+                                ? <ActivityIndicator style={{marginTop: 5}} color={"white"} />
+                                :  null
+                            }
+                        </View>
 
                     </View>
+
+                   
                 </View>
                 
         </RNCamera>
 
-        <View style={styles.instructions}>
+        {/* <View style={styles.instructions}>
              <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.L}}>{message.msg}</Text>
                 {
                     message.icon == null
                     ? <ActivityIndicator style={{marginTop: 10}} color={COLORS.YELLOW} />
                     : <FIcon5 style={{marginTop: 10}} size={30} color={COLORS.YELLOW} name={message.icon}/>
                 }
-        </View>
+        </View> */}
 
     </View>
     )
@@ -228,12 +246,28 @@ const styles = StyleSheet.create({
         height: 100,
         backgroundColor:"white",
         justifyContent:"center",
-        alignItems:"center"
+        alignItems:"center",
     },
     borderEdges: {
         height: 40,
         width: 40,
         position: "absolute",
-        borderColor: "#F6841F",
+        borderColor: COLORS.YELLOW,
+    },
+    backBtn: {
+        backgroundColor:"#FFFFFF",
+        top: Platform.OS === "android" ? 30 : 20, 
+        // top: 30,
+        left: 16,
+        position:"absolute",
+        zIndex: 1,
+        justifyContent:"center",
+        alignItems:"center",
+        borderRadius: 100,
+        height: 35,
+        width: 35,
     }
 })
+
+export default ToktokWalletSelfieImageCamera
+

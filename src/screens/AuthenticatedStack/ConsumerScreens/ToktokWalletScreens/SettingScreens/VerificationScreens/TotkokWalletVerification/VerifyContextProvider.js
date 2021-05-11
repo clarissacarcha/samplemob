@@ -16,7 +16,7 @@ const VerifyContextProvider = ({children})=> {
         middleName: session.user.person.middleName ? session.user.person.middleName : "",
         lastName: session.user.person.lastName,
     })
-    const [nationality,setNationality] = useState("Philippines")
+    const [nationality,setNationality] = useState("Filipino")
     const [birthInfo,setBirthInfo] = useState({
         birthdate: "",
         birthPlace: "",

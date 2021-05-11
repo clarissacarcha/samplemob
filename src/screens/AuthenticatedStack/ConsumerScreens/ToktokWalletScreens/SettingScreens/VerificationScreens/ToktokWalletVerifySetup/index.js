@@ -1,5 +1,5 @@
 import React, { useRef , useEffect} from 'react'
-import {StyleSheet,View,Text,ActivityIndicator} from 'react-native'
+import {StyleSheet,View,Text,ActivityIndicator,StatusBar} from 'react-native'
 import {SIZES, COLORS, FONTS} from '../../../../../../../res/constants'
 import { SomethingWentWrong} from '../../../../../../../components'
 import {GET_TOKTOK_WALLET_KYC, GET_TOKTOK_WALLET} from '../../../../../../../graphql'
@@ -8,7 +8,7 @@ import {useSelector} from 'react-redux'
 import {useNavigation} from '@react-navigation/native'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import { YellowButton } from '../../../../../../../revamp'
-import HeadingBannerLogo from '../../../Components/HeadingBannerLogo'
+import {HeaderImageBackground, HeadingBannerLogo, HeaderTitle, Separator} from '../../../Components'
 
 const ProceedButton = ({route})=> {
     const navigation = useNavigation()
@@ -23,25 +23,34 @@ const ProceedButton = ({route})=> {
 
 const MainComponent = ({children , route})=> {
     return (
+        <>
+        <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
         <View style={[styles.container]}>
-            <HeadingBannerLogo />
+            {/* <HeadingBannerLogo /> */}
+            <View style={styles.headings}>
+                <HeaderImageBackground>
+                        <HeaderTitle isLogo={true} />
+                </HeaderImageBackground>
+            </View>
+            <Separator/>
             <View style={styles.content}>
                 <View style={{alignItems:"center"}}>
                         {children}
                 </View>
             </View>
 
-            <View style={{height: 60,padding: 10,}}>
+            <View style={{height: 70,padding: 16,justifyContent:'flex-end'}}>
                 {
                     route && <ProceedButton route={route}/>
                 }
             </View>
         
         </View>
+        </>
     )
 }
 
-const VerifyUser = ({navigation,route})=> {
+const ToktokWalletVerifySetup = ({navigation,route})=> {
     navigation.setOptions({
         // headerLeft: ()=> <HeaderBack />,
         // headerTitle: ()=> <HeaderTitle label={['',]}/>,
@@ -94,7 +103,7 @@ const VerifyUser = ({navigation,route})=> {
                     <Text style={styles.clickVerifyText}>toktokwallet verification is on pending.</Text>
             </MainComponent>
             <View style={{justifyContent:"flex-end",padding: 16,backgroundColor:"white"}}>
-                <YellowButton label="Back" onPress={()=>navigation.pop()}/>
+                <YellowButton label="Close" onPress={()=>navigation.pop()}/>
             </View>
             </>
         )
@@ -108,7 +117,7 @@ const VerifyUser = ({navigation,route})=> {
                 <Text style={styles.clickVerifyText}>toktokwallet verification is approved.</Text>
             </MainComponent>
             <View style={{justifyContent:"flex-end",padding: 16,backgroundColor:"white"}}>
-                <YellowButton label="Back" onPress={()=>navigation.pop()}/>
+                <YellowButton label="Close" onPress={()=>navigation.pop()}/>
             </View>
           </>
         )
@@ -129,6 +138,10 @@ const VerifyUser = ({navigation,route})=> {
 }
 
 const styles = StyleSheet.create({
+    headings: {
+        height: 92,
+        backgroundColor:"black"
+    },  
     walletLogo: {
         height: 160,
         width: 160,
@@ -138,26 +151,26 @@ const styles = StyleSheet.create({
     },
     verifyWalletText: {
         fontFamily: FONTS.BOLD,
-        fontSize: 20,
+        fontSize: 16,
     },
     clickVerifyText: {
         fontFamily: FONTS.REGULAR,
-        fontSize: SIZES.M
+        fontSize: SIZES.S
     },
     listItem: {
         fontFamily: FONTS.REGULAR,
-        marginBottom: 1,
-        fontSize: SIZES.M
+        marginBottom: 5,
+        fontSize: SIZES.S
     },
     container: {
         flex: 1,
         // padding: 10,
-        backgroundColor: "white"
+        backgroundColor: "white",
     },
     content: {
         flex: 1,
         padding: 10,
-        paddingTop: 20,
+        paddingTop: 30,
     },
     proceedBtn: {
         height: 40,
@@ -165,4 +178,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default VerifyUser
+export default ToktokWalletVerifySetup

@@ -1,15 +1,16 @@
 import React , {useRef, useState} from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,Platform,Dimensions,Alert} from 'react-native'
+import {View,Text,StyleSheet,TouchableOpacity,Platform,Dimensions,Alert,StatusBar,Image} from 'react-native'
 import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions'
 import FIcon from 'react-native-vector-icons/Feather'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import ViewShot , {captureScreen,releaseCapture} from "react-native-view-shot";
 import RNFS from 'react-native-fs'
+import CameraRoll from "@react-native-community/cameraroll";
 import { BlackButton, YellowButton } from '../../../../../revamp';
 import Toast from 'react-native-simple-toast';
 import moment from 'moment'
 import { COLOR, COLORS, FONTS, SIZES } from '../../../../../res/constants';
-import Separator from './Separator';
+import {Separator} from './Separator';
 
 //const path = RNFS.PicturesDirectoryPath
 // const path = RNFS.DocumentDirectoryPath
@@ -18,17 +19,16 @@ const path = Platform.OS === "ios" ? RNFS.LibraryDirectoryPath : RNFS.DownloadDi
 
 const {width,height} = Dimensions.get("window")
 
-const Receipt = ({children, format, refNo ,refDate, onPress})=> {
+export const Receipt = ({children, format, refNo ,refDate, onPress})=> {
 
     const viewshotRef = useRef()
 
     const ScreenshotAndSave =async ()=> {
-        
+
         const checkAndRequest = Platform.select({
             android: async ()=>{
                 const checkResult = await check(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE);
                 if (checkResult === RESULTS.GRANTED) {
-                    DownloadReceipt()
                     return true;
                 }
                 if (checkResult === RESULTS.BLOCKED) {
@@ -47,7 +47,6 @@ const Receipt = ({children, format, refNo ,refDate, onPress})=> {
                         const requestResult = await request(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE);
 
                         if (checkResult === RESULTS.GRANTED) {
-                            DownloadReceipt()
                             return true;
                         }
                         if (checkResult === RESULTS.BLOCKED) {
@@ -112,29 +111,44 @@ const Receipt = ({children, format, refNo ,refDate, onPress})=> {
     
     }
 
-    const DownloadReceipt = ()=> {
-        viewshotRef.current.capture().then(uri => {
+    const DownloadReceipt = async ()=> {
+        
+        const pathCache = RNFS.CachesDirectoryPath
+        console.log(pathCache)
+        
+    //    const albums = await CameraRoll.getAlbums({assetType: "Photos"})
+    //    console.log(albums)
+       
+        viewshotRef.current.capture().then(async (uri ) => {
             const timestamp = +moment()
             const filename = `${timestamp.toString()}_${refNo}.${format ? format : "jpg"}`
-            // RNFS.copyFile(uri, path + `/${filename}`)
-            RNFS.moveFile(uri, path + `/${filename}`)
-            Toast.show(`Receipt ${filename} has been downloaded.`)
+    
+            RNFS.moveFile(uri, pathCache + `/${filename}`)
+            const newFileUri = `${pathCache}/${filename}`
+    
+            await CameraRoll.save(newFileUri, { type: "photo", album: "toktok" })
+            // // RNFS.copyFile(uri, path + `/${filename}`)
+            // // RNFS.moveFile(uri, path + `/${filename}`)
+            Toast.show(`Receipt ${filename} has been downloaded.` , Toast.LONG)
         });
+
     }
 
 
     return (
+        <>
+        <StatusBar barStyle="dark-content" backgroundColor="white" />
         <View style={styles.container}>
             <ViewShot 
                 style={styles.viewShot} 
                 ref={viewshotRef}
-                options={{ format: format ? format : "jpg", quality: 0.9,width: width,height: height * 0.6 }}
+                options={{ format: format ? format : "jpg", quality: 0.9,width: width,height: height * 0.6 ,result: 'tmpfile' }}
             >
                
                <View style={styles.checkIcon}>
-                     <FIcon5 name="check" color="white" size={60}/>
+                    <FIcon5 name="check" color="white" size={60}/> 
                </View>
-
+               
                <Text style={styles.titleText}>
                     Transaction Completed
                </Text>
@@ -149,6 +163,11 @@ const Receipt = ({children, format, refNo ,refDate, onPress})=> {
 
               
                 {children}
+{/* 
+                <View style={{flexDirection:"row",alignItems:"center",marginVertical: 25,}}>
+                    <Image resizeMode="contain" style={{height: 40,width: 100}} source={require('../../../../../assets/toktokwallet-assets/toktokwallet.png')}/>
+                    <Text style={{fontFamily: FONTS.BOLD}}> Cash In</Text>
+                </View> */}
 
             </ViewShot>
             <Separator />
@@ -164,6 +183,7 @@ const Receipt = ({children, format, refNo ,refDate, onPress})=> {
                     <YellowButton label="Confirm" onPress={onPress} />
             </View>
         </View>
+        </>
     )
 }
 
@@ -172,8 +192,8 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     viewShot: {
+        paddingBottom: 40,
         paddingTop: 20,
-        paddingBottom: 50,
         paddingHorizontal: 16,
         marginTop: 60,
         backgroundColor:"white",
@@ -215,5 +235,3 @@ const styles = StyleSheet.create({
         marginBottom: Platform.OS == "ios" ? 25 : 0
     }
 })
-
-export default Receipt

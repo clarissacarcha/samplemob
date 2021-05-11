@@ -6,6 +6,7 @@ import validator from 'validator'
 
 //SELF IMPORTS
 import ModalCountry from './ModalCountry'
+import { YellowButton } from '../../../../../../../revamp'
 
 const VerifyAddress = ()=> {
 
@@ -31,7 +32,7 @@ const VerifyAddress = ()=> {
                         field = "Region/State"
                         break
                     case "zipcode":
-                        field = "Postal Code"
+                        field = "Zip Code"
                     default:
                         break
                 }
@@ -47,7 +48,7 @@ const VerifyAddress = ()=> {
             <ModalCountry type="address" />
             <View style={{flex: 1,}}>
                 <ScrollView style={styles.content} showsVerticalScrollIndicator={true}>
-                        <Text style={styles.labelText}>Where do you live?</Text>
+                        <Text style={styles.labelText}>Address</Text>
                         <Text style={[styles.labelSmall]}>Please enter your current address.</Text>  
                
                         <View style={styles.ViewInput}>
@@ -76,10 +77,10 @@ const VerifyAddress = ()=> {
                         </View>
 
                         <View style={styles.ViewInput}>
-                            <Text style={styles.labelText}>Street Address <Text style={{color:"red"}}>*</Text></Text>
+                            <Text style={styles.labelText}>Street Address</Text>
                             <TextInput 
                                 style={styles.input} 
-                                placeholder="Street / House Number / Building Number"
+                                placeholder="Enter street , house number , building number here"
                                 value={address.streetAddress}
                                 onChangeText={text=>changeAddress("streetAddress", text)}
                                 // onSubmitEditing={Proceed}
@@ -87,10 +88,10 @@ const VerifyAddress = ()=> {
                         </View>
 
                         <View style={styles.ViewInput}>
-                            <Text style={styles.labelText}>Village/Barangay<Text style={{color:"red"}}>*</Text></Text>
+                            <Text style={styles.labelText}>Village/Barangay</Text>
                             <TextInput 
                                 style={styles.input} 
-                                placeholder="Village/Barangay"
+                                placeholder="Enter village/barangay here"
                                 value={address.village}
                                 onChangeText={text=>changeAddress("village", text)}
                                 // onSubmitEditing={Proceed}
@@ -98,10 +99,10 @@ const VerifyAddress = ()=> {
                         </View>
 
                         <View style={styles.ViewInput}>
-                            <Text style={styles.labelText}>City <Text style={{color:"red"}}>*</Text></Text>
+                            <Text style={styles.labelText}>City</Text>
                             <TextInput 
                                 style={styles.input} 
-                                placeholder="City"
+                                placeholder="Enter city here"
                                 value={address.city}
                                 onChangeText={text=>changeAddress("city",text)}
                                 // onSubmitEditing={Proceed}
@@ -109,10 +110,10 @@ const VerifyAddress = ()=> {
                         </View>
 
                         <View style={styles.ViewInput}>
-                            <Text style={styles.labelText}>Region/State <Text style={{color:"red"}}>*</Text></Text>
+                            <Text style={styles.labelText}>Region/State</Text>
                             <TextInput 
                                 style={styles.input} 
-                                placeholder="Region/State"
+                                placeholder="Enter region/state here"
                                 value={address.region}
                                 onChangeText={text=>changeAddress("region",text)}
                                 // onSubmitEditing={Proceed}
@@ -120,10 +121,10 @@ const VerifyAddress = ()=> {
                         </View>
 
                         <View style={styles.ViewInput}>
-                            <Text style={styles.labelText}>Postal Code <Text style={{color:"red"}}>*</Text></Text>
+                            <Text style={styles.labelText}>Zip Code</Text>
                             <TextInput 
                                 style={styles.input} 
-                                placeholder="Postal Code"
+                                placeholder="Enter zip code here"
                                 value={address.zipCode}
                                 onChangeText={text=>changeAddress("zipCode",text)}
                                 onSubmitEditing={Proceed}
@@ -133,18 +134,7 @@ const VerifyAddress = ()=> {
 
                         
                         <View style={styles.proceedBtn}>
-                            <TouchableOpacity onPress={()=>{
-                                    setCurrentIndex(oldval => oldval - 1)
-                                }} style={{height: BUTTON_HEIGHT,flex: 1,marginRight: 10,backgroundColor: "#F7F7FA", borderRadius: 5, justifyContent: "center",alignItems: "center"}}>
-                                    <Text style={{color: "gray",fontSize: SIZES.L,fontFamily: FONTS.BOLD}}>Back</Text>
-                                </TouchableOpacity>
-
-                                <TouchableOpacity 
-                                onPress={Proceed}
-                                style={{height: BUTTON_HEIGHT,flex: 1,marginLeft: 10,backgroundColor: COLORS.YELLOW , borderRadius: 5, justifyContent: "center",alignItems: "center"}}>
-                                    <Text style={{color: COLORS.DARK,fontSize: SIZES.L,fontFamily: FONTS.BOLD}}>Next</Text>
-                                </TouchableOpacity>
-
+                            <YellowButton label="Next" onPress={Proceed} />
                         </View>
             
 
@@ -165,7 +155,6 @@ const styles = StyleSheet.create({
     },
     proceedBtn: {
         flex: 1,
-        flexDirection: "row",
         marginBottom: 26,
         marginTop: 20,
     },
@@ -175,7 +164,8 @@ const styles = StyleSheet.create({
     },
     labelSmall: {
         fontFamily: FONTS.REGULAR,
-        fontSize: SIZES.S
+        fontSize: SIZES.S,
+        color:"#929191"
     },
     ViewInput: {
         marginTop: 20,

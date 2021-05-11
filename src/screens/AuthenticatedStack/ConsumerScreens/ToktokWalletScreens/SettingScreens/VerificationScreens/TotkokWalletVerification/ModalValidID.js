@@ -2,8 +2,8 @@ import React , {useState,useContext} from 'react'
 import {Modal,View,Text,StyleSheet,FlatList,TouchableOpacity,TextInput} from 'react-native'
 import {VerifyContext} from './VerifyContextProvider'
 import FIcon from 'react-native-vector-icons/Feather';
-import { FONT_MEDIUM, FONT_REGULAR, SIZES, INPUT_HEIGHT, FONTS, COLORS } from '../../../../../../../res/constants';
-import Separator from '../../../Components/Separator';
+import { SIZES, INPUT_HEIGHT, FONTS, COLORS } from '../../../../../../../res/constants';
+import {Separator} from '../../../Components';
 
 let validIDList = [
     {label: "Passport" ,value: "Passport"},
@@ -65,7 +65,7 @@ const ModalValidID = ({visible,setVisible})=> {
                 </TouchableOpacity>
                 <View style={styles.search}>
                     <TextInput 
-                        placeholder="Search Valid ID"
+                        placeholder="Search valid ID type"
                         style={styles.input}
                         onChangeText={filterSearch}
                     />

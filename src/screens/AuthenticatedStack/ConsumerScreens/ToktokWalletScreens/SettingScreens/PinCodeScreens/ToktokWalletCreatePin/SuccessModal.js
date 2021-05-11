@@ -10,9 +10,12 @@ const SuccessModal = ({modalVisible})=> {
     const navigation = useNavigation()
 
     const closeModal = ()=> {
-       // navigation.pop()
-        navigation.navigate("ToktokWalletHomePage")
-        navigation.replace("ToktokWalletHomePage")
+        navigation.pop()
+        navigation.push("ToktokWalletHomePage")
+        // navigation.pop()
+        // // navigation.navigate("ToktokWalletHomePage")
+        // navigation.push("ToktokWalletHomePage")
+        // console.log("gg")
     }
 
     return (
@@ -37,8 +40,9 @@ const SuccessModal = ({modalVisible})=> {
                      <Text style={{fontSize: SIZES.XL,fontFamily: FONTS.BOLD}}>toktokwallet PIN set up successfully</Text>
                      <Text style={{color: "#212529",marginTop:5,fontFamily: FONTS.REGULAR,fontSize: SIZES.M}}>Your toktokwallet is now safe.</Text>
                  </View>
-      
-                 <YellowButton label="Done" onPress={closeModal}/>
+                <View>
+                    <YellowButton label="Done" onPress={closeModal}/>
+                </View>
             </View>
      
         </Modal>
@@ -54,7 +58,6 @@ const styles = StyleSheet.create({
     },
     content: {
         alignItems: "center",
-       
         flex: 1,
     },
 })

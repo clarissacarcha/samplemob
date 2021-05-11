@@ -1,7 +1,7 @@
 import React from 'react'
 import {Image,ImageBackground ,StyleSheet,View} from 'react-native'
 
-const HeadingBannerLogo = ()=> {
+export const HeadingBannerLogo = ()=> {
 
     return (
         <ImageBackground imageStyle={[]} style={styles.walletbackgroundimage} source={require('../../../../../assets/toktokwallet-assets/header-bg.png')}>
@@ -19,4 +19,3 @@ const styles = StyleSheet.create({
     },
 })
 
-export default HeadingBannerLogo

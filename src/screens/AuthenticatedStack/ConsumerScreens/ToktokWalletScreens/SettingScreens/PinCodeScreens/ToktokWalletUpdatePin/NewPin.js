@@ -1,7 +1,8 @@
 import React , {useRef, useState} from 'react'
 import {View,Text,StyleSheet,ScrollView,TextInput,TouchableOpacity} from 'react-native'
 import { BUTTON_HEIGHT, COLORS, DARK, FONTS, SIZES } from '../../../../../../../res/constants'
-import NumberBoxes from '../../../Components/NumberBoxes'
+import { YellowButton } from '../../../../../../../revamp'
+import {DisabledButton, NumberBoxes} from '../../../Components'
 
 const NewPin = ({pinCode,setPinCode , pageIndex, setPageIndex})=> {
 
@@ -25,7 +26,6 @@ const NewPin = ({pinCode,setPinCode , pageIndex, setPageIndex})=> {
                 <View style={{position: 'relative',marginTop: 50,}}>
                     <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={showPin}/>
                     <TextInput
-                            // autoFocus={true}
                             caretHidden
                             value={pinCode}
                             ref={inputRef}
@@ -34,7 +34,8 @@ const NewPin = ({pinCode,setPinCode , pageIndex, setPageIndex})=> {
                             returnKeyType="done"
                             onChangeText={(value) => {
                             if (value.length <= 6) {
-                                setPinCode(value);
+                                const num = value.replace(/[^0-9]/g, '')
+                                setPinCode(num);
                             }
                             }}
                             onSubmitEditing={onSubmit}
@@ -49,13 +50,15 @@ const NewPin = ({pinCode,setPinCode , pageIndex, setPageIndex})=> {
 
                 </View>
             </ScrollView>
-            <TouchableOpacity
-                disabled={pinCode.length < 6}
-                onPress={onSubmit}
-                style={{alignItems: "center",height: BUTTON_HEIGHT,backgroundColor: pinCode.length < 6 ? "gray" : COLORS.YELLOW,margin: 16,justifyContent: "center",borderRadius: 5,}}
-            >
-                    <Text style={{color: pinCode.length < 6 ? "white" : COLORS.DARK,fontSize: SIZES.L,fontFamily: FONTS.BOLD}}>Next</Text>
-            </TouchableOpacity>
+
+            <View style={{padding: 16}}>
+                {
+                    pinCode.length < 6 
+                    ? <DisabledButton label="Next"/>
+                    : <YellowButton label="Next" onPress={onSubmit}/>
+                }
+            </View>
+          
         </View>
     )
 }

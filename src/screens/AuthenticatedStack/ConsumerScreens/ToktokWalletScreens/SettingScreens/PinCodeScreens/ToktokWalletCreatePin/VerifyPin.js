@@ -5,7 +5,8 @@ import { GET_VERIFY_TOKTOK_WALLET_PIN } from '../../../../../../../graphql';
 import {useLazyQuery} from '@apollo/react-hooks'
 import {onError} from '../../../../../../../util/ErrorUtility'
 import {useNavigation} from '@react-navigation/native'
-import NumberBoxes from '../../../Components/NumberBoxes'
+import {DisabledButton, NumberBoxes} from '../../../Components'
+import { YellowButton } from '../../../../../../../revamp';
 
 const VerifyPin = ({pageIndex,setPageIndex})=> {
 
@@ -67,7 +68,6 @@ const VerifyPin = ({pageIndex,setPageIndex})=> {
                     <View style={{position: 'relative',marginTop: 50,}}>
                         <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={showPin}/>
                         <TextInput
-                            autoFocus={true}
                             caretHidden
                             value={pinCode}
                             ref={inputRef}
@@ -76,7 +76,8 @@ const VerifyPin = ({pageIndex,setPageIndex})=> {
                             returnKeyType="done"
                             onChangeText={(value) => {
                             if (value.length <= 6) {
-                                setPinCode(value);
+                                const num = value.replace(/[^0-9]/g, '')
+                                setPinCode(num);
                             }
                             }}
                             onSubmitEditing={onSubmit}
@@ -93,13 +94,14 @@ const VerifyPin = ({pageIndex,setPageIndex})=> {
                         </TouchableOpacity>
                     </View>
             </ScrollView>
-            <TouchableOpacity
-                disabled={pinCode.length < 6}
-                onPress={onSubmit}
-                style={{alignItems: "center",height: BUTTON_HEIGHT,backgroundColor: pinCode.length < 6 ? "gray" : COLORS.YELLOW,margin: 10,justifyContent: "center",borderRadius: 5,}}
-            >
-                    <Text style={{color: pinCode.length < 6 ? "white" : COLORS.DARK,fontSize: SIZES.M,fontFamily: FONT_MEDIUM}}>Next</Text>
-            </TouchableOpacity>
+            <View style={{padding: 16}}>
+                {
+                    pinCode.length < 6
+                    ? <DisabledButton label="Next"/>
+                    : <YellowButton label="Next" onPress={onSubmit}/>
+                }
+            </View>
+          
        </View>
     )
 }

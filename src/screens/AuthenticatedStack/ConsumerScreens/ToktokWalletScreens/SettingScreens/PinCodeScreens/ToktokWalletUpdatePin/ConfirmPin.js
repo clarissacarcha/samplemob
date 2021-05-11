@@ -1,7 +1,7 @@
 import React , {useRef, useState , useEffect} from 'react'
 import {View,Text,StyleSheet,ScrollView,TextInput,TouchableOpacity} from 'react-native'
-import { COLOR, COLORS, DARK, FONTS, FONT_MEDIUM, FONT_REGULAR, SIZES } from '../../../../../../../res/constants'
-import NumberBoxes from '../../../Components/NumberBoxes'
+import { COLORS, DARK, FONTS, SIZES } from '../../../../../../../res/constants'
+import {NumberBoxes} from '../../../Components'
 
 const ConfirmPin = ({pinCode ,pageIndex, setPageIndex , patchPincodeToktokWallet })=> {
 
@@ -47,7 +47,8 @@ const ConfirmPin = ({pinCode ,pageIndex, setPageIndex , patchPincodeToktokWallet
                             returnKeyType="done"
                             onChangeText={(value) => {
                             if (value.length <= 6) {
-                                setConfirmPinCode(value);
+                                const num = value.replace(/[^0-9]/g, '')
+                                setConfirmPinCode(num);
                             }
                             }}
                             onSubmitEditing={onSubmit}

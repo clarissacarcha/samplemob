@@ -10,6 +10,7 @@ import moment from 'moment'
 //SELF IMPORTS
 import ModalCountry from './ModalCountry'
 import {DateBirthModal} from './VerifyBirth'
+import ModalNationality from './ModalNationality'
 
 const VerifyFullname = ()=> {
 
@@ -24,6 +25,7 @@ const VerifyFullname = ()=> {
      } = useContext(VerifyContext)
 
     const [modalVisible,setModalVisible] = useState(false)
+    const [modalNationalityVisible, setModalNationalityVisible] = useState(false)
     const [modaltype,setModaltype] = useState("")
 
     const NextPage = ()=> {
@@ -46,7 +48,10 @@ const VerifyFullname = ()=> {
     return (
         <>
          <DateBirthModal modalVisible={modalVisible} setModalVisible={setModalVisible} birthInfo={birthInfo} changeBirthInfo={changeBirthInfo}/>
-         <ModalCountry type={modaltype}/>
+         <ModalNationality 
+                visible={modalNationalityVisible}
+                setVisible={setModalNationalityVisible}
+         />
         <ScrollView style={styles.content}>
 
         <TouchableOpacity onPress={ViewPrivacyPolicy} style={styles.policyView}>
@@ -60,53 +65,53 @@ const VerifyFullname = ()=> {
 
             <View style={styles.mainInput}>
                     <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.M}}>Fill up the information</Text>
-                    <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.S}}>Make sure the information matches your Valid ID.</Text>
+                    <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.S,color:"#929191"}}>Please enter the name that appears on your Valid ID.</Text>
 
 
-                    <View style={{marginTop: 10,}}>
-                    <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.M}}>Last Name <Text style={{color:"red"}}>*</Text></Text>
+                    <View style={{marginTop: 20,}}>
+                    <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.M}}>Last Name</Text>
                         <TextInput 
                             style={styles.input}
                             value={person.lastName}
                             onChangeText={(value)=>changePersonInfo("lastName",value)}
-                            placeholder="Last Name"
+                            placeholder="Enter last name here"
                         />
                     </View>
 
                     <View style={{marginTop: 20,}}>
-                    <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.M}}>First Name <Text style={{color:"red"}}>*</Text></Text>
+                    <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.M}}>First Name</Text>
                         <TextInput 
                             style={styles.input}
                             value={person.firstName}
                             onChangeText={(value)=>changePersonInfo("firstName",value)}
-                            placeholder="First Name"
+                            placeholder="Enter first name here"
                         />
                     </View>
 
                     <View style={{marginTop: 20,}}>
-                    <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.M}}>Middle Name ( optional )</Text>
+                    <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.M}}>Middle Name ( Optional )</Text>
                         <TextInput 
                             style={styles.input}
                             value={person.middleName}
                             onChangeText={(value)=>changePersonInfo("middleName",value)}
-                            placeholder="Middle Name"
+                            placeholder="Enter middle name here"
                         />
                     </View>
                     <View style={{marginTop: 20,}}>
-                    <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.M}}>Date of Birth <Text style={{color:"red"}}>*</Text></Text>
+                    <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.M}}>Date of Birth</Text>
                              <TouchableOpacity onPress={()=>setModalVisible(true)} style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center"}]}>
-                                <Text style={{flex: 1,fontFamily: FONTS.REGULAR,color: "gray",fontSize: SIZES.M}}>{birthInfo.birthdate == "" ? "MM/DD/YY" : moment(birthInfo.birthdate).format("MM/DD/YYYY")}</Text>
-                                <FIcon5 name="calendar" size={24}/>
+                                <Text style={{flex: 1,fontFamily: FONTS.REGULAR,color: "gray",fontSize: SIZES.M}}>{birthInfo.birthdate == "" ? "mm/dd/yy" : moment(birthInfo.birthdate).format("MM/DD/YYYY")}</Text>
+                                <FIcon5 color="#CCCCCC" name="calendar" size={15}/>
                             </TouchableOpacity>
                     </View>
 
                     <View style={{marginTop: 20,}}>
-                    <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.M}}>Place of Birth <Text style={{color:"red"}}>*</Text></Text>
+                    <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.M}}>Place of Birth</Text>
                         <TextInput 
                             style={styles.input}
                             value={birthInfo.birthPlace}
                             onChangeText={(value)=>changeBirthInfo("birthPlace",value)}
-                            placeholder={"Place of Birth"}
+                            placeholder={"Enter place of birth here"}
                         />
                     </View>
 
@@ -116,8 +121,7 @@ const VerifyFullname = ()=> {
                                 <Text style={{flex: 1,color: "gray",fontSize: SIZES.M,fontFamily: FONTS.REGULAR}}>{nationality}</Text>
                                 <TouchableOpacity
                                     onPress={()=>{
-                                        setModaltype("Nationality")
-                                        setModalCountryVisible(true)
+                                      setModalNationalityVisible(true)
                                     }}
                                     style={{
                                         paddingHorizontal: 10,

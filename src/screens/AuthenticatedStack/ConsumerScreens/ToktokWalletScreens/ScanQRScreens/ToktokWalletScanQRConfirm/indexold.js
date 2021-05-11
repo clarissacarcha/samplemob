@@ -10,11 +10,10 @@ import { onError , onErrorAlert} from '../../../../../../util/ErrorUtility';
 import SuccessfulModal from '../../SendMoneyScreens/ToktokWalletSendMoney/SuccessfulModal'
 import {useAlert} from '../../../../../../hooks/useAlert'
 import { BlackButton, YellowButton } from '../../../../../../revamp';
-import ConfirmBottomSheet from '../../Components/ConfirmBottomSheet';
+import {ConfirmBottomSheet,Separator} from '../../Components';
 
 //SELF IMPORTS
 import ConfirmModalContent from './ConfirmModalContent'
-import Separator from '../../Components/Separator'
 
 export default ({navigation,route})=> {
 

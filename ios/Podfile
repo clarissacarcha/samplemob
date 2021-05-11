@@ -100,6 +100,8 @@ target 'toktok' do
 
   pod 'react-native-view-shot', :path => '../node_modules/react-native-view-shot'
 
+  pod 'react-native-cameraroll', :path => '../node_modules/@react-native-community/cameraroll'
+
   target 'toktokTests' do
     inherit! :complete
     # Pods for testing

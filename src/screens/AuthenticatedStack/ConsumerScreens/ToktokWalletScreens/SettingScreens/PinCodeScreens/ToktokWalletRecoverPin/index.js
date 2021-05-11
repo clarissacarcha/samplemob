@@ -7,7 +7,8 @@ import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import {useQuery,useLazyQuery} from '@apollo/react-hooks'
 import {GET_VERIFICATION_CODE,CHECK_VERIFICATION_CODE} from '../../../../../../../graphql'
 import { onError } from '../../../../../../../util/ErrorUtility'
-import Separator from '../../../Components/Separator'
+import {Separator} from '../../../Components'
+import { HeaderBack } from '../../../../../../../revamp'
 
 const NumberBox = ({onPress, value , showPin}) => (
     <TouchableHighlight onPress={onPress} underlayColor={COLORS.YELLOW} style={{borderRadius: 10,marginHorizontal: 5,}}>
@@ -32,10 +33,10 @@ const NumberBoxes = ({pinCode, onNumPress, showPin}) => {
 };
 
 
-export default ({navigation})=> {
+const ToktokWalletRecoverPin = ({navigation})=> {
 
     navigation.setOptions({
-        headerLeft: ()=> <HeaderBackClose/>,
+        headerLeft: ()=> <HeaderBack color={COLORS.YELLOW}/>,
         headerTitle: ()=> <HeaderTitle label={['','']}/>,
     })
 
@@ -91,7 +92,8 @@ export default ({navigation})=> {
         <Separator />
         <KeyboardAvoidingView 
             style={styles.container}
-            keyboardVerticalOffset={Platform.OS == "ios" ? 0 : 90}  
+            keyboardVerticalOffset={Platform.OS == "ios" ? 100 : 90} 
+            // keyboardVerticalOffset={90} 
             behavior={Platform.OS === "ios" ? "padding" : "height"} 
         >
                 <View style={{flex: 1,alignItems:"center",marginTop: 40}}>
@@ -110,7 +112,6 @@ export default ({navigation})=> {
 
                         <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={true}/>
                         <TextInput
-                            autoFocus={true}
                             caretHidden
                             value={pinCode}
                             ref={inputRef}
@@ -176,3 +177,5 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
 })
+
+export default ToktokWalletRecoverPin

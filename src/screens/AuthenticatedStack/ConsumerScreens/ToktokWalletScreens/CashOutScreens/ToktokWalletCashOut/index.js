@@ -1,63 +1,48 @@
 import React , {useState, useEffect} from 'react'
-import {View,StyleSheet,Text,TouchableOpacity,Image,Dimensions} from 'react-native'
-import {HeaderBack, HeaderTitle} from '../../../../../../components'
+import {View,StyleSheet,Text,TouchableOpacity,Image,Dimensions, ImageBackground} from 'react-native'
 import FIcon from 'react-native-vector-icons/Feather';
-import { FONT_LIGHT, FONT_MEDIUM, FONT_REGULAR, SIZES } from '../../../../../../res/constants';
+import { COLORS, FONTS, SIZES } from '../../../../../../res/constants';
 import { numberFormat } from '../../../../../../helper';
-import Separator from '../../Components/Separator';
+import { 
+    HeaderImageBackground,
+    HeaderTitle,
+    Separator
+} from '../../Components'
+
+//SELF IMPORTS
+import GCash from "./GCash"
 
 const {height,width} = Dimensions.get("window")
 
-export default ({navigation,route})=> {
+const ToktokWalletCashOut = ({navigation,route})=> {
 
     navigation.setOptions({
-        headerLeft: ()=> <HeaderBack />,
-        headerTitle: ()=> <HeaderTitle label={['Cash Out','']}/>,
+       headerShown: false
     })
-
-    const [percentage,setPercentage] = useState(100)
-
-    useEffect(()=>{
-        setPercentage(()=>{
-            const rawPercentage = (( route.params.walletinfo.balance - route.params.walletinfo.balance ) / route.params.walletinfo.balance ) * 100
-            return 100 - rawPercentage
-        })
-    },[])
-
-    const SettingOption = ({route,icon,title,iconSize , params={}})=> (
-        <TouchableOpacity style={styles.settingoption} onPress={()=>navigation.navigate(route, params)}>
-                    <View style={styles.logo}>
-                         <Image source={icon} style={{height: iconSize.height, width: iconSize.width}} resizeMode="contain"/>
-                    </View>
-                    <View style={styles.name}>
-                        {/* <Text style={{fontSize:SIZES.M,fontFamily: FONT_MEDIUM}}>{title}</Text> */}
-                        <Text style={{fontSize:SIZES.M,fontFamily: FONT_MEDIUM}}>{title}</Text>
-                        <Text style={{fontSize: SIZES.S, fontFamily: FONT_LIGHT}}>Use {title} to cash out</Text>
-                    </View>
-                    <View style={styles.arrowright}>
-                           {/* <Text style={{fontSize: 16,color: "gray"}}>{'>'}</Text> */}
-                           <FIcon name="chevron-right" size={16} color={"#A6A8A9"} /> 
-                    </View>
-        </TouchableOpacity>
-    )
+    
+    const walletinfo = route.params.walletinfo
+  
 
     return (
      <>
-     <Separator/>
       <View style={styles.container}>
-          {/* <View style={styles.transferDetails}>
-                <Text style={{fontSize: SIZES.L,fontFamily: FONT_MEDIUM}}>Current Balance</Text>
-                <Text style={{fontSize: 20,color:"#F6841F",marginVertical: 5,fontFamily: FONT_MEDIUM}}>PHP {numberFormat(route.params.walletinfo.balance)}</Text>
-          </View> */}
-          <View style={styles.transferOptions}>
-                <SettingOption 
-                    route="ToktokWalletGcashCashOut" 
-                    params={{walletinfo: route.params.walletinfo}} 
-                    iconSize={{height: 40, width: 40}} 
-                    icon={require('../../../../../../assets/icons/gcash.png')} 
-                    title="GCash"
-                />
-          </View>
+            <View style={styles.headings}>
+                <HeaderImageBackground>
+                    <HeaderTitle label="Cash Out"/>
+                    <View style={styles.walletBalance}>
+                                <Text style={{fontSize: 24,fontFamily: FONTS.BOLD}}>PHP {numberFormat(walletinfo.balance ? walletinfo.balance : 0)}</Text>
+                                <Text style={{fontSize: SIZES.M,fontFamily: FONTS.REGULAR,color: COLORS.DARK}}>Available Balance</Text>
+                    </View>
+                </HeaderImageBackground>
+            </View>
+
+            <View style={styles.cashoutoptions}>
+                    <Text style={{fontSize: SIZES.M,fontFamily: FONTS.BOLD}}>Choose cash-out method</Text>
+            </View>
+            <Separator/>
+            <View style={styles.transferOptions}>
+                    <GCash walletinfo={walletinfo}/>
+            </View>
       </View>
       </>
     )
@@ -68,36 +53,29 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor:"white"
     },
+    headings: {
+        height: 190,
+        backgroundColor:"black"
+    },  
+    walletBalance: {
+        flex: 1,
+        justifyContent:"center",
+        alignItems:'center'
+    },
+    cashoutoptions: {
+        padding: 16,
+    },
     transferDetails: {
         paddingVertical: 20,
         borderBottomWidth: 1,
-        borderBottomColor:"silver",
+        borderBottomColor:"#F4F4F4",
         justifyContent:"center",
         alignItems:"center"
     },
     transferOptions: {
         flex: 1,
-        paddingHorizontal: 15,
+        paddingHorizontal: 16,
     },
-    settingoption: {
-        padding: 10,
-        paddingVertical: 20,
-        borderBottomWidth: 0.2,
-        borderColor: "silver",
-        flexDirection: "row"
-    },
-    logo: {
-        flexBasis: 50,
-        justifyContent: "center",
-        alignItems: "flex-start",
-    },
-    name: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems:"flex-start",
-    },
-    arrowright: {
-        justifyContent: "center",
-        alignItems: "flex-end",
-    }
 })
+
+export default ToktokWalletCashOut
