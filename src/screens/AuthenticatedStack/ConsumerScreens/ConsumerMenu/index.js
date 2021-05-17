@@ -94,7 +94,7 @@ const Drawer = ({navigation}) => {
                   source={ToktokWashed}
                   resizeMode={'contain'}
                   tintColor={MEDIUM}
-                  style={{width: 80, height: 80, borderRadius: 5}}
+                  style={{width: 40, height: 40, borderRadius: 5}}
                 />
               </View>
             )}
@@ -163,8 +163,8 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingLeft: SIZE.MARGIN,
     flexDirection: 'row',
+    paddingHorizontal: SIZE.MARGIN / 2,
   },
 
   headerText: {

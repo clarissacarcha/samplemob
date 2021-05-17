@@ -27,7 +27,6 @@ const Title = ({advertisement}) => {
   return (
     <>
       <Text style={styles.title}>{advertisement.title}</Text>
-      <Text style={styles.date}>{advertisement.startDuration}</Text>
     </>
   );
 };
@@ -49,7 +48,6 @@ const SelectedAdvertisement = ({navigation, route}) => {
       <ScrollView showsVerticalScrollIndicator={false}>
         <AdImage advertisement={advertisement} />
         <Title advertisement={advertisement} />
-        <Body body={advertisement.description} />
         <Body body={advertisement.description} />
       </ScrollView>
     </View>

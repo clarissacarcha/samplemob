@@ -1,11 +1,10 @@
-import React from 'react';
+import React, {useRef, useEffect, useCallback} from 'react';
 import {ScrollView, StyleSheet, Text, View, Image, TouchableOpacity, FlatList, Dimensions} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {FONT, FONT_SIZE, SIZE} from '../../../../../res/variables';
+import {FONT, SIZE} from '../../../../../res/variables';
 import {GET_PARTNERS} from '../../../../../graphql/model/Partner';
 import {useQuery} from '@apollo/react-hooks';
-import {GET_CASH_IN_LOGS} from '../../../../../graphql';
-import Pabili from '.';
+import {throttle} from 'lodash';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const IMAGE_SIZE = (SCREEN_WIDTH - 80) / 3;
@@ -13,12 +12,25 @@ const IMAGE_SIZE = (SCREEN_WIDTH - 80) / 3;
 const Partner = ({partner, onBranchSelect}) => {
   const navigation = useNavigation();
 
+  const useThrottle = (cb, delayDuration) => {
+    const options = {leading: true, trailing: false}; // add custom lodash options
+    const cbRef = useRef(cb);
+    // use mutable ref to make useCallback/throttle not depend on `cb` dep
+    useEffect(() => {
+      cbRef.current = cb;
+    });
+    return useCallback(
+      throttle((...args) => cbRef.current(...args), delayDuration, options),
+      [delayDuration],
+    );
+  };
+
+  const onPressThrottled = useThrottle(() => {
+    navigation.push('PartnerBranches', {partner, onBranchSelect});
+  }, 1000);
+
   return (
-    <TouchableOpacity
-      onPress={() => {
-        navigation.push('PartnerBranches', {partner, onBranchSelect});
-      }}
-      style={styles.partnerTouchable}>
+    <TouchableOpacity onPress={onPressThrottled} style={styles.partnerTouchable}>
       <Image source={{uri: partner.partnerImage}} resizeMode="contain" style={styles.partnerImage} />
       <Text style={styles.partnerName}>{partner.partnerName}</Text>
     </TouchableOpacity>

@@ -10,6 +10,8 @@ import {
   StatusBar,
   FlatList,
   Dimensions,
+  Platform,
+  RefreshControl,
 } from 'react-native';
 import {connect} from 'react-redux';
 import 'moment-timezone';
@@ -73,56 +75,6 @@ const NotificationCard = ({message, lastItem}) => {
               {body}
             </Text>
           </View>
-          {/*             
-            <View style={styles.rowBox}>
-              <View style={styles.row}>
-                <YellowIcon set="FontAwesome5" name="exclamation" />
-                <Text
-                  numberOfLines={4}
-                  style={{
-                    fontSize: 12,
-                    color: DARK,
-                    flex: 1,
-                    paddingHorizontal: 10,
-                    marginTop: 2,
-                    fontFamily: 'Rubik-Medium',
-                  }}>
-                  {title}
-                </Text>
-              </View>
-              <View style={styles.row}>
-                <YellowIcon set="FontAwesome" name="calendar" />
-                <Text
-                  style={{
-                    fontSize: 11,
-                    color: MEDIUM,
-                    flex: 1,
-                    paddingHorizontal: 10,
-                    marginTop: 2,
-                    fontFamily: 'Rubik-Medium',
-                  }}>
-                  {createdAt}
-                </Text>
-              </View>
-            </View>
-
-            <View style={styles.rowBox}>
-              <View style={styles.rowMessage}>
-                <YellowIcon set="MaterialCommunity" name="email" />
-
-                <Text
-                  style={{
-                    fontSize: 12,
-                    marginLeft: 10,
-                    color: MEDIUM,
-                    flex: 1,
-                    alignSelf: 'center',
-                  }}>
-                  {body}
-                </Text>
-              </View>
-            </View>
-           */}
         </View>
       </View>
     </TouchableHighlight>
@@ -135,7 +87,7 @@ const Notifications = ({navigation, route, session, createSession}) => {
     headerTitle: () => <HeaderTitle label={['Notifications', '']} />,
   });
 
-  const {data, loading, error} = useQuery(GET_NOTIFICATIONS, {
+  const {data, loading, error, refetch} = useQuery(GET_NOTIFICATIONS, {
     fetchPolicy: 'network-only',
     variables: {
       input: {
@@ -150,18 +102,18 @@ const Notifications = ({navigation, route, session, createSession}) => {
   if (loading) {
     return (
       <View style={styles.container}>
-        <Shadow style={{borderRadius: 0}}>
-          <View
-            style={{
-              height: 50 + StatusBar.currentHeight,
-              backgroundColor: 'white',
-              paddingTop: StatusBar.currentHeight,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Text style={{fontSize: FONT_SIZE.L, fontFamily: FONT.BOLD}}>Notifications</Text>
-          </View>
-        </Shadow>
+        <View
+          style={{
+            backgroundColor: 'white',
+            paddingTop: StatusBar.currentHeight,
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: Platform.select({android: 50 + StatusBar.currentHeight, ios: 50}),
+            borderBottomWidth: 1,
+            borderBottomColor: COLOR.LIGHT,
+          }}>
+          <Text style={{fontSize: FONT_SIZE.L, fontFamily: FONT.BOLD}}>Notifications</Text>
+        </View>
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <ActivityIndicator size="large" color={COLOR.YELLOW} />
         </View>
@@ -172,18 +124,18 @@ const Notifications = ({navigation, route, session, createSession}) => {
   if (error) {
     return (
       <View style={styles.container}>
-        <Shadow style={{borderRadius: 0}}>
-          <View
-            style={{
-              height: 50 + StatusBar.currentHeight,
-              backgroundColor: 'white',
-              paddingTop: StatusBar.currentHeight,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Text style={{fontSize: FONT_SIZE.L, fontFamily: FONT.BOLD}}>Notifications</Text>
-          </View>
-        </Shadow>
+        <View
+          style={{
+            backgroundColor: 'white',
+            paddingTop: StatusBar.currentHeight,
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: Platform.select({android: 50 + StatusBar.currentHeight, ios: 50}),
+            borderBottomWidth: 1,
+            borderBottomColor: COLOR.LIGHT,
+          }}>
+          <Text style={{fontSize: FONT_SIZE.L, fontFamily: FONT.BOLD}}>Notifications</Text>
+        </View>
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <Text>Something Went Wrong</Text>
         </View>
@@ -194,18 +146,18 @@ const Notifications = ({navigation, route, session, createSession}) => {
   if (data.getNotifications.length === 0) {
     return (
       <View style={styles.container}>
-        <Shadow style={{borderRadius: 0}}>
-          <View
-            style={{
-              height: 50 + StatusBar.currentHeight,
-              backgroundColor: 'white',
-              paddingTop: StatusBar.currentHeight,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Text style={{fontSize: FONT_SIZE.L, fontFamily: FONT.BOLD}}>Notifications</Text>
-          </View>
-        </Shadow>
+        <View
+          style={{
+            backgroundColor: 'white',
+            paddingTop: StatusBar.currentHeight,
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: Platform.select({android: 50 + StatusBar.currentHeight, ios: 50}),
+            borderBottomWidth: 1,
+            borderBottomColor: COLOR.LIGHT,
+          }}>
+          <Text style={{fontSize: FONT_SIZE.L, fontFamily: FONT.BOLD}}>Notifications</Text>
+        </View>
         <View style={styles.center}>
           <Image source={NoData} style={styles.image} resizeMode={'contain'} />
         </View>
@@ -215,18 +167,24 @@ const Notifications = ({navigation, route, session, createSession}) => {
 
   return (
     <View style={styles.container}>
-      <Shadow style={{borderRadius: 0}}>
-        <View
-          style={{
-            height: 50 + StatusBar.currentHeight,
-            backgroundColor: 'white',
-            paddingTop: StatusBar.currentHeight,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Text style={{fontSize: FONT_SIZE.L, fontFamily: FONT.BOLD}}>Notifications</Text>
+      <View
+        style={{
+          backgroundColor: 'white',
+          paddingTop: StatusBar.currentHeight,
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: Platform.select({android: 50 + StatusBar.currentHeight, ios: 50}),
+          borderBottomWidth: 1,
+          borderBottomColor: COLOR.LIGHT,
+        }}>
+        <Text style={{fontSize: FONT_SIZE.L, fontFamily: FONT.BOLD}}>Notifications</Text>
+      </View>
+      <View style={{marginHorizontal: SIZE.MARGIN, flexDirection: 'row', paddingVertical: 8}}>
+        <View style={{width: 22, height: 22, marginHorizontal: SIZE.MARGIN, alignItems: 'center'}}>
+          <VectorIcon iconSet={ICON_SET.Entypo} name="arrow-long-down" color={COLOR.MEDIUM} />
         </View>
-      </Shadow>
+        <Text style={{color: COLOR.MEDIUM}}>Swipe down to refresh</Text>
+      </View>
       <FlatList
         showsVerticalScrollIndicator={false}
         data={data.getNotifications}
@@ -239,6 +197,7 @@ const Notifications = ({navigation, route, session, createSession}) => {
         ItemSeparatorComponent={() => (
           <View style={{borderBottomWidth: 1, marginHorizontal: SIZE.MARGIN, borderColor: COLOR.LIGHT}} />
         )}
+        refreshControl={<RefreshControl onRefresh={refetch} refreshing={loading} colors={[COLOR.YELLOW]} />}
       />
     </View>
   );

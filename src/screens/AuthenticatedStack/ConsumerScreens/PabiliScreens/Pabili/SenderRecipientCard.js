@@ -23,8 +23,8 @@ const SenderRecipientCard = ({
   const [getGoogleGeocodeReverse, {loading, error}] = useLazyQuery(GET_GOOGLE_GEOCODE_REVERSE, {
     fetchPolicy: 'network-only',
     onCompleted: ({getGoogleGeocodeReverse}) => {
-      console.log(JSON.stringify({USER: userStop}, null, 4));
-      console.log(JSON.stringify({GEOCODED: getGoogleGeocodeReverse}, null, 4));
+      // console.log(JSON.stringify({USER: userStop}, null, 4));
+      // console.log(JSON.stringify({GEOCODED: getGoogleGeocodeReverse}, null, 4));
 
       const updatedUserStop = [
         {

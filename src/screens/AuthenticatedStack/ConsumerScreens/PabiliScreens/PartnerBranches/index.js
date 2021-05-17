@@ -1,18 +1,34 @@
-import React, {useEffect, useState} from 'react';
+import React, {useRef, useEffect, useCallback, useState} from 'react';
 import {Text, View, ActivityIndicator, FlatList, TouchableHighlight, Image} from 'react-native';
 import {useQuery, useLazyQuery} from '@apollo/react-hooks';
 import {GET_PARTNER_BRANCHES, GET_PARTNER_BRANCH_ORDERS} from '../../../../../graphql';
 import {COLOR, FONT, FONT_SIZE, SIZE} from '../../../../../res/variables';
 import {onError} from '../../../../../util';
 import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../../../components';
+import {throttle} from 'lodash';
 
 const PartnerBranch = ({branch, onBranchSelect}) => {
+  const useThrottle = (cb, delayDuration) => {
+    const options = {leading: true, trailing: false}; // add custom lodash options
+    const cbRef = useRef(cb);
+    // use mutable ref to make useCallback/throttle not depend on `cb` dep
+    useEffect(() => {
+      cbRef.current = cb;
+    });
+    return useCallback(
+      throttle((...args) => cbRef.current(...args), delayDuration, options),
+      [delayDuration],
+    );
+  };
+
+  const onPressThrottled = useThrottle(() => {
+    onBranchSelect(branch);
+  }, 1000);
+
   return (
     <TouchableHighlight
       style={{marginHorizontal: SIZE.MARGIN, borderRadius: SIZE.BORDER_RADIUS}}
-      onPress={() => {
-        onBranchSelect(branch);
-      }}
+      onPress={onPressThrottled}
       underlayColor={COLOR.WHITE_UNDERLAY}>
       <View
         style={{

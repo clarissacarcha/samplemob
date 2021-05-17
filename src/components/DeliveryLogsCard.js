@@ -6,6 +6,7 @@ import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, Image, Dimensions} from 'react-native';
 import _ from 'lodash';
 import {COLOR, DARK, MEDIUM, LIGHT, ORANGE} from '../res/constants';
+import {FONT, FONT_SIZE} from '../res/variables';
 import {YellowIcon} from '../components/ui';
 
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -63,14 +64,14 @@ const StatusBar = ({number, label, log, tempFile}) => {
       <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <View style={[styles.numberBox, {borderRadius: 100}]}>
-            <Text style={{color: 'white', fontFamily: 'Rubik-Medium'}}>{number}</Text>
+            <Text style={{color: 'white', fontFamily: FONT.BOLD}}>{number}</Text>
           </View>
-          <Text style={{marginLeft: 10, color: DARK, fontFamily: 'Rubik-Medium'}}>
+          <Text style={{marginLeft: 10, color: DARK, fontFamily: FONT.BOLD}}>
             {label[0]}
             <Text style={{color: ORANGE}}> {label[1]}</Text>
           </Text>
         </View>
-        <Text style={{color: MEDIUM, fontSize: 10}}>{ts}</Text>
+        <Text style={{color: MEDIUM, fontSize: 11}}>{ts}</Text>
       </View>
       {hasImageBox && hasImage && imageDimension && (
         <Image
@@ -119,7 +120,7 @@ export const DeliveryLogsCard = ({logs}) => {
             borderColor: MEDIUM,
           }}>
           <YellowIcon set="MaterialCommunity" name="format-list-bulleted" size={20} darkIcon />
-          <Text style={{marginLeft: 10, color: DARK, fontFamily: 'Rubik-Medium'}}>
+          <Text style={{marginLeft: 10, color: DARK, fontFamily: FONT.BOLD}}>
             Delivery <Text style={{color: ORANGE}}>Logs</Text>
           </Text>
         </View>

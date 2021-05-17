@@ -43,6 +43,7 @@ const Landing = ({createSession, destroySession, navigation}) => {
     onCompleted: ({getUserSession}) => {
       try {
         const {user, accessToken} = getUserSession;
+        // AsyncStorage.setItem('accessToken', accessToken);
 
         if (user.status == 3) {
           destroySession();

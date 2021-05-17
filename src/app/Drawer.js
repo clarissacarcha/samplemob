@@ -118,34 +118,14 @@ const Drawer = ({navigation, session, constants, destroySession}) => {
         <View style={{flex: 1}}>
           <ScrollView>
             {/*--------------- PROFILE ---------------*/}
-            {/* <DrawerButton
+            <DrawerButton
               label="Profile"
               onPress={() => {
                 const route = APP_FLAVOR == 'C' ? 'ConsumerProfile' : 'DriverProfile';
                 navigation.closeDrawer();
                 navigation.push(route);
               }}
-            /> */}
-
-            {/*--------------- WALLET ---------------*/}
-            {/* <DrawerButton
-          label="Wallet"
-          onPress={() => {
-            // const route = APP_FLAVOR == 'C' ? 'CustomerProfile' : 'DriverProfile';
-            const route = 'DriverWallet';
-            navigation.navigate(route);
-          }}
-        /> */}
-
-            {/*--------------- TOKTOK WALLET ---------------*/}
-            {/* <DrawerButton
-              label="toktok wallet"
-              onPress={() => {
-                navigation.push('TokTokWallet');
-                navigation.closeDrawer();
-              }}
-              restrict="C"
-            /> */}
+            />
 
             {/*--------------- MY DELIVERIES ---------------*/}
             <DrawerButton
@@ -168,13 +148,13 @@ const Drawer = ({navigation, session, constants, destroySession}) => {
             />
 
             {/*--------------- Notifications ---------------*/}
-            {/* <DrawerButton
+            <DrawerButton
               label="Notifications"
               onPress={() => {
                 navigation.push('Notifications');
                 navigation.closeDrawer();
               }}
-            /> */}
+            />
 
             {/*--------------- ANNOUNCEMENTS ---------------*/}
             <DrawerButton

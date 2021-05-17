@@ -82,8 +82,6 @@ const NearbyStores = ({navigation, route}) => {
       setError(true);
     }
     setNearbyStores(nearbyResponse.responseData.results);
-
-    // console.log(JSON.stringify(nearbyResponse.responseData, null, 4));
   };
 
   useEffect(() => {
@@ -107,7 +105,7 @@ const NearbyStores = ({navigation, route}) => {
   if (nearbyStores.length === 0) {
     return (
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white'}}>
-        <Text>No opean nearby stores found.</Text>
+        <Text>No stores open near you.</Text>
       </View>
     );
   }

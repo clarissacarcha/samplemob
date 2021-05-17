@@ -5,6 +5,7 @@
 import React from 'react';
 import {View, Text, StyleSheet, Platform, Linking} from 'react-native';
 import {COLOR, DARK, MEDIUM, ORANGE, LIGHT, APP_FLAVOR} from '../res/constants';
+import {FONT, FONT_SIZE} from '../res/variables';
 import {YellowIcon, BlackIcon} from '../components/ui';
 
 import MIcon from 'react-native-vector-icons/MaterialIcons';
@@ -51,7 +52,7 @@ export const DeliveryStopCard = ({stop, index, status = 0, delivery}) => {
         {/*------------------- STOP LABEL-------------------*/}
         <View style={{flexDirection: 'row', alignItems: 'center', padding: 20}}>
           {icons[index]}
-          <Text style={{marginLeft: 10, color: DARK, fontFamily: 'Rubik-Medium'}}>
+          <Text style={{marginLeft: 10, color: DARK, fontFamily: FONT.BOLD}}>
             {labels[index][0]} <Text style={{color: ORANGE}}>{labels[index][1]}</Text>
           </Text>
         </View>
@@ -64,7 +65,7 @@ export const DeliveryStopCard = ({stop, index, status = 0, delivery}) => {
             padding: 20,
             paddingBottom: 0,
           }}>
-          <Text style={{color: MEDIUM, fontSize: 14, flex: 1}}>
+          <Text style={{color: MEDIUM, fontSize: 13, flex: 1}}>
             {/* {stop.formattedAddress} */}
             {APP_FLAVOR === 'D' && delivery.status === 1 && delivery.tokDriverId === null
               ? getDisplayAddress({stop: stop})
@@ -95,8 +96,8 @@ export const DeliveryStopCard = ({stop, index, status = 0, delivery}) => {
         {/*------------------- NAME -------------------*/}
         <View style={{flexDirection: 'row', padding: 20}}>
           <View style={{flex: 1}}>
-            <Text style={{fontFamily: 'Rubik-Medium'}}>{stop.name}</Text>
-            {showNumber() && <Text style={{fontSize: 12, color: MEDIUM}}>{stop.mobile}</Text>}
+            <Text style={{fontFamily: FONT.BOLD}}>{stop.name}</Text>
+            {showNumber() && <Text style={{fontSize: 13, color: MEDIUM}}>{stop.mobile}</Text>}
           </View>
           {/*------------------- DIALER BUTTON -------------------*/}
           {showNumber() && (
@@ -133,9 +134,9 @@ export const DeliveryStopCard = ({stop, index, status = 0, delivery}) => {
             <View style={{flex: 1, flexDirection: 'row', marginTop: 8}}>
               <YellowIcon set="FontAwesome5" name="landmark" size={16} containerStyle={{marginTop: 4}} />
               <View style={{marginLeft: 10}}>
-                <Text style={{fontFamily: 'Rubik-Medium'}}>Landmark</Text>
+                <Text style={{fontFamily: FONT.BOLD}}>Landmark</Text>
                 <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
-                  <Text style={{fontFamily: 'Rubik-Medium', marginLeft: 10}}>{stop.landmark}</Text>
+                  <Text style={{marginLeft: 10}}>{stop.landmark}</Text>
                 </Text>
               </View>
             </View>

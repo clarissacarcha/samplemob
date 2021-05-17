@@ -6,7 +6,8 @@ import {connect} from 'react-redux';
 import {useMutation} from '@apollo/react-hooks';
 import OneSignal from 'react-native-onesignal';
 import {getUniqueId} from 'react-native-device-info';
-import {COLOR, DARK, APP_FLAVOR, MEDIUM, LIGHT, IMPERSONATE, IMPERSONATION_PASSPHRASE} from '../../res/constants';
+import {COLOR, DARK, APP_FLAVOR, MEDIUM} from '../../res/constants';
+import {FONT} from '../../res/variables';
 import {AUTH_CLIENT, VERIFY_LOGIN} from '../../graphql';
 import {AlertOverlay} from '../../components';
 import {onError, onErrorAlert} from '../../util/ErrorUtility';
@@ -138,41 +139,41 @@ const styles = StyleSheet.create({
   inputView: {
     backgroundColor: 'white',
     borderWidth: StyleSheet.hairlineWidth,
-    borderRadius: 10,
+    borderRadius: 5,
     height: 50,
     width: 50,
     justifyContent: 'center',
     alignItems: 'center',
   },
   submitBox: {
-    margin: 20,
-    borderRadius: 10,
+    margin: 16,
+    borderRadius: 5,
   },
   submit: {
     backgroundColor: DARK,
     height: 50,
-    borderRadius: 10,
+    borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',
   },
   resend: {
     alignSelf: 'flex-end',
-    paddingRight: 20,
+    paddingRight: 16,
   },
   label: {
-    marginHorizontal: 20,
-    marginTop: 20,
+    marginHorizontal: 16,
+    marginTop: 16,
     marginBottom: 5,
     fontSize: 12,
-    color: MEDIUM,
-    fontFamily: 'Rubik-Medium',
+    color: DARK,
+    fontFamily: FONT.BOLD,
   },
   input: {
-    marginHorizontal: 20,
+    marginHorizontal: 16,
     borderWidth: 1,
     borderColor: MEDIUM,
     borderRadius: 5,
-    paddingLeft: 20,
+    paddingLeft: 16,
     height: 50,
     color: DARK,
   },

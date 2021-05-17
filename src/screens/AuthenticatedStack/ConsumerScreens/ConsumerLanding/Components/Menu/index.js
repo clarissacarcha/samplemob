@@ -1,7 +1,7 @@
-import React from 'react';
-import {connect} from 'react-redux';
+import React, {useRef, useEffect, useCallback} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, Image, Share} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import {throttle} from 'lodash';
 import {FONT, FONT_SIZE, COLOR, SIZE} from '../../../../../../res/variables';
 
 import DeliveryIcon from '../../../../../../assets/toktok/icons/menu/Toktok.png';
@@ -11,8 +11,23 @@ import ProfileIcon from '../../../../../../assets/icons/ProfileIcon.png';
 import OthersIcon from '../../../../../../assets/icons/OthersIcon.png';
 
 const MenuIcon = ({label, icon, onPress}) => {
+  const useThrottle = (cb, delayDuration) => {
+    const options = {leading: true, trailing: false}; // add custom lodash options
+    const cbRef = useRef(cb);
+    // use mutable ref to make useCallback/throttle not depend on `cb` dep
+    useEffect(() => {
+      cbRef.current = cb;
+    });
+    return useCallback(
+      throttle((...args) => cbRef.current(...args), delayDuration, options),
+      [delayDuration],
+    );
+  };
+
+  const onPressThrottled = useThrottle(onPress, 1000);
+
   return (
-    <TouchableOpacity style={styles.menuButton} onPress={onPress}>
+    <TouchableOpacity style={styles.menuButton} onPress={onPressThrottled}>
       <View style={styles.menuIconBox}>
         <Image style={styles.menuIcon} source={icon} />
       </View>
@@ -68,10 +83,11 @@ const styles = StyleSheet.create({
   menuIconBox: {
     height: 50,
     width: 50,
+    paddingHorizontal: 5,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 5,
-    backgroundColor: COLOR.LIGHT,
+    backgroundColor: COLOR.TRANSPARENT_YELLOW,
   },
   menuIcon: {
     height: 40,

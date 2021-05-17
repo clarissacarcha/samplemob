@@ -1,9 +1,19 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import _ from 'lodash';
-import {View, Text, TouchableHighlight, ActivityIndicator, StyleSheet, ScrollView, StatusBar} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableHighlight,
+  ActivityIndicator,
+  StyleSheet,
+  ScrollView,
+  StatusBar,
+  Platform,
+  RefreshControl,
+} from 'react-native';
 import {connect} from 'react-redux';
 import {throttle} from 'lodash';
-import {useNavigation, useFocusEffect} from '@react-navigation/native';
+import {useNavigation, useFocusEffect, useScrollToTop} from '@react-navigation/native';
 import {useQuery} from '@apollo/react-hooks';
 import {GET_DELIVERIES_COUNT_BY_STATUS} from '../../../../graphql';
 import {DARK, MEDIUM, LIGHT} from '../../../../res/constants';
@@ -13,6 +23,7 @@ import {HeaderBack, HeaderTitle, SomethingWentWrong} from '../../../../component
 import {YellowIcon} from '../../../../components/ui';
 
 import FIcon from 'react-native-vector-icons/Feather';
+import {lang} from 'moment';
 
 const RoundedButton = ({label, data = {}}) => {
   const navigation = useNavigation();
@@ -87,19 +98,25 @@ const MyDeliveries = ({navigation, session}) => {
 
   return (
     <View style={styles.container}>
-      <Shadow style={{borderRadius: 0}}>
-        <View
-          style={{
-            height: 50 + StatusBar.currentHeight,
-            backgroundColor: 'white',
-            paddingTop: StatusBar.currentHeight,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Text style={{fontSize: FONT_SIZE.L, fontFamily: FONT.BOLD}}>Deliveries</Text>
-        </View>
-      </Shadow>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <View
+        style={{
+          backgroundColor: 'white',
+          paddingTop: StatusBar.currentHeight,
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: Platform.select({android: 50 + StatusBar.currentHeight, ios: 50}),
+          borderBottomWidth: 1,
+          borderBottomColor: COLOR.LIGHT,
+        }}>
+        <Text style={{fontSize: FONT_SIZE.L, fontFamily: FONT.BOLD}}>Deliveries</Text>
+      </View>
+      <View style={{marginHorizontal: SIZE.MARGIN, flexDirection: 'row', paddingVertical: 8}}>
+        <VectorIcon iconSet={ICON_SET.Entypo} name="arrow-long-down" color={COLOR.MEDIUM} />
+        <Text style={{color: COLOR.MEDIUM, marginLeft: SIZE.MARGIN / 2}}>Swipe down to refresh</Text>
+      </View>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        refreshControl={<RefreshControl onRefresh={refetch} refreshing={loading} colors={[COLOR.YELLOW]} />}>
         <RoundedButton data={mappedData['1']} label={['Placed', 'Orders']} />
         <RoundedButton data={mappedData['2']} label={['Scheduled', 'for Delivery']} />
         <RoundedButton data={mappedData['3']} label={['On the Way', 'to Sender']} />
@@ -133,7 +150,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingRight: 2,
-    paddingLeft: SIZE.MARGIN,
+    paddingLeft: SIZE.MARGIN / 2,
     backgroundColor: COLOR.WHITE,
     height: 50,
     borderRadius: 5,

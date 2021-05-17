@@ -1,12 +1,15 @@
-import React, {useCallback, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useMemo, useRef, useState, useEffect} from 'react';
 import {View, StyleSheet, Text, TextInput, ScrollView} from 'react-native';
 import {connect} from 'react-redux';
 import {useLazyQuery} from '@apollo/react-hooks';
 import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../../../components';
-import {LIGHT, FONT_MEDIUM, onError, FONT_REGULAR} from '../../../../../res/constants';
+import {LIGHT, FONT_MEDIUM, FONT_REGULAR} from '../../../../../res/constants';
 import {COLOR, FONT, FONT_SIZE} from '../../../../../res/variables';
 import {GET_DELIVERY_PRICE_AND_DIRECTIONS} from '../../../../../graphql';
-import {WhiteButton, BlackButton} from '../../../../../revamp';
+import {WhiteButton, BlackButton, YellowButton} from '../../../../../revamp';
+import InputScrollView from 'react-native-input-scroll-view';
+import {onErrorAlert} from '../../../../../util/ErrorUtility';
+import {useAlert} from '../../../../../hooks';
 //SELF IMPORTS
 import {PaymentForm, PaymentSheet} from './PaymentForm';
 import ExpressForm from './ExpressForm';
@@ -20,18 +23,43 @@ import NotesForm from './NotesForm';
 import PabiliForm from './PabiliForm';
 import PromoForm from './PromoForm';
 import ItemsToPurchaseForm from './ItemsToPurchaseForm';
-import {string} from 'prop-types';
 
 const FORM_DATA = {description: '', quantity: ''};
 
-const PabiliDetails = ({navigation, route, session}) => {
+const PabiliDetails = ({navigation, route, session, constants}) => {
   navigation.setOptions({
-    headerLeft: () => <HeaderBack />,
+    headerLeft: () => (
+      <HeaderBack
+        onBack={() => {
+          const noSenderOrderData = {
+            ...route.params.orderData,
+            senderStop: {
+              latitude: null,
+              longitude: null,
+              formattedAddress: '',
+              name: `${session.user.person.firstName} ${session.user.person.lastName}`,
+              mobile: session.user.username.replace('+63', ''),
+              landmark: '',
+              orderType: 'ASAP',
+              scheduledFrom: null,
+              scheduledTo: null,
+            },
+          };
+
+          route.params.setOrderData(noSenderOrderData);
+
+          navigation.pop();
+        }}
+      />
+    ),
     headerTitle: () => <HeaderTitle label={['Pabili', 'Information']} />,
   });
 
+  const AlertHook = useAlert();
+
   const [collectPaymentFrom, setCollectPaymentFrom] = useState(route.params.orderData.collectPaymentFrom);
   const [itemDescription, setItemDescription] = useState(route.params.orderData.cargo);
+  const [otherItem, setOtherItem] = useState('');
   const [notes, setNotes] = useState(route.params.orderData.notes);
   const [isExpress, setIsExpress] = useState(route.params.orderData.isExpress);
   // const [isCashOnDelivery, setIsCashOnDelivery] = useState(route.params.orderData.isCashOnDelivery);
@@ -41,8 +69,22 @@ const PabiliDetails = ({navigation, route, session}) => {
   const [tenants, setTenants] = useState(null);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [stringDescription, setStringDescription] = useState(null);
+  const maxValue = constants.maxCashOnDelivery;
+  const [partnerBranch, setPartnerBranch] = useState(null);
 
-  const partnerBranch = route.params.partnerBranch;
+  useEffect(() => {
+    if (route.params.partnerBranch) {
+      const filteredOrders = route.params.partnerBranch.orders.filter((order) => {
+        return order.cargo.tenants.length > 0;
+      });
+
+      const cleanPartner = {
+        ...route.params.partnerBranch,
+        orders: filteredOrders,
+      };
+      setPartnerBranch(cleanPartner);
+    }
+  }, []);
 
   const paymentSheetRef = useRef();
   const partnerItemSheefRef = useRef();
@@ -51,7 +93,9 @@ const PabiliDetails = ({navigation, route, session}) => {
 
   const [getDeliveryPriceAndDirections, {loading}] = useLazyQuery(GET_DELIVERY_PRICE_AND_DIRECTIONS, {
     fetchPolicy: 'no-cache',
-    onError: onError,
+    onError: (error) => {
+      onErrorAlert({alert: AlertHook, error});
+    },
     onCompleted: (data) => {
       // console.log(JSON.stringify(data.getDeliveryPriceAndDirections, null, 4));
       const {hash, pricing, directions} = data.getDeliveryPriceAndDirections;
@@ -66,11 +110,18 @@ const PabiliDetails = ({navigation, route, session}) => {
       //   directions,
       // };
       // navigation.navigate('ConsumerMap', {callbackData: updatedBookingData});
+
+      let finalItemDescription = itemDescription;
+
+      if (itemDescription === 'Others') {
+        finalItemDescription = otherItem;
+      }
+
       navigation.push('DeliverySummary', {
         orderData: {
           ...route.params.orderData,
           collectPaymentFrom,
-          cargo: itemDescription,
+          cargo: finalItemDescription,
           notes,
           description: stringDescription,
           isExpress,
@@ -109,25 +160,54 @@ const PabiliDetails = ({navigation, route, session}) => {
   const onConfirmPabiliInformation = () => {
     const cleanedItems = cleanEmptyItemsToPurchase(itemsToPurchase);
 
+    const isItemsVerified = verifyItemsToPurchase(cleanedItems);
+
+    let finalItemDescription = itemDescription;
+
+    if (!partnerBranch) {
+      if (!itemDescription) {
+        AlertHook({message: 'Select item description.'});
+        return;
+      }
+
+      if (itemDescription === 'Others' && otherItem === '') {
+        AlertHook({message: 'Describe your item.'});
+        return;
+      }
+
+      if (itemDescription === 'Others') {
+        finalItemDescription = otherItem;
+      }
+    }
+    if (partnerBranch) {
+      if (!selectedOrder) {
+        AlertHook({message: 'Select service type.'});
+        return;
+      }
+
+      if (!selectedTenant.name) {
+        AlertHook({message: 'Select store.'});
+        return;
+      }
+    }
+
     if (cleanedItems.length < 1) {
-      alert('Add item to purchase.');
+      AlertHook({message: 'Add item to purchase.'});
       return;
     }
 
-    const isItemsVerified = verifyItemsToPurchase(cleanedItems);
-
     if (!isItemsVerified) {
-      alert('Complete item to purchase information.');
+      AlertHook({message: 'Complete item to purchase information.'});
       return;
     }
 
     if (!cashOnDelivery) {
-      alert('Enter estimated price.');
+      AlertHook({message: 'Enter estimated price of items.'});
       return;
     }
 
-    if (!itemDescription) {
-      alert('Select item description.');
+    if (cashOnDelivery < 1) {
+      AlertHook({message: 'Enter estimated price of items must be greater than or equal to PHP 1.00'});
       return;
     }
 
@@ -142,7 +222,7 @@ const PabiliDetails = ({navigation, route, session}) => {
     route.params.setOrderData({
       ...route.params.orderData,
       collectPaymentFrom,
-      itemDescription,
+      itemDescription: finalItemDescription,
       notes,
       isExpress,
       isCashOnDelivery: true,
@@ -152,11 +232,6 @@ const PabiliDetails = ({navigation, route, session}) => {
 
     const orderData = route.params.orderData;
 
-    console.log({
-      partnerBranchOrderId: selectedOrder.id,
-      partnerBranchTenantId: selectedTenant.id,
-    });
-
     getDeliveryPriceAndDirections({
       variables: {
         input: {
@@ -165,8 +240,8 @@ const PabiliDetails = ({navigation, route, session}) => {
           // promoCode: bookingData.promoCode,
           isExpress: isExpress,
           isCashOnDelivery: true,
-          partnerBranchOrderId: selectedOrder.id,
-          partnerBranchTenantId: selectedTenant.id,
+          partnerBranchOrderId: selectedOrder ? selectedOrder.id : null,
+          partnerBranchTenantId: selectedTenant ? selectedTenant.id : null,
           origin: {
             latitude: orderData.senderStop.latitude,
             longitude: orderData.senderStop.longitude,
@@ -183,49 +258,90 @@ const PabiliDetails = ({navigation, route, session}) => {
   };
 
   const onPartnerBranchOrderSelect = (order) => {
-    setItemDescription(order.cargo.type);
-    setTenants(order.cargo.tenants);
-    setSelectedOrder(order);
+    if (!selectedOrder) {
+      setItemDescription(order.cargo.type);
+      setTenants(order.cargo.tenants);
+      setSelectedOrder(order);
+      setSelectedTenant({name: ''});
+    } else {
+      if (selectedOrder.cargo.type != order.cargo.type) {
+        setItemDescription(order.cargo.type);
+        setTenants(order.cargo.tenants);
+        setSelectedOrder(order);
+        setSelectedTenant({name: ''});
+      }
+    }
+  };
+
+  const onCashOnDeliveryValueChange = (value) => {
+    const decimal = value.split('.')[1];
+
+    if (isNaN(value)) {
+      AlertHook({message: 'Please enter a valid amount.'});
+
+      setCashOnDelivery(''); //force clear
+      return;
+    }
+
+    if (value && decimal) {
+      if (decimal.toString().length > 2) {
+        setCashOnDelivery(amount); //force no change
+        return;
+      }
+    }
+
+    if (parseFloat(value) >= parseFloat(maxValue)) {
+      setCashOnDelivery(maxValue); //force max amount
+
+      return;
+    }
+
+    setCashOnDelivery(value);
   };
 
   return (
     <>
-      <ScrollView style={styles.screenBox} showsVerticalScrollIndicator={false}>
-        <AlertOverlay visible={loading} />
-        <View style={{height: 20}} />
-        {/* <PromoForm /> */}
-        {/* <PaymentForm value={collectPaymentFrom === 'SENDER' ? 'Sender' : 'Recipient'} bottomSheetRef={paymentSheetRef} /> */}
-        {!partnerBranch && <ItemDescriptionForm value={itemDescription} bottomSheetRef={itemSheetRef} />}
-        {partnerBranch && (
-          <PartnerBranchItemDescriptionForm value={itemDescription} bottomSheetRef={partnerItemSheefRef} />
-        )}
-        {partnerBranch && <PartnerBranchTenantForm value={selectedTenant.name} bottomSheetRef={tenantSheetRef} />}
+      <View style={{flex: 1, backgroundColor: 'white'}}>
+        <View style={{flex: 1}}>
+          <InputScrollView contentContainerStyle={styles.screenBox} showsVerticalScrollIndicator={false}>
+            <AlertOverlay visible={loading} />
+            <View style={{height: 20}} />
+            {/* <PromoForm /> */}
+            {/* <PaymentForm value={collectPaymentFrom === 'SENDER' ? 'Sender' : 'Recipient'} bottomSheetRef={paymentSheetRef} /> */}
+            {!partnerBranch && (
+              <ItemDescriptionForm
+                value={itemDescription}
+                bottomSheetRef={itemSheetRef}
+                otherItem={otherItem}
+                onOtherItemChange={setOtherItem}
+              />
+            )}
+            {partnerBranch && (
+              <PartnerBranchItemDescriptionForm value={itemDescription} bottomSheetRef={partnerItemSheefRef} />
+            )}
+            {partnerBranch && <PartnerBranchTenantForm value={selectedTenant.name} bottomSheetRef={tenantSheetRef} />}
 
-        {/* <Text> {JSON.stringify(partnerBranch, null, 4)}</Text> */}
-        <ItemsToPurchaseForm initialData={itemsToPurchase} onDataChange={setItemsToPurchase} />
-        <View style={{marginTop: 20}}>
-          <Text style={{fontFamily: FONT.BOLD}}>Estimated Price of Items</Text>
-          <View style={styles.spacing} />
-          <TextInput
-            style={styles.input}
-            keyboardType="numeric"
-            onChangeText={setCashOnDelivery}
-            placeholder="Maximum: 2,000"
-            placeholderTextColor={LIGHT}
-          />
+            {/* <Text> {JSON.stringify(partnerBranch, null, 4)}</Text> */}
+            <ItemsToPurchaseForm initialData={itemsToPurchase} onDataChange={setItemsToPurchase} />
+            <View style={{marginTop: 20}}>
+              <Text style={{fontFamily: FONT.BOLD}}>Estimated Price of Items</Text>
+              <View style={styles.spacing} />
+              <TextInput
+                style={styles.input}
+                value={cashOnDelivery}
+                keyboardType="number-pad"
+                returnKeyType="done"
+                onChangeText={onCashOnDeliveryValueChange}
+                placeholder="Maximum: 2,000"
+                placeholderTextColor={LIGHT}
+              />
+            </View>
+            <NotesForm value={notes} onChange={setNotes} />
+            <ExpressForm value={isExpress} onChange={setIsExpress} />
+          </InputScrollView>
         </View>
-        <NotesForm value={notes} onChange={setNotes} />
-        <ExpressForm value={isExpress} onChange={setIsExpress} />
-        {/* <PabiliForm
-        value={isCashOnDelivery}
-        amount={cashOnDelivery}
-        onChange={setIsCashOnDelivery}
-        onAmountChange={setCashOnDelivery}
-      /> */}
-      </ScrollView>
-      <View style={{backgroundColor: 'white'}}>
-        <View style={{backgroundColor: COLOR.LIGHT, padding: 10}}>
-          <BlackButton label="Confirm Pabili Information" onPress={onConfirmPabiliInformation} />
+        <View style={{backgroundColor: COLOR.LIGHT}}>
+          <YellowButton label="Confirm Pabili Information" onPress={onConfirmPabiliInformation} style={{margin: 16}} />
         </View>
       </View>
       <PaymentSheet onChange={setCollectPaymentFrom} ref={paymentSheetRef} />
@@ -247,6 +363,7 @@ const PabiliDetails = ({navigation, route, session}) => {
 
 const mapStateToProps = (state) => ({
   session: state.session,
+  constants: state.constants,
 });
 
 export default connect(mapStateToProps, null)(PabiliDetails);
@@ -254,8 +371,6 @@ export default connect(mapStateToProps, null)(PabiliDetails);
 const styles = StyleSheet.create({
   screenBox: {
     paddingHorizontal: 20,
-    backgroundColor: 'white',
-    flex: 1,
   },
   contentContainer: {
     paddingHorizontal: 10,

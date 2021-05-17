@@ -12,12 +12,12 @@ import {GeolocationUtility, GoogleUtility} from '../../../../../util';
 const SenderRecipientCard = ({
   senderStop,
   recipientStop,
-  setRecipientStop,
+  setSenderStop,
   onSenderPress = () => {},
   onRecipientPress = () => {},
   onLocationDetected = () => {},
 }) => {
-  const [userStop, setUserStop] = useState(recipientStop);
+  const [userStop, setUserStop] = useState(senderStop);
   const session = useSelector((state) => state.session);
 
   const [getGoogleGeocodeReverse, {loading, error}] = useLazyQuery(GET_GOOGLE_GEOCODE_REVERSE, {
@@ -26,18 +26,15 @@ const SenderRecipientCard = ({
       console.log(JSON.stringify({USER: userStop}, null, 4));
       console.log(JSON.stringify({GEOCODED: getGoogleGeocodeReverse}, null, 4));
 
-      const updatedUserStop = [
-        {
-          ...userStop[0],
-          name: `${session.user.person.firstName} ${session.user.person.lastName}`,
-          mobile: session.user.username.replace('+63', ''),
-          formattedAddress: getGoogleGeocodeReverse.formattedAddress,
-          // addressBreakdown: getGoogleGeocodeReverse.addressBreakdown,
-          addressBreakdownHash: getGoogleGeocodeReverse.addressBreakdownHash,
-        },
-      ];
-
-      setRecipientStop(updatedUserStop);
+      const updatedUserStop = {
+        ...userStop,
+        name: `${session.user.person.firstName} ${session.user.person.lastName}`,
+        mobile: session.user.username.replace('+63', ''),
+        formattedAddress: getGoogleGeocodeReverse.formattedAddress,
+        addressBreakdownHash: getGoogleGeocodeReverse.addressBreakdownHash,
+        // addressBreakdown: getGoogleGeocodeReverse.addressBreakdown,
+      };
+      setSenderStop(updatedUserStop);
       setUserStop(updatedUserStop);
     },
     onError: (error) => console.log({error}),
@@ -47,13 +44,11 @@ const SenderRecipientCard = ({
     const currentLocation = await GeolocationUtility.getCurrentLocation();
 
     if (currentLocation) {
-      setUserStop([
-        {
-          ...userStop[0],
-          latitude: currentLocation.coords.latitude,
-          longitude: currentLocation.coords.longitude,
-        },
-      ]);
+      setUserStop({
+        ...userStop,
+        latitude: currentLocation.coords.latitude,
+        longitude: currentLocation.coords.longitude,
+      });
 
       onLocationDetected({
         latitude: currentLocation.coords.latitude,
@@ -74,7 +69,8 @@ const SenderRecipientCard = ({
   };
 
   useEffect(() => {
-    if (!recipientStop[0].formattedAddress) {
+    if (!senderStop.formattedAddress) {
+      console.log('___________________');
       getLocationHash();
     }
   }, []);
@@ -89,7 +85,7 @@ const SenderRecipientCard = ({
           backgroundColor: 'white',
         }}>
         <View style={{width: 50, alignItems: 'center', paddingVertical: 20}}>
-          <VectorIcon iconSet={ICON_SET.FontAwesome5} name="map-pin" color={COLORS.YELLOW} size={22} />
+          <VectorIcon iconSet={ICON_SET.FontAwesome5} name="map-pin" color={COLOR.YELLOW} size={22} />
           <View
             style={{
               flex: 1,
@@ -105,46 +101,21 @@ const SenderRecipientCard = ({
             <View style={{height: 4, width: 4, backgroundColor: COLORS.LIGHT, borderRadius: 4, marginBottom: 4}} />
             <View style={{height: 4, width: 4, backgroundColor: COLORS.LIGHT, borderRadius: 4, marginBottom: 4}} />
           </View>
-          <VectorIcon iconSet={ICON_SET.FontAwesome5} name="map-marker-alt" color={COLORS.ORANGE} size={22} />
+          <VectorIcon iconSet={ICON_SET.FontAwesome5} name="map-marker-alt" color={COLOR.ORANGE} size={22} />
         </View>
-        <View style={{flex: 1, justifyContent: 'center', marginRight: 10}}>
+        <View style={{flex: 1, justifyContent: 'center', marginRight: 8}}>
           <TouchableHighlight
             onPress={onSenderPress}
-            style={{borderRadius: NUMBERS.BORDER_RADIUS, marginLeft: -10}}
+            style={{borderRadius: NUMBERS.BORDER_RADIUS, marginLeft: -8}}
             underlayColor={COLORS.LIGHT_YELLOW}>
-            <View style={{height: 50, justifyContent: 'center', backgroundColor: 'white', paddingLeft: 10}}>
+            <View style={{height: 50, justifyContent: 'center', backgroundColor: 'white'}}>
               {senderStop.formattedAddress ? (
-                <>
+                <View style={{paddingLeft: 10}}>
                   <Text numberOfLines={1} style={{fontFamily: FONT.BOLD}}>
                     {senderStop.name}
                   </Text>
                   <Text numberOfLines={1} style={{color: COLOR.DARK}}>
                     {senderStop.formattedAddress}
-                  </Text>
-                </>
-              ) : (
-                <Text
-                  numberOfLines={1}
-                  style={{
-                    fontFamily: FONT.BOLD,
-                  }}>{`May ipapadala? Ipa-toktok mo na yan!`}</Text>
-              )}
-            </View>
-          </TouchableHighlight>
-          <View style={{borderBottomWidth: 1, borderColor: COLOR.LIGHT, marginVertical: 10, marginLeft: -5}} />
-          <TouchableHighlight
-            // onPress={searchRecipientAddress}
-            onPress={onRecipientPress}
-            style={{borderRadius: NUMBERS.BORDER_RADIUS, marginLeft: -10}}
-            underlayColor={COLORS.LIGHT_YELLOW}>
-            <View style={{height: 50, justifyContent: 'center', backgroundColor: 'white'}}>
-              {recipientStop[0].formattedAddress ? (
-                <View style={{paddingLeft: 10}}>
-                  <Text numberOfLines={1} style={{fontFamily: FONT.BOLD}}>
-                    {recipientStop[0].name}
-                  </Text>
-                  <Text numberOfLines={1} style={{color: COLOR.DARK}}>
-                    {recipientStop[0].formattedAddress}
                   </Text>
                 </View>
               ) : (
@@ -158,6 +129,33 @@ const SenderRecipientCard = ({
                     secondaryColor="rgba(256,186,28,0.4)"
                   />
                 </View>
+              )}
+            </View>
+          </TouchableHighlight>
+          <View style={{borderBottomWidth: 1, borderColor: COLOR.LIGHT, marginVertical: 8, marginLeft: -5}} />
+          <TouchableHighlight
+            // onPress={searchRecipientAddress}
+            onPress={onRecipientPress}
+            style={{borderRadius: NUMBERS.BORDER_RADIUS, marginLeft: -8}}
+            underlayColor={COLORS.LIGHT_YELLOW}>
+            <View style={{height: 50, justifyContent: 'center', backgroundColor: 'white', paddingLeft: 8}}>
+              {recipientStop[0].formattedAddress ? (
+                <>
+                  <Text numberOfLines={1} style={{fontFamily: FONT.BOLD}}>
+                    {recipientStop[0].name}
+                  </Text>
+                  <Text numberOfLines={1} style={{color: COLOR.DARK}}>
+                    {recipientStop[0].formattedAddress}
+                  </Text>
+                </>
+              ) : (
+                <Text
+                  numberOfLines={1}
+                  style={{
+                    fontFamily: FONT.BOLD,
+                  }}>
+                  {`May ipapadala? Ipa-toktok mo na yan!`}
+                </Text>
               )}
             </View>
           </TouchableHighlight>

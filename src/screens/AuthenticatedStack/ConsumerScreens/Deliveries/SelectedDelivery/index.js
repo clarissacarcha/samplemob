@@ -13,13 +13,29 @@ import {
   OrderDetailsCard,
   DriverLocationCard,
   RiderRatingCard,
-} from '../../../../components';
-import {useAlert} from '../../../../hooks/useAlert';
-import {OnDeliveryStatusChangeSubscriber, OnDeliveryAcceptedSubscriber} from '../../../../components/subscribers';
-import {YellowIcon} from '../../../../components/ui';
-import {COLOR, DARK, ORANGE, APP_FLAVOR} from '../../../../res/constants';
-import {PATCH_DELIVERY_DELETE} from '../../../../graphql';
-import {onError} from '../../../../util/ErrorUtility';
+} from '../../../../../components';
+import {useAlert} from '../../../../../hooks/useAlert';
+import {OnDeliveryStatusChangeSubscriber, OnDeliveryAcceptedSubscriber} from '../../../../../components/subscribers';
+import {YellowIcon} from '../../../../../components/ui';
+import {YellowButton} from '../../../../../revamp/buttons/YellowButton';
+import {DARK, ORANGE, APP_FLAVOR} from '../../../../../res/constants';
+import {FONT, FONT_SIZE} from '../../../../../res/variables';
+import {PATCH_DELIVERY_DELETE} from '../../../../../graphql';
+import {onError} from '../../../../../util/ErrorUtility';
+
+/*----------------------------*/
+
+import {COLOR} from '../../../../../res/variables';
+
+// Sections
+import {
+  CashOnDeliveryPabiliSection,
+  LandmarkSection,
+  PaymentMethodSection,
+  SenderRecipientSection,
+  StatusSection,
+  SenderRecipientRow,
+} from './Sections';
 
 const SelectedDelivery = ({navigation, route}) => {
   const {delivery, label} = route.params;
@@ -105,60 +121,58 @@ const SelectedDelivery = ({navigation, route}) => {
         }}
       />
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{padding: 20}}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{padding: 16}}>
         {/*---------------------------------------- CANCEL ORDER BUTTON ----------------------------------------*/}
         {[1, 2].includes(getDelivery.status) && (
-          <TouchableHighlight
-            onPress={onCancelPress}
-            underlayColor={COLOR}
-            style={{borderRadius: 10, marginBottom: 20}}>
-            <View style={styles.submit}>
-              <Text style={{color: COLOR, fontSize: 16}}>Cancel Order</Text>
-            </View>
-          </TouchableHighlight>
+          <>
+            <YellowButton onPress={onCancelPress} label="Cancel Order" style={{marginBottom: 8}} />
+            <View style={{height: 8, backgroundColor: COLOR.LIGHT}} />
+          </>
         )}
 
         {/*-------------------- RATE DELIVIERY BUTTON --------------------*/}
         {isRateButtonShown() && (
-          <TouchableHighlight
-            onPress={onRateDeliveryButtonClick}
-            underlayColor={COLOR}
-            style={{borderRadius: 10, marginBottom: 20}}>
-            <View style={styles.submit}>
-              <Text style={{color: COLOR, fontSize: 16}}>Rate This Delivery</Text>
-            </View>
-          </TouchableHighlight>
+          <>
+            <YellowButton onPress={onRateDeliveryButtonClick} label="Rate This Delivery" style={{marginBottom: 8}} />
+            <View style={{height: 8, backgroundColor: COLOR.LIGHT}} />
+          </>
         )}
 
         {/*---------------------------------------- DELIVERY TRACKING ----------------------------------------*/}
         {[2, 3, 4, 5].includes(getDelivery.status) && <DriverLocationCard driver={getDelivery.driver} />}
 
+        {/* <StatusSection delivery={delivery} />
+        <SenderRecipientSection delivery={delivery} />
+        <LandmarkSection delivery={delivery} />
+        <PaymentMethodSection delivery={delivery} />
+        <CashOnDeliveryPabiliSection delivery={delivery} /> */}
+
         {/*-------------------- DELETE/REBOOK BUTTON DETAILS --------------------*/}
         {getDelivery.status === 7 && (
-          <View style={{flexDirection: 'row', marginBottom: 20}}>
+          <View style={{flexDirection: 'row', marginBottom: 16}}>
             {/*-------------------- DELETE BUTTON --------------------*/}
             <TouchableHighlight
               onPress={patchDeliveryDelete}
-              underlayColor={COLOR}
+              underlayColor={COLOR.YELLOW}
               style={{borderRadius: 10, flex: 1, marginRight: 10}}>
               <View style={styles.submit}>
-                <Text style={{color: COLOR, fontSize: 16}}>Delete Order</Text>
+                <Text style={{color: COLOR.YELLOW, fontSize: 16}}>Delete Order</Text>
               </View>
             </TouchableHighlight>
           </View>
         )}
 
         {/*-------------------- DELIVERY ID --------------------*/}
-        <View style={[styles.cardShadow, {marginBottom: 20}]}>
+        <View style={[styles.cardShadow, {marginBottom: 16}]}>
           <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <YellowIcon set="FontAwesome5" name="pen" size={14} darkIcon />
 
-              <Text style={{marginLeft: 10, color: DARK, fontFamily: 'Rubik-Medium'}}>
+              <Text style={{marginLeft: 10, color: DARK, fontFamily: FONT.BOLD}}>
                 Delivery <Text style={{color: ORANGE}}>ID</Text>
               </Text>
             </View>
-            <Text style={{color: DARK, fontFamily: 'Rubik-Medium'}}>{delivery.deliveryId}</Text>
+            <Text style={{color: DARK, fontFamily: FONT.BOLD}}>{delivery.deliveryId}</Text>
           </View>
         </View>
 
@@ -193,7 +207,7 @@ const styles = StyleSheet.create({
   cardShadow: {
     padding: 20,
     backgroundColor: 'white',
-    borderRadius: 10,
+    borderRadius: 5,
     shadowColor: '#000',
 
     shadowOffset: {
@@ -208,7 +222,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: DARK,
     height: 50,
-    borderRadius: 10,
+    borderRadius: 5,
     paddingHorizontal: 20,
     justifyContent: 'center',
     alignItems: 'center',

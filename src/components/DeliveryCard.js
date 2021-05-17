@@ -5,6 +5,7 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableHighlight} from 'react-native';
 import {COLOR, DARK, MEDIUM, LIGHT, ORANGE, APP_FLAVOR} from '../res/constants';
+import {FONT, FONT_SIZE} from '../res/variables';
 import {YellowIcon} from '../components/ui';
 import {numberFormat} from '../helper/numberFormat';
 import moment from 'moment';
@@ -110,7 +111,7 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
   };
 
   return (
-    <View style={{paddingHorizontal: 20, paddingTop: 20, marginBottom: lastItem ? 20 : 0}}>
+    <View style={{paddingHorizontal: 16, paddingTop: 16, marginBottom: lastItem ? 20 : 0}}>
       <TouchableHighlight onPress={onPressThrottled} underlayColor={COLOR} style={styles.card}>
         <View style={styles.taskBox}>
           {/*-------------------- RIDER EXPRESS DELIVERY --------------------*/}
@@ -122,9 +123,9 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
                     <Ionicon name="md-pricetag" size={22} color={COLOR} style={styles.iconBoxWhite} />
 
                     <View style={{marginLeft: 10}}>
-                      <Text style={{fontFamily: 'Rubik-Medium'}}>Promo Delivery</Text>
+                      <Text style={{fontFamily: FONT.BOLD}}>Promo Delivery</Text>
                       <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
-                        <Text style={{fontFamily: 'Rubik-Medium', marginLeft: 10}}>{getDisplayAmount()}</Text>
+                        <Text style={{fontFamily: FONT.BOLD, marginLeft: 10}}>{getDisplayAmount()}</Text>
                       </Text>
                     </View>
                   </View>
@@ -134,9 +135,9 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
                     <MCIcon name="clock-fast" size={20} color={COLOR} style={styles.iconBoxWhite} />
 
                     <View style={{marginLeft: 10}}>
-                      <Text style={{fontFamily: 'Rubik-Medium'}}>Express Delivery</Text>
+                      <Text style={{fontFamily: FONT.BOLD}}>Express Delivery</Text>
                       <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
-                        <Text style={{fontFamily: 'Rubik-Medium', marginLeft: 10}}>{`(${
+                        <Text style={{fontFamily: FONT.BOLD, marginLeft: 10}}>{`(${
                           delivery.price - delivery.expressFee
                         }+${delivery.expressFee}) = ₱ ${parseFloat(delivery.price)}.00`}</Text>
                       </Text>
@@ -152,7 +153,7 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
             <View style={[styles.directionsBox, {borderBottomWidth: StyleSheet.hairlineWidth, borderColor: LIGHT}]}>
               <View style={styles.directionDetail}>
                 <YellowIcon set="FontAwesome" name="search" />
-                <Text style={{fontSize: 14, marginLeft: 10, color: DARK, fontFamily: 'Rubik-Medium'}}>
+                <Text style={{fontSize: 14, marginLeft: 10, color: DARK, fontFamily: FONT.BOLD}}>
                   Looking for your rider,<Text style={{color: ORANGE}}> ka-toktok</Text>
                 </Text>
               </View>
@@ -181,11 +182,11 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
               <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
                 <YellowIcon set="FontAwesome5" name="hand-holding" />
                 <View style={{marginLeft: 10}}>
-                  <Text style={{fontFamily: 'Rubik-Medium'}}>
+                  <Text style={{fontFamily: FONT.BOLD}}>
                     Collect From {delivery.collectPaymentFrom === 'S' ? 'Sender' : 'Recipient'}
                   </Text>
                   <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
-                    <Text style={{fontFamily: 'Rubik-Medium', marginLeft: 10}}>₱ {delivery.price}.00</Text>
+                    <Text style={{fontFamily: FONT.BOLD, marginLeft: 10}}>₱ {delivery.price}.00</Text>
                   </Text>
                 </View>
               </View>
@@ -202,9 +203,9 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
               <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
                 <YellowIcon set="Ionicon" name="ios-pricetag" size={18} />
                 <View style={{marginLeft: 10}}>
-                  <Text style={{fontFamily: 'Rubik-Medium'}}>Amount</Text>
+                  <Text style={{fontFamily: FONT.BOLD}}>Amount</Text>
                   <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
-                    <Text style={{fontFamily: 'Rubik-Medium', marginLeft: 10}}>₱ {delivery.price}.00</Text>
+                    <Text style={{marginLeft: 10, color: MEDIUM}}>₱ {delivery.price}.00</Text>
                   </Text>
                 </View>
               </View>
@@ -212,9 +213,9 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
                   <YellowIcon set="Ionicon" name="ios-pricetags" size={18} />
                   <View style={{marginLeft: 10}}>
-                    <Text style={{fontFamily: 'Rubik-Medium'}}>Discount</Text>
+                    <Text style={{fontFamily: FONT.BOLD}}>Discount</Text>
                     <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
-                      <Text style={{fontFamily: 'Rubik-Medium', marginLeft: 10}}>₱ {delivery.discount}.00</Text>
+                      <Text style={{marginLeft: 10}}>₱ {delivery.discount}.00</Text>
                     </Text>
                   </View>
                 </View>
@@ -232,9 +233,9 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
               <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
                 <YellowIcon set="FontAwesome5" name="wallet" />
                 <View style={{marginLeft: 10}}>
-                  <Text style={{fontFamily: 'Rubik-Medium'}}>Collect From Toktok Wallet</Text>
+                  <Text style={{fontFamily: FONT.BOLD}}>Collect From Toktok Wallet</Text>
                   <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
-                    <Text style={{fontFamily: 'Rubik-Medium', marginLeft: 10}}>₱ {delivery.discount}.00</Text>
+                    <Text style={{marginLeft: 10}}>₱ {delivery.discount}.00</Text>
                   </Text>
                 </View>
               </View>
@@ -262,11 +263,9 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
               <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
                 <YellowIcon set="MaterialCommunity" name="cash" size={22} />
                 <View style={{marginLeft: 10}}>
-                  <Text style={{fontFamily: 'Rubik-Medium'}}>Cash On Delivery</Text>
+                  <Text style={{fontFamily: FONT.BOLD}}>Cash On Delivery</Text>
                   <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
-                    <Text style={{fontFamily: 'Rubik-Medium', marginLeft: 10}}>
-                      ₱ {numberFormat(delivery.cashOnDelivery)}
-                    </Text>
+                    <Text style={{marginLeft: 10}}>₱ {numberFormat(delivery.cashOnDelivery)}</Text>
                   </Text>
                 </View>
               </View>
@@ -280,10 +279,8 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
               <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
                 <YellowIcon set="FontAwesome" name="calendar" />
                 <View style={{marginLeft: 10}}>
-                  <Text style={{fontFamily: 'Rubik-Medium', fontSize: 14}}>Order Date</Text>
-                  <Text
-                    numberOfLines={1}
-                    style={{paddingRight: 10, color: MEDIUM, fontSize: 10, fontFamily: 'Rubik-Medium'}}>
+                  <Text style={{fontFamily: FONT.BOLD}}>Order Date</Text>
+                  <Text numberOfLines={1} style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
                     {createdAt}
                   </Text>
                 </View>
@@ -293,10 +290,8 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
               <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
                 <YellowIcon set="Fontisto" name="sitemap" />
                 <View style={{marginLeft: 10}}>
-                  <Text style={{fontFamily: 'Rubik-Medium'}}>Order Type</Text>
-                  <Text
-                    numberOfLines={1}
-                    style={{paddingRight: 10, color: MEDIUM, fontSize: 10, fontFamily: 'Rubik-Medium'}}>
+                  <Text style={{fontFamily: FONT.BOLD}}>Order Type</Text>
+                  <Text numberOfLines={1} style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
                     {legend[orderType]}
                   </Text>
                 </View>
@@ -327,12 +322,12 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
                   height: 50,
                   justifyContent: 'center',
                 }}>
-                <Text style={{fontFamily: 'Rubik-Medium'}}>
+                <Text style={{fontFamily: FONT.BOLD}}>
                   {APP_FLAVOR === 'D' && delivery.status === 1 && delivery.tokDriverId === null
                     ? getDisplayAddress({stop: delivery.senderStop})
                     : delivery.senderStop.name}
                 </Text>
-                <Text numberOfLines={1} style={{color: MEDIUM, fontSize: 10}}>
+                <Text numberOfLines={1} style={{color: MEDIUM, fontSize: 11}}>
                   {APP_FLAVOR === 'D' && delivery.status === 1 && delivery.tokDriverId === null
                     ? delivery.senderStop.name
                     : delivery.senderStop.formattedAddress}
@@ -344,12 +339,12 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
               <View style={{height: 50, justifyContent: 'center'}}>
                 {delivery.recipientStop.name ? (
                   <>
-                    <Text style={{fontFamily: 'Rubik-Medium'}}>
+                    <Text style={{fontFamily: FONT.BOLD}}>
                       {APP_FLAVOR === 'D' && delivery.status === 1 && delivery.tokDriverId === null
                         ? getDisplayAddress({stop: delivery.recipientStop})
                         : delivery.recipientStop.name}
                     </Text>
-                    <Text numberOfLines={1} style={{paddingRight: 10, color: MEDIUM, fontSize: 10}}>
+                    <Text numberOfLines={1} style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
                       {APP_FLAVOR === 'D' && delivery.status === 1 && delivery.tokDriverId === null
                         ? delivery.recipientStop.name
                         : delivery.recipientStop.formattedAddress}
@@ -368,10 +363,10 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
               <View style={styles.directionDetail}>
                 <YellowIcon set="Fontisto" name="motorcycle" />
                 <View style={{marginLeft: 10}}>
-                  <Text style={{fontFamily: 'Rubik-Medium'}}>
+                  <Text style={{fontFamily: FONT.BOLD}}>
                     {`${delivery.driver.user.person.firstName} ${delivery.driver.user.person.lastName}`}
                   </Text>
-                  <Text numberOfLines={1} style={{paddingRight: 10, color: MEDIUM, fontSize: 10}}>
+                  <Text numberOfLines={1} style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
                     {delivery.driver.user.username}
                   </Text>
                 </View>
@@ -390,10 +385,10 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
               <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
                 <YellowIcon set="MaterialCommunity" name="map-marker-distance" />
                 <View style={{marginLeft: 10}}>
-                  <Text style={{fontFamily: 'Rubik-Medium', fontSize: 14}}>Distance</Text>
-                  <Text style={{fontFamily: 'Rubik-Medium', color: MEDIUM, fontSize: 11}}>
+                  <Text style={{fontFamily: FONT.BOLD, fontSize: 14}}>Distance</Text>
+                  <Text style={{color: MEDIUM, fontSize: 11}}>
                     {parseFloat(delivery.distance).toFixed(2)}
-                    <Text style={{color: MEDIUM}}> km</Text>
+                    <Text style={{color: MEDIUM, fontSize: 11}}> km</Text>
                   </Text>
                 </View>
               </View>
@@ -414,9 +409,9 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
                   <YellowIcon set="MaterialCommunity" name="credit-card" />
                   <View style={{marginLeft: 10}}>
-                    <Text style={{fontFamily: 'Rubik-Medium'}}>Credit Cost</Text>
+                    <Text style={{fontFamily: FONT.BOLD}}>Credit Cost</Text>
                     <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
-                      <Text style={{fontFamily: 'Rubik-Medium', marginLeft: 10}}>
+                      <Text style={{marginLeft: 10}}>
                         {numberFormat(
                           (parseFloat(delivery.price) + parseFloat(delivery.discount)) * parseFloat(delivery.comRate),
                         )}
@@ -435,9 +430,9 @@ export const DeliveryCard = ({delivery, onPress, lastItem = false}) => {
                 <MCIcon name="cash" size={24} color={COLOR} style={styles.iconBoxWhite} />
 
                 <View style={{marginLeft: 10}}>
-                  <Text style={{fontFamily: 'Rubik-Medium'}}>Cash On Delivery</Text>
+                  <Text style={{fontFamily: FONT.BOLD}}>Cash On Delivery</Text>
                   <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
-                    <Text style={{fontFamily: 'Rubik-Medium', marginLeft: 10}}>₱ {delivery.cashOnDelivery}.00</Text>
+                    <Text style={{marginLeft: 10}}>₱ {delivery.cashOnDelivery}.00</Text>
                   </Text>
                 </View>
               </View>
@@ -454,11 +449,11 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   card: {
-    borderRadius: 10,
+    borderRadius: 5,
   },
   taskBox: {
     backgroundColor: 'white',
-    borderRadius: 10,
+    borderRadius: 5,
     shadowColor: '#000',
 
     shadowOffset: {
@@ -515,8 +510,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: COLOR,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
+    borderTopLeftRadius: 5,
+    borderTopRightRadius: 5,
     paddingHorizontal: 20,
   },
   topYellowRow: {
@@ -525,8 +520,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: COLOR,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
+    borderTopLeftRadius: 5,
+    borderTopRightRadius: 5,
     paddingHorizontal: 20,
   },
   bottomYellowRow: {
@@ -535,8 +530,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: COLOR,
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
+    borderBottomLeftRadius: 5,
+    borderBottomRightRadius: 5,
     paddingHorizontal: 20,
   },
 });

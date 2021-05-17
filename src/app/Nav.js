@@ -2,6 +2,7 @@ import React from 'react';
 import {Text} from 'react-native';
 import {connect} from 'react-redux';
 import {COLOR, FONT_SIZE, SIZE} from '../res/variables';
+import {APP_FLAVOR} from '../res/constants';
 import {DeliveriesTopTabHeader} from '../components';
 import EIcon from 'react-native-vector-icons/Entypo';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -344,11 +345,11 @@ const AuthenticatedStack = () => (
     {/* <Authenticated.Screen name="ConsumerLanding" component={ConsumerLanding} options={{headerShown: false}} /> */}
     <Authenticated.Screen name="ConsumerLanding" component={ConsumerHomeBottomTab} options={{headerShown: false}} />
     <Authenticated.Screen name="ToktokDelivery" component={ToktokDelivery} options={{headerShown: false}} />
-    <Authenticated.Screen name="StopDetails" component={StopDetails} />
+    <Authenticated.Screen name="StopDetails" component={StopDetails} options={{headerShown: false}} />
     <Authenticated.Screen name="DeliveryDetails" component={DeliveryDetails} />
     <Authenticated.Screen name="DeliverySummary" component={DeliverySummary} />
     <Authenticated.Screen name="Pabili" component={Pabili} options={{headerShown: false}} />
-    <Authenticated.Screen name="PabiliSearchAddress" component={PabiliSearchAddress} />
+    <Authenticated.Screen name="PabiliSearchAddress" component={PabiliSearchAddress} options={{headerShown: false}} />
     <Authenticated.Screen name="PabiliDetails" component={PabiliDetails} />
     <Authenticated.Screen name="NearbyStores" component={NearbyStores} />
     <Authenticated.Screen name="PartnerBranches" component={PartnerBranches} />
@@ -388,7 +389,7 @@ const AuthenticatedStack = () => (
 
     <Authenticated.Screen name="Notifications" component={Notifications} />
 
-    <Authenticated.Screen name="CustomerDeliveries" component={CustomerDeliveries} />
+    {/* <Authenticated.Screen name="CustomerDeliveries" component={CustomerDeliveries} /> */}
     <Authenticated.Screen name="SelectedDeliveries" component={SelectedDeliveries} />
     <Authenticated.Screen name="SelectedDelivery" component={SelectedDelivery} />
     <Authenticated.Screen name="DeliveryTracking" component={DeliveryTracking} />
@@ -464,6 +465,7 @@ const Drawer = connect(
   mapDispatchToProps,
 )(({session, constants, destroySession}) => (
   <RootDrawer.Navigator
+    screenOptions={{gestureEnabled: false}}
     drawerContent={({navigation}) => (
       <DrawerContent navigation={navigation} session={session} constants={constants} destroySession={destroySession} />
     )}>

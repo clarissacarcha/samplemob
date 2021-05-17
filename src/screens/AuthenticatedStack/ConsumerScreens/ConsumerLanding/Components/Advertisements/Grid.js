@@ -1,6 +1,7 @@
-import React from 'react';
+import React, {useRef, useEffect, useCallback} from 'react';
 import {View, Text, StyleSheet, Dimensions, Image, TouchableHighlight, FlatList} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import {throttle} from 'lodash';
 import {FONT, FONT_SIZE, COLOR, SIZE} from '../../../../../../res/variables';
 import {VectorIcon, ICON_SET} from '../../../../../../revamp';
 
@@ -15,9 +16,24 @@ const GridAd = ({ad}) => {
     navigation.push('SelectedAdvertisement', {advertisement: ad});
   };
 
+  const useThrottle = (cb, delayDuration) => {
+    const options = {leading: true, trailing: false}; // add custom lodash options
+    const cbRef = useRef(cb);
+    // use mutable ref to make useCallback/throttle not depend on `cb` dep
+    useEffect(() => {
+      cbRef.current = cb;
+    });
+    return useCallback(
+      throttle((...args) => cbRef.current(...args), delayDuration, options),
+      [delayDuration],
+    );
+  };
+
+  const onPressThrottled = useThrottle(onPress, 1000);
+
   return (
     <View style={{margin: SIZE.MARGIN / 2, width: BANNER_HEIGHT}}>
-      <TouchableHighlight style={styles.touchable} onPress={onPress}>
+      <TouchableHighlight style={styles.touchable} onPress={onPressThrottled}>
         <View>
           <View style={styles.imageBox}>
             <Image
@@ -34,12 +50,12 @@ const GridAd = ({ad}) => {
         <Text style={{fontFamily: FONT.BOLD}} numberOfLines={2}>
           {ad.title}
         </Text>
-        <View style={styles.iconDateRow}>
+        {/* <View style={styles.iconDateRow}>
           <VectorIcon iconSet={ICON_SET.MaterialCommunity} name="calendar-blank-outline" color={COLOR.DARK} size={13} />
           <Text style={styles.date} numberOfLines={1}>
             {ad.startDuration}
           </Text>
-        </View>
+        </View> */}
       </View>
     </View>
   );
@@ -78,7 +94,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   textBox: {
-    height: 56,
+    height: 40,
     backgroundColor: COLOR.WHITE,
   },
   iconDateRow: {

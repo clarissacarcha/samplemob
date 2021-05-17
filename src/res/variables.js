@@ -15,6 +15,7 @@ export const COLOR = {
   ORANGE: '#F5841F',
   YELLOW_UNDERLAY: '#96641e', //TouchableHightlight underlayColor for YELLOW background
   WHITE_UNDERLAY: '#FDBA1C', //TouchableHightlight underlayColor for WHITE background
+  TRANSPARENT_YELLOW: 'rgba(256,186,28, 0.15)',
 };
 
 export const FONT = {

@@ -16,9 +16,10 @@ import ContentLoader from 'react-native-easy-content-loader';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import moment from 'moment';
 import {COLORS, FONTS, NUMBERS, SIZES, MEDIUM} from '../../../../../res/constants';
-import {FONT, COLOR, SIZE} from '../../../../../res/variables';
+import {FONT, COLOR, SIZE, FONT_SIZE} from '../../../../../res/variables';
 import {WhiteButton, BlackButton, VectorIcon, ICON_SET, Shadow, ImageHeader} from '../../../../../revamp';
-
+import {useAlert} from '../../../../../hooks';
+import {throttle} from 'lodash';
 import BottomSheet, {BottomSheetBackdrop, BottomSheetView} from '@gorhom/bottom-sheet';
 import ScrollPicker from 'react-native-wheel-scrollview-picker';
 
@@ -82,6 +83,17 @@ const SCHEDULES = [
 ];
 
 const SCHEDULE_TIME = SCHEDULES.map((item) => {
+  return item.label;
+});
+
+const TIME_NOW = moment();
+
+const AFTER_SCHEDULES = SCHEDULES.filter(({value}) => {
+  const timeMoment = moment(value, 'HH:mm:ss');
+  return timeMoment.isAfter(TIME_NOW);
+});
+
+const SCHEDULE_TIME_AFTER = AFTER_SCHEDULES.map((item) => {
   return item.label;
 });
 
@@ -160,6 +172,8 @@ const Pabili = ({navigation, session}) => {
   };
   const [orderData, setOrderData] = useState(INITIAL_ORDER_DATA);
 
+  const AlertHook = useAlert();
+
   const onSenderConfirm = (value) => {
     setOrderData({
       ...orderData,
@@ -208,17 +222,20 @@ const Pabili = ({navigation, session}) => {
   };
 
   const [orderType, setOrderType] = useState('ASAP');
-  const [scheduledAt, setScheduledAt] = useState(null);
   const [formattedScheduledAt, setFormattedScheduledAt] = useState('ASAP');
   const [scheduledDate, setScheduledDate] = useState('Today');
   const [scheduledTime, setScheduledTime] = useState('Anytime');
+
+  const [selectedTimeIndex, setSelectedTimeIndex] = useState(0);
+  const [scheduleTimeNow, setScheduleTimeNow] = useState(SCHEDULE_TIME_AFTER);
+
   const [userCoordinates, setUserCoordinates] = useState(null);
 
   const bottomSheetRef = useRef();
   const storesBottomSheetRef = useRef();
 
   const snapPoints = useMemo(() => [0, 130, 345], []);
-  const storesSnapPoints = useMemo(() => [0, 390], []);
+  const storesSnapPoints = useMemo(() => [0, 400], []);
 
   const onNearbySelect = ({value, nav, storeData}) => {
     console.log('NEARBY SELECTED');
@@ -254,6 +271,22 @@ const Pabili = ({navigation, session}) => {
   const pushToNearbyStores = ({label, plural, placeType, coordinates}) => {
     navigation.push('NearbyStores', {label, plural, placeType, coordinates, onNearbySelect});
   };
+
+  const useThrottle = (cb, delayDuration) => {
+    const options = {leading: true, trailing: false}; // add custom lodash options
+    const cbRef = useRef(cb);
+    // use mutable ref to make useCallback/throttle not depend on `cb` dep
+    useEffect(() => {
+      cbRef.current = cb;
+    });
+    return useCallback(
+      throttle((...args) => cbRef.current(...args), delayDuration, options),
+      [delayDuration],
+    );
+  };
+
+  const onPressThrottled = useThrottle(() => navigation.pop(), 1000);
+
   return (
     <>
       {/* <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent /> */}
@@ -261,7 +294,7 @@ const Pabili = ({navigation, session}) => {
         <ImageHeader />
         <View style={{marginTop: -(220 - StatusBar.currentHeight)}} />
         <View style={{flexDirection: 'row'}}>
-          <TouchableOpacity onPress={() => navigation.pop()}>
+          <TouchableOpacity onPress={onPressThrottled}>
             <View
               style={{
                 height: 50,
@@ -296,15 +329,17 @@ const Pabili = ({navigation, session}) => {
             <View
               style={{
                 height: 50,
-                justifyContent: 'center',
-                backgroundColor: 'white',
-                borderRadius: NUMBERS.BORDER_RADIUS,
-                paddingHorizontal: 20,
+                alignItems: 'center',
+                backgroundColor: COLOR.WHITE,
+                borderRadius: SIZE.BORDER_RADIUS,
+                paddingHorizontal: 8,
+                flexDirection: 'row',
               }}>
-              <Text style={{fontFamily: FONT.BOLD}}>
+              <Text style={{fontFamily: FONT.BOLD, flex: 1}}>
                 Pick Up Time:
-                <Text style={{color: COLOR.ORANGE}}> ASAP</Text>
+                <Text style={{color: COLOR.ORANGE}}>{orderType === 'ASAP' ? ' ASAP' : ` ${formattedScheduledAt}`}</Text>
               </Text>
+              <VectorIcon iconSet={ICON_SET.Entypo} name="chevron-thin-right" color={COLOR.BLACK} />
             </View>
           </TouchableHighlight>
         </Shadow>
@@ -335,17 +370,20 @@ const Pabili = ({navigation, session}) => {
               <View
                 style={{
                   height: 50,
-                  justifyContent: 'center',
+                  alignItems: 'center',
                   backgroundColor: 'white',
                   borderRadius: NUMBERS.BORDER_RADIUS,
-                  paddingHorizontal: 20,
+                  paddingHorizontal: 8,
+                  flexDirection: 'row',
                 }}>
-                <Text style={{fontFamily: FONT.BOLD}}>Nearby Establishments</Text>
+                <Text style={{fontFamily: FONT.BOLD, flex: 1}}>What's near me?</Text>
+                <VectorIcon iconSet={ICON_SET.Entypo} name="chevron-thin-right" color={COLOR.BLACK} />
               </View>
             </TouchableHighlight>
           </Shadow>
         )}
         <View style={{height: 10, backgroundColor: COLOR.LIGHT, marginTop: 20, marginBottom: 10}} />
+
         <PabiliPartners orderData={orderData} setOrderData={setOrderData} />
       </View>
       <BottomSheet
@@ -355,9 +393,9 @@ const Pabili = ({navigation, session}) => {
         handleComponent={() => (
           <View
             style={{
-              height: 25,
-              borderTopRightRadius: 15,
-              borderTopLeftRadius: 15,
+              height: 16,
+              borderTopRightRadius: 20,
+              borderTopLeftRadius: 20,
               borderTopWidth: 3,
               borderRightWidth: 2,
               borderLeftWidth: 2,
@@ -370,24 +408,43 @@ const Pabili = ({navigation, session}) => {
         enableHandlePanningGesture={false}
         backdropComponent={BottomSheetBackdrop}>
         <BottomSheetView style={styles.contentContainer}>
-          <Text>Pick Up Time</Text>
-          <View style={{height: 10}} />
+          <Text style={{fontFamily: FONT.BOLD}}>Select Pick Up Time</Text>
+          <View style={{height: 2}} />
           <WhiteButton
             label="ASAP"
-            prefixSet="Material"
-            prefixName="timer"
             borderless
+            labelStyle={{fontFamily: FONT.REGULAR}}
             onPress={() => {
               setOrderType('ASAP');
               setFormattedScheduledAt('ASAP');
               bottomSheetRef.current.snapTo(0);
+
+              setOrderData({
+                ...orderData,
+                orderType: 'ASAP',
+                scheduledAt: 'null',
+                senderStop: {
+                  ...orderData.senderStop,
+                  orderType: 'ASAP',
+                  scheduledFrom: null,
+                  scheduledTo: null,
+                },
+                recipientStop: [
+                  {
+                    ...orderData.recipientStop[0],
+                    orderType: 'ASAP',
+                    scheduledFrom: null,
+                    scheduledTo: null,
+                  },
+                ],
+              });
             }}
           />
+          <View style={{borderBottomWidth: 1, borderColor: COLOR.LIGHT}} />
           <WhiteButton
             label="Scheduled"
-            prefixSet="MaterialCommunity"
-            prefixName="calendar-month"
             borderless
+            labelStyle={{fontFamily: FONT.REGULAR}}
             onPress={() => {
               bottomSheetRef.current.snapTo(2);
             }}
@@ -396,11 +453,16 @@ const Pabili = ({navigation, session}) => {
             <ScrollPicker
               dataSource={SCHEDULE_DAYS}
               selectedIndex={0}
-              renderItem={(data, index) => {
-                //
-              }}
               onValueChange={(data, selectedIndex) => {
+                console.log(data);
                 setScheduledDate(data);
+                if (data === 'Today') {
+                  setScheduleTimeNow(SCHEDULE_TIME_AFTER);
+                  setSelectedTimeIndex(1);
+                } else {
+                  setScheduleTimeNow(SCHEDULE_TIME);
+                  setSelectedTimeIndex(1);
+                }
               }}
               wrapperHeight={150}
               wrapperWidth={150}
@@ -409,13 +471,12 @@ const Pabili = ({navigation, session}) => {
               highlightColor={COLORS.LIGHT}
               highlightBorderWidth={1}
               onPress={() => {}}
+              activeItemTextStyle={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}
+              itemTextStyle={{fontFamily: FONT.REGULAR, color: COLOR.MEDIUM}}
             />
             <ScrollPicker
-              dataSource={SCHEDULE_TIME}
-              selectedIndex={0}
-              renderItem={(data, index) => {
-                return <Text style={{fontSize: 10}}>{data.label}</Text>;
-              }}
+              dataSource={scheduleTimeNow}
+              selectedIndex={selectedTimeIndex}
               onValueChange={(data, selectedIndex) => {
                 console.log(data);
                 setScheduledTime(data);
@@ -430,6 +491,8 @@ const Pabili = ({navigation, session}) => {
                 console.log({x});
                 console.log({y});
               }}
+              activeItemTextStyle={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}
+              itemTextStyle={{fontFamily: FONT.REGULAR, color: COLOR.MEDIUM}}
             />
           </View>
           <View style={{height: 10}} />
@@ -437,6 +500,15 @@ const Pabili = ({navigation, session}) => {
           <BlackButton
             label="Confirm"
             onPress={() => {
+              if (orderType === 'SCHEDULED') {
+                if (scheduledDate === 'Today') {
+                  if (moment().isAfter(moment(scheduledTime, 'HH:mm AA'))) {
+                    AlertHook({message: 'Cannot schedule an ealier pick up time.'});
+                    return;
+                  }
+                }
+              }
+
               const formattedDate = SCHEDULESB.find((date) => {
                 return date.label === scheduledDate;
               });
@@ -444,8 +516,30 @@ const Pabili = ({navigation, session}) => {
               const formattedTime = SCHEDULES.find((date) => {
                 return date.label === scheduledTime;
               });
+
+              setOrderType('SCHEDULED');
               setFormattedScheduledAt(`${formattedDate.label} - ${formattedTime.label}`);
-              setScheduledAt(`${formattedDate.value} ${formattedTime.value}`);
+
+              setOrderData({
+                ...orderData,
+                orderType: 'SCHEDULED',
+                scheduledAt: `${formattedDate.value} ${formattedTime.value}`,
+                senderStop: {
+                  ...orderData.senderStop,
+                  orderType: 'SCHEDULED',
+                  scheduledFrom: `${formattedDate.value} ${formattedTime.value}`,
+                  scheduledTo: `${formattedDate.value} ${formattedTime.value}`,
+                },
+                recipientStop: [
+                  {
+                    ...orderData.recipientStop[0],
+                    orderType: 'SCHEDULED',
+                    scheduledFrom: `${formattedDate.value} ${formattedTime.value}`,
+                    scheduledTo: `${formattedDate.value} ${formattedTime.value}`,
+                  },
+                ],
+              });
+
               bottomSheetRef.current.collapse();
             }}
           />
@@ -474,12 +568,12 @@ const Pabili = ({navigation, session}) => {
         enableHandlePanningGesture={false}
         backdropComponent={BottomSheetBackdrop}>
         <BottomSheetView style={styles.contentContainer}>
-          <Text style={{fontFamily: FONT.BOLD, marginLeft: 10}}>Select Establishment Type</Text>
+          <Text style={{fontFamily: FONT.BOLD}}>Select Establishment Type</Text>
           <View style={{height: 10}} />
           <WhiteButton
             label="Bakery"
             borderless
-            labelColor={MEDIUM}
+            labelStyle={{color: COLOR.BLACK, fontFamily: FONT.REGULAR}}
             onPress={() => {
               storesBottomSheetRef.current.snapTo(0);
               pushToNearbyStores({
@@ -490,10 +584,11 @@ const Pabili = ({navigation, session}) => {
               });
             }}
           />
+          <View style={{borderBottomWidth: 1, borderBottomColor: COLOR.LIGHT}} />
           <WhiteButton
             label="Cafe"
             borderless
-            labelColor={MEDIUM}
+            labelStyle={{color: COLOR.BLACK, fontFamily: FONT.REGULAR}}
             onPress={() => {
               storesBottomSheetRef.current.snapTo(0);
               pushToNearbyStores({
@@ -504,10 +599,11 @@ const Pabili = ({navigation, session}) => {
               });
             }}
           />
+          <View style={{borderBottomWidth: 1, borderBottomColor: COLOR.LIGHT}} />
           <WhiteButton
             label="Convenience Store"
             borderless
-            labelColor={MEDIUM}
+            labelStyle={{color: COLOR.BLACK, fontFamily: FONT.REGULAR}}
             onPress={() => {
               storesBottomSheetRef.current.snapTo(0);
               pushToNearbyStores({
@@ -518,11 +614,11 @@ const Pabili = ({navigation, session}) => {
               });
             }}
           />
-
+          <View style={{borderBottomWidth: 1, borderBottomColor: COLOR.LIGHT}} />
           <WhiteButton
             label="Hardware Store"
             borderless
-            labelColor={MEDIUM}
+            labelStyle={{color: COLOR.BLACK, fontFamily: FONT.REGULAR}}
             onPress={() => {
               pushToNearbyStores({
                 label: 'Hardware Store',
@@ -532,10 +628,11 @@ const Pabili = ({navigation, session}) => {
               });
             }}
           />
+          <View style={{borderBottomWidth: 1, borderBottomColor: COLOR.LIGHT}} />
           <WhiteButton
             label="Pharmacy"
             borderless
-            labelColor={MEDIUM}
+            labelStyle={{color: COLOR.BLACK, fontFamily: FONT.REGULAR}}
             onPress={() => {
               storesBottomSheetRef.current.snapTo(0);
               pushToNearbyStores({
@@ -546,10 +643,11 @@ const Pabili = ({navigation, session}) => {
               });
             }}
           />
+          <View style={{borderBottomWidth: 1, borderBottomColor: COLOR.LIGHT}} />
           <WhiteButton
             label="Restaurant"
             borderless
-            labelColor={MEDIUM}
+            labelStyle={{color: COLOR.BLACK, fontFamily: FONT.REGULAR}}
             onPress={() => {
               storesBottomSheetRef.current.snapTo(0);
               pushToNearbyStores({
@@ -560,11 +658,11 @@ const Pabili = ({navigation, session}) => {
               });
             }}
           />
-
+          <View style={{borderBottomWidth: 1, borderBottomColor: COLOR.LIGHT}} />
           <WhiteButton
             label="Supermarket"
             borderless
-            labelColor={MEDIUM}
+            labelStyle={{color: COLOR.BLACK, fontFamily: FONT.REGULAR}}
             onPress={() => {
               storesBottomSheetRef.current.snapTo(0);
               pushToNearbyStores({
@@ -590,28 +688,16 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, null)(Pabili);
 
 const styles = StyleSheet.create({
-  menuBox: {
-    paddingVertical: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-  },
-  menuButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 100,
-  },
   label: {
-    fontSize: 14,
-    fontFamily: FONTS.REGULAR,
+    // fontSize: 14,
+    // fontFamily: FONTS.REGULAR,
   },
-
   menuIcon: {
     height: 50,
     width: 50,
     resizeMode: 'contain',
   },
   contentContainer: {
-    paddingHorizontal: 10,
+    paddingHorizontal: 16,
   },
 });

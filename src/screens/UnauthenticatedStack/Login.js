@@ -1,5 +1,3 @@
-import {APP_FLAVOR, COLOR, DARK, MEDIUM} from '../../res/constants';
-import {AUTH_CLIENT, LOGIN_REGISTER} from '../../graphql';
 import {
   Alert,
   Image,
@@ -14,7 +12,9 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useAlert} from '../../hooks/useAlert';
-
+import {APP_FLAVOR, DARK, MEDIUM} from '../../res/constants';
+import {COLOR, FONT, FONT_SIZE, SIZE} from '../../res/variables';
+import {AUTH_CLIENT, LOGIN_REGISTER} from '../../graphql';
 import {AlertOverlay, AlertModal} from '../../components';
 import LoginBanner from '../../assets/images/LoginBanner.png';
 import SmsRetriever from 'react-native-sms-retriever';
@@ -155,7 +155,7 @@ const Login = ({navigation, session}) => {
           resizeMode="cover"
         />
         <View style={{height: 50, paddingHorizontal: 20, justifyContent: 'flex-end', marginBottom: 10}}>
-          <Text style={{fontFamily: 'Rubik-Medium', color: MEDIUM}}>{`Enter your ${
+          <Text style={{fontFamily: FONT.BOLD, color: COLOR.BLACK}}>{`Enter your ${
             APP_FLAVOR == 'C' ? 'mobile' : 'rider'
           } number to continue.`}</Text>
         </View>
@@ -180,10 +180,10 @@ const Login = ({navigation, session}) => {
         {/* -------------------- FORGOT PASSWORD BUTTON--------------------*/}
         <TouchableHighlight
           onPress={() => navigation.push('ForgotPasswordRequest')}
-          underlayColor={COLOR}
+          underlayColor={COLOR.YELLOW}
           style={styles.autoFillBox}>
           <View style={styles.autoFill}>
-            <Text style={{color: COLOR, fontSize: 12}}>Forgot Password?</Text>
+            <Text style={{color: COLOR.YELLOW, fontSize: 12}}>Forgot Password?</Text>
           </View>
         </TouchableHighlight>
 
@@ -196,9 +196,9 @@ const Login = ({navigation, session}) => {
       </View>
 
       {/*-------------------- SUBMIT BUTTON --------------------*/}
-      <TouchableHighlight onPress={() => onSubmit(mobile)} underlayColor={COLOR} style={styles.submitBox}>
+      <TouchableHighlight onPress={() => onSubmit(mobile)} underlayColor={COLOR.YELLOW} style={styles.submitBox}>
         <View style={styles.submit}>
-          <Text style={{color: COLOR, fontSize: 20}}>Continue</Text>
+          <Text style={{color: COLOR.YELLOW, fontSize: 20}}>Continue</Text>
         </View>
       </TouchableHighlight>
     </ImageBackground>
@@ -215,36 +215,36 @@ const styles = StyleSheet.create({
   inputView: {
     borderWidth: 1,
     borderColor: MEDIUM,
-    borderRadius: 10,
-    paddingHorizontal: 20,
+    borderRadius: SIZE.BORDER_RADIUS,
+    paddingHorizontal: 16,
     justifyContent: 'center',
-    marginRight: 20,
+    marginRight: 8,
     height: 56,
   },
   input: {
     flex: 1,
     borderWidth: 1,
     borderColor: MEDIUM,
-    borderRadius: 10,
-    paddingHorizontal: 20,
+    borderRadius: SIZE.BORDER_RADIUS,
+    paddingHorizontal: 16,
     fontSize: 25,
     height: 56,
     color: DARK,
   },
   submitBox: {
-    margin: 20,
+    margin: 16,
     borderRadius: 10,
   },
   submit: {
     backgroundColor: DARK,
     height: 50,
-    borderRadius: 10,
+    borderRadius: SIZE.BORDER_RADIUS,
     justifyContent: 'center',
     alignItems: 'center',
   },
   autoFillBox: {
     margin: 20,
-    borderRadius: 10,
+    borderRadius: SIZE.BORDER_RADIUS,
     // width: 100,
     alignSelf: 'flex-end',
   },
@@ -252,7 +252,7 @@ const styles = StyleSheet.create({
   autoFill: {
     backgroundColor: DARK,
     height: 30,
-    borderRadius: 10,
+    borderRadius: SIZE.BORDER_RADIUS,
     justifyContent: 'center',
     alignItems: 'center',
     // width: 50,
