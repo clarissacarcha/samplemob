@@ -8,6 +8,8 @@ export class GeolocationUtility {
     try {
       const {granted, message} = await PermissionUtility.getLocationPermission();
 
+      console.log({granted});
+
       return new Promise((resolve, reject) => {
         Geolocation.getCurrentPosition(
           (position) => {
@@ -20,7 +22,7 @@ export class GeolocationUtility {
           {
             enableHighAccuracy: true,
             timeout: 5000,
-            maximumAge: 3600000,
+            maximumAge: 10000,
           },
         );
       });

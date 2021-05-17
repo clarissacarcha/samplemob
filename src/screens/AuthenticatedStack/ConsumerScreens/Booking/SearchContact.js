@@ -7,6 +7,7 @@ import {
   FlatList,
   StyleSheet,
   TouchableOpacity,
+  TouchableHighlight,
   Alert,
   Platform,
 } from 'react-native';
@@ -14,12 +15,13 @@ import Contacts from 'react-native-contacts';
 import _ from 'lodash';
 
 import {HeaderBack, HeaderTitle} from '../../../../components';
-import {COLOR, DARK, LIGHT, MEDIUM} from '../../../../res/constants';
+import {DARK, LIGHT, MEDIUM} from '../../../../res/constants';
+import {COLOR, FONT} from '../../../../res/variables';
 
 const SearchContact = ({navigation, route}) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={['Search', 'Contact']} />,
+    headerTitle: () => <HeaderTitle label={['Address', 'Book']} />,
   });
 
   const {onContactSelectCallback} = route.params;
@@ -35,8 +37,6 @@ const SearchContact = ({navigation, route}) => {
         if (error) {
           setFetchError(true);
         }
-
-        // console.log(JSON.stringify(contacts, null, 4));
 
         const mappedContacts = contacts
           .filter((contact) => {
@@ -107,7 +107,7 @@ const SearchContact = ({navigation, route}) => {
   if (!filteredData) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator size={24} color={COLOR} />
+        <ActivityIndicator size={24} color={COLOR.YELLOW} />
       </View>
     );
   }
@@ -135,8 +135,8 @@ const SearchContact = ({navigation, route}) => {
           value={searchString}
           onChangeText={onSearchChange}
           style={styles.input}
-          placeholder="Search Contact"
-          placeholderTextColor={LIGHT}
+          placeholder="Address Book"
+          placeholderTextColor={COLOR.MEDIUM}
           returnKeyType="done"
         />
         <View style={styles.center}>
@@ -152,27 +152,26 @@ const SearchContact = ({navigation, route}) => {
         value={searchString}
         onChangeText={onSearchChange}
         style={styles.input}
-        placeholder="Search Contact"
-        placeholderTextColor={LIGHT}
+        placeholder="Search Address Book"
+        placeholderTextColor={COLOR.MEDIUM}
         returnKeyType="done"
       />
       <FlatList
-        showsVerticalScrollIndicator={true}
+        showsVerticalScrollIndicator={false}
+        ItemSeparatorComponent={() => <View style={{borderBottomWidth: 1, borderBottomColor: COLOR.LIGHT}} />}
         data={filteredData}
         keyExtractor={(item, index) => index}
         renderItem={({item, index}) => {
           return (
-            <View
-              style={{
-                borderBottomWidth: StyleSheet.hairlineWidth,
-              }}>
-              <TouchableOpacity onPress={() => onSelectContact(item)}>
-                <View style={styles.contact}>
-                  <Text>{item.name}</Text>
-                  <Text style={{color: MEDIUM}}>{item.number}</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
+            <TouchableHighlight
+              onPress={() => onSelectContact(item)}
+              underlayColor={COLOR.WHITE_UNDERLAY}
+              style={{borderRadius: 5}}>
+              <View style={styles.contact}>
+                <Text style={{fontFamily: FONT.BOLD}}>{item.name}</Text>
+                <Text style={{color: COLOR.DARK}}>{item.number}</Text>
+              </View>
+            </TouchableHighlight>
           );
         }}
       />
@@ -189,20 +188,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   screen: {
-    padding: 20,
+    padding: 16,
     flex: 1,
     paddingBottom: 0,
+    backgroundColor: 'white',
   },
   contact: {
-    paddingLeft: 20,
-    paddingVertical: 15,
+    paddingLeft: 16,
+    height: 50,
+    justifyContent: 'center',
+    backgroundColor: 'white',
+    borderRadius: 5,
   },
   input: {
-    borderWidth: 1,
-    borderColor: MEDIUM,
-    borderRadius: 10,
-    paddingLeft: 20,
+    backgroundColor: COLOR.LIGHT,
+    borderRadius: 5,
+    paddingLeft: 16,
     height: 50,
-    color: DARK,
+    color: COLOR.BLACK,
   },
 });

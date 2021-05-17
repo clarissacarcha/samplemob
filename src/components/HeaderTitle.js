@@ -1,13 +1,14 @@
 import React from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 import {DARK, FONTS, ORANGE} from '../res/constants';
+import {COLOR, FONT, FONT_SIZE} from '../res/variables';
 
 export const HeaderTitle = ({label}) => {
   return (
     <View style={styles.box}>
-      <Text style={styles.outer}>
+      <Text style={styles.title}>
         {label[0]}
-        <Text style={styles.inner}> {label[1]}</Text>
+        <Text style={styles.title}> {label[1]}</Text>
       </Text>
     </View>
   );
@@ -16,16 +17,10 @@ export const HeaderTitle = ({label}) => {
 const styles = StyleSheet.create({
   box: {
     alignItems: 'center',
-    marginRight: 50,
+    marginRight: 66,
   },
-  outer: {
-    fontSize: 16,
+  title: {
+    fontSize: FONT_SIZE.L,
     fontFamily: FONTS.BOLD,
-    color: DARK,
-  },
-  inner: {
-    color: DARK,
-    fontSize: 16,
-    fontFamily: 'Jost-Medium',
   },
 });

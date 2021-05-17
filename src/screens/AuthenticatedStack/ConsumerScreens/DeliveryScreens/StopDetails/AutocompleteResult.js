@@ -7,6 +7,7 @@ import uuid from 'react-native-uuid';
 import {GET_GOOGLE_PLACE_DETAILS} from '../../../../../graphql';
 import {WhiteButton, TouchableIcon} from '../../../../../revamp';
 import {LIGHT, PROTOCOL, HOST_PORT, DIRTY_WHITE} from '../../../../../res/constants';
+import {COLOR} from '../../../../../res/variables';
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
@@ -67,14 +68,17 @@ const AutocompleteResult = ({searchResult, sessionToken, setSessionToken, onLoca
       <WhiteButton
         label={formattedAddressParts[0]}
         description={item.formattedAddress}
-        prefixSet="MaterialCommunity"
-        prefixName="map-marker-outline"
-        suffixSet="Material"
-        suffixName="arrow-forward"
-        suffixColor={LIGHT}
+        prefixSet="FontAwesome5"
+        prefixName="map-marker-alt"
+        prefixSize={18}
+        prefixColor={COLOR.ORANGE}
+        suffixSet="Entypo"
+        suffixName="chevron-thin-right"
+        suffixColor={'black'}
+        suffixSize={18}
         borderless
         onPress={() => onResultSelect({prediction: item})}
-        style={{paddingLeft: 10}}
+        style={{marginHorizontal: 16}}
       />
     );
   };

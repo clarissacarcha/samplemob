@@ -211,7 +211,7 @@ PODS:
   - Permission-PhotoLibrary (2.2.2):
     - RNPermissions
   - PromisesObjC (1.2.12)
-  - Protobuf (3.15.8)
+  - Protobuf (3.17.0)
   - RCTRequired (0.62.2)
   - RCTTypeSafety (0.62.2):
     - FBLazyVector (= 0.62.2)
@@ -794,7 +794,7 @@ SPEC CHECKSUMS:
   Permission-Notifications: 9c6b5cc4f0e6599e9fc3395b77cebddc48f1be41
   Permission-PhotoLibrary: 8227a6ed9f6a971537afe63742d54f5f23a38fe2
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
-  Protobuf: adb85cd18a15bd1a777c158af9fd6e612a0e6d69
+  Protobuf: 7327d4444215b5f18e560a97f879ff5503c4581c
   RCTRequired: cec6a34b3ac8a9915c37e7e4ad3aa74726ce4035
   RCTTypeSafety: 93006131180074cffa227a1075802c89a49dd4ce
   React: 29a8b1a02bd764fb7644ef04019270849b9a7ac3
@@ -806,7 +806,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 512e560d0e985d0e8c479a54a4e5c147a9c83493
   react-native-background-timer: 1f7d560647b40e6a60b01c452ba29c54bf581fc4
   react-native-camera: 8ab02aac456a7db830980cef5f3772644fe96e1f
-  react-native-cameraroll: 7c6c7ca84844f93b3dac9a87670bbad6541684ec
+  react-native-cameraroll: 88f4e62d9ecd0e1f253abe4f685474f2ea14bfa2
   react-native-contacts: 7b5e16196278636030c3fbbb9505543984b01697
   react-native-date-picker: 7b03feaea96db983f1de449e9d6d1dea4fa61010
   react-native-document-picker: 3026780fc04e7ad27534a0f35d5daefb550aa03a
@@ -847,6 +847,6 @@ SPEC CHECKSUMS:
   Yoga: 3ebccbdd559724312790e7742142d062476b698e
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 40d5e71e771d0ea4071549dd067a3307c26f30ca
+PODFILE CHECKSUM: 1e40ffcff3569e758f88893891dbd3379ae221d4
 
 COCOAPODS: 1.10.1

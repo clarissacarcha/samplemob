@@ -257,7 +257,6 @@ export default connect(mapStateToProps, mapDispatchToProps)(DriverProfile);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: 'white',
   },
   map: {
     flex: 1,

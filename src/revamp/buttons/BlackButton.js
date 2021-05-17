@@ -1,10 +1,13 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableHighlight} from 'react-native';
-import {COLOR, DARK, COLOR_UNDERLAY, FONT_REGULAR, FONT_MEDIUM} from '../../res/constants';
+import {COLOR, FONT, FONT_SIZE} from '../../res/variables';
 
 export const BlackButton = ({label, onPress, style, touchableStyle = {}}) => {
   return (
-    <TouchableHighlight onPress={onPress} style={[styles.blackButton, touchableStyle]} underlayColor={COLOR}>
+    <TouchableHighlight
+      onPress={onPress}
+      style={[styles.blackButton, touchableStyle]}
+      underlayColor={COLOR.YELLOW_UNDERLAY}>
       <View style={[styles.blackButtonBox, style]}>
         <Text style={styles.label}>{label}</Text>
       </View>
@@ -20,13 +23,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: 50,
-    backgroundColor: DARK,
+    backgroundColor: COLOR.YELLOW,
     borderRadius: 5,
   },
   label: {
-    color: COLOR,
-    fontSize: 14,
+    color: COLOR.BLACK,
     paddingHorizontal: 10,
-    fontFamily: FONT_MEDIUM,
+    fontFamily: FONT.BOLD,
+    fontSize: FONT_SIZE.XL,
   },
 });

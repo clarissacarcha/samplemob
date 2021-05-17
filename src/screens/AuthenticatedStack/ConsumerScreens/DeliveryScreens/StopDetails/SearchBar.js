@@ -1,13 +1,12 @@
 import React, {useState, useRef, useEffect, useCallback} from 'react';
 import {Text, View, TextInput, StyleSheet} from 'react-native';
-import {throttle, debounce} from 'lodash';
-import {useLazyQuery} from '@apollo/react-hooks';
-import uuid from 'react-native-uuid';
+import {debounce} from 'lodash';
+
 import axios from 'axios';
-import {GET_GOOGLE_PLACE_DETAILS} from '../../../../../graphql';
-import {HeaderBack, HeaderTitle} from '../../../../../components';
-import {WhiteButton, TouchableIcon} from '../../../../../revamp';
+
 import {LIGHT, PROTOCOL, HOST_PORT, FONT_REGULAR} from '../../../../../res/constants';
+import {HeaderBack} from '../../../../../components';
+import {COLOR, FONT} from '../../../../../res/variables';
 
 const INITIAL_RESULT = {
   payload: {
@@ -23,6 +22,33 @@ const ERROR_RESULT = {
   predictions: [],
 };
 
+const SearchBarInput = ({searchText, placeholder, onChangeText}) => {
+  const searchRef = useRef(null);
+
+  const focusInput = () => {
+    setTimeout(() => {
+      if (searchRef) {
+        searchRef.current.focus();
+      }
+    }, 0);
+  };
+
+  useEffect(() => {
+    focusInput();
+  }, []);
+
+  return (
+    <TextInput
+      ref={searchRef}
+      value={searchText}
+      placeholder={placeholder}
+      onChangeText={onChangeText}
+      placeholderTextColor={COLOR.MEDIUM}
+      style={{flex: 1, marginRight: 16}}
+    />
+  );
+};
+
 const SearchBar = ({
   placeholder,
   sessionToken,
@@ -31,11 +57,6 @@ const SearchBar = ({
   onSearchResultChange,
   searchEnabled,
 }) => {
-  const [text, setText] = useState(searchText);
-  //   const [result, setResult] = useState(INITIAL_RESULT)
-
-  const searchRef = useRef(null);
-
   const useIsMounted = () => {
     const isMountedRef = useRef(true);
     useEffect(() => {
@@ -70,10 +91,6 @@ const SearchBar = ({
       [delay, debounce],
     );
   };
-
-  useEffect(() => {
-    searchRef.current.focus();
-  }, []);
 
   const getGooglePlaceAutocomplete = async ({searchString}) => {
     console.log({searchString});
@@ -120,21 +137,15 @@ const SearchBar = ({
     }
   };
 
+  // if (!searchEnabled) return <HeaderBack />;
+
   return (
-    <View style={{flexDirection: 'row'}}>
+    <>
+      <HeaderBack />
       {searchEnabled && (
-        <>
-          <TextInput
-            ref={searchRef}
-            value={searchText}
-            placeholder={placeholder}
-            onChangeText={onChangeText}
-            style={{flex: 1, marginRight: 0, fontFamily: FONT_REGULAR}}
-          />
-          {/* <TouchableIcon iconSet="MaterialCommunity" iconName="close" onPress={() => {}} /> */}
-        </>
+        <SearchBarInput searchText={searchText} placeholder={placeholder} onChangeText={onChangeText} />
       )}
-    </View>
+    </>
   );
 };
 
