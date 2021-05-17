@@ -8,7 +8,7 @@ import {useNavigation} from '@react-navigation/native'
 import {useAlert} from '../../../../../../hooks/useAlert'
 import {onErrorAlert} from '../../../../../../util/ErrorUtility'
 import { BlackButton, OrangeButton, YellowButton } from '../../../../../../revamp';
-import ConfirmBottomSheet from '../../Components/ConfirmBottomSheet'
+import {ConfirmBottomSheet} from '../../Components'
 import { BUTTON_HEIGHT, FONT_MEDIUM, SIZES } from '../../../../../../res/constants';
 
 //SELF IMPORTS

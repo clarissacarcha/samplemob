@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleSheet,View,Text,ActivityIndicator} from 'react-native'
+import {StyleSheet,View,Text,ActivityIndicator,StatusBar} from 'react-native'
 import {SIZES, FONTS, COLORS} from '../../../../../res/constants'
 import {useMutation} from '@apollo/react-hooks'
 import {POST_TOKTOK_WALLET} from '../../../../../graphql'
@@ -7,7 +7,7 @@ import {AlertOverlay,SomethingWentWrong} from '../../../../../components'
 import {onError} from '../../../../../util/ErrorUtility'
 import {useNavigation} from '@react-navigation/native'
 import { YellowButton } from '../../../../../revamp'
-import HeadingBannerLogo from '../Components/HeadingBannerLogo'
+import {HeaderImageBackground, HeadingBannerLogo , HeaderTitle} from '../Components'
 
 const CreateWallet = ({getWallet: getToktokWallet,session})=> {
 
@@ -44,13 +44,18 @@ const CreateWallet = ({getWallet: getToktokWallet,session})=> {
 
     return (
         <>
+        <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
         <AlertOverlay visible={postLoading} />
         <View style={styles.container}>
-                <HeadingBannerLogo/>
+                <View style={styles.headings}>
+                        <HeaderImageBackground>
+                                <HeaderTitle isLogo />
+                        </HeaderImageBackground>
+                </View>
                 <View style={styles.content}>
                     <View style={{alignItems:"center"}}>
-                            <Text style={{fontSize: 20,fontFamily: FONTS.BOLD}}>Go cashless with <Text style={{color: COLORS.YELLOW}}>toktok</Text><Text style={{color: COLORS.ORANGE}}>wallet</Text></Text>
-                            <Text style={{fontSize: SIZES.M,marginTop: 5,fontFamily: FONTS.REGULAR}}>Enjoy a secure and convenient payment experience.</Text>
+                            <Text style={{fontSize: 16,fontFamily: FONTS.BOLD}}>Go cashless with <Text style={{color: COLORS.YELLOW}}>toktok</Text><Text style={{color: COLORS.ORANGE}}>wallet</Text></Text>
+                            <Text style={{fontSize: SIZES.S,marginTop: 5,fontFamily: FONTS.REGULAR}}>Enjoy a secure and convenient payment experience.</Text>
                     </View>
                 </View>
 
@@ -68,6 +73,10 @@ const styles = StyleSheet.create({
        
         backgroundColor: "white"
     },
+    headings: {
+        height: 92,
+        backgroundColor:"black"
+    }, 
     content: {
         flex: 1,
         padding: 10,
@@ -75,7 +84,7 @@ const styles = StyleSheet.create({
         // justifyContent:"center"
     },
     proceedBtn: {
-        height: 60,
+        height: 70,
         padding: 10,
         width: "100%",
     },

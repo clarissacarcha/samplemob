@@ -1,8 +1,8 @@
 import React, {useState,useCallback, useEffect} from 'react'
-import {StyleSheet,View,Text,TouchableOpacity,Dimensions,Image,TouchableHighlight,Platform} from 'react-native'
+import {StyleSheet,View,Text,TouchableOpacity,Dimensions,Image,TouchableHighlight,Platform,SafeAreaView} from 'react-native'
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import { RNCamera } from 'react-native-camera';
-import {FONTS, SIZES} from '../../../../../../res/constants'
+import {COLORS, FONTS, SIZES} from '../../../../../../res/constants'
 import FIcon from 'react-native-vector-icons/Feather';
 import {useFocusEffect} from '@react-navigation/native'
 import {useLazyQuery} from '@apollo/react-hooks'
@@ -17,7 +17,7 @@ import Actions from './Actions'
 
 const {height,width} = Dimensions.get('window')
 
-export default ({navigation,route})=> {
+const ToktokWalletScanQR = ({navigation,route})=> {
 
     navigation.setOptions({
         header: ()=> null,
@@ -117,9 +117,12 @@ export default ({navigation,route})=> {
     }
 
     const customMarker = ()=> (
-        <View style={styles.customMarker}>
-            <TouchableOpacity onPress={()=>navigation.goBack()} style={{top: Platform.OS === "android" ? 60 : 80, left: 0,position:"absolute"}}>
+        <SafeAreaView style={styles.customMarker}>
+            {/* <TouchableOpacity onPress={()=>navigation.goBack()} style={{top: Platform.OS === "android" ? 60 : 80, left: 0,position:"absolute"}}>
              <FIcon name="chevron-left" size={30} color={'white'} /> 
+            </TouchableOpacity> */}
+            <TouchableOpacity onPress={()=>navigation.pop()} style={styles.backBtn}>
+                <FIcon name="chevron-left" size={20} color={'#222222'} /> 
             </TouchableOpacity>
             <View style={styles.centerBox}>
                         <View style={[styles.borderEdges,{borderTopWidth: 5,borderLeftWidth: 5,top: 0,left: 0,}]}/>
@@ -143,12 +146,12 @@ export default ({navigation,route})=> {
             </View>
 
                 <View style={{marginTop: 25}}>
-                    <Text style={{color: "white",fontFamily: FONTS.REGULAR,fontSize: SIZES.L}}>Position the QR code within the frame.</Text>
+                    <Text style={{color: "white",fontFamily: FONTS.REGULAR,fontSize: SIZES.L,color: COLORS.YELLOW}}>Position the QR code within the frame.</Text>
                 </View>
 
     
         
-        </View>
+        </SafeAreaView>
     )
 
     return (
@@ -170,7 +173,7 @@ export default ({navigation,route})=> {
                                         backgroundColor: "rgba(0,0,0,0.5)"
                                     }}
                                     cameraStyle={{
-                                        height: "100%",
+                                        height: height,
                                         backgroundColor: "rgba(0,0,0,0.5)"
                                     }}
                                 />
@@ -186,7 +189,7 @@ export default ({navigation,route})=> {
                         })
                 }}/>
          
-            <WalletBalance navigation={navigation} walletinfo={walletinfo}/>
+            {/* <WalletBalance navigation={navigation} walletinfo={walletinfo}/> */}
         </>
     )
 }
@@ -241,7 +244,21 @@ const styles = StyleSheet.create({
         height: 40,
         width: 40,
         position: "absolute",
-        borderColor: "#F6841F",
+        borderColor: COLORS.YELLOW,
+    },
+    backBtn: {
+        backgroundColor:"#FFFFFF",
+        top: 20, 
+        left: 16,
+        position:"absolute",
+        zIndex: 1,
+        justifyContent:"center",
+        alignItems:"center",
+        borderRadius: 100,
+        height: 35,
+        width: 35,
     }
   });
+
+  export default ToktokWalletScanQR
   

@@ -1,18 +1,25 @@
 import React , {useState , useEffect} from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,Image,ActivityIndicator , FlatList} from 'react-native'
-import {HeaderBack, HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../../../components'
+import {HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../../../components'
 import moment from 'moment'
 import { COLOR, COLORS, FONTS, FONT_MEDIUM, FONT_REGULAR, SIZES } from '../../../../../../res/constants'
-import FilterDateModal from '../../Components/FilterDateModal'
 import {useLazyQuery} from '@apollo/react-hooks'
 import {GET_CASH_IN_LOGS, GET_CASH_OUT_LOGS} from '../../../../../../graphql'
 import {onError} from '../../../../../../util/ErrorUtility'
 import {useSelector} from 'react-redux'
 import { numberFormat } from '../../../../../../helper'
-import Separator from '../../Components/Separator'
+import {Separator , FilterDateModal , TransactionDetails} from '../../Components'
+import { HeaderBack } from '../../../../../../revamp'
 
 
-const CashOutLog = ({transactionDate , transactionItems , index , itemsLength })=> {
+const CashOutLog = ({
+    transactionDate , 
+    transactionItems , 
+    index , 
+    itemsLength ,
+    setTransactionInfo,
+    setTransactionVisible 
+})=> {
 
     const dateValue = moment(transactionDate).tz("Asia/Manila").format("YYYY-MM-DD");
     const phTodayDate = moment().tz("Asia/Manila").format("YYYY-MM-DD");
@@ -24,6 +31,18 @@ const CashOutLog = ({transactionDate , transactionItems , index , itemsLength })
         datedisplay = "Yesterday"
     }else{
         datedisplay = moment(transactionDate).tz("Asia/Manila").format('MMM DD YYYY');
+    }
+
+    const ViewTransactionDetails = (refNo,refDate, transactionAmount , status)=> {
+        setTransactionInfo({
+            refNo: refNo,
+            refDate: refDate,
+            label: "Cash Out",
+            phrase: "Cash-out through GCash",
+            amount: transactionAmount,
+            status: status,
+        })
+        setTransactionVisible(true)
     }
 
     return (
@@ -45,20 +64,21 @@ const CashOutLog = ({transactionDate , transactionItems , index , itemsLength })
                         break;
                 }
 
+                const refNo = item.referenceNumber
+                const refDate = moment(item.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')
+                const transactionAmount = `PHP ${numberFormat(item.totalAmount)}`
+
                 return (
-                    <View style={styles.transaction}>
-                        {/* <View style={styles.transactionIcon}>
-                          <Image source={require('../../../../../assets/icons/walletLogCashin.png')} style={{height: 35, width: 35}} resizeMode="contain"/>
-                        </View> */}
+                    <TouchableOpacity onPress={()=>ViewTransactionDetails(refNo,refDate, transactionAmount , status)} style={styles.transaction}>
                         <View style={styles.transactionDetails}>
-                            <Text style={{fontSize: SIZES.M,fontFamily: FONTS.REGULAR}}>Ref # {item.referenceNumber}</Text>
+                            <Text style={{fontSize: SIZES.M,fontFamily: FONTS.REGULAR}}>Ref # {refNo}</Text>
                             <Text style={{color: "#909294",fontSize: SIZES.M,marginTop: 0,fontFamily: FONTS.REGULAR}}>{status}</Text>
                         </View>
                         <View style={styles.transactionAmount}>
-                            <Text style={{color: "#FCB91A",fontSize: SIZES.M,fontFamily: FONTS.REGULAR}}>PHP {numberFormat(item.totalAmount)}</Text>
-                            <Text style={{color: "#909294",fontSize: SIZES.M,alignSelf: "flex-end",marginTop: 0,fontFamily: FONTS.REGULAR}}>{moment(item.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')}</Text>
+                            <Text style={{color: "#FCB91A",fontSize: SIZES.M,fontFamily: FONTS.REGULAR}}>{transactionAmount}</Text>
+                            <Text style={{color: "#909294",fontSize: SIZES.S,alignSelf: "flex-end",marginTop: 0,fontFamily: FONTS.REGULAR}}>{refDate}</Text>
                         </View>
-                    </View>
+                    </TouchableOpacity>
                 )
                })
            }
@@ -66,10 +86,10 @@ const CashOutLog = ({transactionDate , transactionItems , index , itemsLength })
     )
 }
 
-export default ({navigation})=> {
+const ToktokWalletCashOutLogs = ({navigation})=> {
 
     navigation.setOptions({
-        headerLeft: ()=> <HeaderBack />,
+        headerLeft: ()=> <HeaderBack color={COLORS.YELLOW}/>,
         headerTitle: ()=> <HeaderTitle label={['Cash Out Logs','']}/>,
     })
 
@@ -83,6 +103,16 @@ export default ({navigation})=> {
     const [filterDate,setFilterDate] = useState({
         from: moment(new Date()).subtract(3,'days'),
         to: new Date()
+    })
+
+    const [transactionVisible,setTransactionVisible] = useState(false)
+    const [transactionInfo,setTransactionInfo] = useState({
+        refNo: "",
+        refDate: "",
+        label: "",
+        phrase: "",
+        amount: "",
+        status: "",
     })
 
     const changeFilterDate = (key,val)=>{
@@ -118,6 +148,16 @@ export default ({navigation})=> {
 
     return (
         <>
+          <TransactionDetails 
+            visible={transactionVisible}
+            setVisible={setTransactionVisible}
+            refNo={transactionInfo.refNo}
+            refDate={transactionInfo.refDate}
+            label={transactionInfo.label}
+            phrase={transactionInfo.phrase}
+            amount={transactionInfo.amount}
+            status={transactionInfo.status}
+        />
         <FilterDateModal 
                 showFilterDate={showFilterDate} 
                 changeFilterDate={changeFilterDate} 
@@ -149,7 +189,15 @@ export default ({navigation})=> {
                                 data={filteredLogs}
                                 keyExtractor={item=>item.title}
                                 renderItem={({item,index})=>(
-                                    <CashOutLog key={`cashin-log${index}`} transactionDate={item.logDate} transactionItems={item.logs}  index={index} itemsLength={filteredLogs.length}/>
+                                    <CashOutLog 
+                                        key={`cashin-log${index}`} 
+                                        transactionDate={item.logDate} 
+                                        transactionItems={item.logs}  
+                                        index={index} 
+                                        itemsLength={filteredLogs.length}
+                                        setTransactionInfo={setTransactionInfo}
+                                        setTransactionVisible={setTransactionVisible}
+                                    />
                                 )}
                             />
                         </View>
@@ -205,3 +253,5 @@ const styles = StyleSheet.create({
         alignItems: "flex-end"
     }
 })
+
+export default ToktokWalletCashOutLogs

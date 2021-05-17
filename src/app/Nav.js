@@ -85,6 +85,9 @@ import ToktokWalletSelfieImageCamera from '../screens/AuthenticatedStack/Consume
 
 import ToktokWalletTransactions from '../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens//ToktokWalletTransactions';
 import ToktokWalletRecentTransferView from '../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/ToktokWalletRecentTransferView';
+import ToktokWalletReviewAndConfirm from '../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/ToktokWalletReviewAndConfirm';
+import ToktokWalletGcashRegistration from '../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/CashOutScreens/ToktokWalletGcashRegistration';
+import ToktokWalletGcashUpdate from '../screens/AuthenticatedStack/ConsumerScreens//ToktokWalletScreens/CashOutScreens/ToktokWalletGcashUpdate';
 
 /*---------- DRIVER SCREENS ----------*/
 import DriverMap from '../screens/AuthenticatedStack/DriverScreens/DriverMap';
@@ -432,6 +435,9 @@ const AuthenticatedStack = () => (
 
     <Authenticated.Screen name="ToktokWalletTransactions" component={ToktokWalletTransactions} />
     <Authenticated.Screen name="ToktokWalletRecentTransferView" component={ToktokWalletRecentTransferView} />
+    <Authenticated.Screen name="ToktokWalletReviewAndConfirm" component={ToktokWalletReviewAndConfirm}/>
+    <Authenticated.Screen name="ToktokWalletGcashRegistration" component={ToktokWalletGcashRegistration}/>
+    <Authenticated.Screen name="ToktokWalletGcashUpdate" component={ToktokWalletGcashUpdate}/>
 
     {/*---------- DRIVER SCREENS ----------*/}
     <Authenticated.Screen name="DriverHomeBottomTab" component={DriverHomeBottomTab} options={{headerShown: false}} />

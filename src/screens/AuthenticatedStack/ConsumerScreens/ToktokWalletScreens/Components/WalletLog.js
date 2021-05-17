@@ -1,13 +1,24 @@
-import React from 'react'
+import React, { useState } from 'react'
 import moment from 'moment'
 import {View,Text,TouchableOpacity,StyleSheet,Image} from 'react-native'
 import { COLOR, COLORS, FONTS, FONT_LIGHT, FONT_MEDIUM, FONT_REGULAR, SIZES } from '../../../../../res/constants';
 import {useSelector} from 'react-redux'
 import { numberFormat } from '../../../../../helper';
 
-const WalletLog = ({transactionDate , transactionItems ,index , itemsLength }) => {
+//SELF IMPORTS
+import { TransactionDetails } from './TransactionDetails'
+
+export const WalletLog = ({transactionDate , transactionItems ,index , itemsLength }) => {
 
     const session = useSelector(state=>state.session)
+    const [transactionVisible,setTransactionVisible] = useState(false)
+    const [transactionInfo,setTransactionInfo] = useState({
+        refNo: "",
+        refDate: "",
+        label: "",
+        phrase: "",
+        amount: "",
+    })
 
     const dateValue = moment(transactionDate).tz("Asia/Manila").format("YYYY-MM-DD");
     const phTodayDate = moment().tz("Asia/Manila").format("YYYY-MM-DD");
@@ -21,8 +32,30 @@ const WalletLog = ({transactionDate , transactionItems ,index , itemsLength }) =
         datedisplay = moment(transactionDate).tz("Asia/Manila").format('MMM DD YYYY');
     }
 
+    const ViewTransactionDetails = (transaction , title, phrase , referenceDate , transactionAmount) => {
+        setTransactionVisible(true)
+        setTransactionInfo({
+            refNo: transaction.referenceNumber,
+            refDate: referenceDate,
+            label: title,
+            phrase: phrase,
+            amount: transactionAmount,
+        })
+        console.log(transaction.referenceNumber)
+    }
+
 
     return (
+        <>
+            <TransactionDetails 
+                visible={transactionVisible}
+                setVisible={setTransactionVisible}
+                refNo={transactionInfo.refNo}
+                refDate={transactionInfo.refDate}
+                label={transactionInfo.label}
+                phrase={transactionInfo.phrase}
+                amount={transactionInfo.amount}
+            />
             <View style={[styles.transactionLogsContainer, {marginBottom: index == itemsLength - 1 ? 100 : 0}]}>
                 { transactionItems.length > 0 && <Text style={{fontSize: SIZES.M,fontFamily: FONTS.BOLD,color: COLORS.DARK}}>{datedisplay}</Text> }
             {
@@ -66,24 +99,26 @@ const WalletLog = ({transactionDate , transactionItems ,index , itemsLength }) =
                     
 
                     phrase = item.sourceUserId == session.user.id ? `${item.logType.sourcePhrase.replace("[:replace]",recipient)}` : `${item.logType.destinationPhrase.replace("[:replace]",sender)}`
-    
+                    const referenceDate = moment(item.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')
+                    const transactionAmount = `${amountprefix} PHP ${numberFormat(item.amount)}`
     
                     return (
-                        <View style={styles.transaction}>
+                        <TouchableOpacity onPress={()=>ViewTransactionDetails(item , title , phrase, referenceDate , transactionAmount)} style={styles.transaction}>
                             <View style={styles.transactionDetails}>
                                 {/* <Text style={{fontSize: 12,fontFamily: FONT_MEDIUM}}>{title} <Text style={{fontFamily: FONT_LIGHT,fontSize: 10}}> ( {status} )</Text></Text> */}
                                 <Text style={{fontSize: SIZES.M,fontFamily: FONTS.REGULAR,color: COLORS.DARK}}>{title}</Text>
-                                <Text style={{color: "#929191",fontSize: SIZES.M,fontFamily: FONTS.REGULAR}}>{phrase}</Text>
+                                <Text style={{color: "#929191",fontSize: SIZES.S,fontFamily: FONTS.REGULAR}}>{phrase}</Text>
                             </View>
                             <View style={styles.transactionAmount}>
-                                <Text style={{fontSize: SIZES.M,fontFamily: FONTS.REGULAR , color: amountcolor}}>{amountprefix} PHP {numberFormat(item.amount)}</Text>
-                                <Text style={{color: "#929191",fontSize: SIZES.M,fontFamily: FONTS.REGULAR, alignSelf: "flex-end"}}>{moment(item.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')}</Text>
+                                <Text style={{fontSize: SIZES.M,fontFamily: FONTS.REGULAR , color: amountcolor}}>{transactionAmount}</Text>
+                                <Text style={{color: "#929191",fontSize: SIZES.S,fontFamily: FONTS.REGULAR, alignSelf: "flex-end"}}>{referenceDate}</Text>
                             </View>
-                        </View>
+                        </TouchableOpacity>
                     )
                 })
             }
             </View>
+        </>
     )
 }
 
@@ -93,8 +128,8 @@ const styles = StyleSheet.create({
     },
     transaction: {
         paddingVertical: 12,
-        borderBottomColor:"silver",
-        borderBottomWidth: .2,
+        borderBottomColor:"#F4F4F4",
+        borderBottomWidth: 1,
         // marginVertical: 5,
         flexDirection: "row",
     },
@@ -110,5 +145,3 @@ const styles = StyleSheet.create({
         alignItems: "flex-end"
     }
 })
-
-export default WalletLog

@@ -2,7 +2,8 @@ import React , {useState,useContext} from 'react'
 import {Modal,View,Text,StyleSheet,FlatList,TouchableOpacity,TextInput} from 'react-native'
 import {VerifyContext} from './VerifyContextProvider'
 import FIcon from 'react-native-vector-icons/Feather';
-import { FONT_MEDIUM, FONT_REGULAR, SIZES, INPUT_HEIGHT } from '../../../../../../../res/constants';
+import { SIZES, INPUT_HEIGHT, FONTS, COLORS } from '../../../../../../../res/constants';
+import {Separator} from '../../../Components';
 
 let validIDList = [
     {label: "Passport" ,value: "Passport"},
@@ -41,7 +42,7 @@ const ModalValidID = ({visible,setVisible})=> {
     const renderValidID = ({item,index})=> {
         return (
             <TouchableOpacity onPress={()=>selectValidID(index)} style={[styles.validID]}>
-                    <Text style={{fontFamily: FONT_REGULAR, fontSize: SIZES.M}}>{item.value}</Text>
+                    <Text style={{fontFamily: FONTS.REGULAR, fontSize: SIZES.M}}>{item.value}</Text>
             </TouchableOpacity>
         )
     }
@@ -56,7 +57,7 @@ const ModalValidID = ({visible,setVisible})=> {
                 setFilteredValidID(validIDList)
             }}
             style={styles.container}
-            animationType="fade"
+            animationType="slide"
         >
             <View style={styles.content}>
                 <TouchableOpacity onPress={()=>setVisible(false)} style={{justifyContent: "center",alignItems:"center"}}>
@@ -64,12 +65,14 @@ const ModalValidID = ({visible,setVisible})=> {
                 </TouchableOpacity>
                 <View style={styles.search}>
                     <TextInput 
-                        placeholder="Search Valid ID"
+                        placeholder="Search valid ID type"
                         style={styles.input}
                         onChangeText={filterSearch}
                     />
-                    <FIcon style={{alignSelf: "center"}} name={'search'} size={24}/>
+                    <FIcon style={{alignSelf: "center",position:"absolute", right: 25}} name={'search'} size={24}/>
                 </View>
+
+                <Separator/>
 
                 <FlatList
                         style={{marginVertical: 15,}}
@@ -90,28 +93,33 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     content: {
-        padding: 10,
         flex: 1,
+        marginTop: 15,
     },
     search: {
         flexDirection: "row",
         marginTop: 10,
-        borderBottomColor: "gray",
-        borderBottomWidth: .5,
+        paddingHorizontal: 16,
+        height: 50,
+        marginBottom: 10,
     },
     input: {
-        fontFamily: FONT_REGULAR,
+        fontFamily: FONTS.REGULAR,
         flex: 1,
-        height: INPUT_HEIGHT,
-        fontSize: SIZES.M
-    
+        height: "100%",
+        width:"100%",
+        fontSize: SIZES.M,
+        backgroundColor: "#F7F7FA",
+        paddingLeft: 10,
+        borderRadius: 5,
+        color: COLORS.DARK
     },
     validID: {
         height: INPUT_HEIGHT,
         justifyContent:"center",
         borderBottomWidth: .2,
         borderColor: "silver",
-        paddingHorizontal:10,
+        paddingHorizontal:16,
     },
 })
 

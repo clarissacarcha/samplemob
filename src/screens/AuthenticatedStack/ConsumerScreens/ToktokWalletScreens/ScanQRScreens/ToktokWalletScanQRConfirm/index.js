@@ -1,8 +1,7 @@
 import React, {useState,useEffect,useRef} from 'react'
-import {View,Text,StyleSheet,Image,Alert,TextInput,KeyboardAvoidingView,Platform,ScrollView , ImageBackground , TouchableOpacity} from 'react-native'
-import { HeaderTitle} from '../../../../../../components'
+import {View,Text,StyleSheet,Image,Alert,TextInput,KeyboardAvoidingView,Platform,ScrollView , TouchableOpacity} from 'react-native'
 import {HeaderBack} from '../../../../../../revamp'
-import { BUTTON_HEIGHT, FONT_MEDIUM, FONT_REGULAR, SIZES, INPUT_HEIGHT, FONTS, COLORS } from '../../../../../../res/constants'
+import { SIZES, INPUT_HEIGHT, FONTS, COLORS } from '../../../../../../res/constants'
 import {numberFormat} from '../../../../../../helper'
 import { PATCH_FUND_TRANSFER , GET_DAILY_MONTHLY_YEARLY_INCOMING , GET_DAILY_MONTHLY_YEARLY_OUTGOING} from '../../../../../../graphql'
 import {useQuery,useMutation,useLazyQuery} from '@apollo/react-hooks'
@@ -11,9 +10,13 @@ import { onError , onErrorAlert} from '../../../../../../util/ErrorUtility';
 import SuccessfulModal from '../../SendMoneyScreens/ToktokWalletSendMoney/SuccessfulModal'
 import {useAlert} from '../../../../../../hooks/useAlert'
 import { BlackButton, YellowButton } from '../../../../../../revamp';
-import ConfirmBottomSheet from '../../Components/ConfirmBottomSheet';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
-import Separator from '../../Components/Separator'
+import {
+    ConfirmBottomSheet,
+    Separator,
+    HeaderImageBackground,
+    HeaderTitle
+} from '../../Components'
 
 //SELF IMPORTS
 import ConfirmModalContent from './ConfirmModalContent'
@@ -21,8 +24,9 @@ import RecipientInfo from './RecipientInfo'
 import EnterAmount from './EnterAmount'
 import EnterNote from './EnterNote'
 import SwipeButtonComponent from './SwipeButtonComponent'
+import ProceedButton from './ProceedButton'
 
-export default ({navigation,route})=> {
+const ToktokWalletScanQRConfirm = ({navigation,route})=> {
 
     navigation.setOptions({
       headerShown:false,
@@ -131,20 +135,9 @@ export default ({navigation,route})=> {
         />
         <View style={styles.container}>
             <View style={styles.headings}>
-                <ImageBackground imageStyle={[]} style={styles.walletbackgroundimage} source={require('../../../../../../assets/toktokwallet-assets/header-bg.png')}>
-
-                    <View style={styles.header}>
-                            <View style={{flex: 1}}>
-                                <HeaderBack />
-                            </View>
-                            <View style={{width: 150,justifyContent:"center",alignItems:"center"}}>
-                            <Text style={{fontSize: SIZES.L,fontFamily: FONTS.BOLD,color: COLORS.DARK}}>Send Money</Text>
-                            </View>
-                            <View style={{flex: 1}}>
-
-                            </View>
-                    </View>
-                    <View style={{height: 38}}/>
+                <HeaderImageBackground>
+                    <HeaderTitle label="Send Money"/>
+                    <View style={{height: 32}}/>
                     <View style={styles.walletContent}>
                             <View>
                                 <Text style={{fontSize: 24,fontFamily: FONTS.BOLD}}>PHP {numberFormat(walletinfo.balance ? walletinfo.balance : 0)}</Text>
@@ -156,9 +149,8 @@ export default ({navigation,route})=> {
                                 </View>
                             </TouchableOpacity>
                     </View>
-
-                    </ImageBackground>
-                    <RecipientInfo recipientInfo={recipientInfo}/>
+                </HeaderImageBackground>
+                <RecipientInfo recipientInfo={recipientInfo}/>
             </View>
 
 
@@ -175,35 +167,14 @@ export default ({navigation,route})=> {
             />
 
             <View style={{paddingHorizontal: 10}}> 
-            {/* UNCOMMENT IF NEED BOTTOM SHEET REVIEW AND CONFIRM */}
-            {
-                // swipeEnabled
-                // ? <YellowButton label="Send" onPress={()=>bottomSheetRef.current.snapTo(1)} />
-                // : <View style={{width: "100%", height: BUTTON_HEIGHT,justifyContent:"center",alignItems: "center", backgroundColor:"gray",borderRadius: 5}}>
-                //         <Text style={{fontFamily: FONT_MEDIUM, fontSize: SIZES.M,color:"white"}}>Send</Text>
-                // </View>
+            {/* {
                 swipeEnabled
                 ? <SwipeButtonComponent amount={amount} swipeEnabled={swipeEnabled} note={note} session={session} recipientInfo={recipientInfo}/>
                 : null
-            }
+            } */}
+                <ProceedButton amount={amount} swipeEnabled={swipeEnabled} note={note} session={session} recipientInfo={recipientInfo}/>
             </View>   
 
-            <ConfirmBottomSheet
-                 bottomSheetRef={bottomSheetRef}
-                 headerTitle="Review and Confirm" 
-                 btnLabel="Confirm"
-                 SwipeButtonEnabled
-                 SwipeButtonArgs={
-                  {
-                    enabled: swipeEnabled,
-                    title: `Swipe to send PHP ${amount != "" ? numberFormat(amount) : "0"}`,
-                    onSwipeFail: onSwipeFail,
-                    onSwipeSuccess: onSwipeSuccess
-                  }
-                 }
-            >
-                    <ConfirmModalContent amount={amount} recipientDetails={recipientInfo}/>
-            </ConfirmBottomSheet> 
         </View>
       </>
     )
@@ -215,11 +186,11 @@ const styles = StyleSheet.create({
         backgroundColor: "white"
     },
     headings: {
-        height: 170,
+        height: 190,
         backgroundColor:"black"
     },  
     header: {
-        marginTop: 20,
+        marginTop: 42,
         height: 24,
         width: "100%",
         flexDirection:"row"
@@ -273,3 +244,5 @@ const styles = StyleSheet.create({
     },
 
 })
+
+export default ToktokWalletScanQRConfirm

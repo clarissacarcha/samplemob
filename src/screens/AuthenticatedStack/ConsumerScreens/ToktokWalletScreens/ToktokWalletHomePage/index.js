@@ -1,5 +1,5 @@
 import React , {useState,useRef,useCallback,useEffect} from 'react'
-import { View , StyleSheet , ActivityIndicator,RefreshControl,ScrollView} from 'react-native'
+import { View , StyleSheet , ActivityIndicator,RefreshControl,ScrollView,StatusBar} from 'react-native'
 import {HeaderBack, HeaderTitle, SomethingWentWrong} from '../../../../../components'
 import { COLOR, FONT_BOLD, FONT_REGULAR, SIZES, ORANGE } from '../../../../../res/constants'
 import {GET_TOKTOK_WALLET} from '../../../../../graphql'
@@ -15,7 +15,7 @@ import CheckWalletRestrictionProvider from './CheckWalletRestrictionProvider'
 import CreateWallet from './CreateWallet'
 
 
-export default ({navigation,route})=> {
+const ToktokWalletHomePage = ({navigation,route})=> {
 
     navigation.setOptions({
         headerShown: false,
@@ -82,9 +82,11 @@ export default ({navigation,route})=> {
 
 
     return (
+        <>
+         <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
         <CheckWalletRestrictionProvider walletinfo={data.getToktokWallet.record}>
             <View style={styles.container}>
-                <View style={{height:240}}>
+                <View style={{height:255}}>
                     <ScrollView 
                         style={{flex: 1,backgroundColor:"green"}}
                         scrollEnabled={false}
@@ -107,6 +109,7 @@ export default ({navigation,route})=> {
         
             </View>
         </CheckWalletRestrictionProvider>
+        </>
     )
 }
 
@@ -115,3 +118,5 @@ const styles = StyleSheet.create({
         flex: 1,
     }
 })
+
+export default ToktokWalletHomePage

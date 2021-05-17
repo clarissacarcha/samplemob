@@ -1,8 +1,8 @@
 import React from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,Modal,Image} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
-import { COLOR, DARK, FONT_BOLD, FONT_MEDIUM, FONT_REGULAR, SIZES } from '../../../../../../../res/constants'
-import { BlackButton } from '../../../../../../../revamp'
+import { FONTS, SIZES } from '../../../../../../../res/constants'
+import { BlackButton, YellowButton } from '../../../../../../../revamp'
 
 
 
@@ -10,9 +10,12 @@ const SuccessModal = ({modalVisible})=> {
     const navigation = useNavigation()
 
     const closeModal = ()=> {
-       // navigation.pop()
-        navigation.navigate("ToktokWalletHomePage")
-        navigation.replace("ToktokWalletHomePage")
+        navigation.pop()
+        navigation.push("ToktokWalletHomePage")
+        // navigation.pop()
+        // // navigation.navigate("ToktokWalletHomePage")
+        // navigation.push("ToktokWalletHomePage")
+        // console.log("gg")
     }
 
     return (
@@ -29,16 +32,17 @@ const SuccessModal = ({modalVisible})=> {
                          width: 80,
                          backgroundColor: "#FEEABA",
                          borderRadius: 100,
-                         marginTop: 30,
+                         marginTop: 60,
                          marginBottom: 35,
                      }}>
                          <Image style={{height: 40,width: 40}} source={require('../../../../../../../assets/icons/walletVerify.png')}/>
                      </View>
-                     <Text style={{fontSize: SIZES.XL,fontFamily: FONT_MEDIUM}}>toktokwallet PIN set up successfully</Text>
-                     <Text style={{color: "#212529",marginTop:5,fontFamily: FONT_REGULAR,fontSize: SIZES.M}}>Your toktokwallet is now safe.</Text>
+                     <Text style={{fontSize: SIZES.XL,fontFamily: FONTS.BOLD}}>toktokwallet PIN set up successfully</Text>
+                     <Text style={{color: "#212529",marginTop:5,fontFamily: FONTS.REGULAR,fontSize: SIZES.M}}>Your toktokwallet is now safe.</Text>
                  </View>
-      
-                 <BlackButton label="Done" onPress={closeModal}/>
+                <View>
+                    <YellowButton label="Done" onPress={closeModal}/>
+                </View>
             </View>
      
         </Modal>
@@ -50,11 +54,10 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "white",
-        padding: 10,
+        padding: 16,
     },
     content: {
         alignItems: "center",
-       
         flex: 1,
     },
 })

@@ -1,8 +1,7 @@
 import React, {useState,useEffect,useRef} from 'react'
 import {View,Text,StyleSheet,Image,Alert,TextInput,KeyboardAvoidingView,Platform,ScrollView , ImageBackground , TouchableOpacity} from 'react-native'
-import { HeaderTitle} from '../../../../../../components'
 import {HeaderBack} from '../../../../../../revamp'
-import { BUTTON_HEIGHT, FONT_MEDIUM, FONT_REGULAR, SIZES, INPUT_HEIGHT, FONTS, COLORS } from '../../../../../../res/constants'
+import { SIZES, INPUT_HEIGHT, FONTS, COLORS } from '../../../../../../res/constants'
 import {numberFormat} from '../../../../../../helper'
 import { PATCH_FUND_TRANSFER , GET_DAILY_MONTHLY_YEARLY_INCOMING , GET_DAILY_MONTHLY_YEARLY_OUTGOING} from '../../../../../../graphql'
 import {useQuery,useMutation,useLazyQuery} from '@apollo/react-hooks'
@@ -11,12 +10,11 @@ import { onError , onErrorAlert} from '../../../../../../util/ErrorUtility';
 import SuccessfulModal from '../../SendMoneyScreens/ToktokWalletSendMoney/SuccessfulModal'
 import {useAlert} from '../../../../../../hooks/useAlert'
 import { BlackButton, YellowButton } from '../../../../../../revamp';
-import ConfirmBottomSheet from '../../Components/ConfirmBottomSheet';
+import {ConfirmBottomSheet,Separator} from '../../Components';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 
 //SELF IMPORTS
 import ConfirmModalContent from './ConfirmModalContent'
-import Separator from '../../Components/Separator'
 
 export default ({navigation,route})=> {
 

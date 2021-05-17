@@ -156,6 +156,7 @@ const EnterMobileNo = ({
                 { errorMessage != "" && <Text style={{fontFamily:FONTS.REGULAR,fontSize: SIZES.S,color:"red",marginTop: 0}}>{errorMessage}</Text>}
                     <TextInput
                         caretHidden
+                        // autoFocus={true}
                         value={mobileNo}
                         style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent',zIndex: 1}}
                         keyboardType="number-pad"
@@ -163,6 +164,15 @@ const EnterMobileNo = ({
                         onChangeText={(value)=>{
                                 changeMobileNo(value)
                         }}
+                        // onBlur={()=>{
+                        //     getUserAccount({
+                        //         variables: {
+                        //           input: {
+                        //             mobileNo: mobileNo
+                        //           }
+                        //         },
+                        //       })
+                        // }}
                     />
                 </View>
                 <TouchableOpacity onPress={()=>navigation.navigate("ToktokWalletContacts", {setRecipientInfo: setRecipientMobileNo})} style={styles.contactAddress}>

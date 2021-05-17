@@ -5,7 +5,7 @@ import { BUTTON_HEIGHT, FONT_MEDIUM, SIZES ,ORANGE,COLOR, NUMBERS, COLORS} from 
 import { BlackButton, YellowButton } from '../../../../../revamp';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import BottomSheet, {BottomSheetBackdrop, BottomSheetScrollView, BottomSheetView} from '@gorhom/bottom-sheet';
-import Separator from './Separator';
+import {Separator} from './Separator';
 
 const {width,height} = Dimensions.get("window")
 
@@ -53,7 +53,7 @@ const SwipeButtonRender = ({SwipeButtonArgs})=> {
     )
 }
 
-const ConfirmBottomSheet = ({
+export const ConfirmBottomSheet = ({
     children,
     headerTitle,
     btnLabel,
@@ -152,4 +152,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default ConfirmBottomSheet
+

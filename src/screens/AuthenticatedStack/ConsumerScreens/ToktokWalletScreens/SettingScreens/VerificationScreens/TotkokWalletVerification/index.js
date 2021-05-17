@@ -1,11 +1,11 @@
 import React, {useState, useContext , useEffect} from 'react'
-import {StyleSheet,View,Dimensions,BackHandler,TouchableHighlight,KeyboardAvoidingView,Platform,Alert} from 'react-native'
-import { HeaderTitle} from '../../../../../../../components'
+import {StyleSheet,View,Dimensions,BackHandler,TouchableHighlight,Text,KeyboardAvoidingView,Platform,Alert} from 'react-native'
+import { HeaderTitle} from '../../../../../../../revamp'
 
 import {useNavigation} from '@react-navigation/native'
-import FIcon from 'react-native-vector-icons/Feather';
+import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import {useFocusEffect} from '@react-navigation/native'
-import Separator from '../../../Components/Separator'
+import {Separator,LeavePromptModal} from '../../../Components'
 
 //SELF IMPORTS
 import VerifyContextProvider , {VerifyContext} from './VerifyContextProvider'
@@ -15,10 +15,11 @@ import VerifyAddress from './VerifyAddress'
 import VerifyID from './VerifyID'
 import VerifySelfie from './VerifySelfie'
 import Confirm from './Confirm'
+import { COLORS, FONTS, SIZES } from '../../../../../../../res/constants';
 
 const {height,width} = Dimensions.get("window")
 
-const HeaderBackClose = ({currentIndex,setCurrentIndex})=> {
+const HeaderBackClose = ({currentIndex,setCurrentIndex, setPromptVisible})=> {
 
     const navigation = useNavigation()
 
@@ -32,19 +33,7 @@ const HeaderBackClose = ({currentIndex,setCurrentIndex})=> {
       }
 
       const PromptQuestionCloseMessage = ()=>{
-        Alert.alert(
-            "",
-            "Are you sure you want to leave?",
-            [
-              {
-                text: "No",
-                onPress: () => null,
-                style: "cancel"
-              },
-              { text: "Yes", onPress: () =>navigation.goBack() }
-            ]
-          );
-      
+        setPromptVisible(true)
       }
 
       useFocusEffect(() => {
@@ -62,9 +51,9 @@ const HeaderBackClose = ({currentIndex,setCurrentIndex})=> {
       }, []);
 
       return (
-        <TouchableHighlight onPress={PromptQuestionCloseMessage} underlayColor={'white'} style={styles.button}>
+        <TouchableHighlight onPress={closeScreen} underlayColor={'white'} style={styles.button}>
             <View style={styles.iconBox}>
-                <FIcon name={'x'} size={24} color={'#212529'} />
+                <FIcon5 name={'chevron-left'} size={13} color={COLORS.YELLOW} />
             </View>
         </TouchableHighlight>
       )
@@ -75,14 +64,25 @@ const MainSetupComponent = ()=> {
 
     const {currentIndex,setCurrentIndex} = useContext(VerifyContext)
     const navigation = useNavigation()
+    const [visible,setVisible] = useState(false)
 
     navigation.setOptions({
-        headerLeft: ()=> <HeaderBackClose currentIndex={currentIndex} setCurrentIndex={setCurrentIndex}/>,
+        headerLeft: ()=> <HeaderBackClose setPromptVisible={(value)=>setVisible(true)} currentIndex={currentIndex} setCurrentIndex={setCurrentIndex}/>,
         headerTitle: ()=> <HeaderTitle label={['Verification','']}/>,
+        headerRight: ()=>  <TouchableHighlight style={{paddingRight: 16}} underlayColor={'white'} onPress={cancelSetup}>
+                                <View style={{justifyContent:"center",alignItems:"center"}}>
+                                <Text style={{fontSize: SIZES.M,fontFamily: FONTS.REGULAR ,color:'#929191'}}>Cancel</Text>
+                                </View>
+                            </TouchableHighlight>
     })
 
  
-    const [screenSlides,setScreenSlides] = useState(["Fullname","Birthday","Address","IDPic","SelfiePic"])
+    const [screenSlides,setScreenSlides] = useState(["Fullname","Address","IDPic","SelfiePic"])
+ 
+    const cancelSetup = ()=> {
+      console.log("Cancelling")
+      setVisible(true)
+    }
 
     const DisplayComponents = ()=> {
 
@@ -90,12 +90,10 @@ const MainSetupComponent = ()=> {
             case 0:
                 return <VerifyFullname/>
             case 1:
-                return <VerifyBirth/>
-            case 2:
                 return <VerifyAddress/>
-            case 3:
+            case 2:
                 return <VerifyID/>
-            case 4: 
+            case 3:
                 return <VerifySelfie/>
             default:
                 return <Confirm/>
@@ -105,6 +103,11 @@ const MainSetupComponent = ()=> {
 
     return (
         <>
+        <LeavePromptModal
+            visible={visible}
+            setVisible={setVisible}
+            onConfirm={()=>navigation.goBack()}
+        />
         <Separator />
         <View 
             style={styles.container}
@@ -126,7 +129,7 @@ const MainSetupComponent = ()=> {
 
 }
 
-export default ()=> {
+const TotkokWalletVerification = ()=> {
     return (
         <VerifyContextProvider>
              <MainSetupComponent/>
@@ -163,3 +166,5 @@ const styles = StyleSheet.create({
         alignItems: 'center',
       },
 })
+
+export default TotkokWalletVerification
