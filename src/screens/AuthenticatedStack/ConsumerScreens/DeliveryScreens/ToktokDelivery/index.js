@@ -1,20 +1,24 @@
 import React, {useCallback, useMemo, useRef, useState, useEffect} from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import {View, StyleSheet, Text, StatusBar, TouchableOpacity, TouchableHighlight, Image} from 'react-native';
 import {useLazyQuery} from '@apollo/react-hooks';
 import {connect} from 'react-redux';
 import moment from 'moment';
 import BottomSheet, {BottomSheetBackdrop, BottomSheetView} from '@gorhom/bottom-sheet';
 import ScrollPicker from 'react-native-wheel-scrollview-picker';
 import {HeaderBack, HeaderTitle} from '../../../../../components';
+import {throttle} from 'lodash';
 import {useAlert} from '../../../../../hooks';
-import {COLOR, LIGHT, ORANGE, FONT_REGULAR} from '../../../../../res/constants';
+import {COLORS} from '../../../../../res/constants';
+import {COLOR, FONT, FONT_SIZE, SIZE} from '../../../../../res/variables';
 import {GeolocationUtility, PermissionUtility} from '../../../../../util';
 import {GET_GOOGLE_GEOCODE_REVERSE} from '../../../../../graphql';
 
-import {WhiteButton, BlackButton} from '../../../../../revamp';
+import {WhiteButton, BlackButton, ImageHeader, Shadow, VectorIcon, ICON_SET, YellowButton} from '../../../../../revamp';
+import ToktokHeader from '../../../../../assets/toktok/images/ToktokHeader.png';
 
 //SELF IMPORTS
 import Greeting from './Greeting';
+import SenderRecipientCard from './SenderRecipientCard';
 
 const SCHEDULES = [
   {label: 'Anytime', value: '23:59:59'},
@@ -69,6 +73,17 @@ const SCHEDULES = [
 ];
 
 const SCHEDULE_TIME = SCHEDULES.map((item) => {
+  return item.label;
+});
+
+const TIME_NOW = moment();
+
+const AFTER_SCHEDULES = SCHEDULES.filter(({value}) => {
+  const timeMoment = moment(value, 'HH:mm:ss');
+  return timeMoment.isAfter(TIME_NOW);
+});
+
+const SCHEDULE_TIME_AFTER = AFTER_SCHEDULES.map((item) => {
   return item.label;
 });
 
@@ -147,11 +162,17 @@ const ToktokDelivery = ({navigation, session, route}) => {
   };
   const alertHook = useAlert();
   const [orderData, setOrderData] = useState(INITIAL_ORDER_DATA);
+
   const [orderType, setOrderType] = useState('ASAP');
-  const [scheduledAt, setScheduledAt] = useState(null);
   const [formattedScheduledAt, setFormattedScheduledAt] = useState('ASAP');
+
   const [scheduledDate, setScheduledDate] = useState('Today');
   const [scheduledTime, setScheduledTime] = useState('Anytime');
+
+  const [selectedTimeIndex, setSelectedTimeIndex] = useState(0);
+  const [scheduleTimeNow, setScheduleTimeNow] = useState(SCHEDULE_TIME_AFTER);
+
+  const [userCoordinates, setUserCoordinates] = useState(null);
 
   const [getGoogleGeocodeReverse, {loading, error}] = useLazyQuery(GET_GOOGLE_GEOCODE_REVERSE, {
     fetchPolicy: 'network-only',
@@ -172,7 +193,7 @@ const ToktokDelivery = ({navigation, session, route}) => {
 
   const bottomSheetRef = useRef();
 
-  const snapPoints = useMemo(() => [0, 130, 345], []);
+  const snapPoints = useMemo(() => [0, 135, 350], []);
 
   const onSenderConfirm = (value) => {
     setOrderData({
@@ -212,214 +233,298 @@ const ToktokDelivery = ({navigation, session, route}) => {
     getLocationHash();
   }, []);
 
+  const onAddDeliveryInformation = () => {
+    if (!orderData.senderStop.formattedAddress && !orderData.recipientStop[0].formattedAddress) {
+      alertHook({message: 'Please select a pick up and drop off location.'});
+      return;
+    }
+
+    if (!orderData.senderStop.formattedAddress) {
+      alertHook({message: 'Please select a pick up location.'});
+      return;
+    }
+
+    if (!orderData.recipientStop[0].formattedAddress) {
+      alertHook({message: 'Please select a drop off location.'});
+      return;
+    }
+
+    navigation.push('DeliveryDetails', {orderData, setOrderData});
+  };
+
+  const useThrottle = (cb, delayDuration) => {
+    const options = {leading: true, trailing: false}; // add custom lodash options
+    const cbRef = useRef(cb);
+    // use mutable ref to make useCallback/throttle not depend on `cb` dep
+    useEffect(() => {
+      cbRef.current = cb;
+    });
+    return useCallback(
+      throttle((...args) => cbRef.current(...args), delayDuration, options),
+      [delayDuration],
+    );
+  };
+
+  const onPressThrottled = useThrottle(() => navigation.pop(), 1000);
+
   return (
     <>
-      <View style={styles.screenBox}>
-        <Greeting />
+      <View style={{flex: 1, backgroundColor: 'white'}}>
+        <ImageHeader />
 
-        <WhiteButton
-          label={`Pick Up ${formattedScheduledAt}`}
-          prefixSet="Material"
-          prefixName="access-time"
-          suffixSet="Material"
-          suffixName="arrow-forward"
-          onPress={() => {
-            bottomSheetRef.current.snapTo(1);
-          }}
-        />
-        <View style={{marginTop: 20, borderWidth: 1, borderColor: COLOR, borderRadius: 5}}>
-          <WhiteButton
-            label={orderData.senderStop.formattedAddress ? orderData.senderStop.formattedAddress : 'Pick Up Location'}
-            description={
-              orderData.senderStop.formattedAddress
-                ? `${orderData.senderStop.name} | +63${orderData.senderStop.mobile}`
-                : null
-            }
-            prefixSet="MaterialCommunity"
-            prefixName="circle-outline"
-            borderless
-            onPress={() => {
-              navigation.push('StopDetails', {
-                searchPlaceholder: 'Enter pick up location',
-                stopData: orderData.senderStop,
-                onStopConfirm: onSenderConfirm,
-              });
-            }}
-            style={{paddingLeft: 10}}
-          />
-          <View
-            style={{
-              marginHorizontal: 10,
-              borderColor: LIGHT,
-              borderStyle: 'dashed',
-              borderRadius: 1,
-              borderWidth: 1,
-              borderTopWidth: 0,
-            }}
-          />
-          <WhiteButton
-            label={
-              orderData.recipientStop[0].formattedAddress
-                ? orderData.recipientStop[0].formattedAddress
-                : 'Drop Off Location'
-            }
-            description={
-              orderData.recipientStop[0].formattedAddress
-                ? `${orderData.recipientStop[0].name} | +63${orderData.recipientStop[0].mobile}`
-                : null
-            }
-            prefixSet="MaterialCommunity"
-            prefixName="circle-outline"
-            borderless
-            onPress={() => {
-              navigation.push('StopDetails', {
-                searchPlaceholder: 'Enter drop off location',
-                stopData: orderData.recipientStop[0],
-                onStopConfirm: onRecipientConfirm,
-              });
-            }}
-            style={{paddingLeft: 10}}
-          />
-        </View>
-        <View style={{flex: 1}} />
-        <BlackButton
-          label="Next"
-          onPress={() => {
-            if (!orderData.senderStop.formattedAddress && !orderData.recipientStop[0].formattedAddress) {
-              alertHook({message: 'Please select a pick up and drop off location.'});
-              return;
-            }
-
-            if (!orderData.senderStop.formattedAddress) {
-              alertHook({message: 'Please select a pick up location.'});
-              return;
-            }
-
-            if (!orderData.recipientStop[0].formattedAddress) {
-              alertHook({message: 'Please select a drop off location.'});
-              return;
-            }
-
-            navigation.push('DeliveryDetails', {orderData, setOrderData});
-          }}
-        />
-        <View style={{height: 10}} />
-        <BottomSheet
-          ref={bottomSheetRef}
-          index={-1}
-          snapPoints={snapPoints}
-          handleComponent={() => (
+        <View style={{marginTop: -(220 - StatusBar.currentHeight)}} />
+        <View style={{flexDirection: 'row'}}>
+          <TouchableOpacity onPress={onPressThrottled}>
             <View
               style={{
-                height: 20,
-                borderTopRightRadius: 15,
-                borderTopLeftRadius: 15,
-                borderTopWidth: 3,
-                borderRightWidth: 2,
-                borderLeftWidth: 2,
-                borderColor: ORANGE,
-                marginHorizontal: -2,
-              }}
-            />
-          )}
-          enableContentPanningGesture={false}
-          enableHandlePanningGesture={false}
-          backdropComponent={BottomSheetBackdrop}>
-          <BottomSheetView style={styles.contentContainer}>
-            <Text>Pick Up Time</Text>
-            <View style={{height: 10}} />
-            <WhiteButton
-              label="ASAP"
-              prefixSet="Material"
-              prefixName="timer"
-              borderless
-              onPress={() => {
-                setOrderType('ASAP');
-                setFormattedScheduledAt('ASAP');
-                bottomSheetRef.current.snapTo(0);
-              }}
-            />
-            <WhiteButton
-              label="Scheduled"
-              prefixSet="MaterialCommunity"
-              prefixName="calendar-month"
-              borderless
-              onPress={() => {
-                bottomSheetRef.current.snapTo(2);
-              }}
-            />
-            <View style={{height: 150, flexDirection: 'row'}}>
-              <ScrollPicker
-                dataSource={SCHEDULE_DAYS}
-                selectedIndex={0}
-                renderItem={(data, index) => {
-                  //
-                }}
-                onValueChange={(data, selectedIndex) => {
-                  setScheduledDate(data);
-                }}
-                wrapperHeight={150}
-                wrapperWidth={150}
-                wrapperBackground={'#FFFFFF'}
-                itemHeight={50}
-                highlightColor={LIGHT}
-                highlightBorderWidth={1}
-                onPress={() => {}}
-              />
-              <ScrollPicker
-                dataSource={SCHEDULE_TIME}
-                selectedIndex={0}
-                renderItem={(data, index) => {
-                  return <Text style={{fontSize: 10}}>{data.label}</Text>;
-                }}
-                onValueChange={(data, selectedIndex) => {
-                  console.log(data);
-                  setScheduledTime(data);
-                }}
-                wrapperHeight={150}
-                wrapperWidth={150}
-                wrapperBackground={'#FFFFFF'}
-                itemHeight={50}
-                highlightColor={LIGHT}
-                highlightBorderWidth={1}
-                onPress={(x, y) => {
-                  console.log({x});
-                  console.log({y});
-                }}
-              />
+                height: 50,
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingHorizontal: SIZE.MARGIN,
+                width: 105,
+              }}>
+              <View style={{height: 30, width: 25, justifyContent: 'center'}}>
+                <VectorIcon iconSet={ICON_SET.Entypo} name="chevron-thin-left" color={COLOR.BLACK} size={20} />
+              </View>
+
+              <View style={{height: 20, justifyContent: 'center'}}>
+                <Text style={{fontFamily: FONT.BOLD, fontSize: 15}}>Home</Text>
+              </View>
             </View>
-            <View style={{height: 10}} />
+          </TouchableOpacity>
+          <Image source={ToktokHeader} resizeMode="contain" style={{height: 25, flex: 1, alignSelf: 'center'}} />
+          <View style={{width: 105}} />
+        </View>
 
-            <BlackButton
-              label="Confirm"
-              onPress={() => {
-                const formattedDate = SCHEDULESB.find((date) => {
-                  return date.label === scheduledDate;
-                });
+        <Shadow style={{marginHorizontal: SIZE.MARGIN, borderRadius: SIZE.BORDER_RADIUS}}>
+          <TouchableHighlight
+            onPress={() => {
+              bottomSheetRef.current.snapTo(1);
+            }}
+            style={{
+              borderRadius: SIZE.BORDER_RADIUS,
+            }}
+            underlayColor={COLOR.WHITE_UNDERLAY}>
+            <View
+              style={{
+                height: 50,
+                alignItems: 'center',
+                backgroundColor: COLOR.WHITE,
+                borderRadius: SIZE.BORDER_RADIUS,
+                paddingHorizontal: 8,
+                flexDirection: 'row',
+              }}>
+              <Text style={{fontFamily: FONT.BOLD, flex: 1}}>
+                Pick Up Time:
+                <Text style={{color: COLOR.ORANGE}}>{orderType === 'ASAP' ? ' ASAP' : ` ${formattedScheduledAt}`}</Text>
+              </Text>
+              <VectorIcon iconSet={ICON_SET.Entypo} name="chevron-thin-right" color={COLOR.BLACK} />
+            </View>
+          </TouchableHighlight>
+        </Shadow>
 
-                const formattedTime = SCHEDULES.find((date) => {
-                  return date.label === scheduledTime;
-                });
-                setFormattedScheduledAt(`${formattedDate.label} - ${formattedTime.label}`);
-                setScheduledAt(`${formattedDate.value} ${formattedTime.value}`);
-                bottomSheetRef.current.collapse();
-              }}
-            />
-            <View style={{height: 10}} />
-          </BottomSheetView>
-        </BottomSheet>
+        <View style={{height: 10}} />
+        <SenderRecipientCard
+          senderStop={orderData.senderStop}
+          recipientStop={orderData.recipientStop}
+          onSenderPress={() => {
+            navigation.push('StopDetails', {
+              searchPlaceholder: 'Enter pick up location',
+              stopData: orderData.senderStop,
+              onStopConfirm: onSenderConfirm,
+            });
+          }}
+          onRecipientPress={() => {
+            navigation.push('StopDetails', {
+              searchPlaceholder: 'Enter drop off location',
+              stopData: orderData.recipientStop[0],
+              onStopConfirm: onRecipientConfirm,
+            });
+          }}
+          setRecipientStop={() => {}}
+          setSenderStop={onSenderConfirm}
+          onLocationDetected={(coordinates) => {
+            console.log({coordinates});
+            // setUserCoordinates(coordinates);
+          }}
+        />
+
+        <View style={{flex: 1}} />
+        <View style={{backgroundColor: COLOR.LIGHT}}>
+          <YellowButton
+            label="Add Delivery Information"
+            onPress={onAddDeliveryInformation}
+            style={{margin: SIZE.MARGIN}}
+          />
+        </View>
       </View>
-      {/* <Animated.View
-        style={{
-          height: 100,
-          backgroundColor: 'red',
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          // translateX: 100,
-        }}
-      /> */}
+
+      <BottomSheet
+        ref={bottomSheetRef}
+        index={0}
+        snapPoints={snapPoints}
+        handleComponent={() => (
+          <View
+            style={{
+              height: 16,
+              borderTopRightRadius: 20,
+              borderTopLeftRadius: 20,
+              borderTopWidth: 3,
+              borderRightWidth: 2,
+              borderLeftWidth: 2,
+              borderColor: COLORS.ORANGE,
+              marginHorizontal: -2,
+            }}
+          />
+        )}
+        enableContentPanningGesture={false}
+        enableHandlePanningGesture={false}
+        backdropComponent={BottomSheetBackdrop}>
+        <BottomSheetView style={styles.contentContainer}>
+          <Text style={{fontFamily: FONT.BOLD}}>Select Pick Up Time</Text>
+          <View style={{height: 2}} />
+          <WhiteButton
+            label="ASAP"
+            borderless
+            labelStyle={{fontFamily: FONT.REGULAR}}
+            onPress={() => {
+              setOrderType('ASAP');
+              setFormattedScheduledAt('ASAP');
+              bottomSheetRef.current.snapTo(0);
+
+              setOrderData({
+                ...orderData,
+                orderType: 'ASAP',
+                scheduledAt: 'null',
+                senderStop: {
+                  ...orderData.senderStop,
+                  orderType: 'ASAP',
+                  scheduledFrom: null,
+                  scheduledTo: null,
+                },
+                recipientStop: [
+                  {
+                    ...orderData.recipientStop[0],
+                    orderType: 'ASAP',
+                    scheduledFrom: null,
+                    scheduledTo: null,
+                  },
+                ],
+              });
+            }}
+          />
+          <View style={{borderBottomWidth: 1, borderColor: COLOR.LIGHT}} />
+          <WhiteButton
+            label="Scheduled"
+            borderless
+            labelStyle={{fontFamily: FONT.REGULAR}}
+            onPress={() => {
+              bottomSheetRef.current.snapTo(2);
+            }}
+          />
+          <View style={{height: 150, flexDirection: 'row'}}>
+            <ScrollPicker
+              dataSource={SCHEDULE_DAYS}
+              selectedIndex={0}
+              // renderItem={(data, index) => {
+              //   //
+              // }}
+              onValueChange={(data, selectedIndex) => {
+                console.log(data);
+                setScheduledDate(data);
+                if (data === 'Today') {
+                  setScheduleTimeNow(SCHEDULE_TIME_AFTER);
+                  setSelectedTimeIndex(1);
+                } else {
+                  setScheduleTimeNow(SCHEDULE_TIME);
+                  setSelectedTimeIndex(1);
+                }
+              }}
+              wrapperHeight={150}
+              wrapperWidth={150}
+              wrapperBackground={'#FFFFFF'}
+              itemHeight={50}
+              highlightColor={COLOR.LIGHT}
+              highlightBorderWidth={1}
+              onPress={(selectedDay) => {
+                console.log({selectedDay});
+              }}
+              activeItemTextStyle={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}
+              itemTextStyle={{fontFamily: FONT.REGULAR, color: COLOR.MEDIUM}}
+            />
+            <ScrollPicker
+              dataSource={scheduleTimeNow}
+              selectedIndex={selectedTimeIndex}
+              // renderItem={(data, index) => {
+              //   return <Text style={{fontSize: 10}}>{data.label}</Text>;
+              // }}
+              onValueChange={(data, selectedIndex) => {
+                console.log(data);
+                setScheduledTime(data);
+              }}
+              wrapperHeight={150}
+              wrapperWidth={150}
+              wrapperBackground={'#FFFFFF'}
+              itemHeight={50}
+              highlightColor={COLORS.LIGHT}
+              highlightBorderWidth={1}
+              onPress={(selectedTime) => {
+                console.log({selectedTime});
+              }}
+              activeItemTextStyle={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}
+              itemTextStyle={{fontFamily: FONT.REGULAR, color: COLOR.MEDIUM}}
+            />
+          </View>
+          <View style={{height: 10}} />
+
+          <BlackButton
+            label="Confirm"
+            onPress={() => {
+              if (orderType === 'SCHEDULED') {
+                if (scheduledDate === 'Today') {
+                  if (moment().isAfter(moment(scheduledTime, 'HH:mm AA'))) {
+                    alertHook({message: 'Cannot schedule an ealier pick up time.'});
+                    return;
+                  }
+                }
+              }
+
+              const formattedDate = SCHEDULESB.find((date) => {
+                return date.label === scheduledDate;
+              });
+
+              const formattedTime = SCHEDULES.find((date) => {
+                return date.label === scheduledTime;
+              });
+
+              setOrderType('SCHEDULED');
+              setFormattedScheduledAt(`${formattedDate.label} - ${formattedTime.label}`);
+
+              setOrderData({
+                ...orderData,
+                orderType: 'SCHEDULED',
+                scheduledAt: `${formattedDate.value} ${formattedTime.value}`,
+                senderStop: {
+                  ...orderData.senderStop,
+                  orderType: 'SCHEDULED',
+                  scheduledFrom: `${formattedDate.value} ${formattedTime.value}`,
+                  scheduledTo: `${formattedDate.value} ${formattedTime.value}`,
+                },
+                recipientStop: [
+                  {
+                    ...orderData.recipientStop[0],
+                    orderType: 'SCHEDULED',
+                    scheduledFrom: `${formattedDate.value} ${formattedTime.value}`,
+                    scheduledTo: `${formattedDate.value} ${formattedTime.value}`,
+                  },
+                ],
+              });
+
+              bottomSheetRef.current.collapse();
+            }}
+          />
+        </BottomSheetView>
+      </BottomSheet>
     </>
   );
 };
@@ -432,12 +537,11 @@ export default connect(mapStateToProps, null)(ToktokDelivery);
 
 const styles = StyleSheet.create({
   screenBox: {
-    paddingHorizontal: 10,
     backgroundColor: 'white',
     flex: 1,
   },
   contentContainer: {
-    paddingHorizontal: 10,
+    paddingHorizontal: 16,
     // alignItems: 'center',
     // backgroundColor: 'blue',
   },

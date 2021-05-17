@@ -2,10 +2,11 @@ import React, {useState} from 'react';
 import {View, FlatList, RefreshControl, Text, StyleSheet, Image, ActivityIndicator, ScrollView} from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {connect} from 'react-redux';
-import {HeaderBack, HeaderTitle, DeliveryCard, SomethingWentWrong} from '../../../../components';
+import {HeaderBack, DeliveryCard, HeaderTitle, SomethingWentWrong} from '../../../../components';
+// import {DeliveryCard} from '../../../../_toktok/components';
 import {useQuery} from '@apollo/react-hooks';
 import {GET_DELIVERIES} from '../../../../graphql';
-import {COLOR, DARK, MEDIUM, LIGHT} from '../../../../res/constants';
+import {COLOR} from '../../../../res/variables';
 
 import NoData from '../../../../assets/images/NoData.png';
 
@@ -27,16 +28,16 @@ const SelectedDeliveries = ({navigation, route, session}) => {
     fetchPolicy: 'network-only',
   });
 
-  useFocusEffect(() => {
-    refetch();
-  }, [session.user.id]);
+  // useFocusEffect(() => {
+  //   refetch();
+  // }, [session.user.id]);
 
   const onPress = (delivery) => navigation.push('SelectedDelivery', {delivery});
 
   if (loading) {
     return (
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <ActivityIndicator size={24} color={COLOR} />
+        <ActivityIndicator size="large" color={COLOR.YELLOW} />
       </View>
     );
   }
@@ -54,11 +55,12 @@ const SelectedDeliveries = ({navigation, route, session}) => {
   }
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{flex: 1, backgroundColor: 'white'}}>
       <FlatList
         showsVerticalScrollIndicator={false}
         data={data.getDeliveries}
         keyExtractor={(item) => item.id}
+        // ItemSeparatorComponent={() => <View style={{borderBottomWidth: 8, borderColor: COLOR.LIGHT}} />}
         renderItem={({item, index}) => (
           <DeliveryCard
             delivery={item}

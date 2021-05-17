@@ -384,6 +384,7 @@ const AvailableOrders = ({navigation, session, constants}) => {
       <>
         <OrderTabHeader label={['Available', 'Orders']} setIsSearching={setIsSearching} isOnline={false} />
         <SomethingWentWrong />
+        {/* <Text>{JSON.stringify(error)}</Text> */}
       </>
     );
   }

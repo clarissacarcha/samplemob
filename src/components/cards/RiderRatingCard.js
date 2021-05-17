@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {COLOR, DARK, MEDIUM, LIGHT, ORANGE, APP_FLAVOR} from '../../res/constants';
+import {FONT} from '../../res/variables';
 import {YellowIcon} from '../ui';
 
 import FAIcon from 'react-native-vector-icons/FontAwesome';
@@ -23,7 +24,7 @@ const DateRated = ({dateRated}) => {
 };
 
 const StarRating = ({rating}) => {
-  const getStarColor = index => {
+  const getStarColor = (index) => {
     return index <= rating ? COLOR : LIGHT;
   };
 
@@ -86,7 +87,7 @@ export const RiderRatingCard = ({driverRating, ratingFor}) => {
         <View style={{flexDirection: 'row'}}>
           <YellowIcon set="FontAwesome" name="star" size={14} darkIcon />
 
-          <Text style={{marginLeft: 10, color: DARK, fontFamily: 'Rubik-Medium'}}>
+          <Text style={{marginLeft: 10, color: DARK, fontFamily: FONT.BOLD}}>
             {accountType} <Text style={{color: ORANGE}}>Rating</Text>
           </Text>
         </View>

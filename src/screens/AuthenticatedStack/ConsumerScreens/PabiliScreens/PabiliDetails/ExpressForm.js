@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import {View, StyleSheet, Text, TextInput, Switch} from 'react-native';
-import {LIGHT, COLOR, FONT_MEDIUM, FONT_REGULAR} from '../../../../../res/constants';
+import {LIGHT, FONT_MEDIUM, FONT_REGULAR} from '../../../../../res/constants';
+import {COLOR, FONT, FONT_SIZE} from '../../../../../res/variables';
 
 const ExpressForm = ({value, onChange}) => {
   const [switchState, setSwitchState] = useState(value);
@@ -15,14 +16,14 @@ const ExpressForm = ({value, onChange}) => {
     <View>
       <View style={styles.box}>
         <View style={{flex: 1}}>
-          <Text style={{fontFamily: FONT_MEDIUM}}>Express Delivery</Text>
-          <Text style={{fontSize: 10, color: LIGHT, fontFamily: FONT_REGULAR}}>
+          <Text style={{fontFamily: FONT.BOLD}}>Express Delivery</Text>
+          <Text style={{fontSize: 11, color: LIGHT}}>
             Add PHP 40.00. Your order will be placed at a higher priority.
           </Text>
         </View>
         <Switch
           trackColor={{false: LIGHT, true: LIGHT}}
-          thumbColor={COLOR}
+          thumbColor={COLOR.YELLOW}
           onValueChange={onValueChange}
           value={switchState}
         />
@@ -45,5 +46,5 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginBottom: 10,
   },
-  spacing: {height: 5},
+  spacing: {height: 2},
 });

@@ -1,6 +1,8 @@
 import React from 'react';
+import {Text} from 'react-native';
 import {connect} from 'react-redux';
-import {COLOR, MEDIUM} from '../res/constants';
+import {COLOR, FONT_SIZE, SIZE} from '../res/variables';
+import {APP_FLAVOR} from '../res/constants';
 import {DeliveriesTopTabHeader} from '../components';
 import EIcon from 'react-native-vector-icons/Entypo';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -49,6 +51,10 @@ import Pabili from '../screens/AuthenticatedStack/ConsumerScreens/PabiliScreens/
 import PabiliSearchAddress from '../screens/AuthenticatedStack/ConsumerScreens/PabiliScreens/PabiliSearchAddress';
 import PabiliDetails from '../screens/AuthenticatedStack/ConsumerScreens/PabiliScreens/PabiliDetails';
 import NearbyStores from '../screens/AuthenticatedStack/ConsumerScreens/PabiliScreens/NearbyStores';
+import PartnerBranches from '../screens/AuthenticatedStack/ConsumerScreens/PabiliScreens/PartnerBranches';
+import SelectedAdvertisement from '../screens/AuthenticatedStack/ConsumerScreens/AdvertisementScreens/SelectedAdvertisement';
+import ConsumerMenu from '../screens/AuthenticatedStack/ConsumerScreens/ConsumerMenu';
+import ConsumerNotifications from '../screens/AuthenticatedStack/ConsumerScreens/ConsumerNotifications';
 
 /*---------- CONSUMER TOKTOK WALLET SCREENS ----------*/
 import ToktokWalletHomePage from '../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/ToktokWalletHomePage';
@@ -136,10 +142,10 @@ const DriverDeliveriesTab = () => {
         swipeEnabled={false}
         upperCaseLabel={false}
         tabBarOptions={{
-          activeTintColor: COLOR,
-          inactiveTintColor: MEDIUM,
+          activeTintColor: COLOR.YELLOW,
+          inactiveTintColor: COLOR.DARK,
           allowFontScaling: false,
-          indicatorStyle: {backgroundColor: COLOR},
+          indicatorStyle: {backgroundColor: COLOR.YELLOW},
 
           labelStyle: {
             fontFamily: 'Rubik-Regular',
@@ -152,7 +158,7 @@ const DriverDeliveriesTab = () => {
           component={Ongoing}
           options={() => ({
             tabBarLabel: ({focused}) => {
-              const iconColor = focused ? COLOR : MEDIUM;
+              const iconColor = focused ? COLOR.YELLOW : COLOR.DARK;
               return <EIcon name="time-slot" color={iconColor} size={20} />;
             },
           })}
@@ -162,7 +168,7 @@ const DriverDeliveriesTab = () => {
           component={Pending}
           options={() => ({
             tabBarLabel: ({focused}) => {
-              const iconColor = focused ? COLOR : MEDIUM;
+              const iconColor = focused ? COLOR.YELLOW : COLOR.DARK;
               return <FAIcon name="refresh" color={iconColor} size={20} />;
             },
           })}
@@ -172,7 +178,7 @@ const DriverDeliveriesTab = () => {
           component={Completed}
           options={() => ({
             tabBarLabel: ({focused}) => {
-              const iconColor = focused ? COLOR : MEDIUM;
+              const iconColor = focused ? COLOR.YELLOW : COLOR.DARK;
               return <FA5Icon name="check" color={iconColor} size={20} />;
             },
           })}
@@ -182,7 +188,7 @@ const DriverDeliveriesTab = () => {
           component={Cancelled}
           options={() => ({
             tabBarLabel: ({focused}) => {
-              const iconColor = focused ? COLOR : MEDIUM;
+              const iconColor = focused ? COLOR.YELLOW : COLOR.DARK;
               return <FA5Icon name="times" color={iconColor} size={22} />;
             },
           })}
@@ -209,7 +215,8 @@ const UnauthenticatedStack = () => (
 );
 
 const DriverHomeBottomTab = ({navigation}) => (
-  <DriverHome.Navigator tabBarOptions={{activeTintColor: COLOR, inactiveTintColor: MEDIUM, showLabel: false}}>
+  <DriverHome.Navigator
+    tabBarOptions={{activeTintColor: COLOR.YELLOW, inactiveTintColor: COLOR.DARK, showLabel: false}}>
     <DriverHome.Screen
       name="Order"
       component={Order}
@@ -265,51 +272,57 @@ const DriverHomeBottomTab = ({navigation}) => (
 const ConsumerHomeBottomTab = ({navigation}) => (
   <ConsumerHome.Navigator
     tabBarOptions={{
-      activeTintColor: COLOR,
-      inactiveTintColor: MEDIUM,
-      showLabel: false,
+      activeTintColor: COLOR.YELLOW,
+      inactiveTintColor: COLOR.MEDIUM,
+      // showLabel: false,
       // style: {marginBottom: -10},
+      labelStyle: {
+        fontSize: 9,
+      },
     }}>
     <ConsumerHome.Screen
-      name="ConsumerHome"
+      name="ConsumerLanding"
       component={ConsumerLanding}
       options={{
-        // tabBarLabel: 'Orders',
-        tabBarIcon: ({color}) => <MCIcon name="home" color={color} size={26} />,
+        tabBarLabel: ({focused}) => (
+          <Text style={{fontSize: 10, color: focused ? COLOR.BLACK : COLOR.MEDIUM}}>Home</Text>
+        ),
+        tabBarIcon: ({color}) => <MCIcon name="home" color={color} size={30} />,
       }}
     />
     <ConsumerHome.Screen
-      name="ConsumerHome2"
+      name="CustomerDeliveries"
       component={CustomerDeliveries}
       // options={{
       //   headerLeft: () => <HeaderBack />,
       //   headerTitle: () => <HeaderTitle label={['My', 'Deliveries']} />,
       // }}
       options={{
-        tabBarIcon: ({color}) => <MCIcon name="map-marker-distance" color={color} size={26} />,
+        tabBarLabel: ({focused}) => (
+          <Text style={{fontSize: 10, color: focused ? COLOR.BLACK : COLOR.MEDIUM}}>Deliveries</Text>
+        ),
+        tabBarIcon: ({color}) => <FA5Icon name="clipboard-list" color={color} size={26} />,
       }}
     />
     <ConsumerHome.Screen
-      name="ConsumerHome3"
-      component={Notifications}
+      name="ConsumerNotifications"
+      component={ConsumerNotifications}
       options={{
+        tabBarLabel: ({focused}) => (
+          <Text style={{fontSize: 10, color: focused ? COLOR.BLACK : COLOR.MEDIUM}}>Notifications</Text>
+        ),
         tabBarIcon: ({color}) => <MIcon name="notifications" color={color} size={26} />,
       }}
     />
     <ConsumerHome.Screen
-      name="ConsumerHome4"
-      component={DriverSettings}
+      name="ConsumerMenu"
+      component={ConsumerMenu}
       options={{
-        tabBarIcon: ({color}) => (
-          <EIcon
-            name="menu"
-            color={color}
-            size={26}
-            onPress={() => navigation.openDrawer()}
-            style={{paddingVertical: 12, paddingHorizontal: 20}}
-          />
+        tabBarLabel: ({focused}) => (
+          <Text style={{fontSize: 10, color: focused ? COLOR.BLACK : COLOR.MEDIUM}}>Menu</Text>
         ),
-        tabBarButton: (props) => <TouchableWithoutFeedback {...props} onPress={() => navigation.openDrawer()} />,
+        tabBarIcon: ({color}) => <EIcon name="menu" color={color} size={30} />,
+        // tabBarButton: (props) => <TouchableWithoutFeedback {...props} onPress={() => navigation.openDrawer()} />,
       }}
     />
   </ConsumerHome.Navigator>
@@ -331,14 +344,17 @@ const AuthenticatedStack = () => (
   <Authenticated.Navigator>
     {/* <Authenticated.Screen name="ConsumerLanding" component={ConsumerLanding} options={{headerShown: false}} /> */}
     <Authenticated.Screen name="ConsumerLanding" component={ConsumerHomeBottomTab} options={{headerShown: false}} />
-    <Authenticated.Screen name="ToktokDelivery" component={ToktokDelivery} />
-    <Authenticated.Screen name="StopDetails" component={StopDetails} />
+    <Authenticated.Screen name="ToktokDelivery" component={ToktokDelivery} options={{headerShown: false}} />
+    <Authenticated.Screen name="StopDetails" component={StopDetails} options={{headerShown: false}} />
     <Authenticated.Screen name="DeliveryDetails" component={DeliveryDetails} />
     <Authenticated.Screen name="DeliverySummary" component={DeliverySummary} />
     <Authenticated.Screen name="Pabili" component={Pabili} options={{headerShown: false}} />
-    <Authenticated.Screen name="PabiliSearchAddress" component={PabiliSearchAddress} />
+    <Authenticated.Screen name="PabiliSearchAddress" component={PabiliSearchAddress} options={{headerShown: false}} />
     <Authenticated.Screen name="PabiliDetails" component={PabiliDetails} />
     <Authenticated.Screen name="NearbyStores" component={NearbyStores} />
+    <Authenticated.Screen name="PartnerBranches" component={PartnerBranches} />
+    <Authenticated.Screen name="SelectedAdvertisement" component={SelectedAdvertisement} />
+    <Authenticated.Screen name="ConsumerMenu" component={ConsumerMenu} />
 
     <Authenticated.Screen name="PostRegistration" component={PostRegistration} />
 
@@ -373,7 +389,7 @@ const AuthenticatedStack = () => (
 
     <Authenticated.Screen name="Notifications" component={Notifications} />
 
-    <Authenticated.Screen name="CustomerDeliveries" component={CustomerDeliveries} />
+    {/* <Authenticated.Screen name="CustomerDeliveries" component={CustomerDeliveries} /> */}
     <Authenticated.Screen name="SelectedDeliveries" component={SelectedDeliveries} />
     <Authenticated.Screen name="SelectedDelivery" component={SelectedDelivery} />
     <Authenticated.Screen name="DeliveryTracking" component={DeliveryTracking} />
@@ -449,6 +465,7 @@ const Drawer = connect(
   mapDispatchToProps,
 )(({session, constants, destroySession}) => (
   <RootDrawer.Navigator
+    screenOptions={{gestureEnabled: false}}
     drawerContent={({navigation}) => (
       <DrawerContent navigation={navigation} session={session} constants={constants} destroySession={destroySession} />
     )}>

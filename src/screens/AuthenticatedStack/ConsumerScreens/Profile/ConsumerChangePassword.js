@@ -4,8 +4,10 @@ import {connect} from 'react-redux';
 import Toast from 'react-native-simple-toast';
 import validator from 'validator';
 import {useMutation} from '@apollo/react-hooks';
-import {COLOR, DARK, MAP_DELTA_LOW, LIGHT, ORANGE, MEDIUM} from '../../../../res/constants';
+import {DARK, MAP_DELTA_LOW, LIGHT, ORANGE, MEDIUM} from '../../../../res/constants';
 import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../../components';
+import {COLOR, FONT, FONT_SIZE, SIZE} from '../../../../res/variables';
+import {YellowButton} from '../../../../revamp';
 import {onError} from '../../../../util/ErrorUtility';
 import {PATCH_USER_CHANGE_PASSWORD} from '../../../../graphql';
 
@@ -76,7 +78,7 @@ const ChangePassword = ({navigation, session}) => {
         <Text style={styles.label}>Current Password</Text>
         <TextInput
           value={currentPassword}
-          onChangeText={value => setCurrentPassword(value)}
+          onChangeText={(value) => setCurrentPassword(value)}
           style={styles.input}
           placeholder="Current Password"
           secureTextEntry
@@ -87,7 +89,7 @@ const ChangePassword = ({navigation, session}) => {
         <Text style={styles.label}>New Password</Text>
         <TextInput
           value={newPassword}
-          onChangeText={value => setNewPassword(value)}
+          onChangeText={(value) => setNewPassword(value)}
           style={styles.input}
           placeholder="New Password"
           secureTextEntry
@@ -98,7 +100,7 @@ const ChangePassword = ({navigation, session}) => {
         <Text style={styles.label}>Repeat Password</Text>
         <TextInput
           value={repeatPassword}
-          onChangeText={value => setRepeatPassword(value)}
+          onChangeText={(value) => setRepeatPassword(value)}
           style={styles.input}
           placeholder="Repeat Password"
           secureTextEntry
@@ -106,27 +108,20 @@ const ChangePassword = ({navigation, session}) => {
         />
       </ScrollView>
       {/*-------------------- CONFIRM BUTTON --------------------*/}
-      <TouchableHighlight onPress={onSubmit} underlayColor={COLOR} style={styles.submitBox}>
-        <View style={styles.submit}>
-          <Text style={{color: COLOR, fontSize: 20}}>Confirm</Text>
-        </View>
-      </TouchableHighlight>
+      <YellowButton onPress={onSubmit} label="Change Password" style={{margin: SIZE.MARGIN}} />
     </View>
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   session: state.session,
 });
 
-const mapDispatchToProps = dispatch => ({
-  createSession: payload => dispatch({type: 'CREATE_SESSION', payload}),
+const mapDispatchToProps = (dispatch) => ({
+  createSession: (payload) => dispatch({type: 'CREATE_SESSION', payload}),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(ChangePassword);
+export default connect(mapStateToProps, mapDispatchToProps)(ChangePassword);
 
 const styles = StyleSheet.create({
   container: {
@@ -140,33 +135,31 @@ const styles = StyleSheet.create({
     height: 60,
     flexDirection: 'row',
     paddingHorizontal: 20,
-    backgroundColor: COLOR,
+    backgroundColor: COLOR.YELLOW,
     borderRadius: 10,
     alignItems: 'center',
   },
   input: {
-    marginHorizontal: 20,
-    borderWidth: 1,
-    borderColor: MEDIUM,
+    marginHorizontal: SIZE.MARGIN,
     borderRadius: 5,
-    paddingLeft: 20,
+    paddingLeft: SIZE.MARGIN,
     height: 50,
     color: DARK,
+    backgroundColor: COLOR.LIGHT,
   },
   label: {
-    marginHorizontal: 20,
-    marginTop: 20,
-    marginBottom: 5,
-    fontSize: 12,
-    color: DARK,
-    fontFamily: 'Rubik-Medium',
+    marginHorizontal: SIZE.MARGIN,
+    marginTop: SIZE.MARGIN,
+    marginBottom: 2,
+    color: COLOR.BLACK,
+    fontFamily: FONT.BOLD,
   },
   submitBox: {
-    margin: 20,
+    margin: SIZE.MARGIN,
     borderRadius: 10,
   },
   submit: {
-    backgroundColor: DARK,
+    backgroundColor: COLOR.YELLOW,
     height: 50,
     borderRadius: 10,
     justifyContent: 'center',

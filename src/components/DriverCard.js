@@ -17,6 +17,7 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 import {COLOR, DARK, MEDIUM, ORANGE, LIGHT, COLOR_UNDERLAY} from '../res/constants';
+import {FONT, FONT_SIZE} from '../res/variables';
 
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
@@ -67,7 +68,7 @@ export const DriverCard = ({driver}) => {
             borderColor: MEDIUM,
           }}>
           <Fontisto name="motorcycle" size={18} color={DARK} style={styles.iconBox} />
-          <Text style={{marginLeft: 10, color: DARK, fontFamily: 'Rubik-Medium'}}>
+          <Text style={{marginLeft: 10, color: DARK, fontFamily: FONT.BOLD}}>
             {labels[0]} <Text style={{color: ORANGE}}>{labels[1]}</Text>
           </Text>
         </View>
@@ -108,8 +109,8 @@ export const DriverCard = ({driver}) => {
 
           {/*------------------- NAME -------------------*/}
           <View style={{flex: 1, marginRight: 10}}>
-            <Text style={{fontFamily: 'Rubik-Medium'}}>{`${firstName} ${lastName}`}</Text>
-            <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 12}}>{driver.user.username}</Text>
+            <Text style={{fontFamily: FONT.BOLD}}>{`${firstName} ${lastName}`}</Text>
+            <Text style={{paddingRight: 10, color: MEDIUM}}>{driver.user.username}</Text>
           </View>
 
           {/*------------------- DIALER BUTTON -------------------*/}

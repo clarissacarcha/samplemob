@@ -5,26 +5,20 @@ export const MAPS_API_KEY = 'AIzaSyDhlw6pbriuwr_Mb6KYkVlBar7KD1KTrOs';
 // export const PROTOCOL = 'https';
 // export const HOST_PORT = 'graphql.toktok.ph:2096';
 
-export const PROTOCOL = 'http';
-// export const HOST_PORT = '192.168.0.102:3000'; // Myutini
-export const HOST_PORT = '35.173.0.77:3088'; // Marketing Server
-
-export const COLORS = {
+export const COLOR = {
+  WHITE: '#FFFFFF', // View backgroundColor
+  LIGHT: '#F7F7FA', // Form backgroundColor and item separator
+  MEDIUM: '#D3D3D3', // Placeholder Color
+  DARK: '#808080', // Text and Icons
+  BLACK: '#222222', // Text and Icons
   YELLOW: '#FDBA1C',
   ORANGE: '#F5841F',
-  LIGHT: '#D3D3D3',
-  MEDIUM: '#808080',
-  DARK: '#222222',
-  WHITE: '#FFFFFF',
-  TRANSPARENT_YELLOW: 'rgba(256,186,28, 0.1)',
-  TRANSPARENT_GRAY: 'rgba(204,204,204,0.2)',
-  LIGHT_YELLOW: '#F9C344',
+  YELLOW_UNDERLAY: '#96641e', //TouchableHightlight underlayColor for YELLOW background
+  WHITE_UNDERLAY: '#FDBA1C', //TouchableHightlight underlayColor for WHITE background
+  TRANSPARENT_YELLOW: 'rgba(256,186,28, 0.15)',
 };
 
-export const FONTS = {
-  LIGHT: 'Jost-Light',
-  MEDIUM: 'Jost-Medium',
-  SEMIBOLD: 'Jost-SemiBold',
+export const FONT = {
   REGULAR: 'FiraSans-Regular',
   BOLD: 'FiraSans-Bold',
 };
@@ -37,81 +31,31 @@ export const FONT_SIZE = {
   XL: 17,
 };
 
-export const SIZES = {
-  XS: 9,
-  S: 11,
-  M: 13,
-  L: 15,
-  XL: 17,
-};
-
-// export const SIZES = {
-//   XS: 10,
-//   S: 12,
-//   M: 14,
-//   L: 16,
-//   XL: 18,
-// };
-
-export const NUMBERS = {
+export const SIZE = {
+  BUTTON_HEIGHT: 50,
+  FORM_HEIGHT: 50,
   BORDER_RADIUS: 5,
-  MARGIN_HORIZONTAL: 20,
-  SHADOW: {
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+  MARGIN: 16,
+};
+
+export const SHADOW = {
+  shadowColor: '#000',
+  shadowOffset: {
+    width: 0,
+    height: 2,
   },
+  shadowOpacity: 0.25,
+  shadowRadius: 3.84,
+  elevation: 5,
 };
-
-export const BUTTON_HEIGHT = 50;
-export const INPUT_HEIGHT = 50;
-
-export const BUTTON_ORANGE = '#FDBA1C';
-
-/**
- * LEGACY CONSTANTS
- */
-
-export const COLOR = '#FDBA1C'; //YELLOW
-export const COLOR_UNDERLAY = 'rgba(256,186,28, 0.1)';
-export const ORANGE = '#F5841F';
-export const DARK = '#222222';
-export const MEDIUM = 'gray';
-export const LIGHT = '#D3D3D3';
-export const DIRTY_WHITE = 'rgba(204,204,204,0.2)';
-export const FONT_COLOR = '#2E2D32';
-
-// export const FONT_SIZE = 10;
-// export const SIZES = 10;
-export const FONT_SIZE_SMALL = 10;
-export const FONT_SIZE_MEDIUM = 12;
-export const FONT_SIZE_LARGE = 14;
-
-export const FONT_FAMILY = 'Rubik-Regular';
-export const FONT_STYLE = {
-  fontSize: SIZES,
-  fontFamily: FONT_FAMILY,
-  color: FONT_COLOR,
-};
-
-export const FONT_DEFAULT = 'Jost';
-export const FONT_REGULAR = `${FONT_DEFAULT}-Regular`;
-export const FONT_MEDIUM = `${FONT_DEFAULT}-Medium`;
-export const FONT_LIGHT = `${FONT_DEFAULT}-Light`;
-export const FONT_BOLD = `${FONT_DEFAULT}-Bold`;
-export const FONT_SEMIBOLD = `${FONT_DEFAULT}-SemiBold`;
 
 export const MAP_DELTA = {
-  latitudeDelta: 0.015,
-  longitudeDelta: 0.0121,
-};
-
-export const MAP_DELTA_LOW = {
-  latitudeDelta: 0.0032216430310114674,
-  longitudeDelta: 0.002014003694029043,
+  HIGH: {
+    latitudeDelta: 0.015,
+    longitudeDelta: 0.0121,
+  },
+  LOW: {
+    latitudeDelta: 0.0032216430310114674,
+    longitudeDelta: 0.002014003694029043,
+  },
 };

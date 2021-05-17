@@ -3,8 +3,33 @@ import {connect} from 'react-redux';
 import {View, StyleSheet, Text, TextInput, Switch} from 'react-native';
 import {LIGHT, COLOR, FONT_REGULAR, FONT_MEDIUM} from '../../../../../res/constants';
 
-const PabiliForm = ({value, onChange}) => {
+const PabiliForm = ({value, onChange, onAmountChange, constants}) => {
+  const maxValue = constants.maxCashOnDelivery;
+
   const [switchState, setSwitchState] = useState(false);
+  const [amount, setAmount] = useState(0);
+
+  const onCashOnDeliveryValueChange = (value) => {
+    const decimal = value.split('.')[1];
+
+    if (value && decimal) {
+      if (decimal.toString().length > 2) {
+        setAmount(amount); //force no change
+        onAmountChange(amount);
+        return;
+      }
+    }
+
+    if (parseFloat(value) >= parseFloat(maxValue)) {
+      setAmount(maxValue); //force max amount
+      onAmountChange(maxValue);
+
+      return;
+    }
+
+    setAmount(value);
+    onAmountChange(value);
+  };
 
   const onValueChange = (value) => {
     setSwitchState(value);
@@ -30,8 +55,8 @@ const PabiliForm = ({value, onChange}) => {
       {switchState && (
         <TextInput
           style={styles.input}
-          value={value}
-          onChangeText={onChange}
+          value={amount}
+          onChangeText={onCashOnDeliveryValueChange}
           placeholder="Max Amount: 2000"
           placeholderTextColor={LIGHT}
         />
@@ -41,7 +66,7 @@ const PabiliForm = ({value, onChange}) => {
 };
 
 const mapStateToProps = (state) => ({
-  session: state.session,
+  constants: state.constants,
 });
 
 export default connect(mapStateToProps, null)(PabiliForm);
