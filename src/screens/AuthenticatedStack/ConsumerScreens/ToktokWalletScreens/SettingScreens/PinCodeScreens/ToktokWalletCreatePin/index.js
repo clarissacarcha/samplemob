@@ -66,7 +66,7 @@ const ToktokWalletCreatePin = ({navigation,route})=> {
         headerLeft: ()=> <HeaderBack pageIndex={pageIndex} setPageIndex={setPageIndex} navigation={navigation} walletinfo={walletinfo}/>,
         headerTitle: ()=> <HeaderTitle label={['','']}/>,
         headerRight: ()=> <TouchableHighlight style={{paddingRight: 16}} underlayColor={'white'} onPress={cancelSetup}>
-                              <View style={{paddingVertical: 20}}>
+                              <View style={{justifyContent:"center",alignItems:"center"}}>
                                 <Text style={{fontSize: SIZES.M,fontFamily: FONTS.REGULAR ,color:'#929191'}}>Cancel</Text>
                               </View>
                           </TouchableHighlight>

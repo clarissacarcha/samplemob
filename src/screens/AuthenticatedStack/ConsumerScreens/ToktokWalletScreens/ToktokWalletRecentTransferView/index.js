@@ -25,7 +25,7 @@ const ToktokWalletRecentTransferView = ({navigation,route})=> {
 
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack color={COLORS.YELLOW}/>,
-        headerTitle: ()=> <HeaderTitle label={['Recent Outgoing Transfer']} />,
+        headerTitle: ()=> <HeaderTitle label={['Outgoing Transfer']} />,
     })
 
     const recentTransfer = route.params.recentTransfer

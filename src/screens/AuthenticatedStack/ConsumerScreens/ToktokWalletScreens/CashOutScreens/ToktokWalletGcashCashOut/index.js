@@ -126,10 +126,10 @@ const ToktokWalletGcashCashOut = ({navigation,route})=> {
             cashoutLogParams={cashoutLogParams}
         />
         <Separator />
-        <KeyboardAvoidingView  
+        <View  
             // keyboardVerticalOffset={Platform.OS == "ios" ? 90 : 90} 
-            keyboardVerticalOffset={90}  
-            behavior={Platform.OS === "ios" ? "padding" : "height"}  
+            // keyboardVerticalOffset={90}  
+            // behavior={Platform.OS === "ios" ? "padding" : "height"}  
             style={styles.container}
         >
 
@@ -170,7 +170,7 @@ const ToktokWalletGcashCashOut = ({navigation,route})=> {
                     }
             </View>
             </View>
-        </KeyboardAvoidingView> 
+        </View> 
         </>
     )
 }

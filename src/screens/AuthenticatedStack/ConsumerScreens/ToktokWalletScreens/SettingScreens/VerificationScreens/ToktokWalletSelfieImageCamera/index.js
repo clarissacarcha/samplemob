@@ -4,12 +4,12 @@ import {RNCamera} from 'react-native-camera';
 import FIcon from 'react-native-vector-icons/Feather'
 import { COLOR, COLORS, FONTS, FONT_MEDIUM, SIZES } from '../../../../../../../res/constants';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
+import EIcon from 'react-native-vector-icons/EvilIcons'
 
 const {width,height} = Dimensions.get("window")
 
 const CROP_AREA_WIDTH = width * 0.70;
 const CROP_AREA_HEIGHT = CROP_AREA_WIDTH;
-
 
 const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
 
@@ -60,9 +60,11 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
       const onFacesDetected = async (e)=> {
 
         const result = {
-            x: e.faces[0].bounds.origin.x / 2,
+            // x: e.faces[0].bounds.origin.x / 2,
+            x: e.faces[0].bounds.origin.x,
             y: e.faces[0].bounds.origin.y,
-            width: e.faces[0].bounds.size.width + ( e.faces[0].bounds.origin.x / 2),
+            // width: e.faces[0].bounds.size.width + ( e.faces[0].bounds.origin.x / 2),
+            width: e.faces[0].bounds.size.width,
             height: e.faces[0].bounds.size.height,
             rotateX: e.faces[0].yawAngle,
             rotateY: e.faces[0].rollAngle,
@@ -178,7 +180,7 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
                     }
 
 
-                <View style={{flex: 1,justifyContent:"center",alignItems:"center",backgroundColor:"transparent",marginBottom: 150,}}>
+                <View style={{flex: 1,justifyContent:"center",alignItems:"center",backgroundColor:"transparent",marginBottom: 50,}}>
                     <View style={styles.cameraBox} onLayout={(event)=>{
                          const layout = event.nativeEvent.layout;
                          setBoundary(layout)
@@ -212,6 +214,22 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
                     : <FIcon5 style={{marginTop: 10}} size={30} color={COLORS.YELLOW} name={message.icon}/>
                 }
         </View> */}
+
+                {/* <View
+                    style={{
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        position: 'absolute',
+                        bottom: 0,
+                        width: '100%',
+                        marginBottom: 20,
+                    }}>
+                    <TouchableOpacity onPress={() => takePicture()} style={styles.capture}>
+                        <View style={styles.inCapture}>
+                            <EIcon name="camera" color={COLORS.YELLOW} size={40} />
+                        </View>
+                    </TouchableOpacity>
+                </View> */}
 
     </View>
     )
@@ -266,7 +284,23 @@ const styles = StyleSheet.create({
         borderRadius: 100,
         height: 35,
         width: 35,
-    }
+    },
+    capture: {
+        height: 60,
+        width: 60,
+        borderRadius: 30,
+        backgroundColor: COLORS.YELLOW,
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+    inCapture: {
+        height: 50,
+        width: 50,
+        borderRadius: 25,
+        backgroundColor: 'white',
+        justifyContent:"center",
+        alignItems:"center"
+    },
 })
 
 export default ToktokWalletSelfieImageCamera

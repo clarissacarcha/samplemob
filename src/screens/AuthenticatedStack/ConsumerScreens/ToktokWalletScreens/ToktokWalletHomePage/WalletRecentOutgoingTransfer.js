@@ -44,7 +44,7 @@ const WalletRecentOutgoingTransfer = ({walletinfo})=> {
     return (
         <>
         <View style={styles.container}>
-            <Text style={styles.title}>Recent Outgoing Transfer</Text>
+            <Text style={styles.title}>Outgoing Transfer</Text>
             <View style={{flexDirection:"row",marginTop: 10,borderBottomColor:"silver",borderBottomWidth: .2,paddingBottom: 10}}>
                     <View style={{flex: 1,alignItems:"flex-start"}}>
                         <Text style={{fontSize: SIZES.M,fontFamily: FONTS.BOLD,color: COLORS.DARK}}>{moment(recentTransfer.createdAt).tz('Asia/Manila').format('MMM DD, YYYY')}</Text>

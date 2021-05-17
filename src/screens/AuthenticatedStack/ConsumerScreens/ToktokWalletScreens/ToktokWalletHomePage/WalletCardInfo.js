@@ -39,7 +39,7 @@ const WalletCardInfo = ({walletinfo})=> {
     return (
        <View style={styles.container}>
            <HeaderImageBackground>
-               <HeaderTitle isLogo={true} />
+               <HeaderTitle isLogo={true} headerBackLabel="Home"/>
                <View style={{height: 28}}/>
                 <View style={styles.walletContent}>
                     <View>
@@ -76,6 +76,7 @@ const WalletCardInfo = ({walletinfo})=> {
 
 const styles = StyleSheet.create({
     container: {
+        // height: 215, // ios
         height: 255,
         width: width,
     },

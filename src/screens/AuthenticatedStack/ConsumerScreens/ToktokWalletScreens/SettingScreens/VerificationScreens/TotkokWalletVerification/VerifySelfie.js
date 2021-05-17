@@ -46,8 +46,6 @@ const VerifySelfie = ()=> {
         </View>
     )
 
-
-
     return (
         <>
             <View style={styles.content}>

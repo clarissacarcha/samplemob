@@ -34,7 +34,7 @@ const ToktokWalletSettings = ({navigation , route })=> {
         <>
         <Separator />
         <View style={styles.container}>
-            <SettingOption route="ToktokWalletVerifySetup" icon={require('../../../../../../assets/icons/walletVerify.png')} title="Verify User" subtitle="Verify your toktokwallet."/>
+            <SettingOption route="ToktokWalletVerifySetup" params={{walletinfo: walletinfo}} icon={require('../../../../../../assets/icons/walletVerify.png')} title="Verify User" subtitle="Verify your toktokwallet."/>
             {
                 walletinfo.isHold
                 ? <SettingOption route="ToktokWalletRecoveryMethods" 

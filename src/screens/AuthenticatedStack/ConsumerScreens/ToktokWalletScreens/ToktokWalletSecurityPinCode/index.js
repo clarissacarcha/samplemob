@@ -107,7 +107,7 @@ const ToktokWalletSecurityPinCode = ({navigation,route})=> {
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS == "ios" ? "padding" : "height"}
-            keyboardVerticalOffset={Platform.OS == "ios" ? 50 : 10} 
+            keyboardVerticalOffset={Platform.OS == "ios" ? 40 : 10} 
             style={styles.container}
         >
 
@@ -186,7 +186,8 @@ const styles = StyleSheet.create({
     proceedBtn: {
         height: 70,
         width: "100%",
-        padding: 16
+        padding: 16,
+        justifyContent:"flex-end"
     },
 })
 

@@ -1,5 +1,5 @@
 import React, {useState,useCallback, useEffect} from 'react'
-import {StyleSheet,View,Text,TouchableOpacity,Dimensions,Image,TouchableHighlight,Platform} from 'react-native'
+import {StyleSheet,View,Text,TouchableOpacity,Dimensions,Image,TouchableHighlight,Platform,SafeAreaView} from 'react-native'
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import { RNCamera } from 'react-native-camera';
 import {COLORS, FONTS, SIZES} from '../../../../../../res/constants'
@@ -117,7 +117,7 @@ const ToktokWalletScanQR = ({navigation,route})=> {
     }
 
     const customMarker = ()=> (
-        <View style={styles.customMarker}>
+        <SafeAreaView style={styles.customMarker}>
             {/* <TouchableOpacity onPress={()=>navigation.goBack()} style={{top: Platform.OS === "android" ? 60 : 80, left: 0,position:"absolute"}}>
              <FIcon name="chevron-left" size={30} color={'white'} /> 
             </TouchableOpacity> */}
@@ -151,7 +151,7 @@ const ToktokWalletScanQR = ({navigation,route})=> {
 
     
         
-        </View>
+        </SafeAreaView>
     )
 
     return (
@@ -173,7 +173,7 @@ const ToktokWalletScanQR = ({navigation,route})=> {
                                         backgroundColor: "rgba(0,0,0,0.5)"
                                     }}
                                     cameraStyle={{
-                                        height: "100%",
+                                        height: height,
                                         backgroundColor: "rgba(0,0,0,0.5)"
                                     }}
                                 />
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
     },
     backBtn: {
         backgroundColor:"#FFFFFF",
-        top: Platform.OS === "android" ? 20 : 60, 
+        top: 20, 
         left: 16,
         position:"absolute",
         zIndex: 1,

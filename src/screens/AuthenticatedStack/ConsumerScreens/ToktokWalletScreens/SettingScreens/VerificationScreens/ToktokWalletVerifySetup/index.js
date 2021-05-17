@@ -59,28 +59,31 @@ const ToktokWalletVerifySetup = ({navigation,route})=> {
 
     const session = useSelector(state=>state.session)
 
-    const {data,error,loading} = useQuery(GET_TOKTOK_WALLET,{
-        fetchPolicy: 'network-only',
-        variables: {
-            input: {
-                userId: session.user.id
-            }
-        }
-    })
+    const walletinfo = route.params.walletinfo
 
-    if (loading) {
-        return (
-          <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            <ActivityIndicator size={24} color={COLORS.YELLOW} />
-          </View>
-        );
-    }
+    // const {data,error,loading} = useQuery(GET_TOKTOK_WALLET,{
+    //     fetchPolicy: 'network-only',
+    //     variables: {
+    //         input: {
+    //             userId: session.user.id
+    //         }
+    //     }
+    // })
 
-    if (error) {
-        return <SomethingWentWrong />;
-    }
+    // if (loading) {
+    //     // return (
+    //     //   <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+    //     //     <ActivityIndicator size={24} color={COLORS.YELLOW} />
+    //     //   </View>
+    //     // );
+    //     return null
+    // }
 
-    if(!data.getToktokWallet.record.toktokWalletKYC) {
+    // if (error) {
+    //     return <SomethingWentWrong />;
+    // }
+
+    if(!walletinfo.toktokWalletKYC) {
         return (
             <MainComponent route="ToktokWalletVerification">
                  <Text style={styles.verifyWalletText}>Verify your <Text style={{color: COLORS.YELLOW}}>toktok</Text><Text style={{color: COLORS.ORANGE}}>wallet</Text></Text>
@@ -95,7 +98,7 @@ const ToktokWalletVerifySetup = ({navigation,route})=> {
         )
     }
 
-    if(data.getToktokWallet.record.toktokWalletKYC.status == 0){
+    if(walletinfo.toktokWalletKYC.status == 0){
         return (
             <>
             <MainComponent>
@@ -109,7 +112,7 @@ const ToktokWalletVerifySetup = ({navigation,route})=> {
         )
     }
 
-    if(data.getToktokWallet.record.toktokWalletKYC.status == 1){
+    if(walletinfo.toktokWalletKYC.status == 1){
         return (
             <>
             <MainComponent>
@@ -123,7 +126,7 @@ const ToktokWalletVerifySetup = ({navigation,route})=> {
         )
     }
 
-    if(data.getToktokWallet.record.toktokWalletKYC.status == 2) {
+    if(walletinfo.toktokWalletKYC.status == 2) {
         return (
             <MainComponent route="ToktokWalletVerification">
                 <Text style={styles.verifyWalletText}>Verification of your <Text style={{color: COLORS.YELLOW}}>toktok</Text><Text style={{color: COLORS.ORANGE}}> wallet!</Text> Failed!</Text>

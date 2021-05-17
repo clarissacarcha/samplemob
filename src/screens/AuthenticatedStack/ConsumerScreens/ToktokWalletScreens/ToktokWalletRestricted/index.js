@@ -20,7 +20,7 @@ const ToktokWalletRestricted = ({navigation,route})=> {
                 return <SecurewithPIN navigation={navigation} walletinfo={route.params.walletinfo}/>
             case "notVerified":
                 navigation.pop()
-                return navigation.navigate("ToktokWalletVerifySetup")
+                return navigation.navigate("ToktokWalletVerifySetup", {walletinfo: route.params.walletinfo})
             default:
                 break
         }

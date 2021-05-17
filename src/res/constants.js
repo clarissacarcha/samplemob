@@ -6,7 +6,7 @@ export const MAPS_API_KEY = 'AIzaSyDhlw6pbriuwr_Mb6KYkVlBar7KD1KTrOs';
 // export const HOST_PORT = 'graphql.toktok.ph:2096';
 
 export const PROTOCOL = 'http';
-export const HOST_PORT = '192.168.0.107:3000'; // Myutini
+export const HOST_PORT = '192.168.0.106:3000'; // Myutini
 // export const HOST_PORT = '35.173.0.77:3088'; // Marketing Server
 
 export const COLORS = {
