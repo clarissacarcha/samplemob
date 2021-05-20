@@ -10,6 +10,8 @@ export const HOST_PORT = 'stg-graphql.toktok.ph:2096';
 // export const HOST_PORT = '192.168.0.106:3000'; // Myutini
 // export const HOST_PORT = '35.173.0.77:3088'; // Marketing Server
 
+export const TOKTOK_WALLET_PROTOCOL_HOST_PORT = 'http://192.168.0.106:3000';
+
 export const COLORS = {
   YELLOW: '#FDBA1C',
   ORANGE: '#F5841F',
