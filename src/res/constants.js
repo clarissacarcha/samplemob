@@ -10,7 +10,8 @@ export const PROTOCOL = 'http';
 export const HOST_PORT = '192.168.0.106:3000'; // Myutini
 // export const HOST_PORT = '35.173.0.77:3088'; // Marketing Server
 
-export const TOKTOK_WALLET_PROTOCOL_HOST_PORT = 'http://192.168.0.106:3000';
+export const TOKTOK_WALLET_PROTOCOL = 'http';
+export const TOKTOK_WALLET_PROTOCOL_HOST_PORT = '192.168.0.106:3100';
 
 export const COLORS = {
   YELLOW: '#FDBA1C',

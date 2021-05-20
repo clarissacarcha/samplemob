@@ -1,9 +1,12 @@
-import React , {useState,useContext} from 'react'
+import React , {useState,useContext,useEffect} from 'react'
 import {Modal,View,Text,StyleSheet,FlatList,TouchableOpacity,TextInput} from 'react-native'
 import {VerifyContext} from './VerifyContextProvider'
 import FIcon from 'react-native-vector-icons/Feather';
 import { SIZES, INPUT_HEIGHT, FONTS, COLORS } from '../../../../../../../res/constants';
 import {Separator} from '../../../Components';
+import {useQuery,useLazyQuery} from '@apollo/react-hooks'
+import { TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT } from '../../../../../../../graphql'
+import { GET_COUNTRIES } from '../../../../../../../graphql/toktokwallet/virtual'
 
 const nationalities = [
     "Afghan",
@@ -205,6 +208,34 @@ const nationalities = [
 const ModalNationality = ({visible,setVisible})=> {
     const {setNationality} = useContext(VerifyContext)
     const [filteredNationalities,setFilteredNationalities] = useState(nationalities)
+
+    const [getCountries , {data, error , loading}] = useLazyQuery(GET_COUNTRIES, {
+        client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT,
+        fetchPolicy:"network-only",
+        onCompleted:(response)=> {
+            console.log(response)
+        },
+        onError: (error)=> {
+            console.log(error)
+        }
+    })
+    
+
+    useEffect(()=> {
+        getCountries()
+    },[])
+
+    // if(loading){
+    //     return null // render loading or activityindicator
+    // }
+
+    // if(error){
+    //     // return <Text>Something Went Wrong</Text>
+    //     return null
+    // }
+
+    // console.log(TOKTOK_WALLET_GRAPHQL_CLIENT)
+
 
 
     const selectNationality = (index)=> {

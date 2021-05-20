@@ -1,5 +1,5 @@
 import {ApolloLink, split, fromPromise} from 'apollo-link';
-import {HOST_PORT, PROTOCOL} from '../../res/constants';
+import {HOST_PORT, PROTOCOL , TOKTOK_WALLET_PROTOCOL ,TOKTOK_WALLET_PROTOCOL_HOST_PORT } from '../../res/constants';
 import {onError} from 'apollo-link-error';
 import {ApolloClient} from 'apollo-client';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -11,6 +11,9 @@ import {setContext} from 'apollo-link-context';
 
 const baseUrl = `${PROTOCOL}://${HOST_PORT}/`;
 const wsUrl = `ws://${HOST_PORT}/graphql`;
+
+
+const toktokWalletBaseUrl = `${TOKTOK_WALLET_PROTOCOL}://${TOKTOK_WALLET_PROTOCOL_HOST_PORT}/`;
 
 // const errorLink = onError(({graphQLErrors, networkError}) => {
 //   if (graphQLErrors) {
@@ -95,11 +98,11 @@ const authUploadLink = createUploadLink({
 });
 
 const toktokWalletGraphqlUploadLink = createUploadLink({
-  uri: `${baseUrl}auth/graphql/`,
+  uri: `${toktokWalletBaseUrl}graphql/`,
 });
 
 const toktokWalletEnterpriseGraphqlUploadLink = createUploadLink({
-  uri: `${baseUrl}auth/graphql/`,
+  uri: `${toktokWalletBaseUrl}enterprise/graphql/`,
 });
 
 const splitLink = split(({query}) => {
