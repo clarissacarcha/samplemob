@@ -60,11 +60,13 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
       const onFacesDetected = async (e)=> {
 
         const result = {
-            // x: e.faces[0].bounds.origin.x / 2,
-            x: e.faces[0].bounds.origin.x,
+            // // x: e.faces[0].bounds.origin.x / 2,
+            // x: e.faces[0].bounds.origin.x,
+            x: Platform.OS === "ios" ? e.faces[0].bounds.origin.x : e.faces[0].bounds.origin.x / 2,
             y: e.faces[0].bounds.origin.y,
-            // width: e.faces[0].bounds.size.width + ( e.faces[0].bounds.origin.x / 2),
-            width: e.faces[0].bounds.size.width,
+            // // width: e.faces[0].bounds.size.width + ( e.faces[0].bounds.origin.x / 2),
+            // width: e.faces[0].bounds.size.width,
+            width: Platform.OS === "ios" ? e.faces[0].bounds.size.width : e.faces[0].bounds.size.width + ( e.faces[0].bounds.origin.x / 2),
             height: e.faces[0].bounds.size.height,
             rotateX: e.faces[0].yawAngle,
             rotateY: e.faces[0].rollAngle,

@@ -216,7 +216,7 @@ const VerifyFullname = ()=> {
                                 </TouchableOpacity>
                             </View>
                     </View>
-                    <View style={{marginBottom: 16,marginTop: 20,}}>
+                    <View style={{marginBottom: 16,marginTop: 20,height: 70}}>
                     <YellowButton label="Next" onPress={NextPage}/>
                     </View>
                     

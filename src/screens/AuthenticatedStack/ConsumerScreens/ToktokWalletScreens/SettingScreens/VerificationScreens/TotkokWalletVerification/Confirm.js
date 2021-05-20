@@ -90,30 +90,51 @@ const Confirm = ()=> {
         //     }
         // })
 
-        postToktokWalletKYC({
-            variables: {
-                input: {
-                    mobileNumber: VerifyUserData.contactInfo.mobile_number,
-                    emailAddress: VerifyUserData.contactInfo.email,
-                    firstName: VerifyUserData.person.firstName,
-                    middleName: VerifyUserData.person.middleName,
-                    lastName: VerifyUserData.person.lastName,
-                    birthdate: VerifyUserData.birthInfo.birthdate,
-                    birthPlace: VerifyUserData.birthInfo.birthPlace,
-                    selfieImage: rnSelfieFile,
-                    nationality:  VerifyUserData.nationality,
-                    line1: VerifyUserData.address.line1,
-                    line2: VerifyUserData.address.line2,
-                    postalCode: VerifyUserData.address.zipCode,
-                    cityId: VerifyUserData.address.cityId,
-                    provinceId: VerifyUserData.address.provinceId,
-                    frontImage: rnFrontIDFile,
-                    backImage: rnBackIDFile,
-                    identificationCardNumber: VerifyUserData.verifyID.idNumber,
-                    identificationCardId: VerifyUserData.verifyID.idID,
-                }
-            }
-        })
+        console.log(JSON.stringify({
+            // mobileNumber: VerifyUserData.contactInfo.mobile_number,
+            // emailAddress: VerifyUserData.contactInfo.email,
+            // firstName: VerifyUserData.person.firstName,
+            // middleName: VerifyUserData.person.middleName,
+            // lastName: VerifyUserData.person.lastName,
+            // birthdate: VerifyUserData.birthInfo.birthdate,
+            // birthPlace: VerifyUserData.birthInfo.birthPlace,
+            selfieImage: rnSelfieFile,
+            // nationality:  VerifyUserData.nationality,
+            // line1: VerifyUserData.address.line1,
+            // line2: VerifyUserData.address.line2,
+            // postalCode: VerifyUserData.address.zipCode,
+            // cityId: VerifyUserData.address.cityId,
+            // provinceId: VerifyUserData.address.provinceId,
+            frontImage: rnFrontIDFile,
+            backImage: rnBackIDFile,
+            // identificationCardNumber: VerifyUserData.verifyID.idNumber,
+            // identificationCardId: VerifyUserData.verifyID.idID,
+        }))
+
+        // postToktokWalletKYC({
+        //     variables: {
+        //         input: {
+        //             mobileNumber: VerifyUserData.contactInfo.mobile_number,
+        //             emailAddress: VerifyUserData.contactInfo.email,
+        //             firstName: VerifyUserData.person.firstName,
+        //             middleName: VerifyUserData.person.middleName,
+        //             lastName: VerifyUserData.person.lastName,
+        //             birthdate: VerifyUserData.birthInfo.birthdate,
+        //             birthPlace: VerifyUserData.birthInfo.birthPlace,
+        //             selfieImage: rnSelfieFile,
+        //             nationality:  VerifyUserData.nationality,
+        //             line1: VerifyUserData.address.line1,
+        //             line2: VerifyUserData.address.line2,
+        //             postalCode: VerifyUserData.address.zipCode,
+        //             cityId: VerifyUserData.address.cityId,
+        //             provinceId: VerifyUserData.address.provinceId,
+        //             frontImage: rnFrontIDFile,
+        //             backImage: rnBackIDFile,
+        //             identificationCardNumber: VerifyUserData.verifyID.idNumber,
+        //             identificationCardId: VerifyUserData.verifyID.idID,
+        //         }
+        //     }
+        // })
     }
 
 
@@ -130,7 +151,7 @@ const Confirm = ()=> {
                         <UserInfo label="Date of Birth" value={moment(VerifyUserData.birthInfo.birthdate).format("MMM DD YYYY")}/>
                         <UserInfo label="Place of Birth" value={VerifyUserData.birthInfo.birthPlace}/>
                         <UserInfo label="Nationality" value={VerifyUserData.nationality}/>
-                        <UserInfo label="Address" value={`${VerifyUserData.address.streetAddress} ${VerifyUserData.address.village} ${VerifyUserData.address.city} ${VerifyUserData.address.province}, ${VerifyUserData.address.country} ${VerifyUserData.address.zipCode}`}/>
+                        <UserInfo label="Address" value={`${VerifyUserData.address.line1} ${VerifyUserData.address.line2} ${VerifyUserData.address.city} ${VerifyUserData.address.province}, ${VerifyUserData.address.country} ${VerifyUserData.address.zipCode}`}/>
                         <UserInfo label="ID Type" value={VerifyUserData.verifyID.idType}/>
                         <UserInfo label="ID number" value={VerifyUserData.verifyID.idNumber}/>
                     <TouchableOpacity 

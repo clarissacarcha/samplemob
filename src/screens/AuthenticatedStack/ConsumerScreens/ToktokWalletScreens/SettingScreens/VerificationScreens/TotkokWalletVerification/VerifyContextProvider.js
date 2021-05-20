@@ -93,10 +93,10 @@ const VerifyContextProvider = ({children})=> {
         country: "Philippines",
         line1: "",
         line2: "",
-        city: "",
-        cityId: null,
         province: "",
         provinceId: null,
+        city: "",
+        cityId: null,
         zipCode: ""
     })
     const [verifyID, setVerifyID] = useState({

@@ -64,13 +64,14 @@ const VerifyID = ()=> {
         if(frontImage == null) return Alert.alert("","Photo of front face of your Valid ID is required.")
         if(isBackRequired && backImage == null)  return Alert.alert("","Photo of back face of your Valid ID is required.")
         // if(verifyID.idImage == null) return Alert.alert("","Photo of Valid ID is required.")
-        setCurrentIndex(oldval => oldval + 2)
+        setCurrentIndex(oldval => oldval + 1)
     }
 
     const ChooseImage = ({placement})=> (
         <TouchableOpacity 
             onPress={()=>{
                //setShowCamera(true)
+               if(verifyID.idType == "") return Alert.alert("","Please select ID Type first")
                 navigation.push("ToktokWalletValidIDCamera",{setImage, placement: placement})
               // navigation.push('ProfileCamera', {label: ["Take","Picture"], setImage});
             }}
@@ -111,7 +112,10 @@ const VerifyID = ()=> {
         // }}
         >
                 <Image resizeMode="cover" style={{height: 175 ,width: 283}} source={{uri: placement == "front" ? frontImage.uri : backImage.uri}} />
-                <TouchableOpacity onPress={()=> navigation.push("ToktokWalletValidIDCamera",{setImage, placement: placement})} style={{position:"absolute",bottom: 15,width: 283,height: 20, justifyContent:"center",alignItems:"center"}}>
+                <TouchableOpacity onPress={()=>{
+                    if(verifyID.idType == "") return Alert.alert("","Please select ID Type first")
+                    navigation.push("ToktokWalletValidIDCamera",{setImage, placement: placement})
+                }} style={{position:"absolute",bottom: 15,width: 283,height: 20, justifyContent:"center",alignItems:"center"}}>
                     <EIcon name="camera" color={COLORS.YELLOW} size={20} />
                     <Text style={{color: COLORS.YELLOW,fontFamily: FONTS.REGULAR,fontSize: SIZES.S,marginTop: -2}}>Change Photo</Text>
                 </TouchableOpacity>
@@ -122,18 +126,32 @@ const VerifyID = ()=> {
         if(isBackRequired){
             return (
                 <>
-                <View style={{flex: 1, paddingVertical: 20, marginTop: 20}}>
-                    <Text>Front of ID</Text>
+                <View style={{flex: 1, paddingVertical: 10, marginTop: 0}}>
+                    <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.M}}>Front of ID</Text>
                     {frontImage ? <ImageIDSet placement="front" /> : <ChooseImage placement="front" />}
                 </View>
-                <View style={{flex: 1, paddingVertical: 8}}>
+                <View style={{flex: 1, paddingVertical: 5}}>
                     <Text>Back of ID</Text>
                     {backImage ? <ImageIDSet placement="back" /> : <ChooseImage placement="back" />}
                 </View>
                 </>
             )
         }else if(!isBackRequired){
-            return <>{frontImage ? <ImageIDSet placement="front" /> : <ChooseImage placement="front" />}</>
+            return <>
+                <View style={{flex: 1, paddingVertical: 10, marginTop: 0}}>
+                    <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.M}}>Front of ID</Text>
+                    {frontImage ? <ImageIDSet placement="front" /> : <ChooseImage placement="front" />}
+                </View>
+
+                {
+                    backImage &&
+                    <View style={{flex: 1, paddingVertical: 5, marginTop: 0}}>
+                        <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.M}}>Back of ID</Text>
+                        {backImage ? <ImageIDSet placement="back" /> : <ChooseImage placement="back" />}
+                    </View>
+
+                }
+            </>
         }
     }
 
@@ -237,12 +255,12 @@ const VerifyID = ()=> {
                             {renderImageSetOptions()}
                         </View>
 
-                   
+                    <View style={styles.proceedBtn}>
+                        <YellowButton label="Next" onPress={Proceed} />
+                    </View>
+               
                 </ScrollView>
 
-                <View style={styles.proceedBtn}>
-                       <YellowButton label="Next" onPress={Proceed} />
-                </View>
                
             </View>
             <BottomSheetIDType ref={IDTypeRef} onChange={(onSelectIdType)} />

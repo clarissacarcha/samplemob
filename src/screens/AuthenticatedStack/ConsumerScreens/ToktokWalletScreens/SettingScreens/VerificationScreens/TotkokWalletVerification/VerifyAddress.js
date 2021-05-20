@@ -3,6 +3,7 @@ import {View,Text,StyleSheet,TouchableOpacity,TextInput,KeyboardAvoidingView,Pla
 import {FONTS, SIZES, INPUT_HEIGHT, BUTTON_HEIGHT, COLORS} from '../../../../../../../res/constants'
 import {VerifyContext} from './VerifyContextProvider'
 import validator from 'validator'
+import EIcon from 'react-native-vector-icons/EvilIcons'
 
 //SELF IMPORTS
 import ModalCountry from './ModalCountry'
@@ -26,6 +27,8 @@ const VerifyAddress = ()=> {
 
         for(const [key,value] of Object.entries(address)){
 
+            console.log(key)
+
             if(key == "provinceId" && value == null || key == "cityId" && value == null) continue;
 
             if (validator.isEmpty(value, {ignore_whitespace: true})) {
@@ -36,16 +39,16 @@ const VerifyAddress = ()=> {
                         field = "Street Address"
                         break
                     case "line2":
-                        field = "Village/Barangay"
+                        field = "Subdivision"
+                        break
+                    case "province":
+                        field = "Province"
                         break
                     case "city":
                         field = "City"
                         break
-                    case "province":
-                        field = "Region/State"
-                        break
                     case "zipcode":
-                        field = "Zip Code"
+                        field = "Postal Code"
                     default:
                         break
                 }
@@ -80,7 +83,7 @@ const VerifyAddress = ()=> {
                             <Text style={styles.labelText}>Country</Text>
                             <View style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center"}]}>
                                 <Text style={{flex: 1,color: "gray",fontSize: SIZES.M,fontFamily: FONTS.REGULAR}}>{address.country}</Text>
-                                <TouchableOpacity
+                                {/* <TouchableOpacity
                                     onPress={()=>setModalCountryVisible(true)}
                                     style={{
                                         paddingHorizontal: 10,
@@ -97,7 +100,7 @@ const VerifyAddress = ()=> {
                                     }}>
                                     <Text style={{color: COLORS.YELLOW,fontFamily: FONTS.REGULAR,fontSize: SIZES.S}}>Change</Text>
                                     </View>
-                                </TouchableOpacity>
+                                </TouchableOpacity> */}
                             </View>
                         </View>
 
@@ -146,61 +149,30 @@ const VerifyAddress = ()=> {
                         </View> */}
 
                         <View style={styles.ViewInput}>
-                            <Text style={styles.labelText}>Region/Province</Text>
-                            <View style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center"}]}>
-                                <Text style={{flex: 1,color: "gray",fontSize: SIZES.M,fontFamily: FONTS.REGULAR}}>{address.province}</Text>
-                                <TouchableOpacity
-                                    onPress={()=>setModalProvinceVisible(true)}
-                                    style={{
-                                        paddingHorizontal: 10,
-                                        borderWidth: 1,
-                                        borderColor: COLORS.YELLOW,
-                                        borderRadius: 5,
-                                        height: 20
-                                    }}
-                                >
-                                    <View style={{
-                                         flex: 1,
-                                         justifyContent:"center",
-                                         alignItems:"center",
-                                    }}>
-                                    <Text style={{color: COLORS.YELLOW,fontFamily: FONTS.REGULAR,fontSize: SIZES.S}}>Change</Text>
-                                    </View>
-                                </TouchableOpacity>
-                            </View>
+                            <Text style={styles.labelText}>Province</Text>
+                            <TouchableOpacity  onPress={()=>setModalProvinceVisible(true)} style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center"}]}>
+                                <Text style={{flex: 1,color: "gray",fontSize: SIZES.M,fontFamily: FONTS.REGULAR}}>{address.province ? address.province : "- Select Province -"}</Text>
+                                <EIcon name="chevron-right" size={24} color="#FCB91A"/>
+                            </TouchableOpacity>
                         </View>
 
 
                         <View style={styles.ViewInput}>
                             <Text style={styles.labelText}>City</Text>
-                            <View style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center"}]}>
-                                <Text style={{flex: 1,color: "gray",fontSize: SIZES.M,fontFamily: FONTS.REGULAR}}>{selectedCity}</Text>
-                                <TouchableOpacity
-                                    onPress={()=>setModalCityVisible(true)}
-                                    style={{
-                                        paddingHorizontal: 10,
-                                        borderWidth: 1,
-                                        borderColor: COLORS.YELLOW,
-                                        borderRadius: 5,
-                                        height: 20
-                                    }}
-                                >
-                                    <View style={{
-                                         flex: 1,
-                                         justifyContent:"center",
-                                         alignItems:"center",
-                                    }}>
-                                    <Text style={{color: COLORS.YELLOW,fontFamily: FONTS.REGULAR,fontSize: SIZES.S}}>Change</Text>
-                                    </View>
-                                </TouchableOpacity>
-                            </View>
+                            <TouchableOpacity onPress={()=>{
+                                if(address.province == "") return Alert.alert("","Please select Province first")
+                                setModalCityVisible(true)
+                            }}  style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center"}]}>
+                                <Text style={{flex: 1,color: "gray",fontSize: SIZES.M,fontFamily: FONTS.REGULAR}}>{selectedCity ? selectedCity : "- Select City -"}</Text>
+                                <EIcon name="chevron-right" size={24} color="#FCB91A"/>
+                            </TouchableOpacity>
                         </View>
 
                         <View style={styles.ViewInput}>
-                            <Text style={styles.labelText}>Zip Code</Text>
+                            <Text style={styles.labelText}>Postal Code</Text>
                             <TextInput 
                                 style={styles.input} 
-                                placeholder="Enter zip code here"
+                                placeholder="Enter postal code here"
                                 value={address.zipCode}
                                 onChangeText={text=>changeAddress("zipCode",text)}
                                 onSubmitEditing={Proceed}
