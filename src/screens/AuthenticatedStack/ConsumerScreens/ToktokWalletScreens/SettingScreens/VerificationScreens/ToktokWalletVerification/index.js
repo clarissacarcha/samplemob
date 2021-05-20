@@ -129,7 +129,7 @@ const MainSetupComponent = ()=> {
 
 }
 
-const TotkokWalletVerification = ()=> {
+const ToktokWalletVerification = ()=> {
     return (
         <VerifyContextProvider>
              <MainSetupComponent/>
@@ -167,4 +167,4 @@ const styles = StyleSheet.create({
       },
 })
 
-export default TotkokWalletVerification
+export default ToktokWalletVerification
