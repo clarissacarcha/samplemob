@@ -6,50 +6,42 @@ import FIcon from 'react-native-vector-icons/Feather';
 import {SIZES, INPUT_HEIGHT, FONTS, COLORS } from '../../../../../../../res/constants';
 import {Separator} from '../../../Components';
 
-const countries = [{
-    "name": "United States of America",
-    "code": "USA",
-    "nationality": "American",
-    id: 1
-}, {
-    "name": "Australia",
-    "code": "AUS",
-    "nationality": "Australian",
-    id: 2
-}, {
-    "name": "Philippines",
-    "code": "PHI",
-    "nationality": "Filipino",
-    id: 3
-}, {
-    "name": "India",
-    "code": "IND",
-    "nationality": "indian",
-    id: 4
-}, {
-    "name": "Spain",
-    "code": "SPA",
-    "nationality": "Spanish",
-    id: 5
-}]
+const provinces = [
+    {id: 1, code: "0128", name:"Ilocos Norte"},
+    {id: 2, code: "0129", name:"Ilocos Sur"},
+    {id: 3, code: "0133", name:"La Union"},
+    {id: 4, code: "0155", name:"Pangasinan"}
+]
 
-const ModalCountry = ({type})=> {
-    const {modalCountryVisible,setModalCountryVisible,changeBirthInfo,changeAddress,changeVerifyID,setNationality} = useContext(VerifyContext)
-    const [filteredCountries,setFilteredCountries] = useState(countries.sort((a,b)=> -1))
+const ModalProvince = ({type, onSelect})=> {
+    const {
+        modalProvinceVisible,
+        setModalProvinceVisible,
+        setModalCityVisible,
+        changeBirthInfo,
+        changeAddress,
+        changeVerifyID,
+        setNationality,
+        cities,
+        changeProvinceCities
+    } = useContext(VerifyContext)
+    const [filteredProvinces,setFilteredProvinces] = useState(provinces.sort((a,b)=> -1))
 
     const selectCountry = (index) => {
-        const country = filteredCountries[index].name
+        const province = filteredProvinces[index].name
         if(type == "birthinfo"){
-            changeBirthInfo("birthPlace", country)
+            changeBirthInfo("birthPlace", province)
         }else if(type == "address"){
-            changeAddress("country", country)
+            changeAddress("province", province)
+            changeAddress("provinceID", filteredProvinces[index].id)
+            getCitiesOfProvince(filteredProvinces[index].code)
         }else if(type == "validID"){
-            changeVerifyID("idCountry",country)
+            changeVerifyID("idCountry",province)
         }else{
-            setNationality(country)
+            setNationality(province)
         }   
-        setModalCountryVisible(false)
-        setFilteredCountries(countries)
+        setModalProvinceVisible(false)
+        setFilteredProvinces(provinces)
     }
 
     const renderCountry = ({item,index})=> {
@@ -61,27 +53,33 @@ const ModalCountry = ({type})=> {
     }
 
     const filterSearch = (value) => {
-        const filtered = countries.filter(country=> country.name.toLowerCase().includes(value.toLowerCase()))
-        setFilteredCountries(filtered)
+        const filtered = provinces.filter(province=> province.name.toLowerCase().includes(value.toLowerCase()))
+        setFilteredProvinces(filtered)
+    }
+
+    const getCitiesOfProvince = (code) => {
+        const provCities = cities.filter(city => city.provCode == code)
+        //RETURN THE DATA
+        onSelect(provCities)
     }
 
     return (
         <Modal
-            visible={modalCountryVisible}
+            visible={modalProvinceVisible}
             onRequestClose={()=>{
-                setModalCountryVisible(false)
-                setFilteredCountries(countries)
+                setModalProvinceVisible(false)
+                setFilteredProvinces(provinces)
             }}
             style={styles.container}
             animationType="slide"
         >
             <View style={styles.content}>
-                <TouchableOpacity onPress={()=>setModalCountryVisible(false)} style={{justifyContent: "center",alignItems:"center"}}>
+                <TouchableOpacity onPress={()=>setModalProvinceVisible(false)} style={{justifyContent: "center",alignItems:"center"}}>
                     <FIcon name="chevron-down" size={20}/>
                 </TouchableOpacity>
                 <View style={styles.search}>
                     <TextInput 
-                        placeholder="Search country"
+                        placeholder="Search province"
                         style={styles.input}
                         onChangeText={filterSearch}
                     />
@@ -91,8 +89,8 @@ const ModalCountry = ({type})=> {
 
                 <FlatList
                         style={{marginVertical: 15,}}
-                        data={filteredCountries}
-                        keyExtractor={country=>country.code}
+                        data={filteredProvinces}
+                        keyExtractor={province=>province.id}
                         renderItem={renderCountry}
                         showsVerticalScrollIndicator={false}
                         // scrollEnabled={true}
@@ -138,4 +136,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default ModalCountry
+export default ModalProvince

@@ -1,4 +1,4 @@
-import React, { useState , useContext } from 'react'
+import React, { useState , useEffect, useContext } from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,TextInput,KeyboardAvoidingView,Platform,ScrollView,Alert} from 'react-native'
 import {FONTS, SIZES, INPUT_HEIGHT, BUTTON_HEIGHT, COLORS} from '../../../../../../../res/constants'
 import {VerifyContext} from './VerifyContextProvider'
@@ -6,29 +6,42 @@ import validator from 'validator'
 
 //SELF IMPORTS
 import ModalCountry from './ModalCountry'
+import ModalProvince from './ModalProvince'
+import ModalCity from './ModalCity'
+
 import { YellowButton } from '../../../../../../../revamp'
+import { add } from 'lodash'
 
 const VerifyAddress = ()=> {
 
-    const {address, setCurrentIndex , changeAddress,setModalCountryVisible} = useContext(VerifyContext)
+    const { address, setCurrentIndex, changeAddress, 
+        setModalCountryVisible, 
+        setModalProvinceVisible, 
+        setModalCityVisible, provinceCities} = useContext(VerifyContext)
     
+    const [cities, setCities] = useState([])
+    const [selectedCity, setSelectedCity] = useState("")
 
     const Proceed = ()=> {
+
         for(const [key,value] of Object.entries(address)){
 
+            if(key == "provinceId" && value == null || key == "cityId" && value == null) continue;
+
             if (validator.isEmpty(value, {ignore_whitespace: true})) {
+
                 let field
                 switch(key.toLowerCase()){
-                    case "streetaddress":
+                    case "line1":
                         field = "Street Address"
                         break
-                    case "village":
+                    case "line2":
                         field = "Village/Barangay"
                         break
                     case "city":
                         field = "City"
                         break
-                    case "region":
+                    case "province":
                         field = "Region/State"
                         break
                     case "zipcode":
@@ -43,9 +56,21 @@ const VerifyAddress = ()=> {
         setCurrentIndex(oldval => oldval + 1)
     }
 
+    const onProvinceSelect = (data) => {        
+        setCities(data)
+        setSelectedCity(data[0]?.name || "")
+    }
+
+    useEffect(() => {
+        setSelectedCity(address.city)
+        console.log("City Changed", address)
+    }, [address])
+
     return (
         <>
             <ModalCountry type="address" />
+            <ModalProvince type="address" onSelect={onProvinceSelect} />
+            {cities.length == 0 ? null : <ModalCity type="address" data={cities} />}
             <View style={{flex: 1,}}>
                 <ScrollView style={styles.content} showsVerticalScrollIndicator={true}>
                         <Text style={styles.labelText}>Address</Text>
@@ -80,20 +105,31 @@ const VerifyAddress = ()=> {
                             <Text style={styles.labelText}>Street Address</Text>
                             <TextInput 
                                 style={styles.input} 
-                                placeholder="Enter street , house number , building number here"
-                                value={address.streetAddress}
-                                onChangeText={text=>changeAddress("streetAddress", text)}
+                                placeholder="House/Unit #, Floor"
+                                value={address.line1}
+                                onChangeText={text=>changeAddress("line1", text)}
                                 // onSubmitEditing={Proceed}
                             />
                         </View>
 
                         <View style={styles.ViewInput}>
-                            <Text style={styles.labelText}>Village/Barangay</Text>
+                            <Text style={styles.labelText}>Subdivision</Text>
                             <TextInput 
                                 style={styles.input} 
-                                placeholder="Enter village/barangay here"
-                                value={address.village}
-                                onChangeText={text=>changeAddress("village", text)}
+                                placeholder="Bldg, Barangay, Subdivision/Village"
+                                value={address.line2}
+                                onChangeText={text=>changeAddress("line2", text)}
+                                // onSubmitEditing={Proceed}
+                            />
+                        </View>
+
+                        {/* <View style={styles.ViewInput}>
+                            <Text style={styles.labelText}>Region/Province</Text>
+                            <TextInput 
+                                style={styles.input} 
+                                placeholder="Enter region/province here"
+                                value={address.region}
+                                onChangeText={text=>changeAddress("region",text)}
                                 // onSubmitEditing={Proceed}
                             />
                         </View>
@@ -107,17 +143,57 @@ const VerifyAddress = ()=> {
                                 onChangeText={text=>changeAddress("city",text)}
                                 // onSubmitEditing={Proceed}
                             />
-                        </View>
+                        </View> */}
 
                         <View style={styles.ViewInput}>
-                            <Text style={styles.labelText}>Region/State</Text>
-                            <TextInput 
-                                style={styles.input} 
-                                placeholder="Enter region/state here"
-                                value={address.region}
-                                onChangeText={text=>changeAddress("region",text)}
-                                // onSubmitEditing={Proceed}
-                            />
+                            <Text style={styles.labelText}>Region/Province</Text>
+                            <View style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center"}]}>
+                                <Text style={{flex: 1,color: "gray",fontSize: SIZES.M,fontFamily: FONTS.REGULAR}}>{address.province}</Text>
+                                <TouchableOpacity
+                                    onPress={()=>setModalProvinceVisible(true)}
+                                    style={{
+                                        paddingHorizontal: 10,
+                                        borderWidth: 1,
+                                        borderColor: COLORS.YELLOW,
+                                        borderRadius: 5,
+                                        height: 20
+                                    }}
+                                >
+                                    <View style={{
+                                         flex: 1,
+                                         justifyContent:"center",
+                                         alignItems:"center",
+                                    }}>
+                                    <Text style={{color: COLORS.YELLOW,fontFamily: FONTS.REGULAR,fontSize: SIZES.S}}>Change</Text>
+                                    </View>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+
+
+                        <View style={styles.ViewInput}>
+                            <Text style={styles.labelText}>City</Text>
+                            <View style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center"}]}>
+                                <Text style={{flex: 1,color: "gray",fontSize: SIZES.M,fontFamily: FONTS.REGULAR}}>{selectedCity}</Text>
+                                <TouchableOpacity
+                                    onPress={()=>setModalCityVisible(true)}
+                                    style={{
+                                        paddingHorizontal: 10,
+                                        borderWidth: 1,
+                                        borderColor: COLORS.YELLOW,
+                                        borderRadius: 5,
+                                        height: 20
+                                    }}
+                                >
+                                    <View style={{
+                                         flex: 1,
+                                         justifyContent:"center",
+                                         alignItems:"center",
+                                    }}>
+                                    <Text style={{color: COLORS.YELLOW,fontFamily: FONTS.REGULAR,fontSize: SIZES.S}}>Change</Text>
+                                    </View>
+                                </TouchableOpacity>
+                            </View>
                         </View>
 
                         <View style={styles.ViewInput}>

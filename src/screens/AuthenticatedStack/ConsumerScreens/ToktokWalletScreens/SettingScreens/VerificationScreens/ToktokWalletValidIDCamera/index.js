@@ -71,8 +71,8 @@ const ToktokWalletValidIDCamera = ({navigation,route})=> {
 
             route.params.setImage({
                 ...tempImage,
-                uri: croppedResult,
-            })
+                uri: croppedResult
+            }, route.params.placement) //front or back
             navigation.pop()
       
           } catch (error) {

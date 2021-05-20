@@ -1,4 +1,4 @@
-import React, { useState , useRef , useContext } from 'react'
+import React, { useState , useRef , useContext, useEffect } from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,Modal,Dimensions,Alert,Image,ScrollView,TextInput,FlatList} from 'react-native'
 import { FONTS, INPUT_HEIGHT, BUTTON_HEIGHT, SIZES, COLORS} from '../../../../../../../res/constants'
 import EIcon from 'react-native-vector-icons/EvilIcons'
@@ -10,37 +10,41 @@ import DropDownPicker from 'react-native-dropdown-picker';
 //SELF IMPORTS 
 import ModalCountry from './ModalCountry'
 import ModalValidID from './ModalValidID'
+import BottomSheetIDType from './BottomSheetIDType'
 import { YellowButton } from '../../../../../../../revamp'
 
 const {height,width} = Dimensions.get("window")
-
 
 const CROP_AREA_WIDTH = width * 0.90;
 const CROP_AREA_HEIGHT = height * 0.35;
 
 const ValidIDList = [
-    {label: "Passport" ,value: "Passport"},
-    {label: "Driver's License" ,value: "Driver's License"},
-    {label: "SSS UMID Card" ,value: "SSS UMID Card"},
-    {label: "Philhealth ID" ,value: "Philhealth ID"},
-    {label: "TIN Card" ,value: "TIN Card"},
-    {label: "Postal ID" ,value: "Postal ID"},
-    {label: "Voter's ID" ,value: "Voter's ID"},
-    {label: "Professional Regulation Commission ID" ,value: "Professional Regulation Commission ID"},
-    {label: "Senior Citizen ID" ,value: "Senior Citizen ID"},
-    {label: "OFW ID" ,value: "OFW ID"},
+    {label: "Passport" ,value: "Passport", isBackRequired: 1},
+    {label: "Driver's License" ,value: "Driver's License", isBackRequired: 1},
+    {label: "SSS UMID Card" ,value: "SSS UMID Card", isBackRequired: 1},
+    {label: "Philhealth ID" ,value: "Philhealth ID", isBackRequired: 1},
+    {label: "TIN Card" ,value: "TIN Card", isBackRequired: 1},
+    {label: "Postal ID" ,value: "Postal ID", isBackRequired: 1},
+    {label: "Voter's ID" ,value: "Voter's ID", isBackRequired: 1},
+    {label: "Professional Regulation Commission ID" ,value: "Professional Regulation Commission ID", isBackRequired: 1},
+    {label: "Senior Citizen ID" ,value: "Senior Citizen ID", isBackRequired: 1},
+    {label: "OFW ID" ,value: "OFW ID", isBackRequired: 1},
 ]
 
 
 const VerifyID = ()=> {
 
-    const {setCurrentIndex , setModalCountryVisible  , verifyID, changeVerifyID} = useContext(VerifyContext)
+    const {setCurrentIndex , setModalCountryVisible  , verifyID, changeVerifyID, frontImage, setFrontImage, backImage, setBackImage} = useContext(VerifyContext)
     const [validIDVisible,setValidIDVisible] = useState(false)
-  
-    const navigation = useNavigation()
+    const [isBackRequired, setIsbackRequired] = useState(false)
 
-    const setImage = (data)=> {
-        changeVerifyID("idImage",data);
+    const navigation = useNavigation()
+    const IDTypeRef = useRef()
+
+    const setImage = (data, placement)=> {
+        console.log(data, placement)
+        if(placement == "front") setFrontImage(data)
+        else if(placement == "back") setBackImage(data)
     }
 
     const createFilteredValidIDs = ()=> {
@@ -57,16 +61,17 @@ const VerifyID = ()=> {
         if (validator.isEmpty(verifyID.idNumber, {ignore_whitespace: true})) {
             return Alert.alert("","ID Number is required.")
         }
-        if(verifyID.idImage == null) return Alert.alert("","Photo of Valid ID is required.")
-        setCurrentIndex(oldval => oldval + 1)
+        if(frontImage == null) return Alert.alert("","Photo of front face of your Valid ID is required.")
+        if(isBackRequired && backImage == null)  return Alert.alert("","Photo of back face of your Valid ID is required.")
+        // if(verifyID.idImage == null) return Alert.alert("","Photo of Valid ID is required.")
+        setCurrentIndex(oldval => oldval + 2)
     }
 
-
-    const ChooseImage = ()=> (
+    const ChooseImage = ({placement})=> (
         <TouchableOpacity 
             onPress={()=>{
                //setShowCamera(true)
-                navigation.push("ToktokWalletValidIDCamera",{setImage})
+                navigation.push("ToktokWalletValidIDCamera",{setImage, placement: placement})
               // navigation.push('ProfileCamera', {label: ["Take","Picture"], setImage});
             }}
             style={{
@@ -90,7 +95,7 @@ const VerifyID = ()=> {
     )
 
 
-    const ImageIDSet = ()=> (
+    const ImageIDSet = ({placement})=> (
         <View style={{
             alignSelf:"center",
             marginTop: 7,
@@ -105,19 +110,43 @@ const VerifyID = ()=> {
         //     navigation.push("ToktokWalletValidIDCamera",{setImage})
         // }}
         >
-                <Image resizeMode="cover" style={{height: 175 ,width: 283}} source={{uri: verifyID.idImage.uri}} />
-                <TouchableOpacity onPress={()=> navigation.push("ToktokWalletValidIDCamera",{setImage})} style={{position:"absolute",bottom: 15,width: 283,height: 20, justifyContent:"center",alignItems:"center"}}>
+                <Image resizeMode="cover" style={{height: 175 ,width: 283}} source={{uri: placement == "front" ? frontImage.uri : backImage.uri}} />
+                <TouchableOpacity onPress={()=> navigation.push("ToktokWalletValidIDCamera",{setImage, placement: placement})} style={{position:"absolute",bottom: 15,width: 283,height: 20, justifyContent:"center",alignItems:"center"}}>
                     <EIcon name="camera" color={COLORS.YELLOW} size={20} />
                     <Text style={{color: COLORS.YELLOW,fontFamily: FONTS.REGULAR,fontSize: SIZES.S,marginTop: -2}}>Change Photo</Text>
                 </TouchableOpacity>
         </View>
     )
 
+    const renderImageSetOptions = () => {
+        if(isBackRequired){
+            return (
+                <>
+                <View style={{flex: 1, paddingVertical: 20, marginTop: 20}}>
+                    <Text>Front of ID</Text>
+                    {frontImage ? <ImageIDSet placement="front" /> : <ChooseImage placement="front" />}
+                </View>
+                <View style={{flex: 1, paddingVertical: 8}}>
+                    <Text>Back of ID</Text>
+                    {backImage ? <ImageIDSet placement="back" /> : <ChooseImage placement="back" />}
+                </View>
+                </>
+            )
+        }else if(!isBackRequired){
+            return <>{frontImage ? <ImageIDSet placement="front" /> : <ChooseImage placement="front" />}</>
+        }
+    }
+
+    const onSelectIdType = (card) => {
+        setFrontImage(null)
+        setBackImage(null)
+        setIsbackRequired(card.isBackRequired == 1)
+    }
 
     return (
         <>
-            <ModalCountry type="validID"/>
-            <ModalValidID visible={validIDVisible} setVisible={setValidIDVisible} />
+            {/* <ModalCountry type="validID"/> */}
+            {/* <ModalValidID visible={validIDVisible} setVisible={setValidIDVisible} /> */}
             <View style={styles.content}>
                 <ScrollView
                          showsVerticalScrollIndicator={false}
@@ -153,7 +182,9 @@ const VerifyID = ()=> {
 
                         <View style={{marginTop: 20,}}>
                             <Text style={styles.labelText}>ID Type</Text>
-                            <TouchableOpacity onPress={()=>setValidIDVisible(true)} style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center"}]}>
+                            <TouchableOpacity onPress={()=> {
+                                IDTypeRef.current.expand()
+                            }} style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center"}]}>
                                 <Text style={{flex: 1,color: "gray",fontSize: SIZES.M,fontFamily: FONTS.REGULAR}}>{verifyID.idType == "" ? "Select ID type" : verifyID.idType}</Text>
                                 <EIcon name="chevron-right" size={24} color="#FCB91A"/>
 
@@ -194,7 +225,16 @@ const VerifyID = ()=> {
 
                         <View style={{flex: 1,paddingVertical: 20, alignItems: "center"}}>
                             <Text style={{...styles.labelText, alignSelf:"flex-start"}}>Photo of your Valid ID</Text>
-                            {verifyID.idImage ? <ImageIDSet/>:  <ChooseImage/>}
+                            {/* {verifyID.idImage ? <ImageIDSet/>:  <ChooseImage/>} */}
+                            {/* <View style={{flex: 1, paddingVertical: 20, marginTop: 20}}>
+                                <Text>Front of ID</Text>
+                                <ChooseImage />
+                            </View>
+                            <View style={{flex: 1, paddingVertical: 8}}>
+                                <Text>Back of ID</Text>
+                                <ChooseImage />
+                            </View> */}
+                            {renderImageSetOptions()}
                         </View>
 
                    
@@ -205,6 +245,8 @@ const VerifyID = ()=> {
                 </View>
                
             </View>
+            <BottomSheetIDType ref={IDTypeRef} onChange={(onSelectIdType)} />
+
         </>
     )
 }

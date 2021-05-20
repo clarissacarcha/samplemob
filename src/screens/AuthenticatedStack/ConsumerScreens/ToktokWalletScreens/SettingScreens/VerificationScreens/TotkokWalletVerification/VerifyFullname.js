@@ -1,6 +1,6 @@
 import React, {useContext, useState} from 'react'
 import {Text,View,StyleSheet,Alert,Image,TextInput,TouchableOpacity,Linking,ScrollView} from 'react-native'
-import {FONTS, SIZES, COLORS} from '../../../../../../../res/constants'
+import {FONTS, SIZES, COLORS, COLOR, DARK, FONT, FONT_SIZE, SIZE} from '../../../../../../../res/constants'
 import {VerifyContext} from './VerifyContextProvider'
 import validator from 'validator';
 import { BlackButton, YellowButton } from '../../../../../../../revamp'
@@ -19,6 +19,8 @@ const VerifyFullname = ()=> {
         setCurrentIndex , 
         person , 
         changePersonInfo , 
+        contactInfo,
+        changeContactInfo,
         birthInfo , 
         changeBirthInfo, 
         setModalCountryVisible
@@ -27,6 +29,7 @@ const VerifyFullname = ()=> {
     const [modalVisible,setModalVisible] = useState(false)
     const [modalNationalityVisible, setModalNationalityVisible] = useState(false)
     const [modaltype,setModaltype] = useState("")
+    const [mobile, setMobile] = useState(contactInfo.mobile_number.replace("+63", ""))
 
     const NextPage = ()=> {
         if (validator.isEmpty(person.lastName, {ignore_whitespace: true})) {
@@ -35,15 +38,32 @@ const VerifyFullname = ()=> {
         if (validator.isEmpty(person.firstName, {ignore_whitespace: true})) {
             return Alert.alert("","first Name is required.")
         }
+        if(mobile == "") return Alert.alert("","Mobile Number is required.")
+        if(contactInfo.email == "") return Alert.alert("","Email is required.")
         if(birthInfo.birthdate == "") return Alert.alert("","Date of Birth is required.")
         if(birthInfo.birthPlace == "") return Alert.alert("","Place of Birth is required.")
 
+        changeContactInfo("mobile_number", "+63" + mobile)
         setCurrentIndex(oldval => oldval + 1)
     }
 
     const ViewPrivacyPolicy = ()=> {
         return Linking.openURL("https://toktok.ph/privacy-policy")
     }
+
+    const onMobileChange = (value) => {
+        if (value.length === 1 && value === '0') {
+          setMobile('');
+          return;
+        }
+    
+        if (value.length > 10) {
+          setMobile(mobile);
+          return;
+        }
+    
+        setMobile(value);
+      };
 
     return (
         <>
@@ -63,10 +83,54 @@ const VerifyFullname = ()=> {
                 </View>
         </TouchableOpacity>
 
-            <View style={styles.mainInput}>
+                <View style={styles.mainInput}>
                     <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.M}}>Fill up the information</Text>
                     <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.S,color:"#929191"}}>Please enter the name that appears on your Valid ID.</Text>
 
+                    
+                    <View style={{marginTop: 40}}>
+                      <Text style={{fontFamily: FONTS.BOLD, marginBottom: 2}}>Mobile Number</Text>
+                      <View
+                        style={{
+                            borderRadius: 5,
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            overflow: 'hidden',
+                            height: 50,
+                            marginBottom: SIZES.MARGIN,
+                            backgroundColor: COLOR.LIGHT,
+                        }}>
+                        <View
+                          style={{
+                            paddingLeft: SIZES.MARGIN,
+                            height: 50,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor:"#F7F7FA",
+                          }}>
+                          <Text style={{color: COLOR.BLACK, marginTop: 3.5, marginLeft: 6}}>+63</Text>
+                        </View>
+                        <TextInput
+                            value={mobile}
+                            onChangeText={onMobileChange}
+                            placeholder="9151234567"
+                            keyboardType="number-pad"
+                            returnKeyType="done"
+                            style={{paddingLeft: 8, flex: 1, color: DARK, height: 50, ...styles.input}}
+                            placeholderTextColor={COLOR.MEDIUM}
+                        />
+                      </View>
+                    </View>
+
+                    {/* <View style={{marginTop: 40,}}>
+                    <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.M}}>Mobile Number</Text>
+                        <TextInput 
+                            style={styles.input}
+                            value={contactInfo.mobile_number}
+                            onChangeText={(value)=>changeContactInfo("mobile_number",value)}
+                            placeholder="Enter mobile number here"
+                        />
+                    </View> */}
 
                     <View style={{marginTop: 20,}}>
                     <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.M}}>Last Name</Text>
@@ -97,6 +161,17 @@ const VerifyFullname = ()=> {
                             placeholder="Enter middle name here"
                         />
                     </View>
+
+                    <View style={{marginTop: 20,}}>
+                    <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.M}}>Email</Text>
+                        <TextInput
+                            style={styles.input}
+                            value={contactInfo.email}
+                            onChangeText={(value)=>changeContactInfo("email",value)}
+                            placeholder="Enter email here"
+                        />
+                    </View>
+
                     <View style={{marginTop: 20,}}>
                     <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.M}}>Date of Birth</Text>
                              <TouchableOpacity onPress={()=>setModalVisible(true)} style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center"}]}>
