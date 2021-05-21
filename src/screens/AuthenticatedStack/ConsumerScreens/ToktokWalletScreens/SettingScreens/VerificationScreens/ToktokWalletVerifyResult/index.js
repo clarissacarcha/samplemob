@@ -1,22 +1,11 @@
-import React , {useRef, useState} from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,Platform,Dimensions,Alert,StatusBar,Image} from 'react-native'
-import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions'
-import FIcon from 'react-native-vector-icons/Feather'
+import React from 'react'
+import {View,Text,StyleSheet,Platform,Dimensions,StatusBar,Image} from 'react-native'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
-import ViewShot , {captureScreen,releaseCapture} from "react-native-view-shot";
 import RNFS from 'react-native-fs'
-import CameraRoll from "@react-native-community/cameraroll";
-import { BlackButton, YellowButton } from '../../../../../../../revamp';
-import Toast from 'react-native-simple-toast';
-import moment from 'moment'
+import {YellowButton } from '../../../../../../../revamp';
 import { COLOR, COLORS, FONTS, SIZES } from '../../../../../../../res/constants';
 
-//const path = RNFS.PicturesDirectoryPath
-// const path = RNFS.DocumentDirectoryPath
-// const path = RNFS.MainBundlePath
-const path = Platform.OS === "ios" ? RNFS.LibraryDirectoryPath : RNFS.DownloadDirectoryPath
 
-const {width,height} = Dimensions.get("window")
 
 const VerifyPendingScreen = ({navigation})=> {
 
@@ -26,14 +15,15 @@ const VerifyPendingScreen = ({navigation})=> {
         <View style={styles.container}>
              
              <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-                <View style={styles.checkIcon}>
+                {/* <View style={styles.checkIcon}>
                     <FIcon5 name="check" color="white" size={60}/> 
-                </View>
+                </View> */}
+                <Image style={{marginBottom: 10}} source={require('../../../../../../../assets/toktokwallet-assets/success.png')}/>
                 <View>
                     <Text style={styles.titleText}>Success!</Text>
                 </View>
                 <View style={{padding: 8}}>
-                    <Text style={{color: "gray"}}>
+                    <Text style={{color: "gray",fontFamily: FONTS.REGULAR , fontSize: SIZES.M}}>
                         Please wait for the approval of your verification.
                     </Text>
                 </View>
@@ -41,8 +31,8 @@ const VerifyPendingScreen = ({navigation})=> {
             
             <View style={styles.actionBtn}>
                 <YellowButton label="Done" onPress={() => {
-                    navigation.pop()
-                    navigation.navigate("ToktokWalletHomePage")
+                    // navigation.pop()
+                    // navigation.navigate("ToktokWalletHomePage")
                     navigation.replace("ToktokWalletHomePage")
                 }} />
             </View>
