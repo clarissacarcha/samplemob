@@ -2,8 +2,8 @@ import React, { useState ,useRef , useContext, useEffect } from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,ScrollView,CheckBox,Linking, Alert} from 'react-native'
 import {SIZES, BUTTON_HEIGHT, FONTS, COLORS} from '../../../../../../../res/constants'
 import {VerifyContext} from './VerifyContextProvider'
+import { TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT} from '../../../../../../../graphql'
 import {POST_KYC_REGISTER} from '../../../../../../../graphql/toktokwallet'
-import { TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT } from '../../../../../../../graphql'
 import {useMutation} from '@apollo/react-hooks'
 import {onError} from '../../../../../../../util/ErrorUtility'
 import {AlertOverlay} from '../../../../../../../components';
@@ -35,29 +35,24 @@ const UserInfo = ({label,value})=> {
 const Confirm = ({session})=> {
 
     const VerifyUserData = useContext(VerifyContext)
-    const {setCurrentIndex} = VerifyUserData
-
     const navigation = useNavigation()
 
-    const [isSelected,setSelection] = useState(false)
+    const [isCertify, setCertify] = useState(false)
 
     const [postKYCRegister,{data,error,loading}] = useMutation(POST_KYC_REGISTER, {
         client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT,
-        onError: onError,
+        onError: (err) => {
+            console.log(err)
+        },
         onCompleted: (response)=> {
-            console.log("POST KYC REGISTRATION RESULT", response)
-
-            Alert.alert("Success!", "\nPlease wait for the approval of your verification.")
-
-            navigation.pop()
-            navigation.navigate("ToktokWalletHomePage")
-            navigation.replace("ToktokWalletHomePage")
+            let result = response.postKycRegister
+            if(result.status == 2){
+                navigation.pop()
+                navigation.navigate("ToktokWalletVerifyResult")
+                navigation.replace("ToktokWalletVerifyResult")
+            }
         }
     })
-
-    useEffect(() => {
-        console.log(session.user.userId)
-    }, [])
 
     const confirm = ()=> {
         const rnValidIDFile = new ReactNativeFile({
@@ -84,44 +79,6 @@ const Confirm = ({session})=> {
             type: 'image/jpeg'
         })
 
-        // postToktokWalletKYC({
-        //     variables: {
-        //         input: {
-        //             fullname: `${VerifyUserData.person.lastName}, ${VerifyUserData.person.firstName}${VerifyUserData.person.middleName ? " " + VerifyUserData.person.middleName : ""}`,
-        //             nationality: VerifyUserData.nationality,
-        //             address: `${VerifyUserData.address.streetAddress} ${VerifyUserData.address.village} ${VerifyUserData.address.city} ${VerifyUserData.address.region}, ${VerifyUserData.address.country} ${VerifyUserData.address.zipCode}`,
-        //             birthdate: VerifyUserData.birthInfo.birthdate,
-        //             birthPlace: VerifyUserData.birthInfo.birthPlace,
-        //             validIdType: VerifyUserData.verifyID.idType,
-        //             validIdNumber: VerifyUserData.verifyID.idNumber,
-        //             validIdCountry: VerifyUserData.verifyID.idCountry,
-        //             validIdPicture: rnValidIDFile,
-        //             picture: rnSelfieFile
-        //         }
-        //     }
-        // })
-
-        // console.log(JSON.stringify({
-        //     // mobileNumber: VerifyUserData.contactInfo.mobile_number,
-        //     // emailAddress: VerifyUserData.contactInfo.email,
-        //     // firstName: VerifyUserData.person.firstName,
-        //     // middleName: VerifyUserData.person.middleName,
-        //     // lastName: VerifyUserData.person.lastName,
-        //     // birthdate: VerifyUserData.birthInfo.birthdate,
-        //     // birthPlace: VerifyUserData.birthInfo.birthPlace,
-        //     selfieImage: rnSelfieFile,
-        //     // nationality:  VerifyUserData.nationality,
-        //     // line1: VerifyUserData.address.line1,
-        //     // line2: VerifyUserData.address.line2,
-        //     // postalCode: VerifyUserData.address.zipCode,
-        //     // cityId: VerifyUserData.address.cityId,
-        //     // provinceId: VerifyUserData.address.provinceId,
-        //     frontImage: rnFrontIDFile,
-        //     backImage: rnBackIDFile,
-        //     identificationCardNumber: VerifyUserData.verifyID.idNumber,
-        //     identificationCardId: VerifyUserData.verifyID.idID,
-        // }), VerifyUserData.identificationId)
-
         postKYCRegister({
             variables: {
                 input: {
@@ -135,7 +92,7 @@ const Confirm = ({session})=> {
                     // birthdate: VerifyUserData.birthInfo.birthdate,
                     birthPlace: VerifyUserData.birthInfo.birthPlace,
                     selfieImage: rnSelfieFile,
-                    nationality:  VerifyUserData.address.countryId,
+                    nationality:  VerifyUserData.address.countryId + "",
                     line1: VerifyUserData.address.line1,
                     line2: VerifyUserData.address.line2,
                     postalCode: VerifyUserData.address.zipCode,
@@ -167,33 +124,36 @@ const Confirm = ({session})=> {
                         <UserInfo label="Address" value={`${VerifyUserData.address.line1} ${VerifyUserData.address.line2} ${VerifyUserData.address.city} ${VerifyUserData.address.province}, ${VerifyUserData.address.country} ${VerifyUserData.address.zipCode}`}/>
                         <UserInfo label="ID Type" value={VerifyUserData.verifyID.idType}/>
                         <UserInfo label="ID number" value={VerifyUserData.verifyID.idNumber}/>
-                    <TouchableOpacity 
+                    {/* <TouchableOpacity 
                         onPress={()=>Linking.openURL("https://toktok.ph/terms-and-conditions")} 
                         style={{justifyContent:"flex-end",alignItems:"flex-start",flexGrow: 1,marginBottom: 15,marginTop: 20,}}
                     >
                             <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.M}}>I hereby certify that I accept the <Text style={{color: COLORS.ORANGE,fontFamily: FONTS.REGULAR,fontSize: SIZES.M}}>Terms and Conditions.</Text></Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
             
                 </ScrollView>
 
                 <View style={styles.proceedBtn}>
 
-                    {/* <View style={{
+                    <View style={{
                         flexDirection:"row",
                         flexGrow: 1,
                     }}>
                         <CheckBox
-                            value={isSelected}
-                            onValueChange={setSelection}
+                            value={isCertify}
+                            onValueChange={setCertify}
                         />
                         <View style={{paddingHorizontal: 10,marginRight: 20}}>
-                            <Text style={{fontFamily: FONT_REGULAR,fontSize: SIZES.S}}>By clicking the checkbox, I hereby certify that I accept the Terms and Conditions.</Text>
+                            <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.M}}>I hereby certify that I accept the Terms and Conditions.</Text>
                         </View>
                     
-                    </View> */}
+                    </View>
                   
                     <View style={{height: BUTTON_HEIGHT}}>
-                        <YellowButton label="Confirm" onPress={confirm}/>
+                        <YellowButton label="Confirm" onPress={() => {
+                            if(isCertify) confirm()
+                            else return
+                        }}/>
                     </View>
                    
                 </View>

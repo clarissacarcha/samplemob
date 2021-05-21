@@ -82,6 +82,7 @@ import ToktokWalletVerification from '../screens/AuthenticatedStack/ConsumerScre
 import ToktokWalletValidIDCamera from '../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/VerificationScreens/ToktokWalletValidIDCamera';
 import ToktokWalletSelfieCamera from '../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/VerificationScreens/ToktokWalletSelfieCamera';
 import ToktokWalletSelfieImageCamera from '../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/VerificationScreens/ToktokWalletSelfieImageCamera';
+import ToktokWalletVerifyResult from '../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/VerificationScreens/ToktokWalletVerifyResult';
 
 import ToktokWalletTransactions from '../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens//ToktokWalletTransactions';
 import ToktokWalletRecentTransferView from '../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/ToktokWalletRecentTransferView';
@@ -432,7 +433,8 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="ToktokWalletValidIDCamera" component={ToktokWalletValidIDCamera} />
     <Authenticated.Screen name="ToktokWalletSelfieCamera" component={ToktokWalletSelfieCamera} />
     <Authenticated.Screen name="ToktokWalletSelfieImageCamera" component={ToktokWalletSelfieImageCamera} />
-
+    <Authenticated.Screen name="ToktokWalletVerifyResult" component={ToktokWalletVerifyResult} options={{headerShown: false}}  />
+    
     <Authenticated.Screen name="ToktokWalletTransactions" component={ToktokWalletTransactions} />
     <Authenticated.Screen name="ToktokWalletRecentTransferView" component={ToktokWalletRecentTransferView} />
     <Authenticated.Screen name="ToktokWalletReviewAndConfirm" component={ToktokWalletReviewAndConfirm}/>

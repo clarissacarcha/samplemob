@@ -7,11 +7,11 @@ export const MAPS_API_KEY = 'AIzaSyDhlw6pbriuwr_Mb6KYkVlBar7KD1KTrOs';
 // export const HOST_PORT = 'stg-graphql.toktok.ph:2096';
 
 export const PROTOCOL = 'http';
-export const HOST_PORT = '192.168.0.106:3000'; // Myutini
+export const HOST_PORT = '192.168.8.105:3100'; // Myutini
 // export const HOST_PORT = '35.173.0.77:3088'; // Marketing Server
 
 export const TOKTOK_WALLET_PROTOCOL = 'http';
-export const TOKTOK_WALLET_PROTOCOL_HOST_PORT = '192.168.0.106:3100';
+export const TOKTOK_WALLET_PROTOCOL_HOST_PORT = '192.168.8.105:3200';
 
 export const COLORS = {
   YELLOW: '#FDBA1C',

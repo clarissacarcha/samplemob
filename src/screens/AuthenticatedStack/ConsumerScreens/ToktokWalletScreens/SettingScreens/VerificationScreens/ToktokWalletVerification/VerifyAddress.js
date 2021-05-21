@@ -32,7 +32,7 @@ const VerifyAddress = ()=> {
         fetchPolicy: 'network-only',
         onCompleted: (response) => {
             // console.log("Clity", response)
-            setCities(response.getCities.sort((a,b)=> -1))
+            setCities(response.getCities)
         },
         onError: (err) => {
             console.log(err)
@@ -45,7 +45,9 @@ const VerifyAddress = ()=> {
 
             console.log(key)
 
-            if(key == "provinceId" && value == null || key == "cityId" && value == null || key == "countryId" && value == null) continue;
+            if(key == "provinceId" 
+            || key == "cityId"
+            || key == "countryId") continue;
 
             if (validator.isEmpty(value, {ignore_whitespace: true})) {
 
@@ -76,13 +78,14 @@ const VerifyAddress = ()=> {
     }
 
     const onProvinceSelect = (code) => {
+        changeAddress("city", "")
         getCityByProvinceCode({
             variables: {
                 input: {
                     provCode: code
                 }
             }
-        })
+        })        
     }
 
     useEffect(() => {

@@ -204,11 +204,11 @@ import { GET_COUNTRIES } from '../../../../../../../graphql/toktokwallet/virtual
 //     "Zimbabwean"
 //  ]
 
-
 const ModalNationality = ({visible,setVisible})=> {
+
     const {setNationality, changeAddress} = useContext(VerifyContext)
+    const [nationalities, setNationalities] = useState([])
     const [filteredNationalities, setFilteredNationalities] = useState([])
-    const [nationalities,setNationalities] = useState([])
 
     const [getCountries , {data, error , loading}] = useLazyQuery(GET_COUNTRIES, {
         client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT,
@@ -239,15 +239,15 @@ const ModalNationality = ({visible,setVisible})=> {
     // console.log(TOKTOK_WALLET_GRAPHQL_CLIENT)
 
     const selectNationality = (index)=> {
-        const nationality = filteredNationalities[index]
-        setNationality(nationality.nationality)
-        changeAddress("countryId", nationality.id)
+        const country = filteredNationalities[index]
+        setNationality(country.nationality)
+        changeAddress("countryId", country.id)
         setVisible(false)
         setFilteredNationalities(nationalities)
     }
 
     const filterSearch = (value) => {
-        const filtered = nationalities.filter(nationality=> nationality.nationality.toLowerCase().includes(value.toLowerCase()))
+        const filtered = nationalities.filter(country=> country.nationality.toLowerCase().includes(value.toLowerCase()))
         setFilteredNationalities(filtered)
     }
 
@@ -329,7 +329,7 @@ const styles = StyleSheet.create({
         height: INPUT_HEIGHT,
         justifyContent:"center",
         borderBottomWidth: .2,
-        borderColor: "silver",
+        borderColor: COLORS.LIGHT,
         paddingHorizontal:16,
     },
 })
