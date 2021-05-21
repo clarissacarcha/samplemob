@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import {Text,View,StyleSheet,Alert,Image,TextInput,TouchableOpacity,Linking,ScrollView} from 'react-native'
 import {FONTS, SIZES, COLORS, COLOR, DARK, FONT, FONT_SIZE, SIZE} from '../../../../../../../res/constants'
 import {VerifyContext} from './VerifyContextProvider'
@@ -6,6 +6,10 @@ import validator from 'validator';
 import { BlackButton, YellowButton } from '../../../../../../../revamp'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import moment from 'moment'
+
+import {useQuery, useLazyQuery} from '@apollo/react-hooks';
+import {GET_COUNTRIES, TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT} from '../../../../../../../graphql';
+// import {TOKTOK_WALLET_GRAPHQL_CLIENT, } from '../../../../../../../graphql/client';
 
 //SELF IMPORTS
 import ModalCountry from './ModalCountry'
@@ -30,6 +34,15 @@ const VerifyFullname = ()=> {
     const [modalNationalityVisible, setModalNationalityVisible] = useState(false)
     const [modaltype,setModaltype] = useState("")
     const [mobile, setMobile] = useState(contactInfo.mobile_number.replace("+63", ""))
+
+    // const {loading, error, data} = useQuery(GET_COUNTRIES, {
+    //     client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT
+    // })
+
+    // useEffect(() => {
+
+    //     console.log("Countries List", typeof data)
+    // }, [])
 
     const NextPage = ()=> {
         if (validator.isEmpty(person.lastName, {ignore_whitespace: true})) {

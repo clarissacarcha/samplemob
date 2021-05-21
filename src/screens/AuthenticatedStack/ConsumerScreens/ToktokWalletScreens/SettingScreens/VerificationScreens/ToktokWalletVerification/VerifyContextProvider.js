@@ -97,7 +97,8 @@ const VerifyContextProvider = ({children})=> {
         provinceId: null,
         city: "",
         cityId: null,
-        zipCode: ""
+        zipCode: "",
+        countryId: 175
     })
     const [verifyID, setVerifyID] = useState({
         idType: "",
@@ -106,6 +107,7 @@ const VerifyContextProvider = ({children})=> {
         idNumber: "",
         idID: ""
     })
+    const [identificationId, setIdentificationId] = useState(null)
 
     const [selfieImage,setSelfieImage] = useState(null)
     const [frontImage, setFrontImage] = useState(null)
@@ -193,7 +195,10 @@ const VerifyContextProvider = ({children})=> {
                 frontImage,
                 setFrontImage,
                 backImage,
-                setBackImage
+                setBackImage,
+
+                identificationId,
+                setIdentificationId
  
             }}
         >

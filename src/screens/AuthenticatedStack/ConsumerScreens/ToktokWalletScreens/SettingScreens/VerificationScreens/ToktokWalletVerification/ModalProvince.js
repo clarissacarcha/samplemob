@@ -1,17 +1,20 @@
-import React , {useState,useContext} from 'react'
+import React , {useState,useContext, useEffect} from 'react'
 import {Modal,View,Text,StyleSheet,FlatList,TouchableOpacity,TextInput} from 'react-native'
 // import countries from '../../../../../../../assets/JSON/countries.json'
 import {VerifyContext} from './VerifyContextProvider'
 import FIcon from 'react-native-vector-icons/Feather';
 import {SIZES, INPUT_HEIGHT, FONTS, COLORS } from '../../../../../../../res/constants';
 import {Separator} from '../../../Components';
+import {useQuery,useLazyQuery} from '@apollo/react-hooks'
+import { TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT } from '../../../../../../../graphql'
+import { GET_PROVINCES } from '../../../../../../../graphql/toktokwallet/virtual'
 
-const provinces = [
-    {id: 1, code: "0128", name:"Ilocos Norte"},
-    {id: 2, code: "0129", name:"Ilocos Sur"},
-    {id: 3, code: "0133", name:"La Union"},
-    {id: 4, code: "0155", name:"Pangasinan"}
-]
+// const provinces = [
+//     {id: 1, code: "0128", name:"Ilocos Norte"},
+//     {id: 2, code: "0129", name:"Ilocos Sur"},
+//     {id: 3, code: "0133", name:"La Union"},
+//     {id: 4, code: "0155", name:"Pangasinan"}
+// ]
 
 const ModalProvince = ({type, onSelect})=> {
     const {
@@ -25,16 +28,35 @@ const ModalProvince = ({type, onSelect})=> {
         cities,
         changeProvinceCities
     } = useContext(VerifyContext)
-    const [filteredProvinces,setFilteredProvinces] = useState(provinces.sort((a,b)=> -1))
+
+    const [filteredProvinces, setFilteredProvinces] = useState([])
+    const [provinces, setProvinces] = useState([])
+
+    const [getProvinces, {error, loading}] = useLazyQuery(GET_PROVINCES, {
+        client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT,
+        fetchPolicy: 'network-only',
+        onCompleted: (response) => {
+            setFilteredProvinces(response.getProvinces)
+            setProvinces(response.getProvinces)
+            // console.log("Provinces", response)
+        },
+        onError: (err) => {
+            console.log(err)
+        }
+    })
+
+    useEffect(() => {
+        getProvinces()
+    }, [])
 
     const selectCountry = (index) => {
-        const province = filteredProvinces[index].name
+        const province = filteredProvinces[index].provDesc
         if(type == "birthinfo"){
             changeBirthInfo("birthPlace", province)
         }else if(type == "address"){
             changeAddress("province", province)
             changeAddress("provinceID", filteredProvinces[index].id)
-            getCitiesOfProvince(filteredProvinces[index].code)
+            getCitiesOfProvince(filteredProvinces[index].provCode)
         }else if(type == "validID"){
             changeVerifyID("idCountry",province)
         }else{
@@ -47,20 +69,20 @@ const ModalProvince = ({type, onSelect})=> {
     const renderCountry = ({item,index})=> {
         return (
             <TouchableOpacity onPress={()=>selectCountry(index)} style={[styles.country]}>
-                    <Text style={{fontFamily: FONTS.REGULAR, fontSize: SIZES.M}}>{item.name}</Text>
+                    <Text style={{fontFamily: FONTS.REGULAR, fontSize: SIZES.M}}>{item.provDesc}</Text>
             </TouchableOpacity>
         )
     }
 
     const filterSearch = (value) => {
-        const filtered = provinces.filter(province=> province.name.toLowerCase().includes(value.toLowerCase()))
+        const filtered = provinces.filter(province=> province.provDesc.toLowerCase().includes(value.toLowerCase()))
         setFilteredProvinces(filtered)
     }
 
     const getCitiesOfProvince = (code) => {
-        const provCities = cities.filter(city => city.provCode == code)
+        // const provCities = cities.filter(city => city.provCode == code)
         //RETURN THE DATA
-        onSelect(provCities)
+        onSelect(code)
     }
 
     return (

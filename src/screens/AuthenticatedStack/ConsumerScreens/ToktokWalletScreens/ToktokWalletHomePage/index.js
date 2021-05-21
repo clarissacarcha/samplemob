@@ -37,7 +37,7 @@ const ToktokWalletHomePage = ({navigation,route})=> {
             }
 
             if( getUserToktokWalletData.enterpriseToken ){
-                await AsyncStorage.setItem('toktokWalletAccountToken', getUserToktokWalletData.enterpriseToken);
+                await AsyncStorage.setItem('toktokWalletEnterpriseToken', getUserToktokWalletData.enterpriseToken);
             }
         }
     })

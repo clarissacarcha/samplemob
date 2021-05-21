@@ -14,7 +14,7 @@ const ModalCity = ({type, data})=> {
     const [filteredCities,setFilteredCities] = useState(cities.sort((a,b)=> -1))
 
     const selectCountry = (index) => {
-        const city = cities[index].name
+        const city = cities[index].citymunDesc
         if(type == "birthinfo"){
             changeBirthInfo("birthPlace", city)
         }else if(type == "address"){
@@ -32,13 +32,13 @@ const ModalCity = ({type, data})=> {
     const renderCountry = ({item,index})=> {
         return (
             <TouchableOpacity onPress={()=>selectCountry(index)} style={[styles.country]}>
-                    <Text style={{fontFamily: FONTS.REGULAR, fontSize: SIZES.M}}>{item.name}</Text>
+                    <Text style={{fontFamily: FONTS.REGULAR, fontSize: SIZES.M}}>{item.citymunDesc}</Text>
             </TouchableOpacity>
         )
     }
 
     const filterSearch = (value) => {
-        const filtered = cities.filter(city=> city.name.toLowerCase().includes(value.toLowerCase()))
+        const filtered = filteredCities.filter(city=> city.citymunDesc.toLowerCase().includes(value.toLowerCase()))
         setFilteredCities(filtered)
     }
 

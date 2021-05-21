@@ -1,14 +1,16 @@
-import React, { useState ,useRef , useContext } from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,ScrollView,CheckBox,Linking} from 'react-native'
+import React, { useState ,useRef , useContext, useEffect } from 'react'
+import {View,Text,StyleSheet,TouchableOpacity,ScrollView,CheckBox,Linking, Alert} from 'react-native'
 import {SIZES, BUTTON_HEIGHT, FONTS, COLORS} from '../../../../../../../res/constants'
 import {VerifyContext} from './VerifyContextProvider'
-import {POST_TOKTOK_WALLET_KYC} from '../../../../../../../graphql'
+import {POST_KYC_REGISTER} from '../../../../../../../graphql/toktokwallet'
+import { TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT } from '../../../../../../../graphql'
 import {useMutation} from '@apollo/react-hooks'
 import {onError} from '../../../../../../../util/ErrorUtility'
 import {AlertOverlay} from '../../../../../../../components';
 import {ReactNativeFile} from 'apollo-upload-client';
 import {useNavigation} from '@react-navigation/native'
 import moment from 'moment'
+import {connect} from 'react-redux'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import { YellowButton } from '../../../../../../../revamp'
 
@@ -30,7 +32,7 @@ const UserInfo = ({label,value})=> {
     )
 }
 
-const Confirm = ()=> {
+const Confirm = ({session})=> {
 
     const VerifyUserData = useContext(VerifyContext)
     const {setCurrentIndex} = VerifyUserData
@@ -39,14 +41,23 @@ const Confirm = ()=> {
 
     const [isSelected,setSelection] = useState(false)
 
-    const [postToktokWalletKYC,{data,error,loading}] = useMutation(POST_TOKTOK_WALLET_KYC, {
+    const [postKYCRegister,{data,error,loading}] = useMutation(POST_KYC_REGISTER, {
+        client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT,
         onError: onError,
         onCompleted: (response)=> {
+            console.log("POST KYC REGISTRATION RESULT", response)
+
+            Alert.alert("Success!", "\nPlease wait for the approval of your verification.")
+
             navigation.pop()
             navigation.navigate("ToktokWalletHomePage")
             navigation.replace("ToktokWalletHomePage")
         }
     })
+
+    useEffect(() => {
+        console.log(session.user.userId)
+    }, [])
 
     const confirm = ()=> {
         const rnValidIDFile = new ReactNativeFile({
@@ -90,51 +101,53 @@ const Confirm = ()=> {
         //     }
         // })
 
-        console.log(JSON.stringify({
-            // mobileNumber: VerifyUserData.contactInfo.mobile_number,
-            // emailAddress: VerifyUserData.contactInfo.email,
-            // firstName: VerifyUserData.person.firstName,
-            // middleName: VerifyUserData.person.middleName,
-            // lastName: VerifyUserData.person.lastName,
-            // birthdate: VerifyUserData.birthInfo.birthdate,
-            // birthPlace: VerifyUserData.birthInfo.birthPlace,
-            selfieImage: rnSelfieFile,
-            // nationality:  VerifyUserData.nationality,
-            // line1: VerifyUserData.address.line1,
-            // line2: VerifyUserData.address.line2,
-            // postalCode: VerifyUserData.address.zipCode,
-            // cityId: VerifyUserData.address.cityId,
-            // provinceId: VerifyUserData.address.provinceId,
-            frontImage: rnFrontIDFile,
-            backImage: rnBackIDFile,
-            // identificationCardNumber: VerifyUserData.verifyID.idNumber,
-            // identificationCardId: VerifyUserData.verifyID.idID,
-        }))
+        // console.log(JSON.stringify({
+        //     // mobileNumber: VerifyUserData.contactInfo.mobile_number,
+        //     // emailAddress: VerifyUserData.contactInfo.email,
+        //     // firstName: VerifyUserData.person.firstName,
+        //     // middleName: VerifyUserData.person.middleName,
+        //     // lastName: VerifyUserData.person.lastName,
+        //     // birthdate: VerifyUserData.birthInfo.birthdate,
+        //     // birthPlace: VerifyUserData.birthInfo.birthPlace,
+        //     selfieImage: rnSelfieFile,
+        //     // nationality:  VerifyUserData.nationality,
+        //     // line1: VerifyUserData.address.line1,
+        //     // line2: VerifyUserData.address.line2,
+        //     // postalCode: VerifyUserData.address.zipCode,
+        //     // cityId: VerifyUserData.address.cityId,
+        //     // provinceId: VerifyUserData.address.provinceId,
+        //     frontImage: rnFrontIDFile,
+        //     backImage: rnBackIDFile,
+        //     identificationCardNumber: VerifyUserData.verifyID.idNumber,
+        //     identificationCardId: VerifyUserData.verifyID.idID,
+        // }), VerifyUserData.identificationId)
 
-        // postToktokWalletKYC({
-        //     variables: {
-        //         input: {
-        //             mobileNumber: VerifyUserData.contactInfo.mobile_number,
-        //             emailAddress: VerifyUserData.contactInfo.email,
-        //             firstName: VerifyUserData.person.firstName,
-        //             middleName: VerifyUserData.person.middleName,
-        //             lastName: VerifyUserData.person.lastName,
-        //             birthdate: VerifyUserData.birthInfo.birthdate,
-        //             birthPlace: VerifyUserData.birthInfo.birthPlace,
-        //             selfieImage: rnSelfieFile,
-        //             nationality:  VerifyUserData.nationality,
-        //             line1: VerifyUserData.address.line1,
-        //             line2: VerifyUserData.address.line2,
-        //             postalCode: VerifyUserData.address.zipCode,
-        //             cityId: VerifyUserData.address.cityId,
-        //             provinceId: VerifyUserData.address.provinceId,
-        //             frontImage: rnFrontIDFile,
-        //             backImage: rnBackIDFile,
-        //             identificationCardNumber: VerifyUserData.verifyID.idNumber,
-        //             identificationCardId: VerifyUserData.verifyID.idID,
-        //         }
-        //     }
-        // })
+        postKYCRegister({
+            variables: {
+                input: {
+                    userId: session.user.id,
+                    mobileNumber: VerifyUserData.contactInfo.mobile_number,
+                    emailAddress: VerifyUserData.contactInfo.email,
+                    firstName: VerifyUserData.person.firstName,
+                    middleName: VerifyUserData.person.middleName,
+                    lastName: VerifyUserData.person.lastName,
+                    birthdate: moment(VerifyUserData.birthInfo.birthdate).format("YYYY-MM-DD"),
+                    // birthdate: VerifyUserData.birthInfo.birthdate,
+                    birthPlace: VerifyUserData.birthInfo.birthPlace,
+                    selfieImage: rnSelfieFile,
+                    nationality:  VerifyUserData.address.countryId,
+                    line1: VerifyUserData.address.line1,
+                    line2: VerifyUserData.address.line2,
+                    postalCode: VerifyUserData.address.zipCode,
+                    cityId: VerifyUserData.address.cityId,
+                    provinceId: VerifyUserData.address.provinceId,
+                    frontImage: rnFrontIDFile,
+                    backImage: rnBackIDFile,
+                    identificationCardNumber: VerifyUserData.verifyID.idNumber,
+                    identificationCardId: VerifyUserData.identificationId,
+                }
+            }
+        })
     }
 
 
@@ -189,6 +202,17 @@ const Confirm = ()=> {
     )
 }
 
+const mapStateToProps = (state) => ({
+    session: state.session,
+    constants: state.constants,
+  });
+  
+  const mapDispatchToProps = (dispatch) => ({
+    createSession: (payload) => dispatch({type: 'CREATE_SESSION', payload}),
+  });
+  
+  export default connect(mapStateToProps, mapDispatchToProps)(Confirm);
+
 const styles = StyleSheet.create({
     content: {
         padding: 16,
@@ -212,5 +236,3 @@ const styles = StyleSheet.create({
     },
 
 })
-
-export default Confirm

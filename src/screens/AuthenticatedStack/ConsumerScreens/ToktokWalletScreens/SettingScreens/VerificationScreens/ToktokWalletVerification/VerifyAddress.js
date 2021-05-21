@@ -4,6 +4,9 @@ import {FONTS, SIZES, INPUT_HEIGHT, BUTTON_HEIGHT, COLORS} from '../../../../../
 import {VerifyContext} from './VerifyContextProvider'
 import validator from 'validator'
 import EIcon from 'react-native-vector-icons/EvilIcons'
+import {useQuery,useLazyQuery} from '@apollo/react-hooks'
+import { TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT } from '../../../../../../../graphql'
+import { GET_CITIES } from '../../../../../../../graphql/toktokwallet/virtual'
 
 //SELF IMPORTS
 import ModalCountry from './ModalCountry'
@@ -12,6 +15,7 @@ import ModalCity from './ModalCity'
 
 import { YellowButton } from '../../../../../../../revamp'
 import { add } from 'lodash'
+
 
 const VerifyAddress = ()=> {
 
@@ -23,13 +27,25 @@ const VerifyAddress = ()=> {
     const [cities, setCities] = useState([])
     const [selectedCity, setSelectedCity] = useState("")
 
+    const [getCityByProvinceCode, {error, loading}] = useLazyQuery(GET_CITIES, {
+        client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT,
+        fetchPolicy: 'network-only',
+        onCompleted: (response) => {
+            // console.log("Clity", response)
+            setCities(response.getCities.sort((a,b)=> -1))
+        },
+        onError: (err) => {
+            console.log(err)
+        }
+    })
+
     const Proceed = ()=> {
 
         for(const [key,value] of Object.entries(address)){
 
             console.log(key)
 
-            if(key == "provinceId" && value == null || key == "cityId" && value == null) continue;
+            if(key == "provinceId" && value == null || key == "cityId" && value == null || key == "countryId" && value == null) continue;
 
             if (validator.isEmpty(value, {ignore_whitespace: true})) {
 
@@ -59,21 +75,28 @@ const VerifyAddress = ()=> {
         setCurrentIndex(oldval => oldval + 1)
     }
 
-    const onProvinceSelect = (data) => {        
-        setCities(data)
-        setSelectedCity(data[0]?.name || "")
+    const onProvinceSelect = (code) => {
+        getCityByProvinceCode({
+            variables: {
+                input: {
+                    provCode: code
+                }
+            }
+        })
     }
 
     useEffect(() => {
         setSelectedCity(address.city)
-        console.log("City Changed", address)
     }, [address])
 
     return (
         <>
             <ModalCountry type="address" />
+
             <ModalProvince type="address" onSelect={onProvinceSelect} />
+
             {cities.length == 0 ? null : <ModalCity type="address" data={cities} />}
+
             <View style={{flex: 1,}}>
                 <ScrollView style={styles.content} showsVerticalScrollIndicator={true}>
                         <Text style={styles.labelText}>Address</Text>
@@ -164,7 +187,7 @@ const VerifyAddress = ()=> {
                                 setModalCityVisible(true)
                             }}  style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center"}]}>
                                 <Text style={{flex: 1,color: "gray",fontSize: SIZES.M,fontFamily: FONTS.REGULAR}}>{selectedCity ? selectedCity : "- Select City -"}</Text>
-                                <EIcon name="chevron-right" size={24} color="#FCB91A"/>
+                                <EIcon name={loading ? "spinner" : "chevron-right"} size={24} color="#FCB91A"/>
                             </TouchableOpacity>
                         </View>
 

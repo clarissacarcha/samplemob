@@ -6,6 +6,9 @@ import BottomSheet, {BottomSheetBackdrop, BottomSheetFlatList} from '@gorhom/bot
 import {LIGHT, ORANGE, MEDIUM, FONTS, SIZES, INPUT_HEIGHT, COLORS} from '../../../../../../../res/constants';
 import {COLOR, FONT, FONT_SIZE} from '../../../../../../../res/variables';
 import {WhiteButton, BlackButton, VectorIcon, ICON_SET} from '../../../../../../../revamp';
+import {useQuery,useLazyQuery} from '@apollo/react-hooks'
+import { TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT } from '../../../../../../../graphql'
+import { GET_IDENTIFICATION_CARDS } from '../../../../../../../graphql/toktokwallet/virtual'
 
 let validIDList = [
     {label: "Passport" ,value: "Passport", isBackRequired: 1},
@@ -26,16 +29,33 @@ const BottomSheetIDType = forwardRef(({onChange}, ref) => {
   
     const snapPoints = useMemo(() => [0, 550], []);
     const constants = useSelector((state) => state.constants);
-    const {changeVerifyID} = useContext(VerifyContext)
-    const [filteredValidID, setFilteredValidID] = useState(validIDList)
+    const {changeVerifyID, setIdentificationId} = useContext(VerifyContext)
+    const [filteredValidID, setFilteredValidID] = useState([])
+
+    const [getIdentificationCards, {error, loading}] = useLazyQuery(GET_IDENTIFICATION_CARDS, {
+      client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT,
+      fetchPolicy: 'network-only',
+      onCompleted: (response) => {
+        console.log("IDS", response)
+        setFilteredValidID(response.getIdentificationCards)
+      },
+      onError: (err) => {
+        console.log(err)
+      }
+    })
+
+    useEffect(() => {
+      getIdentificationCards()
+    }, [])
 
     const selectValidID = (index)=> {
-        const validID = filteredValidID[index].value
+        const validID = filteredValidID[index].name
         changeVerifyID("idType",validID)
-        changeVerifyID("idID", filteredValidID[index].id)
         setFilteredValidID(validIDList)
+        setIdentificationId(filteredValidID[index].id)
         onChange(filteredValidID[index])
         ref.current.collapse()
+        console.log(filteredValidID[index].id)
     }
 
   return (
@@ -64,11 +84,11 @@ const BottomSheetIDType = forwardRef(({onChange}, ref) => {
         <Text style={{fontFamily: FONT.BOLD}}>Select ID Type</Text>
         <View style={{height: 10}} />
         <FlatList
-          data={validIDList}
+          data={filteredValidID}
           ItemSeparatorComponent={() => <View style={{borderBottomWidth: 1, borderColor: COLOR.LIGHT}} />}
           renderItem={({item, index}) => (
             <TouchableOpacity onPress={()=>selectValidID(index)} style={[styles.validID]}>
-                    <Text style={{fontFamily: FONTS.REGULAR, fontSize: SIZES.M}}>{item.value}</Text>
+                    <Text style={{fontFamily: FONTS.REGULAR, fontSize: SIZES.M}}>{item.name}</Text>
             </TouchableOpacity>     
           )}
         />
