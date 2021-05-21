@@ -14,15 +14,24 @@ import ModalProvince from './ModalProvince'
 import ModalCity from './ModalCity'
 
 import { YellowButton } from '../../../../../../../revamp'
-import { add } from 'lodash'
-
 
 const VerifyAddress = ()=> {
 
-    const { address, setCurrentIndex, changeAddress, 
+    const { 
+        address, 
+        setCurrentIndex, 
+        changeAddress, 
         setModalCountryVisible, 
         setModalProvinceVisible, 
-        setModalCityVisible, provinceCities} = useContext(VerifyContext)
+        setModalCityVisible, 
+        provinceCities,
+        province,
+        provinceId,
+        city,
+        setCity,
+        cityId,
+        setCityId,
+    } = useContext(VerifyContext)
     
     const [cities, setCities] = useState([])
     const [selectedCity, setSelectedCity] = useState("")
@@ -41,38 +50,12 @@ const VerifyAddress = ()=> {
 
     const Proceed = ()=> {
 
-        for(const [key,value] of Object.entries(address)){
 
-            console.log(key)
-
-            if(key == "provinceId" 
-            || key == "cityId"
-            || key == "countryId") continue;
-
-            if (validator.isEmpty(value, {ignore_whitespace: true})) {
-
-                let field
-                switch(key.toLowerCase()){
-                    case "line1":
-                        field = "Street Address"
-                        break
-                    case "line2":
-                        field = "Subdivision"
-                        break
-                    case "province":
-                        field = "Province"
-                        break
-                    case "city":
-                        field = "City"
-                        break
-                    case "zipcode":
-                        field = "Postal Code"
-                    default:
-                        break
-                }
-                return Alert.alert("",`${field} is required.`)
-             }
-        }
+        if(address.line1 == "") return Alert.alert("","Street Address is required.")
+        if(address.line2 == "") return Alert.alert("","Subdivision is required.")
+        if(provinceId == "") return Alert.alert("","Province is required.")
+        if(cityId == "") return Alert.alert("","City is required.")
+        if(address.postalCode == "") return Alert.alert("","Postal code is required.")
 
         setCurrentIndex(oldval => oldval + 1)
     }
@@ -89,8 +72,8 @@ const VerifyAddress = ()=> {
     }
 
     useEffect(() => {
-        setSelectedCity(address.city)
-    }, [address])
+        setSelectedCity(city)
+    }, [city])
 
     return (
         <>
@@ -152,41 +135,19 @@ const VerifyAddress = ()=> {
                             />
                         </View>
 
-                        {/* <View style={styles.ViewInput}>
-                            <Text style={styles.labelText}>Region/Province</Text>
-                            <TextInput 
-                                style={styles.input} 
-                                placeholder="Enter region/province here"
-                                value={address.region}
-                                onChangeText={text=>changeAddress("region",text)}
-                                // onSubmitEditing={Proceed}
-                            />
-                        </View>
-
-                        <View style={styles.ViewInput}>
-                            <Text style={styles.labelText}>City</Text>
-                            <TextInput 
-                                style={styles.input} 
-                                placeholder="Enter city here"
-                                value={address.city}
-                                onChangeText={text=>changeAddress("city",text)}
-                                // onSubmitEditing={Proceed}
-                            />
-                        </View> */}
 
                         <View style={styles.ViewInput}>
                             <Text style={styles.labelText}>Province</Text>
                             <TouchableOpacity  onPress={()=>setModalProvinceVisible(true)} style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center"}]}>
-                                <Text style={{flex: 1,color: "gray",fontSize: SIZES.M,fontFamily: FONTS.REGULAR}}>{address.province ? address.province : "- Select Province -"}</Text>
+                                <Text style={{flex: 1,color: "gray",fontSize: SIZES.M,fontFamily: FONTS.REGULAR}}>{province ? province : "- Select Province -"}</Text>
                                 <EIcon name="chevron-right" size={24} color="#FCB91A"/>
                             </TouchableOpacity>
                         </View>
 
-
                         <View style={styles.ViewInput}>
                             <Text style={styles.labelText}>City</Text>
                             <TouchableOpacity onPress={()=>{
-                                if(address.province == "") return Alert.alert("","Please select Province first")
+                                if(province == "") return Alert.alert("","Please select Province first")
                                 setModalCityVisible(true)
                             }}  style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center"}]}>
                                 <Text style={{flex: 1,color: "gray",fontSize: SIZES.M,fontFamily: FONTS.REGULAR}}>{selectedCity ? selectedCity : "- Select City -"}</Text>
@@ -199,18 +160,18 @@ const VerifyAddress = ()=> {
                             <TextInput 
                                 style={styles.input} 
                                 placeholder="Enter postal code here"
-                                value={address.zipCode}
-                                onChangeText={text=>changeAddress("zipCode",text)}
+                                value={address.postalCode}
+                                onChangeText={text=>changeAddress("postalCode",text)}
                                 onSubmitEditing={Proceed}
                             />
                         </View>
                         
-
-                        
                         <View style={styles.proceedBtn}>
                             <YellowButton label="Next" onPress={Proceed} />
                         </View>
-            
+
+                        <Text></Text>
+          
 
                     </ScrollView>
                 </View>

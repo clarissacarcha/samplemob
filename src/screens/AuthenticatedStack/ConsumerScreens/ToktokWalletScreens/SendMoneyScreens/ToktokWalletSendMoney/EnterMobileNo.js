@@ -127,17 +127,31 @@ const EnterMobileNo = ({
        <View style={styles.container}>
             <View style={styles.content}>
 
-                <TouchableOpacity onPress={()=>inputMobileRef.current.focus()} style={{flex: 1,justifyContent:"center",paddingHorizontal: 10, height:"100%"}}>
+                <TouchableOpacity onPress={()=>{
+                    return inputMobileRef.current.focus()
+                }} style={{flex: 1,justifyContent:"center",paddingHorizontal: 10, height:50}}>
                     <>
-                { recipientDetails.id && proceed && <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.M,color: COLORS.DARK}}>{`${recipientDetails.person.firstName} ${recipientDetails.person.lastName[0]}.`}</Text>}
-                <Text style={{fontFamily: FONTS.REGULAR,fontSize: recipientDetails.id && proceed ? SIZES.M : SIZES.M,color:"dimgray"}}>{mobileNo == "" ? "Enter Recipient Number" : mobileNo}</Text>
-                { errorMessage != "" && <Text style={{fontFamily:FONTS.REGULAR,fontSize: SIZES.S,color:"red",marginTop: 0}}>{errorMessage}</Text>}
-                    <TextInput
+                    { recipientDetails.id && proceed && <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.M,color: COLORS.DARK}}>{`${recipientDetails.person.firstName} ${recipientDetails.person.lastName[0]}.`}</Text>}
+                    <Text style={{fontFamily: FONTS.REGULAR,fontSize: recipientDetails.id && proceed ? SIZES.M : SIZES.M,color:"dimgray"}}>{mobileNo == "" ? "Enter Recipient Number" : mobileNo}</Text>
+                    { errorMessage != "" && <Text style={{fontFamily:FONTS.REGULAR,fontSize: SIZES.S,color:"red",marginTop: 0}}>{errorMessage}</Text>}
+
+                
+                    </>
+                </TouchableOpacity>
+
+           
+                <TouchableOpacity onPress={()=>navigation.navigate("ToktokWalletContacts", {setRecipientInfo: setRecipientMobileNo})} style={styles.contactAddress}>
+                    <View style={styles.addressbtn}>
+                            <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.XS,color: COLORS.YELLOW}}>Address Book</Text>
+                    </View>
+                </TouchableOpacity>
+
+                <TextInput
                         ref={inputMobileRef}
                         caretHidden
                         // autoFocus={true}
                         value={mobileNo}
-                        style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent',zIndex: 1}}
+                        style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent'}}
                         keyboardType="number-pad"
                         returnKeyType="done"
                         onChangeText={(value)=>{
@@ -153,13 +167,6 @@ const EnterMobileNo = ({
                         //       })
                         // }}
                     />
-                    </>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={()=>navigation.navigate("ToktokWalletContacts", {setRecipientInfo: setRecipientMobileNo})} style={styles.contactAddress}>
-                    <View style={styles.addressbtn}>
-                            <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.XS,color: COLORS.YELLOW}}>Address Book</Text>
-                    </View>
-                </TouchableOpacity>
             </View>
        </View>
     )
@@ -170,8 +177,7 @@ const styles = StyleSheet.create({
         height: INPUT_HEIGHT,
         width: width,
         paddingHorizontal: 16,
-        position:"absolute",  
-        bottom: -25,
+        marginTop: -25,
     },
     content: {
         height:"100%",
@@ -189,7 +195,8 @@ const styles = StyleSheet.create({
         flexDirection:"row",
         justifyContent:"center",
         alignItems:'center',
-        flexDirection: "row" 
+        flexDirection: "row",
+      
     },
     contactAddress: {
         // width:65,

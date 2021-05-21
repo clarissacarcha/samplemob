@@ -20,6 +20,7 @@ const VerifyFullname = ()=> {
 
     const {
         nationality ,
+        nationalityId,
         setCurrentIndex , 
         person , 
         changePersonInfo , 
@@ -55,6 +56,7 @@ const VerifyFullname = ()=> {
         if(contactInfo.email == "") return Alert.alert("","Email is required.")
         if(birthInfo.birthdate == "") return Alert.alert("","Date of Birth is required.")
         if(birthInfo.birthPlace == "") return Alert.alert("","Place of Birth is required.")
+        if(nationalityId == "") return Alert.alert("","Nationality is required.")
 
         changeContactInfo("mobile_number", "+63" + mobile)
         setCurrentIndex(oldval => oldval + 1)

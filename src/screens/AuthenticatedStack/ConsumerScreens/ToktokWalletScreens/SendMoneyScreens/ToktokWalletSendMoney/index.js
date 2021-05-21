@@ -16,6 +16,7 @@ import EnterAmount from './EnterAmount'
 import EnterNote from './/EnterNote'
 import SwipeButtonComponent from './SwipeButtonComponent'
 import ProceedButton from './ProceedButton'
+import { KeyboardAvoidingView } from 'react-native'
 
 
 const ToktokWalletSendMoney = ({navigation,route})=> {
@@ -115,7 +116,10 @@ const ToktokWalletSendMoney = ({navigation,route})=> {
                         </View>
                     </HeaderImageBackground>
     
-                    <EnterMobileNo
+          
+                </View>
+
+                <EnterMobileNo
                         mobileNo={mobileNo}
                         setMobileNo={setMobileNo}
                         navigation={navigation} 
@@ -124,11 +128,10 @@ const ToktokWalletSendMoney = ({navigation,route})=> {
                         proceed={proceed}
                         setRecipientDetails={setRecipientDetails}
                         recipientDetails={recipientDetails}
-                    />
-                </View>
+                />
 
               
-                <View style={{padding: 16,marginTop: 15,flex:1 }}>
+                <KeyboardAvoidingView style={{paddingHorizontal: 16,flex:1 }}>
                 { 
                         proceed
                         ? <> 
@@ -151,7 +154,7 @@ const ToktokWalletSendMoney = ({navigation,route})=> {
                             <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.S,color:COLORS.MEDIUM}}>You can click the "Address Book" to open your contact list.</Text>
                         </View>
                     }
-                </View>
+                </KeyboardAvoidingView>
                 
      
                 <View style={{height: 70,padding: 16, justifyContent:"flex-end"}}>

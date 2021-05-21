@@ -11,21 +11,14 @@ const ModalCity = ({type, data})=> {
 
     const [cities, setCities] = useState(data)
 
-    const {modalCityVisible,setModalCityVisible,changeBirthInfo,changeAddress,changeVerifyID,setNationality} = useContext(VerifyContext)
+    const {modalCityVisible,setModalCityVisible, setCityId , setCity} = useContext(VerifyContext)
     const [filteredCities,setFilteredCities] = useState(cities)
 
     const selectCountry = (index) => {
         const city = filteredCities[index].citymunDesc
-        if(type == "birthinfo"){
-            changeBirthInfo("birthPlace", city)
-        }else if(type == "address"){
-            changeAddress("city", city)
-            changeAddress("cityId", filteredCities[index].id)
-        }else if(type == "validID"){
-            changeVerifyID("idCountry",city)
-        }else{
-            setNationality(city)
-        }   
+        const cityId = filteredCities[index].id
+        setCity(city)
+        setCityId(cityId)
         setModalCityVisible(false)
         setFilteredCities(cities)
     }

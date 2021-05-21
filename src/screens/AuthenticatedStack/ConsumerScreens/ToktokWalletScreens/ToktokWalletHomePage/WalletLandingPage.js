@@ -60,7 +60,7 @@ const WalletLandingPage = ({refreshing, onRefresh })=> {
                         />
                     }
                 >
-                    <WalletCardInfo walletinfo={wallet}/>
+                    <WalletCardInfo walletinfo={wallet} loading={loading}/>
                 </ScrollView>
             </View>
             <View style={{flex: 1,}}>

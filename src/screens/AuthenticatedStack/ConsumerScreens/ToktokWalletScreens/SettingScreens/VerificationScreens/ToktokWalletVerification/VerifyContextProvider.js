@@ -84,7 +84,9 @@ const VerifyContextProvider = ({children})=> {
         mobile_number: session.user.username,
         email: session.user.person.emailAddress
     })
-    const [nationality,setNationality] = useState("Filipino")    
+    const [nationality,setNationality] = useState("Philippine, Filipino")
+    const [nationalityId, setNationalityId] = useState(175)  // Default Philippines from database
+
     const [birthInfo,setBirthInfo] = useState({
         birthdate: "",
         birthPlace: "",
@@ -93,13 +95,16 @@ const VerifyContextProvider = ({children})=> {
         country: "Philippines",
         line1: "",
         line2: "",
-        province: "",
-        provinceId: null,
-        city: "",
-        cityId: null,
-        zipCode: "",
+        postalCode: "",
         countryId: 175
     })
+
+    const [province,setProvince] = useState("")
+    const [provinceId,setProvinceId] = useState("")
+    const [city,setCity] = useState("")
+    const [cityId,setCityId] = useState("")
+
+
     const [verifyID, setVerifyID] = useState({
         idType: "",
         idImage: null,
@@ -166,12 +171,26 @@ const VerifyContextProvider = ({children})=> {
                 setFullname,
                 nationality,
                 setNationality,
+                nationalityId,
+                setNationalityId,
+
                 contactInfo,
                 changeContactInfo,
                 birthInfo,
                 changeBirthInfo,
                 address,
                 changeAddress,
+
+
+                province,
+                setProvince,
+                provinceId,
+                setProvinceId,
+                city,
+                setCity,
+                cityId,
+                setCityId,
+
                 verifyID,
                 changeVerifyID,
                 selfieImage,

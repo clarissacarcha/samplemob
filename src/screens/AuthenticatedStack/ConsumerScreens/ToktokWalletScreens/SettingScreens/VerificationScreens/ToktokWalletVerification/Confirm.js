@@ -13,6 +13,7 @@ import moment from 'moment'
 import {connect} from 'react-redux'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import { YellowButton } from '../../../../../../../revamp'
+import { DisabledButton } from '../../../Components'
 
 const UserInfo = ({label,value})=> {
 
@@ -23,10 +24,10 @@ const UserInfo = ({label,value})=> {
                     <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.M}}>{value}</Text>
             </View> */}
             <View style={{flex: 1}}>
-                <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.M}}>{label}</Text>
+                <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.M,textAlign: "left"}}>{label}</Text>
             </View>
             <View style={{flex: 1,alignItems:"flex-end"}}>
-                <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.M}}>{value}</Text>
+                <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.M,textAlign: "right"}}>{value}</Text>
             </View>
         </View>
     )
@@ -92,12 +93,12 @@ const Confirm = ({session})=> {
                     // birthdate: VerifyUserData.birthInfo.birthdate,
                     birthPlace: VerifyUserData.birthInfo.birthPlace,
                     selfieImage: rnSelfieFile,
-                    nationality:  VerifyUserData.address.countryId + "",
+                    nationality:  VerifyUserData.nationalityId,
                     line1: VerifyUserData.address.line1,
                     line2: VerifyUserData.address.line2,
-                    postalCode: VerifyUserData.address.zipCode,
-                    cityId: VerifyUserData.address.cityId,
-                    provinceId: VerifyUserData.address.provinceId,
+                    postalCode: VerifyUserData.address.postalCode,
+                    cityId: VerifyUserData.cityId,
+                    provinceId: VerifyUserData.provinceId,
                     frontImage: rnFrontIDFile,
                     backImage: rnBackIDFile,
                     identificationCardNumber: VerifyUserData.verifyID.idNumber,
@@ -143,17 +144,32 @@ const Confirm = ({session})=> {
                             value={isCertify}
                             onValueChange={setCertify}
                         />
-                        <View style={{paddingHorizontal: 10,marginRight: 20}}>
-                            <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.M}}>I hereby certify that I accept the Terms and Conditions.</Text>
-                        </View>
+                        <TouchableOpacity 
+                            onPress={()=>Linking.openURL("https://toktok.ph/terms-and-conditions")} 
+                            style={{paddingHorizontal: 10,marginRight: 20}}
+                        >
+                            <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.M}}>I hereby certify that I accept the <Text style={{color: COLORS.ORANGE,fontFamily: FONTS.REGULAR,fontSize: SIZES.M}}>Terms and Conditions.</Text></Text>
+                        </TouchableOpacity>
+
+                         {/* <TouchableOpacity 
+                        onPress={()=>Linking.openURL("https://toktok.ph/terms-and-conditions")} 
+                        style={{justifyContent:"flex-end",alignItems:"flex-start",flexGrow: 1,marginBottom: 15,marginTop: 20,}}
+                    >
+                            <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.M}}>I hereby certify that I accept the <Text style={{color: COLORS.ORANGE,fontFamily: FONTS.REGULAR,fontSize: SIZES.M}}>Terms and Conditions.</Text></Text>
+                    </TouchableOpacity> */}
                     
                     </View>
                   
                     <View style={{height: BUTTON_HEIGHT}}>
-                        <YellowButton label="Confirm" onPress={() => {
+                        {
+                            isCertify 
+                            ? <YellowButton label="Confirm" onPress={confirm}/>
+                            : <DisabledButton label="Confirm" />
+                        }
+                        {/* <YellowButton label="Confirm" onPress={() => {
                             if(isCertify) confirm()
                             else return
-                        }}/>
+                        }}/> */}
                     </View>
                    
                 </View>

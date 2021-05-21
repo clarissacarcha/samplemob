@@ -136,7 +136,6 @@ const ToktokWalletSecurityPinCode = ({navigation,route})=> {
                                             setPinCode(value);
                                         }
                                         }}
-                                        onSubmitEditing={onSubmit}
                                     />
                                 </View>
                                 {

@@ -1,6 +1,7 @@
 import React , {useContext} from 'react'
-import {View,Text,StyleSheet,Dimensions,TouchableOpacity,Animated,RefreshControl,ScrollView} from 'react-native'
+import {View,Text,StyleSheet,Dimensions,TouchableOpacity,Animated,RefreshControl,ScrollView,ActivityIndicator} from 'react-native'
 import { COLORS, FONTS, FONT_BOLD, FONT_MEDIUM, FONT_REGULAR, SIZES } from '../../../../../res/constants'
+import { COLOR } from '../../../../../res/variables';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import { useNavigation } from '@react-navigation/native'
 import {CheckWalletRestrictionContext} from './CheckWalletRestrictionProvider'
@@ -12,9 +13,10 @@ import { numberFormat } from '../../../../../helper';
 import WalletMethods from './WalletMethods'
 import { HeaderBack } from '../../../../../revamp';
 
+
 const {height,width} = Dimensions.get("window")
 
-const WalletCardInfo = ({walletinfo})=> {
+const WalletCardInfo = ({walletinfo , loading})=> {
     const navigation = useNavigation()
     const rotateY = new Animated.Value(0)
     const {checkIfResctricted} = useContext(CheckWalletRestrictionContext)
@@ -43,7 +45,11 @@ const WalletCardInfo = ({walletinfo})=> {
                <View style={{height: 28}}/>
                 <View style={styles.walletContent}>
                     <View>
-                        <Text style={{fontSize: 24,fontFamily: FONTS.BOLD}}>{walletinfo.currency.code} {numberFormat(walletinfo.balance)}</Text>
+                        {
+                            loading
+                            ? <ActivityIndicator size={24} color={COLOR.YELLOW}/>
+                            : <Text style={{fontSize: 24,fontFamily: FONTS.BOLD}}>{walletinfo.currency.code} {numberFormat(walletinfo.balance)}</Text>
+                        }         
                         <Text style={{fontSize:SIZES.M,fontFamily: FONTS.REGULAR,color: COLORS.DARK}}>Available Balance</Text>
                     </View>
                     <TouchableOpacity onPress={cashIn} style={styles.topUp}>

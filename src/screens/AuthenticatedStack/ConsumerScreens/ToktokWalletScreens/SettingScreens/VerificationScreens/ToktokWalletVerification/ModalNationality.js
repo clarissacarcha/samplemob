@@ -11,7 +11,7 @@ import { GET_COUNTRIES } from '../../../../../../../graphql/toktokwallet/virtual
 
 const ModalNationality = ({visible,setVisible})=> {
 
-    const {setNationality, changeAddress} = useContext(VerifyContext)
+    const {setNationality, setNationalityId, changeAddress} = useContext(VerifyContext)
     const [nationalities, setNationalities] = useState([])
     const [filteredNationalities, setFilteredNationalities] = useState([])
 
@@ -46,7 +46,8 @@ const ModalNationality = ({visible,setVisible})=> {
     const selectNationality = (index)=> {
         const country = filteredNationalities[index]
         setNationality(country.nationality)
-        changeAddress("countryId", country.id)
+        setNationalityId(country.id)
+        // changeAddress("countryId", country.id)
         setVisible(false)
         setFilteredNationalities(nationalities)
     }

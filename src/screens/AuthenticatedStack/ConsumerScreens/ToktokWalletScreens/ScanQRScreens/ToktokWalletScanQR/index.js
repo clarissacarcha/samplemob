@@ -15,7 +15,7 @@ import {useAlert} from '../../../../../../hooks/useAlert';
 import WalletBalance from './WalletBalance'
 import Actions from './Actions'
 
-const {height,width} = Dimensions.get('window')
+const {height,width} = Dimensions.get('screen')
 
 const ToktokWalletScanQR = ({navigation,route})=> {
 
@@ -170,7 +170,7 @@ const ToktokWalletScanQR = ({navigation,route})=> {
                                     vibrate={false}
                                     customMarker={customMarker}
                                     containerStyle={{
-                                        backgroundColor: "rgba(0,0,0,0.5)"
+                                        backgroundColor: "rgba(0,0,0,0.5)",
                                     }}
                                     cameraStyle={{
                                         height: height,
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
     },
     backBtn: {
         backgroundColor:"#FFFFFF",
-        top: 20, 
+        top: 30, 
         left: 16,
         position:"absolute",
         zIndex: 1,

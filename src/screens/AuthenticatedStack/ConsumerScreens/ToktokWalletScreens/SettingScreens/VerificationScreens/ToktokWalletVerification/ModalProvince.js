@@ -9,6 +9,7 @@ import {Separator} from '../../../Components';
 import {useQuery,useLazyQuery} from '@apollo/react-hooks'
 import { TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT } from '../../../../../../../graphql'
 import { GET_PROVINCES } from '../../../../../../../graphql/toktokwallet/virtual'
+import { Alert } from 'react-native';
 
 // const provinces = [
 //     {id: 1, code: "0128", name:"Ilocos Norte"},
@@ -21,13 +22,8 @@ const ModalProvince = ({type, onSelect})=> {
     const {
         modalProvinceVisible,
         setModalProvinceVisible,
-        setModalCityVisible,
-        changeBirthInfo,
-        changeAddress,
-        changeVerifyID,
-        setNationality,
-        cities,
-        changeProvinceCities
+        setProvince,
+        setProvinceId,
     } = useContext(VerifyContext)
 
     const [filteredProvinces, setFilteredProvinces] = useState([])
@@ -52,17 +48,10 @@ const ModalProvince = ({type, onSelect})=> {
 
     const selectCountry = (index) => {
         const province = filteredProvinces[index].provDesc
-        if(type == "birthinfo"){
-            changeBirthInfo("birthPlace", province)
-        }else if(type == "address"){
-            changeAddress("province", province)
-            changeAddress("provinceID", filteredProvinces[index].id)
-            getCitiesOfProvince(filteredProvinces[index].provCode)
-        }else if(type == "validID"){
-            changeVerifyID("idCountry",province)
-        }else{
-            setNationality(province)
-        }   
+        const provinceId = filteredProvinces[index].id
+        setProvince(province)
+        setProvinceId(provinceId)
+        getCitiesOfProvince(filteredProvinces[index].provCode)  
         setModalProvinceVisible(false)
         setFilteredProvinces(provinces)
     }
