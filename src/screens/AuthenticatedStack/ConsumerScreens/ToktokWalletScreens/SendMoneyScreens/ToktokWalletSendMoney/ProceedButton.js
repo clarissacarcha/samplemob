@@ -6,7 +6,8 @@ import { DisabledButton } from '../../Components'
 import {useAlert} from '../../../../../../hooks/useAlert'
 import {onErrorAlert} from '../../../../../../util/ErrorUtility'
 import {useMutation} from '@apollo/react-hooks'
-import {CLIENT,PATCH_FUND_TRANSFER} from '../../../../../../graphql'
+import {TOKTOK_WALLET_GRAPHQL_CLIENT,PATCH_FUND_TRANSFER} from '../../../../../../graphql'
+import { POST_FUND_TRANSFER } from '../../../../../../graphql/toktokwallet'
 
 //SELF IMPORTS
 import SuccessfulModal from './SuccessfulModal'
@@ -22,21 +23,22 @@ const ProceedButton = ({swipeEnabled , navigation , amount , note , session , re
         createdAt: ""
     })
 
-    const [patchFundTransfer] = useMutation(PATCH_FUND_TRANSFER, {
+    const [postFundTransfer] = useMutation(POST_FUND_TRANSFER, {
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         variables: {
             input: {
                 amount: +amount,
                 note: note,
-                sourceUserId: session.user.id,
-                destinationUserId: recipientDetails.id,
+                destinationMobileNo: recipientDetails.mobileNumber
             }
         },
         onError: (error)=> {
             onErrorAlert({alert,error})
             navigation.pop()
         },
-        onCompleted: (response)=> {
-            setWalletinfoParams(response.patchFundTransfer.walletLog)
+        onCompleted: ({postFundTransfer})=> {
+            console.log(JSON.stringify(postFundTransfer))
+            setWalletinfoParams(postFundTransfer)
             setSuccessModalVisible(true)
         }
     })
@@ -52,7 +54,7 @@ const ProceedButton = ({swipeEnabled , navigation , amount , note , session , re
                 amount: amount,
                 recipient: {
                     name: `${recipientDetails.person.firstName} ${recipientDetails.person.middleName ? recipientDetails.person.middleName + " " : ""}${recipientDetails.person.lastName}`,
-                    mobileNo: recipientDetails.username
+                    mobileNo: recipientDetails.mobileNumber
                 }
             }
         })
@@ -63,7 +65,7 @@ const ProceedButton = ({swipeEnabled , navigation , amount , note , session , re
     }
 
     const onSwipeSuccess = ()=> {
-        return navigation.push("ToktokWalletSecurityPinCode", {onConfirm: patchFundTransfer})
+        return navigation.push("ToktokWalletSecurityPinCode", {onConfirm: postFundTransfer})
     }
 
     return (
@@ -73,7 +75,7 @@ const ProceedButton = ({swipeEnabled , navigation , amount , note , session , re
                 amount={amount} 
                 recipient={{
                     name: `${recipientDetails.person.firstName} ${recipientDetails.person.middleName ? recipientDetails.person.middleName + " " : ""}${recipientDetails.person.lastName}`,
-                    mobileNo: recipientDetails.username
+                    mobileNo: recipientDetails.mobileNumber
                 }}
                 walletinfoParams={walletinfoParams}
             />

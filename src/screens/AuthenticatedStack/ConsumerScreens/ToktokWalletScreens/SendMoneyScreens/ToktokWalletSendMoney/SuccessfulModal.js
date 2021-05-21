@@ -34,7 +34,8 @@ const SuccessfulModal = ({successModalVisible , amount , recipient , walletinfoP
             onRequestClose={Proceed}
         >
             <Receipt
-                refNo={walletinfoParams.referenceNumber}
+                // refNo={walletinfoParams.referenceNumber}
+                refNo={walletinfoParams.id}
                 refDate={walletinfoParams.createdAt}
                 onPress={Proceed}
             >

@@ -41,18 +41,6 @@ const ToktokWalletSendMoney = ({navigation,route})=> {
             middleName: "",
             lastName: ""
         },
-        incomingRecords: {
-            daily: 0,
-            monthly: 0,
-            yearly: 0,
-            walletlimit: {
-                id: null,
-                walletSize: null,
-                incomingValueDailyLimit: null,
-                incomingValueMonthlyLimit: null,
-                incomingValueAnnualLimit: null,
-              }
-        }
     })
 
     const [senderDetails , setSenderDetails] = useState({

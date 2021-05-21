@@ -145,9 +145,11 @@ export const Receipt = ({children, format, refNo ,refDate, onPress})=> {
                 options={{ format: format ? format : "jpg", quality: 0.9,width: width,height: height * 0.6 ,result: 'tmpfile' }}
             >
                
-               <View style={styles.checkIcon}>
+               {/* <View style={styles.checkIcon}>
                     <FIcon5 name="check" color="white" size={60}/> 
-               </View>
+               </View> */}
+
+               <Image source={require('../../../../../assets/toktokwallet-assets/success.png')}/>
                
                <Text style={styles.titleText}>
                     Transaction Completed

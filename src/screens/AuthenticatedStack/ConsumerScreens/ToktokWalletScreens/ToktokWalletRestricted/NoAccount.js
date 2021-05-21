@@ -1,10 +1,9 @@
 import React from 'react'
-import {View,Text,StyleSheet} from 'react-native'
+import {View,Text,StyleSheet, TouchableOpacity} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
-import { HeaderImageBackground , HeaderTitle , Separator } from '../Components'
-import { COLOR , FONT_SIZE , FONT } from '../../../../../res/variables'
-import FIcon5 from 'react-native-vector-icons/FontAwesome5'
-import { YellowButton } from '../../../../../revamp'
+import { HeaderImageBackground , HeaderTitle , Separator  } from '../Components'
+import { COLOR , FONT_SIZE , FONT , SIZE } from '../../../../../res/variables'
+import { YellowButton , VectorIcon , ICON_SET } from '../../../../../revamp'
 
 const ProceedButton = ({route})=> {
     const navigation = useNavigation()
@@ -16,16 +15,18 @@ const ProceedButton = ({route})=> {
     )
 }
 
-// const LinkButton = ()=> {
-//     const navigation = useNavigation()
+const LinkButton = ()=> {
+    const navigation = useNavigation()
 
-//     return (
-        
-//     )
-// }
+    return (
+        <TouchableOpacity style={styles.linkButton}>
+                <Text style={styles.linkButtonLabel}>Link To Existing toktokwallet</Text>
+        </TouchableOpacity>
+    )
+}
 
 
-const NoAccount = ()=> {
+const PendingKyc = ()=> {
     const navigation = useNavigation()
 
     navigation.setOptions({
@@ -45,15 +46,16 @@ const NoAccount = ()=> {
                     <Text style={styles.verifyWalletText}>Verify your <Text style={{color: COLOR.YELLOW}}>toktok</Text><Text style={{color: COLOR.ORANGE}}>wallet</Text></Text>
                     <Text style={styles.clickVerifyText}>Click the "Verify Now" button.</Text>
                     <View style={{marginTop: 20}}>
-                        <Text style={styles.listItem}><FIcon5 color="orange" name="check" />  Create your toktokwallet</Text>
-                        <Text style={styles.listItem}><FIcon5 color="orange" name="check" />  Secure your account and payments</Text>
-                        <Text style={styles.listItem}><FIcon5 color="orange" name="check" />  Enjoy convenient payment experience</Text>
-                        <Text style={styles.listItem}><FIcon5 color="orange" name="check" />  Unlock toktokwallet features</Text>
+                        <Text style={styles.listItem}><VectorIcon name="check" size={13} iconSet={ICON_SET.FontAwesome5}/> Create your toktokwallet</Text>
+                        <Text style={styles.listItem}><VectorIcon name="check" size={13} iconSet={ICON_SET.FontAwesome5}/> Secure your account and payments</Text>
+                        <Text style={styles.listItem}><VectorIcon name="check" size={13} iconSet={ICON_SET.FontAwesome5}/> Enjoy convenient payment experience</Text>
+                        <Text style={styles.listItem}><VectorIcon name="check" size={13} iconSet={ICON_SET.FontAwesome5}/> Unlock toktokwallet features</Text>
                     </View>
                 </View>
             </View>
 
-            <View style={{height: 70,padding: 16,justifyContent:'flex-end'}}>
+            <View style={{height: 120,padding: 16,justifyContent:'flex-end'}}>
+                {/* <LinkButton /> */}
                <ProceedButton route="ToktokWalletVerification" />
             </View>
         
@@ -89,6 +91,19 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         fontSize: FONT_SIZE.S
     },
+    linkButton: {
+        width: "100%",
+        height: SIZE.BUTTON_HEIGHT,
+        backgroundColor:"#F7F7FA",
+        marginBottom: 20,
+        borderRadius: SIZE.BORDER_RADIUS,
+        justifyContent:"center",
+        alignItems:"center"
+    },
+    linkButtonLabel: {
+        fontSize: FONT_SIZE.L,
+        fontFamily: FONT.BOLD,
+    }
 })
 
-export default NoAccount
+export default PendingKyc

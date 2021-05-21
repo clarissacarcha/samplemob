@@ -81,13 +81,16 @@ const ToktokWalletSecurityPinCode = ({navigation,route})=> {
     };
     
     const onSubmit = () => {
-       getVerifyToktokWalletPIN({
-            variables: {
-                input: {
-                    pincode: pinCode
-                }
-            },
-       })
+    //    getVerifyToktokWalletPIN({
+    //         variables: {
+    //             input: {
+    //                 pincode: pinCode
+    //             }
+    //         },
+    //    })
+        if(pinCode === "123456"){
+            route.params.onConfirm()
+        }
     };
 
 

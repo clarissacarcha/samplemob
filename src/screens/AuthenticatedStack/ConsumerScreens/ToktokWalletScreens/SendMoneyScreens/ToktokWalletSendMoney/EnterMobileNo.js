@@ -2,8 +2,8 @@ import React , {useState, useEffect} from 'react'
 import {View,Text,StyleSheet,TextInput,TouchableOpacity,Dimensions} from 'react-native'
 import {SIZES, INPUT_HEIGHT, FONTS, COLORS} from '../../../../../../res/constants'
 import {useLazyQuery} from '@apollo/react-hooks'
-import {CLIENT,GET_USER_ACCOUNT,GET_DAILY_MONTHLY_YEARLY_INCOMING} from '../../../../../../graphql'
-
+import {TOKTOK_WALLET_GRAPHQL_CLIENT} from '../../../../../../graphql'
+import { GET_ACCOUNT } from '../../../../../../graphql/toktokwallet'
 
 const {width,height} = Dimensions.get("window")
 
@@ -20,52 +20,23 @@ const EnterMobileNo = ({
 
     const [errorMessage,setErrorMessage] = useState("")
 
-    const [getUserAccount, {data: userInfo, error, loading}] = useLazyQuery(GET_USER_ACCOUNT, {
-        fetchPolicy: 'network-only',
-        onError: (err) => {
+    const [getAccount, {data: walletData,error: walletError,loading: walletLoading}] = useLazyQuery(GET_ACCOUNT , {
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+        fetchPolicy: "network-only",
+        onCompleted: ({getAccount})=>{
+            setRecipientDetails(getAccount)
+            checkIFSameNumber(getAccount.mobileNumber.replace("+63","0"))
+        },
+        onError: (err)=> {
             if(err.graphQLErrors.length > 0){
                 err.graphQLErrors.map((error)=> {
-                    if(error.message == "Wallet not found"){
-                       setProceed(false)
-                       return setErrorMessage("Recipient does not have toktokwallet")
-                    }else{
+                    if(error.message == "Person doesn't registered in toktokwallet") {
                         setProceed(false)
-                        return setErrorMessage("Recipient does not have toktok app")
+                        return setErrorMessage("Recipient does not have toktokwallet")
                     }
+                   
                 })
             }
-        },
-        onCompleted: (response) => {
-            setRecipientDetails(oldstate=> {
-                return {
-                    ...oldstate,
-                    ...response.getUserAccount
-                }
-            })
-            checkIFSameNumber(response.getUserAccount.username.replace("+63","0"))
-            // getDailyMonthlyYearlyIncoming({
-            //     variables: {
-            //         input: {
-            //             userID: response.getUserAccount.id
-            //         }
-            //     }
-            // })
-            // return navigation.push("TokTokWalletPinCodeSecurity", {onConfirm: patchFundTransfer})
-        }
-    })
-
-    const [getDailyMonthlyYearlyIncoming] = useLazyQuery(GET_DAILY_MONTHLY_YEARLY_INCOMING , {
-        fetchPolicy: 'network-only',
-        onError: (error)=>{
-
-        },
-        onCompleted: (response)=>{
-            setRecipientDetails(oldstate=> {
-                return {
-                    ...oldstate,
-                    incomingRecords: response.getDailyMonthlyYearlyIncoming
-                }
-            })
         }
     })
 
@@ -132,19 +103,23 @@ const EnterMobileNo = ({
             setProceed(false)
         }
         if(mobileNo.length == 11){
-            getUserAccount({
+            getAccount({
                 variables: {
-                  input: {
-                    mobileNo: mobileNo
-                  }
-                },
-              })
+                    input: {
+                        mobileNumber: mobileNo
+                    }
+                }
+            })
         }
 
         return ()=> {
             setProceed(false)
         }
     },[mobileNo])
+
+    useEffect(()=>{
+        console.log(recipientDetails)
+    },[recipientDetails])
 
     return (
        <View style={styles.container}>
