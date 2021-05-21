@@ -49,7 +49,7 @@ const Confirm = ({session})=> {
             if(result.status == 2){
                 navigation.pop()
                 navigation.navigate("ToktokWalletVerifyResult")
-                navigation.replace("ToktokWalletVerifyResult")
+                // navigation.replace("ToktokWalletVerifyResult")
             }
         }
     })

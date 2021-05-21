@@ -1,9 +1,10 @@
-import React , {useState, useEffect} from 'react'
-import {View,Text,StyleSheet,TextInput,TouchableOpacity,Dimensions} from 'react-native'
+import React , {useState, useEffect , useRef} from 'react'
+import {View,Text,StyleSheet,TextInput,TouchableOpacity,Dimensions,TouchableHighlight} from 'react-native'
 import {SIZES, INPUT_HEIGHT, FONTS, COLORS} from '../../../../../../res/constants'
 import {useLazyQuery} from '@apollo/react-hooks'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from '../../../../../../graphql'
 import { GET_ACCOUNT } from '../../../../../../graphql/toktokwallet'
+import { Alert } from 'react-native'
 
 const {width,height} = Dimensions.get("window")
 
@@ -19,6 +20,7 @@ const EnterMobileNo = ({
 })=> {
 
     const [errorMessage,setErrorMessage] = useState("")
+    const inputMobileRef = useRef()
 
     const [getAccount, {data: walletData,error: walletError,loading: walletLoading}] = useLazyQuery(GET_ACCOUNT , {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
@@ -125,11 +127,13 @@ const EnterMobileNo = ({
        <View style={styles.container}>
             <View style={styles.content}>
 
-                <View style={{flex: 1,paddingHorizontal: 10,}}>
+                <TouchableHighlight underlayColor={"white"} onPress={()=>inputMobileRef.current.focus()} style={{flex: 1,justifyContent:"center",paddingHorizontal: 10, height:"100%"}}>
+                    <>
                 { recipientDetails.id && proceed && <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.M,color: COLORS.DARK}}>{`${recipientDetails.person.firstName} ${recipientDetails.person.lastName[0]}.`}</Text>}
                 <Text style={{fontFamily: FONTS.REGULAR,fontSize: recipientDetails.id && proceed ? SIZES.M : SIZES.M,color:"dimgray"}}>{mobileNo == "" ? "Enter Recipient Number" : mobileNo}</Text>
                 { errorMessage != "" && <Text style={{fontFamily:FONTS.REGULAR,fontSize: SIZES.S,color:"red",marginTop: 0}}>{errorMessage}</Text>}
                     <TextInput
+                        ref={inputMobileRef}
                         caretHidden
                         // autoFocus={true}
                         value={mobileNo}
@@ -149,7 +153,8 @@ const EnterMobileNo = ({
                         //       })
                         // }}
                     />
-                </View>
+                    </>
+                </TouchableHighlight>
                 <TouchableOpacity onPress={()=>navigation.navigate("ToktokWalletContacts", {setRecipientInfo: setRecipientMobileNo})} style={styles.contactAddress}>
                     <View style={styles.addressbtn}>
                             <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.XS,color: COLORS.YELLOW}}>Address Book</Text>

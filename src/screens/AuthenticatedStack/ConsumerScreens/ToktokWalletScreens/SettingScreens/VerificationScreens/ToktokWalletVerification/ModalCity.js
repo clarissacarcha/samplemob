@@ -4,6 +4,7 @@ import {Modal,View,Text,StyleSheet,FlatList,TouchableOpacity,TextInput} from 're
 import {VerifyContext} from './VerifyContextProvider'
 import FIcon from 'react-native-vector-icons/Feather';
 import {SIZES, INPUT_HEIGHT, FONTS, COLORS } from '../../../../../../../res/constants';
+import { COLOR } from '../../../../../../../res/variables';
 import {Separator} from '../../../Components';
 
 const ModalCity = ({type, data})=> {
@@ -31,9 +32,12 @@ const ModalCity = ({type, data})=> {
 
     const renderCountry = ({item,index})=> {
         return (
+            <>
             <TouchableOpacity onPress={()=>selectCountry(index)} style={[styles.country]}>
                     <Text style={{fontFamily: FONTS.REGULAR, fontSize: SIZES.M}}>{item.citymunDesc}</Text>
             </TouchableOpacity>
+            <View style={styles.divider}/>
+            </>
         )
     }
 
@@ -114,10 +118,13 @@ const styles = StyleSheet.create({
     country: {
         height: INPUT_HEIGHT,
         justifyContent:"center",
-        borderBottomWidth: .2,
-        borderColor: "silver",
         paddingHorizontal:16,
     },
+    divider: {
+        height: 1,
+        width: "100%",
+        backgroundColor: COLOR.LIGHT,
+    }
 })
 
 export default ModalCity
