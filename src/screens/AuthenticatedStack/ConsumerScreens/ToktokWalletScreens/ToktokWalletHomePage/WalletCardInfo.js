@@ -16,10 +16,11 @@ import { HeaderBack } from '../../../../../revamp';
 
 const {height,width} = Dimensions.get("window")
 
-const WalletCardInfo = ({walletinfo , loading})=> {
+const WalletCardInfo = ({account , loading})=> {
     const navigation = useNavigation()
     const rotateY = new Animated.Value(0)
     const {checkIfResctricted} = useContext(CheckWalletRestrictionContext)
+    const walletinfo = account.wallet
 
     const animation = Animated.timing(rotateY,{
         toValue: 200,
@@ -73,7 +74,7 @@ const WalletCardInfo = ({walletinfo , loading})=> {
            </HeaderImageBackground>
     
             <View style={styles.whitespace}>
-                <WalletMethods walletinfo={walletinfo}/>
+                <WalletMethods account={account} walletinfo={walletinfo}/>
             </View>
             <Separator />
        </View>

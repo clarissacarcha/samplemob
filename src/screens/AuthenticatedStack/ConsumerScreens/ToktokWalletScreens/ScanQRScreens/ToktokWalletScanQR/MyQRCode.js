@@ -15,7 +15,7 @@ import moment from 'moment'
 
 const {width,height} = Dimensions.get("window")
 
-const MyQRCode = ({visible,setVisible})=> {
+const MyQRCode = ({visible,setVisible,account})=> {
 
     const session = useSelector(state=>state.session)
 
@@ -115,7 +115,7 @@ const MyQRCode = ({visible,setVisible})=> {
        
         viewshotRef.current.capture().then(async (uri ) => {
             const timestamp = +moment()
-            const filename = `${timestamp.toString()}_${session.user.userId}.jpg`
+            const filename = `${timestamp.toString()}_${account.mobileNumber}.jpg`
     
             RNFS.moveFile(uri, pathCache + `/${filename}`)
             const newFileUri = `${pathCache}/${filename}`
@@ -145,16 +145,16 @@ const MyQRCode = ({visible,setVisible})=> {
                             >
                                      <Image resizeMode="contain" style={{height: 23,width: 130,marginBottom: 15}} source={require('../../../../../../assets/toktokwallet-assets/toktokwallet.png')}/>
                                      <QRCode
-                                        value={session.user.userId} //Give value when there's no session as it will throw an error if value is empty.
+                                        value={account.mobileNumber} //Give value when there's no session as it will throw an error if value is empty.
                                         // size={width * 0.7}
                                         size={250}
                                         color="black"
                                         backgroundColor="transparent"
                                         // onPress={() => alert('Pressed')}
                                     />
-                                    {/* <View style={{marginTop: 10,}}>
-                                     <Text style={{fontFamily: FONTS.BOLD,fontSize:SIZES.M, color: COLORS.DARK}}>{`${session.user.person.firstName} ${session.user.person.lastName}`}</Text>
-                                    </View> */}
+                                    <View style={{marginTop: 10,}}>
+                                     <Text style={{fontFamily: FONTS.BOLD,fontSize:SIZES.M, color: COLORS.DARK}}>{account.mobileNumber}</Text>
+                                    </View>
                             </ViewShot>
                             <Separator/>
                             <View style={{height: 50,alignItems:"center",marginTop: 10,}}>

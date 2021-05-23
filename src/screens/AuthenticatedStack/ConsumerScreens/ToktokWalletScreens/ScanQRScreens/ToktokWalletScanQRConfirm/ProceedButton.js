@@ -2,7 +2,8 @@ import React, {useState} from 'react'
 import {View,Text,Modal,StyleSheet,TouchableOpacity,Image, Dimensions} from 'react-native'
 import { numberFormat } from '../../../../../../helper'
 import {useMutation} from '@apollo/react-hooks'
-import {CLIENT,PATCH_FUND_TRANSFER} from '../../../../../../graphql'
+import {TOKTOK_WALLET_GRAPHQL_CLIENT} from '../../../../../../graphql'
+import { POST_FUND_TRANSFER } from '../../../../../../graphql/toktokwallet'
 import {useNavigation} from '@react-navigation/native'
 import {useAlert} from '../../../../../../hooks/useAlert'
 import {onErrorAlert} from '../../../../../../util/ErrorUtility'
@@ -18,7 +19,6 @@ const ProceedButton = ({
     amount,
     swipeEnabled,
     note,
-    session,
     recipientInfo
 })=> {
 
@@ -31,21 +31,22 @@ const ProceedButton = ({
         createdAt: ""
     })
 
-    const [patchFundTransfer] = useMutation(PATCH_FUND_TRANSFER, {
+    const [postFundTransfer] = useMutation(POST_FUND_TRANSFER, {
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         variables: {
             input: {
                 amount: +amount,
                 note: note,
-                sourceUserId: session.user.id,
-                destinationUserId: recipientInfo.id,
+                destinationMobileNo: recipientInfo.mobileNumber
             }
         },
         onError: (error)=> {
             onErrorAlert({alert,error})
             navigation.pop()
         },
-        onCompleted: (response)=> {
-            setWalletinfoParams(response.patchFundTransfer.walletLog)
+        onCompleted: ({postFundTransfer})=> {
+            console.log(JSON.stringify(postFundTransfer))
+            setWalletinfoParams(postFundTransfer)
             setSuccessModalVisible(true)
         }
     })
@@ -56,7 +57,7 @@ const ProceedButton = ({
     }
 
     const onSwipeSuccess = ()=> {
-        return navigation.push("ToktokWalletSecurityPinCode", {onConfirm: patchFundTransfer})
+        return navigation.push("ToktokWalletSecurityPinCode", {onConfirm: postFundTransfer})
     }
 
     const reviewAndConfirm = ()=> {
@@ -69,8 +70,8 @@ const ProceedButton = ({
             data: {
                 amount: amount,
                 recipient: {
-                    name: recipientInfo.name,
-                    mobileNo: recipientInfo.contactNo
+                    name: `${recipientInfo.person.firstName} ${recipientInfo.person.lastName}`,
+                    mobileNo: recipientInfo.mobileNumber
                 }
             }
         })
@@ -83,8 +84,8 @@ const ProceedButton = ({
                 successModalVisible={successModalVisible}
                 amount={amount} 
                 recipient={{
-                    name: `${recipientInfo.name}`,
-                    mobileNo: recipientInfo.contactNo,
+                    name: `${recipientInfo.person.firstName} ${recipientInfo.person.lastName}`,
+                    mobileNo: recipientInfo.mobileNumber
                 }}
                 walletinfoParams={walletinfoParams}
             />

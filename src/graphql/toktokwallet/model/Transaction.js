@@ -14,3 +14,57 @@ export const POST_FUND_TRANSFER = gql`
         }
     }
 `
+
+export const GET_OUTGOING_TRANSFER = gql`
+    query {
+        getOutgoingTransfer {
+            id
+            amount
+            status
+            destinationPerson {
+                firstName
+                lastName
+                middleName
+            }
+            destinationWallet {
+                account {
+                    mobileNumber
+                }
+            }
+        }
+    }
+`
+
+export const GET_TRANSACTIONS = gql`
+    query {
+       getTransactions {
+            recentTransactions {
+                logDate
+                logs {
+                    id
+                    amount
+                    note
+                    status
+                    sourceWalletId
+                    destinationWalletId
+                    sourcePerson {
+                        firstName
+                        middleName
+                        lastName
+                    }
+                    destinationPerson {
+                        firstName
+                        middleName
+                        lastName
+                    }
+                    transactionType {
+                        name
+                        type
+                        sourcePhrase
+                        destinationPhrase
+                    }
+                }
+            }
+       }
+    }
+`

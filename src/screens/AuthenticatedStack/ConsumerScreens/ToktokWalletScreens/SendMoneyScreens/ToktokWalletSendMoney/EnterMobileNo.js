@@ -16,7 +16,8 @@ const EnterMobileNo = ({
     setRecipientDetails , 
     mobileNo , 
     setMobileNo , 
-    recipientDetails
+    recipientDetails,
+    account
 })=> {
 
     const [errorMessage,setErrorMessage] = useState("")
@@ -43,7 +44,7 @@ const EnterMobileNo = ({
     })
 
     const checkIFSameNumber = (mobile) => {
-        let sessionMobile = session.user.username.replace("+63","0")
+        let sessionMobile = account.mobileNumber.replace("+63","0")
         if(mobile == sessionMobile){
             setErrorMessage("You cannot send money to yourself.")
             setProceed(false)
@@ -206,6 +207,7 @@ const styles = StyleSheet.create({
         borderColor: COLORS.YELLOW,
         borderRadius: 3,
         marginRight: 10,
+        zIndex: 1,
     },
     addressbtn: {
         flex: 1,

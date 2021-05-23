@@ -6,7 +6,8 @@ import {COLORS, FONTS, SIZES} from '../../../../../../res/constants'
 import FIcon from 'react-native-vector-icons/Feather';
 import {useFocusEffect} from '@react-navigation/native'
 import {useLazyQuery} from '@apollo/react-hooks'
-import {GET_QR_CODE} from '../../../../../../graphql'
+import {TOKTOK_WALLET_GRAPHQL_CLIENT } from '../../../../../../graphql'
+import {GET_ACCOUNT} from '../../../../../../graphql/toktokwallet'
 import {onError} from '../../../../../../util/ErrorUtility'
 import {useSelector} from 'react-redux'
 import {useAlert} from '../../../../../../hooks/useAlert';
@@ -24,7 +25,7 @@ const ToktokWalletScanQR = ({navigation,route})=> {
     })
 
     const alertHook = useAlert()
-    const {walletinfo} = route.params
+    const {walletinfo,account} = route.params
     const [torch,setTorch] = useState(false)
     const [focusCamera,setFocusCamera] = useState(false)
     const session = useSelector(state=>state.session)
@@ -36,27 +37,27 @@ const ToktokWalletScanQR = ({navigation,route})=> {
         return ()=> setFocusCamera(false)
     },[]))
 
-    const [getQRCode] = useLazyQuery(GET_QR_CODE,{
+
+    const [getAccount] = useLazyQuery(GET_ACCOUNT,{
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         fetchPolicy: "network-only",
-        onError: (error)=>{
-            if(error.graphQLErrors.length > 0){
-                error.graphQLErrors.map((err)=> {
-                    if(err.message == "Wallet not found"){
-                       return alertHook({message:"Recipient does not have toktokwallet"})
-                    }else{
-                       return alertHook({message:"This QR code is invalid"})
+        onError: (err)=>{
+            if(err.graphQLErrors.length > 0){
+                err.graphQLErrors.map((error)=> {
+                    if(error.message == "Person doesn't registered in toktokwallet") {
+                        return alertHook({message:"This QR code is invalid"})
                     }
+                   
                 })
-            return
+                return
             }
             onError(error)
         },
-        onCompleted: (response)=> {
-            if(response.getQRCode.contactNo === session.user.username){
+        onCompleted: ({getAccount})=> {
+            if(getAccount.mobileNumber === account.mobileNumber){
                 return alertHook({message: "You cannot send money to yourself"})
-            }else{
-                navigation.navigate("ToktokWalletScanQRConfirm", {recipientInfo: response.getQRCode, walletinfo: walletinfo})
             }
+            return  navigation.navigate("ToktokWalletScanQRConfirm", {recipientInfo: getAccount, walletinfo: walletinfo})
         }
     })
 
@@ -92,10 +93,10 @@ const ToktokWalletScanQR = ({navigation,route})=> {
         }
 
         if(ifInsideBox(boundary,resultBounds)){
-             getQRCode({
+             getAccount({
                 variables: {
                     input: {
-                        qrCode: e.data
+                        mobileNumber: e.data
                     }
                 }
             })
@@ -179,11 +180,13 @@ const ToktokWalletScanQR = ({navigation,route})=> {
                                 />
            }
 
-                <Actions onUploadSuccess={(qrCode)=>{
-                        getQRCode({
+                <Actions 
+                    account={account}
+                    onUploadSuccess={(qrCode)=>{
+                        getAccount({
                             variables: {
                                 input: {
-                                    qrCode: qrCode
+                                    mobileNumber: qrCode
                                 }
                             }
                         })

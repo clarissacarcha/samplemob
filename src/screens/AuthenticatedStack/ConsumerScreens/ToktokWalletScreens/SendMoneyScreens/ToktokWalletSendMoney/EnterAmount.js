@@ -3,7 +3,7 @@ import {View,Text,StyleSheet,TextInput} from 'react-native'
 import { numberFormat } from '../../../../../../helper'
 import { FONT_MEDIUM, FONT_REGULAR , FONT_LIGHT, INPUT_HEIGHT, SIZES, FONTS, FONT_BOLD, COLORS } from '../../../../../../res/constants'
 
-const EnterAmount = ({walletinfo , setSwipeEnabled , amount  ,setAmount , recipientDetails}) => {
+const EnterAmount = ({walletinfo , setSwipeEnabled , amount  ,setAmount , recipientDetails , account}) => {
 
     const [errorAmountMessage,setErrorAmountMessage] = useState("")
     const [tempAmount,setTempAmount] = useState("")
@@ -26,7 +26,7 @@ const EnterAmount = ({walletinfo , setSwipeEnabled , amount  ,setAmount , recipi
                 
             }else if(amount < 1 && amount != ""){
                 setSwipeEnabled(false)
-                setErrorAmountMessage(`Please Enter atleast PHP 1.00`)
+                setErrorAmountMessage(`Please Enter atleast ${account.wallet.currency.code} 1.00`)
             }else{
                 setSwipeEnabled(false)
                 setErrorAmountMessage(amount == "" ? "" : "Insufficient Fund")
@@ -46,7 +46,7 @@ const EnterAmount = ({walletinfo , setSwipeEnabled , amount  ,setAmount , recipi
                 <Text style={{fontFamily:FONTS.REGULAR,fontSize: SIZES.M,color:"red",marginLeft: 10}}>{errorAmountMessage}</Text>
             </View>
             <View style={styles.input}>
-                    <Text style={{fontSize: SIZES.M,fontFamily: FONTS.BOLD,alignSelf:"center",color: COLORS.DARK}}>PHP </Text>
+                    <Text style={{fontSize: SIZES.M,fontFamily: FONTS.BOLD,alignSelf:"center",color: COLORS.DARK}}>{account.wallet.currency.code} </Text>
                     <TextInput
                             caretHidden
                             value={tempAmount}

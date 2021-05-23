@@ -30,9 +30,10 @@ const ToktokWalletRecentTransferView = ({navigation,route})=> {
 
     const recentTransfer = route.params.recentTransfer
     const walletinfo = route.params.walletinfo
+    const account = route.params.account
 
     const TransferAgain = ()=> {
-        return navigation.navigate("ToktokWalletSendMoney", {walletinfo , recentTransfer})
+        return navigation.navigate("ToktokWalletSendMoney", {walletinfo , account, recentTransfer})
     }
 
     return (
@@ -43,8 +44,8 @@ const ToktokWalletRecentTransferView = ({navigation,route})=> {
                         <Details label="Date" value={moment(recentTransfer.createdAt).tz('Asia/Manila').format('MMM DD, YYYY')}/>
                         <Details label="Time" value={moment(recentTransfer.createdAt).tz('Asia/Manila').format('h:mm a')}/>
                         <Details label="Payment Method" value="toktokwallet"/>
-                        <Details label="Recipient" value={`${recentTransfer.destinationInfo.firstName} ${recentTransfer.destinationInfo.middleName ? recentTransfer.destinationInfo.middleName + " " : ""}${recentTransfer.destinationInfo.lastName}`}/>
-                        <Details label="Fund Transferred" value={`PHP ${numberFormat(recentTransfer.amount)}`}/>
+                        <Details label="Recipient" value={`${recentTransfer.destinationPerson.firstName} ${recentTransfer.destinationPerson.middleName ? recentTransfer.destinationPerson.middleName + " " : ""}${recentTransfer.destinationPerson.lastName}`}/>
+                        <Details label="Fund Transferred" value={`${account.wallet.currency.code} ${numberFormat(recentTransfer.amount)}`}/>
                     </View>
                     <View style={{flex: 1,height: 70,justifyContent:"flex-end",paddingBottom: 16,}}>
                             <YellowButton label="Transfer Again" onPress={TransferAgain} />

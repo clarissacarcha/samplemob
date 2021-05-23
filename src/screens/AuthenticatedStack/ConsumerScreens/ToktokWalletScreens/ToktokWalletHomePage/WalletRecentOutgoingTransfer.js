@@ -4,23 +4,26 @@ import { COLOR, COLORS, FONTS, FONT_BOLD, FONT_LIGHT, FONT_MEDIUM, FONT_REGULAR,
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import moment from 'moment'
 import { numberFormat } from '../../../../../helper'
-import {GET_RECENT_OUTGOING_TRANSFER} from '../../../../../graphql'
+import {GET_OUTGOING_TRANSFER} from '../../../../../graphql/toktokwallet'
+import {TOKTOK_WALLET_GRAPHQL_CLIENT} from '../../../../../graphql'
 import {useQuery} from '@apollo/react-hooks'
 import {useNavigation} from '@react-navigation/native'
 import {Separator} from '../Components'
 
-const WalletRecentOutgoingTransfer = ({walletinfo})=> {
+const WalletRecentOutgoingTransfer = ({account})=> {
 
     const navigation = useNavigation()
+    const walletinfo = account.wallet
 
     const ViewRecentTransfer = (recentTransfer)=> {
-        return navigation.navigate("ToktokWalletRecentTransferView",{recentTransfer , walletinfo})
+        return navigation.navigate("ToktokWalletRecentTransferView",{recentTransfer , walletinfo , account})
     }
 
-    const {data,error,loading} = useQuery(GET_RECENT_OUTGOING_TRANSFER, {
+    const {data,error,loading} = useQuery(GET_OUTGOING_TRANSFER, {
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         fetchPolicy:"network-only",
-        onCompleted: (response)=> {
-
+        onCompleted: ({getOutgoingTransfer})=> {
+            console.log(JSON.stringify(getOutgoingTransfer))
         }
     })
 
@@ -32,19 +35,19 @@ const WalletRecentOutgoingTransfer = ({walletinfo})=> {
         return null
     }
 
-    if(!data.getRecentOutgoingTransfer){
+    if(!data.getOutgoingTransfer){
         return null
     }
-
-    const destination = data.getRecentOutgoingTransfer.destinationInfo
-    const recentTransfer = data.getRecentOutgoingTransfer
+    
+    const destination = data.getOutgoingTransfer.destinationPerson
+    const recentTransfer = data.getOutgoingTransfer
     const destinationFullname = `${destination.firstName} ${destination.middleName ? destination.middleName + " " : ""}${destination.lastName}`
-
 
     return (
         <>
         <View style={styles.container}>
             <Text style={styles.title}>Outgoing Transfer</Text>
+
             <View style={{flexDirection:"row",marginTop: 10,borderBottomColor:"silver",borderBottomWidth: .2,paddingBottom: 10}}>
                     <View style={{flex: 1,alignItems:"flex-start"}}>
                         <Text style={{fontSize: SIZES.M,fontFamily: FONTS.BOLD,color: COLORS.DARK}}>{moment(recentTransfer.createdAt).tz('Asia/Manila').format('MMM DD, YYYY')}</Text>
@@ -56,17 +59,17 @@ const WalletRecentOutgoingTransfer = ({walletinfo})=> {
 
             <View style={styles.recent}>
                         <View style={[styles.recentInfo,{justifyContent:"center",alignItems:"flex-start"}]}>
-                                <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.M,color:"#F6841F"}}>PHP {numberFormat(recentTransfer.amount)}</Text>
+                                <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.M,color:"#F6841F",textAlign:"left"}}>{account.wallet.currency.code} {numberFormat(recentTransfer.amount)}</Text>
                         </View>
                         <View style={[{flex: .5,justifyContent:"center",alignItems:"center",}]}>
                                 <FIcon5 name="arrow-right" size={18} color="#F6841F"/>
                         </View>
                         <View style={[styles.recentInfo,{alignItems:"flex-end"}]}>
-                            <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.M,color: COLORS.DARK}}>{destinationFullname}</Text>
-                            <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.S,color: COLORS.MEDIUM}}>toktokwallet</Text>
+                            <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.M,color: COLORS.DARK,textAlign:"right"}}>{destinationFullname}</Text>
+                            <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.S,color: COLORS.MEDIUM,textAlign:"right"}}>toktokwallet</Text>
                         </View>
-            </View>
-            
+            </View> 
+
         </View>
         <Separator />
         </>

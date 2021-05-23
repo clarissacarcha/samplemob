@@ -11,11 +11,11 @@ const RecipientInfo = ({recipientInfo})=> {
             <View style={styles.content}>
                 <View style={styles.recipient}>
                         <View style={{flexBasis: 40}}>
-                            <Image resizeMode="contain" source={{uri: recipientInfo.image}} style={styles.recipientImage}/>
+                            <Image resizeMode="contain" source={require('../../../../../../assets/toktokwallet-assets/user.png')} style={styles.recipientImage}/>
                         </View>
-                        <View style={{flex: 1,justifyContent:"flex-start"}}>
-                            <Text style={styles.recipientName}>{recipientInfo.name}</Text>
-                            <Text style={styles.recipientContact}>{recipientInfo.contactNo}</Text>
+                        <View style={{flex: 1,justifyContent:"flex-start",justifyContent:'center'}}>
+                            <Text style={styles.recipientName}>{recipientInfo.person.firstName} {recipientInfo.person.lastName[0]}.</Text>
+                            <Text style={styles.recipientContact}>{recipientInfo.mobileNumber}</Text>
                         </View>
                 </View>
             </View>

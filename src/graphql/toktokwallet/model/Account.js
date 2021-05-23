@@ -17,3 +17,34 @@ export const GET_ACCOUNT = gql`
         }
     }
 `
+
+export const GET_MY_ACCOUNT = gql`
+    query {
+        getMyAccount {
+            id
+            mobileNumber
+            status
+            motherId
+            person {
+                id
+                firstName
+                middleName
+                lastName
+            }
+            wallet {
+                id
+                balance
+                status
+                accountId
+                motherId
+                currencyId
+                currency {
+                    id
+                    name
+                    code
+                    phpValue
+                }
+            }
+        }
+    }
+`

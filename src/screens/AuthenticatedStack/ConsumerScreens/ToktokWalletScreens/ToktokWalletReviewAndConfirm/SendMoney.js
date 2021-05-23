@@ -2,9 +2,13 @@ import React from 'react'
 import {View,Text,StyleSheet} from 'react-native'
 import { numberFormat } from '../../../../../helper'
 import { COLORS, FONTS, SIZES } from '../../../../../res/constants'
+import {useSelector} from 'react-redux'
 
 
 const SendMoney = ({data})=>{
+
+    const tokwaAccount = useSelector(state=> state.toktokWallet)
+
     return(
        <View style={styles.container}>
             <View style={styles.information}>
@@ -36,7 +40,7 @@ const SendMoney = ({data})=>{
                         <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.M,color: COLORS.DARK}}>Amount</Text>  
                     </View>
                     <View style={{flex:1,alignItems:"flex-end"}}>
-                        <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.M,color: COLORS.DARK}}>PHP {numberFormat(data.amount)}</Text>
+                        <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.M,color: COLORS.DARK}}>{tokwaAccount.wallet.currency.code} {numberFormat(data.amount)}</Text>
                     </View>
             </View>
        </View>

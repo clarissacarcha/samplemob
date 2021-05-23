@@ -3,13 +3,13 @@ import {View,Text,StyleSheet,Image,Alert,TextInput,KeyboardAvoidingView,Platform
 import {HeaderBack} from '../../../../../../revamp'
 import { SIZES, INPUT_HEIGHT, FONTS, COLORS } from '../../../../../../res/constants'
 import {numberFormat} from '../../../../../../helper'
-import { PATCH_FUND_TRANSFER , GET_DAILY_MONTHLY_YEARLY_INCOMING , GET_DAILY_MONTHLY_YEARLY_OUTGOING} from '../../../../../../graphql'
+import { PATCH_FUND_TRANSFER , TOKTOK_WALLET_GRAPHQL_CLIENT} from '../../../../../../graphql'
+import {} from '../../../../../../graphql/toktokwallet'
 import {useQuery,useMutation,useLazyQuery} from '@apollo/react-hooks'
 import {useSelector} from 'react-redux'
 import { onError , onErrorAlert} from '../../../../../../util/ErrorUtility';
 import SuccessfulModal from '../../SendMoneyScreens/ToktokWalletSendMoney/SuccessfulModal'
 import {useAlert} from '../../../../../../hooks/useAlert'
-import { BlackButton, YellowButton } from '../../../../../../revamp';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import {
     ConfirmBottomSheet,
@@ -67,43 +67,6 @@ const ToktokWalletScanQRConfirm = ({navigation,route})=> {
     })
 
 
-    const [getDailyMonthlyYearlyIncoming] = useLazyQuery(GET_DAILY_MONTHLY_YEARLY_INCOMING, {
-        fetchPolicy: 'network-only',
-        onError: (error)=>{
-
-        },
-        onCompleted: (response)=> {
-            setRecipientDetails(response.getDailyMonthlyYearlyIncoming)
-        }
-    })
-
-    const [getDailyMonthlyYearlyOutgoing] = useLazyQuery(GET_DAILY_MONTHLY_YEARLY_OUTGOING, {
-        fetchPolicy: 'network-only',
-        onError: (error)=>{
-
-        },
-        onCompleted: (response)=> {
-            setSenderDetails(response.getDailyMonthlyYearlyOutgoing)
-        }
-    })
-
-    useEffect(()=>{
-        // getDailyMonthlyYearlyIncoming({
-        //     variables: {
-        //         input: {
-        //             userID: recipientInfo.id
-        //         }
-        //     }
-        // })
-
-        // getDailyMonthlyYearlyOutgoing({
-        //     variables: {
-        //         input: {
-        //             userID: session.user.id
-        //         }
-        //     }
-        // })
-    },[])
 
     const onSwipeSuccess = ()=> {
         bottomSheetRef.current.snapTo(0)
