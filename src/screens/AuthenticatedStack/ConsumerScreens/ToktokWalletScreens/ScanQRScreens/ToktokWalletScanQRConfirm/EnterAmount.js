@@ -2,11 +2,13 @@ import React , {useState} from 'react'
 import {View,Text,StyleSheet,TextInput} from 'react-native'
 import { numberFormat } from '../../../../../../helper'
 import { COLORS, FONTS, INPUT_HEIGHT, SIZES } from '../../../../../../res/constants'
+import { useSelector } from 'react-redux'
 
 const EnterAmount = ({amount , setAmount , setSwipeEnabled , walletinfo})=> {
 
     const [tempAmount,setTempAmount] = useState("")
     const [errorMessage,setErrorMessage] = useState("")
+    const tokwaAccount = useSelector(state=>state.toktokWallet)
 
     const changeAmount = (value)=>{
         const num = value.replace(/[^0-9]/g, '')
@@ -41,7 +43,7 @@ const EnterAmount = ({amount , setAmount , setSwipeEnabled , walletinfo})=> {
                 <Text style={{fontFamily:FONTS.REGULAR,fontSize: SIZES.M,color:"red",marginLeft: 10}}>{errorMessage}</Text>
             </View>
             <View style={styles.amount}>
-                        <Text style={{fontSize: SIZES.M,fontFamily: FONTS.BOLD,alignSelf:"center",color: COLORS.DARK}}>PHP </Text>
+                        <Text style={{fontSize: SIZES.M,fontFamily: FONTS.BOLD,alignSelf:"center",color: COLORS.DARK}}>{tokwaAccount.wallet.currency.code} </Text>
                         <TextInput
                                 caretHidden
                                 value={tempAmount}

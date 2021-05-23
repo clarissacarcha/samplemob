@@ -1,6 +1,7 @@
 import React from 'react'
 import {View,StyleSheet,Text,TouchableOpacity} from 'react-native'
-import { COLOR, COLORS, FONTS, FONT_BOLD, FONT_LIGHT, FONT_MEDIUM, FONT_REGULAR, SIZES } from '../../../../../res/constants'
+import {  COLORS, FONTS, FONT_BOLD, FONT_LIGHT, FONT_MEDIUM, FONT_REGULAR, SIZES } from '../../../../../res/constants'
+import { COLOR } from '../../../../../res/variables'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import moment from 'moment'
 import { numberFormat } from '../../../../../helper'
@@ -48,7 +49,7 @@ const WalletRecentOutgoingTransfer = ({account})=> {
         <View style={styles.container}>
             <Text style={styles.title}>Outgoing Transfer</Text>
 
-            <View style={{flexDirection:"row",marginTop: 10,borderBottomColor:"silver",borderBottomWidth: .2,paddingBottom: 10}}>
+            <View style={{flexDirection:"row",marginTop: 10,paddingBottom: 10}}>
                     <View style={{flex: 1,alignItems:"flex-start"}}>
                         <Text style={{fontSize: SIZES.M,fontFamily: FONTS.BOLD,color: COLORS.DARK}}>{moment(recentTransfer.createdAt).tz('Asia/Manila').format('MMM DD, YYYY')}</Text>
                     </View>
@@ -56,6 +57,7 @@ const WalletRecentOutgoingTransfer = ({account})=> {
                         <Text style={{fontSize: SIZES.M,fontFamily: FONTS.BOLD,color:"#FF8A48"}}>View</Text>
                     </TouchableOpacity>
             </View>
+            <View style={styles.divider}/>
 
             <View style={styles.recent}>
                         <View style={[styles.recentInfo,{justifyContent:"center",alignItems:"flex-start"}]}>
@@ -97,6 +99,11 @@ const styles = StyleSheet.create({
         flex: 1,
         // padding: 5,
     },
+    divider: {
+        height: 2,
+        width: "100%",
+        backgroundColor: COLOR.LIGHT,
+    }
 })
 
 export default WalletRecentOutgoingTransfer

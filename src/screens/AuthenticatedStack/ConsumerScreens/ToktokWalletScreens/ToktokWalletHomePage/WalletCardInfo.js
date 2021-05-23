@@ -62,7 +62,7 @@ const WalletCardInfo = ({account , loading})=> {
                         // rotateY.setValue(0)
                         animation.start(()=> {
                             animation.reset()
-                            // navigation.navigate("ToktokWalletSettings", {walletinfo})
+                            navigation.navigate("ToktokWalletSettings", {walletinfo})
                         })
 
                     }}>
