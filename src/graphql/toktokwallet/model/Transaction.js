@@ -65,6 +65,33 @@ export const GET_TRANSACTIONS = gql`
                     }
                 }
             }
+            allTransactions {
+                logDate
+                logs {
+                    id
+                    amount
+                    note
+                    status
+                    sourceWalletId
+                    destinationWalletId
+                    sourcePerson {
+                        firstName
+                        middleName
+                        lastName
+                    }
+                    destinationPerson {
+                        firstName
+                        middleName
+                        lastName
+                    }
+                    transactionType {
+                        name
+                        type
+                        sourcePhrase
+                        destinationPhrase
+                    }
+                }
+            }
        }
     }
 `

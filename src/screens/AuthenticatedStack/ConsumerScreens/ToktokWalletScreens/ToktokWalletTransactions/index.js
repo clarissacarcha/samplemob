@@ -16,19 +16,22 @@ const ToktokWalletTransactions = ({navigation,route})=> {
         headerTitle: ()=> <HeaderTitle label={['Transactions']} />,
     })
 
+    const tokwaAccount = useSelector(state=>state.toktokWallet)
+    const allTransactions = route.params.allTransactions
+
     return (
         <>
         <Separator />
         <View style={styles.container}>        
                 <View style={styles.logs}>
-                            {/* <FlatList 
+                            <FlatList 
                                 showsVerticalScrollIndicator={false}
-                                data={filteredData}
+                                data={allTransactions}
                                 keyExtractor={(item)=>item.title}
                                 renderItem={({item,index})=>(
-                                    <WalletLog key={`log-${index}`} transactionDate={item.logDate} transactionItems={item.logs} index={index} itemsLength={filteredData.length}/>
+                                    <WalletLog account={tokwaAccount} key={`recentLog${index}`} transactionDate={item.logDate} transactionItems={item.logs} index={index}/>
                                 )}
-                            /> */}
+                            />
                 </View>
         </View>
             

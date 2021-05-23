@@ -41,7 +41,7 @@ const WalletRecentTransactions = ({account})=> {
 
 
     const ViewTransactions = ()=> {
-        return navigation.navigate("ToktokWalletTransactions")
+        return navigation.navigate("ToktokWalletTransactions" , {allTransactions: data.getTransactions.allTransactions})
     }
 
     return (

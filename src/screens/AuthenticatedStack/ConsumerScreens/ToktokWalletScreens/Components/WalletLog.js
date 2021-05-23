@@ -24,7 +24,7 @@ export const WalletLog = ({transactionDate , transactionItems ,index , itemsLeng
     return (
         <>
               <View style={[styles.transactionLogsContainer, {marginBottom: index == itemsLength - 1 ? 100 : 0}]}>
-                { transactionItems.length > 0 && <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,color: COLOR.DARK}}>{datedisplay}</Text> }
+                { transactionItems.length > 0 && <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>{datedisplay}</Text> }
 
                 {
                     transactionItems.map((item)=>{
