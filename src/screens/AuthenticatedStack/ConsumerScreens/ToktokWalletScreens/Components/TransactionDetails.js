@@ -1,6 +1,6 @@
 import React from 'react'
 import {View,Text,Modal,StyleSheet,TouchableOpacity, Dimensions} from 'react-native'
-import { COLOR, COLORS, FONTS, SIZES } from '../../../../../res/constants'
+import {COLOR , FONT, FONT_SIZE} from '../../../../../res/variables'
 
 const {width,height} = Dimensions.get("window")
 
@@ -33,7 +33,7 @@ export const TransactionDetails = ({
                         padding: 16,
                     }}>
                         <View style={{flex: 1}}>
-                            <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.M,color: COLORS.DARK}}>{label}</Text>
+                            <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>{label}</Text>
                             <Text style={styles.labelText}>{phrase}</Text>
                             { status && <Text style={styles.labelText}>Status: {status}</Text>}
                             <View style={{marginTop: 10}}>
@@ -44,7 +44,7 @@ export const TransactionDetails = ({
                         </View>
                         <View style={{flex: 1,justifyContent:"flex-end"}}>
                             <TouchableOpacity onPress={()=>setVisible(false)} style={{alignItems:"center",justifyContent:"center"}}>
-                                    <Text style={{fontFamily: FONTS.BOLD, fontSize: SIZES.M ,color: COLORS.ORANGE}}>Ok</Text>
+                                    <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M ,color: COLOR.ORANGE}}>Ok</Text>
                             </TouchableOpacity>
                         </View>
 
@@ -67,8 +67,7 @@ const styles = StyleSheet.create({
         alignItems:"center"
     },
     labelText: {
-        fontFamily: FONTS.REGULAR,
-        fontSize: SIZES.M,
-        color:COLORS.DARK
+        fontFamily: FONT.REGULAR,
+        fontSize: FONT_SIZE.M,
     }
 })

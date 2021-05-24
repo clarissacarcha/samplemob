@@ -2,7 +2,7 @@ import React, { useState , useEffect} from 'react'
 import {View,Text,StyleSheet,TouchableOpacity} from 'react-native'
 import {HeaderBack, YellowButton} from '../../../../../../revamp'
 import { numberFormat } from '../../../../../../helper'
-import { COLORS, FONTS, SIZES } from '../../../../../../res/constants'
+import { COLOR, FONT, FONT_SIZE } from '../../../../../../res/variables'
 import {useSelector} from 'react-redux'
 import {GET_DAILY_MONTHLY_YEARLY_OUTGOING} from '../../../../../../graphql'
 import {useLazyQuery} from '@apollo/react-hooks'
@@ -86,12 +86,12 @@ const ToktokWalletSendMoney = ({navigation,route})=> {
                         <View style={{height: 32}}/>
                         <View style={styles.walletContent}>
                                 <View>
-                                    <Text style={{fontSize: 24,fontFamily: FONTS.BOLD}}>{account.wallet.currency.code} {numberFormat(walletinfo.balance ? walletinfo.balance : 0)}</Text>
-                                    <Text style={{fontSize: SIZES.M,fontFamily: FONTS.REGULAR,color: COLORS.DARK}}>Available Balance</Text>
+                                    <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>{account.wallet.currency.code} {numberFormat(walletinfo.balance ? walletinfo.balance : 0)}</Text>
+                                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Available Balance</Text>
                                 </View>
                                 <TouchableOpacity onPress={()=> navigation.navigate("ToktokWalletPaymentOptions" , {walletinfo})} style={styles.topUp}>
                                     <View style={styles.topUpbtn}>
-                                            <FIcon5 name={'plus'} size={12} color={COLORS.DARK}/> 
+                                            <FIcon5 name={'plus'} size={12}/> 
                                     </View>
                                 </TouchableOpacity>
                         </View>
@@ -133,8 +133,8 @@ const ToktokWalletSendMoney = ({navigation,route})=> {
                             />
                         </>
                         : <View style={{marginTop: 10}}>
-                            <Text style={{fontFamily: FONTS.BOLD,fontWeight:"bold", fontSize: SIZES.M}}>Enter number to transfer</Text>
-                            <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.S,color:COLORS.MEDIUM}}>You can click the "Address Book" to open your contact list.</Text>
+                            <Text style={{fontFamily: FONT.BOLD,fontWeight:"bold", fontSize: FONT_SIZE.M}}>Enter number to transfer</Text>
+                            <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:COLOR.DARK}}>You can click the "Address Book" to open your contact list.</Text>
                         </View>
                     }
                 </KeyboardAvoidingView>
@@ -196,7 +196,6 @@ const styles = StyleSheet.create({
         height: 34,
         width: 34,
         borderRadius: 100,
-        borderColor: COLORS.DARK,
         borderWidth: 2,
         justifyContent:"center",
         alignItems:"center",

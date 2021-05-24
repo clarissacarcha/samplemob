@@ -2,7 +2,7 @@ import React, {useState,useCallback, useEffect} from 'react'
 import {StyleSheet,View,Text,TouchableOpacity,Dimensions,Image,TouchableHighlight,Platform,SafeAreaView} from 'react-native'
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import { RNCamera } from 'react-native-camera';
-import {COLORS, FONTS, SIZES} from '../../../../../../res/constants'
+import {COLOR , FONT , FONT_SIZE} from '../../../../../../res/variables'
 import FIcon from 'react-native-vector-icons/Feather';
 import {useFocusEffect} from '@react-navigation/native'
 import {useLazyQuery} from '@apollo/react-hooks'
@@ -140,14 +140,14 @@ const ToktokWalletScanQR = ({navigation,route})=> {
                                 <Image source={torch ? require('../../../../../../assets/icons/walletScanTorchOn.png') : require('../../../../../../assets/icons/walletScanTorchOff.png')} />                      
                             </TouchableHighlight>
 
-                            <Text style={{color: "white",fontFamily: FONTS.REGULAR,fontSize: SIZES.L}}>Tap to turn {torch ? 'off' : 'on' }</Text>
+                            <Text style={{color: "white",fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.L}}>Tap to turn {torch ? 'off' : 'on' }</Text>
                     </View>
 
                 
             </View>
 
                 <View style={{marginTop: 25}}>
-                    <Text style={{color: "white",fontFamily: FONTS.REGULAR,fontSize: SIZES.L,color: COLORS.YELLOW}}>Position the QR code within the frame.</Text>
+                    <Text style={{color: "white",fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.L,color: COLOR.YELLOW}}>Position the QR code within the frame.</Text>
                 </View>
 
     
@@ -247,7 +247,7 @@ const styles = StyleSheet.create({
         height: 40,
         width: 40,
         position: "absolute",
-        borderColor: COLORS.YELLOW,
+        borderColor: COLOR.YELLOW,
     },
     backBtn: {
         backgroundColor:"#FFFFFF",

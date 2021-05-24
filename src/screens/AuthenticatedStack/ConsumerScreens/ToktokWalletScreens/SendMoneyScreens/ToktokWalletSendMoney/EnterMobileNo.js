@@ -1,6 +1,6 @@
 import React , {useState, useEffect , useRef} from 'react'
 import {View,Text,StyleSheet,TextInput,TouchableOpacity,Dimensions,TouchableHighlight} from 'react-native'
-import {SIZES, INPUT_HEIGHT, FONTS, COLORS} from '../../../../../../res/constants'
+import {FONT_SIZE , SIZE , FONT , COLOR} from '../../../../../../res/variables'
 import {useLazyQuery} from '@apollo/react-hooks'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from '../../../../../../graphql'
 import { GET_ACCOUNT } from '../../../../../../graphql/toktokwallet'
@@ -132,9 +132,9 @@ const EnterMobileNo = ({
                     return inputMobileRef.current.focus()
                 }} style={{flex: 1,justifyContent:"center",paddingHorizontal: 10, height:50}}>
                     <>
-                    { recipientDetails.id && proceed && <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.M,color: COLORS.DARK}}>{`${recipientDetails.person.firstName} ${recipientDetails.person.lastName[0]}.`}</Text>}
-                    <Text style={{fontFamily: FONTS.REGULAR,fontSize: recipientDetails.id && proceed ? SIZES.M : SIZES.M,color:"dimgray"}}>{mobileNo == "" ? "Enter Recipient Number" : mobileNo}</Text>
-                    { errorMessage != "" && <Text style={{fontFamily:FONTS.REGULAR,fontSize: SIZES.S,color:"red",marginTop: 0}}>{errorMessage}</Text>}
+                    { recipientDetails.id && proceed && <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>{`${recipientDetails.person.firstName} ${recipientDetails.person.lastName[0]}.`}</Text>}
+                    <Text style={{fontFamily: FONT.REGULAR,fontSize: recipientDetails.id && proceed ? FONT_SIZE.M : FONT_SIZE.M,color:"dimgray"}}>{mobileNo == "" ? "Enter Recipient Number" : mobileNo}</Text>
+                    { errorMessage != "" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.S,color:"red",marginTop: 0}}>{errorMessage}</Text>}
 
                 
                     </>
@@ -143,7 +143,7 @@ const EnterMobileNo = ({
            
                 <TouchableOpacity onPress={()=>navigation.navigate("ToktokWalletContacts", {setRecipientInfo: setRecipientMobileNo})} style={styles.contactAddress}>
                     <View style={styles.addressbtn}>
-                            <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.XS,color: COLORS.YELLOW}}>Address Book</Text>
+                            <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.XS,color: COLOR.YELLOW}}>Address Book</Text>
                     </View>
                 </TouchableOpacity>
 
@@ -175,7 +175,7 @@ const EnterMobileNo = ({
 
 const styles = StyleSheet.create({
     container: {
-        height: INPUT_HEIGHT,
+        height: SIZE.FORM_HEIGHT,
         width: width,
         paddingHorizontal: 16,
         marginTop: -25,
@@ -201,10 +201,10 @@ const styles = StyleSheet.create({
     },
     contactAddress: {
         // width:65,
-        height: SIZES.XS + 12,
+        height: FONT_SIZE.XS + 12,
         paddingHorizontal: 7,
         borderWidth: 1,
-        borderColor: COLORS.YELLOW,
+        borderColor: COLOR.YELLOW,
         borderRadius: 3,
         marginRight: 10,
         zIndex: 1,

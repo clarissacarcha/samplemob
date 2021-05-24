@@ -3,7 +3,7 @@ import {Modal,View,Text,StyleSheet,Dimensions,TouchableOpacity,Image} from 'reac
 import { BlackButton, YellowButton } from '../../../../../../revamp'
 import QRCode from 'react-native-qrcode-svg'
 import {useSelector} from 'react-redux'
-import { COLORS, FONTS, SIZES } from '../../../../../../res/constants'
+import {COLOR , FONT , FONT_SIZE} from '../../../../../../res/variables'
 import FIcon from 'react-native-vector-icons/Feather'
 import { Separator } from '../../Components/Separator'
 import ViewShot , {captureScreen,releaseCapture} from "react-native-view-shot";
@@ -153,14 +153,14 @@ const MyQRCode = ({visible,setVisible,account})=> {
                                         // onPress={() => alert('Pressed')}
                                     />
                                     <View style={{marginTop: 10,}}>
-                                     <Text style={{fontFamily: FONTS.BOLD,fontSize:SIZES.M, color: COLORS.DARK}}>{account.mobileNumber}</Text>
+                                     <Text style={{fontFamily: FONT.BOLD,fontSize:FONT_SIZE.M}}>{account.mobileNumber}</Text>
                                     </View>
                             </ViewShot>
                             <Separator/>
                             <View style={{height: 50,alignItems:"center",marginTop: 10,}}>
                                 <TouchableOpacity onPress={ScreenshotAndSave} style={styles.downloadBtn}>
                                     <FIcon name="download" size={20} color={"#FF8A48"}/>
-                                    <Text style={{fontSize: SIZES.M,fontFamily: FONTS.BOLD,marginLeft: 5,color:"#FF8A48"}}>Download</Text>
+                                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginLeft: 5,color:"#FF8A48"}}>Download</Text>
                                 </TouchableOpacity>
                             </View>
 

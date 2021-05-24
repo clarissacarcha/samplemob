@@ -1,7 +1,6 @@
 import React, {useState,useRef,useEffect,useMemo} from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,Image,Modal,TextInput,Platform,KeyboardAvoidingView,ActivityIndicator,Alert,Dimensions,ScrollView,Keyboard} from 'react-native'
-import {HeaderBackClose, HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../../../components'
-import { DARK, SIZES, COLORS, FONTS} from '../../../../../../res/constants'
+import {FONT ,FONT_SIZE , COLOR} from '../../../../../../res/variables'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import {useSelector} from 'react-redux'
 import {useMutation,useLazyQuery} from '@apollo/react-hooks'
@@ -9,7 +8,7 @@ import {POST_WALLET_CASH_IN,GET_DAILY_MONTHLY_YEARLY_INCOMING} from '../../../..
 import {onError,onErrorAlert} from '../../../../../../util/ErrorUtility';
 import {numberFormat} from '../../../../../../helper'
 import {useAlert} from '../../../../../../hooks/useAlert'
-import { HeaderBack, YellowButton } from '../../../../../../revamp'
+import { HeaderBack, YellowButton, HeaderTitle } from '../../../../../../revamp'
 
 import {
     ConfirmBottomSheet,
@@ -25,7 +24,7 @@ const {height,width} = Dimensions.get("window")
 
 const ToktokWalletPayPandaForm = ({navigation,route})=> {
     navigation.setOptions({
-        headerLeft: ()=> <HeaderBack color={COLORS.YELLOW}/>,
+        headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
         headerTitle: ()=> <HeaderTitle label={['Cash In','']}/>,
     })
 
@@ -36,6 +35,7 @@ const ToktokWalletPayPandaForm = ({navigation,route})=> {
     const balance = route.params.walletinfo.balance
     const transactionType = route.params.transactionType
     const userstate = useSelector(state=>state.session.user)
+    const tokwaAccount = useSelector(state=>state.toktokWallet)
     const globalsettings = useSelector(state=>state.constants)
     const [tempAmount,setTempAmount] = useState("")
     const [amount,setAmount] = useState("")
@@ -43,7 +43,6 @@ const ToktokWalletPayPandaForm = ({navigation,route})=> {
     const [recipientDetails,setRecipientDetails] = useState(null)
     const [disablebtn,setDisablebtn] = useState(false)
     const [maxLimitMessage,setMaxLimitMessage] = useState("")
-    const bottomSheetRef = useRef();
 
     const [postWalletCashIn , {data,error,loading}] = useMutation(POST_WALLET_CASH_IN, {
         // fetchPolicy: 'network-only',
@@ -56,63 +55,17 @@ const ToktokWalletPayPandaForm = ({navigation,route})=> {
                 merchantId: postWalletCashIn.merchantId,
                 refNo: postWalletCashIn.refNo,
                 signature: postWalletCashIn.signature,
-                email_address: userstate.person.emailAddress,
-                payer_name: `${userstate.person.firstName}${userstate.person.middleName ? " " + userstate.person.middleName : ""} ${userstate.person.lastName}`,
-                mobile_number: userstate.username,
+                email_address: tokwaAccount.person.emailAddress,
+                payer_name: `${tokwaAccount.person.firstName}${tokwaAccount.person.middleName ? " " + tokwaAccount.person.middleName : ""} ${tokwaAccount.person.lastName}`,
+                mobile_number: tokwaAccount.mobileNumber,
                 amount_to_pay: amount,
-                currency: "PHP",
+                currency: tokwaAccount.wallete.currency.code,
                 walletId: walletId,
                 transactionTypeId: transactionType.id
             })
         }
     })
 
-    const [getDailyMonthlyYearlyIncoming] = useLazyQuery(GET_DAILY_MONTHLY_YEARLY_INCOMING, {
-        fetchPolicy: 'network-only',
-        onError: (error)=>{
-
-        },
-        onCompleted: (response)=> {
-                setRecipientDetails(response.getDailyMonthlyYearlyIncoming)
-        }
-    })
-
-    const checkRecipientWalletLimitation = (amount)=> {
-        const incomingRecords = recipientDetails
-        const walletLimit = incomingRecords.walletlimit
-
-
-        if(walletLimit.walletSize){
-            if((incomingRecords.walletbalance + +amount ) > walletLimit.walletSize){
-                setDisablebtn(true)
-                return setMessage("Your wallet size limit is reached.")
-            }
-        }
-
-        if(walletLimit.incomingValueDailyLimit){
-            if((incomingRecords.daily + +amount ) > walletLimit.incomingValueDailyLimit){
-                setDisablebtn(true)
-                return setMessage("Your daily incoming wallet limit is reached.")
-            }
-        }
-
-        if(walletLimit.incomingValueMonthlyLimit){
-            if((incomingRecords.monthly + +amount ) > walletLimit.incomingValueMonthlyLimit){
-                setDisablebtn(true)
-                return setMessage("Your monthly incoming wallet limit is reached.")
-            }
-        }
-
-        if(walletLimit.incomingValueAnnualLimit){
-            if((incomingRecords.yearly + +amount ) > walletLimit.incomingValueAnnualLimit){
-                setDisablebtn(true)
-                return setMessage("Your annual incoming wallet limit is reached.")
-            }
-        }
-
-        setDisablebtn(false)
-        return setMessage("")
-    }
 
     useEffect(()=>{
         // getDailyMonthlyYearlyIncoming({
@@ -139,15 +92,8 @@ const ToktokWalletPayPandaForm = ({navigation,route})=> {
        
     }
 
-    const openSecurityPIN = ()=> {
-        bottomSheetRef.current.snapTo(0);
-        return navigation.push("ToktokWalletSecurityPinCode", {onConfirm: proceedToPaypandaPortal})
-    }
-
-
     const confirmAmount = ()=> {
         // Keyboard.dismiss()
-        // bottomSheetRef.current.snapTo(1);
         navigation.navigate("ToktokWalletReviewAndConfirm", {
             label:"Cash In" , 
             data: {
@@ -193,7 +139,7 @@ const ToktokWalletPayPandaForm = ({navigation,route})=> {
 
             <View style={styles.paypandaLogo}>
                      <Image style={{height: 90,width: 90,alignSelf: "center",marginBottom: 10}} source={require('../../../../../../assets/toktokwallet-assets/paypanda.png')}/>
-                     <Text style={{fontSize: SIZES.L,fontFamily: FONTS.BOLD}}>PayPanda</Text>
+                     <Text style={{fontSize: FONT_SIZE.L,fontFamily: FONT.BOLD}}>PayPanda</Text>
             </View>
 
             <View style={styles.content}>
@@ -211,15 +157,15 @@ const ToktokWalletPayPandaForm = ({navigation,route})=> {
                                     onChangeText={changeAmountText}
                             />
                             <View style={styles.input}>
-                                <Text style={{fontFamily: FONTS.BOLD,fontSize: 32,marginRight: 10,color:COLORS.YELLOW}}>PHP</Text>
-                                <Text style={{fontFamily: FONTS.BOLD,fontSize: 32,color: COLORS>DARK}}>{amount ? numberFormat(amount) : "0.00"}</Text>
-                                <FIcon5 name="pen" style={{alignSelf:"center",marginLeft: 20}} size={20} color={COLORS.DARK}/>
+                                <Text style={{fontFamily: FONT.BOLD,fontSize: 32,marginRight: 10,color:COLOR.YELLOW}}>{tokwaAccount.wallet.currency.code}</Text>
+                                <Text style={{fontFamily: FONT.BOLD,fontSize: 32}}>{amount ? numberFormat(amount) : "0.00"}</Text>
+                                <FIcon5 name="pen" style={{alignSelf:"center",marginLeft: 20}} size={20} color={COLOR.DARK}/>
                             </View>
                             
                         </View>
-                        <Text style={{color:COLORS.DARK,fontSize: SIZES.M,fontFamily: FONTS.BOLD}}>Available Balance PHP {numberFormat(balance)}</Text>
-                        <Text style={{fontFamily: FONTS.REGULAR, color: "red",marginTop: 5,fontSize: SIZES.S}}>{message}</Text>
-                        <Text style={{fontFamily: FONTS.REGULAR, color: "red",marginTop: 5,fontSize: SIZES.S}}>{maxLimitMessage}</Text>
+                        <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>Available Balance {tokwaAccount.wallet.currency.code} {numberFormat(balance)}</Text>
+                        <Text style={{fontFamily: FONT.REGULAR, color: "red",marginTop: 5,fontSize: FONT_SIZE.S}}>{message}</Text>
+                        <Text style={{fontFamily: FONT.REGULAR, color: "red",marginTop: 5,fontSize: FONT_SIZE.S}}>{maxLimitMessage}</Text>
               
                  </View>
                 : <View style={{flex: 1,justifyContent: "center",alignItems: "center"}}><ActivityIndicator size={50}/></View>
@@ -278,7 +224,6 @@ const styles = StyleSheet.create({
         // // flexGrow: 1,
         flex: 1,
         width: 150,
-        color: DARK,
         justifyContent:"center",
         alignItems:"center",
         flexDirection:"row"

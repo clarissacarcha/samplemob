@@ -1,6 +1,6 @@
 import React from 'react'
 import {View,Text,TouchableOpacity,Image} from 'react-native'
-import { COLOR, FONT_MEDIUM, SIZES , DARK, FONTS, COLORS } from '../../../../../../res/constants'
+import {COLOR , FONT , FONT_SIZE} from '../../../../../../res/variables'
 import {numberFormat} from '../../../../../../helper'
 
 const WalletBalance = ({navigation,walletinfo})=> {
@@ -17,7 +17,7 @@ const WalletBalance = ({navigation,walletinfo})=> {
 
 
             <Image style={{width: 50,height: 25}} resizeMode="contain" source={require('../../../../../../assets/icons/walletMoney.png')} />
-            <Text style={{marginLeft: 10, fontSize: SIZES.XL, fontFamily: FONTS.BOLD}}>PHP {numberFormat(walletinfo.balance)}</Text>
+            <Text style={{marginLeft: 10, fontSize: FONT_SIZE.XL, fontFamily: FONT.BOLD}}>PHP {numberFormat(walletinfo.balance)}</Text>
             <View style={{
                 flex: 1,
                 justifyContent: "flex-end",
@@ -29,12 +29,12 @@ const WalletBalance = ({navigation,walletinfo})=> {
                         justifyContent:"center",
                         alignItems:"center",
                         paddingHorizontal: 15,
-                        backgroundColor: COLORS.YELLOW,
+                        backgroundColor: COLOR.YELLOW,
                         borderRadius: 5,
                     }}
                     onPress={()=>navigation.navigate("ToktokWalletPaymentOptions",{walletinfo: walletinfo})}
                 >
-                        <Text style={{color: COLORS.DARK,fontSize: SIZES.M,fontFamily: FONTS.BOLD}}>Cash In</Text>
+                        <Text style={{color: COLOR.DARK,fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>Cash In</Text>
                 </TouchableOpacity>
                 
             </View>

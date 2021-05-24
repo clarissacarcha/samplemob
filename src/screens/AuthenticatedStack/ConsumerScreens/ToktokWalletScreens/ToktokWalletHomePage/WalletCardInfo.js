@@ -1,7 +1,6 @@
 import React , {useContext} from 'react'
 import {View,Text,StyleSheet,Dimensions,TouchableOpacity,Animated,RefreshControl,ScrollView,ActivityIndicator} from 'react-native'
-import { COLORS, FONTS, FONT_BOLD, FONT_MEDIUM, FONT_REGULAR, SIZES } from '../../../../../res/constants'
-import { COLOR } from '../../../../../res/variables';
+import { COLOR , FONT , FONT_SIZE} from '../../../../../res/variables';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import { useNavigation } from '@react-navigation/native'
 import {CheckWalletRestrictionContext} from './CheckWalletRestrictionProvider'
@@ -49,9 +48,9 @@ const WalletCardInfo = ({account , loading})=> {
                         {
                             loading
                             ? <ActivityIndicator size={24} color={COLOR.YELLOW}/>
-                            : <Text style={{fontSize: 24,fontFamily: FONTS.BOLD}}>{walletinfo.currency.code} {numberFormat(walletinfo.balance)}</Text>
+                            : <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>{walletinfo.currency.code} {numberFormat(walletinfo.balance)}</Text>
                         }         
-                        <Text style={{fontSize:SIZES.M,fontFamily: FONTS.REGULAR,color: COLORS.DARK}}>Available Balance</Text>
+                        <Text style={{fontSize:FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Available Balance</Text>
                     </View>
                     <TouchableOpacity onPress={cashIn} style={styles.topUp}>
                         <View style={styles.topUpbtn}>

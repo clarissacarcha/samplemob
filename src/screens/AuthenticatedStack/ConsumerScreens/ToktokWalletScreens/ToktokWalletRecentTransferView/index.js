@@ -1,11 +1,10 @@
 import React from 'react'
 import {View,StyleSheet,Text} from 'react-native'
-import { HeaderBackClose,HeaderTitle } from '../../../../../components'
-import { COLORS, FONTS, FONT_MEDIUM, FONT_REGULAR, SIZES } from '../../../../../res/constants'
+import { COLOR , FONT , FONT_SIZE } from '../../../../../res/variables'
 import {Separator} from '../Components'
 import moment from 'moment'
 import { numberFormat } from '../../../../../helper'
-import { HeaderBack, YellowButton } from '../../../../../revamp'
+import { HeaderBack, YellowButton , HeaderTitle } from '../../../../../revamp'
 
 
 const Details = ({label,value})=> {
@@ -24,7 +23,7 @@ const Details = ({label,value})=> {
 const ToktokWalletRecentTransferView = ({navigation,route})=> {
 
     navigation.setOptions({
-        headerLeft: ()=> <HeaderBack color={COLORS.YELLOW}/>,
+        headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
         headerTitle: ()=> <HeaderTitle label={['Outgoing Transfer']} />,
     })
 
@@ -79,14 +78,12 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     labelText: {
-        fontFamily: FONTS.REGULAR,
-        fontSize: SIZES.M,
-        color: COLORS.DARK
+        fontFamily: FONT.REGULAR,
+        fontSize: FONT_SIZE.M,
     },
     valueText: {
-        fontFamily:  FONTS.BOLD,
-        fontSize: SIZES.M,
-        color: COLORS.DARK
+        fontFamily:  FONT.BOLD,
+        fontSize: FONT_SIZE.M,
     }
 })
 

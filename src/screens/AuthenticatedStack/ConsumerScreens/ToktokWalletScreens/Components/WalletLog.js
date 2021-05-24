@@ -9,6 +9,27 @@ import { TransactionDetails } from './TransactionDetails'
 
 export const WalletLog = ({transactionDate , transactionItems ,index , itemsLength , account }) => {
 
+    const [transactionVisible,setTransactionVisible] = useState(false)
+    const [transactionInfo,setTransactionInfo] = useState({
+        refNo: "",
+        refDate: "",
+        label: "",
+        phrase: "",
+        amount: "",
+    })
+
+    const ViewTransactionDetails = (transaction , title, phrase , referenceDate , transactionAmount) => {
+        setTransactionVisible(true)
+        setTransactionInfo({
+            refNo: transaction.id,
+            refDate: referenceDate,
+            label: title,
+            phrase: phrase,
+            amount: transactionAmount,
+        })
+        console.log(transaction.referenceNumber)
+    }
+
     const dateValue = moment(transactionDate).tz("Asia/Manila").format("YYYY-MM-DD");
     const phTodayDate = moment().tz("Asia/Manila").format("YYYY-MM-DD");
     const phYesterdayDate = moment().subtract(1,"days").tz("Asia/Manila").format("YYYY-MM-DD");
@@ -23,6 +44,16 @@ export const WalletLog = ({transactionDate , transactionItems ,index , itemsLeng
 
     return (
         <>
+            <TransactionDetails 
+                visible={transactionVisible}
+                setVisible={setTransactionVisible}
+                refNo={transactionInfo.refNo}
+                refDate={transactionInfo.refDate}
+                label={transactionInfo.label}
+                phrase={transactionInfo.phrase}
+                amount={transactionInfo.amount}
+            />
+
               <View style={[styles.transactionLogsContainer, {marginBottom: index == itemsLength - 1 ? 100 : 0}]}>
                 { transactionItems.length > 0 && <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>{datedisplay}</Text> }
 
@@ -49,10 +80,10 @@ export const WalletLog = ({transactionDate , transactionItems ,index , itemsLeng
 
                         return (
                             <>
-                            <TouchableOpacity style={styles.transaction}>
+                            <TouchableOpacity onPress={()=>ViewTransactionDetails(item , title , phrase, referenceDate , transactionAmount)} style={styles.transaction}>
                                 <View style={styles.transactionDetails}>
                                     {/* <Text style={{fontSize: 12,fontFamily: FONT_MEDIUM}}>{title} <Text style={{fontFamily: FONT_LIGHT,fontSize: 10}}> ( {status} )</Text></Text> */}
-                                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR,color: COLOR.DARK}}>{title}</Text>
+                                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{title}</Text>
                                     <Text style={{color: "#929191",fontSize: FONT_SIZE.S,fontFamily: FONT.REGULAR}}>{phrase}</Text>
                                 </View>
                                 <View style={styles.transactionAmount}>

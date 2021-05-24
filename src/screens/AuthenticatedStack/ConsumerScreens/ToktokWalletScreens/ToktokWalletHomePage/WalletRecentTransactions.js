@@ -52,7 +52,7 @@ const WalletRecentTransactions = ({account})=> {
                         <Text style={styles.title}>Recent Transactions</Text>
                     </View>
                     <TouchableOpacity onPress={ViewTransactions} style={{flex: 1,alignItems:"flex-end"}}>
-                        <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,color:"#FF8A48"}}>See All</Text>
+                        <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,color:"#FF8A48"}}>See More</Text>
                     </TouchableOpacity>
             </View>
 

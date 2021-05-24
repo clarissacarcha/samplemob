@@ -1,6 +1,6 @@
 import React , {useContext} from 'react'
 import {View,Text,StyleSheet,Dimensions,Image,TouchableOpacity} from 'react-native'
-import { COLORS, FONTS, FONT_REGULAR, SIZES } from '../../../../../res/constants'
+import {COLOR, FONT, FONT_SIZE} from '../../../../../res/variables'
 import {useNavigation} from '@react-navigation/native'
 import {CheckWalletRestrictionContext} from './CheckWalletRestrictionProvider'
 
@@ -12,7 +12,7 @@ const Method = ({icon,label,iconstyle,onPress})=> {
         <TouchableOpacity onPress={onPress} style={styles.walletMethod}>
                 <View style={{width:"100%",height:"100%",justifyContent:"center",alignItems:"center"}}>
                         <Image resizeMode="contain" style={{...iconstyle,flex: 1,marginTop: 10,}} source={icon} />
-                        <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.XS,height: 22,color: COLORS.DARK}}>{label}</Text>
+                        <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.XS,height: 22}}>{label}</Text>
                 </View>
         </TouchableOpacity>
     )
