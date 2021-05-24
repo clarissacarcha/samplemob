@@ -69,10 +69,12 @@ const SenderRecipientCard = ({
   };
 
   useEffect(() => {
-    if (!senderStop.formattedAddress) {
-      console.log('___________________');
-      getLocationHash();
-    }
+    // if (!senderStop.formattedAddress) {
+    //   console.log('___________________');
+
+    // }
+
+    getLocationHash();
   }, []);
 
   return (

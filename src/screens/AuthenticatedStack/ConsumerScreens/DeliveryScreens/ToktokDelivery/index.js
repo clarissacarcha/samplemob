@@ -230,7 +230,7 @@ const ToktokDelivery = ({navigation, session, route}) => {
   };
 
   useEffect(() => {
-    getLocationHash();
+    // getLocationHash();
   }, []);
 
   const onAddDeliveryInformation = () => {
