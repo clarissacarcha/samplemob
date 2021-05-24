@@ -122,7 +122,7 @@ const Confirm = ({session})=> {
                         <UserInfo label="Date of Birth" value={moment(VerifyUserData.birthInfo.birthdate).format("MMM DD YYYY")}/>
                         <UserInfo label="Place of Birth" value={VerifyUserData.birthInfo.birthPlace}/>
                         <UserInfo label="Nationality" value={VerifyUserData.nationality}/>
-                        <UserInfo label="Address" value={`${VerifyUserData.address.line1} ${VerifyUserData.address.line2} ${VerifyUserData.address.city} ${VerifyUserData.address.province}, ${VerifyUserData.address.country} ${VerifyUserData.address.zipCode}`}/>
+                        <UserInfo label="Address" value={`${VerifyUserData.address.line1} ${VerifyUserData.address.line2} ${VerifyUserData.city} ${VerifyUserData.province}, ${VerifyUserData.address.country} ${VerifyUserData.address.postalCode}`}/>
                         <UserInfo label="ID Type" value={VerifyUserData.verifyID.idType}/>
                         <UserInfo label="ID number" value={VerifyUserData.verifyID.idNumber}/>
                     {/* <TouchableOpacity 
