@@ -51,11 +51,3 @@ export const POST_KYC_REGISTER = gql`
         }
     }
 `
-
-export const POST_REGISTER_KYC = gql`
-    mutation {
-        postRegisterKyc {
-            id
-        }
-    }
-`
