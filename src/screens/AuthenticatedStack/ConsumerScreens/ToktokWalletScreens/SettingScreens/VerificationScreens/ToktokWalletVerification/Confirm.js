@@ -129,6 +129,8 @@ const Confirm = ({session})=> {
                 <ScrollView style={styles.mainInput} showsVerticalScrollIndicator={false}>
                         <Text style={{fontSize: SIZES.M, fontFamily: FONTS.BOLD,color:COLORS.DARK}}>Review Information</Text>
                         <Text style={{fontFamily: FONTS.REGULAR,marginBottom: 10,fontSize: SIZES.M,color:"#929191"}}>Make sure your details are all correct.</Text>  
+                        <UserInfo label="Mobile Number" value={VerifyUserData.contactInfo.mobile_number}/>
+                        <UserInfo label="Email Address" value={VerifyUserData.contactInfo.email}/>
                         <UserInfo label="Last Name" value={VerifyUserData.person.lastName}/>
                         <UserInfo label="First Name" value={VerifyUserData.person.firstName}/>
                         <UserInfo label="Middle Name" value={VerifyUserData.person.middleName}/>
@@ -211,7 +213,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     proceedBtn: {
-        height: 100,
+        height: 90,
         width: "100%",
         justifyContent:"flex-end"
         // flexDirection: "row",
