@@ -42,7 +42,7 @@ const ToktokWalletPaymentOptions = ({navigation,route})=> {
     const CashInMethod = ({item,index})=> {
         let image , navigateLink
         if(item.name.toLowerCase() == "paypanda"){
-            image = require('../../../../../../assets/toktokwallet-assets/paypanda.png')
+            image = require('../../../../../../assets/toktokwallet-assets/cash-in-providers/paypanda.png')
             navigateLink = "ToktokWalletPayPandaForm"
         }else{
             navigateLink = ""
@@ -54,7 +54,7 @@ const ToktokWalletPaymentOptions = ({navigation,route})=> {
                         walletinfo: route.params.walletinfo,
                         transactionType: item
                     }
-                ) : Alert.alert("Temporary Unavailable")}>
+                ) : Alert.alert("","Temporary Unavailable")}>
                 <View style={styles.logo}>
                     <Image style={{height: 35,width: 35}} resizeMode="contain" source={image} />
                 </View>

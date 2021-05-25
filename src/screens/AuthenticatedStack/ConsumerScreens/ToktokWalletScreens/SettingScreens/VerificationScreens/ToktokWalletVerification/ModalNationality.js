@@ -14,14 +14,17 @@ const ModalNationality = ({visible,setVisible})=> {
     const {setNationality, setNationalityId, changeAddress} = useContext(VerifyContext)
     const [nationalities, setNationalities] = useState([])
     const [filteredNationalities, setFilteredNationalities] = useState([])
+    const [countryIndex,setCountryIndex] = useState(20)
 
     const [getCountries , {data, error , loading}] = useLazyQuery(GET_COUNTRIES, {
         client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT,
         fetchPolicy:"network-only",
         onCompleted:(response)=> {
             // console.log("Countries Response", response)
-            setNationalities(response.getCountries)
-            setFilteredNationalities(response.getCountries)
+            const countries = response.getCountries
+            setNationalities(countries)
+            // setFilteredNationalities(countries.slice(0,20))
+            setFilteredNationalities(countries)
         },
         onError: (error)=> {
             console.log(error)
@@ -55,6 +58,12 @@ const ModalNationality = ({visible,setVisible})=> {
     const filterSearch = (value) => {
         const filtered = nationalities.filter(country=> country.nationality.toLowerCase().includes(value.toLowerCase()))
         setFilteredNationalities(filtered)
+    }
+
+    const setAdditionalCountries = ()=> {
+        console.log("Load more")
+        setFilteredNationalities(state=>[...state , ...nationalities.slice(countryIndex + 1, countryIndex + 20)])
+        setCountryIndex(state => state + 20)
     }
 
 
@@ -91,15 +100,16 @@ const ModalNationality = ({visible,setVisible})=> {
                     />
                     <FIcon style={{alignSelf: "center",position:"absolute", right: 25}} name={'search'} size={24}/>
                 </View>
-
                 <Separator/>
 
                 <FlatList
                         style={{marginVertical: 15,}}
                         data={filteredNationalities}
-                        keyExtractor={nationality=>nationality}
+                        keyExtractor={nationality=>nationality.id}
                         renderItem={renderNationality}
                         showsVerticalScrollIndicator={false}
+                        // onEndReached={setAdditionalCountries}
+                        // onEndReachedThreshold={0}
                         // scrollEnabled={true}
                 />
             </View>

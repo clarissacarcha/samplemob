@@ -6,6 +6,8 @@ import { TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT} from '../../../../../../../grap
 import {POST_KYC_REGISTER} from '../../../../../../../graphql/toktokwallet'
 import {useMutation} from '@apollo/react-hooks'
 import {onError} from '../../../../../../../util/ErrorUtility'
+import { useAlert } from '../../../../../../../hooks/useAlert'
+import { onErrorAlert } from '../../../../../../../util/ErrorUtility'
 import {AlertOverlay} from '../../../../../../../components';
 import {ReactNativeFile} from 'apollo-upload-client';
 import {useNavigation} from '@react-navigation/native'
@@ -37,13 +39,14 @@ const Confirm = ({session})=> {
 
     const VerifyUserData = useContext(VerifyContext)
     const navigation = useNavigation()
+    const alert = useAlert()
 
     const [isCertify, setCertify] = useState(false)
 
     const [postKYCRegister,{data,error,loading}] = useMutation(POST_KYC_REGISTER, {
         client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT,
-        onError: (err) => {
-            console.log(err)
+        onError: (error) => {
+            onErrorAlert({alert , error})
         },
         onCompleted: (response)=> {
             let result = response.postKycRegister
@@ -68,42 +71,52 @@ const Confirm = ({session})=> {
             type: 'image/jpeg'
         })
 
-        const rnFrontIDFile = new ReactNativeFile({
+        const rnFrontIDFile = VerifyUserData.frontImage 
+        ? new ReactNativeFile({
             ...VerifyUserData.frontImage,
             name: 'documentValidIDFront.jpg',
             type: 'image/jpeg'
         })
+        : null
 
-        const rnBackIDFile = new ReactNativeFile({
+        const rnBackIDFile = VerifyUserData.backImage 
+        ? new ReactNativeFile({
             ...VerifyUserData.backImage,
             name: 'documentValidIDBack.jpg',
             type: 'image/jpeg'
         })
+        : null
+
+        console.log(rnBackIDFile)
+
+        const input = {
+            userId: session.user.id,
+            mobileNumber: VerifyUserData.contactInfo.mobile_number,
+            emailAddress: VerifyUserData.contactInfo.email,
+            firstName: VerifyUserData.person.firstName,
+            middleName: VerifyUserData.person.middleName,
+            lastName: VerifyUserData.person.lastName,
+            birthdate: moment(VerifyUserData.birthInfo.birthdate).format("YYYY-MM-DD"),
+            // birthdate: VerifyUserData.birthInfo.birthdate,
+            birthPlace: VerifyUserData.birthInfo.birthPlace,
+            ...( rnSelfieFile ? {selfieImage: rnSelfieFile} : {} ),
+            nationality:  VerifyUserData.nationalityId.toString(),
+            line1: VerifyUserData.address.line1,
+            line2: VerifyUserData.address.line2,
+            postalCode: VerifyUserData.address.postalCode,
+            cityId: VerifyUserData.cityId,
+            provinceId: VerifyUserData.provinceId,
+            ...( rnFrontIDFile ? {frontImage: rnFrontIDFile} : {} ),
+            ...( rnBackIDFile ? {backImage: rnBackIDFile} : {} ),
+            identificationCardNumber: VerifyUserData.verifyID.idNumber,
+            identificationCardId: VerifyUserData.identificationId,
+        }
+
+        console.log(JSON.stringify(input))
 
         postKYCRegister({
             variables: {
-                input: {
-                    userId: session.user.id,
-                    mobileNumber: VerifyUserData.contactInfo.mobile_number,
-                    emailAddress: VerifyUserData.contactInfo.email,
-                    firstName: VerifyUserData.person.firstName,
-                    middleName: VerifyUserData.person.middleName,
-                    lastName: VerifyUserData.person.lastName,
-                    birthdate: moment(VerifyUserData.birthInfo.birthdate).format("YYYY-MM-DD"),
-                    // birthdate: VerifyUserData.birthInfo.birthdate,
-                    birthPlace: VerifyUserData.birthInfo.birthPlace,
-                    selfieImage: rnSelfieFile,
-                    nationality:  VerifyUserData.nationalityId,
-                    line1: VerifyUserData.address.line1,
-                    line2: VerifyUserData.address.line2,
-                    postalCode: VerifyUserData.address.postalCode,
-                    cityId: VerifyUserData.cityId,
-                    provinceId: VerifyUserData.provinceId,
-                    frontImage: rnFrontIDFile,
-                    backImage: rnBackIDFile,
-                    identificationCardNumber: VerifyUserData.verifyID.idNumber,
-                    identificationCardId: VerifyUserData.identificationId,
-                }
+                input: input
             }
         })
     }

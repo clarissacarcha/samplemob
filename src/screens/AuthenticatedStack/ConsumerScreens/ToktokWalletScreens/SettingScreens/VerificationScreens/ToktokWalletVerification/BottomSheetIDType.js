@@ -46,7 +46,7 @@ const BottomSheetIDType = forwardRef(({onChange}, ref) => {
 
     useEffect(() => {
       getIdentificationCards()
-    }, [])
+    }, [onChange])
 
     const selectValidID = (index)=> {
         const validID = filteredValidID[index].name
