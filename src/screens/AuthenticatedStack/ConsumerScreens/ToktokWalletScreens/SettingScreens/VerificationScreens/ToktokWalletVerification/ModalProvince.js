@@ -24,6 +24,8 @@ const ModalProvince = ({type, onSelect})=> {
         setModalProvinceVisible,
         setProvince,
         setProvinceId,
+        setCity,
+        setCityId,
     } = useContext(VerifyContext)
 
     const [filteredProvinces, setFilteredProvinces] = useState([])
@@ -51,6 +53,8 @@ const ModalProvince = ({type, onSelect})=> {
         const provinceId = filteredProvinces[index].id
         setProvince(province)
         setProvinceId(provinceId)
+        setCity("")
+        setCityId("")
         getCitiesOfProvince(filteredProvinces[index].provCode)  
         setModalProvinceVisible(false)
         setFilteredProvinces(provinces)

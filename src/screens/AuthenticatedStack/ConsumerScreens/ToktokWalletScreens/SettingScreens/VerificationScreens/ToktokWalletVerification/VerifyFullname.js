@@ -52,6 +52,11 @@ const VerifyFullname = ()=> {
         if (validator.isEmpty(person.firstName, {ignore_whitespace: true})) {
             return Alert.alert("","first Name is required.")
         }
+
+        if (!validator.isEmail(contactInfo.email, {ignore_whitespace: true})) {
+            return Alert.alert("","Email format is invalid.")
+        }
+
         if(mobile == "") return Alert.alert("","Mobile Number is required.")
         if(contactInfo.email == "") return Alert.alert("","Email is required.")
         if(birthInfo.birthdate == "") return Alert.alert("","Date of Birth is required.")
@@ -66,7 +71,8 @@ const VerifyFullname = ()=> {
         return Linking.openURL("https://toktok.ph/privacy-policy")
     }
 
-    const onMobileChange = (value) => {
+    const onMobileChange = (val) => {
+        const value = val.replace(/[^0-9]/g,"")
         if (value.length === 1 && value === '0') {
           setMobile('');
           return;

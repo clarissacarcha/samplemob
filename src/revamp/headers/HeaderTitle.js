@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import {View, StyleSheet, Text, Platform} from 'react-native';
 import {FONT, COLOR} from '../../res/variables'
 
 export const HeaderTitle = ({label}) => {
@@ -16,7 +16,7 @@ export const HeaderTitle = ({label}) => {
 const styles = StyleSheet.create({
   box: {
     alignItems: 'center',
-    // marginRight: 66,
+    // marginRight: Platform.OS === "ios" ? 0 : 66,
   },
   outer: {
     fontSize: 16,
