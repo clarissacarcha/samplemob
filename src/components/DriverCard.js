@@ -17,6 +17,7 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 import {COLOR, DARK, MEDIUM, ORANGE, LIGHT, COLOR_UNDERLAY} from '../res/constants';
+import {FONT, FONT_SIZE} from '../res/variables';
 
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
@@ -28,15 +29,16 @@ const imageWidth = Dimensions.get('window').width - 40;
 const AvatarOverlay = ({avatar, visible, onPress}) => {
   return (
     <Modal visible={visible} transparent={true} animationType="fade" style={{position: 'relative'}}>
-      <TouchableWithoutFeedback onPress={onPress}>
-        <View style={{flex: 1, justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.75)', zIndex: 9}} />
+      <TouchableWithoutFeedback onPress={onPress} style={StyleSheet.absoluteFillObject}>
+        <View style={{flex: 1, justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.75)', zIndex: 9}}>
+          <TouchableWithoutFeedback style={StyleSheet.absoluteFillObject}>
+            <Image
+              source={{uri: avatar}}
+              style={{height: imageWidth, width: imageWidth, borderRadius: 10, marginHorizontal: 20}}
+            />
+          </TouchableWithoutFeedback>
+        </View>
       </TouchableWithoutFeedback>
-      <View style={{...StyleSheet.absoluteFillObject, justifyContent: 'center'}}>
-        <Image
-          source={{uri: avatar}}
-          style={{height: imageWidth, width: imageWidth, borderRadius: 10, marginHorizontal: 20, zIndex: 999}}
-        />
-      </View>
     </Modal>
   );
 };
@@ -66,7 +68,7 @@ export const DriverCard = ({driver}) => {
             borderColor: MEDIUM,
           }}>
           <Fontisto name="motorcycle" size={18} color={DARK} style={styles.iconBox} />
-          <Text style={{marginLeft: 10, color: DARK, fontFamily: 'Rubik-Medium'}}>
+          <Text style={{marginLeft: 10, color: DARK, fontFamily: FONT.BOLD}}>
             {labels[0]} <Text style={{color: ORANGE}}>{labels[1]}</Text>
           </Text>
         </View>
@@ -107,8 +109,8 @@ export const DriverCard = ({driver}) => {
 
           {/*------------------- NAME -------------------*/}
           <View style={{flex: 1, marginRight: 10}}>
-            <Text style={{fontFamily: 'Rubik-Medium'}}>{`${firstName} ${lastName}`}</Text>
-            <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 12}}>{driver.user.username}</Text>
+            <Text style={{fontFamily: FONT.BOLD}}>{`${firstName} ${lastName}`}</Text>
+            <Text style={{paddingRight: 10, color: MEDIUM}}>{driver.user.username}</Text>
           </View>
 
           {/*------------------- DIALER BUTTON -------------------*/}

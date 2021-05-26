@@ -119,8 +119,8 @@ const Splash = ({setConstants}) => {
         setcheckPoint('B');
       }
     } catch (error) {
-      console.log('fetchInitialData', error);
       setcheckPoint('MAINTENANCE');
+      console.log(JSON.stringify(error));
     }
   };
 

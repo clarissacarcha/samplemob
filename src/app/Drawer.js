@@ -46,10 +46,6 @@ const Drawer = ({navigation, session, constants, destroySession}) => {
     });
   };
 
-  const [testButtonResolve] = useMutation(PATCH_DELIVERY_ON_THE_WAY_TO_SENDER, {
-    onCompleted: (data) => console.log({data}),
-  });
-
   return (
     <View style={{flex: 1, backgroundColor: '#222222', justifyContent: 'space-between'}}>
       <View style={{flex: 1}}>
@@ -130,16 +126,6 @@ const Drawer = ({navigation, session, constants, destroySession}) => {
                 navigation.push(route);
               }}
             />
-
-            {/*--------------- WALLET ---------------*/}
-            {/* <DrawerButton
-          label="Wallet"
-          onPress={() => {
-            // const route = APP_FLAVOR == 'C' ? 'CustomerProfile' : 'DriverProfile';
-            const route = 'DriverWallet';
-            navigation.navigate(route);
-          }}
-        /> */}
 
             {/*--------------- MY DELIVERIES ---------------*/}
             <DrawerButton

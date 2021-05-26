@@ -3,6 +3,8 @@ import {View, Text, StyleSheet, ActivityIndicator, TouchableHighlight} from 'rea
 import MapView, {Marker, PROVIDER_GOOGLE, Overlay} from 'react-native-maps';
 import {HeaderBack, HeaderTitle} from '../../../../components';
 import {COLOR, DARK, MAP_DELTA} from '../../../../res/constants';
+import {YellowButton} from '../../../../revamp/buttons/YellowButton';
+
 import {reverseGeocode} from '../../../../helper';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 
@@ -60,11 +62,15 @@ const SearchMap = ({navigation, route}) => {
       {/*---------------------------------------- FLOATING PIN ----------------------------------------*/}
       <FA5Icon name="map-pin" size={24} color={DARK} style={{marginTop: -26}} />
       {/*---------------------------------------- BUTTON ----------------------------------------*/}
-      <TouchableHighlight onPress={onSubmit} underlayColor={COLOR} style={styles.submitBox}>
+      <View style={styles.submitBox}>
+        <YellowButton onPress={onSubmit} label="Confirm Location" />
+      </View>
+
+      {/* <TouchableHighlight onPress={onSubmit} underlayColor={COLOR} style={styles.submitBox}>
         <View style={styles.submit}>
           <Text style={{color: COLOR, fontSize: 20}}>Confirm</Text>
         </View>
-      </TouchableHighlight>
+      </TouchableHighlight> */}
     </View>
   );
 };
@@ -82,10 +88,10 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     backgroundColor: 'white',
     height: 50,
-    margin: 20,
+    margin: 16,
     justifyContent: 'center',
-    paddingHorizontal: 10,
-    borderRadius: 10,
+    paddingHorizontal: 8,
+    borderRadius: 5,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -110,13 +116,13 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: 50,
-    margin: 20,
-    borderRadius: 10,
+    margin: 16,
+    borderRadius: 5,
   },
   submit: {
     backgroundColor: DARK,
     height: 50,
-    borderRadius: 10,
+    borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',
   },

@@ -14,7 +14,17 @@ import {
 import {connect} from 'react-redux';
 import moment from 'moment';
 import 'moment-timezone';
-import {COLOR, DARK, ORANGE, MEDIUM, LIGHT, APP_FLAVOR} from '../../../res/constants';
+import {
+  COLOR,
+  DARK,
+  ORANGE,
+  MEDIUM,
+  LIGHT,
+  APP_FLAVOR,
+  FONT_SIZE,
+  FONT_REGULAR,
+  FONT_MEDIUM,
+} from '../../../res/constants';
 import {HeaderBack, HeaderTitle} from '../../../components';
 import {YellowIcon} from '../../../components/ui';
 import {useQuery} from '@apollo/react-hooks';
@@ -57,7 +67,7 @@ const NotificationCard = ({message, lastItem}) => {
       underlayColor={COLOR}
       style={StyleSheet.flatten([styles.card, lastItem ? {marginBottom: 20} : null])}>
       <View style={styles.taskBox}>
-        <View style={{flexDirection: 'row', marginHorizontal: 20, marginVertical: 10}}>
+        <View style={{flexDirection: 'row', marginHorizontal: 10, marginVertical: 10}}>
           <View style={{flex: 1}}>
             {/*-------------------- TITLE --------------------*/}
             <View style={styles.rowBox}>
@@ -160,6 +170,9 @@ const Notifications = ({navigation, route, session, createSession}) => {
 
   return (
     <View style={styles.container}>
+      <View style={{height: 50, justifyContent: 'center', alignItems: 'center'}}>
+        <Text style={{fontSize: FONT_SIZE.L, fontFamily: FONT_MEDIUM}}>Notifications</Text>
+      </View>
       <FlatList
         showsVerticalScrollIndicator={false}
         data={data.getNotifications}
@@ -219,7 +232,7 @@ const styles = StyleSheet.create({
   },
   taskBox: {
     backgroundColor: 'white',
-    borderRadius: 10,
+    borderRadius: 5,
     shadowColor: '#000',
 
     shadowOffset: {

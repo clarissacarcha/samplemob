@@ -16,14 +16,24 @@ import validator from 'validator';
 import {useMutation} from '@apollo/react-hooks';
 import InputScrollView from 'react-native-input-scroll-view';
 import QRCode from 'react-native-qrcode-svg';
-import {COLOR, DARK, MAP_DELTA_LOW, ORANGE, LIGHT, MEDIUM} from '../../../../res/constants';
+import {
+  COLOR,
+  DARK,
+  MAP_DELTA_LOW,
+  FONT_SIZE,
+  LIGHT,
+  MEDIUM,
+  FONT_MEDIUM,
+  FONT_REGULAR,
+} from '../../../../res/constants';
 import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../../components';
-import {BlackButton} from '../../../../components/ui';
+// import {BlackButton} from '../../../../components/ui';
+import {BlackButton} from '../../../../revamp';
 import {useAlert} from '../../../../hooks/useAlert';
 import {onError, onErrorAlert} from '../../../../util/ErrorUtility';
 import {PATCH_PERSON_POST_REGISTRATION} from '../../../../graphql';
 
-const ImageWidth = (Dimensions.get('window').width - 60) / 2;
+const ImageWidth = (Dimensions.get('window').width - 40) / 2;
 
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 import ToktokWashed from '../../../../assets/images/ToktokWashed.png';
@@ -97,7 +107,7 @@ const ConsumerProfile = ({navigation, constants, session, createSession}) => {
     <View style={styles.container}>
       <AlertOverlay visible={loading} />
       <InputScrollView showsVerticalScrollIndicator={false}>
-        <View style={{flexDirection: 'row', marginHorizontal: 20, justifyContent: 'space-between'}}>
+        <View style={{flexDirection: 'row', marginHorizontal: 10, justifyContent: 'space-between'}}>
           {/*--------------- AVATAR ---------------*/}
           <View style={{marginTop: 20, alignItems: 'center'}}>
             {`${constants.awsS3BaseUrl}${constants.defaultAvatar}` != session.user.person.avatar ? (
@@ -225,10 +235,14 @@ const ConsumerProfile = ({navigation, constants, session, createSession}) => {
         )}
 
         {/*-------------------- UPDATE BUTTON --------------------*/}
-        <BlackButton onPress={onSubmit} label="Update Profile" containerStyle={{marginBottom: 0, marginTop: 20}} />
+        <BlackButton onPress={onSubmit} label="Update Profile" touchableStyle={{marginHorizontal: 10, marginTop: 20}} />
 
         {/*-------------------- CHANGE PASSWORD BUTTON --------------------*/}
-        <BlackButton onPress={() => navigation.push('ConsumerChangePassword')} label="Change Password" />
+        <BlackButton
+          onPress={() => navigation.push('ConsumerChangePassword')}
+          label="Change Password"
+          touchableStyle={{marginHorizontal: 10, marginTop: 20, marginBottom: 10}}
+        />
       </InputScrollView>
     </View>
   );
@@ -262,21 +276,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   input: {
-    marginHorizontal: 20,
+    marginHorizontal: 10,
     borderWidth: 1,
     borderColor: MEDIUM,
     borderRadius: 5,
-    paddingLeft: 20,
+    paddingLeft: 10,
     height: 50,
     color: DARK,
+    fontFamily: FONT_REGULAR,
+    fontSize: FONT_SIZE.M,
   },
   label: {
-    marginHorizontal: 20,
+    marginHorizontal: 10,
     marginTop: 20,
     marginBottom: 5,
     fontSize: 12,
     color: DARK,
-    fontFamily: 'Rubik-Medium',
+    fontFamily: FONT_MEDIUM,
+    fontSize: FONT_SIZE.M,
   },
   submitBox: {
     margin: 20,

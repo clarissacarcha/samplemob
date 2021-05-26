@@ -1,10 +1,10 @@
-import React from 'react';
-import {StyleSheet, View, TouchableHighlight} from 'react-native';
+import React, {useRef, useEffect, useCallback} from 'react';
+import {StyleSheet, View, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {throttle} from 'lodash';
 
-import {COLOR, DARK} from '../res/constants';
-import FIcon from 'react-native-vector-icons/Feather';
+import {DARK, COLOR} from '../res/constants';
+import EntypoIcon from 'react-native-vector-icons/Entypo';
 
 export const HeaderBack = ({onBack}) => {
   const navigation = useNavigation();
@@ -21,28 +21,31 @@ export const HeaderBack = ({onBack}) => {
     {trailing: false},
   );
 
+  const useThrottle = (cb, delayDuration) => {
+    const options = {leading: true, trailing: false}; // add custom lodash options
+    const cbRef = useRef(cb);
+    // use mutable ref to make useCallback/throttle not depend on `cb` dep
+    useEffect(() => {
+      cbRef.current = cb;
+    });
+    return useCallback(
+      throttle((...args) => cbRef.current(...args), delayDuration, options),
+      [delayDuration],
+    );
+  };
+
+  const onPressThrottled = useThrottle(onPress, 1000);
+
   return (
-    <TouchableHighlight onPress={onPress} underlayColor={COLOR} style={styles.button}>
-      <View style={styles.iconBox}>
-        <FIcon name="chevron-left" size={24} color={COLOR} />
-      </View>
-    </TouchableHighlight>
+    <TouchableOpacity onPress={onPressThrottled} style={styles.box}>
+      <EntypoIcon name="chevron-thin-left" size={20} color={COLOR} />
+    </TouchableOpacity>
   );
 };
-
 const styles = StyleSheet.create({
-  button: {
-    borderRadius: 10,
-    marginLeft: 10,
-    overflow: 'hidden',
-
-    height: 30,
-    width: 30,
-  },
-  iconBox: {
-    backgroundColor: DARK,
-    height: 30,
-    width: 30,
+  box: {
+    height: 50,
+    width: 50,
     justifyContent: 'center',
     alignItems: 'center',
   },

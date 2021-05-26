@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import {View, Text, Modal, StyleSheet, ActivityIndicator, TouchableHighlight, Image, Dimensions} from 'react-native';
-import {COLOR, DARK, MEDIUM} from '../res/constants';
+import {COLOR, DARK, MEDIUM, FONT_REGULAR, FONT_MEDIUM} from '../res/constants';
 
 const imageWidth = Dimensions.get('window').width - 80;
 
@@ -24,12 +24,12 @@ const BookingSuccess = ({onPress}) => (
   <View style={{height: '100%', backgroundColor: 'white', borderRadius: 10}}>
     <View style={{flex: 1, margin: 20, justifyContent: 'center', alignItems: 'center'}}>
       <Image source={OrderBooked} style={{height: imageWidth, width: imageWidth}} resizeMode={'contain'} />
-      <Text style={{fontFamily: 'Rubik-Medium', color: MEDIUM, marginTop: 20}}>Your order has been booked.</Text>
+      <Text style={{fontFamily: FONT_REGULAR, color: MEDIUM, marginTop: 20}}>Your order has been booked.</Text>
     </View>
 
     <TouchableHighlight onPress={onPress} underlayColor={COLOR} style={styles.submitBox}>
       <View style={styles.submit}>
-        <Text style={{color: COLOR, fontSize: 20}}>OK</Text>
+        <Text style={{color: COLOR, fontSize: 14, fontFamily: FONT_MEDIUM}}>OK</Text>
       </View>
     </TouchableHighlight>
   </View>
@@ -87,8 +87,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   submitBox: {
-    margin: 20,
-    borderRadius: 10,
+    margin: 10,
+    borderRadius: 5,
   },
   submit: {
     backgroundColor: DARK,

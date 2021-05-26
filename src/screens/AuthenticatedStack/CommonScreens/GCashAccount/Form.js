@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Alert, View, Text, ScrollView, StyleSheet, TouchableOpacity, TextInput} from 'react-native';
 import validator from 'validator';
 
-import {DARK, MEDIUM} from '../../../../res/constants';
+import {DARK, FONT_MEDIUM, FONT_REGULAR, MEDIUM} from '../../../../res/constants';
 import {BlackButton} from '../../../../components/ui/BlackButton';
 
 import DatePickerModal from './DatePickerModal';
@@ -163,6 +163,7 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     height: 50,
     color: DARK,
+    fontFamily: FONT_REGULAR,
   },
   birthdate: {
     marginHorizontal: 20,
@@ -180,7 +181,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     fontSize: 12,
     color: DARK,
-    fontFamily: 'Rubik-Medium',
+    fontFamily: FONT_MEDIUM,
   },
 
   pickerContainerStyle: {

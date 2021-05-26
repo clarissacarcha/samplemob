@@ -28,7 +28,6 @@ export const onError = (error) => {
 
 export const onErrorAlert = ({alert, error}) => {
   try {
-    console.log(JSON.stringify(error));
 
     const {graphQLErrors, networkError} = error;
 
@@ -37,7 +36,7 @@ export const onErrorAlert = ({alert, error}) => {
     } else if (graphQLErrors.length > 0) {
       graphQLErrors.map(({message, locations, path, code}) => {
         if (code === 'INTERNAL_SERVER_ERROR') {
-          alert('Something went wrong.');
+          alert({message: 'Something went wrong.'});
         } else if (code === 'USER_INPUT_ERROR') {
           alert({message});
         } else if (code === 'BAD_USER_INPUT') {

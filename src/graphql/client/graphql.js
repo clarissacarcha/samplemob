@@ -25,12 +25,11 @@ const wsUrl = `ws://${HOST_PORT}/graphql`;
 //     });
 //   }
 //   if (networkError) {
-//     console.log(`[Network error]: ${networkError}`);
 //   }
 // });
 
 const errorLinkLogger = onError((err) => {
-  console.log({ERROR_LINK: JSON.stringify(err.message)});
+  console.log({ERROR_LINK: JSON.stringify(err, 0, 4)});
 });
 
 const setTokenLink = setContext(async (_, {headers}) => {
