@@ -24,9 +24,7 @@ const ToktokWalletCashOut = ({navigation,route})=> {
     navigation.setOptions({
        headerShown: false
     })
-    
     const tokwaAccount = useSelector(state=>state.toktokWallet)
-    const walletinfo = route.params.walletinfo
 
     const {data,error,loading} = useQuery(GET_CASH_OUT_PROVIDERS, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
@@ -51,7 +49,7 @@ const ToktokWalletCashOut = ({navigation,route})=> {
                 <HeaderImageBackground>
                     <HeaderTitle label="Cash Out"/>
                     <View style={styles.walletBalance}>
-                                <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>{tokwaAccount.wallet.currency.code} {numberFormat(walletinfo.balance ? walletinfo.balance : 0)}</Text>
+                                <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>{tokwaAccount.wallet.currency.code} {numberFormat(tokwaAccount.wallet.balance ? tokwaAccount.wallet.balance : 0)}</Text>
                                 <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Available Balance</Text>
                     </View>
                 </HeaderImageBackground>

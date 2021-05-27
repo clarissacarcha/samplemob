@@ -34,7 +34,7 @@ const WalletBalance = ({navigation,walletinfo})=> {
                     }}
                     onPress={()=>navigation.navigate("ToktokWalletPaymentOptions",{walletinfo: walletinfo})}
                 >
-                        <Text style={{color: COLOR.DARK,fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>Cash In</Text>
+                        <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>Cash In</Text>
                 </TouchableOpacity>
                 
             </View>

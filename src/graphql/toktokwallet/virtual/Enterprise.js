@@ -51,3 +51,14 @@ export const POST_KYC_REGISTER = gql`
         }
     }
 `
+
+export const GET_CHECK_ACCOUNT = gql`
+    query getCheckAccount($input: GetCheckAccountInput){
+        getCheckAccount(input: $input){
+            id
+            mobileNumber
+            status
+            motherId
+        }
+    }
+`

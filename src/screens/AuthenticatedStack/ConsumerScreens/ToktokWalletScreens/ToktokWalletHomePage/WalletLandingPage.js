@@ -64,12 +64,12 @@ const WalletLandingPage = ({refreshing, onRefresh , saveTokwaAccount})=> {
                         />
                     }
                 >
-                    <WalletCardInfo account={account} loading={loading}/>
+                    <WalletCardInfo loading={loading}/>
                 </ScrollView>
             </View>
             <View style={{flex: 1,}}>
-                <WalletRecentOutgoingTransfer account={account} walletinfo={account.wallet}/>
-                <WalletRecentTransactions account={account}/>
+                <WalletRecentOutgoingTransfer/>
+                <WalletRecentTransactions/>
             </View>
 
         </View>

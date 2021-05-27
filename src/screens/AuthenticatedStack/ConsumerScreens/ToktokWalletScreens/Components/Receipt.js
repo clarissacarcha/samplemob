@@ -182,7 +182,7 @@ export const Receipt = ({children, format, refNo ,refDate, onPress})=> {
                 </View>
             </View>
             <View style={styles.actionBtn}>
-                    <YellowButton label="Confirm" onPress={onPress} />
+                    <YellowButton label="Back to Home" onPress={onPress} />
             </View>
         </View>
         </>

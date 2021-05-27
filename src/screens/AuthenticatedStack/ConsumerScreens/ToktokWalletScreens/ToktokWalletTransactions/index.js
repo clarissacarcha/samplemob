@@ -3,7 +3,6 @@ import {View,Text,Modal,StyleSheet,TouchableOpacity,FlatList,ActivityIndicator} 
 import { COLOR , FONT , FONT_SIZE} from '../../../../../res/variables'
 import moment from 'moment'
 import {onError} from '../../../../../util/ErrorUtility'
-import {useSelector} from 'react-redux'
 import {Separator,WalletLog,FilterDateModal} from '../Components'
 import { HeaderBack , HeaderTitle } from '../../../../../revamp'
 
@@ -13,7 +12,6 @@ const ToktokWalletTransactions = ({navigation,route})=> {
         headerTitle: ()=> <HeaderTitle label={['Transactions']} />,
     })
 
-    const tokwaAccount = useSelector(state=>state.toktokWallet)
     const allTransactions = route.params.allTransactions
 
     return (
@@ -26,7 +24,7 @@ const ToktokWalletTransactions = ({navigation,route})=> {
                                 data={allTransactions}
                                 keyExtractor={(item)=>item.title}
                                 renderItem={({item,index})=>(
-                                    <WalletLog account={tokwaAccount} key={`recentLog${index}`} transactionDate={item.logDate} transactionItems={item.logs} index={index}/>
+                                    <WalletLog key={`recentLog${index}`} transactionDate={item.logDate} transactionItems={item.logs} index={index}/>
                                 )}
                             />
                 </View>

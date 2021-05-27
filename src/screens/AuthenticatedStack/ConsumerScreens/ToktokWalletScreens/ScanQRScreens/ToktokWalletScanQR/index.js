@@ -25,11 +25,11 @@ const ToktokWalletScanQR = ({navigation,route})=> {
     })
 
     const alertHook = useAlert()
-    const {walletinfo,account} = route.params
     const [torch,setTorch] = useState(false)
     const [focusCamera,setFocusCamera] = useState(false)
     const session = useSelector(state=>state.session)
     const [image, setImage] = useState(null);
+    const tokwaAccount = useSelector(state=>state.toktokWallet)
 
 
     useFocusEffect(useCallback(()=>{
@@ -54,10 +54,10 @@ const ToktokWalletScanQR = ({navigation,route})=> {
             onError(error)
         },
         onCompleted: ({getAccount})=> {
-            if(getAccount.mobileNumber === account.mobileNumber){
+            if(getAccount.mobileNumber === tokwaAccount.mobileNumber){
                 return alertHook({message: "You cannot send money to yourself"})
             }
-            return  navigation.navigate("ToktokWalletScanQRConfirm", {recipientInfo: getAccount, walletinfo: walletinfo})
+            return  navigation.navigate("ToktokWalletScanQRConfirm", {recipientInfo: getAccount})
         }
     })
 
@@ -181,7 +181,7 @@ const ToktokWalletScanQR = ({navigation,route})=> {
            }
 
                 <Actions 
-                    account={account}
+                    tokwaAccount={tokwaAccount}
                     onUploadSuccess={(qrCode)=>{
                         getAccount({
                             variables: {
@@ -192,7 +192,7 @@ const ToktokWalletScanQR = ({navigation,route})=> {
                         })
                 }}/>
          
-            {/* <WalletBalance navigation={navigation} walletinfo={walletinfo}/> */}
+            {/* <WalletBalance navigation={navigation} walletinfo={tokwaAccount.wallet}/> */}
         </>
     )
 }

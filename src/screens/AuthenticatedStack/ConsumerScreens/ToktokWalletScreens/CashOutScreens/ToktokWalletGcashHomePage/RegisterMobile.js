@@ -1,8 +1,8 @@
 import React , {useState} from 'react'
-import {View,StyleSheet,ActivityIndicator,Text,TextInput,Alert} from 'react-native'
+import {View,StyleSheet,ActivityIndicator,Text,TextInput,Alert,Image} from 'react-native'
 import { YellowButton } from '../../../../../../revamp'
 import { FONT, FONT_SIZE, SIZE } from '../../../../../../res/variables'
-import { Separator } from '../../Components'
+import { DisabledButton, Separator } from '../../Components'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from '../../../../../../graphql'
 import {GET_GCASH_ENROLLMENT_RECORD} from '../../../../../../graphql/toktokwallet'
 import {useLazyQuery} from '@apollo/react-hooks'
@@ -10,10 +10,14 @@ import { useAlert } from '../../../../../../hooks/useAlert'
 import { onErrorAlert } from '../../../../../../util/ErrorUtility'
 import {useNavigation} from '@react-navigation/native'
 
-const RegisterMobile = ()=> {
+//SELF IMPORTS
+import ModalLinkMobile from "./ModalLinkMobile";
+
+const RegisterMobile = ({provider})=> {
 
     const [mobileNo,setMobileNo] = useState("")
     const [errorMessage,setErrorMessage] = useState("")
+    const [showLinkModal,setShowLinkModal] = useState(false)
     const alert = useAlert();
     const navigation = useNavigation()
 
@@ -47,8 +51,18 @@ const RegisterMobile = ()=> {
         fetchPolicy:"network-only",
         onCompleted: ({getGcashEnrollmentRecord})=> {
             console.log(getGcashEnrollmentRecord)
-            if(!getGcashEnrollmentRecord){
-                return navigation.navigate("ToktokWalletGcashRegistration")
+
+         
+            if(!getGcashEnrollmentRecord || getGcashEnrollmentRecord.status == 4){
+                return navigation.navigate("ToktokWalletGcashRegistration", {mobile: mobileNo,provider: provider})
+            }
+
+            if(getGcashEnrollmentRecord.status == 2 || getGcashEnrollmentRecord.status == 3){
+                Alert.alert('',`Application status for gcash number ${getGcashEnrollmentRecord.mobile} is on pending`)
+            }
+
+            if(getGcashEnrollmentRecord.status == 1){
+                setShowLinkModal(true)
             }
         },
         onError: (error)=> {
@@ -71,9 +85,19 @@ const RegisterMobile = ()=> {
     return (
         <>
         <Separator />
+        <ModalLinkMobile visible={showLinkModal} setVisible={setShowLinkModal} mobile={mobileNo} provider={provider}/>
+        {/* <View style={styles.header}>
+                    <Image resizeMode="contain" style={{height: 50,width: 60,alignSelf:"center"}} source={require('../../../../../../assets/toktokwallet-assets/cash-out-providers/gcash.png')}/>
+                    <View style={{justifyContent:"center",alignItems:"flex-start",marginLeft: 5,}}>
+                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Register and verify</Text>
+                        <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>your GCash account details.</Text>
+                    </View>
+            </View> */}
+
         <View style={styles.container}>
+          
             <View style={styles.content}>
-                <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>GCash Mobile Number</Text>
+                <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Mobile Number</Text>
                 <TextInput 
                     style={styles.input}
                     placeholder="Enter your GCash mobile number here"
@@ -81,10 +105,15 @@ const RegisterMobile = ()=> {
                     value={mobileNo}
                     onChangeText={changeMobileNo}
                 />
-                <Text>{errorMessage}</Text>
+                <Text style={{fontFamily: FONT.REGULAR,color:"red",fontSize: FONT_SIZE.S}}>{errorMessage}</Text>
             </View>
             <View style={styles.proceedBtn}>
-                <YellowButton label="Confirm" onPress={checkGcashAccount}/>
+                {
+                    mobileNo.length == 0 || mobileNo.length > 0 && errorMessage != ""
+                    ?  <DisabledButton label="Confirm"/>
+                    :  <YellowButton label="Confirm" onPress={checkGcashAccount}/>
+                }
+               
             </View>
         </View>
         </>
@@ -100,6 +129,14 @@ const styles = StyleSheet.create({
     content: {
         flex: 1,
     },
+    header: {
+        height: 70,
+        width: "100%",
+        backgroundColor:"white",
+        marginBottom: 10,
+        flexDirection:"row",
+        padding: 16
+    },  
     proceedBtn: {
         height: SIZE.BUTTON_HEIGHT,
         width: "100%",

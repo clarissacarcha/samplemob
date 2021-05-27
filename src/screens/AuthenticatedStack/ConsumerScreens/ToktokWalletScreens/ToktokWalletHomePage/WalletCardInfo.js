@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native'
 import {CheckWalletRestrictionContext} from './CheckWalletRestrictionProvider'
 import {Separator , HeaderImageBackground, HeaderTitle} from '../Components';
 import { numberFormat } from '../../../../../helper';
+import {useSelector} from 'react-redux'
 
 
 //SELF IMPORTS
@@ -15,11 +16,11 @@ import { HeaderBack } from '../../../../../revamp';
 
 const {height,width} = Dimensions.get("window")
 
-const WalletCardInfo = ({account , loading})=> {
+const WalletCardInfo = ({loading})=> {
     const navigation = useNavigation()
     const rotateY = new Animated.Value(0)
     const {checkIfResctricted} = useContext(CheckWalletRestrictionContext)
-    const walletinfo = account.wallet
+    const tokwaAccount = useSelector(state=>state.toktokWallet)
 
     const animation = Animated.timing(rotateY,{
         toValue: 200,
@@ -34,7 +35,7 @@ const WalletCardInfo = ({account , loading})=> {
 
     const cashIn = ()=> {
         if(!checkIfResctricted()){
-            return navigation.navigate("ToktokWalletPaymentOptions" , {walletinfo})
+            return navigation.navigate("ToktokWalletPaymentOptions")
         }
     }
 
@@ -48,7 +49,7 @@ const WalletCardInfo = ({account , loading})=> {
                         {
                             loading
                             ? <ActivityIndicator size={24} color={COLOR.YELLOW}/>
-                            : <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>{walletinfo.currency.code} {numberFormat(walletinfo.balance)}</Text>
+                            : <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>{tokwaAccount.wallet.currency.code} {numberFormat(tokwaAccount.wallet.balance)}</Text>
                         }         
                         <Text style={{fontSize:FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Available Balance</Text>
                     </View>
@@ -61,7 +62,7 @@ const WalletCardInfo = ({account , loading})=> {
                         // rotateY.setValue(0)
                         animation.start(()=> {
                             animation.reset()
-                            navigation.navigate("ToktokWalletSettings", {walletinfo})
+                            navigation.navigate("ToktokWalletSettings")
                         })
 
                     }}>
@@ -73,7 +74,7 @@ const WalletCardInfo = ({account , loading})=> {
            </HeaderImageBackground>
     
             <View style={styles.whitespace}>
-                <WalletMethods account={account} walletinfo={walletinfo}/>
+                <WalletMethods/>
             </View>
             <Separator />
        </View>

@@ -85,7 +85,7 @@ const VerifyContextProvider = ({children})=> {
         email: session.user.person.emailAddress
     })
     const [nationality,setNationality] = useState("Philippine, Filipino")
-    const [nationalityId, setNationalityId] = useState(175)  // Default Philippines from database
+    const [nationalityId, setNationalityId] = useState(173)  // Default Philippines from database
 
     const [birthInfo,setBirthInfo] = useState({
         birthdate: "",

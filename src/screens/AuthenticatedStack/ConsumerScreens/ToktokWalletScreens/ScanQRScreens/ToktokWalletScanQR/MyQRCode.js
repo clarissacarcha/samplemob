@@ -15,7 +15,7 @@ import moment from 'moment'
 
 const {width,height} = Dimensions.get("window")
 
-const MyQRCode = ({visible,setVisible,account})=> {
+const MyQRCode = ({visible,setVisible,tokwaAccount})=> {
 
     const session = useSelector(state=>state.session)
 
@@ -145,7 +145,7 @@ const MyQRCode = ({visible,setVisible,account})=> {
                             >
                                      <Image resizeMode="contain" style={{height: 23,width: 130,marginBottom: 15}} source={require('../../../../../../assets/toktokwallet-assets/toktokwallet.png')}/>
                                      <QRCode
-                                        value={account.mobileNumber} //Give value when there's no session as it will throw an error if value is empty.
+                                        value={tokwaAccount.mobileNumber} //Give value when there's no session as it will throw an error if value is empty.
                                         // size={width * 0.7}
                                         size={250}
                                         color="black"
@@ -153,7 +153,7 @@ const MyQRCode = ({visible,setVisible,account})=> {
                                         // onPress={() => alert('Pressed')}
                                     />
                                     <View style={{marginTop: 10,}}>
-                                     <Text style={{fontFamily: FONT.BOLD,fontSize:FONT_SIZE.M}}>{account.mobileNumber}</Text>
+                                     <Text style={{fontFamily: FONT.BOLD,fontSize:FONT_SIZE.M}}>{tokwaAccount.mobileNumber}</Text>
                                     </View>
                             </ViewShot>
                             <Separator/>

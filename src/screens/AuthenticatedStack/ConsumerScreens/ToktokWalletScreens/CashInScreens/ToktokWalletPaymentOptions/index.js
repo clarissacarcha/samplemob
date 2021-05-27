@@ -16,7 +16,6 @@ const ToktokWalletPaymentOptions = ({navigation,route})=> {
         headerShown: false,
     })
 
-    const walletinfo = route.params.walletinfo
     const tokwaAccount = useSelector(state=>state.toktokWallet)
 
     const {data: cashinmethods,error,loading} = useQuery(GET_CASH_IN_PROVIDERS,{
@@ -51,7 +50,7 @@ const ToktokWalletPaymentOptions = ({navigation,route})=> {
             <TouchableOpacity 
                 key={`cashin-${index}`}
                 style={styles.cashinoption} onPress={()=> navigateLink != "" ? navigation.navigate(navigateLink,{
-                        walletinfo: route.params.walletinfo,
+                        walletinfo: null,
                         transactionType: item
                     }
                 ) : Alert.alert("","Temporary Unavailable")}>
@@ -75,8 +74,8 @@ const ToktokWalletPaymentOptions = ({navigation,route})=> {
                             <HeaderImageBackground>
                                 <HeaderTitle label="Cash In"/>
                                 <View style={styles.walletBalance}>
-                                        <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>{tokwaAccount.wallet.currency.code} {numberFormat(walletinfo.balance ? walletinfo.balance : 0)}</Text>
-                                        <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR,color: COLOR.DARK}}>Available Balance</Text>
+                                        <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>{tokwaAccount.wallet.currency.code} {numberFormat(tokwaAccount.wallet.balance ? tokwaAccount.wallet.balance : 0)}</Text>
+                                        <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Available Balance</Text>
                                 </View>
                             </HeaderImageBackground>
                       </View>

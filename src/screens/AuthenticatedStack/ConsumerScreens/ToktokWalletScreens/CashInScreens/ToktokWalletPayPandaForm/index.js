@@ -4,7 +4,8 @@ import {FONT ,FONT_SIZE , COLOR} from '../../../../../../res/variables'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import {useSelector} from 'react-redux'
 import {useMutation,useLazyQuery} from '@apollo/react-hooks'
-import {POST_WALLET_CASH_IN,GET_DAILY_MONTHLY_YEARLY_INCOMING} from '../../../../../../graphql/model'
+import {TOKTOK_WALLET_GRAPHQL_CLIENT} from '../../../../../../graphql'
+import {POST_CASH_IN_PAYPANDA_REQUEST} from '../../../../../../graphql/toktokwallet'
 import {onError,onErrorAlert} from '../../../../../../util/ErrorUtility';
 import {numberFormat} from '../../../../../../helper'
 import {useAlert} from '../../../../../../hooks/useAlert'
@@ -30,11 +31,7 @@ const ToktokWalletPayPandaForm = ({navigation,route})=> {
 
     const alert = useAlert()
 
-
-    const walletId = route.params.walletId
-    const balance = route.params.walletinfo.balance
     const transactionType = route.params.transactionType
-    const userstate = useSelector(state=>state.session.user)
     const tokwaAccount = useSelector(state=>state.toktokWallet)
     const globalsettings = useSelector(state=>state.constants)
     const [tempAmount,setTempAmount] = useState("")
@@ -44,52 +41,42 @@ const ToktokWalletPayPandaForm = ({navigation,route})=> {
     const [disablebtn,setDisablebtn] = useState(false)
     const [maxLimitMessage,setMaxLimitMessage] = useState("")
 
-    const [postWalletCashIn , {data,error,loading}] = useMutation(POST_WALLET_CASH_IN, {
-        // fetchPolicy: 'network-only',
-        onError: (error)=>{
+
+    const [postCashInPayPandaRequest , {data,error,loading}] = useMutation(POST_CASH_IN_PAYPANDA_REQUEST , {
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+        onError: (error)=> {
+            console.log(error)
             onErrorAlert({alert,error})
-            navigation.pop()
         },
-        onCompleted: ({postWalletCashIn})=> {
+        onCompleted: ({postCashInPayPandaRequest})=>{
+            console.log(postCashInPayPandaRequest)
             navigation.navigate("ToktokWalletPayPandaWebView", {
-                merchantId: postWalletCashIn.merchantId,
-                refNo: postWalletCashIn.refNo,
-                signature: postWalletCashIn.signature,
+                merchantId: postCashInPayPandaRequest.merchantId,
+                refNo: postCashInPayPandaRequest.refNo,
+                signature: postCashInPayPandaRequest.signature,
                 email_address: tokwaAccount.person.emailAddress,
                 payer_name: `${tokwaAccount.person.firstName}${tokwaAccount.person.middleName ? " " + tokwaAccount.person.middleName : ""} ${tokwaAccount.person.lastName}`,
                 mobile_number: tokwaAccount.mobileNumber,
                 amount_to_pay: amount,
-                currency: tokwaAccount.wallete.currency.code,
-                walletId: walletId,
+                currency: tokwaAccount.wallet.currency.code,
+                walletId: tokwaAccount.wallet.id,
                 transactionTypeId: transactionType.id
             })
         }
     })
 
 
-    useEffect(()=>{
-        // getDailyMonthlyYearlyIncoming({
-        //     variables: {
-        //         input: {
-        //             userID: userstate.id
-        //         }
-        //     }
-        // })
-    },[])
-
     const proceedToPaypandaPortal = ()=> {
-        postWalletCashIn({
-            variables: {
-                input: {
-                    amount: +amount,
-                    destinationUserId: userstate.id,
-                    sourceUserId: transactionType.sourceUserId,
-                    transactionTypeId: transactionType.id
-                }
-            }
-        })
-        // Alert.alert("test")
-       
+      postCashInPayPandaRequest({
+          variables: {
+              input: {
+                  provider: transactionType.id,
+                  amount: amount,
+                  currencyId: tokwaAccount.wallet.currency.id,
+                  walletId: tokwaAccount.wallet.id,
+              }
+          }
+      })
     }
 
     const confirmAmount = ()=> {
@@ -163,7 +150,7 @@ const ToktokWalletPayPandaForm = ({navigation,route})=> {
                             </View>
                             
                         </View>
-                        <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>Available Balance {tokwaAccount.wallet.currency.code} {numberFormat(balance)}</Text>
+                        <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>Available Balance {tokwaAccount.wallet.currency.code} {numberFormat(tokwaAccount.wallet.balance)}</Text>
                         <Text style={{fontFamily: FONT.REGULAR, color: "red",marginTop: 5,fontSize: FONT_SIZE.S}}>{message}</Text>
                         <Text style={{fontFamily: FONT.REGULAR, color: "red",marginTop: 5,fontSize: FONT_SIZE.S}}>{maxLimitMessage}</Text>
               

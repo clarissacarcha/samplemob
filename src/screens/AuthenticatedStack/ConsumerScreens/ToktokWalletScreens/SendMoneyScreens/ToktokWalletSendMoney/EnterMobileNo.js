@@ -9,7 +9,6 @@ import { Alert } from 'react-native'
 const {width,height} = Dimensions.get("window")
 
 const EnterMobileNo = ({
-    session , 
     navigation , 
     setProceed , 
     proceed ,
@@ -17,7 +16,7 @@ const EnterMobileNo = ({
     mobileNo , 
     setMobileNo , 
     recipientDetails,
-    account
+    tokwaAccount,
 })=> {
 
     const [errorMessage,setErrorMessage] = useState("")
@@ -44,7 +43,7 @@ const EnterMobileNo = ({
     })
 
     const checkIFSameNumber = (mobile) => {
-        let sessionMobile = account.mobileNumber.replace("+63","0")
+        let sessionMobile = tokwaAccount.mobileNumber.replace("+63","0")
         if(mobile == sessionMobile){
             setErrorMessage("You cannot send money to yourself.")
             setProceed(false)

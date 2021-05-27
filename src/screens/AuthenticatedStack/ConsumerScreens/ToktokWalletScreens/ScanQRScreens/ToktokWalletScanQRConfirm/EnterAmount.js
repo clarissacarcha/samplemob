@@ -2,13 +2,11 @@ import React , {useState} from 'react'
 import {View,Text,StyleSheet,TextInput} from 'react-native'
 import { numberFormat } from '../../../../../../helper'
 import { COLORS, FONTS, INPUT_HEIGHT, SIZES } from '../../../../../../res/constants'
-import { useSelector } from 'react-redux'
 
-const EnterAmount = ({amount , setAmount , setSwipeEnabled , walletinfo})=> {
+const EnterAmount = ({amount , setAmount , setSwipeEnabled  , tokwaAccount})=> {
 
     const [tempAmount,setTempAmount] = useState("")
     const [errorMessage,setErrorMessage] = useState("")
-    const tokwaAccount = useSelector(state=>state.toktokWallet)
 
     const changeAmount = (value)=>{
         const num = value.replace(/[^0-9]/g, '')
@@ -16,7 +14,7 @@ const EnterAmount = ({amount , setAmount , setSwipeEnabled , walletinfo})=> {
         setTempAmount(num)
         setAmount(num * 0.01)
 
-        if((num * 0.01) >= 1 && (num * 0.01) <= walletinfo.balance){
+        if((num * 0.01) >= 1 && (num * 0.01) <= tokwaAccount.wallet.balance){
             setSwipeEnabled(true)
             setErrorMessage("")
         }else if((num * 0.01) < 1 && num != ""){
@@ -29,7 +27,7 @@ const EnterAmount = ({amount , setAmount , setSwipeEnabled , walletinfo})=> {
         // checkSenderWalletLimitation(num * 0.01)
         // checkRecipientWalletLimitation(num * 0.01)
 
-        if((num * 0.01) > walletinfo.balance){
+        if((num * 0.01) > tokwaAccount.wallet.balance){
             setSwipeEnabled(false)
             return setErrorMessage("You do not have enough balance")
         }

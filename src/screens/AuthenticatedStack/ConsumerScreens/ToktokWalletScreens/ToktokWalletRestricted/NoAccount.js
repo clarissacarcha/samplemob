@@ -1,9 +1,12 @@
-import React from 'react'
+import React , {useState} from 'react'
 import {View,Text,StyleSheet, TouchableOpacity} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
 import { HeaderImageBackground , HeaderTitle , Separator  } from '../Components'
 import { COLOR , FONT_SIZE , FONT , SIZE } from '../../../../../res/variables'
 import { YellowButton , VectorIcon , ICON_SET } from '../../../../../revamp'
+
+//SELF IMPORTS 
+import ModalLinkTokwaAccount from "./ModalLinkTokwaAccount";
 
 const ProceedButton = ({route})=> {
     const navigation = useNavigation()
@@ -15,12 +18,12 @@ const ProceedButton = ({route})=> {
     )
 }
 
-const LinkButton = ()=> {
+const LinkButton = ({onPress})=> {
     const navigation = useNavigation()
-
+   
     return (
-        <TouchableOpacity style={styles.linkButton}>
-                <Text style={styles.linkButtonLabel}>Link To Existing toktokwallet</Text>
+        <TouchableOpacity onPress={onPress} style={styles.linkButton}>
+                <Text style={styles.linkButtonLabel}>Link</Text>
         </TouchableOpacity>
     )
 }
@@ -28,12 +31,19 @@ const LinkButton = ()=> {
 
 const PendingKyc = ()=> {
     const navigation = useNavigation()
+    const [showLinkModal, setShowLinkModal] = useState(false)
 
     navigation.setOptions({
         headerShown:false,
     })
+
+    const LinkAccount = ()=> {
+        setShowLinkModal(true)
+    }
+
     return (
         <>
+        <ModalLinkTokwaAccount visible={showLinkModal} setVisible={setShowLinkModal}/>
         <View style={styles.container}>
              <View style={styles.headings}>
                 <HeaderImageBackground>
@@ -55,7 +65,7 @@ const PendingKyc = ()=> {
             </View>
 
             <View style={{height: 120,padding: 16,justifyContent:'flex-end'}}>
-                {/* <LinkButton /> */}
+               <LinkButton onPress={LinkAccount}/>
                <ProceedButton route="ToktokWalletVerification" />
             </View>
         

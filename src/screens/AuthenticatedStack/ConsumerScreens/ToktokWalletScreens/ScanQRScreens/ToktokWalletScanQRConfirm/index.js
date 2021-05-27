@@ -32,8 +32,9 @@ const ToktokWalletScanQRConfirm = ({navigation,route})=> {
       headerShown:false,
     })
     const alert = useAlert()
-    const { recipientInfo, walletinfo } = route.params
+    const { recipientInfo } = route.params
     const session = useSelector(state=>state.session)
+    const tokwaAccount = useSelector(state=>state.toktokWallet)
     const [amount,setAmount] = useState("")
     const [note,setNote] = useState("")
     const [swipeEnabled,setSwipeEnabled] = useState(false)
@@ -46,6 +47,7 @@ const ToktokWalletScanQRConfirm = ({navigation,route})=> {
     const [recipientDetails,setRecipientDetails] = useState(null)
     const [senderDetails,setSenderDetails] = useState(null)
     const bottomSheetRef = useRef()
+    
 
     const [patchFundTransfer] = useMutation(PATCH_FUND_TRANSFER, {
         variables: {
@@ -103,10 +105,10 @@ const ToktokWalletScanQRConfirm = ({navigation,route})=> {
                     <View style={{height: 32}}/>
                     <View style={styles.walletContent}>
                             <View>
-                                <Text style={{fontSize: 24,fontFamily: FONTS.BOLD}}>PHP {numberFormat(walletinfo.balance ? walletinfo.balance : 0)}</Text>
+                                <Text style={{fontSize: 24,fontFamily: FONTS.BOLD}}>PHP {numberFormat(tokwaAccount.wallet.balance ? tokwaAccount.wallet.balance : 0)}</Text>
                                 <Text style={{fontSize: SIZES.M,fontFamily: FONTS.REGULAR,color: COLORS.DARK}}>Available Balance</Text>
                             </View>
-                            <TouchableOpacity onPress={()=> navigation.navigate("ToktokWalletPaymentOptions" , {walletinfo})} style={styles.topUp}>
+                            <TouchableOpacity onPress={()=> navigation.navigate("ToktokWalletPaymentOptions")} style={styles.topUp}>
                                 <View style={styles.topUpbtn}>
                                         <FIcon5 name={'plus'} size={12} color={COLORS.DARK}/> 
                                 </View>
@@ -121,7 +123,7 @@ const ToktokWalletScanQRConfirm = ({navigation,route})=> {
                 amount={amount} 
                 setAmount={setAmount} 
                 setSwipeEnabled={setSwipeEnabled}
-                walletinfo={walletinfo}
+                tokwaAccount={tokwaAccount}
             />
 
             <EnterNote

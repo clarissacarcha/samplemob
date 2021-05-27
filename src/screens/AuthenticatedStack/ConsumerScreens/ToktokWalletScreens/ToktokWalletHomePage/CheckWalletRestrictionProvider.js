@@ -13,8 +13,6 @@ const CheckWalletRestrictionProvider = ({children, kycStatus})=>{
 
     const checkIfResctricted = ()=> {
 
-      
-
          // If KYC record does not exist, proceed to KYC Registration or Linking
         if(!kycStatus && kycStatus == null){
            navigation.replace("ToktokWalletRestricted" , {component: "noAccount"})
