@@ -66,7 +66,7 @@ const ProceedButton = ({
             isSwipe: true,
             onSwipeFail: onSwipeFail,
             onSwipeSuccess: onSwipeSuccess,
-            swipeTitle: `Pay PHP ${amount != "" ? numberFormat(amount) : "0"}`,
+            swipeTitle: `Send PHP ${amount != "" ? numberFormat(amount) : "0"}`,
             data: {
                 amount: amount,
                 recipient: {

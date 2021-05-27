@@ -12,8 +12,6 @@ const ToktokWalletSettings = ({navigation , route })=> {
         headerTitle: ()=> <HeaderTitle label={['Settings','']}/>,
     })
 
-    const walletinfo = route.params.walletinfo
-
     const SettingOption = ({route,params={},title})=> (
         <>
         <TouchableOpacity style={styles.settingoption} onPress={()=>navigation.navigate(route,params)}>

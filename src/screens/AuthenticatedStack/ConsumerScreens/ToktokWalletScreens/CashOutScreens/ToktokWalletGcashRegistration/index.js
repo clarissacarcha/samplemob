@@ -21,49 +21,11 @@ const ToktokWalletGcashRegistration = ({navigation,route})=> {
         headerTitle: ()=> <HeaderTitle label={["GCash Account"]}/>
     })
 
+    const mobile = route.params.mobile
+
     const session = useSelector(state=>state.session)
 
     const alert = useAlert()
-
-    const {data , error , loading} = useQuery(GET_GCASH_ACCOUNT, {
-        fetchPolicy: 'no-cache',
-        variables: {
-            input: {
-                personId: session.user.person.id,
-              },
-        },
-        onError: (error) => onErrorAlert({alert, error}),
-    });
-
-    if(loading){
-        return null
-    }
-
-    if (error) {
-        return <SomethingWentWrong />;
-    }
-
-    if(!data.getGCashAccount.record){
-        return (
-            <>
-            <Separator/>
-            <View style={styles.container}>
-                    <CreateForm navigation={navigation} session={session}/>
-            </View>
-            </>
-         )
-    }
-
-    if(data.getGCashAccount.record){
-        return (
-            <>
-            <Separator/>
-            <View style={styles.container}>
-                    <ViewForm navigation={navigation} session={session} record={data.getGCashAccount.record}/>
-            </View>
-            </>
-         )
-    }
 
 
 
@@ -72,8 +34,7 @@ const ToktokWalletGcashRegistration = ({navigation,route})=> {
        <>
        <Separator/>
        <View style={styles.container}>
-           
-            
+            <CreateForm navigation={navigation} session={session} mobile={mobile}/>    
        </View>
        </>
     )

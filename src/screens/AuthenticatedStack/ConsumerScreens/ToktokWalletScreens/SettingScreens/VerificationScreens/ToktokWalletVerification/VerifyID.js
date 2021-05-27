@@ -12,6 +12,7 @@ import ModalCountry from './ModalCountry'
 import ModalValidID from './ModalValidID'
 import BottomSheetIDType from './BottomSheetIDType'
 import { YellowButton } from '../../../../../../../revamp'
+import { COLOR } from '../../../../../../../res/variables'
 
 const {height,width} = Dimensions.get("window")
 
@@ -61,8 +62,8 @@ const VerifyID = ()=> {
         if (validator.isEmpty(verifyID.idNumber, {ignore_whitespace: true})) {
             return Alert.alert("","ID Number is required.")
         }
-        if(frontImage == null) return Alert.alert("","Photo of front face of your Valid ID is required.")
-        if(isBackRequired && backImage == null)  return Alert.alert("","Photo of back face of your Valid ID is required.")
+        if(frontImage == null) return Alert.alert("","Front of ID photo is required.")
+        if(isBackRequired && backImage == null)  return Alert.alert("","Back of ID photo is required.")
         // if(verifyID.idImage == null) return Alert.alert("","Photo of Valid ID is required.")
         setCurrentIndex(oldval => oldval + 1)
     }
@@ -203,30 +204,15 @@ const VerifyID = ()=> {
                             <TouchableOpacity onPress={()=> {
                                 IDTypeRef.current.expand()
                             }} style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center"}]}>
-                                <Text style={{flex: 1,color: "gray",fontSize: SIZES.M,fontFamily: FONTS.REGULAR}}>{verifyID.idType == "" ? "Select ID type" : verifyID.idType}</Text>
+                                {
+                                    verifyID.idType == ""
+                                    ? <Text style={{flex: 1,color: COLOR.DARK,fontSize: SIZES.M,fontFamily: FONTS.REGULAR}}>Select ID Type</Text>
+                                    : <Text style={{flex: 1,fontSize: SIZES.M,fontFamily: FONTS.REGULAR}}>{verifyID.idType}</Text>
+                                }
                                 <EIcon name="chevron-right" size={24} color="#FCB91A"/>
 
                             </TouchableOpacity>
-                            {/* <DropDownPicker
-                                // defaultValue={moment(data.scheduledFrom, 'YYYY-MM-DD HH:mm:ss').format('HH:mm:ss').toString()}
-                                placeholder="Select One"
-                                items={ValidIDList.sort((a,b)=> a.value > b.value ? 1 : -1)}
-                                containerStyle={styles.pickerContainer}
-                                style={styles.pickerStyle}
-                                dropDownStyle={styles.pickerDropDown}
-                                arrowColor={COLOR}
-                                labelStyle={styles.pickerLabel}
-                                itemStyle={styles.pickerItem}
-                                // activeItemStyle={styles.pickerActiveItem}
-                                dropDownMaxHeight={250}
-                                // isVisible={visibility.from}
-                                onOpen={() => {
-                                    // onOpenPicker({from: true});
-                                }}
-                                onChangeItem={({value}) => {
-                                   changeVerifyID("idType",value)
-                                }}
-                                /> */}
+              
                             
                         </View>
 
@@ -237,7 +223,7 @@ const VerifyID = ()=> {
                                     onChangeText={text=>changeVerifyID("idNumber",text)}
                                     placeholder="Enter valid id number here"
                                     // onSubmitEditing={Proceed}
-                                    style={[styles.input,{padding: 5,paddingLeft: 10, color: "gray",fontSize: 12,fontFamily: FONTS.REGULAR}]} 
+                                    style={[styles.input,{padding: 5,paddingLeft: 10,fontSize: 12,fontFamily: FONTS.REGULAR}]} 
                             />
                         </View>
 

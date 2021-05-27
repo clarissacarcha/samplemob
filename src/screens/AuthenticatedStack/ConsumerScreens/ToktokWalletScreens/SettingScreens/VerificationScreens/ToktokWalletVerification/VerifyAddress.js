@@ -1,6 +1,6 @@
 import React, { useState , useEffect, useContext } from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,TextInput,KeyboardAvoidingView,Platform,ScrollView,Alert} from 'react-native'
-import {FONTS, SIZES, INPUT_HEIGHT, BUTTON_HEIGHT, COLORS} from '../../../../../../../res/constants'
+import {COLOR , FONT , FONT_SIZE, SIZE } from '../../../../../../../res/variables'
 import {VerifyContext} from './VerifyContextProvider'
 import validator from 'validator'
 import EIcon from 'react-native-vector-icons/EvilIcons'
@@ -91,7 +91,12 @@ const VerifyAddress = ()=> {
                         <View style={styles.ViewInput}>
                             <Text style={styles.labelText}>Country</Text>
                             <View style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center"}]}>
-                                <Text style={{flex: 1,color: "gray",fontSize: SIZES.M,fontFamily: FONTS.REGULAR}}>{address.country}</Text>
+                                {
+                                    address.country
+                                    ? <Text style={{flex: 1,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{address.country}</Text>
+                                    : <Text style={{flex: 1,color: COLOR.FONT_SIZE,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>- Select Country -</Text>
+                                }
+                             
                                 {/* <TouchableOpacity
                                     onPress={()=>setModalCountryVisible(true)}
                                     style={{
@@ -107,7 +112,7 @@ const VerifyAddress = ()=> {
                                          justifyContent:"center",
                                          alignItems:"center",
                                     }}>
-                                    <Text style={{color: COLORS.YELLOW,fontFamily: FONTS.REGULAR,fontSize: SIZES.S}}>Change</Text>
+                                    <Text style={{color: COLORS.YELLOW,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S}}>Change</Text>
                                     </View>
                                 </TouchableOpacity> */}
                             </View>
@@ -139,7 +144,11 @@ const VerifyAddress = ()=> {
                         <View style={styles.ViewInput}>
                             <Text style={styles.labelText}>Province</Text>
                             <TouchableOpacity  onPress={()=>setModalProvinceVisible(true)} style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center"}]}>
-                                <Text style={{flex: 1,color: "gray",fontSize: SIZES.M,fontFamily: FONTS.REGULAR}}>{province ? province : "- Select Province -"}</Text>
+                                {
+                                    province
+                                    ?  <Text style={{flex: 1,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{province}</Text>
+                                    :  <Text style={{flex: 1,color: COLOR.FONT_SIZE,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>- Select Province -</Text>
+                                }
                                 <EIcon name="chevron-right" size={24} color="#FCB91A"/>
                             </TouchableOpacity>
                         </View>
@@ -150,7 +159,11 @@ const VerifyAddress = ()=> {
                                 if(province == "") return Alert.alert("","Please select Province first")
                                 setModalCityVisible(true)
                             }}  style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center"}]}>
-                                <Text style={{flex: 1,color: "gray",fontSize: SIZES.M,fontFamily: FONTS.REGULAR}}>{selectedCity ? selectedCity : "- Select City -"}</Text>
+                                {
+                                    selectedCity
+                                    ?  <Text style={{flex: 1,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{selectedCity}</Text>
+                                    :  <Text style={{flex: 1,color: COLOR.FONT_SIZE,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>- Select City -</Text>
+                                }
                                 <EIcon name={loading ? "spinner" : "chevron-right"} size={24} color="#FCB91A"/>
                             </TouchableOpacity>
                         </View>
@@ -194,12 +207,12 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     labelText: {
-        fontSize: SIZES.M,
-        fontFamily: FONTS.BOLD
+        fontSize: FONT_SIZE.M,
+        fontFamily: FONT.BOLD
     },
     labelSmall: {
-        fontFamily: FONTS.REGULAR,
-        fontSize: SIZES.S,
+        fontFamily: FONT.REGULAR,
+        fontSize: FONT_SIZE.S,
         color:"#929191"
     },
     ViewInput: {
@@ -207,12 +220,12 @@ const styles = StyleSheet.create({
     },
     input: {
         paddingHorizontal: 10,
-        height: INPUT_HEIGHT,
+        height: SIZE.FORM_HEIGHT,
         borderRadius: 5,
         backgroundColor:"#F7F7FA",
         marginTop: 5,
-        fontSize: SIZES.M,
-        fontFamily: FONTS.REGULAR
+        fontSize: FONT_SIZE.M,
+        fontFamily: FONT.REGULAR
     },
 })
 

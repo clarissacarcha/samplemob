@@ -217,7 +217,7 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
                 }
         </View> */}
 
-                {/* <View
+                <View
                     style={{
                         flexDirection: 'row',
                         justifyContent: 'center',
@@ -231,7 +231,7 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
                             <EIcon name="camera" color={COLORS.YELLOW} size={40} />
                         </View>
                     </TouchableOpacity>
-                </View> */}
+                </View>
 
     </View>
     )

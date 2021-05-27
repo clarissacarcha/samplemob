@@ -3,10 +3,11 @@ import {View,Text,StyleSheet,TextInput} from 'react-native'
 import { numberFormat } from '../../../../../../helper'
 import {FONT,FONT_SIZE,COLOR,SIZE} from '../../../../../../res/variables'
 
-const EnterAmount = ({walletinfo , setSwipeEnabled , amount  ,setAmount , recipientDetails , account}) => {
+const EnterAmount = ({tokwaAccount , setSwipeEnabled , amount  ,setAmount , recipientDetails}) => {
 
     const [errorAmountMessage,setErrorAmountMessage] = useState("")
     const [tempAmount,setTempAmount] = useState("")
+
 
 
     const changeAmount = (value)=>{
@@ -18,7 +19,7 @@ const EnterAmount = ({walletinfo , setSwipeEnabled , amount  ,setAmount , recipi
 
     useEffect(()=>{
    
-            if(amount >= 1 && amount <= walletinfo.balance){
+            if(amount >= 1 && amount <= tokwaAccount.wallet.balance){
                 setSwipeEnabled(true)
                 setErrorAmountMessage("")
                 // checkSenderWalletLimitation()
@@ -26,7 +27,7 @@ const EnterAmount = ({walletinfo , setSwipeEnabled , amount  ,setAmount , recipi
                 
             }else if(amount < 1 && amount != ""){
                 setSwipeEnabled(false)
-                setErrorAmountMessage(`Please Enter atleast ${account.wallet.currency.code} 1.00`)
+                setErrorAmountMessage(`Please Enter atleast ${tokwaAccount.wallet.currency.code} 1.00`)
             }else{
                 setSwipeEnabled(false)
                 setErrorAmountMessage(amount == "" ? "" : "Insufficient Fund")
@@ -46,7 +47,7 @@ const EnterAmount = ({walletinfo , setSwipeEnabled , amount  ,setAmount , recipi
                 <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.M,color:"red",marginLeft: 10}}>{errorAmountMessage}</Text>
             </View>
             <View style={styles.input}>
-                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,alignSelf:"center"}}>{account.wallet.currency.code} </Text>
+                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,alignSelf:"center"}}>{tokwaAccount.wallet.currency.code} </Text>
                     <TextInput
                             caretHidden
                             value={tempAmount}

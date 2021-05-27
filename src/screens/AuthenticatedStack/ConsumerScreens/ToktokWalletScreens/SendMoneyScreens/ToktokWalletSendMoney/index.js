@@ -28,8 +28,7 @@ const ToktokWalletSendMoney = ({navigation,route})=> {
       })
     
     const session = useSelector(state => state.session)
-    const walletinfo = route.params.walletinfo
-    const account = route.params.account
+    const tokwaAccount = useSelector(state => state.toktokWallet)
 
     const [mobileNo,setMobileNo] = useState("")
     const [amount,setAmount] = useState("")
@@ -66,9 +65,7 @@ const ToktokWalletSendMoney = ({navigation,route})=> {
             if(route.params.recentTransfer){
                 setAmount(route.params.recentTransfer.amount)
                 setMobileNo(route.params.recentTransfer.destinationWallet.account.mobileNumber.replace("+63","0"))
-                setSwipeEnabled(route.params.recentTransfer.amount <= walletinfo.balance)
-
-                console.log(JSON.stringify(route.params.recentTransfer.destinationWallet.account))
+                setSwipeEnabled(route.params.recentTransfer.amount <= tokwaAccount.wallet.balance)
             }
         }
         
@@ -86,10 +83,10 @@ const ToktokWalletSendMoney = ({navigation,route})=> {
                         <View style={{height: 32}}/>
                         <View style={styles.walletContent}>
                                 <View>
-                                    <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>{account.wallet.currency.code} {numberFormat(walletinfo.balance ? walletinfo.balance : 0)}</Text>
+                                    <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>{tokwaAccount.wallet.currency.code} {numberFormat(tokwaAccount.wallet.balance ? tokwaAccount.wallet.balance : 0)}</Text>
                                     <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Available Balance</Text>
                                 </View>
-                                <TouchableOpacity onPress={()=> navigation.navigate("ToktokWalletPaymentOptions" , {walletinfo})} style={styles.topUp}>
+                                <TouchableOpacity onPress={()=> navigation.navigate("ToktokWalletPaymentOptions")} style={styles.topUp}>
                                     <View style={styles.topUpbtn}>
                                             <FIcon5 name={'plus'} size={12}/> 
                                     </View>
@@ -104,12 +101,11 @@ const ToktokWalletSendMoney = ({navigation,route})=> {
                         mobileNo={mobileNo}
                         setMobileNo={setMobileNo}
                         navigation={navigation} 
-                        session={session} 
                         setProceed={setProceed} 
                         proceed={proceed}
                         setRecipientDetails={setRecipientDetails}
                         recipientDetails={recipientDetails}
-                        account={account}
+                        tokwaAccount={tokwaAccount}
                 />
 
               
@@ -119,12 +115,11 @@ const ToktokWalletSendMoney = ({navigation,route})=> {
                         ? <> 
                              <EnterAmount 
                                 setSwipeEnabled={setSwipeEnabled}
-                                walletinfo={walletinfo} 
+                                tokwaAccount={tokwaAccount}
                                 amount={amount} 
                                 setAmount={setAmount}
                                 recipientDetails={recipientDetails}
                                 senderDetails={senderDetails}
-                                account={account}
                             />
 
                             <EnterNote

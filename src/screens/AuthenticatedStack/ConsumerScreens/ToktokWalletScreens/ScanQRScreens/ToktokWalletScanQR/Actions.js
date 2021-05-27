@@ -12,7 +12,7 @@ import MyQRCode from './MyQRCode'
 
 const {height,width} = Dimensions.get("window")
 
-const Actions = ({onUploadSuccess,account})=> {
+const Actions = ({onUploadSuccess, tokwaAccount})=> {
 
     const alertHook = useAlert()
     const navigation = useNavigation()
@@ -62,7 +62,7 @@ const Actions = ({onUploadSuccess,account})=> {
 
     return (
         <>
-        <MyQRCode account={account} visible={myqrVisible} setVisible={setMyqrVisible} />
+        <MyQRCode tokwaAccount={tokwaAccount} visible={myqrVisible} setVisible={setMyqrVisible} />
         <View style={styles.container}>
             <View style={styles.actionBtnContainer}>
                 <TouchableOpacity onPress={handleSelectFile} style={styles.actionBtn}

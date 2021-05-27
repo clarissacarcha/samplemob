@@ -18,14 +18,15 @@ const Method = ({icon,label,iconstyle,onPress})=> {
     )
 }
 
-const WalletMethods = ({walletinfo , account })=> {
+const WalletMethods = ()=> {
 
     const navigation = useNavigation()
     const {checkIfResctricted} = useContext(CheckWalletRestrictionContext)
 
     const onPress = (route)=> {
         if(!checkIfResctricted()){
-            return navigation.navigate(route, {walletinfo , account})
+            // return navigation.navigate(route, {walletinfo , account})
+            return navigation.navigate(route)
         }
     }
 

@@ -47,6 +47,8 @@ export const GET_TRANSACTIONS = gql`
                     status
                     sourceWalletId
                     destinationWalletId
+                    cashInId
+                    cashOutId
                     sourcePerson {
                         firstName
                         middleName
@@ -74,6 +76,8 @@ export const GET_TRANSACTIONS = gql`
                     status
                     sourceWalletId
                     destinationWalletId
+                    cashInId
+                    cashOutId
                     sourcePerson {
                         firstName
                         middleName

@@ -6,6 +6,7 @@ import {useLazyQuery} from '@apollo/react-hooks'
 import {useAlert} from '../../../../../hooks/useAlert'
 import {onError,onErrorAlert} from '../../../../../util/ErrorUtility'
 import { YellowButton } from '../../../../../revamp';
+import { DisabledButton } from '../Components';
 
 const {height,width} = Dimensions.get("window")
 
@@ -90,6 +91,11 @@ const ToktokWalletSecurityPinCode = ({navigation,route})=> {
     //    })
         if(pinCode === "123456"){
             route.params.onConfirm()
+        }else{
+            return setPinCodeAttempts({
+                visible: true,
+                attempts: "(not yet implemented)"
+            })
         }
     };
 
@@ -146,7 +152,11 @@ const ToktokWalletSecurityPinCode = ({navigation,route})=> {
 
             
                 <View style={styles.proceedBtn}>
-                  <YellowButton label="Proceed" onPress={onSubmit} />
+                 {
+                     pinCode.length < 6
+                     ? <DisabledButton label="Proceed" />
+                     :  <YellowButton label="Proceed" onPress={onSubmit} />
+                 }
                 </View>
 
             </View>

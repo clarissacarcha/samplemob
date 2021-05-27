@@ -2,29 +2,38 @@ import React, {useEffect,useState} from 'react'
 import {View,Text,StyleSheet,ScrollView,TextInput,Alert,TouchableOpacity,Modal,StatusBar,TouchableOpacityBase,Image} from 'react-native'
 import { HeaderBack, YellowButton } from '../../../../../../revamp';
 import {HeaderTitle} from '../../../../../../components'
-import { COLORS, FONTS, SIZES } from '../../../../../../res/constants';
+import { FONT, FONT_SIZE , COLOR } from '../../../../../../res/variables';
 import { Separator } from '../../Components';
 import validator from 'validator';
-import {POST_GCASH_ACCOUNT} from '../../../../../../graphql';
+import {TOKTOK_WALLET_GRAPHQL_CLIENT} from '../../../../../../graphql';
+import { POST_CASH_OUT_ENROLLMENG_GCASH } from '../../../../../../graphql/toktokwallet';
 import {useMutation} from '@apollo/react-hooks';
-import {onError} from '../../../../../../util/ErrorUtility';
+import {onError, onErrorAlert} from '../../../../../../util/ErrorUtility';
+import { useAlert } from '../../../../../../hooks';
 
 //SELF IMPORTS
 import DatePickerModal from './DatePickerModal';
+import ModalCountry from './ModalCountry';
 
 
 const PromptMessage = ({
     visible,
     setVisible,
-    navigation
+    navigation,
 })=> {
+
+    const redirect = ()=> {
+        setVisible(false)
+        navigation.navigate("ToktokWalletGcashHomePage")
+        return navigation.replace("ToktokWalletGcashHomePage")
+    }
 
     return (
         <>
         <StatusBar barStyle="dark-content" backgroundColor={visible ? "rgba(34, 34, 34, 0.5)" : "transparent"} />
         <Modal
             visible={visible}
-            onRequestClose={()=>setVisible(false)}
+            onRequestClose={redirect}
             transparent={true}
             style={styles.promptMessage}
         >
@@ -33,8 +42,8 @@ const PromptMessage = ({
                 <View style={styles.promptContent}>
                     <Image style={{height: 90,width: 90}} resizeMode="contain" source={require('../../../../../../assets/icons/gcash.png')}/>
                     <View style={{alignItems:"center"}}>
-                        <Text style={{fontFamily: FONTS.BOLD, fontSize: SIZES.M,color: COLORS.DARK}}>Successfully added</Text>
-                        <Text style={{fontFamily: FONTS.BOLD, fontSize: SIZES.M,color: COLORS.DARK}}>Gcash Account.</Text>
+                        <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,color: COLOR.DARK}}>Successfully added</Text>
+                        <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,color: COLOR.DARK}}>Wait for verification of Gcash Account.</Text>
                     </View>
                     <TouchableOpacity 
                         style={{
@@ -42,12 +51,9 @@ const PromptMessage = ({
                             paddingVertical: 2,
                             alignItems:"center"
                         }}
-                        onPress={()=>{
-                            setVisible(false)
-                            return navigation.replace("ToktokWalletGcashRegistration")
-                        }}
+                        onPress={redirect}
                     >
-                        <Text style={{fontFamily: FONTS.BOLD, fontSize: SIZES.M,color: COLORS.ORANGE}}>Ok</Text>
+                        <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,color: COLOR.ORANGE}}>Ok</Text>
                     </TouchableOpacity>
                   
                 </View>
@@ -58,34 +64,55 @@ const PromptMessage = ({
     )
 }
 
-const CreateForm = ({navigation,session})=> {
+const CreateForm = ({navigation,session,mobile})=> {
 
     navigation.setOptions({
-        headerLeft: ()=> <HeaderBack color={COLORS.YELLOW}/>,
+        headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
         headerTitle: ()=> <HeaderTitle label={["GCash Account"]}/>
     })
-
+    const alert = useAlert()
     const [pickerVisible, setPickerVisible] = useState(false);
 
-    const [mobileNumber, setMobileNumber] = useState('');
+    const [mobileNumber, setMobileNumber] = useState(mobile);
+    const [errorMessage,setErrorMessage] = useState("");
     const [firstName, setfirstName] = useState('');
     const [middleName, setMiddleName] = useState('');
     const [lastName, setlastName] = useState('');
-    const [streetAddress, setStreetAddress] = useState('');
     const [birthdate, setBirthdate] = useState('');
+    const [streetAddress, setStreetAddress] = useState('');
+    const [barangayTown, setBarangayTown] = useState('');
+    const [provinceCity, setProvinceCity] = useState('');
+    const [country, setCountry] = useState('Philippines');
+   
 
     const [promptVisible,setPromptVisible] = useState(false);
+    const [modalCountryVisible,setModalCountryVisible] = useState(false);
 
-    const [postGCashAccount, {loading: postLoading}] = useMutation(POST_GCASH_ACCOUNT, {
-        onError,
-        onCompleted: (res) => {
-          setPromptVisible(true)
-        },
+    const [postCashOutEnrollmentGcash, {loading: postLoading}] = useMutation(POST_CASH_OUT_ENROLLMENG_GCASH, {
+            client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+            onError: (error)=> {
+                onErrorAlert({alert,error})
+            },
+            onCompleted: (res) => {
+            setPromptVisible(true)
+            },
       });
-
 
     const changeMobileNumber = (value)=>{
         let mobile = value.replace(/[^0-9]/g, "")
+
+         if(mobile.length == 0){
+            setErrorMessage("")
+            setMobileNumber(mobile)
+            return
+         }
+
+        if(mobile.length > 10 && mobile.slice(0,2) == "09"){
+            setErrorMessage("")
+        }else{
+            setErrorMessage("Please enter a valid mobile number.")
+        }
+
         if(mobile.length > 11) return
 
         if(value[0] == "9"){
@@ -97,49 +124,82 @@ const CreateForm = ({navigation,session})=> {
     
     const saveGcashAccount = ()=> {
         if (validator.isEmpty(mobileNumber, {ignore_whitespace: true})) {
-            Alert.alert('', 'Please enter mobile number.');
+            Alert.alert('', 'Please enter Mobile Number.');
             return;
           }
       
           if (validator.isEmpty(firstName, {ignore_whitespace: true})) {
-            Alert.alert('', 'Please enter first name.');
+            Alert.alert('', 'Please enter First Name.');
             return;
           }
       
           if (validator.isEmpty(lastName, {ignore_whitespace: true})) {
-            Alert.alert('', 'Please enter last name.');
+            Alert.alert('', 'Please enter Last Name.');
+            return;
+          }
+
+          if (validator.isEmpty(birthdate, {ignore_whitespace: true})) {
+            Alert.alert('', 'Please select Birthdate.');
             return;
           }
       
           if (validator.isEmpty(streetAddress, {ignore_whitespace: true})) {
-            Alert.alert('', 'Please enter street address.');
-            return;
-          }
-      
-          if (validator.isEmpty(birthdate, {ignore_whitespace: true})) {
-            Alert.alert('', 'Please select birthdate.');
+            Alert.alert('', 'Please enter Street Address.');
             return;
           }
 
-          postGCashAccount({
-            variables: {
-              input: {
-                mobileNumber,
-                firstName,
-                middleName,
-                lastName,
-                streetAddress,
-                birthdate,
-                personId: session.user.person.id,
-              },
-            },
-          });
+          if (validator.isEmpty(barangayTown, {ignore_whitespace: true})) {
+            Alert.alert('', 'Please enter Barangay Town.');
+            return;
+          }
+
+          if (validator.isEmpty(provinceCity, {ignore_whitespace: true})) {
+            Alert.alert('', 'Please enter Province City.');
+            return;
+          }
+
+          if (validator.isEmpty(country, {ignore_whitespace: true})) {
+            Alert.alert('', 'Please enter Country.');
+            return;
+          }
+
+
+          postCashOutEnrollmentGcash({
+              variables: {
+                  input: {
+                        mobile: mobileNumber,
+                        firstName: firstName,
+                        lastName: lastName,
+                        streetAddress: streetAddress,
+                        barangayTown: barangayTown,
+                        provinceCity: provinceCity,
+                        country: country,
+                        birthdate: birthdate,
+                  }
+              }
+          })
+        
+
+        //   postGCashAccount({
+        //     variables: {
+        //       input: {
+        //         mobileNumber,
+        //         firstName,
+        //         middleName,
+        //         lastName,
+        //         streetAddress,
+        //         birthdate,
+        //         personId: session.user.person.id,
+        //       },
+        //     },
+        //   });
       
     }
 
     return (
        <>
         <PromptMessage visible={promptVisible} setVisible={setPromptVisible} navigation={navigation}/>
+        <ModalCountry visible={modalCountryVisible} setVisible={setModalCountryVisible} setCountry={setCountry}/>
         <DatePickerModal
             visible={pickerVisible}
             hidePicker={() => setPickerVisible(false)}
@@ -150,7 +210,7 @@ const CreateForm = ({navigation,session})=> {
             }}
         />
        <View style={styles.container}>
-            <ScrollView style={{flex: 1,flexGrow: 1,}}>
+            <ScrollView style={{flex: 1,flexGrow: 1,}} showsVerticalScrollIndicator={false}>
 
                 <View>
                     <Text style={styles.label}>Mobile Number</Text>
@@ -162,6 +222,7 @@ const CreateForm = ({navigation,session})=> {
                         keyboardType="numeric"
                         returnKeyType="done"
                     />
+                    { errorMessage != "" && <Text style={{fontFamily: FONT.REGULAR,color:"red",fontSize: FONT_SIZE.S}}>{errorMessage}</Text> }
                 </View>
 
                 <View style={{marginTop: 20}}>
@@ -175,7 +236,7 @@ const CreateForm = ({navigation,session})=> {
                     />
                 </View>
 
-                <View style={{marginTop: 20}}>
+                {/* <View style={{marginTop: 20}}>
                     <Text style={styles.label}>Middle Name ( Optional )</Text>
                     <TextInput 
                         style={styles.input}
@@ -184,7 +245,7 @@ const CreateForm = ({navigation,session})=> {
                         value={middleName}
                         returnKeyType="done"
                     />
-                </View>
+                </View> */}
 
                 <View style={{marginTop: 20}}>
                     <Text style={styles.label}>Last Name</Text>
@@ -198,6 +259,20 @@ const CreateForm = ({navigation,session})=> {
                 </View>
 
                 <View style={{marginTop: 20}}>
+                    <Text style={styles.label}>Birthdate</Text>
+                    <TouchableOpacity onPress={() => setPickerVisible(true)}>
+                        <View style={styles.birthdate}>
+                        {birthdate === '' ? (
+                            <Text style={{color: COLOR.DARK,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Select Birthdate</Text>
+                        ) : (
+                            <Text style={{color: COLOR.DARK,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{birthdate}</Text>
+                        )}
+                        </View>
+                    </TouchableOpacity>
+                </View>
+
+
+                <View style={{marginTop: 20}}>
                     <Text style={styles.label}>Street Address</Text>
                     <TextInput 
                         style={styles.input}
@@ -209,24 +284,72 @@ const CreateForm = ({navigation,session})=> {
                 </View>
 
                 <View style={{marginTop: 20}}>
-                    <Text style={styles.label}>Birthdate</Text>
-                    <TouchableOpacity onPress={() => setPickerVisible(true)}>
-                        <View style={styles.birthdate}>
-                        {birthdate === '' ? (
-                            <Text style={{color: COLORS.LIGHT,fontFamily: FONTS.REGULAR,fontSize: SIZES.M}}>Select Birthdate</Text>
-                        ) : (
-                            <Text style={{color: COLORS.MEDIUM,fontFamily: FONTS.REGULAR,fontSize: SIZES.M}}>{birthdate}</Text>
-                        )}
-                        </View>
-                    </TouchableOpacity>
+                    <Text style={styles.label}>Barangay Town</Text>
+                    <TextInput 
+                        style={styles.input}
+                        placeholder="Enter barangay and town here"
+                        onChangeText={(value)=>setBarangayTown(value)}
+                        value={barangayTown}
+                        returnKeyType="done"
+                    />
                 </View>
 
+
+                <View style={{marginTop: 20}}>
+                    <Text style={styles.label}>Province City</Text>
+                    <TextInput 
+                        style={styles.input}
+                        placeholder="Enter province and city here"
+                        onChangeText={(value)=>setProvinceCity(value)}
+                        value={provinceCity}
+                        returnKeyType="done"
+                    />
+                </View>
+
+
+                <View style={{marginVertical: 20}}>
+                    <Text style={styles.label}>Country</Text>
+                    {/* <TextInput 
+                        style={styles.input}
+                        placeholder="Enter Country here"
+                        onChangeText={(value)=>setCountry(value)}
+                        value={country}
+                        returnKeyType="done"
+                    /> */}
+                  <View style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center",paddingVertical: 10}]}>
+                            <Text style={{ fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR,flex: 1}}>{country}</Text>
+                            <TouchableOpacity
+                                    onPress={()=>setModalCountryVisible(true)}
+                                    style={{
+                                        paddingHorizontal: 10,
+                                        borderWidth: 1,
+                                        borderColor: COLOR.YELLOW,
+                                        borderRadius: 5,
+                                        height: 20,
+                                        marginRight: 10,
+                                    }}
+                                >
+                                    <View style={{
+                                         flex: 1,
+                                         justifyContent:"center",
+                                         alignItems:"center",
+                                    }}>
+                                        <Text style={{color: COLOR.YELLOW,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S}}>Change</Text>
+                                    </View>
+                                </TouchableOpacity>
+                          
+                    </View>
+                </View>
+
+
                 
+                
+                <YellowButton label="Save" onPress={saveGcashAccount}/>
 
                 
             </ScrollView>
 
-            <YellowButton label="Save" onPress={saveGcashAccount}/>
+            {/* <YellowButton label="Save" onPress={saveGcashAccount}/> */}
 
        </View>
        </>
@@ -245,20 +368,20 @@ const styles = StyleSheet.create({
         height: 50,
         backgroundColor: "#F7F7FA",
         borderRadius: 5,
-        fontSize: SIZES.M,
-        fontFamily: FONTS.REGULAR,
+        fontSize: FONT_SIZE.M,
+        fontFamily: FONT.REGULAR,
         paddingLeft: 10,
     },
     label: {
-        fontFamily: FONTS.BOLD,
-        fontSize: FONTS.M
+        fontFamily: FONT.BOLD,
+        fontSize: FONT.M
     },
     birthdate: {
         backgroundColor: "#F7F7FA",
         borderRadius: 5,
         paddingLeft: 10,
         height: 50,
-        color: COLORS.DARK,
+        color: COLOR.DARK,
         justifyContent: 'center',
       },
     promptMessage: {

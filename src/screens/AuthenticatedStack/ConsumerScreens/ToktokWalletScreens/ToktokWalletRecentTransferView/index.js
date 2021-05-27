@@ -5,7 +5,7 @@ import {Separator} from '../Components'
 import moment from 'moment'
 import { numberFormat } from '../../../../../helper'
 import { HeaderBack, YellowButton , HeaderTitle } from '../../../../../revamp'
-
+import {useSelector} from 'react-redux'
 
 const Details = ({label,value})=> {
     return (
@@ -28,11 +28,10 @@ const ToktokWalletRecentTransferView = ({navigation,route})=> {
     })
 
     const recentTransfer = route.params.recentTransfer
-    const walletinfo = route.params.walletinfo
-    const account = route.params.account
+    const tokwaAccount = useSelector(state=>state.toktokWallet)
 
     const TransferAgain = ()=> {
-        return navigation.navigate("ToktokWalletSendMoney", {walletinfo , account, recentTransfer})
+        return navigation.navigate("ToktokWalletSendMoney", {recentTransfer})
     }
 
     return (
@@ -44,7 +43,7 @@ const ToktokWalletRecentTransferView = ({navigation,route})=> {
                         <Details label="Time" value={moment(recentTransfer.createdAt).tz('Asia/Manila').format('h:mm a')}/>
                         <Details label="Payment Method" value="toktokwallet"/>
                         <Details label="Recipient" value={`${recentTransfer.destinationPerson.firstName} ${recentTransfer.destinationPerson.middleName ? recentTransfer.destinationPerson.middleName + " " : ""}${recentTransfer.destinationPerson.lastName}`}/>
-                        <Details label="Fund Transferred" value={`${account.wallet.currency.code} ${numberFormat(recentTransfer.amount)}`}/>
+                        <Details label="Fund Transferred" value={`${tokwaAccount.wallet.currency.code} ${numberFormat(recentTransfer.amount)}`}/>
                     </View>
                     <View style={{flex: 1,height: 70,justifyContent:"flex-end",paddingBottom: 16,}}>
                             <YellowButton label="Transfer Again" onPress={TransferAgain} />

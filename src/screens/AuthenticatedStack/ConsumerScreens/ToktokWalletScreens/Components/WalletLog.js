@@ -3,11 +3,15 @@ import moment from 'moment'
 import {View,Text,TouchableOpacity,StyleSheet,Image} from 'react-native'
 import {COLOR, FONT , FONT_SIZE} from '../../../../../res/variables';
 import { numberFormat } from '../../../../../helper';
+import { useSelector } from 'react-redux';
 
 //SELF IMPORTS
 import { TransactionDetails } from './TransactionDetails'
 
-export const WalletLog = ({transactionDate , transactionItems ,index , itemsLength , account }) => {
+export const WalletLog = ({transactionDate , transactionItems ,index , itemsLength }) => {
+
+    const tokwaAccount = useSelector(state=>state.toktokWallet)
+
 
     const [transactionVisible,setTransactionVisible] = useState(false)
     const [transactionInfo,setTransactionInfo] = useState({
@@ -61,21 +65,31 @@ export const WalletLog = ({transactionDate , transactionItems ,index , itemsLeng
                     transactionItems.map((item)=>{
 
                         const title = item.transactionType.name
-                        const amountcolor = item.sourceWalletId == account.wallet.id ? "red" : "green"
-                        const amountprefix = item.sourceWalletId == account.wallet.id ? "-" : "+"
+                        const amountcolor = item.sourceWalletId == tokwaAccount.wallet.id ? "red" : "green"
+                        const amountprefix = item.sourceWalletId == tokwaAccount.wallet.id ? "-" : "+"
                         const referenceDate = moment(item.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')
-                        const transactionAmount = `${amountprefix} ${account.wallet.currency.code} ${numberFormat(item.amount)}`
+                        const transactionAmount = `${amountprefix} ${tokwaAccount.wallet.currency.code} ${numberFormat(item.amount)}`
 
-                        const sourceName = `${item.sourcePerson.firstName} ${item.sourcePerson.lastName}`
-                        const destinationName = `${item.destinationPerson.firstName} ${item.destinationPerson.lastName}`
+
+                        let sourceName , destinationName = ""
+                        if(item.cashOutId){
+                            sourceName = ``
+                            destinationName = ``
+                        }else if(item.cashInId){
+                            sourceName = ``
+                            destinationName = ``
+                        }else{
+                            sourceName = `${item.sourcePerson.firstName} ${item.sourcePerson.lastName}`
+                            destinationName = `${item.destinationPerson.firstName} ${item.destinationPerson.lastName}`
+                        }
 
                         let phrase = ""
-                        if(item.sourceWalletId == account.wallet.id ){
+                        if(item.sourceWalletId == tokwaAccount.wallet.id ){
                             phrase = `${item.transactionType.sourcePhrase.replace("[:source]",destinationName)}`
-                            phrase = `${phrase.replace("[:amount]",`${account.wallet.currency.code} ${numberFormat(item.amount)}`)}`
+                            phrase = `${phrase.replace("[:amount]",`${tokwaAccount.wallet.currency.code} ${numberFormat(item.amount)}`)}`
                         }else{
                             phrase = `${item.transactionType.destinationPhrase.replace("[:source]",sourceName)}`
-                            phrase = `${phrase.replace("[:amount]",`${account.wallet.currency.code} ${numberFormat(item.amount)}`)}`
+                            phrase = `${phrase.replace("[:amount]",`${tokwaAccount.wallet.currency.code} ${numberFormat(item.amount)}`)}`
                         }
 
                         return (

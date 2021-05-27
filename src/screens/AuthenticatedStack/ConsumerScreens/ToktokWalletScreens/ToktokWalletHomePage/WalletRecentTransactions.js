@@ -8,11 +8,10 @@ import {COLOR,FONT,FONT_SIZE} from '../../../../../res/variables'
 import {useNavigation} from '@react-navigation/native'
 import {WalletLog} from '../Components'
 
-const WalletRecentTransactions = ({account})=> {
+const WalletRecentTransactions = ()=> {
 
     const navigation = useNavigation()
-
-
+  
     const {data,error,loading} = useQuery(GET_TRANSACTIONS, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         fetchPolicy: "network-only",
@@ -64,7 +63,7 @@ const WalletRecentTransactions = ({account})=> {
                         data={data.getTransactions.recentTransactions}
                         keyExtractor={item=>item.logDate}
                         renderItem={({item,index})=>{
-                            return <WalletLog account={account} key={`recentLog${index}`} transactionDate={item.logDate} transactionItems={item.logs} index={index}/>
+                            return <WalletLog key={`recentLog${index}`} transactionDate={item.logDate} transactionItems={item.logs} index={index}/>
                         }}
                     />
             </View>

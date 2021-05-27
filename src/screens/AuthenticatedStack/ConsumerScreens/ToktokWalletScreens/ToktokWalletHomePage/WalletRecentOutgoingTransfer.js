@@ -9,14 +9,16 @@ import {TOKTOK_WALLET_GRAPHQL_CLIENT} from '../../../../../graphql'
 import {useQuery} from '@apollo/react-hooks'
 import {useNavigation} from '@react-navigation/native'
 import {Separator} from '../Components'
+import {useSelector} from 'react-redux'
 
-const WalletRecentOutgoingTransfer = ({account})=> {
+const WalletRecentOutgoingTransfer = ()=> {
 
     const navigation = useNavigation()
-    const walletinfo = account.wallet
+    const tokwaAccount = useSelector(state=>state.toktokWallet)
+
 
     const ViewRecentTransfer = (recentTransfer)=> {
-        return navigation.navigate("ToktokWalletRecentTransferView",{recentTransfer , walletinfo , account})
+        return navigation.navigate("ToktokWalletRecentTransferView",{recentTransfer})
     }
 
     const {data,error,loading} = useQuery(GET_OUTGOING_TRANSFER, {
@@ -60,7 +62,7 @@ const WalletRecentOutgoingTransfer = ({account})=> {
 
             <View style={styles.recent}>
                         <View style={[styles.recentInfo,{justifyContent:"center",alignItems:"flex-start"}]}>
-                                <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M,color:"#F6841F",textAlign:"left"}}>{account.wallet.currency.code} {numberFormat(recentTransfer.amount)}</Text>
+                                <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M,color:"#F6841F",textAlign:"left"}}>{tokwaAccount.wallet.currency.code} {numberFormat(recentTransfer.amount)}</Text>
                         </View>
                         <View style={[{flex: .5,justifyContent:"center",alignItems:"center",}]}>
                                 <FIcon5 name="arrow-right" size={18} color="#F6841F"/>

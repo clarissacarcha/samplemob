@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react'
 import {Text,View,StyleSheet,Alert,Image,TextInput,TouchableOpacity,Linking,ScrollView} from 'react-native'
-import {FONTS, SIZES, COLORS, COLOR, DARK, FONT, FONT_SIZE, SIZE} from '../../../../../../../res/constants'
+import {COLOR, FONT ,SIZE,FONT_SIZE} from '../../../../../../../res/variables'
 import {VerifyContext} from './VerifyContextProvider'
 import validator from 'validator';
 import { BlackButton, YellowButton } from '../../../../../../../revamp'
@@ -50,7 +50,7 @@ const VerifyFullname = ()=> {
             return Alert.alert("","Last Name is required.")
         }
         if (validator.isEmpty(person.firstName, {ignore_whitespace: true})) {
-            return Alert.alert("","first Name is required.")
+            return Alert.alert("","First Name is required.")
         }
 
         if (!validator.isEmail(contactInfo.email, {ignore_whitespace: true})) {
@@ -100,17 +100,17 @@ const VerifyFullname = ()=> {
                 <Image style={styles.policyIcon} source={require('../../../../../../../assets/icons/walletVerify.png')} resizeMode="contain" />
                 </View>
                 <View style={{justifyContent: "center", alignItems: "center",marginRight: 20,}}>
-                    <Text style={{marginHorizontal: 10,fontSize: SIZES.S,fontFamily: FONTS.REGULAR}}>All your details are protected in accordance with our <Text style={{color: COLORS.YELLOW}}>privacy policy.</Text></Text>
+                    <Text style={{marginHorizontal: 10,fontSize: FONT_SIZE.S,fontFamily: FONT.REGULAR}}>All your details are protected in accordance with our <Text style={{color: COLOR.YELLOW}}>privacy policy.</Text></Text>
                 </View>
         </TouchableOpacity>
 
                 <View style={styles.mainInput}>
-                    <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.M}}>Fill up the information</Text>
-                    <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.S,color:"#929191"}}>Please enter the name that appears on your Valid ID.</Text>
+                    <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Fill up the information</Text>
+                    <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:"#929191"}}>Please enter the name that appears on your Valid ID.</Text>
 
                     
                     <View style={{marginTop: 40}}>
-                      <Text style={{fontFamily: FONTS.BOLD, marginBottom: 2}}>Mobile Number</Text>
+                      <Text style={{fontFamily: FONT.BOLD, marginBottom: 2}}>Mobile Number</Text>
                       <View
                         style={{
                             borderRadius: 5,
@@ -118,18 +118,18 @@ const VerifyFullname = ()=> {
                             alignItems: 'center',
                             overflow: 'hidden',
                             height: 50,
-                            marginBottom: SIZES.MARGIN,
+                            marginBottom: FONT_SIZE.MARGIN,
                             backgroundColor: COLOR.LIGHT,
                         }}>
                         <View
                           style={{
-                            paddingLeft: SIZES.MARGIN,
-                            height: 50,
+                            height: SIZE.FORM_HEIGHT,
                             justifyContent: 'center',
                             alignItems: 'center',
-                            backgroundColor:"#F7F7FA",
+                            paddingTop: 4.5,
+                            backgroundColor:"lightgray",
                           }}>
-                          <Text style={{color: COLOR.BLACK, marginTop: 3.5, marginLeft: 6}}>+63</Text>
+                          <Text style={{ marginHorizontal: 6}}>+63</Text>
                         </View>
                         <TextInput
                             value={mobile}
@@ -137,14 +137,14 @@ const VerifyFullname = ()=> {
                             placeholder="9151234567"
                             keyboardType="number-pad"
                             returnKeyType="done"
-                            style={{paddingLeft: 8, flex: 1, color: DARK, height: 50, ...styles.input}}
-                            placeholderTextColor={COLOR.MEDIUM}
+                            style={{paddingLeft: 5, flex: 1, ...styles.input}}
+                            placeholderTextColor={COLOR.DARK}
                         />
                       </View>
                     </View>
 
                     {/* <View style={{marginTop: 40,}}>
-                    <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.M}}>Mobile Number</Text>
+                    <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Mobile Number</Text>
                         <TextInput 
                             style={styles.input}
                             value={contactInfo.mobile_number}
@@ -154,7 +154,7 @@ const VerifyFullname = ()=> {
                     </View> */}
 
                     <View style={{marginTop: 20,}}>
-                    <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.M}}>Last Name</Text>
+                    <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Last Name</Text>
                         <TextInput 
                             style={styles.input}
                             value={person.lastName}
@@ -164,7 +164,7 @@ const VerifyFullname = ()=> {
                     </View>
 
                     <View style={{marginTop: 20,}}>
-                    <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.M}}>First Name</Text>
+                    <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>First Name</Text>
                         <TextInput 
                             style={styles.input}
                             value={person.firstName}
@@ -174,7 +174,7 @@ const VerifyFullname = ()=> {
                     </View>
 
                     <View style={{marginTop: 20,}}>
-                    <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.M}}>Middle Name ( Optional )</Text>
+                    <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Middle Name ( Optional )</Text>
                         <TextInput 
                             style={styles.input}
                             value={person.middleName}
@@ -184,7 +184,7 @@ const VerifyFullname = ()=> {
                     </View>
 
                     <View style={{marginTop: 20,}}>
-                    <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.M}}>Email</Text>
+                    <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Email</Text>
                         <TextInput
                             style={styles.input}
                             value={contactInfo.email}
@@ -194,15 +194,19 @@ const VerifyFullname = ()=> {
                     </View>
 
                     <View style={{marginTop: 20,}}>
-                    <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.M}}>Date of Birth</Text>
+                    <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Date of Birth</Text>
                              <TouchableOpacity onPress={()=>setModalVisible(true)} style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center"}]}>
-                                <Text style={{flex: 1,fontFamily: FONTS.REGULAR,color: "gray",fontSize: SIZES.M}}>{birthInfo.birthdate == "" ? "mm/dd/yy" : moment(birthInfo.birthdate).format("MM/DD/YYYY")}</Text>
-                                <FIcon5 color="#CCCCCC" name="calendar" size={15}/>
+                                 {
+                                     birthInfo.birthdate == ""
+                                     ? <Text style={{flex: 1,fontFamily: FONT.REGULAR,color: COLOR.DARK,fontSize: FONT_SIZE.M}}>mm/dd/yy</Text>
+                                     : <Text style={{flex: 1,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{moment(birthInfo.birthdate).format("MM/DD/YYYY")}</Text>
+                                 }
+                                <FIcon5 color="black" name="calendar" size={15}/>
                             </TouchableOpacity>
                     </View>
 
                     <View style={{marginTop: 20,}}>
-                    <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.M}}>Place of Birth</Text>
+                    <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Place of Birth</Text>
                         <TextInput 
                             style={styles.input}
                             value={birthInfo.birthPlace}
@@ -212,9 +216,9 @@ const VerifyFullname = ()=> {
                     </View>
 
                     <View style={{marginTop: 20,}}>
-                    <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.M}}>Nationality</Text>
+                    <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Nationality</Text>
                             <View style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center",paddingVertical: 10}]}>
-                                <Text style={{flex: 1,color: "gray",fontSize: SIZES.M,fontFamily: FONTS.REGULAR}}>{nationality}</Text>
+                                <Text style={{flex: 1,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{nationality}</Text>
                                 <TouchableOpacity
                                     onPress={()=>{
                                       setModalNationalityVisible(true)
@@ -222,7 +226,7 @@ const VerifyFullname = ()=> {
                                     style={{
                                         paddingHorizontal: 10,
                                         borderWidth: 1,
-                                        borderColor: COLORS.YELLOW,
+                                        borderColor: COLOR.YELLOW,
                                         borderRadius: 5,
                                         height: 20
                                     }}
@@ -232,7 +236,7 @@ const VerifyFullname = ()=> {
                                          justifyContent:"center",
                                          alignItems:"center",
                                     }}>
-                                        <Text style={{color: COLORS.YELLOW,fontFamily: FONTS.REGULAR,fontSize: SIZES.S}}>Change</Text>
+                                        <Text style={{color: COLOR.YELLOW,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S}}>Change</Text>
                                     </View>
                                 </TouchableOpacity>
                             </View>
@@ -291,8 +295,8 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         backgroundColor:"#F7F7FA",
         marginTop: 5,
-        fontFamily: FONTS.REGULAR,
-        fontSize: SIZES.M,
+        fontFamily: FONT.REGULAR,
+        fontSize: FONT_SIZE.M,
         paddingHorizontal: 10,
     }
 })
