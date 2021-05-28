@@ -10,3 +10,21 @@ export const POST_CASH_OUT = gql`
         }
     }
 ` 
+export const GET_CASH_OUTS = gql`
+      query {
+        getCashOuts {
+            logDate
+            logs {
+                id
+                amount
+                isExported
+                status
+                accountId
+                currencyId
+                cashOutProviderId
+                createdAt
+                updatedAt
+            }
+        }
+    }
+` 

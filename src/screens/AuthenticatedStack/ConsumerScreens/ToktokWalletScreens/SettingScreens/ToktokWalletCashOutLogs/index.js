@@ -3,8 +3,9 @@ import {View,Text,StyleSheet,TouchableOpacity,Image,ActivityIndicator , FlatList
 import {HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../../../components'
 import moment from 'moment'
 import { COLOR, COLORS, FONTS, FONT_MEDIUM, FONT_REGULAR, SIZES } from '../../../../../../res/constants'
-import {useLazyQuery} from '@apollo/react-hooks'
-import {GET_CASH_IN_LOGS, GET_CASH_OUT_LOGS} from '../../../../../../graphql'
+import {useLazyQuery,useQuery} from '@apollo/react-hooks'
+import {GET_CASH_IN_LOGS, GET_CASH_OUT_LOGS,TOKTOK_WALLET_GRAPHQL_CLIENT} from '../../../../../../graphql'
+import {GET_CASH_OUTS} from '../../../../../../graphql/toktokwallet'
 import {onError} from '../../../../../../util/ErrorUtility'
 import {useSelector} from 'react-redux'
 import { numberFormat } from '../../../../../../helper'
@@ -53,10 +54,10 @@ const CashOutLog = ({
 
                 let status
                 switch (item.status) {
-                    case 0:
+                    case "0":
                         status = "Pending"
                         break;
-                    case 1:
+                    case "1":
                         status = "Accepted"
                         break
                     default:
@@ -64,9 +65,9 @@ const CashOutLog = ({
                         break;
                 }
 
-                const refNo = item.referenceNumber
+                const refNo = item.id
                 const refDate = moment(item.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')
-                const transactionAmount = `PHP ${numberFormat(item.totalAmount)}`
+                const transactionAmount = `PHP ${numberFormat(item.amount)}`
 
                 return (
                     <TouchableOpacity onPress={()=>ViewTransactionDetails(refNo,refDate, transactionAmount , status)} style={styles.transaction}>
@@ -95,15 +96,6 @@ const ToktokWalletCashOutLogs = ({navigation})=> {
 
     const session = useSelector(state=>state.session)
 
-    const [filtertype, setFilterType] = useState("All")
-    const filterOptionsType = ["All","Pending","Confirmed","Rejected"]
-    const [showFilterDate,setShowFilterDate] = useState(false)
-    const [logs,setLogs] = useState([])
-    const [filteredLogs,setFilteredLogs] = useState([])
-    const [filterDate,setFilterDate] = useState({
-        from: moment(new Date()).subtract(3,'days'),
-        to: new Date()
-    })
 
     const [transactionVisible,setTransactionVisible] = useState(false)
     const [transactionInfo,setTransactionInfo] = useState({
@@ -115,36 +107,13 @@ const ToktokWalletCashOutLogs = ({navigation})=> {
         status: "",
     })
 
-    const changeFilterDate = (key,val)=>{
-        setFilterDate((oldstate) => {
-            oldstate[key] = val
-            return {
-                ...oldstate,
-            }
-        })
-        setFilterType("All")
-    }
-
-    const [getCashOutLogs , {data,error,loading}] = useLazyQuery(GET_CASH_OUT_LOGS,{
+    const { data ,error , loading } = useQuery(GET_CASH_OUTS , {
         fetchPolicy: "network-only",
-        variables: {
-            input: {
-                tokUserId: session.user.id,
-                startDate: filterDate.from,
-                endDate: filterDate.to,
-            }
-        },
-        onError: onError,
-        onCompleted: (response)=> {
-            setLogs(response.getCashOutLogs)
-            setFilteredLogs(response.getCashOutLogs)
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+        onCompleted: ({getCashOuts})=> {
+            console.log(getCashOuts)
         }
     })
-
-    useEffect(()=>{
-        getCashOutLogs()
-    },[filterDate])
-
 
     return (
         <>
@@ -158,12 +127,6 @@ const ToktokWalletCashOutLogs = ({navigation})=> {
             amount={transactionInfo.amount}
             status={transactionInfo.status}
         />
-        <FilterDateModal 
-                showFilterDate={showFilterDate} 
-                changeFilterDate={changeFilterDate} 
-                filterDate={filterDate} 
-                setShowFilterDate={setShowFilterDate}
-        />
         <Separator />
         {
             loading
@@ -173,28 +136,17 @@ const ToktokWalletCashOutLogs = ({navigation})=> {
             : <View style={styles.container}>
                     <View style={styles.content}>
                         <View style={{padding: 16}}>
-                            <View style={{flexDirection: "row",paddingBottom: 10,}}>
-                                <Text style={{ffontSize: SIZES.M ,fontFamily: FONTS.BOLD,color: COLORS.DARK}}>Date Range</Text>
-                                <View style={{flex: 1}}>
-                                <TouchableOpacity onPress={()=>setShowFilterDate(true)} style={{alignSelf: "flex-end", padding: 2, paddingHorizontal: 15, borderRadius: 10, backgroundColor: "#FCB91A"}}>
-                                            <Text style={{color: "white",fontSize: SIZES.S,fontFamily: FONTS.REGULAR}}>{moment(filterDate.from).format('D MMM')} - {moment(filterDate.to).format('D MMM')}</Text>
-                                </TouchableOpacity>
-                                </View>
-                            </View>
-                        </View>
-                        <Separator />
-                        <View style={{padding: 16}}>
                             <FlatList
                                 showsVerticalScrollIndicator={false}
-                                data={filteredLogs}
-                                keyExtractor={item=>item.title}
+                                data={data.getCashOuts}
+                                keyExtractor={item=>item.logDate}
                                 renderItem={({item,index})=>(
                                     <CashOutLog 
                                         key={`cashin-log${index}`} 
                                         transactionDate={item.logDate} 
                                         transactionItems={item.logs}  
                                         index={index} 
-                                        itemsLength={filteredLogs.length}
+                                        itemsLength={data.getCashOuts.length}
                                         setTransactionInfo={setTransactionInfo}
                                         setTransactionVisible={setTransactionVisible}
                                     />

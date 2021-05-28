@@ -9,3 +9,32 @@ export const POST_CASH_IN_PAYPANDA_REQUEST = gql`
         }
     }
 `
+
+export const POST_CASH_IN_SMS = gql`
+    mutation postCashInSms($input: PostCashInSmsInput){
+        postCashInSms(input: $input){
+            message
+        }
+    }
+`
+
+export const GET_CASH_INS = gql`
+    query {
+        getCashIns {
+            logDate
+            logs {
+                id
+                amount
+                referenceNumber
+                providerReferenceNumber
+                status
+                accountId
+                currencyId
+                cashInProviderId
+                fatherId
+                createdAt
+                updatedAt
+            }
+        }
+    }
+`

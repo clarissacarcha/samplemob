@@ -23,12 +23,12 @@ const HeaderBack = ({pageIndex,setPageIndex,navigation,walletinfo})=> {
     };
 
     const closeScreen = ()=> {
-      const landingIndex = walletinfo.pincode == null ? 1 :0
-      if(pageIndex == landingIndex){
-        navigation.pop();
-      }else{
-        setPageIndex(oldstate=>oldstate-1);
-      }
+      // const landingIndex = walletinfo.pincode == null ? 1 :0
+      // if(pageIndex == landingIndex){
+      //   navigation.pop();
+      // }else{
+      //   setPageIndex(oldstate=>oldstate-1);
+      // }
     }
 
     useEffect(()=>{
@@ -51,7 +51,7 @@ const HeaderBack = ({pageIndex,setPageIndex,navigation,walletinfo})=> {
 
 const ToktokWalletCreatePin = ({navigation,route})=> {
 
-    const walletinfo = route.params.walletinfo
+    // const walletinfo = route.params.walletinfo
     const [pinCode,setPinCode] = useState("")
     const [pageIndex,setPageIndex] = useState(walletinfo.pincode == null ? 1 : 0)
     const [successModalVisible,setSuccessModalVisible] = useState(false)
