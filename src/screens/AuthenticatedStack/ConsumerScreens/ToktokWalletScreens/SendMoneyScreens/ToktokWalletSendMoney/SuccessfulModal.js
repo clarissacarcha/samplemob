@@ -40,7 +40,7 @@ const SuccessfulModal = ({successModalVisible , amount , recipient , walletinfoP
                 onPress={Proceed}
             >
                   <View style={styles.recipientInfo}>
-                        <RecipientInfo label="Payment Method" value="toktokwallet"/>
+                        {/* <RecipientInfo label="Payment Method" value="toktokwallet"/> */}
                         <RecipientInfo label="Recipient Name" value={recipient.name}/>
                         <RecipientInfo label="Recipient Mobile No." value={recipient.mobileNo}/>
                         <RecipientInfo label="Fund Transfered" value={`PHP ${numberFormat(amount)}`}/>

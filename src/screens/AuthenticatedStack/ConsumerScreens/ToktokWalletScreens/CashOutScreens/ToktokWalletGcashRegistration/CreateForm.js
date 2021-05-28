@@ -20,12 +20,13 @@ const PromptMessage = ({
     visible,
     setVisible,
     navigation,
+    provider,
 })=> {
 
     const redirect = ()=> {
         setVisible(false)
-        navigation.navigate("ToktokWalletGcashHomePage")
-        return navigation.replace("ToktokWalletGcashHomePage")
+        navigation.navigate("ToktokWalletGcashHomePage", {provider})
+        return navigation.replace("ToktokWalletGcashHomePage", {provider})
     }
 
     return (
@@ -43,7 +44,7 @@ const PromptMessage = ({
                     <Image style={{height: 90,width: 90}} resizeMode="contain" source={require('../../../../../../assets/icons/gcash.png')}/>
                     <View style={{alignItems:"center"}}>
                         <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,color: COLOR.DARK}}>Successfully added</Text>
-                        <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,color: COLOR.DARK}}>Wait for verification of Gcash Account.</Text>
+                        <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,color: COLOR.DARK}}>Wait for verification of GCash Account.</Text>
                     </View>
                     <TouchableOpacity 
                         style={{
@@ -64,7 +65,7 @@ const PromptMessage = ({
     )
 }
 
-const CreateForm = ({navigation,session,mobile})=> {
+const CreateForm = ({navigation,session,mobile,provider})=> {
 
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
@@ -198,7 +199,7 @@ const CreateForm = ({navigation,session,mobile})=> {
 
     return (
        <>
-        <PromptMessage visible={promptVisible} setVisible={setPromptVisible} navigation={navigation}/>
+        <PromptMessage provider={provider} visible={promptVisible} setVisible={setPromptVisible} navigation={navigation}/>
         <ModalCountry visible={modalCountryVisible} setVisible={setModalCountryVisible} setCountry={setCountry}/>
         <DatePickerModal
             visible={pickerVisible}

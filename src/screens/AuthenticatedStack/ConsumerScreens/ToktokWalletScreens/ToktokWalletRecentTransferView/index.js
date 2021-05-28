@@ -41,7 +41,7 @@ const ToktokWalletRecentTransferView = ({navigation,route})=> {
                     <View style={{flex: 1}}>
                         <Details label="Date" value={moment(recentTransfer.createdAt).tz('Asia/Manila').format('MMM DD, YYYY')}/>
                         <Details label="Time" value={moment(recentTransfer.createdAt).tz('Asia/Manila').format('h:mm a')}/>
-                        <Details label="Payment Method" value="toktokwallet"/>
+                        {/* <Details label="Payment Method" value="toktokwallet"/> */}
                         <Details label="Recipient" value={`${recentTransfer.destinationPerson.firstName} ${recentTransfer.destinationPerson.middleName ? recentTransfer.destinationPerson.middleName + " " : ""}${recentTransfer.destinationPerson.lastName}`}/>
                         <Details label="Fund Transferred" value={`${tokwaAccount.wallet.currency.code} ${numberFormat(recentTransfer.amount)}`}/>
                     </View>

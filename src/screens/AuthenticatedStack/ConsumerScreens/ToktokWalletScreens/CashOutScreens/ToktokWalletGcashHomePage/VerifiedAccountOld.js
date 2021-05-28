@@ -17,6 +17,7 @@ import SuccessfulCashOutModal from "./SuccessfulCashOutModal";
 
 const VerifiedAccount = ({record,provider})=> {
 
+    const [tempAmount,setTempAmount] = useState("")
     const [amount,setAmount] = useState(0)
     const [errorMessage,setErrorMessage] = useState("")
     const [successModalVisible,setSuccessModalVisible] = useState(false)
@@ -41,16 +42,14 @@ const VerifiedAccount = ({record,provider})=> {
     })
 
     const changeAmount = (value)=>{
-        const num = value.replace(/[^0-9.]/g, '')
-        const checkFormat = /^(\d*[.]?[0-9]{0,2})$/.test(num);
-        if(!checkFormat) return       
+        const num = value.replace(/[^0-9]/g, '')
         if(num.length > 8) return
-        if(num[0] == ".") return setAmount("0.")
-        setAmount(num)
+        setTempAmount(num)
+        setAmount(num * 0.01)
         if(num == "") return setErrorMessage("")
-        if(num < 1 && num != ""){
-            return setErrorMessage(`Please enter atleast ${tokwaAccount.wallet.currency.code} 1.00`)
-        }else if(num > tokwaAccount.wallet.balance){
+        if((num * 0.01) < 1 && num != ""){
+            return setErrorMessage(`Please Enter atleast ${'\u20B1'} 1.00`)
+        }else if((num * 0.01) > tokwaAccount.wallet.balance){
             return setErrorMessage(`You do not have enough balance`)
         }
         // checkSenderWalletLimitation(num * 0.01)
@@ -61,7 +60,7 @@ const VerifiedAccount = ({record,provider})=> {
         postCashOut({
             variables: {
                 input: {
-                    amount: +amount,
+                    amount: amount,
                     provider: provider.id,
                     currencyId: tokwaAccount.wallet.currency.id
                 }
@@ -102,7 +101,7 @@ const VerifiedAccount = ({record,provider})=> {
                     <View style={{flexDirection: "row"}}>
                         <TextInput
                                 caretHidden
-                                value={amount}
+                                value={tempAmount}
                                 ref={inputRef}
                                 style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent',zIndex: 1}}
                                 keyboardType="number-pad"

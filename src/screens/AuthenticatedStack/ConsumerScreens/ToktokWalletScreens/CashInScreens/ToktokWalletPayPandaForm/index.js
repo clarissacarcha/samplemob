@@ -34,7 +34,6 @@ const ToktokWalletPayPandaForm = ({navigation,route})=> {
     const transactionType = route.params.transactionType
     const tokwaAccount = useSelector(state=>state.toktokWallet)
     const globalsettings = useSelector(state=>state.constants)
-    const [tempAmount,setTempAmount] = useState("")
     const [amount,setAmount] = useState("")
     const [message,setMessage] = useState("")
     const [recipientDetails,setRecipientDetails] = useState(null)
@@ -47,6 +46,7 @@ const ToktokWalletPayPandaForm = ({navigation,route})=> {
         onError: (error)=> {
             console.log(error)
             onErrorAlert({alert,error})
+            navigation.pop()
         },
         onCompleted: ({postCashInPayPandaRequest})=>{
             console.log(postCashInPayPandaRequest)
@@ -71,7 +71,7 @@ const ToktokWalletPayPandaForm = ({navigation,route})=> {
           variables: {
               input: {
                   provider: transactionType.id,
-                  amount: amount,
+                  amount: +amount,
                   currencyId: tokwaAccount.wallet.currency.id,
                   walletId: tokwaAccount.wallet.id,
               }
@@ -89,30 +89,31 @@ const ToktokWalletPayPandaForm = ({navigation,route})=> {
                 },
             onConfirm: proceedToPaypandaPortal,
         })
-       
     }
 
     const changeAmountText = (value)=> {
         setMaxLimitMessage("")
-        const num = value.replace(/[^0-9]/g, '')
+        const num = value.replace(/[^0-9.]/g, '')
+        const checkFormat = /^(\d*[.]?[0-9]{0,2})$/.test(num);
+        if(!checkFormat) return       
         if(num.length > 8) return
-        setTempAmount(num)
-        setAmount(num * 0.01)
+       
+        // setAmount(num * 0.01)
+        if(num[0] == ".") return setAmount("0.")
+        setAmount(num)
         if(num == "") return setMessage("")
-        if((num * 0.01) < 1){
-           return setMessage(`Please Enter atleast ${'\u20B1'} 1.00`)
-        }else if((num * 0.01) > transactionType.cashInLimit){
-            setTempAmount(`${transactionType.cashInLimit}00`)
-            setAmount(transactionType.cashInLimit)
-            setMaxLimitMessage(`Maximum cash in limit is ${'\u20B1'} ${numberFormat(transactionType.cashInLimit)}`)
-            setDisablebtn(true)
-            return
+        if(num < 1){
+           return setMessage(`Please enter atleast ${tokwaAccount.wallet.currency.code} 1.00`)
         }
         // checkRecipientWalletLimitation(num * 0.01)
         setDisablebtn(false)
         setMessage("")
         
     }
+
+    useEffect(()=>{
+        console.log(amount)
+    },[amount])
 
     return (
       <>
@@ -137,7 +138,7 @@ const ToktokWalletPayPandaForm = ({navigation,route})=> {
                         <View style={{flexDirection: "row"}}>
                             <TextInput
                                     caretHidden
-                                    value={tempAmount}
+                                    value={amount}
                                     style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent',zIndex: 1}}
                                     keyboardType="number-pad"
                                     returnKeyType="done"

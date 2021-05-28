@@ -22,6 +22,7 @@ const ToktokWalletGcashRegistration = ({navigation,route})=> {
     })
 
     const mobile = route.params.mobile
+    const provider = route.params.provider
 
     const session = useSelector(state=>state.session)
 
@@ -34,7 +35,7 @@ const ToktokWalletGcashRegistration = ({navigation,route})=> {
        <>
        <Separator/>
        <View style={styles.container}>
-            <CreateForm navigation={navigation} session={session} mobile={mobile}/>    
+            <CreateForm provider={provider} navigation={navigation} session={session} mobile={mobile}/>    
        </View>
        </>
     )

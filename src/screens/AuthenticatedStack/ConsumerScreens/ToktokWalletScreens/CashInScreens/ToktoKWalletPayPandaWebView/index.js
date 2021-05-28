@@ -79,8 +79,8 @@ const ToktoKWalletPayPandaWebView = ()=> {
                     style={{flex: 1}}
                     ref={webviewRef}
                     source={{
-                        // uri: "https://sandbox.paypanda.ph/api/payment/toktok_transaction_entry",
-                        uri: constants.paypandaTransactionEndpoint,
+                        uri: "https://sandbox.paypanda.ph/api/payment/toktok_transaction_entry",
+                        // uri: constants.paypandaTransactionEndpoint,
                         method: 'POST',
                         headers: { 'Content-Type': 'application/x-www-form-urlencoded', },
                         body: generatedInitialPaymentData
@@ -88,9 +88,11 @@ const ToktoKWalletPayPandaWebView = ()=> {
                     startInLoadingState
                     renderLoading={()=> <LoadingIndicator/>}
                     onNavigationStateChange={(event)=> {
+
+                        console.log(event)
               
-                        // const checkreturnurl = event.url.search("https://sandbox.paypanda.ph/app/payment/dp_ret")
-                        const checkreturnurl = event.url.search(constants.paypandaReturnUrlEndpoint)
+                        const checkreturnurl = event.url.search("https://sandbox.paypanda.ph/app/payment/dp_ret")
+                        // const checkreturnurl = event.url.search(constants.paypandaReturnUrlEndpoint)
                         https://sandbox.paypanda.ph/app/payment/dp_ret?txnid=0001770000000006&status=S&refno=0001770000000006
                         if(checkreturnurl != -1){
                             const {url} = event
@@ -103,6 +105,29 @@ const ToktoKWalletPayPandaWebView = ()=> {
                                     status: status[0].slice(8),
                                     referenceNumber: route.params.refNo,
                                     paypandaReferenceNumber: paypandaReferenceNumber[0].slice(7),
+                                    amount: +route.params.amount_to_pay,
+                                    createdAt: new Date(),
+                                    email: route.params.email_address,
+                                    payer: route.params.payer_name
+                                })
+                                setDoneTransaction(true)
+                            }
+                            setCheckurl(url)
+                        }
+                        
+                        const checkreturnOtherUrl = event.url.search("https://stg-wallet.toktok.ph/app/transactions/paypanda_ret")
+
+                        if(checkreturnOtherUrl != -1){ 
+                            const {url} = event
+                        
+                            const paypandaReferenceNumber = /(?:\&paypanda_refno=).*(?=\&status)/g.exec(url)
+                            const status = /(?:\&status=).*(?=\&signature)/.exec(url)
+
+                            if(checkurl != url){       
+                                setCashInLogParams({
+                                    status: status[0].slice(8),
+                                    referenceNumber: route.params.refNo,
+                                    paypandaReferenceNumber: paypandaReferenceNumber[0].slice(16),
                                     amount: +route.params.amount_to_pay,
                                     createdAt: new Date(),
                                     email: route.params.email_address,

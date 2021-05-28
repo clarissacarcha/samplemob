@@ -51,7 +51,8 @@ const ToktokWalletScanQR = ({navigation,route})=> {
                 })
                 return
             }
-            onError(error)
+            return alertHook({message:"This QR code is invalid"})
+            onError(err)
         },
         onCompleted: ({getAccount})=> {
             if(getAccount.mobileNumber === tokwaAccount.mobileNumber){

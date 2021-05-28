@@ -106,6 +106,7 @@ const RegisterMobile = ({provider})=> {
                     onChangeText={changeMobileNo}
                 />
                 <Text style={{fontFamily: FONT.REGULAR,color:"red",fontSize: FONT_SIZE.S}}>{errorMessage}</Text>
+                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S}}>Note: Make sure that number is existing GCash account.</Text>
             </View>
             <View style={styles.proceedBtn}>
                 {

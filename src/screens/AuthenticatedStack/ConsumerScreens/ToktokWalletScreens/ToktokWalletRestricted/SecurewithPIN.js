@@ -12,10 +12,10 @@ const SecurewithPIN = ({navigation,walletinfo})=> {
                 <View style={styles.lockIcon}>
                         <Image style={{height: 40,width: 40}} source={require('../../../../../assets/icons/walletVerify.png')}/>
                 </View>
-                <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.XL,marginTop: 20}}>Setup your toktokwallet PIN</Text>
-                <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.S,marginTop: 5}}>Click the "Set Up" button to create your toktokwallet PIN.</Text>
+                <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.XL,marginTop: 20, textAlign:'center'}}>Setup your toktokwallet PIN</Text>
+                <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.S,marginTop: 5, textAlign:'center'}}>Click the "Set Up" button to create your toktokwallet PIN.</Text>
                 <View style={{marginTop: 20}}>
-                    <Text style={{fontFamily: FONTS.REGULAR,marginBottom: 1,fontSize: SIZES.S}}><FIcon5 color="orange" name="check" />  Cashless transactions will be enabled after updating your PIN</Text>
+                    <Text style={{fontFamily: FONTS.REGULAR,marginBottom: 1,fontSize: SIZES.S, textAlign:'center'}}><FIcon5 color="orange" name="check" />  Cashless transactions will be enabled after updating your PIN</Text>
                 </View>
             </View>
             <View style={styles.btns}>
@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems:"center",
         marginTop: 60,
+        padding: 16,
     },
     lockIcon: {
         height: 80,

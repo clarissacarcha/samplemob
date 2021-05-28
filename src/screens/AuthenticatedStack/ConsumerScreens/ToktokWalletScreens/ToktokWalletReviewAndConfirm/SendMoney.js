@@ -11,14 +11,14 @@ const SendMoney = ({data})=>{
 
     return(
        <View style={styles.container}>
-            <View style={styles.information}>
+            {/* <View style={styles.information}>
                     <View style={{flex:1,alignItems:"flex-start"}}>
                         <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Payment Method</Text>  
                     </View>
                     <View style={{flex:1,alignItems:"flex-end"}}>
                         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M,textAlign: 'right'}}>toktokwallet</Text>
                     </View>
-            </View>
+            </View> */}
             <View style={styles.information}>
                     <View style={{flex:1,alignItems:"flex-start"}}>
                         <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Recipient Name</Text>  

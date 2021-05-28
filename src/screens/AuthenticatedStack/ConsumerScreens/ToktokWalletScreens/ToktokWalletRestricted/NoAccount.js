@@ -91,15 +91,18 @@ const styles = StyleSheet.create({
     verifyWalletText: {
         fontFamily: FONT.BOLD,
         fontSize: 16,
+        textAlign:'center'
     },
     clickVerifyText: {
         fontFamily: FONT.REGULAR,
-        fontSize: FONT_SIZE.S
+        fontSize: FONT_SIZE.S,
+        textAlign:'center'
     },
     listItem: {
         fontFamily: FONT.REGULAR,
         marginBottom: 5,
-        fontSize: FONT_SIZE.S
+        fontSize: FONT_SIZE.S,
+        textAlign:'center'
     },
     linkButton: {
         width: "100%",
