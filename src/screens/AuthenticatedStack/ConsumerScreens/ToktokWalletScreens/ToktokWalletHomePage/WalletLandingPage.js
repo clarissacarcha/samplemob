@@ -7,6 +7,7 @@ import { GET_WALLET , GET_MY_ACCOUNT } from '../../../../../graphql/toktokwallet
 import { useAlert } from '../../../../../hooks'
 import { onErrorAlert } from '../../../../../util/ErrorUtility'
 import { connect } from 'react-redux'
+import { useNavigation } from '@react-navigation/native'
 
 //SELF IMPORTS
 import WalletCardInfo from './WalletCardInfo'
@@ -15,7 +16,7 @@ import WalletRecentTransactions from './WalletRecentTransactions'
 import WalletVerificationStatus from './WalletVerificationStatus'
 
 const WalletLandingPage = ({refreshing, onRefresh , saveTokwaAccount})=> {
-
+    const navigation = useNavigation()
     const alert = useAlert()
     const [account,setAccount] = useState({
         wallet: {
@@ -45,6 +46,7 @@ const WalletLandingPage = ({refreshing, onRefresh , saveTokwaAccount})=> {
             onErrorAlert({alert,error})
         }
     })
+    
 
     useEffect(()=>{
        getMyAccount()

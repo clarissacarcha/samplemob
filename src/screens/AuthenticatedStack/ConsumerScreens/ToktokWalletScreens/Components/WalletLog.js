@@ -31,7 +31,6 @@ export const WalletLog = ({transactionDate , transactionItems ,index , itemsLeng
             phrase: phrase,
             amount: transactionAmount,
         })
-        console.log(transaction.referenceNumber)
     }
 
     const dateValue = moment(transactionDate).tz("Asia/Manila").format("YYYY-MM-DD");

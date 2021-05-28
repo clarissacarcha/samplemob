@@ -30,8 +30,8 @@ const RejectedKyc = ()=> {
             </View>
 
             <View style={{height: 70,padding: 16,justifyContent:'flex-end'}}>
-                <YellowButton label="Ok" onPress={()=> {
-                    navigation.pop()
+                <YellowButton label="Verify now" onPress={()=> {
+                    navigation.navigate("ToktokWalletVerification")
                 }}/>
             </View>
         
@@ -57,15 +57,18 @@ const styles = StyleSheet.create({
     verifyWalletText: {
         fontFamily: FONT.BOLD,
         fontSize: 16,
+        textAlign:'center'
     },
     clickVerifyText: {
         fontFamily: FONT.REGULAR,
-        fontSize: FONT_SIZE.S
+        fontSize: FONT_SIZE.S,
+        textAlign:'center'
     },
     listItem: {
         fontFamily: FONT.REGULAR,
         marginBottom: 5,
-        fontSize: FONT_SIZE.S
+        fontSize: FONT_SIZE.S,
+        textAlign:'center'
     },
 })
 

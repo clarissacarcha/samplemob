@@ -11,8 +11,8 @@ const WalletOnHold = ({navigation,walletinfo})=> {
                         {/* <FIcon5 name="lock" /> */}
                         <Image style={{height: 40,width: 40}} resizeMode="contain" source={require('../../../../../assets/icons/lock.png')} />
                 </View>
-                <Text style={{fontFamily: FONTS.BOLD,fontSize: 20,marginTop: 35}}>Wallet is on hold</Text>
-                <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.M}}>Click the "Recover" button to recover toktokwallet.</Text>
+                <Text style={{fontFamily: FONTS.BOLD,fontSize: 20,marginTop: 35, textAlign:'center'}}>Wallet is on hold</Text>
+                <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.M, textAlign:'center'}}>Click the "Recover" button to recover toktokwallet.</Text>
             </View>
 
             <View style={{flex: 1}}>

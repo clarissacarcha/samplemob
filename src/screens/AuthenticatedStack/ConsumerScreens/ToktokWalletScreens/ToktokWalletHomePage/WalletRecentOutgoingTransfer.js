@@ -25,7 +25,7 @@ const WalletRecentOutgoingTransfer = ()=> {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         fetchPolicy:"network-only",
         onCompleted: ({getOutgoingTransfer})=> {
-            console.log(JSON.stringify(getOutgoingTransfer))
+            // console.log(JSON.stringify(getOutgoingTransfer))
         }
     })
 

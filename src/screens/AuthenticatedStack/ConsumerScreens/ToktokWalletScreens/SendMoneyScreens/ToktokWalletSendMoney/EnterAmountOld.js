@@ -11,13 +11,10 @@ const EnterAmount = ({tokwaAccount , setSwipeEnabled , amount  ,setAmount , reci
 
 
     const changeAmount = (value)=>{
-        const num = value.replace(/[^0-9.]/g, '')
-        const checkFormat = /^(\d*[.]?[0-9]{0,2})$/.test(num);
-        if(!checkFormat) return       
+        const num = value.replace(/[^0-9]/g, '')
         if(num.length > 8) return
-        if(num[0] == ".") return setAmount("0.")
-        // setTempAmount(num)
-        setAmount(num)
+        setTempAmount(num)
+        setAmount(num * 0.01)
     }
 
     useEffect(()=>{
@@ -53,7 +50,7 @@ const EnterAmount = ({tokwaAccount , setSwipeEnabled , amount  ,setAmount , reci
                     <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,alignSelf:"center"}}>{tokwaAccount.wallet.currency.code} </Text>
                     <TextInput
                             caretHidden
-                            value={amount}
+                            value={tempAmount}
                             onChangeText={changeAmount}
                             style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent',zIndex: 1}}
                             keyboardType="numeric"

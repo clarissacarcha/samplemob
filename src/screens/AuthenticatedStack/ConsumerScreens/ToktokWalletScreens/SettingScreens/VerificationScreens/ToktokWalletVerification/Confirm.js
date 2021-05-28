@@ -112,8 +112,6 @@ const Confirm = ({session})=> {
             identificationCardId: VerifyUserData.identificationId,
         }
 
-        console.log(JSON.stringify(input))
-
         postKYCRegister({
             variables: {
                 input: input

@@ -6,7 +6,7 @@ import { COLOR , FONT_SIZE , FONT } from '../../../../../res/variables'
 import { YellowButton , VectorIcon , ICON_SET } from '../../../../../revamp'
 
 
-const PendingKyc = ()=> {
+const BlockedAccount = ()=> {
     const navigation = useNavigation()
 
     navigation.setOptions({
@@ -23,8 +23,8 @@ const PendingKyc = ()=> {
             <Separator/>
             <View style={styles.content}>
                 <View style={{alignItems:"center"}}>
-                    <Text style={styles.verifyWalletText}>Waiting for approval of <Text style={{...styles.verifyWalletText, color: COLOR.YELLOW}}>toktok</Text><Text style={{...styles.verifyWalletText, color: COLOR.ORANGE}}>wallet</Text></Text>
-                    <Text style={styles.clickVerifyText}>toktokwallet verification is on pending.</Text>
+                    <Text style={styles.verifyWalletText}>Your <Text style={{...styles.verifyWalletText, color: COLOR.YELLOW}}>toktok</Text><Text style={{...styles.verifyWalletText, color: COLOR.ORANGE}}>wallet</Text> Account has been blocked</Text>
+                    {/* <Text style={styles.clickVerifyText}>toktokwallet verification is on pending.</Text> */}
                     
                 </View>
             </View>
@@ -71,4 +71,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default PendingKyc
+export default BlockedAccount

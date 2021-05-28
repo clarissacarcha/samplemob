@@ -5,23 +5,21 @@ import { COLORS, FONTS, INPUT_HEIGHT, SIZES } from '../../../../../../res/consta
 
 const EnterAmount = ({amount , setAmount , setSwipeEnabled  , tokwaAccount})=> {
 
+    const [tempAmount,setTempAmount] = useState("")
     const [errorMessage,setErrorMessage] = useState("")
 
     const changeAmount = (value)=>{
-        const num = value.replace(/[^0-9.]/g, '')
-        const checkFormat = /^(\d*[.]?[0-9]{0,2})$/.test(num);
-        if(!checkFormat) return  
+        const num = value.replace(/[^0-9]/g, '')
         if(num.length > 8) return
-        if(num[0] == ".") return setAmount("0.")
-        // setTempAmount(num)
-        setAmount(num)
+        setTempAmount(num)
+        setAmount(num * 0.01)
 
-        if(num >= 1 && num <= tokwaAccount.wallet.balance){
+        if((num * 0.01) >= 1 && (num * 0.01) <= tokwaAccount.wallet.balance){
             setSwipeEnabled(true)
             setErrorMessage("")
-        }else if(num < 1 && num != ""){
+        }else if((num * 0.01) < 1 && num != ""){
             setSwipeEnabled(false)
-            setErrorMessage(`Please Enter atleast ${tokwaAccount.wallet.currency.code} 1.00`)
+            setErrorMessage(`Please Enter atleast ${'\u20B1'} 1.00`)
         }else{
             setErrorMessage("")
         }
@@ -46,7 +44,7 @@ const EnterAmount = ({amount , setAmount , setSwipeEnabled  , tokwaAccount})=> {
                         <Text style={{fontSize: SIZES.M,fontFamily: FONTS.BOLD,alignSelf:"center",color: COLORS.DARK}}>{tokwaAccount.wallet.currency.code} </Text>
                         <TextInput
                                 caretHidden
-                                value={amount}
+                                value={tempAmount}
                                 onChangeText={changeAmount}
                                 style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent',zIndex: 1,fontSize: SIZES.M}}
                                 keyboardType="numeric"
