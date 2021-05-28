@@ -3,8 +3,9 @@ import {View,Text,StyleSheet,TouchableOpacity,Image,ActivityIndicator , FlatList
 import {HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../../../components'
 import moment from 'moment'
 import { COLOR, COLORS, FONTS, SIZES } from '../../../../../../res/constants'
-import {useLazyQuery} from '@apollo/react-hooks'
-import {GET_CASH_IN_LOGS} from '../../../../../../graphql'
+import {useLazyQuery , useQuery} from '@apollo/react-hooks'
+import {GET_CASH_IN_LOGS ,TOKTOK_WALLET_GRAPHQL_CLIENT } from '../../../../../../graphql'
+import { GET_CASH_INS} from '../../../../../../graphql/toktokwallet'
 import {onError} from '../../../../../../util/ErrorUtility'
 import {useSelector} from 'react-redux'
 import { numberFormat } from '../../../../../../helper'
@@ -50,20 +51,19 @@ const CashInLog = ({
             <Text style={{fontSize: SIZES.M,fontFamily: FONTS.BOLD,color: COLORS.DARK}}>{datedisplay}</Text>
            {
                transactionItems.map((item)=>{
-
                 let status
-                switch (item.trails[0].status) {
-                    case 0:
-                        status = "Initialized"
+                switch (item.status) {
+                    case "0":
+                        status = "Requested"
                         break;
-                    case 1:
+                    case "1":
+                        status = "Success"
+                        break
+                    case "2":
                         status = "Pending"
                         break
-                    case 2:
-                        status = "Successful"
-                        break
                     default:
-                        status = "Rejected"
+                        status = "Failed"
                         break;
                 }
 
@@ -102,17 +102,6 @@ const ToktokWalletCashInLogs = ({navigation})=> {
         headerTitle: ()=> <HeaderTitle label={['Cash In Logs','']}/>,
     })
 
-    const session = useSelector(state=>state.session)
-
-    const [filtertype, setFilterType] = useState("All")
-    const filterOptionsType = ["All","Pending","Confirmed","Rejected"]
-    const [showFilterDate,setShowFilterDate] = useState(false)
-    const [logs,setLogs] = useState([])
-    const [filteredLogs,setFilteredLogs] = useState([])
-    const [filterDate,setFilterDate] = useState({
-        from: moment(new Date()).subtract(3,'days'),
-        to: new Date()
-    })
 
     const [transactionVisible,setTransactionVisible] = useState(false)
     const [transactionInfo,setTransactionInfo] = useState({
@@ -134,26 +123,14 @@ const ToktokWalletCashInLogs = ({navigation})=> {
         setFilterType("All")
     }
 
-    const [getCashInLogs , {data,error,loading}] = useLazyQuery(GET_CASH_IN_LOGS,{
+
+    const {data,error,loading} = useQuery(GET_CASH_INS, {
         fetchPolicy: "network-only",
-        variables: {
-            input: {
-                tokUserId: session.user.id,
-                startDate: filterDate.from,
-                endDate: filterDate.to,
-            }
-        },
-        onError: onError,
-        onCompleted: (response)=> {
-            setLogs(response.getCashInLogs)
-            setFilteredLogs(response.getCashInLogs)
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+        onCompleted: ({getCashIns})=> {
+            // console.log(getCashIns)
         }
     })
-
-    useEffect(()=>{
-        getCashInLogs()
-    },[filterDate])
-
 
     return (
         <>
@@ -167,12 +144,6 @@ const ToktokWalletCashInLogs = ({navigation})=> {
             amount={transactionInfo.amount}
             status={transactionInfo.status}
         />
-        <FilterDateModal 
-                showFilterDate={showFilterDate} 
-                changeFilterDate={changeFilterDate} 
-                filterDate={filterDate} 
-                setShowFilterDate={setShowFilterDate}
-        />
         <Separator />
         {
             loading
@@ -182,28 +153,17 @@ const ToktokWalletCashInLogs = ({navigation})=> {
             :  <View style={styles.container}>
                     <View style={styles.content}>
                         <View style={{padding: 16}}>
-                            <View style={{flexDirection: "row",paddingBottom: 10,}}>
-                                <Text style={{fontSize: SIZES.M ,fontFamily: FONTS.BOLD,color: COLORS.DARK}}>Date Range</Text>
-                                <View style={{flex: 1}}>
-                                <TouchableOpacity onPress={()=>setShowFilterDate(true)} style={{alignSelf: "flex-end", padding: 2, paddingHorizontal: 15, borderRadius: 10, backgroundColor: "#FCB91A"}}>
-                                            <Text style={{color: "white",fontSize: SIZES.S,fontFamily: FONTS.REGULAR}}>{moment(filterDate.from).format('D MMM')} - {moment(filterDate.to).format('D MMM')}</Text>
-                                </TouchableOpacity>
-                                </View>
-                            </View>
-                        </View>
-                        <Separator />
-                        <View style={{padding: 16}}>
                             <FlatList
                                 showsVerticalScrollIndicator={false}
-                                data={filteredLogs}
-                                keyExtractor={item=>item.title}
+                                data={data.getCashIns}
+                                keyExtractor={item=>item.logDate}
                                 renderItem={({item,index})=>(
                                     <CashInLog 
                                         key={`cashin-log${index}`} 
                                         transactionDate={item.logDate} 
                                         transactionItems={item.logs}  
                                         index={index} 
-                                        itemsLength={filteredLogs.length}
+                                        itemsLength={data.getCashIns.length}
                                         setTransactionInfo={setTransactionInfo}
                                         setTransactionVisible={setTransactionVisible}
                                     />

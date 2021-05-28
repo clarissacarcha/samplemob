@@ -31,9 +31,9 @@ const ToktokWalletSettings = ({navigation , route })=> {
         <>
         <Separator />
         <View style={styles.container}>
-            <SettingOption route="ToktokWalletCreatePin" title="Change Pin"/>
-            <SettingOption route="ToktokWalletCreatePin" title="Cash In Logs"/>
-            <SettingOption route="ToktokWalletCreatePin" title="Cash Out Logs"/>
+            {/* <SettingOption route="ToktokWalletCreatePin" title="Change Pin"/> */}
+            <SettingOption route="ToktokWalletCashInLogs" title="Cash In Logs"/>
+            <SettingOption route="ToktokWalletCashOutLogs" title="Cash Out Logs"/>
         </View>
         </>
     )
