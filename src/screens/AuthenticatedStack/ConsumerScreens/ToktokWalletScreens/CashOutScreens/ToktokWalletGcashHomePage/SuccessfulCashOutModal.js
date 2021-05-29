@@ -4,6 +4,7 @@ import { SIZES, FONTS, COLORS} from '../../../../../../res/constants'
 import { numberFormat } from '../../../../../../helper'
 import {useNavigation} from '@react-navigation/native'
 import {Receipt} from '../../Components'
+import { MaskLeftZero } from '../../../../../../util/HelperUtility'
 
 const TransactionInfo = ({label,value})=> (
     <View style={styles.transactionInfoView}>
@@ -50,7 +51,7 @@ const SuccessfulCashOutModal = ({visible , cashoutLogParams,tokwaAccount})=> {
             onRequestClose={Proceed}
         >
             <Receipt
-                refNo={cashoutLogParams.id}
+                refNo={MaskLeftZero(cashoutLogParams.id)}
                 refDate={cashoutLogParams.createdAt}
                 onPress={Proceed}
             >

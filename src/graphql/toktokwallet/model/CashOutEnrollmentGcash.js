@@ -1,4 +1,5 @@
 import gql from 'graphql-tag'
+import { exp } from 'react-native-reanimated'
 
 export const POST_CASH_OUT_ENROLLMENG_GCASH = gql`
     mutation postCashOutEnrollmentGcash($input: PostCashOutEnrollmentGcashInput){
@@ -58,13 +59,14 @@ export const GET_GCASH_ENROLLMENT_RECORD = gql`
     }
 `
 
-export const GET_LINK_VERIFICATION_CODE = gql`
-    query getLinkVerificationCode($input: GetLinkVerificationCodeInput){
-        getLinkVerificationCode(input: $input){
+export const GET_GCASH_LINK_OTP = gql`
+    query getGcashLinkOTP($input: GetGcashLinkOTPInput){
+        getGcashLinkOTP(input: $input){
             message
         }
     }
 `
+
 
 export const PATCH_LINK_ACCOUNT = gql`
     mutation patchLinkAccount($input: PatchLinkAccountInput){

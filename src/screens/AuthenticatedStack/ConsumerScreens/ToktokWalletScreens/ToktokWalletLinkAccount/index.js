@@ -1,11 +1,17 @@
-import React , {useState,useRef} from 'react'
+import React , {useState,useRef,useEffect} from 'react'
 import { Alert } from 'react-native'
 import {View,Text,StyleSheet,Platform,KeyboardAvoidingView,TextInput,TouchableOpacity} from 'react-native'
 import { COLOR, FONT, FONT_SIZE, SIZE } from '../../../../../res/variables'
 import { HeaderBack, HeaderTitle, YellowButton } from '../../../../../revamp'
 import { DisabledButton, NumberBoxes, Separator } from '../Components'
-import { PATCH_LINK_TOKWA_ACCOUNT} from '../../../../../graphql/toktokwallet'
-import { useMutation } from '@apollo/react-hooks'
+import { TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT } from '../../../../../graphql/'
+import { PATCH_LINK_TOKWA_ACCOUNT , GET_LINK_ACCOUNT_OTP , VERIFY_LINK_ACCOUNT_OTP } from '../../../../../graphql/toktokwallet'
+import { useMutation , useLazyQuery } from '@apollo/react-hooks'
+import { onErrorAlert } from '../../../../../util/ErrorUtility'
+import { useAlert } from '../../../../../hooks'
+
+//SELF IMPORTS
+import SuccessfulModal from './SuccessfulModal'
 
 const ToktokWalletLinkAccount = ({navigation, route})=> {
 
@@ -16,15 +22,48 @@ const ToktokWalletLinkAccount = ({navigation, route})=> {
 
     const tokwaAccount = route.params.tokwaAccount
     const [pinCode,setPinCode] = useState("")
+    const [successModalVisible,setSuccessModalVisible] = useState(false)
     const inputRef = useRef();
+    const alert = useAlert()
+
+    const [getLinkAccountOTP] = useLazyQuery(GET_LINK_ACCOUNT_OTP, {
+        fetchPolicy: "network-only",
+        client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT,
+        onCompleted: ({getLinkAccountOTP})=> {
+            console.log(getLinkAccountOTP)
+        },
+        onError: (error)=>{
+            onErrorAlert({alert,error})
+        }
+    })
+
+    const [verifyLinkAccountOTP] = useLazyQuery(VERIFY_LINK_ACCOUNT_OTP, {
+        fetchPolicy: "network-only",
+        client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT,
+        onCompleted: ({verifyLinkAccountOTP}) => {
+            patchLinkTokwaAccount({
+                variables: {
+                    input: {
+                        tokwaAccountId: tokwaAccount.id
+                    }
+                }
+            })
+        },
+        onError: (error)=>{
+            onErrorAlert({alert,error})
+        }
+    })
 
 
     const [patchLinkTokwaAccount , {data,error,loading}] = useMutation(PATCH_LINK_TOKWA_ACCOUNT, {
         onCompleted: ({patchLinkTokwaAccount})=>{
-            return navigation.navigate("ToktokWalletHomePage")
+             // SUCCESSFUL MESSAGE THAT TOKWA ACCOUNT LINK HERE
+             setSuccessModalVisible(true)
+            //  navigation.pop()
+            //  return navigation.replace("ToktokWalletHomePage")
         },
         onError: (error)=>{
-            console.log(error)
+            onErrorAlert({alert,error})
         }
     })
 
@@ -36,25 +75,33 @@ const ToktokWalletLinkAccount = ({navigation, route})=> {
 
 
     const CreateVerificationCode = ()=> {
-
+        getLinkAccountOTP({
+            variables: {
+                input: {
+                    mobileNumber: tokwaAccount.mobileNumber
+                }
+            }
+        })
     }
 
     const ConfirmVerificationCode = ()=> {
-        if(pinCode == "123456"){
-            patchLinkTokwaAccount({
-                variables: {
-                    input: {
-                        tokwaAccountId: tokwaAccount.id
-                    }
+        verifyLinkAccountOTP({
+            variables: {
+                input: {
+                    OTPCode: pinCode,
+                    mobileNumber: tokwaAccount.mobileNumber
                 }
-            })
-        }else{
-            Alert.alert("","Invalid verification code")
-        }
+            }
+        })
     }
+
+    useEffect(()=>{
+        CreateVerificationCode()
+    },[])
 
     return (
         <>
+        <SuccessfulModal visible={successModalVisible} setVisible={setSuccessModalVisible}/>
         <Separator/>
         <View 
             style={styles.container}
@@ -80,12 +127,12 @@ const ToktokWalletLinkAccount = ({navigation, route})=> {
                             }}
                             // onSubmitEditing={onSubmit}
                         />
-                    <View style={{width:"100%",marginTop: 20}}>
+                    {/* <View style={{width:"100%",marginTop: 20}}>
                         <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Didn't receive it?</Text>
                         <TouchableOpacity onPress={CreateVerificationCode}>
                             <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Request a new code</Text>
                         </TouchableOpacity>
-                    </View>
+                    </View> */}
             </View>
             <View style={{height: SIZE.BUTTON_HEIGHT}}> 
             {

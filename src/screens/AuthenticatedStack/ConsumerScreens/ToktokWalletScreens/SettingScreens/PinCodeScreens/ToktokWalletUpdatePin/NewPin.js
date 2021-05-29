@@ -21,7 +21,7 @@ const NewPin = ({pinCode,setPinCode , pageIndex, setPageIndex})=> {
 
     return (
         <View style={styles.container}>
-        <ScrollView style={styles.content}>
+        <View style={styles.content}>
                 <Text style={{fontSize: SIZES.M,fontFamily: FONTS.BOLD,marginTop: 20,alignSelf:"center"}}>Enter your new PIN</Text>
                 <View style={{position: 'relative',marginTop: 50,}}>
                     <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={showPin}/>
@@ -38,7 +38,7 @@ const NewPin = ({pinCode,setPinCode , pageIndex, setPageIndex})=> {
                                 setPinCode(num);
                             }
                             }}
-                            onSubmitEditing={onSubmit}
+                            // onSubmitEditing={onSubmit}
                         />
 
                         <TouchableOpacity
@@ -49,7 +49,7 @@ const NewPin = ({pinCode,setPinCode , pageIndex, setPageIndex})=> {
                         </TouchableOpacity>
 
                 </View>
-            </ScrollView>
+            </View>
 
             <View style={{padding: 16}}>
                 {

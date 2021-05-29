@@ -3,7 +3,6 @@ import {View,Text,StyleSheet,Dimensions,TouchableOpacity,Animated,RefreshControl
 import { COLOR , FONT , FONT_SIZE} from '../../../../../res/variables';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import { useNavigation } from '@react-navigation/native'
-import {CheckWalletRestrictionContext} from './CheckWalletRestrictionProvider'
 import {Separator , HeaderImageBackground, HeaderTitle} from '../Components';
 import { numberFormat } from '../../../../../helper';
 import {useSelector} from 'react-redux'
@@ -12,6 +11,7 @@ import {useSelector} from 'react-redux'
 //SELF IMPORTS
 import WalletMethods from './WalletMethods'
 import { HeaderBack } from '../../../../../revamp';
+import { CheckWalletAccountRestrictionContext } from './CheckWalletAccountRestriction';
 
 
 const {height,width} = Dimensions.get("window")
@@ -19,8 +19,8 @@ const {height,width} = Dimensions.get("window")
 const WalletCardInfo = ({loading})=> {
     const navigation = useNavigation()
     const rotateY = new Animated.Value(0)
-    const {checkIfResctricted} = useContext(CheckWalletRestrictionContext)
     const tokwaAccount = useSelector(state=>state.toktokWallet)
+    const checkWallet = useContext(CheckWalletAccountRestrictionContext)
 
     const animation = Animated.timing(rotateY,{
         toValue: 200,
@@ -34,7 +34,7 @@ const WalletCardInfo = ({loading})=> {
     })
 
     const cashIn = ()=> {
-        if(!checkIfResctricted()){
+        if(checkWallet.checkIfAllowed()){
             return navigation.navigate("ToktokWalletPaymentOptions")
         }
     }
@@ -47,9 +47,7 @@ const WalletCardInfo = ({loading})=> {
                 <View style={styles.walletContent}>
                     <View>
                         {
-                            loading
-                            ? <ActivityIndicator size={24} color={COLOR.YELLOW}/>
-                            : <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>{tokwaAccount.wallet.currency.code} {numberFormat(tokwaAccount.wallet.balance)}</Text>
+                           <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>{tokwaAccount.wallet.currency.code} {numberFormat(tokwaAccount.wallet.balance)}</Text>
                         }         
                         <Text style={{fontSize:FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Available Balance</Text>
                     </View>
@@ -60,11 +58,12 @@ const WalletCardInfo = ({loading})=> {
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.walletSettings} onPress={()=>{
                         // rotateY.setValue(0)
-                        animation.start(()=> {
-                            animation.reset()
-                            navigation.navigate("ToktokWalletSettings")
-                        })
-
+                        if(checkWallet.checkIfAllowed()){
+                            animation.start(()=> {
+                                animation.reset()
+                                navigation.navigate("ToktokWalletSettings")
+                            })
+                        }
                     }}>
                             <Animated.View style={[{transform: [{rotate: rotateanimation}]}]}>
                                 <FIcon5 name={'cog'} size={25} color="black"/>

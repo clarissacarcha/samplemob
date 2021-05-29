@@ -9,7 +9,8 @@ import AsyncStorage from '@react-native-community/async-storage'
 
 //SELF IMPORTS
 import WalletLandingPage from './WalletLandingPage'
-import CheckWalletRestrictionProvider from './CheckWalletRestrictionProvider'
+import CheckTokwaKYCRegistration from './CheckTokwaKYCRegistration'
+import CheckWalletAccountRestriction from "./CheckWalletAccountRestriction"
 
 
 const ToktokWalletHomePage = ({navigation,route})=> {
@@ -53,21 +54,6 @@ const ToktokWalletHomePage = ({navigation,route})=> {
     },[])
 
 
-
-    useEffect(()=>{
-        setMounted(true)
-        // getUserToktokWalletData()
-        if(route.params){
-            if(route.params.isHold){
-                return navigation.push("ToktokWalletRestricted", {component: "onHold"})
-            }
-        }
-        return ()=> {
-            setMounted(false)
-        }
-    },[])
-
-
     if (loading) {
         return (
           <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -84,12 +70,14 @@ const ToktokWalletHomePage = ({navigation,route})=> {
     return (
         <>
             <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
-            <CheckWalletRestrictionProvider kycStatus={data.getUserToktokWalletData.kycStatus}>
+            <CheckTokwaKYCRegistration kycStatus={data.getUserToktokWalletData.kycStatus}>
                 {
                     data.getUserToktokWalletData.accountToken != null &&
-                    <WalletLandingPage onRefresh={onRefresh} refreshing={refreshing}/>
+                    <CheckWalletAccountRestriction>
+                        <WalletLandingPage onRefresh={onRefresh} refreshing={refreshing}/>
+                    </CheckWalletAccountRestriction>
                 }
-            </CheckWalletRestrictionProvider>
+            </CheckTokwaKYCRegistration>
         </>
     )
 }

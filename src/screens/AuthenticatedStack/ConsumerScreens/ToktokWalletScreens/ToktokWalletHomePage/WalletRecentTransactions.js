@@ -6,7 +6,7 @@ import { GET_TRANSACTIONS } from '../../../../../graphql/toktokwallet'
 import {useQuery} from '@apollo/react-hooks'
 import {COLOR,FONT,FONT_SIZE} from '../../../../../res/variables'
 import {useNavigation} from '@react-navigation/native'
-import {WalletLog} from '../Components'
+import {Separator, WalletLog} from '../Components'
 
 const WalletRecentTransactions = ()=> {
 
@@ -30,7 +30,18 @@ const WalletRecentTransactions = ()=> {
 
     if(data.getTransactions.recentTransactions.length == 0) {
         return (
-            <View style={{flex:1,backgroundColor:"white"}}/>
+            <>
+            <View style={{ width: "100%",backgroundColor:"white",padding: 16,}}>
+            
+                <View style={{flexDirection:"row",marginTop: 0,paddingBottom: 0}}>
+                        <View style={{flex: 1,alignItems:"flex-start"}}>
+                            <Text style={styles.title}>Recent Transactions</Text>
+                        </View>
+                </View>
+            </View>
+            <Separator/>
+            <View style={{flex: 1,backgroundColor:"white"}}/>
+            </>
         )
     }
 

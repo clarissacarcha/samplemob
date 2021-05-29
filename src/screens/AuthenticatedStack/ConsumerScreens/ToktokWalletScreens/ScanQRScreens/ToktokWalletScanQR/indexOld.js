@@ -31,13 +31,7 @@ const ToktokWalletScanQR = ({navigation,route})=> {
     const session = useSelector(state=>state.session)
     const [image, setImage] = useState(null);
     const tokwaAccount = useSelector(state=>state.toktokWallet)
-    const [boundaryArea,setBoundaryArea] = useState({
-        height: 0,
-        width: 0,
-        x: 0,
-        y: 0,
-    })
-
+    
     useFocusEffect(useCallback(()=>{
         setFocusCamera(true)
         return ()=> setFocusCamera(false)
@@ -68,70 +62,71 @@ const ToktokWalletScanQR = ({navigation,route})=> {
         }
     })
 
+    const onSuccess = (e)=> {
+        // size of center Box
+        const ViewFinderHeight = width * 0.7
+        const ViewFinderWidth = width * 0.7
 
-    const barcodeRead = (e)=> {
-        const barcode = Platform.OS === "android" ? e.barcodes[0] : e
-        const resultBounds = {
-            height: barcode.bounds.size.height,
-            width: barcode.bounds.size.width,
-            x: barcode.bounds.origin.x,
-            y: barcode.bounds.origin.y
+        const boundary = {
+            height: ViewFinderHeight + 20,
+            width: ViewFinderWidth + 20,
+            x: ( e.bounds.width - ViewFinderWidth ) / 2,
+            y: ( e.bounds.height - ViewFinderHeight ) / 2,
         }
 
-        const checkifOutside = checkifOutsideBox(boundaryArea , resultBounds)
+        let rXAve = 0
+        let rYAve = 0
+        let x = 0
+        e.bounds.origin.forEach((bound)=>{
+            rXAve = rXAve + +bound.x
+            rYAve = rYAve + +bound.y
+            x++
+        })
 
-        if(!checkifOutside){
-            getAccount({
+        rXAve = rXAve / x
+        rYAve = rYAve / x
+
+        const resultBounds = {
+            height: e.bounds.height,
+            width: e.bounds.width,
+            x: rXAve,
+            y: rYAve 
+        }
+
+        if(ifInsideBox(boundary,resultBounds)){
+             getAccount({
                 variables: {
                     input: {
-                        mobileNumber: barcode.data
+                        mobileNumber: e.data
                     }
                 }
             })
             setTorch(false)
+        }else{
+            console.log("OUT OF BOUNDS")
         }
+
+    }
+  
+
+    const ifInsideBox = (boundary , resultBounds)=> {
+       return boundary.x < (resultBounds.x + resultBounds.width)
+       && ( boundary.x + boundary.width ) > resultBounds.x
+       && boundary.y < ( resultBounds.y + resultBounds.height )
+       && ( boundary.y + boundary.height ) > resultBounds.y
+       && resultBounds.y > boundary.y
+       && resultBounds.x > boundary.x
     }
 
-    const checkifOutsideBox = (boundary, result)=>{
-        return result.x < boundary.x
-           || (result.x + result.width) > (boundary.x + boundary.width)
-           || result.y < boundary.y
-           || (result.y + result.height) > (boundary.y + boundary.height)
-           || result.height > boundary.height
-           || result.width > boundary.width
-    } 
-
-    return (
-        <>
-        <View style={{flex: 1}}>
-            <RNCamera
-                style={{
-                    flex: 1,
-                    justifyContent:"center",
-                    alignItems:"center"
-                }}
-                type={RNCamera.Constants.Type.back}
-                flashMode={torch ? RNCamera.Constants.FlashMode.torch : RNCamera.Constants.FlashMode.off}
-                onBarCodeRead={Platform.OS === "ios" && !loading ? barcodeRead : null}
-                onGoogleVisionBarcodesDetected={Platform.OS === "android" && !loading ? barcodeRead : null}
-                captureAudio={false}
-                androidCameraPermissionOptions={{
-                    title: 'Permission to use camera',
-                    message: 'We need your permission to use your camera',
-                    buttonPositive: 'Ok',
-                    buttonNegative: 'Cancel',
-                }}
-            >
-
+    const customMarker = ()=> (
+        <SafeAreaView style={styles.customMarker}>
+            {/* <TouchableOpacity onPress={()=>navigation.goBack()} style={{top: Platform.OS === "android" ? 60 : 80, left: 0,position:"absolute"}}>
+             <FIcon name="chevron-left" size={30} color={'white'} /> 
+            </TouchableOpacity> */}
             <TouchableOpacity onPress={()=>navigation.pop()} style={styles.backBtn}>
                 <FIcon name="chevron-left" size={20} color={'#222222'} /> 
             </TouchableOpacity>
-
-                <View style={styles.centerBox}
-                    onLayout={(e)=>{
-                        setBoundaryArea(e.nativeEvent.layout)
-                    }}
-                >
+            <View style={styles.centerBox}>
                         <View style={[styles.borderEdges,{borderTopWidth: 5,borderLeftWidth: 5,top: 0,left: 0,}]}/>
                         <View style={[styles.borderEdges,{borderTopWidth: 5,borderRightWidth: 5,top: 0,right: 0,}]}/>
                         <View style={[styles.borderEdges,{borderBottomWidth: 5,borderLeftWidth: 5,bottom:0,left: 0,}]}/>
@@ -143,7 +138,6 @@ const ToktokWalletScanQR = ({navigation,route})=> {
                             }
                            
                         </View>
-
 
                     <View style={styles.TorchView}>
                       { image  ? <Image source={{uri: image.uri}}  style={{height: 100,width: 100}}/> : null}
@@ -157,8 +151,43 @@ const ToktokWalletScanQR = ({navigation,route})=> {
                             <Text style={{color: "white",fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.L}}>Tap to turn {torch ? 'off' : 'on' }</Text>
                     </View>
 
+                
+            </View>
 
+                <View style={{marginTop: 25}}>
+                    <Text style={{color: "white",fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.L,color: COLOR.YELLOW}}>Position the QR code within the frame.</Text>
                 </View>
+
+    
+        
+        </SafeAreaView>
+    )
+
+    return (
+        <>
+           {
+               focusCamera &&  <QRCodeScanner
+                                    onRead={onSuccess}
+                                    flashMode={torch ? RNCamera.Constants.FlashMode.torch : RNCamera.Constants.FlashMode.off}
+                                    fadeIn={false}
+                                    showMarker={true}
+                                    markerStyle={{
+                                        borderColor: "red"
+                                    }}
+                                    reactivate={true}
+                                    // reactivateTimeout={1000}
+                                    vibrate={false}
+                                    customMarker={customMarker}
+                                    containerStyle={{
+                                        backgroundColor: "rgba(0,0,0,0.5)",
+                                    }}
+                                    cameraStyle={{
+                                        height: height,
+                                        backgroundColor: "rgba(0,0,0,0.5)"
+                                    }}
+                                />
+           }
+
                 <Actions 
                     tokwaAccount={tokwaAccount}
                     onUploadSuccess={(qrCode)=>{
@@ -170,9 +199,8 @@ const ToktokWalletScanQR = ({navigation,route})=> {
                             }
                         })
                 }}/>
-
-            </RNCamera>
-        </View>
+         
+            {/* <WalletBalance navigation={navigation} walletinfo={tokwaAccount.wallet}/> */}
         </>
     )
 }

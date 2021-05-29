@@ -25,6 +25,8 @@ export const GET_MY_ACCOUNT = gql`
             mobileNumber
             status
             motherId
+            pinCode
+            pinCodeAttempts
             person {
                 id
                 firstName
@@ -46,6 +48,34 @@ export const GET_MY_ACCOUNT = gql`
                     phpValue
                 }
             }
+        }
+    }
+`
+
+export const PATCH_PIN_CODE = gql`
+    mutation patchPinCode($input: PatchPinCodeInput){
+        patchPinCode(input: $input)
+    }
+`
+
+export const VERIFY_PIN_CODE = gql`
+    query verifyPinCode($input: GetVerifyPinInput){
+        verifyPinCode(input: $input)
+    }
+`
+
+export const GET_FORGOT_AND_RECOVER_OTP_CODE = gql`
+    query {
+        getForgotAndRecoverOTPCode {
+            message
+        }
+    }
+`
+
+export const VERIFY_FORGOT_AND_RECOVER_OTP_CODE = gql`
+    query verifyForgotAndRecoverOTP($input: VerifyForgotAndRecoverOTPInput){
+        verifyForgotAndRecoverOTP(input: $input){
+            message
         }
     }
 `

@@ -3,6 +3,7 @@ import moment from 'moment'
 import {View,Text,TouchableOpacity,StyleSheet,Image} from 'react-native'
 import {COLOR, FONT , FONT_SIZE} from '../../../../../res/variables';
 import { numberFormat } from '../../../../../helper';
+import { MaskLeftZero } from '../../../../../util/HelperUtility'
 import { useSelector } from 'react-redux';
 
 //SELF IMPORTS
@@ -25,7 +26,7 @@ export const WalletLog = ({transactionDate , transactionItems ,index , itemsLeng
     const ViewTransactionDetails = (transaction , title, phrase , referenceDate , transactionAmount) => {
         setTransactionVisible(true)
         setTransactionInfo({
-            refNo: transaction.id,
+            refNo: MaskLeftZero(transaction.id),
             refDate: referenceDate,
             label: title,
             phrase: phrase,
