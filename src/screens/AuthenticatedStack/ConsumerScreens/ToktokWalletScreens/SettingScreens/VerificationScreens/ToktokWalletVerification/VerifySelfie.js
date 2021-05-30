@@ -1,10 +1,15 @@
 import React, { useState ,useRef , useContext } from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,Alert,Dimensions,Modal,Image} from 'react-native'
+import {View,Text,StyleSheet,TouchableOpacity,Alert,Dimensions,Modal,Image,Platform} from 'react-native'
 import {FONTS, SIZES, BUTTON_HEIGHT, COLORS} from '../../../../../../../res/constants'
 import EIcon from 'react-native-vector-icons/EvilIcons'
 import {VerifyContext} from './VerifyContextProvider'
 import {useNavigation} from '@react-navigation/native'
 import { YellowButton } from '../../../../../../../revamp'
+
+const {width,height} = Dimensions.get("window")
+
+const CROP_AREA_WIDTH = width * 0.90;
+const CROP_AREA_HEIGHT = CROP_AREA_WIDTH;
 
 const VerifySelfie = ()=> {
 
@@ -38,10 +43,10 @@ const VerifySelfie = ()=> {
             borderRadius: 5,
             marginBottom: 5,
         }}>
-                <Image resizeMode="cover" style={{height: 180 ,width: 180,backgroundColor:"green"}} source={{uri: selfieImage.uri}} />
-                <TouchableOpacity onPress={()=>navigation.push("ToktokWalletSelfieImageCamera", {setImage})} style={{position:"absolute",bottom: 15,width: 180,height: 20, justifyContent:"center",alignItems:"center"}}>
+                <Image resizeMode="cover" style={{height: Platform.OS == "ios" ? CROP_AREA_HEIGHT + 30 : CROP_AREA_HEIGHT ,width: CROP_AREA_WIDTH,backgroundColor:"transparent"}} source={{uri: selfieImage.uri}} />
+                <TouchableOpacity onPress={()=>navigation.push("ToktokWalletSelfieImageCamera", {setImage})} style={{position:"absolute",bottom: 15,width: 180,height: 20, justifyContent:"center",alignItems:"center",alignSelf:"center"}}>
                     <EIcon name="camera" color={COLORS.YELLOW} size={20} />
-                    <Text style={{color: COLORS.YELLOW,fontFamily: FONTS.REGULAR,fontSize: SIZES.S,marginTop: -2}}>Change Photo</Text>
+                    <Text style={{textAlign:"center",color: COLORS.YELLOW,fontFamily: FONTS.REGULAR,fontSize: SIZES.S,marginTop: -2}}>Change Photo</Text>
                 </TouchableOpacity>
         </View>
     )

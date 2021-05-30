@@ -59,7 +59,13 @@ const CashOutLog = ({
                         status = "Pending"
                         break;
                     case "1":
-                        status = "Accepted"
+                        status = "Processed"
+                        break
+                    case "2":
+                        status = "Pending"
+                        break
+                    case "3":
+                        status = "Rejected"
                         break
                     default:
                         status = "Rejected"
