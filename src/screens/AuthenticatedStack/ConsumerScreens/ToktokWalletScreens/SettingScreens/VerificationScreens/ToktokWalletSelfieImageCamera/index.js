@@ -34,6 +34,7 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
     const [boxColor,setBoxColor] = useState("white")
     const [checkSmile ,setCheckSmile] = useState(false)
     const [leftEyeWink,setLeftEyeWink] = useState(false)
+    const [leftEyeOpen , setLeftEyeOpen] = useState(false)
     const [rightEyeWink,setRightEyeWink] = useState(false)
   
     const takePicture = async () => {
@@ -106,13 +107,17 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
             
             if(!checkSmile){
                 setMessage({
-                    msg: `Please smile`,
+                    msg: `Try to smile`,
                     icon: "smile"
                 })
                 if(e.faces[0].smilingProbability > 0.8){
                     setCheckSmile(true)
                 }
                 return
+            }
+
+            if(e.faces[0].leftEyeOpenProbability > 0.6){
+                setLeftEyeOpen(true)
             }
 
             if(!leftEyeWink){
@@ -125,7 +130,7 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
                 }
                 return
             }
-            if(checkSmile && leftEyeWink){
+            if(checkSmile && leftEyeWink && leftEyeWink){
                 setMessage({
                     msg: `Don't move , Scanning Face`,
                     icon: null
@@ -217,7 +222,7 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
                                 <View style={[styles.borderEdges,{borderBottomWidth: 5,borderRightWidth: 5,bottom:0,right:0,}]}/>
 
                         <View style={{paddingVertical: 10, position:"absolute",bottom: -80,justifyContent:"center",alignItems:"center",width: "100%",backgroundColor:"rgba(255,255,255,0.2)"}}>
-                            <Text style={{fontFamily: FONT.BOLD,FONTize: FONT_SIZE.L,color:"white"}}>{message.msg}</Text>
+                            <Text style={{fontFamily: FONT.BOLD,FONTize: FONT_SIZE.XL,color:"white"}}>{message.msg}</Text>
                             {
                                 message.icon == null
                                 ? <ActivityIndicator style={{marginTop: 5}} color={"white"} />
