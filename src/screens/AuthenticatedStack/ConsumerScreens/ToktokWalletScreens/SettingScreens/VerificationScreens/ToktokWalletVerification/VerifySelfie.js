@@ -11,6 +11,8 @@ const {width,height} = Dimensions.get("window")
 const CROP_AREA_WIDTH = width * 0.90;
 const CROP_AREA_HEIGHT = CROP_AREA_WIDTH;
 
+const ratio = Math.min(width / CROP_AREA_WIDTH , height / CROP_AREA_HEIGHT)
+
 const VerifySelfie = ()=> {
 
     const VerifyUserData = useContext(VerifyContext)
@@ -43,7 +45,7 @@ const VerifySelfie = ()=> {
             borderRadius: 5,
             marginBottom: 5,
         }}>
-                <Image resizeMode="cover" style={{height: Platform.OS == "ios" ? CROP_AREA_HEIGHT + 30 : CROP_AREA_HEIGHT ,width: CROP_AREA_WIDTH,backgroundColor:"transparent"}} source={{uri: selfieImage.uri}} />
+                <Image resizeMode="cover" style={{height: CROP_AREA_HEIGHT,width: CROP_AREA_WIDTH,backgroundColor:"transparent"}} source={{uri: selfieImage.uri}} />
                 <TouchableOpacity onPress={()=>navigation.push("ToktokWalletSelfieImageCamera", {setImage})} style={{position:"absolute",bottom: 15,width: 180,height: 20, justifyContent:"center",alignItems:"center",alignSelf:"center"}}>
                     <EIcon name="camera" color={COLORS.YELLOW} size={20} />
                     <Text style={{textAlign:"center",color: COLORS.YELLOW,fontFamily: FONTS.REGULAR,fontSize: SIZES.S,marginTop: -2}}>Change Photo</Text>

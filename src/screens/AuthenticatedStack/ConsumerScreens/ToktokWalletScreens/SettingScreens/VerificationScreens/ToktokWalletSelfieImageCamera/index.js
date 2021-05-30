@@ -90,7 +90,7 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
                  return 
              }
      
-             if(e.faces[0].bounds.size.height < ((CROP_AREA_HEIGHT - 50))){
+             if(e.faces[0].bounds.size.height < ((CROP_AREA_HEIGHT - 100))){
                  setMessage({
                      msg: "Bring your phone closer to you",
                      icon: "mobile-alt"
