@@ -4,6 +4,7 @@ import { SIZES, FONTS, COLORS} from '../../../../../../res/constants'
 import { numberFormat } from '../../../../../../helper'
 import {useNavigation} from '@react-navigation/native'
 import {Receipt} from '../../Components'
+import { MaskLeftZero } from '../../../../../../util/HelperUtility'
 
 
 const RecipientInfo = ({label,value})=> (
@@ -35,7 +36,7 @@ const SuccessfulModal = ({successModalVisible , amount , recipient , walletinfoP
         >
             <Receipt
                 // refNo={walletinfoParams.referenceNumber}
-                refNo={walletinfoParams.id}
+                refNo={MaskLeftZero(walletinfoParams.id)}
                 refDate={walletinfoParams.createdAt}
                 onPress={Proceed}
             >

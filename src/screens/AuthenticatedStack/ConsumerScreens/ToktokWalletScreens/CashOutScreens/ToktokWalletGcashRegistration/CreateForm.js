@@ -1,7 +1,7 @@
 import React, {useEffect,useState} from 'react'
 import {View,Text,StyleSheet,ScrollView,TextInput,Alert,TouchableOpacity,Modal,StatusBar,TouchableOpacityBase,Image} from 'react-native'
 import { HeaderBack, YellowButton } from '../../../../../../revamp';
-import {HeaderTitle} from '../../../../../../components'
+import {AlertOverlay, HeaderTitle} from '../../../../../../components'
 import { FONT, FONT_SIZE , COLOR } from '../../../../../../res/variables';
 import { Separator } from '../../Components';
 import validator from 'validator';
@@ -43,8 +43,8 @@ const PromptMessage = ({
                 <View style={styles.promptContent}>
                     <Image style={{height: 90,width: 90}} resizeMode="contain" source={require('../../../../../../assets/icons/gcash.png')}/>
                     <View style={{alignItems:"center"}}>
-                        <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,color: COLOR.DARK}}>Successfully added</Text>
-                        <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,color: COLOR.DARK}}>Wait for verification of GCash Account.</Text>
+                        <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.L}}>Success!</Text>
+                        <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,color: COLOR.DARK}}>Your application has been submitted. Please wait for your GCash disbursement account to be verified.</Text>
                     </View>
                     <TouchableOpacity 
                         style={{
@@ -89,7 +89,7 @@ const CreateForm = ({navigation,session,mobile,provider})=> {
     const [promptVisible,setPromptVisible] = useState(false);
     const [modalCountryVisible,setModalCountryVisible] = useState(false);
 
-    const [postCashOutEnrollmentGcash, {loading: postLoading}] = useMutation(POST_CASH_OUT_ENROLLMENG_GCASH, {
+    const [postCashOutEnrollmentGcash, {data, error ,loading}] = useMutation(POST_CASH_OUT_ENROLLMENG_GCASH, {
             client: TOKTOK_WALLET_GRAPHQL_CLIENT,
             onError: (error)=> {
                 onErrorAlert({alert,error})
@@ -111,7 +111,7 @@ const CreateForm = ({navigation,session,mobile,provider})=> {
         if(mobile.length > 10 && mobile.slice(0,2) == "09"){
             setErrorMessage("")
         }else{
-            setErrorMessage("Please enter a valid mobile number.")
+            setErrorMessage("Mobile number must be valid.")
         }
 
         if(mobile.length > 11) return
@@ -199,6 +199,7 @@ const CreateForm = ({navigation,session,mobile,provider})=> {
 
     return (
        <>
+        <AlertOverlay visible={loading} />
         <PromptMessage provider={provider} visible={promptVisible} setVisible={setPromptVisible} navigation={navigation}/>
         <ModalCountry visible={modalCountryVisible} setVisible={setModalCountryVisible} setCountry={setCountry}/>
         <DatePickerModal
@@ -397,7 +398,7 @@ const styles = StyleSheet.create({
         alignItems:"center"
     },
     promptContent: {
-        height: 227,
+        height: 250,
         width: 280,
         backgroundColor:"white",
         borderRadius: 10,

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import {View,StyleSheet,Text,TouchableOpacity} from 'react-native'
 import { COLOR , FONT , FONT_SIZE  } from '../../../../../res/variables'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
@@ -10,15 +10,19 @@ import {useQuery} from '@apollo/react-hooks'
 import {useNavigation} from '@react-navigation/native'
 import {Separator} from '../Components'
 import {useSelector} from 'react-redux'
+import {CheckWalletAccountRestrictionContext} from './CheckWalletAccountRestriction'
 
 const WalletRecentOutgoingTransfer = ()=> {
 
     const navigation = useNavigation()
     const tokwaAccount = useSelector(state=>state.toktokWallet)
+    const checkWallet = useContext(CheckWalletAccountRestrictionContext)
 
 
     const ViewRecentTransfer = (recentTransfer)=> {
-        return navigation.navigate("ToktokWalletRecentTransferView",{recentTransfer})
+        if(checkWallet.checkIfAllowed()){
+            return navigation.navigate("ToktokWalletRecentTransferView",{recentTransfer})
+        }
     }
 
     const {data,error,loading} = useQuery(GET_OUTGOING_TRANSFER, {
@@ -38,7 +42,15 @@ const WalletRecentOutgoingTransfer = ()=> {
     }
 
     if(!data.getOutgoingTransfer){
-        return null
+        return (
+            <>
+            <View style={styles.container}>
+            <Text style={styles.title}>Outgoing Transfer</Text>
+
+            </View> 
+            <Separator/>
+            </>
+        )
     }
     
     const destination = data.getOutgoingTransfer.destinationPerson

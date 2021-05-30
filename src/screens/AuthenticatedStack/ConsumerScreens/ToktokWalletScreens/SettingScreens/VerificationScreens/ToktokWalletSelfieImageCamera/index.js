@@ -2,7 +2,7 @@ import React , {useRef , useState , useEffect} from 'react'
 import { Modal , StyleSheet , Text , View , TouchableOpacity , Dimensions,Platform , ActivityIndicator} from 'react-native'
 import {RNCamera} from 'react-native-camera';
 import FIcon from 'react-native-vector-icons/Feather'
-import { COLOR, COLORS, FONTS, FONT_MEDIUM, SIZES } from '../../../../../../../res/constants';
+import { COLOR, FONT, FONT_SIZE} from '../../../../../../../res/variables';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import EIcon from 'react-native-vector-icons/EvilIcons'
 
@@ -32,6 +32,10 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
         icon: "bullseye"
     })
     const [boxColor,setBoxColor] = useState("white")
+    const [checkSmile ,setCheckSmile] = useState(false)
+    const [leftEyeWink,setLeftEyeWink] = useState(false)
+    const [leftEyeOpen , setLeftEyeOpen] = useState(false)
+    const [rightEyeWink,setRightEyeWink] = useState(false)
   
     const takePicture = async () => {
         setCheck(true)
@@ -73,13 +77,6 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
         }
 
         setBox(result)
-        
-        // const boundary = {
-        //     height: CROP_AREA_HEIGHT,
-        //     width: CROP_AREA_WIDTH,
-        //     x:  ( width - CROP_AREA_WIDTH ) / 2,
-        //     y:  ( height - 200 - CROP_AREA_HEIGHT) / 2
-        // }
 
         if(message.icon){
             if(checkifOutsideBox(boundary,result)){
@@ -88,6 +85,7 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
                      msg: "Position your face within the frame",
                      icon: "bullseye"
                  })
+                 setBoxColor("white")
                  return 
              }
      
@@ -96,19 +94,50 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
                      msg: "Bring your phone closer to you",
                      icon: "mobile-alt"
                  })
+                 setBoxColor("white")
                  return 
              }
      
         }
 
-        setMessage({
-            msg: `Don't move , Scanning Face`,
-            icon: null
-        })
 
         if(!check){
-            setBoxColor(COLOR)
-            takePicture()
+            setBoxColor(COLOR.YELLOW)
+            console.log(JSON.stringify(e))
+            
+            if(!checkSmile){
+                setMessage({
+                    msg: `Try to smile`,
+                    icon: "smile"
+                })
+                if(e.faces[0].smilingProbability > 0.8){
+                    setCheckSmile(true)
+                }
+                return
+            }
+
+            if(e.faces[0].leftEyeOpenProbability > 0.6){
+                setLeftEyeOpen(true)
+            }
+
+            if(!leftEyeWink){
+                setMessage({
+                    msg: `Try to blink your left eye`,
+                    icon: "smile"
+                })
+                if(e.faces[0].leftEyeOpenProbability < 0.2){
+                    setLeftEyeWink(true)
+                }
+                return
+            }
+            if(checkSmile && leftEyeWink && leftEyeWink){
+                setMessage({
+                    msg: `Don't move , Scanning Face`,
+                    icon: null
+                })
+                takePicture()
+            }
+          
         }
         
     
@@ -144,9 +173,9 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
                 buttonPositive: 'Ok',
                 buttonNegative: 'Cancel',
             }}
-            // faceDetectionMode={RNCamera.Constants.FaceDetection.Mode.fast}
-            // // faceDetectionLandmarks={RNCamera.Constants.FaceDetection.Landmarks.all}
-            // // faceDetectionClassifications={RNCamera.Constants.FaceDetection.Classifications.all}
+            faceDetectionMode={RNCamera.Constants.FaceDetection.Mode.fast}
+            // faceDetectionLandmarks={RNCamera.Constants.FaceDetection.Landmarks.all}
+            faceDetectionClassifications={RNCamera.Constants.FaceDetection.Classifications.all}
             onFacesDetected={canDetectFaces ? onFacesDetected : null}
             onFaceDetectionError={(err)=>{
                 console.log(err)
@@ -193,7 +222,7 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
                                 <View style={[styles.borderEdges,{borderBottomWidth: 5,borderRightWidth: 5,bottom:0,right:0,}]}/>
 
                         <View style={{paddingVertical: 10, position:"absolute",bottom: -80,justifyContent:"center",alignItems:"center",width: "100%",backgroundColor:"rgba(255,255,255,0.2)"}}>
-                            <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.L,color:"white"}}>{message.msg}</Text>
+                            <Text style={{fontFamily: FONT.BOLD,FONTize: FONT_SIZE.XL,color:"white"}}>{message.msg}</Text>
                             {
                                 message.icon == null
                                 ? <ActivityIndicator style={{marginTop: 5}} color={"white"} />
@@ -209,15 +238,15 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
         </RNCamera>
 
         {/* <View style={styles.instructions}>
-             <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.L}}>{message.msg}</Text>
+             <Text style={{fontFamily: FONT.BOLD,FONTize: FONT_SIZE.L}}>{message.msg}</Text>
                 {
                     message.icon == null
-                    ? <ActivityIndicator style={{marginTop: 10}} color={COLORS.YELLOW} />
-                    : <FIcon5 style={{marginTop: 10}} size={30} color={COLORS.YELLOW} name={message.icon}/>
+                    ? <ActivityIndicator style={{marginTop: 10}} color={COLOR.YELLOW} />
+                    : <FIcon5 style={{marginTop: 10}} size={30} color={COLOR.YELLOW} name={message.icon}/>
                 }
         </View> */}
 
-                <View
+                {/* <View
                     style={{
                         flexDirection: 'row',
                         justifyContent: 'center',
@@ -228,10 +257,10 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
                     }}>
                     <TouchableOpacity onPress={() => takePicture()} style={styles.capture}>
                         <View style={styles.inCapture}>
-                            <EIcon name="camera" color={COLORS.YELLOW} size={40} />
+                            <EIcon name="camera" color={COLOR.YELLOW} size={40} />
                         </View>
                     </TouchableOpacity>
-                </View>
+                </View> */}
 
     </View>
     )
@@ -272,7 +301,7 @@ const styles = StyleSheet.create({
         height: 40,
         width: 40,
         position: "absolute",
-        borderColor: COLORS.YELLOW,
+        borderColor: COLOR.YELLOW,
     },
     backBtn: {
         backgroundColor:"#FFFFFF",
@@ -291,7 +320,7 @@ const styles = StyleSheet.create({
         height: 60,
         width: 60,
         borderRadius: 30,
-        backgroundColor: COLORS.YELLOW,
+        backgroundColor: COLOR.YELLOW,
         justifyContent: 'center',
         alignItems: 'center',
       },

@@ -17,7 +17,7 @@ import { COLOR } from '../../../../../../../res/variables'
 const {height,width} = Dimensions.get("window")
 
 const CROP_AREA_WIDTH = width * 0.90;
-const CROP_AREA_HEIGHT = height * 0.35;
+const CROP_AREA_HEIGHT = height * 0.40;
 
 const ValidIDList = [
     {label: "Passport" ,value: "Passport", isBackRequired: 1},
@@ -112,7 +112,7 @@ const VerifyID = ()=> {
         //     navigation.push("ToktokWalletValidIDCamera",{setImage})
         // }}
         >
-                <Image resizeMode="cover" style={{height: 175 ,width: 283}} source={{uri: placement == "front" ? frontImage.uri : backImage.uri}} />
+                <Image resizeMode="cover" style={{height: CROP_AREA_HEIGHT ,width: width - 40}} source={{uri: placement == "front" ? frontImage.uri : backImage.uri}} />
                 <TouchableOpacity onPress={()=>{
                     if(verifyID.idType == "") return Alert.alert("","Please select ID Type first")
                     navigation.push("ToktokWalletValidIDCamera",{setImage, placement: placement})

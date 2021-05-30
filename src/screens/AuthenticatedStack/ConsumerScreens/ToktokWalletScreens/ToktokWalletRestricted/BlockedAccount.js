@@ -23,8 +23,8 @@ const BlockedAccount = ()=> {
             <Separator/>
             <View style={styles.content}>
                 <View style={{alignItems:"center"}}>
-                    <Text style={styles.verifyWalletText}>Your <Text style={{...styles.verifyWalletText, color: COLOR.YELLOW}}>toktok</Text><Text style={{...styles.verifyWalletText, color: COLOR.ORANGE}}>wallet</Text> Account has been blocked</Text>
-                    {/* <Text style={styles.clickVerifyText}>toktokwallet verification is on pending.</Text> */}
+                    <Text style={styles.verifyWalletText}>STOP! your <Text style={{...styles.verifyWalletText, color: COLOR.YELLOW}}>toktok</Text><Text style={{...styles.verifyWalletText, color: COLOR.ORANGE}}>wallet</Text> account has been blocked</Text>
+                    <Text style={styles.clickVerifyText}>To reactivate and know more details, please contact</Text>
                     
                 </View>
             </View>
@@ -60,6 +60,7 @@ const styles = StyleSheet.create({
         textAlign:'center'
     },
     clickVerifyText: {
+        marginTop: 5,
         fontFamily: FONT.REGULAR,
         fontSize: FONT_SIZE.S,
         textAlign:'center'

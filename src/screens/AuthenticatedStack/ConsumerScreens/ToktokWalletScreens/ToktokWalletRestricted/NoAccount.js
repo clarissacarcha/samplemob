@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
         fontFamily: FONT.REGULAR,
         marginBottom: 5,
         fontSize: FONT_SIZE.S,
-        textAlign:'center'
+        textAlign:'left'
     },
     linkButton: {
         width: "100%",

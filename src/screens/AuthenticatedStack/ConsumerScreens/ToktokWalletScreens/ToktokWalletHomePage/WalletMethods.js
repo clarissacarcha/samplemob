@@ -2,7 +2,7 @@ import React , {useContext} from 'react'
 import {View,Text,StyleSheet,Dimensions,Image,TouchableOpacity} from 'react-native'
 import {COLOR, FONT, FONT_SIZE} from '../../../../../res/variables'
 import {useNavigation} from '@react-navigation/native'
-import {CheckWalletRestrictionContext} from './CheckWalletRestrictionProvider'
+import {CheckWalletAccountRestrictionContext} from './CheckWalletAccountRestriction'
 
 const {height,width} = Dimensions.get("window")
 
@@ -21,13 +21,12 @@ const Method = ({icon,label,iconstyle,onPress})=> {
 const WalletMethods = ()=> {
 
     const navigation = useNavigation()
-    const {checkIfResctricted} = useContext(CheckWalletRestrictionContext)
+    const checkWallet = useContext(CheckWalletAccountRestrictionContext)
 
     const onPress = (route)=> {
-        if(!checkIfResctricted()){
-            // return navigation.navigate(route, {walletinfo , account})
+        if(checkWallet.checkIfAllowed()){
             return navigation.navigate(route)
-        }
+        }  
     }
 
     return (

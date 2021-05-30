@@ -27,7 +27,8 @@ const ToktokWalletValidIDCamera = ({navigation,route})=> {
         try {
           if (cameraRef) {
             const options = {
-              quality: 0.5,
+            //   quality: 0.5,
+              quality: 1,
               // base64: true,
               width: 1024,
               fixOrientation: true,
@@ -47,15 +48,17 @@ const ToktokWalletValidIDCamera = ({navigation,route})=> {
       const cropSize = {
         // height: 480,
         // width: 480,
-        // width: CROP_AREA_WIDTH,
-        // height: CROP_AREA_HEIGHT,
-        width: CROP_AREA_WIDTH + 20,
-        height: CROP_AREA_HEIGHT + 20,
+        width: Platform.OS === "ios" ? CROP_AREA_WIDTH : CROP_AREA_WIDTH + 100,
+        height: Platform.OS === "ios" ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT + 100,
+        // width: CROP_AREA_WIDTH + 70,
+        // height: CROP_AREA_HEIGHT + 100,
       };
     
       const cropAreaSize = {
-        width: CROP_AREA_WIDTH - 60,
-        height: CROP_AREA_HEIGHT -70,
+        // width: CROP_AREA_WIDTH - 60,
+        // height: CROP_AREA_HEIGHT -70,
+        width: Platform.OS === "ios" ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 20,
+        height: Platform.OS === "ios" ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 100,
         // width: CROP_AREA_WIDTH - 100,
         // height: CROP_AREA_HEIGHT - 100,
       };
@@ -86,11 +89,24 @@ const ToktokWalletValidIDCamera = ({navigation,route})=> {
           return (
         <View style={{flex: 1}}>
             <View style={{flex: 1,justifyContent:"center", alignItems: "center"}}>
-                <View style={{height: CROP_AREA_HEIGHT - 70, width: CROP_AREA_WIDTH - 70, borderRadius: 10}}>
+                {/* <View style={{height: CROP_AREA_HEIGHT - 100, width: CROP_AREA_WIDTH - 110, borderRadius: 10}}>
                     <ImageCropper
                     imageUri={tempImage.uri}
-                    cropAreaWidth={CROP_AREA_WIDTH -70}
-                    cropAreaHeight={CROP_AREA_HEIGHT - 70}
+                    cropAreaWidth={CROP_AREA_WIDTH - 110}
+                    cropAreaHeight={CROP_AREA_HEIGHT - 100}
+                    containerColor="black"
+                    areaColor="black"
+                    setCropperParams={cropperParams =>{
+                        setCropperParams(cropperParams)
+                    }}
+                    />
+                </View> */}
+
+                <View style={{height: Platform.OS === "ios" ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 100, width: Platform.OS === "ios" ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 110, borderRadius: 10}}>
+                    <ImageCropper
+                    imageUri={tempImage.uri}
+                    cropAreaWidth={Platform.OS === "ios" ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 110}
+                    cropAreaHeight={Platform.OS === "ios" ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 100}
                     containerColor="black"
                     areaColor="black"
                     setCropperParams={cropperParams =>{

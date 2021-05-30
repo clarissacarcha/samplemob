@@ -35,6 +35,7 @@ const WalletOnHold = ({navigation,walletinfo})=> {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        padding: 16,
     },
     lockIcon: {
         height: 80,

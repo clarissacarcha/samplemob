@@ -11,6 +11,7 @@ import { POST_FUND_TRANSFER } from '../../../../../../graphql/toktokwallet'
 
 //SELF IMPORTS
 import SuccessfulModal from './SuccessfulModal'
+import { AlertOverlay } from '../../../../../../components'
 
 
 const ProceedButton = ({swipeEnabled , navigation , amount , note , session , recipientDetails })=> {
@@ -23,7 +24,7 @@ const ProceedButton = ({swipeEnabled , navigation , amount , note , session , re
         createdAt: ""
     })
 
-    const [postFundTransfer] = useMutation(POST_FUND_TRANSFER, {
+    const [postFundTransfer , {data ,error , loading }] = useMutation(POST_FUND_TRANSFER, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         variables: {
             input: {
@@ -70,6 +71,7 @@ const ProceedButton = ({swipeEnabled , navigation , amount , note , session , re
 
     return (
        <>
+         <AlertOverlay visible={loading} />
         <SuccessfulModal 
                 successModalVisible={successModalVisible}
                 amount={amount} 

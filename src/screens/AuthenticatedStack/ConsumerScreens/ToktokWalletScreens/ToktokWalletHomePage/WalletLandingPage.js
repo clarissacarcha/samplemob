@@ -15,43 +15,7 @@ import WalletRecentOutgoingTransfer from './WalletRecentOutgoingTransfer'
 import WalletRecentTransactions from './WalletRecentTransactions'
 import WalletVerificationStatus from './WalletVerificationStatus'
 
-const WalletLandingPage = ({refreshing, onRefresh , saveTokwaAccount})=> {
-    const navigation = useNavigation()
-    const alert = useAlert()
-    const [account,setAccount] = useState({
-        wallet: {
-            id: 0,
-            balance: 0,
-            status: 0,
-            accountId: 0,
-            motherId: 0,
-            currencyId: 0,
-            currency: {
-                id: 0,
-                name: "",
-                code: "",
-                phpValue: 0
-            }
-        }
-    })
-
-    const [getMyAccount , {data,error,loading}] = useLazyQuery(GET_MY_ACCOUNT , {
-        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
-        fetchPolicy: "network-only",
-        onCompleted: ({getMyAccount})=> {
-            setAccount(getMyAccount)
-            saveTokwaAccount(getMyAccount)
-        },
-        onError: (error)=> {
-            onErrorAlert({alert,error})
-        }
-    })
-    
-
-    useEffect(()=>{
-       getMyAccount()
-    },[onRefresh])
-
+const WalletLandingPage = ({refreshing, onRefresh})=> {
     return (
         <View style={styles.container}>
             <View style={{height:255}}>
@@ -66,7 +30,7 @@ const WalletLandingPage = ({refreshing, onRefresh , saveTokwaAccount})=> {
                         />
                     }
                 >
-                    <WalletCardInfo loading={loading}/>
+                    <WalletCardInfo/>
                 </ScrollView>
             </View>
             <View style={{flex: 1,}}>

@@ -4,7 +4,7 @@ import { DARK,SIZES, BUTTON_HEIGHT, COLORS, FONTS} from '../../../../../../../re
 import { YellowButton } from '../../../../../../../revamp'
 import {DisabledButton, NumberBoxes} from '../../../Components'
 
-const CreatePin = ({pinCode,setPinCode,pageIndex,setPageIndex,walletinfo})=> {
+const CreatePin = ({pinCode,setPinCode,pageIndex,setPageIndex,tokwaAccount})=> {
 
     const [showPin,setShowPin] = useState(false)
     const inputRef = useRef();
@@ -23,7 +23,7 @@ const CreatePin = ({pinCode,setPinCode,pageIndex,setPageIndex,walletinfo})=> {
     return (
         <View style={styles.container}>
             <ScrollView style={styles.content}>
-                    <Text style={{fontSize: SIZES.M,fontFamily: FONTS.BOLD,marginTop: 20,alignSelf:"center"}}>Enter your {walletinfo.pincode ? "new ": ""}PIN</Text>
+                    <Text style={{fontSize: SIZES.M,fontFamily: FONTS.BOLD,marginTop: 20,alignSelf:"center"}}>Enter your {tokwaAccount.pincode ? "new ": ""}PIN</Text>
                     <View style={{position: 'relative',marginTop: 50,}}>
                         <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={showPin}/>
                         <TextInput
@@ -39,7 +39,7 @@ const CreatePin = ({pinCode,setPinCode,pageIndex,setPageIndex,walletinfo})=> {
                                 setPinCode(num);
                             }
                             }}
-                            onSubmitEditing={onSubmit}
+                            // onSubmitEditing={onSubmit}
                         />
 
                         <TouchableOpacity

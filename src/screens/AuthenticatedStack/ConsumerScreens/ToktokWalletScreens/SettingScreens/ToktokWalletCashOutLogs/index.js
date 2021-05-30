@@ -11,6 +11,7 @@ import {useSelector} from 'react-redux'
 import { numberFormat } from '../../../../../../helper'
 import {Separator , FilterDateModal , TransactionDetails} from '../../Components'
 import { HeaderBack } from '../../../../../../revamp'
+import { MaskLeftZero } from '../../../../../../util/HelperUtility'
 
 
 const CashOutLog = ({
@@ -65,7 +66,7 @@ const CashOutLog = ({
                         break;
                 }
 
-                const refNo = item.id
+                const refNo = MaskLeftZero(item.id)
                 const refDate = moment(item.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')
                 const transactionAmount = `PHP ${numberFormat(item.amount)}`
 

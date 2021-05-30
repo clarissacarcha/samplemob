@@ -19,6 +19,7 @@ import {
 
 //SELF IMPORTS
 import ConfirmModalContent from './ConfirmModalContent'
+import { AlertOverlay } from '../../../../../../components'
 
 const {height,width} = Dimensions.get("window")
 
@@ -117,6 +118,7 @@ const ToktokWalletPayPandaForm = ({navigation,route})=> {
 
     return (
       <>
+    <AlertOverlay visible={loading} />
       <Separator />
        <View  
             // keyboardVerticalOffset={Platform.OS == "ios" ? 90 : 90} 

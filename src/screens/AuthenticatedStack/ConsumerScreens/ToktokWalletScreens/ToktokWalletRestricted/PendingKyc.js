@@ -23,8 +23,8 @@ const PendingKyc = ()=> {
             <Separator/>
             <View style={styles.content}>
                 <View style={{alignItems:"center"}}>
-                    <Text style={styles.verifyWalletText}>Waiting for approval of <Text style={{...styles.verifyWalletText, color: COLOR.YELLOW}}>toktok</Text><Text style={{...styles.verifyWalletText, color: COLOR.ORANGE}}>wallet</Text></Text>
-                    <Text style={styles.clickVerifyText}>toktokwallet verification is on pending.</Text>
+                    <Text style={styles.verifyWalletText}>We are evaluating your application</Text>
+                    <Text style={styles.clickVerifyText}>Your toktokwallet verification is ongoing. Please wait for your account to be approved</Text>
                     
                 </View>
             </View>
@@ -60,6 +60,7 @@ const styles = StyleSheet.create({
         textAlign:'center'
     },
     clickVerifyText: {
+        marginTop: 5,
         fontFamily: FONT.REGULAR,
         fontSize: FONT_SIZE.S,
         textAlign:'center'

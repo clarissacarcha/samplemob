@@ -59,6 +59,29 @@ export const GET_CHECK_ACCOUNT = gql`
             mobileNumber
             status
             motherId
+            person {
+                id
+                accountType {
+                    linkLimit
+                }
+            }
+        }
+    }
+`
+
+
+export const GET_LINK_ACCOUNT_OTP = gql`
+     query getLinkAccountOTP($input: GetLinkAccountOTPInput){
+         getLinkAccountOTP(input: $input){
+             message
+         }
+     }
+`
+
+export const VERIFY_LINK_ACCOUNT_OTP = gql`
+    query verifyLinkAccountOTP($input: VerifyLinkAccountOTPInput){
+        verifyLinkAccountOTP(input: $input){
+            message
         }
     }
 `

@@ -94,7 +94,7 @@ const VerifyAddress = ()=> {
                                 {
                                     address.country
                                     ? <Text style={{flex: 1,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{address.country}</Text>
-                                    : <Text style={{flex: 1,color: COLOR.FONT_SIZE,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>- Select Country -</Text>
+                                    : <Text style={{flex: 1,color: COLOR.DARK,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>- Select Country -</Text>
                                 }
                              
                                 {/* <TouchableOpacity
@@ -147,7 +147,7 @@ const VerifyAddress = ()=> {
                                 {
                                     province
                                     ?  <Text style={{flex: 1,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{province}</Text>
-                                    :  <Text style={{flex: 1,color: COLOR.FONT_SIZE,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>- Select Province -</Text>
+                                    :  <Text style={{flex: 1,color: COLOR.DARK,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>- Select Province -</Text>
                                 }
                                 <EIcon name="chevron-right" size={24} color="#FCB91A"/>
                             </TouchableOpacity>
@@ -162,7 +162,7 @@ const VerifyAddress = ()=> {
                                 {
                                     selectedCity
                                     ?  <Text style={{flex: 1,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{selectedCity}</Text>
-                                    :  <Text style={{flex: 1,color: COLOR.FONT_SIZE,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>- Select City -</Text>
+                                    :  <Text style={{flex: 1,color: COLOR.DARK,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>- Select City -</Text>
                                 }
                                 <EIcon name={loading ? "spinner" : "chevron-right"} size={24} color="#FCB91A"/>
                             </TouchableOpacity>

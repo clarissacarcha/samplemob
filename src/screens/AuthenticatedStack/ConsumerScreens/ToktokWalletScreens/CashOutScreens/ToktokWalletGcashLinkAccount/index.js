@@ -4,13 +4,14 @@ import { COLOR, FONT, FONT_SIZE, SIZE } from '../../../../../../res/variables'
 import { HeaderBack, HeaderTitle, ICON_SET, VectorIcon, YellowButton } from '../../../../../../revamp'
 import { DisabledButton, NumberBoxes, Separator } from '../../Components'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from '../../../../../../graphql'
-import { GET_LINK_VERIFICATION_CODE , PATCH_LINK_ACCOUNT } from '../../../../../../graphql/toktokwallet'
+import { PATCH_LINK_ACCOUNT , GET_GCASH_LINK_OTP } from '../../../../../../graphql/toktokwallet'
 import { useLazyQuery , useMutation } from '@apollo/react-hooks'
 import { onErrorAlert } from '../../../../../../util/ErrorUtility'
 import { useAlert } from '../../../../../../hooks/useAlert'
 
 //SELF IMPORTS
 import SuccessfulModal from "./SuccessfulModal";
+import { AlertOverlay } from '../../../../../../components'
 
 
 
@@ -27,21 +28,21 @@ const ToktokWalletGcashLinKAccount = ({navigation,route})=> {
     const inputRef = useRef();
     const alert = useAlert()
 
-    const [getLinkVerificationCode] = useLazyQuery(GET_LINK_VERIFICATION_CODE,{
+    const [patchLinkAccount, {date,error,loading}] = useMutation(PATCH_LINK_ACCOUNT,{
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
-        fetchPolicy:"network-only",
-        onCompleted: ({getLinkVerificationCode})=>{
-            console.log(getLinkVerificationCode)
+        onCompleted: ({patchLinkAccount})=>{
+            setModalSuccessVisible(true)
         },
         onError: (error)=>{
             onErrorAlert({alert,error})
         }
     })
 
-    const [patchLinkAccount, {date,error,loading}] = useMutation(PATCH_LINK_ACCOUNT,{
+    const [getGcashLinkOTP] = useLazyQuery(GET_GCASH_LINK_OTP, {
+        fetchPolicy: "network-only",
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
-        onCompleted: ({patchLinkAccount})=>{
-            setModalSuccessVisible(true)
+        onCompleted: ({getGcashLinkOTP})=>{
+            console.log(getGcashLinkOTP)
         },
         onError: (error)=>{
             onErrorAlert({alert,error})
@@ -55,10 +56,10 @@ const ToktokWalletGcashLinKAccount = ({navigation,route})=> {
     };
 
     const CreateVerificationCode = ()=> {
-        getLinkVerificationCode({
+        getGcashLinkOTP({
             variables: {
                 input: {
-                    mobile: mobile
+                    mobileNumber: mobile
                 }
             }
         })
@@ -68,7 +69,7 @@ const ToktokWalletGcashLinKAccount = ({navigation,route})=> {
         return patchLinkAccount({
             variables: {
                 input: {
-                    verificationCode: pinCode,
+                    OTPCode: pinCode,
                     mobile: mobile
                 }
             }
@@ -85,6 +86,7 @@ const ToktokWalletGcashLinKAccount = ({navigation,route})=> {
 
     return (
         <>
+         <AlertOverlay visible={loading} />
         <Separator/>
         <SuccessfulModal visible={modalSuccessVisible} setVisible={setModalSuccessVisible} provider={provider}/>
         <KeyboardAvoidingView 
@@ -113,12 +115,12 @@ const ToktokWalletGcashLinKAccount = ({navigation,route})=> {
                             }}
                             // onSubmitEditing={onSubmit}
                         />
-                     <View style={{width:"100%",marginTop: 20}}>
+                     {/* <View style={{width:"100%",marginTop: 20}}>
                         <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Didn't receive it?</Text>
                         <TouchableOpacity onPress={CreateVerificationCode}>
                             <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Request a new code</Text>
                         </TouchableOpacity>
-                    </View>
+                    </View> */}
             </View>
             <View style={{height: SIZE.BUTTON_HEIGHT}}> 
             {
