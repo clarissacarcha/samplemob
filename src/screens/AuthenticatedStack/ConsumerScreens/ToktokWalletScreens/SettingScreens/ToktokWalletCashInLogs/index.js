@@ -99,7 +99,7 @@ const ToktokWalletCashInLogs = ({navigation})=> {
 
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack color={COLORS.YELLOW}/>,
-        headerTitle: ()=> <HeaderTitle label={['Cash In Logs','']}/>,
+        headerTitle: ()=> <HeaderTitle label={['Cash In','']}/>,
     })
 
 
