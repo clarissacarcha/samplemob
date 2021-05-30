@@ -77,7 +77,7 @@ const MainSetupComponent = ()=> {
     })
 
  
-    const [screenSlides,setScreenSlides] = useState(["Fullname","Address","IDPic","SelfiePic"])
+    const [screenSlides,setScreenSlides] = useState(["Fullname","Address","IDPic","SelfiePic","Confirm"])
  
     const cancelSetup = ()=> {
       console.log("Cancelling")

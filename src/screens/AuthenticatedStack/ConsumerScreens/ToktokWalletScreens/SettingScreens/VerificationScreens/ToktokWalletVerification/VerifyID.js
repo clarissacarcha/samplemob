@@ -116,7 +116,7 @@ const VerifyID = ()=> {
                 <TouchableOpacity onPress={()=>{
                     if(verifyID.idType == "") return Alert.alert("","Please select ID Type first")
                     navigation.push("ToktokWalletValidIDCamera",{setImage, placement: placement})
-                }} style={{position:"absolute",bottom: 15,width: 283,height: 20, justifyContent:"center",alignItems:"center"}}>
+                }} style={{position:"absolute",alignSelf:"center", bottom: 15,width: 283,height: 20, justifyContent:"center",alignItems:"center"}}>
                     <EIcon name="camera" color={COLORS.YELLOW} size={20} />
                     <Text style={{color: COLORS.YELLOW,fontFamily: FONTS.REGULAR,fontSize: SIZES.S,marginTop: -2}}>Change Photo</Text>
                 </TouchableOpacity>

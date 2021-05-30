@@ -1,5 +1,5 @@
 import React, { useState ,useRef , useContext, useEffect } from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,ScrollView,CheckBox,Linking, Alert} from 'react-native'
+import {View,Text,StyleSheet,TouchableOpacity,ScrollView,Linking, Alert} from 'react-native'
 import {SIZES, BUTTON_HEIGHT, FONTS, COLORS} from '../../../../../../../res/constants'
 import {VerifyContext} from './VerifyContextProvider'
 import { TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT} from '../../../../../../../graphql'
@@ -16,6 +16,7 @@ import {connect} from 'react-redux'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import { YellowButton } from '../../../../../../../revamp'
 import { DisabledButton } from '../../../Components'
+import CheckBox from 'react-native-check-box'
 
 const UserInfo = ({label,value})=> {
 
@@ -154,12 +155,18 @@ const Confirm = ({session})=> {
                         flexGrow: 1,
                     }}>
                         <CheckBox
-                            value={isCertify}
-                            onValueChange={setCertify}
+                            isChecked={isCertify}
+                            onClick={()=>{
+                                return setCertify(!isCertify)
+                            }}
+                            style={{
+                                alignSelf: "center",
+                                marginRight: 2,
+                            }}
                         />
                         <TouchableOpacity 
                             onPress={()=>Linking.openURL("https://toktok.ph/terms-and-conditions")} 
-                            style={{paddingHorizontal: 10,marginRight: 20}}
+                            style={{paddingHorizontal: 10,marginRight: 20,alignSelf:"center"}}
                         >
                             <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.M}}>I hereby certify that I accept the <Text style={{color: COLORS.ORANGE,fontFamily: FONTS.REGULAR,fontSize: SIZES.M}}>Terms and Conditions.</Text></Text>
                         </TouchableOpacity>

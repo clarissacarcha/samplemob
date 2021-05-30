@@ -59,7 +59,13 @@ const CashOutLog = ({
                         status = "Pending"
                         break;
                     case "1":
-                        status = "Accepted"
+                        status = "Processed"
+                        break
+                    case "2":
+                        status = "Pending"
+                        break
+                    case "3":
+                        status = "Rejected"
                         break
                     default:
                         status = "Rejected"
@@ -92,7 +98,7 @@ const ToktokWalletCashOutLogs = ({navigation})=> {
 
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack color={COLORS.YELLOW}/>,
-        headerTitle: ()=> <HeaderTitle label={['Cash Out Logs','']}/>,
+        headerTitle: ()=> <HeaderTitle label={['Cash Out','']}/>,
     })
 
     const session = useSelector(state=>state.session)
