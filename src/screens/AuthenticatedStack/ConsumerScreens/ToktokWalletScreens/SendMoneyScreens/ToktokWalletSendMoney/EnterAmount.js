@@ -30,10 +30,10 @@ const EnterAmount = ({tokwaAccount , setSwipeEnabled , amount  ,setAmount , reci
                 
             }else if(amount < 1 && amount != ""){
                 setSwipeEnabled(false)
-                setErrorAmountMessage(`Please Enter atleast ${tokwaAccount.wallet.currency.code} 1.00`)
+                setErrorAmountMessage(`Please enter atleast ${tokwaAccount.wallet.currency.code} 1.00.`)
             }else{
                 setSwipeEnabled(false)
-                setErrorAmountMessage(amount == "" ? "" : "Insufficient Fund")
+                setErrorAmountMessage(amount == "" ? "" : "You do not have enough balance.")
             }
 
 

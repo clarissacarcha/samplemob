@@ -105,7 +105,7 @@ const ToktokWalletSecurityPinCode = ({navigation,route})=> {
 
             <View style={styles.content}>
                <View style={styles.pincodeContent}>
-                        <View style={{marginTop: 165, height: 200,width:width,alignItems:"center"}}>
+                        <View style={{marginTop: 165, height: 200,width:width,alignItems:"center",paddingHorizontal: 16,}}>
                                 <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L}}>Enter your pin</Text>
                                 <View style={{marginTop: 30,flexDirection:"row"}}>
                                     <NumberBoxes pinCode={pinCode} onNumPress={onNumPress}/>
@@ -128,7 +128,7 @@ const ToktokWalletSecurityPinCode = ({navigation,route})=> {
                                     />
                                 </View>
                                 {
-                                    pinCodeAttempts.visible && <Text style={{fontFamily: FONT.REGULAR,color:"red",alignSelf:"center",fontSize: FONT_SIZE.M}}>Invalid PIN , You can try {pinCodeAttempts.attempts} more times</Text>
+                                    pinCodeAttempts.visible && <Text style={{textAlign:"center",fontFamily: FONT.REGULAR,color:"red",alignSelf:"center",fontSize: FONT_SIZE.M}}>Invalid PIN , You can try {pinCodeAttempts.attempts} more times before your account will be temporarily on hold.</Text>
                                 }
                         </View>
                </View>

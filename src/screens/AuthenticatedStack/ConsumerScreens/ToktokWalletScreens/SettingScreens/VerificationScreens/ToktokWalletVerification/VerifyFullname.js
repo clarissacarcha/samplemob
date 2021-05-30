@@ -126,7 +126,7 @@ const VerifyFullname = ()=> {
                             height: SIZE.FORM_HEIGHT,
                             justifyContent: 'center',
                             alignItems: 'center',
-                            paddingTop: 4.4,
+                            paddingTop: 4.3,
                             backgroundColor:"lightgray",
                           }}>
                           <Text style={{ marginHorizontal: 6}}>+63</Text>

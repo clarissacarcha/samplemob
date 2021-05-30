@@ -1,6 +1,6 @@
 import React , {useState,useEffect} from 'react'
 import {View,Text,StyleSheet,TouchableHighlight,Alert,BackHandler,KeyboardAvoidingView,Platform} from 'react-native'
-import { HeaderTitle } from '../../../../../../../components'
+import { AlertOverlay, HeaderTitle } from '../../../../../../../components'
 import { TOKTOK_WALLET_GRAPHQL_CLIENT } from '../../../../../../../graphql'
 import { PATCH_PIN_CODE } from '../../../../../../../graphql/toktokwallet'
 import {useMutation} from '@apollo/react-hooks'
@@ -102,6 +102,7 @@ const ToktokWalletUpdatePin =  ({navigation})=> {
 
     return (
         <>
+            <AlertOverlay visible={loading} />
             <LeavePromptModal
                 visible={LeaveModalvisible}
                 setVisible={setLeaveModalVisible}

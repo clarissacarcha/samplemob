@@ -12,6 +12,7 @@ import { useAlert } from '../../../../../hooks'
 
 //SELF IMPORTS
 import SuccessfulModal from './SuccessfulModal'
+import { AlertOverlay } from '../../../../../components'
 
 const ToktokWalletLinkAccount = ({navigation, route})=> {
 
@@ -44,7 +45,8 @@ const ToktokWalletLinkAccount = ({navigation, route})=> {
             patchLinkTokwaAccount({
                 variables: {
                     input: {
-                        tokwaAccountId: tokwaAccount.id
+                        tokwaAccountId: tokwaAccount.id,
+                        linkLimit: tokwaAccount.person.accountType.linkLimit
                     }
                 }
             })
@@ -101,6 +103,7 @@ const ToktokWalletLinkAccount = ({navigation, route})=> {
 
     return (
         <>
+        <AlertOverlay visible={loading} />
         <SuccessfulModal visible={successModalVisible} setVisible={setSuccessModalVisible}/>
         <Separator/>
         <View 

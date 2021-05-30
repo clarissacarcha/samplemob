@@ -23,8 +23,8 @@ const RejectedKyc = ()=> {
             <Separator/>
             <View style={styles.content}>
                 <View style={{alignItems:"center"}}>
-                <Text style={styles.verifyWalletText}><Text style={{ ...styles.verifyWalletText , color: COLOR.YELLOW}}>toktok</Text><Text style={{...styles.verifyWalletText, color: COLOR.ORANGE}}>wallet</Text> Application has been rejected!</Text>
-                <Text style={styles.clickVerifyText}>Click verify now to try again.</Text>
+                <Text style={styles.verifyWalletText}><Text style={{ ...styles.verifyWalletText , color: COLOR.YELLOW}}>toktok</Text><Text style={{...styles.verifyWalletText, color: COLOR.ORANGE}}>wallet</Text> application has been rejected</Text>
+                <Text style={styles.clickVerifyText}>Please check your email for further details or click Verify Now to try again.</Text>
                     
                 </View>
             </View>
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     },  
     content: {
         flex: 1,
-        padding: 10,
+        padding: 16,
         paddingTop: 30,
     },
     verifyWalletText: {
@@ -60,6 +60,7 @@ const styles = StyleSheet.create({
         textAlign:'center'
     },
     clickVerifyText: {
+        marginTop: 5,
         fontFamily: FONT.REGULAR,
         fontSize: FONT_SIZE.S,
         textAlign:'center'

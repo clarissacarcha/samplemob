@@ -12,6 +12,7 @@ import {DisabledButton, SwipeProceedButton} from '../../Components'
 //SELF IMPORTS
 import SuccessfulModal from '../../SendMoneyScreens/ToktokWalletSendMoney/SuccessfulModal'
 import { YellowButton } from '../../../../../../revamp'
+import { AlertOverlay } from '../../../../../../components'
 
 const {width,height} = Dimensions.get("window")
 
@@ -31,7 +32,7 @@ const ProceedButton = ({
         createdAt: ""
     })
 
-    const [postFundTransfer] = useMutation(POST_FUND_TRANSFER, {
+    const [postFundTransfer , {data ,error ,loading}] = useMutation(POST_FUND_TRANSFER, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         variables: {
             input: {
@@ -80,6 +81,7 @@ const ProceedButton = ({
 
     return (
         <>
+           <AlertOverlay visible={loading} />
             <SuccessfulModal 
                 successModalVisible={successModalVisible}
                 amount={amount} 

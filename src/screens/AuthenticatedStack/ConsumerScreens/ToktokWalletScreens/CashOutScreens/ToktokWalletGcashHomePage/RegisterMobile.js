@@ -12,6 +12,7 @@ import {useNavigation} from '@react-navigation/native'
 
 //SELF IMPORTS
 import ModalLinkMobile from "./ModalLinkMobile";
+import { AlertOverlay } from '../../../../../../components'
 
 const RegisterMobile = ({provider})=> {
 
@@ -33,7 +34,7 @@ const RegisterMobile = ({provider})=> {
         if(mobile.length > 10 && mobile.slice(0,2) == "09"){
             setErrorMessage("")
         }else{
-            setErrorMessage("Please enter a valid mobile number.")
+            setErrorMessage("Mobile number must be valid.")
         }
 
         if(mobile.length > 11) return
@@ -84,6 +85,7 @@ const RegisterMobile = ({provider})=> {
 
     return (
         <>
+        <AlertOverlay visible={loading} />
         <Separator />
         <ModalLinkMobile visible={showLinkModal} setVisible={setShowLinkModal} mobile={mobileNo} provider={provider}/>
         {/* <View style={styles.header}>

@@ -33,9 +33,12 @@ const ModalLinkTokwaAccount = ({visible,setVisible})=> {
             // onErrorAlert({alert,error})
             if(error.graphQLErrors.length > 0){
                 error.graphQLErrors.map((err)=> {
-                    setErrorMessage(err.message)
+                    setErrorMessage("Account doesn't exist")
                 })
+                return
             }
+
+            onErrorAlert({alert,error})
 
         }
     })
@@ -52,7 +55,7 @@ const ModalLinkTokwaAccount = ({visible,setVisible})=> {
         if(mobile.length > 10 && mobile.slice(0,2) == "09"){
             setErrorMessage("")
         }else{
-            setErrorMessage("Please enter a valid mobile number.")
+            setErrorMessage("Mobile number must be valid.")
         }
 
         if(mobile.length > 11) return

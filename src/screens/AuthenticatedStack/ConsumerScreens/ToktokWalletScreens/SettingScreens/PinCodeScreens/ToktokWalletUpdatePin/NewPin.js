@@ -38,7 +38,7 @@ const NewPin = ({pinCode,setPinCode , pageIndex, setPageIndex})=> {
                                 setPinCode(num);
                             }
                             }}
-                            // onSubmitEditing={onSubmit}
+                            onSubmitEditing={pinCode.length == 6 ? onSubmit: null}
                         />
 
                         <TouchableOpacity

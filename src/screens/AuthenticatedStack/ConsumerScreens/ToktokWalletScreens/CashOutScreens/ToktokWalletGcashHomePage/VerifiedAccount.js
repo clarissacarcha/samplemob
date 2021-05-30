@@ -14,6 +14,7 @@ import { onErrorAlert } from '../../../../../../util/ErrorUtility'
 
 //SELF IMPORTS
 import SuccessfulCashOutModal from "./SuccessfulCashOutModal";
+import { AlertOverlay } from '../../../../../../components'
 
 const VerifiedAccount = ({record,provider})=> {
 
@@ -82,6 +83,7 @@ const VerifiedAccount = ({record,provider})=> {
 
     return (
         <>
+        <AlertOverlay visible={loading} />
         <Separator/>
         <SuccessfulCashOutModal 
              visible={successModalVisible}

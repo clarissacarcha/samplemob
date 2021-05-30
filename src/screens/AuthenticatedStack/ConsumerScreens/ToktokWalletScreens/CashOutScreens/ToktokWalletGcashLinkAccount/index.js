@@ -11,6 +11,7 @@ import { useAlert } from '../../../../../../hooks/useAlert'
 
 //SELF IMPORTS
 import SuccessfulModal from "./SuccessfulModal";
+import { AlertOverlay } from '../../../../../../components'
 
 
 
@@ -85,6 +86,7 @@ const ToktokWalletGcashLinKAccount = ({navigation,route})=> {
 
     return (
         <>
+         <AlertOverlay visible={loading} />
         <Separator/>
         <SuccessfulModal visible={modalSuccessVisible} setVisible={setModalSuccessVisible} provider={provider}/>
         <KeyboardAvoidingView 
@@ -113,12 +115,12 @@ const ToktokWalletGcashLinKAccount = ({navigation,route})=> {
                             }}
                             // onSubmitEditing={onSubmit}
                         />
-                     <View style={{width:"100%",marginTop: 20}}>
+                     {/* <View style={{width:"100%",marginTop: 20}}>
                         <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Didn't receive it?</Text>
                         <TouchableOpacity onPress={CreateVerificationCode}>
                             <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Request a new code</Text>
                         </TouchableOpacity>
-                    </View>
+                    </View> */}
             </View>
             <View style={{height: SIZE.BUTTON_HEIGHT}}> 
             {

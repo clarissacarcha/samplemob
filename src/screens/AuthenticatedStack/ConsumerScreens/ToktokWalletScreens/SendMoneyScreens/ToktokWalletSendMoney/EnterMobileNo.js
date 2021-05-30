@@ -34,7 +34,7 @@ const EnterMobileNo = ({
                 err.graphQLErrors.map((error)=> {
                     if(error.message == "Person doesn't registered in toktokwallet") {
                         setProceed(false)
-                        return setErrorMessage("Recipient does not have toktokwallet")
+                        return setErrorMessage("Recipient must have toktokwallet account.")
                     }
                    
                 })
@@ -62,7 +62,7 @@ const EnterMobileNo = ({
         if(checkMobileFormat(mobile)) {
             checkIFSameNumber(mobile)
         }else{
-            setErrorMessage("Please enter a valid mobile number.")
+            setErrorMessage("Mobile number must be valid.")
             setProceed(false)
         }
 

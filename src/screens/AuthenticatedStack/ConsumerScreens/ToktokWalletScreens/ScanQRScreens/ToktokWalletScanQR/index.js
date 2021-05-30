@@ -51,13 +51,13 @@ const ToktokWalletScanQR = ({navigation,route})=> {
             if(err.graphQLErrors.length > 0){
                 err.graphQLErrors.map((error)=> {
                     if(error.message == "Person doesn't registered in toktokwallet") {
-                        return alertHook({message:"This QR code is invalid"})
+                        return alertHook({message:"QR code must be valid"})
                     }
                    
                 })
                 return
             }
-            return alertHook({message:"This QR code is invalid"})
+            return alertHook({message:"Qr code must be valid"})
             onError(err)
         },
         onCompleted: ({getAccount})=> {

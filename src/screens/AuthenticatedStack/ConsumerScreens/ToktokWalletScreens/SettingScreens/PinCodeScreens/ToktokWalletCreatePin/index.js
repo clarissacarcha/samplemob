@@ -1,6 +1,6 @@
 import React , {useState , useEffect} from 'react'
 import {View,Text,StyleSheet,TouchableHighlight,Alert,BackHandler,KeyboardAvoidingView,Platform} from 'react-native'
-import { HeaderTitle } from '../../../../../../../components'
+import { AlertOverlay, HeaderTitle } from '../../../../../../../components'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from '../../../../../../../graphql'
 import { PATCH_PIN_CODE} from '../../../../../../../graphql/toktokwallet'
@@ -115,6 +115,7 @@ const ToktokWalletCreatePin = ({navigation,route})=> {
 
     return (
       <>
+        <AlertOverlay visible={loading} />
         <LeavePromptModal
             visible={LeaveModalvisible}
             setVisible={setLeaveModalVisible}
