@@ -1,4 +1,4 @@
-export const APP_VERSION = '1.15.4';
+export const APP_VERSION = '1.15.5';
 export const APP_FLAVOR = 'C'; // C = Customer | D = Driver
 export const ACCOUNT_TYPE = 1; // 1 = Customer | 2 = Driver
 export const MAPS_API_KEY = 'AIzaSyDhlw6pbriuwr_Mb6KYkVlBar7KD1KTrOs';
