@@ -11,10 +11,8 @@ export const POST_CASH_OUT = gql`
     }
 ` 
 export const GET_CASH_OUTS = gql`
-      query {
-        getCashOuts {
-            logDate
-            logs {
+      query getCashOuts($input: GetCashOutsInput){
+        getCashOuts(input: $input) {
                 id
                 amount
                 isExported
@@ -24,7 +22,6 @@ export const GET_CASH_OUTS = gql`
                 cashOutProviderId
                 createdAt
                 updatedAt
-            }
         }
     }
 ` 

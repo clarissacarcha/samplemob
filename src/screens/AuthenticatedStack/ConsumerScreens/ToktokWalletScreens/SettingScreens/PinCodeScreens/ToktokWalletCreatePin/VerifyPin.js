@@ -11,6 +11,19 @@ import { YellowButton } from '../../../../../../../revamp';
 import { useAlert } from '../../../../../../../hooks';
 import { Alert } from 'react-native';
 
+const numWordArray = {
+    "1": "one",
+    "2": "two",
+    "3": "three",
+    "4": "four",
+    "5": "five",
+    "6": "six",
+    "7": "seven",
+    "8": "eight",
+    "9": "nine",
+    "10": "ten"
+}
+
 const VerifyPin = ({pageIndex,setPageIndex})=> {
 
     const [showPin,setShowPin] = useState(false)
@@ -77,7 +90,7 @@ const VerifyPin = ({pageIndex,setPageIndex})=> {
         <View style={styles.container}>
             <ScrollView style={styles.content}>
                     <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 20,alignSelf:"center"}}>Enter old PIN</Text>
-                    <View style={{position: 'relative',marginTop: 50,}}>
+                    <View style={{position: 'relative',marginTop: 40,padding: 16,}}>
                         <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={showPin}/>
                         <TextInput
                             caretHidden
@@ -95,7 +108,7 @@ const VerifyPin = ({pageIndex,setPageIndex})=> {
                             onSubmitEditing={onSubmit}
                         />
                          {
-                            pinCodeAttempts.visible && <Text style={{fontFamily: FONT.REGULAR,color:"red",alignSelf:"center",fontSize: 12}}>Invalid PIN , You can try {pinCodeAttempts.attempts} more times</Text>
+                            pinCodeAttempts.visible && <Text style={{fontFamily: FONT.REGULAR,color:"red",alignSelf:"center",fontSize: 12,textAlign:'center'}}>Incorrect PIN. You can try {numWordArray[pinCodeAttempts.attempts]} ({pinCodeAttempts.attempts}) more {pinCodeAttempts.attempts == 1 ? "time" : "times"} before your account will be temporarily blocked.</Text>
                         }
 
                         <TouchableOpacity

@@ -52,7 +52,7 @@ const Confirm = ({session})=> {
         onCompleted: (response)=> {
             let result = response.postKycRegister
             if(result.status == 2){
-                navigation.pop()
+                navigation.pop(2)
                 navigation.navigate("ToktokWalletVerifyResult")
                 // navigation.replace("ToktokWalletVerifyResult")
             }

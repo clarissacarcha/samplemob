@@ -105,6 +105,15 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
         if(!check){
             setBoxColor(COLOR.YELLOW)
             console.log(JSON.stringify(e))
+
+
+            if(e.faces[0].leftEyeOpenProbability > 0.6){
+                setLeftEyeOpen(true)
+            }
+
+            if(e.faces[0].smilingProbability < 0.5){
+                setCheckNotSmiling(true)
+            }
             
             if(!checkSmile){
                 setMessage({
@@ -117,14 +126,6 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
                 return
             }
 
-            if(e.faces[0].leftEyeOpenProbability > 0.6){
-                setLeftEyeOpen(true)
-            }
-
-            if(e.faces[0].smilingProbability < 0.5){
-                setCheckNotSmiling(true)
-            }
-
             // if(!leftEyeWink){
             //     setMessage({
             //         msg: `Try to blink your left eye`,
@@ -135,7 +136,7 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
             //     }
             //     return
             // }
-            // if(checkSmile && leftEyeWink && leftEyeWink){
+            // if(checkSmile && checkNotSmiling && setLeftEyeOpen && setLeftEyeWink){
             //     setMessage({
             //         msg: `Don't move , Scanning Face`,
             //         icon: null

@@ -1,7 +1,7 @@
 import React , {useState} from 'react'
 import {View,StyleSheet,ActivityIndicator,Text,TextInput,Alert,Image} from 'react-native'
 import { YellowButton } from '../../../../../../revamp'
-import { FONT, FONT_SIZE, SIZE } from '../../../../../../res/variables'
+import { COLOR, FONT, FONT_SIZE, SIZE } from '../../../../../../res/variables'
 import { DisabledButton, Separator } from '../../Components'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from '../../../../../../graphql'
 import {GET_GCASH_ENROLLMENT_RECORD} from '../../../../../../graphql/toktokwallet'
@@ -101,14 +101,14 @@ const RegisterMobile = ({provider})=> {
             <View style={styles.content}>
                 <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Mobile Number</Text>
                 <TextInput 
-                    style={styles.input}
+                    style={[styles.input, {borderWidth: 1, borderColor: errorMessage != "" ? COLOR.RED : "transparent"}]}
                     placeholder="Enter your GCash mobile number here"
                     keyboardType="number-pad"
                     value={mobileNo}
                     onChangeText={changeMobileNo}
                 />
-                <Text style={{fontFamily: FONT.REGULAR,color:"red",fontSize: FONT_SIZE.S}}>{errorMessage}</Text>
-                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S}}>Note: Make sure that number is existing GCash account.</Text>
+                <Text style={{fontFamily: FONT.REGULAR,color:COLOR.RED,fontSize: FONT_SIZE.S}}>{errorMessage}</Text>
+                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S}}>Note: Make sure that number is an existing GCash account.</Text>
             </View>
             <View style={styles.proceedBtn}>
                 {

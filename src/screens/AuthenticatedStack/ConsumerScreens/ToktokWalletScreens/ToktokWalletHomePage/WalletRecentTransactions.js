@@ -15,6 +15,11 @@ const WalletRecentTransactions = ()=> {
     const {data,error,loading} = useQuery(GET_TRANSACTIONS, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         fetchPolicy: "network-only",
+        variables: {
+            input: {
+                pageIndex: 0
+            }
+        },
         onCompleted: ({getTransactions})=> {
             // console.log(JSON.stringify(getTransactions))
         }
@@ -72,9 +77,9 @@ const WalletRecentTransactions = ()=> {
                         showsVerticalScrollIndicator={false}
                         scrollEnabled={true}
                         data={data.getTransactions.recentTransactions}
-                        keyExtractor={item=>item.logDate}
+                        keyExtractor={item=>item.id}
                         renderItem={({item,index})=>{
-                            return <WalletLog key={`recentLog${index}`} transactionDate={item.logDate} transactionItems={item.logs} index={index}/>
+                            return <WalletLog key={`recentLog${index}`} item={item} itemsLength={data.getTransactions.recentTransactions} index={index}/>
                         }}
                     />
             </View>

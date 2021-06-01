@@ -95,8 +95,8 @@ const ToktokWalletGcashLinKAccount = ({navigation,route})=> {
             // keyboardVerticalOffset={90} 
             behavior={Platform.OS === "ios" ? "padding" : "height"} 
         >
-            <View style={{flex: 1,alignItems:"center"}}>
-                    <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L}}>Enter verification code sent to</Text>
+            <View style={{flex: 1,alignItems:"center", marginTop: 40}}>
+                    <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L}}>Enter OTP code sent to</Text>
                     <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.L,marginBottom: 20,}}>{mobile}</Text>
 
                     <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={true}/>
@@ -115,12 +115,12 @@ const ToktokWalletGcashLinKAccount = ({navigation,route})=> {
                             }}
                             // onSubmitEditing={onSubmit}
                         />
-                     {/* <View style={{width:"100%",marginTop: 20}}>
-                        <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Didn't receive it?</Text>
-                        <TouchableOpacity onPress={CreateVerificationCode}>
-                            <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Request a new code</Text>
+                        <TouchableOpacity
+                                style={{marginTop: 18,paddingVertical: 10,alignItems: "center"}}
+                                onPress={CreateVerificationCode}
+                        >
+                                <Text style={{color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>Didn't get code? Tap here to resend.</Text>
                         </TouchableOpacity>
-                    </View> */}
             </View>
             <View style={{height: SIZE.BUTTON_HEIGHT}}> 
             {

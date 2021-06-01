@@ -3,8 +3,7 @@ import {View,Text,StyleSheet,Platform,Dimensions,StatusBar,Image} from 'react-na
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import RNFS from 'react-native-fs'
 import {YellowButton } from '../../../../../../../revamp';
-import { COLOR, COLORS, FONTS, SIZES } from '../../../../../../../res/constants';
-
+import { COLOR, FONT, FONT_SIZE } from '../../../../../../../res/variables';
 
 
 const VerifyPendingScreen = ({navigation})=> {
@@ -23,7 +22,7 @@ const VerifyPendingScreen = ({navigation})=> {
                     <Text style={styles.titleText}>Success!</Text>
                 </View>
                 <View style={{padding: 8}}>
-                    <Text style={{color: "gray",fontFamily: FONTS.REGULAR , fontSize: SIZES.M}}>
+                    <Text style={{fontFamily: FONT.REGULAR , fontSize: FONT_SIZE.M}}>
                         Please wait for the approval of your verification.
                     </Text>
                 </View>
@@ -46,21 +45,20 @@ export default VerifyPendingScreen
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: COLORS.WHITE
+        backgroundColor: COLOR.WHITE
     },
     checkIcon: {
         height: 98,
         width: 98,
-        backgroundColor: COLORS.YELLOW,
+        backgroundColor: COLOR.YELLOW,
         borderRadius: 100,
         justifyContent:"center",
         alignItems:"center"
     },  
     titleText: {
         marginTop: 17,
-        fontSize: SIZES.XL,
-        fontFamily: FONTS.BOLD,
-        color: COLORS.DARK,
+        fontSize: FONT_SIZE.XL,
+        fontFamily: FONT.BOLD,
     },
     actionBtn: {
         height: 70,

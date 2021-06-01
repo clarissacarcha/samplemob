@@ -11,3 +11,4 @@ export * from "./SwipeProceedButton";
 export * from "./DisabledButton";
 export * from "./TransactionDetails";
 export * from "./LeavePromptModal";
+export * from "./ModalPaginationLoading";

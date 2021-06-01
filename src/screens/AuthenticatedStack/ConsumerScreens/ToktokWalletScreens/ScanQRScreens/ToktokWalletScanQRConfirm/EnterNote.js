@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingHorizontal:16,
-        marginTop: 20
+        marginTop: 10
     },
     input: {
         height: INPUT_HEIGHT,

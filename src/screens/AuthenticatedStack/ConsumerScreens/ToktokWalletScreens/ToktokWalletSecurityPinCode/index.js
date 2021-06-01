@@ -11,6 +11,19 @@ import { DisabledButton } from '../Components';
 
 const {height,width} = Dimensions.get("window")
 
+const numWordArray = {
+    "1": "one",
+    "2": "two",
+    "3": "three",
+    "4": "four",
+    "5": "five",
+    "6": "six",
+    "7": "seven",
+    "8": "eight",
+    "9": "nine",
+    "10": "ten"
+}
+
 const NumberBox = ({onPress,value}) => (
     <TouchableHighlight onPress={onPress} underlayColor={COLOR.YELLOW} style={{borderRadius: 10,marginHorizontal: 5,}}>
       <View style={styles.inputView}>
@@ -128,7 +141,7 @@ const ToktokWalletSecurityPinCode = ({navigation,route})=> {
                                     />
                                 </View>
                                 {
-                                    pinCodeAttempts.visible && <Text style={{textAlign:"center",fontFamily: FONT.REGULAR,color:"red",alignSelf:"center",fontSize: FONT_SIZE.M}}>Invalid PIN , You can try {pinCodeAttempts.attempts} more times before your account will be temporarily on hold.</Text>
+                                    pinCodeAttempts.visible && <Text style={{fontFamily: FONT.REGULAR,color:"red",alignSelf:"center",fontSize: 12,textAlign:'center'}}>Incorrect PIN. You can try {numWordArray[pinCodeAttempts.attempts]} ({pinCodeAttempts.attempts}) more {pinCodeAttempts.attempts == 1 ? "time" : "times"} before your account will be temporarily blocked.</Text>
                                 }
                         </View>
                </View>
