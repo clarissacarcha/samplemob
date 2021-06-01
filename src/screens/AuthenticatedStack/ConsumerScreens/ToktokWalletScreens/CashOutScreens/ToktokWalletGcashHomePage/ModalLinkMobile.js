@@ -28,7 +28,8 @@ const ModalLinkMobile = ({visible,setVisible,mobile,provider})=> {
             <View style={styles.modalContent}>
                 <View style={styles.modalBody}>
                     <View style={{flex: 1,justifyContent:"center",alignItems:"center"}}>
-                            <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L, textAlign:"center"}}>Link this GCash number to your toktokwallet account?</Text>
+                            <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M, textAlign:"center"}}>Are you sure you want to link this GCash account to your toktokwallet?</Text>
+                            <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S ,textAlign:"center"}}>Linking an account leads to faster fund transfer transaction next time.</Text>
                     </View>
                     <View style={{height: SIZE.FORM_HEIGHT,justifyContent:"flex-end",flexDirection:"row"}}>
                             {/* <YellowButton onPress={openLinkPage} label="Link"/> */}
@@ -77,8 +78,8 @@ const styles = StyleSheet.create({
         backgroundColor:"rgba(34, 34, 34, 0.5)"
     },
     modalBody: {
-        height: 150,
-        width: width * 0.9,
+        height: 160,
+        width: width * 0.8,
         backgroundColor: "white",
         borderRadius: SIZE.BORDER_RADIUS,
         padding: 16,

@@ -19,10 +19,8 @@ export const POST_CASH_IN_SMS = gql`
 `
 
 export const GET_CASH_INS = gql`
-    query {
-        getCashIns {
-            logDate
-            logs {
+    query getCashIns($input: GetCashInsInput) {
+        getCashIns(input: $input) {
                 id
                 amount
                 referenceNumber
@@ -34,7 +32,6 @@ export const GET_CASH_INS = gql`
                 fatherId
                 createdAt
                 updatedAt
-            }
         }
     }
 `

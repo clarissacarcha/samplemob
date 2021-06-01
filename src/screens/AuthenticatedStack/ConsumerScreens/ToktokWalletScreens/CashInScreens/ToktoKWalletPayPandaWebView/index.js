@@ -4,9 +4,6 @@ import {useNavigation,useRoute} from '@react-navigation/native'
 import {MEDIUM,DARK,COLOR,ORANGE, FONT_MEDIUM} from '../../../../../../res/constants'
 import WebView from 'react-native-webview'
 import {useSelector} from 'react-redux'
-import {TOKTOK_WALLET_GRAPHQL_CLIENT} from '../../../../../../graphql'
-import {POST_CASH_IN_SMS} from '../../../../../../graphql/toktokwallet'
-import {useMutation} from '@apollo/react-hooks'
 
 //SELF IMPORTS
 import SuccessfulModal from './SuccessfulModal'
@@ -60,16 +57,6 @@ const ToktoKWalletPayPandaWebView = ()=> {
         }
     },[])
 
-    const [postCashInSms , {data,error,loading}] = useMutation(POST_CASH_IN_SMS, {
-        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
-        onCompleted: ({postCashInSms})=> {
-            console.log(postCashInSms)
-        },
-        onError: (error)=> {
-            console.log(error)
-        }
-    })
-
 
     const LoadingIndicator = ()=> (
         <View style={{
@@ -114,14 +101,6 @@ const ToktoKWalletPayPandaWebView = ()=> {
                             const status = /(?:\&status=).*(?=\&refno)/.exec(url)
 
                             if(checkurl != url){     
-                                postCashInSms({
-                                    variables: {
-                                        input: {
-                                            referenceNumber: route.params.refNo,
-                                            status: status[0].slice(8)
-                                        }
-                                    }
-                                })  
                                 setCashInLogParams({
                                     status: status[0].slice(8),
                                     referenceNumber: route.params.refNo,
@@ -146,14 +125,6 @@ const ToktoKWalletPayPandaWebView = ()=> {
                             const status = /(?:\&status=).*(?=\&signature)/.exec(url)
 
                             if(checkurl != url){       
-                                postCashInSms({
-                                    variables: {
-                                        input: {
-                                            referenceNumber: route.params.refNo,
-                                            status: status[0].slice(8)
-                                        }
-                                    }
-                                })
                                 setCashInLogParams({
                                     status: status[0].slice(8),
                                     referenceNumber: route.params.refNo,

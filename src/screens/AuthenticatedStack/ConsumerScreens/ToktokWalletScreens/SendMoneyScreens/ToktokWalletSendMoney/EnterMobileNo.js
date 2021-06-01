@@ -133,7 +133,7 @@ const EnterMobileNo = ({
                     <>
                     { recipientDetails.id && proceed && <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>{`${recipientDetails.person.firstName} ${recipientDetails.person.lastName[0]}.`}</Text>}
                     <Text style={{fontFamily: FONT.REGULAR,fontSize: recipientDetails.id && proceed ? FONT_SIZE.M : FONT_SIZE.M,color:"dimgray"}}>{mobileNo == "" ? "Enter Recipient Number" : mobileNo}</Text>
-                    { errorMessage != "" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.S,color:"red",marginTop: 0}}>{errorMessage}</Text>}
+                    { errorMessage != "" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.S,color:COLOR.RED,marginTop: 0}}>{errorMessage}</Text>}
 
                 
                     </>

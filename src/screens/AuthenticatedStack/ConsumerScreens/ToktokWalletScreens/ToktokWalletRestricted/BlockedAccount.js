@@ -24,8 +24,7 @@ const BlockedAccount = ()=> {
             <View style={styles.content}>
                 <View style={{alignItems:"center"}}>
                     <Text style={styles.verifyWalletText}>STOP! your <Text style={{...styles.verifyWalletText, color: COLOR.YELLOW}}>toktok</Text><Text style={{...styles.verifyWalletText, color: COLOR.ORANGE}}>wallet</Text> account has been blocked</Text>
-                    <Text style={styles.clickVerifyText}>To reactivate and know more details, please contact</Text>
-                    
+                    <Text style={styles.clickVerifyText}>To reactivate and know more details, please contact (02) 84-248-617 or email at hello@toktok.ph</Text>
                 </View>
             </View>
 

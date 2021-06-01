@@ -110,8 +110,8 @@ const ToktokWalletLinkAccount = ({navigation, route})=> {
             style={styles.container}
         >
 
-            <View style={{flex: 1,alignItems:"center"}}>
-                    <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L}}>Enter verification code sent to</Text>
+            <View style={{flex: 1,alignItems:"center",marginTop: 40}}>
+                    <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L}}>Enter OTP code sent to</Text>
                     <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.L,marginBottom: 20,}}>{tokwaAccount.mobileNumber}</Text>
 
                     <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={true}/>
@@ -130,12 +130,12 @@ const ToktokWalletLinkAccount = ({navigation, route})=> {
                             }}
                             // onSubmitEditing={onSubmit}
                         />
-                    {/* <View style={{width:"100%",marginTop: 20}}>
-                        <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Didn't receive it?</Text>
-                        <TouchableOpacity onPress={CreateVerificationCode}>
-                            <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Request a new code</Text>
-                        </TouchableOpacity>
-                    </View> */}
+                    <TouchableOpacity
+                                style={{marginTop: 18,paddingVertical: 10,alignItems: "center"}}
+                                onPress={CreateVerificationCode}
+                        >
+                                <Text style={{color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>Didn't get code? Tap here to resend.</Text>
+                     </TouchableOpacity>
             </View>
             <View style={{height: SIZE.BUTTON_HEIGHT}}> 
             {

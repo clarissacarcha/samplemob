@@ -2,37 +2,25 @@ import React , {useState , useEffect} from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,Image,ActivityIndicator , FlatList} from 'react-native'
 import {HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../../../components'
 import moment from 'moment'
-import { COLOR, COLORS, FONTS, SIZES } from '../../../../../../res/constants'
+import { COLOR, FONT, FONT_SIZE } from '../../../../../../res/variables'
 import {useLazyQuery , useQuery} from '@apollo/react-hooks'
 import {GET_CASH_IN_LOGS ,TOKTOK_WALLET_GRAPHQL_CLIENT } from '../../../../../../graphql'
 import { GET_CASH_INS} from '../../../../../../graphql/toktokwallet'
 import {onError} from '../../../../../../util/ErrorUtility'
 import {useSelector} from 'react-redux'
 import { numberFormat } from '../../../../../../helper'
-import {Separator,FilterDateModal,TransactionDetails} from '../../Components'
+import {Separator,FilterDateModal,TransactionDetails, ModalPaginationLoading} from '../../Components'
 import { HeaderBack } from '../../../../../../revamp'
 
 
 const CashInLog = ({
-    transactionDate , 
-    transactionItems ,
+    item,
     index , 
     itemsLength,
     setTransactionInfo,
     setTransactionVisible
 })=> {
 
-    const dateValue = moment(transactionDate).tz("Asia/Manila").format("YYYY-MM-DD");
-    const phTodayDate = moment().tz("Asia/Manila").format("YYYY-MM-DD");
-    const phYesterdayDate = moment().subtract(1,"days").tz("Asia/Manila").format("YYYY-MM-DD");
-    let datedisplay = ''
-    if(dateValue == phTodayDate){
-      datedisplay = "Today"
-    }else if(dateValue == phYesterdayDate){
-        datedisplay = "Yesterday"
-    }else{
-        datedisplay = moment(transactionDate).tz("Asia/Manila").format('MMM DD YYYY');
-    }
 
     const ViewTransactionDetails = (refNo,refDate, transactionAmount , status)=> {
         setTransactionInfo({
@@ -46,64 +34,52 @@ const CashInLog = ({
         setTransactionVisible(true)
     }
 
+    let status
+    switch (item.status) {
+        case "0":
+            status = "Requested"
+            break;
+        case "1":
+            status = "Success"
+            break
+        case "2":
+            status = "Pending"
+            break
+        default:
+            status = "Failed"
+            break;
+    }
+
+    const refNo = item.referenceNumber
+    const refDate = moment(item.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')
+    const transactionAmount = `PHP ${numberFormat(item.amount)}`
+
     return (
-        <View style={[styles.transactionLogsContainer, {marginBottom: index == itemsLength - 1 ? 100 : 0}]}>
-            <Text style={{fontSize: SIZES.M,fontFamily: FONTS.BOLD,color: COLORS.DARK}}>{datedisplay}</Text>
-           {
-               transactionItems.map((item)=>{
-                let status
-                switch (item.status) {
-                    case "0":
-                        status = "Requested"
-                        break;
-                    case "1":
-                        status = "Success"
-                        break
-                    case "2":
-                        status = "Pending"
-                        break
-                    default:
-                        status = "Failed"
-                        break;
-                }
-
-                const refNo = item.referenceNumber
-                const refDate = moment(item.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')
-                const transactionAmount = `PHP ${numberFormat(item.amount)}`
-
-                return (
-                    <>
-                    {
-                        // item.trails[0].status != 0 &&
-                        <TouchableOpacity onPress={()=>ViewTransactionDetails(refNo,refDate, transactionAmount , status)} style={styles.transaction}>
+        <TouchableOpacity onPress={()=>ViewTransactionDetails(refNo,refDate, transactionAmount , status)} style={styles.transaction}>
                             <View style={styles.transactionDetails}>
-                                <Text style={{fontSize: SIZES.M,fontFamily: FONTS.REGULAR}}>Ref # {refNo}</Text>
-                                <Text style={{color: "#909294",fontSize: SIZES.M,marginTop: 0,fontFamily: FONTS.REGULAR}}>{status}</Text>
+                                <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Ref # {refNo}</Text>
+                                <Text style={{color: "#909294",fontSize: FONT_SIZE.M,marginTop: 0,fontFamily: FONT.REGULAR}}>{status}</Text>
                             </View>
                             <View style={styles.transactionAmount}>
-                                <Text style={{color: "#FCB91A",fontSize: SIZES.M,fontFamily: FONTS.REGULAR}}>{transactionAmount}</Text>
-                                <Text style={{color: "#909294",fontSize: SIZES.S,alignSelf: "flex-end",marginTop: 0,fontFamily: FONTS.REGULAR}}>{refDate}</Text>
+                                <Text style={{color: "#FCB91A",fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{transactionAmount}</Text>
+                                <Text style={{color: "#909294",fontSize: FONT_SIZE.S,alignSelf: "flex-end",marginTop: 0,fontFamily: FONT.REGULAR}}>{refDate}</Text>
                             </View>
-                        </TouchableOpacity>
-                    }
-                
-                    </>
-                )
-               })
-           }
-        </View>
+       </TouchableOpacity>
     )
 }
 
 const ToktokWalletCashInLogs = ({navigation})=> {
 
     navigation.setOptions({
-        headerLeft: ()=> <HeaderBack color={COLORS.YELLOW}/>,
+        headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
         headerTitle: ()=> <HeaderTitle label={['Cash In','']}/>,
     })
 
 
     const [transactionVisible,setTransactionVisible] = useState(false)
+    const [pageIndex,setPageIndex] = useState(0)
+    const [pageLoading,setPageLoading] = useState(false)
+    const [records,setRecords] = useState([])
     const [transactionInfo,setTransactionInfo] = useState({
         refNo: "",
         refDate: "",
@@ -113,24 +89,28 @@ const ToktokWalletCashInLogs = ({navigation})=> {
         status: "",
     })
 
-    const changeFilterDate = (key,val)=>{
-        setFilterDate((oldstate) => {
-            oldstate[key] = val
-            return {
-                ...oldstate,
-            }
-        })
-        setFilterType("All")
-    }
 
-
-    const {data,error,loading} = useQuery(GET_CASH_INS, {
+    const [getCashIns, {data,error,loading}] = useLazyQuery(GET_CASH_INS, {
         fetchPolicy: "network-only",
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({getCashIns})=> {
-            // console.log(getCashIns)
+            setRecords(state=> {
+                return [...state, ...getCashIns]
+            })
+            // setPageLoading(false)
         }
     })
+
+    useEffect(()=>{
+        getCashIns({
+            variables: {
+                input: {
+                    pageIndex: pageIndex
+                }
+            }
+        })
+        setPageLoading(loading)
+    },[pageIndex])
 
     return (
         <>
@@ -145,32 +125,36 @@ const ToktokWalletCashInLogs = ({navigation})=> {
             status={transactionInfo.status}
         />
         <Separator />
+        <ModalPaginationLoading visible={pageLoading}/>
         {
-            loading
+            loading && pageIndex == 0
             ?  <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                <ActivityIndicator size={24} color={COLOR} />
+                <ActivityIndicator size={24} color={COLOR.YELLOW} />
                </View>
             :  <View style={styles.container}>
                     <View style={styles.content}>
-                        <View style={{padding: 16}}>
                             <FlatList
                                 showsVerticalScrollIndicator={false}
-                                data={data.getCashIns}
-                                keyExtractor={item=>item.logDate}
+                                data={records}
+                                keyExtractor={item=>item.id}
                                 renderItem={({item,index})=>(
                                     <CashInLog 
                                         key={`cashin-log${index}`} 
-                                        transactionDate={item.logDate} 
-                                        transactionItems={item.logs}  
+                                        item={item}
                                         index={index} 
-                                        itemsLength={data.getCashIns.length}
+                                        itemsLength={records.length}
                                         setTransactionInfo={setTransactionInfo}
                                         setTransactionVisible={setTransactionVisible}
                                     />
                                 )}
+                                // onEndReached={()=>{
+                                //   if(!pageLoading) {
+                                //     console.log("REACH END")
+                                //     setPageIndex(state=>state+1)
+                                //   }
+                                // }}
+                                // onEndReachedThreshold={0.16}
                             />
-                        </View>
-                        
                     </View>
             </View>
         }
@@ -190,7 +174,7 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     content: {
-        marginTop: 10,
+       padding: 16,
     },
     filterType: {
         alignSelf: "flex-end",

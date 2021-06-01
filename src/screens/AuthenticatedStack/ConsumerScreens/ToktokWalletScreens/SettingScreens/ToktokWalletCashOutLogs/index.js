@@ -2,7 +2,7 @@ import React , {useState , useEffect} from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,Image,ActivityIndicator , FlatList} from 'react-native'
 import {HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../../../components'
 import moment from 'moment'
-import { COLOR, COLORS, FONTS, FONT_MEDIUM, FONT_REGULAR, SIZES } from '../../../../../../res/constants'
+import { COLOR, FONT, FONT_SIZE } from '../../../../../../res/variables'
 import {useLazyQuery,useQuery} from '@apollo/react-hooks'
 import {GET_CASH_IN_LOGS, GET_CASH_OUT_LOGS,TOKTOK_WALLET_GRAPHQL_CLIENT} from '../../../../../../graphql'
 import {GET_CASH_OUTS} from '../../../../../../graphql/toktokwallet'
@@ -15,25 +15,13 @@ import { MaskLeftZero } from '../../../../../../util/HelperUtility'
 
 
 const CashOutLog = ({
-    transactionDate , 
-    transactionItems , 
+    item,
     index , 
     itemsLength ,
     setTransactionInfo,
     setTransactionVisible 
 })=> {
 
-    const dateValue = moment(transactionDate).tz("Asia/Manila").format("YYYY-MM-DD");
-    const phTodayDate = moment().tz("Asia/Manila").format("YYYY-MM-DD");
-    const phYesterdayDate = moment().subtract(1,"days").tz("Asia/Manila").format("YYYY-MM-DD");
-    let datedisplay = ''
-    if(dateValue == phTodayDate){
-      datedisplay = "Today"
-    }else if(dateValue == phYesterdayDate){
-        datedisplay = "Yesterday"
-    }else{
-        datedisplay = moment(transactionDate).tz("Asia/Manila").format('MMM DD YYYY');
-    }
 
     const ViewTransactionDetails = (refNo,refDate, transactionAmount , status)=> {
         setTransactionInfo({
@@ -47,63 +35,56 @@ const CashOutLog = ({
         setTransactionVisible(true)
     }
 
+    let status
+    switch (item.status) {
+        case "0":
+            status = "Pending"
+            break;
+        case "1":
+            status = "Processed"
+            break
+        case "2":
+            status = "Pending"
+            break
+        case "3":
+            status = "Rejected"
+            break
+        default:
+            status = "Rejected"
+            break;
+    }
+
+    const refNo = MaskLeftZero(item.id)
+    const refDate = moment(item.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')
+    const transactionAmount = `PHP ${numberFormat(item.amount)}`
+
+
     return (
-        <View style={[styles.transactionLogsContainer, {marginBottom: index == itemsLength - 1 ? 100 : 0}]}>
-            <Text style={{fontSize: SIZES.M,fontFamily: FONTS.BOLD,color: COLORS.DARK}}>{datedisplay}</Text>
-           {
-               transactionItems.map((item)=>{
-
-                let status
-                switch (item.status) {
-                    case "0":
-                        status = "Pending"
-                        break;
-                    case "1":
-                        status = "Processed"
-                        break
-                    case "2":
-                        status = "Pending"
-                        break
-                    case "3":
-                        status = "Rejected"
-                        break
-                    default:
-                        status = "Rejected"
-                        break;
-                }
-
-                const refNo = MaskLeftZero(item.id)
-                const refDate = moment(item.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')
-                const transactionAmount = `PHP ${numberFormat(item.amount)}`
-
-                return (
-                    <TouchableOpacity onPress={()=>ViewTransactionDetails(refNo,refDate, transactionAmount , status)} style={styles.transaction}>
-                        <View style={styles.transactionDetails}>
-                            <Text style={{fontSize: SIZES.M,fontFamily: FONTS.REGULAR}}>Ref # {refNo}</Text>
-                            <Text style={{color: "#909294",fontSize: SIZES.M,marginTop: 0,fontFamily: FONTS.REGULAR}}>{status}</Text>
-                        </View>
-                        <View style={styles.transactionAmount}>
-                            <Text style={{color: "#FCB91A",fontSize: SIZES.M,fontFamily: FONTS.REGULAR}}>{transactionAmount}</Text>
-                            <Text style={{color: "#909294",fontSize: SIZES.S,alignSelf: "flex-end",marginTop: 0,fontFamily: FONTS.REGULAR}}>{refDate}</Text>
-                        </View>
-                    </TouchableOpacity>
-                )
-               })
-           }
-        </View>
+        <TouchableOpacity onPress={()=>ViewTransactionDetails(refNo,refDate, transactionAmount , status)} style={styles.transaction}>
+            <View style={styles.transactionDetails}>
+                <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Ref # {refNo}</Text>
+                <Text style={{color: "#909294",fontSize: FONT_SIZE.M,marginTop: 0,fontFamily: FONT.REGULAR}}>{status}</Text>
+            </View>
+            <View style={styles.transactionAmount}>
+                <Text style={{color: "#FCB91A",fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{transactionAmount}</Text>
+                <Text style={{color: "#909294",fontSize: FONT_SIZE.S,alignSelf: "flex-end",marginTop: 0,fontFamily: FONT.REGULAR}}>{refDate}</Text>
+            </View>
+        </TouchableOpacity>
     )
 }
 
 const ToktokWalletCashOutLogs = ({navigation})=> {
 
     navigation.setOptions({
-        headerLeft: ()=> <HeaderBack color={COLORS.YELLOW}/>,
+        headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
         headerTitle: ()=> <HeaderTitle label={['Cash Out','']}/>,
     })
 
     const session = useSelector(state=>state.session)
-
-
+    
+    const [records,setRecords] = useState([])
+    const [pageIndex,setPageIndex] = useState(0)
+    const [pageLoading,setPageLoading] = useState(false)
     const [transactionVisible,setTransactionVisible] = useState(false)
     const [transactionInfo,setTransactionInfo] = useState({
         refNo: "",
@@ -114,13 +95,24 @@ const ToktokWalletCashOutLogs = ({navigation})=> {
         status: "",
     })
 
-    const { data ,error , loading } = useQuery(GET_CASH_OUTS , {
+    const [getCashOuts ,{ data ,error , loading }] = useLazyQuery(GET_CASH_OUTS , {
         fetchPolicy: "network-only",
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({getCashOuts})=> {
-            console.log(getCashOuts)
+            setRecords(state=> [...state , ...getCashOuts])
+            setPageLoading(false)
         }
     })
+
+    useEffect(()=>{
+        getCashOuts({
+            variables: {
+                input: {
+                    pageIndex: pageIndex
+                }
+            }
+        })
+    },[pageIndex])
 
     return (
         <>
@@ -138,28 +130,36 @@ const ToktokWalletCashOutLogs = ({navigation})=> {
         {
             loading
             ?  <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                <ActivityIndicator size={24} color={COLOR} />
+                <ActivityIndicator size={24} color={COLOR.YELLOW} />
                </View>
             : <View style={styles.container}>
                     <View style={styles.content}>
-                        <View style={{padding: 16}}>
+                        
                             <FlatList
                                 showsVerticalScrollIndicator={false}
-                                data={data.getCashOuts}
-                                keyExtractor={item=>item.logDate}
+                                data={records}
+                                keyExtractor={item=>item.id}
                                 renderItem={({item,index})=>(
                                     <CashOutLog 
                                         key={`cashin-log${index}`} 
-                                        transactionDate={item.logDate} 
-                                        transactionItems={item.logs}  
+                                        item={item}
                                         index={index} 
-                                        itemsLength={data.getCashOuts.length}
+                                        itemsLength={records.length}
                                         setTransactionInfo={setTransactionInfo}
                                         setTransactionVisible={setTransactionVisible}
                                     />
                                 )}
+                                // onEndReached={()=>{
+                                //     setPageLoading(true)
+                                //     setPageIndex(state=>state+1)
+                                // }}
+                                // onEndReachedThreshold={10}
                             />
-                        </View>
+                              {
+                                    pageLoading &&  <View style={{justifyContent:"center",alignItems:"center",paddingHorizontal: 10,}}>
+                                                        <ActivityIndicator color={COLOR.YELLOW}/>
+                                                    </View>
+                                }
 
                     </View>
             </View>
@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     content: {
-        marginTop: 10,
+        padding: 16,
     },
     filterType: {
         alignSelf: "flex-end",

@@ -33,7 +33,7 @@ const ModalLinkTokwaAccount = ({visible,setVisible})=> {
             // onErrorAlert({alert,error})
             if(error.graphQLErrors.length > 0){
                 error.graphQLErrors.map((err)=> {
-                    setErrorMessage("Account doesn't exist")
+                    setErrorMessage("Account does not exist")
                 })
                 return
             }
@@ -99,14 +99,14 @@ const ModalLinkTokwaAccount = ({visible,setVisible})=> {
                             <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L, textAlign:"left",marginBottom: 15}}>Link your toktokwallet account</Text>
                             <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Mobile number</Text>
                             <TextInput 
-                                 style={styles.input} 
+                                 style={[styles.input, {borderWidth: 1, borderColor: errorMessage != "" ? COLOR.RED : "transparent"}]} 
                                  placeholder="Enter your toktokwallet mobile number"
                                  keyboardType="number-pad"
                                  placeholderTextColor={COLOR.DARK}
                                  value={mobileNo}
                                  onChangeText={changeMobileNo}
                             />
-                            <Text style={{fontFamily: FONT.REGULAR,color:"red",fontSize: FONT_SIZE.S}}>{errorMessage}</Text>
+                            <Text style={{fontFamily: FONT.REGULAR,color:COLOR.RED,fontSize: FONT_SIZE.S}}>{errorMessage}</Text>
                         </View>
                         <View style={{height: SIZE.FORM_HEIGHT,justifyContent:"flex-end",flexDirection:"row"}}>
                                 <TouchableOpacity 

@@ -55,7 +55,7 @@ const PendingKyc = ()=> {
                 <View style={{alignItems:"center"}}>
                     <Text style={styles.verifyWalletText}>Verify your <Text style={{color: COLOR.YELLOW}}>toktok</Text><Text style={{color: COLOR.ORANGE}}>wallet</Text></Text>
                     <Text style={styles.clickVerifyText}>Click the "Verify Now" button.</Text>
-                    <View style={{marginTop: 20}}>
+                    <View style={{marginTop: 40}}>
                         <Text style={styles.listItem}><VectorIcon name="check" size={13} iconSet={ICON_SET.FontAwesome5}/> Create your toktokwallet</Text>
                         <Text style={styles.listItem}><VectorIcon name="check" size={13} iconSet={ICON_SET.FontAwesome5}/> Secure your account and payments</Text>
                         <Text style={styles.listItem}><VectorIcon name="check" size={13} iconSet={ICON_SET.FontAwesome5}/> Enjoy convenient payment experience</Text>

@@ -25,17 +25,17 @@ const SuccessModal = ({modalVisible})=> {
                      <View style={{
                          justifyContent: "center",
                          alignItems: "center",
-                         height: 80,
-                         width: 80,
+                         height: 160,
+                         width: 160,
                          backgroundColor: "#FEEABA",
                          borderRadius: 100,
                          marginTop: 60,
                          marginBottom: 35,
                      }}>
-                         <Image style={{height: 40,width: 40}} source={require('../../../../../../../assets/icons/walletVerify.png')}/>
+                         <Image style={{height: 89,width: 89}} source={require('../../../../../../../assets/icons/walletVerify.png')}/>
                      </View>
-                     <Text style={{fontSize: SIZES.XL,fontFamily: FONTS.BOLD}}>toktokwallet PIN has been updated</Text>
-                     <Text style={{color: "#212529",marginTop:5,fontFamily: FONTS.REGULAR,fontSize: SIZES.M}}>Your toktokwallet is now safe.</Text>
+                     <Text style={{fontSize: SIZES.XL,fontFamily: FONTS.BOLD}}>Setup PIN Successful!</Text>
+                     <Text style={{color: "#212529",marginTop:5,fontFamily: FONTS.REGULAR,fontSize: SIZES.M,textAlign:'center'}}>You have secured your toktokwallet. Make sure to remember your PIN and do not share it with anyone.</Text>
                  </View>
                 
                 <View>
