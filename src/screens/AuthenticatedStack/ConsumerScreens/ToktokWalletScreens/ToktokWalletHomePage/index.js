@@ -32,7 +32,6 @@ const ToktokWalletHomePage = ({navigation,route})=> {
             }
         },
         onCompleted: async ({getUserToktokWalletData})=> {
-            console.log(JSON.stringify(getUserToktokWalletData))
             if( getUserToktokWalletData.accountToken ) {
                 await AsyncStorage.setItem('toktokWalletAccountToken', getUserToktokWalletData.accountToken);
             }

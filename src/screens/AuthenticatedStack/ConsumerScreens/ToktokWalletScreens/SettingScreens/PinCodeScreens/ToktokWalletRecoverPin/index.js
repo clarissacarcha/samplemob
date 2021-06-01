@@ -106,7 +106,7 @@ const ToktokWalletRecoverPin = ({navigation})=> {
             behavior={Platform.OS === "ios" ? "padding" : "height"} 
         >
                 <View style={{flex: 1,alignItems:"center",marginTop: 40}}>
-                    <Text style={{fontFamily: FONT.BOLD,fontSize: 16,color:"gray"}}>Enter verification code sent to</Text>
+                    <Text style={{fontFamily: FONT.BOLD,fontSize: 16}}>Enter OTP code sent to</Text>
                     <Text style={{fontFamily: FONT.REGULAR,fontSize: 16}}>{tokwaAccount.mobileNumber}</Text>
                     {/* <TextInput 
                         // autoFocus={true}
@@ -136,7 +136,15 @@ const ToktokWalletRecoverPin = ({navigation})=> {
                             // onSubmitEditing={onSubmit}
                         />
 
+                        <TouchableOpacity
+                                style={{marginTop: 18,paddingVertical: 10,alignItems: "center"}}
+                                onPress={getForgotAndRecoverOTPCode}
+                        >
+                                <Text style={{color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>Didn't get code? Tap here to resend.</Text>
+                        </TouchableOpacity>
+
                 </View>
+                       
                 {/* <View style={styles.bottomActions}>
                     <View style={{flex: 1,justifyContent:"center"}}>
                         <Text style={{fontFamily: FONT.REGULAR,fontSize: SIZES.M}}>Didn't receive it?</Text>

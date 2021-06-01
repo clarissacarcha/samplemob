@@ -115,7 +115,7 @@ const MyQRCode = ({visible,setVisible,tokwaAccount})=> {
        
         viewshotRef.current.capture().then(async (uri ) => {
             const timestamp = +moment()
-            const filename = `${timestamp.toString()}_${account.mobileNumber}.jpg`
+            const filename = `${timestamp.toString()}_${tokwaAccount.mobileNumber}.jpg`
     
             RNFS.moveFile(uri, pathCache + `/${filename}`)
             const newFileUri = `${pathCache}/${filename}`

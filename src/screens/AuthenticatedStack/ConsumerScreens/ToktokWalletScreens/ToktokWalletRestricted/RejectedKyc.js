@@ -23,7 +23,7 @@ const RejectedKyc = ()=> {
             <Separator/>
             <View style={styles.content}>
                 <View style={{alignItems:"center"}}>
-                <Text style={styles.verifyWalletText}><Text style={{ ...styles.verifyWalletText , color: COLOR.YELLOW}}>toktok</Text><Text style={{...styles.verifyWalletText, color: COLOR.ORANGE}}>wallet</Text> application has been rejected</Text>
+                <Text style={styles.verifyWalletText}><Text style={{ ...styles.verifyWalletText , color: COLOR.YELLOW}}>toktok</Text><Text style={{...styles.verifyWalletText, color: COLOR.ORANGE}}>wallet</Text> application has been rejected.</Text>
                 <Text style={styles.clickVerifyText}>Please check your email for further details or click Verify Now to try again.</Text>
                     
                 </View>

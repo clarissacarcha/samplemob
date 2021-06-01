@@ -84,7 +84,7 @@ const VerifyContextProvider = ({children})=> {
         mobile_number: session.user.username,
         email: session.user.person.emailAddress
     })
-    const [nationality,setNationality] = useState("Philippine, Filipino")
+    const [nationality,setNationality] = useState("Filipino")
     const [nationalityId, setNationalityId] = useState(173)  // Default Philippines from database
 
     const [birthInfo,setBirthInfo] = useState({

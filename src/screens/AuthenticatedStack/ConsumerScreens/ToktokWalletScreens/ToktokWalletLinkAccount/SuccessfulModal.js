@@ -21,9 +21,10 @@ const SuccessfulModal = ({visible, setVisible})=> {
         >
 
             <View style={styles.modalBody}>
-                <View style={{flex: 1,alignItems:"center",marginTop: 50}}>
+                <View style={{flex: 1,alignItems:"center",marginTop: 100}}>
                 <Image style={{marginBottom: 20}} source={require('../../../../../assets/toktokwallet-assets/success.png')}/>
-                <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.L}}>toktokwallet account successfully linked</Text>
+                <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.L}}>Linking Successful!</Text>
+                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>You have successfully linked your toktokwallet account.</Text>
                 </View>
                 <View style={{height: SIZE.BUTTON_HEIGHT}}>
                         <YellowButton label="Ok" onPress={redirect}/>

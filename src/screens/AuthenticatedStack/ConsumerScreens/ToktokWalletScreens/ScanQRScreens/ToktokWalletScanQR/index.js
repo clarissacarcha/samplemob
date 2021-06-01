@@ -37,7 +37,6 @@ const ToktokWalletScanQR = ({navigation,route})=> {
         x: 0,
         y: 0,
     })
-
     useFocusEffect(useCallback(()=>{
         setFocusCamera(true)
         return ()=> setFocusCamera(false)
@@ -112,8 +111,8 @@ const ToktokWalletScanQR = ({navigation,route})=> {
                 }}
                 type={RNCamera.Constants.Type.back}
                 flashMode={torch ? RNCamera.Constants.FlashMode.torch : RNCamera.Constants.FlashMode.off}
-                onBarCodeRead={Platform.OS === "ios" && !loading ? barcodeRead : null}
-                onGoogleVisionBarcodesDetected={Platform.OS === "android" && !loading ? barcodeRead : null}
+                onBarCodeRead={Platform.OS === "ios" && !loading && focusCamera ? barcodeRead : null}
+                onGoogleVisionBarcodesDetected={Platform.OS === "android" && !loading && focusCamera ? barcodeRead : null}
                 captureAudio={false}
                 androidCameraPermissionOptions={{
                     title: 'Permission to use camera',
@@ -158,6 +157,9 @@ const ToktokWalletScanQR = ({navigation,route})=> {
                     </View>
 
 
+                </View>
+                <View style={{marginTop: 25}}>
+                    <Text style={{color: "white",fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.L,color: COLOR.YELLOW}}>Position the QR code within the frame.</Text>
                 </View>
                 <Actions 
                     tokwaAccount={tokwaAccount}

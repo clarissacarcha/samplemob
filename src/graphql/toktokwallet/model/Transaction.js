@@ -36,11 +36,9 @@ export const GET_OUTGOING_TRANSFER = gql`
 `
 
 export const GET_TRANSACTIONS = gql`
-    query {
-       getTransactions {
+    query getTransactions($input: GetTransactionsInput) {
+       getTransactions(input: $input) {
             recentTransactions {
-                logDate
-                logs {
                     id
                     amount
                     note
@@ -49,6 +47,9 @@ export const GET_TRANSACTIONS = gql`
                     destinationWalletId
                     cashInId
                     cashOutId
+                    createdAt
+                    externalName
+                    externalPhrase
                     sourcePerson {
                         firstName
                         middleName
@@ -65,11 +66,8 @@ export const GET_TRANSACTIONS = gql`
                         sourcePhrase
                         destinationPhrase
                     }
-                }
             }
             allTransactions {
-                logDate
-                logs {
                     id
                     amount
                     note
@@ -78,6 +76,9 @@ export const GET_TRANSACTIONS = gql`
                     destinationWalletId
                     cashInId
                     cashOutId
+                    createdAt
+                    externalName
+                    externalPhrase
                     sourcePerson {
                         firstName
                         middleName
@@ -94,7 +95,6 @@ export const GET_TRANSACTIONS = gql`
                         sourcePhrase
                         destinationPhrase
                     }
-                }
             }
        }
     }

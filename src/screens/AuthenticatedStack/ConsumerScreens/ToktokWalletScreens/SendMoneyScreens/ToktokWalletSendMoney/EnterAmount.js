@@ -47,9 +47,8 @@ const EnterAmount = ({tokwaAccount , setSwipeEnabled , amount  ,setAmount , reci
         <View style={{marginTop: 20}}>
             <View style={{flexDirection:'row',alignItems:"center"}}>
                 <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Enter Amount</Text>
-                <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.M,color:"red",marginLeft: 10}}>{errorAmountMessage}</Text>
             </View>
-            <View style={styles.input}>
+            <View style={[styles.input, {borderWidth: 1, borderColor: errorAmountMessage == "" ? "transparent" : COLOR.RED}]}>
                     <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,alignSelf:"center"}}>{tokwaAccount.wallet.currency.code} </Text>
                     <TextInput
                             caretHidden
@@ -63,6 +62,7 @@ const EnterAmount = ({tokwaAccount , setSwipeEnabled , amount  ,setAmount , reci
                         <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{amount ? numberFormat(amount) : "0.00"}</Text>
                     </View>
             </View>
+            <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.S,color:"#F93154"}}>{errorAmountMessage}</Text>
     </View>
         </>
     )

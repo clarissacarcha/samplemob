@@ -24,8 +24,9 @@ const SuccessfulModal = ({visible,setVisible,provider})=> {
             <View style={styles.modalBody}>
                     <View style={styles.content}>
                             <View style={{flex: 1,justifyContent:"center",alignItems:"center"}}>
-                                  <Image source={require('../../../../../../assets/toktokwallet-assets/success.png')}/>
-                                  <Text style={{marginTop: 20,fontFamily: FONT.BOLD, fontSize: FONT_SIZE.L,textAlign:"center"}}>GCash number successfully linked</Text>
+                                  <Image source={require('../../../../../../assets/toktokwallet-assets/cash-out-providers/gcash.png')}/>
+                                  <Text style={{marginTop: 15,fontFamily: FONT.BOLD, fontSize: FONT_SIZE.L,textAlign:"center"}}>Linking Successful!</Text>
+                                  <Text style={{textAlign:"center", fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S}}>You have successfully linked your G Cash number to your toktokwallet.</Text>
                             </View>
                             <View style={{height: SIZE.FORM_HEIGHT}}>
                                 <TouchableOpacity 
@@ -38,7 +39,7 @@ const SuccessfulModal = ({visible,setVisible,provider})=> {
                                         }}
                                         onPress={redirect}
                                     >
-                                        <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,color: COLOR.ORANGE}}>Ok</Text>
+                                        <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,color: COLOR.ORANGE}}>Continue</Text>
                                 </TouchableOpacity>
                             </View>
                     </View>
@@ -61,7 +62,7 @@ const styles = StyleSheet.create({
     },
     content: {
         height: 250,
-        width: width * 0.9,
+        width: width * 0.8,
         backgroundColor: "white",
         borderRadius: SIZE.BORDER_RADIUS,
         padding: 16,

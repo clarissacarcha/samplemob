@@ -44,7 +44,7 @@ const PromptMessage = ({
                     <Image style={{height: 90,width: 90}} resizeMode="contain" source={require('../../../../../../assets/icons/gcash.png')}/>
                     <View style={{alignItems:"center"}}>
                         <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.L}}>Success!</Text>
-                        <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,color: COLOR.DARK}}>Your application has been submitted. Please wait for your GCash disbursement account to be verified.</Text>
+                        <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,color: COLOR.DARK,textAlign:"center"}}>Your application has been submitted. Please wait for your GCash disbursement account to be verified.</Text>
                     </View>
                     <TouchableOpacity 
                         style={{
@@ -213,18 +213,19 @@ const CreateForm = ({navigation,session,mobile,provider})=> {
         />
        <View style={styles.container}>
             <ScrollView style={{flex: 1,flexGrow: 1,}} showsVerticalScrollIndicator={false}>
-
+                <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>Please nominate an existing GCash account.</Text>
+                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S,marginBottom: 10}}>Successful fund transfer will be forwarded to this GCash account.</Text>
                 <View>
                     <Text style={styles.label}>Mobile Number</Text>
                     <TextInput 
-                        style={styles.input}
+                        style={[styles.input, {borderWidth: 1 ,borderColor: errorMessage != "" ? COLOR.RED : "transparent"}]}
                         placeholder="Enter mobile number here"
                         value={mobileNumber}
                         onChangeText={(value)=>changeMobileNumber(value)}
                         keyboardType="numeric"
                         returnKeyType="done"
                     />
-                    { errorMessage != "" && <Text style={{fontFamily: FONT.REGULAR,color:"red",fontSize: FONT_SIZE.S}}>{errorMessage}</Text> }
+                    { errorMessage != "" && <Text style={{fontFamily: FONT.REGULAR,color:COLOR.RED,fontSize: FONT_SIZE.S}}>{errorMessage}</Text> }
                 </View>
 
                 <View style={{marginTop: 20}}>
