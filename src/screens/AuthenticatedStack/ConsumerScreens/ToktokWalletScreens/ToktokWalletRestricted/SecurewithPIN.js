@@ -8,7 +8,7 @@ const SecurewithPIN = ({navigation,walletinfo})=> {
 
     return (
         <View style={styles.container}>
-            <View style={{flex: 1,alignItems:"center"}}>
+            <View style={{alignItems:"center",marginTop: 10,flex:1 ,}}>
                 <View style={styles.lockIcon}>
                         <Image style={{height: 40,width: 40}} source={require('../../../../../assets/icons/walletVerify.png')}/>
                 </View>

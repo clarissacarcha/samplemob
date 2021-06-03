@@ -44,6 +44,11 @@ const VerifySelfie = ()=> {
             borderWidth: 2,
             borderRadius: 5,
             marginBottom: 5,
+            transform: [
+                {
+                    scaleX: -1,
+                }
+            ]
         }}>
                 <Image resizeMode="cover" style={{height: CROP_AREA_HEIGHT,width: CROP_AREA_WIDTH,backgroundColor:"transparent"}} source={{uri: selfieImage.uri}} />
                 <TouchableOpacity onPress={()=>navigation.push("ToktokWalletSelfieImageCamera", {setImage})} style={{position:"absolute",bottom: 15,width: 180,height: 20, justifyContent:"center",alignItems:"center",alignSelf:"center"}}>

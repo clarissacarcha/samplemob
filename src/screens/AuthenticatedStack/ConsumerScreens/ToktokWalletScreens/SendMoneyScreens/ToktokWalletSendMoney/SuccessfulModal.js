@@ -17,7 +17,7 @@ const RecipientInfo = ({label,value})=> (
         </View>
     </View>
 )
-const SuccessfulModal = ({successModalVisible , amount , recipient , walletinfoParams})=> {
+const SuccessfulModal = ({successModalVisible , amount , recipient , walletinfoParams , note})=> {
     const navigation = useNavigation()
 
 
@@ -45,6 +45,7 @@ const SuccessfulModal = ({successModalVisible , amount , recipient , walletinfoP
                         <RecipientInfo label="Recipient Name" value={recipient.name}/>
                         <RecipientInfo label="Recipient Mobile No." value={recipient.mobileNo}/>
                         <RecipientInfo label="Fund Transfered" value={`PHP ${numberFormat(amount)}`}/>
+                        <RecipientInfo label="Note" value={note}/>
                 </View>
             </Receipt>
         </Modal>
