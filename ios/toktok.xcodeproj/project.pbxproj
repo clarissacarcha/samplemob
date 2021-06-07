@@ -44,6 +44,7 @@
 		B32D14DDC87F4EE6AC1F77C8 /* Rubik-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 84CF7F93D02D4283BEC1FF3F /* Rubik-Bold.ttf */; };
 		B93D9B9A67564415B7A0AD0B /* Jost-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9AD6CD16B8AE4E8EA24474C2 /* Jost-Regular.ttf */; };
 		BE0BB2277E90432AB32C158D /* Jost-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 699DF7A7F29C416A9E54D104 /* Jost-Bold.ttf */; };
+		BE7A599A265C01E900426FE6 /* toktok_notification.wav in Resources */ = {isa = PBXBuildFile; fileRef = BE7A5999265C01E900426FE6 /* toktok_notification.wav */; };
 		BE9FA7EA25AC5CBA00107ABB /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9FA7E925AC5CBA00107ABB /* NotificationService.swift */; };
 		BE9FA7EE25AC5CBA00107ABB /* OneSignalNotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = BE9FA7E725AC5CBA00107ABB /* OneSignalNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		BEEBF93672F249ED80A5D75E /* Jost-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C5B393ABF5C342BE92EEBE26 /* Jost-SemiBold.ttf */; };
@@ -164,6 +165,7 @@
 		B9DDC796A2684F44864D6D2C /* Jost-SemiBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Jost-SemiBoldItalic.ttf"; path = "../src/assets/fonts/Jost-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
 		BAD6027FDB054C6899F98E98 /* Jost-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Jost-ExtraBoldItalic.ttf"; path = "../src/assets/fonts/Jost-ExtraBoldItalic.ttf"; sourceTree = "<group>"; };
 		BB1771BE7A4E6F715B088F6F /* Pods-toktok.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-toktok.debug.xcconfig"; path = "Target Support Files/Pods-toktok/Pods-toktok.debug.xcconfig"; sourceTree = "<group>"; };
+		BE7A5999265C01E900426FE6 /* toktok_notification.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = toktok_notification.wav; sourceTree = "<group>"; };
 		BE9FA7E725AC5CBA00107ABB /* OneSignalNotificationServiceExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = OneSignalNotificationServiceExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE9FA7E925AC5CBA00107ABB /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		BE9FA7EB25AC5CBA00107ABB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -368,6 +370,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				BE7A5999265C01E900426FE6 /* toktok_notification.wav */,
 				E7EA463C2651F5C200D60944 /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* toktok */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -606,7 +609,11 @@
 				869B7ED20BFD4137B023FC07 /* Jost-ExtraBoldItalic.ttf in Resources */,
 				EB7E15BEDD9D486DB99C8BD5 /* Jost-ExtraLight.ttf in Resources */,
 				6B4B3099EC954F2CBEC4C7C2 /* Jost-ExtraLightItalic.ttf in Resources */,
+<<<<<<< HEAD
+				BE7A599A265C01E900426FE6 /* toktok_notification.wav in Resources */,
+=======
 				E7EA463D2651F5C300D60944 /* GoogleService-Info.plist in Resources */,
+>>>>>>> 0090e3ae3a34762f8eeb31471778cd9e1931e2ca
 				53A7D436DEC44D4E9B3468AD /* Jost-Italic.ttf in Resources */,
 				5DF82E20605045268133C6FC /* Jost-Light.ttf in Resources */,
 				339CAC044D3440279207DDC0 /* Jost-LightItalic.ttf in Resources */,
@@ -1093,7 +1100,7 @@
 				CODE_SIGN_ENTITLEMENTS = toktok/toktok.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1150300;
+				CURRENT_PROJECT_VERSION = 1150500;
 				DEVELOPMENT_TEAM = GB5B4BE7QP;
 				ENABLE_BITCODE = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1102,8 +1109,12 @@
 				);
 				INFOPLIST_FILE = toktok/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+<<<<<<< HEAD
+				MARKETING_VERSION = 1.15.5;
+=======
 				MARKETING_VERSION = 1.15.3;
 				NEW_SETTING = "";
+>>>>>>> 0090e3ae3a34762f8eeb31471778cd9e1931e2ca
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1128,12 +1139,16 @@
 				CODE_SIGN_ENTITLEMENTS = toktok/toktok.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1150300;
+				CURRENT_PROJECT_VERSION = 1150500;
 				DEVELOPMENT_TEAM = GB5B4BE7QP;
 				INFOPLIST_FILE = toktok/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+<<<<<<< HEAD
+				MARKETING_VERSION = 1.15.5;
+=======
 				MARKETING_VERSION = 1.15.3;
 				NEW_SETTING = "";
+>>>>>>> 0090e3ae3a34762f8eeb31471778cd9e1931e2ca
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1384,14 +1399,14 @@
 				CODE_SIGN_ENTITLEMENTS = OneSignalNotificationServiceExtension/OneSignalNotificationServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1150300;
+				CURRENT_PROJECT_VERSION = 1150500;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = GB5B4BE7QP;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				MARKETING_VERSION = 1.15.3;
+				MARKETING_VERSION = 1.15.5;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = ph.cloudpanda.toktok.OneSignalNotificationServiceExtension;
@@ -1418,14 +1433,14 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1150300;
+				CURRENT_PROJECT_VERSION = 1150500;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = GB5B4BE7QP;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				MARKETING_VERSION = 1.15.3;
+				MARKETING_VERSION = 1.15.5;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = ph.cloudpanda.toktok.OneSignalNotificationServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";

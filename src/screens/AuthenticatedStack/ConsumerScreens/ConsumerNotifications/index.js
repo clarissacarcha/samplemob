@@ -58,26 +58,30 @@ const NotificationCard = ({message, lastItem}) => {
           paddingHorizontal: SIZE.MARGIN,
           paddingVertical: SIZE.MARGIN / 2,
         }}>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <View
-            style={{
-              height: 22,
-              width: 22,
-              backgroundColor: COLOR.ORANGE,
-              borderRadius: 11,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <VectorIcon iconSet={ICON_SET.Octicons} name="mail" color={COLOR.WHITE} size={14} />
-          </View>
-          <View style={{marginHorizontal: SIZE.MARGIN}}>
-            <Text numberOfLines={1}>{title}</Text>
-            <Text
+        <View style={{flexDirection: 'row'}}>
+          <View style={{height: 70, justifyContent: 'center'}}>
+            <View
               style={{
-                color: COLOR.DARK,
+                height: 22,
+                width: 22,
+                backgroundColor: COLOR.ORANGE,
+                borderRadius: 11,
+                justifyContent: 'center',
+                alignItems: 'center',
               }}>
-              {body}
-            </Text>
+              <VectorIcon iconSet={ICON_SET.Octicons} name="mail" color={COLOR.WHITE} size={14} />
+            </View>
+          </View>
+          <View style={{justifyContent: 'center'}}>
+            <View style={{marginHorizontal: SIZE.MARGIN}}>
+              <Text numberOfLines={1}>{title}</Text>
+              <Text
+                style={{
+                  color: COLOR.DARK,
+                }}>
+                {body}
+              </Text>
+            </View>
           </View>
         </View>
       </View>

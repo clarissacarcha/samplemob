@@ -1,8 +1,8 @@
 import React, {useRef, useEffect, useCallback} from 'react';
-import {View, StyleSheet, TouchableHighlight, Dimensions, Image} from 'react-native';
+import {View, Text, StyleSheet, TouchableHighlight, Dimensions, Image} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {throttle} from 'lodash';
-import {COLOR, SIZE} from '../../../../../../res/variables';
+import {COLOR, SIZE, FONT} from '../../../../../../res/variables';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const BANNER_WIDTH = SCREEN_WIDTH - SIZE.MARGIN * 2;
@@ -33,15 +33,22 @@ const BannerAds = ({ads}) => {
   if (!ads || ads.length === 0) return <View style={{height: SIZE.MARGIN / 2}} />;
 
   return (
-    <TouchableHighlight onPress={onPressThrottled} style={styles.touchable}>
-      <Image
-        style={{height: BANNER_HEIGHT, width: BANNER_WIDTH, borderRadius: 5}}
-        source={{
-          uri: ads[0].rectangleImage,
-        }}
-        resizeMode="cover"
-      />
-    </TouchableHighlight>
+    <>
+      <TouchableHighlight onPress={onPressThrottled} style={styles.touchable}>
+        <Image
+          style={{height: BANNER_HEIGHT, width: BANNER_WIDTH, borderRadius: 5}}
+          source={{
+            uri: ads[0].rectangleImage,
+          }}
+          resizeMode="cover"
+        />
+      </TouchableHighlight>
+      <View style={styles.textBox}>
+        <Text style={{fontFamily: FONT.BOLD}} numberOfLines={2}>
+          {ads[0].title}
+        </Text>
+      </View>
+    </>
   );
 };
 
@@ -51,6 +58,12 @@ const styles = StyleSheet.create({
   touchable: {
     borderRadius: 5,
     margin: SIZE.MARGIN,
+    marginBottom: 0,
+  },
+  textBox: {
+    height: 40,
+    backgroundColor: COLOR.WHITE,
+    marginHorizontal: SIZE.MARGIN,
     marginBottom: SIZE.MARGIN / 2,
   },
 });
