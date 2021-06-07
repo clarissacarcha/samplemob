@@ -16,6 +16,7 @@ const CashOnDeliveryForm = ({value, onChange, onAmountChange, constants}) => {
   const onValueChange = (value) => {
     setSwitchState(value);
     onChange(value);
+    onAmountChange(0);
   };
 
   const onCashOnDeliveryValueChange = (value) => {

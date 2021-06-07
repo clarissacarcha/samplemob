@@ -4,10 +4,13 @@ import {useNavigation} from '@react-navigation/native'
 import { HeaderImageBackground , HeaderTitle , Separator } from '../Components'
 import { COLOR , FONT_SIZE , FONT } from '../../../../../res/variables'
 import { YellowButton , VectorIcon , ICON_SET } from '../../../../../revamp'
+import {useSelector} from 'react-redux'
 
 
-const RejectedKyc = ()=> {
+const ApprovedRegistration = ()=> {
     const navigation = useNavigation()
+
+    const tokwaAccount = useSelector(state=>state.toktokWallet)
 
     navigation.setOptions({
         headerShown:false,
@@ -23,20 +26,14 @@ const RejectedKyc = ()=> {
             <Separator/>
             <View style={styles.content}>
                 <View style={{alignItems:"center",marginTop: 10,}}>
-                <Text style={styles.verifyWalletText}><Text style={{ ...styles.verifyWalletText , color: COLOR.YELLOW}}>toktok</Text><Text style={{...styles.verifyWalletText, color: COLOR.ORANGE}}>wallet</Text> application has been rejected.</Text>
-                <Text style={styles.clickVerifyText}>Please check your email for further details or click Verify Now to try again.</Text>
-                <View style={{marginTop: 40}}>
-                        {/* <Text style={styles.listItem}><VectorIcon name="check" size={13} iconSet={ICON_SET.FontAwesome5}/> Create your toktokwallet</Text> */}
-                        <Text style={styles.listItem}><VectorIcon name="check" size={13} iconSet={ICON_SET.FontAwesome5}/> Secure your account and payments</Text>
-                        <Text style={styles.listItem}><VectorIcon name="check" size={13} iconSet={ICON_SET.FontAwesome5}/> Enjoy convenient payment experience</Text>
-                        <Text style={styles.listItem}><VectorIcon name="check" size={13} iconSet={ICON_SET.FontAwesome5}/> Unlock toktokwallet features</Text>
-                </View>
+                    <Text style={styles.verifyWalletText}>Welcome to <Text style={{ ...styles.verifyWalletText , color: COLOR.YELLOW}}>toktok</Text><Text style={{...styles.verifyWalletText, color: COLOR.ORANGE}}>wallet</Text>!</Text>
+                    <Text style={[styles.clickVerifyText, {marginHorizontal: 10,}]}>Hi, Ka-toktok {tokwaAccount.person.firstName}! We are thrilled to announce that you are now a toktokwallet user! You can send money to your loved ones, cash in to any toktokwallet partner of your choice, and transfer funds. So easy!</Text>
                 </View>
             </View>
 
             <View style={{height: 70,padding: 16,justifyContent:'flex-end'}}>
-                <YellowButton label="Verify now" onPress={()=> {
-                    navigation.navigate("ToktokWalletVerification")
+                <YellowButton label="Ok" onPress={()=> {
+                     navigation.replace("ToktokWalletRestricted" , {component: "noPin"})
                 }}/>
             </View>
         
@@ -56,7 +53,7 @@ const styles = StyleSheet.create({
     },  
     content: {
         flex: 1,
-        padding: 16,
+        padding: 10,
         paddingTop: 30,
     },
     verifyWalletText: {
@@ -73,9 +70,8 @@ const styles = StyleSheet.create({
     listItem: {
         fontFamily: FONT.REGULAR,
         marginBottom: 5,
-        fontSize: FONT_SIZE.S,
-        textAlign:'center'
+        fontSize: FONT_SIZE.S
     },
 })
 
-export default RejectedKyc
+export default ApprovedRegistration

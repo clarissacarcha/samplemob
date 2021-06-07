@@ -367,6 +367,7 @@ const StopDetails = ({navigation, route}) => {
                     />
                   </View>
                 </View>
+                <View style={{height: 50}} />
               </View>
               {/*--------------- CONFIRM ---------------*/}
             </InputScrollView>

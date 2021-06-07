@@ -53,10 +53,11 @@ const ProceedButton = ({swipeEnabled , navigation , amount , note , session , re
             swipeTitle: `Send PHP ${amount != "" ? numberFormat(amount) : "0"}`,
             data: {
                 amount: amount,
+                note: note,
                 recipient: {
                     name: `${recipientDetails.person.firstName} ${recipientDetails.person.middleName ? recipientDetails.person.middleName + " " : ""}${recipientDetails.person.lastName}`,
-                    mobileNo: recipientDetails.mobileNumber
-                }
+                    mobileNo: recipientDetails.mobileNumber,
+                },
             }
         })
     }
@@ -74,7 +75,8 @@ const ProceedButton = ({swipeEnabled , navigation , amount , note , session , re
          <AlertOverlay visible={loading} />
         <SuccessfulModal 
                 successModalVisible={successModalVisible}
-                amount={amount} 
+                amount={amount}
+                note={note} 
                 recipient={{
                     name: `${recipientDetails.person.firstName} ${recipientDetails.person.middleName ? recipientDetails.person.middleName + " " : ""}${recipientDetails.person.lastName}`,
                     mobileNo: recipientDetails.mobileNumber

@@ -22,9 +22,9 @@ const BlockedAccount = ()=> {
             </View>
             <Separator/>
             <View style={styles.content}>
-                <View style={{alignItems:"center"}}>
-                    <Text style={styles.verifyWalletText}>STOP! your <Text style={{...styles.verifyWalletText, color: COLOR.YELLOW}}>toktok</Text><Text style={{...styles.verifyWalletText, color: COLOR.ORANGE}}>wallet</Text> account has been blocked</Text>
-                    <Text style={styles.clickVerifyText}>To reactivate and know more details, please contact (02) 84-248-617 or email at hello@toktok.ph</Text>
+                <View style={{alignItems:"center",marginTop: 10}}>
+                    <Text style={[styles.verifyWalletText , {color: COLOR.ORANGE}]}>STOP!</Text>
+                    <Text style={styles.clickVerifyText}>Your toktokwallet account has been blocked or put on-hold. To know more details, contact hello@toktok.ph and (02) 84-248-617.</Text>
                 </View>
             </View>
 

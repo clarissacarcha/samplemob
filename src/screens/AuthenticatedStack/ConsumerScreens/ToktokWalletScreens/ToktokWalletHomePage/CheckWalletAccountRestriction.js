@@ -38,9 +38,14 @@ const CheckWalletAccountRestriction = ({children , saveTokwaAccount})=> {
     if(data.getMyAccount.status == 2){
        navigation.replace("ToktokWalletRestricted" , {component: "blockedAccount"})
     }
+    // if Account is Deleted
+    if(data.getMyAccount.status == 0){
+
+    }
     // if pincode is not yet set
     if(!data.getMyAccount.pinCode){
-        navigation.replace("ToktokWalletRestricted" , {component: "noPin"})
+        // navigation.replace("ToktokWalletRestricted" , {component: "noPin"})
+        navigation.replace("ToktokWalletRestricted" , {component: "approvedRegistration"})
     }
 
     const checkIfAllowed = () => {

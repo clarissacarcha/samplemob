@@ -22,15 +22,15 @@ const PendingKyc = ()=> {
             </View>
             <Separator/>
             <View style={styles.content}>
-                <View style={{alignItems:"center"}}>
-                    <Text style={styles.verifyWalletText}>We are evaluating your application</Text>
-                    <Text style={styles.clickVerifyText}>Your toktokwallet verification is ongoing. Please wait for your account to be approved</Text>
-                    {/* <View style={{marginTop: 40}}>
-                        <Text style={styles.listItem}><VectorIcon name="check" size={13} iconSet={ICON_SET.FontAwesome5}/> Create your toktokwallet</Text>
+                <View style={{alignItems:"center",marginTop: 10,}}>
+                    <Text style={styles.verifyWalletText}>We are evaluating your application.</Text>
+                    <Text style={styles.clickVerifyText}>Your toktokwallet verification is ongoing. Please wait for your account to be approved.</Text>
+                    <View style={{marginTop: 40}}>
+                        {/* <Text style={styles.listItem}><VectorIcon name="check" size={13} iconSet={ICON_SET.FontAwesome5}/> Create your toktokwallet</Text> */}
                         <Text style={styles.listItem}><VectorIcon name="check" size={13} iconSet={ICON_SET.FontAwesome5}/> Secure your account and payments</Text>
                         <Text style={styles.listItem}><VectorIcon name="check" size={13} iconSet={ICON_SET.FontAwesome5}/> Enjoy convenient payment experience</Text>
                         <Text style={styles.listItem}><VectorIcon name="check" size={13} iconSet={ICON_SET.FontAwesome5}/> Unlock toktokwallet features</Text>
-                    </View> */}
+                    </View>
                 </View>
             </View>
 

@@ -1,7 +1,7 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet , Image} from 'react-native';
 // import {BlackButton} from './forms/BlackButton';
-import {COLOR, FONT_SIZE, FONT} from '../res/variables';
+import {COLOR, FONT_SIZE, FONT, SIZE} from '../res/variables';
 
 const aButtons = [
   {
@@ -29,10 +29,12 @@ const SingleButton = ({close, buttonLabel, actionButtons = []}) => {
         height: 40,
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 32,
+        marginTop: 40,
         width: 100,
+        backgroundColor: COLOR.YELLOW,
+        borderRadius: SIZE.BORDER_RADIUS
       }}>
-      <Text style={{fontFamily: FONT.BOLD, color: COLOR.ORANGE}}>{label}</Text>
+      <Text style={{fontFamily: FONT.BOLD}}>{label}</Text>
     </TouchableOpacity>
   );
 };
@@ -51,7 +53,8 @@ export const AlertModal = (props) => {
   return (
     <View style={styles.transparent}>
       <View style={styles.labelBox}>
-        <Text style={{color: COLOR.DARK, fontFamily: FONT.BOLD, fontSize: FONT_SIZE.L}}>{message}</Text>
+        <Image style={{height: 80,width: 80,marginBottom: 10,}} source={require('../assets/toktokwallet-assets/error.png')}/>
+        <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.L,textAlign:"center"}}>{message}</Text>
         {RenderButton()}
       </View>
     </View>
@@ -63,7 +66,7 @@ const styles = StyleSheet.create({
     // flex: 1,
     zIndex: 999999,
     backgroundColor: 'rgba(0,0,0,0.75)',
-    paddingHorizontal: 75,
+    paddingHorizontal: 50,
     justifyContent: 'center',
     position: 'absolute',
     top: 0,
@@ -75,9 +78,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     alignItems: 'center',
     borderRadius: 5,
-    paddingHorizontal: 16,
-    paddingTop: 40,
-    paddingBottom: 8,
+    padding:20,
   },
   divider: {
     height: 20,

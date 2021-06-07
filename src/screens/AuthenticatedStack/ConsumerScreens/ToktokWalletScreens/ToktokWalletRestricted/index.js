@@ -3,6 +3,7 @@ import {View,StyleSheet,Image} from 'react-native'
 
 //SELF IMPORTS
 import WalletOnHold from './WalletOnHold'
+import ApprovedRegistration from './ApprovedRegistration'
 import SecurewithPIN from './SecurewithPIN'
 import NoAccount from './NoAccount'
 import PendingKyc from './PendingKyc'
@@ -20,6 +21,8 @@ const ToktokWalletRestricted = ({navigation,route})=> {
         switch(route.params.component){
             case "onHold":
                 return <WalletOnHold navigation={navigation} walletinfo={route.params.walletinfo}/>
+            case "approvedRegistration":
+                return <ApprovedRegistration/>
             case "noPin":
                 return <SecurewithPIN navigation={navigation} walletinfo={route.params.walletinfo}/>
             case "noAccount":

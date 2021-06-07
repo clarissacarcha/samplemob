@@ -44,6 +44,7 @@ const ToktokWalletRecentTransferView = ({navigation,route})=> {
                         {/* <Details label="Payment Method" value="toktokwallet"/> */}
                         <Details label="Recipient" value={`${recentTransfer.destinationPerson.firstName} ${recentTransfer.destinationPerson.middleName ? recentTransfer.destinationPerson.middleName + " " : ""}${recentTransfer.destinationPerson.lastName}`}/>
                         <Details label="Fund Transferred" value={`${tokwaAccount.wallet.currency.code} ${numberFormat(recentTransfer.amount)}`}/>
+                        <Details label="Note" value={recentTransfer.note}/>
                     </View>
                     <View style={{flex: 1,height: 70,justifyContent:"flex-end",paddingBottom: 16,}}>
                             <YellowButton label="Transfer Again" onPress={TransferAgain} />
