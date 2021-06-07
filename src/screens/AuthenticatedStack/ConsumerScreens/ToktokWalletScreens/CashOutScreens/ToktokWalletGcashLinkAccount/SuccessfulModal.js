@@ -11,8 +11,8 @@ const SuccessfulModal = ({visible,setVisible,provider})=> {
 
     const redirect = ()=> {
         setVisible(false)
-        navigation.navigate("ToktokWalletGcashHomePage", {provider})
-        return navigation.replace("ToktokWalletGcashHomePage",{provider})
+        // navigation.navigate("ToktokWalletGcashHomePage", {provider})
+        // return navigation.replace("ToktokWalletGcashHomePage",{provider})
     }
 
     return (

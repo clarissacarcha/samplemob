@@ -9,7 +9,7 @@ import { HeaderBack , HeaderTitle} from '../../../../../../revamp';
 const ToktokWalletSettings = ({navigation , route })=> {
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
-        headerTitle: ()=> <HeaderTitle label={['Settings','']}/>,
+        headerTitle: ()=> <HeaderTitle label={['','']}/>,
     })
 
     const SettingOption = ({route,params={},title})=> (
@@ -31,7 +31,9 @@ const ToktokWalletSettings = ({navigation , route })=> {
         <>
         <Separator />
         <View style={styles.container}>
+            <View style={{padding: 16,paddingVertical: 8}}><Text style={{fontFamily:FONT.BOLD}}>SETTINGS</Text></View>
             <SettingOption route="ToktokWalletCreatePin" title="Change Pin"/>
+            <View style={{padding: 16,paddingVertical: 8}}><Text style={{fontFamily:FONT.BOLD}}>LOGS</Text></View>
             <SettingOption route="ToktokWalletCashInLogs" title="Cash In"/>
             <SettingOption route="ToktokWalletCashOutLogs" title="Cash Out"/>
         </View>
@@ -42,12 +44,12 @@ const ToktokWalletSettings = ({navigation , route })=> {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "white"
     },
     settingoption: {
         padding: 16,
         paddingVertical: 15,
-        flexDirection: "row"
+        flexDirection: "row",
+        backgroundColor:"white"
     },
     logo: {
         flexBasis: 45,

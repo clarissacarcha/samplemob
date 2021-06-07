@@ -1,9 +1,11 @@
 import React from 'react'
-import {View,Text,StyleSheet} from 'react-native'
+import {View,Text,StyleSheet,ImageBackground,Dimensions} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
 import { HeaderImageBackground , HeaderTitle , Separator } from '../Components'
-import { COLOR , FONT_SIZE , FONT } from '../../../../../res/variables'
+import { COLOR , FONT_SIZE , FONT, SIZE } from '../../../../../res/variables'
 import { YellowButton , VectorIcon , ICON_SET } from '../../../../../revamp'
+
+const {height,width} = Dimensions.get("window")
 
 
 const RejectedKyc = ()=> {
@@ -24,13 +26,45 @@ const RejectedKyc = ()=> {
             <View style={styles.content}>
                 <View style={{alignItems:"center",marginTop: 10,}}>
                 <Text style={styles.verifyWalletText}><Text style={{ ...styles.verifyWalletText , color: COLOR.YELLOW}}>toktok</Text><Text style={{...styles.verifyWalletText, color: COLOR.ORANGE}}>wallet</Text> application has been rejected.</Text>
-                <Text style={styles.clickVerifyText}>Please check your email for further details or click Verify Now to try again.</Text>
-                <View style={{marginTop: 20}}>
-                        {/* <Text style={styles.listItem}><VectorIcon name="check" size={13} iconSet={ICON_SET.FontAwesome5}/> Create your toktokwallet</Text> */}
-                        <Text style={styles.listItem}><VectorIcon name="check" size={13} iconSet={ICON_SET.FontAwesome5}/> Secure your account and payments</Text>
-                        <Text style={styles.listItem}><VectorIcon name="check" size={13} iconSet={ICON_SET.FontAwesome5}/> Enjoy convenient payment experience</Text>
-                        <Text style={styles.listItem}><VectorIcon name="check" size={13} iconSet={ICON_SET.FontAwesome5}/> Unlock toktokwallet features</Text>
-                </View>
+                <Text style={styles.clickVerifyText}>Please check your email for further details or click "Verify Now" to try again.</Text>
+                <View style={{marginTop: 40,justifyContent:'center'}}>
+        
+                        <ImageBackground 
+                            resizeMode="stretch"
+                            imageStyle={{borderRadius: SIZE.BORDER_RADIUS}}
+                            source={require('../../../../../assets/toktokwallet-assets/unlock.png')}
+                            style={{borderRadius: SIZE.BORDER_RADIUS, width: width - 80, height: 90,backgroundColor:"transparent",flexDirection:"row"}}
+                        >
+                            <View style={{flex:1,backgroundColor:"transparent",justifyContent:"center",alignItems:"flex-end",paddingRight: 20}}>
+                                <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}><Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M, color: COLOR.ORANGE}}>Secure</Text> your</Text>
+                                <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>toktokwallet</Text>
+                            </View>
+                        </ImageBackground>
+
+                        <ImageBackground 
+                            resizeMode="stretch"
+                            imageStyle={{borderRadius: SIZE.BORDER_RADIUS}}
+                            source={require('../../../../../assets/toktokwallet-assets/secure.png')}
+                            style={{marginVertical: 10, borderRadius: SIZE.BORDER_RADIUS, width: width - 80, height: 90,backgroundColor:"transparent",flexDirection:"row"}}
+                        >
+                            <View style={{flex:1,backgroundColor:"transparent",justifyContent:"center",alignItems:"flex-end",paddingRight: 20}}>
+                                <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}><Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M, color: COLOR.ORANGE}}>Enjoy</Text> convenient</Text>
+                                <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>payment experience</Text>
+                            </View>   
+                        </ImageBackground>
+
+                        <ImageBackground 
+                            resizeMode="stretch"
+                            imageStyle={{borderRadius: SIZE.BORDER_RADIUS}}
+                            source={require('../../../../../assets/toktokwallet-assets/enjoy.png')}
+                            style={{borderRadius: SIZE.BORDER_RADIUS, width: width - 80, height: 90,backgroundColor:"transparent",flexDirection:"row"}}
+                        >
+                            <View style={{flex:1,backgroundColor:"transparent",justifyContent:"center",alignItems:"flex-end",paddingRight: 20}}>
+                                <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}><Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M, color: COLOR.ORANGE}}>Unlock</Text> toktokwallet</Text>
+                                <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>features</Text>
+                            </View>
+                        </ImageBackground>
+                    </View>
                 </View>
             </View>
 

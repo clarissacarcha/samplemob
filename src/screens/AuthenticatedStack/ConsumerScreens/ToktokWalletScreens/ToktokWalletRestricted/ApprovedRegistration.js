@@ -1,5 +1,5 @@
 import React from 'react'
-import {View,Text,StyleSheet} from 'react-native'
+import {View,Text,StyleSheet,Image} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
 import { HeaderImageBackground , HeaderTitle , Separator } from '../Components'
 import { COLOR , FONT_SIZE , FONT } from '../../../../../res/variables'
@@ -25,7 +25,8 @@ const ApprovedRegistration = ()=> {
             </View>
             <Separator/>
             <View style={styles.content}>
-                <View style={{alignItems:"center",marginTop: 10,}}>
+                <Image style={{width: 225, height: 170}} source={require('../../../../../assets/toktokwallet-assets/welcome.png')}/>
+                <View style={{alignItems:"center",marginTop: 20,}}>
                     <Text style={styles.verifyWalletText}>Welcome to <Text style={{ ...styles.verifyWalletText , color: COLOR.YELLOW}}>toktok</Text><Text style={{...styles.verifyWalletText, color: COLOR.ORANGE}}>wallet</Text>!</Text>
                     <Text style={[styles.clickVerifyText, {marginHorizontal: 10,}]}>Hi, Ka-toktok {tokwaAccount.person.firstName}! We are thrilled to announce that you are now a toktokwallet user! You can send money to your loved ones, cash in to any toktokwallet partner of your choice, and transfer funds. So easy!</Text>
                 </View>
@@ -53,8 +54,10 @@ const styles = StyleSheet.create({
     },  
     content: {
         flex: 1,
-        padding: 10,
+        padding: 16,
         paddingTop: 30,
+        justifyContent:'center',
+        alignItems:'center'
     },
     verifyWalletText: {
         fontFamily: FONT.BOLD,

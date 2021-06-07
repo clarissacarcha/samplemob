@@ -10,7 +10,6 @@ import { onErrorAlert } from '../../../../../../util/ErrorUtility'
 import { useAlert } from '../../../../../../hooks/useAlert'
 
 //SELF IMPORTS
-import SuccessfulModal from "./SuccessfulModal";
 import { AlertOverlay } from '../../../../../../components'
 
 
@@ -24,7 +23,6 @@ const ToktokWalletGcashLinKAccount = ({navigation,route})=> {
 
     const { mobile , provider } = route.params
     const [pinCode,setPinCode] = useState("")
-    const [modalSuccessVisible,setModalSuccessVisible] = useState(false)
     const inputRef = useRef();
     const alert = useAlert()
     const [otpTimer,setOtpTimer] = useState(120)
@@ -32,8 +30,8 @@ const ToktokWalletGcashLinKAccount = ({navigation,route})=> {
     const [patchLinkAccount, {data,error,loading}] = useMutation(PATCH_LINK_ACCOUNT,{
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({patchLinkAccount})=>{
-            console.log(patchLinkAccount)
-            setModalSuccessVisible(true)
+            navigation.navigate("ToktokWalletGcashHomePage", {provider})
+            return navigation.replace("ToktokWalletGcashHomePage",{provider, successLink: true})
         },
         onError: (error)=>{
             onErrorAlert({alert,error})
@@ -100,12 +98,11 @@ const ToktokWalletGcashLinKAccount = ({navigation,route})=> {
         <>
          <AlertOverlay visible={loading} />
         <Separator/>
-        <SuccessfulModal visible={modalSuccessVisible} setVisible={setModalSuccessVisible} provider={provider}/>
-        <View 
+        <KeyboardAvoidingView 
             style={styles.container}
             // keyboardVerticalOffset={Platform.OS == "ios" ? 100 : 90} 
-            // // keyboardVerticalOffset={90} 
-            // behavior={Platform.OS === "ios" ? "padding" : "height"} 
+            keyboardVerticalOffset={60} 
+            behavior={Platform.OS === "ios" ? "padding" : "height"} 
         >
             <View style={{flex: 1,alignItems:"center", marginTop: 40}}>
                     <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L}}>Enter OTP code sent to</Text>
@@ -136,14 +133,14 @@ const ToktokWalletGcashLinKAccount = ({navigation,route})=> {
                                 { otpTimer > 0 && <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>{otpTimer} s</Text> }
                         </TouchableOpacity>
             </View>
-            <View style={{height: SIZE.BUTTON_HEIGHT}}> 
+            <View style={{height: SIZE.BUTTON_HEIGHT + 16}}> 
             {
                 pinCode.length < 6 || getOtpLoading
                 ? <DisabledButton label="Proceed"/>
                 : <YellowButton onPress={ConfirmVerificationCode} label="Proceed"/>
             }   
             </View>
-        </View>
+        </KeyboardAvoidingView>
         </>
     )
 }

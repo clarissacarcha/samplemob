@@ -76,9 +76,9 @@ export const EnterPinCode = ({
         >
             {children}
             {/* <AlertOverlay loading={loading}/> */}
-            <View
-                // behavior={Platform.OS == "ios" ? "padding" : "height"}
-                // keyboardVerticalOffset={Platform.OS == "ios" ? 40 : 30} 
+            <KeyboardAvoidingView
+                behavior={Platform.OS == "ios" ? "padding" : "height"}
+                keyboardVerticalOffset={Platform.OS == "ios" ? 10 : 30} 
                 style={styles.modalBody}
             >
                 <View style={styles.content}>
@@ -128,7 +128,7 @@ export const EnterPinCode = ({
                             }
                     </View>
                </View>
-            </View>
+            </KeyboardAvoidingView>
         </Modal>
         </>
     )

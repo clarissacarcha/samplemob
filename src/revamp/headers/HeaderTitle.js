@@ -16,8 +16,7 @@ export const HeaderTitle = ({label , headerRightIsSet}) => {
 const styles = StyleSheet.create({
   box: {
     alignItems: 'center',
-    width:"100%",
-    paddingRight: Platform.OS == "android" ? 66 : 0
+     paddingLeft: Platform.OS == "android" ? 0 : 66
   },
   outer: {
     fontSize: 16,

@@ -156,20 +156,24 @@ const ToktokWalletCardButton = ({session}) => {
         </View>
       </View>
       <View style={{flexDirection: 'row', paddingHorizontal: 20}}>
-        <TouchableHighlight onPress={getToktokWallet} underlayColor={COLOR} style={styles.submitBox}>
+        {/* <TouchableHighlight onPress={getToktokWallet} underlayColor={COLOR} style={styles.submitBox}>
           <View style={styles.submit}>
             <Text style={{color: COLOR, fontSize: 20}}>Refresh</Text>
           </View>
-        </TouchableHighlight>
+        </TouchableHighlight> */}
+        <YellowButton label="Refresh" onPress={getToktokWallet}/>
         <View style={{width: 20}} />
-        <TouchableHighlight
+        {/* <TouchableHighlight
           onPress={() => navigation.push('ToktokWalletHistory', {toktokWalletId: data.getToktokWallet.record.id})}
           underlayColor={COLOR}
           style={styles.submitBox}>
           <View style={styles.submit}>
             <Text style={{color: COLOR, fontSize: 20}}>See History</Text>
           </View>
-        </TouchableHighlight>
+        </TouchableHighlight> */}
+        <View style={styles.submitBox}>
+        <YellowButton label="See History" onPress={()=>navigation.push('ToktokWalletHistory', {toktokWalletId: data.getToktokWallet.record.id})}/>
+        </View>
       </View>
       <View style={{height: 20}} />
       <View style={{flexDirection: 'row', paddingHorizontal: 20}}>
@@ -328,20 +332,26 @@ const DriverWallet = ({navigation, session, constants}) => {
           </View>
         </View>
         <View style={{flexDirection: 'row', paddingHorizontal: 20}}>
-          <TouchableHighlight onPress={getWallet} underlayColor={COLOR} style={styles.submitBox}>
+          {/* <TouchableHighlight onPress={getWallet} underlayColor={COLOR} style={styles.submitBox}>
             <View style={styles.submit}>
               <Text style={{color: COLOR, fontSize: 20}}>Refresh</Text>
             </View>
-          </TouchableHighlight>
+          </TouchableHighlight> */}
+          <View style={styles.submitBox}>
+            <YellowButton label="Refresh" onPress={getWallet}/>
+          </View>
           <View style={{width: 20}} />
-          <TouchableHighlight
+          {/* <TouchableHighlight
             onPress={() => navigation.push('DriverWalletLog')}
             underlayColor={COLOR}
             style={styles.submitBox}>
             <View style={styles.submit}>
               <Text style={{color: COLOR, fontSize: 20}}>See History</Text>
             </View>
-          </TouchableHighlight>
+          </TouchableHighlight> */}
+          <View style={styles.submitBox}>
+          <YellowButton label="See History" onPress={()=>navigation.push('DriverWalletLog')}/>
+          </View>
         </View>
         {/*---------------------------------------- TOKTOK WALLET ----------------------------------------*/}
         <View style={{padding: 20}}>

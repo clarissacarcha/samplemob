@@ -15,6 +15,7 @@ import {GET_COUNTRIES, TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT} from '../../../..
 import ModalCountry from './ModalCountry'
 import {DateBirthModal} from './VerifyBirth'
 import ModalNationality from './ModalNationality'
+import { Platform } from 'react-native';
 
 const VerifyFullname = ()=> {
 
@@ -95,7 +96,7 @@ const VerifyFullname = ()=> {
          />
      
             <KeyboardAvoidingView
-                keyboardVerticalOffset={90}  
+                keyboardVerticalOffset={Platform.OS == 'ios' ? 90 : 0}  
                 behavior={Platform.OS == "ios" ? "padding" : "height"}
                 style={styles.content}
             >

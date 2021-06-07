@@ -110,11 +110,11 @@ const ToktokWalletRecoverPin = ({navigation})=> {
     return (
         <>
         <Separator />
-        <View 
+        <KeyboardAvoidingView 
             style={styles.container}
             // keyboardVerticalOffset={Platform.OS == "ios" ? 100 : 90} 
-            // // keyboardVerticalOffset={90} 
-            // behavior={Platform.OS === "ios" ? "padding" : "height"} 
+            keyboardVerticalOffset={60} 
+            behavior={Platform.OS === "ios" ? "padding" : "height"} 
         >
                 <View style={{flex: 1,alignItems:"center",marginTop: 40}}>
                     <Text style={{fontFamily: FONT.BOLD,fontSize: 16}}>Enter OTP code sent to</Text>
@@ -158,14 +158,14 @@ const ToktokWalletRecoverPin = ({navigation})=> {
 
                 </View>
                        
-                 <View style={{height: SIZE.BUTTON_HEIGHT}}> 
+                 <View style={{height: SIZE.BUTTON_HEIGHT + 16}}> 
                     {
                         pinCode.length < 6
                         ? <DisabledButton label="Proceed"/>
                         : <YellowButton onPress={ConfirmVerificationCode} label="Proceed"/>
                     }   
             </View>
-        </View>
+        </KeyboardAvoidingView>
         </>
     )
 }

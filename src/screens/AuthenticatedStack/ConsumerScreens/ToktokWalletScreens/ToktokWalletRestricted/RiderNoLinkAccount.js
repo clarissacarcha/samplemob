@@ -46,7 +46,7 @@ const RiderNoLinkAccount = ()=> {
         getCheckAccount({
             variables:{
                 input: {
-                    mobileNumber: mobileNo,
+                    mobileNumber: `09${mobileNo}`,
                     motherReferenceNumber: session.user.id,
                 }
             }
@@ -62,40 +62,55 @@ const RiderNoLinkAccount = ()=> {
              return
         }
 
-        if(mobile.length > 10 && mobile.slice(0,2) == "09"){
+        // if(mobile.length > 10 && mobile.slice(0,2) == "09"){
+        //     setErrorMessage("")
+        // }else{
+        //     setErrorMessage("Mobile number must be valid.")
+        // }
+
+        if(mobile.length > 8){
             setErrorMessage("")
         }else{
             setErrorMessage("Mobile number must be valid.")
         }
-
-        if(mobile.length > 11) return
+        if(mobile.length > 9) return
     
-        if(value[0] == "9"){
-            setMobileNo("09")
-        }else{
-            setMobileNo(mobile)
-        }
+        // if(value[0] == "9"){
+        //     setMobileNo("09")
+        // }else{
+        //     setMobileNo(mobile)
+        // }
+        setMobileNo(mobile)
        
     }
 
     return (
         <>
+            
              <View style={styles.content}>
-                <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>Enter mobile number</Text>
+                <Text style={styles.labelText}>Please enter your mobile number to link toktokwallet account</Text>
+                <Text style={[styles.labelSmall]}>Link your existing toktokwallet account.</Text>  
+                <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,marginTop: 10,}}>Mobile Number</Text>
+                <View style={{flexDirection:"row",alignItems:"center",width:"100%"}}>
+                <View style={{ backgroundColor:'lightgray', borderTopLeftRadius: SIZE.BORDER_RADIUS,borderBottomLeftRadius: SIZE.BORDER_RADIUS,justifyContent:"center",alignItems:"center", height: SIZE.BUTTON_HEIGHT,paddingHorizontal: 10,marginTop: 5}}>
+                    <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M,marginBottom: 0.5}}>09</Text>
+                </View>
                 <TextInput 
-                        style={[styles.input, {borderWidth: 1, borderColor: errorMessage != "" ? COLOR.RED : "transparent"}]} 
-                        placeholder="Enter your toktokwallet mobile number"
+                        style={[styles.input, {fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR, flex: 1,borderTopLeftRadius: 0,borderBottomLeftRadius: 0, borderWidth: 1, borderColor: errorMessage != "" ? COLOR.RED : "transparent"}]} 
+                        placeholder="00-000-0000"
                         keyboardType="number-pad"
                         placeholderTextColor={COLOR.DARK}
                         value={mobileNo}
+                        returnKeyType="done"
                         onChangeText={changeMobileNo}
                 />
+                </View>
                 <Text style={{fontFamily: FONT.REGULAR,color:COLOR.RED,fontSize: FONT_SIZE.S}}>{errorMessage}</Text>
             </View>
 
             <View style={{height: 120,padding: 16,justifyContent:'flex-end'}}>
                 {
-                    mobileNo.length == 11
+                    mobileNo.length == 9
                     ? <YellowButton label="Link Now" onPress={checkTokwaAccount}/>
                     : <DisabledButton label="Link Now"/>
                 }
@@ -109,7 +124,6 @@ const styles = StyleSheet.create({
     content: {
         flex: 1,
         padding: 16,
-        paddingTop: 30,
     },
     verifyWalletText: {
         fontFamily: FONT.BOLD,
@@ -135,7 +149,16 @@ const styles = StyleSheet.create({
         fontFamily: FONT.REGULAR,
         fontSize: FONT_SIZE.M,
         paddingHorizontal: 10,
-    }
+    },
+    labelText: {
+        fontSize: FONT_SIZE.M,
+        fontFamily: FONT.BOLD
+    },
+    labelSmall: {
+        fontFamily: FONT.REGULAR,
+        fontSize: FONT_SIZE.S,
+        color:"#929191"
+    },
 })
 
 

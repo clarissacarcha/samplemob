@@ -1,5 +1,5 @@
 import React , {useEffect,useState} from 'react'
-import {View,Text,StyleSheet,ScrollView,RefreshControl} from 'react-native'
+import {View,Text,StyleSheet,ScrollView,RefreshControl,Dimensions} from 'react-native'
 import { connect } from 'react-redux'
 
 
@@ -7,6 +7,8 @@ import { connect } from 'react-redux'
 import WalletCardInfo from './WalletCardInfo'
 import WalletRecentOutgoingTransfer from './WalletRecentOutgoingTransfer'
 import WalletRecentTransactions from './WalletRecentTransactions'
+
+const {height,width} = Dimensions.get("window")
 
 const WalletLandingPage = ({refreshing, onRefresh})=> {
     return (
@@ -48,6 +50,7 @@ const mapDispatchtoProps = (dispatch) => ({
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor:"white"
     }
 })
 

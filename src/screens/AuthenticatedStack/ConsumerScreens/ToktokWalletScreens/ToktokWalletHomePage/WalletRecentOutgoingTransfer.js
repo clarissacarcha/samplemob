@@ -47,13 +47,9 @@ const WalletRecentOutgoingTransfer = ()=> {
 
     if(!data.getOutgoingTransfer){
         return (
-            <>
             <View style={styles.container}>
-            <Text style={styles.title}>Outgoing Transfer</Text>
-
-            </View> 
-            <Separator/>
-            </>
+           
+            </View>
         )
     }
     
@@ -97,9 +93,9 @@ const WalletRecentOutgoingTransfer = ()=> {
 
 const styles = StyleSheet.create({
     container: {
-        width: "100%",
         backgroundColor:"white",
         padding: 16,
+        flex: 1,
     },
     title: {
         fontSize: FONT_SIZE.M,
