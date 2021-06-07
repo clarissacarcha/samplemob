@@ -99,11 +99,11 @@ const ToktokWalletRecoverPin = ({navigation})=> {
     return (
         <>
         <Separator />
-        <KeyboardAvoidingView 
+        <View 
             style={styles.container}
-            keyboardVerticalOffset={Platform.OS == "ios" ? 100 : 90} 
-            // keyboardVerticalOffset={90} 
-            behavior={Platform.OS === "ios" ? "padding" : "height"} 
+            // keyboardVerticalOffset={Platform.OS == "ios" ? 100 : 90} 
+            // // keyboardVerticalOffset={90} 
+            // behavior={Platform.OS === "ios" ? "padding" : "height"} 
         >
                 <View style={{flex: 1,alignItems:"center",marginTop: 40}}>
                     <Text style={{fontFamily: FONT.BOLD,fontSize: 16}}>Enter OTP code sent to</Text>
@@ -145,19 +145,6 @@ const ToktokWalletRecoverPin = ({navigation})=> {
 
                 </View>
                        
-                {/* <View style={styles.bottomActions}>
-                    <View style={{flex: 1,justifyContent:"center"}}>
-                        <Text style={{fontFamily: FONT.REGULAR,fontSize: SIZES.M}}>Didn't receive it?</Text>
-                        <TouchableOpacity onPress={getVerificationCode}>
-                            <Text style={{fontFamily: FONT.BOLD,fontSize: SIZES.M}}>Request a new code</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={{flex: 1,alignItems:"flex-end",justifyContent:"center"}}>
-                            <TouchableOpacity onPress={confirmCode} style={{borderRadius: 100,backgroundColor:COLOR.YELLOW,height: 50,width: 50,justifyContent:"center",alignItems:"center"}}>
-                                    <FIcon5 size={20} color={COLOR.DARK} name="chevron-right"/>
-                            </TouchableOpacity>
-                    </View>
-                </View> */}
                  <View style={{height: SIZE.BUTTON_HEIGHT}}> 
                     {
                         pinCode.length < 6
@@ -165,7 +152,7 @@ const ToktokWalletRecoverPin = ({navigation})=> {
                         : <YellowButton onPress={ConfirmVerificationCode} label="Proceed"/>
                     }   
             </View>
-        </KeyboardAvoidingView>
+        </View>
         </>
     )
 }

@@ -83,8 +83,12 @@ const VerifyAddress = ()=> {
 
             {cities.length == 0 ? null : <ModalCity type="address" data={cities} />}
 
-            <View style={{flex: 1,}}>
-                <ScrollView style={styles.content} showsVerticalScrollIndicator={true}>
+            <KeyboardAvoidingView
+                keyboardVerticalOffset={90}  
+                behavior={Platform.OS == "ios" ? "padding" : "height"}
+                style={styles.content}
+            >
+                   <ScrollView showsVerticalScrollIndicator={false}>
                         <Text style={styles.labelText}>Address</Text>
                         <Text style={[styles.labelSmall]}>Please enter your current address.</Text>  
                
@@ -187,7 +191,7 @@ const VerifyAddress = ()=> {
           
 
                     </ScrollView>
-                </View>
+                </KeyboardAvoidingView>
            
         </>
     )

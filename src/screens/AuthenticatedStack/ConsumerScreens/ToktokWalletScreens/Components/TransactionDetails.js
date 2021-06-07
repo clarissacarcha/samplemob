@@ -1,6 +1,7 @@
 import React from 'react'
 import {View,Text,Modal,StyleSheet,TouchableOpacity, Dimensions} from 'react-native'
 import {COLOR , FONT, FONT_SIZE} from '../../../../../res/variables'
+import { YellowButton } from '../../../../../revamp'
 
 const {width,height} = Dimensions.get("window")
 
@@ -42,10 +43,8 @@ export const TransactionDetails = ({
                                 <Text style={styles.labelText}>Ref Date & Time: {refDate}</Text>
                             </View>
                         </View>
-                        <View style={{flex: 1,justifyContent:"flex-end"}}>
-                            <TouchableOpacity onPress={()=>setVisible(false)} style={{alignItems:"center",justifyContent:"center"}}>
-                                    <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M ,color: COLOR.ORANGE}}>Ok</Text>
-                            </TouchableOpacity>
+                        <View style={{flex: 1,justifyContent:"flex-end", width: "50%",alignSelf:"center"}}>
+                            <YellowButton label="Ok" onPress={()=>setVisible(false)}/>
                         </View>
 
                     </View>

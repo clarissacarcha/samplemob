@@ -73,7 +73,7 @@ const ToktokWalletGcashHomePage = ({navigation,route})=> {
 
     // Linked and verified GCash Account
     return (
-       <VerifiedAccount record={data.getCashOutEnrollmentGcash.linkedGcash} provider={provider}/>
+       <VerifiedAccount record={data.getCashOutEnrollmentGcash.linkedGcash.gcashEnrollmentRecord} provider={provider}/>
     )
 }
 

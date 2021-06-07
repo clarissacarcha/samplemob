@@ -42,16 +42,15 @@ const ToktokWalletHomePage = ({navigation,route})=> {
         }
     })
 
+
     const onRefresh = useCallback(()=>{
         setRefreshing(true)
         setTimeout(() => {
-            // getToktokWallet()
             navigation.replace("ToktokWalletHomePage")
             setRefreshing(false)
         }, 200);
 
     },[])
-
 
     if (loading) {
         return (

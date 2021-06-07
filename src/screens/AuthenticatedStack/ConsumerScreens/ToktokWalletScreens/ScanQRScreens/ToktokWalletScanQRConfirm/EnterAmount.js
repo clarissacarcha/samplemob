@@ -11,7 +11,7 @@ const EnterAmount = ({amount , setAmount , setSwipeEnabled  , tokwaAccount})=> {
         const num = value.replace(/[^0-9.]/g, '')
         const checkFormat = /^(\d*[.]?[0-9]{0,2})$/.test(num);
         if(!checkFormat) return  
-        if(num.length > 8) return
+        if(num.length > 6) return
         if(num[0] == ".") return setAmount("0.")
         // setTempAmount(num)
         setAmount(num)

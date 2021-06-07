@@ -1,8 +1,7 @@
 import React from 'react'
 import {View,Text,StyleSheet} from 'react-native'
-import { HeaderTitle } from '../../../../../components'
 import { COLORS, FONTS, SIZES } from '../../../../../res/constants'
-import { HeaderBack, YellowButton } from '../../../../../revamp'
+import { HeaderBack, YellowButton, HeaderTitle } from '../../../../../revamp'
 import { Separator, SwipeProceedButton } from '../Components'
 
 //SELF IMPORTS
@@ -27,7 +26,8 @@ const ToktokWalletReviewAndConfirm = ({navigation,route})=> {
     })
 
     const confirm = ()=> {
-        navigation.replace("ToktokWalletSecurityPinCode", {onConfirm: onConfirm})
+        // navigation.replace("ToktokWalletSecurityPinCode", {onConfirm: onConfirm})
+        onConfirm()
     }
 
     const RenderDisplay = ()=> {

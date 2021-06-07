@@ -16,17 +16,24 @@ export const GET_CASH_OUT_ENROLLMENT_GCASH = gql`
         getCashOutEnrollmentGcash {
             linkedGcash {
                 id
-                mobile
-                firstName
-                lastName
-                streetAddress
-                barangayTown
-                provinceCity
-                country
-                birthdate
                 accountId
+                cashOutEnrollmentGcashId
+                origin
                 status
-                active
+                gcashEnrollmentRecord {
+                    id
+                    mobile
+                    firstName
+                    lastName
+                    streetAddress
+                    barangayTown
+                    provinceCity
+                    country
+                    birthdate
+                    accountId
+                    status
+                    active
+                }
             }
             pendingRecord {
                 id

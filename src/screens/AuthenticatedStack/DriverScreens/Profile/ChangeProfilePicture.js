@@ -9,6 +9,7 @@ import {PATCH_PERSON_PROFILE_PICTURE} from '../../../../graphql';
 import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../../components';
 import {COLOR, DARK, MAP_DELTA_LOW, ORANGE, MEDIUM} from '../../../../res/constants';
 import {onError} from '../../../../util/ErrorUtility';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
 const imageWidth = Dimensions.get('window').width - 40;
 
@@ -30,18 +31,34 @@ const ChangeProfilePicture = ({navigation, route, session, createSession}) => {
   };
 
   const handleSelectFile = async () => {
+    // try {
+    //   const res = await DocumentPicker.pick({
+    //     type: [DocumentPicker.types.images],
+    //   });
+    //   setImage(res);
+    // } catch (err) {
+    //   if (DocumentPicker.isCancel(err)) {
+    //     // User cancelled the picker, exit any dialogs or menus and move on
+    //   } else {
+    //     throw err;
+    //   }
+    // }
     try {
-      const res = await DocumentPicker.pick({
-        type: [DocumentPicker.types.images],
-      });
-      setImage(res);
-    } catch (err) {
-      if (DocumentPicker.isCancel(err)) {
-        // User cancelled the picker, exit any dialogs or menus and move on
-      } else {
-        throw err;
-      }
-    }
+      console.log("ImagePicker");
+      launchImageLibrary({}, async (response) => {
+           if (response.didCancel) {
+              console.log("User cancelled image picker");
+            } else if (response.error) {
+              console.log("ImagePicker Error: ", response.error);
+            } else if (response.customButton) {
+              console.log("User tapped custom button: ", response.customButton);
+            } else {
+              setImage(response)
+           }
+      })
+  }catch (err) {
+      throw err
+  }
   };
 
   const [patchPersonProfilePicture, {loading}] = useMutation(PATCH_PERSON_PROFILE_PICTURE, {

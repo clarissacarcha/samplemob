@@ -17,6 +17,7 @@ const EnterMobileNo = ({
     setMobileNo , 
     recipientDetails,
     tokwaAccount,
+    setGetAccountLoading
 })=> {
 
     const [errorMessage,setErrorMessage] = useState("")
@@ -122,6 +123,10 @@ const EnterMobileNo = ({
     useEffect(()=>{
         console.log(recipientDetails)
     },[recipientDetails])
+
+    useEffect(()=>{
+        setGetAccountLoading(walletLoading)
+    },[walletLoading])
 
     return (
        <View style={styles.container}>

@@ -1,5 +1,5 @@
 import React, {useEffect,useState} from 'react'
-import {View,Text,StyleSheet,ScrollView,TextInput,Alert,TouchableOpacity,Modal,StatusBar,TouchableOpacityBase,Image} from 'react-native'
+import {View,Text,StyleSheet,ScrollView,TextInput,Alert,TouchableOpacity,Modal,StatusBar,TouchableOpacityBase,Image,KeyboardAvoidingView,Platform} from 'react-native'
 import { HeaderBack, YellowButton } from '../../../../../../revamp';
 import {AlertOverlay, HeaderTitle} from '../../../../../../components'
 import { FONT, FONT_SIZE , COLOR } from '../../../../../../res/variables';
@@ -46,7 +46,10 @@ const PromptMessage = ({
                         <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.L}}>Success!</Text>
                         <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,color: COLOR.DARK,textAlign:"center"}}>Your application has been submitted. Please wait for your GCash disbursement account to be verified.</Text>
                     </View>
-                    <TouchableOpacity 
+                    <View style={{width: "50%",alignSelf:"center"}}>
+                        <YellowButton label="Ok" onPress={redirect}/>
+                    </View>
+                    {/* <TouchableOpacity 
                         style={{
                             width: "100%",
                             paddingVertical: 2,
@@ -55,7 +58,7 @@ const PromptMessage = ({
                         onPress={redirect}
                     >
                         <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,color: COLOR.ORANGE}}>Ok</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                   
                 </View>
             </View>
@@ -211,7 +214,11 @@ const CreateForm = ({navigation,session,mobile,provider})=> {
                 setPickerVisible(false);
             }}
         />
-       <View style={styles.container}>
+       <KeyboardAvoidingView
+        keyboardVerticalOffset={90}  
+        behavior={Platform.OS == "ios" ? "padding" : "height"}
+        style={styles.container}
+       >
             <ScrollView style={{flex: 1,flexGrow: 1,}} showsVerticalScrollIndicator={false}>
                 <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>Please nominate an existing GCash account.</Text>
                 <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S,marginBottom: 10}}>Successful fund transfer will be forwarded to this GCash account.</Text>
@@ -354,7 +361,7 @@ const CreateForm = ({navigation,session,mobile,provider})=> {
 
             {/* <YellowButton label="Save" onPress={saveGcashAccount}/> */}
 
-       </View>
+       </KeyboardAvoidingView>
        </>
     )
 }
@@ -399,7 +406,7 @@ const styles = StyleSheet.create({
         alignItems:"center"
     },
     promptContent: {
-        height: 250,
+        height: 270,
         width: 280,
         backgroundColor:"white",
         borderRadius: 10,

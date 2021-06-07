@@ -28,9 +28,10 @@ const ToktokWalletGcashLinKAccount = ({navigation,route})=> {
     const inputRef = useRef();
     const alert = useAlert()
 
-    const [patchLinkAccount, {date,error,loading}] = useMutation(PATCH_LINK_ACCOUNT,{
+    const [patchLinkAccount, {data,error,loading}] = useMutation(PATCH_LINK_ACCOUNT,{
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({patchLinkAccount})=>{
+            console.log(patchLinkAccount)
             setModalSuccessVisible(true)
         },
         onError: (error)=>{
@@ -38,7 +39,7 @@ const ToktokWalletGcashLinKAccount = ({navigation,route})=> {
         }
     })
 
-    const [getGcashLinkOTP] = useLazyQuery(GET_GCASH_LINK_OTP, {
+    const [getGcashLinkOTP, {loading: getOtpLoading}] = useLazyQuery(GET_GCASH_LINK_OTP, {
         fetchPolicy: "network-only",
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({getGcashLinkOTP})=>{
@@ -89,11 +90,11 @@ const ToktokWalletGcashLinKAccount = ({navigation,route})=> {
          <AlertOverlay visible={loading} />
         <Separator/>
         <SuccessfulModal visible={modalSuccessVisible} setVisible={setModalSuccessVisible} provider={provider}/>
-        <KeyboardAvoidingView 
+        <View 
             style={styles.container}
-            keyboardVerticalOffset={Platform.OS == "ios" ? 100 : 90} 
-            // keyboardVerticalOffset={90} 
-            behavior={Platform.OS === "ios" ? "padding" : "height"} 
+            // keyboardVerticalOffset={Platform.OS == "ios" ? 100 : 90} 
+            // // keyboardVerticalOffset={90} 
+            // behavior={Platform.OS === "ios" ? "padding" : "height"} 
         >
             <View style={{flex: 1,alignItems:"center", marginTop: 40}}>
                     <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L}}>Enter OTP code sent to</Text>
@@ -124,12 +125,12 @@ const ToktokWalletGcashLinKAccount = ({navigation,route})=> {
             </View>
             <View style={{height: SIZE.BUTTON_HEIGHT}}> 
             {
-                pinCode.length < 6
+                pinCode.length < 6 || getOtpLoading
                 ? <DisabledButton label="Proceed"/>
                 : <YellowButton onPress={ConfirmVerificationCode} label="Proceed"/>
             }   
             </View>
-        </KeyboardAvoidingView>
+        </View>
         </>
     )
 }

@@ -7,12 +7,12 @@ import { POST_FUND_TRANSFER } from '../../../../../../graphql/toktokwallet'
 import {useNavigation} from '@react-navigation/native'
 import {useAlert} from '../../../../../../hooks/useAlert'
 import {onErrorAlert} from '../../../../../../util/ErrorUtility'
-import {DisabledButton, SwipeProceedButton} from '../../Components'
 
 //SELF IMPORTS
 import SuccessfulModal from '../../SendMoneyScreens/ToktokWalletSendMoney/SuccessfulModal'
 import { YellowButton } from '../../../../../../revamp'
 import { AlertOverlay } from '../../../../../../components'
+import {DisabledButton, SwipeProceedButton , EnterPinCode} from '../../Components'
 
 const {width,height} = Dimensions.get("window")
 
@@ -31,22 +31,30 @@ const ProceedButton = ({
         referenceNumber: "",
         createdAt: ""
     })
+    const [pinCodeAttempt,setPinCodeAttempt] = useState(6)
+    const [openPinCode,setOpenPinCode] = useState(false)
 
     const [postFundTransfer , {data ,error ,loading}] = useMutation(POST_FUND_TRANSFER, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
-        variables: {
-            input: {
-                amount: +amount,
-                note: note,
-                destinationMobileNo: recipientInfo.mobileNumber
-            }
-        },
         onError: (error)=> {
+            const {graphQLErrors, networkError} = error;
+            if(graphQLErrors[0].message == "Wallet Hold"){
+                setOpenPinCode(false)
+                navigation.navigate("ToktokWalletHomePage")
+                navigation.replace("ToktokWalletHomePage")
+                return navigation.push("ToktokWalletRestricted", {component: "onHold"})
+            }
+
+            if(graphQLErrors[0].message == "Invalid Pincode"){
+                return setPinCodeAttempt(graphQLErrors[0].payload.remainingAttempts)
+            }
+            setOpenPinCode(false)
             onErrorAlert({alert,error})
-            navigation.pop()
+            return navigation.pop()
         },
         onCompleted: ({postFundTransfer})=> {
             console.log(JSON.stringify(postFundTransfer))
+            setOpenPinCode(false)
             setWalletinfoParams(postFundTransfer)
             setSuccessModalVisible(true)
         }
@@ -58,7 +66,9 @@ const ProceedButton = ({
     }
 
     const onSwipeSuccess = ()=> {
-        return navigation.push("ToktokWalletSecurityPinCode", {onConfirm: postFundTransfer})
+        setPinCodeAttempt(6)
+        return setOpenPinCode(true)
+        //return navigation.push("ToktokWalletSecurityPinCode", {onConfirm: postFundTransfer})
     }
 
     const reviewAndConfirm = ()=> {
@@ -79,10 +89,31 @@ const ProceedButton = ({
         })
     }
 
+    const Proceed = (pinCode)=> {
+        postFundTransfer({
+            variables: {
+                input: {
+                    amount: +amount,
+                    note: note,
+                    destinationMobileNo: recipientInfo.mobileNumber,
+                    pinCode: pinCode
+                }
+            },
+        })
+    }
 
     return (
         <>
-           <AlertOverlay visible={loading} />
+          
+           <EnterPinCode 
+                visible={openPinCode} 
+                setVisible={setOpenPinCode} 
+                loading={loading}
+                pinCodeAttempt={pinCodeAttempt}
+                callBackFunc={Proceed}
+            >
+                 <AlertOverlay visible={loading} />
+            </EnterPinCode>
             <SuccessfulModal 
                 successModalVisible={successModalVisible}
                 amount={amount} 
