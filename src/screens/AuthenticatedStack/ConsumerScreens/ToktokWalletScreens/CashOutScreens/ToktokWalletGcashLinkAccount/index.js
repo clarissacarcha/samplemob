@@ -27,6 +27,7 @@ const ToktokWalletGcashLinKAccount = ({navigation,route})=> {
     const [modalSuccessVisible,setModalSuccessVisible] = useState(false)
     const inputRef = useRef();
     const alert = useAlert()
+    const [otpTimer,setOtpTimer] = useState(120)
 
     const [patchLinkAccount, {data,error,loading}] = useMutation(PATCH_LINK_ACCOUNT,{
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
@@ -44,6 +45,7 @@ const ToktokWalletGcashLinKAccount = ({navigation,route})=> {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({getGcashLinkOTP})=>{
             console.log(getGcashLinkOTP)
+            setOtpTimer(120)
         },
         onError: (error)=>{
             onErrorAlert({alert,error})
@@ -85,6 +87,15 @@ const ToktokWalletGcashLinKAccount = ({navigation,route})=> {
         }
     },[])
 
+    useEffect(()=>{
+        if(otpTimer >= 0){
+            setTimeout(()=>{
+                setOtpTimer(state=>state - 1)
+            },1000)
+        }
+        
+    },[otpTimer])
+
     return (
         <>
          <AlertOverlay visible={loading} />
@@ -117,10 +128,12 @@ const ToktokWalletGcashLinKAccount = ({navigation,route})=> {
                             // onSubmitEditing={onSubmit}
                         />
                         <TouchableOpacity
+                                disabled={otpTimer > 0 ? true : false}
                                 style={{marginTop: 18,paddingVertical: 10,alignItems: "center"}}
                                 onPress={CreateVerificationCode}
                         >
-                                <Text style={{color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>Didn't get code? Tap here to resend.</Text>
+                                <Text style={{opacity: otpTimer > 0 ? 0.7 : 1,color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>Didn't get code? Tap here to resend.</Text>
+                                { otpTimer > 0 && <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>{otpTimer} s</Text> }
                         </TouchableOpacity>
             </View>
             <View style={{height: SIZE.BUTTON_HEIGHT}}> 

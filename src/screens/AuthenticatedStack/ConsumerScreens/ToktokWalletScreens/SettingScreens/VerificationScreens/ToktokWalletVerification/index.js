@@ -68,7 +68,7 @@ const MainSetupComponent = ()=> {
 
     navigation.setOptions({
         headerLeft: ()=> <HeaderBackClose setPromptVisible={(value)=>setVisible(true)} currentIndex={currentIndex} setCurrentIndex={setCurrentIndex}/>,
-        headerTitle: ()=> <HeaderTitle headerRightIsSet label={['Verification','']}/>,
+        headerTitle: ()=> <HeaderTitle label={['Verification','']}/>,
         headerRight: ()=>  <TouchableHighlight style={{paddingRight: 16}} underlayColor={'white'} onPress={cancelSetup}>
                                 <View style={{justifyContent:"center",alignItems:"center"}}>
                                 <Text style={{fontSize: SIZES.M,fontFamily: FONTS.REGULAR ,color:'#929191'}}>Cancel</Text>

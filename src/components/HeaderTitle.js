@@ -17,7 +17,7 @@ export const HeaderTitle = ({label}) => {
 const styles = StyleSheet.create({
   box: {
     alignItems: 'center',
-    width: "100%"
+    marginRight: 66,
   },
   title: {
     fontSize: FONT_SIZE.L,

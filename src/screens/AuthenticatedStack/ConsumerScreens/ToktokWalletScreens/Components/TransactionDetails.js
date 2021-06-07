@@ -27,7 +27,7 @@ export const TransactionDetails = ({
             >
                 <View style={styles.content}>
                     <View style={{
-                        height: 200,
+                        height: 230,
                         width: width * 0.9,
                         backgroundColor:"white",
                         borderRadius: 5,

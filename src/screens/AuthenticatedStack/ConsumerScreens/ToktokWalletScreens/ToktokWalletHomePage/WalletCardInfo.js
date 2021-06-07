@@ -1,11 +1,12 @@
 import React , {useContext} from 'react'
-import {View,Text,StyleSheet,Dimensions,TouchableOpacity,Animated,RefreshControl,ScrollView,ActivityIndicator} from 'react-native'
+import {View,Text,StyleSheet,Dimensions,TouchableOpacity,Animated,Alert,RefreshControl,ScrollView,ActivityIndicator} from 'react-native'
 import { COLOR , FONT , FONT_SIZE} from '../../../../../res/variables';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import { useNavigation } from '@react-navigation/native'
 import {Separator , HeaderImageBackground, HeaderTitle} from '../Components';
 import { numberFormat } from '../../../../../helper';
 import {useSelector} from 'react-redux'
+import {APP_FLAVOR , ACCOUNT_TYPE} from '../../../../../res/constants'
 
 
 //SELF IMPORTS
@@ -34,6 +35,9 @@ const WalletCardInfo = ({loading})=> {
     })
 
     const cashIn = ()=> {
+        if(APP_FLAVOR == "D" && ACCOUNT_TYPE == 2){
+            return Alert.alert("","Use the toktok customer app for toktokwallet full features.")
+        }
         if(checkWallet.checkIfAllowed()){
             return navigation.navigate("ToktokWalletPaymentOptions")
         }

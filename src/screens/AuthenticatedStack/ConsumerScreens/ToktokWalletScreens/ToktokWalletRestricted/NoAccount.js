@@ -1,32 +1,15 @@
 import React , {useState} from 'react'
-import {View,Text,StyleSheet, TouchableOpacity} from 'react-native'
+import {View,Text,StyleSheet, TouchableOpacity, StatusBar} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
 import { HeaderImageBackground , HeaderTitle , Separator  } from '../Components'
 import { COLOR , FONT_SIZE , FONT , SIZE } from '../../../../../res/variables'
+import { APP_FLAVOR, ACCOUNT_TYPE } from '../../../../../res/constants'
 import { YellowButton , VectorIcon , ICON_SET } from '../../../../../revamp'
 
 //SELF IMPORTS 
 import ModalLinkTokwaAccount from "./ModalLinkTokwaAccount";
-
-const ProceedButton = ({route})=> {
-    const navigation = useNavigation()
-    return (
-        <YellowButton label="Verify Now" onPress={()=> {
-            navigation.pop()
-            navigation.navigate(route)
-        }}/>
-    )
-}
-
-const LinkButton = ({onPress})=> {
-    const navigation = useNavigation()
-   
-    return (
-        <TouchableOpacity onPress={onPress} style={styles.linkButton}>
-                <Text style={styles.linkButtonLabel}>Link</Text>
-        </TouchableOpacity>
-    )
-}
+import CustomerNoAccount from "./CustomerNoAccount";
+import RiderNoLinkAccount from "./RiderNoLinkAccount";
 
 
 const PendingKyc = ()=> {
@@ -44,6 +27,7 @@ const PendingKyc = ()=> {
     return (
         <>
         <ModalLinkTokwaAccount visible={showLinkModal} setVisible={setShowLinkModal}/>
+        <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
         <View style={styles.container}>
              <View style={styles.headings}>
                 <HeaderImageBackground>
@@ -51,23 +35,12 @@ const PendingKyc = ()=> {
                 </HeaderImageBackground>
             </View>
             <Separator/>
-            <View style={styles.content}>
-                <View style={{alignItems:"center",marginTop: 10,}}>
-                    <Text style={styles.verifyWalletText}>Verify your <Text style={{...styles.verifyWalletText, color: COLOR.YELLOW}}>toktok</Text><Text style={{...styles.verifyWalletText, color: COLOR.ORANGE}}>wallet</Text></Text>
-                    <Text style={styles.clickVerifyText}>Click the "Verify Now" button.</Text>
-                    <View style={{marginTop: 20}}>
-                        {/* <Text style={styles.listItem}><VectorIcon name="check" size={13} iconSet={ICON_SET.FontAwesome5}/> Create your toktokwallet</Text> */}
-                        <Text style={styles.listItem}><VectorIcon name="check" size={13} iconSet={ICON_SET.FontAwesome5}/> Secure your account and payments</Text>
-                        <Text style={styles.listItem}><VectorIcon name="check" size={13} iconSet={ICON_SET.FontAwesome5}/> Enjoy convenient payment experience</Text>
-                        <Text style={styles.listItem}><VectorIcon name="check" size={13} iconSet={ICON_SET.FontAwesome5}/> Unlock toktokwallet features</Text>
-                    </View>
-                </View>
-            </View>
 
-            <View style={{height: 120,padding: 16,justifyContent:'flex-end'}}>
-               {/* <LinkButton onPress={LinkAccount}/> */}
-               <ProceedButton route="ToktokWalletVerification" />
-            </View>
+            {
+                APP_FLAVOR == "C"
+                ? <CustomerNoAccount/>
+                : <RiderNoLinkAccount/>
+            }
         
         </View>
         </>
@@ -83,27 +56,6 @@ const styles = StyleSheet.create({
         height: 92,
         backgroundColor:"black"
     },  
-    content: {
-        flex: 1,
-        padding: 10,
-        paddingTop: 30,
-    },
-    verifyWalletText: {
-        fontFamily: FONT.BOLD,
-        fontSize: 16,
-        textAlign:'center'
-    },
-    clickVerifyText: {
-        fontFamily: FONT.REGULAR,
-        fontSize: FONT_SIZE.S,
-        textAlign:'center'
-    },
-    listItem: {
-        fontFamily: FONT.REGULAR,
-        marginBottom: 5,
-        fontSize: FONT_SIZE.S,
-        textAlign:'left'
-    },
     linkButton: {
         width: "100%",
         height: SIZE.BUTTON_HEIGHT,

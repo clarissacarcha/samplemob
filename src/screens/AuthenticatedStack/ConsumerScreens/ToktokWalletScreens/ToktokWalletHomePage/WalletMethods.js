@@ -1,8 +1,9 @@
 import React , {useContext} from 'react'
-import {View,Text,StyleSheet,Dimensions,Image,TouchableOpacity} from 'react-native'
+import {View,Text,StyleSheet,Dimensions,Image,TouchableOpacity,Alert} from 'react-native'
 import {COLOR, FONT, FONT_SIZE} from '../../../../../res/variables'
 import {useNavigation} from '@react-navigation/native'
 import {CheckWalletAccountRestrictionContext} from './CheckWalletAccountRestriction'
+import {APP_FLAVOR , ACCOUNT_TYPE} from '../../../../../res/constants'
 
 const {height,width} = Dimensions.get("window")
 
@@ -24,6 +25,9 @@ const WalletMethods = ()=> {
     const checkWallet = useContext(CheckWalletAccountRestrictionContext)
 
     const onPress = (route)=> {
+        if(APP_FLAVOR == "D" && ACCOUNT_TYPE == 2){
+            return Alert.alert("","Use the toktok customer app for toktokwallet full features.")
+        }
         if(checkWallet.checkIfAllowed()){
             return navigation.navigate(route)
         }  
