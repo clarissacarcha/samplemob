@@ -116,9 +116,16 @@ const VerifyPin = ({pageIndex,setPageIndex})=> {
 
                         <TouchableOpacity
                                 style={{marginTop: 18,paddingVertical: 10,alignItems: "center"}}
+                                onPress={()=>setShowPin(!showPin)}
+                        >
+                                <Text style={{color: COLOR.ORANGE,fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>{showPin ? "HIDE PIN" : "SHOW PIN"}</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                                style={{paddingVertical: 10,alignItems: "center"}}
                                 onPress={forgotPIN}
                         >
-                                <Text style={{color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>Forgot PIN?</Text>
+                                <Text style={{color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>FORGOT PIN?</Text>
                         </TouchableOpacity>
                     </View>
             </ScrollView>

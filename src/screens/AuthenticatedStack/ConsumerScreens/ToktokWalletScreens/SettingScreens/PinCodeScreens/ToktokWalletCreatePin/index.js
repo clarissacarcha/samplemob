@@ -106,7 +106,7 @@ const ToktokWalletCreatePin = ({navigation,route})=> {
             case 1:
                 return <CreatePin pinCode={pinCode} tokwaAccount={tokwaAccount} setPinCode={setPinCode} pageIndex={pageIndex} setPageIndex={setPageIndex}/>
             case 2:
-                return <CreateConfirmPin pinCode={pinCode} setPinCode={setPinCode} pageIndex={pageIndex} setPageIndex={setPageIndex} patchPincodeToktokWallet={proceed}/>
+                return <CreateConfirmPin tokwaAccount={tokwaAccount} pinCode={pinCode} setPinCode={setPinCode} pageIndex={pageIndex} setPageIndex={setPageIndex} patchPincodeToktokWallet={proceed}/>
             default: 
                 return
         }
@@ -121,7 +121,7 @@ const ToktokWalletCreatePin = ({navigation,route})=> {
             setVisible={setLeaveModalVisible}
             onConfirm={()=>navigation.goBack()}
         />
-        <SuccessModal modalVisible={successModalVisible} />
+        <SuccessModal modalVisible={successModalVisible} tokwaAccount={tokwaAccount}/>
         <Separator />
         <View
             // keyboardVerticalOffset={Platform.OS == "ios" ? 50 : 90} 
