@@ -62,8 +62,13 @@ const RegisterMobile = ({provider})=> {
                 Alert.alert('',`Application status for gcash number ${getGcashEnrollmentRecord.mobile} is on pending`)
             }
 
+            // // create linking table if linking unlinking is allowed
+            // if(getGcashEnrollmentRecord.status == 1){
+            //     setShowLinkModal(true)
+            // }
+            // // temporary solution for 1:1 Gcash
             if(getGcashEnrollmentRecord.status == 1){
-                setShowLinkModal(true)
+                return Alert.alert("",`GCash number ${getGcashEnrollmentRecord.mobile} already linked to toktokwallet account`)
             }
         },
         onError: (error)=> {

@@ -70,6 +70,7 @@ const ProceedButton = ({
             swipeTitle: `Send PHP ${amount != "" ? numberFormat(amount) : "0"}`,
             data: {
                 amount: amount,
+                note: note,
                 recipient: {
                     name: `${recipientInfo.person.firstName} ${recipientInfo.person.lastName}`,
                     mobileNo: recipientInfo.mobileNumber
@@ -85,6 +86,7 @@ const ProceedButton = ({
             <SuccessfulModal 
                 successModalVisible={successModalVisible}
                 amount={amount} 
+                note={note}
                 recipient={{
                     name: `${recipientInfo.person.firstName} ${recipientInfo.person.lastName}`,
                     mobileNo: recipientInfo.mobileNumber

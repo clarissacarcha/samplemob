@@ -64,6 +64,7 @@ const ToktokWalletSendMoney = ({navigation,route})=> {
         if(route.params){
             if(route.params.recentTransfer){
                 setAmount(route.params.recentTransfer.amount)
+                setNote(route.params.recentTransfer.note)
                 setMobileNo(route.params.recentTransfer.destinationWallet.account.mobileNumber.replace("+63","0"))
                 setSwipeEnabled(route.params.recentTransfer.amount <= tokwaAccount.wallet.balance)
             }

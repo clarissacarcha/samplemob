@@ -33,7 +33,7 @@ export const WalletLog = ({item ,index , itemsLength }) => {
         })
     }
 
-    const title = item.externalName ? item.externalName : item.transactionType.name
+    let title = item.externalName ? item.externalName : item.transactionType.name
     const amountcolor = item.sourceWalletId == tokwaAccount.wallet.id ? "red" : "green"
     const amountprefix = item.sourceWalletId == tokwaAccount.wallet.id ? "-" : "+"
     // const referenceDate = moment(item.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')
@@ -45,6 +45,7 @@ export const WalletLog = ({item ,index , itemsLength }) => {
     if(item.cashOutId){
         sourceName = ``
         destinationName = ``
+        title = item.sourceWalletId == tokwaAccount.wallet.id ? item.transactionType.name : `${item.transactionType.name} Return`
     }else if(item.cashInId){
         sourceName = ``
         destinationName = ``

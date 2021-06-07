@@ -21,6 +21,8 @@ export const GET_OUTGOING_TRANSFER = gql`
             id
             amount
             status
+            createdAt
+            note
             destinationPerson {
                 firstName
                 lastName
