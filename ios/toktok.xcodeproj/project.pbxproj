@@ -609,11 +609,8 @@
 				869B7ED20BFD4137B023FC07 /* Jost-ExtraBoldItalic.ttf in Resources */,
 				EB7E15BEDD9D486DB99C8BD5 /* Jost-ExtraLight.ttf in Resources */,
 				6B4B3099EC954F2CBEC4C7C2 /* Jost-ExtraLightItalic.ttf in Resources */,
-<<<<<<< HEAD
 				BE7A599A265C01E900426FE6 /* toktok_notification.wav in Resources */,
-=======
 				E7EA463D2651F5C300D60944 /* GoogleService-Info.plist in Resources */,
->>>>>>> 0090e3ae3a34762f8eeb31471778cd9e1931e2ca
 				53A7D436DEC44D4E9B3468AD /* Jost-Italic.ttf in Resources */,
 				5DF82E20605045268133C6FC /* Jost-Light.ttf in Resources */,
 				339CAC044D3440279207DDC0 /* Jost-LightItalic.ttf in Resources */,
@@ -1109,12 +1106,8 @@
 				);
 				INFOPLIST_FILE = toktok/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-<<<<<<< HEAD
 				MARKETING_VERSION = 1.15.5;
-=======
-				MARKETING_VERSION = 1.15.3;
 				NEW_SETTING = "";
->>>>>>> 0090e3ae3a34762f8eeb31471778cd9e1931e2ca
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1143,12 +1136,8 @@
 				DEVELOPMENT_TEAM = GB5B4BE7QP;
 				INFOPLIST_FILE = toktok/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-<<<<<<< HEAD
 				MARKETING_VERSION = 1.15.5;
-=======
-				MARKETING_VERSION = 1.15.3;
 				NEW_SETTING = "";
->>>>>>> 0090e3ae3a34762f8eeb31471778cd9e1931e2ca
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
