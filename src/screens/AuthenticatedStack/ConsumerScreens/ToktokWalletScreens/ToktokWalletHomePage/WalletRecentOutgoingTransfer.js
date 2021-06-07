@@ -1,5 +1,5 @@
 import React, {useContext} from 'react'
-import {View,StyleSheet,Text,TouchableOpacity} from 'react-native'
+import {View,StyleSheet,Text,TouchableOpacity,Alert} from 'react-native'
 import { COLOR , FONT , FONT_SIZE  } from '../../../../../res/variables'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import moment from 'moment'
@@ -11,6 +11,7 @@ import {useNavigation} from '@react-navigation/native'
 import {Separator} from '../Components'
 import {useSelector} from 'react-redux'
 import {CheckWalletAccountRestrictionContext} from './CheckWalletAccountRestriction'
+import {APP_FLAVOR , ACCOUNT_TYPE} from '../../../../../res/constants'
 
 const WalletRecentOutgoingTransfer = ()=> {
 
@@ -20,6 +21,9 @@ const WalletRecentOutgoingTransfer = ()=> {
 
 
     const ViewRecentTransfer = (recentTransfer)=> {
+        if(APP_FLAVOR == "D" && ACCOUNT_TYPE == 2){
+            return Alert.alert("","Use the toktok customer app for toktokwallet full features.")
+        }
         if(checkWallet.checkIfAllowed()){
             return navigation.navigate("ToktokWalletRecentTransferView",{recentTransfer})
         }

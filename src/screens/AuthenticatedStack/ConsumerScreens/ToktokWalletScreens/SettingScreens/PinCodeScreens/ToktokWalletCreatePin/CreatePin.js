@@ -23,7 +23,7 @@ const CreatePin = ({pinCode,setPinCode,pageIndex,setPageIndex,tokwaAccount})=> {
     return (
         <View style={styles.container}>
             <ScrollView style={styles.content}>
-                    <Text style={{fontSize: SIZES.M,fontFamily: FONTS.BOLD,marginTop: 20,alignSelf:"center"}}>Enter your {tokwaAccount.pincode ? "new ": ""}PIN</Text>
+                    <Text style={{fontSize: SIZES.M,fontFamily: FONTS.BOLD,marginTop: 20,alignSelf:"center"}}>Enter your {tokwaAccount.pinCode ? "new ": ""}PIN</Text>
                     <View style={{position: 'relative',marginTop: 50,}}>
                         <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={showPin}/>
                         <TextInput

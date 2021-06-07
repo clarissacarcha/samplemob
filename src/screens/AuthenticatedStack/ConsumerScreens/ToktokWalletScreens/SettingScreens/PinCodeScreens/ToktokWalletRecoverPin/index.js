@@ -47,12 +47,14 @@ const ToktokWalletRecoverPin = ({navigation})=> {
     const [pinCode,setPinCode] = useState("")
     const inputRef = useRef();
     const alert = useAlert();
+    const [otpTimer,setOtpTimer] = useState(120)
 
     const [getForgotAndRecoverOTPCode] = useLazyQuery(GET_FORGOT_AND_RECOVER_OTP_CODE , {
         fetchPolicy: "network-only",
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({getForgotAndRecoverOTPCode})=>{
             console.log(getForgotAndRecoverOTPCode)
+            setOtpTimer(120)
         },
         onError: (error)=>{
             onErrorAlert({alert,error})
@@ -96,6 +98,15 @@ const ToktokWalletRecoverPin = ({navigation})=> {
         }
     },[])
 
+    useEffect(()=>{
+        if(otpTimer >= 0){
+            setTimeout(()=>{
+                setOtpTimer(state=>state - 1)
+            },1000)
+        }
+        
+    },[otpTimer])
+
     return (
         <>
         <Separator />
@@ -137,10 +148,12 @@ const ToktokWalletRecoverPin = ({navigation})=> {
                         />
 
                         <TouchableOpacity
+                                disabled={otpTimer > 0 ? true : false}
                                 style={{marginTop: 18,paddingVertical: 10,alignItems: "center"}}
                                 onPress={getForgotAndRecoverOTPCode}
                         >
-                                <Text style={{color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>Didn't get code? Tap here to resend.</Text>
+                                <Text style={{opacity: otpTimer > 0 ? 0.7 : 1, color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>Didn't get code? Tap here to resend.</Text>
+                                { otpTimer > 0 && <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>{otpTimer} s</Text> }
                         </TouchableOpacity>
 
                 </View>
