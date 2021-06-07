@@ -10,6 +10,7 @@ import {DisabledButton, NumberBoxes} from '../../../Components'
 import { YellowButton } from '../../../../../../../revamp';
 import { useAlert } from '../../../../../../../hooks';
 import { Alert } from 'react-native';
+import { AlertOverlay } from '../../../../../../../components';
 
 const numWordArray = {
     "1": "one",
@@ -87,6 +88,8 @@ const VerifyPin = ({pageIndex,setPageIndex})=> {
     }
 
     return (
+        <>
+         <AlertOverlay visible={loading} />
         <View style={styles.container}>
             <ScrollView style={styles.content}>
                     <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 20,alignSelf:"center"}}>Enter old PIN</Text>
@@ -105,7 +108,7 @@ const VerifyPin = ({pageIndex,setPageIndex})=> {
                                 setPinCode(num);
                             }
                             }}
-                            onSubmitEditing={onSubmit}
+                            onSubmitEditing={pinCode.length == 6 ? onSubmit: null}
                         />
                          {
                             pinCodeAttempts.visible && <Text style={{fontFamily: FONT.REGULAR,color:"red",alignSelf:"center",fontSize: 12,textAlign:'center'}}>Incorrect PIN. You can try {numWordArray[pinCodeAttempts.attempts]} ({pinCodeAttempts.attempts}) more {pinCodeAttempts.attempts == 1 ? "time" : "times"} before your account will be temporarily blocked.</Text>
@@ -128,6 +131,7 @@ const VerifyPin = ({pageIndex,setPageIndex})=> {
             </View>
           
        </View>
+       </>
     )
 }
 

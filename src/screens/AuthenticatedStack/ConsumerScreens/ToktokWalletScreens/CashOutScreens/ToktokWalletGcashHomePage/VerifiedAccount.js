@@ -2,7 +2,6 @@ import React , {useRef, useState} from 'react'
 import {View,Text,StyleSheet,Image,TextInput} from 'react-native'
 import { SIZE , FONT, COLOR, FONT_SIZE} from '../../../../../../res/variables'
 import { ICON_SET, VectorIcon, YellowButton } from '../../../../../../revamp'
-import { DisabledButton, Separator } from '../../Components'
 import {useSelector} from 'react-redux'
 import { numberFormat } from '../../../../../../helper'
 import { useNavigation } from '@react-navigation/native'
@@ -13,6 +12,7 @@ import { useAlert } from '../../../../../../hooks/useAlert'
 import { onErrorAlert } from '../../../../../../util/ErrorUtility'
 
 //SELF IMPORTS
+import { DisabledButton, Separator, EnterPinCode } from '../../Components'
 import SuccessfulCashOutModal from "./SuccessfulCashOutModal";
 import { AlertOverlay } from '../../../../../../components'
 
@@ -28,16 +28,32 @@ const VerifiedAccount = ({record,provider})=> {
     const inputRef = useRef()
     const navigation = useNavigation()
     const alert = useAlert()
+    const [pinCodeAttempt,setPinCodeAttempt] = useState(6)
+    const [openPinCode,setOpenPinCode] = useState(false)
 
     const [postCashOut , {data,error,loading}] = useMutation(POST_CASH_OUT, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({postCashOut})=> {
+            setOpenPinCode(false)
             setCashoutLogParams(postCashOut)
             setSuccessModalVisible(true)
         },
         onError: (error)=> {
-            navigation.pop()
+            const {graphQLErrors, networkError} = error;
+            console.log(graphQLErrors)
+            if(graphQLErrors[0].message == "Wallet Hold"){
+                setOpenPinCode(false)
+                navigation.navigate("ToktokWalletHomePage")
+                navigation.replace("ToktokWalletHomePage")
+                return navigation.push("ToktokWalletRestricted", {component: "onHold"})
+            }
+
+            if(graphQLErrors[0].message == "Invalid Pincode"){
+                return setPinCodeAttempt(graphQLErrors[0].payload.remainingAttempts)
+            }
+            setOpenPinCode(false)
             onErrorAlert({alert,error})
+            return navigation.pop()
         }
     })
 
@@ -45,7 +61,7 @@ const VerifiedAccount = ({record,provider})=> {
         const num = value.replace(/[^0-9.]/g, '')
         const checkFormat = /^(\d*[.]?[0-9]{0,2})$/.test(num);
         if(!checkFormat) return       
-        if(num.length > 8) return
+        if(num.length > 6) return
         if(num[0] == ".") return setAmount("0.")
         setAmount(num)
         if(num == "") return setErrorMessage("")
@@ -58,13 +74,14 @@ const VerifiedAccount = ({record,provider})=> {
         setErrorMessage("")
     }
 
-    const ProceedTransaction = ()=> {
+    const ProceedTransaction = (pinCode)=> {
         postCashOut({
             variables: {
                 input: {
                     amount: +amount,
                     provider: provider.id,
-                    currencyId: tokwaAccount.wallet.currency.id
+                    currencyId: tokwaAccount.wallet.currency.id,
+                    pinCode: pinCode
                 }
             }
         })
@@ -77,13 +94,24 @@ const VerifiedAccount = ({record,provider})=> {
                     method: "GCash" , 
                     amount: amount
                 },
-            onConfirm: ProceedTransaction,
+            onConfirm: ()=>{
+                setPinCodeAttempt(6)
+                setOpenPinCode(true)
+            },
         })
     }
 
     return (
         <>
-        <AlertOverlay visible={loading} />
+        <EnterPinCode 
+                visible={openPinCode} 
+                setVisible={setOpenPinCode} 
+                loading={loading}
+                pinCodeAttempt={pinCodeAttempt}
+                callBackFunc={ProceedTransaction}
+        >
+             <AlertOverlay visible={loading} />
+        </EnterPinCode>
         <Separator/>
         <SuccessfulCashOutModal 
              visible={successModalVisible}
@@ -107,14 +135,14 @@ const VerifiedAccount = ({record,provider})=> {
                                 value={amount}
                                 ref={inputRef}
                                 style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent',zIndex: 1}}
-                                keyboardType="number-pad"
+                                keyboardType="numeric"
                                 returnKeyType="done"
                                 onChangeText={changeAmount}
                             />
                          <View style={styles.input}>
                                 <Text style={{fontFamily: FONT.BOLD,fontSize: 32,marginRight: 10,color:COLOR.YELLOW}}>{tokwaAccount.wallet.currency.code}</Text>
                                 <Text style={{fontFamily: FONT.BOLD,fontSize: 32}}>{amount ? numberFormat(amount) : "0.00"}</Text>
-                                {/* <VectorIcon iconSet={ICON_SET.FontAwesome5} name="pen" style={{alignSelf:"center",marginLeft: 20}} size={20} color={COLOR.DARK}/> */}
+                                <VectorIcon iconSet={ICON_SET.FontAwesome5} name="pen" style={{alignSelf:"center",marginLeft: 15}} size={20} color="black"/>
                          </View>
                     </View>
                     { errorMessage != "" && <Text style={{fontFamily: FONT.REGULAR, color: COLOR.RED,marginTop: -5,fontSize: FONT_SIZE.S}}>{errorMessage}</Text>}

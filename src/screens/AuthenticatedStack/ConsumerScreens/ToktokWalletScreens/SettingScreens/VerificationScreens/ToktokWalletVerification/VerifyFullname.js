@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react'
-import {Text,View,StyleSheet,Alert,Image,TextInput,TouchableOpacity,Linking,ScrollView} from 'react-native'
+import {Text,View,StyleSheet,Alert,Image,TextInput,TouchableOpacity,Linking,ScrollView,KeyboardAvoidingView} from 'react-native'
 import {COLOR, FONT ,SIZE,FONT_SIZE} from '../../../../../../../res/variables'
 import {VerifyContext} from './VerifyContextProvider'
 import validator from 'validator';
@@ -93,7 +93,13 @@ const VerifyFullname = ()=> {
                 visible={modalNationalityVisible}
                 setVisible={setModalNationalityVisible}
          />
-        <ScrollView style={styles.content}>
+     
+            <KeyboardAvoidingView
+                keyboardVerticalOffset={90}  
+                behavior={Platform.OS == "ios" ? "padding" : "height"}
+                style={styles.content}
+            >
+                   <ScrollView showsVerticalScrollIndicator={false}>
 
         <TouchableOpacity onPress={ViewPrivacyPolicy} style={styles.policyView}>
                 <View>
@@ -109,7 +115,7 @@ const VerifyFullname = ()=> {
                     <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:"#929191"}}>Please enter the name that appears on your Valid ID.</Text>
 
                     
-                    <View style={{marginTop: 40}}>
+                    <View style={{marginTop: 20}}>
                       <Text style={{fontFamily: FONT.BOLD, marginBottom: 2}}>Mobile Number</Text>
                       <View
                         style={{
@@ -246,10 +252,9 @@ const VerifyFullname = ()=> {
                     </View>
                     
             </View>
-
-         
-        </ScrollView>
-
+                 </ScrollView>
+            </KeyboardAvoidingView>
+       
         </>
     )
 }

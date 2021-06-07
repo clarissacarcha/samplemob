@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react'
 import {View,Text,StyleSheet,TextInput} from 'react-native'
-import { numberFormat } from '../../../../../../helper'
-import {FONT,FONT_SIZE,COLOR,SIZE} from '../../../../../../res/variables'
+import { numberFormat } from '../../../../../helper'
+import {FONT,FONT_SIZE,COLOR,SIZE} from '../../../../../res/variables'
 
-const EnterAmount = ({tokwaAccount , setSwipeEnabled , amount  ,setAmount , recipientDetails}) => {
+const EnterAmount = ({tokwaAccount , setSwipeEnabled , amount  ,setAmount}) => {
 
     const [errorAmountMessage,setErrorAmountMessage] = useState("")
     const [tempAmount,setTempAmount] = useState("")
@@ -14,7 +14,7 @@ const EnterAmount = ({tokwaAccount , setSwipeEnabled , amount  ,setAmount , reci
         const num = value.replace(/[^0-9.]/g, '')
         const checkFormat = /^(\d*[.]?[0-9]{0,2})$/.test(num);
         if(!checkFormat) return       
-        if(num.length > 6) return
+        if(num.length > 8) return
         if(num[0] == ".") return setAmount("0.")
         // setTempAmount(num)
         setAmount(num)
@@ -40,7 +40,7 @@ const EnterAmount = ({tokwaAccount , setSwipeEnabled , amount  ,setAmount , reci
         return ()=> {
             setErrorAmountMessage("")
         }
-    },[amount,recipientDetails])
+    },[amount])
 
     return (
         <>

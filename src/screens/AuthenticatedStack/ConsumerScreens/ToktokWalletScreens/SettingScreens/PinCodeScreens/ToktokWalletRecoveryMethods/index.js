@@ -1,11 +1,11 @@
 import React from 'react'
 import {View,Text,StyleSheet,TouchableOpacity} from 'react-native'
-import { HeaderBackClose , HeaderTitle} from '../../../../../../../components'
+import { HeaderBackClose} from '../../../../../../../components'
 import { COLORS, FONTS, SIZES } from '../../../../../../../res/constants'
 import FIcon from 'react-native-vector-icons/Feather'
 import {useSelector} from 'react-redux'
 import {Separator} from '../../../Components'
-import { HeaderBack } from '../../../../../../../revamp'
+import { HeaderBack , HeaderTitle} from '../../../../../../../revamp'
 
 const RecoveryMethod = ({title,message,onPress})=> {
     return (
@@ -25,7 +25,7 @@ const ToktokWalletRecoveryMethods = ({navigation})=> {
 
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack color={COLORS.YELLOW}/>,
-        headerTitle: ()=> <HeaderTitle label={['Recovery Methods','']}/>,
+        headerTitle: ()=> <HeaderTitle label={['Recovery','']}/>,
     })
 
     const session = useSelector(state=>state.session)

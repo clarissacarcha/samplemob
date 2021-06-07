@@ -24,14 +24,14 @@ const ToktokWalletRecentTransferView = ({navigation,route})=> {
 
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
-        headerTitle: ()=> <HeaderTitle label={['Outgoing Transfer']} />,
+        headerTitle: ()=> <HeaderTitle label={['Outgoing Transfer','']} />,
     })
 
     const recentTransfer = route.params.recentTransfer
     const tokwaAccount = useSelector(state=>state.toktokWallet)
 
     const TransferAgain = ()=> {
-        return navigation.navigate("ToktokWalletSendMoney", {recentTransfer})
+        return navigation.navigate("ToktokWalletRecentTransferProceed", {recentTransfer})
     }
 
     return (

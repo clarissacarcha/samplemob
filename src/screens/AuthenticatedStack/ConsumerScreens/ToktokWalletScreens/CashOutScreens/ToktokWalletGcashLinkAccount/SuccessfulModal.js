@@ -2,6 +2,7 @@ import React from 'react'
 import {View,Text,StyleSheet,Modal,Dimensions,TouchableOpacity,Image} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
 import { COLOR, FONT, FONT_SIZE, SIZE } from '../../../../../../res/variables'
+import { YellowButton } from '../../../../../../revamp'
 const {height,width} = Dimensions.get("screen")
 
 const SuccessfulModal = ({visible,setVisible,provider})=> {
@@ -29,18 +30,7 @@ const SuccessfulModal = ({visible,setVisible,provider})=> {
                                   <Text style={{textAlign:"center", fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S}}>You have successfully linked your G Cash number to your toktokwallet.</Text>
                             </View>
                             <View style={{height: SIZE.FORM_HEIGHT}}>
-                                <TouchableOpacity 
-                                        style={{
-                                            flex: 1,
-                                            paddingVertical: 2,
-                                            height: SIZE.FORM_HEIGHT,
-                                            justifyContent:"center",
-                                            alignItems:"center"
-                                        }}
-                                        onPress={redirect}
-                                    >
-                                        <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,color: COLOR.ORANGE}}>Continue</Text>
-                                </TouchableOpacity>
+                                <YellowButton label="Continue" onPress={redirect}/>
                             </View>
                     </View>
             </View>
@@ -61,7 +51,7 @@ const styles = StyleSheet.create({
         alignItems:"center"
     },
     content: {
-        height: 250,
+        height: 270,
         width: width * 0.8,
         backgroundColor: "white",
         borderRadius: SIZE.BORDER_RADIUS,

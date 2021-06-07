@@ -9,6 +9,7 @@ import NoAccount from './NoAccount'
 import PendingKyc from './PendingKyc'
 import RejectedKyc from './RejectedKyc'
 import BlockedAccount from './BlockedAccount'
+import DeletedAccount from './DeletedAccount'
 import { HeadingBannerLogo }from '../Components'
 
 const ToktokWalletRestricted = ({navigation,route})=> {
@@ -33,6 +34,8 @@ const ToktokWalletRestricted = ({navigation,route})=> {
                 return <RejectedKyc />
             case "blockedAccount":
                 return <BlockedAccount />
+            case "deletedAccount":
+                return <DeletedAccount/>
             default:
                 break
         }

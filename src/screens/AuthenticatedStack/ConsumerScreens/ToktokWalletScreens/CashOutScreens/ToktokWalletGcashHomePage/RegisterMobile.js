@@ -51,8 +51,6 @@ const RegisterMobile = ({provider})=> {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         fetchPolicy:"network-only",
         onCompleted: ({getGcashEnrollmentRecord})=> {
-            console.log(getGcashEnrollmentRecord)
-
          
             if(!getGcashEnrollmentRecord || getGcashEnrollmentRecord.status == 4){
                 return navigation.navigate("ToktokWalletGcashRegistration", {mobile: mobileNo,provider: provider})
@@ -68,7 +66,7 @@ const RegisterMobile = ({provider})=> {
             // }
             // // temporary solution for 1:1 Gcash
             if(getGcashEnrollmentRecord.status == 1){
-                return Alert.alert("",`GCash number ${getGcashEnrollmentRecord.mobile} already linked to toktokwallet account`)
+                setErrorMessage(`GCash number ${getGcashEnrollmentRecord.mobile} already linked`)
             }
         },
         onError: (error)=> {
@@ -111,6 +109,7 @@ const RegisterMobile = ({provider})=> {
                     keyboardType="number-pad"
                     value={mobileNo}
                     onChangeText={changeMobileNo}
+                    returnKeyType="done"
                 />
                 <Text style={{fontFamily: FONT.REGULAR,color:COLOR.RED,fontSize: FONT_SIZE.S}}>{errorMessage}</Text>
                 <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S}}>Note: Make sure that number is an existing GCash account.</Text>

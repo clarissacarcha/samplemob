@@ -1,10 +1,10 @@
 import React from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,Image} from 'react-native'
-import {HeaderBackClose, HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../../../components'
+import {HeaderBackClose, SomethingWentWrong , AlertOverlay} from '../../../../../../components'
 import FIcon from 'react-native-vector-icons/Feather';
 import {FONT,FONT_SIZE,COLOR} from '../../../../../../res/variables';
 import {Separator} from '../../Components';
-import { HeaderBack } from '../../../../../../revamp';
+import { HeaderBack , HeaderTitle} from '../../../../../../revamp';
 
 const ToktokWalletSettings = ({navigation , route })=> {
     navigation.setOptions({

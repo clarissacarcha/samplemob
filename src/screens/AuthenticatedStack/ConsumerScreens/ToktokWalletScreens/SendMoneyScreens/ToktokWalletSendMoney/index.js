@@ -1,5 +1,5 @@
 import React, { useState , useEffect} from 'react'
-import {View,Text,StyleSheet,TouchableOpacity} from 'react-native'
+import {View,Text,StyleSheet,TouchableOpacity,ActivityIndicator} from 'react-native'
 import {HeaderBack, YellowButton} from '../../../../../../revamp'
 import { numberFormat } from '../../../../../../helper'
 import { COLOR, FONT, FONT_SIZE } from '../../../../../../res/variables'
@@ -43,6 +43,7 @@ const ToktokWalletSendMoney = ({navigation,route})=> {
             lastName: ""
         },
     })
+    const [getAccountLoading,setGetAccountLoading] = useState(false)
 
     const [senderDetails , setSenderDetails] = useState({
         outgoingRecords: {
@@ -107,6 +108,7 @@ const ToktokWalletSendMoney = ({navigation,route})=> {
                         setRecipientDetails={setRecipientDetails}
                         recipientDetails={recipientDetails}
                         tokwaAccount={tokwaAccount}
+                        setGetAccountLoading={setGetAccountLoading}
                 />
 
               
@@ -133,19 +135,22 @@ const ToktokWalletSendMoney = ({navigation,route})=> {
                             <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:COLOR.DARK}}>You can click the "Address Book" to open your contact list.</Text>
                         </View>
                     }
+                    {
+                        getAccountLoading
+                        ? <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+                            <ActivityIndicator color={COLOR.YELLOW}/>
+                        </View>
+                        : null
+                    }
                 </KeyboardAvoidingView>
                 
      
                 <View style={{height: 70,padding: 16, justifyContent:"flex-end"}}>
-                    {/* {   swipeEnabled 
-                        ? <SwipeButtonComponent amount={amount} swipeEnabled={swipeEnabled} note={note} session={session} recipientDetails={recipientDetails}/>
-                        : <DisabledButton label="Proceed" />
-                    } */}
                     <ProceedButton
                         swipeEnabled={swipeEnabled}
                         amount={amount}
                         navigation={navigation}
-                        session={session}
+                        tokwaAccount={tokwaAccount}
                         note={note}
                         recipientDetails={recipientDetails}
                     />

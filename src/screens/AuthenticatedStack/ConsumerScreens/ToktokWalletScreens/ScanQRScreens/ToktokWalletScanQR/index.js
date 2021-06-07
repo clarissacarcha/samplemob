@@ -63,6 +63,7 @@ const ToktokWalletScanQR = ({navigation,route})=> {
             if(getAccount.mobileNumber === tokwaAccount.mobileNumber){
                 return alertHook({message: "You cannot send money to yourself"})
             }
+            setTorch(false)
             return  navigation.navigate("ToktokWalletScanQRConfirm", {recipientInfo: getAccount})
         }
     })

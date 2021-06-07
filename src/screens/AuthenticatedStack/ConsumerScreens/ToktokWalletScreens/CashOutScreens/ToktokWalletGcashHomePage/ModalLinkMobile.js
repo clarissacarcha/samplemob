@@ -52,11 +52,13 @@ const ModalLinkMobile = ({visible,setVisible,mobile,provider})=> {
                                     paddingVertical: 2,
                                     height: SIZE.FORM_HEIGHT,
                                     justifyContent:"center",
-                                    alignItems:"center"
+                                    alignItems:"center",
+                                    backgroundColor:COLOR.YELLOW,
+                                    marginTop: 5,
                                 }}
                                 onPress={openLinkPage}
                             >
-                                <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,color: COLOR.ORANGE}}>Link Account</Text>
+                                <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>Link Account</Text>
                         </TouchableOpacity>
                     </View>
                 </View>

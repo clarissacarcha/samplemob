@@ -1,5 +1,5 @@
 import React from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,Image,ActivityIndicator,FlatList} from 'react-native'
+import {View,Text,StyleSheet,TouchableOpacity,Image,ActivityIndicator} from 'react-native'
 import {SomethingWentWrong} from '../../../../../components'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from '../../../../../graphql'
 import { GET_TRANSACTIONS } from '../../../../../graphql/toktokwallet'
@@ -7,6 +7,7 @@ import {useQuery} from '@apollo/react-hooks'
 import {COLOR,FONT,FONT_SIZE} from '../../../../../res/variables'
 import {useNavigation} from '@react-navigation/native'
 import {Separator, WalletLog} from '../Components'
+import { FlatList} from 'react-native-gesture-handler'
 
 const WalletRecentTransactions = ()=> {
 
@@ -73,6 +74,7 @@ const WalletRecentTransactions = ()=> {
 
             <View style={styles.transactions}>
                     <FlatList 
+                        nestedScrollEnabled
                         style={{flex: 1,backgroundColor:"white"}}
                         showsVerticalScrollIndicator={false}
                         scrollEnabled={true}

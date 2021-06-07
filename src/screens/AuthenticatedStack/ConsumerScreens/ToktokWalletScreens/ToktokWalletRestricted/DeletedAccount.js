@@ -6,7 +6,7 @@ import { COLOR , FONT_SIZE , FONT } from '../../../../../res/variables'
 import { YellowButton , VectorIcon , ICON_SET } from '../../../../../revamp'
 
 
-const RejectedKyc = ()=> {
+const DeletedAccount = ()=> {
     const navigation = useNavigation()
 
     navigation.setOptions({
@@ -22,21 +22,15 @@ const RejectedKyc = ()=> {
             </View>
             <Separator/>
             <View style={styles.content}>
-                <View style={{alignItems:"center",marginTop: 10,}}>
-                <Text style={styles.verifyWalletText}><Text style={{ ...styles.verifyWalletText , color: COLOR.YELLOW}}>toktok</Text><Text style={{...styles.verifyWalletText, color: COLOR.ORANGE}}>wallet</Text> application has been rejected.</Text>
-                <Text style={styles.clickVerifyText}>Please check your email for further details or click Verify Now to try again.</Text>
-                <View style={{marginTop: 20}}>
-                        {/* <Text style={styles.listItem}><VectorIcon name="check" size={13} iconSet={ICON_SET.FontAwesome5}/> Create your toktokwallet</Text> */}
-                        <Text style={styles.listItem}><VectorIcon name="check" size={13} iconSet={ICON_SET.FontAwesome5}/> Secure your account and payments</Text>
-                        <Text style={styles.listItem}><VectorIcon name="check" size={13} iconSet={ICON_SET.FontAwesome5}/> Enjoy convenient payment experience</Text>
-                        <Text style={styles.listItem}><VectorIcon name="check" size={13} iconSet={ICON_SET.FontAwesome5}/> Unlock toktokwallet features</Text>
-                </View>
+                <View style={{alignItems:"center",marginTop: 10}}>
+                    <Text style={[styles.verifyWalletText , {color: COLOR.ORANGE}]}>STOP!</Text>
+                    <Text style={styles.clickVerifyText}>Your toktokwallet account has been deleted. To know more details, contact hello@toktok.ph and (02) 84-248-617.</Text>
                 </View>
             </View>
 
             <View style={{height: 70,padding: 16,justifyContent:'flex-end'}}>
-                <YellowButton label="Verify now" onPress={()=> {
-                    navigation.navigate("ToktokWalletVerification")
+                <YellowButton label="Ok" onPress={()=> {
+                    navigation.pop()
                 }}/>
             </View>
         
@@ -56,7 +50,7 @@ const styles = StyleSheet.create({
     },  
     content: {
         flex: 1,
-        padding: 16,
+        padding: 10,
         paddingTop: 30,
     },
     verifyWalletText: {
@@ -73,9 +67,8 @@ const styles = StyleSheet.create({
     listItem: {
         fontFamily: FONT.REGULAR,
         marginBottom: 5,
-        fontSize: FONT_SIZE.S,
-        textAlign:'center'
+        fontSize: FONT_SIZE.S
     },
 })
 
-export default RejectedKyc
+export default DeletedAccount

@@ -123,13 +123,14 @@ const ToktokWalletCreatePin = ({navigation,route})=> {
         />
         <SuccessModal modalVisible={successModalVisible} />
         <Separator />
-        <KeyboardAvoidingView 
+        <View
             // keyboardVerticalOffset={Platform.OS == "ios" ? 50 : 90} 
-            keyboardVerticalOffset={90}  
+            // keyboardVerticalOffset={90}  
+            // behavior={Platform.OS == "ios" ? "padding" : "height"}
             style={styles.container} 
-            behavior={Platform.OS == "ios" ? "padding" : "height"}>
+        >
                 {DisplayComponent()}
-        </KeyboardAvoidingView>
+        </View> 
       </>
     )
 }

@@ -14,7 +14,8 @@ import { HeaderBack, YellowButton, HeaderTitle } from '../../../../../../revamp'
 import {
     ConfirmBottomSheet,
     DisabledButton,
-    Separator
+    Separator,
+    EnterPinCode
 } from '../../Components'
 
 //SELF IMPORTS
@@ -40,17 +41,31 @@ const ToktokWalletPayPandaForm = ({navigation,route})=> {
     const [recipientDetails,setRecipientDetails] = useState(null)
     const [disablebtn,setDisablebtn] = useState(false)
     const [maxLimitMessage,setMaxLimitMessage] = useState("")
+    const [pinCodeAttempt,setPinCodeAttempt] = useState(6)
+    const [openPinCode,setOpenPinCode] = useState(false)
 
 
     const [postCashInPayPandaRequest , {data,error,loading}] = useMutation(POST_CASH_IN_PAYPANDA_REQUEST , {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onError: (error)=> {
-            console.log(error)
+            const {graphQLErrors, networkError} = error;
+            if(graphQLErrors[0].message == "Wallet Hold"){
+                setOpenPinCode(false)
+                navigation.navigate("ToktokWalletHomePage")
+                navigation.replace("ToktokWalletHomePage")
+                return navigation.push("ToktokWalletRestricted", {component: "onHold"})
+            }
+
+            if(graphQLErrors[0].message == "Invalid Pincode"){
+                return setPinCodeAttempt(graphQLErrors[0].payload.remainingAttempts)
+            }
+            setOpenPinCode(false)
             onErrorAlert({alert,error})
-            navigation.pop()
+            return navigation.pop()
         },
         onCompleted: ({postCashInPayPandaRequest})=>{
             console.log(postCashInPayPandaRequest)
+            setOpenPinCode(false)
             navigation.navigate("ToktokWalletPayPandaWebView", {
                 merchantId: postCashInPayPandaRequest.merchantId,
                 refNo: postCashInPayPandaRequest.refNo,
@@ -67,7 +82,7 @@ const ToktokWalletPayPandaForm = ({navigation,route})=> {
     })
 
 
-    const proceedToPaypandaPortal = ()=> {
+    const proceedToPaypandaPortal = (pinCode)=> {
       postCashInPayPandaRequest({
           variables: {
               input: {
@@ -75,6 +90,7 @@ const ToktokWalletPayPandaForm = ({navigation,route})=> {
                   amount: +amount,
                   currencyId: tokwaAccount.wallet.currency.id,
                   walletId: tokwaAccount.wallet.id,
+                  pinCode: pinCode
               }
           }
       })
@@ -88,7 +104,10 @@ const ToktokWalletPayPandaForm = ({navigation,route})=> {
                     method: "PayPanda" , 
                     amount: amount
                 },
-            onConfirm: proceedToPaypandaPortal,
+            onConfirm: ()=> {
+                setPinCodeAttempt(6)
+                setOpenPinCode(true)
+            },
         })
     }
 
@@ -97,7 +116,7 @@ const ToktokWalletPayPandaForm = ({navigation,route})=> {
         const num = value.replace(/[^0-9.]/g, '')
         const checkFormat = /^(\d*[.]?[0-9]{0,2})$/.test(num);
         if(!checkFormat) return       
-        if(num.length > 8) return
+        if(num.length > 6) return
        
         // setAmount(num * 0.01)
         if(num[0] == ".") return setAmount("0.")
@@ -118,7 +137,15 @@ const ToktokWalletPayPandaForm = ({navigation,route})=> {
 
     return (
       <>
-    <AlertOverlay visible={loading} />
+    <EnterPinCode 
+            visible={openPinCode} 
+            setVisible={setOpenPinCode} 
+            loading={loading}
+            pinCodeAttempt={pinCodeAttempt}
+            callBackFunc={proceedToPaypandaPortal}
+    >
+            <AlertOverlay visible={loading} />
+    </EnterPinCode>
       <Separator />
        <View  
             // keyboardVerticalOffset={Platform.OS == "ios" ? 90 : 90} 
@@ -143,14 +170,14 @@ const ToktokWalletPayPandaForm = ({navigation,route})=> {
                                     caretHidden
                                     value={amount}
                                     style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent',zIndex: 1}}
-                                    keyboardType="number-pad"
+                                    keyboardType="numeric"
                                     returnKeyType="done"
                                     onChangeText={changeAmountText}
                             />
                             <View style={styles.input}>
                                 <Text style={{fontFamily: FONT.BOLD,fontSize: 32,marginRight: 10,color:COLOR.YELLOW}}>{tokwaAccount.wallet.currency.code}</Text>
                                 <Text style={{fontFamily: FONT.BOLD,fontSize: 32}}>{amount ? numberFormat(amount) : "0.00"}</Text>
-                                {/* <FIcon5 name="pen" style={{alignSelf:"center",marginLeft: 20}} size={20} color={COLOR.DARK}/> */}
+                                <FIcon5 name="pen" style={{ alignSelf:"center", marginLeft: 15}} size={20}/>
                             </View>
                             
                         </View>

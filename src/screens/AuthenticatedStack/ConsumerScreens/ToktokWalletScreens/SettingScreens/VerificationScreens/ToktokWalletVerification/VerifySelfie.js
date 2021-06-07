@@ -5,6 +5,7 @@ import EIcon from 'react-native-vector-icons/EvilIcons'
 import {VerifyContext} from './VerifyContextProvider'
 import {useNavigation} from '@react-navigation/native'
 import { YellowButton } from '../../../../../../../revamp'
+import ImageCropper from 'react-native-simple-image-cropper'
 
 const {width,height} = Dimensions.get("window")
 
@@ -13,91 +14,106 @@ const CROP_AREA_HEIGHT = CROP_AREA_WIDTH;
 
 const ratio = Math.min(width / CROP_AREA_WIDTH , height / CROP_AREA_HEIGHT)
 
+
+const MainComponent = ({children , onPress })=> {
+    return (
+        <View style={styles.content}>
+        <View style={styles.mainInput}>
+                <Text style={{fontSize: SIZES.M, fontFamily: FONTS.BOLD,color: COLORS.DARK}}>One last step before you get a verified toktokwallet</Text>
+                <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.S,color:"#929191"}}>Take a photo to verify your identity.</Text>  
+                
+               
+                <View style={{marginTop: 20,flex: 1}}>
+                <Text style={{fontSize: SIZES.M, fontFamily: FONTS.BOLD,color:COLORS.DARK}}>Take a selfie</Text>
+                        {children}
+                </View>
+                <View style={styles.proceedBtn}>
+                    <YellowButton label="Next" onPress={onPress}/>
+                </View>
+            </View>
+        </View>
+    )
+}
+
 const VerifySelfie = ()=> {
 
     const VerifyUserData = useContext(VerifyContext)
     const {setCurrentIndex , selfieImage, setSelfieImage} = VerifyUserData
-
+    const [cropperParams, setCropperParams] = useState({});
     const navigation = useNavigation()
+    const cropSize = {
+        width: Platform.OS === "ios" ? CROP_AREA_WIDTH : CROP_AREA_WIDTH + 100,
+        height: Platform.OS === "ios" ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT + 100,
+    }
+    const cropAreaSize = {
+        width: Platform.OS === "ios" ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 20,
+        height: Platform.OS === "ios" ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 100,
+    }
 
     const setImage = (data)=> {
         setSelfieImage(data);
         // setCurrentIndex(oldval => oldval + 1)
     }
 
-    const Proceed = ()=> {
+    const Proceed = async ()=> {
         if(selfieImage == null){
             // return navigation.push("ToktokWalletSelfieCamera", {setImage})
             return navigation.push("ToktokWalletSelfieImageCamera", {setImage})
         }
+        try {
+            const croppedResult = await ImageCropper.crop({
+                ...cropperParams,
+                imageUri: selfieImage.uri,
+                cropSize,
+                cropAreaSize,
+            });
+
+            setSelfieImage(state => ({
+                ...state,
+                uri: croppedResult
+            }))
+        }catch(err){
+            console.log(err)
+        }
         return setCurrentIndex(oldval => oldval + 1)
 
     }
-    
-    const ImageIDSet = ()=> (
-        <View style={{
-            alignSelf:"center",
-            marginTop: 7,
-            padding: 2,
-            borderStyle: "dashed",
-            borderColor: COLORS.YELLOW,
-            borderWidth: 2,
-            borderRadius: 5,
-            marginBottom: 5,
-            transform: [
-                {
-                    scaleX: -1,
-                }
-            ]
-        }}>
-                <Image resizeMode="cover" style={{height: CROP_AREA_HEIGHT,width: CROP_AREA_WIDTH,backgroundColor:"transparent"}} source={{uri: selfieImage.uri}} />
-                <TouchableOpacity onPress={()=>navigation.push("ToktokWalletSelfieImageCamera", {setImage})} style={{position:"absolute",bottom: 15,width: 180,height: 20, justifyContent:"center",alignItems:"center",alignSelf:"center"}}>
+
+    if(selfieImage){
+        return(
+            <MainComponent onPress={Proceed}>
+                <View style={styles.PreviewImage}>
+                    <ImageCropper
+                        imageUri={selfieImage.uri}
+                        cropAreaWidth={Platform.OS === "ios" ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 110}
+                        cropAreaHeight={Platform.OS === "ios" ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 100}
+                        containerColor="transparent"
+                        areaColor="black"
+                        setCropperParams={cropperParams =>{
+                            setCropperParams(cropperParams)
+                        }}
+                    />
+                <TouchableOpacity onPress={()=>navigation.push("ToktokWalletSelfieImageCamera", {setImage})} style={styles.changePhoto}>
                     <EIcon name="camera" color={COLORS.YELLOW} size={20} />
                     <Text style={{textAlign:"center",color: COLORS.YELLOW,fontFamily: FONTS.REGULAR,fontSize: SIZES.S,marginTop: -2}}>Change Photo</Text>
                 </TouchableOpacity>
-        </View>
-    )
+                </View>
+            </MainComponent>
+        )
+    }
+    
 
     return (
         <>
-            <View style={styles.content}>
-                <View style={styles.mainInput}>
-                        <Text style={{fontSize: SIZES.M, fontFamily: FONTS.BOLD,color: COLORS.DARK}}>One last step before you get a verified toktokwallet</Text>
-                        <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.S,color:"#929191"}}>Take a photo to verify your identity.</Text>  
-                        
-                       
-                        <View style={{marginTop: 20,}}>
-                            <Text style={{fontSize: SIZES.M, fontFamily: FONTS.BOLD,color:COLORS.DARK}}>Take a selfie</Text>
-
-                            { selfieImage 
-                              ? <ImageIDSet/>
-                              : <TouchableOpacity onPress={()=>{
-                                    // navigation.push("ToktokWalletSelfieCamera", {setImage})
-                                    navigation.push("ToktokWalletSelfieImageCamera", {setImage})
-                                }} style={styles.selfieBtn}>
-                                    <EIcon name="camera" color="#CCCCCC" size={25} />
-                                    <Text style={{color:"#CCCCCC",marginBottom:5,fontFamily: FONTS.BOLD,fontSize: SIZES.S}}>Take a photo</Text>
-                                </TouchableOpacity>
-                            }
-                     
-                            
-
-                            <Text style={{fontSize: SIZES.M, fontFamily: FONTS.REGULAR,color:"#929191",alignSelf:"center"}}>Show us that you match your photo ID with a selfie.</Text>
-                        </View>
-
-                        {/* <View style={{
-                            flex: 1,
-                            paddingVertical: 20,
-                        }}> 
-                             { selfieImage && <ImageIDSet/>}
-                        </View> */}
-
-                </View>
-
-                <View style={styles.proceedBtn}>
-                    <YellowButton label="Next" onPress={Proceed}/>
-                </View>
-            </View>
+        <MainComponent onPress={Proceed}>
+                <TouchableOpacity onPress={()=>{
+                    // navigation.push("ToktokWalletSelfieCamera", {setImage})
+                    navigation.push("ToktokWalletSelfieImageCamera", {setImage})
+                }} style={styles.selfieBtn}>
+                    <EIcon name="camera" color="#CCCCCC" size={25} />
+                    <Text style={{color:"#CCCCCC",marginBottom:5,fontFamily: FONTS.BOLD,fontSize: SIZES.S}}>Take a photo</Text>
+                </TouchableOpacity>
+        </MainComponent>
         </>
     )
 }
@@ -160,7 +176,37 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         borderRadius: 5,
         marginBottom: 10,
-    }
+    },
+    PreviewImage: {
+        height: Platform.OS === "ios" ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 100 + 10, 
+        width: Platform.OS === "ios" ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 110 + 10, 
+        alignSelf:"center",
+        marginTop: 7,
+        padding: 2,
+        borderStyle: "dashed",
+        borderColor: COLORS.YELLOW,
+        borderWidth: 2,
+        borderRadius: 5,
+        marginBottom: 5,
+        transform: [
+            {
+                scaleX: -1,
+            }
+        ]
+    },
+    changePhoto: {
+        position:"absolute",
+        bottom: 15,
+        width: 180,
+        height: 20, 
+        justifyContent:"center",
+        alignItems:"center",
+        alignSelf:"center",  
+        transform: [
+        {
+            scaleX: -1,
+        }
+    ]}
 })
 
 export default VerifySelfie

@@ -48,7 +48,6 @@ const NumberBoxes = ({pinCode, onNumPress}) => {
 
 const ToktokWalletSecurityPinCode = ({navigation,route})=> {
 
-    const { loading , callBackFunction , pinRemainingCodeAttempt } = route.params
     const [pinCode,setPinCode] = useState("")
     const inputRef = useRef();
     const alert = useAlert()
@@ -58,34 +57,34 @@ const ToktokWalletSecurityPinCode = ({navigation,route})=> {
         attempts: "",
     })
 
-    // const [verifyPinCode, {data ,error , loading }] = useLazyQuery(VERIFY_PIN_CODE, {
-    //     fetchPolicy: "network-only",
-    //     client: TOKTOK_WALLET_GRAPHQL_CLIENT,
-    //     onCompleted: ({verifyPinCode})=>{
-    //         if(verifyPinCode.result == 1){
-    //             setPinCodeAttempts({
-    //                 visible: false,
-    //                 attempts: ''
-    //             })
-    //             route.params.onConfirm()
-    //         }else{
+    const [verifyPinCode, {data ,error , loading }] = useLazyQuery(VERIFY_PIN_CODE, {
+        fetchPolicy: "network-only",
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+        onCompleted: ({verifyPinCode})=>{
+            if(verifyPinCode.result == 1){
+                setPinCodeAttempts({
+                    visible: false,
+                    attempts: ''
+                })
+                route.params.onConfirm()
+            }else{
             
-    //             if(verifyPinCode.remainingAttempts == 0){
-    //                 navigation.navigate("ToktokWalletHomePage")
-    //                 navigation.replace("ToktokWalletHomePage")
-    //                 return navigation.push("ToktokWalletRestricted", {component: "onHold"})
-    //             }
+                if(verifyPinCode.remainingAttempts == 0){
+                    navigation.navigate("ToktokWalletHomePage")
+                    navigation.replace("ToktokWalletHomePage")
+                    return navigation.push("ToktokWalletRestricted", {component: "onHold"})
+                }
 
-    //             setPinCodeAttempts({
-    //                 visible: true,
-    //                 attempts: verifyPinCode.remainingAttempts
-    //             })
-    //         }
-    //     },
-    //     onError: (error)=> {
-    //         onErrorAlert({alert, error})
-    //     }
-    // })
+                setPinCodeAttempts({
+                    visible: true,
+                    attempts: verifyPinCode.remainingAttempts
+                })
+            }
+        },
+        onError: (error)=> {
+            onErrorAlert({alert, error})
+        }
+    })
 
 
     const onNumPress = () => {
@@ -94,12 +93,14 @@ const ToktokWalletSecurityPinCode = ({navigation,route})=> {
         }, 10);
     };
     
-    const onSubmit = async () => {
-        try {
-            const transactResult = await callBackFunction(pinCode)
-        }catch(error){
-            
-        }
+    const onSubmit = () => {
+        verifyPinCode({
+            variables: {
+                input: {
+                    pinCode: pinCode
+                }
+            }
+        })
     };
 
 
@@ -142,7 +143,6 @@ const ToktokWalletSecurityPinCode = ({navigation,route})=> {
                                 {
                                     pinCodeAttempts.visible && <Text style={{fontFamily: FONT.REGULAR,color:"red",alignSelf:"center",fontSize: 12,textAlign:'center'}}>Incorrect PIN. You can try {numWordArray[pinCodeAttempts.attempts]} ({pinCodeAttempts.attempts}) more {pinCodeAttempts.attempts == 1 ? "time" : "times"} before your account will be temporarily blocked.</Text>
                                 }
-                                <Text>{pinRemainingCodeAttempt}</Text>
                         </View>
                </View>
 

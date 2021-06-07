@@ -1,6 +1,6 @@
 import React , {useState , useEffect} from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,Image,ActivityIndicator , FlatList} from 'react-native'
-import {HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../../../components'
+import {SomethingWentWrong , AlertOverlay} from '../../../../../../components'
 import moment from 'moment'
 import { COLOR, FONT, FONT_SIZE } from '../../../../../../res/variables'
 import {useLazyQuery,useQuery} from '@apollo/react-hooks'
@@ -10,7 +10,7 @@ import {onError} from '../../../../../../util/ErrorUtility'
 import {useSelector} from 'react-redux'
 import { numberFormat } from '../../../../../../helper'
 import {Separator , FilterDateModal , TransactionDetails} from '../../Components'
-import { HeaderBack } from '../../../../../../revamp'
+import { HeaderBack , HeaderTitle } from '../../../../../../revamp'
 import { MaskLeftZero } from '../../../../../../util/HelperUtility'
 
 
