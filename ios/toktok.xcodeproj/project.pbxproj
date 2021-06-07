@@ -370,11 +370,8 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-<<<<<<< HEAD
 				BE7A5999265C01E900426FE6 /* toktok_notification.wav */,
-=======
 				E7EA463C2651F5C200D60944 /* GoogleService-Info.plist */,
->>>>>>> 0090e3ae3a34762f8eeb31471778cd9e1931e2ca
 				13B07FAE1A68108700A75B9A /* toktok */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* toktokTests */,
