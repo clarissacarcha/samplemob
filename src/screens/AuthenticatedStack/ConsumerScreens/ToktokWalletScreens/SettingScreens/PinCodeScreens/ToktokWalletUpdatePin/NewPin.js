@@ -1,7 +1,8 @@
 import React , {useRef, useState} from 'react'
 import {View,Text,StyleSheet,ScrollView,TextInput,TouchableOpacity} from 'react-native'
-import { BUTTON_HEIGHT, COLOR, DARK, FONT_MEDIUM, SIZES } from '../../../../../../../res/constants'
-import NumberBoxes from '../../../Components/NumberBoxes'
+import { BUTTON_HEIGHT, COLORS, DARK, FONTS, SIZES } from '../../../../../../../res/constants'
+import { YellowButton } from '../../../../../../../revamp'
+import {DisabledButton, NumberBoxes} from '../../../Components'
 
 const NewPin = ({pinCode,setPinCode , pageIndex, setPageIndex})=> {
 
@@ -20,12 +21,11 @@ const NewPin = ({pinCode,setPinCode , pageIndex, setPageIndex})=> {
 
     return (
         <View style={styles.container}>
-        <ScrollView style={styles.content}>
-                <Text style={{fontSize: 14,fontFamily: FONT_MEDIUM,marginTop: 20,alignSelf:"center"}}>Enter your new PIN</Text>
+        <View style={styles.content}>
+                <Text style={{fontSize: SIZES.M,fontFamily: FONTS.BOLD,marginTop: 20,alignSelf:"center"}}>Enter your new PIN</Text>
                 <View style={{position: 'relative',marginTop: 50,}}>
                     <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={showPin}/>
                     <TextInput
-                            // autoFocus={true}
                             caretHidden
                             value={pinCode}
                             ref={inputRef}
@@ -34,28 +34,31 @@ const NewPin = ({pinCode,setPinCode , pageIndex, setPageIndex})=> {
                             returnKeyType="done"
                             onChangeText={(value) => {
                             if (value.length <= 6) {
-                                setPinCode(value);
+                                const num = value.replace(/[^0-9]/g, '')
+                                setPinCode(num);
                             }
                             }}
-                            onSubmitEditing={onSubmit}
+                            onSubmitEditing={pinCode.length == 6 ? onSubmit: null}
                         />
 
                         <TouchableOpacity
-                                style={{marginTop: 40,paddingVertical: 10,alignItems: "center"}}
+                                style={{marginTop: 18,paddingVertical: 10,alignItems: "center"}}
                                 onPress={()=>setShowPin(!showPin)}
                         >
-                                <Text style={{color: "#F6841F",fontSize: 12,fontFamily: FONT_MEDIUM}}>{showPin ? "HIDE PIN" : "SHOW PIN"}</Text>
+                                <Text style={{color: COLORS.ORANGE,fontSize: SIZES.M,fontFamily: FONTS.BOLD}}>{showPin ? "HIDE PIN" : "SHOW PIN"}</Text>
                         </TouchableOpacity>
 
                 </View>
-            </ScrollView>
-            <TouchableOpacity
-                disabled={pinCode.length < 6}
-                onPress={onSubmit}
-                style={{alignItems: "center",height: BUTTON_HEIGHT,backgroundColor: pinCode.length < 6 ? "gray" : DARK,margin: 10,justifyContent: "center",borderRadius: 5,}}
-            >
-                    <Text style={{color: pinCode.length < 6 ? "white" : COLOR,fontSize: SIZES.M,fontFamily: FONT_MEDIUM}}>Next</Text>
-            </TouchableOpacity>
+            </View>
+
+            <View style={{padding: 16}}>
+                {
+                    pinCode.length < 6 
+                    ? <DisabledButton label="Next"/>
+                    : <YellowButton label="Next" onPress={onSubmit}/>
+                }
+            </View>
+          
         </View>
     )
 }
@@ -67,7 +70,7 @@ const styles = StyleSheet.create({
     },
     content: {
         // alignItems: "center",
-        padding: 10,
+        padding: 16,
         flex: 1,
     },
     input: {

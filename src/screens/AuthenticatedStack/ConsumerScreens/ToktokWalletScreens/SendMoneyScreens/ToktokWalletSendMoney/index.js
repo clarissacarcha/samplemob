@@ -1,13 +1,13 @@
 import React, { useState , useEffect} from 'react'
-import {View,Text,StyleSheet,ScrollView,ImageBackground,Image,TouchableOpacity} from 'react-native'
-import {HeaderBack} from '../../../../../../revamp'
+import {View,Text,StyleSheet,TouchableOpacity} from 'react-native'
+import {HeaderBack, YellowButton} from '../../../../../../revamp'
 import { numberFormat } from '../../../../../../helper'
-import { COLORS, FONTS, FONT_LIGHT, FONT_MEDIUM, FONT_REGULAR, SIZES } from '../../../../../../res/constants'
+import { COLOR, FONT, FONT_SIZE } from '../../../../../../res/variables'
 import {useSelector} from 'react-redux'
 import {GET_DAILY_MONTHLY_YEARLY_OUTGOING} from '../../../../../../graphql'
 import {useLazyQuery} from '@apollo/react-hooks'
-import Separator from '../../Components/Separator'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
+import {HeaderImageBackground,HeaderTitle,DisabledButton} from '../../Components'
 
 //SELF IMPORTS
 import SwipeProceedButton from './SwipeProceedButton'
@@ -15,9 +15,11 @@ import EnterMobileNo from './EnterMobileNo'
 import EnterAmount from './EnterAmount'
 import EnterNote from './/EnterNote'
 import SwipeButtonComponent from './SwipeButtonComponent'
+import ProceedButton from './ProceedButton'
+import { KeyboardAvoidingView } from 'react-native'
 
 
-export default ({navigation,route})=> {
+const ToktokWalletSendMoney = ({navigation,route})=> {
 
     navigation.setOptions({
         // headerLeft: ()=> <HeaderBack />,
@@ -26,7 +28,7 @@ export default ({navigation,route})=> {
       })
     
     const session = useSelector(state => state.session)
-    const walletinfo = route.params.walletinfo
+    const tokwaAccount = useSelector(state => state.toktokWallet)
 
     const [mobileNo,setMobileNo] = useState("")
     const [amount,setAmount] = useState("")
@@ -40,18 +42,6 @@ export default ({navigation,route})=> {
             middleName: "",
             lastName: ""
         },
-        incomingRecords: {
-            daily: 0,
-            monthly: 0,
-            yearly: 0,
-            walletlimit: {
-                id: null,
-                walletSize: null,
-                incomingValueDailyLimit: null,
-                incomingValueMonthlyLimit: null,
-                incomingValueAnnualLimit: null,
-              }
-        }
     })
 
     const [senderDetails , setSenderDetails] = useState({
@@ -69,35 +59,14 @@ export default ({navigation,route})=> {
         }
     })
 
-    const [getDailyMonthlyYearlyOutgoing] = useLazyQuery(GET_DAILY_MONTHLY_YEARLY_OUTGOING, {
-        fetchPolicy: 'network-only',
-        onError: (error)=>{
-
-        },
-        onCompleted: (response)=> {
-            setSenderDetails({
-                outgoingRecords: {
-                    ...response.getDailyMonthlyYearlyOutgoing
-                }
-            })
-        }
-    })
-
     useEffect(()=>{
-
-        // getDailyMonthlyYearlyOutgoing({
-        //     variables: {
-        //         input: {
-        //             userID: session.user.id
-        //         }
-        //     }
-        // })
 
         if(route.params){
             if(route.params.recentTransfer){
                 setAmount(route.params.recentTransfer.amount)
-                setMobileNo(route.params.recentTransfer.destinationInfo.username.replace("+63","0"))
-                setSwipeEnabled(route.params.recentTransfer.amount <= walletinfo.balance)
+                setNote(route.params.recentTransfer.note)
+                setMobileNo(route.params.recentTransfer.destinationWallet.account.mobileNumber.replace("+63","0"))
+                setSwipeEnabled(route.params.recentTransfer.amount <= tokwaAccount.wallet.balance)
             }
         }
         
@@ -109,58 +78,45 @@ export default ({navigation,route})=> {
 
     return (
         <View style={{flex:1,backgroundColor:"white"}}>
-            <View style={{flex: 1}}>
                 <View style={styles.headings}>
-                    <ImageBackground imageStyle={[]} style={styles.walletbackgroundimage} source={require('../../../../../../assets/toktokwallet-assets/header-bg.png')}>
-
-                        <View style={styles.header}>
-                                <View style={{flex: 1}}>
-                                    {/* <TouchableOpacity style={{paddingHorizontal: 15,flex: 1,justifyContent:"center",alignItems:'flex-start'}}>
-                                        <FIcon5 name="chevron-left" size={13}/>
-                                    </TouchableOpacity> */}
-                                    <HeaderBack />
-                                </View>
-                                <View style={{width: 150,justifyContent:"center",alignItems:"center"}}>
-                                <Text style={{fontSize: SIZES.L,fontFamily: FONTS.BOLD,color: COLORS.DARK}}>Send Money</Text>
-                                </View>
-                                <View style={{flex: 1}}>
-
-                                </View>
-                        </View>
-                        <View style={{height: 38}}/>
+                    <HeaderImageBackground>
+                        <HeaderTitle label="Send Money"/>
+                        <View style={{height: 32}}/>
                         <View style={styles.walletContent}>
                                 <View>
-                                    <Text style={{fontSize: 24,fontFamily: FONTS.BOLD}}>PHP {numberFormat(walletinfo.balance ? walletinfo.balance : 0)}</Text>
-                                    <Text style={{fontSize: SIZES.M,fontFamily: FONTS.REGULAR,color: COLORS.DARK}}>Available Balance</Text>
+                                    <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>{tokwaAccount.wallet.currency.code} {numberFormat(tokwaAccount.wallet.balance ? tokwaAccount.wallet.balance : 0)}</Text>
+                                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Available Balance</Text>
                                 </View>
-                                <TouchableOpacity onPress={()=> navigation.navigate("ToktokWalletPaymentOptions" , {walletinfo})} style={styles.topUp}>
+                                <TouchableOpacity onPress={()=> navigation.navigate("ToktokWalletPaymentOptions")} style={styles.topUp}>
                                     <View style={styles.topUpbtn}>
-                                            <FIcon5 name={'plus'} size={12} color={COLORS.DARK}/> 
+                                            <FIcon5 name={'plus'} size={12}/> 
                                     </View>
                                 </TouchableOpacity>
                         </View>
+                    </HeaderImageBackground>
+    
+          
+                </View>
 
-                    </ImageBackground>
-                    <EnterMobileNo
+                <EnterMobileNo
                         mobileNo={mobileNo}
                         setMobileNo={setMobileNo}
                         navigation={navigation} 
-                        session={session} 
                         setProceed={setProceed} 
                         proceed={proceed}
                         setRecipientDetails={setRecipientDetails}
                         recipientDetails={recipientDetails}
-                    />
-                </View>
+                        tokwaAccount={tokwaAccount}
+                />
 
               
-                <View style={{padding: 16,marginTop: 15,flex:1 }}>
+                <KeyboardAvoidingView style={{paddingHorizontal: 16,flex:1 }}>
                 { 
                         proceed
                         ? <> 
                              <EnterAmount 
                                 setSwipeEnabled={setSwipeEnabled}
-                                walletinfo={walletinfo} 
+                                tokwaAccount={tokwaAccount}
                                 amount={amount} 
                                 setAmount={setAmount}
                                 recipientDetails={recipientDetails}
@@ -173,31 +129,38 @@ export default ({navigation,route})=> {
                             />
                         </>
                         : <View style={{marginTop: 10}}>
-                            <Text style={{fontFamily: FONTS.BOLD,fontWeight:"bold", fontSize: SIZES.M}}>Enter number to transfer</Text>
-                            <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.S,color:COLORS.MEDIUM}}>You can click the "Address Book" to open your contact list.</Text>
+                            <Text style={{fontFamily: FONT.BOLD,fontWeight:"bold", fontSize: FONT_SIZE.M}}>Enter number to transfer</Text>
+                            <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:COLOR.DARK}}>You can click the "Address Book" to open your contact list.</Text>
                         </View>
                     }
+                </KeyboardAvoidingView>
+                
+     
+                <View style={{height: 70,padding: 16, justifyContent:"flex-end"}}>
+                    {/* {   swipeEnabled 
+                        ? <SwipeButtonComponent amount={amount} swipeEnabled={swipeEnabled} note={note} session={session} recipientDetails={recipientDetails}/>
+                        : <DisabledButton label="Proceed" />
+                    } */}
+                    <ProceedButton
+                        swipeEnabled={swipeEnabled}
+                        amount={amount}
+                        navigation={navigation}
+                        session={session}
+                        note={note}
+                        recipientDetails={recipientDetails}
+                    />
                 </View>
-                
-            </View>
-                {/* UNCOMMENT IF NEED BOTTOM SHEET REVIEW AND CONFIRM */}
-                {/* { proceed && <SwipeProceedButton amount={amount} note={note} swipeEnabled={swipeEnabled} session={session} recipientDetails={recipientDetails}/> } */}
-                
-                {   swipeEnabled 
-                    ? <SwipeButtonComponent amount={amount} swipeEnabled={swipeEnabled} note={note} session={session} recipientDetails={recipientDetails}/>
-                    : null
-                }
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     headings: {
-        height: 170,
+        height: 190,
         backgroundColor:"black"
     },  
     header: {
-        marginTop: 20,
+        marginTop: 42,
         height: 24,
         width: "100%",
         flexDirection:"row"
@@ -229,7 +192,6 @@ const styles = StyleSheet.create({
         height: 34,
         width: 34,
         borderRadius: 100,
-        borderColor: COLORS.DARK,
         borderWidth: 2,
         justifyContent:"center",
         alignItems:"center",
@@ -279,4 +241,6 @@ const styles = StyleSheet.create({
         flexDirection: "row",
     }
 })
+
+export default ToktokWalletSendMoney
 

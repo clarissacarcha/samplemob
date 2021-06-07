@@ -1,168 +1,160 @@
 import React , {useState , useEffect} from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,Image,ActivityIndicator , FlatList} from 'react-native'
-import {HeaderBack, HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../../../components'
+import {HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../../../components'
 import moment from 'moment'
-import { COLOR, COLORS, FONTS, SIZES } from '../../../../../../res/constants'
-import FilterDateModal from '../../Components/FilterDateModal'
-import {useLazyQuery} from '@apollo/react-hooks'
-import {GET_CASH_IN_LOGS} from '../../../../../../graphql'
+import { COLOR, FONT, FONT_SIZE } from '../../../../../../res/variables'
+import {useLazyQuery , useQuery} from '@apollo/react-hooks'
+import {GET_CASH_IN_LOGS ,TOKTOK_WALLET_GRAPHQL_CLIENT } from '../../../../../../graphql'
+import { GET_CASH_INS} from '../../../../../../graphql/toktokwallet'
 import {onError} from '../../../../../../util/ErrorUtility'
 import {useSelector} from 'react-redux'
 import { numberFormat } from '../../../../../../helper'
-import Separator from '../../Components/Separator'
+import {Separator,FilterDateModal,TransactionDetails, ModalPaginationLoading} from '../../Components'
+import { HeaderBack } from '../../../../../../revamp'
 
 
-const CashInLog = ({transactionDate , transactionItems , index , itemsLength })=> {
+const CashInLog = ({
+    item,
+    index , 
+    itemsLength,
+    setTransactionInfo,
+    setTransactionVisible
+})=> {
 
-    const dateValue = moment(transactionDate).tz("Asia/Manila").format("YYYY-MM-DD");
-    const phTodayDate = moment().tz("Asia/Manila").format("YYYY-MM-DD");
-    const phYesterdayDate = moment().subtract(1,"days").tz("Asia/Manila").format("YYYY-MM-DD");
-    let datedisplay = ''
-    if(dateValue == phTodayDate){
-      datedisplay = "Today"
-    }else if(dateValue == phYesterdayDate){
-        datedisplay = "Yesterday"
-    }else{
-        datedisplay = moment(transactionDate).tz("Asia/Manila").format('MMM DD YYYY');
+
+    const ViewTransactionDetails = (refNo,refDate, transactionAmount , status)=> {
+        setTransactionInfo({
+            refNo: refNo,
+            refDate: refDate,
+            label: "Cash In",
+            phrase: "Cash-in through PayPanda",
+            amount: transactionAmount,
+            status: status,
+        })
+        setTransactionVisible(true)
     }
 
+    let status
+    switch (item.status) {
+        case "0":
+            status = "Requested"
+            break;
+        case "1":
+            status = "Success"
+            break
+        case "2":
+            status = "Pending"
+            break
+        default:
+            status = "Failed"
+            break;
+    }
+
+    const refNo = item.referenceNumber
+    const refDate = moment(item.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')
+    const transactionAmount = `PHP ${numberFormat(item.amount)}`
+
     return (
-        <View style={[styles.transactionLogsContainer, {marginBottom: index == itemsLength - 1 ? 100 : 0}]}>
-            <Text style={{fontSize: SIZES.M,fontFamily: FONTS.BOLD,color: COLORS.DARK}}>{datedisplay}</Text>
-           {
-               transactionItems.map((item)=>{
-
-                let status
-                switch (item.trails[0].status) {
-                    case 0:
-                        status = "Initialized"
-                        break;
-                    case 1:
-                        status = "Pending"
-                        break
-                    case 2:
-                        status = "Successful"
-                        break
-                    default:
-                        status = "Rejected"
-                        break;
-                }
-
-                return (
-                    <>
-                    {
-                        // item.trails[0].status != 0 &&
-                        <View style={styles.transaction}>
-                            {/* <View style={styles.transactionIcon}>
-                            <Image source={require('../../../../../assets/icons/walletLogCashin.png')} style={{height: 35, width: 35}} resizeMode="contain"/>
-                            </View> */}
+        <TouchableOpacity onPress={()=>ViewTransactionDetails(refNo,refDate, transactionAmount , status)} style={styles.transaction}>
                             <View style={styles.transactionDetails}>
-                                <Text style={{fontSize: SIZES.M,fontFamily: FONTS.REGULAR}}>Ref # {item.referenceNumber}</Text>
-                                <Text style={{color: "#909294",fontSize: SIZES.M,marginTop: 0,fontFamily: FONTS.REGULAR}}>{status}</Text>
+                                <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Ref # {refNo}</Text>
+                                <Text style={{color: "#909294",fontSize: FONT_SIZE.M,marginTop: 0,fontFamily: FONT.REGULAR}}>{status}</Text>
                             </View>
                             <View style={styles.transactionAmount}>
-                                <Text style={{color: "#FCB91A",fontSize: SIZES.M,fontFamily: FONTS.REGULAR}}>PHP {numberFormat(item.amount)}</Text>
-                                <Text style={{color: "#909294",fontSize: SIZES.M,alignSelf: "flex-end",marginTop: 0,fontFamily: FONTS.REGULAR}}>{moment(item.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')}</Text>
+                                <Text style={{color: "#FCB91A",fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{transactionAmount}</Text>
+                                <Text style={{color: "#909294",fontSize: FONT_SIZE.S,alignSelf: "flex-end",marginTop: 0,fontFamily: FONT.REGULAR}}>{refDate}</Text>
                             </View>
-                        </View>
-                    }
-                
-                    </>
-                )
-               })
-           }
-        </View>
+       </TouchableOpacity>
     )
 }
 
-export default ({navigation})=> {
+const ToktokWalletCashInLogs = ({navigation})=> {
 
     navigation.setOptions({
-        headerLeft: ()=> <HeaderBack />,
-        headerTitle: ()=> <HeaderTitle label={['Cash In Logs','']}/>,
+        headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
+        headerTitle: ()=> <HeaderTitle label={['Cash In','']}/>,
     })
 
-    const session = useSelector(state=>state.session)
 
-    const [filtertype, setFilterType] = useState("All")
-    const filterOptionsType = ["All","Pending","Confirmed","Rejected"]
-    const [showFilterDate,setShowFilterDate] = useState(false)
-    const [logs,setLogs] = useState([])
-    const [filteredLogs,setFilteredLogs] = useState([])
-    const [filterDate,setFilterDate] = useState({
-        from: moment(new Date()).subtract(3,'days'),
-        to: new Date()
+    const [transactionVisible,setTransactionVisible] = useState(false)
+    const [pageIndex,setPageIndex] = useState(0)
+    const [pageLoading,setPageLoading] = useState(false)
+    const [records,setRecords] = useState([])
+    const [transactionInfo,setTransactionInfo] = useState({
+        refNo: "",
+        refDate: "",
+        label: "",
+        phrase: "",
+        amount: "",
+        status: "",
     })
 
-    const changeFilterDate = (key,val)=>{
-        setFilterDate((oldstate) => {
-            oldstate[key] = val
-            return {
-                ...oldstate,
-            }
-        })
-        setFilterType("All")
-    }
 
-    const [getCashInLogs , {data,error,loading}] = useLazyQuery(GET_CASH_IN_LOGS,{
+    const [getCashIns, {data,error,loading}] = useLazyQuery(GET_CASH_INS, {
         fetchPolicy: "network-only",
-        variables: {
-            input: {
-                tokUserId: session.user.id,
-                startDate: filterDate.from,
-                endDate: filterDate.to,
-            }
-        },
-        onError: onError,
-        onCompleted: (response)=> {
-            setLogs(response.getCashInLogs)
-            setFilteredLogs(response.getCashInLogs)
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+        onCompleted: ({getCashIns})=> {
+            setRecords(state=> {
+                return [...state, ...getCashIns]
+            })
+            // setPageLoading(false)
         }
     })
 
     useEffect(()=>{
-        getCashInLogs()
-    },[filterDate])
-
+        getCashIns({
+            variables: {
+                input: {
+                    pageIndex: pageIndex
+                }
+            }
+        })
+        setPageLoading(loading)
+    },[pageIndex])
 
     return (
         <>
-        <FilterDateModal 
-                showFilterDate={showFilterDate} 
-                changeFilterDate={changeFilterDate} 
-                filterDate={filterDate} 
-                setShowFilterDate={setShowFilterDate}
+        <TransactionDetails 
+            visible={transactionVisible}
+            setVisible={setTransactionVisible}
+            refNo={transactionInfo.refNo}
+            refDate={transactionInfo.refDate}
+            label={transactionInfo.label}
+            phrase={transactionInfo.phrase}
+            amount={transactionInfo.amount}
+            status={transactionInfo.status}
         />
         <Separator />
+        <ModalPaginationLoading visible={pageLoading}/>
         {
-            loading
+            loading && pageIndex == 0
             ?  <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                <ActivityIndicator size={24} color={COLOR} />
+                <ActivityIndicator size={24} color={COLOR.YELLOW} />
                </View>
             :  <View style={styles.container}>
                     <View style={styles.content}>
-                        <View style={{padding: 16}}>
-                            <View style={{flexDirection: "row",paddingBottom: 10,}}>
-                                <Text style={{fontSize: SIZES.M ,fontFamily: FONTS.BOLD,color: COLORS.DARK}}>Date Range</Text>
-                                <View style={{flex: 1}}>
-                                <TouchableOpacity onPress={()=>setShowFilterDate(true)} style={{alignSelf: "flex-end", padding: 2, paddingHorizontal: 15, borderRadius: 10, backgroundColor: "#FCB91A"}}>
-                                            <Text style={{color: "white",fontSize: SIZES.S,fontFamily: FONTS.REGULAR}}>{moment(filterDate.from).format('D MMM')} - {moment(filterDate.to).format('D MMM')}</Text>
-                                </TouchableOpacity>
-                                </View>
-                            </View>
-                        </View>
-                        <Separator />
-                        <View style={{padding: 16,}}>
                             <FlatList
                                 showsVerticalScrollIndicator={false}
-                                data={filteredLogs}
-                                keyExtractor={item=>item.title}
+                                data={records}
+                                keyExtractor={item=>item.id}
                                 renderItem={({item,index})=>(
-                                    <CashInLog key={`cashin-log${index}`} transactionDate={item.logDate} transactionItems={item.logs}  index={index} itemsLength={filteredLogs.length}/>
+                                    <CashInLog 
+                                        key={`cashin-log${index}`} 
+                                        item={item}
+                                        index={index} 
+                                        itemsLength={records.length}
+                                        setTransactionInfo={setTransactionInfo}
+                                        setTransactionVisible={setTransactionVisible}
+                                    />
                                 )}
+                                // onEndReached={()=>{
+                                //   if(!pageLoading) {
+                                //     console.log("REACH END")
+                                //     setPageIndex(state=>state+1)
+                                //   }
+                                // }}
+                                // onEndReachedThreshold={0.16}
                             />
-                        </View>
-                        
                     </View>
             </View>
         }
@@ -182,7 +174,7 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     content: {
-        marginTop: 10,
+       padding: 16,
     },
     filterType: {
         alignSelf: "flex-end",
@@ -215,3 +207,5 @@ const styles = StyleSheet.create({
         alignItems: "flex-end"
     }
 })
+
+export default ToktokWalletCashInLogs

@@ -1,15 +1,16 @@
 import React from 'react'
-import { Modal , StyleSheet , View , Text , TouchableOpacity,Image} from 'react-native'
-import { COLOR, FONT_REGULAR , DARK, FONT_MEDIUM, FONT_BOLD, FONT_LIGHT, SIZES} from '../../../../../../res/constants'
+import { Modal , StyleSheet , View , Text } from 'react-native'
+import { FONT_REGULAR , FONT_MEDIUM, FONT_BOLD, FONT_LIGHT, SIZES} from '../../../../../../res/constants'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import { numberFormat } from '../../../../../../helper'
 import {useNavigation} from '@react-navigation/native'
 import moment from 'moment'
-import { BlackButton } from '../../../../../../revamp'
-import Receipt from '../../Components/Receipt'
+import {Receipt} from '../../Components'
+import { COLOR } from '../../../../../../res/variables'
 
 
 const TransactionInfo = ({label,value})=> (
+    <>
     <View style={styles.transactionInfoView}>
         <View style={{flex: 1,justifyContent:"center",alignItems:"flex-start"}}>
             <Text style={{fontFamily: FONT_REGULAR,color:"dimgray",fontSize: SIZES.M}}>{label}</Text>
@@ -18,6 +19,8 @@ const TransactionInfo = ({label,value})=> (
             <Text style={{fontFamily: FONT_MEDIUM,fontSize:SIZES.M}}>{value}</Text>
         </View>
     </View>
+    <View style={styles.divider}/>
+    </>
 )
 
 const SuccessfulModal = ({successModalVisible , amount , cashInLogParams})=> {
@@ -83,7 +86,12 @@ const SuccessfulModal = ({successModalVisible , amount , cashInLogParams})=> {
                 refNo={cashInLogParams.referenceNumber}
                 onPress={Proceed}
             >
-                <ModalContent />
+                <View style={styles.transactionInfo}>
+                     <TransactionInfo label="Cash in Method" value="PayPanda"/>
+                     <TransactionInfo label="PayPanda Ref. No." value={cashInLogParams.paypandaReferenceNumber}/>
+                     <TransactionInfo label="PayPanda Status" value={status}/>
+                     <TransactionInfo label="Amount" value={`PHP ${numberFormat(cashInLogParams.amount)}`}/>
+                </View>
             </Receipt>
         </Modal>
     )
@@ -107,10 +115,13 @@ const styles = StyleSheet.create({
     },
     transactionInfoView: {
         width:"100%",
-        borderBottomWidth: .3,
-        borderColor:"silver",
         flexDirection:"row",
         paddingVertical: 12
+    },
+    divider: {
+        height: 1,
+        width:"100%",
+        backgroundColor: COLOR.LIGHT
     }
 })
 

@@ -40,6 +40,7 @@ def flipper_post_install(installer)
     if target.name == 'YogaKit'
       target.build_configurations.each do |config|
         config.build_settings['SWIFT_VERSION'] = '4.1'
+        # config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '9.0'
       end
     end
   end
@@ -103,8 +104,11 @@ target 'toktok' do
   pod 'Permission-PhotoLibrary', :path => "#{permissions_path}/PhotoLibrary.podspec"
   pod 'Permission-Contacts', :path => "#{permissions_path}/Contacts.podspec"
 
-  pod 'react-native-camera', :path => '../node_modules/react-native-camera'
-
+  # pod 'react-native-camera', :path => '../node_modules/react-native-camera'
+  pod 'react-native-camera', path: '../node_modules/react-native-camera', subspecs: [
+  'FaceDetectorMLKit'
+  ]
+  pod 'Firebase/Core'
 
   pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
 
@@ -113,6 +117,11 @@ target 'toktok' do
   pod 'RNFS', :path => '../node_modules/react-native-fs'
 
   pod 'react-native-view-shot', :path => '../node_modules/react-native-view-shot'
+
+  pod 'react-native-cameraroll', :path => '../node_modules/@react-native-community/cameraroll'
+
+
+  pod 'RNCCheckbox', :path => '../node_modules/@react-native-community/checkbox'
 
   target 'toktokTests' do
     inherit! :complete

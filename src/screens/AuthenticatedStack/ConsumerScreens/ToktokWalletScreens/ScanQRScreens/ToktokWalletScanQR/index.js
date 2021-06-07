@@ -1,12 +1,13 @@
 import React, {useState,useCallback, useEffect} from 'react'
-import {StyleSheet,View,Text,TouchableOpacity,Dimensions,Image,TouchableHighlight,Platform} from 'react-native'
+import {StyleSheet,View,Text,TouchableOpacity,Dimensions,Image,TouchableHighlight,Platform,SafeAreaView} from 'react-native'
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import { RNCamera } from 'react-native-camera';
-import {FONTS, SIZES} from '../../../../../../res/constants'
+import {COLOR , FONT , FONT_SIZE} from '../../../../../../res/variables'
 import FIcon from 'react-native-vector-icons/Feather';
 import {useFocusEffect} from '@react-navigation/native'
 import {useLazyQuery} from '@apollo/react-hooks'
-import {GET_QR_CODE} from '../../../../../../graphql'
+import {TOKTOK_WALLET_GRAPHQL_CLIENT } from '../../../../../../graphql'
+import {GET_ACCOUNT} from '../../../../../../graphql/toktokwallet'
 import {onError} from '../../../../../../util/ErrorUtility'
 import {useSelector} from 'react-redux'
 import {useAlert} from '../../../../../../hooks/useAlert';
@@ -14,118 +15,134 @@ import {useAlert} from '../../../../../../hooks/useAlert';
 //SELF IMPORTS
 import WalletBalance from './WalletBalance'
 import Actions from './Actions'
+import { ActivityIndicator } from 'react-native';
 
-const {height,width} = Dimensions.get('window')
+const {height,width} = Dimensions.get('screen')
 
-export default ({navigation,route})=> {
+const ToktokWalletScanQR = ({navigation,route})=> {
 
     navigation.setOptions({
         header: ()=> null,
     })
 
     const alertHook = useAlert()
-    const {walletinfo} = route.params
     const [torch,setTorch] = useState(false)
     const [focusCamera,setFocusCamera] = useState(false)
     const session = useSelector(state=>state.session)
     const [image, setImage] = useState(null);
-
-
+    const tokwaAccount = useSelector(state=>state.toktokWallet)
+    const [boundaryArea,setBoundaryArea] = useState({
+        height: 0,
+        width: 0,
+        x: 0,
+        y: 0,
+    })
     useFocusEffect(useCallback(()=>{
         setFocusCamera(true)
         return ()=> setFocusCamera(false)
     },[]))
 
-    const [getQRCode] = useLazyQuery(GET_QR_CODE,{
+
+    const [getAccount, {data , error ,loading}] = useLazyQuery(GET_ACCOUNT,{
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         fetchPolicy: "network-only",
-        onError: (error)=>{
-            if(error.graphQLErrors.length > 0){
-                error.graphQLErrors.map((err)=> {
-                    if(err.message == "Wallet not found"){
-                       return alertHook({message:"Recipient does not have toktokwallet"})
-                    }else{
-                       return alertHook({message:"This QR code is invalid"})
+        onError: (err)=>{
+            if(err.graphQLErrors.length > 0){
+                err.graphQLErrors.map((error)=> {
+                    if(error.message == "Person doesn't registered in toktokwallet") {
+                        return alertHook({message:"QR code must be valid"})
                     }
+                   
                 })
-            return
+                return
             }
-            onError(error)
+            return alertHook({message:"Qr code must be valid"})
+            onError(err)
         },
-        onCompleted: (response)=> {
-            if(response.getQRCode.contactNo === session.user.username){
+        onCompleted: ({getAccount})=> {
+            if(getAccount.mobileNumber === tokwaAccount.mobileNumber){
                 return alertHook({message: "You cannot send money to yourself"})
-            }else{
-                navigation.navigate("ToktokWalletScanQRConfirm", {recipientInfo: response.getQRCode, walletinfo: walletinfo})
             }
+            return  navigation.navigate("ToktokWalletScanQRConfirm", {recipientInfo: getAccount})
         }
     })
 
-    const onSuccess = (e)=> {
-        // size of center Box
-        const ViewFinderHeight = width * 0.7
-        const ViewFinderWidth = width * 0.7
 
-        const boundary = {
-            height: ViewFinderHeight,
-            width: ViewFinderWidth,
-            x: ( e.bounds.width - ViewFinderWidth ) / 2,
-            y: ( e.bounds.height - ViewFinderHeight ) / 2
-        }
-
-        let rXAve = 0
-        let rYAve = 0
-        let x = 0
-        e.bounds.origin.forEach((bound)=>{
-            rXAve = rXAve + +bound.x
-            rYAve = rYAve + +bound.y
-            x++
-        })
-
-        rXAve = rXAve / x
-        rYAve = rYAve / x
-
+    const barcodeRead = (e)=> {
+        const barcode = Platform.OS === "android" ? e.barcodes[0] : e
         const resultBounds = {
-            height: e.bounds.height,
-            width: e.bounds.width,
-            x: rXAve,
-            y: rYAve 
+            height: barcode.bounds.size.height,
+            width: barcode.bounds.size.width,
+            x: barcode.bounds.origin.x,
+            y: barcode.bounds.origin.y
         }
 
-        if(ifInsideBox(boundary,resultBounds)){
-             getQRCode({
+        const checkifOutside = checkifOutsideBox(boundaryArea , resultBounds)
+
+        if(!checkifOutside){
+            getAccount({
                 variables: {
                     input: {
-                        qrCode: e.data
+                        mobileNumber: barcode.data
                     }
                 }
             })
             setTorch(false)
-        }else{
-            console.log("OUT OF BOUNDS")
         }
-
-    }
-  
-
-    const ifInsideBox = (boundary , resultBounds)=> {
-       return boundary.x < (resultBounds.x + resultBounds.width)
-       && ( boundary.x + boundary.width ) > resultBounds.x
-       && boundary.y < ( resultBounds.y + resultBounds.height )
-       && ( boundary.y + boundary.height ) > resultBounds.y
-       && resultBounds.y > boundary.y
-       && resultBounds.x > boundary.x
     }
 
-    const customMarker = ()=> (
-        <View style={styles.customMarker}>
-            <TouchableOpacity onPress={()=>navigation.goBack()} style={{top: Platform.OS === "android" ? 60 : 80, left: 0,position:"absolute"}}>
-             <FIcon name="chevron-left" size={30} color={'white'} /> 
+    const checkifOutsideBox = (boundary, result)=>{
+        return result.x < boundary.x
+           || (result.x + result.width) > (boundary.x + boundary.width)
+           || result.y < boundary.y
+           || (result.y + result.height) > (boundary.y + boundary.height)
+           || result.height > boundary.height
+           || result.width > boundary.width
+    } 
+
+    return (
+        <>
+        <View style={{flex: 1}}>
+            <RNCamera
+                style={{
+                    flex: 1,
+                    justifyContent:"center",
+                    alignItems:"center"
+                }}
+                type={RNCamera.Constants.Type.back}
+                flashMode={torch ? RNCamera.Constants.FlashMode.torch : RNCamera.Constants.FlashMode.off}
+                onBarCodeRead={Platform.OS === "ios" && !loading && focusCamera ? barcodeRead : null}
+                onGoogleVisionBarcodesDetected={Platform.OS === "android" && !loading && focusCamera ? barcodeRead : null}
+                captureAudio={false}
+                androidCameraPermissionOptions={{
+                    title: 'Permission to use camera',
+                    message: 'We need your permission to use your camera',
+                    buttonPositive: 'Ok',
+                    buttonNegative: 'Cancel',
+                }}
+            >
+
+            <TouchableOpacity onPress={()=>navigation.pop()} style={styles.backBtn}>
+                <FIcon name="chevron-left" size={20} color={'#222222'} /> 
             </TouchableOpacity>
-            <View style={styles.centerBox}>
+
+                <View style={styles.centerBox}
+                    onLayout={(e)=>{
+                        setBoundaryArea(e.nativeEvent.layout)
+                    }}
+                >
                         <View style={[styles.borderEdges,{borderTopWidth: 5,borderLeftWidth: 5,top: 0,left: 0,}]}/>
                         <View style={[styles.borderEdges,{borderTopWidth: 5,borderRightWidth: 5,top: 0,right: 0,}]}/>
                         <View style={[styles.borderEdges,{borderBottomWidth: 5,borderLeftWidth: 5,bottom:0,left: 0,}]}/>
                         <View style={[styles.borderEdges,{borderBottomWidth: 5,borderRightWidth: 5,bottom:0,right:0,}]}/>
+
+                        <View>
+                            {
+                                loading && <ActivityIndicator color={COLOR.YELLOW} size={50}/>
+                            }
+                           
+                        </View>
+
 
                     <View style={styles.TorchView}>
                       { image  ? <Image source={{uri: image.uri}}  style={{height: 100,width: 100}}/> : null}
@@ -136,57 +153,28 @@ export default ({navigation,route})=> {
                                 <Image source={torch ? require('../../../../../../assets/icons/walletScanTorchOn.png') : require('../../../../../../assets/icons/walletScanTorchOff.png')} />                      
                             </TouchableHighlight>
 
-                            <Text style={{color: "white",fontFamily: FONTS.REGULAR,fontSize: SIZES.L}}>Tap to turn {torch ? 'off' : 'on' }</Text>
+                            <Text style={{color: "white",fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.L}}>Tap to turn {torch ? 'off' : 'on' }</Text>
                     </View>
 
-                
-            </View>
 
-                <View style={{marginTop: 25}}>
-                    <Text style={{color: "white",fontFamily: FONTS.REGULAR,fontSize: SIZES.L}}>Position the QR code within the frame.</Text>
                 </View>
-
-    
-        
-        </View>
-    )
-
-    return (
-        <>
-           {
-               focusCamera &&  <QRCodeScanner
-                                    onRead={onSuccess}
-                                    flashMode={torch ? RNCamera.Constants.FlashMode.torch : RNCamera.Constants.FlashMode.off}
-                                    fadeIn={false}
-                                    showMarker={true}
-                                    markerStyle={{
-                                        borderColor: "red"
-                                    }}
-                                    reactivate={true}
-                                    reactivateTimeout={1000}
-                                    vibrate={false}
-                                    customMarker={customMarker}
-                                    containerStyle={{
-                                        backgroundColor: "rgba(0,0,0,0.5)"
-                                    }}
-                                    cameraStyle={{
-                                        height: "100%",
-                                        backgroundColor: "rgba(0,0,0,0.5)"
-                                    }}
-                                />
-           }
-
-                <Actions onUploadSuccess={(qrCode)=>{
-                        getQRCode({
+                <View style={{marginTop: 25}}>
+                    <Text style={{color: "white",fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.L,color: COLOR.YELLOW}}>Position the QR code within the frame.</Text>
+                </View>
+                <Actions 
+                    tokwaAccount={tokwaAccount}
+                    onUploadSuccess={(qrCode)=>{
+                        getAccount({
                             variables: {
                                 input: {
-                                    qrCode: qrCode
+                                    mobileNumber: qrCode
                                 }
                             }
                         })
                 }}/>
-         
-            <WalletBalance navigation={navigation} walletinfo={walletinfo}/>
+
+            </RNCamera>
+        </View>
         </>
     )
 }
@@ -241,7 +229,21 @@ const styles = StyleSheet.create({
         height: 40,
         width: 40,
         position: "absolute",
-        borderColor: "#F6841F",
+        borderColor: COLOR.YELLOW,
+    },
+    backBtn: {
+        backgroundColor:"#FFFFFF",
+        top: 30, 
+        left: 16,
+        position:"absolute",
+        zIndex: 1,
+        justifyContent:"center",
+        alignItems:"center",
+        borderRadius: 100,
+        height: 35,
+        width: 35,
     }
   });
+
+  export default ToktokWalletScanQR
   

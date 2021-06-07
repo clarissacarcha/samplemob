@@ -1,23 +1,26 @@
 import React , {useContext} from 'react'
-import {View,Text,StyleSheet,Dimensions,ImageBackground,Image,TouchableOpacity,Animated,RefreshControl,ScrollView} from 'react-native'
-import { COLORS, FONTS, FONT_BOLD, FONT_MEDIUM, FONT_REGULAR, SIZES } from '../../../../../res/constants'
+import {View,Text,StyleSheet,Dimensions,TouchableOpacity,Animated,RefreshControl,ScrollView,ActivityIndicator} from 'react-native'
+import { COLOR , FONT , FONT_SIZE} from '../../../../../res/variables';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import { useNavigation } from '@react-navigation/native'
-import {CheckWalletRestrictionContext} from './CheckWalletRestrictionProvider'
-import Separator from '../Components/Separator';
+import {Separator , HeaderImageBackground, HeaderTitle} from '../Components';
 import { numberFormat } from '../../../../../helper';
+import {useSelector} from 'react-redux'
 
 
 //SELF IMPORTS
 import WalletMethods from './WalletMethods'
 import { HeaderBack } from '../../../../../revamp';
+import { CheckWalletAccountRestrictionContext } from './CheckWalletAccountRestriction';
+
 
 const {height,width} = Dimensions.get("window")
 
-const WalletCardInfo = ({walletinfo})=> {
+const WalletCardInfo = ({loading})=> {
     const navigation = useNavigation()
     const rotateY = new Animated.Value(0)
-    const {checkIfResctricted} = useContext(CheckWalletRestrictionContext)
+    const tokwaAccount = useSelector(state=>state.toktokWallet)
+    const checkWallet = useContext(CheckWalletAccountRestrictionContext)
 
     const animation = Animated.timing(rotateY,{
         toValue: 200,
@@ -31,32 +34,22 @@ const WalletCardInfo = ({walletinfo})=> {
     })
 
     const cashIn = ()=> {
-        if(!checkIfResctricted()){
-            return navigation.navigate("ToktokWalletPaymentOptions" , {walletinfo})
+        if(checkWallet.checkIfAllowed()){
+            return navigation.navigate("ToktokWalletPaymentOptions")
         }
     }
 
     return (
        <View style={styles.container}>
-            <ImageBackground imageStyle={[]} style={styles.walletbackgroundimage} source={require('../../../../../assets/toktokwallet-assets/header-bg.png')}>
-                {/* <View style={{backgroundColor:"rgba(255, 235, 188, 0.1)",height:"100%",width:"100%",position:"absolute"}} /> */}
-      
-                <View style={styles.headings}>
-                    <View style={{flex: 1}}>
-                        <HeaderBack />
-                    </View>
-                    <View style={{width: 150,justifyContent:"center",alignItems:"center"}}>
-                            <Image resizeMode="contain" style={{height: 23,width: 130}} source={require('../../../../../assets/toktokwallet-assets/toktokwallet.png')} />
-                    </View>
-                    <View style={{flex: 1}}>
-
-                    </View>
-                </View>
-                <View style={{height: 38}}/>
+           <HeaderImageBackground>
+               <HeaderTitle isLogo={true} headerBackLabel="Home"/>
+               <View style={{height: 28}}/>
                 <View style={styles.walletContent}>
                     <View>
-                        <Text style={{fontSize: 24,fontFamily: FONTS.BOLD}}>PHP {numberFormat(walletinfo.balance ? walletinfo.balance : 0)}</Text>
-                        <Text style={{fontSize:SIZES.M,fontFamily: FONTS.REGULAR,color: COLORS.DARK}}>Available Balance</Text>
+                        {
+                           <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>{tokwaAccount.wallet.currency.code} {numberFormat(tokwaAccount.wallet.balance)}</Text>
+                        }         
+                        <Text style={{fontSize:FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Available Balance</Text>
                     </View>
                     <TouchableOpacity onPress={cashIn} style={styles.topUp}>
                         <View style={styles.topUpbtn}>
@@ -65,21 +58,22 @@ const WalletCardInfo = ({walletinfo})=> {
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.walletSettings} onPress={()=>{
                         // rotateY.setValue(0)
-                        animation.start(()=> {
-                            animation.reset()
-                            navigation.navigate("ToktokWalletSettings", {walletinfo})
-                        })
-
+                        if(checkWallet.checkIfAllowed()){
+                            animation.start(()=> {
+                                animation.reset()
+                                navigation.navigate("ToktokWalletSettings")
+                            })
+                        }
                     }}>
                             <Animated.View style={[{transform: [{rotate: rotateanimation}]}]}>
                                 <FIcon5 name={'cog'} size={25} color="black"/>
                             </Animated.View>
                     </TouchableOpacity>
                 </View>
-            </ImageBackground>
-
+           </HeaderImageBackground>
+    
             <View style={styles.whitespace}>
-                <WalletMethods walletinfo={walletinfo}/>
+                <WalletMethods/>
             </View>
             <Separator />
        </View>
@@ -88,7 +82,8 @@ const WalletCardInfo = ({walletinfo})=> {
 
 const styles = StyleSheet.create({
     container: {
-        height: 240,
+        // height: 215, // ios
+        height: 255,
         width: width,
     },
     whitespace: {
@@ -101,17 +96,12 @@ const styles = StyleSheet.create({
         resizeMode: "cover",
     },
     headings: {
-        marginTop: 20,
+        marginTop: 42,
         height: 24,
         width: width,
         flexDirection:"row"
     },
     walletContent: {
-        // flex: 1,
-        // alignItems:"flex-start",
-        // paddingHorizontal: 16,
-        // flexDirection: "row",
-        // justifyContent:"flex-start"
         flex: 1,
         flexDirection: "row",
         paddingHorizontal: 16,

@@ -2,7 +2,7 @@ import React from 'react'
 import {View,Text,StyleSheet, Dimensions, Image , TouchableOpacity} from 'react-native'
 import { FONTS, SIZES } from '../../../../../res/constants'
 import {useNavigation} from '@react-navigation/native'
-import Separator from '../Components/Separator'
+import {Separator} from '../Components'
 
 const {width,height} = Dimensions.get("window")
 

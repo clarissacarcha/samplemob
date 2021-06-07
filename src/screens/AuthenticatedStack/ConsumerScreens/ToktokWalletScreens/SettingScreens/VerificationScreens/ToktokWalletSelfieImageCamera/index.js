@@ -2,16 +2,16 @@ import React , {useRef , useState , useEffect} from 'react'
 import { Modal , StyleSheet , Text , View , TouchableOpacity , Dimensions,Platform , ActivityIndicator} from 'react-native'
 import {RNCamera} from 'react-native-camera';
 import FIcon from 'react-native-vector-icons/Feather'
-import { COLOR, COLORS, FONTS, FONT_MEDIUM, SIZES } from '../../../../../../../res/constants';
+import { COLOR, FONT, FONT_SIZE} from '../../../../../../../res/variables';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
+import EIcon from 'react-native-vector-icons/EvilIcons'
 
 const {width,height} = Dimensions.get("window")
 
-const CROP_AREA_WIDTH = width * 0.65;
+const CROP_AREA_WIDTH = width * 0.90;
 const CROP_AREA_HEIGHT = CROP_AREA_WIDTH;
 
-
-export default ({navigation,route})=> {
+const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
 
     navigation.setOptions({
         headerShown: false
@@ -32,6 +32,11 @@ export default ({navigation,route})=> {
         icon: "bullseye"
     })
     const [boxColor,setBoxColor] = useState("white")
+    const [checkSmile ,setCheckSmile] = useState(false)
+    const [checkNotSmiling, setCheckNotSmiling] = useState(false)
+    const [leftEyeWink,setLeftEyeWink] = useState(false)
+    const [leftEyeOpen , setLeftEyeOpen] = useState(false)
+    const [rightEyeWink,setRightEyeWink] = useState(false)
   
     const takePicture = async () => {
         setCheck(true)
@@ -60,51 +65,95 @@ export default ({navigation,route})=> {
       const onFacesDetected = async (e)=> {
 
         const result = {
-            x: e.faces[0].bounds.origin.x,
+            // // x: e.faces[0].bounds.origin.x / 2,
+            // x: e.faces[0].bounds.origin.x,
+            x: Platform.OS === "ios" ? e.faces[0].bounds.origin.x : e.faces[0].bounds.origin.x / 2,
             y: e.faces[0].bounds.origin.y,
-            width: e.faces[0].bounds.size.width,
+            // // width: e.faces[0].bounds.size.width + ( e.faces[0].bounds.origin.x / 2),
+            // width: e.faces[0].bounds.size.width,
+            width: Platform.OS === "ios" ? e.faces[0].bounds.size.width : e.faces[0].bounds.size.width + ( e.faces[0].bounds.origin.x / 2),
             height: e.faces[0].bounds.size.height,
             rotateX: e.faces[0].yawAngle,
             rotateY: e.faces[0].rollAngle,
         }
 
         setBox(result)
-        
-        // const boundary = {
-        //     height: CROP_AREA_HEIGHT,
-        //     width: CROP_AREA_WIDTH,
-        //     x:  ( width - CROP_AREA_WIDTH ) / 2,
-        //     y:  ( height - 200 - CROP_AREA_HEIGHT) / 2
-        // }
 
-
-        if(checkifOutsideBox(boundary,result)){
-           console.log("Outside the box")
-           setMessage({
-                msg: "Position your face within the frame",
-                icon: "bullseye"
-            })
-            return 
+        if(message.icon){
+            if(checkifOutsideBox(boundary,result)){
+                console.log("Outside the box")
+                setMessage({
+                     msg: "Position your face within the frame",
+                     icon: "bullseye"
+                 })
+                 setBoxColor("white")
+                 return 
+             }
+     
+             if(e.faces[0].bounds.size.height < ((CROP_AREA_HEIGHT - 100))){
+                 setMessage({
+                     msg: "Bring your phone closer to you",
+                     icon: "mobile-alt"
+                 })
+                 setBoxColor("white")
+                 return 
+             }
+     
         }
 
-        if(e.faces[0].bounds.size.height < ((CROP_AREA_HEIGHT - 100))){
-            setMessage({
-                msg: "Bring your phone closer to you",
-                icon: "mobile-alt"
-            })
-            return 
-        }else{
-            setMessage({
-                msg: `Don't move , Scanning Face`,
-                icon: null
-            })
-    
-            if(!check){
-                setBoxColor(COLOR)
+
+        if(!check){
+            setBoxColor(COLOR.YELLOW)
+            console.log(JSON.stringify(e))
+
+
+            if(e.faces[0].leftEyeOpenProbability > 0.6){
+                setLeftEyeOpen(true)
+            }
+
+            if(e.faces[0].smilingProbability < 0.5){
+                setCheckNotSmiling(true)
+            }
+            
+            if(!checkSmile){
+                setMessage({
+                    msg: `Try to smile`,
+                    icon: "smile"
+                })
+                if(e.faces[0].smilingProbability > 0.8){
+                    setCheckSmile(true)
+                }
+                return
+            }
+
+            // if(!leftEyeWink){
+            //     setMessage({
+            //         msg: `Try to blink your left eye`,
+            //         icon: "smile"
+            //     })
+            //     if(e.faces[0].leftEyeOpenProbability < 0.2){
+            //         setLeftEyeWink(true)
+            //     }
+            //     return
+            // }
+            // if(checkSmile && checkNotSmiling && setLeftEyeOpen && setLeftEyeWink){
+            //     setMessage({
+            //         msg: `Don't move , Scanning Face`,
+            //         icon: null
+            //     })
+            //     takePicture()
+            // }
+
+            if(checkSmile){
+                setMessage({
+                    msg: `Don't move , Scanning Face`,
+                    icon: null
+                })
                 takePicture()
             }
+          
         }
-
+        
     
      
       }
@@ -122,8 +171,8 @@ export default ({navigation,route})=> {
     return (
         <View style={styles.camera}>
 
-            <TouchableOpacity onPress={()=>navigation.goBack()} style={{top: Platform.OS === "android" ? 20 : 40, left: 5,position:"absolute",zIndex: 1}}>
-                <FIcon name="chevron-left" size={35} color={'white'} /> 
+            <TouchableOpacity onPress={()=>navigation.pop()} style={styles.backBtn}>
+                <FIcon name="chevron-left" size={20} color={'#222222'} /> 
             </TouchableOpacity>
    
         <RNCamera
@@ -138,26 +187,31 @@ export default ({navigation,route})=> {
                 buttonPositive: 'Ok',
                 buttonNegative: 'Cancel',
             }}
-            // faceDetectionMode={RNCamera.Constants.FaceDetection.Mode.fast}
-            // // faceDetectionLandmarks={RNCamera.Constants.FaceDetection.Landmarks.all}
-            // // faceDetectionClassifications={RNCamera.Constants.FaceDetection.Classifications.all}
+            faceDetectionMode={RNCamera.Constants.FaceDetection.Mode.fast}
+            // faceDetectionLandmarks={RNCamera.Constants.FaceDetection.Landmarks.all}
+            faceDetectionClassifications={RNCamera.Constants.FaceDetection.Classifications.all}
             onFacesDetected={canDetectFaces ? onFacesDetected : null}
             onFaceDetectionError={(err)=>{
                 console.log(err)
             }}
-            onCameraReady={()=>setCanDetectFaces(true)}
+            onCameraReady={()=>{
+                setTimeout(()=>{
+                    setCanDetectFaces(true)
+                },2000)
+            }}
 
         >   
 
                     {
                         box && <View style={{
                             // borderRadius: box.width,
+                            justifyContent:"flex-end",
                             position:'absolute',
                             backgroundColor:"transparent",
                             borderWidth: 1,
                             borderColor:boxColor,
                             zIndex:9999, 
-                            width: box.width ,
+                            width: box.width,
                             height: box.height,
                             transform: [{
                               translateX: box.x,
@@ -165,11 +219,13 @@ export default ({navigation,route})=> {
                             translateY: box.y,
                             },{
                             rotateX: `${box.rotateX}deg`
-                        }]}}/>
+                        }]}}>
+                    
+                        </View>
                     }
 
 
-                <View style={{flex: 1,justifyContent:"center",alignItems:"center",backgroundColor:"transparent"}}>
+                <View style={{flex: 1,justifyContent:"center",alignItems:"center",backgroundColor:"transparent",marginBottom: 50,}}>
                     <View style={styles.cameraBox} onLayout={(event)=>{
                          const layout = event.nativeEvent.layout;
                          setBoundary(layout)
@@ -179,21 +235,46 @@ export default ({navigation,route})=> {
                                 <View style={[styles.borderEdges,{borderBottomWidth: 5,borderLeftWidth: 5,bottom:0,left: 0,}]}/>
                                 <View style={[styles.borderEdges,{borderBottomWidth: 5,borderRightWidth: 5,bottom:0,right:0,}]}/>
 
-                
+                        <View style={{paddingVertical: 10, position:"absolute",bottom: -80,justifyContent:"center",alignItems:"center",width: "100%",backgroundColor:"rgba(255,255,255,0.2)"}}>
+                            <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.XL,color:"white"}}>{message.msg}</Text>
+                            {
+                                message.icon == null
+                                ? <ActivityIndicator style={{marginTop: 5}} color={"white"} />
+                                :  null
+                            }
+                        </View>
 
                     </View>
+
+                   
                 </View>
                 
         </RNCamera>
 
-        <View style={styles.instructions}>
-             <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.L}}>{message.msg}</Text>
+        {/* <View style={styles.instructions}>
+             <Text style={{fontFamily: FONT.BOLD,FONTize: FONT_SIZE.L}}>{message.msg}</Text>
                 {
                     message.icon == null
-                    ? <ActivityIndicator style={{marginTop: 10}} color={COLORS.YELLOW} />
-                    : <FIcon5 style={{marginTop: 10}} size={30} color={COLORS.YELLOW} name={message.icon}/>
+                    ? <ActivityIndicator style={{marginTop: 10}} color={COLOR.YELLOW} />
+                    : <FIcon5 style={{marginTop: 10}} size={30} color={COLOR.YELLOW} name={message.icon}/>
                 }
-        </View>
+        </View> */}
+
+                {/* <View
+                    style={{
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        position: 'absolute',
+                        bottom: 0,
+                        width: '100%',
+                        marginBottom: 20,
+                    }}>
+                    <TouchableOpacity onPress={() => takePicture()} style={styles.capture}>
+                        <View style={styles.inCapture}>
+                            <EIcon name="camera" color={COLOR.YELLOW} size={40} />
+                        </View>
+                    </TouchableOpacity>
+                </View> */}
 
     </View>
     )
@@ -228,12 +309,44 @@ const styles = StyleSheet.create({
         height: 100,
         backgroundColor:"white",
         justifyContent:"center",
-        alignItems:"center"
+        alignItems:"center",
     },
     borderEdges: {
         height: 40,
         width: 40,
         position: "absolute",
-        borderColor: "#F6841F",
-    }
+        borderColor: COLOR.YELLOW,
+    },
+    backBtn: {
+        backgroundColor:"#FFFFFF",
+        top: Platform.OS === "android" ? 30 : 20, 
+        // top: 30,
+        left: 16,
+        position:"absolute",
+        zIndex: 1,
+        justifyContent:"center",
+        alignItems:"center",
+        borderRadius: 100,
+        height: 35,
+        width: 35,
+    },
+    capture: {
+        height: 60,
+        width: 60,
+        borderRadius: 30,
+        backgroundColor: COLOR.YELLOW,
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+    inCapture: {
+        height: 50,
+        width: 50,
+        borderRadius: 25,
+        backgroundColor: 'white',
+        justifyContent:"center",
+        alignItems:"center"
+    },
 })
+
+export default ToktokWalletSelfieImageCamera
+

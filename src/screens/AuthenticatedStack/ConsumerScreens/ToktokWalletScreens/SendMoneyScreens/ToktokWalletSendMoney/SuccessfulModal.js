@@ -1,12 +1,11 @@
 import React from 'react'
 import { Modal , StyleSheet , View , Text} from 'react-native'
-import { FONT_REGULAR , FONT_MEDIUM, FONT_BOLD, FONT_LIGHT, SIZES, FONTS, COLORS} from '../../../../../../res/constants'
-import FIcon5 from 'react-native-vector-icons/FontAwesome5'
+import { SIZES, FONTS, COLORS} from '../../../../../../res/constants'
 import { numberFormat } from '../../../../../../helper'
 import {useNavigation} from '@react-navigation/native'
-import moment from 'moment'
-import Receipt from '../../Components/Receipt'
-import { BlackButton } from '../../../../../../revamp'
+import {Receipt} from '../../Components'
+import { MaskLeftZero } from '../../../../../../util/HelperUtility'
+
 
 const RecipientInfo = ({label,value})=> (
     <View style={styles.recipientInfoView}>
@@ -18,7 +17,7 @@ const RecipientInfo = ({label,value})=> (
         </View>
     </View>
 )
-const SuccessfulModal = ({successModalVisible , amount , recipient , walletinfoParams})=> {
+const SuccessfulModal = ({successModalVisible , amount , recipient , walletinfoParams , note})=> {
     const navigation = useNavigation()
 
 
@@ -36,14 +35,17 @@ const SuccessfulModal = ({successModalVisible , amount , recipient , walletinfoP
             onRequestClose={Proceed}
         >
             <Receipt
-                refNo={walletinfoParams.referenceNumber}
+                // refNo={walletinfoParams.referenceNumber}
+                refNo={MaskLeftZero(walletinfoParams.id)}
                 refDate={walletinfoParams.createdAt}
                 onPress={Proceed}
             >
                   <View style={styles.recipientInfo}>
-                        <RecipientInfo label="Payment Method" value="toktokwallet"/>
-                        <RecipientInfo label="Recipient" value={recipient.name}/>
+                        {/* <RecipientInfo label="Payment Method" value="toktokwallet"/> */}
+                        <RecipientInfo label="Recipient Name" value={recipient.name}/>
+                        <RecipientInfo label="Recipient Mobile No." value={recipient.mobileNo}/>
                         <RecipientInfo label="Fund Transfered" value={`PHP ${numberFormat(amount)}`}/>
+                        <RecipientInfo label="Note" value={note}/>
                 </View>
             </Receipt>
         </Modal>

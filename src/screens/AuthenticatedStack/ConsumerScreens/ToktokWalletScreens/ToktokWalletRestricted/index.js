@@ -3,9 +3,15 @@ import {View,StyleSheet,Image} from 'react-native'
 
 //SELF IMPORTS
 import WalletOnHold from './WalletOnHold'
+import ApprovedRegistration from './ApprovedRegistration'
 import SecurewithPIN from './SecurewithPIN'
+import NoAccount from './NoAccount'
+import PendingKyc from './PendingKyc'
+import RejectedKyc from './RejectedKyc'
+import BlockedAccount from './BlockedAccount'
+import { HeadingBannerLogo }from '../Components'
 
-export default ({navigation,route})=> {
+const ToktokWalletRestricted = ({navigation,route})=> {
     
     navigation.setOptions({
         headerShown: false
@@ -15,20 +21,30 @@ export default ({navigation,route})=> {
         switch(route.params.component){
             case "onHold":
                 return <WalletOnHold navigation={navigation} walletinfo={route.params.walletinfo}/>
+            case "approvedRegistration":
+                return <ApprovedRegistration/>
             case "noPin":
                 return <SecurewithPIN navigation={navigation} walletinfo={route.params.walletinfo}/>
-            case "notVerified":
-                navigation.pop()
-                return navigation.navigate("ToktokWalletVerifySetup")
+            case "noAccount":
+                return <NoAccount />
+            case "pendingKYC": 
+                return <PendingKyc />
+            case "rejectedKYC":
+                return <RejectedKyc />
+            case "blockedAccount":
+                return <BlockedAccount />
             default:
                 break
         }
     }
 
     return (
+        <>
+        {/* <HeadingBannerLogo/> */}
        <View style={styles.container}>
            {DisplayComponent()}
        </View>
+       </>
     )
 }
 
@@ -36,7 +52,9 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor:"white",
-        padding: 10,
+        // padding: 16,
     },
 
 })
+
+export default ToktokWalletRestricted

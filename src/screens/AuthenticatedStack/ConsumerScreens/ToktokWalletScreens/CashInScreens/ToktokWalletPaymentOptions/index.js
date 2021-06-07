@@ -2,28 +2,28 @@ import React from 'react'
 import {View,StyleSheet,Text,Image,FlatList,Alert,ActivityIndicator} from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import FIcon from 'react-native-vector-icons/Feather'
-import {HeaderBackClose, HeaderTitle, HeaderBack, SomethingWentWrong , AlertOverlay} from '../../../../../../components'
-import { COLOR, FONT_LIGHT, FONT_MEDIUM, SIZES } from '../../../../../../res/constants'
+import {COLOR , FONT, FONT_SIZE} from '../../../../../../res/variables'
 import {useQuery} from '@apollo/react-hooks'
-import {GET_CASH_IN_METHODS} from '../../../../../../graphql'
-import Separator from '../../Components/Separator'
+import {TOKTOK_WALLET_GRAPHQL_CLIENT} from '../../../../../../graphql'
+import {GET_CASH_IN_PROVIDERS} from '../../../../../../graphql/toktokwallet'
+import {Separator,HeaderImageBackground,HeaderTitle} from '../../Components'
+import { numberFormat } from '../../../../../../helper'
+import {useSelector} from 'react-redux'
 
-export default ({navigation,route})=> {
+const ToktokWalletPaymentOptions = ({navigation,route})=> {
 
     navigation.setOptions({
-        // headerLeft: ()=> <HeaderBackClose/>,
-        headerLeft: ()=> <HeaderBack/>,
-        headerTitle: ()=> <HeaderTitle label={['Cash In','']}/>,
+        headerShown: false,
     })
 
-    const {data: cashinmethods,error,loading} = useQuery(GET_CASH_IN_METHODS,{
+    const tokwaAccount = useSelector(state=>state.toktokWallet)
+
+    const {data: cashinmethods,error,loading} = useQuery(GET_CASH_IN_PROVIDERS,{
+            client: TOKTOK_WALLET_GRAPHQL_CLIENT,
             fetchPolicy: 'network-only',
-            variables: {
-                input: {
-                    sourceAccountType: 9,
-                    destinationAccountType: 1,
-                }
-            },
+            onCompleted: ({getCashInProviders})=> {
+                console.log(getCashInProviders)
+            }
     })
 
     if (loading) {
@@ -41,7 +41,7 @@ export default ({navigation,route})=> {
     const CashInMethod = ({item,index})=> {
         let image , navigateLink
         if(item.name.toLowerCase() == "paypanda"){
-            image = require('../../../../../../assets/images/walletcashin/paypanda.png')
+            image = require('../../../../../../assets/toktokwallet-assets/cash-in-providers/paypanda.png')
             navigateLink = "ToktokWalletPayPandaForm"
         }else{
             navigateLink = ""
@@ -50,35 +50,46 @@ export default ({navigation,route})=> {
             <TouchableOpacity 
                 key={`cashin-${index}`}
                 style={styles.cashinoption} onPress={()=> navigateLink != "" ? navigation.navigate(navigateLink,{
-                        walletinfo: route.params.walletinfo,
+                        walletinfo: null,
                         transactionType: item
                     }
-                ) : Alert.alert("Temporary Unavailable")}>
+                ) : Alert.alert("","Temporary Unavailable")}>
                 <View style={styles.logo}>
                     <Image style={{height: 35,width: 35}} resizeMode="contain" source={image} />
                 </View>
                 <View style={styles.name}>
-                    <Text style={{fontSize:SIZES.M,fontFamily: FONT_MEDIUM}}>{item.name}</Text>
-                    <Text style={{fontSize: SIZES.S, fontFamily: FONT_LIGHT}}>Use {item.name} to cash in</Text>
+                    <Text style={{fontSize:FONT_SIZE.M,fontFamily: FONT.BOLD}}>{item.name}</Text>
+                    <Text style={{fontSize: FONT_SIZE.S, fontFamily: FONT.REGULAR}}>Use {item.name} to cash in</Text>
                 </View>
                 <View style={styles.arrowright}>
-                    <FIcon name={'chevron-right'} color={"#A6A8A9"}/>
+                    <FIcon name={'chevron-right'} size={20} color={"#A6A8A9"}/>
                 </View>
             </TouchableOpacity>
         )
     }
 
     return (
-        <>
-        <Separator />
         <View style={styles.container}>
-                <FlatList 
-                    data={cashinmethods.getCashInMethods}
-                    keyExtractor={(item)=>item.id}
-                    renderItem={CashInMethod}
-                />
+                      <View style={styles.headings}>
+                            <HeaderImageBackground>
+                                <HeaderTitle label="Cash In"/>
+                                <View style={styles.walletBalance}>
+                                        <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>{tokwaAccount.wallet.currency.code} {numberFormat(tokwaAccount.wallet.balance ? tokwaAccount.wallet.balance : 0)}</Text>
+                                        <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Available Balance</Text>
+                                </View>
+                            </HeaderImageBackground>
+                      </View>
+
+                      <View style={styles.paymentoptions}>
+                            <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>Choose cash-in method</Text>
+                      </View>
+                      <Separator/>     
+                       <FlatList 
+                            data={cashinmethods.getCashInProviders}
+                            keyExtractor={(item)=>item.id}
+                            renderItem={CashInMethod}
+                        />
         </View>
-        </>
     )
 }
 
@@ -87,17 +98,29 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: "white"
     },
+    headings: {
+        height: 190,
+        backgroundColor:"black"
+    },  
+    walletBalance: {
+        flex: 1,
+        justifyContent:"center",
+        alignItems:'center'
+    },
+    paymentoptions: {
+        padding: 16,
+    },
     cashinoption: {
-        padding: 10,
+        padding: 16,
         paddingVertical: 20,
-        borderBottomWidth: 0.2,
-        borderColor: "silver",
+        borderBottomWidth: 1,
+        borderColor: "#F4F4F4",
         flexDirection: "row"
     },
     logo: {
-        flexBasis: 50,
+        flexBasis: 45,
         justifyContent: "center",
-        alignItems: "center"
+        alignItems: "flex-start"
     },
     name: {
         flex: 1,
@@ -109,4 +132,6 @@ const styles = StyleSheet.create({
         alignItems: "flex-end"
     }
 })
+
+export default ToktokWalletPaymentOptions
 

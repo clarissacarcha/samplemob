@@ -12,6 +12,7 @@ import {onError} from '../../../../util/ErrorUtility';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ENIcon from 'react-native-vector-icons/Entypo';
+import { YellowButton } from '../../../../revamp';
 
 const ToktokWalletCardButton = ({session}) => {
   const [initialLoading, setInitialLoading] = useState(true);
@@ -343,6 +344,10 @@ const DriverWallet = ({navigation, session, constants}) => {
           </TouchableHighlight>
         </View>
         {/*---------------------------------------- TOKTOK WALLET ----------------------------------------*/}
+        <View style={{padding: 20}}>
+           <YellowButton label="toktokwallet" onPress={()=>navigation.push("ToktokWalletHomePage")}/>
+        </View>
+       
         {/* <ToktokWalletCardButton session={session} /> */}
       </ScrollView>
       {/*---------------------------------------- BUTTON ----------------------------------------*/}

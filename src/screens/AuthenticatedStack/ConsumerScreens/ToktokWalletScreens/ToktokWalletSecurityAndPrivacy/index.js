@@ -38,7 +38,7 @@ const LearnMoreItem = ({icon , label , message, onPress})=> {
     )
 }
 
-export default ({navigation,route})=> {
+const ToktokWalletSecurityAndPrivacy = ({navigation,route})=> {
 
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack/>,
@@ -137,3 +137,5 @@ const styles = StyleSheet.create({
         alignItems: "flex-end"
     }
 })
+
+export default ToktokWalletSecurityAndPrivacy

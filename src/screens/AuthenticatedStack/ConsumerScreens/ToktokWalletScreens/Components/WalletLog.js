@@ -1,89 +1,102 @@
-import React from 'react'
+import React, { useState } from 'react'
 import moment from 'moment'
 import {View,Text,TouchableOpacity,StyleSheet,Image} from 'react-native'
-import { COLOR, COLORS, FONTS, FONT_LIGHT, FONT_MEDIUM, FONT_REGULAR, SIZES } from '../../../../../res/constants';
-import {useSelector} from 'react-redux'
+import {COLOR, FONT , FONT_SIZE} from '../../../../../res/variables';
 import { numberFormat } from '../../../../../helper';
+import { MaskLeftZero } from '../../../../../util/HelperUtility'
+import { useSelector } from 'react-redux';
 
-const WalletLog = ({transactionDate , transactionItems ,index , itemsLength }) => {
+//SELF IMPORTS
+import { TransactionDetails } from './TransactionDetails'
 
-    const session = useSelector(state=>state.session)
+export const WalletLog = ({item ,index , itemsLength }) => {
 
-    const dateValue = moment(transactionDate).tz("Asia/Manila").format("YYYY-MM-DD");
-    const phTodayDate = moment().tz("Asia/Manila").format("YYYY-MM-DD");
-    const phYesterdayDate = moment().subtract(1,"days").tz("Asia/Manila").format("YYYY-MM-DD");
-    let datedisplay = ''
-    if(dateValue == phTodayDate){
-      datedisplay = "Today"
-    }else if(dateValue == phYesterdayDate){
-        datedisplay = "Yesterday"
+    const tokwaAccount = useSelector(state=>state.toktokWallet)
+
+    const [transactionVisible,setTransactionVisible] = useState(false)
+    const [transactionInfo,setTransactionInfo] = useState({
+        refNo: "",
+        refDate: "",
+        label: "",
+        phrase: "",
+        amount: "",
+    })
+
+    const ViewTransactionDetails = (transaction , title, phrase , referenceDate , transactionAmount) => {
+        setTransactionVisible(true)
+        setTransactionInfo({
+            refNo: MaskLeftZero(transaction.id),
+            refDate: referenceDate,
+            label: title,
+            phrase: phrase,
+            amount: transactionAmount,
+        })
+    }
+
+    let title = item.externalName ? item.externalName : item.transactionType.name
+    const amountcolor = item.sourceWalletId == tokwaAccount.wallet.id ? "red" : "green"
+    const amountprefix = item.sourceWalletId == tokwaAccount.wallet.id ? "-" : "+"
+    // const referenceDate = moment(item.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')
+    const referenceDate = moment(item.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')
+    const transactionAmount = `${amountprefix} ${tokwaAccount.wallet.currency.code} ${numberFormat(item.amount)}`
+
+
+    let sourceName , destinationName = ""
+    if(item.cashOutId){
+        sourceName = ``
+        destinationName = ``
+        title = item.sourceWalletId == tokwaAccount.wallet.id ? item.transactionType.name : `${item.transactionType.name} Return`
+    }else if(item.cashInId){
+        sourceName = ``
+        destinationName = ``
+    }else if(item.externalName){
+        sourceName = ``
+        destinationName = ``
     }else{
-        datedisplay = moment(transactionDate).tz("Asia/Manila").format('MMM DD YYYY');
+        sourceName = `${item.sourcePerson.firstName} ${item.sourcePerson.lastName}`
+        destinationName = `${item.destinationPerson.firstName} ${item.destinationPerson.lastName}`
+    }
+
+    let phrase = ""
+    if(item.externalPhrase){
+        phrase = `${item.externalPhrase}`
+    }else{
+        if(item.sourceWalletId == tokwaAccount.wallet.id ){
+            phrase = `${item.transactionType.sourcePhrase.replace("[:source]",destinationName)}`
+            phrase = `${phrase.replace("[:amount]",`${tokwaAccount.wallet.currency.code} ${numberFormat(item.amount)}`)}`
+        }else{
+            phrase = `${item.transactionType.destinationPhrase.replace("[:source]",sourceName)}`
+            phrase = `${phrase.replace("[:amount]",`${tokwaAccount.wallet.currency.code} ${numberFormat(item.amount)}`)}`
+        }
     }
 
 
     return (
-            <View style={[styles.transactionLogsContainer, {marginBottom: index == itemsLength - 1 ? 100 : 0}]}>
-                { transactionItems.length > 0 && <Text style={{fontSize: SIZES.M,fontFamily: FONTS.BOLD,color: COLORS.DARK}}>{datedisplay}</Text> }
-            {
-                transactionItems.map((item)=>{
+        <>
+            <TransactionDetails 
+                visible={transactionVisible}
+                setVisible={setTransactionVisible}
+                refNo={transactionInfo.refNo}
+                refDate={transactionInfo.refDate}
+                label={transactionInfo.label}
+                phrase={transactionInfo.phrase}
+                amount={transactionInfo.amount}
+            />
 
-                    let icon , title , status , phrase , amountcolor = "black", amountprefix , sender = "" , recipient = ""
-                    title = item.logType.label
-                    amountcolor = item.sourceUserId == session.user.id ? "red" : "green"
-                    amountprefix = item.sourceUserId == session.user.id ? "-" : "+"
-
-                    switch(item.status){
-                        case 0:
-                            status = "Pending"
-                            break
-                        case 1:
-                            status ="Success"
-                            break
-                        case 2:
-                            status = "Rejected"
-                            break
-                        default:
-                            break
-                    }
-
-                    // Sender
-                    if(item.sourceInfo.firstName != null) sender = `${item.sourceInfo.firstName} ${item.sourceInfo.lastName}`
-                    if(item.sourceInfo.internalAccount != null) sender = `${item.sourceInfo.internalAccount}`
-                    if(item.sourceInfo.enterpriseAccount != null) sender = `${item.sourceInfo.enterpriseAccount}`
-                 
-
-                    // Recipient
-                    if(item.destinationInfo.firstName != null) recipient = `${item.destinationInfo.firstName} ${item.destinationInfo.lastName}`
-                    if(item.destinationInfo.internalAccount != null) recipient = `${item.destinationInfo.internalAccount}`
-                    if(item.destinationInfo.enterpriseAccount != null) recipient = `${item.destinationInfo.enterpriseAccount}`
-
-                    // Delivery
-                    if(item.delivery != null){
-                        sender = `${item.delivery.deliveryId}`
-                        recipient = sender
-                    }
-                    
-
-                    phrase = item.sourceUserId == session.user.id ? `${item.logType.sourcePhrase.replace("[:replace]",recipient)}` : `${item.logType.destinationPhrase.replace("[:replace]",sender)}`
-    
-    
-                    return (
-                        <View style={styles.transaction}>
-                            <View style={styles.transactionDetails}>
-                                {/* <Text style={{fontSize: 12,fontFamily: FONT_MEDIUM}}>{title} <Text style={{fontFamily: FONT_LIGHT,fontSize: 10}}> ( {status} )</Text></Text> */}
-                                <Text style={{fontSize: SIZES.M,fontFamily: FONTS.REGULAR,color: COLORS.DARK}}>{title}</Text>
-                                <Text style={{color: "#929191",fontSize: SIZES.M,fontFamily: FONTS.REGULAR}}>{phrase}</Text>
-                            </View>
-                            <View style={styles.transactionAmount}>
-                                <Text style={{fontSize: SIZES.M,fontFamily: FONTS.REGULAR , color: amountcolor}}>{amountprefix} PHP {numberFormat(item.amount)}</Text>
-                                <Text style={{color: "#929191",fontSize: SIZES.M,fontFamily: FONTS.REGULAR, alignSelf: "flex-end"}}>{moment(item.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')}</Text>
-                            </View>
-                        </View>
-                    )
-                })
-            }
-            </View>
+            <TouchableOpacity onPress={()=>ViewTransactionDetails(item , title , phrase, referenceDate , transactionAmount)} style={styles.transaction}>
+                <View style={styles.transactionDetails}>
+                    {/* <Text style={{fontSize: 12,fontFamily: FONT_MEDIUM}}>{title} <Text style={{fontFamily: FONT_LIGHT,fontSize: 10}}> ( {status} )</Text></Text> */}
+                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{title}</Text>
+                    <Text style={{color: "#929191",fontSize: FONT_SIZE.S,fontFamily: FONT.REGULAR}}>{phrase}</Text>
+                </View>
+                <View style={styles.transactionAmount}>
+                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR , color: amountcolor}}>{transactionAmount}</Text>
+                    <Text style={{color: "#929191",fontSize: FONT_SIZE.S,fontFamily: FONT.REGULAR, alignSelf: "flex-end"}}>{referenceDate}</Text>
+                </View>
+            </TouchableOpacity>
+            <View style={styles.divider}/>
+          
+        </>
     )
 }
 
@@ -93,8 +106,6 @@ const styles = StyleSheet.create({
     },
     transaction: {
         paddingVertical: 12,
-        borderBottomColor:"silver",
-        borderBottomWidth: .2,
         // marginVertical: 5,
         flexDirection: "row",
     },
@@ -108,7 +119,11 @@ const styles = StyleSheet.create({
     transactionAmount: {
         flexBasis: "auto",
         alignItems: "flex-end"
+    },
+    divider: {
+        height: 1,
+        width: "100%",
+        backgroundColor: COLOR.LIGHT,
     }
 })
 
-export default WalletLog

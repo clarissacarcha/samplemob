@@ -78,13 +78,20 @@ import ToktokWalletRecoveryMethods from '../screens/AuthenticatedStack/ConsumerS
 import ToktokWalletRecoverPin from '../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/PinCodeScreens/ToktokWalletRecoverPin';
 import ToktokWalletUpdatePin from '../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/PinCodeScreens/ToktokWalletUpdatePin';
 import ToktokWalletVerifySetup from '../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/VerificationScreens/ToktokWalletVerifySetup';
-import ToktokWalletVerification from '../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/VerificationScreens/TotkokWalletVerification';
+import ToktokWalletVerification from '../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/VerificationScreens/ToktokWalletVerification';
 import ToktokWalletValidIDCamera from '../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/VerificationScreens/ToktokWalletValidIDCamera';
 import ToktokWalletSelfieCamera from '../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/VerificationScreens/ToktokWalletSelfieCamera';
 import ToktokWalletSelfieImageCamera from '../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/VerificationScreens/ToktokWalletSelfieImageCamera';
+import ToktokWalletVerifyResult from '../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/VerificationScreens/ToktokWalletVerifyResult';
 
 import ToktokWalletTransactions from '../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens//ToktokWalletTransactions';
 import ToktokWalletRecentTransferView from '../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/ToktokWalletRecentTransferView';
+import ToktokWalletReviewAndConfirm from '../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/ToktokWalletReviewAndConfirm';
+import ToktokWalletGcashRegistration from '../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/CashOutScreens/ToktokWalletGcashRegistration';
+import ToktokWalletGcashUpdate from '../screens/AuthenticatedStack/ConsumerScreens//ToktokWalletScreens/CashOutScreens/ToktokWalletGcashUpdate';
+import ToktokWalletGcashHomePage from '../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/CashOutScreens/ToktokWalletGcashHomePage';
+import ToktokWalletGcashLinkAccount from '../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/CashOutScreens/ToktokWalletGcashLinkAccount';
+import ToktokWalletLinkAccount from '../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/ToktokWalletLinkAccount';
 
 /*---------- DRIVER SCREENS ----------*/
 import DriverMap from '../screens/AuthenticatedStack/DriverScreens/DriverMap';
@@ -429,9 +436,17 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="ToktokWalletValidIDCamera" component={ToktokWalletValidIDCamera} />
     <Authenticated.Screen name="ToktokWalletSelfieCamera" component={ToktokWalletSelfieCamera} />
     <Authenticated.Screen name="ToktokWalletSelfieImageCamera" component={ToktokWalletSelfieImageCamera} />
-
+    <Authenticated.Screen name="ToktokWalletVerifyResult" component={ToktokWalletVerifyResult} options={{headerShown: false}}  />
+    
     <Authenticated.Screen name="ToktokWalletTransactions" component={ToktokWalletTransactions} />
     <Authenticated.Screen name="ToktokWalletRecentTransferView" component={ToktokWalletRecentTransferView} />
+    <Authenticated.Screen name="ToktokWalletReviewAndConfirm" component={ToktokWalletReviewAndConfirm}/>
+    <Authenticated.Screen name="ToktokWalletGcashRegistration" component={ToktokWalletGcashRegistration}/>
+    <Authenticated.Screen name="ToktokWalletGcashUpdate" component={ToktokWalletGcashUpdate}/>
+    <Authenticated.Screen name="ToktokWalletGcashHomePage" component={ToktokWalletGcashHomePage}/>
+    <Authenticated.Screen name="ToktokWalletGcashLinkAccount" component={ToktokWalletGcashLinkAccount}/>
+    <Authenticated.Screen name="ToktokWalletLinkAccount" component={ToktokWalletLinkAccount} />
+
 
     {/*---------- DRIVER SCREENS ----------*/}
     <Authenticated.Screen name="DriverHomeBottomTab" component={DriverHomeBottomTab} options={{headerShown: false}} />

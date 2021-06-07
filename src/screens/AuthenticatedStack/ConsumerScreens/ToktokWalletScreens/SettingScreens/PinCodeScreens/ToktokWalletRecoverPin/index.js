@@ -2,16 +2,20 @@ import React , {useEffect,useState,useRef} from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,KeyboardAvoidingView,Platform,TextInput, TouchableHighlight} from 'react-native'
 import {useSelector} from 'react-redux'
 import { HeaderBackClose , HeaderTitle} from '../../../../../../../components'
-import { COLOR, DARK, FONT_MEDIUM, FONT_REGULAR, SIZES } from '../../../../../../../res/constants'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import {useQuery,useLazyQuery} from '@apollo/react-hooks'
-import {GET_VERIFICATION_CODE,CHECK_VERIFICATION_CODE} from '../../../../../../../graphql'
-import { onError } from '../../../../../../../util/ErrorUtility'
+import { TOKTOK_WALLET_GRAPHQL_CLIENT } from '../../../../../../../graphql'
+import { GET_FORGOT_AND_RECOVER_OTP_CODE , VERIFY_FORGOT_AND_RECOVER_OTP_CODE} from '../../../../../../../graphql/toktokwallet'
+import { onError, onErrorAlert } from '../../../../../../../util/ErrorUtility'
+import {useAlert} from '../../../../../../../hooks'
+import {DisabledButton, Separator} from '../../../Components'
+import { HeaderBack, YellowButton } from '../../../../../../../revamp'
+import { SIZE , FONT , FONT_SIZE , COLOR } from '../../../../../../../res/variables'
 
 const NumberBox = ({onPress, value , showPin}) => (
-    <TouchableHighlight onPress={onPress} underlayColor={COLOR} style={{borderRadius: 10,marginHorizontal: 5,}}>
+    <TouchableHighlight onPress={onPress} underlayColor={COLOR.YELLOW} style={{borderRadius: 10,marginHorizontal: 5,}}>
       <View style={styles.inputView}>
-        <Text style={{fontSize: 25}}>{value ? showPin ? value : "*" : '_'}</Text>
+        <Text style={{fontSize: 25,fontFamily: FONT.BOLD}}>{value ? showPin ? value : "*" : ''}</Text>
       </View>
     </TouchableHighlight>
 );
@@ -31,42 +35,49 @@ const NumberBoxes = ({pinCode, onNumPress, showPin}) => {
 };
 
 
-export default ({navigation})=> {
+const ToktokWalletRecoverPin = ({navigation})=> {
 
     navigation.setOptions({
-        headerLeft: ()=> <HeaderBackClose/>,
+        headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
         headerTitle: ()=> <HeaderTitle label={['','']}/>,
     })
 
     const session = useSelector(state=>state.session)
+    const tokwaAccount = useSelector(state=>state.toktokWallet)
     const [pinCode,setPinCode] = useState("")
     const inputRef = useRef();
+    const alert = useAlert();
 
-    const [getVerificationCode , {data, error, loading}] = useLazyQuery(GET_VERIFICATION_CODE, {
+    const [getForgotAndRecoverOTPCode] = useLazyQuery(GET_FORGOT_AND_RECOVER_OTP_CODE , {
         fetchPolicy: "network-only",
-        onCompleted: (response)=> {
-            console.log(response)
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+        onCompleted: ({getForgotAndRecoverOTPCode})=>{
+            console.log(getForgotAndRecoverOTPCode)
+        },
+        onError: (error)=>{
+            onErrorAlert({alert,error})
         }
     })
 
-    const [checkVerificationCode] = useLazyQuery(CHECK_VERIFICATION_CODE,{
+    const [verifyForgotAndRecoverOTP] = useLazyQuery(VERIFY_FORGOT_AND_RECOVER_OTP_CODE, {
         fetchPolicy: "network-only",
-        onError: onError,
-        onCompleted: (response)=> {
-            console.log(response)
-            if(response.checkVerificationCode.message){
-                navigation.navigate("ToktokWalletUpdatePin")
-            }
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+        onCompleted: ({verifyForgotAndRecoverOTP})=>{
+            console.log(verifyForgotAndRecoverOTP)
+            return navigation.replace("ToktokWalletUpdatePin")
+        },
+        onError: (error)=>{
+            onErrorAlert({alert,error})
         }
     })
-
-    const confirmCode = ()=> {
-        checkVerificationCode({
+   
+    const ConfirmVerificationCode = () => {
+        verifyForgotAndRecoverOTP({
             variables: {
                 input: {
-                    code: pinCode
+                    OTPCode: pinCode
                 }
-            },
+            }
         })
     }
 
@@ -79,21 +90,24 @@ export default ({navigation})=> {
 
 
     useEffect(()=>{
-        getVerificationCode()
+        getForgotAndRecoverOTPCode()
         return ()=> {
 
         }
     },[])
 
     return (
+        <>
+        <Separator />
         <KeyboardAvoidingView 
             style={styles.container}
-            keyboardVerticalOffset={Platform.OS == "ios" ? 0 : 90}  
+            keyboardVerticalOffset={Platform.OS == "ios" ? 100 : 90} 
+            // keyboardVerticalOffset={90} 
             behavior={Platform.OS === "ios" ? "padding" : "height"} 
         >
-                <View style={{flex: 1,alignItems:"center"}}>
-                    <Text style={{fontFamily: FONT_MEDIUM,fontSize: 16,color:"gray"}}>Enter verification code sent to</Text>
-                    <Text style={{fontFamily: FONT_MEDIUM,fontSize: 16}}>{session.user.username}</Text>
+                <View style={{flex: 1,alignItems:"center",marginTop: 40}}>
+                    <Text style={{fontFamily: FONT.BOLD,fontSize: 16}}>Enter OTP code sent to</Text>
+                    <Text style={{fontFamily: FONT.REGULAR,fontSize: 16}}>{tokwaAccount.mobileNumber}</Text>
                     {/* <TextInput 
                         // autoFocus={true}
                         style={styles.input}
@@ -107,7 +121,6 @@ export default ({navigation})=> {
 
                         <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={true}/>
                         <TextInput
-                            autoFocus={true}
                             caretHidden
                             value={pinCode}
                             ref={inputRef}
@@ -123,35 +136,51 @@ export default ({navigation})=> {
                             // onSubmitEditing={onSubmit}
                         />
 
+                        <TouchableOpacity
+                                style={{marginTop: 18,paddingVertical: 10,alignItems: "center"}}
+                                onPress={getForgotAndRecoverOTPCode}
+                        >
+                                <Text style={{color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>Didn't get code? Tap here to resend.</Text>
+                        </TouchableOpacity>
+
                 </View>
-                <View style={styles.bottomActions}>
+                       
+                {/* <View style={styles.bottomActions}>
                     <View style={{flex: 1,justifyContent:"center"}}>
-                        <Text style={{fontFamily: FONT_REGULAR,fontSize: SIZES.M}}>Didn't receive it?</Text>
+                        <Text style={{fontFamily: FONT.REGULAR,fontSize: SIZES.M}}>Didn't receive it?</Text>
                         <TouchableOpacity onPress={getVerificationCode}>
-                            <Text style={{fontFamily: FONT_MEDIUM,fontSize: SIZES.M}}>Request a new code</Text>
+                            <Text style={{fontFamily: FONT.BOLD,fontSize: SIZES.M}}>Request a new code</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={{flex: 1,alignItems:"flex-end",justifyContent:"center"}}>
-                            <TouchableOpacity onPress={confirmCode} style={{borderRadius: 100,backgroundColor:DARK,height: 50,width: 50,justifyContent:"center",alignItems:"center"}}>
-                                    <FIcon5 size={20} color={COLOR} name="chevron-right"/>
+                            <TouchableOpacity onPress={confirmCode} style={{borderRadius: 100,backgroundColor:COLOR.YELLOW,height: 50,width: 50,justifyContent:"center",alignItems:"center"}}>
+                                    <FIcon5 size={20} color={COLOR.DARK} name="chevron-right"/>
                             </TouchableOpacity>
                     </View>
-                </View>
+                </View> */}
+                 <View style={{height: SIZE.BUTTON_HEIGHT}}> 
+                    {
+                        pinCode.length < 6
+                        ? <DisabledButton label="Proceed"/>
+                        : <YellowButton onPress={ConfirmVerificationCode} label="Proceed"/>
+                    }   
+            </View>
         </KeyboardAvoidingView>
+        </>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 10,
+        padding: 16,
         backgroundColor:"white"
     },
     input: {
         backgroundColor:"white",
         width:"100%",
         paddingVertical: 10,
-        fontFamily: FONT_MEDIUM,
+        fontFamily: FONT.BOLD,
         fontSize: 20,
         marginTop: 10,
         borderRadius: 10,
@@ -161,13 +190,16 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         width:"100%",
         height: 50,
+        padding: 16,
     },
     inputView: {
-        backgroundColor: 'white',
-        borderWidth: StyleSheet.hairlineWidth,
-        height: 40,
+        backgroundColor: '#F7F7FA',
+        borderRadius: 5,
+        height: 48,
         width: 40,
         justifyContent: 'center',
         alignItems: 'center',
     },
 })
+
+export default ToktokWalletRecoverPin

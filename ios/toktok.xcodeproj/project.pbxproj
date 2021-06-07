@@ -54,6 +54,8 @@
 		C441BC814B1B4ABB8C1F50A7 /* Rubik-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0DF3D6A4EA76479B9C60F6DC /* Rubik-Medium.ttf */; };
 		D0307773885D42A9A8C4B1EA /* Rubik-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D191732480534B979FF26DD1 /* Rubik-MediumItalic.ttf */; };
 		E4D71CCF184B93FCFC865F47 /* libPods-toktok.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DB9A39CD09238EE31633D634 /* libPods-toktok.a */; };
+		E7369A7A264B95B400346BF4 /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7369A79264B95B400346BF4 /* ExternalAccessory.framework */; };
+		E7EA463D2651F5C300D60944 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E7EA463C2651F5C200D60944 /* GoogleService-Info.plist */; };
 		E8446D4C7B624B8B9205DF05 /* Jost-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2DDB916F4F77461F9E6385E9 /* Jost-Medium.ttf */; };
 		E9FBBC1DD37B494CBF427694 /* Rubik-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 800A015A200E4872BC47B19B /* Rubik-SemiBold.ttf */; };
 		EB1B18B6ADC343018CF19359 /* Jost-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1EE64892DABA4006BD3F1814 /* Jost-MediumItalic.ttf */; };
@@ -182,6 +184,8 @@
 		DB9A39CD09238EE31633D634 /* libPods-toktok.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-toktok.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD1A434126A647689BDC7BCE /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		E39F4784C19E4702A73F195E /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
+		E7369A79264B95B400346BF4 /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
+		E7EA463C2651F5C200D60944 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 		F9167798F50C456CB93C31CF /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
@@ -202,6 +206,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E7369A7A264B95B400346BF4 /* ExternalAccessory.framework in Frameworks */,
 				E4D71CCF184B93FCFC865F47 /* libPods-toktok.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -268,6 +273,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E7369A79264B95B400346BF4 /* ExternalAccessory.framework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
 				DB9A39CD09238EE31633D634 /* libPods-toktok.a */,
@@ -364,7 +370,11 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+<<<<<<< HEAD
 				BE7A5999265C01E900426FE6 /* toktok_notification.wav */,
+=======
+				E7EA463C2651F5C200D60944 /* GoogleService-Info.plist */,
+>>>>>>> 0090e3ae3a34762f8eeb31471778cd9e1931e2ca
 				13B07FAE1A68108700A75B9A /* toktok */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* toktokTests */,
@@ -413,6 +423,7 @@
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
 				0A083D5F2FAF3D5550876A6B /* [CP] Copy Pods Resources */,
+				DA8A1C46D010EC69A4816482 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -436,6 +447,7 @@
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				64E786FFE7726B606D926682 /* [CP] Copy Pods Resources */,
 				BE9FA7F225AC5CBA00107ABB /* Embed App Extensions */,
+				BFF0A524F63B0C784F89C68E /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -510,6 +522,9 @@
 		83CBB9F71A601CBA00E9B192 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				KnownAssetTags = (
+					New,
+				);
 				LastSwiftUpdateCheck = 1230;
 				LastUpgradeCheck = 1130;
 				TargetAttributes = {
@@ -597,7 +612,11 @@
 				869B7ED20BFD4137B023FC07 /* Jost-ExtraBoldItalic.ttf in Resources */,
 				EB7E15BEDD9D486DB99C8BD5 /* Jost-ExtraLight.ttf in Resources */,
 				6B4B3099EC954F2CBEC4C7C2 /* Jost-ExtraLightItalic.ttf in Resources */,
+<<<<<<< HEAD
 				BE7A599A265C01E900426FE6 /* toktok_notification.wav in Resources */,
+=======
+				E7EA463D2651F5C300D60944 /* GoogleService-Info.plist in Resources */,
+>>>>>>> 0090e3ae3a34762f8eeb31471778cd9e1931e2ca
 				53A7D436DEC44D4E9B3468AD /* Jost-Italic.ttf in Resources */,
 				5DF82E20605045268133C6FC /* Jost-Light.ttf in Resources */,
 				339CAC044D3440279207DDC0 /* Jost-LightItalic.ttf in Resources */,
@@ -659,6 +678,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-toktok-toktokTests/Pods-toktok-toktokTests-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseMLVisionFaceModel/GoogleMVFaceDetectorResources.bundle",
 				"${PODS_ROOT}/GoogleMaps/Maps/Frameworks/GoogleMaps.framework/Resources/GoogleMaps.bundle",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
@@ -679,6 +699,7 @@
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleMVFaceDetectorResources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleMaps.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AntDesign.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Entypo.ttf",
@@ -745,6 +766,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-toktok/Pods-toktok-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseMLVisionFaceModel/GoogleMVFaceDetectorResources.bundle",
 				"${PODS_ROOT}/GoogleMaps/Maps/Frameworks/GoogleMaps.framework/Resources/GoogleMaps.bundle",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
@@ -765,6 +787,7 @@
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleMVFaceDetectorResources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleMaps.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AntDesign.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Entypo.ttf",
@@ -832,6 +855,24 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		BFF0A524F63B0C784F89C68E /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-toktok/Pods-toktok-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/OpenSSL/OpenSSL.framework/OpenSSL",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OpenSSL.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-toktok/Pods-toktok-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		C49A5F79BFDD8F3CF7008E83 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -852,6 +893,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DA8A1C46D010EC69A4816482 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-toktok-toktokTests/Pods-toktok-toktokTests-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/OpenSSL/OpenSSL.framework/OpenSSL",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OpenSSL.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-toktok-toktokTests/Pods-toktok-toktokTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		EF2A08C015B3A322D250BD51 /* [CP] Check Pods Manifest.lock */ = {
@@ -1053,7 +1112,12 @@
 				);
 				INFOPLIST_FILE = toktok/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+<<<<<<< HEAD
 				MARKETING_VERSION = 1.15.5;
+=======
+				MARKETING_VERSION = 1.15.3;
+				NEW_SETTING = "";
+>>>>>>> 0090e3ae3a34762f8eeb31471778cd9e1931e2ca
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1082,7 +1146,12 @@
 				DEVELOPMENT_TEAM = GB5B4BE7QP;
 				INFOPLIST_FILE = toktok/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+<<<<<<< HEAD
 				MARKETING_VERSION = 1.15.5;
+=======
+				MARKETING_VERSION = 1.15.3;
+				NEW_SETTING = "";
+>>>>>>> 0090e3ae3a34762f8eeb31471778cd9e1931e2ca
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

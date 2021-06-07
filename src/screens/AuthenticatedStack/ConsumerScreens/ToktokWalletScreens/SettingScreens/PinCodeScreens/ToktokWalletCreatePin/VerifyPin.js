@@ -1,11 +1,28 @@
 import React, { useState ,useRef , useEffect } from 'react'
 import {View,Text,StyleSheet,TouchableHighlight,TouchableOpacity,TextInput,KeyboardAvoidingView,Platform,ScrollView} from 'react-native'
-import {COLOR,FONT_FAMILY, DARK,FONT_COLOR, MEDIUM,ORANGE, FONT_MEDIUM, FONT_REGULAR, SIZES, BUTTON_HEIGHT} from '../../../../../../../res/constants'
-import { GET_VERIFY_TOKTOK_WALLET_PIN } from '../../../../../../../graphql';
+import {COLOR, FONT, FONT_SIZE} from '../../../../../../../res/variables'
+import { TOKTOK_WALLET_GRAPHQL_CLIENT } from '../../../../../../../graphql';
+import { VERIFY_PIN_CODE } from '../../../../../../../graphql/toktokwallet';
 import {useLazyQuery} from '@apollo/react-hooks'
-import {onError} from '../../../../../../../util/ErrorUtility'
+import {onError, onErrorAlert} from '../../../../../../../util/ErrorUtility'
 import {useNavigation} from '@react-navigation/native'
-import NumberBoxes from '../../../Components/NumberBoxes'
+import {DisabledButton, NumberBoxes} from '../../../Components'
+import { YellowButton } from '../../../../../../../revamp';
+import { useAlert } from '../../../../../../../hooks';
+import { Alert } from 'react-native';
+
+const numWordArray = {
+    "1": "one",
+    "2": "two",
+    "3": "three",
+    "4": "four",
+    "5": "five",
+    "6": "six",
+    "7": "seven",
+    "8": "eight",
+    "9": "nine",
+    "10": "ten"
+}
 
 const VerifyPin = ({pageIndex,setPageIndex})=> {
 
@@ -13,30 +30,39 @@ const VerifyPin = ({pageIndex,setPageIndex})=> {
     const [pinCode,setPinCode] = useState("")
     const inputRef = useRef();
     const navigation = useNavigation()
+    const alert = useAlert()
 
     const [pinCodeAttempts,setPinCodeAttempts] = useState({
         visible: false,
         attempts: "",
     })
 
-    const [getVerifyToktokWalletPIN, {data,error,loading}] = useLazyQuery(GET_VERIFY_TOKTOK_WALLET_PIN,{
-        fetchPolicy: 'network-only',
-        onError: onError,
-        onCompleted: (response)=> {
-
-            if(!response.getVerifyToktokWalletPIN.result){
-                if(response.getVerifyToktokWalletPIN.attempts == 0) {
+    const [verifyPinCode, {data ,error , loading }] = useLazyQuery(VERIFY_PIN_CODE, {
+        fetchPolicy: "network-only",
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+        onCompleted: ({verifyPinCode})=>{
+            if(verifyPinCode.result == 1){
+                setPinCodeAttempts({
+                    visible: false,
+                    attempts: ''
+                })
+                setPageIndex(state=>state+1)
+            }else{
+            
+                if(verifyPinCode.remainingAttempts == 0){
                     navigation.navigate("ToktokWalletHomePage")
-                    return navigation.replace("ToktokWalletHomePage",{isHold: true})
+                    navigation.replace("ToktokWalletHomePage")
+                    return navigation.push("ToktokWalletRestricted", {component: "onHold"})
                 }
 
-                return setPinCodeAttempts({
+                setPinCodeAttempts({
                     visible: true,
-                    attempts: response.getVerifyToktokWalletPIN.attempts
+                    attempts: verifyPinCode.remainingAttempts
                 })
-            }   
-
-            return setPageIndex(oldstate=>oldstate+1)
+            }
+        },
+        onError: (error)=> {
+            onErrorAlert({alert, error})
         }
     })
 
@@ -47,12 +73,12 @@ const VerifyPin = ({pageIndex,setPageIndex})=> {
     };
     
     const onSubmit = ()=> {
-        getVerifyToktokWalletPIN({
+        verifyPinCode({
             variables: {
                 input: {
-                    pincode: pinCode
+                    pinCode: pinCode
                 }
-            },
+            }
         })
     }
 
@@ -63,11 +89,10 @@ const VerifyPin = ({pageIndex,setPageIndex})=> {
     return (
         <View style={styles.container}>
             <ScrollView style={styles.content}>
-                    <Text style={{fontSize: SIZES.M,fontFamily: FONT_MEDIUM,marginTop: 20,alignSelf:"center"}}>Enter old PIN</Text>
-                    <View style={{position: 'relative',marginTop: 50,}}>
+                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 20,alignSelf:"center"}}>Enter old PIN</Text>
+                    <View style={{position: 'relative',marginTop: 40,padding: 16,}}>
                         <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={showPin}/>
                         <TextInput
-                            autoFocus={true}
                             caretHidden
                             value={pinCode}
                             ref={inputRef}
@@ -76,30 +101,32 @@ const VerifyPin = ({pageIndex,setPageIndex})=> {
                             returnKeyType="done"
                             onChangeText={(value) => {
                             if (value.length <= 6) {
-                                setPinCode(value);
+                                const num = value.replace(/[^0-9]/g, '')
+                                setPinCode(num);
                             }
                             }}
                             onSubmitEditing={onSubmit}
                         />
                          {
-                            pinCodeAttempts.visible && <Text style={{fontFamily: FONT_REGULAR,color:"red",alignSelf:"center",fontSize: 12}}>Invalid PIN , You can try {pinCodeAttempts.attempts} more times</Text>
+                            pinCodeAttempts.visible && <Text style={{fontFamily: FONT.REGULAR,color:"red",alignSelf:"center",fontSize: 12,textAlign:'center'}}>Incorrect PIN. You can try {numWordArray[pinCodeAttempts.attempts]} ({pinCodeAttempts.attempts}) more {pinCodeAttempts.attempts == 1 ? "time" : "times"} before your account will be temporarily blocked.</Text>
                         }
 
                         <TouchableOpacity
-                                style={{marginTop: 40,paddingVertical: 10,alignItems: "center"}}
+                                style={{marginTop: 18,paddingVertical: 10,alignItems: "center"}}
                                 onPress={forgotPIN}
                         >
-                                <Text style={{color: "#F6841F",fontSize: SIZES.M,fontFamily: FONT_MEDIUM}}>Forgot PIN?</Text>
+                                <Text style={{color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>Forgot PIN?</Text>
                         </TouchableOpacity>
                     </View>
             </ScrollView>
-            <TouchableOpacity
-                disabled={pinCode.length < 6}
-                onPress={onSubmit}
-                style={{alignItems: "center",height: BUTTON_HEIGHT,backgroundColor: pinCode.length < 6 ? "gray" : DARK,margin: 10,justifyContent: "center",borderRadius: 5,}}
-            >
-                    <Text style={{color: pinCode.length < 6 ? "white" : COLOR,fontSize: SIZES.M,fontFamily: FONT_MEDIUM}}>Next</Text>
-            </TouchableOpacity>
+            <View style={{padding: 16}}>
+                {
+                    pinCode.length < 6
+                    ? <DisabledButton label="Next"/>
+                    : <YellowButton label="Next" onPress={onSubmit}/>
+                }
+            </View>
+          
        </View>
     )
 }
@@ -128,7 +155,6 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         paddingHorizontal: 10,
         fontSize: 25,
-        color: DARK,
         width: 30,
     },
 })
