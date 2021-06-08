@@ -1,4 +1,4 @@
-import React from 'react'
+import React , {useEffect,useState} from 'react'
 import {View,StyleSheet,ActivityIndicator,Text,Image} from 'react-native'
 import { COLOR , FONT , FONT_SIZE } from '../../../../../../res/variables'
 import { HeaderBack, HeaderTitle } from '../../../../../../revamp'
@@ -11,6 +11,7 @@ import {useQuery} from '@apollo/react-hooks'
 import RegisterMobile from "./RegisterMobile";
 import PendingEnrollment from "./PendingEnrollment";
 import VerifiedAccount from "./VerifiedAccount";
+import SuccessfulModal from "../ToktokWalletGcashLinkAccount/SuccessfulModal";
 
 const MainComponent = ({children})=> {
     return (
@@ -38,11 +39,18 @@ const ToktokWalletGcashHomePage = ({navigation,route})=> {
     })
 
     const provider = route.params.provider
+    const [modalSuccessVisible,setModalSuccessVisible] = useState(false)
 
     const {data,error,loading} = useQuery(GET_CASH_OUT_ENROLLMENT_GCASH, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         fetchPolicy:"network-only",
     })
+
+    useEffect(()=>{
+        if(route.params.successLink){
+            setModalSuccessVisible(true)
+        }
+    },[])
 
     if(loading){
         return <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -73,7 +81,10 @@ const ToktokWalletGcashHomePage = ({navigation,route})=> {
 
     // Linked and verified GCash Account
     return (
+       <>
+        <SuccessfulModal visible={modalSuccessVisible} setVisible={setModalSuccessVisible} provider={provider}/>
        <VerifiedAccount record={data.getCashOutEnrollmentGcash.linkedGcash.gcashEnrollmentRecord} provider={provider}/>
+       </>
     )
 }
 

@@ -11,7 +11,7 @@ import {APP_FLAVOR , ACCOUNT_TYPE} from '../../../../../res/constants'
 
 //SELF IMPORTS
 import WalletMethods from './WalletMethods'
-import { HeaderBack } from '../../../../../revamp';
+import { HeaderBack, ICON_SET, VectorIcon } from '../../../../../revamp';
 import { CheckWalletAccountRestrictionContext } from './CheckWalletAccountRestriction';
 
 
@@ -31,7 +31,7 @@ const WalletCardInfo = ({loading})=> {
 
     const rotateanimation = rotateY.interpolate({
         inputRange: [0,100,200],
-        outputRange: ["0deg","60deg","90deg"]
+        outputRange: ["0deg","90deg","180deg"]
     })
 
     const cashIn = ()=> {
@@ -57,7 +57,7 @@ const WalletCardInfo = ({loading})=> {
                     </View>
                     <TouchableOpacity onPress={cashIn} style={styles.topUp}>
                         <View style={styles.topUpbtn}>
-                                <FIcon5 name={'plus'} size={12} color="black"/> 
+                         <VectorIcon iconSet={ICON_SET.Entypo} name="plus" color="black" size={20}/>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.walletSettings} onPress={()=>{
@@ -69,8 +69,8 @@ const WalletCardInfo = ({loading})=> {
                             })
                         }
                     }}>
-                            <Animated.View style={[{transform: [{rotate: rotateanimation}]}]}>
-                                <FIcon5 name={'cog'} size={25} color="black"/>
+                            <Animated.View style={[{borderWidth: 2, borderRadius: 25,padding: 2, transform: [{rotate: rotateanimation}]}]}>
+                                <VectorIcon iconSet={ICON_SET.Entypo} name="dots-three-vertical" color="black" size={20}/>
                             </Animated.View>
                     </TouchableOpacity>
                 </View>

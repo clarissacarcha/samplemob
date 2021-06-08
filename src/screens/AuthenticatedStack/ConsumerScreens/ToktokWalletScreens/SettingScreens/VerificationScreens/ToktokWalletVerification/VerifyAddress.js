@@ -52,7 +52,7 @@ const VerifyAddress = ()=> {
 
 
         if(address.line1 == "") return Alert.alert("","Street Address is required.")
-        if(address.line2 == "") return Alert.alert("","Subdivision is required.")
+        if(address.line2 == "") return Alert.alert("","Barangay is required.")
         if(provinceId == "") return Alert.alert("","Province is required.")
         if(cityId == "") return Alert.alert("","City is required.")
         if(address.postalCode == "") return Alert.alert("","Postal code is required.")
@@ -84,7 +84,7 @@ const VerifyAddress = ()=> {
             {cities.length == 0 ? null : <ModalCity type="address" data={cities} />}
 
             <KeyboardAvoidingView
-                keyboardVerticalOffset={90}  
+                keyboardVerticalOffset={Platform.OS == "ios" ? 90 : 0}  
                 behavior={Platform.OS == "ios" ? "padding" : "height"}
                 style={styles.content}
             >
@@ -134,7 +134,7 @@ const VerifyAddress = ()=> {
                         </View>
 
                         <View style={styles.ViewInput}>
-                            <Text style={styles.labelText}>Subdivision</Text>
+                            <Text style={styles.labelText}>Barangay</Text>
                             <TextInput 
                                 style={styles.input} 
                                 placeholder="Bldg, Barangay, Subdivision/Village"

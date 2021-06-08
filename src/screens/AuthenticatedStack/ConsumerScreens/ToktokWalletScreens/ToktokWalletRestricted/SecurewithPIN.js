@@ -10,7 +10,7 @@ const SecurewithPIN = ({navigation,walletinfo})=> {
         <View style={styles.container}>
             <View style={{alignItems:"center",marginTop: 10,flex:1 ,}}>
                 <View style={styles.lockIcon}>
-                        <Image style={{height: 40,width: 40}} source={require('../../../../../assets/icons/walletVerify.png')}/>
+                        <Image style={{height: 89,width: 89}} source={require('../../../../../assets/icons/walletVerify.png')}/>
                 </View>
                 <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.XL,marginTop: 20, textAlign:'center'}}>Setup your toktokwallet PIN</Text>
                 <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.S,marginTop: 5, textAlign:'center'}}>Click the "Set Up" button to create your toktokwallet PIN.</Text>
@@ -33,9 +33,9 @@ const styles = StyleSheet.create({
         padding: 16,
     },
     lockIcon: {
-        height: 80,
-        width: 80,
-        backgroundColor:"#FCB91A",
+        height: 160,
+        width: 160,
+        backgroundColor:"#FEEABA",
         borderRadius: 100,
         justifyContent:"center",
         alignItems:"center"

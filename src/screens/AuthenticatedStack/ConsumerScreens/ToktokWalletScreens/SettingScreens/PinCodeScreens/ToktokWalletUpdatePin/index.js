@@ -110,9 +110,12 @@ const ToktokWalletUpdatePin =  ({navigation})=> {
             />
             <SuccessModal modalVisible={successModalVisible} />
             <Separator />
-            <View style={{flex: 1,}}>
+            <KeyboardAvoidingView style={{flex: 1,}}
+             keyboardVerticalOffset={60}  
+             behavior={Platform.OS == "ios" ? "padding" : "height"}
+             >
             {DisplayComponent()}
-            </View>
+            </KeyboardAvoidingView>
         </>
     )
 }

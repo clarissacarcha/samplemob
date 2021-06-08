@@ -112,7 +112,7 @@ const RegisterMobile = ({provider})=> {
                     returnKeyType="done"
                 />
                 <Text style={{fontFamily: FONT.REGULAR,color:COLOR.RED,fontSize: FONT_SIZE.S}}>{errorMessage}</Text>
-                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S}}>Note: Make sure that number is an existing GCash account.</Text>
+                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S,marginTop: 1}}>Note: Make sure that number is an existing GCash account.</Text>
             </View>
             <View style={styles.proceedBtn}>
                 {

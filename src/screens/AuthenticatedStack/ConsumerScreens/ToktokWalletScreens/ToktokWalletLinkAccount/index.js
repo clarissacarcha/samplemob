@@ -117,7 +117,9 @@ const ToktokWalletLinkAccount = ({navigation, route})=> {
         <AlertOverlay visible={loading} />
         <SuccessfulModal visible={successModalVisible} setVisible={setSuccessModalVisible}/>
         <Separator/>
-        <View 
+        <KeyboardAvoidingView 
+            keyboardVerticalOffset={60}  
+            behavior={Platform.OS == "ios" ? "padding" : "height"}
             style={styles.container}
         >
 
@@ -151,7 +153,7 @@ const ToktokWalletLinkAccount = ({navigation, route})=> {
                      </TouchableOpacity>
                    
             </View>
-            <View style={{height: SIZE.BUTTON_HEIGHT}}> 
+            <View style={{height: SIZE.BUTTON_HEIGHT + 16}}> 
             {
                 pinCode.length < 6
                 ? <DisabledButton label="Proceed"/>
@@ -160,7 +162,7 @@ const ToktokWalletLinkAccount = ({navigation, route})=> {
             </View>
 
 
-        </View>
+        </KeyboardAvoidingView>
         {/* <Text>{JSON.stringify(tokwaAccount)}</Text> */}
         </>
     )
