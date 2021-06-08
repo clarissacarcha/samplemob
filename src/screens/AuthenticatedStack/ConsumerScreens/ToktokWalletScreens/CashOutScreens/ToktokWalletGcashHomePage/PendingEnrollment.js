@@ -32,9 +32,10 @@ const PendingEnrollment = ({record})=> {
         <Separator/>
         <View style={styles.container}>
             <Text style={styles.labelTitle}>PENDING VERIFICATION</Text>
-            <ScrollView showsVerticalScrollIndicator={false} style={styles.record}>
+            <ScrollView showsVerticalScrollIndicator={false} style={styles.record}>   
                     <Information label="Mobile Number" value={record.mobile}/>
                     <Information label="First Name" value={record.firstName}/>
+                    <Information label="Middle Name" value={record.middleName}/>
                     <Information label="Last Name" value={record.lastName}/>
                     <Information label="Birthdate" value={moment(record.birthdate).tz('Asia/Manila').format('MMM DD, YYYY')}/>
                     <Information label="Street Address" value={record.streetAddress}/>
@@ -43,8 +44,9 @@ const PendingEnrollment = ({record})=> {
                     <Information label="Country" value={record.country}/>
             </ScrollView>
             <View>
-                <YellowButton label="Proceed" onPress={()=>navigation.pop()}/>
-            </View>
+                    <YellowButton label="Proceed" onPress={()=>navigation.pop()}/>
+                </View>
+           
         </View>
         </>
     )
@@ -63,6 +65,7 @@ const styles = StyleSheet.create({
     },
     record: {
         flex: 1,
+        marginBottom: 16
     },
     info: {
         paddingVertical: 16,
