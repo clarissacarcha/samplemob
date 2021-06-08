@@ -3,6 +3,8 @@ import {View,Text,StyleSheet,ScrollView} from 'react-native'
 import { COLOR, FONT, FONT_SIZE } from '../../../../../../res/variables'
 import { Separator } from '../../Components'
 import moment from 'moment'
+import { YellowButton } from '../../../../../../revamp'
+import {useNavigation} from '@react-navigation/native'
 
 const Information = ({label,value})=> {
     return (
@@ -23,6 +25,8 @@ const Information = ({label,value})=> {
 
 const PendingEnrollment = ({record})=> {
 
+    const navigation = useNavigation()
+
     return (
         <>
         <Separator/>
@@ -38,6 +42,9 @@ const PendingEnrollment = ({record})=> {
                     <Information label="Province City" value={record.provinceCity}/>
                     <Information label="Country" value={record.country}/>
             </ScrollView>
+            <View>
+                <YellowButton label="Proceed" onPress={()=>navigation.pop()}/>
+            </View>
         </View>
         </>
     )
