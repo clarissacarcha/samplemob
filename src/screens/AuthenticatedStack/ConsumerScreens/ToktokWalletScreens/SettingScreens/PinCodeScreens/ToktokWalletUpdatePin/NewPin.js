@@ -29,6 +29,7 @@ const NewPin = ({pinCode,setPinCode , pageIndex, setPageIndex})=> {
                             caretHidden
                             value={pinCode}
                             ref={inputRef}
+                            autoFocus={true}
                             style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent'}}
                             keyboardType="number-pad"
                             returnKeyType="done"

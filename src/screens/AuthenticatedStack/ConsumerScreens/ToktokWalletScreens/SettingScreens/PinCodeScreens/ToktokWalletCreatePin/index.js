@@ -125,7 +125,7 @@ const ToktokWalletCreatePin = ({navigation,route})=> {
         <Separator />
         <KeyboardAvoidingView
             // keyboardVerticalOffset={Platform.OS == "ios" ? 50 : 90} 
-            keyboardVerticalOffset={60}  
+            keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80}  
             behavior={Platform.OS == "ios" ? "padding" : "height"}
             style={styles.container} 
         >

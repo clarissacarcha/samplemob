@@ -118,7 +118,7 @@ const ToktokWalletLinkAccount = ({navigation, route})=> {
         <SuccessfulModal visible={successModalVisible} setVisible={setSuccessModalVisible}/>
         <Separator/>
         <KeyboardAvoidingView 
-            keyboardVerticalOffset={60}  
+            keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80}  
             behavior={Platform.OS == "ios" ? "padding" : "height"}
             style={styles.container}
         >
