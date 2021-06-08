@@ -1,5 +1,5 @@
 import React, { useState , useEffect, useContext } from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,TextInput,KeyboardAvoidingView,Platform,ScrollView,Alert} from 'react-native'
+import {View,Text,StyleSheet,TouchableOpacity,TextInput,KeyboardAvoidingView,Platform,ScrollView,Alert,Dimensions} from 'react-native'
 import {COLOR , FONT , FONT_SIZE, SIZE } from '../../../../../../../res/variables'
 import {VerifyContext} from './VerifyContextProvider'
 import validator from 'validator'
@@ -14,6 +14,8 @@ import ModalProvince from './ModalProvince'
 import ModalCity from './ModalCity'
 
 import { YellowButton } from '../../../../../../../revamp'
+
+const screen = Dimensions.get('window');
 
 const VerifyAddress = ()=> {
 
@@ -50,7 +52,6 @@ const VerifyAddress = ()=> {
 
     const Proceed = ()=> {
 
-
         if(address.line1 == "") return Alert.alert("","Street Address is required.")
         if(address.line2 == "") return Alert.alert("","Barangay is required.")
         if(provinceId == "") return Alert.alert("","Province is required.")
@@ -84,11 +85,11 @@ const VerifyAddress = ()=> {
             {cities.length == 0 ? null : <ModalCity type="address" data={cities} />}
 
             <KeyboardAvoidingView
-                keyboardVerticalOffset={Platform.OS == "ios" ? 90 : 0}  
-                behavior={Platform.OS == "ios" ? "padding" : "height"}
-                style={styles.content}
-            >
-                   <ScrollView showsVerticalScrollIndicator={false}>
+                behavior={Platform.OS === "ios" ? "height" : null}
+                keyboardVerticalOffset={Platform.OS === 'ios' ? screen.height * 0.25 : screen.height * 0.5}
+                style={{ flex: 1 }}
+        >
+                   <ScrollView style={{padding: 16}} showsVerticalScrollIndicator={false}>
                         <Text style={styles.labelText}>Address</Text>
                         <Text style={[styles.labelSmall]}>Please enter your current address.</Text>  
                

@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react'
-import {Text,View,StyleSheet,Alert,Image,TextInput,TouchableOpacity,Linking,ScrollView,KeyboardAvoidingView} from 'react-native'
+import {Text,View,StyleSheet,Alert,Image,TextInput,TouchableOpacity,Linking,ScrollView,KeyboardAvoidingView,Dimensions} from 'react-native'
 import {COLOR, FONT ,SIZE,FONT_SIZE} from '../../../../../../../res/variables'
 import {VerifyContext} from './VerifyContextProvider'
 import validator from 'validator';
@@ -16,6 +16,8 @@ import ModalCountry from './ModalCountry'
 import {DateBirthModal} from './VerifyBirth'
 import ModalNationality from './ModalNationality'
 import { Platform } from 'react-native';
+
+const screen = Dimensions.get('window');
 
 const VerifyFullname = ()=> {
 
@@ -95,12 +97,12 @@ const VerifyFullname = ()=> {
                 setVisible={setModalNationalityVisible}
          />
      
-            <KeyboardAvoidingView
-                keyboardVerticalOffset={Platform.OS == 'ios' ? 90 : 0}  
-                behavior={Platform.OS == "ios" ? "padding" : "height"}
-                style={styles.content}
-            >
-                   <ScrollView showsVerticalScrollIndicator={false}>
+        <KeyboardAvoidingView
+                behavior={Platform.OS === "ios" ? "height" : null}
+                keyboardVerticalOffset={Platform.OS === 'ios' ? screen.height * 0.25 : screen.height * 0.5}
+                style={{ flex: 1 }}
+        >
+                   <ScrollView style={{padding: 16}} showsVerticalScrollIndicator={false}>
 
         <TouchableOpacity onPress={ViewPrivacyPolicy} style={styles.policyView}>
                 <View>

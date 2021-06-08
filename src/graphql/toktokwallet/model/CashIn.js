@@ -32,6 +32,10 @@ export const GET_CASH_INS = gql`
                 fatherId
                 createdAt
                 updatedAt
+                provider {
+                    id
+                    name
+                }
         }
     }
 `

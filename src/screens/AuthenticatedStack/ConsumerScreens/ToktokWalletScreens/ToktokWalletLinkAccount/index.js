@@ -48,7 +48,14 @@ const ToktokWalletLinkAccount = ({navigation, route})=> {
                 variables: {
                     input: {
                         tokwaAccountId: tokwaAccount.id,
-                        linkLimit: tokwaAccount.person.accountType.linkLimit
+                        linkLimit: tokwaAccount.person.accountType.linkLimit,
+                        firstName: tokwaAccount.person.firstName,
+                        middleName: tokwaAccount.person.middleName,
+                        lastName: tokwaAccount.person.lastName,
+                        mobileNumber: tokwaAccount.mobileNumber,
+                        emailAddress: tokwaAccount.person.emailAddress,
+                        birthdate: tokwaAccount.person.birthdate,
+                        selfieImage: tokwaAccount.person.selfieImage,
                     }
                 }
             })

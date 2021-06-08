@@ -3,6 +3,7 @@ import {View,Text,StyleSheet,TouchableOpacity,Image} from 'react-native'
 import {HeaderBackClose, SomethingWentWrong , AlertOverlay} from '../../../../../../components'
 import FIcon from 'react-native-vector-icons/Feather';
 import {FONT,FONT_SIZE,COLOR} from '../../../../../../res/variables';
+import {APP_FLAVOR,ACCOUNT_TYPE} from '../../../../../../res/constants';
 import {Separator} from '../../Components';
 import { HeaderBack , HeaderTitle} from '../../../../../../revamp';
 

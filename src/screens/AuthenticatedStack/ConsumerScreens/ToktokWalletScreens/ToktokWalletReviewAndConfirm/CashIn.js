@@ -11,7 +11,7 @@ const CashIn = ({data})=>{
        <View style={styles.container}>
             <View style={styles.information}>
                     <View style={{flex:1,alignItems:"flex-start"}}>
-                        <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Cash-in Method</Text>  
+                        <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Cash in Method</Text>  
                     </View>
                     <View style={{flex:1,alignItems:"flex-end"}}>
                         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M,textAlign: 'right'}}>{data.method}</Text>

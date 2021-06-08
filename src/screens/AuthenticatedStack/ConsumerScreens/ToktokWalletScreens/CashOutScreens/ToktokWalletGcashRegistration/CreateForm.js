@@ -1,5 +1,5 @@
 import React, {useEffect,useState} from 'react'
-import {View,Text,StyleSheet,ScrollView,TextInput,Alert,TouchableOpacity,Modal,StatusBar,TouchableOpacityBase,Image,KeyboardAvoidingView,Platform} from 'react-native'
+import {View,Text,StyleSheet,ScrollView,TextInput,Alert,TouchableOpacity,Modal,StatusBar,TouchableOpacityBase,Image,KeyboardAvoidingView,Platform,Dimensions} from 'react-native'
 import { HeaderBack, YellowButton } from '../../../../../../revamp';
 import {AlertOverlay, HeaderTitle} from '../../../../../../components'
 import { FONT, FONT_SIZE , COLOR } from '../../../../../../res/variables';
@@ -15,6 +15,7 @@ import { useAlert } from '../../../../../../hooks';
 import DatePickerModal from './DatePickerModal';
 import ModalCountry from './ModalCountry';
 
+const screen = Dimensions.get('window');
 
 const PromptMessage = ({
     visible,
@@ -182,21 +183,6 @@ const CreateForm = ({navigation,session,mobile,provider})=> {
                   }
               }
           })
-        
-
-        //   postGCashAccount({
-        //     variables: {
-        //       input: {
-        //         mobileNumber,
-        //         firstName,
-        //         middleName,
-        //         lastName,
-        //         streetAddress,
-        //         birthdate,
-        //         personId: session.user.person.id,
-        //       },
-        //     },
-        //   });
       
     }
 
@@ -215,10 +201,10 @@ const CreateForm = ({navigation,session,mobile,provider})=> {
             }}
         />
        <KeyboardAvoidingView
-        keyboardVerticalOffset={90}  
-        behavior={Platform.OS == "ios" ? "padding" : "height"}
-        style={styles.container}
-       >
+            behavior={Platform.OS === "ios" ? "height" : null}
+            keyboardVerticalOffset={Platform.OS === 'ios' ? screen.height * 0.25 : screen.height * 0.5}
+            style={{ flex: 1 }}
+        >
             <ScrollView style={{flex: 1,flexGrow: 1,}} showsVerticalScrollIndicator={false}>
                 <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>Please nominate an existing GCash account.</Text>
                 <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S,marginBottom: 10}}>Successful fund transfer will be forwarded to this GCash account.</Text>

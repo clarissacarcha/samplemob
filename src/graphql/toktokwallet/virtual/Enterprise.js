@@ -61,6 +61,13 @@ export const GET_CHECK_ACCOUNT = gql`
             motherId
             person {
                 id
+                firstName
+                middleName
+                lastName
+                mobileNumber
+                emailAddress
+                birthdate
+                selfieImage
                 accountType {
                     linkLimit
                 }
