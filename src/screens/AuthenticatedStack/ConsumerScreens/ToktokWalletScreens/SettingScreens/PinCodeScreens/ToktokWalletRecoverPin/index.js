@@ -48,6 +48,7 @@ const ToktokWalletRecoverPin = ({navigation})=> {
     const inputRef = useRef();
     const alert = useAlert();
     const [otpTimer,setOtpTimer] = useState(120)
+    const [errorMessage,setErrorMessage] = useState("")
 
     const [getForgotAndRecoverOTPCode] = useLazyQuery(GET_FORGOT_AND_RECOVER_OTP_CODE , {
         fetchPolicy: "network-only",
@@ -57,6 +58,11 @@ const ToktokWalletRecoverPin = ({navigation})=> {
             setOtpTimer(120)
         },
         onError: (error)=>{
+            const {graphQLErrors, networkError} = error
+            if(graphQLErrors[0]?.payload?.code == "OTPMAXREQUEST"){
+                setPinCode("")
+                return setErrorMessage(graphQLErrors[0].message)
+            }
             onErrorAlert({alert,error})
         }
     })
@@ -69,6 +75,13 @@ const ToktokWalletRecoverPin = ({navigation})=> {
             return navigation.replace("ToktokWalletUpdatePin")
         },
         onError: (error)=>{
+            const {graphQLErrors, networkError} = error
+            if(graphQLErrors[0].message == "Invalid verification code."){
+                return setErrorMessage("Invalid verification code.")
+            }
+            if(graphQLErrors[0].message == "Verification code already expired."){
+                return setErrorMessage("Verification code already expired.")
+            }
             onErrorAlert({alert,error})
         }
     })
@@ -146,6 +159,9 @@ const ToktokWalletRecoverPin = ({navigation})=> {
                             }}
                             // onSubmitEditing={onSubmit}
                         />
+                        {
+                            errorMessage != "" && <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M,color: COLOR.RED,marginHorizontal: 16}}>{errorMessage}</Text>
+                        }
 
                         <TouchableOpacity
                                 disabled={otpTimer > 0 ? true : false}

@@ -31,6 +31,12 @@ export const TOKTOK_WALLET_PROTOCOL_HOST_PORT = '192.168.0.105:3100';
 // export const TOKTOK_WALLET_PROTOCOL = 'https';
 // export const TOKTOK_WALLET_PROTOCOL_HOST_PORT = 'test.toktok.ph:2087';
 
+// export const PROTOCOL = 'https';
+// export const HOST_PORT = 'demo.toktok.ph:2096';
+
+// export const TOKTOK_WALLET_PROTOCOL = 'https';
+// export const TOKTOK_WALLET_PROTOCOL_HOST_PORT = 'demo.toktok.ph:2087';
+
 export const COLORS = {
   YELLOW: '#FDBA1C',
   ORANGE: '#F5841F',
