@@ -87,6 +87,8 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
                      icon: "bullseye"
                  })
                  setBoxColor("white")
+                 setCheckSmile(false)
+                 setCheckNotSmiling(false)
                  return 
              }
      
@@ -96,6 +98,8 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
                      icon: "mobile-alt"
                  })
                  setBoxColor("white")
+                 setCheckSmile(false)
+                 setCheckNotSmiling(false)
                  return 
              }
      
@@ -117,7 +121,7 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
             
             if(!checkSmile){
                 setMessage({
-                    msg: `Try to smile`,
+                    msg: `Smile to take a selfie`,
                     icon: "smile"
                 })
                 if(e.faces[0].smilingProbability > 0.8){
@@ -144,7 +148,7 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
             //     takePicture()
             // }
 
-            if(checkSmile){
+            if(checkSmile && checkNotSmiling){
                 setMessage({
                     msg: `Don't move , Scanning Face`,
                     icon: null
@@ -260,7 +264,7 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
                 }
         </View> */}
 
-                {/* <View
+                <View
                     style={{
                         flexDirection: 'row',
                         justifyContent: 'center',
@@ -274,7 +278,7 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
                             <EIcon name="camera" color={COLOR.YELLOW} size={40} />
                         </View>
                     </TouchableOpacity>
-                </View> */}
+                </View>
 
     </View>
     )

@@ -62,6 +62,12 @@ export const GET_TRANSACTIONS = gql`
                         middleName
                         lastName
                     }
+                    sourceAccount {
+                        mobileNumber
+                    }
+                    destinationAccount {
+                        mobileNumber
+                    }
                     transactionType {
                         name
                         type
@@ -90,6 +96,12 @@ export const GET_TRANSACTIONS = gql`
                         firstName
                         middleName
                         lastName
+                    }
+                    sourceAccount {
+                        mobileNumber
+                    }
+                    destinationAccount {
+                        mobileNumber
                     }
                     transactionType {
                         name

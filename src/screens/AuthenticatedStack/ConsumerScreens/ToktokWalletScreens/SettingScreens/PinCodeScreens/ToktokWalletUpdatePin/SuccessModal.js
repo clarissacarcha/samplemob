@@ -34,8 +34,8 @@ const SuccessModal = ({modalVisible})=> {
                      }}>
                          <Image style={{height: 89,width: 89}} source={require('../../../../../../../assets/icons/walletVerify.png')}/>
                      </View>
-                     <Text style={{fontSize: SIZES.XL,fontFamily: FONTS.BOLD}}>totkokwallet PIN changed successfully</Text>
-                     <Text style={{color: "#212529",marginTop:5,fontFamily: FONTS.REGULAR,fontSize: SIZES.M,textAlign:"center"}}>You can now use you new pin.</Text>
+                     <Text style={{fontSize: SIZES.XL,fontFamily: FONTS.BOLD}}>toktokwallet PIN changed successfully</Text>
+                     <Text style={{color: "#212529",marginTop:5,fontFamily: FONTS.REGULAR,fontSize: SIZES.M,textAlign:"center"}}>You can now use your new pin.</Text>
                  </View>
                 
                 <View>

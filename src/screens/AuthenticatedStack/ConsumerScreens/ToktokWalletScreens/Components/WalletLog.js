@@ -20,9 +20,10 @@ export const WalletLog = ({item ,index , itemsLength }) => {
         label: "",
         phrase: "",
         amount: "",
+        displayNumber: "",
     })
 
-    const ViewTransactionDetails = (transaction , title, phrase , referenceDate , transactionAmount) => {
+    const ViewTransactionDetails = (transaction , title, phrase , referenceDate , transactionAmount, displayNumber) => {
         setTransactionVisible(true)
         setTransactionInfo({
             refNo: MaskLeftZero(transaction.id),
@@ -30,15 +31,26 @@ export const WalletLog = ({item ,index , itemsLength }) => {
             label: title,
             phrase: phrase,
             amount: transactionAmount,
+            displayNumber: displayNumber
         })
     }
 
     let title = item.externalName ? item.externalName : item.transactionType.name
-    const amountcolor = item.sourceWalletId == tokwaAccount.wallet.id ? "red" : "green"
+    const amountcolor = item.sourceWalletId == tokwaAccount.wallet.id ? COLOR.RED : "green"
     const amountprefix = item.sourceWalletId == tokwaAccount.wallet.id ? "-" : "+"
     // const referenceDate = moment(item.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')
     const referenceDate = moment(item.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')
     const transactionAmount = `${amountprefix} ${tokwaAccount.wallet.currency.code} ${numberFormat(item.amount)}`
+
+    let displayNumber = ""
+
+    if(item.sourceWalletId == tokwaAccount.wallet.id && item.destinationAccount?.mobileNumber){
+        displayNumber = item.destinationAccount.mobileNumber
+    }
+
+    if(item.sourceWalletId != tokwaAccount.wallet.id && item.sourceAccount?.mobileNumber){
+        displayNumber = item.sourceAccount.mobileNumber
+    }
 
 
     let sourceName , destinationName = ""
@@ -81,9 +93,10 @@ export const WalletLog = ({item ,index , itemsLength }) => {
                 label={transactionInfo.label}
                 phrase={transactionInfo.phrase}
                 amount={transactionInfo.amount}
+                displayNumber={transactionInfo.displayNumber}
             />
 
-            <TouchableOpacity onPress={()=>ViewTransactionDetails(item , title , phrase, referenceDate , transactionAmount)} style={styles.transaction}>
+            <TouchableOpacity onPress={()=>ViewTransactionDetails(item , title , phrase, referenceDate , transactionAmount, displayNumber)} style={styles.transaction}>
                 <View style={styles.transactionDetails}>
                     {/* <Text style={{fontSize: 12,fontFamily: FONT_MEDIUM}}>{title} <Text style={{fontFamily: FONT_LIGHT,fontSize: 10}}> ( {status} )</Text></Text> */}
                     <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{title}</Text>

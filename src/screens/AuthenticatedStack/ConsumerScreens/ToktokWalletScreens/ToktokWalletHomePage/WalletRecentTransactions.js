@@ -51,7 +51,7 @@ const WalletRecentTransactions = () => {
     return <SomethingWentWrong />;
   }
 
-  if (data.getTransactions.recentTransactions.length == 0) {
+  if (data.getTransactions.recentTransactions.length == 0 && APP_FLAVOR == "C" && ACCOUNT_TYPE == 1) {
     return (
       <View style={{flex: 1,justifyContent:'center',alignItems:'center'}}>
           <Image style={{height: 219,width: 291}} source={require('../../../../../assets/toktokwallet-assets/Landing-page.png')}/>
