@@ -68,7 +68,7 @@ const ModalCountry = ({visible,setVisible,setCountry})=> {
                         </TouchableOpacity>
                         <View style={styles.search}>
                             <TextInput 
-                                placeholder="Search your nationality"
+                                placeholder="Search your country"
                                 style={styles.input}
                                 onChangeText={filterSearch}
                             />

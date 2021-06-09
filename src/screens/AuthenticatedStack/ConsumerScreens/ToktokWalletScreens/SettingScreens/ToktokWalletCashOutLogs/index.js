@@ -18,17 +18,18 @@ const CashOutLog = ({
     item,
     index , 
     itemsLength ,
+    tokwaAccount,
     setTransactionInfo,
     setTransactionVisible 
 })=> {
 
 
-    const ViewTransactionDetails = (refNo,refDate, transactionAmount , status)=> {
+    const ViewTransactionDetails = ({refNo,refDate, transactionAmount , status,provider})=> {
         setTransactionInfo({
             refNo: refNo,
             refDate: refDate,
             label: "Cash Out",
-            phrase: "Cash-out through GCash",
+            phrase: `Cash out through ${provider}`,
             amount: transactionAmount,
             status: status,
         })
@@ -56,11 +57,12 @@ const CashOutLog = ({
 
     const refNo = MaskLeftZero(item.id)
     const refDate = moment(item.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')
-    const transactionAmount = `PHP ${numberFormat(item.amount)}`
+    const transactionAmount = `${tokwaAccount.wallet.currency.code} ${numberFormat(item.amount)}`
+    const provider = item.provider.name
 
 
     return (
-        <TouchableOpacity onPress={()=>ViewTransactionDetails(refNo,refDate, transactionAmount , status)} style={styles.transaction}>
+        <TouchableOpacity onPress={()=>ViewTransactionDetails({refNo,refDate, transactionAmount , status , provider})} style={styles.transaction}>
             <View style={styles.transactionDetails}>
                 <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Ref # {refNo}</Text>
                 <Text style={{color: "#909294",fontSize: FONT_SIZE.M,marginTop: 0,fontFamily: FONT.REGULAR}}>{status}</Text>
@@ -81,7 +83,8 @@ const ToktokWalletCashOutLogs = ({navigation})=> {
     })
 
     const session = useSelector(state=>state.session)
-    
+
+    const tokwaAccount = useSelector(state=>state.toktokWallet)
     const [records,setRecords] = useState([])
     const [pageIndex,setPageIndex] = useState(0)
     const [pageLoading,setPageLoading] = useState(false)
@@ -145,6 +148,7 @@ const ToktokWalletCashOutLogs = ({navigation})=> {
                                         item={item}
                                         index={index} 
                                         itemsLength={records.length}
+                                        tokwaAccount={tokwaAccount}
                                         setTransactionInfo={setTransactionInfo}
                                         setTransactionVisible={setTransactionVisible}
                                     />

@@ -77,13 +77,12 @@ const ToktokWalletGcashLinKAccount = ({navigation,route})=> {
         })
     }
 
+    // useEffect(()=>{
+    //     CreateVerificationCode()
+    //     return ()=> {
 
-    useEffect(()=>{
-        CreateVerificationCode()
-        return ()=> {
-
-        }
-    },[])
+    //     }
+    // },[])
 
     useEffect(()=>{
         if(otpTimer >= 0){
@@ -101,7 +100,7 @@ const ToktokWalletGcashLinKAccount = ({navigation,route})=> {
         <KeyboardAvoidingView 
             style={styles.container}
             // keyboardVerticalOffset={Platform.OS == "ios" ? 100 : 90} 
-            keyboardVerticalOffset={60} 
+            keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80} 
             behavior={Platform.OS === "ios" ? "padding" : "height"} 
         >
             <View style={{flex: 1,alignItems:"center", marginTop: 40}}>

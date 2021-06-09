@@ -43,7 +43,7 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
         try {
           if (cameraRef) {
             const options = {
-              quality: 0.5,
+              quality: 1,
               // base64: true,
               width: 1024,
               fixOrientation: true,

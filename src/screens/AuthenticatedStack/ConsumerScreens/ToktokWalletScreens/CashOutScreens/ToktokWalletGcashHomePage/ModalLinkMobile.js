@@ -4,17 +4,41 @@ import { COLOR, FONT, SIZE } from '../../../../../../res/variables'
 import { YellowButton } from '../../../../../../revamp'
 import {useNavigation} from '@react-navigation/native'
 import { FONT_SIZE } from '../../../../../../res/constants'
+import {TOKTOK_WALLET_GRAPHQL_CLIENT} from '../../../../../../graphql'
+import { PATCH_LINK_ACCOUNT , GET_GCASH_LINK_OTP } from '../../../../../../graphql/toktokwallet'
+import { useLazyQuery , useMutation } from '@apollo/react-hooks'
+import { onErrorAlert } from '../../../../../../util/ErrorUtility'
+import { useAlert } from '../../../../../../hooks/useAlert'
 
 const {height,width} = Dimensions.get("screen")
 
 const ModalLinkMobile = ({visible,setVisible,mobile,provider})=> {
 
     const navigation = useNavigation()
+    const alert = useAlert()
 
     const openLinkPage = ()=> {
-        setVisible(false)
-        return navigation.navigate("ToktokWalletGcashLinkAccount", {mobile,provider})
+        getGcashLinkOTP({
+            variables: {
+                input: {
+                    mobileNumber: mobile
+                }
+            }
+        })
     }
+
+    const [getGcashLinkOTP, {loading: getOtpLoading}] = useLazyQuery(GET_GCASH_LINK_OTP, {
+        fetchPolicy: "network-only",
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+        onCompleted: ({getGcashLinkOTP})=>{
+            setVisible(false)
+            return navigation.navigate("ToktokWalletGcashLinkAccount", {mobile,provider})
+        },
+        onError: (error)=>{
+            setVisible(false)
+            onErrorAlert({alert,error})
+        }
+    })
 
     return (
         <>

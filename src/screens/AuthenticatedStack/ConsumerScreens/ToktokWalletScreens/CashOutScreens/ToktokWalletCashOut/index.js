@@ -47,16 +47,17 @@ const ToktokWalletCashOut = ({navigation,route})=> {
       <View style={styles.container}>
             <View style={styles.headings}>
                 <HeaderImageBackground>
-                    <HeaderTitle label="Cash Out"/>
+                    <HeaderTitle label="Fund Transfer"/>
                     <View style={styles.walletBalance}>
                                 <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>{tokwaAccount.wallet.currency.code} {numberFormat(tokwaAccount.wallet.balance ? tokwaAccount.wallet.balance : 0)}</Text>
-                                <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Available Balance</Text>
+                                <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR,marginTop: -5,marginBottom: 5}}>Transferable Amount</Text>
+                                <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>Total toktokwallet balance: {tokwaAccount.wallet.currency.code} {numberFormat(tokwaAccount.wallet.balance ? tokwaAccount.wallet.balance : 0)}</Text>
                     </View>
                 </HeaderImageBackground>
             </View>
 
             <View style={styles.cashoutoptions}>
-                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>Choose cash-out method</Text>
+                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>Choose cash out method</Text>
             </View>
             <Separator/>
             <View style={styles.transferOptions}>

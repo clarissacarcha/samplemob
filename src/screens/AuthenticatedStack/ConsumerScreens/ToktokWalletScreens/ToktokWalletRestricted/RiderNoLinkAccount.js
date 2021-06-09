@@ -93,10 +93,10 @@ const RiderNoLinkAccount = ()=> {
                 <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,marginTop: 10,}}>Mobile Number</Text>
                 <View style={{flexDirection:"row",alignItems:"center",width:"100%"}}>
                 <View style={{ backgroundColor:'lightgray', borderTopLeftRadius: SIZE.BORDER_RADIUS,borderBottomLeftRadius: SIZE.BORDER_RADIUS,justifyContent:"center",alignItems:"center", height: SIZE.BUTTON_HEIGHT,paddingHorizontal: 10,marginTop: 5}}>
-                    <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M,marginBottom: 0.5}}>09</Text>
+                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,paddingBottom: 2.5}}>09</Text>
                 </View>
                 <TextInput 
-                        style={[styles.input, {fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR, flex: 1,borderTopLeftRadius: 0,borderBottomLeftRadius: 0, borderWidth: 1, borderColor: errorMessage != "" ? COLOR.RED : "transparent"}]} 
+                        style={[styles.input, {fontSize: FONT_SIZE.L + 1,fontFamily: FONT.REGULAR, flex: 1,borderTopLeftRadius: 0,borderBottomLeftRadius: 0, borderWidth: 1, borderColor: errorMessage != "" ? COLOR.RED : "transparent"}]} 
                         placeholder="00-000-0000"
                         keyboardType="number-pad"
                         placeholderTextColor={COLOR.DARK}

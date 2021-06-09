@@ -14,7 +14,7 @@ import {useNavigation} from '@react-navigation/native'
 import ModalLinkMobile from "./ModalLinkMobile";
 import { AlertOverlay } from '../../../../../../components'
 
-const RegisterMobile = ({provider})=> {
+const RegisterMobile = ({provider,rejected})=> {
 
     const [mobileNo,setMobileNo] = useState("")
     const [errorMessage,setErrorMessage] = useState("")
@@ -31,19 +31,28 @@ const RegisterMobile = ({provider})=> {
              return
         }
 
-        if(mobile.length > 10 && mobile.slice(0,2) == "09"){
+        // if(mobile.length > 10 && mobile.slice(0,2) == "09"){
+        //     setErrorMessage("")
+        // }else{
+        //     setErrorMessage("Mobile number must be valid.")
+        // }
+
+        // if(mobile.length > 11) return
+    
+        // if(value[0] == "9"){
+        //     setMobileNo("09")
+        // }else{
+        //     setMobileNo(mobile)
+        // }
+
+        if(mobile.length > 8){
             setErrorMessage("")
         }else{
             setErrorMessage("Mobile number must be valid.")
         }
+        if(mobile.length > 9) return
 
-        if(mobile.length > 11) return
-    
-        if(value[0] == "9"){
-            setMobileNo("09")
-        }else{
-            setMobileNo(mobile)
-        }
+        setMobileNo(mobile)
        
     }
 
@@ -79,7 +88,7 @@ const RegisterMobile = ({provider})=> {
         getGcashEnrollmentRecord({
             variables: {
                 input: {
-                    mobile: mobileNo
+                    mobile: `09${mobileNo}`
                 }
             },
         })
@@ -103,16 +112,36 @@ const RegisterMobile = ({provider})=> {
           
             <View style={styles.content}>
                 <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Mobile Number</Text>
-                <TextInput 
+                {/* <TextInput 
                     style={[styles.input, {borderWidth: 1, borderColor: errorMessage != "" ? COLOR.RED : "transparent"}]}
                     placeholder="Enter your GCash mobile number here"
                     keyboardType="number-pad"
                     value={mobileNo}
                     onChangeText={changeMobileNo}
                     returnKeyType="done"
+                /> */}
+                 <View style={{flexDirection:"row",alignItems:"center",width:"100%"}}>
+                   <View style={{ backgroundColor:'lightgray', borderTopLeftRadius: SIZE.BORDER_RADIUS,borderBottomLeftRadius: SIZE.BORDER_RADIUS,justifyContent:"center",alignItems:"center", height: SIZE.BUTTON_HEIGHT,paddingHorizontal: 10,marginTop: 5}}>
+                    <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,paddingBottom: 2.5}}>09</Text>
+                </View>
+                <TextInput 
+                        style={[styles.input, {fontSize: FONT_SIZE.L + 1,fontFamily: FONT.REGULAR, flex: 1,borderTopLeftRadius: 0,borderBottomLeftRadius: 0, borderWidth: 1, borderColor: errorMessage != "" ? COLOR.RED : "transparent"}]} 
+                        placeholder="00-000-0000"
+                        keyboardType="number-pad"
+                        placeholderTextColor={COLOR.DARK}
+                        value={mobileNo}
+                        returnKeyType="done"
+                        onChangeText={changeMobileNo}
                 />
+                </View>
                 <Text style={{fontFamily: FONT.REGULAR,color:COLOR.RED,fontSize: FONT_SIZE.S}}>{errorMessage}</Text>
                 <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S,marginTop: 1}}>Note: Make sure that number is an existing GCash account.</Text>
+                {
+                    rejected && rejected.status == "4" &&  <View style={{marginTop: 20,}}>
+                                    <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,color: COLOR.RED}}>Your last application with mobile number {rejected.mobile} was rejected. Enter your existing GCash mobile number and click "Confirm" button to try again.</Text>
+                                </View>
+                }
+               
             </View>
             <View style={styles.proceedBtn}>
                 {
@@ -155,7 +184,6 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         backgroundColor:"#F7F7FA",
         marginTop: 5,
-        fontSize: SIZE.M,
         fontFamily: FONT.REGULAR
     },
 })

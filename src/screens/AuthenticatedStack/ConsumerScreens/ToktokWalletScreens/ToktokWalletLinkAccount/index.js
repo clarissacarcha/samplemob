@@ -48,7 +48,14 @@ const ToktokWalletLinkAccount = ({navigation, route})=> {
                 variables: {
                     input: {
                         tokwaAccountId: tokwaAccount.id,
-                        linkLimit: tokwaAccount.person.accountType.linkLimit
+                        linkLimit: tokwaAccount.person.accountType.linkLimit,
+                        firstName: tokwaAccount.person.firstName,
+                        middleName: tokwaAccount.person.middleName,
+                        lastName: tokwaAccount.person.lastName,
+                        mobileNumber: tokwaAccount.mobileNumber,
+                        emailAddress: tokwaAccount.person.emailAddress,
+                        birthdate: tokwaAccount.person.birthdate,
+                        selfieImage: tokwaAccount.person.selfieImage,
                     }
                 }
             })
@@ -118,7 +125,7 @@ const ToktokWalletLinkAccount = ({navigation, route})=> {
         <SuccessfulModal visible={successModalVisible} setVisible={setSuccessModalVisible}/>
         <Separator/>
         <KeyboardAvoidingView 
-            keyboardVerticalOffset={60}  
+            keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80}  
             behavior={Platform.OS == "ios" ? "padding" : "height"}
             style={styles.container}
         >

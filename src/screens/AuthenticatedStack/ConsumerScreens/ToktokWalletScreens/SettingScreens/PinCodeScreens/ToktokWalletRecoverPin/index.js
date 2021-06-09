@@ -91,12 +91,12 @@ const ToktokWalletRecoverPin = ({navigation})=> {
     };
 
 
-    useEffect(()=>{
-        getForgotAndRecoverOTPCode()
-        return ()=> {
+    // useEffect(()=>{
+    //     getForgotAndRecoverOTPCode()
+    //     return ()=> {
 
-        }
-    },[])
+    //     }
+    // },[])
 
     useEffect(()=>{
         if(otpTimer >= 0){
@@ -113,7 +113,7 @@ const ToktokWalletRecoverPin = ({navigation})=> {
         <KeyboardAvoidingView 
             style={styles.container}
             // keyboardVerticalOffset={Platform.OS == "ios" ? 100 : 90} 
-            keyboardVerticalOffset={60} 
+            keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80} 
             behavior={Platform.OS === "ios" ? "padding" : "height"} 
         >
                 <View style={{flex: 1,alignItems:"center",marginTop: 40}}>
@@ -158,7 +158,7 @@ const ToktokWalletRecoverPin = ({navigation})=> {
 
                 </View>
                        
-                 <View style={{height: SIZE.BUTTON_HEIGHT + 16}}> 
+                 <View style={{height: SIZE.BUTTON_HEIGHT + 16,justifyContent:"flex-end"}}> 
                     {
                         pinCode.length < 6
                         ? <DisabledButton label="Proceed"/>

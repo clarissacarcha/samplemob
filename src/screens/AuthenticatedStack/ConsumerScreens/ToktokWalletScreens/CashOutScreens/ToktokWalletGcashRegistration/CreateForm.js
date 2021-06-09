@@ -1,8 +1,8 @@
 import React, {useEffect,useState} from 'react'
-import {View,Text,StyleSheet,ScrollView,TextInput,Alert,TouchableOpacity,Modal,StatusBar,TouchableOpacityBase,Image,KeyboardAvoidingView,Platform} from 'react-native'
+import {View,Text,StyleSheet,ScrollView,TextInput,Alert,TouchableOpacity,Modal,StatusBar,TouchableOpacityBase,Image,KeyboardAvoidingView,Platform,Dimensions} from 'react-native'
 import { HeaderBack, YellowButton } from '../../../../../../revamp';
 import {AlertOverlay, HeaderTitle} from '../../../../../../components'
-import { FONT, FONT_SIZE , COLOR } from '../../../../../../res/variables';
+import { FONT, FONT_SIZE , COLOR, SIZE } from '../../../../../../res/variables';
 import { Separator } from '../../Components';
 import validator from 'validator';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from '../../../../../../graphql';
@@ -15,6 +15,7 @@ import { useAlert } from '../../../../../../hooks';
 import DatePickerModal from './DatePickerModal';
 import ModalCountry from './ModalCountry';
 
+const screen = Dimensions.get('window');
 
 const PromptMessage = ({
     visible,
@@ -111,19 +112,28 @@ const CreateForm = ({navigation,session,mobile,provider})=> {
             return
          }
 
-        if(mobile.length > 10 && mobile.slice(0,2) == "09"){
+        if(mobile.length > 8){
             setErrorMessage("")
         }else{
             setErrorMessage("Mobile number must be valid.")
         }
+        if(mobile.length > 9) return
 
-        if(mobile.length > 11) return
+        setMobileNumber(mobile)
 
-        if(value[0] == "9"){
-            setMobileNumber("09")
-        }else{
-            setMobileNumber(mobile)
-        }
+        // if(mobile.length > 10 && mobile.slice(0,2) == "09"){
+        //     setErrorMessage("")
+        // }else{
+        //     setErrorMessage("Mobile number must be valid.")
+        // }
+
+        // if(mobile.length > 11) return
+
+        // if(value[0] == "9"){
+        //     setMobileNumber("09")
+        // }else{
+        //     setMobileNumber(mobile)
+        // }
     } 
     
     const saveGcashAccount = ()=> {
@@ -171,8 +181,9 @@ const CreateForm = ({navigation,session,mobile,provider})=> {
           postCashOutEnrollmentGcash({
               variables: {
                   input: {
-                        mobile: mobileNumber,
+                        mobile: `09${mobileNumber}`,
                         firstName: firstName,
+                        middleName: middleName,
                         lastName: lastName,
                         streetAddress: streetAddress,
                         barangayTown: barangayTown,
@@ -182,21 +193,6 @@ const CreateForm = ({navigation,session,mobile,provider})=> {
                   }
               }
           })
-        
-
-        //   postGCashAccount({
-        //     variables: {
-        //       input: {
-        //         mobileNumber,
-        //         firstName,
-        //         middleName,
-        //         lastName,
-        //         streetAddress,
-        //         birthdate,
-        //         personId: session.user.person.id,
-        //       },
-        //     },
-        //   });
       
     }
 
@@ -215,23 +211,29 @@ const CreateForm = ({navigation,session,mobile,provider})=> {
             }}
         />
        <KeyboardAvoidingView
-        keyboardVerticalOffset={90}  
-        behavior={Platform.OS == "ios" ? "padding" : "height"}
-        style={styles.container}
-       >
+            behavior={Platform.OS === "ios" ? "height" : null}
+            keyboardVerticalOffset={Platform.OS === 'ios' ? screen.height * 0.25 : screen.height * 0.5}
+            style={{ flex: 1 }}
+        >
             <ScrollView style={{flex: 1,flexGrow: 1,}} showsVerticalScrollIndicator={false}>
                 <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>Please nominate an existing GCash account.</Text>
                 <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S,marginBottom: 10}}>Successful fund transfer will be forwarded to this GCash account.</Text>
                 <View>
                     <Text style={styles.label}>Mobile Number</Text>
-                    <TextInput 
-                        style={[styles.input, {borderWidth: 1 ,borderColor: errorMessage != "" ? COLOR.RED : "transparent"}]}
-                        placeholder="Enter mobile number here"
-                        value={mobileNumber}
-                        onChangeText={(value)=>changeMobileNumber(value)}
-                        keyboardType="numeric"
-                        returnKeyType="done"
-                    />
+                      <View style={{flexDirection:"row",alignItems:"center",width:"100%",justifyContent:"center"}}>
+                        <View style={{ backgroundColor:'lightgray', borderTopLeftRadius: SIZE.BORDER_RADIUS,borderBottomLeftRadius: SIZE.BORDER_RADIUS,justifyContent:"center",alignItems:"center", height: SIZE.BUTTON_HEIGHT,paddingHorizontal: 10,marginTop: 5}}>
+                            <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,paddingBottom: 2.5}}>09</Text>
+                        </View>
+                        <TextInput 
+                                style={[styles.input, {fontSize: FONT_SIZE.L + 1,fontFamily: FONT.REGULAR, flex: 1,borderTopLeftRadius: 0,borderBottomLeftRadius: 0, borderWidth: 1, borderColor: errorMessage != "" ? COLOR.RED : "transparent"}]} 
+                                placeholder="00-000-0000"
+                                keyboardType="number-pad"
+                                placeholderTextColor={COLOR.DARK}
+                                value={mobileNumber}
+                                returnKeyType="done"
+                                onChangeText={(value)=>changeMobileNumber(value)}
+                        />
+                    </View>
                     { errorMessage != "" && <Text style={{fontFamily: FONT.REGULAR,color:COLOR.RED,fontSize: FONT_SIZE.S}}>{errorMessage}</Text> }
                 </View>
 
@@ -246,8 +248,8 @@ const CreateForm = ({navigation,session,mobile,provider})=> {
                     />
                 </View>
 
-                {/* <View style={{marginTop: 20}}>
-                    <Text style={styles.label}>Middle Name ( Optional )</Text>
+                <View style={{marginTop: 20}}>
+                    <Text style={styles.label}>Middle Name (Optional)</Text>
                     <TextInput 
                         style={styles.input}
                         placeholder="Enter middle name here"
@@ -255,7 +257,7 @@ const CreateForm = ({navigation,session,mobile,provider})=> {
                         value={middleName}
                         returnKeyType="done"
                     />
-                </View> */}
+                </View>
 
                 <View style={{marginTop: 20}}>
                     <Text style={styles.label}>Last Name</Text>
@@ -328,7 +330,7 @@ const CreateForm = ({navigation,session,mobile,provider})=> {
                     /> */}
                   <View style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center",paddingVertical: 10}]}>
                             <Text style={{ fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR,flex: 1}}>{country}</Text>
-                            <TouchableOpacity
+                            {/* <TouchableOpacity
                                     onPress={()=>setModalCountryVisible(true)}
                                     style={{
                                         paddingHorizontal: 10,
@@ -346,7 +348,7 @@ const CreateForm = ({navigation,session,mobile,provider})=> {
                                     }}>
                                         <Text style={{color: COLOR.YELLOW,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S}}>Change</Text>
                                     </View>
-                                </TouchableOpacity>
+                                </TouchableOpacity> */}
                           
                     </View>
                 </View>
@@ -375,12 +377,12 @@ const styles = StyleSheet.create({
        justifyContent:"flex-end",
     },
     input: {
-        height: 50,
-        backgroundColor: "#F7F7FA",
+        paddingHorizontal: 10,
+        height: SIZE.FORM_HEIGHT,
         borderRadius: 5,
-        fontSize: FONT_SIZE.M,
-        fontFamily: FONT.REGULAR,
-        paddingLeft: 10,
+        backgroundColor:"#F7F7FA",
+        marginTop: 5,
+        fontFamily: FONT.REGULAR
     },
     label: {
         fontFamily: FONT.BOLD,

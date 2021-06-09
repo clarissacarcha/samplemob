@@ -39,6 +39,7 @@ export const GET_CASH_OUT_ENROLLMENT_GCASH = gql`
                 id
                 mobile
                 firstName
+                middleName
                 lastName
                 streetAddress
                 barangayTown

@@ -22,6 +22,10 @@ export const GET_CASH_OUTS = gql`
                 cashOutProviderId
                 createdAt
                 updatedAt
+                provider {
+                    id
+                    name
+                }
         }
     }
 ` 

@@ -3,6 +3,8 @@ import {View,Text,StyleSheet,ScrollView} from 'react-native'
 import { COLOR, FONT, FONT_SIZE } from '../../../../../../res/variables'
 import { Separator } from '../../Components'
 import moment from 'moment'
+import { YellowButton } from '../../../../../../revamp'
+import {useNavigation} from '@react-navigation/native'
 
 const Information = ({label,value})=> {
     return (
@@ -23,14 +25,17 @@ const Information = ({label,value})=> {
 
 const PendingEnrollment = ({record})=> {
 
+    const navigation = useNavigation()
+
     return (
         <>
         <Separator/>
         <View style={styles.container}>
             <Text style={styles.labelTitle}>PENDING VERIFICATION</Text>
-            <ScrollView showsVerticalScrollIndicator={false} style={styles.record}>
+            <ScrollView showsVerticalScrollIndicator={false} style={styles.record}>   
                     <Information label="Mobile Number" value={record.mobile}/>
                     <Information label="First Name" value={record.firstName}/>
+                    <Information label="Middle Name" value={record.middleName}/>
                     <Information label="Last Name" value={record.lastName}/>
                     <Information label="Birthdate" value={moment(record.birthdate).tz('Asia/Manila').format('MMM DD, YYYY')}/>
                     <Information label="Street Address" value={record.streetAddress}/>
@@ -38,6 +43,10 @@ const PendingEnrollment = ({record})=> {
                     <Information label="Province City" value={record.provinceCity}/>
                     <Information label="Country" value={record.country}/>
             </ScrollView>
+            <View>
+                    <YellowButton label="Proceed" onPress={()=>navigation.pop()}/>
+                </View>
+           
         </View>
         </>
     )
@@ -56,6 +65,7 @@ const styles = StyleSheet.create({
     },
     record: {
         flex: 1,
+        marginBottom: 16
     },
     info: {
         paddingVertical: 16,

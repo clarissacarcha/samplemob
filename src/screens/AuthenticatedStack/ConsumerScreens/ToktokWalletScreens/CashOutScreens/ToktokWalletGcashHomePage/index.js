@@ -63,7 +63,7 @@ const ToktokWalletGcashHomePage = ({navigation,route})=> {
     }
 
     // check if theres pending enrollment 
-    if(data.getCashOutEnrollmentGcash.pendingRecord){
+    if(data.getCashOutEnrollmentGcash.pendingRecord && (data.getCashOutEnrollmentGcash.pendingRecord.status == "2" || data.getCashOutEnrollmentGcash.pendingRecord.status == "3")){
         return (
             <MainComponent>
                 <PendingEnrollment record={data.getCashOutEnrollmentGcash.pendingRecord}/>
@@ -74,7 +74,7 @@ const ToktokWalletGcashHomePage = ({navigation,route})=> {
     if(!data.getCashOutEnrollmentGcash.linkedGcash){
         return (
         <MainComponent>
-            <RegisterMobile provider={provider}/>
+            <RegisterMobile rejected={data.getCashOutEnrollmentGcash.pendingRecord} provider={provider}/>
         </MainComponent>
         )
     }
