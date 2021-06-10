@@ -1,4 +1,4 @@
-import React, {useEffect,useState} from 'react'
+import React, {useEffect,useState,useRef} from 'react'
 import {View,Text,StyleSheet,ScrollView,TextInput,Alert,TouchableOpacity,Modal,StatusBar,TouchableOpacityBase,Image,KeyboardAvoidingView,Platform,Dimensions} from 'react-native'
 import { HeaderBack, YellowButton } from '../../../../../../revamp';
 import {AlertOverlay, HeaderTitle} from '../../../../../../components'
@@ -11,10 +11,12 @@ import {useMutation} from '@apollo/react-hooks';
 import {onError, onErrorAlert} from '../../../../../../util/ErrorUtility';
 import { useAlert } from '../../../../../../hooks';
 import moment from 'moment'
+import {useSelector} from 'react-redux'
 
 //SELF IMPORTS
 import DatePickerModal from './DatePickerModal';
 import ModalCountry from './ModalCountry';
+import BottomSheetGender from './BottomSheetGender'
 
 const screen = Dimensions.get('window');
 
@@ -77,22 +79,25 @@ const CreateForm = ({navigation,session,mobile,provider})=> {
         headerTitle: ()=> <HeaderTitle label={["GCash Account"]}/>
     })
     const alert = useAlert()
+    const tokwaAccount = useSelector(state=>state.toktokWallet)
     const [pickerVisible, setPickerVisible] = useState(false);
 
     const [mobileNumber, setMobileNumber] = useState(mobile);
     const [errorMessage,setErrorMessage] = useState("");
-    const [firstName, setfirstName] = useState('');
-    const [middleName, setMiddleName] = useState('');
-    const [lastName, setlastName] = useState('');
-    const [birthdate, setBirthdate] = useState('');
+    const [firstName, setfirstName] = useState(tokwaAccount.person.firstName);
+    const [middleName, setMiddleName] = useState(tokwaAccount.person.middleName);
+    const [lastName, setlastName] = useState(tokwaAccount.person.lastName);
+    const [birthdate, setBirthdate] = useState(moment(+tokwaAccount.person.birthdate).format("yyyy-MM-DD"));
     const [streetAddress, setStreetAddress] = useState('');
     const [barangayTown, setBarangayTown] = useState('');
     const [provinceCity, setProvinceCity] = useState('');
     const [country, setCountry] = useState('Philippines');
+    const [gender,setGender] = useState("")
    
 
     const [promptVisible,setPromptVisible] = useState(false);
     const [modalCountryVisible,setModalCountryVisible] = useState(false);
+    const genderRef = useRef()
 
     const [postCashOutEnrollmentGcash, {data, error ,loading}] = useMutation(POST_CASH_OUT_ENROLLMENG_GCASH, {
             client: TOKTOK_WALLET_GRAPHQL_CLIENT,
@@ -365,6 +370,7 @@ const CreateForm = ({navigation,session,mobile,provider})=> {
             {/* <YellowButton label="Save" onPress={saveGcashAccount}/> */}
 
        </KeyboardAvoidingView>
+       <BottomSheetGender ref={genderRef} onChange={(gender)=>{setGender(gender); genderRef.current.close()}}/>
        </>
     )
 }

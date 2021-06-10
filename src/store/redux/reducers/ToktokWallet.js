@@ -1,4 +1,11 @@
 const INITIAL_STATE = {
+  person: {
+    accountType: {
+      level: 0,
+      type: "",
+      key: "",
+    }
+  },
   wallet: {
     id: 0,
     balance: 0,
