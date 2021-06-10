@@ -6,11 +6,11 @@ export const MAPS_API_KEY = 'AIzaSyDhlw6pbriuwr_Mb6KYkVlBar7KD1KTrOs';
 // export const HOST_PORT = 'graphql.toktok.ph:2096';
 // export const HOST_PORT = 'stg-graphql.toktok.ph:2096';
 
-export const PROTOCOL = 'http';
-export const HOST_PORT = '192.168.0.104:3000'; // Myutini
+// export const PROTOCOL = 'http';
+// export const HOST_PORT = '192.168.0.104:3000'; // Myutini
 
-export const TOKTOK_WALLET_PROTOCOL = 'http';
-export const TOKTOK_WALLET_PROTOCOL_HOST_PORT = '192.168.0.104:3100';
+// export const TOKTOK_WALLET_PROTOCOL = 'http';
+// export const TOKTOK_WALLET_PROTOCOL_HOST_PORT = '192.168.0.104:3100';
 
 // export const PROTOCOL = 'https';
 // export const HOST_PORT = 'stg-graphql.toktok.ph:2096';
@@ -18,11 +18,11 @@ export const TOKTOK_WALLET_PROTOCOL_HOST_PORT = '192.168.0.104:3100';
 // export const TOKTOK_WALLET_PROTOCOL = 'https';
 // export const TOKTOK_WALLET_PROTOCOL_HOST_PORT = 'stg-wallet.toktok.ph:2096';
 
-// export const PROTOCOL = 'https';
-// export const HOST_PORT = 'test.toktok.ph:2096';
+export const PROTOCOL = 'https';
+export const HOST_PORT = 'test.toktok.ph:2096';
 
-// export const TOKTOK_WALLET_PROTOCOL = 'https';
-// export const TOKTOK_WALLET_PROTOCOL_HOST_PORT = 'test.toktok.ph:2087';
+export const TOKTOK_WALLET_PROTOCOL = 'https';
+export const TOKTOK_WALLET_PROTOCOL_HOST_PORT = 'test.toktok.ph:2087';
 
 // export const PROTOCOL = 'https';
 // export const HOST_PORT = 'demo.toktok.ph:2096';

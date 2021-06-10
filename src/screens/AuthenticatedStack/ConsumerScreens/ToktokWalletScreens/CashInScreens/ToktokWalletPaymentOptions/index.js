@@ -81,7 +81,7 @@ const ToktokWalletPaymentOptions = ({navigation,route})=> {
                       </View>
 
                       <View style={styles.paymentoptions}>
-                            <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>Choose cash-in method</Text>
+                            <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>Choose cash in method</Text>
                       </View>
                       <Separator/>     
                        <FlatList 

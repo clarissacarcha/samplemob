@@ -1,139 +1,151 @@
-import React , {useState} from 'react'
-import {View,Text,StyleSheet,Modal,Dimensions,TouchableOpacity,TextInput} from 'react-native'
+import React , {useState,useEffect} from 'react'
+import {View,Text,StyleSheet,Modal,Dimensions,TouchableOpacity,TextInput,ActivityIndicator,ImageBackground} from 'react-native'
 import { YellowButton, VectorIcon , ICON_SET  } from '../../../../../revamp'
 import { COLOR , FONT_SIZE , FONT , SIZE } from '../../../../../res/variables'
 import { TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT } from '../../../../../graphql'
 import { GET_CHECK_ACCOUNT } from '../../../../../graphql/toktokwallet'
-import { useLazyQuery } from '@apollo/react-hooks'
+import { useQuery } from '@apollo/react-hooks'
 import { onErrorAlert } from '../../../../../util/ErrorUtility'
 import { useAlert } from '../../../../../hooks'
 import { useNavigation } from '@react-navigation/native'
 import { useSelector } from 'react-redux'
 import { DisabledButton } from '../Components'
 
+const {height,width} = Dimensions.get("window")
+
+const LoadingPage = ()=> {
+    return (
+        <View style={{flex: 1,justifyContent:'center',alignItems:'center'}}>
+                <ActivityIndicator/>
+        </View>
+    )
+}
+
+const BannerImages = ()=> (
+    <View style={{marginTop: 40,justifyContent:'center'}}>
+        
+    <ImageBackground 
+        resizeMode="stretch"
+        imageStyle={{borderRadius: SIZE.BORDER_RADIUS}}
+        source={require('../../../../../assets/toktokwallet-assets/unlock.png')}
+        style={{borderRadius: SIZE.BORDER_RADIUS, width: width - 80, height: 90,backgroundColor:"transparent",flexDirection:"row"}}
+    >
+        <View style={{flex:1,backgroundColor:"transparent",justifyContent:"center",alignItems:"flex-end",paddingRight: 20}}>
+            <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}><Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M, color: COLOR.ORANGE}}>Secure</Text> your</Text>
+            <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>toktokwallet</Text>
+        </View>
+    </ImageBackground>
+
+    <ImageBackground 
+        resizeMode="stretch"
+        imageStyle={{borderRadius: SIZE.BORDER_RADIUS}}
+        source={require('../../../../../assets/toktokwallet-assets/secure.png')}
+        style={{marginVertical: 10, borderRadius: SIZE.BORDER_RADIUS, width: width - 80, height: 90,backgroundColor:"transparent",flexDirection:"row"}}
+    >
+        <View style={{flex:1,backgroundColor:"transparent",justifyContent:"center",alignItems:"flex-end",paddingRight: 20}}>
+            <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}><Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M, color: COLOR.ORANGE}}>Enjoy</Text> convenient</Text>
+            <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>payment experience</Text>
+        </View>   
+    </ImageBackground>
+
+    <ImageBackground 
+        resizeMode="stretch"
+        imageStyle={{borderRadius: SIZE.BORDER_RADIUS}}
+        source={require('../../../../../assets/toktokwallet-assets/enjoy.png')}
+        style={{borderRadius: SIZE.BORDER_RADIUS, width: width - 80, height: 90,backgroundColor:"transparent",flexDirection:"row"}}
+    >
+        <View style={{flex:1,backgroundColor:"transparent",justifyContent:"center",alignItems:"flex-end",paddingRight: 20}}>
+            <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}><Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M, color: COLOR.ORANGE}}>Unlock</Text> toktokwallet</Text>
+            <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>features</Text>
+        </View>
+    </ImageBackground>
+</View>
+)
+
+const NoTokwaAccount = ({navigation})=> (
+    <>
+    <View style={styles.content}>
+                <Text style={styles.verifyWalletText}>Create your toktokwallet account</Text>
+                <Text style={styles.clickVerifyText}>Go to toktok customer app and use your toktok mobile number to create your toktokwallet account</Text>
+                <BannerImages/>
+    </View>
+
+    <View style={{height: 120,padding: 16,justifyContent:'flex-end'}}>
+        <YellowButton label="Ok" onPress={()=>navigation.pop()}/>
+    </View>
+    </>
+)
+
 
 const RiderNoLinkAccount = ()=> {
 
-    const [mobileNo,setMobileNo] = useState("")
-    const [errorMessage,setErrorMessage] = useState("")
     const alert = useAlert()
     const navigation = useNavigation()
     const session = useSelector(state=>state.session)
 
-    const [getCheckAccount, {data ,error ,loading}] = useLazyQuery(GET_CHECK_ACCOUNT, {
+    const {data ,error ,loading} = useQuery(GET_CHECK_ACCOUNT, {
         client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT,
         fetchPolicy: "network-only",
-        onCompleted: ({getCheckAccount})=> {
-            setMobileNo("")
-            setErrorMessage("")
-            navigation.navigate("ToktokWalletLinkAccount", {tokwaAccount: getCheckAccount})
+        variables:{
+            input: {
+              
+                //mobileNumber: '+639270752905',
+                mobileNumber: session.user.username,
+                motherReferenceNumber: session.user.id,
+            }
         },
         onError: (error)=> {
             // onErrorAlert({alert,error})
-            if(error.graphQLErrors.length > 0){
-                error.graphQLErrors.map((err)=> {
-                    setErrorMessage("toktokwallet account does not exist")
-                })
-                return
-            }
-
-            onErrorAlert({alert,error})
-
         }
     })
 
-    const checkTokwaAccount = ()=>{
-        getCheckAccount({
-            variables:{
-                input: {
-                    mobileNumber: `09${mobileNo}`,
-                    motherReferenceNumber: session.user.id,
-                }
-            }
-        })
+    const linkAccount = ()=> {
+        return navigation.navigate("ToktokWalletLinkAccount", {tokwaAccount: data.getCheckAccount})
     }
 
-    const changeMobileNo = (value)=> {
-        const mobile = value.replace(/[^0-9]/g,"")
 
-        if(mobile.length == 0){
-             setErrorMessage("")
-             setMobileNo(mobile)
-             return
-        }
-
-        // if(mobile.length > 10 && mobile.slice(0,2) == "09"){
-        //     setErrorMessage("")
-        // }else{
-        //     setErrorMessage("Mobile number must be valid.")
-        // }
-
-        if(mobile.length > 8){
-            setErrorMessage("")
-        }else{
-            setErrorMessage("Mobile number must be valid.")
-        }
-        if(mobile.length > 9) return
-    
-        // if(value[0] == "9"){
-        //     setMobileNo("09")
-        // }else{
-        //     setMobileNo(mobile)
-        // }
-        setMobileNo(mobile)
-       
+    if(loading){
+        return <LoadingPage/>
     }
+
+    if(!data?.getCheckAccount){
+        return <NoTokwaAccount navigation={navigation}/>
+    }
+
 
     return (
         <>
-            
-             <View style={styles.content}>
-                <Text style={styles.labelText}>Please enter your mobile number to link toktokwallet account</Text>
-                <Text style={[styles.labelSmall]}>Link your existing toktokwallet account.</Text>  
-                <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,marginTop: 10,}}>Mobile Number</Text>
-                <View style={{flexDirection:"row",alignItems:"center",width:"100%"}}>
-                <View style={{ backgroundColor:'lightgray', borderTopLeftRadius: SIZE.BORDER_RADIUS,borderBottomLeftRadius: SIZE.BORDER_RADIUS,justifyContent:"center",alignItems:"center", height: SIZE.BUTTON_HEIGHT,paddingHorizontal: 10,marginTop: 5}}>
-                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,paddingBottom: 2.5}}>09</Text>
-                </View>
-                <TextInput 
-                        style={[styles.input, {fontSize: FONT_SIZE.L + 1,fontFamily: FONT.REGULAR, flex: 1,borderTopLeftRadius: 0,borderBottomLeftRadius: 0, borderWidth: 1, borderColor: errorMessage != "" ? COLOR.RED : "transparent"}]} 
-                        placeholder="00-000-0000"
-                        keyboardType="number-pad"
-                        placeholderTextColor={COLOR.DARK}
-                        value={mobileNo}
-                        returnKeyType="done"
-                        onChangeText={changeMobileNo}
-                />
-                </View>
-                <Text style={{fontFamily: FONT.REGULAR,color:COLOR.RED,fontSize: FONT_SIZE.S}}>{errorMessage}</Text>
+            <View style={styles.content}>
+                <Text style={styles.verifyWalletText}>toktokwallet account {data.getCheckAccount.mobileNumber}</Text>
+                <Text style={styles.clickVerifyText}>Click the "Link Now" button.</Text>
+                <BannerImages/>
             </View>
 
             <View style={{height: 120,padding: 16,justifyContent:'flex-end'}}>
-                {
-                    mobileNo.length == 9
-                    ? <YellowButton label="Link Now" onPress={checkTokwaAccount}/>
-                    : <DisabledButton label="Link Now"/>
-                }
-                
+                <YellowButton label="Link Now" onPress={linkAccount}/>
             </View>
-        </>
+    </>
     )
+    
 }
 
 const styles = StyleSheet.create({
     content: {
         flex: 1,
         padding: 16,
+        alignItems:"center"
     },
     verifyWalletText: {
         fontFamily: FONT.BOLD,
         fontSize: 16,
-        textAlign:'center'
+        textAlign:'center',
+        marginTop: 10,
     },
     clickVerifyText: {
         fontFamily: FONT.REGULAR,
         fontSize: FONT_SIZE.S,
-        textAlign:'center'
+        textAlign:'center',
+        marginHorizontal: 10,
     },
     listItem: {
         fontFamily: FONT.REGULAR,

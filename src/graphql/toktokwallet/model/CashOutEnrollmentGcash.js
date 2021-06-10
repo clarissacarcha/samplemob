@@ -91,3 +91,32 @@ export const PATCH_UNLINK_ACCOUNT = gql`
         }
     }
 `
+
+
+export const GET_MY_ACCOUNT_GCASH_FILL = gql`
+    query {
+        getMyAccount {
+            id
+            mobileNumber
+            person {
+                id
+                firstName
+                middleName
+                lastName
+                birthdate
+                emailAddress
+                address {
+                    line1
+                    line2
+                    postalCode
+                    city {
+                        citymunDesc
+                    },
+                    province {
+                        provDesc
+                    }
+                }
+            }
+        }
+    }
+`

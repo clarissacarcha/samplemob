@@ -20,6 +20,7 @@ const VerifyContextProvider = ({children})=> {
         firstName: session.user.person.firstName,
         middleName: session.user.person.middleName ? session.user.person.middleName : "",
         lastName: session.user.person.lastName,
+        gender: "",
     })
     const [contactInfo, setContactInfo] = useState({
         mobile_number: session.user.username,

@@ -16,6 +16,7 @@ import { CheckWalletAccountRestrictionContext } from './CheckWalletAccountRestri
 
 
 const {height,width} = Dimensions.get("window")
+const titleAccountTypeColor = ['','#929191','#00C851','#2699FB']
 
 const WalletCardInfo = ({loading})=> {
     const navigation = useNavigation()
@@ -47,13 +48,19 @@ const WalletCardInfo = ({loading})=> {
        <View style={styles.container}>
            <HeaderImageBackground>
                <HeaderTitle isLogo={true} headerBackLabel="Home"/>
-               <View style={{height: 28}}/>
+               <View style={{height: 24}}/>
+               <View style={{paddingHorizontal: 16,flexDirection:"row",marginBottom: -5}}>
+                <View style={{alignSelf:'center', padding: 1 ,borderRadius: 100, borderWidth: 1,borderColor: titleAccountTypeColor[tokwaAccount.person.accountType.level],justifyContent:'center',marginRight: 5,}}>
+                    <VectorIcon size={FONT_SIZE.XS} iconSet={ICON_SET.Feather} name="check" color={titleAccountTypeColor[tokwaAccount.person.accountType.level]}/>
+                </View>
+                    <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color: titleAccountTypeColor[tokwaAccount.person.accountType.level]}}>{tokwaAccount.person.accountType.title}</Text>
+               </View>
                 <View style={styles.walletContent}>
                     <View>
                         {
                            <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>{tokwaAccount.wallet.currency.code} {numberFormat(tokwaAccount.wallet.balance)}</Text>
                         }         
-                        <Text style={{fontSize:FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Available Balance</Text>
+                        <Text style={{fontSize:FONT_SIZE.M,fontFamily: FONT.REGULAR,marginTop: -5}}>Available Balance</Text>
                     </View>
                     <TouchableOpacity onPress={cashIn} style={styles.topUp}>
                         <View style={styles.topUpbtn}>

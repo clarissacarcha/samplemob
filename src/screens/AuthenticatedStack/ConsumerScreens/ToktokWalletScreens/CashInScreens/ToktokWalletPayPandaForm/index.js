@@ -101,8 +101,10 @@ const ToktokWalletPayPandaForm = ({navigation,route})=> {
         navigation.navigate("ToktokWalletReviewAndConfirm", {
             label:"Cash In" , 
             data: {
-                    method: "PayPanda" , 
-                    amount: amount
+                    method: transactionType.name , 
+                    amount: amount,
+                    accountName: `${tokwaAccount.person.firstName} ${tokwaAccount.person.lastName}`,
+                    accountNumber: tokwaAccount.mobileNumber
                 },
             onConfirm: ()=> {
                 setPinCodeAttempt(6)
@@ -116,7 +118,9 @@ const ToktokWalletPayPandaForm = ({navigation,route})=> {
         const num = value.replace(/[^0-9.]/g, '')
         const checkFormat = /^(\d*[.]?[0-9]{0,2})$/.test(num);
         if(!checkFormat) return       
-        if(num.length > 6) return
+        let decimalValueArray = num.split(".")
+        if(decimalValueArray[0].length > 6) return
+        // if(num.length > 6) return
        
         // setAmount(num * 0.01)
         if(num[0] == ".") return setAmount("0.")

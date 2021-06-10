@@ -38,6 +38,14 @@ const ProceedButton = ({
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onError: (error)=> {
             const {graphQLErrors, networkError} = error;
+
+
+            if(graphQLErrors[0].message == "Insufficient Balance"){
+                navigation.navigate("ToktokWalletHomePage")
+                navigation.replace("ToktokWalletHomePage")
+                return onErrorAlert({alert,error})
+            }
+            
             if(graphQLErrors[0].message == "Wallet Hold"){
                 setOpenPinCode(false)
                 navigation.navigate("ToktokWalletHomePage")

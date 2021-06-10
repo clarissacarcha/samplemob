@@ -1,4 +1,4 @@
-import React, {useEffect,useState} from 'react'
+import React, {useEffect,useState,useRef} from 'react'
 import {View,Text,StyleSheet,ScrollView,TextInput,Alert,TouchableOpacity,Modal,StatusBar,TouchableOpacityBase,Image,KeyboardAvoidingView,Platform,Dimensions} from 'react-native'
 import { HeaderBack, YellowButton } from '../../../../../../revamp';
 import {AlertOverlay, HeaderTitle} from '../../../../../../components'
@@ -10,10 +10,13 @@ import { POST_CASH_OUT_ENROLLMENG_GCASH } from '../../../../../../graphql/toktok
 import {useMutation} from '@apollo/react-hooks';
 import {onError, onErrorAlert} from '../../../../../../util/ErrorUtility';
 import { useAlert } from '../../../../../../hooks';
+import moment from 'moment'
+import {useSelector} from 'react-redux'
 
 //SELF IMPORTS
 import DatePickerModal from './DatePickerModal';
 import ModalCountry from './ModalCountry';
+import BottomSheetGender from './BottomSheetGender'
 
 const screen = Dimensions.get('window');
 
@@ -76,22 +79,25 @@ const CreateForm = ({navigation,session,mobile,provider})=> {
         headerTitle: ()=> <HeaderTitle label={["GCash Account"]}/>
     })
     const alert = useAlert()
+    const tokwaAccount = useSelector(state=>state.toktokWallet)
     const [pickerVisible, setPickerVisible] = useState(false);
 
     const [mobileNumber, setMobileNumber] = useState(mobile);
     const [errorMessage,setErrorMessage] = useState("");
-    const [firstName, setfirstName] = useState('');
-    const [middleName, setMiddleName] = useState('');
-    const [lastName, setlastName] = useState('');
-    const [birthdate, setBirthdate] = useState('');
+    const [firstName, setfirstName] = useState(tokwaAccount.person.firstName);
+    const [middleName, setMiddleName] = useState(tokwaAccount.person.middleName);
+    const [lastName, setlastName] = useState(tokwaAccount.person.lastName);
+    const [birthdate, setBirthdate] = useState(moment(+tokwaAccount.person.birthdate).format("yyyy-MM-DD"));
     const [streetAddress, setStreetAddress] = useState('');
     const [barangayTown, setBarangayTown] = useState('');
     const [provinceCity, setProvinceCity] = useState('');
     const [country, setCountry] = useState('Philippines');
+    const [gender,setGender] = useState("")
    
 
     const [promptVisible,setPromptVisible] = useState(false);
     const [modalCountryVisible,setModalCountryVisible] = useState(false);
+    const genderRef = useRef()
 
     const [postCashOutEnrollmentGcash, {data, error ,loading}] = useMutation(POST_CASH_OUT_ENROLLMENG_GCASH, {
             client: TOKTOK_WALLET_GRAPHQL_CLIENT,
@@ -163,12 +169,12 @@ const CreateForm = ({navigation,session,mobile,provider})=> {
           }
 
           if (validator.isEmpty(barangayTown, {ignore_whitespace: true})) {
-            Alert.alert('', 'Please enter Barangay Town.');
+            Alert.alert('', 'Please enter Barangay/Town.');
             return;
           }
 
           if (validator.isEmpty(provinceCity, {ignore_whitespace: true})) {
-            Alert.alert('', 'Please enter Province City.');
+            Alert.alert('', 'Please enter Province/City.');
             return;
           }
 
@@ -277,7 +283,7 @@ const CreateForm = ({navigation,session,mobile,provider})=> {
                         {birthdate === '' ? (
                             <Text style={{color: COLOR.DARK,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Select Birthdate</Text>
                         ) : (
-                            <Text style={{color: COLOR.DARK,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{birthdate}</Text>
+                            <Text style={{color: COLOR.DARK,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{moment(birthdate,"yyyy-mm-DD").format("mm/DD/yyyy")}</Text>
                         )}
                         </View>
                     </TouchableOpacity>
@@ -296,7 +302,7 @@ const CreateForm = ({navigation,session,mobile,provider})=> {
                 </View>
 
                 <View style={{marginTop: 20}}>
-                    <Text style={styles.label}>Barangay Town</Text>
+                    <Text style={styles.label}>Barangay/Town</Text>
                     <TextInput 
                         style={styles.input}
                         placeholder="Enter barangay and town here"
@@ -308,7 +314,7 @@ const CreateForm = ({navigation,session,mobile,provider})=> {
 
 
                 <View style={{marginTop: 20}}>
-                    <Text style={styles.label}>Province City</Text>
+                    <Text style={styles.label}>Province/City</Text>
                     <TextInput 
                         style={styles.input}
                         placeholder="Enter province and city here"
@@ -364,6 +370,7 @@ const CreateForm = ({navigation,session,mobile,provider})=> {
             {/* <YellowButton label="Save" onPress={saveGcashAccount}/> */}
 
        </KeyboardAvoidingView>
+       <BottomSheetGender ref={genderRef} onChange={(gender)=>{setGender(gender); genderRef.current.close()}}/>
        </>
     )
 }

@@ -11,6 +11,7 @@ const {width,height} = Dimensions.get("window")
 const CROP_AREA_WIDTH = width * 0.90;
 const CROP_AREA_HEIGHT = CROP_AREA_WIDTH;
 
+
 const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
 
     navigation.setOptions({
@@ -28,7 +29,7 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
         width: 0,
     })
     const [message,setMessage] = useState({
-        msg: "Position your face within the frame",
+        msg: "Position your face within the frame and then SMILE",
         icon: "bullseye"
     })
     const [boxColor,setBoxColor] = useState("white")
@@ -36,8 +37,11 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
     const [checkNotSmiling, setCheckNotSmiling] = useState(false)
     const [leftEyeWink,setLeftEyeWink] = useState(false)
     const [leftEyeOpen , setLeftEyeOpen] = useState(false)
+    const [rightEyeOpen, setRightEyeOpen] = useState(false)
     const [rightEyeWink,setRightEyeWink] = useState(false)
-  
+    const [picInterval,setPicInterval] = useState(null)
+    
+
     const takePicture = async () => {
         setCheck(true)
         try {
@@ -53,14 +57,33 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
                 const data = await cameraRef.current.takePictureAsync(options);
                 route.params.setImage(data)
                 navigation.pop()
-    
-            },200)
+            },1000)
           }
         } catch (error) {
             console.log(error)
         //   Alert.alert('Something went wrong with taking a picture.');
         }
       };
+
+      useEffect(()=>{
+        if((leftEyeWink && leftEyeOpen) || (rightEyeWink && rightEyeOpen)){
+            setMessage({
+                msg: `Don't move , Scanning Face`,
+                icon: null
+            })
+            takePicture()
+        }
+      },[leftEyeWink,rightEyeWink])
+
+      const refreshStates = ()=> {
+        setBoxColor("white")
+        setCheckSmile(false)
+        setCheckNotSmiling(false)
+        setLeftEyeOpen(false)
+        setLeftEyeWink(false)
+        setRightEyeOpen(false)
+        setRightEyeWink(false)
+      }
 
       const onFacesDetected = async (e)=> {
 
@@ -83,10 +106,10 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
             if(checkifOutsideBox(boundary,result)){
                 console.log("Outside the box")
                 setMessage({
-                     msg: "Position your face within the frame",
+                     msg: "Position your face within the frame and then SMILE",
                      icon: "bullseye"
                  })
-                 setBoxColor("white")
+                 refreshStates()
                  return 
              }
      
@@ -95,7 +118,7 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
                      msg: "Bring your phone closer to you",
                      icon: "mobile-alt"
                  })
-                 setBoxColor("white")
+                 refreshStates()
                  return 
              }
      
@@ -111,13 +134,17 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
                 setLeftEyeOpen(true)
             }
 
+            if(e.faces[0].rightEyeOpenProbability > 0.6){
+                setRightEyeOpen(true)
+            }
+
             if(e.faces[0].smilingProbability < 0.5){
                 setCheckNotSmiling(true)
             }
             
             if(!checkSmile){
                 setMessage({
-                    msg: `Try to smile`,
+                    msg: `SMILE to take a selfie`,
                     icon: "smile"
                 })
                 if(e.faces[0].smilingProbability > 0.8){
@@ -145,11 +172,21 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
             // }
 
             if(checkSmile){
-                setMessage({
-                    msg: `Don't move , Scanning Face`,
-                    icon: null
-                })
-                takePicture()
+                   if(!leftEyeWink || !rightEyeWink){
+                        setMessage({
+                            msg: `BLINK your eye`,
+                            icon: "smile"
+                        })
+                        if(e.faces[0].leftEyeOpenProbability < 0.2){
+                            setLeftEyeWink(true)
+                        }
+                        if(e.faces[0].rightEyeOpenProbability < 0.2){
+                            setRightEyeWink(true)
+                        }
+                        return
+                    }
+               
+                return
             }
           
         }
@@ -236,7 +273,7 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
                                 <View style={[styles.borderEdges,{borderBottomWidth: 5,borderRightWidth: 5,bottom:0,right:0,}]}/>
 
                         <View style={{paddingVertical: 10, position:"absolute",bottom: -80,justifyContent:"center",alignItems:"center",width: "100%",backgroundColor:"rgba(255,255,255,0.2)"}}>
-                            <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.XL,color:"white"}}>{message.msg}</Text>
+                            <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.XL,color:"white",textAlign:'center'}}>{message.msg}</Text>
                             {
                                 message.icon == null
                                 ? <ActivityIndicator style={{marginTop: 5}} color={"white"} />

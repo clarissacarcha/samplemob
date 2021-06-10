@@ -1,5 +1,5 @@
-import React, {useContext, useEffect, useState} from 'react'
-import {Text,View,StyleSheet,Alert,Image,TextInput,TouchableOpacity,Linking,ScrollView,KeyboardAvoidingView,Dimensions} from 'react-native'
+import React, {useContext, useEffect, useState,useRef} from 'react'
+import {Text,View,StyleSheet,Alert,Image,TextInput,TouchableOpacity,Linking,ScrollView,KeyboardAvoidingView,Dimensions,Platform} from 'react-native'
 import {COLOR, FONT ,SIZE,FONT_SIZE} from '../../../../../../../res/variables'
 import {VerifyContext} from './VerifyContextProvider'
 import validator from 'validator';
@@ -15,7 +15,7 @@ import {GET_COUNTRIES, TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT} from '../../../..
 import ModalCountry from './ModalCountry'
 import {DateBirthModal} from './VerifyBirth'
 import ModalNationality from './ModalNationality'
-import { Platform } from 'react-native';
+import BottomSheetGender from './BottomSheetGender'
 
 const screen = Dimensions.get('window');
 
@@ -38,6 +38,7 @@ const VerifyFullname = ()=> {
     const [modalNationalityVisible, setModalNationalityVisible] = useState(false)
     const [modaltype,setModaltype] = useState("")
     const [mobile, setMobile] = useState(contactInfo.mobile_number.replace("+63", ""))
+    const genderRef = useRef()
 
     // const {loading, error, data} = useQuery(GET_COUNTRIES, {
     //     client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT
@@ -54,6 +55,10 @@ const VerifyFullname = ()=> {
         }
         if (validator.isEmpty(person.firstName, {ignore_whitespace: true})) {
             return Alert.alert("","First Name is required.")
+        }
+
+        if (validator.isEmpty(person.gender, {ignore_whitespace: true})) {
+            return Alert.alert("","Gender is required.")
         }
 
         if (!validator.isEmail(contactInfo.email, {ignore_whitespace: true})) {
@@ -88,6 +93,11 @@ const VerifyFullname = ()=> {
     
         setMobile(value);
       };
+
+      const setGender = (gender)=>{
+        genderRef.current.close()
+        changePersonInfo("gender",gender)
+      }
 
     return (
         <>
@@ -138,9 +148,12 @@ const VerifyFullname = ()=> {
                             paddingTop: 4.3,
                             backgroundColor:"lightgray",
                           }}>
-                          <Text style={{ marginHorizontal: 6}}>+63</Text>
+                          <Text style={{ marginHorizontal: 6,fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>+63</Text>
                         </View>
-                        <TextInput
+                        <View style={{paddingLeft: 5, flex: 1, ...styles.input,justifyContent:"center"}}>
+                            <Text style={{ marginHorizontal: 6,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{mobile}</Text>
+                        </View>
+                        {/* <TextInput
                             value={mobile}
                             onChangeText={onMobileChange}
                             placeholder="9151234567"
@@ -148,29 +161,10 @@ const VerifyFullname = ()=> {
                             returnKeyType="done"
                             style={{paddingLeft: 5, flex: 1, ...styles.input}}
                             placeholderTextColor={COLOR.DARK}
-                        />
+                        /> */}
                       </View>
                     </View>
 
-                    {/* <View style={{marginTop: 40,}}>
-                    <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Mobile Number</Text>
-                        <TextInput 
-                            style={styles.input}
-                            value={contactInfo.mobile_number}
-                            onChangeText={(value)=>changeContactInfo("mobile_number",value)}
-                            placeholder="Enter mobile number here"
-                        />
-                    </View> */}
-
-                    <View style={{marginTop: 20,}}>
-                    <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Last Name</Text>
-                        <TextInput 
-                            style={styles.input}
-                            value={person.lastName}
-                            onChangeText={(value)=>changePersonInfo("lastName",value)}
-                            placeholder="Enter last name here"
-                        />
-                    </View>
 
                     <View style={{marginTop: 20,}}>
                     <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>First Name</Text>
@@ -190,6 +184,39 @@ const VerifyFullname = ()=> {
                             onChangeText={(value)=>changePersonInfo("middleName",value)}
                             placeholder="Enter middle name here"
                         />
+                    </View>
+
+
+                    <View style={{marginTop: 20,}}>
+                    <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Last Name</Text>
+                        <TextInput 
+                            style={styles.input}
+                            value={person.lastName}
+                            onChangeText={(value)=>changePersonInfo("lastName",value)}
+                            placeholder="Enter last name here"
+                        />
+                    </View>
+
+
+                    <View style={{marginTop: 20,}}>
+                    <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Gender</Text>
+                        <TouchableOpacity 
+                            style={[styles.input, {flex: 1,justifyContent:'center'}]}
+                            onPress={()=>genderRef.current.expand()}
+                        >
+                               {/* {
+                                     person.gender == ""
+                                     ? <Text style={{flex: 1,fontFamily: FONT.REGULAR,color: COLOR.DARK,fontSize: FONT_SIZE.M}}>-Select Gender-</Text>
+                                     : <Text style={{flex: 1,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{person.gender}</Text>
+                               } */}
+                                {/* <Text>gg</Text> */}
+                                {
+                                    person.gender == ""
+                                    ? <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M,color: COLOR.DARK}}>-Select Gender-</Text>
+                                    : <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{person.gender}</Text>
+                                }
+                        </TouchableOpacity>
+
                     </View>
 
                     <View style={{marginTop: 20,}}>
@@ -257,6 +284,8 @@ const VerifyFullname = ()=> {
             </View>
                  </ScrollView>
             </KeyboardAvoidingView>
+
+            <BottomSheetGender ref={genderRef} onChange={setGender}/>
        
         </>
     )

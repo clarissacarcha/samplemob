@@ -97,6 +97,7 @@ const Confirm = ({session})=> {
             firstName: VerifyUserData.person.firstName,
             middleName: VerifyUserData.person.middleName,
             lastName: VerifyUserData.person.lastName,
+            gender: VerifyUserData.person.gender,
             birthdate: moment(VerifyUserData.birthInfo.birthdate).format("YYYY-MM-DD"),
             // birthdate: VerifyUserData.birthInfo.birthdate,
             birthPlace: VerifyUserData.birthInfo.birthPlace,
@@ -130,9 +131,10 @@ const Confirm = ({session})=> {
                         <Text style={{fontFamily: FONTS.REGULAR,marginBottom: 10,fontSize: SIZES.M,color:"#929191"}}>Make sure your details are all correct.</Text>  
                         <UserInfo label="Mobile Number" value={VerifyUserData.contactInfo.mobile_number}/>
                         <UserInfo label="Email Address" value={VerifyUserData.contactInfo.email}/>
-                        <UserInfo label="Last Name" value={VerifyUserData.person.lastName}/>
                         <UserInfo label="First Name" value={VerifyUserData.person.firstName}/>
                         <UserInfo label="Middle Name" value={VerifyUserData.person.middleName}/>
+                        <UserInfo label="Last Name" value={VerifyUserData.person.lastName}/>
+                        <UserInfo label="Gender" value={VerifyUserData.person.gender}/>
                         <UserInfo label="Date of Birth" value={moment(VerifyUserData.birthInfo.birthdate).format("MMM DD YYYY")}/>
                         <UserInfo label="Place of Birth" value={VerifyUserData.birthInfo.birthPlace}/>
                         <UserInfo label="Nationality" value={VerifyUserData.nationality}/>

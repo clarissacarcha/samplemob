@@ -58,6 +58,8 @@ const SuccessfulCashOutModal = ({visible , cashoutLogParams,tokwaAccount})=> {
                 
                 <View style={styles.recipientInfo}>
                      <TransactionInfo label="Cash out method" value="GCash"/>
+                     <TransactionInfo label="Account Name" value={cashoutLogParams.accountName}/>
+                     <TransactionInfo label="Account Number" value={cashoutLogParams.accountNumber}/>
                      <TransactionInfo label="Status" value={status}/>
                      <TransactionInfo label="Amount" value={`${tokwaAccount.wallet.currency.code} ${numberFormat(cashoutLogParams.amount)}`}/>
                 </View>            

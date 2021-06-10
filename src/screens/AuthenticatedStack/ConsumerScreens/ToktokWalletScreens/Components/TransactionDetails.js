@@ -14,6 +14,7 @@ export const TransactionDetails = ({
     phrase,
     amount,
     status,
+    displayNumber
 })=> {
 
     return (
@@ -36,11 +37,12 @@ export const TransactionDetails = ({
                         <View style={{flex: 1}}>
                             <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>{label}</Text>
                             <Text style={styles.labelText}>{phrase}</Text>
+                            {displayNumber != "" && <Text style={styles.labelText}>{displayNumber}</Text>}
                             { status && <Text style={styles.labelText}>Status: {status}</Text>}
                             <View style={{marginTop: 10}}>
                                 <Text style={styles.labelText}>Amount: {amount}</Text>
                                 <Text style={styles.labelText}>Ref No: {refNo}</Text>
-                                <Text style={styles.labelText}>Ref Date & Time: {refDate}</Text>
+                                <Text style={styles.labelText}>Date & Time: {refDate}</Text>
                             </View>
                         </View>
                         <View style={{flex: 1,justifyContent:"flex-end", width: "50%",alignSelf:"center"}}>
