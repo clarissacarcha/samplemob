@@ -1,5 +1,5 @@
 import React , {useContext} from 'react'
-import {View,Text,StyleSheet,Dimensions,TouchableOpacity,Animated,Alert,RefreshControl,ScrollView,ActivityIndicator} from 'react-native'
+import {View,Text,StyleSheet,Dimensions,TouchableOpacity,Animated,Alert,RefreshControl,ScrollView,ActivityIndicator,Image} from 'react-native'
 import { COLOR , FONT , FONT_SIZE} from '../../../../../res/variables';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import { useNavigation } from '@react-navigation/native'
@@ -82,6 +82,13 @@ const DriverWalletCardInfo = ({loading})=> {
     
             <View style={styles.whitespace}>
                 <DriverWalletMethods/>
+                <View style={{flex: 1, justifyContent:"center",alignItems:"center"}}>
+                    <TouchableOpacity onPress={()=>null} style={{flexDirection:"row",padding: 2}}>
+                         <Image style={{height: 21,width: 21,marginRight: 5,}} source={require('../../../../../assets/icons/walletVerify.png')}/>
+                         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.S}}>Your wallet is <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.S,color: COLOR.ORANGE}}>encrypted and secure.</Text></Text>
+                    </TouchableOpacity>
+                     
+                </View>
             </View>
             <Separator />
        </View>
@@ -91,11 +98,11 @@ const DriverWalletCardInfo = ({loading})=> {
 const styles = StyleSheet.create({
     container: {
         // height: 215, // ios
-        height: 255,
+        height: 280,
         width: width,
     },
     whitespace: {
-        height: 50,
+        height: 80,
         backgroundColor:"white",
         position:'relative'
     },
