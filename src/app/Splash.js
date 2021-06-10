@@ -39,6 +39,8 @@ const Splash = ({setConstants}) => {
   const [deepLink, setDeepLink] = useState('');
 
   const oneSignalInit = async (oneSignalAppId) => {
+    console.log('Setting OneSignal APP ID ', oneSignalAppId);
+
     if (Platform.OS === 'ios') {
       OneSignal.promptForPushNotificationsWithUserResponse((allowed) => {
         if (allowed) {
