@@ -1,5 +1,5 @@
 import React , {useState,useEffect} from 'react'
-import {View,Text,StyleSheet,Modal,Dimensions,TouchableOpacity,TextInput,ActivityIndicator} from 'react-native'
+import {View,Text,StyleSheet,Modal,Dimensions,TouchableOpacity,TextInput,ActivityIndicator,ImageBackground} from 'react-native'
 import { YellowButton, VectorIcon , ICON_SET  } from '../../../../../revamp'
 import { COLOR , FONT_SIZE , FONT , SIZE } from '../../../../../res/variables'
 import { TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT } from '../../../../../graphql'
@@ -11,6 +11,8 @@ import { useNavigation } from '@react-navigation/native'
 import { useSelector } from 'react-redux'
 import { DisabledButton } from '../Components'
 
+const {height,width} = Dimensions.get("window")
+
 const LoadingPage = ()=> {
     return (
         <View style={{flex: 1,justifyContent:'center',alignItems:'center'}}>
@@ -19,10 +21,53 @@ const LoadingPage = ()=> {
     )
 }
 
+const BannerImages = ()=> (
+    <View style={{marginTop: 40,justifyContent:'center'}}>
+        
+    <ImageBackground 
+        resizeMode="stretch"
+        imageStyle={{borderRadius: SIZE.BORDER_RADIUS}}
+        source={require('../../../../../assets/toktokwallet-assets/unlock.png')}
+        style={{borderRadius: SIZE.BORDER_RADIUS, width: width - 80, height: 90,backgroundColor:"transparent",flexDirection:"row"}}
+    >
+        <View style={{flex:1,backgroundColor:"transparent",justifyContent:"center",alignItems:"flex-end",paddingRight: 20}}>
+            <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}><Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M, color: COLOR.ORANGE}}>Secure</Text> your</Text>
+            <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>toktokwallet</Text>
+        </View>
+    </ImageBackground>
+
+    <ImageBackground 
+        resizeMode="stretch"
+        imageStyle={{borderRadius: SIZE.BORDER_RADIUS}}
+        source={require('../../../../../assets/toktokwallet-assets/secure.png')}
+        style={{marginVertical: 10, borderRadius: SIZE.BORDER_RADIUS, width: width - 80, height: 90,backgroundColor:"transparent",flexDirection:"row"}}
+    >
+        <View style={{flex:1,backgroundColor:"transparent",justifyContent:"center",alignItems:"flex-end",paddingRight: 20}}>
+            <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}><Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M, color: COLOR.ORANGE}}>Enjoy</Text> convenient</Text>
+            <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>payment experience</Text>
+        </View>   
+    </ImageBackground>
+
+    <ImageBackground 
+        resizeMode="stretch"
+        imageStyle={{borderRadius: SIZE.BORDER_RADIUS}}
+        source={require('../../../../../assets/toktokwallet-assets/enjoy.png')}
+        style={{borderRadius: SIZE.BORDER_RADIUS, width: width - 80, height: 90,backgroundColor:"transparent",flexDirection:"row"}}
+    >
+        <View style={{flex:1,backgroundColor:"transparent",justifyContent:"center",alignItems:"flex-end",paddingRight: 20}}>
+            <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}><Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M, color: COLOR.ORANGE}}>Unlock</Text> toktokwallet</Text>
+            <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>features</Text>
+        </View>
+    </ImageBackground>
+</View>
+)
+
 const NoTokwaAccount = ({navigation})=> (
     <>
     <View style={styles.content}>
-         <Text>NO TOKWA ACCOUNT , PLEASE REGISTER USING TOKTOK CUSTOMER APP</Text>
+                <Text style={styles.verifyWalletText}>Create your toktokwallet account</Text>
+                <Text style={styles.clickVerifyText}>Go to toktok customer app and use your toktok mobile number to create your toktokwallet account</Text>
+                <BannerImages/>
     </View>
 
     <View style={{height: 120,padding: 16,justifyContent:'flex-end'}}>
@@ -71,7 +116,9 @@ const RiderNoLinkAccount = ()=> {
     return (
         <>
             <View style={styles.content}>
-                <Text>LINK YOUR ACCOUNT NOW</Text>
+                <Text style={styles.verifyWalletText}>toktokwallet account {data.getCheckAccount.mobileNumber}</Text>
+                <Text style={styles.clickVerifyText}>Click the "Link Now" button.</Text>
+                <BannerImages/>
             </View>
 
             <View style={{height: 120,padding: 16,justifyContent:'flex-end'}}>
@@ -86,16 +133,19 @@ const styles = StyleSheet.create({
     content: {
         flex: 1,
         padding: 16,
+        alignItems:"center"
     },
     verifyWalletText: {
         fontFamily: FONT.BOLD,
         fontSize: 16,
-        textAlign:'center'
+        textAlign:'center',
+        marginTop: 10,
     },
     clickVerifyText: {
         fontFamily: FONT.REGULAR,
         fontSize: FONT_SIZE.S,
-        textAlign:'center'
+        textAlign:'center',
+        marginHorizontal: 10,
     },
     listItem: {
         fontFamily: FONT.REGULAR,

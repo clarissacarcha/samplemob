@@ -29,7 +29,7 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
         width: 0,
     })
     const [message,setMessage] = useState({
-        msg: "Position your face within the frame and then smile",
+        msg: "Position your face within the frame and then SMILE",
         icon: "bullseye"
     })
     const [boxColor,setBoxColor] = useState("white")
@@ -106,7 +106,7 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
             if(checkifOutsideBox(boundary,result)){
                 console.log("Outside the box")
                 setMessage({
-                     msg: "Position your face within the frame and then smile",
+                     msg: "Position your face within the frame and then SMILE",
                      icon: "bullseye"
                  })
                  refreshStates()
@@ -144,7 +144,7 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
             
             if(!checkSmile){
                 setMessage({
-                    msg: `Smile to take a selfie`,
+                    msg: `SMILE to take a selfie`,
                     icon: "smile"
                 })
                 if(e.faces[0].smilingProbability > 0.8){
@@ -174,7 +174,7 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
             if(checkSmile){
                    if(!leftEyeWink || !rightEyeWink){
                         setMessage({
-                            msg: `Blink your eye`,
+                            msg: `BLINK your eye`,
                             icon: "smile"
                         })
                         if(e.faces[0].leftEyeOpenProbability < 0.2){

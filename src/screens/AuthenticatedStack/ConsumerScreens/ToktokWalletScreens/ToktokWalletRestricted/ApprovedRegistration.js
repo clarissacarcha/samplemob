@@ -27,7 +27,7 @@ const ApprovedRegistration = ()=> {
             <View style={styles.content}>
                 <Image style={{width: 225, height: 170}} source={require('../../../../../assets/toktokwallet-assets/welcome.png')}/>
                 <View style={{alignItems:"center",marginTop: 20,}}>
-                    <Text style={styles.verifyWalletText}>Welcome to <Text style={{ ...styles.verifyWalletText , color: COLOR.YELLOW}}>toktok</Text><Text style={{...styles.verifyWalletText, color: COLOR.ORANGE}}>wallet</Text>!</Text>
+                    <Text style={styles.verifyWalletText}>Welcome to <Text style={{ ...styles.verifyWalletText , color: COLOR.YELLOW}}>toktok</Text><Text style={{...styles.verifyWalletText, color: COLOR.ORANGE}}>wallet</Text> !</Text>
                     <Text style={[styles.clickVerifyText, {marginHorizontal: 10,}]}>Hi, Ka-toktok {tokwaAccount.person.firstName}! We are thrilled to announce that you are now a toktokwallet user! You can send money to your loved ones, cash in to any toktokwallet partner of your choice, and transfer funds. So easy!</Text>
                 </View>
             </View>
