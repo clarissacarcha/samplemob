@@ -35,7 +35,11 @@ const VerifiedAccount = ({record,provider})=> {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({postCashOut})=> {
             setOpenPinCode(false)
-            setCashoutLogParams(postCashOut)
+            setCashoutLogParams({
+                accountName: `${record.firstName} ${record.lastName}`,
+                accountNumber: record.mobile,
+                ...postCashOut
+            })
             setSuccessModalVisible(true)
         },
         onError: (error)=> {
@@ -61,7 +65,9 @@ const VerifiedAccount = ({record,provider})=> {
         const num = value.replace(/[^0-9.]/g, '')
         const checkFormat = /^(\d*[.]?[0-9]{0,2})$/.test(num);
         if(!checkFormat) return       
-        if(num.length > 6) return
+        let decimalValueArray = num.split(".")
+        if(decimalValueArray[0].length > 6) return
+        // if(num.length > 6) return
         if(num[0] == ".") return setAmount("0.")
         setAmount(num)
         if(num == "") return setErrorMessage("")
@@ -91,8 +97,10 @@ const VerifiedAccount = ({record,provider})=> {
         navigation.navigate("ToktokWalletReviewAndConfirm", {
             label:"Cash Out" , 
             data: {
-                    method: "GCash" , 
-                    amount: amount
+                    method: provider.name , 
+                    amount: amount,
+                    accountName: `${record.firstName} ${record.lastName}`,
+                    accountNumber: record.mobile
                 },
             onConfirm: ()=>{
                 setPinCodeAttempt(6)

@@ -1,5 +1,5 @@
 import React , {useContext} from 'react'
-import {View,Text,StyleSheet,Dimensions,TouchableOpacity,Animated,Alert,RefreshControl,ScrollView,ActivityIndicator} from 'react-native'
+import {View,Text,StyleSheet,Dimensions,TouchableOpacity,Animated,Alert,RefreshControl,ScrollView,ActivityIndicator,Image} from 'react-native'
 import { COLOR , FONT , FONT_SIZE} from '../../../../../res/variables';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import { useNavigation } from '@react-navigation/native'
@@ -16,6 +16,7 @@ import { CheckWalletAccountRestrictionContext } from './CheckWalletAccountRestri
 
 
 const {height,width} = Dimensions.get("window")
+const titleAccountTypeColor = ['','#929191','#00C851','#2699FB']
 
 const WalletCardInfo = ({loading})=> {
     const navigation = useNavigation()
@@ -47,13 +48,19 @@ const WalletCardInfo = ({loading})=> {
        <View style={styles.container}>
            <HeaderImageBackground>
                <HeaderTitle isLogo={true} headerBackLabel="Home"/>
-               <View style={{height: 28}}/>
+               <View style={{height: 24}}/>
+               <View style={{paddingHorizontal: 16,flexDirection:"row",marginBottom: -5}}>
+                <View style={{alignSelf:'center', padding: 1 ,borderRadius: 100, borderWidth: 1,borderColor: titleAccountTypeColor[tokwaAccount.person.accountType.level],justifyContent:'center',marginRight: 5,}}>
+                    <VectorIcon size={FONT_SIZE.XS} iconSet={ICON_SET.Feather} name="check" color={titleAccountTypeColor[tokwaAccount.person.accountType.level]}/>
+                </View>
+                    <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color: titleAccountTypeColor[tokwaAccount.person.accountType.level]}}>{tokwaAccount.person.accountType.title}</Text>
+               </View>
                 <View style={styles.walletContent}>
                     <View>
                         {
                            <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>{tokwaAccount.wallet.currency.code} {numberFormat(tokwaAccount.wallet.balance)}</Text>
                         }         
-                        <Text style={{fontSize:FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Available Balance</Text>
+                        <Text style={{fontSize:FONT_SIZE.M,fontFamily: FONT.REGULAR,marginTop: -5}}>Available Balance</Text>
                     </View>
                     <TouchableOpacity onPress={cashIn} style={styles.topUp}>
                         <View style={styles.topUpbtn}>
@@ -62,6 +69,7 @@ const WalletCardInfo = ({loading})=> {
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.walletSettings} onPress={()=>{
                         // rotateY.setValue(0)
+
                         if(checkWallet.checkIfAllowed()){
                             animation.start(()=> {
                                 animation.reset()
@@ -78,6 +86,13 @@ const WalletCardInfo = ({loading})=> {
     
             <View style={styles.whitespace}>
                 <WalletMethods/>
+                <View style={{flex: 1 ,marginTop: -36, justifyContent:"center",alignItems:"center"}}>
+                    <TouchableOpacity onPress={()=>null} style={{flexDirection:"row",padding: 2}}>
+                         <Image style={{height: 21,width: 21,marginRight: 5,}} source={require('../../../../../assets/icons/walletVerify.png')}/>
+                         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.S}}>Your wallet is <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.S,color: COLOR.ORANGE}}>encrypted and secure.</Text></Text>
+                    </TouchableOpacity>
+                     
+                </View>
             </View>
             <Separator />
        </View>
@@ -87,11 +102,12 @@ const WalletCardInfo = ({loading})=> {
 const styles = StyleSheet.create({
     container: {
         // height: 215, // ios
-        height: 255,
+        // height: 255,
+        height: 280,
         width: width,
     },
     whitespace: {
-        height: 50,
+        height: 80,
         backgroundColor:"white",
         position:'relative'
     },

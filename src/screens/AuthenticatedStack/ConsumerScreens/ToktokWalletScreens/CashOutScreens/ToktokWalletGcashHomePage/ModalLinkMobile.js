@@ -21,7 +21,7 @@ const ModalLinkMobile = ({visible,setVisible,mobile,provider})=> {
         getGcashLinkOTP({
             variables: {
                 input: {
-                    mobileNumber: mobile
+                    mobileNumber: `09${mobile}`
                 }
             }
         })

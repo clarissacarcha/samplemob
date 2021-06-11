@@ -26,6 +26,7 @@ const ToktokWalletGcashLinKAccount = ({navigation,route})=> {
     const inputRef = useRef();
     const alert = useAlert()
     const [otpTimer,setOtpTimer] = useState(120)
+    const [errorMessage,setErrorMessage] = useState("")
 
     const [patchLinkAccount, {data,error,loading}] = useMutation(PATCH_LINK_ACCOUNT,{
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
@@ -34,6 +35,13 @@ const ToktokWalletGcashLinKAccount = ({navigation,route})=> {
             return navigation.replace("ToktokWalletGcashHomePage",{provider, successLink: true})
         },
         onError: (error)=>{
+            const {graphQLErrors, networkError} = error
+            if(graphQLErrors[0].message == "Invalid verification code."){
+                return setErrorMessage("Invalid verification code.")
+            }
+            if(graphQLErrors[0].message == "Verification code already expired."){
+                return setErrorMessage("Verification code already expired.")
+            }
             onErrorAlert({alert,error})
         }
     })
@@ -46,6 +54,11 @@ const ToktokWalletGcashLinKAccount = ({navigation,route})=> {
             setOtpTimer(120)
         },
         onError: (error)=>{
+            const {graphQLErrors, networkError} = error
+            if(graphQLErrors[0]?.payload?.code == "OTPMAXREQUEST"){
+                setPinCode("")
+                return setErrorMessage(graphQLErrors[0].message)
+            }
             onErrorAlert({alert,error})
         }
     })
@@ -60,7 +73,7 @@ const ToktokWalletGcashLinKAccount = ({navigation,route})=> {
         getGcashLinkOTP({
             variables: {
                 input: {
-                    mobileNumber: mobile
+                    mobileNumber: `09${mobile}`
                 }
             }
         })
@@ -71,7 +84,7 @@ const ToktokWalletGcashLinKAccount = ({navigation,route})=> {
             variables: {
                 input: {
                     OTPCode: pinCode,
-                    mobile: mobile
+                    mobile: `09${mobile}`
                 }
             }
         })
@@ -105,7 +118,7 @@ const ToktokWalletGcashLinKAccount = ({navigation,route})=> {
         >
             <View style={{flex: 1,alignItems:"center", marginTop: 40}}>
                     <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L}}>Enter OTP code sent to</Text>
-                    <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.L,marginBottom: 20,}}>{mobile}</Text>
+                    <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.L,marginBottom: 20,}}>09{mobile}</Text>
 
                     <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={true}/>
                     <TextInput
@@ -123,6 +136,9 @@ const ToktokWalletGcashLinKAccount = ({navigation,route})=> {
                             }}
                             // onSubmitEditing={onSubmit}
                         />
+                         {
+                            errorMessage != "" && <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M,color: COLOR.RED,marginHorizontal: 16}}>{errorMessage}</Text>
+                        }
                         <TouchableOpacity
                                 disabled={otpTimer > 0 ? true : false}
                                 style={{marginTop: 18,paddingVertical: 10,alignItems: "center"}}

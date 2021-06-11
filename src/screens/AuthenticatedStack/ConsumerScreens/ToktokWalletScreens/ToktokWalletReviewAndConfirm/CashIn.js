@@ -19,6 +19,22 @@ const CashIn = ({data})=>{
             </View>
             <View style={styles.information}>
                     <View style={{flex:1,alignItems:"flex-start"}}>
+                        <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Account Name</Text>  
+                    </View>
+                    <View style={{flex:1,alignItems:"flex-end"}}>
+                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M,textAlign: 'right'}}>{data.accountName}</Text>
+                    </View>
+            </View>
+            <View style={styles.information}>
+                    <View style={{flex:1,alignItems:"flex-start"}}>
+                        <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Account Number</Text>  
+                    </View>
+                    <View style={{flex:1,alignItems:"flex-end"}}>
+                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M,textAlign: 'right'}}>{data.accountNumber}</Text>
+                    </View>
+            </View>
+            <View style={styles.information}>
+                    <View style={{flex:1,alignItems:"flex-start"}}>
                         <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Amount</Text>  
                     </View>
                     <View style={{flex:1,alignItems:"flex-end"}}>

@@ -32,7 +32,13 @@ export const GET_MY_ACCOUNT = gql`
                 firstName
                 middleName
                 lastName
+                birthdate
                 emailAddress
+                accountType {
+                    title
+                    level
+                    key
+                }
             }
             wallet {
                 id

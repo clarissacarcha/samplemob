@@ -44,7 +44,7 @@ const PendingEnrollment = ({record})=> {
                     <Information label="Country" value={record.country}/>
             </ScrollView>
             <View>
-                    <YellowButton label="Proceed" onPress={()=>navigation.pop()}/>
+                    <YellowButton label="Ok" onPress={()=>navigation.pop()}/>
                 </View>
            
         </View>

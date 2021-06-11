@@ -52,6 +52,7 @@ export const GET_TRANSACTIONS = gql`
                     createdAt
                     externalName
                     externalPhrase
+                    externalReferenceNumber
                     sourcePerson {
                         firstName
                         middleName
@@ -61,6 +62,12 @@ export const GET_TRANSACTIONS = gql`
                         firstName
                         middleName
                         lastName
+                    }
+                    sourceAccount {
+                        mobileNumber
+                    }
+                    destinationAccount {
+                        mobileNumber
                     }
                     transactionType {
                         name
@@ -81,6 +88,7 @@ export const GET_TRANSACTIONS = gql`
                     createdAt
                     externalName
                     externalPhrase
+                    externalReferenceNumber
                     sourcePerson {
                         firstName
                         middleName
@@ -90,6 +98,12 @@ export const GET_TRANSACTIONS = gql`
                         firstName
                         middleName
                         lastName
+                    }
+                    sourceAccount {
+                        mobileNumber
+                    }
+                    destinationAccount {
+                        mobileNumber
                     }
                     transactionType {
                         name
