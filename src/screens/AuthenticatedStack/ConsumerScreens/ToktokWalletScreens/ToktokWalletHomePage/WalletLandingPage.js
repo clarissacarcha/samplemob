@@ -27,7 +27,7 @@ const WalletLandingPage = ({refreshing, onRefresh})=> {
                         />
                     }
                 >
-                <View style={{height:255}}>
+                <View style={{height:280}}>
                    {
                        APP_FLAVOR == "D" && ACCOUNT_TYPE == 2
                        ? <DriverWalletCardInfo/>

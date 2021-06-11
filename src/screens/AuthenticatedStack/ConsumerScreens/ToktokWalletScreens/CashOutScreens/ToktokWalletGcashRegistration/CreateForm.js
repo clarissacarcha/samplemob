@@ -1,13 +1,13 @@
 import React, {useEffect,useState,useRef} from 'react'
-import {View,Text,StyleSheet,ScrollView,TextInput,Alert,TouchableOpacity,Modal,StatusBar,TouchableOpacityBase,Image,KeyboardAvoidingView,Platform,Dimensions} from 'react-native'
+import {View,Text,StyleSheet,ScrollView,TextInput,Alert,TouchableOpacity,Modal,StatusBar,TouchableOpacityBase,Image,KeyboardAvoidingView,Platform,Dimensions,ActivityIndicator} from 'react-native'
 import { HeaderBack, YellowButton } from '../../../../../../revamp';
 import {AlertOverlay, HeaderTitle} from '../../../../../../components'
 import { FONT, FONT_SIZE , COLOR, SIZE } from '../../../../../../res/variables';
 import { Separator } from '../../Components';
 import validator from 'validator';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from '../../../../../../graphql';
-import { POST_CASH_OUT_ENROLLMENG_GCASH } from '../../../../../../graphql/toktokwallet';
-import {useMutation} from '@apollo/react-hooks';
+import { POST_CASH_OUT_ENROLLMENG_GCASH , GET_MY_ACCOUNT_GCASH_FILL } from '../../../../../../graphql/toktokwallet';
+import {useMutation, useQuery,useLazyQuery} from '@apollo/react-hooks';
 import {onError, onErrorAlert} from '../../../../../../util/ErrorUtility';
 import { useAlert } from '../../../../../../hooks';
 import moment from 'moment'
@@ -72,6 +72,14 @@ const PromptMessage = ({
     )
 }
 
+const LoadingScreen = ()=> {
+    return (
+        <View style={{flex: 1,justifyContent:"center",alignItems:"center"}}>
+            <ActivityIndicator size={24} color={COLOR.YELLOW}/>
+        </View>
+    )
+}
+
 const CreateForm = ({navigation,session,mobile,provider})=> {
 
     navigation.setOptions({
@@ -84,10 +92,10 @@ const CreateForm = ({navigation,session,mobile,provider})=> {
 
     const [mobileNumber, setMobileNumber] = useState(mobile);
     const [errorMessage,setErrorMessage] = useState("");
-    const [firstName, setfirstName] = useState(tokwaAccount.person.firstName);
-    const [middleName, setMiddleName] = useState(tokwaAccount.person.middleName);
+    const [firstName, setfirstName] = useState("");
+    const [middleName, setMiddleName] = useState("");
     const [lastName, setlastName] = useState(tokwaAccount.person.lastName);
-    const [birthdate, setBirthdate] = useState(moment(+tokwaAccount.person.birthdate).format("yyyy-MM-DD"));
+    const [birthdate, setBirthdate] = useState("");
     const [streetAddress, setStreetAddress] = useState('');
     const [barangayTown, setBarangayTown] = useState('');
     const [provinceCity, setProvinceCity] = useState('');
@@ -98,6 +106,28 @@ const CreateForm = ({navigation,session,mobile,provider})=> {
     const [promptVisible,setPromptVisible] = useState(false);
     const [modalCountryVisible,setModalCountryVisible] = useState(false);
     const genderRef = useRef()
+
+    const [getMyAccount, {data: accountData, error: accountError, loading: accountLoading}] = useLazyQuery(GET_MY_ACCOUNT_GCASH_FILL, {
+        fetchPolicy: 'network-only',
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+        onError: (error)=> {
+            onErrorAlert({alert,error})
+        },
+        onCompleted: ({getMyAccount})=> {
+            setfirstName(getMyAccount.person.firstName)
+            setMiddleName(getMyAccount.person.middleName)
+            setlastName(getMyAccount.person.lastName)
+            setBirthdate(moment(+getMyAccount.person.birthdate).format("yyyy-MM-DD"))
+            setStreetAddress(`${getMyAccount.person.address.line1}`)
+            setBarangayTown(`${getMyAccount.person.address.line2}`)
+            setProvinceCity(`${getMyAccount.person.address.province.provDesc}, ${getMyAccount.person.address.city.citymunDesc}`)
+        }
+    })
+
+    useEffect(()=>{
+        getMyAccount()
+    },[])
+    
 
     const [postCashOutEnrollmentGcash, {data, error ,loading}] = useMutation(POST_CASH_OUT_ENROLLMENG_GCASH, {
             client: TOKTOK_WALLET_GRAPHQL_CLIENT,
