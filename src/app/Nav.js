@@ -94,6 +94,16 @@ import ToktokWalletGcashHomePage from '../screens/AuthenticatedStack/ConsumerScr
 import ToktokWalletGcashLinkAccount from '../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/CashOutScreens/ToktokWalletGcashLinkAccount';
 import ToktokWalletLinkAccount from '../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/ToktokWalletLinkAccount';
 
+import ToktokWalletHelpCentrePaymentChart from '../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/HelpCentreScreens/PaymentChartScreens';
+
+import ToktokWalletHelpCentreSecurityPrivacy from '../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/HelpCentreScreens/SecurityPrivacyScreens';
+import ToktokWalletHelpCentreLayeredSecurity from '../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/HelpCentreScreens/SecurityPrivacyScreens/LayeredSecurity';
+import ToktokWalletHelpCentreMoneyProtected from '../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/HelpCentreScreens/SecurityPrivacyScreens/MoneyProtected';
+
+import ToktokWalletHelpCentreTermsConditions from '../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/HelpCentreScreens/TermsConditionsScreens';
+import ToktokWalletHelpCentreTransactionLimit from '../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/HelpCentreScreens/TransactionLimitScreens';
+
+
 /*---------- DRIVER SCREENS ----------*/
 import DriverMap from '../screens/AuthenticatedStack/DriverScreens/DriverMap';
 import Ongoing from '../screens/AuthenticatedStack/DriverScreens/Deliveries/Ongoing';
@@ -449,6 +459,14 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="ToktokWalletGcashLinkAccount" component={ToktokWalletGcashLinkAccount}/>
     <Authenticated.Screen name="ToktokWalletLinkAccount" component={ToktokWalletLinkAccount} />
 
+    <Authenticated.Screen name="ToktokWalletHelpCentrePaymentChart" component={ToktokWalletHelpCentrePaymentChart} />
+    
+    <Authenticated.Screen name="ToktokWalletHelpCentreSecurityPrivacy" component={ToktokWalletHelpCentreSecurityPrivacy} />
+    <Authenticated.Screen name="ToktokWalletHelpCentreLayeredSecurity" component={ToktokWalletHelpCentreLayeredSecurity} />
+    <Authenticated.Screen name="ToktokWalletHelpCentreMoneyProtected" component={ToktokWalletHelpCentreMoneyProtected} />
+
+    <Authenticated.Screen name="ToktokWalletHelpCentreTermsConditions" component={ToktokWalletHelpCentreTermsConditions} />
+    <Authenticated.Screen name="ToktokWalletHelpCentreTransactionLimit" component={ToktokWalletHelpCentreTransactionLimit} />
 
     {/*---------- DRIVER SCREENS ----------*/}
     <Authenticated.Screen name="DriverHomeBottomTab" component={DriverHomeBottomTab} options={{headerShown: false}} />

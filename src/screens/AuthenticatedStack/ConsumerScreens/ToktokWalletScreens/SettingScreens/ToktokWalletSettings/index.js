@@ -37,6 +37,11 @@ const ToktokWalletSettings = ({navigation , route })=> {
             <View style={{padding: 16,paddingVertical: 8}}><Text style={{fontFamily:FONT.BOLD}}>LOGS</Text></View>
             <SettingOption route="ToktokWalletCashInLogs" title="Cash In"/>
             <SettingOption route="ToktokWalletCashOutLogs" title="Cash Out"/>
+            <View style={{padding: 16,paddingVertical: 8}}><Text style={{fontFamily:FONT.BOLD}}>HELP CENTRE</Text></View>
+            <SettingOption route="ToktokWalletHelpCentrePaymentChart" title="Payment Chart"/>
+            <SettingOption route="ToktokWalletHelpCentreSecurityPrivacy" title="Security and Privacy"/>
+            <SettingOption route="ToktokWalletHelpCentreTermsConditions" title="Terms and Conditions"/>
+            <SettingOption route="ToktokWalletHelpCentreTransactionLimit" title="Transaction Limit"/>
         </View>
         </>
     )
