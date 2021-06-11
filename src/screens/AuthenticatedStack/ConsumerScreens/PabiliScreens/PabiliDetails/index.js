@@ -23,6 +23,7 @@ import NotesForm from './NotesForm';
 import PabiliForm from './PabiliForm';
 import PromoForm from './PromoForm';
 import ItemsToPurchaseForm from './ItemsToPurchaseForm';
+import {PaymentMethodForm, PaymentMethodSheet} from './PaymentMethod';
 
 const FORM_DATA = {description: '', quantity: ''};
 
@@ -56,7 +57,7 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
   });
 
   const AlertHook = useAlert();
-
+  const [paymentMethod, setPaymentMethod] = useState('CASH');
   const [collectPaymentFrom, setCollectPaymentFrom] = useState(route.params.orderData.collectPaymentFrom);
   const [itemDescription, setItemDescription] = useState(route.params.orderData.cargo);
   const [otherItem, setOtherItem] = useState('');
@@ -86,6 +87,7 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
     }
   }, []);
 
+  const paymentMethodSheetRef = useRef();
   const paymentSheetRef = useRef();
   const partnerItemSheefRef = useRef();
   const itemSheetRef = useRef();
@@ -120,6 +122,7 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
       navigation.push('DeliverySummary', {
         orderData: {
           ...route.params.orderData,
+          paymentMethod,
           collectPaymentFrom,
           cargo: finalItemDescription,
           notes,
@@ -221,6 +224,7 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
 
     route.params.setOrderData({
       ...route.params.orderData,
+      paymentMethod,
       collectPaymentFrom,
       itemDescription: finalItemDescription,
       notes,
@@ -240,6 +244,7 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
           // promoCode: bookingData.promoCode,
           isExpress: isExpress,
           isCashOnDelivery: true,
+          paymentMethod,
           partnerBranchOrderId: selectedOrder ? selectedOrder.id : null,
           partnerBranchTenantId: selectedTenant ? selectedTenant.id : null,
           origin: {
@@ -255,6 +260,14 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
         },
       },
     });
+  };
+
+  const onPaymentMethodChange = (paymentMethodValue) => {
+    // if (isCashOnDelivery && collectPaymentFromValue === 'SENDER') {
+    //   AlertHook({message: 'Cannot collect payment from sender on cash on deliveries.'});
+    //   return;
+    // }
+    setPaymentMethod(paymentMethodValue);
   };
 
   const onPartnerBranchOrderSelect = (order) => {
@@ -307,6 +320,10 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
             <AlertOverlay visible={loading} />
             <View style={{height: 20}} />
             {/* <PromoForm /> */}
+            <PaymentMethodForm
+              value={paymentMethod === 'CASH' ? 'Cash' : 'toktokwallet'}
+              bottomSheetRef={paymentMethodSheetRef}
+            />
             {/* <PaymentForm value={collectPaymentFrom === 'SENDER' ? 'Sender' : 'Recipient'} bottomSheetRef={paymentSheetRef} /> */}
             {!partnerBranch && (
               <ItemDescriptionForm
@@ -344,6 +361,7 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
           <YellowButton label="Confirm Pabili Information" onPress={onConfirmPabiliInformation} style={{margin: 16}} />
         </View>
       </View>
+      <PaymentMethodSheet onChange={onPaymentMethodChange} ref={paymentMethodSheetRef} />
       <PaymentSheet onChange={setCollectPaymentFrom} ref={paymentSheetRef} />
       <ItemSheet onChange={setItemDescription} ref={itemSheetRef} />
       {partnerBranch && (
