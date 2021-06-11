@@ -62,6 +62,18 @@ const WalletRecentTransactions = () => {
     );
   }
 
+  if (data.getTransactions.recentTransactions.length == 0 && APP_FLAVOR == "D" && ACCOUNT_TYPE == 2) {
+    return (
+      <View style={{flex: 1,justifyContent:'center',alignItems:'center'}}>
+          {/* <Image style={{height: 219,width: 291}} source={require('../../../../../assets/toktokwallet-assets/Landing-page.png')}/>
+          <View style={{width: "40%", justifyContent:'center',marginTop: 20}}>
+              <YellowButton label="Cash In Now" onPress={TopUpNow}/>
+          </View> */}
+      </View>
+    )
+  }
+
+
   const ViewTransactions = () => {
     return navigation.navigate('ToktokWalletTransactions', {allTransactions: data.getTransactions.allTransactions});
   };

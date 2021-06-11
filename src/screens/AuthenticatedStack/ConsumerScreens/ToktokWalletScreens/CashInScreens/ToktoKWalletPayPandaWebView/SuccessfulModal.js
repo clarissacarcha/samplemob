@@ -7,6 +7,7 @@ import {useNavigation} from '@react-navigation/native'
 import moment from 'moment'
 import {Receipt} from '../../Components'
 import { COLOR } from '../../../../../../res/variables'
+import { useSelector } from 'react-redux'
 
 
 const TransactionInfo = ({label,value})=> (
@@ -25,6 +26,7 @@ const TransactionInfo = ({label,value})=> (
 
 const SuccessfulModal = ({successModalVisible , amount , cashInLogParams})=> {
     const navigation = useNavigation()
+    const tokwaAccount = useSelector(state=>state.toktokWallet)
 
     let status
     switch (cashInLogParams.status) {
@@ -55,6 +57,8 @@ const SuccessfulModal = ({successModalVisible , amount , cashInLogParams})=> {
                      <TransactionInfo label="Cash in Method" value="PayPanda"/>
                      <TransactionInfo label="PayPanda Ref. No." value={cashInLogParams.paypandaReferenceNumber}/>
                      <TransactionInfo label="PayPanda Status" value={status}/>
+                     <TransactionInfo label="Account Name" value={`${tokwaAccount.person.firstName} ${tokwaAccount.person.lastName}`}/>
+                     <TransactionInfo label="Account Number" value={tokwaAccount.mobileNumber}/>
                      <TransactionInfo label="Amount" value={`PHP ${numberFormat(cashInLogParams.amount)}`}/>
                 </View>
         </View>

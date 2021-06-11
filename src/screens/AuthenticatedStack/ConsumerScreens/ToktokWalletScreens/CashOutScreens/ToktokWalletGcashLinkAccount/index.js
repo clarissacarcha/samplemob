@@ -73,7 +73,7 @@ const ToktokWalletGcashLinKAccount = ({navigation,route})=> {
         getGcashLinkOTP({
             variables: {
                 input: {
-                    mobileNumber: mobile
+                    mobileNumber: `09${mobile}`
                 }
             }
         })
@@ -84,7 +84,7 @@ const ToktokWalletGcashLinKAccount = ({navigation,route})=> {
             variables: {
                 input: {
                     OTPCode: pinCode,
-                    mobile: mobile
+                    mobile: `09${mobile}`
                 }
             }
         })
@@ -118,7 +118,7 @@ const ToktokWalletGcashLinKAccount = ({navigation,route})=> {
         >
             <View style={{flex: 1,alignItems:"center", marginTop: 40}}>
                     <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L}}>Enter OTP code sent to</Text>
-                    <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.L,marginBottom: 20,}}>{mobile}</Text>
+                    <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.L,marginBottom: 20,}}>09{mobile}</Text>
 
                     <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={true}/>
                     <TextInput

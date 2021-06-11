@@ -9,6 +9,7 @@ import {useLazyQuery} from '@apollo/react-hooks'
 import { useAlert } from '../../../../../../hooks/useAlert'
 import { onErrorAlert } from '../../../../../../util/ErrorUtility'
 import {useNavigation} from '@react-navigation/native'
+import { useSelector } from 'react-redux'
 
 //SELF IMPORTS
 import ModalLinkMobile from "./ModalLinkMobile";
@@ -16,7 +17,8 @@ import { AlertOverlay } from '../../../../../../components'
 
 const RegisterMobile = ({provider,rejected})=> {
 
-    const [mobileNo,setMobileNo] = useState("")
+    const tokwaAccount = useSelector(state=>state.toktokWallet)
+    const [mobileNo,setMobileNo] = useState(tokwaAccount.mobileNumber.replace("+639",""))
     const [errorMessage,setErrorMessage] = useState("")
     const [showLinkModal,setShowLinkModal] = useState(false)
     const alert = useAlert();
