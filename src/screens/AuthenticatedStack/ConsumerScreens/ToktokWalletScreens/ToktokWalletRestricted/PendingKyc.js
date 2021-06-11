@@ -1,5 +1,5 @@
 import React from 'react'
-import {View,Text,StyleSheet,ImageBackground,Dimensions} from 'react-native'
+import {View,Text,StyleSheet,ImageBackground,Dimensions,Image} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
 import { HeaderImageBackground , HeaderTitle , Separator } from '../Components'
 import { COLOR , FONT_SIZE , FONT,SIZE } from '../../../../../res/variables'
@@ -26,44 +26,29 @@ const PendingKyc = ()=> {
                 <View style={{alignItems:"center",marginTop: 10,}}>
                     <Text style={styles.verifyWalletText}>We are evaluating your application.</Text>
                     <Text style={styles.clickVerifyText}>Your toktokwallet verification is ongoing. Please wait for your account to be approved.</Text>
-                    <View style={{marginTop: 40,justifyContent:'center'}}>
-        
-        <ImageBackground 
-            resizeMode="stretch"
-            imageStyle={{borderRadius: SIZE.BORDER_RADIUS}}
-            source={require('../../../../../assets/toktokwallet-assets/unlock.png')}
-            style={{borderRadius: SIZE.BORDER_RADIUS, width: width - 80, height: 90,backgroundColor:"transparent",flexDirection:"row"}}
-        >
-            <View style={{flex:1,backgroundColor:"transparent",justifyContent:"center",alignItems:"flex-end",paddingRight: 20}}>
-                <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}><Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M, color: COLOR.ORANGE}}>Secure</Text> your</Text>
-                <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>toktokwallet</Text>
-            </View>
-        </ImageBackground>
+                    <View style={{marginTop: 20,justifyContent:'center'}}>
 
-        <ImageBackground 
-            resizeMode="stretch"
-            imageStyle={{borderRadius: SIZE.BORDER_RADIUS}}
-            source={require('../../../../../assets/toktokwallet-assets/secure.png')}
-            style={{marginVertical: 10, borderRadius: SIZE.BORDER_RADIUS, width: width - 80, height: 90,backgroundColor:"transparent",flexDirection:"row"}}
-        >
-             <View style={{flex:1,backgroundColor:"transparent",justifyContent:"center",alignItems:"flex-end",paddingRight: 20}}>
-                <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}><Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M, color: COLOR.ORANGE}}>Enjoy</Text> convenient</Text>
-                <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>payment experience</Text>
-            </View>   
-        </ImageBackground>
-
-        <ImageBackground 
-            resizeMode="stretch"
-            imageStyle={{borderRadius: SIZE.BORDER_RADIUS}}
-            source={require('../../../../../assets/toktokwallet-assets/enjoy.png')}
-            style={{borderRadius: SIZE.BORDER_RADIUS, width: width - 80, height: 90,backgroundColor:"transparent",flexDirection:"row"}}
-        >
-            <View style={{flex:1,backgroundColor:"transparent",justifyContent:"center",alignItems:"flex-end",paddingRight: 20}}>
-                <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}><Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M, color: COLOR.ORANGE}}>Unlock</Text> toktokwallet</Text>
-                <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>features</Text>
-            </View>
-        </ImageBackground>
-    </View>
+                    <View style={{flexDirection:'row',marginVertical: 10}}>
+                                <Image resizeMode="contain" style={{height: 100,width: 80}} source={require('../../../../../assets/toktokwallet-assets/nobg-secure.png')} />
+                                <View style={{justifyContent:"center",marginLeft: 20}}>
+                                <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}><Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M,color: COLOR.ORANGE}}>Secure</Text> your toktokwallet</Text>
+                                </View>
+                        </View>
+                        <View style={{flexDirection:'row',marginVertical: 10}}>
+                                <Image resizeMode="contain" style={{height: 100,width: 80}} source={require('../../../../../assets/toktokwallet-assets/nobg-enjoy.png')} />
+                                <View style={{justifyContent:"center",marginLeft: 20}}>
+                                    <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}><Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M,color: COLOR.ORANGE}}>Enjoy</Text> convenient payment</Text>
+                                    <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>experience</Text>
+                                </View>
+                        </View>
+                        <View style={{flexDirection:'row',marginVertical: 10}}>
+                                <Image resizeMode="contain" style={{height: 100,width: 80}} source={require('../../../../../assets/toktokwallet-assets/nobg-unlock.png')} />
+                                <View style={{justifyContent:"center",marginLeft: 20}}>
+                                    <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}><Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M,color: COLOR.ORANGE}}>Unlock</Text> wallet features</Text>
+                                </View>
+                        </View>
+       
+                    </View>
                 </View>
             </View>
 

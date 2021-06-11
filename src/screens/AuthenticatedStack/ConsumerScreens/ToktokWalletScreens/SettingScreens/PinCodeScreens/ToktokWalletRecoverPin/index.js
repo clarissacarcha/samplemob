@@ -8,9 +8,10 @@ import { TOKTOK_WALLET_GRAPHQL_CLIENT } from '../../../../../../../graphql'
 import { GET_FORGOT_AND_RECOVER_OTP_CODE , VERIFY_FORGOT_AND_RECOVER_OTP_CODE} from '../../../../../../../graphql/toktokwallet'
 import { onError, onErrorAlert } from '../../../../../../../util/ErrorUtility'
 import {useAlert} from '../../../../../../../hooks'
-import {DisabledButton, Separator} from '../../../Components'
+import {DisabledButton, Separator, BuildingBottom} from '../../../Components'
 import { HeaderBack, YellowButton } from '../../../../../../../revamp'
 import { SIZE , FONT , FONT_SIZE , COLOR } from '../../../../../../../res/variables'
+
 
 const NumberBox = ({onPress, value , showPin}) => (
     <TouchableHighlight onPress={onPress} underlayColor={COLOR.YELLOW} style={{borderRadius: 10,marginHorizontal: 5,}}>
@@ -181,6 +182,7 @@ const ToktokWalletRecoverPin = ({navigation})=> {
                         : <YellowButton onPress={ConfirmVerificationCode} label="Proceed"/>
                     }   
             </View>
+            <BuildingBottom/>
         </KeyboardAvoidingView>
         </>
     )

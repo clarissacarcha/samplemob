@@ -34,11 +34,6 @@ const WalletLandingPage = ({refreshing, onRefresh})=> {
                        : <WalletCardInfo/>
                    }
                 </View>
-                {
-                    APP_FLAVOR == "C" && ACCOUNT_TYPE == 1 && <View>
-                                                                 <WalletRecentOutgoingTransfer/>
-                                                              </View>
-                }
                 <View>
                     <WalletRecentTransactions/>
                 </View>

@@ -1,9 +1,23 @@
 import React from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,Modal,Image} from 'react-native'
+import {View,Text,StyleSheet,TouchableOpacity,Modal,Image,Dimensions} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
-import { FONTS, SIZES } from '../../../../../../../res/constants'
-import { BlackButton, YellowButton } from '../../../../../../../revamp'
+import { FONTS, FONT_SIZE, SIZES } from '../../../../../../../res/constants'
+import { BlackButton, ICON_SET, VectorIcon, YellowButton } from '../../../../../../../revamp'
+import { COLOR, FONT } from '../../../../../../../res/variables'
+import {BuildingBottom} from '../../../Components'
 
+const {width,height} = Dimensions.get("window")
+
+const Reminder = ({children})=> {
+    return (
+        <View style={{flexDirection: "row",marginVertical: 5}}>
+            <View style={{padding: 2, borderRadius: 100, borderColor: COLOR.YELLOW, borderWidth: 1,marginRight: 10}}>
+                <VectorIcon size={12} iconSet={ICON_SET.Feather} name="check"/>
+            </View>
+           {children}
+    </View>
+    )
+}
 
 const NewPIN = ()=> {
     return (
@@ -67,9 +81,29 @@ const SuccessModal = ({modalVisible,tokwaAccount})=> {
         >
              <View style={styles.container}>
                 { tokwaAccount.pinCode ? <UpdatePIN/> : <NewPIN/>}
+                <View style={{flex: 1,alignItems:"center", justifyContent:"center"}}>
+                        <Text style={{textAlign:"left",fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,marginBottom: 10,}}>Reminders</Text>
+                        <View>
+                            <Reminder>
+                                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>Use a <Text style={{color: COLOR.YELLOW}}>secure</Text> PIN combination</Text>
+                            </Reminder>
+                            <Reminder>
+                                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}><Text style={{color: COLOR.YELLOW}}>Remeber</Text> your PIN</Text>
+                            </Reminder>
+                            <Reminder>
+                                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}><Text style={{color: COLOR.YELLOW}}>Never share</Text> your PIN with anyone</Text>
+                            </Reminder>
+                            <Reminder>
+                                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>If you think your PIN is no longer a secret, </Text>      
+                            </Reminder>
+                            <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M,marginLeft: 28}}><Text style={{color: COLOR.YELLOW}}>change your</Text> PIN immediately</Text>
+                        </View>
+                   
+                </View>
                 <View>
                     <YellowButton label="Done" onPress={closeModal}/>
                 </View>
+               <BuildingBottom/>
             </View>
      
         </Modal>

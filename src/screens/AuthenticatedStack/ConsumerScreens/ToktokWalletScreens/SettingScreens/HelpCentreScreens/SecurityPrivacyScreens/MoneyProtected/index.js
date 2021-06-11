@@ -2,10 +2,10 @@ import React from 'react'
 import {View,Text,StyleSheet,Platform,Dimensions,StatusBar,Image, TouchableOpacity, ScrollView} from 'react-native'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import RNFS from 'react-native-fs'
-import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../../../../../../components';
 import { COLOR, FONT, FONT_SIZE } from '../../../../../../../../res/variables';
 import { COLORS, FONTS, FONT_BOLD } from '../../../../../../../../res/constants';
 import {Separator} from '../../../../Components'
+import {HeaderBack, HeaderTitle} from '../../../../../../../../revamp'
 
 const ListItem = (props) => {
     return (
@@ -29,7 +29,7 @@ const ListItem = (props) => {
 const MoneyProtected = ({navigation}) => {
 
     navigation.setOptions({
-        headerLeft: () => <HeaderBack />,
+        headerLeft: () => <HeaderBack color={COLOR.YELLOW}/>,
         headerTitle: () => <HeaderTitle label={['Your Money is Protected', '']} />,
     });
 
@@ -54,10 +54,15 @@ const MoneyProtected = ({navigation}) => {
                             
                             <View style={{flex: 1, marginTop: 12, marginBottom: 10}}>
                                 
-                                {[{
+                                {/* {[{
                                     title: "Separated for your security",
                                     content: "Your toktokwallet balance is help in a dedicated customer account with BDO."
                                 }, {
+                                    title: "Regulated by the local monetary authority",
+                                    content: "toktokwallet is regulated by Bangko Sentral ng Pilipinas (BSP)."
+                                }].map((data, i) => <ListItem title={data.title} content={data.content} />)} */}
+
+                                {[{
                                     title: "Regulated by the local monetary authority",
                                     content: "toktokwallet is regulated by Bangko Sentral ng Pilipinas (BSP)."
                                 }].map((data, i) => <ListItem title={data.title} content={data.content} />)}

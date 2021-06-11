@@ -2,10 +2,11 @@ import React from 'react'
 import {View,Text,StyleSheet,Platform,Dimensions,StatusBar,Image, TouchableOpacity, ScrollView} from 'react-native'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import RNFS from 'react-native-fs'
-import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../../../../../../components';
+import { AlertOverlay} from '../../../../../../../../components';
 import { COLOR, FONT, FONT_SIZE } from '../../../../../../../../res/variables';
 import { COLORS, FONTS, FONT_BOLD } from '../../../../../../../../res/constants';
 import {Separator} from '../../../../Components'
+import {HeaderBack, HeaderTitle} from '../../../../../../../../revamp'
 
 const ListItem = (props) => {
     return (
@@ -29,7 +30,7 @@ const ListItem = (props) => {
 const LayeredSecurity = ({navigation}) => {
 
     navigation.setOptions({
-        headerLeft: () => <HeaderBack />,
+        headerLeft: () => <HeaderBack color={COLOR.YELLOW}/>,
         headerTitle: () => <HeaderTitle label={['Layered Security', '']} />,
     });
 
@@ -55,8 +56,8 @@ const LayeredSecurity = ({navigation}) => {
                             <View style={{flex: 1, marginTop: 12, marginBottom: 10}}>
 
                                 <ListItem
-                                    title="toktok PIN and biometric authentication"
-                                    content="We protect your wallet by offering toktok PIN biometric authentication. They help prevent unauthorized access to your account."
+                                    title="toktokwallet PIN authentication"
+                                    content="We protect your wallet by offering toktokwallet PIN authentication. They help prevent unauthorized access to your account."
                                     imageSource={require('../../../../../../../../assets/images/SecurityAndPrivacy/fingerprint.png')}
                                     resizeMode="stretch"
                                 />
@@ -72,7 +73,7 @@ const LayeredSecurity = ({navigation}) => {
                                     content: "Push notifications are sent out after every toktokwallet payment, keeping you aware of all your transactions."
                                 },{
                                     title: "Data encryption",
-                                    content: "Push notifications are sent out after every toktokwallet payment, keeping you aware of all your transactions."
+                                    content: "Additional security for every transactions."
                                 },{
                                     title: "Data privacy",
                                     content: "Your personal information will not be shared or used for external gain."

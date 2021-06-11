@@ -2,10 +2,9 @@ import React from 'react'
 import {View,Text,StyleSheet,Platform,Dimensions,StatusBar,Image, TouchableOpacity} from 'react-native'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import RNFS from 'react-native-fs'
-import {YellowButton } from '../../../../../../../revamp';
-import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../../../../../components';
+import {YellowButton ,HeaderBack, HeaderTitle, } from '../../../../../../../revamp';
+import { AlertOverlay} from '../../../../../../../components';
 import { COLOR, FONT, FONT_SIZE } from '../../../../../../../res/variables';
-import { COLORS, FONTS, FONT_BOLD } from '../../../../../../../res/constants';
 import {Separator} from '../../../Components'
 
 
@@ -15,8 +14,8 @@ const Card = (props) => {
             <Separator />    
                 <TouchableOpacity onPress={props.onPress || null} style={{flexDirection: 'row', paddingVertical: 8, paddingHorizontal: 18}}>
                     <View style={{flex: 3, justifyContent: 'center'}}>
-                        <Text style={{fontFamily: FONTS.BOLD, fontSize: FONT_SIZE.L}}>{props.title}</Text>
-                        <Text style={{fontFamily: FONTS.REGULAR, fontSize: FONT_SIZE.S}}>{props.content}</Text>
+                        <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.L}}>{props.title}</Text>
+                        <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S}}>{props.content}</Text>
                     </View>
                     <View style={{flex: 1.5, flexDirection: 'row-reverse'}}>
                         <Image style={{margin: 8, resizeMode: 'contain', width: 80, height: 90}} source={props.imageSource}/>
@@ -29,7 +28,7 @@ const Card = (props) => {
 const SecurityPrivacyScreen = ({navigation})=> {
 
     navigation.setOptions({
-        headerLeft: () => <HeaderBack />,
+        headerLeft: () => <HeaderBack color={COLOR.YELLOW}/>,
         headerTitle: () => <HeaderTitle label={['Security and privacy centre', '']} />,
     });
 

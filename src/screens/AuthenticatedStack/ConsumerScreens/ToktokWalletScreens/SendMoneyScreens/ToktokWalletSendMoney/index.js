@@ -82,18 +82,22 @@ const ToktokWalletSendMoney = ({navigation,route})=> {
                 <View style={styles.headings}>
                     <HeaderImageBackground>
                         <HeaderTitle label="Send Money"/>
-                        <View style={{height: 32}}/>
-                        <View style={styles.walletContent}>
-                                <View>
-                                    <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>{tokwaAccount.wallet.currency.code} {numberFormat(tokwaAccount.wallet.balance ? tokwaAccount.wallet.balance : 0)}</Text>
-                                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Available Balance</Text>
+                        <View style={{flex: 1,justifyContent:"flex-end",paddingBottom: 45}}>
+                            <View>  
+                                    <View style={styles.walletContent}>
+                                        <View>
+                                            <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>{tokwaAccount.wallet.currency.code} {numberFormat(tokwaAccount.wallet.balance ? tokwaAccount.wallet.balance : 0)}</Text>
+                                            <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Available Balance</Text>
+                                        </View>
+                                        <TouchableOpacity onPress={()=> navigation.navigate("ToktokWalletPaymentOptions")} style={styles.topUp}>
+                                            <View style={styles.topUpbtn}>
+                                                    <FIcon5 name={'plus'} size={12}/> 
+                                            </View>
+                                        </TouchableOpacity>
                                 </View>
-                                <TouchableOpacity onPress={()=> navigation.navigate("ToktokWalletPaymentOptions")} style={styles.topUp}>
-                                    <View style={styles.topUpbtn}>
-                                            <FIcon5 name={'plus'} size={12}/> 
-                                    </View>
-                                </TouchableOpacity>
+                            </View>
                         </View>
+                       
                     </HeaderImageBackground>
     
           
@@ -180,11 +184,8 @@ const styles = StyleSheet.create({
         position:'relative'
     },
     walletContent: {
-        flex: 1,
         flexDirection: "row",
         paddingHorizontal: 16,
-        alignItems:"flex-start",
-        justifyContent:"flex-start"
     },
     topUp: {
         justifyContent:"flex-start",

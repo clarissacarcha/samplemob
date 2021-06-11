@@ -10,12 +10,12 @@ export const GET_ACCOUNT_TYPES = gql`
             description
             walletSize
             linkLimit
-            IncomingDailyLimit
-            IncomingMonthlyLimit
-            IncomingAnnualLimit
-            OutgoingDailyLimit
-            OutgoingMonthlyLimit
-            OutgoingAnnualLimit
+            incomingValueDailyLimit
+            incomingValueMonthlyLimit
+            incomingValueAnnualLimit
+            outgoingValueDailyLimit
+            outgoingValueMonthlyLimit
+            outgoingValueAnnualLimit
         }
     }
 `

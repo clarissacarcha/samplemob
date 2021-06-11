@@ -1,5 +1,5 @@
 import React , {useState , useEffect} from 'react'
-import {View,Text,StyleSheet,TouchableHighlight,Alert,BackHandler,KeyboardAvoidingView,Platform} from 'react-native'
+import {View,Text,StyleSheet,TouchableHighlight,Alert,BackHandler,KeyboardAvoidingView,Platform,Image,Dimensions} from 'react-native'
 import { AlertOverlay, HeaderTitle } from '../../../../../../../components'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from '../../../../../../../graphql'
@@ -17,7 +17,7 @@ import CreateConfirmPin from './CreateConfirmPin'
 import VerifyPin from './VerifyPin'
 import SuccessModal from './SuccessModal'
 
-
+const {width,height} = Dimensions.get("window")
 
 const HeaderBack = ({pageIndex,setPageIndex,navigation,tokwaAccount})=> {
 

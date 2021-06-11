@@ -7,10 +7,17 @@ import {APP_FLAVOR,ACCOUNT_TYPE} from '../../../../../../res/constants';
 import {Separator} from '../../Components';
 import { HeaderBack , HeaderTitle} from '../../../../../../revamp';
 
+
+const SettingHeaderTitle = ({title})=> {
+    return (
+        <View style={{paddingHorizontal: 16, paddingVertical: 8,backgroundColor:"white"}}><Text style={{fontFamily:FONT.BOLD}}>{title}</Text></View>
+    )
+}
+
 const ToktokWalletSettings = ({navigation , route })=> {
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
-        headerTitle: ()=> <HeaderTitle label={['','']}/>,
+        headerTitle: ()=> <HeaderTitle label={['Settings','']}/>,
     })
 
     const SettingOption = ({route,params={},title})=> (
@@ -32,16 +39,20 @@ const ToktokWalletSettings = ({navigation , route })=> {
         <>
         <Separator />
         <View style={styles.container}>
-            <View style={{padding: 16,paddingVertical: 8}}><Text style={{fontFamily:FONT.BOLD}}>SETTINGS</Text></View>
+            <SettingHeaderTitle title="Manage Pin"/>
             <SettingOption route="ToktokWalletCreatePin" title="Change Pin"/>
-            <View style={{padding: 16,paddingVertical: 8}}><Text style={{fontFamily:FONT.BOLD}}>LOGS</Text></View>
-            <SettingOption route="ToktokWalletCashInLogs" title="Cash In"/>
-            <SettingOption route="ToktokWalletCashOutLogs" title="Cash Out"/>
-            <View style={{padding: 16,paddingVertical: 8}}><Text style={{fontFamily:FONT.BOLD}}>HELP CENTRE</Text></View>
+            <Separator/>
+            <SettingHeaderTitle title="Help centre"/>
             <SettingOption route="ToktokWalletHelpCentrePaymentChart" title="Payment Chart"/>
+            <SettingOption route="ToktokWalletHelpCentreTransactionLimit" title="User Level and Transaction Limit"/>
+            <Separator/>
+            <SettingHeaderTitle title="Security and Privacy"/>
             <SettingOption route="ToktokWalletHelpCentreSecurityPrivacy" title="Security and Privacy"/>
             <SettingOption route="ToktokWalletHelpCentreTermsConditions" title="Terms and Conditions"/>
-            <SettingOption route="ToktokWalletHelpCentreTransactionLimit" title="Transaction Limit"/>
+            <Separator/>
+            <SettingHeaderTitle title="Logs"/>
+            <SettingOption route="ToktokWalletCashInLogs" title="Cash In"/>
+            <SettingOption route="ToktokWalletCashOutLogs" title="Cash Out"/>
         </View>
         </>
     )

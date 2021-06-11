@@ -1,8 +1,10 @@
 import React, { useState ,useRef , useEffect } from 'react'
-import {View,Text,StyleSheet,TouchableHighlight,TouchableOpacity,TextInput,KeyboardAvoidingView,Platform,ScrollView} from 'react-native'
+import {View,Text,StyleSheet,TouchableHighlight,TouchableOpacity,TextInput,KeyboardAvoidingView,Platform,ScrollView,Image,Dimensions} from 'react-native'
 import { DARK,SIZES, BUTTON_HEIGHT, COLORS, FONTS} from '../../../../../../../res/constants'
 import { YellowButton } from '../../../../../../../revamp'
-import {DisabledButton, NumberBoxes} from '../../../Components'
+import {DisabledButton, NumberBoxes,BuildingBottom} from '../../../Components'
+
+const {width,height} = Dimensions.get("window")
 
 const CreatePin = ({pinCode,setPinCode,pageIndex,setPageIndex,tokwaAccount})=> {
 
@@ -64,6 +66,7 @@ const CreatePin = ({pinCode,setPinCode,pageIndex,setPageIndex,tokwaAccount})=> {
                     : <YellowButton label="Next" onPress={onSubmit}/>
                 }
             </View>
+           <BuildingBottom/>
        </View>
     )
 }

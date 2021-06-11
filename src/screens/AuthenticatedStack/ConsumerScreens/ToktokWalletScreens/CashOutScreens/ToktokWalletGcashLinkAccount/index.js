@@ -2,7 +2,7 @@ import React , {useState,useRef,useEffect} from 'react'
 import {View,Text,StyleSheet,TextInput,TouchableOpacity,KeyboardAvoidingView,Platform} from 'react-native'
 import { COLOR, FONT, FONT_SIZE, SIZE } from '../../../../../../res/variables'
 import { HeaderBack, HeaderTitle, ICON_SET, VectorIcon, YellowButton } from '../../../../../../revamp'
-import { DisabledButton, NumberBoxes, Separator } from '../../Components'
+import { DisabledButton, NumberBoxes, Separator, BuildingBottom } from '../../Components'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from '../../../../../../graphql'
 import { PATCH_LINK_ACCOUNT , GET_GCASH_LINK_OTP } from '../../../../../../graphql/toktokwallet'
 import { useLazyQuery , useMutation } from '@apollo/react-hooks'
@@ -155,6 +155,7 @@ const ToktokWalletGcashLinKAccount = ({navigation,route})=> {
                 : <YellowButton onPress={ConfirmVerificationCode} label="Proceed"/>
             }   
             </View>
+            <BuildingBottom/>
         </KeyboardAvoidingView>
         </>
     )
