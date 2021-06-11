@@ -157,12 +157,20 @@ const ToktokWalletPayPandaForm = ({navigation,route})=> {
             // behavior={Platform.OS === "ios" ? "padding" : "height"} 
             style={styles.container}
         >
-
-            <View style={styles.paypandaLogo}>
-                     <Image style={{height: 90,width: 90,alignSelf: "center",marginBottom: 10}} source={require('../../../../../../assets/toktokwallet-assets/cash-in-providers/jcwallet.png')}/>
-                     <Text style={{fontSize: FONT_SIZE.L,fontFamily: FONT.BOLD}}>JC Wallet</Text>
-                     <Text style={{fontSize: FONT_SIZE.M ,fontFamily: FONT.BOLD}}>Please enter amount to Cash in</Text>
-            </View>
+            {
+                transactionType.name.toLowerCase() == "paypanda"
+                ?    <View style={styles.paypandaLogo}>
+                                <Image style={{height: 90,width: 90,alignSelf: "center",marginBottom: 10}} source={require('../../../../../../assets/toktokwallet-assets/cash-in-providers/paypanda.png')}/>
+                                <Text style={{fontSize: FONT_SIZE.L,fontFamily: FONT.BOLD}}>PayPanda</Text>
+                                <Text style={{fontSize: FONT_SIZE.M ,fontFamily: FONT.BOLD}}>Please enter amount to Cash in</Text>
+                    </View>
+                :    <View style={styles.paypandaLogo}>
+                                <Image style={{height: 90,width: 90,alignSelf: "center",marginBottom: 10}} source={require('../../../../../../assets/toktokwallet-assets/cash-in-providers/jcwallet.png')}/>
+                                <Text style={{fontSize: FONT_SIZE.L,fontFamily: FONT.BOLD}}>JC Wallet</Text>
+                                <Text style={{fontSize: FONT_SIZE.M ,fontFamily: FONT.BOLD}}>Please enter amount to Cash in</Text>
+                    </View>
+            }
+        
 
             <View style={styles.content}>
           
