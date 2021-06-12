@@ -29,6 +29,7 @@ const ToktokWalletLinkAccount = ({navigation, route})=> {
     const inputRef = useRef();
     const alert = useAlert()
     const [otpTimer,setOtpTimer] = useState(120)
+    const [errorMessage,setErrorMessage] = useState("")
 
     const [getLinkAccountOTP] = useLazyQuery(GET_LINK_ACCOUNT_OTP, {
         fetchPolicy: "network-only",
@@ -38,6 +39,11 @@ const ToktokWalletLinkAccount = ({navigation, route})=> {
             setOtpTimer(120)
         },
         onError: (error)=>{
+            const {graphQLErrors, networkError} = error
+            if(graphQLErrors[0]?.payload?.code == "OTPMAXREQUEST"){
+                setPinCode("")
+                return setErrorMessage(graphQLErrors[0].message)
+            }
             onErrorAlert({alert,error})
         }
     })
@@ -108,9 +114,9 @@ const ToktokWalletLinkAccount = ({navigation, route})=> {
         })
     }
 
-    useEffect(()=>{
-        CreateVerificationCode()
-    },[])
+    // useEffect(()=>{
+    //     CreateVerificationCode()
+    // },[])
 
     useEffect(()=>{
         if(otpTimer >= 0){
@@ -152,6 +158,9 @@ const ToktokWalletLinkAccount = ({navigation, route})=> {
                             }}
                             // onSubmitEditing={onSubmit}
                         />
+                        {
+                            errorMessage != "" && <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M,color: COLOR.RED,marginHorizontal: 16}}>{errorMessage}</Text>
+                        }
                         <TouchableOpacity
                                 disabled={otpTimer > 0 ? true : false}
                                 style={{marginTop: 18,paddingVertical: 10,alignItems: "center"}}

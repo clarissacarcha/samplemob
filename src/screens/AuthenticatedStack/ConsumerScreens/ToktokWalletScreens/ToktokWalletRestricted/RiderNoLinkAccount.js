@@ -3,9 +3,9 @@ import {View,Text,StyleSheet,Modal,Dimensions,TouchableOpacity,TextInput,Activit
 import { YellowButton, VectorIcon , ICON_SET  } from '../../../../../revamp'
 import { COLOR , FONT_SIZE , FONT , SIZE } from '../../../../../res/variables'
 import { TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT } from '../../../../../graphql'
-import { GET_CHECK_ACCOUNT } from '../../../../../graphql/toktokwallet'
-import { useQuery } from '@apollo/react-hooks'
-import { onErrorAlert } from '../../../../../util/ErrorUtility'
+import { GET_CHECK_ACCOUNT , GET_LINK_ACCOUNT_OTP } from '../../../../../graphql/toktokwallet'
+import { useQuery , useLazyQuery } from '@apollo/react-hooks'
+import { onErrorAlertlert } from '../../../../../util/ErrorUtility'
 import { useAlert } from '../../../../../hooks'
 import { useNavigation } from '@react-navigation/native'
 import { useSelector } from 'react-redux'
@@ -72,7 +72,6 @@ const RiderNoLinkAccount = ()=> {
         fetchPolicy: "network-only",
         variables:{
             input: {
-              
                 //mobileNumber: '+639270752905',
                 mobileNumber: session.user.username,
                 motherReferenceNumber: session.user.id,
@@ -83,10 +82,6 @@ const RiderNoLinkAccount = ()=> {
         }
     })
 
-    const linkAccount = ()=> {
-        return navigation.navigate("ToktokWalletLinkAccount", {tokwaAccount: data.getCheckAccount})
-    }
-
 
     if(loading){
         return <LoadingPage/>
@@ -96,6 +91,41 @@ const RiderNoLinkAccount = ()=> {
         return <NoTokwaAccount navigation={navigation}/>
     }
 
+    // const [getLinkAccountOTP] = useLazyQuery(GET_LINK_ACCOUNT_OTP, {
+    //     fetchPolicy: "network-only",
+    //     client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT,
+    //     onCompleted: ({getLinkAccountOTP})=> {
+    //         // return navigation.navigate("ToktokWalletLinkAccount", {tokwaAccount: data.getCheckAccount})
+    //     },
+    //     onError: (error)=>{
+    //         onErrorAlert({alert,error})
+    //     }
+    // })
+
+    const getLinkAccountOTP = async (mobileNumber)=> {
+        try {
+            const result = await TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT.query({
+                query: GET_LINK_ACCOUNT_OTP,
+                fetchPolicy:"network-only",
+                variables: {
+                    input: {
+                        mobileNumber: mobileNumber
+                    }
+                },
+                errorPolicy:"all" 
+            })
+      
+            if(result?.errors){
+                return alert({message: result.errors[0].message})
+            }
+       
+            if(result){
+                return navigation.navigate("ToktokWalletLinkAccount", {tokwaAccount: data.getCheckAccount})
+            }
+        }catch(err){
+            throw err
+        }
+    }
 
     return (
         <>
@@ -106,7 +136,7 @@ const RiderNoLinkAccount = ()=> {
             </View>
 
             <View style={{height: 120,padding: 16,justifyContent:'flex-end'}}>
-                <YellowButton label="Link Now" onPress={linkAccount}/>
+                <YellowButton label="Link Now" onPress={()=>getLinkAccountOTP(data.getCheckAccount.mobileNumber)}/>
             </View>
     </>
     )
