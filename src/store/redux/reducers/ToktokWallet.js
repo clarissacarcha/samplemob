@@ -18,8 +18,9 @@ const INITIAL_STATE = {
         name: "",
         code: "",
         phpValue: 0
-    }
-}
+    },
+  },
+  globalSettings: null
 };
 
 export default (state = INITIAL_STATE, action) => {

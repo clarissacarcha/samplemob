@@ -3,9 +3,9 @@ import {View,Text,StyleSheet,TouchableOpacity,Image,Modal,TextInput,Platform,Key
 import {FONT ,FONT_SIZE , COLOR} from '../../../../../../res/variables'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import {useSelector} from 'react-redux'
-import {useMutation,useLazyQuery} from '@apollo/react-hooks'
+import {useMutation,useLazyQuery,useQuery} from '@apollo/react-hooks'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from '../../../../../../graphql'
-import {POST_CASH_IN_PAYPANDA_REQUEST} from '../../../../../../graphql/toktokwallet'
+import {POST_CASH_IN_PAYPANDA_REQUEST,GET_GLOBAL_SETTINGS} from '../../../../../../graphql/toktokwallet'
 import {onError,onErrorAlert} from '../../../../../../util/ErrorUtility';
 import {numberFormat} from '../../../../../../helper'
 import {useAlert} from '../../../../../../hooks/useAlert'
@@ -43,6 +43,38 @@ const ToktokWalletPayPandaForm = ({navigation,route})=> {
     const [maxLimitMessage,setMaxLimitMessage] = useState("")
     const [pinCodeAttempt,setPinCodeAttempt] = useState(6)
     const [openPinCode,setOpenPinCode] = useState(false)
+    const [paypandaTransactionUrl,setPaypandaTransactionUrl] = useState("")
+    const [paypandaReturnUrl,setPaypandaReturnUrl] = useState("")
+    const [paypandaStaginReturnUrl,setPaypandaStagingReturnUrl] = useState("")
+
+
+    const mapToKeyTokwaSettings = (globalsettings)=> {
+        const records = {}
+        globalsettings.map((data)=>{
+            return records[data.settingKey] = data.keyValue
+        })
+        return records
+    }
+
+
+    const [getGlobalSettings , {data: settingData , error: settingError, loading: settingLoading}] = useLazyQuery(GET_GLOBAL_SETTINGS, {
+        fetchPolicy: "network-only",
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+        onError: (error)=> {
+            onErrorAlert({alert,error})
+            navigation.pop()
+        },
+        onCompleted: ({getGlobalSettings})=>{
+            const globalSettings = mapToKeyTokwaSettings(getGlobalSettings)
+            setPaypandaReturnUrl(globalSettings.paypandaReturnUrlEndpoint)
+            setPaypandaTransactionUrl(globalSettings.paypandaTransactionEndpoint)
+            setPaypandaStagingReturnUrl(globalSettings.paypandaStagingReturnUrlEndpoint)
+        }
+    })
+
+    useEffect(()=>{
+        getGlobalSettings()
+    },[])
 
 
     const [postCashInPayPandaRequest , {data,error,loading}] = useMutation(POST_CASH_IN_PAYPANDA_REQUEST , {
@@ -64,7 +96,6 @@ const ToktokWalletPayPandaForm = ({navigation,route})=> {
             return navigation.pop()
         },
         onCompleted: ({postCashInPayPandaRequest})=>{
-            console.log(postCashInPayPandaRequest)
             setOpenPinCode(false)
             navigation.navigate("ToktokWalletPayPandaWebView", {
                 merchantId: postCashInPayPandaRequest.merchantId,
@@ -76,7 +107,10 @@ const ToktokWalletPayPandaForm = ({navigation,route})=> {
                 amount_to_pay: amount,
                 currency: tokwaAccount.wallet.currency.code,
                 walletId: tokwaAccount.wallet.id,
-                transactionTypeId: transactionType.id
+                transactionTypeId: transactionType.id,
+                paypandaTransactionUrl: paypandaReturnUrl,
+                paypandaReturnUrl: paypandaReturnUrl,
+                paypandaStaginReturnUrl: paypandaStaginReturnUrl
             })
         }
     })
@@ -202,7 +236,7 @@ const ToktokWalletPayPandaForm = ({navigation,route})=> {
                 : <View style={{flex: 1,justifyContent: "center",alignItems: "center"}}><ActivityIndicator size={50}/></View>
                 
             }
-          
+   
             <View style={styles.cashinbutton}>
                     {
                         (amount < 1 || amount > transactionType.cashInLimit || disablebtn)
