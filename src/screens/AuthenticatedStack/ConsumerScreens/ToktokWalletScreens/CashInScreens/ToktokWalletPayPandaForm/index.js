@@ -43,39 +43,6 @@ const ToktokWalletPayPandaForm = ({navigation,route})=> {
     const [maxLimitMessage,setMaxLimitMessage] = useState("")
     const [pinCodeAttempt,setPinCodeAttempt] = useState(6)
     const [openPinCode,setOpenPinCode] = useState(false)
-    const [paypandaTransactionUrl,setPaypandaTransactionUrl] = useState("")
-    const [paypandaReturnUrl,setPaypandaReturnUrl] = useState("")
-    const [paypandaStaginReturnUrl,setPaypandaStagingReturnUrl] = useState("")
-
-
-    const mapToKeyTokwaSettings = (globalsettings)=> {
-        const records = {}
-        globalsettings.map((data)=>{
-            return records[data.settingKey] = data.keyValue
-        })
-        return records
-    }
-
-
-    const [getGlobalSettings , {data: settingData , error: settingError, loading: settingLoading}] = useLazyQuery(GET_GLOBAL_SETTINGS, {
-        fetchPolicy: "network-only",
-        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
-        onError: (error)=> {
-            onErrorAlert({alert,error})
-            navigation.pop()
-        },
-        onCompleted: ({getGlobalSettings})=>{
-            const globalSettings = mapToKeyTokwaSettings(getGlobalSettings)
-            setPaypandaReturnUrl(globalSettings.paypandaReturnUrlEndpoint)
-            setPaypandaTransactionUrl(globalSettings.paypandaTransactionEndpoint)
-            setPaypandaStagingReturnUrl(globalSettings.paypandaStagingReturnUrlEndpoint)
-        }
-    })
-
-    useEffect(()=>{
-        getGlobalSettings()
-    },[])
-
 
     const [postCashInPayPandaRequest , {data,error,loading}] = useMutation(POST_CASH_IN_PAYPANDA_REQUEST , {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
@@ -108,9 +75,9 @@ const ToktokWalletPayPandaForm = ({navigation,route})=> {
                 currency: tokwaAccount.wallet.currency.code,
                 walletId: tokwaAccount.wallet.id,
                 transactionTypeId: transactionType.id,
-                paypandaTransactionUrl: paypandaReturnUrl,
-                paypandaReturnUrl: paypandaReturnUrl,
-                paypandaStaginReturnUrl: paypandaStaginReturnUrl
+                paypandaTransactionUrl: postCashInPayPandaRequest.paypandaTransactionEntryEndpoint,
+                paypandaReturnUrl: postCashInPayPandaRequest.paypandaReturnUrlEndpoint,
+                paypandaStaginReturnUrl: postCashInPayPandaRequest.paypandaReturUrlStagingEndpoint
             })
         }
     })

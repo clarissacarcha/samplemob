@@ -23,7 +23,7 @@ export const WalletLog = ({item ,index , itemsLength }) => {
         displayNumber: "",
     })
 
-    const ViewTransactionDetails = ({item , title, phrase , referenceDate , transactionAmount, displayNumber, externalReferenceNumber}) => {
+    const ViewTransactionDetails = ({item , title, phrase , referenceDate , transactionAmount, displayNumber, externalReferenceNumber , deliveryId}) => {
         setTransactionVisible(true)
         setTransactionInfo({
             refNo: MaskLeftZero(item.id),
@@ -33,6 +33,7 @@ export const WalletLog = ({item ,index , itemsLength }) => {
             amount: transactionAmount,
             displayNumber: displayNumber,
             externalReferenceNumber: externalReferenceNumber,
+            deliveryId: deliveryId,
         })
     }
 
@@ -84,6 +85,16 @@ export const WalletLog = ({item ,index , itemsLength }) => {
         }
     }
 
+    let deliveryId = null
+    if(
+        item.externalName 
+        && item.externalName === "toktok" 
+        && item.externalPhrase
+        && (item.externalPhrase === "earnings" || item.externalPhrase === "payment" || item.externalPhrase === "cancelled"))
+    {
+        const deliveryPayload = JSON.parse(item.externalPayload)
+        deliveryId = deliveryPayload.delivery.deliveryId
+    }
 
     return (
         <>
@@ -97,9 +108,10 @@ export const WalletLog = ({item ,index , itemsLength }) => {
                 amount={transactionInfo.amount}
                 displayNumber={transactionInfo.displayNumber}
                 externalReferenceNumber={transactionInfo.externalReferenceNumber}
+                deliveryId={transactionInfo.deliveryId}
             />
 
-            <TouchableOpacity onPress={()=>ViewTransactionDetails({item , title , phrase, referenceDate , transactionAmount, displayNumber ,externalReferenceNumber})} style={styles.transaction}>
+            <TouchableOpacity onPress={()=>ViewTransactionDetails({item , title , phrase, referenceDate , transactionAmount, displayNumber ,externalReferenceNumber , deliveryId})} style={styles.transaction}>
                 <View style={styles.transactionDetails}>
                     {/* <Text style={{fontSize: 12,fontFamily: FONT_MEDIUM}}>{title} <Text style={{fontFamily: FONT_LIGHT,fontSize: 10}}> ( {status} )</Text></Text> */}
                     <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{title}</Text>
