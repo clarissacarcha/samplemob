@@ -2,8 +2,8 @@ import React from 'react'
 import {View,Text,StyleSheet,Platform,Dimensions,StatusBar,ScrollView} from 'react-native'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import RNFS from 'react-native-fs'
-import {YellowButton } from '../../../../../../../revamp';
-import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../../../../../components';
+import {HeaderBack, HeaderTitle,YellowButton } from '../../../../../../../revamp';
+import { AlertOverlay} from '../../../../../../../components';
 import { COLOR, FONT, FONT_SIZE } from '../../../../../../../res/variables';
 import {Separator} from '../../../Components'
 import { COLORS } from '../../../../../../../res/constants';
@@ -15,7 +15,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 const PaymentChartScreen = ({navigation})=> {
 
     navigation.setOptions({
-        headerLeft: () => <HeaderBack />,
+        headerLeft: () => <HeaderBack color={COLOR.YELLOW}/>,
         headerTitle: () => <HeaderTitle label={['Payment Chart', '']} />,
     });
 
