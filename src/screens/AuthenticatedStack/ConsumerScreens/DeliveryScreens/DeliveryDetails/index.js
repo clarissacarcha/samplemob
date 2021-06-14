@@ -1,14 +1,15 @@
 import React, {useCallback, useMemo, useRef, useState} from 'react';
 import {View, StyleSheet, Text, TextInput, Alert} from 'react-native';
 import {connect} from 'react-redux';
-import {useLazyQuery} from '@apollo/react-hooks';
+import {useLazyQuery, useQuery} from '@apollo/react-hooks';
 import InputScrollView from 'react-native-input-scroll-view';
 import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../../../components';
 import {COLOR, LIGHT, ORANGE} from '../../../../../res/constants';
-import {GET_DELIVERY_PRICE_AND_DIRECTIONS} from '../../../../../graphql';
+import {GET_DELIVERY_PRICE_AND_DIRECTIONS, GET_TOKTOK_WALLET_BALANCE} from '../../../../../graphql';
 import {WhiteButton, BlackButton, YellowButton} from '../../../../../revamp';
 import {onErrorAlert} from '../../../../../util/ErrorUtility';
 import {useAlert} from '../../../../../hooks';
+import {numberFormat} from '../../../../../helper/numberFormat';
 
 //SELF IMPORTS
 import {PaymentForm, PaymentSheet} from './PaymentForm';
@@ -36,6 +37,28 @@ const DeliveryDetails = ({navigation, route, session}) => {
   const [isExpress, setIsExpress] = useState(route.params.orderData.isExpress);
   const [isCashOnDelivery, setIsCashOnDelivery] = useState(route.params.orderData.isCashOnDelivery);
   const [cashOnDelivery, setCashOnDelivery] = useState(route.params.orderData.cashOnDelivery);
+  const {data: balanceData, loading: balanceLoading, error: balanceError} = useQuery(GET_TOKTOK_WALLET_BALANCE, {
+    fetchPolicy: 'network-only',
+  });
+
+  let balanceText = '';
+  let hasWallet = false;
+
+  if (balanceError) {
+    balanceText = 'Failed to retrieve balance.';
+  }
+
+  if (balanceLoading) {
+    balanceText = 'Retrieving balance...';
+  }
+
+  if (balanceData) {
+    balanceText = `PHP ${numberFormat(balanceData.getToktokWalletBalance.balance)}`;
+
+    hasWallet = balanceData.getToktokWalletBalance.hasWallet;
+  }
+
+  console.log({balanceText, hasWallet});
 
   const paymentMethodSheetRef = useRef();
   const paymentSheetRef = useRef();
@@ -224,7 +247,12 @@ const DeliveryDetails = ({navigation, route, session}) => {
         </View>
       </View>
       <PaymentSheet onChange={onCollectPaymentFromChange} ref={paymentSheetRef} />
-      <PaymentMethodSheet onChange={onPaymentMethodChange} ref={paymentMethodSheetRef} />
+      <PaymentMethodSheet
+        onChange={onPaymentMethodChange}
+        ref={paymentMethodSheetRef}
+        balanceText={balanceText}
+        hasWallet={hasWallet}
+      />
       <ItemSheet onChange={setItemDescription} ref={itemSheetRef} />
     </>
   );

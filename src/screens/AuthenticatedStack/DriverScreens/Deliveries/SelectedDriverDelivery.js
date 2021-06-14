@@ -15,6 +15,8 @@ import {useMutation, useSubscription} from '@apollo/react-hooks';
 import {connect} from 'react-redux';
 import {throttle} from 'lodash';
 import Toast from 'react-native-simple-toast';
+import SwipeButton from 'rn-swipe-button';
+import {SIZES, FONT_MEDIUM, COLORS, BUTTON_HEIGHT, NUMBERS} from '../../../../res/constants';
 
 import {useAlert} from '../../../../hooks/useAlert';
 import {OnDeliveryAcceptedSubscriber} from '../../../../components/subscribers';
@@ -36,8 +38,59 @@ import {
 } from '../../../../graphql';
 import {onError} from '../../../../util/ErrorUtility';
 import {CaptchaOverlay} from '../../../../components/overlays/CaptchaOverlay';
-
+import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import Ionicon from 'react-native-vector-icons/Ionicons';
+
+const thumbIconComponentRight = () => (
+  <View style={{...NUMBERS.SHADOW}}>
+    <FIcon5 name="chevron-right" size={15} />
+  </View>
+);
+
+const thumbIconComponentLeft = () => (
+  <View style={{...NUMBERS.SHADOW}}>
+    <FIcon5 name="chevron-left" size={15} />
+  </View>
+);
+
+const AcceptSwipeButton = ({onSwipe}) => {
+  const swipeDirection = Math.floor(Math.random() * 2) + 1;
+
+  return (
+    <SwipeButton
+      title={`Swipe ${swipeDirection === 1 ? 'Right' : 'Left'} to Accept`}
+      onSwipeFail={(e) => console.log({FAIL: e})}
+      onSwipeSuccess={onSwipe}
+      containerStyles={styles.swipeContainer}
+      enableReverseSwipe={swipeDirection === 1 ? false : true}
+      width={'100%'}
+      swipeSuccessThreshold={100}
+      titleStyles={{
+        fontSize: SIZES.M,
+        fontFamily: FONT_MEDIUM,
+        paddingLeft: 20,
+      }}
+      titleColor={COLORS.MEDIUM}
+      railBackgroundColor={COLORS.LIGHT}
+      railBorderColor={'transparent'}
+      railStyles={{
+        backgroundColor: COLORS.YELLOW,
+        borderWidth: 0,
+        // ...NUMBERS.SHADOW,
+      }}
+      thumbIconBackgroundColor="white"
+      thumbIconBorderColor={COLORS.LIGHT}
+      thumbIconStyles={{
+        borderColor: 'yellow',
+      }}
+      height={BUTTON_HEIGHT}
+      thumbIconComponent={swipeDirection === 1 ? thumbIconComponentRight : thumbIconComponentLeft}
+      resetAfterSuccessAnimDelay={0}
+      resetAfterSuccessAnimDuration={0}
+      shouldResetAfterSuccess={true}
+    />
+  );
+};
 
 const SelectedDriverDelivery = ({navigation, route, session}) => {
   const {delivery, label, refreshList} = route.params;
@@ -87,7 +140,7 @@ const SelectedDriverDelivery = ({navigation, route, session}) => {
   ];
 
   const onAccept = () => {
-    setCaptchaVisible(false);
+    // setCaptchaVisible(false);
     patchDeliveryAccepted({
       variables: {
         input: {
@@ -264,14 +317,15 @@ const SelectedDriverDelivery = ({navigation, route, session}) => {
         )}
 
         {getDelivery.status === 1 && (
-          <TouchableHighlight
-            onPress={() => setCaptchaVisible(true)}
-            underlayColor={COLOR}
-            style={{borderRadius: 10, marginBottom: 20}}>
-            <View style={styles.submit}>
-              <Text style={{color: COLOR, fontSize: 16}}>Accept Order</Text>
-            </View>
-          </TouchableHighlight>
+          // <TouchableHighlight
+          //   onPress={() => setCaptchaVisible(true)}
+          //   underlayColor={COLOR}
+          //   style={{borderRadius: 10, marginBottom: 20}}>
+          //   <View style={styles.submit}>
+          //     <Text style={{color: COLOR, fontSize: 16}}>Accept Order</Text>
+          //   </View>
+          // </TouchableHighlight>
+          <AcceptSwipeButton onSwipe={onAccept} />
         )}
 
         {/*-------------------- Display 3 Digit Pin --------------------*/}
@@ -399,5 +453,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 10,
     flexDirection: 'row',
+  },
+  swipeContainer: {
+    alignSelf: 'center',
+    marginBottom: 20,
   },
 });

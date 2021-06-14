@@ -1,8 +1,7 @@
-import React, {useCallback, useMemo, forwardRef, useState} from 'react';
-import {connect} from 'react-redux';
-import {View, StyleSheet, Text, TextInput, TouchableHighlight} from 'react-native';
+import React, {useMemo, forwardRef, useState} from 'react';
+import {View, StyleSheet, Text, TouchableHighlight} from 'react-native';
 import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet';
-import {LIGHT, MEDIUM, ORANGE, FONT_REGULAR, FONT_MEDIUM} from '../../../../../res/constants';
+import {LIGHT, ORANGE} from '../../../../../res/constants';
 import {COLOR, FONT} from '../../../../../res/variables';
 import {WhiteButton, VectorIcon, ICON_SET} from '../../../../../revamp';
 
@@ -45,6 +44,7 @@ export const PaymentMethodSheet = forwardRef(({onChange, balanceText, hasWallet}
             <Text style={{color: COLOR.MEDIUM}}>toktokwallet</Text>
           </View>
         )}
+
         {/* <WhiteButton label="toktok Wallet" borderless onPress={() => {}} /> */}
       </View>
     </BottomSheet>
