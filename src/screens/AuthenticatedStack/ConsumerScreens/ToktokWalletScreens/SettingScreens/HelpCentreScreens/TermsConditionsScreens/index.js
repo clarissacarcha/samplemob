@@ -1,40 +1,62 @@
 import React from 'react'
-import {View,Text,StyleSheet,Platform,Dimensions,StatusBar,Image} from 'react-native'
+import {View,Text,StyleSheet,Platform,Dimensions,StatusBar,Image,ActivityIndicator,ScrollView} from 'react-native'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import RNFS from 'react-native-fs'
-import {YellowButton } from '../../../../../../../revamp';
-import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../../../../../components';
-import { COLOR, FONT, FONT_SIZE } from '../../../../../../../res/variables';
-
+import {YellowButton,HeaderBack, HeaderTitle, } from '../../../../../../../revamp';
+import { AlertOverlay} from '../../../../../../../components';
+import { COLOR, FONT, FONT_SIZE, SIZE } from '../../../../../../../res/variables';
+import { Separator } from '../../../Components';
+import {TOKTOK_WALLET_GRAPHQL_CLIENT} from '../../../../../../../graphql'
+import {GET_GLOBAL_SETTING} from '../../../../../../../graphql/toktokwallet'
+import {useQuery} from '@apollo/react-hooks'
+import { onErrorAlert } from '../../../../../../../util/ErrorUtility'
+import {useAlert} from '../../../../../../../hooks'
 
 const TermsConditionsScreen = ({navigation})=> {
 
     navigation.setOptions({
-        headerLeft: () => <HeaderBack />,
+        headerLeft: () => <HeaderBack color={COLOR.YELLOW}/>,
         headerTitle: () => <HeaderTitle label={['Terms and Conditions', '']} />,
     });
 
+    const alert = useAlert()
+
+    const {data,error,loading} = useQuery(GET_GLOBAL_SETTING, {
+        fetchPolicy: "network-only",
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+        variables: {
+            input: {
+                settingKey: "tokwaTermsAndCondition"
+            }
+        },
+        onError: (error)=> {
+            onErrorAlert({alert,error})
+        }
+    })
+
+    if(loading){
+        return (
+            <View style={{flex: 1,justifyContent:"center",alignItems:"center"}}>
+                    <ActivityIndicator color={COLOR.YELLOW} size={24}/>
+            </View>
+        )
+    }
+
+    if(!data.getGlobalSetting){
+        return null
+    }
+
+    if(error){
+        return null
+    }
+
     return (
         <>
-        <StatusBar barStyle="dark-content" backgroundColor="white" />
+        <Separator/>
         <View style={styles.container}>
-             
-             <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-                {/* <View style={styles.checkIcon}>
-                    <FIcon5 name="check" color="white" size={60}/> 
-                </View> */}
-                <Image style={{marginBottom: 10}} source={require('../../../../../../../assets/toktokwallet-assets/success.png')}/>
-                <View>
-                    <Text style={styles.titleText}>Success!</Text>
-                </View>
-                <View style={{padding: 8}}>
-                    <Text style={{fontFamily: FONT.REGULAR , fontSize: FONT_SIZE.M}}>
-                        Please wait for the approval of your verification.
-                    </Text>
-                </View>
-             </View>
-            
-            
+            <ScrollView showsVerticalScrollIndicator={false} style={styles.body}>
+                <Text>{data.getGlobalSetting.keyValue}</Text>
+            </ScrollView>
         </View>
         </>
     )
@@ -45,7 +67,7 @@ export default TermsConditionsScreen
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: COLOR.WHITE
+        backgroundColor: COLOR.WHITE,
     },
     checkIcon: {
         height: 98,
@@ -65,5 +87,9 @@ const styles = StyleSheet.create({
         padding: 16,
         justifyContent:"flex-end",
         marginBottom: Platform.OS == "ios" ? 25 : 0
-    }
+    },
+    body: {
+        margin: SIZE.MARGIN,
+        textAlign: 'justify',
+      },
 })

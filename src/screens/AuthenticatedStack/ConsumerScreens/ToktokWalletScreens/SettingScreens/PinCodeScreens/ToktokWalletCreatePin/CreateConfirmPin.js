@@ -1,7 +1,9 @@
 import React, { useState ,useRef , useEffect } from 'react'
-import {View,Text,StyleSheet,TouchableHighlight,TouchableOpacity,TextInput,Alert,ScrollView} from 'react-native'
+import {View,Text,StyleSheet,TouchableHighlight,TouchableOpacity,TextInput,Alert,ScrollView,Dimensions,Image} from 'react-native'
 import {DARK, SIZES, FONTS, COLORS} from '../../../../../../../res/constants'
-import {NumberBoxes} from '../../../Components'
+import {NumberBoxes,BuildingBottom} from '../../../Components'
+
+const {width,height} = Dimensions.get("window")
 
 const ConfirmPin = ({pinCode,setPageIndex,walletinfo,patchPincodeToktokWallet,tokwaAccount})=> {
 
@@ -71,6 +73,7 @@ const ConfirmPin = ({pinCode,setPageIndex,walletinfo,patchPincodeToktokWallet,to
                       
                     </View>
             </ScrollView>
+           <BuildingBottom/>
        </View>
     )
 }

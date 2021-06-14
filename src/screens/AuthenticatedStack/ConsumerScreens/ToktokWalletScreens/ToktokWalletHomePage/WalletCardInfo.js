@@ -32,7 +32,7 @@ const WalletCardInfo = ({loading})=> {
 
     const rotateanimation = rotateY.interpolate({
         inputRange: [0,100,200],
-        outputRange: ["0deg","90deg","180deg"]
+        outputRange: ["0deg","60deg","90deg"]
     })
 
     const cashIn = ()=> {
@@ -48,49 +48,60 @@ const WalletCardInfo = ({loading})=> {
        <View style={styles.container}>
            <HeaderImageBackground>
                <HeaderTitle isLogo={true} headerBackLabel="Home"/>
-               <View style={{height: 24}}/>
-               <View style={{paddingHorizontal: 16,flexDirection:"row",marginBottom: -5}}>
-                <View style={{alignSelf:'center', padding: 1 ,borderRadius: 100, borderWidth: 1,borderColor: titleAccountTypeColor[tokwaAccount.person.accountType.level],justifyContent:'center',marginRight: 5,}}>
-                    <VectorIcon size={FONT_SIZE.XS} iconSet={ICON_SET.Feather} name="check" color={titleAccountTypeColor[tokwaAccount.person.accountType.level]}/>
-                </View>
-                    <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color: titleAccountTypeColor[tokwaAccount.person.accountType.level]}}>{tokwaAccount.person.accountType.title}</Text>
-               </View>
-                <View style={styles.walletContent}>
+               <View style={{flex: 1,justifyContent:"flex-end",paddingBottom: 45}}>
                     <View>
-                        {
-                           <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>{tokwaAccount.wallet.currency.code} {numberFormat(tokwaAccount.wallet.balance)}</Text>
-                        }         
-                        <Text style={{fontSize:FONT_SIZE.M,fontFamily: FONT.REGULAR,marginTop: -5}}>Available Balance</Text>
-                    </View>
-                    <TouchableOpacity onPress={cashIn} style={styles.topUp}>
-                        <View style={styles.topUpbtn}>
-                         <VectorIcon iconSet={ICON_SET.Entypo} name="plus" color="black" size={20}/>
+                        <View style={{paddingHorizontal: 16,flexDirection:"row"}}>
+                            <View style={{alignSelf:'center', padding: 1 ,borderRadius: 100, borderWidth: 1,borderColor: titleAccountTypeColor[tokwaAccount.person.accountType.level],justifyContent:'center',marginRight: 5,}}>
+                                <VectorIcon size={FONT_SIZE.XS} iconSet={ICON_SET.Feather} name="check" color={titleAccountTypeColor[tokwaAccount.person.accountType.level]}/>
+                            </View>
+                                <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color: titleAccountTypeColor[tokwaAccount.person.accountType.level]}}>{tokwaAccount.person.accountType.title}</Text>
                         </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.walletSettings} onPress={()=>{
-                        // rotateY.setValue(0)
+                        <View style={styles.walletContent}>
+                                 <View>
+                                    {
+                                    <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>{tokwaAccount.wallet.currency.code} {numberFormat(tokwaAccount.wallet.balance)}</Text>
+                                    }         
+                                    <Text style={{fontSize:FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Available Balance</Text>
+                                </View>
 
-                        if(checkWallet.checkIfAllowed()){
-                            animation.start(()=> {
-                                animation.reset()
-                                navigation.navigate("ToktokWalletSettings")
-                            })
-                        }
-                    }}>
-                            <Animated.View style={[{borderWidth: 2, borderRadius: 25,padding: 2, transform: [{rotate: rotateanimation}]}]}>
-                                <VectorIcon iconSet={ICON_SET.Entypo} name="dots-three-vertical" color="black" size={20}/>
-                            </Animated.View>
-                    </TouchableOpacity>
-                </View>
+                                <TouchableOpacity onPress={cashIn} style={styles.topUp}>
+                                    <View style={styles.topUpbtn}>
+                                    <VectorIcon iconSet={ICON_SET.Entypo} name="plus" color="black" size={20}/>
+                                    </View>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity style={styles.walletSettings} onPress={()=>{
+                                        // rotateY.setValue(0)
+
+                                        if(checkWallet.checkIfAllowed()){
+                                            animation.start(()=> {
+                                                animation.reset()
+                                                navigation.navigate("ToktokWalletSettings")
+                                            })
+                                        }
+                                    }}>
+                                            <Animated.View style={[{transform: [{rotate: rotateanimation}]}]}>
+                                                <VectorIcon iconSet={ICON_SET.FontAwesome5} name="cog" color="black" size={30}/>
+                                            </Animated.View>
+                                    </TouchableOpacity>
+                        </View>
+                   </View>
+               </View>
+            
            </HeaderImageBackground>
     
             <View style={styles.whitespace}>
                 <WalletMethods/>
-                <View style={{flex: 1 ,marginTop: -36, justifyContent:"center",alignItems:"center"}}>
-                    <TouchableOpacity onPress={()=>null} style={{flexDirection:"row",padding: 2}}>
+                <View style={{flex: 1 ,marginTop: -40, justifyContent:"center",alignItems:"center"}}>
+                    <TouchableOpacity onPress={()=>navigation.navigate("ToktokWalletHelpCentreSecurityPrivacy")} style={{flexDirection:"row",padding: 2}}>
                          <Image style={{height: 21,width: 21,marginRight: 5,}} source={require('../../../../../assets/icons/walletVerify.png')}/>
                          <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.S}}>Your wallet is <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.S,color: COLOR.ORANGE}}>encrypted and secure.</Text></Text>
                     </TouchableOpacity>
+
+                    {/* <View style={{flexDirection:"row",padding: 2,justifyContent:"center",alignItems:"center"}}>
+                         <Image style={{height: 21,width: 21,marginRight: 5,}} source={require('../../../../../assets/icons/walletVerify.png')}/>
+                         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.S}}>Your wallet is <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.S,color: COLOR.ORANGE}}>encrypted and secure.</Text></Text>
+                    </View> */}
                      
                 </View>
             </View>
@@ -122,18 +133,14 @@ const styles = StyleSheet.create({
         flexDirection:"row"
     },
     walletContent: {
-        flex: 1,
         flexDirection: "row",
         paddingHorizontal: 16,
-        alignItems:"flex-start",
-        justifyContent:"flex-start"
     },
     topUp: {
         justifyContent:"flex-start",
         alignItems: "center",
         width: 40,
         marginLeft: 5,
-        paddingTop: 10,
     },
     topUpbtn: {
         height: 34,
@@ -147,7 +154,6 @@ const styles = StyleSheet.create({
     walletSettings: {
         flex: 1,
         alignItems:'flex-end',
-        paddingTop: 10,
         marginRight: 10,
     }
 })

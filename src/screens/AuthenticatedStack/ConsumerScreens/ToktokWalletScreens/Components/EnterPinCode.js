@@ -5,6 +5,7 @@ import { AlertOverlay } from '../../../../../components'
 import { FONT, FONT_SIZE , COLOR} from '../../../../../res/variables'
 import { ICON_SET, VectorIcon, YellowButton } from '../../../../../revamp'
 import { DisabledButton } from './DisabledButton'
+import { BuildingBottom } from './BuildingBottom'
 
 const {width,height} = Dimensions.get("window")
 
@@ -128,6 +129,7 @@ export const EnterPinCode = ({
                             }
                     </View>
                </View>
+               <BuildingBottom/>
             </KeyboardAvoidingView>
         </Modal>
         </>

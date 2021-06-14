@@ -27,6 +27,7 @@ const ToktoKWalletPayPandaWebView = ()=> {
     const session = useSelector(state=>state.session)
     const constants = useSelector(state=>state.constants)
 
+    console.log(route.params)
     const initialpaymentData = {
         merchant_id: route.params.merchantId,
         reference_number: route.params.refNo,
@@ -79,8 +80,9 @@ const ToktoKWalletPayPandaWebView = ()=> {
                     style={{flex: 1}}
                     ref={webviewRef}
                     source={{
-                        uri: "https://sandbox.paypanda.ph/api/payment/toktok_transaction_entry",
+                        // uri: "https://sandbox.paypanda.ph/api/payment/toktok_transaction_entry",
                         // uri: constants.paypandaTransactionEndpoint,
+                        uri: route.params.paypandaTransactionUrl,
                         method: 'POST',
                         headers: { 'Content-Type': 'application/x-www-form-urlencoded', },
                         body: generatedInitialPaymentData
@@ -91,9 +93,10 @@ const ToktoKWalletPayPandaWebView = ()=> {
 
                         console.log(event)
               
-                        const checkreturnurl = event.url.search("https://sandbox.paypanda.ph/app/payment/dp_ret")
+                        // const checkreturnurl = event.url.search("https://sandbox.paypanda.ph/app/payment/dp_ret")
                         // const checkreturnurl = event.url.search(constants.paypandaReturnUrlEndpoint)
-                        https://sandbox.paypanda.ph/app/payment/dp_ret?txnid=0001770000000006&status=S&refno=0001770000000006
+                        
+                        const checkreturnurl = event.url.search(route.params.paypandaReturnUrl)
                         if(checkreturnurl != -1){
                             const {url} = event
 
@@ -116,7 +119,8 @@ const ToktoKWalletPayPandaWebView = ()=> {
                             setCheckurl(url)
                         }
                         
-                        const checkreturnOtherUrl = event.url.search("https://stg-wallet.toktok.ph/app/transactions/paypanda_ret")
+                        // const checkreturnOtherUrl = event.url.search("https://stg-wallet.toktok.ph/app/transactions/paypanda_ret")
+                        const checkreturnOtherUrl = event.url.search(route.params.paypandaStaginReturnUrl)
 
                         if(checkreturnOtherUrl != -1){ 
                             const {url} = event

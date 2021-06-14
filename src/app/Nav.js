@@ -93,6 +93,7 @@ import ToktokWalletGcashUpdate from '../screens/AuthenticatedStack/ConsumerScree
 import ToktokWalletGcashHomePage from '../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/CashOutScreens/ToktokWalletGcashHomePage';
 import ToktokWalletGcashLinkAccount from '../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/CashOutScreens/ToktokWalletGcashLinkAccount';
 import ToktokWalletLinkAccount from '../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/ToktokWalletLinkAccount';
+import ToktokWalletTransactionLimit from '../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/ToktokWalletTransactionLimit';
 
 import ToktokWalletHelpCentrePaymentChart from '../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/HelpCentreScreens/PaymentChartScreens';
 
@@ -458,6 +459,7 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="ToktokWalletGcashHomePage" component={ToktokWalletGcashHomePage}/>
     <Authenticated.Screen name="ToktokWalletGcashLinkAccount" component={ToktokWalletGcashLinkAccount}/>
     <Authenticated.Screen name="ToktokWalletLinkAccount" component={ToktokWalletLinkAccount} />
+    <Authenticated.Screen name="ToktokWalletTransactionLimit" component={ToktokWalletTransactionLimit}/>
 
     <Authenticated.Screen name="ToktokWalletHelpCentrePaymentChart" component={ToktokWalletHelpCentrePaymentChart} />
     

@@ -1,9 +1,9 @@
 import React , {useState,useRef,useEffect} from 'react'
 import { Alert } from 'react-native'
-import {View,Text,StyleSheet,Platform,KeyboardAvoidingView,TextInput,TouchableOpacity} from 'react-native'
+import {View,Text,StyleSheet,Platform,KeyboardAvoidingView,TextInput,TouchableOpacity,Image,Dimensions} from 'react-native'
 import { COLOR, FONT, FONT_SIZE, SIZE } from '../../../../../res/variables'
 import { HeaderBack, HeaderTitle, YellowButton } from '../../../../../revamp'
-import { DisabledButton, NumberBoxes, Separator } from '../Components'
+import { DisabledButton, NumberBoxes, Separator , BuildingBottom} from '../Components'
 import { TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT } from '../../../../../graphql/'
 import { PATCH_LINK_TOKWA_ACCOUNT , GET_LINK_ACCOUNT_OTP , VERIFY_LINK_ACCOUNT_OTP } from '../../../../../graphql/toktokwallet'
 import { useMutation , useLazyQuery } from '@apollo/react-hooks'
@@ -13,6 +13,8 @@ import { useAlert } from '../../../../../hooks'
 //SELF IMPORTS
 import SuccessfulModal from './SuccessfulModal'
 import { AlertOverlay } from '../../../../../components'
+
+const {height, width} = Dimensions.get("window")
 
 const ToktokWalletLinkAccount = ({navigation, route})=> {
 
@@ -27,6 +29,7 @@ const ToktokWalletLinkAccount = ({navigation, route})=> {
     const inputRef = useRef();
     const alert = useAlert()
     const [otpTimer,setOtpTimer] = useState(120)
+    const [errorMessage,setErrorMessage] = useState("")
 
     const [getLinkAccountOTP] = useLazyQuery(GET_LINK_ACCOUNT_OTP, {
         fetchPolicy: "network-only",
@@ -36,6 +39,11 @@ const ToktokWalletLinkAccount = ({navigation, route})=> {
             setOtpTimer(120)
         },
         onError: (error)=>{
+            const {graphQLErrors, networkError} = error
+            if(graphQLErrors[0]?.payload?.code == "OTPMAXREQUEST"){
+                setPinCode("")
+                return setErrorMessage(graphQLErrors[0].message)
+            }
             onErrorAlert({alert,error})
         }
     })
@@ -106,9 +114,9 @@ const ToktokWalletLinkAccount = ({navigation, route})=> {
         })
     }
 
-    useEffect(()=>{
-        CreateVerificationCode()
-    },[])
+    // useEffect(()=>{
+    //     CreateVerificationCode()
+    // },[])
 
     useEffect(()=>{
         if(otpTimer >= 0){
@@ -150,6 +158,9 @@ const ToktokWalletLinkAccount = ({navigation, route})=> {
                             }}
                             // onSubmitEditing={onSubmit}
                         />
+                        {
+                            errorMessage != "" && <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M,color: COLOR.RED,marginHorizontal: 16}}>{errorMessage}</Text>
+                        }
                         <TouchableOpacity
                                 disabled={otpTimer > 0 ? true : false}
                                 style={{marginTop: 18,paddingVertical: 10,alignItems: "center"}}
@@ -167,10 +178,10 @@ const ToktokWalletLinkAccount = ({navigation, route})=> {
                 : <YellowButton onPress={ConfirmVerificationCode} label="Proceed"/>
             }   
             </View>
-
+            <BuildingBottom/>
 
         </KeyboardAvoidingView>
-        {/* <Text>{JSON.stringify(tokwaAccount)}</Text> */}
+      
         </>
     )
 }

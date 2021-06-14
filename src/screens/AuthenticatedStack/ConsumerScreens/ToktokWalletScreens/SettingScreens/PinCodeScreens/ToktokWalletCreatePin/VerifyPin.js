@@ -1,16 +1,18 @@
 import React, { useState ,useRef , useEffect } from 'react'
-import {View,Text,StyleSheet,TouchableHighlight,TouchableOpacity,TextInput,KeyboardAvoidingView,Platform,ScrollView} from 'react-native'
+import {View,Text,StyleSheet,TouchableHighlight,TouchableOpacity,TextInput,KeyboardAvoidingView,Platform,ScrollView,Dimensions,Image} from 'react-native'
 import {COLOR, FONT, FONT_SIZE} from '../../../../../../../res/variables'
 import { TOKTOK_WALLET_GRAPHQL_CLIENT } from '../../../../../../../graphql';
 import { VERIFY_PIN_CODE } from '../../../../../../../graphql/toktokwallet';
 import {useLazyQuery} from '@apollo/react-hooks'
 import {onError, onErrorAlert} from '../../../../../../../util/ErrorUtility'
 import {useNavigation} from '@react-navigation/native'
-import {DisabledButton, NumberBoxes} from '../../../Components'
+import {BuildingBottom, DisabledButton, NumberBoxes} from '../../../Components'
 import { YellowButton } from '../../../../../../../revamp';
 import { useAlert } from '../../../../../../../hooks';
 import { Alert } from 'react-native';
 import { AlertOverlay } from '../../../../../../../components';
+
+const {width,height} = Dimensions.get("window")
 
 const numWordArray = {
     "1": "one",
@@ -136,6 +138,7 @@ const VerifyPin = ({pageIndex,setPageIndex})=> {
                     : <YellowButton label="Next" onPress={onSubmit}/>
                 }
             </View>
+            <BuildingBottom/>
           
        </View>
        </>
