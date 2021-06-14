@@ -64,6 +64,7 @@ const ToktokWalletLinkAccount = ({navigation, route})=> {
                         emailAddress: tokwaAccount.person.emailAddress,
                         birthdate: tokwaAccount.person.birthdate,
                         selfieImage: tokwaAccount.person.selfieImage,
+                        gender: tokwaAccount.person.gender
                     }
                 }
             })
