@@ -1,14 +1,15 @@
-import React, {useCallback, useMemo, useRef, useState, useEffect} from 'react';
-import {View, StyleSheet, Text, TextInput, ScrollView} from 'react-native';
+import React, {useRef, useState, useEffect} from 'react';
+import {View, StyleSheet, Text, TextInput} from 'react-native';
 import {connect} from 'react-redux';
-import {useLazyQuery} from '@apollo/react-hooks';
+import {useLazyQuery, useQuery} from '@apollo/react-hooks';
 import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../../../components';
-import {LIGHT, FONT_MEDIUM, FONT_REGULAR} from '../../../../../res/constants';
-import {COLOR, FONT, FONT_SIZE} from '../../../../../res/variables';
-import {GET_DELIVERY_PRICE_AND_DIRECTIONS} from '../../../../../graphql';
-import {WhiteButton, BlackButton, YellowButton} from '../../../../../revamp';
+import {LIGHT} from '../../../../../res/constants';
+import {COLOR, FONT} from '../../../../../res/variables';
+import {GET_DELIVERY_PRICE_AND_DIRECTIONS, GET_TOKTOK_WALLET_BALANCE} from '../../../../../graphql';
+import {YellowButton} from '../../../../../revamp';
 import InputScrollView from 'react-native-input-scroll-view';
 import {onErrorAlert} from '../../../../../util/ErrorUtility';
+import {numberFormat} from '../../../../../helper/numberFormat';
 import {useAlert} from '../../../../../hooks';
 //SELF IMPORTS
 import {PaymentForm, PaymentSheet} from './PaymentForm';
@@ -20,8 +21,6 @@ import {
 } from './PartnerBranchItemDescriptionForm';
 import {PartnerBranchTenantForm, PartnerBranchTenantBottomSheet} from './PartnerBranchTenantForm';
 import NotesForm from './NotesForm';
-import PabiliForm from './PabiliForm';
-import PromoForm from './PromoForm';
 import ItemsToPurchaseForm from './ItemsToPurchaseForm';
 import {PaymentMethodForm, PaymentMethodSheet} from './PaymentMethod';
 
@@ -72,6 +71,26 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
   const [stringDescription, setStringDescription] = useState(null);
   const maxValue = constants.maxCashOnDelivery;
   const [partnerBranch, setPartnerBranch] = useState(null);
+  const {data: balanceData, loading: balanceLoading, error: balanceError} = useQuery(GET_TOKTOK_WALLET_BALANCE, {
+    fetchPolicy: 'network-only',
+  });
+
+  let balanceText = '';
+  let hasWallet = false;
+
+  if (balanceError) {
+    balanceText = 'Failed to retrieve balance.';
+  }
+
+  if (balanceLoading) {
+    balanceText = 'Retrieving balance...';
+  }
+
+  if (balanceData) {
+    balanceText = `PHP ${numberFormat(balanceData.getToktokWalletBalance.balance)}`;
+
+    hasWallet = balanceData.getToktokWalletBalance.hasWallet;
+  }
 
   useEffect(() => {
     if (route.params.partnerBranch) {
@@ -149,8 +168,12 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
     let verified = true;
 
     value.map((item) => {
-      if (!item.description) verified = false;
-      if (!item.quantity) verified = false;
+      if (!item.description) {
+        verified = false;
+      }
+      if (!item.quantity) {
+        verified = false;
+      }
     });
 
     return verified;
@@ -298,7 +321,7 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
 
     if (value && decimal) {
       if (decimal.toString().length > 2) {
-        setCashOnDelivery(amount); //force no change
+        setCashOnDelivery(cashOnDelivery); //force no change
         return;
       }
     }
@@ -361,7 +384,12 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
           <YellowButton label="Confirm Pabili Information" onPress={onConfirmPabiliInformation} style={{margin: 16}} />
         </View>
       </View>
-      <PaymentMethodSheet onChange={onPaymentMethodChange} ref={paymentMethodSheetRef} />
+      <PaymentMethodSheet
+        onChange={onPaymentMethodChange}
+        ref={paymentMethodSheetRef}
+        balanceText={balanceText}
+        hasWallet={hasWallet}
+      />
       <PaymentSheet onChange={setCollectPaymentFrom} ref={paymentSheetRef} />
       <ItemSheet onChange={setItemDescription} ref={itemSheetRef} />
       {partnerBranch && (

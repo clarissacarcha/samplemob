@@ -1,12 +1,11 @@
-import React, {useCallback, useMemo, forwardRef, useState} from 'react';
-import {connect} from 'react-redux';
-import {View, StyleSheet, Text, TextInput, TouchableHighlight} from 'react-native';
+import React, {useMemo, forwardRef, useState} from 'react';
+import {View, StyleSheet, Text, TouchableHighlight} from 'react-native';
 import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet';
-import {LIGHT, MEDIUM, ORANGE, FONT_REGULAR, FONT_MEDIUM} from '../../../../../res/constants';
+import {LIGHT, ORANGE} from '../../../../../res/constants';
 import {COLOR, FONT} from '../../../../../res/variables';
 import {WhiteButton, VectorIcon, ICON_SET} from '../../../../../revamp';
 
-export const PaymentMethodSheet = forwardRef(({onChange}, ref) => {
+export const PaymentMethodSheet = forwardRef(({onChange, balanceText, hasWallet}, ref) => {
   const snapPoints = useMemo(() => [0, 141], []);
 
   return (
@@ -14,20 +13,7 @@ export const PaymentMethodSheet = forwardRef(({onChange}, ref) => {
       ref={ref}
       index={-1}
       snapPoints={snapPoints}
-      handleComponent={() => (
-        <View
-          style={{
-            height: 20,
-            borderTopRightRadius: 15,
-            borderTopLeftRadius: 15,
-            borderTopWidth: 3,
-            borderRightWidth: 2,
-            borderLeftWidth: 2,
-            borderColor: ORANGE,
-            marginHorizontal: -2,
-          }}
-        />
-      )}
+      handleComponent={() => <View style={styles.sheetBox} />}
       backdropComponent={BottomSheetBackdrop}>
       <View style={styles.sheet}>
         <Text style={{fontFamily: FONT.BOLD}}>Payment Method</Text>
@@ -42,15 +28,23 @@ export const PaymentMethodSheet = forwardRef(({onChange}, ref) => {
           }}
         />
         <View style={{borderBottomWidth: 1, borderColor: COLOR.LIGHT}} />
-        <WhiteButton
-          label="toktokwallet"
-          borderless
-          labelStyle={{fontFamily: FONT.REGULAR}}
-          onPress={() => {
-            onChange('TOKTOKWALLET');
-            ref.current.collapse();
-          }}
-        />
+        {hasWallet ? (
+          <WhiteButton
+            label="toktokwallet"
+            borderless
+            labelStyle={{fontFamily: FONT.REGULAR}}
+            onPress={() => {
+              onChange('TOKTOKWALLET');
+              ref.current.collapse();
+            }}
+            suffixText={balanceText}
+          />
+        ) : (
+          <View style={{height: 50, justifyContent: 'center', marginLeft: 10}}>
+            <Text style={{color: COLOR.MEDIUM}}>toktokwallet</Text>
+          </View>
+        )}
+
         {/* <WhiteButton label="toktok Wallet" borderless onPress={() => {}} /> */}
       </View>
     </BottomSheet>
@@ -114,4 +108,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   spacing: {height: 5},
+  sheetBox: {
+    height: 20,
+    borderTopRightRadius: 15,
+    borderTopLeftRadius: 15,
+    borderTopWidth: 3,
+    borderRightWidth: 2,
+    borderLeftWidth: 2,
+    borderColor: ORANGE,
+    marginHorizontal: -2,
+  },
 });
