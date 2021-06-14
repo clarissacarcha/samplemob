@@ -35,7 +35,7 @@ const PaymentChartScreen = ({navigation})=> {
                 rows={[
                     {
                         '0': ["Over-the-Counter", "Online Bank"],
-                        '1': ["UNIOINBANK"],                        
+                        '1': ["UNIONBANK"],                        
                         '2': ["2 days", "1 hour"],
                         '3': ["--", "--"],
                         '4': ["10", "30"],

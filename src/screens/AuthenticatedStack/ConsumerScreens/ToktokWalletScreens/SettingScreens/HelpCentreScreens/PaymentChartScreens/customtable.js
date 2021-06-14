@@ -27,7 +27,7 @@ const CustomTable = (props) => {
                                     borderRightColor: last ? COLORS.ORANGE : "",
                                     borderRightWidth: last ? 0.4 : 0
                                 }}>
-                                    <Text style={{textAlign: 'center'}}>{item.value}</Text>
+                                    <Text style={{textAlign: 'center', fontFamily: FONT.BOLD,fontSize:FONT_SIZE.M}}>{item.value}</Text>
                                 </View>
                             </>
                         )
@@ -60,7 +60,7 @@ const CustomTable = (props) => {
                                                             borderBottomColor: lastrow && bottom ? COLORS.ORANGE : "",
                                                             borderBottomWidth: lastrow && bottom ? 0.4 : 0
                                                         }}>
-                                                            <Text style={{textAlign: 'center'}}>{val}</Text>
+                                                            <Text style={{textAlign: 'center', fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M}}>{val}</Text>
                                                         </View>
                                                     )
                                                 })}                                        
@@ -79,7 +79,7 @@ const CustomTable = (props) => {
                                     borderBottomColor: lastrow ? COLORS.ORANGE : "",
                                     borderBottomWidth: lastrow ? 0.4 : 0
                                 }}>
-                                    <Text style={{textAlign: 'center'}}>{data[i]}</Text>
+                                    <Text style={{textAlign: 'center', fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M}}>{data[i]}</Text>
                                 </View>
                                 </>
                             )

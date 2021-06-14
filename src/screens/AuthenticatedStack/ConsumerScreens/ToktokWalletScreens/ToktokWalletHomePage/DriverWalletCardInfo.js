@@ -87,14 +87,14 @@ const DriverWalletCardInfo = ({loading})=> {
             <View style={styles.whitespace}>
                 <DriverWalletMethods/>
                 <View style={{flex: 1, justifyContent:"center",alignItems:"center"}}>
-                    {/* <TouchableOpacity onPress={()=>null} style={{flexDirection:"row",padding: 2}}>
+                    <TouchableOpacity onPress={()=>navigation.navigate("ToktokWalletHelpCentreSecurityPrivacy")} style={{flexDirection:"row",padding: 2}}>
                          <Image style={{height: 21,width: 21,marginRight: 5,}} source={require('../../../../../assets/icons/walletVerify.png')}/>
                          <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.S}}>Your wallet is <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.S,color: COLOR.ORANGE}}>encrypted and secure.</Text></Text>
-                    </TouchableOpacity> */}
-                     <View style={{flexDirection:"row",padding: 2}}>
+                    </TouchableOpacity>
+                     {/* <View style={{flexDirection:"row",padding: 2}}>
                          <Image style={{height: 21,width: 21,marginRight: 5,}} source={require('../../../../../assets/icons/walletVerify.png')}/>
                          <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.S}}>Your wallet is <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.S,color: COLOR.ORANGE}}>encrypted and secure.</Text></Text>
-                    </View>
+                    </View> */}
                      
                 </View>
             </View>
