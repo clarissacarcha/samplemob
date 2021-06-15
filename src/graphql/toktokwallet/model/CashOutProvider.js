@@ -9,3 +9,13 @@ export const GET_CASH_OUT_PROVIDERS = gql`
         }
     }
 `
+
+export const GET_CASH_OUT_PROVIDER_OTHER_BANKS = gql`
+   query {
+       getCashOutProviderOtherBanks {
+            id
+            name
+            status
+        }
+    }
+`

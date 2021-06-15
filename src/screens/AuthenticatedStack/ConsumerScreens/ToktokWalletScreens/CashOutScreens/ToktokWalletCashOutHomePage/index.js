@@ -1,6 +1,5 @@
-import React , {useState, useEffect} from 'react'
+import React from 'react'
 import {View,StyleSheet,Text,TouchableOpacity,Image,Dimensions, ImageBackground,ActivityIndicator,FlatList} from 'react-native'
-import FIcon from 'react-native-vector-icons/Feather';
 import { COLOR , FONT , FONT_SIZE  } from '../../../../../../res/variables';
 import { numberFormat } from '../../../../../../helper';
 import { 
@@ -8,43 +7,22 @@ import {
     HeaderTitle,
     Separator
 } from '../../Components'
-import {useSelector} from 'react-redux'
-import { TOKTOK_WALLET_GRAPHQL_CLIENT } from '../../../../../../graphql'
-import { GET_CASH_OUT_PROVIDERS } from '../../../../../../graphql/toktokwallet'
-import { useQuery } from '@apollo/react-hooks'
+import { useSelector } from 'react-redux';
 
-//SELF IMPORTS
-import CashOutOption from "./CashOutOption";
-import GCash from "./GCash"
+//SElF IMPORTS
+import CashOutOption from './CashOutOption';
 
-const {height,width} = Dimensions.get("window")
-
-const ToktokWalletCashOut = ({navigation,route})=> {
+const ToktokWalletCashOutHomePage = ({navigation,route})=> {
 
     navigation.setOptions({
-       headerShown: false
-    })
-    const tokwaAccount = useSelector(state=>state.toktokWallet)
+        headerShown: false
+     })
 
-    const {data,error,loading} = useQuery(GET_CASH_OUT_PROVIDERS, {
-        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
-        fetchPolicy:"network-only",
-        onCompleted: ({getCashOutProviders})=> {
-    
-        }
-    })
-
-
-    if(loading){
-        return <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                <ActivityIndicator size={24} color={COLOR.YELLOW} />
-            </View>
-    }
-  
+     const tokwaAccount = useSelector(state=>state.toktokWallet)
 
     return (
-     <>
-      <View style={styles.container}>
+        <>
+        <View style={styles.container}>
             <View style={styles.headings}>
                 <HeaderImageBackground>
                     <HeaderTitle label="Fund Transfer"/>
@@ -54,22 +32,13 @@ const ToktokWalletCashOut = ({navigation,route})=> {
                     </View>
                 </HeaderImageBackground>
             </View>
-
-            <View style={styles.cashoutoptions}>
-                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>Enrolled Accounts</Text>
-            </View>
             <Separator/>
             <View style={styles.transferOptions}>
-                     <FlatList 
-                            data={data.getCashOutProviders}
-                            keyExtractor={(item)=>item.id}
-                            renderItem={({item,index})=> {
-                                    return <CashOutOption item={item}/>
-                            }}
-                        />
+                   <CashOutOption label="Enrolled Accounts" route="ToktokWalletCashOut"/>
+                   <CashOutOption label="Other Banks" route="ToktokWalletCashOutOtherBanks"/>
             </View>
       </View>
-      </>
+        </>
     )
 }
 
@@ -103,4 +72,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default ToktokWalletCashOut
+export default ToktokWalletCashOutHomePage

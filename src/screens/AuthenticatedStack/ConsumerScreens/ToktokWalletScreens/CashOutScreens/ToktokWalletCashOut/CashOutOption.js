@@ -12,6 +12,9 @@ const CashOutOption = ({item})=> {
     if(item.name.toLowerCase() == "gcash"){
         icon = require('../../../../../../assets/toktokwallet-assets/cash-out-providers/gcash.png')
         navigateLink = "ToktokWalletGcashHomePage"
+    }else if(item.name.toLowerCase() == "bdo"){
+        icon = require('../../../../../../assets/toktokwallet-assets/cash-out-providers/bdo.png')
+        navigateLink = ""
     }else{
         navigateLink = ""
     }

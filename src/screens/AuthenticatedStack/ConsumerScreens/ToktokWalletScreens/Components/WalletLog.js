@@ -23,7 +23,7 @@ export const WalletLog = ({item ,index , itemsLength }) => {
         displayNumber: "",
     })
 
-    const ViewTransactionDetails = ({item , title, phrase , referenceDate , transactionAmount, displayNumber, externalReferenceNumber , deliveryId}) => {
+    const ViewTransactionDetails = ({item , title, phrase , referenceDate , transactionAmount, displayNumber, externalReferenceNumber , deliveryId, cashOutDisplayInformations}) => {
         setTransactionVisible(true)
         setTransactionInfo({
             refNo: MaskLeftZero(item.id),
@@ -34,6 +34,7 @@ export const WalletLog = ({item ,index , itemsLength }) => {
             displayNumber: displayNumber,
             externalReferenceNumber: externalReferenceNumber,
             deliveryId: deliveryId,
+            cashOutDisplayInformations: cashOutDisplayInformations,
         })
     }
 
@@ -44,6 +45,8 @@ export const WalletLog = ({item ,index , itemsLength }) => {
     const referenceDate = moment(item.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')
     const transactionAmount = `${amountprefix} ${tokwaAccount.wallet.currency.code} ${numberFormat(item.amount)}`
     const externalReferenceNumber = item.externalReferenceNumber
+    const cashOutDisplayInformations = item.cashOutDisplayInformations
+
 
     let displayNumber = ""
 
@@ -109,9 +112,20 @@ export const WalletLog = ({item ,index , itemsLength }) => {
                 displayNumber={transactionInfo.displayNumber}
                 externalReferenceNumber={transactionInfo.externalReferenceNumber}
                 deliveryId={transactionInfo.deliveryId}
+                cashOutDisplayInformations={cashOutDisplayInformations}
             />
 
-            <TouchableOpacity onPress={()=>ViewTransactionDetails({item , title , phrase, referenceDate , transactionAmount, displayNumber ,externalReferenceNumber , deliveryId})} style={styles.transaction}>
+            <TouchableOpacity onPress={()=>ViewTransactionDetails({
+                item , 
+                title , 
+                phrase, 
+                referenceDate , 
+                transactionAmount, 
+                displayNumber ,
+                externalReferenceNumber , 
+                deliveryId ,
+                cashOutDisplayInformations
+            })} style={styles.transaction}>
                 <View style={styles.transactionDetails}>
                     {/* <Text style={{fontSize: 12,fontFamily: FONT_MEDIUM}}>{title} <Text style={{fontFamily: FONT_LIGHT,fontSize: 10}}> ( {status} )</Text></Text> */}
                     <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{title}</Text>
