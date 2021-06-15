@@ -53,6 +53,7 @@ export const GET_TRANSACTIONS = gql`
                     externalName
                     externalPhrase
                     externalReferenceNumber
+                    externalPayload
                     sourcePerson {
                         firstName
                         middleName
@@ -89,6 +90,7 @@ export const GET_TRANSACTIONS = gql`
                     externalName
                     externalPhrase
                     externalReferenceNumber
+                    externalPayload
                     sourcePerson {
                         firstName
                         middleName

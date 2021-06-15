@@ -34,6 +34,7 @@ export const GET_MY_ACCOUNT = gql`
                 lastName
                 birthdate
                 emailAddress
+                gender
                 accountType {
                     title
                     level

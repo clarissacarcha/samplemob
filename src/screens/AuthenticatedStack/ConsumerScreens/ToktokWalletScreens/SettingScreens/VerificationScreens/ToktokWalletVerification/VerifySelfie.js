@@ -1,11 +1,13 @@
 import React, { useState ,useRef , useContext } from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,Alert,Dimensions,Modal,Image,Platform} from 'react-native'
+import {View,Text,StyleSheet,TouchableOpacity,Alert,Dimensions,Modal,Image,Platform,ScrollView} from 'react-native'
 import {FONTS, SIZES, BUTTON_HEIGHT, COLORS} from '../../../../../../../res/constants'
 import EIcon from 'react-native-vector-icons/EvilIcons'
 import {VerifyContext} from './VerifyContextProvider'
 import {useNavigation} from '@react-navigation/native'
-import { YellowButton } from '../../../../../../../revamp'
+import { ICON_SET, VectorIcon, YellowButton } from '../../../../../../../revamp'
 import ImageCropper from 'react-native-simple-image-cropper'
+import { COLOR, FONT, FONT_SIZE } from '../../../../../../../res/variables'
+import { BuildingBottom } from '../../../Components'
 
 const {width,height} = Dimensions.get("window")
 
@@ -14,10 +16,22 @@ const CROP_AREA_HEIGHT = CROP_AREA_WIDTH;
 
 const ratio = Math.min(width / CROP_AREA_WIDTH , height / CROP_AREA_HEIGHT)
 
+const Reminder = ({children})=> {
+    return (
+        <View style={{flexDirection: "row",marginVertical: 5}}>
+            <View style={{padding: 2, borderRadius: 100, borderColor: COLOR.YELLOW, borderWidth: 1,marginRight: 10}}>
+                <VectorIcon size={12} iconSet={ICON_SET.Feather} name="check"/>
+            </View>
+           {children}
+    </View>
+    )
+}
+
 
 const MainComponent = ({children , onPress })=> {
     return (
-        <View style={styles.content}>
+        <>
+        <ScrollView style={styles.content}>
         <View style={styles.mainInput}>
                 <Text style={{fontSize: SIZES.M, fontFamily: FONTS.BOLD,color: COLORS.DARK}}>One last step before you get a verified toktokwallet</Text>
                 <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.S,color:"#929191"}}>Take a photo to verify your identity.</Text>  
@@ -27,11 +41,30 @@ const MainComponent = ({children , onPress })=> {
                 <Text style={{fontSize: SIZES.M, fontFamily: FONTS.BOLD,color:COLORS.DARK}}>Take a selfie</Text>
                         {children}
                 </View>
-                <View style={styles.proceedBtn}>
+                <View style={{flex: 1,alignItems:"center",justifyContent:"center"}}>
+                        <Text style={{textAlign:"left",fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,marginBottom: 10,}}>Reminders</Text>
+                        <View>
+                            <Reminder>
+                                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}><Text style={{color: COLOR.YELLOW}}>Position</Text> your face within the frame</Text>
+                            </Reminder>
+                            <Reminder>
+                                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}><Text style={{color: COLOR.YELLOW}}>Don't</Text> wear anything covering your face</Text>
+                            </Reminder>
+                            <Reminder>
+                                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}><Text style={{color: COLOR.YELLOW}}>Follow</Text> instructions</Text>
+                            </Reminder>
+                        </View>
+                   
+                </View>
+               
+              
+            </View>
+        </ScrollView>
+        <View style={styles.proceedBtn}>
                     <YellowButton label="Next" onPress={onPress}/>
                 </View>
-            </View>
-        </View>
+        <BuildingBottom/>
+        </>
     )
 }
 
@@ -131,8 +164,10 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     proceedBtn: {
-        height: 50,
+        height: 70,
         width: "100%",
+        padding: 16,
+        marginBottom: 16,
     },
     input: {
         padding: 10,

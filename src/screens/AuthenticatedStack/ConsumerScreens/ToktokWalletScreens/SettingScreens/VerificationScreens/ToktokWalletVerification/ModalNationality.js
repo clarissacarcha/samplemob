@@ -27,7 +27,7 @@ const ModalNationality = ({visible,setVisible})=> {
             setFilteredNationalities(countries)
         },
         onError: (error)=> {
-            console.log(error)
+            console.log(JSON.stringify(error))
         }
     })
 

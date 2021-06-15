@@ -29,7 +29,7 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
         width: 0,
     })
     const [message,setMessage] = useState({
-        msg: "Position your face within the frame and then SMILE",
+        msg: "Position your face within the frame. Don't wear anything covering your face.",
         icon: "bullseye"
     })
     const [boxColor,setBoxColor] = useState("white")
@@ -106,7 +106,7 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
             if(checkifOutsideBox(boundary,result)){
                 console.log("Outside the box")
                 setMessage({
-                     msg: "Position your face within the frame and then SMILE",
+                     msg: "Position your face within the frame. Don't wear anything covering your face.",
                      icon: "bullseye"
                  })
                  refreshStates()
@@ -115,7 +115,7 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
      
              if(e.faces[0].bounds.size.height < ((CROP_AREA_HEIGHT - 120))){
                  setMessage({
-                     msg: "Bring your phone closer to you",
+                     msg: "Bring your phone closer to you.",
                      icon: "mobile-alt"
                  })
                  refreshStates()
@@ -138,13 +138,13 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
                 setRightEyeOpen(true)
             }
 
-            if(e.faces[0].smilingProbability < 0.5){
+            if(e.faces[0].smilingProbability < 0.6){
                 setCheckNotSmiling(true)
             }
             
             if(!checkSmile){
                 setMessage({
-                    msg: `SMILE to take a selfie`,
+                    msg: `move your lips and SMILE to take a selfie.`,
                     icon: "smile"
                 })
                 if(e.faces[0].smilingProbability > 0.8){
@@ -163,31 +163,32 @@ const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
             //     }
             //     return
             // }
-            // if(checkSmile && checkNotSmiling && setLeftEyeOpen && setLeftEyeWink){
-            //     setMessage({
-            //         msg: `Don't move , Scanning Face`,
-            //         icon: null
-            //     })
-            //     takePicture()
-            // }
 
-            if(checkSmile){
-                   if(!leftEyeWink || !rightEyeWink){
-                        setMessage({
-                            msg: `BLINK your eye`,
-                            icon: "smile"
-                        })
-                        if(e.faces[0].leftEyeOpenProbability < 0.2){
-                            setLeftEyeWink(true)
-                        }
-                        if(e.faces[0].rightEyeOpenProbability < 0.2){
-                            setRightEyeWink(true)
-                        }
-                        return
-                    }
-               
-                return
+            if(checkSmile && checkNotSmiling){
+                setMessage({
+                    msg: `Don't move , Scanning Face`,
+                    icon: null
+                })
+                takePicture()
             }
+
+            // if(checkSmile){
+            //        if(!leftEyeWink || !rightEyeWink){
+            //             setMessage({
+            //                 msg: `BLINK your eye`,
+            //                 icon: "smile"
+            //             })
+            //             if(e.faces[0].leftEyeOpenProbability < 0.2){
+            //                 setLeftEyeWink(true)
+            //             }
+            //             if(e.faces[0].rightEyeOpenProbability < 0.2){
+            //                 setRightEyeWink(true)
+            //             }
+            //             return
+            //         }
+               
+            //     return
+            // }
           
         }
         

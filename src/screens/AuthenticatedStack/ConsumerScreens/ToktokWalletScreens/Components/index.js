@@ -1,3 +1,4 @@
+export * from "./BuildingBottom";
 export * from "./ConfirmBottomSheet";
 export * from "./DisabledButton";
 export * from "./EnterPinCode";

@@ -3,9 +3,9 @@ import {View,Text,StyleSheet,TouchableOpacity,Image,Modal,TextInput,Platform,Key
 import {FONT ,FONT_SIZE , COLOR} from '../../../../../../res/variables'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import {useSelector} from 'react-redux'
-import {useMutation,useLazyQuery} from '@apollo/react-hooks'
+import {useMutation,useLazyQuery,useQuery} from '@apollo/react-hooks'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from '../../../../../../graphql'
-import {POST_CASH_IN_PAYPANDA_REQUEST} from '../../../../../../graphql/toktokwallet'
+import {POST_CASH_IN_PAYPANDA_REQUEST,GET_GLOBAL_SETTINGS} from '../../../../../../graphql/toktokwallet'
 import {onError,onErrorAlert} from '../../../../../../util/ErrorUtility';
 import {numberFormat} from '../../../../../../helper'
 import {useAlert} from '../../../../../../hooks/useAlert'
@@ -44,7 +44,6 @@ const ToktokWalletPayPandaForm = ({navigation,route})=> {
     const [pinCodeAttempt,setPinCodeAttempt] = useState(6)
     const [openPinCode,setOpenPinCode] = useState(false)
 
-
     const [postCashInPayPandaRequest , {data,error,loading}] = useMutation(POST_CASH_IN_PAYPANDA_REQUEST , {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onError: (error)=> {
@@ -64,7 +63,6 @@ const ToktokWalletPayPandaForm = ({navigation,route})=> {
             return navigation.pop()
         },
         onCompleted: ({postCashInPayPandaRequest})=>{
-            console.log(postCashInPayPandaRequest)
             setOpenPinCode(false)
             navigation.navigate("ToktokWalletPayPandaWebView", {
                 merchantId: postCashInPayPandaRequest.merchantId,
@@ -76,7 +74,10 @@ const ToktokWalletPayPandaForm = ({navigation,route})=> {
                 amount_to_pay: amount,
                 currency: tokwaAccount.wallet.currency.code,
                 walletId: tokwaAccount.wallet.id,
-                transactionTypeId: transactionType.id
+                transactionTypeId: transactionType.id,
+                paypandaTransactionUrl: postCashInPayPandaRequest.paypandaTransactionEntryEndpoint,
+                paypandaReturnUrl: postCashInPayPandaRequest.paypandaReturnUrlEndpoint,
+                paypandaStaginReturnUrl: postCashInPayPandaRequest.paypandaReturUrlStagingEndpoint
             })
         }
     })
@@ -157,12 +158,20 @@ const ToktokWalletPayPandaForm = ({navigation,route})=> {
             // behavior={Platform.OS === "ios" ? "padding" : "height"} 
             style={styles.container}
         >
-
-            <View style={styles.paypandaLogo}>
-                     <Image style={{height: 90,width: 90,alignSelf: "center",marginBottom: 10}} source={require('../../../../../../assets/toktokwallet-assets/paypanda.png')}/>
-                     <Text style={{fontSize: FONT_SIZE.L,fontFamily: FONT.BOLD}}>PayPanda</Text>
-                     <Text style={{fontSize: FONT_SIZE.M ,fontFamily: FONT.BOLD}}>Please enter amount to Cash in</Text>
-            </View>
+            {
+                transactionType.name.toLowerCase() == "paypanda"
+                ?    <View style={styles.paypandaLogo}>
+                                <Image style={{height: 90,width: 90,alignSelf: "center",marginBottom: 10}} source={require('../../../../../../assets/toktokwallet-assets/cash-in-providers/paypanda.png')}/>
+                                <Text style={{fontSize: FONT_SIZE.L,fontFamily: FONT.BOLD}}>PayPanda</Text>
+                                <Text style={{fontSize: FONT_SIZE.M ,fontFamily: FONT.BOLD}}>Please enter amount to Cash in</Text>
+                    </View>
+                :    <View style={styles.paypandaLogo}>
+                                <Image style={{height: 90,width: 90,alignSelf: "center",marginBottom: 10}} source={require('../../../../../../assets/toktokwallet-assets/cash-in-providers/jcwallet.png')}/>
+                                <Text style={{fontSize: FONT_SIZE.L,fontFamily: FONT.BOLD}}>JC Wallet</Text>
+                                <Text style={{fontSize: FONT_SIZE.M ,fontFamily: FONT.BOLD}}>Please enter amount to Cash in</Text>
+                    </View>
+            }
+        
 
             <View style={styles.content}>
           
@@ -194,7 +203,7 @@ const ToktokWalletPayPandaForm = ({navigation,route})=> {
                 : <View style={{flex: 1,justifyContent: "center",alignItems: "center"}}><ActivityIndicator size={50}/></View>
                 
             }
-          
+   
             <View style={styles.cashinbutton}>
                     {
                         (amount < 1 || amount > transactionType.cashInLimit || disablebtn)

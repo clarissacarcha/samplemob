@@ -2,7 +2,7 @@ import React , {useRef, useState} from 'react'
 import {View,Text,StyleSheet,ScrollView,TextInput,TouchableOpacity} from 'react-native'
 import { BUTTON_HEIGHT, COLORS, DARK, FONTS, SIZES } from '../../../../../../../res/constants'
 import { YellowButton } from '../../../../../../../revamp'
-import {DisabledButton, NumberBoxes} from '../../../Components'
+import {DisabledButton, NumberBoxes ,BuildingBottom} from '../../../Components'
 
 const NewPin = ({pinCode,setPinCode , pageIndex, setPageIndex})=> {
 
@@ -58,6 +58,7 @@ const NewPin = ({pinCode,setPinCode , pageIndex, setPageIndex})=> {
                     : <YellowButton label="Next" onPress={onSubmit}/>
                 }
             </View>
+            <BuildingBottom/>
           
         </View>
     )

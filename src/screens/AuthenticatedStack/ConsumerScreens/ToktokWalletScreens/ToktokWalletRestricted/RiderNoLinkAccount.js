@@ -1,11 +1,11 @@
 import React , {useState,useEffect} from 'react'
-import {View,Text,StyleSheet,Modal,Dimensions,TouchableOpacity,TextInput,ActivityIndicator,ImageBackground} from 'react-native'
+import {View,Text,StyleSheet,Modal,Dimensions,TouchableOpacity,TextInput,ActivityIndicator,ImageBackground,Image} from 'react-native'
 import { YellowButton, VectorIcon , ICON_SET  } from '../../../../../revamp'
 import { COLOR , FONT_SIZE , FONT , SIZE } from '../../../../../res/variables'
 import { TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT } from '../../../../../graphql'
-import { GET_CHECK_ACCOUNT } from '../../../../../graphql/toktokwallet'
-import { useQuery } from '@apollo/react-hooks'
-import { onErrorAlert } from '../../../../../util/ErrorUtility'
+import { GET_CHECK_ACCOUNT , GET_LINK_ACCOUNT_OTP } from '../../../../../graphql/toktokwallet'
+import { useQuery , useLazyQuery } from '@apollo/react-hooks'
+import { onErrorAlertlert } from '../../../../../util/ErrorUtility'
 import { useAlert } from '../../../../../hooks'
 import { useNavigation } from '@react-navigation/native'
 import { useSelector } from 'react-redux'
@@ -22,43 +22,27 @@ const LoadingPage = ()=> {
 }
 
 const BannerImages = ()=> (
-    <View style={{marginTop: 40,justifyContent:'center'}}>
-        
-    <ImageBackground 
-        resizeMode="stretch"
-        imageStyle={{borderRadius: SIZE.BORDER_RADIUS}}
-        source={require('../../../../../assets/toktokwallet-assets/unlock.png')}
-        style={{borderRadius: SIZE.BORDER_RADIUS, width: width - 80, height: 90,backgroundColor:"transparent",flexDirection:"row"}}
-    >
-        <View style={{flex:1,backgroundColor:"transparent",justifyContent:"center",alignItems:"flex-end",paddingRight: 20}}>
-            <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}><Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M, color: COLOR.ORANGE}}>Secure</Text> your</Text>
-            <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>toktokwallet</Text>
-        </View>
-    </ImageBackground>
-
-    <ImageBackground 
-        resizeMode="stretch"
-        imageStyle={{borderRadius: SIZE.BORDER_RADIUS}}
-        source={require('../../../../../assets/toktokwallet-assets/secure.png')}
-        style={{marginVertical: 10, borderRadius: SIZE.BORDER_RADIUS, width: width - 80, height: 90,backgroundColor:"transparent",flexDirection:"row"}}
-    >
-        <View style={{flex:1,backgroundColor:"transparent",justifyContent:"center",alignItems:"flex-end",paddingRight: 20}}>
-            <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}><Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M, color: COLOR.ORANGE}}>Enjoy</Text> convenient</Text>
-            <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>payment experience</Text>
-        </View>   
-    </ImageBackground>
-
-    <ImageBackground 
-        resizeMode="stretch"
-        imageStyle={{borderRadius: SIZE.BORDER_RADIUS}}
-        source={require('../../../../../assets/toktokwallet-assets/enjoy.png')}
-        style={{borderRadius: SIZE.BORDER_RADIUS, width: width - 80, height: 90,backgroundColor:"transparent",flexDirection:"row"}}
-    >
-        <View style={{flex:1,backgroundColor:"transparent",justifyContent:"center",alignItems:"flex-end",paddingRight: 20}}>
-            <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}><Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M, color: COLOR.ORANGE}}>Unlock</Text> toktokwallet</Text>
-            <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>features</Text>
-        </View>
-    </ImageBackground>
+    <View style={{marginTop: 20,justifyContent:'center'}}>
+   
+   <View style={{flexDirection:'row',marginVertical: 10}}>
+                                <Image resizeMode="contain" style={{height: 100,width: 80}} source={require('../../../../../assets/toktokwallet-assets/nobg-secure.png')} />
+                                <View style={{justifyContent:"center",marginLeft: 20}}>
+                                <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}><Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M,color: COLOR.ORANGE}}>Secure</Text> your toktokwallet</Text>
+                                </View>
+                        </View>
+                        <View style={{flexDirection:'row',marginVertical: 10}}>
+                                <Image resizeMode="contain" style={{height: 100,width: 80}} source={require('../../../../../assets/toktokwallet-assets/nobg-enjoy.png')} />
+                                <View style={{justifyContent:"center",marginLeft: 20}}>
+                                    <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}><Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M,color: COLOR.ORANGE}}>Enjoy</Text> convenient payment</Text>
+                                    <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>experience</Text>
+                                </View>
+                        </View>
+                        <View style={{flexDirection:'row',marginVertical: 10}}>
+                                <Image resizeMode="contain" style={{height: 100,width: 80}} source={require('../../../../../assets/toktokwallet-assets/nobg-unlock.png')} />
+                                <View style={{justifyContent:"center",marginLeft: 20}}>
+                                    <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}><Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M,color: COLOR.ORANGE}}>Unlock</Text> wallet features</Text>
+                                </View>
+                        </View>
 </View>
 )
 
@@ -88,7 +72,6 @@ const RiderNoLinkAccount = ()=> {
         fetchPolicy: "network-only",
         variables:{
             input: {
-              
                 //mobileNumber: '+639270752905',
                 mobileNumber: session.user.username,
                 motherReferenceNumber: session.user.id,
@@ -99,10 +82,6 @@ const RiderNoLinkAccount = ()=> {
         }
     })
 
-    const linkAccount = ()=> {
-        return navigation.navigate("ToktokWalletLinkAccount", {tokwaAccount: data.getCheckAccount})
-    }
-
 
     if(loading){
         return <LoadingPage/>
@@ -112,6 +91,41 @@ const RiderNoLinkAccount = ()=> {
         return <NoTokwaAccount navigation={navigation}/>
     }
 
+    // const [getLinkAccountOTP] = useLazyQuery(GET_LINK_ACCOUNT_OTP, {
+    //     fetchPolicy: "network-only",
+    //     client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT,
+    //     onCompleted: ({getLinkAccountOTP})=> {
+    //         // return navigation.navigate("ToktokWalletLinkAccount", {tokwaAccount: data.getCheckAccount})
+    //     },
+    //     onError: (error)=>{
+    //         onErrorAlert({alert,error})
+    //     }
+    // })
+
+    const getLinkAccountOTP = async (mobileNumber)=> {
+        try {
+            const result = await TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT.query({
+                query: GET_LINK_ACCOUNT_OTP,
+                fetchPolicy:"network-only",
+                variables: {
+                    input: {
+                        mobileNumber: mobileNumber
+                    }
+                },
+                errorPolicy:"all" 
+            })
+      
+            if(result?.errors){
+                return alert({message: result.errors[0].message})
+            }
+       
+            if(result){
+                return navigation.navigate("ToktokWalletLinkAccount", {tokwaAccount: data.getCheckAccount})
+            }
+        }catch(err){
+            throw err
+        }
+    }
 
     return (
         <>
@@ -122,7 +136,7 @@ const RiderNoLinkAccount = ()=> {
             </View>
 
             <View style={{height: 120,padding: 16,justifyContent:'flex-end'}}>
-                <YellowButton label="Link Now" onPress={linkAccount}/>
+                <YellowButton label="Link Now" onPress={()=>getLinkAccountOTP(data.getCheckAccount.mobileNumber)}/>
             </View>
     </>
     )

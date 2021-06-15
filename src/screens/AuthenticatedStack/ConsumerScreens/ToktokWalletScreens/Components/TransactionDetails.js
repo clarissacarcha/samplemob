@@ -15,7 +15,8 @@ export const TransactionDetails = ({
     amount,
     status,
     displayNumber,
-    externalReferenceNumber
+    externalReferenceNumber,
+    deliveryId
 })=> {
 
     return (
@@ -29,7 +30,7 @@ export const TransactionDetails = ({
             >
                 <View style={styles.content}>
                     <View style={{
-                        height: 230,
+                        height: 250,
                         width: width * 0.9,
                         backgroundColor:"white",
                         borderRadius: 5,
@@ -40,7 +41,7 @@ export const TransactionDetails = ({
                             <Text style={styles.labelText}>{phrase}</Text>
                             {displayNumber != "" && <Text style={styles.labelText}>{displayNumber}</Text>}
                             { status && <Text style={styles.labelText}>Status: {status}</Text>}
-                            { externalReferenceNumber && <Text style={styles.labelText}>Ref No: {externalReferenceNumber}</Text>}
+                            { deliveryId && <Text style={styles.labelText}>Delivery ID: {deliveryId}</Text>}
                             <View style={{marginTop: 10}}>
                                 <Text style={styles.labelText}>Amount: {amount}</Text>
                                 <Text style={styles.labelText}>Ref No: {refNo}</Text>

@@ -68,6 +68,7 @@ export const GET_CHECK_ACCOUNT = gql`
                 emailAddress
                 birthdate
                 selfieImage
+                gender
                 accountType {
                     linkLimit
                 }

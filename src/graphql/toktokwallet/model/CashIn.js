@@ -6,6 +6,9 @@ export const POST_CASH_IN_PAYPANDA_REQUEST = gql`
             signature
             merchantId
             refNo
+            paypandaTransactionEntryEndpoint
+            paypandaReturnUrlEndpoint
+            paypandaReturUrlStagingEndpoint
         }
     }
 `

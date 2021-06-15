@@ -1,6 +1,6 @@
 import React, {useState, useContext , useEffect} from 'react'
 import {StyleSheet,View,Dimensions,BackHandler,TouchableHighlight,Text,KeyboardAvoidingView,Platform,Alert} from 'react-native'
-import { HeaderTitle} from '../../../../../../../revamp'
+// import { HeaderTitle} from '../../../../../../../revamp'
 
 import {useNavigation} from '@react-navigation/native'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
@@ -16,6 +16,7 @@ import VerifyID from './VerifyID'
 import VerifySelfie from './VerifySelfie'
 import Confirm from './Confirm'
 import { COLORS, FONTS, SIZES } from '../../../../../../../res/constants';
+import { FONT } from '../../../../../../../res/variables';
 
 const {height,width} = Dimensions.get("window")
 
@@ -59,6 +60,14 @@ const HeaderBackClose = ({currentIndex,setCurrentIndex, setPromptVisible})=> {
       )
 }
 
+const HeaderTitle = ({label})=> {
+    return (
+    <View style={{width:"100%",justifyContent:"center",alignItems:"center"}}>
+      <Text style={{fontFamily: FONT.BOLD ,fontSize: 16}}>{label}</Text>
+    </View>
+    )
+}
+
 
 const MainSetupComponent = ()=> {
 
@@ -68,7 +77,7 @@ const MainSetupComponent = ()=> {
 
     navigation.setOptions({
         headerLeft: ()=> <HeaderBackClose setPromptVisible={(value)=>setVisible(true)} currentIndex={currentIndex} setCurrentIndex={setCurrentIndex}/>,
-        headerTitle: ()=> <HeaderTitle headerRightIsSet label={['Verification','']}/>,
+        headerTitle: ()=> <HeaderTitle label={"Verification"} />,
         headerRight: ()=>  <TouchableHighlight style={{paddingRight: 16}} underlayColor={'white'} onPress={cancelSetup}>
                                 <View style={{justifyContent:"center",alignItems:"center"}}>
                                 <Text style={{fontSize: SIZES.M,fontFamily: FONTS.REGULAR ,color:'#929191'}}>Cancel</Text>

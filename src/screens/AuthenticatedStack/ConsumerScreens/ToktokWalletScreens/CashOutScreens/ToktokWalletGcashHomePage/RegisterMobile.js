@@ -72,13 +72,13 @@ const RegisterMobile = ({provider,rejected})=> {
             }
 
             // // create linking table if linking unlinking is allowed
-            // if(getGcashEnrollmentRecord.status == 1){
-            //     setShowLinkModal(true)
-            // }
-            // // temporary solution for 1:1 Gcash
             if(getGcashEnrollmentRecord.status == 1){
-                setErrorMessage(`GCash number ${getGcashEnrollmentRecord.mobile} already linked`)
+                setShowLinkModal(true)
             }
+            // // temporary solution for 1:1 Gcash
+            // if(getGcashEnrollmentRecord.status == 1){
+            //     setErrorMessage(`GCash number ${getGcashEnrollmentRecord.mobile} already linked in a toktokwallet account`)
+            // }
         },
         onError: (error)=> {
             onErrorAlert({alert, error});

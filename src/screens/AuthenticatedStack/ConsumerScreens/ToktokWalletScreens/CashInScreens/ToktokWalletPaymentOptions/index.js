@@ -44,7 +44,8 @@ const ToktokWalletPaymentOptions = ({navigation,route})=> {
             image = require('../../../../../../assets/toktokwallet-assets/cash-in-providers/paypanda.png')
             navigateLink = "ToktokWalletPayPandaForm"
         }else{
-            navigateLink = ""
+            image = require('../../../../../../assets/toktokwallet-assets/cash-in-providers/jcwallet.png')
+            navigateLink = "ToktokWalletPayPandaForm"
         }
         return (
             <TouchableOpacity 
