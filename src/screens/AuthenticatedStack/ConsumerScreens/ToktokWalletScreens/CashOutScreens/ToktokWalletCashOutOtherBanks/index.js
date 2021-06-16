@@ -1,4 +1,4 @@
-import React , {useState,useReducer} from 'react'
+import React , {useState,useReducer , useRef,useEffect} from 'react'
 import {View,StyleSheet,Text,ScrollView,KeyboardAvoidingView,Platform,Dimensions} from 'react-native'
 import { 
     HeaderImageBackground,
@@ -16,7 +16,10 @@ import { numberFormat } from '../../../../../../helper';
 import InstaPayOption from './InstaPayOption'
 import PesoNetOption from './PesoNetOption';
 import MySavedAccounts from './MySavedAccounts';
-import FundTransferForm from './FundTransferForm'
+import FundTransferForm from './FundTransferForm';
+import BottomSheetSavedAccountBanks from './BottomSheetSavedAccountBanks';
+import BottomSheetSavedAccounts from './BottomSheetSavedAccounts';
+import BottomSheetChooseBank from './BottomSheetChooseBank'
 
 const screen = Dimensions.get('window');
 
@@ -25,28 +28,61 @@ const ToktokWalletCashOutOtherBanks = ({navigation,route})=> {
         headerShown: false
      })
      const tokwaAccount = useSelector(state=>state.toktokWallet)
+     const bottomSheetSaveAccountBankRef = useRef(null)
+     const bottomSheetSavedAccountRef = useRef(null)
+     const bottomSheetBanksRef = useRef(null)
 
      const initialState = {
          bank: "",
+         bankDescription: "",
+         bankAccountNumberLength: "",
          accountName: `${tokwaAccount.person.firstName} ${tokwaAccount.person.lastName}`,
          accountNumber: "",
          amount: "",
          note: "",
+         savedAccounts: [],
+         banks: [],
      }
 
      const reducer = (state,action) => {
          switch(action.type){
-
+            case "UPDATE_SAVE_ACCOUNTS": 
+                return {
+                    ...state,
+                    savedAccounts: [...action.payload]
+                }
+            case "UPDATE_BANKS_LIST" :
+                return {
+                    ...state,
+                    banks: [...action.payload]
+                }
+            case "SET_BANK":
+                return {
+                    ...state,
+                    bank: action.payload.id,
+                    bankDescription: `${action.payload.code} - ${action.payload.name}`, 
+                    bankAccountNumberLength: action.payload.accountNumberLength
+                }
+            case "SET_ACCOUNT_NUMBER":
+                return {
+                    ...state,
+                    accountNumber: action.payload
+                }
+            case "SET_NOTE":
+                return {
+                    ...state,
+                    note: action.payload
+                }
             default:
                 return state
          }
      }
 
-     const [state,dispatch] = useReducer(reducer , initialState)
-
+    const [state,dispatch] = useReducer(reducer , initialState)
 
     return (
         <>
+        
          <View style={styles.container}>
                <View style={styles.headings}>
                    <HeaderImageBackground>
@@ -64,11 +100,23 @@ const ToktokWalletCashOutOtherBanks = ({navigation,route})=> {
                         style={{ flex: 1 }}
                 >
                <ScrollView showsVerticalScrollIndicator={false} style={styles.transferOptions}>
-                    <MySavedAccounts state={state} dispatch={dispatch}/>
-                    <FundTransferForm state={state} dispatch={dispatch}/>
+                    <MySavedAccounts state={state} dispatch={dispatch} bottomRef={bottomSheetSaveAccountBankRef} edit={()=>bottomSheetSavedAccountRef.current.expand()}/>
+                    <FundTransferForm state={state} dispatch={dispatch} selectBanks={()=>bottomSheetBanksRef.current.expand()}/>
                </ScrollView>
                </KeyboardAvoidingView>
          </View>
+         <BottomSheetSavedAccountBanks ref={bottomSheetSaveAccountBankRef}/>   
+         <BottomSheetSavedAccounts ref={bottomSheetSavedAccountRef} accounts={state.savedAccounts}/> 
+         <BottomSheetChooseBank 
+            ref={bottomSheetBanksRef} 
+            banks={state.banks} 
+            onChange={(bank)=> {
+                dispatch({
+                    type: "SET_BANK",
+                    payload: bank
+                })
+            }}
+         />
          </>
        )
 }
@@ -76,7 +124,7 @@ const ToktokWalletCashOutOtherBanks = ({navigation,route})=> {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor:"white"
+        backgroundColor:"white",
     },
     headings: {
         height: 190,

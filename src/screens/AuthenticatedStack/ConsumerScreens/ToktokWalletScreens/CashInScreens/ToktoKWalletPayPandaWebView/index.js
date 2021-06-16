@@ -91,44 +91,16 @@ const ToktoKWalletPayPandaWebView = ()=> {
                     renderLoading={()=> <LoadingIndicator/>}
                     onNavigationStateChange={(event)=> {
 
-                        console.log(event)
-              
-                        // const checkreturnurl = event.url.search("https://sandbox.paypanda.ph/app/payment/dp_ret")
-                        // const checkreturnurl = event.url.search(constants.paypandaReturnUrlEndpoint)
                         
-                        const checkreturnurl = event.url.search(route.params.paypandaReturnUrl)
+                       const checkreturnurl = event.url.search(route.params.paypandaReturnUrl)
                         if(checkreturnurl != -1){
                             const {url} = event
-
-                            const paypandaReferenceNumber = /(?:\&refno=).*/g.exec(url)
-                            const status = /(?:\&status=).*(?=\&refno)/.exec(url)
-
-                            if(checkurl != url){     
-                                setCashInLogParams({
-                                    status: status[0].slice(8),
-                                    referenceNumber: route.params.refNo,
-                                    paypandaReferenceNumber: paypandaReferenceNumber[0].slice(7),
-                                    amount: +route.params.amount_to_pay,
-                                    createdAt: new Date(),
-                                    email: route.params.email_address,
-                                    payer: route.params.payer_name
-                                })
-                                setDoneTransaction(true)
-                              
-                            }
-                            setCheckurl(url)
-                        }
-                        
-                        // const checkreturnOtherUrl = event.url.search("https://stg-wallet.toktok.ph/app/transactions/paypanda_ret")
-                        const checkreturnOtherUrl = event.url.search(route.params.paypandaStaginReturnUrl)
-
-                        if(checkreturnOtherUrl != -1){ 
-                            const {url} = event
-                        
-                            const paypandaReferenceNumber = /(?:\&paypanda_refno=).*(?=\&status)/g.exec(url)
+      
+                            const paypandaReferenceNumber = /(?:\&paypanda_refno=).*(?=\&status)/.exec(url)
                             const status = /(?:\&status=).*(?=\&signature)/.exec(url)
 
-                            if(checkurl != url){       
+                
+                            if(checkurl != url){     
                                 setCashInLogParams({
                                     status: status[0].slice(8),
                                     referenceNumber: route.params.refNo,
@@ -139,6 +111,7 @@ const ToktoKWalletPayPandaWebView = ()=> {
                                     payer: route.params.payer_name
                                 })
                                 setDoneTransaction(true)
+                              
                             }
                             setCheckurl(url)
                         }

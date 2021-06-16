@@ -49,7 +49,8 @@ export const TransactionDetails = ({
     displayNumber,
     externalReferenceNumber,
     deliveryId,
-    cashOutDisplayInformations
+    cashOutDisplayInformations,
+    cashInMobileNumber
 })=> {
 
     return (
@@ -75,6 +76,7 @@ export const TransactionDetails = ({
                             {displayNumber != "" && <Text style={styles.labelText}>{displayNumber}</Text>}
                             { status && <Text style={styles.labelText}>Status: {status}</Text>}
                             { deliveryId && <Text style={styles.labelText}>Delivery ID: {deliveryId}</Text>}
+                            { cashInMobileNumber && <Text style={styles.labelText}>Account Number: {cashInMobileNumber}</Text>}
                             { renderCashOutDisplayInformations(cashOutDisplayInformations)}
                             <View style={{marginTop: 10}}>
                                 <Text style={styles.labelText}>Amount: {amount}</Text>

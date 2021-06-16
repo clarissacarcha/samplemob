@@ -3,6 +3,8 @@ export * from "./AccountType";
 export * from "./CashIn";
 export * from "./CashInProvider";
 export * from "./CashOut";
+export * from "./CashOutBank";
+export * from "./CashOutBankAccount";
 export * from "./CashOutEnrollmentGcash";
 export * from "./CashOutProvider";
 export * from "./GlobalSetting";
