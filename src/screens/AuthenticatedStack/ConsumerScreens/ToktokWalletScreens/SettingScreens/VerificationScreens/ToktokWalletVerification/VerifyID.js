@@ -35,9 +35,7 @@ const ValidIDList = [
 
 const VerifyID = ()=> {
 
-    const {setCurrentIndex , setModalCountryVisible  , verifyID, changeVerifyID, frontImage, setFrontImage, backImage, setBackImage} = useContext(VerifyContext)
-    const [validIDVisible,setValidIDVisible] = useState(false)
-    const [isBackRequired, setIsbackRequired] = useState(false)
+    const {setCurrentIndex , setModalCountryVisible  , verifyID, changeVerifyID, frontImage, setFrontImage, backImage, setBackImage, isBackRequired, setIsbackRequired} = useContext(VerifyContext)
 
     const navigation = useNavigation()
     const IDTypeRef = useRef()
@@ -164,8 +162,7 @@ const VerifyID = ()=> {
 
     return (
         <>
-            {/* <ModalCountry type="validID"/> */}
-            {/* <ModalValidID visible={validIDVisible} setVisible={setValidIDVisible} /> */}
+
             <View style={styles.content}>
                 <ScrollView
                          showsVerticalScrollIndicator={false}
@@ -174,30 +171,6 @@ const VerifyID = ()=> {
                         <Text style={styles.labelText}>Upload your Valid ID</Text>
                         <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.S,color:"#929191"}}>Help us verify your identity with a photo of your valid government-issued ID. Make sure your valid ID is not expired.</Text>  
                   
-                        {/* <View style={{marginTop: 20,}}>
-                            <Text style={styles.labelText}>Country</Text>
-                            <View style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center",paddingVertical: 10}]}>
-                                <Text style={{flex: 1,color: "gray",fontSize: SIZES.M,fontFamily: FONTS.REGULAR}}>{verifyID.idCountry}</Text>
-                                <TouchableOpacity
-                                    onPress={()=>setModalCountryVisible(true)}
-                                    style={{
-                                        paddingHorizontal: 10,
-                                        borderWidth: 1,
-                                        borderColor: COLORS.YELLOW,
-                                        borderRadius: 2,
-                                        height: 20
-                                    }}
-                                >
-                                    <View style={{
-                                         flex: 1,
-                                         justifyContent:"center",
-                                         alignItems:"center",
-                                    }}>
-                                         <Text style={{color: COLORS.YELLOW,fontSize: SIZES.S,fontFamily: FONTS.REGULAR}}>Change</Text>
-                                    </View>
-                                </TouchableOpacity>
-                            </View>
-                        </View> */}
 
                         <View style={{marginTop: 20,}}>
                             <Text style={styles.labelText}>ID Type</Text>
