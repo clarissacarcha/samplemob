@@ -64,7 +64,7 @@ export const TransactionDetails = ({
             >
                 <View style={styles.content}>
                     <View style={{
-                        height: 270,
+                        height: 300,
                         width: width * 0.9,
                         backgroundColor:"white",
                         borderRadius: 5,

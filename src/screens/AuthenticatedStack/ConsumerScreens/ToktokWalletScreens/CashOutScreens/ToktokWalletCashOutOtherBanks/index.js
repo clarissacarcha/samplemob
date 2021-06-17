@@ -28,7 +28,7 @@ const ToktokWalletCashOutOtherBanks = ({navigation,route})=> {
         headerShown: false
      })
      const tokwaAccount = useSelector(state=>state.toktokWallet)
-     const bottomSheetSaveAccountBankRef = useRef(null)
+     const bottomSheetSaveAccountBankRef = useRef()
      const bottomSheetSavedAccountRef = useRef(null)
      const bottomSheetBanksRef = useRef(null)
 
@@ -42,6 +42,7 @@ const ToktokWalletCashOutOtherBanks = ({navigation,route})=> {
          note: "",
          savedAccounts: [],
          banks: [],
+         activeAccount: null
      }
 
      const reducer = (state,action) => {
@@ -60,7 +61,7 @@ const ToktokWalletCashOutOtherBanks = ({navigation,route})=> {
                 return {
                     ...state,
                     bank: action.payload.id,
-                    bankDescription: `${action.payload.code} - ${action.payload.name}`, 
+                    bankDescription: `${action.payload.name}`, 
                     bankAccountNumberLength: action.payload.accountNumberLength
                 }
             case "SET_ACCOUNT_NUMBER":
@@ -72,6 +73,16 @@ const ToktokWalletCashOutOtherBanks = ({navigation,route})=> {
                 return {
                     ...state,
                     note: action.payload
+                }
+            case "SET_AMOUNT":
+                return {
+                    ...state,
+                    amount: action.payload
+                }
+            case "SET_ACTIVE_ACCOUNT":
+                return {
+                    ...state,
+                    activeAccount: action.payload
                 }
             default:
                 return state
@@ -105,6 +116,7 @@ const ToktokWalletCashOutOtherBanks = ({navigation,route})=> {
                </ScrollView>
                </KeyboardAvoidingView>
          </View>
+
          <BottomSheetSavedAccountBanks ref={bottomSheetSaveAccountBankRef}/>   
          <BottomSheetSavedAccounts ref={bottomSheetSavedAccountRef} accounts={state.savedAccounts}/> 
          <BottomSheetChooseBank 
@@ -114,6 +126,14 @@ const ToktokWalletCashOutOtherBanks = ({navigation,route})=> {
                 dispatch({
                     type: "SET_BANK",
                     payload: bank
+                })
+                dispatch({
+                    type: "SET_ACTIVE_ACCOUNT",
+                    payload: null
+                })
+                dispatch({
+                    type: "SET_ACCOUNT_NUMBER",
+                    payload: ""
                 })
             }}
          />

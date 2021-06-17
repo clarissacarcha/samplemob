@@ -18,11 +18,12 @@ const selectBank = (bank)=> {
 
   return (
     <BottomSheet
+    style={{marginTop: 30}}
       ref={ref}
-      index={-1}
+      index={0}
       snapPoints={snapPoints}
-      enableHandlePanningGesture={false}
-      enableContentPanningGesture={false}
+      enableHandlePanningGesture={true}
+      enableContentPanningGesture={true}
       handleComponent={() => (
         <View
           style={{
@@ -39,22 +40,12 @@ const selectBank = (bank)=> {
       )}
       backdropComponent={BottomSheetBackdrop}>
       <View style={styles.sheet}>
-        <Text style={{fontFamily: FONT.BOLD}}>Choose Bank</Text>
+        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,marginBottom: 5}}>Choose Bank</Text>
         <FlatList
           data={banks}
           ItemSeparatorComponent={() => <View style={{height: 1, borderColor: COLOR.LIGHT}} />}
           renderItem={({item, index}) => (
             <TouchableOpacity onPress={()=>selectBank(item)} style={[styles.banks]}>
-                    {
-                      item.image 
-                      ? <View style={styles.bankLogo}>
-
-                      </View>
-                      : <View style={[styles.bankLogo,{justifyContent:'center',alignItems:"center"}]}>
-                            <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.XS}}>{item.code}</Text>
-                      </View>
-                    }
-                   
                     <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>{item.name} - {item.code}</Text>
             </TouchableOpacity>     
           )}
@@ -77,7 +68,6 @@ const styles = StyleSheet.create({
     alignItems:"center",
     borderBottomWidth: .2,
     borderColor: "silver",
-    paddingHorizontal:12,
     flexDirection:"row"
   },
   bankLogo: {

@@ -8,7 +8,7 @@ import { Separator, SwipeProceedButton } from '../Components'
 import CashIn from "./CashIn";
 import CashOut from "./CashOut";
 import SendMoney from "./SendMoney";
-
+import CashOutOtherBank from "./CashOutOtherBank";
 
 const ToktokWalletReviewAndConfirm = ({navigation,route})=> {
 
@@ -38,6 +38,8 @@ const ToktokWalletReviewAndConfirm = ({navigation,route})=> {
                 return <CashOut data={data}/>
             case "Send Money":
                 return <SendMoney data={data}/>
+            case "Fund Transfer":
+                return <CashOutOtherBank data={data}/>
             default:
                 return
         }

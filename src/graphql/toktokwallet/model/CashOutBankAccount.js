@@ -14,7 +14,6 @@ export const GET_BANK_ACCOUNTS = gql`
                 id
                 name
                 code
-                image
                 accountNumberLength
             }
         }

@@ -17,8 +17,10 @@ const TransactionInfo = ({label,value})=> (
     </View>
 )
 
-const SuccessfulCashOutModal = ({visible , cashoutLogParams,tokwaAccount})=> {
+const SuccessfulCashOutModal = ({visible , cashoutLogParams, tokwaAccount})=> {
     const navigation = useNavigation()
+
+    console.log(JSON.stringify(cashoutLogParams))
 
     let status
     switch(cashoutLogParams.status){
@@ -36,14 +38,12 @@ const SuccessfulCashOutModal = ({visible , cashoutLogParams,tokwaAccount})=> {
             break
     }
 
-
     const Proceed = ()=>  {
         // navigation.pop(3)
         navigation.navigate("ToktokWalletHomePage")
         navigation.replace("ToktokWalletHomePage")
     }
-
-
+    
     return (
         <Modal
             animationType="fade"
@@ -57,11 +57,12 @@ const SuccessfulCashOutModal = ({visible , cashoutLogParams,tokwaAccount})=> {
             >
                 
                 <View style={styles.recipientInfo}>
-                     <TransactionInfo label="Cash out method" value="GCash"/>
+                     <TransactionInfo label="Bank" value={cashoutLogParams.bank}/>
                      <TransactionInfo label="Account Name" value={cashoutLogParams.accountName}/>
                      <TransactionInfo label="Account Number" value={cashoutLogParams.accountNumber}/>
                      <TransactionInfo label="Status" value={status}/>
                      <TransactionInfo label="Amount" value={`${tokwaAccount.wallet.currency.code} ${numberFormat(cashoutLogParams.amount)}`}/>
+                     <TransactionInfo label="Note" value={cashoutLogParams.note}/>
                 </View>            
             </Receipt>
         </Modal>

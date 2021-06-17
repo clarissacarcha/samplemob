@@ -97,8 +97,6 @@ const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
             setErrorMessage("Account number format must be valid.")
         }
 
-        if(value.length == 11) setErrorMessage("")
-
         setAccountNumber(value)
     }
     
@@ -117,20 +115,10 @@ const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
         <Separator/>
         <View style={styles.container}>
              <View style={{flex: 1}}>
-                    <View style={styles.bank}>
-                        {
-                            bank.image 
-                            ? <View style={styles.bankLogo}>
-
-                            </View>
-                            :  <View style={[styles.bankLogo,{justifyContent:"center",alignItems:"center"}]}>
-                                    <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.L}}>{bank.code}</Text>
-                            </View>
-                        }
-                          
+                    <View style={styles.bank}>                
                             <Text style={styles.bankName}>{bank.name}</Text>
                             <TouchableOpacity style={{padding: 2}} onPress={()=>setShowRemoveModal(true)}>
-                                <Text style={[styles.bankName , {color: COLOR.ORANGE}]}>Remove Account</Text>
+                                <Text style={[styles.bankName , {color: COLOR.ORANGE,fontSize:FONT_SIZE.M}]}>Remove Account</Text>
                             </TouchableOpacity>
                            
                     </View>
@@ -209,7 +197,7 @@ const styles = StyleSheet.create({
       },
     bankName: {
         fontFamily: FONT.BOLD,
-        fontSize: FONT_SIZE.M,
+        fontSize: FONT_SIZE.XL,
         marginTop: 10,
     },
     input: {

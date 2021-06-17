@@ -18,11 +18,12 @@ const selectAccount = (bankAccount)=> {
 
   return (
     <BottomSheet
+      style={{marginTop: 30}}
       ref={ref}
-      index={-1}
+      index={0}
       snapPoints={snapPoints}
-      enableHandlePanningGesture={false}
-      enableContentPanningGesture={false}
+      enableHandlePanningGesture={true}
+      enableContentPanningGesture={true}
       handleComponent={() => (
         <View
           style={{
@@ -39,22 +40,15 @@ const selectAccount = (bankAccount)=> {
       )}
       backdropComponent={BottomSheetBackdrop}>
       <View style={styles.sheet}>
-        <Text style={{fontFamily: FONT.BOLD}}>Choose Account</Text>
+        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,marginBottom: 5}}>Choose Account</Text>
         <FlatList
           data={accounts}
           ItemSeparatorComponent={() => <View style={{height: 1, borderColor: COLOR.LIGHT}} />}
           renderItem={({item, index}) => (
             <TouchableOpacity onPress={()=>selectAccount(item)} style={[styles.banks]}>
-                    {
-                      item.bank.image 
-                      ? <View style={styles.bankLogo}>
-
-                      </View>
-                      : <View style={[styles.bankLogo,{justifyContent:'center',alignItems:"center"}]}>
+                  <View style={[styles.bankLogo,{justifyContent:'center',alignItems:"center"}]}>
                             <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.XS}}>{item.bank.code}</Text>
                       </View>
-                    }
-                   
                     <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>{item.accountNumber} - {item.accountName}</Text>
             </TouchableOpacity>     
           )}
@@ -77,13 +71,13 @@ const styles = StyleSheet.create({
     alignItems:"center",
     borderBottomWidth: .2,
     borderColor: "silver",
-    paddingHorizontal:12,
-    flexDirection:"row"
+    flexDirection:"row",
+    paddingHorizontal: 2
   },
   bankLogo: {
     height: 30,
     width: 30,
-    backgroundColor:"white",
+    backgroundColor: COLOR.YELLOW,
     borderRadius: 100,
     shadowColor: '#000',
     shadowOffset: {
