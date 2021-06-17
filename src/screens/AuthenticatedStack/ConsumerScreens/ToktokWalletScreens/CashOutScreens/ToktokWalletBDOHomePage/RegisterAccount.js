@@ -9,8 +9,11 @@ import {useLazyQuery} from '@apollo/react-hooks'
 import { useAlert } from '../../../../../../hooks/useAlert'
 import { onErrorAlert } from '../../../../../../util/ErrorUtility'
 import {useNavigation} from '@react-navigation/native'
-import { useSelector } from 'react-redux'
-import { acc } from 'react-native-reanimated'
+
+
+//SELF IMPORTS
+import ModalLinkAccount from './ModalLinkAccount'
+
 
 const RegisterAccount = ({rejected,provider})=> {
 
@@ -18,6 +21,7 @@ const RegisterAccount = ({rejected,provider})=> {
     const [errorMessage,setErrorMessage] = useState("")
     const alert = useAlert();
     const navigation = useNavigation()
+    const [showLinkModal,setShowLinkModal] = useState(false)
 
     const [getBdoEnrollmentRecord , {data, error ,loading}] = useLazyQuery(GET_BDO_ENROLLMENT_RECORD, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
@@ -31,7 +35,7 @@ const RegisterAccount = ({rejected,provider})=> {
             }
 
             if(getBdoEnrollmentRecord.status == 2 || getBdoEnrollmentRecord.status == 3){
-                Alert.alert('',`Application status for gcash number ${getBdoEnrollmentRecord.accountNumber} is on pending`)
+                Alert.alert('',`Application status for BDO account number ${getBdoEnrollmentRecord.accountNumber} is on pending`)
             }
 
             // // // create linking table if linking unlinking is allowed
@@ -80,6 +84,7 @@ const RegisterAccount = ({rejected,provider})=> {
 
     return (
         <>
+        <ModalLinkAccount visible={showLinkModal} setVisible={setShowLinkModal} provider={provider}/>
         <Separator/>
         <View style={styles.container}>
              
