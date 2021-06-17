@@ -61,6 +61,13 @@ export const Menu = ({setUserLocation}) => {
           navigation.push('ConsumerProfile');
         }}
       />
+      <MenuIcon
+        label={'toktokfood'}
+        icon={ProfileIcon}
+        onPress={() => {
+          navigation.push('ToktokFoodLanding');
+        }}
+      />
     </View>
   );
 };
@@ -71,6 +78,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     backgroundColor: 'white',
+    flexWrap: 'wrap',
   },
   menuButton: {
     justifyContent: 'center',
