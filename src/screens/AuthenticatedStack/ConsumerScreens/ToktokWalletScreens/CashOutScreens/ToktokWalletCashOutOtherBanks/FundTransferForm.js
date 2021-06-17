@@ -222,7 +222,8 @@ const FundTransferForm = ({state,dispatch,selectBanks})=> {
                     accountName: state.accountName,
                     accountNumber: state.accountNumber,
                     note: state.note,
-                    pinCode: pinCode
+                    pinCode: pinCode,
+                    currencyId: tokwaAccount.wallet.currency.id
                 }
             }
         })
