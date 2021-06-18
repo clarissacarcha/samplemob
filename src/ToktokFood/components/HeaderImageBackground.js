@@ -1,12 +1,12 @@
 import React from 'react';
 import {ImageBackground, StyleSheet} from 'react-native';
 
+// assets
+import {headerBg} from 'assets/images';
+
 const HeaderImageBackground = ({children}) => {
   return (
-    <ImageBackground
-      imageStyle={styles.imageStyle}
-      style={styles.walletbackgroundimage}
-      source={require('../assets/images/header-bg.png')}>
+    <ImageBackground imageStyle={styles.imageStyle} style={styles.walletbackgroundimage} source={headerBg}>
       {children}
     </ImageBackground>
   );
@@ -19,7 +19,6 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   walletbackgroundimage: {
-    // flex: 1,
-    resizeMode: 'cover',
+    backgroundColor: 'transparent',
   },
 });
