@@ -6,16 +6,24 @@ module.exports = {
       {
         paths: [
           {
-            rootPathSuffix: './src/ToktokFood/assets',
-            rootPathPrefix: 'assets/',
-          },
-          {
             rootPathSuffix: './src/res/',
             rootPathPrefix: 'res/',
           },
           {
+            rootPathSuffix: './src/ToktokFood/assets',
+            rootPathPrefix: 'assets/',
+          },
+          {
             rootPathSuffix: './src/ToktokFood/components',
             rootPathPrefix: 'components/',
+          },
+          {
+            rootPathSuffix: './src/ToktokFood/helper',
+            rootPathPrefix: 'toktokfood-helper',
+          },
+          {
+            rootPathSuffix: './src/ToktokFood/util',
+            rootPathPrefix: 'toktokfood-util',
           },
         ],
       },
