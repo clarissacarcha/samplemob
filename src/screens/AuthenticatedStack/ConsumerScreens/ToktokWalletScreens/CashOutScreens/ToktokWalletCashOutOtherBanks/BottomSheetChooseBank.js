@@ -8,7 +8,7 @@ const {height,width} = Dimensions.get("window")
 
 const BottomSheetChooseBank = forwardRef(({banks, onChange}, ref) => {
 
-const snapPoints = useMemo(() => [0, height * 0.5], []);
+const snapPoints = useMemo(() => [0, height * 0.8], []);
 const navigation = useNavigation()
 
 const selectBank = (bank)=> {
@@ -23,7 +23,7 @@ const selectBank = (bank)=> {
       index={0}
       snapPoints={snapPoints}
       enableHandlePanningGesture={true}
-      enableContentPanningGesture={true}
+      enableContentPanningGesture={false}
       handleComponent={() => (
         <View
           style={{
@@ -39,18 +39,20 @@ const selectBank = (bank)=> {
         />
       )}
       backdropComponent={BottomSheetBackdrop}>
-      <View style={styles.sheet}>
-        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,marginBottom: 5}}>Choose Bank</Text>
-        <FlatList
+        <View style={styles.sheet}>
+          <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,marginBottom: 5}}>Choose Bank</Text>
+        </View>
+         <BottomSheetFlatList
+          style={{paddingHorizontal:16}}
           data={banks}
+          keyExtractor={i => i}
           ItemSeparatorComponent={() => <View style={{height: 1, borderColor: COLOR.LIGHT}} />}
           renderItem={({item, index}) => (
             <TouchableOpacity onPress={()=>selectBank(item)} style={[styles.banks]}>
-                    <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>{item.name} - {item.code}</Text>
+                    <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>{item.name}</Text>
             </TouchableOpacity>     
           )}
         />
-     </View>
     </BottomSheet>
   );
 })
@@ -61,6 +63,7 @@ const styles = StyleSheet.create({
   },
   sheet: {
     paddingHorizontal: 16,
+    paddingBottom: 16,
   },
   spacing: {height: 2},
   banks: {

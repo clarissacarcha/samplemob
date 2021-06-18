@@ -12,7 +12,7 @@ const renderCashOutDisplayInformations = (cashOutDisplayInformations) => {
             <>
             <Text style={styles.labelText}>Account Name: {cashOutDisplayInformations.accountInfo.accountName}</Text>
             <Text style={styles.labelText}>Account Number: {cashOutDisplayInformations.accountInfo.accountNumber}</Text>
-            <Text style={styles.labelText}>Bank: {cashOutDisplayInformations?.accountInfo?.bank?.code}</Text>
+            <Text style={styles.labelText}>Bank: {cashOutDisplayInformations?.accountInfo?.bank?.name}</Text>
             </>
         )
     }

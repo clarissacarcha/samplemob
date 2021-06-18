@@ -7,6 +7,7 @@ export const GET_BANK_ACCOUNTS = gql`
             accountName
             accountNumber
             nickName
+            address
             status
             type
             accountId
@@ -15,6 +16,8 @@ export const GET_BANK_ACCOUNTS = gql`
                 name
                 code
                 accountNumberLength
+                accountNameLength
+                addressLength
             }
         }
     }

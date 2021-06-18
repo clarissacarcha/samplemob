@@ -58,7 +58,7 @@ const Amount = ({amount , note , dispatch ,errorAmountMessage , setErrorAmountMe
 
     return (
         <View style={styles.container}>
-        <View style={{marginTop: 20,}}>
+        <View style={{marginTop: 0,}}>
         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Enter Amount</Text>
             <View style={[styles.input, {borderWidth: 1, borderColor: errorAmountMessage == "" ? "transparent" : COLOR.RED,flexDirection:"row"}]}>
                         <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,alignSelf:"center"}}>{tokwaAccount.wallet.currency.code} </Text>
@@ -76,13 +76,13 @@ const Amount = ({amount , note , dispatch ,errorAmountMessage , setErrorAmountMe
             </View>
             {errorAmountMessage != "" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.S,color:"#F93154"}}>{errorAmountMessage}</Text>}
         </View>
-        <View style={{marginVertical: 20,}}>
+        <View style={{marginVertical: 16,marginBottom: 20}}>
         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Note (Optional)</Text>
         <View style={[styles.input, {justifyContent:"center"}]}>
              <TextInput
                     style={styles.input}
                     value={note}
-                    maxLength={60}
+                    maxLength={20}
                     onChangeText={(value)=>{
                         dispatch({
                             type: "SET_NOTE",
@@ -91,59 +91,82 @@ const Amount = ({amount , note , dispatch ,errorAmountMessage , setErrorAmountMe
                     }}
                     placeholder="Enter note here"
                 />
-                <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.S}}>{note.length}/60</Text>
+                <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.S}}>{note.length}/20</Text>
         </View>
         </View>
     </View>
     )
 }
 
-const AccountInfo = ({accountName,accountNumber, bankDescription,selectBanks,bankAccountNumberLength , dispatch ,errorMessage, setErrorMessage})=> {
+const AccountInfo = ({accountName,accountNumber,address, bankDescription,selectBanks,bankAccountNumberLength , dispatch ,errorMessage, setErrorMessage})=> {
 
  
-    useEffect(()=>{
-        if(accountNumber == "" || accountNumber.length === +bankAccountNumberLength){
-            setErrorMessage("")
-        }else{
-            setErrorMessage("Account number format must be valid.")
-        }
-    },[accountNumber])
+    // useEffect(()=>{
+    //     if(accountNumber == "" || accountNumber.length === +bankAccountNumberLength){
+    //         setErrorMessage("")
+    //     }else{
+    //         setErrorMessage("Account number format must be valid.")
+    //     }
+    // },[accountNumber])
+
+    const changeAccountNumber = (value)=> {
+        const num = value.replace(/[^0-9.]/g, '')
+        dispatch({
+            type: "SET_ACCOUNT_NUMBER",
+            payload: num
+        })
+    }
 
     return (
         <View style={styles.container}>
              <View style={{marginTop: 20,}}>
             <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Select Bank</Text>
                 <TouchableOpacity onPress={selectBanks} style={[styles.input, {justifyContent:"flex-start",alignItems:"center", flexDirection:'row'}]}>
-                    <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M , color:bankDescription == "" ? "gray": "black" }}>{bankDescription == "" ? "Select Bank" : bankDescription}</Text>
+                    <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M , color:bankDescription == "" ? "gray": "black" }}>{bankDescription == "" ? "Choose bank here" : bankDescription}</Text>
                     <View style={{flex: 1,alignItems:"flex-end"}}>
-                         <VectorIcon iconSet={ICON_SET.Feather} name="chevron-right"/>
+                         <VectorIcon iconSet={ICON_SET.Feather} color="black" name="chevron-down"/>
                     </View>
                 </TouchableOpacity>
             </View>
 
-            <View style={{marginTop: 20,}}>
+            <View style={{marginTop: 16,}}>
             <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Name</Text>
             <View style={[styles.input, {justifyContent:"center"}]}>
                 <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{accountName}</Text>
             </View>
             </View>
-            <View style={{marginTop: 20,}}>
+            <View style={{marginTop: 16,}}>
                 <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Number</Text>
-                <View style={[styles.input, {justifyContent:"center",borderWidth: 1, borderColor: errorMessage == "" ? "transparent" : COLOR.RED}]}>
+                <View style={[{justifyContent:"center",borderWidth: 1, borderColor: errorMessage == "" ? "transparent" : COLOR.RED}]}>
                     <TextInput
-                            
+                            style={styles.input}
                             value={accountNumber}
-                            onChangeText={(value)=>{
-                                dispatch({
-                                    type: "SET_ACCOUNT_NUMBER",
-                                    payload: value
-                                })
-                            }}
+                            onChangeText={changeAccountNumber}
                             maxLength={bankAccountNumberLength != "" ? +bankAccountNumberLength : null}
-                            placeholder={bankAccountNumberLength != "" ? `Enter your ${bankAccountNumberLength}-digit bank account number here` : `Enter your bank account number here`}
+                            placeholder={`Enter bank account number here`}
+                            keyboardType="number-pad"
                         />
                 </View>
                 { errorMessage != "" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.S,color:COLOR.RED}}>{errorMessage}</Text>}
+            </View>
+
+            <View style={{marginTop: 16,}}>
+                <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Address</Text>
+                <View style={[ {justifyContent:"center"}]}>
+                    <TextInput
+                            style={styles.input}
+                            value={address}
+                            onChangeText={(value)=>{
+                                dispatch({
+                                    type: "SET_ADDRESS",
+                                    payload: value
+                                })
+                            }}
+                            maxLength={20}
+                            placeholder={`Enter your address here`}
+                        />
+                </View>
+                <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.S}}></Text>
             </View>
         </View>
     )
@@ -268,6 +291,7 @@ const FundTransferForm = ({state,dispatch,selectBanks})=> {
             <AccountInfo
                 accountName={state.accountName}
                 accountNumber={state.accountNumber}
+                address={state.address}
                 bank={state.bank}
                 bankDescription={state.bankDescription}
                 selectBanks={selectBanks}

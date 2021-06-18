@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
     viewShot: {
         paddingBottom: 20,
         paddingHorizontal: 16,
-        marginTop: 20,
+        marginTop: 50,
         backgroundColor:"white",
         alignItems:"center"
     },

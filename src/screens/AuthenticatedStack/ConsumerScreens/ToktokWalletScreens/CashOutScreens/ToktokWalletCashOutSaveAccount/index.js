@@ -1,5 +1,5 @@
 import React , {useState,useEffect} from 'react'
-import {View,Text,StyleSheet,TextInput,Alert} from 'react-native'
+import {View,Text,StyleSheet,TextInput,Alert,ScrollView} from 'react-native'
 import {Separator} from '../../Components'
 import {HeaderBack,HeaderTitle,YellowButton} from '../../../../../../revamp'
 import { COLOR, FONT, FONT_SIZE } from '../../../../../../res/variables'
@@ -25,6 +25,7 @@ const ToktokWalletCashOutSaveAccount = ({navigation,route})=> {
     const [nickName,setNickName] = useState("")
     const [accountName,setAccountName] = useState(`${tokwaAccount.person.firstName} ${tokwaAccount.person.lastName}`)
     const [accountNumber ,setAccountNumber] = useState("")
+    const [address,setAddress] = useState("")
     const [errorMessage,setErrorMessage] = useState("")
     const [showSuccessModal,setShowSuccessModal] = useState(false)
 
@@ -43,11 +44,15 @@ const ToktokWalletCashOutSaveAccount = ({navigation,route})=> {
 
     const saveAccount = ()=> {
         if(nickName == ""){
-            return Alert.alert("","Nickname is required.")
+            return Alert.alert("","Alias is required.")
         }
 
         if(accountNumber == ""){
             return Alert.alert("","Account Number is required.")
+        }
+
+        if(address == ""){
+            return Alert.alert("","Account Address is required.")
         }
 
         postCashOutBankAccount({
@@ -57,23 +62,24 @@ const ToktokWalletCashOutSaveAccount = ({navigation,route})=> {
                     accountName: accountName,
                     accountNumber: accountNumber,
                     nickName: nickName,
+                    address: address,
                 }
             }
         })
     }
 
     const changeAccountNumber = (value)=> {
+        const num = value.replace(/[^0-9.]/g, '')
+        // if(value.length != +bank.accountNumberLength){
+        //     setErrorMessage("Account number format must be valid.")
+        // }
 
-        if(value.length != +bank.accountNumberLength){
-            setErrorMessage("Account number format must be valid.")
-        }
-
-        setAccountNumber(value)
+        setAccountNumber(num)
     }
 
-    useEffect(()=>{
-        if(accountNumber == "" || accountNumber.length === +bank.accountNumberLength) setErrorMessage("")
-    },[accountNumber])
+    // useEffect(()=>{
+    //     if(accountNumber == "" || accountNumber.length === +bank.accountNumberLength) setErrorMessage("")
+    // },[accountNumber])
 
     return (
         <>
@@ -81,13 +87,13 @@ const ToktokWalletCashOutSaveAccount = ({navigation,route})=> {
         <SuccessfulModal visible={showSuccessModal} setVisible={setShowSuccessModal}/>
         <Separator/>
         <View style={styles.container}>
-             <View style={{flex: 1}}>
+             <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
                     <View style={styles.bank}>            
                             <Text style={styles.bankName}>{bank.name}</Text>
                     </View>
                     <View style={{marginVertical: 10,}}>
-                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Nickname</Text>
-                        <View style={[styles.input, {justifyContent:"center"}]}>
+                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Alias</Text>
+                        <View style={[{justifyContent:"center"}]}>
                             <TextInput
                                     style={styles.input}
                                     value={nickName}
@@ -97,9 +103,9 @@ const ToktokWalletCashOutSaveAccount = ({navigation,route})=> {
                         </View>
                     </View>
 
-                    <View style={{marginVertical: 10,}}>
+                    <View style={{marginBottom: 10,}}>
                         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Name</Text>
-                        <View style={[styles.input, {justifyContent:"center"}]}>
+                        <View style={[{justifyContent:"center"}]}>
                                <View
                                     style={[styles.input, {justifyContent:"center"}]}
                                 >
@@ -108,27 +114,45 @@ const ToktokWalletCashOutSaveAccount = ({navigation,route})=> {
                         </View>
                     </View>
 
-                    <View style={{marginVertical: 10,}}>
+                    <View style={{marginBottom: 10,}}>
                         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Number</Text>
-                        <View style={[styles.input, {borderWidth: 1, borderColor: errorMessage == "" ? "transparent" : COLOR.RED}]}>
+                        <View style={[{borderWidth: 1, borderColor: errorMessage == "" ? "transparent" : COLOR.RED}]}>
                             <TextInput
+                                    style={styles.input}
                                     value={accountNumber}
                                     onChangeText={changeAccountNumber}
                                     maxLength={+bank.accountNumberLength}
-                                    placeholder={`Enter your ${bank.accountNumberLength}-digit bank account number here`}
+                                    placeholder={`Enter bank account number here`}
+                                    keyboardType="number-pad"
                                 />
+                        </View>
+                    </View>
+
+                    <View style={{marginBottom: 10,}}>
+                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Address</Text>
+                        <View style={[{justifyContent:"center"}]}>
+                            <TextInput
+                                    style={styles.input}
+                                    value={accountNumber}
+                                    value={address}
+                                    onChangeText={(value)=>setAddress(value)}
+                                    placeholder={`Enter address here`}
+                            />
                         </View>
                         <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.S,color:COLOR.RED}}>{errorMessage}</Text>
                     </View>
-                   
-             </View>
-             <View style={{justifyContent:'center',alignItems:"center"}}>
-                    <Text style={{textAlign:"center",fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:"#CCCCCC",marginBottom: 20,}}>Please verify the accuracy and completeness of the details before you proceed.</Text>
-                    <Text style={{textAlign:"center",fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:"#CCCCCC",marginBottom: 20,}}>By clicking "Confirm", you hereby consent toktokwallet to collect and store any and all information related tot his Saved Bank Account.</Text>
-             </View>
-             <View style={{height: 70,justifyContent:'flex-end'}}>
-                <YellowButton label="Confirm" onPress={saveAccount}/>
-             </View>
+                    
+
+        
+
+                    <View style={{justifyContent:'center',alignItems:"center"}}>
+                        <Text style={{textAlign:"center",fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:"#CCCCCC",marginBottom: 20,marginHorizontal:20}}>Please verify the accuracy and completeness of the details before you proceed.</Text>
+                        <Text style={{textAlign:"center",fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:"#CCCCCC",marginBottom: 20,marginHorizontal: 10}}>By clicking "Confirm", you hereby consent toktokwallet to collect and store any and all information related tot his Saved Bank Account.</Text>
+                    </View>
+                    <View style={{height: 70,justifyContent:'flex-end',marginBottom: 16}}>
+                        <YellowButton label="Confirm" onPress={saveAccount}/>
+                    </View>      
+             </ScrollView>
         </View>
         </>
     )

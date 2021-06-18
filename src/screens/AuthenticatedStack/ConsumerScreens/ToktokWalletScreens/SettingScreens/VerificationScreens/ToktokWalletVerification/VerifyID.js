@@ -35,7 +35,7 @@ const ValidIDList = [
 
 const VerifyID = ()=> {
 
-    const {setCurrentIndex , setModalCountryVisible  , verifyID, changeVerifyID, frontImage, setFrontImage, backImage, setBackImage, isBackRequired, setIsbackRequired} = useContext(VerifyContext)
+    const {setCurrentIndex , setModalCountryVisible  , verifyID, changeVerifyID, frontImage, setFrontImage, backImage, setBackImage ,isBackRequired, setIsbackRequired} = useContext(VerifyContext)
 
     const navigation = useNavigation()
     const IDTypeRef = useRef()
@@ -170,7 +170,6 @@ const VerifyID = ()=> {
                 >
                         <Text style={styles.labelText}>Upload your Valid ID</Text>
                         <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.S,color:"#929191"}}>Help us verify your identity with a photo of your valid government-issued ID. Make sure your valid ID is not expired.</Text>  
-                  
 
                         <View style={{marginTop: 20,}}>
                             <Text style={styles.labelText}>ID Type</Text>
@@ -202,15 +201,6 @@ const VerifyID = ()=> {
 
                         <View style={{flex: 1,paddingVertical: 20, alignItems: "center"}}>
                             <Text style={{...styles.labelText, alignSelf:"flex-start"}}>Photo of your Valid ID</Text>
-                            {/* {verifyID.idImage ? <ImageIDSet/>:  <ChooseImage/>} */}
-                            {/* <View style={{flex: 1, paddingVertical: 20, marginTop: 20}}>
-                                <Text>Front of ID</Text>
-                                <ChooseImage />
-                            </View>
-                            <View style={{flex: 1, paddingVertical: 8}}>
-                                <Text>Back of ID</Text>
-                                <ChooseImage />
-                            </View> */}
                             {renderImageSetOptions()}
                         </View>
 

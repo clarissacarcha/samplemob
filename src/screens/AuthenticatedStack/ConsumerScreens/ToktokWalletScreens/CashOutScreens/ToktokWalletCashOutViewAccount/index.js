@@ -2,90 +2,63 @@ import React , {useState,useEffect} from 'react'
 import {View,Text,StyleSheet,TextInput,Alert,TouchableOpacity} from 'react-native'
 import {Separator} from '../../Components'
 import {HeaderBack,HeaderTitle,YellowButton} from '../../../../../../revamp'
-import { COLOR, FONT, FONT_SIZE } from '../../../../../../res/variables'
+import { COLOR, FONT, FONT_SIZE, SIZE } from '../../../../../../res/variables'
 import { useSelector } from 'react-redux'
 import { AlertOverlay } from '../../../../../../components'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from '../../../../../../graphql'
-import {PATCH_CASH_OUT_BANK_ACCOUNT} from '../../../../../../graphql/toktokwallet'
+import {PATCH_REMOVE_ACCOUNT} from '../../../../../../graphql/toktokwallet'
 import { useMutation } from '@apollo/react-hooks'
 import { onErrorAlert } from '../../../../../../util/ErrorUtility'
 import {useAlert} from '../../../../../../hooks'
 
 //SELF IMPORTS
-import SuccessfulModal from './SuccessfulModal'
+import RemoveModal from './RemoveModal'
+import RemoveSuccessfulModal from './RemoveSuccessfulModal'
 
-const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
+
+const ToktokWalletCashOutViewAccount = ({navigation,route})=> {
 
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
-        headerTitle: ()=> <HeaderTitle label={['Update Account','']}/>,
+        headerTitle: ()=> <HeaderTitle label={['Bank Account','']}/>,
     })
    
     const bankAccount = route.params.bankAccount
     const bank = bankAccount.bank
     const tokwaAccount = useSelector(state=>state.toktokWallet)
-    const [nickName,setNickName] = useState(bankAccount.nickName)
-    const [accountName,setAccountName] = useState(bankAccount.accountName)
-    const [accountNumber ,setAccountNumber] = useState(bankAccount.accountNumber)
-    const [address,setAddress] = useState(bankAccount.address)
-    const [errorMessage,setErrorMessage] = useState("")
-    const [showSuccessModal,setShowSuccessModal] = useState(false)
-  
+    const [showRemoveModal,setShowRemoveModal] = useState(false)
+    const [showRemoveSuccessModal,setShowRemoveSuccessModal] = useState(false)
     const alert = useAlert()
 
-    const [patchCashOutBankAccount , {data,error,loading}] = useMutation(PATCH_CASH_OUT_BANK_ACCOUNT, {
+    const [patchRemoveAccount,{loading: removeLoading}] = useMutation(PATCH_REMOVE_ACCOUNT, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onError: (error)=> {
             onErrorAlert({alert,error})
         },
-        onCompleted: ({patchCashOutBankAccount})=> {
+        onCompleted: ({patchRemoveAccount})=> {
             // console.log(patchCashOutBankAccount)
-            setShowSuccessModal(true)
+            setShowRemoveSuccessModal(true)
         }
     })
 
-    const saveAccount = ()=> {
-        if(nickName == ""){
-            return Alert.alert("","Nickname is required.")
-        }
-
-        if(accountNumber == ""){
-            return Alert.alert("","Account Number is required.")
-        }
-
-        patchCashOutBankAccount({
+    const removeAccount = ()=> {
+        patchRemoveAccount({
             variables: {
                 input: {
-                    accountId: bankAccount.id,
-                    cashOutBankId: bank.id,
-                    oldAccountNumber: bankAccount.accountNumber,
-                    accountName: accountName,
-                    accountNumber: accountNumber,
-                    nickName: nickName,
-                    address: address,
+                    accountId: bankAccount.id
                 }
             }
         })
     }
 
-    const changeAccountNumber = (value)=> {
+    const editAccount = ()=> navigation.navigate("ToktokWalletCashOutUpdateAccount" , {bankAccount: bankAccount})
 
-        // if(value.length != +bank.accountNumberLength){
-        //     setErrorMessage("Account number format must be valid.")
-        // }
-
-        setAccountNumber(value)
-    }
-    
-
-    // useEffect(()=>{
-    //     if(accountNumber == "" || accountNumber.length === +bank.accountNumberLength) setErrorMessage("")
-    // },[accountNumber])
 
     return (
         <>
-        <AlertOverlay visible={loading}/>
-        <SuccessfulModal visible={showSuccessModal} setVisible={setShowSuccessModal}/>
+        <AlertOverlay visible={removeLoading}/>
+        <RemoveModal visible={showRemoveModal} setVisible={setShowRemoveModal} bankAccount={bankAccount} removeAccount={removeAccount}/>
+        <RemoveSuccessfulModal visible={showRemoveSuccessModal} setVisible={setShowRemoveSuccessModal}/>
         <Separator/>
         <View style={styles.container}>
              <View style={{flex: 1}}>
@@ -95,12 +68,11 @@ const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
                     <View style={{marginVertical: 10,}}>
                         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Nickname</Text>
                         <View style={[styles.input, {justifyContent:"center"}]}>
-                            <TextInput
-                                    style={styles.input}
-                                    value={nickName}
-                                    onChangeText={(value)=>setNickName(value)}
-                                    placeholder="Enter nickname here"
-                                />
+                               <View
+                                    style={[styles.input, {justifyContent:"center"}]}
+                                >
+                                        <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{bankAccount.nickName}</Text>
+                                </View>
                         </View>
                     </View>
 
@@ -110,32 +82,30 @@ const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
                                <View
                                     style={[styles.input, {justifyContent:"center"}]}
                                 >
-                                        <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{accountName}</Text>
+                                        <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{bankAccount.accountName}</Text>
                                 </View>
                         </View>
                     </View>
                     
                     <View style={{marginVertical: 10,}}>
                         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Number</Text>
-                        <View style={[styles.input, {borderWidth: 1, borderColor: errorMessage == "" ? "transparent" : COLOR.RED}]}>
-                            <TextInput
-                                    value={accountNumber}
-                                    onChangeText={changeAccountNumber}
-                                    maxLength={+bank.accountNumberLength}
-                                    placeholder={`Enter bank account number here`}
-                                />
+                        <View style={[styles.input, {justifyContent:"center"}]}>
+                               <View
+                                    style={[styles.input, {justifyContent:"center"}]}
+                                >
+                                        <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{bankAccount.accountNumber}</Text>
+                                </View>
                         </View>
-                        { errorMessage != "" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.S,color:COLOR.RED}}>{errorMessage}</Text>}
                     </View>
 
                     <View style={{marginVertical: 10,}}>
                         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Address</Text>
                         <View style={[styles.input, {justifyContent:"center"}]}>
-                            <TextInput
-                                    value={address}
-                                    onChangeText={(value)=>setAddress(value)}
-                                    placeholder={`Enter address here`}
-                                />
+                               <View
+                                    style={[styles.input, {justifyContent:"center"}]}
+                                >
+                                        <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{bankAccount.address}</Text>
+                                </View>
                         </View>
                     </View>
 
@@ -145,8 +115,16 @@ const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
              <View style={{justifyContent:'center',alignItems:"center"}}>
                     <Text style={{textAlign:"center",fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:"#CCCCCC",marginBottom: 20,}}>Please verify the accuracy and completeness of the details before you proceed.</Text>
              </View>
-             <View style={{height: 70,justifyContent:'flex-end'}}>
-                <YellowButton label="Update" onPress={saveAccount}/>
+             <View style={{height: 70,alignItems:'flex-end',flexDirection:"row"}}>
+                 <View style={{flex: 1 , marginRight: 10}}>
+                    <TouchableOpacity onPress={()=>setShowRemoveModal(true)} style={{ borderRadius:SIZE.BORDER_RADIUS, height: SIZE.FORM_HEIGHT,backgroundColor:"#F7F7FA",justifyContent:'center',alignItems:'center'}}>
+                            <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L}}>Delete</Text>
+                    </TouchableOpacity>
+                 </View>
+                 <View style={{flex: 1,marginLeft: 10}}>
+                 <YellowButton label="Edit" onPress={editAccount}/>
+                 </View>
+               
              </View>
         </View>
         </>
@@ -194,4 +172,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default ToktokWalletCashOutUpdateAccount
+export default ToktokWalletCashOutViewAccount

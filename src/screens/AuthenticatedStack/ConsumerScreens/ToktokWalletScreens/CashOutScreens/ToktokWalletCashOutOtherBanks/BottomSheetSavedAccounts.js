@@ -1,5 +1,5 @@
 import React, { useMemo, forwardRef , useState, useEffect} from 'react';
-import {View, StyleSheet, Text, TextInput, FlatList, TouchableOpacity,Dimensions} from 'react-native';
+import {View, StyleSheet, Text, TextInput, FlatList, TouchableHighlight,Dimensions} from 'react-native';
 import BottomSheet, {BottomSheetBackdrop, BottomSheetFlatList} from '@gorhom/bottom-sheet';
 import {COLOR, FONT, FONT_SIZE, SIZE} from '../../../../../../res/variables';
 import { useNavigation } from '@react-navigation/native';
@@ -13,7 +13,7 @@ const navigation = useNavigation()
 
 const selectAccount = (bankAccount)=> {
     ref.current.close()
-    return navigation.navigate("ToktokWalletCashOutUpdateAccount" , {bankAccount: bankAccount})
+    return navigation.navigate("ToktokWalletCashOutViewAccount" , {bankAccount: bankAccount})
 }
 
   return (
@@ -45,12 +45,14 @@ const selectAccount = (bankAccount)=> {
           data={accounts}
           ItemSeparatorComponent={() => <View style={{height: 1, borderColor: COLOR.LIGHT}} />}
           renderItem={({item, index}) => (
-            <TouchableOpacity onPress={()=>selectAccount(item)} style={[styles.banks]}>
+            <TouchableHighlight underlayColor="transparent" onPress={()=>selectAccount(item)} style={[styles.banks]}>
+              <>
                   <View style={[styles.bankLogo,{justifyContent:'center',alignItems:"center"}]}>
-                            <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.XS}}>{item.bank.code}</Text>
+                            <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>{item.bank.name[0].toUpperCase()}</Text>
                       </View>
                     <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>{item.accountNumber} - {item.accountName}</Text>
-            </TouchableOpacity>     
+              </>
+            </TouchableHighlight>     
           )}
         />
      </View>

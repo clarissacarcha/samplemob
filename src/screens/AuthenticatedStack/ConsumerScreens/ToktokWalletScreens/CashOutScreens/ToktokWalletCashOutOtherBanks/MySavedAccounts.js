@@ -25,7 +25,7 @@ const ActiveBankAccount = ({index,onPress, ...account}) => {
                         <View style={{position:'absolute',top: 0 , right: -5, height: 20,width: 20 ,backgroundColor: COLOR.YELLOW,borderRadius: 100,justifyContent:'center',alignItems:"center",borderWidth: 0.5,borderColor:"black"}}>
                                 <VectorIcon iconSet={ICON_SET.Feather} name="check" color="black" size={12}/>
                         </View>
-                    <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>{account.bank.code}</Text>
+                    <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.XL}}>{account.bank.name[0].toUpperCase()}</Text>
                 </View>
                 <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.S}}>{account.nickName.length <= 10 ? account.nickName : `${account.nickName.slice(0,8)}...`}</Text>
             </>
@@ -39,7 +39,7 @@ const BankAccount = ({index,onPress, ...account})=> {
         <TouchableHighlight onPress={()=>onPress(account , index)} underlayColor={"transparent"} key={`bankAccount${index}`} style={{justifyContent:'center',alignItems:"center",marginRight: 10}}>
             <>
                       <View style={[styles.account, {justifyContent:'center',alignItems:'center'}]}>
-                            <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.S}}>{account.bank.code}</Text>
+                            <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.L}}>{account.bank.name[0].toUpperCase()}</Text>
                         </View>
      
                 <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.S}}>{account.nickName.length <= 10 ? account.nickName : `${account.nickName.slice(0,8)}...`}</Text>
@@ -91,6 +91,10 @@ const MySavedAccounts = ({bottomRef , edit ,dispatch , state})=> {
             payload: account.accountNumber
         })
         dispatch({
+            type: "SET_ADDRESS",
+            payload: account.address
+        })
+        dispatch({
             type: "SET_ACTIVE_ACCOUNT",
             payload: index
         })
@@ -103,6 +107,10 @@ const MySavedAccounts = ({bottomRef , edit ,dispatch , state})=> {
         })
         dispatch({
             type: "SET_ACCOUNT_NUMBER",
+            payload: ""
+        })
+        dispatch({
+            type: "SET_ADDRESS",
             payload: ""
         })
        }else{
@@ -125,7 +133,7 @@ const MySavedAccounts = ({bottomRef , edit ,dispatch , state})=> {
         <>
         <View style={styles.container}>
            <View style={styles.headings}>
-           <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,textAlign: "left",flex: 1}}>My Saved Accounts</Text>
+           <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,textAlign: "left",flex: 1}}>My Saved Accounts ( {data.getBankAccounts.length}/5 )</Text>
            {
                data.getBankAccounts.length > 0 &&
                <TouchableOpacity onPress={edit} style={styles.edit}>
@@ -187,10 +195,10 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     account: {
-        height: 50,
+        height: width / 5 - 20,
         width: width / 5 - 20,
         backgroundColor: COLOR.YELLOW,
-        borderRadius: 100,
+        borderRadius: width / 5 - 20,
         shadowColor: '#000',
         shadowOffset: {
           width: 0,
@@ -201,20 +209,12 @@ const styles = StyleSheet.create({
         elevation: 5,
     },
     addAccount: {
-        height: 50,
+        height: width / 5 - 20,
         width: width / 5 - 20,
         backgroundColor: "white",
-        borderRadius: 100,
+        borderRadius: width / 5 - 20,
         borderWidth: 2,
         borderColor: COLOR.YELLOW,
-        shadowColor: '#000',
-        shadowOffset: {
-          width: 0,
-          height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
         justifyContent:"center",
         alignItems:'center'
     }

@@ -37,6 +37,7 @@ const ToktokWalletCashOutOtherBanks = ({navigation,route})=> {
          bankDescription: "",
          bankAccountNumberLength: "",
          accountName: `${tokwaAccount.person.firstName} ${tokwaAccount.person.lastName}`,
+         address: "",
          accountNumber: "",
          amount: "",
          note: "",
@@ -73,6 +74,11 @@ const ToktokWalletCashOutOtherBanks = ({navigation,route})=> {
                 return {
                     ...state,
                     note: action.payload
+                }
+            case "SET_ADDRESS":
+                return {
+                    ...state,
+                    address: action.payload
                 }
             case "SET_AMOUNT":
                 return {

@@ -12,7 +12,7 @@ const RemoveSuccessfulModal = ({visible,setVisible})=> {
 
     const Redirect = ()=>{
         setVisible(false)
-        navigation.pop()
+        navigation.pop(2)
         return navigation.replace("ToktokWalletCashOutOtherBanks")
     }
 

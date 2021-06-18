@@ -8,6 +8,8 @@ export const GET_BANKS = gql`
             code
             status
             accountNumberLength
+            accountNameLength
+            addressLength
         }
     }
 `

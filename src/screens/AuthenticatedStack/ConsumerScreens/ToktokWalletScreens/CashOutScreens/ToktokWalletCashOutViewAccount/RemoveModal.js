@@ -19,8 +19,8 @@ const RemoveModal = ({visible,setVisible,bankAccount,removeAccount})=> {
 
                 <View style={styles.modalBody}>
                     <View style={styles.content}>
-                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M, textAlign:"center",marginVertical: 10,marginHorizontal: 20}}>Removed this bank account?</Text>
-                        <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M, textAlign:"center",marginHorizontal: 5}}>Account Number: {bankAccount.accountNumber}</Text>
+                        <Image source={require('../../../../../../assets/toktokwallet-assets/error.png')}/>
+                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L, textAlign:"center",marginVertical: 10,marginHorizontal: 20}}>Are you sure you want to delete this account?</Text>
                         {/* <View style={{flex: 1,justifyContent:"flex-end",width: "50%"}}>
                                 <YellowButton label="Continue" onPress={Redirect}/>
                         </View> */}
@@ -40,7 +40,7 @@ const RemoveModal = ({visible,setVisible,bankAccount,removeAccount})=> {
                                         <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,color: COLOR.DARK}}>Cancel</Text>
                                 </TouchableOpacity>
                                 <View style={{flex: 1}}>
-                                 <YellowButton label="Continue" onPress={()=> {
+                                 <YellowButton label="Delete" onPress={()=> {
                                      setVisible(false)
                                      removeAccount()
                                  }}/>
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     },
     content: {
         width: width * 0.8,
-        height: 180,
+        height: 260,
         backgroundColor:"white",
         borderRadius: SIZE.BORDER_RADIUS,
         padding: 16,
