@@ -1,10 +1,24 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 
-export const ToktokFoodHome = () => {
+// Components
+import HeaderImageBackground from 'components/HeaderImageBackground';
+import HeaderTitle from 'components/HeaderTitle';
+
+const ToktokFoodHome = () => {
   return (
-    <View>
-      <Text>Home</Text>
+    <View style={styles.container}>
+      <HeaderImageBackground>
+        <HeaderTitle />
+      </HeaderImageBackground>
     </View>
   );
 };
+
+export default ToktokFoodHome;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
