@@ -22,6 +22,10 @@ module.exports = {
             rootPathPrefix: 'toktokfood-helper',
           },
           {
+            rootPathSuffix: './src/ToktokFood/hooks',
+            rootPathPrefix: 'toktokfood-hooks',
+          },
+          {
             rootPathSuffix: './src/ToktokFood/util',
             rootPathPrefix: 'toktokfood-util',
           },
