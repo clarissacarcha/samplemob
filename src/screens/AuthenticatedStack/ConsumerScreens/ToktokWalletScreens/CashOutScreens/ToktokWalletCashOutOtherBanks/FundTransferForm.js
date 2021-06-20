@@ -1,4 +1,4 @@
-import React , {useEffect,useState} from 'react'
+import React , {useEffect,useState, useContext} from 'react'
 import {View , Text , StyleSheet , TextInput,TouchableOpacity} from 'react-native'
 import { COLOR, FONT, FONT_SIZE } from '../../../../../../res/variables'
 import { Separator , DisabledButton , EnterPinCode} from '../../Components'
@@ -12,21 +12,24 @@ import { numberFormat } from '../../../../../../helper'
 import { useSelector } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
 import { AlertOverlay } from '../../../../../../components'
+import { ContextCashOut } from './ContextProvider'
 
 //SELF IMPORTS
 import SuccessfulCashOutModal from "./SuccessfulCashOutModal";
 
 
-const Amount = ({amount , note , dispatch ,errorAmountMessage , setErrorAmountMessage})=> {
+const Amount = ({errorAmountMessage , setErrorAmountMessage})=> {
 
     const tokwaAccount = useSelector(state=>state.toktokWallet)
+    const { amount ,setAmount , note , setNote ,bank } = useContext(ContextCashOut)
+    const [maxAmount , setMaxAmount] = useState(null)
 
-    const setAmount = (value)=> {
-        dispatch({
-            type: "SET_AMOUNT",
-            payload: value
-        })
-    }
+    useEffect(()=>{
+       if(bank.id){
+        const isInstaPay = bank.isInstaPay
+        setMaxAmount(isInstaPay ? 50000 : 200000)
+       }
+    },[bank])
 
     const changeAmount = (value)=> {
         const num = value.replace(/[^0-9.]/g, '')
@@ -41,24 +44,26 @@ const Amount = ({amount , note , dispatch ,errorAmountMessage , setErrorAmountMe
     }
 
     useEffect(()=>{
+        console.log(amount, maxAmount)
     
             if(amount >= 1 && amount <= tokwaAccount.wallet.balance){
                 setErrorAmountMessage("")
-                
             }else if(amount < 1 && amount != ""){
                 setErrorAmountMessage(`Please enter atleast ${tokwaAccount.wallet.currency.code} 1.00.`)
-            }else{
+            }else if(maxAmount && amount > maxAmount){
+                setErrorAmountMessage(`Maximum limit is ${tokwaAccount.wallet.currency.code} ${numberFormat(maxAmount)}`)
+            } else{
                 setErrorAmountMessage(amount == "" ? "" : "You do not have enough balance.")
             }
 
         return ()=> {
             setErrorAmountMessage("")
         }
-    },[amount])
+    },[amount, maxAmount])
 
     return (
         <View style={styles.container}>
-        <View style={{marginTop: 0,}}>
+        <View style={{marginTop: 16,}}>
         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Enter Amount</Text>
             <View style={[styles.input, {borderWidth: 1, borderColor: errorAmountMessage == "" ? "transparent" : COLOR.RED,flexDirection:"row"}]}>
                         <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,alignSelf:"center"}}>{tokwaAccount.wallet.currency.code} </Text>
@@ -83,24 +88,27 @@ const Amount = ({amount , note , dispatch ,errorAmountMessage , setErrorAmountMe
                     style={styles.input}
                     value={note}
                     maxLength={20}
-                    onChangeText={(value)=>{
-                        dispatch({
-                            type: "SET_NOTE",
-                            payload: value
-                        })
-                    }}
+                    onChangeText={(value)=> setNote(value)}
                     placeholder="Enter note here"
+                    returnKeyType="done"
                 />
-                <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.S}}>{note.length}/20</Text>
+                <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{note.length}/20</Text>
         </View>
         </View>
     </View>
     )
 }
 
-const AccountInfo = ({accountName,accountNumber,address, bankDescription,selectBanks,bankAccountNumberLength , dispatch ,errorMessage, setErrorMessage})=> {
+const AccountInfo = ({selectBanks , dispatch ,errorMessage, setErrorMessage})=> {
 
- 
+    const { 
+        accountName ,
+        accountNumber , 
+        setAccountNumber, 
+        address , 
+        setAddress,
+        bank,
+    } = useContext(ContextCashOut)
     // useEffect(()=>{
     //     if(accountNumber == "" || accountNumber.length === +bankAccountNumberLength){
     //         setErrorMessage("")
@@ -111,10 +119,7 @@ const AccountInfo = ({accountName,accountNumber,address, bankDescription,selectB
 
     const changeAccountNumber = (value)=> {
         const num = value.replace(/[^0-9.]/g, '')
-        dispatch({
-            type: "SET_ACCOUNT_NUMBER",
-            payload: num
-        })
+        setAccountNumber(num)
     }
 
     return (
@@ -122,7 +127,7 @@ const AccountInfo = ({accountName,accountNumber,address, bankDescription,selectB
              <View style={{marginTop: 20,}}>
             <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Select Bank</Text>
                 <TouchableOpacity onPress={selectBanks} style={[styles.input, {justifyContent:"flex-start",alignItems:"center", flexDirection:'row'}]}>
-                    <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M , color:bankDescription == "" ? "gray": "black" }}>{bankDescription == "" ? "Choose bank here" : bankDescription}</Text>
+                    <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M , color:bank.name == "" ? "gray": "black" }}>{bank.name == "" ? "Choose bank here" : bank.name}</Text>
                     <View style={{flex: 1,alignItems:"flex-end"}}>
                          <VectorIcon iconSet={ICON_SET.Feather} color="black" name="chevron-down"/>
                     </View>
@@ -142,12 +147,14 @@ const AccountInfo = ({accountName,accountNumber,address, bankDescription,selectB
                             style={styles.input}
                             value={accountNumber}
                             onChangeText={changeAccountNumber}
-                            maxLength={bankAccountNumberLength != "" ? +bankAccountNumberLength : null}
+                            maxLength={bank.accountNumberLength != "" ? +bank.accountNumberLength : null}
                             placeholder={`Enter bank account number here`}
                             keyboardType="number-pad"
+                            returnKeyType="done"
                         />
                 </View>
                 { errorMessage != "" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.S,color:COLOR.RED}}>{errorMessage}</Text>}
+                { bank.accountNumberLength != "" && <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{accountNumber.length}/{bank.accountNumberLength}</Text> }
             </View>
 
             <View style={{marginTop: 16,}}>
@@ -156,23 +163,19 @@ const AccountInfo = ({accountName,accountNumber,address, bankDescription,selectB
                     <TextInput
                             style={styles.input}
                             value={address}
-                            onChangeText={(value)=>{
-                                dispatch({
-                                    type: "SET_ADDRESS",
-                                    payload: value
-                                })
-                            }}
-                            maxLength={20}
+                            onChangeText={(value)=>setAddress(value)}
+                            maxLength={bank.addressLength != "" ? bank.addressLength : null}
                             placeholder={`Enter your address here`}
+                            returnKeyType="done"
                         />
                 </View>
-                <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.S}}></Text>
+                { bank.addressLength != "" && <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{address.length}/{bank.addressLength}</Text> }
             </View>
         </View>
     )
 }
 
-const FundTransferForm = ({state,dispatch,selectBanks})=> {
+const FundTransferForm = ({selectBanks})=> {
 
     const tokwaAccount = useSelector(state=>state.toktokWallet)
     const alert = useAlert()
@@ -185,23 +188,31 @@ const FundTransferForm = ({state,dispatch,selectBanks})=> {
         status: 0
     })
     const [successModalVisible,setSuccessModalVisible] = useState(false)
+    const {
+        accountName,
+        accountNumber,
+        bank,
+        bankDescription,
+        note,
+        amount,
+        banks
+    } = useContext(ContextCashOut)
 
     const [postCashOutOtherBank , {data,error,loading}] = useMutation(POST_CASH_OUT_OTHER_BANKS, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({postCashOutOtherBank})=> {
             setOpenPinCode(false)
             setCashoutLogParams({
-                accountName: state.accountName,
-                accountNumber: state.accountNumber,
-                bank: state.bankDescription,
-                note: state.note,
+                accountName: accountName,
+                accountNumber: accountNumber,
+                bank: bank.name,
+                note: note,
                 ...postCashOutOtherBank
             })
             setSuccessModalVisible(true)
         },
         onError: (error)=> {
             const {graphQLErrors, networkError} = error;
-            console.log(graphQLErrors)
             if(graphQLErrors[0].message == "Wallet Hold"){
                 setOpenPinCode(false)
                 navigation.navigate("ToktokWalletHomePage")
@@ -218,33 +229,16 @@ const FundTransferForm = ({state,dispatch,selectBanks})=> {
         }
     })
 
-    const [getBanks] = useLazyQuery(GET_BANKS, {
-        fetchPolicy:"network-only",
-        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
-        onError: (error)=> {
-            onErrorAlert({alert,error})
-        },
-        onCompleted:({getBanks})=> {
-            dispatch({
-                type: "UPDATE_BANKS_LIST",
-                payload: getBanks
-            })
-        }
-    })
-
-    useEffect(()=>{
-        getBanks()
-    },[])
 
     const ProceedTransaction = (pinCode)=> {
         postCashOutOtherBank({
             variables: {
                 input: {
-                    amount: +state.amount,
-                    cashOutBankId: state.bank,
-                    accountName: state.accountName,
-                    accountNumber: state.accountNumber,
-                    note: state.note,
+                    amount: +amount,
+                    cashOutBankId: bank.id,
+                    accountName: accountName,
+                    accountNumber: accountNumber,
+                    note: note,
                     pinCode: pinCode,
                     currencyId: tokwaAccount.wallet.currency.id
                 }
@@ -254,15 +248,15 @@ const FundTransferForm = ({state,dispatch,selectBanks})=> {
 
 
     const onPress = ()=> {
-        console.log(state)
         navigation.navigate("ToktokWalletReviewAndConfirm", {
             label:"Fund Transfer" , 
+            event: "Fund Transfer",
             data: {
-                    method: state.bankDescription,
-                    accountName: state.accountName,
-                    accountNumber: state.accountNumber,
-                    amount: state.amount,
-                    note: state.note 
+                    method: bank.name,
+                    accountName: accountName,
+                    accountNumber: accountNumber,
+                    amount: amount,
+                    note: note 
                 },
             onConfirm: ()=>{
                 setPinCodeAttempt(6)
@@ -289,29 +283,19 @@ const FundTransferForm = ({state,dispatch,selectBanks})=> {
                 tokwaAccount={tokwaAccount}
             />
             <AccountInfo
-                accountName={state.accountName}
-                accountNumber={state.accountNumber}
-                address={state.address}
-                bank={state.bank}
-                bankDescription={state.bankDescription}
                 selectBanks={selectBanks}
-                bankAccountNumberLength={state.bankAccountNumberLength}
-                dispatch={dispatch}
                 errorMessage={errorMessage}
                 setErrorMessage={setErrorMessage}
             />
             <Amount
-                amount={state.amount}
-                note={state.note}
-                dispatch={dispatch}
                 errorAmountMessage={errorAmountMessage}
                 setErrorAmountMessage={setErrorAmountMessage}
             />
             <View style={styles.proceedBtn}>
                 {
-                    state.bank == "" ||
-                    state.accountNumber == "" ||
-                    state.amount == "" ||
+                    bank == "" ||
+                    accountNumber == "" ||
+                    amount == "" ||
                     errorMessage != "" ||
                     errorAmountMessage != ""
                     ? <DisabledButton label="Proceed"/>

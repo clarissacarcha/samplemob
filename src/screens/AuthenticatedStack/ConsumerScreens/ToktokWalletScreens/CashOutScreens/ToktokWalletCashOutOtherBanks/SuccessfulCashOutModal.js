@@ -3,10 +3,8 @@ import { Modal , StyleSheet , View , Text } from 'react-native'
 import { SIZES, FONTS, COLORS} from '../../../../../../res/constants'
 import { numberFormat } from '../../../../../../helper'
 import {useNavigation} from '@react-navigation/native'
-import {Receipt} from '../../Components'
+import {Receipt} from './Receipt'
 import { MaskLeftZero } from '../../../../../../util/HelperUtility'
-import { VectorIcon, ICON_SET } from '../../../../../../revamp'
-import { FONT, FONT_SIZE } from '../../../../../../res/variables'
 
 const TransactionInfo = ({label,value})=> (
     <View style={styles.transactionInfoView}>
@@ -67,12 +65,7 @@ const SuccessfulCashOutModal = ({visible , cashoutLogParams, tokwaAccount})=> {
                      <TransactionInfo label="Note" value={cashoutLogParams.note}/>
                 </View>            
             </Receipt>
-            {/* <View style={{position:"absolute",zIndex: 1 , bottom: 0 ,height: 50,marginBottom: 90,paddingHorizontal: 16,flexDirection:"row",alignItems:'center'}}>
-                    <View style={{padding: 2,borderWidth: 2 ,borderColor: "black",borderRadius: 2}}>
-                        <VectorIcon iconSet={ICON_SET.FontAwesome5} size={10} name="check" color="black"/>
-                    </View>
-                    <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M , marginLeft: 10}}>Save bank account details</Text>
-            </View> */}
+        
         </Modal>
     )
 }

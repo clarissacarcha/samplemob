@@ -22,8 +22,10 @@ const ToktokWalletCashOutSaveAccount = ({navigation,route})=> {
     })
     const bank = route.params.bank
     const tokwaAccount = useSelector(state=>state.toktokWallet)
+    const fixAccountName = `${tokwaAccount.person.firstName} ${tokwaAccount.person.lastName}`
     const [nickName,setNickName] = useState("")
-    const [accountName,setAccountName] = useState(`${tokwaAccount.person.firstName} ${tokwaAccount.person.lastName}`)
+    const [accountName,setAccountName] = useState(fixAccountName)
+   // const [accountName,setAccountName] = useState(bank.accountNameLength < fixAccountName.length ? fixAccountName.slice(0,bank.accountNameLength) : fixAccountName)
     const [accountNumber ,setAccountNumber] = useState("")
     const [address,setAddress] = useState("")
     const [errorMessage,setErrorMessage] = useState("")
@@ -99,6 +101,7 @@ const ToktokWalletCashOutSaveAccount = ({navigation,route})=> {
                                     value={nickName}
                                     onChangeText={(value)=>setNickName(value)}
                                     placeholder="Enter nickname here"
+                                    returnKeyType="done"
                                 />
                         </View>
                     </View>
@@ -124,7 +127,9 @@ const ToktokWalletCashOutSaveAccount = ({navigation,route})=> {
                                     maxLength={+bank.accountNumberLength}
                                     placeholder={`Enter bank account number here`}
                                     keyboardType="number-pad"
+                                    returnKeyType="done"
                                 />
+                                <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{accountNumber.length}/{bank.accountNumberLength}</Text>
                         </View>
                     </View>
 
@@ -135,11 +140,13 @@ const ToktokWalletCashOutSaveAccount = ({navigation,route})=> {
                                     style={styles.input}
                                     value={accountNumber}
                                     value={address}
+                                    maxLength={bank.addressLength}
                                     onChangeText={(value)=>setAddress(value)}
                                     placeholder={`Enter address here`}
+                                    returnKeyType="done"
                             />
                         </View>
-                        <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.S,color:COLOR.RED}}>{errorMessage}</Text>
+                        <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{address.length}/{bank.addressLength}</Text>
                     </View>
                     
 

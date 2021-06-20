@@ -10,6 +10,7 @@ import {useQuery} from '@apollo/react-hooks'
 //SELF IMPORTS
 import PendingEnrollment from './PendingEnrollment';
 import RegisterAccount from './RegisterAccount';
+import VerifiedAccount from './VerifiedAccount';
 
 const MainComponent = ({children})=> {
     return (
@@ -83,7 +84,7 @@ const ToktokWalletBDOHomePage = ({navigation,route})=> {
        return (
         <>
          {/* <SuccessfulModal visible={modalSuccessVisible} setVisible={setModalSuccessVisible} provider={provider}/> */}
-         {/* <VerifiedAccount record={data.getCashOutEnrollmentGcash.linkedGcash.gcashEnrollmentRecord} provider={provider}/> */}
+         <VerifiedAccount record={data.getCashOutEnrollmentBdo.linkedBDO.bdoEnrollmentRecord} provider={provider}/>
         </>
      )
 

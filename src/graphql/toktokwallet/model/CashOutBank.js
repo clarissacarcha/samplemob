@@ -10,6 +10,8 @@ export const GET_BANKS = gql`
             accountNumberLength
             accountNameLength
             addressLength
+            isInstaPay
+            isPesoNet
         }
     }
 `

@@ -69,12 +69,12 @@ const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
     }
 
     const changeAccountNumber = (value)=> {
-
+        const num = value.replace(/[^0-9.]/g, '')
         // if(value.length != +bank.accountNumberLength){
         //     setErrorMessage("Account number format must be valid.")
         // }
 
-        setAccountNumber(value)
+        setAccountNumber(num)
     }
     
 
@@ -93,20 +93,22 @@ const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
                             <Text style={styles.bankName}>{bank.name}</Text>
                     </View>
                     <View style={{marginVertical: 10,}}>
-                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Nickname</Text>
-                        <View style={[styles.input, {justifyContent:"center"}]}>
+                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Alias</Text>
+                        <View style={[{justifyContent:"center"}]}>
                             <TextInput
                                     style={styles.input}
                                     value={nickName}
                                     onChangeText={(value)=>setNickName(value)}
                                     placeholder="Enter nickname here"
+                                    returnKeyType="done"
+
                                 />
                         </View>
                     </View>
 
                     <View style={{marginVertical: 10,}}>
                         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Name</Text>
-                        <View style={[styles.input, {justifyContent:"center"}]}>
+                        <View style={[{justifyContent:"center"}]}>
                                <View
                                     style={[styles.input, {justifyContent:"center"}]}
                                 >
@@ -117,30 +119,33 @@ const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
                     
                     <View style={{marginVertical: 10,}}>
                         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Number</Text>
-                        <View style={[styles.input, {borderWidth: 1, borderColor: errorMessage == "" ? "transparent" : COLOR.RED}]}>
+                        <View style={[{borderWidth: 1, borderColor: errorMessage == "" ? "transparent" : COLOR.RED}]}>
                             <TextInput
+                                    style={styles.input}
                                     value={accountNumber}
                                     onChangeText={changeAccountNumber}
                                     maxLength={+bank.accountNumberLength}
                                     placeholder={`Enter bank account number here`}
+                                    returnKeyType="done"
+                                    keyboardType="number-pad"
                                 />
                         </View>
-                        { errorMessage != "" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.S,color:COLOR.RED}}>{errorMessage}</Text>}
+                        <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{accountNumber.length}/{bank.accountNumberLength}</Text>
                     </View>
 
                     <View style={{marginVertical: 10,}}>
                         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Address</Text>
-                        <View style={[styles.input, {justifyContent:"center"}]}>
+                        <View style={[{justifyContent:"center"}]}>
                             <TextInput
+                                    style={styles.input}
                                     value={address}
                                     onChangeText={(value)=>setAddress(value)}
                                     placeholder={`Enter address here`}
+                                    returnKeyType="done"
                                 />
                         </View>
+                        <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{address.length}/{bank.addressLength}</Text>
                     </View>
-
-                    
-                   
              </View>
              <View style={{justifyContent:'center',alignItems:"center"}}>
                     <Text style={{textAlign:"center",fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:"#CCCCCC",marginBottom: 20,}}>Please verify the accuracy and completeness of the details before you proceed.</Text>

@@ -1,16 +1,14 @@
-import React , {useState,useReducer , useRef,useEffect} from 'react'
+import React , {useState,useReducer , useRef,useEffect , useContext, useMemo, useCallback} from 'react'
 import {View,StyleSheet,Text,ScrollView,KeyboardAvoidingView,Platform,Dimensions} from 'react-native'
 import { 
     HeaderImageBackground,
     HeaderTitle,
     Separator
 } from '../../Components'
-import {useSelector} from 'react-redux'
-import { TOKTOK_WALLET_GRAPHQL_CLIENT } from '../../../../../../graphql'
-import { GET_CASH_OUT_PROVIDER_OTHER_BANKS } from '../../../../../../graphql/toktokwallet'
-import { useQuery } from '@apollo/react-hooks'
 import { COLOR , FONT, FONT_SIZE} from '../../../../../../res/variables'
 import { numberFormat } from '../../../../../../helper';
+import ContextProvider from './ContextProvider'
+import { ContextCashOut } from './ContextProvider'
 
 //SELF IMPORTS
 import InstaPayOption from './InstaPayOption'
@@ -21,87 +19,43 @@ import BottomSheetSavedAccountBanks from './BottomSheetSavedAccountBanks';
 import BottomSheetSavedAccounts from './BottomSheetSavedAccounts';
 import BottomSheetChooseBank from './BottomSheetChooseBank'
 
+import ModalChooseBank from './ModalChooseBank';
+import ModalChooseAccount from './ModalChooseAccount';
+
+
 const screen = Dimensions.get('window');
 
-const ToktokWalletCashOutOtherBanks = ({navigation,route})=> {
-    navigation.setOptions({
-        headerShown: false
-     })
-     const tokwaAccount = useSelector(state=>state.toktokWallet)
-     const bottomSheetSaveAccountBankRef = useRef()
-     const bottomSheetSavedAccountRef = useRef(null)
-     const bottomSheetBanksRef = useRef(null)
+const MainComponent = ({navigation})=> {
+    const {
+        banks, 
+        tokwaAccount,
+        setBank,
+        setActiveAccount,
+        setAccountNumber,
+        savedAccounts
+    } = useContext(ContextCashOut)
 
-     const initialState = {
-         bank: "",
-         bankDescription: "",
-         bankAccountNumberLength: "",
-         accountName: `${tokwaAccount.person.firstName} ${tokwaAccount.person.lastName}`,
-         address: "",
-         accountNumber: "",
-         amount: "",
-         note: "",
-         savedAccounts: [],
-         banks: [],
-         activeAccount: null
-     }
 
-     const reducer = (state,action) => {
-         switch(action.type){
-            case "UPDATE_SAVE_ACCOUNTS": 
-                return {
-                    ...state,
-                    savedAccounts: [...action.payload]
-                }
-            case "UPDATE_BANKS_LIST" :
-                return {
-                    ...state,
-                    banks: [...action.payload]
-                }
-            case "SET_BANK":
-                return {
-                    ...state,
-                    bank: action.payload.id,
-                    bankDescription: `${action.payload.name}`, 
-                    bankAccountNumberLength: action.payload.accountNumberLength
-                }
-            case "SET_ACCOUNT_NUMBER":
-                return {
-                    ...state,
-                    accountNumber: action.payload
-                }
-            case "SET_NOTE":
-                return {
-                    ...state,
-                    note: action.payload
-                }
-            case "SET_ADDRESS":
-                return {
-                    ...state,
-                    address: action.payload
-                }
-            case "SET_AMOUNT":
-                return {
-                    ...state,
-                    amount: action.payload
-                }
-            case "SET_ACTIVE_ACCOUNT":
-                return {
-                    ...state,
-                    activeAccount: action.payload
-                }
-            default:
-                return state
-         }
-     }
+    const [showChooseBankModal,setShowChooseBankModal] = useState(false)
+    const [showAccountBankModal,setShowAccountBankModal] = useState(false)
+    const [showChooseAccountModal,setShowChooseAccountModal] = useState(false)
 
-    const [state,dispatch] = useReducer(reducer , initialState)
+    const changeBank = (bank)=> {
+        setBank(bank)
+        setActiveAccount(null)
+        setAccountNumber("")
+        setShowChooseBankModal(false)
+    }
+
+    const selectAccountBank = (bank) => {
+        setShowAccountBankModal(false)
+        return navigation.navigate("ToktokWalletCashOutSaveAccount", {bank: bank})
+    }
 
     return (
         <>
-        
-         <View style={styles.container}>
-               <View style={styles.headings}>
+        <View style={styles.container}>
+                <View style={styles.headings}>
                    <HeaderImageBackground>
                        <HeaderTitle label="Fund Transfer"/>
                        <View style={styles.walletBalance}>
@@ -117,32 +71,28 @@ const ToktokWalletCashOutOtherBanks = ({navigation,route})=> {
                         style={{ flex: 1 }}
                 >
                <ScrollView showsVerticalScrollIndicator={false} style={styles.transferOptions}>
-                    <MySavedAccounts state={state} dispatch={dispatch} bottomRef={bottomSheetSaveAccountBankRef} edit={()=>bottomSheetSavedAccountRef.current.expand()}/>
-                    <FundTransferForm state={state} dispatch={dispatch} selectBanks={()=>bottomSheetBanksRef.current.expand()}/>
+                    <MySavedAccounts selectBanks={()=>setShowAccountBankModal(true)} edit={()=>setShowChooseAccountModal(true)}/>
+                    <FundTransferForm selectBanks={()=>setShowChooseBankModal(true)}/>
                </ScrollView>
                </KeyboardAvoidingView>
-         </View>
+        </View>
+        <ModalChooseBank banks={banks} visible={showChooseBankModal} setVisible={()=>setShowChooseBankModal(false)} onPress={changeBank}/>
+        <ModalChooseBank banks={banks} visible={showAccountBankModal} setVisible={()=>setShowAccountBankModal(false)} onPress={selectAccountBank}/>
+        <ModalChooseAccount accounts={savedAccounts} visible={showChooseAccountModal} setVisible={setShowChooseAccountModal}/>
+        </>
+    )
+}
 
-         <BottomSheetSavedAccountBanks ref={bottomSheetSaveAccountBankRef}/>   
-         <BottomSheetSavedAccounts ref={bottomSheetSavedAccountRef} accounts={state.savedAccounts}/> 
-         <BottomSheetChooseBank 
-            ref={bottomSheetBanksRef} 
-            banks={state.banks} 
-            onChange={(bank)=> {
-                dispatch({
-                    type: "SET_BANK",
-                    payload: bank
-                })
-                dispatch({
-                    type: "SET_ACTIVE_ACCOUNT",
-                    payload: null
-                })
-                dispatch({
-                    type: "SET_ACCOUNT_NUMBER",
-                    payload: ""
-                })
-            }}
-         />
+const ToktokWalletCashOutOtherBanks = ({navigation,route})=> {
+    navigation.setOptions({
+        headerShown: false
+     })
+   
+    return (
+        <>
+        <ContextProvider>
+            <MainComponent navigation={navigation}/>
+         </ContextProvider>
          </>
        )
 }

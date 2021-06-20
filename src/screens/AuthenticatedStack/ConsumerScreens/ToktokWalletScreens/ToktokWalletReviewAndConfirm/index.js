@@ -13,6 +13,7 @@ import CashOutOtherBank from "./CashOutOtherBank";
 const ToktokWalletReviewAndConfirm = ({navigation,route})=> {
 
     const label = route.params.label
+    const event = route.params.event
     const onConfirm = route.params.onConfirm
     const data = route.params.data ? route.params.data : null
     const onSwipeFail = route.params.onSwipeFail ? route.params.onSwipeFail : null
@@ -31,7 +32,7 @@ const ToktokWalletReviewAndConfirm = ({navigation,route})=> {
     }
 
     const RenderDisplay = ()=> {
-        switch(label){
+        switch(event){
             case "Cash In":
                 return <CashIn data={data}/>
             case "Cash Out":

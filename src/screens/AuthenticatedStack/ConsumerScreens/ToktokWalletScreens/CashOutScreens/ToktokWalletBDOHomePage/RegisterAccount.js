@@ -40,12 +40,12 @@ const RegisterAccount = ({rejected,provider})=> {
 
             // // // create linking table if linking unlinking is allowed
             // if(getBdoEnrollmentRecord.status == 1){
-            //     setShowLinkModal(true)
+            //     return setShowLinkModal(true)
             // }
 
             // temporary solution for 1:1 BDO
             if(getBdoEnrollmentRecord.status == 1){
-                setErrorMessage(`BDO account number ${getBdoEnrollmentRecord.accountNumber} already linked in a toktokwallet account`)
+                return setErrorMessage(`BDO account number ${getBdoEnrollmentRecord.accountNumber} already linked in a toktokwallet account`)
             }
         },
         onError: (error)=> {

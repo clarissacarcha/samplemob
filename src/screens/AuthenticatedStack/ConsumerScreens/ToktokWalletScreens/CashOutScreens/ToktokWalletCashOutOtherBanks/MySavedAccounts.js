@@ -1,4 +1,4 @@
-import React , {useRef, useState} from 'react'
+import React , {useRef, useState, useContext} from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,Dimensions,TouchableHighlight,ActivityIndicator} from 'react-native'
 import { COLOR, FONT , FONT_SIZE } from '../../../../../../res/variables'
 import { Separator } from '../../Components'
@@ -8,6 +8,7 @@ import {GET_BANK_ACCOUNTS} from '../../../../../../graphql/toktokwallet'
 import { useQuery } from '@apollo/react-hooks'
 import { onErrorAlert } from '../../../../../../util/ErrorUtility'
 import {useAlert} from '../../../../../../hooks'
+import { ContextCashOut } from './ContextProvider'
 
 const {width,height} = Dimensions.get("window")
 
@@ -16,7 +17,7 @@ const ActiveBankAccount = ({index,onPress, ...account}) => {
     return (
         <TouchableHighlight 
             onPress={()=>onPress(account , index)} 
-            underlayColor={"transparent"} 
+            underlayColor={"#FFFFE5"} 
             key={`bankAccount${index}`} 
             style={{justifyContent:'center',alignItems:"center",marginRight: 10}}
         >
@@ -36,7 +37,7 @@ const ActiveBankAccount = ({index,onPress, ...account}) => {
 const BankAccount = ({index,onPress, ...account})=> {
 
     return (
-        <TouchableHighlight onPress={()=>onPress(account , index)} underlayColor={"transparent"} key={`bankAccount${index}`} style={{justifyContent:'center',alignItems:"center",marginRight: 10}}>
+        <TouchableHighlight onPress={()=>onPress(account , index)} underlayColor={"#FFFFE5"} key={`bankAccount${index}`} style={{justifyContent:'center',alignItems:"center",marginRight: 10}}>
             <>
                       <View style={[styles.account, {justifyContent:'center',alignItems:'center'}]}>
                             <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.L}}>{account.bank.name[0].toUpperCase()}</Text>
@@ -48,10 +49,17 @@ const BankAccount = ({index,onPress, ...account})=> {
     )
 }
 
-const MySavedAccounts = ({bottomRef , edit ,dispatch , state})=> {
+const MySavedAccounts = ({selectBanks , edit})=> {
     const alert = useAlert()
-    // const [activeAccount,setActiveAccount] = useState(null)
-    const activeAccount = state.activeAccount
+    const {
+        savedAccounts,
+        setSaveAccounts,
+        activeAccount,
+        setActiveAccount,
+        setBank,
+        setAccountNumber,
+        setAddress
+    } = useContext(ContextCashOut)
 
     const {data,error,loading} = useQuery(GET_BANK_ACCOUNTS, {
         fetchPolicy:"network-only",
@@ -60,11 +68,7 @@ const MySavedAccounts = ({bottomRef , edit ,dispatch , state})=> {
             onErrorAlert({alert,error})
         },
         onCompleted: ({getBankAccounts})=> {
-            console.log(getBankAccounts)
-            dispatch({
-                type: "UPDATE_SAVE_ACCOUNTS",
-                payload: getBankAccounts
-            })
+            setSaveAccounts(getBankAccounts)
         }
     })
 
@@ -76,56 +80,22 @@ const MySavedAccounts = ({bottomRef , edit ,dispatch , state})=> {
         )
     }
 
-    const addAccount = ()=> {
-        bottomRef.current.expand()
-    }
-
     const onPress = (account , index)=> {
        if(!activeAccount){
-        dispatch({
-            type: "SET_BANK",
-            payload: account.bank
-        })
-        dispatch({
-            type: "SET_ACCOUNT_NUMBER",
-            payload: account.accountNumber
-        })
-        dispatch({
-            type: "SET_ADDRESS",
-            payload: account.address
-        })
-        dispatch({
-            type: "SET_ACTIVE_ACCOUNT",
-            payload: index
-        })
+           setBank(account.bank)
+           setAccountNumber(account.accountNumber)
+           setAddress(account.address)
+           setActiveAccount(index)
        }
 
        if(activeAccount == index){
-        dispatch({
-            type: "SET_ACTIVE_ACCOUNT",
-            payload: null
-        })
-        dispatch({
-            type: "SET_ACCOUNT_NUMBER",
-            payload: ""
-        })
-        dispatch({
-            type: "SET_ADDRESS",
-            payload: ""
-        })
+            setActiveAccount(null)
+            setAccountNumber("")
+            setAddress("")
        }else{
-        dispatch({
-            type: "SET_BANK",
-            payload: account.bank
-        })
-        dispatch({
-            type: "SET_ACCOUNT_NUMBER",
-            payload: account.accountNumber
-        })
-        dispatch({
-            type: "SET_ACTIVE_ACCOUNT",
-            payload: index
-        })
+            setBank(account.bank)
+            setAccountNumber(account.accountNumber)
+            setActiveAccount(index)
        }
     }
 
@@ -133,9 +103,9 @@ const MySavedAccounts = ({bottomRef , edit ,dispatch , state})=> {
         <>
         <View style={styles.container}>
            <View style={styles.headings}>
-           <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,textAlign: "left",flex: 1}}>My Saved Accounts ( {data.getBankAccounts.length}/5 )</Text>
+           <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,textAlign: "left",flex: 1}}>My Saved Accounts ( {savedAccounts.length}/5 )</Text>
            {
-               data.getBankAccounts.length > 0 &&
+               savedAccounts.length > 0 &&
                <TouchableOpacity onPress={edit} style={styles.edit}>
                     <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,textAlign: "right",color: COLOR.ORANGE}}>Edit</Text>
                </TouchableOpacity>
@@ -145,7 +115,7 @@ const MySavedAccounts = ({bottomRef , edit ,dispatch , state})=> {
 
            <View style={styles.body}>
                 {
-                    data.getBankAccounts.map((account,index)=> {
+                    savedAccounts.map((account,index)=> {
                         if(index === activeAccount){
                             return <ActiveBankAccount onPress={onPress} index={index} {...account}/>
                         }
@@ -154,8 +124,8 @@ const MySavedAccounts = ({bottomRef , edit ,dispatch , state})=> {
                 }
 
                 {
-                    data.getBankAccounts.length < 5 && 
-                        <TouchableHighlight onPress={addAccount} underlayColor={"transparent"} style={{justifyContent:'center',alignItems:"center",marginRight: 10}}>
+                    savedAccounts.length < 5 && 
+                        <TouchableHighlight onPress={selectBanks} underlayColor={"transparent"} style={{justifyContent:'center',alignItems:"center",marginRight: 10}}>
                             <>
                             <View style={styles.addAccount}>
                                 <VectorIcon iconSet={ICON_SET.FontAwesome5} name="plus" size={12}/>

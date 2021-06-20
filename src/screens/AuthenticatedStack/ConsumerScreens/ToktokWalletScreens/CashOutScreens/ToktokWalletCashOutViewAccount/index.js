@@ -66,8 +66,8 @@ const ToktokWalletCashOutViewAccount = ({navigation,route})=> {
                             <Text style={styles.bankName}>{bank.name}</Text>
                     </View>
                     <View style={{marginVertical: 10,}}>
-                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Nickname</Text>
-                        <View style={[styles.input, {justifyContent:"center"}]}>
+                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Alias</Text>
+                        <View style={[{justifyContent:"center"}]}>
                                <View
                                     style={[styles.input, {justifyContent:"center"}]}
                                 >
@@ -78,7 +78,7 @@ const ToktokWalletCashOutViewAccount = ({navigation,route})=> {
 
                     <View style={{marginVertical: 10,}}>
                         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Name</Text>
-                        <View style={[styles.input, {justifyContent:"center"}]}>
+                        <View style={[ {justifyContent:"center"}]}>
                                <View
                                     style={[styles.input, {justifyContent:"center"}]}
                                 >
@@ -89,7 +89,7 @@ const ToktokWalletCashOutViewAccount = ({navigation,route})=> {
                     
                     <View style={{marginVertical: 10,}}>
                         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Number</Text>
-                        <View style={[styles.input, {justifyContent:"center"}]}>
+                        <View style={[ {justifyContent:"center"}]}>
                                <View
                                     style={[styles.input, {justifyContent:"center"}]}
                                 >
@@ -100,7 +100,7 @@ const ToktokWalletCashOutViewAccount = ({navigation,route})=> {
 
                     <View style={{marginVertical: 10,}}>
                         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Address</Text>
-                        <View style={[styles.input, {justifyContent:"center"}]}>
+                        <View style={[{justifyContent:"center"}]}>
                                <View
                                     style={[styles.input, {justifyContent:"center"}]}
                                 >
