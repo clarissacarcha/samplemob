@@ -16,7 +16,7 @@ export default HeaderImageBackground;
 
 const styles = StyleSheet.create({
   imageStyle: {
-    height: 150,
+    height: 125,
     resizeMode: 'cover',
   },
   walletBackGroundImage: {

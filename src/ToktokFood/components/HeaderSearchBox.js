@@ -10,7 +10,11 @@ const HeaderSearchBox = () => {
     <View style={styles.searchBoxContainer}>
       <View style={[styles.textInputWrapper, styles.searchBoxShadow]}>
         <Image style={styles.searchBoxIcon} source={searchIcon} />
-        <TextInput placeholder="What would you like to eat?" multiline={false} style={[styles.searchBox, styles.textInputFontStyles]}></TextInput>
+        <TextInput
+          placeholder="What would you like to eat?"
+          multiline={false}
+          style={[styles.searchBox, styles.textInputFontStyles]}
+        />
       </View>
     </View>
   );
@@ -21,12 +25,10 @@ export default HeaderSearchBox;
 const styles = StyleSheet.create({
   searchBoxContainer: {
     left: 0,
-    bottom: 6,
+    bottom: 25,
     width: '100%',
-    display: 'flex',
     alignItems: 'center',
     position: 'absolute',
-    justifyContent: 'center',
   },
   searchBox: {
     height: 50,
