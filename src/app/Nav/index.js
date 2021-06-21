@@ -112,6 +112,7 @@ import ToktokWalletCashOutSaveAccount from '../../screens/AuthenticatedStack/Con
 import ToktokWalletCashOutUpdateAccount from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/CashOutScreens/ToktokWalletCashOutUpdateAccount';
 import ToktokWalletBDORegistration from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/CashOutScreens/ToktokWalletBDORegistration';
 import ToktokWalletCashOutViewAccount from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/CashOutScreens/ToktokWalletCashOutViewAccount';
+import ToktokWalletBDOLinkAccount from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/CashOutScreens/ToktokWalletBDOLinkAccount';
 
 /*---------- DRIVER SCREENS ----------*/
 import DriverMap from '../../screens/AuthenticatedStack/DriverScreens/DriverMap';
@@ -504,6 +505,7 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="ToktokWalletCashOutSaveAccount" component={ToktokWalletCashOutSaveAccount} />
     <Authenticated.Screen name="ToktokWalletCashOutUpdateAccount" component={ToktokWalletCashOutUpdateAccount} />
     <Authenticated.Screen name="ToktokWalletBDORegistration" component={ToktokWalletBDORegistration}/>
+    <Authenticated.Screen name="ToktokWalletBDOLinkAccount" component={ToktokWalletBDOLinkAccount}/>
 
     {/*---------- DRIVER SCREENS ----------*/}
     <Authenticated.Screen name="DriverHomeBottomTab" component={DriverHomeBottomTab} options={{headerShown: false}} />

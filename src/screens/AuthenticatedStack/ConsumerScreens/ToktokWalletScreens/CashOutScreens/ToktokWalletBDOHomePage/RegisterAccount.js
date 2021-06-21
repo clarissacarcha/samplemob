@@ -84,7 +84,7 @@ const RegisterAccount = ({rejected,provider})=> {
 
     return (
         <>
-        <ModalLinkAccount visible={showLinkModal} setVisible={setShowLinkModal} provider={provider}/>
+        <ModalLinkAccount visible={showLinkModal} setVisible={setShowLinkModal} provider={provider} accountNumber={accountNumber}/>
         <Separator/>
         <View style={styles.container}>
              

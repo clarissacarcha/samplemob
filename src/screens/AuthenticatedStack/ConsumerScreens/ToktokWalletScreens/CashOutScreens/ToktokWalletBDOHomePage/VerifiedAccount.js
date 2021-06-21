@@ -6,13 +6,14 @@ import {useSelector} from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
 import { numberFormat } from '../../../../../../helper'
 import { TOKTOK_WALLET_GRAPHQL_CLIENT } from '../../../../../../graphql'
-import { POST_CASH_OUT } from '../../../../../../graphql/toktokwallet'
+import { POST_CASH_OUT_BDO } from '../../../../../../graphql/toktokwallet'
 import { useMutation } from '@apollo/react-hooks'
 import { useAlert } from '../../../../../../hooks/useAlert'
 import { onErrorAlert } from '../../../../../../util/ErrorUtility'
 
 //SELF IMPORTS
 import { DisabledButton, Separator, EnterPinCode } from '../../Components'
+import SuccessfulCashOutModal from "./SuccessfulCashOutModal";
 import { AlertOverlay } from '../../../../../../components'
 
 const VerifiedAccount = ({record,provider})=> {
@@ -29,6 +30,37 @@ const VerifiedAccount = ({record,provider})=> {
     const alert = useAlert()
     const [pinCodeAttempt,setPinCodeAttempt] = useState(6)
     const [openPinCode,setOpenPinCode] = useState(false)
+
+
+    const [postCashOutBdo , {data,error,loading}] = useMutation(POST_CASH_OUT_BDO, {
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+        onCompleted: ({postCashOutBdo})=> {
+            setOpenPinCode(false)
+            setCashoutLogParams({
+                accountName: record.accountName,
+                accountNumber: record.accountNumber,
+                ...postCashOutBdo
+            })
+            setSuccessModalVisible(true)
+        },
+        onError: (error)=> {
+            const {graphQLErrors, networkError} = error;
+            console.log(graphQLErrors)
+            if(graphQLErrors[0].message == "Wallet Hold"){
+                setOpenPinCode(false)
+                navigation.navigate("ToktokWalletHomePage")
+                navigation.replace("ToktokWalletHomePage")
+                return navigation.push("ToktokWalletRestricted", {component: "onHold"})
+            }
+
+            if(graphQLErrors[0].message == "Invalid Pincode"){
+                return setPinCodeAttempt(graphQLErrors[0].payload.remainingAttempts)
+            }
+            setOpenPinCode(false)
+            onErrorAlert({alert,error})
+            return navigation.pop()
+        }
+    })
 
     const changeAmount = (value)=>{
         const num = value.replace(/[^0-9.]/g, '')
@@ -49,7 +81,16 @@ const VerifiedAccount = ({record,provider})=> {
     }
 
     const ProceedTransaction = (pinCode)=> {
-     
+        postCashOutBdo({
+            variables: {
+                input: {
+                    amount: +amount,
+                    provider: provider.id,
+                    currencyId: tokwaAccount.wallet.currency.id,
+                    pinCode: pinCode
+                }
+            }
+        })
     }
 
     const confirmAmount = ()=> {
@@ -71,7 +112,7 @@ const VerifiedAccount = ({record,provider})=> {
 
     return (
         <>
-         {/* <EnterPinCode 
+         <EnterPinCode 
                 visible={openPinCode} 
                 setVisible={setOpenPinCode} 
                 loading={loading}
@@ -79,8 +120,13 @@ const VerifiedAccount = ({record,provider})=> {
                 callBackFunc={ProceedTransaction}
         >
              <AlertOverlay visible={loading} />
-        </EnterPinCode> */}
+        </EnterPinCode>
         <Separator/>
+        <SuccessfulCashOutModal 
+             visible={successModalVisible}
+             cashoutLogParams={cashoutLogParams}
+             tokwaAccount={tokwaAccount}
+        />
         <View style={styles.container}>
             <View style={styles.body}>
                 <View style={styles.bdoLogo}>

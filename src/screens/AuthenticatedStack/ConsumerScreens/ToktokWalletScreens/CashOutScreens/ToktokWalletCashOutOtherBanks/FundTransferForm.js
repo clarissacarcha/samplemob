@@ -236,6 +236,8 @@ const FundTransferForm = ({selectBanks})=> {
                 input: {
                     amount: +amount,
                     cashOutBankId: bank.id,
+                    isInstaPay: bank.isInstaPay,
+                    isPesoNet: bank.isPesoNet,
                     accountName: accountName,
                     accountNumber: accountNumber,
                     note: note,
