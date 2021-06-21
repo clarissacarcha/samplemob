@@ -16,8 +16,8 @@ const ToktokFoodHome = () => {
     <View style={styles.container}>
       <HeaderImageBackground>
         <HeaderTitle />
-        <HeaderSearchBox/>
       </HeaderImageBackground>
+
       <CategoryList />
 
       <RestaurantList />
