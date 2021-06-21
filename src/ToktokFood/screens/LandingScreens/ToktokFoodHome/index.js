@@ -2,8 +2,9 @@ import React from 'react';
 import {View, StyleSheet} from 'react-native';
 
 // Components
-import HeaderImageBackground from 'components/HeaderImageBackground';
-import HeaderTitle from 'components/HeaderTitle';
+import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
+import HeaderTitle from 'toktokfood/components/HeaderTitle';
+import {CategoryList} from './components';
 
 // Hooks
 import {useUserLocation} from 'toktokfood/hooks';
@@ -16,6 +17,8 @@ const ToktokFoodHome = () => {
       <HeaderImageBackground>
         <HeaderTitle />
       </HeaderImageBackground>
+
+      <CategoryList />
     </View>
   );
 };
