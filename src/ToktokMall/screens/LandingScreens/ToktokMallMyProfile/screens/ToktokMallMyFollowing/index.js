@@ -1,10 +1,10 @@
 import React from 'react';
 import {View, Text} from 'react-native';
 
-export const ToktokFoodSelectedOrder = () => {
+export const ToktokMallMyFollowing = () => {
   return (
     <View>
-      <Text>Selected Order</Text>
+      <Text>Following</Text>
     </View>
   );
 };

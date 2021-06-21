@@ -68,6 +68,13 @@ export const Menu = ({setUserLocation}) => {
           navigation.push('ToktokFoodLanding');
         }}
       />
+      <MenuIcon
+        label={'toktokmall'}
+        icon={OthersIcon}
+        onPress={() => {
+          navigation.push('ToktokMallLanding');
+        }}
+      />
     </View>
   );
 };
