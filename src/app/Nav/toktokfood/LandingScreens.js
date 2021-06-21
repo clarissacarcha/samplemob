@@ -12,4 +12,6 @@ const ToktokFoodLanding = () => (
   </ToktokFoodLandingBottomTab.Navigator>
 );
 
-export default ({Navigator}) => <Navigator.Screen name="ToktokFoodLanding" component={ToktokFoodLanding} />;
+export default ({Navigator}) => (
+  <Navigator.Screen options={{headerShown: false}} name="ToktokFoodLanding" component={ToktokFoodLanding} />
+);
