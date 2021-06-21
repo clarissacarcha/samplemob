@@ -5,6 +5,38 @@ import { YellowButton } from '../../../../../revamp'
 
 const {width,height} = Dimensions.get("window")
 
+const renderCashOutDisplayInformations = (cashOutDisplayInformations) => {
+
+    if(cashOutDisplayInformations?.accountInfo){
+        return (
+            <>
+            <Text style={styles.labelText}>Account Name: {cashOutDisplayInformations.accountInfo.accountName}</Text>
+            <Text style={styles.labelText}>Account Number: {cashOutDisplayInformations.accountInfo.accountNumber}</Text>
+            <Text style={styles.labelText}>Bank: {cashOutDisplayInformations?.accountInfo?.bank?.name}</Text>
+            </>
+        )
+    }
+
+    if(cashOutDisplayInformations?.gcashInfo){
+        return (
+            <>
+            <Text style={styles.labelText}>Account Name: {cashOutDisplayInformations.gcashInfo.accountName}</Text>
+            <Text style={styles.labelText}>Account Number: {cashOutDisplayInformations.gcashInfo.accountNumber}</Text>
+            </>
+        )
+    }
+
+    if(cashOutDisplayInformations?.bdoInfo){
+        return (
+            <>
+           <Text style={styles.labelText}>Account Name: {cashOutDisplayInformations.bdoInfo.accountName}</Text>
+            <Text style={styles.labelText}>Account Number: {cashOutDisplayInformations.bdoInfo.accountNumber}</Text>
+            </>
+        )
+    }
+  
+}
+
 export const TransactionDetails = ({
     visible,
     setVisible,
@@ -16,7 +48,9 @@ export const TransactionDetails = ({
     status,
     displayNumber,
     externalReferenceNumber,
-    deliveryId
+    deliveryId,
+    cashOutDisplayInformations,
+    cashInMobileNumber
 })=> {
 
     return (
@@ -30,7 +64,7 @@ export const TransactionDetails = ({
             >
                 <View style={styles.content}>
                     <View style={{
-                        height: 250,
+                        height: 300,
                         width: width * 0.9,
                         backgroundColor:"white",
                         borderRadius: 5,
@@ -42,6 +76,8 @@ export const TransactionDetails = ({
                             {displayNumber != "" && <Text style={styles.labelText}>{displayNumber}</Text>}
                             { status && <Text style={styles.labelText}>Status: {status}</Text>}
                             { deliveryId && <Text style={styles.labelText}>Delivery ID: {deliveryId}</Text>}
+                            { cashInMobileNumber && <Text style={styles.labelText}>Account Number: {cashInMobileNumber}</Text>}
+                            { renderCashOutDisplayInformations(cashOutDisplayInformations)}
                             <View style={{marginTop: 10}}>
                                 <Text style={styles.labelText}>Amount: {amount}</Text>
                                 <Text style={styles.labelText}>Ref No: {refNo}</Text>

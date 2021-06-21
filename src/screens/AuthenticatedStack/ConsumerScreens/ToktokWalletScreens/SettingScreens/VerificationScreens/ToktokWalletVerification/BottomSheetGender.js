@@ -42,7 +42,7 @@ const selectGender = (gender)=> {
         <View style={{height: 10}} />
         <FlatList
           data={[{description:"Female"},{description: "Male"}]}
-          ItemSeparatorComponent={() => <View style={{borderBottomWidth: 1, borderColor: COLOR.LIGHT}} />}
+          ItemSeparatorComponent={() => <View style={{height: 1, borderColor: COLOR.LIGHT}} />}
           renderItem={({item, index}) => (
             <TouchableOpacity onPress={()=>selectGender(item.description)} style={[styles.validID]}>
                     <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>{item.description}</Text>

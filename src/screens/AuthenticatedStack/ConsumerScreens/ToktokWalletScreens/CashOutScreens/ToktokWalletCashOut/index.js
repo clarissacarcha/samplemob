@@ -56,7 +56,7 @@ const ToktokWalletCashOut = ({navigation,route})=> {
             </View>
 
             <View style={styles.cashoutoptions}>
-                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>Choose cash out method</Text>
+                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>Enrolled Accounts</Text>
             </View>
             <Separator/>
             <View style={styles.transferOptions}>

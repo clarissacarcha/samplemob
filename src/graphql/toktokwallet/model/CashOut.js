@@ -26,6 +26,27 @@ export const GET_CASH_OUTS = gql`
                     id
                     name
                 }
+                cashOutDisplayInformations {
+                    accountInfo {
+                            accountNumber
+                            accountName
+                            bank {
+                                name 
+                                code
+                            }
+                    }
+                }
         }
     }
 ` 
+
+export const POST_CASH_OUT_OTHER_BANKS = gql`
+      mutation postCashOutOtherBank($input: PostCashOutOtherBankInput){
+        postCashOutOtherBank(input: $input){
+            id
+            amount
+            status
+            createdAt
+        }
+      }
+`

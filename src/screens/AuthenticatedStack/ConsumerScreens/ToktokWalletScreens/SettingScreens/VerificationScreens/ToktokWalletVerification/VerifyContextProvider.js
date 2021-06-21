@@ -14,7 +14,7 @@ const VerifyContextProvider = ({children})=> {
     const [modalProvinceVisible,setModalProvinceVisible] = useState(false)
     const [modalCityVisible,setModalCityVisible] = useState(false)
 
-    const [currentIndex,setCurrentIndex] = useState(3)
+    const [currentIndex,setCurrentIndex] = useState(0)
     const [fullname,setFullname] = useState(`${session.user.person.firstName} ${session.user.person.middleName ? session.user.person.middleName + " " : ""}${session.user.person.lastName}`)
     const [person,setPerson] = useState({
         firstName: session.user.person.firstName,
@@ -59,6 +59,7 @@ const VerifyContextProvider = ({children})=> {
     const [selfieImage,setSelfieImage] = useState(null)
     const [frontImage, setFrontImage] = useState(null)
     const [backImage, setBackImage] = useState(null)
+    const [isBackRequired, setIsbackRequired] = useState(false)
 
     const changePersonInfo = (key,value)=> {
         person[key] = value
@@ -115,15 +116,12 @@ const VerifyContextProvider = ({children})=> {
                 setNationality,
                 nationalityId,
                 setNationalityId,
-
                 contactInfo,
                 changeContactInfo,
                 birthInfo,
                 changeBirthInfo,
                 address,
                 changeAddress,
-
-
                 province,
                 setProvince,
                 provinceId,
@@ -132,32 +130,28 @@ const VerifyContextProvider = ({children})=> {
                 setCity,
                 cityId,
                 setCityId,
-
                 verifyID,
                 changeVerifyID,
                 selfieImage,
                 setSelfieImage,
                 person,
                 changePersonInfo,
-
                 modalCountryVisible,
                 setModalCountryVisible,
                 modalProvinceVisible,
                 setModalProvinceVisible,
                 modalCityVisible,
                 setModalCityVisible,
-
                 cities,
                 setCities,
-
                 provinceCities,
                 changeProvinceCities,
-
                 frontImage,
                 setFrontImage,
                 backImage,
                 setBackImage,
-
+                isBackRequired,
+                setIsbackRequired,
                 identificationId,
                 setIdentificationId
  

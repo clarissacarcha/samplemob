@@ -76,6 +76,24 @@ export const GET_TRANSACTIONS = gql`
                         sourcePhrase
                         destinationPhrase
                     }
+                    cashOutDisplayInformations {
+                        accountInfo {
+                            accountNumber
+                            accountName
+                            bank {
+                                name 
+                                code
+                            }
+                        }
+                        gcashInfo {
+                            accountNumber
+                            accountName
+                        }
+                        bdoInfo {
+                            accountNumber
+                            accountName
+                        }
+                    }
             }
             allTransactions {
                     id
@@ -112,6 +130,24 @@ export const GET_TRANSACTIONS = gql`
                         type
                         sourcePhrase
                         destinationPhrase
+                    }
+                    cashOutDisplayInformations {
+                        accountInfo {
+                            accountNumber
+                            accountName
+                            bank {
+                                name 
+                                code
+                            }
+                        }
+                        gcashInfo {
+                            accountNumber
+                            accountName
+                        }
+                        bdoInfo {
+                            accountNumber
+                            accountName
+                        }
                     }
             }
        }

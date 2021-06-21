@@ -8,11 +8,12 @@ import { Separator, SwipeProceedButton } from '../Components'
 import CashIn from "./CashIn";
 import CashOut from "./CashOut";
 import SendMoney from "./SendMoney";
-
+import CashOutOtherBank from "./CashOutOtherBank";
 
 const ToktokWalletReviewAndConfirm = ({navigation,route})=> {
 
     const label = route.params.label
+    const event = route.params.event
     const onConfirm = route.params.onConfirm
     const data = route.params.data ? route.params.data : null
     const onSwipeFail = route.params.onSwipeFail ? route.params.onSwipeFail : null
@@ -31,13 +32,15 @@ const ToktokWalletReviewAndConfirm = ({navigation,route})=> {
     }
 
     const RenderDisplay = ()=> {
-        switch(label){
+        switch(event){
             case "Cash In":
                 return <CashIn data={data}/>
             case "Cash Out":
                 return <CashOut data={data}/>
             case "Send Money":
                 return <SendMoney data={data}/>
+            case "Fund Transfer":
+                return <CashOutOtherBank data={data}/>
             default:
                 return
         }

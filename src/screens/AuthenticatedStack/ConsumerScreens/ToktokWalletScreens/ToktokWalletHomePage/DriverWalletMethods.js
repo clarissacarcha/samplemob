@@ -22,7 +22,7 @@ const DriverWalletMethods = ()=> {
 
     const CashOut = ()=> {
         if(checkWallet.checkIfAllowed()){
-            return navigation.navigate("ToktokWalletCashOut")
+            return navigation.navigate("ToktokWalletCashOutHomePage")
         }  
     }
 

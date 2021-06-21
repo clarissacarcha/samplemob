@@ -8,7 +8,6 @@ export const POST_CASH_IN_PAYPANDA_REQUEST = gql`
             refNo
             paypandaTransactionEntryEndpoint
             paypandaReturnUrlEndpoint
-            paypandaReturUrlStagingEndpoint
         }
     }
 `

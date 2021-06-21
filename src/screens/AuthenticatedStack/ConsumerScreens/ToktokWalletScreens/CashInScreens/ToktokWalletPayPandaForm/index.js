@@ -101,6 +101,7 @@ const ToktokWalletPayPandaForm = ({navigation,route})=> {
         // Keyboard.dismiss()
         navigation.navigate("ToktokWalletReviewAndConfirm", {
             label:"Cash In" , 
+            event: "Cash In",
             data: {
                     method: transactionType.name , 
                     amount: amount,

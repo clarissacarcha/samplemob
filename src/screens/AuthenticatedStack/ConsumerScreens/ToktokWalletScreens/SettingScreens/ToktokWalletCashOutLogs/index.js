@@ -24,7 +24,7 @@ const CashOutLog = ({
 })=> {
 
 
-    const ViewTransactionDetails = ({refNo,refDate, transactionAmount , status,provider})=> {
+    const ViewTransactionDetails = ({refNo,refDate, transactionAmount , status,provider,cashOutDisplayInformations})=> {
         setTransactionInfo({
             refNo: refNo,
             refDate: refDate,
@@ -32,6 +32,7 @@ const CashOutLog = ({
             phrase: `Cash out through ${provider}`,
             amount: transactionAmount,
             status: status,
+            cashOutDisplayInformations: cashOutDisplayInformations,
         })
         setTransactionVisible(true)
     }
@@ -59,10 +60,13 @@ const CashOutLog = ({
     const refDate = moment(item.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')
     const transactionAmount = `${tokwaAccount.wallet.currency.code} ${numberFormat(item.amount)}`
     const provider = item.provider.name
+    const cashOutDisplayInformations = item.cashOutDisplayInformations
+
+    // console.log(item.cashOutDisplayInformations)
 
 
     return (
-        <TouchableOpacity onPress={()=>ViewTransactionDetails({refNo,refDate, transactionAmount , status , provider})} style={styles.transaction}>
+        <TouchableOpacity onPress={()=>ViewTransactionDetails({refNo,refDate, transactionAmount , status , provider,cashOutDisplayInformations})} style={styles.transaction}>
             <View style={styles.transactionDetails}>
                 <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Ref # {refNo}</Text>
                 <Text style={{color: "#909294",fontSize: FONT_SIZE.M,marginTop: 0,fontFamily: FONT.REGULAR}}>{status}</Text>
@@ -128,6 +132,8 @@ const ToktokWalletCashOutLogs = ({navigation})=> {
             phrase={transactionInfo.phrase}
             amount={transactionInfo.amount}
             status={transactionInfo.status}
+            cashOutDisplayInformations={transactionInfo.cashOutDisplayInformations}
+            displayNumber=""
         />
         <Separator />
         {
