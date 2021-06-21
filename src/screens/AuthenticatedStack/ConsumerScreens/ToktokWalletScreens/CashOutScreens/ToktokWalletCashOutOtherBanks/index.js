@@ -67,7 +67,7 @@ const MainComponent = ({navigation})=> {
                <Separator/>
                <KeyboardAvoidingView
                         behavior={Platform.OS === "ios" ? "height" : null}
-                        keyboardVerticalOffset={Platform.OS === 'ios' ? screen.height * 0.25 : screen.height * 0.5}
+                        keyboardVerticalOffset={Platform.OS === 'ios' ? screen.height * 0.1 : screen.height * 0.25}
                         style={{ flex: 1 }}
                 >
                <ScrollView showsVerticalScrollIndicator={false} style={styles.transferOptions}>

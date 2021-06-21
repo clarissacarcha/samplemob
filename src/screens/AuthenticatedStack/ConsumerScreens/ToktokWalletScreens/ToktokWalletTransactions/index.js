@@ -1,5 +1,5 @@
 import React, {useState,useEffect} from 'react'
-import {View,Text,Modal,StyleSheet,TouchableOpacity,FlatList,ActivityIndicator} from 'react-native'
+import {View,Text,Modal,StyleSheet,TouchableOpacity,FlatList,ActivityIndicator,RefreshControl} from 'react-native'
 import { COLOR , FONT , FONT_SIZE} from '../../../../../res/variables'
 import moment from 'moment'
 import {onError, onErrorAlert} from '../../../../../util/ErrorUtility'
@@ -35,6 +35,16 @@ const ToktokWalletTransactions = ({navigation,route})=> {
         }
     })
 
+    const Refetch = ()=> {
+        getTransactions({
+            variables: {
+                input: {
+                    pageIndex: pageIndex
+                }
+            }
+        })
+    }
+
     useEffect(()=>{
         if(pageIndex > 0){
             // call pagination here
@@ -54,6 +64,7 @@ const ToktokWalletTransactions = ({navigation,route})=> {
         <View style={styles.container}>        
                 <View style={styles.logs}>
                         <FlatList 
+                            refreshControl={<RefreshControl refreshing={loading} onRefresh={Refetch} colors={[COLOR.YELLOW]} tintColor={COLOR.YELLOW} />}
                             showsVerticalScrollIndicator={false}
                             data={allTransactions}
                             keyExtractor={(item)=>item.id}
