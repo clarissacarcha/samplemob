@@ -74,8 +74,8 @@ const ModalChooseBank = ({visible,setVisible,banks , onPress})=> {
                                            <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>{item.name}</Text>
                                             {/* <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.XS,color: COLOR.DARK}}>
                                                 {item.isInstaPay 
-                                                    ? `Maximum Cash Out limit: PHP 50,000.00`  // instapay
-                                                    : "Maximum Cash Out limit: PHP 200,000.00" // pesonet
+                                                    ? `Maximum cash out limit per transaction: PHP 50,000.00`  // instapay
+                                                    : "Maximum cash out limit per transaction: no limit" // pesonet
                                                 }
                                                 </Text> */}
                                         </View>

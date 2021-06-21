@@ -126,6 +126,7 @@ const ToktokWalletCashInLogs = ({navigation})=> {
             phrase={transactionInfo.phrase}
             amount={transactionInfo.amount}
             status={transactionInfo.status}
+            cashInMobileNumber={tokwaAccount.mobileNumber}
         />
         <Separator />
         <ModalPaginationLoading visible={pageLoading}/>

@@ -27,7 +27,7 @@ const Amount = ({errorAmountMessage , setErrorAmountMessage})=> {
     useEffect(()=>{
        if(bank.id){
         const isInstaPay = bank.isInstaPay
-        setMaxAmount(isInstaPay ? 50000 : 200000)
+        setMaxAmount(isInstaPay ? 50000 : null)
        }
     },[bank])
 
