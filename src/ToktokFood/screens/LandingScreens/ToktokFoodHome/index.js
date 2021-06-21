@@ -6,7 +6,7 @@ import HeaderImageBackground from 'components/HeaderImageBackground';
 import HeaderTitle from 'components/HeaderTitle';
 
 // Hooks
-import {useUserLocation} from 'toktokfood-hooks';
+import {useUserLocation} from 'toktokfood/hooks';
 
 const ToktokFoodHome = () => {
   useUserLocation(); // user location hook

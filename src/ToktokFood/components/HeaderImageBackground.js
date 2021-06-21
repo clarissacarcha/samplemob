@@ -2,7 +2,7 @@ import React from 'react';
 import {ImageBackground, StyleSheet} from 'react-native';
 
 // assets
-import {headerBg} from 'assets/images';
+import {headerBg} from 'toktokfood/assets/images';
 
 const HeaderImageBackground = ({children}) => {
   return (

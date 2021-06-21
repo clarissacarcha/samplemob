@@ -7,26 +7,30 @@ import {useSelector} from 'react-redux';
 const HeaderTitle = () => {
   const {location} = useSelector((state) => state.toktokFood);
 
+  const renderText = () => (
+    <>
+      <Text style={styles.headerLabel}>TokTok PH</Text>
+      <Text numberOfLines={1}>{location.formattedAddress}</Text>
+    </>
+  );
+
+  const renderLoader = () => (
+    <ContentLoader
+      active
+      pRows={2}
+      pWidth={['40%', '70%']}
+      title={false}
+      primaryColor="#FFFFFF"
+      secondaryColor="rgba(256,186,28,0.4)"
+    />
+  );
+
   return (
     <View style={styles.header}>
       <TouchableOpacity style={styles.headerBack}>
         <FIcon5 name="chevron-left" size={15} />
       </TouchableOpacity>
-      <View style={styles.headerTextContainer}>
-        {/* Commented for late discussions */}
-        {/* <ContentLoader
-          // active
-          loading={true}
-          pRows={2}
-          pWidth={['40%', '70%']}
-          title={false}
-          primaryColor="rgba(256,186,28,0.2)"
-          secondaryColor="rgba(256,186,28,0.4)"
-        /> */}
-
-        <Text style={styles.headerLabel}>TokTok PH</Text>
-        <Text>Home</Text>
-      </View>
+      <View style={styles.headerTextContainer}>{!location ? renderLoader() : renderText()}</View>
     </View>
   );
 };
