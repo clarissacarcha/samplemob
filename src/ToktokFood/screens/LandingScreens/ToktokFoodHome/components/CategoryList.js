@@ -28,7 +28,6 @@ const CategoryList = () => {
   ];
 
   const renderItem = ({item}) => {
-    console.log(item);
     return (
       <TouchableOpacity style={styles.listItemContainer}>
         <Image style={styles.img} resizeMode="cover" source={item.image} />
