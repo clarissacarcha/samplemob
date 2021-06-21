@@ -43,7 +43,7 @@ const CategoryList = () => {
         <Text style={styles.endText}>See all</Text>
       </View>
       <View style={styles.listContainer}>
-        <FlatList scrollEnabled={false} horizontal data={data} renderItem={renderItem} />
+        <FlatList horizontal data={data} renderItem={renderItem} />
       </View>
     </View>
   );
