@@ -49,17 +49,11 @@ const ToktokMallCategoriesStackScreen = () => (
   <ToktokMallCategoriesStack.Navigator initialRouteName="ToktokMallCategoriesList">
     <ToktokMallCategoriesStack.Screen
       name="ToktokMallCategoriesList"
-      component={ToktokMallCategoriesList}
-      options={{
-        headerShown: false,
-      }}
+      component={ToktokMallCategoriesList}      
     />
     <ToktokMallCategoriesStack.Screen
       name="ToktokMallCategoriesSearch"
       component={ToktokMallCategoriesSearch}
-      options={{
-        headerShown: false,
-      }}
     />
   </ToktokMallCategoriesStack.Navigator>
 );
@@ -174,6 +168,7 @@ const ToktokMallLanding = () => (
       name="toktokmall" 
       component={ToktokMallHomeStackScreens} 
       options={{
+        tabBarBadge: "99+",
         tabBarIcon: ({color}) => <FoIcon name="shopping-bag-1" color={COLOR.YELLOW} size={24} />
       }}
     />
