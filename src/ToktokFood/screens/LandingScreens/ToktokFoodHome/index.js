@@ -4,7 +4,7 @@ import {View, StyleSheet} from 'react-native';
 // Components
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
-import {CategoryList} from './components';
+import {CategoryList, RestaurantList} from './components';
 
 // Hooks
 import {useUserLocation} from 'toktokfood/hooks';
@@ -19,6 +19,8 @@ const ToktokFoodHome = () => {
       </HeaderImageBackground>
 
       <CategoryList />
+
+      <RestaurantList />
     </View>
   );
 };
