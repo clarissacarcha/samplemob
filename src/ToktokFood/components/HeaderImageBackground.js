@@ -21,5 +21,6 @@ const styles = StyleSheet.create({
   },
   walletBackGroundImage: {
     height: 150,
+    zIndex: 1,
   },
 });
