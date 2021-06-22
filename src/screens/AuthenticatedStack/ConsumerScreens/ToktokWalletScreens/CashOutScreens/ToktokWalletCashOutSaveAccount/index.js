@@ -109,7 +109,9 @@ const ToktokWalletCashOutSaveAccount = ({navigation,route})=> {
                                     onChangeText={(value)=>setNickName(value)}
                                     placeholder="Enter nickname here"
                                     returnKeyType="done"
-                                />
+                                    maxLength={50}
+                            />
+                            <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{nickName.length}/50</Text>
                         </View>
                     </View>
 
