@@ -56,7 +56,7 @@ const StickyView = () => {
         alwaysShowTitle={false}
         headerMinHeight={moderateScale(65)}
         headerMaxHeight={moderateScale(270)}
-        headerTitleStyle={{zIndex: offset <= 240 ? 0 : -1}}
+        headerTitleStyle={{zIndex: offset <= 245 ? 0 : -1}}
         extraScrollHeight={20}
         title={renderTitle()}
         backgroundColor="transparent"

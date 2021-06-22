@@ -1,15 +1,17 @@
 import React, {useState} from 'react';
 import {FlatList, Image, View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import {Rating} from 'react-native-ratings';
+import {useNavigation} from '@react-navigation/native';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-// Components
 // import HeaderTabs from 'toktokfood/components/HeaderTabs';
 
 // Assets
 import {image1, image2, image3, image4} from 'toktokfood/assets/images';
 
 const RestaurantList = () => {
+  const navigation = useNavigation();
+
   const tabs = [
     {
       id: 1,
@@ -99,10 +101,12 @@ const RestaurantList = () => {
     },
   ];
 
-  // const [activeTab, setActiveTab] = useState(tabs[0]);
+  const onRestaurantNavigate = () => {
+    navigation.navigate('ToktokFoodRestaurantOverview');
+  };
 
   const renderItem = ({item}) => (
-    <TouchableOpacity style={styles.restaurantList}>
+    <TouchableOpacity onPress={onRestaurantNavigate} style={styles.restaurantList}>
       <Image style={styles.img} source={item.image} resizeMode="contain" />
       <View style={styles.restaurantInfo}>
         <Text style={styles.restaurantName}>{item.name}</Text>
