@@ -50,12 +50,6 @@ const GridAd = ({ad}) => {
         <Text style={{fontFamily: FONT.BOLD}} numberOfLines={2}>
           {ad.title}
         </Text>
-        {/* <View style={styles.iconDateRow}>
-          <VectorIcon iconSet={ICON_SET.MaterialCommunity} name="calendar-blank-outline" color={COLOR.DARK} size={13} />
-          <Text style={styles.date} numberOfLines={1}>
-            {ad.startDuration}
-          </Text>
-        </View> */}
       </View>
     </View>
   );
