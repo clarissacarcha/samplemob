@@ -20,6 +20,6 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   walletBackGroundImage: {
-    height: 178,
+    height: 150,
   },
 });
