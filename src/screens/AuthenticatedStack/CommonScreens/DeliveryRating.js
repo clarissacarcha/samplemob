@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
 import {View, Text, TextInput, StyleSheet, TouchableHighlight, Alert} from 'react-native';
 import {useMutation} from '@apollo/react-hooks';
@@ -9,15 +10,19 @@ import FAIcon from 'react-native-vector-icons/FontAwesome';
 import {POST_CONSUMER_DELIVERY_RATING, POST_DRIVER_DELIVERY_RATING} from '../../../graphql';
 import {onError} from '../../../util/ErrorUtility';
 
+const StarButton = ({onPress, color, isLast}) => {
+  return <FAIcon onPress={onPress} name="star" size={35} style={{marginRight: isLast ? 0 : 16}} color={color} />;
+};
+
 const StarRating = ({onChange}) => {
   const [rating, setRating] = useState(0);
 
-  const onStarPress = index => {
+  const onStarPress = (index) => {
     setRating(index);
     onChange(index);
   };
 
-  const starColor = index => {
+  const starColor = (index) => {
     if (index <= rating) {
       return COLOR;
     } else {
@@ -27,11 +32,11 @@ const StarRating = ({onChange}) => {
 
   return (
     <View style={{justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
-      <FAIcon onPress={() => onStarPress(1)} name="star" size={35} style={{marginRight: 15}} color={starColor(1)} />
-      <FAIcon onPress={() => onStarPress(2)} name="star" size={35} style={{marginRight: 15}} color={starColor(2)} />
-      <FAIcon onPress={() => onStarPress(3)} name="star" size={35} style={{marginRight: 15}} color={starColor(3)} />
-      <FAIcon onPress={() => onStarPress(4)} name="star" size={35} style={{marginRight: 15}} color={starColor(4)} />
-      <FAIcon onPress={() => onStarPress(5)} name="star" size={35} color={starColor(5)} />
+      <StarButton onPress={() => onStarPress(1)} color={starColor(1)} />
+      <StarButton onPress={() => onStarPress(2)} color={starColor(2)} />
+      <StarButton onPress={() => onStarPress(3)} color={starColor(3)} />
+      <StarButton onPress={() => onStarPress(4)} color={starColor(4)} />
+      <StarButton onPress={() => onStarPress(5)} color={starColor(5)} />
     </View>
   );
 };
@@ -129,7 +134,7 @@ const RateDelivery = ({navigation, route}) => {
           </View>
         </View>
         <View style={{padding: 20}}>
-          <StarRating onChange={value => setRating(value)} />
+          <StarRating onChange={(value) => setRating(value)} />
         </View>
       </View>
 
@@ -154,7 +159,7 @@ const RateDelivery = ({navigation, route}) => {
         </View>
         <TextInput
           value={feedback}
-          onChangeText={value => setFeedback(value)}
+          onChangeText={(value) => setFeedback(value)}
           style={{margin: 20}}
           placeholder={`Share your ${APP_FLAVOR === 'C' ? 'POGI ' : ''}experience with this delivery.`}
           placeholderTextColor={LIGHT}
