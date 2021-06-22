@@ -52,7 +52,7 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
               <Text style={{fontFamily: FONT.BOLD, fontSize: 14}}>My Orders</Text>
             </View>
             <View style={{flexDirection: 'row', paddingVertical: 10}}>
-              <TouchableOpacity onPress={() => navigation.navigate("ToktokMallMyOrders", {tab: 1})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
+              <TouchableOpacity onPress={() => navigation.navigate("ToktokMallMyOrders", {tab: 0})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
                 <CustomIcon.FeIcon name="truck" size={30} color={COLOR.ORANGE} />
                 <Text style={{fontSize: 12}}>To Ship</Text>
               </TouchableOpacity>
@@ -60,11 +60,11 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
                 <CustomIcon.FeIcon name="package" size={30} color={COLOR.ORANGE} />
                 <Text style={{fontSize: 12}}>To Recieve</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => navigation.navigate("ToktokMallMyOrders", {tab: 1})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
+              <TouchableOpacity onPress={() => navigation.navigate("ToktokMallMyOrders", {tab: 2})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
                 <CustomIcon.MCIcon name="comment-check-outline" size={30} color={COLOR.ORANGE} />
                 <Text style={{fontSize: 12}}>Completed</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => navigation.navigate("ToktokMallMyOrders", {tab: 1})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
+              <TouchableOpacity onPress={() => navigation.navigate("ToktokMallMyOrders", {tab: 3})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
                 <CustomIcon.MCIcon name="comment-remove-outline" size={30} color={COLOR.ORANGE} />
                 <Text style={{fontSize: 12}}>Cancelled</Text>
               </TouchableOpacity>

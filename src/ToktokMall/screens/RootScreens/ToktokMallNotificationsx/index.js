@@ -1,15 +1,16 @@
 import React from 'react'
 import {View,Text,StyleSheet,Platform,Dimensions,StatusBar,Image, TouchableOpacity} from 'react-native'
-import { HeaderBack, HeaderTitle, HeaderRight, Card } from '../../../../../Components';
-import CustomIcon from '../../../../../Components/Icons';
-import { AlertOverlay} from '../../../../../../components';
-import { COLOR, FONT, FONT_SIZE } from '../../../../../../res/variables';
+import FIcon5 from 'react-native-vector-icons/FontAwesome5'
+import RNFS from 'react-native-fs'
+import { HeaderBack, HeaderTitle, HeaderRight } from '../../../Components'
+import { AlertOverlay} from '../../../../components';
+import { COLOR, FONT, FONT_SIZE } from '../../../../res/variables';
 
-export const ToktokMallMyWishlist = ({navigation})=> {
+export const ToktokMallNotificationsx = ({navigation})=> {
 
     navigation.setOptions({
         headerLeft: () => <HeaderBack />,
-        headerTitle: () => <HeaderTitle label={['Favorites', '']} />,
+        headerTitle: () => <HeaderTitle label={['Notifications', '']} />,
         headerRight: () => <HeaderRight hidden={true} />
     });
 
@@ -17,7 +18,7 @@ export const ToktokMallMyWishlist = ({navigation})=> {
         <>
         <View style={styles.container}>
             <View style={{flex: 1}}>    
-
+                
             </View>
         </View>
         </>

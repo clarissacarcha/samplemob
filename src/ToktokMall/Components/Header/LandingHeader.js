@@ -29,15 +29,17 @@ export const LandingHeader = (props) => {
               <View style={{flex: 0, alignItems: 'center', paddingHorizontal: 15, paddingTop: 8}}>
                 <FIcon5 name="chevron-left" color={COLOR.ORANGE} size={15}/>
               </View>
-              <View style={{flex: 8, alignItems: 'center', paddingHorizontal: 15, paddingTop: 8}}>
-                <Image source={require("../../../assets/toktok/images/ToktokHeader.png")} style={{width: '80%', height: 35, resizeMode: 'cover'}} />
+              <View style={{flex: 2}}></View>
+              <View style={{flex: 8, alignItems: 'center', paddingTop: 8}}>
+                <Image source={require("../../../assets/toktokmall-assets/images/toktokmall-h.png")} style={{width: '100%', height: 35, resizeMode: 'stretch'}} />
               </View>
+              <View style={{flex: 2}}></View>
               <View style={{flex: 0, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 15, paddingTop: 8}}>
                 <View style={{flexDirection: 'row', paddingRight: 8}}>
-                  <FIcon5 name="bell" color={COLOR.ORANGE} size={22}/>
+                  {/* <FIcon5 name="bell" color={COLOR.ORANGE} size={22}/>
                   <View style={{ position: 'absolute', right: 0, top: 3, backgroundColor: COLOR.YELLOW, borderRadius: 9, width: 18, height: 18, justifyContent: 'center', alignItems: 'center' }}>
                     <Text style={{ color: 'white', fontSize: 11}}>{2}</Text>
-                  </View>
+                  </View> */}
                 </View>
               </View>
             </View>

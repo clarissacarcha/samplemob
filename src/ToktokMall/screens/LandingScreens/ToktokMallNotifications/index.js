@@ -9,7 +9,7 @@ import { COLOR, FONT, FONT_SIZE } from '../../../../res/variables';
 export const ToktokMallNotifications = ({navigation})=> {
 
     navigation.setOptions({
-        headerLeft: () => <HeaderBack />,
+        headerLeft: () => <HeaderBack hidden={true} />,
         headerTitle: () => <HeaderTitle label={['Notifications', '']} />,
         headerRight: () => <HeaderRight hidden={true} />
     });

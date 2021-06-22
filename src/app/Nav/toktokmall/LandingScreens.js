@@ -24,8 +24,11 @@ import {
   ToktokMallStore, 
 
   //Messages
-  ToktokMallMessageHome,
-  ToktokMallMessageConvo,
+  // ToktokMallMessageHome,
+  // ToktokMallMessageConvo,
+
+  //Notifications
+  ToktokMallNotifications,
 
   //My Cart
   ToktokMallMyCart,
@@ -42,10 +45,20 @@ import {
 
 const ToktokMallLandingBottomTab = createBottomTabNavigator();
 
+const ToktokMallCartStack = createStackNavigator();
 const ToktokMallCategoriesStack = createStackNavigator();
 const ToktokMallHomeStack = createStackNavigator();
-const ToktokMallMessagesStack = createStackNavigator();
+const ToktokMallNotificationStack = createStackNavigator();
 const ToktokMallMyProfileStack = createStackNavigator();
+
+const ToktokMallCartStackScreens = () => (
+  <ToktokMallCartStack.Navigator initialRouteName="ToktokMallNotifications">
+    <ToktokMallCartStack.Screen
+      name="ToktokMallMyCart"
+      component={ToktokMallMyCart}
+    />
+  </ToktokMallCartStack.Navigator>
+);
 
 const ToktokMallCategoriesStackScreen = () => (
   <ToktokMallCategoriesStack.Navigator initialRouteName="ToktokMallCategoriesList">
@@ -79,17 +92,13 @@ const ToktokMallHomeStackScreens = () => (
   </ToktokMallHomeStack.Navigator>
 );
 
-const ToktokMallMessagesStackScreens = () => (
-  <ToktokMallMessagesStack.Navigator initialRouteName="ToktokMallMessageHome">
-    <ToktokMallMessagesStack.Screen
-      name="ToktokMallMessageHome"
-      component={ToktokMallMessageHome}
+const ToktokMallNotificationStackScreens = () => (
+  <ToktokMallNotificationStack.Navigator initialRouteName="ToktokMallNotifications">
+    <ToktokMallNotificationStack.Screen
+      name="ToktokMallNotifications"
+      component={ToktokMallNotifications}
     />
-    <ToktokMallMessagesStack.Screen
-      name="ToktokMallMessageConvo"
-      component={ToktokMallMessageConvo}
-    />
-  </ToktokMallMessagesStack.Navigator>
+  </ToktokMallNotificationStack.Navigator>
 );
 
 const ToktokMallMyProfileStackScreens = () => (
@@ -114,10 +123,7 @@ const ToktokMallMyProfileStackScreens = () => (
     />
     <ToktokMallMyProfileStack.Screen
       name="ToktokMallMyVouchers"
-      component={ToktokMallMyVouchers}
-      options={{
-        headerShown: false,
-      }}
+      component={ToktokMallMyVouchers}      
     />
     <ToktokMallMyProfileStack.Screen
       name="ToktokMallHelp"
@@ -126,9 +132,6 @@ const ToktokMallMyProfileStackScreens = () => (
     <ToktokMallMyProfileStack.Screen
       name="ToktokMallMyWishlist"
       component={ToktokMallMyWishlist}
-      options={{
-        headerShown: false,
-      }}
     />    
   </ToktokMallMyProfileStack.Navigator>
 );
@@ -136,25 +139,25 @@ const ToktokMallMyProfileStackScreens = () => (
 const cartIconOutline = require("../../../assets/toktokmall-assets/icons/cart-outline.png")
 const categoriesIconOutline = require("../../../assets/toktokmall-assets/icons/categories-outline.png")
 const homeIconOutline = require("../../../assets/toktokmall-assets/icons/home-outline.png")
-const messagesIconOutline = require("../../../assets/toktokmall-assets/icons/messages-outline.png")
+const notifIconOutline = require("../../../assets/toktokmall-assets/icons/bell-outline.png")
 const userIconOutline = require("../../../assets/toktokmall-assets/icons/me-outline.png")
 
 const homeIconFill = require("../../../assets/toktokmall-assets/icons/home-fill.png")
 const cartIconFill = require("../../../assets/toktokmall-assets/icons/cart-fill.png")
 const categoriesIconFill = require("../../../assets/toktokmall-assets/icons/categories-fill.png")
-const messageIconFill = require("../../../assets/toktokmall-assets/icons/messages-fill.png")
+const notifIconFill = require("../../../assets/toktokmall-assets/icons/bell-fill.png")
 const userIconFill = require("../../../assets/toktokmall-assets/icons/me-fill.png")
 
 const BottomTabImageIconStyle = {
-  width: 20, height: 16, resizeMode: 'stretch'
+  width: 18, height: 20, resizeMode: 'stretch'
 }
 
 const TabBarIcon = ({source}) => {
   return (
     <>
       <Image source={source} style={BottomTabImageIconStyle} />
-      <View style={{ position: 'absolute', right: 10, top: -1, backgroundColor: COLOR.YELLOW, borderRadius: 9, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 2 }}>
-        <Text style={{ color: 'white', fontSize: 9}}>99+</Text>
+      <View style={{ position: 'absolute', right: 13, top: -2, backgroundColor: COLOR.YELLOW, borderRadius: 9, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 2 }}>
+        <Text style={{ color: 'white', fontSize: 10}}>99+</Text>
       </View>
     </>
   )
@@ -172,21 +175,20 @@ const ToktokMallLanding = () => (
       labelStyle: {
         fontFamily: 'Rubik-Regular',
         textTransform: 'none',
-        fontSize: 9,
+        fontSize: 10,
       },
       tabStyle: {
-        padding: 6
+        paddingVertical: 12
+      },
+      style: {
+        height: 65
       }
     }}
   >
     <ToktokMallLandingBottomTab.Screen 
       name="My Cart" 
-      component={ToktokMallMyCart} 
+      component={ToktokMallCartStackScreens} 
       options={{
-        tabBarBadge: 3,
-        tabBarBadgeStyle: {
-          backgroundColor: 'red'
-        },
         // tabBarIcon: ({color}) => <AIcon name="shoppingcart" color={COLOR.YELLOW} size={24} /> 
         // tabBarIcon: ({focused}) => focused ? <Image source={cartIconFill} style={BottomTabImageIconStyle} /> : <Image source={cartIconOutline} style={BottomTabImageIconStyle} />
         tabBarIcon: ({focused}) => focused ? <TabBarIcon source={cartIconFill} /> : <TabBarIcon source={cartIconOutline} />
@@ -210,12 +212,12 @@ const ToktokMallLanding = () => (
       }}
     />
     <ToktokMallLandingBottomTab.Screen 
-      name="Messages" 
-      component={ToktokMallMessagesStackScreens} 
+      name="Notifications" 
+      component={ToktokMallNotificationStackScreens} 
       options={{
         // tabBarIcon: ({color}) => <AIcon name="mail" color={COLOR.YELLOW} size={24} />
         // tabBarIcon: ({focused}) => focused ? <Image source={messageIconFill} style={BottomTabImageIconStyle} /> : <Image source={messagesIconOutline} style={BottomTabImageIconStyle} />
-        tabBarIcon: ({focused}) => focused ? <TabBarIcon source={messageIconFill} /> : <TabBarIcon source={messagesIconOutline} />
+        tabBarIcon: ({focused}) => focused ? <TabBarIcon source={notifIconFill} /> : <TabBarIcon source={notifIconOutline} />
       }}
     />
     <ToktokMallLandingBottomTab.Screen 
