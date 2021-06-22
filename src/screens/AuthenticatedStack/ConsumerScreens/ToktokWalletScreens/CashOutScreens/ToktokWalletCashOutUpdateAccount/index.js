@@ -110,7 +110,7 @@ const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
                                     style={styles.input}
                                     value={nickName}
                                     onChangeText={(value)=>setNickName(value)}
-                                    placeholder="Enter nickname here"
+                                    placeholder="Enter alias here"
                                     returnKeyType="done"
                                     maxLength={50}
                             />
