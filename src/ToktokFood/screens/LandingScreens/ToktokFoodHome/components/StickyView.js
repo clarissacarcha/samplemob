@@ -33,7 +33,7 @@ const tabs = [
 const StickyView = () => {
   const [offset, setOffset] = useState(0);
   const [activeTab, setActiveTab] = useState(tabs[0]);
-  const headerMaxHeight = Platform.OS === 'ios' ? moderateScale(270) : scale(300);
+  const headerMaxHeight = Platform.OS === 'ios' ? moderateScale(270) : scale(320);
   // const headerMinHeight = Platform.OS === 'ios' ? moderateScale(70) : scale(65);
 
   const renderNavBar = () => (

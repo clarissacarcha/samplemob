@@ -119,19 +119,9 @@ const RestaurantList = () => {
           <MCIcon name="clock-outline" color={'#868686'} size={13} />
           <Text style={styles.branches}>{item.time}</Text>
 
-          {Platform.OS === 'ios' && (
-            <View style={styles.distanceWrapper}>
-              <MCIcon name="map-marker-outline" color={'#868686'} size={13} />
-              <Text style={styles.branches}>{item.distance}</Text>
-            </View>
-          )}
+          <MCIcon name="map-marker-outline" color={'#868686'} size={13} />
+          <Text style={styles.branches}>{item.distance}</Text>
         </View>
-        {Platform.OS === 'android' && (
-          <View style={styles.distanceWrapper}>
-            <MCIcon name="map-marker-outline" color={'#868686'} size={13} />
-            <Text style={styles.branches}>{item.distance}</Text>
-          </View>
-        )}
       </View>
     </TouchableOpacity>
   );
@@ -155,8 +145,8 @@ const styles = StyleSheet.create({
   },
   branches: {
     fontWeight: '400',
-    fontSize: 10,
     paddingHorizontal: 3,
+    fontSize: Platform.OS === 'android' ? 9 : 10 ,
   },
   container: {
     flex: 1,
@@ -191,10 +181,5 @@ const styles = StyleSheet.create({
   restaurantName: {
     fontSize: 12,
     fontWeight: '500',
-  },
-  distanceWrapper: {
-    display: 'flex',
-    flexDirection: 'row',
-    marginTop: Platform.OS === 'android' ? 5 : 0,
   },
 });
