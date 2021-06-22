@@ -7,12 +7,12 @@ import {Image, View, StyleSheet, Text, TouchableOpacity, Platform} from 'react-n
 import {FONT, FONT_SIZE, COLOR} from '../../res/variables';
 import {markerIcon} from '../assets/images';
 
-const HeaderTitle = () => {
+const HeaderTitle = ({title = 'TokTok PH'}) => {
   const {location} = useSelector((state) => state.toktokFood);
 
   const renderText = () => (
     <View style={styles.addressContainer}>
-      <Text style={styles.headerLabel}>TokTok PH</Text>
+      <Text style={styles.headerLabel}>{title}</Text>
       <View style={styles.textAddressContainer}>
         <Image style={styles.addressMarkerIcon} source={markerIcon} />
         <Text style={styles.textAddress} numberOfLines={2}>
@@ -67,10 +67,9 @@ const styles = StyleSheet.create({
     paddingRight: 10,
   },
   textAddressContainer: {
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'row',
     alignItems: 'center',
+    maxWidth: '90%',
+    flexDirection: 'row',
   },
   textAddress: {
     color: COLOR.BLACK,
