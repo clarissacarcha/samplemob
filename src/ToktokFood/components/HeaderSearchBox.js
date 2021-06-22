@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, TextInput, Image} from 'react-native';
+import {View, StyleSheet, TextInput, Image, Platform} from 'react-native';
 
 import {FONT, FONT_SIZE, COLOR} from '../../res/variables';
 import {searchIcon} from '../assets/images';
