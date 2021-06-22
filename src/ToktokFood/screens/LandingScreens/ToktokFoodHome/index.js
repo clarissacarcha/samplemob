@@ -5,7 +5,7 @@ import {View, StyleSheet} from 'react-native';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
 import HeaderSearchBox from 'toktokfood/components/HeaderSearchBox';
-import {CategoryList, RestaurantList} from './components';
+import {StickyView} from './components';
 
 // Hooks
 import {useUserLocation} from 'toktokfood/hooks';
@@ -19,9 +19,11 @@ const ToktokFoodHome = () => {
         <HeaderTitle />
         <HeaderSearchBox />
       </HeaderImageBackground>
-      <CategoryList />
 
-      <RestaurantList />
+      <StickyView />
+      {/* <CategoryList /> */}
+
+      {/* <RestaurantList /> */}
     </View>
   );
 };

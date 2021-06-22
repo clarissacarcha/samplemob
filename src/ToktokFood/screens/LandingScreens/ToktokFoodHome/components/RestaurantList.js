@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {FlatList, Image, View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 
 // Components
-import HeaderTabs from 'toktokfood/components/HeaderTabs';
+// import HeaderTabs from 'toktokfood/components/HeaderTabs';
 
 // Assets
 import {image1, image2, image3, image4} from 'toktokfood/assets/images';
@@ -33,7 +33,61 @@ const RestaurantList = () => {
       image: image1,
     },
     {
-      id: 1,
+      id: 2,
+      name: 'Yellow Cab (32nd Street)',
+      ratings: 5,
+      totalBranches: 4,
+      time: '40 mins',
+      distance: '2.1km',
+      image: image2,
+    },
+    {
+      id: 3,
+      name: 'Starbucks (32nd Street)',
+      ratings: 5,
+      totalBranches: 4,
+      time: '40 mins',
+      distance: '1km',
+      image: image3,
+    },
+    {
+      id: 4,
+      name: 'Yellow Cab (32nd Street)',
+      ratings: 5,
+      totalBranches: 4,
+      time: '40 mins',
+      distance: '2.1km',
+      image: image4,
+    },
+    {
+      id: 5,
+      name: 'Starbucks (32nd Street)',
+      ratings: 5,
+      totalBranches: 4,
+      time: '40 mins',
+      distance: '1km',
+      image: image1,
+    },
+    {
+      id: 6,
+      name: 'Yellow Cab (32nd Street)',
+      ratings: 5,
+      totalBranches: 4,
+      time: '40 mins',
+      distance: '2.1km',
+      image: image2,
+    },
+    {
+      id: 7,
+      name: 'Starbucks (32nd Street)',
+      ratings: 5,
+      totalBranches: 4,
+      time: '40 mins',
+      distance: '1km',
+      image: image1,
+    },
+    {
+      id: 8,
       name: 'Yellow Cab (32nd Street)',
       ratings: 5,
       totalBranches: 4,
@@ -56,10 +110,10 @@ const RestaurantList = () => {
 
   return (
     <View style={styles.container}>
-      <HeaderTabs activeTab={activeTab} setActiveTab={setActiveTab} tabs={tabs} />
+      {/* <HeaderTabs activeTab={activeTab} setActiveTab={setActiveTab} tabs={tabs} /> */}
 
       <View style={styles.listContainer}>
-        <FlatList data={restaurants} numColumns={2} renderItem={renderItem} />
+        <FlatList data={restaurants} numColumns={2} renderItem={renderItem} columnWrapperStyle={styles.columnStyle} />
       </View>
     </View>
   );
@@ -73,11 +127,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 10,
   },
+  columnStyle: {
+    justifyContent: 'space-between',
+  },
   img: {
     width: 170,
     height: 150,
   },
   listContainer: {
+    alignItems: 'center',
     flex: 1,
     marginTop: 10,
   },
@@ -86,7 +144,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 3,
   },
   restaurantList: {
-    marginHorizontal: 10,
+    alignItems: 'center',
+    width: '50%',
   },
   restaurantName: {
     fontSize: 12,
