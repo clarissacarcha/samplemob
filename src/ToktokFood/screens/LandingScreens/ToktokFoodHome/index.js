@@ -21,9 +21,6 @@ const ToktokFoodHome = () => {
       </HeaderImageBackground>
 
       <StickyView />
-      {/* <CategoryList /> */}
-
-      {/* <RestaurantList /> */}
     </View>
   );
 };

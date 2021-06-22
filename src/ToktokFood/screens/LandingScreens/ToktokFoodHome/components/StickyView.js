@@ -40,9 +40,7 @@ const StickyView = () => {
     <>
       <CategoryList />
       <CategoryList />
-      <View style={styles.headerWrapper}>
-        <HeaderTabs activeTab={activeTab} setActiveTab={setActiveTab} tabs={tabs} />
-      </View>
+      {renderNavBar()}
     </>
   );
 
@@ -63,11 +61,9 @@ const StickyView = () => {
         renderNavBar={renderNavBar}
         containerStyle={styles.container}
         contentContainerStyle={styles.contentContainer}
-        // scrollViewStyle={{zIndex: offset > 250 ? 2 : 0}}
         scrollViewProps={{
           onScroll: (event) => setOffset(event.nativeEvent.contentOffset.y),
           onScrollEndDrag: (event) => setOffset(event.nativeEvent.contentOffset.y),
-          // scrollEnabled: offset >= 250 ? false : true,
         }}
       />
     </>
@@ -85,7 +81,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
     paddingBottom: 30,
   },
-  headerWrapper: {paddingHorizontal: 20, width: '100%'},
+  headerWrapper: {paddingHorizontal: 15, width: '100%'},
   navbarWrapper: {
     marginTop: 10,
   },
