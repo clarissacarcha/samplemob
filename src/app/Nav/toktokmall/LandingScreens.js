@@ -35,7 +35,8 @@ import {
   ToktokMallMyFollowing,
   ToktokMallMyVouchers,
   ToktokMallMyOrders,
-  ToktokMallMyProfileHome
+  ToktokMallMyProfileHome,
+  ToktokMallMyWishlist
 
  } from '../../../ToktokMall/screens';
 
@@ -92,7 +93,7 @@ const ToktokMallMessagesStackScreens = () => (
 );
 
 const ToktokMallMyProfileStackScreens = () => (
-  <ToktokMallMyProfileStack.Navigator initialRouteName="ToktokMallMyProfileHome" headerMode="none">
+  <ToktokMallMyProfileStack.Navigator initialRouteName="ToktokMallMyProfileHome">
     <ToktokMallMyProfileStack.Screen
       name="ToktokMallMyProfileHome"
       component={ToktokMallMyProfileHome}
@@ -110,9 +111,6 @@ const ToktokMallMyProfileStackScreens = () => (
     <ToktokMallMyProfileStack.Screen
       name="ToktokMallMyFollowing"
       component={ToktokMallMyFollowing}
-      options={{
-        headerShown: false,
-      }}
     />
     <ToktokMallMyProfileStack.Screen
       name="ToktokMallMyVouchers"
@@ -124,6 +122,10 @@ const ToktokMallMyProfileStackScreens = () => (
     <ToktokMallMyProfileStack.Screen
       name="ToktokMallHelp"
       component={ToktokMallHelp}
+    />
+    <ToktokMallMyProfileStack.Screen
+      name="ToktokMallMyWishlist"
+      component={ToktokMallMyWishlist}
       options={{
         headerShown: false,
       }}
@@ -173,7 +175,7 @@ const ToktokMallLanding = () => (
         fontSize: 9,
       },
       tabStyle: {
-        padding: 4
+        padding: 6
       }
     }}
   >
