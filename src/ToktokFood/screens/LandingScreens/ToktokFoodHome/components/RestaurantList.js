@@ -1,5 +1,7 @@
 import React, {useState} from 'react';
 import {FlatList, Image, View, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {Rating} from 'react-native-ratings';
+import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 // Components
 // import HeaderTabs from 'toktokfood/components/HeaderTabs';
@@ -89,7 +91,7 @@ const RestaurantList = () => {
     {
       id: 8,
       name: 'Yellow Cab (32nd Street)',
-      ratings: 5,
+      ratings: 4.5,
       totalBranches: 4,
       time: '40 mins',
       distance: '2.1km',
@@ -97,13 +99,25 @@ const RestaurantList = () => {
     },
   ];
 
-  const [activeTab, setActiveTab] = useState(tabs[0]);
+  // const [activeTab, setActiveTab] = useState(tabs[0]);
 
   const renderItem = ({item}) => (
     <TouchableOpacity style={styles.restaurantList}>
       <Image style={styles.img} source={item.image} resizeMode="contain" />
       <View style={styles.restaurantInfo}>
         <Text style={styles.restaurantName}>{item.name}</Text>
+        <Rating startingValue={item.ratings} tintColor={'whitesmoke'} imageSize={13} readonly style={styles.ratings} />
+
+        <View style={styles.branchInfo}>
+          <MCIcon name="store" color={'#868686'} size={13} />
+          <Text style={styles.branches}>{item.totalBranches} branches</Text>
+
+          <MCIcon name="clock-outline" color={'#868686'} size={13} />
+          <Text style={styles.branches}>{item.time}</Text>
+
+          <MCIcon name="map-marker-outline" color={'#868686'} size={13} />
+          <Text style={styles.branches}>{item.distance}</Text>
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -122,6 +136,14 @@ const RestaurantList = () => {
 export default RestaurantList;
 
 const styles = StyleSheet.create({
+  branchInfo: {
+    flexDirection: 'row',
+  },
+  branches: {
+    fontWeight: '400',
+    fontSize: 10,
+    paddingHorizontal: 3,
+  },
   container: {
     flex: 1,
     paddingHorizontal: 15,
@@ -131,6 +153,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   img: {
+    alignSelf: 'center',
     width: 170,
     height: 150,
   },
@@ -139,12 +162,16 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 10,
   },
+  ratings: {
+    alignItems: 'flex-start',
+    paddingVertical: 4,
+  },
   restaurantInfo: {
-    marginTop: 5,
-    marginHorizontal: 3,
+    paddingVertical: 10,
+    paddingHorizontal: 13,
   },
   restaurantList: {
-    alignItems: 'center',
+    // alignItems: 'center',
     width: '50%',
   },
   restaurantName: {
