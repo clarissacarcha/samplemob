@@ -48,11 +48,15 @@ const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
 
     const saveAccount = ()=> {
         if(nickName == ""){
-            return Alert.alert("","Nickname is required.")
+            return Alert.alert("","Alias is required.")
         }
 
         if(accountNumber == ""){
             return Alert.alert("","Account Number is required.")
+        }
+
+        if(address == ""){
+            return Alert.alert("","Account Address is required.")
         }
 
         patchCashOutBankAccount({
