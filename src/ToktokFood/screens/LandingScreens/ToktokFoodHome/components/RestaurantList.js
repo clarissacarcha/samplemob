@@ -101,12 +101,12 @@ const RestaurantList = () => {
     },
   ];
 
-  const onRestaurantNavigate = () => {
-    navigation.navigate('ToktokFoodRestaurantOverview');
+  const onRestaurantNavigate = (item) => {
+    navigation.navigate('ToktokFoodRestaurantOverview', {item});
   };
 
   const renderItem = ({item}) => (
-    <TouchableOpacity onPress={onRestaurantNavigate} style={styles.restaurantList}>
+    <TouchableOpacity onPress={() => onRestaurantNavigate(item)} style={styles.restaurantList}>
       <Image style={styles.img} source={item.image} resizeMode="contain" />
       <View style={styles.restaurantInfo}>
         <Text style={styles.restaurantName}>{item.name}</Text>

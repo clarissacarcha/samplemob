@@ -7,7 +7,7 @@ import {CategoryList, RestaurantList} from './index';
 import HeaderTabs from 'toktokfood/components/HeaderTabs';
 
 // Utils
-import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
+import {moderateScale, scale, verticalScale} from 'toktokfood/helper/scale';
 
 // const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 // const IS_IPHONE_X = SCREEN_HEIGHT === 812 || SCREEN_HEIGHT === 896;
@@ -33,6 +33,8 @@ const tabs = [
 const StickyView = () => {
   const [offset, setOffset] = useState(0);
   const [activeTab, setActiveTab] = useState(tabs[0]);
+  const headerMaxHeight = Platform.OS === 'ios' ? moderateScale(270) : scale(300);
+  // const headerMinHeight = Platform.OS === 'ios' ? moderateScale(70) : scale(65);
 
   const renderNavBar = () => (
     <View style={[styles.headerWrapper, styles.navbarWrapper]}>
@@ -55,7 +57,7 @@ const StickyView = () => {
         alwaysShowNavBar={false}
         alwaysShowTitle={false}
         headerMinHeight={moderateScale(65)}
-        headerMaxHeight={moderateScale(270)}
+        headerMaxHeight={headerMaxHeight}
         headerTitleStyle={{zIndex: offset <= 245 ? 0 : -1}}
         extraScrollHeight={20}
         title={renderTitle()}
@@ -65,10 +67,10 @@ const StickyView = () => {
         renderNavBar={renderNavBar}
         containerStyle={styles.container}
         contentContainerStyle={styles.contentContainer}
-        scrollViewProps={{
-          onScroll: (event) => setOffset(event.nativeEvent.contentOffset.y),
-          onScrollEndDrag: (event) => setOffset(event.nativeEvent.contentOffset.y),
-        }}
+        // scrollViewProps={{
+        // onScroll: (event) => setOffset(event.nativeEvent.contentOffset.y),
+        // onScrollEndDrag: (event) => setOffset(event.nativeEvent.contentOffset.y),
+        // }}
       />
     </>
   );
@@ -80,14 +82,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   contentContainer: {
-    backgroundColor: 'whitesmoke',
     flexGrow: 1,
     marginTop: Platform.OS === 'ios' ? verticalScale(15) : 0,
     paddingBottom: 30,
   },
   headerWrapper: {paddingHorizontal: 15, width: '100%'},
   navbarWrapper: {
-    marginTop: verticalScale(10),
+    marginTop: Platform.OS === 'ios' ? verticalScale(10) : verticalScale(15),
   },
 });
 
