@@ -11,7 +11,7 @@ const CROP_AREA_WIDTH = width * 0.60;
 const CROP_AREA_HEIGHT = CROP_AREA_WIDTH;
 
 
-export default ({navigation,route})=> {
+const ToktokWalletSelfieCamera = ({navigation,route})=> {
 
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack/>,
@@ -188,3 +188,4 @@ const styles = StyleSheet.create({
     },
 })
 
+export default ToktokWalletSelfieCamera

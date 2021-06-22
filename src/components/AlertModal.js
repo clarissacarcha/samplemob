@@ -1,8 +1,6 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 // import {BlackButton} from './forms/BlackButton';
-import {BlackButton} from '../revamp';
-import {DARK, FONT_MEDIUM, FONT_REGULAR} from '../res/constants';
 import {COLOR, FONT_SIZE, FONT} from '../res/variables';
 
 const aButtons = [
@@ -53,7 +51,7 @@ export const AlertModal = (props) => {
   return (
     <View style={styles.transparent}>
       <View style={styles.labelBox}>
-        <Text style={{color: DARK, fontFamily: FONT_MEDIUM}}>{message}</Text>
+        <Text style={{color: COLOR.DARK, fontFamily: FONT.BOLD, fontSize: FONT_SIZE.L}}>{message}</Text>
         {RenderButton()}
       </View>
     </View>
@@ -88,7 +86,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     width: 40,
     height: 40,
-    backgroundColor: DARK,
+    backgroundColor: COLOR.DARK,
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',

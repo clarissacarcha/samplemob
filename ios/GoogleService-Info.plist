@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>446050056546-ebljul4b9funba9a2in5g485ge72lvs4.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.446050056546-ebljul4b9funba9a2in5g485ge72lvs4</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDJFxSyQwi8fT59n1j3BL9K-EiIKmU81HI</string>
+	<key>GCM_SENDER_ID</key>
+	<string>446050056546</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>ph.cloudpanda.toktok</string>
+	<key>PROJECT_ID</key>
+	<string>tokwa-ios-mlkit</string>
+	<key>STORAGE_BUCKET</key>
+	<string>tokwa-ios-mlkit.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:446050056546:ios:f686579d6a619ed3fad43b</string>
+</dict>
+</plist>

@@ -11,7 +11,7 @@ import SuccessfulModal from './SuccessfulModal'
 
 const {width,height} = Dimensions.get('window')
 
-export default ()=> {
+const ToktoKWalletPayPandaWebView = ()=> {
     const navigation = useNavigation()
     const route = useRoute()
     const webviewRef = useRef()
@@ -162,3 +162,4 @@ const styles = StyleSheet.create({
     }
 })
 
+export default ToktoKWalletPayPandaWebView

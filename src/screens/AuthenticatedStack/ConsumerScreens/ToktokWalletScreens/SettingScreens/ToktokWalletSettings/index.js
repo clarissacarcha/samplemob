@@ -3,11 +3,12 @@ import {View,Text,StyleSheet,TouchableOpacity,Image} from 'react-native'
 import {HeaderBackClose, HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../../../components'
 import FIcon from 'react-native-vector-icons/Feather';
 import { COLORS, FONTS, FONT_LIGHT, FONT_MEDIUM, SIZES } from '../../../../../../res/constants';
-import Separator from '../../Components/Separator';
+import {Separator} from '../../Components';
+import { HeaderBack } from '../../../../../../revamp';
 
-export default ({navigation , route })=> {
+const ToktokWalletSettings = ({navigation , route })=> {
     navigation.setOptions({
-        headerLeft: ()=> <HeaderBackClose/>,
+        headerLeft: ()=> <HeaderBack color={COLORS.YELLOW}/>,
         headerTitle: ()=> <HeaderTitle label={['Settings','']}/>,
     })
 
@@ -24,7 +25,7 @@ export default ({navigation , route })=> {
                     </View>
                     <View style={styles.arrowright}>
                            {/* <Text style={{fontSize: 16,color: "gray"}}>{'>'}</Text> */}
-                           <FIcon name="chevron-right" size={16} color={'#A6A8A9'}/> 
+                           <FIcon name="chevron-right" size={20} color={'#A6A8A9'}/> 
                     </View>
         </TouchableOpacity>
     )
@@ -33,7 +34,7 @@ export default ({navigation , route })=> {
         <>
         <Separator />
         <View style={styles.container}>
-            <SettingOption route="ToktokWalletVerifySetup" icon={require('../../../../../../assets/icons/walletVerify.png')} title="Verify User" subtitle="Verify your toktokwallet."/>
+            <SettingOption route="ToktokWalletVerifySetup" params={{walletinfo: walletinfo}} icon={require('../../../../../../assets/icons/walletVerify.png')} title="Verify User" subtitle="Verify your toktokwallet."/>
             {
                 walletinfo.isHold
                 ? <SettingOption route="ToktokWalletRecoveryMethods" 
@@ -64,8 +65,8 @@ const styles = StyleSheet.create({
     settingoption: {
         padding: 16,
         paddingVertical: 15,
-        // borderWidth: 0.2,
-        borderColor: "silver",
+        borderWidth: 1,
+        borderColor: "#F4F4F4",
         flexDirection: "row"
     },
     logo: {
@@ -83,3 +84,5 @@ const styles = StyleSheet.create({
         alignItems: "flex-end"
     }
 })
+
+export default ToktokWalletSettings

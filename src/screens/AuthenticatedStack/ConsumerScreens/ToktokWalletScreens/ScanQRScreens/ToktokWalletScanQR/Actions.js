@@ -1,6 +1,6 @@
 import React , {useState} from 'react'
 import {View,Text,TouchableOpacity,Dimensions,StyleSheet} from 'react-native'
-import { COLOR, FONTS, FONT_MEDIUM, FONT_REGULAR, SIZES } from '../../../../../../res/constants'
+import { COLOR, COLORS, FONTS, FONT_MEDIUM, FONT_REGULAR, SIZES } from '../../../../../../res/constants'
 import FIcon from 'react-native-vector-icons/FontAwesome';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import RNQRGenerator from 'rn-qr-generator';
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
     actionBtnText: {
         fontFamily: FONTS.REGULAR,
         fontSize: SIZES.M,
-        color: "white"
+        color: COLORS.YELLOW,
     }
 })
 

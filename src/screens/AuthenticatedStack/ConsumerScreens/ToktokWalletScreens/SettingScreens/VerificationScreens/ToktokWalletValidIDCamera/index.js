@@ -5,13 +5,14 @@ import { BUTTON_HEIGHT, COLORS, FONTS, FONT_MEDIUM, SIZES } from '../../../../..
 import FIcon from 'react-native-vector-icons/Feather'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import ImageCropper from 'react-native-simple-image-cropper';
+import EIcon from 'react-native-vector-icons/EvilIcons'
 
 const {width,height} = Dimensions.get("window")
 
 const CROP_AREA_WIDTH = width * 0.90;
 const CROP_AREA_HEIGHT = height * 0.40;
 
-export default ({navigation,route})=> {
+const ToktokWalletValidIDCamera = ({navigation,route})=> {
 
     navigation.setOptions({
         headerShown: false,
@@ -46,13 +47,17 @@ export default ({navigation,route})=> {
       const cropSize = {
         // height: 480,
         // width: 480,
-        width: CROP_AREA_WIDTH,
-        height: CROP_AREA_HEIGHT,
+        // width: CROP_AREA_WIDTH,
+        // height: CROP_AREA_HEIGHT,
+        width: CROP_AREA_WIDTH + 20,
+        height: CROP_AREA_HEIGHT + 20,
       };
     
       const cropAreaSize = {
         width: CROP_AREA_WIDTH - 60,
-        height: CROP_AREA_HEIGHT - 70,
+        height: CROP_AREA_HEIGHT -70,
+        // width: CROP_AREA_WIDTH - 100,
+        // height: CROP_AREA_HEIGHT - 100,
       };
 
       const confirmPicture = async ()=> {
@@ -118,8 +123,8 @@ export default ({navigation,route})=> {
 
       return (
         <View style={styles.container}>
-             <TouchableOpacity onPress={()=>navigation.goBack()} style={{top: Platform.OS === "android" ? 20 : 40, left: 5,position:"absolute",zIndex: 1}}>
-                <FIcon name="chevron-left" size={35} color={'white'} /> 
+             <TouchableOpacity onPress={()=>navigation.pop()} style={styles.backBtn}>
+                <FIcon name="chevron-left" size={20} color={'#222222'} /> 
             </TouchableOpacity>
 
              <View style={styles.cameraContainer}>
@@ -144,9 +149,9 @@ export default ({navigation,route})=> {
                                         <View style={[styles.borderEdges,{borderBottomWidth: 5,borderLeftWidth: 5,bottom:0,left: 0,}]}/>
                                         <View style={[styles.borderEdges,{borderBottomWidth: 5,borderRightWidth: 5,bottom:0,right:0,}]}/>
 
-                                        <View style={{position:"absolute" , top : -60, flex: 1,justifyContent:"center",alignItems:"center"}}>
-                                            <Text style={{fontFamily: FONT_MEDIUM, fontSize: SIZES.M , color:"white",}}>Position your ID within the frame.</Text>
-                                            <Text style={{fontFamily: FONT_MEDIUM, fontSize: SIZES.M , color:"white",}}>Make sure the picture has no glare and not blur.</Text>
+                                        <View style={{position:"absolute" , bottom : -60, flex: 1,justifyContent:"center",alignItems:"center"}}>
+                                            <Text style={{fontFamily: FONT_MEDIUM, fontSize: SIZES.M , color:"white",paddingHorizontal: 5,paddingVertical: 2,backgroundColor:"rgba(255,255,255,0.1)",borderRadius: 5}}>Position your ID within the frame.</Text>
+                                            <Text style={{marginTop: 5,fontFamily: FONT_MEDIUM, fontSize: SIZES.M , color:"white",paddingHorizontal: 5,paddingVertical: 2,backgroundColor:"rgba(255,255,255,0.1)",borderRadius: 5}}>Make sure the picture has no glare and not blur.</Text>
                                         </View>
                             </View>
                         </View>
@@ -162,7 +167,9 @@ export default ({navigation,route})=> {
                         marginBottom: 20,
                     }}>
                     <TouchableOpacity onPress={() => takePicture()} style={styles.capture}>
-                        <View style={styles.inCapture} />
+                        <View style={styles.inCapture}>
+                            <EIcon name="camera" color={COLORS.YELLOW} size={40} />
+                        </View>
                     </TouchableOpacity>
                 </View>
 
@@ -199,7 +206,7 @@ const styles = StyleSheet.create({
         height: 60,
         width: 60,
         borderRadius: 30,
-        backgroundColor: 'orange',
+        backgroundColor: COLORS.YELLOW,
         justifyContent: 'center',
         alignItems: 'center',
       },
@@ -223,6 +230,21 @@ const styles = StyleSheet.create({
         height: 40,
         width: 40,
         position: "absolute",
-        borderColor: "#F6841F",
+        borderColor: COLORS.YELLOW,
+    },
+    backBtn: {
+        backgroundColor:"#FFFFFF",
+        top: Platform.OS === "android" ? 30 : 20, 
+        // top: 30,
+        left: 16,
+        position:"absolute",
+        zIndex: 1,
+        justifyContent:"center",
+        alignItems:"center",
+        borderRadius: 100,
+        height: 35,
+        width: 35,
     }
 })
+
+export default ToktokWalletValidIDCamera
