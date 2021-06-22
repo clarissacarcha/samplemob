@@ -39,6 +39,7 @@ const StickyView = () => {
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const routes = useRoute();
   const {image, name} = routes.params.item;
+  const headerMinHeight = Platform.OS === 'ios' ? moderateScale(150) : moderateScale(170);
 
   const renderNavBar = () => (
     <View style={[styles.headerWrapper, styles.navbarWrapper]}>
@@ -61,7 +62,7 @@ const StickyView = () => {
       <ReactNativeParallaxHeader
         alwaysShowNavBar={false}
         alwaysShowTitle={false}
-        headerMinHeight={moderateScale(150)}
+        headerMinHeight={headerMinHeight}
         headerMaxHeight={moderateScale(250)}
         headerTitleStyle={{zIndex: offset <= 245 ? 0 : -1, justifyContent: 'flex-start'}}
         extraScrollHeight={0}
@@ -94,7 +95,6 @@ const styles = StyleSheet.create({
     paddingBottom: 30,
   },
   headerWrapper: {
-    borderWidth: 1,
     // flex: 1,
     // paddingTop: 20,
     // paddingHorizontal: 15,
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     backgroundColor: 'rgba(255,255,255,0.5).',
-    // position: 'absolute',
+    position: Platform.OS === 'ios' ? 'absolute' : 'relative',
     bottom: Platform.OS === 'ios' ? moderateScale(150) : 0,
     // marginBottom: 200,
     // justifyContent: 'space-between',

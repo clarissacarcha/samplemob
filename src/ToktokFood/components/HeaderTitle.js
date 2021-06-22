@@ -2,7 +2,7 @@ import React from 'react';
 import {useSelector} from 'react-redux';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import ContentLoader from 'react-native-easy-content-loader';
-import {Image, View, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {Image, View, StyleSheet, Text, TouchableOpacity, Platform} from 'react-native';
 
 import {FONT, FONT_SIZE, COLOR} from '../../res/variables';
 import {markerIcon} from '../assets/images';
@@ -47,8 +47,8 @@ export default HeaderTitle;
 
 const styles = StyleSheet.create({
   header: {
-    marginTop: 45,
     flexDirection: 'row',
+    marginTop: Platform.OS === 'android' ? 53 : 40,
   },
   headerBack: {
     paddingHorizontal: 20,

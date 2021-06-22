@@ -19,7 +19,6 @@ const ToktokFoodHome = () => {
         <HeaderTitle />
         <HeaderSearchBox />
       </HeaderImageBackground>
-
       <StickyView />
     </View>
   );

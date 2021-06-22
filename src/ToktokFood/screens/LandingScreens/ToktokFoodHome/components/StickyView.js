@@ -46,6 +46,7 @@ const StickyView = () => {
     <>
       <CategoryList />
       <CategoryList />
+
       {renderNavBar()}
     </>
   );
@@ -83,8 +84,9 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flexGrow: 1,
+    backgroundColor: 'whitesmoke',
+    paddingBottom: Platform.OS === 'android' ? 10 : 30,
     marginTop: Platform.OS === 'ios' ? verticalScale(15) : 0,
-    paddingBottom: 30,
   },
   headerWrapper: {paddingHorizontal: 15, width: '100%'},
   navbarWrapper: {

@@ -1,5 +1,5 @@
 import React from 'react';
-import {ImageBackground, StyleSheet, View} from 'react-native';
+import {ImageBackground, StyleSheet, Platform} from 'react-native';
 
 // assets
 import {headerBg} from 'toktokfood/assets/images';
@@ -16,11 +16,11 @@ export default HeaderImageBackground;
 
 const styles = StyleSheet.create({
   imageStyle: {
-    height: 125,
     resizeMode: 'cover',
+    height: Platform.OS === 'android' ? 150 : 125,
   },
   walletBackGroundImage: {
-    height: 150,
     zIndex: 1,
+    height: Platform.OS === 'android' ? 178 : 150,
   },
 });
