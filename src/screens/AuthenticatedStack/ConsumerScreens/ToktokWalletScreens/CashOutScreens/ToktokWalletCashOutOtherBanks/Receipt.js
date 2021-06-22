@@ -95,6 +95,11 @@ export const Receipt = ({children, format, refNo ,refDate, onPress})=> {
                   );
                   return false;
                 }
+
+                if (requestResult === RESULTS.DENIED) {
+                    Alert.alert('', "Sorry, we can't access your storage without sufficient permission.");
+                    return false;
+                }
               }
 
         }

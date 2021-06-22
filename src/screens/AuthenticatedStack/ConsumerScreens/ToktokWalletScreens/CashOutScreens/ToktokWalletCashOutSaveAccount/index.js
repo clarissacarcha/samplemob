@@ -1,5 +1,5 @@
 import React , {useState,useEffect} from 'react'
-import {View,Text,StyleSheet,TextInput,Alert,ScrollView} from 'react-native'
+import {View,Text,StyleSheet,TextInput,Alert,ScrollView,KeyboardAvoidingView,Dimensions} from 'react-native'
 import {Separator} from '../../Components'
 import {HeaderBack,HeaderTitle,YellowButton} from '../../../../../../revamp'
 import { COLOR, FONT, FONT_SIZE } from '../../../../../../res/variables'
@@ -13,6 +13,8 @@ import {useAlert} from '../../../../../../hooks'
 
 //SELF IMPORTS
 import SuccessfulModal from './SuccessfulModal'
+
+const screen = Dimensions.get('window');
 
 const ToktokWalletCashOutSaveAccount = ({navigation,route})=> {
 
@@ -89,6 +91,11 @@ const ToktokWalletCashOutSaveAccount = ({navigation,route})=> {
         <SuccessfulModal visible={showSuccessModal} setVisible={setShowSuccessModal}/>
         <Separator/>
         <View style={styles.container}>
+        <KeyboardAvoidingView
+                        behavior={Platform.OS === "ios" ? "height" : null}
+                        keyboardVerticalOffset={Platform.OS === 'ios' ? screen.height * 0.1 : screen.height * 0.25}
+                        style={{ flex: 1 }}
+                >
              <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
                     <View style={styles.bank}>            
                             <Text style={styles.bankName}>{bank.name}</Text>
@@ -100,9 +107,11 @@ const ToktokWalletCashOutSaveAccount = ({navigation,route})=> {
                                     style={styles.input}
                                     value={nickName}
                                     onChangeText={(value)=>setNickName(value)}
-                                    placeholder="Enter nickname here"
+                                    placeholder="Enter alias here"
                                     returnKeyType="done"
-                                />
+                                    maxLength={50}
+                            />
+                            <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{nickName.length}/50</Text>
                         </View>
                     </View>
 
@@ -160,6 +169,7 @@ const ToktokWalletCashOutSaveAccount = ({navigation,route})=> {
                         <YellowButton label="Confirm" onPress={saveAccount}/>
                     </View>      
              </ScrollView>
+             </KeyboardAvoidingView>
         </View>
         </>
     )

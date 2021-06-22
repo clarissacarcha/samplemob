@@ -16,6 +16,7 @@ import { ContextCashOut } from './ContextProvider'
 
 //SELF IMPORTS
 import SuccessfulCashOutModal from "./SuccessfulCashOutModal";
+import { Alert } from 'react-native'
 
 
 const Amount = ({errorAmountMessage , setErrorAmountMessage})=> {
@@ -195,7 +196,8 @@ const FundTransferForm = ({selectBanks})=> {
         bankDescription,
         note,
         amount,
-        banks
+        banks,
+        address
     } = useContext(ContextCashOut)
 
     const [postCashOutOtherBank , {data,error,loading}] = useMutation(POST_CASH_OUT_OTHER_BANKS, {
@@ -236,6 +238,8 @@ const FundTransferForm = ({selectBanks})=> {
                 input: {
                     amount: +amount,
                     cashOutBankId: bank.id,
+                    isInstaPay: bank.isInstaPay,
+                    isPesoNet: bank.isPesoNet,
                     accountName: accountName,
                     accountNumber: accountNumber,
                     note: note,
@@ -248,6 +252,12 @@ const FundTransferForm = ({selectBanks})=> {
 
 
     const onPress = ()=> {
+        if(bank == ""){
+            return Alert.alert("","Bank is required.")
+        }
+        if(address == ""){
+            return Alert.alert("","Address is required.")
+        }
         navigation.navigate("ToktokWalletReviewAndConfirm", {
             label:"Fund Transfer" , 
             event: "Fund Transfer",
@@ -296,8 +306,9 @@ const FundTransferForm = ({selectBanks})=> {
                     bank == "" ||
                     accountNumber == "" ||
                     amount == "" ||
+                    address == "" ||
                     errorMessage != "" ||
-                    errorAmountMessage != ""
+                    errorAmountMessage != "" 
                     ? <DisabledButton label="Proceed"/>
                     : <YellowButton label="Proceed" onPress={onPress}/>
                 }

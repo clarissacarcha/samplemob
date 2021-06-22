@@ -57,7 +57,7 @@ const SuccessfulCashOutModal = ({visible , cashoutLogParams,tokwaAccount})=> {
             >
                 
                 <View style={styles.recipientInfo}>
-                     <TransactionInfo label="Bank" value="GCash"/>
+                     <TransactionInfo label="Bank" value="BDO"/>
                      <TransactionInfo label="Account Name" value={cashoutLogParams.accountName}/>
                      <TransactionInfo label="Account Number" value={cashoutLogParams.accountNumber}/>
                      <TransactionInfo label="Status" value={status}/>

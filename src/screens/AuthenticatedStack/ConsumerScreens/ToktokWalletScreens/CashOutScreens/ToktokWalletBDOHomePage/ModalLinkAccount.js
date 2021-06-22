@@ -5,7 +5,7 @@ import { YellowButton } from '../../../../../../revamp'
 import {useNavigation} from '@react-navigation/native'
 import { FONT_SIZE } from '../../../../../../res/constants'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from '../../../../../../graphql'
-import { PATCH_LINK_ACCOUNT , GET_GCASH_LINK_OTP } from '../../../../../../graphql/toktokwallet'
+import { PATCH_LINK_ACCOUNT , GET_GCASH_LINK_OTP , GET_BDO_LINK_OTP} from '../../../../../../graphql/toktokwallet'
 import { useLazyQuery , useMutation } from '@apollo/react-hooks'
 import { onErrorAlert } from '../../../../../../util/ErrorUtility'
 import { useAlert } from '../../../../../../hooks/useAlert'
@@ -13,35 +13,36 @@ import { useSelector } from 'react-redux'
 
 const {height,width} = Dimensions.get("screen")
 
-const ModalLinkAccount = ({visible,setVisible,provider})=> {
+const ModalLinkAccount = ({visible,setVisible,provider,accountNumber})=> {
 
     const navigation = useNavigation()
     const alert = useAlert()
     const tokwaAccount = useSelector(state=>state.toktokWallet)
 
-    const openLinkPage = ()=> {
-        // getGcashLinkOTP({
-        //     variables: {
-        //         input: {
-        //             mobileNumber: tokwaAccount.mobileNumber
-        //         }
-        //     }
-        // })
-        console.log("linking here")
-    }
 
-    const [getGcashLinkOTP, {loading: getOtpLoading}] = useLazyQuery(GET_GCASH_LINK_OTP, {
+    const [getBdoLinkOTP, {loading: getOtpLoading}] = useLazyQuery(GET_BDO_LINK_OTP, {
         fetchPolicy: "network-only",
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
-        onCompleted: ({getGcashLinkOTP})=>{
+        onCompleted: ({getBdoLinkOTP})=>{
             setVisible(false)
-            // return navigation.navigate("ToktokWalletGcashLinkAccount", {mobile,provider})
+            return navigation.navigate("ToktokWalletBDOLinkAccount", {mobile: tokwaAccount.mobileNumber,provider ,accountNumber })
         },
         onError: (error)=>{
             setVisible(false)
             onErrorAlert({alert,error})
         }
     })
+
+
+    const openLinkPage = ()=> {
+        getBdoLinkOTP({
+            variables: {
+                input: {
+                    mobileNumber: tokwaAccount.mobileNumber
+                }
+            }
+        })
+    }
 
     return (
         <>
