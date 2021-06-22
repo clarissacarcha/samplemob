@@ -9,3 +9,4 @@ export const image3 = require('./images/image3.png');
 export const image4 = require('./images/image4.png');
 export const searchIcon = require('./images/search_ic.png');
 export const markerIcon = require('./images/marker_ic.png');
+export const paperRoll = require('./images/paper-roll.png');

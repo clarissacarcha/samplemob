@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderStyle: 'solid',
     marginHorizontal: 5,
-    paddingVertical: 7,
+    paddingVertical: 4,
     paddingHorizontal: 20,
   },
   activeTabText: {
@@ -50,11 +50,11 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   tabContainer: {
+    justifyContent: 'center',
     borderRadius: 20,
     borderStyle: 'dashed',
     borderWidth: 1,
     marginHorizontal: 5,
-    paddingVertical: 7,
     paddingHorizontal: 20,
   },
   tabText: {

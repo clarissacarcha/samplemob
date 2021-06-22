@@ -1,23 +1,25 @@
 import React, {useState} from 'react';
-import {Dimensions, Platform, StyleSheet, View, StatusBar} from 'react-native';
+import {Platform, StyleSheet, View, StatusBar, Text} from 'react-native';
 import ReactNativeParallaxHeader from 'react-native-parallax-header';
+import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useRoute} from '@react-navigation/native';
+import {Rating} from 'react-native-ratings';
 
 // Components
 import {RestaurantList} from '../../ToktokFoodHome/components';
 import HeaderTabs from 'toktokfood/components/HeaderTabs';
-import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
+// import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
-import HeaderSearchBox from 'toktokfood/components/HeaderSearchBox';
+import HeaderTitleSearchBox from './HeaderTitleSearchBox';
 
 // Utils
-import {moderateScale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
+import {moderateScale, scale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
 
-const {height: SCREEN_HEIGHT} = Dimensions.get('window');
-const IS_IPHONE_X = SCREEN_HEIGHT === 812 || SCREEN_HEIGHT === 896;
-const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? (IS_IPHONE_X ? 44 : 20) : 0;
-const HEADER_HEIGHT = Platform.OS === 'ios' ? (IS_IPHONE_X ? 88 : 0) : 64;
-const NAV_BAR_HEIGHT = HEADER_HEIGHT - STATUS_BAR_HEIGHT;
+// const {height: SCREEN_HEIGHT} = Dimensions.get('window');
+// const IS_IPHONE_X = SCREEN_HEIGHT === 812 || SCREEN_HEIGHT === 896;
+// const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? (IS_IPHONE_X ? 44 : 20) : 0;
+// const HEADER_HEIGHT = Platform.OS === 'ios' ? (IS_IPHONE_X ? 88 : 0) : 64;
+// const NAV_BAR_HEIGHT = HEADER_HEIGHT - STATUS_BAR_HEIGHT;
 
 const tabs = [
   {
@@ -38,12 +40,14 @@ const StickyView = () => {
   const [offset, setOffset] = useState(0);
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const routes = useRoute();
-  const {image, name} = routes.params.item;
-  const headerMinHeight = Platform.OS === 'ios' ? moderateScale(150) : moderateScale(170);
+  const {distance, image, name, ratings, time, totalBranches} = routes.params.item;
+  const headerMinHeight = Platform.OS === 'ios' ? moderateScale(130) : moderateScale(160);
+  const headerMaxHeight = Platform.OS === 'ios' ? scale(350) : scale(370);
 
   const renderNavBar = () => (
     <View style={[styles.headerWrapper, styles.navbarWrapper]}>
-      <HeaderTitle />
+      {/* <HeaderTitle /> */}
+      <HeaderTitleSearchBox />
       <View style={styles.tabContainer}>
         <HeaderTabs activeTab={activeTab} tabs={tabs} setActiveTab={setActiveTab} />
       </View>
@@ -51,8 +55,29 @@ const StickyView = () => {
   );
 
   const renderTitle = () => (
-    <View style={styles.titleContainer}>
-      <HeaderTitle title={name} />
+    <View style={styles.title}>
+      <View style={styles.titleContainer}>
+        <HeaderTitle title={name} />
+      </View>
+      <View style={styles.titleInfo}>
+        <View style={styles.content}>
+          <Text style={styles.titleText}>{name}</Text>
+          <Rating startingValue={ratings} tintColor={'white'} imageSize={13} readonly style={styles.ratings} />
+
+          <View style={styles.branchInfo}>
+            <MCIcon name="store" color={'#868686'} size={13} />
+            <Text style={styles.branches}>{totalBranches} branches</Text>
+
+            <MCIcon name="clock-outline" color={'#868686'} size={13} />
+            <Text style={styles.branches}>{time}</Text>
+
+            <MCIcon name="map-marker-outline" color={'#868686'} size={13} />
+            <Text style={styles.branches}>{distance}</Text>
+          </View>
+        </View>
+
+        <HeaderTabs activeTab={activeTab} tabs={tabs} setActiveTab={setActiveTab} />
+      </View>
     </View>
   );
 
@@ -63,9 +88,10 @@ const StickyView = () => {
         alwaysShowNavBar={false}
         alwaysShowTitle={false}
         headerMinHeight={headerMinHeight}
-        headerMaxHeight={moderateScale(250)}
-        headerTitleStyle={{zIndex: offset <= 245 ? 0 : -1, justifyContent: 'flex-start'}}
+        headerMaxHeight={headerMaxHeight}
+        headerTitleStyle={{zIndex: offset <= 210 ? 0 : -1, justifyContent: 'flex-start'}}
         extraScrollHeight={0}
+        backgroundImageScale={1.1}
         title={renderTitle()}
         backgroundImage={image}
         backgroundColor="transparent"
@@ -74,46 +100,80 @@ const StickyView = () => {
         renderNavBar={renderNavBar}
         containerStyle={styles.container}
         contentContainerStyle={styles.contentContainer}
-        // scrollViewProps={{
-        //   onScroll: (event) => setOffset(event.nativeEvent.contentOffset.y),
-        //   onScrollEndDrag: (event) => setOffset(event.nativeEvent.contentOffset.y),
-        // }}
+        scrollViewProps={{
+          //   onScroll: (event) => setOffset(event.nativeEvent.contentOffset.y),
+          onScrollEndDrag: (event) => setOffset(event.nativeEvent.contentOffset.y),
+        }}
       />
     </>
   );
 };
 
 const styles = StyleSheet.create({
+  branches: {
+    fontWeight: '400',
+    fontSize: 10,
+    paddingHorizontal: 3,
+  },
+  branchInfo: {
+    flexDirection: 'row',
+    marginBottom: verticalScale(5),
+  },
   container: {
     flex: 1,
     backgroundColor: 'transparent',
   },
+  content: {
+    paddingHorizontal: moderateScale(10),
+  },
   contentContainer: {
     backgroundColor: 'whitesmoke',
     flexGrow: 1,
-    marginTop: Platform.OS === 'ios' ? verticalScale(15) : 0,
+    marginTop: Platform.OS === 'ios' ? verticalScale(10) : 0,
     paddingBottom: 30,
   },
   headerWrapper: {
-    // flex: 1,
-    // paddingTop: 20,
-    // paddingHorizontal: 15,
-    // width: '100%',
+    backgroundColor: 'white',
+    flex: 1,
+    shadowColor: '#000',
+    shadowOffset: {width: 1, height: 1},
+    shadowOpacity: 0.4,
+    shadowRadius: 3,
+    elevation: 5,
   },
   navbarWrapper: {
     // marginTop: verticalScale(10),
   },
+  ratings: {
+    alignItems: 'flex-start',
+    paddingVertical: 4,
+  },
   tabContainer: {
-    paddingHorizontal: 15,
+    paddingHorizontal: 10,
+    marginTop: verticalScale(8),
+  },
+  title: {
+    flex: 1,
+    width: getDeviceWidth,
+    justifyContent: 'space-between',
   },
   titleContainer: {
-    backgroundColor: 'rgba(255,255,255,0.5).',
-    position: Platform.OS === 'ios' ? 'absolute' : 'relative',
-    bottom: Platform.OS === 'ios' ? moderateScale(150) : 0,
-    // marginBottom: 200,
-    // justifyContent: 'space-between',
-    paddingBottom: moderateScale(30),
-    width: getDeviceWidth,
+    backgroundColor: 'rgba(255,255,255,0.5)',
+    bottom: Platform.OS === 'ios' ? moderateScale(47) : verticalScale(7),
+    height: Platform.OS === 'ios' ? verticalScale(80) : verticalScale(110),
+    position: 'relative',
+  },
+  titleInfo: {
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    backgroundColor: 'white',
+    // height: 100,
+    paddingHorizontal: 10,
+    paddingVertical: 15,
+  },
+  titleText: {
+    fontWeight: '500',
+    fontSize: 15,
   },
 });
 

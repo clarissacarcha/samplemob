@@ -68,10 +68,10 @@ const StickyView = () => {
         renderNavBar={renderNavBar}
         containerStyle={styles.container}
         contentContainerStyle={styles.contentContainer}
-        // scrollViewProps={{
-        // onScroll: (event) => setOffset(event.nativeEvent.contentOffset.y),
-        // onScrollEndDrag: (event) => setOffset(event.nativeEvent.contentOffset.y),
-        // }}
+        scrollViewProps={{
+          // onScroll: (event) => setOffset(event.nativeEvent.contentOffset.y),
+          onScrollEndDrag: (event) => setOffset(event.nativeEvent.contentOffset.y),
+        }}
       />
     </>
   );
