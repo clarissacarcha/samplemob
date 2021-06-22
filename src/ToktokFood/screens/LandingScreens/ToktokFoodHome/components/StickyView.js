@@ -44,6 +44,7 @@ const StickyView = () => {
     <>
       <CategoryList />
       <CategoryList />
+
       {renderNavBar()}
     </>
   );
@@ -55,7 +56,7 @@ const StickyView = () => {
         alwaysShowNavBar={false}
         alwaysShowTitle={false}
         headerMinHeight={moderateScale(65)}
-        headerMaxHeight={moderateScale(270)}
+        headerMaxHeight={moderateScale(Platform.OS === 'android' ? 315 : 270)}
         headerTitleStyle={{zIndex: offset <= 245 ? 0 : -1}}
         extraScrollHeight={20}
         title={renderTitle()}
@@ -80,10 +81,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   contentContainer: {
-    backgroundColor: 'whitesmoke',
     flexGrow: 1,
+    backgroundColor: 'whitesmoke',
+    paddingBottom: Platform.OS === 'android' ? 10 : 30,
     marginTop: Platform.OS === 'ios' ? verticalScale(15) : 0,
-    paddingBottom: 30,
   },
   headerWrapper: {paddingHorizontal: 15, width: '100%'},
   navbarWrapper: {

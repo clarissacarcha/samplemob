@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {FlatList, Image, View, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {FlatList, Image, View, StyleSheet, Text, TouchableOpacity, Platform} from 'react-native';
 import {Rating} from 'react-native-ratings';
 import {useNavigation} from '@react-navigation/native';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -119,9 +119,19 @@ const RestaurantList = () => {
           <MCIcon name="clock-outline" color={'#868686'} size={13} />
           <Text style={styles.branches}>{item.time}</Text>
 
-          <MCIcon name="map-marker-outline" color={'#868686'} size={13} />
-          <Text style={styles.branches}>{item.distance}</Text>
+          {Platform.OS === 'ios' && (
+            <View style={styles.distanceWrapper}>
+              <MCIcon name="map-marker-outline" color={'#868686'} size={13} />
+              <Text style={styles.branches}>{item.distance}</Text>
+            </View>
+          )}
         </View>
+        {Platform.OS === 'android' && (
+          <View style={styles.distanceWrapper}>
+            <MCIcon name="map-marker-outline" color={'#868686'} size={13} />
+            <Text style={styles.branches}>{item.distance}</Text>
+          </View>
+        )}
       </View>
     </TouchableOpacity>
   );
@@ -157,14 +167,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   img: {
-    alignSelf: 'center',
-    width: 170,
     height: 150,
+    alignSelf: 'center',
+    width: Platform.OS === 'android' ? 150 : 170,
   },
   listContainer: {
-    alignItems: 'center',
     flex: 1,
-    marginTop: 10,
+    alignItems: 'center',
+    marginTop: Platform.OS === 'android' ? 0 : 10,
   },
   ratings: {
     alignItems: 'flex-start',
@@ -181,5 +191,10 @@ const styles = StyleSheet.create({
   restaurantName: {
     fontSize: 12,
     fontWeight: '500',
+  },
+  distanceWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    marginTop: Platform.OS === 'android' ? 5 : 0,
   },
 });
