@@ -37,8 +37,8 @@ export const LandingSubHeader = (props) => {
   return (
     <>
       <ImageBackground 
-        source={require("../../../assets/toktok/images/HeaderBackground.png")}
-        imageStyle={{ resizeMode: "cover", width: '200%'}}
+        source={require("../../../assets/toktokmall-assets/images/banner.png")}
+        imageStyle={{ resizeMode: "stretch", width: '100%'}}
         style={{width: "100%", height: 100}}
       >
         <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', marginTop: 35}}>
