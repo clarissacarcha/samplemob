@@ -1,9 +1,13 @@
 import React, {useState} from 'react';
-import {StyleSheet, View, StatusBar} from 'react-native';
+import {Platform, StyleSheet, View, StatusBar} from 'react-native';
 import ReactNativeParallaxHeader from 'react-native-parallax-header';
 
+// Components
 import {CategoryList, RestaurantList} from './index';
 import HeaderTabs from 'toktokfood/components/HeaderTabs';
+
+// Utils
+import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
 
 // const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 // const IS_IPHONE_X = SCREEN_HEIGHT === 812 || SCREEN_HEIGHT === 896;
@@ -50,8 +54,8 @@ const StickyView = () => {
       <ReactNativeParallaxHeader
         alwaysShowNavBar={false}
         alwaysShowTitle={false}
-        headerMinHeight={60}
-        headerMaxHeight={250}
+        headerMinHeight={moderateScale(65)}
+        headerMaxHeight={moderateScale(270)}
         headerTitleStyle={{zIndex: offset <= 240 ? 0 : -1}}
         extraScrollHeight={20}
         title={renderTitle()}
@@ -78,12 +82,12 @@ const styles = StyleSheet.create({
   contentContainer: {
     backgroundColor: 'whitesmoke',
     flexGrow: 1,
-    marginTop: 30,
+    marginTop: Platform.OS === 'ios' ? verticalScale(15) : 0,
     paddingBottom: 30,
   },
   headerWrapper: {paddingHorizontal: 15, width: '100%'},
   navbarWrapper: {
-    marginTop: 10,
+    marginTop: verticalScale(10),
   },
 });
 
