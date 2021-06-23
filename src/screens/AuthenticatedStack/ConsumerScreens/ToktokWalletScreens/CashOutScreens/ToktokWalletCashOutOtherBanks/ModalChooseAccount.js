@@ -63,12 +63,6 @@ const ModalChooseAccount = ({visible,setVisible,accounts})=> {
                                                 <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.S}}>{item.bank.name}</Text>
                                                 <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S}}>Account Number: {item.accountNumber}</Text>
                                                 <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S}}>Account Name: {item.accountName}</Text>
-                                                  {/* <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.XS,color: COLOR.DARK}}>
-                                                    {item.isInstaPay 
-                                                        ? `Maximum Cash Out limit: PHP 50,000.00`  // instapay
-                                                        : "Maximum Cash Out limit: PHP 200,000.00" // pesonet
-                                                    }
-                                                    </Text> */}
                                             </View>
                                             <View>
                                                 <VectorIcon iconSet={ICON_SET.Feather} name="chevron-right" color={COLOR.DARK} />

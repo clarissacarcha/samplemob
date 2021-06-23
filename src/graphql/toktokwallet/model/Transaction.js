@@ -82,7 +82,6 @@ export const GET_TRANSACTIONS = gql`
                             accountName
                             bank {
                                 name 
-                                code
                             }
                         }
                         gcashInfo {
@@ -137,7 +136,6 @@ export const GET_TRANSACTIONS = gql`
                             accountName
                             bank {
                                 name 
-                                code
                             }
                         }
                         gcashInfo {

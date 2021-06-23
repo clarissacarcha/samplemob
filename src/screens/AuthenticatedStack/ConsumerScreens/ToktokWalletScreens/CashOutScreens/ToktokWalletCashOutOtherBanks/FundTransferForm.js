@@ -25,12 +25,6 @@ const Amount = ({errorAmountMessage , setErrorAmountMessage})=> {
     const { amount ,setAmount , note , setNote ,bank } = useContext(ContextCashOut)
     const [maxAmount , setMaxAmount] = useState(null)
 
-    useEffect(()=>{
-       if(bank.id){
-        const isInstaPay = bank.isInstaPay
-        setMaxAmount(isInstaPay ? 50000 : null)
-       }
-    },[bank])
 
     const changeAmount = (value)=> {
         const num = value.replace(/[^0-9.]/g, '')
@@ -88,12 +82,12 @@ const Amount = ({errorAmountMessage , setErrorAmountMessage})=> {
              <TextInput
                     style={styles.input}
                     value={note}
-                    maxLength={20}
+                    maxLength={60}
                     onChangeText={(value)=> setNote(value)}
                     placeholder="Enter note here"
                     returnKeyType="done"
                 />
-                <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{note.length}/20</Text>
+                <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{note.length}/60</Text>
         </View>
         </View>
     </View>
@@ -148,14 +142,14 @@ const AccountInfo = ({selectBanks , dispatch ,errorMessage, setErrorMessage})=> 
                             style={styles.input}
                             value={accountNumber}
                             onChangeText={changeAccountNumber}
-                            maxLength={bank.accountNumberLength != "" ? +bank.accountNumberLength : null}
+                            maxLength={19}
                             placeholder={`Enter bank account number here`}
                             keyboardType="number-pad"
                             returnKeyType="done"
                         />
                 </View>
                 { errorMessage != "" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.S,color:COLOR.RED}}>{errorMessage}</Text>}
-                { bank.accountNumberLength != "" && <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{accountNumber.length}/{bank.accountNumberLength}</Text> }
+                <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{accountNumber.length}/19</Text>
             </View>
 
             <View style={{marginTop: 16,}}>
@@ -165,12 +159,12 @@ const AccountInfo = ({selectBanks , dispatch ,errorMessage, setErrorMessage})=> 
                             style={styles.input}
                             value={address}
                             onChangeText={(value)=>setAddress(value)}
-                            maxLength={bank.addressLength != "" ? bank.addressLength : null}
+                            maxLength={50}
                             placeholder={`Enter your address here`}
                             returnKeyType="done"
                         />
                 </View>
-                { bank.addressLength != "" && <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{address.length}/{bank.addressLength}</Text> }
+              <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{address.length}/50</Text>
             </View>
         </View>
     )
@@ -238,8 +232,6 @@ const FundTransferForm = ({selectBanks})=> {
                 input: {
                     amount: +amount,
                     cashOutBankId: bank.id,
-                    isInstaPay: bank.isInstaPay,
-                    isPesoNet: bank.isPesoNet,
                     accountName: accountName,
                     accountNumber: accountNumber,
                     note: note,
@@ -252,7 +244,7 @@ const FundTransferForm = ({selectBanks})=> {
 
 
     const onPress = ()=> {
-        if(bank == ""){
+        if(!bank.id){
             return Alert.alert("","Bank is required.")
         }
         if(address == ""){
@@ -303,7 +295,7 @@ const FundTransferForm = ({selectBanks})=> {
             />
             <View style={styles.proceedBtn}>
                 {
-                    bank == "" ||
+                    !bank.id || bank.name == "" ||
                     accountNumber == "" ||
                     amount == "" ||
                     address == "" ||

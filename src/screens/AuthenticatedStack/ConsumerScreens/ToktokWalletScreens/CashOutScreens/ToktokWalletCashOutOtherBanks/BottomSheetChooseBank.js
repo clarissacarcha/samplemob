@@ -81,12 +81,7 @@ const selectBank = (bank)=> {
               <>
               <View style={{flex: 1}}>
                 <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>{item.name}</Text>
-                {/* <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.XS,color: COLOR.DARK}}>
-                   {item.isInstaPay 
-                    ? `Maximum Cash Out limit: PHP 50,000.00`  // instapay
-                    : "Maximum Cash Out limit: PHP 200,000.00" // pesonet
-                   }
-                  </Text> */}
+  
               </View>
               <View>
                   <VectorIcon size={12} iconSet={ICON_SET.Feather} name="chevron-right" color={COLOR.DARK} />

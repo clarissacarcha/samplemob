@@ -43,7 +43,6 @@ export const GET_CASH_OUTS = gql`
                             accountName
                             bank {
                                 name 
-                                code
                             }
                     }
                 }

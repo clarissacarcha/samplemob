@@ -16,9 +16,6 @@ const ContextProvider = ({children})=> {
     const [bank,setBank] = useState({
         id: null,
         name: "",
-        accountNumberLength: "",
-        accountNameLength: "",
-        addressLength: ""
     })
 
 

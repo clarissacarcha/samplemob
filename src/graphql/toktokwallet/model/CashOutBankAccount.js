@@ -14,12 +14,6 @@ export const GET_BANK_ACCOUNTS = gql`
             bank {
                 id
                 name
-                code
-                accountNumberLength
-                accountNameLength
-                addressLength
-                isInstaPay
-                isPesoNet
             }
         }
     }
