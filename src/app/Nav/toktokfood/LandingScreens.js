@@ -2,6 +2,7 @@ import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 import {
+  ToktokFoodSearch,
   ToktokFoodHome,
   ToktokFoodOrders,
   ToktokFoodSettings,
@@ -14,6 +15,7 @@ const ToktokStack = createStackNavigator();
 
 const ToktokFoodHomeStack = () => (
   <ToktokStack.Navigator screenOptions={{headerShown: false}} initialRouteName="ToktokFoodHome">
+    <ToktokStack.Screen name="ToktokFoodSearch" component={ToktokFoodSearch} />
     <ToktokStack.Screen name="ToktokFoodHome" component={ToktokFoodHome} />
     <ToktokStack.Screen name="ToktokFoodRestaurantOverview" component={ToktokFoodRestaurantOverview} />
   </ToktokStack.Navigator>
