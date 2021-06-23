@@ -95,6 +95,7 @@ const MySavedAccounts = ({selectBanks , edit})=> {
        }else{
             setBank(account.bank)
             setAccountNumber(account.accountNumber)
+            setAddress(account.address)
             setActiveAccount(index)
        }
     }

@@ -32,7 +32,7 @@ const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
     const [address,setAddress] = useState(bankAccount.address)
     const [errorMessage,setErrorMessage] = useState("")
     const [showSuccessModal,setShowSuccessModal] = useState(false)
-  
+
     const alert = useAlert()
 
     const [patchCashOutBankAccount , {data,error,loading}] = useMutation(PATCH_CASH_OUT_BANK_ACCOUNT, {
@@ -136,13 +136,13 @@ const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
                                     style={styles.input}
                                     value={accountNumber}
                                     onChangeText={changeAccountNumber}
-                                    maxLength={+bank.accountNumberLength}
+                                    maxLength={19}
                                     placeholder={`Enter bank account number here`}
                                     returnKeyType="done"
                                     keyboardType="number-pad"
                                 />
                         </View>
-                        <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{accountNumber.length}/{bank.accountNumberLength}</Text>
+                        <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{accountNumber.length}/19</Text>
                     </View>
 
                     <View style={{marginVertical: 10,}}>
@@ -154,9 +154,10 @@ const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
                                     onChangeText={(value)=>setAddress(value)}
                                     placeholder={`Enter address here`}
                                     returnKeyType="done"
+                                    maxLength={50}
                                 />
                         </View>
-                        <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{address.length}/{bank.addressLength}</Text>
+                        <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{address.length}/50</Text>
                     </View>
     
              <View style={{justifyContent:'center',alignItems:"center"}}>

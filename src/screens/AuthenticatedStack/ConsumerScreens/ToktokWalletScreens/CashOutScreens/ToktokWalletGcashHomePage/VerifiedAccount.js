@@ -163,8 +163,8 @@ const VerifiedAccount = ({record,provider})=> {
             <View style={styles.cashoutbutton}>
                     {
                         (amount != "" && amount <= tokwaAccount.wallet.balance && amount >= 1 )
-                        ? <YellowButton label="Proceed" onPress={confirmAmount}/>
-                        : <DisabledButton label="Proceed" />
+                        ? <YellowButton label="Transfer Fund" onPress={confirmAmount}/>
+                        : <DisabledButton label="Transfer Fund" />
                     }
             </View>
 

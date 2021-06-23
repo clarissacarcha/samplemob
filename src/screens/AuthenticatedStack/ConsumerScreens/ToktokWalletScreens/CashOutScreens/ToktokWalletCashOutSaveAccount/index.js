@@ -133,12 +133,12 @@ const ToktokWalletCashOutSaveAccount = ({navigation,route})=> {
                                     style={styles.input}
                                     value={accountNumber}
                                     onChangeText={changeAccountNumber}
-                                    maxLength={+bank.accountNumberLength}
+                                    maxLength={19}
                                     placeholder={`Enter bank account number here`}
                                     keyboardType="number-pad"
                                     returnKeyType="done"
                                 />
-                                <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{accountNumber.length}/{bank.accountNumberLength}</Text>
+                                <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{accountNumber.length}/19</Text>
                         </View>
                     </View>
 
@@ -149,13 +149,13 @@ const ToktokWalletCashOutSaveAccount = ({navigation,route})=> {
                                     style={styles.input}
                                     value={accountNumber}
                                     value={address}
-                                    maxLength={bank.addressLength}
+                                    maxLength={50}
                                     onChangeText={(value)=>setAddress(value)}
                                     placeholder={`Enter address here`}
                                     returnKeyType="done"
                             />
                         </View>
-                        <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{address.length}/{bank.addressLength}</Text>
+                        <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{address.length}/50</Text>
                     </View>
                     
 
