@@ -18,9 +18,15 @@ import {COLOR, FONT} from 'res/variables';
 import {restaurants, tabs} from 'toktokfood/helper/strings';
 
 // Utils
-import {scale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
+import {scale, verticalScale} from 'toktokfood/helper/scale';
 
 const ToktokFoodSearch = () => {
+
+  tabs[3] = {
+    id: 4,
+    name: 'Best Sellers',
+  };
+
   const navigation = useNavigation();
   const [activeTab, setActiveTab] = useState(tabs[0]);
 

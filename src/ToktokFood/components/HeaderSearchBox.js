@@ -24,7 +24,7 @@ const HeaderSearchBox = () => {
       <View style={[styles.textInputWrapper, styles.searchBoxShadow]}>
         <Image style={styles.searchBoxIcon} source={searchIcon} />
         <TextInput
-          autoFocus={true}
+          autoFocus={false}
           multiline={false}
           placeholder="What would you like to eat?"
           style={[styles.searchBox, styles.textInputFontStyles]}
