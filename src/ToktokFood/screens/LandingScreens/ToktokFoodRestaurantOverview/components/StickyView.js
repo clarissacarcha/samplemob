@@ -6,35 +6,21 @@ import {useRoute} from '@react-navigation/native';
 import {Rating} from 'react-native-ratings';
 
 // Components
-import {RestaurantList} from '../../ToktokFoodHome/components';
+// import {RestaurantList} from '../../ToktokFoodHome/components';
 import HeaderTabs from 'toktokfood/components/HeaderTabs';
-// import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
 import HeaderTitleSearchBox from './HeaderTitleSearchBox';
+import FoodList from './FoodList';
 
 // Utils
 import {moderateScale, scale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
+import {tabs} from 'toktokfood/helper/strings';
 
 // const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 // const IS_IPHONE_X = SCREEN_HEIGHT === 812 || SCREEN_HEIGHT === 896;
 // const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? (IS_IPHONE_X ? 44 : 20) : 0;
 // const HEADER_HEIGHT = Platform.OS === 'ios' ? (IS_IPHONE_X ? 88 : 0) : 64;
 // const NAV_BAR_HEIGHT = HEADER_HEIGHT - STATUS_BAR_HEIGHT;
-
-const tabs = [
-  {
-    id: 1,
-    name: 'Near You',
-  },
-  {
-    id: 2,
-    name: 'Promos',
-  },
-  {
-    id: 3,
-    name: 'All',
-  },
-];
 
 const StickyView = () => {
   const [offset, setOffset] = useState(0);
@@ -96,13 +82,14 @@ const StickyView = () => {
         backgroundImage={image}
         backgroundColor="transparent"
         navbarColor="whitesmoke"
-        renderContent={() => <RestaurantList />}
+        renderContent={() => <FoodList />}
         renderNavBar={renderNavBar}
         containerStyle={styles.container}
         contentContainerStyle={styles.contentContainer}
         scrollViewProps={{
           //   onScroll: (event) => setOffset(event.nativeEvent.contentOffset.y),
           onScrollEndDrag: (event) => setOffset(event.nativeEvent.contentOffset.y),
+          onMomentumScrollEnd: (event) => setOffset(event.nativeEvent.contentOffset.y),
         }}
       />
     </>
@@ -129,7 +116,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     backgroundColor: 'whitesmoke',
     flexGrow: 1,
-    marginTop: Platform.OS === 'ios' ? verticalScale(10) : 0,
+    // marginTop: Platform.OS === 'ios' ? verticalScale(4) : 0,
     paddingBottom: 30,
   },
   headerWrapper: {

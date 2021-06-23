@@ -3,10 +3,10 @@ import {View, StyleSheet, TextInput, TouchableOpacity, Image, Platform} from 're
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 
 import {FONT, FONT_SIZE, COLOR} from 'res/variables';
-import {paperRoll, searchIcon} from 'toktokfood/assets/images';
+import {searchIcon} from 'toktokfood/assets/images';
 
 // Utils
-import {verticalScale} from 'toktokfood/helper/scale';
+import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
 
 // State must be global to share with other components
 const HeaderTitleSearchBox = () => {
@@ -19,9 +19,6 @@ const HeaderTitleSearchBox = () => {
         <Image style={styles.searchBoxIcon} source={searchIcon} />
         <TextInput placeholder="What would you like to eat?" multiline={false} style={[styles.textInputFontStyles]} />
       </View>
-      <TouchableOpacity style={styles.headerBack}>
-        <Image style={styles.paperRollIcon} source={paperRoll} />
-      </TouchableOpacity>
     </View>
   );
 };
@@ -40,6 +37,7 @@ const styles = StyleSheet.create({
   searchBoxContainer: {
     flexDirection: 'row',
     marginTop: Platform.OS === 'android' ? 53 : 35,
+    paddingRight: moderateScale(20),
   },
   searchBox: {
     borderRadius: 13,
