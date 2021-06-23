@@ -11,13 +11,13 @@ export const AdsCarousel = (props) => {
   const renderItem = ({item, index}) => {
     return (
       <View>
-        <Image source={require("../../../assets/images/sampleAds/ad1.png")} style={{width: '100%', height: 170, resizeMode: 'stretch'}} />
+        <Image source={require("../../../assets/images/sampleAds/ad1.png")} style={{width: '100%', height: 130, resizeMode: 'stretch'}} />
       </View>
     )
   }
 
   return (
-    <View>
+    <View style={{paddingHorizontal: 15, paddingTop: 5}}>
       <Carousel
         data={entries}
         renderItem={renderItem}
