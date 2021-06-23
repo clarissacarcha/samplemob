@@ -30,7 +30,7 @@ export const LandingHeader = (props) => {
                 <FIcon5 name="chevron-left" color={COLOR.ORANGE} size={15}/>
               </View>
               <View style={{flex: 2}}></View>
-              <View style={{flex: 8, alignItems: 'center', paddingTop: 8}}>
+              <View style={{flex: 8, alignItems: 'center', paddingTop: 15}}>
                 <Image source={require("../../../assets/toktokmall-assets/images/toktokmall-h.png")} style={{width: '100%', height: 35, resizeMode: 'stretch'}} />
               </View>
               <View style={{flex: 2}}></View>
@@ -43,7 +43,7 @@ export const LandingHeader = (props) => {
                 </View>
               </View>
             </View>
-            <TouchableOpacity activeOpacity={1} onPress={onPress} style={{flex: 1, backgroundColor: '#fff', width: '90%', marginLeft: '5%', position: 'absolute', bottom: -15, padding: 4, elevation: 8, flexDirection: 'row', borderRadius: 6}}>
+            <TouchableOpacity activeOpacity={1} onPress={onPress} style={{flex: 1, backgroundColor: '#fff', width: '92%', marginLeft: '4%', position: 'absolute', bottom: -15, padding: 4, elevation: 8, flexDirection: 'row', borderRadius: 6}}>
               <View style={{flex: 0, paddingHorizontal: 8, paddingVertical: 4}}>
                 <AIcon name="search" color={COLOR.ORANGE} size={22}/>
               </View>

@@ -11,7 +11,7 @@ export const AdsCarousel = (props) => {
   const renderItem = ({item, index}) => {
     return (
       <View>
-        <Image source={require("../../../assets/images/sampleAds/ad1.png")} style={{width: '100%', height: 130, resizeMode: 'stretch'}} />
+        <Image source={require("../../../assets/toktokmall-assets/images/ads.png")} style={{width: '100%', height: 130, resizeMode: 'stretch'}} />
       </View>
     )
   }
