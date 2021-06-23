@@ -34,7 +34,7 @@ const StickyView = () => {
   const [offset, setOffset] = useState(0);
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const headerMaxHeight = Platform.OS === 'ios' ? moderateScale(270) : scale(320);
-  // const headerMinHeight = Platform.OS === 'ios' ? moderateScale(70) : scale(65);
+  const headerMinHeight = Platform.OS === 'ios' ? verticalScale(42) : moderateScale(65);
 
   const renderNavBar = () => (
     <View style={[styles.headerWrapper, styles.navbarWrapper]}>
@@ -57,9 +57,9 @@ const StickyView = () => {
       <ReactNativeParallaxHeader
         alwaysShowNavBar={false}
         alwaysShowTitle={false}
-        headerMinHeight={moderateScale(65)}
+        headerMinHeight={headerMinHeight}
         headerMaxHeight={headerMaxHeight}
-        headerTitleStyle={{zIndex: offset <= 245 ? 0 : -1}}
+        headerTitleStyle={{zIndex: offset <= 247 ? 0 : -1}}
         extraScrollHeight={20}
         title={renderTitle()}
         backgroundColor="transparent"
@@ -71,6 +71,7 @@ const StickyView = () => {
         scrollViewProps={{
           // onScroll: (event) => setOffset(event.nativeEvent.contentOffset.y),
           onScrollEndDrag: (event) => setOffset(event.nativeEvent.contentOffset.y),
+          onMomentumScrollEnd: (event) => setOffset(event.nativeEvent.contentOffset.y),
         }}
       />
     </>

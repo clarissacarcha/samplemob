@@ -75,7 +75,7 @@ const StickyView = () => {
         alwaysShowTitle={false}
         headerMinHeight={headerMinHeight}
         headerMaxHeight={headerMaxHeight}
-        headerTitleStyle={{zIndex: offset <= 210 ? 0 : -1, justifyContent: 'flex-start'}}
+        headerTitleStyle={{zIndex: offset <= 132 ? 0 : -1, justifyContent: 'flex-start'}}
         extraScrollHeight={0}
         backgroundImageScale={1.1}
         title={renderTitle()}
@@ -114,10 +114,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: moderateScale(10),
   },
   contentContainer: {
-    backgroundColor: 'whitesmoke',
+    backgroundColor: 'white',
     flexGrow: 1,
     // marginTop: Platform.OS === 'ios' ? verticalScale(4) : 0,
-    paddingBottom: 30,
+    paddingBottom: verticalScale(15),
   },
   headerWrapper: {
     backgroundColor: 'white',
