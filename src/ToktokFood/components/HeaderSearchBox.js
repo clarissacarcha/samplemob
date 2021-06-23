@@ -1,19 +1,34 @@
 import React from 'react';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {View, StyleSheet, TextInput, Image, Platform} from 'react-native';
 
-import {FONT, FONT_SIZE, COLOR} from '../../res/variables';
 import {searchIcon} from '../assets/images';
+import {FONT, FONT_SIZE, COLOR} from '../../res/variables';
 
 // State must be global to share with other components
 const HeaderSearchBox = () => {
+  const routes = useRoute();
+  const navigation = useNavigation();
+
+  // The navigation must not trigger on ToktokFood search page.
+
+  const onFocusSearchBox = () => {
+    const forSearchPage = routes.params?.forSearchPage;
+    if (typeof forSearchPage === 'undefined') {
+      navigation.navigate('ToktokFoodSearch', {forSearchPage: true});
+    }
+  };
+
   return (
     <View style={styles.searchBoxContainer}>
       <View style={[styles.textInputWrapper, styles.searchBoxShadow]}>
         <Image style={styles.searchBoxIcon} source={searchIcon} />
         <TextInput
-          placeholder="What would you like to eat?"
+          autoFocus={true}
           multiline={false}
+          placeholder="What would you like to eat?"
           style={[styles.searchBox, styles.textInputFontStyles]}
+          onTouchStart={() => onFocusSearchBox()}
         />
       </View>
     </View>
