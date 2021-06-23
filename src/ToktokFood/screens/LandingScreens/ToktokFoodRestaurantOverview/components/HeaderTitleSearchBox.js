@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, StyleSheet, TextInput, TouchableOpacity, Image, Platform} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 
 import {FONT, FONT_SIZE, COLOR} from 'res/variables';
@@ -10,9 +11,11 @@ import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
 
 // State must be global to share with other components
 const HeaderTitleSearchBox = () => {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.searchBoxContainer}>
-      <TouchableOpacity style={styles.headerBack}>
+      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.headerBack}>
         <FIcon5 name="chevron-left" size={15} />
       </TouchableOpacity>
       <View style={[styles.textInputWrapper, styles.searchBox]}>
