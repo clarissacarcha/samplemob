@@ -1,13 +1,15 @@
 import React from 'react';
+import {Image, View, StyleSheet, Text, TouchableOpacity, Platform} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import ContentLoader from 'react-native-easy-content-loader';
-import {Image, View, StyleSheet, Text, TouchableOpacity, Platform} from 'react-native';
 
-import {FONT, FONT_SIZE, COLOR} from '../../res/variables';
-import {markerIcon} from '../assets/images';
+import {FONT, FONT_SIZE, COLOR} from 'res/variables';
+import {markerIcon} from 'toktokfood/assets/images';
 
 const HeaderTitle = ({title = 'TokTok PH'}) => {
+  const navigation = useNavigation();
   const {location} = useSelector((state) => state.toktokFood);
 
   const renderText = () => (
@@ -33,9 +35,13 @@ const HeaderTitle = ({title = 'TokTok PH'}) => {
     />
   );
 
+  const onBack = () => {
+    navigation.goBack();
+  };
+
   return (
     <View style={styles.header}>
-      <TouchableOpacity style={styles.headerBack}>
+      <TouchableOpacity onPress={onBack} style={styles.headerBack}>
         <FIcon5 name="chevron-left" size={15} />
       </TouchableOpacity>
       <View style={styles.headerTextContainer}>{!location ? renderLoader() : renderText()}</View>

@@ -27,7 +27,7 @@ const StickyView = () => {
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const routes = useRoute();
   const {distance, image, name, ratings, time, totalBranches} = routes.params.item;
-  const headerMinHeight = Platform.OS === 'ios' ? moderateScale(130) : moderateScale(160);
+  const headerMinHeight = Platform.OS === 'ios' ? moderateScale(130) : moderateScale(150);
   const headerMaxHeight = Platform.OS === 'ios' ? scale(350) : scale(370);
 
   const renderNavBar = () => (
@@ -75,7 +75,7 @@ const StickyView = () => {
         alwaysShowTitle={false}
         headerMinHeight={headerMinHeight}
         headerMaxHeight={headerMaxHeight}
-        headerTitleStyle={{zIndex: offset <= 132 ? 0 : -1, justifyContent: 'flex-start'}}
+        headerTitleStyle={{zIndex: offset <= 132 ? 1 : -1, justifyContent: 'flex-start'}}
         extraScrollHeight={0}
         backgroundImageScale={1.1}
         title={renderTitle()}
