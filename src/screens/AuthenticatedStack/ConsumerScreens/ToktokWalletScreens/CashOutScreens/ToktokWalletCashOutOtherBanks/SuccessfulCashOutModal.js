@@ -17,7 +17,7 @@ const TransactionInfo = ({label,value})=> (
     </View>
 )
 
-const SuccessfulCashOutModal = ({visible , cashoutLogParams, tokwaAccount})=> {
+const SuccessfulCashOutModal = ({visible , cashoutLogParams, tokwaAccount , savedAccounts , note})=> {
     const navigation = useNavigation()
 
     console.log(JSON.stringify(cashoutLogParams))
@@ -54,6 +54,7 @@ const SuccessfulCashOutModal = ({visible , cashoutLogParams, tokwaAccount})=> {
                 refNo={MaskLeftZero(cashoutLogParams.id)}
                 refDate={cashoutLogParams.createdAt}
                 onPress={Proceed}
+                savedAccounts={savedAccounts}
             >
                 
                 <View style={styles.recipientInfo}>
@@ -62,7 +63,8 @@ const SuccessfulCashOutModal = ({visible , cashoutLogParams, tokwaAccount})=> {
                      <TransactionInfo label="Account Number" value={cashoutLogParams.accountNumber}/>
                      <TransactionInfo label="Status" value={status}/>
                      <TransactionInfo label="Amount" value={`${tokwaAccount.wallet.currency.code} ${numberFormat(cashoutLogParams.amount)}`}/>
-                     <TransactionInfo label="Note" value={cashoutLogParams.note}/>
+                     { note != "" && <TransactionInfo label="Note" value={cashoutLogParams.note}/>}
+                    
                 </View>            
             </Receipt>
         

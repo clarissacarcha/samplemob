@@ -28,7 +28,7 @@ const CashOutOtherBank = ({data})=>{
                 <TransactionInfo label="Account Name" value={data.accountName}/>
                 <TransactionInfo label="Account Number" value={data.accountNumber}/>
                 <TransactionInfo label="Amount" value={`${tokwaAccount.wallet.currency.code} ${numberFormat(data.amount)}`}/>
-                <TransactionInfo label="Note" value={data.note}/>
+                {data.note != "" && <TransactionInfo label="Note" value={data.note}/>}
        </View>
     )
 }

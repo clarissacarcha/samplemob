@@ -1,5 +1,24 @@
 import gql from 'graphql-tag'
 
+const BDOEnrollmentType = `
+            id
+            accountNumber
+            accountName
+            accountCurrency
+            accountType
+            referenceNumber
+            emailAddress
+            accountId
+            status
+            firstName
+            middleName
+            lastName
+            streetAddress
+            barangayTown
+            provinceCity
+            country
+            birthdate`
+
 export const GET_CASH_OUT_ENROLLMENT_BDO = gql`
     query {
         getCashOutEnrollmentBdo {
@@ -10,27 +29,11 @@ export const GET_CASH_OUT_ENROLLMENT_BDO = gql`
                 origin
                 status
                 bdoEnrollmentRecord {
-                    id
-                    accountNumber
-                    accountName
-                    accountCurrency
-                    accountType
-                    referenceNumber
-                    emailAddress
-                    accountId
-                    status
+                    ${BDOEnrollmentType}
                 }
             }
             pendingRecord {
-                id
-                accountNumber
-                accountName
-                accountCurrency
-                accountType
-                referenceNumber
-                emailAddress
-                accountId
-                status
+                ${BDOEnrollmentType}
             }
         }
     }
@@ -39,15 +42,7 @@ export const GET_CASH_OUT_ENROLLMENT_BDO = gql`
 export const GET_BDO_ENROLLMENT_RECORD = gql`
     query getBdoEnrollmentRecord($input: GetBdoEnrollmentRecordInput){
          getBdoEnrollmentRecord(input: $input){
-            id
-            accountNumber
-            accountName
-            accountCurrency
-            accountType
-            referenceNumber
-            emailAddress
-            accountId
-            status
+           ${BDOEnrollmentType} 
          }
     }
 `
@@ -56,15 +51,7 @@ export const GET_BDO_ENROLLMENT_RECORD = gql`
 export const POST_CASH_OUT_ENROLLMENT_BDO = gql`
     mutation postCashOutEnrollmentBdo($input: PostCashOutEnrollmentBdoInput!){
         postCashOutEnrollmentBdo(input: $input){
-            id
-            accountNumber
-            accountName
-            accountCurrency
-            accountType
-            referenceNumber
-            emailAddress
-            accountId
-            status
+            ${BDOEnrollmentType}
         }
     }
 `
