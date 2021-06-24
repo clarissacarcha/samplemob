@@ -1,6 +1,6 @@
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {FlatList, View, SafeAreaView, Text, TouchableOpacity} from 'react-native';
+import {FlatList, View, Text, TouchableOpacity} from 'react-native';
 
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 
@@ -35,7 +35,7 @@ const ToktokFoodNotifications = () => {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => onBack()}>
           <FIcon5 name="chevron-left" size={20} color="#FDBA1C" />
@@ -47,7 +47,7 @@ const ToktokFoodNotifications = () => {
       <View style={styles.listContainer}>
         <FlatList data={notifications} renderItem={renderItem} />
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
