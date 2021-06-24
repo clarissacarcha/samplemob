@@ -56,7 +56,8 @@ export default HeaderTitle;
 const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
-    paddingTop: Platform.OS === 'android' ? verticalScale(getStatusbarHeight + 5) : 20,
+    paddingTop:
+      Platform.OS === 'android' ? verticalScale(getStatusbarHeight + 5) : verticalScale(getStatusbarHeight + 30),
   },
   headerBack: {
     paddingHorizontal: 20,

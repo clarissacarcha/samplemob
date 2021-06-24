@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, TextInput, TouchableOpacity, Image, Platform} from 'react-native';
+import {View, StyleSheet, StatusBar, TextInput, TouchableOpacity, Image, Platform} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 
@@ -7,7 +7,7 @@ import {FONT, FONT_SIZE, COLOR} from 'res/variables';
 import {searchIcon} from 'toktokfood/assets/images';
 
 // Utils
-import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
+import {moderateScale, scale, verticalScale} from 'toktokfood/helper/scale';
 
 // State must be global to share with other components
 const HeaderTitleSearchBox = () => {
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   },
   searchBoxContainer: {
     flexDirection: 'row',
-    marginTop: Platform.OS === 'android' ? 53 : 35,
+    marginTop: Platform.OS === 'android' ? 53 : verticalScale(25),
     paddingRight: moderateScale(20),
   },
   searchBox: {
