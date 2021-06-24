@@ -1,6 +1,7 @@
 import React from 'react';
 import {Text} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
+import MIcon from 'react-native-vector-icons/MaterialIcons';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
@@ -60,7 +61,7 @@ const ToktokFoodLanding = () => (
       options={{
         tabBarLabel: ({focused}) => (
           <>
-            <FA5Icon name="bell" color={getOnFocusProps(focused)} size={20} />
+            <MIcon name="notifications" color={getOnFocusProps(focused)} size={25} />
             <Text style={{fontSize: 10, marginTop: 4, color: getOnFocusProps(focused)}}>Notifications</Text>
           </>
         ),

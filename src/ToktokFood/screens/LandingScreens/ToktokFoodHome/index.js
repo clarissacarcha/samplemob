@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {StyleSheet, SafeAreaView} from 'react-native';
 
 // Components
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
@@ -14,13 +14,13 @@ const ToktokFoodHome = () => {
   useUserLocation(); // user location hook
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <HeaderImageBackground>
         <HeaderTitle />
         <HeaderSearchBox />
       </HeaderImageBackground>
       <StickyView />
-    </View>
+    </SafeAreaView>
   );
 };
 

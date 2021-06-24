@@ -6,6 +6,7 @@ import {COLOR} from 'res/variables';
 
 // Strings
 import {foodData} from 'toktokfood/helper/strings';
+
 import {verticalScale} from 'toktokfood/helper/scale';
 
 const FoodList = () => {
@@ -33,9 +34,9 @@ export default FoodList;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: COLOR.WHITE,
     flex: 1,
     paddingHorizontal: 20,
+    backgroundColor: COLOR.WHITE,
   },
   headerBack: {
     justifyContent: 'center',

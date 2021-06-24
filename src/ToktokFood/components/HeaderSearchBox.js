@@ -40,7 +40,6 @@ const HeaderSearchBox = () => {
             autoFocus={true}
             placeholder="What would you like to eat?"
             style={[styles.searchBox, styles.textInputFontStyles]}
-            onFocus={() => console.log(isForSearchPage())}
           />
         </View>
       </View>
@@ -61,7 +60,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   searchBox: {
-    height: 50,
+    height: 49,
     width: '100%',
     paddingEnd: 10,
     borderRadius: 13,
@@ -84,7 +83,7 @@ const styles = StyleSheet.create({
     fontFamily: FONT.REGULAR,
   },
   textInputWrapper: {
-    height: 51,
+    height: 50,
     width: '93%',
     display: 'flex',
     borderRadius: 13,
