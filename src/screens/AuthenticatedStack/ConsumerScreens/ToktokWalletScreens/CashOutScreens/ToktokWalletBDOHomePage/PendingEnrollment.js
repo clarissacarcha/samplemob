@@ -32,8 +32,15 @@ const PendingEnrollment = ({record})=> {
             <Text style={styles.labelTitle}>PENDING VERIFICATION</Text>
             <ScrollView showsVerticalScrollIndicator={false} style={styles.record}>   
                     <Information label="Account Number" value={record.accountNumber}/>
-                    <Information label="Account Name" value={record.accountName}/>
+                    <Information label="First Name" value={record.firstName}/>
+                    <Information label="Middle Name" value={record.middleName}/>
+                    <Information label="Last Name" value={record.lastName}/>
+                    <Information label="Birthdate" value={moment(record.birthdate).tz('Asia/Manila').format('MMM DD, YYYY')}/>
                     <Information label="Email Address" value={record.emailAddress}/>
+                    <Information label="Street Address" value={record.streetAddress}/>
+                    <Information label="Barangay Town" value={record.barangayTown}/>
+                    <Information label="Province City" value={record.provinceCity}/>
+                    <Information label="Country" value={record.country}/>
             </ScrollView>
             <View>
                 <YellowButton label="Ok" onPress={()=>navigation.pop()}/>

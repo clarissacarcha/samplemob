@@ -248,7 +248,7 @@ const CreateForm = ({navigation,session,mobile,provider})=> {
         />
        <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "height" : null}
-            keyboardVerticalOffset={Platform.OS === 'ios' ? screen.height * 0.25 : screen.height * 0.5}
+            keyboardVerticalOffset={Platform.OS === 'ios' ? screen.height * 0.15 : screen.height * 0.5}
             style={{ flex: 1 }}
         >
             <ScrollView style={{flex: 1,flexGrow: 1,}} showsVerticalScrollIndicator={false}>
@@ -357,35 +357,8 @@ const CreateForm = ({navigation,session,mobile,provider})=> {
 
                 <View style={{marginVertical: 20}}>
                     <Text style={styles.label}>Country</Text>
-                    {/* <TextInput 
-                        style={styles.input}
-                        placeholder="Enter Country here"
-                        onChangeText={(value)=>setCountry(value)}
-                        value={country}
-                        returnKeyType="done"
-                    /> */}
                   <View style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center",paddingVertical: 10}]}>
                             <Text style={{ fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR,flex: 1}}>{country}</Text>
-                            {/* <TouchableOpacity
-                                    onPress={()=>setModalCountryVisible(true)}
-                                    style={{
-                                        paddingHorizontal: 10,
-                                        borderWidth: 1,
-                                        borderColor: COLOR.YELLOW,
-                                        borderRadius: 5,
-                                        height: 20,
-                                        marginRight: 10,
-                                    }}
-                                >
-                                    <View style={{
-                                         flex: 1,
-                                         justifyContent:"center",
-                                         alignItems:"center",
-                                    }}>
-                                        <Text style={{color: COLOR.YELLOW,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S}}>Change</Text>
-                                    </View>
-                                </TouchableOpacity> */}
-                          
                     </View>
                 </View>
 

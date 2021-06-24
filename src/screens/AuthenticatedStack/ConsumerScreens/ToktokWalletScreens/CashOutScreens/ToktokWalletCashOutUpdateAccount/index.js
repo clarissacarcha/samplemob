@@ -2,7 +2,7 @@ import React , {useState,useEffect} from 'react'
 import {View,Text,StyleSheet,TextInput,Alert,TouchableOpacity,Dimensions,KeyboardAvoidingView,ScrollView} from 'react-native'
 import {Separator} from '../../Components'
 import {HeaderBack,HeaderTitle,YellowButton} from '../../../../../../revamp'
-import { COLOR, FONT, FONT_SIZE } from '../../../../../../res/variables'
+import { COLOR, FONT, FONT_SIZE, SIZE } from '../../../../../../res/variables'
 import { useSelector } from 'react-redux'
 import { AlertOverlay } from '../../../../../../components'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from '../../../../../../graphql'
@@ -22,7 +22,8 @@ const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
         headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
         headerTitle: ()=> <HeaderTitle label={['Update Account','']}/>,
     })
-   
+
+    const alert = useAlert()
     const bankAccount = route.params.bankAccount
     const bank = bankAccount.bank
     const tokwaAccount = useSelector(state=>state.toktokWallet)
@@ -33,7 +34,19 @@ const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
     const [errorMessage,setErrorMessage] = useState("")
     const [showSuccessModal,setShowSuccessModal] = useState(false)
 
-    const alert = useAlert()
+    const [errorListMessage, setErrorListMessage] = useState({
+        alias: "",
+        accountNumber: "",
+        address: "",
+    })
+
+    const changeErrorMessagge = (key,value)=> {
+        setErrorListMessage(oldstate=>({
+            ...oldstate,
+            [key]: value
+        }))
+        
+    }
 
     const [patchCashOutBankAccount , {data,error,loading}] = useMutation(PATCH_CASH_OUT_BANK_ACCOUNT, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
@@ -47,17 +60,21 @@ const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
     })
 
     const saveAccount = ()=> {
+        let noError = true
         if(nickName == ""){
-            return Alert.alert("","Alias is required.")
+            changeErrorMessagge("alias","Alias is required.")
+            noError = false
         }
-
         if(accountNumber == ""){
-            return Alert.alert("","Account Number is required.")
+            changeErrorMessagge("accountNumber","Account Number is required.")
+            noError = false
+        }
+        if(address == ""){
+            changeErrorMessagge("address","Account Address is required..")
+            noError = false
         }
 
-        if(address == ""){
-            return Alert.alert("","Account Address is required.")
-        }
+        if(!noError) return
 
         patchCashOutBankAccount({
             variables: {
@@ -74,20 +91,24 @@ const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
         })
     }
 
+    useEffect(()=>{
+        if(nickName.length > 0){
+            changeErrorMessagge("alias","")
+        }
+        if(accountNumber.length > 0) {
+            changeErrorMessagge("accountNumber","")
+        }
+        if(address.length > 0){
+            changeErrorMessagge("address","")
+        }
+    },[nickName,accountNumber,address])
+
+
     const changeAccountNumber = (value)=> {
         const num = value.replace(/[^0-9.]/g, '')
-        // if(value.length != +bank.accountNumberLength){
-        //     setErrorMessage("Account number format must be valid.")
-        // }
-
         setAccountNumber(num)
     }
     
-
-    // useEffect(()=>{
-    //     if(accountNumber == "" || accountNumber.length === +bank.accountNumberLength) setErrorMessage("")
-    // },[accountNumber])
-
     return (
         <>
         <AlertOverlay visible={loading}/>
@@ -105,7 +126,7 @@ const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
                     </View>
                     <View style={{marginVertical: 10,}}>
                         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Alias</Text>
-                        <View style={[{justifyContent:"center"}]}>
+                        <View style={[{borderRadius: SIZE.BORDER_RADIUS, borderWidth: 1, borderColor: errorListMessage.alias == "" ? "transparent" : COLOR.RED}]}>
                             <TextInput
                                     style={styles.input}
                                     value={nickName}
@@ -114,8 +135,10 @@ const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
                                     returnKeyType="done"
                                     maxLength={50}
                             />
-                            <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{nickName.length}/50</Text>
                         </View>
+                        <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{accountNumber.length}/50 
+                            {errorListMessage.alias != "" && <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS,color: COLOR.RED}}>  {errorListMessage.alias}</Text>}
+                        </Text>
                     </View>
 
                     <View style={{marginVertical: 10,}}>
@@ -131,7 +154,7 @@ const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
                     
                     <View style={{marginVertical: 10,}}>
                         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Number</Text>
-                        <View style={[{borderWidth: 1, borderColor: errorMessage == "" ? "transparent" : COLOR.RED}]}>
+                        <View style={[{borderRadius: SIZE.BORDER_RADIUS, borderWidth: 1, borderColor: errorListMessage.accountNumber == "" ? "transparent" : COLOR.RED}]}>
                             <TextInput
                                     style={styles.input}
                                     value={accountNumber}
@@ -142,22 +165,26 @@ const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
                                     keyboardType="number-pad"
                                 />
                         </View>
-                        <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{accountNumber.length}/19</Text>
+                        <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{accountNumber.length}/19 
+                            {errorListMessage.accountNumber != "" && <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS,color: COLOR.RED}}>  {errorListMessage.accountNumber}</Text>}
+                        </Text>
                     </View>
 
                     <View style={{marginVertical: 10,}}>
                         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Address</Text>
-                        <View style={[{justifyContent:"center"}]}>
+                        <View style={[{borderRadius: SIZE.BORDER_RADIUS, borderWidth: 1, borderColor: errorListMessage.address == "" ? "transparent" : COLOR.RED}]}>
                             <TextInput
                                     style={styles.input}
                                     value={address}
                                     onChangeText={(value)=>setAddress(value)}
                                     placeholder={`Enter address here`}
                                     returnKeyType="done"
-                                    maxLength={50}
+                                    maxLength={200}
                                 />
                         </View>
-                        <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{address.length}/50</Text>
+                        <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{accountNumber.length}/200 
+                            {errorListMessage.address != "" && <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS,color: COLOR.RED}}>  {errorListMessage.address}</Text>}
+                        </Text>
                     </View>
     
              <View style={{justifyContent:'center',alignItems:"center"}}>

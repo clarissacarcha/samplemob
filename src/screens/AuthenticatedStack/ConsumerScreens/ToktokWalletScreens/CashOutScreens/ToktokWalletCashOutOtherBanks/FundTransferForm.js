@@ -19,7 +19,7 @@ import SuccessfulCashOutModal from "./SuccessfulCashOutModal";
 import { Alert } from 'react-native'
 
 
-const Amount = ({errorAmountMessage , setErrorAmountMessage})=> {
+const Amount = ({changeErrorMessagge ,errorListMessage})=> {
 
     const tokwaAccount = useSelector(state=>state.toktokWallet)
     const { amount ,setAmount , note , setNote ,bank } = useContext(ContextCashOut)
@@ -39,20 +39,18 @@ const Amount = ({errorAmountMessage , setErrorAmountMessage})=> {
     }
 
     useEffect(()=>{
-        console.log(amount, maxAmount)
-    
             if(amount >= 1 && amount <= tokwaAccount.wallet.balance){
-                setErrorAmountMessage("")
+                changeErrorMessagge("amount","")
             }else if(amount < 1 && amount != ""){
-                setErrorAmountMessage(`Please enter atleast ${tokwaAccount.wallet.currency.code} 1.00.`)
+                changeErrorMessagge("amount",`Please enter atleast ${tokwaAccount.wallet.currency.code} 1.00.`)
             }else if(maxAmount && amount > maxAmount){
-                setErrorAmountMessage(`Maximum limit is ${tokwaAccount.wallet.currency.code} ${numberFormat(maxAmount)}`)
+                changeErrorMessagge("amount",`Maximum limit is ${tokwaAccount.wallet.currency.code} ${numberFormat(maxAmount)}`)
             } else{
-                setErrorAmountMessage(amount == "" ? "" : "You do not have enough balance.")
+                changeErrorMessagge("amount",amount == "" ? "" : "You do not have enough balance.")
             }
 
         return ()=> {
-            setErrorAmountMessage("")
+            changeErrorMessagge("amount","")
         }
     },[amount, maxAmount])
 
@@ -60,7 +58,7 @@ const Amount = ({errorAmountMessage , setErrorAmountMessage})=> {
         <View style={styles.container}>
         <View style={{marginTop: 16,}}>
         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Enter Amount</Text>
-            <View style={[styles.input, {borderWidth: 1, borderColor: errorAmountMessage == "" ? "transparent" : COLOR.RED,flexDirection:"row"}]}>
+            <View style={[styles.input, {borderWidth: 1, borderColor: errorListMessage.amount == "" ? "transparent" : COLOR.RED,flexDirection:"row"}]}>
                         <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,alignSelf:"center"}}>{tokwaAccount.wallet.currency.code} </Text>
                         <TextInput
                                 caretHidden
@@ -74,7 +72,7 @@ const Amount = ({errorAmountMessage , setErrorAmountMessage})=> {
                             <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{amount ? numberFormat(amount) : "0.00"}</Text>
                     </View>
             </View>
-            {errorAmountMessage != "" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.S,color:"#F93154"}}>{errorAmountMessage}</Text>}
+            {errorListMessage.amount != "" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.XS,color:"#F93154"}}>{errorListMessage.amount}</Text>}
         </View>
         <View style={{marginVertical: 16,marginBottom: 20}}>
         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Note (Optional)</Text>
@@ -94,7 +92,7 @@ const Amount = ({errorAmountMessage , setErrorAmountMessage})=> {
     )
 }
 
-const AccountInfo = ({selectBanks , dispatch ,errorMessage, setErrorMessage})=> {
+const AccountInfo = ({selectBanks, errorListMessage })=> {
 
     const { 
         accountName ,
@@ -104,13 +102,7 @@ const AccountInfo = ({selectBanks , dispatch ,errorMessage, setErrorMessage})=> 
         setAddress,
         bank,
     } = useContext(ContextCashOut)
-    // useEffect(()=>{
-    //     if(accountNumber == "" || accountNumber.length === +bankAccountNumberLength){
-    //         setErrorMessage("")
-    //     }else{
-    //         setErrorMessage("Account number format must be valid.")
-    //     }
-    // },[accountNumber])
+
 
     const changeAccountNumber = (value)=> {
         const num = value.replace(/[^0-9.]/g, '')
@@ -121,12 +113,13 @@ const AccountInfo = ({selectBanks , dispatch ,errorMessage, setErrorMessage})=> 
         <View style={styles.container}>
              <View style={{marginTop: 20,}}>
             <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Select Bank</Text>
-                <TouchableOpacity onPress={selectBanks} style={[styles.input, {justifyContent:"flex-start",alignItems:"center", flexDirection:'row'}]}>
+                <TouchableOpacity onPress={selectBanks} style={[styles.input, {justifyContent:"flex-start",alignItems:"center", flexDirection:'row',borderWidth: 1,borderColor: errorListMessage.bank == "" ? "transparent" : COLOR.RED}]}>
                     <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M , color:bank.name == "" ? "gray": "black" }}>{bank.name == "" ? "Choose bank here" : bank.name}</Text>
                     <View style={{flex: 1,alignItems:"flex-end"}}>
                          <VectorIcon iconSet={ICON_SET.Feather} color="black" name="chevron-down"/>
                     </View>
                 </TouchableOpacity>
+                {errorListMessage.bank != "" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.XS,color:"#F93154"}}>{errorListMessage.bank}</Text>}
             </View>
 
             <View style={{marginTop: 16,}}>
@@ -137,7 +130,7 @@ const AccountInfo = ({selectBanks , dispatch ,errorMessage, setErrorMessage})=> 
             </View>
             <View style={{marginTop: 16,}}>
                 <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Number</Text>
-                <View style={[{justifyContent:"center",borderWidth: 1, borderColor: errorMessage == "" ? "transparent" : COLOR.RED}]}>
+                <View style={[{justifyContent:"center",borderWidth: 1, borderColor: errorListMessage.accountNumber == "" ? "transparent" : COLOR.RED}]}>
                     <TextInput
                             style={styles.input}
                             value={accountNumber}
@@ -148,23 +141,26 @@ const AccountInfo = ({selectBanks , dispatch ,errorMessage, setErrorMessage})=> 
                             returnKeyType="done"
                         />
                 </View>
-                { errorMessage != "" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.S,color:COLOR.RED}}>{errorMessage}</Text>}
-                <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{accountNumber.length}/19</Text>
+                <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{accountNumber.length}/19 
+                    {errorListMessage.accountNumber != "" && <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS,color: COLOR.RED}}>  {errorListMessage.accountNumber}</Text>}
+                </Text>
             </View>
 
             <View style={{marginTop: 16,}}>
                 <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Address</Text>
-                <View style={[ {justifyContent:"center"}]}>
+                <View style={[{justifyContent:"center",borderWidth: 1, borderColor: errorListMessage.address == "" ? "transparent" : COLOR.RED}]}>
                     <TextInput
                             style={styles.input}
                             value={address}
                             onChangeText={(value)=>setAddress(value)}
-                            maxLength={50}
+                            maxLength={200}
                             placeholder={`Enter your address here`}
                             returnKeyType="done"
                         />
                 </View>
-              <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{address.length}/50</Text>
+                <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{accountNumber.length}/200 
+                    {errorListMessage.address != "" && <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS,color: COLOR.RED}}>  {errorListMessage.address}</Text>}
+                </Text>
             </View>
         </View>
     )
@@ -176,7 +172,6 @@ const FundTransferForm = ({selectBanks})=> {
     const alert = useAlert()
     const navigation = useNavigation()
     const [errorMessage,setErrorMessage] = useState("")
-    const [errorAmountMessage,setErrorAmountMessage] = useState("")
     const [pinCodeAttempt,setPinCodeAttempt] = useState(6)
     const [openPinCode,setOpenPinCode] = useState(false)
     const [cashoutLogParams,setCashoutLogParams] = useState({
@@ -187,12 +182,39 @@ const FundTransferForm = ({selectBanks})=> {
         accountName,
         accountNumber,
         bank,
-        bankDescription,
         note,
         amount,
-        banks,
-        address
+        address,
+        savedAccounts
     } = useContext(ContextCashOut)
+
+    const [errorListMessage, setErrorListMessage] = useState({
+        bank: "",
+        accountNumber: "",
+        address: "",
+        amount: "",
+    })
+
+    const changeErrorMessagge = (key,value)=> {
+        setErrorListMessage(oldstate=>({
+            ...oldstate,
+            [key]: value
+        }))
+        
+    }
+
+    useEffect(()=>{
+        if(bank.id){
+            changeErrorMessagge("bank","")
+        }
+        if(accountNumber.length > 0) {
+            changeErrorMessagge("accountNumber","")
+        }
+        if(address.length > 0){
+            changeErrorMessagge("address","")
+        }
+    },[bank,accountNumber,address])
+
 
     const [postCashOutOtherBank , {data,error,loading}] = useMutation(POST_CASH_OUT_OTHER_BANKS, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
@@ -236,7 +258,8 @@ const FundTransferForm = ({selectBanks})=> {
                     accountNumber: accountNumber,
                     note: note,
                     pinCode: pinCode,
-                    currencyId: tokwaAccount.wallet.currency.id
+                    currencyId: tokwaAccount.wallet.currency.id,
+                    address: address,
                 }
             }
         })
@@ -244,12 +267,26 @@ const FundTransferForm = ({selectBanks})=> {
 
 
     const onPress = ()=> {
-        if(!bank.id){
-            return Alert.alert("","Bank is required.")
+        let noError = true
+        if(!bank.id || bank.id == ""){
+            changeErrorMessagge("bank",`Select bank first.`)
+            noError = false
+        }
+        if(accountNumber == ""){
+            changeErrorMessagge("accountNumber","Account Number is required.")
+            noError = false
         }
         if(address == ""){
-            return Alert.alert("","Address is required.")
+            changeErrorMessagge("address","Account address is required.")
+            noError = false
         }
+        if(amount == "") {
+            changeErrorMessagge("amount",`Please enter atleast ${tokwaAccount.wallet.currency.code} 1.00.`)
+            noError = false
+        }
+
+        if(!noError) return
+
         navigation.navigate("ToktokWalletReviewAndConfirm", {
             label:"Fund Transfer" , 
             event: "Fund Transfer",
@@ -283,27 +320,19 @@ const FundTransferForm = ({selectBanks})=> {
                 visible={successModalVisible}
                 cashoutLogParams={cashoutLogParams}
                 tokwaAccount={tokwaAccount}
+                savedAccounts={savedAccounts}
+                note={note}
             />
             <AccountInfo
                 selectBanks={selectBanks}
-                errorMessage={errorMessage}
-                setErrorMessage={setErrorMessage}
+                errorListMessage={errorListMessage}
             />
             <Amount
-                errorAmountMessage={errorAmountMessage}
-                setErrorAmountMessage={setErrorAmountMessage}
+                changeErrorMessagge={changeErrorMessagge}
+                errorListMessage={errorListMessage}
             />
             <View style={styles.proceedBtn}>
-                {
-                    !bank.id || bank.name == "" ||
-                    accountNumber == "" ||
-                    amount == "" ||
-                    address == "" ||
-                    errorMessage != "" ||
-                    errorAmountMessage != "" 
-                    ? <DisabledButton label="Proceed"/>
-                    : <YellowButton label="Proceed" onPress={onPress}/>
-                }
+                <YellowButton label="Proceed" onPress={onPress}/>
             </View>
 
         </>

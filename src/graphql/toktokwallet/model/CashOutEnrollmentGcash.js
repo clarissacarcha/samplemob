@@ -1,5 +1,19 @@
 import gql from 'graphql-tag'
-import { exp } from 'react-native-reanimated'
+
+const GCashEnrollmentType = `
+    id
+    mobile
+    firstName
+    lastName
+    streetAddress
+    barangayTown
+    provinceCity
+    country
+    birthdate
+    accountId
+    status
+    active
+`
 
 export const POST_CASH_OUT_ENROLLMENG_GCASH = gql`
     mutation postCashOutEnrollmentGcash($input: PostCashOutEnrollmentGcashInput){
@@ -21,34 +35,11 @@ export const GET_CASH_OUT_ENROLLMENT_GCASH = gql`
                 origin
                 status
                 gcashEnrollmentRecord {
-                    id
-                    mobile
-                    firstName
-                    lastName
-                    streetAddress
-                    barangayTown
-                    provinceCity
-                    country
-                    birthdate
-                    accountId
-                    status
-                    active
+                  ${GCashEnrollmentType}
                 }
             }
             pendingRecord {
-                id
-                mobile
-                firstName
-                middleName
-                lastName
-                streetAddress
-                barangayTown
-                provinceCity
-                country
-                birthdate
-                accountId
-                status
-                active
+                ${GCashEnrollmentType}
             }
         }
     }
@@ -57,12 +48,7 @@ export const GET_CASH_OUT_ENROLLMENT_GCASH = gql`
 export const GET_GCASH_ENROLLMENT_RECORD = gql`
     query getGcashEnrollmentRecord($input: GetGcashEnrollmentRecordInput) {
         getGcashEnrollmentRecord(input: $input){
-            id
-            mobile
-            firstName
-            lastName
-            status
-            active
+            ${GCashEnrollmentType}
         }
     }
 `
