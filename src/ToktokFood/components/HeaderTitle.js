@@ -8,6 +8,8 @@ import ContentLoader from 'react-native-easy-content-loader';
 import {FONT, FONT_SIZE, COLOR} from 'res/variables';
 import {markerIcon} from 'toktokfood/assets/images';
 
+import {getStatusbarHeight, verticalScale} from 'toktokfood/helper/scale';
+
 const HeaderTitle = ({title = 'TokTok PH'}) => {
   const navigation = useNavigation();
   const {location} = useSelector((state) => state.toktokFood);
@@ -54,7 +56,7 @@ export default HeaderTitle;
 const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
-    marginTop: Platform.OS === 'android' ? 53 : 40,
+    paddingTop: Platform.OS === 'android' ? verticalScale(getStatusbarHeight + 5) : 20,
   },
   headerBack: {
     paddingHorizontal: 20,

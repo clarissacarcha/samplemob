@@ -134,3 +134,26 @@ export const tabs = [
     name: 'All',
   },
 ];
+
+export const notifications = [
+  {
+    id: 1,
+    title: 'Notification 1',
+    content: 'Lorem ipsum dolor sit amet',
+  },
+  {
+    id: 2,
+    title: 'Notification 2',
+    content: 'Lorem ipsum dolor sit amet',
+  },
+  {
+    id: 3,
+    title: 'Notification 3',
+    content: 'Lorem ipsum dolor sit amet',
+  },
+  {
+    id: 4,
+    title: 'Notification 4',
+    content: 'Lorem ipsum dolor sit amet',
+  }
+];
