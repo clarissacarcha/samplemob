@@ -13,7 +13,7 @@ import HeaderTitleSearchBox from './HeaderTitleSearchBox';
 import FoodList from './FoodList';
 
 // Utils
-import {moderateScale, scale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
+import {moderateScale, scale, verticalScale, getDeviceWidth, getStatusbarHeight} from 'toktokfood/helper/scale';
 import {tabs} from 'toktokfood/helper/strings';
 
 // const {height: SCREEN_HEIGHT} = Dimensions.get('window');
@@ -69,14 +69,14 @@ const StickyView = () => {
 
   return (
     <>
-      <StatusBar barStyle="dark-content" />
+      {/* <StatusBar barStyle="dark-content" /> */}
       <ReactNativeParallaxHeader
         alwaysShowNavBar={false}
         alwaysShowTitle={false}
         headerMinHeight={headerMinHeight}
         headerMaxHeight={headerMaxHeight}
         headerTitleStyle={{zIndex: offset <= 132 ? 1 : -1, justifyContent: 'flex-start'}}
-        extraScrollHeight={0}
+        extraScrollHeight={10}
         backgroundImageScale={1.1}
         title={renderTitle()}
         backgroundImage={image}
@@ -146,9 +146,8 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     backgroundColor: 'rgba(255,255,255,0.5)',
-    bottom: Platform.OS === 'ios' ? moderateScale(47) : verticalScale(7),
-    height: Platform.OS === 'ios' ? verticalScale(80) : verticalScale(110),
-    position: 'relative',
+    bottom: Platform.OS === 'ios' ? verticalScale(getStatusbarHeight + 38) : verticalScale(7),
+    height: Platform.OS === 'ios' ? verticalScale(85) : verticalScale(110),
   },
   titleInfo: {
     borderTopLeftRadius: 20,
