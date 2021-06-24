@@ -1,9 +1,9 @@
 import React from 'react';
-import {useNavigation, useRoute} from '@react-navigation/native';
-import {View, StyleSheet, TextInput, Image, Text, Platform} from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { View, StyleSheet, TextInput, Image, Text, Platform } from 'react-native';
 
-import {searchIcon} from '../assets/images';
-import {FONT, FONT_SIZE, COLOR} from '../../res/variables';
+import { searchIcon } from '../assets/images';
+import { FONT, FONT_SIZE, COLOR } from '../../res/variables';
 
 // State must be global to share with other components
 const HeaderSearchBox = () => {
@@ -14,13 +14,13 @@ const HeaderSearchBox = () => {
   const isForSearchPage = () => typeof routes.params?.isSearchPage !== 'undefined';
 
   const showSearchPage = () => {
-    navigation.navigate('ToktokFoodSearch', {isSearchPage: true});
+    navigation.navigate('ToktokFoodSearch', { isSearchPage: true });
   };
 
   const PlaceHolderSearchBox = () => {
     return (
-      <View style={styles.searchBoxContainer}>
-        <View onTouchStart={() => showSearchPage()} style={[styles.textInputWrapper, styles.searchBoxShadow]}>
+      <View onTouchStart={() => showSearchPage()} style={styles.searchBoxContainer}>
+        <View style={[styles.textInputWrapper, styles.searchBoxShadow]}>
           <Image style={styles.searchBoxIcon} source={searchIcon} />
           <View style={[styles.searchBox, styles.textInputFontStyles]}>
             <Text style={styles.placeholderText}>What would you like to eat?</Text>
