@@ -1,17 +1,24 @@
 import React from 'react';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {Text} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
+import FA5Icon from 'react-native-vector-icons/FontAwesome5';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+
+import {COLOR} from 'res/variables';
+
 import {
-  ToktokFoodSearch,
   ToktokFoodHome,
   ToktokFoodOrders,
-  ToktokFoodSettings,
+  ToktokFoodSearch,
+  ToktokFoodFavorites,
+  ToktokFoodNotifications,
   ToktokFoodRestaurantOverview,
 } from '../../../ToktokFood/screens';
 
+const ToktokStack = createStackNavigator();
 const ToktokFoodLandingBottomTab = createBottomTabNavigator();
 
-const ToktokStack = createStackNavigator();
+const getOnFocusProps = (isFocus = false) => (isFocus ? COLOR.YELLOW : COLOR.DARK);
 
 const ToktokFoodHomeStack = () => (
   <ToktokStack.Navigator screenOptions={{headerShown: false}} initialRouteName="ToktokFoodHome">
@@ -23,9 +30,54 @@ const ToktokFoodHomeStack = () => (
 
 const ToktokFoodLanding = () => (
   <ToktokFoodLandingBottomTab.Navigator>
-    <ToktokFoodLandingBottomTab.Screen name="ToktokFoodHome" component={ToktokFoodHomeStack} />
-    <ToktokFoodLandingBottomTab.Screen name="ToktokFoodOrders" component={ToktokFoodOrders} />
-    <ToktokFoodLandingBottomTab.Screen name="ToktokFoodSettings" component={ToktokFoodSettings} />
+    <ToktokFoodLandingBottomTab.Screen
+      name="ToktokFoodHome"
+      component={ToktokFoodHomeStack}
+      options={{
+        tabBarLabel: ({focused}) => (
+          <>
+            <FA5Icon name="utensils" color={getOnFocusProps(focused)} size={20} />
+            <Text style={{fontSize: 10, marginTop: 4, color: getOnFocusProps(focused)}}>Home</Text>
+          </>
+        ),
+      }}
+    />
+    <ToktokFoodLandingBottomTab.Screen
+      name="ToktokFoodOrders"
+      component={ToktokFoodOrders}
+      options={{
+        tabBarLabel: ({focused}) => (
+          <>
+            <FA5Icon name="history" color={getOnFocusProps(focused)} size={20} />
+            <Text style={{fontSize: 10, marginTop: 4, color: getOnFocusProps(focused)}}>Activities</Text>
+          </>
+        ),
+      }}
+    />
+    <ToktokFoodLandingBottomTab.Screen
+      name="ToktokFoodNotifications"
+      component={ToktokFoodNotifications}
+      options={{
+        tabBarLabel: ({focused}) => (
+          <>
+            <FA5Icon name="bell" color={getOnFocusProps(focused)} size={20} />
+            <Text style={{fontSize: 10, marginTop: 4, color: getOnFocusProps(focused)}}>Notifications</Text>
+          </>
+        ),
+      }}
+    />
+    <ToktokFoodLandingBottomTab.Screen
+      name="ToktokFoodFavorites"
+      component={ToktokFoodFavorites}
+      options={{
+        tabBarLabel: ({focused}) => (
+          <>
+            <FA5Icon name="heart" color={getOnFocusProps(focused)} size={20} />
+            <Text style={{fontSize: 10, marginTop: 4, color: getOnFocusProps(focused)}}>Favorites</Text>
+          </>
+        ),
+      }}
+    />
   </ToktokFoodLandingBottomTab.Navigator>
 );
 
