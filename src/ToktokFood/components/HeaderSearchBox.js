@@ -1,6 +1,6 @@
 import React from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {View, StyleSheet, TextInput, Image, Platform} from 'react-native';
+import {View, StyleSheet, TextInput, Image, Text, Platform} from 'react-native';
 
 import {searchIcon} from '../assets/images';
 import {FONT, FONT_SIZE, COLOR} from '../../res/variables';
@@ -11,28 +11,43 @@ const HeaderSearchBox = () => {
   const navigation = useNavigation();
 
   // The navigation must not trigger on ToktokFood search page.
+  const isForSearchPage = () => typeof routes.params?.isSearchPage !== 'undefined';
 
-  const onFocusSearchBox = () => {
-    const forSearchPage = routes.params?.forSearchPage;
-    if (typeof forSearchPage === 'undefined') {
-      navigation.navigate('ToktokFoodSearch', {forSearchPage: true});
-    }
+  const showSearchPage = () => {
+    navigation.navigate('ToktokFoodSearch', {isSearchPage: true});
   };
 
-  return (
-    <View style={styles.searchBoxContainer}>
-      <View style={[styles.textInputWrapper, styles.searchBoxShadow]}>
-        <Image style={styles.searchBoxIcon} source={searchIcon} />
-        <TextInput
-          autoFocus={false}
-          multiline={false}
-          placeholder="What would you like to eat?"
-          style={[styles.searchBox, styles.textInputFontStyles]}
-          onTouchStart={() => onFocusSearchBox()}
-        />
+  const PlaceHolderSearchBox = () => {
+    return (
+      <View style={styles.searchBoxContainer}>
+        <View onTouchStart={() => showSearchPage()} style={[styles.textInputWrapper, styles.searchBoxShadow]}>
+          <Image style={styles.searchBoxIcon} source={searchIcon} />
+          <View style={[styles.searchBox, styles.textInputFontStyles]}>
+            <Text style={styles.placeholderText}>What would you like to eat?</Text>
+          </View>
+        </View>
       </View>
-    </View>
-  );
+    );
+  };
+
+  const SearchBox = () => {
+    return (
+      <View style={styles.searchBoxContainer}>
+        <View style={[styles.textInputWrapper, styles.searchBoxShadow]}>
+          <Image style={styles.searchBoxIcon} source={searchIcon} />
+          <TextInput
+            multiline={false}
+            autoFocus={true}
+            placeholder="What would you like to eat?"
+            style={[styles.searchBox, styles.textInputFontStyles]}
+            onFocus={() => console.log(isForSearchPage())}
+          />
+        </View>
+      </View>
+    );
+  };
+
+  return <>{isForSearchPage() ? <SearchBox /> : <PlaceHolderSearchBox />}</>;
 };
 
 export default HeaderSearchBox;
@@ -83,5 +98,11 @@ const styles = StyleSheet.create({
     zIndex: 99,
     alignSelf: 'center',
     position: 'absolute',
+  },
+  placeholderText: {
+    color: COLOR.DARK,
+    fontSize: FONT_SIZE.L,
+    fontFamily: FONT.REGULAR,
+    marginTop: Platform.OS === 'ios' ? 15 : 13,
   },
 });
