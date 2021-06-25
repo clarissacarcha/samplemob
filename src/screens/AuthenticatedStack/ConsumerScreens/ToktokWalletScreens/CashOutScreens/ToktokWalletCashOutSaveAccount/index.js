@@ -68,7 +68,7 @@ const ToktokWalletCashOutSaveAccount = ({navigation,route})=> {
             noError = false
         }
         if(address == ""){
-            changeErrorMessagge("address","Account Address is required..")
+            changeErrorMessagge("address","Account Address is required.")
             noError = false
         }
 
@@ -133,7 +133,7 @@ const ToktokWalletCashOutSaveAccount = ({navigation,route})=> {
                                     maxLength={50}
                             />
                         </View>
-                        <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{accountNumber.length}/50 
+                        <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{nickName.length}/50 
                             {errorListMessage.alias != "" && <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS,color: COLOR.RED}}>  {errorListMessage.alias}</Text>}
                         </Text>
                     </View>
@@ -180,7 +180,7 @@ const ToktokWalletCashOutSaveAccount = ({navigation,route})=> {
                                     returnKeyType="done"
                             />
                         </View>
-                        <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{accountNumber.length}/200 
+                        <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{address.length}/200 
                             {errorListMessage.address != "" && <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS,color: COLOR.RED}}>  {errorListMessage.address}</Text>}
                         </Text>
                     </View>

@@ -1,6 +1,6 @@
 import React , {useEffect,useState, useContext} from 'react'
 import {View , Text , StyleSheet , TextInput,TouchableOpacity} from 'react-native'
-import { COLOR, FONT, FONT_SIZE } from '../../../../../../res/variables'
+import { COLOR, FONT, FONT_SIZE, SIZE } from '../../../../../../res/variables'
 import { Separator , DisabledButton , EnterPinCode} from '../../Components'
 import { YellowButton ,VectorIcon ,ICON_SET} from '../../../../../../revamp'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from '../../../../../../graphql'
@@ -130,7 +130,7 @@ const AccountInfo = ({selectBanks, errorListMessage })=> {
             </View>
             <View style={{marginTop: 16,}}>
                 <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Number</Text>
-                <View style={[{justifyContent:"center",borderWidth: 1, borderColor: errorListMessage.accountNumber == "" ? "transparent" : COLOR.RED}]}>
+                <View style={[{justifyContent:"center",borderRadius: SIZE.BORDER_RADIUS, borderWidth: 1, borderColor: errorListMessage.accountNumber == "" ? "transparent" : COLOR.RED}]}>
                     <TextInput
                             style={styles.input}
                             value={accountNumber}
@@ -148,7 +148,7 @@ const AccountInfo = ({selectBanks, errorListMessage })=> {
 
             <View style={{marginTop: 16,}}>
                 <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Address</Text>
-                <View style={[{justifyContent:"center",borderWidth: 1, borderColor: errorListMessage.address == "" ? "transparent" : COLOR.RED}]}>
+                <View style={[{justifyContent:"center",borderRadius: SIZE.BORDER_RADIUS,borderWidth: 1, borderColor: errorListMessage.address == "" ? "transparent" : COLOR.RED}]}>
                     <TextInput
                             style={styles.input}
                             value={address}
@@ -158,7 +158,7 @@ const AccountInfo = ({selectBanks, errorListMessage })=> {
                             returnKeyType="done"
                         />
                 </View>
-                <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{accountNumber.length}/200 
+                <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{address.length}/200 
                     {errorListMessage.address != "" && <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS,color: COLOR.RED}}>  {errorListMessage.address}</Text>}
                 </Text>
             </View>
@@ -269,7 +269,7 @@ const FundTransferForm = ({selectBanks})=> {
     const onPress = ()=> {
         let noError = true
         if(!bank.id || bank.id == ""){
-            changeErrorMessagge("bank",`Select bank first.`)
+            changeErrorMessagge("bank",`Select Bank first.`)
             noError = false
         }
         if(accountNumber == ""){
@@ -277,7 +277,7 @@ const FundTransferForm = ({selectBanks})=> {
             noError = false
         }
         if(address == ""){
-            changeErrorMessagge("address","Account address is required.")
+            changeErrorMessagge("address","Account Address is required.")
             noError = false
         }
         if(amount == "") {
