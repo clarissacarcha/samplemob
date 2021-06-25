@@ -171,23 +171,10 @@ const screen = Dimensions.get('window');
                 <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S,marginBottom: 10}}>Successful fund transfer will be forwarded to this BDO account.</Text>
                     <View style={{marginVertical: 10,}}>
                         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Number</Text>
-                        <View style={[styles.input, {justifyContent:"center"}]}>
+                        <View style={[styles.input, {justifyContent:"center", backgroundColor:"#F0F0F0"}]}>
                             <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{accountNumber}</Text>
                         </View>
                     </View>
-                    {/* <View style={{marginVertical: 10,}}>
-                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Name</Text>
-                        <View style={[{justifyContent:"center"}]}>
-                            <TextInput 
-                                    style={styles.input}
-                                    value={accountName}
-                                    returnKeyType="done"
-                                    placeholder="Enter Account Name here"
-                                    onChangeText={(value)=>setAccountName(value)}
-                            />
-                        </View>
-                    </View> */}
-
 
                     <View style={{marginVertical: 10}}>
                         <Text style={styles.label}>First Name</Text>

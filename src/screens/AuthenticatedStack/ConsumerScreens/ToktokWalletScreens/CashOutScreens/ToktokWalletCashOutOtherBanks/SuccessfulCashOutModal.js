@@ -17,7 +17,7 @@ const TransactionInfo = ({label,value})=> (
     </View>
 )
 
-const SuccessfulCashOutModal = ({visible , cashoutLogParams, tokwaAccount , savedAccounts , note})=> {
+const SuccessfulCashOutModal = ({visible , cashoutLogParams, tokwaAccount , savedAccounts , note ,activeAccount})=> {
     const navigation = useNavigation()
 
     console.log(JSON.stringify(cashoutLogParams))
@@ -55,10 +55,12 @@ const SuccessfulCashOutModal = ({visible , cashoutLogParams, tokwaAccount , save
                 refDate={cashoutLogParams.createdAt}
                 onPress={Proceed}
                 savedAccounts={savedAccounts}
+                activeAccount={activeAccount}
+                cashoutLogParams={cashoutLogParams}
             >
                 
                 <View style={styles.recipientInfo}>
-                     <TransactionInfo label="Bank" value={cashoutLogParams.bank}/>
+                     <TransactionInfo label="Bank" value={cashoutLogParams.bank?.name}/>
                      <TransactionInfo label="Account Name" value={cashoutLogParams.accountName}/>
                      <TransactionInfo label="Account Number" value={cashoutLogParams.accountNumber}/>
                      <TransactionInfo label="Status" value={status}/>

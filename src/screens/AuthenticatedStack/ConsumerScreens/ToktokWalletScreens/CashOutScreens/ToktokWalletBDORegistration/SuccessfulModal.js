@@ -31,7 +31,7 @@ const SuccessfulModal = ({visible,setVisible , provider})=> {
                         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L, textAlign:"center",marginVertical: 10,marginHorizontal: 20}}>Success !</Text>
                         <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M, textAlign:"center",marginHorizontal: 5}}>Your application has been submitted. Please wait for your BDO disbursement account to be verified.</Text>
                         <View style={{flex: 1,justifyContent:"flex-end",width: "50%"}}>
-                                <YellowButton label="Continue" onPress={Redirect}/>
+                                <YellowButton label="Ok" onPress={Redirect}/>
                         </View>
                     </View>
                 </View>

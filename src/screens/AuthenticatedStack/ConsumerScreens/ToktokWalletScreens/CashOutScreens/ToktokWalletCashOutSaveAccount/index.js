@@ -142,7 +142,7 @@ const ToktokWalletCashOutSaveAccount = ({navigation,route})=> {
                         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Name</Text>
                         <View style={[{justifyContent:"center"}]}>
                                <View
-                                    style={[styles.input, {justifyContent:"center"}]}
+                                    style={[styles.input, {justifyContent:"center",backgroundColor:"#F0F0F0"}]}
                                 >
                                         <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{accountName}</Text>
                                 </View>
@@ -174,13 +174,13 @@ const ToktokWalletCashOutSaveAccount = ({navigation,route})=> {
                                     style={styles.input}
                                     value={accountNumber}
                                     value={address}
-                                    maxLength={200}
+                                    maxLength={20}
                                     onChangeText={(value)=>setAddress(value)}
                                     placeholder={`Enter address here`}
                                     returnKeyType="done"
                             />
                         </View>
-                        <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{address.length}/200 
+                        <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{address.length}/20 
                             {errorListMessage.address != "" && <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS,color: COLOR.RED}}>  {errorListMessage.address}</Text>}
                         </Text>
                     </View>

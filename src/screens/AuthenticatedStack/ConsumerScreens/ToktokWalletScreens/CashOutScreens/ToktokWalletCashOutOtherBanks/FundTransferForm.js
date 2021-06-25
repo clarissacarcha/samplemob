@@ -101,6 +101,7 @@ const AccountInfo = ({selectBanks, errorListMessage })=> {
         address , 
         setAddress,
         bank,
+        activeAccount
     } = useContext(ContextCashOut)
 
 
@@ -124,7 +125,7 @@ const AccountInfo = ({selectBanks, errorListMessage })=> {
 
             <View style={{marginTop: 16,}}>
             <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Name</Text>
-            <View style={[styles.input, {justifyContent:"center"}]}>
+            <View style={[styles.input, {justifyContent:"center",backgroundColor:"#F0F0F0"}]}>
                 <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{accountName}</Text>
             </View>
             </View>
@@ -132,6 +133,7 @@ const AccountInfo = ({selectBanks, errorListMessage })=> {
                 <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Number</Text>
                 <View style={[{justifyContent:"center",borderRadius: SIZE.BORDER_RADIUS, borderWidth: 1, borderColor: errorListMessage.accountNumber == "" ? "transparent" : COLOR.RED}]}>
                     <TextInput
+                            // editable={activeAccount > 0 ? false : true}
                             style={styles.input}
                             value={accountNumber}
                             onChangeText={changeAccountNumber}
@@ -153,12 +155,12 @@ const AccountInfo = ({selectBanks, errorListMessage })=> {
                             style={styles.input}
                             value={address}
                             onChangeText={(value)=>setAddress(value)}
-                            maxLength={200}
+                            maxLength={20}
                             placeholder={`Enter your address here`}
                             returnKeyType="done"
                         />
                 </View>
-                <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{address.length}/200 
+                <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{address.length}/20 
                     {errorListMessage.address != "" && <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS,color: COLOR.RED}}>  {errorListMessage.address}</Text>}
                 </Text>
             </View>
@@ -185,7 +187,8 @@ const FundTransferForm = ({selectBanks})=> {
         note,
         amount,
         address,
-        savedAccounts
+        savedAccounts,
+        activeAccount
     } = useContext(ContextCashOut)
 
     const [errorListMessage, setErrorListMessage] = useState({
@@ -223,7 +226,8 @@ const FundTransferForm = ({selectBanks})=> {
             setCashoutLogParams({
                 accountName: accountName,
                 accountNumber: accountNumber,
-                bank: bank.name,
+                bank: bank,
+                address: address,
                 note: note,
                 ...postCashOutOtherBank
             })
@@ -285,6 +289,11 @@ const FundTransferForm = ({selectBanks})=> {
             noError = false
         }
 
+        if(amount > 50000 && accountNumber.length > 16){
+            changeErrorMessagge("accountNumber","Account Number maximum length must be 16")
+            noError = false
+        }
+
         if(!noError) return
 
         navigation.navigate("ToktokWalletReviewAndConfirm", {
@@ -321,6 +330,7 @@ const FundTransferForm = ({selectBanks})=> {
                 cashoutLogParams={cashoutLogParams}
                 tokwaAccount={tokwaAccount}
                 savedAccounts={savedAccounts}
+                activeAccount={activeAccount}
                 note={note}
             />
             <AccountInfo
