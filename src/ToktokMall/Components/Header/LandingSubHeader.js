@@ -55,13 +55,13 @@ export const LandingSubHeader = (props) => {
               </View>
             </TouchableOpacity>
           </View>
-          <View style={{flex: 0, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 8, paddingTop: 8}}>
-            <TouchableOpacity onPress={onPressNotification} style={{flexDirection: 'row', paddingRight: 8}}>
+          <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 8, paddingTop: 8}}>
+            {/* <TouchableOpacity onPress={onPressNotification} style={{flexDirection: 'row', paddingRight: 8}}>
               <FIcon5 name="bell" color={COLOR.ORANGE} size={22}/>
               <View style={{ position: 'absolute', right: 0, top: 3, backgroundColor: COLOR.YELLOW, borderRadius: 9, width: 18, height: 18, justifyContent: 'center', alignItems: 'center' }}>
                 <Text style={{ color: 'white', fontSize: 11}}>{2}</Text>
               </View>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>        
       </ImageBackground>

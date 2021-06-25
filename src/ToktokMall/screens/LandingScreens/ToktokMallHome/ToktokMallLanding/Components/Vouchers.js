@@ -1,8 +1,7 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity} from 'react-native';
 import { COLOR, FONT } from '../../../../../../res/variables';
-import {LandingHeader, AdsCarousel} from '../../../../../Components';
-import { ScrollView } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/core';
 import CustomIcon from '../../../../../Components/Icons';
 
 const testdata = [{
@@ -41,6 +40,8 @@ const Item = ({data}) => {
 
 export const Vouchers = () => {
 
+  const navigation = useNavigation();
+
     return (
         <>
           <View style={{flex: 1, paddingHorizontal: 15, paddingVertical: 0}}>
@@ -55,7 +56,9 @@ export const Vouchers = () => {
               </ImageBackground>
             </View>
             <View style={{flex: 6}}></View>
-            <TouchableOpacity style={{flex: 2, alignItems: 'flex-end', justifyContent: 'center'}}>
+            <TouchableOpacity onPress={() => {
+              navigation.navigate("ToktokMallVouchersClaim")
+            }} style={{flex: 2, alignItems: 'flex-end', justifyContent: 'center'}}>
               <Text style={{fontSize: 12, color: "#F6841F"}}>See all </Text>
             </TouchableOpacity>
             <View style={{flex: 0, alignItems: 'flex-end', justifyContent: 'center'}}>

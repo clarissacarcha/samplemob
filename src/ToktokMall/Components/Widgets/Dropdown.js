@@ -1,17 +1,23 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {View, Text, ImageBackground, Image, TouchableOpacity} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import CustomIcon from '../Icons';
 
 const Item = ({data}) => {
+
+    const navigation = useNavigation()
+
     return (
         <>
-            <View style={{flexDirection: 'row', paddingVertical: 20, paddingHorizontal: 15}}>
+            <TouchableOpacity onPress={() => {
+                navigation.navigate("ToktokMallCategoriesList", {category: data})
+            }} style={{flexDirection: 'row', paddingVertical: 20, paddingHorizontal: 15}}>
                 <View style={{flex: 1}}></View>
                 <View style={{flex: 8, justifyContent: 'center', paddingHorizontal: 8}}>
                     <Text style={{fontSize: 14}}>{data}</Text>
                 </View>
                 <View style={{flex: 1}}></View>
-            </View>
+            </TouchableOpacity>
             <View style={{ height: 1, backgroundColor: '#F7F7FA'}} />
         </>
     )

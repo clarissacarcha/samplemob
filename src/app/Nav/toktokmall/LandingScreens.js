@@ -61,15 +61,18 @@ const ToktokMallCartStackScreens = () => (
 );
 
 const ToktokMallCategoriesStackScreen = () => (
-  <ToktokMallCategoriesStack.Navigator initialRouteName="ToktokMallCategoriesList">
-    <ToktokMallCategoriesStack.Screen
-      name="ToktokMallCategoriesList"
-      component={ToktokMallCategoriesList}      
-    />
+  <ToktokMallCategoriesStack.Navigator initialRouteName="ToktokMallCategoriesSearch">
     <ToktokMallCategoriesStack.Screen
       name="ToktokMallCategoriesSearch"
       component={ToktokMallCategoriesSearch}
     />
+    <ToktokMallCategoriesStack.Screen
+      name="ToktokMallCategoriesList"
+      component={ToktokMallCategoriesList}
+      options={{
+        headerShown: false,
+      }}      
+    />   
   </ToktokMallCategoriesStack.Navigator>
 );
 
@@ -165,7 +168,7 @@ const TabBarIcon = ({source}) => {
 
 const ToktokMallLanding = () => (
   <ToktokMallLandingBottomTab.Navigator 
-    initialRouteName="toktokmall" 
+    initialRouteName="ToktokMallHome" 
     screenOptions={{headerShown: false, headerMode: "none"}}
     tabBarOptions={{
       activeTintColor: COLOR.DARK,
@@ -186,44 +189,49 @@ const ToktokMallLanding = () => (
     }}
   >
     <ToktokMallLandingBottomTab.Screen 
-      name="My Cart" 
+      name="ToktokMallMyCart" 
       component={ToktokMallCartStackScreens} 
       options={{
+        tabBarLabel: "My Cart",
         // tabBarIcon: ({color}) => <AIcon name="shoppingcart" color={COLOR.YELLOW} size={24} /> 
         // tabBarIcon: ({focused}) => focused ? <Image source={cartIconFill} style={BottomTabImageIconStyle} /> : <Image source={cartIconOutline} style={BottomTabImageIconStyle} />
         tabBarIcon: ({focused}) => focused ? <TabBarIcon source={cartIconFill} /> : <TabBarIcon source={cartIconOutline} />
       }}
     />
     <ToktokMallLandingBottomTab.Screen 
-      name="Categories" 
+      name="ToktokMallCategories" 
       component={ToktokMallCategoriesStackScreen} 
       options={{
+        tabBarLabel: "Categories",
         // tabBarIcon: ({color}) => <AIcon name="profile" color={COLOR.YELLOW} size={24} />
         tabBarIcon: ({focused}) => focused ? <Image source={categoriesIconFill} style={BottomTabImageIconStyle} /> : <Image source={categoriesIconOutline} style={BottomTabImageIconStyle} />
       }}
     />
     <ToktokMallLandingBottomTab.Screen 
-      name="toktokmall" 
+      name="ToktokMallHome" 
       component={ToktokMallHomeStackScreens} 
       options={{
         tabBarBadge: "99+",
+        tabBarLabel: "toktokmall",
         // tabBarIcon: ({color}) => <FoIcon name="shopping-bag-1" color={COLOR.YELLOW} size={24} />
         tabBarIcon: ({focused}) => focused ? <Image source={homeIconFill} style={BottomTabImageIconStyle} /> : <Image source={homeIconOutline} style={BottomTabImageIconStyle} />
       }}
     />
     <ToktokMallLandingBottomTab.Screen 
-      name="Notifications" 
+      name="ToktokMallNotifications" 
       component={ToktokMallNotificationStackScreens} 
       options={{
+        tabBarLabel: "Notifications",
         // tabBarIcon: ({color}) => <AIcon name="mail" color={COLOR.YELLOW} size={24} />
         // tabBarIcon: ({focused}) => focused ? <Image source={messageIconFill} style={BottomTabImageIconStyle} /> : <Image source={messagesIconOutline} style={BottomTabImageIconStyle} />
         tabBarIcon: ({focused}) => focused ? <TabBarIcon source={notifIconFill} /> : <TabBarIcon source={notifIconOutline} />
       }}
     />
     <ToktokMallLandingBottomTab.Screen 
-      name="Me" 
+      name="ToktokMallMyProfile" 
       component={ToktokMallMyProfileStackScreens} 
       options={{
+        tabBarLabel: "Me",
         // tabBarIcon: ({color}) => <AIcon name="user" color={COLOR.YELLOW} size={24} />
         tabBarIcon: ({focused}) => focused ? <Image source={userIconFill} style={BottomTabImageIconStyle} /> : <Image source={userIconOutline} style={BottomTabImageIconStyle} />
       }}
