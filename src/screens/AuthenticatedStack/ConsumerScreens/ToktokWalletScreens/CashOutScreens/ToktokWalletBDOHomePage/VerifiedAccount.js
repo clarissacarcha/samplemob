@@ -93,6 +93,15 @@ const VerifiedAccount = ({record,provider})=> {
         })
     }
 
+    const onSwipeFail = (e)=> {
+        console.log(e)
+    }
+
+    const onSwipeSuccess = ()=> {
+        setPinCodeAttempt(6)
+        setOpenPinCode(true)
+    }
+
     const confirmAmount = ()=> {
         navigation.navigate("ToktokWalletReviewAndConfirm", {
             label:"Fund Transfer" , 
@@ -103,10 +112,14 @@ const VerifiedAccount = ({record,provider})=> {
                     accountName: record.accountName,
                     accountNumber: record.accountNumber
                 },
-            onConfirm: ()=>{
-                setPinCodeAttempt(6)
-                setOpenPinCode(true)
-            },
+            isSwipe: true,
+            swipeTitle: `Confirm`,
+            onSwipeFail: onSwipeFail,
+            onSwipeSuccess: onSwipeSuccess,
+            // onConfirm: ()=>{
+            //     setPinCodeAttempt(6)
+            //     setOpenPinCode(true)
+            // },
         })
     }
 

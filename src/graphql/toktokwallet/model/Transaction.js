@@ -37,116 +37,69 @@ export const GET_OUTGOING_TRANSFER = gql`
     }
 `
 
+const WalletTransactions = `
+id
+amount
+note
+status
+sourceWalletId
+destinationWalletId
+cashInId
+cashOutId
+createdAt
+externalName
+externalPhrase
+externalReferenceNumber
+externalPayload
+sourcePerson {
+    firstName
+    middleName
+    lastName
+}
+destinationPerson {
+    firstName
+    middleName
+    lastName
+}
+sourceAccount {
+    mobileNumber
+}
+destinationAccount {
+    mobileNumber
+}
+transactionType {
+    name
+    type
+    sourcePhrase
+    destinationPhrase
+}
+cashOutDisplayInformations {
+    accountInfo {
+        accountNumber
+        accountName
+        bank {
+            name 
+        }
+    }
+    gcashInfo {
+        accountNumber
+        accountName
+    }
+    bdoInfo {
+        accountNumber
+        accountName
+    }
+}
+`
+
 export const GET_TRANSACTIONS = gql`
-    query getTransactions($input: GetTransactionsInput) {
-       getTransactions(input: $input) {
+    query {
+       getTransactions {
             recentTransactions {
-                    id
-                    amount
-                    note
-                    status
-                    sourceWalletId
-                    destinationWalletId
-                    cashInId
-                    cashOutId
-                    createdAt
-                    externalName
-                    externalPhrase
-                    externalReferenceNumber
-                    externalPayload
-                    sourcePerson {
-                        firstName
-                        middleName
-                        lastName
-                    }
-                    destinationPerson {
-                        firstName
-                        middleName
-                        lastName
-                    }
-                    sourceAccount {
-                        mobileNumber
-                    }
-                    destinationAccount {
-                        mobileNumber
-                    }
-                    transactionType {
-                        name
-                        type
-                        sourcePhrase
-                        destinationPhrase
-                    }
-                    cashOutDisplayInformations {
-                        accountInfo {
-                            accountNumber
-                            accountName
-                            bank {
-                                name 
-                            }
-                        }
-                        gcashInfo {
-                            accountNumber
-                            accountName
-                        }
-                        bdoInfo {
-                            accountNumber
-                            accountName
-                        }
-                    }
+                ${WalletTransactions}
             }
             allTransactions {
-                    id
-                    amount
-                    note
-                    status
-                    sourceWalletId
-                    destinationWalletId
-                    cashInId
-                    cashOutId
-                    createdAt
-                    externalName
-                    externalPhrase
-                    externalReferenceNumber
-                    externalPayload
-                    sourcePerson {
-                        firstName
-                        middleName
-                        lastName
-                    }
-                    destinationPerson {
-                        firstName
-                        middleName
-                        lastName
-                    }
-                    sourceAccount {
-                        mobileNumber
-                    }
-                    destinationAccount {
-                        mobileNumber
-                    }
-                    transactionType {
-                        name
-                        type
-                        sourcePhrase
-                        destinationPhrase
-                    }
-                    cashOutDisplayInformations {
-                        accountInfo {
-                            accountNumber
-                            accountName
-                            bank {
-                                name 
-                            }
-                        }
-                        gcashInfo {
-                            accountNumber
-                            accountName
-                        }
-                        bdoInfo {
-                            accountNumber
-                            accountName
-                        }
-                    }
+                ${WalletTransactions}
             }
        }
     }

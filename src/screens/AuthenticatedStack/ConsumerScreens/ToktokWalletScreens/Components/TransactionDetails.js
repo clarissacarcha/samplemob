@@ -64,13 +64,12 @@ export const TransactionDetails = ({
             >
                 <View style={styles.content}>
                     <View style={{
-                        height: 300,
                         width: width * 0.9,
                         backgroundColor:"white",
                         borderRadius: 5,
                         padding: 16,
                     }}>
-                        <View style={{flex: 1}}>
+                       <View>
                             <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>{label}</Text>
                             <Text style={styles.labelText}>{phrase}</Text>
                             {displayNumber != "" && <Text style={styles.labelText}>{displayNumber}</Text>}
@@ -83,11 +82,10 @@ export const TransactionDetails = ({
                                 <Text style={styles.labelText}>Ref No: {refNo}</Text>
                                 <Text style={styles.labelText}>Date & Time: {refDate}</Text>
                             </View>
-                        </View>
-                        <View style={{flex: 1,justifyContent:"flex-end", width: "50%",alignSelf:"center"}}>
+                       </View>
+                       <View style={{justifyContent:"flex-end", width: "50%",alignSelf:"center",marginTop: 16}}>
                             <YellowButton label="Ok" onPress={()=>setVisible(false)}/>
                         </View>
-
                     </View>
                 </View>
 

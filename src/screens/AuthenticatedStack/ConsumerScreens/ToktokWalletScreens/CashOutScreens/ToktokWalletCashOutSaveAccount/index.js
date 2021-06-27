@@ -18,12 +18,13 @@ const screen = Dimensions.get('window');
 
 const ToktokWalletCashOutSaveAccount = ({navigation,route})=> {
 
+    const bank = route.params.bank
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
-        headerTitle: ()=> <HeaderTitle label={['Add Account','']}/>,
+        headerTitle: ()=> <HeaderTitle label={[bank.name.length < 27 ? bank.name : bank.name.slice(0,27)+'...','']}/>,
     })
     const alert = useAlert()
-    const bank = route.params.bank
+    
     const tokwaAccount = useSelector(state=>state.toktokWallet)
     const fixAccountName = `${tokwaAccount.person.firstName} ${tokwaAccount.person.lastName}`
     const [nickName,setNickName] = useState("")
@@ -37,6 +38,14 @@ const ToktokWalletCashOutSaveAccount = ({navigation,route})=> {
         accountNumber: "",
         address: "",
     })
+
+    useEffect(()=>{
+        if(route.params.cashoutLogParams){
+            const params = route.params.cashoutLogParams
+            setAccountNumber(params.accountNumber)
+            setAddress(params.address)
+        }
+    },[])
 
     const changeErrorMessagge = (key,value)=> {
         setErrorListMessage(oldstate=>({
@@ -68,7 +77,7 @@ const ToktokWalletCashOutSaveAccount = ({navigation,route})=> {
             noError = false
         }
         if(address == ""){
-            changeErrorMessagge("address","Account Address is required..")
+            changeErrorMessagge("address","Account Address is required.")
             noError = false
         }
 
@@ -118,9 +127,9 @@ const ToktokWalletCashOutSaveAccount = ({navigation,route})=> {
                         style={{ flex: 1 }}
                 >
              <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
-                    <View style={styles.bank}>            
+                    {/* <View style={styles.bank}>            
                             <Text style={styles.bankName}>{bank.name}</Text>
-                    </View>
+                    </View> */}
                     <View style={{marginVertical: 10,}}>
                         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Alias</Text>
                         <View style={[{borderRadius: SIZE.BORDER_RADIUS, borderWidth: 1, borderColor: errorListMessage.alias == "" ? "transparent" : COLOR.RED}]}>
@@ -133,7 +142,7 @@ const ToktokWalletCashOutSaveAccount = ({navigation,route})=> {
                                     maxLength={50}
                             />
                         </View>
-                        <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{accountNumber.length}/50 
+                        <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{nickName.length}/50 
                             {errorListMessage.alias != "" && <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS,color: COLOR.RED}}>  {errorListMessage.alias}</Text>}
                         </Text>
                     </View>
@@ -142,7 +151,7 @@ const ToktokWalletCashOutSaveAccount = ({navigation,route})=> {
                         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Name</Text>
                         <View style={[{justifyContent:"center"}]}>
                                <View
-                                    style={[styles.input, {justifyContent:"center"}]}
+                                    style={[styles.input, {justifyContent:"center",backgroundColor:"#F0F0F0"}]}
                                 >
                                         <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{accountName}</Text>
                                 </View>
@@ -174,13 +183,13 @@ const ToktokWalletCashOutSaveAccount = ({navigation,route})=> {
                                     style={styles.input}
                                     value={accountNumber}
                                     value={address}
-                                    maxLength={200}
+                                    maxLength={20}
                                     onChangeText={(value)=>setAddress(value)}
                                     placeholder={`Enter address here`}
                                     returnKeyType="done"
                             />
                         </View>
-                        <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{accountNumber.length}/200 
+                        <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{address.length}/20 
                             {errorListMessage.address != "" && <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS,color: COLOR.RED}}>  {errorListMessage.address}</Text>}
                         </Text>
                     </View>
@@ -192,10 +201,11 @@ const ToktokWalletCashOutSaveAccount = ({navigation,route})=> {
                         <Text style={{textAlign:"center",fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:"#CCCCCC",marginBottom: 20,marginHorizontal:20}}>Please verify the accuracy and completeness of the details before you proceed.</Text>
                         <Text style={{textAlign:"center",fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:"#CCCCCC",marginBottom: 20,marginHorizontal: 10}}>By clicking "Confirm", you hereby consent toktokwallet to collect and store any and all information related tot his Saved Bank Account.</Text>
                     </View>
-                    <View style={{height: 70,justifyContent:'flex-end',marginBottom: 16}}>
-                        <YellowButton label="Confirm" onPress={saveAccount}/>
-                    </View>      
+                     
              </ScrollView>
+             <View style={{height: 70,justifyContent:'flex-end'}}>
+                        <YellowButton label="Confirm" onPress={saveAccount}/>
+                    </View>   
              </KeyboardAvoidingView>
         </View>
         </>

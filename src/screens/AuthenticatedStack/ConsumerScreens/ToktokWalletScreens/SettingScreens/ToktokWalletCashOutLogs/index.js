@@ -113,24 +113,12 @@ const ToktokWalletCashOutLogs = ({navigation})=> {
     })
 
     const Refetch = ()=> {
-        getCashOuts({
-            variables: {
-                input: {
-                    pageIndex: pageIndex
-                }
-            }
-        })
+        getCashOuts()
     }
 
     useEffect(()=>{
-        getCashOuts({
-            variables: {
-                input: {
-                    pageIndex: pageIndex
-                }
-            }
-        })
-    },[pageIndex])
+        getCashOuts()
+    },[])
 
     return (
         <>

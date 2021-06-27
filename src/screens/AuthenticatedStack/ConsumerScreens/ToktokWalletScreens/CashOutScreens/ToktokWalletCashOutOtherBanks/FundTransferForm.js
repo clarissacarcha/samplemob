@@ -1,6 +1,6 @@
 import React , {useEffect,useState, useContext} from 'react'
 import {View , Text , StyleSheet , TextInput,TouchableOpacity} from 'react-native'
-import { COLOR, FONT, FONT_SIZE } from '../../../../../../res/variables'
+import { COLOR, FONT, FONT_SIZE, SIZE } from '../../../../../../res/variables'
 import { Separator , DisabledButton , EnterPinCode} from '../../Components'
 import { YellowButton ,VectorIcon ,ICON_SET} from '../../../../../../revamp'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from '../../../../../../graphql'
@@ -101,6 +101,7 @@ const AccountInfo = ({selectBanks, errorListMessage })=> {
         address , 
         setAddress,
         bank,
+        activeAccount
     } = useContext(ContextCashOut)
 
 
@@ -124,14 +125,15 @@ const AccountInfo = ({selectBanks, errorListMessage })=> {
 
             <View style={{marginTop: 16,}}>
             <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Name</Text>
-            <View style={[styles.input, {justifyContent:"center"}]}>
+            <View style={[styles.input, {justifyContent:"center",backgroundColor:"#F0F0F0"}]}>
                 <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{accountName}</Text>
             </View>
             </View>
             <View style={{marginTop: 16,}}>
                 <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Number</Text>
-                <View style={[{justifyContent:"center",borderWidth: 1, borderColor: errorListMessage.accountNumber == "" ? "transparent" : COLOR.RED}]}>
+                <View style={[{justifyContent:"center",borderRadius: SIZE.BORDER_RADIUS, borderWidth: 1, borderColor: errorListMessage.accountNumber == "" ? "transparent" : COLOR.RED}]}>
                     <TextInput
+                            // editable={activeAccount > 0 ? false : true}
                             style={styles.input}
                             value={accountNumber}
                             onChangeText={changeAccountNumber}
@@ -148,17 +150,17 @@ const AccountInfo = ({selectBanks, errorListMessage })=> {
 
             <View style={{marginTop: 16,}}>
                 <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Address</Text>
-                <View style={[{justifyContent:"center",borderWidth: 1, borderColor: errorListMessage.address == "" ? "transparent" : COLOR.RED}]}>
+                <View style={[{justifyContent:"center",borderRadius: SIZE.BORDER_RADIUS,borderWidth: 1, borderColor: errorListMessage.address == "" ? "transparent" : COLOR.RED}]}>
                     <TextInput
                             style={styles.input}
                             value={address}
                             onChangeText={(value)=>setAddress(value)}
-                            maxLength={200}
+                            maxLength={20}
                             placeholder={`Enter your address here`}
                             returnKeyType="done"
                         />
                 </View>
-                <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{accountNumber.length}/200 
+                <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{address.length}/20 
                     {errorListMessage.address != "" && <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS,color: COLOR.RED}}>  {errorListMessage.address}</Text>}
                 </Text>
             </View>
@@ -185,7 +187,8 @@ const FundTransferForm = ({selectBanks})=> {
         note,
         amount,
         address,
-        savedAccounts
+        savedAccounts,
+        activeAccount
     } = useContext(ContextCashOut)
 
     const [errorListMessage, setErrorListMessage] = useState({
@@ -223,7 +226,8 @@ const FundTransferForm = ({selectBanks})=> {
             setCashoutLogParams({
                 accountName: accountName,
                 accountNumber: accountNumber,
-                bank: bank.name,
+                bank: bank,
+                address: address,
                 note: note,
                 ...postCashOutOtherBank
             })
@@ -265,11 +269,20 @@ const FundTransferForm = ({selectBanks})=> {
         })
     }
 
+    const onSwipeFail = (e)=> {
+        console.log(e)
+    }
+
+    const onSwipeSuccess = ()=> {
+        setPinCodeAttempt(6)
+        setOpenPinCode(true)
+    }
+
 
     const onPress = ()=> {
         let noError = true
         if(!bank.id || bank.id == ""){
-            changeErrorMessagge("bank",`Select bank first.`)
+            changeErrorMessagge("bank",`Select Bank first.`)
             noError = false
         }
         if(accountNumber == ""){
@@ -277,11 +290,16 @@ const FundTransferForm = ({selectBanks})=> {
             noError = false
         }
         if(address == ""){
-            changeErrorMessagge("address","Account address is required.")
+            changeErrorMessagge("address","Account Address is required.")
             noError = false
         }
         if(amount == "") {
             changeErrorMessagge("amount",`Please enter atleast ${tokwaAccount.wallet.currency.code} 1.00.`)
+            noError = false
+        }
+
+        if(amount > 50000 && accountNumber.length > 16){
+            changeErrorMessagge("accountNumber","Account Number maximum length must be 16")
             noError = false
         }
 
@@ -297,10 +315,14 @@ const FundTransferForm = ({selectBanks})=> {
                     amount: amount,
                     note: note 
                 },
-            onConfirm: ()=>{
-                setPinCodeAttempt(6)
-                setOpenPinCode(true)
-            },
+            isSwipe: true,
+            swipeTitle: `Confirm`,
+            onSwipeFail: onSwipeFail,
+            onSwipeSuccess: onSwipeSuccess,
+            // onConfirm: ()=>{
+            //     setPinCodeAttempt(6)
+            //     setOpenPinCode(true)
+            // },
         })
 
     }
@@ -318,9 +340,11 @@ const FundTransferForm = ({selectBanks})=> {
             </EnterPinCode>
             <SuccessfulCashOutModal 
                 visible={successModalVisible}
+                setVisible={setSuccessModalVisible}
                 cashoutLogParams={cashoutLogParams}
                 tokwaAccount={tokwaAccount}
                 savedAccounts={savedAccounts}
+                activeAccount={activeAccount}
                 note={note}
             />
             <AccountInfo

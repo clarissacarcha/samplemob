@@ -45,7 +45,7 @@ const PromptMessage = ({
 
             <View style={styles.promptMessageContent}>
                 <View style={styles.promptContent}>
-                    <Image style={{height: 90,width: 90}} resizeMode="contain" source={require('../../../../../../assets/icons/gcash.png')}/>
+                    <Image source={require('../../../../../../assets/toktokwallet-assets/success.png')}/>
                     <View style={{alignItems:"center"}}>
                         <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.L}}>Success!</Text>
                         <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,color: COLOR.DARK,textAlign:"center"}}>Your application has been submitted. Please wait for your GCash disbursement account to be verified.</Text>
@@ -53,17 +53,6 @@ const PromptMessage = ({
                     <View style={{width: "50%",alignSelf:"center"}}>
                         <YellowButton label="Ok" onPress={redirect}/>
                     </View>
-                    {/* <TouchableOpacity 
-                        style={{
-                            width: "100%",
-                            paddingVertical: 2,
-                            alignItems:"center"
-                        }}
-                        onPress={redirect}
-                    >
-                        <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,color: COLOR.ORANGE}}>Ok</Text>
-                    </TouchableOpacity> */}
-                  
                 </View>
             </View>
 
@@ -257,10 +246,13 @@ const CreateForm = ({navigation,session,mobile,provider})=> {
                 <View>
                     <Text style={styles.label}>Mobile Number</Text>
                       <View style={{flexDirection:"row",alignItems:"center",width:"100%",justifyContent:"center"}}>
-                        <View style={{ backgroundColor:'lightgray', borderTopLeftRadius: SIZE.BORDER_RADIUS,borderBottomLeftRadius: SIZE.BORDER_RADIUS,justifyContent:"center",alignItems:"center", height: SIZE.BUTTON_HEIGHT,paddingHorizontal: 10,marginTop: 5}}>
+                        <View style={{ backgroundColor:'#F7F7FA', borderTopLeftRadius: SIZE.BORDER_RADIUS,borderBottomLeftRadius: SIZE.BORDER_RADIUS,justifyContent:"center",alignItems:"center", height: SIZE.BUTTON_HEIGHT,paddingHorizontal: 10,marginTop: 5}}>
                             <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,paddingBottom: 2.5}}>09</Text>
                         </View>
-                        <TextInput 
+                        <View style={[styles.input, {flex: 1,justifyContent:"center",backgroundColor:"#F0F0F0",borderTopLeftRadius: 0 , borderBottomLeftRadius: 0}]}>
+                                <Text style={ {fontSize: FONT_SIZE.L + 1,fontFamily: FONT.REGULAR}}>{mobileNumber}</Text>
+                        </View>
+                        {/* <TextInput 
                                 style={[styles.input, {fontSize: FONT_SIZE.L + 1,fontFamily: FONT.REGULAR, flex: 1,borderTopLeftRadius: 0,borderBottomLeftRadius: 0, borderWidth: 1, borderColor: errorMessage != "" ? COLOR.RED : "transparent"}]} 
                                 placeholder="00-000-0000"
                                 keyboardType="number-pad"
@@ -268,7 +260,7 @@ const CreateForm = ({navigation,session,mobile,provider})=> {
                                 value={mobileNumber}
                                 returnKeyType="done"
                                 onChangeText={(value)=>changeMobileNumber(value)}
-                        />
+                        /> */}
                     </View>
                     { errorMessage != "" && <Text style={{fontFamily: FONT.REGULAR,color:COLOR.RED,fontSize: FONT_SIZE.S}}>{errorMessage}</Text> }
                 </View>
