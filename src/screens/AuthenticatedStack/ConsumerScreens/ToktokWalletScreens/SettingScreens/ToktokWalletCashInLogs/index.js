@@ -106,26 +106,14 @@ const ToktokWalletCashInLogs = ({navigation})=> {
     })
 
     const Refetch = ()=> {
-        getCashIns({
-            variables: {
-                input: {
-                    pageIndex: pageIndex
-                }
-            }
-        })
+        getCashIns()
         setPageLoading(loading)
     }
 
     useEffect(()=>{
-        getCashIns({
-            variables: {
-                input: {
-                    pageIndex: pageIndex
-                }
-            }
-        })
+        getCashIns()
         setPageLoading(loading)
-    },[pageIndex])
+    },[])
 
     return (
         <>

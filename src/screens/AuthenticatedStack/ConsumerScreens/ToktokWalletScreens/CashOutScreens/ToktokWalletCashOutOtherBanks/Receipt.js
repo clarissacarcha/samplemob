@@ -11,6 +11,9 @@ import moment from 'moment'
 import { COLOR, FONT, FONT_SIZE } from '../../../../../../res/variables';
 import {Separator} from '../../Components';
 import CheckBox from 'react-native-check-box'
+import { useNavigation } from '@react-navigation/native';
+import {RefreshWallet} from '../../ReduxUtility'
+import {connect} from 'react-redux'
 
 //const path = RNFS.PicturesDirectoryPath
 // const path = RNFS.DocumentDirectoryPath
@@ -19,10 +22,28 @@ const path = Platform.OS === "ios" ? RNFS.LibraryDirectoryPath : RNFS.DownloadDi
 
 const {width,height} = Dimensions.get("window")
 
-export const Receipt = ({children, format, refNo ,refDate, onPress,savedAccounts,activeAccount,cashoutLogParams})=> {
+const mapDispatchtoProps = (dispatch) => ({
+    refreshTokwaState: (payload) => dispatch({
+        type: "SET_REFRESH_TOKTOKWALLET",
+        payload: payload
+    })
+})
+
+export const Receipt = connect(null,mapDispatchtoProps)(({children, setVisible,format, refNo ,refDate, onPress,savedAccounts,activeAccount,cashoutLogParams,refreshTokwaState})=> {
 
     const viewshotRef = useRef()
     const [isSaveAccount,setIsSaveAccount] = useState(true)
+    const navigation = useNavigation()
+
+    const refreshWalletState = async ()=>{
+        const walletData = await RefreshWallet()
+        return await refreshTokwaState(walletData)
+    }
+
+
+    useEffect(()=>{
+       refreshWalletState()
+    },[])
 
     useEffect(()=>{
     
@@ -148,10 +169,15 @@ export const Receipt = ({children, format, refNo ,refDate, onPress,savedAccounts
 
     }
 
-    const Proceed = ()=> {
+    const Proceed = async ()=> {
         if( activeAccount && activeAccount >= 0 || savedAccounts.length < 5){
             if(isSaveAccount){
-                return console.log(JSON.stringify(cashoutLogParams))
+                navigation.pop()
+                navigation.navigate("ToktokWalletCashOutSaveAccount", {
+                    bank: cashoutLogParams.bank,
+                    cashoutLogParams: cashoutLogParams
+                })
+               return setVisible(false)
             }
             return onPress()
         }
@@ -223,7 +249,7 @@ export const Receipt = ({children, format, refNo ,refDate, onPress,savedAccounts
         </View>
         </>
     )
-}
+})
 
 const styles = StyleSheet.create({
     container: {
@@ -272,3 +298,6 @@ const styles = StyleSheet.create({
         marginBottom: Platform.OS == "ios" ? 25 : 0
     }
 })
+
+
+

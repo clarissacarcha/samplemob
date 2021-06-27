@@ -269,6 +269,15 @@ const FundTransferForm = ({selectBanks})=> {
         })
     }
 
+    const onSwipeFail = (e)=> {
+        console.log(e)
+    }
+
+    const onSwipeSuccess = ()=> {
+        setPinCodeAttempt(6)
+        setOpenPinCode(true)
+    }
+
 
     const onPress = ()=> {
         let noError = true
@@ -306,10 +315,14 @@ const FundTransferForm = ({selectBanks})=> {
                     amount: amount,
                     note: note 
                 },
-            onConfirm: ()=>{
-                setPinCodeAttempt(6)
-                setOpenPinCode(true)
-            },
+            isSwipe: true,
+            swipeTitle: `Confirm`,
+            onSwipeFail: onSwipeFail,
+            onSwipeSuccess: onSwipeSuccess,
+            // onConfirm: ()=>{
+            //     setPinCodeAttempt(6)
+            //     setOpenPinCode(true)
+            // },
         })
 
     }
@@ -327,6 +340,7 @@ const FundTransferForm = ({selectBanks})=> {
             </EnterPinCode>
             <SuccessfulCashOutModal 
                 visible={successModalVisible}
+                setVisible={setSuccessModalVisible}
                 cashoutLogParams={cashoutLogParams}
                 tokwaAccount={tokwaAccount}
                 savedAccounts={savedAccounts}
