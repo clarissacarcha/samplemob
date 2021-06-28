@@ -27,6 +27,7 @@ const ToktoKWalletPayPandaWebView = ()=> {
     const session = useSelector(state=>state.session)
     const constants = useSelector(state=>state.constants)
 
+    console.log(route.params)
     const initialpaymentData = {
         merchant_id: route.params.merchantId,
         reference_number: route.params.refNo,
@@ -79,7 +80,9 @@ const ToktoKWalletPayPandaWebView = ()=> {
                     style={{flex: 1}}
                     ref={webviewRef}
                     source={{
-                        uri: constants.paypandaTransactionEndpoint,
+                        // uri: "https://sandbox.paypanda.ph/api/payment/toktok_transaction_entry",
+                        // uri: constants.paypandaTransactionEndpoint,
+                        uri: route.params.paypandaTransactionUrl,
                         method: 'POST',
                         headers: { 'Content-Type': 'application/x-www-form-urlencoded', },
                         body: generatedInitialPaymentData
@@ -87,32 +90,32 @@ const ToktoKWalletPayPandaWebView = ()=> {
                     startInLoadingState
                     renderLoading={()=> <LoadingIndicator/>}
                     onNavigationStateChange={(event)=> {
-                        console.log(event)
-                        const checkreturnurl = event.url.search("http://toktokreturnurl.ph")
-                        if(checkreturnurl != - 1){
-                            const {url} = event
-                            const reference_number = /(?:\?refno=).*(?=\&paypanda_refno)/g.exec(url)
-                            const paypanda_refno = /(?:\&paypanda_refno=).*(?=\&status)/.exec(url)
-                            const payment_status = /(?:\&status=).*(?=\&signature)/.exec(url)
-                            const signature = /(?:\&signature=).*/.exec(url)
-                            const paid_amount = route.params.amount_to_pay
-                            const transactionTypeId = route.params.transactionTypeId
-        
 
-                            if(checkurl != url){       
+                        
+                       const checkreturnurl = event.url.search(route.params.paypandaReturnUrl)
+                        if(checkreturnurl != -1){
+                            const {url} = event
+      
+                            const paypandaReferenceNumber = /(?:\&paypanda_refno=).*(?=\&status)/.exec(url)
+                            const status = /(?:\&status=).*(?=\&signature)/.exec(url)
+
+                
+                            if(checkurl != url){     
                                 setCashInLogParams({
-                                    status: payment_status[0].slice(8),
-                                    referenceNumber: reference_number[0].slice(7),
-                                    paypandaReferenceNumber: paypanda_refno[0].slice(16),
-                                    amount: +paid_amount,
+                                    status: status[0].slice(8),
+                                    referenceNumber: route.params.refNo,
+                                    paypandaReferenceNumber: paypandaReferenceNumber[0].slice(16),
+                                    amount: +route.params.amount_to_pay,
                                     createdAt: new Date(),
+                                    email: route.params.email_address,
+                                    payer: route.params.payer_name
                                 })
                                 setDoneTransaction(true)
+                              
                             }
-
                             setCheckurl(url)
-                         
-                        }   
+                        }
+
                     }}
                 />  
                 : mounted &&

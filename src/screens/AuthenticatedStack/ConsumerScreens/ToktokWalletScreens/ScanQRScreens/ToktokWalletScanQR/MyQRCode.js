@@ -3,7 +3,7 @@ import {Modal,View,Text,StyleSheet,Dimensions,TouchableOpacity,Image} from 'reac
 import { BlackButton, YellowButton } from '../../../../../../revamp'
 import QRCode from 'react-native-qrcode-svg'
 import {useSelector} from 'react-redux'
-import { COLORS, FONTS, SIZES } from '../../../../../../res/constants'
+import {COLOR , FONT , FONT_SIZE} from '../../../../../../res/variables'
 import FIcon from 'react-native-vector-icons/Feather'
 import { Separator } from '../../Components/Separator'
 import ViewShot , {captureScreen,releaseCapture} from "react-native-view-shot";
@@ -15,107 +15,99 @@ import moment from 'moment'
 
 const {width,height} = Dimensions.get("window")
 
-const MyQRCode = ({visible,setVisible})=> {
+const MyQRCode = ({visible,setVisible,tokwaAccount})=> {
 
     const session = useSelector(state=>state.session)
 
     const viewshotRef = useRef()
 
-    const ScreenshotAndSave = async ()=> {
-
-        const checkAndRequest = Platform.select({
-            android: async ()=>{
-                const checkResult = await check(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE);
-                if (checkResult === RESULTS.GRANTED) {
-                    return true;
-                }
-                if (checkResult === RESULTS.BLOCKED) {
-                    Alert.alert(
-                      '',
-                      "Read storage access have been blocked. Please allow toktok to access your storage in your phone's settings.",
-                    );
-                    return false;
-                }
-                if (checkResult === RESULTS.UNAVAILABLE) {
-                    Alert.alert('', 'Access to storage is unavailable.');
-                    return false;
-                }
-
-                    if (checkResult === RESULTS.DENIED) {
-                        const requestResult = await request(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE);
-
-                        if (checkResult === RESULTS.GRANTED) {
-                            return true;
-                        }
-                        if (checkResult === RESULTS.BLOCKED) {
-                            Alert.alert(
-                              '',
-                              "Read storage access have been blocked. Please allow toktok to access your storage in your phone's settings.",
-                            );
-                            return false;
-                        }
-                       
-            
-                        if (requestResult === RESULTS.DENIED) {
-                        Alert.alert('', "Sorry, we can't access your contacts without sufficient permission.");
-                        return false;
-                        }
-                    }
-            },
-            ios: async ()=> {
-                // const checkResult = await check(PERMISSIONS.IOS.MEDIA_LIBRARY);
-                // console.log(checkResult)
-                // return true
-                const checkResult = await check(PERMISSIONS.IOS.PHOTO_LIBRARY);
-
-                if (checkResult === RESULTS.GRANTED) {
-                    return true;
-                }
-                if (checkResult === RESULTS.BLOCKED) {
-                    Alert.alert(
-                      '',
-                      "Read storage access have been blocked. Please allow toktok to access your storage in your phone's settings.",
-                    );
-                    return false;
-                }
-                if (checkResult === RESULTS.UNAVAILABLE) {
-                    Alert.alert('', 'Access to storage is unavailable.');
-                    return false;
-                }
+    const checkAndRequest = Platform.select({
+        android: async ()=>{
+            const checkResult = await check(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE);
+            if (checkResult === RESULTS.GRANTED) {
+                return true;
+            }
+            if (checkResult === RESULTS.BLOCKED) {
+                Alert.alert(
+                  '',
+                  "Read storage access have been blocked. Please allow toktok to access your storage in your phone's settings.",
+                );
+                return false;
+            }
+            if (checkResult === RESULTS.UNAVAILABLE) {
+                Alert.alert('', 'Access to storage is unavailable.');
+                return false;
+            }
 
                 if (checkResult === RESULTS.DENIED) {
-                    const requestResult = await request(PERMISSIONS.IOS.PHOTO_LIBRARY);
-                    if (requestResult === RESULTS.GRANTED) {
-                      return true;
-                    }
-          
-                    if (requestResult === RESULTS.BLOCKED) {
-                      Alert.alert(
-                        '',
-                        "Read storage access have been blocked. Please allow toktok to access your storage in your phone's settings.",
-                      );
-                      return false;
-                    }
-                  }
+                    const requestResult = await request(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE);
 
+                    if (checkResult === RESULTS.GRANTED) {
+                        return true;
+                    }
+                    if (checkResult === RESULTS.BLOCKED) {
+                        Alert.alert(
+                          '',
+                          "Read storage access have been blocked. Please allow toktok to access your storage in your phone's settings.",
+                        );
+                        return false;
+                    }
+                   
+        
+                    if (requestResult === RESULTS.DENIED) {
+                    Alert.alert('', "Sorry, we can't access your storage without sufficient permission.");
+                    return false;
+                    }
+                }
+        },
+        ios: async ()=> {
+            // const checkResult = await check(PERMISSIONS.IOS.MEDIA_LIBRARY);
+            // console.log(checkResult)
+            // return true
+            const checkResult = await check(PERMISSIONS.IOS.PHOTO_LIBRARY);
+
+            if (checkResult === RESULTS.GRANTED) {
+                return true;
             }
-        })
+            if (checkResult === RESULTS.BLOCKED) {
+                Alert.alert(
+                  '',
+                  "Read storage access have been blocked. Please allow toktok to access your storage in your phone's settings.",
+                );
+                return false;
+            }
+            if (checkResult === RESULTS.UNAVAILABLE) {
+                Alert.alert('', 'Access to storage is unavailable.');
+                return false;
+            }
 
-        const result = await checkAndRequest();
+            if (checkResult === RESULTS.DENIED) {
+                const requestResult = await request(PERMISSIONS.IOS.PHOTO_LIBRARY);
+                if (requestResult === RESULTS.GRANTED) {
+                  return true;
+                }
+      
+                if (requestResult === RESULTS.BLOCKED) {
+                  Alert.alert(
+                    '',
+                    "Read storage access have been blocked. Please allow toktok to access your storage in your phone's settings.",
+                  );
+                  return false;
+                }
+              }
 
-        if(result){
-            DownloadReceipt()
         }
-    }
-
+    })
 
     const DownloadReceipt = async ()=> {
+
+        const result = await checkAndRequest();
         
         const pathCache = RNFS.CachesDirectoryPath
        
         viewshotRef.current.capture().then(async (uri ) => {
             const timestamp = +moment()
-            const filename = `${timestamp.toString()}_${session.user.userId}.jpg`
+            const filename = `${timestamp.toString()}_${tokwaAccount.mobileNumber}.jpg`
     
             RNFS.moveFile(uri, pathCache + `/${filename}`)
             const newFileUri = `${pathCache}/${filename}`
@@ -145,22 +137,22 @@ const MyQRCode = ({visible,setVisible})=> {
                             >
                                      <Image resizeMode="contain" style={{height: 23,width: 130,marginBottom: 15}} source={require('../../../../../../assets/toktokwallet-assets/toktokwallet.png')}/>
                                      <QRCode
-                                        value={session.user.userId} //Give value when there's no session as it will throw an error if value is empty.
+                                        value={tokwaAccount.mobileNumber} //Give value when there's no session as it will throw an error if value is empty.
                                         // size={width * 0.7}
                                         size={250}
                                         color="black"
                                         backgroundColor="transparent"
                                         // onPress={() => alert('Pressed')}
                                     />
-                                    {/* <View style={{marginTop: 10,}}>
-                                     <Text style={{fontFamily: FONTS.BOLD,fontSize:SIZES.M, color: COLORS.DARK}}>{`${session.user.person.firstName} ${session.user.person.lastName}`}</Text>
-                                    </View> */}
+                                    <View style={{marginTop: 10,}}>
+                                     <Text style={{fontFamily: FONT.BOLD,fontSize:FONT_SIZE.M}}>{tokwaAccount.mobileNumber}</Text>
+                                    </View>
                             </ViewShot>
                             <Separator/>
                             <View style={{height: 50,alignItems:"center",marginTop: 10,}}>
-                                <TouchableOpacity onPress={ScreenshotAndSave} style={styles.downloadBtn}>
+                                <TouchableOpacity onPress={DownloadReceipt} style={styles.downloadBtn}>
                                     <FIcon name="download" size={20} color={"#FF8A48"}/>
-                                    <Text style={{fontSize: SIZES.M,fontFamily: FONTS.BOLD,marginLeft: 5,color:"#FF8A48"}}>Download</Text>
+                                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginLeft: 5,color:"#FF8A48"}}>Download</Text>
                                 </TouchableOpacity>
                             </View>
 

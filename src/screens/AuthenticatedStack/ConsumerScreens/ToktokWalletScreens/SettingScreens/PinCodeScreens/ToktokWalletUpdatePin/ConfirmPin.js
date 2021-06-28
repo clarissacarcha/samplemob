@@ -1,7 +1,7 @@
 import React , {useRef, useState , useEffect} from 'react'
 import {View,Text,StyleSheet,ScrollView,TextInput,TouchableOpacity} from 'react-native'
 import { COLORS, DARK, FONTS, SIZES } from '../../../../../../../res/constants'
-import {NumberBoxes} from '../../../Components'
+import {NumberBoxes,BuildingBottom} from '../../../Components'
 
 const ConfirmPin = ({pinCode ,pageIndex, setPageIndex , patchPincodeToktokWallet })=> {
 
@@ -67,6 +67,7 @@ const ConfirmPin = ({pinCode ,pageIndex, setPageIndex , patchPincodeToktokWallet
 
                 </View>
             </ScrollView>
+            <BuildingBottom/>
             {/* <TouchableOpacity
                 disabled={pinCode.length < 6}
                 onPress={onSubmit}

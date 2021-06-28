@@ -2,12 +2,13 @@ import React from 'react'
 import {View,StyleSheet,Text,Image,FlatList,Alert,ActivityIndicator} from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import FIcon from 'react-native-vector-icons/Feather'
-import {HeaderBackClose, HeaderBack, SomethingWentWrong , AlertOverlay} from '../../../../../../components'
-import { COLOR, COLORS, FONTS, FONT_LIGHT, FONT_MEDIUM, SIZES } from '../../../../../../res/constants'
+import {COLOR , FONT, FONT_SIZE} from '../../../../../../res/variables'
 import {useQuery} from '@apollo/react-hooks'
-import {GET_CASH_IN_METHODS} from '../../../../../../graphql'
+import {TOKTOK_WALLET_GRAPHQL_CLIENT} from '../../../../../../graphql'
+import {GET_CASH_IN_PROVIDERS} from '../../../../../../graphql/toktokwallet'
 import {Separator,HeaderImageBackground,HeaderTitle} from '../../Components'
 import { numberFormat } from '../../../../../../helper'
+import {useSelector} from 'react-redux'
 
 const ToktokWalletPaymentOptions = ({navigation,route})=> {
 
@@ -15,16 +16,14 @@ const ToktokWalletPaymentOptions = ({navigation,route})=> {
         headerShown: false,
     })
 
-    const walletinfo = route.params.walletinfo
+    const tokwaAccount = useSelector(state=>state.toktokWallet)
 
-    const {data: cashinmethods,error,loading} = useQuery(GET_CASH_IN_METHODS,{
+    const {data: cashinmethods,error,loading} = useQuery(GET_CASH_IN_PROVIDERS,{
+            client: TOKTOK_WALLET_GRAPHQL_CLIENT,
             fetchPolicy: 'network-only',
-            variables: {
-                input: {
-                    sourceAccountType: 9,
-                    destinationAccountType: 1,
-                }
-            },
+            onCompleted: ({getCashInProviders})=> {
+                console.log(getCashInProviders)
+            }
     })
 
     if (loading) {
@@ -42,25 +41,26 @@ const ToktokWalletPaymentOptions = ({navigation,route})=> {
     const CashInMethod = ({item,index})=> {
         let image , navigateLink
         if(item.name.toLowerCase() == "paypanda"){
-            image = require('../../../../../../assets/toktokwallet-assets/paypanda.png')
+            image = require('../../../../../../assets/toktokwallet-assets/cash-in-providers/paypanda.png')
             navigateLink = "ToktokWalletPayPandaForm"
         }else{
-            navigateLink = ""
+            image = require('../../../../../../assets/toktokwallet-assets/cash-in-providers/jcwallet.png')
+            navigateLink = "ToktokWalletPayPandaForm"
         }
         return (
             <TouchableOpacity 
                 key={`cashin-${index}`}
                 style={styles.cashinoption} onPress={()=> navigateLink != "" ? navigation.navigate(navigateLink,{
-                        walletinfo: route.params.walletinfo,
+                        walletinfo: null,
                         transactionType: item
                     }
-                ) : Alert.alert("Temporary Unavailable")}>
+                ) : Alert.alert("","Temporary Unavailable")}>
                 <View style={styles.logo}>
                     <Image style={{height: 35,width: 35}} resizeMode="contain" source={image} />
                 </View>
                 <View style={styles.name}>
-                    <Text style={{fontSize:SIZES.M,fontFamily: FONTS.BOLD}}>{item.name}</Text>
-                    <Text style={{fontSize: SIZES.S, fontFamily: FONTS.REGULAR}}>Use {item.name} to cash in</Text>
+                    <Text style={{fontSize:FONT_SIZE.M,fontFamily: FONT.BOLD}}>{item.name}</Text>
+                    <Text style={{fontSize: FONT_SIZE.S, fontFamily: FONT.REGULAR}}>Use {item.name} to cash in</Text>
                 </View>
                 <View style={styles.arrowright}>
                     <FIcon name={'chevron-right'} size={20} color={"#A6A8A9"}/>
@@ -75,18 +75,18 @@ const ToktokWalletPaymentOptions = ({navigation,route})=> {
                             <HeaderImageBackground>
                                 <HeaderTitle label="Cash In"/>
                                 <View style={styles.walletBalance}>
-                                        <Text style={{fontSize: 24,fontFamily: FONTS.BOLD}}>PHP {numberFormat(walletinfo.balance ? walletinfo.balance : 0)}</Text>
-                                        <Text style={{fontSize: SIZES.M,fontFamily: FONTS.REGULAR,color: COLORS.DARK}}>Available Balance</Text>
+                                        <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>{tokwaAccount.wallet.currency.code} {numberFormat(tokwaAccount.wallet.balance ? tokwaAccount.wallet.balance : 0)}</Text>
+                                        <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Available Balance</Text>
                                 </View>
                             </HeaderImageBackground>
                       </View>
 
                       <View style={styles.paymentoptions}>
-                            <Text style={{fontSize: SIZES.M,fontFamily: FONTS.BOLD}}>Choose cash-in method</Text>
+                            <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>Choose cash in method</Text>
                       </View>
                       <Separator/>     
                        <FlatList 
-                            data={cashinmethods.getCashInMethods}
+                            data={cashinmethods.getCashInProviders}
                             keyExtractor={(item)=>item.id}
                             renderItem={CashInMethod}
                         />

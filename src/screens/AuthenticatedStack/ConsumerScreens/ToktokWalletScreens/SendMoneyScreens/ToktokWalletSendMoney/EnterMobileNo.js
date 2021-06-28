@@ -1,76 +1,50 @@
-import React , {useState, useEffect} from 'react'
-import {View,Text,StyleSheet,TextInput,TouchableOpacity,Dimensions} from 'react-native'
-import {SIZES, INPUT_HEIGHT, FONTS, COLORS} from '../../../../../../res/constants'
+import React , {useState, useEffect , useRef} from 'react'
+import {View,Text,StyleSheet,TextInput,TouchableOpacity,Dimensions,TouchableHighlight} from 'react-native'
+import {FONT_SIZE , SIZE , FONT , COLOR} from '../../../../../../res/variables'
 import {useLazyQuery} from '@apollo/react-hooks'
-import {CLIENT,GET_USER_ACCOUNT,GET_DAILY_MONTHLY_YEARLY_INCOMING} from '../../../../../../graphql'
-
+import {TOKTOK_WALLET_GRAPHQL_CLIENT} from '../../../../../../graphql'
+import { GET_ACCOUNT } from '../../../../../../graphql/toktokwallet'
+import { Alert } from 'react-native'
 
 const {width,height} = Dimensions.get("window")
 
 const EnterMobileNo = ({
-    session , 
     navigation , 
     setProceed , 
     proceed ,
     setRecipientDetails , 
     mobileNo , 
     setMobileNo , 
-    recipientDetails
+    recipientDetails,
+    tokwaAccount,
+    setGetAccountLoading
 })=> {
 
     const [errorMessage,setErrorMessage] = useState("")
+    const inputMobileRef = useRef()
 
-    const [getUserAccount, {data: userInfo, error, loading}] = useLazyQuery(GET_USER_ACCOUNT, {
-        fetchPolicy: 'network-only',
-        onError: (err) => {
+    const [getAccount, {data: walletData,error: walletError,loading: walletLoading}] = useLazyQuery(GET_ACCOUNT , {
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+        fetchPolicy: "network-only",
+        onCompleted: ({getAccount})=>{
+            setRecipientDetails(getAccount)
+            checkIFSameNumber(getAccount.mobileNumber.replace("+63","0"))
+        },
+        onError: (err)=> {
             if(err.graphQLErrors.length > 0){
                 err.graphQLErrors.map((error)=> {
-                    if(error.message == "Wallet not found"){
-                       setProceed(false)
-                       return setErrorMessage("Recipient does not have toktokwallet")
-                    }else{
+                    if(error.message == "Person doesn't registered in toktokwallet") {
                         setProceed(false)
-                        return setErrorMessage("Recipient does not have toktok app")
+                        return setErrorMessage("Recipient must have toktokwallet account.")
                     }
+                   
                 })
             }
-        },
-        onCompleted: (response) => {
-            setRecipientDetails(oldstate=> {
-                return {
-                    ...oldstate,
-                    ...response.getUserAccount
-                }
-            })
-            checkIFSameNumber(response.getUserAccount.username.replace("+63","0"))
-            // getDailyMonthlyYearlyIncoming({
-            //     variables: {
-            //         input: {
-            //             userID: response.getUserAccount.id
-            //         }
-            //     }
-            // })
-            // return navigation.push("TokTokWalletPinCodeSecurity", {onConfirm: patchFundTransfer})
-        }
-    })
-
-    const [getDailyMonthlyYearlyIncoming] = useLazyQuery(GET_DAILY_MONTHLY_YEARLY_INCOMING , {
-        fetchPolicy: 'network-only',
-        onError: (error)=>{
-
-        },
-        onCompleted: (response)=>{
-            setRecipientDetails(oldstate=> {
-                return {
-                    ...oldstate,
-                    incomingRecords: response.getDailyMonthlyYearlyIncoming
-                }
-            })
         }
     })
 
     const checkIFSameNumber = (mobile) => {
-        let sessionMobile = session.user.username.replace("+63","0")
+        let sessionMobile = tokwaAccount.mobileNumber.replace("+63","0")
         if(mobile == sessionMobile){
             setErrorMessage("You cannot send money to yourself.")
             setProceed(false)
@@ -89,7 +63,7 @@ const EnterMobileNo = ({
         if(checkMobileFormat(mobile)) {
             checkIFSameNumber(mobile)
         }else{
-            setErrorMessage("Please enter a valid mobile number.")
+            setErrorMessage("Mobile number must be valid.")
             setProceed(false)
         }
 
@@ -132,13 +106,13 @@ const EnterMobileNo = ({
             setProceed(false)
         }
         if(mobileNo.length == 11){
-            getUserAccount({
+            getAccount({
                 variables: {
-                  input: {
-                    mobileNo: mobileNo
-                  }
-                },
-              })
+                    input: {
+                        mobileNumber: mobileNo
+                    }
+                }
+            })
         }
 
         return ()=> {
@@ -146,19 +120,43 @@ const EnterMobileNo = ({
         }
     },[mobileNo])
 
+    useEffect(()=>{
+        console.log(recipientDetails)
+    },[recipientDetails])
+
+    useEffect(()=>{
+        setGetAccountLoading(walletLoading)
+    },[walletLoading])
+
     return (
        <View style={styles.container}>
             <View style={styles.content}>
 
-                <View style={{flex: 1,paddingHorizontal: 10,}}>
-                { recipientDetails.id && proceed && <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.M,color: COLORS.DARK}}>{`${recipientDetails.person.firstName} ${recipientDetails.person.lastName[0]}.`}</Text>}
-                <Text style={{fontFamily: FONTS.REGULAR,fontSize: recipientDetails.id && proceed ? SIZES.M : SIZES.M,color:"dimgray"}}>{mobileNo == "" ? "Enter Recipient Number" : mobileNo}</Text>
-                { errorMessage != "" && <Text style={{fontFamily:FONTS.REGULAR,fontSize: SIZES.S,color:"red",marginTop: 0}}>{errorMessage}</Text>}
-                    <TextInput
+                <TouchableOpacity onPress={()=>{
+                    return inputMobileRef.current.focus()
+                }} style={{flex: 1,justifyContent:"center",paddingHorizontal: 10, height:50}}>
+                    <>
+                    { recipientDetails.id && proceed && <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>{`${recipientDetails.person.firstName} ${recipientDetails.person.lastName[0]}.`}</Text>}
+                    <Text style={{fontFamily: FONT.REGULAR,fontSize: recipientDetails.id && proceed ? FONT_SIZE.M : FONT_SIZE.M,color:"dimgray"}}>{mobileNo == "" ? "Enter Recipient Number" : mobileNo}</Text>
+                    { errorMessage != "" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.S,color:COLOR.RED,marginTop: 0}}>{errorMessage}</Text>}
+
+                
+                    </>
+                </TouchableOpacity>
+
+           
+                <TouchableOpacity onPress={()=>navigation.navigate("ToktokWalletContacts", {setRecipientInfo: setRecipientMobileNo})} style={styles.contactAddress}>
+                    <View style={styles.addressbtn}>
+                            <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.XS,color: COLOR.YELLOW}}>Address Book</Text>
+                    </View>
+                </TouchableOpacity>
+
+                <TextInput
+                        ref={inputMobileRef}
                         caretHidden
                         // autoFocus={true}
                         value={mobileNo}
-                        style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent',zIndex: 1}}
+                        style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent'}}
                         keyboardType="number-pad"
                         returnKeyType="done"
                         onChangeText={(value)=>{
@@ -174,12 +172,6 @@ const EnterMobileNo = ({
                         //       })
                         // }}
                     />
-                </View>
-                <TouchableOpacity onPress={()=>navigation.navigate("ToktokWalletContacts", {setRecipientInfo: setRecipientMobileNo})} style={styles.contactAddress}>
-                    <View style={styles.addressbtn}>
-                            <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.XS,color: COLORS.YELLOW}}>Address Book</Text>
-                    </View>
-                </TouchableOpacity>
             </View>
        </View>
     )
@@ -187,11 +179,10 @@ const EnterMobileNo = ({
 
 const styles = StyleSheet.create({
     container: {
-        height: INPUT_HEIGHT,
+        height: SIZE.FORM_HEIGHT,
         width: width,
         paddingHorizontal: 16,
-        position:"absolute",  
-        bottom: -25,
+        marginTop: -25,
     },
     content: {
         height:"100%",
@@ -209,16 +200,18 @@ const styles = StyleSheet.create({
         flexDirection:"row",
         justifyContent:"center",
         alignItems:'center',
-        flexDirection: "row" 
+        flexDirection: "row",
+      
     },
     contactAddress: {
         // width:65,
-        height: SIZES.XS + 12,
+        height: FONT_SIZE.XS + 12,
         paddingHorizontal: 7,
         borderWidth: 1,
-        borderColor: COLORS.YELLOW,
+        borderColor: COLOR.YELLOW,
         borderRadius: 3,
         marginRight: 10,
+        zIndex: 1,
     },
     addressbtn: {
         flex: 1,

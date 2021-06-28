@@ -2,17 +2,19 @@ import React , {useState} from 'react'
 import {View} from 'react-native'
 import { numberFormat } from '../../../../../../helper'
 import { YellowButton } from '../../../../../../revamp'
-import { DisabledButton } from '../../Components'
 import {useAlert} from '../../../../../../hooks/useAlert'
 import {onErrorAlert} from '../../../../../../util/ErrorUtility'
 import {useMutation} from '@apollo/react-hooks'
-import {CLIENT,PATCH_FUND_TRANSFER} from '../../../../../../graphql'
+import {TOKTOK_WALLET_GRAPHQL_CLIENT,PATCH_FUND_TRANSFER} from '../../../../../../graphql'
+import { POST_FUND_TRANSFER } from '../../../../../../graphql/toktokwallet'
 
 //SELF IMPORTS
 import SuccessfulModal from './SuccessfulModal'
+import { DisabledButton , EnterPinCode } from '../../Components'
+import { AlertOverlay } from '../../../../../../components'
 
 
-const ProceedButton = ({swipeEnabled , navigation , amount , note , session , recipientDetails })=> {
+const ProceedButton = ({swipeEnabled , navigation , amount , note , tokwaAccount , recipientDetails })=> {
 
     const alert = useAlert()
     const [successModalVisible, setSuccessModalVisible] = useState(false)
@@ -21,22 +23,39 @@ const ProceedButton = ({swipeEnabled , navigation , amount , note , session , re
         referenceNumber: "",
         createdAt: ""
     })
+    const [pinCodeAttempt,setPinCodeAttempt] = useState(6)
+    const [openPinCode,setOpenPinCode] = useState(false)
 
-    const [patchFundTransfer] = useMutation(PATCH_FUND_TRANSFER, {
-        variables: {
-            input: {
-                amount: +amount,
-                note: note,
-                sourceUserId: session.user.id,
-                destinationUserId: recipientDetails.id,
-            }
-        },
+    const [postFundTransfer , {data ,error , loading }] = useMutation(POST_FUND_TRANSFER, {
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onError: (error)=> {
+            const {graphQLErrors, networkError} = error;
+            console.log(graphQLErrors)
+
+            if(graphQLErrors[0].message == "Insufficient Balance"){
+                navigation.navigate("ToktokWalletHomePage")
+                navigation.replace("ToktokWalletHomePage")
+                return onErrorAlert({alert,error})
+            }
+        
+            if(graphQLErrors[0].message == "Wallet Hold"){
+                setOpenPinCode(false)
+                navigation.navigate("ToktokWalletHomePage")
+                navigation.replace("ToktokWalletHomePage")
+                return navigation.push("ToktokWalletRestricted", {component: "onHold"})
+            }
+
+            if(graphQLErrors[0].message == "Invalid Pincode"){
+                return setPinCodeAttempt(graphQLErrors[0].payload.remainingAttempts)
+            }
+            setOpenPinCode(false)
             onErrorAlert({alert,error})
-            navigation.pop()
+            return navigation.pop()
         },
-        onCompleted: (response)=> {
-            setWalletinfoParams(response.patchFundTransfer.walletLog)
+        onCompleted: ({postFundTransfer})=> {
+            console.log(JSON.stringify(postFundTransfer))
+            setOpenPinCode(false)
+            setWalletinfoParams(postFundTransfer)
             setSuccessModalVisible(true)
         }
     })
@@ -44,17 +63,32 @@ const ProceedButton = ({swipeEnabled , navigation , amount , note , session , re
     const reviewAndConfirm = ()=> {
         return navigation.navigate("ToktokWalletReviewAndConfirm", {
             label: "Send Money",
+            event: "Send Money",
             isSwipe: true,
             onSwipeFail: onSwipeFail,
             onSwipeSuccess: onSwipeSuccess,
-            swipeTitle: `Pay PHP ${amount != "" ? numberFormat(amount) : "0"}`,
+            swipeTitle: `Send ${tokwaAccount.wallet.currency.code} ${amount != "" ? numberFormat(amount) : "0"}`,
             data: {
                 amount: amount,
+                note: note,
                 recipient: {
                     name: `${recipientDetails.person.firstName} ${recipientDetails.person.middleName ? recipientDetails.person.middleName + " " : ""}${recipientDetails.person.lastName}`,
-                    mobileNo: recipientDetails.username
-                }
+                    mobileNo: recipientDetails.mobileNumber,
+                },
             }
+        })
+    }
+
+    const Proceed = (pinCode)=> {
+        postFundTransfer({
+            variables: {
+                input: {
+                    amount: +amount,
+                    note: note,
+                    destinationMobileNo: recipientDetails.mobileNumber,
+                    pinCode: pinCode
+                }
+            },
         })
     }
 
@@ -63,17 +97,30 @@ const ProceedButton = ({swipeEnabled , navigation , amount , note , session , re
     }
 
     const onSwipeSuccess = ()=> {
-        return navigation.push("ToktokWalletSecurityPinCode", {onConfirm: patchFundTransfer})
+        setPinCodeAttempt(6)
+        return setOpenPinCode(true)
+        //return navigation.push("ToktokWalletSecurityPinCode", {onConfirm: postFundTransfer , callBackFunction: Proceed , loading: loading, pinRemainingCodeAttempt: pinCodeAttempt})
     }
 
     return (
        <>
+        
+        <EnterPinCode 
+            visible={openPinCode} 
+            setVisible={setOpenPinCode} 
+            loading={loading}
+            pinCodeAttempt={pinCodeAttempt}
+            callBackFunc={Proceed}
+        >
+            <AlertOverlay visible={loading} />
+        </EnterPinCode>
         <SuccessfulModal 
                 successModalVisible={successModalVisible}
-                amount={amount} 
+                amount={amount}
+                note={note} 
                 recipient={{
                     name: `${recipientDetails.person.firstName} ${recipientDetails.person.middleName ? recipientDetails.person.middleName + " " : ""}${recipientDetails.person.lastName}`,
-                    mobileNo: recipientDetails.username
+                    mobileNo: recipientDetails.mobileNumber
                 }}
                 walletinfoParams={walletinfoParams}
             />

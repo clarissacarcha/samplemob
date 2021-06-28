@@ -34,18 +34,6 @@ const Loader = () => (
 );
 
 const BookingSuccess = ({onPress}) => (
-  // <View style={{height: '100%', backgroundColor: 'white', borderRadius: 10}}>
-  //   <View style={{flex: 1, margin: 20, justifyContent: 'center', alignItems: 'center'}}>
-  //     <Image source={OrderBooked} style={{height: imageWidth, width: imageWidth}} resizeMode={'contain'} />
-  //     <Text style={{fontFamily: FONT_REGULAR, color: MEDIUM, marginTop: 20}}>Your order has been booked.</Text>
-  //   </View>
-
-  //   <TouchableHighlight underlayColor={COLOR} style={styles.submitBox}>
-  //     <View style={styles.submit}>
-  //       <Text style={{color: COLOR, fontSize: 14, fontFamily: FONT_MEDIUM}}>OK</Text>
-  //     </View>
-  //   </TouchableHighlight>
-  // </View>
   <View
     style={{
       height: cardSize - 70,
@@ -56,11 +44,15 @@ const BookingSuccess = ({onPress}) => (
       borderRadius: 5,
       alignItems: 'center',
     }}>
-    <View style={{flex: 1, width: '100%', justifyContent: 'center', alignItems: 'center'}}>
-      <Image source={BookingSuccessCheck} resizeMode={'contain'} />
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <Image
+        source={BookingSuccessCheck}
+        resizeMode={'contain'}
+        style={{width: cardSize - 185, height: cardSize - 185}}
+      />
     </View>
-    <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.L}}>Booked Successfully</Text>
-    <TouchableOpacity onPress={onPress} style={{height: 50, justifyContent: 'center', alignItems: 'center'}}>
+    <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.L, height: 25}}>Booked Successfully</Text>
+    <TouchableOpacity onPress={onPress} style={{height: 40, justifyContent: 'center', alignItems: 'center'}}>
       <Text style={{color: COLOR.ORANGE, fontFamily: FONT.BOLD}}>Continue</Text>
     </TouchableOpacity>
   </View>

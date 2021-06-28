@@ -43,6 +43,7 @@ export const WhiteButton = ({
   suffixName,
   suffixSize = 24,
   suffixColor = DARK,
+  suffixText = '',
 }) => {
   const useThrottle = (cb, delayDuration) => {
     const options = {leading: true, trailing: false}; // add custom lodash options
@@ -79,6 +80,14 @@ export const WhiteButton = ({
     return <Icon name={suffixName} size={suffixSize} style={{paddingRight: 10}} color={suffixColor} />;
   };
 
+  const SuffixText = () => {
+    if (!suffixText) {
+      return null;
+    }
+
+    return <Text style={{marginRight: 10}}>{suffixText}</Text>;
+  };
+
   return (
     <TouchableHighlight onPress={onPressThrottled} style={styles.whiteButton} underlayColor={COLOR_UNDERLAY}>
       <View style={[styles.whiteButtonBox, style, borderless ? styles.borderless : {}]}>
@@ -94,6 +103,7 @@ export const WhiteButton = ({
           )}
         </View>
         <SuffixIcon />
+        <SuffixText />
       </View>
     </TouchableHighlight>
   );

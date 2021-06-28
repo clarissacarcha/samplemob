@@ -1,9 +1,11 @@
 import React, { useState ,useRef , useEffect } from 'react'
-import {View,Text,StyleSheet,TouchableHighlight,TouchableOpacity,TextInput,Alert,ScrollView} from 'react-native'
+import {View,Text,StyleSheet,TouchableHighlight,TouchableOpacity,TextInput,Alert,ScrollView,Dimensions,Image} from 'react-native'
 import {DARK, SIZES, FONTS, COLORS} from '../../../../../../../res/constants'
-import {NumberBoxes} from '../../../Components'
+import {NumberBoxes,BuildingBottom} from '../../../Components'
 
-const ConfirmPin = ({pinCode,setPageIndex,walletinfo,patchPincodeToktokWallet})=> {
+const {width,height} = Dimensions.get("window")
+
+const ConfirmPin = ({pinCode,setPageIndex,walletinfo,patchPincodeToktokWallet,tokwaAccount})=> {
 
 
     const [confirmpinCode,setConfirmPinCode] = useState("")
@@ -37,7 +39,7 @@ const ConfirmPin = ({pinCode,setPageIndex,walletinfo,patchPincodeToktokWallet})=
     return (
        <View style={styles.container}>
             <ScrollView style={styles.content}>
-                    <Text style={{fontSize: SIZES.M,fontFamily: FONTS.BOLD,marginTop: 20,alignSelf:"center"}}>Confirm your PIN</Text>
+                    <Text style={{fontSize: SIZES.M,fontFamily: FONTS.BOLD,marginTop: 20,alignSelf:"center"}}>Confirm your {tokwaAccount.pinCode ? "new ": ""}PIN</Text>
                     <View style={{position: 'relative',marginTop: 50,}}>
                         <NumberBoxes pinCode={confirmpinCode} onNumPress={onNumPress} showPin={showPin}/>
                         <TextInput
@@ -71,6 +73,7 @@ const ConfirmPin = ({pinCode,setPageIndex,walletinfo,patchPincodeToktokWallet})=
                       
                     </View>
             </ScrollView>
+           <BuildingBottom/>
        </View>
     )
 }
