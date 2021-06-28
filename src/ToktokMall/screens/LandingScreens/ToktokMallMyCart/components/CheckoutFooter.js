@@ -5,7 +5,7 @@ import { AlertOverlay} from '../../../../../components';
 import { COLOR, FONT, FONT_SIZE } from '../../../../../res/variables';
 import CheckBox from 'react-native-check-box';
 
-export const CheckoutFooter = ({subtotal}) => {
+export const CheckoutFooter = ({subtotal, onSubmit}) => {
     return (
         <>
             <View 
@@ -17,7 +17,7 @@ export const CheckoutFooter = ({subtotal}) => {
                         <Text style={{fontSize: 18, color: "#F6841F"}}>&#8369;{parseFloat(subtotal || 0).toFixed(2)}</Text>
                     </View>
                     <View style={{justifyContent: 'center'}}>
-                        <TouchableOpacity style={{backgroundColor: '#F6841F', paddingVertical: 15, paddingHorizontal: 40, borderRadius: 5}}>
+                        <TouchableOpacity onPress={onSubmit} style={{backgroundColor: '#F6841F', paddingVertical: 15, paddingHorizontal: 40, borderRadius: 5}}>
                             <Text style={{fontSize: 14, color: '#fff'}}>Checkout</Text>
                         </TouchableOpacity>
                     </View>

@@ -134,7 +134,14 @@ export const ToktokMallMyCart = ({navigation})=> {
 
                 <View style={{height: 80}}></View>
 
-                {willDelete ? <DeleteFooter /> : <CheckoutFooter subtotal={subTotal} />}
+                {willDelete ? <DeleteFooter /> : 
+                
+                <CheckoutFooter 
+                    onSubmit={() => {
+                        navigation.navigate("ToktokMallCheckout")
+                    }} 
+                    subtotal={subTotal} 
+                />}
                 
             </View>
         </View>
