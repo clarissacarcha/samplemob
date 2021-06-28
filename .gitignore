@@ -60,3 +60,6 @@ buck-out/
 
 # Personal Notes
 MY_TODOS.md
+
+# Environment Variables
+src/res/environments.js

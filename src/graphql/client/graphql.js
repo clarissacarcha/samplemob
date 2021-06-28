@@ -9,9 +9,9 @@ import {createUploadLink} from 'apollo-upload-client';
 import {getMainDefinition} from 'apollo-utilities';
 import {setContext} from 'apollo-link-context';
 
-import axios from 'axios';
+import ENVIRONMENT from '../../res/environments';
 
-const baseUrl = `${PROTOCOL}://${HOST_PORT}/`;
+const baseUrl = `${ENVIRONMENT.TOKTOK_SERVER}/`;
 const wsUrl = `ws://${HOST_PORT}/graphql`;
 
 // const errorLink = onError(({graphQLErrors, networkError}) => {
