@@ -5,6 +5,8 @@ import { AlertOverlay} from '../../../../components';
 import { COLOR, FONT, FONT_SIZE } from '../../../../res/variables';
 import CheckBox from 'react-native-check-box';
 
+import { DeleteFooter, CheckoutFooter, Item, Store } from './Components';
+
 const testdata = [{
     store: "Face Mask PH",
     cart: [{
@@ -40,131 +42,35 @@ const testdata = [{
     }]
 }]
 
-const Store = ({data}) => {
-    return (
-        <>
-            <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
-                    <View style={{flex: 1, justifyContent: 'center'}}>
-                        <CheckBox
-                            isChecked={false}
-                            checkedCheckBoxColor="#F6841F"
-                            uncheckedCheckBoxColor="#F6841F"
-                            onClick={() => {
-                                setAllSelected(!allSelected)
-                            }}
-                        />
-                    </View>
-                    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                       <Image source={require("../../../../assets/toktokmall-assets/icons/store.png")} style={{width: 18, height: 18, resizeMode: 'stretch'}} />
-                    </View>
-                    <View style={{flex: 9, justifyContent: 'center', flexDirection: 'row'}}>                        
-                        <View style={{flex: 12, justifyContent: 'center'}}>
-                            <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>{data.store}</Text>
-                        </View>
-                    </View>
-                </View>
-                <View style={{height: 2, backgroundColor: '#F7F7FA'}} />
-        </>
-    )
-}
-
-const Item = ({data}) => {
-    return (
-        <>
-            <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
-                    <View style={{flex: 1, justifyContent: 'center'}}>
-                        <CheckBox
-                            isChecked={false}
-                            checkedCheckBoxColor="#F6841F"
-                            uncheckedCheckBoxColor="#F6841F"
-                            onClick={() => {
-                                setAllSelected(!allSelected)
-                            }}
-                        />
-                    </View>
-                    <View style={{flex: 3, justifyContent: 'center', alignItems: 'center'}}>
-                       <Image source={require("../../../../assets/toktokmall-assets/images/coppermask.png")} style={{width: 50, height: 65, resizeMode: 'stretch'}} />
-                    </View>
-                    <View style={{flex: 9, justifyContent: 'center', flexDirection: 'row'}}>                        
-                        <View style={{flex: 1, justifyContent: 'center'}}>
-                            <View>
-                                <Text style={{fontSize: 14, fontWeight: '100'}}>{data.label}</Text>
-                            </View>
-                            <View style={{flexDirection: 'row'}}>
-                                <View style={{flex: 0}}>
-                                    <Text style={{fontSize: 13, color: "#F6841F"}}>&#8369;{parseFloat(data.price).toFixed(2)}</Text>
-                                </View>
-                                <View style={{flex: 0, paddingHorizontal: 15}}>
-                                    <Text style={{color: "#9E9E9E", textDecorationLine: 'line-through', fontSize: 10}}>&#8369;{parseFloat(data.originalPrice).toFixed(2)}</Text>
-                                </View>
-                            </View>
-                            <View style={{flexDirection: 'row'}}>
-                                <View style={{flex: 1}}>
-                                    <Text style={{color: "#9E9E9E", fontSize: 13}}>Variation: {data.variation}</Text>
-                                </View>
-                                <View style={{flex: 0}}>
-                                    <Text style={{color: "#9E9E9E", fontSize: 13}}>Qty: {data.qty}</Text>
-                                </View>
-                            </View>
-                        </View>
-                    </View>
-                </View>
-                <View style={{height: 2, backgroundColor: '#F7F7FA'}} />
-        </>
-    )
-}
-
-const CheckoutFooter = () => {
-    return (
-        <>
-            <View 
-                style={{flex: 1, backgroundColor: '#fff', position: 'absolute', bottom: 0, width: '100%'}}
-            >
-                <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
-                    <View style={{flex: 1, justifyContent: 'center'}}>
-                        <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>Subtotal </Text>
-                        <Text style={{fontSize: 18, color: "#F6841F"}}>&#8369;{parseFloat(0).toFixed(2)}</Text>
-                    </View>
-                    <View style={{justifyContent: 'center'}}>
-                        <TouchableOpacity style={{backgroundColor: '#F6841F', paddingVertical: 15, paddingHorizontal: 40, borderRadius: 5}}>
-                            <Text style={{fontSize: 14, color: '#fff'}}>Checkout</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </View>
-        </>
-    )
-}
-
-const DeleteFooter = () => {
-    return (
-        <>
-            <View 
-                    style={{flex: 1, backgroundColor: '#fff', position: 'absolute', bottom: 0, width: '100%'}}
-                >
-                    <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>                        
-                        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', alignSelf: 'center'}}>
-                            <TouchableOpacity style={{backgroundColor: '#F6841F', paddingVertical: 15, paddingHorizontal: 50, borderRadius: 5}}>
-                                <Text style={{fontSize: 14, color: '#fff'}}>Delete</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-            </View>
-        </>
-    )
-}
-
-
 export const ToktokMallMyCart = ({navigation})=> {
 
-    const [allSelected, setAllSelected] = useState(false)
+    const [allSelected, setAllSelected] = useState(true)
     const [willDelete, setWillDelete] = useState(false)
+    const [cartData, setCartData] = useState([])
+    const [subTotal, setSubTotal] = useState(0)
 
     navigation.setOptions({
         headerLeft: () => <HeaderBack hidden={true} />,
         headerTitle: () => <HeaderTitle label={['Shopping Cart', '']} />,
         headerRight: () => <HeaderRight hidden={true} />
     });
+
+    
+    const init = async () => {
+        let a = 0;
+        for(var x=0;x<testdata.length;x++){
+            for(var y=0;y<testdata[x].cart.length;y++){
+                let item = testdata[x].cart[y]
+                a += (item.price * item.qty)
+                console.log(a)
+            }
+        }
+        setSubTotal(a)
+    }
+
+    useEffect(() => {
+        init()
+    }, [])
 
     return (
         <>
@@ -196,8 +102,30 @@ export const ToktokMallMyCart = ({navigation})=> {
                     renderItem={({item}) => {
                         return (
                             <>
-                                <Store data={item} />
-                                {item.cart.map((data, i) => <Item data={data} />)}
+                                <Store 
+                                    data={item}
+                                    onSelect={() => {
+                                        let cart = item.cart
+                                        console.log(cart)
+                                    }} 
+                                />
+                                {item.cart.map((data, i) => 
+                                    <Item 
+                                        data={data}
+                                        onSelect={() => {
+                                            let a = 0;
+                                            for(var x=0;x<testdata.length;x++){
+                                                for(var y=0;y<testdata[x].cart.length;y++){
+                                                    let item = testdata[x].cart[y]
+                                                    if(y == i) continue
+                                                    else a += (item.price * item.qty)
+                                                    console.log(a)
+                                                }
+                                            }
+                                            setSubTotal(a)
+                                            console.log(data)
+                                        }} 
+                                    />)}
                                 <View style={{height: 8, backgroundColor: '#F7F7FA'}} />
                             </>
                         )
@@ -206,7 +134,7 @@ export const ToktokMallMyCart = ({navigation})=> {
 
                 <View style={{height: 80}}></View>
 
-                {willDelete ? <DeleteFooter /> : <CheckoutFooter />}
+                {willDelete ? <DeleteFooter /> : <CheckoutFooter subtotal={subTotal} />}
                 
             </View>
         </View>
