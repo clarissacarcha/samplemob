@@ -33,6 +33,7 @@ export const TOKTOK_WALLET_PROTOCOL_HOST_PORT = 'test.toktok.ph:2087';
 
 export const COLORS = {
   YELLOW: '#FDBA1C',
+  YELLOWTEXT: '#FFA700',
   ORANGE: '#F5841F',
   LIGHT: '#D3D3D3',
   MEDIUM: '#808080',
