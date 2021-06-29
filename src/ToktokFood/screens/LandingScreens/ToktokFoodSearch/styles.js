@@ -12,10 +12,10 @@ export default styles = StyleSheet.create({
   listContainer: {
     flex: 1,
     paddingVertical: 15,
-    paddingHorizontal: 18,
   },
   itemContainer: {
-    flex: 1,
+    width: scale(350),
+    alignSelf: 'center',
     borderBottomWidth: 1,
     flexDirection: 'row',
     borderColor: '#E6E6E6',

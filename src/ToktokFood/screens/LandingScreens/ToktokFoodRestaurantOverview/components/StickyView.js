@@ -121,12 +121,12 @@ const styles = StyleSheet.create({
   },
   headerWrapper: {
     backgroundColor: 'white',
-    flex: 1,
     shadowColor: '#000',
     shadowOffset: {width: 1, height: 1},
     shadowOpacity: 0.4,
     shadowRadius: 3,
     elevation: 5,
+    height: Platform.OS === 'ios' ? scale(120) : scale(145),
   },
   navbarWrapper: {
     // marginTop: verticalScale(10),
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
   },
   tabContainer: {
     paddingHorizontal: 10,
-    marginTop: verticalScale(8),
+    marginTop: Platform.OS === 'ios' ? verticalScale(12) : verticalScale(10),
   },
   title: {
     flex: 1,
@@ -146,8 +146,8 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     backgroundColor: 'rgba(255,255,255,0.5)',
-    bottom: Platform.OS === 'ios' ? verticalScale(getStatusbarHeight + 38) : verticalScale(7),
-    height: Platform.OS === 'ios' ? verticalScale(85) : verticalScale(110),
+    bottom: Platform.OS === 'ios' ? verticalScale(38) : 0,
+    height: Platform.OS === 'ios' ? scale(88) : scale(105),
   },
   titleInfo: {
     borderTopLeftRadius: 20,

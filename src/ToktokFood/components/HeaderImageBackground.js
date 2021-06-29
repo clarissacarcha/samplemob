@@ -18,10 +18,10 @@ export default HeaderImageBackground;
 const styles = StyleSheet.create({
   imageStyle: {
     resizeMode: 'cover',
-    height: Platform.OS === 'android' ? moderateScale(103 + getStatusbarHeight) : moderateScale(105),
+    height: Platform.OS === 'android' ? moderateScale(103 + getStatusbarHeight) : moderateScale(115),
   },
   walletBackGroundImage: {
     zIndex: 1,
-    height: Platform.OS === 'android' ? moderateScale(133 + getStatusbarHeight) : moderateScale(125),
+    height: Platform.OS === 'android' ? moderateScale(133 + getStatusbarHeight) : moderateScale(140),
   },
 });

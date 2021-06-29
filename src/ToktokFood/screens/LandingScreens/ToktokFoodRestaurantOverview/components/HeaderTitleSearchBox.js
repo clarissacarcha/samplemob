@@ -7,7 +7,7 @@ import {FONT, FONT_SIZE, COLOR} from 'res/variables';
 import {searchIcon} from 'toktokfood/assets/images';
 
 // Utils
-import {moderateScale, scale, verticalScale} from 'toktokfood/helper/scale';
+import {moderateScale, verticalScale, getStatusbarHeight} from 'toktokfood/helper/scale';
 
 // State must be global to share with other components
 const HeaderTitleSearchBox = () => {
@@ -39,23 +39,13 @@ const styles = StyleSheet.create({
   },
   searchBoxContainer: {
     flexDirection: 'row',
-    marginTop: Platform.OS === 'android' ? 53 : verticalScale(25),
     paddingRight: moderateScale(20),
+    marginTop: Platform.OS === 'android' ? getStatusbarHeight + 15 : verticalScale(15),
   },
   searchBox: {
     borderRadius: 13,
     backgroundColor: '#F9F9F9',
     flex: 1,
-  },
-  searchBoxShadow: {
-    shadowColor: '#949494',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
   },
   textInputFontStyles: {
     color: COLOR.BLACK,

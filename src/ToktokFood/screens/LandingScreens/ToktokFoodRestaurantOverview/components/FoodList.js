@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
   },
   listContainer: {
-    borderTopWidth: 1,
+    borderBottomWidth: 1,
     borderColor: '#E6E6E6',
     // borderBottomWidth: 1,
     flexDirection: 'row',
