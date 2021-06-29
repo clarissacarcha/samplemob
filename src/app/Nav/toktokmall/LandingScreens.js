@@ -113,13 +113,13 @@ const ToktokMallMyProfileStackScreens = () => (
         headerShown: false,
       }}
     />
-    <ToktokMallMyProfileStack.Screen
+    {/* <ToktokMallMyProfileStack.Screen
       name="ToktokMallMyOrders"
       component={ToktokMallMyOrders}
       options={{
         headerShown: false,
       }}
-    />
+    /> */}
     <ToktokMallMyProfileStack.Screen
       name="ToktokMallMyFollowing"
       component={ToktokMallMyFollowing}

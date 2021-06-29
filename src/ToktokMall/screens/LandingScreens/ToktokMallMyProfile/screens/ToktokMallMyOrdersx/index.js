@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 import {HeaderTab} from '../../../../../Components';
 
-export const ToktokMallMyOrders = ({navigation, route}) => {
+export const ToktokMallMyOrdersx = ({navigation, route}) => {
 
   const [activeTab, setActiveTab] = useState(route.params.tab || 0)
 
