@@ -44,6 +44,6 @@ const styles = StyleSheet.create({
   imgContainer: {
     alignItems: 'center',
     // borderWidth: 1,
-    paddingVertical: verticalScale(50),
+    paddingVertical: verticalScale(40),
   },
 });
