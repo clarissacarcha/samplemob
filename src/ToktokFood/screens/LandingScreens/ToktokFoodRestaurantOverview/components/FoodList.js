@@ -1,5 +1,6 @@
 import React from 'react';
 import {FlatList, View, StyleSheet, Text, TouchableOpacity, Image} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 // Fonts & Colors
 import {COLOR} from 'res/variables';
@@ -10,8 +11,14 @@ import {foodData} from 'toktokfood/helper/strings';
 import {verticalScale} from 'toktokfood/helper/scale';
 
 const FoodList = () => {
+  const navigation = useNavigation();
+
+  const onNavigateToDriver = () => {
+    navigation.navigate('ToktokFoodDriver');
+  };
+
   const renderItem = ({item}) => (
-    <TouchableOpacity style={styles.listContainer}>
+    <TouchableOpacity onPress={onNavigateToDriver} style={styles.listContainer}>
       <View>
         <Text style={styles.listText}>{item.name}</Text>
         <Text style={styles.listPrice}>PHP {item.price}</Text>
