@@ -25,9 +25,9 @@ const SuccessfulModal = ({visible,setVisible,provider})=> {
             <View style={styles.modalBody}>
                     <View style={styles.content}>
                             <View style={{flex: 1,justifyContent:"center",alignItems:"center"}}>
-                                  <Image source={require('../../../../../../assets/toktokwallet-assets/cash-out-providers/gcash.png')}/>
+                                  <Image style={{height: 70,width: 110}} source={require('../../../../../../assets/toktokwallet-assets/cash-out-providers/bdo.png')}/>
                                   <Text style={{marginTop: 15,fontFamily: FONT.BOLD, fontSize: FONT_SIZE.L,textAlign:"center"}}>Linking Successful!</Text>
-                                  <Text style={{textAlign:"center", fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S}}>You have successfully linked your GCash number to your toktokwallet.</Text>
+                                  <Text style={{textAlign:"center", fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S}}>You have successfully linked your BDO account to your toktokwallet.</Text>
                             </View>
                             <View style={{height: SIZE.FORM_HEIGHT}}>
                                 <YellowButton label="Continue" onPress={redirect}/>

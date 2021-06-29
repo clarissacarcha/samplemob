@@ -1,5 +1,5 @@
 import React, {useState,useEffect} from 'react'
-import {View,Text,Modal,StyleSheet,TouchableOpacity,FlatList,ActivityIndicator} from 'react-native'
+import {View,Text,Modal,StyleSheet,TouchableOpacity,FlatList,ActivityIndicator,RefreshControl} from 'react-native'
 import { COLOR , FONT , FONT_SIZE} from '../../../../../res/variables'
 import moment from 'moment'
 import {onError, onErrorAlert} from '../../../../../util/ErrorUtility'
@@ -9,8 +9,9 @@ import { useAlert } from '../../../../../hooks'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from '../../../../../graphql'
 import { GET_TRANSACTIONS } from '../../../../../graphql/toktokwallet'
 import {useLazyQuery} from '@apollo/react-hooks'
+import { useSelector , connect } from 'react-redux'
 
-const ToktokWalletTransactions = ({navigation,route})=> {
+const ToktokWalletTransactions = ({navigation,route,getTokwaTransactions})=> {
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
         headerTitle: ()=> <HeaderTitle label={['Transactions']} />,
@@ -18,7 +19,6 @@ const ToktokWalletTransactions = ({navigation,route})=> {
 
     const [allTransactions, setAllTransactions] = useState(route.params.allTransactions)
     const [pageLoading,setPageLoading] = useState(false)
-    const [pageIndex,setPageIndex] = useState(0)
     const alert = useAlert()
 
     const [getTransactions , {data, error ,loading}] = useLazyQuery(GET_TRANSACTIONS, {
@@ -26,8 +26,9 @@ const ToktokWalletTransactions = ({navigation,route})=> {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({getTransactions})=>{
             setAllTransactions(state=>{
-                return [...state, ...getTransactions.allTransactions]
+                return [...getTransactions.allTransactions]
             })
+            getTokwaTransactions(getTransactions)
             setPageLoading(false)
         },
         onError: (error)=> {
@@ -35,18 +36,16 @@ const ToktokWalletTransactions = ({navigation,route})=> {
         }
     })
 
-    useEffect(()=>{
-        if(pageIndex > 0){
-            // call pagination here
-            getTransactions({
-                variables: {
-                    input: {
-                        pageIndex: pageIndex
-                    }
-                }
-            })
-        }
-    },[pageIndex])
+    const Refetch = ()=> {
+        getTransactions()
+    }
+
+    // useEffect(()=>{
+    //     if(pageIndex > 0){
+    //         // call pagination here
+    //         getTransactions()
+    //     }
+    // },[pageIndex])
 
     return (
         <>
@@ -54,6 +53,7 @@ const ToktokWalletTransactions = ({navigation,route})=> {
         <View style={styles.container}>        
                 <View style={styles.logs}>
                         <FlatList 
+                            refreshControl={<RefreshControl refreshing={loading} onRefresh={Refetch} colors={[COLOR.YELLOW]} tintColor={COLOR.YELLOW} />}
                             showsVerticalScrollIndicator={false}
                             data={allTransactions}
                             keyExtractor={(item)=>item.id}
@@ -67,17 +67,19 @@ const ToktokWalletTransactions = ({navigation,route})=> {
                             // onEndReachedThreshold={2}
                             scrollEnabled={true}
                         />
-                         {
-                            pageLoading &&  <View style={{justifyContent:"center",alignItems:"center",paddingHorizontal: 10,}}>
-                                                <ActivityIndicator color={COLOR.YELLOW}/>
-                                            </View>
-                        }
                 </View>
         </View>
             
        </>
     )
 }
+
+const mapDispatchtoProps = (dispatch) => ({
+    getTokwaTransactions: (payload) => dispatch({
+        type: "SET_TOKTOKWALLET_TRANSACTIONS",
+        payload: payload
+    })
+})
 
 const styles = StyleSheet.create({
     container: {
@@ -99,4 +101,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default ToktokWalletTransactions
+export default connect(null, mapDispatchtoProps)(ToktokWalletTransactions)

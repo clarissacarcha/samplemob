@@ -10,9 +10,20 @@ export const POST_CASH_OUT = gql`
         }
     }
 ` 
+
+export const POST_CASH_OUT_BDO = gql`
+    mutation postCashOutBdo($input: PostCashOutInput){
+        postCashOutBdo(input: $input){
+            id
+            amount
+            status
+            createdAt
+        }
+    }
+` 
 export const GET_CASH_OUTS = gql`
-      query getCashOuts($input: GetCashOutsInput){
-        getCashOuts(input: $input) {
+      query {
+        getCashOuts {
                 id
                 amount
                 isExported
@@ -32,7 +43,6 @@ export const GET_CASH_OUTS = gql`
                             accountName
                             bank {
                                 name 
-                                code
                             }
                     }
                 }

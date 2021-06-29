@@ -11,6 +11,7 @@ import {useQuery} from '@apollo/react-hooks'
 import PendingEnrollment from './PendingEnrollment';
 import RegisterAccount from './RegisterAccount';
 import VerifiedAccount from './VerifiedAccount';
+import SuccessfulModal from "../ToktokWalletBDOLinkAccount/SuccessfulModal";
 
 const MainComponent = ({children})=> {
     return (
@@ -83,7 +84,7 @@ const ToktokWalletBDOHomePage = ({navigation,route})=> {
        // Linked and verified BDO Account
        return (
         <>
-         {/* <SuccessfulModal visible={modalSuccessVisible} setVisible={setModalSuccessVisible} provider={provider}/> */}
+          <SuccessfulModal visible={modalSuccessVisible} setVisible={setModalSuccessVisible} provider={provider}/>
          <VerifiedAccount record={data.getCashOutEnrollmentBdo.linkedBDO.bdoEnrollmentRecord} provider={provider}/>
         </>
      )

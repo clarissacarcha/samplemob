@@ -23,17 +23,11 @@ export const TOKTOK_WALLET_PROTOCOL_HOST_PORT = '192.168.1.3:3200';
 // export const TOKTOK_WALLET_PROTOCOL = 'https';
 // export const TOKTOK_WALLET_PROTOCOL_HOST_PORT = 'stg-wallet.toktok.ph:2096';
 
-/* TESTING PORTS */
-
 // export const PROTOCOL = 'https';
 // export const HOST_PORT = 'test.toktok.ph:2096';
 
 // export const TOKTOK_WALLET_PROTOCOL = 'https';
 // export const TOKTOK_WALLET_PROTOCOL_HOST_PORT = 'test.toktok.ph:2087';
-
-/* TESTING PORTS */
-
-/* DEMO PORTS */
 
 // export const PROTOCOL = 'https';
 // export const HOST_PORT = 'demo.toktok.ph:2096';

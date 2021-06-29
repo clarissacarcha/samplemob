@@ -173,6 +173,7 @@ const VerifyFullname = ()=> {
                             value={person.firstName}
                             onChangeText={(value)=>changePersonInfo("firstName",value)}
                             placeholder="Enter first name here"
+                            returnKeyType="done"
                         />
                     </View>
 
@@ -183,6 +184,7 @@ const VerifyFullname = ()=> {
                             value={person.middleName}
                             onChangeText={(value)=>changePersonInfo("middleName",value)}
                             placeholder="Enter middle name here"
+                            returnKeyType="done"
                         />
                     </View>
 
@@ -194,6 +196,7 @@ const VerifyFullname = ()=> {
                             value={person.lastName}
                             onChangeText={(value)=>changePersonInfo("lastName",value)}
                             placeholder="Enter last name here"
+                            returnKeyType="done"
                         />
                     </View>
 
@@ -226,6 +229,7 @@ const VerifyFullname = ()=> {
                             value={contactInfo.email}
                             onChangeText={(value)=>changeContactInfo("email",value)}
                             placeholder="Enter email here"
+                            returnKeyType="done"
                         />
                     </View>
 
@@ -248,6 +252,7 @@ const VerifyFullname = ()=> {
                             value={birthInfo.birthPlace}
                             onChangeText={(value)=>changeBirthInfo("birthPlace",value)}
                             placeholder={"Enter place of birth here"}
+                            returnKeyType="done"
                         />
                     </View>
 

@@ -1,5 +1,5 @@
 import React , {useState , useEffect} from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,Image,ActivityIndicator , FlatList} from 'react-native'
+import {View,Text,StyleSheet,TouchableOpacity,Image,ActivityIndicator , FlatList , RefreshControl} from 'react-native'
 import {SomethingWentWrong , AlertOverlay} from '../../../../../../components'
 import moment from 'moment'
 import { COLOR, FONT, FONT_SIZE } from '../../../../../../res/variables'
@@ -106,20 +106,19 @@ const ToktokWalletCashOutLogs = ({navigation})=> {
         fetchPolicy: "network-only",
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({getCashOuts})=> {
-            setRecords(state=> [...state , ...getCashOuts])
+            // setRecords(state=> [...state , ...getCashOuts])
+            setRecords(getCashOuts)
             setPageLoading(false)
         }
     })
 
+    const Refetch = ()=> {
+        getCashOuts()
+    }
+
     useEffect(()=>{
-        getCashOuts({
-            variables: {
-                input: {
-                    pageIndex: pageIndex
-                }
-            }
-        })
-    },[pageIndex])
+        getCashOuts()
+    },[])
 
     return (
         <>
@@ -137,14 +136,16 @@ const ToktokWalletCashOutLogs = ({navigation})=> {
         />
         <Separator />
         {
-            loading
-            ?  <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                <ActivityIndicator size={24} color={COLOR.YELLOW} />
-               </View>
-            : <View style={styles.container}>
+            // loading
+            // ?  <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            //     <ActivityIndicator size={24} color={COLOR.YELLOW} />
+            //    </View>
+            // : 
+            <View style={styles.container}>
                     <View style={styles.content}>
                         
                             <FlatList
+                                refreshControl={<RefreshControl refreshing={loading} onRefresh={Refetch} colors={[COLOR.YELLOW]} tintColor={COLOR.YELLOW} />}
                                 showsVerticalScrollIndicator={false}
                                 data={records}
                                 keyExtractor={item=>item.id}
@@ -190,6 +191,7 @@ const styles = StyleSheet.create({
     },
     content: {
         padding: 16,
+        flex: 1,
     },
     filterType: {
         alignSelf: "flex-end",

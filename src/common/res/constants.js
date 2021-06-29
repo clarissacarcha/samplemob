@@ -1,11 +1,4 @@
-export const APP_VERSION = '1.15.0';
-export const APP_FLAVOR = 'C'; // C = Customer | D = Driver
-export const ACCOUNT_TYPE = 1; // 1 = Customer | 2 = Driver
-export const MAPS_API_KEY = 'AIzaSyDhlw6pbriuwr_Mb6KYkVlBar7KD1KTrOs';
-// export const PROTOCOL = 'https';
-// export const HOST_PORT = 'graphql.toktok.ph:2096';
-
-export const COLOR = {
+const COLOR = {
   WHITE: '#FFFFFF', // View backgroundColor
   LIGHT: '#F7F7FA', // Form backgroundColor and item separator
   MEDIUM: '#D3D3D3', // Placeholder Color
@@ -19,12 +12,12 @@ export const COLOR = {
   RED: '#F93154',
 };
 
-export const FONT = {
+const FONT_FAMILY = {
   REGULAR: 'FiraSans-Regular',
   BOLD: 'FiraSans-Bold',
 };
 
-export const FONT_SIZE = {
+const FONT_SIZE = {
   XS: 9,
   S: 11,
   M: 13,
@@ -33,20 +26,19 @@ export const FONT_SIZE = {
 };
 
 export const SIZE = {
-  BUTTON_HEIGHT: 50,
   FORM_HEIGHT: 50,
   BORDER_RADIUS: 5,
-  MARGIN: 16,
 };
 
-export const MARGIN = {
+const MARGIN = {
+  XS: 4,
   S: 8,
   M: 16,
   L: 24,
   XL: 32,
 };
 
-export const SHADOW = {
+const SHADOW = {
   shadowColor: '#000',
   shadowOffset: {
     width: 0,
@@ -57,7 +49,7 @@ export const SHADOW = {
   elevation: 5,
 };
 
-export const MAP_DELTA = {
+const MAP_DELTA = {
   HIGH: {
     latitudeDelta: 0.015,
     longitudeDelta: 0.0121,
@@ -66,4 +58,14 @@ export const MAP_DELTA = {
     latitudeDelta: 0.0032216430310114674,
     longitudeDelta: 0.002014003694029043,
   },
+};
+
+export default {
+  COLOR,
+  FONT_FAMILY,
+  FONT_SIZE,
+  SIZE,
+  MARGIN,
+  SHADOW,
+  MAP_DELTA,
 };

@@ -10,6 +10,10 @@ import Toast from 'react-native-simple-toast';
 import moment from 'moment'
 import { COLOR, FONT, FONT_SIZE } from '../../../../../../res/variables';
 import {Separator} from '../../Components';
+import CheckBox from 'react-native-check-box'
+import { useNavigation } from '@react-navigation/native';
+import {RefreshWallet} from '../../ReduxUtility'
+import {connect} from 'react-redux'
 
 //const path = RNFS.PicturesDirectoryPath
 // const path = RNFS.DocumentDirectoryPath
@@ -18,9 +22,42 @@ const path = Platform.OS === "ios" ? RNFS.LibraryDirectoryPath : RNFS.DownloadDi
 
 const {width,height} = Dimensions.get("window")
 
-export const Receipt = ({children, format, refNo ,refDate, onPress})=> {
+const mapDispatchtoProps = (dispatch) => ({
+    refreshTokwaState: (payload) => dispatch({
+        type: "SET_REFRESH_TOKTOKWALLET",
+        payload: payload
+    })
+})
+
+export const Receipt = connect(null,mapDispatchtoProps)(({children, setVisible,format, refNo ,refDate, onPress,savedAccounts,activeAccount,cashoutLogParams,refreshTokwaState})=> {
 
     const viewshotRef = useRef()
+    const [isSaveAccount,setIsSaveAccount] = useState(true)
+    const navigation = useNavigation()
+
+    const refreshWalletState = async ()=>{
+        const walletData = await RefreshWallet()
+        return await refreshTokwaState(walletData)
+    }
+
+
+    useEffect(()=>{
+       refreshWalletState()
+    },[])
+
+    useEffect(()=>{
+    
+        if(savedAccounts.length >= 5){
+            return setIsSaveAccount(false)
+        }
+
+        if(activeAccount != null){
+            return setIsSaveAccount(false)
+        }
+        
+
+        return
+    },[savedAccounts,activeAccount])
 
     const checkAndRequest = Platform.select({
         android: async ()=>{
@@ -95,6 +132,11 @@ export const Receipt = ({children, format, refNo ,refDate, onPress})=> {
                   );
                   return false;
                 }
+
+                if (requestResult === RESULTS.DENIED) {
+                    Alert.alert('', "Sorry, we can't access your storage without sufficient permission.");
+                    return false;
+                }
               }
 
         }
@@ -125,6 +167,21 @@ export const Receipt = ({children, format, refNo ,refDate, onPress})=> {
             Toast.show(`Receipt ${filename} has been downloaded.` , Toast.LONG)
         });
 
+    }
+
+    const Proceed = async ()=> {
+        if( activeAccount && activeAccount >= 0 || savedAccounts.length < 5){
+            if(isSaveAccount){
+                navigation.pop()
+                navigation.navigate("ToktokWalletCashOutSaveAccount", {
+                    bank: cashoutLogParams.bank,
+                    cashoutLogParams: cashoutLogParams
+                })
+               return setVisible(false)
+            }
+            return onPress()
+        }
+        return onPress()
     }
 
     return (
@@ -165,19 +222,34 @@ export const Receipt = ({children, format, refNo ,refDate, onPress})=> {
                     </TouchableOpacity>
                 </View>
             </View>
-              <View style={{marginBottom: 10, paddingHorizontal: 16,flexDirection:"row",alignItems:'center'}}>
-                    <View style={{padding: 2,borderWidth: 2 ,borderColor: "black",borderRadius: 2}}>
-                        <VectorIcon iconSet={ICON_SET.FontAwesome5} size={10} name="check" color="black"/>
-                    </View>
-                    <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M , marginLeft: 10}}>Save bank account details</Text>
-            </View>
+            {
+                activeAccount == null && savedAccounts.length < 5 &&
+                <View style={{marginBottom: 10, paddingHorizontal: 16,flexDirection:"row",alignItems:'center'}}>
+                            {/* <View style={{padding: 2,borderWidth: 2 ,borderColor: "black",borderRadius: 2}}>
+                                <VectorIcon iconSet={ICON_SET.FontAwesome5} size={10} name="check" color="black"/>
+                            </View> */}
+                            <CheckBox
+                                isChecked={isSaveAccount}
+                                onClick={()=>{
+                                    return setIsSaveAccount(!isSaveAccount)
+                                }}
+                                style={{
+                                    alignSelf: "center",
+                                    marginRight: 2,
+                                }}
+                            />
+                            <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M,marginLeft: 2}}>Save bank account details</Text>
+                </View>
+               
+            }
+          
             <View style={styles.actionBtn}>
-                    <YellowButton label="Back to Home" onPress={onPress} />
+                    <YellowButton label="Confirm" onPress={Proceed} />
             </View>
         </View>
         </>
     )
-}
+})
 
 const styles = StyleSheet.create({
     container: {
@@ -226,3 +298,6 @@ const styles = StyleSheet.create({
         marginBottom: Platform.OS == "ios" ? 25 : 0
     }
 })
+
+
+

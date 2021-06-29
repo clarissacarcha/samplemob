@@ -6,6 +6,14 @@ module.exports = {
       {
         paths: [
           {
+            rootPathSuffix: './src/',
+            rootPathPrefix: 'src/',
+          },
+          {
+            rootPathSuffix: './src/common/',
+            rootPathPrefix: 'common/',
+          },
+          {
             rootPathSuffix: './src/res/',
             rootPathPrefix: 'res/',
           },

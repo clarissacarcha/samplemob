@@ -63,3 +63,4 @@ MY_TODOS.md
 
 # Environment Variables
 src/res/environments.js
+src/common/res/environments.js

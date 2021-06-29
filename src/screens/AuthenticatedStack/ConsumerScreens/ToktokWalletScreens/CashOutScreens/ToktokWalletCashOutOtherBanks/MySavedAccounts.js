@@ -14,6 +14,8 @@ const {width,height} = Dimensions.get("window")
 
 
 const ActiveBankAccount = ({index,onPress, ...account}) => {
+    const splitAlias = account.nickName.split(" ")
+    const initialAlias = `${splitAlias[0][0]}${splitAlias[1] ? " "+splitAlias[1][0]: ""}`
     return (
         <TouchableHighlight 
             onPress={()=>onPress(account , index)} 
@@ -26,7 +28,7 @@ const ActiveBankAccount = ({index,onPress, ...account}) => {
                         <View style={{position:'absolute',top: 0 , right: -5, height: 20,width: 20 ,backgroundColor: COLOR.YELLOW,borderRadius: 100,justifyContent:'center',alignItems:"center",borderWidth: 0.5,borderColor:"black"}}>
                                 <VectorIcon iconSet={ICON_SET.Feather} name="check" color="black" size={12}/>
                         </View>
-                    <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.XL}}>{account.bank.name[0].toUpperCase()}</Text>
+                    <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.XL}}>{initialAlias.toUpperCase()}</Text>
                 </View>
                 <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.S}}>{account.nickName.length <= 10 ? account.nickName : `${account.nickName.slice(0,8)}...`}</Text>
             </>
@@ -35,12 +37,13 @@ const ActiveBankAccount = ({index,onPress, ...account}) => {
 }
 
 const BankAccount = ({index,onPress, ...account})=> {
-
+    const splitAlias = account.nickName.split(" ")
+    const initialAlias = `${splitAlias[0][0]}${splitAlias[1] ? " "+splitAlias[1][0]: ""}`
     return (
         <TouchableHighlight onPress={()=>onPress(account , index)} underlayColor={"#FFFFE5"} key={`bankAccount${index}`} style={{justifyContent:'center',alignItems:"center",marginRight: 10}}>
             <>
                       <View style={[styles.account, {justifyContent:'center',alignItems:'center'}]}>
-                            <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.L}}>{account.bank.name[0].toUpperCase()}</Text>
+                            <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.L}}>{initialAlias.toUpperCase()}</Text>
                         </View>
      
                 <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.S}}>{account.nickName.length <= 10 ? account.nickName : `${account.nickName.slice(0,8)}...`}</Text>
@@ -95,6 +98,7 @@ const MySavedAccounts = ({selectBanks , edit})=> {
        }else{
             setBank(account.bank)
             setAccountNumber(account.accountNumber)
+            setAddress(account.address)
             setActiveAccount(index)
        }
     }

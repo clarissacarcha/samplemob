@@ -4,7 +4,7 @@ import { COLOR, FONT, FONT_SIZE, SIZE } from '../../../../../../res/variables'
 import { HeaderBack, HeaderTitle, ICON_SET, VectorIcon, YellowButton } from '../../../../../../revamp'
 import { DisabledButton, NumberBoxes, Separator, BuildingBottom } from '../../Components'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from '../../../../../../graphql'
-import { PATCH_LINK_ACCOUNT , GET_GCASH_LINK_OTP } from '../../../../../../graphql/toktokwallet'
+import { PATCH_LINK_BDO_ACCOUNT , GET_BDO_LINK_OTP } from '../../../../../../graphql/toktokwallet'
 import { useLazyQuery , useMutation } from '@apollo/react-hooks'
 import { onErrorAlert } from '../../../../../../util/ErrorUtility'
 import { useAlert } from '../../../../../../hooks/useAlert'
@@ -14,25 +14,25 @@ import { AlertOverlay } from '../../../../../../components'
 
 
 
-const ToktokWalletGcashLinKAccount = ({navigation,route})=> {
+const ToktokWalletBDOLinkAccount = ({navigation,route})=> {
 
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
         headerTitle: ()=> <HeaderTitle label={[""]}/>
     })
 
-    const { mobile , provider } = route.params
+    const { mobile , provider , accountNumber} = route.params
     const [pinCode,setPinCode] = useState("")
     const inputRef = useRef();
     const alert = useAlert()
     const [otpTimer,setOtpTimer] = useState(120)
     const [errorMessage,setErrorMessage] = useState("")
 
-    const [patchLinkAccount, {data,error,loading}] = useMutation(PATCH_LINK_ACCOUNT,{
+    const [patchLinkBdoAccount, {data,error,loading}] = useMutation(PATCH_LINK_BDO_ACCOUNT,{
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
-        onCompleted: ({patchLinkAccount})=>{
-            navigation.navigate("ToktokWalletGcashHomePage", {provider})
-            return navigation.replace("ToktokWalletGcashHomePage",{provider, successLink: true})
+        onCompleted: ({patchLinkBdoAccount})=>{
+            navigation.navigate("ToktokWalletBDOHomePage", {provider})
+            return navigation.replace("ToktokWalletBDOHomePage",{provider, successLink: true})
         },
         onError: (error)=>{
             const {graphQLErrors, networkError} = error
@@ -46,10 +46,11 @@ const ToktokWalletGcashLinKAccount = ({navigation,route})=> {
         }
     })
 
-    const [getGcashLinkOTP, {loading: getOtpLoading}] = useLazyQuery(GET_GCASH_LINK_OTP, {
+
+    const [getBdoLinkOTP, {loading: getOtpLoading}] = useLazyQuery(GET_BDO_LINK_OTP, {
         fetchPolicy: "network-only",
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
-        onCompleted: ({getGcashLinkOTP})=>{
+        onCompleted: ({getBdoLinkOTP})=>{
             setErrorMessage("")
             setOtpTimer(120)
         },
@@ -63,6 +64,7 @@ const ToktokWalletGcashLinKAccount = ({navigation,route})=> {
         }
     })
 
+
     const onNumPress = () => {
         setTimeout(() => {
           inputRef.current.focus();
@@ -70,21 +72,22 @@ const ToktokWalletGcashLinKAccount = ({navigation,route})=> {
     };
 
     const CreateVerificationCode = ()=> {
-        getGcashLinkOTP({
+        getBdoLinkOTP({
             variables: {
                 input: {
-                    mobileNumber: `09${mobile}`
+                    mobileNumber: `${mobile}`
                 }
             }
         })
     }
 
     const ConfirmVerificationCode = ()=> {
-        return patchLinkAccount({
+        return patchLinkBdoAccount({
             variables: {
                 input: {
                     OTPCode: pinCode,
-                    mobile: `09${mobile}`
+                    mobile: `${mobile}`,
+                    accountNumber: accountNumber,
                 }
             }
         })
@@ -118,7 +121,7 @@ const ToktokWalletGcashLinKAccount = ({navigation,route})=> {
         >
             <View style={{flex: 1,alignItems:"center", marginTop: 40}}>
                     <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L}}>Enter OTP code sent to</Text>
-                    <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.L,marginBottom: 20,}}>09{mobile}</Text>
+                    <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.L,marginBottom: 20,}}>{mobile}</Text>
 
                     <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={true}/>
                     <TextInput
@@ -175,4 +178,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default ToktokWalletGcashLinKAccount
+export default ToktokWalletBDOLinkAccount

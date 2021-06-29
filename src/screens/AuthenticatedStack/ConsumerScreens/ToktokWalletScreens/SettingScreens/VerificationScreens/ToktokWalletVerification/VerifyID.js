@@ -196,6 +196,7 @@ const VerifyID = ()=> {
                                     placeholder="Enter valid id number here"
                                     // onSubmitEditing={Proceed}
                                     style={[styles.input,{padding: 5,paddingLeft: 10,fontSize: 12,fontFamily: FONTS.REGULAR}]} 
+                                    returnKeyType="done"
                             />
                         </View>
 

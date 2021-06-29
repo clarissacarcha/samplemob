@@ -21,8 +21,8 @@ export const POST_CASH_IN_SMS = gql`
 `
 
 export const GET_CASH_INS = gql`
-    query getCashIns($input: GetCashInsInput) {
-        getCashIns(input: $input) {
+    query {
+        getCashIns {
                 id
                 amount
                 referenceNumber

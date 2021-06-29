@@ -53,29 +53,27 @@ const ModalChooseAccount = ({visible,setVisible,accounts})=> {
                                     style={{paddingHorizontal: 16, paddingBottom: 16, flex: 1,}}
                                     keyExtractor={item => item.id}
                                     ItemSeparatorComponent={() => <View style={{height: 1, borderColor: COLOR.LIGHT}} />}
-                                    renderItem={({item,index})=>(
-                                        <TouchableHighlight underlayColor={'#FFFFE5'} onPress={()=>selectAccount(item)} style={[styles.banks]}>
-                                        <>
-                                            <View style={[styles.bankLogo,{justifyContent:'center',alignItems:"center"}]}>
-                                                      <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>{item.bank.name[0].toUpperCase()}</Text>
-                                            </View>
-                                            <View style={{flex: 1}}>
-                                                <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.S}}>{item.bank.name}</Text>
-                                                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S}}>Account Number: {item.accountNumber}</Text>
-                                                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S}}>Account Name: {item.accountName}</Text>
-                                                  {/* <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.XS,color: COLOR.DARK}}>
-                                                    {item.isInstaPay 
-                                                        ? `Maximum Cash Out limit: PHP 50,000.00`  // instapay
-                                                        : "Maximum Cash Out limit: PHP 200,000.00" // pesonet
-                                                    }
-                                                    </Text> */}
-                                            </View>
-                                            <View>
-                                                <VectorIcon iconSet={ICON_SET.Feather} name="chevron-right" color={COLOR.DARK} />
-                                            </View> 
-                                        </>
-                                      </TouchableHighlight>     
-                                    )}
+                                    renderItem={({item,index})=>{
+                                        const splitAlias = item.nickName.split(" ")
+                                        const initialAlias = `${splitAlias[0][0]}${splitAlias[1] ? " "+splitAlias[1][0]: ""}`
+                                        return (
+                                            <TouchableHighlight underlayColor={'#FFFFE5'} onPress={()=>selectAccount(item)} style={[styles.banks]}>
+                                            <>
+                                                <View style={[styles.bankLogo,{justifyContent:'center',alignItems:"center"}]}>
+                                                          <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>{initialAlias.toUpperCase()}</Text>
+                                                </View>
+                                                <View style={{flex: 1}}>
+                                                    <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.S}}>{item.bank.name}</Text>
+                                                    <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S}}>Account Number: {item.accountNumber}</Text>
+                                                    <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S}}>Account Name: {item.accountName}</Text>
+                                                </View>
+                                                <View>
+                                                    <VectorIcon iconSet={ICON_SET.Feather} name="chevron-right" color={COLOR.DARK} />
+                                                </View> 
+                                            </>
+                                          </TouchableHighlight>     
+                                        )
+                                    }}
                                 />
 
                         </View>
