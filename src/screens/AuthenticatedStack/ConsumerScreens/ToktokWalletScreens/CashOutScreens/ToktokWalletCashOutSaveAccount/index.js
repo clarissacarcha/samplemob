@@ -21,7 +21,7 @@ const ToktokWalletCashOutSaveAccount = ({navigation,route})=> {
     const bank = route.params.bank
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
-        headerTitle: ()=> <HeaderTitle label={[bank.name.length < 27 ? bank.name : bank.name.slice(0,27)+'...','']}/>,
+        headerTitle: ()=> <HeaderTitle label={[bank.name.length < 20 ? bank.name : bank.name.slice(0,20)+'...','']}/>,
     })
     const alert = useAlert()
     

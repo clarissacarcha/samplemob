@@ -6,7 +6,7 @@ import { PATCH_PIN_CODE } from '../../../../../../../graphql/toktokwallet'
 import {useMutation} from '@apollo/react-hooks'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import { Separator , LeavePromptModal} from '../../../Components';
-import { COLORS, FONTS, SIZES } from '../../../../../../../res/constants'
+import { COLOR, FONT, FONT_SIZE } from '../../../../../../../res/variables'
 
 //SELF IMPORTS
 import NewPin from './NewPin'
@@ -36,7 +36,7 @@ const HeaderBack = ({pageIndex,setPageIndex,navigation})=> {
     return (
      <TouchableHighlight onPress={closeScreen} underlayColor={'white'} style={styles.button}>
         <View style={styles.iconBox}>
-            <FIcon5 name="chevron-left" color={COLORS.YELLOW} size={13}/>
+            <FIcon5 name="chevron-left" color={COLOR.YELLOW} size={13}/>
         </View>
       </TouchableHighlight>
     )
@@ -50,7 +50,7 @@ const ToktokWalletUpdatePin =  ({navigation})=> {
         headerTitle: ()=> <HeaderTitle label={['','']}/>,
         headerRight: ()=> <TouchableHighlight style={{paddingRight: 16}} underlayColor={'white'} onPress={cancelSetup}>
                                  <View style={{justifyContent:"center",alignItems:"center"}}>
-                                    <Text style={{fontSize: SIZES.M,fontFamily: FONTS.REGULAR ,color:'#929191'}}>Cancel</Text>
+                                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR ,color:'#929191'}}>Cancel</Text>
                                 </View>
                             </TouchableHighlight>
     })
