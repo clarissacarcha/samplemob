@@ -8,7 +8,7 @@ import {DriverAnimationView} from './components';
 
 const ToktokFoodDriver = () => {
   return (
-    <View>
+    <View style={{flex: 1}}>
       <HeaderImageBackground>
         <HeaderTitle title="Finding Driver" />
       </HeaderImageBackground>
