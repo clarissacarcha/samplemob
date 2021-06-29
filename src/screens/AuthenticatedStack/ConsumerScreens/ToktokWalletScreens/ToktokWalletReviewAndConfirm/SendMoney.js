@@ -1,42 +1,55 @@
 import React from 'react'
 import {View,Text,StyleSheet} from 'react-native'
 import { numberFormat } from '../../../../../helper'
-import { COLORS, FONTS, SIZES } from '../../../../../res/constants'
+import {COLOR, FONT, FONT_SIZE} from '../../../../../res/variables'
+import {useSelector} from 'react-redux'
 
 
 const SendMoney = ({data})=>{
+
+    const tokwaAccount = useSelector(state=> state.toktokWallet)
+
     return(
        <View style={styles.container}>
-            <View style={styles.information}>
+            {/* <View style={styles.information}>
                     <View style={{flex:1,alignItems:"flex-start"}}>
-                        <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.M,color: COLORS.DARK}}>Payment Method</Text>  
+                        <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Payment Method</Text>  
                     </View>
                     <View style={{flex:1,alignItems:"flex-end"}}>
-                        <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.M,color: COLORS.DARK}}>toktokwallet</Text>
+                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M,textAlign: 'right'}}>toktokwallet</Text>
+                    </View>
+            </View> */}
+            <View style={styles.information}>
+                    <View style={{flex:1,alignItems:"flex-start"}}>
+                        <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Recipient Name</Text>  
+                    </View>
+                    <View style={{flex:1,alignItems:"flex-end"}}>
+                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M,textAlign: 'right'}}>{data.recipient.name}</Text>
                     </View>
             </View>
             <View style={styles.information}>
                     <View style={{flex:1,alignItems:"flex-start"}}>
-                        <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.M,color: COLORS.DARK}}>Recipient Name</Text>  
+                        <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Recipient Mobile No.</Text>  
                     </View>
                     <View style={{flex:1,alignItems:"flex-end"}}>
-                        <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.M,color: COLORS.DARK}}>{data.recipient.name}</Text>
+                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M,textAlign: 'right'}}>{data.recipient.mobileNo}</Text>
+                    </View>
+            </View>
+
+            <View style={styles.information}>
+                    <View style={{flex:1,alignItems:"flex-start"}}>
+                        <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Amount</Text>  
+                    </View>
+                    <View style={{flex:1,alignItems:"flex-end"}}>
+                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M,textAlign: 'right'}}>{tokwaAccount.wallet.currency.code} {numberFormat(data.amount)}</Text>
                     </View>
             </View>
             <View style={styles.information}>
                     <View style={{flex:1,alignItems:"flex-start"}}>
-                        <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.M,color: COLORS.DARK}}>Recipient Mobile No.</Text>  
+                        <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Note</Text>  
                     </View>
                     <View style={{flex:1,alignItems:"flex-end"}}>
-                        <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.M,color: COLORS.DARK}}>{data.recipient.mobileNo}</Text>
-                    </View>
-            </View>
-            <View style={styles.information}>
-                    <View style={{flex:1,alignItems:"flex-start"}}>
-                        <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.M,color: COLORS.DARK}}>Amount</Text>  
-                    </View>
-                    <View style={{flex:1,alignItems:"flex-end"}}>
-                        <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.M,color: COLORS.DARK}}>PHP {numberFormat(data.amount)}</Text>
+                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M,textAlign: 'right'}}>{data.note}</Text>
                     </View>
             </View>
        </View>

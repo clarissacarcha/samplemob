@@ -1,7 +1,8 @@
 import React , {useState} from 'react'
 import {View,Text,StyleSheet,ScrollView,Image,TouchableOpacity} from 'react-native'
-import { HeaderBack , HeaderTitle} from '../../../../../components'
+import { HeaderBack , HeaderTitle} from '../../../../../revamp'
 import { FONT_LIGHT, FONT_MEDIUM, FONT_REGULAR } from '../../../../../res/constants'
+import { FONT, FONT_SIZE ,COLOR } from '../../../../../res/variables'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 
 //SELF IMPORTS
@@ -11,8 +12,8 @@ const SecurityItem = ({label, message , icon , onPress})=> {
     return (
         <TouchableOpacity onPress={onPress} style={styles.securityItem}>
                 <View style={styles.securityItemContent}>
-                        <Text style={{fontFamily: FONT_MEDIUM,fontSize:14}}>{label}</Text>
-                        <Text style={{fontFamily: FONT_LIGHT,fontSize: 12}}>{message}</Text>
+                        <Text style={{fontFamily: FONT.BOLD,fontSize:FONT_SIZE.M}}>{label}</Text>
+                        <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S}}>{message}</Text>
                 </View>
                 <View style={styles.securityItemIcon}>
                         <Image source={icon.image} resizeMode="contain" style={[{height: icon.height , width: icon.width}]} />
@@ -28,8 +29,8 @@ const LearnMoreItem = ({icon , label , message, onPress})=> {
                     <Image style={{height: 19,width: 19}} source={icon} />
                 </View>
                 <View style={styles.learnMoreItemContent}>
-                    <Text style={{fontFamily: FONT_MEDIUM,fontSize: 14}}>{label}</Text>
-                    <Text style={{fontFamily: FONT_LIGHT,fontSize: 12}}>{message}</Text>
+                    <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>{label}</Text>
+                    <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S}}>{message}</Text>
                 </View>
                 <View style={styles.learnMoreItemProceed}>
                         <FIcon5 name="chevron-right" color="rgba(33, 37, 41, 0.4)"/>
@@ -41,7 +42,7 @@ const LearnMoreItem = ({icon , label , message, onPress})=> {
 const ToktokWalletSecurityAndPrivacy = ({navigation,route})=> {
 
     navigation.setOptions({
-        headerLeft: ()=> <HeaderBack/>,
+        headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
         headerTitle: ()=> <HeaderTitle label={['Security and privacy centre','']}/>,
     })
 
@@ -79,7 +80,7 @@ const ToktokWalletSecurityAndPrivacy = ({navigation,route})=> {
                 </View>
 
                 <View style={styles.learnMore}>
-                    <Text style={{fontFamily: FONT_MEDIUM , fontSize: 16,marginLeft: 20}}>Learn More</Text>
+                    <Text style={{fontFamily: FONT.BOLD , fontSize: FONT_SIZE.L,marginLeft: 20}}>Learn More</Text>
                     <LearnMoreItem message="Find out how you can protect your account" label="Read our security Blog" icon={require('../../../../../assets/icons/pen.png')}/>
                     <LearnMoreItem message="Visit our Help Centre for answers" label="Have a question?" icon={require('../../../../../assets/icons/question.png')}/>
                 </View>
@@ -97,7 +98,7 @@ const styles = StyleSheet.create({
         flex:1
     },
     securityItem: {
-        paddingVertical: 15,
+        paddingVertical: 16,
         paddingHorizontal: 20,
         borderBottomWidth: .2,
         borderColor:"silver",

@@ -2,7 +2,8 @@ import React, {useState} from 'react'
 import {View,Text,Modal,StyleSheet,TouchableOpacity,Image, Dimensions} from 'react-native'
 import { numberFormat } from '../../../../../../helper'
 import {useMutation} from '@apollo/react-hooks'
-import {CLIENT,PATCH_FUND_TRANSFER} from '../../../../../../graphql'
+import {TOKTOK_WALLET_GRAPHQL_CLIENT,PATCH_FUND_TRANSFER} from '../../../../../../graphql'
+import { POST_FUND_TRANSFER } from '../../../../../../graphql/toktokwallet'
 import {useNavigation} from '@react-navigation/native'
 import {useAlert} from '../../../../../../hooks/useAlert'
 import {onErrorAlert} from '../../../../../../util/ErrorUtility'
@@ -31,22 +32,42 @@ const SwipeButtonComponent = ({
         createdAt: ""
     })
 
-    const [patchFundTransfer] = useMutation(PATCH_FUND_TRANSFER, {
+    // const [patchFundTransfer] = useMutation(PATCH_FUND_TRANSFER, {
+    //     variables: {
+    //         input: {
+    //             amount: +amount,
+    //             note: note,
+    //             sourceUserId: session.user.id,
+    //             destinationUserId: recipientDetails.id,
+    //         }
+    //     },
+    //     onError: (error)=> {
+    //         onErrorAlert({alert,error})
+    //         navigation.pop()
+    //     },
+    //     onCompleted: (response)=> {
+    //         setWalletinfoParams(response.patchFundTransfer.walletLog)
+    //         setSuccessModalVisible(true)
+    //     }
+    // })
+
+    const [postFundTransfer] = useMutation(POST_FUND_TRANSFER, {
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         variables: {
             input: {
                 amount: +amount,
                 note: note,
-                sourceUserId: session.user.id,
-                destinationUserId: recipientDetails.id,
+                destinationMobileNo: recipientDetails.mobileNumber
             }
         },
         onError: (error)=> {
             onErrorAlert({alert,error})
             navigation.pop()
         },
-        onCompleted: (response)=> {
-            setWalletinfoParams(response.patchFundTransfer.walletLog)
-            setSuccessModalVisible(true)
+        onCompleted: ({postFundTransfer})=> {
+            console.log(JSON.stringify(postFundTransfer))
+            // setWalletinfoParams(response.patchFundTransfer.walletLog)
+            // setSuccessModalVisible(true)
         }
     })
 
@@ -56,7 +77,8 @@ const SwipeButtonComponent = ({
     }
 
     const onSwipeSuccess = ()=> {
-        return navigation.push("ToktokWalletSecurityPinCode", {onConfirm: patchFundTransfer})
+        postFundTransfer()
+        // return navigation.push("ToktokWalletSecurityPinCode", {onConfirm: postFundTransfer})
     }
 
     return (

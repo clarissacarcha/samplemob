@@ -57,13 +57,8 @@ const Verification = ({navigation, route, createSession}) => {
         deviceType: Platform.select({ios: 'I', android: 'A'}),
       },
     },
-    // onError: (error) => {
-    //   // onErrorAlert({alert, error});
-    //   console.log({FuckingError: error});
-    // },
-    onError: (error) => {
-      console.log({FuckingError: error});
 
+    onError: (error) => {
       onErrorAlert({alert, error});
     },
     onCompleted: (res) => {
@@ -92,7 +87,7 @@ const Verification = ({navigation, route, createSession}) => {
         navigation.replace('RootDrawer', {
           screen: 'AuthenticatedStack',
           params: {
-            screen: 'CheckConsumerLocation',
+            screen: 'ConsumerLanding',
           },
         });
       }

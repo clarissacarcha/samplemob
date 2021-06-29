@@ -6,9 +6,12 @@ import { numberFormat } from '../../../../../../helper'
 import {useNavigation} from '@react-navigation/native'
 import moment from 'moment'
 import {Receipt} from '../../Components'
+import { COLOR } from '../../../../../../res/variables'
+import { useSelector } from 'react-redux'
 
 
 const TransactionInfo = ({label,value})=> (
+    <>
     <View style={styles.transactionInfoView}>
         <View style={{flex: 1,justifyContent:"center",alignItems:"flex-start"}}>
             <Text style={{fontFamily: FONT_REGULAR,color:"dimgray",fontSize: SIZES.M}}>{label}</Text>
@@ -17,10 +20,13 @@ const TransactionInfo = ({label,value})=> (
             <Text style={{fontFamily: FONT_MEDIUM,fontSize:SIZES.M}}>{value}</Text>
         </View>
     </View>
+    <View style={styles.divider}/>
+    </>
 )
 
 const SuccessfulModal = ({successModalVisible , amount , cashInLogParams})=> {
     const navigation = useNavigation()
+    const tokwaAccount = useSelector(state=>state.toktokWallet)
 
     let status
     switch (cashInLogParams.status) {
@@ -51,6 +57,8 @@ const SuccessfulModal = ({successModalVisible , amount , cashInLogParams})=> {
                      <TransactionInfo label="Cash in Method" value="PayPanda"/>
                      <TransactionInfo label="PayPanda Ref. No." value={cashInLogParams.paypandaReferenceNumber}/>
                      <TransactionInfo label="PayPanda Status" value={status}/>
+                     <TransactionInfo label="Account Name" value={`${tokwaAccount.person.firstName} ${tokwaAccount.person.lastName}`}/>
+                     <TransactionInfo label="Account Number" value={tokwaAccount.mobileNumber}/>
                      <TransactionInfo label="Amount" value={`PHP ${numberFormat(cashInLogParams.amount)}`}/>
                 </View>
         </View>
@@ -82,7 +90,12 @@ const SuccessfulModal = ({successModalVisible , amount , cashInLogParams})=> {
                 refNo={cashInLogParams.referenceNumber}
                 onPress={Proceed}
             >
-                <ModalContent />
+                <View style={styles.transactionInfo}>
+                     <TransactionInfo label="Cash in Method" value="PayPanda"/>
+                     <TransactionInfo label="PayPanda Ref. No." value={cashInLogParams.paypandaReferenceNumber}/>
+                     <TransactionInfo label="PayPanda Status" value={status}/>
+                     <TransactionInfo label="Amount" value={`PHP ${numberFormat(cashInLogParams.amount)}`}/>
+                </View>
             </Receipt>
         </Modal>
     )
@@ -106,10 +119,13 @@ const styles = StyleSheet.create({
     },
     transactionInfoView: {
         width:"100%",
-        borderBottomWidth: .3,
-        borderColor:"silver",
         flexDirection:"row",
         paddingVertical: 12
+    },
+    divider: {
+        height: 1,
+        width:"100%",
+        backgroundColor: COLOR.LIGHT
     }
 })
 

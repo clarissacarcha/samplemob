@@ -1,19 +1,19 @@
 import React from 'react'
 import {View,Text,StyleSheet} from 'react-native'
-import { HeaderTitle } from '../../../../../components'
 import { COLORS, FONTS, SIZES } from '../../../../../res/constants'
-import { HeaderBack, YellowButton } from '../../../../../revamp'
+import { HeaderBack, YellowButton, HeaderTitle } from '../../../../../revamp'
 import { Separator, SwipeProceedButton } from '../Components'
 
 //SELF IMPORTS
 import CashIn from "./CashIn";
 import CashOut from "./CashOut";
 import SendMoney from "./SendMoney";
-
+import CashOutOtherBank from "./CashOutOtherBank";
 
 const ToktokWalletReviewAndConfirm = ({navigation,route})=> {
 
     const label = route.params.label
+    const event = route.params.event
     const onConfirm = route.params.onConfirm
     const data = route.params.data ? route.params.data : null
     const onSwipeFail = route.params.onSwipeFail ? route.params.onSwipeFail : null
@@ -27,17 +27,20 @@ const ToktokWalletReviewAndConfirm = ({navigation,route})=> {
     })
 
     const confirm = ()=> {
-        navigation.replace("ToktokWalletSecurityPinCode", {onConfirm: onConfirm})
+        // navigation.replace("ToktokWalletSecurityPinCode", {onConfirm: onConfirm})
+        onConfirm()
     }
 
     const RenderDisplay = ()=> {
-        switch(label){
+        switch(event){
             case "Cash In":
                 return <CashIn data={data}/>
             case "Cash Out":
                 return <CashOut data={data}/>
             case "Send Money":
                 return <SendMoney data={data}/>
+            case "Fund Transfer":
+                return <CashOutOtherBank data={data}/>
             default:
                 return
         }

@@ -40,6 +40,7 @@ def flipper_post_install(installer)
     if target.name == 'YogaKit'
       target.build_configurations.each do |config|
         config.build_settings['SWIFT_VERSION'] = '4.1'
+        # config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '9.0'
       end
     end
   end
@@ -118,6 +119,9 @@ target 'toktok' do
   pod 'react-native-view-shot', :path => '../node_modules/react-native-view-shot'
 
   pod 'react-native-cameraroll', :path => '../node_modules/@react-native-community/cameraroll'
+
+
+  pod 'RNCCheckbox', :path => '../node_modules/@react-native-community/checkbox'
 
   target 'toktokTests' do
     inherit! :complete

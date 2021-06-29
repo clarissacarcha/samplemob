@@ -10,7 +10,7 @@ const ConfirmModalContent = ({amount})=> {
                     <View style={styles.modalconfirmdetails}>
                         <View style={{flexDirection: "row",paddingVertical: 6,borderColor: "silver",width: "100%",}}>
                             <View style={{flex: 1}}>    
-                                <Text style={{color: "gray",fontSize: SIZES.M, fontFamily: FONT_REGULAR}}>Cash out method</Text>
+                                <Text style={{color: "gray",fontSize: SIZES.M, fontFamily: FONT_REGULAR}}>Bank</Text>
                             </View>
                             <View style={{flex: 1}}>   
                                 <Text style={{color: "gray",fontSize: SIZES.M,alignSelf: "flex-end",fontFamily: FONT_REGULAR}}>GCash</Text>
