@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
   titleContainer: {
     backgroundColor: 'rgba(255,255,255,0.5)',
     bottom: Platform.OS === 'ios' ? verticalScale(38) : 0,
-    height: Platform.OS === 'ios' ? scale(88) : scale(105),
+    height: Platform.OS === 'ios' ? verticalScale(88) : moderateScale(125),
   },
   titleInfo: {
     borderTopLeftRadius: 20,
