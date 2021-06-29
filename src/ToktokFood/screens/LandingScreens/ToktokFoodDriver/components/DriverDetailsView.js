@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     paddingBottom:
-      Platform.OS === 'ios' ? (isIphoneXorAbove() ? verticalScale(720) : verticalScale(860)) : verticalScale(720),
+      Platform.OS === 'ios' ? (isIphoneXorAbove() ? verticalScale(720) : verticalScale(860)) : verticalScale(400),
   },
   status: {
     fontWeight: '300',

@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   },
   searchBoxContainer: {
     flexDirection: 'row',
-    marginTop: Platform.OS === 'android' ? 53 : verticalScale(25),
+    marginTop: Platform.OS === 'android' ? verticalScale(37) : verticalScale(25),
     paddingRight: moderateScale(20),
   },
   searchBox: {
