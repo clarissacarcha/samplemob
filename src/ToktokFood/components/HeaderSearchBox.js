@@ -1,9 +1,9 @@
 import React from 'react';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { View, StyleSheet, TextInput, Image, Text, Platform } from 'react-native';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {View, StyleSheet, TextInput, Image, Text, Platform} from 'react-native';
 
-import { searchIcon } from '../assets/images';
-import { FONT, FONT_SIZE, COLOR } from '../../res/variables';
+import {searchIcon} from '../assets/images';
+import {FONT, FONT_SIZE, COLOR} from '../../res/variables';
 
 // State must be global to share with other components
 const HeaderSearchBox = () => {
@@ -14,7 +14,7 @@ const HeaderSearchBox = () => {
   const isForSearchPage = () => typeof routes.params?.isSearchPage !== 'undefined';
 
   const showSearchPage = () => {
-    navigation.navigate('ToktokFoodSearch', { isSearchPage: true });
+    navigation.navigate('ToktokFoodSearch', {isSearchPage: true});
   };
 
   const PlaceHolderSearchBox = () => {
@@ -54,7 +54,7 @@ export default HeaderSearchBox;
 const styles = StyleSheet.create({
   searchBoxContainer: {
     left: 0,
-    bottom: 0,
+    bottom: -25,
     width: '100%',
     alignItems: 'center',
     position: 'absolute',
