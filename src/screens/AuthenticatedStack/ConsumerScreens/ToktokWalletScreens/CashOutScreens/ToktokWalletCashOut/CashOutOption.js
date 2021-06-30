@@ -1,18 +1,38 @@
 import React from 'react'
-import {View,StyleSheet,Text,TouchableOpacity,Image} from 'react-native'
-import { FONTS, SIZES } from '../../../../../../res/constants'
+import {View,StyleSheet,Text,TouchableOpacity,Image,Alert} from 'react-native'
+import {FONT, FONT_SIZE} from '../../../../../../res/variables'
+import {useNavigation} from '@react-navigation/native'
 import FIcon from 'react-native-vector-icons/Feather';
 
-const CashOutOption = ({icon,title,iconSize,onPress})=> {
+const CashOutOption = ({item})=> {
+
+    const navigation = useNavigation()
+
+    let icon , navigateLink
+    if(item.name.toLowerCase() == "gcash"){
+        icon = require('../../../../../../assets/toktokwallet-assets/cash-out-providers/gcash.png')
+        navigateLink = "ToktokWalletGcashHomePage"
+    }else if(item.name.toLowerCase() == "bdo"){
+        icon = require('../../../../../../assets/toktokwallet-assets/cash-out-providers/bdo.png')
+        navigateLink = ""
+    }else{
+        navigateLink = ""
+    }
+
 
     return (
-     <TouchableOpacity style={styles.cashoutoption} onPress={onPress}>
+     <TouchableOpacity style={styles.cashoutoption}
+                onPress={()=> navigateLink != "" ? navigation.navigate(navigateLink,{
+                    provider: item
+                }
+            ) : Alert.alert("","Temporary Unavailable")}
+     >
             <View style={styles.logo}>
-                <Image source={icon} style={{height: iconSize.height, width: iconSize.width}} resizeMode="contain"/>
+                <Image source={icon} style={{height: 35, width: 35}} resizeMode="contain"/>
             </View>
             <View style={styles.name}>
-                <Text style={{fontSize:SIZES.M,fontFamily: FONTS.BOLD}}>{title}</Text>
-                <Text style={{fontSize: SIZES.S, fontFamily: FONTS.REGULAR}}>Use {title} to cash out</Text>
+                <Text style={{fontSize:FONT_SIZE.M,fontFamily: FONT.BOLD}}>{item.name}</Text>
+                <Text style={{fontSize: FONT_SIZE.S, fontFamily: FONT.REGULAR}}>Use {item.name} to cash out</Text>
             </View>
             <View style={styles.arrowright}>
                 <FIcon name="chevron-right" size={16} color={"#A6A8A9"} /> 

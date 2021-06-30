@@ -2,7 +2,7 @@ import React , {useRef, useState} from 'react'
 import {View,Text,StyleSheet,ScrollView,TextInput,TouchableOpacity} from 'react-native'
 import { BUTTON_HEIGHT, COLORS, DARK, FONTS, SIZES } from '../../../../../../../res/constants'
 import { YellowButton } from '../../../../../../../revamp'
-import {DisabledButton, NumberBoxes} from '../../../Components'
+import {DisabledButton, NumberBoxes ,BuildingBottom} from '../../../Components'
 
 const NewPin = ({pinCode,setPinCode , pageIndex, setPageIndex})=> {
 
@@ -21,7 +21,7 @@ const NewPin = ({pinCode,setPinCode , pageIndex, setPageIndex})=> {
 
     return (
         <View style={styles.container}>
-        <ScrollView style={styles.content}>
+        <View style={styles.content}>
                 <Text style={{fontSize: SIZES.M,fontFamily: FONTS.BOLD,marginTop: 20,alignSelf:"center"}}>Enter your new PIN</Text>
                 <View style={{position: 'relative',marginTop: 50,}}>
                     <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={showPin}/>
@@ -38,7 +38,7 @@ const NewPin = ({pinCode,setPinCode , pageIndex, setPageIndex})=> {
                                 setPinCode(num);
                             }
                             }}
-                            onSubmitEditing={onSubmit}
+                            onSubmitEditing={pinCode.length == 6 ? onSubmit: null}
                         />
 
                         <TouchableOpacity
@@ -49,7 +49,7 @@ const NewPin = ({pinCode,setPinCode , pageIndex, setPageIndex})=> {
                         </TouchableOpacity>
 
                 </View>
-            </ScrollView>
+            </View>
 
             <View style={{padding: 16}}>
                 {
@@ -58,6 +58,7 @@ const NewPin = ({pinCode,setPinCode , pageIndex, setPageIndex})=> {
                     : <YellowButton label="Next" onPress={onSubmit}/>
                 }
             </View>
+            <BuildingBottom/>
           
         </View>
     )

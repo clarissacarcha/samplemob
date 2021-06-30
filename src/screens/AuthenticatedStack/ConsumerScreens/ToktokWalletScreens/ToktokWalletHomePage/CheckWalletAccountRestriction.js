@@ -1,0 +1,81 @@
+import React , {createContext } from 'react'
+import { useQuery } from '@apollo/react-hooks'
+import { TOKTOK_WALLET_GRAPHQL_CLIENT } from '../../../../../graphql'
+import { GET_MY_ACCOUNT } from '../../../../../graphql/toktokwallet'
+import { useAlert } from '../../../../../hooks'
+import { onErrorAlert } from '../../../../../util/ErrorUtility'
+import { useSelector , connect } from 'react-redux'
+import { useNavigation } from '@react-navigation/native'
+
+export const CheckWalletAccountRestrictionContext = createContext({
+    checkIfAllowed: null
+})
+const {Provider} = CheckWalletAccountRestrictionContext
+
+const CheckWalletAccountRestriction = ({children , saveTokwaAccount})=> {
+    const navigation = useNavigation()
+    const alert = useAlert()
+    const tokwaAccount = useSelector(state=>state.toktokWallet)
+    const {data , error ,loading } = useQuery(GET_MY_ACCOUNT, {
+        fetchPolicy: "network-only",
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+        onError: (error)=>{
+            onErrorAlert({alert,error})
+        },
+        onCompleted: ({getMyAccount})=>{
+            saveTokwaAccount(getMyAccount)
+        }
+    })
+
+    if(error){
+        return null
+    }
+
+    if(loading){
+        return null
+    }
+    // if Account is Disabled or blocked
+    if(data.getMyAccount.status == 2){
+       navigation.replace("ToktokWalletRestricted" , {component: "blockedAccount"})
+    }
+    // if Account is Deleted
+    if(data.getMyAccount.status == 0){
+      navigation.replace("ToktokWalletRestricted" , {component: "deletedAccount"})
+    }
+    // if pincode is not yet set
+    if(!data.getMyAccount.pinCode){
+        // navigation.replace("ToktokWalletRestricted" , {component: "noPin"})
+        navigation.replace("ToktokWalletRestricted" , {component: "approvedRegistration"})
+    }
+
+    const checkIfAllowed = () => {
+       
+        console.log(tokwaAccount)
+        // account is on hold
+        if(tokwaAccount.status == 3){
+            navigation.push("ToktokWalletRestricted", {component: "onHold"})
+            return false
+        }
+
+        return true
+    }
+
+    return (
+        <Provider
+            value={{
+                checkIfAllowed: checkIfAllowed,
+            }}
+        >
+            {children}
+        </Provider>
+    )
+}
+
+const mapDispatchtoProps = (dispatch) => ({
+    saveTokwaAccount: (payload)=> dispatch({
+        type: "SET_TOKTOKWALLET_ACCOUNT",
+        payload: payload
+    })
+})
+
+export default connect(null,mapDispatchtoProps)(CheckWalletAccountRestriction)

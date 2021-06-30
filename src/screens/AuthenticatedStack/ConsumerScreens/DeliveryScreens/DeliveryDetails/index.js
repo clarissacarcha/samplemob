@@ -1,21 +1,24 @@
 import React, {useCallback, useMemo, useRef, useState} from 'react';
 import {View, StyleSheet, Text, TextInput, Alert} from 'react-native';
 import {connect} from 'react-redux';
-import {useLazyQuery} from '@apollo/react-hooks';
+import {useLazyQuery, useQuery} from '@apollo/react-hooks';
 import InputScrollView from 'react-native-input-scroll-view';
 import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../../../components';
 import {COLOR, LIGHT, ORANGE} from '../../../../../res/constants';
-import {GET_DELIVERY_PRICE_AND_DIRECTIONS} from '../../../../../graphql';
+import {GET_DELIVERY_PRICE_AND_DIRECTIONS, GET_TOKTOK_WALLET_BALANCE} from '../../../../../graphql';
 import {WhiteButton, BlackButton, YellowButton} from '../../../../../revamp';
 import {onErrorAlert} from '../../../../../util/ErrorUtility';
 import {useAlert} from '../../../../../hooks';
+import {numberFormat} from '../../../../../helper/numberFormat';
 
 //SELF IMPORTS
 import {PaymentForm, PaymentSheet} from './PaymentForm';
+import {PaymentMethodForm, PaymentMethodSheet} from './PaymentMethod';
 import ExpressForm from './ExpressForm';
 import {ItemForm, ItemSheet} from './ItemForm';
 import NotesForm from './NotesForm';
 import PabiliForm from './PabiliForm';
+
 import PromoForm from './PromoForm';
 
 const DeliveryDetails = ({navigation, route, session}) => {
@@ -27,13 +30,37 @@ const DeliveryDetails = ({navigation, route, session}) => {
   const AlertHook = useAlert();
 
   const [collectPaymentFrom, setCollectPaymentFrom] = useState(route.params.orderData.collectPaymentFrom);
+  const [paymentMethod, setPaymentMethod] = useState('CASH');
   const [itemDescription, setItemDescription] = useState(route.params.orderData.cargo);
   const [otherItem, setOtherItem] = useState('');
   const [notes, setNotes] = useState(route.params.orderData.notes);
   const [isExpress, setIsExpress] = useState(route.params.orderData.isExpress);
   const [isCashOnDelivery, setIsCashOnDelivery] = useState(route.params.orderData.isCashOnDelivery);
   const [cashOnDelivery, setCashOnDelivery] = useState(route.params.orderData.cashOnDelivery);
+  const {data: balanceData, loading: balanceLoading, error: balanceError} = useQuery(GET_TOKTOK_WALLET_BALANCE, {
+    fetchPolicy: 'network-only',
+  });
 
+  let balanceText = '';
+  let hasWallet = false;
+
+  if (balanceError) {
+    balanceText = 'Failed to retrieve balance.';
+  }
+
+  if (balanceLoading) {
+    balanceText = 'Retrieving balance...';
+  }
+
+  if (balanceData) {
+    balanceText = `PHP ${numberFormat(balanceData.getToktokWalletBalance.balance)}`;
+
+    hasWallet = balanceData.getToktokWalletBalance.hasWallet;
+  }
+
+  console.log({balanceText, hasWallet});
+
+  const paymentMethodSheetRef = useRef();
   const paymentSheetRef = useRef();
   const itemSheetRef = useRef();
 
@@ -56,6 +83,7 @@ const DeliveryDetails = ({navigation, route, session}) => {
         orderData: {
           ...route.params.orderData,
           collectPaymentFrom,
+          paymentMethod,
           cargo: finalItemDescription,
           notes,
           isExpress,
@@ -90,7 +118,15 @@ const DeliveryDetails = ({navigation, route, session}) => {
     setCollectPaymentFrom(collectPaymentFromValue);
   };
 
-  const onNext = () => {
+  const onPaymentMethodChange = (paymentMethodValue) => {
+    // if (isCashOnDelivery && collectPaymentFromValue === 'SENDER') {
+    //   AlertHook({message: 'Cannot collect payment from sender on cash on deliveries.'});
+    //   return;
+    // }
+    setPaymentMethod(paymentMethodValue);
+  };
+
+  const onConfirmDeliveryInformation = () => {
     // if (!bookingData.recipientStop[0].formattedAddress) {
     //   Alert.alert('', 'Please enter recipient details');
     //   return;
@@ -130,6 +166,7 @@ const DeliveryDetails = ({navigation, route, session}) => {
     route.params.setOrderData({
       ...route.params.orderData,
       collectPaymentFrom,
+      paymentMethod,
       itemDescription: finalItemDescription,
       notes,
       isExpress,
@@ -147,6 +184,7 @@ const DeliveryDetails = ({navigation, route, session}) => {
           // promoCode: bookingData.promoCode,
           isExpress: isExpress,
           isCashOnDelivery: isCashOnDelivery,
+          paymentMethod,
           origin: {
             latitude: orderData.senderStop.latitude,
             longitude: orderData.senderStop.longitude,
@@ -169,10 +207,17 @@ const DeliveryDetails = ({navigation, route, session}) => {
           <InputScrollView>
             <AlertOverlay visible={loading} />
             <View style={{height: 10}} />
-            <PaymentForm
-              value={collectPaymentFrom === 'SENDER' ? 'Sender' : 'Recipient'}
-              bottomSheetRef={paymentSheetRef}
+            <PaymentMethodForm
+              value={paymentMethod === 'CASH' ? 'Cash' : 'toktokwallet'}
+              bottomSheetRef={paymentMethodSheetRef}
             />
+            {paymentMethod === 'CASH' && (
+              <PaymentForm
+                value={collectPaymentFrom === 'SENDER' ? 'Sender' : 'Recipient'}
+                bottomSheetRef={paymentSheetRef}
+              />
+            )}
+
             <ItemForm
               value={itemDescription}
               bottomSheetRef={itemSheetRef}
@@ -194,10 +239,20 @@ const DeliveryDetails = ({navigation, route, session}) => {
           </InputScrollView>
         </View>
         <View style={{backgroundColor: '#F7F7FA', marginHorizontal: -16}}>
-          <YellowButton label="Confirm Delivery Information" onPress={onNext} style={{margin: 16}} />
+          <YellowButton
+            label="Confirm Delivery Information"
+            onPress={onConfirmDeliveryInformation}
+            style={{margin: 16}}
+          />
         </View>
       </View>
       <PaymentSheet onChange={onCollectPaymentFromChange} ref={paymentSheetRef} />
+      <PaymentMethodSheet
+        onChange={onPaymentMethodChange}
+        ref={paymentMethodSheetRef}
+        balanceText={balanceText}
+        hasWallet={hasWallet}
+      />
       <ItemSheet onChange={setItemDescription} ref={itemSheetRef} />
     </>
   );

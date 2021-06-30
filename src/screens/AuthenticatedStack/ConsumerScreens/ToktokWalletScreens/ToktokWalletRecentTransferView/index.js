@@ -1,12 +1,11 @@
 import React from 'react'
 import {View,StyleSheet,Text} from 'react-native'
-import { HeaderBackClose,HeaderTitle } from '../../../../../components'
-import { COLORS, FONTS, FONT_MEDIUM, FONT_REGULAR, SIZES } from '../../../../../res/constants'
+import { COLOR , FONT , FONT_SIZE } from '../../../../../res/variables'
 import {Separator} from '../Components'
 import moment from 'moment'
 import { numberFormat } from '../../../../../helper'
-import { HeaderBack, YellowButton } from '../../../../../revamp'
-
+import { HeaderBack, YellowButton , HeaderTitle } from '../../../../../revamp'
+import {useSelector} from 'react-redux'
 
 const Details = ({label,value})=> {
     return (
@@ -24,15 +23,15 @@ const Details = ({label,value})=> {
 const ToktokWalletRecentTransferView = ({navigation,route})=> {
 
     navigation.setOptions({
-        headerLeft: ()=> <HeaderBack color={COLORS.YELLOW}/>,
-        headerTitle: ()=> <HeaderTitle label={['Outgoing Transfer']} />,
+        headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
+        headerTitle: ()=> <HeaderTitle label={['Outgoing Transfer','']} />,
     })
 
     const recentTransfer = route.params.recentTransfer
-    const walletinfo = route.params.walletinfo
+    const tokwaAccount = useSelector(state=>state.toktokWallet)
 
     const TransferAgain = ()=> {
-        return navigation.navigate("ToktokWalletSendMoney", {walletinfo , recentTransfer})
+        return navigation.navigate("ToktokWalletRecentTransferProceed", {recentTransfer})
     }
 
     return (
@@ -42,9 +41,10 @@ const ToktokWalletRecentTransferView = ({navigation,route})=> {
                     <View style={{flex: 1}}>
                         <Details label="Date" value={moment(recentTransfer.createdAt).tz('Asia/Manila').format('MMM DD, YYYY')}/>
                         <Details label="Time" value={moment(recentTransfer.createdAt).tz('Asia/Manila').format('h:mm a')}/>
-                        <Details label="Payment Method" value="toktokwallet"/>
-                        <Details label="Recipient" value={`${recentTransfer.destinationInfo.firstName} ${recentTransfer.destinationInfo.middleName ? recentTransfer.destinationInfo.middleName + " " : ""}${recentTransfer.destinationInfo.lastName}`}/>
-                        <Details label="Fund Transferred" value={`PHP ${numberFormat(recentTransfer.amount)}`}/>
+                        {/* <Details label="Payment Method" value="toktokwallet"/> */}
+                        <Details label="Recipient" value={`${recentTransfer.destinationPerson.firstName} ${recentTransfer.destinationPerson.middleName ? recentTransfer.destinationPerson.middleName + " " : ""}${recentTransfer.destinationPerson.lastName}`}/>
+                        <Details label="Fund Transferred" value={`${tokwaAccount.wallet.currency.code} ${numberFormat(recentTransfer.amount)}`}/>
+                        <Details label="Note" value={recentTransfer.note}/>
                     </View>
                     <View style={{flex: 1,height: 70,justifyContent:"flex-end",paddingBottom: 16,}}>
                             <YellowButton label="Transfer Again" onPress={TransferAgain} />
@@ -78,14 +78,12 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     labelText: {
-        fontFamily: FONTS.REGULAR,
-        fontSize: SIZES.M,
-        color: COLORS.DARK
+        fontFamily: FONT.REGULAR,
+        fontSize: FONT_SIZE.M,
     },
     valueText: {
-        fontFamily:  FONTS.BOLD,
-        fontSize: SIZES.M,
-        color: COLORS.DARK
+        fontFamily:  FONT.BOLD,
+        fontSize: FONT_SIZE.M,
     }
 })
 

@@ -1,12 +1,12 @@
 import React , {useState , useEffect} from 'react'
 import {View,Text,StyleSheet,TextInput,TouchableOpacity,Platform,FlatList,ActivityIndicator,Image} from 'react-native'
 import {check,request,PERMISSIONS,RESULTS} from 'react-native-permissions'
-import { HeaderBack, HeaderTitle } from '../../../../../../components'
 import { COLOR, FONT_REGULAR, SIZES, INPUT_HEIGHT, FONTS } from '../../../../../../res/constants'
 import {useSelector} from 'react-redux'
 import Contacts from 'react-native-contacts'
 import {sortBy} from 'lodash'
 import {Separator} from '../../Components'
+import { HeaderBack , HeaderTitle } from '../../../../../..//revamp'
 
 //SELF IMPORTS 
 import ContactInfoRender from './ContactInfoRender'

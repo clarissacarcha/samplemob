@@ -3,10 +3,10 @@ import {StyleSheet, View, TouchableOpacity,Text } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {throttle} from 'lodash';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
-import { COLORS, FONTS } from '../../res/constants';
+import { COLOR, FONT } from '../../res/variables'; 
 
 
-export const HeaderBack = ({onBack , color = COLORS.DARK , label}) => {
+export const HeaderBack = ({onBack , color = "black" , label}) => {
   const navigation = useNavigation();
 
   const onPress = throttle(
@@ -24,7 +24,7 @@ export const HeaderBack = ({onBack , color = COLORS.DARK , label}) => {
   return (
     <TouchableOpacity onPress={onPress} style={{paddingHorizontal: 15,flex: 1,justifyContent:"flex-start",alignItems:'center',flexDirection:"row"}}>
         <FIcon5 name="chevron-left" color={color} size={13}/>
-        <Text style={{fontFamily: FONTS.BOLD, color: COLORS.DARK,fontSize: 14,marginLeft: 5}}>{label}</Text>
+        <Text style={{fontFamily: FONT.BOLD,fontSize: 14,marginLeft: 5}}>{label}</Text>
     </TouchableOpacity>
   );
 };

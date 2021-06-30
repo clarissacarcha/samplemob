@@ -3,13 +3,13 @@ import {View,Text,StyleSheet,Image,Alert,TextInput,KeyboardAvoidingView,Platform
 import {HeaderBack} from '../../../../../../revamp'
 import { SIZES, INPUT_HEIGHT, FONTS, COLORS } from '../../../../../../res/constants'
 import {numberFormat} from '../../../../../../helper'
-import { PATCH_FUND_TRANSFER , GET_DAILY_MONTHLY_YEARLY_INCOMING , GET_DAILY_MONTHLY_YEARLY_OUTGOING} from '../../../../../../graphql'
+import { PATCH_FUND_TRANSFER , TOKTOK_WALLET_GRAPHQL_CLIENT} from '../../../../../../graphql'
+import {} from '../../../../../../graphql/toktokwallet'
 import {useQuery,useMutation,useLazyQuery} from '@apollo/react-hooks'
 import {useSelector} from 'react-redux'
 import { onError , onErrorAlert} from '../../../../../../util/ErrorUtility';
 import SuccessfulModal from '../../SendMoneyScreens/ToktokWalletSendMoney/SuccessfulModal'
 import {useAlert} from '../../../../../../hooks/useAlert'
-import { BlackButton, YellowButton } from '../../../../../../revamp';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import {
     ConfirmBottomSheet,
@@ -32,8 +32,9 @@ const ToktokWalletScanQRConfirm = ({navigation,route})=> {
       headerShown:false,
     })
     const alert = useAlert()
-    const { recipientInfo, walletinfo } = route.params
+    const { recipientInfo } = route.params
     const session = useSelector(state=>state.session)
+    const tokwaAccount = useSelector(state=>state.toktokWallet)
     const [amount,setAmount] = useState("")
     const [note,setNote] = useState("")
     const [swipeEnabled,setSwipeEnabled] = useState(false)
@@ -46,6 +47,7 @@ const ToktokWalletScanQRConfirm = ({navigation,route})=> {
     const [recipientDetails,setRecipientDetails] = useState(null)
     const [senderDetails,setSenderDetails] = useState(null)
     const bottomSheetRef = useRef()
+    
 
     const [patchFundTransfer] = useMutation(PATCH_FUND_TRANSFER, {
         variables: {
@@ -67,43 +69,6 @@ const ToktokWalletScanQRConfirm = ({navigation,route})=> {
     })
 
 
-    const [getDailyMonthlyYearlyIncoming] = useLazyQuery(GET_DAILY_MONTHLY_YEARLY_INCOMING, {
-        fetchPolicy: 'network-only',
-        onError: (error)=>{
-
-        },
-        onCompleted: (response)=> {
-            setRecipientDetails(response.getDailyMonthlyYearlyIncoming)
-        }
-    })
-
-    const [getDailyMonthlyYearlyOutgoing] = useLazyQuery(GET_DAILY_MONTHLY_YEARLY_OUTGOING, {
-        fetchPolicy: 'network-only',
-        onError: (error)=>{
-
-        },
-        onCompleted: (response)=> {
-            setSenderDetails(response.getDailyMonthlyYearlyOutgoing)
-        }
-    })
-
-    useEffect(()=>{
-        // getDailyMonthlyYearlyIncoming({
-        //     variables: {
-        //         input: {
-        //             userID: recipientInfo.id
-        //         }
-        //     }
-        // })
-
-        // getDailyMonthlyYearlyOutgoing({
-        //     variables: {
-        //         input: {
-        //             userID: session.user.id
-        //         }
-        //     }
-        // })
-    },[])
 
     const onSwipeSuccess = ()=> {
         bottomSheetRef.current.snapTo(0)
@@ -140,10 +105,10 @@ const ToktokWalletScanQRConfirm = ({navigation,route})=> {
                     <View style={{height: 32}}/>
                     <View style={styles.walletContent}>
                             <View>
-                                <Text style={{fontSize: 24,fontFamily: FONTS.BOLD}}>PHP {numberFormat(walletinfo.balance ? walletinfo.balance : 0)}</Text>
+                                <Text style={{fontSize: 24,fontFamily: FONTS.BOLD}}>PHP {numberFormat(tokwaAccount.wallet.balance ? tokwaAccount.wallet.balance : 0)}</Text>
                                 <Text style={{fontSize: SIZES.M,fontFamily: FONTS.REGULAR,color: COLORS.DARK}}>Available Balance</Text>
                             </View>
-                            <TouchableOpacity onPress={()=> navigation.navigate("ToktokWalletPaymentOptions" , {walletinfo})} style={styles.topUp}>
+                            <TouchableOpacity onPress={()=> navigation.navigate("ToktokWalletPaymentOptions")} style={styles.topUp}>
                                 <View style={styles.topUpbtn}>
                                         <FIcon5 name={'plus'} size={12} color={COLORS.DARK}/> 
                                 </View>
@@ -158,7 +123,7 @@ const ToktokWalletScanQRConfirm = ({navigation,route})=> {
                 amount={amount} 
                 setAmount={setAmount} 
                 setSwipeEnabled={setSwipeEnabled}
-                walletinfo={walletinfo}
+                tokwaAccount={tokwaAccount}
             />
 
             <EnterNote

@@ -1,7 +1,8 @@
 import React , {useState,useEffect} from 'react'
 import {View,Text,StyleSheet,TouchableHighlight,Alert,BackHandler,KeyboardAvoidingView,Platform} from 'react-native'
-import { HeaderTitle } from '../../../../../../../components'
-import {PATCH_PINCODE_TOKTOK_WALLET} from '../../../../../../../graphql'
+import { AlertOverlay, HeaderTitle } from '../../../../../../../components'
+import { TOKTOK_WALLET_GRAPHQL_CLIENT } from '../../../../../../../graphql'
+import { PATCH_PIN_CODE } from '../../../../../../../graphql/toktokwallet'
 import {useMutation} from '@apollo/react-hooks'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import { Separator , LeavePromptModal} from '../../../Components';
@@ -66,25 +67,26 @@ const ToktokWalletUpdatePin =  ({navigation})=> {
     const [LeaveModalvisible,setLeaveModalVisible] = useState(false)
 
 
-
-    const [patchPincodeToktokWallet, {data,error,loading}] = useMutation(PATCH_PINCODE_TOKTOK_WALLET, {
-      variables: {
-          input: {
-              pincode: pinCode
-          }
-      },
-      onError: (err)=> {
-
-      },
-      onCompleted: ({patchPincodeToktokWallet})=> {
-          setSuccessModalVisible(true)
-      }
-  })
+    const [patchPinCode, {data, error, loading}] = useMutation(PATCH_PIN_CODE, {
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+        onCompleted: ({patchPinCode})=>{
+        setSuccessModalVisible(true)
+        },
+        onError: (error)=> {
+        onErrorAlert({alert,error})
+        }
+    })
 
 
-  const proceed = ()=> {
-    patchPincodeToktokWallet()
-  }
+    const proceed = ()=> {
+        patchPinCode({
+            variables: {
+            input: {
+                pinCode: pinCode
+            }
+            }
+        })
+    }
 
 
     const DisplayComponent = () => {
@@ -100,6 +102,7 @@ const ToktokWalletUpdatePin =  ({navigation})=> {
 
     return (
         <>
+            <AlertOverlay visible={loading} />
             <LeavePromptModal
                 visible={LeaveModalvisible}
                 setVisible={setLeaveModalVisible}
@@ -107,12 +110,11 @@ const ToktokWalletUpdatePin =  ({navigation})=> {
             />
             <SuccessModal modalVisible={successModalVisible} />
             <Separator />
-             <KeyboardAvoidingView 
-                // keyboardVerticalOffset={Platform.OS == "ios" ? 50 : 90} 
-                keyboardVerticalOffset={90}  
-                style={styles.container} 
-                behavior={Platform.OS == "ios" ? "padding" : "height"}>
-                    {DisplayComponent()}
+            <KeyboardAvoidingView style={{flex: 1,}}
+             keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80}  
+             behavior={Platform.OS == "ios" ? "padding" : "height"}
+             >
+            {DisplayComponent()}
             </KeyboardAvoidingView>
         </>
     )

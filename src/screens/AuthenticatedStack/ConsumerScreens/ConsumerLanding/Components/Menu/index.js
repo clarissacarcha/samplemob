@@ -47,18 +47,25 @@ export const Menu = ({setUserLocation}) => {
         onPress={() => navigation.push('ToktokDelivery', {setUserLocation})}
       />
       <MenuIcon label={'pabili'} icon={PabiliIcon} onPress={() => navigation.push('Pabili')} />
-      {/* <MenuIcon
+      <MenuIcon
         label={'toktokwallet'}
         icon={WalletIcon}
         onPress={() => {
           navigation.push('ToktokWalletHomePage');
         }}
-      /> */}
+      />
       <MenuIcon
         label={'profile'}
         icon={ProfileIcon}
         onPress={() => {
           navigation.push('ConsumerProfile');
+        }}
+      />
+      <MenuIcon
+        label={'toktokfood'}
+        icon={ProfileIcon}
+        onPress={() => {
+          navigation.push('ToktokFoodLanding');
         }}
       />
     </View>
@@ -71,6 +78,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     backgroundColor: 'white',
+    flexWrap: 'wrap',
   },
   menuButton: {
     justifyContent: 'center',

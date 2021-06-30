@@ -1,179 +1,134 @@
 import React, {useState,useRef,useEffect,useMemo} from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,Image,Modal,TextInput,Platform,KeyboardAvoidingView,ActivityIndicator,Alert,Dimensions,ScrollView,Keyboard} from 'react-native'
-import {HeaderBackClose, HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../../../components'
-import { DARK, SIZES, COLORS, FONTS} from '../../../../../../res/constants'
+import {FONT ,FONT_SIZE , COLOR} from '../../../../../../res/variables'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import {useSelector} from 'react-redux'
-import {useMutation,useLazyQuery} from '@apollo/react-hooks'
-import {POST_WALLET_CASH_IN,GET_DAILY_MONTHLY_YEARLY_INCOMING} from '../../../../../../graphql/model'
+import {useMutation,useLazyQuery,useQuery} from '@apollo/react-hooks'
+import {TOKTOK_WALLET_GRAPHQL_CLIENT} from '../../../../../../graphql'
+import {POST_CASH_IN_PAYPANDA_REQUEST,GET_GLOBAL_SETTINGS} from '../../../../../../graphql/toktokwallet'
 import {onError,onErrorAlert} from '../../../../../../util/ErrorUtility';
 import {numberFormat} from '../../../../../../helper'
 import {useAlert} from '../../../../../../hooks/useAlert'
-import { HeaderBack, YellowButton } from '../../../../../../revamp'
+import { HeaderBack, YellowButton, HeaderTitle } from '../../../../../../revamp'
 
 import {
     ConfirmBottomSheet,
     DisabledButton,
-    Separator
+    Separator,
+    EnterPinCode
 } from '../../Components'
 
 //SELF IMPORTS
 import ConfirmModalContent from './ConfirmModalContent'
+import { AlertOverlay } from '../../../../../../components'
 
 const {height,width} = Dimensions.get("window")
 
 
 const ToktokWalletPayPandaForm = ({navigation,route})=> {
     navigation.setOptions({
-        headerLeft: ()=> <HeaderBack color={COLORS.YELLOW}/>,
+        headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
         headerTitle: ()=> <HeaderTitle label={['Cash In','']}/>,
     })
 
     const alert = useAlert()
 
-
-    const walletId = route.params.walletId
-    const balance = route.params.walletinfo.balance
     const transactionType = route.params.transactionType
-    const userstate = useSelector(state=>state.session.user)
+    const tokwaAccount = useSelector(state=>state.toktokWallet)
     const globalsettings = useSelector(state=>state.constants)
-    const [tempAmount,setTempAmount] = useState("")
     const [amount,setAmount] = useState("")
     const [message,setMessage] = useState("")
     const [recipientDetails,setRecipientDetails] = useState(null)
     const [disablebtn,setDisablebtn] = useState(false)
     const [maxLimitMessage,setMaxLimitMessage] = useState("")
-    const bottomSheetRef = useRef();
+    const [pinCodeAttempt,setPinCodeAttempt] = useState(6)
+    const [openPinCode,setOpenPinCode] = useState(false)
 
-    const [postWalletCashIn , {data,error,loading}] = useMutation(POST_WALLET_CASH_IN, {
-        // fetchPolicy: 'network-only',
-        onError: (error)=>{
+    const [postCashInPayPandaRequest , {data,error,loading}] = useMutation(POST_CASH_IN_PAYPANDA_REQUEST , {
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+        onError: (error)=> {
+            const {graphQLErrors, networkError} = error;
+            if(graphQLErrors[0].message == "Wallet Hold"){
+                setOpenPinCode(false)
+                navigation.navigate("ToktokWalletHomePage")
+                navigation.replace("ToktokWalletHomePage")
+                return navigation.push("ToktokWalletRestricted", {component: "onHold"})
+            }
+
+            if(graphQLErrors[0].message == "Invalid Pincode"){
+                return setPinCodeAttempt(graphQLErrors[0].payload.remainingAttempts)
+            }
+            setOpenPinCode(false)
             onErrorAlert({alert,error})
-            navigation.pop()
+            return navigation.pop()
         },
-        onCompleted: ({postWalletCashIn})=> {
+        onCompleted: ({postCashInPayPandaRequest})=>{
+            setOpenPinCode(false)
             navigation.navigate("ToktokWalletPayPandaWebView", {
-                merchantId: postWalletCashIn.merchantId,
-                refNo: postWalletCashIn.refNo,
-                signature: postWalletCashIn.signature,
-                email_address: userstate.person.emailAddress,
-                payer_name: `${userstate.person.firstName}${userstate.person.middleName ? " " + userstate.person.middleName : ""} ${userstate.person.lastName}`,
-                mobile_number: userstate.username,
+                merchantId: postCashInPayPandaRequest.merchantId,
+                refNo: postCashInPayPandaRequest.refNo,
+                signature: postCashInPayPandaRequest.signature,
+                email_address: tokwaAccount.person.emailAddress,
+                payer_name: `${tokwaAccount.person.firstName}${tokwaAccount.person.middleName ? " " + tokwaAccount.person.middleName : ""} ${tokwaAccount.person.lastName}`,
+                mobile_number: tokwaAccount.mobileNumber,
                 amount_to_pay: amount,
-                currency: "PHP",
-                walletId: walletId,
-                transactionTypeId: transactionType.id
+                currency: tokwaAccount.wallet.currency.code,
+                walletId: tokwaAccount.wallet.id,
+                transactionTypeId: transactionType.id,
+                paypandaTransactionUrl: postCashInPayPandaRequest.paypandaTransactionEntryEndpoint,
+                paypandaReturnUrl: postCashInPayPandaRequest.paypandaReturnUrlEndpoint,
+                paypandaStaginReturnUrl: postCashInPayPandaRequest.paypandaReturUrlStagingEndpoint
             })
         }
     })
 
-    const [getDailyMonthlyYearlyIncoming] = useLazyQuery(GET_DAILY_MONTHLY_YEARLY_INCOMING, {
-        fetchPolicy: 'network-only',
-        onError: (error)=>{
 
-        },
-        onCompleted: (response)=> {
-                setRecipientDetails(response.getDailyMonthlyYearlyIncoming)
-        }
-    })
-
-    const checkRecipientWalletLimitation = (amount)=> {
-        const incomingRecords = recipientDetails
-        const walletLimit = incomingRecords.walletlimit
-
-
-        if(walletLimit.walletSize){
-            if((incomingRecords.walletbalance + +amount ) > walletLimit.walletSize){
-                setDisablebtn(true)
-                return setMessage("Your wallet size limit is reached.")
-            }
-        }
-
-        if(walletLimit.incomingValueDailyLimit){
-            if((incomingRecords.daily + +amount ) > walletLimit.incomingValueDailyLimit){
-                setDisablebtn(true)
-                return setMessage("Your daily incoming wallet limit is reached.")
-            }
-        }
-
-        if(walletLimit.incomingValueMonthlyLimit){
-            if((incomingRecords.monthly + +amount ) > walletLimit.incomingValueMonthlyLimit){
-                setDisablebtn(true)
-                return setMessage("Your monthly incoming wallet limit is reached.")
-            }
-        }
-
-        if(walletLimit.incomingValueAnnualLimit){
-            if((incomingRecords.yearly + +amount ) > walletLimit.incomingValueAnnualLimit){
-                setDisablebtn(true)
-                return setMessage("Your annual incoming wallet limit is reached.")
-            }
-        }
-
-        setDisablebtn(false)
-        return setMessage("")
+    const proceedToPaypandaPortal = (pinCode)=> {
+      postCashInPayPandaRequest({
+          variables: {
+              input: {
+                  provider: transactionType.id,
+                  amount: +amount,
+                  currencyId: tokwaAccount.wallet.currency.id,
+                  walletId: tokwaAccount.wallet.id,
+                  pinCode: pinCode
+              }
+          }
+      })
     }
-
-    useEffect(()=>{
-        // getDailyMonthlyYearlyIncoming({
-        //     variables: {
-        //         input: {
-        //             userID: userstate.id
-        //         }
-        //     }
-        // })
-    },[])
-
-    const proceedToPaypandaPortal = ()=> {
-        postWalletCashIn({
-            variables: {
-                input: {
-                    amount: +amount,
-                    destinationUserId: userstate.id,
-                    sourceUserId: transactionType.sourceUserId,
-                    transactionTypeId: transactionType.id
-                }
-            }
-        })
-        // Alert.alert("test")
-       
-    }
-
-    const openSecurityPIN = ()=> {
-        bottomSheetRef.current.snapTo(0);
-        return navigation.push("ToktokWalletSecurityPinCode", {onConfirm: proceedToPaypandaPortal})
-    }
-
 
     const confirmAmount = ()=> {
         // Keyboard.dismiss()
-        // bottomSheetRef.current.snapTo(1);
         navigation.navigate("ToktokWalletReviewAndConfirm", {
             label:"Cash In" , 
             data: {
-                    method: "PayPanda" , 
-                    amount: amount
+                    method: transactionType.name , 
+                    amount: amount,
+                    accountName: `${tokwaAccount.person.firstName} ${tokwaAccount.person.lastName}`,
+                    accountNumber: tokwaAccount.mobileNumber
                 },
-            onConfirm: proceedToPaypandaPortal,
+            onConfirm: ()=> {
+                setPinCodeAttempt(6)
+                setOpenPinCode(true)
+            },
         })
-       
     }
 
     const changeAmountText = (value)=> {
         setMaxLimitMessage("")
-        const num = value.replace(/[^0-9]/g, '')
-        if(num.length > 8) return
-        setTempAmount(num)
-        setAmount(num * 0.01)
+        const num = value.replace(/[^0-9.]/g, '')
+        const checkFormat = /^(\d*[.]?[0-9]{0,2})$/.test(num);
+        if(!checkFormat) return       
+        let decimalValueArray = num.split(".")
+        if(decimalValueArray[0].length > 6) return
+        // if(num.length > 6) return
+       
+        // setAmount(num * 0.01)
+        if(num[0] == ".") return setAmount("0.")
+        setAmount(num)
         if(num == "") return setMessage("")
-        if((num * 0.01) < 1){
-           return setMessage(`Please Enter atleast ${'\u20B1'} 1.00`)
-        }else if((num * 0.01) > transactionType.cashInLimit){
-            setTempAmount(`${transactionType.cashInLimit}00`)
-            setAmount(transactionType.cashInLimit)
-            setMaxLimitMessage(`Maximum cash in limit is ${'\u20B1'} ${numberFormat(transactionType.cashInLimit)}`)
-            setDisablebtn(true)
-            return
+        if(num < 1){
+           return setMessage(`Please enter atleast ${tokwaAccount.wallet.currency.code} 1.00`)
         }
         // checkRecipientWalletLimitation(num * 0.01)
         setDisablebtn(false)
@@ -181,8 +136,21 @@ const ToktokWalletPayPandaForm = ({navigation,route})=> {
         
     }
 
+    useEffect(()=>{
+        console.log(amount)
+    },[amount])
+
     return (
       <>
+    <EnterPinCode 
+            visible={openPinCode} 
+            setVisible={setOpenPinCode} 
+            loading={loading}
+            pinCodeAttempt={pinCodeAttempt}
+            callBackFunc={proceedToPaypandaPortal}
+    >
+            <AlertOverlay visible={loading} />
+    </EnterPinCode>
       <Separator />
        <View  
             // keyboardVerticalOffset={Platform.OS == "ios" ? 90 : 90} 
@@ -190,11 +158,20 @@ const ToktokWalletPayPandaForm = ({navigation,route})=> {
             // behavior={Platform.OS === "ios" ? "padding" : "height"} 
             style={styles.container}
         >
-
-            <View style={styles.paypandaLogo}>
-                     <Image style={{height: 90,width: 90,alignSelf: "center",marginBottom: 10}} source={require('../../../../../../assets/toktokwallet-assets/paypanda.png')}/>
-                     <Text style={{fontSize: SIZES.L,fontFamily: FONTS.BOLD}}>PayPanda</Text>
-            </View>
+            {
+                transactionType.name.toLowerCase() == "paypanda"
+                ?    <View style={styles.paypandaLogo}>
+                                <Image style={{height: 90,width: 90,alignSelf: "center",marginBottom: 10}} source={require('../../../../../../assets/toktokwallet-assets/cash-in-providers/paypanda.png')}/>
+                                <Text style={{fontSize: FONT_SIZE.L,fontFamily: FONT.BOLD}}>PayPanda</Text>
+                                <Text style={{fontSize: FONT_SIZE.M ,fontFamily: FONT.BOLD}}>Please enter amount to Cash in</Text>
+                    </View>
+                :    <View style={styles.paypandaLogo}>
+                                <Image style={{height: 90,width: 90,alignSelf: "center",marginBottom: 10}} source={require('../../../../../../assets/toktokwallet-assets/cash-in-providers/jcwallet.png')}/>
+                                <Text style={{fontSize: FONT_SIZE.L,fontFamily: FONT.BOLD}}>JC Wallet</Text>
+                                <Text style={{fontSize: FONT_SIZE.M ,fontFamily: FONT.BOLD}}>Please enter amount to Cash in</Text>
+                    </View>
+            }
+        
 
             <View style={styles.content}>
           
@@ -204,28 +181,29 @@ const ToktokWalletPayPandaForm = ({navigation,route})=> {
                         <View style={{flexDirection: "row"}}>
                             <TextInput
                                     caretHidden
-                                    value={tempAmount}
+                                    value={amount}
                                     style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent',zIndex: 1}}
-                                    keyboardType="number-pad"
+                                    keyboardType="numeric"
                                     returnKeyType="done"
                                     onChangeText={changeAmountText}
                             />
                             <View style={styles.input}>
-                                <Text style={{fontFamily: FONTS.BOLD,fontSize: 32,marginRight: 10,color:COLORS.YELLOW}}>PHP</Text>
-                                <Text style={{fontFamily: FONTS.BOLD,fontSize: 32,color: COLORS>DARK}}>{amount ? numberFormat(amount) : "0.00"}</Text>
-                                <FIcon5 name="pen" style={{alignSelf:"center",marginLeft: 20}} size={20} color={COLORS.DARK}/>
+                                <Text style={{fontFamily: FONT.BOLD,fontSize: 32,marginRight: 10,color:COLOR.YELLOW}}>{tokwaAccount.wallet.currency.code}</Text>
+                                <Text style={{fontFamily: FONT.BOLD,fontSize: 32}}>{amount ? numberFormat(amount) : "0.00"}</Text>
+                                <FIcon5 name="pen" style={{ alignSelf:"center", marginLeft: 15}} size={20}/>
                             </View>
                             
                         </View>
-                        <Text style={{color:COLORS.DARK,fontSize: SIZES.M,fontFamily: FONTS.BOLD}}>Available Balance PHP {numberFormat(balance)}</Text>
-                        <Text style={{fontFamily: FONTS.REGULAR, color: "red",marginTop: 5,fontSize: SIZES.S}}>{message}</Text>
-                        <Text style={{fontFamily: FONTS.REGULAR, color: "red",marginTop: 5,fontSize: SIZES.S}}>{maxLimitMessage}</Text>
+                        { message != "" && <Text style={{fontFamily: FONT.REGULAR, color: "red", marginTop: -10,marginBottom: 10, fontSize: FONT_SIZE.S}}>{message}</Text>}
+                        <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>Current Balance {tokwaAccount.wallet.currency.code} {numberFormat(tokwaAccount.wallet.balance)}</Text>
+                      
+                        <Text style={{fontFamily: FONT.REGULAR, color: "red",marginTop: 5,fontSize: FONT_SIZE.S}}>{maxLimitMessage}</Text>
               
                  </View>
                 : <View style={{flex: 1,justifyContent: "center",alignItems: "center"}}><ActivityIndicator size={50}/></View>
                 
             }
-          
+   
             <View style={styles.cashinbutton}>
                     {
                         (amount < 1 || amount > transactionType.cashInLimit || disablebtn)
@@ -278,7 +256,6 @@ const styles = StyleSheet.create({
         // // flexGrow: 1,
         flex: 1,
         width: 150,
-        color: DARK,
         justifyContent:"center",
         alignItems:"center",
         flexDirection:"row"

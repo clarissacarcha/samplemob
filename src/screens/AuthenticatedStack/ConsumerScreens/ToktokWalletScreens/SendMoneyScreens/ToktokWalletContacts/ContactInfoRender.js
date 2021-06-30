@@ -1,6 +1,6 @@
 import React from 'react'
 import {StyleSheet,Text,View,TouchableOpacity} from 'react-native'
-import { FONTS, FONT_MEDIUM, FONT_REGULAR, SIZES } from '../../../../../../res/constants'
+import { COLOR , FONT, FONT_SIZE } from '../../../../../../res/variables'
 
 const ContactInfoRender = ({item,index,checkAccount})=> {
     
@@ -9,6 +9,7 @@ const ContactInfoRender = ({item,index,checkAccount})=> {
     }
 
     return (
+      <>
       <TouchableOpacity
         key={`contactInfo-${index}`}
         style={styles.contactInfo}
@@ -18,24 +19,29 @@ const ContactInfoRender = ({item,index,checkAccount})=> {
         <Text style={styles.contactInfoNumber}>{item.number}</Text>
         
       </TouchableOpacity>
+      <View style={styles.divider}/>
+      </>
     )
 }
 
 const styles = StyleSheet.create({
     contactInfo: {
         paddingVertical: 10,
-        borderBottomColor: "silver",
-        borderBottomWidth: 0.2
       },
       contactInfoName: {
-        fontFamily: FONTS.FONT_REGULAR,
-        fontSize: SIZES.M,
+        fontFamily: FONT.REGULAR,
+        fontSize: FONT_SIZE.M,
       },
       contactInfoNumber: {
         color: "#A6A8A9",
-        fontFamily: FONTS.FONT_REGULAR,
-        fontSize: SIZES.S,
+        fontFamily: FONT.REGULAR,
+        fontSize: FONT_SIZE.S,
       },
+      divider: {
+        height: 1,
+        width: "100%",
+        backgroundColor: COLOR.LIGHT,
+    }
 })
 
 export default ContactInfoRender
