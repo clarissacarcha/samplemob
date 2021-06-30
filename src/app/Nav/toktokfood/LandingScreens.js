@@ -6,21 +6,8 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import {COLOR} from 'res/variables';
 
-<<<<<<< HEAD
-import {
-  ToktokFoodHome,
-  ToktokFoodOrders,
-  ToktokFoodSearch,
-  ToktokFoodDriver,
-  ToktokFoodFavorites,
-  ToktokFoodItemDetails,
-  ToktokFoodNotifications,
-  ToktokFoodRestaurantOverview,
-} from '../../../ToktokFood/screens';
-=======
 import HomeScreen from './HomeScreen';
 import {ToktokFoodOrders, ToktokFoodFavorites, ToktokFoodNotifications} from '../../../ToktokFood/screens';
->>>>>>> c3087f056eac7b7f7dc965dc121f58413590e1e3
 
 const ToktokFoodLandingBottomTab = createBottomTabNavigator();
 

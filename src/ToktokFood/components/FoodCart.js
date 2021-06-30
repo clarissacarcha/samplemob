@@ -1,5 +1,7 @@
 import React from 'react';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
+import {useNavigation} from '@react-navigation/native';
+import Toast from 'react-native-simple-toast';
 import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 
 // Utils
@@ -8,6 +10,13 @@ import {scale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
 import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
 
 const FoodCart = () => {
+  const navigation = useNavigation();
+
+  const onRestaurantNavigate = () => {
+    Toast.show('Added to cart', Toast.SHORT);
+    navigation.navigate('ToktokFoodRestaurantOverview');
+  };
+
   return (
     <>
       <View style={[styles.container, styles.cartBorder]}>
@@ -23,7 +32,7 @@ const FoodCart = () => {
           </View>
           <Text style={styles.total}>Total: 48.00</Text>
         </View>
-        <TouchableOpacity style={styles.cartButton}>
+        <TouchableOpacity style={styles.cartButton} onPress={() => onRestaurantNavigate()}>
           <Text style={styles.buttonText}>Add to Cart</Text>
         </TouchableOpacity>
       </View>

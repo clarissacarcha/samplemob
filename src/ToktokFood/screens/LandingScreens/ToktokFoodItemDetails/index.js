@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import React from 'react';
+import {useRoute} from '@react-navigation/native';
 import {Image, View, Text} from 'react-native';
 
 import {Rating} from 'react-native-ratings';
@@ -14,11 +14,6 @@ import styles from './styles';
 
 const ToktokFoodItemDetails = () => {
   const routes = useRoute();
-  const navigation = useNavigation();
-
-  const onRestaurantNavigate = (item) => {
-    navigation.navigate('ToktokFoodRestaurantOverview', {item});
-  };
 
   const ItemDetails = () => {
     const {id, name, price, description, ratings} = routes.params;
@@ -48,7 +43,7 @@ const ToktokFoodItemDetails = () => {
         <Image source={routes.params.image} style={styles.banner} />
       </HeaderImageBackground>
       <ItemDetails />
-      <Variations item={routes.params}/>
+      <Variations item={routes.params} />
     </View>
   );
 };
