@@ -39,9 +39,9 @@ const styles = StyleSheet.create({
   },
   searchBoxContainer: {
     flexDirection: 'row',
-    marginTop: Platform.OS === 'android' ? verticalScale(37) : verticalScale(25),
+    // marginTop: Platform.OS === 'android' ? verticalScale(37) : verticalScale(25),
     paddingRight: moderateScale(20),
-    marginTop: Platform.OS === 'android' ? getStatusbarHeight + 15 : verticalScale(15),
+    marginTop: Platform.OS === 'android' ? getStatusbarHeight + 15 : verticalScale(25),
   },
   searchBox: {
     borderRadius: 13,
