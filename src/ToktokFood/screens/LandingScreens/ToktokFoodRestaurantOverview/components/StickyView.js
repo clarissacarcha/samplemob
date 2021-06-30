@@ -154,10 +154,6 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     backgroundColor: 'rgba(255,255,255,0.5)',
-<<<<<<< HEAD
-    bottom: Platform.OS === 'ios' ? verticalScale(38) : 0,
-    height: Platform.OS === 'ios' ? verticalScale(88) : moderateScale(125),
-=======
     bottom:
       Platform.OS === 'ios'
         ? isIphoneXorAbove()
@@ -166,7 +162,6 @@ const styles = StyleSheet.create({
         : verticalScale(0),
     // height: Platform.OS === 'ios' ? verticalScale(85) : verticalScale(110),
     height: Platform.OS === 'android' ? moderateScale(88 + getStatusbarHeight) : moderateScale(105),
->>>>>>> 9d23876d365e29d3094f2212476d8e6924dcedc9
   },
   titleInfo: {
     borderTopLeftRadius: 20,
