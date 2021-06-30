@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "android": "react-native run-android",
-    "ios": "react-native run-ios",
+    "ios": "react-native run-ios --simulator \"iPhone 8\"",
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint .",
@@ -47,7 +47,6 @@
     "react": "16.11.0",
     "react-native": "0.62.2",
     "react-native-background-timer": "^2.2.0",
-    "react-native-bouncy-checkbox": "^2.1.2",
     "react-native-camera": "^3.28.0",
     "react-native-check-box": "^2.1.7",
     "react-native-contacts": "^5.2.8",
