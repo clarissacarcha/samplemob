@@ -128,17 +128,17 @@ const ToktokMallMyProfileStackScreens = () => (
   </ToktokMallMyProfileStack.Navigator>
 );
 
-const cartIconOutline = require('../../../assets/toktokmall-assets/icons/cart-outline.png');
-const categoriesIconOutline = require('../../../assets/toktokmall-assets/icons/categories-outline.png');
-const homeIconOutline = require('../../../assets/toktokmall-assets/icons/home-outline.png');
-const notifIconOutline = require('../../../assets/toktokmall-assets/icons/bell-outline.png');
-const userIconOutline = require('../../../assets/toktokmall-assets/icons/me-outline.png');
+const cartIconOutline = require('../../../ToktokMall/assets/icons/cart-outline.png');
+const categoriesIconOutline = require('../../../ToktokMall/assets/icons/categories-outline.png');
+const homeIconOutline = require('../../../ToktokMall/assets/icons/home-outline.png');
+const notifIconOutline = require('../../../ToktokMall/assets/icons/bell-outline.png');
+const userIconOutline = require('../../../ToktokMall/assets/icons/me-outline.png');
 
-const homeIconFill = require('../../../assets/toktokmall-assets/icons/home-fill.png');
-const cartIconFill = require('../../../assets/toktokmall-assets/icons/cart-fill.png');
-const categoriesIconFill = require('../../../assets/toktokmall-assets/icons/categories-fill.png');
-const notifIconFill = require('../../../assets/toktokmall-assets/icons/bell-fill.png');
-const userIconFill = require('../../../assets/toktokmall-assets/icons/me-fill.png');
+const homeIconFill = require('../../../ToktokMall/assets/icons/home-fill.png');
+const cartIconFill = require('../../../ToktokMall/assets/icons/cart-fill.png');
+const categoriesIconFill = require('../../../ToktokMall/assets/icons/categories-fill.png');
+const notifIconFill = require('../../../ToktokMall/assets/icons/bell-fill.png');
+const userIconFill = require('../../../ToktokMall/assets/icons/me-fill.png');
 
 const BottomTabImageIconStyle = {
   width: 18,

@@ -12,23 +12,23 @@ import { Dropdown } from '../../../../Components';
 const testdata = [{
     category: "Accessories",
     subCategories: ["Watch"],
-    imageSource: require("../../../../../assets/toktokmall-assets/images/Watch.png")
+    imageSource: require("../../../../assets/images/Watch.png")
 }, {
     category: "Electronics",
     subCategories: ["iPhone X", "Huawei y7Pro", "Digital TV", "Elecric Fan"],
-    image: require("../../../../../assets/toktokmall-assets/images/Electronics.png")
+    image: require("../../../../assets/images/Electronics.png")
 }, {
     category: "Furnitures",
     subCategories: ["Cabinet", "Chairs", "Drawer", "Tables"],
-    image: require("../../../../../assets/toktokmall-assets/images/Furniture.png")
+    image: require("../../../../assets/images/Furniture.png")
 }, {
     category: "Men's Fashion",
     subCategories: ["Jacket", "Americana", "T Shirt", "Shorts"],
-    image: require("../../../../../assets/toktokmall-assets/images/Men's-Fashion.png")
+    image: require("../../../../assets/images/Men's-Fashion.png")
 }, {
     category: "Pet Care",
     subCategories: ["Dog Food", "Cat Food", "Dog Toys"],
-    image: require("../../../../../assets/toktokmall-assets/images/Pet-Care.png")
+    image: require("../../../../assets/images/Pet-Care.png")
 }]
 
 export const ToktokMallCategoriesSearch = ({navigation})=> {

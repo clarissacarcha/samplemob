@@ -34,7 +34,7 @@ export const Dropdown = ({data}) => {
             <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
                 <View style={{flex: 2, borderRadius: 5, backgroundColor: 'transparent', justifyContent: 'center', alignItems: 'center'}}>
                     <Image 
-                        source={data?.image || require("../../../assets/toktokmall-assets/images/Watch.png")} 
+                        source={data?.image || require("../../assets/images/Watch.png")} 
                         style={{width: 50, height: 50, resizeMode: 'cover', borderRadius: 5}} />
                 </View>
                 <View style={{flex: 8, justifyContent: 'center', paddingHorizontal: 8}}>

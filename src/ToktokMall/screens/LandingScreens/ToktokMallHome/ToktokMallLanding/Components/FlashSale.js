@@ -6,17 +6,17 @@ import { ScrollView } from 'react-native-gesture-handler';
 import CustomIcon from '../../../../../Components/Icons';
 
 const testdata = [{
-  image: require("../../../../../../assets/toktokmall-assets/images/coppermask.png"),
+  image: require("../../../../../assets/images/coppermask.png"),
   price: 1290,
   discount: "50% Off",
   discountPrice: 890
 }, {
-  image: require("../../../../../../assets/toktokmall-assets/images/chair.png"),
+  image: require("../../../../../assets/images/chair.png"),
   price: 2800,
   discount: "50% Off",
   discountPrice: 1400
 }, {
-  image: require("../../../../../../assets/toktokmall-assets/images/bottle.png"),
+  image: require("../../../../../assets/images/bottle.png"),
   price: 967,
   discount: "50% Off",
   discountPrice: 553
@@ -43,13 +43,13 @@ export const FlashSale = () => {
     return (
         <>
         <ImageBackground 
-          source={require("../../../../../../assets/toktokmall-assets/images/flash-sale-bg.png")}
+          source={require("../../../../../assets/images/flash-sale-bg.png")}
           imageStyle={{resizeMode: 'cover'}}          
           style={{flex: 1, paddingHorizontal: 15, paddingVertical: 0}}>
           
           <View style={{paddingVertical: 0, flexDirection: 'row'}}>
             <View style={{flex: 4}}>
-              <Image source={require("../../../../../../assets/toktokmall-assets/images/Flash-Sale.png")} style={{width: 90, height: 90, resizeMode: 'center', justifyContent: 'center', alignSelf: 'flex-end'}} />
+              <Image source={require("../../../../../assets/images/Flash-Sale.png")} style={{width: 90, height: 90, resizeMode: 'center', justifyContent: 'center', alignSelf: 'flex-end'}} />
             </View>
             <View style={{flex: 7, justifyContent: 'center', paddingHorizontal: 4}}>
               <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>&nbsp;UP TO 80% OFF</Text>

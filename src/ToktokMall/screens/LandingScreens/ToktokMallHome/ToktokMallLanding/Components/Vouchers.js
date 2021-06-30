@@ -48,7 +48,7 @@ export const Vouchers = () => {
           <View style={{paddingVertical: 20, flexDirection: 'row'}}>
             <View style={{flex: 3}}>
               <ImageBackground 
-                source={require("../../../../../../assets/toktokmall-assets/images/voucher-fill.png")} 
+                source={require("../../../../../assets/images/voucher-fill.png")} 
                 style={{width: "100%", alignItems: 'center', justifyContent: 'center'}} 
                 imageStyle={{resizeMode: 'cover'}}
               >

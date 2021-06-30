@@ -14,14 +14,14 @@ const testdata = [{
     description: "Order &id is now on its way to deliver your item.",
     date: "06-22-2021",
     history: [],
-    imageSource: require("../../../../assets/toktokmall-assets/images/coppermask.png")
+    imageSource: require("../../../assets/images/coppermask.png")
 }, {
     id: "00X002",
     title: "Parcel delivered",
     description: "Order &id has been delivered. Thank you for shopping with us! Kindly leave us a rating or feedback.",
     date: "06-22-2021",
     history: [],
-    imageSource: require("../../../../assets/toktokmall-assets/images/coppermask.png")
+    imageSource: require("../../../assets/images/coppermask.png")
 }, {
     id: "00X001",
     title: "Parcel delivered",
@@ -40,7 +40,7 @@ const testdata = [{
         description: "Order 000X001 is now being prepared to deliver your item.",
         date: "06-22-2021"
     }],
-    imageSource: require("../../../../assets/toktokmall-assets/images/coppermask.png")
+    imageSource: require("../../../assets/images/coppermask.png")
 }]
 
 export const ToktokMallNotifications = ({navigation})=> {

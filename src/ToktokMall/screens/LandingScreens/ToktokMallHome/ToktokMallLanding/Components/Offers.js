@@ -6,22 +6,22 @@ import { ScrollView } from 'react-native-gesture-handler';
 import CustomIcon from '../../../../../Components/Icons';
 
 const testdata = [{
-  image: require("../../../../../../assets/toktokmall-assets/images/coppermask.png"),
+  image: require("../../../../../assets/images/coppermask.png"),
   // image: {uri: ""},
   price: 380,
   discountedPrice: 190
 }, {
-  image: require("../../../../../../assets/toktokmall-assets/images/chair.png"),
+  image: require("../../../../../assets/images/chair.png"),
   // image: {uri: ""},
   price: 280,
   discountedPrice: 140
 }, {
-  image: require("../../../../../../assets/toktokmall-assets/images/bottle.png"),
+  image: require("../../../../../assets/images/bottle.png"),
   // image: {uri: ""},
   price: 2280,
   discountedPrice: 1400
 }, {
-  image: require("../../../../../../assets/toktokmall-assets/images/chair.png"),
+  image: require("../../../../../assets/images/chair.png"),
   // image: {uri: ""},
   price: 892,
   discountedPrice: 568

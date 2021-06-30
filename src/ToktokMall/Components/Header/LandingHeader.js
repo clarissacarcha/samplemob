@@ -21,7 +21,7 @@ export const LandingHeader = (props) => {
     return (
         <>
           <ImageBackground 
-            source={require("../../../assets/toktokmall-assets/images/banner.png")}
+            source={require("../../assets/images/banner.png")}
             imageStyle={{ resizeMode: "stretch", width: '100%'}}
             style={{width: "100%", height: 120}}
           >
@@ -31,7 +31,7 @@ export const LandingHeader = (props) => {
               </View>
               <View style={{flex: 2}}></View>
               <View style={{flex: 8, alignItems: 'center', paddingTop: 15}}>
-                <Image source={require("../../../assets/toktokmall-assets/images/toktokmall-h.png")} style={{width: '100%', height: 35, resizeMode: 'stretch'}} />
+                <Image source={require("../../assets/images/toktokmall-h.png")} style={{width: '100%', height: 35, resizeMode: 'stretch'}} />
               </View>
               <View style={{flex: 2}}></View>
               <View style={{flex: 0, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 15, paddingTop: 8}}>

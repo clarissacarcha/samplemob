@@ -37,7 +37,7 @@ export const LandingSubHeader = (props) => {
   return (
     <>
       <ImageBackground 
-        source={require("../../../assets/toktokmall-assets/images/banner.png")}
+        source={require("../../assets/images/banner.png")}
         imageStyle={{ resizeMode: "stretch", width: '100%'}}
         style={{width: "100%", height: 100}}
       >

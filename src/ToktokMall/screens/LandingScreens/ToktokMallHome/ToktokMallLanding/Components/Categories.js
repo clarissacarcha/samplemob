@@ -6,23 +6,23 @@ import { ScrollView } from 'react-native-gesture-handler';
 import CustomIcon from '../../../../../Components/Icons';
 
 const testdata = [{
-  image: require("../../../../../../assets/toktokmall-assets/images/Watch.png"),
+  image: require("../../../../../assets/images/Watch.png"),
   // image: {uri: ""},
   label: "Accessories"
 }, {
-  image: require("../../../../../../assets/toktokmall-assets/images/Electronics.png"),
+  image: require("../../../../../assets/images/Electronics.png"),
   // image: {uri: ""},
   label: "Electronics"
 }, {
-  image: require("../../../../../../assets/toktokmall-assets/images/Furniture.png"),
+  image: require("../../../../../assets/images/Furniture.png"),
   // image: {uri: ""},
   label: "Furnitures"
 }, {
-  image: require("../../../../../../assets/toktokmall-assets/images/Men's-Fashion.png"),
+  image: require("../../../../../assets/images/Men's-Fashion.png"),
   // image: {uri: ""},
   label: "Men's Fashion"
 }, {
-  image: require("../../../../../../assets/toktokmall-assets/images/Pet-Care.png"),
+  image: require("../../../../../assets/images/Pet-Care.png"),
   // image: {uri: ""},
   label: "Pet Care"
 }]

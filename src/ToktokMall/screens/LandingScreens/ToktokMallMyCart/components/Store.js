@@ -24,7 +24,7 @@ export const Store = ({data, state = false, onSelect}) => {
                         />
                     </View>
                     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                       <Image source={require("../../../../../assets/toktokmall-assets/icons/store.png")} style={{width: 18, height: 18, resizeMode: 'stretch'}} />
+                       <Image source={require("../../../../assets/icons/store.png")} style={{width: 18, height: 18, resizeMode: 'stretch'}} />
                     </View>
                     <View style={{flex: 9, justifyContent: 'center', flexDirection: 'row'}}>                        
                         <View style={{flex: 12, justifyContent: 'center'}}>

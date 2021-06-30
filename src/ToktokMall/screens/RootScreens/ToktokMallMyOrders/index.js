@@ -5,7 +5,7 @@ import {ToShip, ToRecieve, Completed, Cancelled} from './Components';
 
 export const ToktokMallMyOrders = ({navigation, route}) => {
 
-  const [activeTab, setActiveTab] = useState(route.params.tab || 2)
+  const [activeTab, setActiveTab] = useState(route.params.tab || 0)
 
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>

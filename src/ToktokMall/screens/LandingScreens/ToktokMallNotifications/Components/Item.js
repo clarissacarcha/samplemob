@@ -9,7 +9,7 @@ export const Item = ({active, data, onSelect}) => {
             <View style={{flexDirection: 'row', backgroundColor: active ? '#fff' : '#FFFCF4'}}>
                     <View style={{flex: 2, alignItems: 'center', justifyContent: 'center', paddingVertical: 20, paddingHorizontal: 15}}>
                         <Image 
-                            source={require("../../../../../assets/toktokmall-assets/images/coppermask.png")} 
+                            source={require("../../../../assets/images/coppermask.png")} 
                             style={{width: 50, height: 50, resizeMode: 'cover', borderRadius: 5}}
                         />
                     </View>

@@ -8,7 +8,7 @@ const Store = ({data}) => {
     <>
       <View style={{flexDirection: 'row', paddingHorizontal: 15, paddingVertical: 20}}>
         <View style={{flex: 0}}>
-          <Image source={require("../../../../../assets/toktokmall-assets/icons/store.png")} style={{width: 24, height: 24, resizeMode: 'stretch'}} />
+          <Image source={require("../../../../assets/icons/store.png")} style={{width: 24, height: 24, resizeMode: 'stretch'}} />
         </View>
         <View style={{flex: 1, paddingHorizontal: 7.5, justifyContent: 'center'}}>
           <Text style={{fontSize: 14}}>{data.name}</Text>
@@ -41,7 +41,7 @@ const Item = ({data}) => {
     <>
       <View style={{flexDirection: 'row', paddingVertical: 10, paddingHorizontal: 15}}>
         <View style={{flex: 2, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 5, borderRadius: 5}}>
-          <Image source={require("../../../../../assets/toktokmall-assets/images/coppermask.png")} style={{width: 55, height: 80, resizeMode: 'stretch', borderRadius: 5}} />
+          <Image source={require("../../../../assets/images/coppermask.png")} style={{width: 55, height: 80, resizeMode: 'stretch', borderRadius: 5}} />
         </View>
         <View style={{flex: 8}}>
           <View style={{flex: 1, justifyContent: 'center'}}>

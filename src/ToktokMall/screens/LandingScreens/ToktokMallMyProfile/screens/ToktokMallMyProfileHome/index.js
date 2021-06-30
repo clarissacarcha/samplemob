@@ -10,7 +10,7 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
       <ImageBackground 
-        source={require("../../../../../../assets/toktokmall-assets/images/banner.png")}
+        source={require("../../../../../assets/images/banner.png")}
         imageStyle={{ resizeMode: "cover", width: '100%'}}
         style={{width: "100%", height: 160}}
       >
