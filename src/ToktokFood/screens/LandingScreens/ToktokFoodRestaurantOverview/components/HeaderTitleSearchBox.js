@@ -39,6 +39,10 @@ const styles = StyleSheet.create({
   },
   searchBoxContainer: {
     flexDirection: 'row',
+<<<<<<< HEAD
+=======
+    marginTop: Platform.OS === 'android' ? verticalScale(37) : verticalScale(25),
+>>>>>>> 9d23876d365e29d3094f2212476d8e6924dcedc9
     paddingRight: moderateScale(20),
     marginTop: Platform.OS === 'android' ? getStatusbarHeight + 15 : verticalScale(15),
   },

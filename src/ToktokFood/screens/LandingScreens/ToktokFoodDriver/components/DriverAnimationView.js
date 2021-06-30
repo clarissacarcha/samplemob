@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, StyleSheet, View, Text} from 'react-native';
+import {Image, Platform, StyleSheet, View, Text} from 'react-native';
 
 // Components
 import DriverDetailsView from './DriverDetailsView';
@@ -28,6 +28,7 @@ export default DriverAnimationView;
 
 const styles = StyleSheet.create({
   container: {
+    // flex: 3,
     // borderWidth: 1,
   },
   contactSupportText: {
@@ -43,7 +44,6 @@ const styles = StyleSheet.create({
   },
   imgContainer: {
     alignItems: 'center',
-    // borderWidth: 1,
-    paddingVertical: verticalScale(50),
+    paddingVertical: Platform.OS === 'ios' ? verticalScale(40) : verticalScale(20),
   },
 });

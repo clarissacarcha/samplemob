@@ -13,7 +13,14 @@ import HeaderTitleSearchBox from './HeaderTitleSearchBox';
 import FoodList from './FoodList';
 
 // Utils
-import {moderateScale, scale, verticalScale, getDeviceWidth, getStatusbarHeight} from 'toktokfood/helper/scale';
+import {
+  isIphoneXorAbove,
+  moderateScale,
+  scale,
+  verticalScale,
+  getDeviceWidth,
+  getStatusbarHeight,
+} from 'toktokfood/helper/scale';
 import {tabs} from 'toktokfood/helper/strings';
 
 // const {height: SCREEN_HEIGHT} = Dimensions.get('window');
@@ -27,8 +34,8 @@ const StickyView = () => {
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const routes = useRoute();
   const {distance, image, name, ratings, time, totalBranches} = routes.params.item;
-  const headerMinHeight = Platform.OS === 'ios' ? moderateScale(130) : moderateScale(150);
-  const headerMaxHeight = Platform.OS === 'ios' ? scale(350) : scale(370);
+  const headerMinHeight = Platform.OS === 'ios' ? moderateScale(120) : moderateScale(140);
+  const headerMaxHeight = Platform.OS === 'ios' ? scale(400) : scale(370);
 
   const renderNavBar = () => (
     <View style={[styles.headerWrapper, styles.navbarWrapper]}>
@@ -129,7 +136,8 @@ const styles = StyleSheet.create({
     height: Platform.OS === 'ios' ? scale(120) : scale(145),
   },
   navbarWrapper: {
-    // marginTop: verticalScale(10),
+    // paddingTop: verticalScale(15),
+    // marginTop: verticalScale(15),
   },
   ratings: {
     alignItems: 'flex-start',
@@ -146,8 +154,19 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     backgroundColor: 'rgba(255,255,255,0.5)',
+<<<<<<< HEAD
     bottom: Platform.OS === 'ios' ? verticalScale(38) : 0,
     height: Platform.OS === 'ios' ? verticalScale(88) : moderateScale(125),
+=======
+    bottom:
+      Platform.OS === 'ios'
+        ? isIphoneXorAbove()
+          ? verticalScale(getStatusbarHeight + 37)
+          : verticalScale(getStatusbarHeight + 20)
+        : verticalScale(0),
+    // height: Platform.OS === 'ios' ? verticalScale(85) : verticalScale(110),
+    height: Platform.OS === 'android' ? moderateScale(88 + getStatusbarHeight) : moderateScale(105),
+>>>>>>> 9d23876d365e29d3094f2212476d8e6924dcedc9
   },
   titleInfo: {
     borderTopLeftRadius: 20,

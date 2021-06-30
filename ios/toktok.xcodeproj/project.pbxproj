@@ -1136,8 +1136,17 @@
 				DEVELOPMENT_TEAM = GB5B4BE7QP;
 				INFOPLIST_FILE = toktok/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+<<<<<<< HEAD
+<<<<<<< HEAD
+				MARKETING_VERSION = 1.15.4;
+=======
+				NEW_SETTING = "";
+				MARKETING_VERSION = 1.15.3;
+>>>>>>> a5ec04199d0f102aa09cef830a806d3c73f67cc3
+=======
 				MARKETING_VERSION = 1.16.0;
 				NEW_SETTING = "";
+>>>>>>> fc1b77c7cef7f28027dff9b4efd7687a1bb3ce02
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

@@ -1,5 +1,5 @@
 import React from 'react';
-import {ScrollView, StyleSheet, View, Text} from 'react-native';
+import {Platform, ScrollView, StyleSheet, View, Text} from 'react-native';
 import {useSelector} from 'react-redux';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
@@ -8,7 +8,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import {COLORS} from 'res/constants';
 
 // Utils
-import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
+import {isIphoneXorAbove, moderateScale, verticalScale} from 'toktokfood/helper/scale';
 
 const DriverDetailsView = () => {
   const {location} = useSelector((state) => state.toktokFood);
@@ -27,7 +27,7 @@ const DriverDetailsView = () => {
         <View style={styles.horizontalContainer}>
           <View style={styles.horizontalDivider} />
         </View>
-        <Text>{location.formattedAddress}</Text>
+        <Text numberOfLines={1}>{location.formattedAddress}</Text>
       </View>
     </View>
   );
@@ -43,12 +43,20 @@ const DriverDetailsView = () => {
     </View>
   );
 
+  const renderActions = () => (
+    <View style={styles.actionContainer}>
+      <Text style={styles.orderDetailsText}>See Order Details</Text>
+    </View>
+  );
+
   return (
-    <ScrollView contentContainerStyle={{paddingBottom: verticalScale(720)}} style={styles.container}>
+    <ScrollView
+      contentContainerStyle={styles.scrollContainer}
+      showsVerticalScrollIndicator={false}
+      style={styles.container}>
       {renderTitle()}
       {renderAddress()}
-      {renderAddress()}
-      {renderAddress()}
+      {renderActions()}
     </ScrollView>
   );
 };
@@ -56,6 +64,10 @@ const DriverDetailsView = () => {
 export default DriverDetailsView;
 
 const styles = StyleSheet.create({
+  actionContainer: {
+    backgroundColor: 'white',
+    padding: moderateScale(20),
+  },
   addressContainer: {
     backgroundColor: 'white',
     borderTopWidth: 10,
@@ -98,8 +110,18 @@ const styles = StyleSheet.create({
   },
   horizontalDivider: {
     borderColor: '#DDDDDD',
-    borderWidth: 0.3,
+    borderWidth: 0.4,
     flex: 1,
+  },
+  orderDetailsText: {
+    color: COLORS.YELLOWTEXT,
+    fontWeight: '400',
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  scrollContainer: {
+    paddingBottom:
+      Platform.OS === 'ios' ? (isIphoneXorAbove() ? verticalScale(720) : verticalScale(860)) : verticalScale(400),
   },
   status: {
     fontWeight: '300',
