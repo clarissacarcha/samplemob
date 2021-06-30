@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Platform, StyleSheet, View, StatusBar, Text} from 'react-native';
+import {Platform, StyleSheet, View, Text} from 'react-native';
 import ReactNativeParallaxHeader from 'react-native-parallax-header';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useRoute} from '@react-navigation/native';
@@ -128,12 +128,12 @@ const styles = StyleSheet.create({
   },
   headerWrapper: {
     backgroundColor: 'white',
-    flex: 1,
     shadowColor: '#000',
     shadowOffset: {width: 1, height: 1},
     shadowOpacity: 0.4,
     shadowRadius: 3,
     elevation: 5,
+    height: Platform.OS === 'ios' ? scale(120) : scale(145),
   },
   navbarWrapper: {
     // paddingTop: verticalScale(15),
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
   },
   tabContainer: {
     paddingHorizontal: 10,
-    marginTop: verticalScale(8),
+    marginTop: Platform.OS === 'ios' ? verticalScale(12) : verticalScale(10),
   },
   title: {
     flex: 1,

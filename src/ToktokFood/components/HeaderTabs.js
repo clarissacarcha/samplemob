@@ -14,8 +14,8 @@ const HeaderTabs = ({activeTab, setActiveTab, tabs}) => {
 
   return (
     <View style={styles.container}>
-      <FlatList horizontal data={tabs} renderItem={renderItem} />
-
+      {/* showsHorizontalScrollIndicator={false} added for Android */}
+      <FlatList horizontal data={tabs} renderItem={renderItem} showsHorizontalScrollIndicator={false} />
       <View style={styles.divider} />
     </View>
   );
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   divider: {
     borderColor: '#E6E6E6',
     borderBottomWidth: 1,
-    marginTop: 10,
+    marginTop: 12,
     marginHorizontal: 5,
   },
   tabContainer: {

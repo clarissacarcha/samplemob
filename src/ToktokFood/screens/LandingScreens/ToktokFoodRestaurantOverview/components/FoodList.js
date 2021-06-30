@@ -13,12 +13,12 @@ import {verticalScale} from 'toktokfood/helper/scale';
 const FoodList = () => {
   const navigation = useNavigation();
 
-  const onNavigateToDriver = () => {
-    navigation.navigate('ToktokFoodDriver');
+  const onNavigateToFoodItemDetails = (item) => {
+    navigation.navigate('ToktokFoodItemDetails', item);
   };
 
   const renderItem = ({item}) => (
-    <TouchableOpacity onPress={onNavigateToDriver} style={styles.listContainer}>
+    <TouchableOpacity onPress={() => onNavigateToFoodItemDetails(item)} style={styles.listContainer}>
       <View>
         <Text style={styles.listText}>{item.name}</Text>
         <Text style={styles.listPrice}>PHP {item.price}</Text>
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
   },
   listContainer: {
-    borderTopWidth: 1,
+    borderBottomWidth: 1,
     borderColor: '#E6E6E6',
     // borderBottomWidth: 1,
     flexDirection: 'row',

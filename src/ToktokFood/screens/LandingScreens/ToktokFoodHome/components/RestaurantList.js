@@ -6,6 +6,7 @@ import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 // Utils
 import {restaurants} from 'toktokfood/helper/strings';
+import {scale} from 'toktokfood/helper/scale';
 
 const RestaurantList = () => {
   const navigation = useNavigation();
@@ -58,7 +59,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 15,
-    paddingVertical: 10,
+    paddingVertical: Platform.OS === 'android' ? 0 : 10,
   },
   columnStyle: {
     justifyContent: 'space-between',
@@ -66,7 +67,7 @@ const styles = StyleSheet.create({
   img: {
     height: 150,
     alignSelf: 'center',
-    width: Platform.OS === 'android' ? 150 : 170,
+    width: Platform.OS === 'android' ? 153 : scale(150),
   },
   listContainer: {
     flex: 1,

@@ -7,6 +7,21 @@ export const foodData = [
     price: '48.00',
     description: 'Rich espresso balance with steamed',
     image: food1,
+    ratings: 5,
+    variations: [
+      {
+        sizes: [
+          {name: 'Short', price: '00.00'},
+          {name: 'Tall', price: '50.00'},
+          {name: 'Grande', price: '50.00'},
+          {name: 'Venti', price: '50.00'},
+        ],
+        add_ons: [
+          {name: 'Extra Cream', price: '00.00'},
+          {name: 'Choco Sprinkles', price: '00.00'},
+        ],
+      },
+    ],
   },
   {
     id: 2,
@@ -14,6 +29,21 @@ export const foodData = [
     price: '45.00',
     description: 'Rich espresso balance with steamed',
     image: food1,
+    ratings: 5,
+    variations: [
+      {
+        sizes: [
+          {name: 'Short', price: '00.00'},
+          {name: 'Tall', price: '50.00'},
+          {name: 'Grande', price: '50.00'},
+          {name: 'Venti', price: '50.00'},
+        ],
+        add_ons: [
+          {name: 'Extra Cream', price: '00.00'},
+          {name: 'Choco Sprinkles', price: '00.00'},
+        ],
+      },
+    ],
   },
   {
     id: 3,
@@ -21,6 +51,21 @@ export const foodData = [
     price: '45.00',
     description: 'Rich espresso balance with steamed',
     image: food1,
+    ratings: 5,
+    variations: [
+      {
+        sizes: [
+          {name: 'Short', price: '00.00'},
+          {name: 'Tall', price: '50.00'},
+          {name: 'Grande', price: '50.00'},
+          {name: 'Venti', price: '50.00'},
+        ],
+        add_ons: [
+          {name: 'Extra Cream', price: '00.00'},
+          {name: 'Choco Sprinkles', price: '00.00'},
+        ],
+      },
+    ],
   },
   {
     id: 4,
@@ -28,6 +73,21 @@ export const foodData = [
     price: '45.00',
     description: 'Rich espresso balance with steamed',
     image: food1,
+    ratings: 5,
+    variations: [
+      {
+        sizes: [
+          {name: 'Short', price: '00.00'},
+          {name: 'Tall', price: '50.00'},
+          {name: 'Grande', price: '50.00'},
+          {name: 'Venti', price: '50.00'},
+        ],
+        add_ons: [
+          {name: 'Extra Cream', price: '00.00'},
+          {name: 'Choco Sprinkles', price: '00.00'},
+        ],
+      },
+    ],
   },
   {
     id: 5,
@@ -35,6 +95,21 @@ export const foodData = [
     price: '45.00',
     description: 'Rich espresso balance with steamed',
     image: food1,
+    ratings: 5,
+    variations: [
+      {
+        sizes: [
+          {name: 'Short', price: '00.00'},
+          {name: 'Tall', price: '50.00'},
+          {name: 'Grande', price: '50.00'},
+          {name: 'Venti', price: '50.00'},
+        ],
+        add_ons: [
+          {name: 'Extra Cream', price: '00.00'},
+          {name: 'Choco Sprinkles', price: '00.00'},
+        ],
+      },
+    ],
   },
   {
     id: 6,
@@ -42,6 +117,21 @@ export const foodData = [
     price: '45.00',
     description: 'Rich espresso balance with steamed',
     image: food1,
+    ratings: 5,
+    variations: [
+      {
+        sizes: [
+          {name: 'Short', price: '00.00'},
+          {name: 'Tall', price: '50.00'},
+          {name: 'Grande', price: '50.00'},
+          {name: 'Venti', price: '50.00'},
+        ],
+        add_ons: [
+          {name: 'Extra Cream', price: '00.00'},
+          {name: 'Choco Sprinkles', price: '00.00'},
+        ],
+      },
+    ],
   },
 ];
 
@@ -155,5 +245,5 @@ export const notifications = [
     id: 4,
     title: 'Notification 4',
     content: 'Lorem ipsum dolor sit amet',
-  }
+  },
 ];
