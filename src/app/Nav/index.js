@@ -23,6 +23,8 @@ import Landing from '../../screens/Landing';
 /*---------- CONSUMER SCREENS ----------*/
 import ToktokFoodScreens from './toktokfood';
 
+import ToktokMallScreens from './toktokmall';
+
 /*---------- CONSUMER SCREENS ----------*/
 
 import ConsumerLanding from '../../screens/AuthenticatedStack/ConsumerScreens/ConsumerLanding';
@@ -371,6 +373,7 @@ const ConsumerLandingStack = () => (
 const AuthenticatedStack = () => (
   <Authenticated.Navigator>
     {ToktokFoodScreens({Navigator: Authenticated})}
+    {ToktokMallScreens({Navigator: Authenticated})}
 
     {/* <Authenticated.Screen name="ConsumerLanding" component={ConsumerLanding} options={{headerShown: false}} /> */}
     <Authenticated.Screen name="ConsumerLanding" component={ConsumerHomeBottomTab} options={{headerShown: false}} />

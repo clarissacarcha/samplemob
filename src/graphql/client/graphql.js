@@ -9,7 +9,9 @@ import {createUploadLink} from 'apollo-upload-client';
 import {getMainDefinition} from 'apollo-utilities';
 import {setContext} from 'apollo-link-context';
 
-const baseUrl = `${PROTOCOL}://${HOST_PORT}/`;
+import ENVIRONMENTS from 'src/common/res/environments';
+
+const baseUrl = `${ENVIRONMENTS.TOKTOK_SERVER}/`;
 const wsUrl = `ws://${HOST_PORT}/graphql`;
 
 const toktokWalletBaseUrl = `${TOKTOK_WALLET_PROTOCOL}://${TOKTOK_WALLET_PROTOCOL_HOST_PORT}/`;
