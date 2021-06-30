@@ -21,7 +21,7 @@ export default styles = StyleSheet.create({
     alignItems: 'center',
     borderBottomWidth: 3,
     paddingHorizontal: 20,
-    borderBottomColor: '#F7F7FA',
+    borderBottomColor: COLOR.LIGHT,
     height: Platform.OS === 'ios' ? verticalScale(45) : verticalScale(60),
   },
   headerLabel: {
@@ -39,7 +39,7 @@ export default styles = StyleSheet.create({
     flex: 1,
     marginStart: 12,
     borderBottomWidth: 1,
-    borderColor: '#E6E6E6',
+    borderBottomColor: COLOR.LIGHT,
     paddingVertical: verticalScale(14),
   },
   notificationInfo: {

@@ -11,10 +11,11 @@ import {
   ToktokFoodHome,
   ToktokFoodOrders,
   ToktokFoodSearch,
+  ToktokFoodDriver,
   ToktokFoodFavorites,
+  ToktokFoodItemDetails,
   ToktokFoodNotifications,
   ToktokFoodRestaurantOverview,
-  ToktokFoodDriver,
 } from '../../../ToktokFood/screens';
 
 const ToktokStack = createStackNavigator();
@@ -28,6 +29,7 @@ const ToktokFoodHomeStack = () => (
     <ToktokStack.Screen name="ToktokFoodHome" component={ToktokFoodHome} />
     <ToktokStack.Screen name="ToktokFoodRestaurantOverview" component={ToktokFoodRestaurantOverview} />
     <ToktokStack.Screen name="ToktokFoodDriver" component={ToktokFoodDriver} />
+    <ToktokStack.Screen name="ToktokFoodItemDetails" component={ToktokFoodItemDetails} />
   </ToktokStack.Navigator>
 );
 
