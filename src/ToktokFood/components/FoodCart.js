@@ -63,7 +63,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: getDeviceWidth - 28,
     justifyContent: 'space-between',
-    borderWidth: 1,
   },
   total: {
     color: COLOR.BLACK,
