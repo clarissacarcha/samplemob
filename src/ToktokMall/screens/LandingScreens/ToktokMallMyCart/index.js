@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, Platform, Dimensions, StatusBar, Image, TouchableOpacity, FlatList} from 'react-native';
-import {HeaderBack, HeaderTitle, HeaderRight} from '../../../Components';
+import {HeaderBack, HeaderTitle, HeaderRight, Header} from '../../../Components';
 import {AlertOverlay} from '../../../../components';
 import {COLOR, FONT, FONT_SIZE} from '../../../../res/variables';
 import CheckBox from 'react-native-check-box';
@@ -84,6 +84,7 @@ export const ToktokMallMyCart = ({navigation}) => {
   return (
     <>
       <View style={styles.container}>
+        <Header label="Shopping Cart" />
         <View style={{height: 8, backgroundColor: '#F7F7FA'}} />
         <View style={{flex: 1}}>
           <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>

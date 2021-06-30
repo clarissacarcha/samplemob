@@ -2,15 +2,6 @@ import React from 'react';
 import {View, Image, Text} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
-import EIcon from 'react-native-vector-icons/Entypo';
-import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import MIcon from 'react-native-vector-icons/MaterialIcons';
-import FAIcon from 'react-native-vector-icons/FontAwesome';
-import FA5Icon from 'react-native-vector-icons/FontAwesome5';
-import EvilIcon from 'react-native-vector-icons/EvilIcons';
-import FoIcon from 'react-native-vector-icons/Fontisto';
-import AIcon from 'react-native-vector-icons/AntDesign';
-
 import {COLOR, FONT_SIZE, SIZE} from '../../../res/variables';
 
 import {
@@ -40,6 +31,14 @@ import {
   ToktokMallMyProfileHome,
   ToktokMallMyWishlist,
 } from '../../../ToktokMall/screens';
+
+
+import CartScreens from './CartScreens';
+import CategoriesScreens from './CategoriesScreens';
+import HomeScreens from './HomeScreens';
+import NotificationScreens from './NotificationScreens';
+import MeScreens from './MeScreens';
+import { Categories } from '../../../ToktokMall/screens/LandingScreens/ToktokMallHome/ToktokMallLanding/Components';
 
 const ToktokMallLandingBottomTab = createBottomTabNavigator();
 
@@ -167,10 +166,11 @@ const TabBarIcon = ({source}) => {
   );
 };
 
-const ToktokMallLanding = () => (
+const ToktokMallLanding = ({Navigator}) => {
+
+  return (
   <ToktokMallLandingBottomTab.Navigator
     initialRouteName="ToktokMallHome"
-    screenOptions={{headerShown: false, headerMode: 'none'}}
     tabBarOptions={{
       activeTintColor: COLOR.DARK,
       inactiveTintColor: COLOR.DARK,
@@ -190,7 +190,7 @@ const ToktokMallLanding = () => (
     }}>
     <ToktokMallLandingBottomTab.Screen
       name="ToktokMallMyCart"
-      component={ToktokMallCartStackScreens}
+      component={ToktokMallMyCart}
       options={{
         tabBarLabel: 'My Cart',
         // tabBarIcon: ({color}) => <AIcon name="shoppingcart" color={COLOR.YELLOW} size={24} />
@@ -201,7 +201,7 @@ const ToktokMallLanding = () => (
     />
     <ToktokMallLandingBottomTab.Screen
       name="ToktokMallCategories"
-      component={ToktokMallCategoriesStackScreen}
+      component={ToktokMallCategoriesSearch}
       options={{
         tabBarLabel: 'Categories',
         // tabBarIcon: ({color}) => <AIcon name="profile" color={COLOR.YELLOW} size={24} />
@@ -215,7 +215,7 @@ const ToktokMallLanding = () => (
     />
     <ToktokMallLandingBottomTab.Screen
       name="ToktokMallHome"
-      component={ToktokMallHomeStackScreens}
+      component={ToktokMallLandingScreen}
       options={{
         tabBarBadge: '99+',
         tabBarLabel: 'toktokmall',
@@ -230,7 +230,7 @@ const ToktokMallLanding = () => (
     />
     <ToktokMallLandingBottomTab.Screen
       name="ToktokMallNotifications"
-      component={ToktokMallNotificationStackScreens}
+      component={ToktokMallNotifications}
       options={{
         tabBarLabel: 'Notifications',
         // tabBarIcon: ({color}) => <AIcon name="mail" color={COLOR.YELLOW} size={24} />
@@ -241,7 +241,7 @@ const ToktokMallLanding = () => (
     />
     <ToktokMallLandingBottomTab.Screen
       name="ToktokMallMyProfile"
-      component={ToktokMallMyProfileStackScreens}
+      component={ToktokMallMyProfileHome}
       options={{
         tabBarLabel: 'Me',
         // tabBarIcon: ({color}) => <AIcon name="user" color={COLOR.YELLOW} size={24} />
@@ -254,8 +254,13 @@ const ToktokMallLanding = () => (
       }}
     />
   </ToktokMallLandingBottomTab.Navigator>
-);
+  )
+};
 
 export default ({Navigator}) => (
-  <Navigator.Screen name="ToktokMallLanding" component={ToktokMallLanding} options={{headerShown: false}} />
+  <Navigator.Screen 
+    name="ToktokMallLanding" 
+    component={ToktokMallLanding} 
+    options={{headerShown: false}} 
+  />
 );
