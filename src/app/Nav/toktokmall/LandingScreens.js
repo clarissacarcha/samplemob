@@ -102,17 +102,29 @@ const ToktokMallMyProfileStackScreens = () => (
         headerShown: false,
       }}
     />
-    <ToktokMallMyProfileStack.Screen
+    {/* <ToktokMallMyProfileStack.Screen
       name="ToktokMallMyOrders"
       component={ToktokMallMyOrders}
       options={{
         headerShown: false,
       }}
+    /> */}
+    <ToktokMallMyProfileStack.Screen
+      name="ToktokMallMyFollowing"
+      component={ToktokMallMyFollowing}
     />
-    <ToktokMallMyProfileStack.Screen name="ToktokMallMyFollowing" component={ToktokMallMyFollowing} />
-    <ToktokMallMyProfileStack.Screen name="ToktokMallMyVouchers" component={ToktokMallMyVouchers} />
-    <ToktokMallMyProfileStack.Screen name="ToktokMallHelp" component={ToktokMallHelp} />
-    <ToktokMallMyProfileStack.Screen name="ToktokMallMyWishlist" component={ToktokMallMyWishlist} />
+    <ToktokMallMyProfileStack.Screen
+      name="ToktokMallMyVouchers"
+      component={ToktokMallMyVouchers}      
+    />
+    <ToktokMallMyProfileStack.Screen
+      name="ToktokMallHelp"
+      component={ToktokMallHelp}
+    />
+    <ToktokMallMyProfileStack.Screen
+      name="ToktokMallMyWishlist"
+      component={ToktokMallMyWishlist}
+    />    
   </ToktokMallMyProfileStack.Navigator>
 );
 
