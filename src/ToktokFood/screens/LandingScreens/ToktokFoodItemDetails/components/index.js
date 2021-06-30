@@ -1,1 +1,1 @@
-export Variations from './Variations';
+export Variations from './variations';

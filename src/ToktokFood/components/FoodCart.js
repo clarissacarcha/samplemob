@@ -1,8 +1,9 @@
 import React from 'react';
+import MIcon from 'react-native-vector-icons/MaterialIcons';
 import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 
 // Utils
-import {scale, getDeviceWidth} from 'toktokfood/helper/scale';
+import {scale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
 
 import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
 
@@ -11,10 +12,14 @@ const FoodCart = () => {
     <>
       <View style={[styles.container, styles.cartBorder]}>
         <View style={styles.foodItemTotalWrapper}>
-          <View>
-            <TouchableOpacity></TouchableOpacity>
-            <Text></Text>
-            <TouchableOpacity></TouchableOpacity>
+          <View style={styles.countWrapper}>
+            <TouchableOpacity style={[styles.countButtons, {backgroundColor: COLOR.LIGHT}]}>
+              <MIcon name="remove" color={COLOR.BLACK} size={25} />
+            </TouchableOpacity>
+            <Text style={styles.countText}>01</Text>
+            <TouchableOpacity style={[styles.countButtons, {backgroundColor: COLOR.ORANGE}]}>
+              <MIcon name="add" color={COLOR.WHITE} size={20} />
+            </TouchableOpacity>
           </View>
           <Text style={styles.total}>Total: 48.00</Text>
         </View>
@@ -29,10 +34,10 @@ const FoodCart = () => {
 const styles = StyleSheet.create({
   container: {
     display: 'flex',
-    height: scale(120),
+    height: scale(130),
     alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: COLOR.WHITE,
+    paddingVertical: verticalScale(7),
   },
   cartBorder: {
     borderWidth: 2,
@@ -66,6 +71,26 @@ const styles = StyleSheet.create({
   },
   total: {
     color: COLOR.BLACK,
+    fontSize: FONT_SIZE.L,
+    fontFamily: FONT.BOLD,
+  },
+  countWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  countButtons: {
+    height: 38,
+    width: 38,
+    borderRadius: 50,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  countText: {
+    color: COLOR.BLACK,
+    marginHorizontal: 9,
     fontSize: FONT_SIZE.L,
     fontFamily: FONT.BOLD,
   },
