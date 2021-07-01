@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Image, Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 // Fonts/Colors
 import {COLORS} from 'res/constants';
@@ -12,6 +12,16 @@ import {chat, phoneBlack, riderAvatar, star} from 'toktokfood/assets/images';
 import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
 
 const OrderRider = () => {
+  const onMessage = () => {
+    const url = `sms:+639100593229`;
+    Linking.openURL(url);
+  };
+
+  const onCall = () => {
+    const url = `tel:+639100593229`;
+    Linking.openURL(url);
+  };
+
   const renderAvatar = () => (
     <View style={styles.avatarContainer}>
       <Image resizeMode="contain" style={styles.avatar} source={riderAvatar} />
@@ -30,8 +40,12 @@ const OrderRider = () => {
     <View style={styles.actionContainer}>
       <Text style={styles.orderNumber}>0999000000</Text>
       <View style={styles.actions}>
-        <Image resizeMode="contain" style={styles.phone} source={chat} />
-        <Image resizeMode="contain" style={styles.phone} source={phoneBlack} />
+        <TouchableOpacity onPress={onMessage}>
+          <Image resizeMode="contain" style={styles.phone} source={chat} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={onCall}>
+          <Image resizeMode="contain" style={styles.phone} source={phoneBlack} />
+        </TouchableOpacity>
       </View>
     </View>
   );
