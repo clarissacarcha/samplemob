@@ -432,7 +432,9 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="AddLocation" component={AddLocation} />
 
     {/*----------toktokwallet Screens----------*/}
-    <Authenticated.Screen name="ToktokWalletHomePage" component={ToktokWalletHomePage} />
+    {/* <Authenticated.Screen name="ToktokWalletHomePage" component={ToktokWalletHomePage} /> */}
+
+    
     <Authenticated.Screen name="ToktokWalletRestricted" component={ToktokWalletRestricted} />
     <Authenticated.Screen name="ToktokWalletSecurityAndPrivacy" component={ToktokWalletSecurityAndPrivacy} />
     <Authenticated.Screen
