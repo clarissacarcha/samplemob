@@ -9,7 +9,7 @@ import {APP_FLAVOR , ACCOUNT_TYPE} from 'src/res/constants'
 
 
 //SELF IMPORTS
-import WalletMethods from '../WalletMethods'
+import WalletMethods from './WalletMethods'
 import { ICON_SET, VectorIcon } from 'src/revamp';
 import { CheckWalletAccountRestrictionContext } from '../CheckWalletAccountRestriction';
 

@@ -8,7 +8,7 @@ import {APP_FLAVOR , ACCOUNT_TYPE} from 'src/res/constants'
 import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS
-import DriverWalletMethods from '../DriverWalletMethods'
+import DriverWalletMethods from './DriverWalletMethods'
 import { ICON_SET, VectorIcon } from 'src/revamp';
 import { CheckWalletAccountRestrictionContext } from '../CheckWalletAccountRestriction';
 

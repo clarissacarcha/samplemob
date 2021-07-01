@@ -433,9 +433,10 @@ const AuthenticatedStack = () => (
 
     {/*----------toktokwallet Screens----------*/}
     {/* <Authenticated.Screen name="ToktokWalletHomePage" component={ToktokWalletHomePage} /> */}
-
+    {/* <Authenticated.Screen name="ToktokWalletTransactions" component={ToktokWalletTransactions} /> */}
     
     <Authenticated.Screen name="ToktokWalletRestricted" component={ToktokWalletRestricted} />
+
     <Authenticated.Screen name="ToktokWalletSecurityAndPrivacy" component={ToktokWalletSecurityAndPrivacy} />
     <Authenticated.Screen
       name="ToktokWalletSecurityPinCode"
@@ -471,7 +472,6 @@ const AuthenticatedStack = () => (
       options={{headerShown: false}}
     />
 
-    <Authenticated.Screen name="ToktokWalletTransactions" component={ToktokWalletTransactions} />
     <Authenticated.Screen name="ToktokWalletRecentTransferView" component={ToktokWalletRecentTransferView} />
     <Authenticated.Screen name="ToktokWalletRecentTransferProceed" component={ToktokWalletRecentTransferProceed} />
     <Authenticated.Screen name="ToktokWalletReviewAndConfirm" component={ToktokWalletReviewAndConfirm} />
