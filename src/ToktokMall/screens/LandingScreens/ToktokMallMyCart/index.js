@@ -119,6 +119,9 @@ export const ToktokMallMyCart = ({navigation}) => {
                       let cart = item.cart;
                       console.log(cart);
                     }}
+                    onPress={() => {
+                      navigation.navigate("ToktokMallStore")
+                    }}
                   />
                   {item.cart.map((data, i) => (
                     <Item
