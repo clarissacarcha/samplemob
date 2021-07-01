@@ -22,7 +22,7 @@ const FoodCart = ({item_price}) => {
 
   const onRestaurantNavigate = () => {
     Toast.show('Added to cart', Toast.SHORT);
-    navigation.navigate('ToktokFoodOrderDetails');
+    navigation.navigate('ToktokFoodDriver');
   };
 
   const updateCartTotal = (type = 'ADD') => {

@@ -7,6 +7,7 @@ export const foodData = [
     price: '48.00',
     description: 'Rich espresso balance with steamed',
     image: food1,
+    qty: 1,
     ratings: 5,
     variations: [
       {
@@ -29,6 +30,7 @@ export const foodData = [
     price: '45.00',
     description: 'Rich espresso balance with steamed',
     image: food1,
+    qty: 5,
     ratings: 5,
     variations: [
       {
@@ -51,6 +53,7 @@ export const foodData = [
     price: '45.00',
     description: 'Rich espresso balance with steamed',
     image: food1,
+    qty: 1,
     ratings: 5,
     variations: [
       {
@@ -73,6 +76,7 @@ export const foodData = [
     price: '45.00',
     description: 'Rich espresso balance with steamed',
     image: food1,
+    qty: 1,
     ratings: 5,
     variations: [
       {
@@ -95,6 +99,7 @@ export const foodData = [
     price: '45.00',
     description: 'Rich espresso balance with steamed',
     image: food1,
+    qty: 1,
     ratings: 5,
     variations: [
       {
@@ -117,6 +122,7 @@ export const foodData = [
     price: '45.00',
     description: 'Rich espresso balance with steamed',
     image: food1,
+    qty: 1,
     ratings: 5,
     variations: [
       {
