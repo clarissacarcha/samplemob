@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
   },
   container: {
     zIndex: 1,
-    height: Platform.OS === 'android' ? moderateScale(133 + getStatusbarHeight) : moderateScale(140),
+    height: Platform.OS === 'android' ? moderateScale(133 + getStatusbarHeight) : moderateScale(115),
   },
   detailsImage: {
     resizeMode: 'cover',

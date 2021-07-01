@@ -1,6 +1,7 @@
 import React from 'react';
-import {Platform, ScrollView, StyleSheet, View, Text} from 'react-native';
+import {Platform, ScrollView, StyleSheet, TouchableOpacity, View, Text} from 'react-native';
 import {useSelector} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
@@ -12,6 +13,11 @@ import {isIphoneXorAbove, moderateScale, verticalScale} from 'toktokfood/helper/
 
 const DriverDetailsView = () => {
   const {location} = useSelector((state) => state.toktokFood);
+  const navigation = useNavigation();
+
+  const onSeeDetails = () => {
+    navigation.navigate('ToktokFoodOrderDetails');
+  };
 
   const renderAddress = () => (
     <View style={styles.addressContainer}>
@@ -45,7 +51,9 @@ const DriverDetailsView = () => {
 
   const renderActions = () => (
     <View style={styles.actionContainer}>
-      <Text style={styles.orderDetailsText}>See Order Details</Text>
+      <TouchableOpacity onPress={onSeeDetails} style={styles.seeOrderDetails}>
+        <Text style={styles.orderDetailsText}>See Order Details</Text>
+      </TouchableOpacity>
     </View>
   );
 
@@ -66,7 +74,6 @@ export default DriverDetailsView;
 const styles = StyleSheet.create({
   actionContainer: {
     backgroundColor: 'white',
-    padding: moderateScale(20),
   },
   addressContainer: {
     backgroundColor: 'white',
@@ -126,6 +133,9 @@ const styles = StyleSheet.create({
   status: {
     fontWeight: '300',
     marginTop: verticalScale(5),
+  },
+  seeOrderDetails: {
+    padding: moderateScale(20),
   },
   time: {
     fontWeight: '400',
