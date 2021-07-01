@@ -10,7 +10,6 @@ import {FONT, FONT_SIZE, COLOR} from 'res/variables';
 import {scale, verticalScale} from 'toktokfood/helper/scale';
 
 const Variations = ({item}) => {
-
   const renderItem = (variations) => {
     const {sizes, add_ons} = variations.item;
     return (
@@ -21,7 +20,7 @@ const Variations = ({item}) => {
             <View style={styles.variationsWrapper}>
               <View style={styles.checkBoxWrapper}>
                 <CheckBox
-                  style={{transform: [{scaleX: 0.8}, {scaleY: 0.8}]}}
+                  style={styles.checkBox}
                   lineWidth={2}
                   boxType="square"
                   onCheckColor={COLOR.WHITE}
@@ -43,7 +42,7 @@ const Variations = ({item}) => {
             <View style={styles.variationsWrapper}>
               <View style={styles.checkBoxWrapper}>
                 <CheckBox
-                  style={{transform: [{scaleX: 0.8}, {scaleY: 0.8}]}}
+                  style={styles.checkBox}
                   lineWidth={2}
                   boxType="square"
                   onCheckColor={COLOR.WHITE}
@@ -67,7 +66,7 @@ const Variations = ({item}) => {
     <>
       <View style={styles.container}>
         <FlatList data={item.variations} renderItem={renderItem} />
-        <FoodCart />
+        <FoodCart item_price={item.price} />
       </View>
     </>
   );
@@ -90,6 +89,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingVertical: verticalScale(6),
+  },
+  checkBox: {
+    transform: Platform.OS === 'android' ? [{scaleX: 1}, {scaleY: 1}] : [{scaleX: 0.8}, {scaleY: 0.8}],
   },
   checkBoxWrapper: {
     flex: 1,
