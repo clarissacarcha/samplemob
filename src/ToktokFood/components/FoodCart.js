@@ -14,7 +14,7 @@ const FoodCart = () => {
 
   const onRestaurantNavigate = () => {
     Toast.show('Added to cart', Toast.SHORT);
-    navigation.navigate('ToktokFoodOrderDetails');
+    navigation.navigate('ToktokFoodDriver');
   };
 
   return (
