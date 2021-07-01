@@ -21,6 +21,7 @@ import DrawerContent from '../Drawer';
 import Landing from '../../screens/Landing';
 
 /*---------- CONSUMER SCREENS ----------*/
+import ToktokScreens from './toktok';
 import ToktokFoodScreens from './toktokfood';
 
 import ToktokMallScreens from './toktokmall';
@@ -372,6 +373,7 @@ const ConsumerLandingStack = () => (
 
 const AuthenticatedStack = () => (
   <Authenticated.Navigator>
+    {ToktokScreens({Navigator: Authenticated})}
     {ToktokFoodScreens({Navigator: Authenticated})}
     {ToktokMallScreens({Navigator: Authenticated})}
 
@@ -477,10 +479,10 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="ToktokWalletGcashHomePage" component={ToktokWalletGcashHomePage} />
     <Authenticated.Screen name="ToktokWalletGcashLinkAccount" component={ToktokWalletGcashLinkAccount} />
     <Authenticated.Screen name="ToktokWalletLinkAccount" component={ToktokWalletLinkAccount} />
-    <Authenticated.Screen name="ToktokWalletTransactionLimit" component={ToktokWalletTransactionLimit}/>
+    <Authenticated.Screen name="ToktokWalletTransactionLimit" component={ToktokWalletTransactionLimit} />
     <Authenticated.Screen name="ToktokWalletHelpCentrePaymentChart" component={ToktokWalletHelpCentrePaymentChart} />
-    <Authenticated.Screen name="ToktokWalletBDOHomePage" component={ToktokWalletBDOHomePage}/>
-    <Authenticated.Screen name="ToktokWalletCashOutViewAccount" component={ToktokWalletCashOutViewAccount}/>
+    <Authenticated.Screen name="ToktokWalletBDOHomePage" component={ToktokWalletBDOHomePage} />
+    <Authenticated.Screen name="ToktokWalletCashOutViewAccount" component={ToktokWalletCashOutViewAccount} />
 
     <Authenticated.Screen
       name="ToktokWalletHelpCentreSecurityPrivacy"
@@ -507,8 +509,8 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="ToktokWalletCashOutOtherBanks" component={ToktokWalletCashOutOtherBanks} />
     <Authenticated.Screen name="ToktokWalletCashOutSaveAccount" component={ToktokWalletCashOutSaveAccount} />
     <Authenticated.Screen name="ToktokWalletCashOutUpdateAccount" component={ToktokWalletCashOutUpdateAccount} />
-    <Authenticated.Screen name="ToktokWalletBDORegistration" component={ToktokWalletBDORegistration}/>
-    <Authenticated.Screen name="ToktokWalletBDOLinkAccount" component={ToktokWalletBDOLinkAccount}/>
+    <Authenticated.Screen name="ToktokWalletBDORegistration" component={ToktokWalletBDORegistration} />
+    <Authenticated.Screen name="ToktokWalletBDOLinkAccount" component={ToktokWalletBDOLinkAccount} />
 
     {/*---------- DRIVER SCREENS ----------*/}
     <Authenticated.Screen name="DriverHomeBottomTab" component={DriverHomeBottomTab} options={{headerShown: false}} />

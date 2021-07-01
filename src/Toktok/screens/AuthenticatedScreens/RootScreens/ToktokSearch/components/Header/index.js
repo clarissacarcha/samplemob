@@ -1,35 +1,41 @@
-import React from 'react';
+import React, {useRef, useEffect} from 'react';
 import {View, Text, StyleSheet, TextInput, StatusBar, ImageBackground} from 'react-native';
 import {useSelector} from 'react-redux';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import {Shadow} from '../../../../../../revamp';
-import {ThrottledHighlight} from '../../../../../../components_section/';
 
-import {useNavigation} from '@react-navigation/core';
+import {FONT, FONT_SIZE, COLOR, SIZE} from '../../../../../../../res/variables';
 
-import {FONT, FONT_SIZE, COLOR, SIZE} from '../../../../../../res/variables';
-
-import HeaderImage from '../../../../../../assets/toktok/images/HeaderBackground.png';
+import HeaderImage from 'src/assets/toktok/images/HeaderBackground.png';
 
 const SearchInput = () => {
-  const navigation = useNavigation();
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    setTimeout(() => {
+      inputRef.current.focus();
+    }, 0);
+  }, []);
 
   return (
-    <ThrottledHighlight
-      underlayColor={COLOR.WHITE_UNDERLAY}
-      onPress={() => {
-        navigation.push('ToktokSearch');
-      }}
-      style={{bottom: -10, marginHorizontal: SIZE.MARGIN, borderRadius: 5, borderWidth: 1, borderColor: COLOR.LIGHT}}>
-      <View style={{...styles.inputBox, borderRadius: 5}}>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <View style={{flex: 1}}>
-            <Text style={{color: COLOR.MEDIUM}}>Search in toktok</Text>
-          </View>
-          <FeatherIcon name="search" size={25} color={COLOR.DARK} />
-        </View>
+    <View
+      style={{
+        ...styles.inputBox,
+        borderRadius: 5,
+        bottom: -10,
+        marginHorizontal: SIZE.MARGIN,
+        borderWidth: 1,
+        borderColor: COLOR.LIGHT,
+      }}>
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <TextInput
+          style={{flex: 1}}
+          placeholder="Search in toktok"
+          placeholderTextColor={COLOR.MEDIUM}
+          ref={inputRef}
+        />
+        <FeatherIcon name="search" size={25} color={COLOR.DARK} />
       </View>
-    </ThrottledHighlight>
+    </View>
   );
 };
 

@@ -18,6 +18,10 @@ module.exports = {
             rootPathPrefix: 'res/',
           },
           {
+            rootPathSuffix: './src/Toktok/',
+            rootPathPrefix: 'toktok/',
+          },
+          {
             rootPathSuffix: './src/ToktokFood/',
             rootPathPrefix: 'toktokfood/',
           },
