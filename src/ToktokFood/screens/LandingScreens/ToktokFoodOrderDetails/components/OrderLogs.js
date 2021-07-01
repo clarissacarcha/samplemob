@@ -1,0 +1,106 @@
+import React from 'react';
+import {Image, StyleSheet, Text, View} from 'react-native';
+import FIcon5 from 'react-native-vector-icons/FontAwesome5';
+import DashedLine from 'react-native-dashed-line';
+
+// Fonts/Colors
+import {COLORS} from 'res/constants';
+import {FONT_SIZE} from 'res/variables';
+
+// Images
+import {delivered, pickedUp} from 'toktokfood/assets/images';
+
+// Utils
+import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
+
+const OrderFee = () => {
+  const renderLogInfo = (title, date) => (
+    <View style={styles.logContainer}>
+      <View style={styles.logsTitle}>
+        <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
+        <Text style={styles.logText}>{title}</Text>
+      </View>
+      {date && <Text style={styles.dateText}>{date}</Text>}
+    </View>
+  );
+
+  const renderDash = () => (
+    <View style={styles.dashedLine}>
+      <DashedLine axis="vertical" dashGap={1} dashColor="#DDDDDD" dashLength={5} />
+    </View>
+  );
+
+  const renderDashImage = (dash = true, image) => (
+    <View style={styles.dashedImage}>
+      {dash && <DashedLine axis="vertical" dashGap={1} dashColor="#DDDDDD" dashLength={5} />}
+      <Image style={styles.pickedUp} source={image} resizeMode="cover" />
+    </View>
+  );
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.deliverLogs}>Delivery Logs</Text>
+
+      {renderLogInfo('Order Placed', 'Feb 16 2021 - 1:26 pm')}
+      {renderDash()}
+      {renderLogInfo('On the way to restaurant', 'Feb 16 2021 - 1:26 pm')}
+      {renderDash()}
+      {renderLogInfo('Food Picked Up')}
+      {renderDashImage(true, pickedUp)}
+      {renderLogInfo('On the Way to Recipient')}
+      {renderDash()}
+      {renderLogInfo('Item Delivered')}
+      {renderDashImage(false, delivered)}
+    </View>
+  );
+};
+
+export default OrderFee;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+    marginTop: verticalScale(8),
+    paddingHorizontal: moderateScale(20),
+    paddingVertical: moderateScale(10),
+  },
+  dateText: {
+    fontWeight: '300',
+    fontSize: FONT_SIZE.S,
+  },
+  deliverLogs: {
+    fontWeight: '500',
+    fontSize: FONT_SIZE.M,
+    marginBottom: verticalScale(10),
+  },
+  dashedLine: {
+    height: verticalScale(10),
+    paddingLeft: moderateScale(6),
+    flexDirection: 'row',
+  },
+  dashedImage: {
+    height: verticalScale(145),
+    flex: 1,
+    paddingLeft: moderateScale(6),
+    flexDirection: 'row',
+  },
+  logContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  logText: {
+    fontWeight: '300',
+    fontSize: FONT_SIZE.M,
+    marginLeft: moderateScale(10),
+  },
+  logsTitle: {
+    flexDirection: 'row',
+  },
+  pickedUp: {
+    flex: 1,
+    height: verticalScale(140),
+    marginTop: verticalScale(5),
+    marginLeft: moderateScale(10),
+  },
+});
