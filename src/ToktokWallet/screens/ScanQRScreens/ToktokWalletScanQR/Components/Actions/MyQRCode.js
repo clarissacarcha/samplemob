@@ -1,27 +1,23 @@
-import React , {useRef, useState , useEffect} from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,Platform,Dimensions,Alert,StatusBar,Image} from 'react-native'
-import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions'
+import React , {useRef} from 'react'
+import {Modal,View,Text,StyleSheet,TouchableOpacity,Image} from 'react-native'
+import { YellowButton } from 'src/revamp'
+import QRCode from 'react-native-qrcode-svg'
+import {useSelector} from 'react-redux'
 import FIcon from 'react-native-vector-icons/Feather'
+import { Separator } from 'toktokwallet/components'
 import ViewShot , {captureScreen,releaseCapture} from "react-native-view-shot";
+import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions'
 import RNFS from 'react-native-fs'
 import CameraRoll from "@react-native-community/cameraroll";
-import { BlackButton, YellowButton } from 'src/revamp';
 import Toast from 'react-native-simple-toast';
 import moment from 'moment'
-import {Separator} from './Separator';
 import CONSTANTS from 'common/res/constants'
 
-const { COLOR, FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
+const { COLOR , FONT_FAMILY: FONT , FONT_SIZE} = CONSTANTS
 
+const MyQRCode = ({visible,setVisible,tokwaAccount})=> {
 
-//const path = RNFS.PicturesDirectoryPath
-// const path = RNFS.DocumentDirectoryPath
-// const path = RNFS.MainBundlePath
-const path = Platform.OS === "ios" ? RNFS.LibraryDirectoryPath : RNFS.DownloadDirectoryPath
-
-const {width,height} = Dimensions.get("window")
-
-export const Receipt = ({children, format, refNo ,refDate, onPress})=> {
+    const session = useSelector(state=>state.session)
 
     const viewshotRef = useRef()
 
@@ -103,80 +99,70 @@ export const Receipt = ({children, format, refNo ,refDate, onPress})=> {
         }
     })
 
-
-
     const DownloadReceipt = async ()=> {
 
         const result = await checkAndRequest();
         
         const pathCache = RNFS.CachesDirectoryPath
-        console.log(pathCache)
-        
-    //    const albums = await CameraRoll.getAlbums({assetType: "Photos"})
-    //    console.log(albums)
        
         viewshotRef.current.capture().then(async (uri ) => {
             const timestamp = +moment()
-            const filename = `${timestamp.toString()}_${refNo}.${format ? format : "jpg"}`
+            const filename = `${timestamp.toString()}_${tokwaAccount.mobileNumber}.jpg`
     
             RNFS.moveFile(uri, pathCache + `/${filename}`)
             const newFileUri = `${pathCache}/${filename}`
     
             await CameraRoll.save(newFileUri, { type: "photo", album: "toktok" })
-            // // RNFS.copyFile(uri, path + `/${filename}`)
-            // // RNFS.moveFile(uri, path + `/${filename}`)
-            Toast.show(`Receipt ${filename} has been downloaded.` , Toast.LONG)
+            Toast.show(`QRCode ${filename} has been downloaded.` , Toast.LONG)
         });
 
     }
 
+
     return (
-        <>
-        <StatusBar barStyle="dark-content" backgroundColor="white" />
-        <View style={styles.container}>
-            <ViewShot 
-                style={styles.viewShot} 
-                ref={viewshotRef}
-                options={{ format: format ? format : "jpg", quality: 0.9,width: width,height: height * 0.6 ,result: 'tmpfile' }}
-            >
-               
-               {/* <View style={styles.checkIcon}>
-                    <FIcon5 name="check" color="white" size={60}/> 
-               </View> */}
+        <Modal
+            visible={visible}
+            transparent={true}
+            onRequestClose={()=>setVisible(false)}
+            style={styles.container}
+            animationType="fade"
+        >
+            <View style={styles.content}>
+                        <View style={styles.qrContainer}>
+                           
+                            <ViewShot 
+                                ref={viewshotRef} 
+                                style={{flex: 1,justifyContent:"center",alignItems:"center",backgroundColor:"white",borderRadius: 5,}}
+                                options={{ format: "jpg", quality: 0.9,width: 400,height: 400 ,result: 'tmpfile' }}
+                            >
+                                     <Image resizeMode="contain" style={{height: 23,width: 130,marginBottom: 15}} source={require('../../../../../../assets/toktokwallet-assets/toktokwallet.png')}/>
+                                     <QRCode
+                                        value={tokwaAccount.mobileNumber} //Give value when there's no session as it will throw an error if value is empty.
+                                        // size={width * 0.7}
+                                        size={250}
+                                        color="black"
+                                        backgroundColor="transparent"
+                                        // onPress={() => alert('Pressed')}
+                                    />
+                                    <View style={{marginTop: 10,}}>
+                                     <Text style={{fontFamily: FONT.BOLD,fontSize:FONT_SIZE.M}}>{tokwaAccount.mobileNumber}</Text>
+                                    </View>
+                            </ViewShot>
+                            <Separator/>
+                            <View style={{height: 50,alignItems:"center",marginTop: 10,}}>
+                                <TouchableOpacity onPress={DownloadReceipt} style={styles.downloadBtn}>
+                                    <FIcon name="download" size={20} color={"#FF8A48"}/>
+                                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginLeft: 5,color:"#FF8A48"}}>Download</Text>
+                                </TouchableOpacity>
+                            </View>
 
-               <Image source={require('toktokwallet/assets/images/success.png')}/>
-               
-               <Text style={styles.titleText}>
-                    Transaction Completed
-               </Text>
-
-               <Text style={styles.refNo}>
-                    Ref No. {refNo}
-               </Text>
-
-               <Text style={styles.refDate}>
-                    {moment(refDate).tz('Asia/Manila').format('MMM DD YYYY h:mm a')}
-               </Text>
-
-              
-                {children}
-
-
-            </ViewShot>
-            <Separator />
-            <View style={{flex: 1,}}>
-                <View style={{alignItems:"center"}}>
-                    <TouchableOpacity onPress={DownloadReceipt} style={styles.downloadBtn}>
-                        <FIcon name="download" size={20} color={"#FF8A48"}/>
-                        <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginLeft: 5,color:"#FF8A48"}}>Download</Text>
-                    </TouchableOpacity>
-                </View>
+                            <View style={{height: 80,padding: 10,justifyContent:"flex-end"}}>
+                                <YellowButton label="Close" onPress={()=>setVisible(false)}/>
+                            </View>
+                        </View>
             </View>
-            <View style={styles.actionBtn}>
-                    <YellowButton label="Back to Home" onPress={onPress} />
-            </View>
-        </View>
-        </>
+
+        </Modal>
     )
 }
 
@@ -184,44 +170,23 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
-    viewShot: {
-        paddingBottom: 20,
-        paddingHorizontal: 16,
-        marginTop: 50,
+    content: {
+        backgroundColor:"rgba(0,0,0,0.5)",
+        flex: 1,
+        justifyContent:'center',
+        alignItems:'center'
+    },
+    qrContainer: {
+        // width: width * 0.9,
+        // height: height * 0.6,
+        height: 500,
+        width: 320,
         backgroundColor:"white",
-        alignItems:"center"
-    },
-    checkIcon: {
-        height: 70,
-        width: 70,
-        backgroundColor: COLOR.YELLOW,
-        borderRadius: 100,
-        justifyContent:"center",
-        alignItems:"center"
-    },  
-    titleText: {
-        marginTop: 17,
-        fontSize: FONT_SIZE.XL,
-        fontFamily: FONT.BOLD,
-    },
-    refNo: {
-        marginTop: 11,
-        fontSize: FONT_SIZE.M,
-        fontFamily: FONT.REGULAR,
-    },
-    refDate: {
-        fontSize: FONT_SIZE.M,
-        fontFamily: FONT.REGULAR,
-        color:"#CCCCCC",
+        borderRadius: 5,
     },
     downloadBtn: {
-       flexDirection:'row',
-       marginTop: 15,
-    },
-    actionBtn: {
-        height: 70,
-        padding: 16,
-        justifyContent:"flex-end",
-        marginBottom: Platform.OS == "ios" ? 25 : 0
-    }
+        flexDirection:'row',
+     },
 })
+
+export default MyQRCode

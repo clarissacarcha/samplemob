@@ -5,5 +5,6 @@ export * from "./CashOutGCashScreens";
 export * from "./CashOutOtherBanksScreens";
 export * from "./KYCScreens";
 export * from "./LandingScreens";
+export * from "./ScanQRScreens";
 export * from "./SendMoneyScreens";
 export * from "./SettingScreens";

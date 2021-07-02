@@ -434,6 +434,10 @@ const AuthenticatedStack = () => (
     {/*----------toktokwallet Screens----------*/}
     {/* <Authenticated.Screen name="ToktokWalletHomePage" component={ToktokWalletHomePage} /> */}
     {/* <Authenticated.Screen name="ToktokWalletTransactions" component={ToktokWalletTransactions} /> */}
+    {/* <Authenticated.Screen name="ToktokWalletSendMoney" component={ToktokWalletSendMoney} /> */}
+    {/* <Authenticated.Screen name="ToktokWalletContacts" component={ToktokWalletContacts} /> */}
+    {/* <Authenticated.Screen name="ToktokWalletScanQR" component={ToktokWalletScanQR} /> */}
+    {/* <Authenticated.Screen name="ToktokWalletScanQRConfirm" component={ToktokWalletScanQRConfirm} /> */}
     
     <Authenticated.Screen name="ToktokWalletRestricted" component={ToktokWalletRestricted} />
 
@@ -450,10 +454,8 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="ToktokWalletPayPandaWebView" component={ToktokWalletPayPandaWebView} />
     <Authenticated.Screen name="ToktokWalletCashOut" component={ToktokWalletCashOut} />
     <Authenticated.Screen name="ToktokWalletGcashCashOut" component={ToktokWalletGcashCashOut} />
-    <Authenticated.Screen name="ToktokWalletSendMoney" component={ToktokWalletSendMoney} />
-    <Authenticated.Screen name="ToktokWalletContacts" component={ToktokWalletContacts} />
-    <Authenticated.Screen name="ToktokWalletScanQR" component={ToktokWalletScanQR} />
-    <Authenticated.Screen name="ToktokWalletScanQRConfirm" component={ToktokWalletScanQRConfirm} />
+    
+  
     <Authenticated.Screen name="ToktokWalletSettings" component={ToktokWalletSettings} />
     <Authenticated.Screen name="ToktokWalletCashInLogs" component={ToktokWalletCashInLogs} />
     <Authenticated.Screen name="ToktokWalletCashOutLogs" component={ToktokWalletCashOutLogs} />
