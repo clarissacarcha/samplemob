@@ -90,6 +90,10 @@ import com.android.build.OutputFile
 
 project.ext.react = [
     enableHermes: false,  // clean and rebuild if changing
+    bundleInDebug: true,
+    resourcesDirDebug: "build/intermediates/res/merged/debug",
+    bundleInRelease: true,
+    resourcesDirRelease: "build/intermediates/res/merged/release",
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
