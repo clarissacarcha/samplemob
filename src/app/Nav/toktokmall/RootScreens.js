@@ -13,8 +13,12 @@ import {
   //Product Details
   ToktokMallProductDetails,
 
+  ToktokMallProductRatings,
+
   //Home Search
   ToktokMallSearch,
+
+  ToktokMallRateProduct,
 
   //Vouchers Claim
   ToktokMallVouchersClaim,
@@ -25,11 +29,9 @@ export default ({Navigator}) => (
     <Navigator.Screen name="ToktokMallAddressesForm" component={ToktokMallAddressesForm} />
     <Navigator.Screen name="ToktokMallAddressesMenu" component={ToktokMallAddressesMenu} />
     <Navigator.Screen name="ToktokMallCheckout" component={ToktokMallCheckout} />
-    <Navigator.Screen
-      name="ToktokMallProductDetails"
-      component={ToktokMallProductDetails}
-      options={{headerShown: false}}
-    />
+    <Navigator.Screen name="ToktokMallProductDetails" component={ToktokMallProductDetails} options={{headerShown: false}}/>
+    <Navigator.Screen name="ToktokMallProductRatings" component={ToktokMallProductRatings} />
+    <Navigator.Screen name="ToktokMallRateProduct" component={ToktokMallRateProduct} />
     <Navigator.Screen name="ToktokMallSearch" component={ToktokMallSearch} options={{headerShown: false}} />
     <Navigator.Screen name="ToktokMallStore" component={ToktokMallStore} options={{headerShown: false}} />
     <Navigator.Screen name="ToktokMallVouchersClaim" component={ToktokMallVouchersClaim} />
