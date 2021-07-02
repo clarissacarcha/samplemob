@@ -1,16 +1,38 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {View, Text, ImageBackground, Image, TouchableOpacity} from 'react-native';
+import {View, Text, ImageBackground, Image, TouchableOpacity, FlatList} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import CustomIcon from '../Icons';
 
-const Item = ({data}) => {
+const testdata = [{
+    category: "Accessories",
+    subCategories: ["Watch"],
+    imageSource: require("../../assets/images/Watch.png")
+}, {
+    category: "Electronics",
+    subCategories: ["iPhone X", "Huawei y7Pro", "Digital TV", "Elecric Fan"],
+    image: require("../../assets/images/Electronics.png")
+}, {
+    category: "Furnitures",
+    subCategories: ["Cabinet", "Chairs", "Drawer", "Tables"],
+    image: require("../../assets/images/Furniture.png")
+}, {
+    category: "Men's Fashion",
+    subCategories: ["Jacket", "Americana", "T Shirt", "Shorts"],
+    image: require("../../assets/images/Men's-Fashion.png")
+}, {
+    category: "Pet Care",
+    subCategories: ["Dog Food", "Cat Food", "Dog Toys"],
+    image: require("../../assets/images/Pet-Care.png")
+}]
+
+const Item = ({data, onPress}) => {
 
     const navigation = useNavigation()
 
     return (
         <>
             <TouchableOpacity onPress={() => {
-                navigation.navigate("ToktokMallCategoriesList", {category: data})
+                onPress(data)
             }} style={{flexDirection: 'row', paddingVertical: 20, paddingHorizontal: 15}}>
                 <View style={{flex: 1}}></View>
                 <View style={{flex: 8, justifyContent: 'center', paddingHorizontal: 8}}>
@@ -23,10 +45,10 @@ const Item = ({data}) => {
     )
 }
 
-export const Dropdown = ({data}) => {
+const DropdownItem = ({item, onItemPress}) => {
 
-    const [category, setCategory] = useState( data.category)
-    const [content, setContent] = useState(data.subCategories) //["Cabinet", "Chairs", "Drawer"]
+    const [category, setCategory] = useState( item.category)
+    const [content, setContent] = useState(item.subCategories) //["Cabinet", "Chairs", "Drawer"]
     const [toggle, setToggle] = useState(false)
 
     return (
@@ -34,7 +56,7 @@ export const Dropdown = ({data}) => {
             <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
                 <View style={{flex: 2, borderRadius: 5, backgroundColor: 'transparent', justifyContent: 'center', alignItems: 'center'}}>
                     <Image 
-                        source={data?.image || require("../../assets/images/Watch.png")} 
+                        source={item?.image || require("../../assets/images/Watch.png")} 
                         style={{width: 50, height: 50, resizeMode: 'cover', borderRadius: 5}} />
                 </View>
                 <View style={{flex: 8, justifyContent: 'center', paddingHorizontal: 8}}>
@@ -47,8 +69,29 @@ export const Dropdown = ({data}) => {
             <View style={{ height: 2, backgroundColor: '#F7F7FA'}} />
 
             {/* DROPDOWN CONTENT */}
-            {toggle && content.map((item, i) => <Item data={item} />)}
+            {toggle && content.map((item, i) => <Item data={item} onPress={(data) => onItemPress(data)} />)}
 
+        </>
+    )
+}
+
+export const Dropdown = ({data, onSelect}) => {
+
+    const onItemPress = (data) => {
+        if(onSelect){
+            onSelect(data)
+        }
+        else{
+            navigation.navigate("ToktokMallCategoriesList", {category: data})
+        }
+    }
+
+    return (
+        <>
+		  <FlatList
+            data={testdata}
+            renderItem={({item}) => <DropdownItem item={item} onItemPress={onItemPress} />}
+          />
         </>
     )
 }
