@@ -1,28 +1,46 @@
 import React, {useState, useEffect, useRef} from 'react';
-import { StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity} from 'react-native';
+import { StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList} from 'react-native';
 import { COLOR, FONT } from '../../../../../../res/variables';
 import {LandingHeader, AdsCarousel} from '../../../../../Components';
 import { ScrollView } from 'react-native-gesture-handler';
 import CustomIcon from '../../../../../Components/Icons';
+import {coppermask, chair, bottle} from '../../../../../assets';
+
 
 const testdata = [{
-  image: require("../../../../../assets/images/coppermask.png"),
+  // image: require("../../../../../assets/images/coppermask.png"),
   // image: {uri: ""},
+  image: coppermask,
   price: 380,
   discountedPrice: 190
 }, {
-  image: require("../../../../../assets/images/chair.png"),
+  // image: require("../../../../../assets/images/chair.png"),
   // image: {uri: ""},
+  image: chair,
   price: 280,
   discountedPrice: 140
 }, {
-  image: require("../../../../../assets/images/bottle.png"),
+  // image: require("../../../../../assets/images/bottle.png"),
   // image: {uri: ""},
+  image: bottle,
   price: 2280,
   discountedPrice: 1400
 }, {
-  image: require("../../../../../assets/images/chair.png"),
+  // image: require("../../../../../assets/images/chair.png"),
   // image: {uri: ""},
+  image: chair,
+  price: 892,
+  discountedPrice: 568
+}, {
+  // image: require("../../../../../assets/images/chair.png"),
+  // image: {uri: ""},
+  image: chair,
+  price: 892,
+  discountedPrice: 568
+}, {
+  // image: require("../../../../../assets/images/chair.png"),
+  // image: {uri: ""},
+  image: bottle,
   price: 892,
   discountedPrice: 568
 }]
@@ -42,16 +60,24 @@ export const Offers = ({data}) => {
                 <CustomIcon.EIcon name="chevron-right" color="#F6841F" size={16} />
               </View>
             </View>
-            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{borderRadius: 5, borderColor: '#F6841F', borderWidth: 1, paddingTop: 12, paddingHorizontal: 4}}>
-              <View style={{flexDirection: 'row'}}>
-                {testdata && testdata.map((item, i) => 
-                  <View style={{flex: 1, paddingBottom: 12, paddingHorizontal: 0, alignItems: 'center', justifyContent: 'center'}}>
-                    <Image source={item.image || require("../../../../../../assets/images/BookingSuccess.png")} style={styles.image} />
-                    <Text style={styles.label}>&#8369;{parseFloat(item.discountedPrice).toFixed(2)}</Text>
-                    <Text style={styles.labelLine}>&#8369;{parseFloat(item.price).toFixed(2)}</Text>                
-                  </View>)}            
-              </View>
-            </ScrollView>
+
+            <FlatList
+              horizontal={true} 
+              showsHorizontalScrollIndicator={false}
+              data={testdata}
+              renderItem={({item}) => {
+                return (
+                  <>
+                    <View style={{flex: 1, paddingBottom: 12, paddingHorizontal: 4, alignItems: 'center', justifyContent: 'center'}}>
+                      <Image source={item.image || require("../../../../../../assets/images/BookingSuccess.png")} style={styles.image} />
+                      <Text style={styles.label}>&#8369;{parseFloat(item.discountedPrice).toFixed(2)}</Text>
+                      <Text style={styles.labelLine}>&#8369;{parseFloat(item.price).toFixed(2)}</Text>                
+                    </View>
+                  </>
+                )
+              }}
+            />
+            
           </View>
           {/* <View style={{flex: 0.5, height: 8, backgroundColor: '#F7F7FA'}} /> */}
       </>

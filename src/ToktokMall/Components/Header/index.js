@@ -5,3 +5,4 @@ export * from './HeaderRight';
 export * from './HeaderTab';
 export * from './LandingHeader';
 export * from './LandingSubHeader';
+export * from './StickyHomeHeader';

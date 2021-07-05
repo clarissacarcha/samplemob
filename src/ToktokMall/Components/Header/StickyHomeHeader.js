@@ -1,9 +1,9 @@
 import React from 'react'
 import { Text, View, Animated, StyleSheet } from 'react-native'
 import StickyParallaxHeader from 'react-native-sticky-parallax-header'
-import { LandingSubHeader, LandingHeader } from '../../../Components'
+import { LandingSubHeader, LandingHeader } from '../../Components'
 
-export const ToktokMallRateProduct = ({navigation}) => {
+export const StickyHomeHeader = ({children}) => {
 
   const [scroll, setScroll] = React.useState(new Animated.Value(0))
   const [_value, set_Value] = React.useState(0)
@@ -67,6 +67,7 @@ export const ToktokMallRateProduct = ({navigation}) => {
         onEndReached={() => {}}
         scrollEvent={Animated.event([{ nativeEvent: { contentOffset: { y: scroll } } }])}        
       >
+          {children}
       </StickyParallaxHeader>
     </>
   )

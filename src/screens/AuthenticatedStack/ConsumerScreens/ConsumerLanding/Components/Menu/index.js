@@ -73,6 +73,7 @@ export const Menu = ({setUserLocation}) => {
         label={'toktokmall'}
         icon={ToktokMallIcon}
         onPress={() => {
+          // navigation.push('ToktokMallRateProduct');
           navigation.push('ToktokMallLanding');
         }}
       />

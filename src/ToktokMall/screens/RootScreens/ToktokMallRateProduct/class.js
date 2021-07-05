@@ -1,75 +1,73 @@
 import React from 'react'
 import { Text, View, Animated, StyleSheet } from 'react-native'
 import StickyParallaxHeader from 'react-native-sticky-parallax-header'
-import { LandingSubHeader, LandingHeader } from '../../../Components'
 
-export const ToktokMallRateProduct = ({navigation}) => {
-
-  const [scroll, setScroll] = React.useState(new Animated.Value(0))
-  const [_value, set_Value] = React.useState(0)
-
-  React.useEffect(() => {
-    scroll.addListener(({value}) => set_Value(value))
-  }, [])
-
-  const renderContent = () => {
-    return (
-      <>
-        <View style={styles.content}>
-          <Text>{label}</Text>
-        </View>
-      </>
-    )
+export class ToktokMallRateProduct extends React.Component {
+  state = {
+    scroll: new Animated.Value(0)
   }
-  
-  const renderForeground = () => {
-    
+
+  componentDidMount() {
+    const { scroll } = this.state
+    scroll.addListener(({ value }) => (this._value = value))
+  }
+
+  renderContent = (label) => (
+    <View style={styles.content}>
+      <Text>{label}</Text>
+    </View>
+  )
+
+  renderForeground = () => {
+    const { scroll } = this.state
     const titleOpacity = scroll.interpolate({
       inputRange: [0, 106, 154],
       outputRange: [1, 1, 0],
       extrapolate: 'clamp'
     })
-  
+
     return (
-      <View style={{backgroundColor: 'transparent'}}>
+      <View style={styles.foreground}>
         <Animated.View style={{ opacity: titleOpacity }}>
-          <LandingHeader />
-        </Animated.View>
-      </View>
-    )
-  }
-  
-  const renderHeader = () => {
-  
-    const opacity = scroll.interpolate({
-      inputRange: [0, 120, 170],
-      outputRange: [0, 0, 1],
-      extrapolate: 'clamp'
-    })
-  
-    return (
-      <View style={{backgroundColor: 'transparent'}}>
-        <Animated.View style={{ opacity }}>
-          <LandingSubHeader />
+          <Text style={styles.message}>STICKY HEADER</Text>
         </Animated.View>
       </View>
     )
   }
 
-  return (
-    <>
+  renderHeader = () => {
+    const { scroll } = this.state
+    const opacity = scroll.interpolate({
+      inputRange: [0, 160, 210],
+      outputRange: [0, 0, 1],
+      extrapolate: 'clamp'
+    })
+
+    return (
+      <View style={styles.headerWrapper}>
+        <Animated.View style={{ opacity }}>
+          <Text style={styles.headerTitle}>STICKY HEADER</Text>
+        </Animated.View>
+      </View>
+    )
+  }
+
+  render() {
+    const { scroll } = this.state
+
+    return (
       <StickyParallaxHeader
-        foreground={renderForeground()}
-        header={renderHeader()}
+        foreground={this.renderForeground()}
+        header={this.renderHeader()}
         parallaxHeight={200}
-        headerHeight={0}
+        headerHeight={90}
         headerSize={() => {}}
         onEndReached={() => {}}
         scrollEvent={Animated.event([{ nativeEvent: { contentOffset: { y: scroll } } }])}        
       >
       </StickyParallaxHeader>
-    </>
-  )
+    )
+  }
 }
 
 const styles = StyleSheet.create({
