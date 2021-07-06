@@ -11,18 +11,18 @@ import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
 
 import {useSelector, useDispatch} from 'react-redux';
 
-const FoodCart = ({item_price}) => {
+const FoodCart = ({item_price = 0}) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
   const [count, setCount] = useState(1);
   const [total, setTotal] = useState(0);
 
-  useSelector((state) => console.log(state.toktokFood.cart.total));
+  // useSelector((state) => console.log(state.toktokFood.cart.total));
 
   const onRestaurantNavigate = () => {
     Toast.show('Added to cart', Toast.SHORT);
-    navigation.navigate('ToktokFoodDriver');
+    navigation.navigate('ToktokFoodRestaurantOverview');
   };
 
   const updateCartTotal = (type = 'ADD') => {

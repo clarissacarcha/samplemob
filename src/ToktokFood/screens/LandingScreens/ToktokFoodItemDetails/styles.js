@@ -14,7 +14,7 @@ export default styles = StyleSheet.create({
     paddingVertical: verticalScale(3),
   },
   foodName: {
-    fontSize: 20,
+    fontSize: FONT_SIZE.XL,
     color: COLOR.BLACK,
     fontFamily: FONT.BOLD,
   },

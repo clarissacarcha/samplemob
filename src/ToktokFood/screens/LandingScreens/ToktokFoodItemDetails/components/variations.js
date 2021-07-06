@@ -1,20 +1,20 @@
 import React from 'react';
 import CheckBox from '@react-native-community/checkbox';
-import {View, Text, StyleSheet, FlatList} from 'react-native';
+import {View, Text, StyleSheet, FlatList, TextInput} from 'react-native';
 
-import FoodCart from 'toktokfood/components/FoodCart';
+import FoodCart from './FoodCart';
 
 import {FONT, FONT_SIZE, COLOR} from 'res/variables';
 
 // Utils
-import {scale, verticalScale} from 'toktokfood/helper/scale';
+import {scale, verticalScale, moderateScale} from 'toktokfood/helper/scale';
 
 const Variations = ({item}) => {
   const renderItem = (variations) => {
-    const {sizes, add_ons} = variations.item;
+    const {id, sizes, add_ons} = variations.item;
     return (
       <>
-        <View style={styles.variations}>
+        <View key={id} style={styles.variations}>
           <Text style={styles.variationTitle}>Choose your size (pick 1)</Text>
           {sizes.map((size) => (
             <View style={styles.variationsWrapper}>
@@ -36,7 +36,7 @@ const Variations = ({item}) => {
             </View>
           ))}
         </View>
-        <View style={styles.variations}>
+        <View key={id} style={styles.variations}>
           <Text style={styles.variationTitle}>Add ons (pick 1)</Text>
           {add_ons.map((ons) => (
             <View style={styles.variationsWrapper}>
@@ -57,6 +57,18 @@ const Variations = ({item}) => {
               <Text style={styles.variationPrice}>+{ons.price}</Text>
             </View>
           ))}
+        </View>
+        <View key={id} style={styles.variations}>
+          <Text style={styles.variationTitle}>Special Instructions (Optional)</Text>
+          <View>
+            <TextInput
+              multiline={true}
+              numberOfLines={4}
+              style={styles.input}
+              placeholder="Type your instructions here..."
+              placeholderTextColor={COLOR.MEDIUM}
+            />
+          </View>
         </View>
       </>
     );
@@ -115,6 +127,19 @@ const styles = StyleSheet.create({
     color: COLOR.BLACK,
     fontFamily: FONT.REGULAR,
     fontSize: FONT_SIZE.L,
+  },
+  input: {
+    height: moderateScale(90),
+    borderWidth: 1,
+    borderRadius: 10,
+    color: COLOR.BLACK,
+    fontSize: FONT_SIZE.L,
+    fontFamily: FONT.REGULAR,
+    borderColor: COLOR.MEDIUM,
+    textAlignVertical: 'top',
+    marginVertical: scale(6),
+    paddingTop: 15,
+    paddingHorizontal: scale(15),
   },
 });
 export default Variations;
