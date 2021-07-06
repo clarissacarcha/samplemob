@@ -1,6 +1,7 @@
 export * from './ToktokFoodOrders';
 export * from './ToktokFoodSettings';
 
+export ToktokFoodCart from './ToktokFoodCart';
 export ToktokFoodHome from './ToktokFoodHome';
 export ToktokFoodSearch from './ToktokFoodSearch';
 export ToktokFoodDriver from './ToktokFoodDriver';

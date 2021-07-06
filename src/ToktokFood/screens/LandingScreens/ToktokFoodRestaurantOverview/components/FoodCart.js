@@ -1,7 +1,5 @@
-import React from 'react';
-import MIcon from 'react-native-vector-icons/MaterialIcons';
+import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import Toast from 'react-native-simple-toast';
 import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 
 // Utils
@@ -13,27 +11,18 @@ const FoodCart = () => {
   const navigation = useNavigation();
 
   const onRestaurantNavigate = () => {
-    Toast.show('Added to cart', Toast.SHORT);
-    navigation.navigate('ToktokFoodDriver');
+    navigation.navigate('ToktokFoodCart');
   };
 
   return (
     <>
       <View style={[styles.container, styles.cartBorder]}>
         <View style={styles.foodItemTotalWrapper}>
-          <View style={styles.countWrapper}>
-            <TouchableOpacity style={[styles.countButtons, {backgroundColor: COLOR.LIGHT}]}>
-              <MIcon name="remove" color={COLOR.BLACK} size={25} />
-            </TouchableOpacity>
-            <Text style={styles.countText}>01</Text>
-            <TouchableOpacity style={[styles.countButtons, {backgroundColor: COLOR.ORANGE}]}>
-              <MIcon name="add" color={COLOR.WHITE} size={20} />
-            </TouchableOpacity>
-          </View>
-          <Text style={styles.total}>Total: 48.00</Text>
+          <Text style={styles.total}>1 item</Text>
+          <Text style={styles.total}>Total: 50</Text>
         </View>
         <TouchableOpacity style={styles.cartButton} onPress={() => onRestaurantNavigate()}>
-          <Text style={styles.buttonText}>Add to Cart</Text>
+          <Text style={styles.buttonText}>View Cart</Text>
         </TouchableOpacity>
       </View>
     </>
@@ -75,7 +64,7 @@ const styles = StyleSheet.create({
     height: scale(50),
     flexDirection: 'row',
     alignItems: 'center',
-    width: getDeviceWidth - 28,
+    width: getDeviceWidth - 50,
     justifyContent: 'space-between',
   },
   total: {
@@ -83,26 +72,6 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.L,
     fontFamily: FONT.BOLD,
   },
-  countWrapper: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  countButtons: {
-    height: 38,
-    width: 38,
-    borderRadius: 50,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  countText: {
-    color: COLOR.BLACK,
-    marginHorizontal: 9,
-    fontSize: FONT_SIZE.L,
-    fontFamily: FONT.BOLD,
-  },
 });
 
-export default FoodCart;
+export default React.memo(FoodCart);

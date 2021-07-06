@@ -3,14 +3,11 @@ import {ImageBackground, StyleSheet, Platform} from 'react-native';
 
 // assets
 import {headerBg} from 'toktokfood/assets/images';
-import {moderateScale, getStatusbarHeight, scale} from 'toktokfood/helper/scale';
+import {moderateScale, getStatusbarHeight} from 'toktokfood/helper/scale';
 
-const HeaderImageBackground = ({children, forDetailPage}) => {
+const HeaderImageBackground = ({children}) => {
   return (
-    <ImageBackground
-      imageStyle={forDetailPage ? styles.detailsImage : styles.image}
-      style={forDetailPage ? styles.detailsContainer : styles.container}
-      source={headerBg}>
+    <ImageBackground imageStyle={styles.image} style={styles.container} source={headerBg}>
       {children}
     </ImageBackground>
   );
@@ -21,18 +18,10 @@ export default HeaderImageBackground;
 const styles = StyleSheet.create({
   image: {
     resizeMode: 'cover',
-    height: Platform.OS === 'android' ? moderateScale(103 + getStatusbarHeight) : moderateScale(115),
+    height: Platform.OS === 'android' ? moderateScale(110 + getStatusbarHeight) : moderateScale(125),
   },
   container: {
     zIndex: 1,
-    height: Platform.OS === 'android' ? moderateScale(103 + getStatusbarHeight) : moderateScale(115),
-  },
-  detailsImage: {
-    resizeMode: 'cover',
-    height: Platform.OS === 'android' ? moderateScale(150 + getStatusbarHeight) : moderateScale(170),
-  },
-  detailsContainer: {
-    zIndex: 1,
-    height: Platform.OS === 'android' ? moderateScale(235 + getStatusbarHeight) : scale(250),
+    height: Platform.OS === 'android' ? moderateScale(135 + getStatusbarHeight) : moderateScale(145),
   },
 });
