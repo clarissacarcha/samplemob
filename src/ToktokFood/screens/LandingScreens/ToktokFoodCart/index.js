@@ -1,5 +1,4 @@
 import React from 'react';
-import {useRoute} from '@react-navigation/native';
 import {View, ScrollView} from 'react-native';
 
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
@@ -9,7 +8,6 @@ import styles from './styles';
 import {ReceiverLocation, AlsoOrder, MyOrderList, OrderTotal, PaymentDetails, RiderNotes} from './components';
 
 const ToktokFoodCart = () => {
-  const routes = useRoute();
   return (
     <View style={styles.container}>
       <HeaderImageBackground>

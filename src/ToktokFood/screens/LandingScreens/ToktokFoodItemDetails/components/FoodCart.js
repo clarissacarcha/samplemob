@@ -9,11 +9,11 @@ import {scale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
 
 import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
 
-import {useSelector, useDispatch} from 'react-redux';
+// import {useSelector, useDispatch} from 'react-redux';
 
 const FoodCart = ({item_price = 0}) => {
   const navigation = useNavigation();
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const [count, setCount] = useState(1);
   const [total, setTotal] = useState(0);
