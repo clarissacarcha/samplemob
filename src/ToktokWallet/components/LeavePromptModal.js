@@ -31,7 +31,7 @@ export const LeavePromptModal = ({visible,setVisible, onConfirm})=> {
                                setVisible(false)
                                onConfirm()
                            }} style={{borderRadius: 5, marginLeft: 10, height: "100%",backgroundColor:COLOR.YELLOW,flex: 1,justifyContent:"center",alignItems:"center"}}>
-                                <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L ,color: COLOR.DARK}}>Yes</Text>
+                                <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L}}>Yes</Text>
                            </TouchableOpacity>
                         </View>
                     </View>

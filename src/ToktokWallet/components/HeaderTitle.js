@@ -4,7 +4,7 @@ import CONSTANTS from 'common/res/constants'
 import { HeaderBack } from 'src/revamp'
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
 
-export const HeaderTitle = ({isLogo, label ,labelColor = COLOR.DARK , backButtonColor = COLOR.DARK , headerBackLabel = ""})=> {
+export const HeaderTitle = ({isLogo, label ,labelColor = "black" , backButtonColor = "black" , headerBackLabel = ""})=> {
 
     return (
         <View style={styles.header}>

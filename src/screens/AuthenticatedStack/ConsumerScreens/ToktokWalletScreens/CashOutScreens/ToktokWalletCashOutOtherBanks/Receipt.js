@@ -274,13 +274,11 @@ const styles = StyleSheet.create({
         marginTop: 17,
         fontSize: FONT_SIZE.XL,
         fontFamily: FONT.BOLD,
-        color: COLOR.DARK,
     },
     refNo: {
         marginTop: 11,
         fontSize: FONT_SIZE.M,
         fontFamily: FONT.REGULAR,
-        color: COLOR.DARK,
     },
     refDate: {
         fontSize: FONT_SIZE.M,
