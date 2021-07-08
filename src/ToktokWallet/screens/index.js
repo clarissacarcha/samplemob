@@ -1,8 +1,6 @@
 
-export * from "./CashInPayPandaScreens";
-export * from "./CashOutBDOScreens";
-export * from "./CashOutGCashScreens";
-export * from "./CashOutOtherBanksScreens";
+export * from "./CashInScreens";
+export * from "./CashOutScreens";
 export * from "./KYCScreens";
 export * from "./LandingScreens";
 export * from "./ScanQRScreens";

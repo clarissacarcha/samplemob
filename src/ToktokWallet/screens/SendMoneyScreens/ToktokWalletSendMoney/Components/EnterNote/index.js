@@ -8,7 +8,7 @@ export const EnterNote = ({note,setNote})=> {
 
     return (
        <View style={styles.container}>
-            <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M,color: COLOR.DARK}}>Note <Text style={{fontFamily: FONT.BOLD,fontSize: 11,color: COLOR.DARK}}>(Optional)</Text></Text>
+            <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Note <Text style={{fontFamily: FONT.BOLD,fontSize: 11}}>(Optional)</Text></Text>
             <View style={styles.input}>
                         <TextInput
                                 value={note}
