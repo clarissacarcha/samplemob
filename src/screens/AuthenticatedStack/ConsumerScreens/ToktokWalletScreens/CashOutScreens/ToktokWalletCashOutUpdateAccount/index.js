@@ -17,15 +17,15 @@ import SuccessfulModal from './SuccessfulModal'
 const screen = Dimensions.get('window');
 
 const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
+    const bankAccount = route.params.bankAccount
+    const bank = bankAccount.bank
 
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
-        headerTitle: ()=> <HeaderTitle label={['Update Account','']}/>,
+        headerTitle: ()=> <HeaderTitle label={[bank.name.length < 20 ? bank.name : bank.name.slice(0,20)+'...','']}/>,
     })
 
     const alert = useAlert()
-    const bankAccount = route.params.bankAccount
-    const bank = bankAccount.bank
     const tokwaAccount = useSelector(state=>state.toktokWallet)
     const [nickName,setNickName] = useState(bankAccount.nickName)
     const [accountName,setAccountName] = useState(bankAccount.accountName)
@@ -121,9 +121,9 @@ const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
                         style={{ flex: 1 }}
                 >
             <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
-                    <View style={styles.bank}>                
+                    {/* <View style={styles.bank}>                
                             <Text style={styles.bankName}>{bank.name}</Text>
-                    </View>
+                    </View> */}
                     <View style={{marginVertical: 10,}}>
                         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Alias</Text>
                         <View style={[{borderRadius: SIZE.BORDER_RADIUS, borderWidth: 1, borderColor: errorListMessage.alias == "" ? "transparent" : COLOR.RED}]}>
@@ -190,10 +190,11 @@ const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
              <View style={{justifyContent:'center',alignItems:"center"}}>
                     <Text style={{textAlign:"center",fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:"#CCCCCC",marginBottom: 20,}}>Please verify the accuracy and completeness of the details before you proceed.</Text>
              </View>
+          
+             </ScrollView>
              <View style={{height: 70,justifyContent:'flex-end'}}>
                 <YellowButton label="Update" onPress={saveAccount}/>
              </View>
-             </ScrollView>
              </KeyboardAvoidingView>
         </View>
         </>

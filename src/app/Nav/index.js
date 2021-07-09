@@ -22,6 +22,8 @@ import Landing from '../../screens/Landing';
 
 /*---------- CONSUMER SCREENS ----------*/
 import ToktokFoodScreens from './toktokfood';
+import ToktokWalletScreens from './toktokwallet';
+import ToktokMallScreens from './toktokmall';
 
 /*---------- CONSUMER SCREENS ----------*/
 
@@ -58,61 +60,6 @@ import PartnerBranches from '../../screens/AuthenticatedStack/ConsumerScreens/Pa
 import SelectedAdvertisement from '../../screens/AuthenticatedStack/ConsumerScreens/AdvertisementScreens/SelectedAdvertisement';
 import ConsumerMenu from '../../screens/AuthenticatedStack/ConsumerScreens/ConsumerMenu';
 import ConsumerNotifications from '../../screens/AuthenticatedStack/ConsumerScreens/ConsumerNotifications';
-
-/*---------- CONSUMER TOKTOK WALLET SCREENS ----------*/
-import ToktokWalletHomePage from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/ToktokWalletHomePage';
-import ToktokWalletRestricted from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/ToktokWalletRestricted';
-import ToktokWalletSecurityAndPrivacy from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/ToktokWalletSecurityAndPrivacy';
-import ToktokWalletSecurityPinCode from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/ToktokWalletSecurityPinCode';
-import ToktokWalletPaymentOptions from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/CashInScreens/ToktokWalletPaymentOptions';
-import ToktokWalletPayPandaForm from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/CashInScreens/ToktokWalletPayPandaForm';
-import ToktokWalletPayPandaWebView from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/CashInScreens/ToktoKWalletPayPandaWebView';
-import ToktokWalletCashOut from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/CashOutScreens/ToktokWalletCashOut';
-import ToktokWalletGcashCashOut from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/CashOutScreens/ToktokWalletGcashCashOut';
-import ToktokWalletSendMoney from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SendMoneyScreens/ToktokWalletSendMoney';
-import ToktokWalletContacts from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SendMoneyScreens/ToktokWalletContacts';
-import ToktokWalletScanQR from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/ScanQRScreens/ToktokWalletScanQR';
-import ToktokWalletScanQRConfirm from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/ScanQRScreens/ToktokWalletScanQRConfirm';
-import ToktokWalletSettings from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/ToktokWalletSettings';
-import ToktokWalletCashInLogs from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/ToktokWalletCashInLogs';
-import ToktokWalletCashOutLogs from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/ToktokWalletCashOutLogs';
-import ToktokWalletCreatePin from '../../screens//AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/PinCodeScreens/ToktokWalletCreatePin';
-import ToktokWalletRecoveryMethods from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/PinCodeScreens/ToktokWalletRecoveryMethods';
-import ToktokWalletRecoverPin from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/PinCodeScreens/ToktokWalletRecoverPin';
-import ToktokWalletUpdatePin from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/PinCodeScreens/ToktokWalletUpdatePin';
-import ToktokWalletVerifySetup from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/VerificationScreens/ToktokWalletVerifySetup';
-import ToktokWalletVerification from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/VerificationScreens/ToktokWalletVerification';
-import ToktokWalletValidIDCamera from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/VerificationScreens/ToktokWalletValidIDCamera';
-import ToktokWalletSelfieCamera from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/VerificationScreens/ToktokWalletSelfieCamera';
-import ToktokWalletSelfieImageCamera from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/VerificationScreens/ToktokWalletSelfieImageCamera';
-import ToktokWalletVerifyResult from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/VerificationScreens/ToktokWalletVerifyResult';
-
-import ToktokWalletTransactions from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens//ToktokWalletTransactions';
-import ToktokWalletRecentTransferView from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/ToktokWalletRecentTransferView';
-import ToktokWalletRecentTransferProceed from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/ToktokWalletRecentTransferProceed';
-import ToktokWalletReviewAndConfirm from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/ToktokWalletReviewAndConfirm';
-import ToktokWalletGcashRegistration from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/CashOutScreens/ToktokWalletGcashRegistration';
-import ToktokWalletGcashUpdate from '../../screens/AuthenticatedStack/ConsumerScreens//ToktokWalletScreens/CashOutScreens/ToktokWalletGcashUpdate';
-import ToktokWalletGcashHomePage from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/CashOutScreens/ToktokWalletGcashHomePage';
-import ToktokWalletGcashLinkAccount from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/CashOutScreens/ToktokWalletGcashLinkAccount';
-import ToktokWalletLinkAccount from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/ToktokWalletLinkAccount';
-import ToktokWalletTransactionLimit from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/ToktokWalletTransactionLimit';
-import ToktokWalletHelpCentrePaymentChart from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/HelpCentreScreens/PaymentChartScreens';
-import ToktokWalletHelpCentreSecurityPrivacy from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/HelpCentreScreens/SecurityPrivacyScreens';
-import ToktokWalletHelpCentreLayeredSecurity from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/HelpCentreScreens/SecurityPrivacyScreens/LayeredSecurity';
-import ToktokWalletHelpCentreMoneyProtected from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/HelpCentreScreens/SecurityPrivacyScreens/MoneyProtected';
-import ToktokWalletHelpCentreTermsConditions from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/HelpCentreScreens/TermsConditionsScreens';
-import ToktokWalletHelpCentreTransactionLimit from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/HelpCentreScreens/TransactionLimitScreens';
-
-import ToktokWalletBDOHomePage from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/CashOutScreens/ToktokWalletBDOHomePage';
-
-import ToktokWalletCashOutHomePage from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/CashOutScreens/ToktokWalletCashOutHomePage';
-import ToktokWalletCashOutOtherBanks from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/CashOutScreens/ToktokWalletCashOutOtherBanks';
-import ToktokWalletCashOutSaveAccount from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/CashOutScreens/ToktokWalletCashOutSaveAccount';
-import ToktokWalletCashOutUpdateAccount from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/CashOutScreens/ToktokWalletCashOutUpdateAccount';
-import ToktokWalletBDORegistration from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/CashOutScreens/ToktokWalletBDORegistration';
-import ToktokWalletCashOutViewAccount from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/CashOutScreens/ToktokWalletCashOutViewAccount';
-import ToktokWalletBDOLinkAccount from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/CashOutScreens/ToktokWalletBDOLinkAccount';
 
 /*---------- DRIVER SCREENS ----------*/
 import DriverMap from '../../screens/AuthenticatedStack/DriverScreens/DriverMap';
@@ -371,6 +318,8 @@ const ConsumerLandingStack = () => (
 const AuthenticatedStack = () => (
   <Authenticated.Navigator>
     {ToktokFoodScreens({Navigator: Authenticated})}
+    {ToktokMallScreens({Navigator: Authenticated})}
+    {ToktokWalletScreens({Navigator: Authenticated})}
 
     {/* <Authenticated.Screen name="ConsumerLanding" component={ConsumerLanding} options={{headerShown: false}} /> */}
     <Authenticated.Screen name="ConsumerLanding" component={ConsumerHomeBottomTab} options={{headerShown: false}} />
@@ -426,86 +375,6 @@ const AuthenticatedStack = () => (
 
     <Authenticated.Screen name="SavedLocations" component={SavedLocations} />
     <Authenticated.Screen name="AddLocation" component={AddLocation} />
-
-    {/*----------toktokwallet Screens----------*/}
-    <Authenticated.Screen name="ToktokWalletHomePage" component={ToktokWalletHomePage} />
-    <Authenticated.Screen name="ToktokWalletRestricted" component={ToktokWalletRestricted} />
-    <Authenticated.Screen name="ToktokWalletSecurityAndPrivacy" component={ToktokWalletSecurityAndPrivacy} />
-    <Authenticated.Screen
-      name="ToktokWalletSecurityPinCode"
-      component={ToktokWalletSecurityPinCode}
-      options={{
-        headerShown: false,
-      }}
-    />
-    <Authenticated.Screen name="ToktokWalletPaymentOptions" component={ToktokWalletPaymentOptions} />
-    <Authenticated.Screen name="ToktokWalletPayPandaForm" component={ToktokWalletPayPandaForm} />
-    <Authenticated.Screen name="ToktokWalletPayPandaWebView" component={ToktokWalletPayPandaWebView} />
-    <Authenticated.Screen name="ToktokWalletCashOut" component={ToktokWalletCashOut} />
-    <Authenticated.Screen name="ToktokWalletGcashCashOut" component={ToktokWalletGcashCashOut} />
-    <Authenticated.Screen name="ToktokWalletSendMoney" component={ToktokWalletSendMoney} />
-    <Authenticated.Screen name="ToktokWalletContacts" component={ToktokWalletContacts} />
-    <Authenticated.Screen name="ToktokWalletScanQR" component={ToktokWalletScanQR} />
-    <Authenticated.Screen name="ToktokWalletScanQRConfirm" component={ToktokWalletScanQRConfirm} />
-    <Authenticated.Screen name="ToktokWalletSettings" component={ToktokWalletSettings} />
-    <Authenticated.Screen name="ToktokWalletCashInLogs" component={ToktokWalletCashInLogs} />
-    <Authenticated.Screen name="ToktokWalletCashOutLogs" component={ToktokWalletCashOutLogs} />
-    <Authenticated.Screen name="ToktokWalletCreatePin" component={ToktokWalletCreatePin} />
-    <Authenticated.Screen name="ToktokWalletRecoveryMethods" component={ToktokWalletRecoveryMethods} />
-    <Authenticated.Screen name="ToktokWalletRecoverPin" component={ToktokWalletRecoverPin} />
-    <Authenticated.Screen name="ToktokWalletUpdatePin" component={ToktokWalletUpdatePin} />
-    <Authenticated.Screen name="ToktokWalletVerifySetup" component={ToktokWalletVerifySetup} />
-    <Authenticated.Screen name="ToktokWalletVerification" component={ToktokWalletVerification} />
-    <Authenticated.Screen name="ToktokWalletValidIDCamera" component={ToktokWalletValidIDCamera} />
-    <Authenticated.Screen name="ToktokWalletSelfieCamera" component={ToktokWalletSelfieCamera} />
-    <Authenticated.Screen name="ToktokWalletSelfieImageCamera" component={ToktokWalletSelfieImageCamera} />
-    <Authenticated.Screen
-      name="ToktokWalletVerifyResult"
-      component={ToktokWalletVerifyResult}
-      options={{headerShown: false}}
-    />
-
-    <Authenticated.Screen name="ToktokWalletTransactions" component={ToktokWalletTransactions} />
-    <Authenticated.Screen name="ToktokWalletRecentTransferView" component={ToktokWalletRecentTransferView} />
-    <Authenticated.Screen name="ToktokWalletRecentTransferProceed" component={ToktokWalletRecentTransferProceed} />
-    <Authenticated.Screen name="ToktokWalletReviewAndConfirm" component={ToktokWalletReviewAndConfirm} />
-    <Authenticated.Screen name="ToktokWalletGcashRegistration" component={ToktokWalletGcashRegistration} />
-    <Authenticated.Screen name="ToktokWalletGcashUpdate" component={ToktokWalletGcashUpdate} />
-    <Authenticated.Screen name="ToktokWalletGcashHomePage" component={ToktokWalletGcashHomePage} />
-    <Authenticated.Screen name="ToktokWalletGcashLinkAccount" component={ToktokWalletGcashLinkAccount} />
-    <Authenticated.Screen name="ToktokWalletLinkAccount" component={ToktokWalletLinkAccount} />
-    <Authenticated.Screen name="ToktokWalletTransactionLimit" component={ToktokWalletTransactionLimit}/>
-    <Authenticated.Screen name="ToktokWalletHelpCentrePaymentChart" component={ToktokWalletHelpCentrePaymentChart} />
-    <Authenticated.Screen name="ToktokWalletBDOHomePage" component={ToktokWalletBDOHomePage}/>
-    <Authenticated.Screen name="ToktokWalletCashOutViewAccount" component={ToktokWalletCashOutViewAccount}/>
-
-    <Authenticated.Screen
-      name="ToktokWalletHelpCentreSecurityPrivacy"
-      component={ToktokWalletHelpCentreSecurityPrivacy}
-    />
-    <Authenticated.Screen
-      name="ToktokWalletHelpCentreLayeredSecurity"
-      component={ToktokWalletHelpCentreLayeredSecurity}
-    />
-    <Authenticated.Screen
-      name="ToktokWalletHelpCentreMoneyProtected"
-      component={ToktokWalletHelpCentreMoneyProtected}
-    />
-
-    <Authenticated.Screen
-      name="ToktokWalletHelpCentreTermsConditions"
-      component={ToktokWalletHelpCentreTermsConditions}
-    />
-    <Authenticated.Screen
-      name="ToktokWalletHelpCentreTransactionLimit"
-      component={ToktokWalletHelpCentreTransactionLimit}
-    />
-    <Authenticated.Screen name="ToktokWalletCashOutHomePage" component={ToktokWalletCashOutHomePage} />
-    <Authenticated.Screen name="ToktokWalletCashOutOtherBanks" component={ToktokWalletCashOutOtherBanks} />
-    <Authenticated.Screen name="ToktokWalletCashOutSaveAccount" component={ToktokWalletCashOutSaveAccount} />
-    <Authenticated.Screen name="ToktokWalletCashOutUpdateAccount" component={ToktokWalletCashOutUpdateAccount} />
-    <Authenticated.Screen name="ToktokWalletBDORegistration" component={ToktokWalletBDORegistration}/>
-    <Authenticated.Screen name="ToktokWalletBDOLinkAccount" component={ToktokWalletBDOLinkAccount}/>
 
     {/*---------- DRIVER SCREENS ----------*/}
     <Authenticated.Screen name="DriverHomeBottomTab" component={DriverHomeBottomTab} options={{headerShown: false}} />

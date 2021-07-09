@@ -16,7 +16,7 @@ export const COLOR = {
   YELLOW_UNDERLAY: '#96641e', //TouchableHightlight underlayColor for YELLOW background
   WHITE_UNDERLAY: '#FDBA1C', //TouchableHightlight underlayColor for WHITE background
   TRANSPARENT_YELLOW: 'rgba(256,186,28, 0.15)',
-  RED: "#F93154",
+  RED: '#F93154',
 };
 
 export const FONT = {
@@ -37,6 +37,13 @@ export const SIZE = {
   FORM_HEIGHT: 50,
   BORDER_RADIUS: 5,
   MARGIN: 16,
+};
+
+export const MARGIN = {
+  S: 8,
+  M: 16,
+  L: 24,
+  XL: 32,
 };
 
 export const SHADOW = {
