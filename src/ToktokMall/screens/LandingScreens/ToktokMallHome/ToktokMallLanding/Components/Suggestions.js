@@ -99,6 +99,7 @@ export const Suggestions = ({data}) => {
               numColumns={2}
               style={{paddingHorizontal: 10}}
               renderItem={RenderItem}
+              keyExtractor={(item, index) => item + index}
             />
             
           </View>

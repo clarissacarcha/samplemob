@@ -63,6 +63,7 @@ export const Categories = ({data}) => {
                   </>
                 )
               }}
+              keyExtractor={(item, index) => item + index}
             />            
           </View>
           <View style={styles.separator} />

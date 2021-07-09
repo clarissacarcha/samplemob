@@ -22,14 +22,14 @@ export const ToktokMallLandingScreen = () => {
 
   const HandleOnScroll = (r) => {
     let ypos = r.nativeEvent.contentOffset.y
-    if(ypos > 30) setScrolling(true)
+    if(ypos > 100) setScrolling(true)
     else if (ypos <= 100) setScrolling(false)
   }
 
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>     
 
-      {/* <StickyHomeHeader>
+      <StickyHomeHeader>
         <FlatList
           data={[1]}
           keyExtractor={(item, index) => item + index}
@@ -39,17 +39,17 @@ export const ToktokMallLandingScreen = () => {
           }}
           renderItem={({ item }) => (
             <>
-            <AdsCarousel data={[1,2,3]} />  
-            <Categories data={[]} />
-            <Offers data={[]} />
-            <FlashSale data={[]} />
+            {/* <AdsCarousel data={[1,2,3]} />   */}
+            {/* <Categories data={[]} /> */}
+            {/* <Offers data={[]} /> */}
+            {/* <FlashSale data={[]} /> */}
             <Vouchers data={[]} />
             <Suggestions data={[]} />
             <View style={{height: 10}}></View>
             </>
           )}        
         />          
-      </StickyHomeHeader>     */}
+      </StickyHomeHeader>    
 
       {/* <View style={{display: !scrolling ? "flex" : "none"}}>
         <LandingHeader />
@@ -59,15 +59,15 @@ export const ToktokMallLandingScreen = () => {
         <LandingSubHeader />
       </View> */}
 
-      <LandingHeader />
+      {/* <LandingHeader />
 
       <FlatList
-          data={[1]}
-          keyExtractor={(item, index) => item + index}
-          showsVerticalScrollIndicator={false}
-          onScroll={HandleOnScroll}
-          renderItem={({ item }) => (
-            <>
+        data={[1]}
+        keyExtractor={(item, index) => item + index}
+        showsVerticalScrollIndicator={false}
+        onScroll={HandleOnScroll}
+        renderItem={({ item }) => (
+          <>
             {!scrolling && <AdsCarousel data={[1,2,3]} />}  
             <Categories data={[]} />
             <Offers data={[]} />
@@ -75,9 +75,24 @@ export const ToktokMallLandingScreen = () => {
             <Vouchers data={[]} />
             <Suggestions key={1} data={[]} />
             <View style={{height: 10}}></View>
-            </>
-          )}        
-        />     
+          </>
+        )}        
+      />      */}
+
+      {/* <SectionList         
+        renderSectionHeader={({section: {title}}) => (<Text></Text>)}
+        sections={[
+          {title: 'Ads', data: [1], renderItem: () => <AdsCarousel />},
+          {title: 'Categories', data: [1], renderItem: () => <Categories />},
+          {title: 'Offers', data: [1], renderItem: () => <Offers />},
+          {title: 'FlashSale', data: [1], renderItem: () => <FlashSale />},
+          {title: 'Vouchers', data: [1], renderItem: () => <Vouchers />},
+          {title: 'Suggestions', data: [1], renderItem: () => <Suggestions />},
+        ]}
+        showsVerticalScrollIndicator={false}
+        keyExtractor={(item, index) => item + index}
+      /> */}
+
     </View>
   );
 };

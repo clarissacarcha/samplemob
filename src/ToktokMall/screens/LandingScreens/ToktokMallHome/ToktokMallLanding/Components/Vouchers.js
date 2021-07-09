@@ -67,7 +67,7 @@ export const Vouchers = () => {
           </View>
         </View>
         <View>
-          {testdata && testdata.map((item, i) => <Item data={item} />)}
+          {testdata && testdata.map((item, i) => <Item key={i} data={item} />)}
         </View>
         <View style={{flex: 0.5, height: 2, backgroundColor: '#F7F7FA'}} />
         <View style={{height: 15}}></View>

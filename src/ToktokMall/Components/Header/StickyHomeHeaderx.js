@@ -1,13 +1,10 @@
 import React from 'react'
-import { Text, View, Animated, StyleSheet, ImageBackground } from 'react-native'
+import { Text, View, Animated, StyleSheet } from 'react-native'
 import StickyParallaxHeader from 'react-native-sticky-parallax-header'
-import { LandingSubHeader, LandingHeader } from './'
+import { LandingSubHeader, LandingHeader } from '../../Components'
 
-import {banner} from '../../assets';
+export const StickyHomeHeader = ({children}) => {
 
-export const StickyHomeHeader = ({navigation, children}) => {
-
-  const translation = new Animated.Value(0)
   const [scroll, setScroll] = React.useState(new Animated.Value(0))
   const [_value, set_Value] = React.useState(0)
 
@@ -34,8 +31,9 @@ export const StickyHomeHeader = ({navigation, children}) => {
     })
   
     return (
-      <View style={{backgroundColor: 'red', alignItems: 'center', justifyContent: 'flex-end'}}>
+      <View style={{backgroundColor: 'red'}}>
         <Animated.View style={{ opacity: titleOpacity }}>
+          {/* <LandingHeader /> */}
           <Text>Foreground</Text>
         </Animated.View>
       </View>
@@ -51,18 +49,10 @@ export const StickyHomeHeader = ({navigation, children}) => {
     })
   
     return (
-      <View style={{backgroundColor: 'orange', justifyContent: 'center'}}>
-        <Animated.View style={{
-          marginTop: 10,
-          backgroundColor: 'green',
-          transform: [{
-            translateY: scroll.interpolate({
-              inputRange: [0, 60],
-              outputRange: [0, 60]
-            })
-          }]
-        }}>
-          <Text>Render Header</Text>
+      <View style={{backgroundColor: 'green'}}>
+        <Animated.View style={{ opacity }}>
+          {/* <LandingSubHeader /> */}
+          <Text>Header</Text>
         </Animated.View>
       </View>
     )
@@ -70,31 +60,14 @@ export const StickyHomeHeader = ({navigation, children}) => {
 
   return (
     <>
-      {/* <ImageBackground
-        source={banner}
-        imageStyle={{resizeMode: 'stretch', width: '100%', height: 130}}
-        style={{width: '100%'}}
-      >
-        <StickyParallaxHeader
-          foreground={renderForeground()}
-          header={renderHeader()}
-          parallaxHeight={0}
-          headerHeight={86}
-          headerSize={() => {}}
-          onEndReached={() => {}}
-          scrollEvent={Animated.event([{ nativeEvent: { contentOffset: { y: scroll } } }])}        
-        >
-        </StickyParallaxHeader>
-      </ImageBackground> */}
       <StickyParallaxHeader
-          foreground={renderForeground()}
-          header={renderHeader()}
-          parallaxHeight={0}
-          // transparentHeader={true}
-          headerHeight={86}
-          headerSize={() => {}}
-          onEndReached={() => {}}
-          scrollEvent={Animated.event([{ nativeEvent: { contentOffset: { y: scroll } } }])}        
+        foreground={renderForeground()}
+        header={renderHeader()}
+        parallaxHeight={130}
+        headerHeight={0}
+        headerSize={() => {}}
+        onEndReached={() => {}}
+        scrollEvent={Animated.event([{ nativeEvent: { contentOffset: { y: scroll } } }])}        
       >
         {children}
       </StickyParallaxHeader>
@@ -104,7 +77,6 @@ export const StickyHomeHeader = ({navigation, children}) => {
 
 const styles = StyleSheet.create({
   content: {
-    height: 1000,
     marginTop: 50
   },
   foreground: {

@@ -76,6 +76,7 @@ export const Offers = ({data}) => {
                   </>
                 )
               }}
+              keyExtractor={(item, index) => item + index}
             />
             
           </View>
