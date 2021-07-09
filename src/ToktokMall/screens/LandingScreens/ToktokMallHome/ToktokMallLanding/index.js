@@ -29,28 +29,6 @@ export const ToktokMallLandingScreen = () => {
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>     
 
-      <StickyHomeHeader>
-        <FlatList
-          data={[1]}
-          keyExtractor={(item, index) => item + index}
-          showsVerticalScrollIndicator={false}
-          onScrollBeginDrag={() => {
-            console.log("scrolling...")
-          }}
-          renderItem={({ item }) => (
-            <>
-            {/* <AdsCarousel data={[1,2,3]} />   */}
-            {/* <Categories data={[]} /> */}
-            {/* <Offers data={[]} /> */}
-            {/* <FlashSale data={[]} /> */}
-            <Vouchers data={[]} />
-            <Suggestions data={[]} />
-            <View style={{height: 10}}></View>
-            </>
-          )}        
-        />          
-      </StickyHomeHeader>    
-
       {/* <View style={{display: !scrolling ? "flex" : "none"}}>
         <LandingHeader />
       </View>
@@ -79,8 +57,9 @@ export const ToktokMallLandingScreen = () => {
         )}        
       />      */}
 
-      {/* <SectionList         
-        renderSectionHeader={({section: {title}}) => (<Text></Text>)}
+      <LandingHeader />
+      <SectionList         
+        renderSectionHeader={({section: {title}}) => (<View />)}
         sections={[
           {title: 'Ads', data: [1], renderItem: () => <AdsCarousel />},
           {title: 'Categories', data: [1], renderItem: () => <Categories />},
@@ -91,7 +70,7 @@ export const ToktokMallLandingScreen = () => {
         ]}
         showsVerticalScrollIndicator={false}
         keyExtractor={(item, index) => item + index}
-      /> */}
+      />
 
     </View>
   );
