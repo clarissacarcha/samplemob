@@ -6,6 +6,7 @@ import LandingScreens from './LandingScreens';
 import ScanQRScreens from './ScanQRScreens';
 import SendMoneyScreens from './SendMoneyScreens';
 import SettingScreens from './SettingScreens';
+import TestingScreens from './TestingScreens';
 
 export default ({Navigator}) => {
   return (
@@ -17,6 +18,7 @@ export default ({Navigator}) => {
         {ScanQRScreens({Navigator})}
         {SendMoneyScreens({Navigator})}
         {SettingScreens({Navigator})}
+        {TestingScreens({Navigator})}
     </>
   );
 };

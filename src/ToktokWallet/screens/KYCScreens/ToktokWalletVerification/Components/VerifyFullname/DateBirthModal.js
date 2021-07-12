@@ -12,7 +12,7 @@ const DateBirthModal = ({modalVisible, setModalVisible , birthInfo ,changeBirthI
     const month = todayDate.getMonth()
     const day = todayDate.getDate()
     // const maxDate = todayDate
-    const maxDate = moment(todayDate).subtract(18,"years") // restrict only 18yrs.old up
+    const maxDate = new Date(year - 18, month ,day) // restrict only 18yrs.old up
     const initialDate = new Date(year - 25, month ,day)
 
     const [bday,setBday] = useState(birthInfo.birthdate == "" ? initialDate : birthInfo.birthdate)
