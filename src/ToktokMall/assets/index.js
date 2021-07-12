@@ -9,10 +9,14 @@ export const petcare = require("../assets/images/Pet-Care.png")
 export const coppermask = require("../assets/images/coppermask.png")
 export const chair = require("../assets/images/chair.png")
 export const bottle = require("../assets/images/bottle.png")
-
+export const clothfacemask = require("../assets/images/Cloth-Face-Mask.png")
+export const medicalfacemask = require("../assets/images/Medical-Face-Mask.png") 
+export const ads = require("../assets/images/ads.png")
 
 //STATICS
 export const flashsalebg = require("../assets/images/flash-sale-bg.png")
 export const flashsale = require("../assets/images/Flash-Sale.png")
 export const banner = require("../assets/images/banner.png")
 export const toktokmallH = require("../assets/images/toktokmall-h.png")
+export const voucherbg = require("../assets/images/voucher-bg.png")
+export const reviewimage = require("../assets/images/review-image.png")

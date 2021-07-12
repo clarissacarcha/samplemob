@@ -1,12 +1,14 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList} from 'react-native';
-import { COLOR, FONT } from '../../../../../../res/variables';
-import {LandingHeader, AdsCarousel} from '../../../../../Components';
+import {Price} from '../../../../helpers';
+import { COLOR, FONT } from '../../../../../res/variables';
+import {LandingHeader, AdsCarousel} from '../../../../Components';
 import { ScrollView } from 'react-native-gesture-handler';
-import CustomIcon from '../../../../../Components/Icons';
+import CustomIcon from '../../../../Components/Icons';
 
-import {clothfacemask, medicalfacemask} from '../../../../../assets'; 
+import {clothfacemask, medicalfacemask} from '../../../../assets'; 
 import { useNavigation } from '@react-navigation/core';
+
 
 const testdata = [{
   image: clothfacemask,
@@ -86,7 +88,7 @@ const RenderItem = ({item}) => {
   )
 }
 
-export const Suggestions = ({data}) => {
+export const RenderSuggestions = ({data}) => {
     return (
       <>
         <View style={styles.container}>
