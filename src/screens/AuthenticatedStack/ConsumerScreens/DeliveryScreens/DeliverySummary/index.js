@@ -81,7 +81,8 @@ const StopDetails = ({navigation, route}) => {
 
       delete input.directions;
       delete input.scheduledDate;
-      delete input.scheduledAt, delete input.itemDescription;
+      delete input.scheduledAt;
+      delete input.itemDescription; // Item Description is cargo in postDeliveryInput
       delete input.isCashOnDelivery;
       delete input.pricing;
       delete input.price;
@@ -92,15 +93,8 @@ const StopDetails = ({navigation, route}) => {
       delete input.promoCode;
       delete input.isExpress;
 
-      console.log(JSON.stringify(input, null, 4));
-      // return;
-
       input.cashOnDelivery = parseFloat(input.cashOnDelivery);
       input.referralCode = '';
-
-      console.log(JSON.stringify(input, null, 4));
-
-      console.log(orderData);
 
       postDelivery({
         variables: {
