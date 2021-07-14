@@ -27,8 +27,8 @@ module.exports = {
           },
           {
             rootPathSuffix: './src/ToktokWallet/',
-            rootPathPrefix: 'toktokwallet/'
-          }
+            rootPathPrefix: 'toktokwallet/',
+          },
         ],
       },
     ],

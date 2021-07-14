@@ -1,8 +1,7 @@
 import React from 'react';
 import {Text} from 'react-native';
 import {connect} from 'react-redux';
-import {COLOR, FONT_SIZE, SIZE} from '../../res/variables';
-import {APP_FLAVOR} from '../../res/constants';
+import {COLOR} from '../../res/variables';
 import {DeliveriesTopTabHeader} from '../../components';
 import EIcon from 'react-native-vector-icons/Entypo';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -107,8 +106,6 @@ const RootDrawer = createDrawerNavigator();
 const DriverHome = createBottomTabNavigator();
 const ConsumerHome = createBottomTabNavigator();
 const DriverDeliveries = createMaterialTopTabNavigator();
-
-const ConsumerBottomTabStack = createStackNavigator();
 
 const DriverDeliveriesTab = () => {
   return (
@@ -304,18 +301,6 @@ const ConsumerHomeBottomTab = ({navigation}) => (
   </ConsumerHome.Navigator>
 );
 
-const ConsumerLandingStack = () => (
-  <ConsumerBottomTabStack.Navigator>
-    <ConsumerBottomTabStack.Screen
-      name="ConsumerBottomTabScreen"
-      component={ConsumerHomeBottomTab}
-      options={{
-        headerShown: false,
-      }}
-    />
-  </ConsumerBottomTabStack.Navigator>
-);
-
 const AuthenticatedStack = () => (
   <Authenticated.Navigator>
     {ToktokScreens({Navigator: Authenticated})}
@@ -323,8 +308,7 @@ const AuthenticatedStack = () => (
     {ToktokMallScreens({Navigator: Authenticated})}
     {ToktokWalletScreens({Navigator: Authenticated})}
 
-    {/* <Authenticated.Screen name="ConsumerLanding" component={ConsumerLanding} options={{headerShown: false}} /> */}
-    <Authenticated.Screen name="ConsumerLanding" component={ConsumerHomeBottomTab} options={{headerShown: false}} />
+    {/* <Authenticated.Screen name="ConsumerLanding" component={ConsumerHomeBottomTab} options={{headerShown: false}} /> */}
     <Authenticated.Screen name="ToktokDelivery" component={ToktokDelivery} options={{headerShown: false}} />
     <Authenticated.Screen name="StopDetails" component={StopDetails} options={{headerShown: false}} />
     <Authenticated.Screen name="DeliveryDetails" component={DeliveryDetails} />
