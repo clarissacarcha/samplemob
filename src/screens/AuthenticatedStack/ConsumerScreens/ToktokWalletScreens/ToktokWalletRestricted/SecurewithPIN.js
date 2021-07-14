@@ -30,26 +30,27 @@ const SecurewithPIN = ({navigation,walletinfo})=> {
                 </View>
                 <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.XL,marginTop: 20, textAlign:'center'}}>Setup your toktokwallet PIN</Text>
                 <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.S,marginTop: 5, textAlign:'center'}}>Click the "Setup PIN" button to create your toktokwallet PIN.</Text>
-                <View style={{marginTop: 20}}>
-                    <Text style={{fontFamily: FONTS.REGULAR,marginBottom: 1,fontSize: SIZES.S, textAlign:'center'}}><FIcon5 color="orange" name="check" />  Cashless transactions will be enabled after updating your PIN</Text>
-                </View>
             </View>
-            <View style={{flex: 1,alignItems:"center",justifyContent:"center"}}>
+            <View style={{flex: 1,alignItems:"center",justifyContent:"flex-start"}}>
                         <Text style={{textAlign:"left",fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,marginBottom: 10,}}>Reminders</Text>
                         <View>
                             <Reminder>
-                                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>Use a <Text style={{color: COLOR.YELLOW}}>secure</Text> PIN combination</Text>
+                                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}><Text style={{color: COLOR.ORANGE}}>Cashless transactions</Text> will be enabled after</Text>
+                            </Reminder>
+                            <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M,marginLeft: 28}}>updating your PIN</Text>
+                            <Reminder>
+                                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>Use a <Text style={{color: COLOR.ORANGE}}>secure</Text> PIN combination</Text>
                             </Reminder>
                             <Reminder>
-                                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}><Text style={{color: COLOR.YELLOW}}>Remember</Text> your PIN</Text>
+                                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}><Text style={{color: COLOR.ORANGE}}>Remember</Text> your PIN</Text>
                             </Reminder>
                             <Reminder>
-                                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}><Text style={{color: COLOR.YELLOW}}>Never share</Text> your PIN with anyone</Text>
+                                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}><Text style={{color: COLOR.ORANGE}}>Never share</Text> your PIN with anyone</Text>
                             </Reminder>
                             <Reminder>
                                 <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>If you think your PIN is no longer a secret, </Text>      
                             </Reminder>
-                            <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M,marginLeft: 28}}><Text style={{color: COLOR.YELLOW}}>change your</Text> PIN immediately</Text>
+                            <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M,marginLeft: 28}}><Text style={{color: COLOR.ORANGE}}>change your</Text> PIN immediately</Text>
                         </View>
                    
                 </View>

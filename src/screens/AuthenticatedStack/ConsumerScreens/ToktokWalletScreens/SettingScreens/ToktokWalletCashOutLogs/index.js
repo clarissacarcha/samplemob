@@ -25,11 +25,15 @@ const CashOutLog = ({
 
 
     const ViewTransactionDetails = ({refNo,refDate, transactionAmount , status,provider,cashOutDisplayInformations})=> {
+        let phrase = `${provider}`
+        if(provider == "InstaPay" || provider == "PesoNet"){
+            phrase = "Other Banks"
+        }
         setTransactionInfo({
             refNo: refNo,
             refDate: refDate,
             label: "Cash Out",
-            phrase: `Cash out through ${provider}`,
+            phrase: phrase,
             amount: transactionAmount,
             status: status,
             cashOutDisplayInformations: cashOutDisplayInformations,

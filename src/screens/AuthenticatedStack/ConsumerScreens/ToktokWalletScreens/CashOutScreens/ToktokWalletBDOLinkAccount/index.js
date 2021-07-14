@@ -13,7 +13,6 @@ import { useAlert } from '../../../../../../hooks/useAlert'
 import { AlertOverlay } from '../../../../../../components'
 
 
-
 const ToktokWalletBDOLinkAccount = ({navigation,route})=> {
 
     navigation.setOptions({

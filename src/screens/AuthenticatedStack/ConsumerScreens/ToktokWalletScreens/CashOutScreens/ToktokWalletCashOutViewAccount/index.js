@@ -18,13 +18,14 @@ import RemoveSuccessfulModal from './RemoveSuccessfulModal'
 
 const ToktokWalletCashOutViewAccount = ({navigation,route})=> {
 
-    navigation.setOptions({
-        headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
-        headerTitle: ()=> <HeaderTitle label={['Bank Account','']}/>,
-    })
-   
     const bankAccount = route.params.bankAccount
     const bank = bankAccount.bank
+
+    navigation.setOptions({
+        headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
+        headerTitle: ()=> <HeaderTitle label={[bank.name.length < 20 ? bank.name : bank.name.slice(0,20)+'...','']}/>,
+    })
+
     const tokwaAccount = useSelector(state=>state.toktokWallet)
     const [showRemoveModal,setShowRemoveModal] = useState(false)
     const [showRemoveSuccessModal,setShowRemoveSuccessModal] = useState(false)
@@ -62,9 +63,9 @@ const ToktokWalletCashOutViewAccount = ({navigation,route})=> {
         <Separator/>
         <View style={styles.container}>
              <View style={{flex: 1}}>
-                    <View style={styles.bank}>                
+                    {/* <View style={styles.bank}>                
                             <Text style={styles.bankName}>{bank.name}</Text>
-                    </View>
+                    </View> */}
                     <View style={{marginVertical: 10,}}>
                         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Alias</Text>
                         <View style={[{justifyContent:"center"}]}>

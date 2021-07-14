@@ -10,7 +10,6 @@ import {Separator,LeavePromptModal} from '../../../Components'
 //SELF IMPORTS
 import VerifyContextProvider , {VerifyContext} from './VerifyContextProvider'
 import VerifyFullname from './VerifyFullname'
-import VerifyBirth from './VerifyBirth'
 import VerifyAddress from './VerifyAddress'
 import VerifyID from './VerifyID'
 import VerifySelfie from './VerifySelfie'
