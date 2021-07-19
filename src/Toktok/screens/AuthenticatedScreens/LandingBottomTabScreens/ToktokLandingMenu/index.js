@@ -109,7 +109,7 @@ export const ToktokLandingMenu = ({navigation}) => {
             <DrawerButton
               label="My Saved Locations"
               onPress={() => {
-                navigation.push('SavedLocations');
+                navigation.push('ToktokSavedLocations');
               }}
               restrict="C"
             />
@@ -118,7 +118,7 @@ export const ToktokLandingMenu = ({navigation}) => {
             <DrawerButton
               label="Announcements"
               onPress={() => {
-                navigation.push('Announcements');
+                navigation.push('ToktokAnnouncements');
               }}
             />
 

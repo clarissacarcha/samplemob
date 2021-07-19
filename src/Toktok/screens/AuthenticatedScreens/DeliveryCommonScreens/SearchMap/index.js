@@ -1,14 +1,14 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, ActivityIndicator, TouchableHighlight} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE, Overlay} from 'react-native-maps';
-import {HeaderBack, HeaderTitle} from '../../../../components';
-import {COLOR, DARK, MAP_DELTA} from '../../../../res/constants';
-import {YellowButton} from '../../../../revamp/buttons/YellowButton';
+import {HeaderBack, HeaderTitle} from '../../../../../components';
+import {COLOR, DARK, MAP_DELTA} from '../../../../../res/constants';
+import {YellowButton} from '../../../../../revamp/buttons/YellowButton';
 
-import {reverseGeocode} from '../../../../helper';
+import {reverseGeocode} from '../../../../../helper';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 
-const SearchMap = ({navigation, route}) => {
+export const SearchMap = ({navigation, route}) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={['Search', 'Map']} />,
@@ -74,8 +74,6 @@ const SearchMap = ({navigation, route}) => {
     </View>
   );
 };
-
-export default SearchMap;
 
 const styles = StyleSheet.create({
   container: {

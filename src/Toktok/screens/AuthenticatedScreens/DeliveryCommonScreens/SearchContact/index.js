@@ -14,11 +14,10 @@ import {
 import Contacts from 'react-native-contacts';
 import _ from 'lodash';
 
-import {HeaderBack, HeaderTitle} from '../../../../components';
-import {DARK, LIGHT, MEDIUM} from '../../../../res/constants';
-import {COLOR, FONT} from '../../../../res/variables';
+import {HeaderBack, HeaderTitle} from '../../../../../components';
+import {COLOR, FONT} from '../../../../../res/variables';
 
-const SearchContact = ({navigation, route}) => {
+export const SearchContact = ({navigation, route}) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={['Address', 'Book']} />,
@@ -178,8 +177,6 @@ const SearchContact = ({navigation, route}) => {
     </View>
   );
 };
-
-export default SearchContact;
 
 const styles = StyleSheet.create({
   center: {

@@ -1,19 +1,17 @@
 import React from 'react';
-import {ToktokSearch} from 'toktok/screens';
-// import {} from '../../../Toktok/screens';
+import {ToktokProfile, ToktokSearch} from 'toktok/screens';
 
-const forFade = ({current}) => ({
+const fadeCardStyle = ({current}) => ({
   cardStyle: {
     opacity: current.progress,
   },
 });
 
+const fadeOptions = {headerShown: false, cardStyleInterpolator: fadeCardStyle};
+
 export default ({Navigator}) => (
   <>
-    <Navigator.Screen
-      name="ToktokSearch"
-      component={ToktokSearch}
-      options={{headerShown: false, cardStyleInterpolator: forFade}}
-    />
+    <Navigator.Screen name="ToktokSearch" component={ToktokSearch} options={fadeOptions} />
+    <Navigator.Screen name="ToktokProfile" component={ToktokProfile} />
   </>
 );
