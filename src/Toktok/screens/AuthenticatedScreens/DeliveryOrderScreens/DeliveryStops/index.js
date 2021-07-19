@@ -1,6 +1,6 @@
 import React, {useCallback, useMemo, useRef, useState, useEffect} from 'react';
 import {View, StyleSheet, Text, StatusBar, TouchableOpacity, TouchableHighlight, Image} from 'react-native';
-import {useLazyQuery} from '@apollo/react-hooks';
+import {useLazyQuery, useQuery} from '@apollo/react-hooks';
 import {connect} from 'react-redux';
 import moment from 'moment';
 import BottomSheet, {BottomSheetBackdrop, BottomSheetView} from '@gorhom/bottom-sheet';
@@ -11,7 +11,7 @@ import {useAlert} from '../../../../../hooks';
 import {COLORS} from '../../../../../res/constants';
 import {COLOR, FONT, FONT_SIZE, SIZE} from '../../../../../res/variables';
 import {GeolocationUtility, PermissionUtility} from '../../../../../util';
-import {GET_GOOGLE_GEOCODE_REVERSE} from '../../../../../graphql';
+import {GET_GOOGLE_GEOCODE_REVERSE, GET_VEHICLE_TYPES} from '../../../../../graphql';
 
 import {WhiteButton, BlackButton, ImageHeader, Shadow, VectorIcon, ICON_SET, YellowButton} from '../../../../../revamp';
 import ToktokHeader from '../../../../../assets/toktok/images/ToktokHeader.png';
@@ -174,7 +174,15 @@ const ToktokDelivery = ({navigation, session, route}) => {
 
   const [userCoordinates, setUserCoordinates] = useState(null);
 
-  const [getGoogleGeocodeReverse, {loading, error}] = useLazyQuery(GET_GOOGLE_GEOCODE_REVERSE, {
+  const [getGoogleGeocodeReverse, {loading, error: getGoogleError}] = useLazyQuery(GET_GOOGLE_GEOCODE_REVERSE, {
+    fetchPolicy: 'network-only',
+    onCompleted: (data) => {
+      console.log({data});
+    },
+    onError: (error) => console.log({error}),
+  });
+
+  const {data: vehicleTypesData} = useQuery(GET_VEHICLE_TYPES, {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
       console.log({data});
@@ -249,7 +257,11 @@ const ToktokDelivery = ({navigation, session, route}) => {
       return;
     }
 
-    navigation.push('ToktokVehicleInformation', {orderData, setOrderData});
+    navigation.push('ToktokVehicleInformation', {
+      orderData,
+      setOrderData,
+      vehicleTypesData: vehicleTypesData.getVehicleTypes,
+    });
   };
 
   const useThrottle = (cb, delayDuration) => {

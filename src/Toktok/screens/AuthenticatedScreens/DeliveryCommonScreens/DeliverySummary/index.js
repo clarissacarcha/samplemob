@@ -92,6 +92,7 @@ const StopDetails = ({navigation, route}) => {
       delete input.orderType;
       delete input.promoCode;
       delete input.isExpress;
+      delete input.vehicleTypeId;
 
       input.cashOnDelivery = parseFloat(input.cashOnDelivery);
       input.referralCode = '';

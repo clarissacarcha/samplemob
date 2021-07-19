@@ -180,6 +180,7 @@ const DeliveryDetails = ({navigation, route, session}) => {
       variables: {
         input: {
           consumerId: session.user.consumer.id,
+          vehicleTypeId: orderData.vehicleTypeId,
           promoCode: '',
           // promoCode: bookingData.promoCode,
           isExpress: isExpress,
