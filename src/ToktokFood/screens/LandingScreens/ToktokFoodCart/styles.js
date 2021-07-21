@@ -1,6 +1,5 @@
 import {StyleSheet, Platform} from 'react-native';
 import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
-import {COLORS} from 'res/constants';
 
 // Utils
 import {scale, verticalScale, moderateScale, getDeviceWidth} from 'toktokfood/helper/scale';
@@ -128,13 +127,13 @@ export default styles = StyleSheet.create({
   },
   subtotal: {
     fontFamily: FONT.BOLD,
-    color: COLORS.ORANGE,
+    color: COLOR.ORANGE,
     fontSize: FONT_SIZE.L,
   },
   totalPrice: {
     fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.XL,
-    color: COLORS.ORANGE,
+    color: COLOR.ORANGE,
   },
   paymentContainer: {
     flex: 1,
