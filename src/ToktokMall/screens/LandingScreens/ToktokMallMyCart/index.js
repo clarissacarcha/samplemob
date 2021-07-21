@@ -1,11 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, Platform, Dimensions, StatusBar, Image, TouchableOpacity, FlatList} from 'react-native';
 import {HeaderBack, HeaderTitle, HeaderRight, Header} from '../../../Components';
-import {AlertOverlay} from '../../../../components';
 import {COLOR, FONT, FONT_SIZE} from '../../../../res/variables';
 import CheckBox from 'react-native-check-box';
 
-import {DeleteFooter, CheckoutFooter, Item, Store} from './components';
+import {DeleteFooter, CheckoutFooter, Item, Store, RenderDetails} from './components';
 
 const testdata = [
   {
@@ -14,14 +13,14 @@ const testdata = [
       {
         label: 'Improved Copper Mask 2.0 White or Bronze',
         originalPrice: 380,
-        price: 190,
+        price: 100,
         variation: 'Bronze',
         qty: 1,
       },
       {
         label: 'Improved Copper Mask 2.0 White or Bronze',
         originalPrice: 380,
-        price: 190,
+        price: 150,
         variation: 'White',
         qty: 1,
       },
@@ -33,7 +32,7 @@ const testdata = [
       {
         label: 'Graphic Tees',
         originalPrice: 380,
-        price: 190,
+        price: 50,
         variation: 'White, L',
         qty: 2,
       },
@@ -45,7 +44,7 @@ const testdata = [
       {
         label: 'Graphic Tees',
         originalPrice: 380,
-        price: 190,
+        price: 350,
         variation: 'White, L',
         qty: 2,
       },
@@ -65,7 +64,7 @@ export const ToktokMallMyCart = ({navigation}) => {
     headerRight: () => <HeaderRight hidden={true} />,
   });
 
-  const init = async () => {
+  const getSubTotal = async () => {
     let a = 0;
     for (var x = 0; x < testdata.length; x++) {
       for (var y = 0; y < testdata[x].cart.length; y++) {
@@ -78,7 +77,7 @@ export const ToktokMallMyCart = ({navigation}) => {
   };
 
   useEffect(() => {
-    init();
+    getSubTotal();
   }, []);
 
   return (
@@ -96,6 +95,13 @@ export const ToktokMallMyCart = ({navigation}) => {
                 checkedCheckBoxColor="#F6841F"
                 uncheckedCheckBoxColor="#F6841F"
                 onClick={() => {
+                  if(allSelected){
+                    //to false
+                    setSubTotal(0)
+                  }else{
+                    //to true
+                    getSubTotal()
+                  }
                   setAllSelected(!allSelected);
                 }}
               />
@@ -113,31 +119,31 @@ export const ToktokMallMyCart = ({navigation}) => {
             renderItem={({item}) => {
               return (
                 <>
-                  <Store
-                    data={item}
-                    onSelect={() => {
-                      let cart = item.cart;
-                      console.log(cart);
+                  <RenderDetails 
+                    item={item}
+                    allSelected={allSelected}
+                    onPress={() => {
+                      navigation.navigate("ToktokMallStore")
                     }}
+                    onStoreSelect={(raw) => {
+                      let res = 0
+                      if(raw.checked){
+                        res = subTotal + raw.total
+                      }else{
+                        res = subTotal - raw.total
+                      }
+                      setSubTotal(res)
+                    }}
+                    onItemSelect={(raw) => {
+                      let res = 0
+                      if(raw.checked){
+                        res = subTotal + raw.amount 
+                      }else{
+                        res = subTotal - raw.amount
+                      }
+                      setSubTotal(res)
+                    }} 
                   />
-                  {item.cart.map((data, i) => (
-                    <Item
-                      data={data}
-                      onSelect={() => {
-                        let a = 0;
-                        for (var x = 0; x < testdata.length; x++) {
-                          for (var y = 0; y < testdata[x].cart.length; y++) {
-                            let item = testdata[x].cart[y];
-                            if (y == i) continue;
-                            else a += item.price * item.qty;
-                            console.log(a);
-                          }
-                        }
-                        setSubTotal(a);
-                        console.log(data);
-                      }}
-                    />
-                  ))}
                   <View style={{height: 8, backgroundColor: '#F7F7FA'}} />
                 </>
               );

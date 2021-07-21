@@ -5,29 +5,32 @@ import {LandingHeader, AdsCarousel} from '../../../../../Components';
 import { ScrollView } from 'react-native-gesture-handler';
 import CustomIcon from '../../../../../Components/Icons';
 
+import {clothfacemask, medicalfacemask} from '../../../../../assets'; 
+import { useNavigation } from '@react-navigation/core';
+
 const testdata = [{
-  image: require("../../../../../assets/images/Cloth-Face-Mask.png"),
+  image: clothfacemask,
   rating: 4,
   price: 190,
   stock: 35,
   sold: 187,
   label: "Cloth Face Mask"
 }, {
-  image: require("../../../../../assets/images/Medical-Face-Mask.png"),
+  image: medicalfacemask,
   rating: 3,
   price: 80,
   stock: 201,
   sold: 407,
   label: "Medical Face Mask"
 }, {
-  image: require("../../../../../assets/images/Cloth-Face-Mask.png"),
+  image: clothfacemask,
   rating: 5,
   price: 190,
   stock: 35,
   sold: 187,
   label: "Cloth Face Mask"
 }, {
-  image: require("../../../../../assets/images/Medical-Face-Mask.png"),
+  image: medicalfacemask,
   rating: 2,
   price: 190,
   stock: 35,
@@ -50,11 +53,16 @@ const RenderStars = ({value}) => {
 }
 
 const RenderItem = ({item}) => {
+
+  const navigation = useNavigation()
+
   return (
     <>
       <View style={{flex: 2, backgroundColor: '#fff', margin: 5}}>
                   
-        <View style={{padding: 5}}>
+        <TouchableOpacity activeOpacity={1} onPress={() => {
+          navigation.navigate("ToktokMallProductDetails")
+        }} style={{padding: 5}}>
           <Image 
             source={item.image} 
             style={{resizeMode: 'cover', width: '100%', height: 120, borderRadius: 5}} 
@@ -72,7 +80,7 @@ const RenderItem = ({item}) => {
               <Text style={{fontSize: 10}}>{item.sold} sold</Text>
             </View>
           </View>
-        </View>
+        </TouchableOpacity>
       </View>
     </>
   )
@@ -98,7 +106,10 @@ export const Suggestions = ({data}) => {
               data={testdata}
               numColumns={2}
               style={{paddingHorizontal: 10}}
-              renderItem={RenderItem}
+              renderItem={({item}) => {
+                return <RenderItem item={item} />
+              }}
+              keyExtractor={(item, index) => item + index}
             />
             
           </View>

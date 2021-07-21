@@ -1,29 +1,35 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity} from 'react-native';
+import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList} from 'react-native';
 import { COLOR, FONT } from '../../../../../../res/variables';
 import {LandingHeader, AdsCarousel} from '../../../../../Components';
 import { ScrollView } from 'react-native-gesture-handler';
 import CustomIcon from '../../../../../Components/Icons';
+import {watch, electronics, mensfashion, furniture, petcare} from '../../../../../assets'
 
 const testdata = [{
-  image: require("../../../../../assets/images/Watch.png"),
+  // image: require("../../../../../assets/images/Watch.png"),
   // image: {uri: ""},
+  image: watch,
   label: "Accessories"
 }, {
-  image: require("../../../../../assets/images/Electronics.png"),
+  // image: require("../../../../../assets/images/Electronics.png"),
   // image: {uri: ""},
+  image: electronics,
   label: "Electronics"
 }, {
-  image: require("../../../../../assets/images/Furniture.png"),
+  // image: require("../../../../../assets/images/Furniture.png"),
   // image: {uri: ""},
+  image: furniture,
   label: "Furnitures"
 }, {
-  image: require("../../../../../assets/images/Men's-Fashion.png"),
+  // image: require("../../../../../assets/images/Men's-Fashion.png"),
   // image: {uri: ""},
+  image: mensfashion,
   label: "Men's Fashion"
 }, {
-  image: require("../../../../../assets/images/Pet-Care.png"),
+  // image: require("../../../../../assets/images/Pet-Care.png"),
   // image: {uri: ""},
+  image: petcare,
   label: "Pet Care"
 }]
 
@@ -42,17 +48,23 @@ export const Categories = ({data}) => {
                 <CustomIcon.EIcon name="chevron-right" color="#F6841F" size={16} />
               </View>
             </View>
-            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-              <View style={{flexDirection: 'row'}}>              
-                
-                {testdata && testdata.map((item, i) => 
-                <TouchableOpacity style={{flex: 1, paddingBottom: 12, paddingHorizontal: 4}}>
-                  {item.image && <Image source={item.image} style={styles.image} /> }
-                  <Text style={styles.label}>{item.label}</Text>
-                </TouchableOpacity>)}
-  
-              </View>
-            </ScrollView>
+
+            <FlatList
+              horizontal={true}
+              showsHorizontalScrollIndicator={false} 
+              data={testdata}
+              renderItem={({item}) => {
+                return (
+                  <>
+                    <TouchableOpacity style={{flex: 1, paddingBottom: 12, paddingHorizontal: 4}}>
+                      {item.image && <Image source={item.image} style={styles.image} /> }
+                      <Text style={styles.label}>{item.label}</Text>
+                    </TouchableOpacity>
+                  </>
+                )
+              }}
+              keyExtractor={(item, index) => item + index}
+            />            
           </View>
           <View style={styles.separator} />
       </>

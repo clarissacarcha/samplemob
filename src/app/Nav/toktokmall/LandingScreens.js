@@ -6,16 +6,10 @@ import {COLOR, FONT_SIZE, SIZE} from '../../../res/variables';
 
 import {
   //Categories
-  ToktokMallCategoriesList,
   ToktokMallCategoriesSearch,
 
   //Home
   ToktokMallLandingScreen,
-  ToktokMallStore,
-
-  //Messages
-  // ToktokMallMessageHome,
-  // ToktokMallMessageConvo,
 
   //Notifications
   ToktokMallNotifications,
@@ -24,108 +18,11 @@ import {
   ToktokMallMyCart,
 
   //My Profile
-  ToktokMallHelp,
-  ToktokMallMyFollowing,
-  ToktokMallMyVouchers,
-  ToktokMallMyOrders,
   ToktokMallMyProfileHome,
-  ToktokMallMyWishlist,
 } from '../../../ToktokMall/screens';
 
 
-import CartScreens from './CartScreens';
-import CategoriesScreens from './CategoriesScreens';
-import HomeScreens from './HomeScreens';
-import NotificationScreens from './NotificationScreens';
-import MeScreens from './MeScreens';
-import { Categories } from '../../../ToktokMall/screens/LandingScreens/ToktokMallHome/ToktokMallLanding/Components';
-
 const ToktokMallLandingBottomTab = createBottomTabNavigator();
-
-const ToktokMallCartStack = createStackNavigator();
-const ToktokMallCategoriesStack = createStackNavigator();
-const ToktokMallHomeStack = createStackNavigator();
-const ToktokMallNotificationStack = createStackNavigator();
-const ToktokMallMyProfileStack = createStackNavigator();
-
-const ToktokMallCartStackScreens = () => (
-  <ToktokMallCartStack.Navigator initialRouteName="ToktokMallNotifications">
-    <ToktokMallCartStack.Screen name="ToktokMallMyCart" component={ToktokMallMyCart} />
-  </ToktokMallCartStack.Navigator>
-);
-
-const ToktokMallCategoriesStackScreen = () => (
-  <ToktokMallCategoriesStack.Navigator initialRouteName="ToktokMallCategoriesSearch">
-    <ToktokMallCategoriesStack.Screen name="ToktokMallCategoriesSearch" component={ToktokMallCategoriesSearch} />
-    <ToktokMallCategoriesStack.Screen
-      name="ToktokMallCategoriesList"
-      component={ToktokMallCategoriesList}
-      options={{
-        headerShown: false,
-      }}
-    />
-  </ToktokMallCategoriesStack.Navigator>
-);
-
-const ToktokMallHomeStackScreens = () => (
-  <ToktokMallHomeStack.Navigator initialRouteName="ToktokMallLanding">
-    <ToktokMallHomeStack.Screen
-      name="ToktokMallLanding"
-      component={ToktokMallLandingScreen}
-      options={{
-        headerShown: false,
-      }}
-    />
-    <ToktokMallHomeStack.Screen
-      name="ToktokMallStore"
-      component={ToktokMallStore}
-      options={{
-        headerShown: false,
-      }}
-    />
-  </ToktokMallHomeStack.Navigator>
-);
-
-const ToktokMallNotificationStackScreens = () => (
-  <ToktokMallNotificationStack.Navigator initialRouteName="ToktokMallNotifications">
-    <ToktokMallNotificationStack.Screen name="ToktokMallNotifications" component={ToktokMallNotifications} />
-  </ToktokMallNotificationStack.Navigator>
-);
-
-const ToktokMallMyProfileStackScreens = () => (
-  <ToktokMallMyProfileStack.Navigator initialRouteName="ToktokMallMyProfileHome">
-    <ToktokMallMyProfileStack.Screen
-      name="ToktokMallMyProfileHome"
-      component={ToktokMallMyProfileHome}
-      options={{
-        headerShown: false,
-      }}
-    />
-    {/* <ToktokMallMyProfileStack.Screen
-      name="ToktokMallMyOrders"
-      component={ToktokMallMyOrders}
-      options={{
-        headerShown: false,
-      }}
-    /> */}
-    <ToktokMallMyProfileStack.Screen
-      name="ToktokMallMyFollowing"
-      component={ToktokMallMyFollowing}
-    />
-    <ToktokMallMyProfileStack.Screen
-      name="ToktokMallMyVouchers"
-      component={ToktokMallMyVouchers}      
-    />
-    <ToktokMallMyProfileStack.Screen
-      name="ToktokMallHelp"
-      component={ToktokMallHelp}
-    />
-    <ToktokMallMyProfileStack.Screen
-      name="ToktokMallMyWishlist"
-      component={ToktokMallMyWishlist}
-    />    
-  </ToktokMallMyProfileStack.Navigator>
-);
 
 const cartIconOutline = require('../../../ToktokMall/assets/icons/cart-outline.png');
 const categoriesIconOutline = require('../../../ToktokMall/assets/icons/categories-outline.png');

@@ -5,34 +5,52 @@ import { AlertOverlay} from '../../../../../components';
 import { COLOR, FONT, FONT_SIZE } from '../../../../../res/variables';
 import CheckBox from 'react-native-check-box';
 
-export const Store = ({data, state = false, onSelect}) => {
+export const Store = ({data, state = false, onSelect, onPress}) => {
 
-    const [selected, setSelected] = useState(state)
+  const [selected, setSelected] = useState(state)
+	const [items, setItems] = useState(data.cart || [])
+	const [totalAmount, setTotalAmount] = useState(0)
 
-    return (
-        <>
-            <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
-                    <View style={{flex: 1, justifyContent: 'center'}}>
-                        <CheckBox
-                            isChecked={selected}
-                            checkedCheckBoxColor="#F6841F"
-                            uncheckedCheckBoxColor="#F6841F"
-                            onClick={() => {
-                                setSelected(!selected)
-                                onSelect()
-                            }}
-                        />
-                    </View>
-                    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                       <Image source={require("../../../../assets/icons/store.png")} style={{width: 18, height: 18, resizeMode: 'stretch'}} />
-                    </View>
-                    <View style={{flex: 9, justifyContent: 'center', flexDirection: 'row'}}>                        
-                        <View style={{flex: 12, justifyContent: 'center'}}>
-                            <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>{data.store}</Text>
-                        </View>
-                    </View>
-                </View>
-                <View style={{height: 2, backgroundColor: '#F7F7FA'}} />
-        </>
-    )
+	useEffect(() => {
+		let res = 0
+		for(var x=0;x<items.length;x++){
+			res += items[x].price * items[x].qty
+		}
+		setTotalAmount(res)
+	}, [])
+
+	useEffect(() => {
+		setSelected(state)
+	}, [state])
+
+  return (
+    <>
+      <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
+        <View style={{flex: 1, justifyContent: 'center'}}>
+          <CheckBox
+            isChecked={selected}
+            checkedCheckBoxColor="#F6841F"
+            uncheckedCheckBoxColor="#F6841F"
+            onClick={() => {
+							onSelect({
+								checked: !selected,
+								total: totalAmount,
+								items: items
+							})
+              setSelected(!selected)
+            }}
+          />
+        </View>
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <Image source={require("../../../../assets/icons/store.png")} style={{width: 18, height: 18, resizeMode: 'stretch'}} />
+        </View>
+        <TouchableOpacity onPress={onPress} style={{flex: 9, justifyContent: 'center', flexDirection: 'row'}}>                        
+          <View style={{flex: 12, justifyContent: 'center'}}>
+            <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>{data.store}</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+      <View style={{height: 2, backgroundColor: '#F7F7FA'}} />			
+    </>
+  )
 }

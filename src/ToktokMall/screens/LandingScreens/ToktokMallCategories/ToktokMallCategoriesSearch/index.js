@@ -9,27 +9,6 @@ import CustomIcon from '../../../../Components/Icons';
 
 import { Dropdown } from '../../../../Components';
 
-const testdata = [{
-    category: "Accessories",
-    subCategories: ["Watch"],
-    imageSource: require("../../../../assets/images/Watch.png")
-}, {
-    category: "Electronics",
-    subCategories: ["iPhone X", "Huawei y7Pro", "Digital TV", "Elecric Fan"],
-    image: require("../../../../assets/images/Electronics.png")
-}, {
-    category: "Furnitures",
-    subCategories: ["Cabinet", "Chairs", "Drawer", "Tables"],
-    image: require("../../../../assets/images/Furniture.png")
-}, {
-    category: "Men's Fashion",
-    subCategories: ["Jacket", "Americana", "T Shirt", "Shorts"],
-    image: require("../../../../assets/images/Men's-Fashion.png")
-}, {
-    category: "Pet Care",
-    subCategories: ["Dog Food", "Cat Food", "Dog Toys"],
-    image: require("../../../../assets/images/Pet-Care.png")
-}]
 
 export const ToktokMallCategoriesSearch = ({navigation})=> {
 
@@ -49,12 +28,8 @@ export const ToktokMallCategoriesSearch = ({navigation})=> {
             <View style={{flex: 1}}>   
              
                 <View style={{ height: 8, backgroundColor: '#F7F7FA'}} />
-                <FlatList
-                    data={testdata}
-                    renderItem={({item}) => {
-                        return (<Dropdown data={item} />)
-                    }}
-                />
+                
+                <Dropdown />
 
             </View>
         </View>
