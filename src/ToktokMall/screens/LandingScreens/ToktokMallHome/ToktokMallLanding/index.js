@@ -64,7 +64,7 @@ export const ToktokMallLandingScreen = () => {
         )}        
       />      */}
 
-      <Animated.ScrollView style = {StyleSheet.absoluteFill} 
+      {/* <Animated.ScrollView style = {StyleSheet.absoluteFill} 
         onScroll = {onScrollEvent({ y })}
         scrollEventThrottle = {1}
       >
@@ -78,9 +78,9 @@ export const ToktokMallLandingScreen = () => {
       </Animated.ScrollView>
       <LandingHeader2 {...{y}} />
 
-      <LandingSubHeader2 {... { y}} />
-      
-      {/* <SectionList         
+      <LandingSubHeader2 {... { y}} /> */}
+      <LandingHeader />
+      <SectionList         
         renderSectionHeader={({section: {title}}) => (<View />)}
         sections={[
           {title: 'Ads', data: [1], renderItem: () => <AdsCarousel />},
@@ -92,7 +92,7 @@ export const ToktokMallLandingScreen = () => {
         ]}
         showsVerticalScrollIndicator={false}
         keyExtractor={(item, index) => item + index}
-      /> */}
+      />
 
     </View>
   );
