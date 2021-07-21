@@ -1,5 +1,6 @@
 const INITIAL_STATE = {
   user: {
+    categories: [],
     location: {
       address: '',
       latitude: 0,
@@ -13,8 +14,10 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
+    case 'SET_TOKTOKFOOD_CATEGORIES':
+      return {...state, categories: action.payload};
     case 'SET_TOKTOKFOOD_LOCATION':
-      return {...state.user, location: action.payload};
+      return {...state, location: action.payload};
     case 'SET_TOKTOKFOOD_CART_TOTAL':
       return {...state.user, cart: action.payload};
     default:

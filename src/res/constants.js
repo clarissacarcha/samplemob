@@ -25,6 +25,9 @@ export const HOST_PORT = 'test.toktok.ph:2096';
 export const TOKTOK_WALLET_PROTOCOL = 'https';
 export const TOKTOK_WALLET_PROTOCOL_HOST_PORT = 'test.toktok.ph:2087';
 
+export const TOKTOK_FOOD_PROTOCOL = 'http';
+export const TOKTOK_FOOD_PROTOCOL_HOST_PORT = 'localhost:3002';
+
 // export const PROTOCOL = 'https';
 // export const HOST_PORT = 'demo.toktok.ph:2096';
 
