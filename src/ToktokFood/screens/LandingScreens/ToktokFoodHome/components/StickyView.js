@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {Platform, StyleSheet, View, StatusBar} from 'react-native';
+import {useSelector} from 'react-redux';
 import ReactNativeParallaxHeader from 'react-native-parallax-header';
 
 // Components
@@ -35,6 +36,7 @@ const StickyView = () => {
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const headerMaxHeight = Platform.OS === 'ios' ? moderateScale(270) : scale(320);
   const headerMinHeight = Platform.OS === 'ios' ? verticalScale(42) : moderateScale(65);
+  const {categories} = useSelector((state) => state).toktokFood;
 
   const renderNavBar = () => (
     <View style={[styles.headerWrapper, styles.navbarWrapper]}>
