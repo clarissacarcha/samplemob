@@ -27,6 +27,7 @@ export const GET_MY_ACCOUNT = gql`
             motherId
             pinCode
             pinCodeAttempts
+            isLinked
             person {
                 id
                 firstName
