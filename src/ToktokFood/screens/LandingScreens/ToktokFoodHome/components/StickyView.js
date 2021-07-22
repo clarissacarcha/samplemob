@@ -37,6 +37,7 @@ const StickyView = () => {
   const headerMaxHeight = Platform.OS === 'ios' ? moderateScale(270) : scale(320);
   const headerMinHeight = Platform.OS === 'ios' ? verticalScale(42) : moderateScale(65);
   const {categories} = useSelector((state) => state).toktokFood;
+  const {shops} = useSelector((state) => state).toktokFood;
 
   const renderNavBar = () => (
     <View style={[styles.headerWrapper, styles.navbarWrapper]}>

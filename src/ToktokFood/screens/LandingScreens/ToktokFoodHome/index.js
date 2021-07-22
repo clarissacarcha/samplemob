@@ -8,11 +8,12 @@ import HeaderSearchBox from 'toktokfood/components/HeaderSearchBox';
 import {StickyView} from './components';
 
 // Hooks
-import {useCategories, useUserLocation} from 'toktokfood/hooks';
+import {useCategories, useUserLocation, useShops} from 'toktokfood/hooks';
 
 const ToktokFoodHome = () => {
   useUserLocation(); // user location hook
-  useCategories();
+  useCategories(); // categories api
+  useShops(); // shops api
   return (
     <View style={styles.container}>
       <HeaderImageBackground>
