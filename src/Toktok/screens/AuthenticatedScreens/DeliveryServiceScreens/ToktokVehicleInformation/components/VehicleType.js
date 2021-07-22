@@ -52,7 +52,7 @@ export const VehicleType = ({item, index, data, selectedVehicleType, setSelected
             <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}}>{item.phrase}</Text>
             <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
               <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}}>{`Max weight: ${item.cargoWeightCapacity} KG`}</Text>
-              <Text style={{color: CONSTANTS.COLOR.YELLOW}}>{`PHP ${item.flatRate}`}</Text>
+              {/* <Text style={{color: CONSTANTS.COLOR.YELLOW}}>{`PHP ${item.flatRate}`}</Text> */}
             </View>
           </View>
         </View>

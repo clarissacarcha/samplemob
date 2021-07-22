@@ -5,6 +5,8 @@ export const MAPS_API_KEY = 'AIzaSyDhlw6pbriuwr_Mb6KYkVlBar7KD1KTrOs';
 
 export const PROTOCOL = 'http';
 export const HOST_PORT = '192.168.0.102:3000'; // Myutini
+// export const PROTOCOL = 'https';
+// export const HOST_PORT = 'test.toktok.ph:2096'; // Myutini
 
 export const TOKTOK_WALLET_PROTOCOL = 'http';
 export const TOKTOK_WALLET_PROTOCOL_HOST_PORT = '192.168.0.103:3100';
