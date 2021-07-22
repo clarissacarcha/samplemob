@@ -71,6 +71,7 @@ const ToktokFoodOrderTransactions = () => {
   };
 
   useEffect(() => {
+    // To filter transactions list
     filterTransactions();
   }, [focusTab]);
 
