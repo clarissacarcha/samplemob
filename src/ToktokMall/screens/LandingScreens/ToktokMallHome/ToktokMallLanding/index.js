@@ -1,14 +1,20 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {View, Text, ImageBackground, Image, TouchableOpacity, FlatList, SectionList} from 'react-native';
+import {View, Text, ImageBackground, Image, TouchableOpacity, FlatList, SectionList, StyleSheet} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { COLOR, FONT } from '../../../../../res/variables';
+import Animated from 'react-native-reanimated'
+import {useValues, onScrollEvent} from 'react-native-redash'
 
 //Main Components
 import CustomIcon from '../../../../Components/Icons';
 import {LandingHeader, AdsCarousel, StickyHomeHeader, LandingSubHeader} from '../../../../Components';
 
-//Subcomponents
 import {Categories, Offers, FlashSale, Vouchers, Suggestions} from './Components';
+
+// header with animations
+import LandingHeader2 from '../../../../Components/Header/LandingHeader2'
+import LandingSubHeader2 from '../../../../Components/Header/LandingSubHeader2'
+
 
 const Item = ({ title }) => (
   <View style={{}}>
@@ -19,6 +25,7 @@ const Item = ({ title }) => (
 export const ToktokMallLandingScreen = () => {
 
   const [scrolling, setScrolling] = useState(false)
+  const [y] = useValues([0], [])
 
   const HandleOnScroll = (r) => {
     let ypos = r.nativeEvent.contentOffset.y
@@ -57,6 +64,21 @@ export const ToktokMallLandingScreen = () => {
         )}        
       />      */}
 
+      {/* <Animated.ScrollView style = {StyleSheet.absoluteFill} 
+        onScroll = {onScrollEvent({ y })}
+        scrollEventThrottle = {1}
+      >
+        <View style = {{height: 150}} />
+        <AdsCarousel />
+        <Categories />
+        <Offers />
+        <FlashSale />
+        <Vouchers />
+        <Suggestions />
+      </Animated.ScrollView>
+      <LandingHeader2 {...{y}} />
+
+      <LandingSubHeader2 {... { y}} /> */}
       <LandingHeader />
       <SectionList         
         renderSectionHeader={({section: {title}}) => (<View />)}
