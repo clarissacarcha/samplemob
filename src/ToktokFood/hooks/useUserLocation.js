@@ -3,7 +3,7 @@ import {useDispatch} from 'react-redux';
 import {useLazyQuery} from '@apollo/react-hooks';
 
 // Graphql
-import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql/client/graphql';
+import {TOKTOK_FOOD_GRAPHQL_CLIENT} from '../../graphql/client/graphql';
 import {GET_CATEGORIES, GET_SHOPS} from 'toktokfood/graphql/toktokfood';
 
 // Helpers

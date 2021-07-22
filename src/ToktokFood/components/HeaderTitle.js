@@ -10,7 +10,7 @@ import {markerIcon} from 'toktokfood/assets/images';
 
 import {getStatusbarHeight, verticalScale} from 'toktokfood/helper/scale';
 
-const HeaderTitle = ({title = 'TokTok PH'}) => {
+const HeaderTitle = ({title = 'TokTok Food'}) => {
   const navigation = useNavigation();
   const {location} = useSelector((state) => state.toktokFood);
 
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     paddingTop:
-      Platform.OS === 'android' ? verticalScale(getStatusbarHeight + 5) : verticalScale(getStatusbarHeight + 30),
+      Platform.OS === 'android' ? verticalScale(getStatusbarHeight + 15) : verticalScale(getStatusbarHeight + 25),
   },
   headerBack: {
     paddingHorizontal: 20,

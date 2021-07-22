@@ -10,13 +10,20 @@ import {StickyView} from './components';
 // Hooks
 import {useCategories, useUserLocation, useShops} from 'toktokfood/hooks';
 
+import {moderateScale, getStatusbarHeight} from 'toktokfood/helper/scale';
+
+const CUSTOM_HEADER = {
+  container: Platform.OS === 'android' ? moderateScale(143 + getStatusbarHeight) : moderateScale(145),
+  bgImage: Platform.OS === 'android' ? moderateScale(115 + getStatusbarHeight) : moderateScale(125),
+};
+
 const ToktokFoodHome = () => {
   useUserLocation(); // user location hook
   useCategories(); // categories api
   useShops(); // shops api
   return (
     <View style={styles.container}>
-      <HeaderImageBackground>
+      <HeaderImageBackground customSize={CUSTOM_HEADER}>
         <HeaderTitle />
         <HeaderSearchBox />
       </HeaderImageBackground>

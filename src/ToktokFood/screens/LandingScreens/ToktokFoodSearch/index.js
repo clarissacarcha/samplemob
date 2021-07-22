@@ -17,7 +17,14 @@ import {COLOR} from 'res/variables';
 // Strings
 import {restaurants, tabs} from 'toktokfood/helper/strings';
 
+import {moderateScale, getStatusbarHeight} from 'toktokfood/helper/scale';
+
 import styles from './styles';
+
+const CUSTOM_HEADER = {
+  container: Platform.OS === 'android' ? moderateScale(143 + getStatusbarHeight) : moderateScale(145),
+  bgImage: Platform.OS === 'android' ? moderateScale(115 + getStatusbarHeight) : moderateScale(125),
+};
 
 const ToktokFoodSearch = () => {
   tabs[3] = {
@@ -70,7 +77,7 @@ const ToktokFoodSearch = () => {
 
   return (
     <View style={styles.container}>
-      <HeaderImageBackground>
+      <HeaderImageBackground customSize={CUSTOM_HEADER}>
         <HeaderTitle />
         <HeaderSearchBox />
       </HeaderImageBackground>
