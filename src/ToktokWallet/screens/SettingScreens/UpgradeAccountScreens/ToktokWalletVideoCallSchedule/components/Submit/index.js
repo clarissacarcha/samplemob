@@ -2,14 +2,24 @@ import React, { useState, useEffect, useContext } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, TextInput, Image } from "react-native";
 import CONSTANTS from "common/res/constants";
 import { ContextChannelForm, modifyPlaceholderAccordingToChannel } from "../../components";
+import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql';
+import { POST_FULL_VERIFIED_UPGRADE_REQUEST } from 'toktokwallet/graphql';
+import { useMutation } from '@apollo/react-hooks';
+import { useAlert } from 'src/hooks/useAlert';
+import { onErrorAlert } from 'src/util/ErrorUtility';
+import { useSelector } from 'react-redux';
+import { YellowButton } from 'src/revamp';
+import {AlertOverlay} from 'src/components';
+import {useNavigation} from '@react-navigation/native';
 
 const { FONT_FAMILY: FONT , FONT_SIZE , COLOR, SHADOW, SIZE } = CONSTANTS;
-import { YellowButton } from 'src/revamp'
 
 export const Submit = () => {
 
+    const navigation = useNavigation()
+    const tokwaAccount = useSelector(state=>state.toktokWallet)
     const {
-        selectedChannel,
+        selectedCallChannel,
         numberOrLink,
         setNumberOrLink,
         dayPicked,
@@ -28,7 +38,7 @@ export const Submit = () => {
 
     useEffect(()=>{
         resetFields()
-    },[selectedChannel])
+    },[selectedCallChannel])
 
     const resetFields = () => {
         setNumberOrLink("")
@@ -45,10 +55,25 @@ export const Submit = () => {
         })
     }
 
+    const [postFullyVerifiedUpgradeRequest,{ data, error, loading}] = useMutation(POST_FULL_VERIFIED_UPGRADE_REQUEST, {
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+        onError: (error) => {
+            onErrorAlert({alert , error});
+        },
+        onCompleted: (response)=> {
+            let result = response.postFullyVerifiedUpgradeRequest
+            if(result.requestStatus == 2){
+                navigation.pop(2)
+                navigation.navigate("ToktokWalletUpgradeAccount")
+            }
+        }
+    })
+
     const onPressSubmit = () => {
         let noError = true;
-        let placeholder = modifyPlaceholderAccordingToChannel(selectedChannel);
-        let isMobileNumber = selectedChannel == "Viber" || selectedChannel == "Whats App" || selectedChannel == "Telegram"
+        let { channelName } = selectedCallChannel
+        let placeholder = modifyPlaceholderAccordingToChannel(channelName);
+        let isMobileNumber = channelName == "Viber" || channelName == "Whats App" || channelName == "Telegram"
         if(numberOrLink == ""){
             setErrorMessage(`${placeholder} is required.`)
             noError = false
@@ -59,12 +84,32 @@ export const Submit = () => {
         }
 
         if(!noError) return
+
+        let input = {
+            accountLevel: +tokwaAccount.person.accountType.level,
+            videoCallContactDetails: isMobileNumber ? numberOrLink.replace("0", "+63") : numberOrLink,
+            callChannelId: selectedCallChannel.id,
+            preferredVCSDayMin: dayPicked.min,
+            preferredVCSDayMax: dayPicked.max,
+            preferredVCSTimeMin: timePicked.min,
+            preferredVCSTimeMax: timePicked.max
+        }
+
+        postFullyVerifiedUpgradeRequest({
+            variables: {
+                input
+            }
+        })
     }
 
     return (
-        <View style={{ padding: 16 }}>
-            <YellowButton label="Submit" onPress={onPressSubmit} />
-        </View>
+        <>
+            <AlertOverlay visible={loading} />
+            <View style={{ padding: 16 }}>
+                <YellowButton label="Submit" onPress={onPressSubmit} />
+            </View>
+        </>
+        
     )
 }
 

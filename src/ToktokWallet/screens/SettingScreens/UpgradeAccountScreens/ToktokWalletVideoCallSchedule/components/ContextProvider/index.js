@@ -2,10 +2,14 @@ import React , {createContext , useState , useEffect} from 'react'
 
 export const ContextChannelForm = createContext(null)
 const { Provider } = ContextChannelForm
-
+import {useLazyQuery,useMutation} from '@apollo/react-hooks'
+import {TOKTOK_WALLET_GRAPHQL_CLIENT} from '../../../../../../../graphql'
+import { GET_CALL_CHANNELS } from '../../../../../../graphql/model'
+import { onErrorAlert } from '../../../../../../../util/ErrorUtility'
 export const ContextProvider = ({ children })=> {
 
-    const [selectedChannel, setSelectedChannel] = useState("");
+    const [selectedCallChannel, setSelectedCallChannel] = useState({});
+    const [callChannels, setCallChannels] = useState("");
     const [numberOrLink, setNumberOrLink] = useState("");
     const [dayPicked, setDayPicked] = useState({
         index: 0,
@@ -19,11 +23,27 @@ export const ContextProvider = ({ children })=> {
     });
     const [errorMessage, setErrorMessage] = useState("");
 
+    const [getCallChannels] = useLazyQuery(GET_CALL_CHANNELS, {
+        fetchPolicy:"network-only",
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+        onError: (error)=> {
+            onErrorAlert({alert,error})
+        },
+        onCompleted:({getCallChannels})=> {
+            setCallChannels(getCallChannels)
+        }
+    })
+
+    useEffect(()=>{
+        getCallChannels()
+    },[])
+
     return (
         <Provider
             value={{
-                selectedChannel,
-                setSelectedChannel,
+                callChannels,
+                selectedCallChannel,
+                setSelectedCallChannel,
                 numberOrLink,
                 setNumberOrLink,
                 dayPicked,

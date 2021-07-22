@@ -1,5 +1,6 @@
 export * from "./Account";
 export * from "./AccountType";
+export * from "./CallChannel";
 export * from "./CashIn";
 export * from "./CashInProvider";
 export * from "./CashOut";
@@ -8,6 +9,7 @@ export * from "./CashOutBankAccount";
 export * from "./CashOutEnrollmentBdo";
 export * from "./CashOutEnrollmentGcash";
 export * from "./CashOutProvider";
+export * from "./FullyVerifiedUpgradeRequest";
 export * from "./GlobalSetting";
 export * from "./Transaction";
 export * from "./Wallet";

@@ -8,26 +8,26 @@ import { YellowButton } from 'src/revamp';
 const { FONT_FAMILY: FONT , FONT_SIZE , COLOR, SHADOW, SIZE } = CONSTANTS;
 
 export const ChannelList = ({ item, onPress }) => {
-    const { selectedChannel, setSelectedChannel } = useContext(ContextChannelForm);
-    const { channel, image } = item
-    const isSelected = selectedChannel === channel;
+    const { selectedCallChannel, setSelectedCallChannel } = useContext(ContextChannelForm);
+    const { channelName, logo, id } = item
+    const isSelected = selectedCallChannel.channelName === channelName;
     const borderColor = isSelected? styles.yellowBorder : styles.whiteBorder;
 
     const onItemPress = () => {
         onPress()
-        setSelectedChannel(channel)
+        setSelectedCallChannel({ id, channelName })
     }
 
     return (
         <View style={{ marginBottom: 15 }}>
             <TouchableOpacity activeOpacity={1} style={[styles.cardShadow, borderColor ]} onPress={onItemPress}>
                 <View style={{ flexDirection: "row", alignItems: "center", height: SIZE.FORM_HEIGHT, paddingHorizontal: 10 }}>
-                    <Image source={image} style={{ resizeMode: "contain", height: 30, width: 30 }} />
-                    <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD, padding: 8 }} >{channel}</Text>
+                    <Image source={{ uri: logo }} style={{ resizeMode: "contain", height: 30, width: 30 }} />
+                    <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD, padding: 8 }} >{channelName}</Text>
                 </View>
             </TouchableOpacity>
             { isSelected && (
-                <ChannelForm channel={channel} />
+                <ChannelForm data={item} />
             )}
         </View>
     )
