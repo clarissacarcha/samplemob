@@ -7,7 +7,6 @@ import {useSelector} from 'react-redux'
 import CONSTANTS from 'common/res/constants'
 
 const { FONT_FAMILY: FONT , FONT_SIZE , COLOR } = CONSTANTS
-
 const SettingHeaderTitle = ({title})=> {
     return (
         <View style={{paddingHorizontal: 16, paddingVertical: 8,backgroundColor:"white"}}><Text style={{fontFamily:FONT.BOLD}}>{title}</Text></View>

@@ -9,7 +9,6 @@ import CONSTANTS from 'common/res/constants'
 
 const { COLOR , FONT_SIZE , FONT_FAMILY: FONT  } = CONSTANTS
 
-
 const UpgradeRequirement = ({label})=> {
     return (
         <View style={styles.requirement}>
@@ -29,12 +28,10 @@ export const ToktokWalletUpgradeAccount = ({navigation})=> {
     const {tokwaAccount} = useAccount()
 
     const upgradeAccount = ()=> {
-        // if(tokwaAccount.person.accountType.level == 1){
-        //     // navigate to fully verified application
-        //     return navigation.navigate("ToktokWalletFullyVerifiedApplication")
-        // }
-        
-        // console.log(tokwaAccount.isLinked)
+        if(tokwaAccount.person.accountType.level == 1){
+            // navigate to fully verified application
+            return navigation.navigate("ToktokWalletVideoCallSchedule")
+        }
         return navigation.navigate("ToktokWalletEnterpriseApplication")
     }   
     
