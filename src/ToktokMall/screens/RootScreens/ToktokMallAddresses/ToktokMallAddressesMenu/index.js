@@ -60,7 +60,9 @@ export const ToktokMallAddressesMenu = ({route, navigation, }) => {
   const renderAddresses = () => {
     return data.map((item, i) => {
       return(
-        <TouchableOpacity  style={styles.addressContainer} onPress = {() => {changeDefault(item.id)}}>
+        <TouchableOpacity style={styles.addressContainer} onLongPress={() => {
+          navigation.navigate("ToktokMallAddressesForm", {item, update: true})
+        }} onPress = {() => {changeDefault(item.id)}}>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <Text style={styles.addressfullName}>{item.full_name} {item.id}</Text>
             { item.id == defaultId  ? 
@@ -101,7 +103,7 @@ export const ToktokMallAddressesMenu = ({route, navigation, }) => {
 
 const styles = StyleSheet.create({
   body: {flex: 1, backgroundColor: '#F7F7FA', },
-  container: {padding: 15, backgroundColor: 'white', marginTop: 15,  flex: 1},
+  container: {padding: 15, backgroundColor: 'white', marginTop: 8,  flex: 1},
   addressContainer: {borderRadius: 5, backgroundColor: '#F8F8F8', padding: 10, marginTop: 10, marginBottom: 10},
   defaultText: {color: '#F6841F'},
   fullName: {},
@@ -109,10 +111,12 @@ const styles = StyleSheet.create({
   address: {marginTop: 10, fontWeight: 'bold'},
   button: {flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 10, height: 50, 
   borderRadius: 5,  paddingLeft: 10, paddingRight: 10,
-    elevation: 2, shadowOffset: {width: 1, height: 1}, shadowColor: '#FFFFFF',
-
-    shadowOpacity: 0.3,
-    shadowRadius: 1
+    elevation: 0.0001, 
+    // shadowOffset: {width: 1, height: 1}, shadowColor: '#FFFFFF',
+    // shadowOpacity: 0.3,
+    // shadowRadius: 1
+    borderWidth: 0.2,
+    borderColor: "#F8F8F8"
   },
   addressContainer: {borderRadius: 5, backgroundColor: '#F8F8F8', padding: 10, marginTop: 10, marginBottom: 10},
   addressdefaultText: {color: '#F6841F'},

@@ -4,6 +4,8 @@ import { COLOR, FONT } from '../../../../../res/variables';
 import {HeaderBack, HeaderTitle, HeaderRight} from '../../../../Components';
 import Fontisto from 'react-native-vector-icons/dist/Fontisto'
 
+import {AddressModal} from './Components'
+
 export const ToktokMallAddressesForm = ({navigation, route}) => {
 
   const [fullName, setFullName] = useState('');
@@ -15,6 +17,9 @@ export const ToktokMallAddressesForm = ({navigation, route}) => {
   const [defaultId, setDefaultId] = useState(0);
   const [previousdefaultId, setPreviousDefaultId] = useState(0);
   const [clicked, setClicked] = useState(false)
+  const [toUpdate, setToUpdate] = useState(false)
+  const [confirmDeleteModal, setConfirmDeleteModal] = useState(false)
+  const [messageModal, setMessageModal] = useState(false)
 
   let previousArr = []
 
@@ -24,6 +29,14 @@ export const ToktokMallAddressesForm = ({navigation, route}) => {
     // setAddressData(testDataAddress);
     // setPreviousDefaultId(route.params.defaultAddress)
   },[])
+
+  useEffect(() => {
+    if(route.params.update){
+      setFullName(route.params.full_name)
+      setContact(route.params.contact_number)      
+      setToUpdate(true)
+    }
+  }, [route.params.update])
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
@@ -61,16 +74,36 @@ export const ToktokMallAddressesForm = ({navigation, route}) => {
 
   return (
     <>
+      {confirmDeleteModal && 
+      <AddressModal 
+        type="Confirm"  
+        isVisible={confirmDeleteModal} 
+        setIsVisible={(val) => {
+          setConfirmDeleteModal(val)
+          setMessageModal(true)
+          setTimeout(() => {
+            // setMessageModal(false)
+          }, 1400)
+        }} 
+      />}
+      {messageModal && 
+      <AddressModal 
+        type="Message"  
+        isVisible={messageModal} 
+        setIsVisible={(val) => {
+          setMessageModal(val)
+        }} 
+      />}          
       <View style = {styles.container}>
         <View style= {styles.partition1}> 
           
           <View style = {styles.textinputContainer}>
-            <TextInput style = {styles.textinput}   placeholder = {'Full Name'} 
+            <TextInput style = {styles.textinput} value={fullName}  placeholder = {'Full Name'} 
             onChangeText ={(text) => {setFullName(text)}} 
             />
           </View>
           <View style = {styles.textinputContainer}>
-            <TextInput style = {styles.textinput}  placeholder = {'Contact Number'} 
+            <TextInput style = {styles.textinput} value={contact}  placeholder = {'Contact Number'} 
             onChangeText ={(text) => {setContact(text)}}  
             />
           </View>
@@ -113,7 +146,16 @@ export const ToktokMallAddressesForm = ({navigation, route}) => {
           </TouchableOpacity>
         </View>
         <View style={styles.partition3}>
-          <TouchableOpacity style={styles.button} onPress = {() => {onPress()}} >
+          {toUpdate && 
+          <>
+            <TouchableOpacity style={styles.button2} onPress = {() => {
+              setConfirmDeleteModal(true)
+            }} >
+              <Text style={{color: "#F6841F"}}>Delete</Text>
+            </TouchableOpacity>
+            <View  style={{flex: 0.2}}/>
+          </>}
+          <TouchableOpacity style={styles.button1} onPress = {() => {onPress()}} >
             <Text style={styles.buttonText}>Save</Text>
           </TouchableOpacity>
         </View>
@@ -124,12 +166,13 @@ export const ToktokMallAddressesForm = ({navigation, route}) => {
 
 const styles = StyleSheet.create({
   container: {flex: 1, backgroundColor: '#F7F7FA', },
-  partition1: {padding: 15, backgroundColor: 'white', marginTop: 15,  flex: 1.5},
+  partition1: {padding: 15, backgroundColor: 'white', marginTop: 8,  flex: 1.5},
   partition2: {padding: 15, backgroundColor: 'white', marginTop: 4,  flex: 0.08, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'},
-  partition3: {padding: 15, backgroundColor: 'white', marginTop: 4, flex: .3, justifyContent: 'center', alignItems: 'center'},
+  partition3: {padding: 15, backgroundColor: 'white', marginTop: 4, flex: .3, justifyContent: 'center', alignItems: 'center', flexDirection: 'row'},
   textinputContainer: {backgroundColor: '#F8F8F8', marginTop: 10,  borderRadius: 5, alignItems: 'flex-start'},
   textinput: {marginLeft: 10},
   textinputLastContainer :{backgroundColor: '#F8F8F8', marginTop: 10,  borderRadius: 5, alignItems: 'flex-start', height: 130},
-  button: {alignItems: 'center', justifyContent: 'center', backgroundColor: '#F6841F', width: 136, height: 42, borderRadius: 5},
+  button1: {flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#F6841F', paddingHorizontal: 22, paddingVertical: 16, borderRadius: 5},
+  button2: {flex: 1, alignItems: 'center', justifyContent: 'center', borderColor: "#F6841F", borderWidth: 1, paddingHorizontal: 22, paddingVertical: 16, borderRadius: 5},
   buttonText: {color: 'white'}
 })
