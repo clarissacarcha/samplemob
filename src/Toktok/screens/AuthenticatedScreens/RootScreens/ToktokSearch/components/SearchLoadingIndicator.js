@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, ActivityIndicator} from 'react-native';
+import {View} from 'react-native';
 import ContentLoader from 'react-native-easy-content-loader';
 
 const Loader = () => (

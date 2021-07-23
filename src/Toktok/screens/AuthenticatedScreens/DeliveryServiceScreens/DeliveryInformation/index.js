@@ -208,10 +208,10 @@ const DeliveryDetails = ({navigation, route, session}) => {
           <InputScrollView>
             <AlertOverlay visible={loading} />
             <View style={{height: 10}} />
-            <PaymentMethodForm
+            {/* <PaymentMethodForm
               value={paymentMethod === 'CASH' ? 'Cash' : 'toktokwallet'}
               bottomSheetRef={paymentMethodSheetRef}
-            />
+            /> */}
             {paymentMethod === 'CASH' && (
               <PaymentForm
                 value={collectPaymentFrom === 'SENDER' ? 'Sender' : 'Recipient'}

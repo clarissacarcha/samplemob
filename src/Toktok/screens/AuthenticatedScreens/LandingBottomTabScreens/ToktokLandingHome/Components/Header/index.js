@@ -46,6 +46,7 @@ const SearchInput = () => {
       onPress={() => {
         navigation.push('ToktokSearch');
       }}
+      delay={100}
       style={{bottom: -10, marginHorizontal: SIZE.MARGIN, borderRadius: 5, borderWidth: 1, borderColor: COLOR.LIGHT}}>
       <View style={{...styles.inputBox, borderRadius: 5}}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>

@@ -1,12 +1,21 @@
 import React, {useRef, useEffect, useCallback} from 'react';
-import {View, Text, StyleSheet, TextInput, StatusBar, ImageBackground} from 'react-native';
+import {View, Text, StyleSheet, TextInput, StatusBar, ImageBackground, TouchableOpacity} from 'react-native';
 import {useSelector} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import {LIGHT, PROTOCOL, HOST_PORT, FONT_REGULAR} from '../../../../../../../res/constants';
 import {FONT, FONT_SIZE, COLOR, SIZE} from '../../../../../../../res/variables';
 import {debounce} from 'lodash';
 import axios from 'axios';
 import HeaderImage from 'src/assets/toktok/images/HeaderBackground.png';
+import FIcon5 from 'react-native-vector-icons/FontAwesome5';
+
+const INITIAL_RESULT = {
+  payload: {
+    success: null, // Means no result yet. Show Loading
+  },
+  predictions: [],
+};
 
 const SearchInput = ({onChangeText}) => {
   const inputRef = useRef(null);
@@ -41,9 +50,11 @@ const SearchInput = ({onChangeText}) => {
   );
 };
 
-export const Header = () => {
+export const Header = ({setSearchResult, setSearchLoading, setSearchText, searchText}) => {
   const session = useSelector((state) => state.session);
   const sessionToken = 'ABC123123';
+
+  const navigation = useNavigation();
 
   const useIsMounted = () => {
     const isMountedRef = useRef(true);
@@ -81,33 +92,36 @@ export const Header = () => {
   };
 
   const getGooglePlaceAutocomplete = async ({searchString}) => {
-    console.log({searchString});
-
-    try {
-      const apiResult = await axios({
-        url: `${PROTOCOL}://${HOST_PORT}/graphql`,
-        method: 'post',
-        data: {
-          query: `
-                query {
-                  getGooglePlaceAutocomplete(input:{
-                    searchString: "${searchString}"
-                    sessionToken:"${sessionToken}"
-                  }) {
-                    payload
-                    predictions {
-                      formattedAddress
-                      placeId
+    if (searchText.length >= 3) {
+      try {
+        setSearchLoading(true);
+        const apiResult = await axios({
+          url: `${PROTOCOL}://${HOST_PORT}/graphql`,
+          method: 'post',
+          data: {
+            query: `
+                  query {
+                    getGooglePlaceAutocomplete(input:{
+                      searchString: "${searchString}"
+                      sessionToken:"${sessionToken}"
+                    }) {
+                      payload
+                      predictions {
+                        formattedAddress
+                        placeId
+                      }
                     }
                   }
-                }
-                `,
-        },
-      });
-      // onSearchResultChange(apiResult.data.data.getGooglePlaceAutocomplete);
-      console.log(JSON.stringify(apiResult.data.data.getGooglePlaceAutocomplete, null, 4));
-    } catch (error) {
-      // onSearchResultChange(ERROR_RESULT);
+                  `,
+          },
+        });
+
+        setSearchResult(apiResult.data.data.getGooglePlaceAutocomplete);
+        setSearchLoading(false);
+      } catch (error) {
+        setSearchLoading(false);
+        // onSearchResultChange(ERROR_RESULT);
+      }
     }
   };
 
@@ -117,21 +131,20 @@ export const Header = () => {
   );
 
   const onChangeText = async (value) => {
-    // setText(value);
-    // onSearchTextChange(value);
+    setSearchText(value);
     if (value.length >= 3) {
       debouncedGetGooglePlaceAutocomplete(value);
+    } else {
+      setSearchResult(INITIAL_RESULT);
     }
   };
 
   return (
     <View style={{height: 160, backgroundColor: 'white'}}>
       <ImageBackground style={{height: 130}} source={HeaderImage} resizeMode="cover">
-        <View style={styles.greetingBox}>
-          <Text style={styles.greetingText}>
-            Hello, {session.user.person.firstName} {session.user.person.lastName}
-          </Text>
-        </View>
+        <TouchableOpacity style={styles.greetingBox} onPress={() => navigation.pop()}>
+          <FIcon5 name="chevron-left" color={'black'} size={13} style={{marginLeft: 2}} />
+        </TouchableOpacity>
         <SearchInput onChangeText={onChangeText} />
       </ImageBackground>
     </View>
@@ -152,6 +165,7 @@ const styles = StyleSheet.create({
     marginTop: StatusBar.currentHeight,
     justifyContent: 'center',
     paddingHorizontal: SIZE.MARGIN,
+    width: 50,
   },
   greetingText: {
     fontSize: FONT_SIZE.XL,

@@ -238,7 +238,15 @@ const ToktokDelivery = ({navigation, session, route}) => {
   };
 
   useEffect(() => {
-    // getLocationHash();
+    if (route.params.formattedAddressFromSearch) {
+      setOrderData({
+        ...orderData,
+        senderStop: {
+          ...orderData.senderStop,
+          ...route.params.formattedAddressFromSearch,
+        },
+      });
+    }
   }, []);
 
   const onAddDeliveryInformation = () => {
@@ -359,6 +367,7 @@ const ToktokDelivery = ({navigation, session, route}) => {
             console.log({coordinates});
             // setUserCoordinates(coordinates);
           }}
+          hasAddressFromSearch={route.params.formattedAddressFromSearch ? true : false}
         />
 
         <View style={{flex: 1}} />

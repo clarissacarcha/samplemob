@@ -16,6 +16,7 @@ const SenderRecipientCard = ({
   onSenderPress = () => {},
   onRecipientPress = () => {},
   onLocationDetected = () => {},
+  hasAddressFromSearch = false,
 }) => {
   const [userStop, setUserStop] = useState(senderStop);
   const session = useSelector((state) => state.session);
@@ -73,8 +74,9 @@ const SenderRecipientCard = ({
     //   console.log('___________________');
 
     // }
-
-    getLocationHash();
+    if (!hasAddressFromSearch) {
+      getLocationHash();
+    }
   }, []);
 
   return (
