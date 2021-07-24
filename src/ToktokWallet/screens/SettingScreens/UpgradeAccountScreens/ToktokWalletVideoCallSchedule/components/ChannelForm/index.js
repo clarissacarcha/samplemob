@@ -17,23 +17,23 @@ const TIME_LIST = [
     { subLabel: "(Afternoon)", label: "1:00pm - 5:00pm", value: 1 }
 ];
 
-export const modifyPlaceholderAccordingToChannel = (channel) => {
-    switch (channel) {
+export const modifyPlaceholderAccordingToChannel = (channelName) => {
+    switch (channelName) {
         case "Skype":
             return "Skype ID"
         case "Messenger":
             return "Messenger link"
     
         default:
-            return `${channel} number`;
+            return `${channelName} number`;
     }
 }
 
+export const ChannelForm = ({ data }) => {
 
-export const ChannelForm = ({ channel }) => {
-
-    const isMobileNumber = channel == "Viber" || channel == "Whats App" || channel == "Telegram"
-    const placeholder = modifyPlaceholderAccordingToChannel(channel) 
+    const { channelName, contactDescription } = data
+    const isMobileNumber = contactDescription == "number"
+    const placeholder = modifyPlaceholderAccordingToChannel(channelName) 
     const {
         numberOrLink,
         setNumberOrLink,
@@ -48,8 +48,8 @@ export const ChannelForm = ({ channel }) => {
      const onPressPickDay = (index) => {
         let data = {
             index,
-            min: index ? 7 : 2,
-            max: index ? 1 : 6
+            min: index ? 1 : 2,
+            max: index ? 7 : 6
         }
         setDayPicked(data)
      }
