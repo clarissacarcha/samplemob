@@ -4,6 +4,7 @@ import {HeaderBack, HeaderTitle, HeaderRight, Header} from '../../../Components'
 import {COLOR, FONT, FONT_SIZE} from '../../../../res/variables';
 import CheckBox from 'react-native-check-box';
 
+import {MessageModal} from '../../../Components';
 import {DeleteFooter, CheckoutFooter, Item, Store, RenderDetails} from './components';
 
 const testdata = [
@@ -55,6 +56,7 @@ const testdata = [
 export const ToktokMallMyCart = ({navigation}) => {
   const [allSelected, setAllSelected] = useState(true);
   const [willDelete, setWillDelete] = useState(false);
+  const [messageModalShown, setMessageModalShown] = useState(true);
   const [cartData, setCartData] = useState([]);
   const [subTotal, setSubTotal] = useState(0);
 
@@ -153,12 +155,22 @@ export const ToktokMallMyCart = ({navigation}) => {
           <View style={{height: 80}}></View>
 
           {willDelete ? 
-          <DeleteFooter /> : 
+          <DeleteFooter onDelete={() => {
+            setMessageModalShown(true)
+          }} /> : 
           <CheckoutFooter 
             onSubmit={() => {
               navigation.navigate("ToktokMallCheckout")
             }} 
             subtotal={subTotal} 
+          />}
+
+          {messageModalShown && 
+          <MessageModal 
+            type="Success"
+            isVisible={messageModalShown}
+            setIsVisible={(val) => setMessageModalShown(val)}  
+            message="Item has been removed from your cart."
           />}
             
         </View>

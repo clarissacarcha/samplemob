@@ -16,7 +16,7 @@ const SampleVariations = [{
   label: "Bronze"
 }]
 
-export const VariationBottomSheet = forwardRef(({ item, onBuyNow, onAddToCart, type}, ref) => {
+export const VariationBottomSheet = forwardRef(({ item, onPressBuyNow, onPressAddToCart, type}, ref) => {
   
   const snapPoints = useMemo(() => [0, 450], []);
   const [stock, setStock] = useState(21)
@@ -168,8 +168,8 @@ export const VariationBottomSheet = forwardRef(({ item, onBuyNow, onAddToCart, t
         <View style={{flex: 3, paddingHorizontal: 0, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around'}}>
           <RenderOptions 
             type={type} 
-            onBuyNow={() => null}
-            onAddToCart={() => null}
+            onBuyNow={onPressBuyNow}
+            onAddToCart={onPressAddToCart}
           />
         </View>
       </View>

@@ -7,6 +7,7 @@ import { COLOR, FONT, FONT_SIZE } from '../../../../../../res/variables';
 import {coppermask} from '../../../../../assets';
 import SwipeableView from 'react-native-swipeable-view';
 
+import { MessageModal } from '../../../../../Components';
 import {Item, Store, RenderFooter} from './Components'
 
 const testdata = [{
@@ -43,6 +44,7 @@ const testdata = [{
 export const ToktokMallMyWishlist = ({navigation})=> {
 
   const [willDelete, setWillDelete] = useState(false)
+  const [messageModalShown, setMessageModalShown] = useState(false)
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
@@ -52,10 +54,10 @@ export const ToktokMallMyWishlist = ({navigation})=> {
     }} />
   });
 
-  const DeleteButton = () => {
+  const DeleteButton = ({onPress}) => {
     return (
       <>
-        <TouchableOpacity activeOpacity={1} style={{flex: 1, backgroundColor: '#F6841F', alignItems: 'center', justifyContent: 'center'}}>
+        <TouchableOpacity onPress={onPress} activeOpacity={1} style={{flex: 1, backgroundColor: '#F6841F', alignItems: 'center', justifyContent: 'center'}}>
           <Text style={{fontSize: 14, color: "#fff"}}>Delete</Text>
         </TouchableOpacity>
       </>
@@ -69,7 +71,9 @@ export const ToktokMallMyWishlist = ({navigation})=> {
         {item.items.map((raw, i) => 
         <SwipeableView btnsArray={ [{
           text: "Delete",
-          component: <DeleteButton />
+          component: <DeleteButton onPress={() => {
+            setMessageModalShown(true)
+          }} />
         }] }>
           <Item 
             key={i} 
@@ -94,7 +98,16 @@ export const ToktokMallMyWishlist = ({navigation})=> {
 					data={testdata}
 					renderItem={renderItem}
 				/>
-        {willDelete && <RenderFooter />}
+        {willDelete && <RenderFooter onPressBuyNow={() => {
+          setMessageModalShown(true)
+        }} />}
+        {messageModalShown && 
+        <MessageModal 
+          type="Success"
+          isVisible={messageModalShown} 
+          setIsVisible={(val) => setMessageModalShown(val)}
+          message="Item has been removed from your favorites."
+        />}
 			</View>
     </>
   );

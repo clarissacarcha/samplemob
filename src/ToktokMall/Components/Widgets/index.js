@@ -1,6 +1,7 @@
 export * from './Card'
 export * from './Carousel'
 export * from './Dropdown'
+export * from './MessageModal'
 export * from './Product'
 export * from './Separator'
 export * from './Voucher'

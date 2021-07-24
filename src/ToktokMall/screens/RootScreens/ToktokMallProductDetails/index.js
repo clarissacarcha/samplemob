@@ -1,7 +1,7 @@
 import React, {useRef, useEffect, useState} from 'react';
 import {View, Text, Image, FlatList, SectionList, ImageBackground, TouchableOpacity} from 'react-native';
 import { FONT } from '../../../../res/variables';
-import { Header, AdsCarousel } from '../../../Components';
+import { Header, AdsCarousel, MessageModal } from '../../../Components';
 import CustomIcon from '../../../Components/Icons';
 
 import {
@@ -27,6 +27,7 @@ export const ToktokMallProductDetails = ({navigation}) => {
   const BuyBottomSheetRef = useRef()
   const CartBottomSheetRef = useRef()
   const [variationOptionType, setVariationOptionType] = useState(0)
+  const [messageModalShown, setMessageModalShown] = useState(false)
 
   return (
     <>
@@ -73,8 +74,23 @@ export const ToktokMallProductDetails = ({navigation}) => {
 
       <VariationBottomSheet 
         ref={varBottomSheetRef} 
-        type={variationOptionType}     
+        type={variationOptionType}
+        onPressAddToCart={() => {
+          varBottomSheetRef.current.close()
+          setTimeout(() => {
+            setMessageModalShown(true)
+          }, 300)
+        }}
+        onPressBuyNow={() => null}
       />
+
+      {messageModalShown && 
+      <MessageModal 
+        type="Success"
+        isVisible={messageModalShown}
+        setIsVisible={(val) => setMessageModalShown(val)}
+        message="Item has been added to your cart."
+      />}
 
     </View>
     

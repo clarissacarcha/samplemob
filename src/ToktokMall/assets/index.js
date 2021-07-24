@@ -20,3 +20,9 @@ export const banner = require("../assets/images/banner.png")
 export const toktokmallH = require("../assets/images/toktokmall-h.png")
 export const voucherbg = require("../assets/images/voucher-bg.png")
 export const reviewimage = require("../assets/images/review-image.png")
+
+//ICONS
+export const successIcon = require("../assets/icons/success.png")
+export const warningIcon = require("../assets/icons/warning.png")
+export const questionIcon = require("../assets/icons/question.png")
+export const errorIcon = require("../assets/icons/error.png")
