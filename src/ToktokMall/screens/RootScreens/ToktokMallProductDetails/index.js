@@ -30,6 +30,7 @@ export const ToktokMallProductDetails = ({navigation}) => {
   const [scrolling, setScrolling] = useState(false)
   const [variationOptionType, setVariationOptionType] = useState(0)
   const [messageModalShown, setMessageModalShown] = useState(false)
+  const [isOutOfStock, setisOutOfStock] = useState(false)
 
   const HandleOnScroll = (r) => {
     let ypos = r.nativeEvent.contentOffset.y
@@ -47,7 +48,7 @@ export const ToktokMallProductDetails = ({navigation}) => {
         renderSectionHeader={({section: {title}}) => (<View />)}
         sections={[
           {title: 'Carousel', data: [1], renderItem: () => 
-            <ProductCarousel />
+            <ProductCarousel isOutOfStock={isOutOfStock} />
           },
           {title: 'Product', data: [1], renderItem: () => 
             <RenderProduct 
