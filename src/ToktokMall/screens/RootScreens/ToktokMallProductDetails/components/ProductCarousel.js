@@ -3,6 +3,7 @@ import {View, Text, ImageBackground, Image, StyleSheet, Platform, Dimensions} fr
 import Carousel, { Pagination, ParallaxImage } from 'react-native-snap-carousel';
 import CustomIcon from '../../../../Components/Icons';
 import {coppermask} from '../../../../assets';
+import { FONT } from '../../../../../res/variables';
 
 const { width: screenWidth } = Dimensions.get('window')
 const HEIGHT = 250
@@ -15,6 +16,11 @@ export const ProductCarousel = (props) => {
   const renderItem = ({item, index}, parallaxProps) => {
     return (
       <View style={{width: Dimensions.get("screen").width, height: HEIGHT}}>
+        <View style={{position: "absolute", zIndex: 1, top: 60, left: HEIGHT / 2.5, backgroundColor: 'transparent', alignItems: 'center', justifyContent: 'center'}}>
+          <View style={{width: 150, height: 150, borderRadius: 150/2, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.25)'}}>
+            <Text style={{fontFamily: FONT.BOLD, fontSize: 18, color: "#fff"}}>OUT OF STOCK</Text>
+          </View>
+        </View>
         <ParallaxImage
           // source={{uri: "https://cdn.searchenginejournal.com/wp-content/uploads/2019/04/shutterstock_456779230.png"}}
           source={coppermask}

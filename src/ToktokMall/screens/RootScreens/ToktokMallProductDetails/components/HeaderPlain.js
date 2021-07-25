@@ -1,5 +1,7 @@
-import React from 'react';
+import React, {useState, useRef} from 'react';
 import {View, Text, Image, FlatList, SectionList, ImageBackground} from 'react-native';
+import { Badge, Tooltip } from 'react-native-elements';
+import { useNavigation } from '@react-navigation/core';
 import { Header } from '../../../../Components';
 import {Price} from '../../../../helpers';
 import CustomIcon from '../../../../Components/Icons';
@@ -7,6 +9,10 @@ import {coppermask, clothfacemask, voucherbg} from '../../../../assets';
 import { FONT } from '../../../../../res/variables';
 
 export const HeaderPlain = ({value}) => {
+
+  const navigation = useNavigation()
+  const HelpTooltipRef = useRef(null)
+
 	return (
 		<>
 			<View style={{flexDirection: 'row', paddingTop: 40, paddingBottom: 12, paddingHorizontal: 6}}>
@@ -20,9 +26,26 @@ export const HeaderPlain = ({value}) => {
           <View style={{flex: 0.5}}></View>
 					<View style={{flex: 1, justifyContent: 'center'}}>
             <CustomIcon.AIcon name="shoppingcart" color="#F6841F" size={24} />
+            <Badge
+              status="warning"
+              value="99+"
+              badgeStyle={{backgroundColor: "#FDBA1C"}}
+              textStyle={{fontFamily: FONT.REGULAR, fontSize: 10}}
+              containerStyle={{ position: 'absolute', top: -4, right: 0 }}
+            />
           </View>
           <View style={{flex: 1, justifyContent: 'center'}}>
-            <CustomIcon.FeIcon name="more-horizontal" color="#F6841F" size={24} />
+            <Tooltip
+              ref={HelpTooltipRef}
+              backgroundColor="white"
+              withPointer={false}
+              containerStyle={{backgroundColor: 'white', alignItems: 'flex-start'}} 
+              popover={<Text onPress={() => {
+                HelpTooltipRef.current.toggleTooltip()
+                navigation.navigate("ToktokMallHelp")
+              }}>Help</Text>}>
+              <CustomIcon.FeIcon name="more-horizontal" color="#F6841F" size={24} />
+            </Tooltip>
           </View>
         </View>
       </View>

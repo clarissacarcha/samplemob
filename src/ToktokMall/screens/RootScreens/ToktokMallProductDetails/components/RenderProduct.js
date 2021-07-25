@@ -1,5 +1,8 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {View, Text, Image, FlatList, SectionList, ImageBackground, TouchableOpacity} from 'react-native';
+import Toast from 'react-native-simple-toast';
+import Share from 'react-native-share';
+
 import { Header } from '../../../../Components';
 import {Price} from '../../../../helpers';
 import CustomIcon from '../../../../Components/Icons';
@@ -21,6 +24,9 @@ const RenderStars = ({value}) => {
 }
 
 export const RenderProduct = ({onOpenVariations}) => {
+
+  const [favorite, setFavorite] = useState(false)
+
 	return (
 		<>
 			<View style={{paddingVertical: 8, paddingHorizontal: 16}}>
@@ -49,12 +55,31 @@ export const RenderProduct = ({onOpenVariations}) => {
             </View>
           </View>
           <View style={{flex: 1.8, flexDirection: 'row', justifyContent: 'space-between'}}>
-            <View>
-              <CustomIcon.EIcon name="heart-outlined" size={22} color="#9E9E9E" />
-            </View>
-            <View>
+            <TouchableOpacity onPress={() => {
+              if(!favorite){
+                Toast.show('Added to Favorites')
+                setFavorite(true)
+              }
+            }}>
+              {favorite ? <CustomIcon.EIcon name="heart" size={22} color="#F6841F" /> : <CustomIcon.EIcon name="heart-outlined" size={22} color="#9E9E9E" />}
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => {
+
+              let options = {
+                message: "Black King To-Go",
+                url: "https://toktokmall.ph/products/e7111d7d6bbd406a82ae6a515cb65ab2"
+              }
+
+              Share.open(options)
+              .then((res) => {
+                console.log(res);
+              })
+              .catch((err) => {
+                err && console.log(err);
+              });
+            }}>
               <CustomIcon.FeIcon name="share" size={20} color="#9E9E9E" />
-            </View>
+            </TouchableOpacity>
           </View>
         </View>
       </View>

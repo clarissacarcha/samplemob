@@ -1,5 +1,6 @@
 import React, {useRef, useEffect, useState} from 'react';
 import {View, Text, Image, FlatList, SectionList, ImageBackground, TouchableOpacity} from 'react-native';
+
 import { FONT } from '../../../../res/variables';
 import { Header, AdsCarousel, MessageModal } from '../../../Components';
 import CustomIcon from '../../../Components/Icons';
@@ -26,15 +27,21 @@ export const ToktokMallProductDetails = ({navigation}) => {
   const varBottomSheetRef = useRef()
   const BuyBottomSheetRef = useRef()
   const CartBottomSheetRef = useRef()
+  const [scrolling, setScrolling] = useState(false)
   const [variationOptionType, setVariationOptionType] = useState(0)
   const [messageModalShown, setMessageModalShown] = useState(false)
+
+  const HandleOnScroll = (r) => {
+    let ypos = r.nativeEvent.contentOffset.y
+    if(ypos > 50) setScrolling(true)
+    else if (ypos <= 50) setScrolling(false)
+  }
 
   return (
     <>
     <View style={{flex: 1, backgroundColor: '#fff'}}>
       
-      <HeaderPlain />
-      {/* <HeaderTransparent outOfStock={true} /> */}
+      {scrolling ? <HeaderPlain /> : <HeaderTransparent />}
 
       <SectionList         
         renderSectionHeader={({section: {title}}) => (<View />)}
@@ -58,6 +65,7 @@ export const ToktokMallProductDetails = ({navigation}) => {
         ]}
         showsVerticalScrollIndicator={false}
         keyExtractor={(item, index) => item + index}
+        onScroll={HandleOnScroll}
       />
 
       <RenderFooter 
