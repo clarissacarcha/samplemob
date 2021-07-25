@@ -1,8 +1,9 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, Dimensions} from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/core';
 import { COLOR, FONT } from '../../../../../../res/variables';
 import {LandingHeader, AdsCarousel} from '../../../../../Components';
-import { ScrollView } from 'react-native-gesture-handler';
 import CustomIcon from '../../../../../Components/Icons';
 import {coppermask, chair, bottle, flashsalebg, flashsale} from '../../../../../assets';
 
@@ -44,6 +45,9 @@ const Item = ({data}) => {
 }
 
 export const FlashSale = () => {
+
+  const navigation = useNavigation()
+
     return (
         <>
         <ImageBackground 
@@ -59,12 +63,16 @@ export const FlashSale = () => {
               <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>&nbsp;UP TO 80% OFF</Text>
               <Text style={{color: "#747575", fontSize: 12}}>Offer ends 5.17.2021</Text>
             </View>
-            <TouchableOpacity style={{flex: 3, alignItems: 'flex-end', justifyContent: 'center'}}>
-              <Text style={{fontSize: 12, color: "#F6841F", fontWeight: '600'}}>Shop now </Text>
+            <TouchableOpacity onPress={() => {
+              navigation.navigate("ToktokMallCategoriesList", {searchValue: "Flash Sale"})
+            }} style={{flex: 3, flexDirection: 'row'}}>
+              <View style={{flex: 3, alignItems: 'flex-end', justifyContent: 'center'}}>
+                <Text style={{fontSize: 12, color: "#F6841F", fontWeight: '600'}}>Shop now </Text>
+              </View>
+              <View style={{flex: 0, alignItems: 'flex-end', justifyContent: 'center'}}>
+                <CustomIcon.EIcon name="chevron-right" color="#F6841F" size={16} />
+              </View>
             </TouchableOpacity>
-            <View style={{flex: 0, alignItems: 'flex-end', justifyContent: 'center'}}>
-              <CustomIcon.EIcon name="chevron-right" color="#F6841F" size={16} />
-            </View>
           </View>
           
           <View>            

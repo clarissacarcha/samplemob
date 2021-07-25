@@ -9,37 +9,33 @@ import CustomIcon from '../../../../Components/Icons';
 
 import { Dropdown } from '../../../../Components';
 
-
 export const ToktokMallCategoriesSearch = ({navigation})=> {
 
-    navigation.setOptions({
-        headerLeft: () => <HeaderBack hidden={true} />,
-        headerTitle: () => <HeaderTitle label={['Categories', '']} />,
-        headerRight: () => <HeaderRight icon="search" iconSize={18} onPress={() => navigation.navigate("ToktokMallMessageConvo")} />
-    });
+  // navigation.setOptions({
+  // 	headerLeft: () => <HeaderBack hidden={true} />,
+  //   headerTitle: () => <HeaderTitle label={['Categories', '']} />,
+  //   headerRight: () => <HeaderRight icon="search" iconSize={18} onPress={() => navigation.navigate("ToktokMallMessageConvo")} />
+  // });
 
-    return (
-        <>
-        <View style={styles.container}>
-            <Header 
-                label="Categories" 
-                renderRight={() => <HeaderRight icon="search" iconSize={18} onPress={() => navigation.navigate("ToktokMallMessageConvo")} />} 
-            />
-            <View style={{flex: 1}}>   
-             
-                <View style={{ height: 8, backgroundColor: '#F7F7FA'}} />
-                
-                <Dropdown />
-
-            </View>
-        </View>
-        </>
-    )
+  return (
+    <>
+    <View style={styles.container}>
+      <Header 
+        label="Categories" 
+        search={true}
+      />
+      <View style={{flex: 1}}>     
+        <View style={{ height: 8, backgroundColor: '#F7F7FA'}} />
+          <Dropdown />
+				</View>
+      </View>
+    </>
+  )
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: COLOR.WHITE
-    }
+  container: {
+    flex: 1,
+    backgroundColor: COLOR.WHITE
+  }
 })

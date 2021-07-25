@@ -1,12 +1,12 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList} from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/core';
 import { COLOR, FONT } from '../../../../../../res/variables';
 import {LandingHeader, AdsCarousel} from '../../../../../Components';
-import { ScrollView } from 'react-native-gesture-handler';
 import CustomIcon from '../../../../../Components/Icons';
 
 import {clothfacemask, medicalfacemask} from '../../../../../assets'; 
-import { useNavigation } from '@react-navigation/core';
 
 const testdata = [{
   image: clothfacemask,
@@ -87,6 +87,9 @@ const RenderItem = ({item}) => {
 }
 
 export const Suggestions = ({data}) => {
+
+  const navigation = useNavigation()
+
     return (
       <>
         <View style={styles.container}>
@@ -94,12 +97,16 @@ export const Suggestions = ({data}) => {
               <View style={{flex: 8}}>
                 <Text style={styles.h1}>Suggestions for you</Text>
               </View>
-              <TouchableOpacity style={{flex: 2, alignItems: 'flex-end', justifyContent: 'center'}}>
-                <Text style={styles.link}>See all </Text>
+              <TouchableOpacity onPress={() => {
+                navigation.navigate("ToktokMallCategoriesList", {searchValue: "Suggestions for you"})
+              }} style={{flex: 2, flexDirection: 'row'}}>
+                <View style={{flex: 2, alignItems: 'flex-end', justifyContent: 'center'}}>
+                  <Text style={styles.link}>See all </Text>
+                </View>
+                <View style={{flex: 0, alignItems: 'flex-end', justifyContent: 'center'}}>
+                  <CustomIcon.EIcon name="chevron-right" color="#F6841F" size={16} />
+                </View>
               </TouchableOpacity>
-              <View style={{flex: 0, alignItems: 'flex-end', justifyContent: 'center'}}>
-                <CustomIcon.EIcon name="chevron-right" color="#F6841F" size={16} />
-              </View>
             </View>
 
             <FlatList

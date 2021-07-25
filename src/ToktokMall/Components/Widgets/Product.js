@@ -115,6 +115,8 @@ export const Product = ({data}) => {
               numColumns={2}
               style={{paddingHorizontal: 5}}
               renderItem={RenderItem}
+              keyExtractor={(item, index) => item + index}
+              showsVerticalScrollIndicator={false}
             />
             
           </View>

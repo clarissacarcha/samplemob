@@ -1,10 +1,12 @@
-import React from 'react';
-import {View, Text, ImageBackground, Image, TouchableOpacity} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, Text, StyleSheet, ImageBackground, Image, TouchableOpacity, TextInput, Platform} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {throttle} from 'lodash';
 import FIcon5 from 'react-native-vector-icons/FontAwesome';
 import AIcon from 'react-native-vector-icons/MaterialIcons';
-import { COLOR, FONT } from '../../../res/variables'; 
+import { SearchBar } from 'react-native-elements';
+import {banner} from '../../assets';
+import { COLOR, FONT, FONT_SIZE } from '../../../res/variables'; 
 
 export const LandingSubHeader = (props) => {
 
@@ -34,10 +36,21 @@ export const LandingSubHeader = (props) => {
     {trailing: false},
   );
 
+  const [searchValue, setSearchValue] = useState('')
+
+  const handleOnSearch = (val) => {
+    setSearchValue(val)
+    if(props.onSearch) props.onSearch(val)
+  }
+
+  useEffect(() => {
+    setSearchValue(props.initialValue)
+  }, [props.initialValue])
+
   return (
     <>
       <ImageBackground 
-        source={require("../../assets/images/banner.png")}
+        source={banner}
         imageStyle={{ resizeMode: "stretch", width: '100%'}}
         style={{width: "100%", height: 100}}
       >
@@ -46,12 +59,17 @@ export const LandingSubHeader = (props) => {
             <FIcon5 name="chevron-left" color={COLOR.ORANGE} size={15}/>
           </TouchableOpacity>
           <View style={{flex: 8, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 0, paddingTop: 8}}>
-            <TouchableOpacity activeOpacity={1} onPress={onPress} style={{flex: 0, backgroundColor: '#fff', width: '100%', padding: 4, elevation: 0, flexDirection: 'row', borderRadius: 6}}>
-              <View style={{flex: 0, paddingHorizontal: 8, paddingVertical: 4}}>
+            <TouchableOpacity activeOpacity={1} onPress={onPress} style={{flex: 0, backgroundColor: '#fff', width: '100%', elevation: 0, flexDirection: 'row', borderRadius: 6}}>
+              <View style={{flex: 0, justifyContent: 'center', paddingLeft: 8}}>
                 <AIcon name="search" color={COLOR.ORANGE} size={22}/>
               </View>
-              <View style={{flex: 1, padding: 4}}>
-                <Text style={{color: "darkgray"}}>Search</Text>
+              <View style={{flex: 1}}>
+                <TextInput 
+                  placeholder={props.placeholder ? props.placeholder : "Search"}
+                  value={searchValue}
+                  onChangeText={handleOnSearch} 
+                  style={{paddingVertical: 8, fontFamily: FONT.REGULAR}} 
+                />
               </View>
             </TouchableOpacity>
           </View>

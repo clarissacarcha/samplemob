@@ -56,7 +56,7 @@ const testdata = [
 export const ToktokMallMyCart = ({navigation}) => {
   const [allSelected, setAllSelected] = useState(true);
   const [willDelete, setWillDelete] = useState(false);
-  const [messageModalShown, setMessageModalShown] = useState(true);
+  const [messageModalShown, setMessageModalShown] = useState(false);
   const [cartData, setCartData] = useState([]);
   const [subTotal, setSubTotal] = useState(0);
 
@@ -150,6 +150,8 @@ export const ToktokMallMyCart = ({navigation}) => {
                 </>
               );
             }}
+            keyExtractor={(item, index) => item + index}
+            showsVerticalScrollIndicator={false}
           />
 
           <View style={{height: 80}}></View>

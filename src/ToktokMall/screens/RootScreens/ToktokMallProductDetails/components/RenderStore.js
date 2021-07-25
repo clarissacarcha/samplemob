@@ -1,5 +1,6 @@
 import React from 'react';
-import {View, Text, Image, FlatList, SectionList, ImageBackground} from 'react-native';
+import {View, Text, Image, FlatList, SectionList, ImageBackground, TouchableOpacity} from 'react-native';
+import { useNavigation } from '@react-navigation/core';
 import { Header } from '../../../../Components';
 import {Price} from '../../../../helpers';
 import CustomIcon from '../../../../Components/Icons';
@@ -7,6 +8,9 @@ import {coppermask, clothfacemask, voucherbg} from '../../../../assets';
 import { FONT } from '../../../../../res/variables';
 
 export const RenderStore = () => {
+
+  const navigation = useNavigation()
+
 	return (
 		<>
 			<View style={{paddingVertical: 16, paddingHorizontal: 16}}>
@@ -18,9 +22,11 @@ export const RenderStore = () => {
             <Text style={{fontSize: 13}}>Face Mask PH</Text>
             <Text style={{fontSize: 13, color: "#9E9E9E"}}>Malabon, Manila</Text>
           </View>
-          <View style={{flex: 3, alignItems: 'flex-end', justifyContent: 'center'}}>
+          <TouchableOpacity onPress={() => {
+            navigation.navigate("ToktokMallStore", {})
+          }} style={{flex: 3, alignItems: 'flex-end', justifyContent: 'center'}}>
             <Text style={{fontSize: 13, color: "#F6841F"}}>Visit Store</Text>
-          </View>
+          </TouchableOpacity>
         </View>
         <View style={{flexDirection: 'row', paddingVertical: 14}}>
           <View style={{flex: 3, alignItems: 'flex-end'}}>

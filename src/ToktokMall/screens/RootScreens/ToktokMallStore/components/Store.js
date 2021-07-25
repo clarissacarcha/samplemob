@@ -1,11 +1,12 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {View, Text, Image, TouchableOpacity} from 'react-native';
 import { useNavigation } from '@react-navigation/core';
 import {LandingSubHeader, Card, Product} from '../../../../Components';
 
-export const Store = ({data}) => {
+export const Store = ({data, onToggleFollow}) => {
 
   const navigation = useNavigation()
+  const [following, setFollowing] = useState(data.following)
 
 	return (
 		<>
@@ -20,8 +21,11 @@ export const Store = ({data}) => {
               <Text style={{fontSize: 13, color: "#9E9E9E"}}>{data.location}</Text>
             </View>
             <View style={{flex: 4, justifyContent: 'center'}}>
-              <TouchableOpacity style={{paddingVertical: 5, paddingHorizontal: 4, backgroundColor: data.following ? "#fff" : "#F6841F", borderRadius: 5, borderColor: data.following ? "#F6841F" : "", borderWidth: data.following ? 1 : 0, alignItems: 'center'}}>
-                <Text style={{color: data.following ? "#F6841F" : "#fff", fontSize: 11}}>{data.following ? "Following" : "Follow"}</Text>
+              <TouchableOpacity onPress={() => {                
+                setFollowing(!following)
+                onToggleFollow(!following)
+              }} style={{paddingVertical: 5, paddingHorizontal: 4, backgroundColor: following ? "#fff" : "#F6841F", borderRadius: 5, borderColor: following ? "#F6841F" : "", borderWidth: following ? 1 : 0, alignItems: 'center'}}>
+                <Text style={{color: following ? "#F6841F" : "#fff", fontSize: 11}}>{following ? "Following" : "Follow"}</Text>
               </TouchableOpacity>
             </View>
           </View>

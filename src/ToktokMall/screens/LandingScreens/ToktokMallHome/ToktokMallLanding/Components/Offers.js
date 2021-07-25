@@ -1,8 +1,9 @@
 import React, {useState, useEffect, useRef} from 'react';
 import { StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList} from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/core';
 import { COLOR, FONT } from '../../../../../../res/variables';
 import {LandingHeader, AdsCarousel} from '../../../../../Components';
-import { ScrollView } from 'react-native-gesture-handler';
 import CustomIcon from '../../../../../Components/Icons';
 import {coppermask, chair, bottle} from '../../../../../assets';
 
@@ -46,6 +47,9 @@ const testdata = [{
 }]
 
 export const Offers = ({data}) => {
+
+  const navigation = useNavigation()
+
     return (
       <>
         <View style={styles.container}>
@@ -53,12 +57,16 @@ export const Offers = ({data}) => {
               <View style={{flex: 8}}>
                 <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>Today's Offers</Text>
               </View>
-              <TouchableOpacity style={{flex: 2, alignItems: 'flex-end', justifyContent: 'center'}}>
-                <Text style={styles.link}>See all </Text>
+              <TouchableOpacity onPress={() => {
+                navigation.navigate("ToktokMallCategoriesList", {searchValue: "Today's Offers"})
+              }} style={{flex: 2, flexDirection: 'row'}}>
+                <View style={{flex: 2, alignItems: 'flex-end', justifyContent: 'center'}}>
+                  <Text style={styles.link}>See all </Text>
+                </View>
+                <View style={{flex: 0, alignItems: 'flex-end', justifyContent: 'center'}}>
+                  <CustomIcon.EIcon name="chevron-right" color="#F6841F" size={16} />
+                </View>
               </TouchableOpacity>
-              <View style={{flex: 0, alignItems: 'flex-end', justifyContent: 'center'}}>
-                <CustomIcon.EIcon name="chevron-right" color="#F6841F" size={16} />
-              </View>
             </View>
 
             <FlatList
