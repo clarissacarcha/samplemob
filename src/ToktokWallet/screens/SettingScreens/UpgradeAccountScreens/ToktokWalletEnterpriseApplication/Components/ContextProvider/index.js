@@ -63,6 +63,7 @@ export const ContextProvider = ({children}) => {
         <Provider
             value={{
                 forms,
+                setForms,
                 setFileUpload,
                 setFileError,
                 validID1,

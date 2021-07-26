@@ -18,6 +18,16 @@ const EnterpriseRequest = `
     dateApproved
     createdAt
     updatedAt
+    firstIDType {
+        id
+        name
+        isBackRequired
+    }
+    secondIDType {
+        id
+        name
+        isBackRequired
+    }
 `
 
 export const POST_ENTERPRISE_UPGRADE_REQUEST = gql`

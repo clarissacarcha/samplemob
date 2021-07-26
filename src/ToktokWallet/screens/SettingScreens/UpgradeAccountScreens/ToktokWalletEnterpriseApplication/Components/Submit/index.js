@@ -71,8 +71,8 @@ export const Submit = ()=> {
             secondIdentificationCardId: +validID2.IDType,
             secondGovtIdFront: validID2.frontFile,
             secondGovtIdFrontName: validID2.frontFilename,
-            secondGovdIdBack: validID2.backFile,
-            secondGovdIdBackName: validID2.backFilename 
+            secondGovtIdBack: validID2.backFile,
+            secondGovtIdBackName: validID2.backFilename 
         }
         if(noError){
             postEnterpriseUpgradeRequest({

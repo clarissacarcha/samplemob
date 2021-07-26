@@ -1,4 +1,4 @@
-import React , {useRef, useState} from 'react';
+import React , {useRef, useState , useContext , useEffect} from 'react';
 import {StyleSheet,View,Text,ActivityIndicator} from 'react-native';
 import {Separator} from 'toktokwallet/components';
 import { HeaderBack, HeaderTitle , VectorIcon , ICON_SET , YellowButton} from 'src/revamp';
@@ -13,9 +13,11 @@ import {
     BottomSheetIDType,
     HeaderReminders,
     PendingRequest,
+    SetRequestRecords,
     Submit,
     UploadForms,
     ContextProvider,
+    ContextEnterpriseApplication,
     TakePhotoID
 } from "./Components"
 import { ScrollView } from 'react-native-gesture-handler';
@@ -24,7 +26,7 @@ const { COLOR , FONT_SIZE , FONT_FAMILY: FONT  } = CONSTANTS
 
 
 const MainComponent = ()=> {
-
+    const { setForms } = useContext(ContextEnterpriseApplication)
     const IDTypeRef = useRef()
     const [idIndex,setIDIndex] = useState(1)
     const onPress = (index)=> {
@@ -49,11 +51,28 @@ const MainComponent = ()=> {
         return <SomethingWentWrong/>
     }
 
-    if(data.getEnterpriseUpgradeRequest.status == 2){
+    if(data?.getEnterpriseUpgradeRequest?.status == 2){
         return (
             <>
                 <Separator/>
                 <PendingRequest enterpriseRequest={data.getEnterpriseUpgradeRequest}/>
+            </>
+        )
+    }
+
+    if(data?.getEnterpriseUpgradeRequest?.status == 3){
+    
+        return (
+            <>
+            <Separator/>
+            <SetRequestRecords data={data.getEnterpriseUpgradeRequest}/>
+            <ScrollView style={styles.container}>
+                <HeaderReminders/>
+                <UploadForms/>
+                <TakePhotoID onPress={onPress}/>
+                </ScrollView>
+                <Submit />
+            <BottomSheetIDType ref={IDTypeRef} idIndex={idIndex} onChange={()=>null} />
             </>
         )
     }
