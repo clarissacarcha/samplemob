@@ -59,6 +59,7 @@ export const ToktokMallMyCart = ({navigation}) => {
   const [messageModalShown, setMessageModalShown] = useState(false);
   const [cartData, setCartData] = useState([]);
   const [subTotal, setSubTotal] = useState(0);
+  const [itemsToDelete, setItemsToDelete] = useState(0)
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack hidden={true} />,
@@ -140,8 +141,12 @@ export const ToktokMallMyCart = ({navigation}) => {
                       let res = 0
                       if(raw.checked){
                         res = subTotal + raw.amount 
+                        let _itemsToDel = itemsToDelete
+                        setItemsToDelete(_itemsToDel + 1)
                       }else{
                         res = subTotal - raw.amount
+                        let _itemsToDel = itemsToDelete
+                        setItemsToDelete(_itemsToDel - 1)
                       }
                       setSubTotal(res)
                     }} 
@@ -172,7 +177,7 @@ export const ToktokMallMyCart = ({navigation}) => {
             type="Success"
             isVisible={messageModalShown}
             setIsVisible={(val) => setMessageModalShown(val)}  
-            message="Item has been removed from your cart."
+            message={`${itemsToDelete > 1 ? "Items" : "Item"} has been removed from your cart.`}
           />}
             
         </View>
