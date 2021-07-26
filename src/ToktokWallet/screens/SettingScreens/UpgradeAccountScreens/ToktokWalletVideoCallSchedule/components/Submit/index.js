@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux';
 import { YellowButton } from 'src/revamp';
 import {AlertOverlay} from 'src/components';
 import {useNavigation} from '@react-navigation/native';
+import { SuccessfulModal } from "../../../../../../components";
 
 const { FONT_FAMILY: FONT , FONT_SIZE , COLOR, SHADOW, SIZE } = CONSTANTS;
 
@@ -65,7 +66,7 @@ export const Submit = () => {
             let result = response.postFullyVerifiedUpgradeRequest
             if(result.requestStatus == 2){
                 navigation.pop(2)
-                navigation.navigate("ToktokWalletFullyVerifiedApplication")
+                navigation.navigate("ToktokWalletFullyVerifiedApplication", { doneVSC: true })
             }
         }
     })
@@ -90,10 +91,10 @@ export const Submit = () => {
             accountTypeId: +tokwaAccount.person.accountType.level,
             videoCallContactDetails: isMobileNumber ? numberOrLink.replace("0", "+63") : numberOrLink,
             callChannelId: selectedCallChannel.id,
-            preferredVCSDayMin: dayPicked.min,
-            preferredVCSDayMax: dayPicked.max,
-            preferredVCSTimeMin: timePicked.min,
-            preferredVCSTimeMax: timePicked.max
+            preferredVcsDayMin: dayPicked.min,
+            preferredVcsDayMax: dayPicked.max,
+            preferredVcsTimeMin: timePicked.min,
+            preferredVcsTimeMax: timePicked.max
         }
 
         postFullyVerifiedUpgradeRequest({
