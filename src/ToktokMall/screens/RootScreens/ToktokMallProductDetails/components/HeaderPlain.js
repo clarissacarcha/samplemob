@@ -17,7 +17,7 @@ export const HeaderPlain = ({value}) => {
 		<>
 			<View style={{flexDirection: 'row', paddingTop: 40, paddingBottom: 12, paddingHorizontal: 6}}>
         <View style={{flex: 1.4, alignItems: 'flex-start', justifyContent: 'center'}}>
-          <CustomIcon.MCIcon name="chevron-left" color="#F6841F" size={28} />
+          <CustomIcon.MCIcon name="chevron-left" color="#F6841F" size={28}  onPress={navigation.goBack}/>
         </View>
         <View style={{flex: 8, justifyContent: 'center'}}>
           <Text numberOfLines={1} style={{fontSize: 18}}>Improved Copper Mask 2.0 Bla..</Text>

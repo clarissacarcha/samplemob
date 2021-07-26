@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React, {useState, useEffect} from 'react';
 import {View, Text, TouchableOpacity, Image, FlatList} from 'react-native';
 import {HeaderTab} from '../../../../Components';
@@ -38,6 +39,7 @@ const Summary = ({data}) => {
 }
 
 const Item = ({data}) => {
+  const { navigate } = useNavigation()
   return (
     <>
       <View style={{flexDirection: 'row', paddingTop: 10, paddingBottom: 0, paddingHorizontal: 15}}>
@@ -70,9 +72,11 @@ const Item = ({data}) => {
         </View>        
       </View>
       <View style={{flexDirection: 'row-reverse', paddingHorizontal: 15, paddingBottom: 15}}>
-        <View style={{paddingVertical: 2, paddingHorizontal: 20, backgroundColor: '#F6841F', borderRadius: 5}}>
-          <Text style={{color: "#fff", fontSize: 13}}>Rate</Text>
-        </View>
+        <TouchableOpacity onPress={()=>navigate("ToktokMallRateProduct")}>
+          <View style={{paddingVertical: 2, paddingHorizontal: 20, backgroundColor: '#F6841F', borderRadius: 5}}>
+            <Text style={{color: "#fff", fontSize: 13}}>Rate</Text>
+          </View>
+        </TouchableOpacity>
       </View>
       <View style={{ height: 2, backgroundColor: '#F7F7FA'}} />
     </>
