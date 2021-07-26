@@ -4,8 +4,8 @@ export const POST_FULL_VERIFIED_UPGRADE_REQUEST = gql`
     mutation postFullyVerifiedUpgradeRequest($input: PostFullyVerifiedUpgradeRequestInput) {
         postFullyVerifiedUpgradeRequest(input: $input) {
             id
-            accountID
-            accountLevel
+            accountId
+            accountTypeId
             requestStatus
             videoCallContactDetails
             callChannelId
@@ -13,6 +13,13 @@ export const POST_FULL_VERIFIED_UPGRADE_REQUEST = gql`
             preferredVCSDayMax
             preferredVCSTimeMin
             preferredVCSTimeMax
+        }
+    }
+`
+export const GET_CHECK_FULLY_VERIFIED_UPGRADE_REQUEST = gql`
+    query {
+        getCheckFullyVerifiedUpgradeRequest{
+            result
         }
     }
 `

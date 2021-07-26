@@ -65,7 +65,7 @@ export const Submit = () => {
             let result = response.postFullyVerifiedUpgradeRequest
             if(result.requestStatus == 2){
                 navigation.pop(2)
-                navigation.navigate("ToktokWalletUpgradeAccount")
+                navigation.navigate("ToktokWalletFullyVerifiedApplication")
             }
         }
     })
@@ -87,7 +87,7 @@ export const Submit = () => {
         if(!noError) return
 
         let input = {
-            accountLevel: +tokwaAccount.person.accountType.level,
+            accountTypeId: +tokwaAccount.person.accountType.level,
             videoCallContactDetails: isMobileNumber ? numberOrLink.replace("0", "+63") : numberOrLink,
             callChannelId: selectedCallChannel.id,
             preferredVCSDayMin: dayPicked.min,

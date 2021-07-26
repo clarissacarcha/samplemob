@@ -87,3 +87,11 @@ export const VERIFY_FORGOT_AND_RECOVER_OTP_CODE = gql`
         }
     }
 `
+
+export const GET_CHECK_PENDING_DISBURSEMENT_ACCOUNT = gql`
+    query {
+        getCheckPendingDisbursementAccount {
+            result
+        }
+    }
+`

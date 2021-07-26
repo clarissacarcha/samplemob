@@ -6,6 +6,7 @@ import {useLazyQuery,useMutation} from '@apollo/react-hooks'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from '../../../../../../../graphql'
 import { GET_CALL_CHANNELS } from '../../../../../../graphql/model'
 import { onErrorAlert } from '../../../../../../../util/ErrorUtility'
+import { useAlert } from 'src/hooks'
 export const ContextProvider = ({ children })=> {
 
     const [selectedCallChannel, setSelectedCallChannel] = useState({});
@@ -22,7 +23,8 @@ export const ContextProvider = ({ children })=> {
         max: "12:00"
     });
     const [errorMessage, setErrorMessage] = useState("");
-
+    const alert = useAlert()
+    
     const [getCallChannels] = useLazyQuery(GET_CALL_CHANNELS, {
         fetchPolicy:"network-only",
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,

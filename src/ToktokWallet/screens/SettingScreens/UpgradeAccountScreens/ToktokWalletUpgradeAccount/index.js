@@ -30,9 +30,10 @@ export const ToktokWalletUpgradeAccount = ({navigation})=> {
     const upgradeAccount = ()=> {
         if(tokwaAccount.person.accountType.level == 1){
             // navigate to fully verified application
-            return navigation.navigate("ToktokWalletVideoCallSchedule")
+            return navigation.navigate("ToktokWalletFullyVerifiedApplication")
         }
-        // navigate to enterprise application
+        
+        // console.log(tokwaAccount.isLinked)
         return navigation.navigate("ToktokWalletEnterpriseApplication")
     }   
     
