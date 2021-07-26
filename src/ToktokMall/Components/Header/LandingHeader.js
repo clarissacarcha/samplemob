@@ -7,10 +7,12 @@ import AIcon from 'react-native-vector-icons/MaterialIcons';
 import { COLOR, FONT } from '../../../res/variables'; 
 import {banner, toktokmallH} from '../../assets';
 import { LandingSubHeader } from '.';
+import Animated from 'react-native-reanimated'
 
-const MainHeader = ({onSearch}) => {
+const MainHeader = ({onSearch, animatedValue}) => {
   return (
     <>
+    <Animated.View style = {[ {opacity: animatedValue}]} >
       <ImageBackground 
         source={banner}
         imageStyle={{ resizeMode: "stretch", width: '100%'}}
@@ -43,7 +45,8 @@ const MainHeader = ({onSearch}) => {
           </View>
         </TouchableOpacity>
       </ImageBackground>
-      <View style={{height: 25}}></View>
+      <View style={{height: 25}}></View>      
+    </Animated.View>
     </>
   )
 }
@@ -56,15 +59,24 @@ export const LandingHeader = (props) => {
 
   const onPress = throttle(
     () => {
-      navigation.navigate("ToktokMallSearch");
+      // navigation.navigate("ToktokMallSearch");
+      alert(JSON.stringify(props.Header_Max_Height))
+
     },
-    1000,
-    {trailing: false},
+    // 1000,
+    // {trailing: false},
+    // alert(JSON.stringify(props.AnimatedHeaderValue))
   );
+  // const animateHeaderOpacity = props.AnimatedHeaderValue.interpolate({
+  //   inputRange: [0, 150 - 70],
+  //   outputRange: [1, 0],
+  //   extrapolate: 'clamp'
+  // })
 
   return (
     <>
-      <MainHeader onSearch={onPress} />
+      <MainHeader onSearch={onPress} animatedValue = {1}/>
+
     </>
   )
 }
