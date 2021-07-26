@@ -9,10 +9,10 @@ export const POST_FULL_VERIFIED_UPGRADE_REQUEST = gql`
             requestStatus
             videoCallContactDetails
             callChannelId
-            preferredVCSDayMin
-            preferredVCSDayMax
-            preferredVCSTimeMin
-            preferredVCSTimeMax
+            preferredVcsDayMin
+            preferredVcsDayMax
+            preferredVcsTimeMin
+            preferredVcsTimeMax
         }
     }
 `

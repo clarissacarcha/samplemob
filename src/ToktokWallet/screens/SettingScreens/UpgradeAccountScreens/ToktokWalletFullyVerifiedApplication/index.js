@@ -11,6 +11,7 @@ import { useQuery, useLazyQuery } from '@apollo/react-hooks'
 import { onErrorAlert } from 'src/util/ErrorUtility'
 import { useAlert } from 'src/hooks'
 import {SomethingWentWrong} from 'src/components'
+import { SuccessfulModal } from "../../../../components";
 
 const { COLOR , FONT_SIZE , FONT_FAMILY: FONT, SHADOW  } = CONSTANTS
 
@@ -28,18 +29,20 @@ const DisplayComponent = ({ finishLabel, notFinishLabel, title, btnLabel, onPres
         />
     )
 }
-export const ToktokWalletFullyVerifiedApplication = ({navigation})=> {
+export const ToktokWalletFullyVerifiedApplication = ({navigation, route})=> {
 
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
         headerTitle: ()=> <HeaderTitle label={['Fully Verified','']}/>
     })
-    
+
     const alert = useAlert()
     const [isLinkedBankAccount, setIsLinkedBankAccount] = useState()
     const [hasVCS, setHasVSC] = useState(false)
     const [isLinked, setIsLinked] = useState(false)
     const tokwaAccount = useSelector(state=>state.toktokWallet)
+    const [mounted, setMounted] = useState(true)
+    const [showSuccessModal, setShowSuccessModal] = useState(false)
 
     const [checkHasVSC, { error, loading }] = useLazyQuery(GET_CHECK_FULLY_VERIFIED_UPGRADE_REQUEST, {
         fetchPolicy: "network-only",
@@ -64,14 +67,15 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation})=> {
     })
 
     const checkHasLinkBankAccount = () => {
-        if(!tokwaAccount.isLinked){
-            getCheckPendingDisbursementAccount()
-        }
+        tokwaAccount.isLinked ? setIsLinkedBankAccount(true) : getCheckPendingDisbursementAccount()
     }
 
     useEffect(() => {
         checkHasLinkBankAccount()
         checkHasVSC()
+        if(route.params){
+            setShowSuccessModal(route.params.doneVSC)
+        }
     }, [])
 
     if(loading || isLinkedBankAccount == undefined){
@@ -88,6 +92,12 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation})=> {
 
     return (
         <>
+        <SuccessfulModal
+            visible={showSuccessModal}
+            title="Success!"
+            description={`Your schedule has been submitted.\nPlease wait for our representative to\nget in touch with you`}
+            redirect={() => { setShowSuccessModal(false) }}
+        />
         <View style={{ backgroundColor:"#F7F7FA", padding: 16 }}>
             <Text>
                 <Text style={styles.fontRegularStyle} >Meet the following requirements for upgrading your account to </Text>
