@@ -23,7 +23,7 @@ const MainHeader = ({onSearch, animatedValue}) => {
             <FIcon5 name="chevron-left" color={COLOR.ORANGE} size={15}/>
           </View>
           <View style={{flex: 2}}></View>
-          <View style={{flex: 8, alignItems: 'center', paddingTop: 15}}>
+          <View style={{flex: 8, alignItems: 'center', paddingTop: 15, backgroundColor: 'red'}}>
             <Image source={toktokmallH} style={{width: '100%', height: 35, resizeMode: 'stretch'}} />
           </View>
           <View style={{flex: 2}}></View>
