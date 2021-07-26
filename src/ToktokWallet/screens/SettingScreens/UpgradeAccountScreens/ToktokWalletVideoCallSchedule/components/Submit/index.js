@@ -17,6 +17,7 @@ const { FONT_FAMILY: FONT , FONT_SIZE , COLOR, SHADOW, SIZE } = CONSTANTS;
 export const Submit = () => {
 
     const navigation = useNavigation()
+    const alert = useAlert()
     const tokwaAccount = useSelector(state=>state.toktokWallet)
     const {
         selectedCallChannel,

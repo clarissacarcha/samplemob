@@ -1,54 +1,95 @@
-import React from 'react'
-import {StyleSheet,View,Text} from 'react-native'
-import {Separator} from 'toktokwallet/components'
-import { HeaderBack, HeaderTitle , VectorIcon , ICON_SET , YellowButton} from 'src/revamp'
+import React , {useRef, useState} from 'react';
+import {StyleSheet,View,Text,ActivityIndicator} from 'react-native';
+import {Separator} from 'toktokwallet/components';
+import { HeaderBack, HeaderTitle , VectorIcon , ICON_SET , YellowButton} from 'src/revamp';
+import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql';
+import { GET_ENTERPRISE_UPGRADE_REQUEST } from 'toktokwallet/graphql';
+import { useQuery } from '@apollo/react-hooks';
+import { SomethingWentWrong } from 'src/components';
 import CONSTANTS from 'common/res/constants'
 
+//SELF IMPORTS
+import {
+    BottomSheetIDType,
+    HeaderReminders,
+    PendingRequest,
+    Submit,
+    UploadForms,
+    ContextProvider,
+    TakePhotoID
+} from "./Components"
+import { ScrollView } from 'react-native-gesture-handler';
+
 const { COLOR , FONT_SIZE , FONT_FAMILY: FONT  } = CONSTANTS
+
+
+const MainComponent = ()=> {
+
+    const IDTypeRef = useRef()
+    const [idIndex,setIDIndex] = useState(1)
+    const onPress = (index)=> {
+        setIDIndex(index)
+        IDTypeRef.current.expand()
+    }
+
+    const {data ,error , loading } = useQuery(GET_ENTERPRISE_UPGRADE_REQUEST , {
+        fetchPolicy:"network-only",
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+    })
+
+    if(loading){
+        return (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <ActivityIndicator size={24} color={COLOR.YELLOW} />
+        </View>
+        );
+    }
+
+    if(error){
+        return <SomethingWentWrong/>
+    }
+
+    if(data.getEnterpriseUpgradeRequest.status == 2){
+        return (
+            <>
+                <Separator/>
+                <PendingRequest enterpriseRequest={data.getEnterpriseUpgradeRequest}/>
+            </>
+        )
+    }
+
+    return (
+        <>
+        <Separator/>
+        <ScrollView style={styles.container}>
+            <HeaderReminders/>
+            <UploadForms/>
+            <TakePhotoID onPress={onPress}/>
+        </ScrollView>
+        <Submit />
+        <BottomSheetIDType ref={IDTypeRef} idIndex={idIndex} onChange={()=>null} />
+        </>
+    )
+}
 
 export const ToktokWalletEnterpriseApplication = ({navigation})=> {
 
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
-        headerTitle: ()=> <HeaderTitle label={['Upgrade Account','']}/>,
+        headerTitle: ()=> <HeaderTitle label={['Enterprise','']}/>,
     })
     return (
-        <>
-        <Separator/>
-        <View style={styles.container}>
-            <View style={styles.headingUpload}>
-                <Text style={styles.headingUploadText}>Upload the following documents for upgrading your account to 
-                    <Text style={{...styles.headingUploadText, color:COLOR.ORANGE}}> Enterprise</Text>
-                </Text>
-            </View>
-            <View style={styles.headingAccepted}>
-                <Text style={styles.headingAcceptedText}>Accepted file types are JPG, JPEG and PDF. File size should be Max of 2mb  </Text>
-            </View>
-        </View>
-        </>
+
+        <ContextProvider>
+            <MainComponent/>
+        </ContextProvider>
+
     )
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor:"white"
+        backgroundColor:"white",
     },
-    headingUpload: {
-        padding: 16,
-        backgroundColor: COLOR.LIGHT
-    },
-    headingUploadText: {
-        fontFamily: FONT.REGULAR,
-        fontSize: FONT_SIZE.M
-    },  
-    headingAccepted: {
-        padding: 16,
-        backgroundColor: COLOR.TRANSPARENT_YELLOW
-    },
-    headingAcceptedText: {
-        fontFamily: FONT.REGULAR,
-        fontSize: FONT_SIZE.M,
-        color: COLOR.DARK
-    }
 })
