@@ -1,12 +1,16 @@
-export const APP_VERSION = '1.16.0';
+export const APP_VERSION = '1.17.0';
 export const APP_FLAVOR = 'C'; // C = Customer | D = Driver
 export const ACCOUNT_TYPE = 1; // 1 = Customer | 2 = Driver
 export const MAPS_API_KEY = 'AIzaSyDhlw6pbriuwr_Mb6KYkVlBar7KD1KTrOs';
 
-export const PROTOCOL = 'http';
-export const HOST_PORT = '192.168.0.102:3000'; // Myutini
+// export const PROTOCOL = 'http';
+// export const HOST_PORT = '192.168.0.102:3000'; // Myutini
+
+export const PROTOCOL = 'https';
+export const HOST_PORT = 'test.toktok.ph:2096'; // Test
+
 // export const PROTOCOL = 'https';
-// export const HOST_PORT = 'test.toktok.ph:2096'; // Myutini
+// export const HOST_PORT = 'graphql.toktok.ph:2096'; // Prod
 
 export const TOKTOK_WALLET_PROTOCOL = 'http';
 export const TOKTOK_WALLET_PROTOCOL_HOST_PORT = '192.168.0.103:3100';

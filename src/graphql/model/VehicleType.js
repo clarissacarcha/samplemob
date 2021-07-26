@@ -10,7 +10,11 @@ export const GET_VEHICLE_TYPES = gql`
       flatRate
       perKm
       threshold
+      imageClass
       cargoWeightCapacity
+      cargoMaxLength
+      cargoMaxHeight
+      cargoMaxWidth
       status
     }
   }

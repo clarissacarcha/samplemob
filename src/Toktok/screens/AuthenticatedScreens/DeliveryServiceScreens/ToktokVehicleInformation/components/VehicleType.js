@@ -2,28 +2,22 @@ import React from 'react';
 import {Text, View, StyleSheet, Image} from 'react-native';
 
 import {ThrottledWithoutFeedback} from 'common/components';
+import {VectorIcon, ICON_SET} from 'src/revamp';
 
 import CONSTANTS from 'common/res/constants';
 import ASSETS from 'toktok/assets';
 
-const vehicleNameImage = [
-  {name: 'Motorcycle', image: ASSETS.Vehicles.Motorcycle},
-  {name: 'Sedan', image: ASSETS.Vehicles.Sedan},
-  {name: 'MPV', image: ASSETS.Vehicles.MPV},
-  {name: 'Van', image: ASSETS.Vehicles.Van},
-  {name: 'Truck', image: ASSETS.Vehicles.Truck},
-];
+const VEHICLE_IMAGE_CLASS = {
+  Motorcycle: ASSETS.Vehicles.Motorcycle,
+  Sedan: ASSETS.Vehicles.Sedan,
+  XUV: ASSETS.Vehicles.XUV,
+  MPV: ASSETS.Vehicles.MPV,
+  Van: ASSETS.Vehicles.Van,
+  Aluminum: ASSETS.Vehicles.Aluminum,
+};
 
 export const VehicleType = ({item, index, data, selectedVehicleType, setSelectedVehicleType}) => {
   const isSelected = item.id === selectedVehicleType.id ? true : false;
-
-  let vehicleImage = ASSETS.Vehicles.Motorcycle;
-
-  vehicleNameImage.map((type) => {
-    if (item.type.includes(type.name)) {
-      vehicleImage = type.image;
-    }
-  });
 
   const vehicleCardVerticalMargin = {
     marginTop: index === 0 ? CONSTANTS.MARGIN.M : 0,
@@ -33,7 +27,8 @@ export const VehicleType = ({item, index, data, selectedVehicleType, setSelected
 
   const vehicleDetailsStyle = {
     flex: 1,
-    padding: 16,
+    paddingHorizontal: 8,
+    paddingTop: 2,
     // backgroundColor: isSelected ? CONSTANTS.COLOR.TRANSPARENT_ORANGE : 'white',
   };
 
@@ -46,13 +41,24 @@ export const VehicleType = ({item, index, data, selectedVehicleType, setSelected
         }}
         delay={100}>
         <View style={styles.vehicleCardBody}>
-          <Image source={{uri: vehicleImage}} style={styles.vehicleImage} resizeMode={'contain'} />
+          <Image
+            source={{uri: VEHICLE_IMAGE_CLASS[item.imageClass]}}
+            style={styles.vehicleImage}
+            resizeMode={'contain'}
+          />
           <View style={vehicleDetailsStyle}>
             <Text style={{fontFamily: CONSTANTS.FONT_FAMILY.BOLD}}>{item.name}</Text>
             <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}}>{item.phrase}</Text>
-            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}}>{`Max weight: ${item.cargoWeightCapacity} KG`}</Text>
-              {/* <Text style={{color: CONSTANTS.COLOR.YELLOW}}>{`PHP ${item.flatRate}`}</Text> */}
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <VectorIcon name="box" iconSet={ICON_SET.Feather} size={12} style={{marginRight: 4}} />
+              <Text
+                style={{
+                  fontSize: CONSTANTS.FONT_SIZE.S,
+                }}>{`${item.cargoMaxLength} x ${item.cargoMaxWidth} x ${item.cargoMaxHeight} meter`}</Text>
+            </View>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <VectorIcon name="weight-hanging" iconSet={ICON_SET.FontAwesome5} size={12} style={{marginRight: 4}} />
+              <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}}>{`Up to ${item.cargoWeightCapacity} kg`}</Text>
             </View>
           </View>
         </View>
@@ -63,7 +69,7 @@ export const VehicleType = ({item, index, data, selectedVehicleType, setSelected
 
 const styles = StyleSheet.create({
   vehicleCard: {
-    height: 100,
+    height: 110,
     flexDirection: 'row',
     backgroundColor: 'white',
     marginHorizontal: CONSTANTS.MARGIN.M,
@@ -78,8 +84,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   vehicleImage: {
-    height: 100,
-    width: 150,
+    height: 110,
+    width: 160,
     backgroundColor: CONSTANTS.COLOR.TRANSPARENT_ORANGE,
   },
 });
