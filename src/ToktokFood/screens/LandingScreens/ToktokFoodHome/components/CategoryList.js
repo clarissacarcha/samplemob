@@ -1,9 +1,11 @@
 import React from 'react';
 import {FlatList, Image, View, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 // Assets
 import {allcuisines, drinks, dailydeals, fastfood} from 'toktokfood/assets/images';
-const CategoryList = () => {
+const CategoryList = ({horizontal, rightText = ''}) => {
+  const navigation = useNavigation();
   const data = [
     {
       id: 1,
@@ -25,11 +27,20 @@ const CategoryList = () => {
       category: 'All Cuisines',
       image: allcuisines,
     },
+    {
+      id: 5,
+      category: 'Promo',
+      image: drinks,
+    },
   ];
+
+  const onNavigateCategories = () => {
+    navigation.navigate('ToktokFoodCategories');
+  };
 
   const renderItem = ({item}) => {
     return (
-      <TouchableOpacity style={styles.listItemContainer}>
+      <TouchableOpacity style={horizontal ? styles.listItemContainer : styles.listItemVerticalContainer}>
         <Image style={styles.img} resizeMode="cover" source={item.image} />
         <Text style={styles.listItemText}>{item.category}</Text>
       </TouchableOpacity>
@@ -40,11 +51,19 @@ const CategoryList = () => {
     <View style={styles.container}>
       <View style={styles.textContainer}>
         <Text style={styles.startText}>Categories</Text>
-        <Text style={styles.endText}>See all</Text>
+        <TouchableOpacity onPress={onNavigateCategories}>
+          <Text style={styles.endText}>{rightText}</Text>
+        </TouchableOpacity>
       </View>
       <View style={styles.listContainer}>
         {/* showsHorizontalScrollIndicator={false} added for Android */}
-        <FlatList horizontal data={data} renderItem={renderItem} showsHorizontalScrollIndicator={false} />
+        <FlatList
+          horizontal={horizontal}
+          numColumns={!horizontal ? 4 : 0}
+          data={data}
+          renderItem={renderItem}
+          showsHorizontalScrollIndicator={false}
+        />
       </View>
     </View>
   );
@@ -54,7 +73,6 @@ export default CategoryList;
 
 const styles = StyleSheet.create({
   container: {
-    height: 120,
     paddingHorizontal: 15,
   },
   img: {
@@ -63,11 +81,14 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     alignItems: 'center',
-    flex: 1,
     marginTop: 5,
   },
   listItemContainer: {
     marginHorizontal: 5,
+  },
+  listItemVerticalContainer: {
+    marginHorizontal: 5,
+    marginBottom: 10,
   },
   listItemText: {
     fontWeight: '500',

@@ -34,7 +34,7 @@ const tabs = [
 const StickyView = () => {
   const [offset, setOffset] = useState(0);
   const [activeTab, setActiveTab] = useState(tabs[0]);
-  const headerMaxHeight = Platform.OS === 'ios' ? moderateScale(150) : scale(320);
+  const headerMaxHeight = Platform.OS === 'ios' ? moderateScale(130) : scale(320);
   const headerMinHeight = Platform.OS === 'ios' ? verticalScale(42) : moderateScale(65);
   const {categories} = useSelector((state) => state).toktokFood;
   const {shops} = useSelector((state) => state).toktokFood;
@@ -47,9 +47,7 @@ const StickyView = () => {
 
   const renderTitle = () => (
     <>
-      <CategoryList />
-      {/* <CategoryList /> */}
-
+      <CategoryList horizontal={true} rightText="See all" />
       {renderNavBar()}
     </>
   );
@@ -62,8 +60,8 @@ const StickyView = () => {
         alwaysShowTitle={false}
         headerMinHeight={headerMinHeight}
         headerMaxHeight={headerMaxHeight}
-        headerTitleStyle={{zIndex: offset <= 50 ? 0 : -1}}
-        extraScrollHeight={20}
+        headerTitleStyle={{zIndex: offset <= 50 ? 1 : -1}}
+        extraScrollHeight={10}
         title={renderTitle()}
         backgroundColor="transparent"
         navbarColor="whitesmoke"
@@ -83,18 +81,16 @@ const StickyView = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: 'transparent',
   },
   contentContainer: {
-    flexGrow: 1,
     backgroundColor: 'whitesmoke',
     paddingBottom: Platform.OS === 'android' ? 10 : 30,
-    marginTop: Platform.OS === 'ios' ? verticalScale(15) : 0,
+    marginTop: Platform.OS === 'ios' ? verticalScale(25) : 0,
   },
   headerWrapper: {paddingHorizontal: 15, width: '100%'},
   navbarWrapper: {
-    marginTop: Platform.OS === 'ios' ? verticalScale(10) : verticalScale(15),
+    marginTop: Platform.OS === 'ios' ? verticalScale(5) : verticalScale(15),
   },
 });
 
