@@ -253,3 +253,14 @@ export const notifications = [
     content: 'Lorem ipsum dolor sit amet',
   },
 ];
+
+export const searchData = [
+  {
+    id: 1,
+    title: 'Most Searched',
+  },
+  {
+    id: 2,
+    title: 'Arranged Alphabetically',
+  },
+];
