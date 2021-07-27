@@ -114,6 +114,7 @@ const styles = StyleSheet.create({
     width: 10,
     height: 10,
     marginLeft: 3,
+    alignSelf: 'center',
   },
   notes: {
     fontWeight: '300',
