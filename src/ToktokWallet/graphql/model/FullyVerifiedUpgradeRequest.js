@@ -19,7 +19,8 @@ export const POST_FULL_VERIFIED_UPGRADE_REQUEST = gql`
 export const GET_CHECK_FULLY_VERIFIED_UPGRADE_REQUEST = gql`
     query {
         getCheckFullyVerifiedUpgradeRequest{
-            result
+            hasVcs
+            isPendingVcs
         }
     }
 `

@@ -40,21 +40,25 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route})=> {
     const alert = useAlert()
     const [isLinkedBankAccount, setIsLinkedBankAccount] = useState(false)
     const [isPendingLinking,setIsPendingLinking] = useState(false)
-    const [hasVCS, setHasVSC] = useState(false)
+    const [checkVcs, setCheckVcs] = useState({
+        hasVcs: false,
+        isPendingVcs: false
+    })
     const [isLinked, setIsLinked] = useState(false)
     const tokwaAccount = useSelector(state=>state.toktokWallet)
     const [mounted, setMounted] = useState(true)
     const [showSuccessModal, setShowSuccessModal] = useState(false)
     const dispatch = useDispatch()
 
-    const [checkHasVSC, { error, loading }] = useLazyQuery(GET_CHECK_FULLY_VERIFIED_UPGRADE_REQUEST, {
+    const [checkHasVCS, { error, loading }] = useLazyQuery(GET_CHECK_FULLY_VERIFIED_UPGRADE_REQUEST, {
         fetchPolicy: "network-only",
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onError: (error)=> {
             onErrorAlert({alert,error})
         },
         onCompleted:({ getCheckFullyVerifiedUpgradeRequest })=> {
-            setHasVSC(getCheckFullyVerifiedUpgradeRequest.result)
+            let { hasVcs, isPendingVcs } = getCheckFullyVerifiedUpgradeRequest;
+            setCheckVcs({ hasVcs, isPendingVcs });
         }
     })
 
@@ -76,9 +80,9 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route})=> {
 
     useEffect(() => {
         checkHasLinkBankAccount()
-        checkHasVSC()
+        checkHasVCS()
         if(route.params){
-            setShowSuccessModal(route.params.doneVSC)
+            setShowSuccessModal(route.params.doneVcs)
         }
     }, [])
 
@@ -90,7 +94,7 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route})=> {
         return navigation.navigate("ToktokWalletCashOutHomePage")
     }
 
-    if(loading || isLinkedBankAccount == undefined){
+    if(loading){
         return (
             <View style={styles.activityIndicator}>
                 <ActivityIndicator color={COLOR.YELLOW} size={24}/>
@@ -130,10 +134,14 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route})=> {
             />
             <DisplayComponent
                 onPress={() => { navigation.navigate("ToktokWalletVideoCallSchedule") }}
-                disabled={hasVCS}
+                disabled={checkVcs.hasVcs}
                 notFinishLabel="Request a video call for verification"
                 btnLabel="Schedule Now"
-                finishLabel="Your schedule has been submitted. Please wait for our representative to get in touch with you within 5 business days."
+                finishLabel={
+                    checkVcs.isPendingVcs
+                    ? "Your schedule has been submitted. Please wait for our representative to get in touch with you within 5 business days."
+                    : "Your video call requirement has been approved."
+                }
             />
         </View>
         </>

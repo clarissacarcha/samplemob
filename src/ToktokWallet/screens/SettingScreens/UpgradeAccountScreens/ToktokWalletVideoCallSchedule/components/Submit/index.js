@@ -66,7 +66,7 @@ export const Submit = () => {
             let result = response.postFullyVerifiedUpgradeRequest
             if(result.requestStatus == 2){
                 navigation.pop(2)
-                navigation.navigate("ToktokWalletFullyVerifiedApplication", { doneVSC: true })
+                navigation.navigate("ToktokWalletFullyVerifiedApplication", { doneVcs: true })
             }
         }
     })
