@@ -12,6 +12,7 @@ import { onErrorAlert } from 'src/util/ErrorUtility'
 import { useAlert } from 'src/hooks'
 import {SomethingWentWrong} from 'src/components'
 import { SuccessfulModal } from "../../../../components";
+import { useDispatch } from 'react-redux'
 
 const { COLOR , FONT_SIZE , FONT_FAMILY: FONT, SHADOW  } = CONSTANTS
 
@@ -37,12 +38,14 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route})=> {
     })
 
     const alert = useAlert()
-    const [isLinkedBankAccount, setIsLinkedBankAccount] = useState()
+    const [isLinkedBankAccount, setIsLinkedBankAccount] = useState(false)
+    const [isPendingLinking,setIsPendingLinking] = useState(false)
     const [hasVCS, setHasVSC] = useState(false)
     const [isLinked, setIsLinked] = useState(false)
     const tokwaAccount = useSelector(state=>state.toktokWallet)
     const [mounted, setMounted] = useState(true)
     const [showSuccessModal, setShowSuccessModal] = useState(false)
+    const dispatch = useDispatch()
 
     const [checkHasVSC, { error, loading }] = useLazyQuery(GET_CHECK_FULLY_VERIFIED_UPGRADE_REQUEST, {
         fetchPolicy: "network-only",
@@ -62,7 +65,8 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route})=> {
             onErrorAlert({alert,error})
         },
         onCompleted:({ getCheckPendingDisbursementAccount })=> {
-            setIsLinkedBankAccount(getCheckPendingDisbursementAccount.result)
+            // setIsLinkedBankAccount(getCheckPendingDisbursementAccount.result)
+            setIsPendingLinking(getCheckPendingDisbursementAccount.result)
         }
     })
 
@@ -77,6 +81,14 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route})=> {
             setShowSuccessModal(route.params.doneVSC)
         }
     }, [])
+
+    const redirectLinking = ()=> {
+        dispatch({
+            type: "SET_EVENTS_UPGRADE_ACCOUNT",
+            payload: true
+        })
+        return navigation.navigate("ToktokWalletCashOutHomePage")
+    }
 
     if(loading || isLinkedBankAccount == undefined){
         return (
@@ -106,11 +118,15 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route})=> {
         </View>
         <View style={styles.container}>
             <DisplayComponent
-                onPress={() => {}} // Navigate here the screen for link bank account
-                disabled={isLinkedBankAccount}
+                onPress={redirectLinking} // Navigate here the screen for link bank account
+                disabled={isLinkedBankAccount || isPendingLinking}
                 notFinishLabel="Link your toktokwallet account to one bank account or another debit card."
                 btnLabel="Link Now"
-                finishLabel="Your Application has been submitted. Please wait for your Disbursement Account to be verified within 5 business days."
+                finishLabel={
+                    isLinkedBankAccount 
+                    ? "Your application has been approved. Your Disbursement Account has been verified."
+                    : "Your application has been submitted. Please wait for your Disbursement Account to be verified within 5 business days."
+                }
             />
             <DisplayComponent
                 onPress={() => { navigation.navigate("ToktokWalletVideoCallSchedule") }}

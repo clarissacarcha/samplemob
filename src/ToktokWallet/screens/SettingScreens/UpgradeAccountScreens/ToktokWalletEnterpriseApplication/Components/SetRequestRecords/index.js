@@ -57,7 +57,7 @@ export const SetRequestRecords = ({data})=> {
             }
         })
 
-        setShowModal(true);
+       // setShowModal(true);
     },[])
 
     return <ForCompliancePrompt data={data} visible={showModal} setVisible={setShowModal}/>
