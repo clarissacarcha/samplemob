@@ -50,7 +50,7 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route})=> {
     const [showSuccessModal, setShowSuccessModal] = useState(false)
     const dispatch = useDispatch()
 
-    const [checkHasVCS, { error, loading }] = useLazyQuery(GET_CHECK_FULLY_VERIFIED_UPGRADE_REQUEST, {
+    const [checkHasVcs, { error: errorCheckVcs, loading: loadingCheckVcs }] = useLazyQuery(GET_CHECK_FULLY_VERIFIED_UPGRADE_REQUEST, {
         fetchPolicy: "network-only",
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onError: (error)=> {
@@ -62,14 +62,13 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route})=> {
         }
     })
 
-    const [getCheckPendingDisbursementAccount] = useLazyQuery(GET_CHECK_PENDING_DISBURSEMENT_ACCOUNT, {
+    const [ getCheckPendingDisbursementAccount, { error: errorCheckPendingDisbursement, loading: loadingCheckPendingDisbursement }] = useLazyQuery(GET_CHECK_PENDING_DISBURSEMENT_ACCOUNT, {
         fetchPolicy: "network-only",
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onError: (error)=> {
             onErrorAlert({alert,error})
         },
         onCompleted:({ getCheckPendingDisbursementAccount })=> {
-            // setIsLinkedBankAccount(getCheckPendingDisbursementAccount.result)
             setIsPendingLinking(getCheckPendingDisbursementAccount.result)
         }
     })
@@ -80,7 +79,7 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route})=> {
 
     useEffect(() => {
         checkHasLinkBankAccount()
-        checkHasVCS()
+        checkHasVcs()
         if(route.params){
             setShowSuccessModal(route.params.doneVcs)
         }
@@ -94,7 +93,7 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route})=> {
         return navigation.navigate("ToktokWalletCashOutHomePage")
     }
 
-    if(loading){
+    if(loadingCheckVcs || loadingCheckPendingDisbursement){
         return (
             <View style={styles.activityIndicator}>
                 <ActivityIndicator color={COLOR.YELLOW} size={24}/>
@@ -102,7 +101,7 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route})=> {
         )
     }
 
-    if(error){
+    if(errorCheckVcs || errorCheckPendingDisbursement){
         return <SomethingWentWrong />;
     }
 
