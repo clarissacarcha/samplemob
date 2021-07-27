@@ -34,7 +34,7 @@ const tabs = [
 const StickyView = () => {
   const [offset, setOffset] = useState(0);
   const [activeTab, setActiveTab] = useState(tabs[0]);
-  const headerMaxHeight = Platform.OS === 'ios' ? moderateScale(270) : scale(320);
+  const headerMaxHeight = Platform.OS === 'ios' ? moderateScale(150) : scale(320);
   const headerMinHeight = Platform.OS === 'ios' ? verticalScale(42) : moderateScale(65);
   const {categories} = useSelector((state) => state).toktokFood;
   const {shops} = useSelector((state) => state).toktokFood;
@@ -48,7 +48,7 @@ const StickyView = () => {
   const renderTitle = () => (
     <>
       <CategoryList />
-      <CategoryList />
+      {/* <CategoryList /> */}
 
       {renderNavBar()}
     </>
@@ -62,7 +62,7 @@ const StickyView = () => {
         alwaysShowTitle={false}
         headerMinHeight={headerMinHeight}
         headerMaxHeight={headerMaxHeight}
-        headerTitleStyle={{zIndex: offset <= 247 ? 0 : -1}}
+        headerTitleStyle={{zIndex: offset <= 50 ? 0 : -1}}
         extraScrollHeight={20}
         title={renderTitle()}
         backgroundColor="transparent"

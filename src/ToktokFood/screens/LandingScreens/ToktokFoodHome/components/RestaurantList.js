@@ -23,8 +23,8 @@ const RestaurantList = () => {
         <Rating startingValue={item.ratings} tintColor={'whitesmoke'} imageSize={13} readonly style={styles.ratings} />
 
         <View style={styles.branchInfo}>
-          <MCIcon name="store" color={'#868686'} size={13} />
-          <Text style={styles.branches}>{item.totalBranches} branches</Text>
+          {/* <MCIcon name="store" color={'#868686'} size={13} /> */}
+          {/* <Text style={styles.branches}>{item.totalBranches} branches</Text> */}
 
           <MCIcon name="clock-outline" color={'#868686'} size={13} />
           <Text style={styles.branches}>{item.time}</Text>
