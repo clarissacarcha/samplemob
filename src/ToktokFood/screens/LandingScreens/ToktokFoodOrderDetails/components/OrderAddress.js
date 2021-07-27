@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
   horizontalContainer: {
     borderColor: '#DDDDDD',
     borderTopWidth: 1,
-    marginVertical: verticalScale(3),
+    marginVertical: verticalScale(4),
     marginBottom: verticalScale(6),
   },
   horizontalDivider: {
