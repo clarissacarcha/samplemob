@@ -6,7 +6,9 @@ import {searchIcon} from '../assets/images';
 import {FONT, FONT_SIZE, COLOR} from '../../res/variables';
 
 // State must be global to share with other components
-const HeaderSearchBox = () => {
+const HeaderSearchBox = (props) => {
+  const {onSearch, query} = props;
+
   const routes = useRoute();
   const navigation = useNavigation();
 
@@ -36,9 +38,11 @@ const HeaderSearchBox = () => {
         <View style={[styles.textInputWrapper, styles.searchBoxShadow]}>
           <Image style={styles.searchBoxIcon} source={searchIcon} />
           <TextInput
+            value={query}
             multiline={false}
             autoFocus={true}
             placeholder="What would you like to eat?"
+            onChangeText={(text) => onSearch(text)}
             style={[styles.searchBox, styles.textInputFontStyles]}
           />
         </View>

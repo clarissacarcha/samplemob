@@ -7,7 +7,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {COLOR} from 'res/variables';
 
 import HomeScreen from './HomeScreen';
-import {ToktokFoodOrders, ToktokFoodFavorites, ToktokFoodNotifications} from '../../../ToktokFood/screens';
+import {ToktokFoodFavorites, ToktokFoodNotifications, ToktokFoodOrderTransactions} from '../../../ToktokFood/screens';
 
 const ToktokFoodLandingBottomTab = createBottomTabNavigator();
 
@@ -28,8 +28,8 @@ const ToktokFoodLanding = () => (
       }}
     />
     <ToktokFoodLandingBottomTab.Screen
-      name="ToktokFoodOrders"
-      component={ToktokFoodOrders}
+      name="ToktokFoodOrderTransactions"
+      component={ToktokFoodOrderTransactions}
       options={{
         tabBarLabel: ({focused}) => (
           <>

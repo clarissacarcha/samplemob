@@ -3,7 +3,7 @@ import {useDispatch} from 'react-redux';
 import {useLazyQuery} from '@apollo/react-hooks';
 
 // Graphql
-import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql/client/graphql';
+import {TOKTOK_FOOD_GRAPHQL_CLIENT} from '../../graphql/client/graphql';
 import {GET_CATEGORIES, GET_SHOPS} from 'toktokfood/graphql/toktokfood';
 
 // Helpers
@@ -16,12 +16,20 @@ export const useUserLocation = () => {
     // Get user initial location
     getLocation().then(async (res) => {
       if (res) {
+
+        // Do not spread address object from getFormattedAddress function and pass to payload
+        // if the initial state structure of reducer is not equal to getFormattedAddress result.
+
+        // getFormattedAddress example object result:
+        // {"addressBreakdown": {"city": "", "country": "", "province": ""}, "formattedAddress": ""}
+        // redux reducer structure for tokfood location: location: {address: "", latitude: 0, longitude: 0, } 
+
         const {latitude, longitude} = res;
         const address = await getFormattedAddress(latitude, longitude);
         const payload = {
-          ...address,
           latitude,
           longitude,
+          address: address.formattedAddress,
         };
         dispatch({type: 'SET_TOKTOKFOOD_LOCATION', payload: {...payload}});
       }

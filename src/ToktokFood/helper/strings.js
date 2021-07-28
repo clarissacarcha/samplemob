@@ -254,6 +254,73 @@ export const notifications = [
   },
 ];
 
+export const transactions = [
+  {
+    orderId: 1,
+    quantity: 2,
+    image: food1,
+    shop: 'Starbucks',
+    shopAddress: '32th Street',
+    destinationAddress: 'Cloud Panda PH Inc. 10F 40th Street Taguig',
+    statusCode: 'po',
+    statusMessage: 'On the way to restaurant',
+  },
+  {
+    orderId: 2,
+    quantity: 2,
+    image: food1,
+    shop: 'Starbucks',
+    shopAddress: '32th Street',
+    destinationAddress: 'Cloud Panda PH Inc. 10F 40th Street Taguig',
+    statusCode: 'f',
+    statusMessage: 'Food picked up',
+  },
+  {
+    orderId: 3,
+    quantity: 2,
+    image: food1,
+    shop: 'Starbucks',
+    shopAddress: '32th Street',
+    destinationAddress: 'Cloud Panda PH Inc. 10F 40th Street Taguig',
+    statusCode: 's',
+    statusMessage: 'Delivered',
+    statusTime: '10:00 AM',
+  },
+  {
+    orderId: 4,
+    quantity: 2,
+    image: food1,
+    shop: 'Starbucks',
+    shopAddress: '32th Street',
+    destinationAddress: 'Cloud Panda PH Inc. 10F 40th Street Taguig',
+    statusCode: 's',
+    statusMessage: 'Delivered',
+    statusTime: '10:00 AM',
+  },
+  {
+    orderId: 6,
+    quantity: 2,
+    image: food1,
+    shop: 'Starbucks',
+    shopAddress: '32th Street',
+    destinationAddress: 'Cloud Panda PH Inc. 10F 40th Street Taguig',
+    statusCode: 'c',
+    statusMessage: 'Cancelled',
+    statusTime: '10:00 AM',
+  },
+  {
+    orderId: 7,
+    quantity: 2,
+    image: food1,
+    shop: 'Starbucks',
+    shopAddress: '32th Street',
+    destinationAddress: 'Cloud Panda PH Inc. 10F 40th Street Taguig',
+    statusCode: 'c',
+    statusMessage: 'Cancelled',
+    statusTime: '10:00 AM',
+  },
+];
+
 export const searchData = [
   {
     id: 1,

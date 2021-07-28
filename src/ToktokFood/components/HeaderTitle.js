@@ -10,17 +10,21 @@ import {markerIcon} from 'toktokfood/assets/images';
 
 import {getStatusbarHeight, verticalScale} from 'toktokfood/helper/scale';
 
-const HeaderTitle = ({title = 'TokTok PH'}) => {
+const HeaderTitle = ({title = 'TokTok Food'}) => {
   const navigation = useNavigation();
   const {location} = useSelector((state) => state.toktokFood);
+
+  const onSetLocationDetails = () => {
+    navigation.navigate('ToktokFoodAddressDetails');
+  };
 
   const renderText = () => (
     <View style={styles.addressContainer}>
       <Text style={styles.headerLabel}>{title}</Text>
-      <View style={styles.textAddressContainer}>
+      <View onTouchEndCapture={() => onSetLocationDetails()} style={styles.textAddressContainer}>
         <Image style={styles.addressMarkerIcon} source={markerIcon} />
         <Text style={styles.textAddress} numberOfLines={2}>
-          {location.formattedAddress}
+          {location.address}
         </Text>
       </View>
     </View>
@@ -57,7 +61,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     paddingTop:
-      Platform.OS === 'android' ? verticalScale(getStatusbarHeight + 5) : verticalScale(getStatusbarHeight + 30),
+      Platform.OS === 'android' ? verticalScale(getStatusbarHeight + 15) : verticalScale(getStatusbarHeight + 25),
   },
   headerBack: {
     paddingHorizontal: 20,
