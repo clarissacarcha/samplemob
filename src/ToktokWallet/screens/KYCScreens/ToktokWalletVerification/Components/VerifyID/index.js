@@ -119,7 +119,7 @@ export const VerifyID = ()=> {
                     {frontImage ? <ImageIDSet placement="front" /> : <ChooseImage placement="front" />}
                 </View>
                 <View style={{flex: 1, paddingVertical: 5}}>
-                    <Text>Back of ID</Text>
+                    <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Back of ID</Text>
                     {backImage ? <ImageIDSet placement="back" /> : <ChooseImage placement="back" />}
                 </View>
                 </>
