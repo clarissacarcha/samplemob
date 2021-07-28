@@ -127,7 +127,7 @@ const SCHEDULE_DAYS = createDays().map((item) => {
   return item.label;
 });
 
-const Pabili = ({navigation, session}) => {
+const Pabili = ({navigation, session, route}) => {
   const INITIAL_ORDER_DATA = {
     hash: '',
     consumerId: session.user.consumer.id,
@@ -354,6 +354,7 @@ const Pabili = ({navigation, session}) => {
           onLocationDetected={(coordinates) => {
             setUserCoordinates(coordinates);
           }}
+          routeParams={route.params}
         />
         <View style={{height: 20}} />
         {userCoordinates && (

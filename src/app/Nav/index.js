@@ -1,12 +1,9 @@
 import React from 'react';
-import {Text} from 'react-native';
 import {connect} from 'react-redux';
-import {COLOR, FONT_SIZE, SIZE} from '../../res/variables';
-import {APP_FLAVOR} from '../../res/constants';
+import {COLOR} from '../../res/variables';
 import {DeliveriesTopTabHeader} from '../../components';
 import EIcon from 'react-native-vector-icons/Entypo';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import MIcon from 'react-native-vector-icons/MaterialIcons';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {NavigationContainer} from '@react-navigation/native';
@@ -21,100 +18,43 @@ import DrawerContent from '../Drawer';
 import Landing from '../../screens/Landing';
 
 /*---------- CONSUMER SCREENS ----------*/
+import ToktokScreens from './toktok';
 import ToktokFoodScreens from './toktokfood';
-
+import ToktokWalletScreens from './toktokwallet';
 import ToktokMallScreens from './toktokmall';
 
 /*---------- CONSUMER SCREENS ----------*/
 
-import ConsumerLanding from '../../screens/AuthenticatedStack/ConsumerScreens/ConsumerLanding';
-import ToktokDelivery from '../../screens/AuthenticatedStack/ConsumerScreens/DeliveryScreens/ToktokDelivery';
-import StopDetails from '../../screens/AuthenticatedStack/ConsumerScreens/DeliveryScreens/StopDetails';
-import DeliveryDetails from '../../screens/AuthenticatedStack/ConsumerScreens/DeliveryScreens/DeliveryDetails';
-import DeliverySummary from '../../screens/AuthenticatedStack/ConsumerScreens/DeliveryScreens/DeliverySummary';
+// import ToktokDelivery from '../../screens/AuthenticatedStack/ConsumerScreens/DeliveryScreens/ToktokDelivery';
+// import StopDetails from '../../screens/AuthenticatedStack/ConsumerScreens/DeliveryScreens/StopDetails';
+// import DeliveryDetails from '../../screens/AuthenticatedStack/ConsumerScreens/DeliveryScreens/DeliveryDetails';
+// import DeliverySummary from '../../screens/AuthenticatedStack/ConsumerScreens/DeliveryScreens/DeliverySummary';
 
 import PostRegistration from '../../screens/AuthenticatedStack/ConsumerScreens/PostRegistration';
-import CheckConsumerLocation from '../../screens/AuthenticatedStack/ConsumerScreens/Booking/CheckConsumerLocation';
+// import CheckConsumerLocation from '../../screens/AuthenticatedStack/ConsumerScreens/Booking/CheckConsumerLocation';
 // import StopDetails from '../screens/AuthenticatedStack/ConsumerScreens/Booking/StopDetails';
-import ConsumerMap from '../../screens/AuthenticatedStack/ConsumerScreens/Booking/ConsumerMap';
-import RecipientDetails from '../../screens/AuthenticatedStack/ConsumerScreens/Booking/RecipientDetails';
+// import ConsumerMap from '../../screens/AuthenticatedStack/ConsumerScreens/Booking/ConsumerMap';
+// import RecipientDetails from '../../screens/AuthenticatedStack/ConsumerScreens/Booking/RecipientDetails';
 // import DeliveryDetails from '../screens/AuthenticatedStack/ConsumerScreens/Booking/DeliveryDetails';
-import SavedLocations from '../../screens/AuthenticatedStack/ConsumerScreens/SavedLocations/SavedLocations';
-import SearchMap from '../../screens/AuthenticatedStack/ConsumerScreens/Booking/SearchMap';
-import SearchPlaces from '../../screens/AuthenticatedStack/ConsumerScreens/Booking/SearchPlaces';
+// import SavedLocations from '../../screens/AuthenticatedStack/ConsumerScreens/SavedLocations/SavedLocations';
+// import SearchMap from '../../screens/AuthenticatedStack/ConsumerScreens/Booking/SearchMap';
+// import SearchPlaces from '../../screens/AuthenticatedStack/ConsumerScreens/Booking/SearchPlaces';
 import SelectedDeliveries from '../../screens/AuthenticatedStack/ConsumerScreens/Deliveries/SelectedDeliveries';
 import SelectedDelivery from '../../screens/AuthenticatedStack/ConsumerScreens/Deliveries/SelectedDelivery';
-import SenderDetails from '../../screens/AuthenticatedStack/ConsumerScreens/Booking/SenderDetails';
-import AddLocation from '../../screens/AuthenticatedStack/ConsumerScreens/SavedLocations/AddLocation';
+// import SenderDetails from '../../screens/AuthenticatedStack/ConsumerScreens/Booking/SenderDetails';
+// import AddLocation from '../../screens/AuthenticatedStack/ConsumerScreens/SavedLocations/AddLocation';
 import ConsumerChangePassword from '../../screens/AuthenticatedStack/ConsumerScreens/Profile/ConsumerChangePassword';
 
-import ConsumerProfile from '../../screens/AuthenticatedStack/ConsumerScreens/Profile/ConsumerProfile';
-import CustomerDeliveries from '../../screens/AuthenticatedStack/ConsumerScreens/Deliveries/MyDeliveries';
+// import ConsumerProfile from '../../screens/AuthenticatedStack/ConsumerScreens/Profile/ConsumerProfile';
 import DeliveryTracking from '../../screens/AuthenticatedStack/ConsumerScreens/Deliveries/DeliveryTracking';
-import SearchContact from '../../screens/AuthenticatedStack/ConsumerScreens/Booking/SearchContact';
+import SearchContact from '../../screens/AuthenticatedStack/ConsumerScreens/Booking/SearchContacts';
 import Pabili from '../../screens/AuthenticatedStack/ConsumerScreens/PabiliScreens/Pabili';
 import PabiliSearchAddress from '../../screens/AuthenticatedStack/ConsumerScreens/PabiliScreens/PabiliSearchAddress';
 import PabiliDetails from '../../screens/AuthenticatedStack/ConsumerScreens/PabiliScreens/PabiliDetails';
 import NearbyStores from '../../screens/AuthenticatedStack/ConsumerScreens/PabiliScreens/NearbyStores';
 import PartnerBranches from '../../screens/AuthenticatedStack/ConsumerScreens/PabiliScreens/PartnerBranches';
 import SelectedAdvertisement from '../../screens/AuthenticatedStack/ConsumerScreens/AdvertisementScreens/SelectedAdvertisement';
-import ConsumerMenu from '../../screens/AuthenticatedStack/ConsumerScreens/ConsumerMenu';
-import ConsumerNotifications from '../../screens/AuthenticatedStack/ConsumerScreens/ConsumerNotifications';
-
-/*---------- CONSUMER TOKTOK WALLET SCREENS ----------*/
-import ToktokWalletHomePage from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/ToktokWalletHomePage';
-import ToktokWalletRestricted from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/ToktokWalletRestricted';
-import ToktokWalletSecurityAndPrivacy from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/ToktokWalletSecurityAndPrivacy';
-import ToktokWalletSecurityPinCode from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/ToktokWalletSecurityPinCode';
-import ToktokWalletPaymentOptions from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/CashInScreens/ToktokWalletPaymentOptions';
-import ToktokWalletPayPandaForm from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/CashInScreens/ToktokWalletPayPandaForm';
-import ToktokWalletPayPandaWebView from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/CashInScreens/ToktoKWalletPayPandaWebView';
-import ToktokWalletCashOut from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/CashOutScreens/ToktokWalletCashOut';
-import ToktokWalletGcashCashOut from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/CashOutScreens/ToktokWalletGcashCashOut';
-import ToktokWalletSendMoney from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SendMoneyScreens/ToktokWalletSendMoney';
-import ToktokWalletContacts from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SendMoneyScreens/ToktokWalletContacts';
-import ToktokWalletScanQR from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/ScanQRScreens/ToktokWalletScanQR';
-import ToktokWalletScanQRConfirm from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/ScanQRScreens/ToktokWalletScanQRConfirm';
-import ToktokWalletSettings from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/ToktokWalletSettings';
-import ToktokWalletCashInLogs from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/ToktokWalletCashInLogs';
-import ToktokWalletCashOutLogs from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/ToktokWalletCashOutLogs';
-import ToktokWalletCreatePin from '../../screens//AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/PinCodeScreens/ToktokWalletCreatePin';
-import ToktokWalletRecoveryMethods from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/PinCodeScreens/ToktokWalletRecoveryMethods';
-import ToktokWalletRecoverPin from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/PinCodeScreens/ToktokWalletRecoverPin';
-import ToktokWalletUpdatePin from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/PinCodeScreens/ToktokWalletUpdatePin';
-import ToktokWalletVerifySetup from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/VerificationScreens/ToktokWalletVerifySetup';
-import ToktokWalletVerification from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/VerificationScreens/ToktokWalletVerification';
-import ToktokWalletValidIDCamera from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/VerificationScreens/ToktokWalletValidIDCamera';
-import ToktokWalletSelfieCamera from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/VerificationScreens/ToktokWalletSelfieCamera';
-import ToktokWalletSelfieImageCamera from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/VerificationScreens/ToktokWalletSelfieImageCamera';
-import ToktokWalletVerifyResult from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/VerificationScreens/ToktokWalletVerifyResult';
-
-import ToktokWalletTransactions from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens//ToktokWalletTransactions';
-import ToktokWalletRecentTransferView from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/ToktokWalletRecentTransferView';
-import ToktokWalletRecentTransferProceed from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/ToktokWalletRecentTransferProceed';
-import ToktokWalletReviewAndConfirm from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/ToktokWalletReviewAndConfirm';
-import ToktokWalletGcashRegistration from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/CashOutScreens/ToktokWalletGcashRegistration';
-import ToktokWalletGcashUpdate from '../../screens/AuthenticatedStack/ConsumerScreens//ToktokWalletScreens/CashOutScreens/ToktokWalletGcashUpdate';
-import ToktokWalletGcashHomePage from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/CashOutScreens/ToktokWalletGcashHomePage';
-import ToktokWalletGcashLinkAccount from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/CashOutScreens/ToktokWalletGcashLinkAccount';
-import ToktokWalletLinkAccount from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/ToktokWalletLinkAccount';
-import ToktokWalletTransactionLimit from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/ToktokWalletTransactionLimit';
-import ToktokWalletHelpCentrePaymentChart from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/HelpCentreScreens/PaymentChartScreens';
-import ToktokWalletHelpCentreSecurityPrivacy from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/HelpCentreScreens/SecurityPrivacyScreens';
-import ToktokWalletHelpCentreLayeredSecurity from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/HelpCentreScreens/SecurityPrivacyScreens/LayeredSecurity';
-import ToktokWalletHelpCentreMoneyProtected from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/HelpCentreScreens/SecurityPrivacyScreens/MoneyProtected';
-import ToktokWalletHelpCentreTermsConditions from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/HelpCentreScreens/TermsConditionsScreens';
-import ToktokWalletHelpCentreTransactionLimit from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/SettingScreens/HelpCentreScreens/TransactionLimitScreens';
-
-import ToktokWalletBDOHomePage from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/CashOutScreens/ToktokWalletBDOHomePage';
-
-import ToktokWalletCashOutHomePage from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/CashOutScreens/ToktokWalletCashOutHomePage';
-import ToktokWalletCashOutOtherBanks from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/CashOutScreens/ToktokWalletCashOutOtherBanks';
-import ToktokWalletCashOutSaveAccount from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/CashOutScreens/ToktokWalletCashOutSaveAccount';
-import ToktokWalletCashOutUpdateAccount from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/CashOutScreens/ToktokWalletCashOutUpdateAccount';
-import ToktokWalletBDORegistration from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/CashOutScreens/ToktokWalletBDORegistration';
-import ToktokWalletCashOutViewAccount from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/CashOutScreens/ToktokWalletCashOutViewAccount';
-import ToktokWalletBDOLinkAccount from '../../screens/AuthenticatedStack/ConsumerScreens/ToktokWalletScreens/CashOutScreens/ToktokWalletBDOLinkAccount';
+// import ConsumerMenu from '../../screens/AuthenticatedStack/ConsumerScreens/ConsumerMenu';
 
 /*---------- DRIVER SCREENS ----------*/
 import DriverMap from '../../screens/AuthenticatedStack/DriverScreens/DriverMap';
@@ -135,13 +75,13 @@ import Completed from '../../screens/AuthenticatedStack/DriverScreens/Deliveries
 import ChangeProfilePicture from '../../screens/AuthenticatedStack/DriverScreens/Profile/ChangeProfilePicture';
 
 /*---------- COMMON SCREENS ----------*/
-import SelectedAnnouncement from '../../screens/AuthenticatedStack/CommonScreens/Announcement/SelectedAnnouncement';
+// import SelectedAnnouncement from '../../screens/AuthenticatedStack/CommonScreens/Announcement/SelectedAnnouncement';
 import TalkToUs from '../../screens/AuthenticatedStack/CommonScreens/TalkToUs';
 import OrderCancellation from '../../screens/AuthenticatedStack/CommonScreens/OrderCancellation';
-import Notifications from '../../screens/AuthenticatedStack/CommonScreens/Notifications';
+// import Notifications from '../../screens/AuthenticatedStack/CommonScreens/Notifications';
 import DeliveryRating from '../../screens/AuthenticatedStack/CommonScreens/DeliveryRating';
-import Announcements from '../../screens/AuthenticatedStack/CommonScreens/Announcement/Announcements';
-import GCashAccount from '../../screens/AuthenticatedStack/CommonScreens/GCashAccount';
+// import Announcements from '../../screens/AuthenticatedStack/CommonScreens/Announcement/Announcements';
+// import GCashAccount from '../../screens/AuthenticatedStack/CommonScreens/GCashAccount';
 
 /*---------- Unauthenticated Stack ----------*/
 import AccountBlocked from '../../screens/UnauthenticatedStack/AccountBlocked';
@@ -159,10 +99,7 @@ const Unauthenticated = createStackNavigator();
 const Authenticated = createStackNavigator();
 const RootDrawer = createDrawerNavigator();
 const DriverHome = createBottomTabNavigator();
-const ConsumerHome = createBottomTabNavigator();
 const DriverDeliveries = createMaterialTopTabNavigator();
-
-const ConsumerBottomTabStack = createStackNavigator();
 
 const DriverDeliveriesTab = () => {
   return (
@@ -299,99 +236,52 @@ const DriverHomeBottomTab = ({navigation}) => (
   </DriverHome.Navigator>
 );
 
-const ConsumerHomeBottomTab = ({navigation}) => (
-  <ConsumerHome.Navigator
-    tabBarOptions={{
-      activeTintColor: COLOR.YELLOW,
-      inactiveTintColor: COLOR.MEDIUM,
-      // showLabel: false,
-      // style: {marginBottom: -10},
-      labelStyle: {
-        fontSize: 9,
-      },
-    }}>
-    <ConsumerHome.Screen
-      name="ConsumerLanding"
-      component={ConsumerLanding}
-      options={{
-        tabBarLabel: ({focused}) => (
-          <Text style={{fontSize: 10, color: focused ? COLOR.BLACK : COLOR.MEDIUM}}>Home</Text>
-        ),
-        tabBarIcon: ({color}) => <MCIcon name="home" color={color} size={30} />,
-      }}
-    />
-    <ConsumerHome.Screen
-      name="CustomerDeliveries"
-      component={CustomerDeliveries}
-      // options={{
-      //   headerLeft: () => <HeaderBack />,
-      //   headerTitle: () => <HeaderTitle label={['My', 'Deliveries']} />,
-      // }}
-      options={{
-        tabBarLabel: ({focused}) => (
-          <Text style={{fontSize: 10, color: focused ? COLOR.BLACK : COLOR.MEDIUM}}>Deliveries</Text>
-        ),
-        tabBarIcon: ({color}) => <FA5Icon name="clipboard-list" color={color} size={26} />,
-      }}
-    />
-    <ConsumerHome.Screen
-      name="ConsumerNotifications"
-      component={ConsumerNotifications}
-      options={{
-        tabBarLabel: ({focused}) => (
-          <Text style={{fontSize: 10, color: focused ? COLOR.BLACK : COLOR.MEDIUM}}>Notifications</Text>
-        ),
-        tabBarIcon: ({color}) => <MIcon name="notifications" color={color} size={26} />,
-      }}
-    />
-    <ConsumerHome.Screen
-      name="ConsumerMenu"
-      component={ConsumerMenu}
-      options={{
-        tabBarLabel: ({focused}) => (
-          <Text style={{fontSize: 10, color: focused ? COLOR.BLACK : COLOR.MEDIUM}}>Menu</Text>
-        ),
-        tabBarIcon: ({color}) => <EIcon name="menu" color={color} size={30} />,
-        // tabBarButton: (props) => <TouchableWithoutFeedback {...props} onPress={() => navigation.openDrawer()} />,
-      }}
-    />
-  </ConsumerHome.Navigator>
-);
-
-const ConsumerLandingStack = () => (
-  <ConsumerBottomTabStack.Navigator>
-    <ConsumerBottomTabStack.Screen
-      name="ConsumerBottomTabScreen"
-      component={ConsumerHomeBottomTab}
-      options={{
-        headerShown: false,
-      }}
-    />
-  </ConsumerBottomTabStack.Navigator>
-);
-
 const AuthenticatedStack = () => (
   <Authenticated.Navigator>
+    {ToktokScreens({Navigator: Authenticated})}
     {ToktokFoodScreens({Navigator: Authenticated})}
     {ToktokMallScreens({Navigator: Authenticated})}
+    {ToktokWalletScreens({Navigator: Authenticated})}
 
-    {/* <Authenticated.Screen name="ConsumerLanding" component={ConsumerLanding} options={{headerShown: false}} /> */}
-    <Authenticated.Screen name="ConsumerLanding" component={ConsumerHomeBottomTab} options={{headerShown: false}} />
-    <Authenticated.Screen name="ToktokDelivery" component={ToktokDelivery} options={{headerShown: false}} />
-    <Authenticated.Screen name="StopDetails" component={StopDetails} options={{headerShown: false}} />
-    <Authenticated.Screen name="DeliveryDetails" component={DeliveryDetails} />
-    <Authenticated.Screen name="DeliverySummary" component={DeliverySummary} />
+    <Authenticated.Screen name="PostRegistration" component={PostRegistration} />
+
+    {/********** Delivery **********/}
+    {/* <Authenticated.Screen name="ToktokDelivery" component={ToktokDelivery} options={{headerShown: false}} /> */}
+    {/* <Authenticated.Screen name="StopDetails" component={StopDetails} options={{headerShown: false}} /> */}
+    {/* <Authenticated.Screen name="DeliveryDetails" component={DeliveryDetails} /> */}
+    {/* <Authenticated.Screen name="DeliverySummary" component={DeliverySummary} /> */}
+    {/* <Authenticated.Screen name="SearchMap" component={SearchMap} /> */}
+    {/* <Authenticated.Screen name="SearchContact" component={SearchContact} /> */}
+
+    {/********** Pabili **********/}
     <Authenticated.Screen name="Pabili" component={Pabili} options={{headerShown: false}} />
     <Authenticated.Screen name="PabiliSearchAddress" component={PabiliSearchAddress} options={{headerShown: false}} />
     <Authenticated.Screen name="PabiliDetails" component={PabiliDetails} />
     <Authenticated.Screen name="NearbyStores" component={NearbyStores} />
     <Authenticated.Screen name="PartnerBranches" component={PartnerBranches} />
     <Authenticated.Screen name="SelectedAdvertisement" component={SelectedAdvertisement} />
-    <Authenticated.Screen name="ConsumerMenu" component={ConsumerMenu} />
 
-    <Authenticated.Screen name="PostRegistration" component={PostRegistration} />
+    {/********** Profile **********/}
+    {/* <Authenticated.Screen name="ConsumerProfile" component={ConsumerProfile} /> */}
 
-    <Authenticated.Screen
+    {/********** Deliveries **********/}
+    <Authenticated.Screen name="SelectedDeliveries" component={SelectedDeliveries} />
+    <Authenticated.Screen name="SelectedDelivery" component={SelectedDelivery} />
+    <Authenticated.Screen name="DeliveryRating" component={DeliveryRating} />
+    <Authenticated.Screen name="DeliveryTracking" component={DeliveryTracking} />
+    <Authenticated.Screen name="OrderCancellation" component={OrderCancellation} />
+
+    {/********** Menu **********/}
+    {/* <Authenticated.Screen name="SavedLocations" component={SavedLocations} />
+    <Authenticated.Screen name="AddLocation" component={AddLocation} /> */}
+    {/* <Authenticated.Screen name="Announcements" component={Announcements} />
+    <Authenticated.Screen name="SelectedAnnouncement" component={SelectedAnnouncement} /> */}
+    <Authenticated.Screen name="ConsumerChangePassword" component={ConsumerChangePassword} />
+    <Authenticated.Screen name="TalkToUs" component={TalkToUs} />
+
+    {/********** TO BE REMOVED **********/}
+    {/* <Authenticated.Screen name="ConsumerMenu" component={ConsumerMenu} /> */}
+    {/* <Authenticated.Screen
       name="CheckConsumerLocation"
       component={CheckConsumerLocation}
       options={{headerShown: false, animationEnabled: false}}
@@ -400,115 +290,15 @@ const AuthenticatedStack = () => (
       name="ConsumerMap"
       component={ConsumerMap}
       options={{headerShown: false, animationEnabled: false}}
-    />
-    <Authenticated.Screen name="SearchPlaces" component={SearchPlaces} />
-    <Authenticated.Screen name="SearchMap" component={SearchMap} />
-    <Authenticated.Screen name="SenderDetails" component={SenderDetails} />
-    <Authenticated.Screen name="RecipientDetails" component={RecipientDetails} />
+    /> */}
+    {/* <Authenticated.Screen name="SearchPlaces" component={SearchPlaces} /> */}
+    {/* <Authenticated.Screen name="SenderDetails" component={SenderDetails} />
+    <Authenticated.Screen name="RecipientDetails" component={RecipientDetails} /> */}
     {/* <Authenticated.Screen name="DeliveryDetails" component={DeliveryDetails} /> */}
     {/* <Authenticated.Screen name="StopDetails" component={StopDetails} /> */}
-    <Authenticated.Screen name="SearchContact" component={SearchContact} />
-
-    <Authenticated.Screen name="Announcements" component={Announcements} />
-    <Authenticated.Screen name="SelectedAnnouncement" component={SelectedAnnouncement} />
-    <Authenticated.Screen name="DeliveryRating" component={DeliveryRating} />
-
-    <Authenticated.Screen name="GCashAccount" component={GCashAccount} />
-
-    <Authenticated.Screen name="ConsumerProfile" component={ConsumerProfile} />
-    <Authenticated.Screen name="ConsumerChangePassword" component={ConsumerChangePassword} />
-    <Authenticated.Screen name="TalkToUs" component={TalkToUs} />
-    <Authenticated.Screen name="OrderCancellation" component={OrderCancellation} />
-
-    <Authenticated.Screen name="Notifications" component={Notifications} />
-
+    {/* <Authenticated.Screen name="GCashAccount" component={GCashAccount} /> */}
+    {/* <Authenticated.Screen name="Notifications" component={Notifications} /> */}
     {/* <Authenticated.Screen name="CustomerDeliveries" component={CustomerDeliveries} /> */}
-    <Authenticated.Screen name="SelectedDeliveries" component={SelectedDeliveries} />
-    <Authenticated.Screen name="SelectedDelivery" component={SelectedDelivery} />
-    <Authenticated.Screen name="DeliveryTracking" component={DeliveryTracking} />
-
-    <Authenticated.Screen name="SavedLocations" component={SavedLocations} />
-    <Authenticated.Screen name="AddLocation" component={AddLocation} />
-
-    {/*----------toktokwallet Screens----------*/}
-    <Authenticated.Screen name="ToktokWalletHomePage" component={ToktokWalletHomePage} />
-    <Authenticated.Screen name="ToktokWalletRestricted" component={ToktokWalletRestricted} />
-    <Authenticated.Screen name="ToktokWalletSecurityAndPrivacy" component={ToktokWalletSecurityAndPrivacy} />
-    <Authenticated.Screen
-      name="ToktokWalletSecurityPinCode"
-      component={ToktokWalletSecurityPinCode}
-      options={{
-        headerShown: false,
-      }}
-    />
-    <Authenticated.Screen name="ToktokWalletPaymentOptions" component={ToktokWalletPaymentOptions} />
-    <Authenticated.Screen name="ToktokWalletPayPandaForm" component={ToktokWalletPayPandaForm} />
-    <Authenticated.Screen name="ToktokWalletPayPandaWebView" component={ToktokWalletPayPandaWebView} />
-    <Authenticated.Screen name="ToktokWalletCashOut" component={ToktokWalletCashOut} />
-    <Authenticated.Screen name="ToktokWalletGcashCashOut" component={ToktokWalletGcashCashOut} />
-    <Authenticated.Screen name="ToktokWalletSendMoney" component={ToktokWalletSendMoney} />
-    <Authenticated.Screen name="ToktokWalletContacts" component={ToktokWalletContacts} />
-    <Authenticated.Screen name="ToktokWalletScanQR" component={ToktokWalletScanQR} />
-    <Authenticated.Screen name="ToktokWalletScanQRConfirm" component={ToktokWalletScanQRConfirm} />
-    <Authenticated.Screen name="ToktokWalletSettings" component={ToktokWalletSettings} />
-    <Authenticated.Screen name="ToktokWalletCashInLogs" component={ToktokWalletCashInLogs} />
-    <Authenticated.Screen name="ToktokWalletCashOutLogs" component={ToktokWalletCashOutLogs} />
-    <Authenticated.Screen name="ToktokWalletCreatePin" component={ToktokWalletCreatePin} />
-    <Authenticated.Screen name="ToktokWalletRecoveryMethods" component={ToktokWalletRecoveryMethods} />
-    <Authenticated.Screen name="ToktokWalletRecoverPin" component={ToktokWalletRecoverPin} />
-    <Authenticated.Screen name="ToktokWalletUpdatePin" component={ToktokWalletUpdatePin} />
-    <Authenticated.Screen name="ToktokWalletVerifySetup" component={ToktokWalletVerifySetup} />
-    <Authenticated.Screen name="ToktokWalletVerification" component={ToktokWalletVerification} />
-    <Authenticated.Screen name="ToktokWalletValidIDCamera" component={ToktokWalletValidIDCamera} />
-    <Authenticated.Screen name="ToktokWalletSelfieCamera" component={ToktokWalletSelfieCamera} />
-    <Authenticated.Screen name="ToktokWalletSelfieImageCamera" component={ToktokWalletSelfieImageCamera} />
-    <Authenticated.Screen
-      name="ToktokWalletVerifyResult"
-      component={ToktokWalletVerifyResult}
-      options={{headerShown: false}}
-    />
-
-    <Authenticated.Screen name="ToktokWalletTransactions" component={ToktokWalletTransactions} />
-    <Authenticated.Screen name="ToktokWalletRecentTransferView" component={ToktokWalletRecentTransferView} />
-    <Authenticated.Screen name="ToktokWalletRecentTransferProceed" component={ToktokWalletRecentTransferProceed} />
-    <Authenticated.Screen name="ToktokWalletReviewAndConfirm" component={ToktokWalletReviewAndConfirm} />
-    <Authenticated.Screen name="ToktokWalletGcashRegistration" component={ToktokWalletGcashRegistration} />
-    <Authenticated.Screen name="ToktokWalletGcashUpdate" component={ToktokWalletGcashUpdate} />
-    <Authenticated.Screen name="ToktokWalletGcashHomePage" component={ToktokWalletGcashHomePage} />
-    <Authenticated.Screen name="ToktokWalletGcashLinkAccount" component={ToktokWalletGcashLinkAccount} />
-    <Authenticated.Screen name="ToktokWalletLinkAccount" component={ToktokWalletLinkAccount} />
-    <Authenticated.Screen name="ToktokWalletTransactionLimit" component={ToktokWalletTransactionLimit}/>
-    <Authenticated.Screen name="ToktokWalletHelpCentrePaymentChart" component={ToktokWalletHelpCentrePaymentChart} />
-    <Authenticated.Screen name="ToktokWalletBDOHomePage" component={ToktokWalletBDOHomePage}/>
-    <Authenticated.Screen name="ToktokWalletCashOutViewAccount" component={ToktokWalletCashOutViewAccount}/>
-
-    <Authenticated.Screen
-      name="ToktokWalletHelpCentreSecurityPrivacy"
-      component={ToktokWalletHelpCentreSecurityPrivacy}
-    />
-    <Authenticated.Screen
-      name="ToktokWalletHelpCentreLayeredSecurity"
-      component={ToktokWalletHelpCentreLayeredSecurity}
-    />
-    <Authenticated.Screen
-      name="ToktokWalletHelpCentreMoneyProtected"
-      component={ToktokWalletHelpCentreMoneyProtected}
-    />
-
-    <Authenticated.Screen
-      name="ToktokWalletHelpCentreTermsConditions"
-      component={ToktokWalletHelpCentreTermsConditions}
-    />
-    <Authenticated.Screen
-      name="ToktokWalletHelpCentreTransactionLimit"
-      component={ToktokWalletHelpCentreTransactionLimit}
-    />
-    <Authenticated.Screen name="ToktokWalletCashOutHomePage" component={ToktokWalletCashOutHomePage} />
-    <Authenticated.Screen name="ToktokWalletCashOutOtherBanks" component={ToktokWalletCashOutOtherBanks} />
-    <Authenticated.Screen name="ToktokWalletCashOutSaveAccount" component={ToktokWalletCashOutSaveAccount} />
-    <Authenticated.Screen name="ToktokWalletCashOutUpdateAccount" component={ToktokWalletCashOutUpdateAccount} />
-    <Authenticated.Screen name="ToktokWalletBDORegistration" component={ToktokWalletBDORegistration}/>
-    <Authenticated.Screen name="ToktokWalletBDOLinkAccount" component={ToktokWalletBDOLinkAccount}/>
 
     {/*---------- DRIVER SCREENS ----------*/}
     <Authenticated.Screen name="DriverHomeBottomTab" component={DriverHomeBottomTab} options={{headerShown: false}} />

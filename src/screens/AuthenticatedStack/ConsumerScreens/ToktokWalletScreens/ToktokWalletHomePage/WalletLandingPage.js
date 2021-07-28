@@ -8,6 +8,7 @@ import WalletCardInfo from './WalletCardInfo'
 import WalletRecentOutgoingTransfer from './WalletRecentOutgoingTransfer'
 import WalletRecentTransactions from './WalletRecentTransactions'
 import DriverWalletCardInfo from './DriverWalletCardInfo'
+import { Advertisements } from './Advertisements'
 
 
 const {height,width} = Dimensions.get("window")
@@ -36,6 +37,7 @@ const WalletLandingPage = ({refreshing, onRefresh})=> {
                 </View>
                 <View>
                     <WalletRecentTransactions/>
+                    <Advertisements/>
                 </View>
          
             </ScrollView>

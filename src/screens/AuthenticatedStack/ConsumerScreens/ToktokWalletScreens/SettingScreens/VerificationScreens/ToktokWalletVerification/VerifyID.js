@@ -1,5 +1,5 @@
 import React, { useState , useRef , useContext, useEffect } from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,Modal,Dimensions,Alert,Image,ScrollView,TextInput,FlatList} from 'react-native'
+import {View,Text,StyleSheet,TouchableOpacity,Modal,Dimensions,Alert,Image,ScrollView,TextInput,FlatList,Platform} from 'react-native'
 import { FONTS, INPUT_HEIGHT, BUTTON_HEIGHT, SIZES, COLORS} from '../../../../../../../res/constants'
 import EIcon from 'react-native-vector-icons/EvilIcons'
 import {VerifyContext} from './VerifyContextProvider'
@@ -78,10 +78,10 @@ const VerifyID = ()=> {
                 marginTop: 5,
                 borderRadius: 5,
                 borderStyle: "dashed",
-                // height: CROP_AREA_HEIGHT,
-                // width: CROP_AREA_WIDTH,
-                height: 175,
-                width: 283,
+                // height: 175,
+                // width: 283,
+                height:  Platform.OS === "ios" ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 100,
+                width:  Platform.OS === "ios" ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 110,
                 borderWidth: 2,
                 borderColor: "#CCCCCC",
                 justifyContent: "center",
@@ -105,12 +105,18 @@ const VerifyID = ()=> {
             borderWidth: 2,
             borderRadius: 5,
             marginBottom: 5,
+            height:  Platform.OS === "ios" ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 100,
+            width:  Platform.OS === "ios" ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 110,
         }} 
-        // onPress={()=>{
-        //     navigation.push("ToktokWalletValidIDCamera",{setImage})
-        // }}
         >
-                <Image resizeMode="cover" style={{height: CROP_AREA_HEIGHT ,width: width - 40}} source={{uri: placement == "front" ? frontImage.uri : backImage.uri}} />
+                {/* <Image resizeMode="cover" style={{height: CROP_AREA_HEIGHT ,width: width - 40}} source={{uri: placement == "front" ? frontImage.uri : backImage.uri}} /> */}
+                <Image resizeMode="stretch" 
+                    style={{
+                        height:  Platform.OS === "ios" ? CROP_AREA_HEIGHT - 10 : CROP_AREA_HEIGHT - 110,
+                        width:  Platform.OS === "ios" ? CROP_AREA_WIDTH - 10 : CROP_AREA_WIDTH - 120,
+                    }} 
+                    source={{uri: placement == "front" ? frontImage.uri : backImage.uri}} 
+                />
                 <TouchableOpacity onPress={()=>{
                     if(verifyID.idType == "") return Alert.alert("","Please select ID Type first")
                     navigation.push("ToktokWalletValidIDCamera",{setImage, placement: placement})
