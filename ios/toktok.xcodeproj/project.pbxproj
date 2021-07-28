@@ -1108,11 +1108,7 @@
 				);
 				INFOPLIST_FILE = toktok/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-<<<<<<< HEAD
-				MARKETING_VERSION = 1.16.0;
-=======
 				MARKETING_VERSION = 1.17.0;
->>>>>>> 90ac508beb71598c4e0bbe15abd6de3ef40f6af5
 				NEW_SETTING = "";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
