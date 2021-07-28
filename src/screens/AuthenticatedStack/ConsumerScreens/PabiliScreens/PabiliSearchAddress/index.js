@@ -20,6 +20,7 @@ import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 //SELF IMPORTS
 import AutocompleteResult from './AutocompleteResult';
 import SearchBar from './SearchBar';
+import {SearchLoadingIndicator} from './SearchLoadingIndicator';
 
 const INITIAL_RESULT = {
   payload: {
@@ -42,6 +43,7 @@ const StopDetails = ({navigation, route}) => {
   const {onStopConfirm} = route.params;
 
   const [showMap, setShowMap] = useState(stopData.latitude ? true : false);
+  const [searchLoading, setSearchLoading] = useState(false);
 
   const AlertHook = useAlert();
 
@@ -242,6 +244,7 @@ const StopDetails = ({navigation, route}) => {
           onSearchTextChange={(value) => setSearchText(value)}
           onSearchResultChange={(value) => setSearchResult(value)}
           searchEnabled={!showMap}
+          onSearchLoadingChange={setSearchLoading}
         />
       </View>
 
@@ -392,7 +395,7 @@ const StopDetails = ({navigation, route}) => {
           </View>
         </View>
       )}
-      {!showMap && (
+      {!showMap && !searchLoading && searchText !== '' && (
         <AutocompleteResult
           searchResult={searchResult}
           sessionToken={sessionToken}
@@ -401,6 +404,7 @@ const StopDetails = ({navigation, route}) => {
           setSearchText={setSearchText}
         />
       )}
+      {!showMap && searchLoading && searchText !== '' && <SearchLoadingIndicator />}
     </View>
   );
 };

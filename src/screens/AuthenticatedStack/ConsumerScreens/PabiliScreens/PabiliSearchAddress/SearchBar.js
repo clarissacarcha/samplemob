@@ -1,5 +1,5 @@
 import React, {useState, useRef, useEffect, useCallback} from 'react';
-import {Text, View, TextInput, StyleSheet} from 'react-native';
+import {Text, View, TextInput, StyleSheet, TouchableOpacity} from 'react-native';
 import {debounce} from 'lodash';
 
 import axios from 'axios';
@@ -7,6 +7,7 @@ import axios from 'axios';
 import {LIGHT, PROTOCOL, HOST_PORT, FONT_REGULAR} from '../../../../../res/constants';
 import {HeaderBack} from '../../../../../components';
 import {COLOR, FONT} from '../../../../../res/variables';
+import {VectorIcon, ICON_SET} from '../../../../../revamp';
 
 const INITIAL_RESULT = {
   payload: {
@@ -56,6 +57,7 @@ const SearchBar = ({
   onSearchTextChange,
   onSearchResultChange,
   searchEnabled,
+  onSearchLoadingChange,
 }) => {
   const useIsMounted = () => {
     const isMountedRef = useRef(true);
@@ -96,6 +98,7 @@ const SearchBar = ({
     console.log({searchString});
 
     try {
+      onSearchLoadingChange(true);
       const apiResult = await axios({
         url: `${PROTOCOL}://${HOST_PORT}/graphql`,
         method: 'post',
@@ -119,8 +122,11 @@ const SearchBar = ({
       //   setResult(apiResult.data.data.getGooglePlaceAutocomplete);
       onSearchResultChange(apiResult.data.data.getGooglePlaceAutocomplete);
       console.log({result: apiResult.data.data.getGooglePlaceAutocomplete});
+
+      onSearchLoadingChange(false);
     } catch (error) {
       onSearchResultChange(ERROR_RESULT);
+      onSearchLoadingChange(false);
     }
   };
 
@@ -130,11 +136,28 @@ const SearchBar = ({
   );
 
   const onChangeText = async (value) => {
-    // setText(value);
+    console.log({value});
+
     onSearchTextChange(value);
+
+    if (value.length < 3) {
+      onSearchResultChange({
+        payload: {
+          success: null, // Means no result yet. Show Loading
+        },
+        predictions: [],
+      });
+
+      return;
+    }
+
     if (value.length >= 3) {
       debouncedGetGooglePlaceAutocomplete(value);
     }
+  };
+
+  const onClearSearch = () => {
+    onSearchTextChange('');
   };
 
   // if (!searchEnabled) return <HeaderBack />;
@@ -143,7 +166,16 @@ const SearchBar = ({
     <>
       <HeaderBack />
       {searchEnabled && (
-        <SearchBarInput searchText={searchText} placeholder={placeholder} onChangeText={onChangeText} />
+        <>
+          <SearchBarInput searchText={searchText} placeholder={placeholder} onChangeText={onChangeText} />
+          {searchText !== '' && (
+            <TouchableOpacity
+              onPress={onClearSearch}
+              style={{height: 50, width: 50, justifyContent: 'center', alignItems: 'center'}}>
+              <VectorIcon name="close-circle" iconSet={ICON_SET.MaterialCommunity} color={COLOR.MEDIUM} />
+            </TouchableOpacity>
+          )}
+        </>
       )}
     </>
   );

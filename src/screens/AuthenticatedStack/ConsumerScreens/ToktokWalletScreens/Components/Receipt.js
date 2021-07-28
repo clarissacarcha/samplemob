@@ -187,16 +187,15 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     viewShot: {
-        paddingBottom: 40,
-        paddingTop: 20,
+        paddingBottom: 20,
         paddingHorizontal: 16,
-        marginTop: 60,
+        marginTop: 50,
         backgroundColor:"white",
         alignItems:"center"
     },
     checkIcon: {
-        height: 98,
-        width: 98,
+        height: 70,
+        width: 70,
         backgroundColor: COLORS.YELLOW,
         borderRadius: 100,
         justifyContent:"center",

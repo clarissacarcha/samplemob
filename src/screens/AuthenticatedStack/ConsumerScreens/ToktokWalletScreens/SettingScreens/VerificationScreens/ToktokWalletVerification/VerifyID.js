@@ -1,5 +1,5 @@
 import React, { useState , useRef , useContext, useEffect } from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,Modal,Dimensions,Alert,Image,ScrollView,TextInput,FlatList} from 'react-native'
+import {View,Text,StyleSheet,TouchableOpacity,Modal,Dimensions,Alert,Image,ScrollView,TextInput,FlatList,Platform} from 'react-native'
 import { FONTS, INPUT_HEIGHT, BUTTON_HEIGHT, SIZES, COLORS} from '../../../../../../../res/constants'
 import EIcon from 'react-native-vector-icons/EvilIcons'
 import {VerifyContext} from './VerifyContextProvider'
@@ -35,9 +35,7 @@ const ValidIDList = [
 
 const VerifyID = ()=> {
 
-    const {setCurrentIndex , setModalCountryVisible  , verifyID, changeVerifyID, frontImage, setFrontImage, backImage, setBackImage} = useContext(VerifyContext)
-    const [validIDVisible,setValidIDVisible] = useState(false)
-    const [isBackRequired, setIsbackRequired] = useState(false)
+    const {setCurrentIndex , setModalCountryVisible  , verifyID, changeVerifyID, frontImage, setFrontImage, backImage, setBackImage ,isBackRequired, setIsbackRequired} = useContext(VerifyContext)
 
     const navigation = useNavigation()
     const IDTypeRef = useRef()
@@ -80,10 +78,10 @@ const VerifyID = ()=> {
                 marginTop: 5,
                 borderRadius: 5,
                 borderStyle: "dashed",
-                // height: CROP_AREA_HEIGHT,
-                // width: CROP_AREA_WIDTH,
-                height: 175,
-                width: 283,
+                // height: 175,
+                // width: 283,
+                height:  Platform.OS === "ios" ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 100,
+                width:  Platform.OS === "ios" ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 110,
                 borderWidth: 2,
                 borderColor: "#CCCCCC",
                 justifyContent: "center",
@@ -107,12 +105,18 @@ const VerifyID = ()=> {
             borderWidth: 2,
             borderRadius: 5,
             marginBottom: 5,
+            height:  Platform.OS === "ios" ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 100,
+            width:  Platform.OS === "ios" ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 110,
         }} 
-        // onPress={()=>{
-        //     navigation.push("ToktokWalletValidIDCamera",{setImage})
-        // }}
         >
-                <Image resizeMode="cover" style={{height: CROP_AREA_HEIGHT ,width: width - 40}} source={{uri: placement == "front" ? frontImage.uri : backImage.uri}} />
+                {/* <Image resizeMode="cover" style={{height: CROP_AREA_HEIGHT ,width: width - 40}} source={{uri: placement == "front" ? frontImage.uri : backImage.uri}} /> */}
+                <Image resizeMode="stretch" 
+                    style={{
+                        height:  Platform.OS === "ios" ? CROP_AREA_HEIGHT - 10 : CROP_AREA_HEIGHT - 110,
+                        width:  Platform.OS === "ios" ? CROP_AREA_WIDTH - 10 : CROP_AREA_WIDTH - 120,
+                    }} 
+                    source={{uri: placement == "front" ? frontImage.uri : backImage.uri}} 
+                />
                 <TouchableOpacity onPress={()=>{
                     if(verifyID.idType == "") return Alert.alert("","Please select ID Type first")
                     navigation.push("ToktokWalletValidIDCamera",{setImage, placement: placement})
@@ -164,8 +168,7 @@ const VerifyID = ()=> {
 
     return (
         <>
-            {/* <ModalCountry type="validID"/> */}
-            {/* <ModalValidID visible={validIDVisible} setVisible={setValidIDVisible} /> */}
+
             <View style={styles.content}>
                 <ScrollView
                          showsVerticalScrollIndicator={false}
@@ -173,31 +176,6 @@ const VerifyID = ()=> {
                 >
                         <Text style={styles.labelText}>Upload your Valid ID</Text>
                         <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.S,color:"#929191"}}>Help us verify your identity with a photo of your valid government-issued ID. Make sure your valid ID is not expired.</Text>  
-                  
-                        {/* <View style={{marginTop: 20,}}>
-                            <Text style={styles.labelText}>Country</Text>
-                            <View style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center",paddingVertical: 10}]}>
-                                <Text style={{flex: 1,color: "gray",fontSize: SIZES.M,fontFamily: FONTS.REGULAR}}>{verifyID.idCountry}</Text>
-                                <TouchableOpacity
-                                    onPress={()=>setModalCountryVisible(true)}
-                                    style={{
-                                        paddingHorizontal: 10,
-                                        borderWidth: 1,
-                                        borderColor: COLORS.YELLOW,
-                                        borderRadius: 2,
-                                        height: 20
-                                    }}
-                                >
-                                    <View style={{
-                                         flex: 1,
-                                         justifyContent:"center",
-                                         alignItems:"center",
-                                    }}>
-                                         <Text style={{color: COLORS.YELLOW,fontSize: SIZES.S,fontFamily: FONTS.REGULAR}}>Change</Text>
-                                    </View>
-                                </TouchableOpacity>
-                            </View>
-                        </View> */}
 
                         <View style={{marginTop: 20,}}>
                             <Text style={styles.labelText}>ID Type</Text>
@@ -224,20 +202,12 @@ const VerifyID = ()=> {
                                     placeholder="Enter valid id number here"
                                     // onSubmitEditing={Proceed}
                                     style={[styles.input,{padding: 5,paddingLeft: 10,fontSize: 12,fontFamily: FONTS.REGULAR}]} 
+                                    returnKeyType="done"
                             />
                         </View>
 
                         <View style={{flex: 1,paddingVertical: 20, alignItems: "center"}}>
                             <Text style={{...styles.labelText, alignSelf:"flex-start"}}>Photo of your Valid ID</Text>
-                            {/* {verifyID.idImage ? <ImageIDSet/>:  <ChooseImage/>} */}
-                            {/* <View style={{flex: 1, paddingVertical: 20, marginTop: 20}}>
-                                <Text>Front of ID</Text>
-                                <ChooseImage />
-                            </View>
-                            <View style={{flex: 1, paddingVertical: 8}}>
-                                <Text>Back of ID</Text>
-                                <ChooseImage />
-                            </View> */}
                             {renderImageSetOptions()}
                         </View>
 

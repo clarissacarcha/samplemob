@@ -93,19 +93,33 @@ const VerifiedAccount = ({record,provider})=> {
         })
     }
 
+    const onSwipeFail = (e)=> {
+        console.log(e)
+    }
+
+    const onSwipeSuccess = ()=> {
+        setPinCodeAttempt(6)
+        setOpenPinCode(true)
+    }
+
     const confirmAmount = ()=> {
         navigation.navigate("ToktokWalletReviewAndConfirm", {
-            label:"Cash Out" , 
+            label:"Fund Transfer" , 
+            event: "Cash Out",
             data: {
                     method: provider.name , 
                     amount: amount,
                     accountName: `${record.firstName} ${record.lastName}`,
                     accountNumber: record.mobile
                 },
-            onConfirm: ()=>{
-                setPinCodeAttempt(6)
-                setOpenPinCode(true)
-            },
+            isSwipe: true,
+            swipeTitle: `Confirm`,
+            onSwipeFail: onSwipeFail,
+            onSwipeSuccess: onSwipeSuccess,
+            // onConfirm: ()=>{
+            //     setPinCodeAttempt(6)
+            //     setOpenPinCode(true)
+            // },
         })
     }
 
@@ -129,7 +143,7 @@ const VerifiedAccount = ({record,provider})=> {
         <View style={styles.container}>
 
             <View style={styles.gcashLogo}>
-                     <Image style={{height: 90,width: 90,alignSelf: "center",marginBottom: 9}} source={require('../../../../../../assets/toktokwallet-assets/gcash.png')}/>
+                     <Image style={{height: 90,width: 90,alignSelf: "center",marginBottom: 9}} source={require('../../../../../../assets/toktokwallet-assets/cash-out-providers/gcash.png')}/>
                      <Text style={{fontSize: SIZE.M,fontFamily: FONT.REGULAR , color: "#00C851"}}>Verified <VectorIcon iconSet={ICON_SET.FontAwesome5} name="check" color="#00C851" size={14}/></Text>
                      <Text style={{fontSize: SIZE.L,fontFamily: FONT.BOLD}}>{`${record.firstName} ${record.lastName}`}</Text>
                      <Text style={{fontSize: SIZE.M,fontFamily: FONT.REGULAR}}>{record.mobile}</Text>
@@ -162,8 +176,8 @@ const VerifiedAccount = ({record,provider})=> {
             <View style={styles.cashoutbutton}>
                     {
                         (amount != "" && amount <= tokwaAccount.wallet.balance && amount >= 1 )
-                        ? <YellowButton label="Cash Out" onPress={confirmAmount}/>
-                        : <DisabledButton label="Cash Out" />
+                        ? <YellowButton label="Transfer Fund" onPress={confirmAmount}/>
+                        : <DisabledButton label="Transfer Fund" />
                     }
             </View>
 

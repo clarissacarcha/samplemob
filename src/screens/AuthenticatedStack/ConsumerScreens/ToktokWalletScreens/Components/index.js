@@ -1,5 +1,6 @@
 export * from "./BuildingBottom";
 export * from "./ConfirmBottomSheet";
+export * from "./CustomModalBottomSheet";
 export * from "./DisabledButton";
 export * from "./EnterPinCode";
 export * from "./HeaderImageBackground";

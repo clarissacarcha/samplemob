@@ -1,0 +1,49 @@
+import React, {useState} from 'react';
+import {StyleSheet, Text, View} from 'react-native';
+import {useQuery} from '@apollo/react-hooks';
+import {GET_ADVERTISEMENTS} from 'src/graphql/';
+import Banner from './Banner';
+import Grid from './Grid';
+import CONSTANTS from 'common/res/constants'
+
+const { MARGIN , COLOR } = CONSTANTS
+
+export const Advertisements = () => {
+  const [banner, setBanner] = useState(null);
+  const [grid, setGrid] = useState(null);
+
+  const {data, loading, error} = useQuery(GET_ADVERTISEMENTS, {
+    fetchPolicy: 'network-only',
+    onCompleted: ({getAdvertisements}) => {
+      const bannerAd = getAdvertisements.filter((ad) => {
+        return ad.isHighlighted;
+      });
+
+      const gridAds = getAdvertisements.filter((ad) => {
+        return !ad.isHighlighted;
+      });
+
+      setBanner(bannerAd);
+      setGrid(gridAds);
+    },
+  });
+
+  if (loading) return <View style={styles.separator} />;
+
+  if (error) return <View style={styles.separator} />;
+
+  return (
+    <View>
+      <View style={styles.separator} />
+      <Banner ads={banner} />
+      <Grid ads={grid} />
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  separator: {
+    height: MARGIN.M / 2,
+    backgroundColor: COLOR.LIGHT,
+  },
+});

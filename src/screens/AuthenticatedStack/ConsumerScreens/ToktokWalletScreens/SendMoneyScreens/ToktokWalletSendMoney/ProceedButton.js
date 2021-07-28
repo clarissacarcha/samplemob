@@ -63,6 +63,7 @@ const ProceedButton = ({swipeEnabled , navigation , amount , note , tokwaAccount
     const reviewAndConfirm = ()=> {
         return navigation.navigate("ToktokWalletReviewAndConfirm", {
             label: "Send Money",
+            event: "Send Money",
             isSwipe: true,
             onSwipeFail: onSwipeFail,
             onSwipeSuccess: onSwipeSuccess,

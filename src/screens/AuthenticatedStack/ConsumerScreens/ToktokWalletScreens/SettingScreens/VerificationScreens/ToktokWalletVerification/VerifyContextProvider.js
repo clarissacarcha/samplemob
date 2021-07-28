@@ -59,6 +59,7 @@ const VerifyContextProvider = ({children})=> {
     const [selfieImage,setSelfieImage] = useState(null)
     const [frontImage, setFrontImage] = useState(null)
     const [backImage, setBackImage] = useState(null)
+    const [isBackRequired, setIsbackRequired] = useState(false)
 
     const changePersonInfo = (key,value)=> {
         person[key] = value
@@ -115,15 +116,12 @@ const VerifyContextProvider = ({children})=> {
                 setNationality,
                 nationalityId,
                 setNationalityId,
-
                 contactInfo,
                 changeContactInfo,
                 birthInfo,
                 changeBirthInfo,
                 address,
                 changeAddress,
-
-
                 province,
                 setProvince,
                 provinceId,
@@ -132,32 +130,28 @@ const VerifyContextProvider = ({children})=> {
                 setCity,
                 cityId,
                 setCityId,
-
                 verifyID,
                 changeVerifyID,
                 selfieImage,
                 setSelfieImage,
                 person,
                 changePersonInfo,
-
                 modalCountryVisible,
                 setModalCountryVisible,
                 modalProvinceVisible,
                 setModalProvinceVisible,
                 modalCityVisible,
                 setModalCityVisible,
-
                 cities,
                 setCities,
-
                 provinceCities,
                 changeProvinceCities,
-
                 frontImage,
                 setFrontImage,
                 backImage,
                 setBackImage,
-
+                isBackRequired,
+                setIsbackRequired,
                 identificationId,
                 setIdentificationId
  

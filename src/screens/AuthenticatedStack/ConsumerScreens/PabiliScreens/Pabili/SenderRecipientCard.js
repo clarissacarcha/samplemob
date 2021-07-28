@@ -16,6 +16,7 @@ const SenderRecipientCard = ({
   onSenderPress = () => {},
   onRecipientPress = () => {},
   onLocationDetected = () => {},
+  routeParams = null,
 }) => {
   const [userStop, setUserStop] = useState(recipientStop);
   const session = useSelector((state) => state.session);
@@ -74,6 +75,29 @@ const SenderRecipientCard = ({
   };
 
   useEffect(() => {
+    if (routeParams) {
+      if (routeParams.formattedAddressFromSearch) {
+        const updatedUserStop = [
+          {
+            ...userStop[0],
+            name: `${session.user.person.firstName} ${session.user.person.lastName}`,
+            mobile: session.user.username.replace('+63', ''),
+            ...routeParams.formattedAddressFromSearch,
+          },
+        ];
+
+        setRecipientStop(updatedUserStop);
+        setUserStop(updatedUserStop);
+
+        onLocationDetected({
+          latitude: routeParams.formattedAddressFromSearch.latitude,
+          longitude: routeParams.formattedAddressFromSearch.longitude,
+        });
+
+        return;
+      }
+    }
+
     if (!recipientStop[0].formattedAddress) {
       getLocationHash();
     }

@@ -33,20 +33,6 @@ const RegisterMobile = ({provider,rejected})=> {
              return
         }
 
-        // if(mobile.length > 10 && mobile.slice(0,2) == "09"){
-        //     setErrorMessage("")
-        // }else{
-        //     setErrorMessage("Mobile number must be valid.")
-        // }
-
-        // if(mobile.length > 11) return
-    
-        // if(value[0] == "9"){
-        //     setMobileNo("09")
-        // }else{
-        //     setMobileNo(mobile)
-        // }
-
         if(mobile.length > 8){
             setErrorMessage("")
         }else{
@@ -71,14 +57,14 @@ const RegisterMobile = ({provider,rejected})=> {
                 Alert.alert('',`Application status for gcash number ${getGcashEnrollmentRecord.mobile} is on pending`)
             }
 
-            // // create linking table if linking unlinking is allowed
-            if(getGcashEnrollmentRecord.status == 1){
-                setShowLinkModal(true)
-            }
-            // // temporary solution for 1:1 Gcash
+            // // // create linking table if linking unlinking is allowed
             // if(getGcashEnrollmentRecord.status == 1){
-            //     setErrorMessage(`GCash number ${getGcashEnrollmentRecord.mobile} already linked in a toktokwallet account`)
+            //     setShowLinkModal(true)
             // }
+            // temporary solution for 1:1 Gcash
+            if(getGcashEnrollmentRecord.status == 1){
+                setErrorMessage(`GCash number ${getGcashEnrollmentRecord.mobile} already linked in a toktokwallet account`)
+            }
         },
         onError: (error)=> {
             onErrorAlert({alert, error});
@@ -102,26 +88,11 @@ const RegisterMobile = ({provider,rejected})=> {
         <AlertOverlay visible={loading} />
         <Separator />
         <ModalLinkMobile visible={showLinkModal} setVisible={setShowLinkModal} mobile={mobileNo} provider={provider}/>
-        {/* <View style={styles.header}>
-                    <Image resizeMode="contain" style={{height: 50,width: 60,alignSelf:"center"}} source={require('../../../../../../assets/toktokwallet-assets/cash-out-providers/gcash.png')}/>
-                    <View style={{justifyContent:"center",alignItems:"flex-start",marginLeft: 5,}}>
-                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Register and verify</Text>
-                        <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>your GCash account details.</Text>
-                    </View>
-            </View> */}
 
         <View style={styles.container}>
           
             <View style={styles.content}>
                 <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Mobile Number</Text>
-                {/* <TextInput 
-                    style={[styles.input, {borderWidth: 1, borderColor: errorMessage != "" ? COLOR.RED : "transparent"}]}
-                    placeholder="Enter your GCash mobile number here"
-                    keyboardType="number-pad"
-                    value={mobileNo}
-                    onChangeText={changeMobileNo}
-                    returnKeyType="done"
-                /> */}
                  <View style={{flexDirection:"row",alignItems:"center",width:"100%"}}>
                    <View style={{ backgroundColor:'lightgray', borderTopLeftRadius: SIZE.BORDER_RADIUS,borderBottomLeftRadius: SIZE.BORDER_RADIUS,justifyContent:"center",alignItems:"center", height: SIZE.BUTTON_HEIGHT,paddingHorizontal: 10,marginTop: 5}}>
                     <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,paddingBottom: 2.5}}>09</Text>

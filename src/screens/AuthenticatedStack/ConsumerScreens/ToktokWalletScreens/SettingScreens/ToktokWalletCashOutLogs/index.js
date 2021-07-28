@@ -1,5 +1,5 @@
 import React , {useState , useEffect} from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,Image,ActivityIndicator , FlatList} from 'react-native'
+import {View,Text,StyleSheet,TouchableOpacity,Image,ActivityIndicator , FlatList , RefreshControl} from 'react-native'
 import {SomethingWentWrong , AlertOverlay} from '../../../../../../components'
 import moment from 'moment'
 import { COLOR, FONT, FONT_SIZE } from '../../../../../../res/variables'
@@ -24,14 +24,19 @@ const CashOutLog = ({
 })=> {
 
 
-    const ViewTransactionDetails = ({refNo,refDate, transactionAmount , status,provider})=> {
+    const ViewTransactionDetails = ({refNo,refDate, transactionAmount , status,provider,cashOutDisplayInformations})=> {
+        let phrase = `${provider}`
+        if(provider == "InstaPay" || provider == "PesoNet"){
+            phrase = "Other Banks"
+        }
         setTransactionInfo({
             refNo: refNo,
             refDate: refDate,
             label: "Cash Out",
-            phrase: `Cash out through ${provider}`,
+            phrase: phrase,
             amount: transactionAmount,
             status: status,
+            cashOutDisplayInformations: cashOutDisplayInformations,
         })
         setTransactionVisible(true)
     }
@@ -59,10 +64,13 @@ const CashOutLog = ({
     const refDate = moment(item.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')
     const transactionAmount = `${tokwaAccount.wallet.currency.code} ${numberFormat(item.amount)}`
     const provider = item.provider.name
+    const cashOutDisplayInformations = item.cashOutDisplayInformations
+
+    // console.log(item.cashOutDisplayInformations)
 
 
     return (
-        <TouchableOpacity onPress={()=>ViewTransactionDetails({refNo,refDate, transactionAmount , status , provider})} style={styles.transaction}>
+        <TouchableOpacity onPress={()=>ViewTransactionDetails({refNo,refDate, transactionAmount , status , provider,cashOutDisplayInformations})} style={styles.transaction}>
             <View style={styles.transactionDetails}>
                 <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Ref # {refNo}</Text>
                 <Text style={{color: "#909294",fontSize: FONT_SIZE.M,marginTop: 0,fontFamily: FONT.REGULAR}}>{status}</Text>
@@ -102,20 +110,19 @@ const ToktokWalletCashOutLogs = ({navigation})=> {
         fetchPolicy: "network-only",
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({getCashOuts})=> {
-            setRecords(state=> [...state , ...getCashOuts])
+            // setRecords(state=> [...state , ...getCashOuts])
+            setRecords(getCashOuts)
             setPageLoading(false)
         }
     })
 
+    const Refetch = ()=> {
+        getCashOuts()
+    }
+
     useEffect(()=>{
-        getCashOuts({
-            variables: {
-                input: {
-                    pageIndex: pageIndex
-                }
-            }
-        })
-    },[pageIndex])
+        getCashOuts()
+    },[])
 
     return (
         <>
@@ -128,17 +135,21 @@ const ToktokWalletCashOutLogs = ({navigation})=> {
             phrase={transactionInfo.phrase}
             amount={transactionInfo.amount}
             status={transactionInfo.status}
+            cashOutDisplayInformations={transactionInfo.cashOutDisplayInformations}
+            displayNumber=""
         />
         <Separator />
         {
-            loading
-            ?  <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                <ActivityIndicator size={24} color={COLOR.YELLOW} />
-               </View>
-            : <View style={styles.container}>
+            // loading
+            // ?  <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            //     <ActivityIndicator size={24} color={COLOR.YELLOW} />
+            //    </View>
+            // : 
+            <View style={styles.container}>
                     <View style={styles.content}>
                         
                             <FlatList
+                                refreshControl={<RefreshControl refreshing={loading} onRefresh={Refetch} colors={[COLOR.YELLOW]} tintColor={COLOR.YELLOW} />}
                                 showsVerticalScrollIndicator={false}
                                 data={records}
                                 keyExtractor={item=>item.id}
@@ -184,6 +195,7 @@ const styles = StyleSheet.create({
     },
     content: {
         padding: 16,
+        flex: 1,
     },
     filterType: {
         alignSelf: "flex-end",

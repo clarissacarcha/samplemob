@@ -1,27 +1,44 @@
-import React, { useMemo, forwardRef , useState, useEffect} from 'react';
-import {View, StyleSheet, Text, TextInput, FlatList, TouchableOpacity,Dimensions} from 'react-native';
+import React, { useMemo, forwardRef , useState, useEffect,useCallback,memo} from 'react';
+import {View, StyleSheet, Text, TextInput, FlatList, TouchableOpacity,Dimensions,TouchableHighlight} from 'react-native';
 import BottomSheet, {BottomSheetBackdrop, BottomSheetFlatList} from '@gorhom/bottom-sheet';
 import {COLOR, FONT, FONT_SIZE, SIZE} from '../../../../../../res/variables';
 import { useNavigation } from '@react-navigation/native';
+import { VectorIcon , ICON_SET} from '../../../../../../revamp'
 
 const {height,width} = Dimensions.get("window")
 
-const BottomSheetChooseBank = forwardRef(({banks, onChange}, ref) => {
+const BottomSheetChooseBank = forwardRef(({banks }, ref) => {
 
-const snapPoints = useMemo(() => [0, height * 0.5], []);
+  console.log("RUNNING SO LONG")
+
+const snapPoints = useMemo(() => [0, height * 0.8], []);
 const navigation = useNavigation()
+const [filteredBanks,setFilteredBanks] = useState([])
+
+useEffect(()=>{
+  setFilteredBanks(banks)
+},[banks])
+
+const filterSearch = (value) => {
+  const filtered = banks.filter(bank=> bank.name.toLowerCase().includes(value.toLowerCase()))
+  setFilteredBanks(filtered)
+}
+
 
 const selectBank = (bank)=> {
     ref.current.close()
-    onChange(bank)
+    setFilteredBanks(banks)
+    console.log(bank)
+    // onChange(bank)
 }
 
   return (
     <BottomSheet
+    // style={{marginTop: 30}}
       ref={ref}
       index={-1}
       snapPoints={snapPoints}
-      enableHandlePanningGesture={false}
+      enableHandlePanningGesture={true}
       enableContentPanningGesture={false}
       handleComponent={() => (
         <View
@@ -38,28 +55,41 @@ const selectBank = (bank)=> {
         />
       )}
       backdropComponent={BottomSheetBackdrop}>
-      <View style={styles.sheet}>
-        <Text style={{fontFamily: FONT.BOLD}}>Choose Bank</Text>
-        <FlatList
-          data={banks}
+         <View style={styles.sheet}>
+          <View style={{flexDirection:"row"}}>
+            <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,marginBottom: 10}}>Choose Bank</Text>
+            <TouchableOpacity onPress={()=>ref.current.close()} style={{flex: 1,alignItems:"flex-end",justifyContent:"flex-start"}}>
+              <VectorIcon iconSet={ICON_SET.FontAwesome5} name="chevron-down" color="black"/>
+            </TouchableOpacity>
+          </View>
+          <View>
+            <TextInput 
+              style={{height:SIZE.FORM_HEIGHT,borderRadius: SIZE.BORDER_RADIUS,backgroundColor:"#F7F7FA",marginBottom:5,paddingHorizontal: 16}}
+              returnKeyType="done"
+              onChangeText={filterSearch}
+              placeholder="Search Bank"
+           />
+          </View>
+        </View>
+         <BottomSheetFlatList
+          style={{paddingHorizontal:16}}
+          data={filteredBanks}
+          keyExtractor={i => i}
           ItemSeparatorComponent={() => <View style={{height: 1, borderColor: COLOR.LIGHT}} />}
           renderItem={({item, index}) => (
-            <TouchableOpacity onPress={()=>selectBank(item)} style={[styles.banks]}>
-                    {
-                      item.image 
-                      ? <View style={styles.bankLogo}>
-
-                      </View>
-                      : <View style={[styles.bankLogo,{justifyContent:'center',alignItems:"center"}]}>
-                            <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.XS}}>{item.code}</Text>
-                      </View>
-                    }
-                   
-                    <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>{item.name} - {item.code}</Text>
-            </TouchableOpacity>     
+            <TouchableHighlight underlayColor="#FFFFE5" onPress={()=>selectBank(item)} style={[styles.banks]}>
+              <>
+              <View style={{flex: 1}}>
+                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>{item.name}</Text>
+  
+              </View>
+              <View>
+                  <VectorIcon size={12} iconSet={ICON_SET.Feather} name="chevron-right" color={COLOR.DARK} />
+              </View> 
+              </>
+            </TouchableHighlight>     
           )}
         />
-     </View>
     </BottomSheet>
   );
 })
@@ -77,7 +107,6 @@ const styles = StyleSheet.create({
     alignItems:"center",
     borderBottomWidth: .2,
     borderColor: "silver",
-    paddingHorizontal:12,
     flexDirection:"row"
   },
   bankLogo: {
@@ -97,4 +126,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default BottomSheetChooseBank
+export default memo(BottomSheetChooseBank)

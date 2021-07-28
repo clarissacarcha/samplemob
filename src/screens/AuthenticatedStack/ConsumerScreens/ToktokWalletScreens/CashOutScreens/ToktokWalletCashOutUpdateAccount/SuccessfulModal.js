@@ -12,7 +12,7 @@ const SuccessfulModal = ({visible,setVisible})=> {
 
     const Redirect = ()=>{
         setVisible(false)
-        navigation.pop()
+        navigation.pop(2)
         return navigation.replace("ToktokWalletCashOutOtherBanks")
     }
 
@@ -28,10 +28,9 @@ const SuccessfulModal = ({visible,setVisible})=> {
                 <View style={styles.modalBody}>
                     <View style={styles.content}>
                         <Image source={require('../../../../../../assets/toktokwallet-assets/success.png')}/>
-                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M, textAlign:"center",marginVertical: 10,marginHorizontal: 20}}>Account details has been updated</Text>
-                        <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M, textAlign:"center",marginHorizontal: 5}}>You can now quickly fund transfer to banks</Text>
+                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L, textAlign:"center",marginVertical: 20,marginHorizontal: 20}}>Changes has been saved</Text>
                         <View style={{flex: 1,justifyContent:"flex-end",width: "50%"}}>
-                                <YellowButton label="Continue" onPress={Redirect}/>
+                                <YellowButton label="Ok" onPress={Redirect}/>
                         </View>
                     </View>
                 </View>
@@ -53,7 +52,7 @@ const styles = StyleSheet.create({
     },
     content: {
         width: width * 0.8,
-        height: 290,
+        height: 260,
         backgroundColor:"white",
         borderRadius: SIZE.BORDER_RADIUS,
         padding: 16,
