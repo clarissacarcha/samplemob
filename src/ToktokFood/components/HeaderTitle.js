@@ -14,13 +14,17 @@ const HeaderTitle = ({title = 'TokTok Food'}) => {
   const navigation = useNavigation();
   const {location} = useSelector((state) => state.toktokFood);
 
+  const onSetLocationDetails = () => {
+    navigation.navigate('ToktokFoodAddressDetails');
+  };
+
   const renderText = () => (
     <View style={styles.addressContainer}>
       <Text style={styles.headerLabel}>{title}</Text>
-      <View style={styles.textAddressContainer}>
+      <View onTouchEndCapture={() => onSetLocationDetails()} style={styles.textAddressContainer}>
         <Image style={styles.addressMarkerIcon} source={markerIcon} />
         <Text style={styles.textAddress} numberOfLines={2}>
-          {location.formattedAddress}
+          {location.address}
         </Text>
       </View>
     </View>

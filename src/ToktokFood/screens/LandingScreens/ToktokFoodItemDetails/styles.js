@@ -12,6 +12,7 @@ export default styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingVertical: verticalScale(3),
+    marginTop: Platform.OS === 'android' ? verticalScale(8) : verticalScale(3),
   },
   foodName: {
     fontSize: FONT_SIZE.XL,

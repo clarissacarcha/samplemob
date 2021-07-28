@@ -11,7 +11,8 @@ export default styles = StyleSheet.create({
   },
   listContainer: {
     flex: 1,
-    paddingVertical: 15,
+    paddingTop: 8,
+    paddingBottom: 15,
   },
   itemContainer: {
     width: scale(350),
@@ -65,7 +66,7 @@ export default styles = StyleSheet.create({
     paddingHorizontal: 3,
   },
   tabContainer: {
-    marginTop: 12,
+    marginTop: 18,
     paddingHorizontal: 10,
   },
 });

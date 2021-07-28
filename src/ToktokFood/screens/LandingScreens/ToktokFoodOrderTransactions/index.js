@@ -12,6 +12,8 @@ import {transactions} from 'toktokfood/helper/strings';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
 
+import {useNavigation} from '@react-navigation/native';
+
 // Utils
 import {verticalScale, moderateScale, scale, getStatusbarHeight} from 'toktokfood/helper/scale';
 
@@ -21,15 +23,23 @@ const CUSTOM_HEADER = {
 };
 
 const ToktokFoodOrderTransactions = () => {
+  const navigation = useNavigation();
+
   const [focusTab, setFocusTab] = useState(1);
   const [transactionsList, setTransactionsList] = useState(transactions);
 
   const getSubMessageStatus = (item) =>
     `${item.statusMessage} ${item.statusCode === 's' || item.statusCode === 'c' ? 'at ' + item.statusTime : ''}`;
 
+  const onTransactionsNavigate = (status = 'po') => {
+    if (status === 'po') {
+      navigation.navigate('ToktokFoodDriver');
+    }
+  };
+
   const renderItem = ({item}) => {
     return (
-      <TouchableWithoutFeedback key={item.orderId}>
+      <TouchableWithoutFeedback key={item.orderId} onPress={() => onTransactionsNavigate(item.statusCode)}>
         <View style={styles.itemContainer}>
           <View style={styles.imgWrapper}>
             <Image resizeMode="contain" source={item.image} style={styles.img} />
@@ -43,7 +53,7 @@ const ToktokFoodOrderTransactions = () => {
                 {item.quantity + ' items • ' + item.destinationAddress}
               </Text>
               <View style={styles.activityWrapper}>
-                <FA5Icon name="history" color={COLOR.DARK} size={14} style={styles.activityIcon} />
+                <FA5Icon name="history" color={COLOR.DARK} size={12} style={styles.activityIcon} />
                 <Text numberOfLines={1} style={styles.statusMessage}>
                   {getSubMessageStatus(item)}
                 </Text>

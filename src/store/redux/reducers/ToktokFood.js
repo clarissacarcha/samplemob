@@ -6,9 +6,9 @@ const INITIAL_STATE = {
       latitude: 0,
       longitude: 0,
     },
-    cart: {
-      total: 0,
-    },
+  },
+  cart: {
+    total: 0,
   },
   shops: [],
 };

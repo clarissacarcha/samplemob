@@ -6,13 +6,14 @@ import {Rating} from 'react-native-ratings';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 // Components
-import HeaderTabs from 'toktokfood/components/HeaderTabs';
+// import HeaderTabs from 'toktokfood/components/HeaderTabs';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
+import PromptMessage from 'toktokfood/components/PromptMessage';
 import HeaderSearchBox from 'toktokfood/components/HeaderSearchBox';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 
 // Fonts & Colors
-import {COLOR} from 'res/variables';
+// import {COLOR} from 'res/variables';
 
 // Strings
 import {restaurants, tabs} from 'toktokfood/helper/strings';
@@ -33,7 +34,9 @@ const ToktokFoodSearch = () => {
   };
 
   const navigation = useNavigation();
-  const [activeTab, setActiveTab] = useState(tabs[0]);
+  // const [activeTab, setActiveTab] = useState(tabs[0]);
+  const [isShowModal, setShowModal] = useState(false);
+  const [foodQuery, setFoodQuery] = useState('');
 
   const onRestaurantNavigate = (item) => {
     navigation.navigate('ToktokFoodRestaurantOverview', {item});
@@ -44,10 +47,10 @@ const ToktokFoodSearch = () => {
       <View style={styles.itemContainer}>
         <View style={styles.imgWrapper}>
           <Image resizeMode="contain" source={item.image} style={styles.img} />
-          <View style={styles.branchWrapper}>
+          {/* <View style={styles.branchWrapper}>
             <MCIcon name="store" color={COLOR.ORANGE} size={13} />
             <Text style={styles.branchText}>{item.totalBranches} branches</Text>
-          </View>
+          </View> */}
         </View>
 
         <View style={styles.restaurantInfo}>
@@ -77,12 +80,14 @@ const ToktokFoodSearch = () => {
 
   return (
     <View style={styles.container}>
+      <PromptMessage type={1} message="No result found." visible={isShowModal} setVisible={(v) => setShowModal(v)} />
       <HeaderImageBackground customSize={CUSTOM_HEADER}>
         <HeaderTitle />
-        <HeaderSearchBox />
+        <HeaderSearchBox query={foodQuery} onSearch={(t) => setFoodQuery(t)} />
       </HeaderImageBackground>
       <View style={styles.tabContainer}>
-        <HeaderTabs activeTab={activeTab} tabs={tabs} setActiveTab={setActiveTab} />
+        {/* <HeaderTabs activeTab={activeTab} tabs={tabs} setActiveTab={setActiveTab} /> */}
+        <Text style={[styles.restaurantName, {fontSize: 18}]}>Restaurant</Text>
       </View>
       <View style={styles.listContainer}>
         <FlatList data={restaurants} renderItem={renderItem} />

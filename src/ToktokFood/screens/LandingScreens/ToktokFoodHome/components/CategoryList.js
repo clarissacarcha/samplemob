@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, Image, View, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {FlatList, Image, View, StyleSheet, Text, TouchableOpacity, Platform} from 'react-native';
 
 // Assets
 import {allcuisines, drinks, dailydeals, fastfood} from 'toktokfood/assets/images';
@@ -81,8 +81,8 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   startText: {
-    fontWeight: '500',
     fontSize: 15,
+    fontWeight: '500',
   },
   textContainer: {
     flexDirection: 'row',

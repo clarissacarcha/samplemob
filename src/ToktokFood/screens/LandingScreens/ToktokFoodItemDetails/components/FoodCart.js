@@ -9,16 +9,16 @@ import {scale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
 
 import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
 
-// import {useSelector, useDispatch} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 
-const FoodCart = ({item_price = 0}) => {
+const FoodCart = ({item_price = 0, onCartAdd}) => {
   const navigation = useNavigation();
   // const dispatch = useDispatch();
 
   const [count, setCount] = useState(1);
   const [total, setTotal] = useState(0);
 
-  // useSelector((state) => console.log(state.toktokFood.cart.total));
+  useSelector((state) => console.log(state.toktokFood.cart));
 
   const onRestaurantNavigate = () => {
     Toast.show('Added to cart', Toast.SHORT);
