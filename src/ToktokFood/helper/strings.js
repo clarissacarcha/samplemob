@@ -320,3 +320,14 @@ export const transactions = [
     statusTime: '10:00 AM',
   },
 ];
+
+export const searchData = [
+  {
+    id: 1,
+    title: 'Most Searched',
+  },
+  {
+    id: 2,
+    title: 'Arranged Alphabetically',
+  },
+];
