@@ -1,8 +1,8 @@
 import React, { useState , useEffect} from 'react'
-import {View,Text,StyleSheet,TouchableOpacity} from 'react-native'
+import {View,Text,StyleSheet,TouchableOpacity,ActivityIndicator} from 'react-native'
 import {HeaderBack, YellowButton} from '../../../../../../revamp'
 import { numberFormat } from '../../../../../../helper'
-import { COLORS, FONTS, SIZES } from '../../../../../../res/constants'
+import { COLOR, FONT, FONT_SIZE } from '../../../../../../res/variables'
 import {useSelector} from 'react-redux'
 import {GET_DAILY_MONTHLY_YEARLY_OUTGOING} from '../../../../../../graphql'
 import {useLazyQuery} from '@apollo/react-hooks'
@@ -16,6 +16,7 @@ import EnterAmount from './EnterAmount'
 import EnterNote from './/EnterNote'
 import SwipeButtonComponent from './SwipeButtonComponent'
 import ProceedButton from './ProceedButton'
+import { KeyboardAvoidingView } from 'react-native'
 
 
 const ToktokWalletSendMoney = ({navigation,route})=> {
@@ -27,7 +28,7 @@ const ToktokWalletSendMoney = ({navigation,route})=> {
       })
     
     const session = useSelector(state => state.session)
-    const walletinfo = route.params.walletinfo
+    const tokwaAccount = useSelector(state => state.toktokWallet)
 
     const [mobileNo,setMobileNo] = useState("")
     const [amount,setAmount] = useState("")
@@ -41,19 +42,8 @@ const ToktokWalletSendMoney = ({navigation,route})=> {
             middleName: "",
             lastName: ""
         },
-        incomingRecords: {
-            daily: 0,
-            monthly: 0,
-            yearly: 0,
-            walletlimit: {
-                id: null,
-                walletSize: null,
-                incomingValueDailyLimit: null,
-                incomingValueMonthlyLimit: null,
-                incomingValueAnnualLimit: null,
-              }
-        }
     })
+    const [getAccountLoading,setGetAccountLoading] = useState(false)
 
     const [senderDetails , setSenderDetails] = useState({
         outgoingRecords: {
@@ -70,35 +60,14 @@ const ToktokWalletSendMoney = ({navigation,route})=> {
         }
     })
 
-    const [getDailyMonthlyYearlyOutgoing] = useLazyQuery(GET_DAILY_MONTHLY_YEARLY_OUTGOING, {
-        fetchPolicy: 'network-only',
-        onError: (error)=>{
-
-        },
-        onCompleted: (response)=> {
-            setSenderDetails({
-                outgoingRecords: {
-                    ...response.getDailyMonthlyYearlyOutgoing
-                }
-            })
-        }
-    })
-
     useEffect(()=>{
-
-        // getDailyMonthlyYearlyOutgoing({
-        //     variables: {
-        //         input: {
-        //             userID: session.user.id
-        //         }
-        //     }
-        // })
 
         if(route.params){
             if(route.params.recentTransfer){
                 setAmount(route.params.recentTransfer.amount)
-                setMobileNo(route.params.recentTransfer.destinationInfo.username.replace("+63","0"))
-                setSwipeEnabled(route.params.recentTransfer.amount <= walletinfo.balance)
+                setNote(route.params.recentTransfer.note)
+                setMobileNo(route.params.recentTransfer.destinationWallet.account.mobileNumber.replace("+63","0"))
+                setSwipeEnabled(route.params.recentTransfer.amount <= tokwaAccount.wallet.balance)
             }
         }
         
@@ -113,40 +82,47 @@ const ToktokWalletSendMoney = ({navigation,route})=> {
                 <View style={styles.headings}>
                     <HeaderImageBackground>
                         <HeaderTitle label="Send Money"/>
-                        <View style={{height: 32}}/>
-                        <View style={styles.walletContent}>
-                                <View>
-                                    <Text style={{fontSize: 24,fontFamily: FONTS.BOLD}}>PHP {numberFormat(walletinfo.balance ? walletinfo.balance : 0)}</Text>
-                                    <Text style={{fontSize: SIZES.M,fontFamily: FONTS.REGULAR,color: COLORS.DARK}}>Available Balance</Text>
+                        <View style={{flex: 1,justifyContent:"flex-end",paddingBottom: 45}}>
+                            <View>  
+                                    <View style={styles.walletContent}>
+                                        <View>
+                                            <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>{tokwaAccount.wallet.currency.code} {numberFormat(tokwaAccount.wallet.balance ? tokwaAccount.wallet.balance : 0)}</Text>
+                                            <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Available Balance</Text>
+                                        </View>
+                                        <TouchableOpacity onPress={()=> navigation.navigate("ToktokWalletPaymentOptions")} style={styles.topUp}>
+                                            <View style={styles.topUpbtn}>
+                                                    <FIcon5 name={'plus'} size={12}/> 
+                                            </View>
+                                        </TouchableOpacity>
                                 </View>
-                                <TouchableOpacity onPress={()=> navigation.navigate("ToktokWalletPaymentOptions" , {walletinfo})} style={styles.topUp}>
-                                    <View style={styles.topUpbtn}>
-                                            <FIcon5 name={'plus'} size={12} color={COLORS.DARK}/> 
-                                    </View>
-                                </TouchableOpacity>
+                            </View>
                         </View>
+                       
                     </HeaderImageBackground>
     
-                    <EnterMobileNo
+          
+                </View>
+
+                <EnterMobileNo
                         mobileNo={mobileNo}
                         setMobileNo={setMobileNo}
                         navigation={navigation} 
-                        session={session} 
                         setProceed={setProceed} 
                         proceed={proceed}
                         setRecipientDetails={setRecipientDetails}
                         recipientDetails={recipientDetails}
-                    />
-                </View>
+                        tokwaAccount={tokwaAccount}
+                        setGetAccountLoading={setGetAccountLoading}
+                />
 
               
-                <View style={{padding: 16,marginTop: 15,flex:1 }}>
+                <KeyboardAvoidingView style={{paddingHorizontal: 16,flex:1 }}>
                 { 
                         proceed
                         ? <> 
                              <EnterAmount 
                                 setSwipeEnabled={setSwipeEnabled}
-                                walletinfo={walletinfo} 
+                                tokwaAccount={tokwaAccount}
                                 amount={amount} 
                                 setAmount={setAmount}
                                 recipientDetails={recipientDetails}
@@ -159,23 +135,26 @@ const ToktokWalletSendMoney = ({navigation,route})=> {
                             />
                         </>
                         : <View style={{marginTop: 10}}>
-                            <Text style={{fontFamily: FONTS.BOLD,fontWeight:"bold", fontSize: SIZES.M}}>Enter number to transfer</Text>
-                            <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.S,color:COLORS.MEDIUM}}>You can click the "Address Book" to open your contact list.</Text>
+                            <Text style={{fontFamily: FONT.BOLD,fontWeight:"bold", fontSize: FONT_SIZE.M}}>Enter number to transfer</Text>
+                            <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:COLOR.DARK}}>You can click the "Address Book" to open your contact list.</Text>
                         </View>
                     }
-                </View>
+                    {
+                        getAccountLoading
+                        ? <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+                            <ActivityIndicator color={COLOR.YELLOW}/>
+                        </View>
+                        : null
+                    }
+                </KeyboardAvoidingView>
                 
      
                 <View style={{height: 70,padding: 16, justifyContent:"flex-end"}}>
-                    {/* {   swipeEnabled 
-                        ? <SwipeButtonComponent amount={amount} swipeEnabled={swipeEnabled} note={note} session={session} recipientDetails={recipientDetails}/>
-                        : <DisabledButton label="Proceed" />
-                    } */}
                     <ProceedButton
                         swipeEnabled={swipeEnabled}
                         amount={amount}
                         navigation={navigation}
-                        session={session}
+                        tokwaAccount={tokwaAccount}
                         note={note}
                         recipientDetails={recipientDetails}
                     />
@@ -205,11 +184,8 @@ const styles = StyleSheet.create({
         position:'relative'
     },
     walletContent: {
-        flex: 1,
         flexDirection: "row",
         paddingHorizontal: 16,
-        alignItems:"flex-start",
-        justifyContent:"flex-start"
     },
     topUp: {
         justifyContent:"flex-start",
@@ -222,7 +198,6 @@ const styles = StyleSheet.create({
         height: 34,
         width: 34,
         borderRadius: 100,
-        borderColor: COLORS.DARK,
         borderWidth: 2,
         justifyContent:"center",
         alignItems:"center",

@@ -1,57 +1,58 @@
 import React from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,Image} from 'react-native'
-import {HeaderBackClose, HeaderTitle, SomethingWentWrong , AlertOverlay} from '../../../../../../components'
+import {HeaderBackClose, SomethingWentWrong , AlertOverlay} from '../../../../../../components'
 import FIcon from 'react-native-vector-icons/Feather';
-import { COLORS, FONTS, FONT_LIGHT, FONT_MEDIUM, SIZES } from '../../../../../../res/constants';
+import {FONT,FONT_SIZE,COLOR} from '../../../../../../res/variables';
+import {APP_FLAVOR,ACCOUNT_TYPE} from '../../../../../../res/constants';
 import {Separator} from '../../Components';
-import { HeaderBack } from '../../../../../../revamp';
+import { HeaderBack , HeaderTitle} from '../../../../../../revamp';
+
+
+const SettingHeaderTitle = ({title})=> {
+    return (
+        <View style={{paddingHorizontal: 16, paddingVertical: 8,backgroundColor:"white"}}><Text style={{fontFamily:FONT.BOLD}}>{title}</Text></View>
+    )
+}
 
 const ToktokWalletSettings = ({navigation , route })=> {
     navigation.setOptions({
-        headerLeft: ()=> <HeaderBack color={COLORS.YELLOW}/>,
+        headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
         headerTitle: ()=> <HeaderTitle label={['Settings','']}/>,
     })
 
-    const walletinfo = route.params.walletinfo
-
-    const SettingOption = ({route,params={},icon,title,subtitle})=> (
+    const SettingOption = ({route,params={},title})=> (
+        <>
         <TouchableOpacity style={styles.settingoption} onPress={()=>navigation.navigate(route,params)}>
-                    <View style={styles.logo}>
-                         <Image source={icon} style={{height: 30, width: 30}} resizeMode="contain"/>
-                    </View>
                     <View style={styles.name}>
-                        <Text style={{fontSize:SIZES.M,fontFamily: FONTS.BOLD , color: COLORS.DARK}}>{title}</Text>
-                        <Text style={{fontSize: SIZES.S, fontFamily: FONTS.REGULAR , color: COLORS.MEDIUM}}>{subtitle}</Text>
+                        <Text style={{fontSize:FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{title}</Text>
                     </View>
                     <View style={styles.arrowright}>
                            {/* <Text style={{fontSize: 16,color: "gray"}}>{'>'}</Text> */}
                            <FIcon name="chevron-right" size={20} color={'#A6A8A9'}/> 
                     </View>
         </TouchableOpacity>
+        <View style={styles.divider}/>
+        </>
     )
 
     return (    
         <>
         <Separator />
         <View style={styles.container}>
-            <SettingOption route="ToktokWalletVerifySetup" params={{walletinfo: walletinfo}} icon={require('../../../../../../assets/icons/walletVerify.png')} title="Verify User" subtitle="Verify your toktokwallet."/>
-            {
-                walletinfo.isHold
-                ? <SettingOption route="ToktokWalletRecoveryMethods" 
-                                params={{walletinfo: walletinfo}} 
-                                icon={require('../../../../../../assets/icons/walletPin.png')} 
-                                title={'Recover PIN'} 
-                                subtitle="reset your pincode"
-                />
-                :  <SettingOption route="ToktokWalletCreatePin" 
-                                  params={{walletinfo: walletinfo}} 
-                                  icon={require('../../../../../../assets/icons/walletPin.png')} 
-                                  title={walletinfo.pincode != null ? "Change PIN" : "Create a PIN"} 
-                                  subtitle="Keep your account secure."
-                    />
-            }  
-            <SettingOption route="ToktokWalletCashInLogs" icon={require('../../../../../../assets/icons/walletCashinLog.png')} title="Cash In Logs" subtitle="View your cash in logs."/>
-            <SettingOption route="ToktokWalletCashOutLogs" icon={require('../../../../../../assets/icons/walletCashinLog.png')} title="Cash Out Logs" subtitle="View your cash out logs."/>   
+            <SettingHeaderTitle title="Manage Pin"/>
+            <SettingOption route="ToktokWalletCreatePin" title="Change Pin"/>
+            <Separator/>
+            <SettingHeaderTitle title="Help centre"/>
+            <SettingOption route="ToktokWalletHelpCentrePaymentChart" title="Payment Chart"/>
+            <SettingOption route="ToktokWalletHelpCentreTransactionLimit" title="User Level and Transaction Limit"/>
+            <Separator/>
+            <SettingHeaderTitle title="Security and Privacy"/>
+            <SettingOption route="ToktokWalletHelpCentreSecurityPrivacy" title="Security and Privacy"/>
+            <SettingOption route="ToktokWalletHelpCentreTermsConditions" title="Terms and Conditions"/>
+            <Separator/>
+            <SettingHeaderTitle title="Logs"/>
+            <SettingOption route="ToktokWalletCashInLogs" title="Cash In"/>
+            <SettingOption route="ToktokWalletCashOutLogs" title="Cash Out"/>
         </View>
         </>
     )
@@ -60,14 +61,12 @@ const ToktokWalletSettings = ({navigation , route })=> {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "white"
     },
     settingoption: {
         padding: 16,
         paddingVertical: 15,
-        borderWidth: 1,
-        borderColor: "#F4F4F4",
-        flexDirection: "row"
+        flexDirection: "row",
+        backgroundColor:"white"
     },
     logo: {
         flexBasis: 45,
@@ -82,6 +81,11 @@ const styles = StyleSheet.create({
         flexBasis: 50,
         justifyContent: "center",
         alignItems: "flex-end"
+    },
+    divider: {
+        height: 1,
+        width: "100%",
+        backgroundColor: COLOR.LIGHT,
     }
 })
 

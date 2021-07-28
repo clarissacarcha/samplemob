@@ -1,7 +1,7 @@
 import React , {useRef, useState , useEffect} from 'react'
 import {View,Text,StyleSheet,ScrollView,TextInput,TouchableOpacity} from 'react-native'
-import { COLORS, DARK, FONTS, SIZES } from '../../../../../../../res/constants'
-import {NumberBoxes} from '../../../Components'
+import { COLOR, FONT, FONT_SIZE } from '../../../../../../../res/variables'
+import {NumberBoxes,BuildingBottom} from '../../../Components'
 
 const ConfirmPin = ({pinCode ,pageIndex, setPageIndex , patchPincodeToktokWallet })=> {
 
@@ -34,7 +34,7 @@ const ConfirmPin = ({pinCode ,pageIndex, setPageIndex , patchPincodeToktokWallet
     return (
         <View style={styles.container}>
         <ScrollView style={styles.content}>
-                <Text style={{fontSize: SIZES.M,fontFamily: FONTS.BOLD,marginTop: 20,alignSelf:"center"}}>Confirm your PIN</Text>
+                <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 20,alignSelf:"center"}}>Confirm your PIN</Text>
                 <View style={{position: 'relative',marginTop: 50,}}>
                     <NumberBoxes pinCode={confirmpinCode} onNumPress={onNumPress} showPin={showPin}/>
                     <TextInput
@@ -55,18 +55,19 @@ const ConfirmPin = ({pinCode ,pageIndex, setPageIndex , patchPincodeToktokWallet
                         />
 
                         {
-                            message != "" &&  <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.M,color:"red",alignSelf:"center"}}>{message}</Text>   
+                            message != "" &&  <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M,color:"red",alignSelf:"center"}}>{message}</Text>   
                         }
 
                         <TouchableOpacity
                                 style={{marginTop: 18,paddingVertical: 10,alignItems: "center"}}
                                 onPress={()=>setShowPin(!showPin)}
                         >
-                                <Text style={{color: COLORS.ORANGE,fontSize: SIZES.M,fontFamily: FONTS.BOLD}}>{showPin ? "HIDE PIN" : "SHOW PIN"}</Text>
+                                <Text style={{color: COLOR.ORANGE,fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>{showPin ? "HIDE PIN" : "SHOW PIN"}</Text>
                         </TouchableOpacity>
 
                 </View>
             </ScrollView>
+            <BuildingBottom/>
             {/* <TouchableOpacity
                 disabled={pinCode.length < 6}
                 onPress={onSubmit}
@@ -94,7 +95,6 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         paddingHorizontal: 10,
         fontSize: 25,
-        color: DARK,
         width: 30,
     },
 })

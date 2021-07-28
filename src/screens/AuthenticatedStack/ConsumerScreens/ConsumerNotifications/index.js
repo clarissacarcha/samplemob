@@ -29,17 +29,16 @@ import NoData from '../../../../assets/images/NoData.png';
 const imageWidth = Dimensions.get('window').width - 200;
 
 const NotificationCard = ({message, lastItem}) => {
-  const {title, body, type, payload, delivery, createdAt} = message;
+  const {title, body, type, payload, delivery, createdAt, classification} = message;
+
   const navigation = useNavigation();
 
-  const pushConsumerRoute = () => navigation.push('SelectedDelivery', {delivery});
-  const pushDriverRoute = () => navigation.push('SelectedDriverDelivery', {delivery, label: ['Delivery', 'Details']});
-
-  const pushRoute = APP_FLAVOR == 'C' ? pushConsumerRoute : pushDriverRoute;
-
   const onNotificationSelect = () => {
+    if (classification == 'toktokwallet') {
+      navigation.push('ToktokWalletHomePage');
+    }
     if (delivery) {
-      pushRoute();
+      navigation.push('SelectedDelivery', {delivery});
       return;
     }
 
@@ -52,28 +51,37 @@ const NotificationCard = ({message, lastItem}) => {
   return (
     <TouchableHighlight onPress={onNotificationSelect} underlayColor={COLOR.WHITE_UNDERLAY} style={styles.touchable}>
       <View
-        style={{height: 70, justifyContent: 'center', backgroundColor: COLOR.WHITE, paddingHorizontal: SIZE.MARGIN}}>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <View
-            style={{
-              height: 22,
-              width: 22,
-              backgroundColor: COLOR.ORANGE,
-              borderRadius: 11,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <VectorIcon iconSet={ICON_SET.Octicons} name="mail" color={COLOR.WHITE} size={14} />
-          </View>
-          <View style={{marginHorizontal: SIZE.MARGIN}}>
-            <Text numberOfLines={1}>{title}</Text>
-            <Text
-              numberOfLines={1}
+        style={{
+          minHeight: 70,
+          justifyContent: 'center',
+          backgroundColor: COLOR.WHITE,
+          paddingHorizontal: SIZE.MARGIN,
+          paddingVertical: SIZE.MARGIN / 2,
+        }}>
+        <View style={{flexDirection: 'row'}}>
+          <View style={{height: 70, justifyContent: 'center'}}>
+            <View
               style={{
-                color: COLOR.DARK,
+                height: 22,
+                width: 22,
+                backgroundColor: COLOR.ORANGE,
+                borderRadius: 11,
+                justifyContent: 'center',
+                alignItems: 'center',
               }}>
-              {body}
-            </Text>
+              <VectorIcon iconSet={ICON_SET.Octicons} name="mail" color={COLOR.WHITE} size={14} />
+            </View>
+          </View>
+          <View style={{justifyContent: 'center'}}>
+            <View style={{marginHorizontal: SIZE.MARGIN}}>
+              <Text numberOfLines={1}>{title}</Text>
+              <Text
+                style={{
+                  color: COLOR.DARK,
+                }}>
+                {body}
+              </Text>
+            </View>
           </View>
         </View>
       </View>
@@ -145,6 +153,23 @@ const Notifications = ({navigation, route, session, createSession}) => {
 
   if (data.getNotifications.length === 0) {
     return (
+      // <View style={styles.container}>
+      //   <View
+      //     style={{
+      //       backgroundColor: 'white',
+      //       paddingTop: StatusBar.currentHeight,
+      //       justifyContent: 'center',
+      //       alignItems: 'center',
+      //       height: Platform.select({android: 50 + StatusBar.currentHeight, ios: 50}),
+      //       borderBottomWidth: 1,
+      //       borderBottomColor: COLOR.LIGHT,
+      //     }}>
+      //     <Text style={{fontSize: FONT_SIZE.L, fontFamily: FONT.BOLD}}>Notifications</Text>
+      //   </View>
+      //   <View style={styles.center}>
+      //     <Image source={NoData} style={styles.image} resizeMode={'contain'} />
+      //   </View>
+      // </View>
       <View style={styles.container}>
         <View
           style={{
@@ -158,9 +183,26 @@ const Notifications = ({navigation, route, session, createSession}) => {
           }}>
           <Text style={{fontSize: FONT_SIZE.L, fontFamily: FONT.BOLD}}>Notifications</Text>
         </View>
-        <View style={styles.center}>
-          <Image source={NoData} style={styles.image} resizeMode={'contain'} />
+        <View style={{marginHorizontal: SIZE.MARGIN, flexDirection: 'row', paddingVertical: 8}}>
+          <View style={{width: 22, height: 22, marginHorizontal: SIZE.MARGIN, alignItems: 'center'}}>
+            <VectorIcon iconSet={ICON_SET.Entypo} name="arrow-long-down" color={COLOR.MEDIUM} />
+          </View>
+          <Text style={{color: COLOR.MEDIUM}}>Swipe down to refresh</Text>
         </View>
+        <FlatList
+          ListHeaderComponent={() => (
+            <View style={{paddingTop: 100}}>
+              <View style={styles.center}>
+                <Image source={NoData} style={styles.image} resizeMode={'contain'} />
+              </View>
+            </View>
+          )}
+          showsVerticalScrollIndicator={false}
+          data={data.getNotifications}
+          keyExtractor={(item) => item.id}
+          renderItem={({item, index}) => null}
+          refreshControl={<RefreshControl onRefresh={refetch} refreshing={loading} colors={[COLOR.YELLOW]} />}
+        />
       </View>
     );
   }

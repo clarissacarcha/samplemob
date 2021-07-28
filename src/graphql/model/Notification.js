@@ -58,6 +58,9 @@ const Delivery = `
       }
     }
   }
+  vehicleType {
+    name
+  }
 `;
 
 export const GET_NOTIFICATIONS = gql`
@@ -66,6 +69,7 @@ export const GET_NOTIFICATIONS = gql`
       id
       title
       body
+      classification
       type
       payload
       status

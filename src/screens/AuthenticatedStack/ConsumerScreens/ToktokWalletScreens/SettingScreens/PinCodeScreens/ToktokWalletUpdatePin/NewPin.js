@@ -1,13 +1,14 @@
-import React , {useRef, useState} from 'react'
+import React , {useRef, useState,useEffect} from 'react'
 import {View,Text,StyleSheet,ScrollView,TextInput,TouchableOpacity} from 'react-native'
-import { BUTTON_HEIGHT, COLORS, DARK, FONTS, SIZES } from '../../../../../../../res/constants'
+import {COLOR, FONT , FONT_SIZE} from '../../../../../../../res/variables'
 import { YellowButton } from '../../../../../../../revamp'
-import {DisabledButton, NumberBoxes} from '../../../Components'
+import {DisabledButton, NumberBoxes ,BuildingBottom} from '../../../Components'
 
 const NewPin = ({pinCode,setPinCode , pageIndex, setPageIndex})=> {
 
     const inputRef = useRef();
     const [showPin,setShowPin] = useState(false)
+    const [errorMessage,setErrorMessage] = useState("")
 
     const onNumPress = () => {
         setTimeout(() => {
@@ -16,13 +17,28 @@ const NewPin = ({pinCode,setPinCode , pageIndex, setPageIndex})=> {
     };
 
     const onSubmit = () => {
+        let isWeakPin = true
+        for(let x = 0 ; x < pinCode.length ; x++){
+            if(pinCode[0] != pinCode[x]){
+                isWeakPin = false
+                break
+            }
+        }
+        if(isWeakPin) {
+            setShowPin(true)
+            return setErrorMessage(`Your PIN must not contain repeating digits ex. 000000`)
+        }
         setPageIndex(oldstate=>oldstate+1)
      };
 
+     useEffect(()=>{
+        setErrorMessage("")
+    },[pinCode])
+
     return (
         <View style={styles.container}>
-        <ScrollView style={styles.content}>
-                <Text style={{fontSize: SIZES.M,fontFamily: FONTS.BOLD,marginTop: 20,alignSelf:"center"}}>Enter your new PIN</Text>
+        <View style={styles.content}>
+                <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 20,alignSelf:"center"}}>Enter your new PIN</Text>
                 <View style={{position: 'relative',marginTop: 50,}}>
                     <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={showPin}/>
                     <TextInput
@@ -38,18 +54,23 @@ const NewPin = ({pinCode,setPinCode , pageIndex, setPageIndex})=> {
                                 setPinCode(num);
                             }
                             }}
-                            onSubmitEditing={onSubmit}
+                            onSubmitEditing={pinCode.length == 6 ? onSubmit: null}
                         />
+
+                        {
+                            errorMessage != "" &&  <Text style={{fontFamily: FONT.REGULAR,fontSize: 12,color:COLOR.RED,alignSelf:"center"}}>{errorMessage}</Text>   
+                        }
+
 
                         <TouchableOpacity
                                 style={{marginTop: 18,paddingVertical: 10,alignItems: "center"}}
                                 onPress={()=>setShowPin(!showPin)}
                         >
-                                <Text style={{color: COLORS.ORANGE,fontSize: SIZES.M,fontFamily: FONTS.BOLD}}>{showPin ? "HIDE PIN" : "SHOW PIN"}</Text>
+                                <Text style={{color: COLOR.ORANGE,fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>{showPin ? "HIDE PIN" : "SHOW PIN"}</Text>
                         </TouchableOpacity>
 
                 </View>
-            </ScrollView>
+            </View>
 
             <View style={{padding: 16}}>
                 {
@@ -58,6 +79,7 @@ const NewPin = ({pinCode,setPinCode , pageIndex, setPageIndex})=> {
                     : <YellowButton label="Next" onPress={onSubmit}/>
                 }
             </View>
+            <BuildingBottom/>
           
         </View>
     )
@@ -79,7 +101,6 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         paddingHorizontal: 10,
         fontSize: 25,
-        color: DARK,
         width: 30,
     },
 })

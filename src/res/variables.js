@@ -2,8 +2,6 @@ export const APP_VERSION = '1.15.0';
 export const APP_FLAVOR = 'C'; // C = Customer | D = Driver
 export const ACCOUNT_TYPE = 1; // 1 = Customer | 2 = Driver
 export const MAPS_API_KEY = 'AIzaSyDhlw6pbriuwr_Mb6KYkVlBar7KD1KTrOs';
-// export const PROTOCOL = 'https';
-// export const HOST_PORT = 'graphql.toktok.ph:2096';
 
 export const COLOR = {
   WHITE: '#FFFFFF', // View backgroundColor
@@ -16,6 +14,7 @@ export const COLOR = {
   YELLOW_UNDERLAY: '#96641e', //TouchableHightlight underlayColor for YELLOW background
   WHITE_UNDERLAY: '#FDBA1C', //TouchableHightlight underlayColor for WHITE background
   TRANSPARENT_YELLOW: 'rgba(256,186,28, 0.15)',
+  RED: '#F93154',
 };
 
 export const FONT = {
@@ -36,6 +35,13 @@ export const SIZE = {
   FORM_HEIGHT: 50,
   BORDER_RADIUS: 5,
   MARGIN: 16,
+};
+
+export const MARGIN = {
+  S: 8,
+  M: 16,
+  L: 24,
+  XL: 32,
 };
 
 export const SHADOW = {

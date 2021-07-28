@@ -1,11 +1,12 @@
 import React , {useState,useEffect} from 'react'
 import {View,Text,StyleSheet,TouchableHighlight,Alert,BackHandler,KeyboardAvoidingView,Platform} from 'react-native'
-import { HeaderTitle } from '../../../../../../../components'
-import {PATCH_PINCODE_TOKTOK_WALLET} from '../../../../../../../graphql'
+import { AlertOverlay, HeaderTitle } from '../../../../../../../components'
+import { TOKTOK_WALLET_GRAPHQL_CLIENT } from '../../../../../../../graphql'
+import { PATCH_PIN_CODE } from '../../../../../../../graphql/toktokwallet'
 import {useMutation} from '@apollo/react-hooks'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import { Separator , LeavePromptModal} from '../../../Components';
-import { COLORS, FONTS, SIZES } from '../../../../../../../res/constants'
+import { COLOR, FONT, FONT_SIZE } from '../../../../../../../res/variables'
 
 //SELF IMPORTS
 import NewPin from './NewPin'
@@ -35,7 +36,7 @@ const HeaderBack = ({pageIndex,setPageIndex,navigation})=> {
     return (
      <TouchableHighlight onPress={closeScreen} underlayColor={'white'} style={styles.button}>
         <View style={styles.iconBox}>
-            <FIcon5 name="chevron-left" color={COLORS.YELLOW} size={13}/>
+            <FIcon5 name="chevron-left" color={COLOR.YELLOW} size={13}/>
         </View>
       </TouchableHighlight>
     )
@@ -49,7 +50,7 @@ const ToktokWalletUpdatePin =  ({navigation})=> {
         headerTitle: ()=> <HeaderTitle label={['','']}/>,
         headerRight: ()=> <TouchableHighlight style={{paddingRight: 16}} underlayColor={'white'} onPress={cancelSetup}>
                                  <View style={{justifyContent:"center",alignItems:"center"}}>
-                                    <Text style={{fontSize: SIZES.M,fontFamily: FONTS.REGULAR ,color:'#929191'}}>Cancel</Text>
+                                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR ,color:'#929191'}}>Cancel</Text>
                                 </View>
                             </TouchableHighlight>
     })
@@ -66,25 +67,26 @@ const ToktokWalletUpdatePin =  ({navigation})=> {
     const [LeaveModalvisible,setLeaveModalVisible] = useState(false)
 
 
-
-    const [patchPincodeToktokWallet, {data,error,loading}] = useMutation(PATCH_PINCODE_TOKTOK_WALLET, {
-      variables: {
-          input: {
-              pincode: pinCode
-          }
-      },
-      onError: (err)=> {
-
-      },
-      onCompleted: ({patchPincodeToktokWallet})=> {
-          setSuccessModalVisible(true)
-      }
-  })
+    const [patchPinCode, {data, error, loading}] = useMutation(PATCH_PIN_CODE, {
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+        onCompleted: ({patchPinCode})=>{
+        setSuccessModalVisible(true)
+        },
+        onError: (error)=> {
+        onErrorAlert({alert,error})
+        }
+    })
 
 
-  const proceed = ()=> {
-    patchPincodeToktokWallet()
-  }
+    const proceed = ()=> {
+        patchPinCode({
+            variables: {
+            input: {
+                pinCode: pinCode
+            }
+            }
+        })
+    }
 
 
     const DisplayComponent = () => {
@@ -100,6 +102,7 @@ const ToktokWalletUpdatePin =  ({navigation})=> {
 
     return (
         <>
+            <AlertOverlay visible={loading} />
             <LeavePromptModal
                 visible={LeaveModalvisible}
                 setVisible={setLeaveModalVisible}
@@ -107,12 +110,11 @@ const ToktokWalletUpdatePin =  ({navigation})=> {
             />
             <SuccessModal modalVisible={successModalVisible} />
             <Separator />
-             <KeyboardAvoidingView 
-                // keyboardVerticalOffset={Platform.OS == "ios" ? 50 : 90} 
-                keyboardVerticalOffset={90}  
-                style={styles.container} 
-                behavior={Platform.OS == "ios" ? "padding" : "height"}>
-                    {DisplayComponent()}
+            <KeyboardAvoidingView style={{flex: 1,}}
+             keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80}  
+             behavior={Platform.OS == "ios" ? "padding" : "height"}
+             >
+            {DisplayComponent()}
             </KeyboardAvoidingView>
         </>
     )

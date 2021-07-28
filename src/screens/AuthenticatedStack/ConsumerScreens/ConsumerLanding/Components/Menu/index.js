@@ -8,6 +8,7 @@ import DeliveryIcon from '../../../../../../assets/toktok/icons/menu/Toktok.png'
 import WalletIcon from '../../../../../../assets/toktok/icons/menu/ToktokWallet.png';
 import PabiliIcon from '../../../../../../assets/toktok/icons/menu/Pabili.png';
 import ProfileIcon from '../../../../../../assets/icons/ProfileIcon.png';
+import ToktokMallIcon from '../../../../../../assets/toktokmall-assets/icons/toktokmall-logo.png';
 import OthersIcon from '../../../../../../assets/icons/OthersIcon.png';
 
 const MenuIcon = ({label, icon, onPress}) => {
@@ -47,18 +48,32 @@ export const Menu = ({setUserLocation}) => {
         onPress={() => navigation.push('ToktokDelivery', {setUserLocation})}
       />
       <MenuIcon label={'pabili'} icon={PabiliIcon} onPress={() => navigation.push('Pabili')} />
-      {/* <MenuIcon
+      <MenuIcon
         label={'toktokwallet'}
         icon={WalletIcon}
         onPress={() => {
           navigation.push('ToktokWalletHomePage');
         }}
-      /> */}
+      />
       <MenuIcon
         label={'profile'}
         icon={ProfileIcon}
         onPress={() => {
           navigation.push('ConsumerProfile');
+        }}
+      />
+      <MenuIcon
+        label={'toktokfood'}
+        icon={ProfileIcon}
+        onPress={() => {
+          navigation.push('ToktokFoodLanding');
+        }}
+      />
+      <MenuIcon
+        label={'toktokmall'}
+        icon={ToktokMallIcon}
+        onPress={() => {
+          navigation.push('ToktokMallLanding');
         }}
       />
     </View>
@@ -71,6 +86,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     backgroundColor: 'white',
+    flexWrap: 'wrap',
   },
   menuButton: {
     justifyContent: 'center',

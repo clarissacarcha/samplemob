@@ -70,6 +70,9 @@ const Delivery = `
     feedback
     createdAt
   }
+  vehicleType {
+    name
+  }
 `;
 
 export const GET_DELIVERIES = gql`

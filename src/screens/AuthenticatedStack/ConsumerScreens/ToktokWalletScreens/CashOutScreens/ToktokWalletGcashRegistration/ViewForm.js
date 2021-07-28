@@ -44,6 +44,7 @@ const ViewForm = ({navigation,session,record})=> {
                 <Information label="Status" value={status}/>
                 <Information label="Mobile Number" value={record.mobileNumber}/>
                 <Information label="First Name" value={record.firstName}/>
+                <Information label="First Name" value={record.middleName}/>
                 <Information label="Last Name" value={record.lastName}/>
                 <Information label="Street Address" value={record.streetAddress}/>
                 <Information label="Birthdate" value={moment(record.birthdate, 'MM-DD-YYYY').tz('Asia/Manila').format('MMM DD, YYYY')}/>
