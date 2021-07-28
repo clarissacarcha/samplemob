@@ -1,7 +1,7 @@
 import React , {useContext,useState} from 'react';
 import { View , Text , StyleSheet } from 'react-native';
 import { YellowButton } from 'src/revamp';
-import { Separator } from 'toktokwallet/components';
+import { Separator , PromptModal } from 'toktokwallet/components';
 import { ContextEnterpriseApplication } from "../ContextProvider";
 import { TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
 import { POST_ENTERPRISE_UPGRADE_REQUEST } from 'toktokwallet/graphql';
@@ -9,9 +9,7 @@ import { useMutation } from '@apollo/react-hooks';
 import { onErrorAlert } from 'src/util/ErrorUtility';
 import { AlertOverlay } from 'src/components';
 import { useAlert } from 'src/hooks';
-
-//SELF IMPORTS
-import SuccessfulModal from "./SuccessfulModal";
+import { useNavigation } from '@react-navigation/native';
 
 export const Submit = ()=> {
 
@@ -23,6 +21,7 @@ export const Submit = ()=> {
     } = useContext(ContextEnterpriseApplication)
     const [visible,setVisible] = useState(false);
     const alert = useAlert();
+    const navigation = useNavigation();
 
     const [postEnterpriseUpgradeRequest, {data , error ,loading }] = useMutation(POST_ENTERPRISE_UPGRADE_REQUEST, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
@@ -56,23 +55,15 @@ export const Submit = ()=> {
 
         const input = {
             businessPermitFile: forms[0].file,
-            businessPermitFileName: forms[0].filename,
             dtiCrFile: forms[1].file,
-            dtiCrFileName: forms[1].filename,
             birFile: forms[2].file,
-            birFileName: forms[2].filename, 
             barangayPermitFile: forms[3].file,
-            barangayPermitFileName: forms[3].filename,
             firstIdentificationCardId: +validID1.IDType,
             firstGovtIdFront: validID1.frontFile,
-            firstGovtIdFrontName: validID1.frontFilename,
             firstGovtIdBack: validID1.backFile,
-            firstGovtIdBackName: validID1.backFilename,
             secondIdentificationCardId: +validID2.IDType,
             secondGovtIdFront: validID2.frontFile,
-            secondGovtIdFrontName: validID2.frontFilename,
             secondGovtIdBack: validID2.backFile,
-            secondGovtIdBackName: validID2.backFilename 
         }
         if(noError){
             postEnterpriseUpgradeRequest({
@@ -84,10 +75,21 @@ export const Submit = ()=> {
        
     }
 
+    const closeModal = ()=> {
+        navigation.replace("ToktokWalletEnterpriseApplication");
+        return setVisible(false);
+    }
+
     return (
         <>
         <AlertOverlay visible={loading}/>
-        <SuccessfulModal visible={visible} setVisible={()=>setVisible(false)}/>
+        <PromptModal 
+                visible={visible} 
+                onPress={closeModal}
+                message="Your business documents have been submitted. These documents are for review and approval."
+                title="Success !"
+                event="success"
+        />
         <View style={styles.container}>
             <YellowButton label="Submit" onPress={onPress}/>
         </View>

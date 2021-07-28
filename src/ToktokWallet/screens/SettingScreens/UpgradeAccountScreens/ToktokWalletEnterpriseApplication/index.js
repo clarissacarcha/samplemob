@@ -52,7 +52,7 @@ const MainComponent = ()=> {
         return <SomethingWentWrong/>
     }
 
-    if(data?.getEnterpriseUpgradeRequest?.status == 2){
+    if(data?.getEnterpriseUpgradeRequest?.status == 2 || data?.getEnterpriseUpgradeRequest?.status == 5){
         return (
             <>
                 <Separator/>
@@ -62,7 +62,7 @@ const MainComponent = ()=> {
     }
 
     if(data?.getEnterpriseUpgradeRequest?.status == 3){
-    
+        // Status is for compliance
         return (
             <>
             <Separator/>
