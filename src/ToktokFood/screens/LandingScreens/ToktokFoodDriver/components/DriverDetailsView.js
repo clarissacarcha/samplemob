@@ -33,7 +33,7 @@ const DriverDetailsView = () => {
         <View style={styles.horizontalContainer}>
           <View style={styles.horizontalDivider} />
         </View>
-        <Text numberOfLines={1}>{location.formattedAddress}</Text>
+        <Text numberOfLines={1}>{location.address}</Text>
       </View>
     </View>
   );
