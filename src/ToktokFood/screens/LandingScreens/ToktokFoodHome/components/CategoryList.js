@@ -73,6 +73,7 @@ export default CategoryList;
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 6,
     paddingHorizontal: 15,
     flex: 1,
   },
@@ -82,7 +83,7 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     alignItems: 'center',
-    marginTop: 5,
+    marginTop: 3,
   },
   listItemContainer: {
     marginHorizontal: 5,
@@ -109,7 +110,6 @@ const styles = StyleSheet.create({
   textContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 5,
     paddingHorizontal: 5,
   },
 });
