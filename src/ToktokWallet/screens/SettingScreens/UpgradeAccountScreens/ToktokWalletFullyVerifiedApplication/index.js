@@ -87,8 +87,11 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route})=> {
 
     const redirectLinking = ()=> {
         dispatch({
-            type: "SET_EVENTS_UPGRADE_ACCOUNT",
-            payload: true
+            type: "SET_TOKWA_EVENTS_REDIRECT",
+            payload: {
+                event: "upgradeAccount",
+                value: true,
+            }
         })
         return navigation.navigate("ToktokWalletCashOutHomePage")
     }

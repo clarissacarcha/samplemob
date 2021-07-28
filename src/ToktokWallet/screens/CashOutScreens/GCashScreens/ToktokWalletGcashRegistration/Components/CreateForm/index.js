@@ -35,8 +35,11 @@ const PromptMessage = ({
         setVisible(false)
         if(tokwaAccount.events.upgradeAccount){
             dispatch({
-                type: "SET_EVENTS_UPGRADE_ACCOUNT",
-                payload: false
+                type: "SET_TOKWA_EVENTS_REDIRECT",
+                payload: {
+                    event: "upgradeAccount",
+                    value: false,
+                }
             })
             navigation.navigate("ToktokWalletFullyVerifiedApplication")
             return navigation.replace("ToktokWalletFullyVerifiedApplication")

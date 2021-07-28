@@ -13,6 +13,7 @@ import {
     BottomSheetIDType,
     HeaderReminders,
     PendingRequest,
+    Resubmit,
     SetRequestRecords,
     Submit,
     UploadForms,
@@ -71,7 +72,7 @@ const MainComponent = ()=> {
                 <UploadForms/>
                 <TakePhotoID onPress={onPress}/>
                 </ScrollView>
-                <Submit />
+                <Resubmit id={data.getEnterpriseUpgradeRequest.id}/>
             <BottomSheetIDType ref={IDTypeRef} idIndex={idIndex} onChange={()=>null} />
             </>
         )

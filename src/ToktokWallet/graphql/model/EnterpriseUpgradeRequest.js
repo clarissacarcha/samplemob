@@ -38,6 +38,14 @@ export const POST_ENTERPRISE_UPGRADE_REQUEST = gql`
     }
 `
 
+export const PATCH_ENTERPRISE_UPGRADE_REQUEST = gql`
+    mutation patchEnterpriseUpgradeRequest($input: PatchEnterpriseUpgradeRequestInput){
+        patchEnterpriseUpgradeRequest(input: $input){
+            result
+        }
+    }
+`
+
 export const GET_ENTERPRISE_UPGRADE_REQUEST = gql`
     query {
         getEnterpriseUpgradeRequest {

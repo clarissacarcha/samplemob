@@ -56,12 +56,12 @@ export default (state = INITIAL_STATE, action) => {
           allTransactions: payload.transactions.allTransactions,
         }
       }
-    case 'SET_EVENTS_UPGRADE_ACCOUNT':
+    case 'SET_TOKWA_EVENTS_REDIRECT':
       return {
         ...state,
         events: {
           ...state.events,
-          upgradeAccount: action.payload
+          [action.payload.event]: action.payload.value
         }
       }
     default:

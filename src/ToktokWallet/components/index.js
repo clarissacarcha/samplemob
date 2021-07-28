@@ -9,6 +9,7 @@ export * from "./HeadingBannerLogo";
 export * from "./FilterDateModal";
 export * from "./LeavePromptModal";
 export * from "./ModalPaginationLoading";
+export * from "./Modals";
 export * from "./NumberBoxes";
 export * from "./Receipt";
 export * from "./Separator";
