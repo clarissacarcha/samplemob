@@ -18,6 +18,8 @@ export const Submit = ()=> {
         setFileError,
         validID1,
         validID2,
+        setValidID1,
+        setValidID2,
     } = useContext(ContextEnterpriseApplication)
     const [visible,setVisible] = useState(false);
     const alert = useAlert();
@@ -33,6 +35,10 @@ export const Submit = ()=> {
             return setVisible(true) // Open Successful Modal Prompt
         }   
     })
+
+    const ValidateID = ()=> {
+        
+    }
 
     const onPress = ()=> {
         let noError = true;
@@ -52,6 +58,37 @@ export const Submit = ()=> {
             setFileError( 3 , "Barangay Permit");
             noError = false;
         }
+
+        if(validID1.IDTypeDescription == ""){
+            setValidID1(state=>({...state,frontErrorMessage:"Valid ID is required."}))
+            noError = false;
+        }
+
+        if(validID1.frontFilename == "" && validID1.IDTypeDescription != ""){
+            setValidID1(state=>({...state,frontErrorMessage:"Front Photo of your ID is required."}))
+            noError = false;
+        }
+
+        if(validID1.isBackRequired && validID1.backFilename == ""){
+            setValidID1(state=>({...state,backErrorMessage:"Back Photo of your ID is required."}))
+            noError = false;
+        }
+
+        if(validID2.IDTypeDescription == ""){
+            setValidID2(state=>({...state,frontErrorMessage:"Valid ID is required."}))
+            noError = false;
+        }
+
+        if(validID2.frontFilename == "" && validID2.IDTypeDescription != ""){
+            setValidID2(state=>({...state,frontErrorMessage:"Front Photo of your ID is required."}))
+            noError = false;
+        }
+
+        if(validID2.isBackRequired && validID2.backFilename == ""){
+            setValidID2(state=>({...state,backErrorMessage:"Back Photo of your ID is required."}))
+            noError = false;
+        }
+        
 
         const input = {
             businessPermitFile: forms[0].file,
