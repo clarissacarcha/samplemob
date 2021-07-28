@@ -1,9 +1,10 @@
 import React from 'react';
-import {FlatList, Image, View, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {FlatList, Image, Platform, View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
 // Assets
 import {allcuisines, drinks, dailydeals, fastfood} from 'toktokfood/assets/images';
+
 const CategoryList = ({horizontal, rightText = ''}) => {
   const navigation = useNavigation();
   const data = [
@@ -75,7 +76,7 @@ const styles = StyleSheet.create({
   container: {
     marginTop: 6,
     paddingHorizontal: 15,
-    flex: 1,
+    flex: Platform.OS === 'android' ? 1 : 0,
   },
   img: {
     borderRadius: 10,
