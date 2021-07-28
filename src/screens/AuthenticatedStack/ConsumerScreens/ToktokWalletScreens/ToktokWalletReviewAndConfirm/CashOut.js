@@ -12,7 +12,7 @@ const CashOut = ({data})=>{
        <View style={styles.container}>
             <View style={styles.information}>
                     <View style={{flex:1,alignItems:"flex-start"}}>
-                        <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.M,color: COLORS.DARK}}>Cash out method</Text>  
+                        <Text style={{fontFamily: FONTS.REGULAR,fontSize: SIZES.M,color: COLORS.DARK}}>Bank</Text>  
                     </View>
                     <View style={{flex:1,alignItems:"flex-end"}}>
                         <Text style={{fontFamily: FONTS.BOLD,fontSize: SIZES.M,color: COLORS.DARK,textAlign:"right"}}>{data.method}</Text>

@@ -97,20 +97,34 @@ const ToktokWalletPayPandaForm = ({navigation,route})=> {
       })
     }
 
+    const onSwipeFail = (e)=> {
+        console.log(e)
+    }
+
+    const onSwipeSuccess = ()=> {
+        setPinCodeAttempt(6)
+        setOpenPinCode(true)
+    }
+
     const confirmAmount = ()=> {
         // Keyboard.dismiss()
         navigation.navigate("ToktokWalletReviewAndConfirm", {
             label:"Cash In" , 
+            event: "Cash In",
             data: {
                     method: transactionType.name , 
                     amount: amount,
                     accountName: `${tokwaAccount.person.firstName} ${tokwaAccount.person.lastName}`,
                     accountNumber: tokwaAccount.mobileNumber
                 },
-            onConfirm: ()=> {
-                setPinCodeAttempt(6)
-                setOpenPinCode(true)
-            },
+            isSwipe: true,
+            swipeTitle: `Confirm`,
+            onSwipeFail: onSwipeFail,
+            onSwipeSuccess: onSwipeSuccess,
+            // onConfirm: ()=> {
+            //     setPinCodeAttempt(6)
+            //     setOpenPinCode(true)
+            // },
         })
     }
 

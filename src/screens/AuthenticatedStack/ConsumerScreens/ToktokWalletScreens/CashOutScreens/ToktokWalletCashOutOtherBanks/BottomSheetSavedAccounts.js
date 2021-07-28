@@ -1,28 +1,30 @@
 import React, { useMemo, forwardRef , useState, useEffect} from 'react';
-import {View, StyleSheet, Text, TextInput, FlatList, TouchableOpacity,Dimensions} from 'react-native';
+import {View, StyleSheet, Text, TextInput, FlatList, TouchableHighlight,Dimensions,TouchableOpacity} from 'react-native';
 import BottomSheet, {BottomSheetBackdrop, BottomSheetFlatList} from '@gorhom/bottom-sheet';
 import {COLOR, FONT, FONT_SIZE, SIZE} from '../../../../../../res/variables';
+import { VectorIcon , ICON_SET} from '../../../../../../revamp'
 import { useNavigation } from '@react-navigation/native';
 
 const {height,width} = Dimensions.get("window")
 
 const BottomSheetSavedAccounts = forwardRef(({accounts}, ref) => {
 
-const snapPoints = useMemo(() => [0, height * 0.5], []);
+const snapPoints = useMemo(() => [0, height * 0.7], []);
 const navigation = useNavigation()
 
 const selectAccount = (bankAccount)=> {
     ref.current.close()
-    return navigation.navigate("ToktokWalletCashOutUpdateAccount" , {bankAccount: bankAccount})
+    return navigation.navigate("ToktokWalletCashOutViewAccount" , {bankAccount: bankAccount})
 }
 
   return (
     <BottomSheet
+      style={{marginTop: 30}}
       ref={ref}
-      index={-1}
+      index={0}
       snapPoints={snapPoints}
-      enableHandlePanningGesture={false}
-      enableContentPanningGesture={false}
+      enableHandlePanningGesture={true}
+      enableContentPanningGesture={true}
       handleComponent={() => (
         <View
           style={{
@@ -39,24 +41,31 @@ const selectAccount = (bankAccount)=> {
       )}
       backdropComponent={BottomSheetBackdrop}>
       <View style={styles.sheet}>
-        <Text style={{fontFamily: FONT.BOLD}}>Choose Account</Text>
+      <View style={{flexDirection:"row"}}>
+            <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,marginBottom: 10}}>Choose Account</Text>
+            <TouchableOpacity onPress={()=>ref.current.close()} style={{flex: 1,alignItems:"flex-end",justifyContent:"flex-start"}}>
+              <VectorIcon iconSet={ICON_SET.FontAwesome5} name="chevron-down" color="black"/>
+            </TouchableOpacity>
+          </View>
         <FlatList
           data={accounts}
           ItemSeparatorComponent={() => <View style={{height: 1, borderColor: COLOR.LIGHT}} />}
           renderItem={({item, index}) => (
-            <TouchableOpacity onPress={()=>selectAccount(item)} style={[styles.banks]}>
-                    {
-                      item.bank.image 
-                      ? <View style={styles.bankLogo}>
-
-                      </View>
-                      : <View style={[styles.bankLogo,{justifyContent:'center',alignItems:"center"}]}>
-                            <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.XS}}>{item.bank.code}</Text>
-                      </View>
-                    }
-                   
-                    <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>{item.accountNumber} - {item.accountName}</Text>
-            </TouchableOpacity>     
+            <TouchableHighlight underlayColor={'#FFFFE5'} onPress={()=>selectAccount(item)} style={[styles.banks]}>
+              <>
+                  <View style={[styles.bankLogo,{justifyContent:'center',alignItems:"center"}]}>
+                            <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>{item.bank.name[0].toUpperCase()}</Text>
+                  </View>
+                  <View style={{flex: 1}}>
+                      <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.S}}>{item.bank.name}</Text>
+                      <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S}}>Account Number: {item.accountNumber}</Text>
+                      <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S}}>Account Name: {item.accountName}</Text>
+                  </View>
+                  <View>
+                      <VectorIcon iconSet={ICON_SET.Feather} name="chevron-right" color={COLOR.DARK} />
+                  </View> 
+              </>
+            </TouchableHighlight>     
           )}
         />
      </View>
@@ -73,17 +82,17 @@ const styles = StyleSheet.create({
   },
   spacing: {height: 2},
   banks: {
-    height: SIZE.FORM_HEIGHT,
+    height: SIZE.FORM_HEIGHT + 20,
     alignItems:"center",
     borderBottomWidth: .2,
     borderColor: "silver",
-    paddingHorizontal:12,
-    flexDirection:"row"
+    flexDirection:"row",
+    paddingHorizontal: 2
   },
   bankLogo: {
-    height: 30,
-    width: 30,
-    backgroundColor:"white",
+    height: 50,
+    width: 50,
+    backgroundColor: COLOR.YELLOW,
     borderRadius: 100,
     shadowColor: '#000',
     shadowOffset: {
@@ -94,6 +103,10 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
     marginRight: 10,
+  },
+  accountValue: {
+    fontSize: FONT_SIZE.M,
+    fontFamily: FONT.REGULAR
   }
 });
 

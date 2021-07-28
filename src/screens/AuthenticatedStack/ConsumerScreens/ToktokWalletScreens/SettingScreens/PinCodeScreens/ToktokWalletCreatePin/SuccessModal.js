@@ -1,9 +1,8 @@
 import React from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,Modal,Image,Dimensions} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
-import { FONTS, FONT_SIZE, SIZES } from '../../../../../../../res/constants'
+import { FONT, FONT_SIZE, COLOR } from '../../../../../../../res/variables'
 import { BlackButton, ICON_SET, VectorIcon, YellowButton } from '../../../../../../../revamp'
-import { COLOR, FONT } from '../../../../../../../res/variables'
 import {BuildingBottom} from '../../../Components'
 
 const {width,height} = Dimensions.get("window")
@@ -34,8 +33,8 @@ const NewPIN = ()=> {
             }}>
                 <Image style={{height: 89,width: 89}} source={require('../../../../../../../assets/icons/walletVerify.png')}/>
             </View>
-            <Text style={{fontSize: SIZES.XL,fontFamily: FONTS.BOLD}}>Setup PIN Successful!</Text>
-            <Text style={{color: "#212529",marginTop:5,fontFamily: FONTS.REGULAR,fontSize: SIZES.M,textAlign:"center"}}>You have secured your toktokwallet. Make sure to remember your PIN and do not share it with anyone.</Text>
+            <Text style={{fontSize: FONT_SIZE.XL,fontFamily: FONT.BOLD}}>Setup PIN Successful!</Text>
+            <Text style={{color: "#212529",marginTop:5,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M,textAlign:"center"}}>You have secured your toktokwallet. Make sure to remember your PIN and do not share it with anyone.</Text>
         </View>
     )
 }
@@ -55,8 +54,8 @@ const UpdatePIN = ()=> {
         }}>
             <Image style={{height: 89,width: 89}} source={require('../../../../../../../assets/icons/walletVerify.png')}/>
         </View>
-        <Text style={{fontSize: SIZES.XL,fontFamily: FONTS.BOLD}}>toktokwallet PIN changed successfully</Text>
-        <Text style={{color: "#212529",marginTop:5,fontFamily: FONTS.REGULAR,fontSize: SIZES.M,textAlign:"center"}}>You can now use your new pin.</Text>
+        <Text style={{fontSize: FONT_SIZE.XL,fontFamily: FONT.BOLD}}>toktokwallet PIN changed successfully</Text>
+        <Text style={{color: "#212529",marginTop:5,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M,textAlign:"center"}}>You can now use your new pin.</Text>
     </View>
     )
 }
@@ -88,7 +87,7 @@ const SuccessModal = ({modalVisible,tokwaAccount})=> {
                                 <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>Use a <Text style={{color: COLOR.YELLOW}}>secure</Text> PIN combination</Text>
                             </Reminder>
                             <Reminder>
-                                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}><Text style={{color: COLOR.YELLOW}}>Remeber</Text> your PIN</Text>
+                                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}><Text style={{color: COLOR.YELLOW}}>Remember</Text> your PIN</Text>
                             </Reminder>
                             <Reminder>
                                 <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}><Text style={{color: COLOR.YELLOW}}>Never share</Text> your PIN with anyone</Text>

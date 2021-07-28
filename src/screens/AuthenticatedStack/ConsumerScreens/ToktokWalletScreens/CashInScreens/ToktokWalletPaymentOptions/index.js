@@ -29,7 +29,7 @@ const ToktokWalletPaymentOptions = ({navigation,route})=> {
     if (loading) {
         return (
           <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            <ActivityIndicator size={24} color={COLOR} />
+            <ActivityIndicator size={24} color={COLOR.YELLOW} />
           </View>
         );
     }

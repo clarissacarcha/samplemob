@@ -1,4 +1,4 @@
-import React , {useRef} from 'react'
+import React , {useRef, useState, useContext} from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,Dimensions,TouchableHighlight,ActivityIndicator} from 'react-native'
 import { COLOR, FONT , FONT_SIZE } from '../../../../../../res/variables'
 import { Separator } from '../../Components'
@@ -8,31 +8,61 @@ import {GET_BANK_ACCOUNTS} from '../../../../../../graphql/toktokwallet'
 import { useQuery } from '@apollo/react-hooks'
 import { onErrorAlert } from '../../../../../../util/ErrorUtility'
 import {useAlert} from '../../../../../../hooks'
+import { ContextCashOut } from './ContextProvider'
 
 const {width,height} = Dimensions.get("window")
 
 
-const BankAccount = ({index, ...account})=> {
-
+const ActiveBankAccount = ({index,onPress, ...account}) => {
+    const splitAlias = account.nickName.split(" ")
+    const initialAlias = `${splitAlias[0][0]}${splitAlias[1] ? " "+splitAlias[1][0]: ""}`
     return (
-        <View key={`bankAccount${index}`} style={{justifyContent:'center',alignItems:"center",marginRight: 10}}>
-                {
-                    account.bank.image 
-                    ?   <View style={styles.account}>
-
+        <TouchableHighlight 
+            onPress={()=>onPress(account , index)} 
+            underlayColor={"#FFFFE5"} 
+            key={`bankAccount${index}`} 
+            style={{justifyContent:'center',alignItems:"center",marginRight: 10}}
+        >
+            <>
+                <View style={[styles.account, {justifyContent:'center',alignItems:'center',borderWidth: 2 ,borderColor:"black"}]}>
+                        <View style={{position:'absolute',top: 0 , right: -5, height: 20,width: 20 ,backgroundColor: COLOR.YELLOW,borderRadius: 100,justifyContent:'center',alignItems:"center",borderWidth: 0.5,borderColor:"black"}}>
+                                <VectorIcon iconSet={ICON_SET.Feather} name="check" color="black" size={12}/>
                         </View>
-                    :   <View style={[styles.account, {justifyContent:'center',alignItems:'center'}]}>
-                            <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.XS}}>{account.bank.code}</Text>
-                        </View>
-                }
-             
-                <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.S}}>{account.nickName}</Text>
-        </View>
+                    <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.XL}}>{initialAlias.toUpperCase()}</Text>
+                </View>
+                <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.S}}>{account.nickName.length <= 10 ? account.nickName : `${account.nickName.slice(0,8)}...`}</Text>
+            </>
+        </TouchableHighlight>
     )
 }
 
-const MySavedAccounts = ({bottomRef , edit ,dispatch})=> {
+const BankAccount = ({index,onPress, ...account})=> {
+    const splitAlias = account.nickName.split(" ")
+    const initialAlias = `${splitAlias[0][0]}${splitAlias[1] ? " "+splitAlias[1][0]: ""}`
+    return (
+        <TouchableHighlight onPress={()=>onPress(account , index)} underlayColor={"#FFFFE5"} key={`bankAccount${index}`} style={{justifyContent:'center',alignItems:"center",marginRight: 10}}>
+            <>
+                      <View style={[styles.account, {justifyContent:'center',alignItems:'center'}]}>
+                            <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.L}}>{initialAlias.toUpperCase()}</Text>
+                        </View>
+     
+                <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.S}}>{account.nickName.length <= 10 ? account.nickName : `${account.nickName.slice(0,8)}...`}</Text>
+            </>
+        </TouchableHighlight>
+    )
+}
+
+const MySavedAccounts = ({selectBanks , edit})=> {
     const alert = useAlert()
+    const {
+        savedAccounts,
+        setSaveAccounts,
+        activeAccount,
+        setActiveAccount,
+        setBank,
+        setAccountNumber,
+        setAddress
+    } = useContext(ContextCashOut)
 
     const {data,error,loading} = useQuery(GET_BANK_ACCOUNTS, {
         fetchPolicy:"network-only",
@@ -41,11 +71,7 @@ const MySavedAccounts = ({bottomRef , edit ,dispatch})=> {
             onErrorAlert({alert,error})
         },
         onCompleted: ({getBankAccounts})=> {
-            console.log(getBankAccounts)
-            dispatch({
-                type: "UPDATE_SAVE_ACCOUNTS",
-                payload: getBankAccounts
-            })
+            setSaveAccounts(getBankAccounts)
         }
     })
 
@@ -57,17 +83,33 @@ const MySavedAccounts = ({bottomRef , edit ,dispatch})=> {
         )
     }
 
-    const addAccount = ()=> {
-        bottomRef.current.expand()
+    const onPress = (account , index)=> {
+       if(!activeAccount){
+           setBank(account.bank)
+           setAccountNumber(account.accountNumber)
+           setAddress(account.address)
+           setActiveAccount(index)
+       }
+
+       if(activeAccount == index){
+            setActiveAccount(null)
+            setAccountNumber("")
+            setAddress("")
+       }else{
+            setBank(account.bank)
+            setAccountNumber(account.accountNumber)
+            setAddress(account.address)
+            setActiveAccount(index)
+       }
     }
 
     return(
         <>
         <View style={styles.container}>
            <View style={styles.headings}>
-           <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,textAlign: "left",flex: 1}}>My Saved Accounts</Text>
+           <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,textAlign: "left",flex: 1}}>My Saved Accounts ( {savedAccounts.length}/5 )</Text>
            {
-               data.getBankAccounts.length > 0 &&
+               savedAccounts.length > 0 &&
                <TouchableOpacity onPress={edit} style={styles.edit}>
                     <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,textAlign: "right",color: COLOR.ORANGE}}>Edit</Text>
                </TouchableOpacity>
@@ -77,19 +119,20 @@ const MySavedAccounts = ({bottomRef , edit ,dispatch})=> {
 
            <View style={styles.body}>
                 {
-                    data.getBankAccounts.map((account,index)=> {
-                        return (
-                            <BankAccount index={index} {...account}/>
-                        )
+                    savedAccounts.map((account,index)=> {
+                        if(index === activeAccount){
+                            return <ActiveBankAccount onPress={onPress} index={index} {...account}/>
+                        }
+                        return <BankAccount onPress={onPress} index={index} {...account}/>
                     })
                 }
 
                 {
-                    data.getBankAccounts.length < 5 && 
-                        <TouchableHighlight onPress={addAccount} underlayColor={"transparent"} style={{justifyContent:'center',alignItems:"center",marginRight: 10}}>
+                    savedAccounts.length < 5 && 
+                        <TouchableHighlight onPress={selectBanks} underlayColor={"transparent"} style={{justifyContent:'center',alignItems:"center",marginRight: 10}}>
                             <>
                             <View style={styles.addAccount}>
-                                <VectorIcon iconSet={ICON_SET.FontAwesome5} name="plus" size={12} color="#000000"/>
+                                <VectorIcon iconSet={ICON_SET.FontAwesome5} name="plus" size={12}/>
                             </View>
                             <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.S}}>Add Account</Text>
                             </>
@@ -126,10 +169,10 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     account: {
-        height: 50,
+        height: width / 5 - 20,
         width: width / 5 - 20,
-        backgroundColor:"white",
-        borderRadius: 100,
+        backgroundColor: COLOR.YELLOW,
+        borderRadius: width / 5 - 20,
         shadowColor: '#000',
         shadowOffset: {
           width: 0,
@@ -140,18 +183,12 @@ const styles = StyleSheet.create({
         elevation: 5,
     },
     addAccount: {
-        height: 50,
+        height: width / 5 - 20,
         width: width / 5 - 20,
-        backgroundColor:COLOR.YELLOW,
-        borderRadius: 100,
-        shadowColor: '#000',
-        shadowOffset: {
-          width: 0,
-          height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
+        backgroundColor: "white",
+        borderRadius: width / 5 - 20,
+        borderWidth: 2,
+        borderColor: COLOR.YELLOW,
         justifyContent:"center",
         alignItems:'center'
     }

@@ -12,7 +12,7 @@ const TransactionInfo = ({label,value})=> (
             <Text style={{fontFamily: FONTS.REGULAR,color:COLORS.DARK,fontSize: SIZES.M}}>{label}</Text>
         </View>
         <View style={{flex: 1,justifyContent:"center",alignItems:"flex-end"}}>
-            <Text style={{fontFamily: FONTS.BOLD,fontSize:SIZES.M,color: COLORS.DARK}}>{value}</Text>
+            <Text style={{fontFamily: FONTS.BOLD,fontSize:SIZES.M,color: COLORS.DARK,textAlign:"right"}}>{value}</Text>
         </View>
     </View>
 )
@@ -57,7 +57,7 @@ const SuccessfulCashOutModal = ({visible , cashoutLogParams,tokwaAccount})=> {
             >
                 
                 <View style={styles.recipientInfo}>
-                     <TransactionInfo label="Cash out method" value="GCash"/>
+                     <TransactionInfo label="Bank" value="GCash"/>
                      <TransactionInfo label="Account Name" value={cashoutLogParams.accountName}/>
                      <TransactionInfo label="Account Number" value={cashoutLogParams.accountNumber}/>
                      <TransactionInfo label="Status" value={status}/>

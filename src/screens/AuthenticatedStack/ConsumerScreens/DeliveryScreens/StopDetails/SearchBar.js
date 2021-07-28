@@ -116,10 +116,13 @@ const SearchBar = ({
                 `,
         },
       });
+      console.log({apiResult});
+      console.log('LALA');
       //   setResult(apiResult.data.data.getGooglePlaceAutocomplete);
       onSearchResultChange(apiResult.data.data.getGooglePlaceAutocomplete);
       console.log({result: apiResult.data.data.getGooglePlaceAutocomplete});
     } catch (error) {
+      console.log({error});
       onSearchResultChange(ERROR_RESULT);
     }
   };

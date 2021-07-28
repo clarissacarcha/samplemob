@@ -50,7 +50,7 @@ const ToktokWalletGcashLinKAccount = ({navigation,route})=> {
         fetchPolicy: "network-only",
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({getGcashLinkOTP})=>{
-            console.log(getGcashLinkOTP)
+            setErrorMessage("")
             setOtpTimer(120)
         },
         onError: (error)=>{

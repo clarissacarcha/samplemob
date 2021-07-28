@@ -130,6 +130,7 @@ const VerifyAddress = ()=> {
                                 placeholder="House/Unit #, Floor"
                                 value={address.line1}
                                 onChangeText={text=>changeAddress("line1", text)}
+                                returnKeyType="done"
                                 // onSubmitEditing={Proceed}
                             />
                         </View>
@@ -141,6 +142,7 @@ const VerifyAddress = ()=> {
                                 placeholder="Bldg, Barangay, Subdivision/Village"
                                 value={address.line2}
                                 onChangeText={text=>changeAddress("line2", text)}
+                                returnKeyType="done"
                                 // onSubmitEditing={Proceed}
                             />
                         </View>
@@ -180,6 +182,8 @@ const VerifyAddress = ()=> {
                                 placeholder="Enter postal code here"
                                 value={address.postalCode}
                                 onChangeText={text=>changeAddress("postalCode",text)}
+                                keyboardType="number-pad"
+                                returnKeyType="done"
                                 onSubmitEditing={Proceed}
                             />
                         </View>

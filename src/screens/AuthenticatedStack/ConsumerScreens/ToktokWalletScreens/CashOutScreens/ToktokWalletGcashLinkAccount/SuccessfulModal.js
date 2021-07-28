@@ -27,7 +27,7 @@ const SuccessfulModal = ({visible,setVisible,provider})=> {
                             <View style={{flex: 1,justifyContent:"center",alignItems:"center"}}>
                                   <Image source={require('../../../../../../assets/toktokwallet-assets/cash-out-providers/gcash.png')}/>
                                   <Text style={{marginTop: 15,fontFamily: FONT.BOLD, fontSize: FONT_SIZE.L,textAlign:"center"}}>Linking Successful!</Text>
-                                  <Text style={{textAlign:"center", fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S}}>You have successfully linked your G Cash number to your toktokwallet.</Text>
+                                  <Text style={{textAlign:"center", fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S}}>You have successfully linked your GCash number to your toktokwallet.</Text>
                             </View>
                             <View style={{height: SIZE.FORM_HEIGHT}}>
                                 <YellowButton label="Continue" onPress={redirect}/>
