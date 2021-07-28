@@ -15,7 +15,7 @@ export const PromptModal = ({visible , title , message , onPress , event})=> {
     switch(event){
         case "success":
             imageIcon = SuccessIcon;
-            return
+            break
         default: 
             break;
     }
@@ -25,7 +25,7 @@ export const PromptModal = ({visible , title , message , onPress , event})=> {
         <Modal 
             visible={visible}
             transparent={true}
-            onRequestClose={closeModal}
+            onRequestClose={onPressThrottled}
             style={styles.container}
         >
             <View style={styles.modalBody}>

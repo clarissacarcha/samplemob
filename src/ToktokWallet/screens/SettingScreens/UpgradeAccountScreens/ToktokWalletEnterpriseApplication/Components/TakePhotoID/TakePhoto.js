@@ -1,5 +1,5 @@
 import React , {useContext} from 'react'
-import {Text,Dimensions,Platform,View} from 'react-native'
+import {Text,Dimensions,Platform,View,StyleSheet} from 'react-native'
 import { Separator } from 'toktokwallet/components'
 import validator from 'validator'
 import { ContextEnterpriseApplication } from "../ContextProvider"
@@ -31,11 +31,13 @@ const TakePhoto = ({validID,index})=> {
                     ...(placement === "front"
                         ? {
                             frontFilename: data.uri,
-                            frontFile: rnFile
+                            frontFile: rnFile,
+                            frontErrorMessage: ""
                         }
                         : {
                             backFilename: data.uri,
-                            backFile: rnFile
+                            backFile: rnFile,
+                            backErrorMessage: ""
                         }
                     )
                 }
@@ -48,11 +50,13 @@ const TakePhoto = ({validID,index})=> {
                 ...(placement === "front"
                     ? {
                         frontFilename: data.uri,
-                        frontFile: rnFile
+                        frontFile: rnFile,
+                        frontErrorMessage: "",
                     }
                     : {
                         backFilename: data.uri,
-                        backFile: rnFile
+                        backFile: rnFile,
+                        backErrorMessage: "",
                     }
                 )
             }
@@ -69,6 +73,10 @@ const TakePhoto = ({validID,index})=> {
                     ? <ImageIDSet setImage={setImage} validID={validID} placement="front" index={index}/> 
                     : <ChooseImage setImage={setImage}  placement="front" index={index}/>
                 }
+                {
+                    validID.frontErrorMessage != "" && validID.frontErrorMessage != "Valid ID is required."
+                    && <Text style={styles.errorMessage}>{validID.frontErrorMessage}</Text>
+                }
             </View>
             {
                 validID.isBackRequired == 1 &&
@@ -79,6 +87,10 @@ const TakePhoto = ({validID,index})=> {
                         ? <ImageIDSet setImage={setImage} validID={validID} placement="back" index={index}/> 
                         : <ChooseImage setImage={setImage} placement="back" index={index}/>
                     }
+                     {
+                    validID.backErrorMessage != "" && validID.backErrorMessage != "Valid ID is required."
+                    && <Text style={styles.errorMessage}>{validID.backErrorMessage}</Text>
+                }
                 </View>
             }
             <Separator/>
@@ -86,5 +98,16 @@ const TakePhoto = ({validID,index})=> {
     )
 
 }
+
+const styles = StyleSheet.create({
+    errorMessage: {
+        marginHorizontal: 16,
+        fontFamily: FONT.REGULAR,
+        fontSize: FONT_SIZE.XS,
+        color: COLOR.RED,
+        textAlign:'center',
+        marginTop: 10
+    },
+})
 
 export default TakePhoto

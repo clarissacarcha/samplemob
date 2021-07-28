@@ -24,7 +24,15 @@ const ChooseIDType = ({index , onPress})=> {
             return validID1.IDTypeDescription != "" ? validID1.IDTypeDescription : "Valid ID 1"
         }
         return validID2.IDTypeDescription != "" ? validID2.IDTypeDescription : "Valid ID 2"
-    } 
+    }
+    
+    const displayErrorMessage = (index)=> {
+        if(index == 1){
+            return validID1.IDTypeDescription == "" ? validID1.frontErrorMessage : ""
+        }
+        return validID2.IDTypeDescription == ""  ? validID2.frontErrorMessage : ""
+    }
+
 
     return (
         <>
@@ -34,6 +42,7 @@ const ChooseIDType = ({index , onPress})=> {
                  <VectorIcon style={{textAlign:"right"}} iconSet={ICON_SET.Feather} name="chevron-right" size={14} color={'#9E9E9E'}/>
             </View>
         </TouchableOpacity>
+        { displayErrorMessage(index) != "" && <Text style={styles.errorMessage}>{displayErrorMessage(index)}</Text>}
         <View style={styles.divider}/>
         {
             index == 1
@@ -79,5 +88,11 @@ const styles = StyleSheet.create({
         height: 1,
         backgroundColor: COLOR.LIGHT,
         marginHorizontal: 16,
-    }
+    },
+    errorMessage: {
+        marginHorizontal: 16,
+        fontFamily: FONT.REGULAR,
+        fontSize: FONT_SIZE.XS,
+        color: COLOR.RED,
+    },
 })
