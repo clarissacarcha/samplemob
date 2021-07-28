@@ -34,7 +34,7 @@ const tabs = [
 const StickyView = () => {
   const [offset, setOffset] = useState(0);
   const [activeTab, setActiveTab] = useState(tabs[0]);
-  const headerMaxHeight = Platform.OS === 'ios' ? moderateScale(130) : scale(190);
+  const headerMaxHeight = Platform.OS === 'ios' ? moderateScale(130) : scale(170);
   const headerMinHeight = Platform.OS === 'ios' ? verticalScale(43) : moderateScale(65);
   const {categories} = useSelector((state) => state).toktokFood;
   const {shops} = useSelector((state) => state).toktokFood;

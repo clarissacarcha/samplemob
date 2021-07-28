@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {Platform, StyleSheet, View} from 'react-native';
 
 // Components
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
@@ -13,7 +13,7 @@ import {useCategories, useUserLocation, useShops} from 'toktokfood/hooks';
 import {moderateScale, getStatusbarHeight} from 'toktokfood/helper/scale';
 
 const CUSTOM_HEADER = {
-  container: Platform.OS === 'android' ? moderateScale(143 + getStatusbarHeight) : moderateScale(145),
+  container: Platform.OS === 'android' ? moderateScale(150 + getStatusbarHeight) : moderateScale(145),
   bgImage: Platform.OS === 'android' ? moderateScale(115 + getStatusbarHeight) : moderateScale(125),
 };
 
