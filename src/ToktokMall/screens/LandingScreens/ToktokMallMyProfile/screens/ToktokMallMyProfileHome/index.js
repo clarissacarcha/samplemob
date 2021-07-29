@@ -1,9 +1,19 @@
 import React from 'react';
 import {View, Text, ImageBackground, TouchableOpacity, Image} from 'react-native';
 import MCIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import AIcons from 'react-native-vector-icons/dist/AntDesign'
 import {COLOR, FONT, FONT_SIZE} from '../../../../../../res/variables';
 import {Card} from '../../../../../Components'
 import CustomIcon from './.../../../../../../../Components/Icons'
+
+const testData = [
+  {id: 1, full_name: 'Cloud Panda', contact_number: '09050000000',
+    address: '10F, Inoza Tower, 40th Street, Bonifacio Global City', default: 1
+  },
+  {id: 2, full_name: 'Rick Sanchez', contact_number: '09060000000',
+    address: 'B20 L1, Mahogany Street, San Isidro, Makati City', default: 0
+  }
+]
 
 export const ToktokMallMyProfileHome = ({navigation}) => {
 
@@ -44,6 +54,24 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
           </View>
         </Card>
         
+        <View style={{height: 15}}></View>
+
+        <Card>
+          <TouchableOpacity style={{flexDirection: 'row', padding: 20}} onPress = {() => {navigation.navigate("ToktokMallAddressesMenu", {
+                addressData: testData, screen: 'profile', defaultAddress: 1 })}}>
+            <View style={{flex: 4,  justifyContent: 'center'}}>
+              <Text style={{fontFamily: FONT.BOLD, fontSize: 14}}>My Addresses</Text>
+            </View>
+            <View style={{flex: 2, alignItems: 'flex-end', justifyContent: 'center'}}>
+              <AIcons 
+                name = {'right'}
+                size = {17}
+                color = {COLOR.ORANGE}
+              />
+            </View>
+          </TouchableOpacity>
+        </Card>
+
         <View style={{height: 15}}></View>
 
         <Card>

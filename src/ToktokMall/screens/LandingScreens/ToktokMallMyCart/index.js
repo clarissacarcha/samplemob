@@ -167,7 +167,7 @@ export const ToktokMallMyCart = ({navigation}) => {
           }} /> : 
           <CheckoutFooter 
             onSubmit={() => {
-              navigation.navigate("ToktokMallCheckout")
+              navigation.navigate("ToktokMallCheckout", {vouchers: []})
             }} 
             subtotal={subTotal} 
           />}

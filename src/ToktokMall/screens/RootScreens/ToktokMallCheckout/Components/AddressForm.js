@@ -27,7 +27,7 @@ export const AddressForm = ({navigation , data , addressData, setAddressData ,de
               navigation.navigate("ToktokMallAddressesMenu", {
                 addressData: addressData,  setDefaultAddress:setDefaultAddress, defaultAddress: defaultAddress
                 , setAddressData: setAddressData,
-                addressLengthChanged: addressLengthChanged ,setAddressLengthChanged: setAddressLengthChanged
+                addressLengthChanged: addressLengthChanged ,setAddressLengthChanged: setAddressLengthChanged, screen: 'checkout'
               })
           }}>
             <Text style={{color: '#F6841F'}}>Edit</Text>

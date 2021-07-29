@@ -28,10 +28,10 @@ const onPress = (params, data, navigation) => {
   sampleArr = params.vouchers
   sampleArr.push(data)
   // let newAddressData =  sampleArr.push(data)
-  // alert(JSON.stringify(params))
+  // alert(JSON.stringify(sampleArr))
   params.setVouchers(sampleArr)
   // alert(JSON.stringify(sampleArr))
-  navigation.navigate('ToktokMallCheckout', )
+  navigation.navigate('ToktokMallCheckout', {vouchers: sampleArr} )
 }
 
 const Item = ({data, params, navigation}) => {
