@@ -48,7 +48,11 @@ export const ToktokMallAddressesMenu = ({route, navigation, }) => {
 
   useEffect(() => {
     // alert(JSON.stringify(route.params.screens))
-    route.params.setAddressData(route.params.addressData)
+    if(route.params.screen == 'checkout'){
+      
+      route.params.setAddressData(route.params.addressData)
+      
+    }
     setDefaultID(route.params.defaultAddress)
     setData(route.params.addressData)
     // setData(data)

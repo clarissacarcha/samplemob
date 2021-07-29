@@ -1,5 +1,5 @@
 import React, {useState, useRef} from 'react';
-import {View, Text, Image, FlatList, SectionList, ImageBackground} from 'react-native';
+import {View, Text, Image, FlatList, SectionList, ImageBackground, Platform} from 'react-native';
 import { Badge, Tooltip } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/core';
 import { Header } from '../../../../Components';
@@ -9,18 +9,28 @@ import {coppermask, clothfacemask, voucherbg} from '../../../../assets';
 import { FONT } from '../../../../../res/variables';
 
 const transparentBg = "rgba(129, 129, 129, 0.5)"
+import Animated, {interpolate, Extrapolate, useCode, set, greaterThan} from 'react-native-reanimated'
 
-export const HeaderTransparent = ({value, outOfStock = false}) => {
+
+export const HeaderTransparent = ({value, outOfStock = false, animatedValue}) => {
+
+  const translateOpacity = animatedValue.interpolate({
+    inputRange: [250, 270],
+    outputRange: [1,  0],
+    // extrapolateLeft: Extrapolate.CLAMP
+    extrapolate: 'clamp'
+  })
 
   const navigation = useNavigation()
   const HelpTooltipRef = useRef(null)
 
 	return (
 		<>
-			<View style={{position: 'absolute', width: '100%', zIndex: 1, backgroundColor: 'transparent', paddingTop: 40, paddingBottom: 12, paddingHorizontal: 6}}>
+      <Animated.View style={[{position: 'absolute', width: '100%', zIndex: 1, backgroundColor: 'transparent', paddingTop: Platform.OS === "ios" ? 10 : 40, paddingBottom: 12, paddingHorizontal: 6},
+        {opacity: translateOpacity}]}>
         <View style={{width: '100%', flexDirection: 'row'}}>
           <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center', backgroundColor: transparentBg, height: 28, borderRadius: 35/2}}>
-            <CustomIcon.MCIcon name="chevron-left" color="#fff" size={28} />
+            <CustomIcon.MCIcon name="chevron-left" color="#fff" size={28} onPress={navigation.goBack} />
           </View>
           <View style={{flex: 8, justifyContent: 'center'}} />
           <View style={{flex: 3, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around'}}>
@@ -58,8 +68,8 @@ export const HeaderTransparent = ({value, outOfStock = false}) => {
             <Text style={{fontFamily: FONT.BOLD, fontSize: 18, color: "#fff"}}>OUT OF STOCK</Text>
           </View>
         </View>}
-      </View>
-      <View style={{height: 3, backgroundColor: '#F7F7FA'}} />
+      </Animated.View>
+      <Animated.View style={[{height: 3, backgroundColor: '#F7F7FA'}, {opacity: translateOpacity}]} />
 		</>
 	)
 }

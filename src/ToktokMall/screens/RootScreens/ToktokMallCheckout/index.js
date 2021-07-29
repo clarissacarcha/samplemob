@@ -31,7 +31,7 @@ const testDataAddress = [
   }
 ]
 
-export const ToktokMallCheckout = ({navigation}) => {
+export const ToktokMallCheckout = ({route, navigation}) => {
 
   const [isVisible, setIsVisible] = useState(false)
   // const [data, setData] = useState([])
@@ -77,8 +77,7 @@ export const ToktokMallCheckout = ({navigation}) => {
   useEffect(() => {
     // findDefaultAddress();
     // setAddressData(testDataAddress);
-    
-    alert(JSON.stringify(vouchers))
+    setVouchers(route.params.vouchers)
   },[vouchers])
 
 

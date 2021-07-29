@@ -21,6 +21,7 @@ import {
 
   VariationBottomSheet
 } from './components'
+import Animated, {interpolate, Extrapolate, useCode, set, greaterThan} from 'react-native-reanimated'
 
 export const ToktokMallProductDetails = ({navigation}) => {
 
@@ -32,6 +33,9 @@ export const ToktokMallProductDetails = ({navigation}) => {
   const [messageModalShown, setMessageModalShown] = useState(false)
   const [isOutOfStock, setisOutOfStock] = useState(false)
 
+  let AnimatedHeaderValue = new Animated.Value(0);
+
+
   const HandleOnScroll = (r) => {
     let ypos = r.nativeEvent.contentOffset.y
     if(ypos > 50) setScrolling(true)
@@ -42,32 +46,39 @@ export const ToktokMallProductDetails = ({navigation}) => {
     <>
     <View style={{flex: 1, backgroundColor: '#fff'}}>
       
-      {scrolling ? <HeaderPlain /> : <HeaderTransparent />}
+      {/* {scrolling ? <HeaderPlain /> : <HeaderTransparent />} */}
+      {/* PLAIN HEADER*/}
+      <HeaderPlain animatedValue = {AnimatedHeaderValue}/>
 
-      <SectionList         
-        renderSectionHeader={({section: {title}}) => (<View />)}
-        sections={[
-          {title: 'Carousel', data: [1], renderItem: () => 
-            <ProductCarousel isOutOfStock={isOutOfStock} />
-          },
-          {title: 'Product', data: [1], renderItem: () => 
-            <RenderProduct 
-              onOpenVariations={() => {
-                setVariationOptionType(0)
-                varBottomSheetRef.current.expand()
-              }}
-            />
-          },
-          {title: 'Store', data: [1], renderItem: () => <RenderStore />},
-          {title: 'Description', data: [1], renderItem: () => <RenderDescription />},
-          {title: 'Reviews', data: [1], renderItem: () => <RenderReviews />},
-          {title: 'Suggestions', data: [1], renderItem: () => <RenderSuggestions />},
-          {title: 'FooterOverlay', data: [1], renderItem: () => <View style={{height: 60}} />},
-        ]}
+      {/* TRANSPARENT HEADER*/}
+      <HeaderTransparent animatedValue = {AnimatedHeaderValue}/>
+
+
+      <Animated.ScrollView  
+        // onScroll={HandleOnScroll}
+        scrollEventThrottle = {270}
+        onScroll = {
+          Animated.event(
+            [{nativeEvent: {contentOffset: {y: AnimatedHeaderValue}}}],
+            {useNativeDriver: false}
+          )
+        }
         showsVerticalScrollIndicator={false}
-        keyExtractor={(item, index) => item + index}
-        onScroll={HandleOnScroll}
-      />
+      >
+        <ProductCarousel isOutOfStock={isOutOfStock} />
+        <RenderProduct 
+          onOpenVariations={() => {
+            setVariationOptionType(0)
+            varBottomSheetRef.current.expand()
+          }}
+          animatedValue = {AnimatedHeaderValue}
+        />
+        <RenderStore />
+        <RenderDescription />
+        <RenderReviews />
+        <RenderSuggestions />
+        <View style={{height: 60}} />
+      </Animated.ScrollView>
 
       <RenderFooter 
         onPressVisitStore={() => null}

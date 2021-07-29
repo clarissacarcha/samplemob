@@ -1,5 +1,5 @@
 import React, {useState, useRef} from 'react';
-import {View, Text, Image, FlatList, SectionList, ImageBackground} from 'react-native';
+import {View, Text, Image, FlatList, SectionList, ImageBackground, Platform} from 'react-native';
 import { Badge, Tooltip } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/core';
 import { Header } from '../../../../Components';
@@ -8,14 +8,24 @@ import CustomIcon from '../../../../Components/Icons';
 import {coppermask, clothfacemask, voucherbg} from '../../../../assets';
 import { FONT } from '../../../../../res/variables';
 
-export const HeaderPlain = ({value}) => {
+import Animated, {interpolate, Extrapolate, useCode, set, greaterThan} from 'react-native-reanimated'
+
+export const HeaderPlain = ({value, animatedValue }) => {
 
   const navigation = useNavigation()
   const HelpTooltipRef = useRef(null)
 
+  const translateOpacity = animatedValue.interpolate({
+    inputRange: [250, 270],
+    outputRange: [0,  1],
+    // extrapolateLeft: Extrapolate.CLAMP
+    extrapolate: 'clamp'
+  })
+
 	return (
 		<>
-			<View style={{flexDirection: 'row', paddingTop: 40, paddingBottom: 12, paddingHorizontal: 6}}>
+      <Animated.View style={[{flexDirection: 'row', paddingTop: Platform.OS === "ios" ? 10 : 40, paddingBottom: 12, paddingHorizontal: 6, position: 'absolute', backgroundColor: 'white'}
+      , {opacity: translateOpacity, zIndex: translateOpacity}]}>
         <View style={{flex: 1.4, alignItems: 'flex-start', justifyContent: 'center'}}>
           <CustomIcon.MCIcon name="chevron-left" color="#F6841F" size={28}  onPress={navigation.goBack}/>
         </View>
@@ -48,8 +58,8 @@ export const HeaderPlain = ({value}) => {
             </Tooltip>
           </View>
         </View>
-      </View>
-      <View style={{height: 3, backgroundColor: '#F7F7FA'}} />
+      </Animated.View>
+      <Animated.View style={[{height: 3, backgroundColor: '#F7F7FA'}, {opacity: translateOpacity}]} />
 		</>
 	)
 }

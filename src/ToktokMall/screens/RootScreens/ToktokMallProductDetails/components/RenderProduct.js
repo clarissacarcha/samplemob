@@ -8,6 +8,7 @@ import {Price} from '../../../../helpers';
 import CustomIcon from '../../../../Components/Icons';
 import {coppermask, clothfacemask, voucherbg} from '../../../../assets';
 import { FONT } from '../../../../../res/variables';
+import Animated, {interpolate, Extrapolate, useCode, set, greaterThan} from 'react-native-reanimated'
 
 const RenderStars = ({value}) => {
   let orange = "#FFC833"
@@ -23,14 +24,20 @@ const RenderStars = ({value}) => {
   )
 }
 
-export const RenderProduct = ({onOpenVariations}) => {
+export const RenderProduct = ({onOpenVariations, animatedValue}) => {
 
+  
   const [favorite, setFavorite] = useState(false)
+  const opacity = animatedValue.interpolate({
+    inputRange: [200, 250],
+    outputRange: [1, 0],
+    extrapolate: 'clamp'
+  })
 
 	return (
 		<>
 			<View style={{paddingVertical: 8, paddingHorizontal: 16}}>
-        <Text style={{fontSize: 22, fontWeight: '500', fontFamily: FONT.BOLD}}>Improved Copper Mask 2.0 White or Bronze</Text>
+        <Animated.Text style={[{fontSize: 22, fontWeight: '500', fontFamily: FONT.BOLD}, {opacity: opacity}]}>Improved Copper Mask 2.0 White or Bronze</Animated.Text>
         <View style={{flexDirection: 'row'}}>
           <View style={{flex: 1}}>
             <Text style={{color: "#F6841F", fontSize: 20}}><Price amount={190} /></Text>

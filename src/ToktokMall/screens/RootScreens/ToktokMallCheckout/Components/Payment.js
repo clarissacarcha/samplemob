@@ -5,7 +5,9 @@ import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatLi
 // import { ScrollView } from 'react-native-gesture-handler';
 // import CustomIcon from '../../../../../Components/Icons';
 // import {watch, electronics, mensfashion, furniture, petcare} from '../../../../../assets'
-import Entypo from 'react-native-vector-icons/dist/Entypo'
+import Entypo from 'react-native-vector-icons/dist/Entypo';
+import { useNavigation } from '@react-navigation/core';
+
 const testData = [
   {id: 1, full_name: 'Cloud Panda', contact_number: '09050000000',
     address: '10F, Inoza Tower, 40th Street, Bonifacio Global City', default: 1
@@ -17,6 +19,8 @@ const testData = [
 
 
 export const Payment = ({ payment, setPaymentMethod}) => {
+
+  const navigation = useNavigation()
 
   return (
     <>
@@ -39,7 +43,9 @@ export const Payment = ({ payment, setPaymentMethod}) => {
           </View>
           <View style ={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 3  }}>
             <Text style = {{marginLeft: 5, fontWeight: 'bold', color: '#929191'}}>(Balance Php 200.00)</Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => {
+              navigation.push("ToktokWalletHomePage")
+            }}>
               <Text style = {{ alignSelf: 'flex-end', color: '#F6841F'}}>Top up</Text>
             </TouchableOpacity>
           </View>
