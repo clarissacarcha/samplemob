@@ -1,5 +1,5 @@
 import React, {useState, useRef} from 'react';
-import {View, Text, Image, FlatList, SectionList, ImageBackground} from 'react-native';
+import {View, Text, Image, FlatList, SectionList, ImageBackground, Platform} from 'react-native';
 import { Badge, Tooltip } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/core';
 import { Header } from '../../../../Components';
@@ -24,10 +24,10 @@ export const HeaderPlain = ({value, animatedValue }) => {
 
 	return (
 		<>
-      <Animated.View style={[{flexDirection: 'row', paddingTop: 40, paddingBottom: 12, paddingHorizontal: 6, position: 'absolute', backgroundColor: 'white'}
+      <Animated.View style={[{flexDirection: 'row', paddingTop: Platform.OS === "ios" ? 10 : 40, paddingBottom: 12, paddingHorizontal: 6, position: 'absolute', backgroundColor: 'white'}
       , {opacity: translateOpacity, zIndex: translateOpacity}]}>
         <View style={{flex: 1.4, alignItems: 'flex-start', justifyContent: 'center'}}>
-          <CustomIcon.MCIcon name="chevron-left" color="#F6841F" size={28} />
+          <CustomIcon.MCIcon name="chevron-left" color="#F6841F" size={28} onPress={navigation.goBack} />
         </View>
         <View style={{flex: 8, justifyContent: 'center'}}>
           <Text numberOfLines={1} style={{fontSize: 18}}>Improved Copper Mask 2.0 Bla..</Text>
