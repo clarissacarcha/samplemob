@@ -15,7 +15,7 @@ const Rate = ({ rating, setRating, value }) => {
     </TouchableWithoutFeedback>)
 }
 
-export const ToktokMallRateProduct = ({ data = sample }) => {
+export const ToktokMallRateProduct = ({ data = sample, route }) => {
   const navigation = useNavigation()
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
@@ -83,6 +83,10 @@ export const ToktokMallRateProduct = ({ data = sample }) => {
         paddingVertical: 10,
         borderRadius: 5,
         marginTop: 70
+      }}
+      onPress={() => {
+        route.params.openModal()
+        navigation.goBack()
       }}
     >
       <Text style={{ color: "#FFF", fontSize: 18, fontWeight: '100' }}>Submit</Text>
