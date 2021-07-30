@@ -76,13 +76,19 @@ export const Submit = () => {
         let { channelName } = selectedCallChannel
         let placeholder = modifyPlaceholderAccordingToChannel(channelName);
         let isMobileNumber = channelName == "Viber" || channelName == "Whats App" || channelName == "Telegram"
-        if(numberOrLink == ""){
+        if(numberOrLink !== ""){
+            if(isMobileNumber){
+                if(numberOrLink.length === 11){
+                    setErrorMessage("")
+                    noError = true
+                } else {
+                    setErrorMessage("Mobile number must be valid.")
+                    noError = false
+                }
+            }
+        } else {
             setErrorMessage(`${placeholder} is required.`)
             noError = false
-        } else {
-            if(isMobileNumber){
-                numberOrLink.length === 11 ? setErrorMessage("") : setErrorMessage("Mobile number must be valid.")
-            }
         }
 
         if(!noError) return

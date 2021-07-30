@@ -116,12 +116,14 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route})=> {
             description={`Your schedule has been submitted.\nPlease wait for our representative to\nget in touch with you`}
             redirect={() => { setShowSuccessModal(false) }}
         />
-        <View style={{ backgroundColor:"#F7F7FA", padding: 16 }}>
-            <Text>
-                <Text style={styles.fontRegularStyle} >Meet the following requirements for upgrading your account to </Text>
-                <Text style={{ color: "#00C851" }}>Fully Verified</Text>
-            </Text>
-        </View>
+        { (!checkVcs.hasVcs || !(isLinkedBankAccount || isPendingLinking)) && (
+            <View style={{ backgroundColor:"#F7F7FA", padding: 16 }}>
+                <Text>
+                    <Text style={styles.fontRegularStyle} >Meet the following requirements for upgrading your account to </Text>
+                    <Text style={{ color: "#00C851" }}>Fully Verified</Text>
+                </Text>
+            </View>
+        )}
         <View style={styles.container}>
             <DisplayComponent
                 onPress={redirectLinking} // Navigate here the screen for link bank account
