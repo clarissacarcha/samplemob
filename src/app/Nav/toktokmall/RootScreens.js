@@ -31,7 +31,7 @@ export default ({Navigator}) => (
     <Navigator.Screen name="ToktokMallCheckout" component={ToktokMallCheckout} />
     <Navigator.Screen name="ToktokMallProductDetails" component={ToktokMallProductDetails} options={{headerShown: false}}/>
     <Navigator.Screen name="ToktokMallProductRatings" component={ToktokMallProductRatings} />
-    <Navigator.Screen name="ToktokMallRateProduct" component={ToktokMallRateProduct} options={{headerShown: false}} />
+    <Navigator.Screen name="ToktokMallRateProduct" component={ToktokMallRateProduct} />
     <Navigator.Screen name="ToktokMallSearch" component={ToktokMallSearch} options={{headerShown: false}} />
     <Navigator.Screen name="ToktokMallStore" component={ToktokMallStore} options={{headerShown: false}} />
     <Navigator.Screen name="ToktokMallVouchersClaim" component={ToktokMallVouchersClaim} />

@@ -32,14 +32,14 @@ export const AdsCarousel = (props) => {
   }
 
   return (
-    <View style={{paddingHorizontal: 15, paddingTop: 5}}>
+    <View style={{paddingHorizontal: 15, paddingTop: 5, backgroundColor: "transparent"}}>
       <Carousel
         data={entries}
         renderItem={renderItem}
         onSnapToItem={(index) => setActiveSlide(index) }
         sliderWidth={330}
         itemWidth={330}
-        // autoplay={true}
+        autoplay={true}
         // autoplayDelay={700}
         hasParallaxImages={true}
       />

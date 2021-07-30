@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, TouchableOpacity,Text } from 'react-native';
+import {StyleSheet, View, TouchableOpacity,Text, Platform } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {throttle} from 'lodash';
 import CustomIcon from '../../Components/Icons';
@@ -22,7 +22,7 @@ export const Header = ({onBack , color = "black" , label, hidden, renderRight, s
 
   return (
     <>
-        <View style={{height: 30}}></View>
+        {Platform.OS === "android" && <View style={{height: 30}}></View>}
         <View style={{backgroundColor: '#fff', flexDirection: 'row',  height: 56, alignItems: 'center', justifyContent: 'center'}}>
           <View style={{flex: 2, alignItems: 'flex-start', paddingHorizontal: 16}}>
             <Text></Text>

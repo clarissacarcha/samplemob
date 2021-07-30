@@ -1,6 +1,7 @@
+import { useNavigation } from '@react-navigation/native';
 import React, {useState, useEffect} from 'react';
 import {View, Text, TouchableOpacity, Image, FlatList} from 'react-native';
-import {HeaderTab} from '../../../../Components';
+import {HeaderTab, MessageModal} from '../../../../Components';
 import CustomIcon from '../../../../Components/Icons';
 
 const Store = ({data}) => {
@@ -38,6 +39,8 @@ const Summary = ({data}) => {
 }
 
 const Item = ({data}) => {
+  const [messageModalShown, setMessageModalShown] = useState(false)
+  const { navigate } = useNavigation()
   return (
     <>
       <View style={{flexDirection: 'row', paddingTop: 10, paddingBottom: 0, paddingHorizontal: 15}}>
@@ -70,15 +73,24 @@ const Item = ({data}) => {
         </View>        
       </View>
       <View style={{flexDirection: 'row-reverse', paddingHorizontal: 15, paddingBottom: 15}}>
-        <View style={{paddingVertical: 2, paddingHorizontal: 20, backgroundColor: '#F6841F', borderRadius: 5}}>
-          <Text style={{color: "#fff", fontSize: 13}}>Rate</Text>
-        </View>
+        <TouchableOpacity onPress={()=>navigate("ToktokMallRateProduct", {openModal: () => setMessageModalShown(true)})}>
+          <View style={{paddingVertical: 2, paddingHorizontal: 20, backgroundColor: '#F6841F', borderRadius: 5}}>
+            <Text style={{color: "#fff", fontSize: 13}}>Rate</Text>
+          </View>
+        </TouchableOpacity>
       </View>
       <View style={{ height: 2, backgroundColor: '#F7F7FA'}} />
+
+    {messageModalShown && 
+      <MessageModal 
+        type="Success"
+        isVisible={messageModalShown}
+        setIsVisible={(val) => setMessageModalShown(val)}
+        message="Thank you for your response!"
+      />}
     </>
   )
 }
-
 const Toggle = ({count, state, onPress}) => {
   return (
     <>
