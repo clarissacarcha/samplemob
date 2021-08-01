@@ -55,10 +55,10 @@ export const ContextProvider = ({children}) => {
         })
     }
 
-    const setFileError = (index , fileName)=> {
+    const setFileError = (index , message)=> {
         setForms(state=> {
             const updateState = state[index]
-            updateState.errorMessage = `${fileName} is required.`
+            updateState.errorMessage = message
             return [...state]
         })
     }

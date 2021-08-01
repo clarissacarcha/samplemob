@@ -9,8 +9,8 @@ import { useMutation } from '@apollo/react-hooks';
 import { onErrorAlert } from 'src/util/ErrorUtility';
 import { AlertOverlay } from 'src/components';
 import { useAlert } from 'src/hooks';
-import { useNavigation } from '@react-navigation/native'
-
+import { useNavigation } from '@react-navigation/native';
+import { ValidateRequirements } from "../Submit";
 
 export const Resubmit = ({id})=> {
 
@@ -19,6 +19,8 @@ export const Resubmit = ({id})=> {
         setFileError,
         validID1,
         validID2,
+        setValidID1,
+        setValidID2,
     } = useContext(ContextEnterpriseApplication)
     const [visible,setVisible] = useState(false);
     const alert = useAlert();
@@ -38,23 +40,14 @@ export const Resubmit = ({id})=> {
     })
 
     const onPress = ()=> {
-        let noError = true;
-        if(forms[0].filename == ""){
-            setFileError( 0 , "Business Permit");
-            noError = false;
-        }
-        if(forms[1].filename == ""){
-            setFileError( 1 , "DTI Certification of Registration");
-            noError = false;
-        }
-        if(forms[2].filename == ""){
-            setFileError( 2 , "BIR 2302 Form");
-            noError = false;
-        }
-        if(forms[3].filename == ""){
-            setFileError( 3 , "Barangay Permit");
-            noError = false;
-        }
+        const noError = ValidateRequirements({
+            forms,
+            setFileError,
+            validID1,
+            validID2,
+            setValidID1,
+            setValidID2,
+        });
 
         const input = {
             id: id,

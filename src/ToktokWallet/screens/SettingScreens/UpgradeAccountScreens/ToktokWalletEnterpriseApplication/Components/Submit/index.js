@@ -11,13 +11,80 @@ import { AlertOverlay } from 'src/components';
 import { useAlert } from 'src/hooks';
 import { useNavigation } from '@react-navigation/native';
 
-export const Submit = ()=> {
-
+export const ValidateRequirements = (context)=> {
     const {
         forms,
         setFileError,
         validID1,
         validID2,
+        setValidID1,
+        setValidID2,
+    } = context
+
+    let noError = true;
+    if(forms[0].filename == ""){
+        setFileError( 0 , "Business Permit is required.");
+        noError = false;
+    }
+    if(forms[1].filename == ""){
+        setFileError( 1 , "DTI Certification of Registration is required.");
+        noError = false;
+    }
+    if(forms[2].filename == ""){
+        setFileError( 2 , "BIR 2302 Form is required.");
+        noError = false;
+    }
+    if(forms[3].filename == ""){
+        setFileError( 3 , "Barangay Permit is required.");
+        noError = false;
+    }
+
+    if(validID1.IDTypeDescription == ""){
+        setValidID1(state=>({...state,frontErrorMessage:"Valid ID is required."}))
+        noError = false;
+    }
+
+    if(validID1.frontFilename == "" && validID1.IDTypeDescription != ""){
+        setValidID1(state=>({...state,frontErrorMessage:"Front Photo of your ID is required."}))
+        noError = false;
+    }
+
+    if(validID1.isBackRequired && validID1.backFilename == ""  && validID1.IDTypeDescription != ""){
+        setValidID1(state=>({...state,backErrorMessage:"Back Photo of your ID is required."}))
+        noError = false;
+    }
+
+    if(validID2.IDTypeDescription == ""){
+        setValidID2(state=>({...state,frontErrorMessage:"Valid ID is required."}))
+        noError = false;
+    }
+
+    if(validID2.frontFilename == "" && validID2.IDTypeDescription != ""){
+        setValidID2(state=>({...state,frontErrorMessage:"Front Photo of your ID is required."}))
+        noError = false;
+    }
+
+    if(validID2.isBackRequired && validID2.backFilename == "" && validID2.IDTypeDescription != ""){
+        setValidID2(state=>({...state,backErrorMessage:"Back Photo of your ID is required."}))
+        noError = false;
+    }
+
+    // for(let x = 0 ; x < forms.length ; x++){
+    //     if(forms[x].errorMessage != ""){
+    //         noError = false;
+    //         break;
+    //     }
+    // }
+
+    return noError;
+}
+
+export const Submit = ()=> {
+    const {
+        forms,
+        validID1,
+        validID2,
+        setFileError,
         setValidID1,
         setValidID2,
     } = useContext(ContextEnterpriseApplication)
@@ -36,60 +103,15 @@ export const Submit = ()=> {
         }   
     })
 
-    const ValidateID = ()=> {
-        
-    }
-
     const onPress = ()=> {
-        let noError = true;
-        if(forms[0].filename == ""){
-            setFileError( 0 , "Business Permit");
-            noError = false;
-        }
-        if(forms[1].filename == ""){
-            setFileError( 1 , "DTI Certification of Registration");
-            noError = false;
-        }
-        if(forms[2].filename == ""){
-            setFileError( 2 , "BIR 2302 Form");
-            noError = false;
-        }
-        if(forms[3].filename == ""){
-            setFileError( 3 , "Barangay Permit");
-            noError = false;
-        }
-
-        if(validID1.IDTypeDescription == ""){
-            setValidID1(state=>({...state,frontErrorMessage:"Valid ID is required."}))
-            noError = false;
-        }
-
-        if(validID1.frontFilename == "" && validID1.IDTypeDescription != ""){
-            setValidID1(state=>({...state,frontErrorMessage:"Front Photo of your ID is required."}))
-            noError = false;
-        }
-
-        if(validID1.isBackRequired && validID1.backFilename == ""){
-            setValidID1(state=>({...state,backErrorMessage:"Back Photo of your ID is required."}))
-            noError = false;
-        }
-
-        if(validID2.IDTypeDescription == ""){
-            setValidID2(state=>({...state,frontErrorMessage:"Valid ID is required."}))
-            noError = false;
-        }
-
-        if(validID2.frontFilename == "" && validID2.IDTypeDescription != ""){
-            setValidID2(state=>({...state,frontErrorMessage:"Front Photo of your ID is required."}))
-            noError = false;
-        }
-
-        if(validID2.isBackRequired && validID2.backFilename == ""){
-            setValidID2(state=>({...state,backErrorMessage:"Back Photo of your ID is required."}))
-            noError = false;
-        }
-        
-
+        const noError = ValidateRequirements({
+            forms,
+            setFileError,
+            validID1,
+            validID2,
+            setValidID1,
+            setValidID2,
+        });
         const input = {
             businessPermitFile: forms[0].file,
             dtiCrFile: forms[1].file,

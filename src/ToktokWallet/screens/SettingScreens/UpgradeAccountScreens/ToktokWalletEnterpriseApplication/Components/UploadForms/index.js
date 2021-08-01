@@ -9,10 +9,16 @@ import { ContextEnterpriseApplication } from "../ContextProvider";
 import Form from "./Form";
 
 
+const bytesToMb = (value)=> {
+    return value / 1000000
+}
+
+
 export const UploadForms = ()=> {
     const {
         forms,
-        setFileUpload
+        setFileUpload,
+        setFileError,
     } = useContext(ContextEnterpriseApplication)
 
     const onPress = async (index)=> {  
@@ -26,7 +32,13 @@ export const UploadForms = ()=> {
             const fileTypesAccepted = ["pdf","jpeg","jpg","PDF","JPEG","JPG"]
             const filetype = res.type.split("/")[1]
             if(!fileTypesAccepted.includes(filetype)){
+               // setFileError(index, 'Accepted file types are JPG, JPEG and PDF')
                 return  Toast.show(`Accepted file types are JPG, JPEG and PDF` , Toast.LONG)
+            }
+            const fileSize = bytesToMb(+res.size)
+            if(fileSize > 2){
+              //  setFileError(index, 'File size should be max of 2mb')
+                return  Toast.show(`File size should be max of 2mb` , Toast.LONG)
             }
 
             setFileUpload(index , res)
