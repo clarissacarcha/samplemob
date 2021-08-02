@@ -6,6 +6,7 @@ import {
     HeaderTitle,
     Separator
 } from 'toktokwallet/components'
+import { SomethingWentWrong } from 'src/components'
 import {useSelector} from 'react-redux'
 import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
 import { GET_CASH_OUT_PROVIDERS } from 'toktokwallet/graphql'
@@ -38,6 +39,10 @@ export const ToktokWalletCashOut = ({navigation,route})=> {
         return <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                 <ActivityIndicator size={24} color={COLOR.YELLOW} />
             </View>
+    }
+
+    if(error){
+        return <SomethingWentWrong />;
     }
   
 
