@@ -112,9 +112,9 @@ const Component =  ({
       <RenderFooter 
         onPressVisitStore={() => null}
         onPressBuyNow={() => {
-          // setVariationOptionType(2)
-          // varBottomSheetRef.current.expand()
-          onBuyNow()
+          setVariationOptionType(2)
+          varBottomSheetRef.current.expand()
+          // onBuyNow()
         }}
         onPressAddToCart={() => {
           setVariationOptionType(1)
