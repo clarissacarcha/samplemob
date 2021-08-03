@@ -1,5 +1,5 @@
 import {ApolloLink, split, fromPromise} from 'apollo-link';
-import {HOST_PORT, PROTOCOL, TOKTOK_WALLET_PROTOCOL, TOKTOK_WALLET_PROTOCOL_HOST_PORT} from '../../res/constants';
+import {HOST_PORT, PROTOCOL, TOKTOK_WALLET_PROTOCOL, TOKTOK_WALLET_PROTOCOL_HOST_PORT, TOKTOK_MALL_PROTOCOL, TOKTOK_MALL_PROTOCOL_HOST_PORT} from '../../res/constants';
 import {onError} from 'apollo-link-error';
 import {ApolloClient} from 'apollo-client';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -15,6 +15,7 @@ const baseUrl = `${ENVIRONMENTS.TOKTOK_SERVER}/`;
 const wsUrl = `ws://${HOST_PORT}/graphql`;
 
 const toktokWalletBaseUrl = `${TOKTOK_WALLET_PROTOCOL}://${TOKTOK_WALLET_PROTOCOL_HOST_PORT}/`;
+const toktokMallBaseUrl = `${TOKTOK_MALL_PROTOCOL}://${TOKTOK_MALL_PROTOCOL_HOST_PORT}/`;
 
 // const errorLink = onError(({graphQLErrors, networkError}) => {
 //   if (graphQLErrors) {
@@ -76,6 +77,20 @@ const setToktokWalletEnterpriseGraphqlTokenLink = setContext(async (_, {headers}
   }
 });
 
+const setToktokMallGraphqlTokenLink = setContext(async (_, {headers}) => {
+  try {
+    const accountToken = await AsyncStorage.getItem('toktokMallAccountToken');
+    return {
+      headers: {
+        ...headers,
+        authorization: accountToken ? `Bearer ${accountToken}` : '',
+      },
+    };
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 const wsLink = new WebSocketLink({
   uri: wsUrl,
   options: {
@@ -106,6 +121,11 @@ const toktokWalletEnterpriseGraphqlUploadLink = createUploadLink({
   uri: `${toktokWalletBaseUrl}enterprise/graphql/`,
 });
 
+const toktokMallGraphqlUploadLink = createUploadLink({
+  uri: `${toktokMallBaseUrl}graphql/`,
+});
+
+
 const splitLink = split(({query}) => {
   const definition = getMainDefinition(query);
   return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
@@ -122,6 +142,11 @@ const toktokWalletGraphqlLink = ApolloLink.from([
 const toktokWalletEnterpriseGraphqlLink = ApolloLink.from([
   setToktokWalletEnterpriseGraphqlTokenLink,
   toktokWalletEnterpriseGraphqlUploadLink,
+]);
+const toktokMallGraphqlLink = ApolloLink.from([
+  errorLinkLogger,
+  setToktokMallGraphqlTokenLink,
+  toktokMallGraphqlUploadLink,
 ]);
 
 export const CLIENT = new ApolloClient({
@@ -142,4 +167,9 @@ export const TOKTOK_WALLET_GRAPHQL_CLIENT = new ApolloClient({
 export const TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT = new ApolloClient({
   cache: new InMemoryCache(),
   link: toktokWalletEnterpriseGraphqlLink,
+});
+
+export const TOKTOK_MALL_GRAPHQL_CLIENT = new ApolloClient({
+  cache: new InMemoryCache(),
+  link: toktokMallGraphqlLink,
 });

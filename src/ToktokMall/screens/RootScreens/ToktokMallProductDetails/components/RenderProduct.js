@@ -24,7 +24,7 @@ const RenderStars = ({value}) => {
   )
 }
 
-export const RenderProduct = ({onOpenVariations, animatedValue}) => {
+export const RenderProduct = ({data, onOpenVariations, animatedValue}) => {
 
   
   const [favorite, setFavorite] = useState(false)
@@ -37,28 +37,28 @@ export const RenderProduct = ({onOpenVariations, animatedValue}) => {
 	return (
 		<>
 			<View style={{paddingVertical: 8, paddingHorizontal: 16}}>
-        <Animated.Text style={[{fontSize: 22, fontWeight: '500', fontFamily: FONT.BOLD}, {opacity: opacity}]}>Improved Copper Mask 2.0 White or Bronze</Animated.Text>
+        <Animated.Text style={[{fontSize: 22, fontWeight: '500', fontFamily: FONT.BOLD}, {opacity: opacity}]}>{data.itemname}</Animated.Text>
         <View style={{flexDirection: 'row'}}>
           <View style={{flex: 1}}>
-            <Text style={{color: "#F6841F", fontSize: 20}}><Price amount={190} /></Text>
+            <Text style={{color: "#F6841F", fontSize: 20}}><Price amount={data.price} /></Text>
           </View>
           <View style={{flex: 3, justifyContent: 'center'}}>
-            <Text style={{color: "#9E9E9E", textDecorationLine: 'line-through', fontSize: 14}}><Price amount={380} /></Text>
+            {data.comparedAtPrice ? <Text style={{color: "#9E9E9E", textDecorationLine: 'line-through', fontSize: 14}}><Price amount={data.comparedAtPrice} /></Text> : null}
           </View>
         </View>
         <View style={{flexDirection: 'row', paddingTop: 8}}>
           <View style={{flex: 3, flexDirection: 'row', justifyContent: 'space-between', marginTop: 1}}>
-            <RenderStars value={4} />
+            <RenderStars value={data.rating} />
           </View>
           <View style={{flex: 5, flexDirection: 'row', paddingHorizontal: 12}}>
             <View>
-              <Text>4.0/5</Text>
+              <Text>{data.rating || 0}/5</Text>
             </View>
             <View style={{paddingHorizontal: 2}} >
               <Text style={{color: "#9E9E9E"}}> | </Text>
             </View>
             <View>
-              <Text>187 sold</Text>
+              <Text>{data.soldCount || 0} sold</Text>
             </View>
           </View>
           <View style={{flex: 1.8, flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -66,6 +66,9 @@ export const RenderProduct = ({onOpenVariations, animatedValue}) => {
               if(!favorite){
                 Toast.show('Added to Favorites')
                 setFavorite(true)
+              }else{
+                Toast.show('Removed to Favorites')
+                setFavorite(false)
               }
             }}>
               {favorite ? <CustomIcon.EIcon name="heart" size={22} color="#F6841F" /> : <CustomIcon.EIcon name="heart-outlined" size={22} color="#9E9E9E" />}

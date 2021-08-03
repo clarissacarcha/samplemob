@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, Image, TouchableOpacity} from 'react-native';
 import { useNavigation } from '@react-navigation/core';
 import {LandingSubHeader, Card, Product} from '../../../../Components';
@@ -8,17 +8,22 @@ export const Store = ({data, onToggleFollow}) => {
   const navigation = useNavigation()
   const [following, setFollowing] = useState(data.following)
 
+  const getShopLogo = (raw) => {
+    if(typeof raw == "string") return {uri: raw}
+    else return require("../../../../assets/images/Cloth-Face-Mask.png")
+  }
+
 	return (
 		<>
 			<View style={{paddingVertical: 15, paddingHorizontal: 15}}>
         <Card>
           <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
             <View style={{flex: 3.5}}>
-              <Image source={require("../../../../assets/images/Cloth-Face-Mask.png")} style={{width: 50, height: 50, resizeMode: "cover", borderRadius: 25}} />
+              <Image source={getShopLogo(data.profileImages?.logo ? data.profileImages?.logo : {})} style={{width: 50, height: 50, resizeMode: "cover", borderRadius: 25}} />
             </View>
             <View style={{flex: 12, justifyContent: 'center'}}>
-              <Text style={{fontSize: 14}}>{data.name}</Text>
-              <Text style={{fontSize: 13, color: "#9E9E9E"}}>{data.location}</Text>
+              <Text style={{fontSize: 14}}>{data.shopname}</Text>
+              <Text style={{fontSize: 13, color: "#9E9E9E"}}>{data.address}</Text>
             </View>
             <View style={{flex: 4, justifyContent: 'center'}}>
               <TouchableOpacity onPress={() => {                

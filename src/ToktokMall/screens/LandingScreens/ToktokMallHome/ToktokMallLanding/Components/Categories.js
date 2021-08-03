@@ -2,6 +2,9 @@ import React, {useState, useEffect, useRef} from 'react';
 import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/core';
+import { useLazyQuery } from '@apollo/react-hooks';
+import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../../graphql';
+import { GET_CATEGORIES } from '../../../../../../graphql/toktokmall/model';
 
 import { COLOR, FONT } from '../../../../../../res/variables';
 import {LandingHeader, AdsCarousel} from '../../../../../Components';
@@ -39,6 +42,21 @@ const testdata = [{
 export const Categories = ({data}) => {
 
   const navigation = useNavigation()
+
+  const [getCategories, {error, loading}] = useLazyQuery(GET_CATEGORIES, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: (response) => {
+        console.log("Categories", response)
+    },
+    onError: (err) => {
+        console.log(err)
+    }
+  })
+
+  useEffect(() => {
+    getCategories()
+  }, [])
 
     return (
       <>

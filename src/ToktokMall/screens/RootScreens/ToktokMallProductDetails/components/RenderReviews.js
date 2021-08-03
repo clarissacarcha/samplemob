@@ -5,6 +5,7 @@ import {Price} from '../../../../helpers';
 import CustomIcon from '../../../../Components/Icons';
 import {coppermask, clothfacemask, reviewimage} from '../../../../assets';
 import { FONT } from '../../../../../res/variables';
+import { useNavigation } from '@react-navigation/native';
 
 const RenderStars = ({value}) => {
   let orange = "#FFC833"
@@ -59,6 +60,7 @@ const RenderReviewItem = () => {
 export const RenderReviews = ({value}) => {
 
 	const items = [1,2]
+	const navigation = useNavigation()
 
 	return (
 		<>
@@ -67,7 +69,9 @@ export const RenderReviews = ({value}) => {
           <View style={{flex: 8}}>
             <Text style={styles.h1}>Ratings & Reviews</Text>
           </View>
-          <TouchableOpacity style={{flex: 2, alignItems: 'flex-end', justifyContent: 'center'}}>
+          <TouchableOpacity onPress={() => {
+			  navigation.navigate("ToktokMallProductRatings")
+		  }} style={{flex: 2, alignItems: 'flex-end', justifyContent: 'center'}}>
             <Text style={styles.link}>See all </Text>
           </TouchableOpacity>
           <View style={{flex: 0, alignItems: 'flex-end', justifyContent: 'center'}}>

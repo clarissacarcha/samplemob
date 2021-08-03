@@ -1,6 +1,9 @@
 import React, {useRef, useEffect, useState} from 'react';
 import {View, Text, Image, FlatList, SectionList, ImageBackground, TouchableOpacity} from 'react-native';
-
+import Animated, {interpolate, Extrapolate, useCode, set, greaterThan} from 'react-native-reanimated'
+import { useLazyQuery } from '@apollo/react-hooks';
+import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql';
+import { GET_PRODUCT_DETAILS } from '../../../../graphql/toktokmall/model';
 import { FONT } from '../../../../res/variables';
 import { Header, AdsCarousel, MessageModal } from '../../../Components';
 import CustomIcon from '../../../Components/Icons';
@@ -21,10 +24,13 @@ import {
 
   VariationBottomSheet
 } from './components'
-import Animated, {interpolate, Extrapolate, useCode, set, greaterThan} from 'react-native-reanimated'
 
-export const ToktokMallProductDetails = ({navigation}) => {
 
+export const ToktokMallProductDetails = ({navigation, route}) => {
+
+  const [product, setProduct] = useState({})
+  const [images, setImages] = useState([])
+  const [store, setStore] = useState({})
   const varBottomSheetRef = useRef()
   const BuyBottomSheetRef = useRef()
   const CartBottomSheetRef = useRef()
@@ -35,12 +41,38 @@ export const ToktokMallProductDetails = ({navigation}) => {
 
   let AnimatedHeaderValue = new Animated.Value(0);
 
-
   const HandleOnScroll = (r) => {
     let ypos = r.nativeEvent.contentOffset.y
     if(ypos > 50) setScrolling(true)
     else if (ypos <= 50) setScrolling(false)
   }
+
+  const [getProductDetails, {error, loading}] = useLazyQuery(GET_PRODUCT_DETAILS, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    variables: {
+      input: {
+        id: route.params.Id
+      }
+    },
+    onCompleted: (response) => {
+      console.log("Res", response)
+      if(response.getProductDetails){
+        setProduct(response.getProductDetails)
+        setImages(response.getProductDetails.images)
+        setStore(response.getProductDetails.shop)
+
+        if(response.getProductDetails.noOfStocks == 0) setisOutOfStock(true)
+      }
+    },
+    onError: (err) => {
+      console.log(err)
+    }
+  })
+
+  useEffect(() => {
+    getProductDetails()
+  }, [])
 
   return (
     <>
@@ -65,15 +97,16 @@ export const ToktokMallProductDetails = ({navigation}) => {
         }
         showsVerticalScrollIndicator={false}
       >
-        <ProductCarousel isOutOfStock={isOutOfStock} />
-        <RenderProduct 
+        <ProductCarousel data={images} isOutOfStock={isOutOfStock} />
+        <RenderProduct
+          data={product} 
           onOpenVariations={() => {
             setVariationOptionType(0)
             varBottomSheetRef.current.expand()
           }}
           animatedValue = {AnimatedHeaderValue}
         />
-        <RenderStore />
+        <RenderStore data={store} />
         <RenderDescription />
         <RenderReviews />
         <RenderSuggestions />
@@ -81,7 +114,9 @@ export const ToktokMallProductDetails = ({navigation}) => {
       </Animated.ScrollView>
 
       <RenderFooter 
-        onPressVisitStore={() => null}
+        onPressVisitStore={() => {
+          navigation.navigate("ToktokMallStore", store)
+        }}
         onPressBuyNow={() => {
           setVariationOptionType(2)
           varBottomSheetRef.current.expand()

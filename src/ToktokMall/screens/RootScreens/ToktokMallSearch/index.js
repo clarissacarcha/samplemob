@@ -3,27 +3,37 @@ import React, {useState} from 'react';
 import {View, Text, FlatList} from 'react-native';
 import { SearchBar } from 'react-native-elements'
 import {LandingSubHeader} from '../../../Components';
+import { useLazyQuery } from '@apollo/react-hooks';
+import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql';
+import {SEARCH_PRODUCT} from '../../../../graphql/toktokmall/model';
 
 const testdata = ["Gaming Chair", "Mousepad", "Face mask", "Pillow", "Ballpen"]
 
-export const ToktokMallSearch = () => {
+export const ToktokMallSearch = ({navigation}) => {
 
   const [filteredData, setFilteredData] = useState(testdata)
+  const [searchValue, setSearchValue] = useState('')  
 
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
 
-      <LandingSubHeader onSearch={(val) => {
-        if(val != "") setFilteredData([])
-        else if(val == "") setFilteredData(testdata)
-      }} />
+      <LandingSubHeader 
+        onSearch={(val) => {
+          setSearchValue(val)
+          if(val != "") setFilteredData([])
+          else if(val == "") setFilteredData(testdata)
+        }} 
+        onSubmit={() => {
+          navigation.navigate("ToktokMallCategoriesList", {searchValue: searchValue})
+        }} 
+      />
 
       <View style={{flex: 1}}>
 
-        {filteredData.length == 0 && 
+        {/* {filteredData.length == 0 && 
         <View style={{paddingHorizontal: 15, paddingVertical: 15}}>
           <Text style={{color: "#9E9E9E", fontSize: 14}}>No results found</Text>
-        </View>}
+        </View>} */}
 
         {filteredData.length > 0 &&
         <>

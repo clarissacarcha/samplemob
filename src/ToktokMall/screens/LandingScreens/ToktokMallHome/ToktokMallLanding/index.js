@@ -182,6 +182,7 @@ export const ToktokMallLandingScreen = () => {
             {useNativeDriver: false}
           )
         }
+        showsVerticalScrollIndicator={false}
       >
         <AdsCarousel />
         <Categories />

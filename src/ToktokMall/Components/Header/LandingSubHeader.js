@@ -43,6 +43,10 @@ export const LandingSubHeader = (props) => {
     if(props.onSearch) props.onSearch(val)
   }
 
+  const handleOnSubmit = () => {
+    if(props.onSubmit) props.onSubmit()
+  }
+
   useEffect(() => {
     setSearchValue(props.initialValue)
   }, [props.initialValue])
@@ -69,6 +73,7 @@ export const LandingSubHeader = (props) => {
                   value={searchValue}
                   onChangeText={handleOnSearch} 
                   style={{paddingVertical: 8, fontFamily: FONT.REGULAR}} 
+                  onBlur={handleOnSubmit}
                 />
               </View>
             </TouchableOpacity>

@@ -7,7 +7,7 @@ import CustomIcon from '../../../../Components/Icons';
 import {coppermask, clothfacemask, voucherbg} from '../../../../assets';
 import { FONT } from '../../../../../res/variables';
 
-export const RenderStore = () => {
+export const RenderStore = ({data}) => {
 
   const navigation = useNavigation()
 
@@ -23,7 +23,7 @@ export const RenderStore = () => {
             <Text style={{fontSize: 13, color: "#9E9E9E"}}>Malabon, Manila</Text>
           </View>
           <TouchableOpacity onPress={() => {
-            navigation.navigate("ToktokMallStore", {})
+            navigation.navigate("ToktokMallStore", data)
           }} style={{flex: 3, alignItems: 'flex-end', justifyContent: 'center'}}>
             <Text style={{fontSize: 13, color: "#F6841F"}}>Visit Store</Text>
           </TouchableOpacity>
