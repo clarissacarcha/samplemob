@@ -11,6 +11,8 @@ import {useSelector} from 'react-redux'
 import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
 import { GET_CASH_OUT_PROVIDERS } from 'toktokwallet/graphql'
 import { useQuery } from '@apollo/react-hooks'
+import { onErrorAlert } from 'src/util/ErrorUtility'
+import { useAlert } from 'src/hooks'
 import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS
@@ -25,10 +27,14 @@ export const ToktokWalletCashOut = ({navigation,route})=> {
        headerShown: false
     })
     const tokwaAccount = useSelector(state=>state.toktokWallet)
+    const alert = useAlert()
 
     const {data,error,loading} = useQuery(GET_CASH_OUT_PROVIDERS, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         fetchPolicy:"network-only",
+        onError: (error)=> {
+            onErrorAlert({alert,error})
+        },
         onCompleted: ({getCashOutProviders})=> {
     
         }
