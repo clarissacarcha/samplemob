@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, Platform, Dimensions, StatusBar, Image, TouchableOpacity, FlatList} from 'react-native';
+import {connect} from 'react-redux'
 import {HeaderBack, HeaderTitle, HeaderRight, Header} from '../../../Components';
 import {COLOR, FONT, FONT_SIZE} from '../../../../res/variables';
 import CheckBox from 'react-native-check-box';
@@ -53,7 +54,11 @@ const testdata = [
   },
 ];
 
-export const ToktokMallMyCart = ({navigation}) => {
+const Component =  ({
+  navigation,
+  myCart,
+  createMyCartSession,
+}) => {
   const [allSelected, setAllSelected] = useState(true);
   const [willDelete, setWillDelete] = useState(false);
   const [messageModalShown, setMessageModalShown] = useState(false);
@@ -69,9 +74,16 @@ export const ToktokMallMyCart = ({navigation}) => {
 
   const getSubTotal = async () => {
     let a = 0;
-    for (var x = 0; x < testdata.length; x++) {
-      for (var y = 0; y < testdata[x].cart.length; y++) {
-        let item = testdata[x].cart[y];
+    // for (var x = 0; x < testdata.length; x++) {
+    //   for (var y = 0; y < testdata[x].cart.length; y++) {
+    //     let item = testdata[x].cart[y];
+    //     a += item.price * item.qty;
+    //     console.log(a);
+    //   }
+    // }
+    for (var x = 0; x < myCart.length; x++) {
+      for (var y = 0; y < myCart[x].cart.length; y++) {
+        let item = myCart[x].cart[y];
         a += item.price * item.qty;
         console.log(a);
       }
@@ -80,8 +92,9 @@ export const ToktokMallMyCart = ({navigation}) => {
   };
 
   useEffect(() => {
+    createMyCartSession('set', testdata)
     getSubTotal();
-  }, []);
+  }, [myCart]);
 
   return (
     <>
@@ -118,7 +131,8 @@ export const ToktokMallMyCart = ({navigation}) => {
           <View style={{height: 2, backgroundColor: '#F7F7FA'}} />
 
           <FlatList
-            data={testdata}
+            // data={testdata}
+            data = {myCart}
             renderItem={({item}) => {
               return (
                 <>
@@ -184,7 +198,18 @@ export const ToktokMallMyCart = ({navigation}) => {
       </View>
     </>
   );
-};
+}
+// );
+
+const mapStateToProps = (state) => ({
+  myCart: state.toktokMall.myCart
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  createMyCartSession: (action, payload) => dispatch({type: 'CREATE_MY_CART_SESSION', action,  payload}),
+});
+
+export const ToktokMallMyCart = connect(mapStateToProps, mapDispatchToProps)(Component);
 
 const styles = StyleSheet.create({
   container: {

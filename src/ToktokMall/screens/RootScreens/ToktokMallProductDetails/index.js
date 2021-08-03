@@ -1,6 +1,6 @@
 import React, {useRef, useEffect, useState} from 'react';
-import {View, Text, Image, FlatList, SectionList, ImageBackground, TouchableOpacity} from 'react-native';
-
+import {View, Text, Image, FlatList, SectionList, ImageBackground, TouchableOpacity, AsyncStorage} from 'react-native';
+import {connect} from 'react-redux'
 import { FONT } from '../../../../res/variables';
 import { Header, AdsCarousel, MessageModal } from '../../../Components';
 import CustomIcon from '../../../Components/Icons';
@@ -22,8 +22,32 @@ import {
   VariationBottomSheet
 } from './components'
 import Animated, {interpolate, Extrapolate, useCode, set, greaterThan} from 'react-native-reanimated'
+// import console = require('console');
 
-export const ToktokMallProductDetails = ({navigation}) => {
+const item = {
+  store: 'Face Mask PH',
+  cart: [
+    {
+      label: 'Improved Copper Mask 2.0 White or Bronze',
+      originalPrice: 380,
+      price: 100,
+      variation: 'Bronze',
+      qty: 1,
+    },
+    {
+      label: 'Improved Copper Mask 2.0 White or Bronze',
+      originalPrice: 380,
+      price: 150,
+      variation: 'White',
+      qty: 1,
+    },
+  ],
+}
+
+const Component =  ({
+  navigation,
+  createMyCartSession,
+}) => {
 
   const varBottomSheetRef = useRef()
   const BuyBottomSheetRef = useRef()
@@ -32,6 +56,7 @@ export const ToktokMallProductDetails = ({navigation}) => {
   const [variationOptionType, setVariationOptionType] = useState(0)
   const [messageModalShown, setMessageModalShown] = useState(false)
   const [isOutOfStock, setisOutOfStock] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
   let AnimatedHeaderValue = new Animated.Value(0);
 
@@ -40,6 +65,10 @@ export const ToktokMallProductDetails = ({navigation}) => {
     let ypos = r.nativeEvent.contentOffset.y
     if(ypos > 50) setScrolling(true)
     else if (ypos <= 50) setScrolling(false)
+  }
+
+  const onBuyNow = () => {
+    createMyCartSession('push',item)
   }
 
   return (
@@ -65,7 +94,7 @@ export const ToktokMallProductDetails = ({navigation}) => {
         }
         showsVerticalScrollIndicator={false}
       >
-        <ProductCarousel isOutOfStock={isOutOfStock} />
+        <ProductCarousel isOutOfStock={isOutOfStock} isLoading = {isLoading} setIsLoading = {setIsLoading} />
         <RenderProduct 
           onOpenVariations={() => {
             setVariationOptionType(0)
@@ -83,8 +112,9 @@ export const ToktokMallProductDetails = ({navigation}) => {
       <RenderFooter 
         onPressVisitStore={() => null}
         onPressBuyNow={() => {
-          setVariationOptionType(2)
-          varBottomSheetRef.current.expand()
+          // setVariationOptionType(2)
+          // varBottomSheetRef.current.expand()
+          onBuyNow()
         }}
         onPressAddToCart={() => {
           setVariationOptionType(1)
@@ -100,6 +130,7 @@ export const ToktokMallProductDetails = ({navigation}) => {
           setTimeout(() => {
             setMessageModalShown(true)
           }, 300)
+          // alert('something')
         }}
         onPressBuyNow={() => null}
       />
@@ -116,4 +147,12 @@ export const ToktokMallProductDetails = ({navigation}) => {
     
     </>
   );
-};
+}
+// );
+
+const mapDispatchToProps = (dispatch) => ({
+  createMyCartSession: (action, payload) => dispatch({type: 'CREATE_MY_CART_SESSION', action,  payload}),
+});
+
+export const ToktokMallProductDetails = connect(null, mapDispatchToProps)(Component);
+

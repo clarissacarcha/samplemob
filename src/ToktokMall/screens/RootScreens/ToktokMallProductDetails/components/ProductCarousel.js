@@ -3,12 +3,13 @@ import {View, Text, ImageBackground, Image, StyleSheet, Platform, Dimensions} fr
 import Carousel, { Pagination, ParallaxImage } from 'react-native-snap-carousel';
 import CustomIcon from '../../../../Components/Icons';
 import {coppermask} from '../../../../assets';
-import { FONT } from '../../../../../res/variables';
+import { FONT, COLOR } from '../../../../../res/variables';
+import Spinner from 'react-native-spinkit';
 
 const { width: screenWidth } = Dimensions.get('window')
 const HEIGHT = 250
 
-export const ProductCarousel = ({isOutOfStock}) => {
+export const ProductCarousel = ({isOutOfStock, isLoading, setIsLoading}) => {
 
   const [activeSlide, setActiveSlide] = useState(0)
   const [entries, setEntries] = useState([1, 2, 3, 4, 5])
@@ -22,17 +23,23 @@ export const ProductCarousel = ({isOutOfStock}) => {
             <Text style={{fontFamily: FONT.BOLD, fontSize: 18, color: "#fff"}}>OUT OF STOCK</Text>
           </View>
         </View>}
-        <ParallaxImage
-          // source={{uri: "https://cdn.searchenginejournal.com/wp-content/uploads/2019/04/shutterstock_456779230.png"}}
-          source={coppermask}
-          containerStyle={styles.pxImageContainerStyle}
-          style={{
-            ...StyleSheet.absoluteFillObject,
-            resizeMode: 'stretch'
-          }}
-          parallaxFactor={0.05}
-          {...parallaxProps}
-        />
+        {/* {!isLoading ? ( */}
+           <ParallaxImage
+           // source={{uri: "https://cdn.searchenginejournal.com/wp-content/uploads/2019/04/shutterstock_456779230.png"}}
+           source={coppermask}
+           onLoadEnd = {() => {setIsLoading(false)}}
+           containerStyle={[styles.pxImageContainerStyle, isLoading ? {backgroundColor: 'rgba(0, 0, 0, 0.25)'}: null]}
+           style={{
+             ...StyleSheet.absoluteFillObject,
+             resizeMode: 'stretch'
+           }}
+           parallaxFactor={0.05}
+           {...parallaxProps}
+           showSpinner = {false}
+          //  spinnerColor = {COLOR.ORANGE}
+         />
+        {/* ) : (<></>)} */}
+       
       </View>
     )
   }
@@ -49,6 +56,14 @@ export const ProductCarousel = ({isOutOfStock}) => {
         // autoplay={true}
         // autoplayDelay={700}
         hasParallaxImages={true}
+        onScrollEndDrag = {() => {setIsLoading(true)}}
+      />
+      <Spinner 
+        isVisible = {isLoading}
+        type = 'Circle'
+        style = {{ position: 'absolute', top: HEIGHT / 2, left: screenWidth / 2.2}}
+        color = {COLOR.ORANGE}
+        size = {50}
       />
       <Pagination
         dotsLength={entries.length}
