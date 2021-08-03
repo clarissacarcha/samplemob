@@ -7,6 +7,7 @@ import { GET_PRODUCT_DETAILS } from '../../../../graphql/toktokmall/model';
 import { FONT } from '../../../../res/variables';
 import { Header, AdsCarousel, MessageModal } from '../../../Components';
 import CustomIcon from '../../../Components/Icons';
+import {ASAddToCart} from '../../../helpers';
 
 import {
 
@@ -132,8 +133,10 @@ export const ToktokMallProductDetails = ({navigation, route}) => {
         type={variationOptionType}
         onPressAddToCart={() => {
           varBottomSheetRef.current.close()
-          setTimeout(() => {
+          setTimeout(async () => {
             setMessageModalShown(true)
+            // await ASAddToCart("bryan", product, () => {
+            // })
           }, 300)
         }}
         onPressBuyNow={() => null}

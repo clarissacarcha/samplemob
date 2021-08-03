@@ -2,6 +2,9 @@ import React, {useState, useEffect, useRef} from 'react';
 import {View, Text, ImageBackground, Image, StyleSheet, Platform, Dimensions} from 'react-native';
 import Carousel, { Pagination, ParallaxImage } from 'react-native-snap-carousel';
 import CustomIcon from '../Icons';
+import { useLazyQuery } from '@apollo/react-hooks';
+import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../graphql';
+import { GET_ADS } from '../../../graphql/toktokmall/model';
 
 const SampleImage = require("../../assets/images/ads.png")
 
@@ -12,13 +15,35 @@ export const AdsCarousel = (props) => {
   const [activeSlide, setActiveSlide] = useState(0)
   const [entries, setEntries] = useState([1, 2, 3])
 
+  const [getAds, {error, loading}] = useLazyQuery(GET_ADS, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: (response) => {
+      if(response && response.getAdvertisements.length > 0){
+        setEntries(response.getAdvertisements)
+      }
+    },
+    onError: (err) => {
+      console.log(err)
+    }
+  })
+
   const renderItem = ({item, index}, parallaxProps) => {
+
+    const getImage = (raw) => {
+      if(typeof raw == "object"){
+        return {uri: raw.filename}
+      }else{
+        return SampleImage
+      }
+    }
+
     return (
       <View style={{width: 330, height: 130}}>
         {/* <Image source={SampleImage} style={{width: '100%', height: 130, resizeMode: 'stretch'}} /> */}
         <ParallaxImage
           // source={{uri: "https://cdn.searchenginejournal.com/wp-content/uploads/2019/04/shutterstock_456779230.png"}}
-          source={SampleImage}
+          source={getImage(item?.image)}
           containerStyle={styles.pxImageContainerStyle}
           style={{
             ...StyleSheet.absoluteFillObject,
@@ -30,6 +55,10 @@ export const AdsCarousel = (props) => {
       </View>
     )
   }
+
+  useEffect(() => {
+    getAds()
+  }, [])
 
   return (
     <View style={{paddingHorizontal: 15, paddingTop: 5, backgroundColor: "transparent"}}>

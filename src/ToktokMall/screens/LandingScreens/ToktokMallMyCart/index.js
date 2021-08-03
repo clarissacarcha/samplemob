@@ -6,6 +6,7 @@ import CheckBox from 'react-native-check-box';
 
 import {MessageModal} from '../../../Components';
 import {DeleteFooter, CheckoutFooter, Item, Store, RenderDetails} from './components';
+import {ASGetCart} from '../../../helpers';
 
 const testdata = [
   {
@@ -79,8 +80,15 @@ export const ToktokMallMyCart = ({navigation}) => {
     setSubTotal(a);
   };
 
+  const init = async () => {
+    await ASGetCart("bryan", (response) => {
+      console.log("Cart Content", response)
+    })
+  }
+
   useEffect(() => {
     getSubTotal();
+    init();
   }, []);
 
   return (

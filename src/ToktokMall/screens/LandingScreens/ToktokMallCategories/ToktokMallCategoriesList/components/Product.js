@@ -4,6 +4,7 @@ import { COLOR, FONT } from '../../../../../../res/variables';
 import { ScrollView } from 'react-native-gesture-handler';
 import CustomIcon from '../../../../../Components/Icons';
 import { useNavigation } from '@react-navigation/native';
+import {placeholder} from '../../../../../assets';
 
 const RenderStars = ({value}) => {
   let orange = "#FFC833"

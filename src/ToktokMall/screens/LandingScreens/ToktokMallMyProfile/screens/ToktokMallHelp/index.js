@@ -105,7 +105,7 @@ export const ToktokMallHelp = ({navigation}) => {
                     </View>
                     <View
                       style={{
-                        flex: 3,
+                        flex: 4,
                         justifyContent: 'center',
                         alignItems: 'flex-end',
                       }}>

@@ -41,7 +41,7 @@ export const AddressForm = ({navigation , data , addressData, setAddressData ,de
 
 const styles = StyleSheet.create({
   body: {flex: 1, backgroundColor: '#F7F7FA', },
-  container: {padding: 15, backgroundColor: 'white', marginTop: 15,  },
+  container: {padding: 15, backgroundColor: 'white', marginTop: 0,  },
   
 
 })

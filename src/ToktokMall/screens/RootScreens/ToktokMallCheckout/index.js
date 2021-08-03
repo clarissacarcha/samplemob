@@ -90,7 +90,7 @@ export const ToktokMallCheckout = ({route, navigation}) => {
   return (
     
     <>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <CheckoutModal navigation = {navigation} isVisible = {isVisible} setIsVisible = {setIsVisible} />
         <View style ={{paddingBottom: 0}}>
         <AddressForm navigation = {navigation} data = {addressData[defaultAddress-1]} addressData = {addressData} setAddressData = {setAddressData}
