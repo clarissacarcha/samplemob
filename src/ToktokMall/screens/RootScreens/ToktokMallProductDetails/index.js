@@ -7,7 +7,7 @@ import { GET_PRODUCT_DETAILS } from '../../../../graphql/toktokmall/model';
 import { FONT } from '../../../../res/variables';
 import { Header, AdsCarousel, MessageModal } from '../../../Components';
 import CustomIcon from '../../../Components/Icons';
-import {ASAddToCart} from '../../../helpers';
+import {ASAddToCart, ASClearCart} from '../../../helpers';
 
 import {
 
@@ -40,6 +40,9 @@ export const ToktokMallProductDetails = ({navigation, route}) => {
   const [messageModalShown, setMessageModalShown] = useState(false)
   const [isOutOfStock, setisOutOfStock] = useState(false)
 
+  const [enteredQuantity, setEnteredQuantity] = useState(0)
+  const [selectedVariation, setSelectedVariation] = useState('')
+
   let AnimatedHeaderValue = new Animated.Value(0);
 
   const HandleOnScroll = (r) => {
@@ -57,7 +60,6 @@ export const ToktokMallProductDetails = ({navigation, route}) => {
       }
     },
     onCompleted: (response) => {
-      console.log("Res", response)
       if(response.getProductDetails){
         setProduct(response.getProductDetails)
         setImages(response.getProductDetails.images)
@@ -131,12 +133,20 @@ export const ToktokMallProductDetails = ({navigation, route}) => {
       <VariationBottomSheet 
         ref={varBottomSheetRef} 
         type={variationOptionType}
-        onPressAddToCart={() => {
+        onPressAddToCart={(input) => {
           varBottomSheetRef.current.close()
           setTimeout(async () => {
-            setMessageModalShown(true)
-            // await ASAddToCart("bryan", product, () => {
-            // })
+            // await ASClearCart("bryan")
+
+            const rawdata = {
+              ...product,
+              variant: input.variation,
+              quantity: input.qty
+            }
+
+            await ASAddToCart("bryan", rawdata, () => {
+              setMessageModalShown(true) 
+            })
           }, 300)
         }}
         onPressBuyNow={() => null}

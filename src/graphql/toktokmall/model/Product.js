@@ -99,6 +99,7 @@ export const GET_PRODUCT_BY_CATEGORY = gql`
 export const GET_PRODUCT_DETAILS = gql`
 	query getProductDetails($input: GetProductDetailsInput){
 		getProductDetails(input: $input){
+			Id
 			itemname
     	otherinfo
     	summary
@@ -114,6 +115,11 @@ export const GET_PRODUCT_DETAILS = gql`
 			id
 			shopcode
      		shopname
+			address
+			totalProducts
+			profileImages {
+				logo
+			}
     	}
     	variantSummary {
       	optionNo

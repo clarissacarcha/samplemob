@@ -14,7 +14,7 @@ export const Store = ({data, state = false, onSelect, onPress}) => {
 	useEffect(() => {
 		let res = 0
 		for(var x=0;x<items.length;x++){
-			res += items[x].price * items[x].qty
+			res += parseFloat(items[x].price) * items[x].quantity
 		}
 		setTotalAmount(res)
 	}, [])
@@ -22,6 +22,12 @@ export const Store = ({data, state = false, onSelect, onPress}) => {
 	useEffect(() => {
 		setSelected(state)
 	}, [state])
+
+  const getStoreLogo = (raw) => {
+    let loc = require("../../../../assets/icons/store.png")
+    if(typeof raw == "string") return {uri: raw}
+    else return loc
+  }
 
   return (
     <>
@@ -42,11 +48,11 @@ export const Store = ({data, state = false, onSelect, onPress}) => {
           />
         </View>
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-          <Image source={require("../../../../assets/icons/store.png")} style={{width: 18, height: 18, resizeMode: 'stretch'}} />
+          <Image source={getStoreLogo(data?.store?.profileImages?.logo || {})} style={{width: 18, height: 18, resizeMode: 'stretch'}} />
         </View>
         <TouchableOpacity onPress={onPress} style={{flex: 9, justifyContent: 'center', flexDirection: 'row'}}>                        
           <View style={{flex: 12, justifyContent: 'center'}}>
-            <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>{data.store}</Text>
+            <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>{data.store.shopname}</Text>
           </View>
         </TouchableOpacity>
       </View>

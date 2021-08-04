@@ -10,6 +10,7 @@ import { FONT } from '../../../../../res/variables';
 
 const transparentBg = "rgba(129, 129, 129, 0.5)"
 import Animated, {interpolate, Extrapolate, useCode, set, greaterThan} from 'react-native-reanimated'
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
 export const HeaderTransparent = ({value, outOfStock = false, animatedValue}) => {
@@ -43,6 +44,9 @@ export const HeaderTransparent = ({value, outOfStock = false, animatedValue}) =>
                 badgeStyle={{backgroundColor: "#FDBA1C"}}
                 textStyle={{fontFamily: FONT.REGULAR, fontSize: 10}}
                 containerStyle={{ position: 'absolute', top: -4, right: 0 }}
+                onPress={() => {
+                  navigation.navigate("ToktokMallMyCart", {})
+                }}
               />
             </View>
             <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: transparentBg, height: 28, borderRadius: 35/2}}>

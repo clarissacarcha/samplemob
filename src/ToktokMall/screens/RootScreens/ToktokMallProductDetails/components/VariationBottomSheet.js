@@ -29,7 +29,9 @@ export const VariationBottomSheet = forwardRef(({ item, onPressBuyNow, onPressAd
       return (
         <>
           <View style={{flex: 2}} />
-          <TouchableOpacity onPress={onAddToCart} style={{flex: 10, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: "#F6841F", paddingHorizontal: 20, paddingVertical: 12, borderRadius: 5, backgroundColor: 'white'}}>
+          <TouchableOpacity onPress={() => {
+            onAddToCart({qty, variation})
+            }} style={{flex: 10, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: "#F6841F", paddingHorizontal: 20, paddingVertical: 12, borderRadius: 5, backgroundColor: 'white'}}>
             <Text style={{fontFamily: FONT.BOLD, fontSize: 14, color: "#F6841F"}}>Add to Cart</Text>
           </TouchableOpacity>
           <View style={{flex: 2}} />
@@ -49,7 +51,11 @@ export const VariationBottomSheet = forwardRef(({ item, onPressBuyNow, onPressAd
       return (
         <>
           <View style={{flex: 3}} />
-          <TouchableOpacity onPress={onAddToCart} style={{flex: 8, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: "#F6841F", paddingHorizontal: 20, paddingVertical: 12, borderRadius: 5, backgroundColor: 'white'}}>
+          <TouchableOpacity 
+            onPress={() => {
+            onAddToCart({qty, variation})
+            }} 
+            style={{flex: 8, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: "#F6841F", paddingHorizontal: 20, paddingVertical: 12, borderRadius: 5, backgroundColor: 'white'}}>
             <Text style={{fontFamily: FONT.BOLD, fontSize: 14, color: "#F6841F"}}>Add to Cart</Text>
           </TouchableOpacity>
           <View style={{flex: 1}} />
@@ -122,7 +128,9 @@ export const VariationBottomSheet = forwardRef(({ item, onPressBuyNow, onPressAd
             renderItem={({item}, index) => {
               return (
                 <>
-                  <TouchableOpacity key={index} onPress={() => setVariation(item.label)} activeOpacity={1} style={{flex: 0, alignItems: 'center', paddingHorizontal: 8}}>
+                  <TouchableOpacity key={index} onPress={() => {
+                    setVariation(item.label)
+                  }} activeOpacity={1} style={{flex: 0, alignItems: 'center', paddingHorizontal: 8}}>
                     <View style={{borderColor: "#F6841F", borderWidth: item.label == variation ? 1 : 0, paddingHorizontal: 8, borderRadius: 5}}>
                       <Image source={item.image} style={{width: 60, height: 80, resizeMode: 'cover', borderRadius: 5}} />
                     </View>
