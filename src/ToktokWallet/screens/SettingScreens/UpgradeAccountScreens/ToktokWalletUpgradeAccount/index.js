@@ -25,7 +25,11 @@ export const ToktokWalletUpgradeAccount = ({navigation})=> {
         headerTitle: ()=> <HeaderTitle label={['Upgrade Account','']}/>,
     })
     
-    const {tokwaAccount} = useAccount()
+    const { tokwaAccount, getMyAccount } = useAccount()
+
+    useEffect(() => {
+        getMyAccount()
+    }, [])
 
     const upgradeAccount = ()=> {
         if(tokwaAccount.person.accountType.level == 1){
@@ -41,32 +45,32 @@ export const ToktokWalletUpgradeAccount = ({navigation})=> {
         <>
             <Separator/>
             <View style={styles.container}>
-                    <View style={styles.imageDiv}>
-                            <Image style={styles.image} source={imageLogo} />
-                            <Text style={styles.upgradeText}>Upgrade your 
-                                <Text style={[styles.upgradeText, {color: COLOR.YELLOW}]}> toktok</Text>
-                                <Text style={{...styles.upgradeText,color: COLOR.ORANGE}}>wallet</Text>
-                            </Text>
-                            <Text style={styles.clickText}>Click the "Upgrade Now" button.</Text>
-                    </View>
-                    <Separator/>
-                    <View style={styles.accountVerification}>
-                        <Text style={styles.verifiedText}>Fully Verified</Text>
-                        <UpgradeRequirement label="Link bank account"/>
-                        <UpgradeRequirement label="Video call verification"/>
-                    </View>
-                    <Separator/>
-                    <View style={styles.accountVerification}>
-                        <Text style={styles.verifiedText}>Enterprise</Text>
-                        <UpgradeRequirement label="Business permit"/>
-                        <UpgradeRequirement label="DTI certification of registration"/>
-                        <UpgradeRequirement label="BIR 2302 form"/>
-                        <UpgradeRequirement label="Barangay permit"/>
-                        <UpgradeRequirement label="2 valid government ID"/>
-                    </View>
-                    <View style={styles.proceedBtn}>
-                        <YellowButton label="Upgrade Now" onPress={upgradeAccount}/>
-                    </View>
+                <View style={styles.imageDiv}>
+                    <Image style={styles.image} source={imageLogo} />
+                    <Text style={styles.upgradeText}>Upgrade your 
+                        <Text style={[styles.upgradeText, {color: COLOR.YELLOW}]}> toktok</Text>
+                        <Text style={{...styles.upgradeText,color: COLOR.ORANGE}}>wallet</Text>
+                    </Text>
+                    <Text style={styles.clickText}>Click the "Upgrade Now" button.</Text>
+                </View>
+                <Separator/>
+                <View style={styles.accountVerification}>
+                    <Text style={styles.verifiedText}>Fully Verified</Text>
+                    <UpgradeRequirement label="Link bank account"/>
+                    <UpgradeRequirement label="Video call verification"/>
+                </View>
+                <Separator/>
+                <View style={styles.accountVerification}>
+                    <Text style={styles.verifiedText}>Enterprise</Text>
+                    <UpgradeRequirement label="Business permit"/>
+                    <UpgradeRequirement label="DTI certification of registration"/>
+                    <UpgradeRequirement label="BIR 2302 form"/>
+                    <UpgradeRequirement label="Barangay permit"/>
+                    <UpgradeRequirement label="2 valid government ID"/>
+                </View>
+                <View style={styles.proceedBtn}>
+                    <YellowButton label="Upgrade Now" onPress={upgradeAccount}/>
+                </View>
             </View>
         </>
     )
