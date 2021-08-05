@@ -46,7 +46,6 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route})=> {
     })
     const [isLinked, setIsLinked] = useState(false)
     const tokwaAccount = useSelector(state=>state.toktokWallet)
-    const [mounted, setMounted] = useState(true)
     const [showSuccessModal, setShowSuccessModal] = useState(false)
     const dispatch = useDispatch()
 

@@ -3,6 +3,7 @@ import {Modal,View,Text,StyleSheet,Dimensions , Image} from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { YellowButton } from 'src/revamp'
 import {useAccount} from 'toktokwallet/hooks'
+import { useDispatch } from 'react-redux'
 import CONSTANTS from 'common/res/constants'
 
 const { FONT_FAMILY: FONT , FONT_SIZE , SIZE } = CONSTANTS
@@ -12,6 +13,7 @@ export const SuccessfulModal = ({visible,setVisible , provider})=> {
 
     const navigation = useNavigation()
     const { tokwaAccount } = useAccount();
+    const dispatch = useDispatch();
 
     const Redirect = ()=>{
         setVisible(false)
