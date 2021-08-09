@@ -25,23 +25,21 @@ import Animated, {interpolate, Extrapolate, useCode, set, greaterThan} from 'rea
 // import console = require('console');
 
 const item = {
-  store: 'Face Mask PH',
-  cart: [
-    {
-      label: 'Improved Copper Mask 2.0 White or Bronze',
-      originalPrice: 380,
-      price: 100,
-      variation: 'Bronze',
-      qty: 1,
-    },
-    {
-      label: 'Improved Copper Mask 2.0 White or Bronze',
-      originalPrice: 380,
-      price: 150,
-      variation: 'White',
-      qty: 1,
-    },
-  ],
+  store_id: 4,
+    store: 'The Apparel 3',
+    cart: [
+      {
+        item_id: 1,
+        label: 'Graphic Tees',
+        originalPrice: 380,
+        price: 50,
+        variation: 'White, L',
+        qty: 2,
+        store_id: 4,
+        store: 'The Apparel 3',
+      },
+    ],
+    delivery_fee: 80, date_range_from: 'Jul 20', date_range_to: 'Jul 25'
 }
 
 const Component =  ({
@@ -113,8 +111,8 @@ const Component =  ({
         onPressVisitStore={() => null}
         onPressBuyNow={() => {
           setVariationOptionType(2)
-          varBottomSheetRef.current.expand()
-          // onBuyNow()
+          // varBottomSheetRef.current.expand()
+          onBuyNow()
         }}
         onPressAddToCart={() => {
           setVariationOptionType(1)

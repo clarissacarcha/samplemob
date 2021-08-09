@@ -10,47 +10,125 @@ import {DeleteFooter, CheckoutFooter, Item, Store, RenderDetails} from './compon
 
 const testdata = [
   {
+    store_id: 1,
     store: 'Face Mask PH',
     cart: [
       {
+        item_id: 1,
         label: 'Improved Copper Mask 2.0 White or Bronze',
         originalPrice: 380,
         price: 100,
         variation: 'Bronze',
         qty: 1,
+        store_id: 1,
+        store: 'Face Mask PH',
       },
       {
+        item_id: 2,
         label: 'Improved Copper Mask 2.0 White or Bronze',
         originalPrice: 380,
         price: 150,
         variation: 'White',
-        qty: 1,
+        qty: 1, 
+        store_id: 1,
+        store: 'Face Mask PH',
       },
-    ],
+    ],delivery_fee: 80, date_range_from: 'Jul 20', date_range_to: 'Jul 25'
   },
   {
+    store_id: 2,
     store: 'The Apparel',
     cart: [
       {
+        item_id: 1,
         label: 'Graphic Tees',
         originalPrice: 380,
         price: 50,
         variation: 'White, L',
         qty: 2,
+        store_id: 2,
+        store: 'The Apparel',
       },
-    ],
+    ],delivery_fee: 80, date_range_from: 'Jul 20', date_range_to: 'Jul 25'
   },
   {
-    store: 'The Apparel',
+    store_id: 3,
+    store: 'The Apparel 2',
     cart: [
       {
+        item_id: 1,
         label: 'Graphic Tees',
         originalPrice: 380,
         price: 350,
         variation: 'White, L',
         qty: 2,
+        store_id: 3,
+        store: 'The Apparel 2',
+      },
+    ],delivery_fee: 80, date_range_from: 'Jul 20', date_range_to: 'Jul 25'
+  },
+];
+
+let testData2 =  [
+  {
+    store_id: 1,
+    store: 'Face Mask PH',
+    cart: [
+      {
+        item_id: 1,
+        label: 'Improved Copper Mask 2.0 White or Bronze',
+        originalPrice: 380,
+        price: 100,
+        variation: 'Bronze',
+        qty: 1,
+        store_id: 1,
+        store: 'Face Mask PH',
+      },
+      {
+        item_id: 2,
+        label: 'Improved Copper Mask 2.0 White or Bronze',
+        originalPrice: 380,
+        price: 150,
+        variation: 'White',
+        qty: 1, 
+        store_id: 1,
+        store: 'Face Mask PH',
       },
     ],
+    delivery_fee: 80, date_range_from: 'Jul 20', date_range_to: 'Jul 25'
+  },
+  {
+    store_id: 2,
+    store: 'The Apparel',
+    cart: [
+      {
+        item_id: 1,
+        label: 'Graphic Tees',
+        originalPrice: 380,
+        price: 50,
+        variation: 'White, L',
+        qty: 2,
+        store_id: 2,
+        store: 'The Apparel',
+      },
+    ],
+    delivery_fee: 80, date_range_from: 'Jul 20', date_range_to: 'Jul 25'
+  },
+  {
+    store_id: 3,
+    store: 'The Apparel 2',
+    cart: [
+      {
+        item_id: 1,
+        label: 'Graphic Tees',
+        originalPrice: 380,
+        price: 350,
+        variation: 'White, L',
+        qty: 2,
+        store_id: 3,
+        store: 'The Apparel 2',
+      },
+    ],delivery_fee: 80, date_range_from: 'Jul 20', date_range_to: 'Jul 25'
   },
 ];
 
@@ -65,6 +143,11 @@ const Component =  ({
   const [cartData, setCartData] = useState([]);
   const [subTotal, setSubTotal] = useState(0);
   const [itemsToDelete, setItemsToDelete] = useState(0)
+  const [selectedItemsArr, setSelectedItemsArr] = useState(testData2)
+  const [unSelectedItemsArr, setUnSelectedItemsArr] = useState([])
+  const [ifExisting, setIfExisting] = useState(false)
+  // let itemIdArr = []
+  let checkedItemsArr = []
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack hidden={true} />,
@@ -92,9 +175,124 @@ const Component =  ({
   };
 
   useEffect(() => {
+    // setAllSelected(false)
     createMyCartSession('set', testdata)
     getSubTotal();
+  }, []);
+
+  useEffect(() => {
+    // setAllSelected(false)
+   testData2 = myCart
   }, [myCart]);
+
+  const deleteItem = () => {
+    // itemIdArr.push(item)
+    // alert(JSON.stringify(itemIdArr))
+    // if (allSelected){
+    //   createMyCartSession('clearAll', [])
+    // } else {
+    //   createMyCartSession('deleteItems', [])
+    // }
+    createMyCartSession('removeItems', unSelectedItemsArr)
+    setSelectedItemsArr([])
+    // setUnSelectedItemsArr([])
+    console.log('SELECTED ',selectedItemsArr)
+    console.log('UNSELECTED ',unSelectedItemsArr)
+  }
+
+  const unSelectItem = (type, raw) => {
+    if(type == 'store'){
+      if(selectedItemsArr.length == 1 || selectedItemsArr.length == 0){
+        selectedItemsArr.splice(0, 1);
+      }
+      // else{
+      //   let indexOf = selectedItemsArr.findIndex(x => x.store_id == raw.item.store_id)
+      //   selectedItemsArr.splice(indexOf, 1);
+      // }
+      
+    }else {
+      if(selectedItemsArr.length > 1){
+        if(selectedItemsArr[raw.storeIndex].cart.length == 1){
+          selectedItemsArr.splice(0, 1);
+        }
+        // else {
+        //   console.log('UNSELECT CONDTITION 2 ', )
+        //   // let indexOf = selectedItemsArr.findIndex(x => x.store_id == raw.item.store_id)
+        //   // let indexOfItem = selectedItemsArr[indexOf].cart.findIndex(x => x.item_id == raw.item.item_id)
+        //   // selectedItemsArr.splice(indexOf, 1);
+        //   // selectedItemsArr[indexOf].cart.splice(indexOfItem, 1)
+        // }
+      }else if(selectedItemsArr.length <= 1){
+        console.log('UNSELECT CONDTITION 3 ')
+        let indexOf = selectedItemsArr.findIndex(x => x.store_id == raw.item.store_id)
+        selectedItemsArr.splice(indexOf, 1);
+      }
+    }
+    if(type == 'store'){
+      unSelectedItemsArr.push(raw.item)
+    }else {
+      if(unSelectedItemsArr.length == 0){
+        unSelectedItemsArr.push({store_id: raw.item.store_id, store: raw.item.store, cart: [raw.item]})
+      }else{
+        let indexOf = unSelectedItemsArr.findIndex(x => x.store_id == raw.item.store_id)
+        console.log(indexOf, raw.item.store_id)
+        if(indexOf >= 0){
+          unSelectedItemsArr[indexOf].cart.push(raw.item)
+        }else {
+          unSelectedItemsArr.push({store_id: raw.item.store_id, store: raw.item.store, cart: [raw.item]})
+        }
+      }
+    }
+    console.log('SELECTED ',selectedItemsArr)
+    console.log('UNSELECTED ',unSelectedItemsArr)
+  }
+
+  const selectItem = (type, raw) => {
+    if(type == 'store'){
+      selectedItemsArr.push(raw.item)
+    }else {
+      if(selectedItemsArr.length == 0){
+        selectedItemsArr.push({store_id: raw.item.store_id, store: raw.item.store, cart: [raw.item]})
+      }else{
+        let indexOf = selectedItemsArr.findIndex(x => x.store_id == raw.item.store_id)
+        console.log(indexOf, raw.item.store_id)
+        if(indexOf >= 0){
+          selectedItemsArr[indexOf].cart.push(raw.item)
+        }else {
+          selectedItemsArr.push({store_id: raw.item.store_id, store: raw.item.store, cart: [raw.item]})
+        }
+      }
+    }
+    if(type == 'store'){
+      if(unSelectedItemsArr.length == 1 || unSelectedItemsArr.length == 0){
+        unSelectedItemsArr.splice(0, 1);
+      }
+      // else{
+      //   let indexOf = unSelectedItemsArr.findIndex(x => x.store_id == raw.item.store_id)
+      //   unSelectedItemsArr.splice(indexOf, 1);
+      // }
+      
+    }else {
+      if(unSelectedItemsArr.length > 1){
+        if(unSelectedItemsArr[raw.storeIndex].cart.length == 1){
+            unSelectedItemsArr.splice(0, 1);
+        }
+        // else {
+        //   let indexOf = unSelectedItemsArr.findIndex(x => x.store_id == raw.item.store_id)
+        //   let indexOfItem = unSelectedItemsArr[indexOf].cart.findIndex(x => x.item_id == raw.item.item_id)
+        //   unSelectedItemsArr.splice(indexOf, 1);
+        //   unSelectedItemsArr[indexOf].cart.splice(indexOfItem, 1)
+        // }
+      }else if(unSelectedItemsArr.length <= 1){
+        let indexOf = unSelectedItemsArr.findIndex(x => x.store_id == raw.item.store_id)
+        unSelectedItemsArr.splice(indexOf, 1);
+      }
+    }
+    console.log('SELECTED ',selectedItemsArr)
+    console.log('UNSELECTED ',unSelectedItemsArr)
+  }
+
+ 
 
   return (
     <>
@@ -114,9 +312,13 @@ const Component =  ({
                   if(allSelected){
                     //to false
                     setSubTotal(0)
+                    // setSelectedItemsArr([])
+                    // createMyCartSession('set', [])
                   }else{
                     //to true
                     getSubTotal()
+                    // setSelectedItemsArr(testData2)
+                    // createMyCartSession('set', myCart)
                   }
                   setAllSelected(!allSelected);
                 }}
@@ -133,11 +335,12 @@ const Component =  ({
           <FlatList
             // data={testdata}
             data = {myCart}
-            renderItem={({item}) => {
+            renderItem={({item, index}) => {
               return (
                 <>
                   <RenderDetails 
                     item={item}
+                    storeIndex = {index}
                     allSelected={allSelected}
                     onPress={() => {
                       navigation.navigate("ToktokMallStore")
@@ -146,8 +349,10 @@ const Component =  ({
                       let res = 0
                       if(raw.checked){
                         res = subTotal + raw.total
+                        selectItem('store' ,raw)
                       }else{
                         res = subTotal - raw.total
+                        unSelectItem('store' ,raw)
                       }
                       setSubTotal(res)
                     }}
@@ -157,13 +362,17 @@ const Component =  ({
                         res = subTotal + raw.amount 
                         let _itemsToDel = itemsToDelete
                         setItemsToDelete(_itemsToDel + 1)
+                        selectItem('item' ,raw)
                       }else{
                         res = subTotal - raw.amount
                         let _itemsToDel = itemsToDelete
                         setItemsToDelete(_itemsToDel - 1)
+                        unSelectItem('item', raw)
                       }
+                      // if(raw.checked)
                       setSubTotal(res)
                     }} 
+                    deleteItem = {deleteItem}
                   />
                   <View style={{height: 8, backgroundColor: '#F7F7FA'}} />
                 </>
@@ -177,11 +386,11 @@ const Component =  ({
 
           {willDelete ? 
           <DeleteFooter onDelete={() => {
-            setMessageModalShown(true)
+            deleteItem(), setMessageModalShown(true), setAllSelected(false), setWillDelete(false)
           }} /> : 
           <CheckoutFooter 
             onSubmit={() => {
-              navigation.navigate("ToktokMallCheckout", {vouchers: []})
+              navigation.navigate("ToktokMallCheckout", {data: selectedItemsArr,vouchers: [],unSelectedItemsArr: unSelectedItemsArr})
             }} 
             subtotal={subTotal} 
           />}

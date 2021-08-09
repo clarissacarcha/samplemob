@@ -33,8 +33,8 @@ export  const Totals = ({data}) => {
     let total = 0
     let  totalArr = []
     data.map((item, i) => {
-        for (let i = 0; i < item.items.length; i++){
-          total = total + item.items[i].price
+        for (let i = 0; i < item.cart.length; i++){
+          total = total + item.cart[i].price
         }
     })
     merchandiseTotal = total
