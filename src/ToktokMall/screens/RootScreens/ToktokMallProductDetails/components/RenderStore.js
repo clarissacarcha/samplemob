@@ -14,7 +14,9 @@ export const RenderStore = () => {
 	return (
 		<>
 			<View style={{paddingVertical: 16, paddingHorizontal: 16}}>
-        <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+        <TouchableOpacity onPress={() => {
+            navigation.navigate("ToktokMallStore", {})
+          }} style={{flexDirection: 'row', justifyContent: 'center'}}>
           <View style={{flex: 2, alignItems: 'flex-start', justifyContent: 'center'}}>
 						<Image source={clothfacemask} style={{width: 50, height: 50, resizeMode: 'cover', borderRadius: 30}} />
 					</View>
@@ -22,12 +24,10 @@ export const RenderStore = () => {
             <Text style={{fontSize: 13}}>Face Mask PH</Text>
             <Text style={{fontSize: 13, color: "#9E9E9E"}}>Malabon, Manila</Text>
           </View>
-          <TouchableOpacity onPress={() => {
-            navigation.navigate("ToktokMallStore", {})
-          }} style={{flex: 3, alignItems: 'flex-end', justifyContent: 'center'}}>
+          <View style={{flex: 3, alignItems: 'flex-end', justifyContent: 'center'}}>
             <Text style={{fontSize: 13, color: "#F6841F"}}>Visit Store</Text>
-          </TouchableOpacity>
-        </View>
+          </View>
+        </TouchableOpacity>
         <View style={{flexDirection: 'row', paddingVertical: 14}}>
           <View style={{flex: 3, alignItems: 'flex-end'}}>
             <Text style={{fontSize: 18, color: "#F6841F", marginRight: 8}}>4.0</Text>
