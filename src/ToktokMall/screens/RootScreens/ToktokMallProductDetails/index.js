@@ -110,7 +110,7 @@ export const ToktokMallProductDetails = ({navigation, route}) => {
           animatedValue = {AnimatedHeaderValue}
         />
         <RenderStore data={store} />
-        <RenderDescription />
+        <RenderDescription data={product} />
         <RenderReviews />
         <RenderSuggestions />
         <View style={{height: 60}} />

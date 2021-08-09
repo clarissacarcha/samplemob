@@ -24,6 +24,42 @@ const RenderStars = ({value}) => {
   )
 }
 
+const RenderVariations = ({data, navigate}) => {
+  console.log("Variant Summary", data)
+  if(data.length == 0){
+    return null
+  }else{
+    return (
+      <>
+        <View style={{paddingVertical: 8, paddingHorizontal: 8}}>
+          <View style={{flexDirection: 'row', marginTop: 8}}>
+            <View style={{flex: 2, flexDirection: 'row', paddingHorizontal: 8}}>
+              <View style={{flex: 1, justifyContent: 'center'}}>
+                <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>Select Variation</Text>
+              </View>
+              <View style={{flex: 1, justifyContent: 'center'}}>
+                <Text style={{fontSize: 14, color: "#9E9E9E"}}>( 2 color )</Text>
+              </View>
+            </View>
+            <View style={{flex: 1, flexDirection: 'row-reverse'}}>
+              <TouchableOpacity onPress={navigate} style={{flex: 0}}>
+                <CustomIcon.MCIcon name="chevron-right" size={24} color="#F6841F" />
+              </TouchableOpacity>
+            </View>
+          </View>
+  
+          <View style={{paddingHorizontal: 8, flexDirection: 'row', paddingVertical: 8}}>        
+            <Image source={coppermask} style={{width: 55, height: 65, resizeMode: 'center', borderColor: "#9E9E9E", borderWidth: 1, marginRight: 4}} />
+            <Image source={coppermask} style={{width: 55, height: 65, resizeMode: 'center', borderColor: "#9E9E9E", borderWidth: 1, marginRight: 4}} />
+          </View>
+  
+        </View>
+        <View style={{height: 8, backgroundColor: '#F7F7FA'}} />
+      </>
+    )
+  }
+}
+
 export const RenderProduct = ({data, onOpenVariations, animatedValue}) => {
 
   
@@ -95,30 +131,8 @@ export const RenderProduct = ({data, onOpenVariations, animatedValue}) => {
       </View>
       <View style={{height: 8, backgroundColor: '#F7F7FA'}} />
 
-      <View style={{paddingVertical: 8, paddingHorizontal: 8}}>
-        <View style={{flexDirection: 'row', marginTop: 8}}>
-          <View style={{flex: 2, flexDirection: 'row', paddingHorizontal: 8}}>
-            <View style={{flex: 1, justifyContent: 'center'}}>
-              <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>Select Variation</Text>
-            </View>
-            <View style={{flex: 1, justifyContent: 'center'}}>
-              <Text style={{fontSize: 14, color: "#9E9E9E"}}>( 2 color )</Text>
-            </View>
-          </View>
-          <View style={{flex: 1, flexDirection: 'row-reverse'}}>
-            <TouchableOpacity onPress={onOpenVariations} style={{flex: 0}}>
-              <CustomIcon.MCIcon name="chevron-right" size={24} color="#F6841F" />
-            </TouchableOpacity>
-          </View>
-        </View>
+      <RenderVariations data={data?.variantSummary || []} navigate={onOpenVariations} />
 
-        <View style={{paddingHorizontal: 8, flexDirection: 'row', paddingVertical: 8}}>        
-          <Image source={coppermask} style={{width: 55, height: 65, resizeMode: 'center', borderColor: "#9E9E9E", borderWidth: 1, marginRight: 4}} />
-          <Image source={coppermask} style={{width: 55, height: 65, resizeMode: 'center', borderColor: "#9E9E9E", borderWidth: 1, marginRight: 4}} />
-        </View>
-
-      </View>
-      <View style={{height: 8, backgroundColor: '#F7F7FA'}} />
 		</>
 	)
 }
