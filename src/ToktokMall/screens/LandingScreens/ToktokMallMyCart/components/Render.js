@@ -13,12 +13,11 @@ export const RenderDetails = ({item, storeIndex, allSelected, onPress, onStoreSe
 		setstoreitemselected(allSelected)
 	}, [allSelected])
 
-
 	return (
 		<>
 			<Store
 				state={storeitemselected}
-				data={item}
+				data={item || {}}
 				storeIndex = {storeIndex}
 				onSelect={(raw) => {
 					onStoreSelect(raw)
@@ -28,7 +27,7 @@ export const RenderDetails = ({item, storeIndex, allSelected, onPress, onStoreSe
 				uncheckedItems = {uncheckedItems}
 				setUncheckedItems = {setUncheckedItems}
 			/>
-			{item.cart.map((data, i) => (
+			{item && item.cart.length > 0 && item.cart.map((data, i) => (
 				<Item
 					key={i}
 					index = {i}
@@ -37,8 +36,7 @@ export const RenderDetails = ({item, storeIndex, allSelected, onPress, onStoreSe
 					data={data}
 					onSelect={(raw) => {
 						onItemSelect(raw)
-						// setstoreitemselected(!storeitemselected)
-						
+						// setstoreitemselected(!storeitemselected)						
 					}}
 					item = {item}
 					uncheckedItems = {uncheckedItems}

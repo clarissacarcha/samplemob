@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {View, Text, StyleSheet, ImageBackground, Image, TouchableOpacity, TextInput, Platform} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {throttle} from 'lodash';
@@ -11,6 +11,7 @@ import { COLOR, FONT, FONT_SIZE } from '../../../res/variables';
 export const LandingSubHeader = (props) => {
 
   const navigation = useNavigation();
+  const searchFieldRef = useRef(null)
 
   const onPress = throttle(
     () => {
@@ -22,7 +23,11 @@ export const LandingSubHeader = (props) => {
 
   const onBack = throttle(
     () => {
-      navigation.pop();
+      if(props?.onBack){
+        props.onBack();
+      }else{
+        navigation.pop();
+      }
     },
     1000,
     {trailing: false},
@@ -69,23 +74,33 @@ export const LandingSubHeader = (props) => {
               </View>
               <View style={{flex: 1}}>
                 <TextInput 
+                  ref={searchFieldRef}
                   placeholder={props.placeholder ? props.placeholder : "Search"}
                   value={searchValue}
-                  onChangeText={handleOnSearch} 
+                  onChangeText={(val) => handleOnSearch(val)}
                   style={{paddingVertical: 8, fontFamily: FONT.REGULAR}} 
-                  onBlur={handleOnSubmit}
+                  blurOnSubmit={true}                  
+                  onSubmitEditing={(event) => {
+                    // setTimeout(() => {
+                    //   handleOnSubmit()
+                    // }, 700)
+                    console.log("Submitted")
+                    searchFieldRef.current.isFocused(false)
+                    handleOnSubmit()               
+                  }}
                 />
               </View>
             </TouchableOpacity>
           </View>
-          <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 8, paddingTop: 8}}>
-            {/* <TouchableOpacity onPress={onPressNotification} style={{flexDirection: 'row', paddingRight: 8}}>
+          <View style={{flex: 0.5}} />
+          {/* <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 8, paddingTop: 8}}>
+            <TouchableOpacity onPress={onPressNotification} style={{flexDirection: 'row', paddingRight: 8}}>
               <FIcon5 name="bell" color={COLOR.ORANGE} size={22}/>
               <View style={{ position: 'absolute', right: 0, top: 3, backgroundColor: COLOR.YELLOW, borderRadius: 9, width: 18, height: 18, justifyContent: 'center', alignItems: 'center' }}>
                 <Text style={{ color: 'white', fontSize: 11}}>{2}</Text>
               </View>
-            </TouchableOpacity> */}
-          </View>
+            </TouchableOpacity>
+          </View> */}
         </View>        
       </ImageBackground>
     </>

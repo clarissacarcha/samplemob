@@ -175,17 +175,12 @@ const Component =  ({
     setSubTotal(a);
   };
 
-  const init = async () => {
-    await ASGetCart("bryan", (response) => {
-      console.log("Cart Content", response)
-      setCartData(response)
-    })
-    // await ASClearCart("bryan")
-  }
-
   useEffect(() => {
     // setAllSelected(false)
-    createMyCartSession('set', testdata)
+    // createMyCartSession('set', testdata)
+
+    console.log("My Cart", myCart)
+
     getSubTotal();
   }, []);
 

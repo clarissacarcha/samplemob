@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import {View,Text,StyleSheet,Platform,Dimensions,StatusBar,Image, TouchableOpacity} from 'react-native'
+import { useLazyQuery } from '@apollo/react-hooks';
+import Spinner from 'react-native-spinkit';
 import {  LandingSubHeader } from '../../../../Components'
 import {Product} from './components'
 import { COLOR, FONT, FONT_SIZE } from '../../../../../res/variables';
-import { useLazyQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../graphql';
 import {SEARCH_PRODUCT} from '../../../../../graphql/toktokmall/model';
 
@@ -18,9 +19,10 @@ export const ToktokMallCategoriesList = ({navigation, route})=> {
 	const handleOnSearch = (val) => {
 		if(val == "") setFilteredData(testdata)
 		else if(val != "") setFilteredData([])
+    setSearchValue(val)
 	}
 
-	const [searchProduct, {error2, loading2}] = useLazyQuery(SEARCH_PRODUCT, {
+	const [searchProduct, {error, loading}] = useLazyQuery(SEARCH_PRODUCT, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     variables: {
@@ -34,6 +36,10 @@ export const ToktokMallCategoriesList = ({navigation, route})=> {
         setSearchedProducts([])
       }else if(response && response.searchProduct.length > 0){
         setSearchedProducts(response.searchProduct)
+
+        //Save to AsyncStorage
+
+
       }else if(response && response.searchProduct.length == 0){
         setSearchedProducts([])
       }
@@ -59,18 +65,31 @@ export const ToktokMallCategoriesList = ({navigation, route})=> {
 					onSearch={handleOnSearch} 
 					initialValue={searchValue}  
 					onSubmit={() => {
-						searchProduct()
+						if(searchValue != "") searchProduct()
 					}}
-				/> 
+          onBack={() => {
+            navigation.navigate("ToktokMallSearch", {})
+          }}
+				/>
 
-        <View>
-					
-					{searchedProducts.length == 0 &&
+        <View style={{flex: 1}}>
+
+					{error || !loading && searchValue != "" && searchedProducts.length == 0 &&
 					<View style={{paddingHorizontal: 15, paddingVertical: 15}}>
 						<Text style={{color: "#9E9E9E", fontSize: 14}}>No results found</Text>
 					</View>}
 
-          {searchedProducts.length > 0 && <Product data={searchedProducts} />}
+          {!loading && searchedProducts.length > 0 && <Product data={searchedProducts} />}
+
+          {loading && 
+          <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+            <Spinner 
+              isVisible={loading}
+              type='Circle'
+              color={"#F6841F"}
+              size={35}
+            />
+          </View>}
 
         </View>
 

@@ -15,10 +15,8 @@ export const Item = ({index, data, state = true, onSelect, item, storeIndex, unc
     setSelected(state)
   }, [state])
   
-
   const onPress = () => {
     // uncheckedItems.push(i)
-    
     
     if(selected){
       // if()
@@ -41,7 +39,7 @@ export const Item = ({index, data, state = true, onSelect, item, storeIndex, unc
   }
 
   const getImageSource = (data) => {
-    if(data.length > 0){
+    if(typeof data == "object" && data.length > 0){
       return {uri: data[0].filename}
     }else {
       return placeholder
