@@ -8,7 +8,7 @@ import CustomIcon from '../../../../Components/Icons';
 import {coppermask, clothfacemask, voucherbg} from '../../../../assets';
 import { FONT } from '../../../../../res/variables';
 
-import Animated, {interpolate, Extrapolate, useCode, set, greaterThan} from 'react-native-reanimated'
+import Animated, {interpolate, Extrapolate, useCode, set} from 'react-native-reanimated'
 
 export const HeaderPlain = ({value, animatedValue }) => {
 

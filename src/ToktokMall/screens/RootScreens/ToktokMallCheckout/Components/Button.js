@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, Dimensions} from 'react-native';
+import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, Dimensions, AsyncStorage} from 'react-native';
 // import { COLOR, FONT } from '../../../../../../res/variables';
 // import {LandingHeader, AdsCarousel} from '../../../../../Components';
 // import { ScrollView } from 'react-native-gesture-handler';
@@ -15,22 +15,38 @@ const testData = [
 ]
 const REAL_WIDTH = Dimensions.get('window').width;
 
-export const Button = ({data, isVisible, setIsVisible}) => {
+export const Button = ({data, isVisible, setIsVisible, unSelectedItemsArr}) => {
   
   const computeTotal = () => {
-    let totalShipping = 0
-    let totalMerch = 0
-    let total = 0
-    for (let i = 0; i < data.length; i++){
-        totalShipping = totalShipping + data[i].delivery_fee
+    // let totalShipping = 0
+    // let totalMerch = 0
+    // let total = 0
+    // for (let i = 0; i < data.length; i++){
+    //     totalShipping = totalShipping + data[i].delivery_fee
+    // }
+    // data.map((item, i) => {
+    //     for (let i = 0; i < item.items.length; i++){
+    //         totalMerch = totalMerch + item.items[i].price
+    //     }
+    // })
+    // return total = totalMerch + totalShipping
+    let a = 0;
+    for (var x = 0; x < data.length; x++) {
+      for (var y = 0; y < data[x].cart.length; y++) {
+        let item = data[x].cart[y];
+        a += item.price * item.qty;
+        console.log(a);
+      }
     }
-    data.map((item, i) => {
-        for (let i = 0; i < item.items.length; i++){
-            totalMerch = totalMerch + item.items[i].price
-        }
-    })
-    return total = totalMerch + totalShipping
+    return a
+    // setSubTotal(a);
   }  
+
+  const onCheckout = () => {
+    let stringyfiedArr = JSON.stringify(unSelectedItemsArr)
+    AsyncStorage.setItem('MyCart', stringyfiedArr)
+    setIsVisible(true)
+  }
     
   return (
     <>
@@ -40,7 +56,7 @@ export const Button = ({data, isVisible, setIsVisible}) => {
               <Text style = {{fontWeight: 'bold'}}>Total Payment</Text>
               <Text style = {{fontWeight: 'bold', color: '#F6841F' }}>Php {computeTotal()}.00</Text>
             </View>
-            <TouchableOpacity style = {styles.button} onPress ={() => {setIsVisible(true)}}>
+            <TouchableOpacity style = {styles.button} onPress ={() => {onCheckout()}}>
                 <Text style = {styles.buttonText}>Checkout</Text>
             </TouchableOpacity>
           </View>

@@ -9,7 +9,7 @@ import {coppermask, clothfacemask, voucherbg} from '../../../../assets';
 import { FONT } from '../../../../../res/variables';
 
 const transparentBg = "rgba(129, 129, 129, 0.5)"
-import Animated, {interpolate, Extrapolate, useCode, set, greaterThan} from 'react-native-reanimated'
+import Animated, {interpolate, Extrapolate, useCode, set} from 'react-native-reanimated'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 

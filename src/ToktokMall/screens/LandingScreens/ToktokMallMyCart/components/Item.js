@@ -7,13 +7,38 @@ import CheckBox from 'react-native-check-box';
 import {placeholder} from '../../../../assets';
 import {Price} from '../../../../helpers';
 
-export const Item = ({data, state = true, onSelect}) => {
+export const Item = ({index, data, state = true, onSelect, item, storeIndex, uncheckedItems , setstoreitemselected, storeitemselected} ) => {
 
   const [selected, setSelected] = useState(state)
 
   useEffect(() => {
     setSelected(state)
   }, [state])
+  
+
+  const onPress = () => {
+    // uncheckedItems.push(i)
+    
+    
+    if(selected){
+      // if()
+      uncheckedItems.push(index)
+    }else{
+      if(index != uncheckedItems.length){
+        uncheckedItems.splice(index, 1)
+      }else {
+        uncheckedItems.splice(0, 1)
+      }
+    }
+    if( uncheckedItems.length == item.cart.length  ){
+      // console.log('fire this')
+      setstoreitemselected(false)
+    } else if ( uncheckedItems == 0){
+      setstoreitemselected(true)
+    }
+    // console.log(uncheckedItems, index, uncheckedItems.length, item.cart.length)
+    setSelected(!selected)
+  }
 
   const getImageSource = (data) => {
     if(data.length > 0){
@@ -35,10 +60,15 @@ export const Item = ({data, state = true, onSelect}) => {
 							onSelect({
                 checked: !selected,
                 item: data,
-                amount: parseFloat(data.price) * data.quantity,
-                qty: data.quantity
+                amount: data.price * data.qty,
+                qty: data.qty,
+                index: index,
+                storeIndex: storeIndex
               })
-              setSelected(!selected)
+              // if()
+              // setSelected(!selected)
+              onPress()
+              // deleteItem(data.item_id)
 						}}
 					/>
         </View>

@@ -2,18 +2,25 @@ import React, {useState, useEffect, useRef} from 'react';
 import {View, Text, ImageBackground, Image, StyleSheet, Platform, Dimensions} from 'react-native';
 import Carousel, { Pagination, ParallaxImage } from 'react-native-snap-carousel';
 import CustomIcon from '../../../../Components/Icons';
-import {coppermask} from '../../../../assets';
-import { FONT } from '../../../../../res/variables';
+import {placeholder} from '../../../../assets';
+import { FONT, COLOR } from '../../../../../res/variables';
+import Spinner from 'react-native-spinkit';
 
 const { width: screenWidth } = Dimensions.get('window')
 const HEIGHT = 250
 
-export const ProductCarousel = ({data, isOutOfStock}) => {
+export const ProductCarousel = ({data, isOutOfStock, isLoading, setIsLoading}) => {
 
   const [activeSlide, setActiveSlide] = useState(0)
   const [entries, setEntries] = useState([1, 2, 3, 4, 5])
 
   const renderItem = ({item, index}, parallaxProps) => {
+
+    const getImage = () => {
+      if(typeof item == "object" && item?.filename) return {uri: item?.filename}
+      else return placeholder
+    }
+
     return (
       <View style={{width: Dimensions.get("screen").width, height: HEIGHT}}>
         {isOutOfStock && 
@@ -22,18 +29,19 @@ export const ProductCarousel = ({data, isOutOfStock}) => {
             <Text style={{fontFamily: FONT.BOLD, fontSize: 18, color: "#fff"}}>OUT OF STOCK</Text>
           </View>
         </View>}
-        <ParallaxImage
-          // source={{uri: "https://cdn.searchenginejournal.com/wp-content/uploads/2019/04/shutterstock_456779230.png"}}
-          // source={coppermask}
-          source={{uri: item.filename}}
-          containerStyle={styles.pxImageContainerStyle}
-          style={{
-            ...StyleSheet.absoluteFillObject,
-            resizeMode: 'stretch'
-          }}
-          parallaxFactor={0.05}
-          {...parallaxProps}
-        />
+           <ParallaxImage
+           // source={{uri: "https://cdn.searchenginejournal.com/wp-content/uploads/2019/04/shutterstock_456779230.png"}}
+           source={getImage()}
+           onLoadEnd = {() => {setIsLoading(false)}}
+           containerStyle={[styles.pxImageContainerStyle, isLoading ? {backgroundColor: 'rgba(0, 0, 0, 0.25)'}: null]}
+           style={{
+             ...StyleSheet.absoluteFillObject,
+             resizeMode: 'stretch'
+           }}
+           parallaxFactor={0.05}
+           {...parallaxProps}
+           showSpinner = {false}
+         />       
       </View>
     )
   }
@@ -50,6 +58,14 @@ export const ProductCarousel = ({data, isOutOfStock}) => {
         // autoplay={true}
         // autoplayDelay={700}
         hasParallaxImages={true}
+        onScrollEndDrag = {() => {setIsLoading(true)}}
+      />
+      <Spinner 
+        isVisible = {isLoading}
+        type = 'Circle'
+        style = {{ position: 'absolute', top: HEIGHT / 2, left: screenWidth / 2.2}}
+        color = {COLOR.ORANGE}
+        size = {50}
       />
       <Pagination
         dotsLength={data.length}

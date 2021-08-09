@@ -4,6 +4,7 @@ import Constants from './Constants';
 import Nav from './Nav';
 import ToktokWallet from './ToktokWallet';
 import ToktokFood from './ToktokFood';
+import ToktokMall from './ToktokMall'
 
 export default {
   application: Application,
@@ -12,4 +13,5 @@ export default {
   nav: Nav,
   toktokFood: ToktokFood,
   toktokWallet: ToktokWallet,
+  toktokMall: ToktokMall
 };

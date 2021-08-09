@@ -30,16 +30,18 @@ export  const Shops = ({data,}) => {
     return items.map((item, i) => {
         return(
           <View style={styles.itemContainer}>
-            <Image source = {item.image} style ={styles.itemImage}/>
+            <Image //source = {item.image} 
+            source = {require('../../../../assets/images/coppermask.png')} 
+            style ={styles.itemImage}/>
             <View style = {{ marginLeft: 15, flex: 1}}>
-              <Text>{item.item_name}</Text>
+              <Text>{item.label}</Text>
               <View style = {{flexDirection: 'row'}}>
                 <Text style ={styles.itemprice}>Php{item.price}</Text>
-                <Text style ={styles.itemSaleOff}>Php{item.sale_off}</Text>
+                <Text style ={styles.itemSaleOff}>Php{item.originalPrice}</Text>
               </View>
               <View style = {{flexDirection: 'row', justifyContent: 'space-between', marginTop: 10}}>
                 <Text style ={{ color: '#9E9E9E' }}>Variation: {item.variation}</Text>
-                <Text style ={{ color: '#9E9E9E'}}>Qty: {item.quantity}</Text>
+                <Text style ={{ color: '#9E9E9E'}}>Qty: {item.qty}</Text>
               </View>
             </View>
           </View>
@@ -54,14 +56,14 @@ export  const Shops = ({data,}) => {
         <View style={styles.container}>
           <View style ={{flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, padding: 15, borderBottomColor: '#F7F7FA'}}>
             <Image source={require("../../../../assets/icons/store.png")} style={{width: 18, height: 18, resizeMode: 'stretch'}} /> 
-            <Text style = {{marginLeft: 10, fontWeight: 'bold'}}>{item.shops}</Text>
+            <Text style = {{marginLeft: 10, fontWeight: 'bold'}}>{item.store}</Text>
           </View>
           <View style={{padding: 15}}>
-            {renderItems(item.items)}
+            {renderItems(item.cart)}
           </View>
           <View style={styles.deliveryfeeContainer}>
             <Text>Delivery Fee: Php {item.delivery_fee}.00</Text>
-            <Text>Order total ({item.items.length} items): Php {computeTotal(item.items)} </Text>
+            <Text>Order total ({item.cart.length} items): Php {computeTotal(item.cart)} </Text>
             <Text style = {{marginTop: 7, color: '#929191'}}>Receive by: {item.date_range_from} - {item.date_range_to} </Text>
           </View>
         </View>

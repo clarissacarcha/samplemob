@@ -9,7 +9,7 @@ import {throttle} from 'lodash';
 import FIcon5 from 'react-native-vector-icons/FontAwesome';
 import AIcon from 'react-native-vector-icons/MaterialIcons';
 import {banner, toktokmallH} from '../../../../assets';
-import Animated, {interpolate, Extrapolate, useCode, set, greaterThan} from 'react-native-reanimated'
+import Animated, {interpolate, Extrapolate, useCode, set} from 'react-native-reanimated'
 
 //Main Components
 import CustomIcon from '../../../../Components/Icons';

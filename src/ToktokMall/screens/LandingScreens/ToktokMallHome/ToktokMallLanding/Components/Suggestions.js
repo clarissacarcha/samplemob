@@ -108,13 +108,13 @@ export const Suggestions = ({data}) => {
     fetchPolicy: 'network-only',
     variables: {
       input: {
-        limit: 10
+        limit: 30
       }
     },
     onCompleted: (response) => {
       let temp = products
-      if(response.getProducts){
-        temp.concat(response.getProducts)
+      if(response){
+        temp = temp.concat(response.getProducts)
         setProducts(temp)
       }else{
         setProducts([])

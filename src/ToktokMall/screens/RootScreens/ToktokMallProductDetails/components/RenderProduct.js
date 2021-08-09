@@ -8,7 +8,7 @@ import {Price} from '../../../../helpers';
 import CustomIcon from '../../../../Components/Icons';
 import {coppermask, clothfacemask, voucherbg} from '../../../../assets';
 import { FONT } from '../../../../../res/variables';
-import Animated, {interpolate, Extrapolate, useCode, set, greaterThan} from 'react-native-reanimated'
+import Animated, {interpolate, Extrapolate, useCode, set} from 'react-native-reanimated'
 
 const RenderStars = ({value}) => {
   let orange = "#FFC833"
@@ -25,10 +25,9 @@ const RenderStars = ({value}) => {
 }
 
 const RenderVariations = ({data, navigate}) => {
-  console.log("Variant Summary", data)
   if(data.length == 0){
     return null
-  }else{
+  }else{    
     return (
       <>
         <View style={{paddingVertical: 8, paddingHorizontal: 8}}>
@@ -38,7 +37,7 @@ const RenderVariations = ({data, navigate}) => {
                 <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>Select Variation</Text>
               </View>
               <View style={{flex: 1, justifyContent: 'center'}}>
-                <Text style={{fontSize: 14, color: "#9E9E9E"}}>( 2 color )</Text>
+                <Text style={{fontSize: 14, color: "#9E9E9E"}}></Text>
               </View>
             </View>
             <View style={{flex: 1, flexDirection: 'row-reverse'}}>
@@ -49,8 +48,37 @@ const RenderVariations = ({data, navigate}) => {
           </View>
   
           <View style={{paddingHorizontal: 8, flexDirection: 'row', paddingVertical: 8}}>        
-            <Image source={coppermask} style={{width: 55, height: 65, resizeMode: 'center', borderColor: "#9E9E9E", borderWidth: 1, marginRight: 4}} />
-            <Image source={coppermask} style={{width: 55, height: 65, resizeMode: 'center', borderColor: "#9E9E9E", borderWidth: 1, marginRight: 4}} />
+            {/* <Image source={coppermask} style={{width: 55, height: 65, resizeMode: 'center', borderColor: "#9E9E9E", borderWidth: 1, marginRight: 4}} /> */}
+            {/* <Image source={coppermask} style={{width: 55, height: 65, resizeMode: 'center', borderColor: "#9E9E9E", borderWidth: 1, marginRight: 4}} /> */}
+            {data.map((item, i) => {
+              
+              let variantslist = item?.variantList || ""
+              const variants = variantslist.split(",")
+
+              if(variants.length == 0 || item.variantType == "") return null
+
+              return (
+                <>
+                  <View>
+                    <View style={{paddingVertical: 4}}>
+                      <Text style={{fontSize: 13}}>{item?.variantType || ''}</Text>
+                    </View>
+                    <View style={{flexDirection: 'row'}}>
+                      {variants.map((variant, y) => {
+                        return (
+                          <>
+                            <View style={{paddingVertical: 4, paddingHorizontal: 15, borderRadius: 5, borderWidth: 0.5, borderColor: "#F6841F"}}>
+                              <Text style={{fontSize: 11, color: "#9E9E9E"}}>{variant}</Text>
+                            </View>
+                            <View style={{width: 5}} />
+                          </>
+                        )
+                      })}
+                    </View>
+                  </View>
+                </>
+              )
+            })}
           </View>
   
         </View>
