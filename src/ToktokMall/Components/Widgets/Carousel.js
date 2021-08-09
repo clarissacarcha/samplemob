@@ -71,6 +71,7 @@ export const AdsCarousel = (props) => {
         autoplay={true}
         // autoplayDelay={700}
         hasParallaxImages={true}
+        removeClippedSubviews={true}
       />
       <Pagination
         dotsLength={entries.length}

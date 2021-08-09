@@ -92,6 +92,7 @@ export const Categories = ({data}) => {
                 )
               }}
               keyExtractor={(item, index) => item + index}
+              removeClippedSubviews={true}
             />            
           </View>
           <View style={styles.separator} />

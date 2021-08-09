@@ -1,11 +1,10 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList} from 'react-native';
+import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ActivityIndicator} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/core';
 import { useLazyQuery } from '@apollo/react-hooks';
 import {Image as RNEImage} from 'react-native-elements'; 
 import { COLOR, FONT } from '../../../../../../res/variables';
-import {LandingHeader, AdsCarousel} from '../../../../../Components';
 import CustomIcon from '../../../../../Components/Icons';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../../graphql';
 import { GET_PRODUCTS } from '../../../../../../graphql/toktokmall/model';
@@ -109,11 +108,17 @@ export const Suggestions = ({data}) => {
     fetchPolicy: 'network-only',
     variables: {
       input: {
-        limit: 12
+        limit: 10
       }
     },
     onCompleted: (response) => {
-      setProducts(response.getProducts)
+      let temp = products
+      if(response.getProducts){
+        temp.concat(response.getProducts)
+        setProducts(temp)
+      }else{
+        setProducts([])
+      }
     },
     onError: (err) => {
       console.log(err)
@@ -151,11 +156,31 @@ export const Suggestions = ({data}) => {
                 return <RenderItem item={item} />
               }}
               keyExtractor={(item, index) => item + index}
+              refreshing={loading}
+              onEndReached={() => {
+                console.log("End reached!!!")
+              }}
+              onEndReachedThreshold={0.5}
+              ListFooterComponent={() => {
+                return (
+                  <>
+                    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', paddingTop: 15}}>
+                      <TouchableOpacity onPress={() => {
+                        getProducts()
+                      }}>
+                        {/* {<CustomIcon.EvIcon name="spinner" size={35} color="#F6841F" style={{}} />} */}
+                        {!loading && <Text>Load More...</Text>}
+                        {<ActivityIndicator animating={loading} color="#F6841F" size={25} />}
+                      </TouchableOpacity>
+                    </View>
+                  </>
+                )
+              }}
             />
             
           </View>
           <View style={{height: 15}}></View>
-          <View style={styles.separator} />
+          {/* <View style={styles.separator} /> */}
       </>
     )
   }

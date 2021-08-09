@@ -27,6 +27,7 @@ const Item = ({ title }) => (
 
 export const ToktokMallLandingScreen = () => {
 
+  const scrollViewRef = useRef(null)
   const [scrolling, setScrolling] = useState(false)
   const [y] = useValues([0], [])
   const navigation = useNavigation();
@@ -174,6 +175,7 @@ export const ToktokMallLandingScreen = () => {
       </Animated.View>
 
       <Animated.ScrollView
+        ref={scrollViewRef}
         style = {[{ top : top}]}
         scrollEventThrottle = {16}
         onScroll = {
@@ -183,6 +185,7 @@ export const ToktokMallLandingScreen = () => {
           )
         }
         showsVerticalScrollIndicator={false}
+        removeClippedSubviews={true}
       >
         <AdsCarousel />
         <Categories />
