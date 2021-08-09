@@ -31,7 +31,7 @@ export const PromptModal = ({visible , title , message , onPress , event})=> {
             <View style={styles.modalBody}>
                 <View style={styles.content}>
                     <Image source={imageIcon}/>
-                    <Text style={styles.successText}>{title} !</Text>
+                    <Text style={styles.successText}>{title}</Text>
                     <Text style={styles.messageText}>{message}</Text>
                     <View style={{justifyContent:"flex-end",width: "50%",marginTop: 20}}>
                             <YellowButton label="Ok" onPress={onPressThrottled}/>

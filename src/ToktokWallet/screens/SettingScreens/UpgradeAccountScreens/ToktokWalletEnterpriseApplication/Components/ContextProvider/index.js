@@ -41,7 +41,6 @@ export const ContextProvider = ({children}) => {
     })
 
     const setFileUpload = (index,value)=> {
-        console.log(JSON.stringify(value))
         const rnFile = new ReactNativeFile({
             ...value,
             uri: value.fileCopyUri,

@@ -92,7 +92,7 @@ export const Resubmit = ({id})=> {
                 visible={visible} 
                 onPress={closeModal}
                 message="Your business documents have been submitted. These documents are for review and approval."
-                title="Success !"
+                title="Success!"
                 event="success"
         />
         <View style={styles.container}>
