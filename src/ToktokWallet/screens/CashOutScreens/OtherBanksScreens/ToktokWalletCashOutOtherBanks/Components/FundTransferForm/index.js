@@ -167,7 +167,7 @@ const AccountInfo = ({selectBanks, errorListMessage })=> {
     )
 }
 
-export const FundTransferForm = ({selectBanks})=> {
+export const FundTransferForm = ({selectBanks, screenLabel})=> {
 
     const tokwaAccount = useSelector(state=>state.toktokWallet)
     const alert = useAlert()
@@ -305,7 +305,7 @@ export const FundTransferForm = ({selectBanks})=> {
         if(!noError) return
 
         navigation.navigate("ToktokWalletReviewAndConfirm", {
-            label:"Fund Transfer" , 
+            label: screenLabel ?? "Fund Transfer" , 
             event: "Fund Transfer",
             data: {
                     method: bank.name,
@@ -329,11 +329,11 @@ export const FundTransferForm = ({selectBanks})=> {
     return (
         <>
             <EnterPinCode 
-                    visible={openPinCode} 
-                    setVisible={setOpenPinCode} 
-                    loading={loading}
-                    pinCodeAttempt={pinCodeAttempt}
-                    callBackFunc={ProceedTransaction}
+                visible={openPinCode} 
+                setVisible={setOpenPinCode} 
+                loading={loading}
+                pinCodeAttempt={pinCodeAttempt}
+                callBackFunc={ProceedTransaction}
             >
                 <AlertOverlay visible={loading} />
             </EnterPinCode>
@@ -345,6 +345,7 @@ export const FundTransferForm = ({selectBanks})=> {
                 savedAccounts={savedAccounts}
                 activeAccount={activeAccount}
                 note={note}
+                screenLabel={screenLabel}
             />
             <AccountInfo
                 selectBanks={selectBanks}
