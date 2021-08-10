@@ -21,13 +21,14 @@ import CashOutOption from "./CashOutOption";
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
 const {height,width} = Dimensions.get("window")
 
-export const ToktokWalletCashOut = ({navigation,route})=> {
+export const ToktokWalletCashOut = ({navigation, route})=> {
 
     navigation.setOptions({
        headerShown: false
     })
     const tokwaAccount = useSelector(state=>state.toktokWallet)
     const alert = useAlert()
+    const screenLabel = route.params ? route.params.screenLabel : null
 
     const {data,error,loading} = useQuery(GET_CASH_OUT_PROVIDERS, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
@@ -57,10 +58,10 @@ export const ToktokWalletCashOut = ({navigation,route})=> {
       <View style={styles.container}>
             <View style={styles.headings}>
                 <HeaderImageBackground>
-                    <HeaderTitle label="Fund Transfer"/>
+                    <HeaderTitle label={screenLabel ?? "Fund Transfer"} />
                     <View style={styles.walletBalance}>
-                                <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>{tokwaAccount.wallet.currency.code} {numberFormat(tokwaAccount.wallet.balance ? tokwaAccount.wallet.balance : 0)}</Text>
-                                <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR,marginBottom: 5}}>Available Balance</Text>
+                        <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>{tokwaAccount.wallet.currency.code} {numberFormat(tokwaAccount.wallet.balance ? tokwaAccount.wallet.balance : 0)}</Text>
+                        <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR,marginBottom: 5}}>Available Balance</Text>
                     </View>
                 </HeaderImageBackground>
             </View>

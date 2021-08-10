@@ -92,7 +92,7 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route})=> {
                 value: true,
             }
         })
-        return navigation.navigate("ToktokWalletCashOutHomePage")
+        return navigation.navigate("ToktokWalletCashOutHomePage", { screenLabel: "Link Account" })
     }
 
     if(loadingCheckVcs || loadingCheckPendingDisbursement){
@@ -131,8 +131,8 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route})=> {
                 btnLabel="Link Now"
                 finishLabel={
                     isLinkedBankAccount 
-                    ? "Your application has been approved. Your Disbursement Account has been verified."
-                    : "Your application has been submitted. Please wait for your Disbursement Account to be verified within 5 business days."
+                    ? "Your application has been approved. Your account has been verified."
+                    : "Your application has been submitted. Please wait for your account to be verified within 5 business days."
                 }
             />
             <DisplayComponent

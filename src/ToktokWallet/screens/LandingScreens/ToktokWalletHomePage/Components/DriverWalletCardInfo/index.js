@@ -44,43 +44,47 @@ const DriverWalletCardInfo = ({loading})=> {
         }
     }
 
+    const redirectLinking = () => {
+        return navigation.navigate("ToktokWalletTransactionLimit");
+    }
+
     return (
-       <View style={styles.container}>
-           <HeaderImageBackground>
+        <View style={styles.container}>
+            <HeaderImageBackground>
                <HeaderTitle isLogo={true} headerBackLabel="Home"/>
                <View style={{flex: 1,justifyContent:"flex-end",paddingBottom: 45}}>
                     <View>
-                        <View style={{paddingHorizontal: 16,flexDirection:"row"}}>
-                            <View style={{alignSelf:'center', padding: 1 ,borderRadius: 100, borderWidth: 1,borderColor: titleAccountTypeColor[tokwaAccount.person.accountType.level],justifyContent:'center',marginRight: 5,}}>
-                                <VectorIcon size={FONT_SIZE.XS} iconSet={ICON_SET.Feather} name="check" color={titleAccountTypeColor[tokwaAccount.person.accountType.level]}/>
-                            </View>
-                                <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color: titleAccountTypeColor[tokwaAccount.person.accountType.level]}}>{tokwaAccount.person.accountType.title}</Text>
-                        </View>
-
-                        <View style={styles.walletContent}>
-                                <View>
-                                    {
-                                    <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>{tokwaAccount.wallet.currency.code} {numberFormat(tokwaAccount.wallet.balance)}</Text>
-                                    }         
-                                    <Text style={{fontSize:FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Available Balance</Text>
+                        <View style={{ flexDirection: "row" }}>
+                            <TouchableOpacity onPress={redirectLinking} style={{paddingHorizontal: 16,flexDirection:"row"}}>
+                                <View style={{alignSelf:'center', padding: 1 ,borderRadius: 100, borderWidth: 1,borderColor: titleAccountTypeColor[tokwaAccount.person.accountType.level],justifyContent:'center',marginRight: 5,}}>
+                                    <VectorIcon size={FONT_SIZE.XS} iconSet={ICON_SET.Feather} name="check" color={titleAccountTypeColor[tokwaAccount.person.accountType.level]}/>
                                 </View>
-                                <TouchableOpacity style={styles.walletSettings} onPress={()=>{
-                                    // rotateY.setValue(0)
-                                    if(checkWallet.checkIfAllowed()){
-                                        animation.start(()=> {
-                                            animation.reset()
-                                            navigation.navigate("ToktokWalletSettings")
-                                        })
-                                    }
-                                }}>
-                                         <Animated.View style={[{transform: [{rotate: rotateanimation}]}]}>
-                                                <VectorIcon iconSet={ICON_SET.FontAwesome5} name="cog" color="black" size={30}/>
-                                            </Animated.View>
-                                </TouchableOpacity>
+                                <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color: titleAccountTypeColor[tokwaAccount.person.accountType.level]}}>{tokwaAccount.person.accountType.title}</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.walletContent}>
+                            <View>
+                                {
+                                <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>{tokwaAccount.wallet.currency.code} {numberFormat(tokwaAccount.wallet.balance)}</Text>
+                                }         
+                                <Text style={{fontSize:FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Available Balance</Text>
                             </View>
+                            <TouchableOpacity style={styles.walletSettings} onPress={()=>{
+                                // rotateY.setValue(0)
+                                if(checkWallet.checkIfAllowed()){
+                                    animation.start(()=> {
+                                        animation.reset()
+                                        navigation.navigate("ToktokWalletSettings")
+                                    })
+                                }
+                            }}>
+                                        <Animated.View style={[{transform: [{rotate: rotateanimation}]}]}>
+                                            <VectorIcon iconSet={ICON_SET.FontAwesome5} name="cog" color="black" size={30}/>
+                                        </Animated.View>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
-            
            </HeaderImageBackground>
     
             <View style={styles.whitespace}>
@@ -93,7 +97,7 @@ const DriverWalletCardInfo = ({loading})=> {
                 </View>
             </View>
             <Separator />
-       </View>
+        </View>
     )
 }
 
