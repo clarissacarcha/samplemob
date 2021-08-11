@@ -4,7 +4,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/core';
 import { useLazyQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../../graphql';
-import { GET_CATEGORIES } from '../../../../../../graphql/toktokmall/model';
+import { GET_TOP_CATEGORIES } from '../../../../../../graphql/toktokmall/model';
 
 import { COLOR, FONT } from '../../../../../../res/variables';
 import {LandingHeader, AdsCarousel} from '../../../../../Components';
@@ -42,21 +42,50 @@ const testdata = [{
 export const Categories = ({data}) => {
 
   const navigation = useNavigation()
+  const [categoriesArr, setCategoriesArr] = useState([])
 
-  const [getCategories, {error, loading}] = useLazyQuery(GET_CATEGORIES, {
+  const [getCategoriesList, {error, loading}] = useLazyQuery(GET_TOP_CATEGORIES, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: (response) => {
-        console.log("Categories", response)
+      setCategoriesArr(response.getTopCategories)
     },
     onError: (err) => {
-        console.log(err)
+      console.log(err)
     }
   })
 
   useEffect(() => {
-    getCategories()
+    getCategoriesList()
+    
+    // setTimeout(() => {
+    //   console.log("Categories", categories)
+    // }, 700)
   }, [])
+
+  const setIcon = (item) => {
+
+    if(item?.parentIcon?.name == ""){
+      //Image icon
+      return (
+        <>
+          <Image 
+            source={placeholder} 
+            style={{width: 50, height: 50, resizeMode: 'cover', borderRadius: 5}} 
+          />
+        </>
+      )
+    }else {
+      return (
+        <>
+          <View>
+            <CustomIcon.FA5Icon name={item?.parentIcon?.name} size={20} color="#F6841F" />
+          </View>
+        </>
+      )
+    }
+
+  }
 
     return (
       <>
@@ -77,23 +106,50 @@ export const Categories = ({data}) => {
               </TouchableOpacity>              
             </View>
 
-            <FlatList
+            {/* <FlatList
               horizontal={true}
-              showsHorizontalScrollIndicator={false} 
-              data={testdata}
+              data={categoriesArr}
               renderItem={({item}) => {
+
+                console.log("item", item)
+
                 return (
                   <>
                     <TouchableOpacity style={{flex: 1, paddingBottom: 12, paddingHorizontal: 4}}>
                       {item.image && <Image source={item.image} style={styles.image} /> }
                       <Text style={styles.label}>{item.label}</Text>
                     </TouchableOpacity>
+                    <TouchableOpacity style={{flex: 1, paddingBottom: 12, paddingHorizontal: 4}}>
+                      {setIcon(item)}
+                      <Text style={styles.label}>{item.parentCategory || "loading"}</Text>
+                    </TouchableOpacity>
                   </>
                 )
               }}
               keyExtractor={(item, index) => item + index}
               removeClippedSubviews={true}
-            />            
+              showsHorizontalScrollIndicator={false} 
+            />             */}
+
+            <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
+              {categoriesArr.length > 0 && categoriesArr.map((cat, i) => {
+                return (
+                  <>
+                    <View style={{flex: 1}}>
+                      <View style={{alignItems: 'center', justifyContent: 'center'}}>
+                        {setIcon(cat)}
+                      </View>
+                      <View style={{alignItems: 'center', justifyContent: 'center', marginTop: 4}}>
+                        <Text style={styles.label}>{cat.parentCategory}</Text>
+                      </View>
+                    </View>   
+                  </>
+                )
+              })}           
+            </View>
+
+            <View style={{height: 15}} />
+
           </View>
           <View style={styles.separator} />
       </>
@@ -106,6 +162,6 @@ const styles = StyleSheet.create({
   h1: {fontSize: 14, fontFamily: FONT.BOLD},
   link: {fontSize: 12, color: "#F6841F"},
   image: {width: 50, height: 50, resizeMode: 'cover', alignSelf: 'center', borderRadius: 8},
-  label: {fontSize: 11, alignSelf: 'center'},
+  label: {fontSize: 10, alignSelf: 'center', textAlign: 'center'},
   separator: {flex: 0.5, height: 8, backgroundColor: '#F7F7FA'}
 })

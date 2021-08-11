@@ -186,6 +186,7 @@ export const ToktokMallLandingScreen = () => {
         }
         showsVerticalScrollIndicator={false}
         removeClippedSubviews={true}
+        nestedScrollEnabled={true}
       >
         <AdsCarousel />
         <Categories />
