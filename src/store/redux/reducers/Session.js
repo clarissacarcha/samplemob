@@ -14,8 +14,6 @@ export default (state = INITIAL_STATE, action) => {
     case 'DESTROY_SESSION':
       AsyncStorage.removeItem('userId');
       AsyncStorage.removeItem('accessToken');
-      AsyncStorage.removeItem('toktokWalletAccountToken');
-      AsyncStorage.removeItem('toktokWalletEnterpriseToken');
       // return INITIAL_STATE;
       return state;
     default:
