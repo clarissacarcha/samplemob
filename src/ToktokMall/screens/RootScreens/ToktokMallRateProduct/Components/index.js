@@ -1,2 +1,1 @@
-export * from "./Item"
-export * from "./Rate"
+export * from './Item'

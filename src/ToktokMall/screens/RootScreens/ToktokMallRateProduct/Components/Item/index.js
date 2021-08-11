@@ -1,10 +1,11 @@
-import React, {useState} from 'react';
-import {View, Image, Text, TextInput, TouchableOpacity, Platform} from 'react-native';
-import CustomIcon from '../../../../../Components/Icons';
-import {Rate} from '../Rate';
+import React from 'react'
+import {View, Image, Text, TextInput, TouchableOpacity, Platform} from 'react-native'
+import {Rate, Uploads} from './Components'
 
-export const Item = (data) => {
-  const [rating, setRating] = useState(0);
+export const Item = ({index, setRating, rating: {star, feedback, images}, ...data}) => {
+  const onChangeText = (text) => {
+    setRating({index, feedback: text})
+  }
 
   return (
     <View style={{flex: 1, marginTop: 10, paddingBottom: 15, backgroundColor: '#FFF'}}>
@@ -27,11 +28,7 @@ export const Item = (data) => {
         <Text style={{color: '#9E9E9E', fontSize: 13}}>Kindly select a star rating</Text>
       </View>
       <View style={{flexDirection: 'row', justifyContent: 'center', paddingVertical: 20}}>
-        <Rate {...{rating, setRating}} value={1} />
-        <Rate {...{rating, setRating}} value={2} />
-        <Rate {...{rating, setRating}} value={3} />
-        <Rate {...{rating, setRating}} value={4} />
-        <Rate {...{rating, setRating}} value={5} />
+        <Rate {...{star, setRating, index}}/>
       </View>
 
       <View
@@ -44,22 +41,9 @@ export const Item = (data) => {
           borderRadius: 5,
           borderWidth: 2,
         }}>
-        <TextInput multiline placeholder="(Write your feedback here)" />
+        <TextInput multiline value={feedback} placeholder="(Write your feedback here)" onChangeText={onChangeText} />
       </View>
-      <TouchableOpacity
-        style={{
-          alignItems: 'center',
-          marginTop: 15,
-          marginHorizontal: 15,
-          paddingVertical: 15,
-          borderStyle: 'dashed',
-          borderColor: '#9E9E9E',
-          borderRadius: 5,
-          borderWidth: 2,
-        }}>
-        <CustomIcon.FA5Icon name="camera" color="#9E9E9E" size={25} />
-        <Text style={{color: '#9E9E9E', fontSize: 15, paddingTop: 5}}>Upload Photo</Text>
-      </TouchableOpacity>
+      <Uploads {...{images, setRating,index}}/>
     </View>
-  );
-};
+  )
+}
