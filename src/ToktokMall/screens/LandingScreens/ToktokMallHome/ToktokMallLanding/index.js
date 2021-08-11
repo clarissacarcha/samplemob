@@ -1,7 +1,8 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {View, Text, ImageBackground, Image, TouchableOpacity, FlatList, SectionList, StyleSheet, Dimensions} from 'react-native';
+import {View, Text, ImageBackground, Image, TouchableOpacity, FlatList, SectionList, StyleSheet, Dimensions, AsyncStorage, RefreshControl} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native';
+import {connect} from 'react-redux';
 
 import { COLOR, FONT } from '../../../../../res/variables';
 import {useValues, onScrollEvent} from 'react-native-redash'
@@ -16,7 +17,37 @@ import CustomIcon from '../../../../Components/Icons';
 import {LandingHeader, AdsCarousel, StickyHomeHeader, LandingSubHeader} from '../../../../Components';
 
 import {Categories, Offers, FlashSale, Vouchers, Suggestions} from './Components';
-
+import {clothfacemask, medicalfacemask} from '../../../../assets'; 
+import {suggestionsArr2} from '../../../../Components/Widgets/datas'
+const suggestionsArray = [{
+  image: clothfacemask,
+  rating: 4,
+  price: 190,
+  stock: 35,
+  sold: 187,
+  label: "Cloth Face Mask"
+}, {
+  image: medicalfacemask,
+  rating: 3,
+  price: 80,
+  stock: 201,
+  sold: 407,
+  label: "Medical Face Mask"
+}, {
+  image: clothfacemask,
+  rating: 5,
+  price: 190,
+  stock: 35,
+  sold: 187,
+  label: "Cloth Face Mask"
+}, {
+  image: medicalfacemask,
+  rating: 2,
+  price: 190,
+  stock: 35,
+  sold: 187,
+  label: "Medical Face Mask"
+}]
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const Item = ({ title }) => (
@@ -26,16 +57,34 @@ const Item = ({ title }) => (
 );
 
 export const ToktokMallLandingScreen = () => {
+// const Component = ({ myCart, createMyCartSession,}) => {
 
   const [scrolling, setScrolling] = useState(false)
   const [y] = useValues([0], [])
   const navigation = useNavigation();
+  const [refreshing, setRefreshing] =useState(false)
+  const [suggestionsArr, setSuggestionsArr] = useState(suggestionsArray)
 
   // const HandleOnScroll = (r) => {
   //   let ypos = r.nativeEvent.contentOffset.y
   //   if(ypos > 100) setScrolling(true)
   //   else if (ypos <= 100) setScrolling(false)
   // }
+
+  // useEffect(() => {
+    // setAllSelected(false)
+    // testData2 = myCart
+    // setSelectedItemsArr(myCart)
+    // AsyncStorage.getItem('MyCart').then((value) => {
+    //   console.log(value)
+    //   const parsedValue = JSON.parse(value)
+    //   if(value != null){
+    //     createMyCartSession('set', parsedValue)
+    //   }else {
+        // createMyCartSession('set', testdata)
+    //   }
+    // })
+  // }, []);
 
   let AnimatedHeaderValue = new Animated.Value(0);
   const Header_Max_Height = 120;
@@ -50,18 +99,6 @@ export const ToktokMallLandingScreen = () => {
   const animateHeaderHeight = AnimatedHeaderValue.interpolate({
     inputRange: [0, Header_Max_Height - Header_Min_Height],
     outputRange: [ Header_Max_Height, Header_Min_Height],
-    extrapolate: 'clamp'
-  })
-
-  const animateHeaderOpacity2 = AnimatedHeaderValue.interpolate({
-    inputRange: [0, Header_Max_Height - Header_Min_Height],
-    outputRange: [0, 1],
-    extrapolate: 'clamp'
-  })
-
-  const animateHeaderOpacity3 = AnimatedHeaderValue.interpolate({
-    inputRange: [0, Header_Max_Height - 120],
-    outputRange: [0, 1],
     extrapolate: 'clamp'
   })
 
@@ -108,6 +145,42 @@ export const ToktokMallLandingScreen = () => {
     1000,
     {trailing: false},
   );
+
+  const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+    const paddingBottom = 20;
+    return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingBottom;
+  }
+
+  const onScroll = (event) => {
+    // alert
+    // if(isCloseToBottom(event)){
+    //   alert('close to bottom')
+    // }
+    // console.log(event.nativeEvent)
+    if(isCloseToBottom(event.nativeEvent)){
+      alert('close to bottom')
+    }
+    // Animated.event(
+    //   [{nativeEvent: {contentOffset: {y: AnimatedHeaderValue}}}],
+    //   {useNativeDriver: false}
+    // )
+  }
+
+  const onRefreshData = async () => {
+    setRefreshing(true);
+    let sampleArr = []
+    if(suggestionsArr.length < 30){
+      for (let x = 0; suggestionsArr.length > x; x++){
+        sampleArr.push(suggestionsArr[x])
+      }
+      for (let x = 0; suggestionsArr2.length > x; x++){
+        sampleArr.push(suggestionsArr2[x])
+      }
+    }
+    setSuggestionsArr(sampleArr)
+    console.log(sampleArr)
+    setRefreshing(false)
+  }
 
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
@@ -175,25 +248,55 @@ export const ToktokMallLandingScreen = () => {
 
       <Animated.ScrollView
         style = {[{ top : top}]}
+        refreshControl = {
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefreshData}
+
+          />
+        }
         scrollEventThrottle = {16}
-        onScroll = {
+        onScroll = { 
           Animated.event(
             [{nativeEvent: {contentOffset: {y: AnimatedHeaderValue}}}],
-            {useNativeDriver: false}
+            {
+              listener: (event) => {
+                onScroll(event)
+              },
+              useNativeDriver: true
+            }
           )
+          // ({nativeEvent}) => {
+          //   // Animated.event([{nativeEvent: {contentOffset: {y: AnimatedHeaderValue}}}], {useNativeDriver: false})
+          //   Animated.event([{nativeEvent: {contentOffset: {y: AnimatedHeaderValue}}}], {useNativeDriver: false})
+            // if(isCloseToBottom(nativeEvent)){
+            //   // alert('close to bottom')
+            // }
+          // }
         }
+        
       >
         <AdsCarousel />
         <Categories />
         <Offers />
         <FlashSale />
         <Vouchers />
-        <Suggestions />
+        {refreshing ? <></> :  <Suggestions data = {suggestionsArr}/>}
       </Animated.ScrollView>
 
     </View>
   );
 };
+
+// const mapStateToProps = (state) => ({
+//   myCart: state.toktokMall.myCart
+// })
+
+// const mapDispatchToProps = (dispatch) => ({
+//   createMyCartSession: (action, payload) => dispatch({type: 'CREATE_MY_CART_SESSION', action,  payload}),
+// });
+
+// export const ToktokMallLandingScreen = connect(mapStateToProps, mapDispatchToProps)(Component);
 
 const styles = StyleSheet.create({
   header: {

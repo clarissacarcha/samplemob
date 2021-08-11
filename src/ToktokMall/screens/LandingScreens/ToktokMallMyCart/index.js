@@ -176,13 +176,16 @@ const Component =  ({
 
   useEffect(() => {
     // setAllSelected(false)
-    createMyCartSession('set', testdata)
+    // createMyCartSession('set', testdata)
+    // setSelectedItemsArr(myCart)
     getSubTotal();
   }, []);
 
   useEffect(() => {
     // setAllSelected(false)
-   testData2 = myCart
+    // testData2 = myCart
+    // setSelectedItemsArr(myCart)
+    // setUnSelectedItemsArr([])
   }, [myCart]);
 
   const deleteItem = () => {
@@ -204,24 +207,15 @@ const Component =  ({
     if(type == 'store'){
       if(selectedItemsArr.length == 1 || selectedItemsArr.length == 0){
         selectedItemsArr.splice(0, 1);
+      }else {
+        let indexOf = selectedItemsArr.findIndex(x => x.store_id == raw.item.store_id)
+        selectedItemsArr.splice(indexOf, 1);
       }
-      // else{
-      //   let indexOf = selectedItemsArr.findIndex(x => x.store_id == raw.item.store_id)
-      //   selectedItemsArr.splice(indexOf, 1);
-      // }
-      
     }else {
       if(selectedItemsArr.length > 1){
         if(selectedItemsArr[raw.storeIndex].cart.length == 1){
           selectedItemsArr.splice(0, 1);
         }
-        // else {
-        //   console.log('UNSELECT CONDTITION 2 ', )
-        //   // let indexOf = selectedItemsArr.findIndex(x => x.store_id == raw.item.store_id)
-        //   // let indexOfItem = selectedItemsArr[indexOf].cart.findIndex(x => x.item_id == raw.item.item_id)
-        //   // selectedItemsArr.splice(indexOf, 1);
-        //   // selectedItemsArr[indexOf].cart.splice(indexOfItem, 1)
-        // }
       }else if(selectedItemsArr.length <= 1){
         console.log('UNSELECT CONDTITION 3 ')
         let indexOf = selectedItemsArr.findIndex(x => x.store_id == raw.item.store_id)
@@ -266,23 +260,15 @@ const Component =  ({
     if(type == 'store'){
       if(unSelectedItemsArr.length == 1 || unSelectedItemsArr.length == 0){
         unSelectedItemsArr.splice(0, 1);
+      }else {
+        let indexOf = unSelectedItemsArr.findIndex(x => x.store_id == raw.item.store_id)
+        unSelectedItemsArr.splice(indexOf, 1);
       }
-      // else{
-      //   let indexOf = unSelectedItemsArr.findIndex(x => x.store_id == raw.item.store_id)
-      //   unSelectedItemsArr.splice(indexOf, 1);
-      // }
-      
     }else {
       if(unSelectedItemsArr.length > 1){
         if(unSelectedItemsArr[raw.storeIndex].cart.length == 1){
             unSelectedItemsArr.splice(0, 1);
         }
-        // else {
-        //   let indexOf = unSelectedItemsArr.findIndex(x => x.store_id == raw.item.store_id)
-        //   let indexOfItem = unSelectedItemsArr[indexOf].cart.findIndex(x => x.item_id == raw.item.item_id)
-        //   unSelectedItemsArr.splice(indexOf, 1);
-        //   unSelectedItemsArr[indexOf].cart.splice(indexOfItem, 1)
-        // }
       }else if(unSelectedItemsArr.length <= 1){
         let indexOf = unSelectedItemsArr.findIndex(x => x.store_id == raw.item.store_id)
         unSelectedItemsArr.splice(indexOf, 1);
@@ -390,6 +376,7 @@ const Component =  ({
           }} /> : 
           <CheckoutFooter 
             onSubmit={() => {
+
               navigation.navigate("ToktokMallCheckout", {data: selectedItemsArr,vouchers: [],unSelectedItemsArr: unSelectedItemsArr})
             }} 
             subtotal={subTotal} 

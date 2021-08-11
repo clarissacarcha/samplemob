@@ -110,13 +110,14 @@ export const Suggestions = ({data}) => {
             </View>
 
             <FlatList
-              data={testdata}
+              data={data}
               numColumns={2}
               style={{paddingHorizontal: 10}}
               renderItem={({item}) => {
                 return <RenderItem item={item} />
               }}
               keyExtractor={(item, index) => item + index}
+              // on
             />
             
           </View>

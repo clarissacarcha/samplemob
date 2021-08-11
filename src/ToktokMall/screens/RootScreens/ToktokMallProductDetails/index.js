@@ -22,7 +22,6 @@ import {
   VariationBottomSheet
 } from './components'
 import Animated, {interpolate, Extrapolate, useCode, set, greaterThan} from 'react-native-reanimated'
-// import console = require('console');
 
 const item = {
   store_id: 4,
@@ -58,16 +57,29 @@ const Component =  ({
 
   let AnimatedHeaderValue = new Animated.Value(0);
 
-
   const HandleOnScroll = (r) => {
     let ypos = r.nativeEvent.contentOffset.y
     if(ypos > 50) setScrolling(true)
     else if (ypos <= 50) setScrolling(false)
   }
 
-  const onBuyNow = () => {
+  const onAddToCart = () => {
     createMyCartSession('push',item)
   }
+
+  const something = AnimatedHeaderValue.interpolate({
+    inputRange: [0, 150],
+    outputRange: [0,  1],
+    // extrapolateLeft: Extrapolate.CLAMP
+    extrapolate: 'clamp'
+  })
+
+  const something2 = AnimatedHeaderValue.interpolate({
+    inputRange: [0, 150],
+    outputRange: [1,  0],
+    // extrapolateLeft: Extrapolate.CLAMP
+    extrapolate: 'clamp'
+  })
 
   return (
     <>
@@ -75,12 +87,12 @@ const Component =  ({
       
       {/* {scrolling ? <HeaderPlain /> : <HeaderTransparent />} */}
       {/* PLAIN HEADER*/}
-      <HeaderPlain animatedValue = {AnimatedHeaderValue}/>
+      {/* <HeaderPlain animatedValue = {AnimatedHeaderValue}/> */}
 
       {/* TRANSPARENT HEADER*/}
-      <HeaderTransparent animatedValue = {AnimatedHeaderValue}/>
-
-
+      {/* <HeaderTransparent animatedValue = {AnimatedHeaderValue}/> */}
+      <Animated.Text style = {[{position: 'absolute', zIndex: 1}, {opacity: something}]}>testing</Animated.Text>
+      <Animated.Text style = {[{position: 'absolute', zIndex: 1}, {opacity: something2}]}>gnitset</Animated.Text>
       <Animated.ScrollView  
         // onScroll={HandleOnScroll}
         scrollEventThrottle = {270}
@@ -111,12 +123,13 @@ const Component =  ({
         onPressVisitStore={() => null}
         onPressBuyNow={() => {
           setVariationOptionType(2)
-          // varBottomSheetRef.current.expand()
-          onBuyNow()
+          varBottomSheetRef.current.expand()
+          // onBuyNow()
         }}
         onPressAddToCart={() => {
           setVariationOptionType(1)
           varBottomSheetRef.current.expand()
+          
         }}
       />
 
@@ -129,6 +142,7 @@ const Component =  ({
             setMessageModalShown(true)
           }, 300)
           // alert('something')
+          onAddToCart()
         }}
         onPressBuyNow={() => null}
       />
