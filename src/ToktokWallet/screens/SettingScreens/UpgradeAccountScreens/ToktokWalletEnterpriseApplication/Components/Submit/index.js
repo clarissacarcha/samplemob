@@ -27,7 +27,7 @@ export const ValidateRequirements = (context)=> {
         noError = false;
     }
     if(forms[1].filename == ""){
-        setFileError( 1 , "DTI Certification of Registration is required.");
+        setFileError( 1 , "DTI/SEC Certification of Registration is required.");
         noError = false;
     }
     if(forms[2].filename == ""){

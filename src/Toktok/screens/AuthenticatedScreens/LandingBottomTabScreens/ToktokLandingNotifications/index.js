@@ -130,6 +130,7 @@ const Notifications = ({navigation, route, session, createSession}) => {
   }
 
   if (error) {
+    console.log(JSON.stringify(error))
     return (
       <View style={styles.container}>
         <View

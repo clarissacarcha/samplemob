@@ -63,7 +63,7 @@ export const ToktokWalletUpgradeAccount = ({navigation})=> {
                 <View style={styles.accountVerification}>
                     <Text style={styles.verifiedText}>Enterprise</Text>
                     <UpgradeRequirement label="Business permit"/>
-                    <UpgradeRequirement label="DTI certification of registration"/>
+                    <UpgradeRequirement label="DTI/SEC certification of registration"/>
                     <UpgradeRequirement label="BIR 2302 form"/>
                     <UpgradeRequirement label="Barangay permit"/>
                     <UpgradeRequirement label="2 valid government ID"/>
