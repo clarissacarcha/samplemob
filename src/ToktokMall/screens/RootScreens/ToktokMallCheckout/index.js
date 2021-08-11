@@ -97,14 +97,14 @@ export const ToktokMallCheckout = ({route, navigation}) => {
           defaultAddress = {defaultAddress} setDefaultAddress= {setDefaultAddress} addressLengthChanged = {addressLengthChanged} 
           setAddressLengthChanged={setAddressLengthChanged}
         />
-        <Shops data = {testData2} />
+        <Shops data = {route.params.data} />
         <Vouchers navigation = {navigation} vouchers = {vouchers} setVouchers = {setVouchers} />
         <Payment  payment = {payment} setPaymentMethod = {setPaymentMethod} />
-        <Totals data = {testData2}/>
+        <Totals data = {route.params.data}/>
         </View>
       </ScrollView>
       <View style={styles.footer}>
-        <Button data = {testData2} isVisible = {isVisible} setIsVisible = {setIsVisible} />
+        <Button data = {route.params.data} isVisible = {isVisible} setIsVisible = {setIsVisible} unSelectedItemsArr = {route.params.unSelectedItemsArr} />
       </View>
     </>
     

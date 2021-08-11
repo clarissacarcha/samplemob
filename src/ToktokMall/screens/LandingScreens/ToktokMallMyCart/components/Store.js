@@ -5,7 +5,7 @@ import { AlertOverlay} from '../../../../../components';
 import { COLOR, FONT, FONT_SIZE } from '../../../../../res/variables';
 import CheckBox from 'react-native-check-box';
 
-export const Store = ({data, state = false, onSelect, onPress}) => {
+export const Store = ({data, storeIndex,  state = false, onSelect, onPress, setUncheckedItems}) => {
 
   const [selected, setSelected] = useState(state)
 	const [items, setItems] = useState(data.cart || [])
@@ -21,7 +21,8 @@ export const Store = ({data, state = false, onSelect, onPress}) => {
 
 	useEffect(() => {
 		setSelected(state)
-	}, [state])
+  }, [state])
+  
 
   return (
     <>
@@ -35,9 +36,17 @@ export const Store = ({data, state = false, onSelect, onPress}) => {
 							onSelect({
 								checked: !selected,
 								total: totalAmount,
-								items: items
-							})
+                items: items,
+                item: data,
+                index: storeIndex
+              })
+              if(selected){
+                console.log('from positive')
+              }else {
+                console.log('from neaggitve')
+              }
               setSelected(!selected)
+              
             }}
           />
         </View>
