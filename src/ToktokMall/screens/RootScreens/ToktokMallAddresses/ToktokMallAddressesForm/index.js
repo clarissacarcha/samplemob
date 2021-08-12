@@ -5,6 +5,7 @@ import {HeaderBack, HeaderTitle, HeaderRight} from '../../../../Components';
 import Fontisto from 'react-native-vector-icons/dist/Fontisto'
 
 import {AddressModal} from './Components'
+import { Platform } from 'react-native';
 
 export const ToktokMallAddressesForm = ({navigation, route}) => {
 
@@ -169,9 +170,9 @@ const styles = StyleSheet.create({
   partition1: {padding: 15, backgroundColor: 'white', marginTop: 8,  flex: 1.5},
   partition2: {padding: 15, backgroundColor: 'white', marginTop: 4,  flex: 0.08, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'},
   partition3: {padding: 15, backgroundColor: 'white', marginTop: 4, flex: .3, justifyContent: 'center', alignItems: 'center', flexDirection: 'row'},
-  textinputContainer: {backgroundColor: '#F8F8F8', marginTop: 10,  borderRadius: 5, alignItems: 'flex-start'},
+  textinputContainer: {padding: Platform.OS === "ios" ? 10 : 0, backgroundColor: '#F8F8F8', marginTop: 10,  borderRadius: 5, alignItems: 'flex-start'},
   textinput: {marginLeft: 10},
-  textinputLastContainer :{backgroundColor: '#F8F8F8', marginTop: 10,  borderRadius: 5, alignItems: 'flex-start', height: 130},
+  textinputLastContainer :{padding: Platform.OS === "ios" ? 10 : 0, backgroundColor: '#F8F8F8', marginTop: 10,  borderRadius: 5, alignItems: 'flex-start', height: 130},
   button1: {flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#F6841F', paddingHorizontal: 22, paddingVertical: 16, borderRadius: 5},
   button2: {flex: 1, alignItems: 'center', justifyContent: 'center', borderColor: "#F6841F", borderWidth: 1, paddingHorizontal: 22, paddingVertical: 16, borderRadius: 5},
   buttonText: {color: 'white'}

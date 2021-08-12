@@ -52,7 +52,7 @@ export const ToktokMallStore = () => {
             name: "Face Mask PH",
             location: "Malabon, Manila",
             rating: 4.0,
-            chatResponse: 40,
+            followers: 40,
             totalProducts: 152
           }}
           onToggleFollow={(val) => {
