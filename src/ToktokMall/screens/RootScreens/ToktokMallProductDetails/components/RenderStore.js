@@ -19,7 +19,9 @@ export const RenderStore = ({data}) => {
 	return (
 		<>
 			<View style={{paddingVertical: 16, paddingHorizontal: 16}}>
-        <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+        <TouchableOpacity onPress={() => {
+            navigation.navigate("ToktokMallStore", {})
+          }} style={{flexDirection: 'row', justifyContent: 'center'}}>
           <View style={{flex: 2, alignItems: 'flex-start', justifyContent: 'center'}}>
 						<Image source={getStoreLogo(data?.profileImages?.logo)} style={{width: 50, height: 50, resizeMode: 'stretch', borderRadius: 30}} />
 					</View>
@@ -27,12 +29,10 @@ export const RenderStore = ({data}) => {
             <Text style={{fontSize: 13, fontFamily: FONT.BOLD}}>{data?.shopname}</Text>
             <Text style={{fontSize: 13, color: "#9E9E9E"}}>{data?.address}</Text>
           </View>
-          <TouchableOpacity onPress={() => {
-            navigation.navigate("ToktokMallStore", data)
-          }} style={{flex: 3, alignItems: 'flex-end', justifyContent: 'center'}}>
+          <View style={{flex: 3, alignItems: 'flex-end', justifyContent: 'center'}}>
             <Text style={{fontSize: 13, color: "#F6841F"}}>Visit Store</Text>
-          </TouchableOpacity>
-        </View>
+          </View>
+        </TouchableOpacity>
         <View style={{flexDirection: 'row', paddingVertical: 14}}>
           <View style={{flex: 3, alignItems: 'flex-end'}}>
             <Text style={{fontSize: 18, color: "#F6841F", marginRight: 8}}>4.0</Text>
@@ -51,7 +51,7 @@ export const RenderStore = ({data}) => {
 
       <View style={{paddingHorizontal: 16, paddingVertical: 16}}>
         <View style={{paddingBottom: 16}}>
-          <Text style={{fontSize: 14}}>Face Mask PH Vouchers</Text>
+          <Text style={{fontSize: 14}}>{data?.shopname || 'Shop'} Vouchers</Text>
         </View>
         <FlatList 
           data={[{

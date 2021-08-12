@@ -14,6 +14,7 @@ export const ToktokMallStore = ({navigation, route}) => {
   const [activeTab, setActiveTab] = useState(0)
   const [showCategories, setShowCategories] = useState(false)
   const [messageModalShown, setMessageModalShown] = useState(false)
+  const [messageModalContent, setMessageModalContent] = useState("")
   const [searchValue, setSearchValue] = useState("")
   const [emptySearch, setEmptySearch] = useState(false)
 
@@ -110,10 +111,19 @@ export const ToktokMallStore = ({navigation, route}) => {
             following: true,
             rating: 4.0,
             chatResponse: 40,
+            followers: 40,
+            totalProducts: 152
           }}
           onToggleFollow={(val) => {
-            if(val == false) setMessageModalShown(true) //Unfollow
-            else if(val == true) Toast.show("You are now following Face Mask PH") //Followed
+            if(val == false){
+              //Unfollow
+              setMessageModalContent(`You unfollowed ${storeData?.shopname}`)   
+            }
+            else if(val == true){
+              //Followed
+              setMessageModalContent(`You are now following ${storeData?.shopname}`)              
+            } 
+            setMessageModalShown(true)
           }} 
         />}
 
@@ -125,7 +135,7 @@ export const ToktokMallStore = ({navigation, route}) => {
           type="success"  
           isVisible={messageModalShown}
           setIsVisible={(val) => setMessageModalShown(val)}
-          message={"You unfollowed Face Mask PH"}
+          message={messageModalContent}
         />}
 
       </View>

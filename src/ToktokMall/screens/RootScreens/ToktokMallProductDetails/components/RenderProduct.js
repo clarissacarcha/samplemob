@@ -134,6 +134,10 @@ export const RenderProduct = ({data, onOpenVariations, animatedValue}) => {
                 Toast.show('Removed to Favorites')
                 setFavorite(false)
               }
+              if(favorite){
+                Toast.show('Removed to Favorites')
+                setFavorite(false)
+              }
             }}>
               {favorite ? <CustomIcon.EIcon name="heart" size={22} color="#F6841F" /> : <CustomIcon.EIcon name="heart-outlined" size={22} color="#9E9E9E" />}
             </TouchableOpacity>

@@ -1,104 +1,112 @@
-import React, { useState } from 'react'
-import { View, TouchableWithoutFeedback, Image, Text, TextInput, TouchableOpacity, Platform } from 'react-native'
+import React, {useEffect, useState} from 'react'
+import {View, Text, TouchableOpacity, FlatList} from 'react-native'
+import Toast from 'react-native-simple-toast'
 
-import CustomIcon from '../../../Components/Icons';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native'
 
-import { HeaderBack, HeaderTitle, HeaderRight } from '../../../Components';
+import {HeaderBack, HeaderTitle, HeaderRight} from '../../../Components'
+import {Item} from './Components'
 
-const Rate = ({ rating, setRating, value }) => {
-  let orange = "#FFC833"
-  let gray = "rgba(33, 37, 41, 0.1)"
-  return (
-    <TouchableWithoutFeedback onPress={() => setRating(value)} >
-      <CustomIcon.FoIcon name="star" size={30} color={rating >= value ? orange : gray} style={{ paddingHorizontal: 12 }} />
-    </TouchableWithoutFeedback>)
-}
-
-export const ToktokMallRateProduct = ({ data = sample, route }) => {
+export const ToktokMallRateProduct = ({route}) => {
   const navigation = useNavigation()
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={['Rate Product']} />,
-    headerRight: () => <HeaderRight hidden={true} />
-  });
+    headerRight: () => <HeaderRight hidden={true} />,
+  })
 
-  const [rating, setRating] = useState(0)
+  const [dataWithRatings, setDataWithRatings] = useState(sample)
 
-  return <View style={{ flex: 1, marginTop: 10, backgroundColor: "#FFF" }}>
-    <View style={{ flexDirection: 'row', paddingTop: 10, padding: 15, }}>
-      <Image source={require("../../../assets/images/coppermask.png")} style={{ width: 55, height: 60, resizeMode: 'stretch', borderRadius: 5 }} />
-      <View style={{ marginLeft: 15 }}>
-        <View style={{ flex: 1, justifyContent: 'center' }}>
-          <Text style={{ fontSize: 13, fontWeight: '100' }}>{data.label}</Text>
-          <Text style={{ color: "#9E9E9E", fontSize: 13 }}>Variation: {data.variation}</Text>
+  useEffect(() => {
+    if (route.params.data) {
+      setDataWithRatings({
+        ...route.params.data,
+        rating: {
+          star: 0,
+          feedback: '',
+          images: [],
+        },
+      })
+    }
+  }, [route])
+
+  const setRating = ({index, star, feedback, image}) => {
+    setDataWithRatings((prevState) => {
+      return prevState.map((data, i) => {
+        if (i === index) {
+          const images = data.rating.images
+          if (image) {
+            if (image.action === 'add') {
+              images.push(image.data)
+            } else if (image.action === 'remove') {
+             images.splice(image.index, 1)
+            }
+          }
+          console.log(images)
+          return {
+            ...data,
+            rating: {
+              star: star || data.rating.star,
+              feedback: feedback || data.rating.feedback,
+              images: images,
+            },
+          }
+        }
+        return data
+      })
+    })
+  }
+
+  const onSubmit = () => {
+    let ratingIsRequired = false
+    dataWithRatings.map(({rating}) => {
+      if (rating.star === 0) ratingIsRequired = true
+    })
+
+    if (ratingIsRequired) return Toast.show('Star rating is required!')
+
+    route.params.openModal()
+    navigation.goBack()
+  }
+
+  return (
+    <FlatList
+      data={dataWithRatings}
+      renderItem={({item, index}) => <Item {...{...item, index, setRating}} />}
+      ListFooterComponent={
+        <View style={{backgroundColor: '#FFF'}}>
+          <TouchableOpacity
+            style={{
+              backgroundColor: '#F6841F',
+              alignItems: 'center',
+              alignSelf: 'center',
+              width: 180,
+              paddingVertical: 10,
+              borderRadius: 5,
+              marginTop: 60,
+              marginBottom: 40,
+            }}
+            onPress={onSubmit}>
+            <Text style={{color: '#FFF', fontSize: 18, fontWeight: '100'}}>Submit</Text>
+          </TouchableOpacity>
         </View>
-      </View>
-    </View>
-    <View style={{ height: 2, backgroundColor: '#F7F7FA' }} />
-
-    <View style={{ alignItems: 'center', paddingTop: 40 }}>
-      <Text style={{ fontSize: 16, fontWeight: '100' }}>How was your purchase</Text>
-      <Text style={{ color: "#9E9E9E", fontSize: 13 }}>Kindly select a star rating</Text>
-    </View>
-    <View style={{ flexDirection: "row", justifyContent: "center", paddingVertical: 20 }}>
-      <Rate {...{ rating, setRating }} value={1} />
-      <Rate {...{ rating, setRating }} value={2} />
-      <Rate {...{ rating, setRating }} value={3} />
-      <Rate {...{ rating, setRating }} value={4} />
-      <Rate {...{ rating, setRating }} value={5} />
-    </View>
-
-    <View style={{
-      minHeight: 150,
-      paddingHorizontal: 15,
-      paddingTop: Platform.OS === "ios" ? 15 : 0,
-      marginHorizontal: 15,
-      borderColor: "rgba(33, 37, 41, 0.1)",
-      borderRadius: 5,
-      borderWidth: 2
-    }}>
-      <TextInput multiline placeholder="(Write your feedback here)" />
-    </View>
-    <TouchableOpacity style={{
-      alignItems: "center",
-      marginTop: 15,
-      marginHorizontal: 15,
-      paddingVertical: 15,
-      borderStyle: "dashed",
-      borderColor: "#9E9E9E",
-      borderRadius: 5,
-      borderWidth: 2
-    }}>
-      <CustomIcon.FA5Icon name="camera" color="#9E9E9E" size={25} />
-      <Text style={{ color: "#9E9E9E", fontSize: 15, paddingTop: 5 }}>Upload Photo</Text>
-    </TouchableOpacity>
-
-    <TouchableOpacity
-      style={{
-        backgroundColor: "#F6841F",
-        alignItems: 'center',
-        alignSelf: "center",
-        width: 180,
-        paddingVertical: 10,
-        borderRadius: 5,
-        marginTop: 70
-      }}
-      onPress={() => {
-        route.params.openModal()
-        navigation.goBack()
-      }}
-    >
-      <Text style={{ color: "#FFF", fontSize: 18, fontWeight: '100' }}>Submit</Text>
-    </TouchableOpacity>
-  </View>;
+      }
+    />
+  )
 }
 
-const sample = {
-  label: "Improved Copper Mask 2.0 White or Bronze",
-  originalPrice: 380,
-  price: 190,
-  variation: "Black",
-  qty: 1,
-  image: ""
-}
+const sample = [
+  {
+    label: 'Improved Copper Mask 2.0 White or Bronze',
+    originalPrice: 380,
+    price: 190,
+    variation: 'Black',
+    qty: 1,
+    image: '',
+    rating: {
+      star: 0,
+      feedback: '',
+      images: [],
+    },
+  },
+]

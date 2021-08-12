@@ -13,7 +13,7 @@ import Animated, {interpolate, Extrapolate, useCode, set} from 'react-native-rea
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
-export const HeaderTransparent = ({value, outOfStock = false, animatedValue}) => {
+export const HeaderTransparent = ({value, outOfStock = false, animatedValue, cartItems}) => {
 
   const translateOpacity = animatedValue.interpolate({
     inputRange: [250, 270],
@@ -21,6 +21,7 @@ export const HeaderTransparent = ({value, outOfStock = false, animatedValue}) =>
     // extrapolateLeft: Extrapolate.CLAMP
     extrapolate: 'clamp'
   })
+
 
   const navigation = useNavigation()
   const HelpTooltipRef = useRef(null)
@@ -40,7 +41,7 @@ export const HeaderTransparent = ({value, outOfStock = false, animatedValue}) =>
               <CustomIcon.AIcon name="shoppingcart" color="#fff" size={24} />
               <Badge
                 status="warning"
-                value="99+"
+                value= {cartItems()}
                 badgeStyle={{backgroundColor: "#FDBA1C"}}
                 textStyle={{fontFamily: FONT.REGULAR, fontSize: 10}}
                 containerStyle={{ position: 'absolute', top: -4, right: 0 }}

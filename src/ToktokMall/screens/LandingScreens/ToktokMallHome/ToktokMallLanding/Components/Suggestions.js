@@ -62,7 +62,7 @@ const RenderItem = ({item}) => {
   const navigation = useNavigation()
 
   const getImageSource = (data) => {
-    if(data.length > 0){
+    if(data && data?.length > 0){
       return {uri: data[0].filename}
     }else {
       return placeholder
@@ -158,9 +158,6 @@ export const Suggestions = ({data}) => {
               }}
               keyExtractor={(item, index) => item + index}
               refreshing={loading}
-              onEndReached={() => {
-                console.log("End reached!!!")
-              }}
               onEndReachedThreshold={0.5}
               ListFooterComponent={() => {
                 return (
@@ -177,6 +174,7 @@ export const Suggestions = ({data}) => {
                   </>
                 )
               }}
+              // on
             />
             
           </View>

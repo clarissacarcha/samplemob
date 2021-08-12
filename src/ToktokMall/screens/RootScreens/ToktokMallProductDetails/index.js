@@ -27,28 +27,31 @@ import {
   VariationBottomSheet
 } from './components'
 
-import Animated, {interpolate, Extrapolate, useCode, set} from 'react-native-reanimated'
-// import console = require('console');
+import Animated, {interpolate, Extrapolate, useCode, set, greaterThan} from 'react-native-reanimated'
 
 const item = {
+  // store_id: 4,
+  //   store: 'The Apparel 3',
+  //   cart: [
+  //     {
+        
+  //     },
+  //   ],
+  //   delivery_fee: 80, date_range_from: 'Jul 20', date_range_to: 'Jul 25'
+  item_id: 1,
+  label: 'Graphic Tees',
+  originalPrice: 380,
+  price: 50,
+  variation: 'White, L',
+  qty: 2,
   store_id: 4,
-    store: 'The Apparel 3',
-    cart: [
-      {
-        item_id: 1,
-        label: 'Graphic Tees',
-        originalPrice: 380,
-        price: 50,
-        variation: 'White, L',
-        qty: 2,
-        store_id: 4,
-        store: 'The Apparel 3',
-      },
-    ],
-    delivery_fee: 80, date_range_from: 'Jul 20', date_range_to: 'Jul 25'
+  store: 'The Apparel 3',
 }
 
-const Component = ({navigation, route, createMyCartSession}) => {
+const Component =  ({
+  navigation,
+  createMyCartSession, myCart, route
+}) => {
 
   const [product, setProduct] = useState({})
   const [images, setImages] = useState([])
@@ -117,6 +120,39 @@ const Component = ({navigation, route, createMyCartSession}) => {
       </>
     )
   }
+  
+  const onAddToCart = () => {
+    createMyCartSession('push',item)
+  }
+
+  const something = AnimatedHeaderValue.interpolate({
+    inputRange: [0, 150],
+    outputRange: [0,  1],
+    // extrapolateLeft: Extrapolate.CLAMP
+    extrapolate: 'clamp'
+  })
+
+  const something2 = AnimatedHeaderValue.interpolate({
+    inputRange: [0, 150],
+    outputRange: [1,  0],
+    // extrapolateLeft: Extrapolate.CLAMP
+    extrapolate: 'clamp'
+  })
+
+  const cartItems = () => {
+    // return myCart.length
+    let total = 0
+    for(let x = 0; myCart.length >  x; x++){
+      for(let y=0; myCart[x].cart.length > y; y++){
+        total = total + myCart[x].cart[y].qty
+      }
+    }
+    if(total > 99){
+      return "99+"
+    }else {
+      return total
+    }
+  }
 
   return (
     <>
@@ -124,13 +160,15 @@ const Component = ({navigation, route, createMyCartSession}) => {
       
       {/* {scrolling ? <HeaderPlain /> : <HeaderTransparent />} */}
       {/* PLAIN HEADER*/}
-      <HeaderPlain animatedValue = {AnimatedHeaderValue}/>
+      <HeaderPlain animatedValue={AnimatedHeaderValue} cartItems={cartItems} />
 
       {/* TRANSPARENT HEADER*/}
-      <HeaderTransparent animatedValue = {AnimatedHeaderValue}/>
+      <HeaderTransparent animatedValue={AnimatedHeaderValue} cartItems={cartItems} />
 
-
+      {/* <Animated.Text style = {[{position: 'absolute', zIndex: 1}, {opacity: something}]}>testing</Animated.Text>
+      <Animated.Text style = {[{position: 'absolute', zIndex: 1}, {opacity: something2}]}>gnitset</Animated.Text> */}
       <Animated.ScrollView
+        // onScroll={HandleOnScroll}
         scrollEventThrottle = {270}
         onScroll = {
           Animated.event(
@@ -172,12 +210,13 @@ const Component = ({navigation, route, createMyCartSession}) => {
         }}
         onPressBuyNow={() => {
           setVariationOptionType(2)
-          // varBottomSheetRef.current.expand()
-          onBuyNow()
+          varBottomSheetRef.current.expand()
+          // onBuyNow()
         }}
         onPressAddToCart={() => {
           setVariationOptionType(1)
           varBottomSheetRef.current.expand()
+          
         }}
       />
 
@@ -200,6 +239,7 @@ const Component = ({navigation, route, createMyCartSession}) => {
             })
           }, 300)
           // alert('something')
+          onAddToCart()
         }}
         onPressBuyNow={() => null}
       />
@@ -218,8 +258,13 @@ const Component = ({navigation, route, createMyCartSession}) => {
   );
 }
 
+const mapStateToProps = (state) => ({
+  myCart: state.toktokMall.myCart
+})
+
 const mapDispatchToProps = (dispatch) => ({
   createMyCartSession: (action, payload) => dispatch({type: 'CREATE_MY_CART_SESSION', action,  payload}),
 });
 
-export const ToktokMallProductDetails = connect(null, mapDispatchToProps)(Component)
+export const ToktokMallProductDetails = connect(mapStateToProps, mapDispatchToProps)(Component);
+

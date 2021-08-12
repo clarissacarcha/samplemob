@@ -2,7 +2,11 @@ import React from 'react';
 import {View, Image, Text} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
-import {COLOR, FONT_SIZE, SIZE} from '../../../res/variables';
+import {connect} from 'react-redux';
+import { Badge } from 'react-native-elements';
+
+import {COLOR, FONT, FONT_SIZE, SIZE} from '../../../res/variables';
+
 
 import {
   //Categories
@@ -42,11 +46,30 @@ const BottomTabImageIconStyle = {
   resizeMode: 'stretch',
 };
 
-const TabBarIcon = ({source}) => {
+const countCartItems = (myCart) => {
+  let total = 0
+  if(myCart == undefined){
+    return total
+  }else {
+    for(let x = 0; myCart.length >  x; x++){
+      for(let y=0; myCart[x].cart.length > y; y++){
+        total = total + myCart[x].cart[y].qty
+      }
+    }
+    if(total > 99){
+      return "99+"
+    }else {
+      return total
+    }
+  }
+    
+}
+
+const TabBarIcon = ({source, myCart, tab}) => {
   return (
     <>
       <Image source={source} style={BottomTabImageIconStyle} />
-      <View
+      {/* <View
         style={{
           position: 'absolute',
           right: 13,
@@ -57,13 +80,37 @@ const TabBarIcon = ({source}) => {
           alignItems: 'center',
           paddingHorizontal: 2,
         }}>
-        <Text style={{color: 'white', fontSize: 10}}>99+</Text>
-      </View>
+        {tab == 'cart' ? 
+          <Text style={{color: 'white', fontSize: 10}}>{countCartItems(myCart)}</Text>
+          :
+          <Text style={{color: 'white', fontSize: 10}}>99+</Text>
+        }
+      </View> */}
+      <Badge
+        value={tab == 'cart' ? countCartItems(myCart) : "99+"}
+        status="warning"
+        containerStyle={{
+          position: 'absolute',
+          top: -4,
+          right: 14
+        }}
+        textStyle={{
+          fontFamily: FONT.REGULAR,
+          fontSize: 11
+        }}
+      />
     </>
   );
 };
 
-const ToktokMallLanding = ({Navigator}) => {
+const mapStateToProps = (state) => ({
+  myCart: state.toktokMall.myCart
+})
+
+const ToktokMallLanding = connect(
+  mapStateToProps,
+  null,
+)(({myCart}) => {
 
   return (
   <ToktokMallLandingBottomTab.Navigator
@@ -93,7 +140,7 @@ const ToktokMallLanding = ({Navigator}) => {
         // tabBarIcon: ({color}) => <AIcon name="shoppingcart" color={COLOR.YELLOW} size={24} />
         // tabBarIcon: ({focused}) => focused ? <Image source={cartIconFill} style={BottomTabImageIconStyle} /> : <Image source={cartIconOutline} style={BottomTabImageIconStyle} />
         tabBarIcon: ({focused}) =>
-          focused ? <TabBarIcon source={cartIconFill} /> : <TabBarIcon source={cartIconOutline} />,
+          focused ? <TabBarIcon source={cartIconFill} myCart={myCart} tab={'cart'} /> : <TabBarIcon source={cartIconOutline} myCart = {myCart} tab = {'cart'} />,
       }}
     />
     <ToktokMallLandingBottomTab.Screen
@@ -133,7 +180,7 @@ const ToktokMallLanding = ({Navigator}) => {
         // tabBarIcon: ({color}) => <AIcon name="mail" color={COLOR.YELLOW} size={24} />
         // tabBarIcon: ({focused}) => focused ? <Image source={messageIconFill} style={BottomTabImageIconStyle} /> : <Image source={messagesIconOutline} style={BottomTabImageIconStyle} />
         tabBarIcon: ({focused}) =>
-          focused ? <TabBarIcon source={notifIconFill} /> : <TabBarIcon source={notifIconOutline} />,
+          focused ? <TabBarIcon source={notifIconFill} tab={'notifs'} /> : <TabBarIcon source={notifIconOutline} tab={'notifs'} />,
       }}
     />
     <ToktokMallLandingBottomTab.Screen
@@ -152,7 +199,7 @@ const ToktokMallLanding = ({Navigator}) => {
     />
   </ToktokMallLandingBottomTab.Navigator>
   )
-};
+});
 
 export default ({Navigator}) => (
   <Navigator.Screen 

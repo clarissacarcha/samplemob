@@ -1,9 +1,10 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {View, Text, ImageBackground, Image, TouchableOpacity, FlatList, SectionList, StyleSheet, Dimensions} from 'react-native';
+import {View, Text, ImageBackground, Image, TouchableOpacity, FlatList, SectionList, StyleSheet, Dimensions, AsyncStorage, RefreshControl} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import { useQuery } from '@apollo/react-hooks';
+import {connect} from 'react-redux';
 
 import { COLOR, FONT } from '../../../../../res/variables';
 import {useValues, onScrollEvent} from 'react-native-redash'
@@ -23,10 +24,10 @@ import {LandingHeader, AdsCarousel, StickyHomeHeader, LandingSubHeader} from '..
 
 import {Categories, Offers, FlashSale, Vouchers, Suggestions} from './Components';
 
-
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 export const ToktokMallLandingScreen = () => {
+// const Component = ({ myCart, createMyCartSession,}) => {
 
   const scrollViewRef = useRef(null)
   const [scrolling, setScrolling] = useState(false)
@@ -55,6 +56,21 @@ export const ToktokMallLandingScreen = () => {
   //   else if (ypos <= 100) setScrolling(false)
   // }
 
+  // useEffect(() => {
+    // setAllSelected(false)
+    // testData2 = myCart
+    // setSelectedItemsArr(myCart)
+    // AsyncStorage.getItem('MyCart').then((value) => {
+    //   console.log(value)
+    //   const parsedValue = JSON.parse(value)
+    //   if(value != null){
+    //     createMyCartSession('set', parsedValue)
+    //   }else {
+        // createMyCartSession('set', testdata)
+    //   }
+    // })
+  // }, []);
+
   let AnimatedHeaderValue = new Animated.Value(0);
   const Header_Max_Height = 120;
   const Header_Min_Height = 90;
@@ -68,18 +84,6 @@ export const ToktokMallLandingScreen = () => {
   const animateHeaderHeight = AnimatedHeaderValue.interpolate({
     inputRange: [0, Header_Max_Height - Header_Min_Height],
     outputRange: [ Header_Max_Height, Header_Min_Height],
-    extrapolate: 'clamp'
-  })
-
-  const animateHeaderOpacity2 = AnimatedHeaderValue.interpolate({
-    inputRange: [0, Header_Max_Height - Header_Min_Height],
-    outputRange: [0, 1],
-    extrapolate: 'clamp'
-  })
-
-  const animateHeaderOpacity3 = AnimatedHeaderValue.interpolate({
-    inputRange: [0, Header_Max_Height - 120],
-    outputRange: [0, 1],
     extrapolate: 'clamp'
   })
 
@@ -150,6 +154,42 @@ export const ToktokMallLandingScreen = () => {
       </>
     )
   }
+  
+  const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+    const paddingBottom = 20;
+    return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingBottom;
+  }
+
+  const onScroll = (event) => {
+    // alert
+    // if(isCloseToBottom(event)){
+    //   alert('close to bottom')
+    // }
+    // console.log(event.nativeEvent)
+    if(isCloseToBottom(event.nativeEvent)){
+      alert('close to bottom')
+    }
+    // Animated.event(
+    //   [{nativeEvent: {contentOffset: {y: AnimatedHeaderValue}}}],
+    //   {useNativeDriver: false}
+    // )
+  }
+
+  const onRefreshData = async () => {
+    setRefreshing(true);
+    let sampleArr = []
+    if(suggestionsArr.length < 30){
+      for (let x = 0; suggestionsArr.length > x; x++){
+        sampleArr.push(suggestionsArr[x])
+      }
+      for (let x = 0; suggestionsArr2.length > x; x++){
+        sampleArr.push(suggestionsArr2[x])
+      }
+    }
+    setSuggestionsArr(sampleArr)
+    console.log(sampleArr)
+    setRefreshing(false)
+  }
 
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
@@ -218,21 +258,37 @@ export const ToktokMallLandingScreen = () => {
       <Animated.ScrollView
         ref={scrollViewRef}
         style = {[{ top : top}]}
-        scrollEventThrottle = {16}
-        // onScroll = {
-        //   Animated.event(
-        //     [{nativeEvent: {contentOffset: {y: AnimatedHeaderValue}}}],
-        //     {useNativeDriver: false}
-        //   )
+        // refreshControl = {
+        //   <RefreshControl
+        //     refreshing={refreshing}
+        //     onRefresh={onRefreshData}
+        //   />
         // }
+        scrollEventThrottle = {16}
         showsVerticalScrollIndicator={false}
         removeClippedSubviews={true}
         nestedScrollEnabled={true}
+        onScroll = { 
+          Animated.event(
+            [{nativeEvent: {contentOffset: {y: AnimatedHeaderValue}}}],
+            {
+              useNativeDriver: true
+            }
+          )
+          // ({nativeEvent}) => {
+          //   // Animated.event([{nativeEvent: {contentOffset: {y: AnimatedHeaderValue}}}], {useNativeDriver: false})
+          //   Animated.event([{nativeEvent: {contentOffset: {y: AnimatedHeaderValue}}}], {useNativeDriver: false})
+            // if(isCloseToBottom(nativeEvent)){
+            //   // alert('close to bottom')
+            // }
+          // }
+        }
+        
       >
-        {/* <AdsCarousel /> */}
+        <AdsCarousel />
         <Categories />
-        {/* <Offers /> */}
-        {/* <FlashSale /> */}
+        <Offers />
+        <FlashSale />
         <Vouchers />
         <Suggestions />
       </Animated.ScrollView>
@@ -240,6 +296,16 @@ export const ToktokMallLandingScreen = () => {
     </View>
   );
 };
+
+// const mapStateToProps = (state) => ({
+//   myCart: state.toktokMall.myCart
+// })
+
+// const mapDispatchToProps = (dispatch) => ({
+//   createMyCartSession: (action, payload) => dispatch({type: 'CREATE_MY_CART_SESSION', action,  payload}),
+// });
+
+// export const ToktokMallLandingScreen = connect(mapStateToProps, mapDispatchToProps)(Component);
 
 const styles = StyleSheet.create({
   header: {
