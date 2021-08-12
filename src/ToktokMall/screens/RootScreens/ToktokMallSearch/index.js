@@ -48,9 +48,11 @@ export const ToktokMallSearch = ({navigation, route}) => {
         setEmptySearch(true)
       }
       setIsLoading(false)
+      console.log("Search Result", response)
     },
     onError: (err) => {
       console.log(err)
+      setSearchedProducts([])
       setEmptySearch(true)
       setIsLoading(false)
     }
@@ -114,8 +116,8 @@ export const ToktokMallSearch = ({navigation, route}) => {
 				onSubmit={async () => {
           console.log("Triggered!!!")
 					if(searchValue != ""){
-            // searchProduct()
-            await AddSearchHistory(searchValue)
+            searchProduct()
+            // await AddSearchHistory(searchValue)
           }
 				}}
 			/>

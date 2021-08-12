@@ -103,7 +103,7 @@ export const RenderProduct = ({data, onOpenVariations, animatedValue}) => {
 			<View style={{paddingVertical: 8, paddingHorizontal: 16}}>
         <Animated.Text style={[{fontSize: 22, fontWeight: '500', fontFamily: FONT.BOLD}, {opacity: opacity}]}>{data.itemname}</Animated.Text>
         <View style={{flexDirection: 'row'}}>
-          <View style={{flex: 1}}>
+          <View style={{flex: 1.5}}>
             <Text style={{color: "#F6841F", fontSize: 20}}><Price amount={data.price} /></Text>
           </View>
           <View style={{flex: 3, justifyContent: 'center'}}>

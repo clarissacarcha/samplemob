@@ -4,6 +4,7 @@ import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql';
 import { GET_PRODUCT_DETAILS } from '../../../../graphql/toktokmall/model';
 import {View, Text, Image, FlatList, SectionList, ImageBackground, TouchableOpacity, AsyncStorage} from 'react-native';
 import {connect} from 'react-redux'
+import Spinner from 'react-native-spinkit';
 import { FONT } from '../../../../res/variables';
 import { Header, AdsCarousel, MessageModal } from '../../../Components';
 import CustomIcon from '../../../Components/Icons';
@@ -100,6 +101,21 @@ const Component = ({navigation, route, createMyCartSession}) => {
 
   const onBuyNow = () => {
     createMyCartSession('push',item)
+  }
+
+  if(loading) {
+    return (
+      <>
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <Spinner 
+            isVisible={loading}
+            type='Circle'
+            color={"#F6841F"}
+            size={35}
+          />
+        </View>
+      </>
+    )
   }
 
   return (

@@ -27,3 +27,4 @@ export const successIcon = require("../assets/icons/success.png")
 export const warningIcon = require("../assets/icons/warning.png")
 export const questionIcon = require("../assets/icons/question.png")
 export const errorIcon = require("../assets/icons/error.png")
+export const userIcon = require("../../assets/images/user-icon.png");

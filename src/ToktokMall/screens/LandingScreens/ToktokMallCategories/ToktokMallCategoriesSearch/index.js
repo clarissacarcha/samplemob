@@ -39,14 +39,15 @@ export const ToktokMallCategoriesSearch = ({navigation})=> {
     fetchPolicy: 'network-only'
   });
 
-  console.log("Categories", data)
-
   return (
     <>
     <View style={styles.container}>
       <Header 
         label="Categories" 
         search={true}
+        onSearch={() => {
+          navigation.navigate("ToktokMallSearch", {})
+        }}
       />
       <View style={{flex: 1}}>     
         <View style={{ height: 8, backgroundColor: '#F7F7FA'}} />

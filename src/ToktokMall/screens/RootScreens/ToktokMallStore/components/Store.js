@@ -41,7 +41,7 @@ export const Store = ({data, onToggleFollow}) => {
               <Text style={{fontSize: 13, paddingHorizontal: 4}}>Rating <Text style={{fontSize: 13, color: "#F6841F"}}>{data.rating.toFixed(1)}</Text></Text>
             </TouchableOpacity>
             <View style={{flex: 4, alignItems: 'center', justifyContent: 'center', borderLeftWidth: 2, borderLeftColor: "#E9E9E9", borderRightColor: "#E9E9E9", borderRightWidth: 2, paddingHorizontal: 4}}>
-              <Text style={{fontSize: 13}}>Chat response <Text style={{fontSize: 13, color: "#F6841F"}}>{data.chatResponse}%</Text></Text>
+              <Text style={{fontSize: 13}}>Followers <Text style={{fontSize: 13, color: "#F6841F"}}>{data.followers || 286}</Text></Text>
             </View>
             <View style={{flex: 2.5, justifyContent: 'center', paddingHorizontal: 4}}>
               <Text style={{fontSize: 13}}>Products <Text style={{fontSize: 13, color: "#F6841F"}}>{data.totalProducts}</Text></Text>

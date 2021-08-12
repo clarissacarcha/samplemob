@@ -10,6 +10,7 @@ import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../../graphql';
 import { GET_PRODUCTS } from '../../../../../../graphql/toktokmall/model';
 
 import {clothfacemask, medicalfacemask, placeholder} from '../../../../../assets'; 
+import { Price } from '../../../../../helpers';
 
 
 const testdata = [{
@@ -80,7 +81,7 @@ const RenderItem = ({item}) => {
             style={{resizeMode: 'cover', width: '100%', height: 120, borderRadius: 5}} 
           />
           <Text style={{fontSize: 13, fontWeight: '500', paddingVertical: 5}}>{item.itemname}</Text>
-          <Text style={{fontSize: 13, color: "#F6841F"}}>&#8369;{parseFloat(item.price).toFixed(2)}</Text>    
+          <Text style={{fontSize: 13, color: "#F6841F"}}><Price amount={item.price} /></Text>    
           <View style={{flexDirection: 'row'}}>
             <View style={{flex: 7, flexDirection: 'row'}}>
               <RenderStars value={item.rating} />

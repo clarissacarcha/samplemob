@@ -1,10 +1,12 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, ImageBackground, TouchableOpacity, Image} from 'react-native';
 import MCIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import AIcons from 'react-native-vector-icons/dist/AntDesign'
+import AIcons from 'react-native-vector-icons/dist/AntDesign';
+import {useSelector} from 'react-redux';
 import {COLOR, FONT, FONT_SIZE} from '../../../../../../res/variables';
 import {Card} from '../../../../../Components'
-import CustomIcon from './.../../../../../../../Components/Icons'
+import CustomIcon from './.../../../../../../../Components/Icons';
+import {banner, userIcon} from '../../../../../assets';
 
 const testData = [
   {id: 1, full_name: 'Cloud Panda', contact_number: '09050000000',
@@ -17,23 +19,37 @@ const testData = [
 
 export const ToktokMallMyProfileHome = ({navigation}) => {
 
+  const session = useSelector(state=> state.session)
+  const [profileImage, setProfileImage] = useState("")
+  const [userName, setUserName] = useState("")
+  const [conNo, setConNo] = useState("")
+  const [address, setAddress] = useState("")
+
+  useEffect(() => {
+    const user = session?.user.person || {}
+    setUserName(`${user.firstName} ${user.lastName}`)
+    setProfileImage(user.avatarThumbnail)
+    setConNo(session?.user.username)
+    setAddress(user.address)
+  })
+
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
       <ImageBackground 
-        source={require("../../../../../assets/images/banner.png")}
+        source={banner}
         imageStyle={{ resizeMode: "cover", width: '100%'}}
         style={{width: "100%", height: 160}}
       >
         <View style={{flex: 1}}></View>
         <View style={{flex: 2, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingHorizontal: 10}}>
           <View style={{flex: 3, alignItems: 'center'}}>
-            <Image source={require("../../../../../../assets/images/user-icon.png")} style={{width: 80, height: 80, resizeMode: 'cover'}} />
+            <Image source={profileImage != "" ? {uri: profileImage} : userIcon} style={{width: 80, height: 80, borderRadius: 40, resizeMode: 'cover'}} />
           </View>
           <View style={{flex: 0.3}}></View>
           <View style={{flex: 8}}>
-            <Text style={{fontSize: 15, fontFamily: FONT.BOLD}}>Cloud Panda</Text>
-            <Text style={{fontSize: 11, fontWeight: '800'}}>+639101738451</Text>
-            <Text style={{fontSize: 11, fontWeight: '800'}}>10F Inoza Tower, 40th Street, Bonifacio Global City</Text>
+            <Text style={{fontSize: 15, fontFamily: FONT.BOLD}}>{userName}</Text>
+            <Text style={{fontSize: 11, fontWeight: '800'}}>{conNo}</Text>
+            <Text style={{fontSize: 11, fontWeight: '800'}}>{address || `10F Inoza Tower, 40th Street, Bonifacio Global City`}</Text>
           </View>
         </View>            
       </ImageBackground>

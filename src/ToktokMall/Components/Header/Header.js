@@ -5,7 +5,7 @@ import {throttle} from 'lodash';
 import CustomIcon from '../../Components/Icons';
 import { COLOR, FONT } from '../../../res/variables'; 
 
-export const Header = ({onBack , color = "black" , label, hidden, renderRight, search = false}) => {
+export const Header = ({onBack , color = "black" , label, hidden, renderRight, search = false, onSearch = null}) => {
   const navigation = useNavigation();
 
   const onPress = throttle(
@@ -33,7 +33,7 @@ export const Header = ({onBack , color = "black" , label, hidden, renderRight, s
           <View style={{flex: 2, alignItems: 'flex-end', paddingHorizontal: 16}}>
             {search && 
             <TouchableOpacity onPress={() => {
-              navigation.navigate("ToktokMallCategoriesList")
+              if(onSearch) onSearch()
             }}>
               <CustomIcon.FoIcon name={"search"} color={COLOR.ORANGE} size={18}/>
             </TouchableOpacity>}

@@ -2,6 +2,8 @@ import React, {useState, useEffect, useRef} from 'react';
 import {View, Text, ImageBackground, Image, TouchableOpacity, FlatList, SectionList, StyleSheet, Dimensions} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
+import { useQuery } from '@apollo/react-hooks';
 
 import { COLOR, FONT } from '../../../../../res/variables';
 import {useValues, onScrollEvent} from 'react-native-redash'
@@ -11,6 +13,10 @@ import AIcon from 'react-native-vector-icons/MaterialIcons';
 import {banner, toktokmallH} from '../../../../assets';
 import Animated, {interpolate, Extrapolate, useCode, set} from 'react-native-reanimated'
 
+import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../graphql';
+import { GET_CUSTOMER_IF_EXIST } from '../../../../../graphql/toktokmall/model';
+import Spinner from 'react-native-spinkit';
+
 //Main Components
 import CustomIcon from '../../../../Components/Icons';
 import {LandingHeader, AdsCarousel, StickyHomeHeader, LandingSubHeader} from '../../../../Components';
@@ -19,11 +25,6 @@ import {Categories, Offers, FlashSale, Vouchers, Suggestions} from './Components
 
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
-const Item = ({ title }) => (
-  <View style={{}}>
-    <Text style={{}}>{title}</Text>
-  </View>
-);
 
 export const ToktokMallLandingScreen = () => {
 
@@ -31,6 +32,22 @@ export const ToktokMallLandingScreen = () => {
   const [scrolling, setScrolling] = useState(false)
   const [y] = useValues([0], [])
   const navigation = useNavigation();
+  const session = useSelector(state=> state.session)
+  
+  const {data, loading, error} = useQuery(GET_CUSTOMER_IF_EXIST, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    variables: {
+      input: {
+        mobile: session.user.username,
+        email: session.user.person.emailAddress
+      },
+    },
+  });
+
+  useEffect(() => {
+    console.log(session)
+  }, [])
 
   // const HandleOnScroll = (r) => {
   //   let ypos = r.nativeEvent.contentOffset.y
@@ -95,12 +112,11 @@ export const ToktokMallLandingScreen = () => {
   
   const onPress = throttle(
     () => {
-      navigation.navigate("ToktokMallSearch");
+      navigation.push("ToktokMallSearch");
     },
     1000,
     {trailing: false},
   );
-
 
   const onBack = throttle(
     () => {
@@ -109,6 +125,31 @@ export const ToktokMallLandingScreen = () => {
     1000,
     {trailing: false},
   );
+
+  if(loading) {
+    return (
+      <>
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <Spinner 
+            isVisible={loading}
+            type='Circle'
+            color={"#F6841F"}
+            size={35}
+          />
+        </View>
+      </>
+    )
+  }
+
+  if(error){
+    return (
+      <>
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <Text>Something went wrong...</Text>
+        </View>
+      </>
+    )
+  }
 
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
@@ -178,20 +219,20 @@ export const ToktokMallLandingScreen = () => {
         ref={scrollViewRef}
         style = {[{ top : top}]}
         scrollEventThrottle = {16}
-        onScroll = {
-          Animated.event(
-            [{nativeEvent: {contentOffset: {y: AnimatedHeaderValue}}}],
-            {useNativeDriver: false}
-          )
-        }
+        // onScroll = {
+        //   Animated.event(
+        //     [{nativeEvent: {contentOffset: {y: AnimatedHeaderValue}}}],
+        //     {useNativeDriver: false}
+        //   )
+        // }
         showsVerticalScrollIndicator={false}
         removeClippedSubviews={true}
         nestedScrollEnabled={true}
       >
-        <AdsCarousel />
+        {/* <AdsCarousel /> */}
         <Categories />
-        <Offers />
-        <FlashSale />
+        {/* <Offers /> */}
+        {/* <FlashSale /> */}
         <Vouchers />
         <Suggestions />
       </Animated.ScrollView>
