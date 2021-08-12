@@ -10,7 +10,7 @@ import { FONT } from '../../../../../res/variables';
 
 import Animated, {interpolate, Extrapolate, useCode, set, greaterThan} from 'react-native-reanimated'
 
-export const HeaderPlain = ({value, animatedValue }) => {
+export const HeaderPlain = ({value, animatedValue, cartItems }) => {
 
   const navigation = useNavigation()
   const HelpTooltipRef = useRef(null)
@@ -38,7 +38,7 @@ export const HeaderPlain = ({value, animatedValue }) => {
             <CustomIcon.AIcon name="shoppingcart" color="#F6841F" size={24} />
             <Badge
               status="warning"
-              value="99+"
+              value={cartItems()}
               badgeStyle={{backgroundColor: "#FDBA1C"}}
               textStyle={{fontFamily: FONT.REGULAR, fontSize: 10}}
               containerStyle={{ position: 'absolute', top: -4, right: 0 }}

@@ -75,13 +75,13 @@ export default (state = INITIAL_STATE, action) => {
             // console.log(action.payload)
             let myCartArr = state.myCart;
             if(myCartArr.length == 0){
-                myCartArr.push({store_id: action.payload.store_id, store: action.payload.store, cart: [action.payload]})
+                myCartArr.push({store_id: action.payload.store_id, store: action.payload.store, cart: [action.payload], delivery_fee: 80, date_range_from: 'Jul 20', date_range_to: 'Jul 25'})
             }else {
                 let indexOf = myCartArr.findIndex(x => x.store_id == action.payload.store_id)
                 if(indexOf >= 0){
                     myCartArr[indexOf].cart.push(action.payload)
                 }else{
-                    myCartArr.push({store_id:action.payload.store_id, store: action.payload.store, cart: [action.payload]})
+                    myCartArr.push({store_id:action.payload.store_id, store: action.payload.store, cart: [action.payload], delivery_fee: 80, date_range_from: 'Jul 20', date_range_to: 'Jul 25'})
                 }
             }
             // myCartArr.push(action.payload);
