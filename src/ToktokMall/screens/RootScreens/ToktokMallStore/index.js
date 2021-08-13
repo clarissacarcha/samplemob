@@ -6,6 +6,7 @@ import {Tab, Store, Product} from './components';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql';
 import { GET_SHOP_DETAILS, SEARCH_SHOP_PRODUCT } from '../../../../graphql/toktokmall/model';
 import { useLazyQuery } from '@apollo/react-hooks';
+import Spinner from 'react-native-spinkit';
 
 export const ToktokMallStore = ({navigation, route}) => {
 
@@ -104,7 +105,22 @@ export const ToktokMallStore = ({navigation, route}) => {
           <Text style={{color: "#F6841F", fontSize: 14}}>No results found</Text>
         </View>}
 
-        {searchValue == "" && 
+        {loading && 
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <Spinner 
+            isVisible={loading}
+            type='Circle'
+            color={"#F6841F"}
+            size={35}
+          />
+        </View>}
+
+        {error && 
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <Text>Something went wrong</Text>
+        </View>}
+
+        {!error && !loading && searchValue == "" && 
         <Store 
           data={{
             ...storeData,
@@ -127,8 +143,8 @@ export const ToktokMallStore = ({navigation, route}) => {
           }} 
         />}
 
-        {searchValue == "" && <RenderContent />}
-        {searchedProducts.length > 0 && !emptySearch && <Product data={searchedProducts} />}
+        {!error && !loading && searchValue == "" && <RenderContent />}
+        {!error && !loading && searchedProducts.length > 0 && !emptySearch && <Product data={searchedProducts} />}
 
         {messageModalShown && 
         <MessageModal

@@ -78,7 +78,7 @@ export const VariationBottomSheet = forwardRef(({ item, image, onPressBuyNow, on
       )
   }
 
-  const RenderVariation = () => {
+  const RenderVariationx = (item, variants) => {
     return (
       <>
       <View style={{height: 2, backgroundColor: "#F7F7FA"}} />
@@ -112,6 +112,47 @@ export const VariationBottomSheet = forwardRef(({ item, image, onPressBuyNow, on
       </>
     )
   }
+
+  const RenderVariation = ({variants, type}) => {
+
+    const [activeIndex, setActiveIndex] = useState(-1)
+
+    return (
+      <>
+      <View style={{height: 2, backgroundColor: "#F7F7FA"}} />
+      <View style={{paddingHorizontal: 16, paddingVertical: 16}}>
+        <View>
+          <Text style={{fontFamily: FONT.BOLD, fontSize: 14}}>Select {type}</Text>
+        </View>
+        <View style={{flexDirection: 'row', paddingTop: 16}}>
+
+          <FlatList
+            horizontal={true} 
+            data={variants}
+            renderItem={({item, index}) => {
+              return (
+                <>
+                  <TouchableOpacity key={index} onPress={() => {
+                    setVariation(item)
+                    setActiveIndex(index)
+                  }} style={{paddingVertical: 4, paddingHorizontal: 16, borderRadius: 5, borderWidth: 0.5, borderColor: activeIndex == index ? "#F6841F" : "lightgray"}}>
+                    <Text style={{fontSize: 13, color: "#9E9E9E"}}>{item}</Text>
+                  </TouchableOpacity>
+                  <View style={{width: 5}} />
+                </>
+              )
+            }}
+          />
+
+        </View>
+      </View>
+      </>
+    )
+  }
+
+  useEffect(() => {
+    setStock(item?.noOfStocks)
+  }, [item])
 
   return (
     <BottomSheet
@@ -162,7 +203,14 @@ export const VariationBottomSheet = forwardRef(({ item, image, onPressBuyNow, on
         </View>
       </View>
 
-      {item?.variantSummary && item?.variantSummary.length > 0 && <RenderVariation />}      
+      {item?.variantSummary && 
+        item?.variantSummary.length > 0 && 
+        item?.variantSummary.map((variant, i) => {
+          let variantslist = variant?.variantList || ""
+          const variants = variantslist.split(",")
+          if(variants.length == 0 || variant.variantType == "") return null
+          return <RenderVariation type={variant.variantType} variants={variants} />
+      })}
 
       <View style={{height: 2, backgroundColor: "#F7F7FA"}} />
       <View style={{paddingHorizontal: 16, paddingVertical: 16}}>

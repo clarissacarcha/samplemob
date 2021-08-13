@@ -7,15 +7,21 @@ import CheckBox from 'react-native-check-box';
 import {placeholder} from '../../../../assets';
 import {Price} from '../../../../helpers';
 
-export const Item = ({index, data, state = true, onSelect, item, storeIndex, uncheckedItems , setstoreitemselected, storeitemselected} ) => {
+export const Item = ({
+  index, 
+  data, 
+  state = true, 
+  onSelect, 
+  item, 
+  storeIndex, 
+  uncheckedItems , 
+  setstoreitemselected, 
+  storeitemselected}) => {
 
   const [selected, setSelected] = useState(state)
 
-  data = data.cart[0]
-
   useEffect(() => {
     setSelected(state)
-    console.log("Data", data)
   }, [state])
   
   const onPress = () => {
@@ -31,19 +37,19 @@ export const Item = ({index, data, state = true, onSelect, item, storeIndex, unc
         uncheckedItems.splice(0, 1)
       }
     }
-    if( uncheckedItems.length == item.cart.length  ){
-      // console.log('fire this')
-      setstoreitemselected(false)
-    } else if ( uncheckedItems == 0){
-      setstoreitemselected(true)
-    }
+    // if( uncheckedItems.length == item.cart.length  ){
+    //   // console.log('fire this')
+    //   setstoreitemselected(false)
+    // } else if ( uncheckedItems == 0){
+    //   setstoreitemselected(true)
+    // }
     // console.log(uncheckedItems, index, uncheckedItems.length, item.cart.length)
     setSelected(!selected)
   }
 
-  const getImageSource = (data) => {
-    if(typeof data == "object" && data.length > 0){
-      return {uri: data[0].filename}
+  const getImageSource = (imgs) => {
+    if(typeof imgs == "object" && imgs.length > 0){
+      return {uri: imgs[0].filename}
     }else {
       return placeholder
     }

@@ -25,9 +25,12 @@ const RenderStars = ({value}) => {
 }
 
 const RenderVariations = ({data, navigate}) => {
+
+  const [activeIndex, setActiveIndex] = useState(-1)
+
   if(data.length == 0){
     return null
-  }else{    
+  }else{
     return (
       <>
         <View style={{paddingVertical: 8, paddingHorizontal: 8}}>
@@ -67,9 +70,9 @@ const RenderVariations = ({data, navigate}) => {
                       {variants.map((variant, y) => {
                         return (
                           <>
-                            <View style={{paddingVertical: 4, paddingHorizontal: 15, borderRadius: 5, borderWidth: 0.5, borderColor: "#F6841F"}}>
+                            <TouchableOpacity onPress={() => setActiveIndex(y)} style={{paddingVertical: 4, paddingHorizontal: 15, borderRadius: 5, borderWidth: 0.5, borderColor: activeIndex == y ? "#F6841F" : "lightgray"}}>
                               <Text style={{fontSize: 11, color: "#9E9E9E"}}>{variant}</Text>
-                            </View>
+                            </TouchableOpacity>
                             <View style={{width: 5}} />
                           </>
                         )
