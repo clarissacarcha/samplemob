@@ -74,8 +74,8 @@ const styles = StyleSheet.create({
   row: {flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', top: 20 },
   button: { padding: 10, backgroundColor: COLOR.ORANGE, alignItems: 'center', justifyContent: 'center', borderRadius: 5 , width: '45%' },
   buttonText: {color: 'white', fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M},
-  whiteButton: { padding: 10, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center', 
-    borderRadius: 5, borderWidth: 1, borderColor: COLOR.ORANGE , width: '45%', marginRight: 20
+  whiteButton: { padding: 8, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center', 
+    borderRadius: 5, borderWidth: 1, borderColor: COLOR.ORANGE , width: '45%', marginRight: 20, fontSize: 11
   },
   whiteButtonText: {color: COLOR.ORANGE, fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M},
 })
