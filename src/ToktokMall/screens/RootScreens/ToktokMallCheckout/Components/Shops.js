@@ -1,5 +1,8 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, } from 'react-native';
+import { FONT } from '../../../../../res/variables';
+import {placeholder} from '../../../../assets';
+import { Price, FormatToText } from '../../../../helpers/formats';
 // import { COLOR, FONT } from '../../../../../../res/variables';
 // import {LandingHeader, AdsCarousel} from '../../../../../Components';
 // import { ScrollView } from 'react-native-gesture-handler';
@@ -14,16 +17,22 @@ const testData = [
   }
 ]
 
-export  const Shops = ({data,}) => {
+export const Shops = ({data,}) => {
 
   const computeTotal = (item) => {
     let total = 0
-    let  totalArr = []
     for (let i = 0; i < item.length; i++){
-      total = total + item[i].price
+      total = total + (parseFloat(item[i].price) * item[i].qty)
     }
-    // totals.push(total)
-    return total
+    return FormatToText.currency(total)
+  }
+
+  const getImageSource = (imgs) => {
+    if(typeof imgs == "object" && imgs.length > 0){
+      return {uri: imgs[0].filename}
+    }else {
+      return placeholder
+    }
   }
 
   const renderItems = (items) => {
@@ -31,16 +40,16 @@ export  const Shops = ({data,}) => {
         return(
           <View style={styles.itemContainer}>
             <Image //source = {item.image} 
-            source = {require('../../../../assets/images/coppermask.png')} 
+            source = {getImageSource(item.images)} 
             style ={styles.itemImage}/>
             <View style = {{ marginLeft: 15, flex: 1}}>
               <Text>{item.label}</Text>
               <View style = {{flexDirection: 'row'}}>
-                <Text style ={styles.itemprice}>Php{item.price}</Text>
-                <Text style ={styles.itemSaleOff}>Php{item.originalPrice}</Text>
+                <Text style ={styles.itemprice}>{FormatToText.currency(item.price)}</Text>
+                <Text style ={styles.itemSaleOff}>{parseFloat(item.originalPrice) > 0 ? FormatToText.currency(item.originalPrice) : ""}</Text>
               </View>
               <View style = {{flexDirection: 'row', justifyContent: 'space-between', marginTop: 10}}>
-                <Text style ={{ color: '#9E9E9E' }}>Variation: {item.variation}</Text>
+                <Text style ={{ color: '#9E9E9E' }}>Variation: {item.variation || "No variation"}</Text>
                 <Text style ={{ color: '#9E9E9E'}}>Qty: {item.qty}</Text>
               </View>
             </View>
@@ -56,14 +65,14 @@ export  const Shops = ({data,}) => {
         <View style={styles.container}>
           <View style ={{flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, padding: 15, borderBottomColor: '#F7F7FA'}}>
             <Image source={require("../../../../assets/icons/store.png")} style={{width: 18, height: 18, resizeMode: 'stretch'}} /> 
-            <Text style = {{marginLeft: 10, fontWeight: 'bold'}}>{item.store}</Text>
+            <Text style = {{marginLeft: 10, fontFamily: FONT.BOLD}}>{item.store}</Text>
           </View>
           <View style={{padding: 15}}>
             {renderItems(item.cart)}
           </View>
           <View style={styles.deliveryfeeContainer}>
-            <Text>Delivery Fee: Php {item.delivery_fee}.00</Text>
-            <Text>Order total ({item.cart.length} items): Php {computeTotal(item.cart)} </Text>
+            <Text>Delivery Fee: {FormatToText.currency(item.delivery_fee)}</Text>
+            <Text>Order total ({item.cart.length} items): {computeTotal(item.cart)} </Text>
             <Text style = {{marginTop: 7, color: '#929191'}}>Receive by: {item.date_range_from} - {item.date_range_to} </Text>
           </View>
         </View>
@@ -83,7 +92,7 @@ export  const Shops = ({data,}) => {
 
 const styles = StyleSheet.create({
   body: {flex: 1, backgroundColor: '#F7F7FA', },
-  container: {padding: 0, backgroundColor: 'white', marginTop: 15,  },
+  container: {padding: 0, backgroundColor: 'white', marginTop: 8,  },
   itemContainer: {flexDirection: 'row', justifyContent: 'flex-start'},
   itemImage: {flex: 0.3, height: 100, width: 100},
   itemprice: {color: '#F6841F', marginRight: 10},

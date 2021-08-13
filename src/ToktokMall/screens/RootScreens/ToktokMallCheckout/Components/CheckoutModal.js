@@ -21,7 +21,7 @@ export const CheckoutModal = ({navigation, isVisible, setIsVisible}) => {
 
   return (
     <>
-      <View style= {{ flex:1, justifyContent: 'center', alignItems: 'center', marginTop: 22}}>
+      <View style= {{ flex:1, justifyContent: 'center', alignItems: 'center', marginTop: 8}}>
           <Modal transparent = {true} visible = {isVisible} animationType = "none"  >
             <View style = {{flex:1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.25)'}}>
               <View style = {{backgroundColor: 'white', width: '90%',borderRadius: 10, alignItems: 'center', justifyContent: 'center',

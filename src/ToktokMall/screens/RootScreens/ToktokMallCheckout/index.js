@@ -91,20 +91,46 @@ export const ToktokMallCheckout = ({route, navigation}) => {
     
     <>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <CheckoutModal navigation = {navigation} isVisible = {isVisible} setIsVisible = {setIsVisible} />
-        <View style ={{paddingBottom: 0}}>
-        <AddressForm navigation = {navigation} data = {addressData[defaultAddress-1]} addressData = {addressData} setAddressData = {setAddressData}
-          defaultAddress = {defaultAddress} setDefaultAddress= {setDefaultAddress} addressLengthChanged = {addressLengthChanged} 
-          setAddressLengthChanged={setAddressLengthChanged}
+        <CheckoutModal 
+          navigation={navigation} 
+          isVisible={isVisible} 
+          setIsVisible={setIsVisible} 
         />
-        <Shops data = {route.params.data} />
-        <Vouchers navigation = {navigation} vouchers = {vouchers} setVouchers = {setVouchers} />
-        <Payment  payment = {payment} setPaymentMethod = {setPaymentMethod} />
-        <Totals data = {route.params.data}/>
+        <View style ={{paddingBottom: 0}}>
+          <AddressForm 
+            navigation={navigation} 
+            data={addressData[defaultAddress-1]} 
+            addressData={addressData} 
+            setAddressData={setAddressData}
+            defaultAddress={defaultAddress}
+            setDefaultAddress={setDefaultAddress} 
+            addressLengthChanged={addressLengthChanged} 
+            setAddressLengthChanged={setAddressLengthChanged}
+          />
+          <Shops 
+            data={route.params.data} 
+          />
+          <Vouchers 
+            navigation={navigation} 
+            vouchers={vouchers}
+            setVouchers = {setVouchers} 
+          />
+          <Payment 
+            payment={payment} 
+            setPaymentMethod={setPaymentMethod} 
+          />
+          <Totals 
+            data={route.params.data}
+          />
         </View>
       </ScrollView>
       <View style={styles.footer}>
-        <Button data = {route.params.data} isVisible = {isVisible} setIsVisible = {setIsVisible} unSelectedItemsArr = {route.params.unSelectedItemsArr} />
+        <Button 
+          data={route.params.data} 
+          isVisible={isVisible} 
+          setIsVisible={setIsVisible} 
+          unSelectedItemsArr={route.params.unSelectedItemsArr} 
+        />
       </View>
     </>
     

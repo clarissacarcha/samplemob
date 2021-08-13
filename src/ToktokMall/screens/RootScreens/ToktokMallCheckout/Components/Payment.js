@@ -1,5 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, } from 'react-native';
+import { Price, FormatToText } from '../../../../helpers/formats';
 // import { COLOR, FONT } from '../../../../../../res/variables';
 // import {LandingHeader, AdsCarousel} from '../../../../../Components';
 // import { ScrollView } from 'react-native-gesture-handler';
@@ -7,6 +8,7 @@ import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatLi
 // import {watch, electronics, mensfashion, furniture, petcare} from '../../../../../assets'
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 import { useNavigation } from '@react-navigation/core';
+import { FONT } from '../../../../../res/variables';
 
 const testData = [
   {id: 1, full_name: 'Cloud Panda', contact_number: '09050000000',
@@ -25,7 +27,7 @@ export const Payment = ({ payment, setPaymentMethod}) => {
   return (
     <>
     <View style={styles.container}>
-        <Text style = {{marginLeft: 15, marginTop: 15}}>Select Payment Method</Text>
+        <Text style = {{marginLeft: 15, marginTop: 15, fontSize: 14, fontFamily: FONT.BOLD}}>Select Payment Method</Text>
         { payment == 0 ? 
           <View style = {{backgroundColor: '#FFFCF4', padding:10}}>
             <Text style = {{color: '#F6841F', fontSize: 12, textAlign: 'center'}}>*insufficient funds! Kindly top up to add funds in your toktokwallet.</Text>
@@ -41,8 +43,8 @@ export const Payment = ({ payment, setPaymentMethod}) => {
             <Image source={require("../../../../assets/icons/wallet.png")} style={{width: 18, height: 18, resizeMode: 'stretch'}} /> 
             <Text style = {{marginLeft: 10, fontWeight: 'bold', color: '#F6841F'}}>totokwallet</Text>
           </View>
-          <View style ={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 3  }}>
-            <Text style = {{marginLeft: 5, fontWeight: 'bold', color: '#929191'}}>(Balance Php 200.00)</Text>
+          <View style ={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 2.5  }}>
+            <Text style = {{marginLeft: 5, fontWeight: 'bold', color: '#929191'}}>(Balance {FormatToText.currency(2000)})</Text>
             <TouchableOpacity onPress={() => {
               navigation.push("ToktokWalletHomePage")
             }}>
@@ -65,7 +67,7 @@ export const Payment = ({ payment, setPaymentMethod}) => {
 
 const styles = StyleSheet.create({
   body: {flex: 1, backgroundColor: '#F7F7FA', },
-  container: {padding: 0, backgroundColor: 'white', marginTop: 15,  },
+  container: {padding: 0, backgroundColor: 'white', marginTop: 8,  },
   itemContainer: {flexDirection: 'row', justifyContent: 'flex-start'},
   itemImage: {flex: 0.3, height: 100, width: 100},
   itemprice: {color: '#F6841F', marginRight: 10},

@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, } from 'react-native';
-// import { COLOR, FONT } from '../../../../../../res/variables';
+import { FONT } from '../../../../../res/variables';
+
 // import {LandingHeader, AdsCarousel} from '../../../../../Components';
 // import { ScrollView } from 'react-native-gesture-handler';
 // import CustomIcon from '../../../../../Components/Icons';
@@ -22,7 +23,7 @@ export const AddressForm = ({navigation , data , addressData, setAddressData ,de
     <>
       <View style = {styles.container}>
         <View style = {{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-          <Text>Delivery Address</Text>
+          <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>Delivery Address</Text>
           <TouchableOpacity onPress={() => {
               navigation.navigate("ToktokMallAddressesMenu", {
                 addressData: addressData,  setDefaultAddress:setDefaultAddress, defaultAddress: defaultAddress
@@ -41,7 +42,7 @@ export const AddressForm = ({navigation , data , addressData, setAddressData ,de
 
 const styles = StyleSheet.create({
   body: {flex: 1, backgroundColor: '#F7F7FA', },
-  container: {padding: 15, backgroundColor: 'white', marginTop: 0,  },
+  container: {paddingVertical: 8, paddingHorizontal: 15, backgroundColor: 'white', marginTop: 0,  },
   
 
 })

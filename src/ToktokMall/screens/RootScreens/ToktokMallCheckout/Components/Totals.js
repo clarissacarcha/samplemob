@@ -1,5 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, } from 'react-native';
+import { Price, FormatToText } from '../../../../helpers/formats';
 // import { COLOR, FONT } from '../../../../../../res/variables';
 // import {LandingHeader, AdsCarousel} from '../../../../../Components';
 // import { ScrollView } from 'react-native-gesture-handler';
@@ -21,24 +22,22 @@ export  const Totals = ({data}) => {
 
   const computeShippingFee = () => {
     let total = 0
-    let  totalArr = []
     for (let i = 0; i < data.length; i++){
-      total = total + data[i].delivery_fee
+      total = total + parseFloat(data[i].delivery_fee)
     }
     shippingFeeTotal = total
-    return total
+    return FormatToText.currency(total)
   }
 
   const computeMerchandiseTotal = () => {
     let total = 0
-    let  totalArr = []
     data.map((item, i) => {
-        for (let i = 0; i < item.cart.length; i++){
-          total = total + item.cart[i].price
-        }
+      for (let i = 0; i < item.cart.length; i++){
+        total = total + (parseFloat(item.cart[i].price) * item.cart[i].qty)
+      }
     })
     merchandiseTotal = total
-    return total
+    return FormatToText.currency(total)
   } 
     
   return (
@@ -46,15 +45,15 @@ export  const Totals = ({data}) => {
       <View style = {styles.container}>
         <View style = {styles.textContainer}>
           <Text>Merchandise SubTotal:</Text>
-          <Text>Php {computeMerchandiseTotal()}.00</Text>
+          <Text>{computeMerchandiseTotal()}</Text>
         </View>
         <View style = {styles.textContainer}>
           <Text>Shipping Fee:</Text>
-          <Text>Php {computeShippingFee()}.00</Text>
+          <Text>{computeShippingFee()}</Text>
         </View>
         <View style = {styles.textContainer}>
           <Text style = {{fontWeight: 'bold'}}>Total Payment:</Text>
-          <Text  style = {{color: '#F61841'}}>Php {shippingFeeTotal + merchandiseTotal}.00</Text>
+          <Text  style = {{color: '#F61841'}}>{FormatToText.currency(shippingFeeTotal + merchandiseTotal)}</Text>
         </View>
       </View>
     </>
@@ -63,7 +62,7 @@ export  const Totals = ({data}) => {
 
 const styles = StyleSheet.create({
   body: {flex: 1, backgroundColor: '#F7F7FA', },
-  container: {padding: 15, backgroundColor: 'white', marginTop: 15, },
+  container: {padding: 15, backgroundColor: 'white', marginTop: 8, },
   textContainer: {flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 },
   textContainer2: {flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 20 }
 

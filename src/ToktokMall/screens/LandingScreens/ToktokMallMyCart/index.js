@@ -192,6 +192,13 @@ const Component =  ({
     })
     setCheckoutData(tempCart)
     console.log("Formatted items for checkout", JSON.stringify(tempCart))
+
+    if(tempCart.length == 0) return
+    navigation.navigate("ToktokMallCheckout", {
+      data: tempCart,
+      vouchers: [],
+    })
+    
   }
 
   const deleteItem = () => {
@@ -382,16 +389,8 @@ const Component =  ({
             }} 
           /> : 
           <CheckoutFooter 
-            onSubmit={() => {
-              formatItemsForCheckout()
-              setTimeout(() => {
-                console.log(checkoutData.length)
-                if(checkoutData.length == 0) return
-                navigation.navigate("ToktokMallCheckout", {
-                  data: checkoutData,
-                  vouchers: [],
-                })
-              }, 700)       
+            onSubmit={async () => {
+              await formatItemsForCheckout()      
             }} 
             subtotal={subTotal}
 

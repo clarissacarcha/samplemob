@@ -1,9 +1,10 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, } from 'react-native';
+import { FONT } from '../../../../../res/variables';
 // import { COLOR, FONT } from '../../../../../../res/variables';
 // import {LandingHeader, AdsCarousel} from '../../../../../Components';
 // import { ScrollView } from 'react-native-gesture-handler';
-// import CustomIcon from '../../../../../Components/Icons';
+import CustomIcon from '../../../../Components/Icons';
 // import {watch, electronics, mensfashion, furniture, petcare} from '../../../../../assets'
 const testData = [
   {id: 1, full_name: 'Cloud Panda', contact_number: '09050000000',
@@ -45,9 +46,9 @@ export  const Vouchers = ({ navigation, vouchers, setVouchers}) => {
       <View style = {styles.container2}>
         <TouchableOpacity style = {styles.container} onPress = {() => {navigation.navigate("ToktokMallVouchersClaim", {tab: 1, vouchers: vouchers, setVouchers: setVouchers})}}>
         {/* <TouchableOpacity style = {styles.container} onPress = {() => {navigation.navigate("ToktokMallMyVouchersClaim", {tab: 1})}}> */}
-            <Text>Select Voucher</Text>
+            <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>Select Voucher</Text>
             <TouchableOpacity onPress = {() => {alert(JSON.stringify(vouchers))}}>
-            <Text style={{color: '#F6841F'}}>Edit</Text>
+              <CustomIcon.FA5Icon name="chevron-right" size={11} color="#F6841F" />
             </TouchableOpacity>
         </TouchableOpacity>
         {renderVouchers()}
@@ -60,6 +61,6 @@ export  const Vouchers = ({ navigation, vouchers, setVouchers}) => {
 const styles = StyleSheet.create({
   body: {flex: 1, backgroundColor: '#F7F7FA', },
   container: {padding: 15, backgroundColor: 'white', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'  },
-  container2: { backgroundColor: 'white', marginTop: 15,  }
+  container2: { backgroundColor: 'white', marginTop: 8,  }
 
 })
