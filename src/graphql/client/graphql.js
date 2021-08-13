@@ -15,7 +15,8 @@ const baseUrl = `${ENVIRONMENTS.TOKTOK_SERVER}/`;
 const wsUrl = `ws://${HOST_PORT}/graphql`;
 
 const toktokWalletBaseUrl = `${TOKTOK_WALLET_PROTOCOL}://${TOKTOK_WALLET_PROTOCOL_HOST_PORT}/`;
-const toktokMallBaseUrl = `${TOKTOK_MALL_PROTOCOL}://${TOKTOK_MALL_PROTOCOL_HOST_PORT}/`;
+// const toktokMallBaseUrl = `${TOKTOK_MALL_PROTOCOL}://${TOKTOK_MALL_PROTOCOL_HOST_PORT}/`;
+const toktokMallBaseUrl = `${ENVIRONMENTS.TOKTOKMALL_SERVER}/`
 
 // const errorLink = onError(({graphQLErrors, networkError}) => {
 //   if (graphQLErrors) {

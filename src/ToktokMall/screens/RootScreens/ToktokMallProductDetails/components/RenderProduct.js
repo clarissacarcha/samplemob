@@ -144,8 +144,8 @@ export const RenderProduct = ({data, onOpenVariations, animatedValue}) => {
             <TouchableOpacity onPress={() => {
 
               let options = {
-                message: "Black King To-Go",
-                url: "https://toktokmall.ph/products/e7111d7d6bbd406a82ae6a515cb65ab2"
+                message: data?.itemname,
+                url: `https://toktokmall.ph/products/${data?.Id}`
               }
 
               Share.open(options)
