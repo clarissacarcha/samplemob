@@ -11,8 +11,11 @@ export const Item = ({index, data, state = true, onSelect, item, storeIndex, unc
 
   const [selected, setSelected] = useState(state)
 
+  data = data.cart[0]
+
   useEffect(() => {
     setSelected(state)
+    console.log("Data", data)
   }, [state])
   
   const onPress = () => {
@@ -76,22 +79,22 @@ export const Item = ({index, data, state = true, onSelect, item, storeIndex, unc
         <View style={{flex: 9, justifyContent: 'center', flexDirection: 'row'}}>                        
           <View style={{flex: 1, justifyContent: 'center'}}>
           	<View>
-							<Text style={{fontSize: 14, fontWeight: '100'}}>{data?.itemname}</Text>
+							<Text style={{fontSize: 14, fontWeight: '100'}}>{data?.label}</Text>
 						</View>
 						<View style={{flexDirection: 'row'}}>
               <View style={{flex: 0}}>
 								<Text style={{fontSize: 13, color: "#F6841F"}}><Price amount={data?.price} /></Text>
               </View>
 							<View style={{flex: 0, paddingHorizontal: 15}}>
-								<Text style={{color: "#9E9E9E", textDecorationLine: 'line-through', fontSize: 10}}>&#8369;{parseFloat(data?.compareAtPrice).toFixed(2)}</Text>
+								<Text style={{color: "#9E9E9E", textDecorationLine: 'line-through', fontSize: 10}}>{data?.compareAtPrice ? <Price amount={data?.compareAtPrice} /> : ""}</Text>
               </View>
             </View>
             <View style={{flexDirection: 'row'}}>
               <View style={{flex: 1}}>
-                <Text style={{color: "#9E9E9E", fontSize: 13}}>Variation: {data?.variant}</Text>
+                <Text style={{color: "#9E9E9E", fontSize: 13}}>Variation: {data?.variation || "No variation"}</Text>
               </View>
               <View style={{flex: 0}}>
-                <Text style={{color: "#9E9E9E", fontSize: 13}}>Qty: {data?.quantity}</Text>
+                <Text style={{color: "#9E9E9E", fontSize: 13}}>Qty: {data?.qty}</Text>
               </View>
             </View>
           </View>

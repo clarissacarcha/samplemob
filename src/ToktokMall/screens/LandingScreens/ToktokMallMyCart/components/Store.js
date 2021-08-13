@@ -61,7 +61,7 @@ export const Store = ({data, storeIndex,  state = false, onSelect, onPress, setU
         </View>
         <TouchableOpacity onPress={onPress} style={{flex: 9, justifyContent: 'center', flexDirection: 'row'}}>                        
           <View style={{flex: 12, justifyContent: 'center'}}>
-            <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>{data.store.shopname}</Text>
+            <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>{data.store}</Text>
           </View>
         </TouchableOpacity>
       </View>

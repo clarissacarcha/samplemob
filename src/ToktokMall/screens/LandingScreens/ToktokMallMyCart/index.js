@@ -144,7 +144,7 @@ const Component =  ({
   const [cartData, setCartData] = useState([]);
   const [subTotal, setSubTotal] = useState(0);
   const [itemsToDelete, setItemsToDelete] = useState(0)
-  const [selectedItemsArr, setSelectedItemsArr] = useState(testData2)
+  const [selectedItemsArr, setSelectedItemsArr] = useState([])
   const [unSelectedItemsArr, setUnSelectedItemsArr] = useState([])
   const [ifExisting, setIfExisting] = useState(false)
   // let itemIdArr = []
@@ -167,9 +167,8 @@ const Component =  ({
     // }
     for (var x = 0; x < myCart.length; x++) {
       for (var y = 0; y < myCart[x].cart.length; y++) {
-        let item = myCart[x].cart[y];
-        a += item.price * item.qty;
-        console.log(a);
+        let _item = myCart[x].cart[y].cart[0];
+        a += parseFloat(_item.price) * _item.qty;
       }
     }
     setSubTotal(a);
@@ -181,7 +180,7 @@ const Component =  ({
 
     console.log("My Cart", myCart)
 
-    // setSelectedItemsArr(myCart)
+    setSelectedItemsArr(myCart)
     getSubTotal();
   }, []);
 
@@ -190,6 +189,7 @@ const Component =  ({
     // testData2 = myCart
     // setSelectedItemsArr(myCart)
     // setUnSelectedItemsArr([])
+    // console.log(myCart)
   }, [myCart]);
 
   const deleteItem = () => {

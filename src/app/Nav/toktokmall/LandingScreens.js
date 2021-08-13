@@ -53,7 +53,7 @@ const countCartItems = (myCart) => {
   }else {
     for(let x = 0; myCart.length >  x; x++){
       for(let y=0; myCart[x].cart.length > y; y++){
-        total = total + myCart[x].cart[y].qty
+        total = total + 1
       }
     }
     if(total > 99){

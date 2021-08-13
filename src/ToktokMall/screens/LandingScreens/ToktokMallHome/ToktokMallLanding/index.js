@@ -26,8 +26,8 @@ import {Categories, Offers, FlashSale, Vouchers, Suggestions} from './Components
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
-export const ToktokMallLandingScreen = () => {
-// const Component = ({ myCart, createMyCartSession,}) => {
+// export const ToktokMallLandingScreen = () => {
+const Component = ({ myCart, createMyCartSession,}) => {
 
   const scrollViewRef = useRef(null)
   const [scrolling, setScrolling] = useState(false)
@@ -35,16 +35,16 @@ export const ToktokMallLandingScreen = () => {
   const navigation = useNavigation();
   const session = useSelector(state=> state.session)
   
-  const {data, loading, error} = useQuery(GET_CUSTOMER_IF_EXIST, {
-    client: TOKTOK_MALL_GRAPHQL_CLIENT,
-    fetchPolicy: 'network-only',
-    variables: {
-      input: {
-        mobile: session.user.username,
-        email: session.user.person.emailAddress
-      },
-    },
-  });
+  // const {data, loading, error} = useQuery(GET_CUSTOMER_IF_EXIST, {
+  //   client: TOKTOK_MALL_GRAPHQL_CLIENT,
+  //   fetchPolicy: 'network-only',
+  //   variables: {
+  //     input: {
+  //       mobile: session.user.username,
+  //       email: session.user.person.emailAddress
+  //     },
+  //   },
+  // });
 
   useEffect(() => {
     console.log(session)
@@ -56,20 +56,17 @@ export const ToktokMallLandingScreen = () => {
   //   else if (ypos <= 100) setScrolling(false)
   // }
 
-  // useEffect(() => {
-    // setAllSelected(false)
-    // testData2 = myCart
-    // setSelectedItemsArr(myCart)
-    // AsyncStorage.getItem('MyCart').then((value) => {
-    //   console.log(value)
-    //   const parsedValue = JSON.parse(value)
-    //   if(value != null){
-    //     createMyCartSession('set', parsedValue)
-    //   }else {
-        // createMyCartSession('set', testdata)
-    //   }
-    // })
-  // }, []);
+  useEffect(() => {
+    AsyncStorage.getItem('MyCart').then((value) => {
+      console.log(value)
+      const parsedValue = JSON.parse(value)
+      if(value != null){
+        createMyCartSession('set', parsedValue)
+      }else {
+        createMyCartSession('set', testdata)
+      }
+    })
+  }, []);
 
   let AnimatedHeaderValue = new Animated.Value(0);
   const Header_Max_Height = 120;
@@ -130,30 +127,30 @@ export const ToktokMallLandingScreen = () => {
     {trailing: false},
   );
 
-  if(loading) {
-    return (
-      <>
-        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-          <Spinner 
-            isVisible={loading}
-            type='Circle'
-            color={"#F6841F"}
-            size={35}
-          />
-        </View>
-      </>
-    )
-  }
+  // if(loading) {
+  //   return (
+  //     <>
+  //       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+  //         <Spinner 
+  //           isVisible={loading}
+  //           type='Circle'
+  //           color={"#F6841F"}
+  //           size={35}
+  //         />
+  //       </View>
+  //     </>
+  //   )
+  // }
 
-  if(error){
-    return (
-      <>
-        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-          <Text>Something went wrong...</Text>
-        </View>
-      </>
-    )
-  }
+  // if(error){
+  //   return (
+  //     <>
+  //       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+  //         <Text>Something went wrong...</Text>
+  //       </View>
+  //     </>
+  //   )
+  // }
   
   const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
     const paddingBottom = 20;
@@ -297,15 +294,15 @@ export const ToktokMallLandingScreen = () => {
   );
 };
 
-// const mapStateToProps = (state) => ({
-//   myCart: state.toktokMall.myCart
-// })
+const mapStateToProps = (state) => ({
+  myCart: state.toktokMall.myCart
+})
 
-// const mapDispatchToProps = (dispatch) => ({
-//   createMyCartSession: (action, payload) => dispatch({type: 'CREATE_MY_CART_SESSION', action,  payload}),
-// });
+const mapDispatchToProps = (dispatch) => ({
+  createMyCartSession: (action, payload) => dispatch({type: 'CREATE_MY_CART_SESSION', action,  payload}),
+});
 
-// export const ToktokMallLandingScreen = connect(mapStateToProps, mapDispatchToProps)(Component);
+export const ToktokMallLandingScreen = connect(mapStateToProps, mapDispatchToProps)(Component);
 
 const styles = StyleSheet.create({
   header: {

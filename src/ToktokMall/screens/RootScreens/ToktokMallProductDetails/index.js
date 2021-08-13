@@ -67,6 +67,7 @@ const Component =  ({
 
   const [enteredQuantity, setEnteredQuantity] = useState(0)
   const [selectedVariation, setSelectedVariation] = useState('')
+  const [cartItems, setCartItems] = useState(0)
 
   let AnimatedHeaderValue = new Animated.Value(0);
 
@@ -98,31 +99,34 @@ const Component =  ({
     }
   })
 
-  useEffect(() => {
-    getProductDetails()
-  }, [])
-
   const onBuyNow = () => {
-    createMyCartSession('push',item)
-  }
-
-  if(loading) {
-    return (
-      <>
-        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-          <Spinner 
-            isVisible={loading}
-            type='Circle'
-            color={"#F6841F"}
-            size={35}
-          />
-        </View>
-      </>
-    )
+    // createMyCartSession('push',item)
   }
   
-  const onAddToCart = () => {
-    createMyCartSession('push',item)
+  const onAddToCart = (input) => {
+
+    let raw = {
+      store_id: store.id,
+      store: store.shopname,
+      cart: [
+        {
+          item_id: product.Id,
+          label: product.itemname,
+          originalPrice: product.compareAtPrice,
+          price: product.price,
+          variation: input.variation || "",
+          qty: input.qty || 1,
+          store_id: store.id,
+          store: store.shopname,
+          images: images
+        }
+      ],
+      delivery_fee: 80, date_range_from: 'Jul 20', date_range_to: 'Jul 25'
+    }
+
+    createMyCartSession('push', raw)
+    setCartItems(CountCartItems)
+    setMessageModalShown(true)
   }
 
   const something = AnimatedHeaderValue.interpolate({
@@ -139,12 +143,12 @@ const Component =  ({
     extrapolate: 'clamp'
   })
 
-  const cartItems = () => {
+  const CountCartItems = () => {
     // return myCart.length
     let total = 0
     for(let x = 0; myCart.length >  x; x++){
       for(let y=0; myCart[x].cart.length > y; y++){
-        total = total + myCart[x].cart[y].qty
+        total = total + 1
       }
     }
     if(total > 99){
@@ -152,6 +156,26 @@ const Component =  ({
     }else {
       return total
     }
+  }
+
+  useEffect(() => {
+    getProductDetails()
+    setCartItems(CountCartItems)
+  }, [])  
+
+  if(loading) {
+    return (
+      <>
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <Spinner 
+            isVisible={loading}
+            type='Circle'
+            color={"#F6841F"}
+            size={35}
+          />
+        </View>
+      </>
+    )
   }
 
   return (
@@ -216,30 +240,18 @@ const Component =  ({
         onPressAddToCart={() => {
           setVariationOptionType(1)
           varBottomSheetRef.current.expand()
-          
         }}
       />
 
       <VariationBottomSheet 
         ref={varBottomSheetRef} 
         type={variationOptionType}
+        item={product}
+        image={images.length > 0 ? images[0] : {}}
         onPressAddToCart={(input) => {
           varBottomSheetRef.current.close()
-          setTimeout(async () => {
-            // await ASClearCart("bryan")
-
-            const rawdata = {
-              ...product,
-              variant: input.variation,
-              quantity: input.qty
-            }
-
-            await ASAddToCart("bryan", rawdata, () => {
-              setMessageModalShown(true) 
-            })
-          }, 300)
           // alert('something')
-          onAddToCart()
+          onAddToCart(input)
         }}
         onPressBuyNow={() => null}
       />

@@ -38,7 +38,7 @@ export const HeaderPlain = ({value, animatedValue, cartItems }) => {
             <CustomIcon.AIcon name="shoppingcart" color="#F6841F" size={24} />
             <Badge
               status="warning"
-              value={cartItems()}
+              value={cartItems}
               badgeStyle={{backgroundColor: "#FDBA1C"}}
               textStyle={{fontFamily: FONT.REGULAR, fontSize: 10}}
               containerStyle={{ position: 'absolute', top: -4, right: 0 }}

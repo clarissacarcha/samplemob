@@ -40,6 +40,7 @@ const Summary = ({data}) => {
 
 const Item = ({data}) => {
   const [messageModalShown, setMessageModalShown] = useState(false)
+  const [rated, setRated] = useState(false)
   const { navigate } = useNavigation()
   return (
     <>
@@ -73,11 +74,21 @@ const Item = ({data}) => {
         </View>        
       </View>
       <View style={{flexDirection: 'row-reverse', paddingHorizontal: 15, paddingBottom: 15}}>
-        <TouchableOpacity onPress={()=>navigate("ToktokMallRateProduct", {openModal: () => setMessageModalShown(true)})}>
+        {!rated && <TouchableOpacity onPress={()=> {                    
+          navigate("ToktokMallRateProduct", {openModal: () => {
+            setRated(true)
+            setMessageModalShown(true)
+          }})
+        }}>
           <View style={{paddingVertical: 2, paddingHorizontal: 20, backgroundColor: '#F6841F', borderRadius: 5}}>
             <Text style={{color: "#fff", fontSize: 13}}>Rate</Text>
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity>}
+        {rated && <TouchableOpacity >
+          <View style={{paddingVertical: 2, paddingHorizontal: 20, backgroundColor: '#F6841F', borderRadius: 5}}>
+            <Text style={{color: "#fff", fontSize: 13}}>Buy Again</Text>
+          </View>
+        </TouchableOpacity>}
       </View>
       <View style={{ height: 2, backgroundColor: '#F7F7FA'}} />
 

@@ -5,8 +5,9 @@ import BottomSheet, {BottomSheetBackdrop, BottomSheetFlatList} from '@gorhom/bot
 import {LIGHT, ORANGE, MEDIUM, FONTS, SIZES, INPUT_HEIGHT, COLORS} from '../../../../../res/constants';
 import {COLOR, FONT, FONT_SIZE} from '../../../../../res/variables';
 import CustomIcon from '../../../../Components/Icons';
-import {coppermask} from '../../../../assets';
+import {coppermask, placeholder} from '../../../../assets';
 import {Price} from '../../../../helpers';
+import Toast from 'react-native-simple-toast';
 
 const SampleVariations = [{
   image: coppermask,
@@ -16,12 +17,22 @@ const SampleVariations = [{
   label: "Bronze"
 }]
 
-export const VariationBottomSheet = forwardRef(({ item, onPressBuyNow, onPressAddToCart, type}, ref) => {
+export const VariationBottomSheet = forwardRef(({ item, image, onPressBuyNow, onPressAddToCart, type}, ref) => {
   
   const snapPoints = useMemo(() => [0, 450], []);
-  const [stock, setStock] = useState(21)
+  const [stock, setStock] = useState(item?.noOfStocks)
   const [qty, setQty] = useState(1)
   const [variation, setVariation] = useState("")
+
+  const getImage = () => {
+    if(image && typeof image == "object"){
+      return {
+        uri: image.filename
+      }
+    }else{
+      return placeholder
+    }
+  }
 
   const RenderOptions = ({type, onBuyNow, onAddToCart}) => {
 
@@ -67,54 +78,9 @@ export const VariationBottomSheet = forwardRef(({ item, onPressBuyNow, onPressAd
       )
   }
 
-  return (
-    <BottomSheet
-      ref={ref}
-      index={0}
-      snapPoints={snapPoints}
-      enableHandlePanningGesture={false}
-      enableContentPanningGesture={false}
-      handleComponent={() => (
-        <View
-          style={{
-            height: 20,
-            borderTopRightRadius: 15,
-            borderTopLeftRadius: 15,
-            borderTopWidth: 3,
-            borderRightWidth: 2,
-            borderLeftWidth: 2,
-            borderColor: ORANGE,
-            marginHorizontal: -2,
-          }}
-        />
-      )}
-      backdropComponent={BottomSheetBackdrop}>
-      <View style={styles.sheet}>
-        <View style={{flexDirection: 'row'}}>
-          <View style={{flex: 2}}>
-            <Image source={coppermask} style={{width: 80, height: 120, resizeMode: 'cover', borderRadius: 5}} />
-          </View>
-          <View style={{flex: 8, justifyContent: 'center'}}>
-            <View style={{flexDirection: 'row'}}>
-              <View style={{flex: 1}}></View>
-              <View style={{flex: 2}}>
-                <Text style={{color: "#F6841F", fontSize: 14}}><Price amount={190} /></Text>
-                <Text style={{color: "#9E9E9E", fontSize: 12}}>Stock: {stock}</Text>
-              </View>
-              <View style={{flex: 2, justifyContent: 'center'}}>
-                <Text style={{color: "#9E9E9E", textDecorationLine: 'line-through', fontSize: 11}}><Price amount={380} /></Text>
-                <Text></Text>
-              </View>
-              <View style={{flex: 3}}></View>
-            </View>
-          </View>
-          <TouchableOpacity activeOpacity={1} onPress={() => {
-            ref.current.close()
-          }} style={{flex: 0}}>
-            <CustomIcon.EvIcon name="close" size={22} color="#F6841F" />
-          </TouchableOpacity>
-        </View>
-      </View>
+  const RenderVariation = () => {
+    return (
+      <>
       <View style={{height: 2, backgroundColor: "#F7F7FA"}} />
       <View style={{paddingHorizontal: 16, paddingVertical: 16}}>
         <View>
@@ -143,6 +109,61 @@ export const VariationBottomSheet = forwardRef(({ item, onPressBuyNow, onPressAd
 
         </View>
       </View>
+      </>
+    )
+  }
+
+  return (
+    <BottomSheet
+      ref={ref}
+      index={0}
+      snapPoints={snapPoints}
+      enableHandlePanningGesture={false}
+      enableContentPanningGesture={false}
+      handleComponent={() => (
+        <View
+          style={{
+            height: 20,
+            borderTopRightRadius: 15,
+            borderTopLeftRadius: 15,
+            borderTopWidth: 3,
+            borderRightWidth: 2,
+            borderLeftWidth: 2,
+            borderColor: ORANGE,
+            marginHorizontal: -2,
+          }}
+        />
+      )}
+      backdropComponent={BottomSheetBackdrop}>
+      <View style={styles.sheet}>
+        <View style={{flexDirection: 'row'}}>
+          <View style={{flex: 2}}>
+            <Image source={getImage()} style={{width: 80, height: 120, resizeMode: 'cover', borderRadius: 5}} />
+          </View>
+          <View style={{flex: 8, justifyContent: 'center'}}>
+            <View style={{flexDirection: 'row'}}>
+              <View style={{flex: 1}}></View>
+              <View style={{flex: 2}}>
+                <Text style={{color: "#F6841F", fontSize: 14}}><Price amount={item?.price} /></Text>
+                <Text style={{color: "#9E9E9E", fontSize: 12}}>Stock: {stock}</Text>
+              </View>
+              <View style={{flex: 2, justifyContent: 'center'}}>
+                <Text style={{color: "#9E9E9E", textDecorationLine: 'line-through', fontSize: 11}}>{item.compareAtPrice == 0 ? "" : <Price amount={item.compareAtPrice} />}</Text>
+                <Text></Text>
+              </View>
+              <View style={{flex: 3}}></View>
+            </View>
+          </View>
+          <TouchableOpacity activeOpacity={1} onPress={() => {
+            ref.current.close()
+          }} style={{flex: 0}}>
+            <CustomIcon.EvIcon name="close" size={22} color="#F6841F" />
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      {item?.variantSummary && item?.variantSummary.length > 0 && <RenderVariation />}      
+
       <View style={{height: 2, backgroundColor: "#F7F7FA"}} />
       <View style={{paddingHorizontal: 16, paddingVertical: 16}}>
         <View style={{flexDirection: 'row'}}>
@@ -154,16 +175,22 @@ export const VariationBottomSheet = forwardRef(({ item, onPressBuyNow, onPressAd
             <View style={{flex: 4, flexDirection: 'row'}}>
               <TouchableOpacity onPress={() => {
                 let increment = qty - 1
-                if(increment > 0) setQty(increment) 
+                if(increment > 0) {
+                  setQty(increment)
+                }
               }} style={{flex: 1.5, paddingHorizontal: 8, alignItems: 'center', justifyContent: 'center', borderWidth: 0.8, borderColor: "#F8F8F8"}}>
                 <CustomIcon.FA5Icon name="minus" size={14} color="#F6841F" />
               </TouchableOpacity>
               <View style={{flex: 2, paddingHorizontal: 14, alignItems: 'center', justifyContent: 'center', backgroundColor: '#F8F8F8'}}>
-                <Text style={{fontSize: 16}}>{qty}</Text>
+                <Text style={{fontSize: 16}}>{stock >= 1 ? qty : 0}</Text>
               </View>
               <TouchableOpacity onPress={() => {
                 let increment = qty + 1
-                if(increment <= stock) setQty(increment) 
+                if(increment <= stock){
+                  setQty(increment) 
+                }else{
+                  Toast.show("Not enought stocks")
+                }
               }} style={{flex: 1.5, paddingHorizontal: 8, alignItems: 'center', justifyContent: 'center', borderWidth: 0.8, borderColor: "#F8F8F8"}}>
                 <CustomIcon.FA5Icon name="plus" size={14} color="#F6841F" />
               </TouchableOpacity>
@@ -171,6 +198,9 @@ export const VariationBottomSheet = forwardRef(({ item, onPressBuyNow, onPressAd
           </View>
         </View>
       </View>
+
+      {item?.variantSummary && item?.variantSummary.length == 0 && <View style={{flex: 1, height: '15%'}} />}
+
       <View style={{height: 2, backgroundColor: "#F7F7FA"}} />
       <View style={{ flex: 1}}>
         <View style={{flex: 3, paddingHorizontal: 0, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around'}}>
