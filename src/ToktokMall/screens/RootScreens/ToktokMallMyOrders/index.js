@@ -17,15 +17,13 @@ export const ToktokMallMyOrders = ({navigation, route}) => {
         }} 
       />
 
-      {activeTab == 0 && <ToShip data={[]} />}
+      {activeTab == 0 && <ToShip id={6335} />}
 
-      {activeTab == 1 && <ToRecieve data={[]} />}
+      {activeTab == 1 && <ToRecieve id={6335} />}
 
-      {activeTab == 2 && <Completed data={[]} />}
+      {activeTab == 2 && <Completed id={8008} />}
 
-      {activeTab == 3 && <Cancelled data={[]} />}
-
-      
+      {activeTab == 3 && <Cancelled id={8008} />}
       
     </View>
   );
