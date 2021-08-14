@@ -7,9 +7,9 @@ import { AddressForm, Button, Payment, Shops, Totals, Vouchers, CheckoutModal } 
 import coppermask from '../../../assets/images/coppermask.png'
 import suit from '../../../assets/images/coppermask.png'
 
-import { useLazyQuery, useQuery } from '@apollo/react-hooks';
+import { useLazyQuery, useQuery, useMutation } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql';
-import { GET_CHECKOUT_DATA } from '../../../../graphql/toktokmall/model';
+import { GET_CHECKOUT_DATA, POST_CHECKOUT } from '../../../../graphql/toktokmall/model';
 import {Loading} from '../../../Components/Widgets';
 
 const REAL_WIDTH = Dimensions.get('window').width;
@@ -28,51 +28,48 @@ const testData2 = [
 ]
 
 const postCheckoutBody = {
-  signature: "TOKTKOMALLAPI2021",
-  data: {
-    name: "",
-    contactnumber: "",
-    email: "",
-    address: "",
-    regCode: "",
-    provCode: "",
-    citymunCode: "",
-    total_amount: 0,
-    srp_totalamount: 0,
-    order_type: 2,
-    order_logs: [{
+  name: "",
+  contactnumber: "",
+  email: "",
+  address: "",
+  regCode: "",
+  provCode: "",
+  citymunCode: "",
+  total_amount: 0,
+  srp_totalamount: 0,
+  order_type: 2,
+  order_logs: [{
+    sys_shop: 1,
+    branchid: 0,
+    delivery_amount: 0,
+    daystoship: 1,
+    days_toship_to: 1,
+    items: [{
       sys_shop: 1,
-      branchid: 0,
-      delivery_amount: 0,
-      daystoship: 1,
-      days_toship_to: 1,
-      items: [{
-        sys_shop: 1,
-        product_id: "",
-        quantity: 1,
-        amount: 0,
-        srp_amount: 0,
-        srp_totalamount: 0,
-        total_amount: 0,
-        order_type: 1
-      }]
-    }],
-    //Optional values
-    user_id: 9999,
-    notes: "",
-    latitude: "",
-    longitude: "",
-    postalcode: "",
-    account_type: "",
-    vouchers: [{
-      shopid: 1,
-      vcode: "",
-      vamount: ""
-    }],
-    referral_code: "",
-    referral_account_type: "",
-    payment_method: ""
-  }
+      product_id: "",
+      quantity: 1,
+      amount: 0,
+      srp_amount: 0,
+      srp_totalamount: 0,
+      total_amount: 0,
+      order_type: 1
+    }]
+  }],
+  //Optional values
+  user_id: 9999,
+  notes: "",
+  latitude: "",
+  longitude: "",
+  postalcode: "",
+  account_type: 0,
+  vouchers: [{
+    shopid: 1,
+    vcode: "",
+    vamount: ""
+  }],
+  referral_code: "",
+  referral_account_type: "",
+  payment_method: "cod"
 }
 
 export const ToktokMallCheckout = ({route, navigation}) => {
@@ -96,7 +93,7 @@ export const ToktokMallCheckout = ({route, navigation}) => {
     fetchPolicy: 'network-only',
     variables: {
       input: {
-        userId: 1024
+        userId: 8473
       }
     },
     onCompleted: (response) => {
@@ -108,6 +105,64 @@ export const ToktokMallCheckout = ({route, navigation}) => {
       console.log(err)
     }
   })
+
+  const [postCheckout, {error2, loading2}] = useMutation(POST_CHECKOUT, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    variables: {
+      input: postCheckoutBody
+    },
+    onCompleted: (response) => {
+      console.log("Checkout result", response)
+      if(response.postCheckout){
+        if(response.postCheckout.success == 1){
+          alert(response.postCheckout.message)
+        }
+      }
+    },
+    onError: (err) => {
+      console.log(err)
+    }
+  })
+
+  const postCheckoutSetting = async () => {
+
+    //populate the postCheckoutBody basic data
+    postCheckoutBody.user_id = 0
+    postCheckoutBody.email = ""
+    postCheckoutBody.name = addressData.receiverName
+    postCheckoutBody.contactnumber = addressData.receiverContact
+    postCheckoutBody.address = addressData.address
+    postCheckoutBody.regCode = addressData.regionId
+    postCheckoutBody.provCode = addressData.provinceId
+    postCheckoutBody.citymunCode = addressData.municipalityId
+    postCheckoutBody.total_amount = parseFloat(grandTotal)
+    postCheckoutBody.srp_totalamount = parseFloat(grandTotal)
+    postCheckoutBody.order_logs = []
+    postCheckoutBody.vouchers = []
+
+    //build order log list
+    paramsData.map(val => {
+      if(val.cart.length == 0 || val.cart == undefined) return
+      val.cart.map((item, i) => {
+        let total = parseFloat(item.price) * item.qty
+        postCheckoutBody.order_logs.push({
+          sys_shop: item.store_id,
+          product_id: item.item_id,
+          quantity: item.qty,
+          amount: parseFloat(item.price),
+          srp_amount: parseFloat(item.price),
+          srp_totalamount: total,
+          total_amount: total,
+          order_type: 2
+        })
+      })
+    })
+
+    console.log("PostCheckoutBody", postCheckoutBody)
+
+    await postCheckout()
+
+  }
 
   useEffect(() => {
     getCheckoutData()
@@ -137,7 +192,10 @@ export const ToktokMallCheckout = ({route, navigation}) => {
   return (
     
     <>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView 
+        showsVerticalScrollIndicator={false}
+        removeClippedSubviews={true}
+      >
         <CheckoutModal 
           navigation={navigation} 
           isVisible={isVisible} 
@@ -146,7 +204,9 @@ export const ToktokMallCheckout = ({route, navigation}) => {
         <View style ={{paddingBottom: 0}}>
           <AddressForm
             data={addressData}
-            onEdit={() => navigation.push("ToktokMallAddressesMenu", {onGoBack: (data) => getCheckoutData()})}
+            onEdit={() => navigation.push("ToktokMallAddressesMenu", {
+              onGoBack: (data) => getCheckoutData()
+            })}
           />
           <Shops 
             raw={paramsData}
@@ -169,10 +229,11 @@ export const ToktokMallCheckout = ({route, navigation}) => {
       </ScrollView>
       <View style={styles.footer}>
         <Button 
+          enabled={!loading}
           total={grandTotal}
-          isVisible={isVisible} 
-          setIsVisible={setIsVisible} 
-          unSelectedItemsArr={route.params.unSelectedItemsArr} 
+          onPress={async () => {
+            await postCheckoutSetting()
+          }}      
         />
       </View>
     </>

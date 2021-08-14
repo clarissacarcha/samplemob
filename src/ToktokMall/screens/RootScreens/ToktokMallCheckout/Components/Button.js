@@ -16,12 +16,12 @@ const testData = [
 ]
 const REAL_WIDTH = Dimensions.get('window').width;
 
-export const Button = ({total, isVisible, setIsVisible, unSelectedItemsArr}) => {
+export const Button = ({enabled, total, onPress}) => {
 
   const onCheckout = () => {
-    let stringyfiedArr = JSON.stringify(unSelectedItemsArr)
-    AsyncStorage.setItem('MyCart', stringyfiedArr)
-    setIsVisible(true)
+    // let stringyfiedArr = JSON.stringify(unSelectedItemsArr)
+    // AsyncStorage.setItem('MyCart', stringyfiedArr)
+    // setIsVisible(true)
   }
     
   return (
@@ -32,7 +32,9 @@ export const Button = ({total, isVisible, setIsVisible, unSelectedItemsArr}) => 
               <Text style = {{fontWeight: 'bold'}}>Total Payment</Text>
               <Text style = {{fontWeight: 'bold', color: '#F6841F' }}>{FormatToText.currency(total)}</Text>
             </View>
-            <TouchableOpacity style = {styles.button} onPress ={() => {onCheckout()}}>
+            <TouchableOpacity style={styles.button} onPress={() => {
+              if(enabled) onPress()
+            }}>
                 <Text style = {styles.buttonText}>Checkout</Text>
             </TouchableOpacity>
           </View>

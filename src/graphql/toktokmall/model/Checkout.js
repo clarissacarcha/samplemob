@@ -32,3 +32,13 @@ export const GET_CHECKOUT_DATA = gql`
     }
   }
 `
+export const POST_CHECKOUT = gql`
+	mutation postCheckout($input: PostCheckoutInput) {
+		postCheckout(input: $input){
+			success
+			message
+			orderId
+			orderReferenceNum
+		}
+	}
+`
