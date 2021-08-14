@@ -29,25 +29,6 @@ import {
 
 import Animated, {interpolate, Extrapolate, useCode, set, greaterThan} from 'react-native-reanimated'
 
-const item = {
-  // store_id: 4,
-  //   store: 'The Apparel 3',
-  //   cart: [
-  //     {
-        
-  //     },
-  //   ],
-  //   delivery_fee: 80, date_range_from: 'Jul 20', date_range_to: 'Jul 25'
-  item_id: 1,
-  label: 'Graphic Tees',
-  originalPrice: 380,
-  price: 50,
-  variation: 'White, L',
-  qty: 2,
-  store_id: 4,
-  store: 'The Apparel 3',
-}
-
 const Component =  ({
   navigation,
   createMyCartSession, myCart, route
@@ -99,13 +80,8 @@ const Component =  ({
     }
   })
 
-  const onBuyNow = () => {
-    // createMyCartSession('push',item)
-  }
-  
-  const onAddToCart = (input) => {
-
-    let raw = {
+  const cartObject = (input) => {
+    return {
       store_id: store.id,
       store: store.shopname,
       cart: [
@@ -123,7 +99,18 @@ const Component =  ({
       ],
       delivery_fee: 80, date_range_from: 'Jul 20', date_range_to: 'Jul 25'
     }
+  }
 
+  const onBuyNow = (input) => {
+    navigation.push("ToktokMallCheckout", {
+      data: [cartObject(input)],
+      vouchers: [],
+    })
+  }
+  
+  const onAddToCart = (input) => {
+
+    let raw = cartObject(input)
     createMyCartSession('push', raw)
     setCartItems(CountCartItems)
     setMessageModalShown(true)
@@ -235,7 +222,6 @@ const Component =  ({
         onPressBuyNow={() => {
           setVariationOptionType(2)
           varBottomSheetRef.current.expand()
-          // onBuyNow()
         }}
         onPressAddToCart={() => {
           setVariationOptionType(1)
@@ -250,10 +236,12 @@ const Component =  ({
         image={images.length > 0 ? images[0] : {}}
         onPressAddToCart={(input) => {
           varBottomSheetRef.current.close()
-          // alert('something')
           onAddToCart(input)
         }}
-        onPressBuyNow={() => null}
+        onPressBuyNow={(input) => {
+          varBottomSheetRef.current.close()
+          onBuyNow(input)
+        }}
       />
 
       {messageModalShown && 

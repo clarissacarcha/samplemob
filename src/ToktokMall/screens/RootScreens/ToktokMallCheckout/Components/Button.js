@@ -16,19 +16,7 @@ const testData = [
 ]
 const REAL_WIDTH = Dimensions.get('window').width;
 
-export const Button = ({data, isVisible, setIsVisible, unSelectedItemsArr}) => {
-  
-  const computeTotal = () => {    
-    let a = 0;
-    for (var x = 0; x < data.length; x++) {
-      for (var y = 0; y < data[x].cart.length; y++) {
-        let item = data[x].cart[y];
-        a += parseFloat(item.price) * item.qty;
-      }
-    }
-    return FormatToText.currency(a)
-    // setSubTotal(a);
-  }  
+export const Button = ({total, isVisible, setIsVisible, unSelectedItemsArr}) => {
 
   const onCheckout = () => {
     let stringyfiedArr = JSON.stringify(unSelectedItemsArr)
@@ -42,7 +30,7 @@ export const Button = ({data, isVisible, setIsVisible, unSelectedItemsArr}) => {
           <View style = {{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 15}}>
             <View>
               <Text style = {{fontWeight: 'bold'}}>Total Payment</Text>
-              <Text style = {{fontWeight: 'bold', color: '#F6841F' }}>{computeTotal()}</Text>
+              <Text style = {{fontWeight: 'bold', color: '#F6841F' }}>{FormatToText.currency(total)}</Text>
             </View>
             <TouchableOpacity style = {styles.button} onPress ={() => {onCheckout()}}>
                 <Text style = {styles.buttonText}>Checkout</Text>

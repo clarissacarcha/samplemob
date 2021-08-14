@@ -17,7 +17,13 @@ const testData = [
   }
 ]
 
-export const Shops = ({data,}) => {
+export const Shops = ({raw, shipping}) => {
+
+  const [data, setData] = useState(raw || [])
+
+  useEffect(() => {
+    setData(raw)
+  }, [raw])
 
   const computeTotal = (item) => {
     let total = 0
@@ -71,9 +77,9 @@ export const Shops = ({data,}) => {
             {renderItems(item.cart)}
           </View>
           <View style={styles.deliveryfeeContainer}>
-            <Text>Delivery Fee: {FormatToText.currency(item.delivery_fee)}</Text>
-            <Text>Order total ({item.cart.length} items): {computeTotal(item.cart)} </Text>
-            <Text style = {{marginTop: 7, color: '#929191'}}>Receive by: {item.date_range_from} - {item.date_range_to} </Text>
+            <Text>Delivery Fee: {FormatToText.currency(shipping?.rateAmount)}</Text>
+            <Text>Order total ({item.cart.length} {item.cart.length > 1 ? `items` : 'item'}): {computeTotal(item.cart)} </Text>
+            <Text style = {{marginTop: 7, color: '#929191'}}>Receive by: {shipping?.deliveryDate} </Text>
           </View>
         </View>
       )
@@ -85,7 +91,7 @@ export const Shops = ({data,}) => {
       {/* <View style = {styles.container}>
        
       </View>   */}
-      {renderShops()}
+      {data && data.length > 0 && renderShops()}
     </>
     )
 }

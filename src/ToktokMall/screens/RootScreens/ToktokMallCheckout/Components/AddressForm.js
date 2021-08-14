@@ -7,34 +7,26 @@ import { FONT } from '../../../../../res/variables';
 // import CustomIcon from '../../../../../Components/Icons';
 // import {watch, electronics, mensfashion, furniture, petcare} from '../../../../../assets'
 import Address from '../../ToktokMallAddresses/ToktokMallAddressesMenu/components/Adress'
-const testData = [
-  {id: 1, full_name: 'Cloud Panda', contact_number: '09050000000',
-    address: '10F, Inoza Tower, 40th Street, Bonifacio Global City', default: 1
-  },
-  {id: 2, full_name: 'Rick Sanchez', contact_number: '09060000000',
-    address: 'B20 L1, Mahogany Street, San Isidro, Makati City', default: 0
-  }
-]
 
-export const AddressForm = ({navigation , data , addressData, setAddressData ,defaultAddress , setDefaultAddress, addressLengthChanged ,setAddressLengthChanged}) => {
-
+export const AddressForm = ({data, onEdit}) => {
     
   return (
     <>
       <View style = {styles.container}>
         <View style = {{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
           <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>Delivery Address</Text>
-          <TouchableOpacity onPress={() => {
-              navigation.navigate("ToktokMallAddressesMenu", {
-                addressData: addressData,  setDefaultAddress:setDefaultAddress, defaultAddress: defaultAddress
-                , setAddressData: setAddressData,
-                addressLengthChanged: addressLengthChanged ,setAddressLengthChanged: setAddressLengthChanged, screen: 'checkout'
-              })
-          }}>
+          <TouchableOpacity onPress={onEdit}>
             <Text style={{color: '#F6841F'}}>Edit</Text>
           </TouchableOpacity>
         </View>
-        <Address item = {data} screen = {'checkout'}/>
+        <View  style={styles.addressContainer}>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <Text style={styles.addressfullName}>{data.receiverName}</Text>
+            {/* <Text style={styles.addressdefaultText}>Default</Text> */}
+          </View>
+          <Text style={styles.addresscontact_number}>{data.receiverContact}</Text>
+          <Text style={styles.addressText}>{data.address}</Text>
+        </View>
       </View>  
     </>
     )
@@ -43,8 +35,11 @@ export const AddressForm = ({navigation , data , addressData, setAddressData ,de
 const styles = StyleSheet.create({
   body: {flex: 1, backgroundColor: '#F7F7FA', },
   container: {paddingVertical: 8, paddingHorizontal: 15, backgroundColor: 'white', marginTop: 0,  },
-  
-
+  addressContainer: {borderRadius: 5, backgroundColor: '#F8F8F8', padding: 10, marginTop: 10, marginBottom: 10},
+  addressdefaultText: {color: '#F6841F'},
+  addressfullName: {textTransform: 'capitalize', fontSize: 14, fontFamily: FONT.REGULAR},
+  addresscontact_number: {color: '#9E9E9E'},
+  addressText: {marginTop: 10, fontSize: 13, textTransform: 'capitalize'}
 })
 
 // export default AddressForm

@@ -52,7 +52,9 @@ export const VariationBottomSheet = forwardRef(({ item, image, onPressBuyNow, on
       return (
         <>
           <View style={{flex: 2}} />
-          <TouchableOpacity onPress={onBuyNow} style={{flex: 10, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: "#F6841F", paddingHorizontal: 20, paddingVertical: 12, borderRadius: 5, backgroundColor: '#F6841F'}}>
+          <TouchableOpacity onPress={() => {
+            onBuyNow({qty, variation})
+          }} style={{flex: 10, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: "#F6841F", paddingHorizontal: 20, paddingVertical: 12, borderRadius: 5, backgroundColor: '#F6841F'}}>
             <Text style={{fontFamily: FONT.BOLD, fontSize: 14, color: "#FFF"}}>Buy now</Text>
           </TouchableOpacity>
           <View style={{flex: 2}} />
@@ -64,13 +66,15 @@ export const VariationBottomSheet = forwardRef(({ item, image, onPressBuyNow, on
           <View style={{flex: 3}} />
           <TouchableOpacity 
             onPress={() => {
-            onAddToCart({qty, variation})
+              onAddToCart({qty, variation})
             }} 
             style={{flex: 8, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: "#F6841F", paddingHorizontal: 20, paddingVertical: 12, borderRadius: 5, backgroundColor: 'white'}}>
             <Text style={{fontFamily: FONT.BOLD, fontSize: 14, color: "#F6841F"}}>Add to Cart</Text>
           </TouchableOpacity>
           <View style={{flex: 1}} />
-          <TouchableOpacity onPress={onBuyNow} style={{flex: 8, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: "#F6841F", paddingHorizontal: 20, paddingVertical: 12, borderRadius: 5, backgroundColor: '#F6841F'}}>
+          <TouchableOpacity onPress={() => {
+            onBuyNow({qty, variation})
+          }} style={{flex: 8, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: "#F6841F", paddingHorizontal: 20, paddingVertical: 12, borderRadius: 5, backgroundColor: '#F6841F'}}>
             <Text style={{fontFamily: FONT.BOLD, fontSize: 14, color: "#FFF"}}>Buy now</Text>
           </TouchableOpacity>
           <View style={{flex: 3}} />

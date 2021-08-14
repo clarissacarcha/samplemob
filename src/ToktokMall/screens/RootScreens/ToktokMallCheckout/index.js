@@ -6,8 +6,13 @@ import { AddressForm, Button, Payment, Shops, Totals, Vouchers, CheckoutModal } 
 
 import coppermask from '../../../assets/images/coppermask.png'
 import suit from '../../../assets/images/coppermask.png'
-const REAL_WIDTH = Dimensions.get('window').width;
 
+import { useLazyQuery, useQuery } from '@apollo/react-hooks';
+import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql';
+import { GET_CHECKOUT_DATA } from '../../../../graphql/toktokmall/model';
+import {Loading} from '../../../Components/Widgets';
+
+const REAL_WIDTH = Dimensions.get('window').width;
 
 const testData2 = [
   {id: 1, shops: 'Facemask PH', 
@@ -22,70 +27,112 @@ const testData2 = [
 
 ]
 
-const testDataAddress = [
-  {id: 1, full_name: 'Cloud Panda', contact_number: '09050000000',
-    address: '10F, Inoza Tower, 40th Street, Bonifacio Global City', default: 0
-  },
-  {id: 2, full_name: 'Rick Sanchez', contact_number: '09060000000',
-    address: 'B20 L1, Mahogany Street, San Isidro, Makati City', default: 1
+const postCheckoutBody = {
+  signature: "TOKTKOMALLAPI2021",
+  data: {
+    name: "",
+    contactnumber: "",
+    email: "",
+    address: "",
+    regCode: "",
+    provCode: "",
+    citymunCode: "",
+    total_amount: 0,
+    srp_totalamount: 0,
+    order_type: 2,
+    order_logs: [{
+      sys_shop: 1,
+      branchid: 0,
+      delivery_amount: 0,
+      daystoship: 1,
+      days_toship_to: 1,
+      items: [{
+        sys_shop: 1,
+        product_id: "",
+        quantity: 1,
+        amount: 0,
+        srp_amount: 0,
+        srp_totalamount: 0,
+        total_amount: 0,
+        order_type: 1
+      }]
+    }],
+    //Optional values
+    user_id: 9999,
+    notes: "",
+    latitude: "",
+    longitude: "",
+    postalcode: "",
+    account_type: "",
+    vouchers: [{
+      shopid: 1,
+      vcode: "",
+      vamount: ""
+    }],
+    referral_code: "",
+    referral_account_type: "",
+    payment_method: ""
   }
-]
+}
 
 export const ToktokMallCheckout = ({route, navigation}) => {
-
-  const [isVisible, setIsVisible] = useState(false)
-  // const [data, setData] = useState([])
-  const [addressData, setAddressData] = useState(testDataAddress)
-  const [defaultAddress, setDefaultAddress] = useState(1)
-  const [addressWasChanged, setAddressWasChanged] = useState(1)
-  const [addressLengthChanged, setAddressLengthChanged] = useState(addressData.length)
-
-  const [payment, setPaymentMethod] = useState(3);
-  const [vouchers, setVouchers] = useState([])
-
-
-  const findDefaultAddress = async () => {
-    // testDataAddress.map((item, i) => {
-    //   if(item.default == 1){
-    //     setDefaultAddress(item)
-    //   }else{
-    //     // setDefaultAddress({})
-    //   }
-    // })
-    addressData.find(function(post, index) {
-      if(post.id == defaultAddress){
-        // alert(JSON.stringify(post))
-        setDefaultAddress(post.id)
-      }
-    })
-  }
-
-  const findDefaultAddress2 = async () => {
-    data.find(function(post, index) {
-      if(post.default == 1){
-        // alert(JSON.stringify(post))
-        setDefaultAddress(post.id)
-      }
-    })
-  }
-
-  useEffect(() => {
-    findDefaultAddress();
-    // setAddressData(testDataAddress);
-  },[])
-  
-  useEffect(() => {
-    // findDefaultAddress();
-    // setAddressData(testDataAddress);
-    setVouchers(route.params.vouchers)
-  },[vouchers])
-
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={['Checkout', '']} />,
     headerRight: () => <HeaderRight hidden={true} />
   });
+
+  const [isVisible, setIsVisible] = useState(false)
+  // const [data, setData] = useState([])
+  const [paramsData, setParamsData] = useState([])
+  const [addressData, setAddressData] = useState([])
+  const [payment, setPaymentMethod] = useState(3);
+  const [vouchers, setVouchers] = useState([])
+  const [grandTotal, setGrandTotal] = useState(0)
+
+  const [getCheckoutData, {error, loading}] = useLazyQuery(GET_CHECKOUT_DATA, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    variables: {
+      input: {
+        userId: 1024
+      }
+    },
+    onCompleted: (response) => {
+      if(response.getCheckoutData){
+        setAddressData(response.getCheckoutData.address);
+      }
+    },
+    onError: (err) => {
+      console.log(err)
+    }
+  })
+
+  useEffect(() => {
+    getCheckoutData()
+  },[])
+
+  useEffect(() => {
+    let a = 0;
+    if(!addressData) return
+    for (var x = 0; x < route.params.data.length; x++) {
+      for (var y = 0; y < route.params.data[x].cart.length; y++) {
+        let item = route.params.data[x].cart[y];
+        a += parseFloat(item.price) * item.qty;
+      }
+      a += parseFloat(addressData?.shippingSummary?.rateAmount)
+    }
+    setGrandTotal(a)
+  }, [addressData])
+
+  useEffect(() => {
+    setParamsData(route?.params?.data)
+  }, [route.params])
+
+  if(loading) {
+    return <Loading state={loading} />
+  }
 
   return (
     
@@ -97,18 +144,13 @@ export const ToktokMallCheckout = ({route, navigation}) => {
           setIsVisible={setIsVisible} 
         />
         <View style ={{paddingBottom: 0}}>
-          <AddressForm 
-            navigation={navigation} 
-            data={addressData[defaultAddress-1]} 
-            addressData={addressData} 
-            setAddressData={setAddressData}
-            defaultAddress={defaultAddress}
-            setDefaultAddress={setDefaultAddress} 
-            addressLengthChanged={addressLengthChanged} 
-            setAddressLengthChanged={setAddressLengthChanged}
+          <AddressForm
+            data={addressData}
+            onEdit={() => navigation.push("ToktokMallAddressesMenu", {onGoBack: (data) => getCheckoutData()})}
           />
           <Shops 
-            data={route.params.data} 
+            raw={paramsData}
+            shipping={addressData?.shippingSummary}
           />
           <Vouchers 
             navigation={navigation} 
@@ -120,13 +162,14 @@ export const ToktokMallCheckout = ({route, navigation}) => {
             setPaymentMethod={setPaymentMethod} 
           />
           <Totals 
-            data={route.params.data}
+            raw={paramsData}
+            shipping={addressData?.shippingSummary}
           />
         </View>
       </ScrollView>
       <View style={styles.footer}>
         <Button 
-          data={route.params.data} 
+          total={grandTotal}
           isVisible={isVisible} 
           setIsVisible={setIsVisible} 
           unSelectedItemsArr={route.params.unSelectedItemsArr} 

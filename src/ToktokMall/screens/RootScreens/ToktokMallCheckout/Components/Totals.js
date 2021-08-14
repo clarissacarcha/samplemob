@@ -15,7 +15,13 @@ const testData = [
   }
 ]
 
-export  const Totals = ({data}) => {
+export const Totals = ({raw, shipping}) => {
+
+  const [data, setData] = useState(raw || [])
+
+  useEffect(() => {
+    setData(raw)
+  }, [raw])
 
   let shippingFeeTotal = 0
   let merchandiseTotal = 0
@@ -23,7 +29,7 @@ export  const Totals = ({data}) => {
   const computeShippingFee = () => {
     let total = 0
     for (let i = 0; i < data.length; i++){
-      total = total + parseFloat(data[i].delivery_fee)
+      total = total + parseFloat(shipping?.rateAmount)
     }
     shippingFeeTotal = total
     return FormatToText.currency(total)
@@ -31,7 +37,7 @@ export  const Totals = ({data}) => {
 
   const computeMerchandiseTotal = () => {
     let total = 0
-    data.map((item, i) => {
+    data.length > 0 && data.map((item, i) => {
       for (let i = 0; i < item.cart.length; i++){
         total = total + (parseFloat(item.cart[i].price) * item.cart[i].qty)
       }
@@ -44,7 +50,7 @@ export  const Totals = ({data}) => {
     <>
       <View style = {styles.container}>
         <View style = {styles.textContainer}>
-          <Text>Merchandise SubTotal:</Text>
+          <Text style={{fontSize: 13}}>Merchandise SubTotal:</Text>
           <Text>{computeMerchandiseTotal()}</Text>
         </View>
         <View style = {styles.textContainer}>
@@ -56,6 +62,7 @@ export  const Totals = ({data}) => {
           <Text  style = {{color: '#F61841'}}>{FormatToText.currency(shippingFeeTotal + merchandiseTotal)}</Text>
         </View>
       </View>
+      <View style={{height: 50}} />
     </>
     )
 }

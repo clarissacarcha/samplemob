@@ -4,23 +4,17 @@ import {connect} from 'react-redux'
 import { COLOR, FONT } from '../../../../../res/variables';
 import {HeaderBack, HeaderTitle, HeaderRight} from '../../../../Components';
 import Address from './components/Adress'
-import AntDesign from 'react-native-vector-icons/dist/AntDesign'
-const testData = [
-  {id: 1, full_name: 'Cloud Panda', contact_number: '09050000000',
-    address: '10F, Inoza Tower, 40th Street, Bonifacio Global City', default: 1
-  },
-  {id: 2, full_name: 'Rick Sanchez', contact_number: '09060000000',
-    address: 'B20 L1, Mahogany Street, San Isidro, Makati City', default: 0
-  }
-]
+import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+
+import { useLazyQuery, useQuery } from '@apollo/react-hooks';
+import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../graphql';
+import { GET_CUSTOMER_ADDRESSES } from '../../../../../graphql/toktokmall/model';
+import { Loading } from '../../../../Components';
 
 export const ToktokMallAddressesMenu = ({route, navigation, }) => {
 
   const [data, setData] = useState([])
   const [defaultId, setDefaultID] = useState(0)
-  const [sample, setSample] = useState('[]');
-  const [addressLengthChanged, setAddressLengthChanged] = useState(data.length)
-
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
@@ -28,38 +22,36 @@ export const ToktokMallAddressesMenu = ({route, navigation, }) => {
     headerRight: () => <HeaderRight hidden={true} />
   });
 
-  // let params = route.params.navigated
+  const [getAddresses, {error, loading}] = useLazyQuery(GET_CUSTOMER_ADDRESSES, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    variables: {
+      input: {
+        userId: 1024
+      }
+    },
+    onCompleted: (response) => {
+      if(response.getCustomerAddresses){
+        setData(response.getCustomerAddresses);
+      }
+    },
+    onError: (err) => {
+      console.log(err)
+    }
+  })
 
-  const refresh = async () => {
-
-  } 
-  
   const changeDefault = (id) => {
     route.params.setDefaultAddress(id)
     setDefaultID(id)
   }
 
-  // useEffect(() => {
-  //   // alert(JSON.stringify(route))
-  //   // if(route.params)defaultAddress
-  //   setData(route.params.addressData)
-  //   setDefaultID(route.params.defaultAddress)
-  // }, []);
+  useEffect(() => {
+    setDefaultID(route.params.defaultAddress)
+  }, [data.length]);
 
   useEffect(() => {
-    // alert(JSON.stringify(route.params.screens))
-    if(route.params.screen == 'checkout'){
-      
-      route.params.setAddressData(route.params.addressData)
-      
-    }
-    setDefaultID(route.params.defaultAddress)
-    setData(route.params.addressData)
-    // setData(data)
-    // if()
-    // setData(testData)
-    // refresh()
-  }, [data.length]);
+    getAddresses()
+  }, [])
 
   const renderAddresses = () => {
     return data.map((item, i) => {
@@ -68,17 +60,18 @@ export const ToktokMallAddressesMenu = ({route, navigation, }) => {
           navigation.navigate("ToktokMallAddressesForm", {item, update: true})
         }} onPress = {() => {changeDefault(item.id)}}>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Text style={styles.addressfullName}>{item.full_name} {item.id}</Text>
-            { item.id == defaultId  ? 
-              // item.default == 1  ? 
-              ( <Text style={styles.addressdefaultText}>Default</Text> ) : (<></>)
-            }
+            <Text style={styles.addressfullName}>{item.receiverName}</Text>
+            {item.defaultAdd == 1 ? <Text style={styles.addressdefaultText}>Default</Text> : null}
           </View>
-          <Text style={styles.addresscontact_number}>{item.contact_number}</Text>
+          <Text style={styles.addresscontact_number}>{item.receiverContact}</Text>
           <Text style={styles.addressText}>{item.address}</Text>
         </TouchableOpacity>
       ) 
     })
+  }
+
+  if(loading){
+    return <Loading loading={loading} />
   }
 
   return (
@@ -87,7 +80,7 @@ export const ToktokMallAddressesMenu = ({route, navigation, }) => {
       <View style = {styles.body}>
         <View style= {styles.container}> 
           {renderAddresses()}
-          <TouchableOpacity style={styles.button}  onPress ={() => {
+          <TouchableOpacity style={styles.button} onPress ={() => {
             navigation.navigate('ToktokMallAddressesForm', { addressData: route.params.addressData, defaultAddress: route.params.defaultAddress, addressList: data,
               setDefaultID: setDefaultID, setAddressLengthChanged:setAddressLengthChanged
             })
@@ -124,7 +117,7 @@ const styles = StyleSheet.create({
   },
   addressContainer: {borderRadius: 5, backgroundColor: '#F8F8F8', padding: 10, marginTop: 10, marginBottom: 10},
   addressdefaultText: {color: '#F6841F'},
-  addressfullName: {},
+  addressfullName: {textTransform: 'capitalize', fontSize: 14, fontFamily: FONT.REGULAR},
   addresscontact_number: {color: '#9E9E9E'},
-  addressText: {marginTop: 10, fontWeight: 'bold'},
+  addressText: {marginTop: 10, fontSize: 13, fontFamily: FONT.REGULAR, textTransform: 'capitalize'},
 })

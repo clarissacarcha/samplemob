@@ -16,3 +16,26 @@ export const GET_CUSTOMER_IF_EXIST = gql`
     }
   }
 `
+
+export const GET_CUSTOMER_ADDRESSES = gql`
+	query getCustomerAddresses($input: GetCustomerAddressesInput) {
+		getCustomerAddresses(input: $input) {
+			id
+  	  address
+	    receiverName
+    	receiverContact
+      regionId
+      provinceId
+      municipalityId
+			defaultAdd
+    	shippingSummary {
+      	id
+      	rateName
+      	rateAmount
+      	fromDay
+      	toDay
+      	deliveryDate
+    	}
+		}
+	}
+`
