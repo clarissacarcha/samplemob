@@ -126,6 +126,17 @@ export const GET_PRODUCT_DETAILS = gql`
       	variantType
       	variantList
     	}
+			relevantProducts {
+				Id
+				itemname
+				price
+				soldCount
+			  noOfStocks
+				images {
+					arrangement
+					filename
+				}
+			}
 		}
 	}
 `

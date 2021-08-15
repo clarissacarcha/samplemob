@@ -2,7 +2,7 @@ import React, {useRef, useEffect, useState} from 'react';
 import { useLazyQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql';
 import { GET_PRODUCT_DETAILS } from '../../../../graphql/toktokmall/model';
-import {View, Text, Image, FlatList, SectionList, ImageBackground, TouchableOpacity, AsyncStorage} from 'react-native';
+import {View, SafeAreaView, Text, Image, FlatList, SectionList, ImageBackground, TouchableOpacity, AsyncStorage} from 'react-native';
 import {connect} from 'react-redux'
 import Spinner from 'react-native-spinkit';
 import { FONT } from '../../../../res/variables';
@@ -37,6 +37,7 @@ const Component =  ({
   const [product, setProduct] = useState({})
   const [images, setImages] = useState([])
   const [store, setStore] = useState({})
+  const [relevantProducts, setRelevantProducts] = useState([])
   const varBottomSheetRef = useRef()
   const BuyBottomSheetRef = useRef()
   const CartBottomSheetRef = useRef()
@@ -71,7 +72,7 @@ const Component =  ({
         setProduct(response.getProductDetails)
         setImages(response.getProductDetails.images)
         setStore(response.getProductDetails.shop)
-
+        setRelevantProducts(response.getProductDetails.relevantProducts)
         if(response.getProductDetails.noOfStocks == 0) setisOutOfStock(true)
       }
     },
@@ -167,7 +168,7 @@ const Component =  ({
 
   return (
     <>
-    <View style={{flex: 1, backgroundColor: '#fff'}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
       
       {/* {scrolling ? <HeaderPlain /> : <HeaderTransparent />} */}
       {/* PLAIN HEADER*/}
@@ -211,7 +212,7 @@ const Component =  ({
           data={product} 
         />
         <RenderReviews />
-        <RenderSuggestions />
+        <RenderSuggestions data={relevantProducts || []} />
         <View style={{height: 60}} />
       </Animated.ScrollView>
 
@@ -252,7 +253,7 @@ const Component =  ({
         message="Item has been added to your cart."
       />}
 
-    </View>
+    </SafeAreaView>
     
     </>
   );

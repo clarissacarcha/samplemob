@@ -2,9 +2,8 @@ import React, {useState, useEffect, useRef} from 'react';
 import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ActivityIndicator} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/core';
-import { useLazyQuery } from '@apollo/react-hooks';
+import { useLazyQuery, useQuery } from '@apollo/react-hooks';
 import {Image as RNEImage} from 'react-native-elements'; 
-import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 
 import { COLOR, FONT } from '../../../../../../res/variables';
 import CustomIcon from '../../../../../Components/Icons';
@@ -13,7 +12,7 @@ import { GET_PRODUCTS } from '../../../../../../graphql/toktokmall/model';
 
 import {clothfacemask, medicalfacemask, placeholder} from '../../../../../assets'; 
 import { Price } from '../../../../../helpers';
-import { SwipeReloader } from '../../../../../Components';
+import { SwipeReloader, Loading } from '../../../../../Components';
 
 const testdata = [{
   image: clothfacemask,
@@ -101,11 +100,11 @@ const RenderItem = ({item}) => {
   )
 }
 
-export const Suggestions = ({data}) => {
+export const Suggestions = ({}) => {
 
   const navigation = useNavigation()
-  const [products, setProducts] = useState([])
 
+  const [products, setProducts] = useState([])
   const [getProducts, {error, loading, fetchMore}] = useLazyQuery(GET_PRODUCTS, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
@@ -133,50 +132,67 @@ export const Suggestions = ({data}) => {
     getProducts()
   }, [])
 
-    return (
-      <>
-        <View style={styles.container}>
-            <View style={styles.heading}>
-              <View style={{flex: 8}}>
-                <Text style={styles.h1}>Suggestions for you</Text>
-              </View>
-              <TouchableOpacity onPress={() => {
-                navigation.navigate("ToktokMallCategoriesList", {searchValue: "Suggestions for you"})
-              }} style={{flex: 2, flexDirection: 'row'}}>
-                <View style={{flex: 2, alignItems: 'flex-end', justifyContent: 'center'}}>
-                  <Text style={styles.link}>See all </Text>
-                </View>
-                <View style={{flex: 0, alignItems: 'flex-end', justifyContent: 'center'}}>
-                  <CustomIcon.EIcon name="chevron-right" color="#F6841F" size={16} />
-                </View>
-              </TouchableOpacity>
-            </View>
+  // const { loading, data, fetchMore } = useQuery(GET_PRODUCTS, {
+  //   client: TOKTOK_MALL_GRAPHQL_CLIENT,
+  //   variables: {
+  //     offset: 0,
+  //     limit: 10
+  //   }
+  // })
 
-            <FlatList
-              data={products}
-              numColumns={2}
-              style={{paddingHorizontal: 10}}
-              renderItem={({item}) => {
-                return <RenderItem item={item} />
-              }}
-              keyExtractor={(item, index) => item + index}
-              refreshing={loading}
-              onEndReachedThreshold={0.5}
-              ListFooterComponent={() => {
-                return (
-                  <>
-                    <SwipeReloader state={loading} onSwipeUp={() => getProducts()} />
-                  </>
-                )
-              }}
-            />
-            
+  // if(loading) return <Loading state={loading} />
+
+  return (
+    <>
+      <View style={styles.container}>
+        <View style={styles.heading}>
+          <View style={{flex: 8}}>
+            <Text style={styles.h1}>Suggestions for you</Text>
           </View>
-          <View style={{height: 15}}></View>
-          {/* <View style={styles.separator} /> */}
-      </>
-    )
-  }
+          <TouchableOpacity onPress={() => {
+            navigation.navigate("ToktokMallCategoriesList", {searchValue: "Suggestions for you"})
+          }} style={{flex: 2, flexDirection: 'row'}}>
+            <View style={{flex: 2, alignItems: 'flex-end', justifyContent: 'center'}}>
+              <Text style={styles.link}>See all </Text>
+            </View>
+            <View style={{flex: 0, alignItems: 'flex-end', justifyContent: 'center'}}>
+              <CustomIcon.EIcon name="chevron-right" color="#F6841F" size={16} />
+            </View>
+          </TouchableOpacity>
+        </View>
+
+        <FlatList
+          data={products}
+          numColumns={2}
+          style={{paddingHorizontal: 10}}
+          renderItem={({item}) => {
+            return <RenderItem item={item} />
+          }}
+          keyExtractor={(item, index) => item + index}
+          refreshing={loading}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={() => {
+            return (
+              <>
+                <SwipeReloader state={loading} onSwipeUp={() => {
+                  fetchMore({
+                    variables: {
+                      offset: data.getProducts.length
+                    },
+                  })
+                }} 
+                />
+              </>
+            )
+          }}
+        />
+            
+      </View>
+    <View style={{height: 15}}></View>
+    {/* <View style={styles.separator} /> */}
+  </>
+  )
+}
 
 const styles = StyleSheet.create({
   container: {flex: 1, paddingVertical: 0},

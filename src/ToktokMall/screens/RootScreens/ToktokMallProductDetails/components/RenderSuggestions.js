@@ -6,9 +6,8 @@ import {LandingHeader, AdsCarousel} from '../../../../Components';
 import { ScrollView } from 'react-native-gesture-handler';
 import CustomIcon from '../../../../Components/Icons';
 
-import {clothfacemask, medicalfacemask} from '../../../../assets'; 
+import {clothfacemask, medicalfacemask, placeholder} from '../../../../assets'; 
 import { useNavigation } from '@react-navigation/core';
-
 
 const testdata = [{
   image: clothfacemask,
@@ -58,28 +57,36 @@ const RenderItem = ({item}) => {
 
   const navigation = useNavigation()
 
+  const getImageSource = (data) => {
+    if(data && data?.length > 0){
+      return {uri: data[0].filename}
+    }else {
+      return placeholder
+    }
+  }
+
   return (
     <>
       <View style={{flex: 2, backgroundColor: '#fff', margin: 5}}>
                   
         <TouchableOpacity activeOpacity={1} onPress={() => {
-          navigation.navigate("ToktokMallProductDetails")
+          navigation.navigate("ToktokMallProductDetails", {Id: item.Id})
         }} style={{padding: 5}}>
           <Image 
-            source={item.image} 
+            source={getImageSource(item.images)} 
             style={{resizeMode: 'cover', width: '100%', height: 120, borderRadius: 5}} 
           />
-          <Text style={{fontSize: 13, fontWeight: '500', paddingVertical: 5}}>{item.label}</Text>
-          <Text style={{fontSize: 13, color: "#F6841F"}}>&#8369;{parseFloat(item.price).toFixed(2)}</Text>    
+          <Text style={{fontSize: 13, fontWeight: '500', paddingVertical: 5}}>{item.itemname}</Text>
+          <Text style={{fontSize: 13, color: "#F6841F"}}><Price amount={item.price} /></Text>    
           <View style={{flexDirection: 'row'}}>
             <View style={{flex: 7, flexDirection: 'row'}}>
-              <RenderStars value={item.rating} />
+              <RenderStars value={item.rating || 0} />
             </View>
             <View style={{flex: 2}}>
-              <Text style={{color: "#9E9E9E", fontSize: 10}}>({item.stock})</Text>
+              <Text style={{color: "#9E9E9E", fontSize: 10}}>({item.noOfStocks || 0})</Text>
             </View>
             <View style={{flex: 3}}>
-              <Text style={{fontSize: 10}}>{item.sold} sold</Text>
+              <Text style={{fontSize: 10}}>{item.soldCount || 0} sold</Text>
             </View>
           </View>
         </TouchableOpacity>
@@ -89,6 +96,13 @@ const RenderItem = ({item}) => {
 }
 
 export const RenderSuggestions = ({data}) => {
+
+  const [products, setProducts] = useState(data)
+
+  useEffect(() => {
+    setProducts(data)
+  }, [data])
+
     return (
       <>
         <View style={styles.container}>
@@ -105,7 +119,7 @@ export const RenderSuggestions = ({data}) => {
             </View>
 
             <FlatList
-              data={testdata}
+              data={products}
               numColumns={2}
               style={{paddingHorizontal: 10}}
               renderItem={({item}) => {
