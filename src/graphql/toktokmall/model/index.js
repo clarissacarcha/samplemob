@@ -1,6 +1,7 @@
 export * from './Category'
 export * from './Checkout'
 export * from './Orders'
+export * from './OrderHistory'
 export * from './Product'
 export * from './Shop'
 export * from './User'

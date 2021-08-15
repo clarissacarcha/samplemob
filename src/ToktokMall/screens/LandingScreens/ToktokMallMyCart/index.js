@@ -165,8 +165,8 @@ const Component =  ({
   };
 
   useEffect(() => {
-    console.log("My Cart", myCart)
-    getSubTotal();
+    // console.log("My Cart", myCart)
+    // getSubTotal();
   }, []);
 
   const formatItemsForCheckout = () => {
