@@ -5,6 +5,7 @@ import { GET_PRODUCT_DETAILS } from '../../../../graphql/toktokmall/model';
 import {View, SafeAreaView, Text, Image, FlatList, SectionList, ImageBackground, TouchableOpacity, AsyncStorage} from 'react-native';
 import {connect} from 'react-redux'
 import Spinner from 'react-native-spinkit';
+import Toast from 'react-native-simple-toast';
 import { FONT } from '../../../../res/variables';
 import { Header, AdsCarousel, MessageModal } from '../../../Components';
 import CustomIcon from '../../../Components/Icons';
@@ -217,6 +218,7 @@ const Component =  ({
       </Animated.ScrollView>
 
       <RenderFooter 
+        hideBuyNow={isOutOfStock}
         onPressVisitStore={() => {
           navigation.navigate("ToktokMallStore", store)
         }}
@@ -227,6 +229,9 @@ const Component =  ({
         onPressAddToCart={() => {
           setVariationOptionType(1)
           varBottomSheetRef.current.expand()
+        }}
+        onPressAddToFavorites={() => {
+          Toast.show("Added to favorites")
         }}
       />
 

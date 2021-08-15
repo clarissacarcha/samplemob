@@ -24,27 +24,32 @@ export const ToktokMallSearch = ({navigation, route}) => {
   const [searchValue, setSearchValue] = useState('')
   const [searchHistoryCopy, setSearchHistoryCopy] = useState([])
   const [searchedProducts, setSearchedProducts] = useState([])
+  const [offset, setOffset] = useState(0)
 
   const [searchProduct, {error, loading}] = useLazyQuery(SEARCH_PRODUCT, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     variables: {
       input: {
-        search: searchValue
+        search: searchValue,
+        offset: offset,
+        limit: 10
       }
     },
     onCompleted: async (response) => {      
-			if(!response){
-        setSearchedProducts([])
+			let temp = searchedProducts
+      if(!response){
+        setSearchedProducts(temp)
         setEmptySearch(true)
       }else if(response && response.searchProduct.length > 0){
-        setSearchedProducts(response.searchProduct)
+        temp = temp.concat(response.searchProduct)
+        setSearchedProducts(temp)
         setEmptySearch(false)
-        //Save to AsyncStorage   
+        //Save to AsyncStorage 
         await AddSearchHistory(searchValue)
-
+        console.log("temp", temp)
       }else if(response && response.searchProduct.length == 0){
-        setSearchedProducts([])
+        setSearchedProducts(temp)
         setEmptySearch(true)
       }
       setIsLoading(false)
@@ -140,9 +145,11 @@ export const ToktokMallSearch = ({navigation, route}) => {
           data={searchHistory}
           ItemSeparatorComponent={() => <View style={{ height: 1, backgroundColor: '#F7F7FA'}} />}
           renderItem={({item}) => 
-            <View style={{paddingHorizontal: 15, paddingVertical: 15}}>
+            <TouchableOpacity onPress={() => {
+              setSearchValue(item)
+            }} style={{paddingHorizontal: 15, paddingVertical: 15}}>
               <Text style={{color: "#9E9E9E", fontSize: 14}}>{item}</Text>
-            </View>
+            </TouchableOpacity>
           }
         />
         </>}
@@ -153,7 +160,16 @@ export const ToktokMallSearch = ({navigation, route}) => {
 					</View>
         }
 
-        {!loading && searchedProducts.length > 0 && searchValue != "" && <Product data={searchedProducts} />}
+        {!loading && searchedProducts.length > 0 && searchValue != "" && 
+        <Product 
+          state={false} 
+          data={searchedProducts} 
+          fetch={() => {
+            setOffset(searchedProducts.length)
+            console.log({offset})
+            searchProduct()
+          }} 
+        />}
 
         {loading && 
           <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>

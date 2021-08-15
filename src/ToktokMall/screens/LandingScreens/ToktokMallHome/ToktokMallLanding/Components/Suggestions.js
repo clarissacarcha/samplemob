@@ -105,12 +105,15 @@ export const Suggestions = ({}) => {
   const navigation = useNavigation()
 
   const [products, setProducts] = useState([])
+  const [offset, setOffset] = useState(0)
+
   const [getProducts, {error, loading, fetchMore}] = useLazyQuery(GET_PRODUCTS, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     variables: {
       input: {
-        limit: 6
+        offset: offset,
+        limit: 10
       }
     },
     onCompleted: (response) => {
@@ -120,7 +123,7 @@ export const Suggestions = ({}) => {
         setProducts(temp)
         // setProducts(response.getProducts)
       }else{
-        setProducts([])
+        setProducts(temp)
       }
     },
     onError: (err) => {
@@ -175,11 +178,9 @@ export const Suggestions = ({}) => {
             return (
               <>
                 <SwipeReloader state={loading} onSwipeUp={() => {
-                  fetchMore({
-                    variables: {
-                      offset: data.getProducts.length
-                    },
-                  })
+                  setOffset(products.length)
+                  console.log({offset})
+                  getProducts()
                 }} 
                 />
               </>

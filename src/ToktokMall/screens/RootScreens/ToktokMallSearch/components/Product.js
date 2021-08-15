@@ -5,6 +5,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import CustomIcon from '../../../../Components/Icons';
 import { useNavigation } from '@react-navigation/native';
 import {placeholder} from '../../../../assets';
+import { SwipeReloader } from '../../../../Components';
 
 const RenderStars = ({value}) => {
   let orange = "#FFC833"
@@ -60,16 +61,22 @@ const RenderItem = ({navigation, item}) => {
   )
 }
 
-export const Product = ({data}) => {
+export const Product = ({data, state, fetch}) => {
 
+  const [loading, setloading] = useState(state)
   const navigation = useNavigation()
+  const [products, setProducts] = useState(data)
+
+  useEffect(() => {
+    setProducts(data)
+  }, [data])
 
     return (
       <>
         <View style={styles.container}>
             
             <FlatList
-              data={data}
+              data={products}
               numColumns={2}
               style={{paddingHorizontal: 5}}
               renderItem={({item}) => {
@@ -77,10 +84,19 @@ export const Product = ({data}) => {
               }}
               keyExtractor={(item, index) => item + index}
               showsVerticalScrollIndicator={false}
+              ListFooterComponent={() => {
+                return (
+                  <>
+                    <SwipeReloader state={false} onSwipeUp={fetch} />
+                  </>
+                )
+              }}
             />
             
           </View>
-          <View style={{height: 15}}></View>
+          <View style={{height: 15}}>
+
+          </View>
           <View style={styles.separator} />
       </>
     )
