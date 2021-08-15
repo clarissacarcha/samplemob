@@ -43,7 +43,7 @@ export const RenderDetails = ({item, storeIndex, allSelected, onPress, onStoreSe
 					setstoreitemselected = {setstoreitemselected}
 				/>
 			))}
-			<View style={{height: 8, backgroundColor: '#F7F7FA'}} />
+			{/* <View style={{height: 8, backgroundColor: '#F7F7FA'}} /> */}
 		</>
 	);
 }

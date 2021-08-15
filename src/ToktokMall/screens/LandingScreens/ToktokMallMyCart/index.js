@@ -369,7 +369,7 @@ const Component =  ({
                     }} 
                     deleteItem = {deleteItem}
                   />
-                  <View style={{height: 8, backgroundColor: '#F7F7FA'}} />
+                  <View style={{height: 6, backgroundColor: '#F7F7FA'}} />
                 </>
               );
             }}

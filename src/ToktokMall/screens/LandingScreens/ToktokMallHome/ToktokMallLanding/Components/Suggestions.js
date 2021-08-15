@@ -4,6 +4,8 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/core';
 import { useLazyQuery } from '@apollo/react-hooks';
 import {Image as RNEImage} from 'react-native-elements'; 
+import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
+
 import { COLOR, FONT } from '../../../../../../res/variables';
 import CustomIcon from '../../../../../Components/Icons';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../../graphql';
@@ -11,7 +13,7 @@ import { GET_PRODUCTS } from '../../../../../../graphql/toktokmall/model';
 
 import {clothfacemask, medicalfacemask, placeholder} from '../../../../../assets'; 
 import { Price } from '../../../../../helpers';
-
+import { SwipeReloader } from '../../../../../Components';
 
 const testdata = [{
   image: clothfacemask,
@@ -104,12 +106,12 @@ export const Suggestions = ({data}) => {
   const navigation = useNavigation()
   const [products, setProducts] = useState([])
 
-  const [getProducts, {error, loading}] = useLazyQuery(GET_PRODUCTS, {
+  const [getProducts, {error, loading, fetchMore}] = useLazyQuery(GET_PRODUCTS, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     variables: {
       input: {
-        limit: 30
+        limit: 6
       }
     },
     onCompleted: (response) => {
@@ -117,6 +119,7 @@ export const Suggestions = ({data}) => {
       if(response){
         temp = temp.concat(response.getProducts)
         setProducts(temp)
+        // setProducts(response.getProducts)
       }else{
         setProducts([])
       }
@@ -162,19 +165,10 @@ export const Suggestions = ({data}) => {
               ListFooterComponent={() => {
                 return (
                   <>
-                    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', paddingTop: 15}}>
-                      <TouchableOpacity onPress={() => {
-                        getProducts()
-                      }}>
-                        {/* {<CustomIcon.EvIcon name="spinner" size={35} color="#F6841F" style={{}} />} */}
-                        {!loading && <Text>Load More...</Text>}
-                        {<ActivityIndicator animating={loading} color="#F6841F" size={25} />}
-                      </TouchableOpacity>
-                    </View>
+                    <SwipeReloader state={loading} onSwipeUp={() => getProducts()} />
                   </>
                 )
               }}
-              // on
             />
             
           </View>
