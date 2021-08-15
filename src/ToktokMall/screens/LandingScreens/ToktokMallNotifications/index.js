@@ -11,6 +11,8 @@ import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql';
 import { GET_ORDER_HISTORY } from '../../../../graphql/toktokmall/model';
 
 import {Item, SubItem} from './Components'
+import { RefreshControl } from 'react-native'
+import {connect} from "react-redux"
 
 const testdata = [{
     id: "00X003",
@@ -47,7 +49,11 @@ const testdata = [{
     imageSource: require("../../../assets/images/coppermask.png")
 }]
 
-export const ToktokMallNotifications = ({navigation})=> {
+const Component =  ({
+  navigation,
+  notifications,
+  createNotificationsSession,
+}) => {
 
   navigation.setOptions({
   	headerLeft: () => <HeaderBack hidden={true} />,
@@ -55,7 +61,7 @@ export const ToktokMallNotifications = ({navigation})=> {
     headerRight: () => <HeaderRight hidden={true} />
   });
 
-	const [notifications, setNotifications] = useState([])
+	const [orderHistory, setOrderHistory] = useState([])
 
 	const [getOrderHistory, {loading, error}] = useLazyQuery(GET_ORDER_HISTORY, {
 		client: TOKTOK_MALL_GRAPHQL_CLIENT,
@@ -67,7 +73,16 @@ export const ToktokMallNotifications = ({navigation})=> {
 		},
 		onCompleted: (response) => {
 			if(response.getOrderHistory){
-				setNotifications(response.getOrderHistory)
+				
+        setOrderHistory(response.getOrderHistory)
+        let notifs = []
+        response.getOrderHistory.map( item => {
+          notifs.push({id: item.id, read: false})
+          item.history.map((item2) => {
+            notifs.push({id: item2.id, read: 0})
+          })
+        })
+        createNotificationsSession("set", notifs)
 			}
     },
     onError: (err) => {
@@ -75,14 +90,17 @@ export const ToktokMallNotifications = ({navigation})=> {
     }
 	})
 
-  const RenderItem = ({item}) => {
+  const RenderItem = ({item, index}) => {
     const [dropshown, setDropShown] = useState(false)
     return (
       <>
         <Item 
           active={dropshown}
           data={item} 
-          onSelect={() => setDropShown(!dropshown)} 
+          onSelect={() => {
+            createNotificationsSession("read", item.id)
+            setDropShown(!dropshown)
+          }} 
         />
         {dropshown && item.history.map((raw, i) => 
           <SubItem 
@@ -90,6 +108,9 @@ export const ToktokMallNotifications = ({navigation})=> {
             index={i} 
             root={item} 
             total={item.history.length} 
+            onSelect={() => {
+              createNotificationsSession("read", item.id)
+            }}
           />)}
       </>
     )
@@ -119,14 +140,30 @@ export const ToktokMallNotifications = ({navigation})=> {
           <View style={{ height: 8, backgroundColor: '#F7F7FA'}} />               
             <FlatList
               showsVerticalScrollIndicator={false} 
-              data={notifications}
+              data={orderHistory}
               renderItem={({item}) => <RenderItem item={item} />}
+              refreshControl={
+                <RefreshControl 
+                  refreshing={loading}
+                  onRefresh={getOrderHistory}
+                />
+              }
             />
           </View>
       </View>
     </>
   )
 }
+
+const mapStateToProps = (state) => ({
+  notifications: state.toktokMall.notifications
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  createNotificationsSession: (action, payload) => dispatch({type: 'CREATE_NOTIFICATIONS_SESSION', action,  payload}),
+});
+
+export const ToktokMallNotifications = connect(mapStateToProps, mapDispatchToProps)(Component);
 
 const styles = StyleSheet.create({
   container: {

@@ -4,9 +4,9 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 import {connect} from 'react-redux';
 import { Badge } from 'react-native-elements';
-
 import {COLOR, FONT, FONT_SIZE, SIZE} from '../../../res/variables';
 
+import ToktokMallContextProvider from './ContextProvider';
 
 import {
   //Categories
@@ -49,7 +49,7 @@ const BottomTabImageIconStyle = {
 const countCartItems = (myCart) => {
   let total = 0
   if(myCart == undefined){
-    return total
+    return ""
   }else {
     for(let x = 0; myCart.length >  x; x++){
       for(let y=0; myCart[x].cart.length > y; y++){
@@ -62,10 +62,56 @@ const countCartItems = (myCart) => {
       return total
     }
   }
-    
 }
 
-const TabBarIcon = ({source, myCart, tab}) => {
+const countNotifications = (notifs) => {
+  let total = 0
+  if(!notifs) return ""
+  else{
+    notifs.map(item => {
+      if(item.read == 0) total += 1
+    })
+    return total
+  }
+}
+
+const RenderBadge = ({data}) => {
+  if(data == 0 || data == ""){
+    return (
+      <Badge
+        status="warning"
+        containerStyle={{
+          position: 'absolute',
+          top: 2,
+          right: 2,
+          left: 16
+        }}
+        textStyle={{
+          fontFamily: FONT.REGULAR,
+          fontSize: 9
+        }}
+      />
+    )
+  }else{
+    return (
+      <Badge
+        value={data}
+        status="warning"
+        containerStyle={{
+          position: 'absolute',
+          top: -4,
+          right: 14
+        }}
+        textStyle={{
+          fontFamily: FONT.REGULAR,
+          fontSize: 9
+        }}
+      />
+    )
+  }
+}
+
+const TabBarIcon = ({source, myCart, notifs, tab}) => {
   return (
     <>
       <Image source={source} style={BottomTabImageIconStyle} />
@@ -86,8 +132,10 @@ const TabBarIcon = ({source, myCart, tab}) => {
           <Text style={{color: 'white', fontSize: 10}}>99+</Text>
         }
       </View> */}
-      <Badge
-        value={tab == 'cart' ? countCartItems(myCart) : "99+"}
+      <RenderBadge data={tab == 'cart' ? countCartItems(myCart) : countNotifications(notifs)} />
+      {/* <Badge
+        // value={tab == 'cart' ? countCartItems(myCart) : countNotifications(notifs)}
+
         status="warning"
         containerStyle={{
           position: 'absolute',
@@ -98,19 +146,20 @@ const TabBarIcon = ({source, myCart, tab}) => {
           fontFamily: FONT.REGULAR,
           fontSize: 11
         }}
-      />
+      /> */}
     </>
   );
 };
 
 const mapStateToProps = (state) => ({
-  myCart: state.toktokMall.myCart
+  myCart: state.toktokMall.myCart,
+  notifications: state.toktokMall.notifications
 })
 
 const ToktokMallLanding = connect(
   mapStateToProps,
   null,
-)(({myCart}) => {
+)(({myCart, notifications}) => {
 
   return (
   <ToktokMallLandingBottomTab.Navigator
@@ -140,7 +189,7 @@ const ToktokMallLanding = connect(
         // tabBarIcon: ({color}) => <AIcon name="shoppingcart" color={COLOR.YELLOW} size={24} />
         // tabBarIcon: ({focused}) => focused ? <Image source={cartIconFill} style={BottomTabImageIconStyle} /> : <Image source={cartIconOutline} style={BottomTabImageIconStyle} />
         tabBarIcon: ({focused}) =>
-          focused ? <TabBarIcon source={cartIconFill} myCart={myCart} tab={'cart'} /> : <TabBarIcon source={cartIconOutline} myCart = {myCart} tab = {'cart'} />,
+          focused ? <TabBarIcon source={cartIconFill} myCart={myCart} tab={'cart'} /> : <TabBarIcon source={cartIconOutline} myCart={myCart} tab={'cart'} />,
       }}
     />
     <ToktokMallLandingBottomTab.Screen
@@ -180,7 +229,7 @@ const ToktokMallLanding = connect(
         // tabBarIcon: ({color}) => <AIcon name="mail" color={COLOR.YELLOW} size={24} />
         // tabBarIcon: ({focused}) => focused ? <Image source={messageIconFill} style={BottomTabImageIconStyle} /> : <Image source={messagesIconOutline} style={BottomTabImageIconStyle} />
         tabBarIcon: ({focused}) =>
-          focused ? <TabBarIcon source={notifIconFill} tab={'notifs'} /> : <TabBarIcon source={notifIconOutline} tab={'notifs'} />,
+          focused ? <TabBarIcon source={notifIconFill} notifs={notifications} tab={'notifs'} /> : <TabBarIcon source={notifIconOutline} notifs={notifications} tab={'notifs'} />,
       }}
     />
     <ToktokMallLandingBottomTab.Screen
