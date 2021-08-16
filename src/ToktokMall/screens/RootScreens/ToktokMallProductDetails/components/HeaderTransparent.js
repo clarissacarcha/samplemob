@@ -14,11 +14,10 @@ import Animated, {interpolate, Extrapolate, useCode, set, greaterThan} from 'rea
 
 export const HeaderTransparent = ({value, outOfStock = false, animatedValue, cartItems}) => {
 
-  const translateOpacity = animatedValue.interpolate({
+  const translateOpacity = animatedValue.current.interpolate({
     inputRange: [250, 270],
     outputRange: [1,  0],
     // extrapolateLeft: Extrapolate.CLAMP
-    extrapolate: 'clamp'
   })
 
 

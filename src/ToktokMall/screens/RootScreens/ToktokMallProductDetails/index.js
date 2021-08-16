@@ -57,6 +57,7 @@ const Component =  ({
   const [isLoading, setIsLoading] = useState(true)
 
   let AnimatedHeaderValue = new Animated.Value(0);
+  const animatedHeaderValueRef = useRef(AnimatedHeaderValue)
 
   const HandleOnScroll = (r) => {
     let ypos = r.nativeEvent.contentOffset.y
@@ -68,19 +69,10 @@ const Component =  ({
     createMyCartSession('push',item)
   }
 
-  const something = AnimatedHeaderValue.interpolate({
-    inputRange: [0, 150],
-    outputRange: [0,  1],
-    // extrapolateLeft: Extrapolate.CLAMP
-    extrapolate: 'clamp'
-  })
-
-  const something2 = AnimatedHeaderValue.interpolate({
-    inputRange: [0, 150],
-    outputRange: [1,  0],
-    // extrapolateLeft: Extrapolate.CLAMP
-    extrapolate: 'clamp'
-  })
+  const onScroll = Animated.event(
+    [{nativeEvent: {contentOffset: {y: AnimatedHeaderValue}}}],
+    {useNativeDriver: false}
+  )
 
   const cartItems = () => {
     // return myCart.length
@@ -103,20 +95,16 @@ const Component =  ({
       
       {/* {scrolling ? <HeaderPlain /> : <HeaderTransparent />} */}
       {/* PLAIN HEADER*/}
-      <HeaderPlain animatedValue = {AnimatedHeaderValue} cartItems = {cartItems}/>
+      <HeaderPlain animatedValue = {animatedHeaderValueRef} cartItems = {cartItems}/>
 
       {/* TRANSPARENT HEADER*/}
-      <HeaderTransparent animatedValue = {AnimatedHeaderValue}  cartItems = {cartItems}/>
+      <HeaderTransparent animatedValue = {animatedHeaderValueRef}  cartItems = {cartItems}/>
       <Animated.ScrollView  
         // onScroll={HandleOnScroll}
         scrollEventThrottle = {270}
-        onScroll = {
-          Animated.event(
-            [{nativeEvent: {contentOffset: {y: AnimatedHeaderValue}}}],
-            {useNativeDriver: false}
-          )
-        }
+        onScroll = {onScroll}
         showsVerticalScrollIndicator={false}
+        {...{onScroll}}
       >
         <ProductCarousel isOutOfStock={isOutOfStock} isLoading = {isLoading} setIsLoading = {setIsLoading} />
         <RenderProduct 
