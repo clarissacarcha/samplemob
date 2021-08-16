@@ -200,6 +200,7 @@ const Component =  ({
         />
         <RenderProduct
           data={product} 
+          shop={store} 
           animatedValue = {AnimatedHeaderValue}
           onOpenVariations={() => {
             setVariationOptionType(0)

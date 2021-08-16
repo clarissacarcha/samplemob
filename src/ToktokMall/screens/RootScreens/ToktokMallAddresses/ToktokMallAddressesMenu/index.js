@@ -42,12 +42,12 @@ const Component = ({route, navigation, reduxStates: {user_address}, reduxActions
       },
     },
     onCompleted: async (response) => {
-      const userAdressTemp = await JSON.parse(AsyncStorage.getItem("TOKTOKMALL_USER_ADDRESS"))
-      if(userAdressTemp){
-        updateUserAddress('set', temp)
-      } else if (!temp && response.getCustomerAddresses) {
+      // const userAdressTemp = await JSON.parse(AsyncStorage.getItem("TOKTOKMALL_USER_ADDRESS"))
+      // if(userAdressTemp){
+      //   updateUserAddress('set', userAdressTemp)
+      // } else if (!temp && response.getCustomerAddresses) {
           updateUserAddress('set', response.getCustomerAddresses);
-      }
+      // }
     },
     onError: (err) => console.log(err),
   });

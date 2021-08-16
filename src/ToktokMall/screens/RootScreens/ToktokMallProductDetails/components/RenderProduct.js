@@ -9,6 +9,7 @@ import CustomIcon from '../../../../Components/Icons';
 import {coppermask, clothfacemask, voucherbg} from '../../../../assets';
 import { FONT } from '../../../../../res/variables';
 import Animated, {interpolate, Extrapolate, useCode, set} from 'react-native-reanimated'
+import { connect } from 'react-redux';
 
 const RenderStars = ({value}) => {
   let orange = "#FFC833"
@@ -91,7 +92,9 @@ const RenderVariations = ({data, navigate}) => {
   }
 }
 
-export const RenderProduct = ({data, onOpenVariations, animatedValue}) => {
+const Component = ({data, onOpenVariations, animatedValue, shop, reduxActions: {
+  updateMyFavorites
+}}) => {
 
   
   const [favorite, setFavorite] = useState(false)
@@ -132,6 +135,7 @@ export const RenderProduct = ({data, onOpenVariations, animatedValue}) => {
             <TouchableOpacity onPress={() => {
               if(!favorite){
                 Toast.show('Added to Favorites')
+                updateMyFavorites("add",{shop: shop, item: data})
                 setFavorite(true)
               }else{
                 Toast.show('Removed to Favorites')
@@ -171,3 +175,19 @@ export const RenderProduct = ({data, onOpenVariations, animatedValue}) => {
 		</>
 	)
 }
+
+const mapStateToProps = (state) => ({
+  reduxStates: {
+    myFavorities: state.toktokMall.myFavorities,
+  },
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  reduxActions: {
+    updateMyFavorites: (action, payload) => {
+      dispatch({type: 'TOKTOK_MY_FAVORITES', action, payload});
+    },
+  },
+});
+
+export const RenderProduct = connect(mapStateToProps, mapDispatchToProps)(Component);
