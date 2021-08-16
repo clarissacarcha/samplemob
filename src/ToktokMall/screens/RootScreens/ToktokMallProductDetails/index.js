@@ -1,5 +1,5 @@
 import React, {useRef, useEffect, useState} from 'react';
-import {View, Text, Image, FlatList, SectionList, ImageBackground, TouchableOpacity, AsyncStorage} from 'react-native';
+import {View, Text, Image, FlatList, SectionList, ImageBackground, TouchableOpacity, AsyncStorage, ScrollView} from 'react-native';
 import {connect} from 'react-redux'
 import { FONT } from '../../../../res/variables';
 import { Header, AdsCarousel, MessageModal } from '../../../Components';
@@ -107,8 +107,6 @@ const Component =  ({
 
       {/* TRANSPARENT HEADER*/}
       <HeaderTransparent animatedValue = {AnimatedHeaderValue}  cartItems = {cartItems}/>
-      {/* <Animated.Text style = {[{position: 'absolute', zIndex: 1}, {opacity: something}]}>testing</Animated.Text>
-      <Animated.Text style = {[{position: 'absolute', zIndex: 1}, {opacity: something2}]}>gnitset</Animated.Text> */}
       <Animated.ScrollView  
         // onScroll={HandleOnScroll}
         scrollEventThrottle = {270}

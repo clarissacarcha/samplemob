@@ -11,10 +11,12 @@ import FIcon5 from 'react-native-vector-icons/FontAwesome';
 import AIcon from 'react-native-vector-icons/MaterialIcons';
 import {banner, toktokmallH} from '../../../../assets';
 import Animated, {interpolate, Extrapolate, useCode, set, greaterThan} from 'react-native-reanimated'
+import Spinner from 'react-native-spinkit';
+
 
 //Main Components
 import CustomIcon from '../../../../Components/Icons';
-import {LandingHeader, AdsCarousel, StickyHomeHeader, LandingSubHeader} from '../../../../Components';
+import {LandingHeader, AdsCarousel, StickyHomeHeader, LandingSubHeader,} from '../../../../Components';
 
 import {Categories, Offers, FlashSale, Vouchers, Suggestions} from './Components';
 import {clothfacemask, medicalfacemask} from '../../../../assets'; 
@@ -56,34 +58,18 @@ const Item = ({ title }) => (
   </View>
 );
 
-export const ToktokMallLandingScreen = () => {
-// const Component = ({ myCart, createMyCartSession,}) => {
+// export const ToktokMallLandingScreen = () => {
+const Component = ({ myCart, createMyCartSession,}) => {
 
   const [scrolling, setScrolling] = useState(false)
   const [y] = useValues([0], [])
   const navigation = useNavigation();
-  const [refreshing, setRefreshing] =useState(false)
+  const [refreshing, setRefreshing] = useState(false)
   const [suggestionsArr, setSuggestionsArr] = useState(suggestionsArray)
 
-  // const HandleOnScroll = (r) => {
-  //   let ypos = r.nativeEvent.contentOffset.y
-  //   if(ypos > 100) setScrolling(true)
-  //   else if (ypos <= 100) setScrolling(false)
-  // }
-
   // useEffect(() => {
-    // setAllSelected(false)
-    // testData2 = myCart
-    // setSelectedItemsArr(myCart)
-    // AsyncStorage.getItem('MyCart').then((value) => {
-    //   console.log(value)
-    //   const parsedValue = JSON.parse(value)
-    //   if(value != null){
-    //     createMyCartSession('set', parsedValue)
-    //   }else {
-        // createMyCartSession('set', testdata)
-    //   }
-    // })
+    
+    
   // }, []);
 
   let AnimatedHeaderValue = new Animated.Value(0);
@@ -184,7 +170,6 @@ export const ToktokMallLandingScreen = () => {
 
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
-          
       <Animated.View>
         <Animated.Image
           source={banner}
@@ -255,7 +240,7 @@ export const ToktokMallLandingScreen = () => {
 
           />
         }
-        scrollEventThrottle = {16}
+        scrollEventThrottle = {1}
         onScroll = { 
           Animated.event(
             [{nativeEvent: {contentOffset: {y: AnimatedHeaderValue}}}],
@@ -277,8 +262,8 @@ export const ToktokMallLandingScreen = () => {
         
       >
         <AdsCarousel />
-        <Categories />
-        <Offers />
+        <Categories  />
+        <Offers  />
         <FlashSale />
         <Vouchers />
         {refreshing ? <></> :  <Suggestions data = {suggestionsArr}/>}
@@ -288,15 +273,15 @@ export const ToktokMallLandingScreen = () => {
   );
 };
 
-// const mapStateToProps = (state) => ({
-//   myCart: state.toktokMall.myCart
-// })
+const mapStateToProps = (state) => ({
+  myCart: state.toktokMall.myCart
+})
 
-// const mapDispatchToProps = (dispatch) => ({
-//   createMyCartSession: (action, payload) => dispatch({type: 'CREATE_MY_CART_SESSION', action,  payload}),
-// });
+const mapDispatchToProps = (dispatch) => ({
+  createMyCartSession: (action, payload) => dispatch({type: 'CREATE_MY_CART_SESSION', action,  payload}),
+});
 
-// export const ToktokMallLandingScreen = connect(mapStateToProps, mapDispatchToProps)(Component);
+export const ToktokMallLandingScreen = connect(mapStateToProps, mapDispatchToProps)(Component);
 
 const styles = StyleSheet.create({
   header: {
