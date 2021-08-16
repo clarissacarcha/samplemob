@@ -20,7 +20,7 @@ import Spinner from 'react-native-spinkit';
 
 //Main Components
 import CustomIcon from '../../../../Components/Icons';
-import {LandingHeader, AdsCarousel, StickyHomeHeader, LandingSubHeader} from '../../../../Components';
+import {LandingHeader, AdsCarousel, StickyHomeHeader, LandingSubHeader,} from '../../../../Components';
 
 import {Categories, Offers, FlashSale, Vouchers, Suggestions} from './Components';
 
@@ -190,7 +190,6 @@ const Component = ({ myCart, createMyCartSession,}) => {
 
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
-          
       <Animated.View>
         <Animated.Image
           source={banner}
@@ -283,8 +282,8 @@ const Component = ({ myCart, createMyCartSession,}) => {
         
       >
         <AdsCarousel />
-        <Categories />
-        <Offers />
+        <Categories  />
+        <Offers  />
         <FlashSale />
         <Vouchers />
         <Suggestions />
