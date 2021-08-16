@@ -9,10 +9,13 @@ import CustomIcon from '../../../../Components/Icons';
 import {coppermask, clothfacemask, voucherbg} from '../../../../assets';
 import { FONT } from '../../../../../res/variables';
 import Animated, {interpolate, Extrapolate, useCode, set} from 'react-native-reanimated'
+import { connect } from 'react-redux';
 
 import { RenderStars, RenderVariations } from './subComponents';
 
-export const RenderProduct = ({data, onOpenVariations, animatedValue}) => {
+const Component = ({data, onOpenVariations, animatedValue, shop, reduxActions: {
+  updateMyFavorites
+}}) => {
 
   const [favorite, setFavorite] = useState(false)
   const opacity = animatedValue.interpolate({
@@ -96,3 +99,19 @@ export const RenderProduct = ({data, onOpenVariations, animatedValue}) => {
 		</>
 	)
 }
+
+const mapStateToProps = (state) => ({
+  reduxStates: {
+    myFavorities: state.toktokMall.myFavorities,
+  },
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  reduxActions: {
+    updateMyFavorites: (action, payload) => {
+      dispatch({type: 'TOKTOK_MY_FAVORITES', action, payload});
+    },
+  },
+});
+
+export const RenderProduct = connect(mapStateToProps, mapDispatchToProps)(Component);

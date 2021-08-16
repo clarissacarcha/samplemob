@@ -124,7 +124,6 @@ export const ToktokMallStore = ({navigation, route}) => {
         <Store 
           data={{
             ...storeData,
-            following: true,
             rating: 4.0,
             chatResponse: 40,
             followers: 40,

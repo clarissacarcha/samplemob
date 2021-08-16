@@ -2,11 +2,19 @@ import React, {useEffect, useState} from 'react';
 import {View, Text, Image, TouchableOpacity} from 'react-native';
 import { useNavigation } from '@react-navigation/core';
 import {LandingSubHeader, Card, Product} from '../../../../Components';
+import { connect } from 'react-redux';
 
-export const Store = ({data, onToggleFollow}) => {
+const Component = ({data, onToggleFollow, reduxActions: {updateMyFollowing}, reduxStates: {myFollowing}}) => {
 
   const navigation = useNavigation()
-  const [following, setFollowing] = useState(data.following)
+  const [following, setFollowing] = useState(false)
+  useEffect(()=>{
+    myFollowing.map(shop => {
+      if(shop.id === data.id){
+        setFollowing(true)
+      }
+    })
+  },[myFollowing, data])
 
   const getShopLogo = (raw) => {
     if(typeof raw == "string") return {uri: raw}
@@ -26,7 +34,8 @@ export const Store = ({data, onToggleFollow}) => {
               <Text style={{fontSize: 13, color: "#9E9E9E"}}>{data.address}</Text>
             </View>
             <View style={{flex: 4, justifyContent: 'center'}}>
-              <TouchableOpacity onPress={() => {                
+              <TouchableOpacity onPress={() => {
+                  updateMyFollowing(following ? "unfollow" : "follow", data)
                 setFollowing(!following)
                 onToggleFollow(!following)
               }} style={{paddingVertical: 5, paddingHorizontal: 4, backgroundColor: following ? "#fff" : "#F6841F", borderRadius: 5, borderColor: following ? "#F6841F" : "", borderWidth: following ? 1 : 0, alignItems: 'center'}}>
@@ -52,3 +61,20 @@ export const Store = ({data, onToggleFollow}) => {
 		</>
 	)
 }
+
+
+const mapStateToProps = (state) => ({
+  reduxStates: {
+    myFollowing: state.toktokMall.myFollowing,
+  },
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  reduxActions: {
+    updateMyFollowing: (action, payload) => {
+      dispatch({type: 'TOKTOK_MY_FOLLOWING', action, payload});
+    },
+  },
+});
+
+export const Store = connect(mapStateToProps, mapDispatchToProps)(Component);
