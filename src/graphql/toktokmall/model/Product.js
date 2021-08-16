@@ -125,6 +125,13 @@ export const GET_PRODUCT_DETAILS = gql`
       	optionNo
       	variantType
       	variantList
+				variantProducts {
+					Id
+					itemname
+					images {
+						filename
+					}
+				}
     	}
 			relevantProducts {
 				Id

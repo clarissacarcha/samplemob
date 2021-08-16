@@ -46,11 +46,18 @@ export const ToktokMallSearch = ({navigation, route}) => {
         setSearchedProducts(temp)
         setEmptySearch(false)
         //Save to AsyncStorage 
-        await AddSearchHistory(searchValue)
-        console.log("temp", temp)
+        //Check if exist
+        let ix = searchHistory.indexOf(searchValue)
+        if(ix == -1) await AddSearchHistory(searchValue)
+        
       }else if(response && response.searchProduct.length == 0){
         setSearchedProducts(temp)
         setEmptySearch(true)
+
+        let ix = searchHistory.indexOf(searchValue)
+        console.log("Exist", ix)
+        if(ix == -1) await AddSearchHistory(searchValue)
+
       }
       setIsLoading(false)
       console.log("Search Result", response)
@@ -121,6 +128,7 @@ export const ToktokMallSearch = ({navigation, route}) => {
 				onSubmit={async () => {
           console.log("Triggered!!!")
 					if(searchValue != ""){
+            setOffset(0)
             searchProduct()
             // await AddSearchHistory(searchValue)
           }

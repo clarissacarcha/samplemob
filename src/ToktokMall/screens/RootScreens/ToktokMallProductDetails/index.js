@@ -76,6 +76,7 @@ const Component =  ({
         setRelevantProducts(response.getProductDetails.relevantProducts)
         if(response.getProductDetails.noOfStocks == 0) setisOutOfStock(true)
       }
+      console.log(response, route.params.Id)
     },
     onError: (err) => {
       console.log(err)
@@ -204,7 +205,7 @@ const Component =  ({
           onOpenVariations={() => {
             setVariationOptionType(0)
             varBottomSheetRef.current.expand()
-          }}          
+          }}
         />
         <RenderStore 
           data={store} 

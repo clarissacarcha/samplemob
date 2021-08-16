@@ -12,6 +12,12 @@ export const ASGetSearchHistory = async (userId, callback) => {
 export const ASAddSearchHistory = async (userId, data, callback) => {
 	let loc = `@toktokmallsearchhistory-${userId}`
 	await ASGetSearchHistory(userId, (raw) => {
+
+		let exist = raw.indexOf(x => x == data)
+		if(exist > -1){
+			callback("exist", raw)
+			return
+		}
 		raw.push(data)
 		console.log("raw", raw)
 		AsyncStorage.setItem(loc, JSON.stringify(raw)).then(() => {
