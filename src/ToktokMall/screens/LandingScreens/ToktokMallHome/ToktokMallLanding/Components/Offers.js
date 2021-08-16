@@ -3,10 +3,14 @@ import { StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatL
 import { ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/core';
 import { COLOR, FONT } from '../../../../../../res/variables';
-import {LandingHeader, AdsCarousel} from '../../../../../Components';
+import {LandingHeader, AdsCarousel, Loading} from '../../../../../Components';
 import CustomIcon from '../../../../../Components/Icons';
-import {coppermask, chair, bottle} from '../../../../../assets';
+import {coppermask, chair, bottle, placeholder} from '../../../../../assets';
+import {Price} from '../../../../../helpers';
 
+import { useQuery, useLazyQuery } from '@apollo/react-hooks';
+import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../../graphql';
+import { GET_FEATURED_PRODUCTS } from '../../../../../../graphql/toktokmall/model';
 
 const testdata = [{
   // image: require("../../../../../assets/images/coppermask.png"),
@@ -49,6 +53,30 @@ const testdata = [{
 export const Offers = ({data}) => {
 
   const navigation = useNavigation()
+  const [featured, setFeatured] = useState([])
+
+  const [getFeaturedProducts, {error, loading}] = useLazyQuery(GET_FEATURED_PRODUCTS, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    variables: {
+      input: {
+        offset: 30,
+        limit: 5
+      }
+    },
+    onCompleted: (response) => {
+      if(response.getFeaturedProducts){
+        setFeatured(response.getFeaturedProducts)
+      }
+    },
+    onError: (err) => {
+      console.log(err)
+    }
+  })
+
+  useEffect(() => {
+    getFeaturedProducts()
+  }, [])
 
     return (
       <>
@@ -72,18 +100,30 @@ export const Offers = ({data}) => {
             <FlatList
               horizontal={true} 
               showsHorizontalScrollIndicator={false}
-              data={testdata}
+              data={featured}
               renderItem={({item}) => {
+
+                const getImageSource = (imgs) => {
+                  if(typeof imgs == "object" && imgs.length > 0){
+                    return {uri: imgs[0].filename}
+                  }else {
+                    return placeholder
+                  }
+                }
+
                 return (
                   <>
-                    <View style={{flex: 1, paddingBottom: 12, paddingHorizontal: 4, alignItems: 'center', justifyContent: 'center'}}>
-                      <Image source={item.image || require("../../../../../../assets/images/BookingSuccess.png")} style={styles.image} />
-                      <Text style={styles.label}>&#8369;{parseFloat(item.discountedPrice).toFixed(2)}</Text>
-                      <Text style={styles.labelLine}>&#8369;{parseFloat(item.price).toFixed(2)}</Text>                
-                    </View>
+                    <TouchableOpacity onPress={() => {
+                      navigation.navigate("ToktokMallProductDetails", item)
+                    }} style={{flex: 1, paddingBottom: 12, paddingHorizontal: 4, alignItems: 'center', justifyContent: 'center'}}>
+                      <Image source={getImageSource(item?.images)} style={styles.image} />
+                      <Text style={styles.label}><Price amount={item?.price} /></Text>
+                      <Text style={styles.labelLine}><Price amount={item?.compareAtPrice} /></Text>                
+                    </TouchableOpacity>
                   </>
                 )
               }}
+              ListEmptyComponent={<View style={{height: 70}} />}
               keyExtractor={(item, index) => item + index}
             />
             

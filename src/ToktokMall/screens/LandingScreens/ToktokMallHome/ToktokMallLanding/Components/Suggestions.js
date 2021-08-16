@@ -8,7 +8,7 @@ import {Image as RNEImage} from 'react-native-elements';
 import { COLOR, FONT } from '../../../../../../res/variables';
 import CustomIcon from '../../../../../Components/Icons';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../../graphql';
-import { GET_PRODUCTS } from '../../../../../../graphql/toktokmall/model';
+import { GET_TOP_PRODUCTS } from '../../../../../../graphql/toktokmall/model';
 
 import {clothfacemask, medicalfacemask, placeholder} from '../../../../../assets'; 
 import { Price } from '../../../../../helpers';
@@ -107,7 +107,7 @@ export const Suggestions = ({}) => {
   const [products, setProducts] = useState([])
   const [offset, setOffset] = useState(0)
 
-  const [getProducts, {error, loading, fetchMore}] = useLazyQuery(GET_PRODUCTS, {
+  const [getProducts, {error, loading, fetchMore}] = useLazyQuery(GET_TOP_PRODUCTS, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     variables: {
@@ -119,7 +119,7 @@ export const Suggestions = ({}) => {
     onCompleted: (response) => {
       let temp = products
       if(response){
-        temp = temp.concat(response.getProducts)
+        temp = temp.concat(response.getTopProducts)
         setProducts(temp)
         // setProducts(response.getProducts)
       }else{

@@ -11,6 +11,8 @@ import Animated, {interpolate, Extrapolate, useCode, set} from 'react-native-rea
 
 export const RenderVariations = ({data, navigate}) => {
 
+  if(data.length == 0) return null
+
   const getImageSource = (imgs) => {
     if(typeof imgs == "object" && imgs.length > 0){
       return {uri: imgs[0].filename}

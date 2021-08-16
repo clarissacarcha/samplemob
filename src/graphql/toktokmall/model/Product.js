@@ -34,6 +34,40 @@ export const GET_PRODUCTS = gql`
 		}
 `
 
+export const GET_TOP_PRODUCTS = gql`
+		query getTopProducts($input: GetProductsInput){
+			getTopProducts(input: $input){
+				Id
+				itemname
+				price
+				soldCount
+			  noOfStocks
+				images {
+					arrangement
+					filename
+				}
+			}
+		}
+`
+
+export const GET_FEATURED_PRODUCTS = gql`
+		query getFeaturedProducts($input: GetProductsInput){
+			getFeaturedProducts(input: $input){
+				Id
+				itemname
+				price
+				soldCount
+				noOfStocks
+				discountRate
+				compareAtPrice
+				images {
+					arrangement
+					filename
+				}
+			}
+		}
+`
+
 export const GET_ADS = gql`
 		query {
 			getAdvertisements{

@@ -8,6 +8,7 @@ import CustomIcon from '../../../../Components/Icons';
 import {coppermask, placeholder} from '../../../../assets';
 import {Price} from '../../../../helpers';
 import Toast from 'react-native-simple-toast';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const SampleVariations = [{
   image: coppermask,
@@ -23,6 +24,12 @@ export const VariationBottomSheet = forwardRef(({ item, image, onPressBuyNow, on
   const [stock, setStock] = useState(item?.noOfStocks)
   const [qty, setQty] = useState(1)
   const [variation, setVariation] = useState("")
+  const [variationArr, setVariationArr] = useState([])
+
+  const HandleSetVariation = (val, index) => {
+    let varcopy = variationArr
+    let x = varcopy.findIndex(a => a.index)
+  }
 
   const getImage = () => {
     if(image && typeof image == "object"){
@@ -139,6 +146,7 @@ export const VariationBottomSheet = forwardRef(({ item, image, onPressBuyNow, on
                   <TouchableOpacity key={index} onPress={() => {
                     setVariation(item)
                     setActiveIndex(index)
+                    setActiveIndex(index)
                   }} style={{paddingVertical: 4, paddingHorizontal: 16, borderRadius: 5, borderWidth: 0.5, borderColor: activeIndex == index ? "#F6841F" : "lightgray"}}>
                     <Text style={{fontSize: 13, color: "#9E9E9E"}}>{item}</Text>
                   </TouchableOpacity>
@@ -182,21 +190,21 @@ export const VariationBottomSheet = forwardRef(({ item, image, onPressBuyNow, on
       backdropComponent={BottomSheetBackdrop}>
       <View style={styles.sheet}>
         <View style={{flexDirection: 'row'}}>
-          <View style={{flex: 2}}>
-            <Image source={getImage()} style={{width: 80, height: 120, resizeMode: 'cover', borderRadius: 5}} />
+          <View style={{flex: 3}}>
+            <Image source={getImage()} style={{width: 100, height: 120, resizeMode: 'cover', borderRadius: 5}} />
           </View>
           <View style={{flex: 8, justifyContent: 'center'}}>
             <View style={{flexDirection: 'row'}}>
               <View style={{flex: 1}}></View>
-              <View style={{flex: 2}}>
+              <View style={{flex: 3}}>
                 <Text style={{color: "#F6841F", fontSize: 14}}><Price amount={item?.price} /></Text>
                 <Text style={{color: "#9E9E9E", fontSize: 12}}>Stock: {stock}</Text>
               </View>
-              <View style={{flex: 2, justifyContent: 'center'}}>
+              <View style={{flex: 3, justifyContent: 'center'}}>
                 <Text style={{color: "#9E9E9E", textDecorationLine: 'line-through', fontSize: 11}}>{item.compareAtPrice == 0 ? "" : <Price amount={item.compareAtPrice} />}</Text>
                 <Text></Text>
               </View>
-              <View style={{flex: 3}}></View>
+              <View style={{flex: 1}}></View>
             </View>
           </View>
           <TouchableOpacity activeOpacity={1} onPress={() => {
@@ -207,6 +215,7 @@ export const VariationBottomSheet = forwardRef(({ item, image, onPressBuyNow, on
         </View>
       </View>
 
+      <ScrollView style={{height: 120}} showsVerticalScrollIndicator={false}>
       {item?.variantSummary && 
         item?.variantSummary.length > 0 && 
         item?.variantSummary.map((variant, i) => {
@@ -215,6 +224,7 @@ export const VariationBottomSheet = forwardRef(({ item, image, onPressBuyNow, on
           if(variants.length == 0 || variant.variantType == "") return null
           return <RenderVariation type={variant.variantType} variants={variants} />
       })}
+      </ScrollView>
 
       <View style={{height: 2, backgroundColor: "#F7F7FA"}} />
       <View style={{paddingHorizontal: 16, paddingVertical: 16}}>

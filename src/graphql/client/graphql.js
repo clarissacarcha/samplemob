@@ -15,8 +15,7 @@ const baseUrl = `${ENVIRONMENTS.TOKTOK_SERVER}/`;
 const wsUrl = `ws://${HOST_PORT}/graphql`;
 
 const toktokWalletBaseUrl = `${TOKTOK_WALLET_PROTOCOL}://${TOKTOK_WALLET_PROTOCOL_HOST_PORT}/`;
-// const toktokMallBaseUrl = `${TOKTOK_MALL_PROTOCOL}://${TOKTOK_MALL_PROTOCOL_HOST_PORT}/`;
-const toktokMallBaseUrl = `${ENVIRONMENTS.TOKTOKMALL_SERVER}/`
+const toktokMallBaseUrl = `${ENVIRONMENTS.TOKTOKMALL_SERVER}/`;
 
 // const errorLink = onError(({graphQLErrors, networkError}) => {
 //   if (graphQLErrors) {
@@ -92,6 +91,20 @@ const setToktokMallGraphqlTokenLink = setContext(async (_, {headers}) => {
   }
 });
 
+const setToktokMallAuthGraphqlTokenLink = setContext(async (_, {headers}) => {
+  try {
+    const accountToken = await AsyncStorage.getItem('toktokMallAuthAccountToken');
+    return {
+      headers: {
+        ...headers,
+        authorization: accountToken ? `Bearer ${accountToken}` : '',
+      },
+    };
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 const wsLink = new WebSocketLink({
   uri: wsUrl,
   options: {
@@ -126,6 +139,9 @@ const toktokMallGraphqlUploadLink = createUploadLink({
   uri: `${toktokMallBaseUrl}graphql/`,
 });
 
+const toktokMallAuthGraphqlUploadLink = createUploadLink({
+  uri: `${toktokMallBaseUrl}auth/graphql/`,
+});
 
 const splitLink = split(({query}) => {
   const definition = getMainDefinition(query);
@@ -148,6 +164,11 @@ const toktokMallGraphqlLink = ApolloLink.from([
   errorLinkLogger,
   setToktokMallGraphqlTokenLink,
   toktokMallGraphqlUploadLink,
+]);
+const toktokMallAuthGraphqlLink = ApolloLink.from([
+  errorLinkLogger,
+  setToktokMallAuthGraphqlTokenLink,
+  toktokMallAuthGraphqlUploadLink,
 ]);
 
 export const CLIENT = new ApolloClient({
@@ -173,4 +194,9 @@ export const TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT = new ApolloClient({
 export const TOKTOK_MALL_GRAPHQL_CLIENT = new ApolloClient({
   cache: new InMemoryCache(),
   link: toktokMallGraphqlLink,
+});
+
+export const TOKTOK_MALL_AUTH_GRAPHQL_CLIENT = new ApolloClient({
+  cache: new InMemoryCache(),
+  link: toktokMallAuthGraphqlLink,
 });
