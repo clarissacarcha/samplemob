@@ -7,3 +7,4 @@ export * from './Product'
 export * from './Separator'
 export * from './SwipeReloader'
 export * from './Voucher'
+export * from "./UploadModal"
