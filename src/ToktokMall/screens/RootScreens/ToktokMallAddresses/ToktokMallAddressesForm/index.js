@@ -235,16 +235,16 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
               onChangeText('city', item);
             }}
           /> */}
-          <View style = {styles.textinputContainerRow}>
-            <Text style = {styles.text}>{city}</Text>
-            <TouchableOpacity onPress = {() => {setModalProvinceVisible(true)}}>
-              <CustomIcon.EIcon 
-                name = {'chevron-down'}
-                size = {20}
-                color = {'#9E9E9E'}
-              />
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity onPress = {() => {setModalProvinceVisible(true)}}>
+            <View style = {styles.textinputContainerRow}>
+              <Text style = {styles.text}>{city}</Text>
+                <CustomIcon.EIcon 
+                  name = {'chevron-down'}
+                  size = {20}
+                  color = {'#9E9E9E'}
+                />
+            </View>
+          </TouchableOpacity>
           <View style={styles.textinputContainer}>
             <TextInput
               style={styles.textinput}
@@ -400,7 +400,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   buttonText: {color: 'white', fontSize: 14},
-  text: {color: '#9E9E9E'},
+  text: {color: '#9E9E9E', marginLeft: 10},
   textinputContainerRow: {backgroundColor: '#F8F8F8', marginTop: 10,  borderRadius: 5, alignItems: 'center', flexDirection: 'row', padding: 10,
     justifyContent: 'space-between', 
   },

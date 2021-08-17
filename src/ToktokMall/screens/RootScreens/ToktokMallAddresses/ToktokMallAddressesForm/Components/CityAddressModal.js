@@ -1,5 +1,5 @@
 import React , {useState,useContext, useEffect} from 'react'
-import {Modal,View,Text,StyleSheet,FlatList,TouchableOpacity,TextInput, ScrollView} from 'react-native'
+import {Modal,View,Text,StyleSheet,FlatList,TouchableOpacity,TextInput, Platform} from 'react-native'
 import AIcon from 'react-native-vector-icons/dist/AntDesign'
 import {SIZES, INPUT_HEIGHT, FONTS, COLORS } from '../../../../../../res/constants';
 import {COLOR, FONT, FONT_SIZE } from '../../../../../../res/variables';
@@ -7,6 +7,7 @@ import {COLOR, FONT, FONT_SIZE } from '../../../../../../res/variables';
 import { useLazyQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../../graphql';
 import { GET_CITIES } from '../../../../../../graphql/toktokmall/model/Address';
+import useAsyncStorage from '../../../../../helpers/useAsyncStorage';
 
 const testData = [{id: 1, city: 'Quezon'},
 {id: 2, city: 'Manila'},
@@ -27,15 +28,15 @@ export const CityAddressModal = ({
 	setCity 
 }) => {
     
-	const [filteredCities, setFilteredCities] = useState([])
+	const [filteredCities, setFilteredCities] = useAsyncStorage("TOKTOKMALL_CITIES",[])
     const [provinces, setProvinces] = useState([])
+    const [searchKey, setSearchKey] = useState('')
 
     const [getCities, {error, loading}] = useLazyQuery(GET_CITIES, {
         client: TOKTOK_MALL_GRAPHQL_CLIENT,
         fetchPolicy: 'network-only',
         onCompleted: (response) => {
             setFilteredCities(response.getCities)
-            getCities(response.getCities)
         },
         onError: (err) => {
             console.log(err)
@@ -93,42 +94,73 @@ export const CityAddressModal = ({
     }
 
     return (
-        <>
-           <Modal
-            visible={modalProvinceVisible}
-            // onRequestClose={()=>{
-            //     setModalProvinceVisible(false)
-            //     setFilteredProvinces(provinces)
-            // }}
-            style={styles.container}
-            animationType="slide"
-        >
-            <View>
-                <TouchableOpacity style = {{alignSelf: 'flex-end', marginTop: 10, marginRight: 10}} onPress = {() => {setModalProvinceVisible(false)}}>
-                    <AIcon 
-                        name= {'close'}
-                        size = {15}                        
-                    />
-                </TouchableOpacity>
-                <Text style={styles.label}>Cities</Text>
-                <FlatList 
-                    data={filteredCities}
-                    renderItem={({item}) => {
-                        return (
-                            <View>
-                                <TouchableOpacity onPress = {()=> {onPress(item)}}  style={[styles.country]}>
-                                    <Text style={{fontFamily: FONTS.REGULAR, fontSize: SIZES.M}}>{item.citymunDesc}</Text>
-                                </TouchableOpacity>
-                                <View style={styles.divider}/>
-                            </View>
-                        )
-                    }}
-                />
+      <>
+        <Modal
+          visible={modalProvinceVisible}
+          // onRequestClose={()=>{
+          //     setModalProvinceVisible(false)
+          //     setFilteredProvinces(provinces)
+          // }}
+          style={styles.container}
+          animationType="slide">
+          <View>
+            <View
+              style={{
+                marginTop: Platform.OS === 'ios' ? 50 : 0,
+                paddingBottom: 10,
+                flexDirection: 'row',
+                marginLeft: 15,
+                justifyContent: 'space-between',
+                alignContent: 'center',
+              }}>
+              <TextInput
+                value={searchKey}
+                onChangeText={(value) => setSearchKey(value)}
+                style={{fontSize: 16}}
+                placeholder="Search a City"
+              />
+
+              <TouchableOpacity
+                style={{marginRight: 10}}
+                onPress={() => {
+                  setSearchKey('');
+                  setModalProvinceVisible(false);
+                }}>
+                <AIcon name={'close'} size={15} />
+              </TouchableOpacity>
             </View>
-            
+            <FlatList
+              data={filteredCities.filter((city) => {
+                const regex = new RegExp(searchKey, 'gi');
+                if (regex.test(city.citymunDesc)) {
+                  return city;
+                }
+                return null;
+              })}
+              ListEmptyComponent={
+                <View style={[styles.country]}>
+                    <Text style={{fontFamily: FONTS.REGULAR, fontSize: SIZES.M}}>No results found</Text>
+                </View>
+              }
+              renderItem={({item}) => {
+                return (
+                  <View>
+                    <TouchableOpacity
+                      onPress={() => {
+                        onPress(item);
+                      }}
+                      style={[styles.country]}>
+                      <Text style={{fontFamily: FONTS.REGULAR, fontSize: SIZES.M}}>{item.citymunDesc}</Text>
+                    </TouchableOpacity>
+                    <View style={styles.divider} />
+                  </View>
+                );
+              }}
+            />
+          </View>
         </Modal>
-        </>
-    )
+      </>
+    );
 }
 
 const styles = StyleSheet.create({
