@@ -28,7 +28,7 @@ const Confirm = ({onCancel, onConfirm}) => {
   )
 }
 
-export const AddressModal = ({navigation, isVisible, setIsVisible, type}) => {
+export const AddressModal = ({navigation, isVisible, setIsVisible, type, message}) => {
   
   const [modalVisible, setModalVisible] = useState(isVisible || false)
 
@@ -55,7 +55,7 @@ export const AddressModal = ({navigation, isVisible, setIsVisible, type}) => {
                 color = {'#F6841F'}
               />
               <View style={{paddingVertical: 8}} />
-              <Text style={{fontSize: 22, color: "#F6841F"}}>Address Deleted!</Text>
+              <Text style={{fontSize: 22, color: "#F6841F"}}>{message}</Text>
             </View>}            
           </View>
         </View>

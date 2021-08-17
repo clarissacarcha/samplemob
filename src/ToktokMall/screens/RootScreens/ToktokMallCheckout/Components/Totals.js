@@ -32,7 +32,8 @@ export const Totals = ({raw, shipping}) => {
       total = total + parseFloat(shipping?.rateAmount)
     }
     shippingFeeTotal = total
-    return FormatToText.currency(total)
+    if(!total) return FormatToText.currency(0)
+    else return FormatToText.currency(total)
   }
 
   const computeMerchandiseTotal = () => {

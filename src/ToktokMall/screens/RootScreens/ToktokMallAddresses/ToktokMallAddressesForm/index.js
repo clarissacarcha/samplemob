@@ -1,15 +1,16 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, View, Text, TouchableOpacity, TextInput} from 'react-native';
+import {StyleSheet, Platform, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, Switch} from 'react-native';
 import {HeaderBack, HeaderTitle, HeaderRight} from '../../../../Components';
-import Fontisto from 'react-native-vector-icons/dist/Fontisto';
-import DropDownPicker from 'react-native-dropdown-picker';
+import {CityAddressModal, AddressModal} from './Components';
+import ToggleSwitch from 'toggle-switch-react-native';
+import CustomIcon from "../../../../Components/Icons";
+import axios from "axios";
 
-import {AddressModal} from './Components';
-import {Platform} from 'react-native';
 import {useLazyQuery} from '@apollo/react-hooks';
 import {GET_CITIES} from '../../../../../graphql/toktokmall/model/Address';
 import {TOKTOK_MALL_GRAPHQL_CLIENT} from '../../../../../graphql';
 import {connect} from 'react-redux';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxStates: {user_address}}) => {
   const [newAddressForm, setNewAddressForm] = useState({
@@ -22,6 +23,17 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
   const [confirmDeleteModal, setConfirmDeleteModal] = useState(false);
   const [messageModal, setMessageModal] = useState(false);
   const [open, setOpen] = useState(false);
+  const [newDefault, setNewDefault] = useState(false);
+  const [modalProvinceVisible, setModalProvinceVisible] = useState(false)
+  const [fullname, setFullName] = useState("")
+  const [contact, setContact] = useState("")
+  const [address, setAddress] = useState("")
+  const [city, setCity] = useState('Select City')
+  const [postalCode, setPostalCode] = useState("")
+  const [landmark, setLandmark] = useState("")
+  const [provCode, setProvCode] = useState(0)
+  const [munCode, setMunCode] = useState(0)
+  const [regCode, setRegCode] = useState(0)
 
   const onChangeText = (name, value) => {
     setNewAddressForm((prevState) => ({
@@ -44,7 +56,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
   });
 
   useEffect(() => {
-    getCities();
+    // getCities();
   }, []);
 
   useEffect(() => {
@@ -67,7 +79,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
     headerRight: () => <HeaderRight hidden={true} />,
   });
 
-  const onPress = () => {
+  const SaveToRedux = () => {
     if (route.params?.update) {
       updateUserAddress('update', newAddressForm);
       if (clicked) {
@@ -81,7 +93,72 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
     }
     navigation.goBack();
   };
-  console.log(defaultCity)
+  // console.log(defaultCity)
+
+  const onSelectCity = (data) => {
+    setCity(data.city)
+    setProvCode(data.provCode)
+    setMunCode(data.munCode)
+    setRegCode(data.regCode)
+  }
+
+  const SavePostAddress = async () => {
+
+    AsyncStorage.getItem("ToktokMallUser").then(async (raw) => {
+
+      let data = JSON.parse(raw) || {}
+      if(data.appSignature){
+
+        let body = {
+          customer_id: data.userId,
+          receiver_name: newAddressForm.receiverName,
+          receiver_contact: newAddressForm.receiverContact,
+          address: newAddressForm.address,
+          region_id: parseInt(regCode) || 0,
+          province_id: parseInt(provCode),
+          municipality_id: parseInt(munCode),
+          landmark: newAddressForm.landMark,
+          postal_code: newAddressForm.postalCode,
+          default: clicked == true ? 1 : 0
+        }
+
+        console.log({body})
+
+        let formData = new FormData()
+        formData.append("signature", data.appSignature)
+        formData.append("data", JSON.stringify(body))
+
+        await axios.post(
+          `http://ec2-18-176-178-106.ap-northeast-1.compute.amazonaws.com/toktokmall/save_address`,
+          formData).then((response) => {
+      
+            if(response.data && response.data.success == 1){
+              
+              setMessageModal(true)
+              SaveToRedux()
+
+            }else{
+              console.log("Response", response.data) 
+            }
+
+          }).catch((error) => {
+            console.log(error)
+        })
+
+        // await AxiosUtil("save_address", data.appSignature, body, (res, data) => {
+
+        //   if(res == "success"){
+        //     setMessageModal(true)
+        //     SaveToRedux()
+        //   }
+
+        // })
+
+      }
+
+    })
+  }
+
   return (
     <>
       {confirmDeleteModal && (
@@ -95,6 +172,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
               // setMessageModal(false)
             }, 1400);
           }}
+          message={"Address Deleted!"}
         />
       )}
       {messageModal && (
@@ -104,8 +182,15 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
           setIsVisible={(val) => {
             setMessageModal(val);
           }}
+          message={"Address Added!"}
         />
       )}
+      <CityAddressModal 
+        modalProvinceVisible={modalProvinceVisible} 
+        setModalProvinceVisible={setModalProvinceVisible} 
+        city={city} 
+        setCity={(data) => onSelectCity(data)}
+      />
       <View style={styles.container}>
         <View style={styles.partition1}>
           <View style={styles.textinputContainer}>
@@ -138,7 +223,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
               }}
             />
           </View>
-          <DropDownPicker
+          {/* <DropDownPicker
             containerStyle={styles.dropdownpicker}
             style={styles.dropdownpickerStyle}
             defaultValue={defaultCity}
@@ -149,7 +234,17 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
               console.log(item)
               onChangeText('city', item);
             }}
-          />
+          /> */}
+          <View style = {styles.textinputContainerRow}>
+            <Text style = {styles.text}>{city}</Text>
+            <TouchableOpacity onPress = {() => {setModalProvinceVisible(true)}}>
+              <CustomIcon.EIcon 
+                name = {'chevron-down'}
+                size = {20}
+                color = {'#9E9E9E'}
+              />
+            </TouchableOpacity>
+          </View>
           <View style={styles.textinputContainer}>
             <TextInput
               style={styles.textinput}
@@ -173,7 +268,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
         </View>
         <View style={styles.partition2}>
           <Text>Set as default address</Text>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => {
               setClicked(!clicked);
             }}>
@@ -182,7 +277,17 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
             ) : (
               <Fontisto name={'radio-btn-passive'} size={20} color={'#F6841F'} />
             )}
-          </TouchableOpacity>
+          </TouchableOpacity> */}
+          <ToggleSwitch 
+            isOn = {clicked}
+            // trackColor = {{ false: '#F8F8F8', true: '#FDBA1C'}}
+            size = "medium"
+            onColor = "#FDBA1C"
+            offColor = "#F8F8F8"
+            onToggle = {() => {
+              setClicked(!clicked)
+            }}
+          />
         </View>
         <View style={styles.partition3}>
           {toUpdate && (
@@ -200,7 +305,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
           <TouchableOpacity
             style={styles.button1}
             onPress={() => {
-              onPress();
+              SavePostAddress()
             }}>
             <Text style={styles.buttonText}>Save</Text>
           </TouchableOpacity>
@@ -294,5 +399,9 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     borderRadius: 5,
   },
-  buttonText: {color: 'white'},
+  buttonText: {color: 'white', fontSize: 14},
+  text: {color: '#9E9E9E'},
+  textinputContainerRow: {backgroundColor: '#F8F8F8', marginTop: 10,  borderRadius: 5, alignItems: 'center', flexDirection: 'row', padding: 10,
+    justifyContent: 'space-between', 
+  },
 });

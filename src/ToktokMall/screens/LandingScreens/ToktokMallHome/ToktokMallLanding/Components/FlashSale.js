@@ -47,7 +47,7 @@ const Item = ({data}) => {
   return (
     <>
       <TouchableOpacity onPress={() => {
-          navigation.navigate("ToktokMallProductDetails", item)
+          navigation.navigate("ToktokMallProductDetails", data)
         }} style={{flex: 2, paddingBottom: 4, marginHorizontal: 2, alignItems: 'center', backgroundColor: '#fff', borderRadius: 5}}>
         <View style={{height: 4}}></View>
         <Image source={getImageSource(data?.images)} style={{width: '100%', height: 120, resizeMode: 'stretch', alignSelf: 'center', borderRadius: 5}} />

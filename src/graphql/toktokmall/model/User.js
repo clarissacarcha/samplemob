@@ -5,8 +5,10 @@ export const GET_CUSTOMER_IF_EXIST = gql`
 		getCustomerIfExist(input: $input) {
 			appSignature
 	      id
+		  userId
     		firstName
     	lastName
+		email
     	address1
     	addresses {
 				id

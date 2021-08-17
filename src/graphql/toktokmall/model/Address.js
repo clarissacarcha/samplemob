@@ -6,6 +6,8 @@ export const GET_CITIES = gql`
             id
             citymunDesc
             citymunCode
+            provCode
+            regDesc
         }
 	}
 `

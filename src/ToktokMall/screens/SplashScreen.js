@@ -49,7 +49,8 @@ const Splash = ({ createMyCartSession, createNotificationsSession}) => {
 		fetchPolicy: "network-only",
     variables: {
       input: {
-        toktokId: parseInt(session?.user?.id)
+        // toktokId: parseInt(session?.user?.id)
+        toktokId: 1234
       }
     },
 		onCompleted: async (response) => {
@@ -66,6 +67,7 @@ const Splash = ({ createMyCartSession, createNotificationsSession}) => {
         }else if(response.getCustomerIfExist.id == null){
 
           //SEND REQUEST
+          console.log("User not registered, registering...")
           await RegisterUser(response.getCustomerIfExist.appSignature)          
 
         }
@@ -80,6 +82,17 @@ const Splash = ({ createMyCartSession, createNotificationsSession}) => {
   const RegisterUser = async (signature) => {
 
     let body = {
+      firstname: "test",
+      lastname: "test",
+      toktokid: 1234,
+      contactnumber: "testesttest",
+      email: "email@gmail.com",
+      address: "test",
+      birthday: "test",
+      gender: "test"
+    }
+
+    let bodyx = {
       firstname: session?.user.person.firstName,
       lastname: session?.user.person.lastName,
       toktokid: session?.user.id,
@@ -89,17 +102,23 @@ const Splash = ({ createMyCartSession, createNotificationsSession}) => {
       birthday: moment(session?.user.person.birthdate).format("Y-m-d") || new Date(),
       gender: session?.user.person.gender || "NA"
     }
+
     let formData = new FormData()
     formData.append("signature", signature)
     formData.append("data", JSON.stringify(body))
     await axios
       .post("http://ec2-18-176-178-106.ap-northeast-1.compute.amazonaws.com/toktokmall/create_user", formData)
       .then((response) => {
-        body.signature = signature
-        AsyncStorage.setItem("ToktokMallUser", JSON.stringify({ ...body, signature }))
-        console.log("User registered!", response.data)
+        // body.signature = signature
+        // AsyncStorage.setItem("ToktokMallUser", JSON.stringify({ ...body, signature }))
+        // console.log("User registered!", response.data)
 
-        navigation.navigate("ToktokMallLanding")
+        // navigation.navigate("ToktokMallLanding")
+        if(response.data && response.data.success == 1){
+          authUser()
+        }else{
+         console.log("Response", response.data) 
+        }
       })
       .catch((error) => {
         console.log(error)

@@ -36,11 +36,11 @@ const Component = ({route, navigation, reduxStates: {user_address}, reduxActions
   const [getAddresses, {error, loading}] = useLazyQuery(GET_CUSTOMER_ADDRESSES, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
-    variables: {
-      input: {
-        userId: 1024,
-      },
-    },
+    // variables: {
+    //   input: {
+    //     userId: 1024,
+    //   },
+    // },
     onCompleted: async (response) => {
       // const userAdressTemp = await JSON.parse(AsyncStorage.getItem("TOKTOKMALL_USER_ADDRESS"))
       // if(userAdressTemp){
@@ -53,7 +53,13 @@ const Component = ({route, navigation, reduxStates: {user_address}, reduxActions
   });
 
   useEffect(() => {
-    getAddresses();
+    AsyncStorage.getItem("ToktokMallUser").then((raw) => {
+      let data = JSON.parse(raw) || {}
+      if(data.userId){
+        console.log(data.userId)
+        getAddresses({variables: {input: {userId: data.userId}}})
+      }
+    })
   }, []);
 
   const renderAddresses = () => {

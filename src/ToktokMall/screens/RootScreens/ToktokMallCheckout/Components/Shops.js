@@ -17,7 +17,7 @@ const testData = [
   }
 ]
 
-export const Shops = ({raw, shipping}) => {
+export const Shops = ({raw, shipping, retrieve}) => {
 
   const [data, setData] = useState(raw || [])
 
@@ -66,7 +66,9 @@ export const Shops = ({raw, shipping}) => {
   // 
 
   const renderShops = () => {
+  
     return data.map((item, i) => {
+
       return(
         <View style={styles.container}>
           <View style ={{flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, padding: 15, borderBottomColor: '#F7F7FA'}}>
@@ -77,9 +79,9 @@ export const Shops = ({raw, shipping}) => {
             {renderItems(item.cart)}
           </View>
           <View style={styles.deliveryfeeContainer}>
-            <Text>Delivery Fee: {FormatToText.currency(shipping?.rateAmount)}</Text>
+            <Text>Delivery Fee: {FormatToText.currency(shipping?.rateAmount || 0)}</Text>
             <Text>Order total ({item.cart.length} {item.cart.length > 1 ? `items` : 'item'}): {computeTotal(item.cart)} </Text>
-            <Text style = {{marginTop: 7, color: '#929191'}}>Receive by: {shipping?.deliveryDate} </Text>
+            <Text style = {{marginTop: 7, color: '#929191'}}>Receive by: {shipping?.deliveryDate || "Add address to calculate"} </Text>
           </View>
         </View>
       )

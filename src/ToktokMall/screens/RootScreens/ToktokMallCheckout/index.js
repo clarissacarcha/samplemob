@@ -6,11 +6,15 @@ import { AddressForm, Button, Payment, Shops, Totals, Vouchers, CheckoutModal } 
 
 import coppermask from '../../../assets/images/coppermask.png'
 import suit from '../../../assets/images/coppermask.png'
+import { useSelector } from 'react-redux';
 
 import { useLazyQuery, useQuery, useMutation } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql';
 import { GET_CHECKOUT_DATA, POST_CHECKOUT } from '../../../../graphql/toktokmall/model';
 import {Loading} from '../../../Components/Widgets';
+import AsyncStorage from '@react-native-community/async-storage';
+import Toast from "react-native-simple-toast";
+import axios from "axios";
 
 const REAL_WIDTH = Dimensions.get('window').width;
 
@@ -62,17 +66,19 @@ const postCheckoutBody = {
   longitude: "",
   postalcode: "",
   account_type: 0,
-  vouchers: [{
-    shopid: 1,
-    vcode: "",
-    vamount: ""
-  }],
+  // vouchers: [{
+  //   shopid: 1,
+  //   vcode: "",
+  //   vamount: ""
+  // }],
   referral_code: "",
   referral_account_type: "",
   payment_method: "cod"
 }
 
 export const ToktokMallCheckout = ({route, navigation}) => {
+
+  const user_address = useSelector(state=> state.toktokMall.user_address)
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
@@ -87,15 +93,18 @@ export const ToktokMallCheckout = ({route, navigation}) => {
   const [payment, setPaymentMethod] = useState(3);
   const [vouchers, setVouchers] = useState([])
   const [grandTotal, setGrandTotal] = useState(0)
+  const [userId, setUserId] = useState(null)
+  const [deliveryFees, setDeliveryFees] = useState([])
+  const [receiveDates, setReceiveDates] = useState([])
 
   const [getCheckoutData, {error, loading}] = useLazyQuery(GET_CHECKOUT_DATA, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
-    variables: {
-      input: {
-        userId: 8473
-      }
-    },
+    // variables: {
+    //   input: {
+    //     userId: userId
+    //   }
+    // },
     onCompleted: (response) => {
       if(response.getCheckoutData){
         setAddressData(response.getCheckoutData.address);
@@ -127,25 +136,31 @@ export const ToktokMallCheckout = ({route, navigation}) => {
   const postCheckoutSetting = async () => {
 
     //populate the postCheckoutBody basic data
-    postCheckoutBody.user_id = 0
-    postCheckoutBody.email = ""
     postCheckoutBody.name = addressData.receiverName
     postCheckoutBody.contactnumber = addressData.receiverContact
     postCheckoutBody.address = addressData.address
     postCheckoutBody.regCode = addressData.regionId
-    postCheckoutBody.provCode = addressData.provinceId
+
+    //pangasinan
+    if(addressData.provinceId == "0"){
+      postCheckoutBody.provCode = "0155"
+    }else{
+      postCheckoutBody.provCode = addressData.provinceId
+    }
     postCheckoutBody.citymunCode = addressData.municipalityId
     postCheckoutBody.total_amount = parseFloat(grandTotal)
     postCheckoutBody.srp_totalamount = parseFloat(grandTotal)
+    // postCheckoutBody.vouchers = []
     postCheckoutBody.order_logs = []
-    postCheckoutBody.vouchers = []
 
     //build order log list
-    paramsData.map(val => {
+    paramsData.map((val, index) => {
+
+      let items = []
       if(val.cart.length == 0 || val.cart == undefined) return
       val.cart.map((item, i) => {
         let total = parseFloat(item.price) * item.qty
-        postCheckoutBody.order_logs.push({
+        items.push({
           sys_shop: item.store_id,
           product_id: item.item_id,
           quantity: item.qty,
@@ -156,16 +171,73 @@ export const ToktokMallCheckout = ({route, navigation}) => {
           order_type: 2
         })
       })
+
+      postCheckoutBody.order_logs.push({
+        sys_shop: val.store_id,
+        branchid: 0,
+        delivery_amount: addressData.shippingSummary.rateAmount,
+        daystoship: addressData.shippingSummary.fromDay,
+        daystoship_to: addressData.shippingSummary.toDay,
+        items: items
+      })
+
     })
 
-    console.log("PostCheckoutBody", postCheckoutBody)
+    AsyncStorage.getItem("ToktokMallUser").then(async (raw) => {
+      let data = JSON.parse(raw) || {}
+      if(data.userId){
 
-    await postCheckout()
+        postCheckoutBody.user_id = data.userId
+        postCheckoutBody.email = data.email
+        
+        let formData = new FormData()
+        formData.append("signature", data.appSignature)
+        formData.append("data", JSON.stringify(postCheckoutBody))
+
+        console.log("PostCheckoutBody", JSON.stringify(postCheckoutBody))
+
+        await axios.post(
+          `http://ec2-18-176-178-106.ap-northeast-1.compute.amazonaws.com/toktokmall/checkout`,
+          formData).then((response) => {
+      
+            if(response.data && response.data.success == 1){
+              
+              setIsVisible(true)
+
+            }else{              
+              Toast.show("Something went wrong")
+            }
+
+            console.log("Response", response.data)
+
+          }).catch((error) => {
+            console.log(error)
+            Toast.show("Something went wrong")
+        })
+
+      }
+    })
+
+    // await postCheckout()
 
   }
 
   useEffect(() => {
-    getCheckoutData()
+    AsyncStorage.getItem("ToktokMallUser").then((raw) => {
+      let data = JSON.parse(raw) || {}
+      if(data.userId){
+        console.log(data.userId)
+
+        //FOR TESTING
+        // getCheckoutData({variables: {input: {userId: 1024}}})
+
+        getCheckoutData({variables: {input: {userId: data.userId}}})
+
+      }
+    })
+
+    console.log(route.params)
+    // getCheckoutData()
   },[])
 
   useEffect(() => {
@@ -184,6 +256,10 @@ export const ToktokMallCheckout = ({route, navigation}) => {
   useEffect(() => {
     setParamsData(route?.params?.data)
   }, [route.params])
+
+  useEffect(() => {
+    console.log(grandTotal)
+  }, [grandTotal])
 
   if(loading) {
     return <Loading state={loading} />
@@ -205,12 +281,15 @@ export const ToktokMallCheckout = ({route, navigation}) => {
           <AddressForm
             data={addressData}
             onEdit={() => navigation.push("ToktokMallAddressesMenu", {
-              onGoBack: (data) => getCheckoutData()
+              onGoBack: (data) => {
+                setAddressData(data)
+                // getCheckoutData()
+              }
             })}
           />
           <Shops 
             raw={paramsData}
-            shipping={addressData?.shippingSummary}
+            shipping={addressData?.shippingSummary}            
           />
           <Vouchers 
             navigation={navigation} 

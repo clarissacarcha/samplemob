@@ -21,11 +21,15 @@ export const AddressForm = ({data, onEdit}) => {
         </View>
         <View  style={styles.addressContainer}>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Text style={styles.addressfullName}>{data.receiverName}</Text>
-            {/* <Text style={styles.addressdefaultText}>Default</Text> */}
+
+            {data && data?.receiverName ? 
+            <Text style={styles.addressfullName}>{data?.receiverName || ""}</Text>
+              :
+            <Text style={styles.addressdefaultText}>Please set your default address</Text>}            
+            
           </View>
-          <Text style={styles.addresscontact_number}>{data.receiverContact}</Text>
-          <Text style={styles.addressText}>{data.address}</Text>
+          <Text style={styles.addresscontact_number}>{data?.receiverContact || ""}</Text>
+          <Text style={styles.addressText}>{data?.address || ""}</Text>
         </View>
       </View>  
     </>

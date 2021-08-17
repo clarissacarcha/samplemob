@@ -30,9 +30,11 @@ export const Button = ({enabled, total, onPress}) => {
           <View style = {{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 15}}>
             <View>
               <Text style = {{fontWeight: 'bold'}}>Total Payment</Text>
-              <Text style = {{fontWeight: 'bold', color: '#F6841F' }}>{FormatToText.currency(total)}</Text>
+              <Text style = {{fontWeight: 'bold', color: '#F6841F' }}>{
+                !total ? FormatToText.currency(0) : FormatToText.currency(total)
+              }</Text>
             </View>
-            <TouchableOpacity style={styles.button} onPress={() => {
+            <TouchableOpacity disabled={!total ? true : false} style={styles.activeButton} onPress={() => {
               if(enabled) onPress()
             }}>
                 <Text style = {styles.buttonText}>Checkout</Text>
@@ -61,6 +63,7 @@ const styles = StyleSheet.create({
     // alignItems: 'center',
     zIndex: 1,
   },
-  button: { backgroundColor: '#F6841F', height: 47, width: 140, borderRadius: 5, alignItems: 'center', justifyContent: 'center'},
+  activeButton: { backgroundColor: '#F6841F', height: 47, width: 140, borderRadius: 5, alignItems: 'center', justifyContent: 'center'},
+  invalidButton: { backgroundColor: '#F6841F', height: 47, width: 140, borderRadius: 5, alignItems: 'center', justifyContent: 'center'},
   buttonText: {color: 'white'}
 })
