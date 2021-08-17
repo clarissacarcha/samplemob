@@ -169,18 +169,20 @@ const testdata = [{
   total: 270
 }]
 
-export const Completed = ({id}) => {
+export const Completed = ({id, email}) => {
 
   const [toggleDrop, setToggleDrop] = useState(false)
   const [data, setData] = useState([])
   const [userId, setUserId] = useState(id)
+  const [semail, setEmail] = useState(email)
 
   const [getOrders, {loading, error}] = useLazyQuery(GET_COMPLETED_ORDERS, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     variables: {
       input: {
-        userId: userId || id
+        userId: userId || id,
+        email: semail || email
       }
     },
     onCompleted: (response) => {
@@ -228,8 +230,9 @@ export const Completed = ({id}) => {
 
   useEffect(() => {    
     setUserId(id)
+    setEmail(email)
     getOrders()
-  }, [])
+  }, [id, email])
 
   if(loading) {
     return <Loading state={loading} />

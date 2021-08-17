@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, Dimensions, AsyncStorage} from 'react-native';
 import { Price, FormatToText } from '../../../../helpers/formats';
+import Spinner from 'react-native-spinkit';
 // import { COLOR, FONT } from '../../../../../../res/variables';
 // import {LandingHeader, AdsCarousel} from '../../../../../Components';
 // import { ScrollView } from 'react-native-gesture-handler';
@@ -16,12 +17,19 @@ const testData = [
 ]
 const REAL_WIDTH = Dimensions.get('window').width;
 
-export const Button = ({enabled, total, onPress}) => {
+export const Button = ({enabled, loading, total, onPress}) => {
 
   const onCheckout = () => {
     // let stringyfiedArr = JSON.stringify(unSelectedItemsArr)
     // AsyncStorage.setItem('MyCart', stringyfiedArr)
     // setIsVisible(true)
+  }
+
+  const isDisabled = () => {
+    if(!total) return true
+    else if(total > 0) return false
+    else if(loading) return true
+    else if(!loading) return false
   }
     
   return (
@@ -34,10 +42,11 @@ export const Button = ({enabled, total, onPress}) => {
                 !total ? FormatToText.currency(0) : FormatToText.currency(total)
               }</Text>
             </View>
-            <TouchableOpacity disabled={!total ? true : false} style={styles.activeButton} onPress={() => {
+            <TouchableOpacity disabled={isDisabled()} style={styles.activeButton} onPress={() => {
               if(enabled) onPress()
             }}>
-                <Text style = {styles.buttonText}>Checkout</Text>
+                {!loading && <Text style={styles.buttonText}>Checkout</Text>}
+                {loading && <Spinner type="ThreeBounce" size={30} color="#fff" isVisible={loading} />}
             </TouchableOpacity>
           </View>
         {/* </View> */}

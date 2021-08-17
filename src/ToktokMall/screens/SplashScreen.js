@@ -76,23 +76,13 @@ const Splash = ({ createMyCartSession, createNotificationsSession}) => {
     },
     onError: (err) => {
       console.log(err)
+      authUser()
     }
 	})
 
   const RegisterUser = async (signature) => {
 
     let body = {
-      firstname: "test",
-      lastname: "test",
-      toktokid: 1234,
-      contactnumber: "testesttest",
-      email: "email@gmail.com",
-      address: "test",
-      birthday: "test",
-      gender: "test"
-    }
-
-    let bodyx = {
       firstname: session?.user.person.firstName,
       lastname: session?.user.person.lastName,
       toktokid: session?.user.id,

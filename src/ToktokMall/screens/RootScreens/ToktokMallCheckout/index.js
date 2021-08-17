@@ -96,6 +96,7 @@ export const ToktokMallCheckout = ({route, navigation}) => {
   const [userId, setUserId] = useState(null)
   const [deliveryFees, setDeliveryFees] = useState([])
   const [receiveDates, setReceiveDates] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
 
   const [getCheckoutData, {error, loading}] = useLazyQuery(GET_CHECKOUT_DATA, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
@@ -134,6 +135,8 @@ export const ToktokMallCheckout = ({route, navigation}) => {
   })
 
   const postCheckoutSetting = async () => {
+
+    setIsLoading(true)
 
     //populate the postCheckoutBody basic data
     postCheckoutBody.name = addressData.receiverName
@@ -203,9 +206,11 @@ export const ToktokMallCheckout = ({route, navigation}) => {
             if(response.data && response.data.success == 1){
               
               setIsVisible(true)
+              setIsLoading(false)
 
             }else{              
               Toast.show("Something went wrong")
+              setIsLoading(false)
             }
 
             console.log("Response", response.data)
@@ -213,6 +218,7 @@ export const ToktokMallCheckout = ({route, navigation}) => {
           }).catch((error) => {
             console.log(error)
             Toast.show("Something went wrong")
+            setIsLoading(false)
         })
 
       }
@@ -309,10 +315,13 @@ export const ToktokMallCheckout = ({route, navigation}) => {
       <View style={styles.footer}>
         <Button 
           enabled={!loading}
+          loading={isLoading}
           total={grandTotal}
           onPress={async () => {
-            await postCheckoutSetting()
-          }}      
+            if(!isLoading){
+              await postCheckoutSetting()
+            }            
+          }} 
         />
       </View>
     </>

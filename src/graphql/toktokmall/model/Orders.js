@@ -3,7 +3,6 @@ import gql from 'graphql-tag'
 export const GET_TOSHIP_ORDERS = gql`
   query getToShipOrders($input: GetOrdersInput) {
 		getToShipOrders(input: $input) {
-      id
 	    referenceNum
   	  totalAmount
     	shipping {
@@ -17,7 +16,6 @@ export const GET_TOSHIP_ORDERS = gql`
       	orderPlaced
     	}
 	    orderData {
-  	    id
     	  productId
      		totalAmount
       	quantity
