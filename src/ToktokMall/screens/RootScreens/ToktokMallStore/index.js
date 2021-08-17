@@ -43,7 +43,9 @@ export const ToktokMallStore = ({navigation, route}) => {
     variables: {
       input: {
         shopId: route.params.id,
-        search: searchValue
+        search: searchValue,
+        offset: 0,
+        limit: 10
       }
     },
     onCompleted: (response) => {
@@ -78,9 +80,27 @@ export const ToktokMallStore = ({navigation, route}) => {
           }}
         />
 
-        {activeTab == 0 && <Product data={storeData?.products ? storeData.products : []} />}
-        {activeTab == 1 && !showCategories && <Dropdown onSelect={() => setShowCategories(true)} />}
-        {activeTab == 1 && showCategories && <Product data={storeData?.products ? storeData.products : []} />}
+        {
+          activeTab == 0 && 
+          <Product
+            paginate={true} 
+            data={storeData?.products ? storeData.products : []} 
+          />
+        }
+        {
+          activeTab == 1 && 
+          !showCategories && 
+          <Dropdown 
+            onSelect={() => setShowCategories(true)} 
+          />
+        }
+        {
+          activeTab == 1 && 
+          showCategories && 
+          <Product 
+            data={storeData?.products ? storeData.products : []} 
+          />
+        }
       </>
     )
   }
@@ -96,7 +116,16 @@ export const ToktokMallStore = ({navigation, route}) => {
             setSearchValue(val)
           }}
           onSubmit={() => {
-            searchShopProduct()
+            searchShopProduct({
+              variables: {
+                input: {
+                  shopId: route.params.id,
+                  search: searchValue,
+                  offset: searchedProducts.length,
+                  limit: 10
+                }
+              }
+            })
           }}
         />
 
@@ -142,8 +171,25 @@ export const ToktokMallStore = ({navigation, route}) => {
           }} 
         />}
 
-        {!error && !loading && searchValue == "" && <RenderContent />}
-        {!error && !loading && searchedProducts.length > 0 && !emptySearch && <Product data={searchedProducts} />}
+        {
+          !error && 
+          !loading && 
+          searchValue == "" && 
+          <RenderContent />
+        }
+        {
+          !error && 
+          !loading && 
+          searchedProducts.length > 0 &&
+          !emptySearch && 
+          <Product 
+            paginate={false} 
+            data={searchedProducts} 
+            onReload={() => {
+            
+            }} 
+          />
+        }
 
         {messageModalShown && 
         <MessageModal

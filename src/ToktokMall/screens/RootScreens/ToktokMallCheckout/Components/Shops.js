@@ -43,6 +43,7 @@ export const Shops = ({raw, shipping, retrieve}) => {
 
   const renderItems = (items) => {
     return items.map((item, i) => {
+
         return(
           <View style={styles.itemContainer}>
             <Image //source = {item.image} 
@@ -66,9 +67,8 @@ export const Shops = ({raw, shipping, retrieve}) => {
   // 
 
   const renderShops = () => {
-  
-    return data.map((item, i) => {
 
+    return data.map((item, i) => {
       return(
         <View style={styles.container}>
           <View style ={{flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, padding: 15, borderBottomColor: '#F7F7FA'}}>

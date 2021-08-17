@@ -153,7 +153,7 @@ export const Suggestions = ({}) => {
             <Text style={styles.h1}>Suggestions for you</Text>
           </View>
           <TouchableOpacity onPress={() => {
-            navigation.navigate("ToktokMallCategoriesList", {searchValue: "Suggestions for you"})
+            navigation.navigate("ToktokMallSearch", {searchValue: "Suggestions for you", origin: "suggestion"})
           }} style={{flex: 2, flexDirection: 'row'}}>
             <View style={{flex: 2, alignItems: 'flex-end', justifyContent: 'center'}}>
               <Text style={styles.link}>See all </Text>

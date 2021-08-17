@@ -6,19 +6,7 @@ import {ToShip, ToRecieve, Completed, Cancelled} from './Components';
 
 export const ToktokMallMyOrders = ({navigation, route}) => {
 
-  const [userId, setUserId] = useState(0)
-  const [email, setEmail] = useState('')
   const [activeTab, setActiveTab] = useState(route.params.tab || 0)
-
-  useEffect(() => {
-    AsyncStorage.getItem("ToktokMallUser").then((raw) => {
-      let data = JSON.parse(raw)
-      if(data.userId){
-        setUserId(data.userId)
-        setEmail(data.email)
-      }
-    })
-  }, [])
 
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
@@ -27,16 +15,19 @@ export const ToktokMallMyOrders = ({navigation, route}) => {
         index={activeTab}
         onTabChange={(index) => {
           setActiveTab(index)
-        }} 
+        }}
+        onBack={() => {
+          navigation.navigate("ToktokMallLanding", {screen: "ToktokMallMyProfile"})
+        }}
       />
 
-      {activeTab == 0 && <ToShip id={userId} email={email} />}
+      {activeTab == 0 && <ToShip />}
 
-      {activeTab == 1 && <ToRecieve id={userId} email={email} />}
+      {activeTab == 1 && <ToRecieve />}
 
-      {activeTab == 2 && <Completed id={userId} email={email} />}
+      {activeTab == 2 && <Completed />}
 
-      {activeTab == 3 && <Cancelled id={userId} email={email} />}
+      {activeTab == 3 && <Cancelled />}
       
     </View>
   );

@@ -3,7 +3,7 @@ import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatLi
 import { COLOR, FONT } from '../../../../res/variables';
 import {HeaderBack, HeaderTitle, HeaderRight} from '../../../Components';
 import { AddressForm, Button, Payment, Shops, Totals, Vouchers, CheckoutModal } from './Components';
-
+import {connect} from 'react-redux'
 import coppermask from '../../../assets/images/coppermask.png'
 import suit from '../../../assets/images/coppermask.png'
 import { useSelector } from 'react-redux';
@@ -76,7 +76,7 @@ const postCheckoutBody = {
   payment_method: "cod"
 }
 
-export const ToktokMallCheckout = ({route, navigation}) => {
+const Component = ({route, navigation, createMyCartSession}) => {
 
   const user_address = useSelector(state=> state.toktokMall.user_address)
 
@@ -88,9 +88,11 @@ export const ToktokMallCheckout = ({route, navigation}) => {
 
   const [isVisible, setIsVisible] = useState(false)
   // const [data, setData] = useState([])
+  const [newCartData, setNewCartData] = useState([])
   const [paramsData, setParamsData] = useState([])
   const [addressData, setAddressData] = useState([])
-  const [payment, setPaymentMethod] = useState(3);
+  const [payment, setPaymentMethod] = useState("cod");
+  const [paymentList, setPaymentList] = useState([]);
   const [vouchers, setVouchers] = useState([])
   const [grandTotal, setGrandTotal] = useState(0)
   const [userId, setUserId] = useState(null)
@@ -100,15 +102,11 @@ export const ToktokMallCheckout = ({route, navigation}) => {
 
   const [getCheckoutData, {error, loading}] = useLazyQuery(GET_CHECKOUT_DATA, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
-    fetchPolicy: 'network-only',
-    // variables: {
-    //   input: {
-    //     userId: userId
-    //   }
-    // },
+    fetchPolicy: 'network-only',    
     onCompleted: (response) => {
       if(response.getCheckoutData){
         setAddressData(response.getCheckoutData.address);
+        setPaymentList(response.getCheckoutData.paymentMethods);
       }
     },
     onError: (err) => {
@@ -134,6 +132,12 @@ export const ToktokMallCheckout = ({route, navigation}) => {
     }
   })
 
+  const UpdateCart = async () => {
+    // let stringyfiedArr = JSON.stringify(newCartData)
+    // await AsyncStorage.setItem('MyCart', stringyfiedArr)
+    createMyCartSession("set", newCartData)
+  }
+
   const postCheckoutSetting = async () => {
 
     setIsLoading(true)
@@ -153,6 +157,7 @@ export const ToktokMallCheckout = ({route, navigation}) => {
     postCheckoutBody.citymunCode = addressData.municipalityId
     postCheckoutBody.total_amount = parseFloat(grandTotal)
     postCheckoutBody.srp_totalamount = parseFloat(grandTotal)
+    postCheckoutBody.payment_method = payment || "cod"
     // postCheckoutBody.vouchers = []
     postCheckoutBody.order_logs = []
 
@@ -205,12 +210,23 @@ export const ToktokMallCheckout = ({route, navigation}) => {
       
             if(response.data && response.data.success == 1){
               
+              if(route?.params?.type == "from_cart"){
+                UpdateCart()              
+              }
+
               setIsVisible(true)
               setIsLoading(false)
 
+            }else if(response.data && response.data.success == 0){
+
+              setIsLoading(false)
+              Toast.show(response.data.message, Toast.LONG)
+              
             }else{              
+
               Toast.show("Something went wrong")
               setIsLoading(false)
+            
             }
 
             console.log("Response", response.data)
@@ -261,6 +277,7 @@ export const ToktokMallCheckout = ({route, navigation}) => {
 
   useEffect(() => {
     setParamsData(route?.params?.data)
+    setNewCartData(route?.params.newCart)
   }, [route.params])
 
   useEffect(() => {
@@ -304,6 +321,7 @@ export const ToktokMallCheckout = ({route, navigation}) => {
           />
           <Payment 
             payment={payment} 
+            list={paymentList}
             setPaymentMethod={setPaymentMethod} 
           />
           <Totals 
@@ -329,6 +347,11 @@ export const ToktokMallCheckout = ({route, navigation}) => {
   );
 };
 
+const mapDispatchToProps = (dispatch) => ({
+  createMyCartSession: (action, payload) => dispatch({type: 'CREATE_MY_CART_SESSION', action,  payload}),
+});
+
+export const ToktokMallCheckout = connect(null, mapDispatchToProps)(Component);
 
 const styles = StyleSheet.create({
 

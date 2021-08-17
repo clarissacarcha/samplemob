@@ -20,7 +20,7 @@ const testData = [
 ]
 
 
-export const Payment = ({ payment, setPaymentMethod}) => {
+export const Payment = ({ list, payment, setPaymentMethod}) => {
 
   const navigation = useNavigation()
 
@@ -28,15 +28,15 @@ export const Payment = ({ payment, setPaymentMethod}) => {
     <>
     <View style={styles.container}>
         <Text style = {{marginLeft: 15, marginTop: 15, fontSize: 14, fontFamily: FONT.BOLD}}>Select Payment Method</Text>
-        { payment == 0 ? 
+        { payment == "toktokwallet" ? 
           <View style = {{backgroundColor: '#FFFCF4', padding:10}}>
             <Text style = {{color: '#F6841F', fontSize: 12, textAlign: 'center'}}>*insufficient funds! Kindly top up to add funds in your toktokwallet.</Text>
           </View> :
           <></>
         }
         <TouchableOpacity 
-          style ={{flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, padding: 15, borderBottomColor: '#F7F7FA', backgroundColor: payment == 0 ? '#FFEBBC' : 'white' }}
-          onPress = {() => {setPaymentMethod(0)}}
+          style ={{...styles.item, backgroundColor: payment == 'toktokwallet' ? '#FFEBBC' : 'white' }}
+          onPress = {() => {setPaymentMethod("toktokwallet")}}
         >
           <View style ={{flexDirection: 'row', alignItems: 'center', flex: 1  }}>
             {/* <View style ={{height: 18, width: 18, backgroundColor: '#F6841F', }} /> */}
@@ -52,14 +52,32 @@ export const Payment = ({ payment, setPaymentMethod}) => {
             </TouchableOpacity>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity style ={{flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, padding: 15, borderBottomColor: '#F7F7FA', backgroundColor: payment == 1 ? '#FFEBBC' : 'white' }}
-          onPress = {() => {setPaymentMethod(1)}}
+        <TouchableOpacity 
+          style ={{...styles.item, backgroundColor: payment == 'cod' ? '#FFEBBC' : 'white' }}
+          onPress = {() => {setPaymentMethod("cod")}}
         >
           <View style ={{height: 20, width: 20, backgroundColor: '#F9B71A', borderRadius: 5, alignItems: 'center', justifyContent: 'center' }}>
             <Image source={require("../../../../assets/icons/cod.png")} style={{width: 18, height: 18, resizeMode: 'stretch'}} /> 
           </View>
           <Text style = {{marginLeft: 10, fontWeight: 'bold', color: '#F6841F'}}>Cash on delivery</Text>
         </TouchableOpacity>
+
+        {list && list.length > 0 && list.map((item, i) => {
+          return (
+            <>
+              <TouchableOpacity 
+                style ={{...styles.item, backgroundColor: payment == item?.paycode ? '#FFEBBC' : 'white' }}
+                onPress = {() => {setPaymentMethod(item?.paycode)}}
+              >
+                <View style ={{height: 20, width: 20, backgroundColor: '#F9B71A', borderRadius: 5, alignItems: 'center', justifyContent: 'center' }}>
+                  <Image source={require("../../../../assets/icons/cod.png")} style={{width: 18, height: 18, resizeMode: 'stretch'}} /> 
+                </View>
+                <Text style = {{marginLeft: 10, fontWeight: 'bold', color: '#F6841F'}}>{item?.description}</Text>
+              </TouchableOpacity>
+            </>
+          )
+        })}
+
       </View>
       </>
     )
@@ -72,5 +90,8 @@ const styles = StyleSheet.create({
   itemImage: {flex: 0.3, height: 100, width: 100},
   itemprice: {color: '#F6841F', marginRight: 10},
   itemSaleOff: {textDecorationLine: 'line-through', color: '#9E9E9E'},
-  deliveryfeeContainer: {borderWidth: 1, borderColor: '#FDDC8C', marginLeft: 15, marginRight: 15, padding: 10, borderRadius: 5}
+  deliveryfeeContainer: {borderWidth: 1, borderColor: '#FDDC8C', marginLeft: 15, marginRight: 15, padding: 10, borderRadius: 5},
+  item: {
+    flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, padding: 15, borderBottomColor: '#F7F7FA', 
+  }
 })

@@ -49,8 +49,8 @@ const Splash = ({ createMyCartSession, createNotificationsSession}) => {
 		fetchPolicy: "network-only",
     variables: {
       input: {
-        // toktokId: parseInt(session?.user?.id)
-        toktokId: 1234
+        toktokId: parseInt(session?.user?.id)
+        // toktokId: 1234
       }
     },
 		onCompleted: async (response) => {
@@ -68,7 +68,7 @@ const Splash = ({ createMyCartSession, createNotificationsSession}) => {
 
           //SEND REQUEST
           console.log("User not registered, registering...")
-          await RegisterUser(response.getCustomerIfExist.appSignature)          
+          await RegisterUser(response.getCustomerIfExist.appSignature)    
 
         }
         
@@ -76,7 +76,7 @@ const Splash = ({ createMyCartSession, createNotificationsSession}) => {
     },
     onError: (err) => {
       console.log(err)
-      authUser()
+      // authUser()
     }
 	})
 
@@ -99,16 +99,13 @@ const Splash = ({ createMyCartSession, createNotificationsSession}) => {
     await axios
       .post("http://ec2-18-176-178-106.ap-northeast-1.compute.amazonaws.com/toktokmall/create_user", formData)
       .then((response) => {
-        // body.signature = signature
-        // AsyncStorage.setItem("ToktokMallUser", JSON.stringify({ ...body, signature }))
-        // console.log("User registered!", response.data)
-
-        // navigation.navigate("ToktokMallLanding")
+        
         if(response.data && response.data.success == 1){
           authUser()
         }else{
          console.log("Response", response.data) 
         }
+        
       })
       .catch((error) => {
         console.log(error)
@@ -120,7 +117,7 @@ const Splash = ({ createMyCartSession, createNotificationsSession}) => {
 
     //CART
     await AsyncStorage.getItem('MyCart').then((value) => {
-      console.log('cart async storage',value)
+      // console.log('cart async storage',value)
       const parsedValue = JSON.parse(value)
       if(value != null){
         createMyCartSession('set', parsedValue)
@@ -131,7 +128,7 @@ const Splash = ({ createMyCartSession, createNotificationsSession}) => {
 
     //NOTIFICATION
     await AsyncStorage.getItem('Notifications').then((value) => {
-      console.log('Notifications async storage', value)
+      // console.log('Notifications async storage', value)
       const parsedValue = JSON.parse(value)
       if(value != null){
         createNotificationsSession('set', parsedValue)

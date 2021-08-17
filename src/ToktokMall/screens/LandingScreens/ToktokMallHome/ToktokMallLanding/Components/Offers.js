@@ -86,7 +86,7 @@ export const Offers = ({data}) => {
                 <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>Today's Offers</Text>
               </View>
               <TouchableOpacity onPress={() => {
-                navigation.navigate("ToktokMallCategoriesList", {searchValue: "Today's Offers"})
+                navigation.navigate("ToktokMallSearch", {searchValue: "Today's Offers", origin: "sale"})
               }} style={{flex: 2, flexDirection: 'row'}}>
                 <View style={{flex: 2, alignItems: 'flex-end', justifyContent: 'center'}}>
                   <Text style={styles.link}>See all </Text>

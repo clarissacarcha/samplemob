@@ -43,7 +43,13 @@ export const CheckoutModal = ({navigation, isVisible, setIsVisible}) => {
                   <TouchableOpacity style = {styles.whiteButton} onPress = {() => {setIsVisible(false), navigation.navigate("ToktokMallHome")}}>
                     <Text style = {styles.whiteButtonText}>Continue shopping</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style = {styles.button} onPress = {() => {setIsVisible(false), navigation.navigate("ToktokMallMyOrders", { tab: 0})}}>
+                  <TouchableOpacity 
+                    style={styles.button} 
+                    onPress={() => {
+                      setIsVisible(false)
+                      navigation.navigate("ToktokMallMyOrders", { tab: 0})
+                    }
+                  }>
                     <Text style = {styles.buttonText}>Go to My Orders</Text>
                   </TouchableOpacity>    
                 </View>

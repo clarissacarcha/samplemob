@@ -106,7 +106,9 @@ const Component =  ({
 
   const onBuyNow = (input) => {
     navigation.push("ToktokMallCheckout", {
+      type: "single",
       data: [cartObject(input)],
+      newCart: [],
       vouchers: [],
     })
   }

@@ -6,6 +6,8 @@ import CustomIcon from '../../../../Components/Icons';
 import {placeholder} from '../../../../assets';
 import { useNavigation } from '@react-navigation/core';
 
+import { SwipeReloader } from '../../../../Components';
+
 const RenderStars = ({value}) => {
   let orange = "#FFC833"
   let gray = "rgba(33, 37, 41, 0.1)"
@@ -63,31 +65,49 @@ const RenderItem = ({item, navigation}) => {
 export const Product = ({data}) => {
 
   const navigation = useNavigation()
+  const [loading, setloading] = useState(false)
+  const [offset, setOffset] = useState(0)
+  const [products, setProducts] = useState(data)
 
-    return (
-      <>
-        <View style={styles.container}>
-            
-            <FlatList
-              data={data}
-              numColumns={2}
-              style={{paddingHorizontal: 5}}
-              renderItem={({item}) => {
-                return <RenderItem item={item} navigation={navigation} />
-              }}
-              keyExtractor={(item, index) => item + index}
-              showsVerticalScrollIndicator={false}
-            />
-            
-          </View>
-          <View style={{height: 15}}></View>
-          <View style={styles.separator} />
-      </>
-    )
+  const LoadMore = () => {    
+    setloading(true)
+    setTimeout(() => {
+      setOffset(offset + 10)
+      setloading(false)
+    }, 700)
   }
 
+  useEffect(() => {
+    setProducts(products.slice(0, offset + 10))
+  }, [])
+
+  return (
+    <>
+      <View style={styles.container}>
+            
+        <FlatList
+          data={data.slice(0, offset + 10)}
+          numColumns={2}
+          style={{paddingHorizontal: 5}}
+          renderItem={({item}) => {
+            return <RenderItem item={item} navigation={navigation} />
+          }}
+          keyExtractor={(item, index) => item + index}
+          showsVerticalScrollIndicator={false}
+          ListFooterComponent={
+            <SwipeReloader state={loading} onSwipeUp={LoadMore} />
+          }
+        />
+            
+      </View>
+      <View style={{height: 15}}></View>
+      {/* <View style={styles.separator} /> */}
+    </>
+  )
+}
+
 const styles = StyleSheet.create({
-  container: {flex: 0, paddingVertical: 10},
+  container: {flex: 1, paddingVertical: 10},
   heading: {paddingHorizontal: 15, paddingVertical: 20, flexDirection: 'row'},
   h1: {fontSize: 14, fontFamily: FONT.BOLD},
   link: {fontSize: 12, color: "#F6841F"},

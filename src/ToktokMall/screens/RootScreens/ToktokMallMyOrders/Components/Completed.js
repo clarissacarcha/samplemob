@@ -9,6 +9,7 @@ import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../graphql';
 import { GET_COMPLETED_ORDERS } from '../../../../../graphql/toktokmall/model';
 import {placeholder, storeIcon} from '../../../../assets';
 import { Price } from '../../../../helpers';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const Store = ({data}) => {
   return (
@@ -228,11 +229,23 @@ export const Completed = ({id, email}) => {
     
   }
 
+  const Fetch = async () => {
+    AsyncStorage.getItem("ToktokMallUser").then((raw) => {
+      let data = JSON.parse(raw)
+      if(data.userId){        
+        getOrders({variables: {
+          input: {
+            userId: data.userId,
+            email: data.email
+          }
+        }})
+      }
+    })
+  }
+
   useEffect(() => {    
-    setUserId(id)
-    setEmail(email)
-    getOrders()
-  }, [id, email])
+    Fetch()
+  }, [])
 
   if(loading) {
     return <Loading state={loading} />
@@ -247,7 +260,7 @@ export const Completed = ({id, email}) => {
           <RefreshControl 
             refreshing={loading}
             onRefresh={() => {
-              getOrders()
+              Fetch()
             }}
           />
         }

@@ -29,13 +29,6 @@ export const ToktokMallSearch = ({navigation, route}) => {
   const [searchProduct, {error, loading}] = useLazyQuery(SEARCH_PRODUCT, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
-    variables: {
-      input: {
-        search: searchValue,
-        offset: offset,
-        limit: 10
-      }
-    },
     onCompleted: async (response) => {      
 			let temp = searchedProducts
       if(!response){
@@ -48,7 +41,11 @@ export const ToktokMallSearch = ({navigation, route}) => {
         //Save to AsyncStorage 
         //Check if exist
         let ix = searchHistory.indexOf(searchValue)
-        if(ix == -1) await AddSearchHistory(searchValue)
+        if(ix == -1){
+          if(route.params.origin == null || route.params.origin == undefined){
+            await AddSearchHistory(searchValue)
+          } 
+        }
         
       }else if(response && response.searchProduct.length == 0){
         setSearchedProducts(temp)
@@ -113,9 +110,18 @@ export const ToktokMallSearch = ({navigation, route}) => {
   useEffect(() => {
 		if(route.params?.searchValue){
 			setSearchValue(route.params.searchValue)
-			searchProduct()
+			searchProduct({
+        variables: {
+          input: {
+            search: route.params.searchValue,
+            origin: route.params?.origin ? `${route.params.origin}s` : "all",
+            offset: offset,
+            limit: 10
+          }
+        }
+      })
       setIsLoading(true)
-      console.log("Triggered on useEffect!")
+      console.log("Triggered on useEffect!", route.params)
 		}
 	}, [route.params])
 
@@ -129,7 +135,16 @@ export const ToktokMallSearch = ({navigation, route}) => {
           console.log("Triggered!!!")
 					if(searchValue != ""){
             setOffset(0)
-            searchProduct()
+            searchProduct({
+              variables: {
+                input: {
+                  search: searchValue,
+                  origin: route.params?.origin ? route.params.origin : "all",
+                  offset: 0,
+                  limit: 10
+                }
+              }
+            })
             // await AddSearchHistory(searchValue)
           }
 				}}
@@ -175,7 +190,16 @@ export const ToktokMallSearch = ({navigation, route}) => {
           fetch={() => {
             setOffset(searchedProducts.length)
             console.log({offset})
-            searchProduct()
+            searchProduct({
+              variables: {
+                input: {
+                  search: searchValue,
+                  origin: route.params?.origin ? route.params.origin : "all",
+                  offset: searchedProducts.length,
+                  limit: 10
+                }
+              }
+            })
           }} 
         />}
 

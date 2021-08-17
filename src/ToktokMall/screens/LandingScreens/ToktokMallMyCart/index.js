@@ -167,13 +167,18 @@ const Component =  ({
   useEffect(() => {
     // console.log("My Cart", myCart)
     // getSubTotal();
+
+    //Call to reset cart for debugging
+    // createMyCartSession('set', [])
   }, []);
 
   const formatItemsForCheckout = () => {
     console.log(itemsToCheckoutArr)
-    let cartCopy = myCart
+    let cartCopy = JSON.parse(JSON.stringify(myCart))
+    let remainCart = JSON.parse(JSON.stringify(myCart))
     let tempCart = []
-    itemsToCheckoutArr.forEach((item, i) => {
+
+    itemsToCheckoutArr.map((item, i) => {
       //first check if shop exists on temp cart
       let tempArrShopIdx = tempCart.findIndex(x => x.store_id == item.store_id)
       if(tempArrShopIdx > -1){
@@ -184,18 +189,36 @@ const Component =  ({
         }else{
           //if item doesn't exist, push the item to shop cart
           tempCart[tempArrShopIdx].cart.push(item)
+          // tempCart[tempArrShopIdx].cart[item.itemIndex] = item
+
         }
       }else{
         //if not exist, push the shop and item to temp cart array
+        let itemIndex = cartCopy[item.shopIndex].cart.findIndex(x => x.item_id == item.item_id)
+        if(itemIndex > -1) {
+          cartCopy[item.shopIndex].cart = [cartCopy[item.shopIndex].cart[itemIndex]]
+        }
         tempCart.push(cartCopy[item.shopIndex])
       }
     })
     setCheckoutData(tempCart)
     console.log("Formatted items for checkout", JSON.stringify(tempCart))
 
+    //GET REMAINED ITEMS
+    itemsToCheckoutArr.forEach((item, i) => {
+      remainCart[item.shopIndex].cart.splice(item.itemIndex, 1)
+      if(remainCart[item.shopIndex].cart.length == 0){
+        remainCart.splice(item.shopIndex, 1)
+      }
+    })
+
+    console.log("Remained items when checkout complete", JSON.stringify(remainCart))
+
     if(tempCart.length == 0) return
     navigation.navigate("ToktokMallCheckout", {
+      type: "from_cart",
       data: tempCart,
+      newCart: remainCart,
       vouchers: [],
     })
     
@@ -203,7 +226,7 @@ const Component =  ({
 
   const deleteItem = () => {
 
-    let cartCopy = myCart
+    let cartCopy = JSON.parse(JSON.stringify(myCart))
 
     selectedItemsToDelArr.forEach((item, i) => {      
       if(cartCopy.length == 0) return
@@ -215,7 +238,7 @@ const Component =  ({
 
     console.log("Deletion result", cartCopy)
     createMyCartSession('set', cartCopy)
-    getSubTotal()
+    // getSubTotal()
   }
 
   const unSelectItem = (type, raw) => {
@@ -277,7 +300,7 @@ const Component =  ({
   }
 
   const getItemDetailsByIndexId = (storeId, itemId) => {
-    let cartCopy = myCart
+    let cartCopy = JSON.parse(JSON.stringify(myCart))
     let cartIndex = cartCopy.findIndex(x => x.store_id == storeId)
     let cartArr = cartCopy[cartIndex].cart
     let itemIndex = cartArr.findIndex(x => x.item_id == itemId)
@@ -320,7 +343,12 @@ const Component =  ({
               />
             </View>
             <TouchableOpacity
-              onPress={() => setWillDelete(!willDelete)}
+              onPress={() => {
+                setWillDelete(!willDelete)
+                if(willDelete){
+                  setAllSelected(false)
+                }
+              }}
               style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center'}}>
               <Text style={{fontSize: 14, color: '#F6841F'}}>{willDelete ? 'Done' : 'Edit'}</Text>
             </TouchableOpacity>

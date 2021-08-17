@@ -7,6 +7,7 @@ import { GET_TOSHIP_ORDERS } from '../../../../../graphql/toktokmall/model';
 import {Loading} from '../../../../Components';
 import {placeholder, storeIcon} from '../../../../assets';
 import { Price } from '../../../../helpers';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const Store = ({data}) => {
   return (
@@ -127,22 +128,15 @@ const testdata = [{
 export const ToShip = ({id, email}) => {
 
   const [data, setData] = useState([])
-  const [userId, setUserId] = useState(id)
-  const [semail, setEmail] = useState(email)
 
   const [getOrders, {loading, error}] = useLazyQuery(GET_TOSHIP_ORDERS, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
-    fetchPolicy: 'network-only',
-    variables: {
-      input: {
-        userId: userId || id,
-        email: semail || email
-      }
-    },
+    fetchPolicy: 'network-only',    
     onCompleted: (response) => {
       if(response.getToShipOrders){
         setData(response.getToShipOrders)
       }
+      console.log(response)
     },
     onError: (err) => {
       console.log(err)
@@ -159,11 +153,25 @@ export const ToShip = ({id, email}) => {
     )
   }
 
+  const Fetch = async () => {
+    AsyncStorage.getItem("ToktokMallUser").then((raw) => {
+      let data = JSON.parse(raw)
+      if(data.userId){        
+        getOrders({variables: {
+          input: {
+            userId: data.userId,
+            email: data.email
+          }
+        }})
+      }
+    })
+  }
+
   useEffect(() => {    
-    setUserId(id)
-    setEmail(email)
-    getOrders()
-  }, [id, email])
+
+    Fetch()
+    
+  }, [])
 
   if(loading) {
     return <Loading state={loading} />
@@ -178,7 +186,7 @@ export const ToShip = ({id, email}) => {
           <RefreshControl 
             refreshing={loading}
             onRefresh={() => {
-              getOrders()
+              Fetch()
             }}
           />
         }
