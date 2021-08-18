@@ -60,7 +60,7 @@ export const Item = ({data, onHold, onChecked, willDelete}) => {
         <View style={{flex: 2, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 5, borderRadius: 5}}>
           <Image
             source={images && images.length > 0 ? {uri: images[0].filename} : coppermask}
-            style={{width: 55, height: 80, resizeMode: 'stretch', borderRadius: 5}}
+            style={{width: 55, height: 80, resizeMode: 'center', borderRadius: 5}}
           />
         </View>
       </>
@@ -72,7 +72,7 @@ export const Item = ({data, onHold, onChecked, willDelete}) => {
       <>
         <ImageBackground
           source={images && images.length > 0 ? {uri: images[0].filename} : coppermask}
-          style={{flex: 2.5, justifyContent: 'center', alignItems: 'center', paddingRight: 8, borderRadius: 5}}
+          style={{flex: 2, justifyContent: 'center', alignItems: 'center', paddingRight: 8, borderRadius: 5}}
           imageStyle={{resizeMode: 'center'}}>
           <View
             style={{
@@ -82,6 +82,7 @@ export const Item = ({data, onHold, onChecked, willDelete}) => {
               backgroundColor: 'rgba(0, 0, 0, 0.25)',
               alignItems: 'center',
               justifyContent: 'center',
+              borderRadius: 24,
             }}>
             <Text style={{fontSize: 10, color: '#fff', fontFamily: FONT.BOLD}}>OUT OF STOCK</Text>
           </View>
@@ -89,12 +90,11 @@ export const Item = ({data, onHold, onChecked, willDelete}) => {
       </>
     );
   };
-  console.log(data.variationSummary)
   return (
     <>
       <TouchableOpacity onLongPress={onHold} style={{flexDirection: 'row', paddingVertical: 10, paddingHorizontal: 15}}>
         {willDelete && <RenderCheckBox />}
-        {data.noOfStocks > 0 ? <RenderInStock images={data.images} /> : <RenderOutOfStock images={data.images} />}
+        {data.noOfStocks && data.noOfStocks > 0 ? <RenderInStock images={data.images} /> : <RenderOutOfStock images={data.images} />}
         <View style={{flex: 8}}>
           <View style={{flex: 1, justifyContent: 'center'}}>
             <View>
