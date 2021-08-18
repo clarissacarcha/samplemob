@@ -41,9 +41,11 @@ const Component = ({data, onOpenVariations, animatedValue, shop, reduxActions: {
   const HandleToggleFavorites = () => {
     if(!favorite){
       Toast.show('Added to Favorites')
+      updateMyFavorites('add', {shop, item: data })
       setFavorite(true)
     }else{
       Toast.show('Removed to Favorites')
+      updateMyFavorites('delete', {shop, item: data })
       setFavorite(false)
     }
     if(favorite){
