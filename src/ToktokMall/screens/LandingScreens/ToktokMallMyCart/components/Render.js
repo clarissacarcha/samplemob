@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, Platform, Dimensions, StatusBar, Image, TouchableOpacity, FlatList} from 'react-native';
 import CheckBox from 'react-native-check-box';
+import SwipeableView from 'react-native-swipeable-view';
 
 import {Item, Store} from './';
 
@@ -12,6 +13,19 @@ export const RenderDetails = ({item, storeIndex, allSelected, onPress, onStoreSe
 	useEffect(() => {
 		setstoreitemselected(allSelected)
 	}, [allSelected])
+
+	const DeleteButton = ({onPress}) => {
+		return (
+		  <>
+			<TouchableOpacity
+			  onPress={onPress}
+			  activeOpacity={1}
+			  style={{flex: 1, backgroundColor: '#F6841F', alignItems: 'center', justifyContent: 'center'}}>
+			  <Text style={{fontSize: 14, color: '#fff'}}>Delete</Text>
+			</TouchableOpacity>
+		  </>
+		);
+	};
 
 	return (
 		<>
@@ -28,20 +42,36 @@ export const RenderDetails = ({item, storeIndex, allSelected, onPress, onStoreSe
 				setUncheckedItems = {setUncheckedItems}
 			/>
 			{item && item.cart.length > 0 && item.cart.map((data, i) => (
-				<Item
-					key={i}
-					index = {i}
-					storeIndex = {storeIndex}
-					state={storeitemselected}
-					data={data}
-					onSelect={(raw) => {
-						onItemSelect(raw)
-						// setstoreitemselected(!storeitemselected)						
-					}}
-					item = {item}
-					uncheckedItems = {uncheckedItems}
-					setstoreitemselected = {setstoreitemselected}
-				/>
+				<SwipeableView
+				btnsArray={[
+				  {
+					text: 'Delete',
+					component: (
+					  <DeleteButton
+						onPress={() => {
+						//   updateMyFavorites("delete", {shop: item.shop, item: raw})
+						//   setMessageModalShown(true);
+							console.log('delete')
+						}}
+					  />
+					),
+				  },
+				]}>
+					<Item
+						key={i}
+						index = {i}
+						storeIndex = {storeIndex}
+						state={storeitemselected}
+						data={data}
+						onSelect={(raw) => {
+							onItemSelect(raw)
+							// setstoreitemselected(!storeitemselected)						
+						}}
+						item = {item}
+						uncheckedItems = {uncheckedItems}
+						setstoreitemselected = {setstoreitemselected}
+					/>
+				</SwipeableView>
 			))}
 			{/* <View style={{height: 8, backgroundColor: '#F7F7FA'}} /> */}
 		</>

@@ -69,42 +69,44 @@ const Component = ({ myCart, createMyCartSession,}) => {
   }, []);
 
   let AnimatedHeaderValue = new Animated.Value(0);
+  const animatedHeaderValueRef = useRef(AnimatedHeaderValue)
+
   const Header_Max_Height = 120;
   const Header_Min_Height = 90;
 
-  const animateHeaderOpacity = AnimatedHeaderValue.interpolate({
+  const animateHeaderOpacity = animatedHeaderValueRef.current.interpolate({
     inputRange: [0, Header_Max_Height - Header_Min_Height],
     outputRange: [1, 0],
     extrapolate: 'clamp'
   })
 
-  const animateHeaderHeight = AnimatedHeaderValue.interpolate({
+  const animateHeaderHeight = animatedHeaderValueRef.current.interpolate({
     inputRange: [0, Header_Max_Height - Header_Min_Height],
     outputRange: [ Header_Max_Height, Header_Min_Height],
     extrapolate: 'clamp'
   })
 
-  const top = AnimatedHeaderValue.interpolate({
+  const top = animatedHeaderValueRef.current.interpolate({
     inputRange: [0, Header_Max_Height - Header_Min_Height],
     outputRange: [0, -16],
     // extrapolateLeft: Extrapolate.CLAMP
     extrapolate: 'clamp'
   })
 
-  const translatey = AnimatedHeaderValue.interpolate({
+  const translatey = animatedHeaderValueRef.current.interpolate({
     inputRange: [0, Header_Max_Height - Header_Min_Height],
     outputRange: [-20, -50],
     // extrapolateLeft: Extrapolate.CLAMP
     extrapolateRight: Extrapolate.CLAMP
   })
-  const translateWidth = AnimatedHeaderValue.interpolate({
+  const translateWidth = animatedHeaderValueRef.current.interpolate({
     inputRange: [0, Header_Max_Height - Header_Min_Height],
     outputRange: [SCREEN_WIDTH * .92, SCREEN_WIDTH * .85],
     extrapolate: 'clamp'
     // extrapolateLeft: Extrapolate.CLAMP
     // extrapolateRight: Extrapolate.CLAMP
   })
-  const translateLeft = AnimatedHeaderValue.interpolate({
+  const translateLeft = animatedHeaderValueRef.current.interpolate({
     inputRange: [0, Header_Max_Height - Header_Min_Height],
     outputRange: [SCREEN_WIDTH * .04,  SCREEN_WIDTH * .099],
     // extrapolateLeft: Extrapolate.CLAMP
