@@ -6,7 +6,8 @@ import {useSelector} from 'react-redux';
 import {COLOR, FONT, FONT_SIZE} from '../../../../../../res/variables';
 import {Card} from '../../../../../Components'
 import CustomIcon from './.../../../../../../../Components/Icons';
-import {banner, userIcon} from '../../../../../assets';
+import {banner, userIcon, placeholder} from '../../../../../assets';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const testData = [
   {id: 1, full_name: 'Cloud Panda', contact_number: '09050000000',
@@ -31,6 +32,13 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
     setProfileImage(user.avatarThumbnail)
     setConNo(session?.user.username)
     setAddress(user.address)
+
+    AsyncStorage.getItem("ToktokMallUser").then((raw) => {
+      let data = JSON.parse(raw)
+      if(data.address){
+        setAddress(data.address)
+      }
+    })
   })
 
   return (
@@ -126,7 +134,8 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
                 <Text style={{fontSize: 12}}>Favorites</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => navigation.navigate("ToktokMallMyFollowing", {tab: 1})} style={{flex: 2,  alignItems: 'center' , justifyContent: 'center'}}>
-                <CustomIcon.MCIcon name="store" size={30} color={COLOR.ORANGE} />
+                <CustomIcon.AIcon name="home" size={30} color={COLOR.ORANGE} />
+                {/* <Image style={{width: 26, height: 24, resizeMode: 'cover'}} source={storeIcon} /> */}
                 <Text style={{fontSize: 12}}>Following</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => navigation.navigate("ToktokMallMyVouchers", {tab: 1})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>

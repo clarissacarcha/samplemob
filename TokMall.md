@@ -16,3 +16,15 @@
     2. Image source provider
 
 # Needed Global Components
+
+function FormatMapper(data) {
+    let animals = data.filter( (value, index, self) => self.findIndex((x) => x.name == value.name) === index)
+    let result = animals.map((val, index) => {
+      return {
+        id: val.id,
+        name: val.name,
+        actions: data.filter(x => x.name == val.name)
+      }
+    })
+    return result
+  }

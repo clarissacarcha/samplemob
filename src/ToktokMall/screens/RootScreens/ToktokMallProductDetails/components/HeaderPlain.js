@@ -15,7 +15,7 @@ export const HeaderPlain = ({value, animatedValue, cartItems }) => {
   const navigation = useNavigation()
   const HelpTooltipRef = useRef(null)
 
-  const translateOpacity = animatedValue.interpolate({
+  const translateOpacity = animatedValue.current.interpolate({
     inputRange: [250, 270],
     outputRange: [0,  1],
     // extrapolateLeft: Extrapolate.CLAMP

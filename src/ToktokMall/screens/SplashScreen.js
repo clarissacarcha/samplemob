@@ -78,7 +78,7 @@ const Splash = ({ createMyCartSession, createNotificationsSession}) => {
       console.log(err)
       // authUser()
     }
-	})
+	})  
 
   const RegisterUser = async (signature) => {
 

@@ -32,7 +32,9 @@ import Animated, {interpolate, Extrapolate, useCode, set, greaterThan} from 'rea
 
 const Component =  ({
   navigation,
-  createMyCartSession, myCart, route
+  createMyFavorites,
+  createMyCartSession,
+  myCart, route
 }) => {
 
   const [product, setProduct] = useState({})
@@ -52,7 +54,8 @@ const Component =  ({
   const [selectedVariation, setSelectedVariation] = useState('')
   const [cartItems, setCartItems] = useState(0)
 
-  let AnimatedHeaderValue = new Animated.Value(0);
+  let AnimatedHeaderValue = new Animated.Value(0)
+  const animatedHeaderValueRef = useRef(AnimatedHeaderValue)
 
   const HandleOnScroll = (r) => {
     let ypos = r.nativeEvent.contentOffset.y
@@ -121,19 +124,10 @@ const Component =  ({
     setMessageModalShown(true)
   }
 
-  const something = AnimatedHeaderValue.interpolate({
-    inputRange: [0, 150],
-    outputRange: [0,  1],
-    // extrapolateLeft: Extrapolate.CLAMP
-    extrapolate: 'clamp'
-  })
-
-  const something2 = AnimatedHeaderValue.interpolate({
-    inputRange: [0, 150],
-    outputRange: [1,  0],
-    // extrapolateLeft: Extrapolate.CLAMP
-    extrapolate: 'clamp'
-  })
+  const onScroll = Animated.event(
+    [{nativeEvent: {contentOffset: {y: AnimatedHeaderValue}}}],
+    {useNativeDriver: false}
+  )
 
   const CountCartItems = () => {
     // return myCart.length
@@ -154,6 +148,16 @@ const Component =  ({
     getProductDetails()
     setCartItems(CountCartItems)
   }, [])  
+
+  if(error) {
+    return (
+      <>
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <Text>Something went wrong</Text>
+        </View>
+      </>
+    )
+  }
 
   if(loading) {
     return (
@@ -176,23 +180,25 @@ const Component =  ({
       
       {/* {scrolling ? <HeaderPlain /> : <HeaderTransparent />} */}
       {/* PLAIN HEADER*/}
-      <HeaderPlain animatedValue={AnimatedHeaderValue} cartItems={cartItems} />
+      <HeaderPlain animatedValue={animatedHeaderValueRef} cartItems={cartItems} />
 
       {/* TRANSPARENT HEADER*/}
-      <HeaderTransparent animatedValue={AnimatedHeaderValue} cartItems={cartItems} />
+      <HeaderTransparent animatedValue={animatedHeaderValueRef} cartItems={cartItems} />
 
       {/* <Animated.Text style = {[{position: 'absolute', zIndex: 1}, {opacity: something}]}>testing</Animated.Text>
       <Animated.Text style = {[{position: 'absolute', zIndex: 1}, {opacity: something2}]}>gnitset</Animated.Text> */}
       <Animated.ScrollView
         // onScroll={HandleOnScroll}
         scrollEventThrottle = {270}
-        onScroll = {
-          Animated.event(
-            [{nativeEvent: {contentOffset: {y: AnimatedHeaderValue}}}],
-            {useNativeDriver: false}
-          )
-        }
+        // onScroll = {
+        //   Animated.event(
+        //     [{nativeEvent: {contentOffset: {y: AnimatedHeaderValue}}}],
+        //     {useNativeDriver: false}
+        //   )
+        // }
+        onScroll={onScroll}
         showsVerticalScrollIndicator={false}
+        {...{onScroll}}
 
       >
         <ProductCarousel 
@@ -274,6 +280,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   createMyCartSession: (action, payload) => dispatch({type: 'CREATE_MY_CART_SESSION', action,  payload}),
+  createMyFavorites: (action, payload) => dispatch({type: 'TOKTOK_MY_FOLLOWING', action,  payload}),
 });
 
 export const ToktokMallProductDetails = connect(mapStateToProps, mapDispatchToProps)(Component);
