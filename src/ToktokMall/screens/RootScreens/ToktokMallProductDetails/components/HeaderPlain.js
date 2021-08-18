@@ -10,7 +10,7 @@ import { FONT } from '../../../../../res/variables';
 
 import Animated, {interpolate, Extrapolate, useCode, set} from 'react-native-reanimated'
 
-export const HeaderPlain = ({value, animatedValue, cartItems }) => {
+export const HeaderPlain = ({value, animatedValue, cartItems, itemName }) => {
 
   const navigation = useNavigation()
   const HelpTooltipRef = useRef(null)
@@ -30,7 +30,7 @@ export const HeaderPlain = ({value, animatedValue, cartItems }) => {
           <CustomIcon.MCIcon name="chevron-left" color="#F6841F" size={28}  onPress={navigation.goBack}/>
         </View>
         <View style={{flex: 8, justifyContent: 'center'}}>
-          <Text numberOfLines={1} style={{fontSize: 18}}>Improved Copper Mask 2.0 Bla..</Text>
+          <Text numberOfLines={1} style={{fontSize: 18}}>{itemName}</Text>
         </View>
         <View style={{flex: 3, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around'}}>
           <View style={{flex: 0.5}}></View>

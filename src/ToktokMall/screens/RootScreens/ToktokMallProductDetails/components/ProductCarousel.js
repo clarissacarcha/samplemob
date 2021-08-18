@@ -1,18 +1,25 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {View, Text, ImageBackground, Image, StyleSheet, Platform, Dimensions} from 'react-native';
-import Carousel, { Pagination, ParallaxImage } from 'react-native-snap-carousel';
+import {View, Text, ImageBackground,  StyleSheet, Platform, Dimensions, Image} from 'react-native';
+import Carousel, { Pagination, ParallaxImage,  } from 'react-native-snap-carousel';
 import CustomIcon from '../../../../Components/Icons';
 import {placeholder} from '../../../../assets';
 import { FONT, COLOR } from '../../../../../res/variables';
+import FastImage from 'react-native-fast-image'
+
+import {coppermask} from '../../../../assets';
+import {Image as RNEImage} from 'react-native-elements'; 
 import Spinner from 'react-native-spinkit';
 
 const { width: screenWidth } = Dimensions.get('window')
 const HEIGHT = 250
 
-export const ProductCarousel = ({data, isOutOfStock, isLoading, setIsLoading}) => {
+export const ProductCarousel = ({data, isOutOfStock, isLoading, setIsLoading, firstImage, loading, passedParams}) => {
 
   const [activeSlide, setActiveSlide] = useState(0)
   const [entries, setEntries] = useState([1, 2, 3, 4, 5])
+  const [imageLink, setImageLink] =useState('')
+  const [hasSwiped, sethasSwiped] = useState(false)
+  
 
   const renderItem = ({item, index}, parallaxProps) => {
 
@@ -29,19 +36,33 @@ export const ProductCarousel = ({data, isOutOfStock, isLoading, setIsLoading}) =
             <Text style={{fontFamily: FONT.BOLD, fontSize: 18, color: "#fff"}}>OUT OF STOCK</Text>
           </View>
         </View>}
-           <ParallaxImage
-           // source={{uri: "https://cdn.searchenginejournal.com/wp-content/uploads/2019/04/shutterstock_456779230.png"}}
-           source={getImage()}
-           onLoadEnd = {() => {setIsLoading(false)}}
-           containerStyle={[styles.pxImageContainerStyle, isLoading ? {backgroundColor: 'rgba(0, 0, 0, 0.25)'}: null]}
-           style={{
-             ...StyleSheet.absoluteFillObject,
-             resizeMode: 'stretch'
-           }}
-           parallaxFactor={0.05}
-           {...parallaxProps}
-           showSpinner = {false}
-         />       
+            { loading && firstImage != '' ? <FastImage
+              source={ {
+                uri: firstImage,
+                priority: FastImage.priority.high
+              } }
+              resizeMode = {FastImage.resizeMode.stretch}
+              style = {{height: 250}}
+              // source = {{uri: item.filename}}
+              //  onLoadEnd = {() => {setIsLoading(false)}}
+              // containerStyle={[styles.pxImageContainerStyle
+                // isLoading ? {backgroundColor: 'rgba(0, 0, 0, 0.25)'}: nullresizeMode: 'stretch'
+              // ]}
+              // style={{
+              //   ...StyleSheet.absoluteFillObject,
+                
+              // }}
+          /> : 
+          <FastImage 
+            source={ {
+              uri: item.filename,
+              priority: FastImage.priority.high
+            } }
+            resizeMode = {FastImage.resizeMode.stretch}
+            style = {{height: 250}}
+          
+          /> }
+          
       </View>
     )
   }
@@ -49,48 +70,44 @@ export const ProductCarousel = ({data, isOutOfStock, isLoading, setIsLoading}) =
   return (
     <View style={{paddingHorizontal: 0, paddingTop: 0, height: HEIGHT}}>
       <View style={{height: 0}} />
-      <Carousel
-        data={data}
-        renderItem={renderItem}
-        onSnapToItem={(index) => setActiveSlide(index) }
-        sliderWidth={Dimensions.get("screen").width}
-        itemWidth={Dimensions.get("screen").width}
-        // autoplay={true}
-        // autoplayDelay={700}
-        hasParallaxImages={true}
-        onScrollEndDrag = {() => {setIsLoading(true)}}
-      />
-      <Spinner 
-        isVisible = {isLoading}
-        type = 'Circle'
-        style = {{ position: 'absolute', top: HEIGHT / 2, left: screenWidth / 2.2}}
-        color = {COLOR.ORANGE}
-        size = {50}
-      />
-      <Pagination
-        dotsLength={data.length}
-        activeDotIndex={activeSlide}
-        renderDots={(activeIndex) => {
-          return (            
-            <View style={{width: '100%', alignContent: 'center', alignSelf: 'center'}}>
-              <View style={{width: '20%', marginLeft: '40%', flexDirection: 'row', alignItems: 'center'}}>
-                {data.map((d, i) => 
-                <View style={{flex: 1, paddingHorizontal: 3}}>
-                  <CustomIcon.MCIcon name={i == activeIndex ? "circle" : "circle-outline"} color="#F6841F" size={6} />
-                </View>)}
-              </View>
-              <Text style={{fontSize: 9, alignSelf: 'center', textAlign: 'center'}}>{activeIndex + 1}/{data.length}</Text>
-            </View>
-          )
-        }}
-        containerStyle={{
-          position: 'absolute',
-          backgroundColor: 'transparent',
-          bottom: -40,
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}        
-      />
+        <Carousel
+          data={loading ? [passedParams] : data}
+          renderItem={renderItem}
+          onSnapToItem={(index) => {setActiveSlide(index), sethasSwiped(false)} }
+          sliderWidth={Dimensions.get("screen").width}
+          itemWidth={Dimensions.get("screen").width}
+          // autoplay={true}
+          // autoplayDelay={700}
+          hasParallaxImages={true}
+          onScrollEndDrag = {() => {setIsLoading(true)}}
+        />
+      
+        { loading ? <></>:
+          <Pagination
+            dotsLength={data.length}
+            activeDotIndex={activeSlide}
+            renderDots={(activeIndex) => {
+              return (            
+                <View style={{width: '100%', alignContent: 'center', alignSelf: 'center'}}>
+                  <View style={{width: '20%', marginLeft: '40%', flexDirection: 'row', alignItems: 'center'}}>
+                    {data.map((d, i) => 
+                    <View style={{flex: 1, paddingHorizontal: 3}}>
+                      <CustomIcon.MCIcon name={i == activeIndex ? "circle" : "circle-outline"} color="#F6841F" size={6} />
+                    </View>)}
+                  </View>
+                  <Text style={{fontSize: 9, alignSelf: 'center', textAlign: 'center'}}>{activeIndex + 1}/{data.length}</Text>
+                </View>
+              )
+            }}
+            containerStyle={{
+              position: 'absolute',
+              backgroundColor: 'transparent',
+              bottom: -40,
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}        
+          />
+        }
     </View>
   )
 

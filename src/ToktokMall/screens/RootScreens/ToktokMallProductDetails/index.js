@@ -25,7 +25,8 @@ import {
   RenderStore, 
   RenderSuggestions,
 
-  VariationBottomSheet
+  VariationBottomSheet,
+  LoadingOverlay
 } from './components'
 
 import Animated, {interpolate, Extrapolate, useCode, set, greaterThan} from 'react-native-reanimated'
@@ -147,6 +148,7 @@ const Component =  ({
   useEffect(() => {
     getProductDetails()
     setCartItems(CountCartItems)
+    console.log('dataaaaaaaaaaaaaaa', route.params.itemname)
   }, [])  
 
   if(error) {
@@ -159,43 +161,31 @@ const Component =  ({
     )
   }
 
-  if(loading) {
-    return (
-      <>
-        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-          <Spinner 
-            isVisible={loading}
-            type='Circle'
-            color={"#F6841F"}
-            size={35}
-          />
-        </View>
-      </>
-    )
-  }
+  // if(loading) {
+  //   return (
+  //     <>
+  //       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+  //         <Spinner 
+  //           isVisible={loading}
+  //           type='Circle'
+  //           color={"#F6841F"}
+  //           size={35}
+  //         />
+  //       </View>
+  //     </>
+  //   )
+  // }
 
   return (
     <>
     <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
       
       {/* {scrolling ? <HeaderPlain /> : <HeaderTransparent />} */}
-      {/* PLAIN HEADER*/}
-      <HeaderPlain animatedValue={animatedHeaderValueRef} cartItems={cartItems} />
-
-      {/* TRANSPARENT HEADER*/}
-      <HeaderTransparent animatedValue={animatedHeaderValueRef} cartItems={cartItems} />
-
-      {/* <Animated.Text style = {[{position: 'absolute', zIndex: 1}, {opacity: something}]}>testing</Animated.Text>
-      <Animated.Text style = {[{position: 'absolute', zIndex: 1}, {opacity: something2}]}>gnitset</Animated.Text> */}
+      { loading ? <></> :  <HeaderPlain animatedValue={animatedHeaderValueRef} cartItems={cartItems} itemName = {route.params.itemname} /> }
+      { loading ? <></> :  <HeaderTransparent animatedValue={animatedHeaderValueRef} cartItems={cartItems} /> }
+      <LoadingOverlay  isVisible = {loading} />
       <Animated.ScrollView
-        // onScroll={HandleOnScroll}
         scrollEventThrottle = {270}
-        // onScroll = {
-        //   Animated.event(
-        //     [{nativeEvent: {contentOffset: {y: AnimatedHeaderValue}}}],
-        //     {useNativeDriver: false}
-        //   )
-        // }
         onScroll={onScroll}
         showsVerticalScrollIndicator={false}
         {...{onScroll}}
@@ -206,44 +196,55 @@ const Component =  ({
           isOutOfStock={isOutOfStock} 
           isLoading={isLoading} 
           setIsLoading={setIsLoading} 
+          loading = {loading}
+          firstImage = {route.params.images.length == 0 ? '' : route.params.images[0].filename}
+          passedParams = {route.params}
         />
-        <RenderProduct
-          data={product} 
-          shop={store} 
-          animatedValue = {AnimatedHeaderValue}
-          onOpenVariations={() => {
-            setVariationOptionType(0)
-            varBottomSheetRef.current.expand()
-          }}
-        />
-        <RenderStore 
-          data={store} 
-        />
-        <RenderDescription 
-          data={product} 
-        />
-        <RenderReviews />
-        <RenderSuggestions data={relevantProducts || []} />
-        <View style={{height: 60}} />
+        { loading ? 
+          <></>
+          :
+          <View>
+            <RenderProduct
+              data={product} 
+              shop={store} 
+              animatedValue = {AnimatedHeaderValue}
+              onOpenVariations={() => {
+                setVariationOptionType(0)
+                varBottomSheetRef.current.expand()
+              }}
+            />
+            <RenderStore 
+              data={store} 
+            />
+            <RenderDescription 
+              data={product} 
+            />
+            <RenderReviews />
+            <RenderSuggestions data={relevantProducts || []} />
+            <View style={{height: 60}} />
+          </View>
+        }
       </Animated.ScrollView>
 
-      <RenderFooter 
-        hideBuyNow={isOutOfStock}
-        onPressVisitStore={() => {
-          navigation.navigate("ToktokMallStore", store)
-        }}
-        onPressBuyNow={() => {
-          setVariationOptionType(2)
-          varBottomSheetRef.current.expand()
-        }}
-        onPressAddToCart={() => {
-          setVariationOptionType(1)
-          varBottomSheetRef.current.expand()
-        }}
-        onPressAddToFavorites={() => {
-          Toast.show("Added to favorites")
-        }}
-      />
+      { loading ? <></> :
+        <RenderFooter 
+          hideBuyNow={isOutOfStock}
+          onPressVisitStore={() => {
+            navigation.navigate("ToktokMallStore", store)
+          }}
+          onPressBuyNow={() => {
+            setVariationOptionType(2)
+            varBottomSheetRef.current.expand()
+          }}
+          onPressAddToCart={() => {
+            setVariationOptionType(1)
+            varBottomSheetRef.current.expand()
+          }}
+          onPressAddToFavorites={() => {
+            Toast.show("Added to favorites")
+          }}
+        />
+      }
 
       <VariationBottomSheet 
         ref={varBottomSheetRef} 

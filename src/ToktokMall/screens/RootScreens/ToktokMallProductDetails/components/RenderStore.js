@@ -16,6 +16,19 @@ export const RenderStore = ({data}) => {
     else return clothfacemask
   }
 
+  const margin = () => {
+    let x = parseInt(data.totalProducts)
+    if(x < 9){
+      return 18
+    }else if (x < 99){
+      return 15
+    }
+    else {
+      return 8
+    }
+    
+  }
+
 	return (
 		<>
 			<View style={{paddingVertical: 16, paddingHorizontal: 16}}>
@@ -42,7 +55,7 @@ export const RenderStore = ({data}) => {
             <View style={{width: 2, height: 20, backgroundColor: '#E9E9E9'}} />
           </View>
           <View style={{flex: 3, alignItems: 'flex-start'}}>
-            <Text style={{fontSize: 18, color: "#F6841F", marginLeft: 8}}>{data?.totalProducts || 0}</Text>
+            <Text style={{fontSize: 18, color: "#F6841F", marginLeft: margin(),}}>{data?.totalProducts || 0}</Text>
             <Text>Products</Text>
           </View>
         </View>
