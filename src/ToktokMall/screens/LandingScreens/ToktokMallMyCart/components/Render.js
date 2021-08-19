@@ -8,6 +8,8 @@ export const RenderDetails = ({item, storeIndex, allSelected, onPress, onStoreSe
 
 	const [storeitemselected, setstoreitemselected] = useState(allSelected ? true : false)
 	const [uncheckedItems, setUncheckedItems] = useState([])
+	const [checkedItems, setCheckedItems] = useState([])	
+	const [itemsCheckIndex, setItemsCheckIndex] = useState(allSelected ? item.cart.length : 0)
 
 	useEffect(() => {
 		setstoreitemselected(allSelected)
@@ -35,7 +37,35 @@ export const RenderDetails = ({item, storeIndex, allSelected, onPress, onStoreSe
 					state={storeitemselected}
 					data={data}
 					onSelect={(raw) => {
+						
 						onItemSelect(raw)
+						
+						let currentCheckedItems = JSON.parse(JSON.stringify(checkedItems))
+
+						if(raw.checked){
+							
+							let exist = currentCheckedItems.findIndex( x => x.index == i)
+							if(exist == -1){
+								currentCheckedItems.push({index: i})
+								setCheckedItems(currentCheckedItems)
+
+								if(currentCheckedItems.length == item.cart.length){
+									setstoreitemselected(true)
+								}else{
+									setstoreitemselected(false)
+								}
+							}
+
+						}else{
+							
+							let index = currentCheckedItems.findIndex( x => x.index == i)
+							currentCheckedItems.splice(index, 1)
+							setCheckedItems(currentCheckedItems)
+							if(currentCheckedItems.length == 1){
+								setstoreitemselected(false)
+							}
+
+						}
 						// setstoreitemselected(!storeitemselected)						
 					}}
 					item = {item}

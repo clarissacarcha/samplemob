@@ -139,7 +139,7 @@ export default (state = INITIAL_STATE, action) => {
 
       AsyncStorage.setItem('TOKTOK_MY_FOLLOWING', JSON.stringify(newMyFollowing));
       return {...state, myFollowing: newMyFollowing};
-      case 'TOKTOK_MY_FAVORITES':
+    case 'TOKTOK_MY_FAVORITES':
       let newMyFavorites = state.myFavorites;
       if (action.action === 'add') {
         let shopExists = {
@@ -229,25 +229,49 @@ export default (state = INITIAL_STATE, action) => {
       } else if (action.action == 'push') {
         // console.log(action.payload)
         let myCartArr = state.myCart;
-        if (myCartArr.length == 0) {
-          myCartArr.push(action.payload);
-        } else {
-          let indexOf = myCartArr.findIndex((x) => x.store_id == action.payload.store_id);
-          if (indexOf >= 0) {
-            myCartArr[indexOf].cart.push(action.payload.cart[0]);
-          } else {
-            myCartArr.push(action.payload);
-          }
-        }
-        // myCartArr.push(action.payload);
+        myCartArr.push(action.payload)
         let stringyfiedCart = JSON.stringify(myCartArr);
         AsyncStorage.setItem('MyCart', stringyfiedCart);
         return {...state, myCart: myCartArr};
       } else if (action.action == 'removeItems') {
         return {...state, myCart: action.payload};
       } else if (action.action == 'clearAll') {
+        
         AsyncStorage.setItem('MyCart', '[]');
         return {...state, myCart: []};
+
+      } else if (action.action == 'DeleteMultiple') {
+
+        let myCartArr = state.myCart
+        action.payload.map((item, i) => {
+          let index = myCartArr.findIndex( a => a.item_id == item.item_id)
+          if(index > -1){
+            myCartArr.splice(index, 1)
+          }
+        })
+        AsyncStorage.setItem('MyCart', JSON.stringify(myCartArr));
+        return {...state, myCart: myCartArr};
+
+      } else if (action.action == 'DeleteSingle') {
+
+        let myCartArr = state.myCart
+        let index = myCartArr.findIndex( a => a.item_id == action.payload.item_id)
+        if(index > -1){
+          myCartArr.splice(index, 1)
+        }
+        AsyncStorage.setItem('MyCart', JSON.stringify(myCartArr));
+        return {...state, myCart: myCartArr};
+
+      } else if (action.action == 'UpdateQuantity') {
+
+        let myCartArr = state.myCart
+        let index = myCartArr.findIndex( a => a.item_id == action.payload.item_id)
+        if(index > -1){
+          myCartArr[index].qty += action.payload.qty
+        }
+        AsyncStorage.setItem('MyCart', JSON.stringify(myCartArr));
+        return {...state, myCart: myCartArr};
+        
       }
     case 'CREATE_NOTIFICATIONS_SESSION':
       if (action.action == 'set') {
