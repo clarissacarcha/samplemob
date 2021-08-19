@@ -17,7 +17,9 @@ export const Item = ({
   storeIndex, 
   uncheckedItems , 
   setstoreitemselected, 
-  storeitemselected}) => {
+  storeitemselected,
+  onChangeQuantity
+}) => {
 
   const [selected, setSelected] = useState(state)
   const [qty, setQty] = useState(data.qty)
@@ -25,7 +27,7 @@ export const Item = ({
   useEffect(() => {
     setSelected(state)
   }, [state])
-  
+
   const onPress = () => {
     // uncheckedItems.push(i)
     
@@ -99,20 +101,23 @@ export const Item = ({
             </View>
             <View style={{flexDirection: 'row'}}>
               <View style={{flex: 1}}>
-                <Text style={{color: "#9E9E9E", fontSize: 13}}>Variation: {data?.variation || "No variation"}</Text>
+                <Text style={{color: "#9E9E9E", fontSize: 13}}>Variation: {data?.variation || "None"}</Text>
               </View>
               {/* <View style={{flex: 0}}>
                 <Text style={{color: "#9E9E9E", fontSize: 13}}>Qty: {data?.qty}</Text>
               </View> */}
             </View>
             <View style={{flexDirection: 'row', marginTop: 7, alignItems: 'center', height: 40}}>
-              <Text style = {{fontFamily: FONT.REGULAR, fontSize: 14}}>Qty</Text>
+              <Text style = {{fontFamily: FONT.REGULAR, fontSize: 12}}>Qty</Text>
               <TouchableOpacity 
                 style = {{marginLeft: 10,  alignItems: 'center', justifyContent: 'center',  height: 25,width: 25,
                   borderWidth: 1, borderColor: '#F8F8F8'
                 }}
                 disabled = {qty == 1}
-                onPress = {() => {setQty(qty - 1)}}
+                onPress = {() => {
+                  onChangeQuantity(qty - 1, data?.item_id)
+                  setQty(qty - 1)                  
+                }}
               >
                 <AIcons
                   name = {'minus'}
@@ -130,7 +135,10 @@ export const Item = ({
                 style = {{alignItems: 'center', justifyContent: 'center',  height: 25,width: 25,
                   borderWidth: 1, borderColor: '#F8F8F8'
                 }}
-                onPress = {() => {setQty(qty + 1)}}
+                onPress = {() => {
+                  onChangeQuantity(qty + 1, data?.item_id)
+                  setQty(qty + 1)
+                }}
               >
                 <AIcons
                   name = {'plus'}

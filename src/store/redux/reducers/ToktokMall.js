@@ -267,7 +267,7 @@ export default (state = INITIAL_STATE, action) => {
         let myCartArr = state.myCart
         let index = myCartArr.findIndex( a => a.item_id == action.payload.item_id)
         if(index > -1){
-          myCartArr[index].qty += action.payload.qty
+          myCartArr[index].qty = action.payload.qty
         }
         AsyncStorage.setItem('MyCart', JSON.stringify(myCartArr));
         return {...state, myCart: myCartArr};

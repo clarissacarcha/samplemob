@@ -56,7 +56,7 @@ export const Shops = ({raw, shipping, retrieve}) => {
                 <Text style ={styles.itemSaleOff}>{parseFloat(item.originalPrice) > 0 ? FormatToText.currency(item.originalPrice) : ""}</Text>
               </View>
               <View style = {{flexDirection: 'row', justifyContent: 'space-between', marginTop: 10}}>
-                <Text style ={{ color: '#9E9E9E' }}>Variation: {item.variation || "No variation"}</Text>
+                <Text style ={{ color: '#9E9E9E' }}>Variation: {item.variation || "None"}</Text>
                 <Text style ={{ color: '#9E9E9E'}}>Qty: {item.qty}</Text>
               </View>
             </View>

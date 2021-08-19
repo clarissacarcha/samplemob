@@ -9,6 +9,7 @@ import Toast from 'react-native-simple-toast';
 import {MessageModal} from '../../../Components';
 import {DeleteFooter, CheckoutFooter, Item, Store, RenderDetails} from './components';
 import {MergeStoreProducts} from '../../../helpers';
+import { create } from 'lodash';
 
 const testdata = [
   {
@@ -169,7 +170,7 @@ const Component =  ({
     // getSubTotal();
 
     //Call to reset cart for debugging
-    createMyCartSession('set', [])
+    // createMyCartSession('set', [])
   }, []);
 
   const deleteMultipleItems = () => {
@@ -372,6 +373,10 @@ const Component =  ({
                     onItemDelete={(id) => {
                       deleteSingleItem(id)
                     }}
+                    onChangeQuantity={(qty, id) => {
+                      console.log("change quantity", id)
+                      createMyCartSession("UpdateQuantity", {item_id: id, qty: qty})
+                    }}
                   />
                   <View style={{height: 6, backgroundColor: '#F7F7FA'}} />
                 </>
@@ -407,6 +412,13 @@ const Component =  ({
             setIsVisible={(val) => setMessageModalShown(val)}  
             message={`${itemsToDelArr.length > 1 ? "Items" : "Item"} has been removed from your cart.`}
           />}
+
+          <MessageModal 
+            type="Success"
+            isVisible={true}
+            setIsVisible={(val) => setMessageModalShown(val)}  
+            message={`${itemsToDelArr.length > 1 ? "Items" : "Item"} has been removed from your cart.`}
+          />
             
         </View>
       </View>

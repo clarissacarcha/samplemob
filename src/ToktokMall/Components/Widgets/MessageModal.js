@@ -24,16 +24,16 @@ export const MessageModal = ({navigation, isVisible, setIsVisible, type, message
         visible={modalVisible}       
       >
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.25)'}}>
-          <View style={{backgroundColor: 'white', width: '80%', paddingVertical: 20, paddingHorizontal: 24, borderRadius: 5}}>
-            <View style={{flexDirection: 'row', paddingHorizontal: -15}}>
+          <View style={{backgroundColor: 'white', width: '80%', paddingVertical: 16, paddingHorizontal: 12, borderRadius: 5}}>
+            <View style={{flexDirection: 'row', paddingHorizontal: 0}}>
               <TouchableOpacity onPress={() => {
                 setModalVisible(!modalVisible)
                 setIsVisible(false)
-              }} style={{flex: 1, alignItems: 'flex-end', justifyContent: 'flex-end'}}>
+              }} style={{flex: 1, flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'flex-end'}}>
                 <CustomIcon.EvIcon name="close" size={24} color="#F6841F" />
               </TouchableOpacity>
             </View>
-            <View style={{alignItems: 'center', justifyContent: 'center'}}>              
+            <View style={{alignItems: 'center', justifyContent: 'center', paddingHorizontal: 12}}>              
               <View>
                 <Image 
                   source={successIcon}

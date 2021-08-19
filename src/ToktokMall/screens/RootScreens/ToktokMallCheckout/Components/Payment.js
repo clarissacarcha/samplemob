@@ -54,15 +54,15 @@ export const Payment = ({ list, payment, setPaymentMethod}) => {
         </TouchableOpacity>
         <TouchableOpacity 
           style ={{...styles.item, backgroundColor: payment == 'cod' ? '#FFEBBC' : 'white' }}
-          onPress = {() => {setPaymentMethod("cod")}}
+          onPress = {() => {setPaymentMethod("paypanda")}}
         >
           <View style ={{height: 20, width: 20, backgroundColor: '#F9B71A', borderRadius: 5, alignItems: 'center', justifyContent: 'center' }}>
             <Image source={require("../../../../assets/icons/cod.png")} style={{width: 18, height: 18, resizeMode: 'stretch'}} /> 
           </View>
-          <Text style = {{marginLeft: 10, fontWeight: 'bold', color: '#F6841F'}}>Cash on delivery</Text>
+          <Text style = {{marginLeft: 10, fontWeight: 'bold', color: '#F6841F'}}>Paypanda</Text>
         </TouchableOpacity>
 
-        {list && list.length > 0 && list.map((item, i) => {
+        {/* {list && list.length > 0 && list.map((item, i) => {
           return (
             <>
               <TouchableOpacity 
@@ -76,7 +76,7 @@ export const Payment = ({ list, payment, setPaymentMethod}) => {
               </TouchableOpacity>
             </>
           )
-        })}
+        })} */}
 
       </View>
       </>
