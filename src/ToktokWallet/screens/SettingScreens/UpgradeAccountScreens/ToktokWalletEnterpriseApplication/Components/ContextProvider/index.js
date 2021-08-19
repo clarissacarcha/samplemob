@@ -9,7 +9,7 @@ export const ContextProvider = ({children}) => {
 
     const [forms,setForms] = useState([
         {name: "Business Permit", file: null , filename: "" , errorMessage: ""},
-        {name: "DTI/SEC Certification of Registration", file: null, filename: "", errorMessage: ""},
+        {name: "DTI Certification of Registration or SEC", file: null, filename: "", errorMessage: ""},
         {name: "BIR 2302 Form", file: null , filename: "", errorMessage: ""},
         {name: "Barangay Permit", file: null, filename: "", errorMessage: ""},
     ])
