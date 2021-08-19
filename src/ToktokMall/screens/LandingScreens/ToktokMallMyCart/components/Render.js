@@ -9,6 +9,8 @@ export const RenderDetails = ({item, storeIndex, allSelected, onPress, onStoreSe
 
 	const [storeitemselected, setstoreitemselected] = useState(allSelected ? true : false)
 	const [uncheckedItems, setUncheckedItems] = useState([])
+	const [checkedItems, setCheckedItems] = useState([])	
+	const [itemsCheckIndex, setItemsCheckIndex] = useState(allSelected ? item.cart.length : 0)
 
 	useEffect(() => {
 		setstoreitemselected(allSelected)

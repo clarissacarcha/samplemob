@@ -89,22 +89,15 @@ const Component =  ({
 
   const cartObject = (input) => {
     return {
+      item_id: product.Id,
+      label: product.itemname,
+      originalPrice: product.compareAtPrice,
+      price: product.price,
+      variation: input.variation || "",
+      qty: input.qty || 1,
       store_id: store.id,
-      store: store.shopname,
-      cart: [
-        {
-          item_id: product.Id,
-          label: product.itemname,
-          originalPrice: product.compareAtPrice,
-          price: product.price,
-          variation: input.variation || "",
-          qty: input.qty || 1,
-          store_id: store.id,
-          store: store.shopname,
-          images: images
-        }
-      ],
-      delivery_fee: 80, date_range_from: 'Jul 20', date_range_to: 'Jul 25'
+      storeName: store.shopname,
+      images: images
     }
   }
 
@@ -133,7 +126,7 @@ const Component =  ({
   const CountCartItems = () => {
     // return myCart.length
     let total = 0
-    for(let x = 0; myCart.length >  x; x++){
+    for(let x = 0; myCart.length > x; x++){
       total = total + myCart[x].qty
     }
     if(total > 99){

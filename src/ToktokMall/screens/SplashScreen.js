@@ -19,6 +19,7 @@ import { GET_CUSTOMER_IF_EXIST } from '../../graphql/toktokmall/model';
 import {GET_SIGNATURE} from '../../graphql/toktokmall/virtual';
 import axios from 'axios';
 import moment from 'moment';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const imageWidth = Dimensions.get('screen').width;
 const imageHeight = Dimensions.get('screen').height;
@@ -165,6 +166,11 @@ const Splash = ({ createMyCartSession, createNotificationsSession}) => {
 				style={{height: '100%', width: '100%' }} 
 				resizeMode="cover" 
 			/>
+      
+      {error && 
+      <TouchableOpacity onPress={init} style={{position: 'absolute', bottom: '25%'}}>
+        <Text style={{fontSize: 9}}>Server error, reconnect?</Text>
+      </TouchableOpacity>}
     </View>
   );
 };
