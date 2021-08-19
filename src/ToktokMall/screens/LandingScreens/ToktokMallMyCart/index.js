@@ -169,7 +169,7 @@ const Component =  ({
     // getSubTotal();
 
     //Call to reset cart for debugging
-    // createMyCartSession('set', [])
+    createMyCartSession('set', [])
   }, []);
 
   const formatItemsForCheckout = () => {

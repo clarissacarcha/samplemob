@@ -134,9 +134,7 @@ const Component =  ({
     // return myCart.length
     let total = 0
     for(let x = 0; myCart.length >  x; x++){
-      for(let y=0; myCart[x].cart.length > y; y++){
-        total = total + 1
-      }
+      total = total + myCart[x].qty
     }
     if(total > 99){
       return "99+"
