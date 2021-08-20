@@ -1,5 +1,32 @@
 import {food1, image1, image2, image3, image4} from 'toktokfood/assets/images';
 
+export const availableTips = [
+  {
+    id: 1,
+    name: '₱ 20.00',
+  },
+  {
+    id: 2,
+    name: '₱ 50.00',
+  },
+  {
+    id: 3,
+    name: '₱ 100.00',
+  },
+  {
+    id: 4,
+    name: '₱ 150.00',
+  },
+  {
+    id: 5,
+    name: '₱ 200.00',
+  },
+  {
+    id: 6,
+    name: '₱ 250.00',
+  },
+];
+
 export const foodData = [
   {
     id: 1,
@@ -13,9 +40,9 @@ export const foodData = [
       {
         sizes: [
           {name: 'Short', price: '00.00'},
-          {name: 'Tall', price: '50.00'},
-          {name: 'Grande', price: '50.00'},
-          {name: 'Venti', price: '50.00'},
+          {name: 'Tall', price: '0.00'},
+          {name: 'Grande', price: '0.00'},
+          {name: 'Venti', price: '0.00'},
         ],
         add_ons: [
           {name: 'Extra Cream', price: '00.00'},
@@ -36,7 +63,7 @@ export const foodData = [
       {
         sizes: [
           {name: 'Short', price: '00.00'},
-          {name: 'Tall', price: '50.00'},
+          {name: 'Tall', price: '0.00'},
           {name: 'Grande', price: '50.00'},
           {name: 'Venti', price: '50.00'},
         ],
@@ -234,23 +261,8 @@ export const tabs = [
 export const notifications = [
   {
     id: 1,
-    title: 'Notification 1',
-    content: 'Lorem ipsum dolor sit amet',
-  },
-  {
-    id: 2,
-    title: 'Notification 2',
-    content: 'Lorem ipsum dolor sit amet',
-  },
-  {
-    id: 3,
-    title: 'Notification 3',
-    content: 'Lorem ipsum dolor sit amet',
-  },
-  {
-    id: 4,
-    title: 'Notification 4',
-    content: 'Lorem ipsum dolor sit amet',
+    title: 'Booking Confirmed Order',
+    content: 'Order #TOK60B5199E55295 booking has been confirmed.',
   },
 ];
 

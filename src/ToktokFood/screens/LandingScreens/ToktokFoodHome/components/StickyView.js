@@ -4,7 +4,7 @@ import {useSelector} from 'react-redux';
 import ReactNativeParallaxHeader from 'react-native-parallax-header';
 
 // Components
-import {CategoryList, RestaurantList} from './index';
+import {CategoryList, RestaurantList, AdvertisementSection} from './index';
 import HeaderTabs from 'toktokfood/components/HeaderTabs';
 
 // Utils
@@ -32,23 +32,31 @@ const tabs = [
 ];
 
 const StickyView = () => {
+
   const [offset, setOffset] = useState(0);
   const [activeTab, setActiveTab] = useState(tabs[0]);
-  const headerMaxHeight = Platform.OS === 'ios' ? moderateScale(130) : scale(170);
-  const headerMinHeight = Platform.OS === 'ios' ? verticalScale(43) : moderateScale(65);
-  const {categories} = useSelector((state) => state).toktokFood;
+  const headerMaxHeight = Platform.OS === 'ios' ? moderateScale(295) : moderateScale(325);
+  const headerMinHeight = Platform.OS === 'ios' ? verticalScale(50) : moderateScale(65);
+
   const {shops} = useSelector((state) => state).toktokFood;
+  const {categories} = useSelector((state) => state).toktokFood;
+  
 
-  const renderNavBar = () => (
-    <View style={[styles.headerWrapper, styles.navbarWrapper]}>
-      <HeaderTabs activeTab={activeTab} tabs={tabs} setActiveTab={setActiveTab} />
-    </View>
-  );
+  const RenderNavBar = () => {
+    return (
+      <View style={[styles.headerWrapper, styles.navbarWrapper]}>
+        <HeaderTabs activeTab={activeTab} tabs={tabs} setActiveTab={setActiveTab} />
+      </View>
+    );
+  };
 
-  const renderTitle = () => (
+  const RenderTitle = () => (
     <>
+      <View style={styles.adsContainer}>
+        <AdvertisementSection />
+      </View>
       <CategoryList horizontal={true} rightText="See all" />
-      {renderNavBar()}
+      <RenderNavBar />
     </>
   );
 
@@ -62,11 +70,11 @@ const StickyView = () => {
         headerMaxHeight={headerMaxHeight}
         headerTitleStyle={{zIndex: offset <= 50 ? 1 : -1}}
         extraScrollHeight={10}
-        title={renderTitle()}
+        title={<RenderTitle />}
         backgroundColor="transparent"
         navbarColor="whitesmoke"
         renderContent={() => <RestaurantList />}
-        renderNavBar={renderNavBar}
+        renderNavBar={() => <RenderNavBar />}
         containerStyle={styles.container}
         contentContainerStyle={styles.contentContainer}
         scrollViewProps={{
@@ -86,11 +94,15 @@ const styles = StyleSheet.create({
   contentContainer: {
     backgroundColor: 'whitesmoke',
     paddingBottom: Platform.OS === 'android' ? 10 : 30,
-    marginTop: Platform.OS === 'ios' ? verticalScale(25) : 0,
+    marginTop: Platform.OS === 'ios' ? moderateScale(20) : moderateScale(14),
   },
-  headerWrapper: {paddingHorizontal: 15, width: '100%'},
+  headerWrapper: {paddingHorizontal: 15, width: '100%', paddingTop: moderateScale(8)},
   navbarWrapper: {
-    marginTop: Platform.OS === 'ios' ? verticalScale(5) : verticalScale(15),
+    marginBottom: Platform.OS === 'ios' ? verticalScale(12) : verticalScale(8),
+  },
+  adsContainer: {
+    height: 130,
+    width: '100%',
   },
 });
 

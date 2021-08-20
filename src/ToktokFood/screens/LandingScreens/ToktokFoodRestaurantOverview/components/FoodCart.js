@@ -18,8 +18,8 @@ const FoodCart = () => {
     <>
       <View style={[styles.container, styles.cartBorder]}>
         <View style={styles.foodItemTotalWrapper}>
-          <Text style={styles.total}>1 item</Text>
-          <Text style={styles.total}>Total: 50</Text>
+          <Text style={styles.total}>0 item</Text>
+          <Text style={styles.total}>Total: 0</Text>
         </View>
         <TouchableOpacity style={styles.cartButton} onPress={() => onRestaurantNavigate()}>
           <Text style={styles.buttonText}>View Cart</Text>

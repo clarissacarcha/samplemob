@@ -31,7 +31,9 @@ const ToktokFoodAddressDetails = () => {
   const {location} = useSelector((state) => state.toktokFood);
 
   const onSearchMapNavigate = (c) => {
-    navigation.navigate('ToktokFoodMapSearch', {coordinates: c});
+    if (typeof c === 'object') {
+      navigation.replace('ToktokFoodMapSearch', {coordinates: c});
+    }
   };
 
   const reducer = (state, action) => {
@@ -52,7 +54,6 @@ const ToktokFoodAddressDetails = () => {
   const [addressList, setAddressList] = useState([]);
   const [sessionToken, setSessionToken] = useState(uuid.v4());
   const [state, dispatch] = useReducer(reducer, initialPickUpDetails);
-  const [showCompleteAddress, setShowCompleteAddress] = useState(false);
 
   const useIsMounted = () => {
     const isMountedRef = useRef(true);
@@ -137,7 +138,6 @@ const ToktokFoodAddressDetails = () => {
         },
       });
       onSearchMapNavigate({latitude, longitude});
-      setShowCompleteAddress(true);
       setSessionToken(uuid.v4());
     },
   });
@@ -213,7 +213,7 @@ const ToktokFoodAddressDetails = () => {
             data={addressList}
             renderItem={renderItem}
             keyExtractor={(item, index) => index}
-            keyboardShouldPersistTaps={'handled'}
+            keyboardShouldPersistTaps="handled"
           />
         </View>
       </View>

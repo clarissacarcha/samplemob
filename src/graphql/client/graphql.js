@@ -1,12 +1,5 @@
-import {ApolloLink, split, fromPromise} from 'apollo-link';
-import {
-  HOST_PORT,
-  PROTOCOL,
-  TOKTOK_FOOD_PROTOCOL,
-  TOKTOK_FOOD_PROTOCOL_HOST_PORT,
-  TOKTOK_WALLET_PROTOCOL,
-  TOKTOK_WALLET_PROTOCOL_HOST_PORT,
-} from '../../res/constants';
+import {ApolloLink, split} from 'apollo-link';
+import {HOST_PORT} from 'res/constants';
 import {onError} from 'apollo-link-error';
 import {ApolloClient} from 'apollo-client';
 import AsyncStorage from '@react-native-community/async-storage';

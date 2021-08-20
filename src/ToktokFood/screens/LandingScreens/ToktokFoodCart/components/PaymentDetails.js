@@ -4,6 +4,8 @@ import {View, Text, TouchableOpacity, Image} from 'react-native';
 import styles from '../styles';
 import {wallet} from 'toktokfood/assets/images';
 
+import {COLORS} from 'res/constants';
+
 // enum implementation on JavaScript
 const PAYMENT_TYPE = {
   CASH: 'Cash-on-Delivery',
@@ -11,7 +13,7 @@ const PAYMENT_TYPE = {
 };
 
 const PaymentDetails = () => {
-  const [paymentMethod, setPaymentMethod] = useState(PAYMENT_TYPE.TOKTOK_WALLET);
+  const [paymentMethod, setPaymentMethod] = useState(PAYMENT_TYPE.CASH);
 
   return (
     <>
@@ -21,8 +23,14 @@ const PaymentDetails = () => {
         </View>
         <View style={styles.paymentContainer}>
           <TouchableOpacity
+            disabled
             onPress={() => setPaymentMethod(PAYMENT_TYPE.TOKTOK_WALLET)}
-            style={[styles.tokwaButton, {borderBottomWidth: paymentMethod === PAYMENT_TYPE.TOKTOK_WALLET ? 6 : 1}]}>
+            style={[
+              styles.tokwaButton,
+              {backgroundColor: COLORS.LIGHT},
+              {borderColor: COLORS.LIGHT},
+              {borderBottomWidth: paymentMethod === PAYMENT_TYPE.TOKTOK_WALLET ? 6 : 1},
+            ]}>
             <Image style={styles.walletIcon} source={wallet} />
             <View style={styles.tokwaButtonTextWrapper}>
               <Text style={styles.toktokText}>toktok</Text>

@@ -5,13 +5,14 @@ import {useNavigation} from '@react-navigation/native';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 // Utils
-import {restaurants} from 'toktokfood/helper/strings';
 import {scale} from 'toktokfood/helper/scale';
+import {restaurants} from 'toktokfood/helper/strings';
 
 const RestaurantList = () => {
   const navigation = useNavigation();
 
   const onRestaurantNavigate = (item) => {
+    console.log(item);
     navigation.navigate('ToktokFoodRestaurantOverview', {item});
   };
 

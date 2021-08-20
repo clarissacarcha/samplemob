@@ -47,7 +47,7 @@ const ToktokFoodMapSearch = (props) => {
   };
 
   const closeMap = () => {
-    navigation.pop();
+    navigation.goBack();
   };
 
   return (
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
   mapViewContainer: {
     justifyContent: 'center',
     ...StyleSheet.absoluteFillObject,
-    height: '63%',
+    height: '47%',
   },
 
   mapMarker: {

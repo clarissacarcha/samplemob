@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Platform, StyleSheet, View} from 'react-native';
 
 // Components
@@ -12,15 +12,20 @@ import {useCategories, useUserLocation, useShops} from 'toktokfood/hooks';
 
 import {moderateScale, getStatusbarHeight} from 'toktokfood/helper/scale';
 
+import {useNavigation} from '@react-navigation/native';
+
 const CUSTOM_HEADER = {
   container: Platform.OS === 'android' ? moderateScale(150 + getStatusbarHeight) : moderateScale(145),
   bgImage: Platform.OS === 'android' ? moderateScale(115 + getStatusbarHeight) : moderateScale(125),
 };
 
 const ToktokFoodHome = () => {
-  useUserLocation(); // user location hook
-  useCategories(); // categories api
   useShops(); // shops api
+  useCategories(); // categories api
+  useUserLocation(); // user location hook
+
+  const navigation = useNavigation();
+
   return (
     <View style={styles.container}>
       <HeaderImageBackground customSize={CUSTOM_HEADER}>

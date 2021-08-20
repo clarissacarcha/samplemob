@@ -20,7 +20,7 @@ const ToktokFoodCategories = () => {
     setShowFilter(!showFilter);
   };
 
-  const renderFilter = () => (
+  const RenderFilter = () => (
     <TouchableOpacity onPress={handleFilter} style={styles.filterContainer}>
       <Text style={styles.filterText}>{filterSearch.title}</Text>
       <FIcon name="chevron-down" size={18} />
@@ -33,7 +33,7 @@ const ToktokFoodCategories = () => {
         <HeaderTitle />
         <HeaderSearchBox />
       </HeaderImageBackground>
-      {renderFilter()}
+      <RenderFilter />
       <CategoryList horizontal={false} />
 
       <ModalFilterSearch

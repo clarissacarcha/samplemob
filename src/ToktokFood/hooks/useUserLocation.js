@@ -14,26 +14,27 @@ export const useUserLocation = () => {
 
   useEffect(() => {
     // Get user initial location
-    getLocation().then(async (res) => {
-      if (res) {
+    getLocation()
+      .then(async (res) => {
+        if (res) {
+          // Do not spread address object from getFormattedAddress function and pass to payload
+          // if the initial state structure of reducer is not equal to getFormattedAddress result.
 
-        // Do not spread address object from getFormattedAddress function and pass to payload
-        // if the initial state structure of reducer is not equal to getFormattedAddress result.
+          // getFormattedAddress example object result:
+          // {"addressBreakdown": {"city": "", "country": "", "province": ""}, "formattedAddress": ""}
+          // redux reducer structure for tokfood location: location: {address: "", latitude: 0, longitude: 0, }
 
-        // getFormattedAddress example object result:
-        // {"addressBreakdown": {"city": "", "country": "", "province": ""}, "formattedAddress": ""}
-        // redux reducer structure for tokfood location: location: {address: "", latitude: 0, longitude: 0, } 
-
-        const {latitude, longitude} = res;
-        const address = await getFormattedAddress(latitude, longitude);
-        const payload = {
-          latitude,
-          longitude,
-          address: address.formattedAddress,
-        };
-        dispatch({type: 'SET_TOKTOKFOOD_LOCATION', payload: {...payload}});
-      }
-    });
+          const {latitude, longitude} = res;
+          const address = await getFormattedAddress(latitude, longitude);
+          const payload = {
+            latitude,
+            longitude,
+            address: address.formattedAddress,
+          };
+          dispatch({type: 'SET_TOKTOKFOOD_LOCATION', payload: {...payload}});
+        }
+      })
+      .catch(() => {});
   }, []);
 };
 
