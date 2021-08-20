@@ -412,13 +412,6 @@ const Component =  ({
             setIsVisible={(val) => setMessageModalShown(val)}  
             message={`${itemsToDelArr.length > 1 ? "Items" : "Item"} has been removed from your cart.`}
           />}
-
-          <MessageModal 
-            type="Success"
-            isVisible={true}
-            setIsVisible={(val) => setMessageModalShown(val)}  
-            message={`${itemsToDelArr.length > 1 ? "Items" : "Item"} has been removed from your cart.`}
-          />
             
         </View>
       </View>

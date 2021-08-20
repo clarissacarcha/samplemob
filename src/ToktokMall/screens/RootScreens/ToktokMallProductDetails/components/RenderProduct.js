@@ -63,7 +63,7 @@ const Component = ({data, onOpenVariations, animatedValue, shop, reduxActions: {
             <Text style={{color: "#F6841F", fontSize: 20}}><Price amount={data.price} /></Text>
           </View>
           <View style={{flex: 3, justifyContent: 'center'}}>
-            {data.compareAtPrice ? <Text style={{color: "#9E9E9E", textDecorationLine: 'line-through', fontSize: 14}}><Price amount={data.compareAtPrice} /></Text> : null}
+            {data.compareAtPrice != "0.00" ? <Text style={{color: "#9E9E9E", textDecorationLine: 'line-through', fontSize: 14}}><Price amount={data.compareAtPrice} /></Text> : null}
           </View>
         </View>
         <View style={{flexDirection: 'row', paddingTop: 8}}>
