@@ -28,7 +28,7 @@ export const MergeStoreProducts = (data) => {
   //and find all products from the data that is associated with the store
   let result = stores.map((store, index) => {    
     return {
-      store_id: store.id,
+      store_id: store.store_id,
       store: store.storeName,
       cart: data.filter(x => x.storeName == store.storeName),
       delivery_fee: 80, date_range_from: 'Jul 20', date_range_to: 'Jul 25'

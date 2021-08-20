@@ -53,7 +53,7 @@ export const Payment = ({ list, payment, setPaymentMethod}) => {
           </View>
         </TouchableOpacity>
         <TouchableOpacity 
-          style ={{...styles.item, backgroundColor: payment == 'cod' ? '#FFEBBC' : 'white' }}
+          style ={{...styles.item, backgroundColor: payment == 'paypanda' ? '#FFEBBC' : 'white' }}
           onPress = {() => {setPaymentMethod("paypanda")}}
         >
           <View style ={{height: 20, width: 20, backgroundColor: '#F9B71A', borderRadius: 5, alignItems: 'center', justifyContent: 'center' }}>
