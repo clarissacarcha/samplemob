@@ -80,7 +80,7 @@ const Component =  ({
         setRelevantProducts(response.getProductDetails.relevantProducts)
         if(response.getProductDetails.noOfStocks == 0) setisOutOfStock(true)
       }
-      console.log(response, route.params.Id)
+      // console.log(response, route.params.Id)
     },
     onError: (err) => {
       console.log(err)
@@ -139,7 +139,7 @@ const Component =  ({
   useEffect(() => {
     getProductDetails()
     setCartItems(CountCartItems)
-    console.log('dataaaaaaaaaaaaaaa', route.params.itemname)
+    // console.log('dataaaaaaaaaaaaaaa', route.params.itemname)
   }, [])  
 
   if(error) {

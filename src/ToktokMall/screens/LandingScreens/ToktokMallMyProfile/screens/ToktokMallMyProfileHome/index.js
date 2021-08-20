@@ -142,10 +142,10 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
                 {/* <Image style={{width: 26, height: 24, resizeMode: 'cover'}} source={storeIcon} /> */}
                 <Text style={{fontSize: 12}}>Following</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => navigation.navigate("ToktokMallMyVouchers", {tab: 1})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
+              {/* <TouchableOpacity onPress={() => navigation.navigate("ToktokMallMyVouchers", {tab: 1})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
                 <CustomIcon.MCIcon name="ticket-outline" size={30} color={COLOR.ORANGE} />
                 <Text style={{fontSize: 12}}>My Vouchers</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               <TouchableOpacity onPress={() => navigation.navigate("ToktokMallHelp", {tab: 1})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
                 <CustomIcon.FeIcon name="help-circle" size={30} color={COLOR.ORANGE} />
                 <Text style={{fontSize: 12}}>Help</Text>

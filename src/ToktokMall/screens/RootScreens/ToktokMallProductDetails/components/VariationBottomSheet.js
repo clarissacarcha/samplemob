@@ -19,8 +19,7 @@ const SampleVariations = [{
 }]
 
 export const VariationBottomSheet = forwardRef(({ item, image, onPressBuyNow, onPressAddToCart, type}, ref) => {
-  
-  const snapPoints = useMemo(() => [0, item?.variantSummary && item?.variantSummary.length > 0 ? 450 : 300], [item]);
+  const snapPoints = useMemo(() => [0, item?.variantSummary?.length != 0 ? 450 : 260], [item]);
   const [stock, setStock] = useState(item?.noOfStocks)
   const [qty, setQty] = useState(1)
   const [variation, setVariation] = useState("")
@@ -176,16 +175,16 @@ export const VariationBottomSheet = forwardRef(({ item, image, onPressBuyNow, on
         </View>
       </View>
 
-      <ScrollView style={{height: item?.variantSummary && item?.variantSummary.length > 0 ? 120 : 0}} showsVerticalScrollIndicator={false}>
-        {item?.variantSummary && 
-          item?.variantSummary.length > 0 && 
-          item?.variantSummary.map((variant, i) => {
-            let variantslist = variant?.variantList || ""
-            const variants = variantslist.split(",")
-            if(variants.length == 0 || variant.variantType == "") return null
-            return <RenderVariation type={variant.variantType} variants={variants} />
-        })}
-      </ScrollView>
+      {item?.variantSummary && 
+        item?.variantSummary.length > 0 && 
+        item?.variantSummary.map((variant, i) => {
+          let variantslist = variant?.variantList || ""
+          const variants = variantslist.split(",")
+          if(variants.length == 0 || variant.variantType == "") return null
+          return <ScrollView style={{height: 120}} showsVerticalScrollIndicator={false}>
+      <RenderVariation type={variant.variantType} variants={variants} />
+          </ScrollView>
+      })}
 
       <View style={{height: 2, backgroundColor: "#F7F7FA"}} />
       <View style={{paddingHorizontal: 16, paddingVertical: 16}}>
@@ -196,18 +195,18 @@ export const VariationBottomSheet = forwardRef(({ item, image, onPressBuyNow, on
           <View style={{flex: 1, flexDirection: 'row', alignItems: 'flex-end'}}>
             <View style={{flex: 2}}></View>
             <View style={{flex: 4, flexDirection: 'row'}}>
-              <TouchableOpacity onPress={() => {
+              <TouchableOpacity disabled={qty === 1} onPress={() => {
                 let increment = qty - 1
                 if(increment > 0) {
                   setQty(increment)
                 }
               }} style={{flex: 1.5, paddingHorizontal: 8, alignItems: 'center', justifyContent: 'center', borderWidth: 0.8, borderColor: "#F8F8F8"}}>
-                <CustomIcon.FA5Icon name="minus" size={14} color="#F6841F" />
+                <CustomIcon.FA5Icon name="minus" size={14} color={qty === 1 ? "#9E9E9E":"#F6841F"} />
               </TouchableOpacity>
               <View style={{flex: 2, paddingHorizontal: 14, alignItems: 'center', justifyContent: 'center', backgroundColor: '#F8F8F8'}}>
                 <Text style={{fontSize: 16}}>{stock >= 1 ? qty : 0}</Text>
               </View>
-              <TouchableOpacity onPress={() => {
+              <TouchableOpacity disabled={qty === stock} onPress={() => {
                 let increment = qty + 1
                 if(increment <= stock){
                   setQty(increment) 
@@ -215,14 +214,14 @@ export const VariationBottomSheet = forwardRef(({ item, image, onPressBuyNow, on
                   Toast.show("Not enought stocks")
                 }
               }} style={{flex: 1.5, paddingHorizontal: 8, alignItems: 'center', justifyContent: 'center', borderWidth: 0.8, borderColor: "#F8F8F8"}}>
-                <CustomIcon.FA5Icon name="plus" size={14} color="#F6841F" />
+                <CustomIcon.FA5Icon name="plus" size={14} color={qty === stock ? "#9E9E9E":"#F6841F"} />
               </TouchableOpacity>
             </View>
           </View>
         </View>
       </View>
 
-      {/* {item?.variantSummary && item?.variantSummary.length == 0 && <View style={{flex: 1, height: 30}} />} */}
+      {/* {item?.variantSummary && item?.variantSummary.length == 0 && <View style={{flex: 1, height: '15%'}} />} */}
 
       <View style={{height: 2, backgroundColor: "#F7F7FA", marginBottom: 8}} />
       <View style={{ flex: 1}}>

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, Image, FlatList, SectionList, ImageBackground, TouchableOpacity} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import Share from 'react-native-share';
@@ -13,7 +13,9 @@ import { connect } from 'react-redux';
 
 import { RenderStars, RenderVariations } from './subComponents';
 
-const Component = ({data, onOpenVariations, animatedValue, shop, reduxActions: {
+const Component = ({data, onOpenVariations, animatedValue, shop, reduxStates: {
+  myFavorites
+}, reduxActions: {
   updateMyFavorites
 }}) => {
 
@@ -23,6 +25,22 @@ const Component = ({data, onOpenVariations, animatedValue, shop, reduxActions: {
     outputRange: [1, 0],
     extrapolate: 'clamp'
   })
+
+  useEffect(() => {
+    if(myFavorites && data?.Id){
+      myFavorites.map(({shop: {id}, items}) => {
+        if(shop.id === id){
+          let temp = false
+          items.map(item => {
+            if(item.Id === data.Id){
+              temp = true
+            }
+          })
+          setFavorite(temp)
+        }
+      })
+    }
+  },[myFavorites, shop, data])
 
   const HandleShare = () => {
     let options = {
@@ -43,13 +61,9 @@ const Component = ({data, onOpenVariations, animatedValue, shop, reduxActions: {
       Toast.show('Added to Favorites')
       updateMyFavorites('add', {shop, item: data })
       setFavorite(true)
-    }else{
+    }else if(favorite){
       Toast.show('Removed to Favorites')
       updateMyFavorites('delete', {shop, item: data })
-      setFavorite(false)
-    }
-    if(favorite){
-      Toast.show('Removed to Favorites')
       setFavorite(false)
     }
   }
@@ -104,7 +118,7 @@ const Component = ({data, onOpenVariations, animatedValue, shop, reduxActions: {
 
 const mapStateToProps = (state) => ({
   reduxStates: {
-    myFavorities: state.toktokMall.myFavorities,
+    myFavorites: state.toktokMall.myFavorites,
   },
 });
 

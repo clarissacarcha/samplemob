@@ -82,7 +82,7 @@ const Item = ({data}) => {
            </View>
             <View style={{flexDirection: 'row', paddingVertical: 5}}>
               <View style={{flex: 2.5}}>
-                <Text style={{color: "#9E9E9E", fontSize: 13}}>Variation: {product?.variation || 'No variation'}</Text>
+                <Text style={{color: "#9E9E9E", fontSize: 13}}>Variation: {product?.variation || 'None'}</Text>
               </View>
               <View style={{flex: 1, flexDirection: 'row'}}>
                 <Text style={{color: "#9E9E9E", fontSize: 13}}>Qty: {data.quantity}</Text>
@@ -134,35 +134,38 @@ const Toggle = ({count, state, onPress}) => {
 }
 
 const testdata = [{
-  shop: {name: "Face Mask PH"},
-  items: [{
-    label: "Improved Copper Mask 2.0 White or Bronze",
+
+  shipping: {
+
+    shop: {shopname: "Face Mask PH"}
+    },
+  orderData: [{
+    itemname: "Improved Copper Mask 2.0 White or Bronze",
     originalPrice: 380,
-    price: 190,
+    totalAmount: 190,
     variation: "Black",
-    qty: 1,
-    image: ""
+    quantity: 1,
   }, {
-    label: "Improved Copper Mask 2.0 White or Bronze",
+    itemname: "Improved Copper Mask 2.0 White or Bronze",
     originalPrice: 380,
-    price: 190,
+    totalAmount: 190,
     variation: "White",
-    qty: 1,
-    image: ""
+    quantity: 1,
   }],
   datePlaced: "6-14-21",
   recieveDate: "Jun 15",
   orderNumber: "000X001",
   total: 460
 }, {
-  shop: {name: "The Apparel"},
-  items: [{
-    label: "Graphic Tees",
+  shipping: {
+  shop: {shopname: "The Apparel"}
+  },
+  orderData: [{
+    itemname: "Graphic Tees",
     originalPrice: 380,
-    price: 190,
+    totalAmount: 190,
     variation: "White, L",
-    qty: 1,
-    image: ""
+    quantity: 1,
   }],
   datePlaced: "6-27-21",
   recieveDate: "Jun 15",
@@ -188,7 +191,7 @@ export const Completed = ({id, email}) => {
     },
     onCompleted: (response) => {
       if(response.getCompletedOrders){
-        setData(response.getCompletedOrders)
+        setData(testdata)
       }
     },
     onError: (err) => {

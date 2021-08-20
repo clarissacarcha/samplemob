@@ -6,7 +6,6 @@ import {
   Image,
   Dimensions,
   ImageBackground,
-  AsyncStorage,
 } from 'react-native';
 import {connect} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
@@ -19,7 +18,8 @@ import { GET_CUSTOMER_IF_EXIST } from '../../graphql/toktokmall/model';
 import {GET_SIGNATURE} from '../../graphql/toktokmall/virtual';
 import axios from 'axios';
 import moment from 'moment';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import AsyncStorage from '@react-native-community/async-storage';
+
 
 const imageWidth = Dimensions.get('screen').width;
 const imageHeight = Dimensions.get('screen').height;
