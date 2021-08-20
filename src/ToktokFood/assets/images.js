@@ -28,6 +28,8 @@ export const success_ic = require('./images/prompts_icons/success.png');
 export const error_ic = require('./images/prompts_icons/error.png');
 export const warning_ic = require('./images/prompts_icons/warning.png');
 export const question_ic = require('./images/prompts_icons/question.png');
+export const floatingIcon = require('./images/floating-icon.png');
+
 
 // Test Banners
 export const starbucks = require('./images/sample_banners/starbucks.png');

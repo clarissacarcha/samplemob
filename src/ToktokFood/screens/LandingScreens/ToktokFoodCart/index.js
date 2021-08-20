@@ -9,7 +9,7 @@ import styles from './styles';
 import {ReceiverLocation, AlsoOrder, MyOrderList, OrderTotal, PaymentDetails, RiderNotes} from './components';
 
 // Utils
-import {moderateScale} from 'toktokfood/helper/scale';
+import {moderateScale, getStatusbarHeight} from 'toktokfood/helper/scale';
 
 const CUSTOM_HEADER = {
   container: Platform.OS === 'android' ? moderateScale(150 + getStatusbarHeight) : moderateScale(115),
