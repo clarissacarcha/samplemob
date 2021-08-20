@@ -9,7 +9,7 @@ import Toast from 'react-native-simple-toast';
 import { FONT } from '../../../../res/variables';
 import { Header, AdsCarousel, MessageModal } from '../../../Components';
 import CustomIcon from '../../../Components/Icons';
-import {ASAddToCart, ASClearCart} from '../../../helpers';
+import { MergeStoreProducts } from '../../../helpers';
 
 import {
 
@@ -104,7 +104,7 @@ const Component =  ({
   const onBuyNow = (input) => {
     navigation.push("ToktokMallCheckout", {
       type: "single",
-      data: [cartObject(input)],
+      data: MergeStoreProducts([cartObject(input)]),
       newCart: [],
       vouchers: [],
     })
