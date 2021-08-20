@@ -38,7 +38,7 @@ export default styles = StyleSheet.create({
   img: {
     height: 75,
     width: 78,
-    borderRadius: 12,
+    borderRadius: 7,
   },
   restaurantInfo: {
     paddingEnd: 8,

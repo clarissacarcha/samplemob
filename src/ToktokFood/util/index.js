@@ -4,7 +4,6 @@ import {MAPS_API_KEY} from 'res/constants';
 import {PermissionUtility} from '../../util';
 
 export class GeolocationUtility {
-  // Get coordinates
   static getCurrentLocation = async () => {
     try {
       const {granted, message} = await PermissionUtility.getLocationPermission();
@@ -29,8 +28,6 @@ export class GeolocationUtility {
       });
     } catch (error) {}
   };
-
-  // Get coordinates and formatted address
   static getCurrentAddress = () => {};
 }
 
@@ -52,15 +49,14 @@ const mapAddressComponentsToObject = (addressComponents) => {
 export const reverseGeocode = async ({latitude, longitude}) => {
   try {
     const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${MAPS_API_KEY}`;
-
     const result = await axios.get(url);
-    // console.log(JSON.stringify(result, null, 4));
     const addressBreakdown = mapAddressComponentsToObject(result.data.results[0].address_components);
+    console.log(addressBreakdown);
     return {
       formattedAddress: result.data.results[0].formatted_address,
       addressBreakdown,
     };
   } catch (error) {
-    console.log(error);
+    console.log('reverseGeocode(): ' + error);
   }
 };

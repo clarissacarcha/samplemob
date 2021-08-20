@@ -5,6 +5,8 @@ import {useNavigation} from '@react-navigation/native';
 // Assets
 import {allcuisines, drinks, dailydeals, fastfood} from 'toktokfood/assets/images';
 
+import {moderateScale} from 'toktokfood/helper/scale';
+
 const CategoryList = ({horizontal, rightText = ''}) => {
   const navigation = useNavigation();
   const data = [
@@ -18,21 +20,21 @@ const CategoryList = ({horizontal, rightText = ''}) => {
       category: 'Fast Food',
       image: fastfood,
     },
-    {
-      id: 3,
-      category: 'Daily Deals',
-      image: dailydeals,
-    },
-    {
-      id: 4,
-      category: 'All Cuisines',
-      image: allcuisines,
-    },
-    {
-      id: 5,
-      category: 'Promo',
-      image: drinks,
-    },
+    // {
+    //   id: 3,
+    //   category: 'Daily Deals',
+    //   image: dailydeals,
+    // },
+    // {
+    //   id: 4,
+    //   category: 'All Cuisines',
+    //   image: allcuisines,
+    // },
+    // {
+    //   id: 5,
+    //   category: 'Promo',
+    //   image: drinks,
+    // },
   ];
 
   const onNavigateCategories = () => {
@@ -52,12 +54,11 @@ const CategoryList = ({horizontal, rightText = ''}) => {
     <View style={styles.container}>
       <View style={styles.textContainer}>
         <Text style={styles.startText}>Categories</Text>
-        <TouchableOpacity onPress={onNavigateCategories}>
+        <TouchableOpacity onPress={() => onNavigateCategories()}>
           <Text style={styles.endText}>{rightText}</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.listContainer}>
-        {/* showsHorizontalScrollIndicator={false} added for Android */}
         <FlatList
           horizontal={horizontal}
           numColumns={!horizontal ? 4 : 0}
@@ -74,7 +75,7 @@ export default CategoryList;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 6,
+    width: '100%',
     paddingHorizontal: 15,
     flex: Platform.OS === 'android' ? 1 : 0,
   },
@@ -83,26 +84,26 @@ const styles = StyleSheet.create({
     width: 84,
   },
   listContainer: {
-    alignItems: 'center',
-    marginTop: 3,
+    marginTop: 8,
+    marginBottom: 4,
   },
   listItemContainer: {
     marginHorizontal: 5,
   },
   listItemVerticalContainer: {
     marginHorizontal: 5,
-    marginBottom: 10,
+    marginBottom: moderateScale(18),
   },
   listItemText: {
-    fontWeight: '500',
     fontSize: 13,
     marginTop: 5,
+    fontWeight: '500',
     textAlign: 'center',
   },
   endText: {
+    fontSize: 15,
     color: '#FFA700',
     fontWeight: '400',
-    fontSize: 15,
   },
   startText: {
     fontSize: 15,
@@ -110,7 +111,8 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     paddingHorizontal: 5,
+    marginVertical: moderateScale(8),
+    justifyContent: 'space-between',
   },
 });

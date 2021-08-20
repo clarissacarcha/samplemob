@@ -24,3 +24,19 @@ export const star = require('./images/star-orange.png');
 export const delivered = require('./images/delivered.png');
 export const pickedUp = require('./images/picked-up.png');
 export const wallet = require('./images/tokwallet.png');
+export const success_ic = require('./images/prompts_icons/success.png');
+export const error_ic = require('./images/prompts_icons/error.png');
+export const warning_ic = require('./images/prompts_icons/warning.png');
+export const question_ic = require('./images/prompts_icons/question.png');
+
+// Test Banners
+export const starbucks = require('./images/sample_banners/starbucks.png');
+export const starbucks2 = require('./images/sample_banners/starbucks2.png');
+export const yellow_cab = require('./images/sample_banners/yellow_cab.png');
+export const macao = require('./images/sample_banners/macao.png');
+export const siomai = require('./images/sample_banners/siomai.png');
+export const banner_1 = require('./images/sample_banners/banner_1.png');
+export const splash = require('./images/splash.png');
+
+// Test Rider
+export const rider1 = require('./images/riders/rider1.png');

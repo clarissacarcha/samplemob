@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useRef, useMemo} from 'react';
 import BottomSheet from '@gorhom/bottom-sheet';
 import TextTicker from 'react-native-text-ticker';
 import {View, Text, TextInput, TouchableOpacity, StyleSheet} from 'react-native';
@@ -13,14 +13,16 @@ const PickUpDetails = (props) => {
 
   const navigation = useNavigation();
 
+  const snapPoints = useMemo(() => ['50%', '95%'], []);
+
   return (
     <>
       <BottomSheet
         index={1}
         ref={useRef()}
-        snapPoints={[0, 300]}
-        enableHandlePanningGesture={false}
-        enableContentPanningGesture={false}
+        snapPoints={snapPoints}
+        enableHandlePanningGesture={true}
+        enableContentPanningGesture={true}
         backdropComponent={() => <></>}
         handleComponent={() => <View style={styles.cartBorder}></View>}>
         <View style={styles.sheet}>
@@ -50,7 +52,7 @@ const PickUpDetails = (props) => {
             />
           </View>
 
-          <TouchableOpacity onPress={() => navigation.popToTop()} style={styles.cartButton}>
+          <TouchableOpacity onPress={() => navigation.pop()} style={styles.cartButton}>
             <Text style={styles.buttonText}>Confirm Address Details</Text>
           </TouchableOpacity>
         </View>

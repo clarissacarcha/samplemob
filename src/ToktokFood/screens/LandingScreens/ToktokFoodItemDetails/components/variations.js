@@ -1,22 +1,18 @@
 import React, {useState} from 'react';
 import CheckBox from '@react-native-community/checkbox';
-import {View, Text, StyleSheet, FlatList, TextInput} from 'react-native';
+import {View, Text, StyleSheet, TextInput} from 'react-native';
 
 import FoodCart from './FoodCart';
-
 import {FONT, FONT_SIZE, COLOR} from 'res/variables';
 
 // Utils
 import {scale, verticalScale, moderateScale} from 'toktokfood/helper/scale';
 
-import PromptMessage from 'toktokfood/components/PromptMessage';
-
 const Variations = ({item}) => {
-
   const [isShowModal, setShowModal] = useState(false);
 
-  const renderItem = (variations) => {
-    const {id, sizes, add_ons} = variations.item;
+  const RenderItem = (props) => {
+    const {id, sizes, add_ons} = props.variations;
     return (
       <>
         <View key={id} style={styles.variations}>
@@ -65,15 +61,13 @@ const Variations = ({item}) => {
         </View>
         <View key={id} style={styles.variations}>
           <Text style={styles.variationTitle}>Special Instructions (Optional)</Text>
-          <View>
-            <TextInput
-              multiline={true}
-              numberOfLines={4}
-              style={styles.input}
-              placeholder="Type your instructions here..."
-              placeholderTextColor={COLOR.MEDIUM}
-            />
-          </View>
+          <TextInput
+            multiline={true}
+            numberOfLines={4}
+            style={styles.input}
+            placeholder="Type your instructions here..."
+            placeholderTextColor={COLOR.MEDIUM}
+          />
         </View>
       </>
     );
@@ -82,14 +76,7 @@ const Variations = ({item}) => {
   return (
     <>
       <View style={styles.container}>
-        <PromptMessage
-          type={2}
-          message="You have existing items on your cart. If you add this to cart, the current cart will be empty. Would you like to proceed?"
-          visible={isShowModal}
-          onConfirm={() => console.log('RESET CART')}
-          setVisible={(v) => setShowModal(v)}
-        />
-        <FlatList data={item.variations} renderItem={renderItem} />
+        <RenderItem variations={item.variations[0]} />
         <FoodCart item_price={item.price} />
       </View>
     </>

@@ -6,9 +6,10 @@ import {Rating} from 'react-native-ratings';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 // Components
+
 // import HeaderTabs from 'toktokfood/components/HeaderTabs';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
-import PromptMessage from 'toktokfood/components/PromptMessage';
+import DialogMessage from 'toktokfood/components/DialogMessage';
 import HeaderSearchBox from 'toktokfood/components/HeaderSearchBox';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 
@@ -35,8 +36,8 @@ const ToktokFoodSearch = () => {
 
   const navigation = useNavigation();
   // const [activeTab, setActiveTab] = useState(tabs[0]);
-  const [isShowModal, setShowModal] = useState(false);
-  const [foodQuery, setFoodQuery] = useState('');
+  const [isShowError, setShowError] = useState(false);
+  // const [foodQuery, setFoodQuery] = useState(true);
 
   const onRestaurantNavigate = (item) => {
     navigation.navigate('ToktokFoodRestaurantOverview', {item});
@@ -58,13 +59,7 @@ const ToktokFoodSearch = () => {
             <Text numberOfLines={2} style={styles.restaurantName}>
               {item.name}
             </Text>
-            <Rating
-              startingValue={item.ratings}
-              tintColor="whitesmoke"
-              imageSize={15}
-              readonly
-              style={styles.ratings}
-            />
+            <Rating startingValue={item.ratings} imageSize={15} readonly style={styles.ratings} />
           </View>
 
           <View style={styles.subInfoWrapper}>
@@ -80,10 +75,21 @@ const ToktokFoodSearch = () => {
 
   return (
     <View style={styles.container}>
-      <PromptMessage type={1} message="No result found." visible={isShowModal} setVisible={(v) => setShowModal(v)} />
+      <DialogMessage
+        type="error"
+        visibility={isShowError}
+        title="No result found"
+        onCloseModal={() => setShowError(false)}
+      />
       <HeaderImageBackground customSize={CUSTOM_HEADER}>
         <HeaderTitle />
-        <HeaderSearchBox query={foodQuery} onSearch={(t) => setFoodQuery(t)} />
+        <HeaderSearchBox
+          onSearch={(t) => {
+            if (t === 'mcdo') {
+              setShowError(true);
+            }
+          }}
+        />
       </HeaderImageBackground>
       <View style={styles.tabContainer}>
         {/* <HeaderTabs activeTab={activeTab} tabs={tabs} setActiveTab={setActiveTab} /> */}

@@ -1,6 +1,6 @@
-import React, {useCallback, useMemo, useRef} from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, FlatList} from 'react-native';
+import React from 'react';
 import Modal from 'react-native-modal';
+import {View, Text, TouchableOpacity, StyleSheet, FlatList} from 'react-native';
 
 // COLORS
 import {COLOR, FONT_SIZE} from 'src/res/variables';
