@@ -27,7 +27,7 @@ const { COLOR , FONT_SIZE , FONT_FAMILY: FONT  } = CONSTANTS
 
 
 const MainComponent = ()=> {
-    const { setForms } = useContext(ContextEnterpriseApplication)
+    const { setForms , validID1, validID2 } = useContext(ContextEnterpriseApplication)
     const IDTypeRef = useRef()
     const [idIndex,setIDIndex] = useState(1)
     const onPress = (index)=> {
@@ -87,7 +87,13 @@ const MainComponent = ()=> {
             <TakePhotoID onPress={onPress}/>
         </ScrollView>
         <Submit />
-        <BottomSheetIDType ref={IDTypeRef} idIndex={idIndex} onChange={()=>null} />
+        <BottomSheetIDType 
+            ref={IDTypeRef} 
+            idIndex={idIndex} 
+            onChange={()=>null}
+            validID1={validID1}
+            validID2={validID2}
+        />
         </>
     )
 }
