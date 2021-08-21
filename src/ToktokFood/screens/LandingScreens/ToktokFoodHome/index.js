@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Platform, StyleSheet, View} from 'react-native';
 
 // Components
@@ -11,6 +11,9 @@ import {StickyView} from './components';
 import {useCategories, useUserLocation, useShops} from 'toktokfood/hooks';
 
 import {moderateScale, getStatusbarHeight} from 'toktokfood/helper/scale';
+import {searchIcon} from 'toktokfood/assets/images';
+import DraggableIcon from 'toktokfood/components/DraggableIcon';
+import {transactions} from 'toktokfood/helper/strings';
 
 import {useNavigation} from '@react-navigation/native';
 
@@ -25,9 +28,17 @@ const ToktokFoodHome = () => {
   useUserLocation(); // user location hook
 
   const navigation = useNavigation();
+  const [viewHeight, setViewHeight] = useState(100);
+
+  const getWindowDimension = (event)  => {
+    let height = event.nativeEvent.layout.height
+    setViewHeight(height)
+  }
 
   return (
-    <View style={styles.container}>
+            
+    <View style={styles.container} onLayout={(event) => getWindowDimension(event)}  >
+      <DraggableIcon data={transactions} title="Ongoing Orders" viewHeight={viewHeight} />
       <HeaderImageBackground customSize={CUSTOM_HEADER}>
         <HeaderTitle />
         <HeaderSearchBox />
