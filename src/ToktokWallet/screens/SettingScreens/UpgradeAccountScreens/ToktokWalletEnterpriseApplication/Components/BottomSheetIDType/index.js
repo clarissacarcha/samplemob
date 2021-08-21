@@ -10,7 +10,7 @@ import CONSTANTS from 'common/res/constants'
 
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE , SIZE } = CONSTANTS
 
-export const BottomSheetIDType = forwardRef(({onChange,idIndex}, ref) => {
+export const BottomSheetIDType = forwardRef(({onChange,idIndex,validID1,validID2}, ref) => {
   
     const snapPoints = useMemo(() => [0, 550], []);
     const [filteredValidID, setFilteredValidID] = useState([])
@@ -24,7 +24,14 @@ export const BottomSheetIDType = forwardRef(({onChange,idIndex}, ref) => {
       fetchPolicy: 'network-only',
       onCompleted: (response) => {
         console.log("IDS", response)
-        setFilteredValidID(response.getIDCards)
+        let IDList = response.getIDCards
+        if(validID1.IDType != ""){
+          IDList = IDList.filter((validID)=>validID1.IDType != validID.id)
+        }
+        if(validID2.IDType != ""){
+          IDList = IDList.filter((validID)=>validID2.IDType != validID.id)
+        }
+        setFilteredValidID(IDList)
       },
       onError: (err) => {
         console.log(err)
