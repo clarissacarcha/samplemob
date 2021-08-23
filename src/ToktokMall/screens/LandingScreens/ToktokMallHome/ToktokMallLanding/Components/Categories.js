@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/core';
 import { useLazyQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../../graphql';
 import { GET_TOP_CATEGORIES } from '../../../../../../graphql/toktokmall/model';
-
+import ContentLoader from 'react-native-easy-content-loader'
 import { COLOR, FONT } from '../../../../../../res/variables';
 import {LandingHeader, AdsCarousel} from '../../../../../Components';
 
@@ -94,7 +94,7 @@ export const Categories = ({data}) => {
               <View style={{flex: 8}}>
                 <Text style={styles.h1}>Categories</Text>
               </View>
-              <TouchableOpacity style={{flex: 2, flexDirection: 'row'}} onPress={() => {
+              <TouchableOpacity style={{flex: 2, flexDirection: 'row'}} disabled ={loading} onPress={() => {
                 navigation.navigate("ToktokMallCategories")
               }}>
                 <View style={{flex: 2, alignItems: 'flex-end', justifyContent: 'center'}}>
@@ -132,22 +132,26 @@ export const Categories = ({data}) => {
             />             */}
 
             <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
-              {categoriesArr.length > 0 && categoriesArr.map((cat, i) => {
-                return (
-                  <>
-                    <View style={{flex: 1}}>
-                      <View style={{alignItems: 'center', justifyContent: 'center'}}>
-                        {setIcon(cat)}
-                      </View>
-                      <View style={{alignItems: 'center', justifyContent: 'center', marginTop: 4}}>
-                        <Text style={styles.label}>{cat.parentCategory}</Text>
-                      </View>
-                    </View>   
-                  </>
-                )
-              })}           
+              <ContentLoader active loading = {loading} avatar = {false}  title = {true} pRows = {0}
+                tHeight = {40} avatarStyles = {{ left: 0, borderRadius: 5}}  tWidth = {'100%'}
+              >
+                {categoriesArr.length > 0 && categoriesArr.map((cat, i) => {
+                  return (
+                    <>
+                      <View style={{flex: 1}}>
+                        <View style={{alignItems: 'center', justifyContent: 'center'}}>
+                          {setIcon(cat)}
+                        </View>
+                        <View style={{alignItems: 'center', justifyContent: 'center', marginTop: 4}}>
+                          <Text style={styles.label}>{cat.parentCategory}</Text>
+                        </View>
+                      </View>   
+                    </>
+                  )
+                })} 
+                
+              </ContentLoader>          
             </View>
-
             <View style={{height: 15}} />
 
           </View>

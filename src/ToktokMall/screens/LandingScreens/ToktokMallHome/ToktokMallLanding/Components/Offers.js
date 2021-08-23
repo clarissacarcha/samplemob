@@ -7,6 +7,7 @@ import {LandingHeader, AdsCarousel, Loading} from '../../../../../Components';
 import CustomIcon from '../../../../../Components/Icons';
 import {coppermask, chair, bottle, placeholder} from '../../../../../assets';
 import {Price} from '../../../../../helpers';
+import ContentLoader from 'react-native-easy-content-loader'
 
 import { useQuery, useLazyQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../../graphql';
@@ -96,37 +97,40 @@ export const Offers = ({data}) => {
                 </View>
               </TouchableOpacity>
             </View>
+            <ContentLoader active loading = {loading} avatar = {false}  title = {true} pRows = {1}
+              tHeight = {70} avatarStyles = {{ left: 0, borderRadius: 5}}  tWidth = {'100%'}
+              pWidth = {'100%'}
+            >
+              <FlatList
+                horizontal={true} 
+                showsHorizontalScrollIndicator={false}
+                data={featured}
+                renderItem={({item}) => {
 
-            <FlatList
-              horizontal={true} 
-              showsHorizontalScrollIndicator={false}
-              data={featured}
-              renderItem={({item}) => {
-
-                const getImageSource = (imgs) => {
-                  if(typeof imgs == "object" && imgs.length > 0){
-                    return {uri: imgs[0].filename}
-                  }else {
-                    return placeholder
+                  const getImageSource = (imgs) => {
+                    if(typeof imgs == "object" && imgs.length > 0){
+                      return {uri: imgs[0].filename}
+                    }else {
+                      return placeholder
+                    }
                   }
-                }
 
-                return (
-                  <>
-                    <TouchableOpacity onPress={() => {
-                      navigation.navigate("ToktokMallProductDetails", item)
-                    }} style={{flex: 1, paddingBottom: 12, paddingHorizontal: 4, alignItems: 'center', justifyContent: 'center'}}>
-                      <Image source={getImageSource(item?.images)} style={styles.image} />
-                      <Text style={styles.label}><Price amount={item?.price} /></Text>
-                      <Text style={styles.labelLine}><Price amount={item?.compareAtPrice} /></Text>                
-                    </TouchableOpacity>
-                  </>
-                )
-              }}
-              ListEmptyComponent={<View style={{height: 70}} />}
-              keyExtractor={(item, index) => item + index}
-            />
-            
+                  return (
+                    <>
+                      <TouchableOpacity onPress={() => {
+                        navigation.navigate("ToktokMallProductDetails", item)
+                      }} style={{flex: 1, paddingBottom: 12, paddingHorizontal: 4, alignItems: 'center', justifyContent: 'center'}}>
+                        <Image source={getImageSource(item?.images)} style={styles.image} />
+                        <Text style={styles.label}><Price amount={item?.price} /></Text>
+                        <Text style={styles.labelLine}><Price amount={item?.compareAtPrice} /></Text>                
+                      </TouchableOpacity>
+                    </>
+                  )
+                }}
+                ListEmptyComponent={<View style={{height: 70}} />}
+                keyExtractor={(item, index) => item + index}
+              />
+            </ContentLoader>
           </View>
           {/* <View style={{flex: 0.5, height: 8, backgroundColor: '#F7F7FA'}} /> */}
       </>

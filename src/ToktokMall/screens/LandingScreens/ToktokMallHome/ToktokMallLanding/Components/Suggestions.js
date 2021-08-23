@@ -14,6 +14,8 @@ import {clothfacemask, medicalfacemask, placeholder} from '../../../../../assets
 import { Price } from '../../../../../helpers';
 import { SwipeReloader, Loading } from '../../../../../Components';
 
+import ContentLoader from 'react-native-easy-content-loader'
+
 const testdata = [{
   image: clothfacemask,
   rating: 4,
@@ -58,7 +60,7 @@ const RenderStars = ({value}) => {
   )
 }
 
-const RenderItem = ({item}) => {
+const RenderItem = ({item, loading}) => {
 
   const navigation = useNavigation()
 
@@ -73,7 +75,7 @@ const RenderItem = ({item}) => {
   return (
     <>
       <View style={{flex: 2, backgroundColor: '#fff', margin: 5}}>
-                  
+      
         <TouchableOpacity activeOpacity={1} onPress={() => {
           navigation.navigate("ToktokMallProductDetails", item)
         }} style={{padding: 5}}>
@@ -169,7 +171,7 @@ export const Suggestions = ({}) => {
           numColumns={2}
           style={{paddingHorizontal: 10}}
           renderItem={({item}) => {
-            return <RenderItem item={item} />
+            return <RenderItem item={item} loading = {loading} />
           }}
           keyExtractor={(item, index) => item + index}
           refreshing={loading}

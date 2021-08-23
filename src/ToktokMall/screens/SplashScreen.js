@@ -5,8 +5,8 @@ import {
   StyleSheet,
   Image,
   Dimensions,
-  ImageBackground,
-  AsyncStorage,
+  ImageBackground, 
+  TouchableOpacity
 } from 'react-native';
 import {connect} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
@@ -19,7 +19,8 @@ import { GET_CUSTOMER_IF_EXIST } from '../../graphql/toktokmall/model';
 import {GET_SIGNATURE} from '../../graphql/toktokmall/virtual';
 import axios from 'axios';
 import moment from 'moment';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import AsyncStorage from '@react-native-community/async-storage';
+
 
 const imageWidth = Dimensions.get('screen').width;
 const imageHeight = Dimensions.get('screen').height;
@@ -29,21 +30,7 @@ const Splash = ({ createMyCartSession, createNotificationsSession}) => {
   const session = useSelector(state=> state.session)
   const navigation = useNavigation();
 	const [loading, setloading] = useState(true);
-
-  // useEffect(() => {
-  //   AsyncStorage.getItem('MyCart').then((value) => {
-  //     console.log('cart async storage',value)
-  //     const parsedValue = JSON.parse(value)
-  //     if(value != null){
-  //       createMyCartSession('set', parsedValue)
-  //       navigation.navigate("ToktokMallLanding");
-
-  //     }else {
-  //       createMyCartSession('set', [])
-  //       navigation.navigate("ToktokMallLanding");
-  //     }
-  //   })
-  // }, []);
+  const [failed, setFailed] = useState(false);
 
   const [authUser, { error}] = useLazyQuery(GET_CUSTOMER_IF_EXIST, {
 		client: TOKTOK_MALL_GRAPHQL_CLIENT,
@@ -72,11 +59,16 @@ const Splash = ({ createMyCartSession, createNotificationsSession}) => {
           await RegisterUser(response.getCustomerIfExist.appSignature)    
 
         }
+
+        setFailed(false)
         
+      }else{
+        setFailed(true)
       }
     },
     onError: (err) => {
       console.log(err)
+      setFailed(true)
       // authUser()
     }
 	})  
@@ -104,12 +96,14 @@ const Splash = ({ createMyCartSession, createNotificationsSession}) => {
         if(response.data && response.data.success == 1){
           authUser()
         }else{
+          setFailed(true)
          console.log("Response", response.data) 
         }
         
       })
       .catch((error) => {
         console.log(error)
+        setFailed(true)
     })
 
   }
@@ -142,6 +136,7 @@ const Splash = ({ createMyCartSession, createNotificationsSession}) => {
 
 	const init = async () => {
 
+    setFailed(false)
     await authUser()
     await FetchAsyncStorageData()
 
@@ -166,11 +161,17 @@ const Splash = ({ createMyCartSession, createNotificationsSession}) => {
 				style={{height: '100%', width: '100%' }} 
 				resizeMode="cover" 
 			/>
-      
-      {error && 
-      <TouchableOpacity onPress={init} style={{position: 'absolute', bottom: '25%'}}>
-        <Text style={{fontSize: 9}}>Server error, reconnect?</Text>
-      </TouchableOpacity>}
+
+      {failed && 
+      <View style={{position:'absolute', bottom: '34%'}}>
+        <View style={{alignItems: 'center'}}>
+          <Text style={{fontSize: 12, textAlign: 'center'}}>Unable to connect to server. </Text>
+        </View>
+        <TouchableOpacity onPress={init} style={{alignItems: 'center'}}>
+          <Text style={{fontSize: 14, color: "#F6841F"}}> Try again</Text>
+        </TouchableOpacity>
+      </View>}
+
     </View>
   );
 };

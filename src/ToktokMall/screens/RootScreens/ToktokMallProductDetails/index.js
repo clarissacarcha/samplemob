@@ -2,7 +2,7 @@ import React, {useRef, useEffect, useState} from 'react';
 import { useLazyQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql';
 import { GET_PRODUCT_DETAILS } from '../../../../graphql/toktokmall/model';
-import {View, SafeAreaView, Text, Image, FlatList, SectionList, ImageBackground, TouchableOpacity, AsyncStorage} from 'react-native';
+import {View, SafeAreaView, Text, Image, FlatList, SectionList, ImageBackground, TouchableOpacity, AsyncStorage, Dimensions} from 'react-native';
 import {connect} from 'react-redux'
 import Spinner from 'react-native-spinkit';
 import Toast from 'react-native-simple-toast';
@@ -10,7 +10,7 @@ import { FONT } from '../../../../res/variables';
 import { Header, AdsCarousel, MessageModal } from '../../../Components';
 import CustomIcon from '../../../Components/Icons';
 import {ASAddToCart, ASClearCart} from '../../../helpers';
-
+import ContentLoader, {InstagramLoader, FacebookLoader} from 'react-native-easy-content-loader'
 import {
 
   HeaderPlain,
@@ -174,47 +174,46 @@ const Component =  ({
       {/* {scrolling ? <HeaderPlain /> : <HeaderTransparent />} */}
       { loading ? <></> :  <HeaderPlain animatedValue={animatedHeaderValueRef} cartItems={cartItems} itemName = {route.params.itemname} /> }
       { loading ? <></> :  <HeaderTransparent animatedValue={animatedHeaderValueRef} cartItems={cartItems} /> }
-      <LoadingOverlay  isVisible = {loading} />
+      {/* <LoadingOverlay  isVisible = {loading} /> */}
       <Animated.ScrollView
         scrollEventThrottle = {270}
         onScroll={onScroll}
         showsVerticalScrollIndicator={false}
         {...{onScroll}}
-
+        scrollEnabled = {!loading}
       >
-        <ProductCarousel 
-          data={images} 
-          isOutOfStock={isOutOfStock} 
-          isLoading={isLoading} 
-          setIsLoading={setIsLoading} 
+        <ContentLoader active loading = {loading} avatar aShape = {'square'} title = {false} pRows = {0}
+          aSize = {250} avatarStyles = {{width: Dimensions.get('window').width, left: -10}}
+        >
+          <ProductCarousel 
+            data={images} 
+            isOutOfStock={isOutOfStock} 
+            isLoading={isLoading} 
+            setIsLoading={setIsLoading} 
+            loading = {loading}
+          />
+        </ContentLoader>
+        <RenderProduct
+          data={product} 
+          shop={store} 
+          animatedValue = {AnimatedHeaderValue}
+          onOpenVariations={() => {
+            setVariationOptionType(0)
+            varBottomSheetRef.current.expand()
+          }}
           loading = {loading}
-          firstImage = {route.params.images.length == 0 ? '' : route.params.images[0].filename}
-          passedParams = {route.params}
         />
-        { loading ? 
-          <></>
-          :
-          <View>
-            <RenderProduct
-              data={product} 
-              shop={store} 
-              animatedValue = {AnimatedHeaderValue}
-              onOpenVariations={() => {
-                setVariationOptionType(0)
-                varBottomSheetRef.current.expand()
-              }}
-            />
-            <RenderStore 
-              data={store} 
-            />
-            <RenderDescription 
-              data={product} 
-            />
-            <RenderReviews />
-            <RenderSuggestions data={relevantProducts || []} />
-            <View style={{height: 60}} />
-          </View>
-        }
+        <RenderStore 
+          data={store} 
+          loading = {loading}
+        />
+        <RenderDescription 
+          data={product} 
+          loading = {loading}
+        />
+        <RenderReviews />
+        <RenderSuggestions data={relevantProducts || []} />
+        <View style={{height: 60}} />
       </Animated.ScrollView>
 
       { loading ? <></> :

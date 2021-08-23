@@ -13,7 +13,7 @@ import Spinner from 'react-native-spinkit';
 const { width: screenWidth } = Dimensions.get('window')
 const HEIGHT = 250
 
-export const ProductCarousel = ({data, isOutOfStock, isLoading, setIsLoading, firstImage, loading, passedParams}) => {
+export const ProductCarousel = ({data, isOutOfStock, isLoading, setIsLoading, loading}) => {
 
   const [activeSlide, setActiveSlide] = useState(0)
   const [entries, setEntries] = useState([1, 2, 3, 4, 5])
@@ -36,33 +36,18 @@ export const ProductCarousel = ({data, isOutOfStock, isLoading, setIsLoading, fi
             <Text style={{fontFamily: FONT.BOLD, fontSize: 18, color: "#fff"}}>OUT OF STOCK</Text>
           </View>
         </View>}
-            { loading && firstImage != '' ? <FastImage
-              source={ {
-                uri: firstImage,
-                priority: FastImage.priority.high
-              } }
-              resizeMode = {FastImage.resizeMode.stretch}
-              style = {{height: 250}}
-              // source = {{uri: item.filename}}
-              //  onLoadEnd = {() => {setIsLoading(false)}}
-              // containerStyle={[styles.pxImageContainerStyle
-                // isLoading ? {backgroundColor: 'rgba(0, 0, 0, 0.25)'}: nullresizeMode: 'stretch'
-              // ]}
-              // style={{
-              //   ...StyleSheet.absoluteFillObject,
-                
-              // }}
-          /> : 
-          <FastImage 
-            source={ {
-              uri: item.filename,
-              priority: FastImage.priority.high
-            } }
-            resizeMode = {FastImage.resizeMode.stretch}
-            style = {{height: 250}}
-          
-          /> }
-          
+          <ParallaxImage
+           // source={{uri: "https://cdn.searchenginejournal.com/wp-content/uploads/2019/04/shutterstock_456779230.png"}}
+            source={getImage()}
+            // onLoadEnd = {() => {setIsLoading(false)}}
+            containerStyle={[styles.pxImageContainerStyle]}
+            style={{
+              ...StyleSheet.absoluteFillObject,
+              resizeMode: 'stretch'
+            }}
+            parallaxFactor={0.05}
+            {...parallaxProps}
+          />
       </View>
     )
   }
@@ -71,7 +56,7 @@ export const ProductCarousel = ({data, isOutOfStock, isLoading, setIsLoading, fi
     <View style={{paddingHorizontal: 0, paddingTop: 0, height: HEIGHT}}>
       <View style={{height: 0}} />
         <Carousel
-          data={loading ? [passedParams] : data}
+          data={data}
           renderItem={renderItem}
           onSnapToItem={(index) => {setActiveSlide(index), sethasSwiped(false)} }
           sliderWidth={Dimensions.get("screen").width}

@@ -7,6 +7,7 @@ import {LandingHeader, AdsCarousel, Loading} from '../../../../../Components';
 import CustomIcon from '../../../../../Components/Icons';
 import {coppermask, chair, bottle, flashsalebg, flashsale, placeholder} from '../../../../../assets';
 import {Price} from '../../../../../helpers';
+import ContentLoader from 'react-native-easy-content-loader'
 
 import { useQuery, useLazyQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../../graphql';
@@ -96,33 +97,37 @@ export const FlashSale = () => {
           source={flashsalebg}
           imageStyle={{resizeMode: 'cover'}}          
           style={{flex: 1, paddingHorizontal: 15, paddingVertical: 0}}>
-          
-          <View style={{paddingVertical: 0, flexDirection: 'row'}}>
-            <View style={{flex: 4}}>
-              <Image source={flashsale} style={{width: 90, height: 90, resizeMode: 'center', justifyContent: 'center', alignSelf: 'flex-end'}} />
-            </View>
-            <View style={{flex: 7, justifyContent: 'center', paddingHorizontal: 4}}>
-              <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>&nbsp;UP TO 80% OFF</Text>
-              <Text style={{color: "#747575", fontSize: 12}}>Offer ends 5.17.2021</Text>
-            </View>
-            <TouchableOpacity onPress={() => {
-              navigation.navigate("ToktokMallSearch", {searchValue: "Flash Sale", origin: "flashsale"})
-            }} style={{flex: 3, flexDirection: 'row'}}>
-              <View style={{flex: 3, alignItems: 'flex-end', justifyContent: 'center'}}>
-                <Text style={{fontSize: 12, color: "#F6841F", fontWeight: '600'}}>Shop now </Text>
+          <ContentLoader active loading = {loading} avatar = {false}  title = {true} pRows = {4}
+            tHeight = {70} avatarStyles = {{ left: 0, borderRadius: 5}}  tWidth = {'100%'}
+            pWidth = {'100%'}
+          >
+            <View style={{paddingVertical: 0, flexDirection: 'row'}}>
+              <View style={{flex: 4}}>
+                <Image source={flashsale} style={{width: 90, height: 90, resizeMode: 'center', justifyContent: 'center', alignSelf: 'flex-end'}} />
               </View>
-              <View style={{flex: 0, alignItems: 'flex-end', justifyContent: 'center'}}>
-                <CustomIcon.EIcon name="chevron-right" color="#F6841F" size={16} />
+              <View style={{flex: 7, justifyContent: 'center', paddingHorizontal: 4}}>
+                <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>&nbsp;UP TO 80% OFF</Text>
+                <Text style={{color: "#747575", fontSize: 12}}>Offer ends 5.17.2021</Text>
               </View>
-            </TouchableOpacity>
-          </View>
-          
-          <View>            
-            <View style={{flex: 1, flexDirection: 'row'}}>
-              {loading && <View style={{height: 120}} />}
-              {featured.map((item, i) => <Item key={i} data={item} /> )}
+              <TouchableOpacity disabled = {loading} onPress={() => {
+                navigation.navigate("ToktokMallSearch", {searchValue: "Flash Sale", origin: "flashsale"})
+              }} style={{flex: 3, flexDirection: 'row'}}>
+                <View style={{flex: 3, alignItems: 'flex-end', justifyContent: 'center'}}>
+                  <Text style={{fontSize: 12, color: "#F6841F", fontWeight: '600'}}>Shop now </Text>
+                </View>
+                <View style={{flex: 0, alignItems: 'flex-end', justifyContent: 'center'}}>
+                  <CustomIcon.EIcon name="chevron-right" color="#F6841F" size={16} />
+                </View>
+              </TouchableOpacity>
             </View>
-          </View>
+            
+            <View>            
+              <View style={{flex: 1, flexDirection: 'row'}}>
+                {loading && <View style={{height: 120}} />}
+                {featured.map((item, i) => <Item key={i} data={item} /> )}
+              </View>
+            </View>
+          </ContentLoader>
           <View style={{height: 15}}></View>
         </ImageBackground>
         <View style={{flex: 0.5, height: 8, backgroundColor: '#F7F7FA'}} />

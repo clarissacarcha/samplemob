@@ -5,7 +5,7 @@ import CustomIcon from '../Icons';
 import { useLazyQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../graphql';
 import { GET_ADS } from '../../../graphql/toktokmall/model';
-
+import ContentLoader from 'react-native-easy-content-loader'
 const SampleImage = require("../../assets/images/ads.png")
 
 const { width: screenWidth } = Dimensions.get('window')
@@ -39,20 +39,25 @@ export const AdsCarousel = (props) => {
     }
 
     return (
-      <View style={{width: 330, height: 130}}>
+      <ContentLoader active loading = {loading} avatar = {false}  title = {true} pRows = {0}
+        tHeight = {130}  tWidth= {'100%'} avatarStyles = {{ left: 0, borderRadius: 5}} 
+      >
+        <View style={{width: 330, height: 130}}>
         {/* <Image source={SampleImage} style={{width: '100%', height: 130, resizeMode: 'stretch'}} /> */}
-        <ParallaxImage
-          // source={{uri: "https://cdn.searchenginejournal.com/wp-content/uploads/2019/04/shutterstock_456779230.png"}}
-          source={getImage(item?.image)}
-          containerStyle={styles.pxImageContainerStyle}
-          style={{
-            ...StyleSheet.absoluteFillObject,
-            resizeMode: 'stretch'
-          }}
-          parallaxFactor={0}
-          {...parallaxProps}
-        />
-      </View>
+          <ParallaxImage
+            // source={{uri: "https://cdn.searchenginejournal.com/wp-content/uploads/2019/04/shutterstock_456779230.png"}}
+            source={getImage(item?.image)}
+            containerStyle={styles.pxImageContainerStyle}
+            style={{
+              ...StyleSheet.absoluteFillObject,
+              resizeMode: 'stretch'
+            }}
+            parallaxFactor={0}
+            {...parallaxProps}
+          />
+        </View>
+      </ContentLoader>
+      
     )
   }
 

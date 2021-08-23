@@ -6,8 +6,9 @@ import {Price} from '../../../../helpers';
 import CustomIcon from '../../../../Components/Icons';
 import {coppermask, clothfacemask, voucherbg} from '../../../../assets';
 import { FONT } from '../../../../../res/variables';
+import ContentLoader from 'react-native-easy-content-loader';
 
-export const RenderStore = ({data}) => {
+export const RenderStore = ({data, loading}) => {
 
   const navigation = useNavigation()
 
@@ -26,12 +27,20 @@ export const RenderStore = ({data}) => {
     else {
       return 8
     }
-    
   }
 
 	return (
 		<>
 			<View style={{paddingVertical: 16, paddingHorizontal: 16}}>
+        <ContentLoader 
+          loading = {loading} 
+          avatar = {false}
+          pRows = {1}
+          titleStyles = {{height: 30, left: -10, }}
+          tWidth = {'50%'}
+          paragraphStyles = {{height: 13, left: -10, paddingTop: 14 }}
+          pWidth = {'45%'}
+        >
         <TouchableOpacity onPress={() => {
             navigation.navigate("ToktokMallStore", {id: data?.id})
           }} style={{flexDirection: 'row', justifyContent: 'center'}}>
@@ -59,10 +68,20 @@ export const RenderStore = ({data}) => {
             <Text>Products</Text>
           </View>
         </View>
+        </ContentLoader>
       </View>
       <View style={{height: 8, backgroundColor: '#F7F7FA'}} />
 
       <View style={{paddingHorizontal: 16, paddingVertical: 16}}>
+        <ContentLoader 
+          loading = {loading} 
+          avatar = {false}
+          pRows = {1}
+          titleStyles = {{height: 30, left: -10, }}
+          tWidth = {'50%'}
+          paragraphStyles = {{height: 13, left: -10, paddingTop: 14 }}
+          pWidth = {'45%'}
+        >
         <View style={{paddingBottom: 16}}>
           <Text style={{fontSize: 14}}>{data?.shopname || 'Shop'} Vouchers</Text>
         </View>
@@ -92,6 +111,8 @@ export const RenderStore = ({data}) => {
             )
           }}
         />
+        </ContentLoader>
+        
       </View>
       <View style={{height: 8, backgroundColor: '#F7F7FA'}} />
 		</>
