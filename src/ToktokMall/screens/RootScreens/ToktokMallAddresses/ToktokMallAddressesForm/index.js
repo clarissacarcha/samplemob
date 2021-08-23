@@ -37,6 +37,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
   const [toUpdate, setToUpdate] = useState(false);
   const [confirmDeleteModal, setConfirmDeleteModal] = useState(false);
   const [messageModal, setMessageModal] = useState(false);
+  const [deletedModal, setDeletedModal] = useState(false);
   const [open, setOpen] = useState(false);
   const [newDefault, setNewDefault] = useState(false);
   const [modalProvinceVisible, setModalProvinceVisible] = useState(false);
@@ -237,13 +238,14 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
           type="Confirm"
           isVisible={confirmDeleteModal}
           setIsVisible={(val) => {
-            setConfirmDeleteModal(val);
-            setMessageModal(true);
-            setTimeout(() => {
-              // setMessageModal(false)
-            }, 1400);
+            setConfirmDeleteModal(val)
           }}
-          message={'Address Deleted!'}
+          onConfirm={() => {
+            setConfirmDeleteModal(false)
+            setTimeout(() => {
+              setDeletedModal(true)
+            }, 700)
+          }}
         />
       )}
       {messageModal && (
@@ -254,6 +256,16 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
             setMessageModal(val);
           }}
           message={'Address Added!'}
+        />
+      )}
+      {deletedModal && (
+        <AddressModal
+          type="Message"
+          isVisible={deletedModal}
+          setIsVisible={(val) => {
+            setDeletedModal(val);
+          }}
+          message={'Address Deleted!'}
         />
       )}
       <CityAddressModal

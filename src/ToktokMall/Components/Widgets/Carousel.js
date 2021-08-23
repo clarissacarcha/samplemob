@@ -39,11 +39,13 @@ export const AdsCarousel = (props) => {
     }
 
     return (
-      <ContentLoader active loading = {loading} avatar = {false}  title = {true} pRows = {0}
-        tHeight = {130}  tWidth= {'100%'} avatarStyles = {{ left: 0, borderRadius: 5}} 
-      >
+
+      // <ContentLoader active loading = {loading} avatar = {false}  title = {true} pRows = {0}
+      //   tHeight = {130}  tWidth= {'100%'} avatarStyles = {{ left: 0, borderRadius: 5}} 
+      // ></ContentLoader>
+      
         <View style={{width: 330, height: 130}}>
-        {/* <Image source={SampleImage} style={{width: '100%', height: 130, resizeMode: 'stretch'}} /> */}
+         {/* <Image source={SampleImage} style={{width: '100%', height: 130, resizeMode: 'stretch'}} /> */}
           <ParallaxImage
             // source={{uri: "https://cdn.searchenginejournal.com/wp-content/uploads/2019/04/shutterstock_456779230.png"}}
             source={getImage(item?.image)}
@@ -56,7 +58,6 @@ export const AdsCarousel = (props) => {
             {...parallaxProps}
           />
         </View>
-      </ContentLoader>
       
     )
   }
@@ -74,7 +75,9 @@ export const AdsCarousel = (props) => {
         sliderWidth={330}
         itemWidth={330}
         autoplay={true}
-        autoplayDelay={700}
+        autoplayDelay={2500}
+        enableSnap={true}
+        loop={true}
         hasParallaxImages={true}
         removeClippedSubviews={true}
       />

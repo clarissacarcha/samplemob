@@ -154,29 +154,21 @@ const Component =  ({
     )
   }
 
-  // if(loading) {
-  //   return (
-  //     <>
-  //       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-  //         <Spinner 
-  //           isVisible={loading}
-  //           type='Circle'
-  //           color={"#F6841F"}
-  //           size={35}
-  //         />
-  //       </View>
-  //     </>
-  //   )
-  // }
+  if(loading) {
+    return (
+      <>
+        <LoadingOverlay isVisible={loading} />
+      </>
+    )
+  }
 
   return (
     <>
     <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
       
-      {/* {scrolling ? <HeaderPlain /> : <HeaderTransparent />} */}
       { loading ? <></> :  <HeaderPlain animatedValue={animatedHeaderValueRef} cartItems={cartItems} itemName = {route.params.itemname} /> }
       { loading ? <></> :  <HeaderTransparent animatedValue={animatedHeaderValueRef} cartItems={cartItems} /> }
-      {/* <LoadingOverlay  isVisible = {loading} /> */}
+      
       <Animated.ScrollView
         scrollEventThrottle = {270}
         onScroll={onScroll}
@@ -184,7 +176,7 @@ const Component =  ({
         {...{onScroll}}
         scrollEnabled = {!loading}
       >
-        <ContentLoader active loading = {loading} avatar aShape = {'square'} title = {false} pRows = {0}
+        {/* <ContentLoader active loading = {loading} avatar aShape = {'square'} title = {false} pRows = {0}
           aSize = {250} avatarStyles = {{width: Dimensions.get('window').width, left: -10}}
         >
           <ProductCarousel 
@@ -194,7 +186,14 @@ const Component =  ({
             setIsLoading={setIsLoading} 
             loading = {loading}
           />
-        </ContentLoader>
+        </ContentLoader> */}
+        <ProductCarousel 
+            data={images} 
+            isOutOfStock={isOutOfStock} 
+            isLoading={isLoading} 
+            setIsLoading={setIsLoading} 
+            loading = {loading}
+          />
         <RenderProduct
           data={product} 
           shop={store} 

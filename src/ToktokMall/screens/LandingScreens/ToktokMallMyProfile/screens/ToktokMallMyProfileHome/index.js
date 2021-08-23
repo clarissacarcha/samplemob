@@ -9,6 +9,10 @@ import CustomIcon from './.../../../../../../../Components/Icons';
 import {banner, userIcon, placeholder} from '../../../../../assets';
 import AsyncStorage from '@react-native-community/async-storage';
 
+import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../../graphql';
+import { useLazyQuery } from '@apollo/react-hooks';
+import { GET_DEFAULT_ADDRESS } from '../../../../../../graphql/toktokmall/model';
+
 const testData = [
   {id: 1, full_name: 'Cloud Panda', contact_number: '09050000000',
     address: '10F, Inoza Tower, 40th Street, Bonifacio Global City', default: 1
@@ -26,20 +30,35 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
   const [conNo, setConNo] = useState("")
   const [address, setAddress] = useState("")
 
+  const [getDefaultAddress, {error, loading}] = useLazyQuery(GET_DEFAULT_ADDRESS, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: async (response) => {
+      if(response.getDefaultCustomerAddress){
+        setAddress(response.getDefaultCustomerAddress.fullAddress)
+        console.log("Full Address", response.getDefaultCustomerAddress.fullAddress)
+      }
+    },
+    onError: (err) => console.log(err),
+  });
+
   useEffect(() => {
     const user = session?.user.person || {}
     setUserName(`${user.firstName} ${user.lastName}`)
     setProfileImage(user.avatarThumbnail)
     setConNo(session?.user.username)
-    setAddress(user.address)
 
     AsyncStorage.getItem("ToktokMallUser").then((raw) => {
       let data = JSON.parse(raw)
-      if(data.address){
-        setAddress(data.address)
+      if(data.userId){
+        getDefaultAddress({variables: {
+          input: {
+            userId: data.userId
+          }
+        }})
       }
     })
-  })
+  }, [])
 
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
@@ -57,8 +76,9 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
           <View style={{flex: 8}}>
             <Text style={{fontSize: 15, fontFamily: FONT.BOLD}}>{userName}</Text>
             <Text style={{fontSize: 11, fontWeight: '800'}}>{conNo}</Text>
-            <Text style={{fontSize: 11, fontWeight: '800'}}>{address || `10F Inoza Tower, 40th Street, Bonifacio Global City`}</Text>
+            <Text style={{fontSize: 11, fontWeight: '800', textTransform: 'capitalize'}}>{address || "---"}</Text>
           </View>
+          <View style={{flex: 0.5}} />
         </View>            
       </ImageBackground>
 
@@ -70,7 +90,7 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
               <Image source={require("../../../../../../assets/toktokwallet-assets/toktokwallet.png")} style={{width:'100%', height: 20, resizeMode: 'stretch'}} />
             </View>
             <View style={{flex: 4, alignItems: 'flex-start', justifyContent: 'center'}}>
-              <Text style={{fontSize: 11, marginLeft: 8, color: COLOR.DARK}}>(Balance P2000.00)</Text>
+              <Text style={{fontSize: 11, marginLeft: 8, color: COLOR.DARK}}>(Balance P0.00)</Text>
             </View>
             <View style={{flex: 2, alignItems: 'flex-end', justifyContent: 'center'}}>
               <Text style={{fontSize: 13, fontFamily: FONT.REGULAR, color: COLOR.ORANGE}}>Top up</Text>

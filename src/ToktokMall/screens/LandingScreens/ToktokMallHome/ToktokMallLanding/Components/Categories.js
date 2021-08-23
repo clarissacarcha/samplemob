@@ -57,10 +57,6 @@ export const Categories = ({data}) => {
 
   useEffect(() => {
     getCategoriesList()
-    
-    // setTimeout(() => {
-    //   console.log("Categories", categories)
-    // }, 700)
   }, [])
 
   const setIcon = (item) => {
@@ -132,8 +128,47 @@ export const Categories = ({data}) => {
             />             */}
 
             <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
-              <ContentLoader active loading = {loading} avatar = {false}  title = {true} pRows = {0}
-                tHeight = {40} avatarStyles = {{ left: 0, borderRadius: 5}}  tWidth = {'100%'}
+
+            {/* Skeleton Loader */}
+            {loading && [1,2,3,4,5].map((cat, i) => {
+                  return (
+                    <>
+                      <View style={{flex: 1}}>
+                        <View style={{alignItems: 'center', justifyContent: 'center'}}>
+                          <View style={{width: 50, height: 50, backgroundColor: 'rgba(204, 204, 204, 0.2)', borderRadius: 5}} />
+                        </View>
+                        <View style={{alignItems: 'center', justifyContent: 'center', marginTop: 2}}>
+                          <View style={{height: 0}} />
+                        </View>
+                      </View>   
+                    </>
+                  )
+              })}
+
+              {!loading && categoriesArr.length > 0 && categoriesArr.map((cat, i) => {
+                  return (
+                    <>
+                      <View style={{flex: 1}}>
+                        <View style={{alignItems: 'center', justifyContent: 'center'}}>
+                          {setIcon(cat)}
+                        </View>
+                        <View style={{alignItems: 'center', justifyContent: 'center', marginTop: 4}}>
+                          <Text style={styles.label}>{cat.parentCategory}</Text>
+                        </View>
+                      </View>   
+                    </>
+                  )
+              })}
+
+              {/* <ContentLoader 
+                active 
+                loading={loading}
+                avatar={false}
+                title={true} 
+                pRows={0}
+                tHeight={40} 
+                avatarStyles={{ left: 0, borderRadius: 5}}  
+                tWidth={'100%'}
               >
                 {categoriesArr.length > 0 && categoriesArr.map((cat, i) => {
                   return (
@@ -150,7 +185,8 @@ export const Categories = ({data}) => {
                   )
                 })} 
                 
-              </ContentLoader>          
+              </ContentLoader>           */}
+
             </View>
             <View style={{height: 15}} />
 

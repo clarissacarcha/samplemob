@@ -28,7 +28,7 @@ const Confirm = ({onCancel, onConfirm}) => {
   )
 }
 
-export const AddressModal = ({navigation, isVisible, setIsVisible, type, message}) => {
+export const AddressModal = ({navigation, isVisible, setIsVisible, onConfirm = null, type, message}) => {
   
   const [modalVisible, setModalVisible] = useState(isVisible || false)
 
@@ -46,7 +46,9 @@ export const AddressModal = ({navigation, isVisible, setIsVisible, type, message
       >
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.25)'}}>
           <View style={{backgroundColor: 'white', width: '90%', paddingVertical: 20, paddingHorizontal: 20, borderRadius: 5}}>
-            {type == "Confirm" && <Confirm onCancel={() => setIsVisible(false)} onConfirm={() => setIsVisible(false)} />}
+            {type == "Confirm" && <Confirm onCancel={() => setIsVisible(false)} onConfirm={() => {
+              onConfirm()
+            }} />}
             {type == "Message" && 
             <View style={{alignItems: 'center', justifyContent: 'center'}}>
               <AntDesgin 
