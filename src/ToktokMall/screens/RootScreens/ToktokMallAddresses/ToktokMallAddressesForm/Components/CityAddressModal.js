@@ -32,20 +32,20 @@ export const CityAddressModal = ({
     const [provinces, setProvinces] = useState([])
     const [searchKey, setSearchKey] = useState('')
 
-    // const [getCities, {error, loading}] = useLazyQuery(GET_CITIES, {
-    //     client: TOKTOK_MALL_GRAPHQL_CLIENT,
-    //     fetchPolicy: 'network-only',
-    //     onCompleted: (response) => {
-    //         setFilteredCities(response.getCities)
-    //     },
-    //     onError: (err) => {
-    //         console.log(err)
-    //     }
-    // })
+    const [getCities, {error, loading}] = useLazyQuery(GET_CITIES, {
+        client: TOKTOK_MALL_GRAPHQL_CLIENT,
+        fetchPolicy: 'network-only',
+        onCompleted: (response) => {
+            setFilteredCities(response.getCities)
+        },
+        onError: (err) => {
+            console.log(err)
+        }
+    })
 
-    // useEffect(() => {
-    //   getCities()
-    // }, [])
+    useEffect(() => {
+      getCities()
+    }, [])
 
     // const selectCountry = (index) => {
     //     const province = filteredProvinces[index].provDesc
