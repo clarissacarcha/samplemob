@@ -94,7 +94,7 @@ export const VerifyPin = ({pageIndex,setPageIndex})=> {
          <AlertOverlay visible={loading} />
         <View style={styles.container}>
             <ScrollView style={styles.content}>
-                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 20,alignSelf:"center"}}>Enter old PIN</Text>
+                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 20,alignSelf:"center"}}>Enter old TPIN</Text>
                     <View style={{position: 'relative',marginTop: 40,padding: 16,}}>
                         <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={showPin}/>
                         <TextInput
@@ -113,21 +113,21 @@ export const VerifyPin = ({pageIndex,setPageIndex})=> {
                             onSubmitEditing={pinCode.length == 6 ? onSubmit: null}
                         />
                          {
-                            pinCodeAttempts.visible && <Text style={{fontFamily: FONT.REGULAR,color:"red",alignSelf:"center",fontSize: 12,textAlign:'center'}}>Incorrect PIN. You can try {numWordArray[pinCodeAttempts.attempts]} ({pinCodeAttempts.attempts}) more {pinCodeAttempts.attempts == 1 ? "time" : "times"} before your account will be temporarily blocked.</Text>
+                            pinCodeAttempts.visible && <Text style={{fontFamily: FONT.REGULAR,color:"red",alignSelf:"center",fontSize: 12,textAlign:'center'}}>Incorrect TPIN. You can try {numWordArray[pinCodeAttempts.attempts]} ({pinCodeAttempts.attempts}) more {pinCodeAttempts.attempts == 1 ? "time" : "times"} before your account will be temporarily blocked.</Text>
                         }
 
                         <TouchableOpacity
                                 style={{marginTop: 18,paddingVertical: 10,alignItems: "center"}}
                                 onPress={()=>setShowPin(!showPin)}
                         >
-                                <Text style={{color: COLOR.ORANGE,fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>{showPin ? "HIDE PIN" : "SHOW PIN"}</Text>
+                                <Text style={{color: COLOR.ORANGE,fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>{showPin ? "HIDE TPIN" : "SHOW TPIN"}</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity
                                 style={{paddingVertical: 10,alignItems: "center"}}
                                 onPress={forgotPIN}
                         >
-                                <Text style={{color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>FORGOT PIN?</Text>
+                                <Text style={{color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>FORGOT TPIN?</Text>
                         </TouchableOpacity>
                     </View>
             </ScrollView>

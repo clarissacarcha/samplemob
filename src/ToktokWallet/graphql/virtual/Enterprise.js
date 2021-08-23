@@ -93,3 +93,12 @@ export const VERIFY_LINK_ACCOUNT_OTP = gql`
         }
     }
 `
+
+export const GET_SOURCE_OF_INCOME = gql`
+    query {
+        getSourceOfIncome {
+            id
+            description
+        }
+    }
+`

@@ -14,7 +14,8 @@ import {
     VerifyContext,
     VerifyFullname,
     VerifyID,
-    VerifySelfie
+    VerifySelfie,
+    VerifySourceOfIncome
 } from "./Components";
 
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
@@ -82,7 +83,7 @@ const MainSetupComponent = ()=> {
     })
 
  
-    const [screenSlides,setScreenSlides] = useState(["Fullname","Address","IDPic","SelfiePic","Confirm"])
+    const [screenSlides,setScreenSlides] = useState(["Fullname","Address","SourceOfIncome","IDPic","SelfiePic","Confirm"])
  
     const cancelSetup = ()=> {
       console.log("Cancelling")
@@ -97,8 +98,10 @@ const MainSetupComponent = ()=> {
             case 1:
                 return <VerifyAddress/>
             case 2:
-                return <VerifyID/>
+                return <VerifySourceOfIncome/>
             case 3:
+                return <VerifyID/>
+            case 4:
                 return <VerifySelfie/>
             default:
                 return <Confirm/>

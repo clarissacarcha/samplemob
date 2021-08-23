@@ -41,11 +41,15 @@ export const VerifyContextProvider = ({children})=> {
         countryId: 175
     })
 
+    const [incomeInfo, setIncomeInfo] = useState({
+        source: "",
+        occupation: "",
+    })
+
     const [province,setProvince] = useState("")
     const [provinceId,setProvinceId] = useState("")
     const [city,setCity] = useState("")
     const [cityId,setCityId] = useState("")
-
 
     const [verifyID, setVerifyID] = useState({
         idType: "",
@@ -60,6 +64,8 @@ export const VerifyContextProvider = ({children})=> {
     const [frontImage, setFrontImage] = useState(null)
     const [backImage, setBackImage] = useState(null)
     const [isBackRequired, setIsbackRequired] = useState(false)
+    const [cities, setCities] = useState(citiesList)
+    const [provinceCities, setProvinceCities] = useState([])
 
     const changePersonInfo = (key,value)=> {
         person[key] = value
@@ -96,12 +102,17 @@ export const VerifyContextProvider = ({children})=> {
         }))
     }
 
-    const [cities, setCities] = useState(citiesList)
-    const [provinceCities, setProvinceCities] = useState([])
-
     const changeProvinceCities = (data) => {
         setProvinceCities([...data])
     }
+
+    const changeIncomeInfo = (key,value)=> {
+        setIncomeInfo(oldstate=>({
+            ...oldstate,
+            [key]: value
+        }))
+    }
+
 
     // console.log("Context Provider", session.user.username)
 
@@ -153,8 +164,9 @@ export const VerifyContextProvider = ({children})=> {
                 isBackRequired,
                 setIsbackRequired,
                 identificationId,
-                setIdentificationId
- 
+                setIdentificationId,
+                incomeInfo,
+                changeIncomeInfo,
             }}
         >
             {children}

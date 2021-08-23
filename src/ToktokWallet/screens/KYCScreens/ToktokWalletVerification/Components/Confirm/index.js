@@ -118,6 +118,8 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
             ...( rnBackIDFile ? {backImage: rnBackIDFile} : {} ),
             identificationCardNumber: VerifyUserData.verifyID.idNumber,
             identificationCardId: VerifyUserData.identificationId,
+            sourceIncomeId: VerifyUserData.incomeInfo.source.id,
+            occupation: VerifyUserData.occupation
         }
 
         postKYCRegister({
@@ -141,10 +143,12 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
                         <UserInfo label="Middle Name" value={VerifyUserData.person.middleName}/>
                         <UserInfo label="Last Name" value={VerifyUserData.person.lastName}/>
                         <UserInfo label="Gender" value={VerifyUserData.person.gender}/>
-                        <UserInfo label="Date of Birth" value={moment(VerifyUserData.birthInfo.birthdate).format("MMM DD YYYY")}/>
+                        <UserInfo label="Date of Birth" value={moment(VerifyUserData.birthInfo.birthdate).format("MMM DD, YYYY")}/>
                         <UserInfo label="Place of Birth" value={VerifyUserData.birthInfo.birthPlace}/>
                         <UserInfo label="Nationality" value={VerifyUserData.nationality}/>
                         <UserInfo label="Address" value={`${VerifyUserData.address.line1} ${VerifyUserData.address.line2} ${VerifyUserData.city} ${VerifyUserData.province}, ${VerifyUserData.address.country} ${VerifyUserData.address.postalCode}`}/>
+                        <UserInfo label="Source of Income" value={VerifyUserData.incomeInfo.source.description}/>
+                        <UserInfo label="Occupation" value={VerifyUserData.incomeInfo.occupation}/>
                         <UserInfo label="ID Type" value={VerifyUserData.verifyID.idType}/>
                         <UserInfo label="ID number" value={VerifyUserData.verifyID.idNumber}/>
                 </ScrollView>

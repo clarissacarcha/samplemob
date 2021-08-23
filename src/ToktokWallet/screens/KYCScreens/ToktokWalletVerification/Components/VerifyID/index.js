@@ -3,7 +3,7 @@ import {View,Text,StyleSheet,TouchableOpacity,Modal,Dimensions,Alert,Image,Scrol
 import EIcon from 'react-native-vector-icons/EvilIcons'
 import {VerifyContext} from '../VerifyContextProvider'
 import {useNavigation} from '@react-navigation/native'
-import { YellowButton } from 'src/revamp'
+import { YellowButton , VectorIcon , ICON_SET } from 'src/revamp'
 import validator from 'validator'
 import CONSTANTS from 'common/res/constants'
 

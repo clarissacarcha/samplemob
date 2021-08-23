@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState,useRef} from 'react'
 import {Text,View,StyleSheet,Alert,Image,TextInput,TouchableOpacity,Linking,ScrollView,KeyboardAvoidingView,Dimensions,Platform} from 'react-native'
 import {VerifyContext} from '../VerifyContextProvider'
 import validator from 'validator';
-import {YellowButton } from 'src/revamp'
+import {YellowButton , VectorIcon , ICON_SET } from 'src/revamp'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import moment from 'moment'
 import CONSTANTS from 'common/res/constants'
@@ -202,20 +202,15 @@ export const VerifyFullname = ()=> {
                     <View style={{marginTop: 20,}}>
                     <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Gender</Text>
                         <TouchableOpacity 
-                            style={[styles.input, {flex: 1,justifyContent:'center'}]}
+                            style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center"}]}
                             onPress={()=>genderRef.current.expand()}
                         >
-                               {/* {
-                                     person.gender == ""
-                                     ? <Text style={{flex: 1,fontFamily: FONT.REGULAR,color: COLOR.DARK,fontSize: FONT_SIZE.M}}>-Select Gender-</Text>
-                                     : <Text style={{flex: 1,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{person.gender}</Text>
-                               } */}
-                                {/* <Text>gg</Text> */}
                                 {
                                     person.gender == ""
-                                    ? <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M,color: COLOR.DARK}}>-Select Gender-</Text>
-                                    : <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{person.gender}</Text>
+                                    ? <Text style={{flex:1 ,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M,color: COLOR.DARK}}>-Select Gender-</Text>
+                                    : <Text style={{flex: 1,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{person.gender}</Text>
                                 }
+                                  <VectorIcon iconSet={ICON_SET.Feather} name="chevron-right"/>
                         </TouchableOpacity>
 
                     </View>

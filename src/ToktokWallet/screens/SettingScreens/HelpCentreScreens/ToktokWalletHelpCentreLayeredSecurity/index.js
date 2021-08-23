@@ -54,8 +54,8 @@ export const ToktokWalletHelpCentreLayeredSecurity = ({navigation}) => {
                             <View style={{flex: 1, marginTop: 12, marginBottom: 10}}>
 
                                 <ListItem
-                                    title="toktokwallet PIN authentication"
-                                    content="We protect your wallet by offering toktokwallet PIN authentication. They help prevent unauthorized access to your account."
+                                    title="toktokwallet TPIN authentication"
+                                    content="We protect your wallet by offering toktokwallet TPIN authentication. They help prevent unauthorized access to your account."
                                     imageSource={require('toktokwallet/assets/images/SecurityAndPrivacy/fingerprint.png')}
                                     resizeMode="stretch"
                                 />

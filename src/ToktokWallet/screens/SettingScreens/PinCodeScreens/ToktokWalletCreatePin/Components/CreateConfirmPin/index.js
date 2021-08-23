@@ -22,14 +22,14 @@ export const CreateConfirmPin = ({pinCode,setPageIndex,walletinfo,patchPincodeTo
     
     const onSubmit = () => {
         if(pinCode != confirmpinCode){
-           return Alert.alert("","Pin code does not match!")
+           return Alert.alert("","TPIN code does not match!")
         }
     };
 
     useEffect(()=>{
         if(confirmpinCode.length == 6){
             if(pinCode != confirmpinCode){
-                return setMessage("Pin code does not match! Please try again")
+                return setMessage("TPIN code does not match! Please try again")
             }
             return patchPincodeToktokWallet()
         }else{
@@ -40,7 +40,7 @@ export const CreateConfirmPin = ({pinCode,setPageIndex,walletinfo,patchPincodeTo
     return (
        <View style={styles.container}>
             <ScrollView style={styles.content}>
-                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 20,alignSelf:"center"}}>Confirm your {tokwaAccount.pinCode ? "new ": ""}PIN</Text>
+                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 20,alignSelf:"center"}}>Confirm your {tokwaAccount.pinCode ? "new ": ""}TPIN</Text>
                     <View style={{position: 'relative',marginTop: 50,}}>
                         <NumberBoxes pinCode={confirmpinCode} onNumPress={onNumPress} showPin={showPin}/>
                         <TextInput
@@ -68,7 +68,7 @@ export const CreateConfirmPin = ({pinCode,setPageIndex,walletinfo,patchPincodeTo
                                     style={{marginTop: 18,paddingVertical: 10, alignItems: "center"}}
                                     onPress={()=>setShowPin(!showPin)}
                             >
-                                    <Text style={{color: COLOR.ORANGE,fontSize:FONT_SIZE.M,fontFamily: FONT.BOLD}}>{showPin ? "HIDE PIN" : "SHOW PIN"}</Text>
+                                    <Text style={{color: COLOR.ORANGE,fontSize:FONT_SIZE.M,fontFamily: FONT.BOLD}}>{showPin ? "HIDE TPIN" : "SHOW TPIN"}</Text>
                             </TouchableOpacity>
 
                       
