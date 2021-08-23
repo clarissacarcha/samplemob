@@ -74,7 +74,7 @@ export const AdsCarousel = (props) => {
         sliderWidth={330}
         itemWidth={330}
         autoplay={true}
-        // autoplayDelay={700}
+        autoplayDelay={700}
         hasParallaxImages={true}
         removeClippedSubviews={true}
       />
