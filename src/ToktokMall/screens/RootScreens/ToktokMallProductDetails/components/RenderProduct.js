@@ -73,8 +73,6 @@ const Component = ({data, onOpenVariations, animatedValue, shop, loading, reduxA
     }
   }
 
-  
-
 	return (
 		<>
 			<View style={{paddingVertical: 8, paddingHorizontal: 16}}>
@@ -92,7 +90,7 @@ const Component = ({data, onOpenVariations, animatedValue, shop, loading, reduxA
               {data.price ? <Text style={{color: "#F6841F", fontSize: 20}}><Price amount={data.price} /></Text> : null}
             </View>
             <View style={{flex: 3, justifyContent: 'center'}}>
-              {data.compareAtPrice ? <Text style={{color: "#9E9E9E", textDecorationLine: 'line-through', fontSize: 14}}><Price amount={data.compareAtPrice} /></Text> : null}
+              {data.compareAtPrice && data.compareAtPrice != "0.00" ? <Text style={{color: "#9E9E9E", textDecorationLine: 'line-through', fontSize: 14}}><Price amount={data.compareAtPrice} /></Text> : null}
             </View>
           </View>
           <View style={{flexDirection: 'row', paddingTop: 8}}>

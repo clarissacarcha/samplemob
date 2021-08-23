@@ -65,7 +65,7 @@ const Item = ({data}) => {
     <>
       <View style={{flexDirection: 'row', paddingTop: 10, paddingBottom: 0, paddingHorizontal: 15}}>
         <View style={{flex: 2, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 5, borderRadius: 5}}>
-          <Image source={getImageSource(product?.image)} style={{width: 55, height: 80, resizeMode: 'stretch', borderRadius: 5}} />
+          <Image source={getImageSource(product?.image || product?.img)} style={{width: 55, height: 80, resizeMode: 'stretch', borderRadius: 5}} />
         </View>
         <View style={{flex: 8}}>
           <View style={{flex: 1, justifyContent: 'center'}}>

@@ -8,6 +8,7 @@ export const SubItem = ({index, total, data, root, onSelect}) => {
 
   let bgcol = "rgba(204, 204, 204, 0.2)"
 	const [toggle, setToggle] = useState(false)
+	const [clicks, setClicks] = useState(0)
 
 	const renderDescription = (content, value) => {
 		const txtStyle = {fontSize: 12, color: "#9E9E9E"}
@@ -44,7 +45,7 @@ export const SubItem = ({index, total, data, root, onSelect}) => {
 
   return (
   	<>
-    	<View style={{flexDirection: 'row', backgroundColor: toggle == false ? bgcol : "white"}}>
+    	<View style={{flexDirection: 'row', backgroundColor: clicks == 0 ? bgcol : "white"}}>
         <View style={{flex: 2, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 15}}>
           <View style={{flex: 1, backgroundColor: index == 0 ? 'transparent' : "#C4C4C4", width: '3%'}}></View>
           <CustomIcon.MCIcon name="circle" size={9} color="#C4C4C4" style={{position: 'absolute'}} />
@@ -52,6 +53,9 @@ export const SubItem = ({index, total, data, root, onSelect}) => {
         </View>
         <TouchableOpacity onPress={() => {
 					// setToggle(true)
+					if(clicks == 0){
+						setClicks(clicks + 1)
+					}
 					onSelect()
 				}} style={{flex: 12, paddingHorizontal: 0, paddingVertical: 15}}>
           <View style={{flexDirection: 'row'}}>
@@ -68,7 +72,7 @@ export const SubItem = ({index, total, data, root, onSelect}) => {
             </View>                            
           </View>
           <View style={{paddingTop: 15}}>
-            <View style={{ height: 2, backgroundColor: 'rgba(0, 0, 0, 0.02)'}} />
+            {index < total - 1 ? <View style={{ height: 2, backgroundColor: 'rgba(0, 0, 0, 0.02)'}} /> : null}
           </View>                            
         </TouchableOpacity>
       </View>
