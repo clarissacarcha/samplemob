@@ -10,6 +10,8 @@ import {
   //Visit Store
   ToktokMallStore,
 
+  ToktokMallPaymentWebview,
+
   //Product Details
   ToktokMallProductDetails,
 
@@ -30,6 +32,7 @@ export default ({Navigator}) => (
     <Navigator.Screen name="ToktokMallAddressesForm" component={ToktokMallAddressesForm} />
     <Navigator.Screen name="ToktokMallAddressesMenu" component={ToktokMallAddressesMenu} />
     <Navigator.Screen name="ToktokMallCheckout" component={ToktokMallCheckout} />
+    <Navigator.Screen name="ToktokMallPaymentWebview" component={ToktokMallPaymentWebview} options={{headerShown: false}} />
     <Navigator.Screen name="ToktokMallProductDetails" component={ToktokMallProductDetails} options={{headerShown: false}}/>
     <Navigator.Screen name="ToktokMallProductRatings" component={ToktokMallProductRatings} />
     <Navigator.Screen name="ToktokMallRateProduct" component={ToktokMallRateProduct} />

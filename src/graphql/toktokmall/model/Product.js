@@ -73,9 +73,7 @@ export const GET_ADS = gql`
 			getAdvertisements{
 				Id
 				price
-				image {
-					filename
-				}
+				image 
 			}
 		}
 `

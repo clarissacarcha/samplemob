@@ -38,7 +38,7 @@ const Splash = ({ createMyCartSession, createNotificationsSession}) => {
     variables: {
       input: {
         toktokId: parseInt(session?.user?.id)
-        // toktokId: 1234
+        // toktokId: 9999
       }
     },
 		onCompleted: async (response) => {
@@ -94,7 +94,8 @@ const Splash = ({ createMyCartSession, createNotificationsSession}) => {
       .then((response) => {
         
         if(response.data && response.data.success == 1){
-          authUser()
+          console.log("Response", response.data) 
+          // authUser()
         }else{
           setFailed(true)
          console.log("Response", response.data) 
