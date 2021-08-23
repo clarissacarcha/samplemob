@@ -112,7 +112,7 @@ const ToktokRiderRating = () => {
     <>
       <View style={styles.container}>
         <HeaderImageBackground>
-          <HeaderTitle forRating={true} />
+          <HeaderTitle showAddress={false} title="Rate the Driver" />
           <Image source={rider1} style={styles.riderAvatar} />
         </HeaderImageBackground>
         <InputScrollView contentContainerStyle={{paddingBottom: 220}}>
