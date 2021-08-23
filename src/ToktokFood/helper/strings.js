@@ -3,27 +3,27 @@ import {food1, image1, image2, image3, image4} from 'toktokfood/assets/images';
 export const availableTips = [
   {
     id: 1,
-    name: '₱ 20.00',
+    amount: 20,
   },
   {
     id: 2,
-    name: '₱ 50.00',
+    amount: 50,
   },
   {
     id: 3,
-    name: '₱ 100.00',
+    amount: 100,
   },
   {
     id: 4,
-    name: '₱ 150.00',
+    amount: 150,
   },
   {
     id: 5,
-    name: '₱ 200.00',
+    amount: 200,
   },
   {
     id: 6,
-    name: '₱ 250.00',
+    amount: 250,
   },
 ];
 
