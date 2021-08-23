@@ -157,7 +157,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
     postCheckoutBody.citymunCode = addressData.municipalityId
     postCheckoutBody.total_amount = parseFloat(grandTotal)
     postCheckoutBody.srp_totalamount = parseFloat(grandTotal)
-    postCheckoutBody.payment_method = payment || "cod"
+    postCheckoutBody.payment_method = payment
     // postCheckoutBody.vouchers = []
     postCheckoutBody.order_logs = []
 
@@ -211,7 +211,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
             if(response.data && response.data.success == 1){
               
               if(route?.params?.type == "from_cart"){
-                UpdateCart()              
+                UpdateCart()      
               }
 
               setIsVisible(true)
@@ -225,11 +225,12 @@ const Component = ({route, navigation, createMyCartSession}) => {
             }else{              
 
               Toast.show("Something went wrong")
+              console.log("Response", response)
               setIsLoading(false)
             
             }
 
-            console.log("Response", response.data)
+            console.log("Response", response)
 
           }).catch((error) => {
             console.log(error)

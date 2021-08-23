@@ -11,6 +11,8 @@ import { Header, AdsCarousel, MessageModal } from '../../../Components';
 import CustomIcon from '../../../Components/Icons';
 import {ASAddToCart, ASClearCart} from '../../../helpers';
 import ContentLoader, {InstagramLoader, FacebookLoader} from 'react-native-easy-content-loader'
+import { MergeStoreProducts } from '../../../helpers';
+
 import {
 
   HeaderPlain,
@@ -80,7 +82,7 @@ const Component =  ({
         setRelevantProducts(response.getProductDetails.relevantProducts)
         if(response.getProductDetails.noOfStocks == 0) setisOutOfStock(true)
       }
-      console.log(response, route.params.Id)
+      // console.log(response, route.params.Id)
     },
     onError: (err) => {
       console.log(err)
@@ -104,7 +106,7 @@ const Component =  ({
   const onBuyNow = (input) => {
     navigation.push("ToktokMallCheckout", {
       type: "single",
-      data: [cartObject(input)],
+      data: MergeStoreProducts([cartObject(input)]),
       newCart: [],
       vouchers: [],
     })
@@ -139,7 +141,7 @@ const Component =  ({
   useEffect(() => {
     getProductDetails()
     setCartItems(CountCartItems)
-    console.log('dataaaaaaaaaaaaaaa', route.params.itemname)
+    // console.log('dataaaaaaaaaaaaaaa', route.params.itemname)
   }, [])  
 
   if(error) {

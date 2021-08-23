@@ -1,5 +1,38 @@
 import gql from 'graphql-tag'
 
+
+export const GET_PROCESSING_ORDERS = gql`
+  query getProcessingOrders($input: GetOrdersInput) {
+		getProcessingOrders(input: $input) {
+	    referenceNum
+  	  totalAmount
+    	shipping {
+      	shop {
+        	id
+        	shopname
+      	}
+  	    deliveryAmount
+	      daystoship
+    	  daystoshipTo
+      	orderPlaced
+    	}
+	    orderData {
+    	  productId
+     		totalAmount
+      	quantity
+      	product {
+        	itemname
+        	compareAtPrice
+        	variation
+        	image {
+          	filename
+        	}
+      	}        
+    	}
+    }
+  }
+`
+
 export const GET_TOSHIP_ORDERS = gql`
   query getToShipOrders($input: GetOrdersInput) {
 		getToShipOrders(input: $input) {

@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {StyleSheet, Platform, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, Switch} from 'react-native';
 import {HeaderBack, HeaderTitle, HeaderRight} from '../../../../Components';
 import {CityAddressModal, AddressModal} from './Components';
+import Toast from "react-native-simple-toast"
 import ToggleSwitch from 'toggle-switch-react-native';
 import CustomIcon from "../../../../Components/Icons";
 import axios from "axios";
@@ -11,6 +12,7 @@ import {GET_CITIES} from '../../../../../graphql/toktokmall/model/Address';
 import {TOKTOK_MALL_GRAPHQL_CLIENT} from '../../../../../graphql';
 import {connect} from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
+import { useStateCallback } from '../../../../helpers/useStateCallback';
 
 const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxStates: {user_address}}) => {
   const [newAddressForm, setNewAddressForm] = useState({
@@ -34,6 +36,10 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
   const [provCode, setProvCode] = useState(0)
   const [munCode, setMunCode] = useState(0)
   const [regCode, setRegCode] = useState(0)
+  const [validation, setValidation] = useStateCallback({
+    validated: false,
+    errors: []
+  })
 
   const onChangeText = (name, value) => {
     setNewAddressForm((prevState) => ({
@@ -159,6 +165,62 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
     })
   }
 
+  const addError = (field) => {
+    setValidation(prevState => ({
+      ...prevState,
+      errors: [
+        ...prevState.errors,
+        field
+      ]
+    }))
+  }
+
+  const removeError = (field) => {
+    setValidation(prevState => ({
+      ...prevState,
+      errors: prevState.errors.filter((error) => error !== field)
+    }))
+  }
+  useEffect(() => {
+    if(!newAddressForm.receiverName){
+      addError("receiverName")
+    }
+    if(newAddressForm.receiverName){
+      removeError("receiverName")
+    }
+    if(!newAddressForm.receiverContact){
+      addError("receiverContact")
+    }
+    if(newAddressForm.receiverContact){
+      removeError("receiverContact")
+    }
+    if(!newAddressForm.address){
+      addError("address")
+    }
+    if(newAddressForm.address){
+      removeError("address")
+    }
+    if(city === "Select City"){
+      addError("city")
+    }
+    if(city !== "Select City"){
+      removeError("city")
+    }
+  }, [newAddressForm, city])
+
+  const onSubmitValidation = () => {
+    setValidation(prevState => ({
+      ...prevState,
+      validated: true
+    }), (state) => {
+      if(state.validated && state.errors.length === 0){
+        SavePostAddress()
+      }else {
+        Toast.show("Please fill up the required fields!")
+      }
+    })
+  }
+
   return (
     <>
       {confirmDeleteModal && (
@@ -197,6 +259,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
             <TextInput
               style={styles.textinput}
               value={newAddressForm.receiverName}
+              placeholderTextColor={validation.validated && validation.errors?.includes("receiverName")? "red": "gray"}
               placeholder={'Full Name'}
               onChangeText={(text) => {
                 onChangeText('receiverName', text);
@@ -207,6 +270,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
             <TextInput
               style={styles.textinput}
               value={newAddressForm.receiverContact}
+              placeholderTextColor={validation.validated && validation.errors?.includes("receiverContact")? "red": "gray"}
               placeholder={'Contact Number'}
               onChangeText={(text) => {
                 onChangeText('receiverContact', text);
@@ -218,6 +282,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
               style={styles.textinput}
               placeholder={'Address(House #, Street, Village)'}
               value={newAddressForm.address}
+              placeholderTextColor={validation.validated && validation.errors?.includes("address")? "red": "gray"}
               onChangeText={(text) => {
                 onChangeText('address', text);
               }}
@@ -237,7 +302,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
           /> */}
           <TouchableOpacity onPress = {() => {setModalProvinceVisible(true)}}>
             <View style = {styles.textinputContainerRow}>
-              <Text style = {styles.text}>{city}</Text>
+              <Text style = {[styles.text, {color: validation.validated && validation.errors?.includes("city")? "red": "gray"}]}>{city}</Text>
                 <CustomIcon.EIcon 
                   name = {'chevron-down'}
                   size = {20}
@@ -305,7 +370,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
           <TouchableOpacity
             style={styles.button1}
             onPress={() => {
-              SavePostAddress()
+              onSubmitValidation()
             }}>
             <Text style={styles.buttonText}>Save</Text>
           </TouchableOpacity>

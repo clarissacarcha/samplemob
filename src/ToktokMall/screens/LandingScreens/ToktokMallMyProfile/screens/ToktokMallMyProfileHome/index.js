@@ -105,21 +105,25 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
             </View>
             <View style={{flexDirection: 'row', paddingVertical: 10}}>
               <TouchableOpacity onPress={() => navigation.navigate("ToktokMallMyOrders", {tab: 0})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
+                <CustomIcon.FeIcon name="box" size={30} color={COLOR.ORANGE} />
+                <Text style={{fontSize: 12}}>Confirmed</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate("ToktokMallMyOrders", {tab: 1})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
                 <CustomIcon.FeIcon name="truck" size={30} color={COLOR.ORANGE} />
                 <Text style={{fontSize: 12}}>To Ship</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => navigation.navigate("ToktokMallMyOrders", {tab: 1})} style={{flex: 2,  alignItems: 'center' , justifyContent: 'center'}}>
+              <TouchableOpacity onPress={() => navigation.navigate("ToktokMallMyOrders", {tab: 2})} style={{flex: 2,  alignItems: 'center' , justifyContent: 'center'}}>
                 <CustomIcon.FeIcon name="package" size={30} color={COLOR.ORANGE} />
-                <Text style={{fontSize: 12}}>To Recieve</Text>
+                <Text style={{fontSize: 12}}>To Receive</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => navigation.navigate("ToktokMallMyOrders", {tab: 2})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
+              <TouchableOpacity onPress={() => navigation.navigate("ToktokMallMyOrders", {tab: 3})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
                 <CustomIcon.MCIcon name="comment-check-outline" size={30} color={COLOR.ORANGE} />
                 <Text style={{fontSize: 12}}>Completed</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => navigation.navigate("ToktokMallMyOrders", {tab: 3})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
+              {/* <TouchableOpacity onPress={() => navigation.navigate("ToktokMallMyOrders", {tab: 3})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
                 <CustomIcon.MCIcon name="comment-remove-outline" size={30} color={COLOR.ORANGE} />
                 <Text style={{fontSize: 12}}>Cancelled</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
           </View>
         </Card>
@@ -138,10 +142,10 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
                 {/* <Image style={{width: 26, height: 24, resizeMode: 'cover'}} source={storeIcon} /> */}
                 <Text style={{fontSize: 12}}>Following</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => navigation.navigate("ToktokMallMyVouchers", {tab: 1})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
+              {/* <TouchableOpacity onPress={() => navigation.navigate("ToktokMallMyVouchers", {tab: 1})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
                 <CustomIcon.MCIcon name="ticket-outline" size={30} color={COLOR.ORANGE} />
                 <Text style={{fontSize: 12}}>My Vouchers</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               <TouchableOpacity onPress={() => navigation.navigate("ToktokMallHelp", {tab: 1})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
                 <CustomIcon.FeIcon name="help-circle" size={30} color={COLOR.ORANGE} />
                 <Text style={{fontSize: 12}}>Help</Text>

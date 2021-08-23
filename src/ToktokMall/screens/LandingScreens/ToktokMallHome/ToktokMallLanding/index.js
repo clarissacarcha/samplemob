@@ -285,9 +285,9 @@ const Component = ({ myCart, createMyCartSession,}) => {
       >
         <AdsCarousel />
         <Categories  />
-        <Offers  />
-        <FlashSale />
-        <Vouchers />
+        {/* <Offers  /> */}
+        {/* <FlashSale /> */}
+        {/* <Vouchers /> */}
         <Suggestions />
       </Animated.ScrollView>
 

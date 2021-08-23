@@ -34,9 +34,10 @@ export const UploadModal = ({isVisible, setIsVisible, actions = []}) => {
                 {actions.map(({icon, name, onPress}) => (
                   <TouchableOpacity
                     onPress={() => {
-                      onPress();
-                      setModalVisible(!modalVisible);
-                      setIsVisible(false);
+                      onPress(() => {
+                        setModalVisible(!modalVisible);
+                        setIsVisible(false);
+                      });
                     }}>
                     <View style={{alignItems: 'center', justifyContent: 'center'}}>
                       <View style={{paddingVertical: 5}} />

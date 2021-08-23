@@ -77,20 +77,24 @@ export const HeaderTab = (props) => {
         <View style={{flex: 2, flexDirection: 'row', paddingVertical: 15}}>
           <View style={{flex: 1}} />
           <View style={{flex: 8, justifyContent: 'center'}}>
-            <Tab index={0} active={activeTab} label="To Ship" onPress={() => onTabPress(0)} />
+            <Tab index={0} active={activeTab} label="Confirmed" onPress={() => onTabPress(0)} />
           </View>
           <View style={{flex: 1}}></View>
           <View style={{flex: 8, justifyContent: 'center'}}>
-            <Tab index={1} active={activeTab} label="To Recieve" onPress={() => onTabPress(1)} />
+            <Tab index={1} active={activeTab} label="To Ship" onPress={() => onTabPress(1)} />
           </View>
           <View style={{flex: 1}}></View>
           <View style={{flex: 8, justifyContent: 'center'}}>
-            <Tab index={2} active={activeTab} label="Completed" onPress={() => onTabPress(2)} />
+            <Tab index={2} active={activeTab} label="To Receive" onPress={() => onTabPress(2)} />
           </View>
           <View style={{flex: 1}}></View>
+          <View style={{flex: 8, justifyContent: 'center'}}>
+            <Tab index={3} active={activeTab} label="Completed" onPress={() => onTabPress(3)} />
+          </View>
+          {/* <View style={{flex: 1}}></View>
           <View style={{flex: 8, justifyContent: 'center'}}>
             <Tab index={3} active={activeTab} label="Cancelled" onPress={() => onTabPress(3)} />
-          </View>
+          </View> */}
           <View style={{flex: 1}} />
         </View>
         <View style={{flex: 0.5}} />

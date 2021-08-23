@@ -143,6 +143,7 @@ const Component =  ({
   const [allSelected, setAllSelected] = useState(false);
   const [willDelete, setWillDelete] = useState(false);
   const [messageModalShown, setMessageModalShown] = useState(false);
+  const [singleDeletemsgModalShown, setSingleDeletemsgModalShown] = useState(false);
   const [subTotal, setSubTotal] = useState(0);
   const [itemsToDelArr, setItemsToDelArr] = useState([])
   const [itemsToCheckoutArr, setItemsToCheckoutArr] = useState([])
@@ -181,6 +182,7 @@ const Component =  ({
 
   const deleteSingleItem = (id) => {
     createMyCartSession("DeleteSingle", {item_id: id})
+    setSingleDeletemsgModalShown(true)
     // getSubTotal()
   }
 
@@ -413,12 +415,13 @@ const Component =  ({
             message={`${itemsToDelArr.length > 1 ? "Items" : "Item"} has been removed from your cart.`}
           />}
 
+          {singleDeletemsgModalShown && 
           <MessageModal 
             type="Success"
-            isVisible={true}
-            setIsVisible={(val) => setMessageModalShown(val)}  
-            message={`${itemsToDelArr.length > 1 ? "Items" : "Item"} has been removed from your cart.`}
-          />
+            isVisible={singleDeletemsgModalShown}
+            setIsVisible={(val) => setSingleDeletemsgModalShown(val)}  
+            message={`Item has been removed from your cart.`}
+          />}
             
         </View>
       </View>

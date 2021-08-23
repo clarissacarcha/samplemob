@@ -1,45 +1,45 @@
-import React, {useState} from 'react';
-import {View, Image, TouchableOpacity, Text} from 'react-native';
-import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
-import Toast from 'react-native-simple-toast';
+import { useNavigation } from '@react-navigation/core';
+import React, {useEffect, useState} from 'react';
+import {View, Image, TouchableOpacity} from 'react-native';
+import {launchImageLibrary} from 'react-native-image-picker';
+import DocumentPicker from 'react-native-document-picker'
 import {UploadModal} from '../../../../../../../Components';
 import CustomIcon from '../../../../../../../Components/Icons';
 
 export const Uploads = ({images, setRating, index}) => {
   const [visibility, setVisibility] = useState(false);
+  const [image, setImage] = useState()
+  const {navigate} = useNavigation()
 
-  const handleSelectFile = async () => {
+  const handleSelectFile = async (callback) => {
     try {
       launchImageLibrary({}, async (response) => {
-        console.log(response);
         if (response.didCancel) {
-          console.log('User cancelled image picker');
-        } else if (response.error) {
-          console.log('ImagePicker Error: ', response.error);
-        } else {
+           console.log("User cancelled image picker");
+         } else if (response.error) {
+           console.log("ImagePicker Error: ", response.error);
+         } else if (response.customButton) {
+           console.log("User tapped custom button: ", response.customButton);
+         } else {
+          await callback()
           setRating({index, image: {action: 'add', data: response}});
         }
-      });
+   })
     } catch (err) {
       throw err;
     }
   };
-  const handleOpenCamera = async () => {
-    try {
-      launchCamera({}, async (response) => {
-        console.log(response);
-        if (response.didCancel) {
-          console.log('User cancelled image picker');
-        } else if (response.errorCode) {
-          Toast.show(response.errorCode);
-        } else {
-          setRating({index, image: {action: 'add', data: response}});
-        }
-      });
-    } catch (err) {
-      throw err;
+
+  const handleOpenCamera = (callback) => {
+    callback()
+    navigate("ToktokMallRateProductCamera", {setImage})
+  }
+  
+  useEffect(() => {
+    if(image){
+      setRating({index, image: {action: 'add', data: image}});
     }
-  };
+  },[image])
 
   const modalActions = [
     {
