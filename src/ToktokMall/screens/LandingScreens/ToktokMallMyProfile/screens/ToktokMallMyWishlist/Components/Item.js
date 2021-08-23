@@ -13,6 +13,7 @@ import {
 import {coppermask} from '../../../../../../assets';
 import CheckBox from 'react-native-check-box';
 import {FONT} from '../../../../../../../res/variables';
+import { useNavigation } from '@react-navigation/native';
 
 export const Store = ({data}) => {
   return (
@@ -35,6 +36,7 @@ export const Store = ({data}) => {
 
 export const Item = ({data, onHold, onChecked, willDelete}) => {
   const [selected, setSelected] = useState(false);
+  const {navigate} = useNavigation()
 
   const RenderCheckBox = () => {
     return (
@@ -91,7 +93,7 @@ export const Item = ({data, onHold, onChecked, willDelete}) => {
   };
   return (
     <>
-      <TouchableOpacity onLongPress={onHold} style={{flexDirection: 'row', paddingVertical: 10, paddingHorizontal: 15}}>
+      <TouchableOpacity onPress={() => navigate("ToktokMallProductDetails", data)} onLongPress={onHold} style={{flexDirection: 'row', paddingVertical: 10, paddingHorizontal: 15}}>
         {willDelete && <RenderCheckBox />}
         {data.noOfStocks && data.noOfStocks > 0 ? <RenderInStock images={data.images} /> : <RenderOutOfStock images={data.images} />}
         <View style={{flex: 8}}>

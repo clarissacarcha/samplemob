@@ -92,7 +92,7 @@ const Item = ({data}) => {
           </View>          
         </View>        
       </View>
-      <View style={{flexDirection: 'row-reverse', paddingHorizontal: 15, paddingBottom: 15}}>
+      {/* <View style={{flexDirection: 'row-reverse', paddingHorizontal: 15, paddingBottom: 15}}>
         {!rated && <TouchableOpacity onPress={()=> {                    
           navigate("ToktokMallRateProduct", {openModal: () => {
             setRated(true)
@@ -108,7 +108,7 @@ const Item = ({data}) => {
             <Text style={{color: "#fff", fontSize: 13}}>Buy Again</Text>
           </View>
         </TouchableOpacity>}
-      </View>
+      </View> */}
       <View style={{ height: 2, backgroundColor: '#F7F7FA'}} />
 
     {messageModalShown && 
@@ -191,7 +191,7 @@ export const Completed = ({id, email}) => {
     },
     onCompleted: (response) => {
       if(response.getCompletedOrders){
-        setData(testdata)
+        setData(response.getCompletedOrders)
       }
     },
     onError: (err) => {

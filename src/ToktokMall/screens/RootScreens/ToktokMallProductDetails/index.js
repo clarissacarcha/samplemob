@@ -213,7 +213,7 @@ const Component =  ({
           data={product} 
           loading = {loading}
         />
-        <RenderReviews />
+        {/* <RenderReviews /> */}
         <RenderSuggestions data={relevantProducts || []} />
         <View style={{height: 60}} />
       </Animated.ScrollView>

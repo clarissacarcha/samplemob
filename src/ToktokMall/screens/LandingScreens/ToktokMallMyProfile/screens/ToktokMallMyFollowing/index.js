@@ -6,12 +6,14 @@ import {AlertOverlay} from '../../../../../../components';
 import {COLOR, FONT, FONT_SIZE} from '../../../../../../res/variables';
 import {FlatList} from 'react-native-gesture-handler';
 import {connect} from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 const placeholderPNG = require('../../../../../../assets/images/toktokwallet.png');
 
 const ListItem = ({updateMyFollowing, ...data}) => {
     const {profileImages, shopname} = data
+    const {navigate} = useNavigation()
   return (
-    <>
+    <TouchableOpacity onPress={() =>navigate("ToktokMallStore", {id: data?.id})}>
       <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 20}}>
         <View style={{flex: 0, alignItems: 'center', justifyContent: 'center'}}>
           <Image
@@ -27,7 +29,7 @@ const ListItem = ({updateMyFollowing, ...data}) => {
         </TouchableOpacity>
       </View>
       <View style={{height: 2, backgroundColor: '#F7F7FA'}} />
-    </>
+    </TouchableOpacity>
   );
 };
 

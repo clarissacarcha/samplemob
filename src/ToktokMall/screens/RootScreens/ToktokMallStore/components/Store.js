@@ -43,7 +43,7 @@ const Component = ({data, onToggleFollow, reduxActions: {updateMyFollowing}, red
               </TouchableOpacity>
             </View>
           </View>
-          <View style={{flexDirection: 'row', paddingBottom: 20, paddingHorizontal: 15}}>
+          {/* <View style={{flexDirection: 'row', paddingBottom: 20, paddingHorizontal: 15}}>
             <TouchableOpacity onPress={() => {
               navigation.navigate("ToktokMallProductRatings")
             }} style={{flex: 2.5, justifyContent: 'center', alignItems: 'flex-end'}}>
@@ -55,7 +55,7 @@ const Component = ({data, onToggleFollow, reduxActions: {updateMyFollowing}, red
             <View style={{flex: 2.5, justifyContent: 'center', paddingHorizontal: 4}}>
               <Text style={{fontSize: 13}}>Products <Text style={{fontSize: 13, color: "#F6841F"}}>{data.totalProducts}</Text></Text>
             </View>
-          </View>
+          </View> */}
         </Card>
       </View>
 		</>
