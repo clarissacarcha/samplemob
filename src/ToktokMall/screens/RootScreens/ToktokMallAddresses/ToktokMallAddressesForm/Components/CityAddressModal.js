@@ -106,12 +106,12 @@ export const CityAddressModal = ({
           <View>
             <View
               style={{
-                marginTop: Platform.OS === 'ios' ? 50 : 0,
-                paddingBottom: 10,
+                marginTop: Platform.OS === 'ios' ? 60 : 10,
                 flexDirection: 'row',
                 marginLeft: 15,
                 justifyContent: 'space-between',
                 alignContent: 'center',
+                alignItems: 'center',
               }}>
               <TextInput
                 value={searchKey}
@@ -121,12 +121,12 @@ export const CityAddressModal = ({
               />
 
               <TouchableOpacity
-                style={{marginRight: 10}}
+                style={{marginRight: 10, justifyContent: "center"}}
                 onPress={() => {
                   setSearchKey('');
                   setModalProvinceVisible(false);
                 }}>
-                <AIcon name={'close'} size={15} />
+                <AIcon name={'close'} size={18} />
               </TouchableOpacity>
             </View>
             <FlatList
