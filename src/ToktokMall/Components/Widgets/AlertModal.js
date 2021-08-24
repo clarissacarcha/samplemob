@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     borderRadius: 5,
     height: 50,
-    width: '35%',
+    width: '40%',
     alignItems: 'center', justifyContent: 'center'
   },
   filledButtonText: {
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     marginRight: 15,
     borderRadius: 5,
     height: 50,
-    width: '35%',
+    width: '40%',
     alignItems: 'center', justifyContent: 'center'
   },
   whiteButtonText: {

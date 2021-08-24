@@ -405,6 +405,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
           /> */}
           <Payment 
             payment={payment} 
+            total={grandTotal}
             list={paymentList}
             setPaymentMethod={setPaymentMethod} 
           />

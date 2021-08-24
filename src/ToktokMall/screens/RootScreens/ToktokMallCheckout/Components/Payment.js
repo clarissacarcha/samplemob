@@ -20,23 +20,27 @@ const testData = [
 ]
 
 
-export const Payment = ({ list, payment, setPaymentMethod}) => {
+export const Payment = ({ list, payment, total, setPaymentMethod}) => {
 
   const navigation = useNavigation()
+  const [currentBalance, setCurrenctBalance] = useState(0)
 
   return (
     <>
     <View style={styles.container}>
         <Text style = {{marginLeft: 15, marginTop: 15, fontSize: 14, fontFamily: FONT.BOLD}}>Select Payment Method</Text>
-        { payment == "toktokwallet" ? 
-          <View style = {{backgroundColor: '#FFFCF4', padding:10}}>
-            <Text style = {{color: '#F6841F', fontSize: 12, textAlign: 'center'}}>*insufficient funds! Kindly top up to add funds in your toktokwallet.</Text>
+        {parseFloat(currentBalance) < parseFloat(total) ? 
+          <View style={{backgroundColor: '#FFFCF4', padding:10}}>
+            <Text style={{color: '#F6841F', fontSize: 12, textAlign: 'center'}}>*insufficient funds! Kindly top up to add funds in your toktokwallet.</Text>
           </View> :
-          <></>
+          <View style={{height: 8}} />
         }
         <TouchableOpacity 
-          style ={{...styles.item, backgroundColor: payment == 'toktokwallet' ? '#FFEBBC' : 'white' }}
-          onPress = {() => {setPaymentMethod("toktokwallet")}}
+          // style ={{...styles.item, backgroundColor: payment == 'toktokwallet' ? '#FFEBBC' : 'white' }}
+          style ={{...styles.item, backgroundColor: '#FFEBBC' }}
+          onPress = {() => {
+            setPaymentMethod("toktokwallet")
+          }}
         >
           <View style ={{flexDirection: 'row', alignItems: 'center', flex: 1  }}>
             {/* <View style ={{height: 18, width: 18, backgroundColor: '#F6841F', }} /> */}
@@ -44,15 +48,16 @@ export const Payment = ({ list, payment, setPaymentMethod}) => {
             <Text style = {{marginLeft: 10, fontWeight: 'bold', color: '#F6841F'}}>totokwallet</Text>
           </View>
           <View style ={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 2.5  }}>
-            <Text style = {{marginLeft: 5, fontWeight: 'bold', color: '#929191'}}>(Balance {FormatToText.currency(2000)})</Text>
+            <Text style = {{marginLeft: 5, fontWeight: 'bold', color: '#929191'}}>(Balance {FormatToText.currency(currentBalance)})</Text>
             <TouchableOpacity onPress={() => {
-              navigation.push("ToktokWalletHomePage")
+              // navigation.push("ToktokWalletHomePage")
+              setCurrenctBalance(currentBalance + 1000)
             }}>
               <Text style = {{ alignSelf: 'flex-end', color: '#F6841F'}}>Top up</Text>
             </TouchableOpacity>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity 
+        {/* <TouchableOpacity 
           style ={{...styles.item, backgroundColor: payment == 'paypanda' ? '#FFEBBC' : 'white' }}
           onPress = {() => {setPaymentMethod("paypanda")}}
         >
@@ -60,7 +65,7 @@ export const Payment = ({ list, payment, setPaymentMethod}) => {
             <Image source={require("../../../../assets/icons/cod.png")} style={{width: 18, height: 18, resizeMode: 'stretch'}} /> 
           </View>
           <Text style = {{marginLeft: 10, fontWeight: 'bold', color: '#F6841F'}}>Paypanda</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         {/* {list && list.length > 0 && list.map((item, i) => {
           return (

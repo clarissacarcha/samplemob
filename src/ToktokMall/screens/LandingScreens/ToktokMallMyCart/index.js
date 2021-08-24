@@ -2,12 +2,13 @@ import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, Platform, Dimensions, StatusBar, Image, TouchableOpacity, FlatList} from 'react-native';
 import {connect} from 'react-redux'
 import {HeaderBack, HeaderTitle, HeaderRight, Header} from '../../../Components';
+import CustomIcon from '../../../Components/Icons';
 import {COLOR, FONT, FONT_SIZE} from '../../../../res/variables';
 import CheckBox from 'react-native-check-box';
 import Toast from 'react-native-simple-toast';
 
 import {MessageModal} from '../../../Components';
-import {DeleteFooter, CheckoutFooter, Item, Store, RenderDetails} from './components';
+import {DeleteFooter, CheckoutFooter, Item, Store, RenderDetails, RenderEmpty} from './components';
 import {MergeStoreProducts} from '../../../helpers';
 import { create } from 'lodash';
 
@@ -176,7 +177,11 @@ const Component =  ({
 
   const deleteMultipleItems = () => {
     console.log("Items to delete", itemsToDelArr)
-    createMyCartSession("DeleteMultiple", itemsToDelArr)
+    if(allSelected){
+      createMyCartSession("set", [])
+    }else{
+      createMyCartSession("DeleteMultiple", itemsToDelArr)
+    }
     // getSubTotal()
   }
 
@@ -301,6 +306,8 @@ const Component =  ({
         <View style={{height: 8, backgroundColor: '#F7F7FA'}} />
         <View style={{flex: 1}}>
 
+          {myCart.length == 0 && <RenderEmpty />}
+
           {myCart.length > 0 && 
           <>
           <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
@@ -338,9 +345,7 @@ const Component =  ({
             </TouchableOpacity>
           </View>
           <View style={{height: 2, backgroundColor: '#F7F7FA'}} />
-          </>
-          }
-
+          
           <FlatList
             // data={testdata}
             data={MergeStoreProducts(myCart)}
@@ -390,21 +395,14 @@ const Component =  ({
               );
             }}
             keyExtractor={(item, index) => item + index}
-            showsVerticalScrollIndicator={false}
-            ListEmptyComponent={() => {
-              return (
-                <>
-                  <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-                    <Text>Your cart is empty</Text>
-                  </View>
-                </>
-              )
-            }}
+            showsVerticalScrollIndicator={false}            
           />
+          </>
+          }
 
-          <View style={{height: 80}}></View>
+          {myCart.length > 0 && <View style={{height: 80}}></View>}
 
-          {willDelete ? 
+          {myCart.length > 0 && willDelete && 
           <DeleteFooter 
             onDelete={() => {
               deleteMultipleItems()
@@ -412,13 +410,14 @@ const Component =  ({
               setAllSelected(false)
               setWillDelete(false)
             }} 
-          /> : 
+          />}
+
+          {myCart.length > 0 && !willDelete && 
           <CheckoutFooter 
             onSubmit={async () => {
               await OnSubmitForCheckout()
             }} 
             subtotal={subTotal}
-
           />}
 
           {messageModalShown && 
@@ -426,7 +425,7 @@ const Component =  ({
             type="Success"
             isVisible={messageModalShown}
             setIsVisible={(val) => setMessageModalShown(val)}  
-            message={`${itemsToDelArr.length > 1 ? "Items" : "Item"} has been removed from your cart.`}
+            message={`${itemsToDelArr.length > 1 || willDelete ? "Items" : "Item"} has been removed from your cart.`}
           />}
 
           {singleDeletemsgModalShown && 

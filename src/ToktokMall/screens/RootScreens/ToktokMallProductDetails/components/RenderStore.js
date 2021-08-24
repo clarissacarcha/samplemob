@@ -41,7 +41,7 @@ export const RenderStore = ({data, loading}) => {
           paragraphStyles = {{height: 13, left: -10, paddingTop: 14 }}
           pWidth = {'45%'}
         ></ContentLoader> */}
-        <TouchableOpacity onPress={() => {
+        <TouchableOpacity activeOpacity={1} onPress={() => {
             navigation.navigate("ToktokMallStore", {id: data?.id})
           }} style={{flexDirection: 'row', justifyContent: 'center'}}>
           <View style={{flex: 2, alignItems: 'flex-start', justifyContent: 'center'}}>

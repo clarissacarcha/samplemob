@@ -57,7 +57,7 @@ export const SubItem = ({index, total, data, root, onSelect}) => {
 						setClicks(clicks + 1)
 					}
 					onSelect()
-				}} style={{flex: 12, paddingHorizontal: 0, paddingVertical: 15}}>
+				}} style={{flex: 12, paddingHorizontal: 0, paddingTop: 15}}>
           <View style={{flexDirection: 'row'}}>
             <View style={{flex: 4}}>
               <Text style={{fontSize: 12, color: "#707171", textTransform: 'capitalize'}}>{data?.action}</Text>
@@ -71,11 +71,17 @@ export const SubItem = ({index, total, data, root, onSelect}) => {
               {renderDescription(data?.content, data)}
             </View>                            
           </View>
-          <View style={{paddingTop: 15}}>
-            {index < total - 1 ? <View style={{ height: 2, backgroundColor: 'rgba(0, 0, 0, 0.02)'}} /> : null}
-          </View>                            
-        </TouchableOpacity>
+					<View style={{paddingTop: 15}}>
+						{index < total - 1 ? <View style={{ height: 1.5, backgroundColor: 'rgba(0, 0, 0, 0.02)'}} /> : null}
+					</View>  
+        </TouchableOpacity>				
       </View>
+			{/* <View style={{flexDirection: 'row'}}>
+				<View style={{flex: 2, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 15, height: 0, backgroundColor: 'red'}}>
+
+				</View>				
+				<View style={{flex: 12, height: 2, backgroundColor: 'rgba(0, 0, 0, 0.02)'}}></View>
+			</View> */}
     </>
   )
 }

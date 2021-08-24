@@ -149,7 +149,7 @@ const Component =  ({
         <View style={{flex: 1}}>                    
           <View style={{ height: 8, backgroundColor: '#F7F7FA'}} />               
             <FlatList
-              showsVerticalScrollIndicator={false} 
+              showsVerticalScrollIndicator={true} 
               data={orderHistory}
               renderItem={({item}) => <RenderItem item={item} />}
               refreshControl={
