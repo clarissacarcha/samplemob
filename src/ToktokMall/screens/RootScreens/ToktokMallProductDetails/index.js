@@ -52,6 +52,7 @@ const Component =  ({
   const [messageModalShown, setMessageModalShown] = useState(false)
   const [isOutOfStock, setisOutOfStock] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [isFetching, setIsFetching] = useState(false)
 
   const [enteredQuantity, setEnteredQuantity] = useState(0)
   const [selectedVariation, setSelectedVariation] = useState('')
@@ -80,6 +81,7 @@ const Component =  ({
         setImages(response.getProductDetails.images)
         setStore(response.getProductDetails.shop)
         setRelevantProducts(response.getProductDetails.relevantProducts)
+        setIsFetching(false)
         if(response.getProductDetails.noOfStocks == 0) setisOutOfStock(true)
       }
       // console.log(response, route.params.Id)
@@ -139,6 +141,7 @@ const Component =  ({
   }
 
   useEffect(() => {
+    setIsFetching(true)
     getProductDetails()
     setCartItems(CountCartItems)
     // console.log('dataaaaaaaaaaaaaaa', route.params.itemname)
@@ -174,17 +177,17 @@ const Component =  ({
     <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
       
       {/* {scrolling ? <HeaderPlain /> : <HeaderTransparent />} */}
-      { loading ? <></> :  <HeaderPlain animatedValue={animatedHeaderValueRef} cartItems={cartItems} itemName = {route.params.itemname} /> }
-      { loading ? <></> :  <HeaderTransparent animatedValue={animatedHeaderValueRef} cartItems={cartItems} /> }
+      { isFetching ? <></> :  <HeaderPlain animatedValue={animatedHeaderValueRef} cartItems={cartItems} itemName = {route.params.itemname} /> }
+      { isFetching ? <></> :  <HeaderTransparent animatedValue={animatedHeaderValueRef} cartItems={cartItems} /> }
       {/* <LoadingOverlay  isVisible = {loading} /> */}
       <Animated.ScrollView
         scrollEventThrottle = {270}
         onScroll={onScroll}
         showsVerticalScrollIndicator={false}
         {...{onScroll}}
-        scrollEnabled = {!loading}
+        scrollEnabled = {!isFetching}
       >
-        <ContentLoader active loading = {loading} avatar aShape = {'square'} title = {false} pRows = {0}
+        <ContentLoader active loading = {isFetching} avatar aShape = {'square'} title = {false} pRows = {0}
           aSize = {250} avatarStyles = {{width: Dimensions.get('window').width, left: -10}}
         >
           <ProductCarousel 
@@ -192,7 +195,7 @@ const Component =  ({
             isOutOfStock={isOutOfStock} 
             isLoading={isLoading} 
             setIsLoading={setIsLoading} 
-            loading = {loading}
+            loading = {isFetching}
           />
         </ContentLoader>
         <RenderProduct
@@ -203,22 +206,22 @@ const Component =  ({
             setVariationOptionType(0)
             varBottomSheetRef.current.expand()
           }}
-          loading = {loading}
+          loading = {isFetching}
         />
         <RenderStore 
           data={store} 
-          loading = {loading}
+          loading = {isFetching}
         />
         <RenderDescription 
           data={product} 
-          loading = {loading}
+          loading = {isFetching}
         />
         <RenderReviews />
         <RenderSuggestions data={relevantProducts || []} />
         <View style={{height: 60}} />
       </Animated.ScrollView>
 
-      { loading ? <></> :
+      { isFetching ? <></> :
         <RenderFooter 
           hideBuyNow={isOutOfStock}
           onPressVisitStore={() => {

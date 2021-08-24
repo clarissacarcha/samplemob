@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, Dimensions } from 'react-native';
+import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, Dimensions, BackHandler, Alert } from 'react-native';
 import { COLOR, FONT } from '../../../../res/variables';
 import {HeaderBack, HeaderTitle, HeaderRight} from '../../../Components';
 import { AddressForm, Button, Payment, Shops, Totals, Vouchers, CheckoutModal } from './Components';
@@ -15,7 +15,7 @@ import {Loading} from '../../../Components/Widgets';
 import AsyncStorage from '@react-native-community/async-storage';
 import Toast from "react-native-simple-toast";
 import axios from "axios";
-
+import {AlertModal} from '../../../Components/Widgets'
 const REAL_WIDTH = Dimensions.get('window').width;
 
 const testData2 = [
@@ -81,7 +81,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
   const user_address = useSelector(state=> state.toktokMall.user_address)
 
   navigation.setOptions({
-    headerLeft: () => <HeaderBack />,
+    headerLeft: () => <HeaderBack onBack = {setAlertTrue}/>,
     headerTitle: () => <HeaderTitle label={['Checkout', '']} />,
     headerRight: () => <HeaderRight hidden={true} />
   });
@@ -99,6 +99,11 @@ const Component = ({route, navigation, createMyCartSession}) => {
   const [deliveryFees, setDeliveryFees] = useState([])
   const [receiveDates, setReceiveDates] = useState([])
   const [isLoading, setIsLoading] = useState(false)
+  const [alertModal, setAlertModal] =useState(false)
+
+  const setAlertTrue = () => {
+    setAlertModal(true)
+  }
 
   const [getCheckoutData, {error, loading}] = useLazyQuery(GET_CHECKOUT_DATA, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
@@ -245,7 +250,19 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
   }
 
+  
+
+  
   useEffect(() => {
+    const backAction = () => {
+      console.log('something mo to')
+      setAlertModal(true)
+      return true
+    }
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    )
     AsyncStorage.getItem("ToktokMallUser").then((raw) => {
       let data = JSON.parse(raw) || {}
       if(data.userId){
@@ -260,6 +277,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
     })
 
     console.log(route.params)
+    return () => backHandler.remove()
     // getCheckoutData()
   },[])
 
@@ -296,6 +314,11 @@ const Component = ({route, navigation, createMyCartSession}) => {
         showsVerticalScrollIndicator={false}
         removeClippedSubviews={true}
       >
+        <AlertModal
+          navigation = {navigation}
+          isVisible = {alertModal}
+          setIsVisible = {setAlertModal}
+        />
         <CheckoutModal 
           navigation={navigation} 
           isVisible={isVisible} 

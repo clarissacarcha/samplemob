@@ -8,3 +8,4 @@ export * from './Separator'
 export * from './SwipeReloader'
 export * from './Voucher'
 export * from "./UploadModal"
+export * from './AlertModal'
