@@ -20,7 +20,7 @@ export const Item = ({active, data, onSelect}) => {
       if(str.includes("&id")){
         return (
           <>
-            <Text style={{fontSize: 12, color: "#9E9E9E"}}>
+            <Text style={{fontSize: 11, color: "#9E9E9E"}}>
               {str.split("&id")[0]}
               <Text style={{color: "#F6841F", fontSize: 12}}>{ref}</Text> 
               {str.split("&id")[1]}
@@ -29,9 +29,17 @@ export const Item = ({active, data, onSelect}) => {
         )
       }else{
         return (
-          <Text style={{fontSize: 12, color: "#9E9E9E"}}>{str}</Text>
+          <Text style={{fontSize: 11, color: "#9E9E9E"}}>{str}</Text>
         )
       }
+    }
+  }
+
+  const getTitle = (history) => {
+    if(history && history.length > 0){
+      return history[history.length - 1].action
+    }else{
+      return "Process Order"
     }
   }
 
@@ -45,7 +53,7 @@ export const Item = ({active, data, onSelect}) => {
           />
         </View>
         <View style={{flex: 8, paddingVertical: 20, paddingHorizontal: 0}}>
-          <Text style={{fontSize: 14}}>Process Order</Text>
+          <Text style={{fontSize: 13}}>{getTitle(data?.history)}</Text>
           {getDesc(data?.parent?.description, data?.referenceNum)}
         </View>
         <View style={{flex: 2, paddingVertical: 20, paddingHorizontal: 15}}>

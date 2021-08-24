@@ -300,6 +300,9 @@ const Component =  ({
         <Header label="Shopping Cart" />
         <View style={{height: 8, backgroundColor: '#F7F7FA'}} />
         <View style={{flex: 1}}>
+
+          {myCart.length > 0 && 
+          <>
           <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
             <View style={{flex: 6, justifyContent: 'center'}}>
               <CheckBox
@@ -335,6 +338,8 @@ const Component =  ({
             </TouchableOpacity>
           </View>
           <View style={{height: 2, backgroundColor: '#F7F7FA'}} />
+          </>
+          }
 
           <FlatList
             // data={testdata}
@@ -386,6 +391,15 @@ const Component =  ({
             }}
             keyExtractor={(item, index) => item + index}
             showsVerticalScrollIndicator={false}
+            ListEmptyComponent={() => {
+              return (
+                <>
+                  <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+                    <Text>Your cart is empty</Text>
+                  </View>
+                </>
+              )
+            }}
           />
 
           <View style={{height: 80}}></View>

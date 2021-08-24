@@ -11,7 +11,7 @@ export const SubItem = ({index, total, data, root, onSelect}) => {
 	const [clicks, setClicks] = useState(0)
 
 	const renderDescription = (content, value) => {
-		const txtStyle = {fontSize: 12, color: "#9E9E9E"}
+		const txtStyle = {fontSize: 10, color: "#9E9E9E"}
 		if(content.includes("@id")){
 			return (
 				<>
@@ -60,7 +60,7 @@ export const SubItem = ({index, total, data, root, onSelect}) => {
 				}} style={{flex: 12, paddingHorizontal: 0, paddingVertical: 15}}>
           <View style={{flexDirection: 'row'}}>
             <View style={{flex: 4}}>
-              <Text style={{fontSize: 14, color: "#707171", textTransform: 'capitalize'}}>{data?.action}</Text>
+              <Text style={{fontSize: 12, color: "#707171", textTransform: 'capitalize'}}>{data?.action}</Text>
             </View>
             <View style={{flex: 1, flexDirection: 'row-reverse', paddingHorizontal: 15}}>
               <Text style={{color: "#9E9E9E", fontSize: 10}}>{data?.formatDate}</Text>
