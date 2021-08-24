@@ -273,13 +273,17 @@ export const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
                                 <View style={[styles.borderEdges,{borderBottomWidth: 5,borderLeftWidth: 5,bottom:0,left: 0,}]}/>
                                 <View style={[styles.borderEdges,{borderBottomWidth: 5,borderRightWidth: 5,bottom:0,right:0,}]}/>
 
-                        <View style={{paddingVertical: 10, position:"absolute",bottom: -80,justifyContent:"center",alignItems:"center",width: "100%",backgroundColor:"rgba(255,255,255,0.2)"}}>
-                            <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.XL,color:"white",textAlign:'center'}}>{message.msg}</Text>
+                        <View style={{paddingVertical: 10, position:"absolute",top: -80,justifyContent:"center",alignItems:"center",width: "100%",backgroundColor:"rgba(255,255,255,0.1)",borderRadius: 5}}>
+                            <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M,color:"white",textAlign:'center'}}>{message.msg}</Text>
                             {
                                 message.icon == null
                                 ? <ActivityIndicator style={{marginTop: 5}} color={"white"} />
                                 :  null
                             }
+                        </View>
+
+                        <View style={{paddingVertical: 10, position:"absolute",bottom: -50,justifyContent:"center",alignItems:"center",width: "100%",backgroundColor:"rgba(255,255,255,0.1)",borderRadius: 5}}>
+                            <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M,color:"white",textAlign:'center'}}>Take Selfie with your Valid ID</Text>
                         </View>
 
                     </View>

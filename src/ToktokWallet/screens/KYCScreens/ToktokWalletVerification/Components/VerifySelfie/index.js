@@ -49,6 +49,9 @@ const MainComponent = ({children , onPress })=> {
                                 <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}><Text style={{color: COLOR.YELLOW}}>Position</Text> your face within the frame</Text>
                             </Reminder>
                             <Reminder>
+                                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}><Text style={{color: COLOR.YELLOW}}>Take selfie</Text> with your Valid ID</Text>
+                            </Reminder>
+                            <Reminder>
                                 <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}><Text style={{color: COLOR.YELLOW}}>Don't</Text> wear anything covering your face</Text>
                             </Reminder>
                             <Reminder>
@@ -78,14 +81,18 @@ export const VerifySelfie = ()=> {
     const cropSize = {
         // width: Platform.OS === "ios" ? CROP_AREA_WIDTH : CROP_AREA_WIDTH + 100,
         // height: Platform.OS === "ios" ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT + 100,
-        width: CROP_AREA_WIDTH,
-        height: CROP_AREA_HEIGHT,
+        // width: CROP_AREA_WIDTH,
+        // height: CROP_AREA_HEIGHT,
+        width: width,
+        height: height,
     }
     const cropAreaSize = {
         // width: Platform.OS === "ios" ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 20,
         // height: Platform.OS === "ios" ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 100,
-        width: CROP_AREA_WIDTH,
-        height: CROP_AREA_HEIGHT
+        // width: CROP_AREA_WIDTH,
+        // height: CROP_AREA_HEIGHT,
+        width: width,
+        height: height,
     }
 
     const setImage = (data)=> {
@@ -105,10 +112,10 @@ export const VerifySelfie = ()=> {
                 cropAreaSize,
             });
 
-            setSelfieImage(state => ({
-                ...state,
-                uri: croppedResult
-            }))
+            // setSelfieImage(state => ({
+            //     ...state,
+            //     uri: croppedResult
+            // }))
         }catch(err){
             console.log(err)
         }
@@ -120,7 +127,7 @@ export const VerifySelfie = ()=> {
         return(
             <MainComponent onPress={Proceed}>
                 <View style={styles.PreviewImage}>
-                    <ImageCropper
+                    {/* <ImageCropper
                         imageUri={selfieImage.uri}
                         cropAreaWidth={Platform.OS === "ios" ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 110}
                         cropAreaHeight={Platform.OS === "ios" ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 100}
@@ -129,7 +136,8 @@ export const VerifySelfie = ()=> {
                         setCropperParams={cropperParams =>{
                             setCropperParams(cropperParams)
                         }}
-                    />
+                    /> */}
+                    <Image style={{height:290,width: 280,flex: 1}} resizeMode="stretch" source={{uri: selfieImage.uri}}/>
                 <TouchableOpacity onPress={()=>navigation.push("ToktokWalletSelfieImageCamera", {setImage})} style={styles.changePhoto}>
                     <EIcon name="camera" color={COLOR.YELLOW} size={20} />
                     <Text style={{textAlign:"center",color: COLOR.YELLOW,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,marginTop: -2}}>Change Photo</Text>
@@ -216,8 +224,10 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     PreviewImage: {
-        height: Platform.OS === "ios" ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 100 + 10, 
-        width: Platform.OS === "ios" ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 110 + 10, 
+        // height: Platform.OS === "ios" ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 100 + 10, 
+        // width: Platform.OS === "ios" ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 110 + 10, 
+        width: 290,
+        height: 300,
         alignSelf:"center",
         marginTop: 7,
         padding: 2,
