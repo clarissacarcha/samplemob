@@ -70,7 +70,7 @@ const RenderItem = ({item}) => {
       <View style={{flex: 2, backgroundColor: '#fff', margin: 5}}>
                   
         <TouchableOpacity activeOpacity={1} onPress={() => {
-          navigation.navigate("ToktokMallProductDetails", {Id: item.Id})
+          navigation.push("ToktokMallProductDetails", {Id: item.Id, itemname: item.itemname})
         }} style={{padding: 5}}>
           <Image 
             source={getImageSource(item.images)} 
@@ -117,7 +117,7 @@ export const RenderSuggestions = ({data}) => {
                 <CustomIcon.EIcon name="chevron-right" color="#F6841F" size={16} />
               </View>
             </View>
-
+            
             <FlatList
               data={products}
               numColumns={2}
