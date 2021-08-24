@@ -113,19 +113,22 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
       if (clicked) {
         updateUserAddress('changeDefault', newAddressForm.id);
       }
+      navigation.goBack();
     } else {
-      updateUserAddress('add', {
-        id: user_address.length + 1,
-        ...newAddressForm,
-        regionId: parseInt(regCode) || 0,
-        provinceId: parseInt(provCode),
-        municipalityId: parseInt(munCode),
-      });
-      if (clicked) {
-        updateUserAddress('changeDefault', user_address.length + 1);
-      }
+      SavePostAddress(() => {
+        updateUserAddress('add', {
+          id: user_address.length + 1,
+          ...newAddressForm,
+          regionId: parseInt(regCode) || 0,
+          provinceId: parseInt(provCode),
+          municipalityId: parseInt(munCode),
+        });
+        if (clicked) {
+          updateUserAddress('changeDefault', user_address.length + 1);
+        }
+        navigation.goBack();
+      })
     }
-    navigation.goBack();
   };
 
   const onSelectCity = (data) => {
@@ -135,7 +138,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
     setRegCode(data.regCode);
   };
 
-  const SavePostAddress = async () => {
+  const SavePostAddress = async (callback) => {
     AsyncStorage.getItem('ToktokMallUser').then(async (raw) => {
       let data = JSON.parse(raw) || {};
       if (data.appSignature) {
@@ -152,8 +155,6 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
           default: clicked == true ? 1 : 0,
         };
 
-        console.log({body});
-
         let formData = new FormData();
         formData.append('signature', data.appSignature);
         formData.append('data', JSON.stringify(body));
@@ -163,10 +164,35 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
           .then((response) => {
             if (response.data && response.data.success == 1) {
               setMessageModal(true);
-              SaveToRedux();
+              callback();
             } else {
               console.log('Response', response.data);
             }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    });
+  };
+  const DeleteAddress = async () => {
+    setConfirmDeleteModal(true)
+    AsyncStorage.getItem('ToktokMallUser').then(async (raw) => {
+      let data = JSON.parse(raw) || {};
+      if (data.appSignature) {
+        let body = {
+          address_id: newAddressForm.id
+        };
+
+        let formData = new FormData();
+        formData.append('signature', data.appSignature);
+        formData.append('data', JSON.stringify(body));
+
+        await axios
+          .post(`http://ec2-18-176-178-106.ap-northeast-1.compute.amazonaws.com/toktokmall/delete_address`, formData)
+          .then(() => {
+            updateUserAddress('remove', newAddressForm.id);
+            navigation.goBack();
           })
           .catch((error) => {
             console.log(error);
@@ -223,7 +249,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
       }),
       (state) => {
         if (state.validated && state.errors.length === 0) {
-          SavePostAddress();
+          SaveToRedux();
         } else {
           Toast.show('Please fill up the required fields!');
         }
@@ -238,14 +264,10 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
           type="Confirm"
           isVisible={confirmDeleteModal}
           setIsVisible={(val) => {
-            setConfirmDeleteModal(val)
+            setConfirmDeleteModal(val);
           }}
-          onConfirm={() => {
-            setConfirmDeleteModal(false)
-            setTimeout(() => {
-              setDeletedModal(true)
-            }, 700)
-          }}
+          onConfirm={DeleteAddress}
+          message={'Address Deleted!'}
         />
       )}
       {messageModal && (
@@ -379,8 +401,8 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
             <>
               <TouchableOpacity
                 style={styles.button2}
-                onPress={() => {
-                  setConfirmDeleteModal(true);
+                onPress={()=> {
+                  setConfirmDeleteModal(true)
                 }}>
                 <Text style={{color: '#F6841F'}}>Delete</Text>
               </TouchableOpacity>
