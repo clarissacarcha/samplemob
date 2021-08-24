@@ -95,17 +95,17 @@ const Component = ({data, onOpenVariations, animatedValue, shop, loading, reduxA
           </View>
           <View style={{flexDirection: 'row', paddingTop: 8}}>
             <View style={{flex: 3, flexDirection: 'row', justifyContent: 'space-between', marginTop: 1}}>
-              <RenderStars value={data.rating} />
+              {/* <RenderStars value={data.rating} /> */}
+              <Text>{data.soldCount || 0} sold</Text>
             </View>
             <View style={{flex: 5, flexDirection: 'row', paddingHorizontal: 12}}>
-              <View>
+              {/* <View>
                 <Text>{data.rating || 0}/5</Text>
               </View>
               <View style={{paddingHorizontal: 2}} >
                 <Text style={{color: "#9E9E9E"}}> | </Text>
-              </View>
+              </View> */}
               <View>
-                <Text>{data.soldCount || 0} sold</Text>
               </View>
             </View>
             <View style={{flex: 1.8, flexDirection: 'row', justifyContent: 'space-between'}}>
