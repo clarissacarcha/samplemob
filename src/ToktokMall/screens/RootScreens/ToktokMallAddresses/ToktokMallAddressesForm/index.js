@@ -191,6 +191,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
         await axios
           .post(`http://ec2-18-176-178-106.ap-northeast-1.compute.amazonaws.com/toktokmall/delete_address`, formData)
           .then(() => {
+            setDeletedModal(true)
             updateUserAddress('remove', newAddressForm.id);
             navigation.goBack();
           })
@@ -267,7 +268,6 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
             setConfirmDeleteModal(val);
           }}
           onConfirm={DeleteAddress}
-          message={'Address Deleted!'}
         />
       )}
       {messageModal && (
