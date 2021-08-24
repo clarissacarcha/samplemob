@@ -94,14 +94,16 @@ const Component = ({route, navigation, reduxStates: {user_address}, reduxActions
         <View style={styles.body}>
           <View style={styles.container}>
             {renderAddresses()}
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => {
-                navigation.navigate('ToktokMallAddressesForm');
-              }}>
-              <Text>Add new address</Text>
-              <AntDesign name={'plus'} color={'#F6841F'} size={20} />
-            </TouchableOpacity>
+            {user_address.length < 10 && (
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => {
+                  navigation.navigate('ToktokMallAddressesForm');
+                }}>
+                <Text>Add new address</Text>
+                <AntDesign name={'plus'} color={'#F6841F'} size={20} />
+              </TouchableOpacity>
+            )}
           </View>
         </View>
       </ScrollView>

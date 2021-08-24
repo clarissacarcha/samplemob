@@ -5,6 +5,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import CustomIcon from '../../../../../Components/Icons';
 import { useNavigation } from '@react-navigation/native';
 import {placeholder} from '../../../../../assets';
+import { Price } from '../../../../../helpers';
 
 const RenderStars = ({value}) => {
   let orange = "#FFC833"
@@ -42,12 +43,14 @@ const RenderItem = ({navigation, item}) => {
           <TouchableOpacity onPress={() => navigation.navigate("ToktokMallProductDetails", item)}>
             <Text style={{fontSize: 13, fontWeight: '500', paddingVertical: 5}}>{item?.itemname || ""}</Text>
           </TouchableOpacity>
-          <Text style={{fontSize: 13, color: "#F6841F"}}>&#8369;{parseFloat(item?.price).toFixed(2)}</Text>    
+          <Text style={{fontSize: 13, color: "#F6841F"}}>
+          <Price amount={item?.price}/>
+          </Text>    
           <View style={{flexDirection: 'row'}}>
-            <View style={{flex: 7, flexDirection: 'row'}}>
+            {/* <View style={{flex: 7, flexDirection: 'row'}}>
               <RenderStars value={item?.rating} />
-            </View>
-            <View style={{flex: 2}}>
+            </View> */}
+            <View style={{flex: 9}}>
               <Text style={{color: "#9E9E9E", fontSize: 10}}>({item?.noOfStocks || 0})</Text>
             </View>
             <View style={{flex: 3}}>
