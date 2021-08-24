@@ -46,11 +46,11 @@ const RenderItem = ({navigation, item}) => {
           </TouchableOpacity>
           <Text style={{fontSize: 13, color: "#F6841F"}}><Price amount={item?.price}/></Text>    
           <View style={{flexDirection: 'row'}}>
-            {/* <View style={{flex: 7, flexDirection: 'row'}}>
+            <View style={{flex: 7, flexDirection: 'row'}}>
               <RenderStars value={item?.rating} />
-            </View> */}
+            </View>
             <View style={{flex: 9}}>
-              <Text style={{color: "#9E9E9E", fontSize: 10}}>({item?.noOfStocks || 0})</Text>
+              {/* <Text style={{color: "#9E9E9E", fontSize: 10}}>({item?.noOfStocks || 0})</Text> */}
             </View>
             <View style={{flex: 3}}>
               <Text style={{fontSize: 10}}>{item?.soldCount || 0} sold</Text>
