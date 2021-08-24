@@ -24,7 +24,7 @@ export const GET_PROCESSING_ORDERS = gql`
         	itemname
         	compareAtPrice
         	variation
-        	image {
+        	img {
           	filename
         	}
       	}        
@@ -56,7 +56,7 @@ export const GET_TOSHIP_ORDERS = gql`
         	itemname
         	compareAtPrice
         	variation
-        	image {
+        	img {
           	filename
         	}
       	}        
@@ -91,7 +91,7 @@ export const GET_TORECEIVE_ORDERS = gql`
 					itemname
 					compareAtPrice
 					variation
-					image {
+					img {
 						filename
 					}
 				}        
@@ -124,7 +124,7 @@ export const GET_COMPLETED_ORDERS = gql`
 					itemname
 					compareAtPrice
 					variation
-					image {
+					img {
 						filename
 					}
 				}        

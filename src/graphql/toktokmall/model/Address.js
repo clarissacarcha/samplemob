@@ -11,3 +11,14 @@ export const GET_CITIES = gql`
         }
 	}
 `
+export const GET_CITY = gql`
+	query getCity($input: getCityInput) {
+		getCity(input: $input) {
+            id
+            citymunDesc
+            citymunCode
+            provCode
+            regDesc
+        }
+	}
+`

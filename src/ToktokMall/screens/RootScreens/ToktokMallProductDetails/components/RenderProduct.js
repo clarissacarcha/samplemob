@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, Image, FlatList, SectionList, ImageBackground, TouchableOpacity} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import Share from 'react-native-share';
@@ -16,7 +16,9 @@ import ContentLoader from 'react-native-easy-content-loader';
 
 const Component = ({data, onOpenVariations, animatedValue, shop, loading, reduxActions: {
   updateMyFavorites
-}}) => {
+}, reduxStates: {
+  myFavorites
+}} ) => {
 
   const [favorite, setFavorite] = useState(false)
   const opacity = animatedValue.interpolate({
@@ -24,6 +26,22 @@ const Component = ({data, onOpenVariations, animatedValue, shop, loading, reduxA
     outputRange: [1, 0],
     extrapolate: 'clamp'
   })
+
+  useEffect(() => {
+   if(myFavorites && data?.Id){
+     myFavorites.map(({shop: {id}, items}) => {
+       if(shop.id === id){
+         let temp = false
+         items.map(item => {
+           if(item.Id === data.Id){
+             temp = true
+           }
+         })
+         setFavorite(temp)
+       }
+     })
+   }
+ },[myFavorites, shop, data])
 
   const HandleShare = () => {
     let options = {
@@ -55,8 +73,6 @@ const Component = ({data, onOpenVariations, animatedValue, shop, loading, reduxA
     }
   }
 
-  
-
 	return (
 		<>
 			<View style={{paddingVertical: 8, paddingHorizontal: 16}}>
@@ -74,7 +90,7 @@ const Component = ({data, onOpenVariations, animatedValue, shop, loading, reduxA
               {data.price ? <Text style={{color: "#F6841F", fontSize: 20}}><Price amount={data.price} /></Text> : null}
             </View>
             <View style={{flex: 3, justifyContent: 'center'}}>
-              {data.compareAtPrice ? <Text style={{color: "#9E9E9E", textDecorationLine: 'line-through', fontSize: 14}}><Price amount={data.compareAtPrice} /></Text> : null}
+              {data.compareAtPrice && data.compareAtPrice != "0.00" ? <Text style={{color: "#9E9E9E", textDecorationLine: 'line-through', fontSize: 14}}><Price amount={data.compareAtPrice} /></Text> : null}
             </View>
           </View>
           <View style={{flexDirection: 'row', paddingTop: 8}}>
@@ -117,7 +133,7 @@ const Component = ({data, onOpenVariations, animatedValue, shop, loading, reduxA
 
 const mapStateToProps = (state) => ({
   reduxStates: {
-    myFavorities: state.toktokMall.myFavorities,
+    myFavorites: state.toktokMall.myFavorites,
   },
 });
 

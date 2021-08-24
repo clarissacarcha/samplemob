@@ -8,11 +8,14 @@ import { COLOR, FONT, FONT_SIZE } from '../../../../res/variables';
 
 import { useLazyQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql';
-import { GET_ORDER_HISTORY } from '../../../../graphql/toktokmall/model';
+import { GET_ORDER_HISTORY, GET_ORDERS_AND_HISTORY } from '../../../../graphql/toktokmall/model';
 
 import {Item, SubItem} from './Components'
 import { RefreshControl } from 'react-native'
 import {connect} from "react-redux"
+
+import AsyncStorage from '@react-native-community/async-storage'
+import uuid from 'react-native-uuid'
 
 const testdata = [{
     id: "00X003",
@@ -63,23 +66,18 @@ const Component =  ({
 
 	const [orderHistory, setOrderHistory] = useState([])
 
-	const [getOrderHistory, {loading, error}] = useLazyQuery(GET_ORDER_HISTORY, {
+	const [getOrderHistory, {loading, error}] = useLazyQuery(GET_ORDERS_AND_HISTORY, {
 		client: TOKTOK_MALL_GRAPHQL_CLIENT,
 		fetchPolicy: "network-only",
-		variables: {
-			input: {
-				email: "wilking.rhodalinne@gmail.com"
-			}
-		},
 		onCompleted: (response) => {
-			if(response.getOrderHistory){
+			if(response.getOrdersAndHistory){
 				
-        setOrderHistory(response.getOrderHistory)
+        setOrderHistory(response.getOrdersAndHistory)
         let notifs = []
-        response.getOrderHistory.map( item => {
-          notifs.push({id: item.id, read: false})
-          item.history.map((item2) => {
-            notifs.push({id: item2.id, read: 0})
+        response.getOrdersAndHistory.map((item, topIndex) => {
+          notifs.push({id: item.uuid, read: false})
+          item.history.map((item2, subIndex) => {
+            notifs.push({id: item2.uuid, read: 0})
           })
         })
         createNotificationsSession("set", notifs)
@@ -92,13 +90,16 @@ const Component =  ({
 
   const RenderItem = ({item, index}) => {
     const [dropshown, setDropShown] = useState(false)
+
+    if(item.parent == null) return null
+
     return (
       <>
         <Item 
           active={dropshown}
           data={item} 
           onSelect={() => {
-            createNotificationsSession("read", item.id)
+            createNotificationsSession("read", item.uuid)
             setDropShown(!dropshown)
           }} 
         />
@@ -109,7 +110,7 @@ const Component =  ({
             root={item} 
             total={item.history.length} 
             onSelect={() => {
-              createNotificationsSession("read", item.id)
+              createNotificationsSession("read", raw.uuid)
             }}
           />)}
       </>
@@ -117,7 +118,16 @@ const Component =  ({
   }
 
 	useEffect(() => {
-		getOrderHistory()
+    AsyncStorage.getItem("ToktokMallUser").then((raw) => {
+      const data = JSON.parse(raw)
+      if(data.userId){
+        getOrderHistory({variables: {
+          input: {
+            userId: data.userId
+          }
+        }})
+      }
+    })		
 	}, [])
 
 	if(loading){

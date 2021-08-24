@@ -216,7 +216,7 @@ const Component =  ({
           data={product} 
           loading = {isFetching}
         />
-        <RenderReviews />
+        {/* <RenderReviews /> */}
         <RenderSuggestions data={relevantProducts || []} />
         <View style={{height: 60}} />
       </Animated.ScrollView>

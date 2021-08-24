@@ -16,6 +16,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Toast from "react-native-simple-toast";
 import axios from "axios";
 import {AlertModal} from '../../../Components/Widgets'
+import {ApiCall, PaypandaApiCall, BuildPostCheckoutBody} from "../../../helpers"
+
 const REAL_WIDTH = Dimensions.get('window').width;
 
 const testData2 = [
@@ -143,7 +145,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
     createMyCartSession("set", newCartData)
   }
 
-  const postCheckoutSetting = async () => {
+  const postCheckoutSettingx = async () => {
 
     setIsLoading(true)
 
@@ -253,6 +255,64 @@ const Component = ({route, navigation, createMyCartSession}) => {
   
 
   
+  const postCheckoutSetting = async () => {
+    
+    setIsLoading(true)
+
+    const checkoutBody = await BuildPostCheckoutBody({
+      items: paramsData, 
+      addressData: addressData, 
+      grandTotal: grandTotal, 
+      paymentMethod: payment
+    })
+
+    const req = await ApiCall("checkout", checkoutBody, false)
+
+    if(req.responseData && req.responseData.success == 1){
+
+      if(route?.params?.type == "from_cart"){
+        UpdateCart()
+      }
+
+      // if(payment == "paypanda"){
+
+      //   if(req.responseData.paypanda){
+
+      //     const paypandaReq = await PaypandaApiCall({
+      //       data: req.responseData.paypanda,
+      //       addressData: addressData
+      //     })
+
+      //     if(paypandaReq){
+      //       navigation.push("ToktokMallPaymentWebview", {
+      //         contents: paypandaReq.responseData, 
+      //         onSuccess: () => {
+      //           setIsVisible(true)
+      //           setIsLoading(false)
+      //         }}
+      //       )
+      //     }
+
+      //   }
+
+      // }else{
+      //   setIsVisible(true)
+      //   setIsLoading(false)
+      // }
+
+      setIsVisible(true)
+      setIsLoading(false)
+
+    }else if(req.responseError && req.responseError.success == 0){
+      Toast.show(req.responseError.message, Toast.LONG)
+    }else if(req.responseError){
+      Toast.show("Something went wrong", Toast.LONG)
+    }
+
+    setIsLoading(false)
+
+  }
+
   useEffect(() => {
     const backAction = () => {
       console.log('something mo to')
@@ -338,11 +398,11 @@ const Component = ({route, navigation, createMyCartSession}) => {
             raw={paramsData}
             shipping={addressData?.shippingSummary}            
           />
-          <Vouchers 
+          {/* <Vouchers 
             navigation={navigation} 
             vouchers={vouchers}
             setVouchers = {setVouchers} 
-          />
+          /> */}
           <Payment 
             payment={payment} 
             list={paymentList}

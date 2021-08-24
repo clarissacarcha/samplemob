@@ -55,7 +55,7 @@ export const RenderStore = ({data, loading}) => {
             <Text style={{fontSize: 13, color: "#F6841F"}}>Visit Store</Text>
           </View>
         </TouchableOpacity>
-        <View style={{flexDirection: 'row', paddingVertical: 14}}>
+        {/* <View style={{flexDirection: 'row', paddingVertical: 14}}>
           <View style={{flex: 3, alignItems: 'flex-end'}}>
             <Text style={{fontSize: 18, color: "#F6841F", marginRight: 8}}>4.0</Text>
             <Text>Rating</Text>
@@ -67,11 +67,11 @@ export const RenderStore = ({data, loading}) => {
             <Text style={{fontSize: 18, color: "#F6841F", marginLeft: margin(),}}>{data?.totalProducts || 0}</Text>
             <Text>Products</Text>
           </View>
-        </View>
+        </View> */}
         </ContentLoader>
       </View>
       <View style={{height: 8, backgroundColor: '#F7F7FA'}} />
-
+{/* 
       <View style={{paddingHorizontal: 16, paddingVertical: 16}}>
         <ContentLoader 
           loading = {loading} 
@@ -113,7 +113,7 @@ export const RenderStore = ({data, loading}) => {
         />
         </ContentLoader>
         
-      </View>
+      </View> */}
       <View style={{height: 8, backgroundColor: '#F7F7FA'}} />
 		</>
 	)

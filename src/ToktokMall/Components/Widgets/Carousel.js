@@ -31,8 +31,8 @@ export const AdsCarousel = (props) => {
   const renderItem = ({item, index}, parallaxProps) => {
 
     const getImage = (raw) => {
-      if(typeof raw == "object"){
-        return {uri: raw.filename}
+      if(typeof raw == "string"){
+        return {uri: raw}
       }else{
         return SampleImage
       }
@@ -74,7 +74,7 @@ export const AdsCarousel = (props) => {
         sliderWidth={330}
         itemWidth={330}
         autoplay={true}
-        // autoplayDelay={700}
+        autoplayDelay={700}
         hasParallaxImages={true}
         removeClippedSubviews={true}
       />
