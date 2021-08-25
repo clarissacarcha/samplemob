@@ -68,18 +68,18 @@ const Component =  ({
 
 	const [getOrderHistory, {loading, error}] = useLazyQuery(GET_ORDERS_AND_HISTORY, {
 		client: TOKTOK_MALL_GRAPHQL_CLIENT,
-		fetchPolicy: "network-only",
+		fetchPolicy: 'network-only',
 		onCompleted: (response) => {
 			if(response.getOrdersAndHistory){
 				
         setOrderHistory(response.getOrdersAndHistory)
         let notifs = []
-        response.getOrdersAndHistory.map((item, topIndex) => {
-          notifs.push({id: item.uuid, read: false})
-          item.history.map((item2, subIndex) => {
-            notifs.push({id: item2.uuid, read: 0})
-          })
-        })
+        // response.getOrdersAndHistory.map((item, topIndex) => {
+        //   notifs.push({id: item.uuid, read: false})
+        //   item.history.map((item2, subIndex) => {
+        //     notifs.push({id: item2.uuid, read: 0})
+        //   })
+        // })
         createNotificationsSession("set", notifs)
 			}
     },
@@ -99,25 +99,25 @@ const Component =  ({
           active={dropshown}
           data={item} 
           onSelect={() => {
-            createNotificationsSession("read", item.uuid)
+            // createNotificationsSession("read", item.uuid)
             setDropShown(!dropshown)
           }} 
         />
-        {dropshown && item.history.map((raw, i) => 
+        {/* {dropshown && item.history.map((raw, i) => 
           <SubItem 
             data={raw} 
             index={i} 
             root={item} 
             total={item.history.length} 
             onSelect={() => {
-              createNotificationsSession("read", raw.uuid)
+              // createNotificationsSession("read", raw.uuid)
             }}
-          />)}
+          />)} */}
       </>
     )
   }
 
-	useEffect(() => {
+  const init = () => {
     AsyncStorage.getItem("ToktokMallUser").then((raw) => {
       const data = JSON.parse(raw)
       if(data.userId){
@@ -127,7 +127,11 @@ const Component =  ({
           }
         }})
       }
-    })		
+    })
+  }
+
+	useEffect(() => {
+    init()	
 	}, [])
 
 	if(loading){
@@ -149,13 +153,15 @@ const Component =  ({
         <View style={{flex: 1}}>                    
           <View style={{ height: 8, backgroundColor: '#F7F7FA'}} />               
             <FlatList
-              showsVerticalScrollIndicator={true} 
+              showsVerticalScrollIndicator={false} 
               data={orderHistory}
               renderItem={({item}) => <RenderItem item={item} />}
               refreshControl={
                 <RefreshControl 
                   refreshing={loading}
-                  onRefresh={getOrderHistory}
+                  onRefresh={() => {
+                    init()
+                  }}
                 />
               }
             />

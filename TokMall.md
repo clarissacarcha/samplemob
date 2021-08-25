@@ -28,3 +28,17 @@ function FormatMapper(data) {
     })
     return result
   }
+
+
+# DONE
+
+- Vouchers (hide in landing page)
+- Landing page: Display the featured items in web
+- Update View Product screen (remove three dot) 
+- Change notifications 1=1 ; upon clicking will redirect to order details
+- Order Details screen
+# ONGOING
+- Order Details Backend
+
+# TODO
+- Update Delete Screen (No edit button. hold to delete and swipe left-> delete button will appear) 

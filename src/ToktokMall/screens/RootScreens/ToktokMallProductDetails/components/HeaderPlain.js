@@ -45,7 +45,7 @@ export const HeaderPlain = ({value, animatedValue, cartItems, itemName }) => {
             />
           </View>
           <View style={{flex: 1, justifyContent: 'center'}}>
-            <Tooltip
+            {/* <Tooltip
               ref={HelpTooltipRef}
               backgroundColor="white"
               withPointer={false}
@@ -55,7 +55,7 @@ export const HeaderPlain = ({value, animatedValue, cartItems, itemName }) => {
                 navigation.navigate("ToktokMallHelp")
               }}>Help</Text>}>
               <CustomIcon.FeIcon name="more-horizontal" color="#F6841F" size={24} />
-            </Tooltip>
+            </Tooltip> */}
           </View>
         </View>
       </Animated.View>

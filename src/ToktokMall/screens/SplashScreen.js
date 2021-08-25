@@ -38,7 +38,7 @@ const Splash = ({ createMyCartSession, createNotificationsSession}) => {
     variables: {
       input: {
         toktokId: parseInt(session?.user?.id)
-        // toktokId: 9999
+        // toktokId: 12345
       }
     },
 		onCompleted: async (response) => {
@@ -78,13 +78,16 @@ const Splash = ({ createMyCartSession, createNotificationsSession}) => {
     let body = {
       firstname: session?.user.person.firstName,
       lastname: session?.user.person.lastName,
-      toktokid: session?.user.id,
+      userid: session?.user.id,
+      toktokid: session?.user.id, 
       contactnumber: session?.user.username,
       email: session?.user.person.emailAddress,
       address: session?.user.person.address || "NA",
       birthday: moment(session?.user.person.birthdate).format("Y-m-d") || new Date(),
       gender: session?.user.person.gender || "NA"
     }
+
+    console.log(body)
 
     let formData = new FormData()
     formData.append("signature", signature)
@@ -95,7 +98,11 @@ const Splash = ({ createMyCartSession, createNotificationsSession}) => {
         
         if(response.data && response.data.success == 1){
           console.log("Response", response.data) 
-          // authUser()
+          // authUser({variables: {
+          //   input: {
+          //     toktokId: parseInt(response.data.user_id)
+          //   }
+          // }})
         }else{
           setFailed(true)
          console.log("Response", response.data) 
@@ -138,13 +145,24 @@ const Splash = ({ createMyCartSession, createNotificationsSession}) => {
 	const init = async () => {
 
     setFailed(false)
-    await authUser()
     await FetchAsyncStorageData()
+    
+    await AsyncStorage.getItem("ToktokMallUser").then(async (raw) => {
+      const data = JSON.parse(raw) || null
+      if(data && data.userId){
+        navigation.navigate("ToktokMallLanding");
+      }else{
+        await authUser()
+      }
+    }).catch((error) => {
+      console.log(error)      
+    })    
 
 	}
 
 	useEffect(() => {
-		init()
+		// init()
+    navigation.navigate("ToktokMallLanding");
 	}, [])
 
 	useEffect(() => {

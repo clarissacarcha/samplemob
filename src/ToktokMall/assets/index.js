@@ -30,3 +30,4 @@ export const errorIcon = require("../assets/icons/error.png")
 export const userIcon = require("../../assets/images/user-icon.png");
 export const storeIcon = require("../assets/icons/store.png");
 export const alertIcon = require("../assets/icons/alerticon.png")
+export const emptyCartIcon = require("../assets/icons/empty-cart.png");

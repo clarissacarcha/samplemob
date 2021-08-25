@@ -169,8 +169,8 @@ const Component =  ({
     <>
     <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
       
-      { loading ? <></> :  <HeaderPlain animatedValue={animatedHeaderValueRef} cartItems={cartItems} itemName = {route.params.itemname} /> }
-      { loading ? <></> :  <HeaderTransparent animatedValue={animatedHeaderValueRef} cartItems={cartItems} /> }
+      { loading ? <></> : <HeaderPlain animatedValue={animatedHeaderValueRef} cartItems={cartItems} itemName = {route.params.itemname} /> }
+      { loading ? <></> : <HeaderTransparent animatedValue={animatedHeaderValueRef} cartItems={cartItems} /> }
       
       <Animated.ScrollView
         scrollEventThrottle = {270}

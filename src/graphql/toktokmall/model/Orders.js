@@ -132,3 +132,42 @@ export const GET_COMPLETED_ORDERS = gql`
     }
   }
 `
+
+export const GET_ORDER_DETAILS = gql`
+	query getOrderDetails($input: GetOrderDetailsInput) {
+		getOrderDetails(input: $input) {
+			id
+			referenceNum
+			totalAmount
+			formattedDateOrdered
+			formattedDateReceived
+			shipping {
+				shop {
+					id
+					shopname
+				}
+				deliveryAmount
+				orderPlaced
+			}
+			orderData {
+				id
+				productId
+				totalAmount
+				quantity
+				product {
+					itemname
+					compareAtPrice
+					variation
+					img {
+						filename
+					}
+				}        
+			}
+			orderHistory {
+				action
+				formatDate
+				formatTime
+			  }
+    }
+  }
+`
