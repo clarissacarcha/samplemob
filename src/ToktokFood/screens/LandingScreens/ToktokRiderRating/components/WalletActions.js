@@ -1,18 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import { FlatList, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import React, {useState, useEffect, useContext} from 'react';
+import {Rating} from 'react-native-ratings';
+import {View, Text, StyleSheet, FlatList, TouchableOpacity, TextInput, Platform} from 'react-native';
+import {COLOR} from 'res/variables';
+import {COLORS, FONTS, FONT_SIZE, BUTTON_HEIGHT} from 'res/constants';
+import {verticalScale, moderateScale, scale, getDeviceWidth} from 'toktokfood/helper/scale';
+import {availableTips} from 'toktokfood/helper/strings';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
-import { COLORS, FONTS, FONT_SIZE } from 'res/constants';
-import { COLOR } from 'res/variables';
-import { moderateScale, scale, verticalScale } from 'toktokfood/helper/scale';
-import { availableTips } from 'toktokfood/helper/strings';
-
+import {VerifyContext} from '../components';
 export const WalletActions = () => {
-  const [activeTab, setActiveTab] = useState(availableTips[0]);
-  const [otherAmount, setOtherAmount] = useState('');
-  const [toktokwalletBalance, setToktokwalletBalance] = useState(100);
+  const {
+    activeTab,
+    setActiveTab,
+    otherAmount,
+    setOtherAmount,
+    toktokwalletBalance,
+    setToktokwalletBalance,
+    errorAmountMessage,
+    setErrorAmountMessage,
+  } = useContext(VerifyContext);
 
-  const [errorAmountMessage, setErrorAmountMessage] = useState('');
-  const [tempAmount, setTempAmount] = useState('');
+  const tokwaBalance = parseFloat(toktokwalletBalance);
 
   const changeOtherAmount = (value) => {
     const num = value.replace(/[^0-9.]/g, '');
@@ -22,7 +29,8 @@ export const WalletActions = () => {
     let decimalValueArray = num.split('.');
     if (decimalValueArray[0].length > 6) return;
     if (num[0] == '.') return setOtherAmount('0.');
-    if (num.charAt(0) == '0') return setOtherAmount(num.replace('0', ''));
+    if (num.charAt(0) == '0' && num.charAt(1) == '0') return setOtherAmount(num.replace('0', ''));
+    if (num.charAt(0) == '0' && num.charAt(1) > 0) return setOtherAmount(num.replace('0', ''));
     setOtherAmount(num);
   };
 
@@ -30,14 +38,20 @@ export const WalletActions = () => {
     const checkFormat = /^\d+(\.\d{1,2})?$/.test(otherAmount);
 
     if (otherAmount != '' && !checkFormat) {
+      setActiveTab(0);
       setErrorAmountMessage('Please enter valid amount.');
-    } else if (otherAmount >= 1 && otherAmount <= toktokwalletBalance) {
+    } else if (otherAmount >= 1 && otherAmount <= tokwaBalance) {
       setActiveTab(0);
       setErrorAmountMessage('');
     } else if (otherAmount == '' && activeTab == 0) {
       setActiveTab(availableTips[0]);
+    } else if (otherAmount > 0 && otherAmount < 1) {
+      setActiveTab(0);
+      setErrorAmountMessage('Please enter at least 1.00');
+    } else if (otherAmount > tokwaBalance) {
+      setErrorAmountMessage('You do not have enough balance.');
     } else {
-      setErrorAmountMessage(otherAmount == '' ? '' : 'You do not have enough balance.');
+      otherAmount == '0' ? setActiveTab(0) : '';
     }
 
     return () => {
@@ -47,12 +61,12 @@ export const WalletActions = () => {
 
   const onPressAmount = (item) => {
     setActiveTab(item);
-    setOtherAmount(0);
+    setOtherAmount('');
   };
 
   const renderItem = ({item}) => {
     let {id, amount} = item;
-    let isDisabled = toktokwalletBalance < amount;
+    let isDisabled = tokwaBalance < amount;
     let btnStyle = isDisabled ? {borderColor: '#DDDDDD'} : {};
     let textStyle = isDisabled ? {color: '#DDDDDD'} : {};
 
@@ -69,7 +83,7 @@ export const WalletActions = () => {
               <FA5Icon name="check" size={10} color={'#fff'} />
             </View>
           )}
-          <Text style={[styles.tipButtonText, textStyle]}>{`₱ ${amount.toFixed(2)}`}</Text>
+          <Text style={[styles.tipButtonText, textStyle]}>{`PHP ${amount.toFixed(2)}`}</Text>
         </TouchableOpacity>
       </>
     );
@@ -79,7 +93,7 @@ export const WalletActions = () => {
     <View style={styles.tokWalletWrapper}>
       <View style={styles.walletBalanceWrapper}>
         <Text style={styles.walletBalanceText}>toktokwallet balance: </Text>
-        <Text style={styles.walletBalanceText}>{`Php ${toktokwalletBalance.toFixed(2)}`}</Text>
+        <Text style={styles.walletBalanceText}>{`PHP ${tokwaBalance.toFixed(2)}`}</Text>
       </View>
       <Text style={styles.tipTitle}>Give a tip to make your rider happy!</Text>
       <View style={styles.tipButtonWrapper}>

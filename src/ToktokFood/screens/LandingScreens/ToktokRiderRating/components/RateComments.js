@@ -1,10 +1,19 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, View } from 'react-native';
-import { COLORS, FONTS } from 'res/constants';
-import { scale, verticalScale } from 'toktokfood/helper/scale';
+import React, {useState, useContext} from 'react';
+import {Rating} from 'react-native-ratings';
+import {View, Text, StyleSheet, TextInput} from 'react-native';
+import {COLOR} from 'res/variables';
+import {COLORS, FONTS, FONT_SIZE, BUTTON_HEIGHT} from 'res/constants';
+import {verticalScale, moderateScale, scale} from 'toktokfood/helper/scale';
+import {VerifyContext} from '../components';
 
 export const RateComments = () => {
   const [rating, setRating] = useState(0);
+
+  const {rateComments, setRateComments} = useContext(VerifyContext);
+
+  const onChangeText = (val) => {
+    setRateComments(val);
+  };
 
   return (
     <View style={styles.tokWalletWrapper}>
@@ -13,6 +22,8 @@ export const RateComments = () => {
       </View>
       <View style={styles.textAreaContainer}>
         <TextInput
+          value={rateComments}
+          onChangeText={onChangeText}
           style={styles.textArea}
           underlineColorAndroid="transparent"
           placeholder="Tell us more (Optional)"

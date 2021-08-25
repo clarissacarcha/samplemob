@@ -1,23 +1,50 @@
-import React, {useEffect, useState} from 'react';
-import {Image, Keyboard, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View} from 'react-native';
-import {COLORS} from 'res/constants';
-import {rider1} from 'toktokfood/assets/images';
+import React, {useState, useEffect, useContext} from 'react';
+import {Rating} from 'react-native-ratings';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  FlatList,
+  TouchableOpacity,
+  TextInput,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+  Keyboard,
+} from 'react-native';
+
+import {COLOR} from 'res/variables';
+import {COLORS, FONTS, FONT_SIZE, BUTTON_HEIGHT} from 'res/constants';
+import {
+  verticalScale,
+  moderateScale,
+  scale,
+  getDeviceWidth,
+  getDeviceHeight,
+  getStatusbarHeight,
+} from 'toktokfood/helper/scale';
+import InputScrollView from 'react-native-input-scroll-view';
+
+// Components
+import {
+  RiderInformation,
+  RatingAction,
+  WalletActions,
+  RateComments,
+  SubmitButton,
+  VerifyContext,
+  VerifyContextProvider,
+} from './components';
+import Separator from 'toktokfood/components/Separator';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
-import Separator from 'toktokfood/components/Separator';
-import {verticalScale} from 'toktokfood/helper/scale';
-// Components
-import {RateComments, RatingAction, RiderInformation, SubmitButton, WalletActions} from './components';
+import {headerBg, rider1} from 'toktokfood/assets/images';
 
-import { useNavigation } from '@react-navigation/native'
-
-const ToktokRiderRating = () => {
+const MainComponent = () => {
   const [viewHeight, setViewHeight] = useState(100);
   const [keyboardStatus, setKeyboardStatus] = useState(undefined);
-
-  const homeNav = () => {
-    navigation.replace('ToktokFoodLanding');
-  };
+  const {hasToktokWallet} = useContext(VerifyContext);
 
   useEffect(() => {
     const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
@@ -40,26 +67,37 @@ const ToktokRiderRating = () => {
           setViewHeight(e.nativeEvent.layout.height);
         }}>
         <HeaderImageBackground>
-          <HeaderTitle showAddress={false} title="Rider Rating" />
+          <HeaderTitle forRating={true} />
           <Image source={rider1} style={styles.riderAvatar} />
         </HeaderImageBackground>
       </View>
       <ScrollView
-        bounces={false}
         style={{marginTop: viewHeight / 2 - 10}}
         contentContainerStyle={{
-          paddingBottom: Platform.OS === 'ios' ? viewHeight : keyboardStatus ? verticalScale(50) : 0,
+          paddingBottom: Platform.OS == 'ios' ? viewHeight : keyboardStatus ? verticalScale(50) : 0,
         }}>
         <RiderInformation />
         <Separator />
         <RatingAction />
         <Separator />
-        <WalletActions />
-        <Separator />
+        {hasToktokWallet && (
+          <>
+            <WalletActions />
+            <Separator />
+          </>
+        )}
         <RateComments />
         <SubmitButton />
       </ScrollView>
     </KeyboardAvoidingView>
+  );
+};
+
+export const ToktokRiderRating = ({navigation}) => {
+  return (
+    <VerifyContextProvider>
+      <MainComponent navigation={navigation} />
+    </VerifyContextProvider>
   );
 };
 
