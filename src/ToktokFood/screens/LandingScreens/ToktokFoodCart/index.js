@@ -1,5 +1,5 @@
 import React from 'react';
-import {View} from 'react-native';
+import {View, KeyboardAvoidingView, ScrollView, Platform} from 'react-native';
 import InputScrollView from 'react-native-input-scroll-view';
 
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
@@ -8,29 +8,36 @@ import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 import styles from './styles';
 import {ReceiverLocation, AlsoOrder, MyOrderList, OrderTotal, PaymentDetails, RiderNotes} from './components';
 
+import {useSelector} from 'react-redux';
+
 // Utils
 import {moderateScale, getStatusbarHeight} from 'toktokfood/helper/scale';
 
 const CUSTOM_HEADER = {
-  container: Platform.OS === 'android' ? moderateScale(150 + getStatusbarHeight) : moderateScale(115),
-  bgImage: Platform.OS === 'android' ? moderateScale(115 + getStatusbarHeight) : moderateScale(100),
+  container: Platform.OS === 'android' ? moderateScale(110 + getStatusbarHeight) : moderateScale(95),
+  bgImage: Platform.OS === 'android' ? moderateScale(105 + getStatusbarHeight) : moderateScale(80),
 };
 
 const ToktokFoodCart = () => {
+
+  const {price} = useSelector((state) => state.toktokFood.totalAmount);
+
   return (
-    <View style={styles.container}>
-      <HeaderImageBackground customSize={CUSTOM_HEADER}>
-        <HeaderTitle title="Order Details" />
-      </HeaderImageBackground>
-      <InputScrollView contentContainerStyle={styles.scrollView} showsVerticalScrollIndicator={false}>
-        <ReceiverLocation />
-        <MyOrderList />
-        <AlsoOrder />
-        <OrderTotal />
-        <PaymentDetails />
-        <RiderNotes />
-      </InputScrollView>
-    </View>
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'position' : null} style={styles.container}>
+      <ScrollView bounces={false}>
+        <View style={styles.container}>
+          <HeaderImageBackground customSize={CUSTOM_HEADER}>
+            <HeaderTitle showAddress={false} title="Order Details" />
+          </HeaderImageBackground>
+          <ReceiverLocation />
+          <MyOrderList />
+          <AlsoOrder />
+          <OrderTotal subtotal={price} />
+          <PaymentDetails />
+          <RiderNotes />
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 

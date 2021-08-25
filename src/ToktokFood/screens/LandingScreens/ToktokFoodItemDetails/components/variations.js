@@ -2,14 +2,15 @@ import React, {useState} from 'react';
 import CheckBox from '@react-native-community/checkbox';
 import {View, Text, StyleSheet, TextInput} from 'react-native';
 
-import FoodCart from './FoodCart';
 import {FONT, FONT_SIZE, COLOR} from 'res/variables';
 
 // Utils
 import {scale, verticalScale, moderateScale} from 'toktokfood/helper/scale';
 
-const Variations = ({item}) => {
-  const [isShowModal, setShowModal] = useState(false);
+const Variations = ({item, onVariationChange, onAddOnsChange}) => {
+
+  const [selectedAddOns, setSelectedAddOns] = useState([]);
+  const [selectedVariations, setSelectedVariations] = useState([]);
 
   const RenderItem = (props) => {
     const {id, sizes, add_ons} = props.variations;
@@ -21,19 +22,25 @@ const Variations = ({item}) => {
             <View style={styles.variationsWrapper}>
               <View style={styles.checkBoxWrapper}>
                 <CheckBox
-                  style={styles.checkBox}
                   lineWidth={2}
                   boxType="square"
+                  animationDuration={0.2}
+                  style={styles.checkBox}
                   onCheckColor={COLOR.WHITE}
                   onTintColor={COLOR.ORANGE}
                   onFillColor={COLOR.ORANGE}
-                  animationDuration={0.2}
+                  value={selectedVariations.includes(size.id)}
                   tintColors={{true: COLOR.ORANGE, false: COLOR.MEDIUM}}
-                  onValueChange={(newValue) => console.log(newValue)}
+                  onValueChange={(isChecked) => {
+                    const ids = selectedVariations;
+                    isChecked ? ids.push(size.id) : ids.splice(selectedVariations.indexOf(size.id), 1);
+                    setSelectedVariations(ids);
+                    onVariationChange(isChecked ? size.price : -size.price);
+                  }}
                 />
                 <Text style={styles.checkBoxText}>{size.name}</Text>
               </View>
-              <Text style={styles.variationPrice}>+{size.price}</Text>
+              <Text style={styles.variationPrice}>+ {size.price.toFixed(2)}</Text>
             </View>
           ))}
         </View>
@@ -50,12 +57,18 @@ const Variations = ({item}) => {
                   onTintColor={COLOR.ORANGE}
                   onFillColor={COLOR.ORANGE}
                   animationDuration={0.2}
+                  value={selectedAddOns.includes(ons.id)}
                   tintColors={{true: COLOR.ORANGE, false: COLOR.MEDIUM}}
-                  onValueChange={(newValue) => console.log(newValue)}
+                  onValueChange={(isChecked) => {
+                    const ids = selectedAddOns;
+                    isChecked ? ids.push(ons.id) : ids.splice(selectedAddOns.indexOf(ons.id), 1);
+                    setSelectedAddOns(ids);
+                    onAddOnsChange(isChecked ? ons.price : -ons.price);
+                  }}
                 />
                 <Text style={styles.checkBoxText}>{ons.name}</Text>
               </View>
-              <Text style={styles.variationPrice}>+{ons.price}</Text>
+              <Text style={styles.variationPrice}>+ {ons.price.toFixed(2)}</Text>
             </View>
           ))}
         </View>
@@ -77,7 +90,6 @@ const Variations = ({item}) => {
     <>
       <View style={styles.container}>
         <RenderItem variations={item.variations[0]} />
-        <FoodCart item_price={item.price} />
       </View>
     </>
   );
@@ -124,8 +136,8 @@ const styles = StyleSheet.create({
   },
   variationPrice: {
     color: COLOR.BLACK,
-    fontFamily: FONT.REGULAR,
-    fontSize: FONT_SIZE.L,
+    fontFamily: FONT.BOLD,
+    fontSize: 17,
   },
   input: {
     height: moderateScale(90),

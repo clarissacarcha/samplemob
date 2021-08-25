@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 
@@ -7,7 +7,7 @@ import {scale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
 
 import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
 
-const FoodCart = () => {
+const FoodCart = ({currentTotal = 0.0, itemSize = 0}) => {
   const navigation = useNavigation();
 
   const onRestaurantNavigate = () => {
@@ -18,10 +18,13 @@ const FoodCart = () => {
     <>
       <View style={[styles.container, styles.cartBorder]}>
         <View style={styles.foodItemTotalWrapper}>
-          <Text style={styles.total}>0 item</Text>
-          <Text style={styles.total}>Total: 0</Text>
+          <Text style={styles.total}>{itemSize} item</Text>
+          <Text style={styles.total}>Total: {currentTotal.toFixed(2)}</Text>
         </View>
-        <TouchableOpacity style={styles.cartButton} onPress={() => onRestaurantNavigate()}>
+        <TouchableOpacity
+          disabled={!currentTotal > 0}
+          style={[styles.cartButton, {backgroundColor: !currentTotal > 0 ? COLOR.LIGHT : COLOR.YELLOW}]}
+          onPress={() => onRestaurantNavigate()}>
           <Text style={styles.buttonText}>View Cart</Text>
         </TouchableOpacity>
       </View>
@@ -43,6 +46,7 @@ const styles = StyleSheet.create({
     borderTopEndRadius: 18,
     borderTopStartRadius: 18,
     borderColor: COLOR.ORANGE,
+    marginHorizontal: -2,
   },
   cartButton: {
     display: 'flex',

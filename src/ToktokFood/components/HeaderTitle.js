@@ -10,7 +10,7 @@ import {markerIcon} from 'toktokfood/assets/images';
 
 import {getStatusbarHeight, verticalScale} from 'toktokfood/helper/scale';
 
-const HeaderTitle = ({title = 'toktokfood', forRating = false}) => {
+const HeaderTitle = ({title = 'toktokfood', showAddress = false}) => {
   const navigation = useNavigation();
   const {location} = useSelector((state) => state.toktokFood);
 
@@ -42,7 +42,7 @@ const HeaderTitle = ({title = 'toktokfood', forRating = false}) => {
   );
 
   const onBack = () => {
-    navigation.pop();
+    navigation.goBack();
   };
 
   return (
@@ -50,10 +50,10 @@ const HeaderTitle = ({title = 'toktokfood', forRating = false}) => {
       <TouchableOpacity onPress={onBack} style={styles.headerBack}>
         <FIcon5 name="chevron-left" size={15} />
       </TouchableOpacity>
-      {!forRating ? (
+      {showAddress ? (
         <View style={styles.headerTextContainer}>{!location ? renderLoader() : renderText()}</View>
       ) : (
-        <Text style={styles.headerLabel}>Rate the Driver</Text>
+        <Text style={styles.headerLabel}>{title}</Text>
       )}
     </View>
   );
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     paddingTop:
-      Platform.OS === 'android' ? verticalScale(getStatusbarHeight + 15) : verticalScale(getStatusbarHeight + 25),
+      Platform.OS === 'android' ? verticalScale(getStatusbarHeight + 15) : verticalScale(25),
   },
   headerBack: {
     paddingHorizontal: 20,

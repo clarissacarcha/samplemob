@@ -1,27 +1,25 @@
-import React, {useState} from 'react';
-import {Platform, StyleSheet, View, Text} from 'react-native';
-import ReactNativeParallaxHeader from 'react-native-parallax-header';
-import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useRoute} from '@react-navigation/native';
+import React, {useState} from 'react';
+import {Platform, StyleSheet, Text, View} from 'react-native';
+import ReactNativeParallaxHeader from 'react-native-parallax-header';
 import {Rating} from 'react-native-ratings';
-
+import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 // Components
 // import {RestaurantList} from '../../ToktokFoodHome/components';
 import HeaderTabs from 'toktokfood/components/HeaderTabs';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
-import HeaderTitleSearchBox from './HeaderTitleSearchBox';
-import FoodList from './FoodList';
-
 // Utils
 import {
+  getDeviceWidth,
+  getStatusbarHeight,
   isIphoneXorAbove,
   moderateScale,
   scale,
   verticalScale,
-  getDeviceWidth,
-  getStatusbarHeight,
 } from 'toktokfood/helper/scale';
 import {tabs} from 'toktokfood/helper/strings';
+import FoodList from './FoodList';
+import HeaderTitleSearchBox from './HeaderTitleSearchBox';
 
 // const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 // const IS_IPHONE_X = SCREEN_HEIGHT === 812 || SCREEN_HEIGHT === 896;
@@ -30,16 +28,18 @@ import {tabs} from 'toktokfood/helper/strings';
 // const NAV_BAR_HEIGHT = HEADER_HEIGHT - STATUS_BAR_HEIGHT;
 
 const StickyView = () => {
+  const routes = useRoute();
+
   const [offset, setOffset] = useState(0);
   const [activeTab, setActiveTab] = useState(tabs[0]);
-  const routes = useRoute();
-  const {distance, image, name, ratings, time, totalBranches} = routes.params.item;
-  const headerMinHeight = Platform.OS === 'ios' ? moderateScale(120) : moderateScale(140);
-  const headerMaxHeight = Platform.OS === 'ios' ? scale(400) : scale(370);
 
-  const renderNavBar = () => (
+  const {distance, image, name, ratings, time, totalBranches} = routes.params.item;
+
+  const headerMaxHeight = Platform.OS === 'ios' ? scale(400) : scale(370);
+  const headerMinHeight = Platform.OS === 'ios' ? moderateScale(120) : moderateScale(140);
+
+  const NavBar = () => (
     <View style={[styles.headerWrapper, styles.navbarWrapper]}>
-      {/* <HeaderTitle /> */}
       <HeaderTitleSearchBox />
       <View style={styles.tabContainer}>
         <HeaderTabs activeTab={activeTab} tabs={tabs} setActiveTab={setActiveTab} />
@@ -50,21 +50,21 @@ const StickyView = () => {
   const renderTitle = () => (
     <View style={styles.title}>
       <View style={styles.titleContainer}>
-        <HeaderTitle title={name} />
+        <HeaderTitle title={name} showAddress={true} />
       </View>
       <View style={styles.titleInfo}>
         <View style={styles.content}>
           <Text style={styles.titleText}>{name}</Text>
-          <Rating startingValue={ratings} tintColor={'white'} imageSize={13} readonly style={styles.ratings} />
+          <Rating startingValue={ratings} tintColor="white" imageSize={13} readonly style={styles.ratings} />
 
           <View style={styles.branchInfo}>
-            <MCIcon name="store" color={'#868686'} size={13} />
+            <MCIcon name="store" color="#868686" size={13} />
             <Text style={styles.branches}>{totalBranches} branches</Text>
 
-            <MCIcon name="clock-outline" color={'#868686'} size={13} />
+            <MCIcon name="clock-outline" color="#868686" size={13} />
             <Text style={styles.branches}>{time}</Text>
 
-            <MCIcon name="map-marker-outline" color={'#868686'} size={13} />
+            <MCIcon name="map-marker-outline" color="#868686" size={13} />
             <Text style={styles.branches}>{distance}</Text>
           </View>
         </View>
@@ -87,14 +87,15 @@ const StickyView = () => {
         backgroundImageScale={1.1}
         title={renderTitle()}
         backgroundImage={image}
-        backgroundColor="transparent"
         navbarColor="whitesmoke"
+        backgroundColor="transparent"
+        renderNavBar={() => <NavBar />}
         renderContent={() => <FoodList />}
-        renderNavBar={renderNavBar}
         containerStyle={styles.container}
         contentContainerStyle={styles.contentContainer}
         scrollViewProps={{
-          //   onScroll: (event) => setOffset(event.nativeEvent.contentOffset.y),
+          // scrollEnabled: false,
+          // onScroll: (event) => console.log(event.nativeEvent.contentOffset.y),
           onScrollEndDrag: (event) => setOffset(event.nativeEvent.contentOffset.y),
           onMomentumScrollEnd: (event) => setOffset(event.nativeEvent.contentOffset.y),
         }}
@@ -122,17 +123,16 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     backgroundColor: 'white',
-    flexGrow: 1,
-    // marginTop: Platform.OS === 'ios' ? verticalScale(4) : 0,
     paddingBottom: verticalScale(15),
+    // marginTop: Platform.OS === 'ios' ? verticalScale(4) : 0,
   },
   headerWrapper: {
-    backgroundColor: 'white',
-    shadowColor: '#000',
-    shadowOffset: {width: 1, height: 1},
-    shadowOpacity: 0.4,
-    shadowRadius: 3,
     elevation: 5,
+    shadowRadius: 3,
+    shadowOpacity: 0.4,
+    shadowColor: '#000',
+    backgroundColor: 'white',
+    shadowOffset: {width: 1, height: 1},
     height: Platform.OS === 'ios' ? scale(120) : scale(145),
   },
   navbarWrapper: {
@@ -140,8 +140,8 @@ const styles = StyleSheet.create({
     // marginTop: verticalScale(15),
   },
   ratings: {
-    alignItems: 'flex-start',
     paddingVertical: 4,
+    alignItems: 'flex-start',
   },
   tabContainer: {
     paddingHorizontal: 10,
@@ -160,7 +160,6 @@ const styles = StyleSheet.create({
           ? verticalScale(getStatusbarHeight + 37)
           : verticalScale(getStatusbarHeight + 20)
         : verticalScale(0),
-    // height: Platform.OS === 'ios' ? verticalScale(85) : verticalScale(110),
     height: Platform.OS === 'android' ? moderateScale(88 + getStatusbarHeight) : moderateScale(105),
   },
   titleInfo: {

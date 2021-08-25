@@ -30,7 +30,7 @@ const ToktokFoodCategories = () => {
   return (
     <View style={styles.container}>
       <HeaderImageBackground>
-        <HeaderTitle />
+        <HeaderTitle showAddress={true} />
         <HeaderSearchBox />
       </HeaderImageBackground>
       <RenderFilter />

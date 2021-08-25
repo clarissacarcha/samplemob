@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {useNavigation, useRoute} from '@react-navigation/native';
@@ -21,28 +21,23 @@ const ToktokFoodMapSearch = (props) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
-  let loading = false;
-  const [mapCoordinates, setMapCoordinates] = useState(route.params.coordinates);
   const [address, setAddress] = useState('');
+  const [mapCoordinates, setMapCoordinates] = useState(route.params.coordinates);
 
   const onMapMove = async (c) => {
-    if (!loading) {
-      loading = true;
-      const {latitude, longitude} = c;
-      try {
-        const address = await getFormattedAddress(latitude, longitude);
-        const payload = {
-          latitude,
-          longitude,
-          address: address.formattedAddress,
-        };
-        setAddress(address.formattedAddress);
-        setMapCoordinates({latitude, longitude});
-        dispatch({type: 'SET_TOKTOKFOOD_LOCATION', payload: {...payload}});
-      } catch (error) {
-        console.log(error);
-      }
-      loading = false;
+    const {latitude, longitude} = c;
+    try {
+      const result = await getFormattedAddress(latitude, longitude);
+      const payload = {
+        latitude,
+        longitude,
+        address: result.formattedAddress,
+      };
+      setAddress(result.formattedAddress);
+      setMapCoordinates({latitude, longitude});
+      dispatch({type: 'SET_TOKTOKFOOD_LOCATION', payload: {...payload}});
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -67,8 +62,8 @@ const ToktokFoodMapSearch = (props) => {
         <TouchableOpacity onPress={() => closeMap()} style={[styles.floatingBackButton, styles.floatingBoxShadow]}>
           <FA5Icon name="chevron-left" size={25} color={COLOR.BLACK} />
         </TouchableOpacity>
-        <PickUpDetails pinAddress={address} />
       </View>
+      <PickUpDetails pinAddress={address} />
     </>
   );
 };
@@ -105,16 +100,17 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   mapViewContainer: {
+    height: '53%',
     justifyContent: 'center',
     ...StyleSheet.absoluteFillObject,
-    height: '47%',
   },
-
   mapMarker: {
     position: 'absolute',
     alignSelf: 'center',
   },
 });
 
+// ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
 // React.memo for memoizing the component.
-export default ToktokFoodMapSearch;
+// Do not remove the memo function to avoid multiple unwanted GMAP API request
+export default React.memo(ToktokFoodMapSearch);

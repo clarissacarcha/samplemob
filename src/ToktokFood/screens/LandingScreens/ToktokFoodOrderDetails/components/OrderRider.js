@@ -6,7 +6,7 @@ import {COLORS} from 'res/constants';
 import {FONT_SIZE} from 'res/variables';
 
 // Images
-import {chat, phoneBlack, riderAvatar, star} from 'toktokfood/assets/images';
+import {chat, phoneBlack, rider1, star} from 'toktokfood/assets/images';
 
 // Utils
 import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
@@ -24,12 +24,15 @@ const OrderRider = () => {
 
   const renderAvatar = () => (
     <View style={styles.avatarContainer}>
-      <Image resizeMode="contain" style={styles.avatar} source={riderAvatar} />
+      <Image resizeMode="cover" style={styles.avatar} source={rider1} />
 
       <View style={styles.leftContainer}>
-        <Text style={styles.riderName}>Ellie Williams</Text>
+        <Text style={styles.riderName}>Edward Nolasco Rosario</Text>
         <View style={styles.ratingContainer}>
-          <Text style={styles.notes}>4.8</Text>
+          <Text style={styles.notes}>4</Text>
+          <Image resizeMode="contain" style={styles.star} source={star} />
+          <Image resizeMode="contain" style={styles.star} source={star} />
+          <Image resizeMode="contain" style={styles.star} source={star} />
           <Image resizeMode="contain" style={styles.star} source={star} />
         </View>
       </View>
@@ -57,7 +60,7 @@ const OrderRider = () => {
         {renderActions()}
       </View>
       <View style={styles.riderInfo}>
-        <Text style={styles.notes}>0910-0593229</Text>
+        <Text style={styles.notes}>0909-7570947</Text>
         <Text style={styles.notes}>Yamaha Sniper 150</Text>
       </View>
     </View>
@@ -76,8 +79,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   avatar: {
-    width: 58,
-    height: 58,
+    width: 55,
+    height: 55,
+    borderRadius: 100,
   },
   avatarContainer: {
     flexDirection: 'row',

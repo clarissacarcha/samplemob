@@ -29,13 +29,12 @@ export const RatingAction = () => {
 
 
 const styles = StyleSheet.create({
-    ratingActionWrapper: {
-        paddingVertical: 14,
-        alignItems: 'center'
-    },
-    ratings: {
-      paddingVertical: 4,
-      alignItems: 'flex-start',
-    }
-  });
-  
+  ratingActionWrapper: {
+    paddingVertical: 14,
+    alignItems: 'center',
+  },
+  ratings: {
+    paddingVertical: 4,
+    alignItems: 'flex-start',
+  },
+});

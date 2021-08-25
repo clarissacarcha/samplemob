@@ -1,25 +1,44 @@
-import React from 'react';
-import {Image, Platform, StyleSheet, View, Text} from 'react-native';
-
-// Components
-import DriverDetailsView from './DriverDetailsView';
+import React, {useState, useEffect} from 'react';
+import {Image, StyleSheet, View, Text} from 'react-native';
 
 // Fonts/Colors
 import {COLORS} from 'res/constants';
-import {driver} from 'toktokfood/assets/images';
+import {timer, pot, toktok_rider} from 'toktokfood/assets/images';
 
 // Utils
 import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
 
-const DriverAnimationView = () => {
+import DialogMessage from 'toktokfood/components/DialogMessage';
+
+const DriverAnimationView = ({status = 1}) => {
+  const [iShowSuccess, setShowSuccess] = useState(false);
+
+  useEffect(() => {
+    setShowSuccess(status === 2);
+  }, [status]);
+
+  const CancelOrderComponent = () => {
+
+  };
+
   return (
     <View style={styles.container}>
-      <Text style={styles.contactSupportText}>Contact Support</Text>
+      <DialogMessage
+        type="success"
+        title="Yehey!"
+        visibility={iShowSuccess}
+        messages="We've found you a driver"
+        onCloseModal={() => setShowSuccess(false)}
+      />
+      {/* Contact Support */}
+      <Text style={styles.contactSupportText}></Text>
       <View style={styles.imgContainer}>
-        <Image style={styles.img} source={driver} resizeMode="contain" />
+        <Image
+          style={[styles.img, {height: status === 1 ? 160 : 190}]}
+          source={status === 1 ? timer : status === 2 ? pot : toktok_rider}
+          resizeMode="contain"
+        />
       </View>
-
-      <DriverDetailsView />
     </View>
   );
 };
@@ -32,18 +51,17 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
   },
   contactSupportText: {
-    color: COLORS.YELLOWTEXT,
     fontSize: 15,
-    paddingRight: moderateScale(20),
+    marginTop: 8,
     textAlign: 'right',
+    color: COLORS.YELLOWTEXT,
+    paddingRight: moderateScale(20),
   },
   img: {
-    height: 190,
-    width: 220,
-    marginLeft: moderateScale(30),
+    width: 250,
   },
   imgContainer: {
     alignItems: 'center',
-    paddingVertical: Platform.OS === 'ios' ? verticalScale(40) : verticalScale(20),
+    paddingVertical: verticalScale(10),
   },
 });

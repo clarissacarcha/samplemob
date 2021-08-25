@@ -1,21 +1,18 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {Platform, StyleSheet, View} from 'react-native';
 
 // Components
-import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
+import {StickyView} from './components';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
 import HeaderSearchBox from 'toktokfood/components/HeaderSearchBox';
-import {StickyView} from './components';
+import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 
 // Hooks
 import {useCategories, useUserLocation, useShops} from 'toktokfood/hooks';
 
-import {moderateScale, getStatusbarHeight} from 'toktokfood/helper/scale';
-import {searchIcon} from 'toktokfood/assets/images';
-import DraggableIcon from 'toktokfood/components/DraggableIcon';
 import {transactions} from 'toktokfood/helper/strings';
-
-import {useNavigation} from '@react-navigation/native';
+import DraggableIcon from 'toktokfood/components/DraggableIcon';
+import {moderateScale, getStatusbarHeight} from 'toktokfood/helper/scale';
 
 const CUSTOM_HEADER = {
   container: Platform.OS === 'android' ? moderateScale(150 + getStatusbarHeight) : moderateScale(145),
@@ -27,20 +24,18 @@ const ToktokFoodHome = () => {
   useCategories(); // categories api
   useUserLocation(); // user location hook
 
-  const navigation = useNavigation();
   const [viewHeight, setViewHeight] = useState(100);
 
-  const getWindowDimension = (event)  => {
-    let height = event.nativeEvent.layout.height
-    setViewHeight(height)
-  }
+  const getWindowDimension = (event) => {
+    let height = event.nativeEvent.layout.height;
+    setViewHeight(height);
+  };
 
   return (
-            
-    <View style={styles.container} onLayout={(event) => getWindowDimension(event)}  >
-      <DraggableIcon data={transactions} title="Ongoing Orders" viewHeight={viewHeight} />
+    <View style={styles.container} onLayout={(event) => getWindowDimension(event)}>
+      {/* <DraggableIcon data={transactions} title="Ongoing Orders" viewHeight={viewHeight} /> */}
       <HeaderImageBackground customSize={CUSTOM_HEADER}>
-        <HeaderTitle />
+        <HeaderTitle showAddress={true} />
         <HeaderSearchBox />
       </HeaderImageBackground>
       <StickyView />

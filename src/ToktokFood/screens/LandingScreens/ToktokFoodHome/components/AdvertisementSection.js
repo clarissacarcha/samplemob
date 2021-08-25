@@ -2,7 +2,7 @@ import React from 'react';
 import {View, StyleSheet, Image, Platform, TouchableOpacity} from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 
-import {starbucks, starbucks2, yellow_cab} from 'toktokfood/assets/images';
+import {starbucks, burger_king, yellow_cab, banner_1} from 'toktokfood/assets/images';
 
 // Utils
 import {getDeviceWidth, isIphoneXorAbove} from 'toktokfood/helper/scale';
@@ -12,12 +12,17 @@ import {useNavigation} from '@react-navigation/native';
 const AdvertisementSection = () => {
   const navigation = useNavigation();
 
-  const temp_banners = [{shop_banner: starbucks}, {shop_banner: starbucks2}, {shop_banner: yellow_cab}];
+  const temp_banners = [
+    {shop_banner: banner_1},
+    {shop_banner: starbucks},
+    {shop_banner: yellow_cab},
+    {shop_banner: burger_king},
+  ];
 
   const onRestaurantNavigate = (index) => {
     console.log(index);
     if (index !== 5) {
-      navigation.navigate('ToktokFoodRestaurantOverview', {
+      navigation.navigate('ToktokRiderRating', {
         item: {
           distance: '1km',
           id: 1,

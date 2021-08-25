@@ -41,12 +41,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     // marginTop: Platform.OS === 'android' ? verticalScale(37) : verticalScale(25),
     paddingRight: moderateScale(20),
-    marginTop: Platform.OS === 'android' ? getStatusbarHeight + 15 : verticalScale(25),
+    marginTop: Platform.OS === 'android' ? getStatusbarHeight + 15 : verticalScale(20),
   },
   searchBox: {
+    flex: 1,
     borderRadius: 13,
     backgroundColor: '#F9F9F9',
-    flex: 1,
   },
   textInputFontStyles: {
     color: COLOR.BLACK,
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
   textInputWrapper: {
     alignItems: 'center',
     flexDirection: 'row',
-    height: Platform.OS === 'ios' ? verticalScale(30) : verticalScale(40),
+    height: Platform.OS === 'ios' ? moderateScale(48) : verticalScale(40),
     // paddingVertical: 10,
   },
   searchBoxIcon: {

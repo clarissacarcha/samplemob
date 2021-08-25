@@ -39,7 +39,10 @@ const PaymentDetails = () => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => setPaymentMethod(PAYMENT_TYPE.CASH)}
-            style={[styles.cashButton, {borderBottomWidth: paymentMethod === PAYMENT_TYPE.CASH ? 6 : 1}]}>
+            style={[
+              styles.cashButton,
+              {borderColor: paymentMethod === PAYMENT_TYPE.CASH ? COLORS.ORANGE : COLORS.LIGHT},
+            ]}>
             <Text style={styles.cashText}>CASH</Text>
           </TouchableOpacity>
         </View>

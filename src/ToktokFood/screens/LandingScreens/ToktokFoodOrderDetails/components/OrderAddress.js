@@ -16,6 +16,8 @@ import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
 
 const OrderAddress = () => {
   const {location} = useSelector((state) => state.toktokFood);
+
+  console.log(location);
   const {person, username} = useSelector((state) => state.session.user);
   const fullname = `${person.firstName} ${person.lastName}`;
 
@@ -42,7 +44,7 @@ const OrderAddress = () => {
         <View style={styles.restauranContainer}>
           <Image style={styles.icons} source={locationOutline} resizeMode="contain" />
           <Text font style={styles.addressText} numberOfLines={1}>
-            {location.formattedAddress}
+            {location.address}
           </Text>
         </View>
         <View style={styles.restauranContainer}>
