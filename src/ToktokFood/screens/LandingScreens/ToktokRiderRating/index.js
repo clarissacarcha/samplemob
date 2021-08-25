@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {Rating} from 'react-native-ratings';
 import {
     View,
@@ -20,16 +20,25 @@ import {verticalScale, moderateScale, scale, getDeviceWidth, getDeviceHeight, ge
 import InputScrollView from 'react-native-input-scroll-view';
 
 // Components
-import { RiderInformation, RatingAction, WalletActions, RateComments, SubmitButton} from './components';
+import {
+    RiderInformation,
+    RatingAction,
+    WalletActions,
+    RateComments,
+    SubmitButton,
+    VerifyContext,
+    VerifyContextProvider
+} from './components';
 import Separator from 'toktokfood/components/Separator';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
 import {headerBg, rider1} from 'toktokfood/assets/images';
 
-const ToktokRiderRating = () => {
+const MainComponent = () => {
 
     const [viewHeight, setViewHeight] = useState(100)
     const [keyboardStatus, setKeyboardStatus] = useState(undefined);
+    const { hasToktokWallet } = useContext(VerifyContext);
 
     useEffect(() => {
       const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
@@ -66,14 +75,26 @@ const ToktokRiderRating = () => {
                 <Separator />
                 <RatingAction />
                 <Separator />
-                <WalletActions />
-                <Separator />
+                { hasToktokWallet && (
+                    <>
+                        <WalletActions />
+                        <Separator />
+                    </>
+                )}
                 <RateComments />
                 <SubmitButton />
             </ScrollView>
         </KeyboardAvoidingView>
     );
 };
+
+export const ToktokRiderRating = ({ navigation }) => {
+    return (
+        <VerifyContextProvider>
+            <MainComponent navigation={navigation} />
+        </VerifyContextProvider>
+    )
+}
 
 const styles = StyleSheet.create({
   container: {
