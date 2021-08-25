@@ -33,14 +33,13 @@ const OrderFee = () => {
   const renderDashImage = (dash = true, image) => (
     <View style={styles.dashedImage}>
       {dash && <DashedLine axis="vertical" dashGap={1} dashColor="#DDDDDD" dashLength={5} />}
-      <Image style={styles.pickedUp} source={image} resizeMode="cover" />
+      <Image style={[styles.pickedUp, {borderRadius: 10, height: 130, marginTop: 8}]} source={image} resizeMode="cover" />
     </View>
   );
 
   return (
     <View style={styles.container}>
       <Text style={styles.deliverLogs}>Delivery Logs</Text>
-
       {renderLogInfo('Order Placed', 'Feb 16 2021 - 1:26 pm')}
       {renderDash()}
       {renderLogInfo('On the way to restaurant', 'Feb 16 2021 - 1:26 pm')}

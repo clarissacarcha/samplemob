@@ -12,12 +12,26 @@ import {success_ic, error_ic, warning_ic, question_ic} from 'toktokfood/assets/i
 const DialogMessage = (props) => {
   // type:  success | error | warning | question
   const {visibility, type, title, messages, onAccept, onCancel, onCloseModal} = props;
+
+  const getDialogIcon = () => {
+    switch (type) {
+      case 'success':
+        return success_ic;
+      case 'error':
+        return error_ic;
+      case 'warning':
+        return warning_ic;
+      case 'question':
+        return question_ic;
+    }
+  };
+
   return (
     <>
       <Modal visible={visibility} style={styles.modal} transparent={true}>
         <View style={styles.content}>
           <View style={[styles.prompContentWrapper, NUMBERS.SHADOW]}>
-            <Image style={styles.icon} source={error_ic} resizeMode="contain" />
+            <Image style={styles.icon} source={getDialogIcon()} resizeMode="contain" />
             <View style={styles.messegeWrapper}>
               {title !== undefined && <Text style={styles.messageTitle}>{title}</Text>}
               {messages !== undefined && <Text style={styles.messageContent}>{messages}</Text>}

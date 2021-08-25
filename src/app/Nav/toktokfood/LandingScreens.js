@@ -1,7 +1,5 @@
 import React from 'react';
-import {Text} from 'react-native';
-import MIcon from 'react-native-vector-icons/MaterialIcons';
-import FA5Icon from 'react-native-vector-icons/FontAwesome5';
+import {Text, Image} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import {COLORS} from 'res/constants';
@@ -13,9 +11,12 @@ import {
   ToktokFoodOrderTransactions,
 } from 'toktokfood/screens';
 
+import {home, history, notifications, favorites} from 'toktokfood/assets/images';
+import {home_fill, history_fill, notifications_fill, favorites_fill} from 'toktokfood/assets/images';
+
 const ToktokFoodLandingBottomTab = createBottomTabNavigator();
 
-const getOnFocusProps = (isFocus = false) => (isFocus ? COLORS.YELLOW : COLORS.DARK);
+const getOnFocusProps = (isFocus = false) => (isFocus ? COLORS.ORANGE : COLORS.DARK);
 
 const ToktokFoodLanding = () => (
   <ToktokFoodLandingBottomTab.Navigator>
@@ -25,7 +26,7 @@ const ToktokFoodLanding = () => (
       options={{
         tabBarLabel: ({focused}) => (
           <>
-            <FA5Icon name="utensils" color={getOnFocusProps(focused)} size={20} />
+            <Image source={focused ? home_fill : home} resizeMode="contain" style={{height: 23, width: 25}} />
             <Text style={{fontSize: 12, marginTop: 4, color: getOnFocusProps(focused)}}>Home</Text>
           </>
         ),
@@ -37,7 +38,7 @@ const ToktokFoodLanding = () => (
       options={{
         tabBarLabel: ({focused}) => (
           <>
-            <FA5Icon name="history" color={getOnFocusProps(focused)} size={20} />
+            <Image source={focused ? history_fill : history} resizeMode="contain" style={{height: 23, width: 25}} />
             <Text style={{fontSize: 12, marginTop: 4, color: getOnFocusProps(focused)}}>Activities</Text>
           </>
         ),
@@ -49,7 +50,11 @@ const ToktokFoodLanding = () => (
       options={{
         tabBarLabel: ({focused}) => (
           <>
-            <MIcon name="notifications" color={getOnFocusProps(focused)} size={25} />
+            <Image
+              resizeMode="contain"
+              style={{height: 23, width: 25}}
+              source={focused ? notifications_fill : notifications}
+            />
             <Text style={{fontSize: 12, marginTop: 4, color: getOnFocusProps(focused)}}>Notifications</Text>
           </>
         ),
@@ -61,7 +66,7 @@ const ToktokFoodLanding = () => (
       options={{
         tabBarLabel: ({focused}) => (
           <>
-            <FA5Icon name="heart" color={getOnFocusProps(focused)} size={20} />
+            <Image source={focused ? favorites_fill : favorites} resizeMode="contain" style={{height: 23, width: 25}} />
             <Text style={{fontSize: 12, marginTop: 4, color: getOnFocusProps(focused)}}>Favorites</Text>
           </>
         ),

@@ -30,6 +30,27 @@ export const warning_ic = require('./images/prompts_icons/warning.png');
 export const question_ic = require('./images/prompts_icons/question.png');
 export const floatingIcon = require('./images/floating-icon.png');
 
+// Bottom Nav Icons
+export const home = require('./images/bottom_nav_icons/menu-outline.png');
+export const history = require('./images/bottom_nav_icons/history-outline.png');
+export const notifications = require('./images/bottom_nav_icons/notif-outline.png');
+export const favorites = require('./images/bottom_nav_icons/favorites-outline.png');
+
+export const home_fill = require('./images/bottom_nav_icons/menu-fill.png');
+export const history_fill = require('./images/bottom_nav_icons/history-fill.png');
+export const notifications_fill = require('./images/bottom_nav_icons/notif-fill.png');
+export const favorites_fill = require('./images/bottom_nav_icons/favorites-fill.png');
+
+// Temp Animations
+export const merchant_wait = require('./images/animations/merchant_wait.gif');
+export const cooking = require('./images/animations/cooking.gif');
+export const waiting_rider = require('./images/animations/waiting_rider.gif');
+export const rider = require('./images/animations/rider.gif');
+export const food_delivered = require('./images/animations/delivered.gif');
+
+export const timer = require('./images/animations/timer.gif');
+export const pot = require('./images/animations/pot.gif');
+export const toktok_rider = require('./images/animations/toktok_rider.gif');
 
 // Test Banners
 export const starbucks = require('./images/sample_banners/starbucks.png');
@@ -38,6 +59,7 @@ export const yellow_cab = require('./images/sample_banners/yellow_cab.png');
 export const macao = require('./images/sample_banners/macao.png');
 export const siomai = require('./images/sample_banners/siomai.png');
 export const banner_1 = require('./images/sample_banners/banner_1.png');
+export const burger_king = require('./images/sample_banners/burger_king.jpeg');
 export const splash = require('./images/splash.png');
 
 // Test Rider

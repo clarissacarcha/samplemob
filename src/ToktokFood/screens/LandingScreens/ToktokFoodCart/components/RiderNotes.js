@@ -12,7 +12,7 @@ const RiderNotes = () => {
   const navigation = useNavigation();
 
   const onPlaceOrderNavigate = () => {
-    navigation.navigate('ToktokFoodDriver');
+    navigation.replace('ToktokFoodDriver');
   };
 
   return (

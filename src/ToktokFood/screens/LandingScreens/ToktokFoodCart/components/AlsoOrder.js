@@ -27,7 +27,7 @@ const AlsoOrder = () => {
         <View style={styles.deliverWrapper}>
           <Text style={styles.sectionTitle}>People also ordered</Text>
         </View>
-        <ScrollView horizontal style={styles.alsoOrderList} showsHorizontalScrollIndicator={false}>
+        <ScrollView bounces={false} horizontal style={styles.alsoOrderList} showsHorizontalScrollIndicator={false}>
           <RenderAlsoOrderedItem />
           <RenderAlsoOrderedItem />
           <RenderAlsoOrderedItem />

@@ -22,7 +22,7 @@ const ReceiverLocation = () => {
     <>
       <View style={styles.sectionContainer}>
         <View style={[styles.deliverWrapper, {paddingVertical: verticalScale(2)}]}>
-          <Text style={styles.sectionTitle}>Delivery To</Text>
+          <Text style={styles.sectionTitle}>Deliver To</Text>
           <View onTouchEnd={() => onSetLocationDetails()}>
             <Text style={styles.actionText}>Change Address</Text>
           </View>

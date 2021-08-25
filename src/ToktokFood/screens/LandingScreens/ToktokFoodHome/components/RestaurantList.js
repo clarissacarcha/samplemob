@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
   listContainer: {
     flex: 1,
     alignItems: 'center',
-    marginTop: Platform.OS === 'android' ? 0 : 10,
+    // marginTop: Platform.OS === 'android' ? 0 : 10,
   },
   ratings: {
     alignItems: 'flex-start',

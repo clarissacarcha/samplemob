@@ -1,5 +1,5 @@
 import {StyleSheet, Platform} from 'react-native';
-import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
+import {FONT, FONT_SIZE, COLOR, SIZE, SHADOW} from 'res/variables';
 
 // Utils
 import {scale, verticalScale, moderateScale, getDeviceWidth} from 'toktokfood/helper/scale';
@@ -173,15 +173,15 @@ export default styles = StyleSheet.create({
     marginRight: 4,
   },
   cashButton: {
-    borderWidth: 1,
+    borderWidth: 2,
     borderRadius: 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    borderColor: COLOR.MEDIUM,
     width: moderateScale(80),
     height: moderateScale(50),
     backgroundColor: COLOR.WHITE,
+    ...SHADOW
   },
   cashText: {
     color: COLOR.BLACK,
@@ -189,7 +189,7 @@ export default styles = StyleSheet.create({
     fontFamily: FONT.BOLD,
   },
   input: {
-    height: moderateScale(90),
+    paddingTop: 15,
     borderWidth: 1,
     borderRadius: 10,
     color: COLOR.BLACK,
@@ -198,18 +198,18 @@ export default styles = StyleSheet.create({
     borderColor: COLOR.MEDIUM,
     textAlignVertical: 'top',
     marginVertical: scale(6),
-    paddingTop: 15,
+    height: moderateScale(90),
     paddingHorizontal: scale(15),
   },
   placeOrderButton: {
     display: 'flex',
     borderRadius: 12,
     alignItems: 'center',
+    marginTop: scale(10),
     justifyContent: 'center',
+    width: getDeviceWidth - 28,
     height: SIZE.BUTTON_HEIGHT,
     backgroundColor: COLOR.YELLOW,
-    width: getDeviceWidth - 28,
-    marginTop: scale(10)
   },
   buttonText: {
     color: COLOR.BLACK,

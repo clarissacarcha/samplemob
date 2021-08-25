@@ -8,21 +8,21 @@ import {FONT_SIZE} from 'res/variables';
 // Utils
 import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
 
-const OrderFee = () => {
+const OrderFee = ({subtotal = 0.0}) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text>Subtotal</Text>
-        <Text style={styles.subtotal}>00.00</Text>
+        <Text style={styles.subtotal}>{subtotal.toFixed(2)}</Text>
       </View>
       <View style={styles.header}>
         <Text>Delivery Fee</Text>
-        <Text style={styles.subtotal}>00.00</Text>
+        <Text style={styles.subtotal}>40.00</Text>
       </View>
       <View style={styles.divider} />
       <View style={styles.header}>
         <Text style={styles.total}>Total</Text>
-        <Text style={styles.totalPrice}>45.00</Text>
+        <Text style={styles.totalPrice}>{(40.0 + subtotal).toFixed(2)}</Text>
       </View>
     </View>
   );

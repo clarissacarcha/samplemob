@@ -22,7 +22,7 @@ const TokTokFoodSplashScreen = () => {
   return (
     <>
       <ImageBackground style={styles.container} source={splash} resizeMode="cover">
-        <ActivityIndicator style={{marginBottom: 30}} size="large" color={COLOR.ORANGE} />
+        <ActivityIndicator style={{marginBottom: 30}} size="large" color={COLOR.WHITE} />
       </ImageBackground>
     </>
   );

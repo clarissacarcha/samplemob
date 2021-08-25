@@ -1,5 +1,4 @@
-import React, {useRef, useMemo} from 'react';
-import BottomSheet from '@gorhom/bottom-sheet';
+import React from 'react';
 import TextTicker from 'react-native-text-ticker';
 import {View, Text, TextInput, TouchableOpacity, StyleSheet} from 'react-native';
 
@@ -8,26 +7,20 @@ import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
 
 import {useNavigation} from '@react-navigation/native';
 
+import {useKeyboard} from 'toktokfood/hooks';
+
 const PickUpDetails = (props) => {
   const {pinAddress} = props;
 
   const navigation = useNavigation();
-
-  const snapPoints = useMemo(() => ['50%', '95%'], []);
+  const keyboardHeight = useKeyboard();
 
   return (
     <>
-      <BottomSheet
-        index={1}
-        ref={useRef()}
-        snapPoints={snapPoints}
-        enableHandlePanningGesture={true}
-        enableContentPanningGesture={true}
-        backdropComponent={() => <></>}
-        handleComponent={() => <View style={styles.cartBorder}></View>}>
+      <View style={[styles.proto, styles.cartBorder, {bottom: keyboardHeight - 35}]}>
         <View style={styles.sheet}>
           <Text style={styles.pickUpAddressTitle}>Pickup Address Details</Text>
-          <TextTicker loop duration={8000} repeatSpacer={25} marqueeDelay={1000} style={styles.pickUpAddress}>
+          <TextTicker loop duration={10000} repeatSpacer={25} marqueeDelay={1000} style={styles.pickUpAddress}>
             {pinAddress + '.'}
           </TextTicker>
           <View style={styles.inputWrapper}>
@@ -56,19 +49,19 @@ const PickUpDetails = (props) => {
             <Text style={styles.buttonText}>Confirm Address Details</Text>
           </TouchableOpacity>
         </View>
-      </BottomSheet>
+      </View>
     </>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  proto: {
+    height: '53%',
+    width: '101%',
+    position: 'absolute',
     backgroundColor: COLOR.WHITE,
-    ...StyleSheet.absoluteFillObject,
   },
   cartBorder: {
-    height: 20,
     borderTopWidth: 3,
     borderEndWidth: 2,
     borderStartWidth: 2,
@@ -78,11 +71,11 @@ const styles = StyleSheet.create({
     marginHorizontal: -2,
   },
   sheet: {
-    paddingHorizontal: 16,
+    padding: 15,
   },
   pickUpAddressTitle: {
-    fontSize: FONT_SIZE.XL,
     fontFamily: FONT.BOLD,
+    fontSize: FONT_SIZE.XL,
     marginBottom: verticalScale(7),
   },
   pickUpAddress: {
@@ -91,14 +84,14 @@ const styles = StyleSheet.create({
     fontFamily: FONT.REGULAR,
   },
   cartButton: {
+    width: '100%',
     display: 'flex',
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
     height: SIZE.BUTTON_HEIGHT,
     backgroundColor: COLOR.YELLOW,
-    width: '100%',
-    marginTop: verticalScale(7),
+    marginTop: verticalScale(5),
   },
   buttonText: {
     color: COLOR.BLACK,

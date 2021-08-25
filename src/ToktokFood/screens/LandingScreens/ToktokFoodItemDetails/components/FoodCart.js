@@ -1,26 +1,25 @@
 import React, {useEffect, useState} from 'react';
-import MIcon from 'react-native-vector-icons/MaterialIcons';
-import {useNavigation} from '@react-navigation/native';
 import Toast from 'react-native-simple-toast';
+import {useNavigation} from '@react-navigation/native';
+import MIcon from 'react-native-vector-icons/MaterialIcons';
 import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 
 // Utils
+import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
 import {scale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
 
-import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
+import {useDispatch} from 'react-redux';
 
-import {useSelector, useDispatch} from 'react-redux';
-
-const FoodCart = ({item_price = 0, onCartAdd}) => {
+const FoodCart = ({item_price = 0.0, currentTotal = 0.0}) => {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
-  // const dispatch = useDispatch();
 
   const [count, setCount] = useState(1);
   const [total, setTotal] = useState(0);
 
-  useSelector((state) => console.log(state.toktokFood.cart));
-
   const onRestaurantNavigate = () => {
+    dispatch({type: 'SET_TOKTOKFOOD_CART_TOTAL', payload: {price: (total + currentTotal)}});
+
     Toast.show('Added to cart', Toast.SHORT);
     navigation.navigate('ToktokFoodRestaurantOverview');
   };
@@ -34,14 +33,12 @@ const FoodCart = ({item_price = 0, onCartAdd}) => {
   };
 
   const updateCartStates = () => {
-    setTotal(parseFloat(count * parseFloat(item_price)));
-    // Location is not working when dispatching SET_TOKTOKFOOD_CART_TOTAL
-    // dispatch({type: 'SET_TOKTOKFOOD_CART_TOTAL', payload: {total: total}});
+    setTotal(count * item_price);
   };
 
   useEffect(() => {
     updateCartStates();
-  }, [count]);
+  }, [count, item_price]);
 
   return (
     <>
@@ -49,7 +46,8 @@ const FoodCart = ({item_price = 0, onCartAdd}) => {
         <View style={styles.foodItemTotalWrapper}>
           <View style={styles.countWrapper}>
             <TouchableOpacity
-              style={[styles.countButtons, {backgroundColor: COLOR.LIGHT}]}
+              disabled={count < 2}
+              style={[styles.countButtons, {backgroundColor: count < 2 ? COLOR.LIGHT : COLOR.MEDIUM}]}
               onPress={() => updateCartTotal('REMOVE')}>
               <MIcon name="remove" color={COLOR.BLACK} size={25} />
             </TouchableOpacity>
@@ -60,7 +58,7 @@ const FoodCart = ({item_price = 0, onCartAdd}) => {
               <MIcon name="add" color={COLOR.WHITE} size={20} />
             </TouchableOpacity>
           </View>
-          <Text style={styles.total}>Total: {total}</Text>
+          <Text style={styles.total}>Subtotal: {total.toFixed(2)}</Text>
         </View>
         <TouchableOpacity style={styles.cartButton} onPress={() => onRestaurantNavigate()}>
           <Text style={styles.buttonText}>Add to Cart</Text>
@@ -84,6 +82,7 @@ const styles = StyleSheet.create({
     borderTopEndRadius: 18,
     borderTopStartRadius: 18,
     borderColor: COLOR.ORANGE,
+    marginHorizontal: -2,
   },
   cartButton: {
     display: 'flex',

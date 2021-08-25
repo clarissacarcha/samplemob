@@ -7,13 +7,14 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 // Fonts/Colors
 import {COLORS} from 'res/constants';
+import {FONT_SIZE, FONT, SIZE, COLOR} from 'res/variables';
 
 // Utils
-import {isIphoneXorAbove, moderateScale, verticalScale} from 'toktokfood/helper/scale';
+import {moderateScale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
 
-const DriverDetailsView = () => {
-  const {location} = useSelector((state) => state.toktokFood);
+const DriverDetailsView = ({status}) => {
   const navigation = useNavigation();
+  const {location} = useSelector((state) => state.toktokFood);
 
   const onSeeDetails = () => {
     navigation.navigate('ToktokFoodOrderDetails');
@@ -40,8 +41,18 @@ const DriverDetailsView = () => {
 
   const renderTitle = () => (
     <View style={styles.detailsContainer}>
-      <Text style={styles.title}>Waiting for restaurant confirmation...</Text>
-      <Text style={styles.status}>Give restaurant some time to accept your order</Text>
+
+      {status === 1 && <Text style={styles.title}>Waiting for restaurant confirmation...</Text>}
+      {status === 2 && <Text style={styles.title}>{`We've found you a driver`}</Text>}
+      {status === 3 && <Text style={styles.title}>{`Food Delivered`}</Text>}
+
+      {status === 1 && <Text style={styles.status}>Give restaurant some time to accept your order</Text>}
+      {status === 2 && (
+        <Text numberOfLines={3} style={styles.status}>{`Driver is heading to ${location.address}`}</Text>
+      )}
+      {status === 3 && (
+        <Text numberOfLines={3} style={styles.status}>{`Driver is heading to ${location.address}`}</Text>
+      )}
       <View style={styles.timeContainer}>
         <MaterialIcon name="schedule" size={16} color={COLORS.YELLOWTEXT} />
         <Text style={styles.time}>Estimated time: 10:00 - 10:30</Text>
@@ -51,14 +62,20 @@ const DriverDetailsView = () => {
 
   const renderActions = () => (
     <View style={styles.actionContainer}>
-      <TouchableOpacity onPress={onSeeDetails} style={styles.seeOrderDetails}>
+      <TouchableOpacity onPress={onSeeDetails} style={styles.orderDetailsAction}>
         <Text style={styles.orderDetailsText}>See Order Details</Text>
       </TouchableOpacity>
+      {status === 1 && (
+        <TouchableOpacity style={styles.cancelButton}>
+          <Text style={styles.buttonText}>Cancel</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 
   return (
     <ScrollView
+      bounces={false}
       contentContainerStyle={styles.scrollContainer}
       showsVerticalScrollIndicator={false}
       style={styles.container}>
@@ -74,6 +91,7 @@ export default DriverDetailsView;
 const styles = StyleSheet.create({
   actionContainer: {
     backgroundColor: 'white',
+    alignItems: 'center',
   },
   addressContainer: {
     backgroundColor: 'white',
@@ -105,12 +123,14 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     elevation: 4,
     shadowOpacity: 0.1,
+    paddingHorizontal: 10,
+    textAlign: 'center'
   },
   divider: {
+    flex: 1,
+    borderWidth: 0.4,
     alignSelf: 'center',
     borderColor: '#DDDDDD',
-    borderWidth: 0.4,
-    flex: 1,
   },
   horizontalContainer: {
     paddingVertical: verticalScale(15),
@@ -127,8 +147,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   scrollContainer: {
-    paddingBottom:
-      Platform.OS === 'ios' ? (isIphoneXorAbove() ? verticalScale(720) : verticalScale(860)) : verticalScale(400),
+    // paddingBottom:
+    //   Platform.OS === 'ios' ? (isIphoneXorAbove() ? verticalScale(720) : verticalScale(860)) : verticalScale(400),
   },
   status: {
     fontWeight: '300',
@@ -148,5 +168,22 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: '500',
     fontSize: 16,
+  },
+  cancelButton: {
+    display: 'flex',
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: SIZE.BUTTON_HEIGHT,
+    width: getDeviceWidth - 28,
+    backgroundColor: COLOR.YELLOW,
+  },
+  buttonText: {
+    color: COLOR.BLACK,
+    fontSize: FONT_SIZE.L,
+    fontFamily: FONT.BOLD,
+  },
+  orderDetailsAction: {
+    marginVertical: 16,
   },
 });

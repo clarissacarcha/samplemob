@@ -8,7 +8,7 @@ import {CategoryList, RestaurantList, AdvertisementSection} from './index';
 import HeaderTabs from 'toktokfood/components/HeaderTabs';
 
 // Utils
-import {moderateScale, scale, verticalScale} from 'toktokfood/helper/scale';
+import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
 
 // const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 // const IS_IPHONE_X = SCREEN_HEIGHT === 812 || SCREEN_HEIGHT === 896;
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
   },
   headerWrapper: {paddingHorizontal: 15, width: '100%', paddingTop: moderateScale(8)},
   navbarWrapper: {
-    marginBottom: Platform.OS === 'ios' ? verticalScale(12) : verticalScale(8),
+    // marginBottom: Platform.OS === 'ios' ? verticalScale(12) : verticalScale(8),
   },
   adsContainer: {
     height: 130,

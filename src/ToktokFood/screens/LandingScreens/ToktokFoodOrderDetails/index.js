@@ -6,20 +6,31 @@ import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
 import {OrderAddress, OrderFee, OrderList, OrderLogs, OrderNote, OrderRider, OrderTitle} from './components';
 
+import {useSelector} from 'react-redux';
+
+// Utils
+import {moderateScale, getStatusbarHeight} from 'toktokfood/helper/scale';
+
+const CUSTOM_HEADER = {
+  container: Platform.OS === 'android' ? moderateScale(110 + getStatusbarHeight) : moderateScale(82),
+  bgImage: Platform.OS === 'android' ? moderateScale(105 + getStatusbarHeight) : moderateScale(83),
+};
+
 const ToktokFoodOrderDetails = () => {
+  const {price} = useSelector((state) => state.toktokFood.totalAmount);
   return (
     <View style={styles.container}>
-      <HeaderImageBackground>
+      <HeaderImageBackground customSize={CUSTOM_HEADER}>
         <HeaderTitle title="Order Details" />
       </HeaderImageBackground>
 
-      <ScrollView contentContainerStyle={styles.scrollView} showsVerticalScrollIndicator={false}>
+      <ScrollView bounces={false} contentContainerStyle={styles.scrollView} showsVerticalScrollIndicator={false}>
         <OrderTitle />
         <OrderAddress />
         <OrderNote title="Note" label="Tabi ng vape shop na may black na gate" />
         <OrderRider />
         <OrderList />
-        <OrderFee />
+        <OrderFee subtotal={price} />
         <OrderNote title="Payment Method" label="Cash-on Delivery" />
         <OrderLogs />
       </ScrollView>
@@ -28,8 +39,8 @@ const ToktokFoodOrderDetails = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {flex: 1},
-  scrollView: {paddingBottom: 150},
+  container: {flex: 1, backgroundColor: '#FFFF'},
+  scrollView: {paddingBottom: 50},
 });
 
 export default ToktokFoodOrderDetails;

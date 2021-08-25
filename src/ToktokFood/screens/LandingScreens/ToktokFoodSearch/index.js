@@ -82,7 +82,7 @@ const ToktokFoodSearch = () => {
         onCloseModal={() => setShowError(false)}
       />
       <HeaderImageBackground customSize={CUSTOM_HEADER}>
-        <HeaderTitle />
+        <HeaderTitle showAddress={true} />
         <HeaderSearchBox
           onSearch={(t) => {
             if (t === 'mcdo') {
@@ -93,7 +93,7 @@ const ToktokFoodSearch = () => {
       </HeaderImageBackground>
       <View style={styles.tabContainer}>
         {/* <HeaderTabs activeTab={activeTab} tabs={tabs} setActiveTab={setActiveTab} /> */}
-        <Text style={[styles.restaurantName, {fontSize: 18}]}>Restaurant</Text>
+        <Text style={[styles.restaurantName, {fontSize: 18}]}>Restaurants</Text>
       </View>
       <View style={styles.listContainer}>
         <FlatList data={restaurants} renderItem={renderItem} />

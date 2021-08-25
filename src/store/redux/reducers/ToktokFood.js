@@ -7,10 +7,12 @@ const INITIAL_STATE = {
       longitude: 0,
     },
   },
-  cart: {
-    total: 0,
-  },
   shops: [],
+  cart: {
+    items: [],
+  },
+  totalAmount: {price: 0},
+  orderStatus: {status: 1},
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -20,7 +22,7 @@ export default (state = INITIAL_STATE, action) => {
     case 'SET_TOKTOKFOOD_LOCATION':
       return {...state, location: action.payload};
     case 'SET_TOKTOKFOOD_CART_TOTAL':
-      return {...state.user, cart: action.payload};
+      return {...state, totalAmount: action.payload};
     case 'SET_TOKTOKFOOD_SHOPS':
       return {...state, shops: action.payload};
     default:
