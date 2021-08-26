@@ -2,6 +2,11 @@ import React, {useState, useEffect, useRef} from 'react';
 import {StyleSheet, View, Text, Platform, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, } from 'react-native';
 import { FONT } from '../../../../../res/variables';
 import CustomIcon from '../../../../Components/Icons';
+import Spinner from 'react-native-spinkit';
+
+import { useLazyQuery, useQuery, useMutation } from '@apollo/react-hooks';
+import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../graphql';
+import { GET_APPLY_VOUCHER } from '../../../../../graphql/toktokmall/model';
 
 const testData = [
   {id: 1, full_name: 'Cloud Panda', contact_number: '09050000000',
@@ -12,7 +17,28 @@ const testData = [
   }
 ]
 
-export  const Vouchers = ({ navigation, vouchers, setVouchers, vcode, setvCode}) => {
+export const Vouchers = ({ navigation, vouchers, setVouchers, setVoucher}) => {
+
+  const [isValid, setIsValid] = useState(0)
+  const [vcode, setvCode] = useState("")
+
+  const [applyVoucher, {error, loading}] = useLazyQuery(GET_APPLY_VOUCHER, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',    
+    onCompleted: (response) => {
+      console.log("Response", response)
+      if(response.applyVoucher){
+        setIsValid(2)
+        setVoucher(response.applyVoucher)
+      }else{
+        setIsValid(-1)
+      }
+    },
+    onError: (err) => {
+      console.log(err)
+      setIsValid(-1)
+    }
+  })
 
   const renderVouchers = () => {
     // if (vouchers.length > 0){
@@ -52,22 +78,57 @@ export  const Vouchers = ({ navigation, vouchers, setVouchers, vcode, setvCode})
         </TouchableOpacity>
         <View style={{ height: 2, backgroundColor: '#F7F7FA'}} />
         {/* {renderVouchers()} */}
-        <View style={{paddingVertical: 8, paddingHorizontal: 15}}>
+        <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
           <View style={{
+            flex: 1,
             padding: Platform.OS === 'ios' ? 10 : 0,
             backgroundColor: '#F8F8F8',
             marginTop: 10,
             borderRadius: 5,
             alignItems: 'flex-start',
+            flexDirection: 'row'            
           }}>
             <TextInput
               value={vcode}
-              style={{marginLeft: 10, width: '100%'}}
+              style={{marginLeft: 10, flex: 1}}
               placeholder="Input voucher (optional)"
-              onChangeText={(val) => setvCode(val)}
+              autoCapitalize="characters"
+              onChangeText={(val) => {
+                setvCode(val)
+                setIsValid(0)
+              }}
             />
-          </View>
-          <View style={{paddingVertical: 8}} />
+            <TouchableOpacity 
+              onPress={() => {
+                if(vcode == "") return 
+                applyVoucher({variables: {
+                  input: {
+                    vcode: vcode
+                  }
+                }})
+              }}
+              style={{
+                flex: 0, 
+                paddingVertical: 15, 
+                paddingLeft: 15,
+                backgroundColor: 'white',
+                alignItems: 'flex-end'
+              }}
+            >
+              
+              {loading && <Spinner 
+                isVisible={loading}
+                // isVisible={true}
+                type={"FadingCircleAlt"}
+                color={"#F6841F"}
+                size={20}
+              />}
+              {!loading && isValid == 0 && <Text style={{color: "#F6841F", textAlign: 'right'}}>Apply</Text>}
+              {!loading && isValid == -1 && <CustomIcon.FA5Icon name="times-circle" size={20} color="#F6841F" />}
+              {!loading && isValid == 2 && <CustomIcon.FeIcon name="check-circle" size={20} color="#02d147" />}
+              
+            </TouchableOpacity>
+          </View>          
         </View>
       </View>
         

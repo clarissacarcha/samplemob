@@ -97,6 +97,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
   const [paymentList, setPaymentList] = useState([])
   const [vouchers, setVouchers] = useState([])
   const [vcode, setvCode] = useState("")
+  const [voucher, setVoucher] = useState([])
   const [grandTotal, setGrandTotal] = useState(0)
   const [userId, setUserId] = useState(null)
   const [deliveryFees, setDeliveryFees] = useState([])
@@ -402,6 +403,11 @@ const Component = ({route, navigation, createMyCartSession}) => {
             setVouchers={setVouchers} 
             vcode={vcode}
             setvCode={setvCode}
+            setVoucher={(data) => {
+              let temp = []
+              temp.push(data)
+              setVoucher(temp)
+            }}
           />
           <Payment 
             payment={payment} 
