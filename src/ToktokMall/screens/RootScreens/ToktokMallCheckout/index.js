@@ -94,9 +94,11 @@ const Component = ({route, navigation, createMyCartSession}) => {
   const [newCartData, setNewCartData] = useState([])
   const [paramsData, setParamsData] = useState([])
   const [addressData, setAddressData] = useState([])
-  const [payment, setPaymentMethod] = useState("cod");
-  const [paymentList, setPaymentList] = useState([]);
+  const [payment, setPaymentMethod] = useState("cod")
+  const [paymentList, setPaymentList] = useState([])
   const [vouchers, setVouchers] = useState([])
+  const [vcode, setvCode] = useState("")
+  const [voucher, setVoucher] = useState([])
   const [grandTotal, setGrandTotal] = useState(0)
   const [userId, setUserId] = useState(null)
   const [deliveryFees, setDeliveryFees] = useState([])
@@ -254,9 +256,6 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
   }
 
-  
-
-  
   const postCheckoutSetting = async () => {
     
     setIsLoading(true)
@@ -419,13 +418,21 @@ const Component = ({route, navigation, createMyCartSession}) => {
             raw={paramsData}
             shipping={addressData?.shippingSummary}            
           />
-          {/* <Vouchers 
+          <Vouchers 
             navigation={navigation} 
             vouchers={vouchers}
-            setVouchers = {setVouchers} 
-          /> */}
+            setVouchers={setVouchers} 
+            vcode={vcode}
+            setvCode={setvCode}
+            setVoucher={(data) => {
+              let temp = []
+              temp.push(data)
+              setVoucher(temp)
+            }}
+          />
           <Payment 
             payment={payment} 
+            total={grandTotal}
             list={paymentList}
             setPaymentMethod={setPaymentMethod} 
           />

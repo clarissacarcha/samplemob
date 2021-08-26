@@ -31,6 +31,7 @@ export const GET_ORDERS_AND_HISTORY = gql`
   query getOrdersAndHistory($input: GetOrdersAndHistoryInput) {
     getOrdersAndHistory(input: $input) {
       uuid
+      id
       referenceNum
       history {
         uuid
@@ -38,7 +39,9 @@ export const GET_ORDERS_AND_HISTORY = gql`
         content
         action
         hasLink
+        statusText
         formatDate
+        formatTime
         referenceNum      
       }
       product {

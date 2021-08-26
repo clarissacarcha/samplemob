@@ -45,11 +45,11 @@ const Summary = ({data}) => {
   )
 }
 
-const Item = ({data}) => {
+const Item = ({data, fulldata}) => {
 
   const [messageModalShown, setMessageModalShown] = useState(false)
   const [rated, setRated] = useState(false)
-  const { navigate } = useNavigation()
+  const navigation = useNavigation()
 
   let product = data?.product
 
@@ -63,7 +63,11 @@ const Item = ({data}) => {
 
   return (
     <>
-      <View style={{flexDirection: 'row', paddingTop: 10, paddingBottom: 0, paddingHorizontal: 15}}>
+      <TouchableOpacity 
+        onPress={() => {
+          navigation.navigate("ToktokMallOrderDetails", fulldata)
+        }}
+        style={{flexDirection: 'row', paddingTop: 10, paddingBottom: 0, paddingHorizontal: 15}}>
         <View style={{flex: 2, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 5, borderRadius: 5}}>
           <Image source={getImageSource(product?.image || product?.img)} style={{width: 55, height: 80, resizeMode: 'stretch', borderRadius: 5}} />
         </View>
@@ -91,7 +95,7 @@ const Item = ({data}) => {
             </View>
           </View>          
         </View>        
-      </View>
+      </TouchableOpacity>
       {/* <View style={{flexDirection: 'row-reverse', paddingHorizontal: 15, paddingBottom: 15}}>
         {!rated && <TouchableOpacity onPress={()=> {                    
           navigate("ToktokMallRateProduct", {openModal: () => {
@@ -206,8 +210,8 @@ export const Completed = ({id, email}) => {
       return (
         <>
           <Store data={item?.shipping?.shop} />
-          {!toggleDrop && <Item data={item.orderData[0]} />}
-          {toggleDrop && item.orderData.map((raw, i) => <Item key={i} data={raw} />)}
+          {!toggleDrop && <Item data={item.orderData[0]} fulldata={item} />}
+          {toggleDrop && item.orderData.map((raw, i) => <Item key={i} data={raw} fulldata={item} />)}
           <Toggle 
             count={item.orderData.length - 1} 
             state={toggleDrop} 
@@ -222,7 +226,7 @@ export const Completed = ({id, email}) => {
       return (
         <>
           <Store data={item?.shipping?.shop} />
-          {item.orderData.map((raw, i) => <Item key={i} data={raw} />)}
+          {item.orderData.map((raw, i) => <Item key={i} data={raw} fulldata={item} />)}
           <Summary data={item} />
         </>
       )

@@ -22,3 +22,13 @@ export const GET_CITY = gql`
         }
 	}
 `
+
+export const GET_DEFAULT_ADDRESS = gql`
+  query getDefaultCustomerAddress($input: GetDefaultCustomerAddressInput) {
+		getDefaultCustomerAddress(input: $input) {
+			id
+			fullAddress
+			
+		}
+	}
+`

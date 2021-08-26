@@ -2,6 +2,7 @@ export * from './ToktokMallAddresses';
 export * from './ToktokMallCheckout';
 export * from './ToktokMallMyOrders';
 export * from './ToktokMallNotificationsx';
+export * from './ToktokMallOrderDetails';
 export * from './TokokMallPaymentWebview';
 export * from './ToktokMallProductDetails';
 export * from './ToktokMallProductRatings';

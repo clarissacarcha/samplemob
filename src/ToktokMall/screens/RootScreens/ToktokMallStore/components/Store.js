@@ -27,7 +27,9 @@ const Component = ({data, onToggleFollow, reduxActions: {updateMyFollowing}, red
         <Card>
           <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
             <View style={{flex: 3.5}}>
-              <Image source={getShopLogo(data.profileImages?.logo ? data.profileImages?.logo : {})} style={{width: 50, height: 50, resizeMode: "cover", borderRadius: 25}} />
+              <Image 
+                source={getShopLogo(data.profileImages?.logo ? data.profileImages?.logo : {})} 
+                style={{width: 50, height: 50, resizeMode: "stretch", borderRadius: 25}} />
             </View>
             <View style={{flex: 12, justifyContent: 'center'}}>
               <Text style={{fontSize: 14}}>{data.shopname}</Text>

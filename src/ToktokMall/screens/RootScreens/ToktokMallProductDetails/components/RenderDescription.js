@@ -26,34 +26,23 @@ const DotList = ({data}) => {
 export const RenderDescription = ({data, loading}) => {
 	return (
 		<>
-      <ContentLoader 
+      {/* <ContentLoader 
           loading = {loading} 
           avatar = {false}
           pRows = {6}
           title = {false}
           paragraphStyles = {{height: 13, left: 0, top: 15}}
           pWidth = {'100%'}
-          
-      >
+      ></ContentLoader> */}
         <View style={{paddingVertical: 16, paddingHorizontal: 16}}>
           <View style={{paddingBottom: 12}}>
             <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>Product Description</Text>
-          </View>
-          {/* <View style={{paddingBottom: 12}}>
-            <Text style={{fontSize: 13}}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Egestas viverra gravida ac scelerisque metus nulla pharetra.</Text>
-          </View>
-          <View style={{paddingBottom: 12}}>
-            <DotList data={["100% Cotton", "Washable"]} />
-          </View>
-          <View style={{paddingBottom: 12}}>
-            <Text style={{fontSize: 13}}>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</Text>
-          </View> */}
+          </View>          
           <View style={{paddingBottom: 12}}>
             <Text style={{fontSize: 13}}>{data?.summary || "Product description not available"}</Text>
           </View>
         </View>
-        <View style={{height: 8, backgroundColor: '#F7F7FA'}} />
-      </ContentLoader>
+        <View style={{height: 8, backgroundColor: '#F7F7FA'}} />      
 		</>
 	)
 }

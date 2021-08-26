@@ -37,6 +37,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
   const [toUpdate, setToUpdate] = useState(false);
   const [confirmDeleteModal, setConfirmDeleteModal] = useState(false);
   const [messageModal, setMessageModal] = useState(false);
+  const [deletedModal, setDeletedModal] = useState(false);
   const [open, setOpen] = useState(false);
   const [newDefault, setNewDefault] = useState(false);
   const [modalProvinceVisible, setModalProvinceVisible] = useState(false);
@@ -112,19 +113,22 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
       if (clicked) {
         updateUserAddress('changeDefault', newAddressForm.id);
       }
+      navigation.goBack();
     } else {
-      updateUserAddress('add', {
-        id: user_address.length + 1,
-        ...newAddressForm,
-        regionId: parseInt(regCode) || 0,
-        provinceId: parseInt(provCode),
-        municipalityId: parseInt(munCode),
-      });
-      if (clicked) {
-        updateUserAddress('changeDefault', user_address.length + 1);
-      }
+      SavePostAddress(() => {
+        updateUserAddress('add', {
+          id: user_address.length + 1,
+          ...newAddressForm,
+          regionId: parseInt(regCode) || 0,
+          provinceId: parseInt(provCode),
+          municipalityId: parseInt(munCode),
+        });
+        if (clicked) {
+          updateUserAddress('changeDefault', user_address.length + 1);
+        }
+        navigation.goBack();
+      })
     }
-    navigation.goBack();
   };
 
   const onSelectCity = (data) => {
@@ -134,7 +138,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
     setRegCode(data.regCode);
   };
 
-  const SavePostAddress = async () => {
+  const SavePostAddress = async (callback) => {
     AsyncStorage.getItem('ToktokMallUser').then(async (raw) => {
       let data = JSON.parse(raw) || {};
       if (data.appSignature) {
@@ -151,8 +155,6 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
           default: clicked == true ? 1 : 0,
         };
 
-        console.log({body});
-
         let formData = new FormData();
         formData.append('signature', data.appSignature);
         formData.append('data', JSON.stringify(body));
@@ -162,10 +164,36 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
           .then((response) => {
             if (response.data && response.data.success == 1) {
               setMessageModal(true);
-              SaveToRedux();
+              callback();
             } else {
               console.log('Response', response.data);
             }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    });
+  };
+  const DeleteAddress = async () => {
+    setConfirmDeleteModal(true)
+    AsyncStorage.getItem('ToktokMallUser').then(async (raw) => {
+      let data = JSON.parse(raw) || {};
+      if (data.appSignature) {
+        let body = {
+          address_id: newAddressForm.id
+        };
+
+        let formData = new FormData();
+        formData.append('signature', data.appSignature);
+        formData.append('data', JSON.stringify(body));
+
+        await axios
+          .post(`http://ec2-18-176-178-106.ap-northeast-1.compute.amazonaws.com/toktokmall/delete_address`, formData)
+          .then(() => {
+            setDeletedModal(true)
+            updateUserAddress('remove', newAddressForm.id);
+            navigation.goBack();
           })
           .catch((error) => {
             console.log(error);
@@ -222,7 +250,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
       }),
       (state) => {
         if (state.validated && state.errors.length === 0) {
-          SavePostAddress();
+          SaveToRedux();
         } else {
           Toast.show('Please fill up the required fields!');
         }
@@ -238,12 +266,8 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
           isVisible={confirmDeleteModal}
           setIsVisible={(val) => {
             setConfirmDeleteModal(val);
-            setMessageModal(true);
-            setTimeout(() => {
-              // setMessageModal(false)
-            }, 1400);
           }}
-          message={'Address Deleted!'}
+          onConfirm={DeleteAddress}
         />
       )}
       {messageModal && (
@@ -254,6 +278,16 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
             setMessageModal(val);
           }}
           message={'Address Added!'}
+        />
+      )}
+      {deletedModal && (
+        <AddressModal
+          type="Message"
+          isVisible={deletedModal}
+          setIsVisible={(val) => {
+            setDeletedModal(val);
+          }}
+          message={'Address Deleted!'}
         />
       )}
       <CityAddressModal
@@ -367,8 +401,8 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
             <>
               <TouchableOpacity
                 style={styles.button2}
-                onPress={() => {
-                  setConfirmDeleteModal(true);
+                onPress={()=> {
+                  setConfirmDeleteModal(true)
                 }}>
                 <Text style={{color: '#F6841F'}}>Delete</Text>
               </TouchableOpacity>

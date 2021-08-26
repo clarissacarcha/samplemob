@@ -84,7 +84,7 @@ export const Offers = ({data}) => {
         <View style={styles.container}>
             <View style={styles.heading}>
               <View style={{flex: 8}}>
-                <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>Today's Offers</Text>
+                <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>Piso Deal</Text>
               </View>
               <TouchableOpacity onPress={() => {
                 navigation.navigate("ToktokMallSearch", {searchValue: "Today's Offers", origin: "sale"})
@@ -132,7 +132,7 @@ export const Offers = ({data}) => {
               />
             </ContentLoader>
           </View>
-          {/* <View style={{flex: 0.5, height: 8, backgroundColor: '#F7F7FA'}} /> */}
+          <View style={{flex: 0.5, height: 8, backgroundColor: '#F7F7FA'}} />
       </>
     )
   }

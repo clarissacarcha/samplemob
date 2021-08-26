@@ -46,7 +46,7 @@ const Component = ({data, onOpenVariations, animatedValue, shop, loading, reduxA
   const HandleShare = () => {
     let options = {
       message: data?.itemname,
-      url: `https://toktokmall.ph/products/${data?.Id}`
+      url: `http://ec2-18-178-242-131.ap-northeast-1.compute.amazonaws.com/products/${data?.Id}`
     }
     Share.open(options)
     .then((res) => {
@@ -76,14 +76,14 @@ const Component = ({data, onOpenVariations, animatedValue, shop, loading, reduxA
 	return (
 		<>
 			<View style={{paddingVertical: 8, paddingHorizontal: 16}}>
-        <ContentLoader 
+        {/* <ContentLoader 
           loading = {loading} 
           avatar = {false}
           pRows = {2}
           titleStyles = {{height: 22, left: -10, }}
           paragraphStyles = {{height: 13, left: -10 }}
           pWidth = {'45%'}
-        >
+        ></ContentLoader> */}
           <Animated.Text style={[{fontSize: 22, fontWeight: '500', fontFamily: FONT.BOLD}, {opacity: opacity}]}>{data.itemname}</Animated.Text>
           <View style={{flexDirection: 'row'}}>
             <View style={{flex: 1.5}}>
@@ -99,10 +99,10 @@ const Component = ({data, onOpenVariations, animatedValue, shop, loading, reduxA
             </View>
             <View style={{flex: 5, flexDirection: 'row', paddingHorizontal: 12}}>
               <View>
-                <Text>{data.rating || 0}/5</Text>
+                {/* <Text>{data.rating || 0}/5</Text> */}
               </View>
               <View style={{paddingHorizontal: 2}} >
-                <Text style={{color: "#9E9E9E"}}> | </Text>
+                {/* <Text style={{color: "#9E9E9E"}}> | </Text> */}
               </View>
               <View>
                 <Text>{data.soldCount || 0} sold</Text>
@@ -118,7 +118,7 @@ const Component = ({data, onOpenVariations, animatedValue, shop, loading, reduxA
             </View>
           </View>
           
-        </ContentLoader>
+        
       </View>
       <View style={{height: 8, backgroundColor: '#F7F7FA'}} />
 

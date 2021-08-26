@@ -32,7 +32,7 @@ export const RenderStore = ({data, loading}) => {
 	return (
 		<>
 			<View style={{paddingVertical: 16, paddingHorizontal: 16}}>
-        <ContentLoader 
+        {/* <ContentLoader 
           loading = {loading} 
           avatar = {false}
           pRows = {1}
@@ -40,8 +40,8 @@ export const RenderStore = ({data, loading}) => {
           tWidth = {'50%'}
           paragraphStyles = {{height: 13, left: -10, paddingTop: 14 }}
           pWidth = {'45%'}
-        >
-        <TouchableOpacity onPress={() => {
+        ></ContentLoader> */}
+        <TouchableOpacity activeOpacity={1} onPress={() => {
             navigation.navigate("ToktokMallStore", {id: data?.id})
           }} style={{flexDirection: 'row', justifyContent: 'center'}}>
           <View style={{flex: 2, alignItems: 'flex-start', justifyContent: 'center'}}>
@@ -68,7 +68,7 @@ export const RenderStore = ({data, loading}) => {
             <Text>Products</Text>
           </View>
         </View> */}
-        </ContentLoader>
+        
       </View>
       <View style={{height: 8, backgroundColor: '#F7F7FA'}} />
 {/* 
@@ -114,7 +114,6 @@ export const RenderStore = ({data, loading}) => {
         </ContentLoader>
         
       </View> */}
-      <View style={{height: 8, backgroundColor: '#F7F7FA'}} />
 		</>
 	)
 }

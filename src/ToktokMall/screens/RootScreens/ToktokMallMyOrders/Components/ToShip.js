@@ -8,6 +8,7 @@ import {Loading} from '../../../../Components';
 import {placeholder, storeIcon} from '../../../../assets';
 import { Price } from '../../../../helpers';
 import AsyncStorage from '@react-native-community/async-storage';
+import { useNavigation } from '@react-navigation/native';
 
 const Store = ({data}) => {
   return (
@@ -42,8 +43,9 @@ const Summary = ({data}) => {
   )
 }
 
-const Item = ({data}) => {
+const Item = ({data, fulldata}) => {
 
+  const navigation = useNavigation()
   let product = data?.product
 
   const getImageSource = (img) => {
@@ -56,7 +58,12 @@ const Item = ({data}) => {
 
   return (
     <>
-      <View style={{flexDirection: 'row', paddingVertical: 10, paddingHorizontal: 15}}>
+      <TouchableOpacity 
+        onPress={() => {
+          navigation.navigate("ToktokMallOrderDetails", fulldata)
+        }}
+        style={{flexDirection: 'row', paddingVertical: 10, paddingHorizontal: 15}}
+      >
         <View style={{flex: 2, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 5, borderRadius: 5}}>
           <Image source={getImageSource(product?.image || product?.img)} style={{width: 55, height: 80, resizeMode: 'stretch', borderRadius: 5}} />
         </View>
@@ -84,7 +91,7 @@ const Item = ({data}) => {
             </View>
           </View>
         </View>        
-      </View>
+      </TouchableOpacity>
       <View style={{ height: 2, backgroundColor: '#F7F7FA'}} />
     </>
   )
@@ -147,7 +154,7 @@ export const ToShip = ({id, email}) => {
     return (
       <>
         <Store data={item?.shipping?.shop} />
-        {item.orderData.map((raw, i) => <Item key={i} data={raw} />)}
+        {item.orderData.map((raw, i) => <Item key={i} data={raw} fulldata={item} />)}
         <Summary data={item} />
       </>
     )

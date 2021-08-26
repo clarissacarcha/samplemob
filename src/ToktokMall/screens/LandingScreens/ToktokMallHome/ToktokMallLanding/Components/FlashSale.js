@@ -97,17 +97,17 @@ export const FlashSale = () => {
           source={flashsalebg}
           imageStyle={{resizeMode: 'cover'}}          
           style={{flex: 1, paddingHorizontal: 15, paddingVertical: 0}}>
-          <ContentLoader active loading = {loading} avatar = {false}  title = {true} pRows = {4}
+          {/* <ContentLoader active loading = {loading} avatar = {false}  title = {true} pRows = {4}
             tHeight = {70} avatarStyles = {{ left: 0, borderRadius: 5}}  tWidth = {'100%'}
             pWidth = {'100%'}
-          >
-            <View style={{paddingVertical: 0, flexDirection: 'row'}}>
-              <View style={{flex: 4}}>
+          ></ContentLoader> */}
+            <View style={{paddingVertical: 20, flexDirection: 'row'}}>
+              {/* <View style={{flex: 4}}>
                 <Image source={flashsale} style={{width: 90, height: 90, resizeMode: 'center', justifyContent: 'center', alignSelf: 'flex-end'}} />
-              </View>
-              <View style={{flex: 7, justifyContent: 'center', paddingHorizontal: 4}}>
-                <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>&nbsp;UP TO 80% OFF</Text>
-                <Text style={{color: "#747575", fontSize: 12}}>Offer ends 5.17.2021</Text>
+              </View> */}
+              <View style={{flex: 11, justifyContent: 'center', paddingHorizontal: 4}}>
+                <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>Featured Items</Text>
+                {/* <Text style={{color: "#747575", fontSize: 12}}>Offer ends 5.17.2021</Text> */}
               </View>
               <TouchableOpacity disabled = {loading} onPress={() => {
                 navigation.navigate("ToktokMallSearch", {searchValue: "Flash Sale", origin: "flashsale"})
@@ -127,7 +127,7 @@ export const FlashSale = () => {
                 {featured.map((item, i) => <Item key={i} data={item} /> )}
               </View>
             </View>
-          </ContentLoader>
+          
           <View style={{height: 15}}></View>
         </ImageBackground>
         <View style={{flex: 0.5, height: 8, backgroundColor: '#F7F7FA'}} />

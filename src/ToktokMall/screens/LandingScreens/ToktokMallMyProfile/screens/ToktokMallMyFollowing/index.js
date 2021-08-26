@@ -17,11 +17,11 @@ const ListItem = ({updateMyFollowing, ...data}) => {
       <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 20}}>
         <View style={{flex: 0, alignItems: 'center', justifyContent: 'center'}}>
           <Image
-            source={profileImages && profileImages[0]?.filename ? {uri: profileImages[0].filename} : placeholderPNG}
-            style={{width: 35, height: 35, resizeMode: 'cover', borderRadius: 35 / 2}}
+            source={profileImages?.logo ? {uri: profileImages.logo} : placeholderPNG}
+            style={{width: 35, height: 35, resizeMode: 'stretch', borderRadius: 35 / 2}}
           />
         </View>
-        <View style={{flex: 9, alignItems: 'flex-start', justifyContent: 'center', paddingHorizontal: 6}}>
+        <View style={{flex: 9,marginLeft: 10, alignItems: 'flex-start', justifyContent: 'center', paddingHorizontal: 6}}>
           <Text style={{fontSize: 14, fontFamily: FONT.REGULAR}}>{shopname}</Text>
         </View>
         <TouchableOpacity onPress={() => updateMyFollowing('unfollow', data)} style={{flex: 0, alignItems: 'flex-end', justifyContent: 'center'}}>

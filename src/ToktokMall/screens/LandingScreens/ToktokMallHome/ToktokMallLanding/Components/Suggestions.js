@@ -89,9 +89,10 @@ const RenderItem = ({item, loading}) => {
             <View style={{flex: 7, flexDirection: 'row'}}>
               <RenderStars value={item.rating} />
             </View>
-            <View style={{flex: 4}}>
+            {/* <View style={{flex: 9}}>
               <Text style={{color: "#9E9E9E", fontSize: 10}}>({item.noOfStocks || 0})</Text>
-            </View>
+            </View> */}
+            <View style={{flex: 1}} />
             <View style={{flex: 3}}>
               <Text style={{fontSize: 10}}>{item.soldCount || 0} sold</Text>
             </View>
