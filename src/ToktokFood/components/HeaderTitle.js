@@ -44,7 +44,6 @@ const HeaderTitle = ({title = 'toktokfood', showAddress = false, titleOnly = fal
   const onBack = () => {
     navigation.goBack();
   };
-  console.log(location)
   return (
     <View style={[
       showAddress ? styles.headerWithAddress : styles.headerWithAddress,

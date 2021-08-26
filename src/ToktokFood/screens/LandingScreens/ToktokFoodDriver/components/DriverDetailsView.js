@@ -41,11 +41,9 @@ const DriverDetailsView = ({status}) => {
 
   const renderTitle = () => (
     <View style={styles.detailsContainer}>
-
       {status === 1 && <Text style={styles.title}>Waiting for restaurant confirmation...</Text>}
       {status === 2 && <Text style={styles.title}>{`We've found you a driver`}</Text>}
       {status === 3 && <Text style={styles.title}>{`Food Delivered`}</Text>}
-
       {status === 1 && <Text style={styles.status}>Give restaurant some time to accept your order</Text>}
       {status === 2 && (
         <Text numberOfLines={3} style={styles.status}>{`Driver is heading to ${location.address}`}</Text>
@@ -74,24 +72,24 @@ const DriverDetailsView = ({status}) => {
   );
 
   return (
-    <ScrollView
-      bounces={false}
-      contentContainerStyle={styles.scrollContainer}
-      showsVerticalScrollIndicator={false}
-      style={styles.container}>
+    <View style={styles.container}>
       {renderTitle()}
       {renderAddress()}
       {renderActions()}
-    </ScrollView>
+    </View>
   );
 };
 
 export default DriverDetailsView;
 
 const styles = StyleSheet.create({
+  container: {
+    width: '100%'
+  },
   actionContainer: {
-    backgroundColor: 'white',
+    paddingBottom: 12,
     alignItems: 'center',
+    backgroundColor: 'white',
   },
   addressContainer: {
     backgroundColor: 'white',
@@ -105,9 +103,6 @@ const styles = StyleSheet.create({
   addressInfo: {
     flex: 1,
     paddingHorizontal: moderateScale(10),
-  },
-  container: {
-    paddingTop: verticalScale(10),
   },
   detailsContainer: {
     alignItems: 'center',
@@ -124,7 +119,7 @@ const styles = StyleSheet.create({
     elevation: 4,
     shadowOpacity: 0.1,
     paddingHorizontal: 10,
-    textAlign: 'center'
+    textAlign: 'center',
   },
   divider: {
     flex: 1,
@@ -145,10 +140,6 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     fontSize: 16,
     textAlign: 'center',
-  },
-  scrollContainer: {
-    // paddingBottom:
-    //   Platform.OS === 'ios' ? (isIphoneXorAbove() ? verticalScale(720) : verticalScale(860)) : verticalScale(400),
   },
   status: {
     fontWeight: '300',

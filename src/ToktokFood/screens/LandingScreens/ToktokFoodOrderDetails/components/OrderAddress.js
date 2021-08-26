@@ -17,7 +17,6 @@ import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
 const OrderAddress = () => {
   const {location} = useSelector((state) => state.toktokFood);
 
-  console.log(location);
   const {person, username} = useSelector((state) => state.session.user);
   const fullname = `${person.firstName} ${person.lastName}`;
 
