@@ -1,12 +1,11 @@
-import React, {useState, useEffect, useContext} from 'react';
-import {Rating} from 'react-native-ratings';
-import {View, Text, StyleSheet, FlatList, TouchableOpacity, TextInput, Platform} from 'react-native';
-import {COLOR} from 'res/variables';
-import {COLORS, FONTS, FONT_SIZE, BUTTON_HEIGHT} from 'res/constants';
-import {verticalScale, moderateScale, scale, getDeviceWidth} from 'toktokfood/helper/scale';
-import {availableTips} from 'toktokfood/helper/strings';
+import React, { useContext, useEffect } from 'react';
+import { FlatList, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
-import {VerifyContext} from '../components';
+import { COLORS, FONTS, FONT_SIZE } from 'res/constants';
+import { COLOR } from 'res/variables';
+import { moderateScale, scale, verticalScale } from 'toktokfood/helper/scale';
+import { availableTips } from 'toktokfood/helper/strings';
+import { VerifyContext } from '../components';
 export const WalletActions = () => {
   const {
     activeTab,

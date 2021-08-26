@@ -1,6 +1,5 @@
-import React, {createContext,useState} from 'react'
-import {useSelector} from 'react-redux'
-import {availableTips} from 'toktokfood/helper/strings';
+import React, { createContext, useState } from 'react';
+import { availableTips } from 'toktokfood/helper/strings';
 
 export const VerifyContext = createContext()
 const {Provider} = VerifyContext

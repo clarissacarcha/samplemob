@@ -1,9 +1,7 @@
-import React, {useState, useContext} from 'react';
-import {Rating} from 'react-native-ratings';
-import {View, Text, StyleSheet} from 'react-native';
-import {COLOR} from 'res/variables';
-import {COLORS, FONTS, FONT_SIZE, BUTTON_HEIGHT} from 'res/constants';
-import {VerifyContext} from '../components';
+import React, { useContext } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { FONTS } from 'res/constants';
+import { VerifyContext } from '../components';
 
 export const RiderInformation = ({}) => {
   const {riderInformation} = useContext(VerifyContext);
