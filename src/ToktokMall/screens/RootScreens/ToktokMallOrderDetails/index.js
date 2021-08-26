@@ -13,7 +13,7 @@ export const ToktokMallOrderDetails = ({navigation, route}) => {
   });
 
   useEffect(() => {
-    console.log(route.params.id)
+    console.log(route.params)
   }, [])
   
   return (

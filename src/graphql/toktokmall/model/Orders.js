@@ -4,6 +4,7 @@ import gql from 'graphql-tag'
 export const GET_PROCESSING_ORDERS = gql`
   query getProcessingOrders($input: GetOrdersInput) {
 		getProcessingOrders(input: $input) {
+			id
 	    referenceNum
   	  totalAmount
     	shipping {
@@ -36,6 +37,7 @@ export const GET_PROCESSING_ORDERS = gql`
 export const GET_TOSHIP_ORDERS = gql`
   query getToShipOrders($input: GetOrdersInput) {
 		getToShipOrders(input: $input) {
+			id
 	    referenceNum
   	  totalAmount
     	shipping {
