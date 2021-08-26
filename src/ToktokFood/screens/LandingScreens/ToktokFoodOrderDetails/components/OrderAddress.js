@@ -44,7 +44,7 @@ const OrderAddress = () => {
         <View style={styles.restauranContainer}>
           <Image style={styles.icons} source={locationOutline} resizeMode="contain" />
           <Text font style={styles.addressText} numberOfLines={1}>
-            {location.address}
+            {location ? location.address : ''}
           </Text>
         </View>
         <View style={styles.restauranContainer}>
@@ -65,9 +65,6 @@ export default OrderAddress;
 const styles = StyleSheet.create({
   addressContainer: {
     backgroundColor: 'white',
-    borderTopWidth: 10,
-    borderBottomWidth: 10,
-    borderColor: 'whitesmoke',
     flexDirection: 'row',
     padding: moderateScale(20),
     paddingHorizontal: moderateScale(20),

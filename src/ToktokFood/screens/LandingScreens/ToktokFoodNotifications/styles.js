@@ -16,13 +16,12 @@ export default styles = StyleSheet.create({
     paddingHorizontal: 18,
   },
   header: {
-    display: 'flex',
-    flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'center',
     borderBottomWidth: 3,
     paddingHorizontal: 20,
     borderBottomColor: COLOR.LIGHT,
-    height: Platform.OS === 'ios' ? verticalScale(45) : verticalScale(60),
+    height: Platform.OS === 'ios' ? verticalScale(70) : verticalScale(63),
   },
   headerLabel: {
     color: COLOR.BLACK,

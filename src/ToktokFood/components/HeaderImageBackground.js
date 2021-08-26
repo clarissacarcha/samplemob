@@ -31,5 +31,7 @@ const styles = StyleSheet.create({
   },
   container: {
     zIndex: 1,
+    // justifyContent: "center",
+    // alignItems: "center"
   },
 });

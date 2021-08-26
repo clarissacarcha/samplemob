@@ -30,7 +30,7 @@ const ReceiverLocation = () => {
         <View style={styles.textAddressContainer}>
           <Image style={styles.addressMarkerIcon} source={markerIcon} />
           <Text style={styles.textAddress} numberOfLines={2}>
-            {location.address ? location.address : ''}
+            {location ? location.address : ''}
           </Text>
         </View>
       </View>

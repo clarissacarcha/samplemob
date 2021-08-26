@@ -10,7 +10,7 @@ export default styles = StyleSheet.create({
     backgroundColor: COLOR.WHITE,
   },
   sectionContainer: {
-    paddingBottom: 10,
+    paddingVertical: 10,
     borderBottomWidth: 8,
     borderBottomColor: COLOR.LIGHT,
     paddingHorizontal: Platform.OS === 'android' ? 12 : 14,

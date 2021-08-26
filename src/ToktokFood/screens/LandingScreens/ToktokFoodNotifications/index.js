@@ -37,12 +37,7 @@ const ToktokFoodNotifications = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => onBack()}>
-          <FIcon5 name="chevron-left" size={20} color="#FDBA1C" />
-        </TouchableOpacity>
-        <View style={{flex: 1}}>
           <Text style={styles.headerLabel}>Notifications</Text>
-        </View>
       </View>
       <View style={styles.listContainer}>
         <FlatList data={notifications} renderItem={renderItem} />

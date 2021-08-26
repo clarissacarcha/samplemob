@@ -14,8 +14,8 @@ import {useSelector} from 'react-redux';
 import {moderateScale, getStatusbarHeight} from 'toktokfood/helper/scale';
 
 const CUSTOM_HEADER = {
-  container: Platform.OS === 'android' ? moderateScale(110 + getStatusbarHeight) : moderateScale(95),
-  bgImage: Platform.OS === 'android' ? moderateScale(105 + getStatusbarHeight) : moderateScale(80),
+  container: Platform.OS === 'android' ? moderateScale(83) : moderateScale(70),
+  bgImage: Platform.OS === 'android' ? moderateScale(83) : moderateScale(70),
 };
 
 const ToktokFoodCart = () => {
@@ -24,18 +24,18 @@ const ToktokFoodCart = () => {
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'position' : null} style={styles.container}>
-      <ScrollView bounces={false}>
-        <View style={styles.container}>
-          <HeaderImageBackground customSize={CUSTOM_HEADER}>
-            <HeaderTitle showAddress={false} title="Order Details" />
-          </HeaderImageBackground>
+      <HeaderImageBackground customSize={CUSTOM_HEADER}>
+        <HeaderTitle showAddress={false} title="Order Details" />
+      </HeaderImageBackground>
+      <ScrollView bounces={false} contentContainerStyle={{ paddingBottom: Platform.OS === 'android' ? moderateScale(83) : moderateScale(70)}} >
+        {/* <View style={styles.container}> */}
           <ReceiverLocation />
           <MyOrderList />
           <AlsoOrder />
           <OrderTotal subtotal={price} />
           <PaymentDetails />
           <RiderNotes />
-        </View>
+        {/* </View> */}
       </ScrollView>
     </KeyboardAvoidingView>
   );
