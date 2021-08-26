@@ -4,13 +4,14 @@ import {HeaderBack, HeaderTitle, HeaderRight, Card} from '../../../../../Compone
 import CustomIcon from '../../../../../Components/Icons';
 import {AlertOverlay} from '../../../../../../components';
 import {COLOR, FONT, FONT_SIZE} from '../../../../../../res/variables';
-import {coppermask} from '../../../../../assets';
+import {emptyFaveIcon, emptyCartIcon} from '../../../../../assets';
 import SwipeableView from 'react-native-swipeable-view';
 
 import {MessageModal} from '../../../../../Components';
 import {Item, Store, RenderFooter} from './Components';
 import {connect} from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
+import { EmptyList } from '../../components';
 
 const Component = ({navigation, reduxStates: {myFavorites}, reduxActions: {updateMyFavorites}}) => {
 
@@ -88,7 +89,18 @@ const Component = ({navigation, reduxStates: {myFavorites}, reduxActions: {updat
   return (
     <>
       <View style={{flex: 1, backgroundColor: 'white'}}>
+      {myFavorites.length === 0 ? (
+        <EmptyList
+          image={{
+            source: emptyFaveIcon,
+            style: {width: 220, height: 220, resizeMode: 'cover'}
+          }}
+          title="Your favorites is empty."
+        />
+      ) : (
         <FlatList data={myFavorites} renderItem={renderItem} />
+      )}
+        
         {willDelete && (
           <RenderFooter
             onPressBuyNow={() => {

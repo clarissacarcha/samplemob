@@ -32,3 +32,5 @@ export const storeIcon = require("../assets/icons/store.png");
 export const alertIcon = require("../assets/icons/alerticon.png")
 export const otpicon = require("../assets/icons/otpicon.png")
 export const emptyCartIcon = require("../assets/icons/empty-cart.png");
+export const emptyFaveIcon = require("../assets/icons/empty-fave.png");
+export const emptyFollowingIcon = require("../assets/icons/empty-following.png");

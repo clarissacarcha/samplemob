@@ -41,9 +41,9 @@ export const HeaderTransparent = ({value, outOfStock = false, animatedValue, car
               onPress={() => {
                 navigation.navigate("ToktokMallMyCart", {})
               }}
-              style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: transparentBg, height: 28, width: 28, borderRadius: 35/2}}
+              style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: transparentBg, height: 28, width: 28, borderRadius: 35/2, paddingRight:1}}
             >            
-              <CustomIcon.AIcon name="shoppingcart" color="#fff" size={22} />              
+              <CustomIcon.AIcon name="shoppingcart" color="#fff" size={22} />      
             </TouchableOpacity>
             {/* <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: transparentBg, height: 28, borderRadius: 35/2}}>
               <Tooltip
@@ -59,7 +59,15 @@ export const HeaderTransparent = ({value, outOfStock = false, animatedValue, car
                 <CustomIcon.FeIcon name="more-horizontal" color="#fff" size={24} />
               </Tooltip>
             </View> */}
-            
+              {cartItems === 0 &&
+                <Badge
+                status="warning"
+                value={cartItems}
+                badgeStyle={{backgroundColor: "#FDBA1C"}}
+                textStyle={{fontFamily: FONT.REGULAR, fontSize: 10}}
+                containerStyle={{ position: 'absolute', top: -5, right: 5 }}
+              />
+              }     
           </View>
         </View>
         
@@ -69,23 +77,6 @@ export const HeaderTransparent = ({value, outOfStock = false, animatedValue, car
             <Text style={{fontFamily: FONT.BOLD, fontSize: 18, color: "#fff"}}>OUT OF STOCK</Text>
           </View>
         </View>}
-
-        {cartItems == 0 ? 
-          <Badge
-            status="warning"
-            badgeStyle={{backgroundColor: "#FDBA1C"}}
-            textStyle={{fontFamily: FONT.REGULAR, fontSize: 10}}
-            containerStyle={{ position: 'absolute', zIndex: 9999, top: Platform.OS == "ios" ? 5 : 42, right: 12 }}
-          /> 
-          : 
-          <Badge
-          status="warning"
-          value={cartItems}
-          badgeStyle={{backgroundColor: "#FDBA1C"}}
-          textStyle={{fontFamily: FONT.REGULAR, fontSize: 10}}
-          containerStyle={{ position: 'absolute', zIndex: 9999, top: Platform.OS == "ios" ? 5 : 35, right: 8 }}
-        />
-        }
 
       </Animated.View>
       <Animated.View style={[{height: 3, backgroundColor: '#F7F7FA'}, {opacity: translateOpacity}]} />

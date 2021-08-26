@@ -130,7 +130,8 @@ const TabBarIcon = ({source, myCart, notifs, tab}) => {
           <Text style={{color: 'white', fontSize: 10}}>99+</Text>
         }
       </View> */}
-      <RenderBadge data={tab == 'cart' ? countCartItems(myCart) : countNotifications(notifs)} />
+      {tab == 'cart' && countCartItems(myCart) ? <RenderBadge data={countCartItems(myCart)} /> : <></>}
+      {tab == 'notifs' && countNotifications(notifs) ?<RenderBadge data={countNotifications(notifs)} />: <></>}
       {/* <Badge
         // value={tab == 'cart' ? countCartItems(myCart) : countNotifications(notifs)}
 

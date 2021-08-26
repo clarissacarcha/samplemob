@@ -36,13 +36,13 @@ export const HeaderPlain = ({value, animatedValue, cartItems, itemName }) => {
           <View style={{flex: 0.5}}></View>
 					<View style={{flex: 1, justifyContent: 'center'}}>
             <CustomIcon.AIcon name="shoppingcart" color="#F6841F" size={24} />
-            <Badge
+            {cartItems !== 0 && <Badge
               status="warning"
               value={cartItems}
               badgeStyle={{backgroundColor: "#FDBA1C"}}
               textStyle={{fontFamily: FONT.REGULAR, fontSize: 10}}
               containerStyle={{ position: 'absolute', top: -4, right: 0 }}
-            />
+            />}
           </View>
           <View style={{flex: 1, justifyContent: 'center'}}>
             {/* <Tooltip
