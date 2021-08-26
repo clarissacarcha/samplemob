@@ -1,7 +1,9 @@
-import React, { useContext } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { AirbnbRating } from 'react-native-ratings';
+import React, {useState, useContext} from 'react';
+import {View, Text, StyleSheet, FlatList, Image } from 'react-native';
+import {COLOR} from 'res/variables';
+import {COLORS, FONTS, FONT_SIZE, BUTTON_HEIGHT} from 'res/constants';
 import { VerifyContext } from '../components';
+import CustomStarRating from 'toktokfood/components/CustomStarRating';
 
 export const RatingAction = () => {
 
@@ -9,16 +11,11 @@ export const RatingAction = () => {
 
     return (
       <View style={styles.ratingActionWrapper}>
-        <AirbnbRating
-            count={5}
-            reviews={["Very Dissatisfied", "Dissatisfied", "Fair", "Satisfied", "Very Satisfied"]}
-            defaultRating={1}
-            size={35}
-            reviewSize={12}
-            reviewColor={"black"}
-            unSelectedColor={"#E5E5E5"}
-            selectedColor={"#FFA700"}
-            onFinishRating={(rate) => setRating(rate)}
+        <CustomStarRating
+          rating={rating}
+          onFinishRating={(rate) => setRating(rate)}
+          showReviews
+          isGrayStar
         />
       </View>
     );

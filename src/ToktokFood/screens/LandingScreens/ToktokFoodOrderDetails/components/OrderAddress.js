@@ -1,15 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {useSelector} from 'react-redux';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
-// import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import RatingModal from 'toktokfood/components/RatingModal';
 
 // Fonts/Colors
-import {COLORS} from 'res/constants';
+import {COLORS, FONTS} from 'res/constants';
 import {FONT_SIZE} from 'res/variables';
 
 // Images
-import {locationOutline, phoneBlack, store, user} from 'toktokfood/assets/images';
+import {locationOutline, phoneBlack, store, user, rider1} from 'toktokfood/assets/images';
 
 // Utils
 import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
@@ -19,16 +19,35 @@ const OrderAddress = () => {
 
   const {person, username} = useSelector((state) => state.session.user);
   const fullname = `${person.firstName} ${person.lastName}`;
+  const [ratingModal, setRatingModal] = useState(false);
+  const [rating, setRating] = useState("0");
+
+  const onPressRate = () => { setRatingModal(true) }
 
   return (
     <View style={styles.addressContainer}>
+       <RatingModal
+          visibility={ratingModal}
+          onCloseModal={() => setRatingModal(false)}
+          btnTitle="Submit"
+          imgSrc={rider1}
+          rating={rating}
+          onFinishRating={(rate) => setRating(rate)}
+        >
+            <Text style={styles.messageTitle}>{"Deliver to:"}</Text>
+            <Text style={styles.messageContent}>{location.address}</Text>
+            <Text style={styles.rateTitle}>{`How's your experience with Starbucks?`}</Text>
+      </RatingModal>
       <View style={styles.dividerContainer}>
         <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
         <View style={styles.divider} />
         <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
       </View>
       <View style={styles.addressInfo}>
-        <Text style={styles.restaurant}>Restaurant</Text>
+        <View style={styles.flexDirection}>
+          <Text style={styles.restaurant}>Restaurant</Text>
+          <Text onPress={onPressRate} style={styles.rateText}>Rate</Text>
+        </View>
         <View style={styles.restauranContainer}>
           <Image style={styles.icons} source={locationOutline} resizeMode="contain" />
           <Text style={styles.addressText}>Manila City</Text>
@@ -108,4 +127,27 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginVertical: moderateScale(3),
   },
+  flexDirection: {
+    flexDirection: "row",
+    justifyContent: "space-between"
+  },
+  rateText: {
+    fontSize: FONT_SIZE.M,
+    color: "#FFA700",
+  },
+  messageTitle: {
+    fontSize: FONT_SIZE.S, 
+    fontFamily: FONTS.BOLD
+  },
+  messageContent: {
+    textAlign: 'center',
+    fontSize: FONT_SIZE.S,
+    fontFamily: FONTS.REGULAR,
+  },
+  rateTitle: {
+    textAlign: 'center',
+    fontSize: FONT_SIZE.M,
+    fontFamily: FONTS.BOLD,
+    paddingVertical: 10
+  }
 });

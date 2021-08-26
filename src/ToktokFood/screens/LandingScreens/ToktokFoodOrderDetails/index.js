@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 
 // Components
@@ -18,13 +18,14 @@ const CUSTOM_HEADER = {
 };
 
 const ToktokFoodOrderDetails = () => {
+
   const {price} = useSelector((state) => state.toktokFood.totalAmount);
+
   return (
     <View style={styles.container}>
       <HeaderImageBackground customSize={CUSTOM_HEADER}>
         <HeaderTitle title="Order Details" />
       </HeaderImageBackground>
-
       <ScrollView bounces={false} contentContainerStyle={styles.scrollView} showsVerticalScrollIndicator={false}>
         <OrderTitle />
         <Separator />

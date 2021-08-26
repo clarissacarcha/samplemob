@@ -29,6 +29,10 @@ export const error_ic = require('./images/prompts_icons/error.png');
 export const warning_ic = require('./images/prompts_icons/warning.png');
 export const question_ic = require('./images/prompts_icons/question.png');
 export const floatingIcon = require('./images/floating-icon.png');
+export const star_no_fill = require('./images/star-no-fill.png');
+export const star_gray = require('./images/star-gray.png');
+export const star_half = require('./images/star-half.png');
+
 
 // Bottom Nav Icons
 export const home = require('./images/bottom_nav_icons/menu-outline.png');
