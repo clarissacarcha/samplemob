@@ -6,7 +6,7 @@ import {COLORS} from 'res/constants';
 import {timer, pot, toktok_rider} from 'toktokfood/assets/images';
 
 // Utils
-import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
+import {scale, moderateScale, verticalScale} from 'toktokfood/helper/scale';
 
 import DialogMessage from 'toktokfood/components/DialogMessage';
 
@@ -17,9 +17,7 @@ const DriverAnimationView = ({status = 1}) => {
     setShowSuccess(status === 2);
   }, [status]);
 
-  const CancelOrderComponent = () => {
-
-  };
+  const CancelOrderComponent = () => {};
 
   return (
     <View style={styles.container}>
@@ -34,7 +32,7 @@ const DriverAnimationView = ({status = 1}) => {
       <Text style={styles.contactSupportText}></Text>
       <View style={styles.imgContainer}>
         <Image
-          style={[styles.img, {height: status === 1 ? 160 : 190}]}
+          style={styles.img}
           source={status === 1 ? timer : status === 2 ? pot : toktok_rider}
           resizeMode="contain"
         />
@@ -47,8 +45,7 @@ export default DriverAnimationView;
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 3,
-    // borderWidth: 1,
+    flex: 1,
   },
   contactSupportText: {
     fontSize: 15,
@@ -59,9 +56,13 @@ const styles = StyleSheet.create({
   },
   img: {
     width: 250,
+    height: 150,
+    marginBottom: 20
   },
   imgContainer: {
+    flex: 1,
     alignItems: 'center',
+    justifyContent: 'center',
     paddingVertical: verticalScale(10),
   },
 });

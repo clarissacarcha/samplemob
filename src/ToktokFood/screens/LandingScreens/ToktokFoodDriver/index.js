@@ -1,5 +1,5 @@
 import React from 'react';
-import {View} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 
 // Components
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
@@ -20,10 +20,20 @@ const ToktokFoodDriver = () => {
       <HeaderImageBackground customSize={CUSTOM_HEADER}>
         <HeaderTitle title="Place Order" />
       </HeaderImageBackground>
-      <DriverAnimationView status={2} />
-      <DriverDetailsView status={2} />
+      <DriverAnimationView status={1} />
+      <View style={styles.driverWrapper}>
+        <DriverDetailsView status={1} />
+      </View>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  driverWrapper: {
+    flex: 1,
+    alignItems: 'flex-end',
+    flexDirection: 'row',
+  },
+});
 
 export default ToktokFoodDriver;
