@@ -4,6 +4,7 @@ import {ScrollView, StyleSheet, View} from 'react-native';
 // Components
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
+import Separator from 'toktokfood/components/Separator';
 import {OrderAddress, OrderFee, OrderList, OrderLogs, OrderNote, OrderRider, OrderTitle} from './components';
 
 import {useSelector} from 'react-redux';
@@ -12,8 +13,8 @@ import {useSelector} from 'react-redux';
 import {moderateScale, getStatusbarHeight} from 'toktokfood/helper/scale';
 
 const CUSTOM_HEADER = {
-  container: Platform.OS === 'android' ? moderateScale(110 + getStatusbarHeight) : moderateScale(82),
-  bgImage: Platform.OS === 'android' ? moderateScale(105 + getStatusbarHeight) : moderateScale(83),
+  container: Platform.OS === 'android' ? moderateScale(83) : moderateScale(70),
+  bgImage: Platform.OS === 'android' ? moderateScale(83) : moderateScale(70),
 };
 
 const ToktokFoodOrderDetails = () => {
@@ -26,12 +27,19 @@ const ToktokFoodOrderDetails = () => {
 
       <ScrollView bounces={false} contentContainerStyle={styles.scrollView} showsVerticalScrollIndicator={false}>
         <OrderTitle />
+        <Separator />
         <OrderAddress />
+        <Separator />
         <OrderNote title="Note" label="Tabi ng vape shop na may black na gate" />
+        <Separator />
         <OrderRider />
+        <Separator />
         <OrderList />
+        <Separator />
         <OrderFee subtotal={price} />
+        <Separator />
         <OrderNote title="Payment Method" label="Cash-on Delivery" />
+        <Separator />
         <OrderLogs />
       </ScrollView>
     </View>
@@ -40,7 +48,7 @@ const ToktokFoodOrderDetails = () => {
 
 const styles = StyleSheet.create({
   container: {flex: 1, backgroundColor: '#FFFF'},
-  scrollView: {paddingBottom: 50},
+  scrollView: {paddingBottom: 10},
 });
 
 export default ToktokFoodOrderDetails;

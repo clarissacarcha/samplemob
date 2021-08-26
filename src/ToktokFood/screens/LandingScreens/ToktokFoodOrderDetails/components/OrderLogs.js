@@ -13,20 +13,22 @@ import {delivered, pickedUp} from 'toktokfood/assets/images';
 // Utils
 import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
 
-const OrderFee = () => {
-  const renderLogInfo = (title, date) => (
+const OrderFee = ({ status = 2 }) => {
+
+  const renderLogInfo = (title, date, isDone) => (
     <View style={styles.logContainer}>
       <View style={styles.logsTitle}>
-        <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
+        { isDone ? <View style={{ backgroundColor: COLORS.YELLOWTEXT, height: moderateScale(14), width: moderateScale(14), borderRadius: 10  }} />
+          : <FIcon5 name="circle" color={"#CECECE"} size={moderateScale(15)} /> }
         <Text style={styles.logText}>{title}</Text>
       </View>
-      {date && <Text style={styles.dateText}>{date}</Text>}
+      {!!date && <Text style={styles.dateText}>{date}</Text>}
     </View>
   );
 
   const renderDash = () => (
     <View style={styles.dashedLine}>
-      <DashedLine axis="vertical" dashGap={1} dashColor="#DDDDDD" dashLength={5} />
+      <DashedLine axis="vertical" dashGap={1} dashColor="#DDDDDD" dashLength={3} />
     </View>
   );
 
@@ -37,19 +39,21 @@ const OrderFee = () => {
     </View>
   );
 
+  console.log(status >= 4)
   return (
     <View style={styles.container}>
       <Text style={styles.deliverLogs}>Delivery Logs</Text>
-      {renderLogInfo('Order Placed', 'Feb 16 2021 - 1:26 pm')}
+      {renderLogInfo('Order Placed', 'Feb 16 2021 - 1:26 pm', status >= 1)}
       {renderDash()}
-      {renderLogInfo('On the way to restaurant', 'Feb 16 2021 - 1:26 pm')}
+      {renderLogInfo('On the way to restaurant', 'Feb 16 2021 - 1:26 pm', status >= 2)}
       {renderDash()}
-      {renderLogInfo('Food Picked Up')}
-      {renderDashImage(true, pickedUp)}
-      {renderLogInfo('On the Way to Recipient')}
+      {renderLogInfo('Food Picked Up', '', status >= 3)}
       {renderDash()}
-      {renderLogInfo('Item Delivered')}
-      {renderDashImage(false, delivered)}
+      {/* {renderDashImage(true, pickedUp)} */}
+      {renderLogInfo('On the Way to Recipient', '', status >= 4)}
+      {renderDash()}
+      {renderLogInfo('Item Delivered', '', status >= 5)}
+      {/* {renderDashImage(false, delivered)} */}
     </View>
   );
 };
@@ -74,8 +78,9 @@ const styles = StyleSheet.create({
     marginBottom: verticalScale(10),
   },
   dashedLine: {
-    height: verticalScale(10),
+    height: verticalScale(15),
     paddingLeft: moderateScale(6),
+    // paddingVertical: 3,
     flexDirection: 'row',
   },
   dashedImage: {

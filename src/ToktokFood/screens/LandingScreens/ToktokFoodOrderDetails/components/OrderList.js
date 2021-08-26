@@ -21,7 +21,7 @@ const OrderList = () => {
       <View style={styles.list}>
         <View style={styles.listInfo}>
           <Text style={styles.listName}>{item.name}</Text>
-          <Text style={styles.seeAll}>{item.price}</Text>
+          <Text style={styles.seeAll}>{`PHP ${item.price}`}</Text>
         </View>
         <View>
           <Text style={styles.notes}>{item.qty}x</Text>
@@ -89,6 +89,5 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
     padding: moderateScale(20),
-    marginTop: verticalScale(8),
   },
 });

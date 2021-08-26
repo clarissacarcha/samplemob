@@ -1,5 +1,6 @@
 import React from 'react';
 import {Image, Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Rating} from 'react-native-ratings';
 
 // Fonts/Colors
 import {COLORS} from 'res/constants';
@@ -22,18 +23,15 @@ const OrderRider = () => {
     Linking.openURL(url);
   };
 
-  const renderAvatar = () => (
+  const renderAvatar = (rating = 4) => (
     <View style={styles.avatarContainer}>
       <Image resizeMode="cover" style={styles.avatar} source={rider1} />
-
       <View style={styles.leftContainer}>
         <Text style={styles.riderName}>Edward Nolasco Rosario</Text>
+        <Text style={styles.orderNumber}>0999000000</Text>
         <View style={styles.ratingContainer}>
-          <Text style={styles.notes}>4</Text>
-          <Image resizeMode="contain" style={styles.star} source={star} />
-          <Image resizeMode="contain" style={styles.star} source={star} />
-          <Image resizeMode="contain" style={styles.star} source={star} />
-          <Image resizeMode="contain" style={styles.star} source={star} />
+          <Text style={styles.notes}>{parseFloat(rating).toFixed(1)}</Text>
+          <Rating startingValue={parseFloat(rating).toFixed(1)} imageSize={13} readonly style={styles.ratings} ratingColor={"#FFA700"} />
         </View>
       </View>
     </View>
@@ -41,7 +39,6 @@ const OrderRider = () => {
 
   const renderActions = () => (
     <View style={styles.actionContainer}>
-      <Text style={styles.orderNumber}>0999000000</Text>
       <View style={styles.actions}>
         <TouchableOpacity onPress={onMessage}>
           <Image resizeMode="contain" style={styles.phone} source={chat} />
@@ -75,7 +72,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   actionContainer: {
-    // borderWidth: 1,
     justifyContent: 'space-between',
   },
   avatar: {
@@ -85,26 +81,25 @@ const styles = StyleSheet.create({
   },
   avatarContainer: {
     flexDirection: 'row',
+    paddingBottom: 10
   },
   leftContainer: {
-    // borderWidth: 1,
-    padding: 15,
+    paddingHorizontal: 15
   },
   orderNumber: {
     fontWeight: '400',
   },
   phone: {
-    width: 17,
-    height: 17,
-    marginHorizontal: 10,
+    width: 20,
+    height: 20,
+    marginLeft: 20,
     tintColor: COLORS.YELLOWTEXT,
   },
   ratingContainer: {
     flexDirection: 'row',
-    marginTop: verticalScale(2),
+    alignItems: "center"
   },
   riderInfo: {
-    // borderWidth: 1,
     borderTopWidth: 1,
     borderColor: '#DDDDDD',
     marginTop: verticalScale(5),
@@ -126,11 +121,11 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: 'white',
-    marginTop: verticalScale(8),
     padding: moderateScale(20),
   },
   content: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: "center"
   },
 });
