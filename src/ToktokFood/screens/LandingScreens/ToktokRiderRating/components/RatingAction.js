@@ -1,8 +1,6 @@
-import React, {useState, useContext} from 'react';
-import { Rating, AirbnbRating } from 'react-native-ratings';
-import {View, Text, StyleSheet, FlatList, Image } from 'react-native';
-import {COLOR} from 'res/variables';
-import {COLORS, FONTS, FONT_SIZE, BUTTON_HEIGHT} from 'res/constants';
+import React, { useContext } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { AirbnbRating } from 'react-native-ratings';
 import { VerifyContext } from '../components';
 
 export const RatingAction = () => {

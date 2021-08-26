@@ -1,15 +1,13 @@
 import React from 'react';
-import {View, ActivityIndicator, StyleSheet} from 'react-native';
-
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 // Fonts & Colors
-import {COLOR} from 'res/variables';
-
+import { COLOR } from 'res/variables';
+import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 // Components
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
-import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
-
 // Utils
-import {moderateScale, scale, getStatusbarHeight} from 'toktokfood/helper/scale';
+import { moderateScale } from 'toktokfood/helper/scale';
+
 
 const CUSTOM_HEADER = {
   container: Platform.OS === 'android' ? moderateScale(83) : moderateScale(70),

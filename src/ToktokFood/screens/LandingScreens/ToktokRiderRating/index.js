@@ -1,45 +1,22 @@
-import React, {useState, useEffect, useContext} from 'react';
-import {Rating} from 'react-native-ratings';
+import React, { useContext, useEffect, useState } from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  FlatList,
-  TouchableOpacity,
-  TextInput,
-  ScrollView,
-  KeyboardAvoidingView,
-  Platform,
-  Keyboard,
+  Image, Keyboard, KeyboardAvoidingView,
+  Platform, ScrollView, StyleSheet, View
 } from 'react-native';
-
-import {COLOR} from 'res/variables';
-import {COLORS, FONTS, FONT_SIZE, BUTTON_HEIGHT} from 'res/constants';
-import {
-  verticalScale,
-  moderateScale,
-  scale,
-  getDeviceWidth,
-  getDeviceHeight,
-  getStatusbarHeight,
-} from 'toktokfood/helper/scale';
-import InputScrollView from 'react-native-input-scroll-view';
-
-// Components
-import {
-  RiderInformation,
-  RatingAction,
-  WalletActions,
-  RateComments,
-  SubmitButton,
-  VerifyContext,
-  VerifyContextProvider,
-} from './components';
-import Separator from 'toktokfood/components/Separator';
+import { COLORS } from 'res/constants';
+import { rider1 } from 'toktokfood/assets/images';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
-import {headerBg, rider1} from 'toktokfood/assets/images';
+import Separator from 'toktokfood/components/Separator';
+import {
+  verticalScale
+} from 'toktokfood/helper/scale';
+// Components
+import {
+  RateComments, RatingAction, RiderInformation, SubmitButton,
+  VerifyContext,
+  VerifyContextProvider, WalletActions
+} from './components';
 
 const MainComponent = () => {
   const [viewHeight, setViewHeight] = useState(100);

@@ -1,10 +1,9 @@
-import React, {useState, useContext} from 'react';
-import {Text, StyleSheet, TouchableOpacity, Alert} from 'react-native';
-import {Rating} from 'react-native-ratings';
-import {COLOR} from 'res/variables';
-import {scale, getDeviceWidth} from 'toktokfood/helper/scale';
-import {COLORS, FONTS, FONT_SIZE, BUTTON_HEIGHT} from 'res/constants';
-import {VerifyContext} from '../components';
+import React, { useContext } from 'react';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { BUTTON_HEIGHT, COLORS, FONTS, FONT_SIZE } from 'res/constants';
+import { COLOR } from 'res/variables';
+import { scale } from 'toktokfood/helper/scale';
+import { VerifyContext } from '../components';
 
 export const SubmitButton = () => {
   const {
