@@ -6,7 +6,7 @@ import {COLORS} from 'res/constants';
 import {timer, pot, toktok_rider} from 'toktokfood/assets/images';
 
 // Utils
-import {scale, moderateScale, verticalScale, getDeviceHeight} from 'toktokfood/helper/scale';
+import {scale, moderateScale, verticalScale} from 'toktokfood/helper/scale';
 
 import DialogMessage from 'toktokfood/components/DialogMessage';
 

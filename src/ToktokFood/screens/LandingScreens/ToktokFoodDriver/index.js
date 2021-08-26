@@ -7,7 +7,7 @@ import {DriverAnimationView, DriverDetailsView} from './components';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 
 // Utils
-import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
+import {moderateScale} from 'toktokfood/helper/scale';
 
 const CUSTOM_HEADER = {
   container: Platform.OS === 'android' ? moderateScale(83) : moderateScale(70),
