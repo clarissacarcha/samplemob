@@ -12,8 +12,8 @@ import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 import {moderateScale, scale, getStatusbarHeight} from 'toktokfood/helper/scale';
 
 const CUSTOM_HEADER = {
-  container: Platform.OS === 'android' ? moderateScale(110 + getStatusbarHeight) : moderateScale(118),
-  bgImage: Platform.OS === 'android' ? moderateScale(105 + getStatusbarHeight) : moderateScale(113),
+  container: Platform.OS === 'android' ? moderateScale(110 + getStatusbarHeight) : moderateScale(88),
+  bgImage: Platform.OS === 'android' ? moderateScale(105 + getStatusbarHeight) : moderateScale(83),
 };
 
 const ToktokFoodFavorites = () => {
@@ -21,7 +21,7 @@ const ToktokFoodFavorites = () => {
     <>
       <View style={styles.container}>
         <HeaderImageBackground customSize={CUSTOM_HEADER}>
-          <HeaderTitle />
+          <HeaderTitle title="Favorites"/>
         </HeaderImageBackground>
         <View style={[styles.container, styles.loaderWrapper]}>
           <ActivityIndicator color={COLOR.BLACK} size={25}/>

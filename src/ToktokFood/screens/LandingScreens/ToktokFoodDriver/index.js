@@ -2,9 +2,9 @@ import React from 'react';
 import {View} from 'react-native';
 
 // Components
-import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
 import {DriverAnimationView, DriverDetailsView} from './components';
+import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 
 // Utils
 import {moderateScale} from 'toktokfood/helper/scale';
