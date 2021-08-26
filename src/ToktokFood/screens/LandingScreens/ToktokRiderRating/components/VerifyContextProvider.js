@@ -9,6 +9,7 @@ export const VerifyContextProvider = ({children})=> {
     const [riderInformation, setRiderInformation] = useState({
         name: "Edward Nolasco Rosario",
         contactNo: "09097570947",
+        rating: "3.5"
     });
     const [rating, setRating] = useState(1);
     const [toktokwalletBalance, setToktokwalletBalance] = useState("0.00");
