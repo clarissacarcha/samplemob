@@ -13,16 +13,16 @@ const OrderFee = ({subtotal = 0.0}) => {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text>Subtotal</Text>
-        <Text style={styles.subtotal}>{subtotal.toFixed(2)}</Text>
+        <Text style={styles.subtotal}>{`PHP ${subtotal.toFixed(2)}`}</Text>
       </View>
       <View style={styles.header}>
         <Text>Delivery Fee</Text>
-        <Text style={styles.subtotal}>40.00</Text>
+        <Text style={styles.subtotal}>PHP 40.00</Text>
       </View>
       <View style={styles.divider} />
       <View style={styles.header}>
         <Text style={styles.total}>Total</Text>
-        <Text style={styles.totalPrice}>{(40.0 + subtotal).toFixed(2)}</Text>
+        <Text style={styles.totalPrice}>{`PHP ${(40.0 + subtotal).toFixed(2)}`}</Text>
       </View>
     </View>
   );

@@ -18,8 +18,8 @@ import {useNavigation} from '@react-navigation/native';
 import {verticalScale, moderateScale, scale, getStatusbarHeight} from 'toktokfood/helper/scale';
 
 const CUSTOM_HEADER = {
-  container: Platform.OS === 'android' ? moderateScale(110 + getStatusbarHeight) : moderateScale(88),
-  bgImage: Platform.OS === 'android' ? moderateScale(105 + getStatusbarHeight) : moderateScale(83),
+  container: Platform.OS === 'android' ? moderateScale(83) : moderateScale(70),
+  bgImage: Platform.OS === 'android' ? moderateScale(83) : moderateScale(70),
 };
 
 const ToktokFoodOrderTransactions = () => {
@@ -89,7 +89,7 @@ const ToktokFoodOrderTransactions = () => {
     <>
       <View style={styles.container}>
         <HeaderImageBackground customSize={CUSTOM_HEADER}>
-          <HeaderTitle showAddress={false} title="Food Orders"/>
+          <HeaderTitle titleOnly showAddress={false} title="Food Orders" />
         </HeaderImageBackground>
         <View style={styles.filterContainer}>
           <View style={styles.filterWrapper}>
