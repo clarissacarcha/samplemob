@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect,} from 'react';
 import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, Dimensions, BackHandler, Alert } from 'react-native';
 import { COLOR, FONT } from '../../../../res/variables';
 import {HeaderBack, HeaderTitle, HeaderRight} from '../../../Components';
@@ -7,6 +7,7 @@ import {connect} from 'react-redux'
 import coppermask from '../../../assets/images/coppermask.png'
 import suit from '../../../assets/images/coppermask.png'
 import { useSelector } from 'react-redux';
+import {useFocusEffect} from '@react-navigation/native'
 
 import { useLazyQuery, useQuery, useMutation } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql';
@@ -102,6 +103,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
   const [receiveDates, setReceiveDates] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [alertModal, setAlertModal] =useState(false)
+  const [movedScreens, setMovedScreens] = useState(false)
 
   const setAlertTrue = () => {
     setAlertModal(true)
@@ -313,16 +315,26 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
   }
 
+  const onGoToOrders = () =>{
+    setIsVisible(false)
+    navigation.push("ToktokMallMyOrders", { tab: 0})
+    // BackHandler.removeEventListener("hardwareBackPress", backAction)
+  }
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        setAlertModal(true)
+        return true
+      }
+      BackHandler.addEventListener('hardwareBackPress', onBackPress)
+      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress)
+    }, [])
+  )
+  
+  
   useEffect(() => {
-    const backAction = () => {
-      console.log('something mo to')
-      setAlertModal(true)
-      return true
-    }
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      backAction
-    )
+    // const backhandler = BackHandler.addEventListener("hardwareBackPress", backAction)
     AsyncStorage.getItem("ToktokMallUser").then((raw) => {
       let data = JSON.parse(raw) || {}
       if(data.userId){
@@ -335,11 +347,18 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
       }
     })
-
-    console.log(route.params)
-    return () => backHandler.remove()
+    // return () => backhandler.remove()
+    // console.log(route.params)
     // getCheckoutData()
   },[])
+
+  // useEffect(() => {
+  //   if(movedScreens){
+  //     const removeBackHandler = BackHandler.addEventListener("hardwareBackPress", backAction)
+  //     removeBackHandler.remove()
+  //   }
+  // }, [movedScreens])
+
 
   useEffect(() => {
     let a = 0;
@@ -357,6 +376,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
   useEffect(() => {
     setParamsData(route?.params?.data)
     setNewCartData(route?.params.newCart)
+
   }, [route.params])
 
   useEffect(() => {
@@ -383,6 +403,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
           navigation={navigation} 
           isVisible={isVisible} 
           setIsVisible={setIsVisible} 
+          goToOrders = {onGoToOrders}
         />
         <View style ={{paddingBottom: 0}}>
           <AddressForm

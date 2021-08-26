@@ -9,3 +9,4 @@ export * from './ToktokMallRateProduct';
 export * from './ToktokMallSearch';
 export * from './ToktokMallStore';
 export * from './ToktokMallVouchersClaim';
+export * from './ToktokMallOTP'

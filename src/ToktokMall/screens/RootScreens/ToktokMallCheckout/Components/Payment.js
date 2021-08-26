@@ -46,7 +46,8 @@ export const Payment = ({ list, payment, setPaymentMethod}) => {
           <View style ={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 2.5  }}>
             <Text style = {{marginLeft: 5, fontWeight: 'bold', color: '#929191'}}>(Balance {FormatToText.currency(2000)})</Text>
             <TouchableOpacity onPress={() => {
-              navigation.push("ToktokWalletHomePage")
+              // navigation.push("ToktokWalletHomePage")
+              navigation.navigate("ToktokMallOTP")
             }}>
               <Text style = {{ alignSelf: 'flex-end', color: '#F6841F'}}>Top up</Text>
             </TouchableOpacity>

@@ -148,7 +148,7 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
               </TouchableOpacity> */}
               <TouchableOpacity onPress={() => navigation.navigate("ToktokMallHelp", {tab: 1})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
                 <CustomIcon.FeIcon name="help-circle" size={30} color={COLOR.ORANGE} />
-                <Text style={{fontSize: 12}}>Help</Text>
+                <Text style={{fontSize: 12}}>Help Center</Text>
               </TouchableOpacity>
             </View>
           </View>
