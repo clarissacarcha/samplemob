@@ -29,6 +29,7 @@ export const Payment = ({ list, payment, total, setPaymentMethod}) => {
     <>
     <View style={styles.container}>
         <Text style = {{marginLeft: 15, marginTop: 15, fontSize: 14, fontFamily: FONT.BOLD}}>Select Payment Method</Text>
+        <View style={{paddingTop: 15}} />
         {parseFloat(currentBalance) < parseFloat(total) ? 
           <View style={{backgroundColor: '#FFFCF4', padding:10}}>
             <Text style={{color: '#F6841F', fontSize: 12, textAlign: 'center'}}>*insufficient funds! Kindly top up to add funds in your toktokwallet.</Text>
@@ -37,7 +38,7 @@ export const Payment = ({ list, payment, total, setPaymentMethod}) => {
         }
         <TouchableOpacity 
           // style ={{...styles.item, backgroundColor: payment == 'toktokwallet' ? '#FFEBBC' : 'white' }}
-          style ={{...styles.item, backgroundColor: '#FFEBBC' }}
+          style ={{...styles.item, backgroundColor: parseFloat(currentBalance) < parseFloat(total) ? 'white' : 'rgba(255, 235, 188, 0.25)' }}
           onPress = {() => {
             setPaymentMethod("toktokwallet")
           }}
@@ -82,6 +83,8 @@ export const Payment = ({ list, payment, total, setPaymentMethod}) => {
             </>
           )
         })} */}
+
+        <View style={{height: 30}} />
 
       </View>
       </>

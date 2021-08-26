@@ -1,11 +1,8 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, } from 'react-native';
+import {StyleSheet, View, Text, Platform, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, } from 'react-native';
 import { FONT } from '../../../../../res/variables';
-// import { COLOR, FONT } from '../../../../../../res/variables';
-// import {LandingHeader, AdsCarousel} from '../../../../../Components';
-// import { ScrollView } from 'react-native-gesture-handler';
 import CustomIcon from '../../../../Components/Icons';
-// import {watch, electronics, mensfashion, furniture, petcare} from '../../../../../assets'
+
 const testData = [
   {id: 1, full_name: 'Cloud Panda', contact_number: '09050000000',
     address: '10F, Inoza Tower, 40th Street, Bonifacio Global City', default: 1
@@ -15,7 +12,7 @@ const testData = [
   }
 ]
 
-export  const Vouchers = ({ navigation, vouchers, setVouchers}) => {
+export  const Vouchers = ({ navigation, vouchers, setVouchers, vcode, setvCode}) => {
 
   const renderVouchers = () => {
     // if (vouchers.length > 0){
@@ -44,14 +41,34 @@ export  const Vouchers = ({ navigation, vouchers, setVouchers}) => {
   return (
     <>
       <View style = {styles.container2}>
-        <TouchableOpacity style = {styles.container} onPress = {() => {navigation.navigate("ToktokMallVouchersClaim", {tab: 1, vouchers: vouchers, setVouchers: setVouchers})}}>
+        <TouchableOpacity activeOpacity={1} style = {styles.container} onPress = {() => {
+          // navigation.navigate("ToktokMallVouchersClaim", {tab: 1, vouchers: vouchers, setVouchers: setVouchers})
+        }}>
         {/* <TouchableOpacity style = {styles.container} onPress = {() => {navigation.navigate("ToktokMallMyVouchersClaim", {tab: 1})}}> */}
-            <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>Select Voucher</Text>
-            <TouchableOpacity onPress = {() => {alert(JSON.stringify(vouchers))}}>
+            <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>Voucher</Text>
+            {/* <TouchableOpacity onPress = {() => {alert(JSON.stringify(vouchers))}}>
               <CustomIcon.FA5Icon name="chevron-right" size={11} color="#F6841F" />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
         </TouchableOpacity>
-        {renderVouchers()}
+        <View style={{ height: 2, backgroundColor: '#F7F7FA'}} />
+        {/* {renderVouchers()} */}
+        <View style={{paddingVertical: 8, paddingHorizontal: 15}}>
+          <View style={{
+            padding: Platform.OS === 'ios' ? 10 : 0,
+            backgroundColor: '#F8F8F8',
+            marginTop: 10,
+            borderRadius: 5,
+            alignItems: 'flex-start',
+          }}>
+            <TextInput
+              value={vcode}
+              style={{marginLeft: 10, width: '100%'}}
+              placeholder="Input voucher (optional)"
+              onChangeText={(val) => setvCode(val)}
+            />
+          </View>
+          <View style={{paddingVertical: 8}} />
+        </View>
       </View>
         
     </>

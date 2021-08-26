@@ -132,7 +132,7 @@ export const Offers = ({data}) => {
               />
             </ContentLoader>
           </View>
-          {/* <View style={{flex: 0.5, height: 8, backgroundColor: '#F7F7FA'}} /> */}
+          <View style={{flex: 0.5, height: 8, backgroundColor: '#F7F7FA'}} />
       </>
     )
   }

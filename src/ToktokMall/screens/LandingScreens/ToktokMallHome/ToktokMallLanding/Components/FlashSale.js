@@ -101,12 +101,12 @@ export const FlashSale = () => {
             tHeight = {70} avatarStyles = {{ left: 0, borderRadius: 5}}  tWidth = {'100%'}
             pWidth = {'100%'}
           ></ContentLoader> */}
-            <View style={{paddingVertical: 0, flexDirection: 'row'}}>
-              <View style={{flex: 4}}>
+            <View style={{paddingVertical: 20, flexDirection: 'row'}}>
+              {/* <View style={{flex: 4}}>
                 <Image source={flashsale} style={{width: 90, height: 90, resizeMode: 'center', justifyContent: 'center', alignSelf: 'flex-end'}} />
-              </View>
-              <View style={{flex: 7, justifyContent: 'center', paddingHorizontal: 4}}>
-                <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>&nbsp;Featured</Text>
+              </View> */}
+              <View style={{flex: 11, justifyContent: 'center', paddingHorizontal: 4}}>
+                <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>Featured Items</Text>
                 {/* <Text style={{color: "#747575", fontSize: 12}}>Offer ends 5.17.2021</Text> */}
               </View>
               <TouchableOpacity disabled = {loading} onPress={() => {
