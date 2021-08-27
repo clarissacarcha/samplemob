@@ -22,8 +22,7 @@ export const SuccessModal = ({modalVisible})=> {
     const navigation = useNavigation()
 
     const closeModal = ()=> {
-       // navigation.pop()
-        navigation.navigate("ToktokWalletHomePage")
+        navigation.pop();
         navigation.replace("ToktokWalletHomePage")
     }
 

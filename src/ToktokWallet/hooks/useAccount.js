@@ -5,11 +5,13 @@ import {useLazyQuery} from '@apollo/react-hooks'
 import { useAlert } from 'src/hooks'
 import { onErrorAlert } from 'src/util/ErrorUtility'
 import { WalletUtility } from 'toktokwallet/util'
+import { useNavigation } from '@react-navigation/native'
 import {useDispatch, useSelector} from 'react-redux'
 
 export const useAccount = ()=> {
     const alert = useAlert()
     const dispatch = useDispatch()
+    const navigation = useNavigation();
     const tokwaAccount = useSelector(state=>state.toktokWallet)
 
 
@@ -45,9 +47,20 @@ export const useAccount = ()=> {
         }
     })
 
+    const checkIfTpinIsSet = ()=> {
+        const status = tokwaAccount.pinCode
+        if(!status){
+            return navigation.navigate("ToktokWalletTPINSetup")
+        }
+        return
+    }
+
+
+
     return {
         getMyAccount,
         tokwaAccount,
         refreshWallet,
+        checkIfTpinIsSet
     }
 }

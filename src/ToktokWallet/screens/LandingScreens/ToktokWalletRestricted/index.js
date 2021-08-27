@@ -10,6 +10,7 @@ import {
     PendingKyc,
     RejectedKyc,
     SecurewithPIN,
+    SecureWithMPIN,
     WalletOnHold
 } from "./Components"
 
@@ -27,6 +28,8 @@ export const ToktokWalletRestricted = ({navigation,route})=> {
                 return <ApprovedRegistration/>
             case "noPin":
                 return <SecurewithPIN navigation={navigation} walletinfo={route.params.walletinfo}/>
+            case "noMpin":
+                return <SecureWithMPIN navigation={navigation} walletinfo={route.params.walletinfo}/>
             case "noAccount":
                 return <NoAccount />
             case "pendingKYC": 

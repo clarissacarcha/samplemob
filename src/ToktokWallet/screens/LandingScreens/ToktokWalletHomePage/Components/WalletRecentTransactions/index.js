@@ -5,7 +5,6 @@ import {useNavigation} from '@react-navigation/native';
 import {Separator, WalletLog} from 'toktokwallet/components';
 import { YellowButton } from 'src/revamp';
 import {APP_FLAVOR , ACCOUNT_TYPE} from 'src/res/constants';
-import { CheckWalletAccountRestrictionContext } from '../CheckWalletAccountRestriction';
 import { useSelector } from 'react-redux';
 
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS
@@ -13,7 +12,6 @@ const {height,width} = Dimensions.get("window")
 
 const WalletRecentTransactions = () => {
   const navigation = useNavigation();
-  const checkWallet = useContext(CheckWalletAccountRestrictionContext)
   const tokwaAccount = useSelector(state=>state.toktokWallet)
 
 
@@ -21,9 +19,8 @@ const WalletRecentTransactions = () => {
       if(APP_FLAVOR == "D" && ACCOUNT_TYPE == 2){
           return Alert.alert("","Use the toktok customer app for toktokwallet full features.")
       }
-      if(checkWallet.checkIfAllowed()){
-          return navigation.navigate("ToktokWalletPaymentOptions")
-      }
+      return navigation.navigate("ToktokWalletPaymentOptions")
+  
   }
 
   const CashInNow = ()=> (

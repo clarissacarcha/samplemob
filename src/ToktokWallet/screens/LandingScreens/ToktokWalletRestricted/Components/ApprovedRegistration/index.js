@@ -35,7 +35,7 @@ export const ApprovedRegistration = ()=> {
 
             <View style={{height: 70,padding: 16,justifyContent:'flex-end'}}>
                 <YellowButton label="Ok" onPress={()=> {
-                     navigation.replace("ToktokWalletRestricted" , {component: "noPin"})
+                     navigation.replace("ToktokWalletRestricted" , {component: "noMpin"})
                 }}/>
             </View>
         

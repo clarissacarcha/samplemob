@@ -83,6 +83,10 @@ export const CheckWalletAccountRestriction = connect(null,mapDispatchtoProps)(({
         navigation.replace("ToktokWalletRestricted" , {component: "approvedRegistration"})
     }
 
+    if(!data.getMyAccount.mpinCode){
+        navigation.replace("ToktokWalletRestricted" , {component: "approvedRegistration"})
+    }
+
     const checkIfAllowed = () => {
        
         // account is on hold

@@ -13,11 +13,11 @@ const NumberBox = ({onPress, value , showPin}) => (
     </TouchableHighlight>
 );
 
-export const NumberBoxes = ({pinCode, onNumPress, showPin}) => {
+export const NumberBoxes = ({pinCode, onNumPress, showPin , numberOfBox = 6}) => {
 
     const numberBoxes = [];
     var i;
-    for (i = 0; i <= 5; i++) {
+    for (i = 0; i <= (numberOfBox - 1); i++) {
       numberBoxes.push(<NumberBox onPress={onNumPress} value={pinCode[i]} showPin={showPin}/>);
     }
     return (

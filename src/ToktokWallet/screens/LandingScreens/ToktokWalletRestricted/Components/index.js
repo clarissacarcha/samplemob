@@ -4,5 +4,6 @@ export * from "./DeletedAccount";
 export * from "./NoAccount";
 export * from "./PendingKyc";
 export * from "./RejectedKyc";
+export * from "./SecureWithMPIN";
 export * from "./SecureWithPIN";
 export * from "./WalletOnHold";

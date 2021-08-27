@@ -27,6 +27,8 @@ export const GET_MY_ACCOUNT = gql`
             motherId
             pinCode
             pinCodeAttempts
+            mpinCode
+            mpindCodeAttempts
             isLinked
             person {
                 id
@@ -66,9 +68,21 @@ export const PATCH_PIN_CODE = gql`
     }
 `
 
+export const PATCH_MPIN_CODE = gql`
+    mutation patchMPinCode($input: PatchPinCodeInput){
+        patchMPinCode(input: $input)
+    }
+`
+
 export const VERIFY_PIN_CODE = gql`
     query verifyPinCode($input: GetVerifyPinInput){
         verifyPinCode(input: $input)
+    }
+`
+
+export const GET_VERIFY_MPIN = gql`
+    query getVerifyMPIN($input: GetVerifyMPINInput){
+        getVerifyMPIN(input: $input)
     }
 `
 

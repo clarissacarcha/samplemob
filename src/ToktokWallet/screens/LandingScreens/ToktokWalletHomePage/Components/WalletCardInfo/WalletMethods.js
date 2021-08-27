@@ -1,7 +1,6 @@
 import React , {useContext} from 'react'
 import {View,Text,StyleSheet,Dimensions,Image,TouchableOpacity,Alert} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
-import {CheckWalletAccountRestrictionContext} from '../CheckWalletAccountRestriction'
 import {APP_FLAVOR , ACCOUNT_TYPE} from 'src/res/constants'
 import {useThrottle} from 'src/hooks'
 import { useDispatch } from 'react-redux'
@@ -25,25 +24,24 @@ const Method = ({icon,label,iconstyle,onPress})=> {
 const WalletMethods = ()=> {
 
     const navigation = useNavigation()
-    const checkWallet = useContext(CheckWalletAccountRestrictionContext)
     const dispatch = useDispatch()
 
     const onPress = (route)=> {
         if(APP_FLAVOR == "D" && ACCOUNT_TYPE == 2){
             return Alert.alert("","Use the toktok customer app for toktokwallet full features.")
         }
-        if(checkWallet.checkIfAllowed()){
-            if(route === "ToktokWalletCashOutHomePage"){
-                dispatch({
-                    type: "SET_TOKWA_EVENTS_REDIRECT",
-                    payload: {
-                        event: "upgradeAccount",
-                        value: false,
-                    }
-                })
-            }
-            return navigation.navigate(route)
-        }  
+    
+        if(route === "ToktokWalletCashOutHomePage"){
+            dispatch({
+                type: "SET_TOKWA_EVENTS_REDIRECT",
+                payload: {
+                    event: "upgradeAccount",
+                    value: false,
+                }
+            })
+        }
+        return navigation.navigate(route)
+        
     }
 
     const onPressThrottled = useThrottle(onPress , 2000)

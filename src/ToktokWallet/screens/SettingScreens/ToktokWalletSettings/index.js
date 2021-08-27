@@ -40,7 +40,12 @@ export const ToktokWalletSettings = ({navigation , route })=> {
         <Separator />
         <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
             <SettingHeaderTitle title="Manage PIN"/>
+            <SettingOption route="ToktokWalletMPINCreate" title="Change MPIN"/>
             <SettingOption route="ToktokWalletCreatePin" title="Change TPIN"/>
+            <Separator/>
+            <SettingHeaderTitle title="Manage Validation Set Up"/>
+            <SettingOption route="ToktokWalletMPINCreate" title="Toogle TPIN"/>
+            <SettingOption route="ToktokWalletCreatePin" title="Toogle OTP"/>
             <Separator/>
             <SettingHeaderTitle title="Help centre"/>
             <SettingOption route="ToktokWalletPaymentChart" title="Payment Chart"/>

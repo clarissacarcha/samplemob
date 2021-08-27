@@ -1,7 +1,6 @@
 import React , {useContext} from 'react'
 import {View,Text,StyleSheet,Dimensions,Image,TouchableOpacity} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
-import {CheckWalletAccountRestrictionContext} from '../CheckWalletAccountRestriction'
 import {VectorIcon, ICON_SET} from 'src/revamp';
 import CONSTANTS from 'common/res/constants'
 import { useThrottle } from 'src/hooks';
@@ -13,12 +12,9 @@ const {height,width} = Dimensions.get("window")
 const DriverWalletMethods = ()=> {
 
     const navigation = useNavigation()
-    const checkWallet = useContext(CheckWalletAccountRestrictionContext)
 
     const CashOut = ()=> {
-        if(checkWallet.checkIfAllowed()){
-            return navigation.navigate("ToktokWalletCashOutHomePage")
-        }  
+        return navigation.navigate("ToktokWalletCashOutHomePage")
     }
 
     const onPressThrottled = useThrottle(CashOut , 2000)

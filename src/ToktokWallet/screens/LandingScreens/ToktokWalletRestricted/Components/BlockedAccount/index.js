@@ -24,7 +24,7 @@ export const BlockedAccount = ()=> {
             <Separator/>
             <View style={styles.content}>
                 <View style={{alignItems:"center",marginTop: 10}}>
-                    <Text style={[styles.verifyWalletText , {color: COLOR.ORANGE}]}>STOP !</Text>
+                    <Text style={[styles.verifyWalletText , {color: COLOR.ORANGE}]}>STOP!</Text>
                     <Text style={styles.clickVerifyText}>Your toktokwallet account has been blocked or put on-hold. To know more details, contact support@toktokwallet.ph and (02) 84-248-617.</Text>
                 </View>
             </View>
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     clickVerifyText: {
         marginTop: 5,
         fontFamily: FONT.REGULAR,
-        fontSize: FONT_SIZE.S,
+        fontSize: FONT_SIZE.M,
         textAlign:'center'
     },
     listItem: {

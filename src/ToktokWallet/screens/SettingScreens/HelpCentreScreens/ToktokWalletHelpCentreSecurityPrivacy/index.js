@@ -50,6 +50,7 @@ export const ToktokWalletHelpCentreSecurityPrivacy = ({navigation})=> {
                     title="Help within reach"
                     content="Having issues? Contact us through here."
                     imageSource={require('toktokwallet/assets/images/SecurityAndPrivacy/HelpReach.png')}
+                    onPress={() => navigation.navigate("ToktokWalletHelpCentreContactUs")}
                 />
                 <Separator />
             </View>
