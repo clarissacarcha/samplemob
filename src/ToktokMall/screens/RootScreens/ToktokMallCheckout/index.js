@@ -94,7 +94,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
   const [newCartData, setNewCartData] = useState([])
   const [paramsData, setParamsData] = useState([])
   const [addressData, setAddressData] = useState([])
-  const [payment, setPaymentMethod] = useState("cod")
+  const [payment, setPaymentMethod] = useState("toktokwallet")
   const [paymentList, setPaymentList] = useState([])
   const [vouchers, setVouchers] = useState([])
   const [vcode, setvCode] = useState("")
@@ -264,8 +264,13 @@ const Component = ({route, navigation, createMyCartSession}) => {
       items: paramsData, 
       addressData: addressData, 
       grandTotal: grandTotal, 
+      vouchers: voucher,
       paymentMethod: payment
     })
+
+    // console.log(checkoutBody, voucher)
+    // setIsLoading(false)
+    // return
 
     const req = await ApiCall("checkout", checkoutBody, false)
 
@@ -274,32 +279,6 @@ const Component = ({route, navigation, createMyCartSession}) => {
       if(route?.params?.type == "from_cart"){
         UpdateCart()
       }
-
-      // if(payment == "paypanda"){
-
-      //   if(req.responseData.paypanda){
-
-      //     const paypandaReq = await PaypandaApiCall({
-      //       data: req.responseData.paypanda,
-      //       addressData: addressData
-      //     })
-
-      //     if(paypandaReq){
-      //       navigation.push("ToktokMallPaymentWebview", {
-      //         contents: paypandaReq.responseData, 
-      //         onSuccess: () => {
-      //           setIsVisible(true)
-      //           setIsLoading(false)
-      //         }}
-      //       )
-      //     }
-
-      //   }
-
-      // }else{
-      //   setIsVisible(true)
-      //   setIsLoading(false)
-      // }
 
       setIsVisible(true)
       setIsLoading(false)
@@ -320,20 +299,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
     // BackHandler.removeEventListener("hardwareBackPress", backAction)
   }
 
-  useFocusEffect(
-    React.useCallback(() => {
-      const onBackPress = () => {
-        setAlertModal(true)
-        return true
-      }
-      BackHandler.addEventListener('hardwareBackPress', onBackPress)
-      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress)
-    }, [])
-  )
-  
-  
-  useEffect(() => {
-    // const backhandler = BackHandler.addEventListener("hardwareBackPress", backAction)
+  const init = async () => {
     AsyncStorage.getItem("ToktokMallUser").then((raw) => {
       let data = JSON.parse(raw) || {}
       if(data.userId){
@@ -346,9 +312,21 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
       }
     })
-    // return () => backhandler.remove()
-    // console.log(route.params)
-    // getCheckoutData()
+  }
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        setAlertModal(true)
+        return true
+      }
+      BackHandler.addEventListener('hardwareBackPress', onBackPress)
+      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress)
+    }, [])
+  )
+    
+  useEffect(() => {
+    init()
   },[])
 
   // useEffect(() => {
@@ -409,8 +387,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
             data={addressData}
             onEdit={() => navigation.push("ToktokMallAddressesMenu", {
               onGoBack: (data) => {
-                setAddressData(data)
-                // getCheckoutData()
+                // setAddressData(data)
+                init()
               }
             })}
           />

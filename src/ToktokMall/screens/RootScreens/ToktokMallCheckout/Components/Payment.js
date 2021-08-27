@@ -28,7 +28,7 @@ export const Payment = ({ list, payment, total, setPaymentMethod}) => {
   return (
     <>
     <View style={styles.container}>
-        <Text style = {{marginLeft: 15, marginTop: 15, fontSize: 14, fontFamily: FONT.BOLD}}>Select Payment Method</Text>
+        <Text style = {{marginLeft: 15, marginTop: 15, fontSize: 14, fontFamily: FONT.BOLD}}>Payment Method</Text>
         <View style={{paddingTop: 15}} />
         {parseFloat(currentBalance) < parseFloat(total) ? 
           <View style={{backgroundColor: '#FFFCF4', padding:10}}>

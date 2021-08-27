@@ -285,7 +285,7 @@ const Component = ({ myCart, createMyCartSession,}) => {
       >
         <AdsCarousel />
         <Categories  />
-        <Offers  />
+        {/* <Offers  /> */}
         <FlashSale />
         {/* <Vouchers /> */}
         <Suggestions />

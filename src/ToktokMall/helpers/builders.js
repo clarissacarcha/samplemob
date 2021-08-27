@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage';
 
-export const BuildPostCheckoutBody = async ({items, addressData, grandTotal, paymentMethod}) => {
+export const BuildPostCheckoutBody = async ({items, addressData, grandTotal, paymentMethod, vouchers}) => {
 
 	let rawsession = await AsyncStorage.getItem("ToktokMallUser")
 	let session = JSON.parse(rawsession)
@@ -26,11 +26,7 @@ export const BuildPostCheckoutBody = async ({items, addressData, grandTotal, pay
 			longitude: "",
 			postalcode: "",
 			account_type: 0,
-			// vouchers: [{
-			//   shopid: 1,
-			//   vcode: "",
-			//   vamount: ""
-			// }],
+			vouchers: vouchers,
 			referral_code: "",
 			referral_account_type: "",
 			payment_method: paymentMethod
