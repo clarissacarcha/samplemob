@@ -77,15 +77,23 @@ const RenderItem = ({item}) => {
             style={{resizeMode: 'cover', width: '100%', height: 120, borderRadius: 5}} 
           />
           <Text style={{fontSize: 13, fontWeight: '500', paddingVertical: 5}}>{item.itemname}</Text>
-          <Text style={{fontSize: 13, color: "#F6841F"}}><Price amount={item.price} /></Text>    
+          {/* <Text style={{fontSize: 13, color: "#F6841F"}}><Price amount={item.price} /></Text>    
           <View style={{flexDirection: 'row'}}>
             <View style={{flex: 7, flexDirection: 'row'}}>
               <RenderStars value={item.rating || 0} />
             </View>
             <View style={{flex: 2}}>
-              {/* <Text style={{color: "#9E9E9E", fontSize: 10}}>({item.noOfStocks || 0})</Text> */}
+              <Text style={{color: "#9E9E9E", fontSize: 10}}>({item.noOfStocks || 0})</Text>
             </View>
             <View style={{flex: 3}}>
+              <Text style={{fontSize: 10}}>{item.soldCount || 0} sold</Text>
+            </View>
+          </View> */}
+          <View style={{flexDirection: 'row'}}>
+            <View style={{flex: 1}}>
+              <Text style={{fontSize: 13, color: "#F6841F"}}><Price amount={item.price} /></Text>
+            </View>
+            <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end'}}>
               <Text style={{fontSize: 10}}>{item.soldCount || 0} sold</Text>
             </View>
           </View>

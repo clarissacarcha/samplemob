@@ -144,7 +144,7 @@ const Component =  ({
     setIsFetching(true)
     getProductDetails()
     setCartItems(CountCartItems)
-    // console.log('dataaaaaaaaaaaaaaa', route.params.itemname)
+    console.log('dataaaaaaaaaaaaaaa', route.params.Id)
   }, [])  
 
   if(error) {

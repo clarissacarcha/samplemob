@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, Platform, Dimensions, StatusBar, Image, TouchableOpacity, FlatList} from 'react-native';
 import CheckBox from 'react-native-check-box';
 import SwipeableView from 'react-native-swipeable-view';
+import Swipeable from 'react-native-swipeable';
 import CustomIcon from "../../../../Components/Icons";
 
 import {Item, Store} from './';
@@ -32,7 +33,7 @@ export const RenderDetails = ({
 			<TouchableOpacity
 			  onPress={onPress}
 			  activeOpacity={1}
-			  style={{flex: 1, backgroundColor: '#F6841F', alignItems: 'center', justifyContent: 'center'}}>
+			  style={{flex: 1, width: 75, backgroundColor: '#F6841F', alignItems: 'center', justifyContent: 'center'}}>
 			  {/* <Text style={{fontSize: 14, color: '#fff'}}>Delete</Text> */}
 				<CustomIcon.FoIcon name="trash" size={20} color={"white"} />
 			</TouchableOpacity>
@@ -54,20 +55,37 @@ export const RenderDetails = ({
 				uncheckedItems = {uncheckedItems}
 				setUncheckedItems = {setUncheckedItems}
 			/>
-			{item && item.cart.length > 0 && item.cart.map((data, i) => (
+				{/* <FlatList
+					data={item.cart || []}
+					removeClippedSubviews={true}
+					renderItem={({item, index}) => {
+						return (
+							<>
 				<SwipeableView
-				btnsArray={[
-				  {
-					text: 'Delete',
-					component: (
-					  <DeleteButton
-							onPress={() => {						
-								onItemDelete(data.item_id)
-							}}
-					  />
-					),
-				  },
-				]}>
+					btnsArray={[
+						{
+							text: 'Delete',
+							component: (
+					  		<DeleteButton
+									onPress={() => {						
+									onItemDelete(item.item_id)
+									}}
+					  		/>
+							)
+				  	},
+					]}></SwipeableView>
+					
+							</>
+						)
+					}}
+				/> */}
+
+			{item && item.cart.length > 0 && item.cart.map((data, i) => (
+				<Swipeable 
+					rightActionActivationDistance={30}
+					rightButtonWidth={75}
+					rightButtons={[<DeleteButton />]}
+				>
 					<Item
 						key={i}
 						index = {i}
@@ -109,8 +127,9 @@ export const RenderDetails = ({
 						setstoreitemselected = {setstoreitemselected}
 						onChangeQuantity={onChangeQuantity}
 					/>
-				</SwipeableView>
+				</Swipeable>
 			))}
+			
 			{/* <View style={{height: 8, backgroundColor: '#F7F7FA'}} /> */}
 		</>
 	);
