@@ -31,6 +31,7 @@ const CUSTOM_HEADER = {
 
 const ToktokFoodSearch = () => {
   const {location} = useSelector((state) => state.toktokFood);
+  const [shopList, setShopList] = useState([]);
 
   tabs[3] = {
     id: 4,
@@ -57,7 +58,12 @@ const ToktokFoodSearch = () => {
         data: {
           query: `
             query {
-              getSearchFood(input: {foodName: "${s}", radius: ${radius}, userLatitude: ${location.latitude}, userLongitude: ${location.longitude}}) {
+              getSearchFood(input: {
+                foodName: "${s}",
+                radius: ${radius},
+                userLatitude: ${location.latitude},
+                userLongitude: ${location.longitude}
+              }) {
                 shopId
                 ratings
                 shopName
@@ -69,21 +75,29 @@ const ToktokFoodSearch = () => {
           }`,
         },
       });
-      console.log(JSON.stringify(API_RESULT.data));
+      const {getSearchFood} = API_RESULT.data.data;
+      console.log(getSearchFood);
+      setShopList(getSearchFood);
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    // searchFood('s');
   }, []);
 
   const renderItem = ({item}) => (
     <TouchableWithoutFeedback onPress={() => onRestaurantNavigate(item)}>
       <View style={styles.itemContainer}>
         <View style={styles.imgWrapper}>
-          <Image resizeMode="contain" source={item.image} style={styles.img} />
+          <Image
+            resizeMode="contain"
+            source={{
+              uri:
+                'https://tokfood-stg.s3-ap-northeast-1.amazonaws.com/assets/img/shops/0594b80cbc894f3db60ff2a24f4806ec.jpg',
+            }}
+            style={styles.img}
+          />
           {/* <View style={styles.branchWrapper}>
             <MCIcon name="store" color={COLOR.ORANGE} size={13} />
             <Text style={styles.branchText}>{item.totalBranches} branches</Text>
@@ -93,16 +107,16 @@ const ToktokFoodSearch = () => {
         <View style={styles.restaurantInfo}>
           <View style={styles.infoWrapper}>
             <Text numberOfLines={2} style={styles.restaurantName}>
-              {item.name}
+              {item.shopName}
             </Text>
             <Rating startingValue={item.ratings} imageSize={15} readonly style={styles.ratings} />
           </View>
 
           <View style={styles.subInfoWrapper}>
             <MCIcon name="clock-outline" color="#868686" size={13} />
-            <Text style={styles.subInfoText}>{item.time}</Text>
+            <Text style={styles.subInfoText}>{item.estimatedDeliveryTime} mins</Text>
             <MCIcon name="map-marker-outline" color="#868686" size={13} />
-            <Text style={styles.subInfoText}>{item.distance}</Text>
+            <Text style={styles.subInfoText}>{item.estimatedDistance}</Text>
           </View>
         </View>
       </View>
@@ -121,9 +135,7 @@ const ToktokFoodSearch = () => {
         <HeaderTitle showAddress={true} />
         <HeaderSearchBox
           onSearch={(t) => {
-            if (t === 'mcdo') {
-              setShowError(true);
-            }
+            searchFood(t);
           }}
         />
       </HeaderImageBackground>
@@ -132,7 +144,7 @@ const ToktokFoodSearch = () => {
         <Text style={[styles.restaurantName, {fontSize: 18}]}>Restaurants</Text>
       </View>
       <View style={styles.listContainer}>
-        <FlatList data={restaurants} renderItem={renderItem} />
+        <FlatList data={shopList} renderItem={renderItem} />
       </View>
     </View>
   );
