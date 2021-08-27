@@ -20,7 +20,7 @@ import {restaurants, tabs} from 'toktokfood/helper/strings';
 import {moderateScale, getStatusbarHeight} from 'toktokfood/helper/scale';
 
 import {useSelector} from 'react-redux';
-import {PROTOCOL, HOST_PORT} from 'res/constants';
+import ENVIRONMENTS from 'src/common/res/environments';
 
 import styles from './styles';
 
@@ -49,7 +49,7 @@ const ToktokFoodSearch = () => {
   const searchFood = async (s = '', radius = 100) => {
     try {
       const API_RESULT = await axios({
-        url: `${PROTOCOL}://${HOST_PORT}/graphql`,
+        url: `${ENVIRONMENTS.TOKTOKFOOD_SERVER}/graphql`,
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ const ToktokFoodSearch = () => {
         data: {
           query: `
             query {
-              getSearchFood(input: {foodName: "${s}", radius: ${radius}, userLatitude: 14.6441168, userLongitude: 120.9677566}) {
+              getSearchFood(input: {foodName: "${s}", radius: ${radius}, userLatitude: ${location.latitude}, userLongitude: ${location.longitude}}) {
                 shopId
                 ratings
                 shopName
@@ -69,14 +69,14 @@ const ToktokFoodSearch = () => {
           }`,
         },
       });
-      console.log(API_RESULT);
+      console.log(JSON.stringify(API_RESULT.data));
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    searchFood('s');
+    // searchFood('s');
   }, []);
 
   const renderItem = ({item}) => (

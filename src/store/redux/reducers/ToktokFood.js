@@ -21,6 +21,8 @@ export default (state = INITIAL_STATE, action) => {
       return {...state, categories: action.payload};
     case 'SET_TOKTOKFOOD_LOCATION':
       return {...state, location: action.payload};
+    case 'SET_TOKTOKFOOD_CART_ITEMS':
+      return {...state, cart: action.payload};
     case 'SET_TOKTOKFOOD_CART_TOTAL':
       return {...state, totalAmount: action.payload};
     case 'SET_TOKTOKFOOD_SHOPS':

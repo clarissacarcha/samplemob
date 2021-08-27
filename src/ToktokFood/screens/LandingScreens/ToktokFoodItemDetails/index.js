@@ -5,12 +5,11 @@ import {Image, View, Text, ScrollView, KeyboardAvoidingView, Platform} from 'rea
 import {Rating} from 'react-native-ratings';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 
+import FoodCart from './components/FoodCart';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
 import HeaderImageBackground from './components/HeaderImageBackground';
-import FoodCart from './components/FoodCart';
 
 import {Variations} from './components';
-
 import {useSelector} from 'react-redux';
 
 import styles from './styles';
@@ -23,9 +22,7 @@ const ToktokFoodItemDetails = () => {
   const [newCartTotal, setNewCartTotal] = useState(routes.params.price);
 
   const CancelOrderOption = () => {
-    return <>
-      
-    </>;
+    return <></>;
   };
 
   const ItemDetails = () => {
@@ -49,10 +46,10 @@ const ToktokFoodItemDetails = () => {
     );
   };
 
-  const updateAmount = (amount) => {
-    setNewCartTotal(newCartTotal + amount);
+  const updateAmount = (amount, lastAmount) => {
+    // setNewCartTotal(newCartTotal - lastAmount + amount);
+    // console.log(newCartTotal - lastAmount + amount);
   };
-
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'position' : null} style={styles.container}>
@@ -66,8 +63,8 @@ const ToktokFoodItemDetails = () => {
           <Variations
             currentTotal={price}
             item={routes.params}
-            onVariationChange={(vary) => updateAmount(vary)}
-            onAddOnsChange={(ons) => updateAmount(ons)}
+            onVariationChange={(v) => updateAmount(v.value, v.lastValue)}
+            // onAddOnsChange={(ons) => updateAmount(ons)}
           />
           <FoodCart item_price={newCartTotal} currentTotal={price} />
         </View>
