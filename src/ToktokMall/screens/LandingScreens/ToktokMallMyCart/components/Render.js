@@ -14,6 +14,7 @@ export const RenderDetails = ({
 	onPress, 
 	onStoreSelect, 
 	onItemSelect, 
+	onItemLongPress,
 	onItemDelete,
 	onChangeQuantity
 }) => {
@@ -40,6 +41,36 @@ export const RenderDetails = ({
 		  </>
 		);
 	};
+
+	const HandleItemSelect = (raw, i) => {
+
+		let currentCheckedItems = JSON.parse(JSON.stringify(checkedItems))
+		if(raw.checked){
+								
+			let exist = currentCheckedItems.findIndex( x => x.index == i)
+			if(exist == -1){
+				currentCheckedItems.push({index: i})
+				setCheckedItems(currentCheckedItems)
+
+				if(currentCheckedItems.length == item.cart.length){
+					setstoreitemselected(true)
+				}else{
+					setstoreitemselected(false)
+				}
+			}
+								
+		}else{
+								
+			let index = currentCheckedItems.findIndex( x => x.index == i)
+			currentCheckedItems.splice(index, 1)
+			setCheckedItems(currentCheckedItems)
+			if(currentCheckedItems.length <= 1){
+				setstoreitemselected(false)
+			}
+
+		}
+		// setstoreitemselected(!storeitemselected)
+	}
 
 	return (
 		<>
@@ -92,35 +123,13 @@ export const RenderDetails = ({
 						storeIndex = {storeIndex}
 						state={storeitemselected}
 						data={data}
+						onHold={(raw) => {
+							onItemLongPress(raw)
+							HandleItemSelect(raw, i)
+						}}
 						onSelect={(raw) => {
 							onItemSelect(raw)
-
-							let currentCheckedItems = JSON.parse(JSON.stringify(checkedItems))
-							if(raw.checked){
-								
-								let exist = currentCheckedItems.findIndex( x => x.index == i)
-								if(exist == -1){
-									currentCheckedItems.push({index: i})
-									setCheckedItems(currentCheckedItems)
-
-									if(currentCheckedItems.length == item.cart.length){
-										setstoreitemselected(true)
-									}else{
-										setstoreitemselected(false)
-									}
-								}
-								
-							}else{
-								
-								let index = currentCheckedItems.findIndex( x => x.index == i)
-								currentCheckedItems.splice(index, 1)
-								setCheckedItems(currentCheckedItems)
-								if(currentCheckedItems.length <= 1){
-									setstoreitemselected(false)
-								}
-
-							}
-							// setstoreitemselected(!storeitemselected)						
+							HandleItemSelect(raw, i)						
 						}}
 						item = {item}
 						uncheckedItems = {uncheckedItems}

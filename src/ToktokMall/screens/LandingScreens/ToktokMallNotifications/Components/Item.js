@@ -53,6 +53,14 @@ export const Item = ({active, data, onSelect}) => {
     }
   }
 
+  const getContent = (history) => {
+    if(history && history.length > 0){
+      return history[history.length - 1].description
+    }else{
+      return null
+    }
+  }
+
   return (
   	<>
       <TouchableOpacity 
@@ -67,6 +75,7 @@ export const Item = ({active, data, onSelect}) => {
         <View style={{flex: 8, paddingVertical: 20, paddingHorizontal: 0}}>
           <Text style={{fontSize: 13}}>{getTitle(data?.history)}</Text>
           {getDesc(data?.parent?.description, data?.referenceNum)}
+          {/* {getContent(data?.history)} */}
         </View>
         <View style={{flex: 2, paddingVertical: 20, paddingHorizontal: 15}}>
           <View style={{alignItems: 'center'}}>

@@ -106,6 +106,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
   const [isLoading, setIsLoading] = useState(false)
   const [alertModal, setAlertModal] =useState(false)
   const [movedScreens, setMovedScreens] = useState(false)
+  const [currentBalance, setCurrentBalance] = useState(0)
 
   const setAlertTrue = () => {
     setAlertModal(true)
@@ -412,6 +413,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
             payment={payment} 
             total={grandTotal}
             list={paymentList}
+            currentBalance={currentBalance}
+            setCurrenctBalance={setCurrentBalance}
             setPaymentMethod={setPaymentMethod} 
           />
           <Totals 
