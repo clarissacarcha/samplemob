@@ -21,9 +21,9 @@ const ChooseIDType = ({index , onPress})=> {
 
     const displayText = (index) => {
         if(index == 1){
-            return validID1.IDTypeDescription != "" ? validID1.IDTypeDescription : "Valid ID 1"
+            return validID1.IDTypeDescription != "" ? validID1.IDTypeDescription : "Choose ID Type"
         }
-        return validID2.IDTypeDescription != "" ? validID2.IDTypeDescription : "Valid ID 2"
+        return validID2.IDTypeDescription != "" ? validID2.IDTypeDescription : "Choose ID Type"
     }
     
     const displayErrorMessage = (index)=> {
