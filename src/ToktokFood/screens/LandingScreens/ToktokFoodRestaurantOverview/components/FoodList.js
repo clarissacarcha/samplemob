@@ -5,8 +5,6 @@ import {useNavigation} from '@react-navigation/native';
 // Fonts & Colors
 import {COLOR} from 'res/variables';
 
-// Strings
-import {foodData} from 'toktokfood/helper/strings';
 
 import {
   verticalScale,
@@ -16,7 +14,8 @@ import {
   isIphoneXorAbove,
 } from 'toktokfood/helper/scale';
 
-const FoodList = () => {
+const FoodList = (props) => {
+  const {foodList} = props;
   const navigation = useNavigation();
 
   const onNavigateToFoodItemDetails = (item) => {
@@ -38,7 +37,7 @@ const FoodList = () => {
     );
   };
 
-  return <View style={styles.container}>{foodData.map((i) => FoodItem(i))}</View>;
+  return <View style={styles.container}></View>;
 };
 
 export default FoodList;

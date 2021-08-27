@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+import axios from 'axios';
+import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {Image, View, FlatList, Text, TouchableWithoutFeedback} from 'react-native';
 
@@ -13,13 +14,13 @@ import DialogMessage from 'toktokfood/components/DialogMessage';
 import HeaderSearchBox from 'toktokfood/components/HeaderSearchBox';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 
-// Fonts & Colors
-// import {COLOR} from 'res/variables';
-
 // Strings
 import {restaurants, tabs} from 'toktokfood/helper/strings';
 
 import {moderateScale, getStatusbarHeight} from 'toktokfood/helper/scale';
+
+import {useSelector} from 'react-redux';
+import {PROTOCOL, HOST_PORT} from 'res/constants';
 
 import styles from './styles';
 
@@ -29,6 +30,8 @@ const CUSTOM_HEADER = {
 };
 
 const ToktokFoodSearch = () => {
+  const {location} = useSelector((state) => state.toktokFood);
+
   tabs[3] = {
     id: 4,
     name: 'Best Sellers',
@@ -42,6 +45,39 @@ const ToktokFoodSearch = () => {
   const onRestaurantNavigate = (item) => {
     navigation.navigate('ToktokFoodRestaurantOverview', {item});
   };
+
+  const searchFood = async (s = '', radius = 100) => {
+    try {
+      const API_RESULT = await axios({
+        url: `${PROTOCOL}://${HOST_PORT}/graphql`,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        data: {
+          query: `
+            query {
+              getSearchFood(input: {foodName: "${s}", radius: ${radius}, userLatitude: 14.6441168, userLongitude: 120.9677566}) {
+                shopId
+                ratings
+                shopName
+                branchNumber
+                shopAddress
+                estimatedDistance
+                estimatedDeliveryTime
+              }
+          }`,
+        },
+      });
+      console.log(API_RESULT);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    searchFood('s');
+  }, []);
 
   const renderItem = ({item}) => (
     <TouchableWithoutFeedback onPress={() => onRestaurantNavigate(item)}>

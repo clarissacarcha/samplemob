@@ -1,6 +1,8 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import CheckBox from '@react-native-community/checkbox';
-import {View, Text, StyleSheet, TextInput} from 'react-native';
+import {View, Text, StyleSheet, TextInput, TouchableOpacity} from 'react-native';
+
+import RadioButton from 'toktokfood/components/RadioButton';
 
 import {FONT, FONT_SIZE, COLOR} from 'res/variables';
 
@@ -10,33 +12,50 @@ import {scale, verticalScale, moderateScale} from 'toktokfood/helper/scale';
 const Variations = ({item, onVariationChange, onAddOnsChange}) => {
 
   const [selectedAddOns, setSelectedAddOns] = useState([]);
-  const [selectedVariations, setSelectedVariations] = useState([]);
+  const [selectedVariations, setSelectedVariations] = useState(null);
+  const [lastSelected, setLastSelected] = useState({id: '', value: 0.0, lastValue: 0.0});
+
+  useEffect(() => {
+    // onVariationChange({value: lastSelected.value, lastValue: lastSelected.lastValue});
+    // console.log({value: lastSelected.value, lastValue: lastSelected.lastValue});
+  }, [lastSelected]);
 
   const RenderItem = (props) => {
     const {id, sizes, add_ons} = props.variations;
     return (
       <>
         <View key={id} style={styles.variations}>
-          <Text style={styles.variationTitle}>Choose your size (pick 1)</Text>
+          <Text style={styles.variationTitle}>Choose your size (Pick 1)</Text>
           {sizes.map((size) => (
             <View style={styles.variationsWrapper}>
               <View style={styles.checkBoxWrapper}>
-                <CheckBox
+                {/* <CheckBox
                   lineWidth={2}
                   boxType="square"
                   animationDuration={0.2}
                   style={styles.checkBox}
-                  onCheckColor={COLOR.WHITE}
+                  onCheckColor={COLOR.ORANGE}
                   onTintColor={COLOR.ORANGE}
                   onFillColor={COLOR.ORANGE}
-                  value={selectedVariations.includes(size.id)}
+                  value={selectedVariations === size.id}
                   tintColors={{true: COLOR.ORANGE, false: COLOR.MEDIUM}}
                   onValueChange={(isChecked) => {
-                    const ids = selectedVariations;
-                    isChecked ? ids.push(size.id) : ids.splice(selectedVariations.indexOf(size.id), 1);
-                    setSelectedVariations(ids);
-                    onVariationChange(isChecked ? size.price : -size.price);
+                    if (isChecked) {
+                      if (lastSelected !== null) setLastSelected(size.price);
+                      setSelectedVariations(isChecked ? size.id : null);
+                      onVariationChange(isChecked ? size.price : lastSelected - size.price);
+                    }
                   }}
+                /> */}
+                <RadioButton
+                  onValueChange={() => {
+                    setLastSelected({
+                      id: size.id,
+                      value: size.price,
+                      lastValue: lastSelected.id !== '' ? lastSelected.value : size.price,
+                    });
+                  }}
+                  selected={lastSelected.id === size.id}
                 />
                 <Text style={styles.checkBoxText}>{size.name}</Text>
               </View>
@@ -45,7 +64,7 @@ const Variations = ({item, onVariationChange, onAddOnsChange}) => {
           ))}
         </View>
         <View key={id} style={styles.variations}>
-          <Text style={styles.variationTitle}>Add ons (pick 1)</Text>
+          <Text style={styles.variationTitle}>Add ons</Text>
           {add_ons.map((ons) => (
             <View style={styles.variationsWrapper}>
               <View style={styles.checkBoxWrapper}>
@@ -53,7 +72,7 @@ const Variations = ({item, onVariationChange, onAddOnsChange}) => {
                   style={styles.checkBox}
                   lineWidth={2}
                   boxType="square"
-                  onCheckColor={COLOR.WHITE}
+                  onCheckColor={COLOR.ORANGE}
                   onTintColor={COLOR.ORANGE}
                   onFillColor={COLOR.ORANGE}
                   animationDuration={0.2}
