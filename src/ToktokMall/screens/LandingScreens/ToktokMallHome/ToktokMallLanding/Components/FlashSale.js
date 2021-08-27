@@ -55,8 +55,12 @@ const Item = ({data}) => {
         <View style={{height: 2}}></View>
         <Text style={{fontSize: 14, fontWeight: '600', color: "#F6841F", alignSelf: 'flex-start', paddingHorizontal: 5}}><Price amount={data?.price} /></Text>
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-          <Text style={{flex: 2, fontSize: 10, textDecorationLine: 'line-through', alignSelf: 'flex-start', paddingHorizontal: 5, color: "#9E9E9E"}}><Price amount={data?.compareAtPrice} /></Text>
-          <Text style={{flex: 1, fontSize: 10, alignSelf: 'flex-start', paddingHorizontal: 5, color: "#FDBA1C"}}>{data?.discountRate}</Text>
+          <View style={{flex: 2}}>
+            <Text style={{fontSize: 10, textDecorationLine: 'line-through', alignSelf: 'flex-start', paddingHorizontal: 5, color: "#9E9E9E"}}><Price amount={data?.compareAtPrice} /></Text>          
+          </View>
+          <View style={{flex: 1}}>
+            <Text style={{fontSize: 9.5, alignSelf: 'center', color: "#FDBA1C"}}>{data?.discountRate}</Text>
+          </View>
         </View>
       </TouchableOpacity>
     </>
