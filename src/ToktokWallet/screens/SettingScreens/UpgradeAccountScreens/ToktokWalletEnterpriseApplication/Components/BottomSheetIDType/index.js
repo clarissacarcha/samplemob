@@ -25,12 +25,12 @@ export const BottomSheetIDType = forwardRef(({onChange,idIndex,validID1,validID2
       onCompleted: (response) => {
         console.log("IDS", response)
         let IDList = response.getIDCards
-        if(validID1.IDType != ""){
-          IDList = IDList.filter((validID)=>validID1.IDType != validID.id)
-        }
-        if(validID2.IDType != ""){
-          IDList = IDList.filter((validID)=>validID2.IDType != validID.id)
-        }
+        // if(validID1.IDType != ""){
+        //   IDList = IDList.filter((validID)=>validID1.IDType != validID.id)
+        // }
+        // if(validID2.IDType != ""){
+        //   IDList = IDList.filter((validID)=>validID2.IDType != validID.id)
+        // }
         setFilteredValidID(IDList)
       },
       onError: (err) => {
@@ -94,9 +94,13 @@ export const BottomSheetIDType = forwardRef(({onChange,idIndex,validID1,validID2
           data={filteredValidID}
           ItemSeparatorComponent={() => <View style={{borderBottomWidth: 1, borderColor: COLOR.LIGHT}} />}
           renderItem={({item, index}) => (
-            <TouchableOpacity onPress={()=>selectValidID(index)} style={[styles.validID]}>
-                    <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>{item.name}</Text>
-            </TouchableOpacity>     
+           <TouchableOpacity 
+              disabled={item.id == validID1.IDType || item.id == validID2.IDType} 
+              onPress={()=>selectValidID(index)} 
+              style={[styles.validID,{backgroundColor: item.id == validID1.IDType || item.id == validID2.IDType ? COLOR.LIGHT : "transparent"}]}
+            >
+                     <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>{item.name}</Text>
+             </TouchableOpacity>  
           )}
         />
       </View>
