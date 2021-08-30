@@ -336,7 +336,9 @@ const Component =  ({
               onPress={() => {
                 if(!willDelete == true){
                   //Copy items selected by user from to checkout array
-                  setItemsToDelArr(itemsToCheckoutArr)
+                  // setItemsToDelArr(itemsToCheckoutArr)
+                  setItemsToCheckoutArr([])
+                  setItemsToDelArr([])
                 }
                 setWillDelete(!willDelete)
               }}

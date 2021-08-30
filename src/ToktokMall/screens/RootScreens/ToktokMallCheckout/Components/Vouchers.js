@@ -118,6 +118,7 @@ export const Vouchers = ({ navigation, vouchers, setVouchers, setVoucher}) => {
               </View>              
             </View>
             <TouchableOpacity 
+              disabled={vcode == ""}
               onPress={() => {
                 if(vcode == "") return 
                 applyVoucher({variables: {
@@ -134,7 +135,7 @@ export const Vouchers = ({ navigation, vouchers, setVouchers, setVoucher}) => {
                 alignItems: 'flex-end'
               }}
             >
-              <Text style={{color: "#F6841F", textAlign: 'right'}}>Apply</Text>
+              <Text style={{color: vcode == "" ? "#9E9E9E" : "#F6841F", textAlign: 'right'}}>Apply</Text>
             </TouchableOpacity>
           </View>          
         </View>

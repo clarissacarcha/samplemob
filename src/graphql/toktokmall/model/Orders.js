@@ -115,6 +115,7 @@ export const GET_COMPLETED_ORDERS = gql`
 					id
 					shopname
 				}
+				orderPlaced
 				deliveryAmount
 			}
 			orderData {

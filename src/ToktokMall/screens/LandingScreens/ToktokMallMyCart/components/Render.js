@@ -20,12 +20,15 @@ export const RenderDetails = ({
 }) => {
 
 	const [storeitemselected, setstoreitemselected] = useState(allSelected ? true : false)
+	const [toggleRoot, setToggleRoot] = useState("")
+	const [superSelected, setSuperSelected] = useState(allSelected ? true : false)
 	const [uncheckedItems, setUncheckedItems] = useState([])
 	const [checkedItems, setCheckedItems] = useState([])	
 	const [itemsCheckIndex, setItemsCheckIndex] = useState(allSelected ? item.cart.length : 0)
 
 	useEffect(() => {
 		setstoreitemselected(allSelected)
+		setSuperSelected(allSelected)
 	}, [allSelected])
 
 	const DeleteButton = ({onPress}) => {
@@ -42,14 +45,14 @@ export const RenderDetails = ({
 		);
 	};
 
-	const HandleItemSelect = (raw, i) => {
+	const HandleItemSelect = (raw, total) => {
 
 		let currentCheckedItems = JSON.parse(JSON.stringify(checkedItems))
 		if(raw.checked){
 								
-			let exist = currentCheckedItems.findIndex( x => x.index == i)
+			let exist = currentCheckedItems.findIndex( x => x.id == raw.item.item_id)
 			if(exist == -1){
-				currentCheckedItems.push({index: i})
+				currentCheckedItems.push({id: raw.item.item_id})
 				setCheckedItems(currentCheckedItems)
 
 				if(currentCheckedItems.length == item.cart.length){
@@ -57,18 +60,24 @@ export const RenderDetails = ({
 				}else{
 					setstoreitemselected(false)
 				}
+			}else{
+				setstoreitemselected(false)
 			}
 								
 		}else{
 								
-			let index = currentCheckedItems.findIndex( x => x.index == i)
-			currentCheckedItems.splice(index, 1)
+			let index = currentCheckedItems.findIndex( x => x.id == raw.item.item_id)
+			currentCheckedItems = currentCheckedItems.splice(index, 1)
 			setCheckedItems(currentCheckedItems)
+
 			if(currentCheckedItems.length <= 1){
 				setstoreitemselected(false)
 			}
 
+			console.log(item.cart.length, currentCheckedItems.length)
+
 		}
+
 		// setstoreitemselected(!storeitemselected)
 	}
 
@@ -81,6 +90,19 @@ export const RenderDetails = ({
 				onSelect={(raw) => {
 					onStoreSelect(raw)
 					setstoreitemselected(!storeitemselected)
+					setToggleRoot("shop")
+
+					if(!storeitemselected == true){
+						//to true
+						let items = JSON.parse(JSON.stringify(item.cart))
+						let allitems = items.map((data) => {
+							return {id: data.item_id}
+						})
+						setCheckedItems(allitems)
+					}else{
+						setCheckedItems([])
+					}
+
 				}}
 				onPress={onPress}
 				uncheckedItems = {uncheckedItems}
@@ -120,20 +142,22 @@ export const RenderDetails = ({
 					<Item
 						key={i}
 						index = {i}
-						storeIndex = {storeIndex}
-						state={storeitemselected}
+						storeIndex={storeIndex}
+						state={toggleRoot == "shop" && storeitemselected || superSelected}
 						data={data}
 						onHold={(raw) => {
+							setToggleRoot("item")
 							onItemLongPress(raw)
-							HandleItemSelect(raw, i)
+							HandleItemSelect(raw, item.cart.length)
 						}}
 						onSelect={(raw) => {
+							setToggleRoot("item")
 							onItemSelect(raw)
-							HandleItemSelect(raw, i)						
+							HandleItemSelect(raw, item.cart.length)						
 						}}
-						item = {item}
-						uncheckedItems = {uncheckedItems}
-						setstoreitemselected = {setstoreitemselected}
+						item={item}
+						uncheckedItems={uncheckedItems}
+						setstoreitemselected={setstoreitemselected}
 						onChangeQuantity={onChangeQuantity}
 					/>
 				</Swipeable>

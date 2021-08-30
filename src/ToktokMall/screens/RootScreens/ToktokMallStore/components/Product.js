@@ -7,6 +7,7 @@ import {placeholder} from '../../../../assets';
 import { useNavigation } from '@react-navigation/core';
 
 import { SwipeReloader } from '../../../../Components';
+import { Price } from '../../../../helpers';
 
 const RenderStars = ({value}) => {
   let orange = "#FFC833"

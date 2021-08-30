@@ -74,7 +74,8 @@ const countNotifications = (notifs) => {
 }
 
 const RenderBadge = ({data}) => {
-  if(data == 0 || data == ""){
+
+  if(data == 0 || data == "" || data == null){
     return (
       <Badge
         status="warning"
@@ -159,6 +160,9 @@ const ToktokMallLanding = connect(
   mapStateToProps,
   null,
 )(({myCart, notifications}) => {
+
+  console.log("My Cart", myCart)
+  console.log("notifications", notifications)
 
   return (
   <ToktokMallLandingBottomTab.Navigator
