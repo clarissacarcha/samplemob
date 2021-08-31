@@ -112,7 +112,7 @@ export const ToktokWalletUpdatePin =  ({navigation})=> {
                 setVisible={setLeaveModalVisible}
                 onConfirm={()=>navigation.pop(2)}
             />
-            <SuccessModal modalVisible={successModalVisible} />
+            <SuccessModal modalVisible={successModalVisible} setModalVisible={setSuccessModalVisible}/>
             <Separator />
             <KeyboardAvoidingView style={{flex: 1,}}
              keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80}  

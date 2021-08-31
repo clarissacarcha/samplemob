@@ -1,7 +1,7 @@
 import React , {useEffect,useState,useRef} from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,KeyboardAvoidingView,Platform,TextInput, TouchableHighlight} from 'react-native'
 import {useSelector} from 'react-redux'
-import { HeaderBackClose , HeaderTitle} from 'src/components'
+import { HeaderBackClose , HeaderTitle , AlertOverlay} from 'src/components'
 import {useQuery,useLazyQuery} from '@apollo/react-hooks'
 import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
 import { GET_FORGOT_AND_RECOVER_OTP_CODE , VERIFY_FORGOT_AND_RECOVER_OTP_CODE} from 'toktokwallet/graphql'
@@ -69,7 +69,7 @@ export const ToktokWalletRecoverPin = ({navigation , route})=> {
         }
     })
 
-    const [verifyForgotAndRecoverOTP] = useLazyQuery(VERIFY_FORGOT_AND_RECOVER_OTP_CODE, {
+    const [verifyForgotAndRecoverOTP , {loading}] = useLazyQuery(VERIFY_FORGOT_AND_RECOVER_OTP_CODE, {
         fetchPolicy: "network-only",
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({verifyForgotAndRecoverOTP})=>{
@@ -128,6 +128,7 @@ export const ToktokWalletRecoverPin = ({navigation , route})=> {
     return (
         <>
         <Separator />
+        <AlertOverlay visible={loading}/>
         <KeyboardAvoidingView 
             style={styles.container}
             // keyboardVerticalOffset={Platform.OS == "ios" ? 100 : 90} 
