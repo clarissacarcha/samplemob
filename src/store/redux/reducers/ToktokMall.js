@@ -5,6 +5,7 @@ const INITIAL_STATE = {
   myCart: [],
   notifications: [],
   myFollowing: [],
+  searchHistory: []
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -124,7 +125,7 @@ export default (state = INITIAL_STATE, action) => {
         // console.log(action.payload)
         let myCartArr = state.myCart;
         myCartArr.push(action.payload)
-        let stringyfiedCart = JSON.stringify(myCartArr);
+        let stringyfiedCart = JSON.stringify(myCartArr.reverse());
         AsyncStorage.setItem('MyCart', stringyfiedCart);
         return {...state, myCart: myCartArr};
       } else if (action.action == 'removeItems') {
@@ -185,6 +186,29 @@ export default (state = INITIAL_STATE, action) => {
         let stringyfiedNotifs = JSON.stringify(notifArr);
         AsyncStorage.setItem('Notifications', stringyfiedNotifs);
         return {...state, notifications: notifArr};
+      }
+    case 'CREATE_SEARCH_HISTORY_SESSION': 
+      if(action.action == 'set') {
+        let stringyfiedPayload = JSON.stringify(action.payload);
+        AsyncStorage.setItem('SearchHistory', stringyfiedPayload);
+        return {...state, searchHistory: action.payload};
+      } else if (action.action == 'push') {
+        let hist = state.searchHistory; 
+        if(hist.indexOf(action.payload) == -1){
+          hist.push(action.payload);        
+        }
+        let stringyfiedHist = JSON.stringify(hist);
+        AsyncStorage.setItem('SearchHistory', stringyfiedHist);
+        return {...state, searchHistory: hist};
+      } else if(action.action == 'pop') {
+        let hist = state.searchHistory;
+        hist.splice(action.payload);
+        let stringyfiedHist = JSON.stringify(hist);
+        AsyncStorage.setItem('SearchHistory', stringyfiedHist);
+        return {...state, searchHistory: hist};
+      } else if(action.action == 'clear') {
+        AsyncStorage.setItem('SearchHistory', JSON.stringify([]));
+        return {...state, searchHistory: []};
       }
     default:
       return state;

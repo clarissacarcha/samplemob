@@ -149,6 +149,7 @@ const Component =  ({
   const [itemsToDelArr, setItemsToDelArr] = useState([])
   const [itemsToCheckoutArr, setItemsToCheckoutArr] = useState([])
   const [checkoutData, setCheckoutData] = useState([])
+  const [myCartData, setMyCartData] = useState([])
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack hidden={true} />,
@@ -174,6 +175,10 @@ const Component =  ({
     //Call to reset cart for debugging
     // createMyCartSession('set', [])
   }, []);
+
+  useEffect(() => {
+    setMyCartData(myCart)
+  }, [myCart])
 
   const deleteMultipleItems = () => {
     console.log("Items to delete", itemsToDelArr)
@@ -350,7 +355,7 @@ const Component =  ({
           
           <FlatList
             // data={testdata}
-            data={MergeStoreProducts(myCart)}
+            data={MergeStoreProducts(myCartData)}
             renderItem={({item, index}) => {
               return (
                 <>

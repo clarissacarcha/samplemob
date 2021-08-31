@@ -7,22 +7,22 @@ import { useLazyQuery } from '@apollo/react-hooks';
 import Toast from 'react-native-simple-toast';
 
 import {LandingSubHeader} from '../../../Components';
-import { ASAddSearchHistory, ASClearSearchHistory, ASGetSearchHistory } from '../../../helpers/storage';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql';
 import {SEARCH_PRODUCT} from '../../../../graphql/toktokmall/model';
+
+import { connect } from 'react-redux';
 
 import {Product} from './components'
 
 const testdata = ["Gaming Chair", "Mousepad", "Face mask", "Pillow", "Ballpen"]
 
-export const ToktokMallSearch = ({navigation, route}) => {
+const Component = ({navigation, route, searchHistory, createSearchHistorySession}) => {
 
   const [searchPath, setSearchPath] = useState("all")
   const [emptySearch, setEmptySearch] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [searchHistory, setSearchHistory] = useState([])
   const [searchValue, setSearchValue] = useState('')
-  const [searchHistoryCopy, setSearchHistoryCopy] = useState([])
+  const [searchHist, setSearchHist] = useState([])
   const [searchedProducts, setSearchedProducts] = useState([])
   const [offset, setOffset] = useState(0)
 
@@ -30,34 +30,30 @@ export const ToktokMallSearch = ({navigation, route}) => {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: async (response) => {      
-			let temp = searchedProducts
+
+      let temp = searchedProducts
       if(!response){
+
         setSearchedProducts(temp)
         setEmptySearch(true)
+
       }else if(response && response.searchProduct.length > 0){
+
         temp = temp.concat(response.searchProduct)
         setSearchedProducts(temp)
         setEmptySearch(false)
-        //Save to AsyncStorage 
-        //Check if exist
-        let ix = searchHistory.indexOf(searchValue)
-        if(ix == -1){
-          if(route.params.origin == null || route.params.origin == undefined){
-            await AddSearchHistory(searchValue)
-          } 
-        }
         
       }else if(response && response.searchProduct.length == 0){
+
         setSearchedProducts(temp)
         setEmptySearch(true)
 
-        let ix = searchHistory.indexOf(searchValue)
-        console.log("Exist", ix)
-        if(ix == -1) await AddSearchHistory(searchValue)
-
       }
+      createSearchHistorySession("push", searchValue)
+      setHistoryOrder()
       setIsLoading(false)
       console.log("Search Result", response)
+      
     },
     onError: (err) => {
       console.log(err)
@@ -70,42 +66,21 @@ export const ToktokMallSearch = ({navigation, route}) => {
   const handleOnSearch = (val) => {    
 		setSearchValue(val)
     if(val == ""){
-      setSearchHistory(searchHistoryCopy.reverse())
       setSearchedProducts([])
     }else if(val != ""){
-      setSearchHistory([])
-    }    
+    }
     setEmptySearch(false)
 	}
 
-  const AddSearchHistory = async (value) => {
-    await ASAddSearchHistory("bryan", value, async (result, data) => {
-      GetSearchHistory("bryan")
-    })
-  }
-
-  const GetSearchHistory = async (userId) => {
-    await ASGetSearchHistory(userId, (result) => {
-      setSearchHistory(result.reverse())
-      setSearchHistoryCopy(result.reverse())
-    })
-  }
-
-  const ClearSearchHistory = async () => {
-    await ASClearSearchHistory("bryan", (res) => {
-      setSearchHistoryCopy([])
-      setSearchHistory([])
-      Toast.show("Cleared search history")
-    })
-  }
-
-  const init = async () => {
-    await GetSearchHistory("bryan")
+  const setHistoryOrder = () => {
+    let temphist = JSON.parse(JSON.stringify(searchHistory))
+    setSearchHist(temphist.reverse())
   }
 
   useEffect(() => {
-    init()
-  }, [])
+    console.log("Search History", searchHistory)
+    setHistoryOrder()
+  }, [searchHistory])
 
   useEffect(() => {
 		if(route.params?.searchValue){
@@ -145,7 +120,6 @@ export const ToktokMallSearch = ({navigation, route}) => {
                 }
               }
             })
-            // await AddSearchHistory(searchValue)
           }
 				}}
 			/>
@@ -159,16 +133,18 @@ export const ToktokMallSearch = ({navigation, route}) => {
             <Text style={{fontSize: 14}}>Search History</Text>
           </View>
           <TouchableOpacity onPress={async () => {
-            await ClearSearchHistory()
+            // await ClearSearchHistory()
+            await createSearchHistorySession("clear")
+            Toast.show("Cleared search history")
           }} style={{flex: 1}}>
             <Text style={{fontSize: 12, textAlign: 'right', color: '#F6841F'}}>Clear History</Text>
           </TouchableOpacity>
         </View> 
         <FlatList 
-          data={searchHistory}
+          data={searchHist}
           ItemSeparatorComponent={() => <View style={{ height: 1, backgroundColor: '#F7F7FA'}} />}
-          renderItem={({item}) => 
-            <TouchableOpacity onPress={() => {
+          renderItem={({item, index}) => 
+            <TouchableOpacity key={index} onPress={() => {
               setSearchValue(item)
             }} style={{paddingHorizontal: 15, paddingVertical: 15}}>
               <Text style={{color: "#9E9E9E", fontSize: 14}}>{item}</Text>
@@ -217,3 +193,13 @@ export const ToktokMallSearch = ({navigation, route}) => {
     </View>
   );
 };
+
+const mapStateToProps = (state) => ({
+  searchHistory: state.toktokMall.searchHistory
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  createSearchHistorySession: (action, payload) => dispatch({type: 'CREATE_SEARCH_HISTORY_SESSION', action,  payload}),
+});
+
+export const ToktokMallSearch = connect(mapStateToProps, mapDispatchToProps)(Component);
