@@ -34,7 +34,7 @@ const ToktokFoodCategories = () => {
         <HeaderSearchBox />
       </HeaderImageBackground>
       <RenderFilter />
-      <CategoryList horizontal={false} />
+      <CategoryList filterSearch={filterSearch} horizontal={false} />
 
       <ModalFilterSearch
         data={searchData}
@@ -42,6 +42,7 @@ const ToktokFoodCategories = () => {
         handleSelected={setFilterSearch}
         selected={filterSearch}
         visible={showFilter}
+        setShowFilter={setShowFilter}
       />
     </View>
   );
