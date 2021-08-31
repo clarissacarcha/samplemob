@@ -77,11 +77,6 @@ export const CheckWalletAccountRestriction = connect(null,mapDispatchtoProps)(({
     if(data.getMyAccount.status == 0){
       navigation.replace("ToktokWalletRestricted" , {component: "deletedAccount"})
     }
-    // if pincode is not yet set
-    if(!data.getMyAccount.pinCode){
-        // navigation.replace("ToktokWalletRestricted" , {component: "noPin"})
-        navigation.replace("ToktokWalletRestricted" , {component: "approvedRegistration"})
-    }
 
     if(!data.getMyAccount.mpinCode){
         navigation.replace("ToktokWalletRestricted" , {component: "approvedRegistration"})

@@ -27,13 +27,13 @@ const RecoveryMethod = ({title,message,onPress})=> {
     )
 }
 
-export const ToktokWalletRecoveryMethods = ({navigation})=> {
+export const ToktokWalletRecoveryMethods = ({navigation , route})=> {
 
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
         headerTitle: ()=> <HeaderTitle label={['Recovery','']}/>,
     })
-
+    const type = route.params.type
     const session = useSelector(state=>state.session)
     const emails = session.user.person.emailAddress.split("@")
     const maskedchar = (length)=> {
@@ -58,7 +58,7 @@ export const ToktokWalletRecoveryMethods = ({navigation})=> {
         fetchPolicy: "network-only",
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({getForgotAndRecoverOTPCode})=>{
-            return navigation.navigate("ToktokWalletRecoverPin")
+            return navigation.navigate("ToktokWalletRecoverPin" , {type})
         },
         onError: (error)=>{
             onErrorAlert({alert,error})

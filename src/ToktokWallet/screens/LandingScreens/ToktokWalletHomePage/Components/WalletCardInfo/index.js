@@ -4,7 +4,7 @@ import CONSTANTS from 'common/res/constants';
 import { useNavigation } from '@react-navigation/native'
 import {Separator , HeaderImageBackground, HeaderTitle} from 'toktokwallet/components';
 import { numberFormat , getDeviceWidth as width  } from 'toktokwallet/helper';
-import {useSelector} from 'react-redux'
+import {useAccount} from 'toktokwallet/hooks'
 import {APP_FLAVOR , ACCOUNT_TYPE} from 'src/res/constants'
 
 
@@ -18,7 +18,7 @@ const titleAccountTypeColor = ['','#929191','#00C851','#2699FB']
 const WalletCardInfo = ({loading})=> {
     const navigation = useNavigation()
     const rotateY = new Animated.Value(0)
-    const tokwaAccount = useSelector(state=>state.toktokWallet)
+    const {checkIfTpinIsSet,tokwaAccount} = useAccount();
 
     const animation = Animated.timing(rotateY,{
         toValue: 200,
@@ -35,7 +35,8 @@ const WalletCardInfo = ({loading})=> {
         if(APP_FLAVOR == "D" && ACCOUNT_TYPE == 2){
             return Alert.alert("","Use the toktok customer app for toktokwallet full features.")
         }
-
+        const tpinIsSet = checkIfTpinIsSet();
+        if(!tpinIsSet) return
         return navigation.navigate("ToktokWalletPaymentOptions")
         
     }

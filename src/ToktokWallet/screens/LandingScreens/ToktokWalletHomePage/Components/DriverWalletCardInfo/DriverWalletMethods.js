@@ -4,6 +4,7 @@ import {useNavigation} from '@react-navigation/native'
 import {VectorIcon, ICON_SET} from 'src/revamp';
 import CONSTANTS from 'common/res/constants'
 import { useThrottle } from 'src/hooks';
+import { useAccount } from 'toktokwallet/hooks';
 
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE} = CONSTANTS
 const {height,width} = Dimensions.get("window")
@@ -11,9 +12,12 @@ const {height,width} = Dimensions.get("window")
 
 const DriverWalletMethods = ()=> {
 
-    const navigation = useNavigation()
+    const navigation = useNavigation();
+    const {checkIfTpinIsSet,tokwaAccount} = useAccount();
 
     const CashOut = ()=> {
+        const tpinIsSet = checkIfTpinIsSet();
+        if(!tpinIsSet) return
         return navigation.navigate("ToktokWalletCashOutHomePage")
     }
 

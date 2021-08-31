@@ -36,7 +36,7 @@ const NumberBoxes = ({pinCode, onNumPress, showPin}) => {
 };
 
 
-export const ToktokWalletRecoverPin = ({navigation})=> {
+export const ToktokWalletRecoverPin = ({navigation , route})=> {
 
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
@@ -44,6 +44,7 @@ export const ToktokWalletRecoverPin = ({navigation})=> {
     })
 
     const session = useSelector(state=>state.session)
+    const type = route.params.type
     const tokwaAccount = useSelector(state=>state.toktokWallet)
     const [pinCode,setPinCode] = useState("")
     const inputRef = useRef();
@@ -72,8 +73,11 @@ export const ToktokWalletRecoverPin = ({navigation})=> {
         fetchPolicy: "network-only",
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({verifyForgotAndRecoverOTP})=>{
-            console.log(verifyForgotAndRecoverOTP)
-            return navigation.replace("ToktokWalletUpdatePin")
+            if(type == "TPIN"){
+                return navigation.replace("ToktokWalletUpdatePin")
+            }
+            // type is MPIN
+            return navigation.replace("ToktokWalletMPINUpdate")
         },
         onError: (error)=>{
             const {graphQLErrors, networkError} = error

@@ -76,7 +76,7 @@ export const Verify = ({pageIndex,setPageIndex})=> {
     }
 
     const forgotPIN = ()=> {
-
+        navigation.navigate("ToktokWalletRecoveryMethods" , {type: "MPIN"})
     }
 
 

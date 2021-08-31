@@ -21,6 +21,10 @@ export const useAccount = ()=> {
             type: "SET_REFRESH_TOKTOKWALLET",
             payload: walletData
         })
+        await dispatch({
+            type: "SET_LOADING",
+            payload: false
+        })
         return
     }
 
@@ -50,9 +54,10 @@ export const useAccount = ()=> {
     const checkIfTpinIsSet = ()=> {
         const status = tokwaAccount.pinCode
         if(!status){
-            return navigation.navigate("ToktokWalletTPINSetup")
+            navigation.navigate("ToktokWalletRestricted" , {component: "noPin"})
+            return false
         }
-        return
+        return true
     }
 
 

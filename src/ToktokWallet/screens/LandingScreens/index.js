@@ -1,4 +1,4 @@
-export * from "./ToktokWalletHomePage/indexOld";
+export * from "./ToktokWalletHomePage";
 export * from "./ToktokWalletLinkAccount";
 export * from "./ToktokWalletLoginPage";
 export * from "./ToktokWalletNotifications";

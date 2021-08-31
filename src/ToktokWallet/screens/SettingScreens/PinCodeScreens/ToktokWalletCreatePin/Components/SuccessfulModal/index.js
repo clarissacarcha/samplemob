@@ -3,6 +3,7 @@ import {View,Text,StyleSheet,TouchableOpacity,Modal,Image,Dimensions} from 'reac
 import {useNavigation} from '@react-navigation/native'
 import { BlackButton, ICON_SET, VectorIcon, YellowButton } from 'src/revamp'
 import {BuildingBottom} from 'toktokwallet/components'
+import { useAccount } from 'toktokwallet/hooks'
 import CONSTANTS from 'common/res/constants'
 
 const { FONT_FAMILY: FONT , FONT_SIZE , COLOR } = CONSTANTS
@@ -64,9 +65,11 @@ const UpdatePIN = ()=> {
 
 export const SuccessfulModal = ({modalVisible,tokwaAccount})=> {
     const navigation = useNavigation()
+    const { getMyAccount } = useAccount();
 
     const closeModal = ()=> {
-        navigation.pop()
+        getMyAccount();
+        navigation.pop(2)
         navigation.push("ToktokWalletHomePage")
         // navigation.pop()
         // // navigation.navigate("ToktokWalletHomePage")

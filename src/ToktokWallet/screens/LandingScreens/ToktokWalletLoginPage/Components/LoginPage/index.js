@@ -84,7 +84,7 @@ export const LoginPage = ()=> {
     }
 
     const forgotPIN = ()=> {
-
+        navigation.navigate("ToktokWalletRecoveryMethods" , {type: "MPIN"})
     }
 
     return (

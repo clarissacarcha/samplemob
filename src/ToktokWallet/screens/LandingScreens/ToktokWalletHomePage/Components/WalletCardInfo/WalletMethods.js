@@ -4,6 +4,7 @@ import {useNavigation} from '@react-navigation/native'
 import {APP_FLAVOR , ACCOUNT_TYPE} from 'src/res/constants'
 import {useThrottle} from 'src/hooks'
 import { useDispatch } from 'react-redux'
+import { useAccount } from 'toktokwallet/hooks'
 import CONSTANTS from 'common/res/constants'
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS
 
@@ -25,11 +26,16 @@ const WalletMethods = ()=> {
 
     const navigation = useNavigation()
     const dispatch = useDispatch()
+    const {checkIfTpinIsSet,tokwaAccount} = useAccount();
 
     const onPress = (route)=> {
+        
         if(APP_FLAVOR == "D" && ACCOUNT_TYPE == 2){
             return Alert.alert("","Use the toktok customer app for toktokwallet full features.")
         }
+
+        const tpinIsSet = checkIfTpinIsSet();
+        if(!tpinIsSet) return
     
         if(route === "ToktokWalletCashOutHomePage"){
             dispatch({
