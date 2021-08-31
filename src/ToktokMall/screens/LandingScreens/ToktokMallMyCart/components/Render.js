@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {View, Text, StyleSheet, Platform, Dimensions, StatusBar, Image, TouchableOpacity, FlatList} from 'react-native';
 import CheckBox from 'react-native-check-box';
 import SwipeableView from 'react-native-swipeable-view';
@@ -133,11 +133,16 @@ export const RenderDetails = ({
 					}}
 				/> */}
 
-			{item && item.cart.length > 0 && item.cart.map((data, i) => (
+			{item && item.cart.length > 0 && item.cart.map((data, i) => {
+
+				return (
 				<Swipeable 
 					rightActionActivationDistance={30}
 					rightButtonWidth={75}
-					rightButtons={[<DeleteButton />]}
+					rightButtons={[<DeleteButton onPress={() => {
+						onItemDelete(data.item_id)
+						
+					}} />]}
 				>
 					<Item
 						key={i}
@@ -161,7 +166,8 @@ export const RenderDetails = ({
 						onChangeQuantity={onChangeQuantity}
 					/>
 				</Swipeable>
-			))}
+				)}
+			)}
 			
 			{/* <View style={{height: 8, backgroundColor: '#F7F7FA'}} /> */}
 		</>

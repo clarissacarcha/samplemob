@@ -42,7 +42,15 @@ export const Tab = (props) => {
 	return (
 		<>
 			<View style={{flexDirection: 'row', paddingBottom: 15, paddingHorizontal: 15}}>
-        <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center', paddingHorizontal: 12}}>
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 12}}>
+          <ButtonTab 
+            label="All Products"
+            index={0}
+            active={activeTab}
+            onPress={() => onTabPress(0)}
+          />
+        </View>
+        {/* <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center', paddingHorizontal: 12}}>
           <ButtonTab 
             label="All Products"
             index={0}
@@ -57,7 +65,7 @@ export const Tab = (props) => {
             active={activeTab}
             onPress={() => onTabPress(1)}
           />
-        </View>         
+        </View>          */}
       </View>
       <View style={{paddingHorizontal: 15}}>
         <View style={{height: 2, backgroundColor: "#F7F7FA"}} />
