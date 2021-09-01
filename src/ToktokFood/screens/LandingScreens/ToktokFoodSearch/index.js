@@ -43,8 +43,8 @@ const ToktokFoodSearch = () => {
   const [isShowError, setShowError] = useState(false);
   // const [foodQuery, setFoodQuery] = useState(true);
 
-  const onRestaurantNavigate = (item) => {
-    navigation.navigate('ToktokFoodRestaurantOverview', {item});
+  const onRestaurantNavigate = (shopId) => {
+    navigation.navigate('ToktokFoodRestaurantOverview', {shopId});
   };
 
   const searchFood = async (s = '', radius = 100) => {
@@ -67,6 +67,7 @@ const ToktokFoodSearch = () => {
                 shopId
                 ratings
                 shopName
+                shopImage
                 branchNumber
                 shopAddress
                 estimatedDistance
@@ -76,25 +77,22 @@ const ToktokFoodSearch = () => {
         },
       });
       const {getSearchFood} = API_RESULT.data.data;
-      console.log(getSearchFood);
       setShopList(getSearchFood);
     } catch (error) {
       console.log(error);
     }
   };
 
-  useEffect(() => {
-  }, []);
+  useEffect(() => {}, []);
 
   const renderItem = ({item}) => (
-    <TouchableWithoutFeedback onPress={() => onRestaurantNavigate(item)}>
+    <TouchableWithoutFeedback onPress={() => onRestaurantNavigate(item.shopId)}>
       <View style={styles.itemContainer}>
         <View style={styles.imgWrapper}>
           <Image
             resizeMode="contain"
             source={{
-              uri:
-                'https://tokfood-stg.s3-ap-northeast-1.amazonaws.com/assets/img/shops/0594b80cbc894f3db60ff2a24f4806ec.jpg',
+              uri: item.shopImage,
             }}
             style={styles.img}
           />
