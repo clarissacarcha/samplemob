@@ -39,7 +39,7 @@
     "decode-google-map-polyline": "^1.0.1",
     "graphql": "^15.0.0",
     "graphql-tag": "^2.10.3",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "moment": "^2.26.0",
     "moment-timezone": "^0.5.31",
     "patch-package": "^6.2.2",

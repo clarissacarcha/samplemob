@@ -1,4 +1,4 @@
-import { filter } from 'lodash';
+import { debounce, filter } from 'lodash';
 import React, {useState, useEffect, useRef} from 'react';
 import {View, Text, FlatList, TouchableOpacity} from 'react-native';
 import { SearchBar } from 'react-native-elements'
@@ -45,7 +45,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
         
       }else if(response && response.searchProduct.length == 0){
 
-        setSearchedProducts(temp)
+        setSearchedProducts([])
         setEmptySearch(true)
 
       }
@@ -65,6 +65,17 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
 
   const handleOnSearch = (val) => {    
 		setSearchValue(val)
+    setOffset(0)
+    searchProduct({
+      variables: {
+        input: {
+          search: val,
+          origin: route.params?.origin ? route.params.origin : "all",
+          offset: 0,
+          limit: 10
+        }
+      }
+    })
     if(val == ""){
       setSearchedProducts([])
     }else if(val != ""){
@@ -104,24 +115,14 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
     <View style={{flex: 1, backgroundColor: '#fff'}}>
 
       <LandingSubHeader 
-				onSearch={(val) => handleOnSearch(val)}
+				onSearch={debounce((val) => handleOnSearch(val), 500)}
 				initialValue={searchValue}
-				onSubmit={async () => {
-          console.log("Triggered!!!")
-					if(searchValue != ""){
-            setOffset(0)
-            searchProduct({
-              variables: {
-                input: {
-                  search: searchValue,
-                  origin: route.params?.origin ? route.params.origin : "all",
-                  offset: 0,
-                  limit: 10
-                }
-              }
-            })
-          }
-				}}
+				// onSubmit={async () => {
+        //   console.log("Triggered!!!")
+				// 	if(searchValue != ""){
+            
+        //   }
+				// }}
 			/>
 
       <View style={{flex: 1}}>
