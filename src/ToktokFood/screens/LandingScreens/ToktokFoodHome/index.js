@@ -20,7 +20,7 @@ const CUSTOM_HEADER = {
 };
 
 const ToktokFoodHome = () => {
-  useShops(); // shops api
+  // useShops(); // shops api
   useUserLocation(); // user location hook
 
   const [viewHeight, setViewHeight] = useState(100);

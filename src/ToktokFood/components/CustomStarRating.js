@@ -6,14 +6,14 @@ import {star, star_no_fill, star_gray, star_half} from 'toktokfood/assets/images
 import {moderateScale, getStatusbarHeight} from 'toktokfood/helper/scale';
 import {COLORS, FONTS, FONT_SIZE, NUMBERS, BUTTON_HEIGHT} from 'res/constants';
 
-const RenderStar = ({ item, rating, readOnly, onPressStar, isGrayStar }) => {
+const RenderStar = ({ item, rating, readOnly, onPressStar, isGrayStar, starImgStyle }) => {
     let rate = parseInt(rating[0]) + 1 == item && rating.includes(".")
  
     if(readOnly){
         return (
             <Image
                 source={ item <= rating ? star : rate ? star_half : star_gray }
-                style={{ width: moderateScale(40), height: moderateScale(40) }}
+                style={[styles.starImg, starImgStyle]}
                 resizeMode="contain"
             />
         )
@@ -22,7 +22,7 @@ const RenderStar = ({ item, rating, readOnly, onPressStar, isGrayStar }) => {
         <TouchableOpacity onPress={() => onPressStar(item)}>
             <Image
                 source={ item <= rating ? star : isGrayStar ? star_gray : star_no_fill}
-                style={{ width: moderateScale(40), height: moderateScale(40) }}
+                style={[styles.starImg, starImgStyle]}
                 resizeMode="contain"
             />
         </TouchableOpacity>
@@ -32,7 +32,16 @@ const RenderStar = ({ item, rating, readOnly, onPressStar, isGrayStar }) => {
 
 const CustomStarRating = (props) => {
 
-    const { rating = "0", readOnly, showReviews, showRating, reviewStyle, isGrayStar, onFinishRating } = props;
+    const {
+        rating = "0",
+        readOnly,
+        showReviews,
+        showRating,
+        reviewStyle,
+        isGrayStar,
+        onFinishRating,
+        starImgStyle
+    } = props;
     const reviews = ["Very Dissatisfied", "Dissatisfied", "Fair", "Satisfied", "Very Satisfied"] 
     const maxRating = [1, 2, 3, 4, 5];
    
@@ -53,6 +62,7 @@ const CustomStarRating = (props) => {
                         item={item}
                         rating={rating}
                         onPressStar={onPressStar}
+                        starImgStyle={starImgStyle}
                     />
                 )}
                 scrollEnabled={false}
@@ -86,4 +96,8 @@ const styles = StyleSheet.create({
         color: '#000',
         paddingBottom: 10
     },
+    starImg: {
+        width: moderateScale(40),
+        height: moderateScale(40)
+    }
 });

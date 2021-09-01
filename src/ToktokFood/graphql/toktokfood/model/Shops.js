@@ -1,13 +1,15 @@
 import gql from 'graphql-tag';
 
 export const GET_SHOPS = gql`
-  query getShops {
-    getShops {
+  query getShops($input: ShopInput) {
+    getShops(input: $input) {
       id
       address
-      distance
       shopname
-      totalBranches
+      logo
+      ratings
+      estimatedDistance
+      estimatedDeliveryTime
     }
   }
 `;
