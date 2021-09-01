@@ -26,6 +26,7 @@ export const GET_PRODUCTS = gql`
 				price
 				soldCount
 			    noOfStocks
+				discountRate
 				images {
 					arrangement
 					filename
@@ -42,6 +43,7 @@ export const GET_TOP_PRODUCTS = gql`
 				price
 				soldCount
 			  noOfStocks
+			  discountRate
 				images {
 					arrangement
 					filename
@@ -116,6 +118,7 @@ export const GET_PRODUCT_BY_CATEGORY = gql`
 			itemname
     	price
     	compareAtPrice
+		discountRate
     	variantSummary {
       	variantType
       	variantList
@@ -139,6 +142,7 @@ export const GET_PRODUCT_DETAILS = gql`
     	noOfStocks
     	price
     	compareAtPrice
+		discountRate
     	images {
       	arrangement
       	filename
@@ -171,6 +175,7 @@ export const GET_PRODUCT_DETAILS = gql`
 				price
 				soldCount
 			  noOfStocks
+			  discountRate
 				images {
 					arrangement
 					filename
@@ -186,6 +191,7 @@ export const SEARCH_PRODUCT = gql`
 			Id
     	itemname
     	price
+		discountRate
     	images {
       	arrangement
       	filename

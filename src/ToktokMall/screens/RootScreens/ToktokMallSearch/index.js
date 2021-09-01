@@ -49,8 +49,12 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
         setEmptySearch(true)
 
       }
-      createSearchHistorySession("push", searchValue)
-      setHistoryOrder()
+      
+      if(!route.params?.origin){
+        createSearchHistorySession("push", searchValue)
+        setHistoryOrder()
+      }
+
       setIsLoading(false)
       console.log("Search Result", response)
       
@@ -99,8 +103,8 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
 			searchProduct({
         variables: {
           input: {
-            search: route.params.searchValue,
-            origin: route.params?.origin ? `${route.params.origin}s` : "all",
+            search: route.params.origin ? "" : route.params.searchValue,
+            origin: route.params?.origin ? `${route.params.origin}` : "all",
             offset: offset,
             limit: 10
           }

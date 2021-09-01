@@ -104,6 +104,6 @@ const styles = StyleSheet.create({
   itemContainer: {flexDirection: 'row', justifyContent: 'flex-start'},
   itemImage: {flex: 0.3, height: 100, width: 100},
   itemprice: {color: '#F6841F', marginRight: 10},
-  itemSaleOff: {textDecorationLine: 'line-through', color: '#9E9E9E'},
+  itemSaleOff: {textDecorationLine: 'line-through', color: '#9E9E9E', fontSize: 11, marginTop: 2},
   deliveryfeeContainer: {borderWidth: 1, borderColor: '#FDDC8C', marginLeft: 15, marginRight: 15, padding: 10, borderRadius: 5, marginBottom: 15,}
 })

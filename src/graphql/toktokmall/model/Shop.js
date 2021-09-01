@@ -12,6 +12,7 @@ export const GET_SHOP_DETAILS = gql`
 				Id
 				itemname
 				price
+				discountRate
 				images {
 					arrangement
 					filename
@@ -32,6 +33,7 @@ export const SEARCH_SHOP_PRODUCT = gql`
     	sysShop
     	itemname
     	price
+		discountRate
     	images {
       	filename
     	}

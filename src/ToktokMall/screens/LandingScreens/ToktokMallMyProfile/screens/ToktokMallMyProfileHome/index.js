@@ -173,9 +173,9 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
                 <CustomIcon.FeIcon name="help-circle" size={30} color={COLOR.ORANGE} />
                 <Text style={{fontSize: 12}}>Help Centre</Text>
               </TouchableOpacity>
-              <View style={{flex: 2}} />
-              <View style={{flex: 2}} />
-              <View style={{flex: 1}} />
+              {/* <View style={{flex: 2}} /> */}
+              {/* <View style={{flex: 2}} /> */}
+              {/* <View style={{flex: 1}} /> */}
             </View>
           </View>
         </Card>
