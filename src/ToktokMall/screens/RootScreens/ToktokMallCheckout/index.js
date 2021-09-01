@@ -274,7 +274,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
     // setIsLoading(false)
     // return
 
-    const req = await ApiCall("checkout", checkoutBody, false)
+    const req = await ApiCall("checkout", checkoutBody, true)
 
     if(req.responseData && req.responseData.success == 1){
 
@@ -289,8 +289,11 @@ const Component = ({route, navigation, createMyCartSession}) => {
       Toast.show(req.responseError.message, Toast.LONG)
     }else if(req.responseError){
       Toast.show("Something went wrong", Toast.LONG)
+    }else if(req.responseError == null && req.responseData == null){
+      Toast.show("Something went wrong", Toast.LONG)
     }
 
+    console.log(req)
     setIsLoading(false)
 
   }
@@ -399,6 +402,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
             shipping={addressData?.shippingSummary}            
           />
           <Vouchers 
+            items={paramsData}
             navigation={navigation} 
             vouchers={vouchers}
             setVouchers={setVouchers} 
@@ -406,7 +410,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
             setvCode={setvCode}
             setVoucher={(data) => {
               let temp = []
-              temp.push(data)
+              if(data) temp.push(data)
               setVoucher(temp)
             }}
           />
