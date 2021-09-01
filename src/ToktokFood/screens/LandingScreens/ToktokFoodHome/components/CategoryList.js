@@ -6,16 +6,16 @@ import {GET_CATEGORIES} from 'toktokfood/graphql/toktokfood';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import { onErrorAlert } from 'src/util/ErrorUtility';
 import {useAlert} from 'src/hooks';
+import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 
 // Assets
 import {allcuisines, drinks, dailydeals, fastfood} from 'toktokfood/assets/images';
 
-import {moderateScale, getDeviceWidth, scale} from 'toktokfood/helper/scale';
+import {moderateScale, getDeviceWidth, scale, verticalScale, getDeviceHeight} from 'toktokfood/helper/scale';
 import { useSelector } from 'react-redux'
-import { set } from 'react-native-reanimated';
 
 
-const CategoryList = ({horizontal, rightText = '', filterSearch = 0}) => {
+const CategoryList = ({horizontal, rightText = '', filterSearch = 0, homeRefreshing}) => {
 
   const navigation = useNavigation();
   const [tempCategories, setTempCategories] = useState([]);
@@ -25,6 +25,8 @@ const CategoryList = ({horizontal, rightText = '', filterSearch = 0}) => {
   const [refreshing, setRefreshing] = useState(false);
   const limit = 10;
   const flatListRef = useRef()
+
+  // fetch data in categoties
   const {data, error, loading, fetchMore, refetch} = useQuery(GET_CATEGORIES, {
     variables: {
       input: {
@@ -39,29 +41,25 @@ const CategoryList = ({horizontal, rightText = '', filterSearch = 0}) => {
 
   useEffect(() => {
     onRefresh()
-  }, [filterSearch]);
+  }, [filterSearch, homeRefreshing]);
 
   useEffect(() => {
     if(page != 0 && data && data.getCategories.length > 0){
-      setLoadMore(true)
-      setTimeout(() => {
-        fetchMore({
-          variables: {
-            input: {
-              page: page,
-              limit: limit,
-              filterSearch: filterSearch ? filterSearch.id : 0
-            }
-          },
-          updateQuery: (previousResult, { fetchMoreResult }) => {
-            if (!fetchMoreResult) {
-              return previousResult;
-            }
-            return { getCategories: [ ...previousResult.getCategories, ...fetchMoreResult.getCategories ] }
+      fetchMore({
+        variables: {
+          input: {
+            page: page,
+            limit: limit,
+            filterSearch: filterSearch ? filterSearch.id : 0
           }
-        })
-        setLoadMore(false)
-      }, 200)
+        },
+        updateQuery: (previousResult, { fetchMoreResult }) => {
+          if (!fetchMoreResult) {
+            return previousResult;
+          }
+          return { getCategories: [ ...previousResult.getCategories, ...fetchMoreResult.getCategories ] }
+        }
+      })
     }
   }, [page]);
 
@@ -73,15 +71,20 @@ const CategoryList = ({horizontal, rightText = '', filterSearch = 0}) => {
       } else {
         setPendingProcess(false)
       }
+      setTimeout(() => {
+        setLoadMore(false)
+      }, 2000)
     }
   }, [data, page]);
 
   const onRefresh = React.useCallback(() => {
-    setRefreshing(!horizontal);
+    setRefreshing(page !== 0);
     setPage(0)
     setTempCategories([])
     refetch()
-    if(data){ flatListRef.current.scrollToOffset({ animated: true, offset: 0 }) }
+    if(data?.length > 0){ 
+      flatListRef.current.scrollToOffset({ animated: true, offset: 0 })
+    }
   }, [filterSearch]);
 
   const onNavigateCategories = () => {
@@ -91,50 +94,59 @@ const CategoryList = ({horizontal, rightText = '', filterSearch = 0}) => {
   const handleLoadMore = () => {
     if(!loadMore && pendingProcess){
       setPage((prev) => prev + 1)
+      setLoadMore(true)
     }
   }
 
   const renderItem = ({item}) => {
-    if(horizontal){
-      return (
-        <TouchableOpacity style={styles.listItemVerticalContainer} onPress={() => { navigation.navigate('ToktokFoodSearch', { search: item.categoryName }) }}>
-          <Image style={styles.img} resizeMode="cover" source={fastfood} />
-          <Text numberOfLines={1} style={styles.listItemText}>{item.categoryName}</Text>
-        </TouchableOpacity>
-      )
-    }
     return (
-      <TouchableOpacity style={{ flexDirection: 'row', paddingBottom: 10 }}>
+      <TouchableOpacity
+        style={horizontal ? styles.listItemVerticalContainer : { flexDirection: 'row', paddingBottom: 10 }}
+        onPress={() => { navigation.navigate('ToktokFoodSearch', { search: item.categoryName }) }}
+      >
         <Image style={styles.img} resizeMode="cover" source={fastfood} />
-        <Text numberOfLines={1} style={[styles.listItemText, { paddingHorizontal: 10 }]}>{item.categoryName}</Text>
+        <Text numberOfLines={1} style={[styles.listItemText, { paddingHorizontal: horizontal ? 0 : 10 }]}>{item.categoryName}</Text>
       </TouchableOpacity>
     );
   };
 
+  const listEmpty = () => (
+    <Text style={{  color: '#898997', textAlign: 'center', marginVertical: 20 }}>
+      No result found
+    </Text>
+  )
+  
   const displayComponent = () => {
-    if((loading && horizontal) || error){
-      return <View style={{  }}><ActivityIndicator size='large' /></View>
+    const datas = horizontal ? data?.getCategories.slice(0, 4) : data?.getCategories
+    const shops = datas ? datas : []
+
+    if(loading || error){
+      return <LoadingIndicator style={{ marginVertical: 20  }} isLoading={true} />
     }
     return (
       <FlatList
         extraData={loadMore}
-        horizontal={horizontal}
-        data={data ? data.getCategories : []}
+        horizontal={data?.getCategories.length > 0 ? horizontal : false}
+        data={shops} 
         renderItem={renderItem}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
         keyExtractor={(val, index) => index.toString()}
-        contentContainerStyle={{ paddingBottom: horizontal ? 0 : 30 }}
-        ListFooterComponent={() => ( loadMore ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}><ActivityIndicator size='large' /></View> : null)}
-        onEndReachedThreshold={0}
+        contentContainerStyle={{ paddingBottom: horizontal ? 0 : verticalScale(50) }}
+        onEndReachedThreshold={0.2}
         onEndReached={() => handleLoadMore()}
         refreshControl={
+          !horizontal ? 
           <RefreshControl
             refreshing={loading}
             onRefresh={onRefresh}
-          />
+            colors={['#FFA700']}
+            tintColor='#FFA700'
+          /> : null
         }
         ref={flatListRef}
+        ListFooterComponent={() => ( <LoadingIndicator isFlex isLoading={loadMore} /> )}
+        ListEmptyComponent={listEmpty()}
       />
     )
   }
