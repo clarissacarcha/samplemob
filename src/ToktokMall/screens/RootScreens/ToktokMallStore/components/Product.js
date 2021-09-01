@@ -7,6 +7,7 @@ import {placeholder} from '../../../../assets';
 import { useNavigation } from '@react-navigation/core';
 
 import { SwipeReloader } from '../../../../Components';
+import { Price } from '../../../../helpers';
 
 const RenderStars = ({value}) => {
   let orange = "#FFC833"
@@ -44,7 +45,7 @@ const RenderItem = ({item, navigation}) => {
           <TouchableOpacity onPress={() => navigation.navigate("ToktokMallProductDetails", item)}>
             <Text style={{fontSize: 13, fontWeight: '500', paddingVertical: 5}}>{item?.itemname || ""}</Text>
           </TouchableOpacity>
-          <Text style={{fontSize: 13, color: "#F6841F"}}>&#8369;{parseFloat(item?.price).toFixed(2)}</Text>    
+          {/* <Text style={{fontSize: 13, color: "#F6841F"}}>&#8369;{parseFloat(item?.price).toFixed(2)}</Text>    
           <View style={{flexDirection: 'row'}}>
             <View style={{flex: 7, flexDirection: 'row'}}>
               <RenderStars value={item?.rating} />
@@ -53,6 +54,14 @@ const RenderItem = ({item, navigation}) => {
               <Text style={{color: "#9E9E9E", fontSize: 10}}>({item?.noOfStocks || 0})</Text>
             </View>
             <View style={{flex: 3}}>
+              <Text style={{fontSize: 10}}>{item?.soldCount || 0} sold</Text>
+            </View>
+          </View> */}
+          <View style={{flexDirection: 'row'}}>
+            <View style={{flex: 1}}>
+              <Text style={{fontSize: 13, color: "#F6841F"}}><Price amount={item?.price} /></Text>
+            </View>
+            <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end'}}>
               <Text style={{fontSize: 10}}>{item?.soldCount || 0} sold</Text>
             </View>
           </View>
@@ -89,8 +98,20 @@ export const Product = ({data}) => {
           data={data.slice(0, offset + 10)}
           numColumns={2}
           style={{paddingHorizontal: 5}}
-          renderItem={({item}) => {
-            return <RenderItem item={item} navigation={navigation} />
+          renderItem={({item, index}) => {
+            const isEven = products?.length % 2 === 0
+            if(!isEven){
+              //ODD
+              if(index == products?.length - 1){
+                return (
+                  <>
+                    <RenderItem item={item} />
+                    <View style={{flex: 2, backgroundColor: '#fff', margin: 5}}></View>
+                  </>
+                )
+              }                  
+            }
+            return <RenderItem item={item} />
           }}
           keyExtractor={(item, index) => item + index}
           showsVerticalScrollIndicator={false}

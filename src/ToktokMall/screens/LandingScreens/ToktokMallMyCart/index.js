@@ -149,6 +149,7 @@ const Component =  ({
   const [itemsToDelArr, setItemsToDelArr] = useState([])
   const [itemsToCheckoutArr, setItemsToCheckoutArr] = useState([])
   const [checkoutData, setCheckoutData] = useState([])
+  const [myCartData, setMyCartData] = useState([])
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack hidden={true} />,
@@ -175,6 +176,10 @@ const Component =  ({
     // createMyCartSession('set', [])
   }, []);
 
+  useEffect(() => {
+    setMyCartData(myCart)
+  }, [myCart])
+
   const deleteMultipleItems = () => {
     console.log("Items to delete", itemsToDelArr)
     if(allSelected){
@@ -191,7 +196,7 @@ const Component =  ({
     // getSubTotal()
   }
 
-  const unSelectItem = (type, raw) => {
+  const unSelectItem = (type, raw, del) => {
 
     //Must create a copy of itemstocheckout array with a new instance
     //to prevent bugs
@@ -199,7 +204,7 @@ const Component =  ({
     let willDeleteItems = JSON.parse(JSON.stringify(itemsToDelArr))
     
     if(type == "item"){
-      if(willDelete){
+      if(willDelete || del){
         let index = willDeleteItems.findIndex((a) => a.item_id == raw.item.item_id)
         willDeleteItems.splice(index, 1)
         setItemsToDelArr(willDeleteItems)
@@ -209,7 +214,7 @@ const Component =  ({
         setItemsToCheckoutArr(currentItems)
       }
     }else if(type == "store"){
-      if(willDelete){
+      if(willDelete || del){
         
         //Map raw items
         raw.items.map((item, i) => {
@@ -235,7 +240,7 @@ const Component =  ({
 
   }
 
-  const selectItem = (type, raw) => {
+  const selectItem = (type, raw, del) => {
 
     //Must create a copy of itemstocheckout array with a new instance
     //to prevent bugs
@@ -243,7 +248,7 @@ const Component =  ({
     let willDeleteItems = JSON.parse(JSON.stringify(itemsToDelArr))
     
     if(type == "item"){
-      if(willDelete){
+      if(willDelete || del){
         willDeleteItems.push(raw.item)
         setItemsToDelArr(willDeleteItems)
       }else{
@@ -251,7 +256,7 @@ const Component =  ({
         setItemsToCheckoutArr(currentItems)
       }
     }else if(type == "store"){
-      if(willDelete){
+      if(willDelete || del){
 
          //Map raw items
          raw.items.map((item, i) => {
@@ -336,19 +341,21 @@ const Component =  ({
               onPress={() => {
                 if(!willDelete == true){
                   //Copy items selected by user from to checkout array
-                  setItemsToDelArr(itemsToCheckoutArr)
+                  // setItemsToDelArr(itemsToCheckoutArr)
+                  setItemsToCheckoutArr([])
+                  setItemsToDelArr([])
                 }
                 setWillDelete(!willDelete)
               }}
               style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center'}}>
-              <Text style={{fontSize: 14, color: '#F6841F'}}>{willDelete ? 'Done' : 'Edit'}</Text>
+              <Text style={{fontSize: 14, color: '#F6841F'}}>{willDelete ? 'Cancel' : ''}</Text>
             </TouchableOpacity>
           </View>
           <View style={{height: 2, backgroundColor: '#F7F7FA'}} />
           
           <FlatList
             // data={testdata}
-            data={MergeStoreProducts(myCart)}
+            data={MergeStoreProducts(myCartData)}
             renderItem={({item, index}) => {
               return (
                 <>
@@ -363,10 +370,10 @@ const Component =  ({
                       let res = 0
                       if(raw.checked){
                         res = subTotal + raw.total
-                        selectItem('store' , raw)
+                        selectItem('store' , raw, willDelete)
                       }else{
                         res = subTotal - raw.total
-                        unSelectItem('store' , raw)
+                        unSelectItem('store' , raw, willDelete)
                       }
                       setSubTotal(res)
                     }}
@@ -374,14 +381,29 @@ const Component =  ({
                       let res = 0
                       if(raw.checked){
                         res = subTotal + raw.amount
-                        selectItem('item' , raw)
+                        selectItem('item' , raw, false)
                       }else{
                         res = subTotal - raw.amount
-                        unSelectItem('item', raw)
+                        unSelectItem('item', raw, false)
                       }
                       // if(raw.checked)
                       setSubTotal(res)
                     }} 
+                    onItemLongPress={(raw) => {
+
+                      setWillDelete(true)
+                      
+                      let res = 0
+                      if(raw.checked){
+                        res = subTotal + raw.amount
+                        selectItem('item' , raw, true)
+                      }else{
+                        res = subTotal - raw.amount
+                        unSelectItem('item', raw, true)
+                      }
+                      // if(raw.checked)
+                      setSubTotal(res)
+                    }}
                     onItemDelete={(id) => {
                       deleteSingleItem(id)
                     }}

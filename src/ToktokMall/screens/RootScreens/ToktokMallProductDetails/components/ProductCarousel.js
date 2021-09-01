@@ -67,18 +67,20 @@ export const ProductCarousel = ({data, isOutOfStock, isLoading, setIsLoading, lo
           onScrollEndDrag = {() => {setIsLoading(true)}}
         />
       
-        { loading ? <></>:
+        { loading ? <></> :
           <Pagination
             dotsLength={data.length}
             activeDotIndex={activeSlide}
-            renderDots={(activeIndex) => {
+            renderDots={(activeIndex) => {              
               return (            
                 <View style={{width: '100%', alignContent: 'center', alignSelf: 'center'}}>
-                  <View style={{width: '20%', marginLeft: '40%', flexDirection: 'row', alignItems: 'center'}}>
+                  <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+                    <View style={{flex: 2}} />
                     {data.map((d, i) => 
-                    <View style={{flex: 1, paddingHorizontal: 3}}>
+                    <View style={{flex: 0, paddingHorizontal: 3}}>
                       <CustomIcon.MCIcon name={i == activeIndex ? "circle" : "circle-outline"} color="#F6841F" size={6} />
                     </View>)}
+                    <View style={{flex: 2}} />
                   </View>
                   <Text style={{fontSize: 9, alignSelf: 'center', textAlign: 'center'}}>{activeIndex + 1}/{data.length}</Text>
                 </View>

@@ -127,7 +127,8 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
             </View>
             <View style={{flexDirection: 'row', paddingVertical: 10}}>
               <TouchableOpacity onPress={() => navigation.navigate("ToktokMallMyOrders", {tab: 0})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
-                <CustomIcon.FeIcon name="box" size={30} color={COLOR.ORANGE} />
+                {/* <CustomIcon.FeIcon name="box" size={30} color={COLOR.ORANGE} /> */}
+                <CustomIcon.MCIcon name="comment-check-outline" size={30} color={COLOR.ORANGE} />
                 <Text style={{fontSize: 12}}>Confirmed</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => navigation.navigate("ToktokMallMyOrders", {tab: 1})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
@@ -139,7 +140,7 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
                 <Text style={{fontSize: 12}}>To Receive</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => navigation.navigate("ToktokMallMyOrders", {tab: 3})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
-                <CustomIcon.MCIcon name="comment-check-outline" size={30} color={COLOR.ORANGE} />
+                <CustomIcon.MCIcon name="check-all" size={30} color={COLOR.ORANGE} />
                 <Text style={{fontSize: 12}}>Completed</Text>
               </TouchableOpacity>
               {/* <TouchableOpacity onPress={() => navigation.navigate("ToktokMallMyOrders", {tab: 3})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
@@ -155,24 +156,25 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
         <Card>
           <View style={{paddingVertical: 10 }}>            
             <View style={{flexDirection: 'row', paddingVertical: 10}}>
-              <View style={{flex: 1}} />
-              <TouchableOpacity onPress={() => navigation.navigate("ToktokMallMyWishlist", {tab: 1})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
+              {/* <View style={{flex: 1}} /> */}
+              {/* <TouchableOpacity onPress={() => navigation.navigate("ToktokMallMyWishlist", {tab: 1})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
                 <CustomIcon.EIcon name="heart-outlined" size={30} color={COLOR.ORANGE} />
                 <Text style={{fontSize: 12}}>Favorites</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => navigation.navigate("ToktokMallMyFollowing", {tab: 1})} style={{flex: 2,  alignItems: 'center' , justifyContent: 'center'}}>
                 <CustomIcon.AIcon name="home" size={30} color={COLOR.ORANGE} />
-                {/* <Image style={{width: 26, height: 24, resizeMode: 'cover'}} source={storeIcon} /> */}
                 <Text style={{fontSize: 12}}>Following</Text>
               </TouchableOpacity>
-              {/* <TouchableOpacity onPress={() => navigation.navigate("ToktokMallMyVouchers", {tab: 1})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
+              <TouchableOpacity onPress={() => navigation.navigate("ToktokMallMyVouchers", {tab: 1})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
                 <CustomIcon.MCIcon name="ticket-outline" size={30} color={COLOR.ORANGE} />
                 <Text style={{fontSize: 12}}>My Vouchers</Text>
               </TouchableOpacity> */}
               <TouchableOpacity onPress={() => navigation.navigate("ToktokMallHelp", {tab: 1})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
                 <CustomIcon.FeIcon name="help-circle" size={30} color={COLOR.ORANGE} />
-                <Text style={{fontSize: 12}}>Help Center</Text>
+                <Text style={{fontSize: 12}}>Help Centre</Text>
               </TouchableOpacity>
+              <View style={{flex: 2}} />
+              <View style={{flex: 2}} />
               <View style={{flex: 1}} />
             </View>
           </View>

@@ -15,6 +15,9 @@ export const LandingSubHeader = (props) => {
 
   const onPress = throttle(
     () => {
+      if(props.onPress){
+        props.onPress()
+      }
       // navigation.pop();
     },
     1000,
@@ -73,10 +76,20 @@ export const LandingSubHeader = (props) => {
                 <AIcon name="search" color={COLOR.ORANGE} size={22}/>
               </View>
               <View style={{flex: 1}}>
+
+                {props.static ? 
+                
+                <TouchableOpacity activeOpacity={1} onPress={props.onPress} style={{paddingVertical: 4, backgroundColor: 'transparent'}}>
+                  <Text style={{paddingHorizontal: 4, paddingVertical: 8, fontFamily: FONT.REGULAR, color: "#818181"}}>{props.placeholder}</Text>
+                </TouchableOpacity>
+                
+                :
+                
                 <TextInput 
                   ref={searchFieldRef}
                   placeholder={props.placeholder ? props.placeholder : "Search"}
                   value={searchValue}
+                  autoFocus={props.focused ? props.focused : false}
                   onChangeText={(val) => handleOnSearch(val)}
                   style={{paddingVertical: 8, fontFamily: FONT.REGULAR}} 
                   blurOnSubmit={true}                  
@@ -88,7 +101,7 @@ export const LandingSubHeader = (props) => {
                     searchFieldRef.current.isFocused(false)
                     handleOnSubmit()               
                   }}
-                />
+                />}
               </View>
             </TouchableOpacity>
           </View>

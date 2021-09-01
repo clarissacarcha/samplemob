@@ -9,5 +9,6 @@ export * from './ToktokMallProductRatings';
 export * from './ToktokMallRateProduct';
 export * from './ToktokMallSearch';
 export * from './ToktokMallStore';
+export * from './ToktokMallStoreSearch';
 export * from './ToktokMallVouchersClaim';
-export * from './ToktokMallOTP'
+export * from './ToktokMallOTP';

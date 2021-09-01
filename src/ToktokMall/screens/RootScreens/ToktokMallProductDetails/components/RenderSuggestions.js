@@ -77,15 +77,23 @@ const RenderItem = ({item}) => {
             style={{resizeMode: 'cover', width: '100%', height: 120, borderRadius: 5}} 
           />
           <Text style={{fontSize: 13, fontWeight: '500', paddingVertical: 5}}>{item.itemname}</Text>
-          <Text style={{fontSize: 13, color: "#F6841F"}}><Price amount={item.price} /></Text>    
+          {/* <Text style={{fontSize: 13, color: "#F6841F"}}><Price amount={item.price} /></Text>    
           <View style={{flexDirection: 'row'}}>
             <View style={{flex: 7, flexDirection: 'row'}}>
               <RenderStars value={item.rating || 0} />
             </View>
             <View style={{flex: 2}}>
-              {/* <Text style={{color: "#9E9E9E", fontSize: 10}}>({item.noOfStocks || 0})</Text> */}
+              <Text style={{color: "#9E9E9E", fontSize: 10}}>({item.noOfStocks || 0})</Text>
             </View>
             <View style={{flex: 3}}>
+              <Text style={{fontSize: 10}}>{item.soldCount || 0} sold</Text>
+            </View>
+          </View> */}
+          <View style={{flexDirection: 'row'}}>
+            <View style={{flex: 1}}>
+              <Text style={{fontSize: 13, color: "#F6841F"}}><Price amount={item.price} /></Text>
+            </View>
+            <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end'}}>
               <Text style={{fontSize: 10}}>{item.soldCount || 0} sold</Text>
             </View>
           </View>
@@ -122,7 +130,19 @@ export const RenderSuggestions = ({data}) => {
               data={products}
               numColumns={2}
               style={{paddingHorizontal: 10}}
-              renderItem={({item}) => {
+              renderItem={({item, index}) => {
+                const isEven = products?.length % 2 === 0
+                if(!isEven){
+                  //ODD
+                  if(index == products?.length - 1){
+                    return (
+                      <>
+                        <RenderItem item={item} />
+                        <View style={{flex: 2, backgroundColor: '#fff', margin: 5}}></View>
+                      </>
+                    )
+                  }                  
+                }
                 return <RenderItem item={item} />
               }}
               keyExtractor={(item, index) => item + index}

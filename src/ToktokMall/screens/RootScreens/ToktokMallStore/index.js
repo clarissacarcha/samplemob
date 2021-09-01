@@ -37,34 +37,6 @@ export const ToktokMallStore = ({navigation, route}) => {
     }
   })
 
-  const [searchShopProduct, {error2, loading2}] = useLazyQuery(SEARCH_SHOP_PRODUCT, {
-    client: TOKTOK_MALL_GRAPHQL_CLIENT,
-    fetchPolicy: 'network-only',
-    variables: {
-      input: {
-        shopId: route.params.id,
-        search: searchValue,
-        offset: 0,
-        limit: 10
-      }
-    },
-    onCompleted: (response) => {
-      if(!response){
-        setEmptySearch(true)
-      }else if(response && response.searchShopProduct.length > 0){
-        setEmptySearch(false)
-        setSearchedProducts(response.searchShopProduct)
-      }else if(response && response.searchShopProduct.length == 0){
-        setEmptySearch(true)
-        setSearchedProducts([])
-      }
-    },
-    onError: (err) => {
-      console.log(err)
-      setEmptySearch(true)
-    }
-  })
-
   useEffect(() => {
     getShopDetails()
   }, [])
@@ -87,7 +59,7 @@ export const ToktokMallStore = ({navigation, route}) => {
             data={storeData?.products ? storeData.products : []} 
           />
         }
-        {
+        {/* {
           activeTab == 1 && 
           !showCategories && 
           <Dropdown 
@@ -100,7 +72,7 @@ export const ToktokMallStore = ({navigation, route}) => {
           <Product 
             data={storeData?.products ? storeData.products : []} 
           />
-        }
+        } */}
       </>
     )
   }
@@ -111,28 +83,11 @@ export const ToktokMallStore = ({navigation, route}) => {
 
         <LandingSubHeader  
           placeholder="Search in Store"
-          onSearch={(val) => {
-            setSearchedProducts([])
-            setSearchValue(val)
-          }}
-          onSubmit={() => {
-            searchShopProduct({
-              variables: {
-                input: {
-                  shopId: route.params.id,
-                  search: searchValue,
-                  offset: searchedProducts.length,
-                  limit: 10
-                }
-              }
-            })
+          static={true}
+          onPress={() => {
+            navigation.navigate("ToktokMallStoreSearch", route.params)
           }}
         />
-
-        {emptySearch &&
-        <View style={{paddingHorizontal: 15, paddingVertical: 15}}>
-          <Text style={{color: "#F6841F", fontSize: 14}}>No results found</Text>
-        </View>}
 
         {loading && 
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
@@ -149,7 +104,7 @@ export const ToktokMallStore = ({navigation, route}) => {
           <Text>Something went wrong</Text>
         </View>}
 
-        {!error && !loading && searchValue == "" && 
+        {!error && !loading && 
         <Store 
           data={{
             ...storeData,
@@ -174,21 +129,7 @@ export const ToktokMallStore = ({navigation, route}) => {
         {
           !error && 
           !loading && 
-          searchValue == "" && 
           <RenderContent />
-        }
-        {
-          !error && 
-          !loading && 
-          searchedProducts.length > 0 &&
-          !emptySearch && 
-          <Product 
-            paginate={false} 
-            data={searchedProducts} 
-            onReload={() => {
-            
-            }} 
-          />
         }
 
         {messageModalShown && 

@@ -84,16 +84,24 @@ const RenderItem = ({item, loading}) => {
             style={{resizeMode: 'cover', width: '100%', height: 120, borderRadius: 5}} 
           />
           <Text style={{fontSize: 13, fontWeight: '500', paddingVertical: 5}}>{item.itemname}</Text>
-          <Text style={{fontSize: 13, color: "#F6841F"}}><Price amount={item.price} /></Text>    
+          {/* <Text style={{fontSize: 13, color: "#F6841F"}}><Price amount={item.price} /></Text>    
           <View style={{flexDirection: 'row'}}>
             <View style={{flex: 7, flexDirection: 'row'}}>
               <RenderStars value={item.rating} />
             </View>
-            {/* <View style={{flex: 9}}>
+            <View style={{flex: 9}}>
               <Text style={{color: "#9E9E9E", fontSize: 10}}>({item.noOfStocks || 0})</Text>
-            </View> */}
+            </View>
             <View style={{flex: 1}} />
             <View style={{flex: 3}}>
+              <Text style={{fontSize: 10}}>{item.soldCount || 0} sold</Text>
+            </View>
+          </View> */}
+          <View style={{flexDirection: 'row'}}>
+            <View style={{flex: 1}}>
+              <Text style={{fontSize: 13, color: "#F6841F"}}><Price amount={item.price} /></Text>
+            </View>
+            <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end'}}>
               <Text style={{fontSize: 10}}>{item.soldCount || 0} sold</Text>
             </View>
           </View>
@@ -171,8 +179,20 @@ export const Suggestions = ({}) => {
           data={products}
           numColumns={2}
           style={{paddingHorizontal: 10}}
-          renderItem={({item}) => {
-            return <RenderItem item={item} loading = {loading} />
+          renderItem={({item, index}) => {
+            const isEven = products?.length % 2 === 0
+            if(!isEven){
+              //ODD
+              if(index == products?.length - 1){
+                return (
+                  <>
+                    <RenderItem navigation={navigation} item={item} />
+                    <View style={{flex: 2, backgroundColor: '#fff', margin: 5}}></View>
+                  </>
+                )
+              }                  
+            }
+            return <RenderItem navigation={navigation} item={item} />
           }}
           keyExtractor={(item, index) => item + index}
           refreshing={loading}
@@ -186,6 +206,7 @@ export const Suggestions = ({}) => {
                   getProducts()
                 }} 
                 />
+                <View style={styles.separator} />
               </>
             )
           }}
@@ -205,5 +226,5 @@ const styles = StyleSheet.create({
   link: {fontSize: 12, color: "#F6841F"},
   image: {width: 50, height: 50, resizeMode: 'cover', alignSelf: 'center', borderRadius: 8},
   label: {fontSize: 11, alignSelf: 'center'},
-  separator: {flex: 0.5, height: 8, backgroundColor: '#F7F7FA'}
+  separator: {height: 8, backgroundColor: '#F7F7FA'}
 })

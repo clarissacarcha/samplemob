@@ -181,7 +181,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
       let data = JSON.parse(raw) || {};
       if (data.appSignature) {
         let body = {
-          address_id: newAddressForm.id
+          address_id: `${newAddressForm.id}`
         };
 
         let formData = new FormData();
@@ -190,7 +190,8 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
 
         await axios
           .post(`http://ec2-18-176-178-106.ap-northeast-1.compute.amazonaws.com/toktokmall/delete_address`, formData)
-          .then(() => {
+          .then(({success, ...rest}) => {
+            console.log(rest)
             setDeletedModal(true)
             updateUserAddress('remove', newAddressForm.id);
             navigation.goBack();

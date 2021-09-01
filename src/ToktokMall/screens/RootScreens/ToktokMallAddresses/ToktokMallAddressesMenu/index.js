@@ -46,11 +46,14 @@ const Component = ({route, navigation, reduxStates: {user_address}, reduxActions
       // if(userAdressTemp){
       //   updateUserAddress('set', userAdressTemp)
       // } else if (!temp && response.getCustomerAddresses) {
-          updateUserAddress('set', response.getCustomerAddresses);
+        updateAddress(response)
       // }
     },
     onError: (err) => console.log(err),
   });
+  const updateAddress = (response) => {
+    user_address.length === 0 && updateUserAddress('set', response.getCustomerAddresses);
+  }
 
   useEffect(() => {
     AsyncStorage.getItem("ToktokMallUser").then((raw) => {

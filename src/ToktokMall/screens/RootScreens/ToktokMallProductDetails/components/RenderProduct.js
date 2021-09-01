@@ -86,16 +86,18 @@ const Component = ({data, onOpenVariations, animatedValue, shop, loading, reduxA
         ></ContentLoader> */}
           <Animated.Text style={[{fontSize: 22, fontWeight: '500', fontFamily: FONT.BOLD}, {opacity: opacity}]}>{data.itemname}</Animated.Text>
           <View style={{flexDirection: 'row'}}>
-            <View style={{flex: 1.5}}>
+            <View style={{flex: 2}}>
               {data.price ? <Text style={{color: "#F6841F", fontSize: 20}}><Price amount={data.price} /></Text> : null}
             </View>
-            <View style={{flex: 3, justifyContent: 'center'}}>
+            <View style={{flex: 2, justifyContent: 'center'}}>
               {data.compareAtPrice && data.compareAtPrice != "0.00" ? <Text style={{color: "#9E9E9E", textDecorationLine: 'line-through', fontSize: 14}}><Price amount={data.compareAtPrice} /></Text> : null}
             </View>
+            <View style={{flex: 2.5}} />
           </View>
           <View style={{flexDirection: 'row', paddingTop: 8}}>
             <View style={{flex: 3, flexDirection: 'row', justifyContent: 'space-between', marginTop: 1}}>
-              <RenderStars value={data.rating} />
+              {/* <RenderStars value={data.rating} /> */}
+              <Text>{data.soldCount || 0} sold</Text>
             </View>
             <View style={{flex: 5, flexDirection: 'row', paddingHorizontal: 12}}>
               <View>
@@ -105,7 +107,7 @@ const Component = ({data, onOpenVariations, animatedValue, shop, loading, reduxA
                 {/* <Text style={{color: "#9E9E9E"}}> | </Text> */}
               </View>
               <View>
-                <Text>{data.soldCount || 0} sold</Text>
+                {/* <Text>{data.soldCount || 0} sold</Text> */}
               </View>
             </View>
             <View style={{flex: 1.8, flexDirection: 'row', justifyContent: 'space-between'}}>

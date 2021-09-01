@@ -21,6 +21,7 @@ export const banner = require("../assets/images/banner.png")
 export const toktokmallH = require("../assets/images/toktokmall-h.png")
 export const voucherbg = require("../assets/images/voucher-bg.png")
 export const reviewimage = require("../assets/images/review-image.png")
+export const otpbg = require("../assets/images/otp-bg.png")
 
 //ICONS
 export const successIcon = require("../assets/icons/success.png")
@@ -32,3 +33,5 @@ export const storeIcon = require("../assets/icons/store.png");
 export const alertIcon = require("../assets/icons/alerticon.png")
 export const otpicon = require("../assets/icons/otpicon.png")
 export const emptyCartIcon = require("../assets/icons/empty-cart.png");
+export const emptyFaveIcon = require("../assets/icons/empty-fave.png");
+export const emptyFollowingIcon = require("../assets/icons/empty-following.png");

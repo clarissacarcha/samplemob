@@ -3,8 +3,9 @@ import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatLi
 import { COLOR, FONT } from '../../../../../res/variables';
 import { ScrollView } from 'react-native-gesture-handler';
 import CustomIcon from '../../../../Components/Icons';
-import { useNavigation } from '@react-navigation/native';
 import {placeholder} from '../../../../assets';
+import { useNavigation } from '@react-navigation/core';
+
 import { SwipeReloader } from '../../../../Components';
 import { Price } from '../../../../helpers';
 
@@ -22,7 +23,7 @@ const RenderStars = ({value}) => {
   )
 }
 
-const RenderItem = ({navigation, item}) => {
+const RenderItem = ({item, navigation}) => {
 
   const getImageSource = (data) => {
     if(data.length > 0){
@@ -44,12 +45,12 @@ const RenderItem = ({navigation, item}) => {
           <TouchableOpacity onPress={() => navigation.navigate("ToktokMallProductDetails", item)}>
             <Text style={{fontSize: 13, fontWeight: '500', paddingVertical: 5}}>{item?.itemname || ""}</Text>
           </TouchableOpacity>
-          {/* <Text style={{fontSize: 13, color: "#F6841F"}}><Price amount={item?.price}/></Text>    
+          {/* <Text style={{fontSize: 13, color: "#F6841F"}}>&#8369;{parseFloat(item?.price).toFixed(2)}</Text>    
           <View style={{flexDirection: 'row'}}>
             <View style={{flex: 7, flexDirection: 'row'}}>
               <RenderStars value={item?.rating} />
             </View>
-            <View style={{flex: 9}}>
+            <View style={{flex: 2}}>
               <Text style={{color: "#9E9E9E", fontSize: 10}}>({item?.noOfStocks || 0})</Text>
             </View>
             <View style={{flex: 3}}>
@@ -70,59 +71,68 @@ const RenderItem = ({navigation, item}) => {
   )
 }
 
-export const Product = ({data, state, fetch}) => {
+export const Product = ({data}) => {
 
-  const [loading, setloading] = useState(state)
   const navigation = useNavigation()
+  const [loading, setloading] = useState(false)
+  const [offset, setOffset] = useState(0)
   const [products, setProducts] = useState(data)
 
-  useEffect(() => {
-    setProducts(data)
-  }, [data])
-
-    return (
-      <>
-        <View style={styles.container}>
-            
-            <FlatList
-              data={products}
-              numColumns={2}
-              style={{flex: 0, paddingHorizontal: 5}}
-              renderItem={({item, index}) => {
-                const isEven = products?.length % 2 === 0
-                if(!isEven){
-                  //ODD
-                  if(index == products?.length - 1){
-                    return (
-                      <>
-                        <RenderItem navigation={navigation} item={item} />
-                        <View style={{flex: 2, backgroundColor: '#fff', margin: 5}}></View>
-                      </>
-                    )
-                  }                  
-                }
-                return <RenderItem navigation={navigation} item={item} />
-              }}
-              keyExtractor={(item, index) => item + index}
-              showsVerticalScrollIndicator={false}
-              ListFooterComponent={() => {
-                return (
-                  <>
-                    <SwipeReloader state={false} onSwipeUp={fetch} />
-                    <View style={styles.separator} />
-                  </>
-                )
-              }}
-            />
-            
-          </View>
-          <View style={{height: 15}} />
-      </>
-    )
+  const LoadMore = () => {    
+    setloading(true)
+    setTimeout(() => {
+      setOffset(offset + 10)
+      setloading(false)
+    }, 700)
   }
 
+  useEffect(() => {
+    setProducts(products.slice(0, offset + 10))
+  }, [])
+
+  return (
+    <>
+      <View style={styles.container}>
+            
+        <FlatList
+          data={data.slice(0, offset + 10)}
+          numColumns={2}
+          style={{paddingHorizontal: 5}}
+          renderItem={({item, index}) => {
+            const isEven = products?.length % 2 === 0
+            if(!isEven){
+              //ODD
+              if(index == products?.length - 1){
+                return (
+                  <>
+                    <RenderItem navigation={navigation} item={item} />
+                    <View style={{flex: 2, backgroundColor: '#fff', margin: 5}}></View>
+                  </>
+                )
+              }                  
+            }
+            return <RenderItem navigation={navigation} item={item} />
+          }}
+          keyExtractor={(item, index) => item + index}
+          showsVerticalScrollIndicator={false}
+          ListFooterComponent={() => {
+            return (
+              <>
+                <SwipeReloader state={false} onSwipeUp={LoadMore} />
+                <View style={styles.separator} />
+              </>
+            )
+          }}
+        />
+            
+      </View>
+      <View style={{height: 15}}></View>
+    </>
+  )
+}
+
 const styles = StyleSheet.create({
-  container: {flex: 0, paddingVertical: 10},
+  container: {flex: 1, paddingVertical: 10},
   heading: {paddingHorizontal: 15, paddingVertical: 20, flexDirection: 'row'},
   h1: {fontSize: 14, fontFamily: FONT.BOLD},
   link: {fontSize: 12, color: "#F6841F"},

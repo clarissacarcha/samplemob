@@ -78,6 +78,12 @@ export const Vouchers = ({ navigation, vouchers, setVouchers, setVoucher}) => {
         </TouchableOpacity>
         <View style={{ height: 2, backgroundColor: '#F7F7FA'}} />
         {/* {renderVouchers()} */}
+    
+        {!loading && isValid == -1 && 
+        <View style={{backgroundColor: '#FFFCF4', padding:10}}>
+          <Text style={{color: '#F6841F', fontSize: 12, textAlign: 'center'}}>*Invalid voucher code. Please check your voucher code.</Text>
+        </View>}
+    
         <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
           <View style={{
             flex: 1,
@@ -98,7 +104,21 @@ export const Vouchers = ({ navigation, vouchers, setVouchers, setVoucher}) => {
                 setIsValid(0)
               }}
             />
+            <View style={{flex: 0.2, alignItems: 'center', justifyContent: 'center'}}>
+              <View style={{flex: 1, justifyContent: 'center'}}>
+                {loading && <Spinner 
+                  isVisible={loading}
+                  // isVisible={true}
+                  type={"FadingCircleAlt"}
+                  color={"#F6841F"}
+                  size={15}
+                />}
+                {!loading && isValid == 2 && <CustomIcon.FeIcon name="check-circle" size={15} color="#06A44E" />}
+                {!loading && isValid == -1 && <CustomIcon.FA5Icon name="times-circle" size={15} color="#F6841F" />}
+              </View>              
+            </View>
             <TouchableOpacity 
+              disabled={vcode == ""}
               onPress={() => {
                 if(vcode == "") return 
                 applyVoucher({variables: {
@@ -115,18 +135,7 @@ export const Vouchers = ({ navigation, vouchers, setVouchers, setVoucher}) => {
                 alignItems: 'flex-end'
               }}
             >
-              
-              {loading && <Spinner 
-                isVisible={loading}
-                // isVisible={true}
-                type={"FadingCircleAlt"}
-                color={"#F6841F"}
-                size={20}
-              />}
-              {!loading && isValid == 0 && <Text style={{color: "#F6841F", textAlign: 'right'}}>Apply</Text>}
-              {!loading && isValid == -1 && <CustomIcon.FA5Icon name="times-circle" size={20} color="#F6841F" />}
-              {!loading && isValid == 2 && <CustomIcon.FeIcon name="check-circle" size={20} color="#02d147" />}
-              
+              <Text style={{color: vcode == "" ? "#9E9E9E" : "#F6841F", textAlign: 'right'}}>Apply</Text>
             </TouchableOpacity>
           </View>          
         </View>

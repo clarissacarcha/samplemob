@@ -14,7 +14,7 @@ export const Store = ({data, storeIndex,  state = false, onSelect, onPress, setU
 	useEffect(() => {
 		let res = 0
 		for(var x=0;x<items.length;x++){
-			res += parseFloat(items[x].price) * items[x].quantity
+			res += parseFloat(items[x].price) * items[x].qty
 		}
 		setTotalAmount(res)
 	}, [])
