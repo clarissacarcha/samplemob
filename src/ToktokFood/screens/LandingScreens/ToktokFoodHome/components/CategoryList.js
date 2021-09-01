@@ -98,11 +98,15 @@ const CategoryList = ({horizontal, rightText = '', filterSearch = 0, homeRefresh
     }
   }
 
+  const showSearchPage = (item) => {
+    navigation.navigate('ToktokFoodSearch', { searchByCategory: item.categoryName, isSearchPage: true }) 
+  }
+
   const renderItem = ({item}) => {
     return (
       <TouchableOpacity
         style={horizontal ? styles.listItemVerticalContainer : { flexDirection: 'row', paddingBottom: 10 }}
-        onPress={() => { navigation.navigate('ToktokFoodSearch', { search: item.categoryName }) }}
+        onPress={() => showSearchPage(item)}
       >
         <Image style={styles.img} resizeMode="cover" source={fastfood} />
         <Text numberOfLines={1} style={[styles.listItemText, { paddingHorizontal: horizontal ? 0 : 10 }]}>{item.categoryName}</Text>

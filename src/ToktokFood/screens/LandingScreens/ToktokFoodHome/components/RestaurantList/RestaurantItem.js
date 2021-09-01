@@ -31,7 +31,7 @@ const RestaurantItem = ({ item }) => {
         />
         <View style={styles.branchInfo}>
           <MCIcon name="clock-outline" color={'#868686'} size={13} />
-          <Text style={styles.branches}>{item.estimatedDeliveryTime}</Text>
+          <Text style={styles.branches}>{`${item.estimatedDeliveryTime} mins`}</Text>
 
           <MCIcon name="map-marker-outline" color={'#868686'} size={13} />
           <Text style={styles.branches}>{item.estimatedDistance}</Text>
