@@ -130,7 +130,7 @@ export const Vouchers = ({ navigation, vouchers, setVouchers, setVoucher}) => {
               style={{
                 flex: 0, 
                 paddingVertical: 15, 
-                paddingLeft: 15,
+                paddingHorizontal: 15,
                 backgroundColor: 'white',
                 alignItems: 'flex-end'
               }}

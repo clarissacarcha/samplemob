@@ -162,11 +162,11 @@ export const VariationBottomSheet = forwardRef(({ item, image, onPressBuyNow, on
               <View style={{flex: 1}}></View>
               <View style={{flex: 3}}>
                 <Text style={{color: "#F6841F", fontSize: 14}}><Price amount={item?.price} /></Text>
-                <Text style={{color: "#9E9E9E", fontSize: 12}}>Stock: {stock}</Text>
+                <Text style={{color: "#9E9E9E", fontSize: 12, marginTop: 5}}>Stock: {stock}</Text>
               </View>
-              <View style={{flex: 3, justifyContent: 'center'}}>
+              <View style={{flex: 6, justifyContent: 'center'}}>
                 <Text style={{color: "#9E9E9E", textDecorationLine: 'line-through', fontSize: 11}}>{item.compareAtPrice == 0 ? "" : <Price amount={item.compareAtPrice} />}</Text>
-                <Text></Text>
+                <Text style={{marginTop: 8}}></Text>
               </View>
               <View style={{flex: 1}}></View>
             </View>
@@ -185,7 +185,7 @@ export const VariationBottomSheet = forwardRef(({ item, image, onPressBuyNow, on
           let variantslist = variant?.variantList || ""
           const variants = variantslist.split(",")
           if(variants.length == 0 || variant.variantType == "") return null
-          return <ScrollView style={{height: 120}} showsVerticalScrollIndicator={false}>
+          return <ScrollView showsVerticalScrollIndicator={false}>
       <RenderVariation type={variant.variantType} variants={variants} />
           </ScrollView>
       })}

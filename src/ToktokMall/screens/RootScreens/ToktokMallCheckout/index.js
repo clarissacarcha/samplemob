@@ -110,6 +110,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
   const setAlertTrue = () => {
     setAlertModal(true)
+    console.log("test")
   }
 
   const [getCheckoutData, {error, loading}] = useLazyQuery(GET_CHECKOUT_DATA, {
