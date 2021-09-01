@@ -175,11 +175,13 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
       }
     });
   };
+
   const DeleteAddress = async () => {
     setConfirmDeleteModal(true)
     AsyncStorage.getItem('ToktokMallUser').then(async (raw) => {
       let data = JSON.parse(raw) || {};
       if (data.appSignature) {
+
         let body = {
           address_id: `${newAddressForm.id}`
         };
@@ -216,6 +218,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
       errors: prevState.errors.filter((error) => error !== field),
     }));
   };
+
   useEffect(() => {
     if (!newAddressForm.receiverName) {
       addError('receiverName');

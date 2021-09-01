@@ -81,7 +81,8 @@ const postCheckoutBody = {
 
 const Component = ({route, navigation, createMyCartSession}) => {
 
-  const user_address = useSelector(state=> state.toktokMall.user_address)
+  const userAddress = useSelector(state=> state.toktokMall.user_address)
+  const userDefaultAddress = useSelector(state=> state.toktokMall.defaultAddress)
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack onBack = {setAlertTrue}/>,
@@ -118,7 +119,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
     fetchPolicy: 'network-only',    
     onCompleted: (response) => {
       if(response.getCheckoutData){
-        setAddressData(response.getCheckoutData.address);
+        // setAddressData(response.getCheckoutData.address);
         setPaymentList(response.getCheckoutData.paymentMethods);
       }
     },
@@ -344,16 +345,16 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
   useEffect(() => {
     let a = 0;
-    if(!addressData) return
+    if(!userDefaultAddress) return
     for (var x = 0; x < route.params.data.length; x++) {
       for (var y = 0; y < route.params.data[x].cart.length; y++) {
         let item = route.params.data[x].cart[y];
         a += parseFloat(item.price) * item.qty;
       }
-      a += parseFloat(addressData?.shippingSummary?.rateAmount)
+      a += parseFloat(userDefaultAddress?.shippingSummary?.rateAmount)
     }
     setGrandTotal(a)
-  }, [addressData])
+  }, [userDefaultAddress])
 
   useEffect(() => {
     setParamsData(route?.params?.data)
@@ -389,7 +390,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
         />
         <View style ={{paddingBottom: 0}}>
           <AddressForm
-            data={addressData}
+            data={userDefaultAddress}
             onEdit={() => navigation.push("ToktokMallAddressesMenu", {
               onGoBack: (data) => {
                 // setAddressData(data)
@@ -399,7 +400,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
           />
           <Shops 
             raw={paramsData}
-            shipping={addressData?.shippingSummary}            
+            shipping={userDefaultAddress?.shippingSummary}            
           />
           <Vouchers 
             items={paramsData}
@@ -424,7 +425,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
           />
           <Totals 
             raw={paramsData}
-            shipping={addressData?.shippingSummary}
+            shipping={userDefaultAddress?.shippingSummary}
           />
         </View>
       </ScrollView>
@@ -446,7 +447,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  createMyCartSession: (action, payload) => dispatch({type: 'CREATE_MY_CART_SESSION', action,  payload}),
+  createMyCartSession: (action, payload) => dispatch({type: 'CREATE_MY_CART_SESSION', action,  payload})
 });
 
 export const ToktokMallCheckout = connect(null, mapDispatchToProps)(Component);

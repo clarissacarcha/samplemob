@@ -23,7 +23,7 @@ import {GET_CUSTOMER_ADDRESSES} from '../../../../../graphql/toktokmall/model';
 import {Loading} from '../../../../Components';
 import AsyncStorage from '@react-native-community/async-storage';
 
-const Component = ({route, navigation, reduxStates: {user_address}, reduxActions: {updateUserAddress}}) => {
+const Component = ({route, navigation, reduxStates: {user_address, defaultAddress}, reduxActions: {updateUserAddress, setDefaultUserAddress}}) => {
   const [data, setData] = useState([]);
   const [defaultId, setDefaultID] = useState(0);
 
@@ -67,6 +67,7 @@ const Component = ({route, navigation, reduxStates: {user_address}, reduxActions
 
   const renderAddresses = () => {
     return user_address.map((item) => {
+      console.log(item.fullAddress)
       return (
         <TouchableOpacity
           style={styles.addressContainer}
@@ -75,13 +76,15 @@ const Component = ({route, navigation, reduxStates: {user_address}, reduxActions
           }}
           onPress={() => {
             updateUserAddress("changeDefault", item.id);
+            setDefaultUserAddress("set", item);
           }}>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <Text style={styles.addressfullName}>{item.receiverName}</Text>
-            {item.defaultAdd == 1 ? <Text style={styles.addressdefaultText}>Default</Text> : null}
+            {/* {item.defaultAdd == 1 ? <Text style={styles.addressdefaultText}>Default</Text> : null} */}
+            {defaultAddress && item.id == defaultAddress.id ? <Text style={styles.addressdefaultText}>Default</Text> : null}
           </View>
           <Text style={styles.addresscontact_number}>{item.receiverContact}</Text>
-          <Text style={styles.addressText}>{item.address}</Text>
+          <Text style={styles.addressText}>{item.fullAddress || item.address}</Text>
         </TouchableOpacity>
       );
     });
@@ -117,6 +120,7 @@ const Component = ({route, navigation, reduxStates: {user_address}, reduxActions
 const mapStateToProps = (state) => ({
   reduxStates: {
     user_address: state.toktokMall.user_address,
+    defaultAddress: state.toktokMall.defaultAddress
   },
 });
 
@@ -124,6 +128,9 @@ const mapDispatchToProps = (dispatch) => ({
   reduxActions: {
     updateUserAddress: (action, payload) => {
       dispatch({type: 'TOKTOKMALL_USER_ADDRESS', action, payload});
+    },
+    setDefaultUserAddress: (action, payload) => {
+      dispatch({type: 'CREATE_DEFAULT_ADDRESS_SESSION', action, payload});
     },
   },
 });

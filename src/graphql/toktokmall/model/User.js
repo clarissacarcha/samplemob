@@ -31,6 +31,7 @@ export const GET_CUSTOMER_ADDRESSES = gql`
       provinceId
       municipalityId
 			defaultAdd
+			fullAddress
     	shippingSummary {
       	id
       	rateName
