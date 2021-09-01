@@ -157,22 +157,23 @@ const Component =  ({
     )
   }
 
-  if(loading) {
-    return (
-      <>
-        <LoadingOverlay isVisible={loading} />
-      </>
-    )
-  }
+  // if(loading) {
+  //   return (
+  //     <>
+  //       <LoadingOverlay isVisible={loading} />
+  //     </>
+  //   )
+  // }
 
   return (
     <>
     <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
       
-      { loading ? <></> : <HeaderPlain animatedValue={animatedHeaderValueRef} cartItems={cartItems} itemName = {route.params.itemname} /> }
-      { loading ? <></> : <HeaderTransparent animatedValue={animatedHeaderValueRef} cartItems={cartItems} /> }
+      { isFetching ? <></> : <HeaderPlain animatedValue={animatedHeaderValueRef} cartItems={cartItems} itemName = {route.params.itemname} /> }
+      { isFetching ? <></> : <HeaderTransparent animatedValue={animatedHeaderValueRef} cartItems={cartItems} /> }
+      <LoadingOverlay isVisible={isFetching} />
       
-      <Animated.ScrollView
+     <Animated.ScrollView
         scrollEventThrottle = {270}
         onScroll={onScroll}
         showsVerticalScrollIndicator={false}
@@ -190,33 +191,47 @@ const Component =  ({
             loading = {isFetching}
           />
         </ContentLoader> */}
-        <ProductCarousel 
+        {isFetching ? <></> :
+          <ProductCarousel 
             data={images} 
             isOutOfStock={isOutOfStock} 
             isLoading={isLoading} 
             setIsLoading={setIsLoading} 
             loading = {loading}
           />
-        <RenderProduct
-          data={product} 
-          shop={store} 
-          animatedValue = {AnimatedHeaderValue}
-          onOpenVariations={() => {
-            setVariationOptionType(0)
-            varBottomSheetRef.current.expand()
-          }}
-          loading = {isFetching}
-        />
-        <RenderStore 
-          data={store} 
-          loading = {isFetching}
-        />
-        <RenderDescription 
-          data={product} 
-          loading = {isFetching}
-        />
+        }
+
+        {isFetching ? <></> :
+          <RenderProduct
+            data={product} 
+            shop={store} 
+            animatedValue = {AnimatedHeaderValue}
+            onOpenVariations={() => {
+              setVariationOptionType(0)
+              varBottomSheetRef.current.expand()
+            }}
+            loading = {isFetching}
+          />
+        }
+
+        {isFetching ? <></> :
+          <RenderStore 
+            data={store} 
+            loading = {isFetching}
+          />
+        }
+
+        {isFetching ? <></> :
+          <RenderDescription 
+            data={product} 
+            loading = {isFetching}
+          />
+        }
+
+        {isFetching ? <></> : <RenderSuggestions data={relevantProducts || []} /> }
+        
         {/* <RenderReviews /> */}
-        <RenderSuggestions data={relevantProducts || []} />
+        
         <View style={{height: 60}} />
       </Animated.ScrollView>
 

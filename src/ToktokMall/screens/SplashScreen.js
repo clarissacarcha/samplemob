@@ -161,8 +161,8 @@ const Splash = ({ createMyCartSession, createNotificationsSession}) => {
 	}
 
 	useEffect(() => {
-		// init()
-    navigation.navigate("ToktokMallLanding");
+		init()
+    // navigation.navigate("ToktokMallLanding");
 	}, [])
 
 	useEffect(() => {

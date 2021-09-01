@@ -92,9 +92,11 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
             <View style={{flex: 4, alignItems: 'flex-start', justifyContent: 'center'}}>
               <Text style={{fontSize: 11, marginLeft: 8, color: COLOR.DARK}}>(Balance P0.00)</Text>
             </View>
-            <View style={{flex: 2, alignItems: 'flex-end', justifyContent: 'center'}}>
+            <TouchableOpacity style={{flex: 2, alignItems: 'flex-end', justifyContent: 'center'}}
+              onPress = {() => {navigation.navigate("ToktokMallOTP")}}
+            >
               <Text style={{fontSize: 13, fontFamily: FONT.REGULAR, color: COLOR.ORANGE}}>Top up</Text>
-            </View>
+            </TouchableOpacity>
           </View>
         </Card>
         
