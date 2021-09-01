@@ -84,7 +84,17 @@ const Component = ({data, onOpenVariations, animatedValue, shop, loading, reduxA
           paragraphStyles = {{height: 13, left: -10 }}
           pWidth = {'45%'}
         ></ContentLoader> */}
-          <Animated.Text style={[{fontSize: 22, fontWeight: '500', fontFamily: FONT.BOLD}, {opacity: opacity}]}>{data.itemname}</Animated.Text>
+          <Animated.View style={{flexDirection: 'row', opacity: opacity}}>
+            <View style={{flex: 9}}>
+              <Text style={[{fontSize: 22, fontWeight: '500', fontFamily: FONT.BOLD}]}>{data.itemname}</Text>
+            </View>         
+            <View style={{flex: 0}}>
+              {data?.discountRate != "" && 
+              <View style={{position:'absolute', zIndex: 1, right: 0, top: -16, backgroundColor: '#F6841F', borderBottomLeftRadius: 30}}>
+                <Text style={{fontSize: 11, paddingHorizontal: 8, paddingLeft: 16, paddingTop: 1, paddingBottom: 3, color: "#fff", fontFamily: FONT.BOLD}}>{data?.discountRate}</Text>
+              </View>}
+            </View> 
+          </Animated.View>
           <View style={{flexDirection: 'row', alignItems: "center"}}>
               {data.price ? <Text style={{color: "#F6841F", fontSize: 20}}><Price amount={data.price} /></Text> : null}
               {data.compareAtPrice && data.compareAtPrice != "0.00" ? <Text style={{color: "#9E9E9E", textDecorationLine: 'line-through', fontSize: 14, marginLeft: 10}}><Price amount={data.compareAtPrice} /></Text> : null}
