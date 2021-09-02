@@ -1,10 +1,13 @@
-import React from 'react';
-import {View, StyleSheet, Text, TouchableOpacity, Image, Platform} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, StyleSheet, Text, TouchableOpacity, Image, Platform, FlatList} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import {useLazyQuery, useQuery} from '@apollo/react-hooks';
+import {GET_PRODUCTS_BY_SHOP_CATEGORY} from 'toktokfood/graphql/toktokfood';
+import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
+import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 
 // Fonts & Colors
 import {COLOR} from 'res/variables';
-
 
 import {
   verticalScale,
@@ -15,20 +18,38 @@ import {
 } from 'toktokfood/helper/scale';
 
 const FoodList = (props) => {
-  const {foodList} = props;
+  const { activeTab, id, tagsLoading } = props;
   const navigation = useNavigation();
+
+  // data fetching for product under specific category
+  const [getProductsByShopCategory, {data: products, error: productsError, loading: productsLoading }] = useLazyQuery(GET_PRODUCTS_BY_SHOP_CATEGORY, {
+    variables: {
+      input: {
+        id: id,
+        catId: `${activeTab.id}`
+      }
+    },
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only'
+  });
+
+  useEffect(() => {
+    if(activeTab?.id){
+      getProductsByShopCategory()
+    }
+  }, [activeTab])
 
   const onNavigateToFoodItemDetails = (item) => {
     navigation.navigate('ToktokFoodItemDetails', item);
   };
 
-  const FoodItem = (item) => {
+  const renderItem = ({ item }) => {
     return (
       <TouchableOpacity onPress={() => onNavigateToFoodItemDetails(item)} style={styles.listContainer}>
         <View>
-          <Text style={styles.listText}>{item.name}</Text>
+          <Text style={styles.listText}>{item.itemname}</Text>
           <Text style={styles.listPrice}>PHP {item.price.toFixed(2)}</Text>
-          <Text>{item.description}</Text>
+          <Text numberOfLines={1} >{item.summary}</Text>
         </View>
         <View>
           <Image resizeMode="contain" source={item.image} style={styles.img} />
@@ -36,8 +57,27 @@ const FoodList = (props) => {
       </TouchableOpacity>
     );
   };
-
-  return <View style={styles.container}></View>;
+  
+  console.log(!productsLoading, Object.entries(activeTab).length, 'HAHAHA')
+  console.log(productsLoading, productsLoading == undefined, productsError, 'asldjasljdas')
+  
+  if(productsLoading || tagsLoading || productsError){
+    return <LoadingIndicator style={styles.container} isLoading={true} />
+  }
+  return(
+    <>
+      <FlatList
+        data={products ? products.getProductsByShopCategory : []}
+        extraData={props}
+        renderItem={renderItem}
+        ListEmptyComponent={() => (
+          <View style={styles.container}>
+            <Text style={{ textAlign: 'center', marginVertical: 20 }}>No products</Text>
+          </View>
+        )}
+      />
+    </>
+  )
 };
 
 export default FoodList;
@@ -50,7 +90,6 @@ const styles = StyleSheet.create({
         : getDeviceHeight -
           ((Platform.OS === 'android' ? moderateScale(88 + getStatusbarHeight) : moderateScale(105)) +
             moderateScale(180)),
-
     flex: 1,
     paddingHorizontal: 20,
     backgroundColor: COLOR.WHITE,
@@ -78,5 +117,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingVertical: verticalScale(15),
+    paddingHorizontal: verticalScale(20)
   },
 });

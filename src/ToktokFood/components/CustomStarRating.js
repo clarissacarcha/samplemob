@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {TouchableOpacity, StyleSheet, Platform, Text, Image, FlatList} from 'react-native';
+import {TouchableOpacity, StyleSheet, Platform, Text, Image, FlatList, View} from 'react-native';
 
 // assets
 import {star, star_no_fill, star_gray, star_half} from 'toktokfood/assets/images';
@@ -40,7 +40,10 @@ const CustomStarRating = (props) => {
         reviewStyle,
         isGrayStar,
         onFinishRating,
-        starImgStyle
+        starImgStyle,
+        rightRating,
+        ratingText = '',
+        ratingStyle
     } = props;
     const reviews = ["Very Dissatisfied", "Dissatisfied", "Fair", "Satisfied", "Very Satisfied"] 
     const maxRating = [1, 2, 3, 4, 5];
@@ -52,10 +55,24 @@ const CustomStarRating = (props) => {
     return (
         <>
             { showReviews && <Text style={[ styles.reviewText, reviewStyle ]}>{reviews[rating - 1]}</Text> }
-            <FlatList
-                horizontal
-                data={maxRating}
-                renderItem={({item}) => (
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                {/* <FlatList
+                    horizontal
+                    data={maxRating}
+                    renderItem={({item}) => (
+                        <RenderStar
+                            isGrayStar={isGrayStar}
+                            readOnly={readOnly}
+                            item={item}
+                            rating={rating}
+                            onPressStar={onPressStar}
+                            starImgStyle={starImgStyle}
+                        />
+                    )}
+                    scrollEnabled={false}
+                    extraData={props}
+                /> */}
+                { maxRating.map(({ item }) => (
                     <RenderStar
                         isGrayStar={isGrayStar}
                         readOnly={readOnly}
@@ -64,11 +81,15 @@ const CustomStarRating = (props) => {
                         onPressStar={onPressStar}
                         starImgStyle={starImgStyle}
                     />
-                )}
-                scrollEnabled={false}
-                extraData={props}
-            />
-            { showRating && <Text style={styles.ratingText}>{`${parseFloat(rating).toFixed(1)} stars`}</Text> }
+                ))
+
+                }
+                { showRating && 
+                    <Text style={[ styles.ratingText, { paddingTop: !rightRating ? 15 : 0 }, ratingStyle ]}>
+                        {`${parseFloat(rating).toFixed(1)} ${ratingText}`}
+                    </Text>
+                }
+            </View>
         </>
     )
 };
@@ -84,10 +105,10 @@ const styles = StyleSheet.create({
     },
     ratingText: {
         fontSize: 14,
-        fontFamily: FONTS.MEDIUM,
+        fontFamily: FONTS.BOLD,
         textAlign: 'center',
         color: '#FFA700',
-        paddingTop: 15
+        paddingHorizontal: 10
     },
     reviewText: {
         fontSize: 14,

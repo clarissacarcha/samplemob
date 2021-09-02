@@ -1,6 +1,6 @@
 import {useRoute} from '@react-navigation/native';
-import React, {useState} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {Platform, StyleSheet, Text, View, Image} from 'react-native';
 import ReactNativeParallaxHeader from 'react-native-parallax-header';
 import {Rating} from 'react-native-ratings';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -20,6 +20,12 @@ import {
 import {tabs} from 'toktokfood/helper/strings';
 import FoodList from './FoodList';
 import HeaderTitleSearchBox from './HeaderTitleSearchBox';
+import CustomStarRating from 'toktokfood/components/CustomStarRating';
+import { FONT_SIZE } from 'res/variables';
+import {useLazyQuery, useQuery} from '@apollo/react-hooks';
+import {GET_PRODUCT_CATEGORIES, GET_PRODUCTS_BY_SHOP} from 'toktokfood/graphql/toktokfood';
+import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
+import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 
 // const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 // const IS_IPHONE_X = SCREEN_HEIGHT === 812 || SCREEN_HEIGHT === 896;
@@ -31,52 +37,92 @@ const StickyView = () => {
   const routes = useRoute();
 
   const [offset, setOffset] = useState(0);
-  const [activeTab, setActiveTab] = useState(tabs[0]);
+  const [activeTab, setActiveTab] = useState({});
 
-  const {distance, image, name, ratings, time, totalBranches} = routes.params.item;
+  const {
+    id,
+    address,
+    shopname,
+    ratings,
+    banner,
+    estimatedDeliveryTime,
+    estimatedDistance,
+    logo
+  } = routes.params.item;
 
   const headerMaxHeight = Platform.OS === 'ios' ? scale(400) : scale(370);
   const headerMinHeight = Platform.OS === 'ios' ? moderateScale(120) : moderateScale(140);
+
+  // data fetching for product tags/tabs
+  const [getProductCategories, {data: tagsData, error: tagsError, loading: tagsLoading }] = useLazyQuery(GET_PRODUCT_CATEGORIES, {
+    variables: {
+      input: {
+        id: id,
+      }
+    },
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only'
+  });
+
+  useEffect(() => {
+    getProductCategories()
+  }, [])
+  
+  useEffect(() => {
+    if(tagsData?.getProductCategories.length > 0){
+      setActiveTab(tagsData?.getProductCategories[0])
+    }
+  }, [tagsData])
+
+  const DisplayHeaderTabs = () => {
+    if(tagsLoading){
+      return <LoadingIndicator style={{ paddingVertical: 10 }} isLoading={true} size='small' />
+    }
+    return <HeaderTabs activeTab={activeTab} tabs={tagsData?.getProductCategories} setActiveTab={setActiveTab} />
+  }
 
   const NavBar = () => (
     <View style={[styles.headerWrapper, styles.navbarWrapper]}>
       <HeaderTitleSearchBox />
       <View style={styles.tabContainer}>
-        <HeaderTabs activeTab={activeTab} tabs={tabs} setActiveTab={setActiveTab} />
+        <DisplayHeaderTabs />
       </View>
     </View>
   );
-
+  
   const renderTitle = () => (
     <View style={styles.title}>
       <View style={styles.titleContainer}>
-        <HeaderTitle title={name} showAddress={true} />
+        <HeaderTitle title={'toktokfood'} showAddress={true} />
       </View>
       <View style={styles.titleInfo}>
         <View style={styles.content}>
-          <Text style={styles.titleText}>{name}</Text>
-          <Rating startingValue={ratings} tintColor="white" imageSize={13} readonly style={styles.ratings} />
-
-          <View style={styles.branchInfo}>
-            <MCIcon name="store" color="#868686" size={13} />
-            <Text style={styles.branches}>{totalBranches} branches</Text>
-
-            <MCIcon name="clock-outline" color="#868686" size={13} />
-            <Text style={styles.branches}>{time}</Text>
-
-            <MCIcon name="map-marker-outline" color="#868686" size={13} />
-            <Text style={styles.branches}>{distance}</Text>
+          <Image source={logo} style={{ width: scale(70), height: scale(70) }} resizeMode='cover' />
+          <View style={{ flexShrink: 1 }}>
+            <Text numberOfLines={2} style={styles.titleText}>{`${shopname} (${address})`}</Text>
+            <CustomStarRating
+              rating={ratings ?? '0'}
+              starImgStyle={{ width: scale(15), height: scale(15), marginVertical: 5 }}
+              ratingStyle={{ color: 'black', fontSize: FONT_SIZE.S }}
+              readOnly
+              showRating
+              rightRating
+            />
+            <View style={styles.branchInfo}>
+              <MCIcon name="clock-outline" color="#868686" size={13} />
+              <Text style={styles.branches}>{`${estimatedDeliveryTime} mins`}</Text>
+              <MCIcon name="map-marker-outline" color="#868686" size={13} />
+              <Text style={styles.branches}>{estimatedDistance}</Text>
+            </View>
           </View>
         </View>
-
-        <HeaderTabs activeTab={activeTab} tabs={tabs} setActiveTab={setActiveTab} />
+        <DisplayHeaderTabs />
       </View>
     </View>
   );
-
+ 
   return (
     <>
-      {/* <StatusBar barStyle="dark-content" /> */}
       <ReactNativeParallaxHeader
         alwaysShowNavBar={false}
         alwaysShowTitle={false}
@@ -86,11 +132,11 @@ const StickyView = () => {
         extraScrollHeight={10}
         backgroundImageScale={1.1}
         title={renderTitle()}
-        backgroundImage={image}
+        backgroundImage={banner}
         navbarColor="whitesmoke"
         backgroundColor="transparent"
         renderNavBar={() => <NavBar />}
-        renderContent={() => <FoodList />}
+        renderContent={() => <FoodList id={id} activeTab={activeTab} tagsLoading={tagsLoading} />}
         containerStyle={styles.container}
         contentContainerStyle={styles.contentContainer}
         scrollViewProps={{
@@ -120,6 +166,7 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingHorizontal: moderateScale(10),
+    flexDirection: 'row',
   },
   contentContainer: {
     backgroundColor: 'white',

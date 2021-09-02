@@ -9,7 +9,7 @@ import {FONT, FONT_SIZE, COLOR} from '../../res/variables';
 const LoadingIndicator = ({ isLoading, isFlex, style }) => {
 
   const Loading = () => (
-    <View style={[ isFlex ? styles.container : {}, style]}>
+    <View style={[ isFlex ? styles.container : { zIndex: 2 },  style]}>
       <ActivityIndicator size='large' color='#FFA700' />
     </View>
   )

@@ -6,6 +6,7 @@ export const GET_SHOPS = gql`
       id
       address
       shopname
+      banner
       logo
       ratings
       estimatedDistance

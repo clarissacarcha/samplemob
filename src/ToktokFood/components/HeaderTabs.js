@@ -6,8 +6,8 @@ const HeaderTabs = ({activeTab, setActiveTab, tabs}) => {
     return (
       <TouchableOpacity
         onPress={() => setActiveTab(item)}
-        style={[styles.tabContainer, activeTab.id === item.id && styles.activeTabContainer]}>
-        <Text style={[styles.tabText, activeTab.id === item.id && styles.activeTabText]}>{item.name}</Text>
+        style={[styles.tabContainer, activeTab.id == item.id && styles.activeTabContainer]}>
+        <Text style={[styles.tabText, activeTab.id == item.id && styles.activeTabText]}>{item.name ?? item.categoryName}</Text>
       </TouchableOpacity>
     );
   };
@@ -15,7 +15,7 @@ const HeaderTabs = ({activeTab, setActiveTab, tabs}) => {
   return (
     <View style={styles.container}>
       {/* showsHorizontalScrollIndicator={false} added for Android */}
-      <FlatList horizontal data={tabs} renderItem={renderItem} showsHorizontalScrollIndicator={false} />
+      <FlatList extraData={activeTab} horizontal data={tabs} renderItem={renderItem} showsHorizontalScrollIndicator={false} />
       <View style={styles.divider} />
     </View>
   );
@@ -59,5 +59,6 @@ const styles = StyleSheet.create({
   },
   tabText: {
     fontWeight: '400',
+    textTransform: 'capitalize'
   },
 });

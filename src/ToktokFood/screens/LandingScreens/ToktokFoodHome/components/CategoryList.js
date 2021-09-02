@@ -2,7 +2,7 @@ import React, {useState, useEffect, useRef} from 'react';
 import {FlatList, Image, Platform, View, StyleSheet, Text, TouchableOpacity, ActivityIndicator, RefreshControl} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {useLazyQuery, useQuery} from '@apollo/react-hooks';
-import {GET_CATEGORIES} from 'toktokfood/graphql/toktokfood';
+import {GET_CATEGORIES_BY_LIMIT} from 'toktokfood/graphql/toktokfood';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import { onErrorAlert } from 'src/util/ErrorUtility';
 import {useAlert} from 'src/hooks';
@@ -27,11 +27,11 @@ const CategoryList = ({horizontal, rightText = '', filterSearch = 0, homeRefresh
   const flatListRef = useRef()
 
   // fetch data in categoties
-  const {data, error, loading, fetchMore, refetch} = useQuery(GET_CATEGORIES, {
+  const {data, error, loading, fetchMore, refetch} = useQuery(GET_CATEGORIES_BY_LIMIT, {
     variables: {
       input: {
         page: 0,
-        limit,
+        limit: limit,
         filterSearch: filterSearch ? filterSearch.id : 0
       }
     },
@@ -44,7 +44,7 @@ const CategoryList = ({horizontal, rightText = '', filterSearch = 0, homeRefresh
   }, [filterSearch, homeRefreshing]);
 
   useEffect(() => {
-    if(page != 0 && data && data.getCategories.length > 0){
+    if(page != 0 && data && data.getCategoriesByLimit.length > 0){
       fetchMore({
         variables: {
           input: {
@@ -57,7 +57,7 @@ const CategoryList = ({horizontal, rightText = '', filterSearch = 0, homeRefresh
           if (!fetchMoreResult) {
             return previousResult;
           }
-          return { getCategories: [ ...previousResult.getCategories, ...fetchMoreResult.getCategories ] }
+          return { getCategoriesByLimit: [ ...previousResult.getCategoriesByLimit, ...fetchMoreResult.getCategoriesByLimit ] }
         }
       })
     }
@@ -65,8 +65,8 @@ const CategoryList = ({horizontal, rightText = '', filterSearch = 0, homeRefresh
 
   useEffect(() => {
     if(data){
-      if(JSON.stringify(data.getCategories) != JSON.stringify(tempCategories)){
-        setTempCategories(data.getCategories)
+      if(JSON.stringify(data.getCategoriesByLimit) != JSON.stringify(tempCategories)){
+        setTempCategories(data.getCategoriesByLimit)
         setPendingProcess(true)
       } else {
         setPendingProcess(false)
@@ -121,7 +121,7 @@ const CategoryList = ({horizontal, rightText = '', filterSearch = 0, homeRefresh
   )
   
   const displayComponent = () => {
-    const datas = horizontal ? data?.getCategories.slice(0, 4) : data?.getCategories
+    const datas = horizontal ? data?.getCategoriesByLimit.slice(0, 4) : data?.getCategoriesByLimit
     const shops = datas ? datas : []
 
     if(loading || error){
@@ -130,7 +130,7 @@ const CategoryList = ({horizontal, rightText = '', filterSearch = 0, homeRefresh
     return (
       <FlatList
         extraData={loadMore}
-        horizontal={data?.getCategories.length > 0 ? horizontal : false}
+        horizontal={data?.getCategoriesByLimit.length > 0 ? horizontal : false}
         data={shops} 
         renderItem={renderItem}
         showsHorizontalScrollIndicator={false}
