@@ -40,3 +40,18 @@ export const SEARCH_SHOP_PRODUCT = gql`
 		}
 	}
 `
+
+export const GET_SHOP_SEARCH_SUGGESTIONS = gql`
+	query getSearchSuggestions($input: SearchShopProductInput){
+		getSearchSuggestions(input: $input){
+			Id
+			sysShop
+			itemname
+			price
+			discountRate
+			images {
+				filename
+			}
+		}
+	}
+`
