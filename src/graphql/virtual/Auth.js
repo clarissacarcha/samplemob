@@ -17,6 +17,8 @@ user {
     avatar
     avatarThumbnail
     status
+    mobileNumber
+    hasToktokfood
     address {
       line1
       line2

@@ -72,7 +72,7 @@ const CustomStarRating = (props) => {
                     scrollEnabled={false}
                     extraData={props}
                 /> */}
-                { maxRating.map(({ item }) => (
+                { maxRating.map((item) => (
                     <RenderStar
                         isGrayStar={isGrayStar}
                         readOnly={readOnly}

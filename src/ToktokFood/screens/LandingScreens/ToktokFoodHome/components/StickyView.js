@@ -5,7 +5,7 @@ import ReactNativeParallaxHeader from 'react-native-parallax-header';
 import {useNavigation} from '@react-navigation/native';
 import {useLazyQuery, useQuery} from '@apollo/react-hooks';
 import {GET_SHOPS} from 'toktokfood/graphql/toktokfood';
-import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
+import {TOKTOK_FOOD_GRAPHQL_CLIENT, AUTH_CLIENT} from 'src/graphql';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 
 // Components
@@ -43,7 +43,7 @@ const StickyView = () => {
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const headerMaxHeight = Platform.OS === 'ios' ? moderateScale(295) : moderateScale(325);
   const headerMinHeight = Platform.OS === 'ios' ? verticalScale(50) : moderateScale(65);
-  const {location} = useSelector((state) => state.toktokFood);
+  const { location } = useSelector((state) => state.toktokFood);
 
   const RenderNavBar = () => {
     return (
