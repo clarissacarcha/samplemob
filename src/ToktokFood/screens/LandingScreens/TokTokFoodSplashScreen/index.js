@@ -35,13 +35,13 @@ const TokTokFoodSplashScreen = () => {
     {
       variables: {
         input: {
-          toktokUserId: user.person.id,
+          toktokUserId: user.id,
         },
       },
       client: TOKTOK_FOOD_GRAPHQL_CLIENT,
       fetchPolicy: 'network-only',
-      onCompleted: () => {
-        dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_INFO', payload: {...foodPerson.getAccount}});
+      onCompleted: ({getAccount}) => {
+        dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_INFO', payload: {...getAccount}});
         showHomPage();
       },
     },
