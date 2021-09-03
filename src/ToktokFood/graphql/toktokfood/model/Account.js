@@ -13,6 +13,7 @@ export const GET_ACCOUNT = gql`
     getAccount(input: $input) {
       id
       userId
+      toktokUserid
       firstName
       lastName
       conno

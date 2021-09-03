@@ -43,8 +43,8 @@ const ToktokFoodSearch = () => {
   const [isShowError, setShowError] = useState(false);
   // const [foodQuery, setFoodQuery] = useState(true);
 
-  const onRestaurantNavigate = (shopId) => {
-    navigation.navigate('ToktokFoodRestaurantOverview', {shopId});
+  const onRestaurantNavigate = (item) => {
+    navigation.navigate('ToktokFoodRestaurantOverview', {item});
   };
 
   const searchFood = async (s = '', radius = 100) => {
@@ -64,12 +64,12 @@ const ToktokFoodSearch = () => {
                 userLatitude: ${location.latitude},
                 userLongitude: ${location.longitude}
               }) {
-                shopId
+                id
                 ratings
-                shopName
-                shopImage
-                branchNumber
-                shopAddress
+                shopname
+                logo
+                banner
+                address
                 estimatedDistance
                 estimatedDeliveryTime
               }
@@ -86,13 +86,13 @@ const ToktokFoodSearch = () => {
   useEffect(() => {}, []);
 
   const renderItem = ({item}) => (
-    <TouchableWithoutFeedback onPress={() => onRestaurantNavigate(item.shopId)}>
+    <TouchableWithoutFeedback onPress={() => onRestaurantNavigate(item)}>
       <View style={styles.itemContainer}>
         <View style={styles.imgWrapper}>
           <Image
             resizeMode="contain"
             source={{
-              uri: item.shopImage,
+              uri: item.logo,
             }}
             style={styles.img}
           />
@@ -105,7 +105,7 @@ const ToktokFoodSearch = () => {
         <View style={styles.restaurantInfo}>
           <View style={styles.infoWrapper}>
             <Text numberOfLines={2} style={styles.restaurantName}>
-              {item.shopName}
+              {item.shopname}
             </Text>
             <Rating startingValue={item.ratings} imageSize={15} readonly style={styles.ratings} />
           </View>
