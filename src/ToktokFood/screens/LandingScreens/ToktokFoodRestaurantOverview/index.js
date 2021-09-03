@@ -9,7 +9,6 @@ import {FoodCart} from './components';
 import {MY_ORDERS} from 'toktokfood/helper/strings';
 
 const ToktokFoodRestaurantOverview = () => {
-
   const {price} = useSelector((state) => state.toktokFood.totalAmount);
 
   return (
