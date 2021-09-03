@@ -13,7 +13,7 @@ const INITIAL_STATE = {
   },
   totalAmount: {price: 0},
   orderStatus: {status: 1},
-  accountInfo: {}
+  customerInfo: {},
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -28,8 +28,10 @@ export default (state = INITIAL_STATE, action) => {
       return {...state, totalAmount: action.payload};
     case 'SET_TOKTOKFOOD_SHOPS':
       return {...state, shops: action.payload};
-     case 'SET_TOKTOKFOOD_ACCOUNT_INFO':
+    case 'SET_TOKTOKFOOD_ACCOUNT_INFO':
       return {...state, accountInfo: action.payload};
+    case 'SET_TOKTOKFOOD_CUSTOMER_INFO':
+      return {...state, customerInfo: action.payload};
     default:
       return state;
   }
