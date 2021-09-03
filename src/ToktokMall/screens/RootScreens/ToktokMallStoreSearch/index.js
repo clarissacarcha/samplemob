@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, Image, FlatList, TouchableOpacity} from 'react-native';
+import {View, Text, Image, FlatList, TouchableOpacity, Dimensions} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import {LandingSubHeader, Dropdown, MessageModal} from '../../../Components';
 import { Product} from './components';
@@ -8,6 +8,7 @@ import { GET_SHOP_DETAILS, SEARCH_SHOP_PRODUCT, GET_SHOP_SEARCH_SUGGESTIONS } fr
 import { useLazyQuery } from '@apollo/react-hooks';
 import Spinner from 'react-native-spinkit';
 import { FONT } from '../../../../res/variables';
+import {emptysearch} from "../../../assets";
 
 export const ToktokMallStoreSearch = ({navigation, route}) => {
 
@@ -117,9 +118,20 @@ export const ToktokMallStoreSearch = ({navigation, route}) => {
         />
 
         {emptySearch &&
-        <View style={{paddingHorizontal: 15, paddingVertical: 15}}>
-          <Text style={{color: "#F6841F", fontSize: 14}}>No results found</Text>
-        </View>}
+          <>
+          <View style={{flex: 1, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center'}}>
+            <Image 
+		  			  source={emptysearch}
+	  				  style={{width: '70%', height: Dimensions.get("screen").height / 4, resizeMode: 'contain'}}
+  				  />
+            <View style={{height: 20}} />
+            <View style={{alignItems: 'center', justifyContent: 'center'}}>
+		    			<Text style={{fontSize: 16, color: "#9E9E9E"}}>No products found</Text>
+              <Text style={{fontSize: 11, color: "#9E9E9E"}}>Try different or more general keywords</Text>              
+	    			</View>
+          </View>
+          <View style={{flex: 0.2}} />
+          </>}
 
         {loading && 
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>

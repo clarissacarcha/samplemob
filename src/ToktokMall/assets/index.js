@@ -24,6 +24,7 @@ export const reviewimage = require("../assets/images/review-image.png")
 export const otpbg = require("../assets/images/otp-bg.png")
 export const emptyorders = require("../assets/images/empty-orders.png")
 export const emptynotification = require("../assets/images/empty-notification.png")
+export const emptysearch = require("../assets/images/empty-search.png")
 
 //ICONS
 export const successIcon = require("../assets/icons/success.png")

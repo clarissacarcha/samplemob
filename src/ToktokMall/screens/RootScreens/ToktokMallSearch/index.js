@@ -1,6 +1,6 @@
 import { debounce, filter } from 'lodash';
 import React, {useState, useEffect, useRef} from 'react';
-import {View, Text, FlatList, TouchableOpacity} from 'react-native';
+import {View, Text, FlatList, TouchableOpacity, Image, Dimensions} from 'react-native';
 import { SearchBar } from 'react-native-elements'
 import Spinner from 'react-native-spinkit';
 import { useLazyQuery } from '@apollo/react-hooks';
@@ -13,6 +13,7 @@ import {SEARCH_PRODUCT} from '../../../../graphql/toktokmall/model';
 import { connect } from 'react-redux';
 
 import {Product} from './components'
+import {emptysearch} from '../../../assets'
 
 const testdata = ["Gaming Chair", "Mousepad", "Face mask", "Pillow", "Ballpen"]
 
@@ -159,9 +160,23 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
         </>}
 
         {error || !loading && searchValue != "" && searchedProducts.length == 0 && emptySearch && 
-					<View style={{paddingHorizontal: 15, paddingVertical: 15}}>
-						<Text style={{color: "#9E9E9E", fontSize: 14}}>No results found</Text>
-					</View>
+					// <View style={{paddingHorizontal: 15, paddingVertical: 15}}>
+					// 	<Text style={{color: "#9E9E9E", fontSize: 14}}>No results found</Text>
+					// </View>
+          <>
+          <View style={{flex: 1, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center'}}>
+            <Image 
+		  			  source={emptysearch}
+	  				  style={{width: '70%', height: Dimensions.get("screen").height / 4, resizeMode: 'contain'}}
+  				  />
+            <View style={{height: 20}} />
+            <View style={{alignItems: 'center', justifyContent: 'center'}}>
+		    			<Text style={{fontSize: 16, color: "#9E9E9E"}}>No products found</Text>
+              <Text style={{fontSize: 11, color: "#9E9E9E"}}>Try different or more general keywords</Text>              
+	    			</View>
+          </View>
+          <View style={{flex: 0.2}} />
+          </>
         }
 
         {!loading && searchedProducts.length > 0 && searchValue != "" && 
