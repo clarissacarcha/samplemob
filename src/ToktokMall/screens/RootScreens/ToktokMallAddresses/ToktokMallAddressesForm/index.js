@@ -106,6 +106,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
     if (route.params?.update) {
       updateUserAddress('update', {
         ...newAddressForm,
+        fullAddress: newAddressForm.address + `, ${city}`,
         regionId: parseInt(regCode) || 0,
         provinceId: parseInt(provCode),
         municipalityId: parseInt(munCode),
@@ -119,6 +120,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
         updateUserAddress('add', {
           id: user_address.length + 1,
           ...newAddressForm,
+          fullAddress: newAddressForm.address + `, ${city}`,
           regionId: parseInt(regCode) || 0,
           provinceId: parseInt(provCode),
           municipalityId: parseInt(munCode),
