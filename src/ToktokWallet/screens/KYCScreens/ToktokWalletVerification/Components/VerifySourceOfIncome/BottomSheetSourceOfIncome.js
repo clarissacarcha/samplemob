@@ -20,6 +20,7 @@ const BottomSheetSourceOfIncome = forwardRef(({changeIncomeInfo} , ref)=> {
       fetchPolicy:"network-only",
       onCompleted: ({getSourceOfIncome})=> {
         setFilteredSourceOfIncome(getSourceOfIncome)
+        setFilteredSourceOfIncome(state=> [...state, {id: 0 , description: "others"}])
       },
       onError: (error) => {
         onErrorAlert({alert, error});

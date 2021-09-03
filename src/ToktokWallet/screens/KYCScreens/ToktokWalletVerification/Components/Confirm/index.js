@@ -78,6 +78,12 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
             type: 'image/jpeg'
         })
 
+        const rnSelfieFileWithID =  new ReactNativeFile({
+            ...VerifyUserData.selfieImageWithID,
+            name: 'documentSelfieWithID.jpg',
+            type: 'image/jpeg'
+        })
+
         const rnFrontIDFile = VerifyUserData.frontImage 
         ? new ReactNativeFile({
             ...VerifyUserData.frontImage,
@@ -108,6 +114,7 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
             // birthdate: VerifyUserData.birthInfo.birthdate,
             birthPlace: VerifyUserData.birthInfo.birthPlace,
             ...( rnSelfieFile ? {selfieImage: rnSelfieFile} : {} ),
+            ...( rnSelfieFileWithID ? {selfieImageWithID: rnSelfieFileWithID} : {} ),
             nationality:  VerifyUserData.nationalityId.toString(),
             line1: VerifyUserData.address.line1,
             line2: VerifyUserData.address.line2,

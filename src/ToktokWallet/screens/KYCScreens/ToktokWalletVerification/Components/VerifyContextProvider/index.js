@@ -61,6 +61,7 @@ export const VerifyContextProvider = ({children})=> {
     const [identificationId, setIdentificationId] = useState(null)
 
     const [selfieImage,setSelfieImage] = useState(null)
+    const [selfieImageWithID,setSelfieImageWithID] = useState(null)
     const [frontImage, setFrontImage] = useState(null)
     const [backImage, setBackImage] = useState(null)
     const [isBackRequired, setIsbackRequired] = useState(false)
@@ -145,6 +146,8 @@ export const VerifyContextProvider = ({children})=> {
                 changeVerifyID,
                 selfieImage,
                 setSelfieImage,
+                selfieImageWithID,
+                setSelfieImageWithID,
                 person,
                 changePersonInfo,
                 modalCountryVisible,

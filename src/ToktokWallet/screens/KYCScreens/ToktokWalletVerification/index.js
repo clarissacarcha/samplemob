@@ -15,6 +15,7 @@ import {
     VerifyFullname,
     VerifyID,
     VerifySelfie,
+    VerifySelfieWithID,
     VerifySourceOfIncome
 } from "./Components";
 
@@ -83,7 +84,7 @@ const MainSetupComponent = ()=> {
     })
 
  
-    const [screenSlides,setScreenSlides] = useState(["Fullname","Address","SourceOfIncome","IDPic","SelfiePic","Confirm"])
+    const [screenSlides,setScreenSlides] = useState(["Fullname","Address","SourceOfIncome","IDPic","SelfiePic","SelfiePicWithID","Confirm"])
  
     const cancelSetup = ()=> {
       console.log("Cancelling")
@@ -103,6 +104,8 @@ const MainSetupComponent = ()=> {
                 return <VerifyID/>
             case 4:
                 return <VerifySelfie/>
+            case 5:
+                return <VerifySelfieWithID/>
             default:
                 return <Confirm/>
         }
