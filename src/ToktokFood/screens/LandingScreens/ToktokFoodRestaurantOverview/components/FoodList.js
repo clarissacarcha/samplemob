@@ -8,6 +8,8 @@ import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 
 // Fonts & Colors
 import {COLOR} from 'res/variables';
+import { food1 } from 'toktokfood/assets/images';
+
 
 import {
   verticalScale,
@@ -52,14 +54,11 @@ const FoodList = (props) => {
           <Text numberOfLines={1} >{item.summary}</Text>
         </View>
         <View>
-          <Image resizeMode="contain" source={item.image} style={styles.img} />
+          <Image resizeMode="contain" source={food1} style={styles.img} />
         </View>
       </TouchableOpacity>
     );
   };
-  
-  console.log(!productsLoading, Object.entries(activeTab).length, 'HAHAHA')
-  console.log(productsLoading, productsLoading == undefined, productsError, 'asldjasljdas')
   
   if(productsLoading || tagsLoading || productsError){
     return <LoadingIndicator style={styles.container} isLoading={true} />
@@ -70,6 +69,7 @@ const FoodList = (props) => {
         data={products ? products.getProductsByShopCategory : []}
         extraData={props}
         renderItem={renderItem}
+        contentContainerStyle={styles.container}
         ListEmptyComponent={() => (
           <View style={styles.container}>
             <Text style={{ textAlign: 'center', marginVertical: 20 }}>No products</Text>
@@ -91,7 +91,6 @@ const styles = StyleSheet.create({
           ((Platform.OS === 'android' ? moderateScale(88 + getStatusbarHeight) : moderateScale(105)) +
             moderateScale(180)),
     flex: 1,
-    paddingHorizontal: 20,
     backgroundColor: COLOR.WHITE,
   },
   headerBack: {
