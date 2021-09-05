@@ -3,9 +3,9 @@ import moment from 'moment';
 export const getOrderStatus = (focusTab) => {
   switch(focusTab){
     case 1:
-      return 'p, po, rp, bc, s'
+      return 'p, po, rp, f'
     case 2:
-      return 'f'
+      return 's'
     case 3:
       return 'c'
     
@@ -16,7 +16,7 @@ export const getOrderStatus = (focusTab) => {
 
 export const getSubMessageStatus = (item) => {
   switch(item.orderStatus){
-    case 'f':
+    case 's':
       return `Delivered at ${moment(item.dateFulfilled).format('lll')}`;
     case 'c':
       return `Cancelled at ${moment(item.dateDeclined).format('lll')}`;

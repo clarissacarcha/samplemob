@@ -14,9 +14,9 @@ import {locationOutline, phoneBlack, store, user, rider1} from 'toktokfood/asset
 // Utils
 import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
 
-const OrderAddress = () => {
+const OrderAddress = ({ shopDetails }) => {
   const {location} = useSelector((state) => state.toktokFood);
-
+  const { shopname, address } = shopDetails;
   const {person, username} = useSelector((state) => state.session.user);
   const fullname = `${person.firstName} ${person.lastName}`;
   const [ratingModal, setRatingModal] = useState(false);
@@ -36,7 +36,7 @@ const OrderAddress = () => {
         >
             <Text style={styles.messageTitle}>{"Deliver to:"}</Text>
             <Text style={styles.messageContent}>{location.address}</Text>
-            <Text style={styles.rateTitle}>{`How's your experience with Starbucks?`}</Text>
+            <Text style={styles.rateTitle}>{`How's your experience with ${shopname}?`}</Text>
       </RatingModal>
       <View style={styles.dividerContainer}>
         <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
@@ -50,11 +50,11 @@ const OrderAddress = () => {
         </View>
         <View style={styles.restauranContainer}>
           <Image style={styles.icons} source={locationOutline} resizeMode="contain" />
-          <Text style={styles.addressText}>Manila City</Text>
+          <Text style={styles.addressText}>{address}</Text>
         </View>
         <View style={styles.restauranContainer}>
           <Image style={styles.icons} source={store} resizeMode="contain" />
-          <Text style={styles.addressText}>Starbucks (32nd Street)</Text>
+          <Text style={styles.addressText}>{shopname}</Text>
         </View>
         <View style={styles.horizontalContainer} />
 

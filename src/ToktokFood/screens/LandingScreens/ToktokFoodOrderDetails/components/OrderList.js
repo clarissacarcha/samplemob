@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, Image, StyleSheet, Text, View} from 'react-native';
+import {addons, FlatList, Image, StyleSheet, Text, View} from 'react-native';
 
 // Fonts/Colors
 import {COLORS} from 'res/constants';
@@ -11,26 +11,41 @@ import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
 // Data
 import {foodData} from 'toktokfood/helper/strings';
 
-const OrderList = () => {
-  const listData = foodData.splice(0, 2);
-  //   console.log(listData)
-  const renderItem = ({item}) => (
-    <View style={styles.listContainer}>
-      <Image style={styles.listImg} source={item.image} resizeMode="contain" />
 
-      <View style={styles.list}>
-        <View style={styles.listInfo}>
-          <Text style={styles.listName}>{item.name}</Text>
-          <Text style={styles.seeAll}>{`PHP ${item.price}`}</Text>
-        </View>
-        <View>
-          <Text style={styles.notes}>{item.qty}x</Text>
-          <Text style={styles.notes}>Size: Venti</Text>
-          <Text style={styles.notes}>Add on: Extra Cream</Text>
+const DisplayAddons = ({ addOns }) => {
+  let addOnsList = addOns.map(item => item.addon_name).join(', ');
+  let label = addOns.length > 1 ? 'Add ons:' : 'Add on:'
+ 
+  return (
+    <Text style={styles.notes} >{`${label} ${addOnsList}`}</Text>
+  )
+}
+
+const OrderList = ({ orderDetails }) => {
+
+  const renderItem = ({item}) => {
+
+    let parseAddOns = JSON.parse(item.addons);
+    
+    return(
+      <View style={styles.listContainer}>
+        <Image style={styles.listImg} source={item.image} resizeMode="contain" />
+
+        <View style={styles.list}>
+          <View style={styles.listInfo}>
+            <Text style={styles.listName}>{item.name}</Text>
+            <Text style={styles.seeAll}>{`PHP ${item.amount}`}</Text>
+          </View>
+          <View>
+            <Text style={styles.notes}>{item.quantity}x</Text>
+            {/* <Text style={styles.notes}>Size: Venti</Text> */}
+            {/* <Text style={styles.notes}>Add on: Extra Cream</Text> */}
+            { parseAddOns.length > 0 && <DisplayAddons addOns={parseAddOns} /> }
+          </View>
         </View>
       </View>
-    </View>
-  );
+    )
+  }
 
   return (
     <View style={styles.container}>
@@ -39,7 +54,7 @@ const OrderList = () => {
         <Text style={styles.seeAll}>See All</Text>
       </View>
 
-      <FlatList data={listData} renderItem={renderItem} scrollEnabled={false} />
+      <FlatList data={orderDetails} renderItem={renderItem} scrollEnabled={false} />
     </View>
   );
 };

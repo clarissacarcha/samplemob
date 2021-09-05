@@ -26,16 +26,14 @@ export const TransactionItems = (props) => {
     lowerText = !isSameDay ? dayTitle(data[index + 1].dateOrdered) : ''
   }
 
-  const onTransactionsNavigate = (status = 'po') => {
-    if (status === 'po') {
-      navigation.navigate('ToktokFoodDriver');
-    }
+  const onTransactionsNavigate = (referenceNum) => {
+    navigation.navigate('ToktokFoodDriver', { referenceNum })
   };
   
   return (
     <>
     { !!upperText && <Text style={styles.dayTitle}>{upperText}</Text> }
-    <TouchableWithoutFeedback key={item.orderId} onPress={() => onTransactionsNavigate(orderStatus)}>
+    <TouchableWithoutFeedback key={item.orderId} onPress={() => onTransactionsNavigate(item.referenceNum)}>
       <View style={styles.itemContainer}>
         <View style={styles.imgWrapper}>
           <Image resizeMode="contain" source={shopDetails.logo} style={styles.imgShop} />

@@ -18,8 +18,7 @@ import {
   verticalScale,
 } from 'toktokfood/helper/scale';
 import {tabs} from 'toktokfood/helper/strings';
-import FoodList from './FoodList';
-import HeaderTitleSearchBox from './HeaderTitleSearchBox';
+import { HeaderTitleSearchBox, FoodList } from '../components';
 import CustomStarRating from 'toktokfood/components/CustomStarRating';
 import { FONT_SIZE } from 'res/variables';
 import {useLazyQuery, useQuery} from '@apollo/react-hooks';
@@ -33,22 +32,11 @@ import { food1 } from 'toktokfood/assets/images';
 // const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? (IS_IPHONE_X ? 44 : 20) : 0;
 // const HEADER_HEIGHT = Platform.OS === 'ios' ? (IS_IPHONE_X ? 88 : 0) : 64;
 // const NAV_BAR_HEIGHT = HEADER_HEIGHT - STATUS_BAR_HEIGHT;
-
-const StickyView = () => {
+export const StickyView = () => {
   const routes = useRoute();
-  const tabs = [
-    {
-      id: 'All',
-      categoryName: 'All'
-    },
-    {
-      id: 'Others',
-      categoryName: 'Others'
-    }
-  ]
   const [offset, setOffset] = useState(0);
   const [activeTab, setActiveTab] = useState({});
-  const [productCategories, setProductCategories] = useState(tabs);
+  const [productCategories, setProductCategories] = useState([]);
   
   const {
     id,
@@ -81,18 +69,15 @@ const StickyView = () => {
   
   useEffect(() => {
     if(data){
-      let categories = productCategories.concat(data.getProductCategories)
+      let categories = data.getProductCategories
       categories.sort(function(a,b){ return a.categoryName > b.categoryName })
       setProductCategories(categories)
-      setActiveTab(productCategories[0])
+      setActiveTab(categories[0])
     }
   }, [data])
 
   const DisplayHeaderTabs = () => {
-    if(loading){
-      return <LoadingIndicator style={{ paddingVertical: 10 }} isLoading={true} size='small' />
-    }
-    return <HeaderTabs activeTab={activeTab} tabs={productCategories} setActiveTab={setActiveTab} />
+    return <HeaderTabs loading={loading} activeTab={activeTab} tabs={productCategories} setActiveTab={setActiveTab} />
   }
 
   const NavBar = () => (
@@ -152,7 +137,14 @@ const StickyView = () => {
         navbarColor="whitesmoke"
         backgroundColor="transparent"
         renderNavBar={() => <NavBar />}
-        renderContent={() => <FoodList id={id} activeTab={activeTab} tagsLoading={loading} />}
+        renderContent={() => 
+          <FoodList
+            id={id}
+            activeTab={activeTab}
+            tagsLoading={loading}
+            // searchProduct={searchProduct}
+          />
+        }
         containerStyle={styles.container}
         contentContainerStyle={styles.contentContainer}
         scrollViewProps={{
@@ -238,4 +230,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default StickyView;

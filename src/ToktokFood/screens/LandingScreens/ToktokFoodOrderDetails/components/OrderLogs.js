@@ -12,9 +12,12 @@ import {delivered, pickedUp} from 'toktokfood/assets/images';
 
 // Utils
 import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
+import moment from 'moment';
 
-const OrderFee = ({ status = 2 }) => {
+const OrderFee = ({ status = 2, data }) => {
 
+  let { dateOrdered } = data
+  console.log(data)
   const renderLogInfo = (title, date, isDone) => (
     <View style={styles.logContainer}>
       <View style={styles.logsTitle}>
@@ -43,7 +46,7 @@ const OrderFee = ({ status = 2 }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.deliverLogs}>Delivery Logs</Text>
-      {renderLogInfo('Order Placed', 'Feb 16 2021 - 1:26 pm', status >= 1)}
+      {renderLogInfo('Order Placed', moment(dateOrdered).format('lll'), status >= 1)}
       {renderDash()}
       {renderLogInfo('On the way to restaurant', 'Feb 16 2021 - 1:26 pm', status >= 2)}
       {renderDash()}
