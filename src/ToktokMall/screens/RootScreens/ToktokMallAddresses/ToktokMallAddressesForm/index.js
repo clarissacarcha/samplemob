@@ -14,7 +14,7 @@ import {
   Switch,
 } from 'react-native';
 import {HeaderBack, HeaderTitle, HeaderRight, LoadingOverlay} from '../../../../Components';
-import {CityAddressModal, AddressModal} from './Components';
+import {CityAddressModal, CityAddressModalAndroid, AddressModal} from './Components';
 import Toast from 'react-native-simple-toast';
 import ToggleSwitch from 'toggle-switch-react-native';
 import CustomIcon from '../../../../Components/Icons';
@@ -304,12 +304,19 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
           message={'Address Deleted!'}
         />
       )}
+      {Platform.OS == "ios" && 
       <CityAddressModal
         modalProvinceVisible={modalProvinceVisible}
         setModalProvinceVisible={setModalProvinceVisible}
         city={city}
         setCity={(data) => onSelectCity(data)}
-      />
+      />}
+      {Platform.OS == "android" && 
+      <CityAddressModalAndroid
+        isVisible={modalProvinceVisible}
+        setVisible={setModalProvinceVisible}
+        setCity={(data) => onSelectCity(data)}
+      />}
       <View style={styles.container}>
         <View style={styles.partition1}>
           <View style={styles.textinputContainer}>
@@ -369,7 +376,10 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
               <Text
                 style={[
                   styles.text,
-                  {color: validation.validated && validation.errors?.includes('city') ? 'red' : 'gray'},
+                  {
+                    color: validation.validated && validation.errors?.includes('city') ? 'red' : 'gray',
+                    textTransform: 'capitalize'
+                  },
                 ]}>
                 {city}
               </Text>

@@ -25,6 +25,7 @@ const testData = [
 export const ToktokMallMyProfileHome = ({navigation}) => {
 
   const session = useSelector(state=> state.session)
+  const userDefaultAddress = useSelector(state => state.toktokMall.defaultAddress)
   const [profileImage, setProfileImage] = useState("")
   const [userName, setUserName] = useState("")
   const [conNo, setConNo] = useState("")
@@ -48,16 +49,18 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
     setProfileImage(user.avatarThumbnail)
     setConNo(session?.user.username)
 
-    AsyncStorage.getItem("ToktokMallUser").then((raw) => {
-      let data = JSON.parse(raw)
-      if(data.userId){
-        getDefaultAddress({variables: {
-          input: {
-            userId: data.userId
-          }
-        }})
-      }
-    })
+    // AsyncStorage.getItem("ToktokMallUser").then((raw) => {
+    //   let data = JSON.parse(raw)
+    //   if(data.userId){
+    //     getDefaultAddress({variables: {
+    //       input: {
+    //         userId: data.userId
+    //       }
+    //     }})
+    //   }
+    // })
+
+
   }, [])
 
   return (
@@ -76,7 +79,7 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
           <View style={{flex: 8}}>
             <Text style={{fontSize: 15, fontFamily: FONT.BOLD}}>{userName}</Text>
             <Text style={{fontSize: 11, fontWeight: '800'}}>{conNo}</Text>
-            <Text style={{fontSize: 11, fontWeight: '800', textTransform: 'capitalize'}}>{address || "---"}</Text>
+            <Text style={{fontSize: 11, fontWeight: '800', textTransform: 'capitalize'}}>{userDefaultAddress.fullAddress || "---"}</Text>
           </View>
           <View style={{flex: 0.5}} />
         </View>            
