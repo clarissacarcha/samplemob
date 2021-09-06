@@ -99,6 +99,7 @@ export const CreateForm = ({navigation,session,mobile,provider})=> {
     const [firstName, setfirstName] = useState("");
     const [middleName, setMiddleName] = useState("");
     const [lastName, setlastName] = useState(tokwaAccount.person.lastName);
+    const [email,setEmail] = useState(tokwaAccount.person.emailAddress);
     const [birthdate, setBirthdate] = useState("");
     const [streetAddress, setStreetAddress] = useState('');
     const [barangayTown, setBarangayTown] = useState('');
@@ -192,6 +193,11 @@ export const CreateForm = ({navigation,session,mobile,provider})=> {
             return;
           }
 
+          if (validator.isEmpty(email, {ignore_whitespace: true})) {
+            Alert.alert('', 'Please enter Email Address.');
+            return;
+          }
+
           if (validator.isEmpty(birthdate, {ignore_whitespace: true})) {
             Alert.alert('', 'Please select Birthdate.');
             return;
@@ -225,6 +231,7 @@ export const CreateForm = ({navigation,session,mobile,provider})=> {
                         firstName: firstName,
                         middleName: middleName,
                         lastName: lastName,
+                        email: email,
                         streetAddress: streetAddress,
                         barangayTown: barangayTown,
                         provinceCity: provinceCity,
@@ -309,6 +316,17 @@ export const CreateForm = ({navigation,session,mobile,provider})=> {
                         placeholder="Enter last name here"
                         onChangeText={(value)=>setlastName(value)}
                         value={lastName}
+                        returnKeyType="done"
+                    />
+                </View>
+
+                <View style={{marginTop: 20}}>
+                    <Text style={styles.label}>Email Address</Text>
+                    <TextInput 
+                        style={styles.input}
+                        placeholder="Enter last name here"
+                        onChangeText={(value)=>setEmail(value)}
+                        value={email}
                         returnKeyType="done"
                     />
                 </View>

@@ -47,7 +47,7 @@ export const ToktokWalletSettings = ({navigation , route })=> {
             <SettingOption route="ToktokWalletMPINCreate" title="Toogle TPIN"/>
             <SettingOption route="ToktokWalletCreatePin" title="Toogle OTP"/>
             <Separator/>
-            <SettingHeaderTitle title="Help centre"/>
+            <SettingHeaderTitle title="Help Centre"/>
             <SettingOption route="ToktokWalletPaymentChart" title="Payment Chart"/>
             <SettingOption route="ToktokWalletTransactionLimit" title="User Level and Transaction Limit"/>
             {
