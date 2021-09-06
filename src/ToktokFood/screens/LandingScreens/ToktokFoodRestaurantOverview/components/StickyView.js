@@ -18,27 +18,26 @@ import {
   verticalScale,
 } from 'toktokfood/helper/scale';
 import {tabs} from 'toktokfood/helper/strings';
-import FoodList from './FoodList';
-import HeaderTitleSearchBox from './HeaderTitleSearchBox';
+import { HeaderTitleSearchBox, FoodList } from '../components';
 import CustomStarRating from 'toktokfood/components/CustomStarRating';
 import { FONT_SIZE } from 'res/variables';
 import {useLazyQuery, useQuery} from '@apollo/react-hooks';
 import {GET_PRODUCT_CATEGORIES, GET_PRODUCTS_BY_SHOP} from 'toktokfood/graphql/toktokfood';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
+import { food1 } from 'toktokfood/assets/images';
 
 // const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 // const IS_IPHONE_X = SCREEN_HEIGHT === 812 || SCREEN_HEIGHT === 896;
 // const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? (IS_IPHONE_X ? 44 : 20) : 0;
 // const HEADER_HEIGHT = Platform.OS === 'ios' ? (IS_IPHONE_X ? 88 : 0) : 64;
 // const NAV_BAR_HEIGHT = HEADER_HEIGHT - STATUS_BAR_HEIGHT;
-
-const StickyView = () => {
+export const StickyView = () => {
   const routes = useRoute();
-
   const [offset, setOffset] = useState(0);
   const [activeTab, setActiveTab] = useState({});
-
+  const [productCategories, setProductCategories] = useState([]);
+  
   const {
     id,
     address,
@@ -54,7 +53,7 @@ const StickyView = () => {
   const headerMinHeight = Platform.OS === 'ios' ? moderateScale(120) : moderateScale(140);
 
   // data fetching for product tags/tabs
-  const [getProductCategories, {data: tagsData, error: tagsError, loading: tagsLoading }] = useLazyQuery(GET_PRODUCT_CATEGORIES, {
+  const [getProductCategories, {data, error, loading }] = useLazyQuery(GET_PRODUCT_CATEGORIES, {
     variables: {
       input: {
         id: id,
@@ -69,16 +68,16 @@ const StickyView = () => {
   }, [])
   
   useEffect(() => {
-    if(tagsData?.getProductCategories.length > 0){
-      setActiveTab(tagsData?.getProductCategories[0])
+    if(data){
+      let categories = data.getProductCategories
+      categories.sort(function(a,b){ return a.categoryName > b.categoryName })
+      setProductCategories(categories)
+      setActiveTab(categories[0])
     }
-  }, [tagsData])
+  }, [data])
 
   const DisplayHeaderTabs = () => {
-    if(tagsLoading){
-      return <LoadingIndicator style={{ paddingVertical: 10 }} isLoading={true} size='small' />
-    }
-    return <HeaderTabs activeTab={activeTab} tabs={tagsData?.getProductCategories} setActiveTab={setActiveTab} />
+    return <HeaderTabs loading={loading} activeTab={activeTab} tabs={productCategories} setActiveTab={setActiveTab} />
   }
 
   const NavBar = () => (
@@ -97,8 +96,8 @@ const StickyView = () => {
       </View>
       <View style={styles.titleInfo}>
         <View style={styles.content}>
-          <Image source={logo} style={{ width: scale(70), height: scale(70) }} resizeMode='cover' />
-          <View style={{ flexShrink: 1 }}>
+          <Image source={{ uri: logo }} style={{ width: scale(70), height: scale(70) }} resizeMode='contain' />
+          <View style={{ flexShrink: 1, marginHorizontal: 10 }}>
             <Text numberOfLines={2} style={styles.titleText}>{`${shopname} (${address})`}</Text>
             <CustomStarRating
               rating={ratings ?? '0'}
@@ -116,7 +115,9 @@ const StickyView = () => {
             </View>
           </View>
         </View>
-        <DisplayHeaderTabs />
+        <View style={{ paddingTop: 15 }}>
+          <DisplayHeaderTabs />
+        </View>
       </View>
     </View>
   );
@@ -136,7 +137,14 @@ const StickyView = () => {
         navbarColor="whitesmoke"
         backgroundColor="transparent"
         renderNavBar={() => <NavBar />}
-        renderContent={() => <FoodList id={id} activeTab={activeTab} tagsLoading={tagsLoading} />}
+        renderContent={() => 
+          <FoodList
+            id={id}
+            activeTab={activeTab}
+            tagsLoading={loading}
+            // searchProduct={searchProduct}
+          />
+        }
         containerStyle={styles.container}
         contentContainerStyle={styles.contentContainer}
         scrollViewProps={{
@@ -213,7 +221,6 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     backgroundColor: 'white',
-    // height: 100,
     paddingHorizontal: 10,
     paddingVertical: 15,
   },
@@ -223,4 +230,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default StickyView;

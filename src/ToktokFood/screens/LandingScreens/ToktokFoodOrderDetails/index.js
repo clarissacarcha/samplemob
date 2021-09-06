@@ -17,10 +17,12 @@ const CUSTOM_HEADER = {
   bgImage: Platform.OS === 'android' ? moderateScale(83) : moderateScale(70),
 };
 
-const ToktokFoodOrderDetails = () => {
+const ToktokFoodOrderDetails = ({ route }) => {
 
   const {price} = useSelector((state) => state.toktokFood.totalAmount);
-
+  const data = route.params ? route.params.item : {}
+  // const {price} = useSelector((state) => state.toktokFood.totalAmount);
+  console.log(data.notes)
   return (
     <View style={styles.container}>
       <HeaderImageBackground customSize={CUSTOM_HEADER}>
@@ -29,19 +31,23 @@ const ToktokFoodOrderDetails = () => {
       <ScrollView bounces={false} contentContainerStyle={styles.scrollView} showsVerticalScrollIndicator={false}>
         <OrderTitle />
         <Separator />
-        <OrderAddress />
+        <OrderAddress shopDetails={data.shopDetails} />
         <Separator />
-        <OrderNote title="Note" label="Tabi ng vape shop na may black na gate" />
-        <Separator />
+        { data.notes &&
+          <>
+            <OrderNote title="Note" label={data.notes} />
+            <Separator />
+          </>
+        }
         <OrderRider />
         <Separator />
-        <OrderList />
+        <OrderList orderDetails={data.orderDetails} />
         <Separator />
-        <OrderFee subtotal={price} />
+        <OrderFee data={data} />
         <Separator />
         <OrderNote title="Payment Method" label="Cash-on Delivery" />
         <Separator />
-        <OrderLogs />
+        <OrderLogs data={data} />
       </ScrollView>
     </View>
   );

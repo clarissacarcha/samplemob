@@ -12,21 +12,18 @@ export const GET_PRODUCT_CATEGORIES = gql`
 export const GET_PRODUCTS_BY_SHOP_CATEGORY = gql`
   query getProductsByShopCategory($input: GetProductByShopCategoryInput) {
     getProductsByShopCategory(input: $input) {
-        Id
-        itemid
-        itemname
-        price
-        noOfStocks
-        maxQty
-        enabled
-        otherinfo
-        tags
-        summary
-        img_1
-        img_2
-        img_3
-        img_4
-        img_5
+      Id
+      itemid
+      catId
+      itemname
+      price
+      noOfStocks
+      maxQty
+      enabled
+      otherinfo
+      tags
+      summary
+      filename
     }
   }
 `;

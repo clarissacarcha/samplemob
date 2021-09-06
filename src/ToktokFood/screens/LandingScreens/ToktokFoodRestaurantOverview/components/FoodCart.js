@@ -7,7 +7,7 @@ import {scale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
 
 import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
 
-const FoodCart = ({currentTotal = 0.0, itemSize = 0}) => {
+export const FoodCart = ({currentTotal = 0.0, itemSize = 0}) => {
   const navigation = useNavigation();
 
   const onRestaurantNavigate = () => {
@@ -77,5 +77,3 @@ const styles = StyleSheet.create({
     fontFamily: FONT.BOLD,
   },
 });
-
-export default React.memo(FoodCart);

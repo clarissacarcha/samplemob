@@ -18,10 +18,10 @@ const RestaurantItem = ({ item }) => {
   const onRestaurantNavigate = (item) => {
     navigation.navigate('ToktokFoodRestaurantOverview', {item});
   };
-  
+
   return (
     <TouchableOpacity onPress={() => onRestaurantNavigate(item)} style={styles.restaurantList}>
-      <Image style={styles.img} source={allcuisines} resizeMode="cover" />
+      <Image style={styles.img} source={{ uri: item.logo }} resizeMode="cover" />
       <View style={styles.restaurantInfo}>
         <Text numberOfLines={2} style={styles.restaurantName}>{`${item.shopname} (${item.address})`}</Text>
         <CustomStarRating

@@ -40,28 +40,22 @@ const TokTokFoodSplashScreen = () => {
       },
       client: TOKTOK_FOOD_GRAPHQL_CLIENT,
       fetchPolicy: 'network-only',
-      onCompleted: ({getAccount}) => {
+      onCompleted: ({ getAccount }) => {
         dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_INFO', payload: {...getAccount}});
         showHomPage();
       },
     },
   );
-
+  
   const showHomPage = () => {
     navigation.replace('ToktokFoodLanding');
   };
 
   useEffect(() => {
-    if (location && user && user.person.hasToktokfood != 1) {
-      processCreateAccount();
+    if (location && user) {
+      user.person.hasToktokfood == 1 ? getToktokUserInfo() : processCreateAccount()
     }
   }, [user, location]);
-
-  useEffect(() => {
-    if (user.person.hasToktokfood === 1) {
-      getToktokUserInfo();
-    }
-  }, []);
 
   const processCreateAccount = () => {
     let {firstName, lastName, birthdate, emailAddress, mobileNumber, gender} = user.person;
@@ -107,6 +101,7 @@ const TokTokFoodSplashScreen = () => {
         },
       });
       const res = API_RESULT.data.data;
+      getToktokUserInfo();
       console.log(res);
     } catch (error) {
       console.log(error);
