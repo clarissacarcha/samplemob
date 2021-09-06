@@ -82,7 +82,7 @@ const Component =  ({
         setStore(response.getProductDetails.shop)
         setRelevantProducts(response.getProductDetails.relevantProducts)
         setIsFetching(false)
-        if(response.getProductDetails.noOfStocks == 0) setisOutOfStock(true)
+        if(response.getProductDetails.noOfStocks <= 0) setisOutOfStock(true)
       }
       // console.log(response, route.params.Id)
     },
