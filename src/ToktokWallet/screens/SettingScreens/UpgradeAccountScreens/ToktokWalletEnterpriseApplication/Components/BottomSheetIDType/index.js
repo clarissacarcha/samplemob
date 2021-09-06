@@ -71,7 +71,7 @@ export const BottomSheetIDType = forwardRef(({onChange,idIndex,validID1,validID2
       index={-1}
       snapPoints={snapPoints}
       enableHandlePanningGesture={true}
-      enableContentPanningGesture={true}
+      enableContentPanningGesture={false}
       handleComponent={() => (
         <View
           style={{
@@ -91,16 +91,18 @@ export const BottomSheetIDType = forwardRef(({onChange,idIndex,validID1,validID2
         <Text style={{fontFamily: FONT.BOLD}}>Select ID Type</Text>
         <View style={{height: 10}} />
         <FlatList
+          showsVerticalScrollIndicator={false}
+          style={{marginBottom:50}}
           data={filteredValidID}
           ItemSeparatorComponent={() => <View style={{borderBottomWidth: 1, borderColor: COLOR.LIGHT}} />}
           renderItem={({item, index}) => (
-           <TouchableOpacity 
+            <TouchableOpacity 
               disabled={item.id == validID1.IDType || item.id == validID2.IDType} 
               onPress={()=>selectValidID(index)} 
               style={[styles.validID,{backgroundColor: item.id == validID1.IDType || item.id == validID2.IDType ? COLOR.LIGHT : "transparent"}]}
             >
-                     <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>{item.name}</Text>
-             </TouchableOpacity>  
+                    <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>{item.name}</Text>
+            </TouchableOpacity>     
           )}
         />
       </View>
