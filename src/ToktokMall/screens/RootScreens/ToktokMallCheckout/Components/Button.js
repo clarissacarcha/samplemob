@@ -17,7 +17,7 @@ const testData = [
 ]
 const REAL_WIDTH = Dimensions.get('window').width;
 
-export const Button = ({enabled, loading, total, onPress}) => {
+export const Button = ({enabled, loading, shipping, total, onPress}) => {
 
   const onCheckout = () => {
     // let stringyfiedArr = JSON.stringify(unSelectedItemsArr)
@@ -30,6 +30,7 @@ export const Button = ({enabled, loading, total, onPress}) => {
     else if(total > 0) return false
     else if(loading) return true
     else if(!loading) return false
+    else if(!shipping) return false
   }
     
   return (
@@ -42,7 +43,7 @@ export const Button = ({enabled, loading, total, onPress}) => {
                 !total ? FormatToText.currency(0) : FormatToText.currency(total)
               }</Text>
             </View>
-            <TouchableOpacity disabled={isDisabled()} style={styles.activeButton} onPress={() => {
+            <TouchableOpacity disabled={isDisabled()} style={isDisabled() ? styles.invalidButton : styles.activeButton} onPress={() => {
               if(enabled) onPress()
             }}>
                 {!loading && <Text style={styles.buttonText}>Checkout</Text>}
@@ -73,6 +74,6 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   activeButton: { backgroundColor: '#F6841F', height: 47, width: 140, borderRadius: 5, alignItems: 'center', justifyContent: 'center'},
-  invalidButton: { backgroundColor: '#F6841F', height: 47, width: 140, borderRadius: 5, alignItems: 'center', justifyContent: 'center'},
+  invalidButton: { backgroundColor: '#D7D7D7', height: 47, width: 140, borderRadius: 5, alignItems: 'center', justifyContent: 'center'},
   buttonText: {color: 'white'}
 })

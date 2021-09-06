@@ -3,8 +3,18 @@ import AsyncStorage from '@react-native-community/async-storage'
 
 export const env = "staging" // staging | production
 export const paypanda_env = env == "staging" ? "sandbox" : "production"
+
+export const server_staging = "http://ec2-18-176-178-106.ap-northeast-1.compute.amazonaws.com"
+export const server_production = ""
+
+export const api_entry = "toktokmall"
+
 export const api_url = {
-	'staging': 'http://ec2-18-176-178-106.ap-northeast-1.compute.amazonaws.com/toktokmall/',
+	'staging': `${server_staging}/${api_entry}/`,
+	'production': `${server_production}/${api_entry}`
+}
+export const toktokwallet_api_url = {
+	'staging': `${server_staging}/toktokwallet/`,
 	'production': ''
 }
 export const paypanda_api_url = {
@@ -30,6 +40,60 @@ export const ApiCall = async (endpoint, body, debug = false) => {
 			formData.append("data", JSON.stringify(body))
 
 			await axios.post(`${api_url[env]}${endpoint}`, formData).then((response) => {
+				if(debug){
+					console.log("Response data", response.data)
+				}
+				if(response.data.success == 1){
+					responseData = response.data
+				}else{
+					responseError = response.data
+				}
+			}).catch((error) => {
+				if(debug){
+					console.log(error)
+				}
+			})
+
+			return {
+				responseData,
+				responseError
+			}
+
+		}else{
+
+			return {
+				responseData,
+				responseError
+			}
+
+		}
+
+	}catch(error){
+		console.log(error)
+	}
+}
+
+export const WalletApiCall = async (endpoint, body, debug = false) => {	
+
+	let responseData = null
+	let responseError = null
+
+  try{
+
+		let formData = new FormData()
+		let rawSession = await AsyncStorage.getItem("ToktokMallUser")
+		let session = JSON.parse(rawSession)
+
+		console.log("session", session)
+
+		//CHECK IF SESSION IS VALID
+		if(session.walletSignature){
+			
+			// formData.append("signature", session.walletSignature)
+			formData.append("signature", "aUN0S0Z5clNNaFlCbHBlRWFLRkorMWtXeWJ4WUk1VkdISmlDT0Z1NStNdHFWREVWZzIrR01DcnduaEt5dU03OQ==")
+			formData.append("data", JSON.stringify(body))
+
+			await axios.post(`${toktokwallet_api_url[env]}${endpoint}`, formData).then((response) => {
 				if(debug){
 					console.log("Response data", response.data)
 				}

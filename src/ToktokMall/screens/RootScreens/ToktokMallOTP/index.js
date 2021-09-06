@@ -4,12 +4,35 @@ import {HeaderBack, HeaderTitle, HeaderRight, Header} from '../../../Components'
 import {COLOR, FONT, FONT_SIZE} from '../../../../res/variables';
 import {otpicon, otpbg} from '../../../assets';
 import CustomIcon from '../../../Components/Icons';
+import Toast from "react-native-simple-toast";
 import { FONT_REGULAR } from '../../../../res/constants';
+import {ApiCall, PaypandaApiCall, BuildPostCheckoutBody, BuildTransactionPayload, WalletApiCall} from "../../../helpers";
 
 export const ToktokMallOTP =  ({navigation, route}) => {
 
   const inputRef = useRef(null)
   const [value, setValue] = useState("")
+
+  const ProcessPayment = async () => {
+
+    let checkoutBody = route.params.data
+    checkoutBody.pin = value
+    const req = await ApiCall("checkout", checkoutBody, true)
+
+    if(req.responseData && req.responseData.success == 1){
+
+      route.params.onSuccess()
+      navigation.pop()
+
+    }else if(req.responseError && req.responseError.success == 0){
+      Toast.show(req.responseError.message, Toast.LONG)
+    }else if(req.responseError){
+      Toast.show("Something went wrong", Toast.LONG)
+    }else if(req.responseError == null && req.responseData == null){
+      Toast.show("Something went wrong", Toast.LONG)
+    }
+
+  }
 
   useEffect(() => {
     console.log(value)
@@ -53,6 +76,18 @@ export const ToktokMallOTP =  ({navigation, route}) => {
                 }} style = {styles.charContainer}>              
                 {value.length >= 4 && <CustomIcon.EIcon name="dot-single" size={40} />}
               </TouchableOpacity>
+              <TouchableOpacity 
+                onPress={() => {
+                  inputRef.current.focus()
+                }} style = {styles.charContainer}>              
+                {value.length >= 5 && <CustomIcon.EIcon name="dot-single" size={40} />}
+              </TouchableOpacity>
+              <TouchableOpacity 
+                onPress={() => {
+                  inputRef.current.focus()
+                }} style = {styles.charContainer}>              
+                {value.length >= 6 && <CustomIcon.EIcon name="dot-single" size={40} />}
+              </TouchableOpacity>
             
             </View>
         </View>
@@ -60,7 +95,7 @@ export const ToktokMallOTP =  ({navigation, route}) => {
         <TextInput 
           ref={inputRef} 
           keyboardType = {'number-pad'}
-          maxLength = {4}
+          maxLength = {6}
           style={{width: 0, height: 0}} 
           value={value}
           onChangeText={(val) => {
@@ -68,14 +103,21 @@ export const ToktokMallOTP =  ({navigation, route}) => {
           }}
         />
       
-        <TouchableOpacity onPress={() => {
-          if(route.params.callback){
-            route.params.callback()
-          }
-          navigation.pop()
-        }} style={styles.button}>
+        <TouchableOpacity 
+          activeOpacity={0.5} 
+          disabled={value.length != 6} 
+          onPress={async () => {
+
+            let transactionType = route.params?.transaction || null
+
+            if(transactionType && transactionType == "payment"){
+              await ProcessPayment()
+            }
+
+          }} 
+          style={value && value.length == 6 ? styles.activeButton : styles.invalidButton}>
           <Text style={styles.buttonText}>Proceed</Text>
-        </TouchableOpacity>        
+        </TouchableOpacity>
 
       </ImageBackground>
      
@@ -98,19 +140,30 @@ const styles = StyleSheet.create({
   },
   charContainer: {
     height: 60,
-    width: 50, 
+    width: '15%', 
     borderRadius: 5,
     backgroundColor: '#F7F7FA',
-    marginLeft: 15,
+    marginLeft: 5,
     justifyContent: 'center',
     alignItems: 'center'
   },
-  button: {
+  activeButton: {
     // height: 45,
     paddingVertical: 15,
     width: '80%',
     borderRadius: 5,
     backgroundColor: COLOR.ORANGE,
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    bottom: 20,
+  },
+  invalidButton: {
+    // height: 45,
+    paddingVertical: 15,
+    width: '80%',
+    borderRadius: 5,
+    backgroundColor: "#D7D7D7",
     alignItems: 'center',
     justifyContent: 'center',
     position: 'absolute',

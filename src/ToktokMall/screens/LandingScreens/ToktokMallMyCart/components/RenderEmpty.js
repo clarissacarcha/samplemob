@@ -9,7 +9,7 @@ export const RenderEmpty = () => {
 			<View style={{flex: 1, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center'}}>
         <Image 
 					source={emptyCartIcon}
-					style={{width: 220, height: 130, resizeMode: 'cover'}}
+					style={{width: '80%', height: Dimensions.get("screen").height / 4, resizeMode: 'contain'}}
 				/>
         <View style={{height: 8}} />
         <View>
