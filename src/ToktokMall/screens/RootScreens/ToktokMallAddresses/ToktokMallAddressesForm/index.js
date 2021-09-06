@@ -13,7 +13,7 @@ import {
   Picker,
   Switch,
 } from 'react-native';
-import {HeaderBack, HeaderTitle, HeaderRight} from '../../../../Components';
+import {HeaderBack, HeaderTitle, HeaderRight, LoadingOverlay} from '../../../../Components';
 import {CityAddressModal, AddressModal} from './Components';
 import Toast from 'react-native-simple-toast';
 import ToggleSwitch from 'toggle-switch-react-native';
@@ -31,6 +31,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
   const [newAddressForm, setNewAddressForm] = useState({
     city: null,
   });
+  const [isLoading, setIsLoading] = useState(false)
   const [cities, setCities] = useState([]);
   const [defaultCity, setDefaultCity] = useState(null);
   const [clicked, setClicked] = useState(false);
@@ -141,6 +142,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
   };
 
   const SavePostAddress = async (callback) => {
+    setIsLoading(true)
     AsyncStorage.getItem('ToktokMallUser').then(async (raw) => {
       let data = JSON.parse(raw) || {};
       if (data.appSignature) {
@@ -165,6 +167,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
           .post(`http://ec2-18-176-178-106.ap-northeast-1.compute.amazonaws.com/toktokmall/save_address`, formData)
           .then((response) => {
             if (response.data && response.data.success == 1) {
+              setIsLoading(false);
               setMessageModal(true);
               callback();
             } else {
@@ -180,6 +183,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
 
   const DeleteAddress = async () => {
     setConfirmDeleteModal(true)
+    setIsLoading(true)
     AsyncStorage.getItem('ToktokMallUser').then(async (raw) => {
       let data = JSON.parse(raw) || {};
       if (data.appSignature) {
@@ -194,13 +198,15 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
 
         await axios
           .post(`http://ec2-18-176-178-106.ap-northeast-1.compute.amazonaws.com/toktokmall/delete_address`, formData)
-          .then(({success, ...rest}) => {
-            console.log(rest)
+          .then(async (response) => {
+            console.log(response.data)
+            setIsLoading(false)            
             setDeletedModal(true)
             updateUserAddress('remove', newAddressForm.id);
             navigation.goBack();
           })
           .catch((error) => {
+            setIsLoading(false)
             console.log(error);
           });
       }
@@ -266,6 +272,8 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
 
   return (
     <>
+      {isLoading && <LoadingOverlay isVisible={isLoading} />}
+
       {confirmDeleteModal && (
         <AddressModal
           type="Confirm"
