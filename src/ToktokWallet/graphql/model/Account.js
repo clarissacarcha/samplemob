@@ -110,3 +110,9 @@ export const GET_CHECK_PENDING_DISBURSEMENT_ACCOUNT = gql`
         }
     }
 `
+
+export const PATCH_VALIDATOR = gql`
+    mutation patchValidator($input: PatchValidatorInput){
+        patchValidator(input: $input)
+    }
+`

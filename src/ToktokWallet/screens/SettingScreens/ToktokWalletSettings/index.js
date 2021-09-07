@@ -5,6 +5,10 @@ import {Separator} from 'toktokwallet/components';
 import { HeaderBack , HeaderTitle} from 'src/revamp';
 import {useSelector} from 'react-redux'
 import CONSTANTS from 'common/res/constants'
+//SELF IMPORTS
+import {
+    Validator
+} from "./Components";
 
 const { FONT_FAMILY: FONT , FONT_SIZE , COLOR } = CONSTANTS
 const SettingHeaderTitle = ({title})=> {
@@ -43,10 +47,15 @@ export const ToktokWalletSettings = ({navigation , route })=> {
             <SettingOption route="ToktokWalletMPINCreate" title="Change MPIN"/>
             <SettingOption route="ToktokWalletCreatePin" title={`${tokwaAccount.pinCode ? "Change" : "Create"} TPIN`}/>
             <Separator/>
-            <SettingHeaderTitle title="Manage Validation Set Up"/>
-            <SettingOption route="ToktokWalletMPINCreate" title="Toogle TPIN"/>
-            <SettingOption route="ToktokWalletCreatePin" title="Toogle OTP"/>
-            <Separator/>
+            {
+                tokwaAccount.pinCode &&
+                <>
+                 <SettingHeaderTitle title="Manage Validation Set Up"/>
+                <Validator validator={tokwaAccount.validator}/>
+                <Separator/>
+                </>
+            }
+           
             <SettingHeaderTitle title="Help Centre"/>
             <SettingOption route="ToktokWalletPaymentChart" title="Payment Chart"/>
             <SettingOption route="ToktokWalletTransactionLimit" title="User Level and Transaction Limit"/>
