@@ -1,78 +1,119 @@
-import React, {useState} from 'react';
-import CheckBox from '@react-native-community/checkbox';
-import {View, Text, StyleSheet, TextInput} from 'react-native';
-
-import {FONT, FONT_SIZE, COLOR} from 'res/variables';
-
+import _ from 'lodash';
+import React, {useEffect, useState, useReducer} from 'react';
+import {StyleSheet, Text, TextInput, View} from 'react-native';
+import {COLOR, FONT, FONT_SIZE} from 'res/variables';
+import RadioButton from 'toktokfood/components/RadioButton';
 // Utils
-import {scale, verticalScale, moderateScale} from 'toktokfood/helper/scale';
+import {moderateScale, scale, verticalScale} from 'toktokfood/helper/scale';
+
+import reducer from './reducer';
 
 const Variations = ({item, onVariationChange, onAddOnsChange}) => {
+  const initialState = {
+    variants: [],
+    addOns: [],
+  };
+
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   const [selectedAddOns, setSelectedAddOns] = useState([]);
-  const [selectedVariations, setSelectedVariations] = useState([]);
+  const [selectedVariations, setSelectedVariations] = useState(null);
+  const [lastSelected, setLastSelected] = useState({id: '', value: 0.0, lastValue: 0.0});
 
-  const RenderItem = (props) => {
-    const {id, sizes, add_ons} = props.variations;
+  useEffect(() => {
+    // onVariationChange({value: lastSelected.value, lastValue: lastSelected.lastValue});
+    // console.log({value: lastSelected.value, lastValue: lastSelected.lastValue});
+
+    // console.log(JSON.stringify(state));
+  }, [state]);
+
+  const FoodVariations = (props) => {
+    const {id, name, maxSelection, variants} = props;
     return (
       <>
         <View key={id} style={styles.variations}>
-          <Text style={styles.variationTitle}>Choose your size (pick 1)</Text>
-          {sizes.map((size) => (
+          <Text style={styles.variationTitle}>
+            Choose your {name.toLowerCase()} (Pick {maxSelection})
+          </Text>
+          {variants.map((v) => (
             <View style={styles.variationsWrapper}>
               <View style={styles.checkBoxWrapper}>
-                <CheckBox
-                  lineWidth={2}
-                  boxType="square"
-                  animationDuration={0.2}
-                  style={styles.checkBox}
-                  onCheckColor={COLOR.WHITE}
-                  onTintColor={COLOR.ORANGE}
-                  onFillColor={COLOR.ORANGE}
-                  value={selectedVariations.includes(size.id)}
-                  tintColors={{true: COLOR.ORANGE, false: COLOR.MEDIUM}}
-                  onValueChange={(isChecked) => {
-                    const ids = selectedVariations;
-                    isChecked ? ids.push(size.id) : ids.splice(selectedVariations.indexOf(size.id), 1);
-                    setSelectedVariations(ids);
-                    onVariationChange(isChecked ? size.price : -size.price);
+                <RadioButton
+                  onValueChange={(s) => {
+                    dispatch({type: 'UPDATE_VARIANTS', payload: v});
+                    // setLastSelected({
+                    //   id: v.id,
+                    //   value: v.optionPrice,
+                    //   lastValue: lastSelected.id !== '' ? lastSelected.value : v.optionPrice,
+                    // });
                   }}
+                  selected={lastSelected.id === v.id}
                 />
-                <Text style={styles.checkBoxText}>{size.name}</Text>
+                <Text style={styles.checkBoxText}>{v.optionName}</Text>
               </View>
-              <Text style={styles.variationPrice}>+ {size.price.toFixed(2)}</Text>
+              <Text style={styles.variationPrice}>+ {v.optionPrice.toFixed(2)}</Text>
             </View>
           ))}
         </View>
+      </>
+    );
+  };
+
+  const FoodAddOns = (props) => {
+    const {id, name, maxSelection, variants} = props;
+    return (
+      <>
         <View key={id} style={styles.variations}>
-          <Text style={styles.variationTitle}>Add ons (pick 1)</Text>
-          {add_ons.map((ons) => (
+          <Text style={styles.variationTitle}>
+            Choose your {name.toLowerCase()} (Pick {maxSelection})
+          </Text>
+          {variants.map((v) => (
             <View style={styles.variationsWrapper}>
               <View style={styles.checkBoxWrapper}>
-                <CheckBox
-                  style={styles.checkBox}
-                  lineWidth={2}
-                  boxType="square"
-                  onCheckColor={COLOR.WHITE}
-                  onTintColor={COLOR.ORANGE}
-                  onFillColor={COLOR.ORANGE}
-                  animationDuration={0.2}
-                  value={selectedAddOns.includes(ons.id)}
-                  tintColors={{true: COLOR.ORANGE, false: COLOR.MEDIUM}}
-                  onValueChange={(isChecked) => {
-                    const ids = selectedAddOns;
-                    isChecked ? ids.push(ons.id) : ids.splice(selectedAddOns.indexOf(ons.id), 1);
-                    setSelectedAddOns(ids);
-                    onAddOnsChange(isChecked ? ons.price : -ons.price);
+                <RadioButton
+                  onValueChange={() => {
+                    setLastSelected({
+                      id: v.id,
+                      value: v.optionPrice,
+                      lastValue: lastSelected.id !== '' ? lastSelected.value : v.optionPrice,
+                    });
                   }}
+                  selected={lastSelected.id === v.id}
                 />
-                <Text style={styles.checkBoxText}>{ons.name}</Text>
+                <Text style={styles.checkBoxText}>{v.optionName}</Text>
               </View>
-              <Text style={styles.variationPrice}>+ {ons.price.toFixed(2)}</Text>
+              <Text style={styles.variationPrice}>+ {v.optionPrice.toFixed(2)}</Text>
             </View>
           ))}
         </View>
-        <View key={id} style={styles.variations}>
+      </>
+    );
+  };
+
+  return (
+    <>
+      <View style={styles.container}>
+        {_.map(item, (v) => {
+          const {id, optionName, isRequired, noOfSelection, options} = v;
+          return optionName !== 'Add-ons' ? (
+            <FoodVariations
+              id={id}
+              name={optionName}
+              variants={options}
+              required={isRequired}
+              maxSelection={noOfSelection}
+            />
+          ) : (
+            <FoodAddOns
+              id={id}
+              name={optionName}
+              variants={options}
+              required={isRequired}
+              maxSelection={noOfSelection}
+            />
+          );
+        })}
+        <View style={styles.variations}>
           <Text style={styles.variationTitle}>Special Instructions (Optional)</Text>
           <TextInput
             multiline={true}
@@ -82,14 +123,6 @@ const Variations = ({item, onVariationChange, onAddOnsChange}) => {
             placeholderTextColor={COLOR.MEDIUM}
           />
         </View>
-      </>
-    );
-  };
-
-  return (
-    <>
-      <View style={styles.container}>
-        <RenderItem variations={item.variations[0]} />
       </View>
     </>
   );
@@ -111,7 +144,7 @@ const styles = StyleSheet.create({
   variationsWrapper: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: verticalScale(6),
+    paddingVertical: verticalScale(10),
   },
   checkBox: {
     transform: Platform.OS === 'android' ? [{scaleX: 1}, {scaleY: 1}] : [{scaleX: 0.8}, {scaleY: 0.8}],

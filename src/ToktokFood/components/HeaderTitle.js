@@ -45,13 +45,14 @@ const HeaderTitle = ({title = 'toktokfood', showAddress = false, titleOnly = fal
     navigation.goBack();
   };
   return (
-    <View style={[
-      showAddress ? styles.headerWithAddress : styles.headerWithAddress,
-      { paddingHorizontal: titleOnly ? moderateScale(14) : 0 }
-    ]}>
-      { !titleOnly && (
+    <View
+      style={[
+        showAddress ? styles.headerWithAddress : styles.headerWithAddress,
+        {paddingHorizontal: titleOnly ? moderateScale(14) : 0},
+      ]}>
+      {!titleOnly && (
         <TouchableOpacity onPress={onBack} style={styles.headerBack}>
-            <FIcon5 name="chevron-left" size={15} />
+          <FIcon5 name="chevron-left" size={15} />
         </TouchableOpacity>
       )}
       {showAddress ? (
@@ -73,7 +74,7 @@ const styles = StyleSheet.create({
   headerWithoutAddress: {
     flex: 1,
     flexDirection: 'row',
-    alignItems: "center"
+    alignItems: 'center',
   },
   headerBack: {
     paddingHorizontal: 20,

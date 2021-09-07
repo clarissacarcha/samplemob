@@ -9,7 +9,13 @@ import {VectorIcon, ICON_SET} from 'src/revamp';
 // Utils
 import {moderateScale, scale, verticalScale} from 'toktokfood/helper/scale';
 
-const ModalFilterSearch = ({data, handleModal, handleSelected, selected, visible}) => {
+const ModalFilterSearch = ({data, handleModal, handleSelected, selected, visible, setShowFilter}) => {
+
+  const onPressItem = (item) => {
+    handleSelected(item)
+    setShowFilter(false)
+  }
+
   // renders
   const renderHeader = () => (
     <View style={styles.headerContainer}>
@@ -21,7 +27,7 @@ const ModalFilterSearch = ({data, handleModal, handleSelected, selected, visible
   );
 
   const renderItem = ({item}) => (
-    <TouchableOpacity onPress={() => handleSelected(item)} style={styles.itemContainer}>
+    <TouchableOpacity onPress={() => onPressItem(item)} style={styles.itemContainer}>
       <Text style={selected.title === item.title ? styles.itemTextSelected : styles.itemText}>{item.title}</Text>
     </TouchableOpacity>
   );

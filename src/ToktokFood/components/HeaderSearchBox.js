@@ -11,8 +11,9 @@ const HeaderSearchBox = (props) => {
 
   const routes = useRoute();
   const navigation = useNavigation();
-
-  const [foodQuery, setFoodQuery] = useState('');
+  
+  const searchByCategory = routes.params?.searchByCategory;
+  const [foodQuery, setFoodQuery] = useState(searchByCategory);
 
   // The navigation must not trigger on ToktokFood search page.
   const isForSearchPage = () => typeof routes.params?.isSearchPage !== 'undefined';

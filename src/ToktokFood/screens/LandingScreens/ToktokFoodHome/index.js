@@ -8,7 +8,7 @@ import HeaderSearchBox from 'toktokfood/components/HeaderSearchBox';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 
 // Hooks
-import {useCategories, useUserLocation, useShops} from 'toktokfood/hooks';
+import {useUserLocation} from 'toktokfood/hooks';
 
 import {transactions} from 'toktokfood/helper/strings';
 import DraggableIcon from 'toktokfood/components/DraggableIcon';
@@ -20,8 +20,6 @@ const CUSTOM_HEADER = {
 };
 
 const ToktokFoodHome = () => {
-  useShops(); // shops api
-  useCategories(); // categories api
   useUserLocation(); // user location hook
 
   const [viewHeight, setViewHeight] = useState(100);

@@ -4,7 +4,7 @@ import {useLazyQuery} from '@apollo/react-hooks';
 
 // Graphql
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from '../../graphql/client/graphql';
-import {GET_CATEGORIES, GET_SHOPS} from 'toktokfood/graphql/toktokfood';
+import {GET_SHOPS} from 'toktokfood/graphql/toktokfood';
 
 // Helpers
 import {getFormattedAddress, getLocation} from 'toktokfood/helper';
@@ -37,25 +37,6 @@ export const useUserLocation = () => {
       .catch(() => {});
   }, []);
 };
-
-export const useCategories = () => {
-  const dispatch = useDispatch();
-
-  const [getCategories, {data, error, loading}] = useLazyQuery(GET_CATEGORIES, {
-    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-    fetchPolicy: 'network-only',
-    onCompleted: ({getCategories}) => {
-      if (getCategories.length > 0) {
-        return dispatch({type: 'SET_TOKTOKFOOD_CATEGORIES', payload: {categories: getCategories}});
-      }
-      return null;
-    },
-  });
-  useEffect(() => {
-    getCategories();
-  }, []);
-};
-
 export const useShops = () => {
   const dispatch = useDispatch();
 

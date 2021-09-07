@@ -15,14 +15,14 @@ export const GET_GLOBAL_SETTING = gql`
 
 
 export const GET_GLOBAL_SETTINGS = gql`
-    query {
-        getGlobalSettings {
-            id
-            description
-            settingKey
-            keyValue
-            unit
-            status
-        }
+  query {
+    getGlobalSettings {
+      id
+      description
+      settingKey
+      keyValue
+      unit
+      status
     }
-`
+  }
+`;

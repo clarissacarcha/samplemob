@@ -12,17 +12,20 @@ import {delivered, pickedUp} from 'toktokfood/assets/images';
 
 // Utils
 import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
+import moment from 'moment';
 
-const OrderFee = ({ status = 2 }) => {
+const OrderFee = ({ status = 2, transaction }) => {
 
-  const renderLogInfo = (title, date, isDone) => (
+  let { dateOrdered, dateFulfilled, dateShipped, dateBookingConfirmed, deliveryImgurl, deliveryImgurl2 } = transaction
+ 
+  const renderLogInfo = (title, date) => (
     <View style={styles.logContainer}>
       <View style={styles.logsTitle}>
-        { isDone ? <View style={{ backgroundColor: COLORS.YELLOWTEXT, height: moderateScale(14), width: moderateScale(14), borderRadius: 10  }} />
+        { date != 'Invalid date' ? <View style={{ backgroundColor: COLORS.YELLOWTEXT, height: moderateScale(14), width: moderateScale(14), borderRadius: 10  }} />
           : <FIcon5 name="circle" color={"#CECECE"} size={moderateScale(15)} /> }
         <Text style={styles.logText}>{title}</Text>
       </View>
-      {!!date && <Text style={styles.dateText}>{date}</Text>}
+      {date != 'Invalid date' && <Text style={styles.dateText}>{date}</Text>}
     </View>
   );
 
@@ -35,25 +38,26 @@ const OrderFee = ({ status = 2 }) => {
   const renderDashImage = (dash = true, image) => (
     <View style={styles.dashedImage}>
       {dash && <DashedLine axis="vertical" dashGap={1} dashColor="#DDDDDD" dashLength={5} />}
-      <Image style={[styles.pickedUp, {borderRadius: 10, height: 130, marginTop: 8}]} source={image} resizeMode="cover" />
+      <Image style={[styles.pickedUp, {borderRadius: 10, height: 130, marginTop: 8}]} source={{ uri: image }} resizeMode="cover" />
     </View>
   );
 
-  console.log(status >= 4)
   return (
     <View style={styles.container}>
       <Text style={styles.deliverLogs}>Delivery Logs</Text>
-      {renderLogInfo('Order Placed', 'Feb 16 2021 - 1:26 pm', status >= 1)}
+      {renderLogInfo('Order Placed', moment(dateOrdered).format('lll'))}
       {renderDash()}
-      {renderLogInfo('On the way to restaurant', 'Feb 16 2021 - 1:26 pm', status >= 2)}
+      {renderLogInfo('On the way to restaurant', moment(dateBookingConfirmed).format('lll'))}
       {renderDash()}
-      {renderLogInfo('Food Picked Up', '', status >= 3)}
+      {renderLogInfo('Food Picked Up', moment(dateFulfilled).format('lll'))}
       {renderDash()}
-      {/* {renderDashImage(true, pickedUp)} */}
-      {renderLogInfo('On the Way to Recipient', '', status >= 4)}
+      {(moment(dateFulfilled).format('lll') != 'Invalid date' && deliveryImgurl != null )
+        && renderDashImage(true, deliveryImgurl)}
+      {renderLogInfo('On the Way to Recipient', moment(dateFulfilled).format('lll'))}
       {renderDash()}
-      {renderLogInfo('Item Delivered', '', status >= 5)}
-      {/* {renderDashImage(false, delivered)} */}
+      {renderLogInfo('Item Delivered', moment(dateShipped).format('lll'))}
+      {(moment(dateShipped).format('lll') != 'Invalid date' && deliveryImgurl2 != null )
+        && renderDashImage(true, deliveryImgurl2)}
     </View>
   );
 };
