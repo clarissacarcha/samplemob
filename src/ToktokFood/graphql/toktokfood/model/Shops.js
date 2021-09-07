@@ -14,3 +14,21 @@ export const GET_SHOPS = gql`
     }
   }
 `;
+
+export const RATE_SHOP = gql`
+  mutation rateShop($input: ShopRatingInput) {
+    rateShop(input: $input) {
+      status
+      message
+    }
+  }
+`;
+
+export const CHECK_IF_SHOP_WAS_RATED = gql`
+  query checkIfShopWasRated($input: CheckIfShopWasRatedInput) {
+    checkIfShopWasRated(input: $input) {
+      status
+    }
+  }
+`;
+

@@ -2,7 +2,7 @@ import React, {useEffect, useState, useContext} from 'react';
 import {View, StyleSheet, Text, TouchableOpacity, Image, Platform, FlatList} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {useLazyQuery, useQuery} from '@apollo/react-hooks';
-import {GET_PRODUCTS_BY_SHOP_CATEGORY} from 'toktokfood/graphql/toktokfood';
+import {GET_PRODUCTS_BY_SHOP_CATEGORY, GET_PRODUCTS_BY_SHOP} from 'toktokfood/graphql/toktokfood';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import {VerifyContext} from '../components';
@@ -31,9 +31,18 @@ export const FoodList = (props) => {
         input: {
           id: id,
           catId: activeTab?.id,
-          key: searchProduct,
+          // key: searchProduct,
         },
       },
+      client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+      fetchPolicy: 'network-only',
+    },
+  );
+
+  // data fetching for product 
+  const [getProductsByShop, {data: searchProducts, error: searchProductsError, loading: searchProductsLoading}] = useLazyQuery(
+    GET_PRODUCTS_BY_SHOP,
+    {
       client: TOKTOK_FOOD_GRAPHQL_CLIENT,
       fetchPolicy: 'network-only',
     },
@@ -46,10 +55,23 @@ export const FoodList = (props) => {
     }
   }, [activeTab]);
 
+  useEffect(() => {
+    if(searchProduct){
+      getProductsByShop({
+        variables: {
+          input: {
+            id: id,
+            key: searchProduct,
+          },
+        },
+      })
+    }
+  }, [searchProduct])
+
   const onNavigateToFoodItemDetails = (item) => {
     navigation.navigate('ToktokFoodItemDetails', {...item, ...{ratings}});
   };
-
+ 
   const renderItem = ({item}) => {
     return (
       <TouchableOpacity onPress={() => onNavigateToFoodItemDetails(item)} style={styles.listContainer}>
@@ -65,13 +87,13 @@ export const FoodList = (props) => {
     );
   };
 
-  if (productsLoading || tagsLoading || productsError) {
+  if (productsLoading || tagsLoading || productsError || searchProductsLoading) {
     return <LoadingIndicator style={[styles.container, {paddingVertical: 20}]} isLoading={true} />;
   }
   return (
     <>
       <FlatList
-        data={products ? products.getProductsByShopCategory : []}
+        data={searchProduct ? searchProducts?.getProductsByShop : products ? products.getProductsByShopCategory : []}
         extraData={props}
         renderItem={renderItem}
         contentContainerStyle={styles.container}

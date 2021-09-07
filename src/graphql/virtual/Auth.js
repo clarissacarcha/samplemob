@@ -6,7 +6,7 @@ user {
   userId
   username
   status
-  toktokFoodUserId
+  toktokfoodUserId
   person {
     id
     firstName

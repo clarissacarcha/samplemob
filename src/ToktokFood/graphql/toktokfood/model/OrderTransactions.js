@@ -29,7 +29,7 @@ const transaction = `
   dateRedeliver
   dateShipped
   dateReceived
-  tDeliveryid
+  tDeliveryId
   tShareLink
   isconfirmed
   deliveryImgurl
@@ -38,6 +38,7 @@ const transaction = `
     id
     shopname
     address
+    logo
   }
   orderDetails {
     id

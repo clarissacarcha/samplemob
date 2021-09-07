@@ -10,8 +10,8 @@ import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 import {moderateScale} from 'toktokfood/helper/scale';
 
 import {useLazyQuery, useQuery} from '@apollo/react-hooks';
-import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
-import {GET_ORDER_TRANSACTION_BY_ID, GET_RIDER} from 'toktokfood/graphql/toktokfood';
+import {TOKTOK_FOOD_GRAPHQL_CLIENT, AUTH_CLIENT, CLIENT} from 'src/graphql';
+import {GET_ORDER_TRANSACTION_BY_ID, GET_RIDER, GET_RIDER_DETAILS} from 'toktokfood/graphql/toktokfood';
 import {useSelector} from 'react-redux';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import { useIsFocused } from '@react-navigation/native';
@@ -24,17 +24,9 @@ const CUSTOM_HEADER = {
 const ToktokFoodDriver = ({ route, navigation }) => {
 
   const appSalesOrderId = route.params ? route.params.id : ''
-  const [seconds, setSeconds] = useState(300);
+  const [seconds, setSeconds] = useState(0);
   const [transaction, setTransaction] = useState({});
-  const [rider, setRider] = useState(
-  //     {
-  //   "id": "21",
-  //   "riderName": "JERANIL LARONG",
-  //   "riderConno": "+639163145136",
-  //   "riderPlatenum": "1380-034"
-  // }
-    null
-  );
+  const [riderDetails, setRiderDetails] = useState(null);
   const checkOrderResponse5mins = useRef(null);
   const isFocus = useIsFocused();
 
@@ -54,19 +46,18 @@ const ToktokFoodDriver = ({ route, navigation }) => {
     }
   });
 
-  // data fetching for transaction
-  const [getRider, {error: riderError, loading: riderLoading }] = useLazyQuery(GET_RIDER, {
+   // data fetching for rider details
+   const [getRiderDetails, {error: riderDetailsError, loading: riderDetailsLoading }] = useLazyQuery(GET_RIDER_DETAILS, {
     variables: {
       input: {
-        appSalesOrderId: appSalesOrderId
+        deliveryId: transaction.tDeliveryId
       }
     },
-    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    client: CLIENT,
     fetchPolicy: 'network-only',
-    onCompleted: ({ getRider }) => {
-      if(rider && JSON.stringify(getRider) != JSON.stringify(getRider)){
-        setRider(getRider)
-      }
+    onCompleted: ({ getDriver }) => {
+      console.log(getDriver.driver.user.person, 'sadasd')
+      setRiderDetails(getDriver.driver)
     }
   });
 
@@ -93,21 +84,26 @@ const ToktokFoodDriver = ({ route, navigation }) => {
       if (seconds > 0) {
         if(transaction.orderStatus != 'p'){
           getTransactionById()
-          getRider()
+          getRiderDetails()
         } else {
           getTransactionById()
         }
         checkOrderResponse5mins.current = setInterval(() => setSeconds(seconds - 5), 5000);
       } else {
-        if(transaction.orderStatus == 'p'){
-          alertPrompt('No Response', 'It takes some time to the merchant to confirm your order')
+        if(riderDetails == null){
+          clearTimeout(checkOrderResponse5mins.current)
+          if(transaction.orderStatus == 'p'){
+            alertPrompt('No Response', 'It takes some time for the merchant to confirm your order')
+          } else {
+            alertPrompt('No Driver found', 'It takes some time for the drivers to confirm your booking')
+          }
         } else {
-          alertPrompt('No Driver found', 'It takes some time to the drivers to confirm your booking')
+          setSeconds(300)
         }
       } 
     }
     return () => { clearInterval(checkOrderResponse5mins.current) }
-  }, [seconds, transaction, rider]);
+  }, [seconds, transaction, riderDetails]);
 
   const alertPrompt = (title, message) => {
     Alert.alert(
@@ -128,11 +124,13 @@ const ToktokFoodDriver = ({ route, navigation }) => {
           <LoadingIndicator isFlex isLoading={true} />
         ) : (
           <>
-            <DriverAnimationView status={1} orderStatus={transaction.orderStatus} rider={rider} />
+            <DriverAnimationView
+              orderStatus={transaction.orderStatus}
+              riderDetails={riderDetails}
+            />
             <View style={styles.driverWrapper}>
               <DriverDetailsView
-                status={1}
-                rider={rider}
+                riderDetails={riderDetails}
                 transaction={transaction}
                 appSalesOrderId={appSalesOrderId}
               />

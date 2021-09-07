@@ -27,7 +27,11 @@ export const TransactionItems = (props) => {
   }
 
   const onTransactionsNavigate = (id) => {
-    navigation.navigate('ToktokFoodDriver', { id })
+    if(orderStatus == 's' || orderStatus == 'c'){
+      navigation.navigate('ToktokFoodOrderDetails', { appSalesOrderId: id, orderStatus })
+    } else {
+      navigation.navigate('ToktokFoodDriver', {  id })
+    }
   };
   
   return (

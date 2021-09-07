@@ -12,8 +12,8 @@ import {chat, phoneBlack, rider1, star} from 'toktokfood/assets/images';
 // Utils
 import {moderateScale, verticalScale, scale} from 'toktokfood/helper/scale';
 
-const OrderRider = ({ rider }) => {
-  const { riderName, riderConno, riderPlatenum } = rider;
+const OrderRider = ({ riderDetails }) => {
+  const { user, vehicle } = riderDetails;
 
   const onMessage = () => {
     const url = `sms:+639100593229`;
@@ -27,11 +27,12 @@ const OrderRider = ({ rider }) => {
 
   const renderAvatar = (rating = 4) => (
     <View style={styles.avatarContainer}>
-      <Image resizeMode="cover" style={styles.avatar} source={rider1} />
+      <Image resizeMode="cover" style={styles.avatar} source={{ uri: user.person.avatar }} />
       <View style={styles.leftContainer}>
-        <Text style={styles.riderName}>{riderName}</Text>
-        <Text style={styles.orderNumber}>{riderConno}</Text>
-        <Text style={styles.notes}>{riderPlatenum}</Text>
+        <Text style={styles.riderName}>{`${user.person.firstName} ${user.person.lastName}`}</Text>
+        <Text style={styles.orderNumber}>{user.person.mobileNumber}</Text>
+        <Text style={styles.notes}>{vehicle.plateNumber}</Text>
+        <Text style={styles.notes}>{`${vehicle.brand.brand} ${vehicle.model.model}`}</Text>
           {/* <Text style={styles.notes}>{parseFloat(rating).toFixed(1)}</Text>
           <Rating startingValue={parseFloat(rating).toFixed(1)} imageSize={13} readonly style={styles.ratings} ratingColor={"#FFA700"} /> */}
         <CustomStarRating

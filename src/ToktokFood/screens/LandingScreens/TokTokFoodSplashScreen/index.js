@@ -45,7 +45,7 @@ const TokTokFoodSplashScreen = () => {
           dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_INFO', payload: {...getAccount}});
           showHomPage();
         } else {
-          patchToktokFoodUserId(getAccount.userId);
+          patchToktokFoodUserId(getAccount);
         }
       },
     },
@@ -84,7 +84,7 @@ const TokTokFoodSplashScreen = () => {
     });
   };
 
-  const patchToktokFoodUserId = async (toktokfoodUserId) => {
+  const patchToktokFoodUserId = async (getAccount) => {
     try {
       const API_RESULT = await axios({
         url: `${ENVIRONMENTS.TOKTOK_SERVER}/graphql`,
@@ -96,7 +96,7 @@ const TokTokFoodSplashScreen = () => {
           query: `
             mutation {
               patchToktokFoodUserId(input: {
-                toktokfoodUserId: "${toktokfoodUserId}"
+                toktokfoodUserId: "${getAccount.userId}"
                 toktokUserId: "${user.id}"
               }) {
                 status
@@ -106,6 +106,8 @@ const TokTokFoodSplashScreen = () => {
         },
       });
       const res = API_RESULT.data.data;
+      dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_INFO', payload: {...getAccount}});
+      showHomPage();
     } catch (error) {
       console.log(error);
     }

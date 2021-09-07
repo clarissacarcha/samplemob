@@ -9,8 +9,8 @@ import {OrderAddress, OrderFee, OrderList, OrderLogs, OrderNote, OrderRider, Ord
 
 import {useSelector} from 'react-redux';
 import {useLazyQuery, useQuery} from '@apollo/react-hooks';
-import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
-import {GET_ORDER_TRANSACTION_BY_ID, GET_RIDER} from 'toktokfood/graphql/toktokfood';
+import {TOKTOK_FOOD_GRAPHQL_CLIENT, CLIENT} from 'src/graphql';
+import {GET_ORDER_TRANSACTION_BY_ID, GET_RIDER, GET_RIDER_DETAILS} from 'toktokfood/graphql/toktokfood';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import {rider1} from 'toktokfood/assets/images';
 import RatingModal from 'toktokfood/components/RatingModal';
@@ -27,19 +27,13 @@ const ToktokFoodOrderDetails = ({ route, navigation }) => {
 
   const {price} = useSelector((state) => state.toktokFood.totalAmount);
   const appSalesOrderId = route.params ? route.params.appSalesOrderId : ''
+  const orderStatus = route.params ? route.params.orderStatus : ''
+
   const [iShowSuccess, setShowSuccess] = useState(false);
 
   const [seconds, setSeconds] = useState(300);
   const [transaction, setTransaction] = useState({});
-  const [rider, setRider] = useState(
-  //        {
-  //   "id": "21",
-  //   "riderName": "JERANIL LARONG",
-  //   "riderConno": "+639163145136",
-  //   "riderPlatenum": "1380-034"
-  // }
-    null
-  );
+  const [riderDetails, setRiderDetails] = useState(null);
   const checkOrderResponse5mins = useRef(null);
 
   const [getTransactionById, {error: transactionError, loading: transactionLoading }] = useLazyQuery(GET_ORDER_TRANSACTION_BY_ID, {
@@ -57,19 +51,18 @@ const ToktokFoodOrderDetails = ({ route, navigation }) => {
     }
   });
 
-  // data fetching for transaction
-  const [getRider, {error: riderError, loading: riderLoading }] = useLazyQuery(GET_RIDER, {
+   // data fetching for rider details
+   const [getRiderDetails, {error: riderDetailsError, loading: riderDetailsLoading }] = useLazyQuery(GET_RIDER_DETAILS, {
     variables: {
       input: {
-        appSalesOrderId: appSalesOrderId
+        deliveryId: transaction?.tDeliveryId
       }
     },
-    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    client: CLIENT,
     fetchPolicy: 'network-only',
-    onCompleted: ({ getRider }) => {
-      if(rider && JSON.stringify(getRider) != JSON.stringify(getRider)){
-        setRider(getRider)
-      }
+    onCompleted: ({ getDriver }) => {
+      console.log(getDriver.driver.user.person, 'sadasd')
+      setRiderDetails(getDriver.driver)
     }
   });
 
@@ -86,7 +79,7 @@ const ToktokFoodOrderDetails = ({ route, navigation }) => {
   }, [])
 
   useEffect(() => {
-    if(Object.entries(transaction).length > 0){
+    if(Object.entries(transaction).length > 0 && orderStatus == undefined && riderDetails == null){
       if (seconds > 0) {
         if(transaction.orderStatus != 'p'){
           getTransactionById()
@@ -96,19 +89,23 @@ const ToktokFoodOrderDetails = ({ route, navigation }) => {
         }
         checkOrderResponse5mins.current = setTimeout(() => setSeconds(seconds - 5), 5000);
       } else {
-        clearTimeout(checkOrderResponse5mins.current)
-        if(transaction.orderStatus == 'p'){
-          alertPrompt('No Response', 'It takes some time to the merchant to confirm your order')
+        if(riderDetails == null){
+          clearTimeout(checkOrderResponse5mins.current)
+          if(transaction.orderStatus == 'p'){
+            alertPrompt('No Response', 'It takes some time for the merchant to confirm your order')
+          } else {
+            alertPrompt('No Driver found', 'It takes some time for the drivers to confirm your booking')
+          }
         } else {
-          alertPrompt('No Driver found', 'It takes some time to the drivers to confirm your booking')
+          setSeconds(300)
         }
       } 
     }
-  }, [seconds, transaction, rider]);
+  }, [seconds, transaction, riderDetails]);
 
   useEffect(() => {
-    setShowSuccess(rider != null);
-  }, [rider]);
+    setShowSuccess(riderDetails != null);
+  }, [riderDetails]);
 
   const alertPrompt = (title, message) => {
     Alert.alert(
@@ -128,26 +125,25 @@ const ToktokFoodOrderDetails = ({ route, navigation }) => {
       <RatingModal
         title={"We've found you a driver!"}
         visibility={iShowSuccess}
-        onCloseModal={() => {
-          setShowSuccess(false)
-          navigation.goBack()
-        }}
+        onCloseModal={() => setShowSuccess(false)}
         btnTitle="Ok"
-        imgSrc={rider1}
+        imgSrc={riderDetails?.user.person.avatar}
         rating={0}
         readOnly
       >
-        <Text style={styles.messageTitle}>{rider?.riderName}</Text>
-        <Text style={styles.messageContent}>{rider?.riderConno}</Text>
-        <Text style={styles.messageContent}>{rider?.riderPlatenum}</Text>
+        <Text style={styles.messageTitle}>{`${riderDetails?.user.person.firstName} ${riderDetails?.user.person.lastName}`}</Text>
+        <Text style={styles.messageContent}>{riderDetails?.user.person.mobileNumber}</Text>
+        <Text style={styles.messageContent}>{
+          `${riderDetails?.vehicle.brand.brand} ${riderDetails?.vehicle.model.model} - ${riderDetails?.vehicle.plateNumber}`
+        }</Text>
       </RatingModal>
       {((transactionLoading && Object.entries(transaction).length == 0) || Object.entries(transaction).length == 0 || transactionError) ? (
           <LoadingIndicator isFlex isLoading={true} />
       ) : (
         <ScrollView bounces={false} contentContainerStyle={styles.scrollView} showsVerticalScrollIndicator={false}>
-          <OrderTitle transaction={transaction} rider={rider} />
+          <OrderTitle transaction={transaction} riderDetails={riderDetails} />
           <Separator />
-          <OrderAddress  transaction={transaction} rider={rider} />
+          <OrderAddress transaction={transaction} riderDetails={riderDetails} />
           <Separator />
           { transaction.deliveryNotes &&
             <>
@@ -155,9 +151,9 @@ const ToktokFoodOrderDetails = ({ route, navigation }) => {
               <Separator />
             </>
           }
-          { rider != null && (
+          { riderDetails != null && (
             <>
-              <OrderRider rider={rider} />
+              <OrderRider riderDetails={riderDetails} />
               <Separator />
             </>
           )}
@@ -165,7 +161,10 @@ const ToktokFoodOrderDetails = ({ route, navigation }) => {
           <Separator />
           <OrderFee data={transaction} />
           <Separator />
-          <OrderNote title="Payment Method" label="Cash-on Delivery" />
+          <OrderNote
+            title="Payment Method"
+            label={transaction.paymentMethod == "COD" ? "Cash On Delivery" : transaction.paymentMethod }
+          />
           <Separator />
           <OrderLogs transaction={transaction} />
         </ScrollView>
