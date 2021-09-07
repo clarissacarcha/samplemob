@@ -29,6 +29,7 @@ export const GET_MY_ACCOUNT = gql`
             pinCodeAttempts
             mpinCode
             mpindCodeAttempts
+            validator
             isLinked
             person {
                 id
