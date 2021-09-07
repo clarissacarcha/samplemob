@@ -60,7 +60,7 @@ export const Totals = ({raw, shipping}) => {
         </View>
         <View style = {styles.textContainer}>
           <Text style = {{fontWeight: 'bold'}}>Total Payment:</Text>
-          <Text  style = {{color: '#F61841'}}>{FormatToText.currency(shippingFeeTotal + merchandiseTotal)}</Text>
+          <Text  style = {{color: '#F61841'}}>{FormatToText.currency((shippingFeeTotal || 0) + (merchandiseTotal || 0))}</Text>
         </View>
       </View>
       <View style={{height: 50}} />

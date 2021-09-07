@@ -44,7 +44,7 @@ export const AdsCarousel = (props) => {
       //   tHeight = {130}  tWidth= {'100%'} avatarStyles = {{ left: 0, borderRadius: 5}} 
       // ></ContentLoader>
       
-        <View style={{width: 330, height: 130}}>
+        <View style={{width: screenWidth - 30, height: 130}}>
          {/* <Image source={SampleImage} style={{width: '100%', height: 130, resizeMode: 'stretch'}} /> */}
           <ParallaxImage
             // source={{uri: "https://cdn.searchenginejournal.com/wp-content/uploads/2019/04/shutterstock_456779230.png"}}
@@ -72,8 +72,8 @@ export const AdsCarousel = (props) => {
         data={entries}
         renderItem={renderItem}
         onSnapToItem={(index) => setActiveSlide(index) }
-        sliderWidth={330}
-        itemWidth={330}
+        sliderWidth={screenWidth -30}
+        itemWidth={screenWidth -30}
         autoplay={true}
         autoplayDelay={2500}
         enableSnap={true}
