@@ -9,6 +9,7 @@ import {coppermask, clothfacemask, voucherbg} from '../../../../assets';
 import { FONT } from '../../../../../res/variables';
 
 import Animated, {interpolate, Extrapolate, useCode, set} from 'react-native-reanimated'
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export const HeaderPlain = ({value, animatedValue, cartItems, itemName }) => {
 
@@ -34,17 +35,19 @@ export const HeaderPlain = ({value, animatedValue, cartItems, itemName }) => {
         </View>
         <View style={{flex: 3, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around'}}>
           <View style={{flex: 0.5}}></View>
-					<View style={{flex: 1, justifyContent: 'center'}}>
+					<TouchableOpacity onPress={() => {
+            navigation.navigate("ToktokMallMyCart", {})
+          }} style={{flex: 1, justifyContent: 'center'}}>
             <CustomIcon.AIcon name="shoppingcart" color="#F6841F" size={24} />
-            {cartItems !== 0 && <Badge
+            {/* {cartItems !== 0 && <Badge
               status="warning"
               value={cartItems}
               badgeStyle={{backgroundColor: "#FDBA1C"}}
               textStyle={{fontFamily: FONT.REGULAR, fontSize: 10}}
               containerStyle={{ position: 'absolute', top: -4, right: 0 }}
-            />}
-          </View>
-          <View style={{flex: 1, justifyContent: 'center'}}>
+            />} */}
+          </TouchableOpacity>
+          <View style={{flex: 0, justifyContent: 'center'}}>
             {/* <Tooltip
               ref={HelpTooltipRef}
               backgroundColor="white"
@@ -57,6 +60,21 @@ export const HeaderPlain = ({value, animatedValue, cartItems, itemName }) => {
               <CustomIcon.FeIcon name="more-horizontal" color="#F6841F" size={24} />
             </Tooltip> */}
           </View>
+          {cartItems == 0 &&
+                <Badge
+                status="warning"
+                badgeStyle={{backgroundColor: "#FDBA1C"}}
+                textStyle={{fontFamily: FONT.REGULAR, fontSize: 10}}
+                containerStyle={{ position: 'absolute', top: 0, right: 10 }}
+              />} 
+              {cartItems > 0 &&
+                <Badge
+                status="warning"
+                value={cartItems}
+                badgeStyle={{backgroundColor: "#FDBA1C"}}
+                textStyle={{fontFamily: FONT.REGULAR, fontSize: 10}}
+                containerStyle={{ position: 'absolute', top: -5, right: 5 }}
+              />}   
         </View>
       </Animated.View>
       <Animated.View style={[{height: 3, backgroundColor: '#F7F7FA'}, {opacity: translateOpacity}]} />

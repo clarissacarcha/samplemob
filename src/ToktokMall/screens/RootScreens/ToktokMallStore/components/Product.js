@@ -23,8 +23,10 @@ const RenderStars = ({value}) => {
   )
 }
 
-const RenderItem = ({item, navigation}) => {
+const RenderItem = ({item}) => {
 
+  const navigation = useNavigation()
+  
   const getImageSource = (data) => {
     if(data.length > 0){
       return {uri: data[0].filename}
@@ -38,6 +40,10 @@ const RenderItem = ({item, navigation}) => {
       <View style={{flex: 2, backgroundColor: '#fff', margin: 5}}>
                   
         <View style={{padding: 5}}>
+          {item?.discountRate != "" && 
+          <View style={{position:'absolute', zIndex: 1, right: 0, backgroundColor: '#F6841F', borderBottomLeftRadius: 30}}>
+            <Text style={{fontSize: 8, paddingHorizontal: 4, paddingLeft: 8, paddingTop: 1, paddingBottom: 3, color: "#fff", fontFamily: FONT.BOLD}}>{item?.discountRate}</Text>
+          </View>}
           <Image 
             source={getImageSource(item?.images || [])} 
             style={{resizeMode: 'cover', width: '100%', height: 120, borderRadius: 5}} 

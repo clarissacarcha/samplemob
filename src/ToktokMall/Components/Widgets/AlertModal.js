@@ -1,12 +1,21 @@
 import React, {useState, useEffect, useRef} from 'react';
+import { Platform } from 'react-native';
 import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, Dimensions, Modal,  Alert } from 'react-native';
 import { COLOR, FONT, FONT_SIZE } from '../../../res/variables';
 import {successIcon, errorIcon, warningIcon, questionIcon, alertIcon} from '../../assets'
 import CustomIcon from '../Icons'
 
+const Wrapper = ({children}) => {
+  return Platform.OS === 'ios'? <>{children}</> : <View style={styles.centeredView}>{children}</View>
+}
+
 export const AlertModal = ({navigation, isVisible, setIsVisible, type, message}) => {
   
-  const [modalVisible, setModalVisible] = useState(isVisible || false)
+  const [modalVisible, setModalVisible] = useState(false)
+
+  useEffect(() => {
+    setModalVisible(isVisible)
+  }, [isVisible])
 
   const getIconByType = () => {
     if(type == "Success") return successIcon
@@ -16,12 +25,11 @@ export const AlertModal = ({navigation, isVisible, setIsVisible, type, message})
   }
 
   return (
-    <>
-      <View style={styles.centeredView}>
+      <Wrapper>
       <Modal
         animationType="none"
         transparent={true}
-        visible={isVisible}       
+        visible={modalVisible}       
       >
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.25)'}}>
           <View style={{backgroundColor: 'white', width: '80%', paddingVertical: 16, paddingHorizontal: 12, borderRadius: 5}}>
@@ -55,9 +63,7 @@ export const AlertModal = ({navigation, isVisible, setIsVisible, type, message})
           </View>
         </View>
       </Modal>
-      
-    </View>
-    </>
+    </Wrapper>
   )
 }
 

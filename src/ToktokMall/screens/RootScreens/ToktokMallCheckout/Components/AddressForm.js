@@ -29,7 +29,7 @@ export const AddressForm = ({data, onEdit}) => {
             
           </View>
           <Text style={styles.addresscontact_number}>{data?.receiverContact || ""}</Text>
-          <Text style={styles.addressText}>{data?.address || ""}</Text>
+          <Text style={styles.addressText}>{data?.fullAddress || data?.address}</Text>
         </View>
       </View>  
     </>

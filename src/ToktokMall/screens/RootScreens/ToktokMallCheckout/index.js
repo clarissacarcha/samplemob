@@ -17,7 +17,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Toast from "react-native-simple-toast";
 import axios from "axios";
 import {AlertModal} from '../../../Components/Widgets'
-import {ApiCall, PaypandaApiCall, BuildPostCheckoutBody} from "../../../helpers"
+import {ApiCall, PaypandaApiCall, BuildPostCheckoutBody, BuildTransactionPayload, WalletApiCall} from "../../../helpers"
 
 const REAL_WIDTH = Dimensions.get('window').width;
 
@@ -81,7 +81,9 @@ const postCheckoutBody = {
 
 const Component = ({route, navigation, createMyCartSession}) => {
 
-  const user_address = useSelector(state=> state.toktokMall.user_address)
+  const parentSession = useSelector(state => state.session)
+  const userAddress = useSelector(state=> state.toktokMall.user_address)
+  const userDefaultAddress = useSelector(state=> state.toktokMall.defaultAddress)
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack onBack = {setAlertTrue}/>,
@@ -106,10 +108,11 @@ const Component = ({route, navigation, createMyCartSession}) => {
   const [isLoading, setIsLoading] = useState(false)
   const [alertModal, setAlertModal] =useState(false)
   const [movedScreens, setMovedScreens] = useState(false)
-  const [currentBalance, setCurrentBalance] = useState(0)
+  const [currentBalance, setCurrentBalance] = useState(100000)
 
   const setAlertTrue = () => {
     setAlertModal(true)
+    console.log("test")
   }
 
   const [getCheckoutData, {error, loading}] = useLazyQuery(GET_CHECKOUT_DATA, {
@@ -117,7 +120,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
     fetchPolicy: 'network-only',    
     onCompleted: (response) => {
       if(response.getCheckoutData){
-        setAddressData(response.getCheckoutData.address);
+        // setAddressData(response.getCheckoutData.address);
         setPaymentList(response.getCheckoutData.paymentMethods);
       }
     },
@@ -257,40 +260,112 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
   }
 
-  const postCheckoutSetting = async () => {
-    
+  const postCheckoutSetting = async () => {    
+
     setIsLoading(true)
 
-    const checkoutBody = await BuildPostCheckoutBody({
-      items: paramsData, 
-      addressData: addressData, 
-      grandTotal: grandTotal, 
-      vouchers: voucher,
-      paymentMethod: payment
-    })
+    if(payment == 'toktokwallet'){
+      
+      let transactionPayload = await BuildTransactionPayload({
+        method: "TOKTOKWALLET", 
+        notes: "", 
+        total: grandTotal, 
+        // toktokid: parentSession.user.id
+        toktokid: 13
+      })
+
+      console.log(JSON.stringify(transactionPayload))
+           
+      const req = await WalletApiCall("request_money", transactionPayload, true)
+
+      if(req.responseData && req.responseData.success == 1){
+
+        const checkoutBody = await BuildPostCheckoutBody({
+          walletRequest: req.responseData.data,
+          pin: "",
+          items: paramsData, 
+          addressData: userDefaultAddress, 
+          grandTotal: grandTotal, 
+          vouchers: voucher,
+          paymentMethod: payment
+        })
+
+        navigation.navigate("ToktokMallOTP", {
+          transaction: "payment", 
+          data: checkoutBody,
+          onSuccess: async () => {
+
+            if(route?.params?.type == "from_cart"){
+              UpdateCart()
+            }
+
+            setIsVisible(true)
+            setIsLoading(false)
+          },
+          onError: async (error) => {
+            console.log(error)
+            setIsLoading(false)
+          }
+        })
+
+        setIsLoading(false)
+
+      }else if(req.responseError){
+
+        let json = JSON.parse(req.responseError.message)
+        let errors = json.errors
+        
+        if(errors.length > 0){
+          Toast.show(errors[0].message, Toast.LONG)
+        }
+        
+        setIsLoading(false)
+      }else{
+        Toast.show("Something went wrong", Toast.LONG)
+        setIsLoading(false)
+      }
+
+      setIsLoading(false)
+
+      
+
+      
+  
+      
+
+    }
+
+
+    
+    return
+
+        
 
     // console.log(checkoutBody, voucher)
     // setIsLoading(false)
     // return
 
-    const req = await ApiCall("checkout", checkoutBody, false)
+    // const req = await ApiCall("checkout", checkoutBody, true)
 
-    if(req.responseData && req.responseData.success == 1){
+    // if(req.responseData && req.responseData.success == 1){
 
-      if(route?.params?.type == "from_cart"){
-        UpdateCart()
-      }
+    //   if(route?.params?.type == "from_cart"){
+    //     UpdateCart()
+    //   }
 
-      setIsVisible(true)
-      setIsLoading(false)
+    //   setIsVisible(true)
+    //   setIsLoading(false)
 
-    }else if(req.responseError && req.responseError.success == 0){
-      Toast.show(req.responseError.message, Toast.LONG)
-    }else if(req.responseError){
-      Toast.show("Something went wrong", Toast.LONG)
-    }
+    // }else if(req.responseError && req.responseError.success == 0){
+    //   Toast.show(req.responseError.message, Toast.LONG)
+    // }else if(req.responseError){
+    //   Toast.show("Something went wrong", Toast.LONG)
+    // }else if(req.responseError == null && req.responseData == null){
+    //   Toast.show("Something went wrong", Toast.LONG)
+    // }
 
-    setIsLoading(false)
+    // console.log(req)
+    // setIsLoading(false)
 
   }
 
@@ -328,6 +403,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
     
   useEffect(() => {
     init()
+
+    console.log("Parent Session", parentSession)
   },[])
 
   // useEffect(() => {
@@ -340,16 +417,16 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
   useEffect(() => {
     let a = 0;
-    if(!addressData) return
+    if(!userDefaultAddress) return
     for (var x = 0; x < route.params.data.length; x++) {
       for (var y = 0; y < route.params.data[x].cart.length; y++) {
         let item = route.params.data[x].cart[y];
         a += parseFloat(item.price) * item.qty;
       }
-      a += parseFloat(addressData?.shippingSummary?.rateAmount)
+      a += parseFloat(userDefaultAddress?.shippingSummary?.rateAmount)
     }
     setGrandTotal(a)
-  }, [addressData])
+  }, [userDefaultAddress])
 
   useEffect(() => {
     setParamsData(route?.params?.data)
@@ -385,7 +462,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
         />
         <View style ={{paddingBottom: 0}}>
           <AddressForm
-            data={addressData}
+            data={userDefaultAddress}
             onEdit={() => navigation.push("ToktokMallAddressesMenu", {
               onGoBack: (data) => {
                 // setAddressData(data)
@@ -395,9 +472,10 @@ const Component = ({route, navigation, createMyCartSession}) => {
           />
           <Shops 
             raw={paramsData}
-            shipping={addressData?.shippingSummary}            
+            shipping={userDefaultAddress?.shippingSummary}            
           />
           <Vouchers 
+            items={paramsData}
             navigation={navigation} 
             vouchers={vouchers}
             setVouchers={setVouchers} 
@@ -405,7 +483,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
             setvCode={setvCode}
             setVoucher={(data) => {
               let temp = []
-              temp.push(data)
+              if(data) temp.push(data)
               setVoucher(temp)
             }}
           />
@@ -419,7 +497,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
           />
           <Totals 
             raw={paramsData}
-            shipping={addressData?.shippingSummary}
+            shipping={userDefaultAddress?.shippingSummary}
           />
         </View>
       </ScrollView>
@@ -428,9 +506,10 @@ const Component = ({route, navigation, createMyCartSession}) => {
           enabled={!loading}
           loading={isLoading}
           total={grandTotal}
+          shipping={userDefaultAddress}
           onPress={async () => {
             if(!isLoading){
-              await postCheckoutSetting()
+              await postCheckoutSetting()              
             }            
           }} 
         />
@@ -441,7 +520,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  createMyCartSession: (action, payload) => dispatch({type: 'CREATE_MY_CART_SESSION', action,  payload}),
+  createMyCartSession: (action, payload) => dispatch({type: 'CREATE_MY_CART_SESSION', action,  payload})
 });
 
 export const ToktokMallCheckout = connect(null, mapDispatchToProps)(Component);

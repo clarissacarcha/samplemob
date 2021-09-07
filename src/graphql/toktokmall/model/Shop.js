@@ -12,6 +12,7 @@ export const GET_SHOP_DETAILS = gql`
 				Id
 				itemname
 				price
+				discountRate
 				images {
 					arrangement
 					filename
@@ -32,9 +33,25 @@ export const SEARCH_SHOP_PRODUCT = gql`
     	sysShop
     	itemname
     	price
+		discountRate
     	images {
       	filename
     	}
+		}
+	}
+`
+
+export const GET_SHOP_SEARCH_SUGGESTIONS = gql`
+	query getSearchSuggestions($input: SearchShopProductInput){
+		getSearchSuggestions(input: $input){
+			Id
+			sysShop
+			itemname
+			price
+			discountRate
+			images {
+				filename
+			}
 		}
 	}
 `

@@ -17,10 +17,14 @@ const testData = [
   }
 ]
 
-export const Vouchers = ({ navigation, vouchers, setVouchers, setVoucher}) => {
+export const Vouchers = ({ navigation, items, vouchers, setVouchers, setVoucher}) => {
 
   const [isValid, setIsValid] = useState(0)
   const [vcode, setvCode] = useState("")
+
+  useEffect(() => {
+    console.log(items)
+  }, [items])
 
   const [applyVoucher, {error, loading}] = useLazyQuery(GET_APPLY_VOUCHER, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
@@ -28,10 +32,21 @@ export const Vouchers = ({ navigation, vouchers, setVouchers, setVoucher}) => {
     onCompleted: (response) => {
       console.log("Response", response)
       if(response.applyVoucher){
-        setIsValid(2)
-        setVoucher(response.applyVoucher)
+
+        //Check store id if exist on item list
+        let index = items.findIndex(x => x.store_id == response.applyVoucher.shopid)
+        if(index > -1){
+          //if exist, voucher is valid
+          setIsValid(2)
+          setVoucher(response.applyVoucher)
+        }else{
+          setIsValid(-1)
+          setVoucher(null)
+        }
+        
       }else{
         setIsValid(-1)
+        setVoucher(null)
       }
     },
     onError: (err) => {
@@ -130,7 +145,7 @@ export const Vouchers = ({ navigation, vouchers, setVouchers, setVoucher}) => {
               style={{
                 flex: 0, 
                 paddingVertical: 15, 
-                paddingLeft: 15,
+                paddingHorizontal: 15,
                 backgroundColor: 'white',
                 alignItems: 'flex-end'
               }}

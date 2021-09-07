@@ -159,14 +159,16 @@ export const VariationBottomSheet = forwardRef(({ item, image, onPressBuyNow, on
           </View>
           <View style={{flex: 8, justifyContent: 'center'}}>
             <View style={{flexDirection: 'row'}}>
-              <View style={{flex: 1}}></View>
-              <View style={{flex: 3}}>
-                <Text style={{color: "#F6841F", fontSize: 14}}><Price amount={item?.price} /></Text>
-                <Text style={{color: "#9E9E9E", fontSize: 12}}>Stock: {stock}</Text>
+              <View style={{flex: 1.5}}></View>
+              <View style={{flex: 4}}>
+                <View style={{flexDirection:'row'}}>
+                  <Text style={{color: "#F6841F", fontSize: 14}}><Price amount={item?.price} /></Text>
+                  <Text style={{color: "#9E9E9E", textDecorationLine: 'line-through', fontSize: 11, marginTop: 2.5, marginLeft: 8}}>{item.compareAtPrice == 0 ? "" : <Price amount={item.compareAtPrice} />}</Text>                
+                </View>
+                <Text style={{color: "#9E9E9E", fontSize: 12, marginTop: 5}}>Stock: {stock}</Text>
               </View>
-              <View style={{flex: 3, justifyContent: 'center'}}>
-                <Text style={{color: "#9E9E9E", textDecorationLine: 'line-through', fontSize: 11}}>{item.compareAtPrice == 0 ? "" : <Price amount={item.compareAtPrice} />}</Text>
-                <Text></Text>
+              <View style={{flex: 6, justifyContent: 'center'}}>
+                <Text style={{marginTop: 8}}></Text>
               </View>
               <View style={{flex: 1}}></View>
             </View>
@@ -185,7 +187,7 @@ export const VariationBottomSheet = forwardRef(({ item, image, onPressBuyNow, on
           let variantslist = variant?.variantList || ""
           const variants = variantslist.split(",")
           if(variants.length == 0 || variant.variantType == "") return null
-          return <ScrollView style={{height: 120}} showsVerticalScrollIndicator={false}>
+          return <ScrollView showsVerticalScrollIndicator={false}>
       <RenderVariation type={variant.variantType} variants={variants} />
           </ScrollView>
       })}

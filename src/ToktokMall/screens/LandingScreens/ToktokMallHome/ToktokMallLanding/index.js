@@ -228,12 +228,14 @@ const Component = ({ myCart, createMyCartSession,}) => {
           <View style={{flex: 2}} />
         </View>
 
+        <TouchableOpacity onPress ={onPress}>
         <Animated.View 
           style={[
             {
               flexDirection: 'row',
               backgroundColor: '#fff', 
-              padding: 4, 
+              alignItems: "center",
+              padding: 8, 
               elevation: 8,
               borderRadius: 6
             }, 
@@ -243,13 +245,10 @@ const Component = ({ myCart, createMyCartSession,}) => {
               left: translateLeft
             }
           ]}>
-          <TouchableOpacity style={{flex: 0, paddingHorizontal: 8,  paddingVertical: 4}} onPress ={onPress}>
             <AIcon name="search" color={COLOR.ORANGE} size={22}/>
-          </TouchableOpacity>
-          <TouchableOpacity style={{flex: 0, justifyContent: 'center', paddingVertical: 4}} onPress ={onPress}>
-            <Text style={{color: "darkgray", fontSize: 13}}>Search</Text>
-          </TouchableOpacity>
+            <Text style={{color: "darkgray", fontSize: 13, paddingLeft: 5}}>Search</Text>
         </Animated.View>
+          </TouchableOpacity>
 
       </Animated.View>
 

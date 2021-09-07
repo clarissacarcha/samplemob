@@ -25,12 +25,18 @@ import AsyncStorage from '@react-native-community/async-storage';
 const imageWidth = Dimensions.get('screen').width;
 const imageHeight = Dimensions.get('screen').height;
 
-const Splash = ({ createMyCartSession, createNotificationsSession}) => {
+const Splash = ({ 
+  createMyCartSession, 
+  createNotificationsSession, 
+  createDefaultAddressSession,
+  createSearchHistorySession
+}) => {
 
   const session = useSelector(state=> state.session)
   const navigation = useNavigation();
 	const [loading, setloading] = useState(true);
   const [failed, setFailed] = useState(false);
+  const [registerRetries, setRegisterRetries] = useState(0);
 
   const [authUser, { error}] = useLazyQuery(GET_CUSTOMER_IF_EXIST, {
 		client: TOKTOK_MALL_GRAPHQL_CLIENT,
@@ -54,9 +60,15 @@ const Splash = ({ createMyCartSession, createNotificationsSession}) => {
 
         }else if(response.getCustomerIfExist.id == null){
 
-          //SEND REQUEST
-          console.log("User not registered, registering...")
-          await RegisterUser(response.getCustomerIfExist.appSignature)    
+          if(registerRetries == 0){
+            //SEND REQUEST
+            console.log("User not registered, registering...")
+            await RegisterUser(response.getCustomerIfExist.appSignature)
+          }else{
+            //ALREADY TRIED REGISTERING BUT DIDNT REFLECTED ON app_customers table
+            console.log("Register attemp succeed but not reflected on app_customers table")
+            setFailed(true)
+          }
 
         }
 
@@ -83,7 +95,7 @@ const Splash = ({ createMyCartSession, createNotificationsSession}) => {
       contactnumber: session?.user.username,
       email: session?.user.person.emailAddress,
       address: session?.user.person.address || "NA",
-      birthday: moment(session?.user.person.birthdate).format("Y-m-d") || new Date(),
+      birthday: session?.user.person.birthdate ? moment(session?.user.person.birthdate).format("Y-m-d") : "",
       gender: session?.user.person.gender || "NA"
     }
 
@@ -98,11 +110,12 @@ const Splash = ({ createMyCartSession, createNotificationsSession}) => {
         
         if(response.data && response.data.success == 1){
           console.log("Response", response.data) 
-          // authUser({variables: {
-          //   input: {
-          //     toktokId: parseInt(response.data.user_id)
-          //   }
-          // }})
+          setRegisterRetries(1)
+          authUser({variables: {
+            input: {
+              toktokId: parseInt(response.data.user_id)
+            }
+          }})
         }else{
           setFailed(true)
          console.log("Response", response.data) 
@@ -129,6 +142,17 @@ const Splash = ({ createMyCartSession, createNotificationsSession}) => {
       }
     })
 
+    //DEFAULT ADDRESS
+    await AsyncStorage.getItem('UserDefaultAddress').then((value) => {
+      // console.log('Notifications async storage', value)
+      const parsedValue = JSON.parse(value)
+      if(value != null){
+        createDefaultAddressSession('set', parsedValue)
+      }else {
+        createDefaultAddressSession('set', {})
+      }
+    })
+
     //NOTIFICATION
     await AsyncStorage.getItem('Notifications').then((value) => {
       // console.log('Notifications async storage', value)
@@ -137,6 +161,17 @@ const Splash = ({ createMyCartSession, createNotificationsSession}) => {
         createNotificationsSession('set', parsedValue)
       }else {
         createNotificationsSession('set', [])
+      }
+    })
+
+    //SEARCH HISTORY
+    await AsyncStorage.getItem('SearchHistory').then((value) => {
+      // console.log('Notifications async storage', value)
+      const parsedValue = JSON.parse(value)
+      if(value != null){
+        createSearchHistorySession('set', parsedValue)
+      }else {
+        createSearchHistorySession('set', [])
       }
     })
 
@@ -156,12 +191,21 @@ const Splash = ({ createMyCartSession, createNotificationsSession}) => {
       }
     }).catch((error) => {
       console.log(error)      
-    })    
+    })
 
 	}
 
+  const bypass = async () => {
+    setFailed(false)
+    await FetchAsyncStorageData()    
+    await authUser()
+  }
+
 	useEffect(() => {
-		init()
+		
+    init()
+    // bypass()
+
     // navigation.navigate("ToktokMallLanding");
 	}, [])
 
@@ -198,6 +242,8 @@ const Splash = ({ createMyCartSession, createNotificationsSession}) => {
 const mapDispatchToProps = (dispatch) => ({
   createMyCartSession: (action, payload) => dispatch({type: 'CREATE_MY_CART_SESSION', action,  payload}),
 	createNotificationsSession: (action, payload) => dispatch({type: 'CREATE_NOTIFICATIONS_SESSION', action,  payload}),  
+  createDefaultAddressSession: (action, payload) => dispatch({type: 'CREATE_DEFAULT_ADDRESS_SESSION', action,  payload}),
+  createSearchHistorySession: (action, payload) => dispatch({type: 'CREATE_SEARCH_HISTORY_SESSION', action,  payload}),
 });
 
 export default connect(null, mapDispatchToProps)(Splash);

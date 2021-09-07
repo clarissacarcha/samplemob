@@ -7,10 +7,9 @@ export const RenderEmpty = () => {
 	return (
 		<>
 			<View style={{flex: 1, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center'}}>
-        {/* <CustomIcon.MCIcon name="cart-remove" size={80} color="#F6841F" /> */}
-				<Image 
+        <Image 
 					source={emptyCartIcon}
-					style={{width: 220, height: 130, resizeMode: 'cover'}}
+					style={{width: '80%', height: Dimensions.get("screen").height / 4, resizeMode: 'contain'}}
 				/>
         <View style={{height: 8}} />
         <View>

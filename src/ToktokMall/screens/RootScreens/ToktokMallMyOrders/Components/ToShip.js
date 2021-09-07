@@ -1,11 +1,11 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, TouchableOpacity, Image, FlatList, RefreshControl} from 'react-native';
+import {View, Text, TouchableOpacity, Image, FlatList, RefreshControl, Dimensions} from 'react-native';
 
 import { useLazyQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../graphql';
 import { GET_TOSHIP_ORDERS } from '../../../../../graphql/toktokmall/model';
 import {Loading} from '../../../../Components';
-import {placeholder, storeIcon} from '../../../../assets';
+import {placeholder, storeIcon, emptyorders} from '../../../../assets';
 import { Price } from '../../../../helpers';
 import AsyncStorage from '@react-native-community/async-storage';
 import { useNavigation } from '@react-navigation/native';
@@ -166,6 +166,7 @@ export const ToShip = ({id, email}) => {
       if(data.userId){        
         getOrders({variables: {
           input: {
+            // userId: 9999,
             userId: data.userId,
             email: data.email
           }
@@ -182,6 +183,21 @@ export const ToShip = ({id, email}) => {
 
   if(loading) {
     return <Loading state={loading} />
+  }
+
+  if(!loading && data && data.length == 0){
+    return (
+      <>
+        <View style={{flex: 1, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center'}}>
+          <Image source={emptyorders} style={{width: '80%', height: Dimensions.get("screen").height / 4, resizeMode: 'contain'}} />
+          <View style={{height: 8}} />
+          <View>
+    				<Text style={{fontSize: 16, color: "#9E9E9E"}}>You don’t have orders yet</Text>
+		    	</View>
+        </View>
+        <View style={{flex: 0.2}} />
+      </>
+    )
   }
 
   return (

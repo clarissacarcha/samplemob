@@ -114,7 +114,7 @@ export const FlashSale = () => {
                 {/* <Text style={{color: "#747575", fontSize: 12}}>Offer ends 5.17.2021</Text> */}
               </View>
               <TouchableOpacity disabled = {loading} onPress={() => {
-                navigation.navigate("ToktokMallSearch", {searchValue: "Flash Sale", origin: "flashsale"})
+                navigation.navigate("ToktokMallSearch", {searchValue: "Featured Items", origin: "flashsale"})
               }} style={{flex: 3, flexDirection: 'row'}}>
                 <View style={{flex: 3, alignItems: 'flex-end', justifyContent: 'center'}}>
                   <Text style={{fontSize: 12, color: "#F6841F", fontWeight: '600'}}>Shop now </Text>

@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-community/async-storage';
 const INITIAL_STATE = {
   user_address: [],
+  defaultAddress: {},
   myFavorites: [],
   myCart: [],
   notifications: [],
@@ -106,7 +107,6 @@ export default (state = INITIAL_STATE, action) => {
               },
         );
       }
-
       if (action.action === 'update') {
         new_user_address = state.user_address.map((data) => (data.id === action.payload.id ? action.payload : data));
       }
@@ -209,6 +209,11 @@ export default (state = INITIAL_STATE, action) => {
       } else if(action.action == 'clear') {
         AsyncStorage.setItem('SearchHistory', JSON.stringify([]));
         return {...state, searchHistory: []};
+      }
+    case 'CREATE_DEFAULT_ADDRESS_SESSION':
+      if(action.action == "set") {
+        AsyncStorage.setItem('UserDefaultAddress', JSON.stringify(action.payload))
+        return {...state, defaultAddress: action.payload}
       }
     default:
       return state;

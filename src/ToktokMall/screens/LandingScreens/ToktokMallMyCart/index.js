@@ -169,7 +169,7 @@ const Component =  ({
   };
 
   useEffect(() => {
-    console.log("My Cart", myCart)
+    // console.log("My Cart", myCart)
     // getSubTotal();
 
     //Call to reset cart for debugging

@@ -4,11 +4,12 @@ export const GET_CUSTOMER_IF_EXIST = gql`
   query getCustomerIfExist($input: GetCustomerIfExistInput) {
 		getCustomerIfExist(input: $input) {
 			appSignature
-	      id
+			walletSignature
+	    id
 		  userId
-    		firstName
+    	firstName
     	lastName
-		email
+			email
     	address1
     	addresses {
 				id
@@ -31,6 +32,7 @@ export const GET_CUSTOMER_ADDRESSES = gql`
       provinceId
       municipalityId
 			defaultAdd
+			fullAddress
     	shippingSummary {
       	id
       	rateName

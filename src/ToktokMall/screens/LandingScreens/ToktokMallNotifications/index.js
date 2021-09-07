@@ -11,6 +11,8 @@ import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql';
 import { GET_ORDER_HISTORY, GET_ORDERS_AND_HISTORY } from '../../../../graphql/toktokmall/model';
 
 import {Item, SubItem} from './Components'
+import {emptynotification} from '../../../assets'
+
 import { RefreshControl } from 'react-native'
 import {connect} from "react-redux"
 
@@ -58,11 +60,11 @@ const Component =  ({
   createNotificationsSession,
 }) => {
 
-  navigation.setOptions({
-  	headerLeft: () => <HeaderBack hidden={true} />,
-    headerTitle: () => <HeaderTitle label={['Notifications', '']} />,
-    headerRight: () => <HeaderRight hidden={true} />
-  });
+  // navigation.setOptions({
+  // 	headerLeft: () => <HeaderBack hidden={true} />,
+  //   headerTitle: () => <HeaderTitle label={['Notifications', '']} />,
+  //   headerRight: () => <HeaderRight hidden={true} />
+  // });
 
 	const [orderHistory, setOrderHistory] = useState([])
 
@@ -123,6 +125,7 @@ const Component =  ({
       if(data.userId){
         getOrderHistory({variables: {
           input: {
+            // userId: 9999
             userId: data.userId
           }
         }})
@@ -145,6 +148,25 @@ const Component =  ({
 			</>
 		)
 	}
+
+  if(!loading && orderHistory && orderHistory.length == 0){
+    return (
+      <>
+        <View style={styles.container}>
+	        <Header label="Notifications" />
+					<View style={{ height: 8, backgroundColor: '#F7F7FA'}} />
+					<View style={{flex: 1, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center'}}>
+            <Image source={emptynotification} style={{width: '80%', height: Dimensions.get("screen").height / 4, resizeMode: 'contain'}} />
+            <View style={{height: 8}} />
+            <View>
+    				  <Text style={{fontSize: 16, color: "#9E9E9E"}}>No notifications</Text>
+  		    	</View>
+          </View>
+          <View style={{flex: 0.1}} />
+				</View> 
+      </>
+    )
+  }
 
   return (
     <>

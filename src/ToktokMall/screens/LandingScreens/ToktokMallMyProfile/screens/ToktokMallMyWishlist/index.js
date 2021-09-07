@@ -95,7 +95,7 @@ const Component = ({navigation, reduxStates: {myFavorites}, reduxActions: {updat
             source: emptyFaveIcon,
             style: {width: 220, height: 220, resizeMode: 'cover'}
           }}
-          title="Your favorites is empty."
+          title="Your dont have favorites yet."
         />
       ) : (
         <FlatList data={myFavorites} renderItem={renderItem} />

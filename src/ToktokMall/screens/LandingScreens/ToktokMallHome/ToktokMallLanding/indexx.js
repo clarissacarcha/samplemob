@@ -195,7 +195,7 @@ export const ToktokMallLandingScreen = () => {
             {
               width: "100%",
               resizeMode: "stretch",
-              width: '100%'
+              width: '100%',
             }, 
             {
               height: animateHeaderHeight
@@ -239,11 +239,13 @@ export const ToktokMallLandingScreen = () => {
               left: translateLeft
             }
           ]}>
+          <TouchableOpacity style={{flex: 1,}} onPress ={onPress}>
           <TouchableOpacity style={{flex: 0, paddingHorizontal: 8,  paddingVertical: 4}} onPress ={onPress}>
             <AIcon name="search" color={COLOR.ORANGE} size={22}/>
           </TouchableOpacity>
           <TouchableOpacity style={{flex: 0, justifyContent: 'center', paddingVertical: 4}} onPress ={onPress}>
             <Text style={{color: "darkgray", fontSize: 13}}>Search</Text>
+          </TouchableOpacity>
           </TouchableOpacity>
         </Animated.View>
 

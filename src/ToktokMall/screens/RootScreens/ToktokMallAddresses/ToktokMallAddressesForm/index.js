@@ -13,8 +13,8 @@ import {
   Picker,
   Switch,
 } from 'react-native';
-import {HeaderBack, HeaderTitle, HeaderRight} from '../../../../Components';
-import {CityAddressModal, AddressModal} from './Components';
+import {HeaderBack, HeaderTitle, HeaderRight, LoadingOverlay} from '../../../../Components';
+import {CityAddressModal, CityAddressModalAndroid, AddressModal} from './Components';
 import Toast from 'react-native-simple-toast';
 import ToggleSwitch from 'toggle-switch-react-native';
 import CustomIcon from '../../../../Components/Icons';
@@ -31,6 +31,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
   const [newAddressForm, setNewAddressForm] = useState({
     city: null,
   });
+  const [isLoading, setIsLoading] = useState(false)
   const [cities, setCities] = useState([]);
   const [defaultCity, setDefaultCity] = useState(null);
   const [clicked, setClicked] = useState(false);
@@ -106,6 +107,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
     if (route.params?.update) {
       updateUserAddress('update', {
         ...newAddressForm,
+        fullAddress: newAddressForm.address + `, ${city}`,
         regionId: parseInt(regCode) || 0,
         provinceId: parseInt(provCode),
         municipalityId: parseInt(munCode),
@@ -119,6 +121,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
         updateUserAddress('add', {
           id: user_address.length + 1,
           ...newAddressForm,
+          fullAddress: newAddressForm.address + `, ${city}`,
           regionId: parseInt(regCode) || 0,
           provinceId: parseInt(provCode),
           municipalityId: parseInt(munCode),
@@ -139,6 +142,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
   };
 
   const SavePostAddress = async (callback) => {
+    setIsLoading(true)
     AsyncStorage.getItem('ToktokMallUser').then(async (raw) => {
       let data = JSON.parse(raw) || {};
       if (data.appSignature) {
@@ -163,6 +167,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
           .post(`http://ec2-18-176-178-106.ap-northeast-1.compute.amazonaws.com/toktokmall/save_address`, formData)
           .then((response) => {
             if (response.data && response.data.success == 1) {
+              setIsLoading(false);
               setMessageModal(true);
               callback();
             } else {
@@ -175,11 +180,14 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
       }
     });
   };
+
   const DeleteAddress = async () => {
     setConfirmDeleteModal(true)
+    setIsLoading(true)
     AsyncStorage.getItem('ToktokMallUser').then(async (raw) => {
       let data = JSON.parse(raw) || {};
       if (data.appSignature) {
+
         let body = {
           address_id: `${newAddressForm.id}`
         };
@@ -190,13 +198,15 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
 
         await axios
           .post(`http://ec2-18-176-178-106.ap-northeast-1.compute.amazonaws.com/toktokmall/delete_address`, formData)
-          .then(({success, ...rest}) => {
-            console.log(rest)
+          .then(async (response) => {
+            console.log(response.data)
+            setIsLoading(false)            
             setDeletedModal(true)
             updateUserAddress('remove', newAddressForm.id);
             navigation.goBack();
           })
           .catch((error) => {
+            setIsLoading(false)
             console.log(error);
           });
       }
@@ -216,6 +226,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
       errors: prevState.errors.filter((error) => error !== field),
     }));
   };
+
   useEffect(() => {
     if (!newAddressForm.receiverName) {
       addError('receiverName');
@@ -261,6 +272,8 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
 
   return (
     <>
+      {isLoading && <LoadingOverlay isVisible={isLoading} />}
+
       {confirmDeleteModal && (
         <AddressModal
           type="Confirm"
@@ -291,12 +304,19 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
           message={'Address Deleted!'}
         />
       )}
+      {Platform.OS == "ios" && 
       <CityAddressModal
         modalProvinceVisible={modalProvinceVisible}
         setModalProvinceVisible={setModalProvinceVisible}
         city={city}
         setCity={(data) => onSelectCity(data)}
-      />
+      />}
+      {Platform.OS == "android" && 
+      <CityAddressModalAndroid
+        isVisible={modalProvinceVisible}
+        setVisible={setModalProvinceVisible}
+        setCity={(data) => onSelectCity(data)}
+      />}
       <View style={styles.container}>
         <View style={styles.partition1}>
           <View style={styles.textinputContainer}>
@@ -356,7 +376,10 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
               <Text
                 style={[
                   styles.text,
-                  {color: validation.validated && validation.errors?.includes('city') ? 'red' : 'gray'},
+                  {
+                    color: validation.validated && validation.errors?.includes('city') ? 'red' : 'gray',
+                    textTransform: 'capitalize'
+                  },
                 ]}>
                 {city}
               </Text>
@@ -493,7 +516,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#F6841F',
-    paddingHorizontal: 22,
+    paddingHorizontal: 28,
     paddingVertical: 16,
     borderRadius: 5,
   },

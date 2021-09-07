@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage';
 
-export const BuildPostCheckoutBody = async ({items, addressData, grandTotal, paymentMethod, vouchers}) => {
+export const BuildPostCheckoutBody = async ({walletRequest, pin, items, addressData, grandTotal, paymentMethod, vouchers}) => {
 
 	let rawsession = await AsyncStorage.getItem("ToktokMallUser")
 	let session = JSON.parse(rawsession)
@@ -9,6 +9,9 @@ export const BuildPostCheckoutBody = async ({items, addressData, grandTotal, pay
 
 		return {
 			name: addressData.receiverName,
+			request_id: walletRequest.requestTakeMoneyId,
+			pin: pin,
+			pin_type: walletRequest.validator,
 			contactnumber: addressData.receiverContact,
 			email: session.email,
 			address: addressData.address,
@@ -72,4 +75,25 @@ export const BuildOrderLogsList = ({data, shipping}) => {
 
 	return logs
 
+}
+
+export const BuildTransactionPayload = async ({method, notes, total, toktokid}) => {
+
+	let rawsession = await AsyncStorage.getItem("ToktokMallUser")
+	let session = JSON.parse(rawsession)
+
+	console.log(session)
+
+	if(session.userId){
+		if(method == "TOKTOKWALLET"){
+			return {
+				name: `${session.firstName} ${session.lastName}`,
+				currency: "PHP",
+				amount: total,
+				toktokuser_id: toktokid,
+				payment_method: method,
+				notes: notes
+			}
+		}
+	}
 }
