@@ -3,3 +3,4 @@ export * from './HeaderTitleSearchBox';
 export * from './FoodList';
 export * from './FoodCart';
 export * from './VerifyContextProvider';
+export * from './CategoryTabs';
