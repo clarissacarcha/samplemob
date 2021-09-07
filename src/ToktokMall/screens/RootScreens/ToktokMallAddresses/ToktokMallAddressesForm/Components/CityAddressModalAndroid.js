@@ -9,6 +9,7 @@ import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../../graphql';
 import { GET_CITIES } from '../../../../../../graphql/toktokmall/model/Address';
 import useAsyncStorage from '../../../../../helpers/useAsyncStorage';
 import { SwipeReloader } from '../../../../../Components';
+import { Platform } from 'react-native';
 
 export const CityAddressModalAndroid = ({type, onSelect, isVisible, setVisible, setCity})=> {
 
@@ -123,7 +124,7 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    marginTop: 15,
+    marginTop: Platform.OS === "ios" ? 45 : 15,
   },
   search: {
     flexDirection: "row",
