@@ -29,11 +29,11 @@ const OrderList = ({ orderDetails }) => {
     
     return(
       <View style={styles.listContainer}>
-        <Image style={styles.listImg} source={item.image} resizeMode="contain" />
+        <Image style={styles.listImg} source={{ uri: item.productDetails.filename }} resizeMode="contain" />
 
         <View style={styles.list}>
           <View style={styles.listInfo}>
-            <Text style={styles.listName}>{item.name}</Text>
+            <Text style={styles.listName}>{item.productDetails.itemname}</Text>
             <Text style={styles.seeAll}>{`PHP ${item.amount}`}</Text>
           </View>
           <View>
@@ -86,6 +86,7 @@ const styles = StyleSheet.create({
   listName: {
     fontWeight: '500',
     fontSize: FONT_SIZE.L,
+    flexShrink: 1
   },
   note: {
     fontWeight: '500',
@@ -95,6 +96,7 @@ const styles = StyleSheet.create({
     fontWeight: '300',
     fontSize: FONT_SIZE.S,
     marginTop: verticalScale(5),
+    flexShrink: 1
   },
   seeAll: {
     color: COLORS.ORANGE,
