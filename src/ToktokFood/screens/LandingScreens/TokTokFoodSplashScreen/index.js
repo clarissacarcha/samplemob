@@ -24,7 +24,6 @@ const TokTokFoodSplashScreen = () => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     onCompleted: ({createAccount}) => {
       let {status} = createAccount;
-      console.log(status);
       if (status == 200) {
         getToktokUserInfo();
       }
@@ -46,7 +45,7 @@ const TokTokFoodSplashScreen = () => {
           dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_INFO', payload: {...getAccount}});
           showHomPage();
         } else {
-          patchToktokFoodUserId(getAccount.user_id);
+          patchToktokFoodUserId(getAccount.userId);
         }
       },
     },
@@ -108,7 +107,6 @@ const TokTokFoodSplashScreen = () => {
         },
       });
       const res = API_RESULT.data.data;
-      getToktokUserInfo();
     } catch (error) {
       console.log(error);
     }
