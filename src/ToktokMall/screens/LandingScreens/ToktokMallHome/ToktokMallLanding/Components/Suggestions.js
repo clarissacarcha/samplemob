@@ -117,6 +117,7 @@ export const Suggestions = ({}) => {
 
   const [products, setProducts] = useState([])
   const [offset, setOffset] = useState(0)
+  const [isFetching, setIsFetching] = useState(true)
 
   const [getProducts, {error, loading, fetchMore}] = useLazyQuery(GET_TOP_PRODUCTS, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
@@ -136,9 +137,11 @@ export const Suggestions = ({}) => {
       }else{
         setProducts(temp)
       }
+      setIsFetching(false)
     },
     onError: (err) => {
       console.log(err)
+      setIsFetching(false)
     }
   })
 
@@ -155,6 +158,25 @@ export const Suggestions = ({}) => {
   // })
 
   // if(loading) return <Loading state={loading} />
+  const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+    const paddingBottom = 20;
+    return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingBottom;
+  }
+
+  const onScroll = (event) => {
+    // alert
+    // if(isCloseToBottom(event)){
+    //   alert('close to bottom')
+    // }
+    // console.log(event.nativeEvent)
+    if(isCloseToBottom(event.nativeEvent)){
+      alert('close to bottom')
+    }
+    // Animated.event(
+    //   [{nativeEvent: {contentOffset: {y: AnimatedHeaderValue}}}],
+    //   {useNativeDriver: false}
+    // )
+  }
 
   return (
     <>
@@ -179,6 +201,7 @@ export const Suggestions = ({}) => {
           data={products}
           numColumns={2}
           style={{paddingHorizontal: 10}}
+          nestedScrollEnabled = {true}
           renderItem={({item, index}) => {
             const isEven = products?.length % 2 === 0
             if(!isEven){
@@ -196,15 +219,25 @@ export const Suggestions = ({}) => {
           }}
           keyExtractor={(item, index) => item + index}
           refreshing={loading}
-          onEndReachedThreshold={0.5}
+          onEndReached = {() => {
+            setIsFetching(true)
+            setOffset(products.length)
+            console.log({offset})
+            getProducts()
+          }}
+          // onScroll = {(nativeEvent) => {
+          //   console.log(nativeEvent)
+          // }}
+          onEndReachedThreshold={1}
           ListFooterComponent={() => {
             return (
               <>
-                <SwipeReloader state={loading} onSwipeUp={() => {
-                  setOffset(products.length)
-                  console.log({offset})
-                  getProducts()
-                }} 
+                <SwipeReloader state={isFetching} 
+                // onSwipeUp={() => {
+                //   setOffset(products.length)
+                //   console.log({offset})
+                //   getProducts()
+                // }} 
                 />
                 <View style={styles.separator} />
               </>

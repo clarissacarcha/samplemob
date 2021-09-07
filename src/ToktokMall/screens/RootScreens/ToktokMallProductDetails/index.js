@@ -58,6 +58,10 @@ const Component =  ({
   const [selectedVariation, setSelectedVariation] = useState('')
   const [cartItems, setCartItems] = useState(0)
 
+  const {
+    params: { Id },
+  } = route
+
   let AnimatedHeaderValue = new Animated.Value(0)
   const animatedHeaderValueRef = useRef(AnimatedHeaderValue)
 
@@ -72,7 +76,7 @@ const Component =  ({
     fetchPolicy: 'network-only',
     variables: {
       input: {
-        id: route.params.Id
+        id: Id
       }
     },
     onCompleted: (response) => {
@@ -124,7 +128,7 @@ const Component =  ({
 
   const onScroll = Animated.event(
     [{nativeEvent: {contentOffset: {y: AnimatedHeaderValue}}}],
-    {useNativeDriver: false}
+    { useNativeDriver: false}
   )
 
   const CountCartItems = () => {
@@ -144,7 +148,7 @@ const Component =  ({
     setIsFetching(true)
     getProductDetails()
     setCartItems(CountCartItems)
-    console.log('dataaaaaaaaaaaaaaa', route.params.Id)
+    console.log('dataaaaaaaaaaaaaaa', Id)
   }, [])  
 
   if(error) {

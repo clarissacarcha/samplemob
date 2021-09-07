@@ -43,10 +43,11 @@ const Component = ({data, onOpenVariations, animatedValue, shop, loading, reduxA
    }
  },[myFavorites, shop, data])
 
-  const HandleShare = () => {
+  const HandleShare = async () => {
     let options = {
       message: data?.itemname,
-      url: `http://ec2-18-178-242-131.ap-northeast-1.compute.amazonaws.com/products/${data?.Id}`
+      // url: `http://ec2-18-178-242-131.ap-northeast-1.compute.amazonaws.com/products/${data?.Id}`,
+      url: `https://toktokmall.ph/products/${data?.Id}`
     }
     Share.open(options)
     .then((res) => {

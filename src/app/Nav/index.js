@@ -24,6 +24,8 @@ import Landing from '../../screens/Landing';
 import ToktokFoodScreens from './toktokfood';
 
 import ToktokMallScreens from './toktokmall';
+/*---------- TOKTOKMALL DEEP LINKING  ----------*/
+import linking from '../../ToktokMall/util/linking'
 
 /*---------- CONSUMER SCREENS ----------*/
 
@@ -562,7 +564,7 @@ const SwitchStack = () => {
 
 const Nav = ({initialRoute}) => {
   return (
-    <NavigationContainer>
+    <NavigationContainer linking = {linking}>
       <SwitchStack initialRoute={initialRoute} />
     </NavigationContainer>
   );

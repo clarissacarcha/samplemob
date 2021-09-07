@@ -275,12 +275,15 @@ const Component = ({ myCart, createMyCartSession,}) => {
           )
           // ({nativeEvent}) => {
           //   // Animated.event([{nativeEvent: {contentOffset: {y: AnimatedHeaderValue}}}], {useNativeDriver: false})
-          //   Animated.event([{nativeEvent: {contentOffset: {y: AnimatedHeaderValue}}}], {useNativeDriver: false})
-            // if(isCloseToBottom(nativeEvent)){
-            //   // alert('close to bottom')
-            // }
+          //   // Animated.event([{nativeEvent: {contentOffset: {y: AnimatedHeaderValue}}}], {useNativeDriver: false})
+          //   console.log(nativeEvent)
+          //   if(isCloseToBottom(nativeEvent)){
+          //     alert('close to bottom')
+          //   }
+
+          //   // animatedHeaderValueRef.setValue(nativeEvent.contentOffset.y)
           // }
-        }
+      }
         
       >
         <AdsCarousel />
