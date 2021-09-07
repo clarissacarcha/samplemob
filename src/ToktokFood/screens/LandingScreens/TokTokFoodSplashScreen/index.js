@@ -41,7 +41,7 @@ const TokTokFoodSplashScreen = () => {
       client: TOKTOK_FOOD_GRAPHQL_CLIENT,
       fetchPolicy: 'network-only',
       onCompleted: ({getAccount}) => {
-        if (user.toktokFooduserId != null) {
+        if (user.toktokfoodUserId != null) {
           dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_INFO', payload: {...getAccount}});
           showHomPage();
         } else {
@@ -56,9 +56,8 @@ const TokTokFoodSplashScreen = () => {
   };
 
   useEffect(() => {
-    console.log(user);
     if (location && user) {
-      user.toktokFoodUserId != null ? getToktokUserInfo() : processCreateAccount();
+      user.toktokfoodUserId != null ? getToktokUserInfo() : processCreateAccount();
     }
   }, [user, location]);
 
