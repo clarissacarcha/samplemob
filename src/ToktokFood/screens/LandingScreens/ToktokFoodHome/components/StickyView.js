@@ -1,20 +1,17 @@
-import React, {useState, useEffect, useRef} from 'react';
-import {Platform, StyleSheet, View, StatusBar, RefreshControl} from 'react-native';
-import {useSelector} from 'react-redux';
-import ReactNativeParallaxHeader from 'react-native-parallax-header';
-import {useNavigation} from '@react-navigation/native';
-import {useLazyQuery, useQuery} from '@apollo/react-hooks';
-import {GET_SHOPS} from 'toktokfood/graphql/toktokfood';
-import {TOKTOK_FOOD_GRAPHQL_CLIENT, AUTH_CLIENT} from 'src/graphql';
-import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
-
-// Components
-import {CategoryList, RestaurantList, AdvertisementSection} from './index';
+import { useLazyQuery } from '@apollo/react-hooks';
+import { useNavigation } from '@react-navigation/native';
+import React, { useEffect, useRef, useState } from 'react';
+import { Platform, RefreshControl, ScrollView, StatusBar, StyleSheet, View } from 'react-native';
+import { useSelector } from 'react-redux';
+import { TOKTOK_FOOD_GRAPHQL_CLIENT } from 'src/graphql';
 import HeaderTabs from 'toktokfood/components/HeaderTabs';
-
+import { GET_SHOPS } from 'toktokfood/graphql/toktokfood';
 // Utils
-import {moderateScale, verticalScale, getDeviceHeight} from 'toktokfood/helper/scale';
-import { ScrollView } from 'react-native';
+import { moderateScale, verticalScale } from 'toktokfood/helper/scale';
+// Components
+import { AdvertisementSection, CategoryList, RestaurantList } from './index';
+
+
 
 // const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 // const IS_IPHONE_X = SCREEN_HEIGHT === 812 || SCREEN_HEIGHT === 896;
