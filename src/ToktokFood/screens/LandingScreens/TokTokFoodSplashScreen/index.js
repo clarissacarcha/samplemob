@@ -25,7 +25,7 @@ const TokTokFoodSplashScreen = () => {
     onCompleted: ({createAccount}) => {
       let {status} = createAccount;
       if (status == 200) {
-        patchPersonHasToktokFood();
+        getToktokUserInfo();
       }
     },
   });
@@ -40,32 +40,37 @@ const TokTokFoodSplashScreen = () => {
       },
       client: TOKTOK_FOOD_GRAPHQL_CLIENT,
       fetchPolicy: 'network-only',
-      onCompleted: ({ getAccount }) => {
-        dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_INFO', payload: {...getAccount}});
-        showHomPage();
+      onCompleted: ({getAccount}) => {
+        if (user.toktokFooduserId != null) {
+          dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_INFO', payload: {...getAccount}});
+          showHomPage();
+        } else {
+          patchToktokFoodUserId(getAccount.userId);
+        }
       },
     },
   );
-  
+
   const showHomPage = () => {
     navigation.replace('ToktokFoodLanding');
   };
 
   useEffect(() => {
+    console.log(user);
     if (location && user) {
-      user.person.hasToktokfood == 1 ? getToktokUserInfo() : processCreateAccount()
+      user.toktokFoodUserId != null ? getToktokUserInfo() : processCreateAccount();
     }
   }, [user, location]);
 
   const processCreateAccount = () => {
-    let {firstName, lastName, birthdate, emailAddress, mobileNumber, gender} = user.person;
+    let {firstName, lastName, birthdate, emailAddress, gender} = user.person;
     createAccount({
       variables: {
         input: {
           firstname: firstName,
           lastname: lastName,
           toktokid: user.id,
-          contactnumber: mobileNumber,
+          contactnumber: user.username,
           email: emailAddress,
           address: location.address,
           birthday: '',
@@ -80,7 +85,7 @@ const TokTokFoodSplashScreen = () => {
     });
   };
 
-  const patchPersonHasToktokFood = async () => {
+  const patchToktokFoodUserId = async (toktokfoodUserId) => {
     try {
       const API_RESULT = await axios({
         url: `${ENVIRONMENTS.TOKTOK_SERVER}/graphql`,
@@ -91,8 +96,9 @@ const TokTokFoodSplashScreen = () => {
         data: {
           query: `
             mutation {
-              patchPersonHasToktokFood(input: {
-                tokPersonId: "${user.person.id}"
+              patchToktokFoodUserId(input: {
+                toktokfoodUserId: "${toktokfoodUserId}"
+                toktokUserId: "${user.id}"
               }) {
                 status
                 message
@@ -101,8 +107,6 @@ const TokTokFoodSplashScreen = () => {
         },
       });
       const res = API_RESULT.data.data;
-      getToktokUserInfo();
-      console.log(res);
     } catch (error) {
       console.log(error);
     }
