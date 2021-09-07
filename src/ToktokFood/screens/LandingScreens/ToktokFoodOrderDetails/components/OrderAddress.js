@@ -14,8 +14,9 @@ import {locationOutline, phoneBlack, store, user, rider1} from 'toktokfood/asset
 // Utils
 import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
 
-const OrderAddress = ({ shopDetails }) => {
+const OrderAddress = ({ transaction, rider }) => {
   const {location} = useSelector((state) => state.toktokFood);
+  const { shopDetails, orderStatus } = transaction;
   const { shopname, address } = shopDetails;
   const {person, username} = useSelector((state) => state.session.user);
   const fullname = `${person.firstName} ${person.lastName}`;
@@ -41,12 +42,18 @@ const OrderAddress = ({ shopDetails }) => {
       <View style={styles.dividerContainer}>
         <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
         <View style={styles.divider} />
-        <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
+        {(rider != null && orderStatus == 'f') ? (
+            <MaterialIcon name="lens" size={16} color={COLORS.YELLOWTEXT} />
+          ) : (
+            <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
+        )}
       </View>
       <View style={styles.addressInfo}>
         <View style={styles.flexDirection}>
           <Text style={styles.restaurant}>Restaurant</Text>
-          <Text onPress={onPressRate} style={styles.rateText}>Rate</Text>
+          { orderStatus == 's' && (
+            <Text onPress={onPressRate} style={styles.rateText}>Rate</Text>
+          )}
         </View>
         <View style={styles.restauranContainer}>
           <Image style={styles.icons} source={locationOutline} resizeMode="contain" />
