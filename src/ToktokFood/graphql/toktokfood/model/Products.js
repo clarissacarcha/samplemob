@@ -24,6 +24,20 @@ export const GET_PRODUCTS_BY_SHOP_CATEGORY = gql`
       tags
       summary
       filename
+      variants {
+        id
+        optionName
+        isRequired
+        noOfSelection
+        status
+        options {
+          id
+          optionName
+          optionPrice
+          status
+          optionDetailsId
+        }
+      }
     }
   }
 `;

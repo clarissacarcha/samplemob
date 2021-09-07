@@ -5,10 +5,10 @@ import {useLazyQuery, useQuery} from '@apollo/react-hooks';
 import {GET_PRODUCTS_BY_SHOP_CATEGORY} from 'toktokfood/graphql/toktokfood';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
-import { VerifyContext } from '../components';
+import {VerifyContext} from '../components';
 // Fonts & Colors
 import {COLOR} from 'res/variables';
-import { food1 } from 'toktokfood/assets/images';
+import {food1} from 'toktokfood/assets/images';
 
 import {
   verticalScale,
@@ -19,53 +19,56 @@ import {
 } from 'toktokfood/helper/scale';
 
 export const FoodList = (props) => {
-  const { activeTab, id, tagsLoading } = props;
+  const {activeTab, id, tagsLoading, ratings} = props;
   const navigation = useNavigation();
-  const { searchProduct, setSearchProduct } = useContext(VerifyContext)
+  const {searchProduct, setSearchProduct} = useContext(VerifyContext);
 
   // data fetching for product under specific category
-  const [getProductsByShopCategory, {data: products, error: productsError, loading: productsLoading }] = useLazyQuery(GET_PRODUCTS_BY_SHOP_CATEGORY, {
-    variables: {
-      input: {
-        id: id,
-        catId: activeTab?.id,
-        key: searchProduct
-      }
+  const [getProductsByShopCategory, {data: products, error: productsError, loading: productsLoading}] = useLazyQuery(
+    GET_PRODUCTS_BY_SHOP_CATEGORY,
+    {
+      variables: {
+        input: {
+          id: id,
+          catId: activeTab?.id,
+          key: searchProduct,
+        },
+      },
+      client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+      fetchPolicy: 'network-only',
     },
-    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-    fetchPolicy: 'network-only'
-  });
-  console.log(id)
+  );
+
   useEffect(() => {
-    if(activeTab?.id){
-      setSearchProduct('')
-      getProductsByShopCategory()
+    if (activeTab?.id) {
+      setSearchProduct('');
+      getProductsByShopCategory();
     }
-  }, [activeTab])
+  }, [activeTab]);
 
   const onNavigateToFoodItemDetails = (item) => {
-    navigation.navigate('ToktokFoodItemDetails', item);
+    navigation.navigate('ToktokFoodItemDetails', {...item, ...{ratings}});
   };
 
-  const renderItem = ({ item }) => {
+  const renderItem = ({item}) => {
     return (
       <TouchableOpacity onPress={() => onNavigateToFoodItemDetails(item)} style={styles.listContainer}>
         <View>
           <Text style={styles.listText}>{item.itemname}</Text>
           <Text style={styles.listPrice}>PHP {item.price.toFixed(2)}</Text>
-          <Text numberOfLines={1} >{item.summary}</Text>
+          <Text numberOfLines={1}>{item.summary}</Text>
         </View>
         <View>
-          <Image resizeMode="contain" source={{ uri: item.filename }} style={styles.img} />
+          <Image resizeMode="contain" source={{uri: item.filename}} style={styles.img} />
         </View>
       </TouchableOpacity>
     );
   };
-  
-  if(productsLoading || tagsLoading || productsError){
-    return <LoadingIndicator style={[styles.container, { paddingVertical: 20 }]} isLoading={true} />
+
+  if (productsLoading || tagsLoading || productsError) {
+    return <LoadingIndicator style={[styles.container, {paddingVertical: 20}]} isLoading={true} />;
   }
-  return(
+  return (
     <>
       <FlatList
         data={products ? products.getProductsByShopCategory : []}
@@ -74,12 +77,12 @@ export const FoodList = (props) => {
         contentContainerStyle={styles.container}
         ListEmptyComponent={() => (
           <View style={styles.container}>
-            <Text style={{ textAlign: 'center', marginVertical: 20 }}>No products</Text>
+            <Text style={{textAlign: 'center', marginVertical: 20}}>No products</Text>
           </View>
         )}
       />
     </>
-  )
+  );
 };
 
 const styles = StyleSheet.create({
@@ -116,6 +119,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingVertical: verticalScale(15),
-    paddingHorizontal: verticalScale(20)
+    paddingHorizontal: verticalScale(20),
   },
 });

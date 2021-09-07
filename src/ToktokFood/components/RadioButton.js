@@ -8,7 +8,7 @@ const RadioButton = (props) => {
 
   const componentClick = () => {
     if (!readonly) {
-      onValueChange();
+      onValueChange(selected);
     }
   };
   return (
@@ -17,11 +17,11 @@ const RadioButton = (props) => {
       onTouchEnd={() => componentClick()}
       style={[
         {
-          width: 22,
-          height: 22,
+          width: 24,
+          height: 24,
           borderWidth: 2,
-          borderRadius: 5,
-          marginRight: 5,
+          borderRadius: 7,
+          marginRight: 3,
           alignItems: 'center',
           justifyContent: 'center',
           borderColor: selected ? COLOR.ORANGE : COLOR.DARK,
@@ -31,9 +31,9 @@ const RadioButton = (props) => {
       {selected ? (
         <View
           style={{
-            height: 22,
-            width: 22,
-            borderRadius: 6,
+            height: 24,
+            width: 24,
+            borderRadius: 7,
             backgroundColor: COLOR.ORANGE,
           }}
         />

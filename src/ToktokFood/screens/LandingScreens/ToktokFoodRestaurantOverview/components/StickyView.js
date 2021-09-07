@@ -1,13 +1,17 @@
+import {useLazyQuery} from '@apollo/react-hooks';
 import {useRoute} from '@react-navigation/native';
-import React, {useState, useEffect} from 'react';
-import {Platform, StyleSheet, Text, View, Image} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Image, Platform, StyleSheet, Text, View} from 'react-native';
 import ReactNativeParallaxHeader from 'react-native-parallax-header';
-import {Rating} from 'react-native-ratings';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {FONT_SIZE} from 'res/variables';
+import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
+import CustomStarRating from 'toktokfood/components/CustomStarRating';
 // Components
 // import {RestaurantList} from '../../ToktokFoodHome/components';
 import HeaderTabs from 'toktokfood/components/HeaderTabs';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
+import {GET_PRODUCT_CATEGORIES} from 'toktokfood/graphql/toktokfood';
 // Utils
 import {
   getDeviceWidth,
@@ -17,15 +21,7 @@ import {
   scale,
   verticalScale,
 } from 'toktokfood/helper/scale';
-import {tabs} from 'toktokfood/helper/strings';
-import { HeaderTitleSearchBox, FoodList } from '../components';
-import CustomStarRating from 'toktokfood/components/CustomStarRating';
-import { FONT_SIZE } from 'res/variables';
-import {useLazyQuery, useQuery} from '@apollo/react-hooks';
-import {GET_PRODUCT_CATEGORIES, GET_PRODUCTS_BY_SHOP} from 'toktokfood/graphql/toktokfood';
-import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
-import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
-import { food1 } from 'toktokfood/assets/images';
+import {FoodList, HeaderTitleSearchBox} from '../components';
 
 // const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 // const IS_IPHONE_X = SCREEN_HEIGHT === 812 || SCREEN_HEIGHT === 896;
@@ -37,48 +33,41 @@ export const StickyView = () => {
   const [offset, setOffset] = useState(0);
   const [activeTab, setActiveTab] = useState({});
   const [productCategories, setProductCategories] = useState([]);
-  
-  const {
-    id,
-    address,
-    shopname,
-    ratings,
-    banner,
-    estimatedDeliveryTime,
-    estimatedDistance,
-    logo
-  } = routes.params.item;
+
+  const {id, address, shopname, ratings, banner, estimatedDeliveryTime, estimatedDistance, logo} = routes.params.item;
 
   const headerMaxHeight = Platform.OS === 'ios' ? scale(400) : scale(370);
   const headerMinHeight = Platform.OS === 'ios' ? moderateScale(120) : moderateScale(140);
 
   // data fetching for product tags/tabs
-  const [getProductCategories, {data, error, loading }] = useLazyQuery(GET_PRODUCT_CATEGORIES, {
+  const [getProductCategories, {data, error, loading}] = useLazyQuery(GET_PRODUCT_CATEGORIES, {
     variables: {
       input: {
         id: id,
-      }
+      },
     },
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-    fetchPolicy: 'network-only'
+    fetchPolicy: 'network-only',
   });
 
   useEffect(() => {
-    getProductCategories()
-  }, [])
-  
+    getProductCategories();
+  }, []);
+
   useEffect(() => {
-    if(data){
-      let categories = data.getProductCategories
-      categories.sort(function(a,b){ return a.categoryName > b.categoryName })
-      setProductCategories(categories)
-      setActiveTab(categories[0])
+    if (data) {
+      let categories = data.getProductCategories;
+      categories.sort(function (a, b) {
+        return a.categoryName > b.categoryName;
+      });
+      setProductCategories(categories);
+      setActiveTab(categories[0]);
     }
-  }, [data])
+  }, [data]);
 
   const DisplayHeaderTabs = () => {
-    return <HeaderTabs loading={loading} activeTab={activeTab} tabs={productCategories} setActiveTab={setActiveTab} />
-  }
+    return <HeaderTabs loading={loading} activeTab={activeTab} tabs={productCategories} setActiveTab={setActiveTab} />;
+  };
 
   const NavBar = () => (
     <View style={[styles.headerWrapper, styles.navbarWrapper]}>
@@ -88,7 +77,7 @@ export const StickyView = () => {
       </View>
     </View>
   );
-  
+
   const renderTitle = () => (
     <View style={styles.title}>
       <View style={styles.titleContainer}>
@@ -96,13 +85,13 @@ export const StickyView = () => {
       </View>
       <View style={styles.titleInfo}>
         <View style={styles.content}>
-          <Image source={{ uri: logo }} style={{ width: scale(70), height: scale(70) }} resizeMode='contain' />
-          <View style={{ flexShrink: 1, marginHorizontal: 10 }}>
+          <Image source={{uri: logo}} style={{width: scale(70), height: scale(70)}} resizeMode="contain" />
+          <View style={{flexShrink: 1, marginHorizontal: 10}}>
             <Text numberOfLines={2} style={styles.titleText}>{`${shopname} (${address})`}</Text>
             <CustomStarRating
               rating={ratings ?? '0'}
-              starImgStyle={{ width: scale(15), height: scale(15), marginVertical: 5 }}
-              ratingStyle={{ color: 'black', fontSize: FONT_SIZE.S }}
+              starImgStyle={{width: scale(15), height: scale(15), marginVertical: 5}}
+              ratingStyle={{color: 'black', fontSize: FONT_SIZE.S}}
               readOnly
               showRating
               rightRating
@@ -115,13 +104,13 @@ export const StickyView = () => {
             </View>
           </View>
         </View>
-        <View style={{ paddingTop: 15 }}>
+        <View style={{paddingTop: 15}}>
           <DisplayHeaderTabs />
         </View>
       </View>
     </View>
   );
- 
+
   return (
     <>
       <ReactNativeParallaxHeader
@@ -133,23 +122,22 @@ export const StickyView = () => {
         extraScrollHeight={10}
         backgroundImageScale={1.1}
         title={renderTitle()}
-        backgroundImage={banner}
+        backgroundImage={{uri: banner}}
         navbarColor="whitesmoke"
         backgroundColor="transparent"
         renderNavBar={() => <NavBar />}
-        renderContent={() => 
+        renderContent={() => (
           <FoodList
+            ratings={ratings}
             id={id}
             activeTab={activeTab}
             tagsLoading={loading}
             // searchProduct={searchProduct}
           />
-        }
+        )}
         containerStyle={styles.container}
         contentContainerStyle={styles.contentContainer}
         scrollViewProps={{
-          // scrollEnabled: false,
-          // onScroll: (event) => console.log(event.nativeEvent.contentOffset.y),
           onScrollEndDrag: (event) => setOffset(event.nativeEvent.contentOffset.y),
           onMomentumScrollEnd: (event) => setOffset(event.nativeEvent.contentOffset.y),
         }}
@@ -229,4 +217,3 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
 });
-

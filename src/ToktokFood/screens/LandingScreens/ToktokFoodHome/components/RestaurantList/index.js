@@ -1,18 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
-import {FlatList, Image, View, StyleSheet, Text, TouchableOpacity, Platform, RefreshControl, ActivityIndicator} from 'react-native';
-import {Rating} from 'react-native-ratings';
-import {useNavigation} from '@react-navigation/native';
-import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useLazyQuery, useQuery} from '@apollo/react-hooks';
-import { useSelector } from 'react-redux';
-import {GET_SHOPS} from 'toktokfood/graphql/toktokfood';
-import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
+import React from 'react';
+import { FlatList, Platform, StyleSheet, Text, View } from 'react-native';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
-
 // Utils
-import {scale, verticalScale, getDeviceHeight} from 'toktokfood/helper/scale';
-import {restaurants} from 'toktokfood/helper/strings';
+import { scale, verticalScale } from 'toktokfood/helper/scale';
 import RestaurantItem from './RestaurantItem';
+
 
 const RestaurantList = (props) => {
 
