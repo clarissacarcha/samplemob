@@ -11,28 +11,16 @@ import {FONT_SIZE, FONT, SIZE, COLOR} from 'res/variables';
 
 // Utils
 import {moderateScale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
+import {orderStatusMessage} from 'toktokfood/helper/orderStatusMessage';
 
-const checkStatus = (orderStatus) => {
-  console.log(orderStatus)
-  switch(orderStatus){
-    case 'p':
-      return { id: 'p',  title: 'Waiting for restaurant confirmation...', message: 'Give restaurant some time to accept your order' }
-    case 'po':
-      return { id: 'po',  title: 'Waiting for Rider...' };
-    
-    default:
-      return { id: 'p',  title: 'Waiting for restaurant confirmation...', message: 'Give restaurant some time to accept your order' }
-  }
-}
-
-const DriverDetailsView = ({ transaction }) => {
+const DriverDetailsView = ({ transaction, rider, appSalesOrderId }) => {
   const navigation = useNavigation();
   const {location} = useSelector((state) => state.toktokFood);
   const { shopDetails, orderStatus, isconfirmed, address } = transaction;
-  const status = checkStatus(orderStatus)
+  const status = orderStatusMessage(orderStatus, rider, `${shopDetails.shopname} (${shopDetails.address})`)
 
   const onSeeDetails = () => {
-    navigation.navigate('ToktokFoodOrderDetails');
+    navigation.navigate('ToktokFoodOrderDetails', {appSalesOrderId});
   };
 
   const renderAddress = () => (
@@ -40,12 +28,14 @@ const DriverDetailsView = ({ transaction }) => {
       <View>
         <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
         <View style={styles.divider} />
-        {/* Commented for status change */}
-        {/* <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} /> */}
-        <MaterialIcon name="lens" size={16} color={COLORS.YELLOWTEXT} />
+        {(rider != null && orderStatus == 'f') ? (
+            <MaterialIcon name="lens" size={16} color={COLORS.YELLOWTEXT} />
+          ) : (
+            <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
+        )}
       </View>
       <View style={styles.addressInfo}>
-        <Text>{`${shopDetails.shopname} (${shopDetails.address})`}</Text>
+        <Text numberOfLines={1}>{`${shopDetails.shopname} (${shopDetails.address})`}</Text>
         <View style={styles.horizontalContainer}>
           <View style={styles.horizontalDivider} />
         </View>
@@ -58,20 +48,12 @@ const DriverDetailsView = ({ transaction }) => {
     <View style={styles.detailsContainer}>
       <Text style={styles.title}>{status.title}</Text>
       <Text style={styles.status}>{status.message}</Text>
-
-      {/* {status === 1 && <Text style={styles.title}>Waiting for restaurant confirmation...</Text>}
-      {status === 2 && <Text style={styles.title}>{`We've found you a driver`}</Text>}
-      {status === 3 && <Text style={styles.title}>{`Food Delivered`}</Text>}
-      {status === 2 && (
-        <Text numberOfLines={3} style={styles.status}>{`Driver is heading to ${location.address}`}</Text>
+      { rider != null && (
+        <View style={styles.timeContainer}>
+          <MaterialIcon name="schedule" size={16} color={COLORS.YELLOWTEXT} />
+          <Text style={styles.time}>Estimated time: 10:00 - 10:30</Text>
+        </View>
       )}
-      {status === 3 && (
-        <Text numberOfLines={3} style={styles.status}>{`Driver is heading to ${location.address}`}</Text>
-      )} */}
-      <View style={styles.timeContainer}>
-        <MaterialIcon name="schedule" size={16} color={COLORS.YELLOWTEXT} />
-        <Text style={styles.time}>Estimated time: 10:00 - 10:30</Text>
-      </View>
     </View>
   );
 
@@ -80,7 +62,7 @@ const DriverDetailsView = ({ transaction }) => {
       <TouchableOpacity onPress={onSeeDetails} style={styles.orderDetailsAction}>
         <Text style={styles.orderDetailsText}>See Order Details</Text>
       </TouchableOpacity>
-      {status.id === 'p' && (
+      {rider == null && (
         <TouchableOpacity style={styles.cancelButton}>
           <Text style={styles.buttonText}>Cancel</Text>
         </TouchableOpacity>

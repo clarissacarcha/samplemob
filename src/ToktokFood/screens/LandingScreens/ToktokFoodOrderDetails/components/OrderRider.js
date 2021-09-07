@@ -1,6 +1,6 @@
 import React from 'react';
 import {Image, Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {Rating} from 'react-native-ratings';
+import CustomStarRating from 'toktokfood/components/CustomStarRating';
 
 // Fonts/Colors
 import {COLORS} from 'res/constants';
@@ -10,9 +10,11 @@ import {FONT_SIZE} from 'res/variables';
 import {chat, phoneBlack, rider1, star} from 'toktokfood/assets/images';
 
 // Utils
-import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
+import {moderateScale, verticalScale, scale} from 'toktokfood/helper/scale';
 
-const OrderRider = () => {
+const OrderRider = ({ rider }) => {
+  const { riderName, riderConno, riderPlatenum } = rider;
+
   const onMessage = () => {
     const url = `sms:+639100593229`;
     Linking.openURL(url);
@@ -27,12 +29,19 @@ const OrderRider = () => {
     <View style={styles.avatarContainer}>
       <Image resizeMode="cover" style={styles.avatar} source={rider1} />
       <View style={styles.leftContainer}>
-        <Text style={styles.riderName}>Edward Nolasco Rosario</Text>
-        <Text style={styles.orderNumber}>0999000000</Text>
-        <View style={styles.ratingContainer}>
-          <Text style={styles.notes}>{parseFloat(rating).toFixed(1)}</Text>
-          <Rating startingValue={parseFloat(rating).toFixed(1)} imageSize={13} readonly style={styles.ratings} ratingColor={"#FFA700"} />
-        </View>
+        <Text style={styles.riderName}>{riderName}</Text>
+        <Text style={styles.orderNumber}>{riderConno}</Text>
+        <Text style={styles.notes}>{riderPlatenum}</Text>
+          {/* <Text style={styles.notes}>{parseFloat(rating).toFixed(1)}</Text>
+          <Rating startingValue={parseFloat(rating).toFixed(1)} imageSize={13} readonly style={styles.ratings} ratingColor={"#FFA700"} /> */}
+        <CustomStarRating
+          rating={'0'}
+          starImgStyle={{ width: scale(15), height: scale(15), marginVertical: 5 }}
+          ratingStyle={{ color: 'black', fontSize: FONT_SIZE.S }}
+          readOnly
+          showRating
+          rightRating
+        />
       </View>
     </View>
   );
@@ -56,10 +65,10 @@ const OrderRider = () => {
         {renderAvatar()}
         {renderActions()}
       </View>
-      <View style={styles.riderInfo}>
-        <Text style={styles.notes}>0909-7570947</Text>
-        <Text style={styles.notes}>Yamaha Sniper 150</Text>
-      </View>
+      {/* <View style={styles.riderInfo}>
+        <Text style={styles.notes}>{riderConno}</Text>
+        <Text style={styles.notes}>{riderPlatenum}</Text>
+      </View> */}
     </View>
   );
 };
@@ -81,7 +90,7 @@ const styles = StyleSheet.create({
   },
   avatarContainer: {
     flexDirection: 'row',
-    paddingBottom: 10
+    // paddingBottom: 10
   },
   leftContainer: {
     paddingHorizontal: 15
