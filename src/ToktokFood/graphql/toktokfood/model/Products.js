@@ -6,7 +6,7 @@ const products = `
   catId
   itemname
   price
-  noOfStocks
+  stocks
   maxQty
   enabled
   otherinfo

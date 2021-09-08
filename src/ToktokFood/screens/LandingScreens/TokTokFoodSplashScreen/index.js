@@ -63,13 +63,14 @@ const TokTokFoodSplashScreen = () => {
 
   const processCreateAccount = () => {
     let {firstName, lastName, birthdate, emailAddress, gender} = user.person;
+    const formattedMobile = user.username.substring(1, user.username.length);
     createAccount({
       variables: {
         input: {
           firstname: firstName,
           lastname: lastName,
           toktokid: user.id,
-          contactnumber: user.username,
+          contactnumber: formattedMobile,
           email: emailAddress,
           address: location.address,
           birthday: '',
