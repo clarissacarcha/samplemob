@@ -16,3 +16,4 @@ export ToktokFoodAddressDetails from './ToktokFoodAddressDetails';
 export ToktokFoodMapSearch from './ToktokFoodMapSearch';
 export ToktokFoodCategories from './ToktokFoodCategories';
 export ToktokRiderRating from './ToktokRiderRating';
+export ToktokFoodEnterPinCode from './ToktokFoodEnterPinCode';

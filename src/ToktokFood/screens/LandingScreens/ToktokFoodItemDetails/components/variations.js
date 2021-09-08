@@ -18,12 +18,12 @@ const Variations = ({item, onVariationChange, onAddOnsChange}) => {
   const [selectedVariations, setSelectedVariations] = useState(null);
   const [lastSelected, setLastSelected] = useState({id: '', value: 0.0, lastValue: 0.0});
 
-  useEffect(() => {
-    // onVariationChange({value: lastSelected.value, lastValue: lastSelected.lastValue});
-    // console.log({value: lastSelected.value, lastValue: lastSelected.lastValue});
+  // useEffect(() => {
+  //   // onVariationChange({value: lastSelected.value, lastValue: lastSelected.lastValue});
+  //   // console.log({value: lastSelected.value, lastValue: lastSelected.lastValue});
 
-    // console.log(JSON.stringify(state));
-  }, [state]);
+  //   // console.log(JSON.stringify(state));
+  // }, [state]);
 
   const isVariantChecked = () =>{
   };

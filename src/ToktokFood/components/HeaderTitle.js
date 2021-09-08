@@ -10,7 +10,7 @@ import {markerIcon} from 'toktokfood/assets/images';
 
 import {getStatusbarHeight, verticalScale, moderateScale} from 'toktokfood/helper/scale';
 
-const HeaderTitle = ({title = 'toktokfood', showAddress = false, titleOnly = false}) => {
+const HeaderTitle = ({title = '', showAddress = false, titleOnly = false}) => {
   const navigation = useNavigation();
   const {location} = useSelector((state) => state.toktokFood);
 

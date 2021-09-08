@@ -4,7 +4,6 @@ import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import { getDistance, convertDistance } from 'geolib';
 
 // Fonts/Colors
 import {COLORS} from 'res/constants';
@@ -12,36 +11,13 @@ import {FONT_SIZE, FONT, SIZE, COLOR} from 'res/variables';
 
 // Utils
 import {moderateScale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
-import {orderStatusMessageDelivery} from 'toktokfood/helper/orderStatusMessage';
-import moment from 'moment';
+import {orderStatusMessagePickUp} from 'toktokfood/helper/orderStatusMessage';
 
-const DriverDetailsView = ({ transaction, riderDetails, appSalesOrderId }) => {
+const PickUpDetailsView = ({ transaction, riderDetails, appSalesOrderId }) => {
   const navigation = useNavigation();
   const {location} = useSelector((state) => state.toktokFood);
-  const { shopDetails, orderStatus, isconfirmed, address, dateReadyPickup, dateOrderProcessed } = transaction;
-  const status = orderStatusMessageDelivery(orderStatus, riderDetails, `${shopDetails.shopname} (${shopDetails.address})`)
-  const date = riderDetails != null && orderStatus == 'po' ? dateOrderProcessed : dateReadyPickup
-
-  const calculateDistance = (startTime, riderLocation) => { 
-   
-    let distance = getDistance(
-      { latitude: location?.latitude, longitude: location?.longitude },
-      { latitude: 14.537752, longitude: 121.001381 }
-    );
-    let distanceMiles = convertDistance(distance, 'mi')
-    let duration = distanceMiles / 60
-    let hours = 20 / 60
-    let final = (duration + hours).toFixed(2)
- 
-    return moment(startTime).add(final, 'hours').format('hh:mm A')
-  }
-
-  const convertMinsToTime = (mins) => {
-    let hours = Math.floor(mins / 60);
-    let minutes = mins % 60;
-    minutes = minutes < 10 ? '0' + minutes : minutes;
-    return `${hours}hrs:${minutes}mins`;
-  }
+  const { shopDetails, orderStatus, isconfirmed, address } = transaction;
+  const status = orderStatusMessagePickUp(orderStatus, riderDetails, `${shopDetails.shopname} (${shopDetails.address})`)
 
   const onSeeDetails = () => {
     navigation.navigate('ToktokFoodOrderDetails', {appSalesOrderId});
@@ -49,7 +25,7 @@ const DriverDetailsView = ({ transaction, riderDetails, appSalesOrderId }) => {
 
   const renderAddress = () => (
     <View style={styles.addressContainer}>
-      <View>
+      {/* <View>
         <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
         <View style={styles.divider} />
         {(riderDetails != null && orderStatus == 'f') ? (
@@ -57,41 +33,31 @@ const DriverDetailsView = ({ transaction, riderDetails, appSalesOrderId }) => {
           ) : (
             <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
         )}
-      </View>
+      </View> */}
       <View style={styles.addressInfo}>
+        <Text numberOfLines={1} style={{ fontFamily: FONT.BOLD }}>Restaurant</Text>
         <Text numberOfLines={1}>{`${shopDetails.shopname} (${shopDetails.address})`}</Text>
-        <View style={styles.horizontalContainer}>
-          <View style={styles.horizontalDivider} />
-        </View>
-        <Text numberOfLines={1}>{address}</Text>
       </View>
     </View>
   );
-  const renderTitle = () => {
-    let startTime = moment(date).format('LT')
-    let endTime = calculateDistance(date)
 
-    return (
-      <View style={styles.detailsContainer}>
-        <Text style={styles.title}>{status.title}</Text>
-        <Text style={styles.status}>{status.message}</Text>
-        { riderDetails != null && (
-          <View style={styles.timeContainer}>
-            <MaterialIcon name="schedule" size={16} color={COLORS.YELLOWTEXT} />
-            <Text style={styles.time}>{`Estimated Delivery Time: ${startTime} - ${endTime}`}</Text>
-          </View>
-        )}
+  const renderTitle = () => (
+    <View style={styles.detailsContainer}>
+      <Text style={styles.title}>{status.title}</Text>
+      <Text style={styles.status}>{status.message}</Text>
+      <View style={styles.timeContainer}>
+        <MaterialIcon name="schedule" size={16} color={COLORS.YELLOWTEXT} />
+        <Text style={styles.time}>Estimated Delivery Time: 10:00 - 10:30</Text>
       </View>
-    )
-    
-  }
+    </View>
+  );
 
   const renderActions = () => (
     <View style={styles.actionContainer}>
       <TouchableOpacity onPress={onSeeDetails} style={styles.orderDetailsAction}>
         <Text style={styles.orderDetailsText}>See Order Details</Text>
       </TouchableOpacity>
-      {riderDetails == null && (
+      {orderStatus != 'p' && (
         <TouchableOpacity style={styles.cancelButton}>
           <Text style={styles.buttonText}>Cancel</Text>
         </TouchableOpacity>
@@ -108,7 +74,7 @@ const DriverDetailsView = ({ transaction, riderDetails, appSalesOrderId }) => {
   );
 };
 
-export default DriverDetailsView;
+export default PickUpDetailsView;
 
 const styles = StyleSheet.create({
   container: {
@@ -130,7 +96,9 @@ const styles = StyleSheet.create({
   },
   addressInfo: {
     flex: 1,
+    flexDirection: 'row',
     paddingHorizontal: moderateScale(10),
+    justifyContent: 'space-between'
   },
   detailsContainer: {
     alignItems: 'center',

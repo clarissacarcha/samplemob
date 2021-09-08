@@ -34,6 +34,7 @@ const transaction = `
   isconfirmed
   deliveryImgurl
   deliveryImgurl2
+  orderIsfor
   shopDetails {
     id
     shopname

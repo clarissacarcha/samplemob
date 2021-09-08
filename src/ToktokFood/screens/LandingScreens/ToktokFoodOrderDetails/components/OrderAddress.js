@@ -26,7 +26,7 @@ const OrderAddress = ({ transaction, riderDetails }) => {
   const isFocus = useIsFocused();
   const navigation = useNavigation();
   const {location} = useSelector((state) => state.toktokFood);
-  const { shopDetails, orderStatus, referenceNum, sysShop, name, email } = transaction;
+  const { shopDetails, orderStatus, referenceNum, sysShop, name, email, orderIsfor } = transaction;
   const { shopname, address, logo } = shopDetails;
   const {person, username} = useSelector((state) => state.session.user);
   const fullname = `${person.firstName} ${person.lastName}`;
@@ -113,15 +113,17 @@ const OrderAddress = ({ transaction, riderDetails }) => {
         <Text style={styles.messageContent}>{location.address}</Text>
         <Text style={styles.rateTitle}>{`How's your experience with ${shopname}?`}</Text>
       </RatingModal>
-      <View style={styles.dividerContainer}>
-        <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
-        <View style={styles.divider} />
-        {(riderDetails != null && orderStatus == 'f') ? (
-            <MaterialIcon name="lens" size={16} color={COLORS.YELLOWTEXT} />
-          ) : (
-            <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
-        )}
-      </View>
+      {orderIsfor == 1 && (
+        <View style={styles.dividerContainer}>
+          <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
+          <View style={styles.divider} />
+          {(riderDetails != null && orderStatus == 'f') ? (
+              <MaterialIcon name="lens" size={16} color={COLORS.YELLOWTEXT} />
+            ) : (
+              <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
+          )}
+        </View>
+      )}
       <View style={styles.addressInfo}>
         <View style={styles.flexDirection}>
           <Text style={styles.restaurant}>Restaurant</Text>
@@ -137,23 +139,26 @@ const OrderAddress = ({ transaction, riderDetails }) => {
           <Image style={styles.icons} source={store} resizeMode="contain" />
           <Text style={styles.addressText}>{shopname}</Text>
         </View>
-        <View style={styles.horizontalContainer} />
-
-        <Text style={styles.restaurant}>Deliver to</Text>
-        <View style={styles.restauranContainer}>
-          <Image style={styles.icons} source={locationOutline} resizeMode="contain" />
-          <Text font style={styles.addressText} numberOfLines={1}>
-            {location ? location.address : ''}
-          </Text>
-        </View>
-        <View style={styles.restauranContainer}>
-          <Image style={styles.icons} source={user} resizeMode="contain" />
-          <Text style={styles.addressText}>{fullname}</Text>
-        </View>
-        <View style={styles.restauranContainer}>
-          <Image style={styles.icons} source={phoneBlack} resizeMode="contain" />
-          <Text style={styles.addressText}>{username}</Text>
-        </View>
+        { orderIsfor == 1 && (
+          <>
+            <View style={styles.horizontalContainer} />
+              <Text style={styles.restaurant}>Deliver to</Text>
+              <View style={styles.restauranContainer}>
+                <Image style={styles.icons} source={locationOutline} resizeMode="contain" />
+                <Text font style={styles.addressText} numberOfLines={1}>
+                {location ? location.address : ''}
+              </Text>
+            </View>
+            <View style={styles.restauranContainer}>
+              <Image style={styles.icons} source={user} resizeMode="contain" />
+              <Text style={styles.addressText}>{fullname}</Text>
+            </View>
+            <View style={styles.restauranContainer}>
+              <Image style={styles.icons} source={phoneBlack} resizeMode="contain" />
+              <Text style={styles.addressText}>{username}</Text>
+            </View>
+          </>
+        )}
       </View>
     </View>
   );

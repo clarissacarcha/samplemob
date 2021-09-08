@@ -7,20 +7,42 @@ import {COLORS} from 'res/constants';
 
 // Utils
 import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
-import {orderStatusMessage} from 'toktokfood/helper/orderStatusMessage';
+import {orderStatusMessageDelivery} from 'toktokfood/helper/orderStatusMessage';
+import moment from 'moment';
+import {useSelector} from 'react-redux';
+import { getDistance, convertDistance } from 'geolib';
 
 const OrderTitle = ({ transaction, riderDetails }) => {
-  const { shopDetails, orderStatus, isconfirmed, address } = transaction;
-  const status = orderStatusMessage(orderStatus, riderDetails, `${shopDetails.shopname} (${shopDetails.address})`);
+  const { shopDetails, orderStatus, isconfirmed, address, dateReadyPickup, dateOrderProcessed } = transaction;
+  const status = orderStatusMessageDelivery(orderStatus, riderDetails, `${shopDetails.shopname} (${shopDetails.address})`);
+  const {location} = useSelector((state) => state.toktokFood);
+  const date = riderDetails != null && orderStatus == 'po' ? dateOrderProcessed : dateReadyPickup
+
+  const calculateDistance = (startTime, riderLocation) => { 
+   
+    let distance = getDistance(
+      { latitude: location?.latitude, longitude: location?.longitude },
+      { latitude: 14.537752, longitude: 121.001381 }
+    );
+    let distanceMiles = convertDistance(distance, 'mi')
+    let duration = distanceMiles / 60
+    let hours = 20 / 60
+    let final = (duration + hours).toFixed(2)
+ 
+    return moment(startTime).add(final, 'hours').format('hh:mm A')
+  }
+  
+  let startTime = moment(date).format('LT')
+  let endTime = calculateDistance(date)
 
   return (
     <View style={styles.detailsContainer}>
       <Text style={styles.title}>{status.title}</Text>
       { !!status.message && <Text style={styles.status}>{status.message}</Text> }
-      { riderDetails != null && (
+      {(riderDetails != null && transaction.orderIsfor == 1) && (
         <View style={styles.timeContainer}>
           <MaterialIcon name="schedule" size={16} color={COLORS.YELLOWTEXT} />
-          <Text style={styles.time}>Estimated time: 10:00 - 10:30</Text>
+          <Text style={styles.time}>{`Estimated Delivery Time: ${startTime} - ${endTime}`}</Text>
         </View>
       )}
     </View>

@@ -12,6 +12,7 @@ import {
   ToktokFoodAddressDetails,
   ToktokFoodRestaurantOverview,
   ToktokRiderRating,
+  ToktokFoodEnterPinCode
 } from 'toktokfood/screens';
 
 export default ({Navigator}) => (
@@ -34,6 +35,11 @@ export default ({Navigator}) => (
       options={{headerShown: false}}
       name="ToktokFoodAddressDetails"
       component={ToktokFoodAddressDetails}
+    />
+    <Navigator.Screen
+      options={{headerShown: false}}
+      name="ToktokFoodEnterPinCode"
+      component={ToktokFoodEnterPinCode}
     />
   </>
 );

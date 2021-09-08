@@ -60,9 +60,9 @@ const ToktokFoodOrderDetails = ({ route, navigation }) => {
     },
     client: CLIENT,
     fetchPolicy: 'network-only',
-    onCompleted: ({ getDriver }) => {
-      console.log(getDriver.driver.user.person, 'sadasd')
-      setRiderDetails(getDriver.driver)
+    onCompleted: ({ getDeliveryDriver }) => {
+      console.log(getDeliveryDriver.driver.user.person, 'sadasd')
+      setRiderDetails(getDeliveryDriver.driver)
     }
   });
 
@@ -81,9 +81,9 @@ const ToktokFoodOrderDetails = ({ route, navigation }) => {
   useEffect(() => {
     if(Object.entries(transaction).length > 0 && orderStatus == undefined && riderDetails == null){
       if (seconds > 0) {
-        if(transaction.orderStatus != 'p'){
+        if(transaction.orderStatus != 'p' && transaction.orderIsfor == 1){
           getTransactionById()
-          getRider()
+          if(transaction.tDeliveryId){ getRiderDetails() }
         } else {
           getTransactionById()
         }
