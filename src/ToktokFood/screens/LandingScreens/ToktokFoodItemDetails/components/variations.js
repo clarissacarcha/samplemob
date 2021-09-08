@@ -1,20 +1,18 @@
 import _ from 'lodash';
-import React, {useEffect, useState, useReducer} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, TextInput, View} from 'react-native';
 import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 import RadioButton from 'toktokfood/components/RadioButton';
 // Utils
 import {moderateScale, scale, verticalScale} from 'toktokfood/helper/scale';
 
-import reducer from './reducer';
+import counter from './counter';
 
 const Variations = ({item, onVariationChange, onAddOnsChange}) => {
   const initialState = {
     variants: [],
     addOns: [],
   };
-
-  const [state, dispatch] = useReducer(reducer, initialState);
 
   const [selectedAddOns, setSelectedAddOns] = useState([]);
   const [selectedVariations, setSelectedVariations] = useState(null);
@@ -26,6 +24,9 @@ const Variations = ({item, onVariationChange, onAddOnsChange}) => {
 
     // console.log(JSON.stringify(state));
   }, [state]);
+
+  const isVariantChecked = () =>{
+  };
 
   const FoodVariations = (props) => {
     const {id, name, maxSelection, variants} = props;

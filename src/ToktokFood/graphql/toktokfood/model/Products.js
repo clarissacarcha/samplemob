@@ -6,7 +6,7 @@ const products = `
   catId
   itemname
   price
-  noOfStocks
+  stocks
   maxQty
   enabled
   otherinfo
@@ -41,14 +41,6 @@ export const GET_PRODUCT_CATEGORIES = gql`
 export const GET_PRODUCTS_BY_SHOP_CATEGORY = gql`
   query getProductsByShopCategory($input: GetProductByShopCategoryInput) {
     getProductsByShopCategory(input: $input) {
-      ${products}
-    }
-  }
-`;
-
-export const GET_PRODUCTS_BY_SHOP = gql`
-  query getProductsByShop($input: GetProductsByShopInput) {
-    getProductsByShop(input: $input) {
       ${products}
     }
   }
