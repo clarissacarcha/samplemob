@@ -1,8 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {useSelector} from 'react-redux';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import RatingModal from 'toktokfood/components/RatingModal';
+import {useMutation, useLazyQuery} from '@apollo/react-hooks';
+import {RATE_SHOP, CHECK_IF_SHOP_WAS_RATED} from 'toktokfood/graphql/toktokfood';
+import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
+import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
+import {useNavigation} from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 
 // Fonts/Colors
 import {COLORS, FONTS} from 'res/constants';
@@ -13,36 +19,104 @@ import {locationOutline, phoneBlack, store, user, rider1} from 'toktokfood/asset
 
 // Utils
 import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
+import DialogMessage from 'toktokfood/components/DialogMessage';
 
-const OrderAddress = ({ transaction, rider }) => {
+const OrderAddress = ({ transaction, riderDetails }) => {
+  
+  const isFocus = useIsFocused();
+  const navigation = useNavigation();
   const {location} = useSelector((state) => state.toktokFood);
-  const { shopDetails, orderStatus } = transaction;
-  const { shopname, address } = shopDetails;
+  const { shopDetails, orderStatus, referenceNum, sysShop, name, email } = transaction;
+  const { shopname, address, logo } = shopDetails;
   const {person, username} = useSelector((state) => state.session.user);
   const fullname = `${person.firstName} ${person.lastName}`;
   const [ratingModal, setRatingModal] = useState(false);
+  const [isRated, setIsRated] = useState(false);
   const [rating, setRating] = useState("0");
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  const [rateShop, {loading, error}] = useMutation(RATE_SHOP, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    onCompleted: ({rateShop}) => {
+      if (rateShop.status == 200) {
+        setRatingModal(false)
+        setShowSuccess(true)
+      }
+    },
+  });
+
+  const [checkIfShopWasRated, {loading: loadingIsRated, error: errorIsRated}] = useLazyQuery(CHECK_IF_SHOP_WAS_RATED, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    onCompleted: ({checkIfShopWasRated}) => {
+      setIsRated(checkIfShopWasRated.status)
+    },
+  });
+
+  useEffect(() => {
+    checkIfShopWasRated({
+      variables: {
+        input: {
+          referenceNum: referenceNum
+        }
+      },
+    })
+  }, [])
 
   const onPressRate = () => { setRatingModal(true) }
 
+  const onPressSumbit = () => {
+    if(rating == 0){ return setRatingModal(false) }
+    rateShop({
+      variables: {
+        input: {
+          shopid: parseInt(sysShop),
+          branchid: parseInt(sysShop),
+          name: name,
+          email: email,
+          rating: parseInt(rating),
+          reference_num: referenceNum
+        }
+      }
+    })
+  }
+
   return (
     <View style={styles.addressContainer}>
-       <RatingModal
-          visibility={ratingModal}
-          onCloseModal={() => setRatingModal(false)}
-          btnTitle="Submit"
-          imgSrc={rider1}
-          rating={rating}
-          onFinishRating={(rate) => setRating(rate)}
-        >
-            <Text style={styles.messageTitle}>{"Deliver to:"}</Text>
-            <Text style={styles.messageContent}>{location.address}</Text>
-            <Text style={styles.rateTitle}>{`How's your experience with ${shopname}?`}</Text>
+      <DialogMessage
+        type="success"
+        visibility={showSuccess}
+        hasChildren
+        onCloseModal={() => {
+          setShowSuccess(false)
+          navigation.navigate('ToktokFoodHome')
+        }}
+      >
+        <Text style={{ fontSize: FONT_SIZE.XL, fontFamily: FONTS.BOLD }} >Thank you for ordering</Text>
+        <Text>
+          <Text style={{ fontSize: FONT_SIZE.XL, fontFamily: FONTS.BOLD, color: COLORS.YELLOW }} >toktok</Text>
+          <Text style={{ fontSize: FONT_SIZE.XL, fontFamily: FONTS.BOLD, color: '#FFA700' }}>food</Text>
+          <Text style={{ fontSize: FONT_SIZE.XL, fontFamily: FONTS.BOLD }}>!</Text>
+        </Text>
+      </DialogMessage>
+      <RatingModal
+        visibility={ratingModal}
+        onCloseModal={() => {
+          onPressSumbit()
+        }}
+        btnTitle="Submit"
+        imgSrc={logo}
+        rating={rating}
+        onFinishRating={(rate) => setRating(rate)}
+        loading={loading}
+      >
+        <Text style={styles.messageTitle}>{"Deliver to:"}</Text>
+        <Text style={styles.messageContent}>{location.address}</Text>
+        <Text style={styles.rateTitle}>{`How's your experience with ${shopname}?`}</Text>
       </RatingModal>
       <View style={styles.dividerContainer}>
         <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
         <View style={styles.divider} />
-        {(rider != null && orderStatus == 'f') ? (
+        {(riderDetails != null && orderStatus == 'f') ? (
             <MaterialIcon name="lens" size={16} color={COLORS.YELLOWTEXT} />
           ) : (
             <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
@@ -51,7 +125,7 @@ const OrderAddress = ({ transaction, rider }) => {
       <View style={styles.addressInfo}>
         <View style={styles.flexDirection}>
           <Text style={styles.restaurant}>Restaurant</Text>
-          { orderStatus == 's' && (
+          {(orderStatus == 's' && !isRated) && (
             <Text onPress={onPressRate} style={styles.rateText}>Rate</Text>
           )}
         </View>

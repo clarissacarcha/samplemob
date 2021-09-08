@@ -13,11 +13,11 @@ import {FONT_SIZE, FONT, SIZE, COLOR} from 'res/variables';
 import {moderateScale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
 import {orderStatusMessage} from 'toktokfood/helper/orderStatusMessage';
 
-const DriverDetailsView = ({ transaction, rider, appSalesOrderId }) => {
+const DriverDetailsView = ({ transaction, riderDetails, appSalesOrderId }) => {
   const navigation = useNavigation();
   const {location} = useSelector((state) => state.toktokFood);
   const { shopDetails, orderStatus, isconfirmed, address } = transaction;
-  const status = orderStatusMessage(orderStatus, rider, `${shopDetails.shopname} (${shopDetails.address})`)
+  const status = orderStatusMessage(orderStatus, riderDetails, `${shopDetails.shopname} (${shopDetails.address})`)
 
   const onSeeDetails = () => {
     navigation.navigate('ToktokFoodOrderDetails', {appSalesOrderId});
@@ -28,7 +28,7 @@ const DriverDetailsView = ({ transaction, rider, appSalesOrderId }) => {
       <View>
         <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
         <View style={styles.divider} />
-        {(rider != null && orderStatus == 'f') ? (
+        {(riderDetails != null && orderStatus == 'f') ? (
             <MaterialIcon name="lens" size={16} color={COLORS.YELLOWTEXT} />
           ) : (
             <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
@@ -48,7 +48,7 @@ const DriverDetailsView = ({ transaction, rider, appSalesOrderId }) => {
     <View style={styles.detailsContainer}>
       <Text style={styles.title}>{status.title}</Text>
       <Text style={styles.status}>{status.message}</Text>
-      { rider != null && (
+      { riderDetails != null && (
         <View style={styles.timeContainer}>
           <MaterialIcon name="schedule" size={16} color={COLORS.YELLOWTEXT} />
           <Text style={styles.time}>Estimated time: 10:00 - 10:30</Text>
@@ -62,7 +62,7 @@ const DriverDetailsView = ({ transaction, rider, appSalesOrderId }) => {
       <TouchableOpacity onPress={onSeeDetails} style={styles.orderDetailsAction}>
         <Text style={styles.orderDetailsText}>See Order Details</Text>
       </TouchableOpacity>
-      {rider == null && (
+      {riderDetails == null && (
         <TouchableOpacity style={styles.cancelButton}>
           <Text style={styles.buttonText}>Cancel</Text>
         </TouchableOpacity>

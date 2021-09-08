@@ -9,15 +9,15 @@ import {COLORS} from 'res/constants';
 import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
 import {orderStatusMessage} from 'toktokfood/helper/orderStatusMessage';
 
-const OrderTitle = ({ transaction, rider }) => {
+const OrderTitle = ({ transaction, riderDetails }) => {
   const { shopDetails, orderStatus, isconfirmed, address } = transaction;
-  const status = orderStatusMessage(orderStatus, rider, `${shopDetails.shopname} (${shopDetails.address})`);
+  const status = orderStatusMessage(orderStatus, riderDetails, `${shopDetails.shopname} (${shopDetails.address})`);
 
   return (
     <View style={styles.detailsContainer}>
-      <Text style={styles.title}>Waiting for restaurant confirmation...</Text>
-      <Text style={styles.status}>Give restaurant some time to accept your order</Text>
-      { rider != null && (
+      <Text style={styles.title}>{status.title}</Text>
+      { !!status.message && <Text style={styles.status}>{status.message}</Text> }
+      { riderDetails != null && (
         <View style={styles.timeContainer}>
           <MaterialIcon name="schedule" size={16} color={COLORS.YELLOWTEXT} />
           <Text style={styles.time}>Estimated time: 10:00 - 10:30</Text>

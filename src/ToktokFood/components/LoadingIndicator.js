@@ -6,11 +6,11 @@ import {searchIcon} from '../assets/images';
 import {FONT, FONT_SIZE, COLOR} from '../../res/variables';
 
 // State must be global to share with other components
-const LoadingIndicator = ({ isLoading, isFlex, style }) => {
+const LoadingIndicator = ({ isLoading, isFlex, style, color = '#FFA700' }) => {
 
   const Loading = () => (
     <View style={[ isFlex ? styles.container : { zIndex: 2 },  style]}>
-      <ActivityIndicator size='large' color='#FFA700' />
+      <ActivityIndicator size='large' color={color} />
     </View>
   )
 
