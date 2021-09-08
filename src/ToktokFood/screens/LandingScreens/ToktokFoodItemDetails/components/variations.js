@@ -6,27 +6,61 @@ import RadioButton from 'toktokfood/components/RadioButton';
 // Utils
 import {moderateScale, scale, verticalScale} from 'toktokfood/helper/scale';
 
-import counter from './counter';
-
 const Variations = ({item, onVariationChange, onAddOnsChange}) => {
-  const initialState = {
-    variants: [],
-    addOns: [],
+  const [vars, setVariants] = useState([]);
+  const [addOns, setAddOns] = useState([]);
+
+  const itemChecker = (collection = [], payload = {}, action = '') => {
+    if (!_.find(collection, {id: payload.id})) {
+      collection.push(payload);
+      if (action === 'variants') {
+        setVariants(collection);
+      } else {
+        setAddOns(collection);
+      }
+    }
   };
 
-  const [selectedAddOns, setSelectedAddOns] = useState([]);
-  const [selectedVariations, setSelectedVariations] = useState(null);
-  const [lastSelected, setLastSelected] = useState({id: '', value: 0.0, lastValue: 0.0});
+  const counter = ({collection = [], action = '', payload = {}}) => {
+    if (action === 'UPDATE_VARIANTS') {
+      itemChecker(collection, payload, 'variants');
+    }
+    if (action === 'UPDATE_ADD_ONS') {
+      itemChecker(collection, payload, 'addOns');
+    }
+  };
+
+  const isVariantChecked = (id) => {
+    if (vars.length > 0) {
+      return _.find(vars, {id: id});
+    } else {
+      return false;
+    }
+  };
+
+  const isAddOnCheked = (id) => {
+    if (addOns.length > 0) {
+      return _.find(addOns, {id: id});
+    } else {
+      return false;
+    }
+  };
+
+  const itemCalculator = () => {
+    const total = _(addOns)
+      .groupBy('id')
+      .map((objs, key) => ({
+        total: _.sumBy(objs, 'optionPrice'),
+      }))
+      .value();
+    const sum = _.reduce(total, (acc, n) => {
+      return acc.total + n.total;
+    });
+  };
 
   useEffect(() => {
-    // onVariationChange({value: lastSelected.value, lastValue: lastSelected.lastValue});
-    // console.log({value: lastSelected.value, lastValue: lastSelected.lastValue});
-
-    // console.log(JSON.stringify(state));
-  }, [state]);
-
-  const isVariantChecked = () =>{
-  };
+    itemCalculator();
+  }, [addOns]);
 
   const FoodVariations = (props) => {
     const {id, name, maxSelection, variants} = props;
@@ -40,15 +74,10 @@ const Variations = ({item, onVariationChange, onAddOnsChange}) => {
             <View style={styles.variationsWrapper}>
               <View style={styles.checkBoxWrapper}>
                 <RadioButton
-                  onValueChange={(s) => {
-                    dispatch({type: 'UPDATE_VARIANTS', payload: v});
-                    // setLastSelected({
-                    //   id: v.id,
-                    //   value: v.optionPrice,
-                    //   lastValue: lastSelected.id !== '' ? lastSelected.value : v.optionPrice,
-                    // });
+                  onValueChange={(c) => {
+                    counter({collection: vars, action: 'UPDATE_VARIANTS', payload: v});
                   }}
-                  selected={lastSelected.id === v.id}
+                  selected={isVariantChecked(v.id)}
                 />
                 <Text style={styles.checkBoxText}>{v.optionName}</Text>
               </View>
@@ -61,25 +90,21 @@ const Variations = ({item, onVariationChange, onAddOnsChange}) => {
   };
 
   const FoodAddOns = (props) => {
-    const {id, name, maxSelection, variants} = props;
+    const {id, name, maxSelection, ons} = props;
     return (
       <>
         <View key={id} style={styles.variations}>
           <Text style={styles.variationTitle}>
             Choose your {name.toLowerCase()} (Pick {maxSelection})
           </Text>
-          {variants.map((v) => (
+          {ons.map((v) => (
             <View style={styles.variationsWrapper}>
               <View style={styles.checkBoxWrapper}>
                 <RadioButton
-                  onValueChange={() => {
-                    setLastSelected({
-                      id: v.id,
-                      value: v.optionPrice,
-                      lastValue: lastSelected.id !== '' ? lastSelected.value : v.optionPrice,
-                    });
+                  onValueChange={(c) => {
+                    counter({collection: addOns, action: 'UPDATE_ADD_ONS', payload: v});
                   }}
-                  selected={lastSelected.id === v.id}
+                  selected={isAddOnCheked(v.id)}
                 />
                 <Text style={styles.checkBoxText}>{v.optionName}</Text>
               </View>
@@ -96,23 +121,21 @@ const Variations = ({item, onVariationChange, onAddOnsChange}) => {
       <View style={styles.container}>
         {_.map(item, (v) => {
           const {id, optionName, isRequired, noOfSelection, options} = v;
-          return optionName !== 'Add-ons' ? (
-            <FoodVariations
-              id={id}
-              name={optionName}
-              variants={options}
-              required={isRequired}
-              maxSelection={noOfSelection}
-            />
-          ) : (
-            <FoodAddOns
-              id={id}
-              name={optionName}
-              variants={options}
-              required={isRequired}
-              maxSelection={noOfSelection}
-            />
-          );
+          if (optionName.toLowerCase().indexOf('ons') === -1) {
+            return (
+              <FoodVariations
+                id={id}
+                name={optionName}
+                variants={options}
+                required={isRequired}
+                maxSelection={noOfSelection}
+              />
+            );
+          } else {
+            return (
+              <FoodAddOns id={id} name={optionName} ons={options} required={isRequired} maxSelection={noOfSelection} />
+            );
+          }
         })}
         <View style={styles.variations}>
           <Text style={styles.variationTitle}>Special Instructions (Optional)</Text>
