@@ -11,12 +11,12 @@ import {scale, moderateScale, verticalScale} from 'toktokfood/helper/scale';
 import DialogMessage from 'toktokfood/components/DialogMessage';
 import RatingModal from 'toktokfood/components/RatingModal';
 
-const DriverAnimationView = ({orderStatus, rider}) => {
+const DriverAnimationView = ({orderStatus, riderDetails}) => {
   const [iShowSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
-    setShowSuccess(rider != null);
-  }, [rider]);
+    setShowSuccess(riderDetails != null);
+  }, [riderDetails]);
 
   const CancelOrderComponent = () => {};
  
@@ -34,21 +34,23 @@ const DriverAnimationView = ({orderStatus, rider}) => {
         visibility={iShowSuccess}
         onCloseModal={() => setShowSuccess(false)}
         btnTitle="Ok"
-        imgSrc={rider1}
+        imgSrc={riderDetails?.user.person.avatar}
         rating={0}
         readOnly
         // showRating
       >
-        <Text style={styles.messageTitle}>{rider?.riderName}</Text>
-        <Text style={styles.messageContent}>{rider?.riderConno}</Text>
-        <Text style={styles.messageContent}>{rider?.riderPlatenum}</Text>
+        <Text style={styles.messageTitle}>{`${riderDetails?.user.person.firstName} ${riderDetails?.user.person.lastName}`}</Text>
+        <Text style={styles.messageContent}>{riderDetails?.user.person.mobileNumber}</Text>
+        <Text style={styles.messageContent}>{
+          `${riderDetails?.vehicle.brand.brand} ${riderDetails?.vehicle.model.model} - ${riderDetails?.vehicle.plateNumber}`
+        }</Text>
       </RatingModal>
       {/* Contact Support */}
       <Text style={styles.contactSupportText}></Text>
       <View style={styles.imgContainer}>
         <Image
           style={styles.img}
-          source={rider == null ? timer : toktok_rider}
+          source={riderDetails == null ? timer : toktok_rider}
           resizeMode="contain"
         />
       </View>

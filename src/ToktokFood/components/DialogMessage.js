@@ -11,7 +11,8 @@ import {success_ic, error_ic, warning_ic, question_ic} from 'toktokfood/assets/i
 
 const DialogMessage = (props) => {
   // type:  success | error | warning | question
-  const {visibility, type, title, messages, onAccept, onCancel, onCloseModal} = props;
+  const {visibility, type, title, messages, onAccept, onCancel, onCloseModal, hasChildren,
+    children} = props;
 
   const getDialogIcon = () => {
     switch (type) {
@@ -33,14 +34,17 @@ const DialogMessage = (props) => {
           <View style={[styles.prompContentWrapper, NUMBERS.SHADOW]}>
             <Image style={styles.icon} source={getDialogIcon()} resizeMode="contain" />
             <View style={styles.messegeWrapper}>
-              {title !== undefined && <Text style={styles.messageTitle}>{title}</Text>}
-              {messages !== undefined && <Text style={styles.messageContent}>{messages}</Text>}
+              { !hasChildren && (
+                <>
+                  {title !== undefined && <Text style={styles.messageTitle}>{title}</Text>}
+                  {messages !== undefined && <Text style={styles.messageContent}>{messages}</Text>}
+                </>
+              )}
+              { children }
             </View>
-            <View style={styles.buttonWrapper}>
-              <TouchableOpacity style={styles.confirmButton} onPress={() => onCloseModal()}>
-                <Text style={styles.buttonText}>OK</Text>
-              </TouchableOpacity>
-            </View>
+            <TouchableOpacity style={styles.confirmButton} onPress={() => onCloseModal()}>
+              <Text style={styles.buttonText}>OK</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
@@ -59,7 +63,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(34, 34, 34, 0.5)',
   },
   prompContentWrapper: {
-    display: 'flex',
     borderRadius: 14,
     alignItems: 'center',
     width: moderateScale(325),
@@ -67,8 +70,8 @@ const styles = StyleSheet.create({
     paddingVertical: verticalScale(20),
   },
   icon: {
-    width: 148,
-    height: 148,
+    width: scale(100),
+    height: scale(100),
   },
   messegeWrapper: {
     display: 'flex',
@@ -89,17 +92,14 @@ const styles = StyleSheet.create({
     marginTop: moderateScale(8),
   },
   buttonWrapper: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    marginHorizontal: 10,
   },
   confirmButton: {
-    display: 'flex',
+    width: '85%',
     alignItems: 'center',
     height: BUTTON_HEIGHT,
     justifyContent: 'center',
-    paddingHorizontal: scale(22),
-    backgroundColor: COLORS.ORANGE,
+    backgroundColor: '#FFA700',
     borderRadius: NUMBERS.BORDER_RADIUS,
   },
   cancelButton: {},

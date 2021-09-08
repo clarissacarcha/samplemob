@@ -12,3 +12,44 @@ export const GET_RIDER = gql`
     }
   }
 `;
+export const GET_RIDER_DETAILS = gql`
+  query getDriver($input: GetDriverInput) {
+    getDriver(input: $input) {
+      driver {
+        id
+        status
+        licenseNumber
+        isOnline
+        location {
+          latitude
+          longitude
+          lastUpdate
+        }
+        user {
+          id
+          username
+          status
+          person {
+            firstName
+            middleName
+            lastName
+            mobileNumber
+            emailAddress
+            avatar
+            avatarThumbnail
+          }
+        }
+        vehicle{
+          plateNumber
+          brand {
+            brand
+          }
+          model {
+            model
+          }
+        }
+      }
+    }
+  }
+`;
+

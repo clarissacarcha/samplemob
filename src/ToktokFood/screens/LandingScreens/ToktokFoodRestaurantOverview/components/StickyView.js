@@ -1,6 +1,6 @@
 import {useLazyQuery} from '@apollo/react-hooks';
 import {useRoute} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import {Image, Platform, StyleSheet, Text, View} from 'react-native';
 import ReactNativeParallaxHeader from 'react-native-parallax-header';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -22,6 +22,7 @@ import {
   verticalScale,
 } from 'toktokfood/helper/scale';
 import {FoodList, HeaderTitleSearchBox} from '../components';
+import {VerifyContext, CategoryTabs} from '../components';
 
 // const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 // const IS_IPHONE_X = SCREEN_HEIGHT === 812 || SCREEN_HEIGHT === 896;
@@ -65,15 +66,17 @@ export const StickyView = () => {
     }
   }, [data]);
 
-  const DisplayHeaderTabs = () => {
-    return <HeaderTabs loading={loading} activeTab={activeTab} tabs={productCategories} setActiveTab={setActiveTab} />;
-  };
-
+ 
   const NavBar = () => (
     <View style={[styles.headerWrapper, styles.navbarWrapper]}>
       <HeaderTitleSearchBox />
       <View style={styles.tabContainer}>
-        <DisplayHeaderTabs />
+        <CategoryTabs
+          activeTab={activeTab}
+          productCategories={productCategories}
+          setActiveTab={setActiveTab}
+          loading={loading}
+        />
       </View>
     </View>
   );
@@ -105,7 +108,12 @@ export const StickyView = () => {
           </View>
         </View>
         <View style={{paddingTop: 15}}>
-          <DisplayHeaderTabs />
+          <CategoryTabs
+            activeTab={activeTab}
+            productCategories={productCategories}
+            setActiveTab={setActiveTab}
+            loading={loading}
+          />
         </View>
       </View>
     </View>
@@ -132,7 +140,6 @@ export const StickyView = () => {
             id={id}
             activeTab={activeTab}
             tagsLoading={loading}
-            // searchProduct={searchProduct}
           />
         )}
         containerStyle={styles.container}

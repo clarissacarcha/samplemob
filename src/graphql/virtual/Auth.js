@@ -6,6 +6,7 @@ user {
   userId
   username
   status
+  toktokfoodUserId
   person {
     id
     firstName
@@ -18,7 +19,6 @@ user {
     avatarThumbnail
     status
     mobileNumber
-    hasToktokfood
     address {
       line1
       line2
