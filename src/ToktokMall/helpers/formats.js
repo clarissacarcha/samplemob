@@ -30,6 +30,7 @@ export const MergeStoreProducts = (data) => {
     return {
       store_id: store.store_id,
       store: store.storeName,
+      storeLogo: store.storeLogo || "",
       cart: data.filter(x => x.storeName == store.storeName),
       delivery_fee: 80, date_range_from: 'Jul 20', date_range_to: 'Jul 25'
     }

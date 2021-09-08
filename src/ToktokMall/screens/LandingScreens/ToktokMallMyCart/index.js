@@ -157,13 +157,31 @@ const Component =  ({
     headerRight: () => <HeaderRight hidden={true} />,
   });
 
-  const getSubTotal = async () => {
-    let a = 0;
-    for (var x = 0; x < myCart.length; x++) {
-      for (var y = 0; y < myCart[x].cart.length; y++) {
-        let _item = myCart[x].cart[y];
-        a += parseFloat(_item.price) * _item.qty;
+  useEffect(()=> {
+    if(itemsToCheckoutArr && itemsToCheckoutArr.length !== 0){
+      getSubTotal(itemsToCheckoutArr)
+    }else if(itemsToCheckoutArr && itemsToCheckoutArr.length === 0){
+      setSubTotal(0)
+    }
+  }, [itemsToCheckoutArr])
+
+  const onChangeQuantity = (id, qty) => {
+    let currentItems = itemsToCheckoutArr
+    setItemsToCheckoutArr(currentItems.map(item => {
+      let newItem = item
+      if(item.item_id === id){
+        newItem.qty = qty
       }
+      return newItem
+    }))
+  }
+
+  const getSubTotal = async (data) => {
+    let temp = data || myCart
+    let a = 0;
+    for (var x = 0; x < temp.length; x++) {
+        let _item = temp[x];
+        a += parseFloat(_item.price) * _item.qty;
     }
     setSubTotal(a);
   };
@@ -181,17 +199,35 @@ const Component =  ({
   }, [myCart])
 
   const deleteMultipleItems = () => {
-    console.log("Items to delete", itemsToDelArr)
+    let currentItems = JSON.parse(JSON.stringify(itemsToCheckoutArr))
     if(allSelected){
       createMyCartSession("set", [])
     }else{
       createMyCartSession("DeleteMultiple", itemsToDelArr)
+      itemsToDelArr.map((item, i) => {
+        //Check if item already exist on current items
+        let index = currentItems.findIndex((a) => a.item_id == item.item_id)
+        currentItems.splice(index, 1)
+      })
+      setItemsToCheckoutArr(currentItems)
     }
     // getSubTotal()
   }
 
   const deleteSingleItem = (id) => {
     createMyCartSession("DeleteSingle", {item_id: id})
+
+    let currentItems = JSON.parse(JSON.stringify(itemsToCheckoutArr))
+    let willDeleteItems = JSON.parse(JSON.stringify(itemsToDelArr))
+
+    let index = willDeleteItems.findIndex((a) => a.item_id === id)
+    willDeleteItems.splice(index, 1)
+    setItemsToDelArr(willDeleteItems)
+
+
+    let indexC = currentItems.findIndex((a) => a.item_id === id)
+    currentItems.splice(indexC, 1)
+    setItemsToCheckoutArr(currentItems)
     setSingleDeletemsgModalShown(true)
     // getSubTotal()
   }
@@ -205,6 +241,9 @@ const Component =  ({
     
     if(type == "item"){
       if(willDelete || del){
+        let indexC = currentItems.findIndex((a) => a.item_id == raw.item.item_id)
+        currentItems.splice(indexC, 1)
+        setItemsToCheckoutArr(currentItems)
         let index = willDeleteItems.findIndex((a) => a.item_id == raw.item.item_id)
         willDeleteItems.splice(index, 1)
         setItemsToDelArr(willDeleteItems)
@@ -224,6 +263,13 @@ const Component =  ({
         })
         setItemsToDelArr(willDeleteItems)
 
+        raw.items.map((item, i) => {
+          //Check if item already exist on current items
+          let index = currentItems.findIndex((a) => a.item_id == item.item_id)
+          currentItems.splice(index, 1)
+        })
+        setItemsToCheckoutArr(currentItems)
+
       }else{
 
         //Map raw items
@@ -232,6 +278,7 @@ const Component =  ({
           let index = currentItems.findIndex((a) => a.item_id == item.item_id)
           currentItems.splice(index, 1)
         })
+        getSubTotal(currentItems)
         setItemsToCheckoutArr(currentItems)
       }
     }
@@ -318,7 +365,7 @@ const Component =  ({
           <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
             <View style={{flex: 6, justifyContent: 'center'}}>
               <CheckBox
-                isChecked={allSelected}
+                isChecked={!willDelete ? itemsToCheckoutArr.length === myCart.length : itemsToDelArr.length === myCart.length}
                 rightText="Select All"
                 rightTextStyle={{fontSize: 14, fontWeight: '500'}}
                 checkedCheckBoxColor="#F6841F"
@@ -326,11 +373,9 @@ const Component =  ({
                 onClick={() => {
                   if(allSelected){
                     //to false
-                    setSubTotal(0)
                     setItemsToCheckoutArr([])
                   }else{
                     //to true
-                    getSubTotal()
                     setItemsToCheckoutArr(myCart)
                   }
                   setAllSelected(!allSelected);
@@ -369,25 +414,22 @@ const Component =  ({
                     onStoreSelect={(raw) => {
                       let res = 0
                       if(raw.checked){
-                        res = subTotal + raw.total
+                        // res = subTotal + raw.total
                         selectItem('store' , raw, willDelete)
                       }else{
-                        res = subTotal - raw.total
+                        // res = subTotal - raw.total
                         unSelectItem('store' , raw, willDelete)
                       }
-                      setSubTotal(res)
+                      // setSubTotal(res)
                     }}
                     onItemSelect={(raw) => {
                       let res = 0
                       if(raw.checked){
-                        res = subTotal + raw.amount
                         selectItem('item' , raw, false)
                       }else{
-                        res = subTotal - raw.amount
                         unSelectItem('item', raw, false)
                       }
                       // if(raw.checked)
-                      setSubTotal(res)
                     }} 
                     onItemLongPress={(raw) => {
 
@@ -409,6 +451,7 @@ const Component =  ({
                     }}
                     onChangeQuantity={(qty, id) => {
                       console.log("change quantity", id)
+                      onChangeQuantity(id, qty)
                       createMyCartSession("UpdateQuantity", {item_id: id, qty: qty})
                     }}
                   />

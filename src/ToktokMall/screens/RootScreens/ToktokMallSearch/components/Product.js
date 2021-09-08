@@ -46,7 +46,7 @@ const RenderItem = ({navigation, item}) => {
             style={{resizeMode: 'cover', width: '100%', height: 120, borderRadius: 5}} 
           />
           <TouchableOpacity onPress={() => navigation.navigate("ToktokMallProductDetails", item)}>
-            <Text style={{fontSize: 13, fontWeight: '500', paddingVertical: 5}}>{item?.itemname || ""}</Text>
+            <Text style={{fontSize: 13, fontWeight: '500', paddingVertical: 5}}  numberOfLines={2} ellipsizeMode="tail">{item?.itemname || ""}</Text>
           </TouchableOpacity>
           {/* <Text style={{fontSize: 13, color: "#F6841F"}}><Price amount={item?.price}/></Text>    
           <View style={{flexDirection: 'row'}}>

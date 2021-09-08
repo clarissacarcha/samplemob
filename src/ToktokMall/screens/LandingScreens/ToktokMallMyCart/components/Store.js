@@ -57,7 +57,7 @@ export const Store = ({data, storeIndex,  state = false, onSelect, onPress, setU
           />
         </View>
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-          <Image source={getStoreLogo(data?.store?.profileImages?.logo || {})} style={{width: 18, height: 18, resizeMode: 'stretch'}} />
+          <Image source={getStoreLogo(data?.storeLogo || {})} style={{width: 18, height: 18, resizeMode: 'stretch'}} />
         </View>
         <TouchableOpacity onPress={onPress} style={{flex: 9, justifyContent: 'center', flexDirection: 'row'}}>                        
           <View style={{flex: 12, justifyContent: 'center'}}>

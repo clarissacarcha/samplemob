@@ -23,7 +23,11 @@ export const Item = ({
 }) => {
 
   const [selected, setSelected] = useState(state)
-  const [qty, setQty] = useState(data.qty)
+  const [qty, setQty] = useState(1)
+
+  useEffect(() => {
+    setQty(data.qty)
+  },[data])
 
   useEffect(() => {
     setSelected(state)

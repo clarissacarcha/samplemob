@@ -23,7 +23,7 @@ const Component = ({data, onToggleFollow, reduxActions: {updateMyFollowing}, red
 
 	return (
 		<>
-			<View style={{paddingVertical: 15, paddingHorizontal: 15}}>
+			<View style={{paddingTop: 15, paddingHorizontal: 15}}>
         <Card>
           <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
             <View style={{flex: 3.5, justifyContent: 'center'}}>
