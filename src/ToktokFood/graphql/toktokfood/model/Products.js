@@ -45,3 +45,11 @@ export const GET_PRODUCTS_BY_SHOP_CATEGORY = gql`
     }
   }
 `;
+
+export const GET_PRODUCTS_BY_SHOP = gql`
+  query getProductsByShop($input: GetProductsByShopInput) {
+    getProductsByShop(input: $input) {
+      ${products}
+    }
+  }
+`;
