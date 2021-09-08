@@ -28,7 +28,7 @@ export const ProceedButton = ({swipeEnabled , navigation , amount , note , tokwa
     const [openOtpCode,setOpenOtpCode] = useState(false)
     const [requestSendMoneyId,setRequestSendMoneyId] = useState(null)
 
-    const [postRequestSendMoney] = useMutation(POST_REQUEST_SEND_MONEY, {
+    const [postRequestSendMoney , {loading: requestLoading}] = useMutation(POST_REQUEST_SEND_MONEY, {
         client:TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({postRequestSendMoney})=>{
             const { validator , requestSendMoneyId } = postRequestSendMoney
@@ -50,6 +50,7 @@ export const ProceedButton = ({swipeEnabled , navigation , amount , note , tokwa
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({postSendMoney})=> {
             setOpenPinCode(false)
+            setOpenOtpCode(false)
             setWalletinfoParams(postSendMoney)
             setSuccessModalVisible(true)
         },
@@ -120,7 +121,7 @@ export const ProceedButton = ({swipeEnabled , navigation , amount , note , tokwa
 
     return (
        <>
-        
+        <AlertOverlay visible={requestLoading}/>
         <EnterPinCode 
             visible={openPinCode} 
             setVisible={setOpenPinCode} 

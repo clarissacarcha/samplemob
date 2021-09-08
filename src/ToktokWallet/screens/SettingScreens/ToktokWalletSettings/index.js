@@ -7,7 +7,7 @@ import {useSelector} from 'react-redux'
 import CONSTANTS from 'common/res/constants'
 //SELF IMPORTS
 import {
-    Validator
+    
 } from "./Components";
 
 const { FONT_FAMILY: FONT , FONT_SIZE , COLOR } = CONSTANTS
@@ -46,16 +46,7 @@ export const ToktokWalletSettings = ({navigation , route })=> {
             <SettingHeaderTitle title="Manage PIN"/>
             <SettingOption route="ToktokWalletMPINCreate" title="Change MPIN"/>
             <SettingOption route="ToktokWalletCreatePin" title={`${tokwaAccount.pinCode ? "Change" : "Create"} TPIN`}/>
-            <Separator/>
-            {
-                tokwaAccount.pinCode &&
-                <>
-                 <SettingHeaderTitle title="Manage Validation Set Up"/>
-                <Validator validator={tokwaAccount.validator}/>
-                <Separator/>
-                </>
-            }
-           
+            <Separator/>   
             <SettingHeaderTitle title="Help Centre"/>
             <SettingOption route="ToktokWalletPaymentChart" title="Payment Chart"/>
             <SettingOption route="ToktokWalletTransactionLimit" title="User Level and Transaction Limit"/>

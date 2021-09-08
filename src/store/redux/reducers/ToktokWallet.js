@@ -45,11 +45,6 @@ export default (state = INITIAL_STATE, action) => {
           allTransactions: action.payload.allTransactions,
           recentTransactions: action.payload.recentTransactions} 
         }
-    case 'SET_TOKTOKWALLET_VALIDATOR':
-        return {
-          ...state,
-          validator: action.payload
-        }
     case 'SET_REFRESH_TOKTOKWALLET':
       const payload = action.payload
       return {

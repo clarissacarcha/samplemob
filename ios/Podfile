@@ -123,6 +123,8 @@ target 'toktok' do
 
   pod 'RNCCheckbox', :path => '../node_modules/@react-native-community/checkbox'
 
+  pod 'jail-monkey', :path => '../node_modules/jail-monkey'
+
   target 'toktokTests' do
     inherit! :complete
     # Pods for testing

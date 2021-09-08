@@ -80,7 +80,7 @@ export const ToktokWalletPayPandaForm = ({navigation,route})=> {
     })
 
 
-    const proceedToPaypandaPortal = (pinCode)=> {
+    const proceedToPaypandaPortal = ({pinCode = null , Otp = null})=> {
       postCashInPayPandaRequest({
           variables: {
               input: {

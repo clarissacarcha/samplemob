@@ -6,12 +6,14 @@ import {GET_USER_TOKTOK_WALLET_DATA} from 'toktokwallet/graphql'
 import {useLazyQuery, useQuery} from '@apollo/react-hooks'
 import {useSelector} from 'react-redux'
 import AsyncStorage from '@react-native-community/async-storage'
+import JailMonkey from 'jail-monkey'
 
 //SELF IMPORTS
 import {
     CheckTokwaKYCRegistration,
     CheckWalletAccountRestriction,
-    LoginPage
+    LoginPage,
+    RootedDevice
 } from "./Components";
 
 const {COLOR} = CONSTANTS
@@ -22,6 +24,18 @@ export const ToktokWalletLoginPage = ({navigation,route})=> {
     })
 
     const session = useSelector(state=> state.session)
+    const [isRooted,setIsRooted] = useState(false)
+    const [isDebugMode,setIsDebugMode] = useState(false)
+
+    const CheckIfDeviceIsRooted = async ()=> {
+        const isDebugMode = await JailMonkey.isDebuggedMode()
+        const isRooted = await JailMonkey.isJailBroken()
+        setIsDebugMode(isDebugMode)
+        setIsRooted(isRooted)
+    }
+
+    CheckIfDeviceIsRooted();
+
 
     const  {data,error,loading} = useQuery(GET_USER_TOKTOK_WALLET_DATA , {
         fetchPolicy:"network-only",
@@ -62,7 +76,12 @@ export const ToktokWalletLoginPage = ({navigation,route})=> {
                 {
                     data.getUserToktokWalletData.accountToken != null &&
                     <CheckWalletAccountRestriction>
-                        <LoginPage />
+                        {
+                            // isRooted || isDebugMode 
+                            isRooted
+                            ? <RootedDevice/>
+                            : <LoginPage/>
+                        }
                     </CheckWalletAccountRestriction>
                 }
             </CheckTokwaKYCRegistration>

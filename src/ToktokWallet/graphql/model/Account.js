@@ -29,7 +29,6 @@ export const GET_MY_ACCOUNT = gql`
             pinCodeAttempts
             mpinCode
             mpindCodeAttempts
-            validator
             isLinked
             person {
                 id
@@ -108,11 +107,5 @@ export const GET_CHECK_PENDING_DISBURSEMENT_ACCOUNT = gql`
         getCheckPendingDisbursementAccount {
             result
         }
-    }
-`
-
-export const PATCH_VALIDATOR = gql`
-    mutation patchValidator($input: PatchValidatorInput){
-        patchValidator(input: $input)
     }
 `
