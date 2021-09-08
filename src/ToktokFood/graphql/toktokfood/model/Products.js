@@ -17,7 +17,7 @@ export const GET_PRODUCTS_BY_SHOP_CATEGORY = gql`
       catId
       itemname
       price
-      noOfStocks
+      stocks
       maxQty
       enabled
       otherinfo
