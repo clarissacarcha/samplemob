@@ -53,3 +53,14 @@ export const GET_RIDER_DETAILS = gql`
   }
 `;
 
+export const GET_SHIPPING_FEE = gql`
+  query getShippingFee($input: GetShippingFeeInput!) {
+    getShippingFee(input: $input) {
+      success
+      price
+      hash
+      hash_price
+    }
+  }
+`;
+

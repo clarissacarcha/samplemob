@@ -1,4 +1,4 @@
-import gql from 'graphql-tag'
+import gql from 'graphql-tag';
 
 const transaction = `
   id
@@ -65,18 +65,27 @@ const transaction = `
       filename
     }
   }
-`
+`;
 export const GET_ORDER_TRANSACTIONS = gql`
   query getTransactions($input: GetTransactionInput){
     getTransactions(input: $input) {
       ${transaction}
     }
   }
-`
+`;
 export const GET_ORDER_TRANSACTION_BY_ID = gql`
   query getTransactionById($input: GetTransactionByIdInput){
     getTransactionById(input: $input) {
       ${transaction}
     }
   }
-`
+`;
+
+export const PATCH_PLACE_CUSTOMER_ORDER = gql`
+  mutation checkoutOrder($input: CheckOutOrderInput) {
+    checkoutOrder(input: $input) {
+      status
+      message
+    }
+  }
+`;

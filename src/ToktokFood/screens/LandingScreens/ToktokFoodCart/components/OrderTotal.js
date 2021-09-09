@@ -1,9 +1,12 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, ActivityIndicator} from 'react-native';
 
 import styles from '../styles';
 
-const OrderTotal = ({subtotal = 0.00}) => {
+import {COLOR} from 'res/variables';
+
+const OrderTotal = ({subtotal = 0.0, deliveryFee = 0}) => {
+
   return (
     <View style={[styles.sectionContainer, styles.totalContainer]}>
       <View style={styles.header}>
@@ -12,12 +15,12 @@ const OrderTotal = ({subtotal = 0.00}) => {
       </View>
       <View style={styles.header}>
         <Text>Delivery Fee</Text>
-        <Text style={styles.subtotal}>40.00</Text>
+        <Text style={styles.subtotal}>{deliveryFee.toFixed(2)}</Text>
       </View>
       <View style={styles.divider} />
       <View style={styles.header}>
         <Text style={styles.total}>Total</Text>
-        <Text style={styles.totalPrice}>{(40.0 + subtotal).toFixed(2)}</Text>
+        <Text style={styles.totalPrice}>{(deliveryFee + subtotal).toFixed(2)}</Text>
       </View>
     </View>
   );

@@ -28,10 +28,10 @@ export const GET_ACCOUNT = gql`
 `;
 
 export const PATCH_PERSON_HAS_TOKTOKFOOD = gql`
-  mutation patchPersonHasToktokFood($input: patchPersonHasToktokFoodInput){
-    patchPersonHasToktokFood(input: $input){
+  mutation patchPersonHasToktokFood($input: patchPersonHasToktokFoodInput) {
+    patchPersonHasToktokFood(input: $input) {
       status
       message
     }
   }
-`
+`;
