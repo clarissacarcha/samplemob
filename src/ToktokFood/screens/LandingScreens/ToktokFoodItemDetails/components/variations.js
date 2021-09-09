@@ -12,7 +12,7 @@ const Variations = ({item, onVariationChange, onAddOnsChange}) => {
 
   const [selected, setSelected] = useState([]);
 
-  const [d, dd] = useState();
+  const [singleSelection, setSingleSelection] = useState();
 
   const itemChecker = (collection = [], payload = {}, action = '', cb) => {
     if (!_.find(collection, {id: payload.id})) {
@@ -63,8 +63,7 @@ const Variations = ({item, onVariationChange, onAddOnsChange}) => {
   };
 
   useEffect(() => {
-    // itemCalculator();
-    console.log(selected);
+    itemCalculator();
   }, [selected]);
 
   const FoodVariations = (props) => {
@@ -81,9 +80,9 @@ const Variations = ({item, onVariationChange, onAddOnsChange}) => {
                 <RadioButton
                   onValueChange={(c) => {
                     counter({collection: vars, action: 'UPDATE_VARIANTS', payload: v});
-                    dd(v.id);
+                    setSingleSelection(v.id);
                   }}
-                  selected={d === v.id}
+                  selected={singleSelection === v.id}
                 />
                 <Text style={styles.checkBoxText}>{v.optionName}</Text>
               </View>
@@ -109,9 +108,9 @@ const Variations = ({item, onVariationChange, onAddOnsChange}) => {
                 <RadioButton
                   onValueChange={(c) => {
                     counter({collection: addOns, action: 'UPDATE_ADD_ONS', payload: v});
-                    dd(v.id);
+                    setSingleSelection(v.id);
                   }}
-                  selected={d ===v.id}
+                  selected={singleSelection === v.id}
                 />
                 <Text style={styles.checkBoxText}>{v.optionName}</Text>
               </View>
