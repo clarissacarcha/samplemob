@@ -36,7 +36,7 @@ const RenderItem = ({navigation, item}) => {
     <>
       <View style={{flex: 2, backgroundColor: '#fff', margin: 5}}>
                   
-        <View style={{padding: 5}}>
+        <TouchableOpacity onPress={() => navigation.navigate("ToktokMallProductDetails", item)} style={{padding: 5}}>
           {item?.discountRate != "" && 
           <View style={{position:'absolute', zIndex: 1, right: 0, backgroundColor: '#F6841F', borderBottomLeftRadius: 30}}>
             <Text style={{fontSize: 8, paddingHorizontal: 4, paddingLeft: 8, paddingTop: 1, paddingBottom: 3, color: "#fff", fontFamily: FONT.BOLD}}>{item?.discountRate}</Text>
@@ -45,9 +45,9 @@ const RenderItem = ({navigation, item}) => {
             source={getImageSource(item?.images || [])} 
             style={{resizeMode: 'cover', width: '100%', height: 120, borderRadius: 5}} 
           />
-          <TouchableOpacity onPress={() => navigation.navigate("ToktokMallProductDetails", item)}>
-            <Text style={{fontSize: 13, fontWeight: '500', paddingVertical: 5}}  numberOfLines={2} ellipsizeMode="tail">{item?.itemname || ""}</Text>
-          </TouchableOpacity>
+          <View>
+            <Text style={{fontSize: 13, fontWeight: '500', paddingVertical: 5}}>{item?.itemname || ""}</Text>
+          </View>
           {/* <Text style={{fontSize: 13, color: "#F6841F"}}><Price amount={item?.price}/></Text>    
           <View style={{flexDirection: 'row'}}>
             <View style={{flex: 7, flexDirection: 'row'}}>
@@ -68,7 +68,7 @@ const RenderItem = ({navigation, item}) => {
               <Text style={{fontSize: 10}}>{item?.soldCount || 0} sold</Text>
             </View>
           </View>
-        </View>
+        </TouchableOpacity>
       </View>
     </>
   )

@@ -120,6 +120,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
     fetchPolicy: 'network-only',    
     onCompleted: (response) => {
       if(response.getCheckoutData){
+        console.log(response.getCheckoutData.address)
+        console.log(userDefaultAddress)
         // setAddressData(response.getCheckoutData.address);
         setPaymentList(response.getCheckoutData.paymentMethods);
       }
@@ -474,7 +476,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
             raw={paramsData}
             shipping={userDefaultAddress?.shippingSummary}            
           />
-          <Vouchers 
+          {/* <Vouchers 
             items={paramsData}
             navigation={navigation} 
             vouchers={vouchers}
@@ -486,7 +488,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
               if(data) temp.push(data)
               setVoucher(temp)
             }}
-          />
+          /> */}
           <Payment 
             payment={payment} 
             total={grandTotal}

@@ -18,7 +18,7 @@ const Component = ({data, onToggleFollow, reduxActions: {updateMyFollowing}, red
 
   const getShopLogo = (raw) => {
     if(typeof raw == "string") return {uri: raw}
-    else return require("../../../../assets/images/Cloth-Face-Mask.png")
+    else return ""
   }
 
 	return (

@@ -72,6 +72,7 @@ const History = ({data}) => {
   const history = data?.orderHistory
 
   const getColor = (index) => {
+    if(index == 0) return "#F6841F"
     if(!history || history.length == 0) return "#929191"
     if(history[index] != undefined || history[index] != null){
       return "#F6841F"
@@ -81,6 +82,7 @@ const History = ({data}) => {
   }
 
   const getIconColor = (index) => {
+    if(index == 0) return "#F6841F"
     if(!history || history.length == 0) return "#CCCCCC"
     if(history[index] != undefined || history[index] != null){
       return "#F6841F"
@@ -90,6 +92,7 @@ const History = ({data}) => {
   }
 
   const getDateTime = (index) => {
+    if(index == 0) return "--:--:-- 00:00 --"
     if(!history || history.length == 0) return ""
     if(history[index] != undefined || history[index] != null){
       return `${history[index].formatDate}, ${history[index].formatTime}`

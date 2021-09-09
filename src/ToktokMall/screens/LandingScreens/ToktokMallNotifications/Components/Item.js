@@ -17,7 +17,7 @@ export const Item = ({active, data, onSelect}) => {
 
   const getDesc = (str, ref) => {
 
-    if(typeof str != "string") return <Text />
+    if(typeof str != "string") return <Text style={{color: "#9E9E9E", fontSize: 12}}>Order {ref} has been confirmed. Kindly wait for your order to be processed.</Text>
     else{
       if(str.includes("&id")){
         return (
@@ -41,7 +41,7 @@ export const Item = ({active, data, onSelect}) => {
     if(history && history.length > 0){
       return history[history.length - 1].action
     }else{
-      return "Process Order"
+      return "Confirmed Order"
     }
   }
 
@@ -49,7 +49,7 @@ export const Item = ({active, data, onSelect}) => {
     if(history && history.length > 0){
       return history[history.length - 1].formatTime
     }else{
-      return null
+      return "00:00 PM"
     }
   }
 
@@ -73,13 +73,13 @@ export const Item = ({active, data, onSelect}) => {
           />
         </View>
         <View style={{flex: 8, paddingVertical: 20, paddingHorizontal: 0}}>
-          <Text style={{fontSize: 13}}>{getTitle(data?.history)}</Text>
+          <Text style={{fontSize: 13, fontFamily: FONT.BOLD}}>{getTitle(data?.history)}</Text>
           {getDesc(data?.parent?.description, data?.referenceNum)}
           {/* {getContent(data?.history)} */}
         </View>
         <View style={{flex: 2, paddingVertical: 20, paddingHorizontal: 15}}>
           <View style={{alignItems: 'center'}}>
-            <Text style={{color: "#9E9E9E", fontSize: 10}}>{data?.parent?.date}</Text>
+            <Text style={{color: "#9E9E9E", fontSize: 10}}>{data?.parent?.date || "--:--:--"}</Text>
           </View>
           <View style={{alignItems: 'center'}}>
             <Text style={{color: "#9E9E9E", fontSize: 10}}>{getTime(data?.history)}</Text>

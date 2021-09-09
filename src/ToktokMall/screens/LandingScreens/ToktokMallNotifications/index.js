@@ -76,12 +76,12 @@ const Component =  ({
 				
         setOrderHistory(response.getOrdersAndHistory)
         let notifs = []
-        // response.getOrdersAndHistory.map((item, topIndex) => {
-        //   notifs.push({id: item.uuid, read: false})
-        //   item.history.map((item2, subIndex) => {
-        //     notifs.push({id: item2.uuid, read: 0})
-        //   })
-        // })
+        response.getOrdersAndHistory.map((item, topIndex) => {
+          notifs.push({id: item.uuid, read: false})
+          item.history.map((item2, subIndex) => {
+            notifs.push({id: item2.uuid, read: 0})
+          })
+        })
         createNotificationsSession("set", notifs)
 			}
     },
@@ -92,8 +92,6 @@ const Component =  ({
 
   const RenderItem = ({item, index}) => {
     const [dropshown, setDropShown] = useState(false)
-
-    if(item.parent == null) return null
 
     return (
       <>

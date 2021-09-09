@@ -90,8 +90,8 @@ const Splash = ({
     let body = {
       firstname: session?.user.person.firstName,
       lastname: session?.user.person.lastName,
-      userid: session?.user.id,
-      toktokid: session?.user.id, 
+      // userid: session?.user.id,
+      toktokid: parseInt(session?.user.id), 
       contactnumber: session?.user.username,
       email: session?.user.person.emailAddress,
       address: session?.user.person.address || "NA",

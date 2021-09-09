@@ -223,25 +223,28 @@ export const Suggestions = ({}) => {
           }}
           keyExtractor={(item, index) => item + index}
           refreshing={loading}
-          onEndReached = {() => {
-            setIsFetching(true)
-            setOffset(products.length)
-            // console.log({offset})
-            getProducts()
-          }}
+          // onEndReached = {() => {
+          //   setIsFetching(true)
+          //   setOffset(products.length)
+          //   // console.log({offset})
+          //   getProducts()
+          // }}
           // onScroll = {(nativeEvent) => {
           //   console.log(nativeEvent)
           // }}
+          onScroll = {(nativeEvent) => {
+            console.log(nativeEvent)
+          }}
           onEndReachedThreshold={1}
           ListFooterComponent={() => {
             return (
               <>
                 <SwipeReloader state={isFetching} 
-                // onSwipeUp={() => {
-                //   setOffset(products.length)
-                //   console.log({offset})
-                //   getProducts()
-                // }} 
+                  onSwipeUp={() => {
+                    setOffset(products.length)
+                    console.log({offset})
+                    getProducts()
+                  }}
                 />
                 {/* <View style={styles.separator} /> */}
               </>

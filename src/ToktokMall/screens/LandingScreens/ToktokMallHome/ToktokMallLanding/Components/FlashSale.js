@@ -47,7 +47,7 @@ const Item = ({data}) => {
 
   return (
     <>
-      <TouchableOpacity onPress={() => {
+      <TouchableOpacity activeOpacity={0.5} onPress={() => {
           navigation.navigate("ToktokMallProductDetails", data)
         }} style={{flex: 2, paddingBottom: 4, marginHorizontal: 2, alignItems: 'center', backgroundColor: '#fff', borderRadius: 5}}>
         <View style={{height: 4}}></View>
@@ -63,6 +63,29 @@ const Item = ({data}) => {
           </View>
         </View>
       </TouchableOpacity>
+    </>
+  )
+}
+
+const Empty = ({data}) => {
+
+  return (
+    <>
+      <View style={{flex: 2, paddingBottom: 4, marginHorizontal: 2, alignItems: 'center', backgroundColor: "rgba(255,255,255,0.4)", borderRadius: 5}}>
+        <View style={{height: 4}}></View>
+        <View style={{height: 120 }} />
+        {/* <Image source={getImageSource(data?.images)} style={{width: '100%', height: 120, resizeMode: 'stretch', alignSelf: 'center', borderRadius: 5}} /> */}
+        <View style={{height: 2}}></View>
+        <Text style={{fontSize: 14, fontWeight: '600', color: "#F6841F", alignSelf: 'flex-start', paddingHorizontal: 5}}></Text>
+        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <View style={{flex: 2}}>
+            <Text style={{fontSize: 10, textDecorationLine: 'line-through', alignSelf: 'flex-start', paddingHorizontal: 5, color: "#9E9E9E"}}></Text>          
+          </View>
+          <View style={{flex: 1}}>
+            <Text style={{fontSize: 9.5, alignSelf: 'center', color: "#FDBA1C"}}></Text>
+          </View>
+        </View>
+      </View>
     </>
   )
 }
@@ -127,8 +150,8 @@ export const FlashSale = () => {
             
             <View>            
               <View style={{flex: 1, flexDirection: 'row'}}>
-                {loading && <View style={{height: 120}} />}
-                {featured.map((item, i) => <Item key={i} data={item} /> )}
+                {loading && [1,2,3].map((item, i) => <Empty key={i} data={item} />)}
+                {!loading && featured.map((item, i) => <Item key={i} data={item} /> )}
               </View>
             </View>
           

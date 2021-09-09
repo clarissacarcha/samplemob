@@ -103,7 +103,7 @@ export const Item = ({
 				</View>
         <View style={{flex: 9, justifyContent: 'center', flexDirection: 'row'}}>       
           <View style={{flex: 1, justifyContent: 'center'}}>
-							<Text style={{fontSize: 14, fontWeight: '100'}}>{data?.label}</Text>
+							<Text style={{fontSize: 13, fontWeight: '100'}} numberOfLines={2}>{data?.label}</Text>
 						<View style={{flexDirection: 'row'}}>
               <View style={{flex: 0}}>
 								<Text style={{fontSize: 13, color: "#F6841F"}}><Price amount={data?.price} /></Text>

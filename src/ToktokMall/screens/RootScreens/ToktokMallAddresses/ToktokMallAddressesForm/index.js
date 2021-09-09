@@ -124,13 +124,13 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefa
           id: user_address.length + 1,
           ...dataForm
         });
-        if (clicked) {
-          setDefaultUserAddress("set", {
-            id: user_address.length + 1,
-            ...dataForm
-          })
-          updateUserAddress('changeDefault', user_address.length + 1);
-        }
+        // if (clicked) {
+        //   setDefaultUserAddress("set", {
+        //     id: user_address.length + 1,
+        //     ...dataForm
+        //   })
+        //   updateUserAddress('changeDefault', user_address.length + 1);
+        // }
         navigation.goBack();
       })
     }
