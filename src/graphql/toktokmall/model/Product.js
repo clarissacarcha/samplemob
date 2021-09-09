@@ -200,3 +200,12 @@ export const SEARCH_PRODUCT = gql`
 		}
 	}
 `
+
+export const SEARCH_PRODUCT_SUGGESTIONS = gql`
+	query searchProductSuggestions($input: SearchProductInput){
+		searchProductSuggestions(input: $input){
+      itemname
+			tags
+		}
+	}
+`

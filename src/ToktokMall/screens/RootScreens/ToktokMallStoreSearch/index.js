@@ -150,35 +150,35 @@ export const ToktokMallStoreSearch = ({navigation, route}) => {
 
         {suggestions.length > 0 && 
         <>
-        <View style={{paddingHorizontal: 20, paddingVertical: 15}}>
-          <Text style={{fontFamily: FONT.BOLD}}>Suggestions</Text>
-        </View>
-        <FlatList 
-          data={suggestions}
-          renderItem={({item, index}) => {
-            return (
-              <>
-                <TouchableOpacity onPress={() => {
-                  setSuggestions([])
-                  setSearchValue(item.tags)
-                  searchShopProduct({
-                    variables: {
-                      input: {
-                        shopId: route.params.id,
-                        search: item.tags,
-                        offset: searchedProducts.length,
-                        limit: 10
+          <View style={{paddingHorizontal: 20, paddingVertical: 15}}>
+            <Text style={{fontFamily: FONT.BOLD}}>Suggestions</Text>
+          </View>
+          <FlatList 
+            data={suggestions}
+            renderItem={({item, index}) => {
+              return (
+                <>
+                  <TouchableOpacity onPress={() => {
+                    setSuggestions([])
+                    setSearchValue(item.tags)
+                    searchShopProduct({
+                      variables: {
+                        input: {
+                          shopId: route.params.id,
+                          search: item.tags,
+                          offset: searchedProducts.length,
+                          limit: 10
+                        }
                       }
-                    }
-                  })
-                }} style={{paddingHorizontal: 20, paddingVertical: 8}}>
-                  <Text style={{color: "#9E9E9E", fontSize: 13, textTransform: 'capitalize'}}>{item.tags}</Text>
-                </TouchableOpacity>
-                {index < suggestions.length - 1 && <View style={{height: 1, backgroundColor: "#F7F7FA"}} />}
-              </>
-            )
-          }}
-        />
+                    })
+                  }} style={{paddingHorizontal: 20, paddingVertical: 8}}>
+                    <Text style={{color: "#9E9E9E", fontSize: 13, textTransform: 'capitalize'}}>{item.tags}</Text>
+                  </TouchableOpacity>
+                  {index < suggestions.length - 1 && <View style={{height: 1, backgroundColor: "#F7F7FA"}} />}
+                </>
+              )
+            }}
+          />
         </>}
         
         {

@@ -54,7 +54,7 @@ const Item = ({data}) => {
           navigation.navigate("ToktokMallProductDetails", data)
         }} style={{flex: 2, paddingBottom: 4, marginHorizontal: 2, alignItems: 'center', backgroundColor: '#fff', borderRadius: 5}}>
         <View style={{height: 4}}></View>
-        <Image source={getImageSource(data?.images)} style={{width: '100%', height: 120, resizeMode: 'stretch', alignSelf: 'center', borderRadius: 5}} />
+        <Image source={getImageSource(data?.images)} style={{width: '100%', height: 100, resizeMode: 'stretch', alignSelf: 'center', borderRadius: 5}} />
         <View style={{height: 2}}></View>
         <Text style={{fontSize: 14, fontWeight: '600', color: "#F6841F", alignSelf: 'flex-start', paddingHorizontal: 5}}><Price amount={data?.price} /></Text>
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
