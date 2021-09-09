@@ -47,6 +47,7 @@ export const GET_SHOP_SEARCH_SUGGESTIONS = gql`
 			Id
 			sysShop
 			itemname
+			tags
 			price
 			discountRate
 			images {

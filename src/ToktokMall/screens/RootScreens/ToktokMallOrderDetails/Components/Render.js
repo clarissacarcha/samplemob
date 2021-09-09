@@ -72,7 +72,7 @@ const History = ({data}) => {
   const history = data?.orderHistory
 
   const getColor = (index) => {
-    if(index == 0) return "#F6841F"
+    // if(index == 0) return "#F6841F"
     if(!history || history.length == 0) return "#929191"
     if(history[index] != undefined || history[index] != null){
       return "#F6841F"
@@ -82,7 +82,7 @@ const History = ({data}) => {
   }
 
   const getIconColor = (index) => {
-    if(index == 0) return "#F6841F"
+    // if(index == 0) return "#F6841F"
     if(!history || history.length == 0) return "#CCCCCC"
     if(history[index] != undefined || history[index] != null){
       return "#F6841F"
@@ -92,7 +92,7 @@ const History = ({data}) => {
   }
 
   const getDateTime = (index) => {
-    if(index == 0) return "--:--:-- 00:00 --"
+    // if(index == 0) return "--:--:-- 00:00 --"
     if(!history || history.length == 0) return ""
     if(history[index] != undefined || history[index] != null){
       return `${history[index].formatDate}, ${history[index].formatTime}`
@@ -115,7 +115,7 @@ const History = ({data}) => {
             <CustomIcon.MCIcon name="circle" size={11} color={getIconColor(0)} style={{}} />
           </View>
           <View style={{paddingVertical: 12, alignItems: 'flex-start', justifyContent: 'flex-start'}}>
-            <CustomIcon.MCIcon name="circle" size={11} color={getIconColor(1)} style={{}} />
+            <CustomIcon.MCIcon name="circle" size={11} color={getIconColor(0)} style={{}} />
           </View>
           <View style={{paddingVertical: 12, alignItems: 'flex-start', justifyContent: 'flex-start'}}>
             <CustomIcon.MCIcon name="circle" size={11} color={getIconColor(2)} style={{}} />
@@ -136,7 +136,7 @@ const History = ({data}) => {
             <Text style={{color: getColor(0), fontSize: 13}}>Order confirmed</Text>
           </View>
           <View style={{paddingVertical: 8}}>
-            <Text style={{color: getColor(1), fontSize: 13}}>Preparing order</Text>
+            <Text style={{color: getColor(0), fontSize: 13}}>Preparing order</Text>
           </View>
           <View style={{paddingVertical: 8}}>
             <Text style={{color: getColor(2), fontSize: 13}}>Order is ready to be picked up</Text>
@@ -148,10 +148,13 @@ const History = ({data}) => {
             <Text style={{color: getColor(4), fontSize: 13}}>Order is ready to be delivered</Text>
           </View>
           <View style={{paddingVertical: 8}}>
-            <Text style={{color: "#929191", fontSize: 13}}>Order delivered</Text>
+            <Text style={{color: getColor(4), fontSize: 13}}>Order delivered</Text>
           </View>
         </View>
         <View styl={{flex: 1}}>
+          <View style={{paddingVertical: 8}}>
+            <Text style={{color: "#929191", fontSize: 13}}>{getDateTime(0)}</Text>
+          </View>
           <View style={{paddingVertical: 8}}>
             <Text style={{color: "#929191", fontSize: 13}}>{getDateTime(0)}</Text>
           </View>
@@ -166,9 +169,6 @@ const History = ({data}) => {
           </View>
           <View style={{paddingVertical: 8}}>
             <Text style={{color: "#929191", fontSize: 13}}>{getDateTime(4)}</Text>
-          </View>
-          <View style={{paddingVertical: 8}}>
-            <Text style={{color: "#929191", fontSize: 13}}></Text>
           </View>
         </View>
       </View>      
@@ -198,7 +198,7 @@ const Item = ({data}) => {
         <View style={{flex: 8}}>
           <View style={{flex: 1, justifyContent: 'center'}}>
             <View>
-              <Text style={{fontSize: 13, fontWeight: '100'}}>{product?.itemname}</Text>
+              <Text style={{fontSize: 13, fontWeight: '100'}} numberOfLines={2} ellipsizeMode="tail">{product?.itemname}</Text>
             </View>
             <View style={{flexDirection: 'row'}}>
               <View style={{flex: 0}}>

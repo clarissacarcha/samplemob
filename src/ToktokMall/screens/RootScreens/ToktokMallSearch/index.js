@@ -71,21 +71,10 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
   const handleOnSearch = (val) => {    
 		setSearchValue(val)
     setOffset(0)
-    searchProduct({
-      variables: {
-        input: {
-          search: val,
-          origin: route.params?.origin ? route.params.origin : "all",
-          offset: 0,
-          limit: 10
-        }
-      }
-    })
+    setEmptySearch(false)
     if(val == ""){
       setSearchedProducts([])
-    }else if(val != ""){
-    }
-    setEmptySearch(false)
+    }    
 	}
 
   const setHistoryOrder = () => {
@@ -120,14 +109,24 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
     <View style={{flex: 1, backgroundColor: '#fff'}}>
 
       <LandingSubHeader 
-				onSearch={debounce((val) => handleOnSearch(val), 500)}
+				// onSearch={debounce((val) => handleOnSearch(val), 500)}
+        placeholder="Search"
 				initialValue={searchValue}
-				// onSubmit={async () => {
-        //   console.log("Triggered!!!")
-				// 	if(searchValue != ""){
-            
-        //   }
-				// }}
+        onSearch={handleOnSearch}
+				onSubmit={async () => {
+					if(searchValue != ""){
+            searchProduct({
+              variables: {
+                input: {
+                  search: searchValue,
+                  origin: route.params?.origin ? route.params.origin : "all",
+                  offset: 0,
+                  limit: 10
+                }
+              }
+            })
+          }
+				}}
 			/>
 
       <View style={{flex: 1}}>
@@ -139,7 +138,6 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
             <Text style={{fontSize: 14}}>Search History</Text>
           </View>
           <TouchableOpacity onPress={async () => {
-            // await ClearSearchHistory()
             await createSearchHistorySession("clear")
             Toast.show("Cleared search history")
           }} style={{flex: 1}}>
@@ -189,7 +187,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
             searchProduct({
               variables: {
                 input: {
-                  search: searchValue,
+                  search: route.params.origin ? "" : route.params.searchValue,
                   origin: route.params?.origin ? route.params.origin : "all",
                   offset: searchedProducts.length,
                   limit: 10
