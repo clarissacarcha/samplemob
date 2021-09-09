@@ -13,6 +13,8 @@ import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {GET_SHIPPING_FEE, PATCH_PLACE_CUSTOMER_ORDER} from 'toktokfood/graphql/toktokfood';
 import CheckOutOrderHelper from 'toktokfood/helper/CheckOutOrderHelper';
 
+import {useRoute} from '@react-navigation/native';
+
 // Utils
 import {moderateScale, getStatusbarHeight} from 'toktokfood/helper/scale';
 
@@ -24,7 +26,12 @@ const CUSTOM_HEADER = {
 };
 
 const ToktokFoodCart = () => {
-  const {location, totalAmount, customerInfo, shopLocation} = useSelector((state) => state.toktokFood);
+  const route = useRoute();
+
+  const {amount} = route.params;
+  const {location, customerInfo, shopLocation} = useSelector((state) => state.toktokFood);
+
+  useSelector((state) => console.log(JSON.stringify(state.toktokFood)));
 
   const [riderNotes, setRiderNotes] = useState('');
   const [delivery, setDeliveryInfo] = useState(null);
@@ -33,7 +40,7 @@ const ToktokFoodCart = () => {
   const [getDeliverFee, {data}] = useLazyQuery(GET_SHIPPING_FEE, {
     variables: {
       input: {
-        shopid: 55,
+        shopid: 55, // Must get SHOP ID
         date_today: '2021-09-09',
         origin_lat: location.latitude,
         origin_lng: location.longitude,
@@ -89,9 +96,11 @@ const ToktokFoodCart = () => {
         total_amount: 311.0,
         notes: riderNotes,
         order_isfor: 1,
+        order_type: 2,
+        payment_method: 'TOKTOKWALLET',
         order_logs: [
           {
-            sys_shop: 55,
+            sys_shop: 55, // Must get SHOP ID
             branchid: 0,
             hash_delivery_amount: delivery.hash_price,
             delivery_amount: delivery.price,
@@ -99,7 +108,7 @@ const ToktokFoodCart = () => {
             daystoship_to: 0,
             items: [
               {
-                sys_shop: 55,
+                sys_shop: 55, // Must get SHOP ID
                 product_id: '1e33caf73047401db1cb96438abd6ca1',
                 quantity: 1,
                 amount: 150.0,
@@ -111,7 +120,7 @@ const ToktokFoodCart = () => {
                 addons: [{addon_id: 31, addon_name: 'Nata', addon_price: 20}],
               },
               {
-                sys_shop: 55,
+                sys_shop: 55, // Must get SHOP ID
                 product_id: '42697a20e82e40ef8031aa5ebee2d434',
                 quantity: 1,
                 amount: 140.0,
@@ -132,9 +141,13 @@ const ToktokFoodCart = () => {
       };
 
       postCustomerOrder({
-        ...WALLET,
-        ...CUSTOMER,
-        ...ORDER,
+        variables: {
+          input: {
+            ...WALLET,
+            ...CUSTOMER,
+            ...ORDER,
+          },
+        },
       });
     });
   };
@@ -159,7 +172,7 @@ const ToktokFoodCart = () => {
             <ActivityIndicator color={COLOR.ORANGE} />
           </View>
         ) : (
-          <OrderTotal subtotal={totalAmount.price} deliveryFee={delivery.price} />
+          <OrderTotal subtotal={amount} deliveryFee={delivery.price} />
         )}
         <PaymentDetails />
         <RiderNotes

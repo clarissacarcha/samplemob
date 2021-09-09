@@ -3,7 +3,7 @@ import Toast from 'react-native-simple-toast';
 import {useNavigation} from '@react-navigation/native';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
-import { VerifyContext } from '.';
+import {VerifyContext} from './VerifyContextProvider';
 import {useRoute} from '@react-navigation/native';
 
 // Utils
@@ -11,40 +11,42 @@ import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
 import {scale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
 
 import {useDispatch} from 'react-redux';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
 
 export const FoodCart = ({basePrice = 0.0, currentTotal = 0.0}) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const routes = useRoute();
   const restaurantData = routes.params;
-  const { totalPrice, setTotalPrice, optionsAmount, count, setCount, selected, notes } = useContext(VerifyContext);
-  const { cart, totalAmount } = useSelector((state) => state.toktokFood);
+  const {totalPrice, setTotalPrice, optionsAmount, count, setCount, selected, notes} = useContext(VerifyContext);
+  const {cart, totalAmount} = useSelector((state) => state.toktokFood);
 
   const arrangeAddOns = () => {
-    let  data = []
+    let data = [];
     Object.values(selected).map((item) => {
       item.map((val) => {
-        data.push(val)
-      })
-    })
-    return data
-  }
+        data.push(val);
+      });
+    });
+    return data;
+  };
 
   const computeTotalPrice = (items) => {
-    let  amount = 0
+    let amount = 0;
     Object.values(items).map((val) => {
-      amount += val.srp_totalamount
-    })
-    return amount + totalPrice
-  }
-  
+      amount += val.srp_totalamount;
+    });
+    return amount + totalPrice;
+  };
+
   const onRestaurantNavigate = () => {
-    let hasCart = cart.findIndex((val) => { return val.sys_shop == restaurantData.shopId })
-    let items = {}
-    let totalItemPrice = hasCart > -1 ? computeTotalPrice(cart[hasCart].items) : totalPrice
-  
-    if(hasCart > -1){
+    let hasCart = cart.findIndex((val) => {
+      return val.sys_shop == restaurantData.shopId;
+    });
+    let items = {};
+    let totalItemPrice = hasCart > -1 ? computeTotalPrice(cart[hasCart].items) : totalPrice;
+
+    if (hasCart > -1) {
       cart[hasCart].items.push({
         sys_shop: restaurantData.shopId,
         product_id: restaurantData.Id,
@@ -55,48 +57,50 @@ export const FoodCart = ({basePrice = 0.0, currentTotal = 0.0}) => {
         total_amount: totalPrice,
         orderType: 1,
         notes: notes,
-        addons: arrangeAddOns()
-      })
+        addons: arrangeAddOns(),
+      });
     } else {
       items = {
         sys_shop: restaurantData.shopId,
         branchid: 0,
         daystoship: 0,
         daystoship_to: 0,
-        items: [{
-          sys_shop: restaurantData.shopId,
-          product_id: restaurantData.Id,
-          quantity: count.quantity,
-          amount: totalPrice,
-          srp_amount: totalPrice,
-          srp_totalamount: totalPrice,
-          total_amount: totalPrice,
-          orderType: 1,
-          notes: notes,
-          addons: arrangeAddOns()
-        }]
-      }
-      dispatch({type: 'SET_TOKTOKFOOD_CART_ITEMS', payload: [ ...cart, items ]});
+        items: [
+          {
+            sys_shop: restaurantData.shopId,
+            product_id: restaurantData.Id,
+            quantity: count.quantity,
+            amount: totalPrice,
+            srp_amount: totalPrice,
+            srp_totalamount: totalPrice,
+            total_amount: totalPrice,
+            orderType: 1,
+            notes: notes,
+            addons: arrangeAddOns(),
+          },
+        ],
+      };
+      dispatch({type: 'SET_TOKTOKFOOD_CART_ITEMS', payload: [...cart, items]});
     }
-    dispatch({type: 'SET_TOKTOKFOOD_CART_TOTAL', payload: { ...totalAmount, [restaurantData.shopId]: totalItemPrice }});
+    dispatch({type: 'SET_TOKTOKFOOD_CART_TOTAL', payload: {...totalAmount, [restaurantData.shopId]: totalItemPrice}});
     Toast.show('Added to cart', Toast.SHORT);
     navigation.navigate('ToktokFoodRestaurantOverview');
   };
 
   const updateCartTotal = (type = 'ADD') => {
-    let quantity = 1
+    let quantity = 1;
     if (type === 'ADD') {
-      quantity = count.quantity + 1
+      quantity = count.quantity + 1;
     } else {
-      quantity = count.quantity - 1
+      quantity = count.quantity - 1;
     }
-    setCount({ type, quantity })
+    setCount({type, quantity});
   };
 
   const updateCartStates = () => {
-    if(count.type){
-      let amount = basePrice + optionsAmount
-      if(count.type == 'ADD'){
+    if (count.type) {
+      let amount = basePrice + optionsAmount;
+      if (count.type == 'ADD') {
         setTotalPrice(totalPrice + amount);
       } else {
         setTotalPrice(totalPrice - amount);

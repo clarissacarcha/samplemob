@@ -13,7 +13,7 @@ const PAYMENT_TYPE = {
 };
 
 const PaymentDetails = () => {
-  const [paymentMethod, setPaymentMethod] = useState(PAYMENT_TYPE.WALLET);
+  const [paymentMethod, setPaymentMethod] = useState(PAYMENT_TYPE.TOKTOK_WALLET);
 
   return (
     <>
@@ -26,7 +26,7 @@ const PaymentDetails = () => {
             onPress={() => setPaymentMethod(PAYMENT_TYPE.TOKTOK_WALLET)}
             style={[
               styles.tokwaButton,
-              {borderBottomWidth: paymentMethod === PAYMENT_TYPE.TOKTOK_WALLET ? 6 : 1},
+              {borderColor: paymentMethod === PAYMENT_TYPE.TOKTOK_WALLET ? COLORS.YELLOW : COLORS.LIGHT},
             ]}>
             <Image style={styles.walletIcon} source={wallet} />
             <View style={styles.tokwaButtonTextWrapper}>
@@ -35,10 +35,11 @@ const PaymentDetails = () => {
             </View>
           </TouchableOpacity>
           <TouchableOpacity
+            disabled
             onPress={() => setPaymentMethod(PAYMENT_TYPE.CASH)}
             style={[
               styles.cashButton,
-              {borderColor: paymentMethod === PAYMENT_TYPE.CASH ? COLORS.ORANGE : COLORS.LIGHT},
+              {borderColor: paymentMethod === PAYMENT_TYPE.CASH ? COLORS.YELLOW : COLORS.LIGHT},
             ]}>
             <Text style={styles.cashText}>CASH</Text>
           </TouchableOpacity>

@@ -5,10 +5,8 @@ import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 import RadioButton from 'toktokfood/components/RadioButton';
 // Utils
 import {moderateScale, scale, verticalScale} from 'toktokfood/helper/scale';
-import { VerifyContext } from '../components';
-export const Variations = ({basePrice, item, onVariationChange, onAddOnsChange}) => {
-
-  // const [selected, setSelected] = useState({});
+import {VerifyContext} from '../components';
+export const Variations = ({basePrice, item}) => {
   const {
     totalPrice,
     setTotalPrice,
@@ -20,70 +18,78 @@ export const Variations = ({basePrice, item, onVariationChange, onAddOnsChange})
     requiredOptions,
     setRequiredOptions,
     notes,
-    setNotes
+    setNotes,
   } = useContext(VerifyContext);
 
   useEffect(() => {
-    if(optionsAmount){
-      setTotalPrice(count.quantity * (basePrice + optionsAmount))
+    if (optionsAmount) {
+      setTotalPrice(count.quantity * (basePrice + optionsAmount));
     } else {
-      setTotalPrice(prev => {
-        let amount = prev - (prev - basePrice)
-        return count.quantity * amount
-      })
+      setTotalPrice((prev) => {
+        let amount = prev - (prev - basePrice);
+        return count.quantity * amount;
+      });
     }
   }, [optionsAmount]);
 
   useEffect(() => {
-    if(Object.values(selected).length > 0){
-      let amount = 0
+    if (Object.values(selected).length > 0) {
+      let amount = 0;
       Object.values(selected).map((item) => {
         item.map((val) => {
-          amount += val.addon_price
-        })
-      })
-      setOptionsAmount(amount)
+          amount += val.addon_price;
+        });
+      });
+      setOptionsAmount(amount);
     } else {
-      setOptionsAmount(0)
+      setOptionsAmount(0);
     }
   }, [selected]);
 
-  const onValueChange = ({ item, options, index, temp }) => {
+  const onValueChange = ({item, options, index, temp}) => {
     let opt = {
       addon_id: options.id,
       addon_name: options.optionName,
-      addon_price: options.optionPrice
-    }
+      addon_price: options.optionPrice,
+    };
     let hasSelected = selected[item.optionName];
-    if(hasSelected){
-      if(selected[item.optionName][index]){
-        if(selected[item.optionName].length > 1){
-          selected[item.optionName].splice(index, 1)
-          setSelected(prev => { return { ...prev, [item.optionName]: selected[item.optionName] } })
+    if (hasSelected) {
+      if (selected[item.optionName][index]) {
+        if (selected[item.optionName].length > 1) {
+          selected[item.optionName].splice(index, 1);
+          setSelected((prev) => {
+            return {...prev, [item.optionName]: selected[item.optionName]};
+          });
         } else {
-          delete selected[item.optionName]
-          setSelected({ ...selected })
+          delete selected[item.optionName];
+          setSelected({...selected});
         }
       } else {
-        if(selected[item.optionName].length != item.noOfSelection){
-          temp = [ ...selected[item.optionName], opt ]
-          setSelected(prev => { return { ...prev, [item.optionName]: temp } })
+        if (selected[item.optionName].length != item.noOfSelection) {
+          temp = [...selected[item.optionName], opt];
+          setSelected((prev) => {
+            return {...prev, [item.optionName]: temp};
+          });
         } else {
-          selected[item.optionName].splice(selected[item.optionName].length - 1, 1)
-          temp = [ ...selected[item.optionName], opt ]
-          setSelected(prev => { return { ...prev, [item.optionName]: temp } })
+          selected[item.optionName].splice(selected[item.optionName].length - 1, 1);
+          temp = [...selected[item.optionName], opt];
+          setSelected((prev) => {
+            return {...prev, [item.optionName]: temp};
+          });
         }
       }
     } else {
-      temp = [ ...temp, opt ]
-      setSelected(prev => { return { ...prev, [item.optionName]: temp } })
+      temp = [...temp, opt];
+      setSelected((prev) => {
+        return {...prev, [item.optionName]: temp};
+      });
     }
-  }
+  };
 
   const renderVariants = ({item}) => {
-    let temp = []
+    let temp = [];
     // setRequiredOptions(prev => { return { ...prev, [item.optionName]: item.isRequired }})
-    return(
+    return (
       <>
         <View style={styles.variations}>
           <Text style={styles.variationTitle}>
@@ -92,15 +98,17 @@ export const Variations = ({basePrice, item, onVariationChange, onAddOnsChange})
           <Text>{item.isRequired ? 'REQURED' : 'OPTIONAL'}</Text>
           {item.options.map((options, i) => {
             let index = -1;
-            if(selected[item.optionName]){
-              index = selected[item.optionName].findIndex((v) => { return v.addon_id == options.id })
+            if (selected[item.optionName]) {
+              index = selected[item.optionName].findIndex((v) => {
+                return v.addon_id == options.id;
+              });
             }
             return (
               <View style={styles.variationsWrapper}>
                 <View style={styles.checkBoxWrapper}>
                   <RadioButton
                     onValueChange={(c) => {
-                      onValueChange({ item, options, index, temp })
+                      onValueChange({item, options, index, temp});
                     }}
                     selected={index > -1}
                   />
@@ -108,20 +116,17 @@ export const Variations = ({basePrice, item, onVariationChange, onAddOnsChange})
                 </View>
                 <Text style={styles.variationPrice}>+ {options.optionPrice.toFixed(2)}</Text>
               </View>
-            )
+            );
           })}
         </View>
       </>
-    )
-  }
+    );
+  };
 
   return (
     <>
       <View style={styles.container}>
-        <FlatList
-          data={item}
-          renderItem={renderVariants}
-        />
+        <FlatList data={item} renderItem={renderVariants} />
         <View style={styles.variations}>
           <Text style={styles.variationTitle}>Special Instructions (Optional)</Text>
           <TextInput

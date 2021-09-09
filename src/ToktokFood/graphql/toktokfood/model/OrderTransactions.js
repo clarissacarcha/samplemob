@@ -82,7 +82,7 @@ export const GET_ORDER_TRANSACTION_BY_ID = gql`
 `;
 
 export const PATCH_PLACE_CUSTOMER_ORDER = gql`
-  mutation checkoutOrder($input: CheckOutOrderInput) {
+  mutation checkoutOrder($input: CheckOutOrderInput!) {
     checkoutOrder(input: $input) {
       status
       message

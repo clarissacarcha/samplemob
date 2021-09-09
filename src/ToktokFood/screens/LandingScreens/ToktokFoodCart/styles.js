@@ -19,7 +19,7 @@ export default styles = StyleSheet.create({
   deliverWrapper: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: verticalScale(10)
+    paddingVertical: verticalScale(10),
   },
   sectionTitle: {
     fontSize: FONT_SIZE.L,
@@ -148,7 +148,6 @@ export default styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    borderColor: COLOR.YELLOW,
     height: moderateScale(50),
     width: moderateScale(150),
     paddingHorizontal: scale(6),
@@ -173,7 +172,7 @@ export default styles = StyleSheet.create({
     marginRight: 4,
   },
   cashButton: {
-    borderWidth: 2,
+    borderWidth: 1,
     borderRadius: 10,
     flexDirection: 'row',
     alignItems: 'center',
@@ -181,7 +180,6 @@ export default styles = StyleSheet.create({
     width: moderateScale(80),
     height: moderateScale(50),
     backgroundColor: COLOR.WHITE,
-    ...SHADOW
   },
   cashText: {
     color: COLOR.BLACK,

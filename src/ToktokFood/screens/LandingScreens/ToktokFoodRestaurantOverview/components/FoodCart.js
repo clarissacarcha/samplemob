@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 
 // Utils
 import {scale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
-import { useIsFocused } from '@react-navigation/native';
+import {useIsFocused} from '@react-navigation/native';
 
 import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
 import {useSelector} from 'react-redux';
@@ -12,26 +12,28 @@ import {useSelector} from 'react-redux';
 export const FoodCart = ({currentTotal = 0.0, itemSize = 0}) => {
   const navigation = useNavigation();
   const route = useRoute();
-  const { cart, totalAmount } = useSelector((state) => state.toktokFood);
-  const [hasCart, setHasCart]= useState(0)
-  const [amount, setAmount]= useState(0)
+  const {cart, totalAmount} = useSelector((state) => state.toktokFood);
+  const [hasCart, setHasCart] = useState(0);
+  const [amount, setAmount] = useState(0);
   const isFocus = useIsFocused();
- 
+
   const onRestaurantNavigate = () => {
-    navigation.navigate('ToktokFoodCart');
+    navigation.navigate('ToktokFoodCart', {amount});
   };
 
   useEffect(() => {
-    let hasCart = cart.findIndex((val) => { return val.sys_shop == route.params.item.id })
-    let data = hasCart > -1 ? cart[hasCart].items.length : 0
-    let itemAmount = totalAmount[route.params.item.id] ? totalAmount[route.params.item.id] : 0
-    setHasCart(data)
-    setAmount(itemAmount)
-    console.log(totalAmount[route.params.item.id], 'HAHAHA')
+    let hasCart = cart.findIndex((val) => {
+      return val.sys_shop == route.params.item.id;
+    });
+    let data = hasCart > -1 ? cart[hasCart].items.length : 0;
+    let itemAmount = totalAmount[route.params.item.id] ? totalAmount[route.params.item.id] : 0;
+    setHasCart(data);
+    setAmount(itemAmount);
+  }, [isFocus, cart, totalAmount]);
 
-  }, [isFocus, cart, totalAmount])
-
-  if(hasCart == 0){ return null }
+  if (hasCart == 0) {
+    return null;
+  }
   return (
     <>
       <View style={[styles.container, styles.cartBorder]}>
@@ -42,8 +44,7 @@ export const FoodCart = ({currentTotal = 0.0, itemSize = 0}) => {
         <TouchableOpacity
           disabled={hasCart < 0}
           style={[styles.cartButton, {backgroundColor: hasCart < 0 ? COLOR.LIGHT : COLOR.YELLOW}]}
-          onPress={() => onRestaurantNavigate()}
-        >
+          onPress={() => onRestaurantNavigate()}>
           <Text style={styles.buttonText}>View Cart</Text>
         </TouchableOpacity>
       </View>

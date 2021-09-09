@@ -69,7 +69,7 @@ export const FoodList = (props) => {
   }, [searchProduct]);
 
   const onNavigateToFoodItemDetails = (item) => {
-    navigation.navigate('ToktokFoodItemDetails', {...item, ...{ratings}, shopId: id });
+    navigation.navigate('ToktokFoodItemDetails', {...item, shopId: id});
   };
 
   const renderItem = ({item}) => {
