@@ -5,15 +5,13 @@ import {ImageBackground, StyleSheet, Platform} from 'react-native';
 import {headerBg} from 'toktokfood/assets/images';
 import {moderateScale, getStatusbarHeight, scale} from 'toktokfood/helper/scale';
 
-const HeaderImageBackground = ({children}) => {
+export const HeaderImageBackground = ({children}) => {
   return (
     <ImageBackground imageStyle={styles.detailsImage} style={styles.detailsContainer} source={headerBg}>
       {children}
     </ImageBackground>
   );
 };
-
-export default HeaderImageBackground;
 
 const styles = StyleSheet.create({
   detailsImage: {
