@@ -90,6 +90,7 @@ export const VariationBottomSheet = forwardRef(({ item, image, onPressBuyNow, on
   const RenderVariation = ({variants, type}) => {
 
     const [activeIndex, setActiveIndex] = useState(-1)
+    const [toggle, setToggle] = useState(false)
 
     return (
       <>
@@ -100,8 +101,7 @@ export const VariationBottomSheet = forwardRef(({ item, image, onPressBuyNow, on
         </View>
         <View style={{flexDirection: 'row', paddingTop: 16}}>
 
-          <FlatList
-            horizontal={true} 
+          {/* <FlatList
             data={variants}
             renderItem={({item, index}) => {
               return (
@@ -117,7 +117,38 @@ export const VariationBottomSheet = forwardRef(({ item, image, onPressBuyNow, on
                 </>
               )
             }}
-          />
+          /> */}
+
+          <View style={{flexWrap: "wrap"}}>
+            <View style={{flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'flex-start'}}>
+            {variants.map((item, index) => {
+              return (
+                <>
+                  <TouchableOpacity 
+                    key={index} 
+                    onPress={() => {
+                      console.log("index", index)
+                      console.log("active index", activeIndex)
+                      setToggle(!toggle)
+                      setActiveIndex(index)
+                      setVariation(item)
+                    }} 
+                    style={{
+                      marginTop: 4,
+                      paddingVertical: 4, 
+                      paddingHorizontal: 16, 
+                      borderRadius: 5, 
+                      borderWidth: 0.5, 
+                      borderColor: activeIndex == index ? "#F6841F" : "lightgray"
+                    }}>
+                    <Text style={{fontSize: 13, color: "#9E9E9E"}}>{item}</Text>
+                  </TouchableOpacity>
+                  <View style={{width: 5}} />
+                </>
+              )
+            })}
+            </View>
+          </View>
 
         </View>
       </View>
@@ -187,9 +218,18 @@ export const VariationBottomSheet = forwardRef(({ item, image, onPressBuyNow, on
           let variantslist = variant?.variantList || ""
           const variants = variantslist.split(",")
           if(variants.length == 0 || variant.variantType == "") return null
-          return <ScrollView showsVerticalScrollIndicator={false}>
-      <RenderVariation type={variant.variantType} variants={variants} />
-          </ScrollView>
+          // return (
+          //   <ScrollView 
+          //     showsVerticalScrollIndicator={false} 
+          //     contentContainerStyle={{ flexGrow: 1 }}>
+          //     <RenderVariation type={variant.variantType} variants={variants} />
+          //   </ScrollView>
+          // )
+          return (
+            <View >
+              <RenderVariation type={variant.variantType} variants={variants} />
+            </View>
+          )
       })}
 
       <View style={{height: 2, backgroundColor: "#F7F7FA"}} />

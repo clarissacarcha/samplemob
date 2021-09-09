@@ -185,6 +185,16 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
           renderItem={({item, index}) => 
             <TouchableOpacity key={index} onPress={() => {
               setSearchValue(item)
+              searchProduct({
+                variables: {
+                  input: {
+                    search: item,
+                    origin: route.params?.origin ? route.params.origin : "all",
+                    offset: 0,
+                    limit: 10
+                  }
+                }
+              })
             }} style={{paddingHorizontal: 15, paddingVertical: 15}}>
               <Text style={{color: "#9E9E9E", fontSize: 14}}>{item}</Text>
             </TouchableOpacity>
