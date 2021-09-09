@@ -8,14 +8,12 @@ const INITIAL_STATE = {
     },
   },
   shops: [],
-  cart: {
-    items: [],
-  },
   shopLocation: {
     latitude: 0.0,
     longitude: 0.0,
   },
-  totalAmount: {price: 0},
+  cart: [],
+  totalAmount: {},
   orderStatus: {status: 1},
   customerInfo: {},
 };

@@ -1,12 +1,11 @@
-import React, {useState} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {useRoute} from '@react-navigation/native';
 import {Image, View, Text, ScrollView, KeyboardAvoidingView, Platform} from 'react-native';
 
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 
-import FoodCart from './components/FoodCart';
+import { FoodCart, HeaderImageBackground, VerifyContextProvider, VerifyContext } from './components';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
-import HeaderImageBackground from './components/HeaderImageBackground';
 
 import ContentLoader from 'react-native-easy-content-loader';
 
@@ -17,14 +16,19 @@ import {scale} from 'toktokfood/helper/scale';
 
 import styles from './styles';
 
-const ToktokFoodItemDetails = () => {
+const MainComponent = () => {
   const routes = useRoute();
 
   const {variants} = routes.params;
   const {price} = useSelector((state) => state.toktokFood.totalAmount);
   const [newCartTotal, setNewCartTotal] = useState(routes.params.price);
+  const { totalPrice, setTotalPrice } = useContext(VerifyContext);
 
   const [bannerLoaded, setBannerLoaded] = useState(false);
+
+  useEffect(() => {
+    setTotalPrice(routes.params.price)
+  }, [])
 
   const ItemDetails = () => {
     const {id, itemname, price, summary, ratings} = routes.params;
@@ -91,15 +95,24 @@ const ToktokFoodItemDetails = () => {
             <Variations
               currentTotal={price}
               item={variants}
+              basePrice={routes.params.price}
               onVariationChange={(v) => updateAmount(v.value, v.lastValue)}
               onAddOnsChange={(ons) => updateAmount(ons)}
             />
           )}
-          <FoodCart item_price={newCartTotal} currentTotal={0} />
+          <FoodCart basePrice={routes.params.price} currentTotal={0} />
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
   );
+}
+
+const ToktokFoodItemDetails = () => {
+  return (
+    <VerifyContextProvider>
+      <MainComponent />
+    </VerifyContextProvider>
+  )
 };
 
 export default React.memo(ToktokFoodItemDetails);
