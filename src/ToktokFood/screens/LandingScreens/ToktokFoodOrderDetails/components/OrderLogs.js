@@ -16,7 +16,7 @@ import moment from 'moment';
 
 const OrderFee = ({ status = 2, transaction }) => {
 
-  let { dateOrdered, dateFulfilled, dateShipped, dateReadyPickup, deliveryImgurl, deliveryImgurl2 } = transaction
+  let { dateOrdered, dateFulfilled, dateShipped, dateReadyPickup, deliveryImgurl, deliveryImgurl2, orderIsfor } = transaction
  
   const renderLogInfo = (title, date) => (
     <View style={styles.logContainer}>
@@ -42,22 +42,42 @@ const OrderFee = ({ status = 2, transaction }) => {
     </View>
   );
 
+  const displayComponent = () => {
+    if(orderIsfor == 1){
+      return (
+        <>
+          {renderLogInfo('Order Placed', moment(dateOrdered).format('lll'))}
+          {renderDash()}
+          {renderLogInfo('On the way to restaurant', moment(dateReadyPickup).format('lll'))}
+          {renderDash()}
+          {renderLogInfo('Food Picked Up', moment(dateFulfilled).format('lll'))}
+          {renderDash()}
+          {(moment(dateFulfilled).format('lll') != 'Invalid date' && deliveryImgurl != null )
+            && renderDashImage(true, deliveryImgurl)}
+          {renderLogInfo('On the Way to Recipient', moment(dateFulfilled).format('lll'))}
+          {renderDash()}
+          {renderLogInfo('Item Delivered', moment(dateShipped).format('lll'))}
+          {(moment(dateShipped).format('lll') != 'Invalid date' && deliveryImgurl2 != null )
+          && renderDashImage(true, deliveryImgurl2)}
+        </>
+      )
+    } else {
+      return (
+        <>
+          {renderLogInfo('Order Placed', moment(dateOrdered).format('lll'))}
+          {renderDash()}
+          {renderLogInfo('Ready for Pick-Up', moment(dateReadyPickup).format('lll'))}
+          {renderDash()}
+          {renderLogInfo('Food Picked Up', moment(dateFulfilled).format('lll'))}
+        </>
+      )
+    }
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.deliverLogs}>Delivery Logs</Text>
-      {renderLogInfo('Order Placed', moment(dateOrdered).format('lll'))}
-      {renderDash()}
-      {renderLogInfo('On the way to restaurant', moment(dateReadyPickup).format('lll'))}
-      {renderDash()}
-      {renderLogInfo('Food Picked Up', moment(dateFulfilled).format('lll'))}
-      {renderDash()}
-      {(moment(dateFulfilled).format('lll') != 'Invalid date' && deliveryImgurl != null )
-        && renderDashImage(true, deliveryImgurl)}
-      {renderLogInfo('On the Way to Recipient', moment(dateFulfilled).format('lll'))}
-      {renderDash()}
-      {renderLogInfo('Item Delivered', moment(dateShipped).format('lll'))}
-      {(moment(dateShipped).format('lll') != 'Invalid date' && deliveryImgurl2 != null )
-        && renderDashImage(true, deliveryImgurl2)}
+      {displayComponent()}
     </View>
   );
 };

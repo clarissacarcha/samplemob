@@ -3,8 +3,9 @@ import {View, StyleSheet, Alert} from 'react-native';
 
 // Components
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
-import {DriverAnimationView, DriverDetailsView} from './components';
+import {DriverAnimationView, DriverDetailsView, PickUpDetailsView} from './components';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
+import { getDistance, convertDistance } from 'geolib';
 
 // Utils
 import {moderateScale} from 'toktokfood/helper/scale';
@@ -29,6 +30,7 @@ const ToktokFoodDriver = ({ route, navigation }) => {
   const [riderDetails, setRiderDetails] = useState(null);
   const checkOrderResponse5mins = useRef(null);
   const isFocus = useIsFocused();
+  const {location} = useSelector((state) => state.toktokFood);
 
   // data fetching for tsransaction
   const [getTransactionById, {error: transactionError, loading: transactionLoading }] = useLazyQuery(GET_ORDER_TRANSACTION_BY_ID, {
@@ -50,14 +52,14 @@ const ToktokFoodDriver = ({ route, navigation }) => {
    const [getRiderDetails, {error: riderDetailsError, loading: riderDetailsLoading }] = useLazyQuery(GET_RIDER_DETAILS, {
     variables: {
       input: {
-        deliveryId: transaction.tDeliveryId
+        deliveryId: transaction?.tDeliveryId
       }
     },
     client: CLIENT,
     fetchPolicy: 'network-only',
-    onCompleted: ({ getDriver }) => {
-      console.log(getDriver.driver.user.person, 'sadasd')
-      setRiderDetails(getDriver.driver)
+    onCompleted: ({ getDeliveryDriver }) => {
+      console.log(getDeliveryDriver.driver.user.person, 'sadasd')
+      setRiderDetails(getDeliveryDriver.driver)
     }
   });
 
@@ -82,9 +84,9 @@ const ToktokFoodDriver = ({ route, navigation }) => {
   useEffect(() => {
     if(Object.entries(transaction).length > 0){
       if (seconds > 0) {
-        if(transaction.orderStatus != 'p'){
+        if(transaction.orderStatus != 'p' && transaction?.orderIsfor == 1){
           getTransactionById()
-          getRiderDetails()
+          if(transaction.tDeliveryId){ getRiderDetails() }
         } else {
           getTransactionById()
         }
@@ -127,13 +129,22 @@ const ToktokFoodDriver = ({ route, navigation }) => {
             <DriverAnimationView
               orderStatus={transaction.orderStatus}
               riderDetails={riderDetails}
+              orderIsfor={transaction.orderIsfor}
             />
             <View style={styles.driverWrapper}>
-              <DriverDetailsView
-                riderDetails={riderDetails}
-                transaction={transaction}
-                appSalesOrderId={appSalesOrderId}
-              />
+              { transaction.orderIsfor == 1 ? (
+                <DriverDetailsView
+                  riderDetails={riderDetails}
+                  transaction={transaction}
+                  appSalesOrderId={appSalesOrderId}
+                />
+              ) : (
+                <PickUpDetailsView
+                  riderDetails={riderDetails}
+                  transaction={transaction}
+                  appSalesOrderId={appSalesOrderId}
+                />
+              )}
             </View>
           </>
       )}

@@ -11,7 +11,7 @@ import {scale, moderateScale, verticalScale} from 'toktokfood/helper/scale';
 import DialogMessage from 'toktokfood/components/DialogMessage';
 import RatingModal from 'toktokfood/components/RatingModal';
 
-const DriverAnimationView = ({orderStatus, riderDetails}) => {
+const DriverAnimationView = ({orderStatus, riderDetails, orderIsfor}) => {
   const [iShowSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
@@ -50,7 +50,7 @@ const DriverAnimationView = ({orderStatus, riderDetails}) => {
       <View style={styles.imgContainer}>
         <Image
           style={styles.img}
-          source={riderDetails == null ? timer : toktok_rider}
+          source={orderIsfor == 1 ? riderDetails == null ? timer : toktok_rider : pot}
           resizeMode="contain"
         />
       </View>

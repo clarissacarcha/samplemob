@@ -40,7 +40,7 @@ export const TransactionItems = (props) => {
     <TouchableWithoutFeedback key={item.orderId} onPress={() => onTransactionsNavigate(item.id)}>
       <View style={styles.itemContainer}>
         <View style={styles.imgWrapper}>
-          <Image resizeMode="contain" source={shopDetails.logo} style={styles.imgShop} />
+          <Image resizeMode="contain" source={{ uri: shopDetails.logo}} style={styles.imgShop} />
         </View>
         <View style={styles.restaurantInfo}>
           <View style={styles.infoWrapper}>
@@ -93,7 +93,8 @@ const styles = StyleSheet.create({
   dayTitle: {
     paddingHorizontal: 16,
     fontSize: FONT_SIZE.L,
-    fontFamily: FONT.BOLD
+    fontFamily: FONT.BOLD,
+    paddingBottom: 10
   },
   timeImg: {
     width: scale(15),
