@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, TextInput, View} from 'react-native';
+import {StyleSheet, Text, TextInput, View, FlatList} from 'react-native';
 import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 import RadioButton from 'toktokfood/components/RadioButton';
 // Utils
@@ -13,6 +13,7 @@ const Variations = ({item, onVariationChange, onAddOnsChange}) => {
   const [selected, setSelected] = useState([]);
 
   const [singleSelection, setSingleSelection] = useState();
+  const [multipleSelection, setMultipleSelection] = useState([]);
 
   const itemChecker = (collection = [], payload = {}, action = '', cb) => {
     if (!_.find(collection, {id: payload.id})) {
@@ -22,10 +23,13 @@ const Variations = ({item, onVariationChange, onAddOnsChange}) => {
       } else {
         cb(collection);
       }
-    }
+    } 
+    // else {
+    //   _.remove(collection, { id: payload.id })
+    // }
   };
-
-  const counter = ({collection = [], action = '', payload = {}}) => {
+  // console.log(addOns)
+  const counter = ({collection = [], action = '', payload = {}, maxSelection = 1}) => {
     if (action === 'UPDATE_VARIANTS') {
       itemChecker(collection, payload, 'variants', (v) => setVariants(v));
     }
@@ -55,16 +59,17 @@ const Variations = ({item, onVariationChange, onAddOnsChange}) => {
         total: _.sumBy(objs, 'optionPrice'),
       }))
       .value();
-    console.log(total);
+    // console.log(addOns, 'asdsadasdas');
     const sum = _.reduce(total, (acc, n) => {
       return acc.total + n.total;
     });
+    onAddOnsChange(sum)
     console.log(sum);
   };
 
   useEffect(() => {
     itemCalculator();
-  }, [selected]);
+  }, [singleSelection, multipleSelection]);
 
   const FoodVariations = (props) => {
     const {id, name, maxSelection, variants} = props;
@@ -79,8 +84,12 @@ const Variations = ({item, onVariationChange, onAddOnsChange}) => {
               <View style={styles.checkBoxWrapper}>
                 <RadioButton
                   onValueChange={(c) => {
-                    counter({collection: vars, action: 'UPDATE_VARIANTS', payload: v});
-                    setSingleSelection(v.id);
+                    counter({collection: vars, action: 'UPDATE_VARIANTS', payload: v, maxSelection});
+                    if(singleSelection === v.id){
+                      setSingleSelection('')
+                    } else {
+                      setSingleSelection(v.id);
+                    }
                   }}
                   selected={singleSelection === v.id}
                 />
@@ -102,25 +111,62 @@ const Variations = ({item, onVariationChange, onAddOnsChange}) => {
           <Text style={styles.variationTitle}>
             Choose your {name.toLowerCase()} (Pick {maxSelection})
           </Text>
-          {ons.map((v) => (
-            <View style={styles.variationsWrapper}>
-              <View style={styles.checkBoxWrapper}>
-                <RadioButton
-                  onValueChange={(c) => {
-                    counter({collection: addOns, action: 'UPDATE_ADD_ONS', payload: v});
-                    setSingleSelection(v.id);
-                  }}
-                  selected={singleSelection === v.id}
-                />
-                <Text style={styles.checkBoxText}>{v.optionName}</Text>
+          {ons.map((v, index) => {
+            let i = multipleSelection.findIndex((item) => { return item == v.id })
+            return (
+              <View style={styles.variationsWrapper}>
+                <View style={styles.checkBoxWrapper}>
+                  <RadioButton
+                    onValueChange={(c) => {
+                      counter({collection: addOns, action: 'UPDATE_ADD_ONS', payload: v, maxSelection});
+                      if(multipleSelection[i]){
+                        multipleSelection.splice(i, 1)
+                        setMultipleSelection([...multipleSelection])
+                      } else {
+                        if(multipleSelection.length != maxSelection){
+                          setMultipleSelection(prev => prev.concat(v.id))
+                        }
+                      }
+                    }}
+                    selected={multipleSelection[i]}
+                  />
+                  <Text style={styles.checkBoxText}>{v.optionName}</Text>
+                </View>
+                <Text style={styles.variationPrice}>+ {v.optionPrice.toFixed(2)}</Text>
               </View>
-              <Text style={styles.variationPrice}>+ {v.optionPrice.toFixed(2)}</Text>
-            </View>
-          ))}
+            )
+          })}
         </View>
       </>
     );
   };
+
+  // const renderVariants = ({item}) => {
+  //   return(
+  //     <>
+  //       <View style={styles.variations}>
+  //         <Text style={styles.variationTitle}>
+  //           Choose your {item.optionName.toLowerCase()} (Pick {item.noOfSelection})
+  //         </Text>
+  //         {item.options.map((v) => (
+  //           <View style={styles.variationsWrapper}>
+  //             <View style={styles.checkBoxWrapper}>
+  //               <RadioButton
+  //                 onValueChange={(c) => {
+  //                   counter({collection: addOns, action: 'UPDATE_ADD_ONS', payload: v});
+  //                   setSingleSelection(v.id);
+  //                 }}
+  //                 selected={singleSelection === v.id}
+  //               />
+  //               <Text style={styles.checkBoxText}>{v.optionName}</Text>
+  //             </View>
+  //             <Text style={styles.variationPrice}>+ {v.optionPrice.toFixed(2)}</Text>
+  //           </View>
+  //         ))}
+  //       </View>
+  //     </>
+  //   )
+  // }
 
   return (
     <>
@@ -143,6 +189,10 @@ const Variations = ({item, onVariationChange, onAddOnsChange}) => {
             );
           }
         })}
+        {/* <FlatList
+          data={item}
+          renderItem={renderVariants}
+        /> */}
         <View style={styles.variations}>
           <Text style={styles.variationTitle}>Special Instructions (Optional)</Text>
           <TextInput

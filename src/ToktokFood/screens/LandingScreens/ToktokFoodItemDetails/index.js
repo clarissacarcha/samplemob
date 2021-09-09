@@ -48,7 +48,10 @@ const ToktokFoodItemDetails = () => {
   };
 
   const updateAmount = (amount, lastAmount) => {
-    // setNewCartTotal(newCartTotal - lastAmount + amount);
+    console.log(amount, 'asdjaskdjlkasjd')
+    if(amount){
+      setNewCartTotal(prevAmount => prevAmount + amount.total);
+    }
     // console.log(newCartTotal - lastAmount + amount);
   };
 
