@@ -4,11 +4,14 @@ import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 // Utils
 import {getStatusbarHeight, verticalScale} from 'toktokfood/helper/scale';
 
-export default styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLOR.WHITE,
     paddingTop: Platform.OS === 'android' ? getStatusbarHeight : 0,
+  },
+  emptyContainer: {
+    alignItems: 'center',
   },
   listContainer: {
     flex: 1,
@@ -21,7 +24,7 @@ export default styles = StyleSheet.create({
     borderBottomWidth: 3,
     paddingHorizontal: 20,
     borderBottomColor: COLOR.LIGHT,
-    height: Platform.OS === 'ios' ? verticalScale(70) : verticalScale(63),
+    height: verticalScale(60),
   },
   headerLabel: {
     color: COLOR.BLACK,
@@ -56,12 +59,13 @@ export default styles = StyleSheet.create({
     fontFamily: FONT.REGULAR,
   },
   notificationIcon: {
-    width: 32,
-    height: 32,
-    display: 'flex',
+    width: 30,
+    height: 30,
     borderRadius: 50,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: COLOR.ORANGE,
   },
 });
+
+export default styles;
