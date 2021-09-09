@@ -22,14 +22,12 @@ export const FoodCart = ({currentTotal = 0.0, itemSize = 0}) => {
   };
 
   useEffect(() => {
-    let hasCart = cart.findIndex((val) => {
-      return val.sys_shop == route.params.item.id;
-    });
-    let data = hasCart > -1 ? cart[hasCart].items.length : 0;
-    let itemAmount = totalAmount[route.params.item.id] ? totalAmount[route.params.item.id] : 0;
-    setHasCart(data);
-    setAmount(itemAmount);
-  }, [isFocus, cart, totalAmount]);
+    let hasCart = cart.findIndex((val) => { return val.sys_shop == route.params.item.id })
+    let data = hasCart > -1 ? cart[hasCart].items.length : 0
+    let itemAmount = totalAmount[route.params.item.id] ? totalAmount[route.params.item.id] : 0
+    setHasCart(data)
+    setAmount(itemAmount)
+  }, [isFocus])
 
   if (hasCart == 0) {
     return null;
