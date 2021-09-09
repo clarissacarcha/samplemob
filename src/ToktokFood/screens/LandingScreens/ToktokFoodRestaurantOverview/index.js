@@ -8,15 +8,11 @@ import {FoodCart, VerifyContextProvider} from './components';
 
 const ToktokFoodRestaurantOverview = ({route}) => {
   const {price} = useSelector((state) => state.toktokFood.totalAmount);
-  const {cart} = useSelector((state) => state.toktokFood);
-  let hasCart = cart.findIndex((val) => {
-    return val.sys_shop == route.params.item.id;
-  });
   return (
     <VerifyContextProvider>
       <View style={styles.container}>
         <StickyView />
-        <FoodCart itemSize={hasCart > -1 ? cart[hasCart].items.length : 0} currentTotal={price} />
+        <FoodCart currentTotal={price} />
       </View>
     </VerifyContextProvider>
   );
