@@ -10,40 +10,42 @@ const Variations = ({item, onVariationChange, onAddOnsChange}) => {
   const [vars, setVariants] = useState([]);
   const [addOns, setAddOns] = useState([]);
 
-  const itemChecker = (collection = [], payload = {}, action = '') => {
+  const [selected, setSelected] = useState([]);
+
+  const [d, dd] = useState();
+
+  const itemChecker = (collection = [], payload = {}, action = '', cb) => {
     if (!_.find(collection, {id: payload.id})) {
       collection.push(payload);
       if (action === 'variants') {
-        setVariants(collection);
+        cb(collection);
       } else {
-        setAddOns(collection);
+        cb(collection);
       }
     }
   };
 
   const counter = ({collection = [], action = '', payload = {}}) => {
     if (action === 'UPDATE_VARIANTS') {
-      itemChecker(collection, payload, 'variants');
+      itemChecker(collection, payload, 'variants', (v) => setVariants(v));
     }
     if (action === 'UPDATE_ADD_ONS') {
-      itemChecker(collection, payload, 'addOns');
+      itemChecker(collection, payload, 'addOns', (v) => setAddOns(v));
     }
+  };
+
+  const updatedSelectedOption = (id) => {
+    const curentSelected = selected;
+    curentSelected.push(id);
+    setSelected(curentSelected);
   };
 
   const isVariantChecked = (id) => {
-    if (vars.length > 0) {
-      return _.find(vars, {id: id});
-    } else {
-      return false;
-    }
+    return _.find(vars, {id: id});
   };
 
   const isAddOnCheked = (id) => {
-    if (addOns.length > 0) {
-      return _.find(addOns, {id: id});
-    } else {
-      return false;
-    }
+    return _.find(addOns, {id: id});
   };
 
   const itemCalculator = () => {
@@ -53,14 +55,17 @@ const Variations = ({item, onVariationChange, onAddOnsChange}) => {
         total: _.sumBy(objs, 'optionPrice'),
       }))
       .value();
+    console.log(total);
     const sum = _.reduce(total, (acc, n) => {
       return acc.total + n.total;
     });
+    console.log(sum);
   };
 
   useEffect(() => {
-    itemCalculator();
-  }, [addOns]);
+    // itemCalculator();
+    console.log(selected);
+  }, [selected]);
 
   const FoodVariations = (props) => {
     const {id, name, maxSelection, variants} = props;
@@ -76,8 +81,9 @@ const Variations = ({item, onVariationChange, onAddOnsChange}) => {
                 <RadioButton
                   onValueChange={(c) => {
                     counter({collection: vars, action: 'UPDATE_VARIANTS', payload: v});
+                    dd(v.id);
                   }}
-                  selected={isVariantChecked(v.id)}
+                  selected={d === v.id}
                 />
                 <Text style={styles.checkBoxText}>{v.optionName}</Text>
               </View>
@@ -103,8 +109,9 @@ const Variations = ({item, onVariationChange, onAddOnsChange}) => {
                 <RadioButton
                   onValueChange={(c) => {
                     counter({collection: addOns, action: 'UPDATE_ADD_ONS', payload: v});
+                    dd(v.id);
                   }}
-                  selected={isAddOnCheked(v.id)}
+                  selected={d ===v.id}
                 />
                 <Text style={styles.checkBoxText}>{v.optionName}</Text>
               </View>
