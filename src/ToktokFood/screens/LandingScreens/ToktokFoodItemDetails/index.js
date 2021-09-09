@@ -31,7 +31,7 @@ const MainComponent = () => {
   }, [])
 
   const ItemDetails = () => {
-    const {id, itemname, price, summary, ratings} = routes.params;
+    const {id, itemname, price, summary} = routes.params;
     return (
       <View key={id} style={styles.foodContainer}>
         <View style={styles.foodDetails}>
