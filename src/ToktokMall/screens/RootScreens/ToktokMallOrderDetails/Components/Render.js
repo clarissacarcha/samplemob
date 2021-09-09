@@ -83,6 +83,7 @@ const History = ({data}) => {
 
   const getIconColor = (index) => {
     // if(index == 0) return "#F6841F"
+    if(index == -1) return "white"
     if(!history || history.length == 0) return "#CCCCCC"
     if(history[index] != undefined || history[index] != null){
       return "#F6841F"
@@ -101,6 +102,78 @@ const History = ({data}) => {
     }
   }
 
+  const dottedLine = (colorIndex, start) => {
+
+    const lineWidth = "12%"
+
+    if(start == "fill"){
+      return (
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 0}}>
+          <View style={{flex: 1, backgroundColor: getIconColor(colorIndex), width: lineWidth}}></View>
+          <View style={{flex: 1, backgroundColor: getIconColor(-1), width: lineWidth}}></View>
+          <View style={{flex: 1, backgroundColor: getIconColor(colorIndex), width: lineWidth}}></View>
+          <View style={{flex: 1, backgroundColor: getIconColor(-1), width: lineWidth}}></View>
+          <View style={{flex: 1, backgroundColor: getIconColor(colorIndex), width: lineWidth}}></View>
+          <CustomIcon.MCIcon name="circle" size={9} color={getIconColor(colorIndex)} style={{position: 'absolute'}} />
+          <View style={{flex: 1, backgroundColor: getIconColor(colorIndex), width: lineWidth}}></View>
+          <View style={{flex: 1, backgroundColor: getIconColor(-1), width: lineWidth}}></View>
+          <View style={{flex: 1, backgroundColor: getIconColor(colorIndex), width: lineWidth}}></View>
+          <View style={{flex: 1, backgroundColor: getIconColor(-1), width: lineWidth}}></View>
+          <View style={{flex: 1, backgroundColor: getIconColor(colorIndex), width: lineWidth}}></View>
+        </View>
+      )
+    }else if(start == "blank"){
+      return (
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 0}}>
+          <View style={{flex: 1, backgroundColor: getIconColor(-1), width: lineWidth}}></View>
+          <View style={{flex: 1, backgroundColor: getIconColor(colorIndex), width: lineWidth}}></View>
+          <View style={{flex: 1, backgroundColor: getIconColor(-1), width: lineWidth}}></View>
+          <View style={{flex: 1, backgroundColor: getIconColor(colorIndex), width: lineWidth}}></View>
+          <View style={{flex: 1, backgroundColor: getIconColor(-1), width: lineWidth}}></View>
+          <CustomIcon.MCIcon name="circle" size={9} color={getIconColor(colorIndex)} style={{position: 'absolute', zIndex: 1}} />
+          <View style={{flex: 1, backgroundColor: getIconColor(-1), width: lineWidth}}></View>
+          <View style={{flex: 1, backgroundColor: getIconColor(colorIndex), width: lineWidth}}></View>
+          <View style={{flex: 1, backgroundColor: getIconColor(-1), width: lineWidth}}></View>
+          <View style={{flex: 1, backgroundColor: getIconColor(colorIndex), width: lineWidth}}></View>
+          <View style={{flex: 1, backgroundColor: getIconColor(-1), width: lineWidth}}></View>
+        </View>
+      )
+    }else if(start == "top"){
+      return (
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 0}}>
+            <View style={{flex: 1}} />
+            <View style={{flex: 1}} />
+            <View style={{flex: 1}} />
+            <View style={{flex: 1}} />
+            <View style={{flex: 1}} />
+            <CustomIcon.MCIcon name="circle" size={9} color={getIconColor(colorIndex)} style={{position: 'absolute', zIndex: 1}} />
+            <View style={{flex: 1, backgroundColor: getIconColor(colorIndex), width: lineWidth}}></View>
+            <View style={{flex: 1, backgroundColor: getIconColor(-1), width: lineWidth}}></View>
+            <View style={{flex: 1, backgroundColor: getIconColor(colorIndex), width: lineWidth}}></View>
+            <View style={{flex: 1, backgroundColor: getIconColor(-1), width: lineWidth}}></View>
+            <View style={{flex: 1, backgroundColor: getIconColor(colorIndex), width: lineWidth}}></View>
+          </View>
+      )
+    }else if(start == "bottom"){
+      return (
+          <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 0}}>
+            <View style={{flex: 1, backgroundColor: getIconColor(-1), width: lineWidth}}></View>
+            <View style={{flex: 1, backgroundColor: getIconColor(colorIndex), width: lineWidth}}></View>
+            <View style={{flex: 1, backgroundColor: getIconColor(-1), width: lineWidth}}></View>
+            <View style={{flex: 1, backgroundColor: getIconColor(colorIndex), width: lineWidth}}></View>
+            <View style={{flex: 1, backgroundColor: getIconColor(-1), width: lineWidth}}></View>
+            <CustomIcon.MCIcon name="circle" size={9} color={getIconColor(colorIndex)} style={{position: 'absolute'}} />
+            <View style={{flex: 1}} />
+            <View style={{flex: 1}} />
+            <View style={{flex: 1}} />
+            <View style={{flex: 1}} />
+            <View style={{flex: 1}} />
+          </View>
+      )
+    }
+    
+  }
+
   return (
     <>
       <View style={{flexDirection: 'row', paddingVertical: 20, paddingHorizontal: 15}}>
@@ -110,8 +183,17 @@ const History = ({data}) => {
       </View>
       <View style={{ height: 2, backgroundColor: '#F7F7FA'}} />
       <View style={{flexDirection: 'row', paddingVertical: 12, paddingHorizontal: 15}}>
+
         <View style={{flex: 0.6}}>
-          <View style={{paddingVertical: 12, alignItems: 'flex-start', justifyContent: 'flex-start'}}>
+
+          {dottedLine(0, "top")}
+          {dottedLine(0, "blank")}
+          {dottedLine(2, "fill")}
+          {dottedLine(3, "blank")}
+          {dottedLine(4, "fill")}
+          {dottedLine(4, "bottom")}
+
+          {/* <View style={{paddingVertical: 12, alignItems: 'flex-start', justifyContent: 'flex-start'}}>
             <CustomIcon.MCIcon name="circle" size={11} color={getIconColor(0)} style={{}} />
           </View>
           <View style={{paddingVertical: 12, alignItems: 'flex-start', justifyContent: 'flex-start'}}>
@@ -128,7 +210,8 @@ const History = ({data}) => {
           </View>
           <View style={{paddingVertical: 12, alignItems: 'flex-start', justifyContent: 'flex-start'}}>
             <CustomIcon.MCIcon name="circle" size={11} color={getIconColor(5)} style={{}} />
-          </View>          
+          </View>           */}
+
         </View>
         <View style={{flex: 0.2}} />
         <View style={{flex: 8}}>
