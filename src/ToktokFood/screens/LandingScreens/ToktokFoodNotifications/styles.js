@@ -2,7 +2,7 @@ import {StyleSheet, Platform} from 'react-native';
 import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 
 // Utils
-import {getStatusbarHeight, verticalScale} from 'toktokfood/helper/scale';
+import {getStatusbarHeight, moderateScale, verticalScale} from 'toktokfood/helper/scale';
 
 const styles = StyleSheet.create({
   container: {
@@ -12,6 +12,17 @@ const styles = StyleSheet.create({
   },
   emptyContainer: {
     alignItems: 'center',
+    flex: 1,
+    paddingTop: verticalScale(80),
+  },
+  emptyImg: {
+    height: moderateScale(175),
+    width: moderateScale(250),
+  },
+  emptyText: {
+    color: '#9E9E9E',
+    fontSize: FONT_SIZE.XL,
+    marginTop: moderateScale(20),
   },
   listContainer: {
     flex: 1,

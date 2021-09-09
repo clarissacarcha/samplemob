@@ -72,7 +72,8 @@ const ToktokFoodNotifications = () => {
 
   const renderEmpty = () => (
     <View style={styles.emptyContainer}>
-      <Image resizeMode="contain" source={empty_notification} />
+      <Image style={styles.emptyImg} resizeMode="contain" source={empty_notification} />
+      <Text style={styles.emptyText}>No notifications</Text>
     </View>
   );
 

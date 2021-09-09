@@ -34,7 +34,7 @@ export const star_gray = require('./images/star-gray.png');
 export const star_half = require('./images/star-half.png');
 
 // Notifications
-export const empty_notification = require('./images/notifications/empty-notification.png');
+export const empty_notification = require('./images/empty_icons/empty-notification.png');
 
 // Bottom Nav Icons
 export const home = require('./images/bottom_nav_icons/menu-outline.png');
