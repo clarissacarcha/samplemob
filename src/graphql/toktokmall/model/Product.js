@@ -61,6 +61,7 @@ export const GET_FEATURED_PRODUCTS = gql`
 				soldCount
 				noOfStocks
 				discountRate
+				otherinfo
 				compareAtPrice
 				images {
 					arrangement

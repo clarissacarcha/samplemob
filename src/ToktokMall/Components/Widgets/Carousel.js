@@ -5,7 +5,7 @@ import CustomIcon from '../Icons';
 import { useLazyQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../graphql';
 import { GET_ADS } from '../../../graphql/toktokmall/model';
-import ContentLoader from 'react-native-easy-content-loader'
+import ContentLoader from 'react-native-easy-content-loader';
 const SampleImage = require("../../assets/images/ads.png")
 
 const { width: screenWidth } = Dimensions.get('window')
