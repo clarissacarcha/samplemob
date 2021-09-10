@@ -48,33 +48,33 @@ export const FoodCart = ({basePrice = 0.0, currentTotal = 0.0}) => {
 
     if (hasCart > -1) {
       cart[hasCart].items.push({
-        sys_shop: restaurantData.shopId,
+        sys_shop: parseInt(restaurantData.shopId),
         product_id: restaurantData.Id,
         quantity: count.quantity,
         amount: totalPrice,
         srp_amount: totalPrice,
         srp_totalamount: totalPrice,
         total_amount: totalPrice,
-        orderType: 1,
+        order_type: 1,
         notes: notes,
         addons: arrangeAddOns(),
       });
     } else {
       items = {
-        sys_shop: restaurantData.shopId,
+        sys_shop: parseInt(restaurantData.shopId),
         branchid: 0,
         daystoship: 0,
         daystoship_to: 0,
         items: [
           {
-            sys_shop: restaurantData.shopId,
+            sys_shop: parseInt(restaurantData.shopId),
             product_id: restaurantData.Id,
             quantity: count.quantity,
             amount: totalPrice,
             srp_amount: totalPrice,
             srp_totalamount: totalPrice,
             total_amount: totalPrice,
-            orderType: 1,
+            order_type: 1,
             notes: notes,
             addons: arrangeAddOns(),
           },
