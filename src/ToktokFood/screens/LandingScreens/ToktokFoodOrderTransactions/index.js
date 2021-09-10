@@ -18,6 +18,7 @@ import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import { TransactionTabs, TransactionList } from './components';
+import {useIsFocused} from '@react-navigation/native';
 
 // Functions
 import { getOrderStatus, getSubMessageStatus, sameDay, dayTitle } from './functions';
@@ -38,7 +39,7 @@ const ToktokFoodOrderTransactions = () => {
   const [focusTab, setFocusTab] = useState(1);
   const [refreshing, setRefreshing] = useState(false);
   const [transactionList, setTransactionList] = useState([]);
-
+  const isFocus = useIsFocused();
   const { customerInfo } = useSelector((state) => state.toktokFood);
 
   // data fetching for product under specific category
@@ -50,12 +51,12 @@ const ToktokFoodOrderTransactions = () => {
       setTransactionList(sorted)
     }
   });
-
+ 
   useEffect(() => {
-    if(customerInfo){
+    if(customerInfo && isFocus){
       processTransactions()
     }
-  }, [customerInfo, focusTab])
+  }, [customerInfo, focusTab, isFocus])
 
   const processTransactions = () => {
     let orderStatus = getOrderStatus(focusTab)

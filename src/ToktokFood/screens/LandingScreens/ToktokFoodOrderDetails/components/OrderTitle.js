@@ -7,17 +7,19 @@ import {COLORS} from 'res/constants';
 
 // Utils
 import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
-import {orderStatusMessageDelivery} from 'toktokfood/helper/orderStatusMessage';
+import {orderStatusMessagePickUp, orderStatusMessageDelivery} from 'toktokfood/helper/orderStatusMessage';
 import moment from 'moment';
 import {useSelector} from 'react-redux';
 import { getDistance, convertDistance } from 'geolib';
 
 const OrderTitle = ({ transaction, riderDetails }) => {
-  const { shopDetails, orderStatus, isconfirmed, address, dateReadyPickup, dateOrderProcessed } = transaction;
-  const status = orderStatusMessageDelivery(orderStatus, riderDetails, `${shopDetails.shopname} (${shopDetails.address})`);
+  const { shopDetails, orderStatus, isconfirmed, address, dateReadyPickup, dateOrderProcessed, orderIsfor } = transaction;
   const {location} = useSelector((state) => state.toktokFood);
   const date = riderDetails != null && orderStatus == 'po' ? dateOrderProcessed : dateReadyPickup
-
+  const status = orderIsfor == 1 ? orderStatusMessageDelivery(orderStatus, riderDetails, `${shopDetails.shopname} (${shopDetails.address})`) 
+    : orderStatusMessagePickUp(orderStatus, riderDetails, `${shopDetails.shopname} (${shopDetails.address})`);
+  
+  console.log(status, 'adasd')
   const calculateDistance = (startTime, riderLocation) => { 
    
     let distance = getDistance(
@@ -31,20 +33,41 @@ const OrderTitle = ({ transaction, riderDetails }) => {
  
     return moment(startTime).add(final, 'hours').format('hh:mm A')
   }
-  
-  let startTime = moment(date).format('LT')
-  let endTime = calculateDistance(date)
+
+  const renderEstimatedPickUpTime = () => {
+    let startTime = moment(dateOrderProcessed).format('LT')
+    let endTime = moment(dateOrderProcessed).add(20, 'minutes').format('hh:mm A')
+    return (
+      <View style={styles.timeContainer}>
+        <MaterialIcon name="schedule" size={16} color={COLORS.YELLOWTEXT} />
+        <Text style={styles.time}>{`Estimated Pickup Time: ${startTime} - ${endTime}`}</Text>
+      </View>
+    )
+  }
+
+  const renderEstimatedDeliveryTime = () => {
+    let startTime = moment(date).format('LT')
+    let endTime = calculateDistance(date)
+    return (
+      <View style={styles.timeContainer}>
+        <MaterialIcon name="schedule" size={16} color={COLORS.YELLOWTEXT} />
+        <Text style={styles.time}>{`Estimated Delivery Time: ${startTime} - ${endTime}`}</Text>
+      </View>
+    )
+  }
 
   return (
     <View style={styles.detailsContainer}>
       <Text style={styles.title}>{status.title}</Text>
       { !!status.message && <Text style={styles.status}>{status.message}</Text> }
-      {(riderDetails != null && transaction.orderIsfor == 1) && (
+      { transaction.orderIsfor == 2 && (orderStatus != 'p' && orderStatus!== 'c' && orderStatus !== 's') && renderEstimatedPickUpTime()}
+      {(riderDetails != null && transaction.orderIsfor == 1) && renderEstimatedDeliveryTime() }
+      {/* {(riderDetails != null && transaction.orderIsfor == 1) && (
         <View style={styles.timeContainer}>
           <MaterialIcon name="schedule" size={16} color={COLORS.YELLOWTEXT} />
           <Text style={styles.time}>{`Estimated Delivery Time: ${startTime} - ${endTime}`}</Text>
         </View>
-      )}
+      )} */}
     </View>
   );
 };

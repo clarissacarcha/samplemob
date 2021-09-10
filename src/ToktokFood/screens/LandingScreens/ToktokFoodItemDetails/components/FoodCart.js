@@ -2,7 +2,7 @@ import React, {useEffect, useState, useContext} from 'react';
 import Toast from 'react-native-simple-toast';
 import {useNavigation} from '@react-navigation/native';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
-import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, Text, TouchableOpacity, Alert} from 'react-native';
 import {VerifyContext} from './VerifyContextProvider';
 import {useRoute} from '@react-navigation/native';
 
@@ -81,35 +81,63 @@ export const FoodCart = ({basePrice = 0.0}) => {
       } else {
         cart[hasCart].items.push(item);
       }
+      dispatchTotalAmount(totalItemPrice)
+      Toast.show('Added to cart', Toast.SHORT);
+      navigation.navigate('ToktokFoodRestaurantOverview');
     } else {
-      items = {
-        sys_shop: parseInt(restaurantData.shopId),
-        branchid: 0,
-        daystoship: 0,
-        daystoship_to: 0,
-        items: [
+      if(cart.length > 0){
+        Alert.alert(
+          'You have existing items on your cart. If you add this to cart, the current cart will be empty. Would you like to proceed?',
+          '',
+        [
           {
-            sys_shop: parseInt(restaurantData.shopId),
-            product_id: restaurantData.Id,
-            productImage: routes.params.filename,
-            productName: routes.params.itemname,
-            quantity: count.quantity,
-            amount: totalPrice,
-            srp_amount: totalPrice,
-            srp_totalamount: totalPrice,
-            total_amount: totalPrice,
-            order_type: 1,
-            notes: notes,
-            addons: selected
+            text: 'No', 
+            onPress: () => {}
           },
-        ],
+          {
+            text: "Yes",
+            onPress: () => onPressYes(totalItemPrice),
+          },
+        ]);
+      } else {
+        onPressYes(totalItemPrice)
       };
-      dispatch({type: 'SET_TOKTOKFOOD_CART_ITEMS', payload: [...cart, items]});
     }
-    dispatch({type: 'SET_TOKTOKFOOD_CART_TOTAL', payload: {...totalAmount, [restaurantData.shopId]: totalItemPrice}});
+   
+  };
+
+  const dispatchTotalAmount = (totalItemPrice) => {
+    dispatch({type: 'SET_TOKTOKFOOD_CART_TOTAL', payload: {[restaurantData.shopId]: totalItemPrice}});
+  }
+
+  const onPressYes = (totalItemPrice) => {
+    items = {
+      sys_shop: parseInt(restaurantData.shopId),
+      branchid: 0,
+      daystoship: 0,
+      daystoship_to: 0,
+      items: [
+        {
+          sys_shop: parseInt(restaurantData.shopId),
+          product_id: restaurantData.Id,
+          productImage: routes.params.filename,
+          productName: routes.params.itemname,
+          quantity: count.quantity,
+          amount: totalPrice,
+          srp_amount: totalPrice,
+          srp_totalamount: totalPrice,
+          total_amount: totalPrice,
+          order_type: 1,
+          notes: notes,
+          addons: selected
+        },
+      ],
+    }
+    dispatch({type: 'SET_TOKTOKFOOD_CART_ITEMS', payload: [ items ]});
+    dispatchTotalAmount(totalItemPrice)
     Toast.show('Added to cart', Toast.SHORT);
     navigation.navigate('ToktokFoodRestaurantOverview');
-  };
+  }
 
   const updateCartTotal = (type = 'ADD') => {
     let quantity = 1;

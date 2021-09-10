@@ -88,7 +88,10 @@ const ToktokFoodDriver = ({route, navigation}) => {
 
   useEffect(() => {
     if (Object.entries(transaction).length > 0) {
-      if (transaction.isdeclined != 1) {
+      if(transaction.orderStatus == 's'){
+        return alertPrompt('Order Delivered', 'Thank you for choosing, toktokfood!', 'Okay');
+      }
+      if(transaction.isdeclined != 1) {
         if (seconds > 0) {
           if (transaction.orderStatus != 'p' && transaction?.orderIsfor == 1) {
             getTransactionByRefNum();
@@ -103,16 +106,18 @@ const ToktokFoodDriver = ({route, navigation}) => {
           if (riderDetails == null) {
             clearTimeout(checkOrderResponse5mins.current);
             if (transaction.orderStatus == 'p') {
-              alertPrompt('No Response', 'It takes some time for the merchant to confirm your order');
+              alertPrompt('No Response', 'It takes some time for the merchant to confirm your order', 'Retry');
             } else {
-              alertPrompt('No Driver found', 'It takes some time for the drivers to confirm your booking');
+              if(transaction.orderIsfor == 1){
+                alertPrompt('No Driver found', 'It takes some time for the drivers to confirm your booking', 'Retry');
+              }
             }
           } else {
             setSeconds(300);
           }
         }
       } else {
-        alertPrompt('Order Declined', 'Your order has been declined by merchant', 'declined');
+        alertPrompt('Order Declined', 'Your order has been declined by merchant', 'Okay');
       }
     }
     return () => {
@@ -123,21 +128,9 @@ const ToktokFoodDriver = ({route, navigation}) => {
   const alertPrompt = (title, message, status) => {
     Alert.alert(title, message, [
       {
-        text: status != 'declined' ? 'Retry' : 'Okay',
-        onPress: () => (status != 'declined' ? setSeconds(300) : navigation.goBack()),
-      },
-    ]);
-  };
-
-  const alertCancelFailedPrompt = () => {
-    Alert.alert('Cancellation Failed', 'Order already on process', [
-      {
-        text: 'OK',
-        onPress: () => {
-          setShowLoader(false);
-          setShowCancel(false);
-        },
-      },
+        text: status, 
+        onPress: () => status == 'retry' ? setSeconds(300) : navigation.navigate('ToktokFoodOrderTransactions')
+      }
     ]);
   };
 
