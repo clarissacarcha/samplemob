@@ -8,7 +8,7 @@ import {COLOR} from 'res/variables';
 import styles from '../styles';
 import {useNavigation} from '@react-navigation/native';
 
-const RiderNotes = ({onNotesChange, notes = '', onPlaceOrder}) => {
+const RiderNotes = ({onNotesChange, notes = '', onPlaceOrder, showPlaceOrder = false}) => {
   const navigation = useNavigation();
 
   const onPlaceOrderNavigate = () => {
@@ -32,9 +32,11 @@ const RiderNotes = ({onNotesChange, notes = '', onPlaceOrder}) => {
             onChangeText={(v) => onNotesChange(v)}
           />
         </View>
-        <TouchableOpacity style={styles.placeOrderButton} onPress={() => onPlaceOrder()}>
-          <Text style={styles.buttonText}>Place Order</Text>
-        </TouchableOpacity>
+        {showPlaceOrder && (
+          <TouchableOpacity style={styles.placeOrderButton} onPress={() => onPlaceOrder()}>
+            <Text style={styles.buttonText}>Place Order</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </>
   );

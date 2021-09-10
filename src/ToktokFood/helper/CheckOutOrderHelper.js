@@ -9,7 +9,7 @@ const BYPASS_WALLET_REQUEST_INPUT = {
   toktokuser_id: '13',
   payment_method: 'TOKTOKWALLET',
   name: 'Marky Neri',
-  notes: 'Test Note',
+  notes: 'Payment by toktokfood customer',
 };
 
 export default class CheckOutOrderHelper {

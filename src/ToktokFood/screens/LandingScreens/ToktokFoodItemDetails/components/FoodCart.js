@@ -31,24 +31,26 @@ export const FoodCart = ({basePrice = 0.0, currentTotal = 0.0}) => {
     return data;
   };
 
-  const computeTotalPrice = async(items) => {
-    let  amount = 0
+  const computeTotalPrice = async (items) => {
+    let amount = 0;
     await Object.values(items).map((val) => {
-      amount += val.srp_totalamount
-    })
-    return amount + totalPrice
-  }
+      amount += val.srp_totalamount;
+    });
+    return amount + totalPrice;
+  };
 
-  const isEqual = (...objects) => objects.every(obj => JSON.stringify(obj) === JSON.stringify(objects[0]));
+  const isEqual = (...objects) => objects.every((obj) => JSON.stringify(obj) === JSON.stringify(objects[0]));
 
-  const onRestaurantNavigate = async() => {
-    let hasCart = await cart.findIndex((val) => { return val.sys_shop == restaurantData.shopId })
-    let items = {}
-    let totalItemPrice = hasCart > -1 ? await computeTotalPrice(cart[hasCart].items) : totalPrice
-  
-    if(hasCart > -1){
+  const onRestaurantNavigate = async () => {
+    let hasCart = await cart.findIndex((val) => {
+      return val.sys_shop == restaurantData.shopId;
+    });
+    let items = {};
+    let totalItemPrice = hasCart > -1 ? await computeTotalPrice(cart[hasCart].items) : totalPrice;
+
+    if (hasCart > -1) {
       let item = {
-        sys_shop: restaurantData.shopId,
+        sys_shop: parseInt(restaurantData.shopId),
         product_id: restaurantData.Id,
         quantity: count.quantity,
         amount: totalPrice,
@@ -57,26 +59,28 @@ export const FoodCart = ({basePrice = 0.0, currentTotal = 0.0}) => {
         total_amount: totalPrice,
         order_type: 1,
         notes: notes,
-        addons: arrangeAddOns()
-      }
-    
-      let filterData = await cart[hasCart].items.filter((item) => { return item.product_id == restaurantData.Id })
-      if(filterData.length > 0){
-        filterData.map((val, index) => {
-          if(isEqual(val.addons, item.addons)){
-            item.quantity += val.quantity
-            item.srp_totalamount += val.srp_totalamount
-            item.srp_amount += val.srp_amount
-            item.amount += val.amount
-            item.total_amount += val.total_amount
+        addons: arrangeAddOns(),
+      };
 
-            cart[hasCart].items[index] = item
+      let filterData = await cart[hasCart].items.filter((item) => {
+        return item.product_id == restaurantData.Id;
+      });
+      if (filterData.length > 0) {
+        filterData.map((val, index) => {
+          if (isEqual(val.addons, item.addons)) {
+            item.quantity += val.quantity;
+            item.srp_totalamount += val.srp_totalamount;
+            item.srp_amount += val.srp_amount;
+            item.amount += val.amount;
+            item.total_amount += val.total_amount;
+
+            cart[hasCart].items[index] = item;
           } else {
-            cart[hasCart].items.push(item)
+            cart[hasCart].items.push(item);
           }
-        })
+        });
       } else {
-        cart[hasCart].items.push(item)
+        cart[hasCart].items.push(item);
       }
     } else {
       items = {

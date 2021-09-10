@@ -48,7 +48,7 @@ export const Variations = ({basePrice, item}) => {
 
   const onValueChange = ({item, options, index, temp}) => {
     let opt = {
-      addon_id: options.id,
+      addon_id: parseInt(options.id),
       addon_name: options.optionName,
       addon_price: options.optionPrice,
     };
