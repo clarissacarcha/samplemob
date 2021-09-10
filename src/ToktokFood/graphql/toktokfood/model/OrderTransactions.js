@@ -87,6 +87,7 @@ export const PATCH_PLACE_CUSTOMER_ORDER = gql`
     checkoutOrder(input: $input) {
       status
       message
+      referenceNum
     }
   }
 `;

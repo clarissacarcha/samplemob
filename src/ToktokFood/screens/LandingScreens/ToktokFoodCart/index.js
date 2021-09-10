@@ -23,6 +23,8 @@ import {COLOR} from 'res/variables';
 import moment from 'moment';
 import 'moment-timezone';
 
+import {useNavigation} from '@react-navigation/native';
+
 const CUSTOM_HEADER = {
   container: Platform.OS === 'android' ? moderateScale(83) : moderateScale(70),
   bgImage: Platform.OS === 'android' ? moderateScale(83) : moderateScale(70),
@@ -30,15 +32,30 @@ const CUSTOM_HEADER = {
 
 const ToktokFoodCart = () => {
   const route = useRoute();
+  const navigation = useNavigation();
   const nowDate = moment().format('YYYY-DD-YYYY');
 
-  const {amount, cartDetails} = route.params;
-  const {location, customerInfo, shopLocation} = useSelector((state) => state.toktokFood);
-
-  useSelector((state) => console.log(JSON.stringify(state.toktokFood)));
+  const {amount} = route.params;
+  const {location, customerInfo, shopLocation, cart} = useSelector((state) => state.toktokFood);
 
   const [riderNotes, setRiderNotes] = useState('');
   const [delivery, setDeliveryInfo] = useState(null);
+
+  const merge = (o) => {
+    const arr = [];
+    const k = Object.keys(o);
+    for (let i = 0; i < k.length; i++) {
+      arr.push(o[k[i]]);
+    }
+    return [].concat.apply([], arr);
+  };
+
+  const fixAddOns = () => {
+    for (let c = 0; c < cart[0]['items'].length; c++) {
+      const {addons} = cart[0]['items'][c];
+      cart[0].items[c].addons = merge(addons);
+    }
+  };
 
   const [getDeliverFee, {data}] = useLazyQuery(GET_SHIPPING_FEE, {
     variables: {
@@ -60,9 +77,13 @@ const ToktokFoodCart = () => {
 
   const requestToktokWalletCredit = () => {
     return new Promise(async (resolve, reject) => {
-      const WALLET_REQUEST = parseInt(amount) + parseInt(delivery.price);
+      const WALLET_REQUEST = parseInt(amount) + parseInt(delivery.price ? delivery.price : 0);
       const {data} = await CheckOutOrderHelper.requestTakeMoneyId(WALLET_REQUEST);
-      data.postRequestTakeMoney.success === 1 ? resolve(data.postRequestTakeMoney.data) : reject();
+      if (data.postRequestTakeMoney.success === 1) {
+        resolve(data.postRequestTakeMoney.data);
+      } else {
+        reject();
+      }
     });
   };
 
@@ -70,14 +91,16 @@ const ToktokFoodCart = () => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'no-cache',
     onError: (error) => console.log(`LOCATION LOG ERROR: ${error}`),
-    onCompleted: (r) => console.log(r),
+    onCompleted: ({checkoutOrder}) => {
+      navigation.replace('ToktokFoodDriver', {referenceNum: checkoutOrder.referenceNum});
+    },
   });
 
   const placeCustomerOrder = () => {
     if (delivery !== null) {
       const CUSTOMER_CART = [...cart];
 
-      CUSTOMER_CART[0]['delivery_amount'] = delivery.price;
+      CUSTOMER_CART[0]['delivery_amount'] = delivery.price ? delivery.price : 0;
       CUSTOMER_CART[0]['hash_delivery_amount'] = delivery.hash_price;
 
       requestToktokWalletCredit()
@@ -105,7 +128,7 @@ const ToktokFoodCart = () => {
             total_amount: amount,
             srp_totalamount: amount,
             notes: riderNotes,
-            order_isfor: 2,
+            order_isfor: 1, // 1 Delivery | 2 Pick Up Status
             order_type: 2,
             payment_method: 'TOKTOKWALLET',
             order_logs: CUSTOMER_CART,
@@ -123,12 +146,14 @@ const ToktokFoodCart = () => {
         })
         .catch(() => {
           // Show dialog error about toktokwallet request failed.
+          console.log('ERROR HAHAHA');
         });
     }
   };
-  
+
   useEffect(() => {
     getDeliverFee();
+    fixAddOns();
   }, []);
 
   return (

@@ -12,35 +12,31 @@ const MyOrderList = () => {
   const {amount, cartDetails} = route.params;
 
   const displayAddOns = (addons) => {
-    return (
-      Object.entries(addons).map((item) => {
-        return (
-          item[1].map((val) => {
-            return ( <Text style={styles.orderText}>{`${item[0]}: ${val.addon_name}`}</Text> )
-          })
-        )
-      })
-    )
-  }
+    return Object.entries(addons).map((item) => {
+      return item.map((val) => {
+        return <Text style={styles.orderText}>{`${item[0]}: ${val.addon_name}`}</Text>;
+      });
+    });
+  };
 
-  const onPressEdit = (item) => {
-    
-  }
+  const onPressEdit = (item) => {};
 
   const renderFoodItem = (item) => {
-    let { quantity, addons, notes, srp_totalamount, productImage, productName } = item
+    let {quantity, addons, notes, srp_totalamount, productImage, productName} = item;
     return (
       <>
         <View style={styles.orderItemContainer}>
-          <Image style={styles.foodItemImage} source={{ uri: productImage }} />
+          <Image style={styles.foodItemImage} source={{uri: productImage}} />
           <View style={styles.orderInfoWrapper}>
-          <Text style={styles.orderText, {fontWeight: '500'}}>{productName}</Text>
+            <Text style={(styles.orderText, {fontWeight: '500'})}>{productName}</Text>
             <Text style={[styles.orderText]}>{`x${quantity}`}</Text>
-            { displayAddOns(addons) }
-            {!!notes && <Text style={styles.orderText}>{`Note: ${notes}`}</Text> }
+            {displayAddOns(addons)}
+            {!!notes && <Text style={styles.orderText}>{`Note: ${notes}`}</Text>}
           </View>
           <View style={styles.priceWrapper}>
-            <Text onPress={() => onPressEdit(item)} style={styles.actionText}>Edit</Text>
+            <Text onPress={() => onPressEdit(item)} style={styles.actionText}>
+              Edit
+            </Text>
             <Text style={styles.foodPrice}>PHP {srp_totalamount.toFixed(2)}</Text>
           </View>
         </View>
