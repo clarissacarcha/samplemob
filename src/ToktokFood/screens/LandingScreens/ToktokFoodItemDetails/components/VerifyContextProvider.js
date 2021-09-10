@@ -5,6 +5,7 @@ export const VerifyContext = createContext();
 const {Provider} = VerifyContext;
 
 export const VerifyContextProvider = ({children}) => {
+
   const [totalPrice, setTotalPrice] = useState(1);
   const [optionsAmount, setOptionsAmount] = useState(0);
   const [count, setCount] = useState({type: '', quantity: 1});
@@ -26,9 +27,10 @@ export const VerifyContextProvider = ({children}) => {
         requiredOptions,
         setRequiredOptions,
         notes,
-        setNotes,
-      }}>
+        setNotes
+      }}
+    >
       {children}
     </Provider>
-  );
-};
+  )
+}
