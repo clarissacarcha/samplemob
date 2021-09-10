@@ -6,7 +6,7 @@ import styles from '../styles';
 import {COLOR} from 'res/variables';
 
 const OrderTotal = ({subtotal = 0.0, deliveryFee = 0}) => {
-
+  console.log(deliveryFee)
   return (
     <View style={[styles.sectionContainer, styles.totalContainer]}>
       <View style={styles.header}>

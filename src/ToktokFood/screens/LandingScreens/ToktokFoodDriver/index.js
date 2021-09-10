@@ -12,7 +12,7 @@ import {moderateScale} from 'toktokfood/helper/scale';
 
 import {useLazyQuery, useQuery} from '@apollo/react-hooks';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT, AUTH_CLIENT, CLIENT} from 'src/graphql';
-import {GET_ORDER_TRANSACTION_BY_ID, GET_RIDER, GET_RIDER_DETAILS} from 'toktokfood/graphql/toktokfood';
+import {GET_ORDER_TRANSACTION_BY_REF_NUM, GET_RIDER, GET_RIDER_DETAILS} from 'toktokfood/graphql/toktokfood';
 import {useSelector} from 'react-redux';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import {useIsFocused} from '@react-navigation/native';
@@ -23,7 +23,7 @@ const CUSTOM_HEADER = {
 };
 
 const ToktokFoodDriver = ({route, navigation}) => {
-  const appSalesOrderId = route.params ? route.params.id : '';
+  const referenceNum = route.params ? route.params.referenceNum : '';
   const [seconds, setSeconds] = useState(0);
   const [transaction, setTransaction] = useState({});
   const [riderDetails, setRiderDetails] = useState(null);
@@ -32,19 +32,19 @@ const ToktokFoodDriver = ({route, navigation}) => {
   const {location} = useSelector((state) => state.toktokFood);
 
   // data fetching for tsransaction
-  const [getTransactionById, {error: transactionError, loading: transactionLoading}] = useLazyQuery(
-    GET_ORDER_TRANSACTION_BY_ID,
+  const [getTransactionByRefNum, {error: transactionError, loading: transactionLoading}] = useLazyQuery(
+    GET_ORDER_TRANSACTION_BY_REF_NUM,
     {
       variables: {
         input: {
-          appSalesOrderId: appSalesOrderId,
+          referenceNum: referenceNum,
         },
       },
       client: TOKTOK_FOOD_GRAPHQL_CLIENT,
       fetchPolicy: 'network-only',
-      onCompleted: ({getTransactionById}) => {
-        if (JSON.stringify(getTransactionById) != JSON.stringify(transaction)) {
-          setTransaction(getTransactionById);
+      onCompleted: ({getTransactionByRefNum}) => {
+        if (JSON.stringify(getTransactionByRefNum) != JSON.stringify(transaction)) {
+          setTransaction(getTransactionByRefNum);
         }
       },
     },
@@ -80,32 +80,36 @@ const ToktokFoodDriver = ({route, navigation}) => {
   }, [isFocus]);
 
   useEffect(() => {
-    getTransactionById();
+    getTransactionByRefNum();
   }, []);
 
   useEffect(() => {
     if (Object.entries(transaction).length > 0) {
-      if (seconds > 0) {
-        if (transaction.orderStatus != 'p' && transaction?.orderIsfor == 1) {
-          getTransactionById();
-          if (transaction.tDeliveryId) {
-            getRiderDetails();
-          }
-        } else {
-          getTransactionById();
-        }
-        checkOrderResponse5mins.current = setInterval(() => setSeconds(seconds - 5), 5000);
-      } else {
-        if (riderDetails == null) {
-          clearTimeout(checkOrderResponse5mins.current);
-          if (transaction.orderStatus == 'p') {
-            alertPrompt('No Response', 'It takes some time for the merchant to confirm your order');
+      if(transaction.isdeclined != 1) {
+        if (seconds > 0) {
+          if (transaction.orderStatus != 'p' && transaction?.orderIsfor == 1) {
+            getTransactionByRefNum();
+            if (transaction.tDeliveryId) {
+              getRiderDetails();
+            }
           } else {
-            alertPrompt('No Driver found', 'It takes some time for the drivers to confirm your booking');
+            getTransactionByRefNum();
           }
+          checkOrderResponse5mins.current = setInterval(() => setSeconds(seconds - 5), 5000);
         } else {
-          setSeconds(300);
+          if (riderDetails == null) {
+            clearTimeout(checkOrderResponse5mins.current);
+            if (transaction.orderStatus == 'p') {
+              alertPrompt('No Response', 'It takes some time for the merchant to confirm your order');
+            } else {
+              alertPrompt('No Driver found', 'It takes some time for the drivers to confirm your booking');
+            }
+          } else {
+            setSeconds(300);
+          }
         }
+      } else {
+        alertPrompt('Order Declined', 'Your order has been declined by merchant', 'declined');
       }
     }
     return () => {
@@ -113,8 +117,13 @@ const ToktokFoodDriver = ({route, navigation}) => {
     };
   }, [seconds, transaction, riderDetails]);
 
-  const alertPrompt = (title, message) => {
-    Alert.alert(title, message, [{text: 'Retry', onPress: () => setSeconds(300)}]);
+  const alertPrompt = (title, message, status) => {
+    Alert.alert(title, message,[
+      {
+        text: status != 'declined' ? 'Retry' : 'Okay', 
+        onPress: () => status != 'declined' ? setSeconds(300) : navigation.goBack()
+      }
+    ]);
   };
 
   return (
@@ -138,13 +147,13 @@ const ToktokFoodDriver = ({route, navigation}) => {
               <DriverDetailsView
                 riderDetails={riderDetails}
                 transaction={transaction}
-                appSalesOrderId={appSalesOrderId}
+                referenceNum={referenceNum}
               />
             ) : (
               <PickUpDetailsView
                 riderDetails={riderDetails}
                 transaction={transaction}
-                appSalesOrderId={appSalesOrderId}
+                referenceNum={referenceNum}
               />
             )}
           </View>

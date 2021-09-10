@@ -32,8 +32,10 @@ const ToktokFoodCart = () => {
   const route = useRoute();
   const nowDate = moment().format('YYYY-DD-YYYY');
 
-  const {amount} = route.params;
-  const {location, customerInfo, shopLocation, cart} = useSelector((state) => state.toktokFood);
+  const {amount, cartDetails} = route.params;
+  const {location, customerInfo, shopLocation} = useSelector((state) => state.toktokFood);
+
+  useSelector((state) => console.log(JSON.stringify(state.toktokFood)));
 
   const [riderNotes, setRiderNotes] = useState('');
   const [delivery, setDeliveryInfo] = useState(null);
@@ -124,7 +126,7 @@ const ToktokFoodCart = () => {
         });
     }
   };
-
+  
   useEffect(() => {
     getDeliverFee();
   }, []);

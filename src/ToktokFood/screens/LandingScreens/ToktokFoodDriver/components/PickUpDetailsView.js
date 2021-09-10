@@ -13,14 +13,14 @@ import {FONT_SIZE, FONT, SIZE, COLOR} from 'res/variables';
 import {moderateScale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
 import {orderStatusMessagePickUp} from 'toktokfood/helper/orderStatusMessage';
 
-const PickUpDetailsView = ({ transaction, riderDetails, appSalesOrderId }) => {
+const PickUpDetailsView = ({ transaction, riderDetails, referenceNum }) => {
   const navigation = useNavigation();
   const {location} = useSelector((state) => state.toktokFood);
   const { shopDetails, orderStatus, isconfirmed, address } = transaction;
   const status = orderStatusMessagePickUp(orderStatus, riderDetails, `${shopDetails.shopname} (${shopDetails.address})`)
 
   const onSeeDetails = () => {
-    navigation.navigate('ToktokFoodOrderDetails', {appSalesOrderId});
+    navigation.navigate('ToktokFoodOrderDetails', { referenceNum });
   };
 
   const renderAddress = () => (
