@@ -12,7 +12,7 @@ const ToktokFoodRestaurantOverview = ({route}) => {
     <VerifyContextProvider>
       <View style={styles.container}>
         <StickyView />
-        <FoodCart currentTotal={price} />
+        <FoodCart/>
       </View>
     </VerifyContextProvider>
   );

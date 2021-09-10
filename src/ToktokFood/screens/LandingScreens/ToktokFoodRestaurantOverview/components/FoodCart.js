@@ -9,7 +9,7 @@ import {useIsFocused} from '@react-navigation/native';
 import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
 import {useSelector} from 'react-redux';
 
-export const FoodCart = ({currentTotal = 0.0, itemSize = 0}) => {
+export const FoodCart = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const {cart, totalAmount} = useSelector((state) => state.toktokFood);

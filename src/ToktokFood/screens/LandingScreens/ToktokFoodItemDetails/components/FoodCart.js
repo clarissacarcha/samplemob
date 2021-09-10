@@ -10,10 +10,9 @@ import {useRoute} from '@react-navigation/native';
 import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
 import {scale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
 
-import {useDispatch} from 'react-redux';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
-export const FoodCart = ({basePrice = 0.0, currentTotal = 0.0}) => {
+export const FoodCart = ({basePrice = 0.0}) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const routes = useRoute();

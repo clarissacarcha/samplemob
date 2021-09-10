@@ -82,9 +82,9 @@ const MainComponent = () => {
           </HeaderImageBackground>
           <ItemDetails />
           {typeof variants === 'object' && (
-            <Variations currentTotal={price} item={variants} basePrice={routes.params.price} />
+            <Variations item={variants} basePrice={routes.params.price} />
           )}
-          <FoodCart basePrice={routes.params.price} currentTotal={0} />
+          <FoodCart basePrice={routes.params.price} />
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
