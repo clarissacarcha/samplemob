@@ -35,6 +35,7 @@ const transaction = `
   deliveryImgurl
   deliveryImgurl2
   orderIsfor
+  isdeclined
   shopDetails {
     id
     shopname
@@ -73,9 +74,9 @@ export const GET_ORDER_TRANSACTIONS = gql`
     }
   }
 `;
-export const GET_ORDER_TRANSACTION_BY_ID = gql`
-  query getTransactionById($input: GetTransactionByIdInput){
-    getTransactionById(input: $input) {
+export const GET_ORDER_TRANSACTION_BY_REF_NUM = gql`
+  query getTransactionByRefNum($input: GetTransactionByRefNumInput){
+    getTransactionByRefNum(input: $input) {
       ${transaction}
     }
   }

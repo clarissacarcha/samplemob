@@ -15,34 +15,37 @@ export const FoodCart = ({currentTotal = 0.0, itemSize = 0}) => {
   const {cart, totalAmount} = useSelector((state) => state.toktokFood);
   const [hasCart, setHasCart] = useState(0);
   const [amount, setAmount] = useState(0);
+  const [cartItemsLength, setCartItemsLength] = useState(0);
   const isFocus = useIsFocused();
 
   const onRestaurantNavigate = () => {
-    navigation.navigate('ToktokFoodCart', {amount});
+    navigation.navigate('ToktokFoodCart', {amount, cartDetails: cart[hasCart]});
   };
 
   useEffect(() => {
     let hasCart = cart.findIndex((val) => { return val.sys_shop == route.params.item.id })
-    let data = hasCart > -1 ? cart[hasCart].items.length : 0
+    let itemLength = hasCart > -1 ? cart[hasCart].items.length : 0
     let itemAmount = totalAmount[route.params.item.id] ? totalAmount[route.params.item.id] : 0
-    setHasCart(data)
+    setHasCart(hasCart)
+    setCartItemsLength(itemLength)
     setAmount(itemAmount)
   }, [isFocus])
 
-  if (hasCart == 0) {
-    return null;
-  }
+  // if (hasCart < 0) {
+  //   return null;
+  // }
   return (
     <>
       <View style={[styles.container, styles.cartBorder]}>
         <View style={styles.foodItemTotalWrapper}>
-          <Text style={styles.total}>{hasCart} item</Text>
+          <Text style={styles.total}>{cartItemsLength} item</Text>
           <Text style={styles.total}>Total: {amount.toFixed(2)}</Text>
         </View>
         <TouchableOpacity
           disabled={hasCart < 0}
           style={[styles.cartButton, {backgroundColor: hasCart < 0 ? COLOR.LIGHT : COLOR.YELLOW}]}
-          onPress={() => onRestaurantNavigate()}>
+          onPress={() => onRestaurantNavigate()}
+        >
           <Text style={styles.buttonText}>View Cart</Text>
         </TouchableOpacity>
       </View>
