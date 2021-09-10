@@ -13,14 +13,18 @@ import {FONT_SIZE, FONT, SIZE, COLOR} from 'res/variables';
 import {moderateScale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
 import {orderStatusMessagePickUp} from 'toktokfood/helper/orderStatusMessage';
 
-const PickUpDetailsView = ({ transaction, riderDetails, referenceNum }) => {
+const PickUpDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) => {
   const navigation = useNavigation();
   const {location} = useSelector((state) => state.toktokFood);
-  const { shopDetails, orderStatus, isconfirmed, address } = transaction;
-  const status = orderStatusMessagePickUp(orderStatus, riderDetails, `${shopDetails.shopname} (${shopDetails.address})`)
+  const {shopDetails, orderStatus, isconfirmed, address} = transaction;
+  const status = orderStatusMessagePickUp(
+    orderStatus,
+    riderDetails,
+    `${shopDetails.shopname} (${shopDetails.address})`,
+  );
 
   const onSeeDetails = () => {
-    navigation.navigate('ToktokFoodOrderDetails', { referenceNum });
+    navigation.navigate('ToktokFoodOrderDetails', {referenceNum});
   };
 
   const renderAddress = () => (
@@ -35,7 +39,9 @@ const PickUpDetailsView = ({ transaction, riderDetails, referenceNum }) => {
         )}
       </View> */}
       <View style={styles.addressInfo}>
-        <Text numberOfLines={1} style={{ fontFamily: FONT.BOLD }}>Restaurant</Text>
+        <Text numberOfLines={1} style={{fontFamily: FONT.BOLD}}>
+          Restaurant
+        </Text>
         <Text numberOfLines={1}>{`${shopDetails.shopname} (${shopDetails.address})`}</Text>
       </View>
     </View>
@@ -58,7 +64,7 @@ const PickUpDetailsView = ({ transaction, riderDetails, referenceNum }) => {
         <Text style={styles.orderDetailsText}>See Order Details</Text>
       </TouchableOpacity>
       {orderStatus != 'p' && (
-        <TouchableOpacity style={styles.cancelButton}>
+        <TouchableOpacity onPress={() => onCancel()} style={styles.cancelButton}>
           <Text style={styles.buttonText}>Cancel</Text>
         </TouchableOpacity>
       )}
@@ -78,7 +84,7 @@ export default PickUpDetailsView;
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%'
+    width: '100%',
   },
   actionContainer: {
     paddingBottom: 12,
@@ -98,7 +104,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     paddingHorizontal: moderateScale(10),
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   detailsContainer: {
     alignItems: 'center',

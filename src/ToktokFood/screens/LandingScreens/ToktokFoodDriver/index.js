@@ -2,8 +2,9 @@ import React, {useEffect, useState, useRef} from 'react';
 import {View, StyleSheet, Alert} from 'react-native';
 
 // Components
+import Loader from 'toktokfood/components/Loader';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
-import {DriverAnimationView, DriverDetailsView, PickUpDetailsView} from './components';
+import {DriverAnimationView, DriverDetailsView, PickUpDetailsView, CancelOrder} from './components';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 import {getDistance, convertDistance} from 'geolib';
 
@@ -25,6 +26,8 @@ const CUSTOM_HEADER = {
 const ToktokFoodDriver = ({route, navigation}) => {
   const referenceNum = route.params ? route.params.referenceNum : '';
   const [seconds, setSeconds] = useState(0);
+  const [showCancel, setShowCancel] = useState(false);
+  const [showLoader, setShowLoader] = useState(false);
   const [transaction, setTransaction] = useState({});
   const [riderDetails, setRiderDetails] = useState(null);
   const checkOrderResponse5mins = useRef(null);
@@ -85,7 +88,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
 
   useEffect(() => {
     if (Object.entries(transaction).length > 0) {
-      if(transaction.isdeclined != 1) {
+      if (transaction.isdeclined != 1) {
         if (seconds > 0) {
           if (transaction.orderStatus != 'p' && transaction?.orderIsfor == 1) {
             getTransactionByRefNum();
@@ -118,11 +121,23 @@ const ToktokFoodDriver = ({route, navigation}) => {
   }, [seconds, transaction, riderDetails]);
 
   const alertPrompt = (title, message, status) => {
-    Alert.alert(title, message,[
+    Alert.alert(title, message, [
       {
-        text: status != 'declined' ? 'Retry' : 'Okay', 
-        onPress: () => status != 'declined' ? setSeconds(300) : navigation.goBack()
-      }
+        text: status != 'declined' ? 'Retry' : 'Okay',
+        onPress: () => (status != 'declined' ? setSeconds(300) : navigation.goBack()),
+      },
+    ]);
+  };
+
+  const alertCancelFailedPrompt = () => {
+    Alert.alert('Cancellation Failed', 'Order already on process', [
+      {
+        text: 'OK',
+        onPress: () => {
+          setShowLoader(false);
+          setShowCancel(false);
+        },
+      },
     ]);
   };
 
@@ -131,6 +146,17 @@ const ToktokFoodDriver = ({route, navigation}) => {
       <HeaderImageBackground customSize={CUSTOM_HEADER}>
         <HeaderTitle title="Place Order" />
       </HeaderImageBackground>
+      <Loader visibility={showLoader} />
+      <CancelOrder
+        onProcess={() => setShowLoader(true)}
+        onCloseSheet={() => {
+          setShowCancel(false);
+          setSeconds(300);
+        }}
+        failedCancel={() => alertCancelFailedPrompt()}
+        visibility={showCancel}
+        referenceOrderNumber={referenceNum}
+      />
       {(transactionLoading && Object.entries(transaction).length == 0) ||
       Object.entries(transaction).length == 0 ||
       transactionError ? (
@@ -145,12 +171,20 @@ const ToktokFoodDriver = ({route, navigation}) => {
           <View style={styles.driverWrapper}>
             {transaction.orderIsfor == 1 ? (
               <DriverDetailsView
+                onCancel={() => {
+                  setShowCancel(true);
+                  clearTimeout(checkOrderResponse5mins.current);
+                }}
                 riderDetails={riderDetails}
                 transaction={transaction}
                 referenceNum={referenceNum}
               />
             ) : (
               <PickUpDetailsView
+                onCancel={() => {
+                  setShowCancel(true);
+                  clearTimeout(checkOrderResponse5mins.current);
+                }}
                 riderDetails={riderDetails}
                 transaction={transaction}
                 referenceNum={referenceNum}

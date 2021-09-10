@@ -91,3 +91,12 @@ export const PATCH_PLACE_CUSTOMER_ORDER = gql`
     }
   }
 `;
+
+export const PATCH_CANCEL_CUSTOMER_ORDER = gql`
+  mutation cancelOrder($input: CancelOrderInput!) {
+    cancelOrder(input: $input) {
+      status
+      message
+    }
+  }
+`;

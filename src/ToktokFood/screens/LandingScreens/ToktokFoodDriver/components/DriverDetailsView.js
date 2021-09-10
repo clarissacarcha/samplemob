@@ -15,7 +15,7 @@ import {moderateScale, verticalScale, getDeviceWidth} from 'toktokfood/helper/sc
 import {orderStatusMessageDelivery} from 'toktokfood/helper/orderStatusMessage';
 import moment from 'moment';
 
-const DriverDetailsView = ({ transaction, riderDetails, referenceNum }) => {
+const DriverDetailsView = ({ transaction, riderDetails, referenceNum, onCancel }) => {
   const navigation = useNavigation();
   const {location} = useSelector((state) => state.toktokFood);
   const { shopDetails, orderStatus, isconfirmed, address, dateReadyPickup, dateOrderProcessed } = transaction;
@@ -92,7 +92,7 @@ const DriverDetailsView = ({ transaction, riderDetails, referenceNum }) => {
         <Text style={styles.orderDetailsText}>See Order Details</Text>
       </TouchableOpacity>
       {riderDetails == null && (
-        <TouchableOpacity style={styles.cancelButton}>
+        <TouchableOpacity onPress={() => onCancel()} style={styles.cancelButton}>
           <Text style={styles.buttonText}>Cancel</Text>
         </TouchableOpacity>
       )}

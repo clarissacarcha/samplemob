@@ -2,7 +2,9 @@ import {useSelector} from 'react-redux';
 import React, {useState, useEffect} from 'react';
 import {KeyboardAvoidingView, ScrollView, Platform, ActivityIndicator, View} from 'react-native';
 
+import Loader from 'toktokfood/components/Loader';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
+
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 
 import styles from './styles';
@@ -40,6 +42,7 @@ const ToktokFoodCart = () => {
 
   const [riderNotes, setRiderNotes] = useState('');
   const [delivery, setDeliveryInfo] = useState(null);
+  const [showLoader, setShowLoader] = useState(false);
 
   const merge = (o) => {
     const arr = [];
@@ -98,6 +101,9 @@ const ToktokFoodCart = () => {
 
   const placeCustomerOrder = () => {
     if (delivery !== null) {
+
+      setShowLoader(true);
+
       const CUSTOMER_CART = [...cart];
 
       CUSTOMER_CART[0]['delivery_amount'] = delivery.price ? delivery.price : 0;
@@ -154,6 +160,7 @@ const ToktokFoodCart = () => {
   useEffect(() => {
     getDeliverFee();
     fixAddOns();
+    // navigation.replace('ToktokFoodDriver', {referenceNum: 'TOK613AC1C151A6A'});
   }, []);
 
   return (
@@ -161,6 +168,7 @@ const ToktokFoodCart = () => {
       <HeaderImageBackground customSize={CUSTOM_HEADER}>
         <HeaderTitle showAddress={false} title="Order Details" />
       </HeaderImageBackground>
+      <Loader visibility={showLoader} />
       <ScrollView
         bounces={false}
         contentContainerStyle={{paddingBottom: Platform.OS === 'android' ? moderateScale(83) : moderateScale(70)}}>
