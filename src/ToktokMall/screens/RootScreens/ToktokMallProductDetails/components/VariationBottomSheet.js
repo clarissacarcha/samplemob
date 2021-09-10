@@ -19,7 +19,7 @@ const SampleVariations = [{
 }]
 
 export const VariationBottomSheet = forwardRef(({ item, image, onPressBuyNow, onPressAddToCart, type}, ref) => {
-  const snapPoints = useMemo(() => [0, item?.variantSummary?.length != 0 ? 450 : 260], [item]);
+  const snapPoints = useMemo(() => [0, item?.variantSummary?.length === 0 ? 260 :item?.variantSummary?.length === 1? 400 : 500], [item]);
   const [stock, setStock] = useState(item?.noOfStocks)
   const [qty, setQty] = useState(1)
   const [variation, setVariation] = useState("")
@@ -150,10 +150,10 @@ export const VariationBottomSheet = forwardRef(({ item, image, onPressBuyNow, on
             </View>
           </View>
 
+          </View>
         </View>
-      </View>
       </>
-    )
+    );
   }
 
   useEffect(() => {
@@ -211,7 +211,6 @@ export const VariationBottomSheet = forwardRef(({ item, image, onPressBuyNow, on
           </TouchableOpacity>
         </View>
       </View>
-
       {item?.variantSummary && 
         item?.variantSummary.length > 0 && 
         item?.variantSummary.map((variant, i) => {
