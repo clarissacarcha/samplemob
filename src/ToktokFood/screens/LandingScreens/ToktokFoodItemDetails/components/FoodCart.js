@@ -51,6 +51,8 @@ export const FoodCart = ({basePrice = 0.0}) => {
       let item = {
         sys_shop: parseInt(restaurantData.shopId),
         product_id: restaurantData.Id,
+        productImage: routes.params.filename,
+        productName: routes.params.itemname,
         quantity: count.quantity,
         amount: totalPrice,
         srp_amount: totalPrice,
@@ -58,13 +60,11 @@ export const FoodCart = ({basePrice = 0.0}) => {
         total_amount: totalPrice,
         order_type: 1,
         notes: notes,
-        addons: arrangeAddOns(),
-      };
-
-      let filterData = await cart[hasCart].items.filter((item) => {
-        return item.product_id == restaurantData.Id;
-      });
-      if (filterData.length > 0) {
+        addons: selected
+      }
+    
+      let filterData = await cart[hasCart].items.filter((item) => { return item.product_id == restaurantData.Id })
+      if(filterData.length > 0){
         filterData.map((val, index) => {
           if (isEqual(val.addons, item.addons)) {
             item.quantity += val.quantity;
@@ -91,6 +91,8 @@ export const FoodCart = ({basePrice = 0.0}) => {
           {
             sys_shop: parseInt(restaurantData.shopId),
             product_id: restaurantData.Id,
+            productImage: routes.params.filename,
+            productName: routes.params.itemname,
             quantity: count.quantity,
             amount: totalPrice,
             srp_amount: totalPrice,
@@ -98,7 +100,7 @@ export const FoodCart = ({basePrice = 0.0}) => {
             total_amount: totalPrice,
             order_type: 1,
             notes: notes,
-            addons: arrangeAddOns(),
+            addons: selected
           },
         ],
       };

@@ -3,27 +3,45 @@ import {Image, View, Text} from 'react-native';
 
 import styles from '../styles';
 import {food1} from 'toktokfood/assets/images';
+import {useRoute} from '@react-navigation/native';
 
 import {MY_ORDERS} from 'toktokfood/helper/strings';
 
 const MyOrderList = () => {
+  const route = useRoute();
+  const {amount, cartDetails} = route.params;
+
+  const displayAddOns = (addons) => {
+    return (
+      Object.entries(addons).map((item) => {
+        return (
+          item[1].map((val) => {
+            return ( <Text style={styles.orderText}>{`${item[0]}: ${val.addon_name}`}</Text> )
+          })
+        )
+      })
+    )
+  }
+
+  const onPressEdit = (item) => {
+    
+  }
 
   const renderFoodItem = (item) => {
+    let { quantity, addons, notes, srp_totalamount, productImage, productName } = item
     return (
       <>
         <View style={styles.orderItemContainer}>
-          <Image style={styles.foodItemImage} source={item.image} />
+          <Image style={styles.foodItemImage} source={{ uri: productImage }} />
           <View style={styles.orderInfoWrapper}>
-            <Text style={[styles.orderText, {fontWeight: '500'}]}>x1</Text>
-            <Text style={styles.orderText}>Americano</Text>
-            <Text style={styles.orderText}>Size: Venti</Text>
-            <Text style={styles.orderText}>Add on: Extra Cream</Text>
-            <Text style={styles.orderText}>Note: Less sugar</Text>
+          <Text style={styles.orderText, {fontWeight: '500'}}>{productName}</Text>
+            <Text style={[styles.orderText]}>{`x${quantity}`}</Text>
+            { displayAddOns(addons) }
+            {!!notes && <Text style={styles.orderText}>{`Note: ${notes}`}</Text> }
           </View>
           <View style={styles.priceWrapper}>
-            {/* Edit */}
-            <Text style={styles.actionText}></Text>
-            <Text style={styles.foodPrice}>PHP {item.price.toFixed(2)}</Text>
+            <Text onPress={() => onPressEdit(item)} style={styles.actionText}>Edit</Text>
+            <Text style={styles.foodPrice}>PHP {srp_totalamount.toFixed(2)}</Text>
           </View>
         </View>
       </>
@@ -39,7 +57,7 @@ const MyOrderList = () => {
           <Text style={styles.actionText}></Text>
         </View>
         <View>
-          {MY_ORDERS.map((v) => {
+          {cartDetails.items.map((v) => {
             return renderFoodItem(v);
           })}
         </View>
