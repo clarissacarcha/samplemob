@@ -62,6 +62,7 @@ export const FoodList = (props) => {
           input: {
             id: id,
             key: searchProduct,
+            requestFrom: 'customer'
           },
         },
       });

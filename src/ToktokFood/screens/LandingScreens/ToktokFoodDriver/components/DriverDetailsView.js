@@ -21,7 +21,7 @@ const DriverDetailsView = ({ transaction, riderDetails, referenceNum, onCancel }
   const { shopDetails, orderStatus, isconfirmed, address, dateReadyPickup, dateOrderProcessed } = transaction;
   const status = orderStatusMessageDelivery(orderStatus, riderDetails, `${shopDetails.shopname} (${shopDetails.address})`)
   const date = riderDetails != null && orderStatus == 'po' ? dateOrderProcessed : dateReadyPickup
-
+ 
   const calculateDistance = (startTime, riderLocation) => { 
    
     let distance = getDistance(

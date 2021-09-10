@@ -446,10 +446,10 @@ export const transactions = [
 ];
 
 export const searchData = [
-  {
-    id: 1,
-    title: 'Most Searched',
-  },
+  // {
+  //   id: 1,
+  //   title: 'Most Searched',
+  // },
   {
     id: 2,
     title: 'Arranged Alphabetically',

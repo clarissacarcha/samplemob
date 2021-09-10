@@ -209,9 +209,9 @@ const StickyView = () => {
         scrollEventThrottle={15}
         
       >
-        <View style={styles.adsContainer}>
+        {/* <View style={styles.adsContainer}>
           <AdvertisementSection />
-        </View>
+        </View> */}
         <CategoryList
           horizontal
           homeRefreshing={refreshing}
