@@ -2,10 +2,7 @@ import React from 'react';
 import {Image, View, Text} from 'react-native';
 
 import styles from '../styles';
-import {food1} from 'toktokfood/assets/images';
 import {useRoute} from '@react-navigation/native';
-
-import {MY_ORDERS} from 'toktokfood/helper/strings';
 
 const MyOrderList = () => {
   const route = useRoute();
@@ -13,16 +10,14 @@ const MyOrderList = () => {
 
   const displayAddOns = (addons) => {
     return Object.entries(addons).map((item) => {
-      return item.map((val) => {
-        return <Text style={styles.orderText}>{`${item[0]}: ${val.addon_name}`}</Text>;
-      });
+      return <Text style={styles.orderText}>{item[1].addon_name}</Text>;
     });
   };
 
   const onPressEdit = (item) => {};
 
   const renderFoodItem = (item) => {
-    let {quantity, addons, notes, srp_totalamount, productImage, productName} = item;
+    const {quantity, addons, notes, srp_totalamount, productImage, productName} = item;
     return (
       <>
         <View style={styles.orderItemContainer}>
@@ -31,7 +26,7 @@ const MyOrderList = () => {
             <Text style={(styles.orderText, {fontWeight: '500'})}>{productName}</Text>
             <Text style={[styles.orderText]}>{`x${quantity}`}</Text>
             {displayAddOns(addons)}
-            {!!notes && <Text style={styles.orderText}>{`Note: ${notes}`}</Text>}
+            {!!notes && <Text style={styles.orderText}>{`Notes: ${notes}`}</Text>}
           </View>
           <View style={styles.priceWrapper}>
             <Text onPress={() => onPressEdit(item)} style={styles.actionText}>

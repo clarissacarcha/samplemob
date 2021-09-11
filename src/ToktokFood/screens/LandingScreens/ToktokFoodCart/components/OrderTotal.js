@@ -1,9 +1,7 @@
 import React from 'react';
-import {View, Text, ActivityIndicator} from 'react-native';
+import {View, Text} from 'react-native';
 
 import styles from '../styles';
-
-import {COLOR} from 'res/variables';
 
 const OrderTotal = ({subtotal = 0.0, deliveryFee = 0}) => {
   return (

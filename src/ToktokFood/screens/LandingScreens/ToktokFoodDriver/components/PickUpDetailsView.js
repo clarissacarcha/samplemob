@@ -17,28 +17,34 @@ import moment from 'moment';
 const PickUpDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) => {
   const navigation = useNavigation();
   const {location} = useSelector((state) => state.toktokFood);
-  const { shopDetails, orderStatus, isconfirmed, address, dateOrderProcessed, dateReadyPickup } = transaction;
-  const status = orderStatusMessagePickUp(orderStatus, riderDetails, `${shopDetails.shopname} (${shopDetails.address})`)
-  const date = orderStatus == 'po' ? dateOrderProcessed : dateReadyPickup
+  const {shopDetails, orderStatus, isconfirmed, address, dateOrderProcessed, dateReadyPickup} = transaction;
+  const status = orderStatusMessagePickUp(
+    orderStatus,
+    riderDetails,
+    `${shopDetails.shopname} (${shopDetails.address})`,
+  );
+  const date = orderStatus == 'po' ? dateOrderProcessed : dateReadyPickup;
 
   const onSeeDetails = () => {
     navigation.navigate('ToktokFoodOrderDetails', {referenceNum});
   };
 
   const renderEstimatedTime = () => {
-    let startTime = moment(dateOrderProcessed).format('LT')
-    let endTime = moment(dateOrderProcessed).add(20, 'minutes').format('hh:mm A')
+    let startTime = moment(dateOrderProcessed).format('LT');
+    let endTime = moment(dateOrderProcessed).add(20, 'minutes').format('hh:mm A');
     return (
       <View style={styles.addressInfo}>
-        <Text numberOfLines={1} style={{ fontFamily: FONT.BOLD }}>Estimated Pickup Time:</Text>
+        <Text numberOfLines={1} style={{fontFamily: FONT.BOLD}}>
+          Estimated Pickup Time:
+        </Text>
         <Text numberOfLines={1}>{`${startTime} - ${endTime}`}</Text>
       </View>
-    )
-  }
+    );
+  };
 
   const renderAddress = () => {
     return (
-      <View style={styles.addressContainer}>  
+      <View style={styles.addressContainer}>
         {/* <View>
           <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
           <View style={styles.divider} />
@@ -48,14 +54,16 @@ const PickUpDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
               <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
           )}
         </View> */}
-        <View style={[styles.addressInfo, { paddingBottom: 10 } ]}>
-          <Text numberOfLines={1} style={{ fontFamily: FONT.BOLD }}>Restaurant</Text>
+        <View style={[styles.addressInfo, {paddingBottom: 10}]}>
+          <Text numberOfLines={1} style={{fontFamily: FONT.BOLD}}>
+            Restaurant
+          </Text>
           <Text numberOfLines={1}>{`${shopDetails.shopname} (${shopDetails.address})`}</Text>
         </View>
-        {(orderStatus != 'p' && orderStatus!== 'c' && orderStatus !== 's') && renderEstimatedTime() }
+        {orderStatus != 'p' && orderStatus !== 'c' && orderStatus !== 's' && renderEstimatedTime()}
       </View>
-    )
-  }
+    );
+  };
 
   const renderTitle = () => {
     // let startTime = moment(date).format('LT')
@@ -69,15 +77,15 @@ const PickUpDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
           <Text style={styles.time}>Estimated Delivery Time: 10:00 - 10:30</Text>
         </View> */}
       </View>
-    )
-  }
+    );
+  };
 
   const renderActions = () => (
     <View style={styles.actionContainer}>
       <TouchableOpacity onPress={onSeeDetails} style={styles.orderDetailsAction}>
         <Text style={styles.orderDetailsText}>See Order Details</Text>
       </TouchableOpacity>
-      {orderStatus == 'p' && (
+      {orderStatus === 'p' && (
         <TouchableOpacity style={styles.cancelButton}>
           <Text style={styles.buttonText}>Cancel</Text>
         </TouchableOpacity>

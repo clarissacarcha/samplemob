@@ -27,8 +27,8 @@ const CancelOrder = ({visibility = false, onCloseSheet, failedCancel, referenceO
   });
 
   const cancelCurrentOrder = () => {
-    onCloseSheet();
     onProcess();
+    onCloseSheet();
     postCancelOrder({
       variables: {
         input: {
@@ -40,7 +40,12 @@ const CancelOrder = ({visibility = false, onCloseSheet, failedCancel, referenceO
 
   return (
     <>
-      <Modal style={styles.container} visible={visibility} transparent={true}>
+      <Modal
+        style={styles.container}
+        visible={visibility}
+        transparent={true}
+        animationType="slide"
+        presentationStyle="overFullScreen">
         <View style={styles.content}>
           <View style={[styles.proto, styles.cartBorder]}>
             <View style={styles.sheet}>

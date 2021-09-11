@@ -6,15 +6,14 @@ import Loader from 'toktokfood/components/Loader';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
 import {DriverAnimationView, DriverDetailsView, PickUpDetailsView, CancelOrder} from './components';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
-import {getDistance, convertDistance} from 'geolib';
 
 // Utils
 import {moderateScale} from 'toktokfood/helper/scale';
 
-import {useLazyQuery, useQuery} from '@apollo/react-hooks';
-import {TOKTOK_FOOD_GRAPHQL_CLIENT, AUTH_CLIENT, CLIENT} from 'src/graphql';
-import {GET_ORDER_TRANSACTION_BY_REF_NUM, GET_RIDER, GET_RIDER_DETAILS} from 'toktokfood/graphql/toktokfood';
-import {useSelector} from 'react-redux';
+import {useLazyQuery} from '@apollo/react-hooks';
+import {TOKTOK_FOOD_GRAPHQL_CLIENT, CLIENT} from 'src/graphql';
+import {GET_ORDER_TRANSACTION_BY_REF_NUM, GET_RIDER_DETAILS} from 'toktokfood/graphql/toktokfood';
+import {useSelector, useDispatch} from 'react-redux';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import {useIsFocused} from '@react-navigation/native';
 
@@ -32,6 +31,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
   const [riderDetails, setRiderDetails] = useState(null);
   const checkOrderResponse5mins = useRef(null);
   const isFocus = useIsFocused();
+  const dispatch = useDispatch();
   const {location} = useSelector((state) => state.toktokFood);
 
   // data fetching for tsransaction
@@ -82,16 +82,20 @@ const ToktokFoodDriver = ({route, navigation}) => {
     }
   }, [isFocus]);
 
+  const clearCart = () => {
+    dispatch({type: 'SET_TOKTOKFOOD_CART_ITEMS', payload: []});
+  };
+
   useEffect(() => {
     getTransactionByRefNum();
   }, []);
 
   useEffect(() => {
     if (Object.entries(transaction).length > 0) {
-      if(transaction.orderStatus == 's'){
+      if (transaction.orderStatus == 's') {
         return alertPrompt('Order Delivered', 'Thank you for choosing, toktokfood!', 'Okay');
       }
-      if(transaction.isdeclined != 1) {
+      if (transaction.isdeclined != 1) {
         if (seconds > 0) {
           if (transaction.orderStatus != 'p' && transaction?.orderIsfor == 1) {
             getTransactionByRefNum();
@@ -108,7 +112,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
             if (transaction.orderStatus == 'p') {
               alertPrompt('No Response', 'It takes some time for the merchant to confirm your order', 'Retry');
             } else {
-              if(transaction.orderIsfor == 1){
+              if (transaction.orderIsfor == 1) {
                 alertPrompt('No Driver found', 'It takes some time for the drivers to confirm your booking', 'Retry');
               }
             }
@@ -128,9 +132,9 @@ const ToktokFoodDriver = ({route, navigation}) => {
   const alertPrompt = (title, message, status) => {
     Alert.alert(title, message, [
       {
-        text: status, 
-        onPress: () => status == 'retry' ? setSeconds(300) : navigation.navigate('ToktokFoodOrderTransactions')
-      }
+        text: status,
+        onPress: () => (status == 'retry' ? setSeconds(300) : navigation.navigate('ToktokFoodOrderTransactions')),
+      },
     ]);
   };
 
@@ -139,14 +143,14 @@ const ToktokFoodDriver = ({route, navigation}) => {
       <HeaderImageBackground customSize={CUSTOM_HEADER}>
         <HeaderTitle title="Place Order" />
       </HeaderImageBackground>
-      <Loader visibility={showLoader} />
+      <Loader visibility={showLoader} message="Canceling order..." />
       <CancelOrder
         onProcess={() => setShowLoader(true)}
         onCloseSheet={() => {
           setShowCancel(false);
           setSeconds(300);
         }}
-        failedCancel={() => alertCancelFailedPrompt()}
+        failedCancel={() => console.log('Failed to cancel')}
         visibility={showCancel}
         referenceOrderNumber={referenceNum}
       />

@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useContext} from 'react';
+import React, {useEffect, useContext} from 'react';
 import Toast from 'react-native-simple-toast';
 import {useNavigation} from '@react-navigation/native';
 import MIcon from 'react-native-vector-icons/MaterialIcons';

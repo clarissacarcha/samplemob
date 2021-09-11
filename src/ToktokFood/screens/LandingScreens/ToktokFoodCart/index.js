@@ -1,31 +1,27 @@
-import {useSelector} from 'react-redux';
 import React, {useState, useEffect} from 'react';
+import {useRoute} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {KeyboardAvoidingView, ScrollView, Platform, ActivityIndicator, View} from 'react-native';
 
 import Loader from 'toktokfood/components/Loader';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
-
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 
 import styles from './styles';
-import {ReceiverLocation, AlsoOrder, MyOrderList, OrderTotal, PaymentDetails, RiderNotes} from './components';
-
-import {useLazyQuery, useMutation} from '@apollo/react-hooks';
-import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
-import {GET_SHIPPING_FEE, PATCH_PLACE_CUSTOMER_ORDER} from 'toktokfood/graphql/toktokfood';
-import CheckOutOrderHelper from 'toktokfood/helper/CheckOutOrderHelper';
-
-import {useRoute} from '@react-navigation/native';
-
-// Utils
-import {moderateScale} from 'toktokfood/helper/scale';
-
 import {COLOR} from 'res/variables';
+import {ReceiverLocation, MyOrderList, OrderTotal, PaymentDetails, RiderNotes} from './components';
+
+import {useDispatch, useSelector} from 'react-redux';
+import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
+import {useLazyQuery, useMutation} from '@apollo/react-hooks';
+import CheckOutOrderHelper from 'toktokfood/helper/CheckOutOrderHelper';
+import {GET_SHIPPING_FEE, PATCH_PLACE_CUSTOMER_ORDER} from 'toktokfood/graphql/toktokfood';
 
 import moment from 'moment';
 import 'moment-timezone';
 
-import {useNavigation} from '@react-navigation/native';
+// Utils
+import {moderateScale} from 'toktokfood/helper/scale';
 
 const CUSTOM_HEADER = {
   container: Platform.OS === 'android' ? moderateScale(83) : moderateScale(70),
@@ -101,7 +97,6 @@ const ToktokFoodCart = () => {
 
   const placeCustomerOrder = () => {
     if (delivery !== null) {
-
       setShowLoader(true);
 
       const CUSTOMER_CART = [...cart];
@@ -152,7 +147,7 @@ const ToktokFoodCart = () => {
         })
         .catch(() => {
           // Show dialog error about toktokwallet request failed.
-          console.log('ERROR HAHAHA');
+          console.log('ERROR ON PLACING CART');
         });
     }
   };
@@ -160,7 +155,6 @@ const ToktokFoodCart = () => {
   useEffect(() => {
     getDeliverFee();
     fixAddOns();
-    // navigation.replace('ToktokFoodDriver', {referenceNum: 'TOK613AC1C151A6A'});
   }, []);
 
   return (
@@ -168,7 +162,7 @@ const ToktokFoodCart = () => {
       <HeaderImageBackground customSize={CUSTOM_HEADER}>
         <HeaderTitle showAddress={false} title="Order Details" />
       </HeaderImageBackground>
-      <Loader visibility={showLoader} />
+      <Loader visibility={showLoader} message="Placing order..." />
       <ScrollView
         bounces={false}
         contentContainerStyle={{paddingBottom: Platform.OS === 'android' ? moderateScale(83) : moderateScale(70)}}>

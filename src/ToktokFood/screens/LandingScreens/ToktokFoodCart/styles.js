@@ -1,5 +1,5 @@
 import {StyleSheet, Platform} from 'react-native';
-import {FONT, FONT_SIZE, COLOR, SIZE, SHADOW} from 'res/variables';
+import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
 
 // Utils
 import {scale, verticalScale, moderateScale, getDeviceWidth} from 'toktokfood/helper/scale';
