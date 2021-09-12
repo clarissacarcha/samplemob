@@ -57,6 +57,7 @@ export const food_delivered = require('./images/animations/delivered.gif');
 export const timer = require('./images/animations/timer.gif');
 export const pot = require('./images/animations/pot.gif');
 export const toktok_rider = require('./images/animations/toktok_rider.gif');
+export const ordering = require('./images/animations/ordering_loader.gif');
 
 // Test Banners
 export const starbucks = require('./images/sample_banners/starbucks.png');

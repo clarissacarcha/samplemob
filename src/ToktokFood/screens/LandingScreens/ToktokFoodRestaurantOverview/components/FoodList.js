@@ -19,7 +19,7 @@ import {
 } from 'toktokfood/helper/scale';
 
 export const FoodList = (props) => {
-  const {activeTab, id, tagsLoading, ratings} = props;
+  const {activeTab, id, tagsLoading} = props;
   const navigation = useNavigation();
   const {searchProduct, setSearchProduct} = useContext(VerifyContext);
 
@@ -39,14 +39,14 @@ export const FoodList = (props) => {
     },
   );
 
-  // data fetching for product 
-  const [getProductsByShop, {data: searchProducts, error: searchProductsError, loading: searchProductsLoading}] = useLazyQuery(
-    GET_PRODUCTS_BY_SHOP,
-    {
-      client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-      fetchPolicy: 'network-only',
-    },
-  );
+  // data fetching for product
+  const [
+    getProductsByShop,
+    {data: searchProducts, error: searchProductsError, loading: searchProductsLoading},
+  ] = useLazyQuery(GET_PRODUCTS_BY_SHOP, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+  });
 
   useEffect(() => {
     if (activeTab?.id) {
@@ -56,22 +56,23 @@ export const FoodList = (props) => {
   }, [activeTab]);
 
   useEffect(() => {
-    if(searchProduct){
+    if (searchProduct) {
       getProductsByShop({
         variables: {
           input: {
             id: id,
             key: searchProduct,
+            requestFrom: 'customer'
           },
         },
-      })
+      });
     }
-  }, [searchProduct])
+  }, [searchProduct]);
 
   const onNavigateToFoodItemDetails = (item) => {
-    navigation.navigate('ToktokFoodItemDetails', {...item, ...{ratings}});
+    navigation.navigate('ToktokFoodItemDetails', {...item, shopId: id});
   };
- 
+
   const renderItem = ({item}) => {
     return (
       <TouchableOpacity onPress={() => onNavigateToFoodItemDetails(item)} style={styles.listContainer}>

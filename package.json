@@ -37,6 +37,7 @@
     "axios": "^0.19.2",
     "ci": "^2.1.1",
     "decode-google-map-polyline": "^1.0.1",
+    "geolib": "^3.3.1",
     "graphql": "^15.0.0",
     "graphql-tag": "^2.10.3",
     "lodash": "^4.17.15",

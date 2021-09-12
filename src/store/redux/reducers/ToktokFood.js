@@ -8,10 +8,12 @@ const INITIAL_STATE = {
     },
   },
   shops: [],
-  cart: {
-    items: [],
+  shopLocation: {
+    latitude: 0.0,
+    longitude: 0.0,
   },
-  totalAmount: {price: 0},
+  cart: [],
+  totalAmount: {},
   orderStatus: {status: 1},
   customerInfo: {},
 };
@@ -32,6 +34,8 @@ export default (state = INITIAL_STATE, action) => {
       return {...state, accountInfo: action.payload};
     case 'SET_TOKTOKFOOD_CUSTOMER_INFO':
       return {...state, customerInfo: action.payload};
+    case 'SET_TOKTOKFOOD_SHOP_COORDINATES':
+      return {...state, shopLocation: action.payload};
     default:
       return state;
   }

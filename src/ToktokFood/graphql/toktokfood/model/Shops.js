@@ -8,6 +8,8 @@ export const GET_SHOPS = gql`
       shopname
       banner
       logo
+      latitude
+      longitude
       ratings
       estimatedDistance
       estimatedDeliveryTime

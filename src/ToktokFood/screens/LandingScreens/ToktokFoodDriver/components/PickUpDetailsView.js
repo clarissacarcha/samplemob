@@ -4,7 +4,6 @@ import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import {getDistance, convertDistance} from 'geolib';
 
 // Fonts/Colors
 import {COLORS} from 'res/constants';
@@ -12,78 +11,71 @@ import {FONT_SIZE, FONT, SIZE, COLOR} from 'res/variables';
 
 // Utils
 import {moderateScale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
-import {orderStatusMessageDelivery} from 'toktokfood/helper/orderStatusMessage';
+import {orderStatusMessagePickUp} from 'toktokfood/helper/orderStatusMessage';
 import moment from 'moment';
 
-const DriverDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) => {
+const PickUpDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) => {
   const navigation = useNavigation();
   const {location} = useSelector((state) => state.toktokFood);
-  const {shopDetails, orderStatus, isconfirmed, address, dateReadyPickup, dateOrderProcessed} = transaction;
-  const status = orderStatusMessageDelivery(
+  const {shopDetails, orderStatus, isconfirmed, address, dateOrderProcessed, dateReadyPickup} = transaction;
+  const status = orderStatusMessagePickUp(
     orderStatus,
     riderDetails,
     `${shopDetails.shopname} (${shopDetails.address})`,
   );
-  const date = riderDetails != null && orderStatus == 'po' ? dateOrderProcessed : dateReadyPickup;
-
-  const calculateDistance = (startTime, riderLocation) => {
-    let distance = getDistance(
-      {latitude: location?.latitude, longitude: location?.longitude},
-      {latitude: 14.537752, longitude: 121.001381},
-    );
-    let distanceMiles = convertDistance(distance, 'mi');
-    let duration = distanceMiles / 60;
-    let hours = 20 / 60;
-    let final = (duration + hours).toFixed(2);
-
-    return moment(startTime).add(final, 'hours').format('hh:mm A');
-  };
-
-  const convertMinsToTime = (mins) => {
-    let hours = Math.floor(mins / 60);
-    let minutes = mins % 60;
-    minutes = minutes < 10 ? '0' + minutes : minutes;
-    return `${hours}hrs:${minutes}mins`;
-  };
+  const date = orderStatus == 'po' ? dateOrderProcessed : dateReadyPickup;
 
   const onSeeDetails = () => {
     navigation.navigate('ToktokFoodOrderDetails', {referenceNum});
   };
 
-  const renderAddress = () => (
-    <View style={styles.addressContainer}>
-      <View>
-        <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
-        <View style={styles.divider} />
-        {riderDetails != null && orderStatus == 'f' ? (
-          <MaterialIcon name="lens" size={16} color={COLORS.YELLOWTEXT} />
-        ) : (
-          <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
-        )}
-      </View>
+  const renderEstimatedTime = () => {
+    let startTime = moment(dateOrderProcessed).format('LT');
+    let endTime = moment(dateOrderProcessed).add(20, 'minutes').format('hh:mm A');
+    return (
       <View style={styles.addressInfo}>
-        <Text numberOfLines={1}>{`${shopDetails.shopname} (${shopDetails.address})`}</Text>
-        <View style={styles.horizontalContainer}>
-          <View style={styles.horizontalDivider} />
-        </View>
-        <Text numberOfLines={1}>{address}</Text>
+        <Text numberOfLines={1} style={{fontFamily: FONT.BOLD}}>
+          Estimated Pickup Time:
+        </Text>
+        <Text numberOfLines={1}>{`${startTime} - ${endTime}`}</Text>
       </View>
-    </View>
-  );
+    );
+  };
+
+  const renderAddress = () => {
+    return (
+      <View style={styles.addressContainer}>
+        {/* <View>
+          <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
+          <View style={styles.divider} />
+          {(riderDetails != null && orderStatus == 'f') ? (
+              <MaterialIcon name="lens" size={16} color={COLORS.YELLOWTEXT} />
+            ) : (
+              <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
+          )}
+        </View> */}
+        <View style={[styles.addressInfo, {paddingBottom: 10}]}>
+          <Text numberOfLines={1} style={{fontFamily: FONT.BOLD}}>
+            Restaurant
+          </Text>
+          <Text numberOfLines={1}>{`${shopDetails.shopname} (${shopDetails.address})`}</Text>
+        </View>
+        {orderStatus != 'p' && orderStatus !== 'c' && orderStatus !== 's' && renderEstimatedTime()}
+      </View>
+    );
+  };
+
   const renderTitle = () => {
-    let startTime = moment(date).format('LT');
-    let endTime = calculateDistance(date);
+    // let startTime = moment(date).format('LT')
 
     return (
       <View style={styles.detailsContainer}>
         <Text style={styles.title}>{status.title}</Text>
         <Text style={styles.status}>{status.message}</Text>
-        {riderDetails != null && (
-          <View style={styles.timeContainer}>
-            <MaterialIcon name="schedule" size={16} color={COLORS.YELLOWTEXT} />
-            <Text style={styles.time}>{`Estimated Delivery Time: ${startTime} - ${endTime}`}</Text>
-          </View>
-        )}
+        {/* <View style={styles.timeContainer}>
+          <MaterialIcon name="schedule" size={16} color={COLORS.YELLOWTEXT} />
+          <Text style={styles.time}>Estimated Delivery Time: 10:00 - 10:30</Text>
+        </View> */}
       </View>
     );
   };
@@ -94,7 +86,7 @@ const DriverDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
         <Text style={styles.orderDetailsText}>See Order Details</Text>
       </TouchableOpacity>
       {orderStatus === 'p' && (
-        <TouchableOpacity onPress={() => onCancel()} style={styles.cancelButton}>
+        <TouchableOpacity style={styles.cancelButton}>
           <Text style={styles.buttonText}>Cancel</Text>
         </TouchableOpacity>
       )}
@@ -110,7 +102,7 @@ const DriverDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
   );
 };
 
-export default DriverDetailsView;
+export default PickUpDetailsView;
 
 const styles = StyleSheet.create({
   container: {
@@ -126,13 +118,14 @@ const styles = StyleSheet.create({
     borderTopWidth: 10,
     borderBottomWidth: 10,
     borderColor: 'whitesmoke',
-    flexDirection: 'row',
+    // flexDirection: 'row',
     padding: moderateScale(20),
-    paddingHorizontal: moderateScale(30),
+    // paddingHorizontal: moderateScale(30),
   },
   addressInfo: {
-    flex: 1,
+    flexDirection: 'row',
     paddingHorizontal: moderateScale(10),
+    justifyContent: 'space-between',
   },
   detailsContainer: {
     alignItems: 'center',

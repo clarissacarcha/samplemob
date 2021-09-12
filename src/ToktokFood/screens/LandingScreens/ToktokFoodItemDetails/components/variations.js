@@ -1,91 +1,123 @@
 import _ from 'lodash';
-import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, TextInput, View} from 'react-native';
+import React, {useEffect, useState, useContext} from 'react';
+import {StyleSheet, Text, TextInput, View, FlatList} from 'react-native';
 import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 import RadioButton from 'toktokfood/components/RadioButton';
 // Utils
 import {moderateScale, scale, verticalScale} from 'toktokfood/helper/scale';
-
-import counter from './counter';
-
-const Variations = ({item, onVariationChange, onAddOnsChange}) => {
-  const initialState = {
-    variants: [],
-    addOns: [],
-  };
-
-  const [selectedAddOns, setSelectedAddOns] = useState([]);
-  const [selectedVariations, setSelectedVariations] = useState(null);
-  const [lastSelected, setLastSelected] = useState({id: '', value: 0.0, lastValue: 0.0});
+import {VerifyContext} from '../components';
+export const Variations = ({basePrice, item}) => {
+  const {
+    totalPrice,
+    setTotalPrice,
+    optionsAmount,
+    setOptionsAmount,
+    count,
+    selected,
+    setSelected,
+    requiredOptions,
+    setRequiredOptions,
+    notes,
+    setNotes,
+  } = useContext(VerifyContext);
 
   useEffect(() => {
-    // onVariationChange({value: lastSelected.value, lastValue: lastSelected.lastValue});
-    // console.log({value: lastSelected.value, lastValue: lastSelected.lastValue});
+    if (optionsAmount) {
+      setTotalPrice(count.quantity * (basePrice + optionsAmount));
+    } else {
+      setTotalPrice((prev) => {
+        let amount = prev - (prev - basePrice);
+        return count.quantity * amount;
+      });
+    }
+  }, [optionsAmount]);
 
-    // console.log(JSON.stringify(state));
-  }, [state]);
+  useEffect(() => {
+    if (Object.values(selected).length > 0) {
+      let amount = 0;
+      Object.values(selected).map((item) => {
+        item.map((val) => {
+          amount += val.addon_price;
+        });
+      });
+      setOptionsAmount(amount);
+    } else {
+      setOptionsAmount(0);
+    }
+  }, [selected]);
 
-  const isVariantChecked = () =>{
+  const onValueChange = ({item, options, index, temp}) => {
+    let opt = {
+      addon_id: parseInt(options.id),
+      addon_name: options.optionName,
+      addon_price: options.optionPrice,
+    };
+    let hasSelected = selected[item.optionName];
+    if (hasSelected) {
+      if (selected[item.optionName][index]) {
+        if (selected[item.optionName].length > 1) {
+          selected[item.optionName].splice(index, 1);
+          setSelected((prev) => {
+            return {...prev, [item.optionName]: selected[item.optionName]};
+          });
+        } else {
+          delete selected[item.optionName];
+          setSelected({...selected});
+        }
+      } else {
+        if (selected[item.optionName].length != item.noOfSelection) {
+          temp = [...selected[item.optionName], opt];
+          setSelected((prev) => {
+            return {...prev, [item.optionName]: temp};
+          });
+        } else {
+          selected[item.optionName].splice(selected[item.optionName].length - 1, 1);
+          temp = [...selected[item.optionName], opt];
+          setSelected((prev) => {
+            return {...prev, [item.optionName]: temp};
+          });
+        }
+      }
+    } else {
+      temp = [...temp, opt];
+      setSelected((prev) => {
+        return {...prev, [item.optionName]: temp};
+      });
+    }
   };
 
-  const FoodVariations = (props) => {
-    const {id, name, maxSelection, variants} = props;
+  const renderVariants = ({item}) => {
+    let temp = [];
+    // setRequiredOptions(prev => { return { ...prev, [item.optionName]: item.isRequired }})
     return (
       <>
-        <View key={id} style={styles.variations}>
+        <View style={styles.variations}>
           <Text style={styles.variationTitle}>
-            Choose your {name.toLowerCase()} (Pick {maxSelection})
+            Choose your {item.optionName.toLowerCase()} (Pick {item.noOfSelection})
           </Text>
-          {variants.map((v) => (
-            <View style={styles.variationsWrapper}>
-              <View style={styles.checkBoxWrapper}>
-                <RadioButton
-                  onValueChange={(s) => {
-                    dispatch({type: 'UPDATE_VARIANTS', payload: v});
-                    // setLastSelected({
-                    //   id: v.id,
-                    //   value: v.optionPrice,
-                    //   lastValue: lastSelected.id !== '' ? lastSelected.value : v.optionPrice,
-                    // });
-                  }}
-                  selected={lastSelected.id === v.id}
-                />
-                <Text style={styles.checkBoxText}>{v.optionName}</Text>
+          <Text>{item.isRequired ? 'REQURED' : 'OPTIONAL'}</Text>
+          {item.options.map((options, i) => {
+            let index = -1;
+            if (selected[item.optionName]) {
+              index = selected[item.optionName].findIndex((v) => {
+                return v.addon_id == options.id;
+              });
+            }
+            return (
+              <View style={styles.variationsWrapper}>
+                <View style={styles.checkBoxWrapper}>
+                  <RadioButton
+                    onValueChange={(c) => {
+                      onValueChange({item, options, index, temp});
+                    }}
+                    selected={index > -1}
+                  />
+                  <Text style={styles.checkBoxText}>{options.optionName}</Text>
+                </View>
+                <Text style={styles.variationPrice}>+ {options.optionPrice.toFixed(2)}</Text>
               </View>
-              <Text style={styles.variationPrice}>+ {v.optionPrice.toFixed(2)}</Text>
-            </View>
-          ))}
-        </View>
-      </>
-    );
-  };
-
-  const FoodAddOns = (props) => {
-    const {id, name, maxSelection, variants} = props;
-    return (
-      <>
-        <View key={id} style={styles.variations}>
-          <Text style={styles.variationTitle}>
-            Choose your {name.toLowerCase()} (Pick {maxSelection})
-          </Text>
-          {variants.map((v) => (
-            <View style={styles.variationsWrapper}>
-              <View style={styles.checkBoxWrapper}>
-                <RadioButton
-                  onValueChange={() => {
-                    setLastSelected({
-                      id: v.id,
-                      value: v.optionPrice,
-                      lastValue: lastSelected.id !== '' ? lastSelected.value : v.optionPrice,
-                    });
-                  }}
-                  selected={lastSelected.id === v.id}
-                />
-                <Text style={styles.checkBoxText}>{v.optionName}</Text>
-              </View>
-              <Text style={styles.variationPrice}>+ {v.optionPrice.toFixed(2)}</Text>
-            </View>
-          ))}
+            );
+          })}
         </View>
       </>
     );
@@ -94,34 +126,17 @@ const Variations = ({item, onVariationChange, onAddOnsChange}) => {
   return (
     <>
       <View style={styles.container}>
-        {_.map(item, (v) => {
-          const {id, optionName, isRequired, noOfSelection, options} = v;
-          return optionName !== 'Add-ons' ? (
-            <FoodVariations
-              id={id}
-              name={optionName}
-              variants={options}
-              required={isRequired}
-              maxSelection={noOfSelection}
-            />
-          ) : (
-            <FoodAddOns
-              id={id}
-              name={optionName}
-              variants={options}
-              required={isRequired}
-              maxSelection={noOfSelection}
-            />
-          );
-        })}
+        <FlatList data={item} renderItem={renderVariants} />
         <View style={styles.variations}>
           <Text style={styles.variationTitle}>Special Instructions (Optional)</Text>
           <TextInput
+            value={notes}
             multiline={true}
             numberOfLines={4}
             style={styles.input}
             placeholder="Type your instructions here..."
             placeholderTextColor={COLOR.MEDIUM}
+            onChangeText={(notes) => setNotes(notes)}
           />
         </View>
       </View>
@@ -187,4 +202,3 @@ const styles = StyleSheet.create({
     paddingHorizontal: scale(15),
   },
 });
-export default Variations;

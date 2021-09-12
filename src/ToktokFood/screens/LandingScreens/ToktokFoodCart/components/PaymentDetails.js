@@ -9,11 +9,11 @@ import {COLORS} from 'res/constants';
 // enum implementation on JavaScript
 const PAYMENT_TYPE = {
   CASH: 'Cash-on-Delivery',
-  TOKTOK_WALLET: 'Toktok Wallet',
+  TOKTOK_WALLET: 'TOKTOKWALLET',
 };
 
 const PaymentDetails = () => {
-  const [paymentMethod, setPaymentMethod] = useState(PAYMENT_TYPE.CASH);
+  const [paymentMethod, setPaymentMethod] = useState(PAYMENT_TYPE.TOKTOK_WALLET);
 
   return (
     <>
@@ -23,13 +23,10 @@ const PaymentDetails = () => {
         </View>
         <View style={styles.paymentContainer}>
           <TouchableOpacity
-            disabled
             onPress={() => setPaymentMethod(PAYMENT_TYPE.TOKTOK_WALLET)}
             style={[
               styles.tokwaButton,
-              {backgroundColor: COLORS.LIGHT},
-              {borderColor: COLORS.LIGHT},
-              {borderBottomWidth: paymentMethod === PAYMENT_TYPE.TOKTOK_WALLET ? 6 : 1},
+              {borderColor: paymentMethod === PAYMENT_TYPE.TOKTOK_WALLET ? COLORS.YELLOW : COLORS.LIGHT},
             ]}>
             <Image style={styles.walletIcon} source={wallet} />
             <View style={styles.tokwaButtonTextWrapper}>
@@ -38,10 +35,11 @@ const PaymentDetails = () => {
             </View>
           </TouchableOpacity>
           <TouchableOpacity
+            disabled
             onPress={() => setPaymentMethod(PAYMENT_TYPE.CASH)}
             style={[
               styles.cashButton,
-              {borderColor: paymentMethod === PAYMENT_TYPE.CASH ? COLORS.ORANGE : COLORS.LIGHT},
+              {borderColor: paymentMethod === PAYMENT_TYPE.CASH ? COLORS.YELLOW : COLORS.LIGHT},
             ]}>
             <Text style={styles.cashText}>CASH</Text>
           </TouchableOpacity>

@@ -1,44 +1,168 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useContext} from 'react';
 import Toast from 'react-native-simple-toast';
 import {useNavigation} from '@react-navigation/native';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
-import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, Text, TouchableOpacity, Alert} from 'react-native';
+import {VerifyContext} from './VerifyContextProvider';
+import {useRoute} from '@react-navigation/native';
 
 // Utils
 import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
 import {scale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
 
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
-const FoodCart = ({item_price = 0.0, currentTotal = 0.0}) => {
+export const FoodCart = ({basePrice = 0.0}) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
+  const routes = useRoute();
+  const restaurantData = routes.params;
+  const {totalPrice, setTotalPrice, optionsAmount, count, setCount, selected, notes} = useContext(VerifyContext);
+  const {cart, totalAmount} = useSelector((state) => state.toktokFood);
 
-  const [count, setCount] = useState(1);
-  const [total, setTotal] = useState(0);
-
-  const onRestaurantNavigate = () => {
-    dispatch({type: 'SET_TOKTOKFOOD_CART_TOTAL', payload: {price: (total + currentTotal)}});
-
-    Toast.show('Added to cart', Toast.SHORT);
-    navigation.navigate('ToktokFoodRestaurantOverview');
+  const arrangeAddOns = () => {
+    let data = [];
+    Object.values(selected).map((item) => {
+      item.map((val) => {
+        data.push(val);
+      });
+    });
+    return data;
   };
 
-  const updateCartTotal = (type = 'ADD') => {
-    if (type === 'ADD') {
-      setCount(count + 1);
+  const computeTotalPrice = async (items) => {
+    let amount = 0;
+    await Object.values(items).map((val) => {
+      amount += val.srp_totalamount;
+    });
+    return amount + totalPrice;
+  };
+
+  const isEqual = (...objects) => objects.every((obj) => JSON.stringify(obj) === JSON.stringify(objects[0]));
+
+  const onRestaurantNavigate = async () => {
+    let hasCart = await cart.findIndex((val) => {
+      return val.sys_shop == restaurantData.shopId;
+    });
+    let items = {};
+    let totalItemPrice = hasCart > -1 ? await computeTotalPrice(cart[hasCart].items) : totalPrice;
+
+    if (hasCart > -1) {
+      let item = {
+        sys_shop: parseInt(restaurantData.shopId),
+        product_id: restaurantData.Id,
+        productImage: routes.params.filename,
+        productName: routes.params.itemname,
+        quantity: count.quantity,
+        amount: totalPrice,
+        srp_amount: totalPrice,
+        srp_totalamount: totalPrice,
+        total_amount: totalPrice,
+        order_type: 1,
+        notes: notes,
+        addons: selected
+      }
+    
+      let filterData = await cart[hasCart].items.filter((item) => { return item.product_id == restaurantData.Id })
+      if(filterData.length > 0){
+        filterData.map((val, index) => {
+          if (isEqual(val.addons, item.addons)) {
+            item.quantity += val.quantity;
+            item.srp_totalamount += val.srp_totalamount;
+            item.srp_amount += val.srp_amount;
+            item.amount += val.amount;
+            item.total_amount += val.total_amount;
+
+            cart[hasCart].items[index] = item;
+          } else {
+            cart[hasCart].items.push(item);
+          }
+        });
+      } else {
+        cart[hasCart].items.push(item);
+      }
+      dispatchTotalAmount(totalItemPrice)
+      Toast.show('Added to cart', Toast.SHORT);
+      navigation.navigate('ToktokFoodRestaurantOverview');
     } else {
-      count > 1 && setCount(count - 1);
+      if(cart.length > 0){
+        Alert.alert(
+          'You have existing items on your cart. If you add this to cart, the current cart will be empty. Would you like to proceed?',
+          '',
+        [
+          {
+            text: 'No', 
+            onPress: () => {}
+          },
+          {
+            text: "Yes",
+            onPress: () => onPressYes(totalItemPrice),
+          },
+        ]);
+      } else {
+        onPressYes(totalItemPrice)
+      };
     }
+   
+  };
+
+  const dispatchTotalAmount = (totalItemPrice) => {
+    dispatch({type: 'SET_TOKTOKFOOD_CART_TOTAL', payload: {[restaurantData.shopId]: totalItemPrice}});
+  }
+
+  const onPressYes = (totalItemPrice) => {
+    items = {
+      sys_shop: parseInt(restaurantData.shopId),
+      branchid: 0,
+      daystoship: 0,
+      daystoship_to: 0,
+      items: [
+        {
+          sys_shop: parseInt(restaurantData.shopId),
+          product_id: restaurantData.Id,
+          productImage: routes.params.filename,
+          productName: routes.params.itemname,
+          quantity: count.quantity,
+          amount: totalPrice,
+          srp_amount: totalPrice,
+          srp_totalamount: totalPrice,
+          total_amount: totalPrice,
+          order_type: 1,
+          notes: notes,
+          addons: selected
+        },
+      ],
+    }
+    dispatch({type: 'SET_TOKTOKFOOD_CART_ITEMS', payload: [ items ]});
+    dispatchTotalAmount(totalItemPrice)
+    Toast.show('Added to cart', Toast.SHORT);
+    navigation.navigate('ToktokFoodRestaurantOverview');
+  }
+
+  const updateCartTotal = (type = 'ADD') => {
+    let quantity = 1;
+    if (type === 'ADD') {
+      quantity = count.quantity + 1;
+    } else {
+      quantity = count.quantity - 1;
+    }
+    setCount({type, quantity});
   };
 
   const updateCartStates = () => {
-    setTotal(count * item_price);
+    if (count.type) {
+      let amount = basePrice + optionsAmount;
+      if (count.type == 'ADD') {
+        setTotalPrice(totalPrice + amount);
+      } else {
+        setTotalPrice(totalPrice - amount);
+      }
+    }
   };
 
   useEffect(() => {
     updateCartStates();
-  }, [count, item_price]);
+  }, [count]);
 
   return (
     <>
@@ -46,19 +170,19 @@ const FoodCart = ({item_price = 0.0, currentTotal = 0.0}) => {
         <View style={styles.foodItemTotalWrapper}>
           <View style={styles.countWrapper}>
             <TouchableOpacity
-              disabled={count < 2}
-              style={[styles.countButtons, {backgroundColor: count < 2 ? COLOR.LIGHT : COLOR.MEDIUM}]}
+              disabled={count.quantity < 2}
+              style={[styles.countButtons, {backgroundColor: count.quantity < 2 ? COLOR.LIGHT : COLOR.MEDIUM}]}
               onPress={() => updateCartTotal('REMOVE')}>
               <MIcon name="remove" color={COLOR.BLACK} size={25} />
             </TouchableOpacity>
-            <Text style={styles.countText}>{count}</Text>
+            <Text style={styles.countText}>{count.quantity}</Text>
             <TouchableOpacity
               style={[styles.countButtons, {backgroundColor: COLOR.ORANGE}]}
               onPress={() => updateCartTotal()}>
               <MIcon name="add" color={COLOR.WHITE} size={20} />
             </TouchableOpacity>
           </View>
-          <Text style={styles.total}>Subtotal: {total.toFixed(2)}</Text>
+          <Text style={styles.total}>Subtotal: {totalPrice.toFixed(2)}</Text>
         </View>
         <TouchableOpacity style={styles.cartButton} onPress={() => onRestaurantNavigate()}>
           <Text style={styles.buttonText}>Add to Cart</Text>
@@ -134,4 +258,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default React.memo(FoodCart);
+// export default React.memo(FoodCart);

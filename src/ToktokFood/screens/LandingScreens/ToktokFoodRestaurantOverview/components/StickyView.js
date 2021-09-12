@@ -24,6 +24,8 @@ import {
 import {FoodList, HeaderTitleSearchBox} from '../components';
 import {VerifyContext, CategoryTabs} from '../components';
 
+import {useDispatch} from 'react-redux';
+
 // const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 // const IS_IPHONE_X = SCREEN_HEIGHT === 812 || SCREEN_HEIGHT === 896;
 // const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? (IS_IPHONE_X ? 44 : 20) : 0;
@@ -31,11 +33,23 @@ import {VerifyContext, CategoryTabs} from '../components';
 // const NAV_BAR_HEIGHT = HEADER_HEIGHT - STATUS_BAR_HEIGHT;
 export const StickyView = () => {
   const routes = useRoute();
+  const dispatch = useDispatch();
   const [offset, setOffset] = useState(0);
   const [activeTab, setActiveTab] = useState({});
   const [productCategories, setProductCategories] = useState([]);
 
-  const {id, address, shopname, ratings, banner, estimatedDeliveryTime, estimatedDistance, logo} = routes.params.item;
+  const {
+    id,
+    address,
+    shopname,
+    ratings,
+    banner,
+    estimatedDeliveryTime,
+    estimatedDistance,
+    logo,
+    latitude,
+    longitude,
+  } = routes.params.item;
 
   const headerMaxHeight = Platform.OS === 'ios' ? scale(400) : scale(370);
   const headerMinHeight = Platform.OS === 'ios' ? moderateScale(120) : moderateScale(140);
@@ -52,6 +66,7 @@ export const StickyView = () => {
   });
 
   useEffect(() => {
+    dispatch({type: 'SET_TOKTOKFOOD_SHOP_COORDINATES', payload: {latitude, longitude}});
     getProductCategories();
   }, []);
 
@@ -66,7 +81,6 @@ export const StickyView = () => {
     }
   }, [data]);
 
- 
   const NavBar = () => (
     <View style={[styles.headerWrapper, styles.navbarWrapper]}>
       <HeaderTitleSearchBox />
@@ -135,12 +149,7 @@ export const StickyView = () => {
         backgroundColor="transparent"
         renderNavBar={() => <NavBar />}
         renderContent={() => (
-          <FoodList
-            ratings={ratings}
-            id={id}
-            activeTab={activeTab}
-            tagsLoading={loading}
-          />
+          <FoodList latitude={latitude} longitude={longitude} id={id} activeTab={activeTab} tagsLoading={loading} />
         )}
         containerStyle={styles.container}
         contentContainerStyle={styles.contentContainer}

@@ -13,8 +13,8 @@ export const GET_RIDER = gql`
   }
 `;
 export const GET_RIDER_DETAILS = gql`
-  query getDriver($input: GetDriverInput) {
-    getDriver(input: $input) {
+  query getDeliveryDriver($input: GetDeliveryDriverInput) {
+    getDeliveryDriver(input: $input) {
       driver {
         id
         status
@@ -49,6 +49,17 @@ export const GET_RIDER_DETAILS = gql`
           }
         }
       }
+    }
+  }
+`;
+
+export const GET_SHIPPING_FEE = gql`
+  query getShippingFee($input: GetShippingFeeInput!) {
+    getShippingFee(input: $input) {
+      success
+      price
+      hash
+      hash_price
     }
   }
 `;

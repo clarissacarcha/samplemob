@@ -26,21 +26,21 @@ export const TransactionItems = (props) => {
     lowerText = !isSameDay ? dayTitle(data[index + 1].dateOrdered) : ''
   }
 
-  const onTransactionsNavigate = (id) => {
+  const onTransactionsNavigate = (referenceNum) => {
     if(orderStatus == 's' || orderStatus == 'c'){
-      navigation.navigate('ToktokFoodOrderDetails', { appSalesOrderId: id, orderStatus })
+      navigation.navigate('ToktokFoodOrderDetails', { referenceNum, orderStatus })
     } else {
-      navigation.navigate('ToktokFoodDriver', {  id })
+      navigation.navigate('ToktokFoodDriver', { referenceNum })
     }
   };
   
   return (
     <>
     { !!upperText && <Text style={styles.dayTitle}>{upperText}</Text> }
-    <TouchableWithoutFeedback key={item.orderId} onPress={() => onTransactionsNavigate(item.id)}>
+    <TouchableWithoutFeedback key={item.orderId} onPress={() => onTransactionsNavigate(item.referenceNum)}>
       <View style={styles.itemContainer}>
         <View style={styles.imgWrapper}>
-          <Image resizeMode="contain" source={shopDetails.logo} style={styles.imgShop} />
+          <Image resizeMode="contain" source={{ uri: shopDetails.logo}} style={styles.imgShop} />
         </View>
         <View style={styles.restaurantInfo}>
           <View style={styles.infoWrapper}>
@@ -93,7 +93,8 @@ const styles = StyleSheet.create({
   dayTitle: {
     paddingHorizontal: 16,
     fontSize: FONT_SIZE.L,
-    fontFamily: FONT.BOLD
+    fontFamily: FONT.BOLD,
+    paddingBottom: 10
   },
   timeImg: {
     width: scale(15),

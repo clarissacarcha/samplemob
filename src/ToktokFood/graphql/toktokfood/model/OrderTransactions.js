@@ -1,4 +1,4 @@
-import gql from 'graphql-tag'
+import gql from 'graphql-tag';
 
 const transaction = `
   id
@@ -34,6 +34,8 @@ const transaction = `
   isconfirmed
   deliveryImgurl
   deliveryImgurl2
+  orderIsfor
+  isdeclined
   shopDetails {
     id
     shopname
@@ -64,18 +66,37 @@ const transaction = `
       filename
     }
   }
-`
+`;
 export const GET_ORDER_TRANSACTIONS = gql`
   query getTransactions($input: GetTransactionInput){
     getTransactions(input: $input) {
       ${transaction}
     }
   }
-`
-export const GET_ORDER_TRANSACTION_BY_ID = gql`
-  query getTransactionById($input: GetTransactionByIdInput){
-    getTransactionById(input: $input) {
+`;
+export const GET_ORDER_TRANSACTION_BY_REF_NUM = gql`
+  query getTransactionByRefNum($input: GetTransactionByRefNumInput){
+    getTransactionByRefNum(input: $input) {
       ${transaction}
     }
   }
-`
+`;
+
+export const PATCH_PLACE_CUSTOMER_ORDER = gql`
+  mutation checkoutOrder($input: CheckOutOrderInput!) {
+    checkoutOrder(input: $input) {
+      status
+      message
+      referenceNum
+    }
+  }
+`;
+
+export const PATCH_CANCEL_CUSTOMER_ORDER = gql`
+  mutation cancelOrder($input: CancelOrderInput!) {
+    cancelOrder(input: $input) {
+      status
+      message
+    }
+  }
+`;

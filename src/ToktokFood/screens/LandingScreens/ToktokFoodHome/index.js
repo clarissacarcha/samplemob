@@ -10,8 +10,6 @@ import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 // Hooks
 import {useUserLocation} from 'toktokfood/hooks';
 
-import {transactions} from 'toktokfood/helper/strings';
-import DraggableIcon from 'toktokfood/components/DraggableIcon';
 import {moderateScale, getStatusbarHeight} from 'toktokfood/helper/scale';
 
 const CUSTOM_HEADER = {
@@ -33,7 +31,7 @@ const ToktokFoodHome = () => {
     <View style={styles.container} onLayout={(event) => getWindowDimension(event)}>
       {/* <DraggableIcon data={transactions} title="Ongoing Orders" viewHeight={viewHeight} /> */}
       <HeaderImageBackground customSize={CUSTOM_HEADER}>
-        <HeaderTitle showAddress={true} />
+        <HeaderTitle showAddress={true} title="toktokfood" />
         <HeaderSearchBox />
       </HeaderImageBackground>
       <StickyView />
