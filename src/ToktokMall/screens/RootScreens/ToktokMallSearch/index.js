@@ -68,6 +68,40 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
     }
   })
 
+  const [getProductsLazyLoad, {error2, loading2}] = useLazyQuery(SEARCH_PRODUCT, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    variables: {
+      input: {
+        search: searchValue,
+        origin: route.params?.origin ? route.params.origin : "all",
+        offset: searchedProducts.length + 10,
+        limit: 10
+      }
+    },
+    onCompleted: async (response) => {      
+      console.log('lazy load fired')
+      let temp2 = searchedProducts
+      if(response){
+        console.log('RESPONSE FROM DB',response)
+        temp2 = temp2.concat(response.searchProduct)
+        setSearchedProducts(temp2)
+        // setProducts(response.getProducts)
+      }else{
+        setSearchedProducts(temp2)
+      }
+      console.log('searchedProducts', temp2)
+      setOffset(searchedProducts.length + 10)
+      
+    },
+    onError: (err) => {
+      console.log(err)
+      setSearchedProducts([])
+      setEmptySearch(true)
+      setIsLoading(false)
+    }
+  })
+
   const handleOnSearch = (val) => {    
 		setSearchValue(val)
     setOffset(0)
@@ -196,7 +230,12 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
                 }
               }
             })
-          }} 
+          }}
+          lazyload={() => {
+            setOffset(searchedProducts.length + 10)
+            console.log('lazyload', {offset},  searchValue, route.params.origin  )
+            getProductsLazyLoad()
+          }}
         />}
 
         {loading && 

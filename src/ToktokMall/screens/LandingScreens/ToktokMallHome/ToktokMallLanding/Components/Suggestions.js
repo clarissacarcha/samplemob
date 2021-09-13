@@ -224,10 +224,10 @@ export const Suggestions = ({}) => {
           keyExtractor={(item, index) => item + index}
           refreshing={loading}
           onEndReached = {() => {
-            setIsFetching(true)
-            setOffset(products.length)
-            console.log({offset})
-            getProducts()
+            // setIsFetching(true)
+            // setOffset(products.length)
+            // console.log({offset})
+            // getProducts()
           }}
           // onScroll = {(nativeEvent) => {
           //   console.log(nativeEvent)

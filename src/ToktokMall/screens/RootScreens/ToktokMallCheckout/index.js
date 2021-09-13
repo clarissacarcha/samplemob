@@ -456,7 +456,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
         />
         <CheckoutModal 
           navigation={navigation} 
-          isVisible={isVisible} 
+          isVisible={true} 
           setIsVisible={setIsVisible} 
           goToOrders = {onGoToOrders}
         />

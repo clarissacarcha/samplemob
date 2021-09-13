@@ -23,10 +23,3 @@ const linking = {
 }
 
 export default linking
-
-// ToktokMallProductDetails: {
-//     path: "products/:Id",
-//     parse: {
-//       Id: (Id) => `${Id}`
-//     }
-//   }

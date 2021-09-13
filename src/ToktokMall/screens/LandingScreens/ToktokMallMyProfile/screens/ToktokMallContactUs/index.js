@@ -8,15 +8,52 @@ import {
   StatusBar,
   Image,
   TouchableOpacity,
-  TextInput,
+  TextInput, Linking
 } from 'react-native';
 import {HeaderBack, HeaderTitle, HeaderRight, Card} from '../../../../../Components';
 import CustomIcon from '../../../../../Components/Icons';
 import {MessageModal} from '../../../../../Components'
 import {COLOR, FONT, FONT_SIZE} from '../../../../../../res/variables';
+import * as  qs from 'qs'
 
 export const ToktokMallContactUs = ({navigation}) => {
   const [messageModalShown, setMessageModalShown] = useState(false)
+  const [message, setMessage] =useState('')
+
+  const sendEmail = async ( subject, body, options= {}) => {
+    const {cc, bcc} = options
+
+    let url = 'mailto:mall@toktok.ph'
+
+    const query = qs.stringify({
+      subject: subject,
+      body: body,
+      cc: cc,
+      bcc: bcc
+    })
+
+    if (query.length) {
+      url += `?${query}`
+    }
+
+    const canOpen = await Linking.canOpenURL(url)
+
+    if(!canOpen){
+      throw new Error('Provided URL can not be handled');
+    }
+
+    return Linking.openURL(url)
+  }
+
+  const onPress = () => {
+    sendEmail(
+      message,
+      '',
+      {cc: 'sample text', }
+    ).then(() => {
+      console.log('Your message was successfully sent')
+    })
+  }
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
@@ -137,12 +174,15 @@ export const ToktokMallContactUs = ({navigation}) => {
                   />
                 </View>
                 <View style={styles.textinputLastContainer}>
-                  <TextInput style={styles.textinput} placeholder={'Message'} />
+                  <TextInput style={styles.textinput} placeholder={'Message'} 
+                    value = {message}
+                    onChangeText = {(text) => {setMessage(text)}}
+                  />
                 </View>
               </View>
               <View
                 style={{flex: 0, marginTop: 18, alignItems: 'center', justifyContent: 'center', paddingVertical: 10}}>
-                <TouchableOpacity onPress = {() => {setMessageModalShown(true)}} style={styles.button}>
+                <TouchableOpacity onPress = {() => {onPress()}} style={styles.button}>
                   <Text style={styles.buttonText}>Save</Text>
                 </TouchableOpacity>
               </View>

@@ -74,11 +74,16 @@ const RenderItem = ({navigation, item}) => {
   )
 }
 
-export const Product = ({data, state, fetch}) => {
+export const Product = ({data, state, fetch, lazyload}) => {
 
   const [loading, setloading] = useState(state)
   const navigation = useNavigation()
   const [products, setProducts] = useState(data)
+
+  const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+    const paddingBottom = 150;
+    return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingBottom;
+  }
 
   useEffect(() => {
     setProducts(data)
@@ -107,13 +112,18 @@ export const Product = ({data, state, fetch}) => {
                 }
                 return <RenderItem navigation={navigation} item={item} />
               }}
+              onScroll = {({nativeEvent}) => {
+                if(isCloseToBottom(nativeEvent)){
+                  lazyload()
+                }
+              }}
               keyExtractor={(item, index) => item + index}
               showsVerticalScrollIndicator={false}
               ListFooterComponent={() => {
                 return (
                   <>
-                    <SwipeReloader state={false} onSwipeUp={fetch} />
-                    <View style={styles.separator} />
+                    {/* <SwipeReloader state={false} onSwipeUp={fetch} />
+                    <View style={styles.separator} /> */}
                   </>
                 )
               }}
