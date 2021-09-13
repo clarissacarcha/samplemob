@@ -48,13 +48,13 @@ const OrderTypeSelection = ({visibility, date, onValueChange, value}) => {
           <View style={[styles.wrapper, styles.cartBorder]}>
             <View style={styles.sheet}>
               <View style={styles.itemWrapper}>
-                <RoundedButton orderIsFor={2} selected={value === 'PICK_UP'} />
-                <Text style={styles.itemText}>Pick-up</Text>
+                <RoundedButton orderIsFor={1} selected={value === 'DELIVERY'} />
+                <Text style={styles.itemText}>Delivery</Text>
               </View>
               <View style={styles.separator} />
               <View style={styles.itemWrapper}>
-                <RoundedButton orderIsFor={1} selected={value === 'DELIVERY'} />
-                <Text style={styles.itemText}>Delivery</Text>
+                <RoundedButton orderIsFor={2} selected={value === 'PICK_UP'} />
+                <Text style={styles.itemText}>Pick-up</Text>
               </View>
               <View style={styles.scheduleWrapper}>
                 <View style={styles.dateWrapper}>
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
   },
   scheduleTitle: {
     fontSize: 18,
-    marginRight: 10,
+    marginRight: 8,
     fontFamily: FONT.BOLD,
   },
   scheduleText: {

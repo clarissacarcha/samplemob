@@ -86,7 +86,7 @@ const PickUpDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
         <Text style={styles.orderDetailsText}>See Order Details</Text>
       </TouchableOpacity>
       {orderStatus === 'p' && (
-        <TouchableOpacity style={styles.cancelButton}>
+        <TouchableOpacity onPress={() => onCancel()} style={styles.cancelButton}>
           <Text style={styles.buttonText}>Cancel</Text>
         </TouchableOpacity>
       )}
