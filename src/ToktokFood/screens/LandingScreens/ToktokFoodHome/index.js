@@ -28,12 +28,12 @@ const ToktokFoodHome = () => {
     setViewHeight(height);
   };
 
-  // useEffect(() => {
-  //   async function getCart(){
-  //     await clearTemporaryCart()
-  //   }
-  //   getCart()
-  // }, [])
+  useEffect(() => {
+    async function getCart(){
+      await clearTemporaryCart()
+    }
+    getCart()
+  }, [])
 
   return (
     <View style={styles.container} onLayout={(event) => getWindowDimension(event)}>

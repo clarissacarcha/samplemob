@@ -24,7 +24,8 @@ const OrderTitle = ({ transaction, riderDetails }) => {
    
     let distance = getDistance(
       { latitude: location?.latitude, longitude: location?.longitude },
-      { latitude: 14.537752, longitude: 121.001381 }
+      // { latitude: 14.537752, longitude: 121.001381 }
+      { latitude: riderLocation.latitude, longitude: riderLocation.longitude },
     );
     let distanceMiles = convertDistance(distance, 'mi')
     let duration = distanceMiles / 60
@@ -47,7 +48,7 @@ const OrderTitle = ({ transaction, riderDetails }) => {
 
   const renderEstimatedDeliveryTime = () => {
     let startTime = moment(date).format('LT')
-    let endTime = calculateDistance(date)
+    let endTime = calculateDistance(date, riderDetails.location)
     return (
       <View style={styles.timeContainer}>
         <MaterialIcon name="schedule" size={16} color={COLORS.YELLOWTEXT} />

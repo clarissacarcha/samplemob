@@ -38,27 +38,23 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
     return amount + totalPrice;
   };
 
-  const isEqual = (...objects) => objects.every((obj) => JSON.stringify(obj) == JSON.stringify(objects[0]))
+  // const isEqual = (...objects) => objects.every((obj) => JSON.stringify(obj) == JSON.stringify(objects[0]))
 
-  // const isEqual = async(obj1, obj2) => {
-  //   let res = false;
-  //   // let objects = [...obj1, ...obj2]
-  //   if(Object.keys(obj1).length > 0 && Object.keys(obj2).length > 0){
-  //     for(let key in obj1){
-  //       res = await obj1[key].every(val => {
-  //         return obj2[key].some(b2 => b2.addon_id === val.addon_id);
-  //       });
-  //     }
-  //   } else {
-
-  //     res = Object.keys(obj1).length == 0 && Object.entries(obj2).length == 0
-  //   }
-  //   // console.log(objects)
-  //   console.log(obj1, obj2, 'HAHA')
-    
-  //   console.log(res)
-  //   return false
-  // }
+  const isEqual = (obj1, obj2) => {
+    let result = false;
+    if(Object.keys(obj1).length > 0 && Object.keys(obj2).length > 0){
+      for(let key in obj1){
+        res = obj1[key].every(val => {
+          if(obj2[key]){
+            return obj2[key].some(b2 => b2.addon_id === val.addon_id);
+          }
+        });
+      }
+    } else {
+      res = Object.keys(obj1).length == 0 && Object.entries(obj2).length == 0
+    }
+    return res;
+  }
 
   const onRestaurantNavigate = useCallback( async () => {
     let { cart, totalAmount } = await getTemporaryCart();

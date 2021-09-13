@@ -17,11 +17,12 @@ import moment from 'moment';
 const PickUpDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) => {
   const navigation = useNavigation();
   const {location} = useSelector((state) => state.toktokFood);
-  const {shopDetails, orderStatus, isconfirmed, address, dateOrderProcessed, dateReadyPickup} = transaction;
+  const {shopDetails, orderStatus, isconfirmed, address, dateOrderProcessed, dateReadyPickup, isdeclined} = transaction;
   const status = orderStatusMessagePickUp(
     orderStatus,
     riderDetails,
     `${shopDetails.shopname} (${shopDetails.address})`,
+    isdeclined
   );
   const date = orderStatus == 'po' ? dateOrderProcessed : dateReadyPickup;
 

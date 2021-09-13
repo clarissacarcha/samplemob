@@ -5,6 +5,9 @@ import styles from '../styles';
 
 const OrderTotal = ({subtotal = 0.0, deliveryFee = 0}) => {
   deliveryFee = deliveryFee ? deliveryFee : 0
+  subtotal = subtotal ? subtotal : 0
+  // const {totalAmount, tempCart} = useContext(VerifyContext);
+
   return (
     <View style={[styles.sectionContainer, styles.totalContainer]}>
       <View style={styles.header}>

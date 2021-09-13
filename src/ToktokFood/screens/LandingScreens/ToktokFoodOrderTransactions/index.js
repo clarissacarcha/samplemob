@@ -47,8 +47,7 @@ const ToktokFoodOrderTransactions = () => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: ({ getTransactions }) => {
-      let sorted = getTransactions.sort((a, b) => b.dateOrdered.localeCompare(a.dateOrdered))
-      setTransactionList(sorted)
+      setTransactionList(getTransactions)
     }
   });
  
