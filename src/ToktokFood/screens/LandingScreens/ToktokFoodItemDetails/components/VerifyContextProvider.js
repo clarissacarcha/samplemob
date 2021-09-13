@@ -1,17 +1,21 @@
-import React, {createContext, useState} from 'react';
+import React, {createContext, useState, useEffect} from 'react';
 import {availableTips} from 'toktokfood/helper/strings';
+import {useRoute} from '@react-navigation/native';
 
 export const VerifyContext = createContext();
 const {Provider} = VerifyContext;
 
 export const VerifyContextProvider = ({children}) => {
 
-  const [totalPrice, setTotalPrice] = useState(1);
+  const routes = useRoute();
+
+  const [totalPrice, setTotalPrice] = useState(0);
   const [optionsAmount, setOptionsAmount] = useState(0);
   const [count, setCount] = useState({type: '', quantity: 1});
   const [selected, setSelected] = useState({});
   const [requiredOptions, setRequiredOptions] = useState({});
   const [notes, setNotes] = useState('');
+  const [productDetails, setProductDetails] = useState({});
 
   return (
     <Provider
@@ -27,7 +31,9 @@ export const VerifyContextProvider = ({children}) => {
         requiredOptions,
         setRequiredOptions,
         notes,
-        setNotes
+        setNotes,
+        productDetails,
+        setProductDetails
       }}
     >
       {children}

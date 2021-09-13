@@ -69,13 +69,13 @@ export const FoodList = (props) => {
     }
   }, [searchProduct]);
 
-  const onNavigateToFoodItemDetails = (item) => {
-    navigation.navigate('ToktokFoodItemDetails', {...item, shopId: id});
+  const onNavigateToFoodItemDetails = (Id) => {
+    navigation.navigate('ToktokFoodItemDetails', { Id });
   };
 
   const renderItem = ({item}) => {
     return (
-      <TouchableOpacity onPress={() => onNavigateToFoodItemDetails(item)} style={styles.listContainer}>
+      <TouchableOpacity onPress={() => onNavigateToFoodItemDetails(item.Id)} style={styles.listContainer}>
         <View>
           <Text style={styles.listText}>{item.itemname}</Text>
           <Text style={styles.listPrice}>PHP {item.price.toFixed(2)}</Text>

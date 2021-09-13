@@ -13,6 +13,7 @@ const products = `
   tags
   summary
   filename
+  sysShop
   variants {
     id
     optionName
@@ -49,6 +50,14 @@ export const GET_PRODUCTS_BY_SHOP_CATEGORY = gql`
 export const GET_PRODUCTS_BY_SHOP = gql`
   query getProductsByShop($input: GetProductsByShopInput) {
     getProductsByShop(input: $input) {
+      ${products}
+    }
+  }
+`;
+
+export const GET_PRODUCT_DETAILS = gql`
+  query getProductDetails($input: GetProductDetailsInput) {
+    getProductDetails(input: $input) {
       ${products}
     }
   }

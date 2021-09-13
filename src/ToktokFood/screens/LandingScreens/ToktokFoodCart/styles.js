@@ -21,6 +21,13 @@ export default styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: verticalScale(10),
   },
+  myOrderWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: verticalScale(10),
+    borderBottomWidth: 1,
+    borderBottomColor: '#E6E6E6'
+  },
   sectionTitle: {
     fontSize: FONT_SIZE.L,
     color: COLOR.BLACK,
@@ -58,8 +65,7 @@ export default styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingVertical: verticalScale(18),
-    borderTopWidth: 1,
-    borderTopColor: '#E6E6E6',
+    backgroundColor: 'white'
   },
   foodPrice: {
     marginEnd: 3,
@@ -213,5 +219,37 @@ export default styles = StyleSheet.create({
     color: COLOR.BLACK,
     fontSize: FONT_SIZE.L,
     fontFamily: FONT.BOLD,
+  },
+  backTextWhite: {
+    color: '#FFF',
+  },
+  rowFront: {
+    alignItems: 'center',
+    backgroundColor: '#CCC',
+    borderBottomColor: 'black',
+    borderBottomWidth: 1,
+    justifyContent: 'center',
+    height: 50,
+  },
+  rowBack: {
+    alignItems: 'center',
+    backgroundColor: '#DDD',
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingLeft: 15,
+    backgroundColor: 'white'
+  },
+  backRightBtn: {
+    alignItems: 'center',
+    bottom: 0,
+    justifyContent: 'center',
+    position: 'absolute',
+    top: 0,
+    width: 80,
+  },
+  backRightBtnRight: {
+    backgroundColor: '#F6841F',
+    right: 0,
   },
 });
