@@ -8,6 +8,8 @@ export const getOrderStatus = (focusTab) => {
       return 's'
     case 3:
       return 'c'
+    case 4:
+      return 'decline'
     
     default:
       return ''

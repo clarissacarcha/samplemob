@@ -28,3 +28,10 @@ export const clearTemporaryCart = async(key) => {
     return false;
   }
 }
+export const removeTemporaryCartItem = async(value, isLastItem) => {
+  try {
+    return isLastItem ? await clearTemporaryCart() : await storeTemporaryCart(value)
+  } catch(exception) {
+    return false;
+  }
+}
