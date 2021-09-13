@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {Platform, StyleSheet, View} from 'react-native';
-import deepDiffer from `react-native/libraries/utilities/differ/deepDiffer`
+
 // Components
 import {StickyView} from './components';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
