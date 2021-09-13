@@ -35,13 +35,13 @@ const ToktokFoodCart = () => {
   const nowDate = moment().format('YYYY-DD-YYYY');
 
   const {amount, cart} = route.params;
-  const {location, customerInfo, shopLocation } = useSelector((state) => state.toktokFood);
+  const {location, customerInfo, shopLocation} = useSelector((state) => state.toktokFood);
 
   const [riderNotes, setRiderNotes] = useState('');
   const [delivery, setDeliveryInfo] = useState(null);
   const [showLoader, setShowLoader] = useState(false);
   const [showOrderType, setShowrderType] = useState(true);
-  const [orderType, setOrderType] = useState(true);
+  const [orderType, setOrderType] = useState('DELIVERY');
 
   const merge = (o) => {
     const arr = [];
@@ -132,7 +132,7 @@ const ToktokFoodCart = () => {
             total_amount: amount,
             srp_totalamount: amount,
             notes: riderNotes,
-            order_isfor: 1, // 1 Delivery | 2 Pick Up Status
+            order_isfor: orderType === 'DELIVERY' ? 1 : 2, // 1 Delivery | 2 Pick Up Status
             order_type: 2,
             payment_method: 'TOKTOKWALLET',
             order_logs: CUSTOMER_CART,
