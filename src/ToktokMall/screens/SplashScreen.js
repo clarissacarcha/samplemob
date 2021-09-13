@@ -185,6 +185,7 @@ const Splash = ({
     await AsyncStorage.getItem("ToktokMallUser").then(async (raw) => {
       const data = JSON.parse(raw) || null
       if(data && data.userId){
+        console.log(data)
         navigation.navigate("ToktokMallLanding");
       }else{
         await authUser()

@@ -197,8 +197,10 @@ export default (state = INITIAL_STATE, action) => {
         return {...state, notifications: notifArr};
       } else if (action.action == 'read') {
         let notifArr = state.notifications;
-        let index = notifArr.findIndex((raw) => raw.id == action.payload);
-        notifArr[index].read = 1;
+        // console.log(action.payload, notifArr)
+        // let index = notifArr.findIndex((raw) => raw.id == action.payload);
+        // notifArr[index].read = 1;
+        notifArr.splice(0, 1)
         let stringyfiedNotifs = JSON.stringify(notifArr);
         AsyncStorage.setItem('Notifications', stringyfiedNotifs);
         return {...state, notifications: notifArr};

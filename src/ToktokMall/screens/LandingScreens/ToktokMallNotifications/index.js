@@ -82,7 +82,11 @@ const Component =  ({
             notifs.push({id: item2.uuid, read: 0})
           })
         })
-        createNotificationsSession("set", notifs)
+
+        if(notifs.length != notifications.length){
+          createNotificationsSession("set", notifs)
+        }
+
 			}
     },
     onError: (err) => {
@@ -99,8 +103,8 @@ const Component =  ({
           active={dropshown}
           data={item} 
           onSelect={() => {
-            // createNotificationsSession("read", item.uuid)
-            setDropShown(!dropshown)
+            createNotificationsSession("read", item.uuid)
+            // setDropShown(!dropshown)
           }} 
         />
         {/* {dropshown && item.history.map((raw, i) => 

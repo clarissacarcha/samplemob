@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {View,Text,StyleSheet,Platform,Dimensions,StatusBar,Image, TouchableOpacity, FlatList} from 'react-native'
 import CustomIcon from '../../../../Components/Icons'
 import { COLOR, FONT, FONT_SIZE } from '../../../../../res/variables';
@@ -9,6 +9,10 @@ export const Item = ({active, data, onSelect}) => {
 
   const navigation = useNavigation()
   const [clicks, setClicks] = useState(0)
+
+  useEffect(() => {
+    console.log(data)
+  }, [])
 
 	const getImage = (raw) => {
 		if(typeof raw == "object" && raw != null) return {uri: raw.filename}
@@ -45,12 +49,14 @@ export const Item = ({active, data, onSelect}) => {
     }
   }
 
-  const getTime = (history) => {
-    if(history && history.length > 0){
-      return history[history.length - 1].formatTime
-    }else{
-      return "00:00 PM"
-    }
+  const getDate = (parent) => {
+    if(parent.date) return parent.date
+    else return "--- --- ----"
+  }
+
+  const getTime = (parent) => {
+    if(parent.time) return parent.time
+    else return "00:00 PM"
   }
 
   const getContent = (history) => {
@@ -64,7 +70,10 @@ export const Item = ({active, data, onSelect}) => {
   return (
   	<>
       <TouchableOpacity 
-        onPress={() => navigation.navigate("ToktokMallOrderDetails", data)}
+        onPress={() => {
+          onSelect()
+          navigation.navigate("ToktokMallOrderDetails", data)
+        }}
         style={{flexDirection: 'row', backgroundColor: clicks == 1 ? '#fff' : '#FFFCF4'}}>
         <View style={{flex: 2, alignItems: 'center', justifyContent: 'center', paddingVertical: 20, paddingHorizontal: 15}}>
           <Image 
@@ -77,12 +86,12 @@ export const Item = ({active, data, onSelect}) => {
           {getDesc(data?.parent?.description, data?.referenceNum)}
           {/* {getContent(data?.history)} */}
         </View>
-        <View style={{flex: 2, paddingVertical: 20, paddingHorizontal: 15}}>
+        <View style={{flex: 2.5, paddingVertical: 20, paddingHorizontal: 15}}>
           <View style={{alignItems: 'center'}}>
-            <Text style={{color: "#9E9E9E", fontSize: 10}}>{data?.parent?.date || "--:--:--"}</Text>
+            <Text style={{color: "#9E9E9E", fontSize: 10}}>{getDate(data?.parent)}</Text>
           </View>
           <View style={{alignItems: 'center'}}>
-            <Text style={{color: "#9E9E9E", fontSize: 10}}>{getTime(data?.history)}</Text>
+            <Text style={{color: "#9E9E9E", fontSize: 10}}>{getTime(data?.parent)}</Text>
           </View>
           {/* <TouchableOpacity onPress={() => {
             if(clicks == 0 && !active){
