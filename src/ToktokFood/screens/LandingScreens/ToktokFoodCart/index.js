@@ -5,6 +5,7 @@ import {KeyboardAvoidingView, ScrollView, Platform, ActivityIndicator, View} fro
 
 import Loader from 'toktokfood/components/Loader';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
+import OrderTypeSelection from 'toktokfood/components/OrderTypeSelection';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 
 import styles from './styles';
@@ -39,6 +40,8 @@ const ToktokFoodCart = () => {
   const [riderNotes, setRiderNotes] = useState('');
   const [delivery, setDeliveryInfo] = useState(null);
   const [showLoader, setShowLoader] = useState(false);
+  const [showOrderType, setShowrderType] = useState(true);
+  const [orderType, setOrderType] = useState(true);
 
   const merge = (o) => {
     const arr = [];
@@ -182,6 +185,12 @@ const ToktokFoodCart = () => {
           notes={riderNotes}
           onNotesChange={(n) => setRiderNotes(n)}
           onPlaceOrder={() => placeCustomerOrder()}
+        />
+        <OrderTypeSelection
+          value={orderType}
+          visibility={showOrderType}
+          date={moment().format('MMM DD, YYYY')}
+          onValueChange={(type) => setOrderType(type)}
         />
       </ScrollView>
     </KeyboardAvoidingView>

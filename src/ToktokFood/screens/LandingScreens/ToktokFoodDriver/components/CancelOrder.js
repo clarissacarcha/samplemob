@@ -47,7 +47,7 @@ const CancelOrder = ({visibility = false, onCloseSheet, failedCancel, referenceO
         animationType="slide"
         presentationStyle="overFullScreen">
         <View style={styles.content}>
-          <View style={[styles.proto, styles.cartBorder]}>
+          <View style={[styles.wrapper, styles.cartBorder]}>
             <View style={styles.sheet}>
               <Text style={styles.cancelTitle}>This order will be canceled. Would you like to proceed?</Text>
               <View style={styles.buttonWrapper}>
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     backgroundColor: 'rgba(34, 34, 34, 0.5)',
   },
-  proto: {
+  wrapper: {
     height: '40%',
     width: '101%',
     position: 'absolute',
