@@ -1,34 +1,34 @@
-import React, {useEffect, useContext} from 'react';
+import React, {useEffect, useContext, useState, useCallback} from 'react';
 import Toast from 'react-native-simple-toast';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import {View, StyleSheet, Text, TouchableOpacity, Alert} from 'react-native';
 import {VerifyContext} from './VerifyContextProvider';
-import {useRoute} from '@react-navigation/native';
+import uuid from 'react-native-uuid';
+import _ from 'lodash';
 
 // Utils
 import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
 import {scale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
+import { storeTemporaryCart, getTemporaryCart } from 'toktokfood/helper/TemporaryCart';
 
 import {useDispatch, useSelector} from 'react-redux';
 
-export const FoodCart = ({basePrice = 0.0}) => {
+export const FoodCart = ({basePrice = 0.0, loading}) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const routes = useRoute();
-  const restaurantData = routes.params;
-  const {totalPrice, setTotalPrice, optionsAmount, count, setCount, selected, notes} = useContext(VerifyContext);
-  const {cart, totalAmount} = useSelector((state) => state.toktokFood);
-
-  const arrangeAddOns = () => {
-    let data = [];
-    Object.values(selected).map((item) => {
-      item.map((val) => {
-        data.push(val);
-      });
-    });
-    return data;
-  };
+  const { Id, selectedAddons, selectedItemId, selectedPrice, selectedQty } = routes.params;
+  const {
+    totalPrice,
+    setTotalPrice,
+    optionsAmount,
+    count,
+    setCount,
+    selected,
+    notes,
+    productDetails,
+  } = useContext(VerifyContext);
 
   const computeTotalPrice = async (items) => {
     let amount = 0;
@@ -38,21 +38,41 @@ export const FoodCart = ({basePrice = 0.0}) => {
     return amount + totalPrice;
   };
 
-  const isEqual = (...objects) => objects.every((obj) => JSON.stringify(obj) === JSON.stringify(objects[0]));
+  const isEqual = (...objects) => objects.every((obj) => JSON.stringify(obj) == JSON.stringify(objects[0]))
 
-  const onRestaurantNavigate = async () => {
-    let hasCart = await cart.findIndex((val) => {
-      return val.sys_shop == restaurantData.shopId;
-    });
+  // const isEqual = async(obj1, obj2) => {
+  //   let res = false;
+  //   // let objects = [...obj1, ...obj2]
+  //   if(Object.keys(obj1).length > 0 && Object.keys(obj2).length > 0){
+  //     for(let key in obj1){
+  //       res = await obj1[key].every(val => {
+  //         return obj2[key].some(b2 => b2.addon_id === val.addon_id);
+  //       });
+  //     }
+  //   } else {
+
+  //     res = Object.keys(obj1).length == 0 && Object.entries(obj2).length == 0
+  //   }
+  //   // console.log(objects)
+  //   console.log(obj1, obj2, 'HAHA')
+    
+  //   console.log(res)
+  //   return false
+  // }
+
+  const onRestaurantNavigate = useCallback( async () => {
+    let { cart, totalAmount } = await getTemporaryCart();
+    let hasCart = await cart.findIndex((val) => { return val.sys_shop == productDetails.sysShop });
+    let totalItemPrice = hasCart >= 0 ? await computeTotalPrice(cart[hasCart].items) : totalPrice;
     let items = {};
-    let totalItemPrice = hasCart > -1 ? await computeTotalPrice(cart[hasCart].items) : totalPrice;
 
-    if (hasCart > -1) {
+    if (hasCart >= 0) {
       let item = {
-        sys_shop: parseInt(restaurantData.shopId),
-        product_id: restaurantData.Id,
-        productImage: routes.params.filename,
-        productName: routes.params.itemname,
+        itemId: selectedItemId ? selectedItemId : uuid.v4(),
+        sys_shop: parseInt(productDetails.sysShop),
+        product_id: productDetails.Id,
+        productImage: productDetails.filename,
+        productName: productDetails.itemname,
         quantity: count.quantity,
         amount: totalPrice,
         srp_amount: totalPrice,
@@ -62,66 +82,60 @@ export const FoodCart = ({basePrice = 0.0}) => {
         notes: notes,
         addons: selected
       }
+     
+      let currentIndex = await cart[hasCart].items.findIndex((item) => { return isEqual(item.addons, selected) })
+      let editedIndex = await cart[hasCart].items.findIndex((item) => { return item.itemId == selectedItemId })
     
-      let filterData = await cart[hasCart].items.filter((item) => { return item.product_id == restaurantData.Id })
-      if(filterData.length > 0){
-        filterData.map((val, index) => {
-          if (isEqual(val.addons, item.addons)) {
-            item.quantity += val.quantity;
-            item.srp_totalamount += val.srp_totalamount;
-            item.srp_amount += val.srp_amount;
-            item.amount += val.amount;
-            item.total_amount += val.total_amount;
-
-            cart[hasCart].items[index] = item;
-          } else {
-            cart[hasCart].items.push(item);
-          }
-        });
-      } else {
-        cart[hasCart].items.push(item);
+      if(currentIndex < 0 && editedIndex >= 0){ // check if edited and not existing item in cart
+        totalItemPrice = totalItemPrice - selectedPrice
+        return pushProducts({ cart, hasCart, item, index: editedIndex, totalItemPrice, pushExistingItems: true })
+      } 
+      if(editedIndex >= 0){ await cart[hasCart].items.splice(editedIndex, 1) } // delete item from edited if already existed in cart
+      if((currentIndex >= 0 && selectedQty != item.quantity && editedIndex < 0)){ // check quantity if same and come from edit
+        let tempCart = cart[hasCart].items[currentIndex]
+        item.quantity += tempCart.quantity;
+        item.srp_totalamount += tempCart.srp_totalamount;
+        item.srp_amount += tempCart.srp_amount;
+        item.amount += tempCart.amount;
+        item.total_amount += tempCart.total_amount;
       }
-      dispatchTotalAmount(totalItemPrice)
-      Toast.show('Added to cart', Toast.SHORT);
-      navigation.navigate('ToktokFoodRestaurantOverview');
+   
+      if(editedIndex >= 0){ 
+        totalItemPrice = totalItemPrice - selectedPrice
+      }
+      currentIndex >= 0 ? (
+        pushProducts({ cart, hasCart, item, index: currentIndex, totalItemPrice, pushExistingItems: true })
+      ) : (
+        pushProducts({ cart, hasCart, item, totalItemPrice, pushExistingItems: false })
+      )
     } else {
       if(cart.length > 0){
         Alert.alert(
           'You have existing items on your cart. If you add this to cart, the current cart will be empty. Would you like to proceed?',
           '',
         [
-          {
-            text: 'No', 
-            onPress: () => {}
-          },
-          {
-            text: "Yes",
-            onPress: () => onPressYes(totalItemPrice),
-          },
+          { text: 'No', onPress: () => {} },
+          { text: "Yes", onPress: () => onPressYes(totalItemPrice) },
         ]);
       } else {
         onPressYes(totalItemPrice)
       };
     }
-   
-  };
+  }, [totalPrice, setTotalPrice, optionsAmount, count, setCount, selected, notes, productDetails ]);
 
-  const dispatchTotalAmount = (totalItemPrice) => {
-    dispatch({type: 'SET_TOKTOKFOOD_CART_TOTAL', payload: {[restaurantData.shopId]: totalItemPrice}});
-  }
-
-  const onPressYes = (totalItemPrice) => {
-    items = {
-      sys_shop: parseInt(restaurantData.shopId),
+  const onPressYes = async(totalItemPrice) => {
+    items = [{
+      sys_shop: parseInt(productDetails.sysShop),
       branchid: 0,
       daystoship: 0,
       daystoship_to: 0,
       items: [
         {
-          sys_shop: parseInt(restaurantData.shopId),
-          product_id: restaurantData.Id,
-          productImage: routes.params.filename,
-          productName: routes.params.itemname,
+          itemId: uuid.v4(),
+          sys_shop: parseInt(productDetails.sysShop),
+          product_id: productDetails.Id,
+          productImage: productDetails.filename,
+          productName: productDetails.itemname,
           quantity: count.quantity,
           amount: totalPrice,
           srp_amount: totalPrice,
@@ -132,11 +146,27 @@ export const FoodCart = ({basePrice = 0.0}) => {
           addons: selected
         },
       ],
+    }]
+    processStoreTemporaryCart({ cart: items, totalAmount: {[productDetails.sysShop]: totalItemPrice}  })
+  }
+
+  const pushProducts = ({ cart, hasCart, item, index, totalItemPrice, pushExistingItems }) => {
+    pushExistingItems ? cart[hasCart].items[index] = item : cart[hasCart].items.push(item);
+    processStoreTemporaryCart({ cart, totalAmount: {[productDetails.sysShop]: totalItemPrice} })
+  }
+
+  const dispatchTotalAmount = (totalItemPrice) => {
+    dispatch({type: 'SET_TOKTOKFOOD_CART_TOTAL', payload: {[productDetails.sysShop]: totalItemPrice}});
+  }
+
+  const processStoreTemporaryCart = async({ cart, totalAmount }) => {
+    let res = await storeTemporaryCart({ cart, totalAmount })
+    if(res.status == 200){
+      Toast.show('Added to cart', Toast.SHORT);
+      navigation.navigate('ToktokFoodRestaurantOverview');
+    } else {
+      Toast.show('Something went wrong', Toast.SHORT);
     }
-    dispatch({type: 'SET_TOKTOKFOOD_CART_ITEMS', payload: [ items ]});
-    dispatchTotalAmount(totalItemPrice)
-    Toast.show('Added to cart', Toast.SHORT);
-    navigation.navigate('ToktokFoodRestaurantOverview');
   }
 
   const updateCartTotal = (type = 'ADD') => {
@@ -177,6 +207,7 @@ export const FoodCart = ({basePrice = 0.0}) => {
             </TouchableOpacity>
             <Text style={styles.countText}>{count.quantity}</Text>
             <TouchableOpacity
+              disabled={productDetails.stocks == count.quantity}
               style={[styles.countButtons, {backgroundColor: COLOR.ORANGE}]}
               onPress={() => updateCartTotal()}>
               <MIcon name="add" color={COLOR.WHITE} size={20} />
@@ -184,7 +215,11 @@ export const FoodCart = ({basePrice = 0.0}) => {
           </View>
           <Text style={styles.total}>Subtotal: {totalPrice.toFixed(2)}</Text>
         </View>
-        <TouchableOpacity style={styles.cartButton} onPress={() => onRestaurantNavigate()}>
+        <TouchableOpacity
+          disabled={loading}
+          style={[styles.cartButton, {backgroundColor: loading ? COLOR.LIGHT : COLOR.YELLOW}]}
+          onPress={() => onRestaurantNavigate()}
+        >
           <Text style={styles.buttonText}>Add to Cart</Text>
         </TouchableOpacity>
       </View>

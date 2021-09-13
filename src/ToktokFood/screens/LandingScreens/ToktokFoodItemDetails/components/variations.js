@@ -1,10 +1,11 @@
 import _ from 'lodash';
-import React, {useEffect, useState, useContext} from 'react';
+import React, {useEffect, useState, useContext, useCallback} from 'react';
 import {StyleSheet, Text, TextInput, View, FlatList} from 'react-native';
 import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 import RadioButton from 'toktokfood/components/RadioButton';
 // Utils
 import {moderateScale, scale, verticalScale} from 'toktokfood/helper/scale';
+import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import {VerifyContext} from '../components';
 export const Variations = ({basePrice, item}) => {
   const {
@@ -18,7 +19,7 @@ export const Variations = ({basePrice, item}) => {
     requiredOptions,
     setRequiredOptions,
     notes,
-    setNotes,
+    setNotes
   } = useContext(VerifyContext);
 
   useEffect(() => {
@@ -46,7 +47,7 @@ export const Variations = ({basePrice, item}) => {
     }
   }, [selected]);
 
-  const onValueChange = ({item, options, index, temp}) => {
+  const onValueChange = useCallback(({item, options, index, temp}) => {
     let opt = {
       addon_id: parseInt(options.id),
       addon_name: options.optionName,
@@ -84,7 +85,7 @@ export const Variations = ({basePrice, item}) => {
         return {...prev, [item.optionName]: temp};
       });
     }
-  };
+  }, [selected])
 
   const renderVariants = ({item}) => {
     let temp = [];
@@ -123,22 +124,24 @@ export const Variations = ({basePrice, item}) => {
     );
   };
 
+  // if(true){
+   
+  //   return <LoadingIndicator isFlex isLoading={true} />
+  // }
   return (
     <>
-      <View style={styles.container}>
-        <FlatList data={item} renderItem={renderVariants} />
-        <View style={styles.variations}>
-          <Text style={styles.variationTitle}>Special Instructions (Optional)</Text>
-          <TextInput
-            value={notes}
-            multiline={true}
-            numberOfLines={4}
-            style={styles.input}
-            placeholder="Type your instructions here..."
-            placeholderTextColor={COLOR.MEDIUM}
-            onChangeText={(notes) => setNotes(notes)}
-          />
-        </View>
+      <FlatList data={item} renderItem={renderVariants} style={{flex: 1}}/>
+      <View style={styles.variations}>
+        <Text style={styles.variationTitle}>Special Instructions (Optional)</Text>
+        <TextInput
+          value={notes}
+          multiline={true}
+          numberOfLines={4}
+          style={styles.input}
+          placeholder="Type your instructions here..."
+          placeholderTextColor={COLOR.MEDIUM}
+          onChangeText={(notes) => setNotes(notes)}
+        />
       </View>
     </>
   );
@@ -150,7 +153,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLOR.WHITE,
   },
   variations: {
-    flex: 1,
+    // flex: 1,
     paddingBottom: 10,
     borderBottomWidth: 8,
     borderBottomColor: COLOR.LIGHT,

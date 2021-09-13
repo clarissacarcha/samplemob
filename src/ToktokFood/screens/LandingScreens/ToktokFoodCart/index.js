@@ -33,8 +33,8 @@ const ToktokFoodCart = () => {
   const navigation = useNavigation();
   const nowDate = moment().format('YYYY-DD-YYYY');
 
-  const {amount} = route.params;
-  const {location, customerInfo, shopLocation, cart} = useSelector((state) => state.toktokFood);
+  const {amount, cart} = route.params;
+  const {location, customerInfo, shopLocation } = useSelector((state) => state.toktokFood);
 
   const [riderNotes, setRiderNotes] = useState('');
   const [delivery, setDeliveryInfo] = useState(null);
@@ -117,7 +117,7 @@ const ToktokFoodCart = () => {
             contactnumber: customerInfo.conno,
             email: customerInfo.email,
             address: customerInfo.address1,
-            user_id: customerInfo.id,
+            user_id: customerInfo.userId,
             latitude: location.latitude,
             longitude: location.longitude,
             regCode: '0',
