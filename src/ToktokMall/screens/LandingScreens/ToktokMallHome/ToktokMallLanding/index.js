@@ -34,6 +34,7 @@ const Component = ({ myCart, createMyCartSession,}) => {
   const [y] = useValues([0], [])
   const navigation = useNavigation();
   const session = useSelector(state=> state.session)
+  const [scrollendreached, setscrollendreached] = useState(false)
   
   // const {data, loading, error} = useQuery(GET_CUSTOMER_IF_EXIST, {
   //   client: TOKTOK_MALL_GRAPHQL_CLIENT,
@@ -155,8 +156,9 @@ const Component = ({ myCart, createMyCartSession,}) => {
   // }
   
   const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
-    const paddingBottom = 20;
-    return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingBottom;
+    const paddingBottom = 0;
+    // console.log(layoutMeasurement.height + contentOffset.y, contentSize.height - paddingBottom)
+    return layoutMeasurement.height + contentOffset.y == contentSize.height - paddingBottom;
   }
 
   const onScroll = (event) => {
@@ -266,19 +268,21 @@ const Component = ({ myCart, createMyCartSession,}) => {
         removeClippedSubviews={true}
         nestedScrollEnabled={true}
         onScroll = { 
-          Animated.event(
-            [{nativeEvent: {contentOffset: {y: AnimatedHeaderValue}}}],
-            {
-              useNativeDriver: true
-            }
-          )
-          // ({nativeEvent}) => {
-          //   // Animated.event([{nativeEvent: {contentOffset: {y: AnimatedHeaderValue}}}], {useNativeDriver: false})
-          //   // Animated.event([{nativeEvent: {contentOffset: {y: AnimatedHeaderValue}}}], {useNativeDriver: false})
-          //   console.log(nativeEvent)
-          //   if(isCloseToBottom(nativeEvent)){
-          //     alert('close to bottom')
+          // Animated.event(
+          //   [{nativeEvent: {contentOffset: {y: AnimatedHeaderValue}}}],
+          //   {
+          //     useNativeDriver: true
           //   }
+          // )
+          ({nativeEvent}) => {
+            Animated.event([{nativeEvent: {contentOffset: {y: AnimatedHeaderValue}}}], {useNativeDriver: false})
+            Animated.event([{nativeEvent: {contentOffset: {y: AnimatedHeaderValue}}}], {useNativeDriver: false})
+            if(isCloseToBottom(nativeEvent)){
+              setscrollendreached(true)
+            }else{
+              setscrollendreached(false)
+            }
+          }
 
           //   // animatedHeaderValueRef.setValue(nativeEvent.contentOffset.y)
           // }
@@ -291,7 +295,7 @@ const Component = ({ myCart, createMyCartSession,}) => {
         {/* <Offers  /> */}
         {/* <FlashSale /> */}
         {/* <Vouchers /> */}
-        <Suggestions />
+        <Suggestions lazyload={scrollendreached} />
       </Animated.ScrollView>
 
     </View>

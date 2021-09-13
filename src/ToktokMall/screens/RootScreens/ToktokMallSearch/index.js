@@ -70,17 +70,9 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
     }
   })
 
-  const [getProductsLazyLoad, {error2, loading2}] = useLazyQuery(SEARCH_PRODUCT, {
+  const [getProductsLazyLoad, {error3, loading3}] = useLazyQuery(SEARCH_PRODUCT, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
-    variables: {
-      input: {
-        search: searchValue,
-        origin: route.params?.origin ? route.params.origin : "all",
-        offset: searchedProducts.length + 10,
-        limit: 10
-      }
-    },
     onCompleted: async (response) => {      
       console.log('lazy load fired')
       let temp2 = searchedProducts
@@ -100,6 +92,20 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
       console.log(err)
       setSearchedProducts([])
       setEmptySearch(true)
+      setIsLoading(false)
+    }
+  })
+
+  const [searchProductSuggestion, {error2, loading2}] = useLazyQuery(SEARCH_PRODUCT_SUGGESTIONS, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: async (response) => {      
+      if(response.searchProductSuggestions){
+        setSuggestions(response.searchProductSuggestions)
+      }
+    },
+    onError: (err) => {
+      console.log(err)
       setIsLoading(false)
     }
   })
@@ -254,7 +260,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
                 input: {
                   search: route.params?.origin ? "" : route.params.searchValue,
                   origin: route.params?.origin ? route.params.origin : "all",
-                  offset: searchedProducts.length,
+                  offset: searchedProducts.length + 10,
                   limit: 10
                 }
               }
@@ -262,8 +268,17 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
           }}
           lazyload={() => {
             setOffset(searchedProducts.length + 10)
-            console.log('lazyload', {offset},  searchValue, route.params.origin  )
-            getProductsLazyLoad()
+            // console.log('lazyload', {offset},  searchValue, route.params.origin  )
+            getProductsLazyLoad({
+              variables: {
+                input: {
+                  search: searchValue,
+                  origin: route.params?.origin ? route.params.origin : "all",
+                  offset: searchedProducts.length + 10,
+                  limit: 10
+                }
+              }
+            })
           }}
         />}
 

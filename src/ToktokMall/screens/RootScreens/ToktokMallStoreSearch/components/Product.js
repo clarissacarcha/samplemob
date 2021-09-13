@@ -75,31 +75,37 @@ const RenderItem = ({item, navigation}) => {
   )
 }
 
-export const Product = ({data}) => {
+export const Product = ({data, lazyload}) => {
 
   const navigation = useNavigation()
   const [loading, setloading] = useState(false)
   const [offset, setOffset] = useState(0)
   const [products, setProducts] = useState(data)
 
-  const LoadMore = () => {    
-    setloading(true)
-    setTimeout(() => {
-      setOffset(offset + 10)
-      setloading(false)
-    }, 700)
-  }
+  // // const LoadMore = () => {    
+  // //   setloading(true)
+  // //   setTimeout(() => {
+  // //     setOffset(offset + 10)
+  // //     setloading(false)
+  // //   }, 700)
+  // // }
 
-  useEffect(() => {
-    setProducts(products.slice(0, offset + 10))
-  }, [])
+  // useEffect(() => {
+  //   setProducts(products.slice(0, offset + 10))
+  // }, [])
+
+  const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+    const paddingBottom = 0;
+    // console.log(layoutMeasurement.height + contentOffset.y, contentSize.height - paddingBottom)
+    return layoutMeasurement.height + contentOffset.y == contentSize.height - paddingBottom;
+  }
 
   return (
     <>
       <View style={styles.container}>
             
         <FlatList
-          data={data.slice(0, offset + 10)}
+          data={data}
           numColumns={2}
           style={{paddingHorizontal: 5}}
           renderItem={({item, index}) => {
@@ -119,10 +125,16 @@ export const Product = ({data}) => {
           }}
           keyExtractor={(item, index) => item + index}
           showsVerticalScrollIndicator={false}
+          onScroll = {({nativeEvent}) => {
+            if(isCloseToBottom(nativeEvent)){
+              console.log("will reload...")
+              lazyload()
+            }
+          }}
           ListFooterComponent={() => {
             return (
               <>
-                <SwipeReloader state={false} onSwipeUp={LoadMore} />
+                <SwipeReloader state={false} onSwipeUp={null} />
                 <View style={styles.separator} />
               </>
             )
