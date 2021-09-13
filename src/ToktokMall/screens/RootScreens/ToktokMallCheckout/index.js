@@ -404,7 +404,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
   )
     
   useEffect(() => {
-    init()
+    // init()
 
     console.log("Parent Session", parentSession)
   },[])
@@ -458,7 +458,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
         />
         <CheckoutModal 
           navigation={navigation} 
-          isVisible={true} 
+          isVisible={isVisible} 
           setIsVisible={setIsVisible} 
           goToOrders = {onGoToOrders}
         />

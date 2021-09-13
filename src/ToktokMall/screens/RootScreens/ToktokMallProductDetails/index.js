@@ -65,6 +65,22 @@ const Component =  ({
   let AnimatedHeaderValue = new Animated.Value(0)
   const animatedHeaderValueRef = useRef(AnimatedHeaderValue)
 
+  const getBottomSheetDynamicHeight = (variants) => {
+    if(variants.length == 0) return 260
+    else if(variants.length == 1){
+      let vars = variants[0].variantList.split(",").length
+      if(vars > 5){
+        return '70%'
+      }else if(vars < 5 && vars > 1){
+        return '60%'
+      }else{
+        return 400
+      }
+    }else{
+      return '60%'
+    }
+  }
+
   const HandleOnScroll = (r) => {
     let ypos = r.nativeEvent.contentOffset.y
     if(ypos > 50) setScrolling(true)
@@ -264,6 +280,7 @@ const Component =  ({
       <VariationBottomSheet 
         ref={varBottomSheetRef} 
         type={variationOptionType}
+        initialSnapPoint={getBottomSheetDynamicHeight(product?.variantSummary || [])}
         item={product}
         image={images.length > 0 ? images[0] : {}}
         onPressAddToCart={(input) => {
