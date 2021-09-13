@@ -1,5 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, Dimensions} from 'react-native';
+import Carousel, { Pagination, ParallaxImage } from 'react-native-snap-carousel';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/core';
 import { COLOR, FONT } from '../../../../../../res/variables';
@@ -12,6 +13,8 @@ import ContentLoader from 'react-native-easy-content-loader'
 import { useQuery, useLazyQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../../graphql';
 import { GET_FEATURED_PRODUCTS } from '../../../../../../graphql/toktokmall/model';
+
+const { width: screenWidth } = Dimensions.get('window')
 
 const testdata = [{
   // image: require("../../../../../assets/images/coppermask.png"),
@@ -51,12 +54,19 @@ const Item = ({data}) => {
           navigation.navigate("ToktokMallProductDetails", data)
         }} style={{flex: 2, paddingBottom: 4, marginHorizontal: 2, alignItems: 'center', backgroundColor: '#fff', borderRadius: 5}}>
         <View style={{height: 4}}></View>
-        <Image source={getImageSource(data?.images)} style={{width: '100%', height: 120, resizeMode: 'stretch', alignSelf: 'center', borderRadius: 5}} />
+        <Image source={getImageSource(data?.images)} style={{width: '100%', height: 100, resizeMode: 'stretch', alignSelf: 'center', borderRadius: 5}} />
         <View style={{height: 2}}></View>
         <Text style={{fontSize: 14, fontWeight: '600', color: "#F6841F", alignSelf: 'flex-start', paddingHorizontal: 5}}><Price amount={data?.price} /></Text>
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
           <View style={{flex: 2}}>
-            <Text style={{fontSize: 10, textDecorationLine: 'line-through', alignSelf: 'flex-start', paddingHorizontal: 5, color: "#9E9E9E"}}><Price amount={data?.compareAtPrice} /></Text>          
+						{data?.compareAtPrice != "0.00" ? 
+						<Text style={{fontSize: 10, textDecorationLine: 'line-through', alignSelf: 'flex-start', paddingHorizontal: 5, color: "#9E9E9E"}}>
+							<Price amount={data?.compareAtPrice} />
+						</Text> : null}
+            {data?.compareAtPrice == "0.00" && data?.otherinfo ?
+						<Text style={{fontSize: 8, alignSelf: 'flex-start', paddingHorizontal: 5, color: "#9E9E9E"}}>
+							{data?.otherinfo}	
+						</Text> : null}
           </View>
           <View style={{flex: 1}}>
             <Text style={{fontSize: 9.5, alignSelf: 'center', color: "#FDBA1C"}}>{data?.discountRate}</Text>
@@ -90,7 +100,7 @@ const Empty = ({data}) => {
   )
 }
 
-export const FlashSale = () => {
+export const Featured = () => {
 
   const navigation = useNavigation()
   const [featured, setFeatured] = useState([])
@@ -100,8 +110,8 @@ export const FlashSale = () => {
     fetchPolicy: 'network-only',
     variables: {
       input: {
-        offset: 90,
-        limit: 3
+        offset: 0,
+        limit: 8
       }
     },
     onCompleted: (response) => {
@@ -114,6 +124,14 @@ export const FlashSale = () => {
     }
   })
 
+	const sliceData = (data) => {
+		let copy = JSON.parse(JSON.stringify(data))
+		let result = []
+		result.push({items: copy.slice(0, 3)})
+		result.push({items: copy.slice(3, 6)})
+		return result
+	}
+
   useEffect(() => {
     getFeaturedProducts()
   }, [])
@@ -124,17 +142,10 @@ export const FlashSale = () => {
           source={flashsalebg}
           imageStyle={{resizeMode: 'cover'}}          
           style={{flex: 1, paddingHorizontal: 15, paddingVertical: 0}}>
-          {/* <ContentLoader active loading = {loading} avatar = {false}  title = {true} pRows = {4}
-            tHeight = {70} avatarStyles = {{ left: 0, borderRadius: 5}}  tWidth = {'100%'}
-            pWidth = {'100%'}
-          ></ContentLoader> */}
+          
             <View style={{paddingVertical: 20, flexDirection: 'row'}}>
-              {/* <View style={{flex: 4}}>
-                <Image source={flashsale} style={{width: 90, height: 90, resizeMode: 'center', justifyContent: 'center', alignSelf: 'flex-end'}} />
-              </View> */}
               <View style={{flex: 11, justifyContent: 'center', paddingHorizontal: 4}}>
-                <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>Featured Items</Text>
-                {/* <Text style={{color: "#747575", fontSize: 12}}>Offer ends 5.17.2021</Text> */}
+                <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>Featured Items</Text>                
               </View>
               <TouchableOpacity disabled = {loading} onPress={() => {
                 navigation.navigate("ToktokMallSearch", {searchValue: "Featured Items", origin: "flashsale"})
@@ -150,8 +161,48 @@ export const FlashSale = () => {
             
             <View>            
               <View style={{flex: 1, flexDirection: 'row'}}>
-                {loading && [1,2,3].map((item, i) => <Empty key={i} data={item} />)}
-                {!loading && featured.map((item, i) => <Item key={i} data={item} /> )}
+                
+								<Carousel
+									layout={'stack'} 
+									layoutCardOffset={`18`}
+									data={sliceData(featured)}
+									renderItem={({item, index}) => {
+
+										if(!featured || featured.length == 0){
+											return (
+												// <Item key={index} data={item} />
+												<>
+													<View style={{flexDirection: 'row'}} >
+														<Empty />
+														<Empty />
+														<Empty />
+													</View>
+												</>
+											)
+										}
+
+										return (
+											<>
+												<View style={{flexDirection: 'row'}} >
+													{item.items.map((raw, index) => {
+														return <Item key={index} data={raw} />
+													})}
+												</View>
+											</>
+										)
+										
+									}}
+									onSnapToItem={(index) => console.log(index) }
+									sliderWidth={screenWidth -30}
+									itemWidth={screenWidth -30}
+									autoplay={false}
+									autoplayDelay={2500}
+									enableSnap={true}
+									loop={false}
+									hasParallaxImages={true}
+									removeClippedSubviews={true}
+								/>
+
               </View>
             </View>
           

@@ -27,7 +27,7 @@ import {connect} from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
 import {useStateCallback} from '../../../../helpers/useStateCallback';
 
-const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxStates: {user_address}}) => {
+const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefaultUserAddress}, reduxStates: {user_address,}}) => {
   const [newAddressForm, setNewAddressForm] = useState({
     city: null,
   });
@@ -68,7 +68,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
     fetchPolicy: 'network-only',
     variables: {
       input: {
-        citymunCode: route.params?.item.municipalityId.length === 5 ? `0${route.params?.item.municipalityId}` : `${route.params?.item.municipalityId}`,
+        citymunCode: route.params?.item.municipalityId.toString().length === 5 ? `0${route.params?.item.municipalityId}` : `${route.params?.item.municipalityId}`,
       },
     },
     onCompleted: (response) => {
@@ -104,15 +104,17 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
   });
 
   const SaveToRedux = () => {
+    const dataForm = {
+    ...newAddressForm,
+    fullAddress: newAddressForm.address + `, ${city}`,
+    regionId: parseInt(regCode) || 0,
+    provinceId: parseInt(provCode),
+    municipalityId: parseInt(munCode),
+  }
     if (route.params?.update) {
-      updateUserAddress('update', {
-        ...newAddressForm,
-        fullAddress: newAddressForm.address + `, ${city}`,
-        regionId: parseInt(regCode) || 0,
-        provinceId: parseInt(provCode),
-        municipalityId: parseInt(munCode),
-      });
+      updateUserAddress('update', dataForm);
       if (clicked) {
+        setDefaultUserAddress("set", dataForm)
         updateUserAddress('changeDefault', newAddressForm.id);
       }
       navigation.goBack();
@@ -120,15 +122,15 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
       SavePostAddress(() => {
         updateUserAddress('add', {
           id: user_address.length + 1,
-          ...newAddressForm,
-          fullAddress: newAddressForm.address + `, ${city}`,
-          regionId: parseInt(regCode) || 0,
-          provinceId: parseInt(provCode),
-          municipalityId: parseInt(munCode),
+          ...dataForm
         });
-        if (clicked) {
-          updateUserAddress('changeDefault', user_address.length + 1);
-        }
+        // if (clicked) {
+        //   setDefaultUserAddress("set", {
+        //     id: user_address.length + 1,
+        //     ...dataForm
+        //   })
+        //   updateUserAddress('changeDefault', user_address.length + 1);
+        // }
         navigation.goBack();
       })
     }
@@ -304,19 +306,18 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}, reduxS
           message={'Address Deleted!'}
         />
       )}
-      {Platform.OS == "ios" && 
+      {/* {Platform.OS == "ios" && 
       <CityAddressModal
         modalProvinceVisible={modalProvinceVisible}
         setModalProvinceVisible={setModalProvinceVisible}
         city={city}
         setCity={(data) => onSelectCity(data)}
-      />}
-      {Platform.OS == "android" && 
+      />} */}
       <CityAddressModalAndroid
         isVisible={modalProvinceVisible}
         setVisible={setModalProvinceVisible}
         setCity={(data) => onSelectCity(data)}
-      />}
+      />
       <View style={styles.container}>
         <View style={styles.partition1}>
           <View style={styles.textinputContainer}>
@@ -455,6 +456,9 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   reduxActions: {
     updateUserAddress: (action, payload) => dispatch({type: 'TOKTOKMALL_USER_ADDRESS', action, payload}),
+    setDefaultUserAddress: (action, payload) => {
+      dispatch({type: 'CREATE_DEFAULT_ADDRESS_SESSION', action, payload});
+    },
   },
 });
 

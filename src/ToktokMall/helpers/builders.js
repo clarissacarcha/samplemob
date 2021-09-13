@@ -24,7 +24,7 @@ export const BuildPostCheckoutBody = async ({walletRequest, pin, items, addressD
 			order_logs: BuildOrderLogsList({data: items, shipping: addressData.shippingSummary}),
 			//Optional values
 			user_id: session.userId,
-			notes: "",
+			notes: "This is a test order from mobile",
 			latitude: "",
 			longitude: "",
 			postalcode: "",

@@ -37,7 +37,7 @@ const Component =  ({
   navigation,
   createMyFavorites,
   createMyCartSession,
-  myCart, route
+  myCart, route, cartNoOfItems
 }) => {
 
   const [product, setProduct] = useState({})
@@ -103,7 +103,9 @@ const Component =  ({
       price: product.price,
       variation: input.variation || "",
       qty: input.qty || 1,
+      noOfStocks: product.noOfStocks || 0,
       store_id: store.id,
+      storeLogo: store.profileImages?.logo,
       storeName: store.shopname,
       images: images
     }
@@ -173,8 +175,8 @@ const Component =  ({
     <>
     <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
       
-      { isFetching ? <></> : <HeaderPlain animatedValue={animatedHeaderValueRef} cartItems={cartItems} itemName = {route.params.itemname} /> }
-      { isFetching ? <></> : <HeaderTransparent animatedValue={animatedHeaderValueRef} cartItems={cartItems} /> }
+      { isFetching ? <></> : <HeaderPlain animatedValue={animatedHeaderValueRef} cartItems={cartNoOfItems} itemName = {route.params.itemname} /> }
+      { isFetching ? <></> : <HeaderTransparent animatedValue={animatedHeaderValueRef} cartItems={cartNoOfItems} /> }
       <LoadingOverlay isVisible={isFetching} />
       
      <Animated.ScrollView
@@ -288,9 +290,15 @@ const Component =  ({
   );
 }
 
-const mapStateToProps = (state) => ({
-  myCart: state.toktokMall.myCart
-})
+const mapStateToProps = (state) => {
+  let total = 0;
+  state.toktokMall.myCart.map(({qty}) => total += qty)
+
+  return {
+    myCart: state.toktokMall.myCart,
+    cartNoOfItems: total > 99 ? "99+" : total,
+  };
+};
 
 const mapDispatchToProps = (dispatch) => ({
   createMyCartSession: (action, payload) => dispatch({type: 'CREATE_MY_CART_SESSION', action,  payload}),

@@ -75,6 +75,7 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
             navigation.navigate('ToktokMallAddressesForm', {item, update: true});
           }}
           onPress={() => {
+            console.log(item)
             updateUserAddress("changeDefault", item.id);
             setDefaultUserAddress("set", item);
           }}>

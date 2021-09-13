@@ -20,9 +20,9 @@ import Spinner from 'react-native-spinkit';
 
 //Main Components
 import CustomIcon from '../../../../Components/Icons';
-import {LandingHeader, AdsCarousel, StickyHomeHeader, LandingSubHeader,} from '../../../../Components';
+import {LandingHeader, AdsCarousel, StickyHomeHeader, LandingSubHeader} from '../../../../Components';
 
-import {Categories, Offers, FlashSale, Vouchers, Suggestions} from './Components';
+import {Categories, Offers, FlashSale, Vouchers, Suggestions, Featured} from './Components';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -287,8 +287,9 @@ const Component = ({ myCart, createMyCartSession,}) => {
       >
         <AdsCarousel />
         <Categories  />
+        <Featured />
         {/* <Offers  /> */}
-        <FlashSale />
+        {/* <FlashSale /> */}
         {/* <Vouchers /> */}
         <Suggestions />
       </Animated.ScrollView>

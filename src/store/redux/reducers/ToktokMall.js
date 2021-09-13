@@ -124,7 +124,23 @@ export default (state = INITIAL_STATE, action) => {
       } else if (action.action == 'push') {
         // console.log(action.payload)
         let myCartArr = state.myCart;
+        let exists = false
+        myCartArr = myCartArr.map((item) => {
+          if(item.item_id === action.payload.item_id){
+            console.log(true, true, item.qty + action.payload.qty)
+            exists = true
+            return {
+              ...item,
+              qty: item.qty + action.payload.qty
+            }
+          }else{
+            return item
+          }
+        })
+        console.log(myCartArr)
+        if(!exists){
         myCartArr.push(action.payload)
+        }
         let stringyfiedCart = JSON.stringify(myCartArr.reverse());
         AsyncStorage.setItem('MyCart', stringyfiedCart);
         return {...state, myCart: myCartArr};

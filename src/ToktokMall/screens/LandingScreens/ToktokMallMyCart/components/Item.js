@@ -23,7 +23,11 @@ export const Item = ({
 }) => {
 
   const [selected, setSelected] = useState(state)
-  const [qty, setQty] = useState(data.qty)
+  const [qty, setQty] = useState(1)
+
+  useEffect(() => {
+    setQty(data.qty)
+  },[data])
 
   useEffect(() => {
     setSelected(state)
@@ -61,7 +65,17 @@ export const Item = ({
   }
   
   return (
-    <>
+    <TouchableOpacity onLongPress={() => {
+      onHold({
+        checked: !selected,
+        item: data,
+        amount: data.price * data.qty,
+        qty: qty,
+        index: index,
+        storeIndex: storeIndex
+      })
+      onPress()
+    }}>          
       <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
         <View style={{flex: 1, justifyContent: 'center'}}>
           <CheckBox
@@ -87,21 +101,9 @@ export const Item = ({
 				<View style={{flex: 3, justifyContent: 'center', alignItems: 'center'}}>
 					<Image source={getImageSource(data?.images)} style={{width: 50, height: 65, resizeMode: 'stretch'}} />
 				</View>
-        <View style={{flex: 9, justifyContent: 'center', flexDirection: 'row'}}>                        
+        <View style={{flex: 9, justifyContent: 'center', flexDirection: 'row'}}>       
           <View style={{flex: 1, justifyContent: 'center'}}>
-          	<TouchableOpacity onLongPress={() => {
-              onHold({
-                checked: !selected,
-                item: data,
-                amount: data.price * data.qty,
-                qty: qty,
-                index: index,
-                storeIndex: storeIndex
-              })
-              onPress()
-            }}>
-							<Text style={{fontSize: 14, fontWeight: '100'}}>{data?.label}</Text>
-						</TouchableOpacity>
+							<Text style={{fontSize: 13, fontWeight: '100'}} numberOfLines={2}>{data?.label}</Text>
 						<View style={{flexDirection: 'row'}}>
               <View style={{flex: 0}}>
 								<Text style={{fontSize: 13, color: "#F6841F"}}><Price amount={data?.price} /></Text>
@@ -163,6 +165,6 @@ export const Item = ({
         </View>
       </View>
       <View style={{height: 2, backgroundColor: '#F7F7FA'}} />
-    </>
+						</TouchableOpacity>
     )
 }

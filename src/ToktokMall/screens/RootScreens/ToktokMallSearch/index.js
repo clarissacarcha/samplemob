@@ -8,12 +8,13 @@ import Toast from 'react-native-simple-toast';
 
 import {LandingSubHeader} from '../../../Components';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql';
-import {SEARCH_PRODUCT} from '../../../../graphql/toktokmall/model';
+import {SEARCH_PRODUCT, SEARCH_PRODUCT_SUGGESTIONS} from '../../../../graphql/toktokmall/model';
 
 import { connect } from 'react-redux';
 
 import {Product} from './components'
 import {emptysearch} from '../../../assets'
+import { FONT } from '../../../../res/variables';
 
 const testdata = ["Gaming Chair", "Mousepad", "Face mask", "Pillow", "Ballpen"]
 
@@ -25,6 +26,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
   const [searchValue, setSearchValue] = useState('')
   const [searchHist, setSearchHist] = useState([])
   const [searchedProducts, setSearchedProducts] = useState([])
+  const [suggestions, setSuggestions] = useState([])
   const [offset, setOffset] = useState(0)
 
   const [searchProduct, {error, loading}] = useLazyQuery(SEARCH_PRODUCT, {
@@ -68,6 +70,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
     }
   })
 
+<<<<<<< HEAD
   const [getProductsLazyLoad, {error2, loading2}] = useLazyQuery(SEARCH_PRODUCT, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
@@ -98,6 +101,18 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
       console.log(err)
       setSearchedProducts([])
       setEmptySearch(true)
+=======
+  const [searchProductSuggestion, {error2, loading2}] = useLazyQuery(SEARCH_PRODUCT_SUGGESTIONS, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: async (response) => {      
+      if(response.searchProductSuggestions){
+        setSuggestions(response.searchProductSuggestions)
+      }
+    },
+    onError: (err) => {
+      console.log(err)
+>>>>>>> 1677eaf08690c00e0a242a2292a3f180347bd84d
       setIsLoading(false)
     }
   })
@@ -105,21 +120,10 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
   const handleOnSearch = (val) => {    
 		setSearchValue(val)
     setOffset(0)
-    searchProduct({
-      variables: {
-        input: {
-          search: val,
-          origin: route.params?.origin ? route.params.origin : "all",
-          offset: 0,
-          limit: 10
-        }
-      }
-    })
+    setEmptySearch(false)
     if(val == ""){
       setSearchedProducts([])
-    }else if(val != ""){
-    }
-    setEmptySearch(false)
+    }    
 	}
 
   const setHistoryOrder = () => {
@@ -154,26 +158,54 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
     <View style={{flex: 1, backgroundColor: '#fff'}}>
 
       <LandingSubHeader 
-				onSearch={debounce((val) => handleOnSearch(val), 500)}
+				// onSearch={debounce((val) => handleOnSearch(val), 500)}
+        placeholder="Search"
 				initialValue={searchValue}
-				// onSubmit={async () => {
-        //   console.log("Triggered!!!")
-				// 	if(searchValue != ""){
-            
-        //   }
-				// }}
+        onSearch={(val) => {
+          setSearchValue(val)
+
+          if(val == ""){
+            setSearchedProducts([])
+            setSuggestions([])
+          }else if(val != "" ){
+            searchProductSuggestion({
+              variables: {
+                input: {
+                  search: val,
+                  origin: "all",
+                  offset: 0,
+                  limit: 10
+                }
+              }
+            })
+          }
+          
+        }}
+				onSubmit={async () => {
+					if(searchValue != ""){
+            searchProduct({
+              variables: {
+                input: {
+                  search: searchValue,
+                  origin: route.params?.origin ? route.params.origin : "all",
+                  offset: 0,
+                  limit: 10
+                }
+              }
+            })
+          }
+				}}
 			/>
 
       <View style={{flex: 1}}>
 
-        {searchedProducts.length == 0 && searchValue == "" &&
+        {searchedProducts.length == 0 && searchValue == "" && !loading && !loading2 && 
         <>
         <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
           <View style={{flex: 1}}>
             <Text style={{fontSize: 14}}>Search History</Text>
           </View>
           <TouchableOpacity onPress={async () => {
-            // await ClearSearchHistory()
             await createSearchHistorySession("clear")
             Toast.show("Cleared search history")
           }} style={{flex: 1}}>
@@ -186,6 +218,16 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
           renderItem={({item, index}) => 
             <TouchableOpacity key={index} onPress={() => {
               setSearchValue(item)
+              searchProduct({
+                variables: {
+                  input: {
+                    search: item,
+                    origin: route.params?.origin ? route.params.origin : "all",
+                    offset: 0,
+                    limit: 10
+                  }
+                }
+              })
             }} style={{paddingHorizontal: 15, paddingVertical: 15}}>
               <Text style={{color: "#9E9E9E", fontSize: 14}}>{item}</Text>
             </TouchableOpacity>
@@ -193,7 +235,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
         />
         </>}
 
-        {error || !loading && searchValue != "" && searchedProducts.length == 0 && emptySearch && 
+        {error || !loading && !loading2 && searchValue != "" && searchedProducts.length == 0 && emptySearch && 
 					// <View style={{paddingHorizontal: 15, paddingVertical: 15}}>
 					// 	<Text style={{color: "#9E9E9E", fontSize: 14}}>No results found</Text>
 					// </View>
@@ -213,7 +255,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
           </>
         }
 
-        {!loading && searchedProducts.length > 0 && searchValue != "" && 
+        {!loading && !loading2 && searchedProducts.length > 0 && searchValue != "" && 
         <Product 
           state={false} 
           data={searchedProducts} 
@@ -223,7 +265,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
             searchProduct({
               variables: {
                 input: {
-                  search: searchValue,
+                  search: route.params?.origin ? "" : route.params.searchValue,
                   origin: route.params?.origin ? route.params.origin : "all",
                   offset: searchedProducts.length,
                   limit: 10
@@ -247,6 +289,40 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
               size={35}
             />
           </View>}
+
+        {suggestions.length > 0 && searchValue != "" && !loading && 
+        <>
+          <View style={{paddingHorizontal: 20, paddingVertical: 15}}>
+            <Text style={{fontFamily: FONT.BOLD}}>Suggestions</Text>
+          </View>
+          <FlatList 
+            data={suggestions}
+            renderItem={({item, index}) => {
+              return (
+                <>
+                  <TouchableOpacity onPress={() => {
+                    setSearchedProducts([])
+                    setSuggestions([])
+                    setSearchValue(item.tags)
+                    searchProduct({
+                      variables: {
+                        input: {
+                          search: item.tags,
+                          origin: route.params?.origin ? route.params.origin : "all",
+                          offset: 0,
+                          limit: 10
+                        }
+                      }
+                    })
+                  }} style={{paddingHorizontal: 20, paddingVertical: 8}}>
+                    <Text style={{color: "#9E9E9E", fontSize: 13, textTransform: 'capitalize'}}>{item.tags}</Text>
+                  </TouchableOpacity>
+                  {index < suggestions.length - 1 && <View style={{height: 1, backgroundColor: "#F7F7FA"}} />}
+                </>
+              )
+            }}
+          />
+        </>}
 
       </View>
     </View>

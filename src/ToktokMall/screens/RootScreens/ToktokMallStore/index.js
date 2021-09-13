@@ -44,7 +44,7 @@ export const ToktokMallStore = ({navigation, route}) => {
   const RenderContent = () => {
     return (
       <>
-        <Tab 
+        {/* <Tab 
           index={activeTab} 
           onTabChange={(index) => {
             setActiveTab(index)
@@ -53,12 +53,11 @@ export const ToktokMallStore = ({navigation, route}) => {
         />
 
         {
-          activeTab == 0 && 
+          activeTab == 0 &&  */}
           <Product
             paginate={true} 
             data={storeData?.products ? storeData.products : []} 
           />
-        }
         {/* {
           activeTab == 1 && 
           !showCategories && 

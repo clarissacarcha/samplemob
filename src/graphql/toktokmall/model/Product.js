@@ -61,6 +61,7 @@ export const GET_FEATURED_PRODUCTS = gql`
 				soldCount
 				noOfStocks
 				discountRate
+				otherinfo
 				compareAtPrice
 				images {
 					arrangement
@@ -196,6 +197,15 @@ export const SEARCH_PRODUCT = gql`
       	arrangement
       	filename
     	}
+		}
+	}
+`
+
+export const SEARCH_PRODUCT_SUGGESTIONS = gql`
+	query searchProductSuggestions($input: SearchProductInput){
+		searchProductSuggestions(input: $input){
+      itemname
+			tags
 		}
 	}
 `
