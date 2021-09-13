@@ -72,7 +72,7 @@ const MainComponent = ({children , onPress })=> {
 export const VerifySelfie = ()=> {
 
     const VerifyUserData = useContext(VerifyContext)
-    const {setCurrentIndex , selfieImage, setSelfieImage} = VerifyUserData
+    const {setCurrentIndex , selfieImage, setSelfieImage , setTempSelfieImage , tempSelfieImage} = VerifyUserData
     const [cropperParams, setCropperParams] = useState({});
     const navigation = useNavigation()
     const cropSize = {
@@ -89,18 +89,20 @@ export const VerifySelfie = ()=> {
     }
 
     const setImage = (data)=> {
-        setSelfieImage(data);
+        // setSelfieImage(data);
+        setTempSelfieImage(data);
         // setCurrentIndex(oldval => oldval + 1)
     }
 
     const Proceed = async ()=> {
-        if(selfieImage == null){
+        if(tempSelfieImage == null){
             return navigation.push("ToktokWalletSelfieImageCamera", {setImage})
         }
         try {
             const croppedResult = await ImageCropper.crop({
                 ...cropperParams,
-                imageUri: selfieImage.uri,
+                // imageUri: selfieImage.uri,
+                imageUri: tempSelfieImage.uri,
                 cropSize,
                 cropAreaSize,
             });
@@ -116,12 +118,12 @@ export const VerifySelfie = ()=> {
 
     }
 
-    if(selfieImage){
+    if(tempSelfieImage){
         return(
             <MainComponent onPress={Proceed}>
                 <View style={styles.PreviewImage}>
                     <ImageCropper
-                        imageUri={selfieImage.uri}
+                        imageUri={tempSelfieImage.uri}
                         cropAreaWidth={Platform.OS === "ios" ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 110}
                         cropAreaHeight={Platform.OS === "ios" ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 100}
                         containerColor="transparent"

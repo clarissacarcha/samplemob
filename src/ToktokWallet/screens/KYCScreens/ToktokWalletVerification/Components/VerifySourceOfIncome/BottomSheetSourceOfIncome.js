@@ -19,8 +19,8 @@ const BottomSheetSourceOfIncome = forwardRef(({changeIncomeInfo} , ref)=> {
       client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT,
       fetchPolicy:"network-only",
       onCompleted: ({getSourceOfIncome})=> {
-        setFilteredSourceOfIncome(getSourceOfIncome)
-        setFilteredSourceOfIncome(state=> [...state, {id: 0 , description: "others"}])
+        const data = [...getSourceOfIncome , {id: 0 , description: "Others"}]
+        setFilteredSourceOfIncome(data)
       },
       onError: (error) => {
         onErrorAlert({alert, error});
@@ -61,6 +61,7 @@ const BottomSheetSourceOfIncome = forwardRef(({changeIncomeInfo} , ref)=> {
             <Text style={{fontFamily: FONT.BOLD}}>Select Source of Income</Text>
             <View style={{height: 10}} />
             <FlatList
+                style={{marginBottom: 50}}
                 data={filteredSourceOfIncome}
                 ItemSeparatorComponent={() => <View style={{borderBottomWidth: 1, borderColor: COLOR.LIGHT}} />}
                 renderItem={({item, index}) => (

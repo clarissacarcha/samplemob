@@ -126,6 +126,7 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
             identificationCardNumber: VerifyUserData.verifyID.idNumber,
             identificationCardId: VerifyUserData.identificationId,
             sourceIncomeId: VerifyUserData.incomeInfo.source.id,
+            otherSource: VerifyUserData.incomeInfo.otherSource,
             occupation: VerifyUserData.occupation
         }
 

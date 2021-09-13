@@ -21,6 +21,7 @@ export const VerifySourceOfIncome = ()=> {
 
     const Proceed = ()=>{
         if(incomeInfo.source == "") return Alert.alert("","Source of Income is required.")
+        if(incomeInfo.source.id == "0" && incomeInfo.otherSource == "") return Alert.alert("","Source of Income is required.")
         if (validator.isEmpty(incomeInfo.occupation, {ignore_whitespace: true})) {
             return Alert.alert("","Occupation is required.")
         }
@@ -46,6 +47,18 @@ export const VerifySourceOfIncome = ()=> {
                                 <VectorIcon iconSet={ICON_SET.Feather} name="chevron-right"/>
                              </TouchableOpacity>
                         </View>
+                        {
+                            incomeInfo.source.id == "0" &&
+                            <View style={styles.formField}>
+                                <Text style={styles.labelText}>Other</Text>
+                                <TextInput 
+                                    placeholder="Enter Source of Income here"
+                                    style={styles.input}
+                                    value={incomeInfo.otherSource}
+                                    onChangeText={(value)=>changeIncomeInfo("otherSource",value)}
+                                />
+                            </View>
+                        }
                         <View style={styles.formField}>
                             <Text style={styles.labelText}>Occupation</Text>
                             <TextInput 

@@ -6,13 +6,14 @@ import {useNavigation} from '@react-navigation/native'
 import { ICON_SET, VectorIcon, YellowButton } from 'src/revamp'
 import { BuildingBottom } from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants'
+import ImageCropper from 'react-native-simple-image-cropper'
 
 const { COLOR, FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
 
 const {width,height} = Dimensions.get("window")
 
-const CROP_AREA_WIDTH = width * 0.90;
-const CROP_AREA_HEIGHT = CROP_AREA_WIDTH;
+const CROP_AREA_WIDTH = width * 1;
+const CROP_AREA_HEIGHT = CROP_AREA_WIDTH + 50;
 
 const ratio = Math.min(width / CROP_AREA_WIDTH , height / CROP_AREA_HEIGHT)
 
@@ -74,35 +75,66 @@ const MainComponent = ({children , onPress })=> {
 export const VerifySelfieWithID = ()=> {
 
     const VerifyUserData = useContext(VerifyContext)
-    const {setCurrentIndex , selfieImageWithID, setSelfieImageWithID} = VerifyUserData
+    const {setCurrentIndex , selfieImageWithID, setSelfieImageWithID , setTempSelfieImageWithID, tempSelfieImageWithID} = VerifyUserData
     const [cropperParams, setCropperParams] = useState({});
     const navigation = useNavigation()
     const cropSize = {
-        width: width,
-        height: height,
+        // width: width,
+        // height: height,
+        width: CROP_AREA_WIDTH,
+        height: CROP_AREA_HEIGHT,
     }
     const cropAreaSize = {
-        width: width,
-        height: height,
+        // width: width,
+        // height: height,
+        width: CROP_AREA_WIDTH,
+        height: CROP_AREA_HEIGHT,
     }
 
     const setImage = (data)=> {
-        setSelfieImageWithID(data);
+       // setSelfieImageWithID(data);
+        setTempSelfieImageWithID(data);
         // setCurrentIndex(oldval => oldval + 1)
     }
 
     const Proceed = async ()=> {
-        if(selfieImageWithID == null){
+        if(tempSelfieImageWithID == null){
             return navigation.push("ToktokWalletSelfieImageWithIDCamera", {setImage})
+        }
+        try {
+            const croppedResult = await ImageCropper.crop({
+                ...cropperParams,
+                // imageUri: selfieImage.uri,
+                imageUri: tempSelfieImageWithID.uri,
+                cropSize,
+                cropAreaSize,
+            });
+
+            setSelfieImageWithID(state => ({
+                ...state,
+                uri: croppedResult
+            }))
+        }catch(error){  
+            throw error;
         }
         return setCurrentIndex(oldval => oldval + 1)
     }
 
-    if(selfieImageWithID){
+    if(tempSelfieImageWithID){
         return(
             <MainComponent onPress={Proceed}>
                 <View style={styles.PreviewImage}>
-                    <Image style={{height:290,width: 280,flex: 1}} resizeMode="stretch" source={{uri: selfieImageWithID.uri}}/>
+                    {/* <Image style={{height:290,width: 280,flex: 1}} resizeMode="stretch" source={{uri: selfieImageWithID.uri}}/> */}
+                    <ImageCropper
+                        imageUri={tempSelfieImageWithID.uri}
+                         cropAreaWidth={Platform.OS === "ios" ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 110}
+                        cropAreaHeight={Platform.OS === "ios" ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 100}
+                        containerColor="transparent"
+                        areaColor="black"
+                        setCropperParams={cropperParams =>{
+                            setCropperParams(cropperParams)
+                        }}
+                    />
                 <TouchableOpacity onPress={()=>navigation.push("ToktokWalletSelfieImageWithIDCamera", {setImage})} style={styles.changePhoto}>
                     <EIcon name="camera" color={COLOR.YELLOW} size={20} />
                     <Text style={{textAlign:"center",color: COLOR.YELLOW,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,marginTop: -2}}>Change Photo</Text>
@@ -189,8 +221,10 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     PreviewImage: {
-        width: 290,
-        height: 300,
+        // width: 290,
+        // height: 300,
+        height: Platform.OS === "ios" ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 100 + 10, 
+        width: Platform.OS === "ios" ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 110 + 10, 
         alignSelf:"center",
         marginTop: 7,
         padding: 2,

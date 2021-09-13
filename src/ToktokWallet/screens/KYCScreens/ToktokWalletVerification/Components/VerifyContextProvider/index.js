@@ -14,7 +14,7 @@ export const VerifyContextProvider = ({children})=> {
     const [modalProvinceVisible,setModalProvinceVisible] = useState(false)
     const [modalCityVisible,setModalCityVisible] = useState(false)
 
-    const [currentIndex,setCurrentIndex] = useState(0)
+    const [currentIndex,setCurrentIndex] = useState(4)
     const [fullname,setFullname] = useState(`${session.user.person.firstName} ${session.user.person.middleName ? session.user.person.middleName + " " : ""}${session.user.person.lastName}`)
     const [person,setPerson] = useState({
         firstName: session.user.person.firstName,
@@ -43,6 +43,7 @@ export const VerifyContextProvider = ({children})=> {
 
     const [incomeInfo, setIncomeInfo] = useState({
         source: "",
+        otherSource: "",
         occupation: "",
     })
 
@@ -61,7 +62,9 @@ export const VerifyContextProvider = ({children})=> {
     const [identificationId, setIdentificationId] = useState(null)
 
     const [selfieImage,setSelfieImage] = useState(null)
+    const [tempSelfieImage,setTempSelfieImage] = useState(null)
     const [selfieImageWithID,setSelfieImageWithID] = useState(null)
+    const [tempSelfieImageWithID,setTempSelfieImageWithID] = useState(null)
     const [frontImage, setFrontImage] = useState(null)
     const [backImage, setBackImage] = useState(null)
     const [isBackRequired, setIsbackRequired] = useState(false)
@@ -146,8 +149,12 @@ export const VerifyContextProvider = ({children})=> {
                 changeVerifyID,
                 selfieImage,
                 setSelfieImage,
+                tempSelfieImage,
+                setTempSelfieImage,
                 selfieImageWithID,
                 setSelfieImageWithID,
+                tempSelfieImageWithID,
+                setTempSelfieImageWithID,
                 person,
                 changePersonInfo,
                 modalCountryVisible,

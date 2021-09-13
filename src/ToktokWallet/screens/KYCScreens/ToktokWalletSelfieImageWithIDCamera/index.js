@@ -9,7 +9,7 @@ const { COLOR, FONT_FAMILY: FONT, FONT_SIZE } = CONSTANTS
 const {width,height} = Dimensions.get("window")
 
 const CROP_AREA_WIDTH = width * 0.90;
-const CROP_AREA_HEIGHT = CROP_AREA_WIDTH;
+const CROP_AREA_HEIGHT = CROP_AREA_WIDTH + 50;
 
 
 export const ToktokWalletSelfieImageWithIDCamera = ({navigation,route})=> {
@@ -113,14 +113,14 @@ export const ToktokWalletSelfieImageWithIDCamera = ({navigation,route})=> {
                  return 
              }
      
-             if(e.faces[0].bounds.size.height < ((CROP_AREA_HEIGHT - 120))){
-                 setMessage({
-                     msg: "Bring your phone closer to you.",
-                     icon: "mobile-alt"
-                 })
-                 refreshStates()
-                 return 
-             }
+            //  if(e.faces[0].bounds.size.height < ((CROP_AREA_HEIGHT + 500))){
+            //      setMessage({
+            //          msg: "Bring your phone closer to you.",
+            //          icon: "mobile-alt"
+            //      })
+            //      refreshStates()
+            //      return 
+            //  }
      
         }
 
@@ -273,7 +273,7 @@ export const ToktokWalletSelfieImageWithIDCamera = ({navigation,route})=> {
                                 <View style={[styles.borderEdges,{borderBottomWidth: 5,borderLeftWidth: 5,bottom:0,left: 0,}]}/>
                                 <View style={[styles.borderEdges,{borderBottomWidth: 5,borderRightWidth: 5,bottom:0,right:0,}]}/>
 
-                        <View style={{paddingVertical: 10, position:"absolute",top: -80,justifyContent:"center",alignItems:"center",width: "100%",backgroundColor:"rgba(255,255,255,0.1)",borderRadius: 5}}>
+                        <View style={{paddingVertical: 10, position:"absolute",bottom: -100,justifyContent:"center",alignItems:"center",width: "100%",backgroundColor:"rgba(255,255,255,0.1)",borderRadius: 5}}>
                             <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M,color:"white",textAlign:'center'}}>{message.msg}</Text>
                             {
                                 message.icon == null
