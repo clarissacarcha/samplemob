@@ -42,3 +42,8 @@ function FormatMapper(data) {
 
 # TODO
 - Update Delete Screen (No edit button. hold to delete and swipe left-> delete button will appear) 
+
+
+# VALUES
+
+- Ramen Nagi Voucher TJCRNXJ8KHFG

@@ -74,7 +74,7 @@ const Item = ({data, fulldata}) => {
         <View style={{flex: 8}}>
           <View style={{flex: 1, justifyContent: 'center'}}>
             <View>
-              <Text style={{fontSize: 13, fontWeight: '100'}}>{product?.itemname}</Text>
+              <Text style={{fontSize: 13, fontWeight: '100'}} numberOfLines={2} ellipsizeMode="tail">{product?.itemname}</Text>
             </View>
             <View style={{flexDirection: 'row'}}>
               <View style={{flex: 0}}>

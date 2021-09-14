@@ -37,6 +37,27 @@ export const ToktokMallStoreSearch = ({navigation, route}) => {
     }
   })
 
+  const [lazyloadSearchProduct, {error3, loading3}] = useLazyQuery(SEARCH_SHOP_PRODUCT, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',    
+    onCompleted: (response) => {
+      let temp = searchedProducts
+      if(!response){
+        setSearchedProducts(temp)
+      }else if(response && response.searchShopProduct.length > 0){
+        temp = temp.concat(response.searchShopProduct)
+        console.log(searchedProducts.length, response.searchShopProduct.length)
+        setSearchedProducts(temp)
+      }else if(response && response.searchShopProduct.length == 0){
+        setSearchedProducts(temp)
+      }
+    },
+    onError: (err) => {
+      console.log(err)
+      setEmptySearch(true)
+    }
+  })
+
   const [getSuggestions, {error2, loading2}] = useLazyQuery(GET_SHOP_SEARCH_SUGGESTIONS, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
@@ -109,7 +130,7 @@ export const ToktokMallStoreSearch = ({navigation, route}) => {
                 input: {
                   shopId: route.params.id,
                   search: searchValue,
-                  offset: searchedProducts.length,
+                  offset: 0,
                   limit: 10
                 }
               }
@@ -189,8 +210,17 @@ export const ToktokMallStoreSearch = ({navigation, route}) => {
           <Product 
             paginate={false} 
             data={searchedProducts} 
-            onReload={() => {
-              
+            lazyload={() => {
+              lazyloadSearchProduct({
+                variables: {
+                  input: {
+                    shopId: route.params.id,
+                    search: searchValue,
+                    offset: searchedProducts.length,
+                    limit: 10
+                  }
+                }
+              })
             }} 
           />
         }

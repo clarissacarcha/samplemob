@@ -13,6 +13,7 @@ import { GET_TOP_PRODUCTS } from '../../../../../../graphql/toktokmall/model';
 import {clothfacemask, medicalfacemask, placeholder} from '../../../../../assets'; 
 import { Price } from '../../../../../helpers';
 import { SwipeReloader, Loading } from '../../../../../Components';
+import Spinner from 'react-native-spinkit';
 
 import ContentLoader from 'react-native-easy-content-loader'
 
@@ -115,7 +116,7 @@ const RenderItem = ({item, loading}) => {
   )
 }
 
-export const Suggestions = ({}) => {
+export const Suggestions = ({lazyload}) => {
 
   const navigation = useNavigation()
 
@@ -137,7 +138,6 @@ export const Suggestions = ({}) => {
       if(response){
         temp = temp.concat(response.getTopProducts)
         setProducts(temp)
-        // setProducts(response.getProducts)
       }else{
         setProducts(temp)
       }
@@ -153,6 +153,15 @@ export const Suggestions = ({}) => {
     getProducts()
   }, [])
 
+  useEffect(() => {
+    if(!isFetching){
+      console.log("will lazy load products...")
+      setOffset(products.length)
+      console.log({offset})
+      getProducts()
+    }
+  }, [lazyload])
+
   // const { loading, data, fetchMore } = useQuery(GET_PRODUCTS, {
   //   client: TOKTOK_MALL_GRAPHQL_CLIENT,
   //   variables: {
@@ -162,25 +171,7 @@ export const Suggestions = ({}) => {
   // })
 
   // if(loading) return <Loading state={loading} />
-  const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
-    const paddingBottom = 20;
-    return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingBottom;
-  }
 
-  const onScroll = (event) => {
-    // alert
-    // if(isCloseToBottom(event)){
-    //   alert('close to bottom')
-    // }
-    // console.log(event.nativeEvent)
-    if(isCloseToBottom(event.nativeEvent)){
-      alert('close to bottom')
-    }
-    // Animated.event(
-    //   [{nativeEvent: {contentOffset: {y: AnimatedHeaderValue}}}],
-    //   {useNativeDriver: false}
-    // )
-  }
 
   return (
     <>
@@ -222,30 +213,28 @@ export const Suggestions = ({}) => {
             return <RenderItem navigation={navigation} item={item} />
           }}
           keyExtractor={(item, index) => item + index}
-          refreshing={loading}
-          // onEndReached = {() => {
-            // setIsFetching(true)
-            // setOffset(products.length)
-            // console.log({offset})
-            // getProducts()
-          // }}
-          // onScroll = {(nativeEvent) => {
-          //   console.log(nativeEvent)
-          // }}
-          onScroll = {(nativeEvent) => {
-            console.log(nativeEvent)
-          }}
+          refreshing={loading}          
           onEndReachedThreshold={1}
           ListFooterComponent={() => {
             return (
               <>
-                <SwipeReloader state={isFetching} 
+                {isFetching && 
+                <View style={{padding: 15, alignItems: 'center', justifyContent: 'center'}}>
+                  <Spinner 
+                    isVisible={true}
+                    type={"Circle"}
+                    color={"#F6841F"}
+                    size={20}
+                  />
+                </View>}
+                
+                {/* <SwipeReloader state={isFetching} 
                   onSwipeUp={() => {
                     setOffset(products.length)
                     console.log({offset})
                     getProducts()
                   }}
-                />
+                /> */}
                 {/* <View style={styles.separator} /> */}
               </>
             )

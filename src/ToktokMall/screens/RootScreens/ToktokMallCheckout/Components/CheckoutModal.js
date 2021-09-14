@@ -21,10 +21,16 @@ export const CheckoutModal = ({navigation, isVisible, setIsVisible}) => {
 
   return (
     <>
-      <View style= {{ flex:1, justifyContent: 'center', alignItems: 'center', }}>
+      <View style= {{ flex:1, justifyContent: 'center', alignItems: 'center'}}>
           <Modal transparent = {true} visible = {isVisible} animationType = "none"  >
-            <View style = {{flex:1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.25)'}}>
-              <View style = {{backgroundColor: 'white', width: '90%',borderRadius: 10, alignItems: 'center', justifyContent: 'center',
+            <View style = {{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.65)'}}>
+              
+              <View style = {{
+                backgroundColor: 'white', 
+                width: '90%',
+                borderRadius: 10, 
+                alignItems: 'center', 
+                justifyContent: 'center',
                 // paddingHorizontal: 30, 
                 padding: 15
               }}>
@@ -50,7 +56,7 @@ export const CheckoutModal = ({navigation, isVisible, setIsVisible}) => {
                 </View> */}
                 <Image 
                   source = {require('../../../../assets/icons/promptsuccess.png')}
-                  style = {{height: '55%', width: '65%', alignSelf: 'center', resizeMode: 'stretch', top:-15}}
+                  style = {{height: '50%', width: '65%', alignSelf: 'center', resizeMode: 'contain'}}
                 />
                 <Text style ={styles.title}>Your order has been placed!</Text>
                 <Text style ={styles.text}>Your order has been placed successfully. Please visit My Orders to check the progress and other details.</Text>
@@ -68,6 +74,7 @@ export const CheckoutModal = ({navigation, isVisible, setIsVisible}) => {
                     <Text style = {styles.buttonText}>Go to My Orders</Text>
                   </TouchableOpacity>    
                 </View>
+                
               </View>
             </View>
             

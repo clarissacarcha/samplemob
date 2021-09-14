@@ -1,17 +1,29 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {View, Text, StyleSheet, Platform, ImageBackground, Dimensions, StatusBar, Image, TouchableOpacity, FlatList, TextInput} from 'react-native';
+import {View, Text, StyleSheet, Platform, ImageBackground, Dimensions, StatusBar, Image, TouchableOpacity, FlatList, TextInput, ScrollView} from 'react-native';
 import {HeaderBack, HeaderTitle, HeaderRight, Header} from '../../../Components';
 import {COLOR, FONT, FONT_SIZE} from '../../../../res/variables';
 import {otpicon, otpbg} from '../../../assets';
 import CustomIcon from '../../../Components/Icons';
 import Toast from "react-native-simple-toast";
 import { FONT_REGULAR } from '../../../../res/constants';
-import {ApiCall, PaypandaApiCall, BuildPostCheckoutBody, BuildTransactionPayload, WalletApiCall} from "../../../helpers";
+import {
+  ApiCall, 
+  PaypandaApiCall, 
+  BuildPostCheckoutBody, 
+  BuildTransactionPayload, 
+  WalletApiCall,
+  ToktokWalletRawApiCall
+} from "../../../helpers";
+import { useSelector } from 'react-redux';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 export const ToktokMallOTP =  ({navigation, route}) => {
 
+  const session = useSelector(state => state.session)
   const inputRef = useRef(null)
   const [value, setValue] = useState("")
+  const [retries, setretries] = useState(1)
+  const [isInvalid, setIsInvalid] = useState(false)
 
   const ProcessPayment = async () => {
 
@@ -34,18 +46,35 @@ export const ToktokMallOTP =  ({navigation, route}) => {
 
   }
 
+  const ValidatePin = async () => {    
+
+    const paramsData = route.params.data
+    const req = await ToktokWalletRawApiCall(session, {
+      input: {
+        requestTakeMoneyId: paramsData.request_id,
+        OTP: paramsData.pin_type == "OTP" ? value : "",
+        TPIN: paramsData.pin_type == "TPIN" ? value : "",
+      }
+    })
+    console.log("Result", req)
+  }
+
   useEffect(() => {
     console.log(value)
   }, [value])
 
+  useEffect(() => {
+    // console.log(route.params.data.request_id)
+  }, [])
+
   return (
-    <>
+    <KeyboardAwareScrollView style={{backgroundColor: "#FFF"}}>
       <ImageBackground 
         source={otpbg}
         style = {styles.container}
         imageStyle={{width: '100%', height: Dimensions.get("screen").height, resizeMode: 'cover'}}
       >
-        <View style = {{margin: 20, alignItems: 'center', top: -20}}>
+        <View style = {{margin: 20, alignItems: 'center', height: Dimensions.get("window").height*0.7, paddingTop: Dimensions.get("window").height*0.2}}>
             <Image
               source={otpicon}
             />     
@@ -54,37 +83,37 @@ export const ToktokMallOTP =  ({navigation, route}) => {
             <View style = {{flexDirection: 'row', marginTop: 25}}>
               <TouchableOpacity 
                 onPress={() => {
-                  inputRef.current.focus()
+                  !isInvalid && inputRef.current.focus()
                 }} style = {styles.charContainer}>              
                 {value.length >= 1 && <CustomIcon.EIcon name="dot-single" size={40} />}
               </TouchableOpacity>
               <TouchableOpacity 
                 onPress={() => {
-                  inputRef.current.focus()
+                  !isInvalid && inputRef.current.focus()
                 }} style = {styles.charContainer}>              
                 {value.length >= 2 && <CustomIcon.EIcon name="dot-single" size={40} />}
               </TouchableOpacity>
               <TouchableOpacity 
                 onPress={() => {
-                  inputRef.current.focus()
+                  !isInvalid && inputRef.current.focus()
                 }} style = {styles.charContainer}>              
                 {value.length >= 3 && <CustomIcon.EIcon name="dot-single" size={40} />}
               </TouchableOpacity>
               <TouchableOpacity 
                 onPress={() => {
-                  inputRef.current.focus()
+                  !isInvalid && inputRef.current.focus()
                 }} style = {styles.charContainer}>              
                 {value.length >= 4 && <CustomIcon.EIcon name="dot-single" size={40} />}
               </TouchableOpacity>
               <TouchableOpacity 
                 onPress={() => {
-                  inputRef.current.focus()
+                  !isInvalid && inputRef.current.focus()
                 }} style = {styles.charContainer}>              
                 {value.length >= 5 && <CustomIcon.EIcon name="dot-single" size={40} />}
               </TouchableOpacity>
               <TouchableOpacity 
                 onPress={() => {
-                  inputRef.current.focus()
+                  !isInvalid && inputRef.current.focus()
                 }} style = {styles.charContainer}>              
                 {value.length >= 6 && <CustomIcon.EIcon name="dot-single" size={40} />}
               </TouchableOpacity>
@@ -92,9 +121,59 @@ export const ToktokMallOTP =  ({navigation, route}) => {
             </View>
         </View>
 
-        <TextInput 
+        {isInvalid && retries < 5 &&
+        <View style={{alignItems: 'center', paddingHorizontal: 15, justifyContent: 'center', paddingBottom: 10}}>
+          <Text style={{color: '#F6841F'}}>The OTP you entered is invalid. </Text>
+          <Text style={{color: '#F6841F'}}>You have {5 - retries} retries remaining.</Text>
+        </View>}
+
+        {isInvalid && retries >= 5 && 
+        <View style={{alignItems: 'center', paddingHorizontal: 15, justifyContent: 'center', paddingBottom: 10}}>
+          <Text style={{color: '#F6841F'}}>You have exceeded your retries to enter OTP.</Text>
+        </View>}
+
+        {!isInvalid && <View style={{height: 40}}/>}
+      
+        {!isInvalid && <TouchableOpacity 
+          activeOpacity={0.5} 
+          disabled={value.length != 6} 
+          onPress={async () => {
+
+            let transactionType = route.params?.transaction || null
+
+            if(value != "123456" || value != 123456){
+              setIsInvalid(true)              
+              setValue("")
+            }else{
+              setIsInvalid(false) 
+              if(transactionType && transactionType == "payment"){
+                await ProcessPayment()
+              }
+            }
+
+          }} 
+          style={value && value.length == 6 ? styles.activeButton : styles.invalidButton}>
+          <Text style={styles.buttonText}>Proceed</Text>
+        </TouchableOpacity>}
+
+        {isInvalid && value == "" && retries < 5 &&
+
+          <TouchableOpacity 
+            activeOpacity={0.5} 
+            onPress={async () => {
+              setIsInvalid(false)  
+              setretries(retries + 1)
+            }} 
+            style={styles.activeButton}>
+            <Text style={styles.buttonText}>Retry</Text>
+          </TouchableOpacity>
+        }
+
+      </ImageBackground>
+
+      <TextInput 
           ref={inputRef} 
-          keyboardType = {'number-pad'}
+          keyboardType="number-pad"
           maxLength = {6}
           style={{width: 0, height: 0}} 
           value={value}
@@ -102,26 +181,8 @@ export const ToktokMallOTP =  ({navigation, route}) => {
             setValue(val)
           }}
         />
-      
-        <TouchableOpacity 
-          activeOpacity={0.5} 
-          disabled={value.length != 6} 
-          onPress={async () => {
-
-            let transactionType = route.params?.transaction || null
-
-            if(transactionType && transactionType == "payment"){
-              await ProcessPayment()
-            }
-
-          }} 
-          style={value && value.length == 6 ? styles.activeButton : styles.invalidButton}>
-          <Text style={styles.buttonText}>Proceed</Text>
-        </TouchableOpacity>
-
-      </ImageBackground>
      
-    </>
+    </KeyboardAwareScrollView>
   );
 }
 // );
@@ -155,8 +216,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLOR.ORANGE,
     alignItems: 'center',
     justifyContent: 'center',
-    position: 'absolute',
-    bottom: 20,
   },
   invalidButton: {
     // height: 45,
@@ -166,8 +225,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#D7D7D7",
     alignItems: 'center',
     justifyContent: 'center',
-    position: 'absolute',
-    bottom: 20,
   },
   buttonText: {
     color: 'white',

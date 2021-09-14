@@ -13,7 +13,8 @@ export const RenderEmpty = () => {
 				/>
         <View style={{height: 8}} />
         <View>
-					<Text style={{fontSize: 16, color: "#9E9E9E"}}>Your cart is empty</Text>
+					<Text style={{fontSize: 16, color: "black", textAlign: 'center'}}>Your cart is empty</Text>
+					<Text style={{fontSize: 12, color: '#525252', textAlign: 'center'}}>Browse our products and add to your cart now!</Text>
 				</View>
       </View>
 		</>

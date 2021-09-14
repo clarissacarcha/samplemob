@@ -52,6 +52,7 @@ export const GET_ORDERS_AND_HISTORY = gql`
       parent {
 	  		description
         date
+        time
       }
     }
   }

@@ -18,8 +18,16 @@ const SampleVariations = [{
   label: "Bronze"
 }]
 
-export const VariationBottomSheet = forwardRef(({ item, image, onPressBuyNow, onPressAddToCart, type}, ref) => {
-  const snapPoints = useMemo(() => [0, item?.variantSummary?.length === 0 ? 260 :item?.variantSummary?.length === 1? 400 : 500], [item]);
+export const VariationBottomSheet = forwardRef(({ 
+  initialSnapPoint, 
+  item, 
+  image, 
+  onPressBuyNow, 
+  onPressAddToCart, 
+  type
+}, ref) => {
+    
+  const snapPoints = useMemo(() => [0, initialSnapPoint], [item]);
   const [stock, setStock] = useState(item?.noOfStocks)
   const [qty, setQty] = useState(1)
   const [variation, setVariation] = useState("")
@@ -157,7 +165,6 @@ export const VariationBottomSheet = forwardRef(({ item, image, onPressBuyNow, on
   }
 
   useEffect(() => {
-
     setStock(item?.noOfStocks)
   }, [item])
 

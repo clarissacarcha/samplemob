@@ -175,3 +175,35 @@ export const PaypandaApiCall = async ({data, addressData}) => {
 		console.log(error)
 	}
 }
+
+export const ToktokWalletRawApiCall = async (session, input) => {
+
+	let token = await AsyncStorage.getItem("toktokWalletEnterpriseToken")
+	console.log(token)
+
+	return
+
+	const data = await axios({
+		url: "https://dev.toktok.ph:2087/enterprise/graphql",
+		method: 'post',
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': `Bearer ${session.accessToken}`
+		},
+		data: {
+			query: `
+				mutation postVerifyRequestTakeMoney($input: $postVerifyRequestTakeMoneyInput) {
+					postVerifyRequestTakeMoney(input: $input){
+						requestTakeMoneyId
+						OTP
+						TPIN
+					}
+				}
+			`,
+			variables: input
+		}
+	});
+
+	return data
+
+}
