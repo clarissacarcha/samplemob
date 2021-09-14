@@ -140,7 +140,7 @@ export const RenderDetails = ({
 					rightActionActivationDistance={30}
 					rightButtonWidth={75}
 					rightButtons={[<DeleteButton onPress={() => {
-						onItemDelete(data.item_id)
+						onItemDelete(data)
 						
 					}} />]}
 				>

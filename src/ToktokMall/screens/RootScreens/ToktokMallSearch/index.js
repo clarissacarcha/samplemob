@@ -70,8 +70,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
     }
   })
 
-<<<<<<< HEAD
-  const [getProductsLazyLoad, {error2, loading2}] = useLazyQuery(SEARCH_PRODUCT, {
+  const [getProductsLazyLoad, {error3, loading3}] = useLazyQuery(SEARCH_PRODUCT, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     variables: {
@@ -101,7 +100,8 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
       console.log(err)
       setSearchedProducts([])
       setEmptySearch(true)
-=======
+    }
+  })
   const [searchProductSuggestion, {error2, loading2}] = useLazyQuery(SEARCH_PRODUCT_SUGGESTIONS, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
@@ -112,7 +112,6 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
     },
     onError: (err) => {
       console.log(err)
->>>>>>> 1677eaf08690c00e0a242a2292a3f180347bd84d
       setIsLoading(false)
     }
   })

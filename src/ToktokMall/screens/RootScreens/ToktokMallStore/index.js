@@ -7,6 +7,8 @@ import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql';
 import { GET_SHOP_DETAILS, SEARCH_SHOP_PRODUCT } from '../../../../graphql/toktokmall/model';
 import { useLazyQuery } from '@apollo/react-hooks';
 import Spinner from 'react-native-spinkit';
+import {ApiCall, PaypandaApiCall, BuildPostCheckoutBody, BuildTransactionPayload, WalletApiCall} from "../../../helpers";
+import {useSelector} from 'react-redux';
 
 export const ToktokMallStore = ({navigation, route}) => {
 
@@ -18,6 +20,8 @@ export const ToktokMallStore = ({navigation, route}) => {
   const [messageModalContent, setMessageModalContent] = useState("")
   const [searchValue, setSearchValue] = useState("")
   const [emptySearch, setEmptySearch] = useState(false)
+  const session = useSelector(state=> state.session)
+  const [user, setUser] = useState({})
 
   const [getShopDetails, {error, loading}] = useLazyQuery(GET_SHOP_DETAILS, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
@@ -37,7 +41,49 @@ export const ToktokMallStore = ({navigation, route}) => {
     }
   })
 
+  const followShop = async () => {
+    let variables = {
+      userid: user.id,
+      shopid: storeData.id,
+      branchid: '',
+    }
+    console.log(variables)
+    const req = await ApiCall("follow_shop", variables, true)
+
+    if(req.responseData && req.responseData.success == 1){
+      setMessageModalContent(`You are now following ${storeData.shopname}`)   
+    }else if(req.responseError && req.responseError.success == 0){
+      Toast.show(req.responseError.message, Toast.LONG)
+    }else if(req.responseError){
+      Toast.show("Something went wrong", Toast.LONG)
+    }else if(req.responseError == null && req.responseData == null){
+      Toast.show("Something went wrong", Toast.LONG)
+    }
+  }
+
+  const unFollowShop = async () => {
+    let variables = {
+      userid: user.id,
+      shopid: storeData.id,
+      branchid: '',
+    }
+    console.log(variables)
+    const req = await ApiCall("unfollow_shop", variables, true)
+
+    if(req.responseData && req.responseData.success == 1){
+      setMessageModalContent(`You unfollowed ${storeData.shopname}`)    
+    }else if(req.responseError && req.responseError.success == 0){
+      Toast.show(req.responseError.message, Toast.LONG)
+    }else if(req.responseError){
+      Toast.show("Something went wrong", Toast.LONG)
+    }else if(req.responseError == null && req.responseData == null){
+      Toast.show("Something went wrong", Toast.LONG)
+    }
+  }
+
   useEffect(() => {
+    const user = session?.user.person || {}
+    setUser(user)
     getShopDetails()
   }, [])
 
@@ -115,11 +161,11 @@ export const ToktokMallStore = ({navigation, route}) => {
           onToggleFollow={(val) => {
             if(val == false){
               //Unfollow
-              setMessageModalContent(`You unfollowed ${storeData?.shopname}`)   
+              unFollowShop()
             }
             else if(val == true){
-              //Followed
-              setMessageModalContent(`You are now following ${storeData?.shopname}`)              
+              //Followed 
+              followShop()       
             } 
             setMessageModalShown(true)
           }} 

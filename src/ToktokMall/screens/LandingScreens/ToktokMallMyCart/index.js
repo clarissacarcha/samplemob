@@ -11,7 +11,8 @@ import {MessageModal} from '../../../Components';
 import {DeleteFooter, CheckoutFooter, Item, Store, RenderDetails, RenderEmpty} from './components';
 import {MergeStoreProducts} from '../../../helpers';
 import { create } from 'lodash';
-
+import {useSelector} from 'react-redux';
+import {ApiCall, PaypandaApiCall, BuildPostCheckoutBody, BuildTransactionPayload, WalletApiCall} from "../../../helpers";
 const testdata = [
   {
     store_id: 1,
@@ -149,7 +150,9 @@ const Component =  ({
   const [itemsToDelArr, setItemsToDelArr] = useState([])
   const [itemsToCheckoutArr, setItemsToCheckoutArr] = useState([])
   const [checkoutData, setCheckoutData] = useState([])
-  const [myCartData, setMyCartData] = useState([])
+  const [myCartData, setMyCartData] = useState([])  
+  const session = useSelector(state=> state.session)
+  const [user, setUser] = useState({})
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack hidden={true} />,
@@ -192,6 +195,9 @@ const Component =  ({
 
     //Call to reset cart for debugging
     // createMyCartSession('set', [])
+    
+    const user = session?.user.person || {}
+    setUser(user)
   }, []);
 
   useEffect(() => {
@@ -215,21 +221,49 @@ const Component =  ({
   }
 
   const deleteSingleItem = (id) => {
-    createMyCartSession("DeleteSingle", {item_id: id})
+    createMyCartSession("DeleteSingle", {item_id: id.item_id})
 
     let currentItems = JSON.parse(JSON.stringify(itemsToCheckoutArr))
     let willDeleteItems = JSON.parse(JSON.stringify(itemsToDelArr))
 
-    let index = willDeleteItems.findIndex((a) => a.item_id === id)
+    let index = willDeleteItems.findIndex((a) => a.item_id === id.item_id)
     willDeleteItems.splice(index, 1)
     setItemsToDelArr(willDeleteItems)
 
 
-    let indexC = currentItems.findIndex((a) => a.item_id === id)
+    let indexC = currentItems.findIndex((a) => a.item_id === id.item_id)
     currentItems.splice(indexC, 1)
     setItemsToCheckoutArr(currentItems)
     setSingleDeletemsgModalShown(true)
     // getSubTotal()
+  }
+
+  const deleteItems = async (type, singleItem) => {
+    let variables = {
+      userid: user.id,
+      shopid: singleItem.store_id,
+      branchid: 0,
+      productid: [singleItem.item_id]
+    }
+    // data.pin = value
+    console.log(variables)
+    const req = await ApiCall("remove_cart", variables, true)
+
+    if(req.responseData && req.responseData.success == 1){
+      if(type == 'single'){
+        //single item delete
+        deleteSingleItem(singleItem)
+      }else {
+        //multiple delete
+      }
+    }else if(req.responseError && req.responseError.success == 0){
+      Toast.show(req.responseError.message, Toast.LONG)
+    }else if(req.responseError){
+      Toast.show("Something went wrong", Toast.LONG)
+    }else if(req.responseError == null && req.responseData == null){
+      Toast.show("Something went wrong", Toast.LONG)
+    }
+
   }
 
   const unSelectItem = (type, raw, del) => {
@@ -447,7 +481,7 @@ const Component =  ({
                       setSubTotal(res)
                     }}
                     onItemDelete={(id) => {
-                      deleteSingleItem(id)
+                      deleteItems('single', id)
                     }}
                     onChangeQuantity={(qty, id) => {
                       console.log("change quantity", id)

@@ -12,6 +12,9 @@ import CustomIcon from '../../../Components/Icons';
 import {ASAddToCart, ASClearCart} from '../../../helpers';
 import ContentLoader, {InstagramLoader, FacebookLoader} from 'react-native-easy-content-loader'
 import { MergeStoreProducts } from '../../../helpers';
+import {useSelector} from 'react-redux';
+import {ApiCall, PaypandaApiCall, BuildPostCheckoutBody, BuildTransactionPayload, WalletApiCall} from "../../../helpers";
+
 
 import {
 
@@ -57,6 +60,8 @@ const Component =  ({
   const [enteredQuantity, setEnteredQuantity] = useState(0)
   const [selectedVariation, setSelectedVariation] = useState('')
   const [cartItems, setCartItems] = useState(0)
+  const session = useSelector(state=> state.session)
+  const [user, setUser] = useState({})
 
   const {
     params: { Id },
@@ -120,12 +125,29 @@ const Component =  ({
     })
   }
   
-  const onAddToCart = (input) => {
 
+  const onAddToCart = async (input) => {
     let raw = cartObject(input)
-    createMyCartSession('push', raw)
-    setCartItems(CountCartItems)
-    setMessageModalShown(true)
+    let variables = {
+      userid: user.id,
+      shopid: store.id,
+      branchid: 0,
+      productid: product.Id,
+      quantity: input.qty
+    }
+    const req = await ApiCall("insert_cart", variables, true)
+
+    if(req.responseData && req.responseData.success == 1){
+      createMyCartSession('push', raw)
+      setCartItems(CountCartItems)
+      setMessageModalShown(true)
+    }else if(req.responseError && req.responseError.success == 0){
+      Toast.show(req.responseError.message, Toast.LONG)
+    }else if(req.responseError){
+      Toast.show("Something went wrong", Toast.LONG)
+    }else if(req.responseError == null && req.responseData == null){
+      Toast.show("Something went wrong", Toast.LONG)
+    }
   }
 
   const onScroll = Animated.event(
@@ -147,6 +169,8 @@ const Component =  ({
   }
 
   useEffect(() => {
+    const user = session?.user.person || {}
+    setUser(user)
     setIsFetching(true)
     getProductDetails()
     setCartItems(CountCartItems)
@@ -216,6 +240,7 @@ const Component =  ({
               setVariationOptionType(0)
               varBottomSheetRef.current.expand()
             }}
+            user = {user}
             loading = {isFetching}
           />
         }

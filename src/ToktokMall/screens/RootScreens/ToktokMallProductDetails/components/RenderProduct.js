@@ -13,8 +13,11 @@ import { connect } from 'react-redux';
 
 import { RenderStars, RenderVariations } from './subComponents';
 import ContentLoader from 'react-native-easy-content-loader';
+import {ApiCall, PaypandaApiCall, BuildPostCheckoutBody, BuildTransactionPayload, WalletApiCall} from "../../../../helpers";
 
-const Component = ({data, onOpenVariations, animatedValue, shop, loading, reduxActions: {
+
+
+const Component = ({data, onOpenVariations, animatedValue, shop, loading, user, reduxActions: {
   updateMyFavorites
 }, reduxStates: {
   myFavorites
@@ -43,6 +46,56 @@ const Component = ({data, onOpenVariations, animatedValue, shop, loading, reduxA
    }
  },[myFavorites, shop, data])
 
+ const addToFavorites = async () => {
+
+    let variables = {
+      shopid: shop.id,
+      branchid: '',
+      userid: user.id,
+      productid: data.Id
+    }
+    // data.pin = value
+    console.log(variables)
+    const req = await ApiCall("set_favorite_product", variables, true)
+
+    if(req.responseData && req.responseData.success == 1){
+      Toast.show('Added to Favorites')
+      updateMyFavorites('add', {shop, item: data })
+      setFavorite(true)
+    }else if(req.responseError && req.responseError.success == 0){
+      Toast.show(req.responseError.message, Toast.LONG)
+    }else if(req.responseError){
+      Toast.show("Something went wrong", Toast.LONG)
+    }else if(req.responseError == null && req.responseData == null){
+      Toast.show("Something went wrong", Toast.LONG)
+    }
+
+  }
+
+  const removeFromFavorites = async () => {
+    let variables = {
+      shopid: shop.id,
+      branchid: '',
+      userid: user.id,
+      productid: data.Id
+    }
+    // data.pin = value
+    console.log(variables)
+    const req = await ApiCall("remove_favorite_product", variables, true)
+
+    if(req.responseData && req.responseData.success == 1){
+      Toast.show('Removed to Favorites')
+      updateMyFavorites('delete', {shop, item: data })
+      setFavorite(false)
+    }else if(req.responseError && req.responseError.success == 0){
+      Toast.show(req.responseError.message, Toast.LONG)
+    }else if(req.responseError){
+      Toast.show("Something went wrong", Toast.LONG)
+    }else if(req.responseError == null && req.responseData == null){
+      Toast.show("Something went wrong", Toast.LONG)
+    }
+  }
+
   const HandleShare = async () => {
     let options = {
       message: data?.itemname,
@@ -60,18 +113,14 @@ const Component = ({data, onOpenVariations, animatedValue, shop, loading, reduxA
 
   const HandleToggleFavorites = () => {
     if(!favorite){
-      Toast.show('Added to Favorites')
-      updateMyFavorites('add', {shop, item: data })
-      setFavorite(true)
+      addToFavorites()
     }else{
-      Toast.show('Removed to Favorites')
-      updateMyFavorites('delete', {shop, item: data })
-      setFavorite(false)
+      removeFromFavorites()
     }
     if(favorite){
-      Toast.show('Removed to Favorites')
-      setFavorite(false)
+      removeFromFavorites()
     }
+    // console.log(shop)
   }
 
 	return (
@@ -103,9 +152,9 @@ const Component = ({data, onOpenVariations, animatedValue, shop, loading, reduxA
               <Text style={{marginLeft: 10}}>{data.soldCount || 0} sold</Text>
 
             <View style={{flex: 1.8, flexDirection: 'row', justifyContent: 'flex-end'}}>
-              {/* <TouchableOpacity style={{marginRight: 10}} onPress={() => HandleToggleFavorites()}>
+              <TouchableOpacity style={{marginRight: 10}} onPress={() => HandleToggleFavorites()}>
                 {favorite ? <CustomIcon.EIcon name="heart" size={22} color="#F6841F" /> : <CustomIcon.EIcon name="heart-outlined" size={22} color="#9E9E9E" />}
-              </TouchableOpacity> */}
+              </TouchableOpacity>
               <TouchableOpacity onPress={() => HandleShare()}>
                 <CustomIcon.FeIcon name="share" size={20} color="#9E9E9E" />
               </TouchableOpacity>
