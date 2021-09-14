@@ -1,6 +1,7 @@
 export * from "./Account";
 export * from "./AccountBiometricLogin";
 export * from "./AccountType";
+export * from "./Advertisement";
 export * from "./CallChannel";
 export * from "./CashIn";
 export * from "./CashInProvider";

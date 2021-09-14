@@ -64,9 +64,16 @@ export const CheckWalletAccountRestriction = connect(null,mapDispatchtoProps)(({
     if(loading){
         return null
     }
+
+    // if Account is Dormant
+    if(data.getMyAccount.isDormant){
+        navigation.replace("ToktokWalletRestricted" , {component: "dormantAccount"})
+        return null
+    }
+
     // if Account is Disabled or blocked
     if(data.getMyAccount.status == 2){
-       navigation.replace("ToktokWalletRestricted" , {component: "blockedAccount"})
+       navigation.replace("ToktokWalletRestricted" , {component: "blockedAccount", data: { account: data.getMyAccount}})
        return null
     }
     // if Account is On Hold

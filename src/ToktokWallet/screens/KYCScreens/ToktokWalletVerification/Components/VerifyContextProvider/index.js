@@ -14,7 +14,7 @@ export const VerifyContextProvider = ({children})=> {
     const [modalProvinceVisible,setModalProvinceVisible] = useState(false)
     const [modalCityVisible,setModalCityVisible] = useState(false)
 
-    const [currentIndex,setCurrentIndex] = useState(4)
+    const [currentIndex,setCurrentIndex] = useState(0)
     const [fullname,setFullname] = useState(`${session.user.person.firstName} ${session.user.person.middleName ? session.user.person.middleName + " " : ""}${session.user.person.lastName}`)
     const [person,setPerson] = useState({
         firstName: session.user.person.firstName,

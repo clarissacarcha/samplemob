@@ -24,6 +24,8 @@ export const GET_MY_ACCOUNT = gql`
             id
             mobileNumber
             status
+            disabledType
+            isDormant
             motherId
             pinCode
             pinCodeAttempts

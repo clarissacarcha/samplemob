@@ -20,6 +20,8 @@ export const ToktokWalletRestricted = ({navigation,route})=> {
         headerShown: false
     })
 
+    const data = route.params.data ? route.params.data : null
+
     const DisplayComponent = ()=> {
         switch(route.params.component){
             case "onHold":
@@ -37,7 +39,7 @@ export const ToktokWalletRestricted = ({navigation,route})=> {
             case "rejectedKYC":
                 return <RejectedKyc />
             case "blockedAccount":
-                return <BlockedAccount />
+                return <BlockedAccount data={data}/>
             case "deletedAccount":
                 return <DeletedAccount/>
             default:

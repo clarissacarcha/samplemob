@@ -19,7 +19,7 @@ const BottomSheetSourceOfIncome = forwardRef(({changeIncomeInfo} , ref)=> {
       client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT,
       fetchPolicy:"network-only",
       onCompleted: ({getSourceOfIncome})=> {
-        const data = [...getSourceOfIncome , {id: 0 , description: "Others"}]
+        const data = [...getSourceOfIncome , {id: "0" , description: "Others"}]
         setFilteredSourceOfIncome(data)
       },
       onError: (error) => {
@@ -29,6 +29,9 @@ const BottomSheetSourceOfIncome = forwardRef(({changeIncomeInfo} , ref)=> {
 
     const selectSourceOfIncome = (index)=> {
         changeIncomeInfo("source",filteredSourceOfIncome[index])
+        if(filteredSourceOfIncome[index].id == "0"){
+          changeIncomeInfo("otherSource","")
+        }
         ref.current.collapse()
     }
 

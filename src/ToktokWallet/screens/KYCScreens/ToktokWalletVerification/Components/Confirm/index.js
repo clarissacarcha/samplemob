@@ -127,7 +127,7 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
             identificationCardId: VerifyUserData.identificationId,
             sourceIncomeId: VerifyUserData.incomeInfo.source.id,
             otherSource: VerifyUserData.incomeInfo.otherSource,
-            occupation: VerifyUserData.occupation
+            occupation: VerifyUserData.incomeInfo.occupation
         }
 
         postKYCRegister({

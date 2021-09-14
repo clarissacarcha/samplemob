@@ -7,8 +7,9 @@ import CONSTANTS from 'common/res/constants'
 
 const  { COLOR , FONT_SIZE , FONT_FAMILY: FONT } = CONSTANTS
 
-export const BlockedAccount = ()=> {
+export const BlockedAccount = ({data})=> {
     const navigation = useNavigation()
+    const { account } = data
 
     navigation.setOptions({
         headerShown:false,
