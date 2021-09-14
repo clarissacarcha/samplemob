@@ -96,23 +96,32 @@ const Item = ({data, fulldata}) => {
           </View>          
         </View>        
       </TouchableOpacity>
-      {/* <View style={{flexDirection: 'row-reverse', paddingHorizontal: 15, paddingBottom: 15}}>
-        {!rated && <TouchableOpacity onPress={()=> {                    
-          navigate("ToktokMallRateProduct", {openModal: () => {
-            setRated(true)
-            setMessageModalShown(true)
-          }})
+      
+      {/* Comment this View for disabling rating */}
+      <View style={{flexDirection: 'row-reverse', paddingHorizontal: 15, paddingBottom: 15}}>
+        {!rated && 
+        <TouchableOpacity 
+          onPress={()=> {                    
+            navigation.navigate("ToktokMallRateProduct", {
+              orderData: {...fulldata, ...data},
+              openModal: () => {
+                setRated(true)
+                setMessageModalShown(true)
+              }
+            })
         }}>
           <View style={{paddingVertical: 2, paddingHorizontal: 20, backgroundColor: '#F6841F', borderRadius: 5}}>
             <Text style={{color: "#fff", fontSize: 13}}>Rate</Text>
           </View>
         </TouchableOpacity>}
-        {rated && <TouchableOpacity >
+        {rated && 
+        <TouchableOpacity >
           <View style={{paddingVertical: 2, paddingHorizontal: 20, backgroundColor: '#F6841F', borderRadius: 5}}>
             <Text style={{color: "#fff", fontSize: 13}}>Buy Again</Text>
           </View>
         </TouchableOpacity>}
-      </View> */}
+      </View>
+
       <View style={{ height: 2, backgroundColor: '#F7F7FA'}} />
 
     {messageModalShown && 
