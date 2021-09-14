@@ -16,12 +16,18 @@ import {FONT} from '../../../../../../../res/variables';
 import { useNavigation } from '@react-navigation/native';
 
 export const Store = ({data}) => {
+
+  const getShopLogo = (raw) => {
+    if(typeof raw == "string") return {uri: raw}
+    else return require('../../../../../../assets/icons/store.png')
+  }
+
   return (
     <>
       <View style={{flexDirection: 'row', paddingHorizontal: 15, paddingVertical: 20}}>
         <View style={{flex: 0}}>
           <Image
-            source={require('../../../../../../assets/icons/store.png')}
+            source={getShopLogo(data.profileImages.logo)}
             style={{width: 24, height: 24, resizeMode: 'stretch'}}
           />
         </View>
@@ -34,7 +40,10 @@ export const Store = ({data}) => {
   );
 };
 
-export const Item = ({data, onHold, onChecked, willDelete}) => {
+export const Item = ({rawdata, onHold, onChecked, willDelete}) => {
+
+  const data = rawdata?.product
+
   const [selected, setSelected] = useState(false);
   const {navigate} = useNavigation()
 

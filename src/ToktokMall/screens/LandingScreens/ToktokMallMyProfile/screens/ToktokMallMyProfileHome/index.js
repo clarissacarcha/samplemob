@@ -159,8 +159,8 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
         <Card>
           <View style={{paddingVertical: 10 }}>            
             <View style={{flexDirection: 'row', paddingVertical: 10}}>
-              {/* <View style={{flex: 1}} /> */}
-              {/* <TouchableOpacity onPress={() => navigation.navigate("ToktokMallMyWishlist", {tab: 1})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
+              <View style={{flex: 1}} />
+              <TouchableOpacity onPress={() => navigation.navigate("ToktokMallMyWishlist", {tab: 1})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
                 <CustomIcon.EIcon name="heart-outlined" size={30} color={COLOR.ORANGE} />
                 <Text style={{fontSize: 12}}>Favorites</Text>
               </TouchableOpacity>
@@ -168,7 +168,7 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
                 <CustomIcon.AIcon name="home" size={30} color={COLOR.ORANGE} />
                 <Text style={{fontSize: 12}}>Following</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => navigation.navigate("ToktokMallMyVouchers", {tab: 1})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
+              {/* <TouchableOpacity onPress={() => navigation.navigate("ToktokMallMyVouchers", {tab: 1})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
                 <CustomIcon.MCIcon name="ticket-outline" size={30} color={COLOR.ORANGE} />
                 <Text style={{fontSize: 12}}>My Vouchers</Text>
               </TouchableOpacity> */}
@@ -176,7 +176,7 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
                 <CustomIcon.FeIcon name="help-circle" size={30} color={COLOR.ORANGE} />
                 <Text style={{fontSize: 12}}>Help Centre</Text>
               </TouchableOpacity>
-              {/* <View style={{flex: 2}} /> */}
+              <View style={{flex: 1}} />
               {/* <View style={{flex: 2}} /> */}
               {/* <View style={{flex: 1}} /> */}
             </View>

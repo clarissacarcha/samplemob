@@ -2,7 +2,7 @@ import React, {useRef, useEffect, useState} from 'react';
 import { useLazyQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql';
 import { GET_PRODUCT_DETAILS } from '../../../../graphql/toktokmall/model';
-import {View, SafeAreaView, Text, Image, FlatList, SectionList, ImageBackground, TouchableOpacity, AsyncStorage, Dimensions} from 'react-native';
+import {View, SafeAreaView, Text, Image, FlatList, SectionList, ImageBackground, TouchableOpacity, Dimensions} from 'react-native';
 import {connect} from 'react-redux'
 import Spinner from 'react-native-spinkit';
 import Toast from 'react-native-simple-toast';
@@ -14,7 +14,7 @@ import ContentLoader, {InstagramLoader, FacebookLoader} from 'react-native-easy-
 import { MergeStoreProducts } from '../../../helpers';
 import {useSelector} from 'react-redux';
 import {ApiCall, PaypandaApiCall, BuildPostCheckoutBody, BuildTransactionPayload, WalletApiCall} from "../../../helpers";
-
+import AsyncStorage from '@react-native-community/async-storage';
 
 import {
 
@@ -185,8 +185,14 @@ const Component =  ({
   }
 
   useEffect(() => {
-    const user = session?.user.person || {}
-    setUser(user)
+
+    AsyncStorage.getItem("ToktokMallUser").then((raw) => {
+      const data = JSON.parse(raw)
+      if(data.userId){
+        setUser(data)
+      }
+    })
+
     setIsFetching(true)
     getProductDetails()
     setCartItems(CountCartItems)

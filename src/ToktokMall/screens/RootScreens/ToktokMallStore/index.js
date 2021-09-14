@@ -9,6 +9,7 @@ import { useLazyQuery } from '@apollo/react-hooks';
 import Spinner from 'react-native-spinkit';
 import {ApiCall, PaypandaApiCall, BuildPostCheckoutBody, BuildTransactionPayload, WalletApiCall} from "../../../helpers";
 import {useSelector} from 'react-redux';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export const ToktokMallStore = ({navigation, route}) => {
 
@@ -43,7 +44,7 @@ export const ToktokMallStore = ({navigation, route}) => {
 
   const followShop = async () => {
     let variables = {
-      userid: user.id,
+      userid: user.userId,
       shopid: storeData.id,
       branchid: '',
     }
@@ -63,7 +64,7 @@ export const ToktokMallStore = ({navigation, route}) => {
 
   const unFollowShop = async () => {
     let variables = {
-      userid: user.id,
+      userid: user.userId,
       shopid: storeData.id,
       branchid: '',
     }
@@ -82,8 +83,12 @@ export const ToktokMallStore = ({navigation, route}) => {
   }
 
   useEffect(() => {
-    const user = session?.user.person || {}
-    setUser(user)
+    AsyncStorage.getItem("ToktokMallUser").then((raw) => {
+      const data = JSON.parse(raw)
+      if(data.userId){
+        setUser(data)
+      }
+    })
     getShopDetails()
   }, [])
 

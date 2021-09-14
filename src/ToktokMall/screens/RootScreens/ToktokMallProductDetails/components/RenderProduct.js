@@ -15,13 +15,20 @@ import { RenderStars, RenderVariations } from './subComponents';
 import ContentLoader from 'react-native-easy-content-loader';
 import {ApiCall, PaypandaApiCall, BuildPostCheckoutBody, BuildTransactionPayload, WalletApiCall} from "../../../../helpers";
 
-
-
-const Component = ({data, onOpenVariations, animatedValue, shop, loading, user, reduxActions: {
-  updateMyFavorites
-}, reduxStates: {
-  myFavorites
-}} ) => {
+const Component = ({
+  data, 
+  onOpenVariations, 
+  animatedValue, 
+  shop, 
+  loading, 
+  user, 
+  reduxActions: {
+    updateMyFavorites
+  }, 
+  reduxStates: {
+    myFavorites
+  }
+}) => {
 
   const [favorite, setFavorite] = useState(false)
   const opacity = animatedValue.interpolate({
@@ -51,10 +58,10 @@ const Component = ({data, onOpenVariations, animatedValue, shop, loading, user, 
     let variables = {
       shopid: shop.id,
       branchid: '',
-      userid: user.id,
+      userid: user.userId,
       productid: data.Id
     }
-    // data.pin = value
+
     console.log(variables)
     const req = await ApiCall("set_favorite_product", variables, true)
 
@@ -76,7 +83,7 @@ const Component = ({data, onOpenVariations, animatedValue, shop, loading, user, 
     let variables = {
       shopid: shop.id,
       branchid: '',
-      userid: user.id,
+      userid: user.userId,
       productid: data.Id
     }
     // data.pin = value
