@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {View, Text, StyleSheet, Platform, ImageBackground, Dimensions, StatusBar, Image, TouchableOpacity, FlatList, TextInput} from 'react-native';
+import {View, Text, StyleSheet, Platform, ImageBackground, Dimensions, StatusBar, Image, TouchableOpacity, FlatList, TextInput, ScrollView} from 'react-native';
 import {HeaderBack, HeaderTitle, HeaderRight, Header} from '../../../Components';
 import {COLOR, FONT, FONT_SIZE} from '../../../../res/variables';
 import {otpicon, otpbg} from '../../../assets';
@@ -15,6 +15,7 @@ import {
   ToktokWalletRawApiCall
 } from "../../../helpers";
 import { useSelector } from 'react-redux';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 export const ToktokMallOTP =  ({navigation, route}) => {
 
@@ -67,13 +68,13 @@ export const ToktokMallOTP =  ({navigation, route}) => {
   }, [])
 
   return (
-    <>
+    <KeyboardAwareScrollView style={{backgroundColor: "#FFF"}}>
       <ImageBackground 
         source={otpbg}
         style = {styles.container}
         imageStyle={{width: '100%', height: Dimensions.get("screen").height, resizeMode: 'cover'}}
       >
-        <View style = {{margin: 20, alignItems: 'center', top: -20}}>
+        <View style = {{margin: 20, alignItems: 'center', height: Dimensions.get("window").height*0.7, paddingTop: Dimensions.get("window").height*0.2}}>
             <Image
               source={otpicon}
             />     
@@ -121,26 +122,17 @@ export const ToktokMallOTP =  ({navigation, route}) => {
         </View>
 
         {isInvalid && retries < 5 &&
-        <View style={{alignItems: 'center', paddingHorizontal: 15, justifyContent: 'center'}}>
+        <View style={{alignItems: 'center', paddingHorizontal: 15, justifyContent: 'center', paddingBottom: 10}}>
           <Text style={{color: '#F6841F'}}>The OTP you entered is invalid. </Text>
           <Text style={{color: '#F6841F'}}>You have {5 - retries} retries remaining.</Text>
         </View>}
 
         {isInvalid && retries >= 5 && 
-        <View style={{alignItems: 'center', paddingHorizontal: 15, justifyContent: 'center'}}>
+        <View style={{alignItems: 'center', paddingHorizontal: 15, justifyContent: 'center', paddingBottom: 10}}>
           <Text style={{color: '#F6841F'}}>You have exceeded your retries to enter OTP.</Text>
         </View>}
 
-        <TextInput 
-          ref={inputRef} 
-          keyboardType = {'number-pad'}
-          maxLength = {6}
-          style={{width: 0, height: 0}} 
-          value={value}
-          onChangeText={(val) => {
-            setValue(val)
-          }}
-        />
+        {!isInvalid && <View style={{height: 40}}/>}
       
         {!isInvalid && <TouchableOpacity 
           activeOpacity={0.5} 
@@ -178,8 +170,19 @@ export const ToktokMallOTP =  ({navigation, route}) => {
         }
 
       </ImageBackground>
+
+      <TextInput 
+          ref={inputRef} 
+          keyboardType="number-pad"
+          maxLength = {6}
+          style={{width: 0, height: 0}} 
+          value={value}
+          onChangeText={(val) => {
+            setValue(val)
+          }}
+        />
      
-    </>
+    </KeyboardAwareScrollView>
   );
 }
 // );
@@ -213,8 +216,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLOR.ORANGE,
     alignItems: 'center',
     justifyContent: 'center',
-    position: 'absolute',
-    bottom: 20,
   },
   invalidButton: {
     // height: 45,
@@ -224,8 +225,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#D7D7D7",
     alignItems: 'center',
     justifyContent: 'center',
-    position: 'absolute',
-    bottom: 20,
   },
   buttonText: {
     color: 'white',
