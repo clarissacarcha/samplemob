@@ -32,7 +32,7 @@ export const Store = ({data}) => {
           />
         </View>
         <View style={{flex: 1, paddingHorizontal: 7.5, justifyContent: 'center'}}>
-          <Text style={{fontSize: 14}}>{data.shopname}</Text>
+          <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>{data.shopname}</Text>
         </View>
       </View>
       <View style={{height: 2, backgroundColor: '#F7F7FA'}} />
@@ -108,7 +108,7 @@ export const Item = ({rawdata, onHold, onChecked, willDelete}) => {
         <View style={{flex: 8}}>
           <View style={{flex: 1, justifyContent: 'center'}}>
             <View>
-              <Text style={{fontSize: 13, fontWeight: '100'}}>{data.itemname}</Text>
+              <Text style={{fontSize: 13, fontWeight: '100'}} numberOfLines={2} ellipsizeMode="tail">{data.itemname}</Text>
             </View>
             <View style={{flexDirection: 'row'}}>
               <View style={{flex: 0}}>

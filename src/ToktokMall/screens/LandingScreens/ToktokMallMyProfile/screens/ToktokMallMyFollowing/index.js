@@ -1,6 +1,6 @@
-import React from 'react';
-import {View, Text, StyleSheet, Platform, Dimensions, StatusBar, Image, TouchableOpacity} from 'react-native';
-import {HeaderBack, HeaderTitle, HeaderRight, Card} from '../../../../../Components';
+import React, { useEffect, useState } from 'react';
+import {View, Text, StyleSheet, Platform, Dimensions, StatusBar, Image, TouchableOpacity, RefreshControl} from 'react-native';
+import {HeaderBack, HeaderTitle, HeaderRight, Card, Loading} from '../../../../../Components';
 import CustomIcon from '../../../../../Components/Icons';
 import {AlertOverlay} from '../../../../../../components';
 import {COLOR, FONT, FONT_SIZE} from '../../../../../../res/variables';
@@ -9,6 +9,11 @@ import {FlatList} from 'react-native-gesture-handler';
 import {connect} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import {EmptyList} from '../../components';
+
+import { useLazyQuery } from '@apollo/react-hooks';
+import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../../graphql';
+import { GET_MY_FOLLOWING } from '../../../../../../graphql/toktokmall/model';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const placeholderPNG = require('../../../../../../assets/images/toktokwallet.png');
 
@@ -40,16 +45,73 @@ const ListItem = ({updateMyFollowing, ...data}) => {
 };
 
 const Component = ({navigation, reduxStates: {myFollowing}, reduxActions: {updateMyFollowing}}) => {
+
+  const [following, setFollowing] = useState([])
+
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={['Following', '']} />,
     headerRight: () => <HeaderRight hidden={true} />,
   });
 
+  const [getMyFollowing, {error, loading}] = useLazyQuery(GET_MY_FOLLOWING, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',    
+    onCompleted: (response) => {
+      console.log(response)
+      if(response.getMyFollowing){
+        setFollowing(response.getMyFollowing)
+      }
+    },
+    onError: (err) => {
+      console.log(err)
+    }
+  })
+
+  const init = async () => {
+    AsyncStorage.getItem("ToktokMallUser").then((raw) => {
+      const data = JSON.parse(raw)
+      if(data.userId){
+        getMyFollowing({
+          variables: {
+            input: {
+              userId: data.userId
+            }
+          }
+        })
+      }
+    })
+  }
+
+  useEffect(() => {
+    init()
+  }, [])
+
   return (
     <View style={{flex: 1}}>
       <View style={{height: 8, backgroundColor: '#F7F7FA'}} />
-      {myFollowing.length === 0 ? (
+
+      {loading && 
+        <View style={{flex: 1}}>
+          <Loading state={loading} />
+        </View>
+      }      
+
+      {!loading && following.length > 0 &&
+        <FlatList
+          style={styles.container}
+          data={following}
+          renderItem={({item}) => <ListItem {...{...item?.shop, updateMyFollowing}} />}
+          refreshControl={
+            <RefreshControl 
+              refreshing={loading}
+              onRefresh={() => init()}
+            />
+          }
+        />
+      }
+      
+      {!loading && following.length == 0 && 
         <EmptyList
           image={{
             source: emptyFollowingIcon,
@@ -57,13 +119,8 @@ const Component = ({navigation, reduxStates: {myFollowing}, reduxActions: {updat
           }}
           title="You didn't follow any store yet."
         />
-      ) : (
-        <FlatList
-          style={styles.container}
-          data={myFollowing}
-          renderItem={({item}) => <ListItem {...{...item, updateMyFollowing}} />}
-        />
-      )}
+      }
+      
     </View>
   );
 };

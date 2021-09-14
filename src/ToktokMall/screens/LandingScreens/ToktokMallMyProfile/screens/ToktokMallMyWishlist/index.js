@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, Platform, Dimensions, FlatList, Image, TouchableOpacity, RefreshControl} from 'react-native';
-import {HeaderBack, HeaderTitle, HeaderRight, Card} from '../../../../../Components';
+import {HeaderBack, HeaderTitle, HeaderRight, Card, Loading} from '../../../../../Components';
 import CustomIcon from '../../../../../Components/Icons';
 import {AlertOverlay} from '../../../../../../components';
 import {COLOR, FONT, FONT_SIZE} from '../../../../../../res/variables';
@@ -162,7 +162,8 @@ const Component = ({navigation, reduxStates: {myFavorites}, reduxActions: {updat
   return (
     <>
       <View style={{flex: 1, backgroundColor: 'white'}}>
-      {favorites.length === 0 ? (
+      
+      {!loading && favorites.length === 0 ? (
         <EmptyList
           image={{
             source: emptyFaveIcon,
