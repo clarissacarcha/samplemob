@@ -39,16 +39,8 @@ export const Shops = ({raw, shipping, retrieve}) => {
       console.log("Response", response)
       if(response.applyVoucher){
 
-        //Check store id if exist on item list
-        let index = items.findIndex(x => x.store_id == response.applyVoucher.shopid)
-        if(index > -1){
-          //if exist, voucher is valid
-          setVoucherIsValid(2)
-          setShopVoucher(response.applyVoucher)
-        }else{
-          setVoucherIsValid(-1)
-          setShopVoucher(null)
-        }
+        setVoucherIsValid(2)
+        setShopVoucher(response.applyVoucher)
         
       }else{
         setVoucherIsValid(-1)
