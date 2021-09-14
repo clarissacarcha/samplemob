@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/core';
 import { COLOR, FONT } from '../../../../../../res/variables';
 import {LandingHeader, AdsCarousel, Loading} from '../../../../../Components';
 import CustomIcon from '../../../../../Components/Icons';
-import {coppermask, chair, bottle, flashsalebg, flashsale, placeholder} from '../../../../../assets';
+import {coppermask, chair, bottle, flashsalebg, flashsale, featuredflash, placeholder} from '../../../../../assets';
 import {Price} from '../../../../../helpers';
 import ContentLoader from 'react-native-easy-content-loader'
 
@@ -50,11 +50,21 @@ const Item = ({data}) => {
 
   return (
     <>
-      <TouchableOpacity activeOpacity={0.5} onPress={() => {
+      <TouchableOpacity 
+        activeOpacity={0.5} 
+        onPress={() => {
           navigation.navigate("ToktokMallProductDetails", data)
-        }} style={{flex: 2, paddingBottom: 4, marginHorizontal: 2, alignItems: 'center', backgroundColor: '#fff', borderRadius: 5}}>
+        }} 
+        style={{
+          flex: 2, 
+          paddingBottom: 4, 
+          marginHorizontal: 2, 
+          alignItems: 'center', 
+          backgroundColor: '#fff', 
+          borderRadius: 5
+        }}>
         <View style={{height: 4}}></View>
-        <Image source={getImageSource(data?.images)} style={{width: '100%', height: 100, resizeMode: 'stretch', alignSelf: 'center', borderRadius: 5}} />
+        <Image source={getImageSource(data?.images)} style={{width: 100, height: 120, resizeMode: 'stretch', alignSelf: 'center', borderRadius: 5}} />
         <View style={{height: 2}}></View>
         <Text style={{fontSize: 14, fontWeight: '600', color: "#F6841F", alignSelf: 'flex-start', paddingHorizontal: 5}}><Price amount={data?.price} /></Text>
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -83,7 +93,7 @@ const Empty = ({data}) => {
     <>
       <View style={{flex: 2, paddingBottom: 4, marginHorizontal: 2, alignItems: 'center', backgroundColor: "rgba(255,255,255,0.4)", borderRadius: 5}}>
         <View style={{height: 4}}></View>
-        <View style={{height: 120 }} />
+        <View style={{height: 120, width: 110, padding: 5 }} />
         {/* <Image source={getImageSource(data?.images)} style={{width: '100%', height: 120, resizeMode: 'stretch', alignSelf: 'center', borderRadius: 5}} /> */}
         <View style={{height: 2}}></View>
         <Text style={{fontSize: 14, fontWeight: '600', color: "#F6841F", alignSelf: 'flex-start', paddingHorizontal: 5}}></Text>
@@ -132,6 +142,12 @@ export const Featured = () => {
 		return result
 	}
 
+  const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+    const paddingBottom = 0;
+    // console.log(layoutMeasurement.height + contentOffset.y, contentSize.height - paddingBottom)
+    return layoutMeasurement.height + contentOffset.y == contentSize.height - paddingBottom;
+  }
+
   useEffect(() => {
     getFeaturedProducts()
   }, [])
@@ -144,10 +160,13 @@ export const Featured = () => {
           style={{flex: 1, paddingHorizontal: 15, paddingVertical: 0}}>
           
             <View style={{paddingVertical: 20, flexDirection: 'row'}}>
-              <View style={{flex: 11, justifyContent: 'center', paddingHorizontal: 4}}>
-                <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>Featured Items</Text>                
+              <View style={{flex: 1}}>
+                <Image source={featuredflash} style={{width: '38%', height: 40, resizeMode: 'stretch', justifyContent: 'center', alignSelf: 'flex-start'}} />
               </View>
-              <TouchableOpacity disabled = {loading} onPress={() => {
+              {/* <View style={{flex: 0, justifyContent: 'center', paddingHorizontal: 4}}>
+                <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>Featured Items</Text>                
+              </View> */}
+              {/* <TouchableOpacity disabled = {loading} onPress={() => {
                 navigation.navigate("ToktokMallSearch", {searchValue: "Featured Items", origin: "flashsale"})
               }} style={{flex: 3, flexDirection: 'row'}}>
                 <View style={{flex: 3, alignItems: 'flex-end', justifyContent: 'center'}}>
@@ -156,13 +175,13 @@ export const Featured = () => {
                 <View style={{flex: 0, alignItems: 'flex-end', justifyContent: 'center'}}>
                   <CustomIcon.EIcon name="chevron-right" color="#F6841F" size={16} />
                 </View>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
             
             <View>            
               <View style={{flex: 1, flexDirection: 'row'}}>
                 
-								<Carousel
+								{/* <Carousel
 									layout={'stack'} 
 									layoutCardOffset={`18`}
 									data={sliceData(featured)}
@@ -201,7 +220,21 @@ export const Featured = () => {
 									loop={false}
 									hasParallaxImages={true}
 									removeClippedSubviews={true}
-								/>
+								/> */}
+
+                <FlatList                  
+                  data={loading ? [1,2,3] : featured}
+                  horizontal={true}
+                  showsHorizontalScrollIndicator={false}
+                  renderItem={({item, index}) => {
+										return (
+											<>
+												{loading && <Empty />}
+                        {!loading && <Item key={index} data={item} />}
+											</>
+										)
+                  }}
+                />
 
               </View>
             </View>

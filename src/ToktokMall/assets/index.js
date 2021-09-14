@@ -16,6 +16,7 @@ export const ads = require("../assets/images/ads.png")
 //STATICS
 export const placeholder = require("../assets/images/placeholder.png")
 export const flashsalebg = require("../assets/images/flash-sale-bg.png")
+export const featuredflash = require("../assets/images/featuredflash.png")
 export const flashsale = require("../assets/images/Flash-Sale.png")
 export const banner = require("../assets/images/banner.png")
 export const toktokmallH = require("../assets/images/toktokmall-h.png")

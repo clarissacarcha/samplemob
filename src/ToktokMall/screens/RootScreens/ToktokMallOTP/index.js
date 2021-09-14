@@ -16,6 +16,9 @@ import {
 } from "../../../helpers";
 import { useSelector } from 'react-redux';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { useLazyQuery, useMutation } from '@apollo/react-hooks';
+import { TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT } from '../../../../graphql';
+import { POST_VERIFY_TOKTOKWALLET_PIN } from '../../../../graphql/toktokmall/virtual';
 
 export const ToktokMallOTP =  ({navigation, route}) => {
 
@@ -24,6 +27,14 @@ export const ToktokMallOTP =  ({navigation, route}) => {
   const [value, setValue] = useState("")
   const [retries, setretries] = useState(1)
   const [isInvalid, setIsInvalid] = useState(false)
+
+  const [validatePin, {error, loading}] = useMutation(POST_VERIFY_TOKTOKWALLET_PIN, {
+    client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT,
+    onCompleted: async (response) => {
+      console.log(response)
+    },
+    onError: (err) => console.log(err),
+  });
 
   const ProcessPayment = async () => {
 
@@ -46,25 +57,12 @@ export const ToktokMallOTP =  ({navigation, route}) => {
 
   }
 
-  const ValidatePin = async () => {    
-
-    const paramsData = route.params.data
-    const req = await ToktokWalletRawApiCall(session, {
-      input: {
-        requestTakeMoneyId: paramsData.request_id,
-        OTP: paramsData.pin_type == "OTP" ? value : "",
-        TPIN: paramsData.pin_type == "TPIN" ? value : "",
-      }
-    })
-    console.log("Result", req)
-  }
-
   useEffect(() => {
     console.log(value)
   }, [value])
 
   useEffect(() => {
-    // console.log(route.params.data.request_id)
+    console.log(route.params.data)
   }, [])
 
   return (
@@ -140,6 +138,20 @@ export const ToktokMallOTP =  ({navigation, route}) => {
           onPress={async () => {
 
             let transactionType = route.params?.transaction || null
+            // let data = route.params?.data
+            // let input = {
+            //   requestTakeMoneyId: data.request_id,
+            //   OTP:  data.pin_type == "OTP" ? value : "",
+            //   TPIN:  data.pin_type == "TPIN" ? value : ""
+            // }
+
+            // console.log(input)
+
+            // validatePin({
+            //   variables: {
+            //     input: input
+            //   }
+            // })
 
             if(value != "123456" || value != 123456){
               setIsInvalid(true)              
