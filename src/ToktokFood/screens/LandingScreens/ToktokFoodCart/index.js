@@ -18,7 +18,7 @@ import {
   RiderNotes,
   ShippingOption,
   VerifyContextProvider,
-  VerifyContext
+  VerifyContext,
 } from './components';
 
 import {useDispatch, useSelector} from 'react-redux';
@@ -26,7 +26,7 @@ import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import CheckOutOrderHelper from 'toktokfood/helper/CheckOutOrderHelper';
 import {GET_SHIPPING_FEE, PATCH_PLACE_CUSTOMER_ORDER} from 'toktokfood/graphql/toktokfood';
-import { clearTemporaryCart } from 'toktokfood/helper/TemporaryCart';
+import {clearTemporaryCart} from 'toktokfood/helper/TemporaryCart';
 
 import moment from 'moment';
 import 'moment-timezone';
@@ -55,7 +55,7 @@ const MainComponent = () => {
   const [orderType, setOrderType] = useState('DELIVERY');
 
   useEffect(() => {
-    if(Object.entries(tempCart).length > 0){
+    if (Object.entries(tempCart).length > 0) {
       getDeliverFee({
         variables: {
           input: {
@@ -97,7 +97,12 @@ const MainComponent = () => {
 
   const requestToktokWalletCredit = () => {
     return new Promise(async (resolve, reject) => {
-      const WALLET_REQUEST = parseInt(totalAmount) + parseInt(delivery.price ? delivery.price : 0);
+      let WALLET_REQUEST = 0;
+      if (orderType === 'DELIVERY') {
+        WALLET_REQUEST = parseInt(totalAmount) + parseInt(delivery.price ? delivery.price : 0);
+      } else {
+        WALLET_REQUEST = parseInt(totalAmount);
+      }
       const {data} = await CheckOutOrderHelper.requestTakeMoneyId(WALLET_REQUEST);
       if (data.postRequestTakeMoney.success === 1) {
         resolve(data.postRequestTakeMoney.data);
@@ -112,13 +117,17 @@ const MainComponent = () => {
     fetchPolicy: 'no-cache',
     onError: (error) => console.log(`LOCATION LOG ERROR: ${error}`),
     onCompleted: async ({checkoutOrder}) => {
-      await clearTemporaryCart()
-      navigation.replace('ToktokFoodDriver', {referenceNum: checkoutOrder.referenceNum});
+      if (checkoutOrder.status == 200) {
+        await clearTemporaryCart();
+        console.log(checkoutOrder.referenceNum);
+        navigation.replace('ToktokFoodDriver', {referenceNum: checkoutOrder.referenceNum});
+      } else {
+        // error prompt
+      }
     },
   });
-  console.log(customerInfo.userId)
 
-  const placeCustomerOrder = async() => {
+  const placeCustomerOrder = async () => {
     if (delivery !== null) {
       await fixAddOns();
       setShowLoader(true);
@@ -126,7 +135,7 @@ const MainComponent = () => {
       const CUSTOMER_CART = [...tempCart];
 
       CUSTOMER_CART[0]['delivery_amount'] = delivery.price ? delivery.price : 0;
-      CUSTOMER_CART[0]['hash_delivery_amount'] = delivery.hash_price ? delivery.hash_price : 0 ;
+      CUSTOMER_CART[0]['hash_delivery_amount'] = delivery.hash_price ? delivery.hash_price : 0;
 
       requestToktokWalletCredit()
         .then(async (wallet) => {
@@ -139,7 +148,7 @@ const MainComponent = () => {
             name: `${customerInfo.firstName} ${customerInfo.lastName}`,
             contactnumber: customerInfo.conno,
             email: customerInfo.email,
-            address: location.address1,
+            address: location.address,
             user_id: customerInfo.userId,
             latitude: location.latitude,
             longitude: location.longitude,
@@ -157,7 +166,7 @@ const MainComponent = () => {
             payment_method: 'TOKTOKWALLET',
             order_logs: CUSTOMER_CART,
           };
-      
+
           postCustomerOrder({
             variables: {
               input: {
@@ -185,7 +194,7 @@ const MainComponent = () => {
         bounces={false}
         contentContainerStyle={{paddingBottom: Platform.OS === 'android' ? moderateScale(83) : moderateScale(70)}}>
         <ShippingOption orderType={orderType} setShowOrderType={setShowOrderType} />
-        { orderType == 'DELIVERY' && <ReceiverLocation /> } 
+        {orderType == 'DELIVERY' && <ReceiverLocation />}
         <MyOrderList />
         {/* <AlsoOrder /> */}
         {delivery === null ? (
@@ -193,7 +202,7 @@ const MainComponent = () => {
             <ActivityIndicator color={COLOR.ORANGE} />
           </View>
         ) : (
-          <OrderTotal subtotal={totalAmount} deliveryFee={delivery.price} />
+          <OrderTotal subtotal={totalAmount} deliveryFee={delivery.price} forDelivery={orderType === 'DELIVERY'} />
         )}
         <PaymentDetails />
         <RiderNotes
@@ -207,8 +216,8 @@ const MainComponent = () => {
           visibility={showOrderType}
           date={moment().format('MMM DD, YYYY')}
           onValueChange={(type) => {
-            setShowOrderType(false)
-            setOrderType(type)
+            setShowOrderType(false);
+            setOrderType(type);
           }}
         />
       </ScrollView>
@@ -222,6 +231,5 @@ const ToktokFoodCart = () => {
       <MainComponent />
     </VerifyContextProvider>
   );
-}
+};
 export default ToktokFoodCart;
-
