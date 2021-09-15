@@ -115,7 +115,9 @@ const Item = ({data, fulldata}) => {
           </View>
         </TouchableOpacity>}
         {rated && 
-        <TouchableOpacity >
+        <TouchableOpacity onPress={() => {
+          navigation.navigate("ToktokMallProductDetails", {Id: data.productId})
+        }} >
           <View style={{paddingVertical: 2, paddingHorizontal: 20, backgroundColor: '#F6841F', borderRadius: 5}}>
             <Text style={{color: "#fff", fontSize: 13}}>Buy Again</Text>
           </View>

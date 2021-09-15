@@ -101,12 +101,12 @@ export const ToktokMallRateProduct = ({route, navigation}) => {
 
       const body = {
         shopid: transaction.shipping.shop.id,
-        branchid: 0,
+        branchid: 1,
         productid: transaction.productId,
         name: `${person.firstName} ${person.lastName}`,
         email: person.emailAddress,
         rating: rate,
-        order_refnum: transaction.referenceNum
+        reference_num: transaction.referenceNum
       }
 
       console.log(body)
