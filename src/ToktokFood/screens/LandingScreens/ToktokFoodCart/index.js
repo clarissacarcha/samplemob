@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {useRoute} from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/native';
-import {KeyboardAvoidingView, ScrollView, Platform, ActivityIndicator, View} from 'react-native';
+import {KeyboardAvoidingView, ScrollView, Platform, ActivityIndicator, View, Alert} from 'react-native';
 
 import Loader from 'toktokfood/components/Loader';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
@@ -25,27 +25,30 @@ import {useSelector} from 'react-redux';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import CheckOutOrderHelper from 'toktokfood/helper/CheckOutOrderHelper';
-import {GET_SHIPPING_FEE, PATCH_PLACE_CUSTOMER_ORDER} from 'toktokfood/graphql/toktokfood';
-import {clearTemporaryCart} from 'toktokfood/helper/TemporaryCart';
+import {GET_SHIPPING_FEE, PATCH_PLACE_CUSTOMER_ORDER, DELETE_SHOP_TEMPORARY_CART} from 'toktokfood/graphql/toktokfood';
+import { clearTemporaryCart } from 'toktokfood/helper/TemporaryCart';
 
 import moment from 'moment';
 import 'moment-timezone';
 
 // Utils
 import {moderateScale} from 'toktokfood/helper/scale';
+import { arrangeAddons } from './functions';
 
 const CUSTOM_HEADER = {
   container: Platform.OS === 'android' ? moderateScale(83) : moderateScale(70),
   bgImage: Platform.OS === 'android' ? moderateScale(83) : moderateScale(70),
 };
 
+
 const MainComponent = () => {
   const route = useRoute();
   const navigation = useNavigation();
   const nowDate = moment().format('YYYY-DD-YYYY');
 
+  const {amount, cart, shopId} = route.params;
   const {location, customerInfo, shopLocation} = useSelector((state) => state.toktokFood);
-  const {totalAmount, tempCart} = useContext(VerifyContext);
+  const {totalAmount, temporaryCart} = useContext(VerifyContext);
 
   const [riderNotes, setRiderNotes] = useState('');
   const [delivery, setDeliveryInfo] = useState(null);
@@ -54,11 +57,11 @@ const MainComponent = () => {
   const [orderType, setOrderType] = useState('DELIVERY');
 
   useEffect(() => {
-    if (Object.entries(tempCart).length > 0) {
+    if(temporaryCart && temporaryCart.items.length > 0){
       getDeliverFee({
         variables: {
           input: {
-            shopid: tempCart[0]['sys_shop'],
+            shopid: +shopId,
             date_today: nowDate,
             origin_lat: location.latitude,
             origin_lng: location.longitude,
@@ -68,23 +71,7 @@ const MainComponent = () => {
         },
       });
     }
-  }, [tempCart]);
-
-  const merge = (o) => {
-    const arr = [];
-    const k = Object.keys(o);
-    for (let i = 0; i < k.length; i++) {
-      arr.push(o[k[i]]);
-    }
-    return [].concat.apply([], arr);
-  };
-
-  const fixAddOns = () => {
-    for (let c = 0; c < tempCart[0]['items'].length; c++) {
-      const {addons} = tempCart[0]['items'][c];
-      tempCart[0].items[c].addons = merge(addons);
-    }
-  };
+  }, [temporaryCart, location]);
 
   const [getDeliverFee, {data}] = useLazyQuery(GET_SHIPPING_FEE, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
@@ -93,6 +80,17 @@ const MainComponent = () => {
       setDeliveryInfo(getShippingFee);
     },
   });
+
+  const [deleteShopTemporaryCart, {loading: deleteLoading, error: deleteError}] = useMutation(DELETE_SHOP_TEMPORARY_CART, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    onError: (err) => {
+      setTimeout(() => { Alert.alert('', 'Something went wrong.') }, 100)
+    },
+    onCompleted: ({deleteShopTemporaryCart}) => {
+      // console.log(patchTemporaryCartItem)
+    },
+  });
+
 
   const requestToktokWalletCredit = () => {
     return new Promise(async (resolve, reject) => {
@@ -114,27 +112,88 @@ const MainComponent = () => {
   const [postCustomerOrder] = useMutation(PATCH_PLACE_CUSTOMER_ORDER, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'no-cache',
-    onError: (error) => console.log(`LOCATION LOG ERROR: ${error}`),
+    onError: (error) => {
+      setShowLoader(false)
+      console.log(`LOCATION LOG ERROR: ${error}`)
+    },
     onCompleted: async ({checkoutOrder}) => {
-      if (checkoutOrder.status == 200) {
-        await clearTemporaryCart();
-        console.log(checkoutOrder.referenceNum);
-        navigation.replace('ToktokFoodDriver', {referenceNum: checkoutOrder.referenceNum});
+      if(checkoutOrder.status == 200){
+        deleteShopTemporaryCart({
+          variables: {
+            input: {
+              userid: customerInfo.userId,
+              shopid: +shopId,
+              branchid: 0,
+            }
+          }
+        }).then(() => {
+          setShowLoader(false)
+          navigation.replace('ToktokFoodDriver', {referenceNum: checkoutOrder.referenceNum});
+        })
       } else {
         // error prompt
+        Alert.alert(checkoutOrder.message)
+        setShowLoader(false)
       }
     },
   });
 
+  const fixOrderLogs = async() => {
+    let orderLogs = {
+      sys_shop: temporaryCart.items[0]?.shopid,
+      branchid: temporaryCart.items[0]?.branchid,
+      delivery_amount: delivery?.price ? delivery.price : 0,
+      hash_delivery_amount: delivery?.hash_price ? delivery.hash_price : '',
+      daystoship: 0,
+      daystoship_to: 0,
+      items: await fixItems()
+    }
+    return orderLogs
+  }
+
+  const fixItems = async () => {
+    let items = []
+    return Promise.all(
+      temporaryCart.items.map(async(item) => {
+        let data = {
+          sys_shop: item.shopid,
+          product_id: item.productid,
+          amount: item.totalAmount,
+          srp_amount: item.totalAmount,
+          srp_totalamount: item.totalAmount,
+          total_amount: item.totalAmount,
+          quantity: item.quantity,
+          order_type: 1,
+          addons: await fixAddOns(item.addonsDetails)
+        }
+        items.push(data)
+      })
+    ).then(() => {
+      return items
+    });
+  }
+
+  const fixAddOns = (addonsDetails) => {
+    let addons = [];
+    return Promise.all(
+      addonsDetails.map((item) => {
+        let { id, optionPrice, optionName, optionDetailsName } = item;
+        let data = { addon_id: id, addon_name: optionName, addon_price: optionPrice, option_name: optionDetailsName }
+        addons.push(data)
+      })
+    ).then(() => {
+      return addons
+    });
+  }
+
   const placeCustomerOrder = async () => {
     if (delivery !== null) {
-      await fixAddOns();
       setShowLoader(true);
-
-      const CUSTOMER_CART = [...tempCart];
-
+      const orderLogs = await fixOrderLogs();
+      const CUSTOMER_CART = [orderLogs];
+    
       CUSTOMER_CART[0]['delivery_amount'] = delivery.price ? delivery.price : 0;
-      CUSTOMER_CART[0]['hash_delivery_amount'] = delivery.hash_price ? delivery.hash_price : 0;
+      CUSTOMER_CART[0]['hash_delivery_amount'] = delivery.hash_price;
 
       requestToktokWalletCredit()
         .then(async (wallet) => {
@@ -157,8 +216,8 @@ const MainComponent = () => {
           };
 
           const ORDER = {
-            total_amount: totalAmount,
-            srp_totalamount: totalAmount,
+            total_amount: temporaryCart.totalAmount,
+            srp_totalamount: temporaryCart.totalAmount,
             notes: riderNotes,
             order_isfor: orderType === 'DELIVERY' ? 1 : 2, // 1 Delivery | 2 Pick Up Status
             order_type: 2,

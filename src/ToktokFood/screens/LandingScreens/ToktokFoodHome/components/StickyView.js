@@ -65,7 +65,7 @@ const StickyView = () => {
   const [refreshing, setRefreshing] = useState(false);
   let variableInput = {
     limit: 10,
-    radius: 50,
+    radius: 5,
     userLongitude: location?.longitude,
     userLatitude: location?.latitude,
   };
@@ -202,7 +202,9 @@ const StickyView = () => {
             handleLoadMore(nativeEvent);
           }
         }}
-        scrollEventThrottle={15}>
+        scrollEventThrottle={15}
+        // showsVerticalScrollIndicator={false}
+      >
         {/* <View style={styles.adsContainer}>
           <AdvertisementSection />
         </View> */}
@@ -223,7 +225,7 @@ const styles = StyleSheet.create({
     paddingBottom: Platform.OS === 'android' ? 10 : 30,
     marginTop: Platform.OS === 'ios' ? moderateScale(20) : moderateScale(14),
   },
-  headerWrapper: {paddingHorizontal: 15, width: '100%', paddingTop: moderateScale(8), backgroundColor: 'whitesmoke'},
+  headerWrapper: {paddingHorizontal: moderateScale(8), width: '100%', paddingTop: moderateScale(8), backgroundColor: 'whitesmoke'},
   navbarWrapper: {
     // marginBottom: Platform.OS === 'ios' ? verticalScale(12) : verticalScale(8),
   },

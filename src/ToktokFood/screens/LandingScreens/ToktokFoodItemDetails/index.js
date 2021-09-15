@@ -18,7 +18,7 @@ import styles from './styles';
 
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
-import {GET_PRODUCT_DETAILS} from 'toktokfood/graphql/toktokfood';
+import {GET_PRODUCT_DETAILS, GET_TEMPORARY_CART} from 'toktokfood/graphql/toktokfood';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 
 const CUSTOM_HEADER = {
@@ -30,9 +30,20 @@ const MainComponent = () => {
   const routes = useRoute();
 
   const {Id, selectedAddons, selectedPrice, selectedQty, selectedNotes} = routes.params;
-  const {price} = useSelector((state) => state.toktokFood.totalAmount);
-  const {setTotalPrice, setSelected, productDetails, setProductDetails, setCount, setNotes} = useContext(VerifyContext);
+  const {customerInfo} = useSelector((state) => state.toktokFood);
+  const {
+    totalPrice,
+    setTotalPrice,
+    setSelected,
+    productDetails,
+    setProductDetails,
+    setCount,
+    temporaryCart,
+    setTemporaryCart,
+    setNotes
+  } = useContext(VerifyContext);
   const [bannerLoaded, setBannerLoaded] = useState(false);
+  const stickyHeaderIndices = bannerLoaded ? [1] : [2];
 
   const [getProductDetails, {data, loading, error}] = useLazyQuery(GET_PRODUCT_DETAILS, {
     variables: {
@@ -44,6 +55,33 @@ const MainComponent = () => {
     fetchPolicy: 'network-only',
     onCompleted: ({getProductDetails}) => {
       setProductDetails(getProductDetails)
+      getTemporaryCart({
+        variables: {
+          input: {
+            shopId: +getProductDetails.sysShop,
+            userId: customerInfo.userId
+          },
+        },
+      })
+    },
+  });
+
+  const [getTemporaryCart, {loading: getLoading, error: getError}] = useLazyQuery(GET_TEMPORARY_CART, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+   
+    onError: (err) => {
+      console.log(err)
+    },
+    onCompleted: ({getTemporaryCart}) => {
+      if(getTemporaryCart.items.length > 0){
+        let { items, totalAmount } = getTemporaryCart
+        setTemporaryCart({
+          cartItemsLength: items.length,
+          totalAmount,
+          items: items
+        })
+      }
     },
   });
 
@@ -53,8 +91,8 @@ const MainComponent = () => {
     if(selectedQty){ setCount({ type: '', quantity: selectedQty }) }
     if(selectedNotes){ setNotes(selectedNotes) }
     getProductDetails()
-  }, []);
-
+  }, [routes.params]);
+ 
   const ItemDetails = () => {
     const {itemname, price, summary} = productDetails;
     return (
@@ -78,7 +116,13 @@ const MainComponent = () => {
 
   const BannerPlaceHolder = () => {
     return (
-      <View style={{alignSelf: 'center', height: scale(140), width: scale(350)}}>
+      <View style={{
+        marginTop: scale(10),
+        position: 'absolute',
+        alignSelf: 'center',
+        height: scale(140),
+        width: scale(350)
+      }}>
         <ContentLoader
           active
           pRows={1}
@@ -91,18 +135,18 @@ const MainComponent = () => {
       </View>
     );
   };
-
+ 
   return (
     <View behavior={Platform.OS === 'ios' ? 'position' : null} style={styles.container}>
       <HeaderImageBackground customSize={CUSTOM_HEADER}>
         <HeaderTitle title="" />
       </HeaderImageBackground>
-      {(Object.entries(productDetails).length == 0) ? (
+      {(Object.entries(productDetails).length == 0) || getLoading || getError ? (
         <LoadingIndicator isLoading={true} style={{ height: moderateScale(500), justifyContent: 'center' }} />
         ) : (
         <>
           <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'position' : null} style={styles.container}>
-            <ScrollView stickyHeaderIndices={[1]} >
+            <ScrollView stickyHeaderIndices={stickyHeaderIndices} >
               {!bannerLoaded && <BannerPlaceHolder />}
               <Image
                 onLoadEnd={() => setBannerLoaded(true)}

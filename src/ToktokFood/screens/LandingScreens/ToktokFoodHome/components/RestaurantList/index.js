@@ -1,10 +1,12 @@
 import React from 'react';
-import { FlatList, Platform, StyleSheet, Text, View } from 'react-native';
+import { FlatList, Platform, StyleSheet, Text, View, Image } from 'react-native';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 // Utils
-import { scale, verticalScale } from 'toktokfood/helper/scale';
+import { scale, verticalScale, moderateScale } from 'toktokfood/helper/scale';
 import RestaurantItem from './RestaurantItem';
-
+import {empty_following} from 'toktokfood/assets/images';
+// Fonts & Colors
+import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 
 const RestaurantList = (props) => {
 
@@ -15,16 +17,17 @@ const RestaurantList = (props) => {
   )
 
   const listEmpty = () => (
-    <Text style={{ color: '#898997', textAlign: 'center', marginVertical: 20 }}>
-      No shops near you as of the moment
-    </Text>
+    <View style={styles.emptyContainer}>
+      <Image style={styles.emptyImg} resizeMode="contain" source={empty_following} />
+      <Text style={styles.emptyText}>No shops near you as of the moment</Text>
+    </View>
   )
  
   if(loading || error || location == undefined){
     return <LoadingIndicator style={{ marginVertical: 20  }} isFlex isLoading={true} />
   }
   return (
-    <View style={styles.container}>
+    // <View style={styles.container}>
       <FlatList
         data={data ? data.getShops : []}
         extraData={loadMore}
@@ -36,9 +39,10 @@ const RestaurantList = (props) => {
         keyExtractor={(val, index) => index.toString()}
         ListFooterComponent={renderFooter()}
         ListEmptyComponent={listEmpty()}
-        contentContainerStyle={{ paddingBottom: Platform.OS == 'android' ? verticalScale(20) : 0  }}
+        style={{ flex:1 }}
+        contentContainerStyle={{ backgroundColor: 'whitesmoke', paddingHorizontal: 20, paddingTop: 15, paddingBottom: Platform.OS == 'android' ? verticalScale(20) : 0  }}
       />
-    </View>
+    // </View>
   );
 };
 
@@ -55,7 +59,6 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    paddingHorizontal: 15,
     paddingVertical: 10,
   },
   columnStyle: {
@@ -86,5 +89,18 @@ const styles = StyleSheet.create({
   restaurantName: {
     fontSize: 12,
     fontWeight: '500',
+  },
+  emptyContainer: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  emptyImg: {
+    height: moderateScale(175),
+    width: moderateScale(250),
+  },
+  emptyText: {
+    color: '#9E9E9E',
+    fontSize: FONT_SIZE.XL,
+    marginTop: moderateScale(20),
   },
 });

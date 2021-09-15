@@ -6,25 +6,29 @@ import {scale, moderateScale} from 'toktokfood/helper/scale';
 // Fonts & Colors
 import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 
-export const TransactionTabs = ({ focusTab, setFocusTab }) => {
+export const TransactionTabs = ({ focusTab, setTransactionList, setFocusTab }) => {
 
   const navigation = useNavigation();
+  const handleFocusTab = (index) => {
+    setTransactionList(null)
+    setFocusTab(index)
+  }
 
   return (
     <View style={styles.filterContainer}>
       <View style={styles.filterWrapper}>
-        <TouchableWithoutFeedback onPress={() => setFocusTab(1)}>
+        <TouchableWithoutFeedback onPress={() => handleFocusTab(1)}>
           <View style={[styles.filterButton, {borderBottomWidth: focusTab === 1 ? 2 : 0}]}>
             <Text style={styles.filterText}>Ongoing</Text>
           </View>
         </TouchableWithoutFeedback>
-        <TouchableWithoutFeedback onPress={() => setFocusTab(2)}>
+        <TouchableWithoutFeedback onPress={() => handleFocusTab(2)}>
           <View
             style={[styles.filterButton, {marginHorizontal: scale(18), borderBottomWidth: focusTab === 2 ? 2 : 0}]}>
             <Text style={styles.filterText}>Completed</Text>
           </View>
         </TouchableWithoutFeedback>
-        <TouchableWithoutFeedback onPress={() => setFocusTab(3)}>
+        <TouchableWithoutFeedback onPress={() => handleFocusTab(3)}>
           <View style={[styles.filterButton, { borderBottomWidth: focusTab === 3 ? 2 : 0}]}>
             <Text style={styles.filterText}>Cancelled</Text>
           </View>

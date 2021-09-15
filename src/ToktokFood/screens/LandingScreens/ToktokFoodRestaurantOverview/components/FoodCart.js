@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 
@@ -8,59 +8,73 @@ import {useIsFocused} from '@react-navigation/native';
 
 import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
 import {useSelector} from 'react-redux';
-import { getTemporaryCart } from 'toktokfood/helper/TemporaryCart';
-
+// import { getTemporaryCart } from 'toktokfood/helper/TemporaryCart';
+import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
+import {useLazyQuery, useMutation} from '@apollo/react-hooks';
+import {GET_TEMPORARY_CART} from 'toktokfood/graphql/toktokfood';
+import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
+import {VerifyContext} from '../components';
 export const FoodCart = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  // const { totalAmount} = useSelector((state) => state.toktokFood);
-  // const [hasCart, setHasCart] = useState(-1);
-  // const [amount, setAmount] = useState(0);
-  // const [cartItemsLength, setCartItemsLength] = useState(0);
-  const [tempCart, setTempCart] = useState({
-    hasCart: 0,
-    amount: 0,
-    cartItemsLength: 0,
-    cart: []
-  });
-
+  const { id } = route.params.item;
+  const {customerInfo} = useSelector((state) => state.toktokFood);
   const isFocus = useIsFocused();
+  const {temporaryCart, setTemporaryCart, setFoodCartHeight} = useContext(VerifyContext);
 
-  const onRestaurantNavigate = () => {
-    let { amount, cart } = tempCart
-    navigation.navigate('ToktokFoodCart', { amount, cart });
+  const getFoodCartHeight = (event) => {
+    let height = event.nativeEvent.layout.height;
+    setFoodCartHeight(height);
   };
 
+  const [getTemporaryCart, {data, loading, error}] = useLazyQuery(GET_TEMPORARY_CART, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: ({ getTemporaryCart }) => {
+      if(getTemporaryCart.items.length > 0){
+        let { items, totalAmount } = getTemporaryCart
+        setTemporaryCart({
+          cartItemsLength: items.length,
+          totalAmount,
+          items: items
+        })
+      }
+    },
+  });
+
+  const onRestaurantNavigate = () => {
+    navigation.navigate('ToktokFoodCart', { shopId: id, userId: customerInfo.userId });
+  };
+ 
   useEffect(() => {
     if(isFocus){
-      handleGetTemporaryCart()
+      getTemporaryCart({
+        variables: {
+          input: {
+            shopId: +id,
+            userId: customerInfo.userId
+          },
+        },
+      })
     }
   }, [isFocus])
-  
-  const handleGetTemporaryCart = async() => {
-    let { cart, totalAmount } = await getTemporaryCart()
-    
-    let hasCart = cart.findIndex((val) => { return val.sys_shop == route.params.item.id })
-    let cartItemsLength = hasCart > -1 ? cart[hasCart].items.length : 0
-    let amount = totalAmount[route.params.item.id] ? totalAmount[route.params.item.id] : 0
-    setTempCart({
-      hasCart,
-      cartItemsLength,
-      amount,
-      cart
-    })
-  }
 
+  if(loading || error || temporaryCart.cartItemsLength == 0){
+    return null
+  }
   return (
     <>
-      <View style={[styles.container, styles.cartBorder]}>
+      <View
+        onLayout={(event) => getFoodCartHeight(event)}
+        style={[styles.container, styles.cartBorder]}
+      >
         <View style={styles.foodItemTotalWrapper}>
-          <Text style={styles.total}>{tempCart.cartItemsLength} item</Text>
-          <Text style={styles.total}>Total: {tempCart.amount.toFixed(2)}</Text>
+          <Text style={styles.total}>{temporaryCart.cartItemsLength} item</Text>
+          <Text style={styles.total}>Total: {temporaryCart.totalAmount.toFixed(2)}</Text>
         </View>
         <TouchableOpacity
-          disabled={tempCart.hasCart < 0}
-          style={[styles.cartButton, {backgroundColor: tempCart.hasCart < 0 ? COLOR.LIGHT : COLOR.YELLOW}]}
+          disabled={temporaryCart.cartItemsLength == 0}
+          style={[styles.cartButton, {backgroundColor: temporaryCart.cartItemsLength == 0 ? COLOR.LIGHT : COLOR.YELLOW}]}
           onPress={() => onRestaurantNavigate()}
         >
           <Text style={styles.buttonText}>View Cart</Text>

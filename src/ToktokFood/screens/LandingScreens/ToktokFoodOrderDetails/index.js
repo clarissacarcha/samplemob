@@ -146,10 +146,10 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
     };
   }, [seconds, transaction, riderDetails]);
 
-  const handleOrderProcess = async () => {
-    if (transaction && Object.entries(transaction).length > 0 && orderStatus == undefined && riderDetails == null) {
-      if (transaction.orderStatus == 's') {
-        await removeRiderDetails(referenceNum);
+  const handleOrderProcess = async() => {
+    if(transaction && Object.entries(transaction).length > 0 && orderStatus == undefined && riderDetails == null){
+      if(transaction.orderStatus == 's'){
+        await removeRiderDetails(referenceNum)
         return alertPrompt('Order Completed', 'Thank you for choosing, toktokfood!', 'Okay');
       }
       if (transaction.isdeclined != 1) {

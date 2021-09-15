@@ -159,8 +159,8 @@ const ToktokFoodDriver = ({route, navigation}) => {
     };
   }, [seconds, transaction, riderDetails]);
 
-  const handleOrderProcess = async () => {
-    if (Object.keys(transaction).length > 0) {
+  const handleOrderProcess = async() => {
+    if (transaction && Object.keys(transaction).length > 0) {
       if (transaction.orderStatus == 's') {
         await removeRiderDetails(referenceNum);
         return alertPrompt('Order Completed', 'Thank you for choosing, toktokfood!', 'Okay');
