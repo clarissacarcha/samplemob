@@ -89,7 +89,9 @@ export const Variations = ({basePrice, item}) => {
 
   const renderVariants = ({item}) => {
     let temp = [];
-    // setRequiredOptions(prev => { return { ...prev, [item.optionName]: item.isRequired }})
+    if(!(requiredOptions[item.optionName]) && item.isRequired){
+      setRequiredOptions(prev => { return { ...prev, [item.optionName]: item.isRequired }})
+    }
     return (
       <>
         <View style={styles.variations}>
@@ -124,10 +126,6 @@ export const Variations = ({basePrice, item}) => {
     );
   };
 
-  // if(true){
-   
-  //   return <LoadingIndicator isFlex isLoading={true} />
-  // }
   return (
     <>
       <FlatList data={item} renderItem={renderVariants} style={{flex: 1}}/>

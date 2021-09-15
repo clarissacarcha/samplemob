@@ -13,7 +13,7 @@ import {TOKTOK_FOOD_GRAPHQL_CLIENT, CLIENT} from 'src/graphql';
 import {GET_ORDER_TRANSACTION_BY_REF_NUM, GET_RIDER, GET_RIDER_DETAILS} from 'toktokfood/graphql/toktokfood';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import {rider1} from 'toktokfood/assets/images';
-import RatingModal from 'toktokfood/components/RatingModal';
+import { removeRiderDetails } from 'toktokfood/helper/ShowRiderDetails';
 
 // Utils
 import {moderateScale, getStatusbarHeight} from 'toktokfood/helper/scale';
@@ -29,11 +29,42 @@ const ToktokFoodOrderDetails = ({ route, navigation }) => {
   const referenceNum = route.params ? route.params.referenceNum : ''
   const orderStatus = route.params ? route.params.orderStatus : ''
 
-  const [iShowSuccess, setShowSuccess] = useState(false);
-
   const [seconds, setSeconds] = useState(300);
   const [transaction, setTransaction] = useState({});
-  const [riderDetails, setRiderDetails] = useState(null);
+  const [riderDetails, setRiderDetails] = useState({
+    "id": "1",
+    "status": 1,
+    "licenseNumber": "D04778726763577",
+    "isOnline": true,
+    "location": {
+      "latitude": 14.4247075,
+      "longitude": 120.9493347,
+      "lastUpdate": "Today - 3:49 pm"
+    },
+    "user": {
+      "id": "4",
+      "username": "+639151111111",
+      "status": 1,
+      "person": {
+        "firstName": "Juan",
+        "middleName": "",
+        "lastName": "Dela Cruz",
+        "mobileNumber": "09151111111",
+        "emailAddress": "toktokrider@gmail.com",
+        "avatar": "https://s3.us-east-1.amazonaws.com/margel/15947868238644blank_avatar.png",
+        "avatarThumbnail": "https://s3.us-east-1.amazonaws.com/margel/thumbnail/15947868238644blank_avatar.png"
+      }
+    },
+    "vehicle": {
+      "plateNumber": "EX12338",
+      "brand": {
+        "brand": "Yamaha"
+      },
+      "model": {
+        "model": "CC"
+      }
+    }
+  });
   const checkOrderResponse5mins = useRef(null);
 
   const [getTransactionByRefNum, {error: transactionError, loading: transactionLoading }] = useLazyQuery(GET_ORDER_TRANSACTION_BY_REF_NUM, {
@@ -79,9 +110,17 @@ const ToktokFoodOrderDetails = ({ route, navigation }) => {
   }, [])
 
   useEffect(() => {
+    handleOrderProcess();
+    return () => {
+      clearInterval(checkOrderResponse5mins.current);
+    };
+  }, [seconds, transaction, riderDetails]);
+
+  const handleOrderProcess = async() => {
     if(Object.entries(transaction).length > 0 && orderStatus == undefined && riderDetails == null){
       if(transaction.orderStatus == 's'){
-        return alertPrompt('Order Delivered', 'Thank you for choosing, toktokfood!', 'Okay');
+        await removeRiderDetails(referenceNum)
+        return alertPrompt('Order Completed', 'Thank you for choosing, toktokfood!', 'Okay');
       }
       if(transaction.isdeclined != 1) {
         if (seconds > 0) {
@@ -110,12 +149,8 @@ const ToktokFoodOrderDetails = ({ route, navigation }) => {
         alertPrompt('Order Declined', 'Your order has been declined by merchant', 'Okay');
       }
     }
-  }, [seconds, transaction, riderDetails]);
-
-  useEffect(() => {
-    setShowSuccess(riderDetails != null);
-  }, [riderDetails]);
-
+  }
+ 
   const alertPrompt = (title, message, status) => {
     Alert.alert(title, message,[
       {
@@ -130,21 +165,6 @@ const ToktokFoodOrderDetails = ({ route, navigation }) => {
       <HeaderImageBackground customSize={CUSTOM_HEADER}>
         <HeaderTitle title="Order Details" />
       </HeaderImageBackground>
-      <RatingModal
-        title={"We've found you a driver!"}
-        visibility={iShowSuccess}
-        onCloseModal={() => setShowSuccess(false)}
-        btnTitle="Ok"
-        imgSrc={riderDetails?.user.person.avatar}
-        rating={0}
-        readOnly
-      >
-        <Text style={styles.messageTitle}>{`${riderDetails?.user.person.firstName} ${riderDetails?.user.person.lastName}`}</Text>
-        <Text style={styles.messageContent}>{riderDetails?.user.person.mobileNumber}</Text>
-        <Text style={styles.messageContent}>{
-          `${riderDetails?.vehicle.brand.brand} ${riderDetails?.vehicle.model.model} - ${riderDetails?.vehicle.plateNumber}`
-        }</Text>
-      </RatingModal>
       {((transactionLoading && Object.entries(transaction).length == 0) || Object.entries(transaction).length == 0 || transactionError) ? (
           <LoadingIndicator isFlex isLoading={true} />
       ) : (
@@ -161,7 +181,7 @@ const ToktokFoodOrderDetails = ({ route, navigation }) => {
           }
           { riderDetails != null && (
             <>
-              <OrderRider riderDetails={riderDetails} />
+              <OrderRider riderDetails={riderDetails} transaction={transaction} />
               <Separator />
             </>
           )}

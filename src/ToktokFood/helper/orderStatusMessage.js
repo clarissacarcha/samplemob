@@ -6,7 +6,7 @@ export const orderStatusMessageDelivery = (orderStatus, riderDetails, shopname) 
   } else if(orderStatus == 'f') {
     return { id: orderStatus,  title: 'Your order is on the way to you...', message: 'Driver is heading to you' }
   } else if(orderStatus == 's') {
-    return { id: orderStatus,  title: 'Order Delivered', message: '' }
+    return { id: orderStatus,  title: 'Order Completed', message: '' }
   } else if(orderStatus == 'c') {
     return { id: orderStatus,  title: 'Order Cancelled', message: '' }
   } else {
@@ -19,7 +19,7 @@ export const orderStatusMessagePickUp = (orderStatus, riderDetails, shopname) =>
   } else if(orderStatus == 'rp'){
     return { id: orderStatus,  title: 'Ready for pick up', message: '' }
   } else if(orderStatus == 's'){
-    return { id: orderStatus,  title: 'Order Delivered', message: '' }
+    return { id: orderStatus,  title: 'Order Completed', message: '' }
   } else if(orderStatus == 'c'){
     return { id: orderStatus,  title: 'Order Cancelled', message: '' }
   } else {

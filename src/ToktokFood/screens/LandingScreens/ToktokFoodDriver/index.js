@@ -16,6 +16,7 @@ import {GET_ORDER_TRANSACTION_BY_REF_NUM, GET_RIDER_DETAILS} from 'toktokfood/gr
 import {useSelector, useDispatch} from 'react-redux';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import {useIsFocused} from '@react-navigation/native';
+import { removeRiderDetails } from 'toktokfood/helper/ShowRiderDetails';
 
 const CUSTOM_HEADER = {
   container: Platform.OS === 'android' ? moderateScale(83) : moderateScale(70),
@@ -28,7 +29,40 @@ const ToktokFoodDriver = ({route, navigation}) => {
   const [showCancel, setShowCancel] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
   const [transaction, setTransaction] = useState({});
-  const [riderDetails, setRiderDetails] = useState(null);
+  const [riderDetails, setRiderDetails] = useState({
+    "id": "1",
+    "status": 1,
+    "licenseNumber": "D04778726763577",
+    "isOnline": true,
+    "location": {
+      "latitude": 14.4247075,
+      "longitude": 120.9493347,
+      "lastUpdate": "Today - 3:49 pm"
+    },
+    "user": {
+      "id": "4",
+      "username": "+639151111111",
+      "status": 1,
+      "person": {
+        "firstName": "Juan",
+        "middleName": "",
+        "lastName": "Dela Cruz",
+        "mobileNumber": "09151111111",
+        "emailAddress": "toktokrider@gmail.com",
+        "avatar": "https://s3.us-east-1.amazonaws.com/margel/15947868238644blank_avatar.png",
+        "avatarThumbnail": "https://s3.us-east-1.amazonaws.com/margel/thumbnail/15947868238644blank_avatar.png"
+      }
+    },
+    "vehicle": {
+      "plateNumber": "EX12338",
+      "brand": {
+        "brand": "Yamaha"
+      },
+      "model": {
+        "model": "CC"
+      }
+    }
+  });
   const checkOrderResponse5mins = useRef(null);
   const isFocus = useIsFocused();
   const dispatch = useDispatch();
@@ -91,9 +125,17 @@ const ToktokFoodDriver = ({route, navigation}) => {
   }, []);
 
   useEffect(() => {
+    handleOrderProcess();
+    return () => {
+      clearInterval(checkOrderResponse5mins.current);
+    };
+  }, [seconds, transaction, riderDetails]);
+
+  const handleOrderProcess = async() => {
     if (Object.entries(transaction).length > 0) {
       if (transaction.orderStatus == 's') {
-        return alertPrompt('Order Delivered', 'Thank you for choosing, toktokfood!', 'Okay');
+        await removeRiderDetails(referenceNum)
+        return alertPrompt('Order Completed', 'Thank you for choosing, toktokfood!', 'Okay');
       }
       if (transaction.isdeclined != 1) {
         if (seconds > 0) {
@@ -124,10 +166,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
         alertPrompt('Order Declined', 'Your order has been declined by merchant', 'Okay');
       }
     }
-    return () => {
-      clearInterval(checkOrderResponse5mins.current);
-    };
-  }, [seconds, transaction, riderDetails]);
+  }
 
   const alertPrompt = (title, message, status) => {
     Alert.alert(title, message, [
@@ -164,6 +203,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
             orderStatus={transaction.orderStatus}
             riderDetails={riderDetails}
             orderIsfor={transaction.orderIsfor}
+            referenceNum={referenceNum}
           />
           <View style={styles.driverWrapper}>
             {transaction.orderIsfor == 1 ? (

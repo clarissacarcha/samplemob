@@ -29,11 +29,11 @@ export const TransactionTabs = ({ focusTab, setFocusTab }) => {
             <Text style={styles.filterText}>Cancelled</Text>
           </View>
         </TouchableWithoutFeedback>
-        <TouchableWithoutFeedback onPress={() => setFocusTab(4)}>
+        {/* <TouchableWithoutFeedback onPress={() => setFocusTab(4)}>
           <View style={[styles.filterButton, {marginHorizontal: scale(18), borderBottomWidth: focusTab === 4 ? 2 : 0}]}>
             <Text style={styles.filterText}>Decline</Text>
           </View>
-        </TouchableWithoutFeedback>
+        </TouchableWithoutFeedback> */}
       </View>
     </View>
   );

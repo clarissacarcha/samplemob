@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {Image, StyleSheet, View, Text} from 'react-native';
 
 // Fonts/Colors
@@ -10,14 +10,22 @@ import {scale, moderateScale, verticalScale} from 'toktokfood/helper/scale';
 
 import DialogMessage from 'toktokfood/components/DialogMessage';
 import RatingModal from 'toktokfood/components/RatingModal';
+import { saveRiderDetails, checkRiderDetails, getRiderDetails, clearRiderDetails } from 'toktokfood/helper/ShowRiderDetails';
 
-const DriverAnimationView = ({orderStatus, riderDetails, orderIsfor}) => {
-  const [iShowSuccess, setShowSuccess] = useState(false);
+const DriverAnimationView = ({orderStatus, riderDetails, orderIsfor, referenceNum}) => {
+  const [showDriverModal, setShowDriverModal] = useState(false);
 
   useEffect(() => {
-    setShowSuccess(riderDetails != null);
-  }, [riderDetails]);
+    if(riderDetails != null && orderStatus != 's'){
+      handleCheckRiderDetails();
+    }
+  }, [riderDetails, orderStatus]);
 
+  const handleCheckRiderDetails = async() => {
+    let res = await checkRiderDetails(referenceNum)
+    setShowDriverModal(res?.status == 200)
+  }
+ 
   const CancelOrderComponent = () => {};
  
   return (
@@ -31,8 +39,8 @@ const DriverAnimationView = ({orderStatus, riderDetails, orderIsfor}) => {
       /> */}
       <RatingModal
         title={"We've found you a driver!"}
-        visibility={iShowSuccess}
-        onCloseModal={() => setShowSuccess(false)}
+        visibility={showDriverModal}
+        onCloseModal={() => setShowDriverModal(false)}
         btnTitle="Ok"
         imgSrc={riderDetails?.user.person.avatar}
         rating={0}

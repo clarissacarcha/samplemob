@@ -116,6 +116,7 @@ const MainComponent = () => {
       navigation.replace('ToktokFoodDriver', {referenceNum: checkoutOrder.referenceNum});
     },
   });
+  console.log(customerInfo.userId)
 
   const placeCustomerOrder = async() => {
     if (delivery !== null) {
@@ -134,12 +135,11 @@ const MainComponent = () => {
             request_id: wallet.requestTakeMoneyId,
             pin_type: wallet.validator,
           };
-
           const CUSTOMER = {
             name: `${customerInfo.firstName} ${customerInfo.lastName}`,
             contactnumber: customerInfo.conno,
             email: customerInfo.email,
-            address: customerInfo.address1,
+            address: location.address1,
             user_id: customerInfo.userId,
             latitude: location.latitude,
             longitude: location.longitude,

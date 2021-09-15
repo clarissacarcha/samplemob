@@ -9,6 +9,7 @@ import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import {useNavigation} from '@react-navigation/native';
 import { useIsFocused } from '@react-navigation/native';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 // Fonts/Colors
 import {COLORS, FONTS} from 'res/constants';
@@ -46,20 +47,20 @@ const OrderAddress = ({ transaction, riderDetails }) => {
   });
 
   const [checkIfShopWasRated, {loading: loadingIsRated, error: errorIsRated}] = useLazyQuery(CHECK_IF_SHOP_WAS_RATED, {
+    variables: {
+      input: {
+        referenceNum: referenceNum
+      }
+    },
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
     onCompleted: ({checkIfShopWasRated}) => {
       setIsRated(checkIfShopWasRated.status)
     },
   });
 
   useEffect(() => {
-    checkIfShopWasRated({
-      variables: {
-        input: {
-          referenceNum: referenceNum
-        }
-      },
-    })
+    checkIfShopWasRated()
   }, [])
 
   const onPressRate = () => { setRatingModal(true) }
@@ -117,7 +118,7 @@ const OrderAddress = ({ transaction, riderDetails }) => {
         <View style={styles.dividerContainer}>
           <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
           <View style={styles.divider} />
-          {(riderDetails != null && orderStatus == 'f') ? (
+          {(riderDetails != null && (orderStatus == 'f' || orderStatus == 's')) ? (
               <MaterialIcon name="lens" size={16} color={COLORS.YELLOWTEXT} />
             ) : (
               <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
