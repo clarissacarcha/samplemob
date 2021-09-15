@@ -31,8 +31,8 @@ const OrderList = () => {
     });
   };
 
-  const onPressEdit = async(Id, selectedAddons, selectedItemId, selectedPrice, selectedQty) => {
-    navigation.navigate('ToktokFoodItemDetails', { Id, selectedAddons, selectedItemId, selectedPrice, selectedQty })
+  const onPressEdit = async(Id, selectedAddons, selectedItemId, selectedPrice, selectedQty, selectedNotes) => {
+    navigation.navigate('ToktokFoodItemDetails', { Id, selectedAddons, selectedItemId, selectedPrice, selectedQty, selectedNotes })
   };
 
   const renderFoodItem = ({ item }) => {
@@ -48,7 +48,7 @@ const OrderList = () => {
         </View>
         <View style={styles.priceWrapper}>
           <Text
-            onPress={() => onPressEdit(product_id, addons, itemId, srp_totalamount, quantity)}
+            onPress={() => onPressEdit(product_id, addons, itemId, srp_totalamount, quantity, notes)}
             style={styles.actionText}
           >
             Edit

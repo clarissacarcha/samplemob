@@ -29,3 +29,12 @@ export const GET_CATEGORIES_BY_LIMIT = gql`
     }
   }
 `;
+export const POST_CATEGORY_SEARCH_COUNTER = gql`
+  query postCategorySearchCounter($input: PostCategorySearchCounterInput) {
+    postCategorySearchCounter(input: $input) {
+      status
+      message
+    }
+  }
+`;
+

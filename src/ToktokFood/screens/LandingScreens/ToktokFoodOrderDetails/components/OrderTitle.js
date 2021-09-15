@@ -61,14 +61,10 @@ const OrderTitle = ({ transaction, riderDetails }) => {
     <View style={styles.detailsContainer}>
       <Text style={styles.title}>{status.title}</Text>
       { !!status.message && <Text style={styles.status}>{status.message}</Text> }
-      { transaction.orderIsfor == 2 && (orderStatus != 'p' && orderStatus!== 'c' && orderStatus !== 's') && renderEstimatedPickUpTime()}
-      {(riderDetails != null && transaction.orderIsfor == 1) && renderEstimatedDeliveryTime() }
-      {/* {(riderDetails != null && transaction.orderIsfor == 1) && (
-        <View style={styles.timeContainer}>
-          <MaterialIcon name="schedule" size={16} color={COLORS.YELLOWTEXT} />
-          <Text style={styles.time}>{`Estimated Delivery Time: ${startTime} - ${endTime}`}</Text>
-        </View>
-      )} */}
+      { transaction.orderIsfor == 2 && (orderStatus != 'p' && orderStatus!== 'c' && orderStatus !== 's')
+        && renderEstimatedPickUpTime()}
+      {(riderDetails != null && transaction.orderIsfor == 1 && (orderStatus != 'p' && orderStatus!== 'c' && orderStatus !== 's'))
+        && renderEstimatedDeliveryTime() }
     </View>
   );
 };

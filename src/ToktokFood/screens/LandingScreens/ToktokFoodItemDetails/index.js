@@ -29,7 +29,7 @@ const CUSTOM_HEADER = {
 const MainComponent = () => {
   const routes = useRoute();
 
-  const {Id, selectedAddons, selectedPrice, selectedQty} = routes.params;
+  const {Id, selectedAddons, selectedPrice, selectedQty, selectedNotes} = routes.params;
   const {price} = useSelector((state) => state.toktokFood.totalAmount);
   const {totalPrice, setTotalPrice, setSelected, productDetails, setProductDetails, setCount} = useContext(VerifyContext);
   const [bannerLoaded, setBannerLoaded] = useState(false);
@@ -51,6 +51,7 @@ const MainComponent = () => {
     if(selectedAddons){ setSelected(selectedAddons) }
     if(selectedPrice){ setTotalPrice(selectedPrice) }
     if(selectedQty){ setCount({ type: '', quantity: selectedQty }) }
+    if(selectedNotes){ setNotes(selectedNotes) }
     getProductDetails()
   }, []);
 

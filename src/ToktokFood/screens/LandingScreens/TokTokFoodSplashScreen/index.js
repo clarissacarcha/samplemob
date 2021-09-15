@@ -41,6 +41,7 @@ const TokTokFoodSplashScreen = () => {
       client: TOKTOK_FOOD_GRAPHQL_CLIENT,
       fetchPolicy: 'network-only',
       onCompleted: ({getAccount}) => {
+        console.log('HAHAHAH')
         if (user.toktokfoodUserId != null) {
           dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_INFO', payload: {...getAccount}});
           showHomPage();

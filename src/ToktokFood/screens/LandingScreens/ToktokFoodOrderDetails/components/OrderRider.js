@@ -1,10 +1,12 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {Image, Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import CustomStarRating from 'toktokfood/components/CustomStarRating';
+import RatingModal from 'toktokfood/components/RatingModal';
 
 // Fonts/Colors
 import {COLORS} from 'res/constants';
 import {FONT_SIZE} from 'res/variables';
+import { checkRiderDetails } from 'toktokfood/helper/ShowRiderDetails';
 
 // Images
 import {chat, phoneBlack, rider1, star} from 'toktokfood/assets/images';
@@ -12,8 +14,21 @@ import {chat, phoneBlack, rider1, star} from 'toktokfood/assets/images';
 // Utils
 import {moderateScale, verticalScale, scale} from 'toktokfood/helper/scale';
 
-const OrderRider = ({ riderDetails }) => {
+const OrderRider = ({ riderDetails, transaction }) => {
   const { user, vehicle } = riderDetails;
+  const [showDriverModal, setShowDriverModal] = useState(false);
+
+  useEffect(() => {
+    console.log(transaction.orderStatus)
+    if(riderDetails != null && transaction.orderStatus != 's'){
+      handleCheckRiderDetails();
+    }
+  }, [riderDetails, transaction]);
+
+  const handleCheckRiderDetails = async() => {
+    let res = await checkRiderDetails(referenceNum)
+    setShowDriverModal(res?.status == 200)
+  }
 
   const onMessage = () => {
     const url = `sms:+639100593229`;
@@ -62,6 +77,21 @@ const OrderRider = ({ riderDetails }) => {
 
   return (
     <View style={styles.container}>
+       <RatingModal
+        title={"We've found you a driver!"}
+        visibility={showDriverModal}
+        onCloseModal={() => setShowDriverModal(false)}
+        btnTitle="Ok"
+        imgSrc={user.person.avatar}
+        rating={0}
+        readOnly
+      >
+        <Text style={styles.messageTitle}>{`${user.person.firstName} ${user.person.lastName}`}</Text>
+        <Text style={styles.messageContent}>{user.person.mobileNumber}</Text>
+        <Text style={styles.messageContent}>{
+          `${vehicle.brand.brand} ${vehicle.model.model} - ${vehicle.plateNumber}`
+        }</Text>
+      </RatingModal>
       <View style={styles.content}>
         {renderAvatar()}
         {renderActions()}

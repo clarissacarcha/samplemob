@@ -28,6 +28,7 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
     selected,
     notes,
     productDetails,
+    requiredOptions
   } = useContext(VerifyContext);
 
   const computeTotalPrice = async (items) => {
@@ -56,29 +57,40 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
     return res;
   }
 
-  const onRestaurantNavigate = useCallback( async () => {
+  const onRestaurantNavigate = useCallback(async() => {
+    let required = await Object.keys(requiredOptions).filter((val) => { return selected[val] == undefined });
+    if(required.length > 0){
+      Alert.alert(`${required[0]} is required.`, )
+    } else {
+      console.log(required)
+      processAddToCart()
+    }
+  }, [totalPrice, setTotalPrice, optionsAmount, count, setCount, selected, notes, productDetails ]);
+
+  //PROCESS ADD TO CART
+  const processAddToCart = async() => {
     let { cart, totalAmount } = await getTemporaryCart();
     let hasCart = await cart.findIndex((val) => { return val.sys_shop == productDetails.sysShop });
     let totalItemPrice = hasCart >= 0 ? await computeTotalPrice(cart[hasCart].items) : totalPrice;
-    let items = {};
+
+    let item = {
+      itemId: selectedItemId ? selectedItemId : uuid.v4(),
+      sys_shop: parseInt(productDetails.sysShop),
+      product_id: productDetails.Id,
+      productImage: productDetails.filename,
+      productName: productDetails.itemname,
+      quantity: count.quantity,
+      amount: totalPrice,
+      srp_amount: totalPrice,
+      srp_totalamount: totalPrice,
+      total_amount: totalPrice,
+      order_type: 1,
+      notes: notes,
+      addons: selected
+    }
 
     if (hasCart >= 0) {
-      let item = {
-        itemId: selectedItemId ? selectedItemId : uuid.v4(),
-        sys_shop: parseInt(productDetails.sysShop),
-        product_id: productDetails.Id,
-        productImage: productDetails.filename,
-        productName: productDetails.itemname,
-        quantity: count.quantity,
-        amount: totalPrice,
-        srp_amount: totalPrice,
-        srp_totalamount: totalPrice,
-        total_amount: totalPrice,
-        order_type: 1,
-        notes: notes,
-        addons: selected
-      }
-     
+    
       let currentIndex = await cart[hasCart].items.findIndex((item) => { return isEqual(item.addons, selected) })
       let editedIndex = await cart[hasCart].items.findIndex((item) => { return item.itemId == selectedItemId })
     
@@ -111,39 +123,23 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
           '',
         [
           { text: 'No', onPress: () => {} },
-          { text: "Yes", onPress: () => onPressYes(totalItemPrice) },
+          { text: "Yes", onPress: () => onPressYes(totalItemPrice, item) },
         ]);
       } else {
-        onPressYes(totalItemPrice)
+        onPressYes(totalItemPrice, item)
       };
     }
-  }, [totalPrice, setTotalPrice, optionsAmount, count, setCount, selected, notes, productDetails ]);
+  }
 
-  const onPressYes = async(totalItemPrice) => {
-    items = [{
+  const onPressYes = async(totalItemPrice, item) => {
+    let cart = [{
       sys_shop: parseInt(productDetails.sysShop),
       branchid: 0,
       daystoship: 0,
       daystoship_to: 0,
-      items: [
-        {
-          itemId: uuid.v4(),
-          sys_shop: parseInt(productDetails.sysShop),
-          product_id: productDetails.Id,
-          productImage: productDetails.filename,
-          productName: productDetails.itemname,
-          quantity: count.quantity,
-          amount: totalPrice,
-          srp_amount: totalPrice,
-          srp_totalamount: totalPrice,
-          total_amount: totalPrice,
-          order_type: 1,
-          notes: notes,
-          addons: selected
-        },
-      ],
+      items: [ item ],
     }]
-    processStoreTemporaryCart({ cart: items, totalAmount: {[productDetails.sysShop]: totalItemPrice}  })
+    processStoreTemporaryCart({ cart, totalAmount: {[productDetails.sysShop]: totalItemPrice}  })
   }
 
   const pushProducts = ({ cart, hasCart, item, index, totalItemPrice, pushExistingItems }) => {
