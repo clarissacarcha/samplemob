@@ -1,4 +1,5 @@
 import React from 'react'
+import AccountRecoveryScreens from './AccountRecoveryScreens';
 import HelpCentreScreens from './HelpCentreScreens';
 import PinCodeScreens from './PinCodeScreens';
 import UpgradeAccountScreens from './UpgradeAccountScreens';
@@ -13,6 +14,7 @@ import {
 
 export default ({Navigator}) => (
     <>
+    {AccountRecoveryScreens({Navigator})}
     {HelpCentreScreens({Navigator})}
     {PinCodeScreens({Navigator})}
     {UpgradeAccountScreens({Navigator})}

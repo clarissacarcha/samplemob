@@ -5,6 +5,9 @@ import { HeaderImageBackground , HeaderTitle , Separator } from 'toktokwallet/co
 import { YellowButton , VectorIcon , ICON_SET } from 'src/revamp'
 import CONSTANTS from 'common/res/constants'
 
+//SELF IMPORTS
+import AccountRecovery from "./AccountRecovery"
+
 const  { COLOR , FONT_SIZE , FONT_FAMILY: FONT } = CONSTANTS
 
 export const BlockedAccount = ({data})=> {
@@ -28,6 +31,10 @@ export const BlockedAccount = ({data})=> {
                     <Text style={[styles.verifyWalletText , {color: COLOR.ORANGE}]}>STOP!</Text>
                     <Text style={styles.clickVerifyText}>Your toktokwallet account has been blocked or put on-hold. To know more details, contact support@toktokwallet.ph and (02) 84-248-617.</Text>
                 </View>
+
+                {
+                    account.disabledType == "2" && <AccountRecovery/>
+                }
             </View>
 
             <View style={{height: 70,padding: 16,justifyContent:'flex-end'}}>

@@ -4,6 +4,9 @@ import Carousel, { Pagination } from 'react-native-snap-carousel';
 import { useThrottle } from 'src/hooks'
 import CONSTANTS from 'common/res/constants'
 
+//SELF IMPORTS
+import AdModal from './AdModal';
+
 const { FONT_SIZE, COLOR , SIZE , FONT_FAMILY: FONT , MARGIN} = CONSTANTS
 const { width } = Dimensions.get("window");
 const SCREEN_WIDTH = width;
@@ -41,13 +44,19 @@ const RenderDots = ({entries, activeSlide})=> {
 
 const RenderItem = ({ad,index})=> {
 
-    const onPress = () => {
-        console.log(ad)
-    };
+    const [visible,setVisible] = useState(false);
+
+    const onPress = () => setVisible(true)
 
     const onPressThrottled = useThrottle(onPress , 1000)
 
     return (
+        <>
+        <AdModal
+            visible={visible}
+            setVisible={setVisible}
+            ad={ad}
+        />
         <View style={styles.adv}>
         <TouchableHighlight style={styles.touchable} underlayColor="transparent" onPress={onPressThrottled}>
           <View>
@@ -69,6 +78,7 @@ const RenderItem = ({ad,index})=> {
           </Text>
         </View> */}
       </View>
+      </>
     )
 }
 
