@@ -19,6 +19,7 @@ export const GET_MY_FAVORITES = gql`
 				}
 			}
     	shop {
+			id
       	shopname
       	profileImages {
         	logo

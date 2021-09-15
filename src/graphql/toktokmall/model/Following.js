@@ -5,6 +5,7 @@ export const GET_MY_FOLLOWING = gql`
 		getMyFollowing(input: $input) {
 			id	    
     	shop {
+			id
       	shopname
       	profileImages {
         	logo
