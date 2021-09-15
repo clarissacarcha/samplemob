@@ -1,25 +1,50 @@
 import React, {createContext, useState, useEffect} from 'react';
 import {availableTips} from 'toktokfood/helper/strings';
 import {useRoute} from '@react-navigation/native';
-import { getTemporaryCart } from 'toktokfood/helper/TemporaryCart';
-
+// import { getTemporaryCart } from 'toktokfood/helper/TemporaryCart';
+import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
+import {useLazyQuery, useMutation} from '@apollo/react-hooks';
+import {GET_TEMPORARY_CART} from 'toktokfood/graphql/toktokfood';
+import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 export const VerifyContext = createContext();
 const {Provider} = VerifyContext;
 
 export const VerifyContextProvider = ({children}) => {
 
   const routes = useRoute();
-
+  const { shopId, userId } = routes.params;
   const [totalAmount, setTotalAmount] = useState(0);
-  const [tempCart, setTempCart] = useState([]);
+  const [temporaryCart, setTemporaryCart] = useState({
+    cartItemsLength: 0,
+    totalAmount: 0,
+    items: []
+  });
+
+  const [getTemporaryCart, {data, loading, error}] = useLazyQuery(GET_TEMPORARY_CART, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: ({ getTemporaryCart }) => {
+      if(getTemporaryCart.items.length > 0){
+        let { items, totalAmount } = getTemporaryCart
+        console.log(totalAmount, 'asdas')
+        setTemporaryCart({
+          cartItemsLength: items.length,
+          totalAmount,
+          items: items
+        })
+      }
+    },
+  });
 
   useEffect(() => {
-    async function handleGetTemporaryCart() {
-      let { cart, totalAmount } = await getTemporaryCart()
-      setTempCart(cart)
-      setTotalAmount(totalAmount[cart[0]['sys_shop']])
-    }
-    handleGetTemporaryCart()
+    getTemporaryCart({
+      variables: {
+        input: {
+          shopId: +shopId,
+          userId: userId
+        },
+      },
+    })
   }, [])
 
   return (
@@ -27,8 +52,8 @@ export const VerifyContextProvider = ({children}) => {
       value={{
         totalAmount,
         setTotalAmount,
-        tempCart,
-        setTempCart
+        temporaryCart,
+        setTemporaryCart
       }}
     >
       {children}

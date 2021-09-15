@@ -38,7 +38,7 @@ const ToktokFoodOrderTransactions = () => {
 
   const [focusTab, setFocusTab] = useState(1);
   const [refreshing, setRefreshing] = useState(false);
-  const [transactionList, setTransactionList] = useState([]);
+  const [transactionList, setTransactionList] = useState(null);
   const isFocus = useIsFocused();
   const { customerInfo } = useSelector((state) => state.toktokFood);
 
@@ -81,7 +81,7 @@ const ToktokFoodOrderTransactions = () => {
         <HeaderImageBackground customSize={CUSTOM_HEADER}>
           <HeaderTitle titleOnly showAddress={false} title="Food Orders" />
         </HeaderImageBackground>
-        <TransactionTabs focusTab={focusTab} setFocusTab={setFocusTab} />
+        <TransactionTabs focusTab={focusTab} setTransactionList={setTransactionList} setFocusTab={setFocusTab} />
         <TransactionList
           data={transactionList}
           loading={loading}

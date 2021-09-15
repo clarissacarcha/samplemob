@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef, useContext} from 'react';
+import React, {useEffect, useState, useRef, useContext, useCallback} from 'react';
 import {Image, View, Text, TouchableHighlight, TouchableOpacity, FlatList, Dimensions, Animated, Alert} from 'react-native';
 import _ from 'lodash';
 import styles from '../styles';
@@ -7,15 +7,33 @@ import {useDispatch, useSelector} from 'react-redux';
 import { getTemporaryCart, removeTemporaryCartItem } from 'toktokfood/helper/TemporaryCart';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { delete_ic } from 'toktokfood/assets/images';
+import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import { VerifyContext } from '../components';
+import { arrangeAddons } from '../functions';
 
-const OrderList = () => {
+import {DELETE_TEMPORARY_CART_ITEM} from 'toktokfood/graphql/toktokfood';
+import {useMutation, useLazyQuery} from '@apollo/react-hooks';
+import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
+import Loader from 'toktokfood/components/Loader';
+
+const MyOrderList = () => {
   const route = useRoute();
   // const { cart } = route.params;
   const navigation = useNavigation();
   const {location, customerInfo, shopLocation} = useSelector((state) => state.toktokFood, _.isEqual);
-  const {totalAmount, tempCart, setTempCart, setTotalAmount} = useContext(VerifyContext);
+  const {totalAmount, setTotalAmount, temporaryCart, setTemporaryCart} = useContext(VerifyContext);
+  
   const swipeListViewRef = useRef(null)
+
+  const [deleteTemporaryCartItem, {loading: deleteLoading, error: deleteError}] = useMutation(DELETE_TEMPORARY_CART_ITEM, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    onError: (err) => {
+      // console.log(err)
+    },
+    onCompleted: ({deleteTemporaryCartItem}) => {
+      // console.log(postTemporaryCart)
+    },
+  });
 
   const displayAddOns = (addons) => {
     return Object.entries(addons).map((item) => {
@@ -32,28 +50,38 @@ const OrderList = () => {
   };
 
   const onPressEdit = async(Id, selectedAddons, selectedItemId, selectedPrice, selectedQty, selectedNotes) => {
-    navigation.navigate('ToktokFoodItemDetails', { Id, selectedAddons, selectedItemId, selectedPrice, selectedQty, selectedNotes })
+    navigation.navigate('ToktokFoodItemDetails', {
+      Id,
+      selectedAddons,
+      selectedItemId,
+      selectedPrice,
+      selectedQty,
+      selectedNotes,
+    })
   };
 
+
   const renderFoodItem = ({ item }) => {
-    const {quantity, addons, notes, srp_totalamount, productImage, productName, product_id, itemId} = item;
+    const {productid, id, quantity, totalAmount, productLogo, productName, addonsDetails, notes} = item;
+    const addons = arrangeAddons(addonsDetails);
+    console.log(totalAmount)
     return (
       <View style={styles.orderItemContainer}>
-        <Image style={styles.foodItemImage} source={{uri: productImage}} />
+        <Image style={styles.foodItemImage} source={{uri: productLogo}} />
         <View style={styles.orderInfoWrapper}>
           <Text style={(styles.orderText, {fontWeight: '500'})}>{productName}</Text>
           <Text style={[styles.orderText]}>{`x${quantity}`}</Text>
-          {displayAddOns(addons)}
+          { addonsDetails.length > 0 && displayAddOns(addons)}
           {!!notes && <Text style={styles.orderText}>{`Notes: ${notes}`}</Text>}
         </View>
         <View style={styles.priceWrapper}>
           <Text
-            onPress={() => onPressEdit(product_id, addons, itemId, srp_totalamount, quantity, notes)}
+            onPress={() => {onPressEdit(productid, addons, id, totalAmount, quantity, notes)}}
             style={styles.actionText}
           >
             Edit
           </Text>
-          <Text style={styles.foodPrice}>PHP {srp_totalamount.toFixed(2)}</Text>
+          <Text style={styles.foodPrice}>PHP {totalAmount.toFixed(2)}</Text>
         </View>
       </View>
     );
@@ -76,24 +104,38 @@ const OrderList = () => {
     swipeListViewRef.current.closeAllOpenRows()
   };
 
-  const deleteRow = async(rowKey) => {
+  const deleteRow = useCallback(async(item) => {
+    const { id, shopid, totalAmount } = item;
+    deleteTemporaryCartItem({
+      variables: {
+        input: {
+          deleteid: id
+        }
+      }
+    }).then(({ data }) =>{
+      let { status, message } = data.deleteTemporaryCartItem
+      if(status == 200){
+        const amount = temporaryCart.totalAmount - totalAmount;
+        const index = temporaryCart.items.findIndex(val => val.id == item.id);
+        temporaryCart.items.splice(index, 1);
+        setTemporaryCart({
+          totalAmount: amount,
+          items: [...temporaryCart.items]
+        })
+        const isLastItem = temporaryCart.items.length == 0;
+        if(isLastItem){ return navigation.goBack() }
+      } else {
+        setTimeout(() => {
+          Alert.alert('', message)
+        }, 100)
+      }
+    })
     closeRow();
-    const { sys_shop, srp_totalamount } = rowKey;
-    const newData = [...tempCart[0].items];
-    const prevIndex = tempCart[0].items.findIndex(item => item.key === rowKey);
-      tempCart[0].items.splice(prevIndex, 1);
-    const amount = totalAmount - srp_totalamount;
-    const isLastItem = tempCart[0].items.length == 0;
-    const res = await removeTemporaryCartItem({ cart: tempCart, totalAmount: { [sys_shop]: amount }}, isLastItem);
-    if(isLastItem){ return navigation.goBack() }
-    if(res.status == 200){
-      setTempCart([...tempCart]);
-      setTotalAmount(amount);
-    }
-  };
+  }, [temporaryCart]);
 
   return (
     <>
+      <Loader visibility={deleteLoading} message="Deleting item..." hasImage={false} loadingIndicator />
       <View style={styles.sectionContainer}>
         <View style={[styles.myOrderWrapper]}>
           <Text style={styles.sectionTitle}>My Orders</Text>
@@ -101,25 +143,29 @@ const OrderList = () => {
           <Text onPress={() => navigation.goBack()} style={styles.actionText}>Add Items</Text>
         </View>
         <View>
-          <SwipeListView
-            useFlatList
-            disableRightSwipe
-            data={tempCart[0]?.items}
-            renderItem={renderFoodItem}
-            renderHiddenItem={renderHiddenItem}
-            rightOpenValue={-80}
-            previewRowKey={'0'}
-            previewOpenValue={-40}
-            previewOpenDelay={1000}
-            closeOnRowOpen={true}
-            keyExtractor={(item, index) => index.toString()}
-            ItemSeparatorComponent={() => ( <View style={{ borderTopWidth: 1, borderTopColor: '#E6E6E6' }} /> )}
-            ref={swipeListViewRef}
-          />
+          { temporaryCart.items.length == 0 ? (
+            <LoadingIndicator isLoading={true} size='small' style={{ paddingVertical: 20 }} />
+          ) : (
+            <SwipeListView
+              useFlatList
+              disableRightSwipe
+              data={temporaryCart?.items}
+              renderItem={renderFoodItem}
+              renderHiddenItem={renderHiddenItem}
+              rightOpenValue={-80}
+              previewRowKey={'0'}
+              previewOpenValue={-40}
+              previewOpenDelay={1000}
+              closeOnRowOpen={true}
+              keyExtractor={(item, index) => index.toString()}
+              ItemSeparatorComponent={() => ( <View style={{ borderTopWidth: 1, borderTopColor: '#E6E6E6' }} /> )}
+              ref={swipeListViewRef}
+            />
+          )}
         </View>
       </View>
     </>
   );
 };
 
-export default MyOrderList = React.memo(OrderList);
+export default MyOrderList;

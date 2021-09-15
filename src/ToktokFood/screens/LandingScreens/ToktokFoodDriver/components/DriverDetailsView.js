@@ -18,14 +18,14 @@ import moment from 'moment';
 const DriverDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) => {
   const navigation = useNavigation();
   const {location} = useSelector((state) => state.toktokFood);
-  const {shopDetails, orderStatus, isconfirmed, address, dateReadyPickup, dateOrderProcessed, isdeclined} = transaction;
+  const {shopDetails, orderStatus, isconfirmed, address, dateReadyPickup, dateBookingConfirmed, dateOrderProcessed, isdeclined} = transaction;
   const status = orderStatusMessageDelivery(
     orderStatus,
     riderDetails,
     `${shopDetails.shopname} (${shopDetails.address})`,
     isdeclined
   );
-  const date = riderDetails != null && orderStatus == 'po' ? dateOrderProcessed : dateReadyPickup;
+  // const date = dateOrderProcessed 
 
   const calculateDistance = (startTime, riderLocation) => {
     let distance = getDistance(
@@ -74,9 +74,9 @@ const DriverDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
   );
 
   const renderTitle = () => {
-    let startTime = moment(date).format('LT');
-    let endTime = riderDetails != null ? calculateDistance(date, riderDetails.location) : '00:00'
-
+    let startTime = moment(dateBookingConfirmed).format('LT');
+    let endTime = riderDetails != null ? calculateDistance(dateBookingConfirmed, riderDetails.location) : '00:00'
+  
     return (
       <View style={styles.detailsContainer}>
         <Text style={styles.title}>{status.title}</Text>

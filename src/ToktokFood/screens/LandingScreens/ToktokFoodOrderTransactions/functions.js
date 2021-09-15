@@ -17,6 +17,7 @@ export const getOrderStatus = (focusTab) => {
 }
 
 export const getSubMessageStatus = (item) => {
+  console.log(item.orderStatus)
   switch(item.orderStatus){
     case 's':
       return `Delivered at ${moment(item.dateFulfilled).format('lll')}`;
@@ -26,8 +27,8 @@ export const getSubMessageStatus = (item) => {
       return 'Ready for Pickup';
     case 'po':
       return 'Processing Order';
-    case 'bc':
-      return 'Booking Confirmed';
+    case 'f':
+      return 'Your order is on the way to you';
     
     default:
       return 'Pending Order'

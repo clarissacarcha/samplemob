@@ -2,7 +2,7 @@ import {useMutation, useLazyQuery} from '@apollo/react-hooks';
 import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
 import React, {useEffect} from 'react';
-import {ActivityIndicator, ImageBackground, StyleSheet} from 'react-native';
+import {ActivityIndicator, ImageBackground, StyleSheet, Alert} from 'react-native';
 import {useSelector} from 'react-redux';
 import {COLOR} from 'res/variables';
 import ENVIRONMENTS from 'src/common/res/environments';
@@ -25,7 +25,13 @@ const TokTokFoodSplashScreen = () => {
     onCompleted: ({createAccount}) => {
       let {status} = createAccount;
       if (status == 200) {
-        getToktokUserInfo();
+        getToktokUserInfo({
+          variables: {
+            input: {
+              toktokUserId: user.id,
+            },
+          },
+        });
       }
     },
   });
@@ -33,13 +39,16 @@ const TokTokFoodSplashScreen = () => {
   const [getToktokUserInfo, {data: foodPerson, error: foodPersonError, loading: foodPersonLoading}] = useLazyQuery(
     GET_ACCOUNT,
     {
-      variables: {
-        input: {
-          toktokUserId: user.id,
-        },
-      },
       client: TOKTOK_FOOD_GRAPHQL_CLIENT,
       fetchPolicy: 'network-only',
+      onError: (error) => {
+        const {graphQLErrors, networkError } = error;
+        if(networkError || graphQLErrors){
+          return Alert.alert('', 'Network error occured. Please check your internet connection',
+            [ { text: "Okay", onPress: () => navigation.goBack() }]
+          )
+        }
+      },
       onCompleted: ({getAccount}) => {
         console.log('HAHAHAH')
         if (user.toktokfoodUserId != null) {
@@ -57,10 +66,20 @@ const TokTokFoodSplashScreen = () => {
   };
 
   useEffect(() => {
-    if (location && user) {
-      user.toktokfoodUserId != null ? getToktokUserInfo() : processCreateAccount();
+    if(user) {
+      if(user.toktokfoodUserId != null){
+        getToktokUserInfo({
+          variables: {
+            input: {
+              toktokUserId: user.id,
+            },
+          },
+        });
+      } else {
+        processCreateAccount();
+      }
     }
-  }, [user, location]);
+  }, [user]);
 
   const processCreateAccount = () => {
     let {firstName, lastName, birthdate, emailAddress, gender} = user.person;

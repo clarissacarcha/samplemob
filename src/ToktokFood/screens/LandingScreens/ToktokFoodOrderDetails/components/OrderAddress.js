@@ -119,9 +119,9 @@ const OrderAddress = ({ transaction, riderDetails }) => {
           <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
           <View style={styles.divider} />
           {(riderDetails != null && (orderStatus == 'f' || orderStatus == 's')) ? (
-              <MaterialIcon name="lens" size={16} color={COLORS.YELLOWTEXT} />
-            ) : (
               <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
+            ) : (
+              <MaterialIcon name="lens" size={16} color={COLORS.YELLOWTEXT} />
           )}
         </View>
       )}

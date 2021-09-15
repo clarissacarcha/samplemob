@@ -16,6 +16,11 @@ export const VerifyContextProvider = ({children}) => {
   const [requiredOptions, setRequiredOptions] = useState({});
   const [notes, setNotes] = useState('');
   const [productDetails, setProductDetails] = useState({});
+  const [temporaryCart, setTemporaryCart] = useState({
+    totalAmount: 0,
+    items: []
+  });
+  const [hasTemporaryCart, setHasTemporaryCart] = useState(false);
 
   return (
     <Provider
@@ -33,7 +38,11 @@ export const VerifyContextProvider = ({children}) => {
         notes,
         setNotes,
         productDetails,
-        setProductDetails
+        setProductDetails,
+        temporaryCart,
+        setTemporaryCart,
+        hasTemporaryCart,
+        setHasTemporaryCart
       }}
     >
       {children}

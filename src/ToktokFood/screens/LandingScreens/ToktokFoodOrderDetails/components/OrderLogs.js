@@ -16,7 +16,16 @@ import moment from 'moment';
 
 const OrderFee = ({ status = 2, transaction }) => {
 
-  let { dateOrdered, dateFulfilled, dateShipped, dateReadyPickup, deliveryImgurl, deliveryImgurl2, orderIsfor } = transaction
+  let {
+    dateOrdered,
+    dateFulfilled,
+    dateShipped,
+    dateReadyPickup,
+    deliveryImgurl,
+    deliveryImgurl2,
+    orderIsfor,
+    dateBookingConfirmed
+  } = transaction
  
   const renderLogInfo = (title, date) => (
     <View style={styles.logContainer}>
@@ -41,14 +50,14 @@ const OrderFee = ({ status = 2, transaction }) => {
       <Image style={[styles.pickedUp, {borderRadius: 10, height: 130, marginTop: 8}]} source={{ uri: image }} resizeMode="cover" />
     </View>
   );
-
+  console.log(deliveryImgurl)
   const displayComponent = () => {
     if(orderIsfor == 1){
       return (
         <>
           {renderLogInfo('Order Placed', moment(dateOrdered).format('lll'))}
           {renderDash()}
-          {renderLogInfo('On the way to restaurant', moment(dateReadyPickup).format('lll'))}
+          {renderLogInfo('On the way to restaurant', moment(dateBookingConfirmed).format('lll'))}
           {renderDash()}
           {renderLogInfo('Food Picked Up', moment(dateFulfilled).format('lll'))}
           {renderDash()}
@@ -58,7 +67,7 @@ const OrderFee = ({ status = 2, transaction }) => {
           {renderDash()}
           {renderLogInfo('Item Delivered', moment(dateShipped).format('lll'))}
           {(moment(dateShipped).format('lll') != 'Invalid date' && deliveryImgurl2 != null )
-          && renderDashImage(true, deliveryImgurl2)}
+          && renderDashImage(false, deliveryImgurl2)}
         </>
       )
     } else {
