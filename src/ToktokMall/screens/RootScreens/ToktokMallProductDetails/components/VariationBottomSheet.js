@@ -31,6 +31,7 @@ export const VariationBottomSheet = forwardRef(({
   const [stock, setStock] = useState(item?.noOfStocks)
   const [qty, setQty] = useState(1)
   const [variation, setVariation] = useState("")
+  const [variationWithTypes, setVariationWithTypes] = useState({})
   const [variationArr, setVariationArr] = useState([])
 
   const getImage = () => {
@@ -42,6 +43,24 @@ export const VariationBottomSheet = forwardRef(({
       return placeholder
     }
   }
+
+  useEffect(() => {
+    item?.variantSummary &&
+      item?.variantSummary.length > 0 &&
+      Object.keys(variationWithTypes).length > 0 &&
+      setVariation(
+        item?.variantSummary
+          .map((variant, i) => {
+            let variantslist = variant?.variantList || '';
+            const variants = variantslist.split(',');
+            if (Object.keys(variationWithTypes).includes(variant.variantType)) {
+              return variants[variationWithTypes[variant.variantType]];
+            }
+          })
+          .join(' '),
+      );
+  }, [item, variationWithTypes]);
+  console.log(variation)
 
   const RenderOptions = ({type, onBuyNow, onAddToCart}) => {
 
@@ -97,9 +116,6 @@ export const VariationBottomSheet = forwardRef(({
 
   const RenderVariation = ({variants, type}) => {
 
-    const [activeIndex, setActiveIndex] = useState(-1)
-    const [toggle, setToggle] = useState(false)
-
     return (
       <>
       <View style={{height: 2, backgroundColor: "#F7F7FA"}} />
@@ -109,24 +125,6 @@ export const VariationBottomSheet = forwardRef(({
         </View>
         <View style={{flexDirection: 'row', paddingTop: 16}}>
 
-          {/* <FlatList
-            data={variants}
-            renderItem={({item, index}) => {
-              return (
-                <>
-                  <TouchableOpacity key={index} onPress={() => {
-                    setVariation(item)
-                    setActiveIndex(index)
-                    setActiveIndex(index)
-                  }} style={{paddingVertical: 4, paddingHorizontal: 16, borderRadius: 5, borderWidth: 0.5, borderColor: activeIndex == index ? "#F6841F" : "lightgray"}}>
-                    <Text style={{fontSize: 13, color: "#9E9E9E"}}>{item}</Text>
-                  </TouchableOpacity>
-                  <View style={{width: 5}} />
-                </>
-              )
-            }}
-          /> */}
-
           <View style={{flexWrap: "wrap"}}>
             <View style={{flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'flex-start'}}>
             {variants.map((item, index) => {
@@ -135,11 +133,7 @@ export const VariationBottomSheet = forwardRef(({
                   <TouchableOpacity 
                     key={index} 
                     onPress={() => {
-                      console.log("index", index)
-                      console.log("active index", activeIndex)
-                      setToggle(!toggle)
-                      setActiveIndex(index)
-                      setVariation(item)
+                      setVariationWithTypes(prevState => ({...prevState, [type]: index}))
                     }} 
                     style={{
                       marginTop: 4,
@@ -147,7 +141,7 @@ export const VariationBottomSheet = forwardRef(({
                       paddingHorizontal: 16, 
                       borderRadius: 5, 
                       borderWidth: 0.5, 
-                      borderColor: activeIndex == index ? "#F6841F" : "lightgray"
+                      borderColor: variationWithTypes?.[type] === index ? "#F6841F" : "lightgray"
                     }}>
                     <Text style={{fontSize: 13, color: "#9E9E9E"}}>{item}</Text>
                   </TouchableOpacity>

@@ -33,7 +33,7 @@ const Component = ({data, onToggleFollow, reduxActions: {updateMyFollowing}, red
             </View>
             <View style={{flex: 12, justifyContent: 'center'}}>
               <Text style={{fontSize: 14}}>{data.shopname}</Text>
-              <Text style={{fontSize: 13, color: "#9E9E9E"}}>{data.address}</Text>
+              <Text style={{fontSize: 13, color: "#9E9E9E", paddingRight: 5}}>{data.address}</Text>
             </View>
             <View style={{flex: 4, justifyContent: 'center'}}>
               <TouchableOpacity onPress={() => {

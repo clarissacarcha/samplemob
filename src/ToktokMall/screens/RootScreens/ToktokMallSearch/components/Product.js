@@ -114,7 +114,7 @@ export const Product = ({data, state, fetch, lazyload}) => {
               }}
               onScroll = {({nativeEvent}) => {
                 if(isCloseToBottom(nativeEvent)){
-                  lazyload()
+                  lazyload?.()
                 }
               }}
               keyExtractor={(item, index) => item + index}

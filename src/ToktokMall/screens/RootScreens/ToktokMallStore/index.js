@@ -52,7 +52,8 @@ export const ToktokMallStore = ({navigation, route}) => {
     const req = await ApiCall("follow_shop", variables, true)
 
     if(req.responseData && req.responseData.success == 1){
-      setMessageModalContent(`You are now following ${storeData.shopname}`)   
+      setMessageModalContent(`You are now following ${storeData.shopname}`)  
+      setMessageModalShown(true) 
     }else if(req.responseError && req.responseError.success == 0){
       Toast.show(req.responseError.message, Toast.LONG)
     }else if(req.responseError){
@@ -72,7 +73,8 @@ export const ToktokMallStore = ({navigation, route}) => {
     const req = await ApiCall("unfollow_shop", variables, true)
 
     if(req.responseData && req.responseData.success == 1){
-      setMessageModalContent(`You unfollowed ${storeData.shopname}`)    
+      setMessageModalContent(`You unfollowed ${storeData.shopname}`)  
+      setMessageModalShown(true)   
     }else if(req.responseError && req.responseError.success == 0){
       Toast.show(req.responseError.message, Toast.LONG)
     }else if(req.responseError){
@@ -172,7 +174,6 @@ export const ToktokMallStore = ({navigation, route}) => {
               //Followed 
               followShop()       
             } 
-            setMessageModalShown(true)
           }} 
         />}
 

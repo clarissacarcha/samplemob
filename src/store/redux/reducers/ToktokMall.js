@@ -126,8 +126,7 @@ export default (state = INITIAL_STATE, action) => {
         let myCartArr = state.myCart;
         let exists = false
         myCartArr = myCartArr.map((item) => {
-          if(item.item_id === action.payload.item_id){
-            console.log(true, true, item.qty + action.payload.qty)
+          if(item.item_id === action.payload.item_id && item.variation === action.payload.variation){
             exists = true
             return {
               ...item,
