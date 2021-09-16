@@ -201,14 +201,14 @@ const Component = ({ myCart, createMyCartSession,}) => {
     return coords;
   }
 
-  useEffect(() => {
-    getLocation().then(async (res) => {
-      if (res) {
-        // const {latitude, longitude} = res;
-        AsyncStorage.setItem("ToktokMallUserCoords", JSON.stringify(res))
-      }
-    });
-  }, [])
+  // useEffect(() => {
+  //   getLocation().then(async (res) => {
+  //     if (res) {
+  //       // const {latitude, longitude} = res;
+  //       AsyncStorage.setItem("ToktokMallUserCoords", JSON.stringify(res))
+  //     }
+  //   });
+  // }, [])
 
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
