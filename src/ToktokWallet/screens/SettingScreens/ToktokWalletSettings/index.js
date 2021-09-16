@@ -42,7 +42,7 @@ export const ToktokWalletSettings = ({navigation , route })=> {
             <SettingHeaderTitle title="Manage Pin"/>
             <SettingOption route="ToktokWalletCreatePin" title="Change Pin"/>
             <Separator/>
-            <SettingHeaderTitle title="Help centre"/>
+            <SettingHeaderTitle title="Help Centre"/>
             <SettingOption route="ToktokWalletPaymentChart" title="Payment Chart"/>
             <SettingOption route="ToktokWalletTransactionLimit" title="User Level and Transaction Limit"/>
             {

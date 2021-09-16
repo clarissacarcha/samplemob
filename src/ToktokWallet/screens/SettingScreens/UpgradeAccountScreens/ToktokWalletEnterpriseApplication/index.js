@@ -73,7 +73,13 @@ const MainComponent = ()=> {
                 <TakePhotoID onPress={onPress}/>
                 </ScrollView>
                 <Resubmit id={data.getEnterpriseUpgradeRequest.id}/>
-            <BottomSheetIDType ref={IDTypeRef} idIndex={idIndex} onChange={()=>null} />
+                <BottomSheetIDType 
+                    ref={IDTypeRef} 
+                    idIndex={idIndex} 
+                    onChange={()=>null}
+                    validID1={validID1}
+                    validID2={validID2}
+                />
             </>
         )
     }

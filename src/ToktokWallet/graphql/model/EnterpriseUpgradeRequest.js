@@ -12,7 +12,7 @@ const EnterpriseRequest = `
     firstGovtIdBack
     secondIdentificationCardId 
     secondGovtIdFront 
-    secondGovdIdBack
+    secondGovtIdBack
     reasons
     status 
     dateApproved

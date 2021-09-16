@@ -39,6 +39,7 @@ export const PendingEnrollment = ({record})=> {
                     <Information label="First Name" value={record.firstName}/>
                     <Information label="Middle Name" value={record.middleName}/>
                     <Information label="Last Name" value={record.lastName}/>
+                    <Information label="Email Address" value={record.emailAddress}/>
                     <Information label="Birthdate" value={moment(record.birthdate).tz('Asia/Manila').format('MMM DD, YYYY')}/>
                     <Information label="Street Address" value={record.streetAddress}/>
                     <Information label="Barangay Town" value={record.barangayTown}/>

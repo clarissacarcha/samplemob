@@ -71,7 +71,7 @@ export const BottomSheetIDType = forwardRef(({onChange,idIndex,validID1,validID2
       index={-1}
       snapPoints={snapPoints}
       enableHandlePanningGesture={true}
-      enableContentPanningGesture={true}
+      enableContentPanningGesture={false}
       handleComponent={() => (
         <View
           style={{
@@ -91,6 +91,8 @@ export const BottomSheetIDType = forwardRef(({onChange,idIndex,validID1,validID2
         <Text style={{fontFamily: FONT.BOLD}}>Select ID Type</Text>
         <View style={{height: 10}} />
         <FlatList
+          showsVerticalScrollIndicator={false}
+          style={{marginBottom:50}}
           data={filteredValidID}
           ItemSeparatorComponent={() => <View style={{borderBottomWidth: 1, borderColor: COLOR.LIGHT}} />}
           renderItem={({item, index}) => (

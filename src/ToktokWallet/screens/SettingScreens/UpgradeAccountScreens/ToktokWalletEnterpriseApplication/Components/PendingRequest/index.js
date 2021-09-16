@@ -15,7 +15,7 @@ export const PendingRequest = ({enterpriseRequest})=> {
               </View>
               <View style={{flex: 1,marginLeft: 15}}>
                   <Text style={styles.messageText}>
-                    Your business documents have been submitted. These documents are for review and approval.
+                    Your business documents have been {enterpriseRequest.status == 2 ? "submitted" : "resubmitted"}. These documents are for review and approval.
                   </Text>
               </View>
            </View>

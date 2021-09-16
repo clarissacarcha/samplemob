@@ -5,6 +5,7 @@ const GCashEnrollmentType = `
     mobile
     firstName
     lastName
+    emailAddress
     streetAddress
     barangayTown
     provinceCity
