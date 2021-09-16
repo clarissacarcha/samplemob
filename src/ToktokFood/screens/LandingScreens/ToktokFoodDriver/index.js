@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, {useEffect, useState, useRef} from 'react';
 import {View, StyleSheet, Alert} from 'react-native';
 
@@ -47,11 +48,9 @@ const ToktokFoodDriver = ({route, navigation}) => {
       client: TOKTOK_FOOD_GRAPHQL_CLIENT,
       fetchPolicy: 'network-only',
       onCompleted: ({getTransactionByRefNum}) => {
-        console.log(getTransactionByRefNum);
-        // if (JSON.stringify(getTransactionByRefNum) != JSON.stringify(transaction)) {
-        //   setTransaction(getTransactionByRefNum);
-        // }
-        setTransaction(getTransactionByRefNum);
+        if (JSON.stringify(getTransactionByRefNum) != JSON.stringify(transaction)) {
+          setTransaction(getTransactionByRefNum);
+        }
       },
     },
   );
@@ -70,6 +69,66 @@ const ToktokFoodDriver = ({route, navigation}) => {
       setRiderDetails(getDeliveryDriver.driver);
     },
   });
+
+  const getToktokFoodRiderDetails = async () => {
+    try {
+      const API_RESULT = await axios({
+        url: 'https://dev.toktok.ph:2096/graphql',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        data: {
+          query: `
+            query {
+              getDeliveryDriver(input: {
+                deliveryId: "${transaction?.tDeliveryId}"
+              }) {
+                driver {
+                  id
+                  status
+                  licenseNumber
+                  isOnline
+                  location {
+                    latitude
+                    longitude
+                    lastUpdate
+                  }
+                user {
+                  id
+                  username
+                  status
+                  person {
+                    firstName
+                    middleName
+                    lastName
+                    mobileNumber
+                    emailAddress
+                    avatar
+                    avatarThumbnail
+                  }
+                }
+                vehicle {
+                  plateNumber
+                  brand {
+                    brand
+                  }
+                  model {
+                    model
+                  }
+                }
+              }
+            }
+          }`,
+        },
+      });
+      const res = API_RESULT.data.data.getDeliveryDriver;
+      //console.log(JSON.stringify(res));
+      setRiderDetails(res.driver);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('blur', () => {
@@ -111,7 +170,8 @@ const ToktokFoodDriver = ({route, navigation}) => {
           if (transaction.orderStatus != 'p' && transaction?.orderIsfor == 1) {
             getTransactionByRefNum();
             if (transaction.tDeliveryId) {
-              getRiderDetails();
+              // getRiderDetails();
+              getToktokFoodRiderDetails();
             }
           } else {
             getTransactionByRefNum();

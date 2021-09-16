@@ -50,14 +50,14 @@ const OrderRider = ({ riderDetails, transaction }) => {
         <Text style={styles.notes}>{`${vehicle.brand.brand} ${vehicle.model.model}`}</Text>
           {/* <Text style={styles.notes}>{parseFloat(rating).toFixed(1)}</Text>
           <Rating startingValue={parseFloat(rating).toFixed(1)} imageSize={13} readonly style={styles.ratings} ratingColor={"#FFA700"} /> */}
-        <CustomStarRating
+        {/* <CustomStarRating
           rating={'0'}
           starImgStyle={{ width: scale(15), height: scale(15), marginVertical: 5 }}
           ratingStyle={{ color: 'black', fontSize: FONT_SIZE.S }}
           readOnly
           showRating
           rightRating
-        />
+        /> */}
       </View>
     </View>
   );

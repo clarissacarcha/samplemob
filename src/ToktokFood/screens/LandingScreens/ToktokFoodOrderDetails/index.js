@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, {useState, useEffect, useRef} from 'react';
 import {ScrollView, StyleSheet, View, Alert, Text} from 'react-native';
 
@@ -66,6 +67,66 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
     },
   });
 
+  const getToktokFoodRiderDetails = async () => {
+    try {
+      const API_RESULT = await axios({
+        url: 'https://dev.toktok.ph:2096/graphql',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        data: {
+          query: `
+            query {
+              getDeliveryDriver(input: {
+                deliveryId: "${transaction?.tDeliveryId}"
+              }) {
+                driver {
+                  id
+                  status
+                  licenseNumber
+                  isOnline
+                  location {
+                    latitude
+                    longitude
+                    lastUpdate
+                  }
+                user {
+                  id
+                  username
+                  status
+                  person {
+                    firstName
+                    middleName
+                    lastName
+                    mobileNumber
+                    emailAddress
+                    avatar
+                    avatarThumbnail
+                  }
+                }
+                vehicle {
+                  plateNumber
+                  brand {
+                    brand
+                  }
+                  model {
+                    model
+                  }
+                }
+              }
+            }
+          }`,
+        },
+      });
+      const res = API_RESULT.data.data.getDeliveryDriver;
+      // console.log(JSON.stringify(res));
+      setRiderDetails(res.driver);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     const unsubscribe = navigation.addListener('blur', () => {
       clearInterval(checkOrderResponse5mins.current);
@@ -86,7 +147,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
   }, [seconds, transaction, riderDetails]);
 
   const handleOrderProcess = async () => {
-    if (transaction && Object.entries(transaction).length > 0) {
+    if (Object.entries(transaction).length > 0) {
       if (transaction.orderStatus == 's') {
         await removeRiderDetails(referenceNum);
         return alertPrompt('Order Completed', 'Thank you for choosing, toktokfood!', 'Okay');
@@ -96,7 +157,8 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
           if (transaction.orderStatus != 'p' && transaction?.orderIsfor == 1) {
             getTransactionByRefNum();
             if (transaction.tDeliveryId) {
-              getRiderDetails();
+              // getRiderDetails();
+              getToktokFoodRiderDetails();
             }
           } else {
             getTransactionByRefNum();
@@ -160,7 +222,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
           )}
           <OrderList orderDetails={transaction.orderDetails} />
           <Separator />
-          <OrderFee data={transaction} />
+          <OrderFee data={transaction} forDelivery={transaction.orderIsfor == 1} />
           <Separator />
           <OrderNote
             title="Payment Method"
