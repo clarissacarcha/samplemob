@@ -14,6 +14,10 @@ import { connect } from 'react-redux';
 import { RenderStars, RenderVariations } from './subComponents';
 import ContentLoader from 'react-native-easy-content-loader';
 import {ApiCall, PaypandaApiCall, BuildPostCheckoutBody, BuildTransactionPayload, WalletApiCall} from "../../../../helpers";
+import { GET_MY_FAVORITES } from '../../../../../graphql/toktokmall/model';
+import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../graphql';
+import { useLazyQuery } from '@apollo/react-hooks';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const Component = ({
   data, 
@@ -31,19 +35,53 @@ const Component = ({
 }) => {
 
   const [favorite, setFavorite] = useState(false)
+  const [favorites, setFavorites] = useState([])
   const opacity = animatedValue.interpolate({
     inputRange: [200, 250],
     outputRange: [1, 0],
     extrapolate: 'clamp'
   })
 
+  const [getMyFavorites, {error}] = useLazyQuery(GET_MY_FAVORITES, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',    
+    onCompleted: (response) => {
+      console.log(response)
+      if(response.getMyFavorites){
+        setFavorites(response.getMyFavorites)
+      }
+    },
+    onError: (err) => {
+      console.log(err)
+    }
+  })
+
+  const init = async () => {
+    AsyncStorage.getItem("ToktokMallUser").then((raw) => {
+      const data = JSON.parse(raw)
+      if(data.userId){
+        getMyFavorites({
+          variables: {
+            input: {
+              userId: data.userId
+            }
+          }
+        })
+      }
+    })
+  }
+
   useEffect(() => {
-   if(myFavorites && data?.Id){
-     myFavorites.map(({shop: {id}, items}) => {
+    init()
+  }, [])
+
+  useEffect(() => {
+   if(favorites && data?.Id){
+    favorites.map(({shop: {id}, items}) => {
        if(shop.id === id){
          let temp = false
          items.map(item => {
-           if(item.Id === data.Id){
+           if(item.product.Id === data.Id){
              temp = true
            }
          })
@@ -51,7 +89,7 @@ const Component = ({
        }
      })
    }
- },[myFavorites, shop, data])
+ },[favorites, shop, data])
 
  const addToFavorites = async () => {
 
@@ -87,7 +125,6 @@ const Component = ({
       productid: data.Id
     }
     // data.pin = value
-    console.log(variables)
     const req = await ApiCall("remove_favorite_product", variables, true)
 
     if(req.responseData && req.responseData.success == 1){
