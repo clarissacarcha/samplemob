@@ -32,13 +32,13 @@ const Item = ({data, onPress}) => {
     <>
       <TouchableOpacity 
 				onPress={() => { 
-					onPress(data?.subCategory)
+					onPress(data?.categoryName)
         }} 
 				style={{flexDirection: 'row', paddingVertical: 20, paddingHorizontal: 15}}
 			>
         <View style={{flex: 1}}></View>
         <View style={{flex: 8, justifyContent: 'center', paddingHorizontal: 8}}>
-          <Text style={{fontSize: 14}}>{data?.subCategory}</Text>
+          <Text style={{fontSize: 14}}>{data?.categoryName}</Text>
         </View>
         <View style={{flex: 1}}></View>
       </TouchableOpacity>
@@ -49,31 +49,40 @@ const Item = ({data, onPress}) => {
 
 const DropdownItem = ({item, onItemPress}) => {
 
-  const [category, setCategory] = useState( item.parentCategory)
+  const [category, setCategory] = useState( item.parentCategoryName)
   const [content, setContent] = useState(item.subCategories) //["Cabinet", "Chairs", "Drawer"]
   const [toggle, setToggle] = useState(false)
 
-  const setIcon = () => {
+  const setIcon = (item) => {
 
-    if(item?.parentIcon?.name == ""){
-      //Image icon
-      return (
-        <>
-          <Image 
-            source={placeholder} 
-            style={{width: 50, height: 50, resizeMode: 'cover', borderRadius: 5}} 
-          />
-        </>
-      )
-    }else {
-      return (
-        <>
-          <View>
-            <CustomIcon.FA5Icon name={item?.parentIcon?.name} size={22} color="#F6841F" />
-          </View>
-        </>
-      )
-    }
+    return (
+      <>
+        <Image 
+          source={item.image ? {uri: item.image} : placeholder} 
+          style={{width: 50, height: 50, resizeMode: 'cover', borderRadius: 5}} 
+        />
+      </>
+    )
+
+    // if(item?.image){
+    //   //Image icon
+    //   return (
+    //     <>
+    //       <Image 
+    //         source={placeholder} 
+    //         style={{width: 50, height: 50, resizeMode: 'cover', borderRadius: 5}} 
+    //       />
+    //     </>
+    //   )
+    // }else {
+    //   return (
+    //     <>
+    //       <View>
+    //         <CustomIcon.FA5Icon name={item?.parentIcon?.name} size={22} color="#F6841F" />
+    //       </View>
+    //     </>
+    //   )
+    // }
 
   }
 
@@ -81,7 +90,7 @@ const DropdownItem = ({item, onItemPress}) => {
   	<>
     	<TouchableOpacity onPress={() => setToggle(!toggle)} style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
         <View style={{flex: 2, borderRadius: 5, backgroundColor: 'transparent', justifyContent: 'center', alignItems: 'center'}}>
-          {setIcon()}
+          {setIcon(item)}
         </View>
         <View style={{flex: 8, justifyContent: 'center', paddingHorizontal: 8}}>
           <Text style={{fontSize: 14}}>{category}</Text>

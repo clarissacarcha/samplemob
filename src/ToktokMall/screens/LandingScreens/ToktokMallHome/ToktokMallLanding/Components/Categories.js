@@ -10,7 +10,7 @@ import { COLOR, FONT } from '../../../../../../res/variables';
 import {LandingHeader, AdsCarousel} from '../../../../../Components';
 
 import CustomIcon from '../../../../../Components/Icons';
-import {watch, electronics, mensfashion, furniture, petcare} from '../../../../../assets'
+import {watch, electronics, mensfashion, furniture, petcare, placeholder} from '../../../../../assets'
 
 const testdata = [{
   // image: require("../../../../../assets/images/Watch.png"),
@@ -61,25 +61,28 @@ export const Categories = ({data}) => {
 
   const setIcon = (item) => {
 
-    if(item?.parentIcon?.name == ""){
-      //Image icon
-      return (
-        <>
-          <Image 
-            source={placeholder} 
-            style={{width: 50, height: 50, resizeMode: 'cover', borderRadius: 5}} 
-          />
-        </>
-      )
-    }else {
-      return (
-        <>
-          <View>
-            <CustomIcon.FA5Icon name={item?.parentIcon?.name} size={20} color="#F6841F" />
-          </View>
-        </>
-      )
-    }
+    return (
+      <>
+        <Image 
+          source={item.image ? {uri: item.image} : placeholder} 
+          style={{width: 50, height: 50, resizeMode: 'cover', borderRadius: 5}} 
+        />
+      </>
+    )
+
+    // if(item?.image){
+    //   //Image icon
+      
+    // }
+    // else {
+    //   return (
+    //     <>
+    //       <View>
+    //         <CustomIcon.FA5Icon name={item?.parentIcon} size={20} color="#F6841F" />
+    //       </View>
+    //     </>
+    //   )
+    // }
 
   }
 
@@ -153,7 +156,7 @@ export const Categories = ({data}) => {
                           {setIcon(cat)}
                         </View>
                         <View style={{alignItems: 'center', justifyContent: 'center', marginTop: 4}}>
-                          <Text style={styles.label}>{cat.parentCategory}</Text>
+                          <Text style={styles.label}>{cat.parentCategoryName}</Text>
                         </View>
                       </View>   
                     </>

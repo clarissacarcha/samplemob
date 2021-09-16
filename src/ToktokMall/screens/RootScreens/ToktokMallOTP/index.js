@@ -40,6 +40,9 @@ export const ToktokMallOTP =  ({navigation, route}) => {
 
     let checkoutBody = route.params.data
     checkoutBody.pin = value
+
+    console.log("Checkout body", JSON.stringify(checkoutBody))
+    
     const req = await ApiCall("checkout", checkoutBody, true)
 
     if(req.responseData && req.responseData.success == 1){
