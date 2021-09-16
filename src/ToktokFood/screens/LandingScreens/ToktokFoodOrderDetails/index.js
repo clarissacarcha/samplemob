@@ -147,7 +147,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
   }, [seconds, transaction, riderDetails]);
 
   const handleOrderProcess = async () => {
-    if (Object.entries(transaction).length > 0) {
+    if (transaction && Object.entries(transaction).length > 0 && orderStatus == undefined && riderDetails == null) {
       if (transaction.orderStatus == 's') {
         await removeRiderDetails(referenceNum);
         return alertPrompt('Order Completed', 'Thank you for choosing, toktokfood!', 'Okay');

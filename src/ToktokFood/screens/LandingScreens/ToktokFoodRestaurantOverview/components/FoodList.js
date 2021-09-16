@@ -2,7 +2,7 @@ import React, {useEffect, useState, useContext} from 'react';
 import {View, StyleSheet, Text, TouchableOpacity, Image, Platform, FlatList} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {useLazyQuery, useQuery} from '@apollo/react-hooks';
-import {GET_PRODUCTS_BY_SHOP_CATEGORY, GET_PRODUCTS_BY_SHOP} from 'toktokfood/graphql/toktokfood';
+import {GET_PRODUCTS_BY_SHOP_CATEGORY, GET_SEARCH_PRODUCTS_BY_SHOP} from 'toktokfood/graphql/toktokfood';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import {VerifyContext} from '../components';
@@ -41,9 +41,9 @@ export const FoodList = (props) => {
 
   // data fetching for product
   const [
-    getProductsByShop,
+    getSearchProductsByShop,
     {data: searchProducts, error: searchProductsError, loading: searchProductsLoading},
-  ] = useLazyQuery(GET_PRODUCTS_BY_SHOP, {
+  ] = useLazyQuery(GET_SEARCH_PRODUCTS_BY_SHOP, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
   });
@@ -57,12 +57,11 @@ export const FoodList = (props) => {
 
   useEffect(() => {
     if (searchProduct) {
-      getProductsByShop({
+      getSearchProductsByShop({
         variables: {
           input: {
             id: id,
             key: searchProduct,
-            requestFrom: 'customer'
           },
         },
       });
@@ -94,7 +93,7 @@ export const FoodList = (props) => {
   return (
     <>
       <FlatList
-        data={searchProduct ? searchProducts?.getProductsByShop : products ? products.getProductsByShopCategory : []}
+        data={searchProduct ? searchProducts?.getSearchProductsByShop : products ? products.getProductsByShopCategory : []}
         extraData={props}
         renderItem={renderItem}
         contentContainerStyle={styles.container}
