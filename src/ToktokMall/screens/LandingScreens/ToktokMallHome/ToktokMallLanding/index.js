@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {View, Text, ImageBackground, Image, TouchableOpacity, FlatList, SectionList, StyleSheet, Dimensions, AsyncStorage, RefreshControl} from 'react-native';
+import {View, Text, ImageBackground, Image, TouchableOpacity, FlatList, SectionList, StyleSheet, Dimensions, RefreshControl} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
@@ -18,11 +18,14 @@ import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../graphql';
 import { GET_CUSTOMER_IF_EXIST } from '../../../../../graphql/toktokmall/model';
 import Spinner from 'react-native-spinkit';
 
+import { GeolocationUtility } from '../../../../util';
+
 //Main Components
 import CustomIcon from '../../../../Components/Icons';
 import {LandingHeader, AdsCarousel, StickyHomeHeader, LandingSubHeader} from '../../../../Components';
 
 import {Categories, Offers, FlashSale, Vouchers, Suggestions, Featured} from './Components';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -191,6 +194,21 @@ const Component = ({ myCart, createMyCartSession,}) => {
     console.log(sampleArr)
     setRefreshing(false)
   }
+
+  const getLocation = async () => {
+    const currentLocation = await GeolocationUtility.getCurrentLocation();
+    const {coords} = currentLocation;
+    return coords;
+  }
+
+  useEffect(() => {
+    getLocation().then(async (res) => {
+      if (res) {
+        // const {latitude, longitude} = res;
+        AsyncStorage.setItem("ToktokMallUserCoords", JSON.stringify(res))
+      }
+    });
+  }, [])
 
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>

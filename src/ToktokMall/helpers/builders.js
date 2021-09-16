@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage';
 
-export const BuildPostCheckoutBody = async ({walletRequest, pin, items, addressData, grandTotal, paymentMethod, vouchers}) => {
+export const BuildPostCheckoutBody = async ({walletRequest, pin, items, addressData, shippingRates, grandTotal, paymentMethod, vouchers}) => {
 
 	let rawsession = await AsyncStorage.getItem("ToktokMallUser")
 	let session = JSON.parse(rawsession)
@@ -21,7 +21,7 @@ export const BuildPostCheckoutBody = async ({walletRequest, pin, items, addressD
 			total_amount: parseFloat(grandTotal),
 			srp_totalamount: parseFloat(grandTotal),
 			order_type: 2,
-			order_logs: BuildOrderLogsList({data: items, shipping: addressData.shippingSummary}),
+			order_logs: BuildOrderLogsList({data: items, shipping: addressData.shippingSummary, shippingRates}),
 			//Optional values
 			user_id: session.userId,
 			notes: "This is a test order from mobile",
@@ -29,6 +29,7 @@ export const BuildPostCheckoutBody = async ({walletRequest, pin, items, addressD
 			longitude: "",
 			postalcode: "",
 			account_type: 0,
+			disrate: [],
 			vouchers: vouchers,
 			referral_code: "",
 			referral_account_type: "",
@@ -41,7 +42,7 @@ export const BuildPostCheckoutBody = async ({walletRequest, pin, items, addressD
 	
 }
 
-export const BuildOrderLogsList = ({data, shipping}) => {
+export const BuildOrderLogsList = ({data, shipping, shippingRates}) => {
 
 	let logs = []
 	data.map((val, index) => {
@@ -66,6 +67,8 @@ export const BuildOrderLogsList = ({data, shipping}) => {
 			sys_shop: val.store_id,
 			branchid: 0,
 			delivery_amount: shipping.rateAmount,
+			hash: shippingRates[index].hash,
+			hash_delivery_amount: shippingRates[index].price,
 			daystoship: shipping.fromDay,
 			daystoship_to: shipping.toDay,
 			items: items

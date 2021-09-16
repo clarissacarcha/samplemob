@@ -25,7 +25,7 @@ const testData = [
   }
 ]
 
-export const Shops = ({raw, shipping, retrieve}) => {
+export const Shops = ({raw, shipping, shippingRates, retrieve}) => {
 
   const [data, setData] = useState(raw || [])
   const [voucherIsValid, setVoucherIsValid] = useState(0)
@@ -203,7 +203,7 @@ export const Shops = ({raw, shipping, retrieve}) => {
             {renderItems(item.cart)}
           </View>
           <View style={styles.deliveryfeeContainer}>
-            <Text>Delivery Fee: {FormatToText.currency(shipping?.rateAmount || 0)}</Text>
+            <Text>Delivery Fee: {FormatToText.currency(shippingRates[i]?.price || 0)}</Text>
             <Text>Order total ({item.cart.length} {item.cart.length > 1 ? `items` : 'item'}): {computeTotal(item.cart)} </Text>
             <Text style = {{marginTop: 7, color: '#929191'}}>Receive by: {shipping?.deliveryDate || "Add address to calculate"} </Text>
           </View>

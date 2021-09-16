@@ -17,7 +17,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Toast from "react-native-simple-toast";
 import axios from "axios";
 import {AlertModal} from '../../../Components/Widgets'
-import {ApiCall, PaypandaApiCall, BuildPostCheckoutBody, BuildTransactionPayload, WalletApiCall} from "../../../helpers"
+import {ApiCall, ShippingApiCall, BuildPostCheckoutBody, BuildTransactionPayload, WalletApiCall} from "../../../helpers"
 
 const REAL_WIDTH = Dimensions.get('window').width;
 
@@ -109,6 +109,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
   const [alertModal, setAlertModal] =useState(false)
   const [movedScreens, setMovedScreens] = useState(false)
   const [currentBalance, setCurrentBalance] = useState(100000)
+  const [shippingRates, setShippingRates] = useState([])
+  const [initialLoading, setInitialLoading] = useState(false)
 
   const setAlertTrue = () => {
     setAlertModal(true)
@@ -118,148 +120,55 @@ const Component = ({route, navigation, createMyCartSession}) => {
   const [getCheckoutData, {error, loading}] = useLazyQuery(GET_CHECKOUT_DATA, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',    
-    onCompleted: (response) => {
+    onCompleted: async (response) => {
       if(response.getCheckoutData){
-        console.log(response.getCheckoutData.address)
-        console.log(userDefaultAddress)
+        // console.log(response.getCheckoutData.address)
+        // console.log(userDefaultAddress)
+        // console.log("Shipping Rates", response.getCheckoutData.shippingRates)
+        
         // setAddressData(response.getCheckoutData.address);
-        setPaymentList(response.getCheckoutData.paymentMethods);
+        await setPaymentList(response.getCheckoutData.paymentMethods)
+        await getShippingRates(response.getCheckoutData.shippingRates)
       }
     },
     onError: (err) => {
       console.log(err)
+      setInitialLoading(false)
+      Toast.show("Something went wrong")
     }
   })
 
-  const [postCheckout, {error2, loading2}] = useMutation(POST_CHECKOUT, {
-    client: TOKTOK_MALL_GRAPHQL_CLIENT,
-    variables: {
-      input: postCheckoutBody
-    },
-    onCompleted: (response) => {
-      console.log("Checkout result", response)
-      if(response.postCheckout){
-        if(response.postCheckout.success == 1){
-          alert(response.postCheckout.message)
+  const getShippingRates = async (rates) => {
+
+    if(rates && rates.length > 0){
+
+      for (const shippingrate of rates) {
+        const res = await ShippingApiCall("get_shipping", shippingrate)
+        if(res.responseData && res.responseData.success == 1){
+          let tempArr = shippingRates
+          let {price, hash_price, hash} = res.responseData
+          tempArr = tempArr.concat({price, hash_price, hash})
+          setShippingRates(tempArr)
+        }else if(res.responseError){
+          let contents = JSON.parse(res.responseError.message)
+          console.log(contents.errors)
+          if(contents.errors.length > 0){
+            for (const err of contents.errors) {
+              Alert.alert("Shipping\n", err.message)
+            }
+          }
         }
       }
-    },
-    onError: (err) => {
-      console.log(err)
-    }
-  })
+      setInitialLoading(false)
+    }else{
+      setInitialLoading(false)
+    }    
+  }
 
   const UpdateCart = async () => {
     // let stringyfiedArr = JSON.stringify(newCartData)
     // await AsyncStorage.setItem('MyCart', stringyfiedArr)
     createMyCartSession("set", newCartData)
-  }
-
-  const postCheckoutSettingx = async () => {
-
-    setIsLoading(true)
-
-    //populate the postCheckoutBody basic data
-    postCheckoutBody.name = addressData.receiverName
-    postCheckoutBody.contactnumber = addressData.receiverContact
-    postCheckoutBody.address = addressData.address
-    postCheckoutBody.regCode = addressData.regionId
-
-    //pangasinan
-    if(addressData.provinceId == "0"){
-      postCheckoutBody.provCode = "0155"
-    }else{
-      postCheckoutBody.provCode = addressData.provinceId
-    }
-    postCheckoutBody.citymunCode = addressData.municipalityId
-    postCheckoutBody.total_amount = parseFloat(grandTotal)
-    postCheckoutBody.srp_totalamount = parseFloat(grandTotal)
-    postCheckoutBody.payment_method = payment
-    // postCheckoutBody.vouchers = []
-    postCheckoutBody.order_logs = []
-
-    //build order log list
-    paramsData.map((val, index) => {
-
-      let items = []
-      if(val.cart.length == 0 || val.cart == undefined) return
-      val.cart.map((item, i) => {
-        let total = parseFloat(item.price) * item.qty
-        items.push({
-          sys_shop: item.store_id,
-          product_id: item.item_id,
-          quantity: item.qty,
-          amount: parseFloat(item.price),
-          srp_amount: parseFloat(item.price),
-          srp_totalamount: total,
-          total_amount: total,
-          order_type: 2
-        })
-      })
-
-      postCheckoutBody.order_logs.push({
-        sys_shop: val.store_id,
-        branchid: 0,
-        delivery_amount: addressData.shippingSummary.rateAmount,
-        daystoship: addressData.shippingSummary.fromDay,
-        daystoship_to: addressData.shippingSummary.toDay,
-        items: items
-      })
-
-    })
-
-    AsyncStorage.getItem("ToktokMallUser").then(async (raw) => {
-      let data = JSON.parse(raw) || {}
-      if(data.userId){
-
-        postCheckoutBody.user_id = data.userId
-        postCheckoutBody.email = data.email
-        
-        let formData = new FormData()
-        formData.append("signature", data.appSignature)
-        formData.append("data", JSON.stringify(postCheckoutBody))
-
-        console.log("PostCheckoutBody", JSON.stringify(postCheckoutBody))
-
-        await axios.post(
-          `http://ec2-18-176-178-106.ap-northeast-1.compute.amazonaws.com/toktokmall/checkout`,
-          formData).then((response) => {
-      
-            if(response.data && response.data.success == 1){
-              
-              if(route?.params?.type == "from_cart"){
-                UpdateCart()      
-              }
-
-              setIsVisible(true)
-              setIsLoading(false)
-
-            }else if(response.data && response.data.success == 0){
-
-              setIsLoading(false)
-              Toast.show(response.data.message, Toast.LONG)
-              
-            }else{              
-
-              Toast.show("Something went wrong")
-              console.log("Response", response)
-              setIsLoading(false)
-            
-            }
-
-            console.log("Response", response)
-
-          }).catch((error) => {
-            console.log(error)
-            Toast.show("Something went wrong")
-            setIsLoading(false)
-        })
-
-      }
-    })
-
-    // await postCheckout()
-
   }
 
   const postCheckoutSetting = async () => {    
@@ -289,6 +198,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
           addressData: userDefaultAddress, 
           grandTotal: grandTotal, 
           vouchers: voucher,
+          shippingRates: shippingRates,
           paymentMethod: payment
         })
 
@@ -329,45 +239,9 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
       setIsLoading(false)
 
-      
-
-      
-  
-      
-
     }
 
-
-    
     return
-
-        
-
-    // console.log(checkoutBody, voucher)
-    // setIsLoading(false)
-    // return
-
-    // const req = await ApiCall("checkout", checkoutBody, true)
-
-    // if(req.responseData && req.responseData.success == 1){
-
-    //   if(route?.params?.type == "from_cart"){
-    //     UpdateCart()
-    //   }
-
-    //   setIsVisible(true)
-    //   setIsLoading(false)
-
-    // }else if(req.responseError && req.responseError.success == 0){
-    //   Toast.show(req.responseError.message, Toast.LONG)
-    // }else if(req.responseError){
-    //   Toast.show("Something went wrong", Toast.LONG)
-    // }else if(req.responseError == null && req.responseData == null){
-    //   Toast.show("Something went wrong", Toast.LONG)
-    // }
-
-    // console.log(req)
-    // setIsLoading(false)
 
   }
 
@@ -378,18 +252,39 @@ const Component = ({route, navigation, createMyCartSession}) => {
   }
 
   const init = async () => {
-    AsyncStorage.getItem("ToktokMallUser").then((raw) => {
-      let data = JSON.parse(raw) || {}
-      if(data.userId){
-        console.log(data.userId)
+    
+    const savedUser = await AsyncStorage.getItem("ToktokMallUser")
+    const savedUserLocation = await AsyncStorage.getItem("ToktokMallUserCoords")
 
-        //FOR TESTING
-        // getCheckoutData({variables: {input: {userId: 1024}}})
+    const userData = JSON.parse(savedUser) || {}
+    const userLocation = JSON.parse(savedUserLocation) || {}
 
-        getCheckoutData({variables: {input: {userId: data.userId}}})
+    if(userData.userId){
+      if(userLocation){
+        
+        const shops = route.params.data.map((a) => a.store_id)
+        console.log(userLocation)
+        console.log(route.params.data.map((a) => a.store_id))
+
+        setInitialLoading(true)
+        getCheckoutData({
+          variables: {
+            input: {
+              userId: userData.userId,
+              shops: shops,
+              customerLon: userLocation.longitude,
+              customerLat: userLocation.latitude,
+
+              //High Street South Taguig Metro Manila
+              // customerLat: 14.5463442,
+              // customerLon: 121.0501614
+            }
+          }
+        })
 
       }
-    })
+    }
+
   }
 
   useFocusEffect(
@@ -404,10 +299,13 @@ const Component = ({route, navigation, createMyCartSession}) => {
   )
     
   useEffect(() => {
-    // init()
-
-    console.log("Parent Session", parentSession)
+    init()
+    // console.log("Parent Session", parentSession)
   },[])
+
+  useEffect(() => {
+    console.log("Shipping Rates Value:", shippingRates)
+  }, [shippingRates])
 
   // useEffect(() => {
   //   if(movedScreens){
@@ -415,7 +313,6 @@ const Component = ({route, navigation, createMyCartSession}) => {
   //     removeBackHandler.remove()
   //   }
   // }, [movedScreens])
-
 
   useEffect(() => {
     let a = 0;
@@ -437,10 +334,10 @@ const Component = ({route, navigation, createMyCartSession}) => {
   }, [route.params])
 
   useEffect(() => {
-    console.log(grandTotal)
+    // console.log(grandTotal)
   }, [grandTotal])
 
-  if(loading) {
+  if(loading || initialLoading) {
     return <Loading state={loading} />
   }
 
@@ -474,7 +371,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
           />
           <Shops 
             raw={paramsData}
-            shipping={userDefaultAddress?.shippingSummary}            
+            shipping={userDefaultAddress?.shippingSummary}      
+            shippingRates={shippingRates}      
           />
           {/* <Vouchers 
             items={paramsData}
@@ -500,6 +398,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
           <Totals 
             raw={paramsData}
             shipping={userDefaultAddress?.shippingSummary}
+            shippingRates={shippingRates}
           />
         </View>
       </ScrollView>
@@ -509,10 +408,11 @@ const Component = ({route, navigation, createMyCartSession}) => {
           loading={isLoading}
           total={grandTotal}
           shipping={userDefaultAddress}
+          shippingRates={shippingRates}
           onPress={async () => {
             if(!isLoading){
               await postCheckoutSetting()              
-            }            
+            }      
           }} 
         />
       </View>

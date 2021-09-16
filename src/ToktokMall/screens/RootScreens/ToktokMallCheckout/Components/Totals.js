@@ -15,7 +15,7 @@ const testData = [
   }
 ]
 
-export const Totals = ({raw, shipping}) => {
+export const Totals = ({raw, shipping, shippingRates}) => {
 
   const [data, setData] = useState(raw || [])
 
@@ -30,6 +30,16 @@ export const Totals = ({raw, shipping}) => {
     let total = 0
     for (let i = 0; i < data.length; i++){
       total = total + parseFloat(shipping?.rateAmount)
+    }
+    shippingFeeTotal = total
+    if(!total) return FormatToText.currency(0)
+    else return FormatToText.currency(total)
+  }
+
+  const computeShippingRates = () => {
+    let total = 0
+    for (let i = 0; i < shippingRates.length; i++){
+      total = total + parseFloat(shippingRates[i].price)
     }
     shippingFeeTotal = total
     if(!total) return FormatToText.currency(0)
@@ -56,7 +66,7 @@ export const Totals = ({raw, shipping}) => {
         </View>
         <View style = {styles.textContainer}>
           <Text>Shipping Fee:</Text>
-          <Text>{computeShippingFee()}</Text>
+          <Text>{computeShippingRates()}</Text>
         </View>
         <View style = {styles.textContainer}>
           <Text style = {{fontWeight: 'bold'}}>Total Payment:</Text>

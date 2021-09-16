@@ -73,6 +73,46 @@ export const ApiCall = async (endpoint, body, debug = false) => {
 	}
 }
 
+export const ShippingApiCall = async (endpoint, body, debug = false) => {	
+
+	let responseData = null
+	let responseError = null
+
+  try{
+
+		let formData = new FormData()
+
+		Object.keys(body).map((key, index) => {
+			formData.append(key, Object.values(body)[index])
+		})
+
+		console.log(formData)
+
+		await axios.post(`${api_url[env]}${endpoint}`, formData).then((response) => {
+			if(debug){
+				console.log("Response data", response.data)
+			}
+			if(response.data.success == 1){
+				responseData = response.data
+			}else{
+				responseError = response.data
+			}
+		}).catch((error) => {
+			if(debug){
+				console.log(error)
+			}
+		})
+
+		return {
+			responseData,
+			responseError
+		}
+
+	}catch(error){
+		console.log(error)
+	}
+}
+
 export const WalletApiCall = async (endpoint, body, debug = false) => {	
 
 	let responseData = null
@@ -174,36 +214,4 @@ export const PaypandaApiCall = async ({data, addressData}) => {
 	}catch(error){
 		console.log(error)
 	}
-}
-
-export const ToktokWalletRawApiCall = async (session, input) => {
-
-	let token = await AsyncStorage.getItem("toktokWalletEnterpriseToken")
-	console.log(token)
-
-	return
-
-	const data = await axios({
-		url: "https://dev.toktok.ph:2087/enterprise/graphql",
-		method: 'post',
-		headers: {
-			'Content-Type': 'application/json',
-			'Authorization': `Bearer ${session.accessToken}`
-		},
-		data: {
-			query: `
-				mutation postVerifyRequestTakeMoney($input: $postVerifyRequestTakeMoneyInput) {
-					postVerifyRequestTakeMoney(input: $input){
-						requestTakeMoneyId
-						OTP
-						TPIN
-					}
-				}
-			`,
-			variables: input
-		}
-	});
-
-	return data
-
 }

@@ -22,13 +22,22 @@ import {TOKTOK_MALL_GRAPHQL_CLIENT} from '../../../../../graphql';
 import {GET_CUSTOMER_ADDRESSES} from '../../../../../graphql/toktokmall/model';
 import {Loading} from '../../../../Components';
 import AsyncStorage from '@react-native-community/async-storage';
+import { GeolocationUtility } from '../../../../util';
 
 const Component = ({route, navigation, reduxStates: {user_address, defaultAddress}, reduxActions: {updateUserAddress, setDefaultUserAddress}}) => {
   const [data, setData] = useState([]);
   const [defaultId, setDefaultID] = useState(0);
 
   navigation.setOptions({
-    headerLeft: () => <HeaderBack />,
+    headerLeft: () => <HeaderBack onBack={() => {
+      
+      if(route.params?.onGoBack){
+        route.params?.onGoBack()
+      }
+
+      navigation.goBack()
+
+    }} />,
     headerTitle: () => <HeaderTitle label={['Address', '']} />,
     headerRight: () => <HeaderRight hidden={true} />,
   });
@@ -67,17 +76,23 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
 
   const renderAddresses = () => {
     return user_address.map((item) => {
-      console.log(item.fullAddress)
+      // console.log(item.fullAddress)
       return (
         <TouchableOpacity
           style={styles.addressContainer}
           onLongPress={() => {
             navigation.navigate('ToktokMallAddressesForm', {item, update: true});
           }}
-          onPress={() => {
+          onPress={async () => {
             console.log(item)
             updateUserAddress("changeDefault", item.id);
             setDefaultUserAddress("set", item);
+
+            const coords = await GeolocationUtility.getCoordinatesFromAddress(`${item.fullAddress} Philippines`)
+            if(coords){
+              AsyncStorage.setItem("ToktokMallUserCoords", JSON.stringify(coords))
+            }
+
           }}>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <Text style={styles.addressfullName}>{item.receiverName}</Text>

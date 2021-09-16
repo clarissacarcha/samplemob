@@ -29,6 +29,15 @@ export const GET_CHECKOUT_DATA = gql`
 				paycode
 				description
 			}
+			shippingRates {
+				signature
+      	date_today
+      	shopid
+      	des_lat
+      	des_lng
+      	origin_lat
+      	origin_lng
+			}
     }
   }
 `
