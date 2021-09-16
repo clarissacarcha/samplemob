@@ -68,7 +68,7 @@ const StickyView = () => {
   const [refreshing, setRefreshing] = useState(false);
   let variableInput = {
     limit: 10,
-    radius: 1000,
+    radius: 5,
     userLongitude: location?.longitude,
     userLatitude: location?.latitude 
   }
@@ -81,6 +81,9 @@ const StickyView = () => {
         page: 0,
         ...variableInput
       }
+    },
+    onError: () => {
+      setRefreshing(false)
     },
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only'

@@ -31,7 +31,7 @@ const MainComponent = () => {
 
   const {Id, selectedAddons, selectedPrice, selectedQty, selectedNotes} = routes.params;
   const {price} = useSelector((state) => state.toktokFood.totalAmount);
-  const {totalPrice, setTotalPrice, setSelected, productDetails, setProductDetails, setCount} = useContext(VerifyContext);
+  const {totalPrice, setTotalPrice, setSelected, productDetails, setProductDetails, setCount, setNotes} = useContext(VerifyContext);
   const [bannerLoaded, setBannerLoaded] = useState(false);
 
   const [getProductDetails, {data, loading, error}] = useLazyQuery(GET_PRODUCT_DETAILS, {

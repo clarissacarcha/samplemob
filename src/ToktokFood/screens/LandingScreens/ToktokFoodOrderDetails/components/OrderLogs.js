@@ -76,7 +76,7 @@ const OrderFee = ({ status = 2, transaction }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.deliverLogs}>Delivery Logs</Text>
+      <Text style={styles.deliverLogs}>Order Logs</Text>
       {displayComponent()}
     </View>
   );

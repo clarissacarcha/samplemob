@@ -62,3 +62,10 @@ export const GET_PRODUCT_DETAILS = gql`
     }
   }
 `;
+export const GET_SEARCH_PRODUCTS_BY_SHOP = gql`
+  query getSearchProductsByShop($input: GetSearchProductByShopInput) {
+    getSearchProductsByShop(input: $input) {
+      ${products}
+    }
+  }
+`;
