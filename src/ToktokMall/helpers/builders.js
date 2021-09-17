@@ -66,9 +66,10 @@ export const BuildOrderLogsList = ({data, shipping, shippingRates}) => {
 		logs.push({
 			sys_shop: val.store_id,
 			branchid: 0,
-			delivery_amount: shipping.rateAmount,
+			// delivery_amount: shipping.rateAmount,
+			delivery_amount: parseFloat(shippingRates[index].price),
 			hash: shippingRates[index].hash,
-			hash_delivery_amount: shippingRates[index].price,
+			hash_delivery_amount: shippingRates[index].hash_price,
 			daystoship: shipping.fromDay,
 			daystoship_to: shipping.toDay,
 			items: items

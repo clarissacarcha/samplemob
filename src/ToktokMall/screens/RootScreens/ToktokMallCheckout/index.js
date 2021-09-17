@@ -254,17 +254,16 @@ const Component = ({route, navigation, createMyCartSession}) => {
   const init = async () => {
     
     const savedUser = await AsyncStorage.getItem("ToktokMallUser")
-    const savedUserLocation = await AsyncStorage.getItem("ToktokMallUserCoords")
 
     const userData = JSON.parse(savedUser) || {}
-    const userLocation = JSON.parse(savedUserLocation) || {}
 
     if(userData.userId){
-      if(userLocation){
+      if(userDefaultAddress){
         
         const shops = route.params.data.map((a) => a.store_id)
-        console.log(userLocation)
-        console.log(route.params.data.map((a) => a.store_id))
+        // console.log(route.params.data.map((a) => a.store_id))
+
+        console.log("Lat", userDefaultAddress.latitude)
 
         setInitialLoading(true)
         getCheckoutData({
@@ -272,8 +271,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
             input: {
               userId: userData.userId,
               shops: shops,
-              customerLon: userLocation.longitude,
-              customerLat: userLocation.latitude,
+              customerLon: parseFloat(userDefaultAddress.longitude),
+              customerLat: parseFloat(userDefaultAddress.latitude),
 
               //High Street South Taguig Metro Manila
               // customerLat: 14.5463442,
@@ -322,10 +321,15 @@ const Component = ({route, navigation, createMyCartSession}) => {
         let item = route.params.data[x].cart[y];
         a += parseFloat(item.price) * item.qty;
       }
-      a += parseFloat(userDefaultAddress?.shippingSummary?.rateAmount)
+      let shipping = 0
+      for(var z=0;z<shippingRates.length;z++){
+        shipping += parseFloat(shippingRates[z].price)
+      }
+      a += shipping
+      // a += parseFloat(userDefaultAddress?.shippingSummary?.rateAmount)
     }
     setGrandTotal(a)
-  }, [userDefaultAddress])
+  }, [userDefaultAddress, shippingRates])
 
   useEffect(() => {
     setParamsData(route?.params?.data)

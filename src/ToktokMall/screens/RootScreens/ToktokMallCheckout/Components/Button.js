@@ -26,14 +26,16 @@ export const Button = ({enabled, loading, shipping, shippingRates, total, onPres
   }
 
   const isDisabled = () => {
+
     // if(!total) return true
     // else if(total > 0) return false
     // else if(loading) return true
     // else if(!loading) return false
     // else if(!shipping) return false
-    // else if(shippingRates.length == 0) return false
+    // else if(shippingRates.length == 0) return true
+    // else if(shippingRates.length > 0) return false
 
-    if(total > 0 && !loading && !shipping && shippingRates.length > 0) return false
+    if(total > 0 && !loading && shipping && shippingRates.length > 0) return false
     else return true
   }
     

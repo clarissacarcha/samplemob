@@ -14,7 +14,7 @@ import {
   Switch,
 } from 'react-native';
 import {HeaderBack, HeaderTitle, HeaderRight, LoadingOverlay} from '../../../../Components';
-import {CityAddressModal, CityAddressModalAndroid, AddressModal} from './Components';
+import {AddressFinderModal, CityAddressModal, CityAddressModalAndroid, AddressModal} from './Components';
 import Toast from 'react-native-simple-toast';
 import ToggleSwitch from 'toggle-switch-react-native';
 import CustomIcon from '../../../../Components/Icons';
@@ -51,10 +51,13 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefa
   const [provCode, setProvCode] = useState(0);
   const [munCode, setMunCode] = useState(0);
   const [regCode, setRegCode] = useState(0);
+  const [longitude, setLongitude] = useState(0)
+  const [latitude, setLatitude] = useState(0)
   const [validation, setValidation] = useStateCallback({
     validated: false,
     errors: [],
   });
+  const [addressFinderModal, setAddressFinderModal] = useState(false)
 
   const onChangeText = (name, value) => {
     setNewAddressForm((prevState) => ({
@@ -158,9 +161,12 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefa
           municipality_id: parseInt(munCode),
           landmark: newAddressForm.landMark,
           postal_code: newAddressForm.postalCode,
+          latitude: parseFloat(latitude),
+          longitude: parseFloat(longitude),
           default: clicked == true ? 1 : 0,
         };
 
+        console.log(body)
         let formData = new FormData();
         formData.append('signature', data.appSignature);
         formData.append('data', JSON.stringify(body));
@@ -313,6 +319,16 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefa
         city={city}
         setCity={(data) => onSelectCity(data)}
       />} */}
+      <AddressFinderModal
+        isVisible={addressFinderModal}
+        setVisible={setAddressFinderModal}
+        setLocation={(data) => {
+          onChangeText('address', data.name)
+          console.log(data.geometry.location)
+          setLatitude(parseFloat(data.geometry.location.lat))
+          setLongitude(parseFloat(data.geometry.location.lng))
+        }}
+      />
       <CityAddressModalAndroid
         isVisible={modalProvinceVisible}
         setVisible={setModalProvinceVisible}
@@ -346,17 +362,38 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefa
               }}
             />
           </View>
-          <View style={styles.textinputContainer}>
+          {/* <View style={styles.textinputContainer}>
             <TextInput
               style={styles.textinput}
               placeholder={'Address(House #, Street, Village)'}
               value={newAddressForm.address}
               placeholderTextColor={validation.validated && validation.errors?.includes('address') ? 'red' : 'gray'}
-              onChangeText={(text) => {
-                onChangeText('address', text);
+              // onChangeText={(text) => {
+              //   onChangeText('address', text);
+              // }}
+              onFocus={() => {
+                setAddressFinderModal(true)
               }}
             />
-          </View>
+          </View> */}
+          <TouchableOpacity
+            onPress={() => {
+              setAddressFinderModal(true);
+            }}>
+            <View style={styles.textinputContainerRow}>
+              <Text
+                style={[
+                  styles.text,
+                  {
+                    color: validation.validated && validation.errors?.includes('address') ? 'red' : 'gray',
+                    textTransform: 'capitalize'
+                  },
+                ]}>
+                {!newAddressForm.address ? "Address(House #, Street, Village)" : newAddressForm.address}
+              </Text>
+              {/* <CustomIcon.EIcon name={'chevron-down'} size={20} color={'#9E9E9E'} /> */}
+            </View>
+          </TouchableOpacity>
           {/* <DropDownPicker
             containerStyle={styles.dropdownpicker}
             style={styles.dropdownpickerStyle}
@@ -535,7 +572,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   buttonText: {color: 'white', fontSize: 14},
-  text: {color: '#9E9E9E', marginLeft: 10},
+  text: {color: '#9E9E9E', marginLeft: 5},
   textinputContainerRow: {
     backgroundColor: '#F8F8F8',
     marginTop: 10,

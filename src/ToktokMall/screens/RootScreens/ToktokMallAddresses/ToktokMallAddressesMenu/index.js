@@ -88,10 +88,11 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
             updateUserAddress("changeDefault", item.id);
             setDefaultUserAddress("set", item);
 
-            const coords = await GeolocationUtility.getCoordinatesFromAddress(`${item.fullAddress} Philippines`)
-            if(coords){
-              AsyncStorage.setItem("ToktokMallUserCoords", JSON.stringify(coords))
-            }
+            console.log(item)
+            // const coords = await GeolocationUtility.getCoordinatesFromAddress(`${item.fullAddress} Philippines`)
+            // if(coords){
+            //   AsyncStorage.setItem("ToktokMallUserCoords", JSON.stringify(coords))
+            // }
 
           }}>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>

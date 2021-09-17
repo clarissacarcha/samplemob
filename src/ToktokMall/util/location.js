@@ -33,7 +33,7 @@ export class GeolocationUtility {
   // Get coordinates and formatted address
   static getCurrentAddress = () => {};
 
-  static getCoordinatesFromAddress = async (address) => {
+  static getCoordinatesFromAddress = async (address, filtered = true) => {
 
     var config = {
       method: 'get',
@@ -43,14 +43,27 @@ export class GeolocationUtility {
     
     axios(config)
     .then( (response) => {
-      if(response.data.status == "OK"){
-        if(response.data.candidates.length > 0){
-          let data = response.data.candidates[0]
-          return data.geometry.location
+
+      console.log(response.data)
+
+      if(filtered){
+        if(response.data.status == "OK"){
+          if(response.data.candidates.length > 0){
+            let data = response.data.candidates[0]
+            return data.geometry.location
+          }else{
+            return null
+          }
+        }
+      }else{
+        console.log('pasok')
+        if(response.data.status == "OK"){
+          return response.data.candidates
         }else{
-          return null
+          return []
         }
       }
+      
     })
     .catch( (error) => {
       console.log(error);
