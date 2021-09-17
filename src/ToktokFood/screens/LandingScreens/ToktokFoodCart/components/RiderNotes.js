@@ -1,12 +1,7 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import {View, Text, TouchableOpacity, TextInput} from 'react-native';
-
-import {verticalScale} from 'toktokfood/helper/scale';
-
-import {COLOR} from 'res/variables';
-
+import { Text, TouchableOpacity, View } from 'react-native';
 import styles from '../styles';
-import {useNavigation} from '@react-navigation/native';
 
 const RiderNotes = ({onNotesChange, notes = '', onPlaceOrder, showPlaceOrder = false}) => {
   const navigation = useNavigation();
@@ -18,7 +13,7 @@ const RiderNotes = ({onNotesChange, notes = '', onPlaceOrder, showPlaceOrder = f
   return (
     <>
       <View style={styles.sectionContainer}>
-        <View style={[styles.deliverWrapper, {paddingVertical: verticalScale(10)}]}>
+        {/* <View style={[styles.deliverWrapper, {paddingVertical: verticalScale(10)}]}>
           <Text style={styles.sectionTitle}>Note to Rider</Text>
         </View>
         <View>
@@ -31,7 +26,7 @@ const RiderNotes = ({onNotesChange, notes = '', onPlaceOrder, showPlaceOrder = f
             placeholderTextColor={COLOR.MEDIUM}
             onChangeText={(v) => onNotesChange(v)}
           />
-        </View>
+        </View> */}
         {showPlaceOrder && (
           <TouchableOpacity style={styles.placeOrderButton} onPress={() => onPlaceOrder()}>
             <Text style={styles.buttonText}>Place Order</Text>

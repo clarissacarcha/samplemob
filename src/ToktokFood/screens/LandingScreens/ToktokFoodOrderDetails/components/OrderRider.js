@@ -1,18 +1,14 @@
-import React, {useState, useEffect} from 'react';
-import {Image, Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import CustomStarRating from 'toktokfood/components/CustomStarRating';
-import RatingModal from 'toktokfood/components/RatingModal';
-
+import React, { useEffect, useState } from 'react';
+import { Image, Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 // Fonts/Colors
-import {COLORS} from 'res/constants';
-import {FONT_SIZE} from 'res/variables';
-import { checkRiderDetails } from 'toktokfood/helper/ShowRiderDetails';
-
+import { COLORS } from 'res/constants';
+import { FONT_SIZE } from 'res/variables';
 // Images
-import {chat, phoneBlack, rider1, star} from 'toktokfood/assets/images';
-
+import { chat, phoneBlack } from 'toktokfood/assets/images';
+import RatingModal from 'toktokfood/components/RatingModal';
 // Utils
-import {moderateScale, verticalScale, scale} from 'toktokfood/helper/scale';
+import { moderateScale, verticalScale } from 'toktokfood/helper/scale';
+import { checkRiderDetails } from 'toktokfood/helper/ShowRiderDetails';
 
 const OrderRider = ({ riderDetails, transaction }) => {
   const { user, vehicle } = riderDetails;

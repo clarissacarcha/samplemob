@@ -21,7 +21,7 @@ import {
   VerifyContext,
 } from './components';
 
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import CheckOutOrderHelper from 'toktokfood/helper/CheckOutOrderHelper';
@@ -44,7 +44,6 @@ const MainComponent = () => {
   const navigation = useNavigation();
   const nowDate = moment().format('YYYY-DD-YYYY');
 
-  const {amount, cart} = route.params;
   const {location, customerInfo, shopLocation} = useSelector((state) => state.toktokFood);
   const {totalAmount, tempCart} = useContext(VerifyContext);
 
