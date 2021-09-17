@@ -11,6 +11,7 @@ import useAsyncStorage from '../../../../../helpers/useAsyncStorage';
 import { SwipeReloader } from '../../../../../Components';
 import { Platform } from 'react-native';
 import { GeolocationUtility } from '../../../../../util';
+import { debounce } from 'lodash';
 import axios from 'axios';
 
 export const AddressFinderModal = ({type, onSelect, isVisible, setVisible, setLocation}) => {
@@ -86,8 +87,7 @@ export const AddressFinderModal = ({type, onSelect, isVisible, setVisible, setLo
           <TextInput 
             placeholder="Address(House #, Street, Village)"
             style={styles.input}
-            onChangeText={(val) => setSearchValue(val)}
-						onSubmitEditing={() => googleApiSearch(searchValue)}
+            onChangeText={debounce((val) => googleApiSearch(val))}
           />
           <FIcon style={{alignSelf: "center",position:"absolute", right: 25}} name={'search'} size={24}/>
         </View>
