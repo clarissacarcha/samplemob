@@ -9,7 +9,7 @@ import {
 import Spinner from 'react-native-spinkit';
 
 
-export const LoadingOverlay = ({isVisible}) => {
+export const LoadingOverlay = ({isVisible, label = "Loading"}) => {
   return (
     <Modal animationType="fade" transparent={true} visible={isVisible}>
       <View style={styles.transparent}>
@@ -37,7 +37,7 @@ export const LoadingOverlay = ({isVisible}) => {
                   //   Platform.OS === 'ios' ? fontRegularIOS : fontRegular,
                 }
               }>
-              Loading
+              {label}
             </Text>
           </View>
         </View>

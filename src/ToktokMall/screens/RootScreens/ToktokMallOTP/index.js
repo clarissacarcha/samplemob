@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {View, Text, StyleSheet, Platform, ImageBackground, Dimensions, StatusBar, Image, TouchableOpacity, FlatList, TextInput, ScrollView} from 'react-native';
-import {HeaderBack, HeaderTitle, HeaderRight, Header} from '../../../Components';
+import {HeaderBack, HeaderTitle, HeaderRight, Header, LoadingOverlay} from '../../../Components';
 import {COLOR, FONT, FONT_SIZE} from '../../../../res/variables';
 import {otpicon, otpbg} from '../../../assets';
 import CustomIcon from '../../../Components/Icons';
@@ -27,14 +27,47 @@ export const ToktokMallOTP =  ({navigation, route}) => {
   const [value, setValue] = useState("")
   const [retries, setretries] = useState(1)
   const [isInvalid, setIsInvalid] = useState(false)
+  const [validating, setValidating] = useState(false)
+  const [processing, setProcessing] = useState(false)
 
-  const [validatePin, {error, loading}] = useMutation(POST_VERIFY_TOKTOKWALLET_PIN, {
-    client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT,
-    onCompleted: async (response) => {
-      console.log(response)
-    },
-    onError: (err) => console.log(err),
-  });
+  const ValidatePin = async () => {
+
+    let transactionType = route.params?.transaction || null
+    let body = {
+      request_money_id: route.params?.data?.request_id,
+      pin_type: route.params?.data?.pin_type,
+      pin: value
+    }
+
+    console.log(JSON.stringify(body))
+    
+    setProcessing(false)
+    setValidating(true)
+    const req = await WalletApiCall("verify_pin", body, true)
+    
+    if(req.responseData && req.responseData.success == 1){
+
+      setIsInvalid(false) 
+      setValidating(false)
+      if(transactionType && transactionType == "payment"){
+        await ProcessPayment()
+      }
+
+    }else if(req.responseError && req.responseError.success == 0){
+
+      // Toast.show(req.responseError.message, Toast.LONG)
+      setIsInvalid(true)           
+      setValue("")
+      setValidating(false)
+
+    }else if(req.responseError){
+      Toast.show("Something went wrong", Toast.LONG)
+      setValidating(false)
+    }else if(req.responseError == null && req.responseData == null){
+      Toast.show("Something went wrong", Toast.LONG)
+      setValidating(false)
+    }
+  }
 
   const ProcessPayment = async () => {
 
@@ -43,19 +76,25 @@ export const ToktokMallOTP =  ({navigation, route}) => {
 
     console.log("Checkout body", JSON.stringify(checkoutBody))
     
+    setValidating(false)
+    setProcessing(true)
     const req = await ApiCall("checkout", checkoutBody, true)
 
     if(req.responseData && req.responseData.success == 1){
 
+      setProcessing(false)
       route.params.onSuccess()
       navigation.pop()
 
     }else if(req.responseError && req.responseError.success == 0){
       Toast.show(req.responseError.message, Toast.LONG)
+      setProcessing(false)
     }else if(req.responseError){
       Toast.show("Something went wrong", Toast.LONG)
+      setProcessing(false)
     }else if(req.responseError == null && req.responseData == null){
       Toast.show("Something went wrong", Toast.LONG)
+      setProcessing(false)
     }
 
   }
@@ -70,6 +109,10 @@ export const ToktokMallOTP =  ({navigation, route}) => {
 
   return (
     <KeyboardAwareScrollView style={{backgroundColor: "#FFF"}}>
+
+      {validating && !processing && <LoadingOverlay label="Verifying" />}
+      {processing && !validating && <LoadingOverlay label="Processing" />}
+
       <ImageBackground 
         source={otpbg}
         style = {styles.container}
@@ -140,31 +183,7 @@ export const ToktokMallOTP =  ({navigation, route}) => {
           disabled={value.length != 6} 
           onPress={async () => {
 
-            let transactionType = route.params?.transaction || null
-            // let data = route.params?.data
-            // let input = {
-            //   requestTakeMoneyId: data.request_id,
-            //   OTP:  data.pin_type == "OTP" ? value : "",
-            //   TPIN:  data.pin_type == "TPIN" ? value : ""
-            // }
-
-            // console.log(input)
-
-            // validatePin({
-            //   variables: {
-            //     input: input
-            //   }
-            // })
-
-            if(value != "123456" || value != 123456){
-              setIsInvalid(true)              
-              setValue("")
-            }else{
-              setIsInvalid(false) 
-              if(transactionType && transactionType == "payment"){
-                await ProcessPayment()
-              }
-            }
+            await ValidatePin()
 
           }} 
           style={value && value.length == 6 ? styles.activeButton : styles.invalidButton}>
