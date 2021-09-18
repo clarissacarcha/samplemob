@@ -24,7 +24,7 @@ export const ProductCarousel = ({data, isOutOfStock, isLoading, setIsLoading, lo
   const renderItem = ({item, index}, parallaxProps) => {
 
     const getImage = () => {
-      if(typeof item == "object" && item?.filename) return {uri: item?.filename}
+      if(typeof item == "object" && item?.resized_520) return {uri: item?.resized_520}
       else return placeholder
     }
 
@@ -43,7 +43,7 @@ export const ProductCarousel = ({data, isOutOfStock, isLoading, setIsLoading, lo
             containerStyle={[styles.pxImageContainerStyle]}
             style={{
               ...StyleSheet.absoluteFillObject,
-              resizeMode: 'stretch'
+              resizeMode: 'contain'
             }}
             parallaxFactor={0.05}
             {...parallaxProps}

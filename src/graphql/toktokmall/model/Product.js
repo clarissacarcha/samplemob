@@ -143,10 +143,11 @@ export const GET_PRODUCT_DETAILS = gql`
     	noOfStocks
     	price
     	compareAtPrice
-		discountRate
+			discountRate
     	images {
       	arrangement
       	filename
+				resized_520
     	}
     	shop {
 			id
