@@ -126,7 +126,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
         // console.log(userDefaultAddress)
         // console.log("Shipping Rates", response.getCheckoutData.shippingRates)
         
-        // setAddressData(response.getCheckoutData.address);
+        setAddressData(response.getCheckoutData.address);
         await setPaymentList(response.getCheckoutData.paymentMethods)
         await getShippingRates(response.getCheckoutData.shippingRates)
       }
@@ -139,15 +139,14 @@ const Component = ({route, navigation, createMyCartSession}) => {
   })
 
   const getShippingRates = async (rates) => {
-
     if(rates && rates.length > 0){
-
       for (const shippingrate of rates) {
+        console.log("Shipping Rate", shippingrate)
         const res = await ShippingApiCall("get_shipping", shippingrate)
         if(res.responseData && res.responseData.success == 1){
           let tempArr = shippingRates
           let {price, hash_price, hash} = res.responseData
-          tempArr = tempArr.concat({price, hash_price, hash})
+          tempArr.push({price, hash_price, hash})
           setShippingRates(tempArr)
         }else if(res.responseError){
           let contents = JSON.parse(res.responseError.message)
@@ -158,6 +157,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
             }
           }
         }
+        calculateGrandTotal()
       }
       setInitialLoading(false)
     }else{
@@ -266,10 +266,12 @@ const Component = ({route, navigation, createMyCartSession}) => {
         console.log("Lat", userDefaultAddress.latitude)
 
         setInitialLoading(true)
+        setShippingRates([])
         getCheckoutData({
           variables: {
             input: {
               userId: userData.userId,
+              addressId: userDefaultAddress.id,
               shops: shops,
               customerLon: parseFloat(userDefaultAddress.longitude),
               customerLat: parseFloat(userDefaultAddress.latitude),
@@ -284,6 +286,30 @@ const Component = ({route, navigation, createMyCartSession}) => {
       }
     }
 
+  }
+
+  const calculateGrandTotal = () => {
+    let a = 0;
+    if(!userDefaultAddress) return
+    for (var x = 0; x < route.params.data.length; x++) {
+      for (var y = 0; y < route.params.data[x].cart.length; y++) {
+        let item = route.params.data[x].cart[y];
+        a += parseFloat(item.price) * item.qty;
+      }
+      // let shipping = 0
+      // for(var z=0;z<shippingRates.length;z++){
+      //   shipping += parseFloat(shippingRates[z].price)
+      // }
+      // a += shipping
+      // console.log(shippingRates, shipping)
+      // a += parseFloat(userDefaultAddress?.shippingSummary?.rateAmount)
+    }
+    let shipping = 0
+    for(var z=0;z<shippingRates.length;z++){
+      shipping += parseFloat(shippingRates[z].price)
+    }
+    a += shipping
+    setGrandTotal(a)
   }
 
   useFocusEffect(
@@ -303,7 +329,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
   },[])
 
   useEffect(() => {
-    console.log("Shipping Rates Value:", shippingRates)
+    console.log("Shipping Rates Value:", shippingRates.length)
   }, [shippingRates])
 
   // useEffect(() => {
@@ -314,21 +340,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
   // }, [movedScreens])
 
   useEffect(() => {
-    let a = 0;
-    if(!userDefaultAddress) return
-    for (var x = 0; x < route.params.data.length; x++) {
-      for (var y = 0; y < route.params.data[x].cart.length; y++) {
-        let item = route.params.data[x].cart[y];
-        a += parseFloat(item.price) * item.qty;
-      }
-      let shipping = 0
-      for(var z=0;z<shippingRates.length;z++){
-        shipping += parseFloat(shippingRates[z].price)
-      }
-      a += shipping
-      // a += parseFloat(userDefaultAddress?.shippingSummary?.rateAmount)
-    }
-    setGrandTotal(a)
+    calculateGrandTotal()
   }, [userDefaultAddress, shippingRates])
 
   useEffect(() => {
@@ -375,7 +387,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
           />
           <Shops 
             raw={paramsData}
-            shipping={userDefaultAddress?.shippingSummary}      
+            shipping={userDefaultAddress?.shippingSummary} 
             shippingRates={shippingRates}      
           />
           {/* <Vouchers 

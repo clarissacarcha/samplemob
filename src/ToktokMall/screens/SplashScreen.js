@@ -132,7 +132,7 @@ const Splash = ({
   const FetchAsyncStorageData = async () => {
 
     //CART
-    await AsyncStorage.getItem('MyCart').then((value) => {
+    await AsyncStorage.getItem('ToktokMallMyCart').then((value) => {
       // console.log('cart async storage',value)
       const parsedValue = JSON.parse(value)
       if(value != null){
@@ -143,7 +143,7 @@ const Splash = ({
     })
 
     //DEFAULT ADDRESS
-    await AsyncStorage.getItem('UserDefaultAddress').then((value) => {
+    await AsyncStorage.getItem('ToktokMallUserDefaultAddress').then((value) => {
       // console.log('Notifications async storage', value)
       const parsedValue = JSON.parse(value)
       if(value != null){
@@ -154,7 +154,7 @@ const Splash = ({
     })
 
     //NOTIFICATION
-    await AsyncStorage.getItem('Notifications').then((value) => {
+    await AsyncStorage.getItem('ToktokMallNotifications').then((value) => {
       // console.log('Notifications async storage', value)
       const parsedValue = JSON.parse(value)
       if(value != null){
@@ -165,7 +165,7 @@ const Splash = ({
     })
 
     //SEARCH HISTORY
-    await AsyncStorage.getItem('SearchHistory').then((value) => {
+    await AsyncStorage.getItem('ToktokMallSearchHistory').then((value) => {
       // console.log('Notifications async storage', value)
       const parsedValue = JSON.parse(value)
       if(value != null){

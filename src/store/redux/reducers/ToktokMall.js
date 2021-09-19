@@ -30,7 +30,7 @@ export default (state = INITIAL_STATE, action) => {
         newMyFollowing.splice(index, 1)
       }
 
-      AsyncStorage.setItem('TOKTOK_MY_FOLLOWING', JSON.stringify(newMyFollowing));
+      AsyncStorage.setItem('ToktokMallMyFollowing', JSON.stringify(newMyFollowing));
       return {...state, myFollowing: newMyFollowing};
     case 'TOKTOK_MY_FAVORITES':
       let newMyFavorites = state.myFavorites;
@@ -84,7 +84,7 @@ export default (state = INITIAL_STATE, action) => {
         newMyFavorites = action.payload;
       }
 
-      AsyncStorage.setItem('TOKTOK_MY_FAVORITES', JSON.stringify(newMyFavorites));
+      AsyncStorage.setItem('ToktokMallMyFavorites', JSON.stringify(newMyFavorites));
       return {...state, myFavorites: newMyFavorites};
     case 'TOKTOKMALL_USER_ADDRESS':
       let new_user_address = [];
@@ -113,13 +113,13 @@ export default (state = INITIAL_STATE, action) => {
       if (action.action === "remove") {
         new_user_address = state.user_address.filter((data) => (data.id !== action.payload));
       }
-      AsyncStorage.setItem('TOKTOKMALL_USER_ADDRESS', JSON.stringify(new_user_address));
+      AsyncStorage.setItem('ToktokMallUserAddresses', JSON.stringify(new_user_address));
       return {...state, user_address: new_user_address};
     case 'CREATE_MY_CART_SESSION':
       // let action = action.action
       if (action.action == 'set') {
         let stringyfiedPayload = JSON.stringify(action.payload);
-        AsyncStorage.setItem('MyCart', stringyfiedPayload);
+        AsyncStorage.setItem('ToktokMallMyCart', stringyfiedPayload);
         return {...state, myCart: action.payload};
       } else if (action.action == 'push') {
         // console.log(action.payload)
@@ -141,13 +141,13 @@ export default (state = INITIAL_STATE, action) => {
         myCartArr.push(action.payload)
         }
         let stringyfiedCart = JSON.stringify(myCartArr.reverse());
-        AsyncStorage.setItem('MyCart', stringyfiedCart);
+        AsyncStorage.setItem('ToktokMallMyCart', stringyfiedCart);
         return {...state, myCart: myCartArr};
       } else if (action.action == 'removeItems') {
         return {...state, myCart: action.payload};
       } else if (action.action == 'clearAll') {
         
-        AsyncStorage.setItem('MyCart', '[]');
+        AsyncStorage.setItem('ToktokMallMyCart', '[]');
         return {...state, myCart: []};
 
       } else if (action.action == 'DeleteMultiple') {
@@ -159,7 +159,7 @@ export default (state = INITIAL_STATE, action) => {
             myCartArr.splice(index, 1)
           }
         })
-        AsyncStorage.setItem('MyCart', JSON.stringify(myCartArr));
+        AsyncStorage.setItem('ToktokMallMyCart', JSON.stringify(myCartArr));
         return {...state, myCart: myCartArr};
 
       } else if (action.action == 'DeleteSingle') {
@@ -169,7 +169,7 @@ export default (state = INITIAL_STATE, action) => {
         if(index > -1){
           myCartArr.splice(index, 1)
         }
-        AsyncStorage.setItem('MyCart', JSON.stringify(myCartArr));
+        AsyncStorage.setItem('ToktokMallMyCart', JSON.stringify(myCartArr));
         return {...state, myCart: myCartArr};
 
       } else if (action.action == 'UpdateQuantity') {
@@ -179,20 +179,20 @@ export default (state = INITIAL_STATE, action) => {
         if(index > -1){
           myCartArr[index].qty = action.payload.qty
         }
-        AsyncStorage.setItem('MyCart', JSON.stringify(myCartArr));
+        AsyncStorage.setItem('ToktokMallMyCart', JSON.stringify(myCartArr));
         return {...state, myCart: myCartArr};
         
       }
     case 'CREATE_NOTIFICATIONS_SESSION':
       if (action.action == 'set') {
         let stringyfiedPayload = JSON.stringify(action.payload);
-        AsyncStorage.setItem('Notifications', stringyfiedPayload);
+        AsyncStorage.setItem('ToktokMallNotifications', stringyfiedPayload);
         return {...state, notifications: action.payload};
       } else if (action.action == 'push') {
         let notifArr = state.notifications;
         notifArr.push(action.payload);
         let stringyfiedNotifs = JSON.stringify(notifArr);
-        AsyncStorage.setItem('Notifications', stringyfiedNotifs);
+        AsyncStorage.setItem('ToktokMallNotifications', stringyfiedNotifs);
         return {...state, notifications: notifArr};
       } else if (action.action == 'read') {
         let notifArr = state.notifications;
@@ -201,13 +201,13 @@ export default (state = INITIAL_STATE, action) => {
         // notifArr[index].read = 1;
         notifArr.splice(0, 1)
         let stringyfiedNotifs = JSON.stringify(notifArr);
-        AsyncStorage.setItem('Notifications', stringyfiedNotifs);
+        AsyncStorage.setItem('ToktokMallNotifications', stringyfiedNotifs);
         return {...state, notifications: notifArr};
       }
     case 'CREATE_SEARCH_HISTORY_SESSION': 
       if(action.action == 'set') {
         let stringyfiedPayload = JSON.stringify(action.payload);
-        AsyncStorage.setItem('SearchHistory', stringyfiedPayload);
+        AsyncStorage.setItem('ToktokMallSearchHistory', stringyfiedPayload);
         return {...state, searchHistory: action.payload};
       } else if (action.action == 'push') {
         let hist = state.searchHistory; 
@@ -215,21 +215,21 @@ export default (state = INITIAL_STATE, action) => {
           hist.push(action.payload);        
         }
         let stringyfiedHist = JSON.stringify(hist);
-        AsyncStorage.setItem('SearchHistory', stringyfiedHist);
+        AsyncStorage.setItem('ToktokMallSearchHistory', stringyfiedHist);
         return {...state, searchHistory: hist};
       } else if(action.action == 'pop') {
         let hist = state.searchHistory;
         hist.splice(action.payload);
         let stringyfiedHist = JSON.stringify(hist);
-        AsyncStorage.setItem('SearchHistory', stringyfiedHist);
+        AsyncStorage.setItem('ToktokMallSearchHistory', stringyfiedHist);
         return {...state, searchHistory: hist};
       } else if(action.action == 'clear') {
-        AsyncStorage.setItem('SearchHistory', JSON.stringify([]));
+        AsyncStorage.setItem('ToktokMallSearchHistory', JSON.stringify([]));
         return {...state, searchHistory: []};
       }
     case 'CREATE_DEFAULT_ADDRESS_SESSION':
       if(action.action == "set") {
-        AsyncStorage.setItem('UserDefaultAddress', JSON.stringify(action.payload))
+        AsyncStorage.setItem('ToktokMallUserDefaultAddress', JSON.stringify(action.payload))
         return {...state, defaultAddress: action.payload}
       }
     default:
