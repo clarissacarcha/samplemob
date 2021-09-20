@@ -1,16 +1,15 @@
-import { useLazyQuery } from '@apollo/react-hooks';
-import { useNavigation } from '@react-navigation/native';
-import React, { useEffect, useRef, useState } from 'react';
-import { Platform, RefreshControl, ScrollView, StatusBar, StyleSheet, View } from 'react-native';
-import { useSelector } from 'react-redux';
-import { TOKTOK_FOOD_GRAPHQL_CLIENT } from 'src/graphql';
+import {useLazyQuery} from '@apollo/react-hooks';
+import {useNavigation} from '@react-navigation/native';
+import React, {useEffect, useRef, useState} from 'react';
+import {Platform, RefreshControl, ScrollView, StatusBar, StyleSheet, View} from 'react-native';
+import {useSelector} from 'react-redux';
+import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import HeaderTabs from 'toktokfood/components/HeaderTabs';
-import { GET_SHOPS } from 'toktokfood/graphql/toktokfood';
+import {GET_SHOPS} from 'toktokfood/graphql/toktokfood';
 // Utils
-import { moderateScale, verticalScale } from 'toktokfood/helper/scale';
+import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
 // Components
-import { AdvertisementSection, CategoryList, RestaurantList } from './index';
-
+import {AdvertisementSection, CategoryList, RestaurantList} from './index';
 
 // const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 // const IS_IPHONE_X = SCREEN_HEIGHT === 812 || SCREEN_HEIGHT === 896;
@@ -34,12 +33,11 @@ const tabs = [
 ];
 
 const StickyView = () => {
-
   const [offset, setOffset] = useState(0);
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const headerMaxHeight = Platform.OS === 'ios' ? moderateScale(295) : moderateScale(325);
   const headerMinHeight = Platform.OS === 'ios' ? verticalScale(50) : moderateScale(65);
-  const { location } = useSelector((state) => state.toktokFood);
+  const {location} = useSelector((state) => state.toktokFood);
 
   const RenderNavBar = () => {
     return (
@@ -69,63 +67,65 @@ const StickyView = () => {
     limit: 10,
     radius: 50,
     userLongitude: location?.longitude,
-    userLatitude: location?.latitude 
-  }
-  const scrollRef = useRef()
+    userLatitude: location?.latitude,
+  };
+
+  console.log(variableInput);
+  const scrollRef = useRef();
 
   // data fetching for shops
   const [getShops, {data, error, loading, fetchMore, refetch}] = useLazyQuery(GET_SHOPS, {
     variables: {
       input: {
         page: 0,
-        ...variableInput
-      }
+        ...variableInput,
+      },
     },
     onError: () => {
-      setRefreshing(false)
+      setRefreshing(false);
     },
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-    fetchPolicy: 'network-only'
+    fetchPolicy: 'network-only',
   });
 
   useEffect(() => {
-    if(location !== undefined){
-      getShops()
+    if (location !== undefined) {
+      getShops();
     }
   }, [location]);
 
   useEffect(() => {
-    if(page != 0 && data && data.getShops.length > 0){
-        fetchMore({
-          variables: {
-            input: {
-              page: page,
-              ...variableInput
-            }
+    if (page != 0 && data && data.getShops.length > 0) {
+      fetchMore({
+        variables: {
+          input: {
+            page: page,
+            ...variableInput,
           },
-          updateQuery: (previousResult, { fetchMoreResult }) => {
-            if (!fetchMoreResult) {
-              return previousResult;
-            }
-            return { getShops: [ ...previousResult.getShops, ...fetchMoreResult.getShops ] }
+        },
+        updateQuery: (previousResult, {fetchMoreResult}) => {
+          if (!fetchMoreResult) {
+            return previousResult;
           }
-        })
+          return {getShops: [...previousResult.getShops, ...fetchMoreResult.getShops]};
+        },
+      });
     }
   }, [page]);
 
   useEffect(() => {
-    if(data){
-      if(JSON.stringify(data.getShops) != JSON.stringify(tempCategories)){
-        setTempCategories(data.getShops)
-        setPendingProcess(true)
-        setLoadMore(false)
+    if (data) {
+      if (JSON.stringify(data.getShops) != JSON.stringify(tempCategories)) {
+        setTempCategories(data.getShops);
+        setPendingProcess(true);
+        setLoadMore(false);
       } else {
-        setPendingProcess(false)
-        setTimeout(() => { 
-          setLoadMore(false)
-        }, 2000)
+        setPendingProcess(false);
+        setTimeout(() => {
+          setLoadMore(false);
+        }, 2000);
       }
-      setRefreshing(false)
+      setRefreshing(false);
     }
   }, [data, page]);
 
@@ -134,26 +134,25 @@ const StickyView = () => {
   };
 
   const handleLoadMore = (nativeEvent) => {
-    if(!loadMore && pendingProcess){
-      setPage((prev) => prev + 1)
-      setLoadMore(isCloseToBottom(nativeEvent))
+    if (!loadMore && pendingProcess) {
+      setPage((prev) => prev + 1);
+      setLoadMore(isCloseToBottom(nativeEvent));
     }
-  }
+  };
 
   const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
     const paddingToBottom = 120;
-    return layoutMeasurement.height + contentOffset.y >=
-      contentSize.height - paddingToBottom;
+    return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom;
   };
 
   const onRefresh = () => {
-    setRefreshing(true)
-    setPage(0)
-    setTempCategories([])
+    setRefreshing(true);
+    setPage(0);
+    setTempCategories([]);
     refetch().then(() => {
-      setRefreshing(false)
-    })
-  }
+      setRefreshing(false);
+    });
+  };
 
   return (
     <>
@@ -196,37 +195,20 @@ const StickyView = () => {
       <ScrollView
         stickyHeaderIndices={[1]}
         refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            colors={['#FFA700']}
-            tintColor='#FFA700'
-          />
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#FFA700']} tintColor="#FFA700" />
         }
         onScroll={({nativeEvent}) => {
           if (isCloseToBottom(nativeEvent)) {
-            handleLoadMore(nativeEvent)
+            handleLoadMore(nativeEvent);
           }
         }}
-        scrollEventThrottle={15}
-        
-      >
+        scrollEventThrottle={15}>
         {/* <View style={styles.adsContainer}>
           <AdvertisementSection />
         </View> */}
-        <CategoryList
-          horizontal
-          homeRefreshing={refreshing}
-          rightText="See all"
-        />
+        <CategoryList horizontal homeRefreshing={refreshing} rightText="See all" />
         <RenderNavBar />
-        <RestaurantList
-          location={location}
-          loading={loading}
-          error={error}
-          data={data}
-          loadMore={loadMore}
-        />
+        <RestaurantList location={location} loading={loading} error={error} data={data} loadMore={loadMore} />
       </ScrollView>
     </>
   );
@@ -239,7 +221,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     backgroundColor: 'whitesmoke',
     paddingBottom: Platform.OS === 'android' ? 10 : 30,
-    marginTop: Platform.OS === 'ios' ? moderateScale(20) : moderateScale(14)
+    marginTop: Platform.OS === 'ios' ? moderateScale(20) : moderateScale(14),
   },
   headerWrapper: {paddingHorizontal: 15, width: '100%', paddingTop: moderateScale(8), backgroundColor: 'whitesmoke'},
   navbarWrapper: {
