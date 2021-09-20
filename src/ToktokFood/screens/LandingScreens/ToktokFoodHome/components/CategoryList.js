@@ -45,21 +45,21 @@ const CategoryList = ({horizontal, rightText = '', filterSearch = 0, homeRefresh
 
   useEffect(() => {
     if(page != 0 && data && data.getCategoriesByLimit.length > 0){
-      fetchMore({
-        variables: {
-          input: {
-            page: page,
-            limit: limit,
-            filterSearch: filterSearch ? filterSearch.id : 0
-          }
-        },
-        updateQuery: (previousResult, { fetchMoreResult }) => {
-          if (!fetchMoreResult) {
-            return previousResult;
-          }
-          return { getCategoriesByLimit: [ ...previousResult.getCategoriesByLimit, ...fetchMoreResult.getCategoriesByLimit ] }
-        }
-      })
+      // fetchMore({
+      //   variables: {
+      //     input: {
+      //       page: page,
+      //       limit: limit,
+      //       filterSearch: filterSearch ? filterSearch.id : 0
+      //     }
+      //   },
+      //   updateQuery: (previousResult, { fetchMoreResult }) => {
+      //     if (!fetchMoreResult) {
+      //       return previousResult;
+      //     }
+      //     return { getCategoriesByLimit: [ ...previousResult.getCategoriesByLimit, ...fetchMoreResult.getCategoriesByLimit ] }
+      //   }
+      // })
     }
   }, [page]);
 
@@ -81,7 +81,7 @@ const CategoryList = ({horizontal, rightText = '', filterSearch = 0, homeRefresh
     setRefreshing(page !== 0);
     setPage(0)
     setTempCategories([])
-    refetch()
+    // refetch()
     if(data?.length > 0){ 
       flatListRef.current.scrollToOffset({ animated: true, offset: 0 })
     }
@@ -103,6 +103,7 @@ const CategoryList = ({horizontal, rightText = '', filterSearch = 0, homeRefresh
   }
 
   const renderItem = ({item}) => {
+    // let 
     return (
       <TouchableOpacity
         style={horizontal ? styles.listItemVerticalContainer : { flexDirection: 'row', paddingBottom: 10 }}
@@ -133,10 +134,11 @@ const CategoryList = ({horizontal, rightText = '', filterSearch = 0, homeRefresh
         horizontal={data?.getCategoriesByLimit.length > 0 ? horizontal : false}
         data={shops} 
         renderItem={renderItem}
+        scrollEnabled={!horizontal}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
         keyExtractor={(val, index) => index.toString()}
-        contentContainerStyle={{ paddingBottom: horizontal ? 0 : verticalScale(50) }}
+        contentContainerStyle={{ paddingBottom: horizontal ? 0 : verticalScale(10) }}
         onEndReachedThreshold={0.2}
         onEndReached={() => handleLoadMore()}
         refreshControl={
@@ -156,7 +158,7 @@ const CategoryList = ({horizontal, rightText = '', filterSearch = 0, homeRefresh
   }
 
   return (
-    <View style={[ styles.container, { flex: horizontal ? 0 : 1, paddingHorizontal: horizontal ? 14  : 20 } ]}>
+    <View style={[ styles.container ]}>
       <View style={styles.textContainer}>
         <Text style={styles.startText}>Categories</Text>
         <TouchableOpacity onPress={() => onNavigateCategories()}>
@@ -174,22 +176,23 @@ export default CategoryList;
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
-    flex: Platform.OS === 'android' ? 1 : 0,
+    flex: 1,
+    paddingHorizontal: scale(16),
+    paddingTop: 10,
+    backgroundColor: 'whitesmoke'
   },
   img: {
     borderRadius: 10,
     width: scale(75),
   },
   listContainer: {
-    marginTop: 8,
-    marginBottom: 4,
+    marginVertical: 10
   },
   listItemContainer: {
     marginHorizontal: 5,
   },
   listItemVerticalContainer: {
-    marginHorizontal: 5,
+    marginRight: scale(11),
     width: (getDeviceWidth - scale(60)) / 4 - 1
   },
   listItemText: {
@@ -210,7 +213,7 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     flexDirection: 'row',
-    marginVertical: moderateScale(8),
+    marginVertical: moderateScale(0),
     justifyContent: 'space-between',
   },
 });

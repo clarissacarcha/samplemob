@@ -62,8 +62,8 @@ export const Variations = ({basePrice, item}) => {
             return {...prev, [item.optionName]: selected[item.optionName]};
           });
         } else {
-          delete selected[item.optionName];
-          setSelected({...selected});
+          const {[item.optionName]: val, ...data} = selected;
+          setSelected(data);
         }
       } else {
         if (selected[item.optionName].length != item.noOfSelection) {

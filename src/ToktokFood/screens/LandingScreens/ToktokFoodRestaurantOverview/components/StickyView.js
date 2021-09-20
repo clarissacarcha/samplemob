@@ -37,6 +37,7 @@ export const StickyView = () => {
   const [offset, setOffset] = useState(0);
   const [activeTab, setActiveTab] = useState({});
   const [productCategories, setProductCategories] = useState([]);
+  const { setNavBarHeight } = useContext(VerifyContext);
 
   const {
     id,
@@ -81,8 +82,13 @@ export const StickyView = () => {
     }
   }, [data]);
 
+  const getNavBarHeight = (event) => {
+    let height = event.nativeEvent.layout.height;
+    setNavBarHeight(height);
+  };
+
   const NavBar = () => (
-    <View style={[styles.headerWrapper, styles.navbarWrapper]}>
+    <View onLayout={(event) => getNavBarHeight(event)} style={[styles.headerWrapper, styles.navbarWrapper]}>
       <HeaderTitleSearchBox />
       <View style={styles.tabContainer}>
         <CategoryTabs

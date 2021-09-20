@@ -11,14 +11,26 @@ import _ from 'lodash';
 import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
 import {scale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
 import { storeTemporaryCart, getTemporaryCart } from 'toktokfood/helper/TemporaryCart';
-
+import {
+  POST_TEMPORARY_CART,
+  PATCH_TEMPORARY_CART_ITEM,
+  DELETE_TEMPORARY_CART_ITEM,
+  GET_TEMPORARY_CART,
+  DELETE_SHOP_TEMPORARY_CART,
+  CHECK_HAS_TEMPORARY_CART
+} from 'toktokfood/graphql/toktokfood';
+import {useMutation, useLazyQuery, useQuery} from '@apollo/react-hooks';
+import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
+import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import {useDispatch, useSelector} from 'react-redux';
+import Loader from 'toktokfood/components/Loader';
 
 export const FoodCart = ({basePrice = 0.0, loading}) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const routes = useRoute();
-  const { Id, selectedAddons, selectedItemId, selectedPrice, selectedQty } = routes.params;
+  const [loader, setLoader] = useState(false);
+  const { Id, selectedAddons, selectedItemId, selectedPrice, selectedQty, selectedNotes } = routes.params;
   const {
     totalPrice,
     setTotalPrice,
@@ -28,9 +40,72 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
     selected,
     notes,
     productDetails,
-    requiredOptions
+    requiredOptions,
+    temporaryCart,
+    // hasTemporaryCart,
+    setHasTemporaryCart
   } = useContext(VerifyContext);
+  const {customerInfo} = useSelector((state) => state.toktokFood);
 
+  const [postTemporaryCart, {loading: postLoading, error: postError}] = useMutation(POST_TEMPORARY_CART, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    onError: (err) => {
+      setLoader(false)
+      setTimeout(() => { Alert.alert('', 'Something went wrong.') }, 100)
+    },
+    onCompleted: ({postTemporaryCart}) => {
+      // console.log(postTemporaryCart)
+    },
+  });
+
+  const [patchTemporaryCartItem, {loading: patchLoading, error: patchError}] = useMutation(PATCH_TEMPORARY_CART_ITEM, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    onError: (err) => {
+      setLoader(false)
+      setTimeout(() => { Alert.alert('', 'Something went wrong.') }, 100)
+    },
+    onCompleted: ({patchTemporaryCartItem}) => {
+      // console.log(patchTemporaryCartItem)
+    },
+  });
+
+  const [deleteTemporaryCartItem, {loading: deleteItemLoading, error: deleteItemError}] = useMutation(DELETE_TEMPORARY_CART_ITEM, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    onError: (err) => {
+      setLoader(false)
+      setTimeout(() => { Alert.alert('', 'Something went wrong.') }, 100)
+    },
+    onCompleted: ({deleteTemporaryCartItem}) => {
+      // console.log(patchTemporaryCartItem)
+    },
+  });
+
+  const [deleteShopTemporaryCart, {loading: deleteLoading, error: deleteError}] = useMutation(DELETE_SHOP_TEMPORARY_CART, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    onError: (err) => {
+      setLoader(false)
+      setTimeout(() => { Alert.alert('', 'Something went wrong.') }, 100)
+    },
+    onCompleted: ({deleteShopTemporaryCart}) => {
+      // console.log(patchTemporaryCartItem)
+    },
+  });
+
+  const [checkHasTemporaryCart, {data: hasTemporaryCart, loading: hasCartLoading, error: hasCartError}] = useLazyQuery(CHECK_HAS_TEMPORARY_CART, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onError: (err) => {
+      setLoader(false)
+      setTimeout(() => { Alert.alert('', 'Something went wrong.') }, 100)
+    }
+  });
+
+  useEffect(() => {
+    if(customerInfo){
+      checkHasTemporaryCart({ variables: { input: { userId: customerInfo.userId } } })
+    }
+  }, [customerInfo])
+ 
   const computeTotalPrice = async (items) => {
     let amount = 0;
     await Object.values(items).map((val) => {
@@ -39,126 +114,144 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
     return amount + totalPrice;
   };
 
-  // const isEqual = (...objects) => objects.every((obj) => JSON.stringify(obj) == JSON.stringify(objects[0]))
-
   const isEqual = (obj1, obj2) => {
-    let result = false;
-    if(Object.keys(obj1).length > 0 && Object.keys(obj2).length > 0){
-      for(let key in obj1){
-        res = obj1[key].every(val => {
-          if(obj2[key]){
-            return obj2[key].some(b2 => b2.addon_id === val.addon_id);
-          }
-        });
-      }
-    } else {
-      res = Object.keys(obj1).length == 0 && Object.entries(obj2).length == 0
-    }
-    return res;
+    let data = []
+    let filter = obj1.filter((b1) => { return obj2.includes(b1.id) });
+    return obj2.length == filter.length
   }
 
-  const onRestaurantNavigate = useCallback(async() => {
+  const onRestaurantNavigate = async() => {
     let required = await Object.keys(requiredOptions).filter((val) => { return selected[val] == undefined });
     if(required.length > 0){
       Alert.alert(`${required[0]} is required.`, )
     } else {
-      console.log(required)
       processAddToCart()
     }
-  }, [totalPrice, setTotalPrice, optionsAmount, count, setCount, selected, notes, productDetails ]);
+  };
+
+  const extractAddons = () => {
+    let addons = []
+    if(Object.values(selected).length > 0){
+      Object.values(selected).map((item) => {
+        item.map((val) => {
+          addons.push(val.addon_id)
+        })
+      })
+    }
+    return addons
+  }
 
   //PROCESS ADD TO CART
   const processAddToCart = async() => {
-    let { cart, totalAmount } = await getTemporaryCart();
-    let hasCart = await cart.findIndex((val) => { return val.sys_shop == productDetails.sysShop });
-    let totalItemPrice = hasCart >= 0 ? await computeTotalPrice(cart[hasCart].items) : totalPrice;
-
-    let item = {
-      itemId: selectedItemId ? selectedItemId : uuid.v4(),
-      sys_shop: parseInt(productDetails.sysShop),
-      product_id: productDetails.Id,
-      productImage: productDetails.filename,
-      productName: productDetails.itemname,
+    
+    let items = {
+      userid: customerInfo.userId,
+      shopid: +productDetails.sysShop,
+      branchid: 0,
+      productid: productDetails.Id,
       quantity: count.quantity,
-      amount: totalPrice,
-      srp_amount: totalPrice,
-      srp_totalamount: totalPrice,
-      total_amount: totalPrice,
-      order_type: 1,
-      notes: notes,
-      addons: selected
+      addons: extractAddons(),
+      notes: notes
     }
+    let duplicateItem = await temporaryCart.items.filter((item) => { 
+      return isEqual(item.addonsDetails, items.addons)
+    })
+     
+    let editedItem = await temporaryCart.items.filter((item) => { return item.id == selectedItemId })
 
-    if (hasCart >= 0) {
-    
-      let currentIndex = await cart[hasCart].items.findIndex((item) => { return isEqual(item.addons, selected) })
-      let editedIndex = await cart[hasCart].items.findIndex((item) => { return item.itemId == selectedItemId })
-    
-      if(currentIndex < 0 && editedIndex >= 0){ // check if edited and not existing item in cart
-        totalItemPrice = totalItemPrice - selectedPrice
-        return pushProducts({ cart, hasCart, item, index: editedIndex, totalItemPrice, pushExistingItems: true })
-      } 
-      if(editedIndex >= 0){ await cart[hasCart].items.splice(editedIndex, 1) } // delete item from edited if already existed in cart
-      if((currentIndex >= 0 && selectedQty != item.quantity && editedIndex < 0)){ // check quantity if same and come from edit
-        let tempCart = cart[hasCart].items[currentIndex]
-        item.quantity += tempCart.quantity;
-        item.srp_totalamount += tempCart.srp_totalamount;
-        item.srp_amount += tempCart.srp_amount;
-        item.amount += tempCart.amount;
-        item.total_amount += tempCart.total_amount;
+    if(duplicateItem.length == 0){
+      if(selectedItemId){
+        setLoader(true)
+        items['updateid'] = selectedItemId
+        return patchCartItem(items)
       }
-   
-      if(editedIndex >= 0){ 
-        totalItemPrice = totalItemPrice - selectedPrice
+      if(temporaryCart.items.length > 0){
+        setLoader(true)
+        return addToCart(items)
       }
-      currentIndex >= 0 ? (
-        pushProducts({ cart, hasCart, item, index: currentIndex, totalItemPrice, pushExistingItems: true })
-      ) : (
-        pushProducts({ cart, hasCart, item, totalItemPrice, pushExistingItems: false })
-      )
-    } else {
-      if(cart.length > 0){
+      if(hasTemporaryCart.checkHasTemporaryCart.shopid){
         Alert.alert(
-          'You have existing items on your cart. If you add this to cart, the current cart will be empty. Would you like to proceed?',
           '',
+          'You have existing items on your cart. If you add this to cart, the current cart will be empty. Would you like to proceed?',
         [
           { text: 'No', onPress: () => {} },
-          { text: "Yes", onPress: () => onPressYes(totalItemPrice, item) },
+          { text: "Yes", onPress: () => {
+            setLoader(true)
+            deleteShopTemporaryCart({ variables: { 
+              input: { 
+                userid: customerInfo.userId,
+                shopid: hasTemporaryCart.checkHasTemporaryCart.shopid,
+                branchid: 0,
+              } 
+            }}).then(({ data }) => {
+              let {status, message} = data.deleteShopTemporaryCart;
+              if(status == 200){
+                addToCart(items)
+              } else {
+                setLoader(false)
+                setTimeout(() => { Alert.alert('', message) }, 100)
+              }
+            })
+          }},
         ]);
       } else {
-        onPressYes(totalItemPrice, item)
-      };
-    }
-  }
-
-  const onPressYes = async(totalItemPrice, item) => {
-    let cart = [{
-      sys_shop: parseInt(productDetails.sysShop),
-      branchid: 0,
-      daystoship: 0,
-      daystoship_to: 0,
-      items: [ item ],
-    }]
-    processStoreTemporaryCart({ cart, totalAmount: {[productDetails.sysShop]: totalItemPrice}  })
-  }
-
-  const pushProducts = ({ cart, hasCart, item, index, totalItemPrice, pushExistingItems }) => {
-    pushExistingItems ? cart[hasCart].items[index] = item : cart[hasCart].items.push(item);
-    processStoreTemporaryCart({ cart, totalAmount: {[productDetails.sysShop]: totalItemPrice} })
-  }
-
-  const dispatchTotalAmount = (totalItemPrice) => {
-    dispatch({type: 'SET_TOKTOKFOOD_CART_TOTAL', payload: {[productDetails.sysShop]: totalItemPrice}});
-  }
-
-  const processStoreTemporaryCart = async({ cart, totalAmount }) => {
-    let res = await storeTemporaryCart({ cart, totalAmount })
-    if(res.status == 200){
-      Toast.show('Added to cart', Toast.SHORT);
-      navigation.navigate('ToktokFoodRestaurantOverview');
+        setLoader(true)
+        addToCart(items)
+      }
     } else {
-      Toast.show('Something went wrong', Toast.SHORT);
+      let sameAsDuplicateItem = duplicateItem[0]?.id == selectedItemId 
+      let editedId = sameAsDuplicateItem ? selectedItemId : duplicateItem[0].id
+      setLoader(true)
+      if((duplicateItem.length > 0 || items.quantity != duplicateItem[0].quantity) && !selectedItemId){
+        items.quantity += duplicateItem[0].quantity
+      }
+      if(((!sameAsDuplicateItem) && selectedItemId != undefined)){
+        return deleteCartItem(editedId, items)
+      }
+      items['updateid'] = editedId
+      patchCartItem(items)
     }
+  }
+
+  const deleteCartItem = (editedId, items) => {
+    deleteTemporaryCartItem({ variables: { input: { deleteid: editedId }}})
+      .then(({ data }) => {
+        let {status, message} = data.deleteTemporaryCartItem;
+        if(status == 200){
+          patchCartItem(items);
+        } else {
+          setLoader(false)
+          setTimeout(() => { Alert.alert('', message) }, 100)
+        }
+      });
+  }
+
+  const patchCartItem = (items) => {
+    patchTemporaryCartItem({ variables: { input: items } })
+      .then(({ data }) => {
+        let {status, message} = data.patchTemporaryCartItem;
+        setLoader(false)
+        if(status == 200){
+          Toast.show('Added to cart', Toast.SHORT);
+          navigation.navigate('ToktokFoodRestaurantOverview');
+        } else {
+          setTimeout(() => { Alert.alert('', message) }, 100)
+        }
+      });
+  }
+
+  const addToCart = (items) => {
+    postTemporaryCart({ variables: { input: items } })
+      .then(({data}) => {
+        let { status, message } = data.postTemporaryCart;
+        setLoader(false)
+        if(status == 200){
+          Toast.show('Added to cart', Toast.SHORT);
+          navigation.navigate('ToktokFoodRestaurantOverview');
+        } else {
+          setTimeout(() => { Alert.alert('', message) }, 100)
+        }
+      })
   }
 
   const updateCartTotal = (type = 'ADD') => {
@@ -188,6 +281,12 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
 
   return (
     <>
+      <Loader
+        visibility={loader}
+        message="Adding to cart..."
+        hasImage={false}
+        loadingIndicator
+      />
       <View style={[styles.container, styles.cartBorder]}>
         <View style={styles.foodItemTotalWrapper}>
           <View style={styles.countWrapper}>
@@ -208,8 +307,8 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
           <Text style={styles.total}>Subtotal: {totalPrice.toFixed(2)}</Text>
         </View>
         <TouchableOpacity
-          disabled={loading}
-          style={[styles.cartButton, {backgroundColor: loading ? COLOR.LIGHT : COLOR.YELLOW}]}
+          disabled={loading || postLoading || patchLoading || deleteLoading || hasCartLoading}
+          style={[styles.cartButton, {backgroundColor: loading || postLoading || patchLoading || deleteLoading || hasCartLoading ? COLOR.LIGHT : COLOR.YELLOW}]}
           onPress={() => onRestaurantNavigate()}
         >
           <Text style={styles.buttonText}>Add to Cart</Text>

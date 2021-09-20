@@ -29,12 +29,11 @@ const OrderList = ({ orderDetails }) => {
     
     return(
       <View style={styles.listContainer}>
-        <Image style={styles.listImg} source={{ uri: item.productDetails.filename }} resizeMode="contain" />
-
+        <Image style={styles.listImg} source={{ uri: item.productDetails.filename }} resizeMode="cover" />
         <View style={styles.list}>
           <View style={styles.listInfo}>
             <Text style={styles.listName}>{item.productDetails.itemname}</Text>
-            <Text style={styles.seeAll}>{`PHP ${item.amount}`}</Text>
+            <Text style={styles.seeAll}>{`PHP ${item.amount.toFixed(2)}`}</Text>
           </View>
           <View>
             <Text style={styles.notes}>{item.quantity}x</Text>
@@ -51,7 +50,7 @@ const OrderList = ({ orderDetails }) => {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.note}>My Order</Text>
-        <Text style={styles.seeAll}>See All</Text>
+        {/* <Text style={styles.seeAll}>See All</Text> */}
       </View>
 
       <FlatList data={orderDetails} renderItem={renderItem} scrollEnabled={false} />

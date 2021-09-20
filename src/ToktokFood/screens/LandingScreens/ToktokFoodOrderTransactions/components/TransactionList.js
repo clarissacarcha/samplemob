@@ -1,17 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, StyleSheet, Text, FlatList, RefreshControl} from 'react-native';
+import { View, StyleSheet, Text, FlatList, RefreshControl, Image} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {scale, moderateScale} from 'toktokfood/helper/scale';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import { TransactionItems } from './TransactionItems';
 // Fonts & Colors
 import {COLOR, FONT, FONT_SIZE} from 'res/variables';
+// Utils
+import {getStatusbarHeight, scale, moderateScale, verticalScale} from 'toktokfood/helper/scale';
+import {empty_orders} from 'toktokfood/assets/images';
 
-const ListEmptyComponent = () => (
-  <Text style={{ color: '#898997', textAlign: 'center', marginVertical: 20 }}>
-    No results found
-  </Text>
-)
+const renderEmpty = () => (
+  <View style={styles.emptyContainer}>
+    <Image style={styles.emptyImg} resizeMode="contain" source={empty_orders} />
+    <Text style={styles.emptyText}>No notifications</Text>
+  </View>
+);
 export const TransactionList = (props) => {
 
   const navigation = useNavigation();
@@ -19,7 +22,7 @@ export const TransactionList = (props) => {
 
   return (
     <View style={styles.listContainer}>
-      { (loading || error) ? (
+      { ((loading || error) && data == null) ? (
         <LoadingIndicator isFlex isLoading={true} />
       ) : (
         <FlatList
@@ -31,7 +34,7 @@ export const TransactionList = (props) => {
               data={data}
             />
           }
-          ListEmptyComponent={ListEmptyComponent}
+          ListEmptyComponent={renderEmpty}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
@@ -45,6 +48,20 @@ const styles = StyleSheet.create({
   listContainer: {
     flex: 1,
     paddingVertical: 15,
+  },
+  emptyContainer: {
+    alignItems: 'center',
+    flex: 1,
+    paddingTop: verticalScale(80),
+  },
+  emptyImg: {
+    height: moderateScale(175),
+    width: moderateScale(250),
+  },
+  emptyText: {
+    color: '#9E9E9E',
+    fontSize: FONT_SIZE.XL,
+    marginTop: moderateScale(20),
   },
 });
 
