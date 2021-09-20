@@ -19,6 +19,25 @@ export const ToktokWalletHomePage = ({navigation,route})=> {
 
     const [refreshing,setRefreshing] = useState(false)
     const { refreshWallet } = useAccount();
+  
+
+    const  {data,error,loading} = useQuery(GET_USER_TOKTOK_WALLET_DATA , {
+        fetchPolicy:"network-only",
+        variables: {
+            input: {
+                userId: session.user.id,
+            }
+        },
+        onCompleted: async ({getUserToktokWalletData})=> {
+            // if( getUserToktokWalletData.accountToken ) {
+            //     await AsyncStorage.setItem('toktokWalletAccountToken', getUserToktokWalletData.accountToken);
+            // }
+
+            if( getUserToktokWalletData.enterpriseToken ){
+                await AsyncStorage.setItem('toktokWalletEnterpriseToken', getUserToktokWalletData.enterpriseToken);
+            }
+        }
+    })
 
 
     const onRefresh = useCallback(()=>{
@@ -32,7 +51,13 @@ export const ToktokWalletHomePage = ({navigation,route})=> {
     return (
         <>
             <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
-            <WalletLandingPage onRefresh={onRefresh} refreshing={refreshing}/>
+            <CheckTokwaKYCRegistration kycStatus={data.getUserToktokWalletData.kycStatus}>
+   
+                    <CheckWalletAccountRestriction>
+                        <WalletLandingPage onRefresh={onRefresh} refreshing={refreshing}/>
+                    </CheckWalletAccountRestriction>
+                
+            </CheckTokwaKYCRegistration>
         </>
     )
 }

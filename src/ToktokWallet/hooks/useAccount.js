@@ -28,7 +28,7 @@ export const useAccount = ()=> {
         return
     }
 
-    const [getMyAccount] = useLazyQuery(GET_MY_ACCOUNT , {
+    const [getMyAccount , {loading}] = useLazyQuery(GET_MY_ACCOUNT , {
         fetchPolicy:"network-only",
         client:TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: async ({getMyAccount})=> {
@@ -66,6 +66,7 @@ export const useAccount = ()=> {
         getMyAccount,
         tokwaAccount,
         refreshWallet,
-        checkIfTpinIsSet
+        checkIfTpinIsSet,
+        getMyAccountLoading: loading
     }
 }
