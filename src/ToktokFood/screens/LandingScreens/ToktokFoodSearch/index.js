@@ -47,7 +47,7 @@ const ToktokFoodSearch = () => {
     navigation.navigate('ToktokFoodRestaurantOverview', {item});
   };
 
-  const searchFood = async (s = '', radius = 1000) => {
+  const searchFood = async (s = '', radius = 5) => {
     try {
       const API_RESULT = await axios({
         url: `${ENVIRONMENTS.TOKTOKFOOD_SERVER}/graphql`,

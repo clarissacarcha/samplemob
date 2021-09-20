@@ -191,9 +191,6 @@ const MainComponent = () => {
       setShowLoader(true);
       const orderLogs = await fixOrderLogs();
       const CUSTOMER_CART = [orderLogs];
-    
-      CUSTOMER_CART[0]['delivery_amount'] = delivery.price ? delivery.price : 0;
-      CUSTOMER_CART[0]['hash_delivery_amount'] = delivery.hash_price;
 
       requestToktokWalletCredit()
         .then(async (wallet) => {
@@ -234,6 +231,7 @@ const MainComponent = () => {
               },
             },
           });
+          console.log(JSON.stringify({...WALLET, ...CUSTOMER, ...ORDER}));
         })
         .catch(() => {
           // Show dialog error about toktokwallet request failed.
