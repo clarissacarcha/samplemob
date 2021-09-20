@@ -31,7 +31,7 @@ const MainComponent = () => {
 
   const {Id, selectedAddons, selectedPrice, selectedQty, selectedNotes} = routes.params;
   const {price} = useSelector((state) => state.toktokFood.totalAmount);
-  const {totalPrice, setTotalPrice, setSelected, productDetails, setProductDetails, setCount, setNotes} = useContext(VerifyContext);
+  const {setTotalPrice, setSelected, productDetails, setProductDetails, setCount, setNotes} = useContext(VerifyContext);
   const [bannerLoaded, setBannerLoaded] = useState(false);
 
   const [getProductDetails, {data, loading, error}] = useLazyQuery(GET_PRODUCT_DETAILS, {
@@ -62,7 +62,7 @@ const MainComponent = () => {
         <View style={styles.foodDetails}>
           <View style={styles.foodNameWrapper}>
             <Text style={styles.foodName}>{itemname}</Text>
-            <MIcon name="favorite-border" size={22} color="#808080" style={styles.heart} />
+            {/* <MIcon name="favorite-border" size={22} color="#808080" style={styles.heart} /> */}
           </View>
           <Text style={styles.foodPrice}>PHP {price?.toFixed(2)}</Text>
         </View>

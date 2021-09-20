@@ -28,13 +28,6 @@ const ToktokFoodHome = () => {
     setViewHeight(height);
   };
 
-  useEffect(() => {
-    async function getCart(){
-      await clearTemporaryCart()
-    }
-    getCart()
-  }, [])
-
   return (
     <View style={styles.container} onLayout={(event) => getWindowDimension(event)}>
       {/* <DraggableIcon data={transactions} title="Ongoing Orders" viewHeight={viewHeight} /> */}
