@@ -15,9 +15,8 @@ import { getDistance, convertDistance } from 'geolib';
 const OrderTitle = ({ transaction, riderDetails }) => {
   const { shopDetails, orderStatus, isconfirmed, address, dateReadyPickup, dateOrderProcessed, dateBookingConfirmed, orderIsfor } = transaction;
   const {location} = useSelector((state) => state.toktokFood);
-  const date = riderDetails != null && orderStatus == 'po' ? dateOrderProcessed : dateReadyPickup
-  const status = orderIsfor == 1 ? orderStatusMessageDelivery(orderStatus, riderDetails, `${shopDetails.shopname} (${shopDetails.address})`) 
-    : orderStatusMessagePickUp(orderStatus, riderDetails, `${shopDetails.shopname} (${shopDetails.address})`);
+  const status = orderIsfor == 1 ? orderStatusMessageDelivery(orderStatus, riderDetails, `${shopDetails?.shopname} (${shopDetails.address})`) 
+    : orderStatusMessagePickUp(orderStatus, riderDetails, `${shopDetails?.shopname} (${shopDetails.address})`);
   
   const calculateDistance = (startTime, riderLocation) => { 
    
@@ -46,8 +45,9 @@ const OrderTitle = ({ transaction, riderDetails }) => {
   }
 
   const renderEstimatedDeliveryTime = () => {
-    let startTime = moment(dateBookingConfirmed).format('LT')
-    let endTime = calculateDistance(dateBookingConfirmed, riderDetails.location)
+    let date = dateReadyPickup != 'Invalid date' ? dateReadyPickup : dateBookingConfirmed
+    let startTime = moment(date).format('LT')
+    let endTime = calculateDistance(date, riderDetails.location)
     return (
       <View style={styles.timeContainer}>
         <MaterialIcon name="schedule" size={16} color={COLORS.YELLOWTEXT} />

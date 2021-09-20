@@ -11,8 +11,6 @@ export default styles = StyleSheet.create({
   },
   sectionContainer: {
     paddingVertical: 10,
-    borderBottomWidth: 8,
-    borderBottomColor: COLOR.LIGHT,
     paddingHorizontal: Platform.OS === 'android' ? 12 : 14,
   },
   scrollView: {paddingBottom: 150},

@@ -22,7 +22,7 @@ export const TransactionList = (props) => {
 
   return (
     <View style={styles.listContainer}>
-      { ((loading || error) && data == null) ? (
+      { ((loading || error) || data == null) ? (
         <LoadingIndicator isFlex isLoading={true} />
       ) : (
         <FlatList

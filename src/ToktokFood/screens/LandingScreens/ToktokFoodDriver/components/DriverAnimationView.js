@@ -37,7 +37,7 @@ const DriverAnimationView = ({orderStatus, riderDetails, orderIsfor, referenceNu
         messages="We've found you a driver"
         onCloseModal={() => setShowSuccess(false)}
       /> */}
-      <RatingModal
+      {/* <RatingModal
         title={"We've found you a driver!"}
         visibility={showDriverModal}
         onCloseModal={() => setShowDriverModal(false)}
@@ -52,7 +52,7 @@ const DriverAnimationView = ({orderStatus, riderDetails, orderIsfor, referenceNu
         <Text style={styles.messageContent}>{
           `${riderDetails?.vehicle.brand.brand} ${riderDetails?.vehicle.model.model} - ${riderDetails?.vehicle.plateNumber}`
         }</Text>
-      </RatingModal>
+      </RatingModal> */}
       {/* Contact Support */}
       <Text style={styles.contactSupportText}></Text>
       <View style={styles.imgContainer}>

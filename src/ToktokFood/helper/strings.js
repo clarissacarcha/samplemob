@@ -455,3 +455,13 @@ export const searchData = [
     title: 'Arranged Alphabetically',
   },
 ];
+export const orderTypeData = [
+  {
+    id: 2,
+    title: 'Pickup',
+  },
+  {
+    id: 1,
+    title: 'Delivery',
+  },
+];

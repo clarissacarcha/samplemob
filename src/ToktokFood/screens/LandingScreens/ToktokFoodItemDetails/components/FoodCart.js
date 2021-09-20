@@ -117,6 +117,7 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
   const isEqual = (obj1, obj2) => {
     let data = []
     let filter = obj1.filter((b1) => { return obj2.includes(b1.id) });
+
     return obj2.length == filter.length
   }
 
@@ -153,10 +154,13 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
       addons: extractAddons(),
       notes: notes
     }
-    let duplicateItem = await temporaryCart.items.filter((item) => { 
+    let filterItemByProductId = await temporaryCart.items.filter((item) => { 
+      return item.productid == productDetails.Id
+    })
+    let duplicateItem = await filterItemByProductId.filter((item) => { 
       return isEqual(item.addonsDetails, items.addons)
     })
-     
+  
     let editedItem = await temporaryCart.items.filter((item) => { return item.id == selectedItemId })
 
     if(duplicateItem.length == 0){
@@ -201,19 +205,21 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
     } else {
       let sameAsDuplicateItem = duplicateItem[0]?.id == selectedItemId 
       let editedId = sameAsDuplicateItem ? selectedItemId : duplicateItem[0].id
+      items['updateid'] = editedId
+    
       setLoader(true)
       if((duplicateItem.length > 0 || items.quantity != duplicateItem[0].quantity) && !selectedItemId){
         items.quantity += duplicateItem[0].quantity
       }
       if(((!sameAsDuplicateItem) && selectedItemId != undefined)){
-        return deleteCartItem(editedId, items)
+        items.quantity += duplicateItem[0].quantity
+        return deleteCartItem(selectedItemId, items, 'edit')
       }
-      items['updateid'] = editedId
       patchCartItem(items)
     }
   }
 
-  const deleteCartItem = (editedId, items) => {
+  const deleteCartItem = (editedId, items, action) => {
     deleteTemporaryCartItem({ variables: { input: { deleteid: editedId }}})
       .then(({ data }) => {
         let {status, message} = data.deleteTemporaryCartItem;

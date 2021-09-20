@@ -74,14 +74,12 @@ const MainComponent = () => {
       console.log(err)
     },
     onCompleted: ({getTemporaryCart}) => {
-      if(getTemporaryCart.items.length > 0){
-        let { items, totalAmount } = getTemporaryCart
-        setTemporaryCart({
-          cartItemsLength: items.length,
-          totalAmount,
-          items: items
-        })
-      }
+      let { items, totalAmount } = getTemporaryCart
+      setTemporaryCart({
+        cartItemsLength: items.length,
+        totalAmount,
+        items: items
+      })
     },
   });
 
