@@ -54,6 +54,7 @@ export const BuildOrderLogsList = ({data, shipping, shippingRates}) => {
 			items.push({
 				sys_shop: item.store_id,
 				product_id: item.item_id,
+				itemname: item.label,
 				quantity: item.qty,
 				amount: parseFloat(item.price),
 				srp_amount: parseFloat(item.price),
