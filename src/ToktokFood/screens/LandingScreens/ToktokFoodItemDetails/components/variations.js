@@ -5,7 +5,7 @@ import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 import RadioButton from 'toktokfood/components/RadioButton';
 // Utils
 import {moderateScale, scale, verticalScale} from 'toktokfood/helper/scale';
-import {VerifyContext} from '../components';
+import {VerifyContext} from '.';
 export const Variations = ({basePrice, item}) => {
   const {
     totalPrice,

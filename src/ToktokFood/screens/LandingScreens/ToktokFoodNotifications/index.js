@@ -5,6 +5,7 @@ import {useNavigation} from '@react-navigation/native';
 import {FlatList, Image, RefreshControl, View, Text, TouchableOpacity} from 'react-native';
 import {useQuery} from '@apollo/react-hooks';
 import {useIsFocused} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
 
 import styles from './styles';
 
@@ -12,7 +13,7 @@ import {VectorIcon, ICON_SET} from 'src/revamp';
 import {COLORS} from 'src/res/constants';
 
 // Strings
-import {notifications} from 'toktokfood/helper/strings';
+// import {notifications} from 'toktokfood/helper/strings';
 import {empty_notification} from 'toktokfood/assets/images';
 
 // Queries
@@ -20,6 +21,7 @@ import {GET_TOKTOKFOOD_NOTIFICATIONS} from 'toktokfood/graphql/toktokfood';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 
 const ToktokFoodNotifications = () => {
+  const {customerInfo} = useSelector((state) => state.toktokFood);
   const isFocus = useIsFocused();
   const navigation = useNavigation();
   // State
@@ -29,11 +31,17 @@ const ToktokFoodNotifications = () => {
   const {refetch} = useQuery(GET_TOKTOKFOOD_NOTIFICATIONS, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
+    variables: {
+      input: {
+        userId: customerInfo.userId,
+      },
+    },
     onCompleted: ({getToktokFoodNotifications}) => {
+      console.log(getToktokFoodNotifications);
       setNotification(getToktokFoodNotifications);
     },
     onError: (error) => {
-      console.log(error);
+      console.log(error.response);
     },
   });
 
@@ -42,6 +50,23 @@ const ToktokFoodNotifications = () => {
       refetch();
     }
   }, [isFocus]);
+
+  const getStatus = (status, referenceNum) => {
+    switch (status) {
+      case 'c':
+        return {title: 'Cancelled Order', desc: `Order ${referenceNum} has been cancelled`};
+      case 'p':
+        return {title: 'Upcoming Order', desc: `Ongoing order ${referenceNum}`};
+      case 'po':
+        return {title: 'Preparing Order', desc: `Preparing order ${referenceNum}`};
+      case 'rp':
+        return {title: 'Ready for Pickup', desc: `Order ${referenceNum} is ready for pickup`};
+      case 'f':
+        return {title: 'Item picked up', desc: `Order ${referenceNum} has been picked up`};
+      case 's':
+        return {title: 'Completed Order', desc: `Order ${referenceNum} has been delivered`};
+    }
+  };
 
   const onBack = () => {
     navigation.goBack();
@@ -60,10 +85,10 @@ const ToktokFoodNotifications = () => {
       <View style={styles.infoWrapper}>
         <View style={styles.notificationInfo}>
           <Text numberOfLines={2} style={styles.notificationTitle}>
-            {item.title}
+            {getStatus(item.orderStatus, item.referenceNum).title}
           </Text>
           <Text numberOfLines={2} style={styles.notificationContent}>
-            {item.content}
+            {getStatus(item.orderStatus, item.referenceNum).desc}
           </Text>
         </View>
       </View>
