@@ -32,11 +32,10 @@ const Summary = ({data}) => {
       <View style={{flexDirection: 'row', paddingVertical: 20, paddingHorizontal: 15}}>
         <View style={{flex: 1}}>
           <Text style={{color: "#9E9E9E", fontSize: 12}}>Order #: {data?.referenceNum}</Text>
-          <Text style={{color: "#9E9E9E", fontSize: 12}}>Order Placed: {data?.shipping?.orderPlaced} </Text>
+          <Text style={{color: "#9E9E9E", fontSize: 12}}>Order Placed: {data?.orderPlaced} </Text>
         </View>
         <View styl={{flex: 1}}>
-          <Text style={{fontSize: 14}}>Order Total: <Text style={{color: "#F6841F", fontSize: 14}}>&#8369;{parseFloat(data?.totalAmount).toFixed(2)}</Text></Text>
-          <Text style={{color: "#9E9E9E", fontSize: 12}}>Receive by: {data?.shipping?.receiveBy} </Text>
+          <Text style={{fontSize: 14}}>Order Total: <Text style={{color: "#F6841F", fontSize: 14}}><Price amount={data?.orderTotal} /></Text></Text>
         </View>
       </View>
       <View style={{ height: 8, backgroundColor: '#F7F7FA'}} />
@@ -77,7 +76,7 @@ const Item = ({data, fulldata}) => {
                 <Text style={{fontSize: 13, color: "#F6841F"}}><Price amount={data.totalAmount} /></Text>
               </View>
               <View style={{flex: 0, paddingHorizontal: 10}}>
-              <Text style={{color: "#9E9E9E", textDecorationLine: 'line-through', fontSize: 11}}>{parseFloat(data?.compareAtPrice) > 0 ? <Price amount={data?.compareAtPrice} /> : null}</Text>
+              <Text style={{color: "#9E9E9E", textDecorationLine: 'line-through', fontSize: 11}}>{parseFloat(product?.compareAtPrice) > 0 ? <Price amount={product?.compareAtPrice} /> : null}</Text>
               </View>
            </View>
             <View style={{flexDirection: 'row', paddingVertical: 5}}>
@@ -143,8 +142,8 @@ export const ToRecieve = ({id, email}) => {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',    
     onCompleted: (response) => {
-      if(response.getToReceiveOrders){
-        setData(response.getToReceiveOrders)
+      if(response.getToReceiveTransactions){
+        setData(response.getToReceiveTransactions)
       }
       console.log('response', response)
     },
@@ -154,10 +153,37 @@ export const ToRecieve = ({id, email}) => {
   })
 
   const renderItem = ({item}) => {
+    let items = item.items || []
     return (
       <>
-        <Store data={item?.shipping?.shop} />
-        {item.orderData.map((raw, i) => <Item key={i} data={raw} fulldata={item} />)}
+        {items && items.length > 0 && items.map((data) => {
+
+          return (
+            <>
+              <Store data={data.shop} />
+              
+              {data.products && data.products.length > 0 && data.products.map((order) => {
+
+                return (
+                  <>
+                  {order.data.map((product, i) => {
+
+                    return (
+                      <>
+                        <Item key={i} data={product} fulldata={item} />
+                      </>
+                    )
+                  })}
+                  </>
+                )
+                
+              })}
+
+            </>
+          )
+        })}
+        {/* <Store data={item?.shipping?.shop} /> */}
+        {/* {item.orderData.map((raw, i) => <Item key={i} data={raw} fulldata={item} />)} */}
         <Summary data={item} />
       </>
     )

@@ -43,7 +43,7 @@ export const ProductCarousel = ({data, isOutOfStock, isLoading, setIsLoading, lo
             containerStyle={[styles.pxImageContainerStyle]}
             style={{
               ...StyleSheet.absoluteFillObject,
-              resizeMode: 'stretch'
+              resizeMode: 'contain'
             }}
             parallaxFactor={0.05}
             {...parallaxProps}

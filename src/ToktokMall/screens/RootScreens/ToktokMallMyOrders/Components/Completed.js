@@ -6,7 +6,7 @@ import CustomIcon from '../../../../Components/Icons';
 
 import { useLazyQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../graphql';
-import { GET_COMPLETED_ORDERS } from '../../../../../graphql/toktokmall/model';
+import { GET_COMPLETED_ORDERS, GET_COMPLETED_TRANSACTIONS } from '../../../../../graphql/toktokmall/model';
 import {placeholder, storeIcon, emptyorders} from '../../../../assets';
 import { Price } from '../../../../helpers';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -33,11 +33,11 @@ const Summary = ({data}) => {
       <View style={{flexDirection: 'row', paddingVertical: 20, paddingHorizontal: 15}}>
         <View style={{flex: 1}}>
           <Text style={{color: "#9E9E9E", fontSize: 12}}>Order #: {data?.referenceNum}</Text>
-          <Text style={{color: "#9E9E9E", fontSize: 12}}>Order Placed: {data?.formattedDateOrdered} </Text>
+          <Text style={{color: "#9E9E9E", fontSize: 12}}>Order Placed: {data?.orderPlaced} </Text>
         </View>
         <View styl={{flex: 1}}>
-          <Text style={{fontSize: 14}}>Order Total: <Text style={{color: "#F6841F", fontSize: 14}}><Price amount={data?.totalAmount} /></Text></Text>
-          <Text style={{color: "#9E9E9E", fontSize: 12}}>Received: {data?.formattedDateReceived} </Text>
+          <Text style={{fontSize: 14}}>Order Total: <Text style={{color: "#F6841F", fontSize: 14}}><Price amount={data?.orderTotal} /></Text></Text>
+          <Text style={{color: "#9E9E9E", fontSize: 12}}>Received: {data?.orderReceived} </Text>
         </View>
       </View>
       <View style={{ height: 8, backgroundColor: '#F7F7FA'}} />
@@ -195,7 +195,7 @@ export const Completed = ({id, email}) => {
   const [userId, setUserId] = useState(id)
   const [semail, setEmail] = useState(email)
 
-  const [getOrders, {loading, error}] = useLazyQuery(GET_COMPLETED_ORDERS, {
+  const [getOrders, {loading, error}] = useLazyQuery(GET_COMPLETED_TRANSACTIONS, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     variables: {
@@ -205,8 +205,8 @@ export const Completed = ({id, email}) => {
       }
     },
     onCompleted: (response) => {
-      if(response.getCompletedOrders){
-        setData(response.getCompletedOrders)
+      if(response.getCompletedTransactions){
+        setData(response.getCompletedTransactions)
       }
     },
     onError: (err) => {
@@ -214,7 +214,7 @@ export const Completed = ({id, email}) => {
     }
   })
 
-  const renderItem = ({item}) => {
+  const renderItemx = ({item}) => {
 
     if(item.orderData.length > 1){
 
@@ -242,9 +242,43 @@ export const Completed = ({id, email}) => {
         </>
       )
 
-    }
+    }    
     
-    
+  }
+
+  const renderItem = ({item}) => {
+    let items = item.items || []
+    return (
+      <>
+        {items && items.length > 0 && items.map((data) => {
+
+          return (
+            <>
+              <Store data={data.shop} />
+              
+              {data.products && data.products.length > 0 && data.products.map((order) => {
+
+                return (
+                  <>
+                  {order.data.map((product, i) => {
+
+                    return (
+                      <>
+                        <Item key={i} data={product} fulldata={item} />
+                      </>
+                    )
+                  })}
+                  </>
+                )
+                
+              })}
+
+            </>
+          )
+        })}
+        <Summary data={item} />
+      </>
+    )
   }
 
   const Fetch = async () => {

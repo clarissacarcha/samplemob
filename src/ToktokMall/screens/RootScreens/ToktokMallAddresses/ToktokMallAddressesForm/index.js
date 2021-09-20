@@ -113,6 +113,8 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefa
     regionId: parseInt(regCode) || 0,
     provinceId: parseInt(provCode),
     municipalityId: parseInt(munCode),
+    latitude: parseFloat(latitude),
+    longitude: parseFloat(longitude)
   }
     if (route.params?.update) {
       updateUserAddress('update', dataForm);
