@@ -28,12 +28,13 @@ export const ToktokWalletPayPandaForm = ({navigation,route})=> {
         headerTitle: ()=> <HeaderTitle label={['Cash In','']}/>,
     })
 
+    const cashInAmount = route.params.amount
+    const onCashIn = route.params.onCashIn
     const alert = useAlert()
-
     const transactionType = route.params.transactionType
     const tokwaAccount = useSelector(state=>state.toktokWallet)
     const globalsettings = useSelector(state=>state.constants)
-    const [amount,setAmount] = useState("")
+    const [amount,setAmount] = useState(cashInAmount ? cashInAmount : "")
     const [message,setMessage] = useState("")
     const [recipientDetails,setRecipientDetails] = useState(null)
     const [disablebtn,setDisablebtn] = useState(false)
@@ -74,7 +75,9 @@ export const ToktokWalletPayPandaForm = ({navigation,route})=> {
                 transactionTypeId: transactionType.id,
                 paypandaTransactionUrl: postCashInPayPandaRequest.paypandaTransactionEntryEndpoint,
                 paypandaReturnUrl: postCashInPayPandaRequest.paypandaReturnUrlEndpoint,
-                paypandaStaginReturnUrl: postCashInPayPandaRequest.paypandaReturUrlStagingEndpoint
+                paypandaStaginReturnUrl: postCashInPayPandaRequest.paypandaReturUrlStagingEndpoint,
+                cashInAmount: cashInAmount,
+                onCashIn: onCashIn
             })
         }
     })

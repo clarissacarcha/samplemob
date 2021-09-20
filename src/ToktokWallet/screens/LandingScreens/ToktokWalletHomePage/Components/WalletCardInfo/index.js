@@ -33,12 +33,17 @@ const WalletCardInfo = ({loading})=> {
         outputRange: ["0deg","60deg","90deg"]
     })
 
+    const onCashIn = ({balance})=> console.log(balance)
+
     const cashIn = ()=> {
         if(APP_FLAVOR == "D" && ACCOUNT_TYPE == 2){
             return Alert.alert("","Use the toktok customer app for toktokwallet full features.")
         }
         if(checkWallet.checkIfAllowed()){
-            return navigation.navigate("ToktokWalletPaymentOptions")
+            return navigation.navigate("ToktokWalletPaymentOptions" , {
+                amount: 1500,
+                onCashIn: onCashIn
+            })
         }
     }
 
