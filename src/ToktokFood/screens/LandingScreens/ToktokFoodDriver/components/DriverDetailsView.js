@@ -25,8 +25,8 @@ const DriverDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
     `${shopDetails.shopname} (${shopDetails.address})`,
     isdeclined
   );
-  // const date = dateOrderProcessed 
-
+  const date = dateReadyPickup != 'Invalid date' ? dateReadyPickup : dateBookingConfirmed
+  // console.log(dateReadyPickup)
   const calculateDistance = (startTime, riderLocation) => {
     let distance = getDistance(
       {latitude: location?.latitude, longitude: location?.longitude},
@@ -74,8 +74,8 @@ const DriverDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
   );
 
   const renderTitle = () => {
-    let startTime = moment(dateBookingConfirmed).format('LT');
-    let endTime = riderDetails != null ? calculateDistance(dateBookingConfirmed, riderDetails.location) : '00:00'
+    let startTime = moment(date).format('LT');
+    let endTime = riderDetails != null ? calculateDistance(date, riderDetails.location) : '00:00'
   
     return (
       <View style={styles.detailsContainer}>

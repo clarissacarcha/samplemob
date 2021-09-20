@@ -50,7 +50,7 @@ const OrderFee = ({ status = 2, transaction }) => {
       <Image style={[styles.pickedUp, {borderRadius: 10, height: 130, marginTop: 8}]} source={{ uri: image }} resizeMode="cover" />
     </View>
   );
-  console.log(deliveryImgurl)
+
   const displayComponent = () => {
     if(orderIsfor == 1){
       return (

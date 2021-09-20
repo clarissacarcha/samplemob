@@ -26,7 +26,6 @@ const OrderList = ({ orderDetails }) => {
   const renderItem = ({item}) => {
 
     let parseAddOns = JSON.parse(item.addons);
-    
     return(
       <View style={styles.listContainer}>
         <Image style={styles.listImg} source={{ uri: item.productDetails.filename }} resizeMode="cover" />
@@ -39,7 +38,7 @@ const OrderList = ({ orderDetails }) => {
             <Text style={styles.notes}>{item.quantity}x</Text>
             {/* <Text style={styles.notes}>Size: Venti</Text> */}
             {/* <Text style={styles.notes}>Add on: Extra Cream</Text> */}
-            { parseAddOns.length > 0 && <DisplayAddons addOns={parseAddOns} /> }
+            { parseAddOns && parseAddOns.length > 0 && <DisplayAddons addOns={parseAddOns} /> }
           </View>
         </View>
       </View>

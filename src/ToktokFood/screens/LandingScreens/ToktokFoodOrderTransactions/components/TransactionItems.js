@@ -40,7 +40,7 @@ export const TransactionItems = (props) => {
     <TouchableWithoutFeedback key={item.orderId} onPress={() => onTransactionsNavigate(item.referenceNum)}>
       <View style={styles.itemContainer}>
         <View style={styles.imgWrapper}>
-          <Image resizeMode="contain" source={{ uri: shopDetails.logo}} style={styles.imgShop} />
+          <Image resizeMode="cover" source={{ uri: shopDetails.logo}} style={styles.imgShop} />
         </View>
         <View style={styles.restaurantInfo}>
           <View style={styles.infoWrapper}>

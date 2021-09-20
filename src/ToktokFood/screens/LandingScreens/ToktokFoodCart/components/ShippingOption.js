@@ -9,18 +9,17 @@ import {verticalScale} from 'toktokfood/helper/scale';
 
 import styles from '../styles';
 
-const ShippingOption = ({ orderType, setShowOrderType }) => {
+const ShippingOption = ({ orderType, onPressChange }) => {
   const navigation = useNavigation();
 
   const {location} = useSelector((state) => state.toktokFood);
-  const label = orderType == 'DELIVERY' ? 'Delivery' : 'Pick up';
   
   return (
     <>
       <View style={styles.sectionContainer}>
         <View style={[styles.deliverWrapper, {paddingVertical: verticalScale(2)}]}>
-          <Text style={styles.sectionTitle}>{`Estimated ${label} time:`}</Text>
-          <View onTouchEnd={() => setShowOrderType(true)}>
+          <Text style={styles.sectionTitle}>{`Estimated ${orderType} time:`}</Text>
+          <View onTouchEnd={onPressChange}>
             <Text style={styles.actionText}>Change</Text>
           </View>
         </View>

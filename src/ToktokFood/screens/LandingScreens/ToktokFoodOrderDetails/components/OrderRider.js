@@ -10,7 +10,7 @@ import RatingModal from 'toktokfood/components/RatingModal';
 import { moderateScale, verticalScale } from 'toktokfood/helper/scale';
 import { checkRiderDetails } from 'toktokfood/helper/ShowRiderDetails';
 
-const OrderRider = ({ riderDetails, transaction }) => {
+const OrderRider = ({ riderDetails, transaction, referenceNum }) => {
   const { user, vehicle } = riderDetails;
   const [showDriverModal, setShowDriverModal] = useState(false);
 
@@ -73,7 +73,7 @@ const OrderRider = ({ riderDetails, transaction }) => {
 
   return (
     <View style={styles.container}>
-       <RatingModal
+       {/* <RatingModal
         title={"We've found you a driver!"}
         visibility={showDriverModal}
         onCloseModal={() => setShowDriverModal(false)}
@@ -87,7 +87,7 @@ const OrderRider = ({ riderDetails, transaction }) => {
         <Text style={styles.messageContent}>{
           `${vehicle.brand.brand} ${vehicle.model.model} - ${vehicle.plateNumber}`
         }</Text>
-      </RatingModal>
+      </RatingModal> */}
       <View style={styles.content}>
         {renderAvatar()}
         {renderActions()}

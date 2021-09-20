@@ -11,7 +11,7 @@ import CustomStarRating from 'toktokfood/components/CustomStarRating';
 // import {RestaurantList} from '../../ToktokFoodHome/components';
 import HeaderTabs from 'toktokfood/components/HeaderTabs';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
-import {GET_PRODUCT_CATEGORIES} from 'toktokfood/graphql/toktokfood';
+import {GET_PRODUCT_CATEGORIES, CHECK_SHOP_VALIDATIONS} from 'toktokfood/graphql/toktokfood';
 // Utils
 import {
   getDeviceWidth,
@@ -23,8 +23,9 @@ import {
 } from 'toktokfood/helper/scale';
 import {FoodList, HeaderTitleSearchBox} from '../components';
 import {VerifyContext, CategoryTabs} from '../components';
-
+import {useIsFocused} from '@react-navigation/native';
 import {useDispatch} from 'react-redux';
+import {useSelector} from 'react-redux';
 
 // const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 // const IS_IPHONE_X = SCREEN_HEIGHT === 812 || SCREEN_HEIGHT === 896;
@@ -37,7 +38,8 @@ export const StickyView = () => {
   const [offset, setOffset] = useState(0);
   const [activeTab, setActiveTab] = useState({});
   const [productCategories, setProductCategories] = useState([]);
-  const { setNavBarHeight } = useContext(VerifyContext);
+  const { setNavBarHeight, temporaryCart, setTemporaryCart } = useContext(VerifyContext);
+  const {customerInfo} = useSelector((state) => state.toktokFood);
 
   const {
     id,
@@ -54,6 +56,7 @@ export const StickyView = () => {
 
   const headerMaxHeight = Platform.OS === 'ios' ? scale(400) : scale(370);
   const headerMinHeight = Platform.OS === 'ios' ? moderateScale(120) : moderateScale(140);
+  const isFocus = useIsFocused();
 
   // data fetching for product tags/tabs
   const [getProductCategories, {data, error, loading}] = useLazyQuery(GET_PRODUCT_CATEGORIES, {
@@ -65,6 +68,17 @@ export const StickyView = () => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
   });
+
+  const [checkShopValidations, {data: checkShop, loading: shopValidationLoading, error: shopValidationError}] =
+    useLazyQuery(CHECK_SHOP_VALIDATIONS, {
+      client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+      fetchPolicy: 'network-only'
+    }
+  );
+
+  useEffect(() => {
+    checkShopValidations({ variables: { input: { shopId: id } }})
+  }, [isFocus])
 
   useEffect(() => {
     dispatch({type: 'SET_TOKTOKFOOD_SHOP_COORDINATES', payload: {latitude, longitude}});
@@ -125,6 +139,13 @@ export const StickyView = () => {
               <MCIcon name="map-marker-outline" color="#868686" size={13} />
               <Text style={styles.branches}>{estimatedDistance}</Text>
             </View>
+            <Text style={{ color: '#FFA700', fontSize: FONT_SIZE.S }}>
+              {checkShop?.checkShopValidations.allowPickup ? (
+                'Available for pick-up and delivery'
+              ) : (
+                'Available for delivery only' 
+              )}
+            </Text>
           </View>
         </View>
         <View style={{paddingTop: 15}}>

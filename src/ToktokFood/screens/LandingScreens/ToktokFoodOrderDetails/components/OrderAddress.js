@@ -128,9 +128,9 @@ const OrderAddress = ({ transaction, riderDetails }) => {
       <View style={styles.addressInfo}>
         <View style={styles.flexDirection}>
           <Text style={styles.restaurant}>Restaurant</Text>
-          {(orderStatus == 's' && !isRated) && (
-            {/* <Text onPress={onPressRate} style={styles.rateText}>Rate</Text> */}
-          )}
+          {/* {(orderStatus == 's' && !isRated) && (
+            <Text onPress={onPressRate} style={styles.rateText}>Rate</Text>
+          )} */}
         </View>
         <View style={styles.restauranContainer}>
           <Image style={styles.icons} source={locationOutline} resizeMode="contain" />
