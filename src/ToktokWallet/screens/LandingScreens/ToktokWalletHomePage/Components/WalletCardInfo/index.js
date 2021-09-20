@@ -6,6 +6,7 @@ import {Separator , HeaderImageBackground, HeaderTitle} from 'toktokwallet/compo
 import { numberFormat , getDeviceWidth as width  } from 'toktokwallet/helper';
 import {useAccount} from 'toktokwallet/hooks'
 import {APP_FLAVOR , ACCOUNT_TYPE} from 'src/res/constants'
+import MIcon from 'react-native-vector-icons/MaterialIcons';
 
 
 //SELF IMPORTS
@@ -45,6 +46,8 @@ const WalletCardInfo = ({loading})=> {
         return navigation.navigate("ToktokWalletTransactionLimit");
     }
 
+    const tokwaNotifications = ()=> navigation.navigate("ToktokWalletNotifications")
+
     return (
        <View style={styles.container}>
            <HeaderImageBackground>
@@ -72,6 +75,14 @@ const WalletCardInfo = ({loading})=> {
                                     <VectorIcon iconSet={ICON_SET.Entypo} name="plus" color="black" size={20}/>
                                     </View>
                                 </TouchableOpacity>
+
+                                <TouchableOpacity onPress={tokwaNotifications} style={styles.topUp}>
+                                    
+                                    {/* <VectorIcon iconSet={ICON_SET.MaterialCommunityIcons} name="user" color="black" size={30}/> */}
+                                    <MIcon name="notifications" color={"black"} size={33} />
+                               
+                                </TouchableOpacity>
+                                
 
                                 <TouchableOpacity style={styles.walletSettings} onPress={()=>{
                               

@@ -23,3 +23,11 @@ export const POST_ACCOUNT_RECOVERY = gql`
         }
     }
 `
+
+export const PATCH_RECOVER_ACCOUNT = gql`
+    mutation {
+        patchRecoverAccount {
+            message
+        }
+    }
+`

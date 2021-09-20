@@ -30,7 +30,7 @@ const AccountRecovery = ()=> {
     }
 
     const HelpCenter = ()=> navigation.navigate("ToktokWalletHelpCentreContactUs")
-    const AccountRecovery = ()=> navigation.navigate("ToktokWalletAccountRecoverySetup")
+    const AccountRecovery = ()=> navigation.navigate("ToktokWalletAccountRecovery" , {data: data?.getAccountRecovery})
 
     if(data?.getAccountRecovery){
         return <>
