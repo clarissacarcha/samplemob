@@ -24,15 +24,12 @@ export const VerifyContextProvider = ({children}) => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: ({ getTemporaryCart }) => {
-      if(getTemporaryCart.items.length > 0){
-        let { items, totalAmount } = getTemporaryCart
-        console.log(totalAmount, 'asdas')
-        setTemporaryCart({
-          cartItemsLength: items.length,
-          totalAmount,
-          items: items
-        })
-      }
+      let { items, totalAmount } = getTemporaryCart
+      setTemporaryCart({
+        cartItemsLength: items.length,
+        totalAmount,
+        items: items
+      })
     },
   });
 

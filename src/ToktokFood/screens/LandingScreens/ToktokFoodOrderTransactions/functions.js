@@ -17,7 +17,6 @@ export const getOrderStatus = (focusTab) => {
 }
 
 export const getSubMessageStatus = (item) => {
-  console.log(item.orderStatus)
   switch(item.orderStatus){
     case 's':
       return `Delivered at ${moment(item.dateFulfilled).format('lll')}`;

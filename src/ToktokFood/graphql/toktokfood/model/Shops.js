@@ -33,4 +33,13 @@ export const CHECK_IF_SHOP_WAS_RATED = gql`
     }
   }
 `;
+export const CHECK_SHOP_VALIDATIONS = gql`
+  query checkShopValidations($input: CheckShopValidationsInput) {
+    checkShopValidations(input: $input) {
+      allowPickup
+      isOpen
+    }
+  }
+`;
+
 

@@ -1,15 +1,35 @@
 import React from 'react';
-import {View, StyleSheet, Modal, Text} from 'react-native';
+import Modal from 'react-native-modal';
+import {View, Text, TouchableOpacity, StyleSheet, FlatList, TouchableWithoutFeedback} from 'react-native';
 
-import {COLOR, FONT} from 'src/res/variables';
-import {verticalScale} from 'toktokfood/helper/scale';
+// COLORS
+import {COLOR, FONT_SIZE, FONT} from 'src/res/variables';
+import {VectorIcon, ICON_SET} from 'src/revamp';
+// Utils
+import {moderateScale, scale, verticalScale} from 'toktokfood/helper/scale';
 
-const OrderTypeSelection = ({visibility, date, onValueChange, value}) => {
+const OrderTypeSelection = ({
+  data,
+  allowPickup,
+  handleModal,
+  handleSelected,
+  onValueChange,
+  value,
+  visibility,
+  setShowFilter,
+  date,
+  shopname
+}) => {
+
+  const onPressItem = (item) => {
+    handleSelected(item)
+    setShowFilter(false)
+  }
+
   const RoundedButton = (props) => {
-    const {selected, orderIsFor} = props;
+    const {selected, orderIsFor, disabled} = props;
     return (
       <View
-        onTouchEnd={() => onValueChange(orderIsFor === 1 ? 'DELIVERY' : 'PICK_UP')}
         style={[
           {
             width: 20,
@@ -19,7 +39,8 @@ const OrderTypeSelection = ({visibility, date, onValueChange, value}) => {
             marginRight: 10,
             alignItems: 'center',
             justifyContent: 'center',
-            borderColor: selected ? COLOR.YELLOW : COLOR.YELLOW,
+            borderColor: '#FFA700',
+            opacity: disabled ? .5 : 1
           },
         ]}>
         {selected ? (
@@ -28,7 +49,7 @@ const OrderTypeSelection = ({visibility, date, onValueChange, value}) => {
               height: 11,
               width: 11,
               borderRadius: 50,
-              backgroundColor: COLOR.YELLOW,
+              backgroundColor: '#FFA700',
             }}
           />
         ) : null}
@@ -36,48 +57,85 @@ const OrderTypeSelection = ({visibility, date, onValueChange, value}) => {
     );
   };
 
+  const DisplayButton = ({ disabled, title, orderIsFor, onTouchEnd, textStyle }) => {
+    let disableStyle = disabled ? { color: 'gray' } : {} 
+    return (
+      <TouchableOpacity
+        style={styles.itemWrapper}
+        onPress={onTouchEnd}
+        disabled={disabled}
+      >
+        <RoundedButton disabled={disabled} orderIsFor={orderIsFor} selected={value === title} />
+        <Text numberOfLines={1} style={[styles.itemText, disableStyle]}>{title}</Text>
+      </TouchableOpacity>
+    )
+  }
+
   return (
-    <>
-      <Modal
-        style={styles.container}
-        visible={visibility}
-        transparent={true}
-        animationType="slide"
-        presentationStyle="overFullScreen">
-        <View style={styles.content}>
-          <View style={[styles.wrapper, styles.cartBorder]}>
-            <View style={styles.sheet}>
-              <View style={styles.itemWrapper}>
-                <RoundedButton orderIsFor={1} selected={value === 'DELIVERY'} />
-                <Text style={styles.itemText}>Delivery</Text>
+    <Modal isVisible={visibility} onBackdropPress={handleModal} style={styles.modal}>
+      {/* <View style={styles.container}> */}
+        {/* {renderHeader()} */}
+        {/* <FlatList data={data} renderItem={renderItem} showsVerticalScrollIndicator={false} /> */}
+        <View style={[styles.wrapper, styles.cartBorder]}>
+          <View style={styles.sheet}>
+            <DisplayButton
+              title='Delivery'
+              orderIsFor={1}
+              onTouchEnd={() => onValueChange('Delivery')}
+            />
+            <View style={styles.separator} />
+            
+            <DisplayButton
+              title={allowPickup == 0 ? `${shopname} is not available for pickup` : 'Pickup'}
+              orderIsFor={2}
+              onTouchEnd={() => onValueChange('Pickup')}
+              disabled={allowPickup == 0}
+            />
+            
+            <View style={styles.scheduleWrapper}>
+              <View style={styles.dateWrapper}>
+                <Text style={styles.scheduleTitle}>Date</Text>
+                <Text style={styles.scheduleText}>Today, {date}</Text>
               </View>
-              <View style={styles.separator} />
-              <View style={styles.itemWrapper}>
-                <RoundedButton orderIsFor={2} selected={value === 'PICK_UP'} />
-                <Text style={styles.itemText}>Pick-up</Text>
-              </View>
-              <View style={styles.scheduleWrapper}>
-                <View style={styles.dateWrapper}>
-                  <Text style={styles.scheduleTitle}>Date</Text>
-                  <Text style={styles.scheduleText}>Today, {date}</Text>
-                </View>
-                <View style={styles.dateWrapper}>
-                  <Text style={styles.scheduleTitle}>Time</Text>
-                  <Text style={styles.scheduleText}>ASAP</Text>
-                </View>
+              <View style={styles.dateWrapper}>
+                <Text style={styles.scheduleTitle}>Time</Text>
+                <Text style={styles.scheduleText}>ASAP</Text>
               </View>
             </View>
           </View>
         </View>
-      </Modal>
-    </>
+      {/* </View> */}
+    </Modal>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLOR.WHITE,
+  headerContainer: {
+    borderBottomWidth: 1,
+    borderColor: '#DDDDDD',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: moderateScale(20),
+  },
+  headerText: {
+    fontSize: FONT_SIZE.XL,
+    fontWeight: '500',
+  },
+  itemContainer: {
+    borderBottomWidth: 1,
+    borderColor: '#DDDDDD',
+    padding: moderateScale(20),
+  },
+  itemText: {
+    fontSize: FONT_SIZE.L,
+  },
+  itemTextSelected: {
+    color: COLOR.ORANGE,
+    fontSize: FONT_SIZE.L,
+  },
+  modal: {
+    justifyContent: 'flex-end',
+    margin: 0,
   },
   content: {
     flex: 1,
@@ -87,7 +145,6 @@ const styles = StyleSheet.create({
   wrapper: {
     width: '101%',
     position: 'absolute',
-    height: verticalScale(170),
     backgroundColor: COLOR.WHITE,
   },
   cartBorder: {
@@ -96,7 +153,7 @@ const styles = StyleSheet.create({
     borderStartWidth: 2,
     borderTopEndRadius: 20,
     borderTopStartRadius: 20,
-    borderColor: COLOR.YELLOW,
+    borderColor: '#FFA700',
     marginHorizontal: -2,
   },
   sheet: {
@@ -121,9 +178,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLOR.MEDIUM,
   },
   scheduleWrapper: {
-    flex: 1,
-    height: 120,
-    marginTop: 5,
+    marginTop: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 5,
@@ -146,3 +201,4 @@ const styles = StyleSheet.create({
 });
 
 export default OrderTypeSelection;
+

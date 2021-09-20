@@ -105,7 +105,6 @@ export const FoodList = (props) => {
     )
   }
 
-  console.log(navBartHeight)
   return (
     <>
       <FlatList

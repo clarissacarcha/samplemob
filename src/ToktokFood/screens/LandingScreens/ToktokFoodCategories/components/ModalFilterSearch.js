@@ -36,7 +36,6 @@ const ModalFilterSearch = ({data, handleModal, handleSelected, selected, visible
     <Modal isVisible={visible} onBackdropPress={handleModal} style={styles.modal}>
       <View style={styles.container}>
         {renderHeader()}
-
         <FlatList data={data} renderItem={renderItem} showsVerticalScrollIndicator={false} />
       </View>
     </Modal>

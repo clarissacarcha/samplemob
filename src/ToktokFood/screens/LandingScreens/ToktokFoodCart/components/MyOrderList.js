@@ -64,7 +64,6 @@ const MyOrderList = () => {
   const renderFoodItem = ({ item }) => {
     const {productid, id, quantity, totalAmount, productLogo, productName, addonsDetails, notes} = item;
     const addons = arrangeAddons(addonsDetails);
-    console.log(totalAmount)
     return (
       <View style={styles.orderItemContainer}>
         <Image style={styles.foodItemImage} source={{uri: productLogo}} />

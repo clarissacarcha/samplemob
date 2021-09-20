@@ -15,6 +15,7 @@ import {GET_ORDER_TRANSACTION_BY_REF_NUM, GET_RIDER, GET_RIDER_DETAILS} from 'to
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import {rider1} from 'toktokfood/assets/images';
 import {removeRiderDetails} from 'toktokfood/helper/ShowRiderDetails';
+import {useIsFocused} from '@react-navigation/native';
 
 // Utils
 import {moderateScale, getStatusbarHeight} from 'toktokfood/helper/scale';
@@ -29,43 +30,25 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
   const referenceNum = route.params ? route.params.referenceNum : '';
   const orderStatus = route.params ? route.params.orderStatus : '';
 
-  const [seconds, setSeconds] = useState(300);
+  const [seconds, setSeconds] = useState(0);
   const [transaction, setTransaction] = useState({});
   const [riderDetails, setRiderDetails] = useState(null);
   const checkOrderResponse5mins = useRef(null);
+  const isFocus = useIsFocused();
 
-  const [getTransactionByRefNum, {error: transactionError, loading: transactionLoading}] = useLazyQuery(
+  const [getTransactionByRefNum, {error: transactionError, loading: transactionLoading, refetch}] = useLazyQuery(
     GET_ORDER_TRANSACTION_BY_REF_NUM,
     {
-      variables: {
-        input: {
-          referenceNum: referenceNum,
-        },
-      },
+      variables: { input: { referenceNum: referenceNum }},
       client: TOKTOK_FOOD_GRAPHQL_CLIENT,
       fetchPolicy: 'network-only',
       onCompleted: ({getTransactionByRefNum}) => {
-        if (JSON.stringify(getTransactionByRefNum) != JSON.stringify(transaction)) {
+        if(JSON.stringify(getTransactionByRefNum) != JSON.stringify(transaction)) {
           setTransaction(getTransactionByRefNum);
         }
       },
     },
   );
-
-  // data fetching for rider details
-  const [getRiderDetails, {error: riderDetailsError, loading: riderDetailsLoading}] = useLazyQuery(GET_RIDER_DETAILS, {
-    variables: {
-      input: {
-        deliveryId: transaction?.tDeliveryId,
-      },
-    },
-    client: CLIENT,
-    fetchPolicy: 'network-only',
-    onCompleted: ({getDeliveryDriver}) => {
-      console.log(getDeliveryDriver.driver.user.person, 'sadasd');
-      setRiderDetails(getDeliveryDriver.driver);
-    },
-  });
 
   const getToktokFoodRiderDetails = async () => {
     try {
@@ -140,33 +123,40 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
   }, []);
 
   useEffect(() => {
+    if (isFocus) {
+      setSeconds(300);
+    }
+  }, [isFocus]);
+
+  useEffect(() => {
     handleOrderProcess();
     return () => {
       clearInterval(checkOrderResponse5mins.current);
     };
-  }, [seconds, transaction, riderDetails]);
+  }, [seconds, transaction]);
 
   const handleOrderProcess = async() => {
-    if(transaction && Object.entries(transaction).length > 0 && orderStatus == undefined && riderDetails == null){
+    if(transaction && Object.entries(transaction).length > 0 && orderStatus == undefined){
       if(transaction.orderStatus == 's'){
+        clearInterval(checkOrderResponse5mins.current);
         await removeRiderDetails(referenceNum)
         return alertPrompt('Order Completed', 'Thank you for choosing, toktokfood!', 'Okay');
       }
       if (transaction.isdeclined != 1) {
         if (seconds > 0) {
-          if (transaction.orderStatus != 'p' && transaction?.orderIsfor == 1) {
-            getTransactionByRefNum();
+          if (transaction.orderStatus != 'p' && transaction.orderIsfor == 1) {
+            refetch({variables: { input: { referenceNum: referenceNum }}});
             if (transaction.tDeliveryId) {
               // getRiderDetails();
               getToktokFoodRiderDetails();
             }
           } else {
-            getTransactionByRefNum();
+            refetch({variables: { input: { referenceNum: referenceNum }}});
           }
-          checkOrderResponse5mins.current = setTimeout(() => setSeconds(seconds - 5), 5000);
+          checkOrderResponse5mins.current = setInterval(() => setSeconds(seconds - 5), 5000);
         } else {
           if (riderDetails == null) {
-            clearTimeout(checkOrderResponse5mins.current);
+            clearInterval(checkOrderResponse5mins.current);
             if (transaction.orderStatus == 'p') {
               alertPrompt('No Response', 'It takes some time for the merchant to confirm your order', 'Retry');
             } else {

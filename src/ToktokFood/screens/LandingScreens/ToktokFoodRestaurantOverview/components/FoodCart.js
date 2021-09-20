@@ -11,41 +11,31 @@ import {useSelector} from 'react-redux';
 // import { getTemporaryCart } from 'toktokfood/helper/TemporaryCart';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
-import {GET_TEMPORARY_CART} from 'toktokfood/graphql/toktokfood';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import {VerifyContext} from '../components';
+import {GET_TEMPORARY_CART} from 'toktokfood/graphql/toktokfood';
+
 export const FoodCart = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const { id } = route.params.item;
+  const { id, shopname } = route.params.item;
   const {customerInfo} = useSelector((state) => state.toktokFood);
   const isFocus = useIsFocused();
   const {temporaryCart, setTemporaryCart, setFoodCartHeight} = useContext(VerifyContext);
 
-  const getFoodCartHeight = (event) => {
-    let height = event.nativeEvent.layout.height;
-    setFoodCartHeight(height);
-  };
-
-  const [getTemporaryCart, {data, loading, error}] = useLazyQuery(GET_TEMPORARY_CART, {
+  const [getTemporaryCart, {loading: cartLoading, error: cartError}] = useLazyQuery(GET_TEMPORARY_CART, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: ({ getTemporaryCart }) => {
-      if(getTemporaryCart.items.length > 0){
-        let { items, totalAmount } = getTemporaryCart
-        setTemporaryCart({
-          cartItemsLength: items.length,
-          totalAmount,
-          items: items
-        })
-      }
+      let { items, totalAmount } = getTemporaryCart
+      setTemporaryCart({
+        cartItemsLength: items.length,
+        totalAmount,
+        items: items
+      })
     },
   });
 
-  const onRestaurantNavigate = () => {
-    navigation.navigate('ToktokFoodCart', { shopId: id, userId: customerInfo.userId });
-  };
- 
   useEffect(() => {
     if(isFocus){
       getTemporaryCart({
@@ -57,9 +47,18 @@ export const FoodCart = () => {
         },
       })
     }
-  }, [isFocus])
+  }, [isFocus, customerInfo])
 
-  if(loading || error || temporaryCart.cartItemsLength == 0){
+  const getFoodCartHeight = (event) => {
+    let height = event.nativeEvent.layout.height;
+    setFoodCartHeight(height);
+  };
+
+  const onRestaurantNavigate = () => {
+    navigation.navigate('ToktokFoodCart', { shopId: id, userId: customerInfo.userId, shopname });
+  };
+
+  if(temporaryCart.cartItemsLength == 0 || cartLoading){
     return null
   }
   return (

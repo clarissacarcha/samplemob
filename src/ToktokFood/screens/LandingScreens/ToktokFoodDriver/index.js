@@ -37,7 +37,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
   const {location} = useSelector((state) => state.toktokFood);
 
   // data fetching for tsransaction
-  const [getTransactionByRefNum, {error: transactionError, loading: transactionLoading}] = useLazyQuery(
+  const [getTransactionByRefNum, {error: transactionError, loading: transactionLoading, refetch}] = useLazyQuery(
     GET_ORDER_TRANSACTION_BY_REF_NUM,
     {
       variables: {
@@ -157,29 +157,30 @@ const ToktokFoodDriver = ({route, navigation}) => {
     return () => {
       clearInterval(checkOrderResponse5mins.current);
     };
-  }, [seconds, transaction, riderDetails]);
+  }, [seconds, transaction]);
 
   const handleOrderProcess = async() => {
     if (transaction && Object.keys(transaction).length > 0) {
       if (transaction.orderStatus == 's') {
+        clearInterval(checkOrderResponse5mins.current);
         await removeRiderDetails(referenceNum);
         return alertPrompt('Order Completed', 'Thank you for choosing, toktokfood!', 'Okay');
       }
       if (transaction.isdeclined != 1) {
         if (seconds > 0) {
           if (transaction.orderStatus != 'p' && transaction?.orderIsfor == 1) {
-            getTransactionByRefNum();
+            refetch({variables: { input: { referenceNum: referenceNum }}});
             if (transaction.tDeliveryId) {
               // getRiderDetails();
               getToktokFoodRiderDetails();
             }
           } else {
-            getTransactionByRefNum();
+            refetch({variables: { input: { referenceNum: referenceNum }}});
           }
           checkOrderResponse5mins.current = setInterval(() => setSeconds(seconds - 5), 5000);
         } else {
           if (riderDetails == null) {
-            clearTimeout(checkOrderResponse5mins.current);
+            clearInterval(checkOrderResponse5mins.current);
             if (transaction.orderStatus == 'p') {
               alertPrompt('No Response', 'It takes some time for the merchant to confirm your order', 'Retry');
             } else {
