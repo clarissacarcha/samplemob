@@ -129,7 +129,7 @@ const OrderAddress = ({ transaction, riderDetails }) => {
         <View style={styles.flexDirection}>
           <Text style={styles.restaurant}>Restaurant</Text>
           {(orderStatus == 's' && !isRated) && (
-            <Text onPress={onPressRate} style={styles.rateText}>Rate</Text>
+            {/* <Text onPress={onPressRate} style={styles.rateText}>Rate</Text> */}
           )}
         </View>
         <View style={styles.restauranContainer}>
