@@ -102,18 +102,20 @@ const CategoryList = ({horizontal, rightText = '', filterSearch = 0, homeRefresh
     navigation.navigate('ToktokFoodSearch', { searchByCategory: item.categoryName, isSearchPage: true }) 
   }
 
+ 
   const renderItem = ({item}) => {
-    // let 
+    let image = item.filename ? { uri: item.filename } : fastfood
     return (
       <TouchableOpacity
         style={horizontal ? styles.listItemVerticalContainer : { flexDirection: 'row', paddingBottom: 10 }}
         onPress={() => showSearchPage(item)}
       >
-        <Image style={styles.img} resizeMode="cover" source={fastfood} />
+        <Image style={styles.img} resizeMode="cover" source={image} />
         <Text numberOfLines={1} style={[styles.listItemText, { paddingHorizontal: horizontal ? 0 : 10 }]}>{item.categoryName}</Text>
       </TouchableOpacity>
     );
   };
+
 
   const listEmpty = () => (
     <Text style={{  color: '#898997', textAlign: 'center', marginVertical: 20 }}>
@@ -124,7 +126,7 @@ const CategoryList = ({horizontal, rightText = '', filterSearch = 0, homeRefresh
   const displayComponent = () => {
     const datas = horizontal ? data?.getCategoriesByLimit.slice(0, 4) : data?.getCategoriesByLimit
     const shops = datas ? datas : []
-
+ 
     if(loading || error){
       return <LoadingIndicator style={{ marginVertical: 20  }} isLoading={true} />
     }

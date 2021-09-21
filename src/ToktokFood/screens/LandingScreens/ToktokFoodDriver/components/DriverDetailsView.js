@@ -25,8 +25,8 @@ const DriverDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
     `${shopDetails.shopname} (${shopDetails.address})`,
     isdeclined
   );
-  const date = dateReadyPickup != 'Invalid date' ? dateReadyPickup : dateBookingConfirmed
-  // console.log(dateReadyPickup)
+  const date = dateReadyPickup.toString() != 'Invalid date' ? dateReadyPickup : dateBookingConfirmed
+
   const calculateDistance = (startTime, riderLocation) => {
     let distance = getDistance(
       {latitude: location?.latitude, longitude: location?.longitude},

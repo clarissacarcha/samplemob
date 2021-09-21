@@ -77,5 +77,7 @@ export const rider1 = require('./images/riders/rider1.png');
 // Empty
 export const empty_orders = require('./images/empty_icons/empty-orders.png');
 export const empty_following = require('./images/empty_icons/empty-following.png');
+export const empty_shop = require('./images/empty_icons/empty-shop.png');
 export const empty_search = require('./images/empty_icons/empty-search.png');
+
 

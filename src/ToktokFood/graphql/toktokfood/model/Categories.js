@@ -16,6 +16,7 @@ export const GET_CATEGORIES_BY_PRODUCT = gql`
       id
       categoryName
       categoryCode
+      filename
     }
   }
 `;
@@ -26,6 +27,7 @@ export const GET_CATEGORIES_BY_LIMIT = gql`
       id
       categoryName
       categoryCode
+      filename
     }
   }
 `;
