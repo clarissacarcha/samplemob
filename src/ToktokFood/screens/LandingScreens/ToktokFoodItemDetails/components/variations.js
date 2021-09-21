@@ -96,7 +96,7 @@ export const Variations = ({basePrice, item}) => {
       <>
         <View style={styles.variations}>
           <Text style={styles.variationTitle}>
-            Choose your {item.optionName.toLowerCase()} (Pick {item.noOfSelection})
+            Choose your {item.optionName.toLowerCase()} (Pick atleast 1)
           </Text>
           <Text>{item.isRequired ? 'REQURED' : 'OPTIONAL'}</Text>
           {item.options.map((options, i) => {

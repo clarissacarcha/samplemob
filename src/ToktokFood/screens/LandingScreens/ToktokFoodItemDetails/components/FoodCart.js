@@ -42,8 +42,6 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
     productDetails,
     requiredOptions,
     temporaryCart,
-    // hasTemporaryCart,
-    setHasTemporaryCart
   } = useContext(VerifyContext);
   const {customerInfo} = useSelector((state) => state.toktokFood);
 
@@ -236,11 +234,14 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
     patchTemporaryCartItem({ variables: { input: items } })
       .then(({ data }) => {
         let {status, message} = data.patchTemporaryCartItem;
-        setLoader(false)
         if(status == 200){
-          Toast.show('Added to cart', Toast.SHORT);
-          navigation.navigate('ToktokFoodRestaurantOverview');
+          setTimeout(() => {
+            setLoader(false)
+            Toast.show('Added to cart', Toast.SHORT);
+            navigation.navigate('ToktokFoodRestaurantOverview');
+          }, 1000)
         } else {
+          setLoader(false)
           setTimeout(() => { Alert.alert('', message) }, 100)
         }
       });
@@ -250,11 +251,14 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
     postTemporaryCart({ variables: { input: items } })
       .then(({data}) => {
         let { status, message } = data.postTemporaryCart;
-        setLoader(false)
         if(status == 200){
-          Toast.show('Added to cart', Toast.SHORT);
-          navigation.navigate('ToktokFoodRestaurantOverview');
+          setTimeout(() => {
+            setLoader(false)
+            Toast.show('Added to cart', Toast.SHORT);
+            navigation.navigate('ToktokFoodRestaurantOverview');
+          }, 1000)
         } else {
+          setLoader(false)
           setTimeout(() => { Alert.alert('', message) }, 100)
         }
       })
@@ -285,6 +289,7 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
     updateCartStates();
   }, [count]);
 
+  const addDisabled = productDetails.stocks == count.quantity
   return (
     <>
       <Loader
@@ -294,6 +299,7 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
         loadingIndicator
       />
       <View style={[styles.container, styles.cartBorder]}>
+        {/* <Text style={{ color: '#FFA700', fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD }}>{`Max quantity per checkout: ${productDetails.maxQty}`}</Text> */}
         <View style={styles.foodItemTotalWrapper}>
           <View style={styles.countWrapper}>
             <TouchableOpacity
@@ -304,8 +310,8 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
             </TouchableOpacity>
             <Text style={styles.countText}>{count.quantity}</Text>
             <TouchableOpacity
-              disabled={productDetails.stocks == count.quantity}
-              style={[styles.countButtons, {backgroundColor: COLOR.ORANGE}]}
+              disabled={addDisabled}
+              style={[styles.countButtons, {backgroundColor: COLOR.ORANGE, opacity: addDisabled ? 0.5 : 1}]}
               onPress={() => updateCartTotal()}>
               <MIcon name="add" color={COLOR.WHITE} size={20} />
             </TouchableOpacity>
@@ -327,10 +333,10 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
 const styles = StyleSheet.create({
   container: {
     display: 'flex',
-    height: scale(130),
+    // height: scale(130),
     alignItems: 'center',
     backgroundColor: COLOR.WHITE,
-    paddingVertical: verticalScale(7),
+    paddingVertical: verticalScale(15),
   },
   cartBorder: {
     borderWidth: 2,
