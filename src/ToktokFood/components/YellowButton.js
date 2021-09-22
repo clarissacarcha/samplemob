@@ -10,12 +10,12 @@ import {markerIcon} from 'toktokfood/assets/images';
 
 import {getStatusbarHeight, verticalScale, moderateScale, getDeviceWidth} from 'toktokfood/helper/scale';
 
-const YellowButton = ({ onPress, label, disabled }) => {
+const YellowButton = ({ onPress, label, disabled, btnStyle }) => {
   const backgroundColor = disabled ? { backgroundColor: 'lightgray'} : {};
   const colorText =  disabled ? { color: 'gray'} : {};
 
   return (
-    <TouchableOpacity disabled={disabled} style={[styles.btn, backgroundColor]} onPress={onPress}>
+    <TouchableOpacity disabled={disabled} style={[styles.btn, backgroundColor, btnStyle]} onPress={onPress}>
       <Text style={[styles.buttonText, colorText]}>{label}</Text>
     </TouchableOpacity>
   );

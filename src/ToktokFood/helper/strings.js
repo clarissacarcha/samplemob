@@ -465,3 +465,26 @@ export const orderTypeData = [
     title: 'Delivery',
   },
 ];
+
+export const SamplePolicy = `Lorem ipsum dolor sit amet, consectetur adipiscing
+elit, sed do eiusmod tempor incididunt ut labore et
+dolore magna aliqua. Facilisis gravida neque convallis
+a cras semper auctor neque vitae. Orci sagittis eu volu
+tpat odio facilisis mauris. A cras semper auctor neque vitae tempus. Ut placerat orci nulla pellentesque dig
+nissim enim sit amet. Fermentum iaculis eu non diam. Adipiscing diam donec adipiscing tristique risus nec.
+Dolor sed viverra ipsum nunc aliquet. Lorem donec
+massa sapien faucibus et molestie ac. Commodo sed egestas egestas fringilla phasellus faucibus scelerisq
+ue eleifend donec. Vel pretium lectus quam id leo in.
+Purus viverra accumsan in nisl nisi scelerisque eu. Habitant morbi tristique senectus et netus et. Mi
+ipsum faucibus vitae aliquet nec ullamcorper sit
+amet. Justo eget magna fermentum iaculis eu non
+diam phasellus vestibulum. Lectus mauris ultrices
+eros in. Viverra maecenas accumsan lacus vel facilisis volutpat. Dolor purus non enim praesent elementum facilisis. Purus sit amet volutpat consequat mauris nunc congue nisi.
+
+Euismod nisi porta lorem mollis aliquam ut porttitor
+leo a. Nam aliquam sem et tortor. Lectus urna duis convallis convallis tellus id interdum velit. Velit laore
+et id donec ultrices tincidunt arcu non. In cursus turp
+is massa tincidunt dui ut ornare lectus sit. Turpis massa sed elementum tempus egestas. Odio ut enim blandit volutpat. Dictum at tempor commodo ullamcorper. 
+Nunc scelerisque viverra mauris in aliquam sem frin
+gilla ut. Est velit egestas dui id ornare arcu odio ut.
+`

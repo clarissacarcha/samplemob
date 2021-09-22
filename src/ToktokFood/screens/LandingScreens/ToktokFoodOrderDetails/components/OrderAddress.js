@@ -35,7 +35,7 @@ const OrderAddress = ({ transaction, riderDetails }) => {
   const [isRated, setIsRated] = useState(false);
   const [rating, setRating] = useState("0");
   const [showSuccess, setShowSuccess] = useState(false);
-
+ 
   const [rateShop, {loading, error}] = useMutation(RATE_SHOP, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     onCompleted: ({rateShop}) => {
@@ -118,10 +118,10 @@ const OrderAddress = ({ transaction, riderDetails }) => {
         <View style={styles.dividerContainer}>
           <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
           <View style={styles.divider} />
-          {(riderDetails != null && (orderStatus == 'f' || orderStatus == 's')) ? (
-              <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
-            ) : (
+          {(riderDetails != null || orderStatus == 'f' || orderStatus == 's') ? (
               <MaterialIcon name="lens" size={16} color={COLORS.YELLOWTEXT} />
+            ) : (
+              <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
           )}
         </View>
       )}

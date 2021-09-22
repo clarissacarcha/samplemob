@@ -24,7 +24,7 @@ const DisplayAddons = ({ addOns }) => {
 const OrderList = ({ orderDetails }) => {
 
   const renderItem = ({item}) => {
-
+    console.log(item.notes)
     let parseAddOns = JSON.parse(item.addons);
     return(
       <View style={styles.listContainer}>
@@ -36,9 +36,8 @@ const OrderList = ({ orderDetails }) => {
           </View>
           <View>
             <Text style={styles.notes}>{item.quantity}x</Text>
-            {/* <Text style={styles.notes}>Size: Venti</Text> */}
-            {/* <Text style={styles.notes}>Add on: Extra Cream</Text> */}
             { parseAddOns && parseAddOns.length > 0 && <DisplayAddons addOns={parseAddOns} /> }
+            { !!item.notes && <Text style={styles.notes}>{`Notes: ${item.notes}`}</Text> }
           </View>
         </View>
       </View>

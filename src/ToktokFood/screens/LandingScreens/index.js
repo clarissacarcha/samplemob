@@ -17,3 +17,7 @@ export ToktokFoodMapSearch from './ToktokFoodMapSearch';
 export ToktokFoodCategories from './ToktokFoodCategories';
 export ToktokRiderRating from './ToktokRiderRating';
 export ToktokFoodEnterPinCode from './ToktokFoodEnterPinCode';
+export ToktokFoodMe from './ToktokFoodMe';
+export ToktokFoodTermsAndConditions from './ToktokFoodTermsAndConditions';
+export ToktokFoodPrivacyPolicy from './ToktokFoodPrivacyPolicy';
+export ToktokFoodContactUs from './ToktokFoodContactUs';

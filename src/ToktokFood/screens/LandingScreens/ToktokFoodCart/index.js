@@ -191,6 +191,7 @@ const MainComponent = () => {
           total_amount: item.totalAmount,
           quantity: item.quantity,
           order_type: 1,
+          notes: item.notes,
           addons: await fixAddOns(item.addonsDetails),
         };
         items.push(data);
@@ -218,6 +219,7 @@ const MainComponent = () => {
       setShowLoader(true);
       const CUSTOMER_CART = await fixOrderLogs();
       const shopValidation = await refetch({variables: {input: {shopId: shopId}}});
+      console.log(JSON.stringify(CUSTOMER_CART))
 
       if (shopValidation.data?.checkShopValidations?.isOpen == 1) {
         requestToktokWalletCredit()
@@ -249,7 +251,6 @@ const MainComponent = () => {
               payment_method: 'TOKTOKWALLET',
               order_logs: CUSTOMER_CART,
             };
-
             postCustomerOrder({
               variables: {
                 input: {

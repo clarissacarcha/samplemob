@@ -27,12 +27,12 @@ const OrderRider = ({ riderDetails, transaction, referenceNum }) => {
   }
 
   const onMessage = () => {
-    const url = `sms:+639100593229`;
+    const url = `sms:${user.person.mobileNumber}`;
     Linking.openURL(url);
   };
 
   const onCall = () => {
-    const url = `tel:+639100593229`;
+    const url = `tel:${user.person.mobileNumber}`;
     Linking.openURL(url);
   };
 

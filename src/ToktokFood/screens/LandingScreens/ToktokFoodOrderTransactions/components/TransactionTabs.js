@@ -1,12 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { View, StyleSheet, Text, TouchableWithoutFeedback} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {scale, moderateScale} from 'toktokfood/helper/scale';
+import {VerifyContext} from './VerifyContextProvider';
 
 // Fonts & Colors
 import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 
-export const TransactionTabs = ({ focusTab, setTransactionList, setFocusTab }) => {
+export const TransactionTabs = () => {
+
+  const { focusTab, setFocusTab, transactionList, setTransactionList } = useContext(VerifyContext);
 
   const navigation = useNavigation();
   const handleFocusTab = (index) => {
