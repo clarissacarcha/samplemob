@@ -111,7 +111,6 @@ const ToktokFoodDriver = ({route, navigation}) => {
       });
       const res = API_RESULT.data.data.getDeliveryDriver;
       setRiderDetails(res.driver);
-      set;
     } catch (error) {
       console.log(error);
     }
@@ -120,6 +119,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
   useEffect(() => {
     const unsubscribe = navigation.addListener('blur', () => {
       clearInterval(checkOrderResponse5mins.current);
+      clearInterval(getRiderDetailsInterval.current);
     });
 
     return unsubscribe;
@@ -151,20 +151,21 @@ const ToktokFoodDriver = ({route, navigation}) => {
     return () => {
       clearInterval(getRiderDetailsInterval.current);
     };
-  }, [riderSeconds, riderDetails]);
+  }, [riderSeconds]);
 
   const handleMapRider = () => {
     if (transaction.tDeliveryId && riderDetails != null) {
       getToktokFoodRiderDetails();
     }
     getRiderDetailsInterval.current = setInterval(() => setRiderSeconds(seconds - 20), 20000);
-    console.log('Ride Details Updated');
+    console.log('Rider Details Updated ' + riderSeconds);
   };
 
   const handleOrderProcess = async () => {
     if (transaction && Object.keys(transaction).length > 0) {
       if (transaction.orderStatus == 's') {
         clearInterval(checkOrderResponse5mins.current);
+        clearInterval(getRiderDetailsInterval.current);
         await removeRiderDetails(referenceNum);
         alertPrompt('Order Completed', 'Thank you for choosing, toktokfood!', 'Okay');
         return;
@@ -183,6 +184,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
         } else {
           if (riderDetails == null) {
             clearInterval(checkOrderResponse5mins.current);
+            clearInterval(getRiderDetailsInterval.current);
             if (transaction.orderStatus == 'p') {
               alertPrompt('No Response', 'It takes some time for the merchant to confirm your order', 'retry');
             } else {
@@ -231,8 +233,8 @@ const ToktokFoodDriver = ({route, navigation}) => {
         <LoadingIndicator isFlex isLoading={true} />
       ) : (
         <>
-          {riderDetails !== null && transaction.orderStatus == 'f' ? (
-            <RiderMapView riderCoordinates={riderDetails.location} customerCoordinates={location} />
+          {riderDetails !== null && (transaction.orderStatus == 'f' || transaction.status == 's') ? (
+            <RiderMapView riderCoordinates={riderDetails.location} customerCoordinates={transaction} />
           ) : (
             <DriverAnimationView
               orderStatus={transaction.orderStatus}

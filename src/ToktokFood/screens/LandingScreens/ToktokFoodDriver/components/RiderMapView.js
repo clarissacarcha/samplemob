@@ -6,10 +6,7 @@ import {rider_ic, customer_map_ic} from 'toktokfood/assets/images';
 
 const RiderMapView = (props) => {
   const {customerCoordinates, riderCoordinates} = props;
-
   delete riderCoordinates.lastUpdate;
-  delete customerCoordinates.address;
-
   const mafRef = useRef(null);
 
   useEffect(() => {}, []);
@@ -41,7 +38,7 @@ const RiderMapView = (props) => {
           <Marker identifier="rider" coordinate={riderCoordinates} showsTraffic={true}>
             <Image style={{width: 55, height: 55}} resizeMode="contain" source={rider_ic} />
           </Marker>
-          <Marker identifier="customer" coordinate={customerCoordinates} showsTraffic={true}>
+          <Marker identifier="customer" coordinate={{latitude: customerCoordinates.latitude, longitude: customerCoordinates.longitude}} showsTraffic={true}>
             <Image style={{width: 55, height: 55}} resizeMode="contain" source={customer_map_ic} />
           </Marker>
         </MapView>
