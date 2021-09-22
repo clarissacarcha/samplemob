@@ -30,22 +30,21 @@ import {
   GET_SHIPPING_FEE,
   PATCH_PLACE_CUSTOMER_ORDER,
   DELETE_SHOP_TEMPORARY_CART,
-  CHECK_SHOP_VALIDATIONS
+  CHECK_SHOP_VALIDATIONS,
 } from 'toktokfood/graphql/toktokfood';
-import { clearTemporaryCart } from 'toktokfood/helper/TemporaryCart';
+import {clearTemporaryCart} from 'toktokfood/helper/TemporaryCart';
 
 import moment from 'moment';
 import 'moment-timezone';
 
 // Utils
 import {moderateScale} from 'toktokfood/helper/scale';
-import { arrangeAddons } from './functions';
+import {arrangeAddons} from './functions';
 
 const CUSTOM_HEADER = {
   container: Platform.OS === 'android' ? moderateScale(83) : moderateScale(70),
   bgImage: Platform.OS === 'android' ? moderateScale(83) : moderateScale(70),
 };
-
 
 const MainComponent = () => {
   const route = useRoute();
@@ -65,8 +64,8 @@ const MainComponent = () => {
   const [checkShop, setCheckShop] = useState(null);
 
   useEffect(() => {
-    checkShopValidations({ variables: { input: { shopId: shopId } }})
-    if(temporaryCart && temporaryCart.items.length > 0){
+    checkShopValidations({variables: {input: {shopId: shopId}}});
+    if (temporaryCart && temporaryCart.items.length > 0) {
       getDeliverFee({
         variables: {
           input: {
@@ -90,27 +89,32 @@ const MainComponent = () => {
     },
   });
 
-  const [deleteShopTemporaryCart, {loading: deleteLoading, error: deleteError}] = useMutation(DELETE_SHOP_TEMPORARY_CART, {
-    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-    onError: (err) => {
-      setTimeout(() => { Alert.alert('', 'Something went wrong.') }, 100)
-    },
-    onCompleted: ({deleteShopTemporaryCart}) => {
-      // console.log(patchTemporaryCartItem)
-    },
-  });
-
-  const [checkShopValidations, {loading: shopValidationLoading, error: shopValidationError, refetch}] =
-    useLazyQuery(CHECK_SHOP_VALIDATIONS, {
+  const [deleteShopTemporaryCart, {loading: deleteLoading, error: deleteError}] = useMutation(
+    DELETE_SHOP_TEMPORARY_CART,
+    {
       client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-      fetchPolicy: 'network-only',
-      onCompleted: ({ checkShopValidations }) => {
-        setRefreshing(false);
-        setCheckShop(checkShopValidations)
-      }
-    }
+      onError: (err) => {
+        setTimeout(() => {
+          Alert.alert('', 'Something went wrong.');
+        }, 100);
+      },
+      onCompleted: ({deleteShopTemporaryCart}) => {
+        // console.log(patchTemporaryCartItem)
+      },
+    },
   );
 
+  const [checkShopValidations, {loading: shopValidationLoading, error: shopValidationError, refetch}] = useLazyQuery(
+    CHECK_SHOP_VALIDATIONS,
+    {
+      client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+      fetchPolicy: 'network-only',
+      onCompleted: ({checkShopValidations}) => {
+        setRefreshing(false);
+        setCheckShop(checkShopValidations);
+      },
+    },
+  );
 
   const requestToktokWalletCredit = () => {
     return new Promise(async (resolve, reject) => {
@@ -133,32 +137,34 @@ const MainComponent = () => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'no-cache',
     onError: (error) => {
-      setShowLoader(false)
-      console.log(`LOCATION LOG ERROR: ${error}`)
+      setShowLoader(false);
+      console.log(`LOCATION LOG ERROR: ${error}`);
     },
     onCompleted: async ({checkoutOrder}) => {
-      if(checkoutOrder.status == 200){
+      if (checkoutOrder.status == 200) {
         deleteShopTemporaryCart({
           variables: {
             input: {
               userid: customerInfo.userId,
               shopid: +shopId,
               branchid: 0,
-            }
-          }
+            },
+          },
         }).then(() => {
-          setShowLoader(false)
+          setShowLoader(false);
           navigation.replace('ToktokFoodDriver', {referenceNum: checkoutOrder.referenceNum});
-        })
+        });
       } else {
         // error prompt
-        setShowLoader(false)
-        setTimeout(() => {Alert.alert(checkoutOrder.message)}, 100)
+        setShowLoader(false);
+        setTimeout(() => {
+          Alert.alert(checkoutOrder.message);
+        }, 100);
       }
     },
   });
 
-  const fixOrderLogs = async() => {
+  const fixOrderLogs = async () => {
     let orderLogs = {
       sys_shop: temporaryCart.items[0]?.shopid,
       branchid: temporaryCart.items[0]?.branchid,
@@ -166,15 +172,15 @@ const MainComponent = () => {
       hash_delivery_amount: delivery?.hash_price ? delivery.hash_price : '',
       daystoship: 0,
       daystoship_to: 0,
-      items: await fixItems()
-    }
-    return [orderLogs]
-  }
+      items: await fixItems(),
+    };
+    return [orderLogs];
+  };
 
   const fixItems = async () => {
-    let items = []
+    let items = [];
     return Promise.all(
-      temporaryCart.items.map(async(item) => {
+      temporaryCart.items.map(async (item) => {
         let data = {
           sys_shop: item.shopid,
           product_id: item.productid,
@@ -184,35 +190,35 @@ const MainComponent = () => {
           total_amount: item.totalAmount,
           quantity: item.quantity,
           order_type: 1,
-          addons: await fixAddOns(item.addonsDetails)
-        }
-        items.push(data)
-      })
+          addons: await fixAddOns(item.addonsDetails),
+        };
+        items.push(data);
+      }),
     ).then(() => {
-      return items
+      return items;
     });
-  }
+  };
 
   const fixAddOns = (addonsDetails) => {
     let addons = [];
     return Promise.all(
       addonsDetails.map((item) => {
-        let { id, optionPrice, optionName, optionDetailsName } = item;
-        let data = { addon_id: id, addon_name: optionName, addon_price: optionPrice, option_name: optionDetailsName }
-        addons.push(data)
-      })
+        let {id, optionPrice, optionName, optionDetailsName} = item;
+        let data = {addon_id: id, addon_name: optionName, addon_price: optionPrice, option_name: optionDetailsName};
+        addons.push(data);
+      }),
     ).then(() => {
-      return addons
+      return addons;
     });
-  }
+  };
 
   const placeCustomerOrder = async () => {
     if (delivery !== null) {
       setShowLoader(true);
       const CUSTOMER_CART = await fixOrderLogs();
-      const shopValidation = await refetch({ variables: { input: { shopId: shopId } }});
-   
-      if(shopValidation.data?.checkShopValidations?.isOpen == 1){
+      const shopValidation = await refetch({variables: {input: {shopId: shopId}}});
+
+      if (shopValidation.data?.checkShopValidations?.isOpen == 1) {
         requestToktokWalletCredit()
           .then(async (wallet) => {
             const WALLET = {
@@ -258,18 +264,18 @@ const MainComponent = () => {
             console.log('ERROR ON PLACING CART');
           });
       } else {
-        setShowLoader(false)
-        setTimeout(() =>{
-          Alert.alert(`${shopname} is not accepting orders right now...`, '')
-        }, 100)
+        setShowLoader(false);
+        setTimeout(() => {
+          Alert.alert(`${shopname} is not accepting orders right now...`, '');
+        }, 100);
       }
     }
   };
 
   const onPressChange = (action) => {
-    setRefreshing(action != undefined)
-    checkShopValidations({ variables: { input: { shopId: shopId } }})
-  }
+    setRefreshing(action != undefined);
+    checkShopValidations({variables: {input: {shopId: shopId}}});
+  };
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'position' : null} style={styles.container}>
@@ -284,11 +290,10 @@ const MainComponent = () => {
             refreshing={refreshing}
             onRefresh={() => onPressChange('refresh')}
             colors={['#FFA700']}
-            tintColor='#FFA700'
+            tintColor="#FFA700"
           />
-        }
-      >
-        { checkShop == null && !refreshing ? (
+        }>
+        {checkShop == null && !refreshing ? (
           <View style={styles.totalContainer}>
             <ActivityIndicator color={COLOR.ORANGE} />
           </View>
@@ -297,8 +302,8 @@ const MainComponent = () => {
             checkShop={checkShop}
             orderType={orderType}
             onPressChange={() => {
-              onPressChange()
-              setShowOrderType(true)
+              onPressChange();
+              setShowOrderType(true);
             }}
           />
         )}
@@ -324,7 +329,7 @@ const MainComponent = () => {
           onNotesChange={(n) => setRiderNotes(n)}
           onPlaceOrder={() => placeCustomerOrder()}
         />
-        { checkShop != null && (
+        {checkShop != null && (
           <OrderTypeSelection
             value={orderType}
             visibility={showOrderType}
@@ -335,7 +340,9 @@ const MainComponent = () => {
             }}
             shopname={shopname}
             allowPickup={checkShop?.allowPickup}
-            handleModal={() => { setShowOrderType(!showOrderType); }}
+            handleModal={() => {
+              setShowOrderType(!showOrderType);
+            }}
           />
         )}
       </ScrollView>

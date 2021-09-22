@@ -25,9 +25,7 @@ const DriverAnimationView = ({orderStatus, riderDetails, orderIsfor, referenceNu
     let res = await checkRiderDetails(referenceNum)
     setShowDriverModal(res?.status == 200)
   }
- 
-  const CancelOrderComponent = () => {};
- 
+
   return (
     <View style={styles.container}>
       {/* <DialogMessage

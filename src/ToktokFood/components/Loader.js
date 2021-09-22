@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Modal, StyleSheet, Image, Text} from 'react-native';
 import {COLOR, FONT} from 'res/variables';
 
-import {verticalScale, scale, moderateScale} from 'toktokfood/helper/scale';
+import {scale, moderateScale} from 'toktokfood/helper/scale';
 import {ordering} from 'toktokfood/assets/images';
 import LoadingIndicator from './LoadingIndicator';
 

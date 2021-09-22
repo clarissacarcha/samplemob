@@ -5,7 +5,7 @@ import {View, StyleSheet, Alert} from 'react-native';
 // Components
 import Loader from 'toktokfood/components/Loader';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
-import {DriverAnimationView, DriverDetailsView, PickUpDetailsView, CancelOrder} from './components';
+import {DriverAnimationView, DriverDetailsView, PickUpDetailsView, CancelOrder, RiderMapView} from './components';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 
 // Utils
@@ -27,11 +27,13 @@ const CUSTOM_HEADER = {
 const ToktokFoodDriver = ({route, navigation}) => {
   const referenceNum = route.params ? route.params.referenceNum : '';
   const [seconds, setSeconds] = useState(0);
+  const [riderSeconds, setRiderSeconds] = useState(0);
   const [showCancel, setShowCancel] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
   const [transaction, setTransaction] = useState({});
   const [riderDetails, setRiderDetails] = useState(null);
   const checkOrderResponse5mins = useRef(null);
+  const getRiderDetailsInterval = useRef(null);
   const isFocus = useIsFocused();
   const dispatch = useDispatch();
   const {location} = useSelector((state) => state.toktokFood);
@@ -54,21 +56,6 @@ const ToktokFoodDriver = ({route, navigation}) => {
       },
     },
   );
-
-  // data fetching for rider details
-  const [getRiderDetails, {error: riderDetailsError, loading: riderDetailsLoading}] = useLazyQuery(GET_RIDER_DETAILS, {
-    variables: {
-      input: {
-        deliveryId: transaction?.tDeliveryId,
-      },
-    },
-    client: CLIENT,
-    fetchPolicy: 'network-only',
-    onCompleted: ({getDeliveryDriver}) => {
-      console.log(getDeliveryDriver.driver.user.person, 'sadasd');
-      setRiderDetails(getDeliveryDriver.driver);
-    },
-  });
 
   const getToktokFoodRiderDetails = async () => {
     try {
@@ -123,8 +110,8 @@ const ToktokFoodDriver = ({route, navigation}) => {
         },
       });
       const res = API_RESULT.data.data.getDeliveryDriver;
-      //console.log(JSON.stringify(res));
       setRiderDetails(res.driver);
+      set;
     } catch (error) {
       console.log(error);
     }
@@ -159,7 +146,22 @@ const ToktokFoodDriver = ({route, navigation}) => {
     };
   }, [seconds, transaction]);
 
-  const handleOrderProcess = async() => {
+  useEffect(() => {
+    handleMapRider();
+    return () => {
+      clearInterval(getRiderDetailsInterval.current);
+    };
+  }, [riderSeconds, riderDetails]);
+
+  const handleMapRider = () => {
+    if (transaction.tDeliveryId && riderDetails != null) {
+      getToktokFoodRiderDetails();
+    }
+    getRiderDetailsInterval.current = setInterval(() => setRiderSeconds(seconds - 20), 20000);
+    console.log('Ride Details Updated');
+  };
+
+  const handleOrderProcess = async () => {
     if (transaction && Object.keys(transaction).length > 0) {
       if (transaction.orderStatus == 's') {
         clearInterval(checkOrderResponse5mins.current);
@@ -169,13 +171,12 @@ const ToktokFoodDriver = ({route, navigation}) => {
       if (transaction.isdeclined != 1) {
         if (seconds > 0) {
           if (transaction.orderStatus != 'p' && transaction?.orderIsfor == 1) {
-            refetch({variables: { input: { referenceNum: referenceNum }}});
-            if (transaction.tDeliveryId) {
-              // getRiderDetails();
+            refetch({variables: {input: {referenceNum: referenceNum}}});
+            if (transaction.tDeliveryId && riderDetails == null) {
               getToktokFoodRiderDetails();
             }
           } else {
-            refetch({variables: { input: { referenceNum: referenceNum }}});
+            refetch({variables: {input: {referenceNum: referenceNum}}});
           }
           checkOrderResponse5mins.current = setInterval(() => setSeconds(seconds - 5), 5000);
         } else {
@@ -229,12 +230,17 @@ const ToktokFoodDriver = ({route, navigation}) => {
         <LoadingIndicator isFlex isLoading={true} />
       ) : (
         <>
-          <DriverAnimationView
-            orderStatus={transaction.orderStatus}
-            riderDetails={riderDetails}
-            orderIsfor={transaction.orderIsfor}
-            referenceNum={referenceNum}
-          />
+          {riderDetails !== null && transaction.orderStatus == 'f' ? (
+            <RiderMapView riderCoordinates={riderDetails.location} customerCoordinates={location} />
+          ) : (
+            <DriverAnimationView
+              orderStatus={transaction.orderStatus}
+              riderDetails={riderDetails}
+              orderIsfor={transaction.orderIsfor}
+              referenceNum={referenceNum}
+            />
+          )}
+
           <View style={styles.driverWrapper}>
             {transaction.orderIsfor == 1 ? (
               <DriverDetailsView

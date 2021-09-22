@@ -34,7 +34,6 @@ export const star_gray = require('./images/star-gray.png');
 export const star_half = require('./images/star-half.png');
 export const delete_ic = require('./images/delete.png');
 
-
 // Notifications
 export const empty_notification = require('./images/empty_icons/empty-notification.png');
 
@@ -79,3 +78,6 @@ export const empty_orders = require('./images/empty_icons/empty-orders.png');
 export const empty_following = require('./images/empty_icons/empty-following.png');
 export const empty_search = require('./images/empty_icons/empty-search.png');
 
+// Rider Map Icons
+export const rider_ic = require('./images/rider_map_ic.png');
+export const customer_map_ic = require('./images/customer_map_ic.png');

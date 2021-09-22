@@ -36,6 +36,8 @@ const transaction = `
   deliveryImgurl2
   orderIsfor
   isdeclined
+  latitude
+  longitude
   shopDetails {
     id
     shopname
