@@ -62,6 +62,7 @@ const transaction = `
     exratePhpToN
     currency
     curcode
+    notes
     productDetails {
       Id
       itemname

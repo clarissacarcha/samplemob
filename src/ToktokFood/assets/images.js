@@ -33,6 +33,7 @@ export const star_no_fill = require('./images/star-no-fill.png');
 export const star_gray = require('./images/star-gray.png');
 export const star_half = require('./images/star-half.png');
 export const delete_ic = require('./images/delete.png');
+export const arrow_right = require('./images/arrow-right.png');
 
 // Notifications
 export const empty_notification = require('./images/empty_icons/empty-notification.png');
@@ -42,11 +43,15 @@ export const home = require('./images/bottom_nav_icons/menu-outline.png');
 export const history = require('./images/bottom_nav_icons/history-outline.png');
 export const notifications = require('./images/bottom_nav_icons/notif-outline.png');
 export const favorites = require('./images/bottom_nav_icons/favorites-outline.png');
+export const me = require('./images/bottom_nav_icons/me-outline.png');
+
 
 export const home_fill = require('./images/bottom_nav_icons/menu-fill.png');
 export const history_fill = require('./images/bottom_nav_icons/history-fill.png');
 export const notifications_fill = require('./images/bottom_nav_icons/notif-fill.png');
 export const favorites_fill = require('./images/bottom_nav_icons/favorites-fill.png');
+export const me_fill = require('./images/bottom_nav_icons/me-fill.png');
+
 
 // Temp Animations
 export const merchant_wait = require('./images/animations/merchant_wait.gif');
@@ -82,4 +87,14 @@ export const empty_search = require('./images/empty_icons/empty-search.png');
 // Rider Map Icons
 export const rider_ic = require('./images/rider_map_ic.png');
 export const customer_map_ic = require('./images/customer_map_ic.png');
+
+
+// Me Icons
+export const help_centre_ic = require('./images/me_icons/help-centre.png');
+export const contact_support_ic = require('./images/me_icons/contact-support.png');
+export const policy_ic = require('./images/me_icons/policy.png');
+export const terms_and_conditions_ic = require('./images/me_icons/terms-and-conditions.png');
+export const email_ic = require('./images/me_icons/email.png');
+export const call_ic = require('./images/me_icons/call.png');
+export const wallet_ic = require('./images/me_icons/wallet.png');
 

@@ -172,7 +172,6 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
 
   //PROCESS ADD TO CART
   const processAddToCart = async() => {
-    
     let items = {
       userid: customerInfo.userId,
       shopid: +productDetails.sysShop,
@@ -182,6 +181,7 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
       addons: extractAddons(),
       notes: notes
     }
+  
     let filterItemByProductId = await temporaryCart.items.filter((item) => { 
       return item.productid == productDetails.Id
     })
