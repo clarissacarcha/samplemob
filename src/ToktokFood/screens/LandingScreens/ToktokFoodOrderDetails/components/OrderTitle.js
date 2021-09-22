@@ -45,7 +45,7 @@ const OrderTitle = ({ transaction, riderDetails }) => {
   }
 
   const renderEstimatedDeliveryTime = () => {
-    let date = dateReadyPickup != 'Invalid date' ? dateReadyPickup : dateBookingConfirmed
+    let date = dateReadyPickup.toString() != 'Invalid date' ? dateReadyPickup : dateBookingConfirmed
     let startTime = moment(date).format('LT')
     let endTime = calculateDistance(date, riderDetails.location)
     return (

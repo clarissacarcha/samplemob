@@ -30,6 +30,8 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
   const navigation = useNavigation();
   const routes = useRoute();
   const [loader, setLoader] = useState(false);
+  const [disableAdd, setDisableAdd] = useState(false);
+  const [disabledMaxQty, setDisableMaxQty] = useState(false);
   const { Id, selectedAddons, selectedItemId, selectedPrice, selectedQty, selectedNotes } = routes.params;
   const {
     totalPrice,
@@ -103,6 +105,34 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
       checkHasTemporaryCart({ variables: { input: { userId: customerInfo.userId } } })
     }
   }, [customerInfo])
+
+  useEffect(() => {
+    if(productDetails && Object.keys(productDetails).length > 0){
+      if(productDetails.maxQtyIsset == 1){
+        if(temporaryCart.items.length > 0){
+          const hasItem = temporaryCart.items.filter((item) => { return item.productid == productDetails.Id });
+          if(hasItem.length > 0){
+            let currentQty = 0;
+            hasItem.map((item) => {
+              currentQty += item.quantity
+            })
+            let isEditQtty = selectedItemId == undefined ? (count.quantity + currentQty) : count.quantity 
+            let exceededQty = currentQty == productDetails.maxQty ? currentQty : isEditQtty
+            let disableMaxQtyCondition = selectedItemId == undefined ? exceededQty > productDetails.maxQty : selectedQty + (productDetails.maxQty - currentQty) == count.quantity 
+            let disableAddCondition = selectedItemId == undefined ? exceededQty > productDetails.maxQty - 1 : selectedQty + (productDetails.maxQty - currentQty) == count.quantity 
+            
+            setDisableMaxQty((currentQty == productDetails.maxQty && selectedItemId == undefined) || selectedItemId == undefined && disableMaxQtyCondition)
+            setDisableAdd(disableAddCondition)
+            return
+          }
+        }
+        setDisableMaxQty(count.quantity > productDetails.maxQty)
+        setDisableAdd(count.quantity > productDetails.maxQty - 1)
+      } else {
+        setDisableAdd(productDetails.stocks == count.quantity)
+      }
+    } 
+  }, [productDetails, temporaryCart, count])
  
   const computeTotalPrice = async (items) => {
     let amount = 0;
@@ -289,7 +319,7 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
     updateCartStates();
   }, [count]);
 
-  const addDisabled = productDetails.stocks == count.quantity
+ 
   return (
     <>
       <Loader
@@ -299,7 +329,9 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
         loadingIndicator
       />
       <View style={[styles.container, styles.cartBorder]}>
-        {/* <Text style={{ color: '#FFA700', fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD }}>{`Max quantity per checkout: ${productDetails.maxQty}`}</Text> */}
+        {productDetails.maxQtyIsset == 1 && (
+          <Text style={{ color: '#FFA700', fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD }}>{`Max quantity per checkout: ${productDetails.maxQty}`}</Text>
+        )}
         <View style={styles.foodItemTotalWrapper}>
           <View style={styles.countWrapper}>
             <TouchableOpacity
@@ -310,8 +342,8 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
             </TouchableOpacity>
             <Text style={styles.countText}>{count.quantity}</Text>
             <TouchableOpacity
-              disabled={addDisabled}
-              style={[styles.countButtons, {backgroundColor: COLOR.ORANGE, opacity: addDisabled ? 0.5 : 1}]}
+              disabled={disableAdd}
+              style={[styles.countButtons, {backgroundColor: COLOR.ORANGE, opacity: disableAdd ? 0.5 : 1}]}
               onPress={() => updateCartTotal()}>
               <MIcon name="add" color={COLOR.WHITE} size={20} />
             </TouchableOpacity>
@@ -319,8 +351,8 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
           <Text style={styles.total}>Subtotal: {totalPrice.toFixed(2)}</Text>
         </View>
         <TouchableOpacity
-          disabled={loading || postLoading || patchLoading || deleteLoading || hasCartLoading}
-          style={[styles.cartButton, {backgroundColor: loading || postLoading || patchLoading || deleteLoading || hasCartLoading ? COLOR.LIGHT : COLOR.YELLOW}]}
+          disabled={loading || postLoading || patchLoading || deleteLoading || hasCartLoading || disabledMaxQty}
+          style={[styles.cartButton, {backgroundColor: disabledMaxQty || loading || postLoading || patchLoading || deleteLoading || hasCartLoading ? COLOR.LIGHT : COLOR.YELLOW}]}
           onPress={() => onRestaurantNavigate()}
         >
           <Text style={styles.buttonText}>Add to Cart</Text>

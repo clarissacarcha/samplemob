@@ -14,6 +14,7 @@ const products = `
   summary
   filename
   sysShop
+  maxQtyIsset
   variants {
     id
     optionName

@@ -166,7 +166,8 @@ const ToktokFoodDriver = ({route, navigation}) => {
       if (transaction.orderStatus == 's') {
         clearInterval(checkOrderResponse5mins.current);
         await removeRiderDetails(referenceNum);
-        return alertPrompt('Order Completed', 'Thank you for choosing, toktokfood!', 'Okay');
+        alertPrompt('Order Completed', 'Thank you for choosing, toktokfood!', 'Okay');
+        return;
       }
       if (transaction.isdeclined != 1) {
         if (seconds > 0) {
@@ -183,10 +184,10 @@ const ToktokFoodDriver = ({route, navigation}) => {
           if (riderDetails == null) {
             clearInterval(checkOrderResponse5mins.current);
             if (transaction.orderStatus == 'p') {
-              alertPrompt('No Response', 'It takes some time for the merchant to confirm your order', 'Retry');
+              alertPrompt('No Response', 'It takes some time for the merchant to confirm your order', 'retry');
             } else {
               if (transaction.orderIsfor == 1) {
-                alertPrompt('No Driver found', 'It takes some time for the drivers to confirm your booking', 'Retry');
+                alertPrompt('No Driver found', 'It takes some time for the drivers to confirm your booking', 'retry');
               }
             }
           } else {

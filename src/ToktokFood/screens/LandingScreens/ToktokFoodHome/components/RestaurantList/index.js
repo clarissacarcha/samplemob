@@ -19,7 +19,7 @@ const RestaurantList = (props) => {
   const listEmpty = () => (
     <View style={styles.emptyContainer}>
       <Image style={styles.emptyImg} resizeMode="contain" source={empty_following} />
-      <Text style={styles.emptyText}>No shops near you as of the moment</Text>
+      <Text style={styles.emptyText}>It seems like there is no open restaurant near you.</Text>
     </View>
   )
  
