@@ -169,6 +169,7 @@ const MainComponent = () => {
       sys_shop: temporaryCart.items[0]?.shopid,
       branchid: temporaryCart.items[0]?.branchid,
       delivery_amount: delivery?.price ? delivery.price : 0,
+      hash: delivery?.hash ? delivery.hash : '',
       hash_delivery_amount: delivery?.hash_price ? delivery.hash_price : '',
       daystoship: 0,
       daystoship_to: 0,
