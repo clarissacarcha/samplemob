@@ -45,21 +45,21 @@ const CategoryList = ({horizontal, rightText = '', filterSearch = 0, homeRefresh
 
   useEffect(() => {
     if(page != 0 && data && data.getCategoriesByLimit.length > 0){
-      // fetchMore({
-      //   variables: {
-      //     input: {
-      //       page: page,
-      //       limit: limit,
-      //       filterSearch: filterSearch ? filterSearch.id : 0
-      //     }
-      //   },
-      //   updateQuery: (previousResult, { fetchMoreResult }) => {
-      //     if (!fetchMoreResult) {
-      //       return previousResult;
-      //     }
-      //     return { getCategoriesByLimit: [ ...previousResult.getCategoriesByLimit, ...fetchMoreResult.getCategoriesByLimit ] }
-      //   }
-      // })
+      fetchMore({
+        variables: {
+          input: {
+            page: page,
+            limit: limit,
+            filterSearch: filterSearch ? filterSearch.id : 0
+          }
+        },
+        updateQuery: (previousResult, { fetchMoreResult }) => {
+          if (!fetchMoreResult) {
+            return previousResult;
+          }
+          return { getCategoriesByLimit: [ ...previousResult.getCategoriesByLimit, ...fetchMoreResult.getCategoriesByLimit ] }
+        }
+      })
     }
   }, [page]);
 
@@ -81,7 +81,7 @@ const CategoryList = ({horizontal, rightText = '', filterSearch = 0, homeRefresh
     setRefreshing(page !== 0);
     setPage(0)
     setTempCategories([])
-    // refetch()
+    refetch()
     if(data?.length > 0){ 
       flatListRef.current.scrollToOffset({ animated: true, offset: 0 })
     }
@@ -186,6 +186,7 @@ const styles = StyleSheet.create({
   img: {
     borderRadius: 10,
     width: scale(75),
+    height: scale(55),
   },
   listContainer: {
     marginVertical: 10

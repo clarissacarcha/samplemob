@@ -4,7 +4,7 @@ import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 // Utils
 import { scale, verticalScale, moderateScale } from 'toktokfood/helper/scale';
 import RestaurantItem from './RestaurantItem';
-import {empty_following} from 'toktokfood/assets/images';
+import {empty_shop} from 'toktokfood/assets/images';
 // Fonts & Colors
 import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 
@@ -18,7 +18,7 @@ const RestaurantList = (props) => {
 
   const listEmpty = () => (
     <View style={styles.emptyContainer}>
-      <Image style={styles.emptyImg} resizeMode="contain" source={empty_following} />
+      <Image style={styles.emptyImg} resizeMode="contain" source={empty_shop} />
       <Text style={styles.emptyText}>It seems like there is no open restaurant near you.</Text>
     </View>
   )
@@ -100,7 +100,8 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     color: '#9E9E9E',
-    fontSize: FONT_SIZE.XL,
+    fontSize: FONT_SIZE.L,
+    textAlign: 'center',
     marginTop: moderateScale(20),
   },
 });
