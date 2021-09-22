@@ -1,5 +1,6 @@
 import React , {useEffect,useState,useRef} from 'react'
-import {View,Text,StyleSheet,TextInput,TouchableOpacity} from 'react-native'
+import {View,Text,StyleSheet,TextInput,TouchableOpacity,Image} from 'react-native'
+import tokwaLogo from 'toktokwallet/assets/images/tokwaLogo.png'
 import {useAccount} from 'toktokwallet/hooks'
 import { BuildingBottom , NumberBoxes ,DisabledButton } from 'toktokwallet/components'
 import { YellowButton } from 'src/revamp'
@@ -92,8 +93,13 @@ export const LoginPage = ()=> {
         <AlertOverlay visible={loading} />
             <View style={styles.container}>
                 <View style={styles.content}>
+                    <Image
+                        style={styles.tokwaLogo}
+                        source={tokwaLogo}
+                        resizeMode="contain"
+                    />
                     <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,alignSelf:"center"}}>Enter your MPIN</Text>
-                    <View style={{position: 'relative',marginTop: 50,}}>
+                    <View style={{position: 'relative',marginTop: 30,}}>
                         <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={showPin} numberOfBox={4}/>
                         <TextInput
                             caretHidden
@@ -155,6 +161,11 @@ const styles = StyleSheet.create({
         alignItems:"center",
         paddingTop: 100,
         textAlign:"center",
+    },
+    tokwaLogo: {
+        height: 100,
+        width: 100,
+        marginBottom: 40,
     },
     btn: {
 

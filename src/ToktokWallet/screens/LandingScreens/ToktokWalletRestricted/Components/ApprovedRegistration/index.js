@@ -1,16 +1,19 @@
 import React , {useRef,useEffect,useState} from 'react'
-import {View,Text,StyleSheet,Image,FlatList,Dimensions,Animated} from 'react-native'
+import {View,Text,StyleSheet,Image,FlatList,Dimensions,Animated,TouchableHighlight} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
 import { HeaderImageBackground , HeaderTitle , Separator , BuildingBottom } from 'toktokwallet/components'
 import { YellowButton , VectorIcon , ICON_SET } from 'src/revamp'
 import {useSelector} from 'react-redux'
 import { getStatusbarHeight } from 'toktokwallet/helper'
+import {useThrottle} from 'src/hooks'
 import CONSTANTS from 'common/res/constants'
 
 //SELF  IMPORTS
 import RenderDots from './RenderDots'
 import PageOne from './PageOne'
 import PageTwo from './PageTwo'
+import PageThree from './PageThree'
+import PageFour from './PageFour'
 
 const  { COLOR , FONT_SIZE , FONT_FAMILY: FONT } = CONSTANTS
 const {width} = Dimensions.get("window")
@@ -34,7 +37,7 @@ const Template2 = ({label , rotate , scale})=> {
     )
 }
 
-const data = [PageOne,PageTwo,Template1,Template2,Template2,Template1]
+const data = [PageOne,PageTwo,PageThree,PageFour]
 
 
 export const ApprovedRegistration = ()=> {
@@ -51,12 +54,18 @@ export const ApprovedRegistration = ()=> {
     const dotPosition = Animated.divide(scrollX,width)
     const [currentIndex,setCurrentIndex] = useState(0)
 
+    const skip = ()=> {
+        return navigation.push("ToktokWalletRestricted" , {component: "noMpin"})
+    }
+
+    const onPressThrottled = useThrottle(skip, 2000);
+
     return (
         <>
         <View style={styles.container}>
-                <View style={styles.skip}>
+                <TouchableHighlight underlayColor="transparent" onPress={onPressThrottled} style={styles.skip}>
                     <Text style={styles.skipText}>Skip</Text>
-                </View>
+                </TouchableHighlight>
                 <Separator/>
                 <Animated.FlatList
                     ref={slider}
@@ -101,7 +110,7 @@ export const ApprovedRegistration = ()=> {
                             outputRange: [0, 1, 0]
                         })
 
-                        return item({label: `Template ${index}` , rotate , scale})
+                        return item({label: `Template ${index}` , rotate , scale , tokwaAccount})
                     }}
                 />
 

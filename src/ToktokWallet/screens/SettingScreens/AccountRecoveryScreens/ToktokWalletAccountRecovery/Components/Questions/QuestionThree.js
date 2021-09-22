@@ -4,8 +4,8 @@ import {  YellowButton } from 'src/revamp'
 import { BuildingBottom } from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
-import { PATCH_RECOVER_ACCOUNT } from 'toktokwallet/graphql'
-import { useMutation } from '@apollo/react-hooks'
+import { GET_FORGOT_AND_RECOVER_OTP_CODE } from 'toktokwallet/graphql'
+import { useLazyQuery } from '@apollo/react-hooks'
 import { onErrorAlert } from 'src/util/ErrorUtility'
 import { useAlert } from 'src/hooks'
 import { useNavigation } from '@react-navigation/native'
@@ -26,19 +26,22 @@ const QuestionThree = ({
     const alert = useAlert();
     const navigation = useNavigation();
 
-    const [patchRecoverAccount, {loading}] = useMutation(PATCH_RECOVER_ACCOUNT, {
+
+    const [getForgotAndRecoverOTPCode , {loading}] = useLazyQuery(GET_FORGOT_AND_RECOVER_OTP_CODE , {
+        fetchPolicy: "network-only",
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
-        onCompleted: ({patchRecoverAccount})=>{
-            navigation.pop(2);
-            navigation.navigate("ToktokWalletMPINUpdate");
+        onCompleted: ({getForgotAndRecoverOTPCode})=>{
+            return navigation.navigate("ToktokWalletAccountRecoveryOTP")
         },
-        onError: (error) => onErrorAlert({alert,error})
+        onError: (error)=>{
+            onErrorAlert({alert,error})
+        }
     })
 
     const onPress = ()=> {
         if(myAnswer == "" ) return Alert.alert("","Answer is required.")
         if(myAnswer != answer ) return Alert.alert("","Answer is wrong.")
-        patchRecoverAccount()
+        getForgotAndRecoverOTPCode()
     }
 
     const onChangeText = (text)=> {
