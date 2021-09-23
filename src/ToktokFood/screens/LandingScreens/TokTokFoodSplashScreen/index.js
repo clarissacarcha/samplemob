@@ -42,15 +42,15 @@ const TokTokFoodSplashScreen = () => {
       client: TOKTOK_FOOD_GRAPHQL_CLIENT,
       fetchPolicy: 'network-only',
       onError: (error) => {
-        const {graphQLErrors, networkError } = error;
-        if(networkError || graphQLErrors){
-          return Alert.alert('', 'Network error occured. Please check your internet connection',
-            [ { text: "Okay", onPress: () => navigation.goBack() }]
-          )
+        const {graphQLErrors, networkError} = error;
+        if (networkError || graphQLErrors) {
+          return Alert.alert('', 'Network error occured. Please check your internet connection', [
+            {text: 'Okay', onPress: () => navigation.goBack()},
+          ]);
         }
       },
       onCompleted: ({getAccount}) => {
-        console.log('HAHAHAH')
+        console.log(JSON.stringify({getAccount}));
         if (user.toktokfoodUserId != null) {
           dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_INFO', payload: {...getAccount}});
           showHomPage();
@@ -66,8 +66,8 @@ const TokTokFoodSplashScreen = () => {
   };
 
   useEffect(() => {
-    if(user) {
-      if(user.toktokfoodUserId != null){
+    if (user) {
+      if (user.toktokfoodUserId != null) {
         getToktokUserInfo({
           variables: {
             input: {
@@ -83,14 +83,14 @@ const TokTokFoodSplashScreen = () => {
 
   const processCreateAccount = () => {
     let {firstName, lastName, birthdate, emailAddress, gender} = user.person;
-    const formattedMobile = user.username.substring(1, user.username.length);
+    const formattedMobile = user.username.substring(3, user.username.length);
     createAccount({
       variables: {
         input: {
           firstname: firstName,
           lastname: lastName,
           toktokid: user.id,
-          contactnumber: formattedMobile,
+          contactnumber: `0${formattedMobile}`,
           email: emailAddress,
           address: location.address,
           birthday: '',
@@ -127,7 +127,16 @@ const TokTokFoodSplashScreen = () => {
         },
       });
       const res = API_RESULT.data.data;
-      dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_INFO', payload: {...getAccount}});
+
+      console.log(res);
+
+      if (res.patchToktokFoodUserId.status == 200) {
+        dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_INFO', payload: {...getAccount}});
+        showHomPage();
+      } else {
+        Alert.alert('', 'Something went wrong.', [{text: 'Okay', onPress: () => navigation.goBack()}]);
+      }
+
       showHomPage();
     } catch (error) {
       console.log(error);

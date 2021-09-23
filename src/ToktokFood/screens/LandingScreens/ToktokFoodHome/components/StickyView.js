@@ -70,7 +70,7 @@ const StickyView = () => {
     userLatitude: location?.latitude,
   };
 
-  console.log(variableInput);
+  // console.log(variableInput);
   const scrollRef = useRef();
 
   // data fetching for shops
