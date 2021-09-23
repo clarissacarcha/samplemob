@@ -45,6 +45,7 @@ export const ToktokWalletRecoverPin = ({navigation , route})=> {
 
     const session = useSelector(state=>state.session)
     const type = route.params.type
+    const event = route?.params?.event ? route.params.event : null
     const tokwaAccount = useSelector(state=>state.toktokWallet)
     const [pinCode,setPinCode] = useState("")
     const inputRef = useRef();
@@ -77,7 +78,7 @@ export const ToktokWalletRecoverPin = ({navigation , route})=> {
                 return navigation.replace("ToktokWalletUpdatePin")
             }
             // type is MPIN
-            return navigation.replace("ToktokWalletMPINUpdate")
+            return navigation.replace("ToktokWalletMPINUpdate" , {event})
         },
         onError: (error)=>{
             const {graphQLErrors, networkError} = error

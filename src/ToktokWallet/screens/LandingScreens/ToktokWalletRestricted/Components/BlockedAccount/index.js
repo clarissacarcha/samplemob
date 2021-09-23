@@ -1,5 +1,5 @@
-import React from 'react'
-import {View,Text,StyleSheet} from 'react-native'
+import React, { useState } from 'react'
+import {View,Text,StyleSheet,TouchableOpacity} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
 import { HeaderImageBackground , HeaderTitle , Separator } from 'toktokwallet/components'
 import { YellowButton , VectorIcon , ICON_SET } from 'src/revamp'
@@ -13,12 +13,23 @@ const  { COLOR , FONT_SIZE , FONT_FAMILY: FONT } = CONSTANTS
 export const BlockedAccount = ({data})=> {
     const navigation = useNavigation()
     const { account } = data
+    const [visible,setVisible] = useState(false)
 
     navigation.setOptions({
         headerShown:false,
     })
+
+    const HelpCenter = ()=> {
+        setVisible(true)
+    }
+
     return (
         <>
+        <AccountRecovery
+            visible={visible}
+            setVisible={setVisible}
+            account={account}
+        />
         <View style={styles.container}>
              <View style={styles.headings}>
                 <HeaderImageBackground>
@@ -32,9 +43,9 @@ export const BlockedAccount = ({data})=> {
                     <Text style={styles.clickVerifyText}>Your toktokwallet account has been blocked or put on-hold. To know more details, contact support@toktokwallet.ph and (02) 84-248-617.</Text>
                 </View>
 
-                {
-                    account.disabledType == "2" && <AccountRecovery/>
-                }
+                <TouchableOpacity onPress={HelpCenter} style={styles.helpCenter}>
+                    <Text style={styles.labelHC}>Help Center</Text>
+                 </TouchableOpacity>
             </View>
 
             <View style={{height: 70,padding: 16,justifyContent:'flex-end'}}>
@@ -78,4 +89,16 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         fontSize: FONT_SIZE.S
     },
+    helpCenter: {
+        justifyContent:'center',
+        alignItems:'center',
+        marginVertical: 10,
+        marginTop: 20
+    },
+    labelHC: {
+        fontFamily: FONT.BOLD,
+        fontSize: FONT_SIZE.L,
+        color: COLOR.ORANGE,
+        textDecorationLine:"underline"
+    }
 })

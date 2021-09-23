@@ -3,6 +3,7 @@ import {View,Text,StyleSheet,TouchableOpacity,Modal,Image} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
 import { BlackButton, ICON_SET, VectorIcon, YellowButton } from 'src/revamp'
 import {BuildingBottom} from 'toktokwallet/components'
+import { useAccount } from 'toktokwallet/hooks'
 import CONSTANTS from 'common/res/constants'
 
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
@@ -18,11 +19,18 @@ const Reminder = ({children})=> {
     )
 }
 
-export const SuccessModal = ({modalVisible , setModalVisible})=> {
+export const SuccessModal = ({modalVisible , setModalVisible , event})=> {
     const navigation = useNavigation()
+    const { getMyAccount } = useAccount();
 
     const closeModal = ()=> {
         setModalVisible(false)
+
+        if(event == "ACCOUNT RECOVERY"){
+            getMyAccount();
+            navigation.pop(3);
+            return navigation.navigate("ToktokWalletHomePage");
+        }
         navigation.navigate("ToktokWalletHomePage")
         navigation.replace("ToktokWalletHomePage")
     }

@@ -46,7 +46,9 @@ const HeaderBack = ({pageIndex,setPageIndex,navigation})=> {
     )
 }
 
-export const ToktokWalletMPINUpdate =  ({navigation})=> {
+export const ToktokWalletMPINUpdate =  ({navigation , route})=> {
+
+    const event = route.params.event
 
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack pageIndex={pageIndex} setPageIndex={setPageIndex} navigation={navigation}/>,
@@ -112,7 +114,7 @@ export const ToktokWalletMPINUpdate =  ({navigation})=> {
                 setVisible={setLeaveModalVisible}
                 onConfirm={()=>navigation.pop(2)}
             />
-            <SuccessModal modalVisible={successModalVisible} setModalVisible={setSuccessModalVisible}/>
+            <SuccessModal modalVisible={successModalVisible} setModalVisible={setSuccessModalVisible} event={event}/>
             <Separator />
             <KeyboardAvoidingView style={{flex: 1,}}
              keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80}  

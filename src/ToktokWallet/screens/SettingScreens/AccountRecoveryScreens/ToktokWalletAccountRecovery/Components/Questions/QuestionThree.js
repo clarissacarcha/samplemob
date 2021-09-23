@@ -31,7 +31,8 @@ const QuestionThree = ({
         fetchPolicy: "network-only",
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({getForgotAndRecoverOTPCode})=>{
-            return navigation.navigate("ToktokWalletAccountRecoveryOTP")
+            // return navigation.navigate("ToktokWalletAccountRecoveryOTP")
+            return navigation.navigate("ToktokWalletRecoverPin" , {type: "MPIN" , event: "ACCOUNT RECOVERY"})
         },
         onError: (error)=>{
             onErrorAlert({alert,error})
