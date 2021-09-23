@@ -131,10 +131,12 @@ export const TransactionList = (props) => {
               item={item}
               index={index}
               data={data.getTransactions}
+              focusTab={focusTab}
             />
           }
           contentContainerStyle={{ paddingBottom: Platform.OS == 'android' ? verticalScale(20) : 0 }}
           extraData={loadMore}
+          keyExtractor={(val, index) => index.toString()}
           onEndReachedThreshold={1}
           onEndReached={() => handleLoadMore()}
           ListEmptyComponent={renderEmpty}

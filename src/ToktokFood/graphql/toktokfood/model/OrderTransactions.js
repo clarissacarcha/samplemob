@@ -29,6 +29,7 @@ const transaction = `
   dateRedeliver
   dateShipped
   dateReceived
+  dateCancelled
   tDeliveryId
   tShareLink
   isconfirmed

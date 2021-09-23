@@ -18,6 +18,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import {useIsFocused} from '@react-navigation/native';
 import {removeRiderDetails} from 'toktokfood/helper/ShowRiderDetails';
+import DialogMessage from 'toktokfood/components/DialogMessage';
 
 const CUSTOM_HEADER = {
   container: Platform.OS === 'android' ? moderateScale(83) : moderateScale(70),
@@ -32,6 +33,12 @@ const ToktokFoodDriver = ({route, navigation}) => {
   const [showLoader, setShowLoader] = useState(false);
   const [transaction, setTransaction] = useState({});
   const [riderDetails, setRiderDetails] = useState(null);
+  const [showDialogMessage, setShadowDialogMessage] = useState({
+    title: '',
+    message: '',
+    show: false,
+    type: ''
+  });
   const checkOrderResponse5mins = useRef(null);
   const getRiderDetailsInterval = useRef(null);
   const isFocus = useIsFocused();
@@ -164,13 +171,19 @@ const ToktokFoodDriver = ({route, navigation}) => {
   const handleOrderProcess = async () => {
     if (transaction && Object.keys(transaction).length > 0) {
       if (transaction.orderStatus == 's') {
+        let message = transaction.orderIsfor == 1 ? 'Your order has been delivered successfully.' : 'You have successfully picked up your order.'
         clearInterval(checkOrderResponse5mins.current);
         clearInterval(getRiderDetailsInterval.current);
         await removeRiderDetails(referenceNum);
-        alertPrompt('Order Completed', 'Thank you for choosing, toktokfood!', 'Okay');
+        setShadowDialogMessage({
+          title: 'Order Complete',
+          message,
+          show: false,
+          type: 'success'
+        });
         return;
       }
-      if (transaction.isdeclined != 1) {
+      if (transaction.isdeclined == 0) {
         if (seconds > 0) {
           if (transaction.orderStatus != 'p' && transaction?.orderIsfor == 1) {
             refetch({variables: {input: {referenceNum: referenceNum}}});
@@ -186,10 +199,20 @@ const ToktokFoodDriver = ({route, navigation}) => {
             clearInterval(checkOrderResponse5mins.current);
             clearInterval(getRiderDetailsInterval.current);
             if (transaction.orderStatus == 'p') {
-              alertPrompt('No Response', 'It takes some time for the merchant to confirm your order', 'retry');
+              setShadowDialogMessage({
+                title: 'No Response from Merchant',
+                message: `Merchant hasn't confirmed your order.\nPlease try again.`,
+                show: true,
+                type: 'warning'
+              });
             } else {
               if (transaction.orderIsfor == 1) {
-                alertPrompt('No Driver found', 'It takes some time for the drivers to confirm your booking', 'retry');
+                setShadowDialogMessage({
+                  title: `Couldn't Find Driver`,
+                  message: `We couldn't find you a driver as of this moment. Please try again.`,
+                  show: true,
+                  type: 'warning'
+                });
               }
             }
           } else {
@@ -197,19 +220,25 @@ const ToktokFoodDriver = ({route, navigation}) => {
           }
         }
       } else {
-        alertPrompt('Order Declined', 'Your order has been declined by merchant', 'Okay');
+        setShadowDialogMessage({
+          title: 'OOPS!',
+          message: 'Your order has been declined.',
+          show: true,
+          type: 'warning'
+        });
       }
     }
   };
 
-  const alertPrompt = (title, message, status) => {
-    Alert.alert(title, message, [
-      {
-        text: status,
-        onPress: () => (status == 'retry' ? setSeconds(300) : navigation.navigate('ToktokFoodOrderTransactions')),
-      },
-    ]);
-  };
+  const onCloseModal = () => {
+    let { title } = showDialogMessage
+    setShadowDialogMessage(prev => ({ ...prev, show: false }))
+    if(title == 'Order Complete' || title == 'OOPS!'){
+      navigation.navigate('ToktokFoodOrderTransactions')
+    } else {
+      setSeconds(300)
+    }
+  }
 
   return (
     <View style={{flex: 1, backgroundColor: '#FFFF'}}>
@@ -217,6 +246,13 @@ const ToktokFoodDriver = ({route, navigation}) => {
         <HeaderTitle title="Place Order" />
       </HeaderImageBackground>
       <Loader visibility={showLoader} message="Canceling order..." />
+      <DialogMessage
+        type={showDialogMessage.type}
+        title={showDialogMessage.title}
+        messages={showDialogMessage.message}
+        visibility={showDialogMessage.show}
+        onCloseModal={() => { onCloseModal() }}
+      />
       <CancelOrder
         onProcess={() => setShowLoader(true)}
         onCloseSheet={() => {

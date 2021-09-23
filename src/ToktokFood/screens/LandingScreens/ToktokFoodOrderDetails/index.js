@@ -16,6 +16,7 @@ import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import {rider1} from 'toktokfood/assets/images';
 import {removeRiderDetails} from 'toktokfood/helper/ShowRiderDetails';
 import {useIsFocused} from '@react-navigation/native';
+import DialogMessage from 'toktokfood/components/DialogMessage';
 
 // Utils
 import {moderateScale, getStatusbarHeight} from 'toktokfood/helper/scale';
@@ -35,6 +36,12 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
   const [riderDetails, setRiderDetails] = useState(null);
   const checkOrderResponse5mins = useRef(null);
   const isFocus = useIsFocused();
+  const [showDialogMessage, setShadowDialogMessage] = useState({
+    title: '',
+    message: '',
+    show: false,
+    type: ''
+  });
 
   const [getTransactionByRefNum, {error: transactionError, loading: transactionLoading, refetch}] = useLazyQuery(
     GET_ORDER_TRANSACTION_BY_REF_NUM,
@@ -138,10 +145,16 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
   const handleOrderProcess = async() => {
     if(transaction && Object.entries(transaction).length > 0 && orderStatus == undefined){
       if(transaction.orderStatus == 's'){
+        let message = transaction.orderIsfor == 1 ? 'Your order has been delivered successfully.' : 'You have successfully picked up your order.'
         clearInterval(checkOrderResponse5mins.current);
         await removeRiderDetails(referenceNum)
-        alertPrompt('Order Completed', 'Thank you for choosing, toktokfood!', 'Okay');
-        return 
+        setShadowDialogMessage({
+          title: 'Order Complete',
+          message,
+          show: false,
+          type: 'success'
+        });
+        return;
       }
       if (transaction.isdeclined != 1) {
         if (seconds > 0) {
@@ -159,10 +172,20 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
           if (riderDetails == null) {
             clearInterval(checkOrderResponse5mins.current);
             if (transaction.orderStatus == 'p') {
-              alertPrompt('No Response', 'It takes some time for the merchant to confirm your order', 'retry');
+              setShadowDialogMessage({
+                title: 'No Response from Merchant',
+                message: `Merchant hasn't confirmed your order.\nPlease try again.`,
+                show: true,
+                type: 'warning'
+              });
             } else {
               if (transaction.orderIsfor == 1) {
-                alertPrompt('No Driver found', 'It takes some time for the drivers to confirm your booking', 'retry');
+                setShadowDialogMessage({
+                  title: `Couldn't Find Driver`,
+                  message: `We couldn't find you a driver as of this moment. Please try again.`,
+                  show: true,
+                  type: 'warning'
+                });
               }
             }
           } else {
@@ -170,7 +193,12 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
           }
         }
       } else {
-        alertPrompt('Order Declined', 'Your order has been declined by merchant', 'Okay');
+        setShadowDialogMessage({
+          title: 'OOPS!',
+          message: 'Your order has been declined.',
+          show: true,
+          type: 'warning'
+        });
       }
     }
   };
@@ -184,8 +212,25 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
     ]);
   };
 
+  const onCloseModal = () => {
+    let { title } = showDialogMessage
+    setShadowDialogMessage(prev => ({ ...prev, show: false }))
+    if(title == 'Order Complete' || title == 'OOPS!'){
+      navigation.navigate('ToktokFoodOrderTransactions')
+    } else {
+      setSeconds(300)
+    }
+  }
+
   return (
     <View style={styles.container}>
+      <DialogMessage
+        type={showDialogMessage.type}
+        title={showDialogMessage.title}
+        messages={showDialogMessage.message}
+        visibility={showDialogMessage.show}
+        onCloseModal={() => { onCloseModal() }}
+      />
       <HeaderImageBackground customSize={CUSTOM_HEADER}>
         <HeaderTitle title="Order Details" />
       </HeaderImageBackground>

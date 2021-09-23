@@ -15,7 +15,6 @@ const OrderRider = ({ riderDetails, transaction, referenceNum }) => {
   const [showDriverModal, setShowDriverModal] = useState(false);
 
   useEffect(() => {
-    console.log(transaction.orderStatus)
     if(riderDetails != null && transaction.orderStatus != 's'){
       handleCheckRiderDetails();
     }

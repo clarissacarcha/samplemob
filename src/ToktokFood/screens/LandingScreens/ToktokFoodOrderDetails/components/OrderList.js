@@ -24,7 +24,6 @@ const DisplayAddons = ({ addOns }) => {
 const OrderList = ({ orderDetails }) => {
 
   const renderItem = ({item}) => {
-    console.log(item.notes)
     let parseAddOns = JSON.parse(item.addons);
     return(
       <View style={styles.listContainer}>

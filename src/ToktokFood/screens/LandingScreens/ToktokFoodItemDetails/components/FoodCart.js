@@ -24,6 +24,7 @@ import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import {useDispatch, useSelector} from 'react-redux';
 import Loader from 'toktokfood/components/Loader';
+import DialogMessage from 'toktokfood/components/DialogMessage';
 
 export const FoodCart = ({basePrice = 0.0, loading}) => {
   const dispatch = useDispatch();
@@ -46,6 +47,7 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
     temporaryCart,
   } = useContext(VerifyContext);
   const {customerInfo} = useSelector((state) => state.toktokFood);
+  const [showDialogMessage, setShowDialogMessage] = useState({ show: false, items: [] });
 
   const [postTemporaryCart, {loading: postLoading, error: postError}] = useMutation(POST_TEMPORARY_CART, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
@@ -202,30 +204,10 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
         return addToCart(items)
       }
       if(hasTemporaryCart.checkHasTemporaryCart.shopid){
-        Alert.alert(
-          '',
-          'You have existing items on your cart. If you add this to cart, the current cart will be empty. Would you like to proceed?',
-        [
-          { text: 'No', onPress: () => {} },
-          { text: "Yes", onPress: () => {
-            setLoader(true)
-            deleteShopTemporaryCart({ variables: { 
-              input: { 
-                userid: customerInfo.userId,
-                shopid: hasTemporaryCart.checkHasTemporaryCart.shopid,
-                branchid: 0,
-              } 
-            }}).then(({ data }) => {
-              let {status, message} = data.deleteShopTemporaryCart;
-              if(status == 200){
-                addToCart(items)
-              } else {
-                setLoader(false)
-                setTimeout(() => { Alert.alert('', message) }, 100)
-              }
-            })
-          }},
-        ]);
+        setShowDialogMessage({
+          show: true,
+          items
+        })
       } else {
         setLoader(true)
         addToCart(items)
@@ -245,6 +227,26 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
       }
       patchCartItem(items)
     }
+  }
+
+  const onPressProceed = () => {
+    setShowDialogMessage(prev => ({ ...prev, show: false }))
+    setLoader(true)
+    deleteShopTemporaryCart({ variables: { 
+      input: { 
+        userid: customerInfo.userId,
+        shopid: hasTemporaryCart.checkHasTemporaryCart.shopid,
+        branchid: 0,
+      } 
+    }}).then(({ data }) => {
+      let {status, message} = data.deleteShopTemporaryCart;
+      if(status == 200){
+        addToCart(showDialogMessage.items)
+      } else {
+        setLoader(false)
+        setTimeout(() => { Alert.alert('', message) }, 100)
+      }
+    })
   }
 
   const deleteCartItem = (editedId, items, action) => {
@@ -327,6 +329,17 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
         message="Adding to cart..."
         hasImage={false}
         loadingIndicator
+      />
+      <DialogMessage
+        visibility={showDialogMessage.show}
+        title={'OOPS!'}
+        messages={'You have existing items from a different restaurant in your cart. If you proceed, items will be removed.'}
+        type='warning'
+        btn1Title='Cancel'
+        btn2Title='Proceed'
+        onCloseBtn1={() => { setShowDialogMessage(prev => ({ ...prev, show: false })) }}
+        onCloseBtn2={() => { onPressProceed() }}
+        hasTwoButtons
       />
       <View style={[styles.container, styles.cartBorder]}>
         {productDetails.maxQtyIsset == 1 && (

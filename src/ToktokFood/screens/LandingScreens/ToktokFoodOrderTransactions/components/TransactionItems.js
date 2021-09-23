@@ -9,21 +9,37 @@ import { time } from 'toktokfood/assets/images';
 
 import { getOrderStatus, getSubMessageStatus, sameDay, dayTitle } from '../functions';
 
+const orderStatusDate = (item, focusTab) => {
+  let { dateOrdered, dateShipped, dateDeclined } = item;
+  let orderStatus = getOrderStatus(focusTab)
+  switch(orderStatus){
+    case 's':
+      return dateShipped;
+    case 'c':
+      return dateDeclined ? dateDeclined : new Date();
+
+    default:
+      return dateOrdered;
+  }
+}
+
 export const TransactionItems = (props) => {
 
   const navigation = useNavigation();
 
-  const { item, index, data } = props
-  let { address, orderStatus, shopDetails, orderDetails, dateOrdered } = item;
+  const { item, index, data, focusTab } = props
+  let { address, orderStatus, shopDetails, orderDetails } = item;
   let nextItem = data[index + 1] ? data[index + 1]  : false
   let isSameDay = false, lowerText = '', upperText = '';
+  let dateCurrent = orderStatusDate(item, focusTab);
+  let dateNext = orderStatusDate(nextItem, focusTab);
 
   if(index === 0){
-    upperText = dayTitle(dateOrdered)
+    upperText = dayTitle(dateCurrent)
   }
   if(nextItem){
-    isSameDay = sameDay(dateOrdered.toString(), nextItem.dateOrdered.toString())
-    lowerText = !isSameDay ? dayTitle(data[index + 1].dateOrdered) : ''
+    isSameDay = sameDay(dateCurrent.toString(), dateNext.toString())
+    lowerText = !isSameDay ? dayTitle(dateNext) : ''
   }
 
   const onTransactionsNavigate = (referenceNum) => {

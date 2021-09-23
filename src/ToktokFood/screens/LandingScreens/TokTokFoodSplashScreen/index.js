@@ -66,8 +66,8 @@ const TokTokFoodSplashScreen = () => {
   };
 
   useEffect(() => {
-    if (user) {
-      if (user.toktokfoodUserId != null) {
+    if(location) {
+      if(user.toktokfoodUserId != null){
         getToktokUserInfo({
           variables: {
             input: {
@@ -79,7 +79,7 @@ const TokTokFoodSplashScreen = () => {
         processCreateAccount();
       }
     }
-  }, [user]);
+  }, [user, location]);
 
   const processCreateAccount = () => {
     let {firstName, lastName, birthdate, emailAddress, gender} = user.person;
@@ -92,7 +92,7 @@ const TokTokFoodSplashScreen = () => {
           toktokid: user.id,
           contactnumber: `0${formattedMobile}`,
           email: emailAddress,
-          address: location.address,
+          address: location?.address,
           birthday: '',
           gender: '',
           postal_code: '',
@@ -104,11 +104,10 @@ const TokTokFoodSplashScreen = () => {
       },
     });
   };
-
   const patchToktokFoodUserId = async (getAccount) => {
     try {
       const API_RESULT = await axios({
-        url: `${ENVIRONMENTS.TOKTOK_SERVER}/graphql`,
+        url: `https://dev.toktok.ph:2096/graphql`,
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -128,16 +127,12 @@ const TokTokFoodSplashScreen = () => {
       });
       const res = API_RESULT.data.data;
 
-      console.log(res);
-
       if (res.patchToktokFoodUserId.status == 200) {
         dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_INFO', payload: {...getAccount}});
         showHomPage();
       } else {
         Alert.alert('', 'Something went wrong.', [{text: 'Okay', onPress: () => navigation.goBack()}]);
       }
-
-      showHomPage();
     } catch (error) {
       console.log(error);
     }
