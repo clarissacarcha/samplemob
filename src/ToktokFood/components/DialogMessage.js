@@ -12,7 +12,7 @@ import {success_ic, error_ic, warning_ic, question_ic} from 'toktokfood/assets/i
 const DialogMessage = (props) => {
   // type:  success | error | warning | question
   const {visibility, type, title, messages, onAccept, onCancel, onCloseModal, hasChildren,
-    children} = props;
+    children, hasTwoButtons, btn1Title, btn2Title, onCloseBtn1, onCloseBtn2} = props;
 
   const getDialogIcon = () => {
     switch (type) {
@@ -42,9 +42,20 @@ const DialogMessage = (props) => {
               )}
               { children }
             </View>
-            <TouchableOpacity style={styles.confirmButton} onPress={() => onCloseModal()}>
-              <Text style={styles.buttonText}>OK</Text>
-            </TouchableOpacity>
+            { hasTwoButtons ? (
+              <View style={{ flexDirection: 'row', marginHorizontal: moderateScale(25), marginBottom: 10 }}>
+                <TouchableOpacity style={[styles.btn1Style]} onPress={() => onCloseBtn1()}>
+                  <Text style={styles.buttonText}>{btn1Title}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.btn2Style} onPress={() => onCloseBtn2()}>
+                  <Text style={styles.buttonText}>{btn2Title}</Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <TouchableOpacity style={styles.confirmButton} onPress={() => onCloseModal()}>
+                <Text style={styles.buttonText}>OK</Text>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
       </Modal>
@@ -80,16 +91,15 @@ const styles = StyleSheet.create({
     paddingVertical: verticalScale(15),
   },
   messageTitle: {
-    fontSize: 24,
-    color: '#F46058',
+    fontSize: FONT_SIZE.XL,
     fontFamily: FONTS.BOLD,
   },
   messageContent: {
     textAlign: 'center',
-    color: COLORS.MEDIUM,
-    fontSize: FONT_SIZE.L,
+    fontSize: FONT_SIZE.M,
     fontFamily: FONTS.REGULAR,
     marginTop: moderateScale(8),
+    marginBottom: moderateScale(15)
   },
   buttonWrapper: {
     marginHorizontal: 10,
@@ -102,10 +112,27 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFA700',
     borderRadius: NUMBERS.BORDER_RADIUS,
   },
+  btn1Style: {
+    flex: 1,
+    alignItems: 'center',
+    height: BUTTON_HEIGHT,
+    justifyContent: 'center',
+    backgroundColor: '#868686',
+    borderRadius: NUMBERS.BORDER_RADIUS,
+    marginRight: 20
+  },
+  btn2Style: {
+    flex: 1,
+    alignItems: 'center',
+    height: BUTTON_HEIGHT,
+    justifyContent: 'center',
+    backgroundColor: '#FFA700',
+    borderRadius: NUMBERS.BORDER_RADIUS,
+  },
   cancelButton: {},
   buttonText: {
     color: COLORS.WHITE,
-    fontSize: FONT_SIZE.XL,
+    fontSize: FONT_SIZE.L,
     fontFamily: FONTS.BOLD,
   },
 });

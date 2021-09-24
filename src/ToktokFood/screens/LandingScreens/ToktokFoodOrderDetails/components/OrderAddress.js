@@ -9,6 +9,7 @@ import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import {useNavigation} from '@react-navigation/native';
 import { useIsFocused } from '@react-navigation/native';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 // Fonts/Colors
 import {COLORS, FONTS} from 'res/constants';
@@ -34,7 +35,7 @@ const OrderAddress = ({ transaction, riderDetails }) => {
   const [isRated, setIsRated] = useState(false);
   const [rating, setRating] = useState("0");
   const [showSuccess, setShowSuccess] = useState(false);
-
+ 
   const [rateShop, {loading, error}] = useMutation(RATE_SHOP, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     onCompleted: ({rateShop}) => {
@@ -46,20 +47,20 @@ const OrderAddress = ({ transaction, riderDetails }) => {
   });
 
   const [checkIfShopWasRated, {loading: loadingIsRated, error: errorIsRated}] = useLazyQuery(CHECK_IF_SHOP_WAS_RATED, {
+    variables: {
+      input: {
+        referenceNum: referenceNum
+      }
+    },
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
     onCompleted: ({checkIfShopWasRated}) => {
       setIsRated(checkIfShopWasRated.status)
     },
   });
 
   useEffect(() => {
-    checkIfShopWasRated({
-      variables: {
-        input: {
-          referenceNum: referenceNum
-        }
-      },
-    })
+    checkIfShopWasRated()
   }, [])
 
   const onPressRate = () => { setRatingModal(true) }
@@ -117,7 +118,7 @@ const OrderAddress = ({ transaction, riderDetails }) => {
         <View style={styles.dividerContainer}>
           <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
           <View style={styles.divider} />
-          {(riderDetails != null && orderStatus == 'f') ? (
+          {(riderDetails != null || orderStatus == 'f' || orderStatus == 's') ? (
               <MaterialIcon name="lens" size={16} color={COLORS.YELLOWTEXT} />
             ) : (
               <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
@@ -127,9 +128,9 @@ const OrderAddress = ({ transaction, riderDetails }) => {
       <View style={styles.addressInfo}>
         <View style={styles.flexDirection}>
           <Text style={styles.restaurant}>Restaurant</Text>
-          {(orderStatus == 's' && !isRated) && (
+          {/* {(orderStatus == 's' && !isRated) && (
             <Text onPress={onPressRate} style={styles.rateText}>Rate</Text>
-          )}
+          )} */}
         </View>
         <View style={styles.restauranContainer}>
           <Image style={styles.icons} source={locationOutline} resizeMode="contain" />

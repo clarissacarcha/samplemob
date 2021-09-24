@@ -12,12 +12,14 @@ const DEFAULT_CONTAINER_HEIGHT =
 const HeaderImageBackground = ({
   children,
   customSize = {container: DEFAULT_CONTAINER_HEIGHT, bgImage: DEFAULT_IMAGE_HEIGHT},
+  styleContainer
 }) => {
   return (
     <ImageBackground
       source={headerBg}
       imageStyle={[styles.image, {height: customSize.bgImage}]}
-      style={[styles.container, {height: customSize.container}]}>
+      style={[styles.container, {height: customSize.container}, styleContainer]}
+    >
       {children}
     </ImageBackground>
   );
@@ -31,7 +33,5 @@ const styles = StyleSheet.create({
   },
   container: {
     zIndex: 1,
-    // justifyContent: "center",
-    // alignItems: "center"
   },
 });

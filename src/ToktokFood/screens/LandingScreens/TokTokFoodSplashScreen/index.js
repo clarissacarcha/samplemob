@@ -2,7 +2,7 @@ import {useMutation, useLazyQuery} from '@apollo/react-hooks';
 import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
 import React, {useEffect} from 'react';
-import {ActivityIndicator, ImageBackground, StyleSheet} from 'react-native';
+import {ActivityIndicator, ImageBackground, StyleSheet, Alert} from 'react-native';
 import {useSelector} from 'react-redux';
 import {COLOR} from 'res/variables';
 import ENVIRONMENTS from 'src/common/res/environments';
@@ -25,7 +25,13 @@ const TokTokFoodSplashScreen = () => {
     onCompleted: ({createAccount}) => {
       let {status} = createAccount;
       if (status == 200) {
-        getToktokUserInfo();
+        getToktokUserInfo({
+          variables: {
+            input: {
+              toktokUserId: user.id,
+            },
+          },
+        });
       }
     },
   });
@@ -33,14 +39,18 @@ const TokTokFoodSplashScreen = () => {
   const [getToktokUserInfo, {data: foodPerson, error: foodPersonError, loading: foodPersonLoading}] = useLazyQuery(
     GET_ACCOUNT,
     {
-      variables: {
-        input: {
-          toktokUserId: user.id,
-        },
-      },
       client: TOKTOK_FOOD_GRAPHQL_CLIENT,
       fetchPolicy: 'network-only',
+      onError: (error) => {
+        const {graphQLErrors, networkError} = error;
+        if (networkError || graphQLErrors) {
+          return Alert.alert('', 'Network error occured. Please check your internet connection', [
+            {text: 'Okay', onPress: () => navigation.goBack()},
+          ]);
+        }
+      },
       onCompleted: ({getAccount}) => {
+        console.log(JSON.stringify({getAccount}));
         if (user.toktokfoodUserId != null) {
           dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_INFO', payload: {...getAccount}});
           showHomPage();
@@ -56,23 +66,33 @@ const TokTokFoodSplashScreen = () => {
   };
 
   useEffect(() => {
-    if (location && user) {
-      user.toktokfoodUserId != null ? getToktokUserInfo() : processCreateAccount();
+    if(location) {
+      if(user.toktokfoodUserId != null){
+        getToktokUserInfo({
+          variables: {
+            input: {
+              toktokUserId: user.id,
+            },
+          },
+        });
+      } else {
+        processCreateAccount();
+      }
     }
   }, [user, location]);
 
   const processCreateAccount = () => {
     let {firstName, lastName, birthdate, emailAddress, gender} = user.person;
-    const formattedMobile = user.username.substring(1, user.username.length);
+    const formattedMobile = user.username.substring(3, user.username.length);
     createAccount({
       variables: {
         input: {
           firstname: firstName,
           lastname: lastName,
           toktokid: user.id,
-          contactnumber: formattedMobile,
+          contactnumber: `0${formattedMobile}`,
           email: emailAddress,
-          address: location.address,
+          address: location?.address,
           birthday: '',
           gender: '',
           postal_code: '',
@@ -84,11 +104,10 @@ const TokTokFoodSplashScreen = () => {
       },
     });
   };
-
   const patchToktokFoodUserId = async (getAccount) => {
     try {
       const API_RESULT = await axios({
-        url: `${ENVIRONMENTS.TOKTOK_SERVER}/graphql`,
+        url: `https://dev.toktok.ph:2096/graphql`,
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -107,8 +126,13 @@ const TokTokFoodSplashScreen = () => {
         },
       });
       const res = API_RESULT.data.data;
-      dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_INFO', payload: {...getAccount}});
-      showHomPage();
+
+      if (res.patchToktokFoodUserId.status == 200) {
+        dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_INFO', payload: {...getAccount}});
+        showHomPage();
+      } else {
+        Alert.alert('', 'Something went wrong.', [{text: 'Okay', onPress: () => navigation.goBack()}]);
+      }
     } catch (error) {
       console.log(error);
     }

@@ -8,6 +8,8 @@ export const getOrderStatus = (focusTab) => {
       return 's'
     case 3:
       return 'c'
+    case 4:
+      return 'decline'
     
     default:
       return ''
@@ -24,8 +26,8 @@ export const getSubMessageStatus = (item) => {
       return 'Ready for Pickup';
     case 'po':
       return 'Processing Order';
-    case 'bc':
-      return 'Booking Confirmed';
+    case 'f':
+      return 'Your order is on the way to you';
     
     default:
       return 'Pending Order'

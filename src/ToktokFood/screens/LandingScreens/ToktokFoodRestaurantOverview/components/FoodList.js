@@ -2,7 +2,7 @@ import React, {useEffect, useState, useContext} from 'react';
 import {View, StyleSheet, Text, TouchableOpacity, Image, Platform, FlatList} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {useLazyQuery, useQuery} from '@apollo/react-hooks';
-import {GET_PRODUCTS_BY_SHOP_CATEGORY, GET_PRODUCTS_BY_SHOP} from 'toktokfood/graphql/toktokfood';
+import {GET_PRODUCTS_BY_SHOP_CATEGORY, GET_SEARCH_PRODUCTS_BY_SHOP} from 'toktokfood/graphql/toktokfood';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import {VerifyContext} from '../components';
@@ -16,13 +16,16 @@ import {
   getStatusbarHeight,
   moderateScale,
   isIphoneXorAbove,
+  getIphoneNotchSize
 } from 'toktokfood/helper/scale';
 
 export const FoodList = (props) => {
   const {activeTab, id, tagsLoading} = props;
   const navigation = useNavigation();
-  const {searchProduct, setSearchProduct} = useContext(VerifyContext);
-
+  const {searchProduct, setSearchProduct, temporaryCart, foodCartHeight, navBartHeight} = useContext(VerifyContext);
+  const navBar = Platform.OS == 'ios' ? navBartHeight + (getIphoneNotchSize * 2) : navBartHeight
+  const minHeight = (getDeviceHeight - navBar) - foodCartHeight 
+ 
   // data fetching for product under specific category
   const [getProductsByShopCategory, {data: products, error: productsError, loading: productsLoading}] = useLazyQuery(
     GET_PRODUCTS_BY_SHOP_CATEGORY,
@@ -41,9 +44,9 @@ export const FoodList = (props) => {
 
   // data fetching for product
   const [
-    getProductsByShop,
+    getSearchProductsByShop,
     {data: searchProducts, error: searchProductsError, loading: searchProductsLoading},
-  ] = useLazyQuery(GET_PRODUCTS_BY_SHOP, {
+  ] = useLazyQuery(GET_SEARCH_PRODUCTS_BY_SHOP, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
   });
@@ -57,25 +60,24 @@ export const FoodList = (props) => {
 
   useEffect(() => {
     if (searchProduct) {
-      getProductsByShop({
+      getSearchProductsByShop({
         variables: {
           input: {
             id: id,
             key: searchProduct,
-            requestFrom: 'customer'
           },
         },
       });
     }
   }, [searchProduct]);
 
-  const onNavigateToFoodItemDetails = (item) => {
-    navigation.navigate('ToktokFoodItemDetails', {...item, shopId: id});
+  const onNavigateToFoodItemDetails = (Id) => {
+    navigation.navigate('ToktokFoodItemDetails', { Id, temporaryCart: temporaryCart.items });
   };
 
   const renderItem = ({item}) => {
     return (
-      <TouchableOpacity onPress={() => onNavigateToFoodItemDetails(item)} style={styles.listContainer}>
+      <TouchableOpacity onPress={() => onNavigateToFoodItemDetails(item.Id)} style={styles.listContainer}>
         <View>
           <Text style={styles.listText}>{item.itemname}</Text>
           <Text style={styles.listPrice}>PHP {item.price.toFixed(2)}</Text>
@@ -89,17 +91,34 @@ export const FoodList = (props) => {
   };
 
   if (productsLoading || tagsLoading || productsError || searchProductsLoading) {
-    return <LoadingIndicator style={[styles.container, {paddingVertical: 20}]} isLoading={true} />;
+    return (
+      <LoadingIndicator
+        style={[
+          styles.container,
+          {
+            minHeight,
+            paddingVertical: 20
+          }
+        ]}
+          isLoading={true}
+        />
+    )
   }
+
   return (
     <>
       <FlatList
-        data={searchProduct ? searchProducts?.getProductsByShop : products ? products.getProductsByShopCategory : []}
+        data={searchProduct ? searchProducts?.getSearchProductsByShop : products ? products.getProductsByShopCategory : []}
         extraData={props}
         renderItem={renderItem}
-        contentContainerStyle={styles.container}
+        contentContainerStyle={[
+          styles.container,
+          { minHeight }
+        ]}
         ListEmptyComponent={() => (
-          <View style={styles.container}>
+          <View
+           
+          >
             <Text style={{textAlign: 'center', marginVertical: 20}}>No products</Text>
           </View>
         )}
@@ -110,12 +129,11 @@ export const FoodList = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-    minHeight:
-      Platform.OS === 'ios' && isIphoneXorAbove()
-        ? 518
-        : getDeviceHeight -
-          ((Platform.OS === 'android' ? moderateScale(88 + getStatusbarHeight) : moderateScale(105)) +
-            moderateScale(180)),
+      // Platform.OS === 'ios' && isIphoneXorAbove()
+      //   ? 518
+      //   : getDeviceHeight -
+      //     ((Platform.OS === 'android' ? moderateScale(88 + getStatusbarHeight) : moderateScale(105)) +
+      //       moderateScale(180)),
     flex: 1,
     backgroundColor: COLOR.WHITE,
   },

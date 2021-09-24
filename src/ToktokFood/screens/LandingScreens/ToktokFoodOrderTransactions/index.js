@@ -17,7 +17,7 @@ import {transactions} from 'toktokfood/helper/strings';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
-import { TransactionTabs, TransactionList } from './components';
+import { TransactionTabs, TransactionList, VerifyContext, VerifyContextProvider } from './components';
 import {useIsFocused} from '@react-navigation/native';
 
 // Functions
@@ -33,66 +33,36 @@ const CUSTOM_HEADER = {
   bgImage: Platform.OS === 'android' ? moderateScale(83) : moderateScale(70),
 };
 
-const ToktokFoodOrderTransactions = () => {
+const MainComponent = () => {
   const navigation = useNavigation();
 
-  const [focusTab, setFocusTab] = useState(1);
-  const [refreshing, setRefreshing] = useState(false);
-  const [transactionList, setTransactionList] = useState([]);
-  const isFocus = useIsFocused();
-  const { customerInfo } = useSelector((state) => state.toktokFood);
-
-  // data fetching for product under specific category
-  const [getOrderTransactions, {data, error, loading }] = useLazyQuery(GET_ORDER_TRANSACTIONS, {
-    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-    fetchPolicy: 'network-only',
-    onCompleted: ({ getTransactions }) => {
-      let sorted = getTransactions.sort((a, b) => b.dateOrdered.localeCompare(a.dateOrdered))
-      setTransactionList(sorted)
-    }
-  });
- 
-  useEffect(() => {
-    if(customerInfo && isFocus){
-      processTransactions()
-    }
-  }, [customerInfo, focusTab, isFocus])
-
-  const processTransactions = () => {
-    let orderStatus = getOrderStatus(focusTab)
-    getOrderTransactions({
-      variables: {
-        input: {
-          userId: `${customerInfo.userId}`,
-          orderStatus: orderStatus
-        }
-      },
-    })
-    setRefreshing(false)
-  }
-
-  const onRefresh = () => {
-    setRefreshing(true)
-    processTransactions()
-  }
-
+  
   return (
     <>
       <View style={styles.container}>
         <HeaderImageBackground customSize={CUSTOM_HEADER}>
           <HeaderTitle titleOnly showAddress={false} title="Food Orders" />
         </HeaderImageBackground>
-        <TransactionTabs focusTab={focusTab} setFocusTab={setFocusTab} />
+        <TransactionTabs />
         <TransactionList
-          data={transactionList}
-          loading={loading}
-          error={error}
-          refreshing={refreshing}
-          onRefresh={onRefresh}
+          // data={transactionList}
+          // loading={loading}
+          // error={error}
+          // refreshing={refreshing}
+          // onRefresh={onRefresh}
+          // loadMore={loadMore}
         />
       </View>
     </>
   );
+}
+
+const ToktokFoodOrderTransactions = () => {
+  return (
+    <VerifyContextProvider>
+      <MainComponent />
+    </VerifyContextProvider>
+  )
 };
 
 const styles = StyleSheet.create({

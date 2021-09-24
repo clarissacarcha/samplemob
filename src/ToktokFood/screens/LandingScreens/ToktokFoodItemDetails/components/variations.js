@@ -1,11 +1,12 @@
 import _ from 'lodash';
-import React, {useEffect, useState, useContext} from 'react';
+import React, {useEffect, useState, useContext, useCallback} from 'react';
 import {StyleSheet, Text, TextInput, View, FlatList} from 'react-native';
 import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 import RadioButton from 'toktokfood/components/RadioButton';
 // Utils
 import {moderateScale, scale, verticalScale} from 'toktokfood/helper/scale';
 import {VerifyContext} from '.';
+import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 export const Variations = ({basePrice, item}) => {
   const {
     totalPrice,
@@ -18,7 +19,7 @@ export const Variations = ({basePrice, item}) => {
     requiredOptions,
     setRequiredOptions,
     notes,
-    setNotes,
+    setNotes
   } = useContext(VerifyContext);
 
   useEffect(() => {
@@ -46,7 +47,7 @@ export const Variations = ({basePrice, item}) => {
     }
   }, [selected]);
 
-  const onValueChange = ({item, options, index, temp}) => {
+  const onValueChange = useCallback(({item, options, index, temp}) => {
     let opt = {
       addon_id: parseInt(options.id),
       addon_name: options.optionName,
@@ -61,8 +62,8 @@ export const Variations = ({basePrice, item}) => {
             return {...prev, [item.optionName]: selected[item.optionName]};
           });
         } else {
-          delete selected[item.optionName];
-          setSelected({...selected});
+          const {[item.optionName]: val, ...data} = selected;
+          setSelected(data);
         }
       } else {
         if (selected[item.optionName].length != item.noOfSelection) {
@@ -84,16 +85,18 @@ export const Variations = ({basePrice, item}) => {
         return {...prev, [item.optionName]: temp};
       });
     }
-  };
+  }, [selected])
 
   const renderVariants = ({item}) => {
     let temp = [];
-    // setRequiredOptions(prev => { return { ...prev, [item.optionName]: item.isRequired }})
+    if(!(requiredOptions[item.optionName]) && item.isRequired){
+      setRequiredOptions(prev => { return { ...prev, [item.optionName]: item.isRequired }})
+    }
     return (
       <>
         <View style={styles.variations}>
           <Text style={styles.variationTitle}>
-            Choose your {item.optionName.toLowerCase()} (Pick {item.noOfSelection})
+            Choose your {item.optionName.toLowerCase()} (Pick atleast 1)
           </Text>
           <Text>{item.isRequired ? 'REQURED' : 'OPTIONAL'}</Text>
           {item.options.map((options, i) => {
@@ -125,20 +128,18 @@ export const Variations = ({basePrice, item}) => {
 
   return (
     <>
-      <View style={styles.container}>
-        <FlatList data={item} renderItem={renderVariants} />
-        <View style={styles.variations}>
-          <Text style={styles.variationTitle}>Special Instructions (Optional)</Text>
-          <TextInput
-            value={notes}
-            multiline={true}
-            numberOfLines={4}
-            style={styles.input}
-            placeholder="Type your instructions here..."
-            placeholderTextColor={COLOR.MEDIUM}
-            onChangeText={(notes) => setNotes(notes)}
-          />
-        </View>
+      <FlatList data={item} renderItem={renderVariants} style={{flex: 1}}/>
+      <View style={styles.variations}>
+        <Text style={styles.variationTitle}>Special Instructions (Optional)</Text>
+        <TextInput
+          value={notes}
+          multiline={true}
+          numberOfLines={4}
+          style={styles.input}
+          placeholder="Type your instructions here..."
+          placeholderTextColor={COLOR.MEDIUM}
+          onChangeText={(notes) => setNotes(notes)}
+        />
       </View>
     </>
   );
@@ -150,7 +151,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLOR.WHITE,
   },
   variations: {
-    flex: 1,
+    // flex: 1,
     paddingBottom: 10,
     borderBottomWidth: 8,
     borderBottomColor: COLOR.LIGHT,

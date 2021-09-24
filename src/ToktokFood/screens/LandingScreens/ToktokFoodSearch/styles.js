@@ -1,8 +1,8 @@
 import {StyleSheet} from 'react-native';
-import {COLOR, FONT} from 'res/variables';
+import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 
 // Utils
-import {verticalScale, scale} from 'toktokfood/helper/scale';
+import {verticalScale, scale, moderateScale} from 'toktokfood/helper/scale';
 
 export default styles = StyleSheet.create({
   container: {
@@ -68,5 +68,21 @@ export default styles = StyleSheet.create({
   tabContainer: {
     marginTop: 18,
     paddingHorizontal: 10,
+  },
+  emptyContainer: {
+    alignItems: 'center',
+    flex: 1,
+    paddingTop: verticalScale(80)
+  },
+  emptyImg: {
+    height: moderateScale(175),
+    width: moderateScale(250),
+  },
+  emptyText: {
+    color: '#9E9E9E',
+    fontSize: FONT_SIZE.L,
+    marginTop: moderateScale(20),
+    marginHorizontal: moderateScale(50),
+    textAlign: 'center'
   },
 });

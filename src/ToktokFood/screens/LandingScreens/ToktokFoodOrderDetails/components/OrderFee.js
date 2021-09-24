@@ -8,9 +8,9 @@ import {FONT_SIZE} from 'res/variables';
 // Utils
 import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
 
-const OrderFee = ({ data }) => {
-
-  const { totalAmount, deliveryAmount } = data
+const OrderFee = ({data, forDelivery}) => {
+  const {totalAmount, deliveryAmount} = data;
+  let deliveryFee = deliveryAmount ? deliveryAmount : 0;
 
   return (
     <View style={styles.container}>
@@ -18,14 +18,20 @@ const OrderFee = ({ data }) => {
         <Text>Subtotal</Text>
         <Text style={styles.subtotal}>{`PHP ${totalAmount.toFixed(2)}`}</Text>
       </View>
-      <View style={styles.header}>
-        <Text>Delivery Fee</Text>
-        <Text style={styles.subtotal}>{`PHP ${deliveryAmount.toFixed(2)}`}</Text>
-      </View>
+      {forDelivery && (
+        <View style={styles.header}>
+          <Text>Delivery Fee</Text>
+          <Text style={styles.subtotal}>{`PHP ${deliveryFee.toFixed(2)}`}</Text>
+        </View>
+      )}
       <View style={styles.divider} />
       <View style={styles.header}>
         <Text style={styles.total}>Total</Text>
-        <Text style={styles.totalPrice}>{`PHP ${(deliveryAmount + totalAmount).toFixed(2)}`}</Text>
+        {forDelivery ? (
+          <Text style={styles.totalPrice}>{`PHP ${(deliveryFee + totalAmount).toFixed(2)}`}</Text>
+        ) : (
+          <Text style={styles.totalPrice}>{`PHP ${totalAmount.toFixed(2)}`}</Text>
+        )}
       </View>
     </View>
   );

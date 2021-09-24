@@ -2,10 +2,11 @@ import React from 'react';
 import {View, Modal, StyleSheet, Image, Text} from 'react-native';
 import {COLOR, FONT} from 'res/variables';
 
-import {verticalScale, scale, moderateScale} from 'toktokfood/helper/scale';
+import {scale, moderateScale} from 'toktokfood/helper/scale';
 import {ordering} from 'toktokfood/assets/images';
+import LoadingIndicator from './LoadingIndicator';
 
-const Loader = ({visibility = false, message = ''}) => {
+const Loader = ({visibility = false, message = '', hasImage = true, loadingIndicator = false}) => {
   return (
     <Modal
       visible={visibility}
@@ -15,7 +16,8 @@ const Loader = ({visibility = false, message = ''}) => {
       presentationStyle="overFullScreen">
       <View style={styles.content}>
         <View style={[styles.proto, styles.shadow]}>
-          <Image style={styles.icon} source={ordering} resizeMode="contain" />
+          { hasImage && <Image style={[styles.icon, styles.paddingBottom]} source={ordering} resizeMode="contain" /> }
+          { loadingIndicator && <LoadingIndicator style={styles.paddingBottom} isLoading={true} /> }
           <Text style={styles.messageContent}>{message}</Text>
         </View>
       </View>
@@ -42,7 +44,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#FFFF',
     paddingVertical: scale(15),
-    height: verticalScale(250),
   },
   shadow: {
     backgroundColor: 'white',
@@ -67,6 +68,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: COLOR.ORANGE,
     fontFamily: FONT.NORMAL,
-    marginTop: moderateScale(20),
   },
+  paddingBottom: {
+    marginBottom: moderateScale(20)
+  }
 });

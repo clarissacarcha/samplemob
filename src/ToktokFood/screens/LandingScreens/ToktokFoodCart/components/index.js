@@ -4,3 +4,6 @@ export MyOrderList from './MyOrderList';
 export OrderTotal from './OrderTotal';
 export PaymentDetails from './PaymentDetails';
 export RiderNotes from './RiderNotes';
+export ShippingOption from './ShippingOption';
+export * from './VerifyContextProvider';
+

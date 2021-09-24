@@ -16,6 +16,7 @@ const INITIAL_STATE = {
   totalAmount: {},
   orderStatus: {status: 1},
   customerInfo: {},
+  location: {}
 };
 
 export default (state = INITIAL_STATE, action) => {

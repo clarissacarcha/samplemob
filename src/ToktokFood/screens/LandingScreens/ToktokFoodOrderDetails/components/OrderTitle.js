@@ -13,18 +13,17 @@ import {useSelector} from 'react-redux';
 import { getDistance, convertDistance } from 'geolib';
 
 const OrderTitle = ({ transaction, riderDetails }) => {
-  const { shopDetails, orderStatus, isconfirmed, address, dateReadyPickup, dateOrderProcessed, orderIsfor } = transaction;
+  const { shopDetails, orderStatus, isconfirmed, address, dateReadyPickup, dateOrderProcessed, dateBookingConfirmed, orderIsfor } = transaction;
   const {location} = useSelector((state) => state.toktokFood);
-  const date = riderDetails != null && orderStatus == 'po' ? dateOrderProcessed : dateReadyPickup
-  const status = orderIsfor == 1 ? orderStatusMessageDelivery(orderStatus, riderDetails, `${shopDetails.shopname} (${shopDetails.address})`) 
-    : orderStatusMessagePickUp(orderStatus, riderDetails, `${shopDetails.shopname} (${shopDetails.address})`);
+  const status = orderIsfor == 1 ? orderStatusMessageDelivery(orderStatus, riderDetails, `${shopDetails?.shopname} (${shopDetails.address})`) 
+    : orderStatusMessagePickUp(orderStatus, riderDetails, `${shopDetails?.shopname} (${shopDetails.address})`);
   
-  console.log(status, 'adasd')
   const calculateDistance = (startTime, riderLocation) => { 
    
     let distance = getDistance(
       { latitude: location?.latitude, longitude: location?.longitude },
-      { latitude: 14.537752, longitude: 121.001381 }
+      // { latitude: 14.537752, longitude: 121.001381 }
+      { latitude: riderLocation.latitude, longitude: riderLocation.longitude },
     );
     let distanceMiles = convertDistance(distance, 'mi')
     let duration = distanceMiles / 60
@@ -46,8 +45,9 @@ const OrderTitle = ({ transaction, riderDetails }) => {
   }
 
   const renderEstimatedDeliveryTime = () => {
+    let date = dateReadyPickup.toString() != 'Invalid date' ? dateReadyPickup : dateBookingConfirmed
     let startTime = moment(date).format('LT')
-    let endTime = calculateDistance(date)
+    let endTime = calculateDistance(date, riderDetails.location)
     return (
       <View style={styles.timeContainer}>
         <MaterialIcon name="schedule" size={16} color={COLORS.YELLOWTEXT} />
@@ -60,14 +60,10 @@ const OrderTitle = ({ transaction, riderDetails }) => {
     <View style={styles.detailsContainer}>
       <Text style={styles.title}>{status.title}</Text>
       { !!status.message && <Text style={styles.status}>{status.message}</Text> }
-      { transaction.orderIsfor == 2 && (orderStatus != 'p' && orderStatus!== 'c' && orderStatus !== 's') && renderEstimatedPickUpTime()}
-      {(riderDetails != null && transaction.orderIsfor == 1) && renderEstimatedDeliveryTime() }
-      {/* {(riderDetails != null && transaction.orderIsfor == 1) && (
-        <View style={styles.timeContainer}>
-          <MaterialIcon name="schedule" size={16} color={COLORS.YELLOWTEXT} />
-          <Text style={styles.time}>{`Estimated Delivery Time: ${startTime} - ${endTime}`}</Text>
-        </View>
-      )} */}
+      { transaction.orderIsfor == 2 && (orderStatus != 'p' && orderStatus!== 'c' && orderStatus !== 's')
+        && renderEstimatedPickUpTime()}
+      {(riderDetails != null && transaction.orderIsfor == 1 && (orderStatus != 'p' && orderStatus!== 'c' && orderStatus !== 's'))
+        && renderEstimatedDeliveryTime() }
     </View>
   );
 };

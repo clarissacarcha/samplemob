@@ -18,18 +18,20 @@ import moment from 'moment';
 const DriverDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) => {
   const navigation = useNavigation();
   const {location} = useSelector((state) => state.toktokFood);
-  const {shopDetails, orderStatus, isconfirmed, address, dateReadyPickup, dateOrderProcessed} = transaction;
+  const {shopDetails, orderStatus, isconfirmed, address, dateReadyPickup, dateBookingConfirmed, dateOrderProcessed, isdeclined} = transaction;
   const status = orderStatusMessageDelivery(
     orderStatus,
     riderDetails,
     `${shopDetails.shopname} (${shopDetails.address})`,
+    isdeclined
   );
-  const date = riderDetails != null && orderStatus == 'po' ? dateOrderProcessed : dateReadyPickup;
+  const date = dateReadyPickup.toString() != 'Invalid date' ? dateReadyPickup : dateBookingConfirmed
 
   const calculateDistance = (startTime, riderLocation) => {
     let distance = getDistance(
       {latitude: location?.latitude, longitude: location?.longitude},
-      {latitude: 14.537752, longitude: 121.001381},
+      // {latitude: 14.537752, longitude: 121.001381},
+      {latitude: riderLocation.latitude, longitude: riderLocation.longitude},
     );
     let distanceMiles = convertDistance(distance, 'mi');
     let duration = distanceMiles / 60;
@@ -55,7 +57,7 @@ const DriverDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
       <View>
         <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
         <View style={styles.divider} />
-        {riderDetails != null && orderStatus == 'f' ? (
+        {riderDetails != null && (orderStatus == 'f' || orderStatus == 's') ? (
           <MaterialIcon name="lens" size={16} color={COLORS.YELLOWTEXT} />
         ) : (
           <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
@@ -70,10 +72,11 @@ const DriverDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
       </View>
     </View>
   );
+
   const renderTitle = () => {
     let startTime = moment(date).format('LT');
-    let endTime = calculateDistance(date);
-
+    let endTime = riderDetails != null ? calculateDistance(date, riderDetails.location) : '00:00'
+  
     return (
       <View style={styles.detailsContainer}>
         <Text style={styles.title}>{status.title}</Text>

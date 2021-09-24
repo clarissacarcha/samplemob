@@ -3,7 +3,7 @@ import React from 'react';
 import { Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import CustomStarRating from 'toktokfood/components/CustomStarRating';
-import { scale } from 'toktokfood/helper/scale';
+import { scale, getDeviceWidth } from 'toktokfood/helper/scale';
 
 const RestaurantItem = ({ item }) => {
 
@@ -45,9 +45,8 @@ const styles = StyleSheet.create({
       fontSize: Platform.OS === 'android' ? 9 : 10,
     },
     img: {
+      width: '90%',
       height: 150,
-      alignSelf: 'center',
-      width: Platform.OS === 'android' ? 153 : scale(150),
       borderRadius: 10,
     },
     ratings: {
@@ -56,10 +55,10 @@ const styles = StyleSheet.create({
     },
     restaurantInfo: {
       paddingVertical: 10,
-      paddingHorizontal: 13,
+      paddingRight: scale(20),
     },
     restaurantList: {
-      width: '50%',
+      width: (getDeviceWidth - 20) / 2
     },
     restaurantName: {
       fontSize: 12,

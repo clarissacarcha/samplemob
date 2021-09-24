@@ -1,35 +1,141 @@
-import React, {useEffect, useContext} from 'react';
+import React, {useEffect, useContext, useState, useCallback} from 'react';
 import Toast from 'react-native-simple-toast';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import {View, StyleSheet, Text, TouchableOpacity, Alert} from 'react-native';
 import {VerifyContext} from './VerifyContextProvider';
-import {useRoute} from '@react-navigation/native';
+import uuid from 'react-native-uuid';
+import _ from 'lodash';
 
 // Utils
 import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
 import {scale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
-
+import { storeTemporaryCart, getTemporaryCart } from 'toktokfood/helper/TemporaryCart';
+import {
+  POST_TEMPORARY_CART,
+  PATCH_TEMPORARY_CART_ITEM,
+  DELETE_TEMPORARY_CART_ITEM,
+  GET_TEMPORARY_CART,
+  DELETE_SHOP_TEMPORARY_CART,
+  CHECK_HAS_TEMPORARY_CART
+} from 'toktokfood/graphql/toktokfood';
+import {useMutation, useLazyQuery, useQuery} from '@apollo/react-hooks';
+import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
+import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import {useDispatch, useSelector} from 'react-redux';
+import Loader from 'toktokfood/components/Loader';
+import DialogMessage from 'toktokfood/components/DialogMessage';
 
-export const FoodCart = ({basePrice = 0.0}) => {
+export const FoodCart = ({basePrice = 0.0, loading}) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const routes = useRoute();
-  const restaurantData = routes.params;
-  const {totalPrice, setTotalPrice, optionsAmount, count, setCount, selected, notes} = useContext(VerifyContext);
-  const {cart, totalAmount} = useSelector((state) => state.toktokFood);
+  const [loader, setLoader] = useState(false);
+  const [disableAdd, setDisableAdd] = useState(false);
+  const [disabledMaxQty, setDisableMaxQty] = useState(false);
+  const { Id, selectedAddons, selectedItemId, selectedPrice, selectedQty, selectedNotes } = routes.params;
+  const {
+    totalPrice,
+    setTotalPrice,
+    optionsAmount,
+    count,
+    setCount,
+    selected,
+    notes,
+    productDetails,
+    requiredOptions,
+    temporaryCart,
+  } = useContext(VerifyContext);
+  const {customerInfo} = useSelector((state) => state.toktokFood);
+  const [showDialogMessage, setShowDialogMessage] = useState({ show: false, items: [] });
 
-  const arrangeAddOns = () => {
-    let data = [];
-    Object.values(selected).map((item) => {
-      item.map((val) => {
-        data.push(val);
-      });
-    });
-    return data;
-  };
+  const [postTemporaryCart, {loading: postLoading, error: postError}] = useMutation(POST_TEMPORARY_CART, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    onError: (err) => {
+      setLoader(false)
+      setTimeout(() => { Alert.alert('', 'Something went wrong.') }, 100)
+    },
+    onCompleted: ({postTemporaryCart}) => {
+      // console.log(postTemporaryCart)
+    },
+  });
 
+  const [patchTemporaryCartItem, {loading: patchLoading, error: patchError}] = useMutation(PATCH_TEMPORARY_CART_ITEM, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    onError: (err) => {
+      setLoader(false)
+      setTimeout(() => { Alert.alert('', 'Something went wrong.') }, 100)
+    },
+    onCompleted: ({patchTemporaryCartItem}) => {
+      // console.log(patchTemporaryCartItem)
+    },
+  });
+
+  const [deleteTemporaryCartItem, {loading: deleteItemLoading, error: deleteItemError}] = useMutation(DELETE_TEMPORARY_CART_ITEM, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    onError: (err) => {
+      setLoader(false)
+      setTimeout(() => { Alert.alert('', 'Something went wrong.') }, 100)
+    },
+    onCompleted: ({deleteTemporaryCartItem}) => {
+      // console.log(patchTemporaryCartItem)
+    },
+  });
+
+  const [deleteShopTemporaryCart, {loading: deleteLoading, error: deleteError}] = useMutation(DELETE_SHOP_TEMPORARY_CART, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    onError: (err) => {
+      setLoader(false)
+      setTimeout(() => { Alert.alert('', 'Something went wrong.') }, 100)
+    },
+    onCompleted: ({deleteShopTemporaryCart}) => {
+      // console.log(patchTemporaryCartItem)
+    },
+  });
+
+  const [checkHasTemporaryCart, {data: hasTemporaryCart, loading: hasCartLoading, error: hasCartError}] = useLazyQuery(CHECK_HAS_TEMPORARY_CART, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onError: (err) => {
+      setLoader(false)
+      setTimeout(() => { Alert.alert('', 'Something went wrong.') }, 100)
+    }
+  });
+
+  useEffect(() => {
+    if(customerInfo){
+      checkHasTemporaryCart({ variables: { input: { userId: customerInfo.userId } } })
+    }
+  }, [customerInfo])
+
+  useEffect(() => {
+    if(productDetails && Object.keys(productDetails).length > 0){
+      if(productDetails.maxQtyIsset == 1){
+        if(temporaryCart.items.length > 0){
+          const hasItem = temporaryCart.items.filter((item) => { return item.productid == productDetails.Id });
+          if(hasItem.length > 0){
+            let currentQty = 0;
+            hasItem.map((item) => {
+              currentQty += item.quantity
+            })
+            let isEditQtty = selectedItemId == undefined ? (count.quantity + currentQty) : count.quantity 
+            let exceededQty = currentQty == productDetails.maxQty ? currentQty : isEditQtty
+            let disableMaxQtyCondition = selectedItemId == undefined ? exceededQty > productDetails.maxQty : selectedQty + (productDetails.maxQty - currentQty) == count.quantity 
+            let disableAddCondition = selectedItemId == undefined ? exceededQty > productDetails.maxQty - 1 : selectedQty + (productDetails.maxQty - currentQty) == count.quantity 
+            
+            setDisableMaxQty((currentQty == productDetails.maxQty && selectedItemId == undefined) || selectedItemId == undefined && disableMaxQtyCondition)
+            setDisableAdd(disableAddCondition)
+            return
+          }
+        }
+        setDisableMaxQty(count.quantity > productDetails.maxQty)
+        setDisableAdd(count.quantity > productDetails.maxQty - 1)
+      } else {
+        setDisableAdd(productDetails.stocks == count.quantity)
+      }
+    } 
+  }, [productDetails, temporaryCart, count])
+ 
   const computeTotalPrice = async (items) => {
     let amount = 0;
     await Object.values(items).map((val) => {
@@ -38,105 +144,156 @@ export const FoodCart = ({basePrice = 0.0}) => {
     return amount + totalPrice;
   };
 
-  const isEqual = (...objects) => objects.every((obj) => JSON.stringify(obj) === JSON.stringify(objects[0]));
+  const isEqual = (obj1, obj2) => {
+    let data = []
+    let filter = obj1.filter((b1) => { return obj2.includes(b1.id) });
 
-  const onRestaurantNavigate = async () => {
-    let hasCart = await cart.findIndex((val) => {
-      return val.sys_shop == restaurantData.shopId;
-    });
-    let items = {};
-    let totalItemPrice = hasCart > -1 ? await computeTotalPrice(cart[hasCart].items) : totalPrice;
-
-    if (hasCart > -1) {
-      let item = {
-        sys_shop: parseInt(restaurantData.shopId),
-        product_id: restaurantData.Id,
-        productImage: routes.params.filename,
-        productName: routes.params.itemname,
-        quantity: count.quantity,
-        amount: totalPrice,
-        srp_amount: totalPrice,
-        srp_totalamount: totalPrice,
-        total_amount: totalPrice,
-        order_type: 1,
-        notes: notes,
-        addons: selected
-      }
-    
-      let filterData = await cart[hasCart].items.filter((item) => { return item.product_id == restaurantData.Id })
-      if(filterData.length > 0){
-        filterData.map((val, index) => {
-          if (isEqual(val.addons, item.addons)) {
-            item.quantity += val.quantity;
-            item.srp_totalamount += val.srp_totalamount;
-            item.srp_amount += val.srp_amount;
-            item.amount += val.amount;
-            item.total_amount += val.total_amount;
-
-            cart[hasCart].items[index] = item;
-          } else {
-            cart[hasCart].items.push(item);
-          }
-        });
-      } else {
-        cart[hasCart].items.push(item);
-      }
-      dispatchTotalAmount(totalItemPrice)
-      Toast.show('Added to cart', Toast.SHORT);
-      navigation.navigate('ToktokFoodRestaurantOverview');
-    } else {
-      if(cart.length > 0){
-        Alert.alert(
-          'You have existing items on your cart. If you add this to cart, the current cart will be empty. Would you like to proceed?',
-          '',
-        [
-          {
-            text: 'No', 
-            onPress: () => {}
-          },
-          {
-            text: "Yes",
-            onPress: () => onPressYes(totalItemPrice),
-          },
-        ]);
-      } else {
-        onPressYes(totalItemPrice)
-      };
-    }
-   
-  };
-
-  const dispatchTotalAmount = (totalItemPrice) => {
-    dispatch({type: 'SET_TOKTOKFOOD_CART_TOTAL', payload: {[restaurantData.shopId]: totalItemPrice}});
+    return obj2.length == filter.length
   }
 
-  const onPressYes = (totalItemPrice) => {
-    items = {
-      sys_shop: parseInt(restaurantData.shopId),
-      branchid: 0,
-      daystoship: 0,
-      daystoship_to: 0,
-      items: [
-        {
-          sys_shop: parseInt(restaurantData.shopId),
-          product_id: restaurantData.Id,
-          productImage: routes.params.filename,
-          productName: routes.params.itemname,
-          quantity: count.quantity,
-          amount: totalPrice,
-          srp_amount: totalPrice,
-          srp_totalamount: totalPrice,
-          total_amount: totalPrice,
-          order_type: 1,
-          notes: notes,
-          addons: selected
-        },
-      ],
+  const onRestaurantNavigate = async() => {
+    let required = await Object.keys(requiredOptions).filter((val) => { return selected[val] == undefined });
+    if(required.length > 0){
+      Alert.alert(`${required[0]} is required.`, )
+    } else {
+      processAddToCart()
     }
-    dispatch({type: 'SET_TOKTOKFOOD_CART_ITEMS', payload: [ items ]});
-    dispatchTotalAmount(totalItemPrice)
-    Toast.show('Added to cart', Toast.SHORT);
-    navigation.navigate('ToktokFoodRestaurantOverview');
+  };
+
+  const extractAddons = () => {
+    let addons = []
+    if(Object.values(selected).length > 0){
+      Object.values(selected).map((item) => {
+        item.map((val) => {
+          addons.push(val.addon_id)
+        })
+      })
+    }
+    return addons
+  }
+
+  //PROCESS ADD TO CART
+  const processAddToCart = async() => {
+    let items = {
+      userid: customerInfo.userId,
+      shopid: +productDetails.sysShop,
+      branchid: 0,
+      productid: productDetails.Id,
+      quantity: count.quantity,
+      addons: extractAddons(),
+      notes: notes
+    }
+  
+    let filterItemByProductId = await temporaryCart.items.filter((item) => { 
+      return item.productid == productDetails.Id
+    })
+    let duplicateItem = await filterItemByProductId.filter((item) => { 
+      return isEqual(item.addonsDetails, items.addons)
+    })
+  
+    let editedItem = await temporaryCart.items.filter((item) => { return item.id == selectedItemId })
+
+    if(duplicateItem.length == 0){
+      if(selectedItemId){
+        setLoader(true)
+        items['updateid'] = selectedItemId
+        return patchCartItem(items)
+      }
+      if(temporaryCart.items.length > 0){
+        setLoader(true)
+        return addToCart(items)
+      }
+      if(hasTemporaryCart.checkHasTemporaryCart.shopid){
+        setShowDialogMessage({
+          show: true,
+          items
+        })
+      } else {
+        setLoader(true)
+        addToCart(items)
+      }
+    } else {
+      let sameAsDuplicateItem = duplicateItem[0]?.id == selectedItemId 
+      let editedId = sameAsDuplicateItem ? selectedItemId : duplicateItem[0].id
+      items['updateid'] = editedId
+    
+      setLoader(true)
+      if((duplicateItem.length > 0 || items.quantity != duplicateItem[0].quantity) && !selectedItemId){
+        items.quantity += duplicateItem[0].quantity
+      }
+      if(((!sameAsDuplicateItem) && selectedItemId != undefined)){
+        items.quantity += duplicateItem[0].quantity
+        return deleteCartItem(selectedItemId, items, 'edit')
+      }
+      patchCartItem(items)
+    }
+  }
+
+  const onPressProceed = () => {
+    setShowDialogMessage(prev => ({ ...prev, show: false }))
+    setLoader(true)
+    deleteShopTemporaryCart({ variables: { 
+      input: { 
+        userid: customerInfo.userId,
+        shopid: hasTemporaryCart.checkHasTemporaryCart.shopid,
+        branchid: 0,
+      } 
+    }}).then(({ data }) => {
+      let {status, message} = data.deleteShopTemporaryCart;
+      if(status == 200){
+        addToCart(showDialogMessage.items)
+      } else {
+        setLoader(false)
+        setTimeout(() => { Alert.alert('', message) }, 100)
+      }
+    })
+  }
+
+  const deleteCartItem = (editedId, items, action) => {
+    deleteTemporaryCartItem({ variables: { input: { deleteid: editedId }}})
+      .then(({ data }) => {
+        let {status, message} = data.deleteTemporaryCartItem;
+        if(status == 200){
+          patchCartItem(items);
+        } else {
+          setLoader(false)
+          setTimeout(() => { Alert.alert('', message) }, 100)
+        }
+      });
+  }
+
+  const patchCartItem = (items) => {
+    patchTemporaryCartItem({ variables: { input: items } })
+      .then(({ data }) => {
+        let {status, message} = data.patchTemporaryCartItem;
+        if(status == 200){
+          setTimeout(() => {
+            setLoader(false)
+            Toast.show('Added to cart', Toast.SHORT);
+            navigation.navigate('ToktokFoodRestaurantOverview');
+          }, 1000)
+        } else {
+          setLoader(false)
+          setTimeout(() => { Alert.alert('', message) }, 100)
+        }
+      });
+  }
+
+  const addToCart = (items) => {
+    postTemporaryCart({ variables: { input: items } })
+      .then(({data}) => {
+        let { status, message } = data.postTemporaryCart;
+        if(status == 200){
+          setTimeout(() => {
+            setLoader(false)
+            Toast.show('Added to cart', Toast.SHORT);
+            navigation.navigate('ToktokFoodRestaurantOverview');
+          }, 1000)
+        } else {
+          setLoader(false)
+          setTimeout(() => { Alert.alert('', message) }, 100)
+        }
+      })
   }
 
   const updateCartTotal = (type = 'ADD') => {
@@ -164,9 +321,30 @@ export const FoodCart = ({basePrice = 0.0}) => {
     updateCartStates();
   }, [count]);
 
+ 
   return (
     <>
+      <Loader
+        visibility={loader}
+        message="Adding to cart..."
+        hasImage={false}
+        loadingIndicator
+      />
+      <DialogMessage
+        visibility={showDialogMessage.show}
+        title={'OOPS!'}
+        messages={'You have existing items from a different restaurant in your cart. If you proceed, items will be removed.'}
+        type='warning'
+        btn1Title='Cancel'
+        btn2Title='Proceed'
+        onCloseBtn1={() => { setShowDialogMessage(prev => ({ ...prev, show: false })) }}
+        onCloseBtn2={() => { onPressProceed() }}
+        hasTwoButtons
+      />
       <View style={[styles.container, styles.cartBorder]}>
+        {productDetails.maxQtyIsset == 1 && (
+          <Text style={{ color: '#FFA700', fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD }}>{`Max quantity per checkout: ${productDetails.maxQty}`}</Text>
+        )}
         <View style={styles.foodItemTotalWrapper}>
           <View style={styles.countWrapper}>
             <TouchableOpacity
@@ -177,14 +355,19 @@ export const FoodCart = ({basePrice = 0.0}) => {
             </TouchableOpacity>
             <Text style={styles.countText}>{count.quantity}</Text>
             <TouchableOpacity
-              style={[styles.countButtons, {backgroundColor: COLOR.ORANGE}]}
+              disabled={disableAdd}
+              style={[styles.countButtons, {backgroundColor: COLOR.ORANGE, opacity: disableAdd ? 0.5 : 1}]}
               onPress={() => updateCartTotal()}>
               <MIcon name="add" color={COLOR.WHITE} size={20} />
             </TouchableOpacity>
           </View>
           <Text style={styles.total}>Subtotal: {totalPrice.toFixed(2)}</Text>
         </View>
-        <TouchableOpacity style={styles.cartButton} onPress={() => onRestaurantNavigate()}>
+        <TouchableOpacity
+          disabled={loading || postLoading || patchLoading || deleteLoading || hasCartLoading || disabledMaxQty}
+          style={[styles.cartButton, {backgroundColor: disabledMaxQty || loading || postLoading || patchLoading || deleteLoading || hasCartLoading ? COLOR.LIGHT : COLOR.YELLOW}]}
+          onPress={() => onRestaurantNavigate()}
+        >
           <Text style={styles.buttonText}>Add to Cart</Text>
         </TouchableOpacity>
       </View>
@@ -195,10 +378,10 @@ export const FoodCart = ({basePrice = 0.0}) => {
 const styles = StyleSheet.create({
   container: {
     display: 'flex',
-    height: scale(130),
+    // height: scale(130),
     alignItems: 'center',
     backgroundColor: COLOR.WHITE,
-    paddingVertical: verticalScale(7),
+    paddingVertical: verticalScale(15),
   },
   cartBorder: {
     borderWidth: 2,

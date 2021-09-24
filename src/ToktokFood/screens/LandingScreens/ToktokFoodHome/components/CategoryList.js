@@ -102,17 +102,20 @@ const CategoryList = ({horizontal, rightText = '', filterSearch = 0, homeRefresh
     navigation.navigate('ToktokFoodSearch', { searchByCategory: item.categoryName, isSearchPage: true }) 
   }
 
+ 
   const renderItem = ({item}) => {
+    let image = item.filename ? { uri: item.filename } : fastfood
     return (
       <TouchableOpacity
         style={horizontal ? styles.listItemVerticalContainer : { flexDirection: 'row', paddingBottom: 10 }}
         onPress={() => showSearchPage(item)}
       >
-        <Image style={styles.img} resizeMode="cover" source={fastfood} />
+        <Image style={styles.img} resizeMode="cover" source={image} />
         <Text numberOfLines={1} style={[styles.listItemText, { paddingHorizontal: horizontal ? 0 : 10 }]}>{item.categoryName}</Text>
       </TouchableOpacity>
     );
   };
+
 
   const listEmpty = () => (
     <Text style={{  color: '#898997', textAlign: 'center', marginVertical: 20 }}>
@@ -123,7 +126,7 @@ const CategoryList = ({horizontal, rightText = '', filterSearch = 0, homeRefresh
   const displayComponent = () => {
     const datas = horizontal ? data?.getCategoriesByLimit.slice(0, 4) : data?.getCategoriesByLimit
     const shops = datas ? datas : []
-
+ 
     if(loading || error){
       return <LoadingIndicator style={{ marginVertical: 20  }} isLoading={true} />
     }
@@ -133,10 +136,11 @@ const CategoryList = ({horizontal, rightText = '', filterSearch = 0, homeRefresh
         horizontal={data?.getCategoriesByLimit.length > 0 ? horizontal : false}
         data={shops} 
         renderItem={renderItem}
+        scrollEnabled={!horizontal}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
         keyExtractor={(val, index) => index.toString()}
-        contentContainerStyle={{ paddingBottom: horizontal ? 0 : verticalScale(50) }}
+        contentContainerStyle={{ paddingBottom: horizontal ? 0 : verticalScale(10) }}
         onEndReachedThreshold={0.2}
         onEndReached={() => handleLoadMore()}
         refreshControl={
@@ -156,7 +160,7 @@ const CategoryList = ({horizontal, rightText = '', filterSearch = 0, homeRefresh
   }
 
   return (
-    <View style={[ styles.container, { flex: horizontal ? 0 : 1, paddingHorizontal: horizontal ? 14  : 20 } ]}>
+    <View style={[ styles.container ]}>
       <View style={styles.textContainer}>
         <Text style={styles.startText}>Categories</Text>
         <TouchableOpacity onPress={() => onNavigateCategories()}>
@@ -174,22 +178,24 @@ export default CategoryList;
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
-    flex: Platform.OS === 'android' ? 1 : 0,
+    flex: 1,
+    paddingHorizontal: scale(16),
+    paddingTop: 10,
+    backgroundColor: 'whitesmoke'
   },
   img: {
     borderRadius: 10,
     width: scale(75),
+    height: scale(55),
   },
   listContainer: {
-    marginTop: 8,
-    marginBottom: 4,
+    marginVertical: 10
   },
   listItemContainer: {
     marginHorizontal: 5,
   },
   listItemVerticalContainer: {
-    marginHorizontal: 5,
+    marginRight: scale(11),
     width: (getDeviceWidth - scale(60)) / 4 - 1
   },
   listItemText: {
@@ -210,7 +216,7 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     flexDirection: 'row',
-    marginVertical: moderateScale(8),
+    marginVertical: moderateScale(0),
     justifyContent: 'space-between',
   },
 });

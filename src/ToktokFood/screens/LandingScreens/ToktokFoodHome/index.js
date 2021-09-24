@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Platform, StyleSheet, View} from 'react-native';
 
 // Components
@@ -6,6 +6,7 @@ import {StickyView} from './components';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
 import HeaderSearchBox from 'toktokfood/components/HeaderSearchBox';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
+import { clearTemporaryCart } from 'toktokfood/helper/TemporaryCart';
 
 // Hooks
 import {useUserLocation} from 'toktokfood/hooks';
@@ -44,5 +45,6 @@ export default ToktokFoodHome;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'whitesmoke'
   },
 });

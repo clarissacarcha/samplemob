@@ -29,6 +29,7 @@ const transaction = `
   dateRedeliver
   dateShipped
   dateReceived
+  dateCancelled
   tDeliveryId
   tShareLink
   isconfirmed
@@ -36,6 +37,8 @@ const transaction = `
   deliveryImgurl2
   orderIsfor
   isdeclined
+  latitude
+  longitude
   shopDetails {
     id
     shopname
@@ -60,6 +63,7 @@ const transaction = `
     exratePhpToN
     currency
     curcode
+    notes
     productDetails {
       Id
       itemname

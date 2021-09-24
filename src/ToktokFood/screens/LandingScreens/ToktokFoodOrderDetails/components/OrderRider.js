@@ -1,27 +1,37 @@
-import React from 'react';
-import {Image, Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import CustomStarRating from 'toktokfood/components/CustomStarRating';
-
+import React, { useEffect, useState } from 'react';
+import { Image, Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 // Fonts/Colors
-import {COLORS} from 'res/constants';
-import {FONT_SIZE} from 'res/variables';
-
+import { COLORS } from 'res/constants';
+import { FONT_SIZE } from 'res/variables';
 // Images
-import {chat, phoneBlack, rider1, star} from 'toktokfood/assets/images';
-
+import { chat, phoneBlack } from 'toktokfood/assets/images';
+import RatingModal from 'toktokfood/components/RatingModal';
 // Utils
-import {moderateScale, verticalScale, scale} from 'toktokfood/helper/scale';
+import { moderateScale, verticalScale } from 'toktokfood/helper/scale';
+import { checkRiderDetails } from 'toktokfood/helper/ShowRiderDetails';
 
-const OrderRider = ({ riderDetails }) => {
+const OrderRider = ({ riderDetails, transaction, referenceNum }) => {
   const { user, vehicle } = riderDetails;
+  const [showDriverModal, setShowDriverModal] = useState(false);
+
+  useEffect(() => {
+    if(riderDetails != null && transaction.orderStatus != 's'){
+      handleCheckRiderDetails();
+    }
+  }, [riderDetails, transaction]);
+
+  const handleCheckRiderDetails = async() => {
+    let res = await checkRiderDetails(referenceNum)
+    setShowDriverModal(res?.status == 200)
+  }
 
   const onMessage = () => {
-    const url = `sms:+639100593229`;
+    const url = `sms:${user.person.mobileNumber}`;
     Linking.openURL(url);
   };
 
   const onCall = () => {
-    const url = `tel:+639100593229`;
+    const url = `tel:${user.person.mobileNumber}`;
     Linking.openURL(url);
   };
 
@@ -35,14 +45,14 @@ const OrderRider = ({ riderDetails }) => {
         <Text style={styles.notes}>{`${vehicle.brand.brand} ${vehicle.model.model}`}</Text>
           {/* <Text style={styles.notes}>{parseFloat(rating).toFixed(1)}</Text>
           <Rating startingValue={parseFloat(rating).toFixed(1)} imageSize={13} readonly style={styles.ratings} ratingColor={"#FFA700"} /> */}
-        <CustomStarRating
+        {/* <CustomStarRating
           rating={'0'}
           starImgStyle={{ width: scale(15), height: scale(15), marginVertical: 5 }}
           ratingStyle={{ color: 'black', fontSize: FONT_SIZE.S }}
           readOnly
           showRating
           rightRating
-        />
+        /> */}
       </View>
     </View>
   );
@@ -62,6 +72,21 @@ const OrderRider = ({ riderDetails }) => {
 
   return (
     <View style={styles.container}>
+       {/* <RatingModal
+        title={"We've found you a driver!"}
+        visibility={showDriverModal}
+        onCloseModal={() => setShowDriverModal(false)}
+        btnTitle="Ok"
+        imgSrc={user.person.avatar}
+        rating={0}
+        readOnly
+      >
+        <Text style={styles.messageTitle}>{`${user.person.firstName} ${user.person.lastName}`}</Text>
+        <Text style={styles.messageContent}>{user.person.mobileNumber}</Text>
+        <Text style={styles.messageContent}>{
+          `${vehicle.brand.brand} ${vehicle.model.model} - ${vehicle.plateNumber}`
+        }</Text>
+      </RatingModal> */}
       <View style={styles.content}>
         {renderAvatar()}
         {renderActions()}
