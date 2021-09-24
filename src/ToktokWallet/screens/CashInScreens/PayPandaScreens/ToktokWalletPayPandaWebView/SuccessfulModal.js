@@ -7,6 +7,11 @@ import moment from 'moment'
 import {Receipt} from 'toktokwallet/components'
 import { useSelector } from 'react-redux'
 import CONSTANTS from 'common/res/constants'
+import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
+import { GET_WALLET } from 'toktokwallet/graphql'
+import { useLazyQuery } from '@apollo/react-hooks'
+import { useAlert } from 'src/hooks'
+import { onErrorAlert} from 'src/util'
 
 const {COLOR , FONT_FAMILY: FONT, FONT_SIZE , SIZE } = CONSTANTS
 
@@ -25,9 +30,10 @@ const TransactionInfo = ({label,value})=> (
     </>
 )
 
-const SuccessfulModal = ({successModalVisible , amount , cashInLogParams})=> {
+const SuccessfulModal = ({successModalVisible , amount , cashInLogParams , onCashIn})=> {
     const navigation = useNavigation()
     const tokwaAccount = useSelector(state=>state.toktokWallet)
+    const alert = useAlert();
 
     let status
     switch (cashInLogParams.status) {
@@ -45,30 +51,28 @@ const SuccessfulModal = ({successModalVisible , amount , cashInLogParams})=> {
             break;
     }
 
-    const ModalContent = ()=> (
-        <View style={{justifyContent: "center",alignItems:"center",flex: 1}}>
-                <View style={{height: 80,width: 80,borderRadius: 100, backgroundColor: "#FCB91A",justifyContent: "center", alignItems: "center",marginBottom: 20}}>
-                            <FIcon5 name="check" color="white" size={40}/>
-                            {/* <Image style={{height: 40,width: 40,alignSelf: "center"}} source={require('../../../../../../assets/images/paypanda.png')}/> */}
-                </View>
-                <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.XL,marginTop: 15,}}>Transaction Completed</Text>
-                <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,marginVertical: 2,marginTop: 5}}>Ref. No. {cashInLogParams.referenceNumber}</Text>
-                <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S}}>{moment(cashInLogParams.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')}</Text>
-                <View style={styles.transactionInfo}>
-                     <TransactionInfo label="Cash in Method" value="PayPanda"/>
-                     <TransactionInfo label="PayPanda Ref. No." value={cashInLogParams.paypandaReferenceNumber}/>
-                     <TransactionInfo label="PayPanda Status" value={status}/>
-                     <TransactionInfo label="Account Name" value={`${tokwaAccount.person.firstName} ${tokwaAccount.person.lastName}`}/>
-                     <TransactionInfo label="Account Number" value={tokwaAccount.mobileNumber}/>
-                     <TransactionInfo label="Amount" value={`PHP ${numberFormat(cashInLogParams.amount)}`}/>
-                </View>
-        </View>
-    )
+    const [getWallet] = useLazyQuery(GET_WALLET, {
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+        onError: (error) => onErrorAlert({alert,error}),
+        onCompleted: ({getWallet})=> {
+            console.log(getWallet)
+            onCashIn({
+                balance: getWallet.balance
+            })
+            return navigation.pop(4)
+        }
+    })
+
 
     const Proceed = ()=>  {
         // navigation.pop(4)
-        navigation.navigate("ToktokWalletHomePage")
-        navigation.replace("ToktokWalletHomePage")
+        if(onCashIn){
+            getWallet() 
+        }else{
+            navigation.navigate("ToktokWalletHomePage")
+            navigation.replace("ToktokWalletHomePage")
+        }
+       
     }
 
 
@@ -78,15 +82,6 @@ const SuccessfulModal = ({successModalVisible , amount , cashInLogParams})=> {
             visible={successModalVisible}
             onRequestClose={Proceed}
         >
-
-            {/* <View style={styles.container}>
-                <View style={styles.content}>
-                        <ModalContent />
-                </View>
-                <View style={styles.buttons}>
-                    <BlackButton label="Ok" onPress={Proceed}/>
-                </View>
-            </View> */}
             <Receipt
                 refNo={cashInLogParams.referenceNumber}
                 onPress={Proceed}

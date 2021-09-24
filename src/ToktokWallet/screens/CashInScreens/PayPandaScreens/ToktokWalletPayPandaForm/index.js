@@ -7,7 +7,7 @@ import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import {POST_CASH_IN_PAYPANDA_REQUEST,GET_GLOBAL_SETTINGS} from 'toktokwallet/graphql'
 import {onError,onErrorAlert} from 'src/util/ErrorUtility';
 import {numberFormat} from 'toktokwallet/helper'
-import {useAlert} from 'src/hooks/useAlert'
+import { useAlert } from 'src/hooks'
 import { HeaderBack, YellowButton, HeaderTitle } from 'src/revamp'
 import { AlertOverlay } from 'src/components'
 import {
@@ -28,12 +28,13 @@ export const ToktokWalletPayPandaForm = ({navigation,route})=> {
         headerTitle: ()=> <HeaderTitle label={['Cash In','']}/>,
     })
 
+    const cashInAmount = route.params.amount
+    const onCashIn = route.params.onCashIn
     const alert = useAlert()
-
     const transactionType = route.params.transactionType
     const tokwaAccount = useSelector(state=>state.toktokWallet)
     const globalsettings = useSelector(state=>state.constants)
-    const [amount,setAmount] = useState("")
+    const [amount,setAmount] = useState(cashInAmount ? cashInAmount : "")
     const [message,setMessage] = useState("")
     const [recipientDetails,setRecipientDetails] = useState(null)
     const [disablebtn,setDisablebtn] = useState(false)
@@ -45,14 +46,14 @@ export const ToktokWalletPayPandaForm = ({navigation,route})=> {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onError: (error)=> {
             const {graphQLErrors, networkError} = error;
-            if(graphQLErrors[0].message == "Wallet Hold"){
+            if(graphQLErrors[0]?.message == "Wallet Hold"){
                 setOpenPinCode(false)
                 navigation.navigate("ToktokWalletHomePage")
                 navigation.replace("ToktokWalletHomePage")
                 return navigation.push("ToktokWalletRestricted", {component: "onHold"})
             }
 
-            if(graphQLErrors[0].message == "Invalid Pincode"){
+            if(graphQLErrors[0]?.message == "Invalid Pincode"){
                 return setPinCodeAttempt(graphQLErrors[0].payload.remainingAttempts)
             }
             setOpenPinCode(false)
@@ -74,7 +75,9 @@ export const ToktokWalletPayPandaForm = ({navigation,route})=> {
                 transactionTypeId: transactionType.id,
                 paypandaTransactionUrl: postCashInPayPandaRequest.paypandaTransactionEntryEndpoint,
                 paypandaReturnUrl: postCashInPayPandaRequest.paypandaReturnUrlEndpoint,
-                paypandaStaginReturnUrl: postCashInPayPandaRequest.paypandaReturUrlStagingEndpoint
+                paypandaStaginReturnUrl: postCashInPayPandaRequest.paypandaReturUrlStagingEndpoint,
+                cashInAmount: cashInAmount,
+                onCashIn: onCashIn
             })
         }
     })

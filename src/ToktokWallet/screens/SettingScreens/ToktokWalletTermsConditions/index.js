@@ -8,6 +8,7 @@ import {useQuery} from '@apollo/react-hooks'
 import { onErrorAlert } from 'src/util/ErrorUtility'
 import {useAlert} from 'src/hooks'
 import CONSTANTS from 'common/res/constants'
+import { SomethingWentWrong } from 'src/components';
 
 const { FONT_FAMILY: FONT , FONT_SIZE , MARGIN , COLOR } = CONSTANTS
 
@@ -19,7 +20,6 @@ export const ToktokWalletTermsConditions = ({navigation})=> {
     });
 
     const alert = useAlert()
-
     const {data,error,loading} = useQuery(GET_GLOBAL_SETTING, {
         fetchPolicy: "network-only",
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
@@ -36,17 +36,13 @@ export const ToktokWalletTermsConditions = ({navigation})=> {
     if(loading){
         return (
             <View style={{flex: 1,justifyContent:"center",alignItems:"center"}}>
-                    <ActivityIndicator color={COLOR.YELLOW} size={24}/>
+                <ActivityIndicator color={COLOR.YELLOW} size={24}/>
             </View>
         )
     }
 
-    if(!data.getGlobalSetting){
-        return null
-    }
-
     if(error){
-        return null
+        return <SomethingWentWrong/>
     }
 
     return (

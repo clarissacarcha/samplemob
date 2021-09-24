@@ -35,9 +35,9 @@ export const ToktokWalletHomePage = ({navigation,route})=> {
             }
         },
         onCompleted: async ({getUserToktokWalletData})=> {
-            if( getUserToktokWalletData.accountToken ) {
-                await AsyncStorage.setItem('toktokWalletAccountToken', getUserToktokWalletData.accountToken);
-            }
+            // if( getUserToktokWalletData.accountToken ) {
+            //     await AsyncStorage.setItem('toktokWalletAccountToken', getUserToktokWalletData.accountToken);
+            // }
 
             if( getUserToktokWalletData.enterpriseToken ){
                 await AsyncStorage.setItem('toktokWalletEnterpriseToken', getUserToktokWalletData.enterpriseToken);
@@ -72,12 +72,11 @@ export const ToktokWalletHomePage = ({navigation,route})=> {
         <>
             <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
             <CheckTokwaKYCRegistration kycStatus={data.getUserToktokWalletData.kycStatus}>
-                {
-                    data.getUserToktokWalletData.accountToken != null &&
+   
                     <CheckWalletAccountRestriction>
                         <WalletLandingPage onRefresh={onRefresh} refreshing={refreshing}/>
                     </CheckWalletAccountRestriction>
-                }
+                
             </CheckTokwaKYCRegistration>
         </>
     )

@@ -6,3 +6,4 @@ export * from "./ToktokWalletPaymentChart";
 export * from "./ToktokWalletSettings";
 export * from "./ToktokWalletTermsConditions";
 export * from "./ToktokWalletTransactionLimit";
+export * from "./UpgradeAccountScreens";
