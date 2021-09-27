@@ -53,6 +53,7 @@ const SuccessfulModal = ({successModalVisible , amount , cashInLogParams , onCas
 
     const [getWallet] = useLazyQuery(GET_WALLET, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+        fetchPolicy: "network-only",
         onError: (error) => onErrorAlert({alert,error}),
         onCompleted: ({getWallet})=> {
             console.log(getWallet)
