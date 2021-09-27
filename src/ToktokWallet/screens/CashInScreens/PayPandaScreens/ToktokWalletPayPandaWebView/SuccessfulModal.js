@@ -11,7 +11,7 @@ import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
 import { GET_WALLET } from 'toktokwallet/graphql'
 import { useLazyQuery } from '@apollo/react-hooks'
 import { useAlert } from 'src/hooks'
-import { onErrorAlert} from 'src/util'
+import { onErrorAlert} from 'src/util/ErrorUtility'
 
 const {COLOR , FONT_FAMILY: FONT, FONT_SIZE , SIZE } = CONSTANTS
 
