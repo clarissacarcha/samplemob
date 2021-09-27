@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, Text, StyleSheet , Dimensions , TextInput } from 'react-native'
+import { View, Text, StyleSheet , Dimensions , TextInput , ScrollView } from 'react-native'
 import {  YellowButton } from 'src/revamp'
 import { BuildingBottom , PromptModal } from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants'
@@ -15,6 +15,24 @@ import moment from 'moment'
 
 const {COLOR , FONT_FAMILY: FONT , FONT_SIZE, SIZE } = CONSTANTS
 const screen = Dimensions.get('window');
+
+const Question = ({question, answer , index })=> {
+
+    let maskAsterisk = ""
+    
+    for(let x = 0 ; x < answer.length - 1 ; x++ ){
+        maskAsterisk = maskAsterisk + "*"
+    }
+
+    return (
+        <View style={styles.ViewInput}>
+        <Text style={styles.labelText}>{index + 1} ) {question}</Text>
+        <View style={styles.viewAnswer}>
+            <Text style={styles.viewAnswerText}>{index == 1 ? `${moment(answer).tz('Asia/Manila').format('MMM DD, YYYY')[0]}${maskAsterisk}` : `${answer[0]}${maskAsterisk}`}</Text>
+        </View>
+    </View>
+    )
+}
 
 const Confirm = ({
     currentIndex,
@@ -53,21 +71,35 @@ const Confirm = ({
             <AlertOverlay visible={loading}/>
             <PromptModal 
                     visible={visible}
-                    title="Successful"
-                    message="Account recovery setup submitted."
+                    title="Security Questions Set Up!"
+                    message={`${'1. Remember all your answers and do not share them with anyone.'}${'\n\n'}${'2. Always keep your MPIN and never share this with anyone.'}`}
                     event="success"
                     onPress={()=>{
                         setVisible(false)
                         navigation.replace("ToktokWalletAccountRecoverySetup")
                     }}
             />
+
             <View style={styles.container}>
-                <View style={styles.body}>
-                            <Text>{JSON.stringify(questions)}</Text>
-                            <Text>{JSON.stringify(answers)}</Text>
-                </View>
+            <ScrollView showsVerticalScrollIndicator={false} style={styles.body}>
+                    <Text style={styles.headerText}>Account Recovery helps you recover your account once
+    deactivated or locked due to forgotten MPIN.</Text>
+                    <Text style={styles.headerText}>Answer the following Security Questions that will be
+    used for authentication in your account recovery process.</Text>
+                     <View style={{marginBottom: 20}}/>
+                        {
+                            questions.map((question,index)=>(
+                                <Question
+                                    question={question}
+                                    answer={answers[index]}
+                                    index={index}
+                                />
+                            ))
+                        }
+                    <Text style={[styles.headerText,{fontSize: FONT_SIZE.S}]}>Answers cannot be changed once saved.</Text>
+                </ScrollView>
                 <View style={styles.btn}>
-                        <YellowButton label="Submit" onPress={onPress}/>
+                        <YellowButton label="Save" onPress={onPress}/>
                 </View>
                 <BuildingBottom/>
             </View>
@@ -87,6 +119,14 @@ const styles = StyleSheet.create({
         height: 70,
         justifyContent: "flex-end"
     },
+    headerText: {
+        textAlign:'center',
+        marginHorizontal: 10,
+        fontFamily: FONT.REGULAR,
+        fontSize: FONT_SIZE.M,
+        color:COLOR.ORANGE,
+        marginVertical: 2,
+    },
     labelText: {
         fontSize: FONT_SIZE.M,
         fontFamily: FONT.BOLD
@@ -97,7 +137,7 @@ const styles = StyleSheet.create({
         color:"#929191"
     },
     ViewInput: {
-        marginTop: 20,
+        marginVertical: 10,
     },
     input: {
         paddingHorizontal: 10,
@@ -108,6 +148,20 @@ const styles = StyleSheet.create({
         fontSize: FONT_SIZE.M,
         fontFamily: FONT.REGULAR
     },
+    errorMessage: {
+        fontFamily: FONT.REGULAR,
+        fontSize: FONT_SIZE.XS,
+        color: COLOR.RED
+    },
+    viewAnswer: {
+        justifyContent:"center",
+        // alignItems:"center",
+        height: SIZE.FORM_HEIGHT,
+    },
+    viewAnswerText: {
+        fontFamily: FONT.BOLD,
+        fontSize: FONT_SIZE.M
+    }
 })
 
 export default Confirm

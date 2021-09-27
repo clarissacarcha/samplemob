@@ -4,6 +4,7 @@ import React , {useState} from 'react'
 import QuestionOne from './QuestionOne'
 import QuestionTwo from './QuestionTwo'
 import QuestionThree from './QuestionThree'
+import Questions from './Questions'
 import Confirm from './Confirm'
 
 const questions = [
@@ -26,30 +27,14 @@ export const SetupAnswers = ()=> {
         switch(currentIndex){
 
             case 0:
-                return <QuestionOne
+                return <Questions
                                 currentIndex={currentIndex}
                                 setCurrentIndex={setCurrentIndex}
-                                question={questions[0]}
+                                questions={questions}
                                 answers={answers}
                                 setAnswers={setAnswers}
                         />
             case 1:
-                return <QuestionTwo
-                                currentIndex={currentIndex}
-                                setCurrentIndex={setCurrentIndex}
-                                question={questions[1]}
-                                answers={answers}
-                                setAnswers={setAnswers}
-                        />
-            case 2: 
-                return <QuestionThree
-                                currentIndex={currentIndex}
-                                setCurrentIndex={setCurrentIndex}
-                                question={questions[2]}
-                                answers={answers}
-                                setAnswers={setAnswers}
-                        />
-            case 3:
                 return <Confirm
                                 currentIndex={currentIndex}
                                 setCurrentIndex={setCurrentIndex}

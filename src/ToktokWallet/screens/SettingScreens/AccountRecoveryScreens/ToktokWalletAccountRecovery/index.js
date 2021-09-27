@@ -5,7 +5,8 @@ import { Separator } from 'toktokwallet/components'
 
 //SELF IMPORTS
 import {
-    Questions
+    Questions,
+    QuestionsAnswers
 } from "./Components";
 import CONSTANTS from 'common/res/constants'
 const {COLOR , FONT_FAMILY: FONT , FONT_SIZE, SIZE } = CONSTANTS
@@ -26,7 +27,7 @@ export const ToktokWalletAccountRecovery = ({navigation,route})=> {
         <>
             <Separator/>
             <View style={styles.container}>
-                <Questions
+                <QuestionsAnswers
                     questions={questions}
                     answers={answers}
                 />

@@ -8,7 +8,7 @@ import CONSTANTS from 'common/res/constants';
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE , SIZE } = CONSTANTS;
 const { width , height } = Dimensions.get("window");
 
-export const PromptModal = ({visible , title , message , onPress , event})=> {
+export const PromptModal = ({visible , title , message , onPress , event , children})=> {
 
     const onPressThrottled = useThrottle(onPress , 2000);
     let imageIcon = null
@@ -33,6 +33,7 @@ export const PromptModal = ({visible , title , message , onPress , event})=> {
                     <Image source={imageIcon}/>
                     <Text style={styles.successText}>{title}</Text>
                     <Text style={styles.messageText}>{message}</Text>
+                    {children}
                     <View style={{justifyContent:"flex-end",width: "50%",marginTop: 20}}>
                             <YellowButton label="Ok" onPress={onPressThrottled}/>
                     </View>
