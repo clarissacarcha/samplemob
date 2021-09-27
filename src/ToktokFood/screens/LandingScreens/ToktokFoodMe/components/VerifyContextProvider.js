@@ -10,12 +10,15 @@ export const VerifyContextProvider = ({children}) => {
   const routes = useRoute();
 
   const [showHelpCentreList, setShowHelpCentreList] = useState(false);
+  const [walletBalance, setWalletBalance] = useState(0);
 
   return (
     <Provider
       value={{
         showHelpCentreList,
-        setShowHelpCentreList
+        setShowHelpCentreList,
+        walletBalance,
+        setWalletBalance
       }}
     >
       {children}

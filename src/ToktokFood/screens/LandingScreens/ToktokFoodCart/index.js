@@ -25,6 +25,7 @@ import {
 import {useSelector} from 'react-redux';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
+import { GET_MY_ACCOUNT } from 'toktokwallet/graphql';
 import CheckOutOrderHelper from 'toktokfood/helper/CheckOutOrderHelper';
 import {
   GET_SHIPPING_FEE,
@@ -40,6 +41,8 @@ import 'moment-timezone';
 // Utils
 import {moderateScale} from 'toktokfood/helper/scale';
 import {arrangeAddons} from './functions';
+import EnterPinCode from 'toktokfood/components/EnterPinCode';
+import LoadingIndicator from '../../../components/LoadingIndicator';
 
 const CUSTOM_HEADER = {
   container: Platform.OS === 'android' ? moderateScale(83) : moderateScale(70),
@@ -53,7 +56,7 @@ const MainComponent = () => {
 
   const {amount, cart, shopId, shopname} = route.params;
   const {location, customerInfo, shopLocation} = useSelector((state) => state.toktokFood);
-  const {totalAmount, temporaryCart} = useContext(VerifyContext);
+  const {totalAmount, temporaryCart, toktokWallet, setToktokWallet, paymentMethod, pmLoading} = useContext(VerifyContext);
 
   const [riderNotes, setRiderNotes] = useState('');
   const [delivery, setDeliveryInfo] = useState(null);
@@ -62,6 +65,10 @@ const MainComponent = () => {
   const [orderType, setOrderType] = useState('Delivery');
   const [refreshing, setRefreshing] = useState(false);
   const [checkShop, setCheckShop] = useState(null);
+  const [showEnterPinCode, setShowEnterPinCode] = useState(false);
+  const [toktokWalletCredit, setToktokWalletCredit] = useState({});
+  const [errorMessage, setErrorMessage] = useState('');
+  const [loadingWallet, setLoadingWallet] = useState(false);
 
   useEffect(() => {
     checkShopValidations({variables: {input: {shopId: shopId}}});
@@ -113,34 +120,55 @@ const MainComponent = () => {
         setRefreshing(false);
         setCheckShop(checkShopValidations);
       },
+      onError: () => {
+        setRefreshing(false);
+      }
     },
   );
 
   const requestToktokWalletCredit = () => {
     return new Promise(async (resolve, reject) => {
-      let WALLET_REQUEST = 0;
+      let totalPrice = 0;
       if (orderType === 'Delivery') {
-        WALLET_REQUEST = parseInt(totalAmount) + parseInt(delivery.price ? delivery.price : 0);
+        totalPrice = parseInt(totalAmount) + parseInt(delivery.price ? delivery.price : 0);
       } else {
-        WALLET_REQUEST = parseInt(totalAmount);
+        totalPrice = parseInt(totalAmount);
       }
-      const {data} = await CheckOutOrderHelper.requestTakeMoneyId(WALLET_REQUEST);
-      if (data.postRequestTakeMoney.success === 1) {
-        resolve(data.postRequestTakeMoney.data);
+      const result = await CheckOutOrderHelper.requestTakeMoneyId(totalPrice, paymentMethod, toktokWallet);
+      if (result.data.postRequestTakeMoney.success === 1) {
+        resolve(result.data.postRequestTakeMoney);
       } else {
-        reject();
+        reject(result.data.postRequestTakeMoney)
       }
     });
   };
+
+  const tokwaVerifyPin = (pinCode) => {
+    let { requestTakeMoneyId, validator } = toktokWalletCredit;
+    return new Promise(async (resolve, reject) => {
+      const result = await CheckOutOrderHelper.verifyPin({ pinCode, requestTakeMoneyId, validator });
+      if (result.data.verifyPin.success === 1) {
+        resolve(result.data.verifyPin);
+      } else {
+        reject(result.data.verifyPin)
+      }
+    });
+  };
+
 
   const [postCustomerOrder] = useMutation(PATCH_PLACE_CUSTOMER_ORDER, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'no-cache',
     onError: (error) => {
+      const { graphQLErrors, networkError } = error;
       setShowLoader(false);
-      console.log(`LOCATION LOG ERROR: ${error}`);
+      if(networkError){
+        Alert.alert('', 'Network error occurred. Please check your internet connection.')      
+      }
     },
     onCompleted: async ({checkoutOrder}) => {
+      console.log(checkoutOrder)
+      setShowLoader(false)
       if (checkoutOrder.status == 200) {
         deleteShopTemporaryCart({
           variables: {
@@ -157,9 +185,7 @@ const MainComponent = () => {
       } else {
         // error prompt
         setShowLoader(false);
-        setTimeout(() => {
-          Alert.alert(checkoutOrder.message);
-        }, 100);
+        setErrorMessage(`Incorrent ${toktokWalletCredit.validator}. Please try again.`)
       }
     },
   });
@@ -214,57 +240,63 @@ const MainComponent = () => {
     });
   };
 
-  const placeCustomerOrder = async () => {
-    if (delivery !== null) {
-      setShowLoader(true);
+  const toktokWalletPaymentMethod = (pinCode) => {
+    setShowLoader(true);
+    tokwaVerifyPin(pinCode)
+      .then(({ success }) => {
+        if(success == 1){
+          const {requestTakeMoneyId, validator, cart} = toktokWalletCredit;
+          const WALLET = {
+            pin: pinCode,
+            request_id: requestTakeMoneyId,
+            pin_type: validator,
+          };
+          console.log('skdks')
+          placeCustomerOrderProcess(cart, WALLET)
+        } else {
+          setErrorMessage(`Incorrent ${toktokWalletCredit.validator}. Please try again.`);
+          setShowLoader(false);
+        }
+      })
+      .catch((err) => {
+        setErrorMessage(`Incorrent ${toktokWalletCredit.validator}. Please try again.`);
+        setShowLoader(false);
+      })
+  
+  }
+
+  const placeCustomerOrder = async (pinCode) => {
+    if (delivery !== null && !pmLoading) {
       const CUSTOMER_CART = await fixOrderLogs();
       const shopValidation = await refetch({variables: {input: {shopId: shopId}}});
-      console.log(JSON.stringify(CUSTOMER_CART))
+      // console.log(JSON.stringify(CUSTOMER_CART))
 
       if (shopValidation.data?.checkShopValidations?.isOpen == 1) {
-        requestToktokWalletCredit()
-          .then(async (wallet) => {
-            const WALLET = {
-              pin: '123456',
-              request_id: wallet.requestTakeMoneyId,
-              pin_type: wallet.validator,
-            };
-            const CUSTOMER = {
-              name: `${customerInfo.firstName} ${customerInfo.lastName}`,
-              contactnumber: customerInfo.conno,
-              email: customerInfo.email,
-              address: location.address,
-              user_id: customerInfo.userId,
-              latitude: location.latitude,
-              longitude: location.longitude,
-              regCode: '0',
-              provCode: '0',
-              citymunCode: '0',
-            };
-
-            const ORDER = {
-              total_amount: temporaryCart.totalAmount,
-              srp_totalamount: temporaryCart.totalAmount,
-              notes: riderNotes,
-              order_isfor: orderType == 'Delivery' ? 1 : 2, // 1 Delivery | 2 Pick Up Status
-              order_type: 2,
-              payment_method: 'TOKTOKWALLET',
-              order_logs: CUSTOMER_CART,
-            };
-            postCustomerOrder({
-              variables: {
-                input: {
-                  ...WALLET,
-                  ...CUSTOMER,
-                  ...ORDER,
-                },
-              },
+        if(paymentMethod == 'TOKTOKWALLET'){
+          setLoadingWallet(true)
+          requestToktokWalletCredit()
+            .then(async ({ data }) => {
+              setLoadingWallet(false)
+              setShowEnterPinCode(true)
+              let { requestTakeMoneyId, validator} = data
+              setToktokWalletCredit({
+                requestTakeMoneyId,
+                validator,
+                cart: CUSTOMER_CART
+              })
+            })
+            .catch((err) => {
+              // Show dialog error about toktokwallet request failed.
+              setLoadingWallet(false)
+              console.log(err, 'ERROR ON PLACING CART');
+              setTimeout(() => {
+                Alert.alert('', 'Something went wrong.');
+              }, 100);
             });
-          })
-          .catch(() => {
-            // Show dialog error about toktokwallet request failed.
-            console.log('ERROR ON PLACING CART');
-          });
+        } else {
+          setShowLoader(true)
+          placeCustomerOrderProcess(CUSTOMER_CART)
+        }
       } else {
         setShowLoader(false);
         setTimeout(() => {
@@ -274,17 +306,75 @@ const MainComponent = () => {
     }
   };
 
+  const mobileNumberFormat = () => {
+    let { conno } = customerInfo;
+    if(conno.charAt(0) == '6'){
+      return `+${conno}`
+    }
+    return conno
+  }
+
+  const placeCustomerOrderProcess = (CUSTOMER_CART, WALLET) => {
+    const CUSTOMER = {
+      name: `${customerInfo.firstName} ${customerInfo.lastName}`,
+      contactnumber: mobileNumberFormat(),
+      email: customerInfo.email,
+      address: location.address,
+      user_id: customerInfo.userId,
+      latitude: location.latitude,
+      longitude: location.longitude,
+      regCode: '0',
+      provCode: '0',
+      citymunCode: '0',
+    };
+
+    const ORDER = {
+      total_amount: temporaryCart.totalAmount,
+      srp_totalamount: temporaryCart.totalAmount,
+      notes: riderNotes,
+      order_isfor: orderType == 'Delivery' ? 1 : 2, // 1 Delivery | 2 Pick Up Status
+      order_type: 2,
+      payment_method: paymentMethod,
+      order_logs: CUSTOMER_CART,
+    };
+    let data = WALLET ? { ...WALLET, ...CUSTOMER, ...ORDER } : { ...CUSTOMER, ...ORDER } 
+    console.log(JSON.stringify(data))
+    postCustomerOrder({
+      variables: {
+        input: data
+      },
+    });
+  }
+
   const onPressChange = (action) => {
     setRefreshing(action != undefined);
     checkShopValidations({variables: {input: {shopId: shopId}}});
   };
+  
+  const LoadingComponent = () => (
+    <Loader visibility={showLoader} message="Placing order..." />
+  )
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'position' : null} style={styles.container}>
       <HeaderImageBackground customSize={CUSTOM_HEADER}>
         <HeaderTitle showAddress={false} title="Order Details" />
       </HeaderImageBackground>
-      <Loader visibility={showLoader} message="Placing order..." />
+      <Loader hasImage={false} loadingIndicator visibility={loadingWallet} message="loading..." />
+      { paymentMethod == 'COD' && <LoadingComponent />}
+      <EnterPinCode
+        visible={showEnterPinCode}
+        setVisible={() => {
+          setShowEnterPinCode(false)
+          setErrorMessage('')
+        }}
+        callBackFunc={(pinCode) => toktokWalletPaymentMethod(pinCode)}
+        errorMessage={errorMessage}
+        setErrorMessage={setErrorMessage}
+        title={toktokWalletCredit.validator}
+      >
+        <LoadingComponent />
+      </EnterPinCode>
       <ScrollView
         contentContainerStyle={{paddingBottom: Platform.OS === 'android' ? moderateScale(83) : moderateScale(70)}}
         refreshControl={
@@ -323,10 +413,10 @@ const MainComponent = () => {
           <OrderTotal subtotal={totalAmount} deliveryFee={delivery.price} forDelivery={orderType === 'Delivery'} />
         )}
         <Separator />
-        <PaymentDetails />
+        <PaymentDetails refreshing={refreshing} />
         <Separator />
         <RiderNotes
-          showPlaceOrder={delivery != null}
+          showPlaceOrder={delivery != null && !pmLoading}
           notes={riderNotes}
           onNotesChange={(n) => setRiderNotes(n)}
           onPlaceOrder={() => placeCustomerOrder()}

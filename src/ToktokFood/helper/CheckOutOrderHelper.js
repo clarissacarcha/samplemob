@@ -6,15 +6,16 @@ import {useMutation} from '@apollo/react-hooks';
 const BYPASS_WALLET_PIN = '123456';
 const BYPASS_WALLET_REQUEST_INPUT = {
   currency: 'PHP',
-  toktokuser_id: '13',
+  toktokuser_id: '6',
   payment_method: 'TOKTOKWALLET',
-  name: 'Marky Neri',
+  name: 'Alvin Raquem',
   notes: 'Payment by toktokfood customer',
 };
 
 export default class CheckOutOrderHelper {
   // fee: delivery fee + order fee
-  static requestTakeMoneyId = async (fee = 0) => {
+  static requestTakeMoneyId = async (fee = 0, paymentMethod = '', input) => {
+    console.log(fee, paymentMethod, input)
     const API_RESULT = await axios({
       url: `${ENVIRONMENTS.TOKTOKFOOD_SERVER}/graphql`,
       method: 'POST',
@@ -23,25 +24,50 @@ export default class CheckOutOrderHelper {
       },
       data: {
         query: `
-            mutation {
-                postRequestTakeMoney(input: {
-                currency: "${BYPASS_WALLET_REQUEST_INPUT.currency}",
-                amount: ${fee},
-                toktokuser_id: "${BYPASS_WALLET_REQUEST_INPUT.toktokuser_id}",
-                payment_method: "${BYPASS_WALLET_REQUEST_INPUT.payment_method}",
-                name: "${BYPASS_WALLET_REQUEST_INPUT.name}",
-                notes: "${BYPASS_WALLET_REQUEST_INPUT.notes}"
-            }) {
-                success
-                data {
-                  requestTakeMoneyId
-                  validator
-                  message
-                }
-              }
-          }`,
+          mutation {
+            postRequestTakeMoney(input: {
+              currency: "${input.currency}",
+              amount: ${fee},
+              toktokuser_id: "${input.toktokuser_id}",
+              payment_method: "${paymentMethod}",
+              name: "${input.name}",
+              notes: "${input.notes}"
+          }) {
+            success
+            data {
+              requestTakeMoneyId
+              validator
+              message
+            }
+          }
+        }`,
       },
     });
+
+    return API_RESULT.data;
+  };
+  static verifyPin = async ({ pinCode, requestTakeMoneyId, validator }) => {
+    const API_RESULT = await axios({
+      url: `${ENVIRONMENTS.TOKTOKFOOD_SERVER}/graphql`,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {
+        query: `
+          mutation {
+            verifyPin(input: {
+              request_money_id: "${requestTakeMoneyId}",
+              pin: ${pinCode},
+              pin_type: "${validator}",
+          }) {
+            success
+            message
+          }
+        }`,
+      },
+    });
+
     return API_RESULT.data;
   };
 }

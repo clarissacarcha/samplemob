@@ -263,8 +263,8 @@ const ToktokFoodDriver = ({route, navigation}) => {
         visibility={showCancel}
         referenceOrderNumber={referenceNum}
       />
-      {(transactionLoading && Object.entries(transaction).length == 0) ||
-      Object.entries(transaction).length == 0 ||
+      {(transactionLoading && transaction && Object.keys(transaction).length == 0) ||
+      transaction && Object.keys(transaction).length == 0 ||
       transactionError ? (
         <LoadingIndicator isFlex isLoading={true} />
       ) : (

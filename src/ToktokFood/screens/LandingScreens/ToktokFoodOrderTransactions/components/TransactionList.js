@@ -19,7 +19,7 @@ import { getOrderStatus, getSubMessageStatus, sameDay, dayTitle } from '../funct
 const renderEmpty = () => (
   <View style={styles.emptyContainer}>
     <Image style={styles.emptyImg} resizeMode="contain" source={empty_orders} />
-    <Text style={styles.emptyText}>No notifications</Text>
+    <Text style={styles.emptyText}>You don't have orders yet</Text>
   </View>
 );
 export const TransactionList = (props) => {

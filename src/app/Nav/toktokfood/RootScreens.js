@@ -12,7 +12,6 @@ import {
   ToktokFoodAddressDetails,
   ToktokFoodRestaurantOverview,
   ToktokRiderRating,
-  ToktokFoodEnterPinCode,
   ToktokFoodTermsAndConditions,
   ToktokFoodPrivacyPolicy,
   ToktokFoodContactUs
@@ -38,11 +37,6 @@ export default ({Navigator}) => (
       options={{headerShown: false}}
       name="ToktokFoodAddressDetails"
       component={ToktokFoodAddressDetails}
-    />
-    <Navigator.Screen
-      options={{headerShown: false}}
-      name="ToktokFoodEnterPinCode"
-      component={ToktokFoodEnterPinCode}
     />
     <Navigator.Screen
       options={{headerShown: false}}

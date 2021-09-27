@@ -35,7 +35,7 @@ const TokTokFoodSplashScreen = () => {
       }
     },
   });
-
+  console.log(user.id)
   const [getToktokUserInfo, {data: foodPerson, error: foodPersonError, loading: foodPersonLoading}] = useLazyQuery(
     GET_ACCOUNT,
     {

@@ -6,13 +6,17 @@ import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
 import HeaderSearchBox from 'toktokfood/components/HeaderSearchBox';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
-import { clearTemporaryCart } from 'toktokfood/helper/TemporaryCart';
+import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 
 // Hooks
 import {useUserLocation} from 'toktokfood/hooks';
 import {useSelector} from 'react-redux';
 import {moderateScale, getStatusbarHeight} from 'toktokfood/helper/scale';
 import {arrow_right, help_centre_ic} from 'toktokfood/assets/images';
+import { GET_MY_ACCOUNT } from 'toktokwallet/graphql';
+import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql';
+import { useLazyQuery } from '@apollo/react-hooks';
+import {useIsFocused} from '@react-navigation/native';
 
 // Fonts & Colors
 import {COLOR, FONT, FONT_SIZE} from 'res/variables';
@@ -23,19 +27,35 @@ const CUSTOM_HEADER = {
   bgImage: Platform.OS === 'android' ? moderateScale(70) + getStatusbarHeight : moderateScale(70),
 };
 
-const DATA = [
-  {
-    title: "Help Centre",
-    icon: ""
-  }
-]
-
 const MainComponent = () => {
 
   const {location} = useSelector((state) => state.toktokFood);
   const {user} = useSelector((state) => state.session);
-  const { showHelpCentreList, setShowHelpCentreList } = useContext(VerifyContext);
+  const { showHelpCentreList, setShowHelpCentreList, walletBalance, setWalletBalance } = useContext(VerifyContext);
+  const isFocus = useIsFocused();
 
+  const [ getMyAccount, {loading, error} ] = useLazyQuery(GET_MY_ACCOUNT , {
+    fetchPolicy: 'network-only',
+    client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+    onCompleted: ({ getMyAccount })=> {
+      setWalletBalance(getMyAccount.wallet.balance);
+    },
+    onError: (error) => {
+      // console.log(error)
+    }
+  });
+
+  useEffect(() => {
+    if(user && isFocus){
+      console.log(user.toktokWalletAccountId)
+      if(user.toktokWalletAccountId){
+        getMyAccount()
+      } else {
+        setWalletBalance(null);
+      }
+    } 
+  }, [user, isFocus])
+  
 
   const onBack = () => {
     setShowHelpCentreList(false)
@@ -54,8 +74,16 @@ const MainComponent = () => {
           <Text style={{ fontSize: FONT_SIZE.L, fontFamily: FONT.BOLD }}>{`${user.person.firstName} ${user.person.lastName}`}</Text>
         </View>
       </HeaderImageBackground>
-      <Me />
-      <HelpCentre />
+      { loading || error ? (
+          <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+            <LoadingIndicator isLoading={true} size='small' />
+          </View>
+        ): (
+        <>
+          <Me />
+          <HelpCentre />
+        </>
+      )}
     </View>
   );
 };

@@ -153,9 +153,9 @@ export default styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     height: moderateScale(50),
-    width: moderateScale(150),
-    paddingHorizontal: scale(6),
+    paddingHorizontal: scale(10),
     backgroundColor: COLOR.WHITE,
+
   },
   tokwaButtonTextWrapper: {
     flexDirection: 'row',
@@ -181,14 +181,14 @@ export default styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    width: moderateScale(80),
     height: moderateScale(50),
+    paddingHorizontal: scale(30),
     backgroundColor: COLOR.WHITE,
   },
   cashText: {
     color: COLOR.BLACK,
     fontSize: FONT_SIZE.L,
-    fontFamily: FONT.BOLD,
+    fontFamily: FONT.REGULAR,
   },
   input: {
     paddingTop: 15,
@@ -249,5 +249,17 @@ export default styles = StyleSheet.create({
   backRightBtnRight: {
     backgroundColor: '#F6841F',
     right: 0,
+  },
+  shadow: {
+    backgroundColor:"white",
+    borderRadius: 5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
 });
