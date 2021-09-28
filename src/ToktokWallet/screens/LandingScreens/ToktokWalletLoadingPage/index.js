@@ -1,33 +1,28 @@
-import React , {useState,useRef,useCallback,useEffect} from 'react'
+import React, { useEffect, useState } from 'react'
 import { View ,ActivityIndicator,StatusBar,Text} from 'react-native'
 import {SomethingWentWrong} from 'src/components'
 import CONSTANTS from 'common/res/constants'
 import {GET_USER_TOKTOK_WALLET_DATA} from 'toktokwallet/graphql'
 import {useLazyQuery, useQuery} from '@apollo/react-hooks'
 import {useSelector} from 'react-redux'
-import { useAccount } from 'toktokwallet/hooks'
 import AsyncStorage from '@react-native-community/async-storage'
 
 //SELF IMPORTS
 import {
-    WalletLandingPage,
     CheckTokwaKYCRegistration,
     CheckWalletAccountRestriction
 } from "./Components";
 
 const {COLOR} = CONSTANTS
 
-export const ToktokWalletHomePage = ({navigation,route})=> {
-
+export const ToktokWalletLoadingPage = ({navigation,route})=> {
     navigation.setOptions({
         headerShown: false,
     })
 
     const session = useSelector(state=> state.session)
-    const [mounted, setMounted] = useState(true)
-    const [refreshing,setRefreshing] = useState(false)
-    const { refreshWallet } = useAccount();
-
+    const [mounted,setMounted] = useState(false)
+    
     const  {data,error,loading} = useQuery(GET_USER_TOKTOK_WALLET_DATA , {
         fetchPolicy:"network-only",
         variables: {
@@ -36,20 +31,18 @@ export const ToktokWalletHomePage = ({navigation,route})=> {
             }
         },
         onCompleted: async ({getUserToktokWalletData})=> {
-            // if( getUserToktokWalletData.accountToken ) {
-            //     await AsyncStorage.setItem('toktokWalletAccountToken', getUserToktokWalletData.accountToken);
-            // }
-
             if( getUserToktokWalletData.enterpriseToken ){
                 await AsyncStorage.setItem('toktokWalletEnterpriseToken', getUserToktokWalletData.enterpriseToken);
+            }else{
+                setMounted(true)
             }
         }
     })
 
-
-    const onRefresh = useCallback(()=>{
-        refreshWallet();
-    },[])
+    useEffect(()=>{
+        if(mounted) navigation.replace("ToktokWalletHomePage")
+        return ()=> setMounted(false);
+    },[mounted])
 
     if (loading) {
         return (
@@ -63,17 +56,15 @@ export const ToktokWalletHomePage = ({navigation,route})=> {
         return <SomethingWentWrong />;
     }
 
-
     return (
         <>
             <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
             <CheckTokwaKYCRegistration kycStatus={data.getUserToktokWalletData.kycStatus}>
-   
-                    <CheckWalletAccountRestriction>
-                        <WalletLandingPage onRefresh={onRefresh} refreshing={refreshing}/>
-                    </CheckWalletAccountRestriction>
-                
+                    <CheckWalletAccountRestriction/>
             </CheckTokwaKYCRegistration>
         </>
     )
+
+
+
 }
