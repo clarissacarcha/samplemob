@@ -29,9 +29,7 @@ export default Loader;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    zIndex: 5,
-    position: 'absolute'
+    flex: 1
   },
   content: {
     flex: 1,

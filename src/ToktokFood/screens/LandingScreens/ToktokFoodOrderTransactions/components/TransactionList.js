@@ -137,7 +137,7 @@ export const TransactionList = (props) => {
           contentContainerStyle={{ paddingBottom: Platform.OS == 'android' ? verticalScale(20) : 0 }}
           extraData={loadMore}
           keyExtractor={(val, index) => index.toString()}
-          onEndReachedThreshold={1}
+          onEndReachedThreshold={.5}
           onEndReached={() => handleLoadMore()}
           ListEmptyComponent={renderEmpty}
           ListFooterComponent={() => ( <LoadingIndicator isLoading={loadMore} /> )}

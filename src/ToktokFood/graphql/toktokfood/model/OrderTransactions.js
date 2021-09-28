@@ -30,6 +30,7 @@ const transaction = `
   dateShipped
   dateReceived
   dateCancelled
+  dateCancelledDeclined
   tDeliveryId
   tShareLink
   isconfirmed

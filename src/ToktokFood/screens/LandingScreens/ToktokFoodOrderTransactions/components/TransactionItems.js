@@ -10,13 +10,14 @@ import { time } from 'toktokfood/assets/images';
 import { getOrderStatus, getSubMessageStatus, sameDay, dayTitle } from '../functions';
 
 const orderStatusDate = (item, focusTab) => {
-  let { dateOrdered, dateShipped, dateDeclined } = item;
+  let { dateOrdered, dateShipped, dateCancelledDeclined } = item;
   let orderStatus = getOrderStatus(focusTab)
+
   switch(orderStatus){
     case 's':
       return dateShipped;
     case 'c':
-      return dateDeclined ? dateDeclined : new Date();
+      return dateCancelledDeclined ?? new Date();
 
     default:
       return dateOrdered;
