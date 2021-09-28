@@ -130,9 +130,9 @@ const MainComponent = () => {
     return new Promise(async (resolve, reject) => {
       let totalPrice = 0;
       if (orderType === 'Delivery') {
-        totalPrice = parseInt(totalAmount) + parseInt(delivery.price ? delivery.price : 0);
+        totalPrice = parseInt(temporaryCart.totalAmount) + parseInt(delivery.price ? delivery.price : 0);
       } else {
-        totalPrice = parseInt(totalAmount);
+        totalPrice = parseInt(temporaryCart.totalAmount);
       }
       const result = await CheckOutOrderHelper.requestTakeMoneyId(totalPrice, paymentMethod, toktokWallet);
       if (result.data.postRequestTakeMoney.success === 1) {
@@ -168,7 +168,6 @@ const MainComponent = () => {
     },
     onCompleted: async ({checkoutOrder}) => {
       console.log(checkoutOrder)
-      setShowLoader(false)
       if (checkoutOrder.status == 200) {
         deleteShopTemporaryCart({
           variables: {
@@ -241,17 +240,16 @@ const MainComponent = () => {
   };
 
   const toktokWalletPaymentMethod = (pinCode) => {
-    setShowLoader(true);
     tokwaVerifyPin(pinCode)
-      .then(({ success }) => {
-        if(success == 1){
+      .then((data) => {
+        if(data.success == 1){
           const {requestTakeMoneyId, validator, cart} = toktokWalletCredit;
           const WALLET = {
             pin: pinCode,
             request_id: requestTakeMoneyId,
             pin_type: validator,
           };
-          console.log('skdks')
+          console.log(data, 'VERIFY PIN')
           placeCustomerOrderProcess(cart, WALLET)
         } else {
           setErrorMessage(`Incorrent ${toktokWalletCredit.validator}. Please try again.`);
@@ -368,7 +366,10 @@ const MainComponent = () => {
           setShowEnterPinCode(false)
           setErrorMessage('')
         }}
-        callBackFunc={(pinCode) => toktokWalletPaymentMethod(pinCode)}
+        callBackFunc={(pinCode) => {
+          setShowLoader(true);
+          toktokWalletPaymentMethod(pinCode)
+        }}
         errorMessage={errorMessage}
         setErrorMessage={setErrorMessage}
         title={toktokWalletCredit.validator}

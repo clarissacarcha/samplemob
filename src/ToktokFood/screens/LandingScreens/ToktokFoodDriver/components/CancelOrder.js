@@ -39,6 +39,7 @@ const CancelOrder = ({visibility = false, onCloseSheet, failedCancel, referenceO
     fetchPolicy: 'no-cache',
     onError: (error) => console.log(`LOCATION LOG ERROR: ${error}`),
     onCompleted: ({cancelOrder}) => {
+      console.log(cancelOrder)
       if (cancelOrder.status == 200) {
         navigation.pop();
       } else {
@@ -52,6 +53,7 @@ const CancelOrder = ({visibility = false, onCloseSheet, failedCancel, referenceO
     setShowReason(false);
     onProcess();
     onCloseSheet();
+    console.log(referenceOrderNumber, selectedReason)
     postCancelOrder({
       variables: {
         input: {

@@ -259,7 +259,12 @@ const ToktokFoodDriver = ({route, navigation}) => {
           setShowCancel(false);
           setSeconds(300);
         }}
-        failedCancel={() => console.log('Failed to cancel')}
+        failedCancel={() => {
+          setShowLoader(false)
+          setTimeout(() => {
+            Alert.alert('', 'Toktokwallet error. Unable to return the money.')
+          }, 100)
+        }}
         visibility={showCancel}
         referenceOrderNumber={referenceNum}
       />
