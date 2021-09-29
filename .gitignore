@@ -2,6 +2,7 @@
 #
 .DS_Store
 
+
 # Xcode
 #
 build/
@@ -64,3 +65,6 @@ MY_TODOS.md
 # Environment Variables
 src/res/environments.js
 src/common/res/environments.js
+
+# Android release res
+android/app/src/release

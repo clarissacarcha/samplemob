@@ -20,25 +20,17 @@ export const TOKTOK_MALL_PROTOCOL_HOST_PORT = '192.168.1.3:3300';
 
 /* LOCAL PORTS */
 
-// export const PROTOCOL = 'https';
-// export const HOST_PORT = 'stg-graphql.toktok.ph:2096';
+// export const PROTOCOL = 'http';
+// export const HOST_PORT = '192.168.0.102:3000'; // Myutini
 
-// export const TOKTOK_WALLET_PROTOCOL = 'https';
-// export const TOKTOK_WALLET_PROTOCOL_HOST_PORT = 'stg-wallet.toktok.ph:2096';
-
-// export const PROTOCOL = 'https';
-// export const HOST_PORT = 'test.toktok.ph:2096';
-
-// export const TOKTOK_WALLET_PROTOCOL = 'https';
-// export const TOKTOK_WALLET_PROTOCOL_HOST_PORT = 'test.toktok.ph:2087';
+export const PROTOCOL = 'https';
+export const HOST_PORT = 'test.toktok.ph:2096'; // Test
 
 // export const PROTOCOL = 'https';
-// export const HOST_PORT = 'demo.toktok.ph:2096';
+// export const HOST_PORT = 'graphql.toktok.ph:2096'; // Prod
 
-// export const TOKTOK_WALLET_PROTOCOL = 'https';
-// export const TOKTOK_WALLET_PROTOCOL_HOST_PORT = 'demo.toktok.ph:2087';
-
-/* DEMO PORTS */
+export const TOKTOK_WALLET_PROTOCOL = 'http';
+export const TOKTOK_WALLET_PROTOCOL_HOST_PORT = '192.168.0.103:3100';
 
 export const COLORS = {
   YELLOW: '#FDBA1C',

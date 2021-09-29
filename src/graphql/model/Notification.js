@@ -58,6 +58,9 @@ const Delivery = `
       }
     }
   }
+  vehicleType {
+    name
+  }
 `;
 
 export const GET_NOTIFICATIONS = gql`
