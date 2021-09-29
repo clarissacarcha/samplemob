@@ -206,7 +206,7 @@ const StopDetails = ({navigation, route}) => {
         name: person,
         mobile: mobile,
         landmark: landmark,
-        formattedAddress: searchText,
+        // formattedAddress: searchText,
       },
       navigation,
     );
