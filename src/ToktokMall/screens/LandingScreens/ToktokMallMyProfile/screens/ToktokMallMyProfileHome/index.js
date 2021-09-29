@@ -8,10 +8,16 @@ import {Card} from '../../../../../Components'
 import CustomIcon from './.../../../../../../../Components/Icons';
 import {banner, userIcon, placeholder} from '../../../../../assets';
 import AsyncStorage from '@react-native-community/async-storage';
+import {FormatToText} from '../../../../../helpers';
 
-import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../../graphql';
+import { 
+  TOKTOK_MALL_GRAPHQL_CLIENT
+} from '../../../../../../graphql';
 import { useLazyQuery } from '@apollo/react-hooks';
 import { GET_DEFAULT_ADDRESS } from '../../../../../../graphql/toktokmall/model';
+
+import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
+import { GET_MY_ACCOUNT, GET_WALLET } from 'toktokwallet/graphql'
 
 const testData = [
   {id: 1, full_name: 'Cloud Panda', contact_number: '09050000000',
@@ -30,6 +36,7 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
   const [userName, setUserName] = useState("")
   const [conNo, setConNo] = useState("")
   const [address, setAddress] = useState("")
+  const [accountBalance, setAccountBalance] = useState(0)
 
   const [getDefaultAddress, {error, loading}] = useLazyQuery(GET_DEFAULT_ADDRESS, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
@@ -43,11 +50,39 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
     onError: (err) => console.log(err),
   });
 
+  const [ getMyAccount ] = useLazyQuery(GET_MY_ACCOUNT , {
+    fetchPolicy: "network-only",
+    client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+    onCompleted: ({ getMyAccount })=> {
+      // do something with result
+      console.log(getMyAccount)
+  },
+  onError: (error) => {
+    console.log(error)
+  }
+  })
+
+  const [ getWallet ] = useLazyQuery(GET_WALLET , {
+    fetchPolicy: "network-only",
+    client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+    onCompleted: ({ getWallet })=> {
+      // do something with result
+      console.log(getWallet.balance)
+      setAccountBalance(getWallet.balance)
+  },
+  onError: (error) => {
+    console.log(error)
+  }
+  })
+  
+
   useEffect(() => {
     const user = session?.user.person || {}
     setUserName(`${user.firstName} ${user.lastName}`)
     setProfileImage(user.avatarThumbnail)
     setConNo(session?.user.username)
+
+    getWallet()
 
     // AsyncStorage.getItem("ToktokMallUser").then((raw) => {
     //   let data = JSON.parse(raw)
@@ -93,10 +128,19 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
               <Image source={require("../../../../../../assets/toktokwallet-assets/toktokwallet.png")} style={{width:'100%', height: 20, resizeMode: 'stretch'}} />
             </View>
             <View style={{flex: 4, alignItems: 'flex-start', justifyContent: 'center'}}>
-              <Text style={{fontSize: 11, marginLeft: 8, color: COLOR.DARK}}>(Balance P0.00)</Text>
+              <Text style={{fontSize: 11, marginLeft: 8, color: COLOR.DARK}}>(Balance {FormatToText.currency(accountBalance)})</Text>
             </View>
             <TouchableOpacity style={{flex: 2, alignItems: 'flex-end', justifyContent: 'center'}}
-              onPress = {() => {navigation.navigate("ToktokMallOTP")}}
+              onPress = {() => {
+
+                navigation.navigate("ToktokWalletPaymentOptions" , {
+                  amount: 1000,
+                   onCashIn: ({balance}) => {
+                     setAccountBalance(balance)
+                   },
+                })                
+
+              }}
             >
               <Text style={{fontSize: 13, fontFamily: FONT.REGULAR, color: COLOR.ORANGE}}>Top up</Text>
             </TouchableOpacity>

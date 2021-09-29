@@ -73,13 +73,8 @@
     "react-native-permissions": "^2.2.2",
     "react-native-qrcode-scanner": "^1.5.3",
     "react-native-qrcode-svg": "^6.0.6",
-<<<<<<< HEAD
     "react-native-ratings": "^7.6.1",
     "react-native-reanimated": "^1.13.3",
-=======
-    "react-native-ratings": "^7.2.0",
-    "react-native-reanimated": "^1.9.0",
->>>>>>> 3819e9d4fc268ab408b47a0e917ab5d94f566d06
     "react-native-redash": "^14.1.1",
     "react-native-render-html": "^4.2.0",
     "react-native-safe-area-context": "^0.7.3",

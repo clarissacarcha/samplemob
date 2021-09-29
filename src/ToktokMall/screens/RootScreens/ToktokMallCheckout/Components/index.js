@@ -4,4 +4,5 @@ export * from './Payment';
 export * from './Shops';
 export * from './Totals';
 export * from './Vouchers';
-export * from './CheckoutModal'
+export * from './CheckoutModal';
+export * from './MessageModal';

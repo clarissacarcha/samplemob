@@ -25,6 +25,8 @@ export const Payment = ({ list, payment, total, setPaymentMethod, currentBalance
   const navigation = useNavigation()
   // const [currentBalance, setCurrenctBalance] = useState(0)
 
+  
+
   return (
     <>
     <View style={styles.container}>
@@ -51,10 +53,13 @@ export const Payment = ({ list, payment, total, setPaymentMethod, currentBalance
           <View style ={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 2.5  }}>
             <Text style = {{marginLeft: 5, fontWeight: 'bold', color: '#929191'}}>(Balance {FormatToText.currency(currentBalance)})</Text>
             <TouchableOpacity onPress={() => {
-              // navigation.push("ToktokWalletHomePage")
-              navigation.navigate("ToktokMallOTP", {callback: () => {
-                setCurrenctBalance(currentBalance + 1000)
-              }})
+
+              navigation.navigate("ToktokWalletPaymentOptions" , {
+                amount: 1000,
+                  onCashIn: ({balance}) => {
+                    setCurrenctBalance(balance)
+                  },
+              })
 
             }}>
               <Text style = {{ alignSelf: 'flex-end', color: '#F6841F'}}>Top up</Text>

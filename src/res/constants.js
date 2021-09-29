@@ -8,15 +8,15 @@ export const MAPS_API_KEY = 'AIzaSyDhlw6pbriuwr_Mb6KYkVlBar7KD1KTrOs';
 
 /* LOCAL PORTS */
 
-export const PROTOCOL = 'http';
-export const HOST_PORT = '192.168.1.3:3100'; // Myutini
+// export const PROTOCOL = 'http';
+// export const HOST_PORT = '192.168.1.3:3100'; // Myutini
 // // export const HOST_PORT = '35.173.0.77:3088'; // Marketing Server
 
-export const TOKTOK_WALLET_PROTOCOL = 'http';
-export const TOKTOK_WALLET_PROTOCOL_HOST_PORT = '192.168.1.3:3200';
+// export const TOKTOK_WALLET_PROTOCOL = 'http';
+// export const TOKTOK_WALLET_PROTOCOL_HOST_PORT = '192.168.1.3:3200';
 
-export const TOKTOK_MALL_PROTOCOL = 'http';
-export const TOKTOK_MALL_PROTOCOL_HOST_PORT = '192.168.1.3:3300';
+// export const TOKTOK_MALL_PROTOCOL = 'http';
+// export const TOKTOK_MALL_PROTOCOL_HOST_PORT = '192.168.1.3:3300';
 
 /* LOCAL PORTS */
 
