@@ -38,7 +38,7 @@ export const ProceedButton = ({
             const {graphQLErrors, networkError} = error;
 
 
-            if(graphQLErrors[0].message == "Insufficient Balance"){
+            if(graphQLErrors[0].message == "Account does not have enough balance."){
                 navigation.navigate("ToktokWalletHomePage")
                 navigation.replace("ToktokWalletHomePage")
                 return onErrorAlert({alert,error})
