@@ -56,7 +56,7 @@ const PickUpDetails = (props) => {
 
 const styles = StyleSheet.create({
   proto: {
-    height: '53%',
+    height: 350,
     width: '101%',
     position: 'absolute',
     backgroundColor: COLOR.WHITE,
