@@ -20,3 +20,4 @@ export ToktokFoodMe from './ToktokFoodMe';
 export ToktokFoodTermsAndConditions from './ToktokFoodTermsAndConditions';
 export ToktokFoodPrivacyPolicy from './ToktokFoodPrivacyPolicy';
 export ToktokFoodContactUs from './ToktokFoodContactUs';
+export ToktokFoodEmptyCart from './ToktokFoodEmptyCart';

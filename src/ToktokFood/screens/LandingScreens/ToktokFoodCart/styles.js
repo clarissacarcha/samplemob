@@ -11,7 +11,7 @@ export default styles = StyleSheet.create({
   },
   sectionContainer: {
     paddingVertical: 10,
-    paddingHorizontal: Platform.OS === 'android' ? 12 : 14,
+    paddingHorizontal: moderateScale(16),
   },
   scrollView: {paddingBottom: 150},
   deliverWrapper: {
@@ -123,7 +123,7 @@ export default styles = StyleSheet.create({
     marginVertical: verticalScale(6),
   },
   totalContainer: {
-    paddingVertical: verticalScale(14),
+    paddingVertical: moderateScale(16),
   },
   total: {
     fontFamily: FONT.BOLD,

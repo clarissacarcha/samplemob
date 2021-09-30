@@ -26,11 +26,6 @@ import {empty_shop, empty_search} from 'toktokfood/assets/images';
 
 import styles from './styles';
 
-const CUSTOM_HEADER = {
-  container: Platform.OS === 'android' ? moderateScale(143 + getStatusbarHeight) : moderateScale(145),
-  bgImage: Platform.OS === 'android' ? moderateScale(115 + getStatusbarHeight) : moderateScale(125),
-};
-
 const ToktokFoodSearch = ({ route }) => {
   const {location} = useSelector((state) => state.toktokFood);
   const [shopList, setShopList] = useState([]);
@@ -152,8 +147,8 @@ const ToktokFoodSearch = ({ route }) => {
         title="No result found"
         onCloseModal={() => setShowError(false)}
       />
-      <HeaderImageBackground customSize={CUSTOM_HEADER}>
-        <HeaderTitle showAddress={true} />
+      <HeaderImageBackground>
+        <HeaderTitle />
         <HeaderSearchBox
           onSearch={(t) => {
             searchFood(t);

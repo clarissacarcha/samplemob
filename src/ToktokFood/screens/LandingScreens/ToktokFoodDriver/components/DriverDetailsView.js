@@ -34,7 +34,7 @@ const DriverDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
       {latitude: riderLocation.latitude, longitude: riderLocation.longitude},
     );
     let distanceMiles = convertDistance(distance, 'mi');
-    let duration = distanceMiles / 60;
+    let duration = distanceMiles / 40;
     let hours = 20 / 60;
     let final = (duration + hours).toFixed(2);
 

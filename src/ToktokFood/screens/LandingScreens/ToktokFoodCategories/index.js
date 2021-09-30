@@ -30,7 +30,7 @@ const ToktokFoodCategories = () => {
   return (
     <View style={styles.container}>
       <HeaderImageBackground>
-        <HeaderTitle showAddress={true} />
+        <HeaderTitle />
         <HeaderSearchBox />
       </HeaderImageBackground>
       <RenderFilter />
@@ -53,7 +53,7 @@ export default ToktokFoodCategories;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'whitesmoke'
+    backgroundColor: 'white'
   },
   filterContainer: {
     alignItems: 'center',

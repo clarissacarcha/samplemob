@@ -12,7 +12,7 @@ const ToktokFoodRestaurantOverview = ({route}) => {
     <VerifyContextProvider>
       <View style={styles.container}>
         <StickyView />
-        <FoodCart/>
+        {/* <FoodCart/> */}
       </View>
     </VerifyContextProvider>
   );
@@ -23,6 +23,6 @@ export default ToktokFoodRestaurantOverview;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'whitesmoke'
+    backgroundColor: 'white'
   },
 });

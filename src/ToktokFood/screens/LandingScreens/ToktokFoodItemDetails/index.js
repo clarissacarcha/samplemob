@@ -135,9 +135,9 @@ const MainComponent = () => {
   };
  
   return (
-    <View behavior={Platform.OS === 'ios' ? 'position' : null} style={styles.container}>
-      <HeaderImageBackground customSize={CUSTOM_HEADER}>
-        <HeaderTitle title="" />
+    <View style={styles.container}>
+      <HeaderImageBackground searchBox={false}>
+        <HeaderTitle />
       </HeaderImageBackground>
       {(Object.entries(productDetails).length == 0) || getLoading || getError ? (
         <LoadingIndicator isLoading={true} style={{ height: moderateScale(500), justifyContent: 'center' }} />

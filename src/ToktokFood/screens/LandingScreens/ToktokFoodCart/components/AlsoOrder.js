@@ -13,7 +13,7 @@ const AlsoOrder = () => {
           <Image style={styles.alsoOrderedItemImage} source={food1} />
           <View style={styles.alsoOrderedInfoWrapper}>
             <Text style={styles.alsoOrderedTitle}>Caffe Latte</Text>
-            <Rating startingValue={5} tintColor={'whitesmoke'} imageSize={12} readonly style={styles.ratings} />
+            <Rating startingValue={5} tintColor={'white'} imageSize={12} readonly style={styles.ratings} />
             <Text style={[styles.foodPrice, {fontSize: 12}]}>PHP 230.00</Text>
           </View>
         </View>

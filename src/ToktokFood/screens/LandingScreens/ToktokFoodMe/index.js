@@ -55,7 +55,6 @@ const MainComponent = () => {
       }
     } 
   }, [user, isFocus])
-  
 
   const onBack = () => {
     setShowHelpCentreList(false)
@@ -63,24 +62,23 @@ const MainComponent = () => {
 
   return (
     <View style={styles.container}>
-      <HeaderImageBackground styleContainer={{ justifyContent: 'center' }} customSize={CUSTOM_HEADER}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', paddingTop: getStatusbarHeight, paddingHorizontal: 16 }}>
-          <TouchableOpacity onPress={onBack} style={{  }}>
-            <FIcon5 name="chevron-left" size={15} />
-          </TouchableOpacity>
-          <View style={{ paddingHorizontal: 10  }}>
-            <Image source={{ uri: user.person.avatar }} style={{ height: 50, width: 50, borderRadius: 50, resizeMode: 'cover' }} />
-          </View>
-          <Text style={{ fontSize: FONT_SIZE.L, fontFamily: FONT.BOLD }}>{`${user.person.firstName} ${user.person.lastName}`}</Text>
+      <HeaderImageBackground searchBox={false}>
+        <View style={styles.header}>
+          { showHelpCentreList && (
+            <TouchableOpacity onPress={onBack}>
+              <FIcon5 name="chevron-left" size={15} />
+            </TouchableOpacity>
+          )}
+          <Image source={{ uri: user.person.avatar }} style={styles.avatar} />
+          <Text style={styles.name}>
+            {`${user.person.firstName} ${user.person.lastName}`}
+          </Text>
         </View>
       </HeaderImageBackground>
       { loading || error ? (
-          <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
-            <LoadingIndicator isLoading={true} size='small' />
-          </View>
+          <LoadingIndicator isFlex isLoading={true} />
         ): (
         <>
-          <Me />
           <HelpCentre />
         </>
       )}
@@ -101,25 +99,23 @@ export default ToktokFoodMe;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'whitesmoke',
+    backgroundColor: 'white',
   },
-  shadow: {
-    backgroundColor:"whitesmoke",
-    borderRadius: 5,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
+  avatar: {
+    height: moderateScale(50),
+    width: moderateScale(50),
+    borderRadius: moderateScale(50),
+    resizeMode: 'cover'
   },
-  boxContainer: {
-    paddingHorizontal: 15,
-    paddingVertical: 15,
-    justifyContent: 'space-between',
+  header: {
+    flexDirection: 'row',
     alignItems: 'center',
-    flexDirection: 'row'
+    paddingTop: getStatusbarHeight,
+    paddingHorizontal: 16
+  },
+  name: {
+    fontSize: FONT_SIZE.L,
+    fontFamily: FONT.BOLD,
+    paddingHorizontal: 15
   }
 });

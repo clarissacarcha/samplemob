@@ -231,7 +231,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
         visibility={showDialogMessage.show}
         onCloseModal={() => { onCloseModal() }}
       />
-      <HeaderImageBackground customSize={CUSTOM_HEADER}>
+      <HeaderImageBackground searchBox={false}>
         <HeaderTitle title="Order Details" />
       </HeaderImageBackground>
       {(transactionLoading && Object.entries(transaction).length == 0) ||

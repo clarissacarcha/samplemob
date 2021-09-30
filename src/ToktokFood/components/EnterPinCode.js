@@ -91,7 +91,7 @@ const EnterPinCode = ({
         statusBarTranslucent
       >
         {children}
-        <HeaderImageBackground styleContainer={styles.header} customSize={CUSTOM_HEADER}>
+        <HeaderImageBackground styleContainer={styles.header} searchBox={false}>
           <View style={styles.backContainer}>
             <TouchableOpacity onPress={onBack}>
               <FIcon5 name="chevron-left" size={15} />
@@ -145,7 +145,7 @@ const EnterPinCode = ({
             </View>
           </View>
         </KeyboardAvoidingView>
-        <View style={{ backgroundColor: 'whitesmoke' }}>
+        <View style={{ backgroundColor: 'white' }}>
           <View style={{ alignSelf: 'center', paddingVertical: 20 }}>
             <YellowButton
               onPress={() => { 
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
   },
   modalBody: {
     flex: 1,
-    backgroundColor:"whitesmoke"
+    backgroundColor:"white"
   },
   content: {
     justifyContent:"center",

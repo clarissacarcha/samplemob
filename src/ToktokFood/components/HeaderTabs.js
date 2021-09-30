@@ -84,6 +84,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginHorizontal: 5,
     paddingHorizontal: 20,
+    paddingVertical: 4,
   },
   tabText: {
     fontWeight: '400',

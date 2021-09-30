@@ -14,7 +14,8 @@ import {
   ToktokRiderRating,
   ToktokFoodTermsAndConditions,
   ToktokFoodPrivacyPolicy,
-  ToktokFoodContactUs
+  ToktokFoodContactUs,
+  ToktokFoodEmptyCart
 } from 'toktokfood/screens';
 
 export default ({Navigator}) => (
@@ -52,6 +53,11 @@ export default ({Navigator}) => (
       options={{headerShown: false}}
       name="ToktokFoodContactUs"
       component={ToktokFoodContactUs}
+    />
+    <Navigator.Screen
+      options={{headerShown: false}}
+      name="ToktokFoodEmptyCart"
+      component={ToktokFoodEmptyCart}
     />
   </>
 );

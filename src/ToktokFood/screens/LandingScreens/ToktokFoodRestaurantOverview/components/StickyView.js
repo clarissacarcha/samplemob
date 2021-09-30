@@ -1,6 +1,6 @@
 import {useLazyQuery} from '@apollo/react-hooks';
 import {useRoute} from '@react-navigation/native';
-import React, {useEffect, useState, useContext} from 'react';
+import React, {useEffect, useState, useContext, useRef, useMemo} from 'react';
 import {Image, Platform, StyleSheet, Text, View} from 'react-native';
 import ReactNativeParallaxHeader from 'react-native-parallax-header';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -38,6 +38,7 @@ export const StickyView = () => {
   const [offset, setOffset] = useState(0);
   const [activeTab, setActiveTab] = useState({});
   const [productCategories, setProductCategories] = useState([]);
+  const searchProduct = useRef('');
   const { setNavBarHeight, temporaryCart, setTemporaryCart } = useContext(VerifyContext);
   const {customerInfo} = useSelector((state) => state.toktokFood);
 
@@ -101,25 +102,25 @@ export const StickyView = () => {
     setNavBarHeight(height);
   };
 
-  const NavBar = () => (
-    <View onLayout={(event) => getNavBarHeight(event)} style={[styles.headerWrapper, styles.navbarWrapper]}>
-      <HeaderTitleSearchBox />
-      <View style={styles.tabContainer}>
-        <CategoryTabs
-          activeTab={activeTab}
-          productCategories={productCategories}
-          setActiveTab={setActiveTab}
-          loading={loading}
-        />
+  const renderNavBar = useMemo(() => {
+    return (
+      <View onLayout={(event) => getNavBarHeight(event)} style={[styles.headerWrapper, styles.navbarWrapper]}>
+        <HeaderTitleSearchBox />
+        <View style={styles.tabContainer}>
+          <CategoryTabs
+            activeTab={activeTab}
+            productCategories={productCategories}
+            setActiveTab={setActiveTab}
+            loading={loading}
+          />
+        </View>
       </View>
-    </View>
-  );
-
+    )
+  }, [activeTab, productCategories, loading]);
+ 
   const renderTitle = () => (
     <View style={styles.title}>
-      <View style={styles.titleContainer}>
-        <HeaderTitle title={'toktokfood'} showAddress={true} />
-      </View>
+      <HeaderTitle searchBox={false} />
       <View style={styles.titleInfo}>
         <View style={styles.content}>
           <Image source={{uri: logo}} style={{width: scale(70), height: scale(70)}} resizeMode="contain" />
@@ -160,6 +161,16 @@ export const StickyView = () => {
     </View>
   );
 
+  const renderContent = useMemo(() => {
+    return (
+      <FoodList
+        id={id}
+        activeTab={activeTab}
+        tagsLoading={loading} 
+      />
+    )
+  }, [id, activeTab, loading])
+
   return (
     <>
       <ReactNativeParallaxHeader
@@ -172,12 +183,10 @@ export const StickyView = () => {
         backgroundImageScale={1.1}
         title={renderTitle()}
         backgroundImage={{uri: banner}}
-        navbarColor="whitesmoke"
+        navbarColor="white"
         backgroundColor="transparent"
-        renderNavBar={() => <NavBar />}
-        renderContent={() => (
-          <FoodList latitude={latitude} longitude={longitude} id={id} activeTab={activeTab} tagsLoading={loading} />
-        )}
+        renderNavBar={() => renderNavBar}
+        renderContent={() => renderContent}
         containerStyle={styles.container}
         contentContainerStyle={styles.contentContainer}
         scrollViewProps={{

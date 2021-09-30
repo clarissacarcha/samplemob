@@ -22,6 +22,7 @@ import {useNavigation} from '@react-navigation/native';
 
 // Fonts & Colors
 import {COLOR, FONT, FONT_SIZE} from 'res/variables';
+import { HelpCentre } from './HelpCentre';
 
 export const Me = () => {
   const {user} = useSelector((state) => state.session);
@@ -44,35 +45,17 @@ export const Me = () => {
     })
   }
 
-  if(showHelpCentreList){ return null }
+  // if(showHelpCentreList){ return null }
   return (
-    <View style={{ padding: 16 }}>
-      {!!walletBalance && (
-        <View style={[styles.shadow, styles.boxContainer]}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', flexShrink: 1, flexWrap: 'wrap' }}>
-            <Image source={wallet_ic} style={{ height: 25, width: 25, resizeMode: 'contain', marginRight: 10 }} />
-            <Text>
-              <Text style={{ fontSize: FONT_SIZE.XL, fontFamily: FONT.REGULAR, color: '#fdba1a' }} >toktok</Text>
-              <Text style={{ fontSize: FONT_SIZE.XL, fontFamily: FONT.REGULAR, color: '#f6841f' }}>wallet</Text>
-            </Text>
-            <Text style={{ color: '#929191', fontSize: FONT_SIZE.M, paddingHorizontal: 5, marginVertical: 10 }}>
-              (Balance: PHP {walletBalance.toFixed(2)})
-            </Text>
-          </View>
-          <TouchableOpacity onPress={onPressTopUp}>
-            <Text style={{ color: '#FCB81A', fontSize: FONT_SIZE.M, paddingHorizontal: 5 }}>
-              Top up
-            </Text>
-          </TouchableOpacity>
-        </View>
-      )}
-      <TouchableOpacity onPress={onPress} style={[styles.shadow, styles.boxContainer]}>
+    <View style={{ flex: 1 }}>
+      {/* <TouchableOpacity onPress={onPress} style={[styles.shadow, styles.boxContainer]}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Image source={help_centre_ic} style={{ height: 25, width: 25, resizeMode: 'contain' }} />
           <Text style={{ fontSize: FONT_SIZE.L, paddingHorizontal: 5 }}>Help Centre</Text>
         </View>
         <Image source={arrow_right} style={{ height: 15, width: 15, resizeMode: 'contain' }} />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
+      <HelpCentre />
     </View>
   );
 };
@@ -80,10 +63,10 @@ export const Me = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'whitesmoke',
+    backgroundColor: 'white',
   },
   shadow: {
-    backgroundColor:"whitesmoke",
+    backgroundColor:"white",
     borderRadius: 5,
     shadowColor: '#000',
     shadowOffset: {
@@ -93,6 +76,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 3.84,
     elevation: 5,
+    marginHorizontal: 16
   },
   boxContainer: {
     paddingHorizontal: 15,
@@ -100,6 +84,5 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'row',
-    marginBottom: 15,
   }
 });

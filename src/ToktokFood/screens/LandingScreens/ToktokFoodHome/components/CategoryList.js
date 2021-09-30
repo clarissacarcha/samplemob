@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: scale(16),
     paddingTop: 10,
-    backgroundColor: 'whitesmoke'
+    backgroundColor: 'white'
   },
   img: {
     borderRadius: 10,

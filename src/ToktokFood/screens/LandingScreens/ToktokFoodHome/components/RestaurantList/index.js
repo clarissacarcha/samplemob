@@ -40,7 +40,7 @@ const RestaurantList = (props) => {
       ListEmptyComponent={listEmpty()}
       style={{flex: 1}}
       contentContainerStyle={{
-        backgroundColor: 'whitesmoke',
+        backgroundColor: 'white',
         paddingHorizontal: 20,
         paddingTop: 15,
         paddingBottom: Platform.OS == 'android' ? verticalScale(20) : 0,

@@ -40,8 +40,8 @@ const MainComponent = () => {
   return (
     <>
       <View style={styles.container}>
-        <HeaderImageBackground customSize={CUSTOM_HEADER}>
-          <HeaderTitle titleOnly showAddress={false} title="Food Orders" />
+        <HeaderImageBackground searchBox={false}>
+          <HeaderTitle backOnly title="Food Orders" />
         </HeaderImageBackground>
         <TransactionTabs />
         <TransactionList

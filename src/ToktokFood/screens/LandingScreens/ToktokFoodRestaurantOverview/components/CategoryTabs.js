@@ -11,11 +11,10 @@ export const CategoryTabs = ({activeTab, setActiveTab, productCategories, loadin
   const flatListRef = useRef();
   const { searchProduct } = useContext(VerifyContext);
   
-  if(searchProduct) return null
   return (
     <HeaderTabs
       loading={loading}
-      activeTab={activeTab}
+      activeTab={searchProduct ? -1 : activeTab}
       tabs={productCategories}
       setActiveTab={setActiveTab}
     />

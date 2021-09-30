@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {useRoute} from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/native';
-import {KeyboardAvoidingView, ScrollView, Platform, ActivityIndicator, View, Alert, RefreshControl} from 'react-native';
+import {KeyboardAvoidingView, ScrollView, Platform, ActivityIndicator, View, Alert, RefreshControl, Text} from 'react-native';
 
 import Loader from 'toktokfood/components/Loader';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
@@ -43,11 +43,7 @@ import {moderateScale} from 'toktokfood/helper/scale';
 import {arrangeAddons} from './functions';
 import EnterPinCode from 'toktokfood/components/EnterPinCode';
 import LoadingIndicator from '../../../components/LoadingIndicator';
-
-const CUSTOM_HEADER = {
-  container: Platform.OS === 'android' ? moderateScale(83) : moderateScale(70),
-  bgImage: Platform.OS === 'android' ? moderateScale(83) : moderateScale(70),
-};
+import { FONT, FONT_SIZE } from '../../../../res/variables';
 
 const MainComponent = () => {
   const route = useRoute();
@@ -180,8 +176,10 @@ const MainComponent = () => {
       if (checkoutOrder.status == "200") {
         deleteShopTemporaryCart()
           .then(() => {
-            setShowLoader(false);
-            navigation.replace('ToktokFoodDriver', {referenceNum: checkoutOrder.referenceNum});
+            setTimeout(() => {
+              setShowLoader(false);
+              navigation.replace('ToktokFoodDriver', {referenceNum: checkoutOrder.referenceNum});
+            }, 1000)
           })
           .catch(() => {
             setShowLoader(false);
@@ -366,8 +364,8 @@ const MainComponent = () => {
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'position' : null} style={styles.container}>
-      <HeaderImageBackground customSize={CUSTOM_HEADER}>
-        <HeaderTitle showAddress={false} title="Order Details" />
+      <HeaderImageBackground searchBox={false}>
+        <HeaderTitle backOnly />
       </HeaderImageBackground>
       <Loader hasImage={false} loadingIndicator visibility={loadingWallet} message="loading..." />
       { paymentMethod == 'COD' ? (
@@ -391,7 +389,7 @@ const MainComponent = () => {
         </EnterPinCode>
       )}
       <ScrollView
-        contentContainerStyle={{paddingBottom: Platform.OS === 'android' ? moderateScale(83) : moderateScale(70)}}
+        contentContainerStyle={{paddingBottom: Platform.OS === 'android' ? 0 : moderateScale(70)}}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -399,7 +397,11 @@ const MainComponent = () => {
             colors={['#FFA700']}
             tintColor="#FFA700"
           />
-        }>
+        }
+      >
+        <View style={{ paddingTop: 15, paddingBottom: 10, paddingHorizontal: moderateScale(16) }}>
+          <Text style={{ fontSize: FONT_SIZE.L, fontFamily: FONT.BOLD }}>Order Details</Text>
+        </View>
         {checkShop == null && !refreshing ? (
           <View style={styles.totalContainer}>
             <ActivityIndicator color={COLOR.ORANGE} />

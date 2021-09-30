@@ -242,8 +242,8 @@ const ToktokFoodDriver = ({route, navigation}) => {
 
   return (
     <View style={{flex: 1, backgroundColor: '#FFFF'}}>
-      <HeaderImageBackground customSize={CUSTOM_HEADER}>
-        <HeaderTitle title="Place Order" />
+      <HeaderImageBackground searchBox={false}>
+        <HeaderTitle />
       </HeaderImageBackground>
       <Loader visibility={showLoader} message="Canceling order..." />
       <DialogMessage

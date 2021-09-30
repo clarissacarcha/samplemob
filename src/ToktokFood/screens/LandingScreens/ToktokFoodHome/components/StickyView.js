@@ -65,7 +65,7 @@ const StickyView = () => {
   const [refreshing, setRefreshing] = useState(false);
   let variableInput = {
     limit: 10,
-    radius: 5,
+    radius: 500,
     userLongitude: location?.longitude,
     userLatitude: location?.latitude,
   };
@@ -157,41 +157,6 @@ const StickyView = () => {
   return (
     <>
       <StatusBar barStyle="dark-content" />
-      {/* <ReactNativeParallaxHeader
-        alwaysShowNavBar={false}
-        alwaysShowTitle={false}
-        headerMinHeight={headerMinHeight}
-        headerMaxHeight={headerMaxHeight}
-        headerTitleStyle={{zIndex: offset <= 50 ? 1 : -1}}
-        extraScrollHeight={10}
-        title={<RenderTitle />}
-        backgroundColor="transparent"
-        navbarColor="whitesmoke"
-        renderContent={() => <RestaurantList location={location} loading={loading} error={error} data={data} loadMore={loadMore} />}
-        renderNavBar={() => <RenderNavBar />}
-        containerStyle={styles.container}
-        contentContainerStyle={styles.contentContainer}
-        scrollEventThrottle={400}
-        scrollViewProps={{
-          // onScroll: (event) => setOffset(event.nativeEvent.contentOffset.y),
-          onScroll: ({nativeEvent}) => {
-            if (isCloseToBottom(nativeEvent)) {
-              handleLoadMore(nativeEvent)
-            }
-          },
-          refreshControl: (
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          )
-          // onScrollEndDrag: ({ nativeEvent }) => setOffset(nativeEvent.contentOffset.y - 100),
-          // onMomentumScrollEnd: ({ nativeEvent }) => {
-          //   // setOffset(nativeEvent.contentOffset.y - 100)
-          //   console.log(isCloseToBottom(nativeEvent), 'asdasd')
-          //   if (isCloseToBottom(nativeEvent)) {
-          //     handleLoadMore(nativeEvent)
-          //   }
-          // }
-        }}
-      /> */}
       <ScrollView
         stickyHeaderIndices={[1]}
         refreshControl={
@@ -203,7 +168,6 @@ const StickyView = () => {
           }
         }}
         scrollEventThrottle={15}
-        // showsVerticalScrollIndicator={false}
       >
         {/* <View style={styles.adsContainer}>
           <AdvertisementSection />
@@ -221,11 +185,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   contentContainer: {
-    backgroundColor: 'whitesmoke',
+    backgroundColor: 'white',
     paddingBottom: Platform.OS === 'android' ? 10 : 30,
     marginTop: Platform.OS === 'ios' ? moderateScale(20) : moderateScale(14),
   },
-  headerWrapper: {paddingHorizontal: moderateScale(8), width: '100%', paddingTop: moderateScale(8), backgroundColor: 'whitesmoke'},
+  headerWrapper: {paddingHorizontal: moderateScale(8), width: '100%', paddingTop: moderateScale(8), backgroundColor: 'white'},
   navbarWrapper: {
     // marginBottom: Platform.OS === 'ios' ? verticalScale(12) : verticalScale(8),
   },

@@ -119,7 +119,9 @@ export const FoodList = (props) => {
           <View
            
           >
-            <Text style={{textAlign: 'center', marginVertical: 20}}>No products</Text>
+            <Text style={{textAlign: 'center', marginVertical: 20}}>
+              { searchProduct ? 'No product found' : 'This restaurant has no products yet.' }
+            </Text>
           </View>
         )}
       />
