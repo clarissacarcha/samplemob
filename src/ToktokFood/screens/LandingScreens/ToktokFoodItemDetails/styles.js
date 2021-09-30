@@ -47,7 +47,7 @@ export default styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   foodContainer: {
-    paddingVertical: 10,
+    paddingBottom: 10,
     borderBottomWidth: 8,
     borderBottomColor: COLOR.LIGHT,
     paddingHorizontal: Platform.OS === 'android' ? 12 : 14,

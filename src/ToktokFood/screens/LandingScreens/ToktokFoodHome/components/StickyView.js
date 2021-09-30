@@ -5,17 +5,13 @@ import {Platform, RefreshControl, ScrollView, StatusBar, StyleSheet, View} from 
 import {useSelector} from 'react-redux';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import HeaderTabs from 'toktokfood/components/HeaderTabs';
+import ChangeAddress from 'toktokfood/components/ChangeAddress';
 import {GET_SHOPS} from 'toktokfood/graphql/toktokfood';
 // Utils
 import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
 // Components
 import {AdvertisementSection, CategoryList, RestaurantList} from './index';
 
-// const {height: SCREEN_HEIGHT} = Dimensions.get('window');
-// const IS_IPHONE_X = SCREEN_HEIGHT === 812 || SCREEN_HEIGHT === 896;
-// const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? (IS_IPHONE_X ? 44 : 20) : 0;
-// const HEADER_HEIGHT = Platform.OS === 'ios' ? (IS_IPHONE_X ? 88 : 0) : 64;
-// const NAV_BAR_HEIGHT = HEADER_HEIGHT - STATUS_BAR_HEIGHT;
 
 const tabs = [
   {
@@ -65,7 +61,7 @@ const StickyView = () => {
   const [refreshing, setRefreshing] = useState(false);
   let variableInput = {
     limit: 10,
-    radius: 500,
+    radius: 5,
     userLongitude: location?.longitude,
     userLatitude: location?.latitude,
   };
@@ -156,9 +152,8 @@ const StickyView = () => {
 
   return (
     <>
-      <StatusBar barStyle="dark-content" />
       <ScrollView
-        stickyHeaderIndices={[1]}
+        stickyHeaderIndices={[2]}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#FFA700']} tintColor="#FFA700" />
         }
@@ -172,6 +167,7 @@ const StickyView = () => {
         {/* <View style={styles.adsContainer}>
           <AdvertisementSection />
         </View> */}
+        <ChangeAddress />
         <CategoryList horizontal homeRefreshing={refreshing} rightText="See all" />
         <RenderNavBar />
         <RestaurantList location={location} loading={loading} error={error} data={data} loadMore={loadMore} />

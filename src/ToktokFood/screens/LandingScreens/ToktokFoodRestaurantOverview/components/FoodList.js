@@ -116,13 +116,9 @@ export const FoodList = (props) => {
           { minHeight }
         ]}
         ListEmptyComponent={() => (
-          <View
-           
-          >
-            <Text style={{textAlign: 'center', marginVertical: 20}}>
-              { searchProduct ? 'No product found' : 'This restaurant has no products yet.' }
-            </Text>
-          </View>
+          <Text style={{textAlign: 'center', marginVertical: 20}}>
+            { searchProduct ? 'No product found' : 'This restaurant has no products yet.' }
+          </Text>
         )}
       />
     </>
@@ -131,11 +127,6 @@ export const FoodList = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-      // Platform.OS === 'ios' && isIphoneXorAbove()
-      //   ? 518
-      //   : getDeviceHeight -
-      //     ((Platform.OS === 'android' ? moderateScale(88 + getStatusbarHeight) : moderateScale(105)) +
-      //       moderateScale(180)),
     flex: 1,
     backgroundColor: COLOR.WHITE,
   },
@@ -144,8 +135,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   img: {
-    height: 55,
-    width: 60,
+    height: moderateScale(60),
+    width: moderateScale(60),
+    resizeMode: 'cover',
+    borderRadius: 5
   },
   listText: {
     fontWeight: '500',
@@ -163,5 +156,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: verticalScale(15),
     paddingHorizontal: verticalScale(20),
+    alignItems: 'center'
   },
 });

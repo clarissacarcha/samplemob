@@ -8,6 +8,7 @@ import HeaderTitle from 'toktokfood/components/HeaderTitle';
 import HeaderSearchBox from 'toktokfood/components/HeaderSearchBox';
 import {CategoryList} from '../ToktokFoodHome/components';
 import {ModalFilterSearch} from './components';
+import ChangeAddress from 'toktokfood/components/ChangeAddress';
 
 // Constants
 import {searchData} from 'toktokfood/helper/strings';
@@ -33,9 +34,9 @@ const ToktokFoodCategories = () => {
         <HeaderTitle />
         <HeaderSearchBox />
       </HeaderImageBackground>
+      <ChangeAddress />
       <RenderFilter />
       <CategoryList filterSearch={filterSearch} horizontal={false} />
-
       <ModalFilterSearch
         data={searchData}
         handleModal={handleFilter}
@@ -58,8 +59,8 @@ const styles = StyleSheet.create({
   filterContainer: {
     alignItems: 'center',
     flexDirection: 'row',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+    paddingHorizontal: 17,
+    paddingBottom: 10,
   },
   filterText: {
     fontWeight: '400',

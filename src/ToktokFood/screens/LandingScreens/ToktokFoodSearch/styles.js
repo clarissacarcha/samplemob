@@ -11,12 +11,9 @@ export default styles = StyleSheet.create({
   },
   listContainer: {
     flex: 1,
-    paddingTop: 8,
-    paddingBottom: 15,
   },
   itemContainer: {
-    width: scale(350),
-    alignSelf: 'center',
+    marginHorizontal: moderateScale(16),
     borderBottomWidth: 1,
     flexDirection: 'row',
     borderColor: '#E6E6E6',
@@ -49,6 +46,11 @@ export default styles = StyleSheet.create({
     color: COLOR.BLACK,
     fontFamily: FONT.BOLD,
   },
+  restaurantTitle: {
+    color: COLOR.BLACK,
+    fontFamily: FONT.BOLD,
+    fontSize: FONT_SIZE.XL
+  },
   ratings: {
     marginTop: 4,
     alignItems: 'flex-start',
@@ -66,8 +68,7 @@ export default styles = StyleSheet.create({
     paddingHorizontal: 3,
   },
   tabContainer: {
-    marginTop: 18,
-    paddingHorizontal: 10,
+    paddingHorizontal: 16,
   },
   emptyContainer: {
     alignItems: 'center',
@@ -85,4 +86,9 @@ export default styles = StyleSheet.create({
     marginHorizontal: moderateScale(50),
     textAlign: 'center'
   },
+  ratingImg: {
+    width: moderateScale(15),
+    height: moderateScale(15),
+    marginVertical: 5
+  }
 });

@@ -66,7 +66,7 @@ const TokTokFoodSplashScreen = () => {
   };
 
   useEffect(() => {
-    if(location && user) {
+    if(location) {
       if(user.toktokfoodUserId != null){
         getToktokUserInfo({
           variables: {

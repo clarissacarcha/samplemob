@@ -17,7 +17,7 @@ const RestaurantItem = ({ item }) => {
     <TouchableOpacity onPress={() => onRestaurantNavigate(item)} style={styles.restaurantList}>
       <Image style={styles.img} source={{ uri: item.logo }} resizeMode="cover" />
       <View style={styles.restaurantInfo}>
-        <Text numberOfLines={2} style={styles.restaurantName}>{`${item.shopname} (${item.address})`}</Text>
+        <Text numberOfLines={1} style={styles.restaurantName}>{`${item.shopname} (${item.address})`}</Text>
         <CustomStarRating
           rating={item.ratings ?? '0'}
           starImgStyle={{ width: scale(15), height: scale(15), marginVertical: 5 }}

@@ -20,11 +20,7 @@ import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import {GET_PRODUCT_DETAILS, GET_TEMPORARY_CART} from 'toktokfood/graphql/toktokfood';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
-
-const CUSTOM_HEADER = {
-  container: Platform.OS === 'android' ? moderateScale(83) : moderateScale(70),
-  bgImage: Platform.OS === 'android' ? moderateScale(83) : moderateScale(70),
-};
+import ChangeAddress from 'toktokfood/components/ChangeAddress';
 
 const MainComponent = () => {
   const routes = useRoute();
@@ -43,7 +39,7 @@ const MainComponent = () => {
     setNotes
   } = useContext(VerifyContext);
   const [bannerLoaded, setBannerLoaded] = useState(false);
-  const stickyHeaderIndices = bannerLoaded ? [1] : [2];
+  const stickyHeaderIndices = bannerLoaded ? [2] : [3];
 
   const [getProductDetails, {data, loading, error}] = useLazyQuery(GET_PRODUCT_DETAILS, {
     variables: {
@@ -115,7 +111,7 @@ const MainComponent = () => {
   const BannerPlaceHolder = () => {
     return (
       <View style={{
-        marginTop: scale(10),
+        marginTop: scale(50),
         position: 'absolute',
         alignSelf: 'center',
         height: scale(140),
@@ -145,6 +141,7 @@ const MainComponent = () => {
         <>
           <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'position' : null} style={styles.container}>
             <ScrollView stickyHeaderIndices={stickyHeaderIndices} >
+              <ChangeAddress />
               {!bannerLoaded && <BannerPlaceHolder />}
               <Image
                 onLoadEnd={() => setBannerLoaded(true)}

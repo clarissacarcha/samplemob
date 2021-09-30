@@ -7,6 +7,8 @@ import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {FONT_SIZE} from 'res/variables';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import CustomStarRating from 'toktokfood/components/CustomStarRating';
+import ChangeAddress from 'toktokfood/components/ChangeAddress';
+
 // Components
 // import {RestaurantList} from '../../ToktokFoodHome/components';
 import HeaderTabs from 'toktokfood/components/HeaderTabs';
@@ -55,8 +57,8 @@ export const StickyView = () => {
     longitude,
   } = routes.params.item;
 
-  const headerMaxHeight = Platform.OS === 'ios' ? scale(400) : scale(370);
-  const headerMinHeight = Platform.OS === 'ios' ? moderateScale(120) : moderateScale(140);
+  const headerMaxHeight = verticalScale(450);
+  const headerMinHeight = verticalScale(120);
   const isFocus = useIsFocused();
 
   // data fetching for product tags/tabs
@@ -122,8 +124,9 @@ export const StickyView = () => {
     <View style={styles.title}>
       <HeaderTitle searchBox={false} />
       <View style={styles.titleInfo}>
+        <ChangeAddress styleContainer={{ paddingTop: moderateScale(10) }} />
         <View style={styles.content}>
-          <Image source={{uri: logo}} style={{width: scale(70), height: scale(70)}} resizeMode="contain" />
+          <Image source={{uri: logo}} style={{width: scale(70), height: scale(70)}} resizeMode="cover" />
           <View style={{flexShrink: 1, marginHorizontal: 10}}>
             <Text numberOfLines={2} style={styles.titleText}>{`${shopname} (${address})`}</Text>
             <CustomStarRating
@@ -215,20 +218,20 @@ const styles = StyleSheet.create({
   content: {
     paddingHorizontal: moderateScale(10),
     flexDirection: 'row',
+    paddingTop: 5
   },
   contentContainer: {
     backgroundColor: 'white',
     paddingBottom: verticalScale(15),
-    // marginTop: Platform.OS === 'ios' ? verticalScale(4) : 0,
   },
   headerWrapper: {
     elevation: 5,
     shadowRadius: 3,
-    shadowOpacity: 0.4,
+    shadowOpacity: 0.3,
     shadowColor: '#000',
     backgroundColor: 'white',
     shadowOffset: {width: 1, height: 1},
-    height: Platform.OS === 'ios' ? scale(120) : scale(145),
+    height: Platform.OS === 'ios' ? verticalScale(120) : verticalScale(130),
   },
   navbarWrapper: {
     // paddingTop: verticalScale(15),
@@ -246,6 +249,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: getDeviceWidth,
     justifyContent: 'space-between',
+    overflow: 'hidden'
   },
   titleContainer: {
     backgroundColor: 'rgba(255,255,255,0.5)',
@@ -263,6 +267,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     paddingHorizontal: 10,
     paddingVertical: 15,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 3.84,
   },
   titleText: {
     fontWeight: '500',

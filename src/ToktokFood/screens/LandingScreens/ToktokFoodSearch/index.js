@@ -1,10 +1,10 @@
 import axios from 'axios';
 import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {Image, View, FlatList, Text, TouchableWithoutFeedback, RefreshControl} from 'react-native';
+import {Image, View, FlatList, Text, TouchableWithoutFeedback, RefreshControl, Platform} from 'react-native';
 
-import {Rating} from 'react-native-ratings';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import CustomStarRating from 'toktokfood/components/CustomStarRating';
 
 // Components
 
@@ -14,11 +14,12 @@ import DialogMessage from 'toktokfood/components/DialogMessage';
 import HeaderSearchBox from 'toktokfood/components/HeaderSearchBox';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
+import ChangeAddress from 'toktokfood/components/ChangeAddress';
 
 // Strings
 import {restaurants, tabs} from 'toktokfood/helper/strings';
 
-import {moderateScale, getStatusbarHeight} from 'toktokfood/helper/scale';
+import {moderateScale, getStatusbarHeight, getIphoneNotchSize} from 'toktokfood/helper/scale';
 
 import {useSelector} from 'react-redux';
 import ENVIRONMENTS from 'src/common/res/environments';
@@ -112,9 +113,12 @@ const ToktokFoodSearch = ({ route }) => {
             <Text numberOfLines={2} style={styles.restaurantName}>
               {item.shopname}
             </Text>
-            <Rating startingValue={item.ratings} imageSize={15} readonly style={styles.ratings} />
+            <CustomStarRating
+              rating={item.ratings ?? '0'}
+              starImgStyle={styles.ratingImg}
+              readOnly
+            />
           </View>
-
           <View style={styles.subInfoWrapper}>
             <MCIcon name="clock-outline" color="#868686" size={13} />
             <Text style={styles.subInfoText}>{item.estimatedDeliveryTime} mins</Text>
@@ -126,14 +130,21 @@ const ToktokFoodSearch = ({ route }) => {
     </TouchableWithoutFeedback>
   );
 
-  const renderEmpty = () => (
-    <View style={styles.emptyContainer}>
-      <Image style={styles.emptyImg} resizeMode="contain" source={search != '' ? empty_shop : empty_search} />
-      { search != '' && 
-        <Text style={styles.emptyText}>It seems like there is no open restaurant near you. Refresh or try again later.</Text>
-      }
-    </View>
-  );
+  const renderEmpty = () => {
+    let withSearch = moderateScale(Platform.OS == 'android' ? getStatusbarHeight * 5 : getIphoneNotchSize * 5);
+    let withoutSearch = moderateScale(Platform.OS == 'android' ? getStatusbarHeight * 6 : getIphoneNotchSize * 6)
+    let paddingTop = search != '' ? withSearch : withoutSearch
+    return(
+      <View style={[ styles.emptyContainer, { paddingTop } ]}>
+        <Image style={styles.emptyImg} resizeMode="contain" source={search != '' ? empty_shop : empty_search} />
+        { search != '' && 
+          <Text style={styles.emptyText}>
+            It seems like there is no open restaurant near you. Refresh or try again later.
+            </Text>
+        }
+      </View>
+    );
+  }
 
   const onRefresh = () => {
     searchFood(search)
@@ -155,12 +166,12 @@ const ToktokFoodSearch = ({ route }) => {
           }}
         />
       </HeaderImageBackground>
+      <ChangeAddress />
       { shopList.length != 0 && (
         <View style={styles.tabContainer}>
-          <Text style={[styles.restaurantName, {fontSize: 18}]}>Restaurants</Text>
+          <Text style={[styles.restaurantTitle]}>Restaurants</Text>
         </View>
       )}
-      <View style={styles.listContainer}>
         { loading ? (
           <LoadingIndicator isFlex isLoading={true} />
         ) : (
@@ -178,7 +189,6 @@ const ToktokFoodSearch = ({ route }) => {
             }
           />
         )}
-      </View>
     </View>
   );
 };
