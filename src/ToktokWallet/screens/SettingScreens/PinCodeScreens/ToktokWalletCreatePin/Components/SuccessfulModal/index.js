@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,Modal,Image,Dimensions} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
 import { BlackButton, ICON_SET, VectorIcon, YellowButton } from 'src/revamp'
 import {BuildingBottom} from 'toktokwallet/components'
 import { useAccount } from 'toktokwallet/hooks'
 import CONSTANTS from 'common/res/constants'
+import { useAccount } from 'toktokwallet/hooks'
 
 const { FONT_FAMILY: FONT , FONT_SIZE , COLOR } = CONSTANTS
 const {width,height} = Dimensions.get("window")
@@ -63,18 +64,30 @@ const UpdatePIN = ()=> {
 }
 
 
-export const SuccessfulModal = ({modalVisible,tokwaAccount})=> {
+export const SuccessfulModal = ({modalVisible,tokwaAccount,amount,onCashIn,setSuccessModalVisible})=> {
     const navigation = useNavigation()
-    const { getMyAccount } = useAccount();
+    const { getMyAccount , tokwaAccount: tokwaAccountLatest } = useAccount()
 
-    const closeModal = ()=> {
-        getMyAccount();
-        navigation.navigate("ToktokWalletHomePage");
-        navigation.replace("ToktokWalletHomePage")
-        // navigation.pop()
-        // // navigation.navigate("ToktokWalletHomePage")
-        // navigation.push("ToktokWalletHomePage")
-        // console.log("gg")
+    useEffect(()=>{
+      if(tokwaAccountLatest.pinCode){
+        navigation.pop();
+        navigation.push("ToktokWalletPaymentOptions", {
+            amount: amount ? amount : 0,
+            onCashIn: onCashIn
+        })
+        setSuccessModalVisible(false)
+      }
+    },[tokwaAccountLatest])
+
+    const closeModal = async ()=> {
+        if(onCashIn){
+            await getMyAccount();
+            return;
+        }
+    
+        navigation.pop()
+        navigation.push("ToktokWalletHomePage")
+    
     }
 
     return (

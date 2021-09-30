@@ -81,27 +81,13 @@ const RecentRecords = ()=> (
 
   return (
     <>
-    {
        <View style={styles.container}>
             {
               tokwaAccount?.wallet?.recentTransactions?.length == 0
               ? <CashInNow/>
               : <RecentRecords/>
             }
-        </View>
-    }
-    {/* {
-      pageLoading
-      ? <LoadingScreen/>
-      : <View style={styles.container}>
-        {
-          tokwaAccount.wallet?.recentTransactions?.length == 0
-          ? <CashInNow/>
-          : <RecentRecords/>
-          // <Text>{JSON.stringify(tokwaAccount.wallet.recentTransactions)}</Text>
-        }
       </View>
-    } */}
    </>
   );
 };
