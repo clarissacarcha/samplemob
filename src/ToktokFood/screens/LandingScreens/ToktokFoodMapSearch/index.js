@@ -1,4 +1,4 @@
-import React, {useState, useMemo} from 'react';
+import React, {useState, useMemo, useEffect} from 'react';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {useNavigation, useRoute} from '@react-navigation/native';
@@ -16,7 +16,7 @@ import {getFormattedAddress} from 'toktokfood/helper';
 
 import {PickUpDetails} from './component';
 
-const ToktokFoodMapSearch = (props) => {
+const ToktokFoodMapSearch = () => {
   const route = useRoute();
   const dispatch = useDispatch();
   const navigation = useNavigation();
