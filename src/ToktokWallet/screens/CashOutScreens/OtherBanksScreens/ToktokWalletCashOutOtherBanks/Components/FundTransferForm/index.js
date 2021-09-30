@@ -12,6 +12,7 @@ import { useSelector } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
 import { AlertOverlay } from 'src/components'
 import { ContextCashOut } from '../ContextProvider'
+import { TransactionUtility } from 'toktokwallet/util/TransactionUtility'
 import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS
@@ -233,20 +234,13 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
             setSuccessModalVisible(true)
         },
         onError: (error)=> {
-            const {graphQLErrors, networkError} = error;
-            if(graphQLErrors[0].message == "Wallet Hold"){
-                setOpenPinCode(false)
-                navigation.navigate("ToktokWalletHomePage")
-                navigation.replace("ToktokWalletHomePage")
-                return navigation.push("ToktokWalletRestricted", {component: "onHold"})
-            }
-
-            if(graphQLErrors[0].message == "Invalid Pincode"){
-                return setPinCodeAttempt(graphQLErrors[0].payload.remainingAttempts)
-            }
-            setOpenPinCode(false)
-            onErrorAlert({alert,error})
-            return navigation.pop()
+            TransactionUtility.StandardErrorHandling({
+                error,
+                navigation,
+                onErrorAlert,
+                setOpenPinCode,
+                setPinCodeAttempt
+            })
         }
     })
 
