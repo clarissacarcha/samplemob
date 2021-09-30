@@ -5,7 +5,6 @@ import { BlackButton, ICON_SET, VectorIcon, YellowButton } from 'src/revamp'
 import {BuildingBottom} from 'toktokwallet/components'
 import { useAccount } from 'toktokwallet/hooks'
 import CONSTANTS from 'common/res/constants'
-import { useAccount } from 'toktokwallet/hooks'
 
 const { FONT_FAMILY: FONT , FONT_SIZE , COLOR } = CONSTANTS
 const {width,height} = Dimensions.get("window")
@@ -69,7 +68,7 @@ export const SuccessfulModal = ({modalVisible,tokwaAccount,amount,onCashIn,setSu
     const { getMyAccount , tokwaAccount: tokwaAccountLatest } = useAccount()
 
     useEffect(()=>{
-      if(tokwaAccountLatest.pinCode){
+      if(tokwaAccountLatest.pinCode && onCashIn){
         navigation.pop();
         navigation.push("ToktokWalletPaymentOptions", {
             amount: amount ? amount : 0,
@@ -77,7 +76,7 @@ export const SuccessfulModal = ({modalVisible,tokwaAccount,amount,onCashIn,setSu
         })
         setSuccessModalVisible(false)
       }
-    },[tokwaAccountLatest])
+    },[tokwaAccountLatest,onCashIn])
 
     const closeModal = async ()=> {
         if(onCashIn){
