@@ -90,5 +90,11 @@ export default styles = StyleSheet.create({
     width: moderateScale(15),
     height: moderateScale(15),
     marginVertical: 5
-  }
+  },
+  timeImg: {
+    width: scale(13),
+    height: scale(13),
+    tintColor: COLOR.DARK,
+    resizeMode: 'contain'
+  },
 });

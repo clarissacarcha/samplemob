@@ -21,7 +21,7 @@ export default styles = StyleSheet.create({
   },
   foodPrice: {
     marginEnd: 3,
-    color: COLOR.ORANGE,
+    color: '#FF6200',
     fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.XL,
   },

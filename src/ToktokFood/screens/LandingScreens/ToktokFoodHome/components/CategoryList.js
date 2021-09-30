@@ -10,6 +10,8 @@ import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 
 // Assets
 import {allcuisines, drinks, dailydeals, fastfood} from 'toktokfood/assets/images';
+// Fonts & Colors
+import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 
 import {moderateScale, getDeviceWidth, scale, verticalScale, getDeviceHeight} from 'toktokfood/helper/scale';
 import { useSelector } from 'react-redux'
@@ -198,11 +200,11 @@ const styles = StyleSheet.create({
     width: (getDeviceWidth - scale(60)) / 4 - 1
   },
   listItemText: {
-    fontSize: 13,
+    fontSize: FONT_SIZE.M,
     marginTop: 5,
-    fontWeight: '500',
     textAlign: 'center',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
+    fontFamily: FONT.BOLD
   },
   endText: {
     fontSize: 15,
@@ -210,8 +212,8 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
   startText: {
-    fontSize: 15,
-    fontWeight: '500',
+    fontSize: FONT_SIZE.L,
+    fontFamily: FONT.BOLD
   },
   textContainer: {
     flexDirection: 'row',

@@ -184,7 +184,7 @@ const MainComponent = () => {
           .catch(() => {
             setShowLoader(false);
             setTimeout(() => {
-              Alert.alert('', 'Network error occurred. Please check your internet connection.')      
+              Alert.alert('', 'Something went wrong.')      
             }, 100)
           })
       } else {

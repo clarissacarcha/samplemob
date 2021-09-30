@@ -241,7 +241,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
   }
 
   return (
-    <View style={{flex: 1, backgroundColor: '#FFFF'}}>
+    <View style={{flex: 1, backgroundColor: '#F9F9F9'}}>
       <HeaderImageBackground searchBox={false}>
         <HeaderTitle />
       </HeaderImageBackground>
@@ -284,7 +284,6 @@ const ToktokFoodDriver = ({route, navigation}) => {
               referenceNum={referenceNum}
             />
           )}
-
           <View style={styles.driverWrapper}>
             {transaction.orderIsfor == 1 ? (
               <DriverDetailsView
@@ -316,7 +315,6 @@ const ToktokFoodDriver = ({route, navigation}) => {
 
 const styles = StyleSheet.create({
   driverWrapper: {
-    flex: 1,
     alignItems: 'flex-end',
     flexDirection: 'row',
   },

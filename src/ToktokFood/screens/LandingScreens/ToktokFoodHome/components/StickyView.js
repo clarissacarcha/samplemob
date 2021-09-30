@@ -85,7 +85,7 @@ const StickyView = () => {
   });
 
   useEffect(() => {
-    if (location !== undefined) {
+    if(location) {
       getShops();
     }
   }, [location]);

@@ -4,6 +4,7 @@ import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import Separator from 'toktokfood/components/Separator';
 
 // Fonts/Colors
 import {COLORS} from 'res/constants';
@@ -12,6 +13,7 @@ import {FONT_SIZE, FONT, SIZE, COLOR} from 'res/variables';
 // Utils
 import {moderateScale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
 import {orderStatusMessagePickUp} from 'toktokfood/helper/orderStatusMessage';
+
 import moment from 'moment';
 
 const PickUpDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) => {
@@ -34,8 +36,8 @@ const PickUpDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
     let startTime = moment(dateOrderProcessed).format('LT');
     let endTime = moment(dateOrderProcessed).add(20, 'minutes').format('hh:mm A');
     return (
-      <View style={styles.addressInfo}>
-        <Text numberOfLines={1} style={{fontFamily: FONT.BOLD}}>
+      <View style={[styles.addressInfo, { paddingTop: moderateScale(10) }]}>
+        <Text numberOfLines={1} style={styles.bodyText}>
           Estimated Pickup Time:
         </Text>
         <Text numberOfLines={1}>{`${startTime} - ${endTime}`}</Text>
@@ -46,17 +48,8 @@ const PickUpDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
   const renderAddress = () => {
     return (
       <View style={styles.addressContainer}>
-        {/* <View>
-          <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
-          <View style={styles.divider} />
-          {(riderDetails != null && orderStatus == 'f') ? (
-              <MaterialIcon name="lens" size={16} color={COLORS.YELLOWTEXT} />
-            ) : (
-              <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
-          )}
-        </View> */}
-        <View style={[styles.addressInfo, {paddingBottom: 10}]}>
-          <Text numberOfLines={1} style={{fontFamily: FONT.BOLD}}>
+        <View style={[styles.addressInfo ]}>
+          <Text numberOfLines={1} style={styles.bodyText}>
             Restaurant
           </Text>
           <Text numberOfLines={1}>{`${shopDetails.shopname} (${shopDetails.address})`}</Text>
@@ -73,10 +66,6 @@ const PickUpDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
       <View style={styles.detailsContainer}>
         <Text style={styles.title}>{status.title}</Text>
         <Text style={styles.status}>{status.message}</Text>
-        {/* <View style={styles.timeContainer}>
-          <MaterialIcon name="schedule" size={16} color={COLORS.YELLOWTEXT} />
-          <Text style={styles.time}>Estimated Delivery Time: 10:00 - 10:30</Text>
-        </View> */}
       </View>
     );
   };
@@ -96,10 +85,15 @@ const PickUpDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
 
   return (
     <View style={styles.container}>
-      {renderTitle()}
-      {renderAddress()}
-      {renderActions()}
+      <View style={styles.shadow}>
+        {renderTitle()}
+        <Separator />
+        {renderAddress()}
+        <Separator />
+        {renderActions()}
+      </View>
     </View>
+   
   );
 };
 
@@ -107,7 +101,9 @@ export default PickUpDetailsView;
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
+    paddingTop: verticalScale(10),
+    overflow: 'hidden',
+    flex: 1
   },
   actionContainer: {
     paddingBottom: 12,
@@ -120,16 +116,13 @@ const styles = StyleSheet.create({
     borderBottomWidth: 10,
     borderColor: 'white',
     // flexDirection: 'row',
-    padding: moderateScale(20),
-    // paddingHorizontal: moderateScale(30),
+    paddingHorizontal: moderateScale(16),
   },
   addressInfo: {
     flexDirection: 'row',
-    paddingHorizontal: moderateScale(10),
     justifyContent: 'space-between',
   },
-  detailsContainer: {
-    alignItems: 'center',
+  shadow: {
     backgroundColor: 'white',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
@@ -140,10 +133,12 @@ const styles = StyleSheet.create({
       height: -3,
     },
     shadowColor: '#000',
-    elevation: 4,
+    elevation: 10,
     shadowOpacity: 0.1,
-    paddingHorizontal: 10,
-    textAlign: 'center',
+  },
+  detailsContainer: {
+    alignItems: 'center',
+    paddingBottom: moderateScale(15)
   },
   divider: {
     flex: 1,
@@ -161,44 +156,40 @@ const styles = StyleSheet.create({
   },
   orderDetailsText: {
     color: COLORS.YELLOWTEXT,
-    fontWeight: '400',
-    fontSize: 16,
+    fontSize: FONT_SIZE.L,
+    fontFamily: FONT.REGULAR,
     textAlign: 'center',
   },
   status: {
-    fontWeight: '300',
+    fontSize: FONT_SIZE.S,
+    fontFamily: FONT.REGULAR,
     marginTop: verticalScale(5),
   },
   seeOrderDetails: {
     padding: moderateScale(20),
   },
-  time: {
-    fontWeight: '400',
-    marginLeft: moderateScale(5),
-  },
-  timeContainer: {
-    flexDirection: 'row',
-    marginTop: verticalScale(5),
-  },
   title: {
-    fontWeight: '500',
-    fontSize: 16,
+    fontSize: FONT_SIZE.L,
+    fontFamily: FONT.BOLD
   },
   cancelButton: {
-    display: 'flex',
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
     height: SIZE.BUTTON_HEIGHT,
-    width: getDeviceWidth - 28,
+    width: '90%',
     backgroundColor: COLOR.YELLOW,
   },
   buttonText: {
-    color: COLOR.BLACK,
+    color: COLOR.WHITE,
     fontSize: FONT_SIZE.L,
     fontFamily: FONT.BOLD,
   },
   orderDetailsAction: {
     marginVertical: 16,
   },
+  bodyText: {
+    fontFamily: FONT.BOLD,
+    fontSize: FONT_SIZE.M
+  }
 });

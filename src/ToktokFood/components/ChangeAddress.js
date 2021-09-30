@@ -41,17 +41,17 @@ const ChangeAddress = ({title = '', searchBox = true, backOnly = false, styleCon
         Deliver to
       </Text>
       <View style={styles.divider} />
-        { location.address == undefined ? (
-          renderLoader()
-        ) : (
-          <View style={styles.textAddressContainer}>
-            <Image style={styles.addressMarkerIcon} source={markerIcon} />
-            <Text style={styles.textAddress} numberOfLines={1}>
-              {location.address}
-            </Text>
-            <Image style={styles.downArrowIc} source={down_arrow_ic} />
-          </View>
-        )}
+      { location.address == undefined ? (
+        renderLoader()
+      ) : (
+        <View style={styles.textAddressContainer}>
+          <Image style={styles.addressMarkerIcon} source={markerIcon} />
+          <Text style={styles.textAddress} numberOfLines={1}>
+            {location.address}
+          </Text>
+          <Image style={styles.downArrowIc} source={down_arrow_ic} />
+        </View>
+      )}
     </View>
   );
 };
@@ -84,12 +84,10 @@ const styles = StyleSheet.create({
     resizeMode: 'contain'
   },
   divider: {
-    flex: 1,
-    borderWidth: 0.4,
-    alignSelf: 'center',
-    borderColor: '#FFA700',
-    height: moderateScale(20),
-    marginHorizontal: 10
+    marginHorizontal: 10,
+    height: '100%',
+    width: 1,
+    backgroundColor: '#FFA700'
   },
   downArrowIc: {
     width: moderateScale(12),

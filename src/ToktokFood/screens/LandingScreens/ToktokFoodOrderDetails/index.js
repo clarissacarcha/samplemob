@@ -232,7 +232,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
         onCloseModal={() => { onCloseModal() }}
       />
       <HeaderImageBackground searchBox={false}>
-        <HeaderTitle title="Order Details" />
+        <HeaderTitle />
       </HeaderImageBackground>
       {(transactionLoading && Object.entries(transaction).length == 0) ||
       Object.entries(transaction).length == 0 ||

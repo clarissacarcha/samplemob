@@ -5,7 +5,7 @@ import DashedLine from 'react-native-dashed-line';
 
 // Fonts/Colors
 import {COLORS} from 'res/constants';
-import {FONT_SIZE} from 'res/variables';
+import {FONT_SIZE, FONT} from 'res/variables';
 
 // Images
 import {delivered, pickedUp} from 'toktokfood/assets/images';
@@ -24,8 +24,9 @@ const OrderFee = ({ status = 2, transaction }) => {
     deliveryImgurl,
     deliveryImgurl2,
     orderIsfor,
-    dateBookingConfirmed
+    dateBookingConfirmed,
   } = transaction
+  const otwRestaurantDate = dateReadyPickup.toString() != 'Invalid date' ? dateReadyPickup : dateBookingConfirmed
  
   const renderLogInfo = (title, date) => (
     <View style={styles.logContainer}>
@@ -57,7 +58,7 @@ const OrderFee = ({ status = 2, transaction }) => {
         <>
           {renderLogInfo('Order Placed', moment(dateOrdered).format('lll'))}
           {renderDash()}
-          {renderLogInfo('On the way to restaurant', moment(dateBookingConfirmed).format('lll'))}
+          {renderLogInfo('On the way to restaurant', moment(otwRestaurantDate).format('lll'))}
           {renderDash()}
           {renderLogInfo('Food Picked Up', moment(dateFulfilled).format('lll'))}
           {renderDash()}
@@ -106,7 +107,7 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.S,
   },
   deliverLogs: {
-    fontWeight: '500',
+    fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.M,
     marginBottom: verticalScale(10),
   },
