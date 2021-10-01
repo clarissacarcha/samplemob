@@ -10,14 +10,14 @@ import _ from 'lodash';
 // Utils
 import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
 import {scale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
-import { storeTemporaryCart, getTemporaryCart } from 'toktokfood/helper/TemporaryCart';
+import {storeTemporaryCart, getTemporaryCart} from 'toktokfood/helper/TemporaryCart';
 import {
   POST_TEMPORARY_CART,
   PATCH_TEMPORARY_CART_ITEM,
   DELETE_TEMPORARY_CART_ITEM,
   GET_TEMPORARY_CART,
   DELETE_SHOP_TEMPORARY_CART,
-  CHECK_HAS_TEMPORARY_CART
+  CHECK_HAS_TEMPORARY_CART,
 } from 'toktokfood/graphql/toktokfood';
 import {useMutation, useLazyQuery, useQuery} from '@apollo/react-hooks';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
@@ -33,7 +33,7 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
   const [loader, setLoader] = useState(false);
   const [disableAdd, setDisableAdd] = useState(false);
   const [disabledMaxQty, setDisableMaxQty] = useState(false);
-  const { Id, selectedAddons, selectedItemId, selectedPrice, selectedQty, selectedNotes } = routes.params;
+  const {Id, selectedAddons, selectedItemId, selectedPrice, selectedQty, selectedNotes} = routes.params;
   const {
     totalPrice,
     setTotalPrice,
@@ -47,13 +47,15 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
     temporaryCart,
   } = useContext(VerifyContext);
   const {customerInfo} = useSelector((state) => state.toktokFood);
-  const [showDialogMessage, setShowDialogMessage] = useState({ show: false, items: [] });
+  const [showDialogMessage, setShowDialogMessage] = useState({show: false, items: []});
 
   const [postTemporaryCart, {loading: postLoading, error: postError}] = useMutation(POST_TEMPORARY_CART, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     onError: (err) => {
-      setLoader(false)
-      setTimeout(() => { Alert.alert('', 'Something went wrong.') }, 100)
+      setLoader(false);
+      setTimeout(() => {
+        Alert.alert('', 'Something went wrong.');
+      }, 100);
     },
     onCompleted: ({postTemporaryCart}) => {
       // console.log(postTemporaryCart)
@@ -63,117 +65,140 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
   const [patchTemporaryCartItem, {loading: patchLoading, error: patchError}] = useMutation(PATCH_TEMPORARY_CART_ITEM, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     onError: (err) => {
-      setLoader(false)
-      setTimeout(() => { Alert.alert('', 'Something went wrong.') }, 100)
+      setLoader(false);
+      setTimeout(() => {
+        Alert.alert('', 'Something went wrong.');
+      }, 100);
     },
     onCompleted: ({patchTemporaryCartItem}) => {
       // console.log(patchTemporaryCartItem)
     },
   });
 
-  const [deleteTemporaryCartItem, {loading: deleteItemLoading, error: deleteItemError}] = useMutation(DELETE_TEMPORARY_CART_ITEM, {
-    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-    onError: (err) => {
-      setLoader(false)
-      setTimeout(() => { Alert.alert('', 'Something went wrong.') }, 100)
+  const [deleteTemporaryCartItem, {loading: deleteItemLoading, error: deleteItemError}] = useMutation(
+    DELETE_TEMPORARY_CART_ITEM,
+    {
+      client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+      onError: (err) => {
+        setLoader(false);
+        setTimeout(() => {
+          Alert.alert('', 'Something went wrong.');
+        }, 100);
+      },
+      onCompleted: ({deleteTemporaryCartItem}) => {
+        // console.log(patchTemporaryCartItem)
+      },
     },
-    onCompleted: ({deleteTemporaryCartItem}) => {
-      // console.log(patchTemporaryCartItem)
-    },
-  });
+  );
 
-  const [deleteShopTemporaryCart, {loading: deleteLoading, error: deleteError}] = useMutation(DELETE_SHOP_TEMPORARY_CART, {
-    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-    onError: (err) => {
-      setLoader(false)
-      setTimeout(() => { Alert.alert('', 'Something went wrong.') }, 100)
+  const [deleteShopTemporaryCart, {loading: deleteLoading, error: deleteError}] = useMutation(
+    DELETE_SHOP_TEMPORARY_CART,
+    {
+      client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+      onError: (err) => {
+        setLoader(false);
+        setTimeout(() => {
+          Alert.alert('', 'Something went wrong.');
+        }, 100);
+      },
+      onCompleted: ({deleteShopTemporaryCart}) => {
+        // console.log(patchTemporaryCartItem)
+      },
     },
-    onCompleted: ({deleteShopTemporaryCart}) => {
-      // console.log(patchTemporaryCartItem)
-    },
-  });
+  );
 
-  const [checkHasTemporaryCart, {data: hasTemporaryCart, loading: hasCartLoading, error: hasCartError}] = useLazyQuery(CHECK_HAS_TEMPORARY_CART, {
-    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-    fetchPolicy: 'network-only',
-    onError: (err) => {
-      setLoader(false)
-      setTimeout(() => { Alert.alert('', 'Something went wrong.') }, 100)
-    }
-  });
+  const [checkHasTemporaryCart, {data: hasTemporaryCart, loading: hasCartLoading, error: hasCartError}] = useLazyQuery(
+    CHECK_HAS_TEMPORARY_CART,
+    {
+      client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+      fetchPolicy: 'network-only',
+      onError: (err) => {
+        setLoader(false);
+        setTimeout(() => {
+          Alert.alert('', 'Something went wrong.');
+        }, 100);
+      },
+    },
+  );
 
   useEffect(() => {
-    if(customerInfo){
-      checkHasTemporaryCart({ variables: { input: { userId: customerInfo.userId } } })
+    if (customerInfo) {
+      checkHasTemporaryCart({variables: {input: {userId: customerInfo.userId}}});
     }
-  }, [customerInfo])
+  }, [customerInfo]);
 
   useEffect(() => {
-    if(productDetails && Object.keys(productDetails).length > 0){
-      if(productDetails.maxQtyIsset == 1){
-        if(temporaryCart.items.length > 0){
-          const hasItem = temporaryCart.items.filter((item) => { return item.productid == productDetails.Id });
-          if(hasItem.length > 0){
+    if (productDetails && Object.keys(productDetails).length > 0) {
+      if (productDetails.maxQtyIsset == 1) {
+        if (temporaryCart.items.length > 0) {
+          const hasItem = temporaryCart.items.filter((item) => {
+            return item.productid == productDetails.Id;
+          });
+          if (hasItem.length > 0) {
             let currentQty = 0;
             hasItem.map((item) => {
-              currentQty += item.quantity
-            })
-            let isEditQtty = selectedItemId == undefined ? (count.quantity + currentQty) : count.quantity 
-            let exceededQty = currentQty == productDetails.maxQty ? currentQty : isEditQtty
-            let disableMaxQtyCondition = selectedItemId == undefined ? exceededQty > productDetails.maxQty : selectedQty + (productDetails.maxQty - currentQty) == count.quantity 
-            let disableAddCondition = selectedItemId == undefined ? exceededQty > productDetails.maxQty - 1 : selectedQty + (productDetails.maxQty - currentQty) == count.quantity 
-            
-            setDisableMaxQty((currentQty == productDetails.maxQty && selectedItemId == undefined) || selectedItemId == undefined && disableMaxQtyCondition)
-            setDisableAdd(disableAddCondition)
-            return
+              currentQty += item.quantity;
+            });
+            let isEditQtty = selectedItemId == undefined ? count.quantity + currentQty : count.quantity;
+            let exceededQty = currentQty == productDetails.maxQty ? currentQty : isEditQtty;
+            let disableMaxQtyCondition =
+              selectedItemId == undefined
+                ? exceededQty > productDetails.maxQty
+                : selectedQty + (productDetails.maxQty - currentQty) == count.quantity;
+            let disableAddCondition =
+              selectedItemId == undefined
+                ? exceededQty > productDetails.maxQty - 1
+                : selectedQty + (productDetails.maxQty - currentQty) == count.quantity;
+
+            setDisableMaxQty(
+              (currentQty == productDetails.maxQty && selectedItemId == undefined) ||
+                (selectedItemId == undefined && disableMaxQtyCondition),
+            );
+            setDisableAdd(disableAddCondition);
+            return;
           }
         }
-        setDisableMaxQty(count.quantity > productDetails.maxQty)
-        setDisableAdd(count.quantity > productDetails.maxQty - 1)
+        setDisableMaxQty(count.quantity > productDetails.maxQty);
+        setDisableAdd(count.quantity > productDetails.maxQty - 1);
       } else {
-        setDisableAdd(productDetails.stocks == count.quantity)
+        setDisableAdd(productDetails.stocks == count.quantity);
       }
-    } 
-  }, [productDetails, temporaryCart, count])
- 
-  const computeTotalPrice = async (items) => {
-    let amount = 0;
-    await Object.values(items).map((val) => {
-      amount += val.srp_totalamount;
-    });
-    return amount + totalPrice;
-  };
+    }
+  }, [productDetails, temporaryCart, count]);
 
   const isEqual = (obj1, obj2) => {
-    let data = []
-    let filter = obj1.filter((b1) => { return obj2.includes(b1.id) });
+    let filter = obj1.filter((b1) => {
+      return obj2.includes(b1.id);
+    });
 
-    return obj2.length == filter.length
-  }
+    return obj2.length == filter.length;
+  };
 
-  const onRestaurantNavigate = async() => {
-    let required = await Object.keys(requiredOptions).filter((val) => { return selected[val] == undefined });
-    if(required.length > 0){
-      Alert.alert(`${required[0]} is required.`, )
+  const onRestaurantNavigate = async () => {
+    let required = await Object.keys(requiredOptions).filter((val) => {
+      return selected[val] == undefined;
+    });
+    if (required.length > 0) {
+      Alert.alert(`${required[0]} is required.`);
     } else {
-      processAddToCart()
+      processAddToCart();
     }
   };
 
   const extractAddons = () => {
-    let addons = []
-    if(Object.values(selected).length > 0){
+    let addons = [];
+    if (Object.values(selected).length > 0) {
       Object.values(selected).map((item) => {
         item.map((val) => {
-          addons.push(val.addon_id)
-        })
-      })
+          addons.push(val.addon_id);
+        });
+      });
     }
-    return addons
-  }
+    return addons;
+  };
 
   //PROCESS ADD TO CART
-  const processAddToCart = async() => {
+  const processAddToCart = async () => {
     let items = {
       userid: customerInfo.userId,
       shopid: +productDetails.sysShop,
@@ -181,120 +206,129 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
       productid: productDetails.Id,
       quantity: count.quantity,
       addons: extractAddons(),
-      notes: notes
-    }
-  
-    let filterItemByProductId = await temporaryCart.items.filter((item) => { 
-      return item.productid == productDetails.Id
-    })
-    let duplicateItem = await filterItemByProductId.filter((item) => { 
-      return isEqual(item.addonsDetails, items.addons)
-    })
-  
-    let editedItem = await temporaryCart.items.filter((item) => { return item.id == selectedItemId })
+      notes: notes,
+    };
 
-    if(duplicateItem.length == 0){
-      if(selectedItemId){
-        setLoader(true)
-        items['updateid'] = selectedItemId
-        return patchCartItem(items)
+    let filterItemByProductId = await temporaryCart.items.filter((item) => {
+      return item.productid == productDetails.Id;
+    });
+    let duplicateItem = await filterItemByProductId.filter((item) => {
+      return isEqual(item.addonsDetails, items.addons);
+    });
+
+    let editedItem = await temporaryCart.items.filter((item) => {
+      return item.id == selectedItemId;
+    });
+
+    if (duplicateItem.length == 0) {
+      if (selectedItemId) {
+        setLoader(true);
+        items['updateid'] = selectedItemId;
+        return patchCartItem(items);
       }
-      if(temporaryCart.items.length > 0){
-        setLoader(true)
-        return addToCart(items)
+      if (temporaryCart.items.length > 0) {
+        setLoader(true);
+        return addToCart(items);
       }
-      if(hasTemporaryCart.checkHasTemporaryCart.shopid){
+      if (hasTemporaryCart.checkHasTemporaryCart.shopid) {
         setShowDialogMessage({
           show: true,
-          items
-        })
+          items,
+        });
       } else {
-        setLoader(true)
-        addToCart(items)
+        setLoader(true);
+        addToCart(items);
       }
     } else {
-      let sameAsDuplicateItem = duplicateItem[0]?.id == selectedItemId 
-      let editedId = sameAsDuplicateItem ? selectedItemId : duplicateItem[0].id
-      items['updateid'] = editedId
-    
-      setLoader(true)
-      if((duplicateItem.length > 0 || items.quantity != duplicateItem[0].quantity) && !selectedItemId){
-        items.quantity += duplicateItem[0].quantity
+      let sameAsDuplicateItem = duplicateItem[0]?.id == selectedItemId;
+      let editedId = sameAsDuplicateItem ? selectedItemId : duplicateItem[0].id;
+      items['updateid'] = editedId;
+
+      setLoader(true);
+      if ((duplicateItem.length > 0 || items.quantity != duplicateItem[0].quantity) && !selectedItemId) {
+        items.quantity += duplicateItem[0].quantity;
       }
-      if(((!sameAsDuplicateItem) && selectedItemId != undefined)){
-        items.quantity += duplicateItem[0].quantity
-        return deleteCartItem(selectedItemId, items, 'edit')
+      if (!sameAsDuplicateItem && selectedItemId != undefined) {
+        items.quantity += duplicateItem[0].quantity;
+        return deleteCartItem(selectedItemId, items, 'edit');
       }
-      patchCartItem(items)
+      patchCartItem(items);
     }
-  }
+  };
 
   const onPressProceed = () => {
-    setShowDialogMessage(prev => ({ ...prev, show: false }))
-    setLoader(true)
-    deleteShopTemporaryCart({ variables: { 
-      input: { 
-        userid: customerInfo.userId,
-        shopid: hasTemporaryCart.checkHasTemporaryCart.shopid,
-        branchid: 0,
-      } 
-    }}).then(({ data }) => {
+    setShowDialogMessage((prev) => ({...prev, show: false}));
+    setLoader(true);
+    deleteShopTemporaryCart({
+      variables: {
+        input: {
+          userid: customerInfo.userId,
+          shopid: hasTemporaryCart.checkHasTemporaryCart.shopid,
+          branchid: 0,
+        },
+      },
+    }).then(({data}) => {
       let {status, message} = data.deleteShopTemporaryCart;
-      if(status == 200){
-        addToCart(showDialogMessage.items)
+      if (status == 200) {
+        addToCart(showDialogMessage.items);
       } else {
-        setLoader(false)
-        setTimeout(() => { Alert.alert('', message) }, 100)
+        setLoader(false);
+        setTimeout(() => {
+          Alert.alert('', message);
+        }, 100);
       }
-    })
-  }
+    });
+  };
 
   const deleteCartItem = (editedId, items, action) => {
-    deleteTemporaryCartItem({ variables: { input: { deleteid: editedId }}})
-      .then(({ data }) => {
-        let {status, message} = data.deleteTemporaryCartItem;
-        if(status == 200){
-          patchCartItem(items);
-        } else {
-          setLoader(false)
-          setTimeout(() => { Alert.alert('', message) }, 100)
-        }
-      });
-  }
+    deleteTemporaryCartItem({variables: {input: {deleteid: editedId}}}).then(({data}) => {
+      let {status, message} = data.deleteTemporaryCartItem;
+      if (status == 200) {
+        patchCartItem(items);
+      } else {
+        setLoader(false);
+        setTimeout(() => {
+          Alert.alert('', message);
+        }, 100);
+      }
+    });
+  };
 
   const patchCartItem = (items) => {
-    patchTemporaryCartItem({ variables: { input: items } })
-      .then(({ data }) => {
-        let {status, message} = data.patchTemporaryCartItem;
-        if(status == 200){
-          setTimeout(() => {
-            setLoader(false)
-            Toast.show('Added to cart', Toast.SHORT);
-            navigation.navigate('ToktokFoodRestaurantOverview');
-          }, 1000)
-        } else {
-          setLoader(false)
-          setTimeout(() => { Alert.alert('', message) }, 100)
-        }
-      });
-  }
+    patchTemporaryCartItem({variables: {input: items}}).then(({data}) => {
+      let {status, message} = data.patchTemporaryCartItem;
+      if (status == 200) {
+        setTimeout(() => {
+          setLoader(false);
+          Toast.show('Added to cart', Toast.SHORT);
+          navigation.navigate('ToktokFoodRestaurantOverview');
+        }, 1000);
+      } else {
+        setLoader(false);
+        setTimeout(() => {
+          Alert.alert('', message);
+        }, 100);
+      }
+    });
+  };
 
   const addToCart = (items) => {
-    postTemporaryCart({ variables: { input: items } })
-      .then(({data}) => {
-        let { status, message } = data.postTemporaryCart;
-        if(status == 200){
-          setTimeout(() => {
-            setLoader(false)
-            Toast.show('Added to cart', Toast.SHORT);
-            navigation.navigate('ToktokFoodRestaurantOverview');
-          }, 1000)
-        } else {
-          setLoader(false)
-          setTimeout(() => { Alert.alert('', message) }, 100)
-        }
-      })
-  }
+    postTemporaryCart({variables: {input: items}}).then(({data}) => {
+      let {status, message} = data.postTemporaryCart;
+      if (status == 200) {
+        setTimeout(() => {
+          setLoader(false);
+          Toast.show('Added to cart', Toast.SHORT);
+          navigation.navigate('ToktokFoodRestaurantOverview');
+        }, 1000);
+      } else {
+        setLoader(false);
+        setTimeout(() => {
+          Alert.alert('', message);
+        }, 100);
+      }
+    });
+  };
 
   const updateCartTotal = (type = 'ADD') => {
     let quantity = 1;
@@ -321,29 +355,34 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
     updateCartStates();
   }, [count]);
 
- 
   return (
     <>
-      <Loader
-        visibility={loader}
-        message="Adding to cart..."
-        hasImage={false}
-        loadingIndicator
-      />
+      <Loader visibility={loader} message="Adding to cart..." hasImage={false} loadingIndicator />
       <DialogMessage
         visibility={showDialogMessage.show}
         title={'OOPS!'}
-        messages={'You have existing items from a different restaurant in your cart. If you proceed, items will be removed.'}
-        type='warning'
-        btn1Title='Cancel'
-        btn2Title='Proceed'
-        onCloseBtn1={() => { setShowDialogMessage(prev => ({ ...prev, show: false })) }}
-        onCloseBtn2={() => { onPressProceed() }}
+        messages={
+          'You have existing items from a different restaurant in your cart. If you proceed, items will be removed.'
+        }
+        type="warning"
+        btn1Title="Cancel"
+        btn2Title="Proceed"
+        onCloseBtn1={() => {
+          setShowDialogMessage((prev) => ({...prev, show: false}));
+        }}
+        onCloseBtn2={() => {
+          onPressProceed();
+        }}
         hasTwoButtons
       />
       <View style={[styles.container, styles.cartBorder]}>
         {productDetails.maxQtyIsset == 1 && (
-          <Text style={{ color: '#FFA700', fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD }}>{`Max quantity per checkout: ${productDetails.maxQty}`}</Text>
+          <Text
+            style={{
+              color: '#FFA700',
+              fontSize: FONT_SIZE.M,
+              fontFamily: FONT.BOLD,
+            }}>{`Max quantity per checkout: ${productDetails.maxQty}`}</Text>
         )}
         <View style={styles.foodItemTotalWrapper}>
           <View style={styles.countWrapper}>
@@ -365,9 +404,16 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
         </View>
         <TouchableOpacity
           disabled={loading || postLoading || patchLoading || deleteLoading || hasCartLoading || disabledMaxQty}
-          style={[styles.cartButton, {backgroundColor: disabledMaxQty || loading || postLoading || patchLoading || deleteLoading || hasCartLoading ? COLOR.LIGHT : COLOR.YELLOW}]}
-          onPress={() => onRestaurantNavigate()}
-        >
+          style={[
+            styles.cartButton,
+            {
+              backgroundColor:
+                disabledMaxQty || loading || postLoading || patchLoading || deleteLoading || hasCartLoading
+                  ? COLOR.LIGHT
+                  : COLOR.YELLOW,
+            },
+          ]}
+          onPress={() => onRestaurantNavigate()}>
           <Text style={styles.buttonText}>Add to Cart</Text>
         </TouchableOpacity>
       </View>

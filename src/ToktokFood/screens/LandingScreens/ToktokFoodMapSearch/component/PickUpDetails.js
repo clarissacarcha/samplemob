@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useReducer} from 'react';
 import TextTicker from 'react-native-text-ticker';
 import {View, Text, TextInput, TouchableOpacity, StyleSheet} from 'react-native';
 
@@ -7,13 +7,36 @@ import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
 
 import {useNavigation} from '@react-navigation/native';
 
+import {useDispatch, useSelector} from 'react-redux';
 import {useKeyboard} from 'toktokfood/hooks';
 
 const PickUpDetails = (props) => {
-  const {pinAddress} = props;
+  const initialState = {completeAddress: '', contactPerson: '', contactPersonNumber: ''};
 
+  function reducer(state, action) {
+    switch (action.type) {
+      case 'SET_COMPLETE_ADDRESS':
+        return {...state, completeAddress: action.value};
+      case 'SET_CONTACT_NAME':
+        return {...state, contactPerson: action.value};
+      case 'SET_CONTACT_NUMBER':
+        return {...state, contactPersonNumber: action.value};
+    }
+  }
+
+  const {pinAddress} = props;
   const navigation = useNavigation();
   const keyboardHeight = useKeyboard();
+  const dispatchToStore = useDispatch();
+  const {receiver} = useSelector((state) => state.toktokFood);
+
+  const initState = () => (Object.keys(receiver).length > 0 ? receiver : initialState);
+  const [state, dispatch] = useReducer(reducer, initialState, initState);
+
+  const onConfirmAddress = () => {
+    dispatchToStore({type: 'SET_TOKTOKFOOD_ORDER_RECEIVER', payload: state});
+    navigation.pop();
+  };
 
   return (
     <>
@@ -26,26 +49,31 @@ const PickUpDetails = (props) => {
           <View style={styles.inputWrapper}>
             <TextInput
               style={styles.input}
-              //   onChangeText={(value) => changePersonInfo('firstName', value)}
               placeholder="Your Complete Address"
+              value={state.completeAddress}
+              onChangeText={(value) => dispatch({type: 'SET_COMPLETE_ADDRESS', value})}
             />
           </View>
           <View style={styles.inputWrapper}>
             <TextInput
               style={styles.input}
-              //   onChangeText={(value) => changePersonInfo('firstName', value)}
               placeholder="Contact Person"
+              value={state.contactPerson}
+              onChangeText={(value) => dispatch({type: 'SET_CONTACT_NAME', value})}
             />
           </View>
           <View style={[styles.inputWrapper, {marginBottom: 8}]}>
             <TextInput
+              maxLength={11}
               style={styles.input}
-              //   onChangeText={(value) => changePersonInfo('firstName', value)}
+              keyboardType="number-pad"
               placeholder="Contact Person's Number"
+              value={state.contactPersonNumber}
+              onChangeText={(value) => dispatch({type: 'SET_CONTACT_NUMBER', value})}
             />
           </View>
 
-          <TouchableOpacity onPress={() => navigation.pop()} style={styles.cartButton}>
+          <TouchableOpacity onPress={() => onConfirmAddress()} style={styles.cartButton}>
             <Text style={styles.buttonText}>Confirm Address Details</Text>
           </TouchableOpacity>
         </View>
@@ -56,7 +84,7 @@ const PickUpDetails = (props) => {
 
 const styles = StyleSheet.create({
   proto: {
-    height: 350,
+    height: 370,
     width: '101%',
     position: 'absolute',
     backgroundColor: COLOR.WHITE,
@@ -76,7 +104,7 @@ const styles = StyleSheet.create({
   pickUpAddressTitle: {
     fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.XL,
-    marginBottom: verticalScale(7),
+    marginBottom: verticalScale(17),
   },
   pickUpAddress: {
     color: COLOR.BLACK,
@@ -91,7 +119,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     height: SIZE.BUTTON_HEIGHT,
     backgroundColor: COLOR.YELLOW,
-    marginTop: verticalScale(5),
+    marginTop: verticalScale(10),
   },
   buttonText: {
     color: COLOR.BLACK,

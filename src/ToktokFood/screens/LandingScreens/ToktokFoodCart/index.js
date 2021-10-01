@@ -1,7 +1,16 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {useRoute} from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/native';
-import {KeyboardAvoidingView, ScrollView, Platform, ActivityIndicator, View, Alert, RefreshControl, Text} from 'react-native';
+import {
+  KeyboardAvoidingView,
+  ScrollView,
+  Platform,
+  ActivityIndicator,
+  View,
+  Alert,
+  RefreshControl,
+  Text,
+} from 'react-native';
 
 import Loader from 'toktokfood/components/Loader';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
@@ -25,7 +34,6 @@ import {
 import {useSelector} from 'react-redux';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
-import { GET_MY_ACCOUNT } from 'toktokwallet/graphql';
 import CheckOutOrderHelper from 'toktokfood/helper/CheckOutOrderHelper';
 import {
   GET_SHIPPING_FEE,
@@ -40,19 +48,17 @@ import 'moment-timezone';
 
 // Utils
 import {moderateScale} from 'toktokfood/helper/scale';
-import {arrangeAddons} from './functions';
 import EnterPinCode from 'toktokfood/components/EnterPinCode';
-import LoadingIndicator from '../../../components/LoadingIndicator';
-import { FONT, FONT_SIZE } from '../../../../res/variables';
+import {FONT, FONT_SIZE} from '../../../../res/variables';
 
 const MainComponent = () => {
   const route = useRoute();
   const navigation = useNavigation();
   const nowDate = moment().format('YYYY-DD-YYYY');
 
-  const {amount, cart, shopname} = route.params;
-  const {location, customerInfo, shopLocation} = useSelector((state) => state.toktokFood);
-  const {totalAmount, temporaryCart, toktokWallet, setToktokWallet, paymentMethod, pmLoading} = useContext(VerifyContext);
+  const {shopname} = route.params;
+  const {location, customerInfo, shopLocation, receiver} = useSelector((state) => state.toktokFood);
+  const {totalAmount, temporaryCart, toktokWallet, paymentMethod, pmLoading} = useContext(VerifyContext);
 
   const [riderNotes, setRiderNotes] = useState('');
   const [delivery, setDeliveryInfo] = useState(null);
@@ -104,7 +110,7 @@ const MainComponent = () => {
         },
       },
       onCompleted: ({deleteShopTemporaryCart}) => {
-        console.log(deleteShopTemporaryCart,'DELETE')
+        console.log(deleteShopTemporaryCart, 'DELETE');
       },
     },
   );
@@ -117,18 +123,18 @@ const MainComponent = () => {
       onCompleted: ({checkShopValidations}) => {
         setRefreshing(false);
         setShowLoader(false);
-        setLoadingWallet(false)
+        setLoadingWallet(false);
         setCheckShop(checkShopValidations);
       },
       onError: (err) => {
-        console.log(err, 'skdsd')
+        console.log(err, 'skdsd');
         setRefreshing(false);
         setShowLoader(false);
-        setLoadingWallet(false)
+        setLoadingWallet(false);
         setTimeout(() => {
-          Alert.alert('', 'Network error occurred. Please check your internet connection.')    
+          Alert.alert('', 'Network error occurred. Please check your internet connection.');
         }, 100);
-      }
+      },
     },
   );
 
@@ -144,19 +150,19 @@ const MainComponent = () => {
       if (result.data.postRequestTakeMoney.success === 1) {
         resolve(result.data.postRequestTakeMoney);
       } else {
-        reject(result.data.postRequestTakeMoney)
+        reject(result.data.postRequestTakeMoney);
       }
     });
   };
 
   const tokwaVerifyPin = (pinCode) => {
-    let { requestTakeMoneyId, validator } = toktokWalletCredit;
+    let {requestTakeMoneyId, validator} = toktokWalletCredit;
     return new Promise(async (resolve, reject) => {
-      const result = await CheckOutOrderHelper.verifyPin({ pinCode, requestTakeMoneyId, validator });
+      const result = await CheckOutOrderHelper.verifyPin({pinCode, requestTakeMoneyId, validator});
       if (result.data.verifyPin.success === 1) {
         resolve(result.data.verifyPin);
       } else {
-        reject(result.data.verifyPin)
+        reject(result.data.verifyPin);
       }
     });
   };
@@ -165,34 +171,34 @@ const MainComponent = () => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'no-cache',
     onError: (error) => {
-      const { graphQLErrors, networkError } = error;
+      const {graphQLErrors, networkError} = error;
       setShowLoader(false);
-      if(networkError){
-        Alert.alert('', 'Network error occurred. Please check your internet connection.')      
+      if (networkError) {
+        Alert.alert('', 'Network error occurred. Please check your internet connection.');
       }
     },
     onCompleted: async ({checkoutOrder}) => {
-      console.log(checkoutOrder)
-      if (checkoutOrder.status == "200") {
+      console.log(checkoutOrder);
+      if (checkoutOrder.status == '200') {
         deleteShopTemporaryCart()
           .then(() => {
             setTimeout(() => {
               setShowLoader(false);
               navigation.replace('ToktokFoodDriver', {referenceNum: checkoutOrder.referenceNum});
-            }, 1000)
+            }, 1000);
           })
           .catch(() => {
             setShowLoader(false);
             setTimeout(() => {
-              Alert.alert('', 'Network error occurred. Please check your internet connection.')      
-            }, 100)
-          })
+              Alert.alert('', 'Network error occurred. Please check your internet connection.');
+            }, 100);
+          });
       } else {
         // error prompt
         setShowLoader(false);
         setTimeout(() => {
-          Alert.alert('', 'Network error occurred. Please check your internet connection.')      
-        }, 100)
+          Alert.alert('', 'Network error occurred. Please check your internet connection.');
+        }, 100);
       }
     },
   });
@@ -250,7 +256,7 @@ const MainComponent = () => {
   const toktokWalletPaymentMethod = (pinCode) => {
     tokwaVerifyPin(pinCode)
       .then((data) => {
-        if(data.success == 1){
+        if (data.success == 1) {
           const {requestTakeMoneyId, validator, cart} = toktokWalletCredit;
           const WALLET = {
             pin: pinCode,
@@ -258,7 +264,7 @@ const MainComponent = () => {
             pin_type: validator,
           };
           setShowLoader(true);
-          placeCustomerOrderProcess(cart, WALLET)
+          placeCustomerOrderProcess(cart, WALLET);
         } else {
           setErrorMessage(`Incorrent ${toktokWalletCredit.validator}. Please try again.`);
           setShowLoader(false);
@@ -267,43 +273,42 @@ const MainComponent = () => {
       .catch((err) => {
         setErrorMessage(`Incorrent ${toktokWalletCredit.validator}. Please try again.`);
         setShowLoader(false);
-      })
-  
-  }
+      });
+  };
 
   const placeCustomerOrder = async () => {
     if (delivery !== null && !pmLoading) {
-      paymentMethod == 'COD' ?  setShowLoader(true) : setLoadingWallet(true)
+      paymentMethod == 'COD' ? setShowLoader(true) : setLoadingWallet(true);
       const CUSTOMER_CART = await fixOrderLogs();
       const shopValidation = await refetch({variables: {input: {shopId: `${temporaryCart.items[0]?.shopid}`}}});
 
       if (shopValidation.data?.checkShopValidations?.isOpen == 1) {
-        if(paymentMethod == 'TOKTOKWALLET'){
+        if (paymentMethod == 'TOKTOKWALLET') {
           requestToktokWalletCredit()
-            .then(async ({ data }) => {
-              let { requestTakeMoneyId, validator} = data
-              setShowEnterPinCode(true)
-              setLoadingWallet(false)
+            .then(async ({data}) => {
+              let {requestTakeMoneyId, validator} = data;
+              setShowEnterPinCode(true);
+              setLoadingWallet(false);
               setToktokWalletCredit({
                 requestTakeMoneyId,
                 validator,
-                cart: CUSTOMER_CART
-              })
+                cart: CUSTOMER_CART,
+              });
             })
             .catch((err) => {
               // Show dialog error about toktokwallet request failed.
-              setLoadingWallet(false)
+              setLoadingWallet(false);
               console.log(err, 'ERROR ON PLACING CART');
               setTimeout(() => {
                 Alert.alert('', 'Something went wrong.');
               }, 100);
             });
         } else {
-          placeCustomerOrderProcess(CUSTOMER_CART)
+          placeCustomerOrderProcess(CUSTOMER_CART);
         }
       } else {
         setShowLoader(false);
-        setLoadingWallet(false)
+        setLoadingWallet(false);
         setTimeout(() => {
           Alert.alert(`${shopname} is not accepting orders right now...`, '');
         }, 100);
@@ -312,17 +317,19 @@ const MainComponent = () => {
   };
 
   const mobileNumberFormat = () => {
-    let { conno } = customerInfo;
-    if(conno.charAt(0) == '6'){
-      return `+${conno}`
+    let {conno} = customerInfo;
+    if (conno.charAt(0) == '6') {
+      return `+${conno}`;
     }
-    return conno
-  }
+    return conno;
+  };
 
-  const placeCustomerOrderProcess = async(CUSTOMER_CART, WALLET) => {
+  const hasCustomReceiver = () => Object.keys(receiver).length > 0;
+
+  const placeCustomerOrderProcess = async (CUSTOMER_CART, WALLET) => {
     const CUSTOMER = {
-      name: `${customerInfo.firstName} ${customerInfo.lastName}`,
-      contactnumber: mobileNumberFormat(),
+      name: hasCustomReceiver() ? receiver.contactPerson : `${customerInfo.firstName} ${customerInfo.lastName}`,
+      contactnumber: hasCustomReceiver() ? receiver.contactPersonNumber : mobileNumberFormat(),
       email: customerInfo.email,
       address: location.address,
       user_id: customerInfo.userId,
@@ -342,25 +349,20 @@ const MainComponent = () => {
       payment_method: paymentMethod,
       order_logs: CUSTOMER_CART,
     };
-    let data = WALLET ? { ...WALLET, ...CUSTOMER, ...ORDER } : { ...CUSTOMER, ...ORDER } 
-    console.log(JSON.stringify(data))
- 
+    const data = WALLET ? {...WALLET, ...CUSTOMER, ...ORDER} : {...CUSTOMER, ...ORDER};
     postCustomerOrder({
       variables: {
-        input: data
+        input: data,
       },
     });
-   
-  }
+  };
 
   const onPressChange = (action) => {
     setRefreshing(action != undefined);
     checkShopValidations({variables: {input: {shopId: `${temporaryCart.items[0]?.shopid}`}}});
   };
-  
-  const LoadingComponent = () => (
-    <Loader visibility={showLoader} message="Placing order..." />
-  )
+
+  const LoadingComponent = () => <Loader visibility={showLoader} message="Placing order..." />;
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'position' : null} style={styles.container}>
@@ -368,23 +370,22 @@ const MainComponent = () => {
         <HeaderTitle backOnly />
       </HeaderImageBackground>
       <Loader hasImage={false} loadingIndicator visibility={loadingWallet} message="loading..." />
-      { paymentMethod == 'COD' ? (
-         <Loader visibility={showLoader} message="Placing order..." />
+      {paymentMethod == 'COD' ? (
+        <Loader visibility={showLoader} message="Placing order..." />
       ) : (
         <EnterPinCode
           visible={showEnterPinCode}
           setVisible={() => {
-            setShowEnterPinCode(false)
-            setErrorMessage('')
+            setShowEnterPinCode(false);
+            setErrorMessage('');
           }}
           callBackFunc={(pinCode) => {
             setShowLoader(true);
-            toktokWalletPaymentMethod(pinCode)
+            toktokWalletPaymentMethod(pinCode);
           }}
           errorMessage={errorMessage}
           setErrorMessage={setErrorMessage}
-          title={toktokWalletCredit.validator}
-        >
+          title={toktokWalletCredit.validator}>
           <Loader visibility={showLoader} message="Placing order..." />
         </EnterPinCode>
       )}
@@ -397,10 +398,9 @@ const MainComponent = () => {
             colors={['#FFA700']}
             tintColor="#FFA700"
           />
-        }
-      >
-        <View style={{ paddingTop: 15, paddingBottom: 10, paddingHorizontal: moderateScale(16) }}>
-          <Text style={{ fontSize: FONT_SIZE.L, fontFamily: FONT.BOLD }}>Order Details</Text>
+        }>
+        <View style={{paddingTop: 15, paddingBottom: 10, paddingHorizontal: moderateScale(16)}}>
+          <Text style={{fontSize: FONT_SIZE.L, fontFamily: FONT.BOLD}}>Order Details</Text>
         </View>
         {checkShop == null && !refreshing ? (
           <View style={styles.totalContainer}>
