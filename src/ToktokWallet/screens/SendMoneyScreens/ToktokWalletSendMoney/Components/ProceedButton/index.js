@@ -29,6 +29,7 @@ export const ProceedButton = ({swipeEnabled , navigation , amount , note , tokwa
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onError: (error)=> {
             TransactionUtility.StandardErrorHandling({
+                alert,
                 error,
                 navigation,
                 onErrorAlert,
