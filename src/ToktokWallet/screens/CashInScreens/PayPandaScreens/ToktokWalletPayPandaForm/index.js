@@ -48,6 +48,7 @@ export const ToktokWalletPayPandaForm = ({navigation,route})=> {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onError: (error)=> {
             TransactionUtility.StandardErrorHandling({
+                alert,
                 error,
                 navigation,
                 onErrorAlert,

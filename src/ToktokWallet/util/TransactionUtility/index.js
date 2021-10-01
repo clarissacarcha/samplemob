@@ -1,6 +1,7 @@
 export class TransactionUtility {
 
     static StandardErrorHandling = ({
+        alert,
         error,
         navigation,
         onErrorAlert,
@@ -9,11 +10,11 @@ export class TransactionUtility {
     })=> {
         const { graphQLErrors , networkError } = error;
 
-          // if(graphQLErrors[0]?.payload?.code == "VALIDATORMAXREQUEST"){  
-            //     setOpenPinCode(false)
-            //     onErrorAlert({alert,error})
-            //     return navigation.pop()
-            // }
+        if(graphQLErrors[0]?.payload?.code == "VALIDATORMAXREQUEST"){  
+            setOpenPinCode(false)
+            onErrorAlert({alert,error})
+            return navigation.pop()
+        }
 
         if(graphQLErrors[0].message == "Account does not have enough balance."){
             navigation.navigate("ToktokWalletHomePage")
@@ -31,9 +32,9 @@ export class TransactionUtility {
             return setPinCodeAttempt(graphQLErrors[0].payload.remainingAttempts)
         }
 
-        // if(graphQLErrors[0]?.payload?.code == "INVALIDTPIN"){
-        //     return setPinCodeAttempt(graphQLErrors[0].payload.remainingAttempts)
-        // }
+        if(graphQLErrors[0]?.payload?.code == "INVALIDTPIN"){
+            return setPinCodeAttempt(graphQLErrors[0].payload.remainingAttempts)
+        }
 
         setOpenPinCode(false)
         onErrorAlert({alert,error})

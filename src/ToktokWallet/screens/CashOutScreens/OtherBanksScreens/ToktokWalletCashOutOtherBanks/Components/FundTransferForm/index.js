@@ -235,6 +235,7 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
         },
         onError: (error)=> {
             TransactionUtility.StandardErrorHandling({
+                alert,
                 error,
                 navigation,
                 onErrorAlert,

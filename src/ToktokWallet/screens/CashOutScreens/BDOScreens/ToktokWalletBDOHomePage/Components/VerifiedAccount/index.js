@@ -48,6 +48,7 @@ export const VerifiedAccount = ({record,provider})=> {
         },
         onError: (error)=> {
             TransactionUtility.StandardErrorHandling({
+                alert,
                 error,
                 navigation,
                 onErrorAlert,
