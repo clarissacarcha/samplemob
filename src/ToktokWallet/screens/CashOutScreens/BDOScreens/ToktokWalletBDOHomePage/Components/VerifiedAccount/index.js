@@ -11,6 +11,7 @@ import { useAlert } from 'src/hooks/useAlert'
 import { onErrorAlert } from 'src/util/ErrorUtility'
 import { AlertOverlay } from 'src/components'
 import { DisabledButton, Separator, EnterPinCode } from 'toktokwallet/components'
+import { TransactionUtility } from 'toktokwallet/util/TransactionUtility'
 import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS
@@ -46,21 +47,13 @@ export const VerifiedAccount = ({record,provider})=> {
             setSuccessModalVisible(true)
         },
         onError: (error)=> {
-            const {graphQLErrors, networkError} = error;
-            console.log(graphQLErrors)
-            if(graphQLErrors[0].message == "Wallet Hold"){
-                setOpenPinCode(false)
-                navigation.navigate("ToktokWalletHomePage")
-                navigation.replace("ToktokWalletHomePage")
-                return navigation.push("ToktokWalletRestricted", {component: "onHold"})
-            }
-
-            if(graphQLErrors[0].message == "Invalid Pincode"){
-                return setPinCodeAttempt(graphQLErrors[0].payload.remainingAttempts)
-            }
-            setOpenPinCode(false)
-            onErrorAlert({alert,error})
-            return navigation.pop()
+            TransactionUtility.StandardErrorHandling({
+                error,
+                navigation,
+                onErrorAlert,
+                setOpenPinCode,
+                setPinCodeAttempt
+            })
         }
     })
 

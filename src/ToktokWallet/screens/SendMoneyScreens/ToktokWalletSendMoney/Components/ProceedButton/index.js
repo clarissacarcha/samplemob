@@ -7,6 +7,7 @@ import {useMutation} from '@apollo/react-hooks'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import { POST_FUND_TRANSFER } from 'toktokwallet/graphql'
 import { DisabledButton , EnterPinCode } from 'toktokwallet/components'
+import { TransactionUtility } from 'toktokwallet/util/TransactionUtility'
 import { AlertOverlay } from 'src/components'
 
 //SELF IMPORTS
@@ -27,28 +28,13 @@ export const ProceedButton = ({swipeEnabled , navigation , amount , note , tokwa
     const [postFundTransfer , {data ,error , loading }] = useMutation(POST_FUND_TRANSFER, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onError: (error)=> {
-            const {graphQLErrors, networkError} = error;
-            console.log(graphQLErrors)
-
-            if(graphQLErrors[0].message == "Insufficient Balance"){
-                navigation.navigate("ToktokWalletHomePage")
-                navigation.replace("ToktokWalletHomePage")
-                return onErrorAlert({alert,error})
-            }
-        
-            if(graphQLErrors[0].message == "Wallet Hold"){
-                setOpenPinCode(false)
-                navigation.navigate("ToktokWalletHomePage")
-                navigation.replace("ToktokWalletHomePage")
-                return navigation.push("ToktokWalletRestricted", {component: "onHold"})
-            }
-
-            if(graphQLErrors[0].message == "Invalid Pincode"){
-                return setPinCodeAttempt(graphQLErrors[0].payload.remainingAttempts)
-            }
-            setOpenPinCode(false)
-            onErrorAlert({alert,error})
-            return navigation.pop()
+            TransactionUtility.StandardErrorHandling({
+                error,
+                navigation,
+                onErrorAlert,
+                setOpenPinCode,
+                setPinCodeAttempt
+            })
         },
         onCompleted: ({postFundTransfer})=> {
             console.log(JSON.stringify(postFundTransfer))
