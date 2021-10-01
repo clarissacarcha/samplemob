@@ -182,21 +182,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 5,
+    alignItems: 'center'
   },
   scheduleTitle: {
-    fontSize: 18,
-    marginRight: 8,
+    fontSize: FONT_SIZE.L,
+    marginRight: moderateScale(15),
     fontFamily: FONT.BOLD,
   },
   scheduleText: {
-    fontSize: 16,
+    fontSize: FONT_SIZE.L,
     fontFamily: FONT.REGULAR,
   },
   dateWrapper: {
-    padding: 5,
-    display: 'flex',
-    alignItems: 'center',
     flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 5
   },
 });
 

@@ -10,17 +10,19 @@ import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import {useNavigation} from '@react-navigation/native';
 import { useIsFocused } from '@react-navigation/native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import DashedLine from 'react-native-dashed-line';
 
 // Fonts/Colors
-import {COLORS, FONTS} from 'res/constants';
-import {FONT_SIZE} from 'res/variables';
+import {COLORS} from 'res/constants';
+import {FONT_SIZE, FONT, COLOR} from 'res/variables';
 
 // Images
 import {locationOutline, phoneBlack, store, user, rider1} from 'toktokfood/assets/images';
 
 // Utils
-import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
+import {moderateScale, verticalScale, isIphoneXorAbove} from 'toktokfood/helper/scale';
 import DialogMessage from 'toktokfood/components/DialogMessage';
+import { Platform } from 'react-native';
 
 const OrderAddress = ({ transaction, riderDetails }) => {
   
@@ -81,6 +83,12 @@ const OrderAddress = ({ transaction, riderDetails }) => {
     })
   }
 
+  const renderDash = () => (
+    <View style={styles.dashedLine}>
+      <DashedLine axis="vertical" dashGap={2} dashColor="#DDDDDD" dashLength={3} />
+    </View>
+  );
+
   return (
     <View style={styles.addressContainer}>
       <DialogMessage
@@ -92,11 +100,11 @@ const OrderAddress = ({ transaction, riderDetails }) => {
           navigation.navigate('ToktokFoodHome')
         }}
       >
-        <Text style={{ fontSize: FONT_SIZE.XL, fontFamily: FONTS.BOLD }} >Thank you for ordering</Text>
+        <Text style={{ fontSize: FONT_SIZE.XL, fontFamily: FONT.BOLD }} >Thank you for ordering</Text>
         <Text>
-          <Text style={{ fontSize: FONT_SIZE.XL, fontFamily: FONTS.BOLD, color: COLORS.YELLOW }} >toktok</Text>
-          <Text style={{ fontSize: FONT_SIZE.XL, fontFamily: FONTS.BOLD, color: '#FFA700' }}>food</Text>
-          <Text style={{ fontSize: FONT_SIZE.XL, fontFamily: FONTS.BOLD }}>!</Text>
+          <Text style={{ fontSize: FONT_SIZE.XL, fontFamily: FONT.BOLD, color: COLORS.YELLOW }} >toktok</Text>
+          <Text style={{ fontSize: FONT_SIZE.XL, fontFamily: FONT.BOLD, color: '#FFA700' }}>food</Text>
+          <Text style={{ fontSize: FONT_SIZE.XL, fontFamily: FONT.BOLD }}>!</Text>
         </Text>
       </DialogMessage>
       <RatingModal
@@ -117,7 +125,7 @@ const OrderAddress = ({ transaction, riderDetails }) => {
       {orderIsfor == 1 && (
         <View style={styles.dividerContainer}>
           <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
-          <View style={styles.divider} />
+          {renderDash()}
           {(riderDetails != null || orderStatus == 'f' || orderStatus == 's') ? (
               <MaterialIcon name="lens" size={16} color={COLORS.YELLOWTEXT} />
             ) : (
@@ -184,7 +192,7 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   dividerContainer: {
-    height: verticalScale(64),
+    height: verticalScale(83),
   },
   divider: {
     alignSelf: 'center',
@@ -207,8 +215,8 @@ const styles = StyleSheet.create({
     height: 12,
   },
   restaurant: {
-    fontWeight: '500',
     fontSize: FONT_SIZE.M,
+    fontFamily: FONT.BOLD
   },
   restauranContainer: {
     flexDirection: 'row',
@@ -224,17 +232,22 @@ const styles = StyleSheet.create({
   },
   messageTitle: {
     fontSize: FONT_SIZE.S, 
-    fontFamily: FONTS.BOLD
+    fontFamily: FONT.BOLD
   },
   messageContent: {
     textAlign: 'center',
     fontSize: FONT_SIZE.S,
-    fontFamily: FONTS.REGULAR,
+    fontFamily: FONT.REGULAR,
   },
   rateTitle: {
     textAlign: 'center',
     fontSize: FONT_SIZE.M,
-    fontFamily: FONTS.BOLD,
+    fontFamily: FONT.BOLD,
     paddingVertical: 10
-  }
+  },
+  dashedLine: {
+    paddingLeft: moderateScale(6),
+    flex: isIphoneXorAbove() ? .7 : 1,
+    flexDirection: 'row'
+  },
 });

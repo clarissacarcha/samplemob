@@ -45,19 +45,22 @@ export default styles = StyleSheet.create({
   },
   textAddress: {
     color: COLOR.BLACK,
-    fontSize: FONT_SIZE.M,
+    fontSize: FONT_SIZE.S,
     fontFamily: FONT.REGULAR,
   },
   addressMarkerIcon: {
-    width: 20,
-    height: 20,
+    width: moderateScale(15),
+    height: moderateScale(15),
     marginRight: 4,
+    resizeMode: 'contain',
+    tintColor: 'black'
   },
   foodItemImage: {
-    width: 80,
-    height: 75,
+    width: moderateScale(80),
+    height: moderateScale(80),
     marginRight: 8,
     borderRadius: 12,
+    resizeMode: 'contain'
   },
   orderItemContainer: {
     flexDirection: 'row',
@@ -131,13 +134,13 @@ export default styles = StyleSheet.create({
   },
   subtotal: {
     fontFamily: FONT.BOLD,
-    color: COLOR.ORANGE,
+    color: '#FF6200',
     fontSize: FONT_SIZE.L,
   },
   totalPrice: {
     fontFamily: FONT.BOLD,
-    fontSize: FONT_SIZE.XL,
-    color: COLOR.ORANGE,
+    fontSize: FONT_SIZE.L,
+    color: '#FF6200',
   },
   paymentContainer: {
     flex: 1,

@@ -9,7 +9,8 @@ import HeaderSearchBox from 'toktokfood/components/HeaderSearchBox';
 import {CategoryList} from '../ToktokFoodHome/components';
 import {ModalFilterSearch} from './components';
 import ChangeAddress from 'toktokfood/components/ChangeAddress';
-
+// Fonts, Colors & Images
+import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 // Constants
 import {searchData} from 'toktokfood/helper/strings';
 
@@ -63,8 +64,8 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   filterText: {
-    fontWeight: '400',
-    fontSize: 13,
+    fontFamily: FONT.BOLD,
+    fontSize: FONT_SIZE.M,
     marginRight: 5,
   },
 });

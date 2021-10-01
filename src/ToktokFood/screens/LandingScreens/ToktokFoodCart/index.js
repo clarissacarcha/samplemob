@@ -190,9 +190,9 @@ const MainComponent = () => {
           .catch(() => {
             setShowLoader(false);
             setTimeout(() => {
-              Alert.alert('', 'Network error occurred. Please check your internet connection.');
-            }, 100);
-          });
+              Alert.alert('', 'Something went wrong.')      
+            }, 100)
+          })
       } else {
         // error prompt
         setShowLoader(false);

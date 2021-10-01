@@ -15,6 +15,7 @@ import {DELETE_TEMPORARY_CART_ITEM} from 'toktokfood/graphql/toktokfood';
 import {useMutation, useLazyQuery} from '@apollo/react-hooks';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import Loader from 'toktokfood/components/Loader';
+import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 
 const MyOrderList = () => {
   const route = useRoute();
@@ -68,7 +69,9 @@ const MyOrderList = () => {
       <View style={styles.orderItemContainer}>
         <Image style={styles.foodItemImage} source={{uri: productLogo}} />
         <View style={styles.orderInfoWrapper}>
-          <Text style={(styles.orderText, {fontWeight: '500'})}>{productName}</Text>
+          <Text style={(styles.orderText, {fontFamily: FONT.BOLD, fontSize: FONT_SIZE.L})}>
+            {productName}
+          </Text>
           <Text style={[styles.orderText]}>{`x${quantity}`}</Text>
           { addonsDetails.length > 0 && displayAddOns(addons)}
           {!!notes && <Text style={styles.orderText}>{`Notes: ${notes}`}</Text>}

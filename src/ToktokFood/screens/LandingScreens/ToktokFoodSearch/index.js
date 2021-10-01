@@ -23,7 +23,7 @@ import {moderateScale, getStatusbarHeight, getIphoneNotchSize} from 'toktokfood/
 
 import {useSelector} from 'react-redux';
 import ENVIRONMENTS from 'src/common/res/environments';
-import {empty_shop, empty_search} from 'toktokfood/assets/images';
+import {empty_shop, empty_search, time} from 'toktokfood/assets/images';
 
 import styles from './styles';
 
@@ -97,21 +97,14 @@ const ToktokFoodSearch = ({ route }) => {
         <View style={styles.imgWrapper}>
           <Image
             resizeMode="contain"
-            source={{
-              uri: item.logo,
-            }}
+            source={{ uri: item.logo }}
             style={styles.img}
           />
-          {/* <View style={styles.branchWrapper}>
-            <MCIcon name="store" color={COLOR.ORANGE} size={13} />
-            <Text style={styles.branchText}>{item.totalBranches} branches</Text>
-          </View> */}
         </View>
-
         <View style={styles.restaurantInfo}>
           <View style={styles.infoWrapper}>
-            <Text numberOfLines={2} style={styles.restaurantName}>
-              {item.shopname}
+            <Text numberOfLines={1} style={styles.restaurantName}>
+              {item.shopname} ({ item.address })
             </Text>
             <CustomStarRating
               rating={item.ratings ?? '0'}
@@ -120,7 +113,7 @@ const ToktokFoodSearch = ({ route }) => {
             />
           </View>
           <View style={styles.subInfoWrapper}>
-            <MCIcon name="clock-outline" color="#868686" size={13} />
+            <Image resizeMode="contain" source={time} style={styles.timeImg} />
             <Text style={styles.subInfoText}>{item.estimatedDeliveryTime} mins</Text>
             <MCIcon name="map-marker-outline" color="#868686" size={13} />
             <Text style={styles.subInfoText}>{item.estimatedDistance}</Text>
@@ -140,7 +133,7 @@ const ToktokFoodSearch = ({ route }) => {
         { search != '' && 
           <Text style={styles.emptyText}>
             It seems like there is no open restaurant near you. Refresh or try again later.
-            </Text>
+          </Text>
         }
       </View>
     );

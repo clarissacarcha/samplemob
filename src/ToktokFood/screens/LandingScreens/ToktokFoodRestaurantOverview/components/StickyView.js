@@ -4,10 +4,11 @@ import React, {useEffect, useState, useContext, useRef, useMemo} from 'react';
 import {Image, Platform, StyleSheet, Text, View} from 'react-native';
 import ReactNativeParallaxHeader from 'react-native-parallax-header';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {FONT_SIZE} from 'res/variables';
+import {FONT_SIZE, FONT, COLOR} from 'res/variables';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import CustomStarRating from 'toktokfood/components/CustomStarRating';
 import ChangeAddress from 'toktokfood/components/ChangeAddress';
+import { time } from 'toktokfood/assets/images';
 
 // Components
 // import {RestaurantList} from '../../ToktokFoodHome/components';
@@ -26,8 +27,7 @@ import {
 import {FoodList, HeaderTitleSearchBox} from '../components';
 import {VerifyContext, CategoryTabs} from '../components';
 import {useIsFocused} from '@react-navigation/native';
-import {useDispatch} from 'react-redux';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 // const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 // const IS_IPHONE_X = SCREEN_HEIGHT === 812 || SCREEN_HEIGHT === 896;
@@ -58,7 +58,7 @@ export const StickyView = () => {
   } = routes.params.item;
 
   const headerMaxHeight = verticalScale(450);
-  const headerMinHeight = verticalScale(120);
+  const headerMinHeight = verticalScale(110);
   const isFocus = useIsFocused();
 
   // data fetching for product tags/tabs
@@ -126,9 +126,9 @@ export const StickyView = () => {
       <View style={styles.titleInfo}>
         <ChangeAddress styleContainer={{ paddingTop: moderateScale(10) }} />
         <View style={styles.content}>
-          <Image source={{uri: logo}} style={{width: scale(70), height: scale(70)}} resizeMode="cover" />
+          <Image source={{uri: logo}} style={styles.logo} resizeMode="cover" />
           <View style={{flexShrink: 1, marginHorizontal: 10}}>
-            <Text numberOfLines={2} style={styles.titleText}>{`${shopname} (${address})`}</Text>
+            <Text numberOfLines={1} style={styles.titleText}>{`${shopname} (${address})`}</Text>
             <CustomStarRating
               rating={ratings ?? '0'}
               starImgStyle={{width: scale(15), height: scale(15), marginVertical: 5}}
@@ -138,7 +138,7 @@ export const StickyView = () => {
               rightRating
             />
             <View style={styles.branchInfo}>
-              <MCIcon name="clock-outline" color="#868686" size={13} />
+              <Image resizeMode="contain" source={time} style={styles.timeImg} />
               <Text style={styles.branches}>{`${estimatedDeliveryTime} mins`}</Text>
               <MCIcon name="map-marker-outline" color="#868686" size={13} />
               <Text style={styles.branches}>{estimatedDistance}</Text>
@@ -218,7 +218,8 @@ const styles = StyleSheet.create({
   content: {
     paddingHorizontal: moderateScale(10),
     flexDirection: 'row',
-    paddingTop: 5
+    paddingTop: 5,
+    alignItems: 'center'
   },
   contentContainer: {
     backgroundColor: 'white',
@@ -277,7 +278,18 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
   },
   titleText: {
-    fontWeight: '500',
-    fontSize: 15,
+    fontSize: FONT_SIZE.L,
+    fontFamily: FONT.BOLD
   },
+  timeImg: {
+    width: scale(13),
+    height: scale(13),
+    tintColor: COLOR.DARK,
+    resizeMode: 'contain'
+  },
+  logo: {
+    width: scale(70),
+    height: scale(70),
+    borderRadius: 5
+  }
 });

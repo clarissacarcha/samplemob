@@ -7,7 +7,7 @@ import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import {VerifyContext} from '../components';
 // Fonts & Colors
-import {COLOR} from 'res/variables';
+import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 import {food1} from 'toktokfood/assets/images';
 
 import {
@@ -75,16 +75,26 @@ export const FoodList = (props) => {
     navigation.navigate('ToktokFoodItemDetails', { Id, temporaryCart: temporaryCart.items });
   };
 
-  const renderItem = ({item}) => {
+  const renderItem = ({item, index}) => {
+    console.log(index)
     return (
-      <TouchableOpacity onPress={() => onNavigateToFoodItemDetails(item.Id)} style={styles.listContainer}>
+      <TouchableOpacity
+        onPress={() => onNavigateToFoodItemDetails(item.Id)}
+        style={[
+          styles.listContainer,
+          {
+            paddingBottom: index == 0 ? moderateScale(10) : 0,
+            marginVertical: index == 0 ?  0 : moderateScale(10),
+          }
+        ]}
+      >
         <View>
           <Text style={styles.listText}>{item.itemname}</Text>
           <Text style={styles.listPrice}>PHP {item.price.toFixed(2)}</Text>
-          <Text numberOfLines={1}>{item.summary}</Text>
+          { !!item.summary && <Text numberOfLines={1} style={styles.summary}>{item.summary}</Text> }
         </View>
         <View>
-          <Image resizeMode="contain" source={{uri: item.filename}} style={styles.img} />
+          <Image resizeMode='contain' source={{uri: item.filename}} style={styles.img} />
         </View>
       </TouchableOpacity>
     );
@@ -105,6 +115,10 @@ export const FoodList = (props) => {
     )
   }
 
+  const itemSepartor = () => (
+    <View style={styles.separtor} />
+  )
+
   return (
     <>
       <FlatList
@@ -115,6 +129,7 @@ export const FoodList = (props) => {
           styles.container,
           { minHeight }
         ]}
+        ItemSeparatorComponent={itemSepartor}
         ListEmptyComponent={() => (
           <Text style={{textAlign: 'center', marginVertical: 20}}>
             { searchProduct ? 'No product found' : 'This restaurant has no products yet.' }
@@ -135,27 +150,33 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   img: {
-    height: moderateScale(60),
-    width: moderateScale(60),
-    resizeMode: 'cover',
+    height: moderateScale(70),
+    width: moderateScale(70),
     borderRadius: 5
   },
   listText: {
-    fontWeight: '500',
-    paddingVertical: 3,
+    fontFamily: FONT.BOLD,
+    fontSize: FONT_SIZE.M,
+  },
+  summary: {
+    fontFamily: FONT.REGULAR,
+    fontSize: FONT_SIZE.M,
   },
   listPrice: {
     color: '#FF6200',
-    fontWeight: '500',
+    fontFamily: FONT.BOLD,
+    fontSize: FONT_SIZE.M,
     paddingVertical: 3,
   },
   listContainer: {
-    borderBottomWidth: 1,
-    borderColor: '#E6E6E6',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: verticalScale(15),
-    paddingHorizontal: verticalScale(20),
-    alignItems: 'center'
+    paddingHorizontal: verticalScale(18),
+    alignItems: 'center',
   },
+  separtor: {
+    borderBottomWidth: 1,
+    borderColor: '#E6E6E6',
+    marginHorizontal: verticalScale(20),
+  }
 });
