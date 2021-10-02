@@ -5,13 +5,13 @@ export class TransactionUtility {
         error,
         navigation,
         onErrorAlert,
-        setOpenPinCode,
+        setOpenPinCode = null,
         setPinCodeAttempt
     })=> {
         const { graphQLErrors , networkError } = error;
 
         if(graphQLErrors[0]?.payload?.code == "VALIDATORMAXREQUEST"){  
-            setOpenPinCode(false)
+            if(setOpenPinCode) setOpenPinCode(false)
             onErrorAlert({alert,error})
             return navigation.pop()
         }
@@ -23,7 +23,7 @@ export class TransactionUtility {
         }
 
         if(graphQLErrors[0]?.message == "Wallet Hold"){
-            setOpenPinCode(false)
+            if(setOpenPinCode) setOpenPinCode(false)
             navigation.navigate("ToktokWalletHomePage")
             navigation.replace("ToktokWalletHomePage")
             return navigation.push("ToktokWalletRestricted", {component: "onHold"})
@@ -35,8 +35,7 @@ export class TransactionUtility {
         if(graphQLErrors[0]?.payload?.code == "INVALIDTPIN"){
             return setPinCodeAttempt(graphQLErrors[0].payload.remainingAttempts)
         }
-
-        setOpenPinCode(false)
+        if(setOpenPinCode) setOpenPinCode(false)
         onErrorAlert({alert,error})
         return navigation.pop()
     }
