@@ -43,17 +43,21 @@ export const ToktokWalletPayPandaForm = ({navigation,route})=> {
     const [maxLimitMessage,setMaxLimitMessage] = useState("")
     const [pinCodeAttempt,setPinCodeAttempt] = useState(6)
     const [openPinCode,setOpenPinCode] = useState(false)
+    const [otpCodeAttempt,setOtpCodeAttempt] = useState(6)
+    const [openOtpCode,setOpenOtpCode] = useState(false)
 
     const [postCashInPayPandaRequest , {data,error,loading}] = useMutation(POST_CASH_IN_PAYPANDA_REQUEST , {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onError: (error)=> {
             TransactionUtility.StandardErrorHandling({
-                alert,
                 error,
                 navigation,
+                alert,
                 onErrorAlert,
                 setOpenPinCode,
-                setPinCodeAttempt
+                setOpenOtpCode,  
+                setPinCodeAttempt,
+                setOtpCodeAttempt
             })
         },
         onCompleted: ({postCashInPayPandaRequest})=>{
