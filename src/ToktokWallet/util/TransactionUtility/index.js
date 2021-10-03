@@ -23,9 +23,9 @@ export class TransactionUtility {
         }
 
         if(graphQLErrors[0]?.payload?.code == "INVALIDOTP"){
-            console.log("OTP MALI")
             return setOtpCodeAttempt(graphQLErrors[0].payload.remainingAttempts)
         }
+
         if(setOpenPinCode) setOpenPinCode(false)
         if(setOpenOtpCode) setOpenOtpCode(false)
         onErrorAlert({alert,error})

@@ -76,7 +76,8 @@ export const VerifiedAccount = ({record,provider})=> {
                 onErrorAlert,
                 setOpenPinCode,
                 setOpenOtpCode,  
-                setPinCodeAttempt       
+                setPinCodeAttempt,
+                setOtpCodeAttempt       
             })
         }
     })
@@ -162,6 +163,8 @@ export const VerifiedAccount = ({record,provider})=> {
             visible={openOtpCode}
             setVisible={setOpenOtpCode}
             callBackFunc={ProceedTransaction}
+            otpCodeAttempt={otpCodeAttempt}
+            resend={onSwipeSuccess}
         >
             <AlertOverlay visible={loading} />
         </EnterOtpCode>

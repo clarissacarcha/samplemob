@@ -264,7 +264,8 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
                 onErrorAlert,
                 setOpenPinCode,
                 setOpenOtpCode,  
-                setPinCodeAttempt       
+                setPinCodeAttempt,
+                setOtpCodeAttempt       
             })
         }
     })
@@ -364,6 +365,8 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
                 visible={openOtpCode}
                 setVisible={setOpenOtpCode}
                 callBackFunc={ProceedTransaction}
+                otpCodeAttempt={otpCodeAttempt}
+                resend={onSwipeSuccess}
             >
                 <AlertOverlay visible={loading} />
             </EnterOtpCode>

@@ -70,7 +70,8 @@ export const ProceedButton = ({
                 onErrorAlert,
                 setOpenPinCode,
                 setOpenOtpCode,  
-                setPinCodeAttempt       
+                setPinCodeAttempt,
+                setOtpCodeAttempt       
             })
         }
     })
@@ -139,6 +140,8 @@ export const ProceedButton = ({
                 visible={openOtpCode}
                 setVisible={setOpenOtpCode}
                 callBackFunc={Proceed}
+                otpCodeAttempt={otpCodeAttempt}
+                resend={onSwipeSuccess}
             >
                 <AlertOverlay visible={loading} />
             </EnterOtpCode>
