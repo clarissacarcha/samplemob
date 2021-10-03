@@ -5,13 +5,13 @@ import {useSelector} from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
 import { numberFormat } from 'toktokwallet/helper'
 import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
-import { POST_CASH_OUT_BDO } from 'toktokwallet/graphql'
+import { POST_CASH_OUT_BDO , POST_REQUEST_CASH_OUT } from 'toktokwallet/graphql'
 import { useMutation } from '@apollo/react-hooks'
 import { useAlert } from 'src/hooks/useAlert'
 import { onErrorAlert } from 'src/util/ErrorUtility'
 import { AlertOverlay } from 'src/components'
-import { DisabledButton, Separator, EnterPinCode } from 'toktokwallet/components'
-import { TransactionUtility } from 'toktokwallet/util/TransactionUtility'
+import { DisabledButton, Separator, EnterPinCode , EnterOtpCode } from 'toktokwallet/components'
+import { TransactionUtility } from 'toktokwallet/util'
 import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS
@@ -33,6 +33,28 @@ export const VerifiedAccount = ({record,provider})=> {
     const alert = useAlert()
     const [pinCodeAttempt,setPinCodeAttempt] = useState(6)
     const [openPinCode,setOpenPinCode] = useState(false)
+    const [otpCodeAttempt,setOtpCodeAttempt] = useState(6)
+    const [openOtpCode,setOpenOtpCode] = useState(false)
+    const [requestFundTransferId,setRequestFundTransferId] = useState(null)
+
+    const [postRequestCashOut , {loading: requestLoading}] = useMutation(POST_REQUEST_CASH_OUT , {
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+        onCompleted: ({postRequestCashOut})=>{
+            const { validator , requestFundTransferId } = postRequestCashOut
+            setRequestFundTransferId(requestFundTransferId)
+            if(validator == "TPIN"){
+                setPinCodeAttempt(6)
+                return setOpenPinCode(true)
+            }else{
+                setOtpCodeAttempt(6)
+                return setOpenOtpCode(true)
+            }
+           
+        },
+        onError: (error)=>{
+            onErrorAlert({alert,error})
+        }
+    })
 
 
     const [postCashOutBdo , {data,error,loading}] = useMutation(POST_CASH_OUT_BDO, {
@@ -48,12 +70,14 @@ export const VerifiedAccount = ({record,provider})=> {
         },
         onError: (error)=> {
             TransactionUtility.StandardErrorHandling({
-                alert,
                 error,
                 navigation,
+                alert,
                 onErrorAlert,
                 setOpenPinCode,
-                setPinCodeAttempt
+                setOpenOtpCode,  
+                setPinCodeAttempt,
+                setOtpCodeAttempt,       
             })
         }
     })
@@ -76,14 +100,13 @@ export const VerifiedAccount = ({record,provider})=> {
         setErrorMessage("")
     }
 
-    const ProceedTransaction = (pinCode)=> {
+    const ProceedTransaction = ({pinCode = null ,Otp = null})=> {
         postCashOutBdo({
             variables: {
                 input: {
-                    amount: +amount,
-                    provider: provider.id,
-                    currencyId: tokwaAccount.wallet.currency.id,
-                    pinCode: pinCode
+                    requestFundTransferId: requestFundTransferId,
+                    OTP: Otp,
+                    TPIN: pinCode
                 }
             }
         })
@@ -94,8 +117,16 @@ export const VerifiedAccount = ({record,provider})=> {
     }
 
     const onSwipeSuccess = ()=> {
-        setPinCodeAttempt(6)
-        setOpenPinCode(true)
+        postRequestCashOut({
+            variables: {
+                input: {
+                    amount: +amount,
+                    provider: provider.id,
+                    currencyId: tokwaAccount.wallet.currency.id,
+                    type: "BDO"
+                }
+            }
+        })
     }
 
     const confirmAmount = ()=> {
@@ -112,15 +143,12 @@ export const VerifiedAccount = ({record,provider})=> {
             swipeTitle: `Confirm`,
             onSwipeFail: onSwipeFail,
             onSwipeSuccess: onSwipeSuccess,
-            // onConfirm: ()=>{
-            //     setPinCodeAttempt(6)
-            //     setOpenPinCode(true)
-            // },
         })
     }
 
     return (
         <>
+        <AlertOverlay visible={requestLoading}/>
          <EnterPinCode 
                 visible={openPinCode} 
                 setVisible={setOpenPinCode} 
@@ -130,6 +158,15 @@ export const VerifiedAccount = ({record,provider})=> {
         >
              <AlertOverlay visible={loading} />
         </EnterPinCode>
+        <EnterOtpCode
+            visible={openOtpCode}
+            setVisible={setOpenOtpCode}
+            callBackFunc={ProceedTransaction}
+            otpCodeAttempt={otpCodeAttempt}
+            resend={onSwipeSuccess}
+        >
+            <AlertOverlay visible={loading} />
+        </EnterOtpCode>
         <Separator/>
         <SuccessfulCashOutModal 
              visible={successModalVisible}
