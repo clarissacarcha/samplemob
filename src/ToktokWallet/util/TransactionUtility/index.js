@@ -6,9 +6,10 @@ export class TransactionUtility {
         navigation,
         alert,
         onErrorAlert,
-        setOpenPinCode,
-        setOpenOtpCode,
-        setPinCodeAttempt
+        setOpenPinCode = null,
+        setOpenOtpCode = null,
+        setPinCodeAttempt = null,
+        setOtpCodeAttempt = null
     })=> {
         const {graphQLErrors, networkError} = error;
         if(graphQLErrors[0].message == "Account does not have enough balance."){
@@ -16,23 +17,18 @@ export class TransactionUtility {
             navigation.replace("ToktokWalletHomePage")
             return onErrorAlert({alert,error})
         }
-    
-        if(graphQLErrors[0].message == "Wallet Hold"){
-            setOpenPinCode(false)
-            navigation.navigate("ToktokWalletLoginPage")
-            navigation.replace("ToktokWalletLoginPage")
-            return navigation.push("ToktokWalletRestricted", {component: "onHold"})
-        }
 
-        if(graphQLErrors[0].message == "Invalid Pincode"){
+        if(graphQLErrors[0]?.payload?.code == "INVALIDTPIN"){
             return setPinCodeAttempt(graphQLErrors[0].payload.remainingAttempts)
         }
-        setOpenPinCode(false)
-        setOpenOtpCode(false)
+
+        if(graphQLErrors[0]?.payload?.code == "INVALIDOTP"){
+            console.log("OTP MALI")
+            return setOtpCodeAttempt(graphQLErrors[0].payload.remainingAttempts)
+        }
+        if(setOpenPinCode) setOpenPinCode(false)
+        if(setOpenOtpCode) setOpenOtpCode(false)
         onErrorAlert({alert,error})
         return navigation.pop()
-
-
     }
-
 }

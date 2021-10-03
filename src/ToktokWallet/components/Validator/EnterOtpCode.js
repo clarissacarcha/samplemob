@@ -1,13 +1,27 @@
-import React, {useState,useRef} from 'react'
+import React, {useState,useRef,useEffect} from 'react'
 import {View , Text , TextInput, StyleSheet , Modal , KeyboardAvoidingView, Platform, Dimensions , TouchableHighlight, TouchableOpacity} from 'react-native'
 import CONSTANTS from 'common/res/constants'
 import { ICON_SET, VectorIcon, YellowButton } from 'src/revamp'
 import { useAccount } from 'toktokwallet/hooks'
+import { useFocusEffect } from '@react-navigation/native'
 import { DisabledButton } from '../DisabledButton'
 import { BuildingBottom } from '../BuildingBottom'
 
 const {width,height} = Dimensions.get("window")
 const { FONT_FAMILY: FONT , FONT_SIZE , COLOR } = CONSTANTS
+
+const numWordArray = {
+    "1": "one",
+    "2": "two",
+    "3": "three",
+    "4": "four",
+    "5": "five",
+    "6": "six",
+    "7": "seven",
+    "8": "eight",
+    "9": "nine",
+    "10": "ten"
+}
 
 
 const NumberBox = ({onPress,value, showPin}) => (
@@ -36,11 +50,27 @@ const NumberBoxes = ({pinCode, onNumPress , showPin}) => {
     visible,
     setVisible,
     callBackFunc,
+    otpCodeAttempt,
+    resend,
     children
  })=> { 
     const {tokwaAccount} = useAccount();
     const [otpCode,setOtpCode] = useState("")
+    const [otpTimer,setOtpTimer] = useState(120)
     const inputRef = useRef();
+
+
+    useEffect(()=>{
+       if(visible){
+        if(otpTimer >= 0){
+            setTimeout(()=>{
+                setOtpTimer(state=>state - 1)
+            },1000)
+        }
+       }else{
+           setOtpTimer(120)
+       }
+    },[visible,otpTimer])
 
     const onNumPress = () => {
         setTimeout(() => {
@@ -48,14 +78,21 @@ const NumberBoxes = ({pinCode, onNumPress , showPin}) => {
         }, 10);
     };
 
+    const resendRequest = ()=> {
+        resend();
+        setOtpTimer(120)
+    }
+
+    const closeModal = ()=> {
+        setOtpCode("")
+        setVisible(false)
+    }
+
     return(
         <>
         <Modal
             visible={visible}
-            onRequestClose={()=>{
-                setOtpCode("")
-                setVisible(false)
-            }}
+            onRequestClose={closeModal}
             transparent={false}
             style={styles.container}
         >
@@ -66,7 +103,7 @@ const NumberBoxes = ({pinCode, onNumPress , showPin}) => {
                 style={styles.modalBody}
             >
                 <View style={styles.content}>
-                <TouchableOpacity onPress={()=>setVisible(false)} style={styles.backBtn}>
+                <TouchableOpacity onPress={closeModal} style={styles.backBtn}>
                     <VectorIcon iconSet={ICON_SET.Feather} name="chevron-left" size={20} color="#222222" />
                 </TouchableOpacity>
                         <View style={styles.pincodeContent}>
@@ -89,7 +126,20 @@ const NumberBoxes = ({pinCode, onNumPress , showPin}) => {
                                 }}
                                
                             />
+                            
                         </View>
+
+                            {
+                                otpCodeAttempt < 6 && <Text style={{fontFamily: FONT.REGULAR,color:"red",alignSelf:"center",fontSize: 12,textAlign:'center'}}>Incorrect OTP. You can try {numWordArray[otpCodeAttempt]} ({otpCodeAttempt}) more {otpCodeAttempt == 1 ? "time" : "times"} before your account will be temporarily blocked.</Text>
+                            }
+                            <TouchableOpacity
+                                    disabled={otpTimer > 0 ? true : false}
+                                    style={{marginTop: 18,paddingVertical: 10,alignItems: "center"}}
+                                    onPress={resendRequest}
+                            >
+                                <Text style={{opacity: otpTimer > 0 ? 0.7 : 1, color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>Didn't get code? Tap here to resend.</Text>
+                                { otpTimer > 0 && <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>{otpTimer} s</Text> }
+                        </TouchableOpacity>
                              </View>
 
                          </View>

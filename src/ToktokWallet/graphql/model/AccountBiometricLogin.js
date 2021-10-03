@@ -8,7 +8,15 @@ export const GET_REGISTERED_BIOMETRIC = gql`
             deviceId
             deviceName
             platform
-            active
+            status
+        }
+    }
+`
+
+export const GET_VERIFY_SIGNATURE = gql`
+    query getVerifySignature($input: GetVerifySignatureInput!){
+        getVerifySignature(input: $input){
+            result
         }
     }
 `

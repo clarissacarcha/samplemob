@@ -13,6 +13,9 @@ import { useAlert } from 'src/hooks'
 import { onErrorAlert } from 'src/util/ErrorUtility'
 import CONSTANTS from 'common/res/constants'
 
+//SELF IMPORTS
+import Biometrics from "./Biometrics"
+
 const { FONT_FAMILY: FONT , FONT_SIZE , COLOR } = CONSTANTS
 
 const numWordArray = {
@@ -45,7 +48,6 @@ export const LoginPage = ()=> {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         fetchPolicy:"network-only",
         onCompleted: ({getVerifyMPIN})=>{
-            console.log(getVerifyMPIN)
             if(getVerifyMPIN){
                 navigation.pop();
                 navigation.navigate("ToktokWalletHomePage");
@@ -119,7 +121,9 @@ export const LoginPage = ()=> {
                         {
                             errorMessage != "" &&  <Text style={{paddingHorizontal: 16,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:COLOR.RED,alignSelf:"center"}}>{errorMessage}</Text>   
                         }
-
+                        <Biometrics
+                            setErrorMessage={setErrorMessage}
+                        />
                         <TouchableOpacity
                                 style={{marginTop: 18,paddingVertical: 10,alignItems: "center"}}
                                 onPress={()=>setShowPin(!showPin)}
@@ -132,6 +136,7 @@ export const LoginPage = ()=> {
                         >
                                 <Text style={{color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>FORGOT MPIN?</Text>
                         </TouchableOpacity> */}
+                       
                     </View>
                 </View>
                 <View style={styles.btn}>

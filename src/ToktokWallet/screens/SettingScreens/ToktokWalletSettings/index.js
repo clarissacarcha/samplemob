@@ -7,7 +7,7 @@ import {useSelector} from 'react-redux'
 import CONSTANTS from 'common/res/constants'
 //SELF IMPORTS
 import {
-    
+    Biometrics
 } from "./Components";
 
 const { FONT_FAMILY: FONT , FONT_SIZE , COLOR } = CONSTANTS
@@ -54,6 +54,8 @@ export const ToktokWalletSettings = ({navigation , route })=> {
                 +tokwaAccount.person.accountType.level < 3 &&
                 <SettingOption route="ToktokWalletUpgradeAccount" title="Upgrade Account"/>
             }
+            <Biometrics/>
+            <SettingOption route="ToktokWalletHelpCentreContactUs" title="Contact Us"/>
             <Separator/>
             <SettingHeaderTitle title="Security and Privacy"/>
             <SettingOption route="ToktokWalletHelpCentreSecurityPrivacy" title="Security and Privacy"/>

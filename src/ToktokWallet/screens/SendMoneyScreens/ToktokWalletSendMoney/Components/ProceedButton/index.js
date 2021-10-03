@@ -42,6 +42,8 @@ export const ProceedButton = ({swipeEnabled , navigation , amount , note , tokwa
             }
         },
         onError: (error)=>{
+            setOpenPinCode(false)
+            setOpenOtpCode(false)
             onErrorAlert({alert,error})
         }
     })
@@ -62,7 +64,8 @@ export const ProceedButton = ({swipeEnabled , navigation , amount , note , tokwa
                 onErrorAlert,
                 setOpenPinCode,
                 setOpenOtpCode,  
-                setPinCodeAttempt       
+                setPinCodeAttempt,
+                setOtpCodeAttempt,       
             })
         }
     })
@@ -136,6 +139,8 @@ export const ProceedButton = ({swipeEnabled , navigation , amount , note , tokwa
             visible={openOtpCode}
             setVisible={setOpenOtpCode}
             callBackFunc={Proceed}
+            otpCodeAttempt={otpCodeAttempt}
+            resend={onSwipeSuccess}
         >
             <AlertOverlay visible={loading} />
         </EnterOtpCode>
