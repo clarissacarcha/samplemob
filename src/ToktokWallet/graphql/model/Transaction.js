@@ -76,6 +76,7 @@ externalName
 externalPhrase
 externalReferenceNumber
 externalPayload
+externalDetails
 sourcePerson {
     firstName
     middleName
