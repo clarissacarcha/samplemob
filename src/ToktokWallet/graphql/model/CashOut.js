@@ -11,6 +11,16 @@ export const POST_CASH_OUT = gql`
     }
 ` 
 
+export const POST_REQUEST_CASH_OUT = gql`
+    mutation postRequestCashOut($input: PostRequestCashOutInput){
+        postRequestCashOut(input: $input){
+            message
+            requestFundTransferId
+            validator
+        }
+    }
+`
+
 export const POST_CASH_OUT_BDO = gql`
     mutation postCashOutBdo($input: PostCashOutInput){
         postCashOutBdo(input: $input){
@@ -51,7 +61,7 @@ export const GET_CASH_OUTS = gql`
 ` 
 
 export const POST_CASH_OUT_OTHER_BANKS = gql`
-      mutation postCashOutOtherBank($input: PostCashOutOtherBankInput){
+      mutation postCashOutOtherBank($input: PostCashOutInput){
         postCashOutOtherBank(input: $input){
             id
             amount
