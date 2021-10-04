@@ -1,10 +1,10 @@
-import React from 'react'
+import React , {useEffect} from 'react'
 import {View,StyleSheet,Text,Image,FlatList,Alert,ActivityIndicator} from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import FIcon from 'react-native-vector-icons/Feather'
 import {useQuery} from '@apollo/react-hooks'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
-import {GET_CASH_IN_PROVIDERS} from 'toktokwallet/graphql'
+import {GET_CASH_IN_PROVIDERS } from 'toktokwallet/graphql'
 import { Separator, HeaderImageBackground, HeaderTitle } from 'toktokwallet/components'
 import { numberFormat } from 'toktokwallet/helper'
 import { useSelector } from 'react-redux'
@@ -13,6 +13,8 @@ import { SomethingWentWrong } from 'src/components';
 import { onErrorAlert } from 'src/util/ErrorUtility'
 import { useAlert } from 'src/hooks'
 import {YellowButton,HeaderBack } from 'src/revamp';
+import { useAccount } from 'toktokwallet/hooks'
+import { AlertOverlay } from 'src/components'
 
 const {COLOR , FONT_FAMILY: FONT, FONT_SIZE, SHADOW} = CONSTANTS
 
@@ -22,7 +24,9 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
         headerShown: false,
     })
 
-    const tokwaAccount = useSelector(state=>state.toktokWallet)
+    const amount = route?.params?.amount ? route.params.amount : null
+    const onCashIn = route?.params?.onCashIn ? route.params.onCashIn : null
+    const { tokwaAccount , getMyAccountLoading , getMyAccount}  = useAccount();
     const alert = useAlert()
     const { data: cashinmethods, error, loading } = useQuery(GET_CASH_IN_PROVIDERS, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
@@ -31,6 +35,23 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
             onErrorAlert({alert,error})
         }
     })
+
+    const checkStatus = async ()=> {
+        if(!tokwaAccount.mobileNumber){
+            await getMyAccount()
+        }   
+      
+        if(!tokwaAccount.pinCode){
+            return navigation.replace("ToktokWalletRestricted", {component: "noPin" , amount: amount , onCashIn: onCashIn})
+        }
+       
+    }
+
+    useEffect(()=>{
+        if(onCashIn){
+           checkStatus();
+        }
+    },[onCashIn])
 
     if (loading) {
         return (
@@ -49,6 +70,7 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
         )
     }
 
+
     const CashInMethod = ({item,index})=> {
         let image , navigateLink
         if(item.name.toLowerCase() == "paypanda"){
@@ -63,7 +85,9 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
                 key={`cashin-${index}`}
                 style={styles.cashinoption} onPress={()=> navigateLink != "" ? navigation.navigate(navigateLink,{
                         walletinfo: null,
-                        transactionType: item
+                        transactionType: item,
+                        amount: amount,
+                        onCashIn: onCashIn
                     }
                 ) : Alert.alert("","Temporary Unavailable")}>
                 <View style={styles.logo}>
@@ -81,6 +105,8 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
     }
 
     return (
+        <>
+        <AlertOverlay visible={getMyAccountLoading}/>
         <View style={styles.container}>
             <View style={styles.headings}>
                 <HeaderImageBackground>
@@ -101,6 +127,7 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
                 renderItem={CashInMethod}
             />
         </View>
+        </>
     )
 }
 

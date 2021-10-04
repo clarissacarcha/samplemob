@@ -31,7 +31,7 @@ const SuccessfulModal = ({visible,setVisible})=> {
                     <View style={styles.content}>
                         <Image source={require('toktokwallet/assets/images/success.png')}/>
                         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M, textAlign:"center",marginVertical: 10,marginHorizontal: 20}}>Account details has been successfully saved</Text>
-                        <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M, textAlign:"center",marginHorizontal: 5}}>You can now quickly fund transfer to banks</Text>
+                        <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M, textAlign:"center",marginHorizontal: 5}}>You can now quickly transfer funds to banks</Text>
                         <View style={{flex: 1,justifyContent:"flex-end",width: "50%"}}>
                                 <YellowButton label="Continue" onPress={Redirect}/>
                         </View>

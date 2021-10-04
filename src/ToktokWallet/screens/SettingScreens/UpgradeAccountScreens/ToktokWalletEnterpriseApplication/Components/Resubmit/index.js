@@ -91,7 +91,7 @@ export const Resubmit = ({id})=> {
         <PromptModal 
                 visible={visible} 
                 onPress={closeModal}
-                message="Your business documents have been submitted. These documents are for review and approval."
+                message="Your business documents have been resubmitted. These documents are for review and approval."
                 title="Success!"
                 event="success"
         />

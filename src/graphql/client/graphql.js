@@ -50,7 +50,8 @@ const setTokenLink = setContext(async (_, {headers}) => {
 
 const setToktokWalletGraphqlTokenLink = setContext(async (_, {headers}) => {
   try {
-    const accountToken = await AsyncStorage.getItem('toktokWalletAccountToken');
+    // const accountToken = await AsyncStorage.getItem('toktokWalletAccountToken');
+    const accountToken = await AsyncStorage.getItem('accessToken');
     return {
       headers: {
         ...headers,
