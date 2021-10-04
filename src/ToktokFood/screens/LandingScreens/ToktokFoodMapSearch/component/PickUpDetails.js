@@ -34,7 +34,10 @@ const PickUpDetails = (props) => {
   const [state, dispatch] = useReducer(reducer, initialState, initState);
 
   const onConfirmAddress = () => {
-    dispatchToStore({type: 'SET_TOKTOKFOOD_ORDER_RECEIVER', payload: state});
+    const {contactPerson, contactPersonNumber} = state;
+    if (contactPerson !== '' && contactPersonNumber !== '') {
+      dispatchToStore({type: 'SET_TOKTOKFOOD_ORDER_RECEIVER', payload: state});
+    }
     navigation.pop();
   };
 

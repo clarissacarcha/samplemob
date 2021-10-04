@@ -9,6 +9,7 @@ import {VerifyContext} from '../components';
 // Fonts & Colors
 import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 import {food1} from 'toktokfood/assets/images';
+import ContentLoader from 'react-native-easy-content-loader';
 
 import {
   verticalScale,
@@ -76,7 +77,6 @@ export const FoodList = (props) => {
   };
 
   const renderItem = ({item, index}) => {
-    console.log(index)
     return (
       <TouchableOpacity
         onPress={() => onNavigateToFoodItemDetails(item.Id)}
@@ -99,19 +99,25 @@ export const FoodList = (props) => {
       </TouchableOpacity>
     );
   };
-
   if (productsLoading || tagsLoading || productsError || searchProductsLoading) {
+    let listSize = (getDeviceHeight / verticalScale(100)).toFixed(0);
+
     return (
-      <LoadingIndicator
-        style={[
-          styles.container,
-          {
-            minHeight,
-            paddingVertical: 20
-          }
-        ]}
-          isLoading={true}
+      <View style={{ paddingHorizontal: moderateScale(10), paddingTop: moderateScale(10) }}>
+        <ContentLoader
+          active
+          pRows={3}
+          pWidth={['50%', '30%', '70%']}
+          title={false}
+          primaryColor="#FFFFFF"
+          secondaryColor="rgba(256,186,28,0.4)"
+          aShape='square'
+          aSize='large'
+          listSize={parseInt(listSize)}
+          avatar
+          reverse
         />
+      </View>
     )
   }
 

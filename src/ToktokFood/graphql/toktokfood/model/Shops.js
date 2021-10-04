@@ -41,5 +41,21 @@ export const CHECK_SHOP_VALIDATIONS = gql`
     }
   }
 `;
-
-
+export const GET_SHOP_DETAILS = gql`
+  query getShopDetails($input: GetShopDetailsInput) {
+    getShopDetails(input: $input) {
+      id
+      address
+      shopname
+      banner
+      logo
+      latitude
+      longitude
+      ratings
+      estimatedDistance
+      estimatedDeliveryTime
+      isOpen
+      allowPickup
+    }
+  }
+`;

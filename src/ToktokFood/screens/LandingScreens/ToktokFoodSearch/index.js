@@ -82,7 +82,7 @@ const ToktokFoodSearch = ({ route }) => {
         },
       });
       const {getSearchFood} = API_RESULT.data.data;
-      console.log(getSearchFood)
+      console.log(location.latitude, location.longitude)
       setShopList(getSearchFood);
       setLoading(false)
       setSearch(s)
