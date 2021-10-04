@@ -156,6 +156,10 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
                         <UserInfo label="Nationality" value={VerifyUserData.nationality}/>
                         <UserInfo label="Address" value={`${VerifyUserData.address.line1} ${VerifyUserData.address.line2} ${VerifyUserData.city} ${VerifyUserData.province}, ${VerifyUserData.address.country} ${VerifyUserData.address.postalCode}`}/>
                         <UserInfo label="Source of Income" value={VerifyUserData.incomeInfo.source.description}/>
+                        {
+                            VerifyUserData.incomeInfo.source.description == "others" &&
+                            <UserInfo label="" value={VerifyUserData.incomeInfo.otherSource}/>
+                        }
                         <UserInfo label="Occupation" value={VerifyUserData.incomeInfo.occupation}/>
                         <UserInfo label="ID Type" value={VerifyUserData.verifyID.idType}/>
                         <UserInfo label="ID number" value={VerifyUserData.verifyID.idNumber}/>

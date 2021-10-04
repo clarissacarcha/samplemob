@@ -9,6 +9,7 @@ import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS
 import BottomSheetGender from './BottomSheetGender'
+import BottomSheetSourceOfIncome from './BottomSheetSourceOfIncome'
 import DateBirthModal from './DateBirthModal'
 import ModalNationality from './ModalNationality'
 
@@ -29,7 +30,9 @@ export const VerifyFullname = ()=> {
         changeContactInfo,
         birthInfo , 
         changeBirthInfo, 
-        setModalCountryVisible
+        setModalCountryVisible,
+        incomeInfo,
+        changeIncomeInfo
      } = useContext(VerifyContext)
 
     const [modalVisible,setModalVisible] = useState(false)
@@ -37,6 +40,7 @@ export const VerifyFullname = ()=> {
     const [modaltype,setModaltype] = useState("")
     const [mobile, setMobile] = useState(contactInfo.mobile_number.replace("+63", ""))
     const genderRef = useRef()
+    const SourceOfIncomeRef = useRef()
 
     // const {loading, error, data} = useQuery(GET_COUNTRIES, {
     //     client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT
@@ -68,6 +72,11 @@ export const VerifyFullname = ()=> {
         if(birthInfo.birthdate == "") return Alert.alert("","Date of Birth is required.")
         if(birthInfo.birthPlace == "") return Alert.alert("","Place of Birth is required.")
         if(nationalityId == "") return Alert.alert("","Nationality is required.")
+        if (validator.isEmpty(incomeInfo.occupation, {ignore_whitespace: true})) {
+            return Alert.alert("","Occupation is required.")
+        }
+        if(incomeInfo.source == "") return Alert.alert("","Source of Income is required.")
+        if(incomeInfo.source.id == "0" && incomeInfo.otherSource == "") return Alert.alert("","Source of Income is required.")
 
         changeContactInfo("mobile_number", "+63" + mobile)
         setCurrentIndex(oldval => oldval + 1)
@@ -275,6 +284,40 @@ export const VerifyFullname = ()=> {
                                 </TouchableOpacity>
                             </View>
                     </View>
+
+                    <View style={{marginTop: 20,}}>
+                    <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Occupation</Text>
+                            <TextInput 
+                                placeholder="Enter Occupation here"
+                                style={styles.input}
+                                value={incomeInfo.occupation}
+                                onChangeText={(value)=>changeIncomeInfo("occupation",value)}
+                            />
+                    </View>
+
+                    <View style={{marginTop: 20,}}>
+                    <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Source of Income</Text>
+                            <TouchableOpacity onPress={()=>SourceOfIncomeRef.current.expand()} style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center"}]}>
+                             {
+                                incomeInfo.source == ""
+                                ? <Text style={{flex: 1,color: COLOR.DARK,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>- Select -</Text>
+                                : <Text style={{flex: 1,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{incomeInfo.source.description}</Text>
+                             }
+                                <VectorIcon iconSet={ICON_SET.Feather} name="chevron-right"/>
+                             </TouchableOpacity>
+                    </View>
+                    {
+                            incomeInfo.source.id == "0" &&
+                            <View style={{marginTop: 10,}}>
+                                <TextInput 
+                                    placeholder="Enter Source of Income here"
+                                    style={styles.input}
+                                    value={incomeInfo.otherSource}
+                                    onChangeText={(value)=>changeIncomeInfo("otherSource",value)}
+                                />
+                            </View>
+                        }
+
                     <View style={{marginBottom: 16,marginTop: 20,height: 70}}>
                     <YellowButton label="Next" onPress={NextPage}/>
                     </View>
@@ -284,6 +327,7 @@ export const VerifyFullname = ()=> {
             </KeyboardAvoidingView>
 
             <BottomSheetGender ref={genderRef} onChange={setGender}/>
+            <BottomSheetSourceOfIncome ref={SourceOfIncomeRef} changeIncomeInfo={changeIncomeInfo}/>
        
         </>
     )

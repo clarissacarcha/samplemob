@@ -34,12 +34,14 @@ const MainComponent = ({children , onPress })=> {
         <>
         <ScrollView style={styles.content}>
         <View style={styles.mainInput}>
-                <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD}}>One last step before you get a verified toktokwallet</Text>
+                {/* <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD}}>One last step before you get a verified toktokwallet</Text>
                 <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:"#929191"}}>Take a photo to verify your identity.</Text>  
+                 */}
+               <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD}}>Take a selfie with your Valid ID</Text>
+                <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:"#929191"}}>One last step before you get a verified toktokwallet.</Text>  
                 
-               
                 <View style={{marginTop: 20,flex: 1}}>
-                <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD}}>Take a selfie</Text>
+                {/* <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD}}>Take a selfie with your Valid ID</Text> */}
                         {children}
                 </View>
                 <View style={{flex: 1,alignItems:"center",justifyContent:"center"}}>

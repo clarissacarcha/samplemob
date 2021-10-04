@@ -84,7 +84,7 @@ const MainSetupComponent = ()=> {
     })
 
  
-    const [screenSlides,setScreenSlides] = useState(["Fullname","Address","SourceOfIncome","IDPic","SelfiePic","SelfiePicWithID","Confirm"])
+    const [screenSlides,setScreenSlides] = useState(["Fullname","Address","IDPic","SelfiePic","SelfiePicWithID","Confirm"])
  
     const cancelSetup = ()=> {
       console.log("Cancelling")
@@ -98,13 +98,13 @@ const MainSetupComponent = ()=> {
                 return <VerifyFullname/>
             case 1:
                 return <VerifyAddress/>
+            // case 2:
+            //     return <VerifySourceOfIncome/>
             case 2:
-                return <VerifySourceOfIncome/>
-            case 3:
                 return <VerifyID/>
-            case 4:
+            case 3:
                 return <VerifySelfie/>
-            case 5:
+            case 4:
                 return <VerifySelfieWithID/>
             default:
                 return <Confirm/>
