@@ -17,7 +17,7 @@ const testData = [
 ]
 const REAL_WIDTH = Dimensions.get('window').width;
 
-export const Button = ({enabled, loading, shipping, shippingRates, total, onPress}) => {
+export const Button = ({enabled, loading, shipping, balance, shippingRates, total, onPress}) => {
 
   const onCheckout = () => {
     // let stringyfiedArr = JSON.stringify(unSelectedItemsArr)
@@ -35,7 +35,7 @@ export const Button = ({enabled, loading, shipping, shippingRates, total, onPres
     // else if(shippingRates.length == 0) return true
     // else if(shippingRates.length > 0) return false
 
-    if(total > 0 && !loading && shipping && shippingRates.length > 0) return false
+    if(total > 0 && !loading && shipping && shippingRates.length > 0 && balance >= total) return false
     else return true
   }
     

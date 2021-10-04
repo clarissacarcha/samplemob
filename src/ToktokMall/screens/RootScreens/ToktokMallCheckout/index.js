@@ -2,7 +2,7 @@ import React, {useState, useEffect,} from 'react';
 import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, Dimensions, BackHandler, Alert } from 'react-native';
 import { COLOR, FONT } from '../../../../res/variables';
 import {HeaderBack, HeaderTitle, HeaderRight} from '../../../Components';
-import { AddressForm, Button, Payment, Shops, Totals, Vouchers, CheckoutModal } from './Components';
+import { AddressForm, Button, Payment, Shops, Totals, Vouchers, CheckoutModal, MessageModal } from './Components';
 import {connect} from 'react-redux'
 import coppermask from '../../../assets/images/coppermask.png'
 import suit from '../../../assets/images/coppermask.png'
@@ -12,6 +12,10 @@ import {useFocusEffect} from '@react-navigation/native'
 import { useLazyQuery, useQuery, useMutation } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql';
 import { GET_CHECKOUT_DATA, POST_CHECKOUT } from '../../../../graphql/toktokmall/model';
+
+import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
+import { GET_WALLET, GET_MY_ACCOUNT } from 'toktokwallet/graphql'
+
 import {Loading} from '../../../Components/Widgets';
 import AsyncStorage from '@react-native-community/async-storage';
 import Toast from "react-native-simple-toast";
@@ -108,9 +112,11 @@ const Component = ({route, navigation, createMyCartSession}) => {
   const [isLoading, setIsLoading] = useState(false)
   const [alertModal, setAlertModal] =useState(false)
   const [movedScreens, setMovedScreens] = useState(false)
-  const [currentBalance, setCurrentBalance] = useState(100000)
+  const [currentBalance, setCurrentBalance] = useState(0)
   const [shippingRates, setShippingRates] = useState([])
   const [initialLoading, setInitialLoading] = useState(false)
+  const [walletAccount, setWalletAccount] = useState(false)
+  const [walletmodal, setwalletmodal] = useState(false)
 
   const setAlertTrue = () => {
     setAlertModal(true)
@@ -164,6 +170,25 @@ const Component = ({route, navigation, createMyCartSession}) => {
       setInitialLoading(false)
     }    
   }
+
+  const [ getMyAccount ] = useLazyQuery(GET_MY_ACCOUNT , {
+    fetchPolicy: "network-only",
+    client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+    onCompleted: ({ getMyAccount })=> {
+      if(getMyAccount){
+        console.log(getMyAccount)
+        setwalletmodal(false)
+        setWalletAccount(getMyAccount)
+        setCurrentBalance(getMyAccount?.wallet?.balance)
+      }else{
+        setwalletmodal(true)
+      }
+    },
+    onError: (error) => {
+      console.log(error)
+      setwalletmodal(true)
+    }
+  })  
 
   const UpdateCart = async () => {
     // let stringyfiedArr = JSON.stringify(newCartData)
@@ -253,6 +278,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
   const init = async () => {
     
+    await getMyAccount()
+
     const savedUser = await AsyncStorage.getItem("ToktokMallUser")
 
     const userData = JSON.parse(savedUser) || {}
@@ -273,8 +300,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
               userId: userData.userId,
               addressId: userDefaultAddress.id,
               shops: shops,
-              customerLon: parseFloat(userDefaultAddress.longitude),
-              customerLat: parseFloat(userDefaultAddress.latitude),
+              customerLon: parseFloat(userDefaultAddress.longitude || 0),
+              customerLat: parseFloat(userDefaultAddress.latitude || 0),
 
               //High Street South Taguig Metro Manila
               // customerLat: 14.5463442,
@@ -324,7 +351,9 @@ const Component = ({route, navigation, createMyCartSession}) => {
   )
     
   useEffect(() => {
+    
     init()
+    
     // console.log("Parent Session", parentSession)
   },[])
 
@@ -375,6 +404,11 @@ const Component = ({route, navigation, createMyCartSession}) => {
           setIsVisible={setIsVisible} 
           goToOrders = {onGoToOrders}
         />
+        <MessageModal 
+          navigation={navigation} 
+          isVisible={walletmodal} 
+          setIsVisible={setwalletmodal} 
+        />
         <View style ={{paddingBottom: 0}}>
           <AddressForm
             data={userDefaultAddress}
@@ -422,6 +456,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
         <Button 
           enabled={!loading}
           loading={isLoading}
+          balance={currentBalance}
           total={grandTotal}
           shipping={userDefaultAddress}
           shippingRates={shippingRates}

@@ -3,7 +3,7 @@ import {View, Text, StyleSheet, TouchableHighlight} from 'react-native';
 import {throttle} from 'lodash';
 import {COLOR, DARK, COLOR_UNDERLAY, FONT_REGULAR, FONT_MEDIUM, COLORS, SIZES, FONTS} from '../../res/constants';
 
-export const YellowButton = ({label, onPress, style, delay = 2000}) => {
+export const YellowButton = ({label, onPress, style, delay = 2000, labelStyle}) => {
   const useThrottle = (cb, delayDuration) => {
     const options = {leading: true, trailing: false}; // add custom lodash options
     const cbRef = useRef(cb);
@@ -22,7 +22,7 @@ export const YellowButton = ({label, onPress, style, delay = 2000}) => {
   return (
     <TouchableHighlight onPress={onPressThrottled} style={styles.blackButton} underlayColor={'white'}>
       <View style={[styles.blackButtonBox, style]}>
-        <Text style={styles.label}>{label}</Text>
+        <Text style={[ styles.label, labelStyle ]}>{label}</Text>
       </View>
     </TouchableHighlight>
   );
