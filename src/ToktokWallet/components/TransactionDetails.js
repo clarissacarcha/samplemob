@@ -8,6 +8,24 @@ const { COLOR, FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
 
 const {width,height} = Dimensions.get("window")
 
+const renderExternalDetails = (externalDetails)=> {
+    
+    if(!externalDetails) return null
+    const data = JSON.parse(externalDetails)
+    if(!data) return null
+
+    return (
+        <>
+        {
+            data.map(({key,value},index)=>(
+                <Text key={`externalDetails_${index}`} style={styles.labelText}>{key}: {value}</Text>
+            ))
+        }
+
+        </>
+    )
+}
+
 const renderCashOutDisplayInformations = (cashOutDisplayInformations) => {
 
     if(cashOutDisplayInformations?.accountInfo){
@@ -43,18 +61,23 @@ const renderCashOutDisplayInformations = (cashOutDisplayInformations) => {
 export const TransactionDetails = ({
     visible,
     setVisible,
-    refNo,
-    refDate,
-    label,
-    phrase,
-    amount,
-    status,
-    displayNumber,
-    externalReferenceNumber,
-    deliveryId,
+    transactionInfo,
     cashOutDisplayInformations,
     cashInMobileNumber
 })=> {
+
+    const {
+        refNo,
+        refDate,
+        label,
+        phrase,
+        amount,
+        status,
+        displayNumber,
+        externalReferenceNumber,
+        deliveryId,
+        externalDetails
+    } = transactionInfo
 
     return (
         <>
@@ -77,7 +100,8 @@ export const TransactionDetails = ({
                             <Text style={styles.labelText}>{phrase}</Text>
                             {displayNumber != "" && <Text style={styles.labelText}>{displayNumber}</Text>}
                             { status && <Text style={styles.labelText}>Status: {status}</Text>}
-                            { deliveryId && <Text style={styles.labelText}>Delivery ID: {deliveryId}</Text>}
+                            {/* { deliveryId && <Text style={styles.labelText}>Delivery ID: {deliveryId}</Text>} */}
+                            { renderExternalDetails(externalDetails) }
                             { cashInMobileNumber && <Text style={styles.labelText}>Account Number: {cashInMobileNumber}</Text>}
                             { renderCashOutDisplayInformations(cashOutDisplayInformations)}
                             <View style={{marginTop: 10}}>

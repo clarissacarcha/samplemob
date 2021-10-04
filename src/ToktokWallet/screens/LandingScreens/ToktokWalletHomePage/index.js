@@ -5,6 +5,7 @@ import CONSTANTS from 'common/res/constants'
 import {GET_USER_TOKTOK_WALLET_DATA} from 'toktokwallet/graphql'
 import {useLazyQuery, useQuery} from '@apollo/react-hooks'
 import {useSelector} from 'react-redux'
+import { useAccount } from 'toktokwallet/hooks'
 import AsyncStorage from '@react-native-community/async-storage'
 
 //SELF IMPORTS
@@ -25,7 +26,7 @@ export const ToktokWalletHomePage = ({navigation,route})=> {
     const session = useSelector(state=> state.session)
     const [mounted, setMounted] = useState(true)
     const [refreshing,setRefreshing] = useState(false)
-  
+    const { refreshWallet } = useAccount();
 
     const  {data,error,loading} = useQuery(GET_USER_TOKTOK_WALLET_DATA , {
         fetchPolicy:"network-only",
@@ -47,12 +48,7 @@ export const ToktokWalletHomePage = ({navigation,route})=> {
 
 
     const onRefresh = useCallback(()=>{
-        setRefreshing(true)
-        setTimeout(() => {
-            navigation.replace("ToktokWalletHomePage")
-            setRefreshing(false)
-        }, 200);
-
+        refreshWallet();
     },[])
 
     if (loading) {

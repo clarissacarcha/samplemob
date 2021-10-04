@@ -1,12 +1,13 @@
 import React , {useState} from 'react'
 import { numberFormat } from 'toktokwallet/helper'
+import { TransactionUtility } from 'toktokwallet/util'
 import { YellowButton } from 'src/revamp'
 import {useAlert} from 'src/hooks/useAlert'
 import {onErrorAlert} from 'src/util/ErrorUtility'
 import {useMutation} from '@apollo/react-hooks'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
-import { POST_FUND_TRANSFER } from 'toktokwallet/graphql'
-import { DisabledButton , EnterPinCode } from 'toktokwallet/components'
+import { POST_FUND_TRANSFER , POST_REQUEST_SEND_MONEY , POST_SEND_MONEY } from 'toktokwallet/graphql'
+import { DisabledButton , EnterPinCode , EnterOtpCode} from 'toktokwallet/components'
 import { AlertOverlay } from 'src/components'
 
 //SELF IMPORTS
@@ -23,40 +24,52 @@ export const ProceedButton = ({swipeEnabled , navigation , amount , note , tokwa
     })
     const [pinCodeAttempt,setPinCodeAttempt] = useState(6)
     const [openPinCode,setOpenPinCode] = useState(false)
+    const [otpCodeAttempt,setOtpCodeAttempt] = useState(6)
+    const [openOtpCode,setOpenOtpCode] = useState(false)
+    const [requestSendMoneyId,setRequestSendMoneyId] = useState(null)
 
-    const [postFundTransfer , {data ,error , loading }] = useMutation(POST_FUND_TRANSFER, {
-        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
-        onError: (error)=> {
-            const {graphQLErrors, networkError} = error;
-            console.log(graphQLErrors)
-
-            if(graphQLErrors[0].message == "Insufficient Balance"){
-                navigation.navigate("ToktokWalletHomePage")
-                navigation.replace("ToktokWalletHomePage")
-                return onErrorAlert({alert,error})
+    const [postRequestSendMoney , {loading: requestLoading}] = useMutation(POST_REQUEST_SEND_MONEY, {
+        client:TOKTOK_WALLET_GRAPHQL_CLIENT,
+        onCompleted: ({postRequestSendMoney})=>{
+            const { validator , requestSendMoneyId } = postRequestSendMoney
+            setRequestSendMoneyId(requestSendMoneyId)
+            if(validator == "TPIN"){
+                setPinCodeAttempt(6)
+                return setOpenPinCode(true)
+            }else{
+                setOtpCodeAttempt(6)
+                return setOpenOtpCode(true)
             }
-        
-            if(graphQLErrors[0].message == "Wallet Hold"){
-                setOpenPinCode(false)
-                navigation.navigate("ToktokWalletHomePage")
-                navigation.replace("ToktokWalletHomePage")
-                return navigation.push("ToktokWalletRestricted", {component: "onHold"})
-            }
-
-            if(graphQLErrors[0].message == "Invalid Pincode"){
-                return setPinCodeAttempt(graphQLErrors[0].payload.remainingAttempts)
-            }
-            setOpenPinCode(false)
-            onErrorAlert({alert,error})
-            return navigation.pop()
         },
-        onCompleted: ({postFundTransfer})=> {
-            console.log(JSON.stringify(postFundTransfer))
+        onError: (error)=>{
             setOpenPinCode(false)
-            setWalletinfoParams(postFundTransfer)
-            setSuccessModalVisible(true)
+            setOpenOtpCode(false)
+            onErrorAlert({alert,error})
         }
     })
+
+    const [postSendMoney , {data ,error, loading }] = useMutation(POST_SEND_MONEY , {
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+        onCompleted: ({postSendMoney})=> {
+            setOpenPinCode(false)
+            setOpenOtpCode(false)
+            setWalletinfoParams(postSendMoney)
+            setSuccessModalVisible(true)
+        },
+        onError: (error)=> {
+            TransactionUtility.StandardErrorHandling({
+                error,
+                navigation,
+                alert,
+                onErrorAlert,
+                setOpenPinCode,
+                setOpenOtpCode,  
+                setPinCodeAttempt,
+                setOtpCodeAttempt,       
+            })
+        }
+    })
+
 
     const reviewAndConfirm = ()=> {
         return navigation.navigate("ToktokWalletReviewAndConfirm", {
@@ -77,14 +90,13 @@ export const ProceedButton = ({swipeEnabled , navigation , amount , note , tokwa
         })
     }
 
-    const Proceed = (pinCode)=> {
-        postFundTransfer({
+    const Proceed = ({pinCode = null , Otp = null })=> {
+        postSendMoney({
             variables: {
                 input: {
-                    amount: +amount,
-                    note: note,
-                    destinationMobileNo: recipientDetails.mobileNumber,
-                    pinCode: pinCode
+                    requestSendMoneyId: requestSendMoneyId,
+                    OTP: Otp,
+                    TPIN: pinCode
                 }
             },
         })
@@ -95,14 +107,24 @@ export const ProceedButton = ({swipeEnabled , navigation , amount , note , tokwa
     }
 
     const onSwipeSuccess = ()=> {
-        setPinCodeAttempt(6)
-        return setOpenPinCode(true)
+        postRequestSendMoney({
+            variables: {
+                input: {
+                    amount: +amount,
+                    note: note,
+                    destinationMobileNo: recipientDetails.mobileNumber,
+                }
+            }
+        })
+
+        // setPinCodeAttempt(6)
+        // return setOpenPinCode(true)
         //return navigation.push("ToktokWalletSecurityPinCode", {onConfirm: postFundTransfer , callBackFunction: Proceed , loading: loading, pinRemainingCodeAttempt: pinCodeAttempt})
     }
 
     return (
        <>
-        
+        <AlertOverlay visible={requestLoading}/>
         <EnterPinCode 
             visible={openPinCode} 
             setVisible={setOpenPinCode} 
@@ -112,6 +134,17 @@ export const ProceedButton = ({swipeEnabled , navigation , amount , note , tokwa
         >
             <AlertOverlay visible={loading} />
         </EnterPinCode>
+
+        <EnterOtpCode
+            visible={openOtpCode}
+            setVisible={setOpenOtpCode}
+            callBackFunc={Proceed}
+            otpCodeAttempt={otpCodeAttempt}
+            resend={onSwipeSuccess}
+        >
+            <AlertOverlay visible={loading} />
+        </EnterOtpCode>
+
         <SuccessfulModal 
                 successModalVisible={successModalVisible}
                 amount={amount}

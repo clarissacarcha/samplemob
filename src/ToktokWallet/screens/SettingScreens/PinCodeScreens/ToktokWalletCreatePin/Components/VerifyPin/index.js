@@ -10,6 +10,7 @@ import { YellowButton } from 'src/revamp';
 import { useAlert } from 'src/hooks';
 import { AlertOverlay } from 'src/components';
 import CONSTANTS from 'common/res/constants'
+import { TransactionUtility } from '../../../../../../util/TransactionUtility';
 
 const { FONT_FAMILY: FONT , FONT_SIZE , COLOR } = CONSTANTS
 const {width,height} = Dimensions.get("window")
@@ -35,37 +36,23 @@ export const VerifyPin = ({pageIndex,setPageIndex})=> {
     const navigation = useNavigation()
     const alert = useAlert()
 
-    const [pinCodeAttempts,setPinCodeAttempts] = useState({
-        visible: false,
-        attempts: "",
-    })
+    const [pinCodeAttempt,setPinCodeAttempt] = useState(0)
 
     const [verifyPinCode, {data ,error , loading }] = useLazyQuery(VERIFY_PIN_CODE, {
         fetchPolicy: "network-only",
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({verifyPinCode})=>{
-            if(verifyPinCode.result == 1){
-                setPinCodeAttempts({
-                    visible: false,
-                    attempts: ''
-                })
-                setPageIndex(state=>state+1)
-            }else{
-            
-                if(verifyPinCode.remainingAttempts == 0){
-                    navigation.navigate("ToktokWalletHomePage")
-                    navigation.replace("ToktokWalletHomePage")
-                    return navigation.push("ToktokWalletRestricted", {component: "onHold"})
-                }
-
-                setPinCodeAttempts({
-                    visible: true,
-                    attempts: verifyPinCode.remainingAttempts
-                })
-            }
+            setPageIndex(state=>state+1)
         },
         onError: (error)=> {
-            onErrorAlert({alert, error})
+            // onErrorAlert({alert, error})
+            TransactionUtility.StandardErrorHandling({
+                alert,
+                error,
+                navigation,
+                onErrorAlert,
+                setPinCodeAttempt
+            })
         }
     })
 
@@ -113,7 +100,7 @@ export const VerifyPin = ({pageIndex,setPageIndex})=> {
                             onSubmitEditing={pinCode.length == 6 ? onSubmit: null}
                         />
                          {
-                            pinCodeAttempts.visible && <Text style={{fontFamily: FONT.REGULAR,color:"red",alignSelf:"center",fontSize: 12,textAlign:'center'}}>Incorrect PIN. You can try {numWordArray[pinCodeAttempts.attempts]} ({pinCodeAttempts.attempts}) more {pinCodeAttempts.attempts == 1 ? "time" : "times"} before your account will be temporarily blocked.</Text>
+                            pinCodeAttempt > 0 && <Text style={{fontFamily: FONT.REGULAR,color:"red",alignSelf:"center",fontSize: 12,textAlign:'center'}}>Incorrect PIN. You can try {numWordArray[pinCodeAttempt]} ({pinCodeAttempt}) more {pinCodeAttempt == 1 ? "time" : "times"} before your account will be temporarily blocked.</Text>
                         }
 
                         <TouchableOpacity

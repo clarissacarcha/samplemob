@@ -36,9 +36,20 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
         }
     })
 
+    const checkStatus = async ()=> {
+        if(!tokwaAccount.mobileNumber){
+            await getMyAccount()
+        }   
+      
+        if(!tokwaAccount.pinCode){
+            return navigation.replace("ToktokWalletRestricted", {component: "noPin" , amount: amount , onCashIn: onCashIn})
+        }
+       
+    }
+
     useEffect(()=>{
         if(onCashIn){
-            getMyAccount()
+           checkStatus();
         }
     },[onCashIn])
 
