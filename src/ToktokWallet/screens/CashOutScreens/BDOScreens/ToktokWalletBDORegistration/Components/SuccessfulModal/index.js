@@ -2,6 +2,8 @@ import React from 'react'
 import {Modal,View,Text,StyleSheet,Dimensions , Image} from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { YellowButton } from 'src/revamp'
+import {useAccount} from 'toktokwallet/hooks'
+import { useDispatch } from 'react-redux'
 import CONSTANTS from 'common/res/constants'
 
 const { FONT_FAMILY: FONT , FONT_SIZE , SIZE } = CONSTANTS
@@ -10,9 +12,23 @@ const {width,height} = Dimensions.get("window")
 export const SuccessfulModal = ({visible,setVisible , provider})=> {
 
     const navigation = useNavigation()
+    const { tokwaAccount } = useAccount();
+    const dispatch = useDispatch();
 
     const Redirect = ()=>{
         setVisible(false)
+        if(tokwaAccount.events.upgradeAccount){
+            dispatch({
+                type: "SET_TOKWA_EVENTS_REDIRECT",
+                payload: {
+                    event: "upgradeAccount",
+                    value: false,
+                }
+            })
+            navigation.navigate("ToktokWalletFullyVerifiedApplication")
+            return navigation.replace("ToktokWalletFullyVerifiedApplication")
+        }
+
         navigation.navigate("ToktokWalletBDOHomePage", {provider})
         return navigation.replace("ToktokWalletBDOHomePage", {provider})
     }

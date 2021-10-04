@@ -5,12 +5,16 @@ import FIcon from 'react-native-vector-icons/Feather'
 import {useQuery} from '@apollo/react-hooks'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import {GET_CASH_IN_PROVIDERS} from 'toktokwallet/graphql'
-import {Separator,HeaderImageBackground,HeaderTitle} from 'toktokwallet/components'
+import { Separator, HeaderImageBackground, HeaderTitle } from 'toktokwallet/components'
 import { numberFormat } from 'toktokwallet/helper'
-import {useSelector} from 'react-redux'
+import { useSelector } from 'react-redux'
 import CONSTANTS from 'common/res/constants'
+import { SomethingWentWrong } from 'src/components';
+import { onErrorAlert } from 'src/util/ErrorUtility'
+import { useAlert } from 'src/hooks'
+import {YellowButton,HeaderBack } from 'src/revamp';
 
-const {COLOR , FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS
+const {COLOR , FONT_FAMILY: FONT, FONT_SIZE, SHADOW} = CONSTANTS
 
 export const ToktokWalletPaymentOptions = ({navigation,route})=> {
 
@@ -19,13 +23,13 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
     })
 
     const tokwaAccount = useSelector(state=>state.toktokWallet)
-
-    const {data: cashinmethods,error,loading} = useQuery(GET_CASH_IN_PROVIDERS,{
-            client: TOKTOK_WALLET_GRAPHQL_CLIENT,
-            fetchPolicy: 'network-only',
-            onCompleted: ({getCashInProviders})=> {
-                console.log(getCashInProviders)
-            }
+    const alert = useAlert()
+    const { data: cashinmethods, error, loading } = useQuery(GET_CASH_IN_PROVIDERS, {
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+        fetchPolicy: 'network-only',
+        onError: (error)=> {
+            onErrorAlert({alert,error})
+        }
     })
 
     if (loading) {
@@ -37,7 +41,12 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
     }
 
     if(error){
-        console.log(error)
+        return (
+            <>
+            <HeaderTitle backButtonColor={COLOR.YELLOW} label="Cash In" />
+            <SomethingWentWrong />
+            </>
+        )
     }
 
     const CashInMethod = ({item,index})=> {
@@ -73,25 +82,24 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
 
     return (
         <View style={styles.container}>
-                      <View style={styles.headings}>
-                            <HeaderImageBackground>
-                                <HeaderTitle label="Cash In"/>
-                                <View style={styles.walletBalance}>
-                                        <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>{tokwaAccount.wallet.currency.code} {numberFormat(tokwaAccount.wallet.balance ? tokwaAccount.wallet.balance : 0)}</Text>
-                                        <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Available Balance</Text>
-                                </View>
-                            </HeaderImageBackground>
-                      </View>
-
-                      <View style={styles.paymentoptions}>
-                            <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>Choose cash in method</Text>
-                      </View>
-                      <Separator/>     
-                       <FlatList 
-                            data={cashinmethods.getCashInProviders}
-                            keyExtractor={(item)=>item.id}
-                            renderItem={CashInMethod}
-                        />
+            <View style={styles.headings}>
+                <HeaderImageBackground>
+                    <HeaderTitle label="Cash In"/>
+                    <View style={styles.walletBalance}>
+                        <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>{tokwaAccount.wallet.currency.code} {numberFormat(tokwaAccount.wallet.balance ? tokwaAccount.wallet.balance : 0)}</Text>
+                        <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Available Balance</Text>
+                    </View>
+                </HeaderImageBackground>
+            </View>
+            <View style={styles.paymentoptions}>
+                <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>Choose cash in method</Text>
+            </View>
+            <Separator/>     
+            <FlatList 
+                data={cashinmethods.getCashInProviders}
+                keyExtractor={(item)=>item.id}
+                renderItem={CashInMethod}
+            />
         </View>
     )
 }

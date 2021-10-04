@@ -20,7 +20,7 @@ const TransactionInfo = ({label,value})=> (
     </View>
 )
 
-const SuccessfulCashOutModal = ({visible ,setVisible, cashoutLogParams, tokwaAccount , savedAccounts , note ,activeAccount})=> {
+const SuccessfulCashOutModal = ({visible, setVisible, cashoutLogParams, tokwaAccount, savedAccounts, note, activeAccount, screenLabel})=> {
     const navigation = useNavigation()
 
     let status
@@ -41,8 +41,14 @@ const SuccessfulCashOutModal = ({visible ,setVisible, cashoutLogParams, tokwaAcc
 
     const Proceed = ()=>  {
         // navigation.pop(3)
-        navigation.navigate("ToktokWalletHomePage")
-        navigation.replace("ToktokWalletHomePage")
+        console.log(screenLabel, "Asdasd")
+        if(screenLabel){
+            navigation.navigate("ToktokWalletFullyVerifiedApplication")
+            navigation.replace("ToktokWalletFullyVerifiedApplication")
+        } else {
+            navigation.navigate("ToktokWalletHomePage")
+            navigation.replace("ToktokWalletHomePage")
+        }
     }
     
     return (

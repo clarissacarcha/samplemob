@@ -9,7 +9,7 @@ import {useMutation, useQuery,useLazyQuery} from '@apollo/react-hooks';
 import {onError, onErrorAlert} from 'src/util/ErrorUtility';
 import { useAlert } from 'src/hooks';
 import moment from 'moment'
-import {useSelector} from 'react-redux'
+import {useSelector,useDispatch} from 'react-redux'
 import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS
@@ -26,10 +26,24 @@ const PromptMessage = ({
     setVisible,
     navigation,
     provider,
+    tokwaAccount
 })=> {
 
+    const dispatch = useDispatch()
+    
     const redirect = ()=> {
         setVisible(false)
+        if(tokwaAccount.events.upgradeAccount){
+            dispatch({
+                type: "SET_TOKWA_EVENTS_REDIRECT",
+                payload: {
+                    event: "upgradeAccount",
+                    value: false,
+                }
+            })
+            navigation.navigate("ToktokWalletFullyVerifiedApplication")
+            return navigation.replace("ToktokWalletFullyVerifiedApplication")
+        }
         navigation.navigate("ToktokWalletGcashHomePage", {provider})
         return navigation.replace("ToktokWalletGcashHomePage", {provider})
     }
@@ -225,7 +239,7 @@ export const CreateForm = ({navigation,session,mobile,provider})=> {
     return (
        <>
         <AlertOverlay visible={loading} />
-        <PromptMessage provider={provider} visible={promptVisible} setVisible={setPromptVisible} navigation={navigation}/>
+        <PromptMessage tokwaAccount={tokwaAccount} provider={provider} visible={promptVisible} setVisible={setPromptVisible} navigation={navigation}/>
         <ModalCountry visible={modalCountryVisible} setVisible={setModalCountryVisible} setCountry={setCountry}/>
         <DatePickerModal
             visible={pickerVisible}

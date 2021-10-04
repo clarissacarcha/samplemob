@@ -9,6 +9,9 @@ import { numberFormat } from 'toktokwallet/helper'
 import {Separator,TransactionDetails, ModalPaginationLoading} from 'toktokwallet/components'
 import { HeaderBack , HeaderTitle} from 'src/revamp'
 import CONSTANTS from 'common/res/constants'
+import { onErrorAlert } from 'src/util/ErrorUtility'
+import { useAlert } from 'src/hooks'
+import { SomethingWentWrong } from 'src/components'
 
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
 
@@ -58,14 +61,14 @@ const CashInLog = ({
 
     return (
         <TouchableOpacity onPress={()=>ViewTransactionDetails({refNo,refDate, transactionAmount , status , provider})} style={styles.transaction}>
-                            <View style={styles.transactionDetails}>
-                                <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Ref # {refNo}</Text>
-                                <Text style={{color: "#909294",fontSize: FONT_SIZE.M,marginTop: 0,fontFamily: FONT.REGULAR}}>{status}</Text>
-                            </View>
-                            <View style={styles.transactionAmount}>
-                                <Text style={{color: "#FCB91A",fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{transactionAmount}</Text>
-                                <Text style={{color: "#909294",fontSize: FONT_SIZE.S,alignSelf: "flex-end",marginTop: 0,fontFamily: FONT.REGULAR}}>{refDate}</Text>
-                            </View>
+            <View style={styles.transactionDetails}>
+                <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Ref # {refNo}</Text>
+                <Text style={{color: "#909294",fontSize: FONT_SIZE.M,marginTop: 0,fontFamily: FONT.REGULAR}}>{status}</Text>
+            </View>
+            <View style={styles.transactionAmount}>
+                <Text style={{color: "#FCB91A",fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{transactionAmount}</Text>
+                <Text style={{color: "#909294",fontSize: FONT_SIZE.S,alignSelf: "flex-end",marginTop: 0,fontFamily: FONT.REGULAR}}>{refDate}</Text>
+            </View>
        </TouchableOpacity>
     )
 }
@@ -91,10 +94,14 @@ export const ToktokWalletCashInLogs = ({navigation})=> {
         status: "",
     })
 
+    const alert = useAlert()
 
-    const [getCashIns, {data,error,loading}] = useLazyQuery(GET_CASH_INS, {
+    const [getCashIns, {data, error, loading}] = useLazyQuery(GET_CASH_INS, {
         fetchPolicy: "network-only",
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+        onError: (error) => {
+            onErrorAlert({ alert, error })
+        },
         onCompleted: ({getCashIns})=> {
             // setRecords(state=> {
             //     return [...state, ...getCashIns]
@@ -113,6 +120,10 @@ export const ToktokWalletCashInLogs = ({navigation})=> {
         getCashIns()
         setPageLoading(loading)
     },[])
+
+    if(error){
+        return <SomethingWentWrong onRefetch={Refetch} />
+    }
 
     return (
         <>
