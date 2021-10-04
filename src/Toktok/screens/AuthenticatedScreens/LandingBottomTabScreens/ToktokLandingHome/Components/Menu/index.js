@@ -48,13 +48,13 @@ export const Menu = ({setUserLocation}) => {
         onPress={() => navigation.push('ToktokDelivery', {setUserLocation})}
       />
       <MenuIcon label={'pabili'} icon={PabiliIcon} onPress={() => navigation.push('Pabili')} />
-      {/* <MenuIcon
+      <MenuIcon
         label={'toktokwallet'}
         icon={WalletIcon}
         onPress={() => {
           navigation.push('ToktokWalletHomePage');
         }}
-      /> */}
+      />
       <MenuIcon
         label={'profile'}
         icon={ProfileIcon}

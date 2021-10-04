@@ -29,7 +29,6 @@ export const ToktokWalletPayPandaWebView = ()=> {
     const session = useSelector(state=>state.session)
     const constants = useSelector(state=>state.constants)
 
-    console.log(route.params)
     const initialpaymentData = {
         merchant_id: route.params.merchantId,
         reference_number: route.params.refNo,
@@ -93,7 +92,7 @@ export const ToktokWalletPayPandaWebView = ()=> {
                     renderLoading={()=> <LoadingIndicator/>}
                     onNavigationStateChange={(event)=> {
 
-                        
+                        console.log(JSON.stringify(event))
                        const checkreturnurl = event.url.search(route.params.paypandaReturnUrl)
                         if(checkreturnurl != -1){
                             const {url} = event

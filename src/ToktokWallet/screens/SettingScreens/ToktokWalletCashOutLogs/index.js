@@ -9,6 +9,9 @@ import { numberFormat ,MaskLeftZero } from 'toktokwallet/helper'
 import {Separator , FilterDateModal , TransactionDetails} from 'toktokwallet/components'
 import { HeaderBack , HeaderTitle } from 'src/revamp'
 import CONSTANTS from 'common/res/constants'
+import { onErrorAlert } from 'src/util/ErrorUtility'
+import { useAlert } from 'src/hooks'
+import { SomethingWentWrong } from 'src/components'
 
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
 
@@ -103,10 +106,13 @@ export const ToktokWalletCashOutLogs = ({navigation})=> {
         amount: "",
         status: "",
     })
-
-    const [getCashOuts ,{ data ,error , loading }] = useLazyQuery(GET_CASH_OUTS , {
+    const alert = useAlert()
+    const [getCashOuts, { data, error, loading }] = useLazyQuery(GET_CASH_OUTS , {
         fetchPolicy: "network-only",
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+        onError: (error) => {
+            onErrorAlert({alert,error})
+        },
         onCompleted: ({getCashOuts})=> {
             // setRecords(state=> [...state , ...getCashOuts])
             setRecords(getCashOuts)
@@ -122,9 +128,13 @@ export const ToktokWalletCashOutLogs = ({navigation})=> {
         getCashOuts()
     },[])
 
+    if(error){
+        return <SomethingWentWrong onRefetch={Refetch} />
+    }
+
     return (
         <>
-          <TransactionDetails 
+        <TransactionDetails 
             visible={transactionVisible}
             setVisible={setTransactionVisible}
             refNo={transactionInfo.refNo}
@@ -144,37 +154,35 @@ export const ToktokWalletCashOutLogs = ({navigation})=> {
             //    </View>
             // : 
             <View style={styles.container}>
-                    <View style={styles.content}>
-                        
-                            <FlatList
-                                refreshControl={<RefreshControl refreshing={loading} onRefresh={Refetch} colors={[COLOR.YELLOW]} tintColor={COLOR.YELLOW} />}
-                                showsVerticalScrollIndicator={false}
-                                data={records}
-                                keyExtractor={item=>item.id}
-                                renderItem={({item,index})=>(
-                                    <CashOutLog 
-                                        key={`cashin-log${index}`} 
-                                        item={item}
-                                        index={index} 
-                                        itemsLength={records.length}
-                                        tokwaAccount={tokwaAccount}
-                                        setTransactionInfo={setTransactionInfo}
-                                        setTransactionVisible={setTransactionVisible}
-                                    />
-                                )}
-                                // onEndReached={()=>{
-                                //     setPageLoading(true)
-                                //     setPageIndex(state=>state+1)
-                                // }}
-                                // onEndReachedThreshold={10}
+                <View style={styles.content}>
+                    <FlatList
+                        refreshControl={<RefreshControl refreshing={loading} onRefresh={Refetch} colors={[COLOR.YELLOW]} tintColor={COLOR.YELLOW} />}
+                        showsVerticalScrollIndicator={false}
+                        data={records}
+                        keyExtractor={item=>item.id}
+                        renderItem={({item,index})=>(
+                            <CashOutLog 
+                                key={`cashin-log${index}`} 
+                                item={item}
+                                index={index} 
+                                itemsLength={records.length}
+                                tokwaAccount={tokwaAccount}
+                                setTransactionInfo={setTransactionInfo}
+                                setTransactionVisible={setTransactionVisible}
                             />
-                              {
-                                    pageLoading &&  <View style={{justifyContent:"center",alignItems:"center",paddingHorizontal: 10,}}>
-                                                        <ActivityIndicator color={COLOR.YELLOW}/>
-                                                    </View>
-                                }
-
-                    </View>
+                        )}
+                        // onEndReached={()=>{
+                        //     setPageLoading(true)
+                        //     setPageIndex(state=>state+1)
+                        // }}
+                        // onEndReachedThreshold={10}
+                    />
+                    {
+                        pageLoading &&  <View style={{justifyContent:"center",alignItems:"center",paddingHorizontal: 10,}}>
+                                            <ActivityIndicator color={COLOR.YELLOW}/>
+                                        </View>
+                    }
+                </View>
             </View>
         }
         </>

@@ -21,7 +21,7 @@ import {
 const { COLOR , FONT_FAMILY: FONT, FONT_SIZE } = CONSTANTS
 const screen = Dimensions.get('window');
 
-const MainComponent = ({navigation})=> {
+const MainComponent = ({navigation, screenLabel})=> {
     const {
         banks, 
         tokwaAccount,
@@ -50,26 +50,26 @@ const MainComponent = ({navigation})=> {
     return (
         <>
         <View style={styles.container}>
-                <View style={styles.headings}>
-                   <HeaderImageBackground>
-                       <HeaderTitle label="Fund Transfer"/>
-                       <View style={styles.walletBalance}>
-                                   <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>{tokwaAccount.wallet.currency.code} {numberFormat(tokwaAccount.wallet.balance ? tokwaAccount.wallet.balance : 0)}</Text>
-                                   <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR,marginBottom: 5}}>Available Balance</Text>
-                       </View>
-                   </HeaderImageBackground>
-               </View>
-               <Separator/>
-               <KeyboardAvoidingView
-                        behavior={Platform.OS === "ios" ? "height" : null}
-                        keyboardVerticalOffset={Platform.OS === 'ios' ? screen.height * 0.1 : screen.height * 0.25}
-                        style={{ flex: 1 }}
-                >
-               <ScrollView showsVerticalScrollIndicator={false} style={styles.transferOptions}>
-                    <MySavedAccounts selectBanks={()=>setShowAccountBankModal(true)} edit={()=>setShowChooseAccountModal(true)}/>
-                    <FundTransferForm selectBanks={()=>setShowChooseBankModal(true)}/>
-               </ScrollView>
-               </KeyboardAvoidingView>
+            <View style={styles.headings}>
+                <HeaderImageBackground>
+                    <HeaderTitle label={screenLabel ?? "Fund Transfer" }/>
+                    <View style={styles.walletBalance}>
+                        <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>{tokwaAccount.wallet.currency.code} {numberFormat(tokwaAccount.wallet.balance ? tokwaAccount.wallet.balance : 0)}</Text>
+                        <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR,marginBottom: 5}}>Available Balance</Text>
+                    </View>
+                </HeaderImageBackground>
+            </View>
+            <Separator/>
+            <KeyboardAvoidingView
+                behavior={Platform.OS === "ios" ? "height" : null}
+                keyboardVerticalOffset={Platform.OS === 'ios' ? screen.height * 0.1 : screen.height * 0.25}
+                style={{ flex: 1 }}
+            >
+            <ScrollView showsVerticalScrollIndicator={false} style={styles.transferOptions}>
+                <MySavedAccounts selectBanks={()=>setShowAccountBankModal(true)} edit={()=>setShowChooseAccountModal(true)} screenLabel={screenLabel}/>
+                <FundTransferForm selectBanks={()=>setShowChooseBankModal(true)} screenLabel={screenLabel}/>
+            </ScrollView>
+            </KeyboardAvoidingView>
         </View>
         <ModalChooseBank banks={banks} visible={showChooseBankModal} setVisible={()=>setShowChooseBankModal(false)} onPress={changeBank}/>
         <ModalChooseBank banks={banks} visible={showAccountBankModal} setVisible={()=>setShowAccountBankModal(false)} onPress={selectAccountBank}/>
@@ -78,15 +78,18 @@ const MainComponent = ({navigation})=> {
     )
 }
 
-export const ToktokWalletCashOutOtherBanks = ({navigation,route})=> {
+export const ToktokWalletCashOutOtherBanks = ({navigation, route})=> {
+
     navigation.setOptions({
         headerShown: false
-     })
-   
+    })
+
+    const screenLabel = route.params ? route.params.screenLabel : null
+
     return (
         <>
         <ContextProvider>
-            <MainComponent navigation={navigation}/>
+            <MainComponent navigation={navigation} screenLabel={screenLabel} />
          </ContextProvider>
          </>
        )

@@ -27,6 +27,7 @@ export const GET_MY_ACCOUNT = gql`
             motherId
             pinCode
             pinCodeAttempts
+            isLinked
             person {
                 id
                 firstName
@@ -83,6 +84,14 @@ export const VERIFY_FORGOT_AND_RECOVER_OTP_CODE = gql`
     query verifyForgotAndRecoverOTP($input: VerifyForgotAndRecoverOTPInput){
         verifyForgotAndRecoverOTP(input: $input){
             message
+        }
+    }
+`
+
+export const GET_CHECK_PENDING_DISBURSEMENT_ACCOUNT = gql`
+    query {
+        getCheckPendingDisbursementAccount {
+            result
         }
     }
 `
