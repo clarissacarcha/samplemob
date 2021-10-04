@@ -1,56 +1,46 @@
 import React from 'react';
-import {Text} from 'react-native';
-import {createStackNavigator} from '@react-navigation/stack';
-import MIcon from 'react-native-vector-icons/MaterialIcons';
-import FA5Icon from 'react-native-vector-icons/FontAwesome5';
+import {Text, Image} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
-import {COLOR} from 'res/variables';
+import {COLORS} from 'res/constants';
 
 import {
   ToktokFoodHome,
-  ToktokFoodOrders,
-  ToktokFoodSearch,
   ToktokFoodFavorites,
   ToktokFoodNotifications,
-  ToktokFoodRestaurantOverview,
-} from '../../../ToktokFood/screens';
+  ToktokFoodOrderTransactions,
+  ToktokFoodMe
+} from 'toktokfood/screens';
 
-const ToktokStack = createStackNavigator();
+import {home, history, notifications, favorites, me} from 'toktokfood/assets/images';
+import {home_fill, history_fill, notifications_fill, favorites_fill, me_fill} from 'toktokfood/assets/images';
+
 const ToktokFoodLandingBottomTab = createBottomTabNavigator();
 
-const getOnFocusProps = (isFocus = false) => (isFocus ? COLOR.YELLOW : COLOR.DARK);
-
-const ToktokFoodHomeStack = () => (
-  <ToktokStack.Navigator screenOptions={{headerShown: false}} initialRouteName="ToktokFoodHome">
-    <ToktokStack.Screen name="ToktokFoodSearch" component={ToktokFoodSearch} />
-    <ToktokStack.Screen name="ToktokFoodHome" component={ToktokFoodHome} />
-    <ToktokStack.Screen name="ToktokFoodRestaurantOverview" component={ToktokFoodRestaurantOverview} />
-  </ToktokStack.Navigator>
-);
+const getOnFocusProps = (isFocus = false) => (isFocus ? '#FCB81A' : COLORS.DARK);
 
 const ToktokFoodLanding = () => (
   <ToktokFoodLandingBottomTab.Navigator>
     <ToktokFoodLandingBottomTab.Screen
       name="ToktokFoodHome"
-      component={ToktokFoodHomeStack}
+      component={ToktokFoodHome}
       options={{
         tabBarLabel: ({focused}) => (
           <>
-            <FA5Icon name="utensils" color={getOnFocusProps(focused)} size={20} />
-            <Text style={{fontSize: 10, marginTop: 4, color: getOnFocusProps(focused)}}>Home</Text>
+            <Image source={focused ? home_fill : home} resizeMode="contain" style={{height: 23, width: 25}} />
+            <Text style={{fontSize: 12, marginTop: 4 }}>Home</Text>
           </>
         ),
       }}
     />
     <ToktokFoodLandingBottomTab.Screen
-      name="ToktokFoodOrders"
-      component={ToktokFoodOrders}
+      name="ToktokFoodOrderTransactions"
+      component={ToktokFoodOrderTransactions}
       options={{
         tabBarLabel: ({focused}) => (
           <>
-            <FA5Icon name="history" color={getOnFocusProps(focused)} size={20} />
-            <Text style={{fontSize: 10, marginTop: 4, color: getOnFocusProps(focused)}}>Activities</Text>
+            <Image source={focused ? history_fill : history} resizeMode="contain" style={{height: 23, width: 25}} />
+            <Text style={{fontSize: 12, marginTop: 4 }}>Activities</Text>
           </>
         ),
       }}
@@ -61,8 +51,12 @@ const ToktokFoodLanding = () => (
       options={{
         tabBarLabel: ({focused}) => (
           <>
-            <MIcon name="notifications" color={getOnFocusProps(focused)} size={25} />
-            <Text style={{fontSize: 10, marginTop: 4, color: getOnFocusProps(focused)}}>Notifications</Text>
+            <Image
+              resizeMode="contain"
+              style={{height: 23, width: 25}}
+              source={focused ? notifications_fill : notifications}
+            />
+            <Text style={{fontSize: 12, marginTop: 4 }}>Notifications</Text>
           </>
         ),
       }}
@@ -73,13 +67,26 @@ const ToktokFoodLanding = () => (
       options={{
         tabBarLabel: ({focused}) => (
           <>
-            <FA5Icon name="heart" color={getOnFocusProps(focused)} size={20} />
-            <Text style={{fontSize: 10, marginTop: 4, color: getOnFocusProps(focused)}}>Favorites</Text>
+            <Image source={focused ? favorites_fill : favorites} resizeMode="contain" style={{height: 23, width: 25}} />
+            <Text style={{fontSize: 12, marginTop: 4 }}>Favorites</Text>
+          </>
+        ),
+      }}
+    />
+    <ToktokFoodLandingBottomTab.Screen
+      name="ToktokFoodMe"
+      component={ToktokFoodMe}
+      options={{
+        tabBarLabel: ({focused}) => (
+          <>
+            <Image source={focused ? me_fill : me} resizeMode="contain" style={{height: 23, width: 20}} />
+            <Text style={{fontSize: 12, marginTop: 4 }}>Me</Text>
           </>
         ),
       }}
     />
   </ToktokFoodLandingBottomTab.Navigator>
+  
 );
 
 export default ({Navigator}) => (

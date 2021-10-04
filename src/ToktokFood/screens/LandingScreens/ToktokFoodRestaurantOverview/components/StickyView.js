@@ -1,41 +1,116 @@
-import React, {useState} from 'react';
-import {Platform, StyleSheet, View, StatusBar, Text} from 'react-native';
+import {useLazyQuery} from '@apollo/react-hooks';
+import {useRoute} from '@react-navigation/native';
+import React, {useEffect, useState, useContext} from 'react';
+import {Image, Platform, StyleSheet, Text, View} from 'react-native';
 import ReactNativeParallaxHeader from 'react-native-parallax-header';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useRoute} from '@react-navigation/native';
-import {Rating} from 'react-native-ratings';
-
+import {FONT_SIZE} from 'res/variables';
+import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
+import CustomStarRating from 'toktokfood/components/CustomStarRating';
 // Components
 // import {RestaurantList} from '../../ToktokFoodHome/components';
 import HeaderTabs from 'toktokfood/components/HeaderTabs';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
-import HeaderTitleSearchBox from './HeaderTitleSearchBox';
-import FoodList from './FoodList';
-
+import {GET_PRODUCT_CATEGORIES, CHECK_SHOP_VALIDATIONS} from 'toktokfood/graphql/toktokfood';
 // Utils
-import {moderateScale, scale, verticalScale, getDeviceWidth, getStatusbarHeight} from 'toktokfood/helper/scale';
-import {tabs} from 'toktokfood/helper/strings';
+import {
+  getDeviceWidth,
+  getStatusbarHeight,
+  isIphoneXorAbove,
+  moderateScale,
+  scale,
+  verticalScale,
+} from 'toktokfood/helper/scale';
+import {FoodList, HeaderTitleSearchBox} from '../components';
+import {VerifyContext, CategoryTabs} from '../components';
+import {useIsFocused} from '@react-navigation/native';
+import {useDispatch} from 'react-redux';
+import {useSelector} from 'react-redux';
 
 // const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 // const IS_IPHONE_X = SCREEN_HEIGHT === 812 || SCREEN_HEIGHT === 896;
 // const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? (IS_IPHONE_X ? 44 : 20) : 0;
 // const HEADER_HEIGHT = Platform.OS === 'ios' ? (IS_IPHONE_X ? 88 : 0) : 64;
 // const NAV_BAR_HEIGHT = HEADER_HEIGHT - STATUS_BAR_HEIGHT;
-
-const StickyView = () => {
-  const [offset, setOffset] = useState(0);
-  const [activeTab, setActiveTab] = useState(tabs[0]);
+export const StickyView = () => {
   const routes = useRoute();
-  const {distance, image, name, ratings, time, totalBranches} = routes.params.item;
-  const headerMinHeight = Platform.OS === 'ios' ? moderateScale(130) : moderateScale(150);
-  const headerMaxHeight = Platform.OS === 'ios' ? scale(350) : scale(370);
+  const dispatch = useDispatch();
+  const [offset, setOffset] = useState(0);
+  const [activeTab, setActiveTab] = useState({});
+  const [productCategories, setProductCategories] = useState([]);
+  const { setNavBarHeight, temporaryCart, setTemporaryCart } = useContext(VerifyContext);
+  const {customerInfo} = useSelector((state) => state.toktokFood);
 
-  const renderNavBar = () => (
-    <View style={[styles.headerWrapper, styles.navbarWrapper]}>
-      {/* <HeaderTitle /> */}
+  const {
+    id,
+    address,
+    shopname,
+    ratings,
+    banner,
+    estimatedDeliveryTime,
+    estimatedDistance,
+    logo,
+    latitude,
+    longitude,
+  } = routes.params.item;
+
+  const headerMaxHeight = Platform.OS === 'ios' ? scale(400) : scale(370);
+  const headerMinHeight = Platform.OS === 'ios' ? moderateScale(120) : moderateScale(140);
+  const isFocus = useIsFocused();
+
+  // data fetching for product tags/tabs
+  const [getProductCategories, {data, error, loading}] = useLazyQuery(GET_PRODUCT_CATEGORIES, {
+    variables: {
+      input: {
+        id: id,
+      },
+    },
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+  });
+
+  const [checkShopValidations, {data: checkShop, loading: shopValidationLoading, error: shopValidationError}] =
+    useLazyQuery(CHECK_SHOP_VALIDATIONS, {
+      client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+      fetchPolicy: 'network-only'
+    }
+  );
+
+  useEffect(() => {
+    checkShopValidations({ variables: { input: { shopId: id } }})
+  }, [isFocus])
+
+  useEffect(() => {
+    dispatch({type: 'SET_TOKTOKFOOD_SHOP_COORDINATES', payload: {latitude, longitude}});
+    getProductCategories();
+  }, []);
+
+  useEffect(() => {
+    if (data) {
+      let categories = data.getProductCategories;
+      categories.sort(function (a, b) {
+        return a.categoryName > b.categoryName;
+      });
+      setProductCategories(categories);
+      setActiveTab(categories[0]);
+    }
+  }, [data]);
+
+  const getNavBarHeight = (event) => {
+    let height = event.nativeEvent.layout.height;
+    setNavBarHeight(height);
+  };
+
+  const NavBar = () => (
+    <View onLayout={(event) => getNavBarHeight(event)} style={[styles.headerWrapper, styles.navbarWrapper]}>
       <HeaderTitleSearchBox />
       <View style={styles.tabContainer}>
-        <HeaderTabs activeTab={activeTab} tabs={tabs} setActiveTab={setActiveTab} />
+        <CategoryTabs
+          activeTab={activeTab}
+          productCategories={productCategories}
+          setActiveTab={setActiveTab}
+          loading={loading}
+        />
       </View>
     </View>
   );
@@ -43,33 +118,50 @@ const StickyView = () => {
   const renderTitle = () => (
     <View style={styles.title}>
       <View style={styles.titleContainer}>
-        <HeaderTitle title={name} />
+        <HeaderTitle title={'toktokfood'} showAddress={true} />
       </View>
       <View style={styles.titleInfo}>
         <View style={styles.content}>
-          <Text style={styles.titleText}>{name}</Text>
-          <Rating startingValue={ratings} tintColor={'white'} imageSize={13} readonly style={styles.ratings} />
-
-          <View style={styles.branchInfo}>
-            <MCIcon name="store" color={'#868686'} size={13} />
-            <Text style={styles.branches}>{totalBranches} branches</Text>
-
-            <MCIcon name="clock-outline" color={'#868686'} size={13} />
-            <Text style={styles.branches}>{time}</Text>
-
-            <MCIcon name="map-marker-outline" color={'#868686'} size={13} />
-            <Text style={styles.branches}>{distance}</Text>
+          <Image source={{uri: logo}} style={{width: scale(70), height: scale(70)}} resizeMode="contain" />
+          <View style={{flexShrink: 1, marginHorizontal: 10}}>
+            <Text numberOfLines={2} style={styles.titleText}>{`${shopname} (${address})`}</Text>
+            <CustomStarRating
+              rating={ratings ?? '0'}
+              starImgStyle={{width: scale(15), height: scale(15), marginVertical: 5}}
+              ratingStyle={{color: 'black', fontSize: FONT_SIZE.S}}
+              readOnly
+              showRating
+              rightRating
+            />
+            <View style={styles.branchInfo}>
+              <MCIcon name="clock-outline" color="#868686" size={13} />
+              <Text style={styles.branches}>{`${estimatedDeliveryTime} mins`}</Text>
+              <MCIcon name="map-marker-outline" color="#868686" size={13} />
+              <Text style={styles.branches}>{estimatedDistance}</Text>
+            </View>
+            <Text style={{ color: '#FFA700', fontSize: FONT_SIZE.S }}>
+              {checkShop?.checkShopValidations.allowPickup ? (
+                'Available for pick-up and delivery'
+              ) : (
+                'Available for delivery only' 
+              )}
+            </Text>
           </View>
         </View>
-
-        <HeaderTabs activeTab={activeTab} tabs={tabs} setActiveTab={setActiveTab} />
+        <View style={{paddingTop: 15}}>
+          <CategoryTabs
+            activeTab={activeTab}
+            productCategories={productCategories}
+            setActiveTab={setActiveTab}
+            loading={loading}
+          />
+        </View>
       </View>
     </View>
   );
 
   return (
     <>
-      {/* <StatusBar barStyle="dark-content" /> */}
       <ReactNativeParallaxHeader
         alwaysShowNavBar={false}
         alwaysShowTitle={false}
@@ -79,15 +171,16 @@ const StickyView = () => {
         extraScrollHeight={10}
         backgroundImageScale={1.1}
         title={renderTitle()}
-        backgroundImage={image}
-        backgroundColor="transparent"
+        backgroundImage={{uri: banner}}
         navbarColor="whitesmoke"
-        renderContent={() => <FoodList />}
-        renderNavBar={renderNavBar}
+        backgroundColor="transparent"
+        renderNavBar={() => <NavBar />}
+        renderContent={() => (
+          <FoodList latitude={latitude} longitude={longitude} id={id} activeTab={activeTab} tagsLoading={loading} />
+        )}
         containerStyle={styles.container}
         contentContainerStyle={styles.contentContainer}
         scrollViewProps={{
-          //   onScroll: (event) => setOffset(event.nativeEvent.contentOffset.y),
           onScrollEndDrag: (event) => setOffset(event.nativeEvent.contentOffset.y),
           onMomentumScrollEnd: (event) => setOffset(event.nativeEvent.contentOffset.y),
         }}
@@ -112,32 +205,33 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingHorizontal: moderateScale(10),
+    flexDirection: 'row',
   },
   contentContainer: {
     backgroundColor: 'white',
-    flexGrow: 1,
-    // marginTop: Platform.OS === 'ios' ? verticalScale(4) : 0,
     paddingBottom: verticalScale(15),
+    // marginTop: Platform.OS === 'ios' ? verticalScale(4) : 0,
   },
   headerWrapper: {
-    backgroundColor: 'white',
-    flex: 1,
-    shadowColor: '#000',
-    shadowOffset: {width: 1, height: 1},
-    shadowOpacity: 0.4,
-    shadowRadius: 3,
     elevation: 5,
+    shadowRadius: 3,
+    shadowOpacity: 0.4,
+    shadowColor: '#000',
+    backgroundColor: 'white',
+    shadowOffset: {width: 1, height: 1},
+    height: Platform.OS === 'ios' ? scale(120) : scale(145),
   },
   navbarWrapper: {
-    // marginTop: verticalScale(10),
+    // paddingTop: verticalScale(15),
+    // marginTop: verticalScale(15),
   },
   ratings: {
-    alignItems: 'flex-start',
     paddingVertical: 4,
+    alignItems: 'flex-start',
   },
   tabContainer: {
     paddingHorizontal: 10,
-    marginTop: verticalScale(8),
+    marginTop: Platform.OS === 'ios' ? verticalScale(12) : verticalScale(10),
   },
   title: {
     flex: 1,
@@ -146,14 +240,18 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     backgroundColor: 'rgba(255,255,255,0.5)',
-    bottom: Platform.OS === 'ios' ? verticalScale(getStatusbarHeight + 38) : verticalScale(7),
-    height: Platform.OS === 'ios' ? verticalScale(85) : verticalScale(110),
+    bottom:
+      Platform.OS === 'ios'
+        ? isIphoneXorAbove()
+          ? verticalScale(getStatusbarHeight + 37)
+          : verticalScale(getStatusbarHeight + 20)
+        : verticalScale(0),
+    height: Platform.OS === 'android' ? moderateScale(88 + getStatusbarHeight) : moderateScale(105),
   },
   titleInfo: {
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     backgroundColor: 'white',
-    // height: 100,
     paddingHorizontal: 10,
     paddingVertical: 15,
   },
@@ -162,5 +260,3 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
 });
-
-export default StickyView;

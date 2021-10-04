@@ -5,9 +5,21 @@ import {ImageBackground, StyleSheet, Platform} from 'react-native';
 import {headerBg} from 'toktokfood/assets/images';
 import {moderateScale, getStatusbarHeight} from 'toktokfood/helper/scale';
 
-const HeaderImageBackground = ({children}) => {
+const DEFAULT_IMAGE_HEIGHT = Platform.OS === 'android' ? moderateScale(110 + getStatusbarHeight) : moderateScale(125);
+const DEFAULT_CONTAINER_HEIGHT =
+  Platform.OS === 'android' ? moderateScale(135 + getStatusbarHeight) : moderateScale(145);
+
+const HeaderImageBackground = ({
+  children,
+  customSize = {container: DEFAULT_CONTAINER_HEIGHT, bgImage: DEFAULT_IMAGE_HEIGHT},
+  styleContainer
+}) => {
   return (
-    <ImageBackground imageStyle={styles.imageStyle} style={styles.walletBackGroundImage} source={headerBg}>
+    <ImageBackground
+      source={headerBg}
+      imageStyle={[styles.image, {height: customSize.bgImage}]}
+      style={[styles.container, {height: customSize.container}, styleContainer]}
+    >
       {children}
     </ImageBackground>
   );
@@ -16,12 +28,10 @@ const HeaderImageBackground = ({children}) => {
 export default HeaderImageBackground;
 
 const styles = StyleSheet.create({
-  imageStyle: {
+  image: {
     resizeMode: 'cover',
-    height: Platform.OS === 'android' ? moderateScale(103 + getStatusbarHeight) : moderateScale(105),
   },
-  walletBackGroundImage: {
+  container: {
     zIndex: 1,
-    height: Platform.OS === 'android' ? moderateScale(133 + getStatusbarHeight) : moderateScale(125),
   },
 });

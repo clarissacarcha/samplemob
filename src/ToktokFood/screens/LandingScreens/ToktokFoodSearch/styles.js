@@ -1,8 +1,8 @@
 import {StyleSheet} from 'react-native';
-import {COLOR, FONT} from 'res/variables';
+import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 
 // Utils
-import {verticalScale, scale} from 'toktokfood/helper/scale';
+import {verticalScale, scale, moderateScale} from 'toktokfood/helper/scale';
 
 export default styles = StyleSheet.create({
   container: {
@@ -11,11 +11,12 @@ export default styles = StyleSheet.create({
   },
   listContainer: {
     flex: 1,
-    paddingVertical: 15,
-    paddingHorizontal: 18,
+    paddingTop: 8,
+    paddingBottom: 15,
   },
   itemContainer: {
-    flex: 1,
+    width: scale(350),
+    alignSelf: 'center',
     borderBottomWidth: 1,
     flexDirection: 'row',
     borderColor: '#E6E6E6',
@@ -35,8 +36,9 @@ export default styles = StyleSheet.create({
     paddingHorizontal: 3,
   },
   img: {
-    height: 75,
-    width: 78,
+    height: 64,
+    width: 64,
+    borderRadius: 7,
   },
   restaurantInfo: {
     paddingEnd: 8,
@@ -64,7 +66,23 @@ export default styles = StyleSheet.create({
     paddingHorizontal: 3,
   },
   tabContainer: {
-    marginTop: 12,
+    marginTop: 18,
     paddingHorizontal: 10,
+  },
+  emptyContainer: {
+    alignItems: 'center',
+    flex: 1,
+    paddingTop: verticalScale(80)
+  },
+  emptyImg: {
+    height: moderateScale(175),
+    width: moderateScale(250),
+  },
+  emptyText: {
+    color: '#9E9E9E',
+    fontSize: FONT_SIZE.L,
+    marginTop: moderateScale(20),
+    marginHorizontal: moderateScale(50),
+    textAlign: 'center'
   },
 });

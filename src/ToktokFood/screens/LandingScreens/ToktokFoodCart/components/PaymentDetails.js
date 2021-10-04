@@ -1,0 +1,52 @@
+import React, {useState} from 'react';
+import {View, Text, TouchableOpacity, Image} from 'react-native';
+
+import styles from '../styles';
+import {wallet} from 'toktokfood/assets/images';
+
+import {COLORS} from 'res/constants';
+
+// enum implementation on JavaScript
+const PAYMENT_TYPE = {
+  CASH: 'Cash-on-Delivery',
+  TOKTOK_WALLET: 'TOKTOKWALLET',
+};
+
+const PaymentDetails = () => {
+  const [paymentMethod, setPaymentMethod] = useState(PAYMENT_TYPE.TOKTOK_WALLET);
+
+  return (
+    <>
+      <View style={styles.sectionContainer}>
+        <View style={styles.deliverWrapper}>
+          <Text style={styles.sectionTitle}>Payment Details</Text>
+        </View>
+        <View style={styles.paymentContainer}>
+          <TouchableOpacity
+            onPress={() => setPaymentMethod(PAYMENT_TYPE.TOKTOK_WALLET)}
+            style={[
+              styles.tokwaButton,
+              {borderColor: paymentMethod === PAYMENT_TYPE.TOKTOK_WALLET ? COLORS.YELLOW : COLORS.LIGHT},
+            ]}>
+            <Image style={styles.walletIcon} source={wallet} />
+            <View style={styles.tokwaButtonTextWrapper}>
+              <Text style={styles.toktokText}>toktok</Text>
+              <Text style={styles.walletText}>wallet</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            disabled
+            onPress={() => setPaymentMethod(PAYMENT_TYPE.CASH)}
+            style={[
+              styles.cashButton,
+              {borderColor: paymentMethod === PAYMENT_TYPE.CASH ? COLORS.YELLOW : COLORS.LIGHT},
+            ]}>
+            <Text style={styles.cashText}>CASH</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </>
+  );
+};
+
+export default PaymentDetails;

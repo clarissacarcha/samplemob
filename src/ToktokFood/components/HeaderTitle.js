@@ -8,19 +8,23 @@ import ContentLoader from 'react-native-easy-content-loader';
 import {FONT, FONT_SIZE, COLOR} from 'res/variables';
 import {markerIcon} from 'toktokfood/assets/images';
 
-import {getStatusbarHeight, verticalScale} from 'toktokfood/helper/scale';
+import {getStatusbarHeight, verticalScale, moderateScale} from 'toktokfood/helper/scale';
 
-const HeaderTitle = ({title = 'TokTok PH'}) => {
+const HeaderTitle = ({title = '', showAddress = false, titleOnly = false}) => {
   const navigation = useNavigation();
   const {location} = useSelector((state) => state.toktokFood);
+
+  const onSetLocationDetails = () => {
+    navigation.navigate('ToktokFoodAddressDetails');
+  };
 
   const renderText = () => (
     <View style={styles.addressContainer}>
       <Text style={styles.headerLabel}>{title}</Text>
-      <View style={styles.textAddressContainer}>
+      <View onTouchEndCapture={() => onSetLocationDetails()} style={styles.textAddressContainer}>
         <Image style={styles.addressMarkerIcon} source={markerIcon} />
         <Text style={styles.textAddress} numberOfLines={2}>
-          {location.formattedAddress}
+          {location.address}
         </Text>
       </View>
     </View>
@@ -40,13 +44,22 @@ const HeaderTitle = ({title = 'TokTok PH'}) => {
   const onBack = () => {
     navigation.goBack();
   };
-
   return (
-    <View style={styles.header}>
-      <TouchableOpacity onPress={onBack} style={styles.headerBack}>
-        <FIcon5 name="chevron-left" size={15} />
-      </TouchableOpacity>
-      <View style={styles.headerTextContainer}>{!location ? renderLoader() : renderText()}</View>
+    <View
+      style={[
+        showAddress ? styles.headerWithAddress : styles.headerWithAddress,
+        {paddingHorizontal: titleOnly ? moderateScale(14) : 0},
+      ]}>
+      {!titleOnly && (
+        <TouchableOpacity onPress={onBack} style={styles.headerBack}>
+          <FIcon5 name="chevron-left" size={15} />
+        </TouchableOpacity>
+      )}
+      {showAddress ? (
+        <View style={styles.headerTextContainer}>{!location ? renderLoader() : renderText()}</View>
+      ) : (
+        <Text style={styles.headerLabel}>{title}</Text>
+      )}
     </View>
   );
 };
@@ -54,10 +67,14 @@ const HeaderTitle = ({title = 'TokTok PH'}) => {
 export default HeaderTitle;
 
 const styles = StyleSheet.create({
-  header: {
+  headerWithAddress: {
     flexDirection: 'row',
-    paddingTop:
-      Platform.OS === 'android' ? verticalScale(getStatusbarHeight + 5) : verticalScale(getStatusbarHeight + 30),
+    paddingTop: Platform.OS === 'android' ? verticalScale(getStatusbarHeight + 15) : verticalScale(25),
+  },
+  headerWithoutAddress: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   headerBack: {
     paddingHorizontal: 20,
