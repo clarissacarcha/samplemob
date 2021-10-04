@@ -91,7 +91,7 @@ export const ToktokWalletPayPandaForm = ({navigation,route})=> {
                   amount: +amount,
                   currencyId: tokwaAccount.wallet.currency.id,
                   walletId: tokwaAccount.wallet.id,
-                  pinCode: pinCode
+                  pinCode: pinCode.toString()
               }
           }
       })
