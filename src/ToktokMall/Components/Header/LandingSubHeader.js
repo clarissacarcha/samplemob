@@ -4,6 +4,7 @@ import {useNavigation} from '@react-navigation/native';
 import {throttle} from 'lodash';
 import FIcon5 from 'react-native-vector-icons/FontAwesome';
 import AIcon from 'react-native-vector-icons/MaterialIcons';
+import AntIcon from 'react-native-vector-icons/dist/AntDesign'
 import { SearchBar } from 'react-native-elements';
 import {banner} from '../../assets';
 import { COLOR, FONT, FONT_SIZE } from '../../../res/variables'; 
@@ -103,6 +104,14 @@ export const LandingSubHeader = (props) => {
                   }}
                 />}
               </View>
+              {
+                searchValue.length > 0 ?
+                <TouchableOpacity style={{flex: 0, justifyContent: 'center', paddingRight: 8}} onPress = {() => {setSearchValue('')}}>
+                  <AntIcon name="close" color={COLOR.ORANGE} size={18}/>
+                </TouchableOpacity>
+                : <></>
+              }
+              
             </TouchableOpacity>
           </View>
           <View style={{flex: 0.5}} />

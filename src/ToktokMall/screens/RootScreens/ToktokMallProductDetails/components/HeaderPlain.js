@@ -11,7 +11,7 @@ import { FONT } from '../../../../../res/variables';
 import Animated, {interpolate, Extrapolate, useCode, set} from 'react-native-reanimated'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-export const HeaderPlain = ({value, animatedValue, cartItems, itemName }) => {
+export const HeaderPlain = ({value, animatedValue, cartItems, itemName}) => {
 
   const navigation = useNavigation()
   const HelpTooltipRef = useRef(null)
@@ -60,7 +60,7 @@ export const HeaderPlain = ({value, animatedValue, cartItems, itemName }) => {
               <CustomIcon.FeIcon name="more-horizontal" color="#F6841F" size={24} />
             </Tooltip> */}
           </View>
-          {cartItems == 0 &&
+          {/* {cartItems == 0 &&
                 <Badge
                 status="warning"
                 badgeStyle={{backgroundColor: "#FDBA1C"}}
@@ -74,7 +74,24 @@ export const HeaderPlain = ({value, animatedValue, cartItems, itemName }) => {
                 badgeStyle={{backgroundColor: "#FDBA1C"}}
                 textStyle={{fontFamily: FONT.REGULAR, fontSize: 10}}
                 containerStyle={{ position: 'absolute', top: -5, right: 5 }}
-              />}   
+              />
+              }    */}
+              {cartItems == 0 ?
+                <Badge
+                  status="warning"
+                  badgeStyle={{backgroundColor: "#FDBA1C"}}
+                  textStyle={{fontFamily: FONT.REGULAR, fontSize: 10}}
+                  containerStyle={{ position: 'absolute', top: 0, right: 10 }}
+                /> : 
+                <Badge
+                  status="warning"
+                  value={cartItems}
+                  badgeStyle={{backgroundColor: "#FDBA1C"}}
+                  textStyle={{fontFamily: FONT.REGULAR, fontSize: 10}}
+                  containerStyle={{ position: 'absolute', top: -5, right: 5 }}
+                />
+              }
+              
         </View>
       </Animated.View>
       <Animated.View style={[{height: 3, backgroundColor: '#F7F7FA'}, {opacity: translateOpacity}]} />

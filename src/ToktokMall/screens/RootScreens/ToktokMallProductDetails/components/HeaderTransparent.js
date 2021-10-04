@@ -59,21 +59,21 @@ export const HeaderTransparent = ({value, outOfStock = false, animatedValue, car
                 <CustomIcon.FeIcon name="more-horizontal" color="#fff" size={24} />
               </Tooltip>
             </View> */}
-              {cartItems == 0 &&
+              {cartItems == 0 ?
                 <Badge
-                status="warning"
-                badgeStyle={{backgroundColor: "#FDBA1C"}}
-                textStyle={{fontFamily: FONT.REGULAR, fontSize: 10}}
-                containerStyle={{ position: 'absolute', top: 0, right: 10 }}
-              />} 
-              {cartItems > 0 &&
+                  status="warning"
+                  badgeStyle={{backgroundColor: "#FDBA1C"}}
+                  textStyle={{fontFamily: FONT.REGULAR, fontSize: 10}}
+                  containerStyle={{ position: 'absolute', top: 0, right: 10 }}
+                /> : 
                 <Badge
-                status="warning"
-                value={cartItems}
-                badgeStyle={{backgroundColor: "#FDBA1C"}}
-                textStyle={{fontFamily: FONT.REGULAR, fontSize: 10}}
-                containerStyle={{ position: 'absolute', top: -5, right: 5 }}
-              />}     
+                  status="warning"
+                  value={cartItems}
+                  badgeStyle={{backgroundColor: "#FDBA1C"}}
+                  textStyle={{fontFamily: FONT.REGULAR, fontSize: 10}}
+                  containerStyle={{ position: 'absolute', top: -5, right: 5 }}
+                />
+              }  
           </View>
         </View>
         

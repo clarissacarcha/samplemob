@@ -54,6 +54,7 @@ const Item = ({data}) => {
         activeOpacity={0.5} 
         onPress={() => {
           navigation.navigate("ToktokMallProductDetails", data)
+          , console.log(data)
         }} 
         style={{
           flex: 2, 
@@ -76,9 +77,9 @@ const Item = ({data}) => {
             {data?.compareAtPrice == "0.00" && data?.otherinfo ?
 						<Text style={{fontSize: 8, alignSelf: 'flex-start', paddingHorizontal: 5, color: "#9E9E9E"}}>
 							{data?.otherinfo}	
-						</Text> : null}
+            </Text> : null}
           </View>
-          <View style={{flex: 1}}>
+          <View style={{flex: 0, left: -12}}>
             <Text style={{fontSize: 9.5, alignSelf: 'center', color: "#FDBA1C"}}>{data?.discountRate}</Text>
           </View>
         </View>

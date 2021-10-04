@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {View, Text, ImageBackground, Image, TouchableOpacity, FlatList, SectionList, StyleSheet, Dimensions, RefreshControl} from 'react-native';
+import {View, Text, ImageBackground, Image, TouchableOpacity, FlatList, SectionList, StyleSheet, Dimensions, RefreshControl, BackHandler} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
@@ -19,6 +19,8 @@ import { GET_CUSTOMER_IF_EXIST } from '../../../../../graphql/toktokmall/model';
 import Spinner from 'react-native-spinkit';
 
 import { GeolocationUtility } from '../../../../util';
+import {useFocusEffect} from '@react-navigation/native'
+
 
 //Main Components
 import CustomIcon from '../../../../Components/Icons';
@@ -71,6 +73,17 @@ const Component = ({ myCart, createMyCartSession,}) => {
       }
     })
   }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        navigation.pop(2)
+        return true
+      }
+      BackHandler.addEventListener('hardwareBackPress', onBackPress)
+      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress)
+    }, [])
+  )
 
   let AnimatedHeaderValue = new Animated.Value(0);
   const animatedHeaderValueRef = useRef(AnimatedHeaderValue)
@@ -227,9 +240,9 @@ const Component = ({ myCart, createMyCartSession,}) => {
           ]}
         />
         <View style={[{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', marginTop: 35, position: 'absolute'}]}>
-          <View style={{flex: 0, alignItems: 'center', paddingHorizontal: 15, paddingTop: 8}}>
+          <TouchableOpacity style={{flex: 0, alignItems: 'center', paddingHorizontal: 15, paddingTop: 8}} onPress = {() => {navigation.pop(2)}}>
             <FIcon5 name="chevron-left" color={COLOR.ORANGE} size={15}/>
-          </View>
+          </TouchableOpacity>
           <View style={{flex: .5}}></View>
           <View style={{flex: 10, alignItems: 'center', paddingTop: 15}}>
             <Animated.Image 

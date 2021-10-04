@@ -11,7 +11,7 @@ import AIcons from 'react-native-vector-icons/dist/Entypo'
 export const Item = ({
   index, 
   data, 
-  state = true, 
+  state = false, 
   onSelect, 
   onHold,
   item, 

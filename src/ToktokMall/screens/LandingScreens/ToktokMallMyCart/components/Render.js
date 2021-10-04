@@ -99,8 +99,11 @@ export const RenderDetails = ({
 							return {id: data.item_id}
 						})
 						setCheckedItems(allitems)
+						console.log('firing from here which is to to set status to true', toggleRoot,  storeitemselected)
 					}else{
+						setToggleRoot("shop")
 						setCheckedItems([])
+						console.log('firing from here which is to to set status to false', toggleRoot,  storeitemselected)
 					}
 
 				}}
@@ -148,7 +151,8 @@ export const RenderDetails = ({
 						key={i}
 						index = {i}
 						storeIndex={storeIndex}
-						state={toggleRoot == "shop" && storeitemselected || superSelected}
+						// state={toggleRoot == "shop" && storeitemselected || superSelected}
+						state = {storeitemselected}
 						data={data}
 						onHold={(raw) => {
 							setToggleRoot("item")

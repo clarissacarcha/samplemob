@@ -15,6 +15,7 @@ import { MergeStoreProducts } from '../../../helpers';
 import {useSelector} from 'react-redux';
 import {ApiCall, PaypandaApiCall, BuildPostCheckoutBody, BuildTransactionPayload, WalletApiCall} from "../../../helpers";
 import AsyncStorage from '@react-native-community/async-storage';
+import { Badge, Tooltip } from 'react-native-elements';
 
 import {
 
@@ -110,6 +111,7 @@ const Component =  ({
         if(response.getProductDetails.noOfStocks <= 0) setisOutOfStock(true)
       }
       // console.log(response, route.params.Id)
+      console.log(product)
     },
     onError: (err) => {
       console.log(err)
@@ -201,7 +203,7 @@ const Component =  ({
     setIsFetching(true)
     getProductDetails()
     setCartItems(CountCartItems)
-    console.log('dataaaaaaaaaaaaaaa', Id)
+    console.log('dataaaaaaaaaaaaaaa', route.params)
   }, [])  
 
   if(error) {

@@ -6,6 +6,8 @@ import { useLazyQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../graphql';
 import { GET_ADS } from '../../../graphql/toktokmall/model';
 import ContentLoader from 'react-native-easy-content-loader';
+import Swiper from 'react-native-swiper'
+import FastImage from 'react-native-fast-image'
 const SampleImage = require("../../assets/images/ads.png")
 
 const { width: screenWidth } = Dimensions.get('window')
@@ -27,6 +29,21 @@ export const AdsCarousel = (props) => {
       console.log(err)
     }
   })
+
+  const renderBanners = () => {
+    return entries.map((item, i) => {
+      return(
+        <FastImage 
+          style={{width: screenWidth - 30, height: 130, borderRadius: 5}}
+          source = {{
+            uri: item.image,
+            priority: FastImage.priority.high
+          }}
+          resizeMode = {FastImage.resizeMode.stretch}
+        />
+      )
+    })
+  }
 
   const renderItem = ({item, index}, parallaxProps) => {
 
@@ -68,20 +85,44 @@ export const AdsCarousel = (props) => {
 
   return (
     <View style={{paddingHorizontal: 15, paddingTop: 5, backgroundColor: "transparent"}}>
-      <Carousel
+      {/* <Carousel
         data={entries}
         renderItem={renderItem}
-        onSnapToItem={(index) => setActiveSlide(index) }
+        // onSnapToItem={(index) => {setActiveSlide(index), console.log(index)} }
         sliderWidth={screenWidth -30}
         itemWidth={screenWidth -30}
-        autoplay={true}
-        autoplayDelay={2500}
-        enableSnap={true}
+        // autoplay={true}
+        // autoplayDelay={2500}
+        // enableSnap={true}
         loop={true}
         hasParallaxImages={true}
-        removeClippedSubviews={true}
-      />
-      <Pagination
+        useScrollView = {true}
+        // removeClippedSubviews={true}
+      /> */}
+      <Swiper
+        width = {screenWidth -30}
+        height = {170}
+        loop = {true}
+        autoplay = {true}
+        onIndexChanged={(index) => {setActiveSlide(index)} }
+        autoplayTimeout = {3}
+        showsPagination = {true}
+        // activeDot 
+        // renderPagination = {({index}) => {
+        //   <View style={styles.paginationDotContainerStyle}>
+        //     {/* {entries.map((d, i) =>  */}
+        //     <View style={{paddingHorizontal: 8}}>
+        //       <CustomIcon.MCIcon name={index == activeSlide ? "circle" : "circle-outline"} color="#fff" size={10} />
+        //     </View>    
+        //   </View>
+        // }}
+        activeDotColor = {'#fff'}
+        dotStyle = {{borderColor: 'white', top: -20, borderWidth: 1, backgroundColor: 'rgba(0,0,0,0)', height: 10, width: 10, borderRadius: 5, left: 5}}
+        activeDotStyle = {{ top: -20,  height: 10, width: 10,  borderRadius: 5, left: 5}}
+      >
+        {renderBanners()}
+      </Swiper>
+      {/* <Pagination
         dotsLength={entries.length}
         activeDotIndex={activeSlide}
         renderDots={(activeIndex) => {
@@ -94,7 +135,7 @@ export const AdsCarousel = (props) => {
           )
         }}
         containerStyle={styles.paginationContainerStyle}        
-      />
+      /> */}
     </View>
   )
 
