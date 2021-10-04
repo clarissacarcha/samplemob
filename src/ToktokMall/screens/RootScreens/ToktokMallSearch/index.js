@@ -180,7 +180,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
           </TouchableOpacity>
         </View> 
         <FlatList 
-          data={searchHist}
+          data={searchHist.slice(0,5)}
           ItemSeparatorComponent={() => <View style={{ height: 1, backgroundColor: '#F7F7FA'}} />}
           renderItem={({item, index}) => 
             <TouchableOpacity key={index} onPress={() => {

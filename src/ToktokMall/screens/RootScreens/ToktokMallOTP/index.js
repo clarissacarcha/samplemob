@@ -43,29 +43,23 @@ export const ToktokMallOTP =  ({navigation, route}) => {
     
     setProcessing(false)
     setValidating(true)
-    const req = await WalletApiCall("verify_pin", body, true)
+    const req = await WalletApiCall("verify_pin", body, false)
     
-    if(req.responseData && req.responseData.success == 1){
+    setProcessing(false)
+    setValidating(false)
 
-      setIsInvalid(false) 
-      setValidating(false)
+    if(req.responseData && req.responseData.success == 1){
+    setValidating(false)
       if(transactionType && transactionType == "payment"){
         await ProcessPayment()
       }
-
     }else if(req.responseError && req.responseError.success == 0){
-
       // Toast.show(req.responseError.message, Toast.LONG)
-      setIsInvalid(true)           
       setValue("")
-      setValidating(false)
-
     }else if(req.responseError){
       Toast.show("Something went wrong", Toast.LONG)
-      setValidating(false)
     }else if(req.responseError == null && req.responseData == null){
       Toast.show("Something went wrong", Toast.LONG)
-      setValidating(false)
     }
   }
 
@@ -78,40 +72,29 @@ export const ToktokMallOTP =  ({navigation, route}) => {
     
     setValidating(false)
     setProcessing(true)
-    const req = await ApiCall("checkout", checkoutBody, true)
+    const req = await ApiCall("checkout", checkoutBody, false)
+    setProcessing(false)
 
     if(req.responseData && req.responseData.success == 1){
 
-      setProcessing(false)
       route.params.onSuccess()
       navigation.pop()
 
-    }else if(req.responseError && req.responseError.success == 0){
-      Toast.show(req.responseError.message, Toast.LONG)
-      setProcessing(false)
     }else if(req.responseError){
-      Toast.show("Something went wrong", Toast.LONG)
-      setProcessing(false)
+      const regex = /(<([^>]+)>)/ig;
+      Toast.show(req.responseError.message.replace(regex, ""), Toast.LONG)
     }else if(req.responseError == null && req.responseData == null){
       Toast.show("Something went wrong", Toast.LONG)
-      setProcessing(false)
     }
-
+    setProcessing(false)
   }
-
-  useEffect(() => {
-    console.log(value)
-  }, [value])
-
-  useEffect(() => {
-    console.log(route.params.data)
-  }, [])
+console.log("validating", processing, validating)
 
   return (
     <KeyboardAwareScrollView style={{backgroundColor: "#FFF"}}>
 
-      {validating && !processing && <LoadingOverlay label="Verifying" />}
-      {processing && !validating && <LoadingOverlay label="Processing" />}
+      <LoadingOverlay label="Verifying" isVisible={validating}/>
+      <LoadingOverlay label="Processing" isVisible={processing} />
 
       <ImageBackground 
         source={otpbg}

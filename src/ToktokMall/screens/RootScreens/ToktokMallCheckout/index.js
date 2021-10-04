@@ -140,7 +140,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
     onError: (err) => {
       console.log(err)
       setInitialLoading(false)
-      Toast.show("Something went wrong")
+      // Toast.show("Something went wrong")
     }
   })
 
@@ -209,6 +209,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
         // toktokid: parentSession.user.id
         toktokid: 13
       })
+      setIsLoading(false)
 
       console.log(JSON.stringify(transactionPayload))
            
@@ -237,15 +238,12 @@ const Component = ({route, navigation, createMyCartSession}) => {
             }
 
             setIsVisible(true)
-            setIsLoading(false)
           },
           onError: async (error) => {
             console.log(error)
-            setIsLoading(false)
           }
         })
 
-        setIsLoading(false)
 
       }else if(req.responseError){
 
@@ -256,13 +254,10 @@ const Component = ({route, navigation, createMyCartSession}) => {
           Toast.show(errors[0].message, Toast.LONG)
         }
         
-        setIsLoading(false)
       }else{
-        Toast.show("Something went wrong", Toast.LONG)
-        setIsLoading(false)
+        // Toast.show("Something went wrong", Toast.LONG)
       }
 
-      setIsLoading(false)
 
     }
 
@@ -351,11 +346,10 @@ const Component = ({route, navigation, createMyCartSession}) => {
   )
     
   useEffect(() => {
-    
-    init()
-    
-    // console.log("Parent Session", parentSession)
-  },[])
+    (async () => {
+      await init()
+    })();
+  },[userDefaultAddress])
 
   useEffect(() => {
     console.log("Shipping Rates Value:", shippingRates.length)
