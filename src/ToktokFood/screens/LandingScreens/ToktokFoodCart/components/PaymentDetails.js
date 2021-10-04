@@ -38,7 +38,7 @@ const PaymentDetails = ({ refreshing }) => {
       let { wallet, person } = getMyAccount;
       setToktokWallet({
         balance: wallet.balance,
-        toktokuser_id: getMyAccount.id,
+        toktokuser_id: user.id,
         currency: wallet.currency.code,
         name: `${customerInfo.firstName} ${customerInfo.lastName}`,
         notes: 'Payment by toktokfood customer',
@@ -109,7 +109,7 @@ const PaymentDetails = ({ refreshing }) => {
                     <Text style={styles.walletText}>wallet</Text>
                   </View>
                   <Text style={{ color: '#707070', fontSize: FONT_SIZE.S }}>
-                    Balance: PHP {toktokWallet?.balance.toFixed(2)}
+                    Balance: PHP {toktokWallet?.balance.toLocaleString()}.00
                   </Text>
                   </View>
                   <TouchableOpacity onPress={onPressTopUp}>

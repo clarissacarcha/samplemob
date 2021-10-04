@@ -26,7 +26,7 @@ const ToktokFoodHome = () => {
     <View style={styles.container} onLayout={(event) => getWindowDimension(event)}>
       {/* <DraggableIcon data={transactions} title="Ongoing Orders" viewHeight={viewHeight} /> */}
       <HeaderImageBackground>
-        <HeaderTitle />
+        <HeaderTitle isHome />
         <HeaderSearchBox />
       </HeaderImageBackground>
       <StickyView />

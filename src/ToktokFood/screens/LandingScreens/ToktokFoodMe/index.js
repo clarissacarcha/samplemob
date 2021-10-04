@@ -47,7 +47,6 @@ const MainComponent = () => {
 
   useEffect(() => {
     if(user && isFocus){
-      console.log(user.toktokWalletAccountId)
       if(user.toktokWalletAccountId){
         getMyAccount()
       } else {
@@ -79,7 +78,7 @@ const MainComponent = () => {
           <LoadingIndicator isFlex isLoading={true} />
         ): (
         <>
-          <HelpCentre />
+          <HelpCentre getMyAccount={() => { getMyAccount() }} />
         </>
       )}
     </View>

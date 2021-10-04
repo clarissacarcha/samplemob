@@ -16,7 +16,7 @@ import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import {GET_ALL_TEMPORARY_CART} from 'toktokfood/graphql/toktokfood';
 import {useIsFocused} from '@react-navigation/native';
 
-const HeaderTitle = ({title = '', searchBox = true, backOnly = false}) => {
+const HeaderTitle = ({title = '', searchBox = true, backOnly = false, isHome = false}) => {
   const navigation = useNavigation();
   const {location} = useSelector((state) => state.toktokFood);
   const [allTemporaryCart, setAllTemporaryCart] = useState({
@@ -82,7 +82,7 @@ const HeaderTitle = ({title = '', searchBox = true, backOnly = false}) => {
   );
 
   const onBack = () => {
-    navigation.goBack();
+    isHome ? navigation.navigate('ToktokLandingHome'):  navigation.goBack();
   };
 
   const onPressCart = () => {

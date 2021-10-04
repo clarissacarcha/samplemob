@@ -97,6 +97,7 @@ const MainComponent = () => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: ({getShippingFee}) => {
+      console.log(getShippingFee)
       setDeliveryInfo(getShippingFee);
     },
   });
