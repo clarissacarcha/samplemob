@@ -27,6 +27,7 @@ const ToktokFoodMapSearch = () => {
       longitude: route.params.coordinates.longitude,
     },
     address: '',
+    fullInfo: {},
   });
 
   const onMapMove = async (c) => {
@@ -42,12 +43,16 @@ const ToktokFoodMapSearch = () => {
         setMapInfo({
           coordinates: {latitude, longitude},
           address: result.formattedAddress,
+          fullInfo: payload,
         });
-        dispatch({type: 'SET_TOKTOKFOOD_LOCATION', payload: {...payload}});
       }
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const onConfirmAddress = () => {
+    dispatch({type: 'SET_TOKTOKFOOD_LOCATION', payload: {...mapInfo.fullInfo}});
   };
 
   const closeMap = () => {
@@ -73,7 +78,7 @@ const ToktokFoodMapSearch = () => {
           <FA5Icon name="chevron-left" size={25} color={COLOR.BLACK} />
         </TouchableOpacity>
       </View>
-      <PickUpDetails pinAddress={mapInfo.address} />
+      <PickUpDetails pinAddress={mapInfo.address} onConfirm={() => onConfirmAddress()} />
     </>
   );
 };

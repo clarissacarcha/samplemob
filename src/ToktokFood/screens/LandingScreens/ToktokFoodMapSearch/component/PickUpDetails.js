@@ -31,7 +31,7 @@ const PickUpDetails = (props) => {
     }
   };
 
-  const {pinAddress} = props;
+  const {pinAddress, onConfirm} = props;
   const navigation = useNavigation();
   const keyboardHeight = useKeyboard();
   const dispatchToStore = useDispatch();
@@ -52,22 +52,19 @@ const PickUpDetails = (props) => {
     },
   });
 
-  const [deleteShopTemporaryCart, {}] = useMutation(
-    DELETE_SHOP_TEMPORARY_CART,
-    {
-      client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-      variables: {
-        input: {
-          userid: customerInfo.userId,
-          shopid: temporaryCart?.checkHasTemporaryCart?.shopid,
-          branchid: 0,
-        },
-      },
-      onCompleted: ({deleteShopTemporaryCart}) => {
-        console.log(deleteShopTemporaryCart, 'DELETE');
+  const [deleteShopTemporaryCart, {}] = useMutation(DELETE_SHOP_TEMPORARY_CART, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    variables: {
+      input: {
+        userid: customerInfo.userId,
+        shopid: temporaryCart?.checkHasTemporaryCart?.shopid,
+        branchid: 0,
       },
     },
-  );
+    onCompleted: ({deleteShopTemporaryCart}) => {
+      console.log(deleteShopTemporaryCart, 'DELETE');
+    },
+  });
 
   const onConfirmAddress = () => {
     const {contactPerson, contactPersonNumber} = state;
@@ -77,6 +74,7 @@ const PickUpDetails = (props) => {
     if (temporaryCart?.checkHasTemporaryCart?.shopid !== 0) {
       deleteShopTemporaryCart();
     }
+    onConfirm();
     setShowSuccess(true);
   };
 
