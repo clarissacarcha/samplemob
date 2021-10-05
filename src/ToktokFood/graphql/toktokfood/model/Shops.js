@@ -56,6 +56,8 @@ export const GET_SHOP_DETAILS = gql`
       estimatedDeliveryTime
       isOpen
       allowPickup
+      email
+      mobile
     }
   }
 `;
