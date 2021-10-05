@@ -26,7 +26,7 @@ const CancelOrder = ({visibility = false, onCloseSheet, failedCancel, referenceO
     },
     {
       id: 4,
-      reason: 'Change to delivery',
+      reason: 'Change order type (Pick up or Delivery)',
     },
   ];
 
@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
     fontFamily: FONT.BOLD,
   },
   reasonWrapper: {
-    width: '85%',
+    width: '90%',
     height: verticalScale(400),
     borderRadius: 5,
     display: 'flex',
@@ -273,7 +273,7 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   itemText: {
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: FONT.REGULAR,
   },
   reasonButtonWrapper: {
