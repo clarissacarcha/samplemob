@@ -52,7 +52,7 @@ const RiderNotes = ({onNotesChange, notes = '', onPlaceOrder, showPlaceOrder = f
               onPlaceOrder()
             }}
             label='Place Order'
-            disabled={!showPlaceOrder || isDisabled}
+            disabled={showPlaceOrder || isDisabled}
           />
         </View>
       </View>

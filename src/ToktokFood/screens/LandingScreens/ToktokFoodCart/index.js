@@ -17,6 +17,7 @@ import HeaderTitle from 'toktokfood/components/HeaderTitle';
 import OrderTypeSelection from 'toktokfood/components/OrderTypeSelection';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 import Separator from 'toktokfood/components/Separator';
+import DialogMessage from 'toktokfood/components/DialogMessage';
 
 import styles from './styles';
 import {COLOR} from 'res/variables';
@@ -60,6 +61,7 @@ const MainComponent = () => {
 
   const {shopname} = route.params;
   const {location, customerInfo, shopLocation, receiver} = useSelector((state) => state.toktokFood);
+  const {user} = useSelector((state) => state.session);
   const {totalAmount, temporaryCart, toktokWallet, paymentMethod, pmLoading} = useContext(VerifyContext);
 
   const [riderNotes, setRiderNotes] = useState('');
@@ -73,6 +75,7 @@ const MainComponent = () => {
   const [toktokWalletCredit, setToktokWalletCredit] = useState({});
   const [errorMessage, setErrorMessage] = useState('');
   const [loadingWallet, setLoadingWallet] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
   const alert = useAlert();
 
   useEffect(() => {
@@ -85,8 +88,8 @@ const MainComponent = () => {
             date_today: nowDate,
             origin_lat: location.latitude,
             origin_lng: location.longitude,
-            des_lat: shopLocation.latitude,
-            des_lng: shopLocation.longitude,
+            des_lat: temporaryCart.items[0]?.shopLatitude,
+            des_lng: temporaryCart.items[0]?.shopLongitude,
           },
         },
       });
@@ -377,12 +380,30 @@ const MainComponent = () => {
   };
 
   const LoadingComponent = () => <Loader visibility={showLoader} message="Placing order..." />;
-
+  console.log(user?.toktokWalletAccountId == null)
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'position' : null} style={styles.container}>
       <HeaderImageBackground searchBox={false}>
         <HeaderTitle backOnly />
       </HeaderImageBackground>
+      <DialogMessage
+        visibility={showConfirmation}
+        title={'Proceed with Order?'}
+        messages={
+          'Are you sure you want to proceed with your order?'
+        }
+        type="warning"
+        btn1Title="Cancel"
+        btn2Title="Proceed"
+        onCloseBtn1={() => {
+          setShowConfirmation(false)
+        }}
+        onCloseBtn2={() => {
+          setShowConfirmation(false)
+          placeCustomerOrder();
+        }}
+        hasTwoButtons
+      />
       <Loader hasImage={false} loadingIndicator visibility={loadingWallet} message="loading..." />
       {paymentMethod == 'COD' ? (
         <Loader visibility={showLoader} message="Placing order..." />
@@ -444,13 +465,13 @@ const MainComponent = () => {
           <OrderTotal subtotal={totalAmount} deliveryFee={delivery.price} forDelivery={orderType === 'Delivery'} />
         )}
         <Separator />
-        <PaymentDetails refreshing={refreshing} />
+        <PaymentDetails orderType={orderType} refreshing={refreshing} />
         <Separator />
         <RiderNotes
-          showPlaceOrder={delivery != null && !pmLoading}
+          showPlaceOrder={delivery == null || pmLoading || user?.toktokWalletAccountId == null}
           notes={riderNotes}
           onNotesChange={(n) => setRiderNotes(n)}
-          onPlaceOrder={() => placeCustomerOrder()}
+          onPlaceOrder={() => setShowConfirmation(true)}
         />
         {checkShop != null && (
           <OrderTypeSelection
