@@ -196,9 +196,9 @@ const Component = ({
               <Text style={{marginLeft: 10}}>{data.soldCount || 0} sold</Text>
 
             <View style={{flex: 1.8, flexDirection: 'row', justifyContent: 'flex-end'}}>
-              <TouchableOpacity style={{marginRight: 10}} onPress={() => HandleToggleFavorites()}>
+              {/* <TouchableOpacity style={{marginRight: 10}} onPress={() => HandleToggleFavorites()}>
                 {favorite ? <CustomIcon.EIcon name="heart" size={22} color="#F6841F" /> : <CustomIcon.EIcon name="heart-outlined" size={22} color="#9E9E9E" />}
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               <TouchableOpacity onPress={() => HandleShare()}>
                 <CustomIcon.FeIcon name="share" size={20} color="#9E9E9E" />
               </TouchableOpacity>

@@ -135,6 +135,7 @@ export const ToktokMallStore = ({navigation, route}) => {
 
         <LandingSubHeader  
           placeholder="Search in Store"
+          initialValue=""
           static={true}
           onPress={() => {
             navigation.navigate("ToktokMallStoreSearch", route.params)

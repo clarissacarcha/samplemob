@@ -156,6 +156,15 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
         }}
 				onSubmit={async () => {
 					if(searchValue != ""){
+
+            if(route.params?.searchValue){
+              if(route.params?.searchValue == searchValue){
+
+                setSearchedProducts([])                
+
+              }
+            }
+
             searchProduct({
               variables: {
                 input: {
@@ -166,6 +175,8 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
                 }
               }
             })
+
+            
           }
 				}}
 			/>

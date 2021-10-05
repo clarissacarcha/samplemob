@@ -35,7 +35,9 @@ const Component = ({data, onToggleFollow, reduxActions: {updateMyFollowing}, red
               <Text style={{fontSize: 14}}>{data.shopname}</Text>
               <Text style={{fontSize: 13, color: "#9E9E9E", paddingRight: 5}}>{data.address}</Text>
             </View>
-            <View style={{flex: 4, justifyContent: 'center'}}>
+
+            {/* FOLLOW STORE BUTTON */}
+            {/* <View style={{flex: 4, justifyContent: 'center'}}>
               <TouchableOpacity onPress={() => {
                   updateMyFollowing(following ? "unfollow" : "follow", data)
                 setFollowing(!following)
@@ -43,7 +45,10 @@ const Component = ({data, onToggleFollow, reduxActions: {updateMyFollowing}, red
               }} style={{paddingVertical: 5, paddingHorizontal: 4, backgroundColor: following ? "#fff" : "#F6841F", borderRadius: 5, borderColor: following ? "#F6841F" : "", borderWidth: following ? 1 : 0, alignItems: 'center'}}>
                 <Text style={{color: following ? "#F6841F" : "#fff", fontSize: 11}}>{following ? "Following" : "Follow"}</Text>
               </TouchableOpacity>
-            </View>
+            </View> */}
+            {/* FOLLOW STORE BUTTON */}
+
+
           </View>
           {/* <View style={{flexDirection: 'row', paddingBottom: 20, paddingHorizontal: 15}}>
             <TouchableOpacity onPress={() => {
