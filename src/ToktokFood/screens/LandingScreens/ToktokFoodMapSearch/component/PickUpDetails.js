@@ -1,19 +1,26 @@
-import React, {useReducer} from 'react';
+import React, {useState, useReducer, useEffect} from 'react';
 import TextTicker from 'react-native-text-ticker';
-import {View, Text, TextInput, TouchableOpacity, StyleSheet} from 'react-native';
+import {View, Text, TextInput, TouchableOpacity, StyleSheet, Alert} from 'react-native';
 
 import {verticalScale} from 'toktokfood/helper/scale';
 import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
 
 import {useNavigation} from '@react-navigation/native';
 
-import {useDispatch, useSelector} from 'react-redux';
 import {useKeyboard} from 'toktokfood/hooks';
+import {useDispatch, useSelector} from 'react-redux';
+import DialogMessage from 'toktokfood/components/DialogMessage';
+
+import {DELETE_SHOP_TEMPORARY_CART} from 'toktokfood/graphql/toktokfood';
+import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
+import {useMutation, useLazyQuery} from '@apollo/react-hooks';
+
+import {CHECK_HAS_TEMPORARY_CART} from 'toktokfood/graphql/toktokfood';
 
 const PickUpDetails = (props) => {
   const initialState = {completeAddress: '', contactPerson: '', contactPersonNumber: ''};
 
-  function reducer(state, action) {
+  const reducer = (state, action) => {
     switch (action.type) {
       case 'SET_COMPLETE_ADDRESS':
         return {...state, completeAddress: action.value};
@@ -22,24 +29,88 @@ const PickUpDetails = (props) => {
       case 'SET_CONTACT_NUMBER':
         return {...state, contactPersonNumber: action.value};
     }
-  }
+  };
 
   const {pinAddress} = props;
   const navigation = useNavigation();
   const keyboardHeight = useKeyboard();
   const dispatchToStore = useDispatch();
+  const [showConfirmation, setShowConfirmation] = useState(true);
+  const [showSuccess, setShowSuccess] = useState(false);
   const {receiver} = useSelector((state) => state.toktokFood);
+
+  const {customerInfo} = useSelector((state) => state.toktokFood);
 
   const initState = () => (Object.keys(receiver).length > 0 ? receiver : initialState);
   const [state, dispatch] = useReducer(reducer, initialState, initState);
 
+  const [checkHasTemporaryCart, {data: temporaryCart}] = useLazyQuery(CHECK_HAS_TEMPORARY_CART, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onError: (err) => {
+      Alert.alert('', 'Something went wrong.');
+    },
+  });
+
+  const [deleteShopTemporaryCart, {}] = useMutation(
+    DELETE_SHOP_TEMPORARY_CART,
+    {
+      client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+      variables: {
+        input: {
+          userid: customerInfo.userId,
+          shopid: temporaryCart?.checkHasTemporaryCart?.shopid,
+          branchid: 0,
+        },
+      },
+      onCompleted: ({deleteShopTemporaryCart}) => {
+        console.log(deleteShopTemporaryCart, 'DELETE');
+      },
+    },
+  );
+
   const onConfirmAddress = () => {
-    dispatchToStore({type: 'SET_TOKTOKFOOD_ORDER_RECEIVER', payload: state});
-    navigation.pop();
+    const {contactPerson, contactPersonNumber} = state;
+    if (contactPerson !== '' && contactPersonNumber !== '') {
+      dispatchToStore({type: 'SET_TOKTOKFOOD_ORDER_RECEIVER', payload: state});
+    }
+    if (temporaryCart?.checkHasTemporaryCart?.shopid !== 0) {
+      deleteShopTemporaryCart();
+    }
+    setShowSuccess(true);
   };
+
+  useEffect(() => {
+    checkHasTemporaryCart({variables: {input: {userId: customerInfo.userId}}});
+  }, []);
 
   return (
     <>
+      <DialogMessage
+        visibility={showConfirmation}
+        title="Change Location"
+        messages="You will lose the items in your cart if you change location. Proceed?"
+        type="warning"
+        btn1Title="Cancel"
+        btn2Title="Proceed"
+        onCloseBtn1={() => {
+          navigation.pop();
+        }}
+        onCloseBtn2={() => {
+          setShowConfirmation(false);
+        }}
+        hasTwoButtons
+      />
+      <DialogMessage
+        visibility={showSuccess}
+        title="Change Location"
+        messages="You have successfully changed your location"
+        type="success"
+        btn1Title="OK"
+        onCloseModal={() => {
+          navigation.pop();
+        }}
+      />
       <View style={[styles.proto, styles.cartBorder, {bottom: keyboardHeight - 35}]}>
         <View style={styles.sheet}>
           <Text style={styles.pickUpAddressTitle}>Pickup Address Details</Text>

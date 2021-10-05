@@ -151,7 +151,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
         setShadowDialogMessage({
           title: 'Order Complete',
           message,
-          show: false,
+          show: true,
           type: 'success'
         });
         return;

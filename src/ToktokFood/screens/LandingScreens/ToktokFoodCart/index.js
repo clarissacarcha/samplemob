@@ -41,7 +41,6 @@ import {
   DELETE_SHOP_TEMPORARY_CART,
   CHECK_SHOP_VALIDATIONS,
 } from 'toktokfood/graphql/toktokfood';
-import {clearTemporaryCart} from 'toktokfood/helper/TemporaryCart';
 
 import moment from 'moment';
 import 'moment-timezone';
@@ -190,9 +189,9 @@ const MainComponent = () => {
           .catch(() => {
             setShowLoader(false);
             setTimeout(() => {
-              Alert.alert('', 'Something went wrong.')      
-            }, 100)
-          })
+              Alert.alert('', 'Something went wrong.');
+            }, 100);
+          });
       } else {
         // error prompt
         setShowLoader(false);
@@ -361,8 +360,6 @@ const MainComponent = () => {
     setRefreshing(action != undefined);
     checkShopValidations({variables: {input: {shopId: `${temporaryCart.items[0]?.shopid}`}}});
   };
-
-  const LoadingComponent = () => <Loader visibility={showLoader} message="Placing order..." />;
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'position' : null} style={styles.container}>
