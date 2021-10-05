@@ -43,7 +43,7 @@ const DATA = [
   }
 ]
 
-export const HelpCentre = () => {
+export const HelpCentre = ({ getMyAccount }) => {
 
   const navigation = useNavigation();
   const {location} = useSelector((state) => state.toktokFood);
@@ -53,6 +53,7 @@ export const HelpCentre = () => {
   const onCashIn = ({ balance })=> {
     // do something here
     console.log(balance)
+    getMyAccount()
   }
 
   const onPressTopUp = () => {
@@ -70,7 +71,7 @@ export const HelpCentre = () => {
     if(item.title == 'toktokwallet'){
       return (
         <>
-        {!!walletBalance && (
+        {walletBalance != null && (
           <View style={[styles.shadow, styles.boxContainer]}>
             <View style={{ flexDirection: 'row', alignItems: 'center', flexShrink: 1, flexWrap: 'wrap' }}>
               <Image source={wallet_ic} style={{ height: 25, width: 25, resizeMode: 'contain', marginRight: 10 }} />
@@ -79,7 +80,7 @@ export const HelpCentre = () => {
                 <Text style={{ fontSize: FONT_SIZE.XL, fontFamily: FONT.REGULAR, color: '#f6841f' }}>wallet</Text>
               </Text>
               <Text style={{ color: '#929191', fontSize: FONT_SIZE.M, paddingHorizontal: 5, marginVertical: 10 }}>
-                (Balance: PHP {walletBalance.toFixed(2)})
+                (Balance: PHP {walletBalance.toLocaleString()}.00)
               </Text>
             </View>
             <TouchableOpacity onPress={onPressTopUp}>

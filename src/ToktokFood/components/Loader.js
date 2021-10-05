@@ -64,10 +64,9 @@ const styles = StyleSheet.create({
   },
   messageContent: {
     fontSize: 18,
-    fontWeight: '600',
     textAlign: 'center',
     color: COLOR.ORANGE,
-    fontFamily: FONT.NORMAL,
+    fontFamily: FONT.BOLD,
   },
   paddingBottom: {
     marginBottom: moderateScale(20)

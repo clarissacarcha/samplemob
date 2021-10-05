@@ -15,6 +15,31 @@ export const POST_FUND_TRANSFER = gql`
     }
 `
 
+export const POST_REQUEST_SEND_MONEY = gql`
+    mutation postRequestSendMoney($input: PostRequestSendMoneyInput){
+        postRequestSendMoney(input:$input){
+            message
+            requestSendMoneyId
+            validator
+        }
+    }
+`
+
+export const POST_SEND_MONEY = gql`
+    mutation postSendMoney($input: PostSendMoneyInput){
+        postSendMoney(input:$input){
+            id
+            amount
+            status
+            sourceWalletId
+            destinationWalletId
+            sourcePersonId
+            destinationPersonId
+            transactionTypeId
+        }
+    }
+`
+
 export const GET_OUTGOING_TRANSFER = gql`
     query {
         getOutgoingTransfer {
@@ -51,6 +76,7 @@ externalName
 externalPhrase
 externalReferenceNumber
 externalPayload
+externalDetails
 sourcePerson {
     firstName
     middleName

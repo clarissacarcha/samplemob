@@ -21,10 +21,13 @@ import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import {GET_PRODUCT_DETAILS, GET_TEMPORARY_CART} from 'toktokfood/graphql/toktokfood';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import ChangeAddress from 'toktokfood/components/ChangeAddress';
+import { onErrorAlert } from 'src/util/ErrorUtility';
+import { useAlert } from 'src/hooks';
 
 const MainComponent = () => {
-  const routes = useRoute();
 
+  const routes = useRoute();
+  const alert = useAlert();
   const {Id, selectedAddons, selectedPrice, selectedQty, selectedNotes} = routes.params;
   const {customerInfo} = useSelector((state) => state.toktokFood);
   const {
@@ -49,6 +52,9 @@ const MainComponent = () => {
     },
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
+    onError: (error) => {
+      onErrorAlert({ alert, error })
+    },
     onCompleted: ({getProductDetails}) => {
       setProductDetails(getProductDetails)
       getTemporaryCart({
@@ -65,9 +71,8 @@ const MainComponent = () => {
   const [getTemporaryCart, {loading: getLoading, error: getError}] = useLazyQuery(GET_TEMPORARY_CART, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
-   
-    onError: (err) => {
-      console.log(err)
+    onError: (error) => {
+      onErrorAlert({ alert, error })
     },
     onCompleted: ({getTemporaryCart}) => {
       let { items, totalAmount } = getTemporaryCart
@@ -100,9 +105,11 @@ const MainComponent = () => {
         </View>
         <View style={styles.ratingsWrapper}>
           {/* <Rating startingValue={ratings} imageSize={16} readonly style={styles.ratings} /> */}
-          <Text style={styles.description} numberOfLines={3}>
-            {summary}
-          </Text>
+          { !!summary && (
+            <Text style={styles.description} numberOfLines={3}>
+              {summary}
+            </Text>
+          )}
         </View>
       </View>
     );

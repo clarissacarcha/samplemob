@@ -17,6 +17,7 @@ import HeaderTitle from 'toktokfood/components/HeaderTitle';
 import OrderTypeSelection from 'toktokfood/components/OrderTypeSelection';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 import Separator from 'toktokfood/components/Separator';
+import DialogMessage from 'toktokfood/components/DialogMessage';
 
 import styles from './styles';
 import {COLOR} from 'res/variables';
@@ -49,6 +50,8 @@ import 'moment-timezone';
 import {moderateScale} from 'toktokfood/helper/scale';
 import EnterPinCode from 'toktokfood/components/EnterPinCode';
 import {FONT, FONT_SIZE} from '../../../../res/variables';
+import { onErrorAlert } from 'src/util/ErrorUtility';
+import { useAlert } from 'src/hooks';
 
 const MainComponent = () => {
   const route = useRoute();
@@ -57,6 +60,7 @@ const MainComponent = () => {
 
   const {shopname} = route.params;
   const {location, customerInfo, shopLocation, receiver} = useSelector((state) => state.toktokFood);
+  const {user} = useSelector((state) => state.session);
   const {totalAmount, temporaryCart, toktokWallet, paymentMethod, pmLoading} = useContext(VerifyContext);
 
   const [riderNotes, setRiderNotes] = useState('');
@@ -70,6 +74,8 @@ const MainComponent = () => {
   const [toktokWalletCredit, setToktokWalletCredit] = useState({});
   const [errorMessage, setErrorMessage] = useState('');
   const [loadingWallet, setLoadingWallet] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const alert = useAlert();
 
   useEffect(() => {
     if (temporaryCart && temporaryCart.items.length > 0) {
@@ -81,8 +87,8 @@ const MainComponent = () => {
             date_today: nowDate,
             origin_lat: location.latitude,
             origin_lng: location.longitude,
-            des_lat: shopLocation.latitude,
-            des_lng: shopLocation.longitude,
+            des_lat: temporaryCart.items[0]?.shopLatitude,
+            des_lng: temporaryCart.items[0]?.shopLongitude,
           },
         },
       });
@@ -93,6 +99,7 @@ const MainComponent = () => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: ({getShippingFee}) => {
+      console.log(getShippingFee)
       setDeliveryInfo(getShippingFee);
     },
   });
@@ -125,14 +132,13 @@ const MainComponent = () => {
         setLoadingWallet(false);
         setCheckShop(checkShopValidations);
       },
-      onError: (err) => {
-        console.log(err, 'skdsd');
+      onError: (error) => {
         setRefreshing(false);
         setShowLoader(false);
         setLoadingWallet(false);
         setTimeout(() => {
-          Alert.alert('', 'Network error occurred. Please check your internet connection.');
-        }, 100);
+          onErrorAlert({alert, error})
+        }, 500)
       },
     },
   );
@@ -170,11 +176,10 @@ const MainComponent = () => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'no-cache',
     onError: (error) => {
-      const {graphQLErrors, networkError} = error;
       setShowLoader(false);
-      if (networkError) {
-        Alert.alert('', 'Network error occurred. Please check your internet connection.');
-      }
+      setTimeout(() => {
+        onErrorAlert({alert, error})
+      }, 500)
     },
     onCompleted: async ({checkoutOrder}) => {
       console.log(checkoutOrder);
@@ -184,20 +189,20 @@ const MainComponent = () => {
             setTimeout(() => {
               setShowLoader(false);
               navigation.replace('ToktokFoodDriver', {referenceNum: checkoutOrder.referenceNum});
-            }, 1000);
+            }, 5000);
           })
           .catch(() => {
             setShowLoader(false);
             setTimeout(() => {
-              Alert.alert('', 'Something went wrong.');
-            }, 100);
-          });
+              Alert.alert('', 'Something went wrong.')      
+            }, 500)
+          })
       } else {
         // error prompt
         setShowLoader(false);
         setTimeout(() => {
           Alert.alert('', 'Network error occurred. Please check your internet connection.');
-        }, 100);
+        }, 500);
       }
     },
   });
@@ -279,39 +284,51 @@ const MainComponent = () => {
     if (delivery !== null && !pmLoading) {
       paymentMethod == 'COD' ? setShowLoader(true) : setLoadingWallet(true);
       const CUSTOMER_CART = await fixOrderLogs();
-      const shopValidation = await refetch({variables: {input: {shopId: `${temporaryCart.items[0]?.shopid}`}}});
-
-      if (shopValidation.data?.checkShopValidations?.isOpen == 1) {
-        if (paymentMethod == 'TOKTOKWALLET') {
-          requestToktokWalletCredit()
-            .then(async ({data}) => {
-              let {requestTakeMoneyId, validator} = data;
-              setShowEnterPinCode(true);
-              setLoadingWallet(false);
-              setToktokWalletCredit({
-                requestTakeMoneyId,
-                validator,
-                cart: CUSTOMER_CART,
-              });
-            })
-            .catch((err) => {
-              // Show dialog error about toktokwallet request failed.
-              setLoadingWallet(false);
-              console.log(err, 'ERROR ON PLACING CART');
-              setTimeout(() => {
-                Alert.alert('', 'Something went wrong.');
-              }, 100);
-            });
-        } else {
-          placeCustomerOrderProcess(CUSTOMER_CART);
-        }
-      } else {
-        setShowLoader(false);
-        setLoadingWallet(false);
-        setTimeout(() => {
-          Alert.alert(`${shopname} is not accepting orders right now...`, '');
-        }, 100);
-      }
+      await refetch({variables: {input: {shopId: `${temporaryCart.items[0]?.shopid}`}}})
+        .then(({data}) => {
+          let { isOpen } = data.checkShopValidations;
+          if (isOpen == 1) {
+            if (paymentMethod == 'TOKTOKWALLET') {
+              requestToktokWalletCredit()
+                .then(async ({data}) => {
+                  let {requestTakeMoneyId, validator} = data;
+                  setShowEnterPinCode(true);
+                  setLoadingWallet(false);
+                  setToktokWalletCredit({
+                    requestTakeMoneyId,
+                    validator,
+                    cart: CUSTOMER_CART,
+                  });
+                })
+                .catch((err) => {
+                  // Show dialog error about toktokwallet request failed.
+                  setLoadingWallet(false);
+                  console.log(err, 'ERROR ON PLACING CART');
+                  setTimeout(() => {
+                    Alert.alert('', 'Something went wrong.');
+                  }, 500);
+                });
+            } else {
+              placeCustomerOrderProcess(CUSTOMER_CART);
+            }
+          } else {
+            setShowLoader(false);
+            setLoadingWallet(false);
+            setTimeout(() => {
+              Alert.alert(`${shopname} is not accepting orders right now...`, '');
+            }, 500);
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+          setShowLoader(false);
+          setLoadingWallet(false);
+          setTimeout(() => {
+            onErrorAlert({alert, error})
+          }, 500)
+        })
+      
+     
     }
   };
 
@@ -366,6 +383,24 @@ const MainComponent = () => {
       <HeaderImageBackground searchBox={false}>
         <HeaderTitle backOnly />
       </HeaderImageBackground>
+      <DialogMessage
+        visibility={showConfirmation}
+        title={'Proceed with Order?'}
+        messages={
+          'Are you sure you want to proceed with your order?'
+        }
+        type="warning"
+        btn1Title="Cancel"
+        btn2Title="Proceed"
+        onCloseBtn1={() => {
+          setShowConfirmation(false)
+        }}
+        onCloseBtn2={() => {
+          setShowConfirmation(false)
+          placeCustomerOrder();
+        }}
+        hasTwoButtons
+      />
       <Loader hasImage={false} loadingIndicator visibility={loadingWallet} message="loading..." />
       {paymentMethod == 'COD' ? (
         <Loader visibility={showLoader} message="Placing order..." />
@@ -427,13 +462,13 @@ const MainComponent = () => {
           <OrderTotal subtotal={totalAmount} deliveryFee={delivery.price} forDelivery={orderType === 'Delivery'} />
         )}
         <Separator />
-        <PaymentDetails refreshing={refreshing} />
+        <PaymentDetails orderType={orderType} refreshing={refreshing} />
         <Separator />
         <RiderNotes
-          showPlaceOrder={delivery != null && !pmLoading}
+          showPlaceOrder={delivery == null || pmLoading || user?.toktokWalletAccountId == null}
           notes={riderNotes}
           onNotesChange={(n) => setRiderNotes(n)}
-          onPlaceOrder={() => placeCustomerOrder()}
+          onPlaceOrder={() => setShowConfirmation(true)}
         />
         {checkShop != null && (
           <OrderTypeSelection

@@ -18,7 +18,7 @@ import {GET_ALL_TEMPORARY_CART, CHECK_HAS_TEMPORARY_CART} from 'toktokfood/graph
 export const FoodCart = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const { id, shopname } = route.params.item;
+  const { id } = route.params.item;
   const {customerInfo} = useSelector((state) => state.toktokFood);
   const isFocus = useIsFocused();
   const {temporaryCart, setTemporaryCart, setFoodCartHeight} = useContext(VerifyContext);
@@ -65,7 +65,7 @@ export const FoodCart = () => {
   };
 
   const onRestaurantNavigate = () => {
-    navigation.navigate('ToktokFoodCart', { shopId: id, userId: customerInfo.userId, shopname });
+    navigation.navigate('ToktokFoodCart', { shopId: id, userId: customerInfo.userId });
   };
 
   if(temporaryCart.cartItemsLength == 0 || cartLoading || hasTemporaryCart?.checkHasTemporaryCart.shopid == 0){

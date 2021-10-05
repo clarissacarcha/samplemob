@@ -13,6 +13,8 @@ const tempCart = `
     productName
     productLogo
     notes
+    shopLatitude
+    shopLongitude
     addonsDetails {
       id
       optionName

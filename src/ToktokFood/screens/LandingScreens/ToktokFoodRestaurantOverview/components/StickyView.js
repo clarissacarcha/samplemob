@@ -1,7 +1,7 @@
 import {useLazyQuery} from '@apollo/react-hooks';
 import {useRoute} from '@react-navigation/native';
 import React, {useEffect, useState, useContext, useRef, useMemo} from 'react';
-import {Image, Platform, StyleSheet, Text, View} from 'react-native';
+import {Image, Platform, StyleSheet, Text, View, StatusBar} from 'react-native';
 import ReactNativeParallaxHeader from 'react-native-parallax-header';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {FONT_SIZE, FONT, COLOR} from 'res/variables';
@@ -9,12 +9,13 @@ import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import CustomStarRating from 'toktokfood/components/CustomStarRating';
 import ChangeAddress from 'toktokfood/components/ChangeAddress';
 import { time } from 'toktokfood/assets/images';
+import ContentLoader from 'react-native-easy-content-loader';
 
 // Components
 // import {RestaurantList} from '../../ToktokFoodHome/components';
 import HeaderTabs from 'toktokfood/components/HeaderTabs';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
-import {GET_PRODUCT_CATEGORIES, CHECK_SHOP_VALIDATIONS} from 'toktokfood/graphql/toktokfood';
+import {GET_PRODUCT_CATEGORIES, CHECK_SHOP_VALIDATIONS, GET_SHOP_DETAILS} from 'toktokfood/graphql/toktokfood';
 // Utils
 import {
   getDeviceWidth,
@@ -28,21 +29,18 @@ import {FoodList, HeaderTitleSearchBox} from '../components';
 import {VerifyContext, CategoryTabs} from '../components';
 import {useIsFocused} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
+import LoadingIndicator from '../../../../components/LoadingIndicator';
 
-// const {height: SCREEN_HEIGHT} = Dimensions.get('window');
-// const IS_IPHONE_X = SCREEN_HEIGHT === 812 || SCREEN_HEIGHT === 896;
-// const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? (IS_IPHONE_X ? 44 : 20) : 0;
-// const HEADER_HEIGHT = Platform.OS === 'ios' ? (IS_IPHONE_X ? 88 : 0) : 64;
-// const NAV_BAR_HEIGHT = HEADER_HEIGHT - STATUS_BAR_HEIGHT;
 export const StickyView = () => {
   const routes = useRoute();
   const dispatch = useDispatch();
   const [offset, setOffset] = useState(0);
   const [activeTab, setActiveTab] = useState({});
   const [productCategories, setProductCategories] = useState([]);
+  const [shopDetails, setShopDetails] = useState({});
   const searchProduct = useRef('');
   const { setNavBarHeight, temporaryCart, setTemporaryCart } = useContext(VerifyContext);
-  const {customerInfo} = useSelector((state) => state.toktokFood);
+  const {customerInfo, location} = useSelector((state) => state.toktokFood);
 
   const {
     id,
@@ -72,6 +70,14 @@ export const StickyView = () => {
     fetchPolicy: 'network-only',
   });
 
+  const [getShopDetails, { error: shopDetailsError, loading: shopDetailsLoading}] = useLazyQuery(GET_SHOP_DETAILS, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: ({ getShopDetails }) => {
+      setShopDetails(getShopDetails)
+    }
+  });
+
   const [checkShopValidations, {data: checkShop, loading: shopValidationLoading, error: shopValidationError}] =
     useLazyQuery(CHECK_SHOP_VALIDATIONS, {
       client: TOKTOK_FOOD_GRAPHQL_CLIENT,
@@ -80,13 +86,21 @@ export const StickyView = () => {
   );
 
   useEffect(() => {
-    checkShopValidations({ variables: { input: { shopId: id } }})
-  }, [isFocus])
-
-  useEffect(() => {
-    dispatch({type: 'SET_TOKTOKFOOD_SHOP_COORDINATES', payload: {latitude, longitude}});
-    getProductCategories();
-  }, []);
+    // checkShopValidations({ variables: { input: { shopId: id } }})
+    if(isFocus && location){
+      dispatch({type: 'SET_TOKTOKFOOD_SHOP_COORDINATES', payload: {latitude, longitude}});
+      getProductCategories();
+      getShopDetails({
+        variables: {
+          input: {
+            shopId: id,
+            userLongitude: location?.longitude,
+            userLatitude: location?.latitude,
+          },
+        },
+      })
+    }
+  }, [isFocus, location])
 
   useEffect(() => {
     if (data) {
@@ -120,49 +134,68 @@ export const StickyView = () => {
     )
   }, [activeTab, productCategories, loading]);
  
-  const renderTitle = () => (
-    <View style={styles.title}>
-      <HeaderTitle searchBox={false} />
-      <View style={styles.titleInfo}>
-        <ChangeAddress styleContainer={{ paddingTop: moderateScale(10) }} />
-        <View style={styles.content}>
-          <Image source={{uri: logo}} style={styles.logo} resizeMode="cover" />
-          <View style={{flexShrink: 1, marginHorizontal: 10}}>
-            <Text numberOfLines={1} style={styles.titleText}>{`${shopname} (${address})`}</Text>
-            <CustomStarRating
-              rating={ratings ?? '0'}
-              starImgStyle={{width: scale(15), height: scale(15), marginVertical: 5}}
-              ratingStyle={{color: 'black', fontSize: FONT_SIZE.S}}
-              readOnly
-              showRating
-              rightRating
+  const renderTitle = () => {
+    return (
+      <View style={styles.title}>
+        <HeaderTitle searchBox={false} />
+        <View style={styles.titleInfo}>
+          <ChangeAddress styleContainer={{ paddingTop: moderateScale(10) }} />
+          { shopDetailsLoading || shopDetailsError || (shopDetails && Object.keys(shopDetails).length == 0) ? (
+            <ContentLoader
+              active
+              pRows={4}
+              pWidth={['40%', '80%', '30%', '60%']}
+              title={false}
+              primaryColor="#FFFFFF"
+              secondaryColor="rgba(256,186,28,0.4)"
+              aShape='square'
+              aSize='large'
+              avatar
             />
-            <View style={styles.branchInfo}>
-              <Image resizeMode="contain" source={time} style={styles.timeImg} />
-              <Text style={styles.branches}>{`${estimatedDeliveryTime} mins`}</Text>
-              <MCIcon name="map-marker-outline" color="#868686" size={13} />
-              <Text style={styles.branches}>{estimatedDistance}</Text>
+          ) : (
+            <View style={styles.content}>
+              <Image source={{uri: logo}} style={styles.logo} resizeMode="cover" />
+              <View style={{flexShrink: 1, marginHorizontal: 10}}>
+                <Text numberOfLines={1} style={styles.titleText}>
+                  {`${shopDetails.shopname} (${shopDetails.address})`}
+                </Text>
+                <CustomStarRating
+                  rating={shopDetails.ratings ?? '0'}
+                  starImgStyle={{width: scale(15), height: scale(15), marginVertical: 5}}
+                  ratingStyle={{color: 'black', fontSize: FONT_SIZE.S}}
+                  readOnly
+                  showRating
+                  rightRating
+                />
+                <View style={styles.branchInfo}>
+                  <Image resizeMode="contain" source={time} style={styles.timeImg} />
+                  <Text style={styles.branches}>{`${shopDetails.estimatedDeliveryTime} mins`}</Text>
+                  <MCIcon name="map-marker-outline" color="#868686" size={13} />
+                  <Text style={styles.branches}>{shopDetails.estimatedDistance}</Text>
+                </View>
+                <Text style={{ color: '#FFA700', fontSize: FONT_SIZE.S }}>
+                  {shopDetails?.allowPickup ? (
+                    'Available for pick-up and delivery'
+                  ) : (
+                    'Available for delivery only' 
+                  )}
+                </Text>
+              </View>
             </View>
-            <Text style={{ color: '#FFA700', fontSize: FONT_SIZE.S }}>
-              {checkShop?.checkShopValidations.allowPickup ? (
-                'Available for pick-up and delivery'
-              ) : (
-                'Available for delivery only' 
-              )}
-            </Text>
+          )}
+
+          <View style={{paddingTop: 15}}>
+            <CategoryTabs
+              activeTab={activeTab}
+              productCategories={productCategories}
+              setActiveTab={setActiveTab}
+              loading={loading}
+            />
           </View>
         </View>
-        <View style={{paddingTop: 15}}>
-          <CategoryTabs
-            activeTab={activeTab}
-            productCategories={productCategories}
-            setActiveTab={setActiveTab}
-            loading={loading}
-          />
-        </View>
       </View>
-    </View>
-  );
+    )
+  }
 
   const renderContent = useMemo(() => {
     return (
@@ -176,6 +209,7 @@ export const StickyView = () => {
 
   return (
     <>
+      <StatusBar barStyle="dark-content" />
       <ReactNativeParallaxHeader
         alwaysShowNavBar={false}
         alwaysShowTitle={false}

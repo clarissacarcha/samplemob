@@ -25,8 +25,11 @@ import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import {useDispatch, useSelector} from 'react-redux';
 import Loader from 'toktokfood/components/Loader';
 import DialogMessage from 'toktokfood/components/DialogMessage';
-
+import { onErrorAlert } from 'src/util/ErrorUtility';
+import { useAlert } from 'src/hooks';
 export const FoodCart = ({basePrice = 0.0, loading}) => {
+
+  const alert = useAlert();
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const routes = useRoute();
@@ -51,11 +54,11 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
 
   const [postTemporaryCart, {loading: postLoading, error: postError}] = useMutation(POST_TEMPORARY_CART, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-    onError: (err) => {
+    onError: (error) => {
       setLoader(false);
       setTimeout(() => {
-        Alert.alert('', 'Something went wrong.');
-      }, 100);
+        onErrorAlert({alert, error})
+      }, 100)
     },
     onCompleted: ({postTemporaryCart}) => {
       // console.log(postTemporaryCart)
@@ -64,11 +67,11 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
 
   const [patchTemporaryCartItem, {loading: patchLoading, error: patchError}] = useMutation(PATCH_TEMPORARY_CART_ITEM, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-    onError: (err) => {
+    onError: (error) => {
       setLoader(false);
       setTimeout(() => {
-        Alert.alert('', 'Something went wrong.');
-      }, 100);
+        onErrorAlert({alert, error})
+      }, 100)
     },
     onCompleted: ({patchTemporaryCartItem}) => {
       // console.log(patchTemporaryCartItem)
@@ -81,9 +84,6 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
       client: TOKTOK_FOOD_GRAPHQL_CLIENT,
       onError: (err) => {
         setLoader(false);
-        setTimeout(() => {
-          Alert.alert('', 'Something went wrong.');
-        }, 100);
       },
       onCompleted: ({deleteTemporaryCartItem}) => {
         // console.log(patchTemporaryCartItem)
@@ -113,16 +113,17 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
       client: TOKTOK_FOOD_GRAPHQL_CLIENT,
       fetchPolicy: 'network-only',
       onError: (err) => {
+        console.log('sjdjs')
         setLoader(false);
         setTimeout(() => {
-          Alert.alert('', 'Something went wrong.');
-        }, 100);
+          onErrorAlert({alert, error})
+        }, 100)
       },
     },
   );
 
   useEffect(() => {
-    if (customerInfo) {
+    if(customerInfo.userId != undefined) {
       checkHasTemporaryCart({variables: {input: {userId: customerInfo.userId}}});
     }
   }, [customerInfo]);
@@ -167,11 +168,16 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
   }, [productDetails, temporaryCart, count]);
 
   const isEqual = (obj1, obj2) => {
-    let filter = obj1.filter((b1) => {
-      return obj2.includes(b1.id);
-    });
-
-    return obj2.length == filter.length;
+    if(obj2.length > 0 && obj1.length > 0){
+      let filter = []
+      for(let x = 0; x < obj1.length; x++){
+        filter.push(obj2[x] == obj1[x].id)
+      }
+     
+      return !filter.includes(false) && obj1.length == obj2.length
+    } else {
+      return obj2.length == obj1.length
+    }
   };
 
   const onRestaurantNavigate = async () => {
@@ -194,7 +200,7 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
         });
       });
     }
-    return addons;
+    return addons.sort()
   };
 
   //PROCESS ADD TO CART
@@ -213,7 +219,8 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
       return item.productid == productDetails.Id;
     });
     let duplicateItem = await filterItemByProductId.filter((item) => {
-      return isEqual(item.addonsDetails, items.addons);
+      let sortedData = item.addonsDetails.sort((a,b) => ( a.id - b.id ));
+      return isEqual(sortedData, items.addons);
     });
 
     let editedItem = await temporaryCart.items.filter((item) => {
@@ -230,7 +237,7 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
         setLoader(true);
         return addToCart(items);
       }
-      if (hasTemporaryCart.checkHasTemporaryCart.shopid) {
+      if(hasTemporaryCart.checkHasTemporaryCart.shopid != 0) {
         setShowDialogMessage({
           show: true,
           items,
@@ -319,7 +326,8 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
         setTimeout(() => {
           setLoader(false);
           Toast.show('Added to cart', Toast.SHORT);
-          navigation.navigate('ToktokFoodRestaurantOverview');
+          navigation.navigate('ToktokFoodRestaurantOverview', 
+            { item: { id: productDetails.sysShop } });
         }, 1000);
       } else {
         setLoader(false);
