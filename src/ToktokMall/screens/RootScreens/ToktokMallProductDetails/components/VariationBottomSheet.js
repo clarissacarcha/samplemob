@@ -252,7 +252,7 @@ export const VariationBottomSheet = forwardRef(({
               <View style={{flex: 2, paddingHorizontal: 14, alignItems: 'center', justifyContent: 'center', backgroundColor: '#F8F8F8'}}>
                 <Text style={{fontSize: 16}}>{stock >= 1 ? qty : 0}</Text>
               </View>
-              <TouchableOpacity disabled={qty === stock} onPress={() => {
+              <TouchableOpacity disabled={qty === stock || qty === 200} onPress={() => {
                 let increment = qty + 1
                 if(increment <= stock){
                   setQty(increment) 
