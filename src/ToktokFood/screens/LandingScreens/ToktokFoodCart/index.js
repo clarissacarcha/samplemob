@@ -386,17 +386,15 @@ const MainComponent = () => {
       <DialogMessage
         visibility={showConfirmation}
         title={'Proceed with Order?'}
-        messages={
-          'Are you sure you want to proceed with your order?'
-        }
+        messages={'Are you sure you want to proceed with your order?'}
         type="warning"
         btn1Title="Cancel"
         btn2Title="Proceed"
         onCloseBtn1={() => {
-          setShowConfirmation(false)
+          setShowConfirmation(false);
         }}
         onCloseBtn2={() => {
-          setShowConfirmation(false)
+          setShowConfirmation(false);
           placeCustomerOrder();
         }}
         hasTwoButtons
@@ -465,6 +463,7 @@ const MainComponent = () => {
         <PaymentDetails orderType={orderType} refreshing={refreshing} />
         <Separator />
         <RiderNotes
+          forDelivery={orderType === 'Delivery'}
           showPlaceOrder={delivery == null || pmLoading || user?.toktokWalletAccountId == null}
           notes={riderNotes}
           onNotesChange={(n) => setRiderNotes(n)}
