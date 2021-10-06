@@ -117,6 +117,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
           input: {
             search: route.params.origin ? "" : route.params.searchValue,
             origin: route.params?.origin ? `${route.params.origin}` : "all",
+            category: route.params?.categoryId ? route.params?.categoryId : null,
             offset: offset,
             limit: 10
           }
@@ -170,6 +171,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
                 input: {
                   search: searchValue,
                   origin: route.params?.origin ? route.params.origin : "all",
+                  category: route.params?.categoryId ? route.params?.categoryId : null,
                   offset: 0,
                   limit: 10
                 }
@@ -207,6 +209,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
                   input: {
                     search: item,
                     origin: route.params?.origin ? route.params.origin : "all",
+                    category: route.params?.categoryId ? route.params?.categoryId : null,
                     offset: 0,
                     limit: 10
                   }
@@ -251,6 +254,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
                 input: {
                   search: route.params?.origin ? "" : route.params.searchValue,
                   origin: route.params?.origin ? route.params.origin : "all",
+                  category: route.params?.categoryId ? route.params?.categoryId : null,
                   offset: searchedProducts.length,
                   limit: 10
                 }
@@ -288,6 +292,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
                         input: {
                           search: item.tags,
                           origin: route.params?.origin ? route.params.origin : "all",
+                          category: route.params?.categoryId ? route.params?.categoryId : null,
                           offset: 0,
                           limit: 10
                         }
