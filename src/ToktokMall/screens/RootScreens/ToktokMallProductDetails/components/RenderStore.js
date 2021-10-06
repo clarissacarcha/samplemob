@@ -42,7 +42,7 @@ export const RenderStore = ({data, loading}) => {
           pWidth = {'45%'}
         ></ContentLoader> */}
         <TouchableOpacity activeOpacity={1} onPress={() => {
-            navigation.navigate("ToktokMallStore", {id: data?.id})
+            navigation.navigate("ToktokMallStore", {id: data?.id, searchValue: ""})
           }} style={{flexDirection: 'row', justifyContent: 'center'}}>
           <View style={{flex: 2, alignItems: 'flex-start', justifyContent: 'center'}}>
 						<Image source={getStoreLogo(data?.profileImages?.logo)} style={{width: 50, height: 50, resizeMode: 'stretch', borderRadius: 30}} />

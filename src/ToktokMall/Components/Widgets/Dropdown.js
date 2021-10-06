@@ -32,7 +32,7 @@ const Item = ({data, onPress}) => {
     <>
       <TouchableOpacity 
 				onPress={() => { 
-					onPress(data?.categoryName)
+					onPress({id: data?.id, name: data?.categoryName})
         }} 
 				style={{flexDirection: 'row', paddingVertical: 20, paddingHorizontal: 15}}
 			>
@@ -116,7 +116,7 @@ export const Dropdown = ({loading = false, data, onSelect, onRefresh}) => {
   	if(onSelect){
       onSelect(value)
     }else{
-      navigation.navigate("ToktokMallSearch", {category: data, searchValue: value})
+      navigation.navigate("ToktokMallSearch", {categoryId: value.id, origin: "category", searchValue: value.name})
     }
   }
 

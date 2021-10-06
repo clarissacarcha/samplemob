@@ -22,6 +22,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
 
   const [searchPath, setSearchPath] = useState("all")
   const [emptySearch, setEmptySearch] = useState(false)
+  const [suggest, setSuggest] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [searchValue, setSearchValue] = useState('')
   const [searchHist, setSearchHist] = useState([])
@@ -39,17 +40,20 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
 
         setSearchedProducts(temp)
         setEmptySearch(true)
+        setSuggest(false)
 
       }else if(response && response.searchProduct.length > 0){
 
         temp = temp.concat(response.searchProduct)
         setSearchedProducts(temp)
         setEmptySearch(false)
+        setSuggest(false)
         
       }else if(response && response.searchProduct.length == 0){
 
         setSearchedProducts([])
         setEmptySearch(true)
+        setSuggest(false)
 
       }
       
@@ -75,11 +79,13 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
     fetchPolicy: 'network-only',
     onCompleted: async (response) => {      
       if(response.searchProductSuggestions){
+        setSuggest(true)
         setSuggestions(response.searchProductSuggestions)
       }
     },
     onError: (err) => {
       console.log(err)
+      setSuggest(false)
       setIsLoading(false)
     }
   })
@@ -111,6 +117,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
           input: {
             search: route.params.origin ? "" : route.params.searchValue,
             origin: route.params?.origin ? `${route.params.origin}` : "all",
+            category: route.params?.categoryId ? route.params?.categoryId : null,
             offset: offset,
             limit: 10
           }
@@ -150,16 +157,28 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
         }}
 				onSubmit={async () => {
 					if(searchValue != ""){
+
+            if(route.params?.searchValue){
+              if(route.params?.searchValue == searchValue){
+
+                setSearchedProducts([])                
+
+              }
+            }
+
             searchProduct({
               variables: {
                 input: {
                   search: searchValue,
                   origin: route.params?.origin ? route.params.origin : "all",
+                  category: route.params?.categoryId ? route.params?.categoryId : null,
                   offset: 0,
                   limit: 10
                 }
               }
             })
+
+            
           }
 				}}
 			/>
@@ -190,6 +209,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
                   input: {
                     search: item,
                     origin: route.params?.origin ? route.params.origin : "all",
+                    category: route.params?.categoryId ? route.params?.categoryId : null,
                     offset: 0,
                     limit: 10
                   }
@@ -202,7 +222,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
         />
         </>}
 
-        {error || !loading && !loading2 && searchValue != "" && searchedProducts.length == 0 && emptySearch && 
+        {error || !loading && !loading2 && !suggest && searchValue != "" && searchedProducts.length == 0 && emptySearch && 
 					// <View style={{paddingHorizontal: 15, paddingVertical: 15}}>
 					// 	<Text style={{color: "#9E9E9E", fontSize: 14}}>No results found</Text>
 					// </View>
@@ -234,6 +254,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
                 input: {
                   search: route.params?.origin ? "" : route.params.searchValue,
                   origin: route.params?.origin ? route.params.origin : "all",
+                  category: route.params?.categoryId ? route.params?.categoryId : null,
                   offset: searchedProducts.length,
                   limit: 10
                 }
@@ -252,7 +273,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
             />
           </View>}
 
-        {suggestions.length > 0 && searchValue != "" && !loading && 
+        {suggestions.length > 0 && suggest && searchValue != "" && !loading && 
         <>
           <View style={{paddingHorizontal: 20, paddingVertical: 15}}>
             <Text style={{fontFamily: FONT.BOLD}}>Suggestions</Text>
@@ -271,6 +292,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
                         input: {
                           search: item.tags,
                           origin: route.params?.origin ? route.params.origin : "all",
+                          category: route.params?.categoryId ? route.params?.categoryId : null,
                           offset: 0,
                           limit: 10
                         }

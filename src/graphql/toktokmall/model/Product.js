@@ -44,6 +44,7 @@ export const GET_TOP_PRODUCTS = gql`
 				soldCount
 			  noOfStocks
 			  discountRate
+				compareAtPrice
 				images {
 					arrangement
 					filename
