@@ -94,11 +94,14 @@ const RenderItem = ({item}) => {
             </View>
           </View> */}
           <View style={{flexDirection: 'row'}}>
-            <View style={{flex: 1}}>
-              <Text style={{fontSize: 13, color: "#F6841F"}}><Price amount={item.price} /></Text>
+            <View style={{flex: 2.3}}>
+              <Text style={{fontSize: 12, color: "#F6841F"}}><Price amount={item.price} /></Text>
             </View>
-            <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end'}}>
-              <Text style={{fontSize: 10}}>{item.soldCount || 0} sold</Text>
+            <View style={{flex: 2, justifyContent: 'center'}}>
+              {item.discountRate && item.discountRate != "" ?  <Text style={{fontSize: 9, color: "#9E9E9E", textDecorationLine: 'line-through'}}><Price amount={item.compareAtPrice} /></Text> : <></>}
+            </View>
+            <View style={{flex: 1.3, justifyContent: 'center', alignItems: 'flex-end'}}>
+              <Text style={{fontSize: 9}}>{item.soldCount || 0} sold</Text>
             </View>
           </View>
         </TouchableOpacity>

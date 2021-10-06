@@ -237,13 +237,12 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
           renderItem={({item, index}) => 
             <TouchableOpacity key={index} onPress={() => {
               setSearchValue(item)
-              searchProduct({
+              searchShopProduct({
                 variables: {
                   input: {
+                    shopId: route.params.id,
                     search: item,
-                    origin: route.params?.origin ? route.params.origin : "all",
-                    category: route.params?.categoryId ? route.params?.categoryId : null,
-                    offset: 0,
+                    offset: searchedProducts.length,
                     limit: 10
                   }
                 }
