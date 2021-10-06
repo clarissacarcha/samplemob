@@ -69,7 +69,7 @@ const Component = ({ myCart, createMyCartSession,}) => {
       if(value != null){
         createMyCartSession('set', parsedValue)
       }else {
-        createMyCartSession('set', testdata)
+        createMyCartSession('set', [])
       }
     })
   }, []);
@@ -172,9 +172,9 @@ const Component = ({ myCart, createMyCartSession,}) => {
   // }
   
   const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
-    const paddingBottom = 0;
+    const paddingBottom = 20;
     // console.log(layoutMeasurement.height + contentOffset.y, contentSize.height - paddingBottom)
-    return layoutMeasurement.height + contentOffset.y == contentSize.height - paddingBottom;
+    return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingBottom;
   }
 
   const onScroll = (event) => {
@@ -183,7 +183,8 @@ const Component = ({ myCart, createMyCartSession,}) => {
     //   alert('close to bottom')
     // }
     // console.log(event.nativeEvent)
-    if(isCloseToBottom(event.nativeEvent)){
+    if(isCloseToBottom(event)){
+      console.log('close to bottom')
       alert('close to bottom')
     }
     // Animated.event(
@@ -306,13 +307,14 @@ const Component = ({ myCart, createMyCartSession,}) => {
           //   }
           // )
           ({nativeEvent}) => {
-            Animated.event([{nativeEvent: {contentOffset: {y: AnimatedHeaderValue}}}], {useNativeDriver: false})
-            Animated.event([{nativeEvent: {contentOffset: {y: AnimatedHeaderValue}}}], {useNativeDriver: false})
             if(isCloseToBottom(nativeEvent)){
               setscrollendreached(true)
             }else{
               setscrollendreached(false)
             }
+            Animated.event([{nativeEvent: {contentOffset: {y: AnimatedHeaderValue}}}], {useNativeDriver: false})
+            Animated.event([{nativeEvent: {contentOffset: {y: AnimatedHeaderValue}}}], {useNativeDriver: false})
+            
           }
 
           //   // animatedHeaderValueRef.setValue(nativeEvent.contentOffset.y)
