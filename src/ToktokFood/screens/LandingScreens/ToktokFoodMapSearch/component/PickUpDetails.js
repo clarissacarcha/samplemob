@@ -9,13 +9,13 @@ import {useNavigation} from '@react-navigation/native';
 
 import {useKeyboard} from 'toktokfood/hooks';
 import {useDispatch, useSelector} from 'react-redux';
-import DialogMessage from 'toktokfood/components/DialogMessage';
 
 import {DELETE_SHOP_TEMPORARY_CART} from 'toktokfood/graphql/toktokfood';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {useMutation, useLazyQuery} from '@apollo/react-hooks';
 
 import {CHECK_HAS_TEMPORARY_CART} from 'toktokfood/graphql/toktokfood';
+import DialogMessage from 'toktokfood/components/DialogMessage';
 
 const PickUpDetails = (props) => {
   const initialState = {completeAddress: '', contactPerson: '', contactPersonNumber: ''};
@@ -35,7 +35,6 @@ const PickUpDetails = (props) => {
   const navigation = useNavigation();
   const keyboardHeight = useKeyboard();
   const dispatchToStore = useDispatch();
-  const [showConfirmation, setShowConfirmation] = useState(true);
   const [showSuccess, setShowSuccess] = useState(false);
   const {receiver} = useSelector((state) => state.toktokFood);
 
@@ -84,21 +83,6 @@ const PickUpDetails = (props) => {
 
   return (
     <>
-      <DialogMessage
-        visibility={showConfirmation}
-        title="Change Location"
-        messages="You will lose the items in your cart if you change location. Proceed?"
-        type="warning"
-        btn1Title="Cancel"
-        btn2Title="Proceed"
-        onCloseBtn1={() => {
-          navigation.pop();
-        }}
-        onCloseBtn2={() => {
-          setShowConfirmation(false);
-        }}
-        hasTwoButtons
-      />
       <DialogMessage
         visibility={showSuccess}
         title="Change Location"
