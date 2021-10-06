@@ -9,7 +9,6 @@ import {moderateScale} from 'toktokfood/helper/scale';
 
 import DialogMessage from 'toktokfood/components/DialogMessage';
 
-import {DELETE_SHOP_TEMPORARY_CART} from 'toktokfood/graphql/toktokfood';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {useLazyQuery} from '@apollo/react-hooks';
 
@@ -39,8 +38,13 @@ const ChangeAddress = ({title = '', searchBox = true, backOnly = false, styleCon
   const [checkHasTemporaryCart, {data: temporaryCart}] = useLazyQuery(CHECK_HAS_TEMPORARY_CART, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
-    onCompleted: (r) => {
-      console.log(r);
+    onCompleted: (cart) => {
+      if (cart?.checkHasTemporaryCart?.shopid !== 0) {
+        console.log(cart?.checkHasTemporaryCart?.shopid);
+        setShowConfirmation(true);
+      } else {
+        onSetLocationDetails();
+      }
     },
     onError: (err) => {
       Alert.alert('', 'Something went wrong.');
@@ -48,16 +52,8 @@ const ChangeAddress = ({title = '', searchBox = true, backOnly = false, styleCon
   });
 
   const showConfirmationDialog = () => {
-    if (temporaryCart?.checkHasTemporaryCart?.shopid !== 0) {
-      setShowConfirmation(true);
-    } else {
-      onSetLocationDetails();
-    }
-  };
-
-  useEffect(() => {
     checkHasTemporaryCart({variables: {input: {userId: customerInfo.userId}}});
-  }, []);
+  };
 
   return (
     <>
