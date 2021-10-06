@@ -261,11 +261,13 @@ const MainComponent = () => {
     tokwaVerifyPin(pinCode)
       .then((data) => {
         if (data.success == 1) {
-          const {requestTakeMoneyId, validator, cart} = toktokWalletCredit;
+          const {requestTakeMoneyId, validator, cart, orderRefNum, hashAmount} = toktokWalletCredit;
           const WALLET = {
             pin: pinCode,
             request_id: requestTakeMoneyId,
             pin_type: validator,
+            reference_num: orderRefNum,
+            hash_amount: hashAmount
           };
           setShowLoader(true);
           placeCustomerOrderProcess(cart, WALLET);
@@ -290,14 +292,16 @@ const MainComponent = () => {
           if (isOpen == 1) {
             if (paymentMethod == 'TOKTOKWALLET') {
               requestToktokWalletCredit()
-                .then(async ({data}) => {
-                  let {requestTakeMoneyId, validator} = data;
+                .then(async (request) => {
+                  let {requestTakeMoneyId, validator} = request.data;
                   setShowEnterPinCode(true);
                   setLoadingWallet(false);
                   setToktokWalletCredit({
                     requestTakeMoneyId,
                     validator,
                     cart: CUSTOMER_CART,
+                    orderRefNum: request.orderRefNum,
+                    hashAmount: request.hash_amount
                   });
                 })
                 .catch((err) => {
@@ -343,6 +347,7 @@ const MainComponent = () => {
   const hasCustomReceiver = () => Object.keys(receiver).length > 0;
 
   const placeCustomerOrderProcess = async (CUSTOMER_CART, WALLET) => {
+
     const CUSTOMER = {
       name: hasCustomReceiver() ? receiver.contactPerson : `${customerInfo.firstName} ${customerInfo.lastName}`,
       contactnumber: hasCustomReceiver() ? receiver.contactPersonNumber : mobileNumberFormat(),
@@ -366,6 +371,7 @@ const MainComponent = () => {
       order_logs: CUSTOMER_CART,
     };
     const data = WALLET ? {...WALLET, ...CUSTOMER, ...ORDER} : {...CUSTOMER, ...ORDER};
+    console.log(JSON.stringify(data))
     postCustomerOrder({
       variables: {
         input: data,

@@ -27,7 +27,7 @@ import Loader from 'toktokfood/components/Loader';
 import DialogMessage from 'toktokfood/components/DialogMessage';
 import { onErrorAlert } from 'src/util/ErrorUtility';
 import { useAlert } from 'src/hooks';
-export const FoodCart = ({basePrice = 0.0, loading}) => {
+export const FoodCart = ({loading}) => {
 
   const alert = useAlert();
   const dispatch = useDispatch();
@@ -48,10 +48,13 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
     productDetails,
     requiredOptions,
     temporaryCart,
+    selectedVariants,
+    basePrice
   } = useContext(VerifyContext);
   const {customerInfo} = useSelector((state) => state.toktokFood);
   const [showDialogMessage, setShowDialogMessage] = useState({show: false, items: []});
-
+  const [tempData, setTempData] = useState({});
+ 
   const [postTemporaryCart, {loading: postLoading, error: postError}] = useMutation(POST_TEMPORARY_CART, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     onError: (error) => {
@@ -130,10 +133,12 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
 
   useEffect(() => {
     if (productDetails && Object.keys(productDetails).length > 0) {
-      if (productDetails.maxQtyIsset == 1) {
+      let data = productDetails.variants.length > 0 ? selectedVariants : productDetails;
+      setTempData(data)
+      if (data?.maxQtyIsset == 1) {
         if (temporaryCart.items.length > 0) {
           const hasItem = temporaryCart.items.filter((item) => {
-            return item.productid == productDetails.Id;
+            return item.productid == data.Id;
           });
           if (hasItem.length > 0) {
             let currentQty = 0;
@@ -141,31 +146,25 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
               currentQty += item.quantity;
             });
             let isEditQtty = selectedItemId == undefined ? count.quantity + currentQty : count.quantity;
-            let exceededQty = currentQty == productDetails.maxQty ? currentQty : isEditQtty;
-            let disableMaxQtyCondition =
-              selectedItemId == undefined
-                ? exceededQty > productDetails.maxQty
-                : selectedQty + (productDetails.maxQty - currentQty) == count.quantity;
-            let disableAddCondition =
-              selectedItemId == undefined
-                ? exceededQty > productDetails.maxQty - 1
-                : selectedQty + (productDetails.maxQty - currentQty) == count.quantity;
-
+            let exceededQty = currentQty == data.maxQty ? currentQty : isEditQtty;
+            let disableMaxQtyCondition = selectedItemId == undefined ? exceededQty > data.maxQty : selectedQty + (data.maxQty - currentQty) == count.quantity;
+            let disableAddCondition = selectedItemId == undefined ? exceededQty > data.maxQty - 1 : selectedQty + (data.maxQty - currentQty) == count.quantity;
+            console.log(disableAddCondition)
             setDisableMaxQty(
-              (currentQty == productDetails.maxQty && selectedItemId == undefined) ||
+              (currentQty == data.maxQty && selectedItemId == undefined) ||
                 (selectedItemId == undefined && disableMaxQtyCondition),
             );
             setDisableAdd(disableAddCondition);
             return;
           }
         }
-        setDisableMaxQty(count.quantity > productDetails.maxQty);
-        setDisableAdd(count.quantity > productDetails.maxQty - 1);
+        setDisableMaxQty(count.quantity > data.maxQty);
+        setDisableAdd(count.quantity > data.maxQty - 1);
       } else {
-        setDisableAdd(productDetails.stocks == count.quantity);
+        setDisableAdd(data?.stocks == count.quantity);
       }
     }
-  }, [productDetails, temporaryCart, count]);
+  }, [productDetails, temporaryCart, count, selectedVariants]);
 
   const isEqual = (obj1, obj2) => {
     if(obj2.length > 0 && obj1.length > 0){
@@ -209,15 +208,17 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
       userid: customerInfo.userId,
       shopid: +productDetails.sysShop,
       branchid: 0,
-      productid: productDetails.Id,
+      productid: productDetails.variants.length > 0 ? selectedVariants?.Id : productDetails.Id,
       quantity: count.quantity,
       addons: extractAddons(),
       notes: notes,
     };
-
+  
     let filterItemByProductId = await temporaryCart.items.filter((item) => {
-      return item.productid == productDetails.Id;
+      // console.log(item.productid)
+      return item.productid == items.productid;
     });
+    // return null
     let duplicateItem = await filterItemByProductId.filter((item) => {
       let sortedData = item.addonsDetails.sort((a,b) => ( a.id - b.id ));
       return isEqual(sortedData, items.addons);
@@ -308,7 +309,7 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
         setTimeout(() => {
           setLoader(false);
           Toast.show('Added to cart', Toast.SHORT);
-          navigation.navigate('ToktokFoodRestaurantOverview');
+          navigation.navigate('ToktokFoodRestaurantOverview', { item: { id: productDetails.sysShop } });
         }, 1000);
       } else {
         setLoader(false);
@@ -326,8 +327,7 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
         setTimeout(() => {
           setLoader(false);
           Toast.show('Added to cart', Toast.SHORT);
-          navigation.navigate('ToktokFoodRestaurantOverview', 
-            { item: { id: productDetails.sysShop } });
+          navigation.navigate('ToktokFoodRestaurantOverview', { item: { id: productDetails.sysShop } });
         }, 1000);
       } else {
         setLoader(false);
@@ -384,31 +384,35 @@ export const FoodCart = ({basePrice = 0.0, loading}) => {
         hasTwoButtons
       />
       <View style={[styles.container, styles.cartBorder]}>
-        {productDetails.maxQtyIsset == 1 && (
+        {tempData?.maxQtyIsset == 1 && (
           <Text
             style={{
               color: '#FFA700',
               fontSize: FONT_SIZE.M,
               fontFamily: FONT.BOLD,
-            }}>{`Max quantity per checkout: ${productDetails.maxQty}`}</Text>
+            }}>{`Max quantity per checkout: ${tempData?.maxQty}`}</Text>
         )}
         <View style={styles.foodItemTotalWrapper}>
           <View style={styles.countWrapper}>
             <TouchableOpacity
               disabled={count.quantity < 2}
               style={[styles.countButtons, {backgroundColor: count.quantity < 2 ? COLOR.LIGHT : COLOR.MEDIUM}]}
-              onPress={() => updateCartTotal('REMOVE')}>
+              onPress={_.debounce(() => updateCartTotal('REMOVE'), 100, { leading: true, trailing: false })}>
               <MIcon name="remove" color={COLOR.BLACK} size={25} />
             </TouchableOpacity>
             <Text style={styles.countText}>{count.quantity}</Text>
             <TouchableOpacity
-              disabled={disableAdd}
-              style={[styles.countButtons, {backgroundColor: COLOR.ORANGE, opacity: disableAdd ? 0.5 : 1}]}
-              onPress={() => updateCartTotal()}>
+              disabled={(disableAdd || count.quantity >= tempData?.stocks)}
+              style={[
+                styles.countButtons,
+                {backgroundColor: COLOR.ORANGE, opacity: (disableAdd || count.quantity >= tempData?.stocks) ? 0.5 : 1}
+              ]}
+              onPress={_.debounce(() => updateCartTotal(), 100, { leading: true, trailing: false })}
+            >
               <MIcon name="add" color={COLOR.WHITE} size={20} />
             </TouchableOpacity>
           </View>
-          <Text style={styles.total}>Subtotal: {totalPrice.toFixed(2)}</Text>
+          <Text style={styles.total}>Total: {totalPrice.toFixed(2)}</Text>
         </View>
         <TouchableOpacity
           disabled={loading || postLoading || patchLoading || deleteLoading || hasCartLoading || disabledMaxQty}

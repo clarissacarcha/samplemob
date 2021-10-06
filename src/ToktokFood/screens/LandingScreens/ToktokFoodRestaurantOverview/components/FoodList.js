@@ -88,7 +88,7 @@ export const FoodList = (props) => {
           }
         ]}
       >
-        <View>
+        <View style={{ flex: 1 }}>
           <Text style={styles.listText}>{item.itemname}</Text>
           <Text style={styles.listPrice}>PHP {item.price.toFixed(2)}</Text>
           { !!item.summary && <Text numberOfLines={1} style={styles.summary}>{item.summary}</Text> }
@@ -167,6 +167,8 @@ const styles = StyleSheet.create({
   summary: {
     fontFamily: FONT.REGULAR,
     fontSize: FONT_SIZE.M,
+    flexShrink: 1,
+    paddingRight: 10
   },
   listPrice: {
     color: '#FF6200',

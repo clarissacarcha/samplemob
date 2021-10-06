@@ -81,14 +81,14 @@ export default styles = StyleSheet.create({
   },
   orderInfoWrapper: {
     flex: 1,
-    minHeight: 90,
     paddingHorizontal: scale(6),
+    flexShrink: 1
   },
   orderText: {
     color: COLOR.BLACK,
     fontFamily: FONT.REGULAR,
     fontSize: FONT_SIZE.M,
-    marginVertical: verticalScale(1),
+    marginVertical: verticalScale(2),
   },
   alsoOrderList: {
     flex: 1,

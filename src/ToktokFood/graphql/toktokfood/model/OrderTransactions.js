@@ -69,6 +69,8 @@ const transaction = `
       Id
       itemname
       filename
+      parentProductId
+      parentProductName
     }
   }
 `;

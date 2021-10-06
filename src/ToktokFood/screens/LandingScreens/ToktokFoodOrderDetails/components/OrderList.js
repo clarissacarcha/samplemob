@@ -25,17 +25,22 @@ const DisplayAddons = ({ addOns }) => {
 const OrderList = ({ orderDetails }) => {
 
   const renderItem = ({item}) => {
+    let { parentProductId, filename, itemname, parentProductName} = item.productDetails
     let parseAddOns = item.addons.length > 0 ? JSON.parse(item.addons) : item.addons;
+    let productName = parentProductId ? parentProductName : itemname
     return(
       <View style={styles.listContainer}> 
-        <Image style={styles.listImg} source={{ uri: item.productDetails.filename }} />
+        { item.productDetails.filename && (
+          <Image style={styles.listImg} source={{ uri: item.productDetails.filename }} />
+        )}
         <View style={styles.list}>
           <View style={styles.listInfo}>
-            <Text style={styles.listName}>{item.productDetails.itemname}</Text>
+            <Text style={styles.listName}>{productName}</Text>
             <Text style={styles.seeAll}>{`PHP ${item.amount.toFixed(2)}`}</Text>
           </View>
           <View>
             <Text style={styles.notes}>x{item.quantity}</Text>
+            { parentProductId && <Text style={styles.notes}>{`Variant: ${itemname}`}</Text>}
             { !!parseAddOns && parseAddOns.length > 0 && <DisplayAddons addOns={parseAddOns} /> }
             { !!item.notes && <Text style={styles.notes}>{`Notes: ${JSON.parse(item.notes)}`}</Text> }
           </View>

@@ -7,7 +7,8 @@ import RadioButton from 'toktokfood/components/RadioButton';
 import {moderateScale, scale, verticalScale} from 'toktokfood/helper/scale';
 import {VerifyContext} from '.';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
-export const Variations = ({basePrice, item}) => {
+import Separator from 'toktokfood/components/Separator';
+export const Variations = ({ data, productId }) => {
   const {
     totalPrice,
     setTotalPrice,
@@ -19,8 +20,19 @@ export const Variations = ({basePrice, item}) => {
     requiredOptions,
     setRequiredOptions,
     notes,
-    setNotes
+    setNotes,
+    selectedVariants,
+    setSelectedVariants,
+    productDetails,
+    basePrice
   } = useContext(VerifyContext);
+
+  useEffect(() => {
+    if(data.variants.length > 0){
+      let selectedVar = productId ? data.variants.find((val) => { return productId == val.Id }) : data.variants[0]
+      setSelectedVariants(selectedVar)
+    }
+  }, [data.variants])
 
   useEffect(() => {
     if (optionsAmount) {
@@ -31,7 +43,7 @@ export const Variations = ({basePrice, item}) => {
         return count.quantity * amount;
       });
     }
-  }, [optionsAmount]);
+  }, [optionsAmount, basePrice]);
 
   useEffect(() => {
     if (Object.values(selected).length > 0) {
@@ -47,11 +59,11 @@ export const Variations = ({basePrice, item}) => {
     }
   }, [selected]);
 
-  const onValueChange = useCallback(({item, options, index, temp}) => {
+  const onValueChange = useCallback(({item, optionLogs, index, temp}) => {
     let opt = {
-      addon_id: parseInt(options.id),
-      addon_name: options.optionName,
-      addon_price: options.optionPrice,
+      addon_id: parseInt(optionLogs.id),
+      addon_name: optionLogs.optionName,
+      addon_price: optionLogs.optionPrice,
     };
     let hasSelected = selected[item.optionName];
     if (hasSelected) {
@@ -87,50 +99,88 @@ export const Variations = ({basePrice, item}) => {
     }
   }, [selected])
 
-  const renderVariants = ({item}) => {
+  const renderOptions = ({item}) => {
     let temp = [];
     if(!(requiredOptions[item.optionName]) && item.isRequired){
       setRequiredOptions(prev => { return { ...prev, [item.optionName]: item.isRequired }})
     }
+   
     return (
-      <>
-        <View style={styles.variations}>
+      <View style={styles.variations}>
+        <View style={styles.flexCenter}>
           <Text style={styles.variationTitle}>
-            Choose your {item.optionName.toLowerCase()} (Pick atleast 1)
+            {item.optionName.toLowerCase()} (Choose at least 1)
           </Text>
-          <Text>{item.isRequired ? 'REQURED' : 'OPTIONAL'}</Text>
-          {item.options.map((options, i) => {
-            let index = -1;
-            if (selected[item.optionName]) {
-              index = selected[item.optionName].findIndex((v) => {
-                return v.addon_id == options.id;
-              });
-            }
-            return (
-              <View style={styles.variationsWrapper}>
-                <View style={styles.checkBoxWrapper}>
-                  <RadioButton
-                    onValueChange={(c) => {
-                      onValueChange({item, options, index, temp});
-                    }}
-                    selected={index > -1}
-                  />
-                  <Text style={styles.checkBoxText}>{options.optionName}</Text>
-                </View>
-                <Text style={styles.variationPrice}>+ {options.optionPrice.toFixed(2)}</Text>
-              </View>
-            );
-          })}
+          <View style={styles.requiredContainer}>
+            <Text style={styles.requiredText}>{item.isRequired ? 'Required' : 'Optional'}</Text>
+          </View>
         </View>
-      </>
+       
+        {item.optionLogs.map((optionLogs, i) => {
+          let index = -1;
+          if (selected[item.optionName]) {
+            index = selected[item.optionName].findIndex((v) => {
+              return v.addon_id == optionLogs.id;
+            });
+          }
+          return (
+            <View style={styles.variationsWrapper}>
+              <RadioButton
+                isMultiple={item.noOfSelection > 1}
+                onValueChange={(c) => {
+                  onValueChange({item, optionLogs, index, temp});
+                }}
+                name={optionLogs.optionName}
+                selected={index > -1}
+              />
+              <Text style={styles.variationPrice}>+ {optionLogs.optionPrice.toFixed(2)}</Text>
+            </View>
+          );
+        })}
+      </View>
     );
   };
 
+  const renderVariants = ({ item }) => {
+    return (
+      <View style={styles.variantWrapper}>
+        <View style={styles.variantSubWrapper}>
+          <RadioButton
+            onValueChange={(c) => {
+              setSelectedVariants(item)
+            }}
+            name={item.itemname}
+            selected={item.Id == selectedVariants?.Id}
+          />
+        </View>
+          <Text style={styles.variationPrice}>PHP {item.price.toFixed(2)}</Text>
+      </View>
+    )
+  }
+  
   return (
     <>
-      <FlatList data={item} renderItem={renderVariants} style={{flex: 1}}/>
+      { data.variants && data.variants.length > 0 && (
+        <>
+        <View style={styles.variantContainer}>
+          <Text style={styles.variantTitle}>Variants</Text>
+          <FlatList data={data.variants} renderItem={renderVariants} style={{flex: 1}}/>
+        </View>
+        <Separator />
+        </>
+      )}
+      <FlatList
+        data={data.options}
+        renderItem={renderOptions}
+        style={{flex: 1}}
+      />
       <View style={styles.variations}>
-        <Text style={styles.variationTitle}>Special Instructions (Optional)</Text>
+        <View style={styles.instructionContainer}>
+          <Text style={styles.variationTitle}>Special Instructions</Text>
+          <View style={styles.requiredContainer}>
+            <Text style={styles.requiredText}>Optional</Text>
+          </View>
+        </View>
         <TextInput
           value={notes}
           multiline={true}
@@ -151,17 +201,15 @@ const styles = StyleSheet.create({
     backgroundColor: COLOR.WHITE,
   },
   variations: {
-    // flex: 1,
-    paddingBottom: 10,
     borderBottomWidth: 8,
     borderBottomColor: COLOR.LIGHT,
-    paddingHorizontal: scale(18),
-    paddingVertical: verticalScale(12),
+    paddingHorizontal: verticalScale(15),
+    paddingVertical: verticalScale(15),
   },
   variationsWrapper: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: verticalScale(10),
+    paddingTop: verticalScale(10)
   },
   checkBox: {
     transform: Platform.OS === 'android' ? [{scaleX: 1}, {scaleY: 1}] : [{scaleX: 0.8}, {scaleY: 0.8}],
@@ -172,22 +220,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   checkBoxText: {
-    marginLeft: 8,
     color: COLOR.BLACK,
     fontSize: FONT_SIZE.L,
     fontFamily: FONT.REGULAR,
     textDecorationLine: 'none',
   },
   variationTitle: {
-    marginBottom: 8,
+    color: COLOR.BLACK,
+    fontFamily: FONT.BOLD,
+    fontSize: FONT_SIZE.L,
+    textTransform: 'capitalize'
+  },
+  variantTitle: {
     color: COLOR.BLACK,
     fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.L,
   },
   variationPrice: {
-    color: COLOR.BLACK,
-    fontFamily: FONT.BOLD,
-    fontSize: 17,
+    fontFamily: FONT.REGULAR,
+    fontSize: FONT_SIZE.L,
   },
   input: {
     height: moderateScale(90),
@@ -202,4 +253,40 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     paddingHorizontal: scale(15),
   },
+  flexCenter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  requiredContainer: {
+    borderWidth: 1,
+    borderColor: '#FFA700',
+    padding: 5,
+    borderRadius: 5
+  },
+  requiredText: {
+    color: '#FFA700',
+    fontSize: FONT_SIZE.S
+  },
+  variantContainer: {
+    paddingHorizontal: verticalScale(15),
+    paddingVertical: verticalScale(15)
+  },
+  variantWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingTop: 10
+  },
+  instructionContainer: {
+    flexDirection: 'row', 
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingBottom: 10
+  },
+  variantSubWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexShrink: 1
+  }
 });

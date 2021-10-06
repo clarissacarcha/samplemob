@@ -39,6 +39,8 @@ export default class CheckOutOrderHelper {
               validator
               message
             }
+            hash_amount
+            orderRefNum
           }
         }`,
       },

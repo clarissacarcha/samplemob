@@ -28,7 +28,7 @@ const MainComponent = () => {
 
   const routes = useRoute();
   const alert = useAlert();
-  const {Id, selectedAddons, selectedPrice, selectedQty, selectedNotes} = routes.params;
+  const {Id, parentProductId, selectedItemId, selectedAddons, selectedPrice, selectedQty, selectedNotes} = routes.params;
   const {customerInfo} = useSelector((state) => state.toktokFood);
   const {
     totalPrice,
@@ -39,7 +39,9 @@ const MainComponent = () => {
     setCount,
     temporaryCart,
     setTemporaryCart,
-    setNotes
+    setNotes,
+    selectedVariants,
+    setBasePrice
   } = useContext(VerifyContext);
   const [bannerLoaded, setBannerLoaded] = useState(false);
   const stickyHeaderIndices = bannerLoaded ? [2] : [3];
@@ -47,7 +49,7 @@ const MainComponent = () => {
   const [getProductDetails, {data, loading, error}] = useLazyQuery(GET_PRODUCT_DETAILS, {
     variables: {
       input: {
-        product_id: Id
+        product_id: parentProductId ? parentProductId : Id
       },
     },
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
@@ -57,6 +59,7 @@ const MainComponent = () => {
     },
     onCompleted: ({getProductDetails}) => {
       setProductDetails(getProductDetails)
+      console.log(+getProductDetails.sysShop, customerInfo.userId)
       getTemporaryCart({
         variables: {
           input: {
@@ -76,6 +79,8 @@ const MainComponent = () => {
     },
     onCompleted: ({getTemporaryCart}) => {
       let { items, totalAmount } = getTemporaryCart
+      // console.log(getTemporaryCart)
+
       setTemporaryCart({
         cartItemsLength: items.length,
         totalAmount,
@@ -83,6 +88,20 @@ const MainComponent = () => {
       })
     },
   });
+
+  useEffect(() => {
+    if(productDetails && Object.keys(productDetails).length > 0){
+      let basePrice = 0
+      if(productDetails?.variants.length > 0){
+        if(selectedVariants && Object.keys(selectedVariants).length > 0){
+          basePrice = parseInt(selectedVariants?.price)
+        }
+      } else {
+        basePrice = productDetails.price
+      }
+      setBasePrice(basePrice)
+    }
+  }, [selectedVariants, productDetails])
 
   useEffect(() => {
     if(selectedAddons){ setSelected(selectedAddons) }
@@ -156,10 +175,14 @@ const MainComponent = () => {
                 style={[styles.banner]}
               />
               <ItemDetails />
-              <Variations item={productDetails.variants} basePrice={productDetails?.price} />
+              <Variations
+                productId={selectedItemId ? Id : ''}
+                data={productDetails}
+                basePrice={productDetails?.price}
+              />
             </ScrollView>
           </KeyboardAvoidingView>
-          <FoodCart loading={loading} basePrice={productDetails?.price} />
+          <FoodCart loading={loading} basePrice={0} />
         </>
       )}
     </View>

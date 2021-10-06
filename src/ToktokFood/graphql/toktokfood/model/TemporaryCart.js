@@ -15,6 +15,8 @@ const tempCart = `
     notes
     shopLatitude
     shopLongitude
+    parentProductId
+    parentProductName
     addonsDetails {
       id
       optionName

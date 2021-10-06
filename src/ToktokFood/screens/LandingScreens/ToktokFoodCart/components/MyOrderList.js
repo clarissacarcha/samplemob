@@ -50,9 +50,10 @@ const MyOrderList = () => {
     });
   };
 
-  const onPressEdit = async(Id, selectedAddons, selectedItemId, selectedPrice, selectedQty, selectedNotes) => {
+  const onPressEdit = async(Id, parentProductId, selectedAddons, selectedItemId, selectedPrice, selectedQty, selectedNotes) => {
     navigation.navigate('ToktokFoodItemDetails', {
       Id,
+      parentProductId,
       selectedAddons,
       selectedItemId,
       selectedPrice,
@@ -63,22 +64,37 @@ const MyOrderList = () => {
 
 
   const renderFoodItem = ({ item }) => {
-    const {productid, id, quantity, totalAmount, productLogo, productName, addonsDetails, notes} = item;
+    const {
+      productid,
+      id,
+      parentProductId,
+      quantity,
+      totalAmount,
+      productLogo,
+      productName,
+      addonsDetails,
+      notes,
+      parentProductName
+    } = item;
     const addons = arrangeAddons(addonsDetails);
+    console.log(parentProductName)
     return (
       <View style={styles.orderItemContainer}>
-        <Image style={styles.foodItemImage} source={{uri: productLogo}} />
+        { productLogo && (
+          <Image style={styles.foodItemImage} source={{uri: productLogo}} />
+        )}
         <View style={styles.orderInfoWrapper}>
           <Text style={(styles.orderText, {fontFamily: FONT.BOLD, fontSize: FONT_SIZE.L})}>
-            {productName}
+            {parentProductId ? parentProductName : productName}
           </Text>
           <Text style={[styles.orderText]}>{`x${quantity}`}</Text>
+          {parentProductId && <Text style={styles.orderText}>{`Variant: ${productName}`}</Text>}
           { addonsDetails.length > 0 && displayAddOns(addons)}
           {!!notes && <Text style={styles.orderText}>{`Notes: ${notes}`}</Text>}
         </View>
         <View style={styles.priceWrapper}>
           <Text
-            onPress={() => {onPressEdit(productid, addons, id, totalAmount, quantity, notes)}}
+            onPress={() => {onPressEdit(productid, parentProductId, addons, id, totalAmount, quantity, notes)}}
             style={styles.actionText}
           >
             Edit
