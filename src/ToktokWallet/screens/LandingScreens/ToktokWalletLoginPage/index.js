@@ -4,7 +4,7 @@ import {SomethingWentWrong} from 'src/components'
 import CONSTANTS from 'common/res/constants'
 import {GET_USER_TOKTOK_WALLET_DATA} from 'toktokwallet/graphql'
 import {useLazyQuery, useQuery} from '@apollo/react-hooks'
-import {useSelector} from 'react-redux'
+import {useSelector,useDispatch} from 'react-redux'
 import AsyncStorage from '@react-native-community/async-storage'
 import JailMonkey from 'jail-monkey'
 
@@ -26,6 +26,7 @@ export const ToktokWalletLoginPage = ({navigation,route})=> {
     const session = useSelector(state=> state.session)
     const [isRooted,setIsRooted] = useState(false)
     const [isDebugMode,setIsDebugMode] = useState(false)
+    const dispatch = useDispatch()
 
     const CheckIfDeviceIsRooted = async ()=> {
         const isDebugMode = await JailMonkey.isDebuggedMode()
@@ -48,6 +49,14 @@ export const ToktokWalletLoginPage = ({navigation,route})=> {
             // if( getUserToktokWalletData.accountToken ) {
             //     await AsyncStorage.setItem('toktokWalletAccountToken', getUserToktokWalletData.accountToken);
             // }
+
+            if(getUserToktokWalletData.toktokWalletAccountId && !session.user.toktokWalletAccountId){
+                // UPDATE SESSION HERE
+                dispatch({
+                    type: "UPDATE_TOKWA_ACCOUNT_ID_SESSION",
+                    payload: getUserToktokWalletData.toktokWalletAccountId
+                })
+            }
 
             if( getUserToktokWalletData.enterpriseToken ){
                 await AsyncStorage.setItem('toktokWalletEnterpriseToken', getUserToktokWalletData.enterpriseToken);

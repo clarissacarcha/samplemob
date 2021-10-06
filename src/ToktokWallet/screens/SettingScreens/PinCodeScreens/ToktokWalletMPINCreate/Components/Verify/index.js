@@ -50,7 +50,7 @@ export const Verify = ({pageIndex,setPageIndex})=> {
             }
             if(graphQLErrors[0]?.message == "Invalid MPincode"){
                 const attempt = graphQLErrors[0].payload.remainingAttempts
-                return setErrorMessage(`Incorrect MPIN. You can try ${numWordArray[attempt]} (${attempt}) more ${attempt == 1 ? 'time' : 'times'} before your account will be temporarily blocked.`)
+                return setErrorMessage(`Incorrect MPIN. You can try ${numWordArray[attempt]} (${attempt}) more ${attempt == 1 ? 'time' : 'times'} before your account will be blocked.`)
             }
 
             onErrorAlert({alert,error})

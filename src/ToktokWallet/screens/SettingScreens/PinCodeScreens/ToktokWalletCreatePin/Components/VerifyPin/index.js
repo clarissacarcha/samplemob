@@ -100,7 +100,7 @@ export const VerifyPin = ({pageIndex,setPageIndex})=> {
                             onSubmitEditing={pinCode.length == 6 ? onSubmit: null}
                         />
                          {
-                            pinCodeAttempt > 0 && <Text style={{fontFamily: FONT.REGULAR,color:"red",alignSelf:"center",fontSize: 12,textAlign:'center'}}>Incorrect PIN. You can try {numWordArray[pinCodeAttempt]} ({pinCodeAttempt}) more {pinCodeAttempt == 1 ? "time" : "times"} before your account will be temporarily blocked.</Text>
+                            pinCodeAttempt > 0 && <Text style={{fontFamily: FONT.REGULAR,color:"red",alignSelf:"center",fontSize: 12,textAlign:'center'}}>Incorrect TPIN. You can try {numWordArray[pinCodeAttempt]} ({pinCodeAttempt}) more {pinCodeAttempt == 1 ? "time" : "times"} before your account will be temporarily blocked.</Text>
                         }
 
                         <TouchableOpacity

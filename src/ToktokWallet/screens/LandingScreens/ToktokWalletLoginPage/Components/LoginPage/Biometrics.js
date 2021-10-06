@@ -3,12 +3,12 @@ import {View,Text,StyleSheet,Switch,Platform,TouchableOpacity,ActivityIndicator}
 import {AlertOverlay} from 'src/components'
 import { useDispatch } from 'react-redux'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
-import {GET_REGISTERED_BIOMETRIC , GET_VERIFY_SIGNATURE } from 'toktokwallet/graphql'
-import { useLazyQuery, useQuery } from '@apollo/react-hooks'
+import {GET_REGISTERED_BIOMETRIC , GET_VERIFY_SIGNATURE , POST_REGISTER_BIOMETRICS} from 'toktokwallet/graphql'
+import { useLazyQuery, useQuery , useMutation } from '@apollo/react-hooks'
 import { onErrorAlert } from 'src/util/ErrorUtility'
 import {useAlert} from 'src/hooks'
 import ReactNativeBiometrics from 'react-native-biometrics'
-import { getUniqueId } from 'react-native-device-info';
+import { getUniqueId , getBrand, getModel } from 'react-native-device-info';
 import { useNavigation } from '@react-navigation/native'
 import moment from 'moment';
 import CONSTANTS from 'common/res/constants'
@@ -18,6 +18,47 @@ const { FONT_FAMILY: FONT , FONT_SIZE , COLOR } = CONSTANTS
 const Biometrics = ({setErrorMessage})=> {
     const alert = useAlert();
     const navigation = useNavigation();
+    const [bioRecord,setBioRecord] = useState(null)
+    const [postRegisterBiometrics , {loading: postPublicKeyLoading}] = useMutation(POST_REGISTER_BIOMETRICS,{
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+        onError: (error)=> onErrorAlert({alert,error}),
+        onCompleted: ({postRegisterBiometrics})=>{
+            return
+        }
+    })
+
+
+    const CreateKey = async ()=> {
+        const resultObject = await ReactNativeBiometrics.createKeys(`Confirm fingerprint using ${getUniqueId()}`)
+        const { publicKey } = resultObject
+        postRegisterBiometrics({
+            variables: {
+                input: {
+                    deviceId: getUniqueId(),
+                    deviceName: `${await getBrand()} ${await getModel()}`,
+                    platform: Platform.select({
+                        android: "A",
+                        ios: "I"
+                    }),
+                    publicKey: publicKey,
+                }
+            }
+        })
+    }
+
+    const checkIfKeyExist = async ()=> {
+        const { keysExist } = await ReactNativeBiometrics.biometricKeysExist()
+        if(!keysExist){
+            CreateKey()
+        }
+    }
+
+    useEffect(()=>{
+        if(bioRecord){
+            checkIfKeyExist()
+        }
+    },[bioRecord])
+
 
     const [getVerifySignature , {loading: verifyLoading}] = useLazyQuery(GET_VERIFY_SIGNATURE,{
         fetchPolicy:"network-only",
@@ -40,6 +81,7 @@ const Biometrics = ({setErrorMessage})=> {
             }
         },
         onError: (error)=> onErrorAlert({alert,error}),
+        onCompleted: ({getRegisteredBiometric})=>setBioRecord(getRegisteredBiometric)
     })
 
     if(loading){
@@ -80,7 +122,7 @@ const Biometrics = ({setErrorMessage})=> {
 
     return(
         <>
-        <AlertOverlay visible={verifyLoading}/>
+        <AlertOverlay visible={verifyLoading || postPublicKeyLoading}/>
        <TouchableOpacity onPress={bioLogin} style={styles.container}>
             <Text style={styles.labelText}>or login with Fingerprint</Text>
        </TouchableOpacity>

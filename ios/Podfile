@@ -1,14 +1,14 @@
 project './toktok.xcodeproj'
-platform :ios, '9.0'
+platform :ios, '12.0'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
 def add_flipper_pods!(versions = {})
-  versions['Flipper'] ||= '~> 0.33.1'
+  versions['Flipper'] ||= '~> 0.87.0'
   versions['DoubleConversion'] ||= '1.1.7'
-  versions['Flipper-Folly'] ||= '~> 2.1'
+  versions['Flipper-Folly'] ||= '~> 2.5.3'
   versions['Flipper-Glog'] ||= '0.3.6'
   versions['Flipper-PeerTalk'] ||= '~> 0.0.4'
-  versions['Flipper-RSocket'] ||= '~> 1.0'
+  versions['Flipper-RSocket'] ||= '~> 1.3.1'
 
   pod 'FlipperKit', versions['Flipper'], :configuration => 'Debug'
   pod 'FlipperKit/FlipperKitLayoutPlugin', versions['Flipper'], :configuration => 'Debug'
@@ -154,14 +154,14 @@ target 'toktok' do
       "RCTBridgeModuleNameForClass(strongModule))", "RCTBridgeModuleNameForClass(Class(strongModule)))")
 
     ## Fix for Flipper-Folly on iOS 14.5
-    find_and_replace("Pods/Flipper-Folly/folly/synchronization/DistributedMutex-inl.h",
-      "atomic_notify_one(state)", "folly::atomic_notify_one(state)")
+    # find_and_replace("Pods/Flipper-Folly/folly/synchronization/DistributedMutex-inl.h",
+    #   "atomic_notify_one(state)", "folly::atomic_notify_one(state)")
 
-    find_and_replace("Pods/Headers/Private/RCT-Folly/folly/synchronization/DistributedMutex-inl.h",
-      "atomic_notify_one(state)", "folly::atomic_notify_one(state)")
+    # find_and_replace("Pods/Headers/Private/RCT-Folly/folly/synchronization/DistributedMutex-inl.h",
+    #   "atomic_notify_one(state)", "folly::atomic_notify_one(state)")
 
-    find_and_replace("Pods/Flipper-Folly/folly/synchronization/DistributedMutex-inl.h",
-      "atomic_wait_until(&state, previous | data, deadline)", "folly::atomic_wait_until(&state, previous | data, deadline)")
+    # find_and_replace("Pods/Flipper-Folly/folly/synchronization/DistributedMutex-inl.h",
+    #   "atomic_wait_until(&state, previous | data, deadline)", "folly::atomic_wait_until(&state, previous | data, deadline)")
   end
 end
 
