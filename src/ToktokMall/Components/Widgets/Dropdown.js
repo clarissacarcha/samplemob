@@ -50,8 +50,12 @@ const Item = ({data, onPress}) => {
 const DropdownItem = ({item, onItemPress}) => {
 
   const [category, setCategory] = useState( item.parentCategoryName)
-  const [content, setContent] = useState(item.subCategories) //["Cabinet", "Chairs", "Drawer"]
+  const [content, setContent] = useState([]) //["Cabinet", "Chairs", "Drawer"]
   const [toggle, setToggle] = useState(false)
+
+  useEffect(() => {
+    setContent(item.subCategories.sort((a, b) => a.categoryName.localeCompare(b.categoryName)))
+  }, [])
 
   const setIcon = (item) => {
 
