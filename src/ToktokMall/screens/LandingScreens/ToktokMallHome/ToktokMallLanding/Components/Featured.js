@@ -64,6 +64,10 @@ const Item = ({data}) => {
           backgroundColor: '#fff', 
           borderRadius: 5
         }}>
+        {data?.discountRate != "" && 
+          <View style={{position:'absolute', zIndex: 1, right: 0, backgroundColor: '#F6841F', borderBottomLeftRadius: 30}}>
+            <Text style={{fontSize: 8, paddingHorizontal: 4, paddingLeft: 8, paddingTop: 1, paddingBottom: 3, color: "#fff", fontFamily: FONT.BOLD}}>{data?.discountRate}</Text>
+          </View>}
         <View style={{height: 4}}></View>
         <Image source={getImageSource(data?.images)} style={{width: 100, height: 100, resizeMode: 'stretch', alignSelf: 'center', borderRadius: 5}} />
         <View style={{height: 2}}></View>
@@ -79,9 +83,9 @@ const Item = ({data}) => {
 							{data?.otherinfo}	
             </Text> : null}
           </View>
-          <View style={{flex: 0, left: -12}}>
+          {/* <View style={{flex: 0, left: -12}}>
             <Text style={{fontSize: 9.5, alignSelf: 'center', color: "#FDBA1C"}}>{data?.discountRate}</Text>
-          </View>
+          </View> */}
         </View>
       </TouchableOpacity>
     </>
