@@ -9,21 +9,33 @@ const { COLOR, FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
 const {width,height} = Dimensions.get("window")
 
 const renderExternalDetails = (externalDetails)=> {
-    
-    if(!externalDetails) return null
-    const data = JSON.parse(externalDetails)
-    if(!data) return null
 
-    return (
-        <>
-        {
-            data.map(({key,value},index)=>(
-                <Text key={`externalDetails_${index}`} style={styles.labelText}>{key}: {value}</Text>
-            ))
-        }
+    try {
 
-        </>
-    )
+        if(!externalDetails) return null
+        let data = JSON.parse(externalDetails)
+        data = Object.entries(data)
+        if(!data) return null
+
+        return (
+            <>
+            {
+                data.map((data,index)=> {
+                    if(!data[0] && !data[1]) return null
+                    const key = data[0]
+                    const value = data[1]
+                    return (
+                        <>
+                        <Text key={`externalDetails_${index}`} style={styles.labelText}>{key}: {value}</Text>
+                        </>
+                    )
+                })
+            }
+            </>
+        )
+    }catch(error){
+        return null;
+    }
 }
 
 const renderCashOutDisplayInformations = (cashOutDisplayInformations) => {
