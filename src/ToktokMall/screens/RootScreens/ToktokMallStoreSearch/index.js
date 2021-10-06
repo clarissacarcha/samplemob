@@ -9,13 +9,15 @@ import { useLazyQuery } from '@apollo/react-hooks';
 import Spinner from 'react-native-spinkit';
 import { FONT } from '../../../../res/variables';
 import {emptysearch} from "../../../assets";
+import { connect } from 'react-redux';
 
-export const ToktokMallStoreSearch = ({navigation, route}) => {
+const Component = ({navigation, route, searchHistory, createSearchHistorySession}) => {
 
   const [searchedProducts, setSearchedProducts] = useState([])
   const [suggestions, setSuggestions] = useState([])
   const [searchValue, setSearchValue] = useState("")
   const [emptySearch, setEmptySearch] = useState(false)
+  const [searchHist, setSearchHist] = useState([])
 
   const [searchShopProduct, {error, loading}] = useLazyQuery(SEARCH_SHOP_PRODUCT, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
@@ -80,6 +82,16 @@ export const ToktokMallStoreSearch = ({navigation, route}) => {
     }
   })
 
+  const setHistoryOrder = () => {
+    let temphist = JSON.parse(JSON.stringify(searchHistory))
+    setSearchHist(temphist.reverse())
+  }
+
+  useEffect(() => {
+    console.log("Search History", searchHistory)
+    setHistoryOrder()
+  }, [searchHistory])
+
   useEffect(() => {
     // getShopDetails()
     return () => {
@@ -124,17 +136,21 @@ export const ToktokMallStoreSearch = ({navigation, route}) => {
 
           }}
           onSubmit={() => {
-            setSuggestions([])
-            searchShopProduct({
-              variables: {
-                input: {
-                  shopId: route.params.id,
-                  search: searchValue,
-                  offset: 0,
-                  limit: 10
+
+            if(searchValue != ""){
+              setSuggestions([])
+              searchShopProduct({
+                variables: {
+                  input: {
+                    shopId: route.params.id,
+                    search: searchValue,
+                    offset: 0,
+                    limit: 10
+                  }
                 }
-              }
-            })
+              })
+            }
+            
           }}
         />
 
@@ -201,6 +217,43 @@ export const ToktokMallStoreSearch = ({navigation, route}) => {
             }}
           />
         </>}
+
+        {searchedProducts.length == 0 && searchValue == "" && !loading && 
+        <>
+        <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
+          <View style={{flex: 1}}>
+            <Text style={{fontSize: 14}}>Search History</Text>
+          </View>
+          <TouchableOpacity onPress={async () => {
+            await createSearchHistorySession("clear")
+            Toast.show("Cleared search history")
+          }} style={{flex: 1}}>
+            <Text style={{fontSize: 12, textAlign: 'right', color: '#F6841F'}}>Clear History</Text>
+          </TouchableOpacity>
+        </View> 
+        <FlatList 
+          data={searchHist.slice(0,5)}
+          ItemSeparatorComponent={() => <View style={{ height: 1, backgroundColor: '#F7F7FA'}} />}
+          renderItem={({item, index}) => 
+            <TouchableOpacity key={index} onPress={() => {
+              setSearchValue(item)
+              searchProduct({
+                variables: {
+                  input: {
+                    search: item,
+                    origin: route.params?.origin ? route.params.origin : "all",
+                    category: route.params?.categoryId ? route.params?.categoryId : null,
+                    offset: 0,
+                    limit: 10
+                  }
+                }
+              })
+            }} style={{paddingHorizontal: 15, paddingVertical: 15}}>
+              <Text style={{color: "#9E9E9E", fontSize: 14}}>{item}</Text>
+            </TouchableOpacity>
+          }
+        />
+        </>}
         
         {
           !error && 
@@ -229,3 +282,14 @@ export const ToktokMallStoreSearch = ({navigation, route}) => {
     </View>
   );
 };
+
+
+const mapStateToProps = (state) => ({
+  searchHistory: state.toktokMall.searchHistory
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  createSearchHistorySession: (action, payload) => dispatch({type: 'CREATE_SEARCH_HISTORY_SESSION', action,  payload}),
+});
+
+export const ToktokMallStoreSearch = connect(mapStateToProps, mapDispatchToProps)(Component);
