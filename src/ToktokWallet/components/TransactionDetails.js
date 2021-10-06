@@ -8,11 +8,22 @@ const { COLOR, FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
 
 const {width,height} = Dimensions.get("window")
 
-const renderExternalDetails = (externalDetails)=> {
+const renderReferenceNumber = (externalReferenceNumber) => {
+    if(externalReferenceNumber && externalReferenceNumber != ""){
+        return (
+            <Text style={styles.labelText}>Reference Number: {externalReferenceNumber}</Text>
+        )
+    }
+    return null
+}
+
+const renderExternalDetails = (externalDetails,externalReferenceNumber)=> {
 
     try {
 
-        if(!externalDetails) return null
+        if(!externalDetails || externalDetails === ""){
+            return renderReferenceNumber(externalReferenceNumber)
+        }
         let data = JSON.parse(externalDetails)
         data = Object.entries(data)
         if(!data) return null
@@ -34,7 +45,7 @@ const renderExternalDetails = (externalDetails)=> {
             </>
         )
     }catch(error){
-        return null;
+        return renderReferenceNumber(externalReferenceNumber);
     }
 }
 
@@ -113,7 +124,7 @@ export const TransactionDetails = ({
                             {displayNumber != "" && <Text style={styles.labelText}>{displayNumber}</Text>}
                             { status && <Text style={styles.labelText}>Status: {status}</Text>}
                             {/* { deliveryId && <Text style={styles.labelText}>Delivery ID: {deliveryId}</Text>} */}
-                            { renderExternalDetails(externalDetails) }
+                            { renderExternalDetails(externalDetails,externalReferenceNumber) }
                             { cashInMobileNumber && <Text style={styles.labelText}>Account Number: {cashInMobileNumber}</Text>}
                             { renderCashOutDisplayInformations(cashOutDisplayInformations)}
                             <View style={{marginTop: 10}}>
