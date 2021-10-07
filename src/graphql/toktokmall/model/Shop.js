@@ -13,6 +13,8 @@ export const GET_SHOP_DETAILS = gql`
 				itemname
 				price
 				discountRate
+				soldCount
+				compareAtPrice
 				images {
 					arrangement
 					filename
@@ -34,6 +36,7 @@ export const SEARCH_SHOP_PRODUCT = gql`
     	itemname
     	price
 		discountRate
+		compareAtPrice
     	images {
       	filename
     	}

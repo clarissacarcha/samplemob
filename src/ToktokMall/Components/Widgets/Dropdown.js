@@ -97,7 +97,7 @@ const DropdownItem = ({item, onItemPress}) => {
           {setIcon(item)}
         </View>
         <View style={{flex: 8, justifyContent: 'center', paddingHorizontal: 8}}>
-          <Text style={{fontSize: 14}}>{category}</Text>
+          <Text style={{fontSize: 14, color: toggle ? "#F6841F" : "#000000"}}>{category}</Text>
         </View>
         <View style={{flex: 1, justifyContent: 'center'}}>
           <CustomIcon.FeIcon name={toggle ? "chevron-up" : "chevron-down"} size={22} color={toggle ? "#F6841F" : "#CCCCCC"} /> 
@@ -123,6 +123,8 @@ export const Dropdown = ({loading = false, data, onSelect, onRefresh}) => {
       navigation.navigate("ToktokMallSearch", {categoryId: value.id, origin: "category", searchValue: value.name})
     }
   }
+
+  console.log(data)
 
   return (
     <>
