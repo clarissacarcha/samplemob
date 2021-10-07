@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal:  moderateScale(16),
-    paddingVertical: moderateScale(20)
+    paddingVertical: Platform.OS == 'android' ? moderateScale(20) : 0
   },
   headerWithAddress: {
     flexDirection: 'row',

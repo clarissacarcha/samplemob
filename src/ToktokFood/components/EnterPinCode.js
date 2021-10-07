@@ -106,8 +106,10 @@ const EnterPinCode = ({
           <View style={styles.pincodeContent}>
             <View style={{ alignItems:"center",paddingHorizontal: 16 }}>
               <Text style={styles.title}>Enter {title}</Text>
-              <Text style={styles.description}>
-                We have sent OTP to your mobile number. Please enter below to proceed with your toktokwallet transaction.
+              <Text style={styles.description}>{
+                title == 'OTP' ? ' We have sent OTP to your mobile number. Please enter below to proceed with your toktokwallet transaction.'
+                  : 'Please enter your TPIN below to proceed with your toktokwallet transaction.'
+              }
               </Text>
               <View style={{marginTop: 30,flexDirection:"row"}}>
                 <NumberBoxes
@@ -246,7 +248,7 @@ const styles = StyleSheet.create({
   },
   header: {
     justifyContent: 'center',
-    marginTop: getIphoneNotchSize
+    marginTop: Platform.OS == 'ios' ? getIphoneNotchSize : 0
   },
   backContainer: {
     justifyContent: 'center',

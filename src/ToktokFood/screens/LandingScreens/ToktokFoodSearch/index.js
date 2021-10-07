@@ -1,7 +1,16 @@
 import axios from 'axios';
 import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {Image, View, FlatList, Text, TouchableWithoutFeedback, RefreshControl, Platform} from 'react-native';
+import {
+  Image,
+  View,
+  FlatList,
+  Text,
+  TouchableWithoutFeedback,
+  RefreshControl,
+  Platform,
+  TextInput,
+} from 'react-native';
 
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import CustomStarRating from 'toktokfood/components/CustomStarRating';
@@ -15,6 +24,7 @@ import HeaderSearchBox from 'toktokfood/components/HeaderSearchBox';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import ChangeAddress from 'toktokfood/components/ChangeAddress';
+import {searchIcon} from 'toktokfood/assets/images';
 
 // Strings
 import {restaurants, tabs} from 'toktokfood/helper/strings';
@@ -37,9 +47,17 @@ const ToktokFoodSearch = ({ route }) => {
   };
 
   const navigation = useNavigation();
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState(route.params?.searchByCategory ? route.params?.searchByCategory : '');
   const [isShowError, setShowError] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('blur', () => {
+      setSearch('')
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   const onRestaurantNavigate = (item) => {
     navigation.navigate('ToktokFoodRestaurantOverview', {item});
@@ -82,10 +100,8 @@ const ToktokFoodSearch = ({ route }) => {
         },
       });
       const {getSearchFood} = API_RESULT.data.data;
-      console.log(location.latitude, location.longitude)
-      setShopList(getSearchFood);
+      setShopList(s != '' ? getSearchFood : []);
       setLoading(false)
-      setSearch(s)
     } catch (error) {
       console.log(error);
     }
@@ -153,11 +169,23 @@ const ToktokFoodSearch = ({ route }) => {
       />
       <HeaderImageBackground>
         <HeaderTitle />
-        <HeaderSearchBox
-          onSearch={(t) => {
-            searchFood(t);
-          }}
-        />
+        <View style={styles.searchBoxContainer}>
+          <View style={[styles.textInputWrapper, styles.searchBoxShadow]}>
+            <Image style={styles.searchBoxIcon} source={searchIcon} />
+            <TextInput
+              defaultValue={search}
+              multiline={false}
+              autoFocus={true}
+              placeholder="What would you like to eat?"
+              onChangeText={(text) => {
+                setSearch(text);
+                searchFood(text);
+                console.log(text)
+              }}
+              style={[styles.searchBox, styles.textInputFontStyles]}
+            />
+          </View>
+        </View>
       </HeaderImageBackground>
       <ChangeAddress />
       { shopList.length != 0 && (
@@ -178,7 +206,7 @@ const ToktokFoodSearch = ({ route }) => {
                 onRefresh={onRefresh}
                 colors={['#FFA700']}
                 tintColor='#FFA700'
-              />
+             />
             }
           />
         )}

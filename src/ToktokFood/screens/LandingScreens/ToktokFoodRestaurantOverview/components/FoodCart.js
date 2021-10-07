@@ -78,7 +78,9 @@ export const FoodCart = () => {
         style={[styles.container, styles.cartBorder]}
       >
         <View style={styles.foodItemTotalWrapper}>
-          <Text style={styles.total}>{temporaryCart.cartItemsLength} item</Text>
+          <Text style={styles.total}>{
+            `${temporaryCart.cartItemsLength} ${temporaryCart.cartItemsLength > 1 ? 'items' : 'item'}`
+          }</Text>
           <Text style={styles.total}>Total: {temporaryCart.totalAmount.toFixed(2)}</Text>
         </View>
         <TouchableOpacity

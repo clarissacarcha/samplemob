@@ -34,6 +34,7 @@ export default class CheckOutOrderHelper {
               notes: "${input.notes}"
           }) {
             success
+            message
             data {
               requestTakeMoneyId
               validator

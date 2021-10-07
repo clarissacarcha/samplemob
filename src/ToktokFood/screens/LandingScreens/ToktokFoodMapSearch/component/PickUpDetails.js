@@ -16,6 +16,9 @@ import {useMutation, useLazyQuery} from '@apollo/react-hooks';
 
 import {CHECK_HAS_TEMPORARY_CART} from 'toktokfood/graphql/toktokfood';
 import DialogMessage from 'toktokfood/components/DialogMessage';
+import Loader from 'toktokfood/components/Loader';
+import { onErrorAlert } from 'src/util/ErrorUtility';
+import { useAlert } from 'src/hooks';
 
 const PickUpDetails = (props) => {
   const initialState = {completeAddress: '', contactPerson: '', contactPersonNumber: ''};
@@ -37,8 +40,8 @@ const PickUpDetails = (props) => {
   const dispatchToStore = useDispatch();
   const [showSuccess, setShowSuccess] = useState(false);
   const {receiver} = useSelector((state) => state.toktokFood);
-
   const {customerInfo} = useSelector((state) => state.toktokFood);
+  const alert = useAlert();
 
   const initState = () => (Object.keys(receiver).length > 0 ? receiver : initialState);
   const [state, dispatch] = useReducer(reducer, initialState, initState);
@@ -51,7 +54,7 @@ const PickUpDetails = (props) => {
     },
   });
 
-  const [deleteShopTemporaryCart, {}] = useMutation(DELETE_SHOP_TEMPORARY_CART, {
+  const [deleteShopTemporaryCart, { loading }] = useMutation(DELETE_SHOP_TEMPORARY_CART, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     variables: {
       input: {
@@ -60,8 +63,13 @@ const PickUpDetails = (props) => {
         branchid: 0,
       },
     },
+    onError: (error) => {
+      onErrorAlert({alert, error})
+    },
     onCompleted: ({deleteShopTemporaryCart}) => {
       console.log(deleteShopTemporaryCart, 'DELETE');
+      onConfirm();
+      setShowSuccess(true);
     },
   });
 
@@ -71,10 +79,11 @@ const PickUpDetails = (props) => {
       dispatchToStore({type: 'SET_TOKTOKFOOD_ORDER_RECEIVER', payload: state});
     }
     if (temporaryCart?.checkHasTemporaryCart?.shopid !== 0) {
-      deleteShopTemporaryCart();
+      deleteShopTemporaryCart()
+    } else {
+      setShowSuccess(true);
+      onConfirm();
     }
-    onConfirm();
-    setShowSuccess(true);
   };
 
   useEffect(() => {
@@ -83,6 +92,7 @@ const PickUpDetails = (props) => {
 
   return (
     <>
+      <Loader visibility={loading} message="Saving..." hasImage={false} loadingIndicator />
       <DialogMessage
         visibility={showSuccess}
         title="Change Location"
@@ -90,7 +100,9 @@ const PickUpDetails = (props) => {
         type="success"
         btn1Title="OK"
         onCloseModal={() => {
-          navigation.pop();
+          setTimeout(() => {
+            navigation.pop();
+          }, 1000)
         }}
       />
       <View style={[styles.proto, styles.cartBorder, {bottom: keyboardHeight - 35}]}>

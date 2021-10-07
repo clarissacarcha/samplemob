@@ -97,19 +97,19 @@ const ToktokFoodAddressDetails = () => {
         method: 'post',
         data: {
           query: `
-                query {
-                  getGooglePlaceAutocomplete(input:{
-                    searchString: "${searchString}"
-                    sessionToken:"${sessionToken}"
-                  }) {
-                    payload
-                    predictions {
-                      formattedAddress
-                      placeId
-                    }
-                  }
+            query {
+              getGooglePlaceAutocomplete(input:{
+                searchString: "${searchString}"
+                sessionToken:"${sessionToken}"
+              }) {
+                payload
+                predictions {
+                  formattedAddress
+                  placeId
                 }
-                `,
+              }
+            }
+          `,
         },
       });
       const {payload, predictions} = API_RESULT?.data.data?.getGooglePlaceAutocomplete;

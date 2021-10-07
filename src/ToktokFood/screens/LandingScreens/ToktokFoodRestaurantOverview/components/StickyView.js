@@ -147,7 +147,7 @@ export const StickyView = () => {
   const renderTitle = () => {
     return (
       <View style={styles.title}>
-        <HeaderTitle searchBox={false} />
+        <HeaderTitle backOnly searchBox={false} />
         <View style={styles.titleInfo}>
           <ChangeAddress styleContainer={{paddingTop: moderateScale(10)}} />
           {shopDetailsLoading || shopDetailsError || (shopDetails && Object.keys(shopDetails).length == 0) ? (
@@ -164,7 +164,7 @@ export const StickyView = () => {
             />
           ) : (
             <View style={styles.content}>
-              <Image source={{uri: logo}} style={styles.logo} resizeMode="cover" />
+              <Image source={{ uri: shopDetails.logo }} style={styles.logo} resizeMode="cover" />
               <View style={{flexShrink: 1, marginHorizontal: 10}}>
                 <Text numberOfLines={1} style={styles.titleText}>
                   {`${shopDetails.shopname} (${shopDetails.address})`}
@@ -229,7 +229,7 @@ export const StickyView = () => {
         extraScrollHeight={10}
         backgroundImageScale={1.1}
         title={renderTitle()}
-        backgroundImage={{uri: banner}}
+        backgroundImage={{uri: shopDetails.banner}}
         navbarColor="white"
         backgroundColor="transparent"
         renderNavBar={() => renderNavBar}
