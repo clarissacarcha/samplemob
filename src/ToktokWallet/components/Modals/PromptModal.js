@@ -3,6 +3,7 @@ import { View , Text , StyleSheet , Modal , Dimensions , Image } from 'react-nat
 import {useThrottle} from 'src/hooks'
 import { YellowButton } from 'src/revamp';
 import SuccessIcon from 'toktokwallet/assets/images/success.png';
+import ErrorIcon from 'toktokwallet/assets/images/error.png';
 import CONSTANTS from 'common/res/constants';
 
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE , SIZE } = CONSTANTS;
@@ -16,6 +17,8 @@ export const PromptModal = ({visible , title , message , onPress , event , child
         case "success":
             imageIcon = SuccessIcon;
             break
+        case "error":
+            imageIcon = ErrorIcon;
         default: 
             break;
     }

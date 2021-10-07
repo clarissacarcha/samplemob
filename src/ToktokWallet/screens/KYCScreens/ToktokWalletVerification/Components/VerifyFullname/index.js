@@ -55,6 +55,10 @@ export const VerifyFullname = ()=> {
         if (validator.isEmpty(person.lastName, {ignore_whitespace: true})) {
             return Alert.alert("","Last Name is required.")
         }
+
+        if (validator.isEmpty(person.middleName, {ignore_whitespace: true})) {
+            return Alert.alert("","Middle Name is required.")
+        }
         if (validator.isEmpty(person.firstName, {ignore_whitespace: true})) {
             return Alert.alert("","First Name is required.")
         }
@@ -185,7 +189,7 @@ export const VerifyFullname = ()=> {
                     </View>
 
                     <View style={{marginTop: 20,}}>
-                    <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Middle Name ( Optional )</Text>
+                    <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Middle Name</Text>
                         <TextInput 
                             style={styles.input}
                             value={person.middleName}

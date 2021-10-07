@@ -6,6 +6,7 @@ import {GET_USER_TOKTOK_WALLET_DATA} from 'toktokwallet/graphql'
 import {useLazyQuery, useQuery} from '@apollo/react-hooks'
 import {useSelector,useDispatch} from 'react-redux'
 import AsyncStorage from '@react-native-community/async-storage'
+import { useAccount } from 'toktokwallet/hooks'
 import JailMonkey from 'jail-monkey'
 
 //SELF IMPORTS
@@ -26,6 +27,7 @@ export const ToktokWalletLoginPage = ({navigation,route})=> {
     const session = useSelector(state=> state.session)
     const [isRooted,setIsRooted] = useState(false)
     const [isDebugMode,setIsDebugMode] = useState(false)
+    const { refreshWallet } = useAccount();
     const dispatch = useDispatch()
 
     const CheckIfDeviceIsRooted = async ()=> {
@@ -36,7 +38,10 @@ export const ToktokWalletLoginPage = ({navigation,route})=> {
     }
 
     CheckIfDeviceIsRooted();
-
+ 
+     useEffect(()=>{
+         refreshWallet();
+     },[])
 
     const  {data,error,loading} = useQuery(GET_USER_TOKTOK_WALLET_DATA , {
         fetchPolicy:"network-only",

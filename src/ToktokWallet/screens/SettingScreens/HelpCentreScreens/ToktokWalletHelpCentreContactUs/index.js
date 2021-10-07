@@ -35,7 +35,7 @@ export const ToktokWalletHelpCentreContactUs = ({navigation,route})=> {
 
     navigation.setOptions({
         headerLeft: () => <HeaderBack color={COLOR.YELLOW}/>,
-        headerTitle: () => <HeaderTitle label={['Help within reach', '']} />,
+        headerTitle: () => <HeaderTitle label={['', '']} />,
     });
 
     return (

@@ -1,7 +1,7 @@
 import React , {useState,useEffect} from 'react'
 import { View, Text, StyleSheet , Dimensions , TextInput ,TouchableOpacity , ScrollView } from 'react-native'
 import {  YellowButton } from 'src/revamp'
-import { BuildingBottom } from 'toktokwallet/components'
+import { BuildingBottom , DisabledButton , PromptModal } from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants'
 import moment from 'moment'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
@@ -18,7 +18,7 @@ import DateBirthModal from '../../../ToktokWalletAccountRecoverySetup/Components
 const {COLOR , FONT_FAMILY: FONT , FONT_SIZE, SIZE } = CONSTANTS
 const screen = Dimensions.get('window');
 
-const Question = ({questions, answers, setAnswers, index , dateModal , errorMessages})=> {
+const Question = ({questions, answers, setAnswers, index , dateModal , errorMessages , maxLength = null})=> {
 
     const [visible,setVisible] = useState(false);
 
@@ -45,7 +45,7 @@ const Question = ({questions, answers, setAnswers, index , dateModal , errorMess
                         {
                             answers[index] == ""
                             ?  <Text style={styles.labelSmall}>Choose Date</Text>
-                            :  <Text style={styles.labelSmall}>{moment(answers[1]).tz('Asia/Manila').format('MMM DD, YYYY')}</Text>
+                            :  <Text style={{...styles.labelSmall,color:"black"}}>{moment(answers[1]).tz('Asia/Manila').format('MMM DD, YYYY')}</Text>
                         }
                     </TouchableOpacity>
                 </View>
@@ -57,6 +57,7 @@ const Question = ({questions, answers, setAnswers, index , dateModal , errorMess
                         value={answers[index]}
                         onChangeText={onChangeText}
                         returnKeyType="done"
+                        maxLength={maxLength}
                         // onSubmitEditing={Proceed}
                     />
                 </View>
@@ -73,6 +74,7 @@ export const QuestionsAnswers = ({
 })=> {
     const alert = useAlert();
     const navigation = useNavigation();
+    const [showPrompt,setShowPrompt] = useState(false)
 
     const [answersForm, setAnswersForm] = useState([
         "",
@@ -105,6 +107,7 @@ export const QuestionsAnswers = ({
                     return [...state]
                 })
             }else if(answer != answers[index]){
+                return setShowPrompt(true)
                 setErrorMessages(state=>{
                     state[index] = "Answer is wrong."
                     return [...state]
@@ -122,9 +125,21 @@ export const QuestionsAnswers = ({
         getForgotAndRecoverOTPCode()
     }
 
+    const closePrompt = ()=> {
+        setShowPrompt(false)
+        return navigation.navigate("ToktokWalletRestricted", {showPrompt: true})
+    }
+
     return(
         <>
              <AlertOverlay visible={loading}/>
+             <PromptModal
+                    visible={showPrompt}
+                    title="Incorrect answers!"
+                    message="Sorry, you have entered incorrect answers, please email Customer Service for your account recovery"
+                    event="error"
+                    onPress={closePrompt}
+             />
             <View style={styles.container}>
                 <ScrollView showsVerticalScrollIndicator={false} style={styles.body}>
                     <Question
@@ -133,6 +148,7 @@ export const QuestionsAnswers = ({
                         questions={questions}
                         errorMessages={errorMessages}
                         index={0}
+                        maxLength={30}
                     />
                     <Question
                         answers={answersForm}
@@ -149,11 +165,16 @@ export const QuestionsAnswers = ({
                         questions={questions}
                         errorMessages={errorMessages}
                         index={2}
+                        maxLength={70}
                     />
 
                 </ScrollView>
                 <View style={styles.btn}>
-                        <YellowButton label="Confirm" onPress={onPress}/>
+                    {
+                        answersForm[0] == "" || answersForm[1] == "" || answersForm[2] == ""
+                        ? <DisabledButton label="Confirm"/>
+                        :  <YellowButton label="Confirm" onPress={onPress}/>
+                    }
                 </View>
                 <BuildingBottom/>
              </View>

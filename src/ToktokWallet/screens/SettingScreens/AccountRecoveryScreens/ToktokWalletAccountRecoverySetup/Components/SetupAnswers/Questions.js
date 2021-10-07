@@ -1,7 +1,7 @@
 import React , {useState,useEffect} from 'react'
 import { View, Text, StyleSheet , Dimensions , TextInput ,TouchableOpacity , ScrollView } from 'react-native'
 import {  YellowButton } from 'src/revamp'
-import { BuildingBottom } from 'toktokwallet/components'
+import { BuildingBottom , DisabledButton} from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants'
 import moment from 'moment'
 
@@ -11,7 +11,7 @@ import DateBirthModal from './DateBirthModal'
 const {COLOR , FONT_FAMILY: FONT , FONT_SIZE, SIZE } = CONSTANTS
 const screen = Dimensions.get('window');
 
-const Question = ({questions, answers, setAnswers, index , dateModal , errorMessages})=> {
+const Question = ({questions, answers, setAnswers, index , dateModal , errorMessages , maxLength = null})=> {
 
     const [visible,setVisible] = useState(false);
 
@@ -38,7 +38,7 @@ const Question = ({questions, answers, setAnswers, index , dateModal , errorMess
                         {
                             answers[index] == ""
                             ?  <Text style={styles.labelSmall}>Choose Date</Text>
-                            :  <Text style={styles.labelSmall}>{moment(answers[1]).tz('Asia/Manila').format('MMM DD, YYYY')}</Text>
+                            :  <Text style={[styles.labelSmall, {color:"black"}]}>{moment(answers[1]).tz('Asia/Manila').format('MMM DD, YYYY')}</Text>
                         }
                     </TouchableOpacity>
                 </View>
@@ -50,6 +50,7 @@ const Question = ({questions, answers, setAnswers, index , dateModal , errorMess
                         value={answers[index]}
                         onChangeText={onChangeText}
                         returnKeyType="done"
+                        maxLength={maxLength}
                         // onSubmitEditing={Proceed}
                     />
                 </View>
@@ -108,6 +109,7 @@ used for authentication in your account recovery process.</Text>
                         questions={questions}
                         errorMessages={errorMessages}
                         index={0}
+                        maxLength={30}
                     />
                     <Question
                         answers={answers}
@@ -124,13 +126,19 @@ used for authentication in your account recovery process.</Text>
                         questions={questions}
                         errorMessages={errorMessages}
                         index={2}
+                        maxLength={70}
                     />
 
                     <Text style={[styles.headerText,{fontSize: FONT_SIZE.S}]}>Answers cannot be changed once saved.</Text>
 
                 </ScrollView>
                 <View style={styles.btn}>
-                        <YellowButton label="Next" onPress={onPress}/>
+                    {
+                        answers[0] == "" || answers[1] == "" || answers[2] == ""
+                        ?  <DisabledButton label="Next"/>
+                        :  <YellowButton label="Next" onPress={onPress}/>
+                    }
+                       
                 </View>
                 <BuildingBottom/>
              </View>

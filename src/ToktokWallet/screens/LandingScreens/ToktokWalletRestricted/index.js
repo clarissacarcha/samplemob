@@ -23,6 +23,7 @@ export const ToktokWalletRestricted = ({navigation,route})=> {
     const data = route.params.data ? route.params.data : null
     const amount = route?.params?.amount ? route.params.amount : null
     const onCashIn = route?.params.onCashIn ? route.params.onCashIn : null
+    const showPrompt = route?.params?.showPrompt ? true : null
 
     const DisplayComponent = ()=> {
         switch(route.params.component){
@@ -41,7 +42,7 @@ export const ToktokWalletRestricted = ({navigation,route})=> {
             case "rejectedKYC":
                 return <RejectedKyc />
             case "blockedAccount":
-                return <BlockedAccount data={data}/>
+                return <BlockedAccount data={data} showPrompt={showPrompt}/>
             case "deletedAccount":
                 return <DeletedAccount/>
             default:

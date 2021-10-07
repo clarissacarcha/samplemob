@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState , useEffect , useCallback } from 'react'
 import {View,Text,StyleSheet,TouchableOpacity} from 'react-native'
-import {useNavigation} from '@react-navigation/native'
+import {useNavigation,useFocusEffect} from '@react-navigation/native'
 import { HeaderImageBackground , HeaderTitle , Separator } from 'toktokwallet/components'
 import { YellowButton , VectorIcon , ICON_SET } from 'src/revamp'
 import CONSTANTS from 'common/res/constants'
@@ -10,7 +10,7 @@ import AccountRecovery from "./AccountRecovery"
 
 const  { COLOR , FONT_SIZE , FONT_FAMILY: FONT } = CONSTANTS
 
-export const BlockedAccount = ({data})=> {
+export const BlockedAccount = ({data,showPrompt})=> {
     const navigation = useNavigation()
     const { account } = data
     const [visible,setVisible] = useState(false)
@@ -23,6 +23,10 @@ export const BlockedAccount = ({data})=> {
         setVisible(true)
     }
 
+    useFocusEffect(useCallback(()=>{
+        if(showPrompt) setVisible(true)
+    },[]))
+  
     return (
         <>
         <AccountRecovery
