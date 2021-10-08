@@ -65,7 +65,7 @@ const Biometrics = ({setErrorMessage})=> {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({getVerifySignature})=>{
             if(getVerifySignature.result){
-                navigation.pop();
+                // navigation.pop();
                 navigation.navigate("ToktokWalletHomePage");
             }
         },

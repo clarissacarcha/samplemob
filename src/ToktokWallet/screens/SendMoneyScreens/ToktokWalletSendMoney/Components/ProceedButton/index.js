@@ -7,7 +7,7 @@ import {onErrorAlert} from 'src/util/ErrorUtility'
 import {useMutation} from '@apollo/react-hooks'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import { POST_FUND_TRANSFER , POST_REQUEST_SEND_MONEY , POST_SEND_MONEY } from 'toktokwallet/graphql'
-import { DisabledButton , EnterPinCode , EnterOtpCode} from 'toktokwallet/components'
+import { DisabledButton , EnterPinCode , EnterOtpCode , ValidatorScreen } from 'toktokwallet/components'
 import { AlertOverlay } from 'src/components'
 
 //SELF IMPORTS
@@ -125,7 +125,18 @@ export const ProceedButton = ({swipeEnabled , navigation , amount , note , tokwa
     return (
        <>
         <AlertOverlay visible={requestLoading}/>
-        <EnterPinCode 
+        <ValidatorScreen
+            TPINVisible={openPinCode}
+            setTPINVisible={setOpenPinCode}
+            tpinCodeAttempt={pinCodeAttempt}
+            OTPVisible={openOtpCode}
+            setOTPVisible={setOpenOtpCode}
+            otpCodeAttempt={otpCodeAttempt}
+            otpResend={onSwipeSuccess}
+            callBackFunc={Proceed}
+            loading={loading}
+        />
+        {/* <EnterPinCode 
             visible={openPinCode} 
             setVisible={setOpenPinCode} 
             loading={loading}
@@ -143,7 +154,7 @@ export const ProceedButton = ({swipeEnabled , navigation , amount , note , tokwa
             resend={onSwipeSuccess}
         >
             <AlertOverlay visible={loading} />
-        </EnterOtpCode>
+        </EnterOtpCode> */}
 
         <SuccessfulModal 
                 successModalVisible={successModalVisible}

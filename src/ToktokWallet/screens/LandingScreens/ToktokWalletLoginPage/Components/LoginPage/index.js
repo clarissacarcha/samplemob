@@ -49,7 +49,8 @@ export const LoginPage = ()=> {
         fetchPolicy:"network-only",
         onCompleted: ({getVerifyMPIN})=>{
             if(getVerifyMPIN){
-                navigation.pop();
+                setPinCode("")
+                // navigation.pop();
                 navigation.navigate("ToktokWalletHomePage");
             }
         },

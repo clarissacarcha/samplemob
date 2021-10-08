@@ -2,6 +2,7 @@ import React , {useState,useRef,useCallback,useEffect} from 'react'
 import { View ,ActivityIndicator,StatusBar,Text} from 'react-native'
 import {SomethingWentWrong} from 'src/components'
 import { useAccount } from 'toktokwallet/hooks'
+import { CheckIdleState } from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS
@@ -29,9 +30,9 @@ export const ToktokWalletHomePage = ({navigation,route})=> {
     },[])
 
     return (
-        <>
+        <CheckIdleState>
             <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
             <WalletLandingPage onRefresh={onRefresh} refreshing={refreshing}/>
-        </>
+        </CheckIdleState>
     )
 }
