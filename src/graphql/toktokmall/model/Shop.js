@@ -37,6 +37,7 @@ export const SEARCH_SHOP_PRODUCT = gql`
     	price
 		discountRate
 		compareAtPrice
+		soldCount
     	images {
       	filename
     	}

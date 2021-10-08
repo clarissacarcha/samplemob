@@ -98,7 +98,9 @@ export const Product = ({data}) => {
   }
 
   useEffect(() => {
-    setProducts(products.slice(0, offset + 10))
+    let sliced = products.slice(0, offset + 10)
+    let sorted = sliced.sort((a, b) => a.soldCount < b.soldCount )
+    setProducts(sorted)
   }, [])
 
   return (

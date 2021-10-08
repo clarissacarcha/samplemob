@@ -145,9 +145,9 @@ export const Suggestions = ({lazyload}) => {
       let temp = products
       if(response){
         temp = temp.concat(response.getTopProducts)
-        setProducts(temp)
+        setProducts(temp.sort((a, b) => a.soldCount < b.soldCount ))
       }else{
-        setProducts(temp)
+        setProducts(temp.sort((a, b) => a.soldCount < b.soldCount ))
       }
       setIsFetching(false)
     },

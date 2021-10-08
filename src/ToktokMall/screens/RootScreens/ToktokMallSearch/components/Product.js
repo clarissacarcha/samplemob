@@ -81,7 +81,7 @@ export const Product = ({data, state, fetch, lazyload}) => {
 
   const [loading, setloading] = useState(state)
   const navigation = useNavigation()
-  const [products, setProducts] = useState(data)
+  const [products, setProducts] = useState([])
 
   const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
     const paddingBottom = 150;
@@ -89,7 +89,7 @@ export const Product = ({data, state, fetch, lazyload}) => {
   }
 
   useEffect(() => {
-    setProducts(data)
+    setProducts(data.sort((a, b) => a.soldCount < b.soldCount ))
   }, [data])
 
     return (
