@@ -74,45 +74,34 @@ export const WalletLog = ({item ,index , itemsLength }) => {
         sourceName = ``
         destinationName = ``
         cashInMobileNumber = tokwaAccount.mobileNumber
-    }else if(item.externalName){
-        sourceName = ``
-        destinationName = ``
-    }else{
+    }else if(item.sourceWalletId && item.destinationwalletId){
         sourceName = `${item.sourcePerson.firstName} ${item.sourcePerson.lastName}`
         destinationName = `${item.destinationPerson.firstName} ${item.destinationPerson.lastName}`
     }
 
     let phrase = ""
-    // if(item.externalPhrase){
-    //     phrase = `${item.externalPhrase}`
-    // }else{
-    //     if(item.sourceWalletId == tokwaAccount.wallet.id ){
-    //         phrase = `${item.transactionType.sourcePhrase.replace("[:source]",destinationName)}`
-    //         phrase = `${phrase.replace("[:amount]",`${tokwaAccount.wallet.currency.code} ${numberFormat(item.amount)}`)}`
-    //     }else{
-    //         phrase = `${item.transactionType.destinationPhrase.replace("[:source]",sourceName)}`
-    //         phrase = `${phrase.replace("[:amount]",`${tokwaAccount.wallet.currency.code} ${numberFormat(item.amount)}`)}`
-    //     }
-    // }
-
-    if(item.sourceWalletId == tokwaAccount.wallet.id ){
-        phrase = `${item.transactionType.sourcePhrase.replace("[:source]",destinationName)}`
-        phrase = `${phrase.replace("[:amount]",`${tokwaAccount.wallet.currency.code} ${numberFormat(item.amount)}`)}`
+    if(item.souceWalletId && item.destinationwalletId){
+        if(item.sourceWalletId == tokwaAccount.wallet.id ){
+            phrase = `${item.transactionType.sourcePhrase.replace("[:source]",destinationName)}`
+            phrase = `${phrase.replace("[:amount]",`${tokwaAccount.wallet.currency.code} ${numberFormat(item.amount)}`)}`
+        }else{
+            phrase = `${item.transactionType.destinationPhrase.replace("[:source]",sourceName)}`
+            phrase = `${phrase.replace("[:amount]",`${tokwaAccount.wallet.currency.code} ${numberFormat(item.amount)}`)}`
+        }
     }else{
-        phrase = `${item.transactionType.destinationPhrase.replace("[:source]",sourceName)}`
-        phrase = `${phrase.replace("[:amount]",`${tokwaAccount.wallet.currency.code} ${numberFormat(item.amount)}`)}`
+        phrase = (item.sourceWalletId == tokwaAccount.wallet.id) ? item.transactionType.sourcePhrase : item.transactionType.destinationPhrase
     }
 
     let deliveryId = null
-    if(
-        item.externalName 
-        && item.externalName === "toktok" || item.externalName === "toktok rider" 
-        && item.externalPhrase
-        && (item.externalPhrase === "earnings" || item.externalPhrase === "payment" || item.externalPhrase === "cancelled"))
-    {
-        const deliveryPayload = JSON.parse(item.externalPayload)
-        deliveryId = deliveryPayload.delivery.deliveryId
-    }
+    // if(
+    //     item.externalName 
+    //     && item.externalName === "toktok" || item.externalName === "toktok rider" 
+    //     && item.externalPhrase
+    //     && (item.externalPhrase === "earnings" || item.externalPhrase === "payment" || item.externalPhrase === "cancelled"))
+    // {
+    //     const deliveryPayload = JSON.parse(item.externalPayload)
+    //     deliveryId = deliveryPayload.delivery.deliveryId
+    // }
 
     const externalDetails = item.externalDetails
 

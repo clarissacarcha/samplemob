@@ -4,8 +4,10 @@ import {SomethingWentWrong} from 'src/components'
 import CONSTANTS from 'common/res/constants'
 import {GET_USER_TOKTOK_WALLET_DATA} from 'toktokwallet/graphql'
 import {useLazyQuery, useQuery} from '@apollo/react-hooks'
-import {useSelector} from 'react-redux'
+import {useSelector , useDispatch} from 'react-redux'
 import { useAccount } from 'toktokwallet/hooks'
+import { useAlert } from 'src/hooks'
+import { onErrorAlert } from 'src/util/ErrorUtility'
 import AsyncStorage from '@react-native-community/async-storage'
 
 //SELF IMPORTS
@@ -27,6 +29,8 @@ export const ToktokWalletHomePage = ({navigation,route})=> {
     const [mounted, setMounted] = useState(true)
     const [refreshing,setRefreshing] = useState(false)
     const { refreshWallet } = useAccount();
+    const alert = useAlert();
+    const dispatch = useDispatch();
 
     const  {data,error,loading} = useQuery(GET_USER_TOKTOK_WALLET_DATA , {
         fetchPolicy:"network-only",
@@ -39,6 +43,14 @@ export const ToktokWalletHomePage = ({navigation,route})=> {
             // if( getUserToktokWalletData.accountToken ) {
             //     await AsyncStorage.setItem('toktokWalletAccountToken', getUserToktokWalletData.accountToken);
             // }
+
+            if(getUserToktokWalletData.toktokWalletAccountId && !session.user.toktokWalletAccountId){
+                // UPDATE SESSION HERE
+                dispatch({
+                    type: "UPDATE_TOKWA_ACCOUNT_ID_SESSION",
+                    payload: getUserToktokWalletData.toktokWalletAccountId
+                })
+            }
 
             if( getUserToktokWalletData.enterpriseToken ){
                 await AsyncStorage.setItem('toktokWalletEnterpriseToken', getUserToktokWalletData.enterpriseToken);
@@ -68,7 +80,7 @@ export const ToktokWalletHomePage = ({navigation,route})=> {
         <>
             <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
             <CheckTokwaKYCRegistration kycStatus={data.getUserToktokWalletData.kycStatus}>
-   
+                    
                     <CheckWalletAccountRestriction>
                         <WalletLandingPage onRefresh={onRefresh} refreshing={refreshing}/>
                     </CheckWalletAccountRestriction>

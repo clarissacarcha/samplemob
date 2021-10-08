@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
   },
 
   rowFlexibleHeight: {
-    height: 50,
+    minHeight: 50,
     marginHorizontal: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
