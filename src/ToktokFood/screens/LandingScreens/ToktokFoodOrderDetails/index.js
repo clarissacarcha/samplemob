@@ -14,7 +14,7 @@ import {TOKTOK_FOOD_GRAPHQL_CLIENT, CLIENT} from 'src/graphql';
 import {GET_ORDER_TRANSACTION_BY_REF_NUM, GET_RIDER, GET_RIDER_DETAILS} from 'toktokfood/graphql/toktokfood';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import {rider1} from 'toktokfood/assets/images';
-import {removeRiderDetails} from 'toktokfood/helper/ShowRiderDetails';
+import {removeRiderDetails} from 'toktokfood/helper/showRiderDetails';
 import {useIsFocused} from '@react-navigation/native';
 import DialogMessage from 'toktokfood/components/DialogMessage';
 
@@ -194,8 +194,8 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
         }
       } else {
         setShadowDialogMessage({
-          title: 'OOPS!',
-          message: 'Your order has been declined.',
+          title: transaction.declinedNote ? 'Order Cancelled by Merchant' : 'OOPS!',
+          message: transaction.declinedNote ? transaction.declinedNote : 'Your order has been declined.',
           show: true,
           type: 'warning'
         });

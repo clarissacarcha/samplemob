@@ -25,14 +25,14 @@ const initialPickUpDetails = {
   pickUpAddressLatLong: {},
 };
 
-const ToktokFoodAddressDetails = () => {
+const ToktokFoodAddressDetails = ({ route }) => {
   const navigation = useNavigation();
 
   const {location} = useSelector((state) => state.toktokFood);
 
   const onSearchMapNavigate = (c) => {
     if (typeof c === 'object') {
-      navigation.replace('ToktokFoodMapSearch', {coordinates: c});
+      navigation.replace('ToktokFoodMapSearch', {coordinates: c, isCart: route.params?.isCart});
     }
   };
 

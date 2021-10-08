@@ -6,7 +6,6 @@ import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
 import HeaderSearchBox from 'toktokfood/components/HeaderSearchBox';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
-import { clearTemporaryCart } from 'toktokfood/helper/TemporaryCart';
 import {VerifyContext} from './VerifyContextProvider';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 

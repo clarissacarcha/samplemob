@@ -8,7 +8,6 @@ import {useIsFocused} from '@react-navigation/native';
 
 import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
 import {useSelector} from 'react-redux';
-// import { getTemporaryCart } from 'toktokfood/helper/TemporaryCart';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';

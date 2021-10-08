@@ -1,7 +1,6 @@
 import React, {createContext, useState, useEffect} from 'react';
 import {availableTips} from 'toktokfood/helper/strings';
 import {useRoute} from '@react-navigation/native';
-// import { getTemporaryCart } from 'toktokfood/helper/TemporaryCart';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT, TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import {GET_ALL_TEMPORARY_CART} from 'toktokfood/graphql/toktokfood';

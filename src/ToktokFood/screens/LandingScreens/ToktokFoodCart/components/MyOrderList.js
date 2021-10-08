@@ -4,7 +4,6 @@ import _ from 'lodash';
 import styles from '../styles';
 import {useRoute, useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
-import { getTemporaryCart, removeTemporaryCartItem } from 'toktokfood/helper/TemporaryCart';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { delete_ic } from 'toktokfood/assets/images';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';

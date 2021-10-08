@@ -34,7 +34,7 @@ const PickUpDetails = (props) => {
     }
   };
 
-  const {pinAddress, onConfirm} = props;
+  const {pinAddress, onConfirm, isCart} = props;
   const navigation = useNavigation();
   const keyboardHeight = useKeyboard();
   const dispatchToStore = useDispatch();
@@ -100,9 +100,8 @@ const PickUpDetails = (props) => {
         type="success"
         btn1Title="OK"
         onCloseModal={() => {
-          setTimeout(() => {
-            navigation.pop();
-          }, 1000)
+          setShowSuccess(false)
+          isCart ? navigation.navigate('ToktokFoodHome') : navigation.pop();
         }}
       />
       <View style={[styles.proto, styles.cartBorder, {bottom: keyboardHeight - 35}]}>

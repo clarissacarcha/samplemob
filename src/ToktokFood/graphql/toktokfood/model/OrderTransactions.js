@@ -40,6 +40,7 @@ const transaction = `
   isdeclined
   latitude
   longitude
+  declinedNote
   shopDetails {
     id
     shopname

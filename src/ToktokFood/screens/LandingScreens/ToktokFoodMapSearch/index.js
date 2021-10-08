@@ -78,7 +78,7 @@ const ToktokFoodMapSearch = () => {
           <FA5Icon name="chevron-left" size={25} color={COLOR.BLACK} />
         </TouchableOpacity>
       </View>
-      <PickUpDetails pinAddress={mapInfo.address} onConfirm={() => onConfirmAddress()} />
+      <PickUpDetails isCart={route.params?.isCart} pinAddress={mapInfo.address} onConfirm={() => onConfirmAddress()} />
     </>
   );
 };

@@ -1,7 +1,7 @@
 import {useMutation, useLazyQuery} from '@apollo/react-hooks';
 import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {ActivityIndicator, ImageBackground, StyleSheet, Alert} from 'react-native';
 import {useSelector} from 'react-redux';
 import {COLOR} from 'res/variables';
@@ -11,6 +11,9 @@ import {splash} from 'toktokfood/assets/images';
 import {CREATE_ACCOUNT, GET_ACCOUNT} from 'toktokfood/graphql/toktokfood';
 import {useUserLocation} from 'toktokfood/hooks';
 import {useDispatch} from 'react-redux';
+import { onErrorAlert } from 'src/util/ErrorUtility';
+import { useAlert } from 'src/hooks';
+import AlertModal from 'toktokfood/components/AlertModal';
 
 const TokTokFoodSplashScreen = () => {
   useUserLocation(); // user location hook
@@ -19,6 +22,7 @@ const TokTokFoodSplashScreen = () => {
   const navigation = useNavigation();
   const {user} = useSelector((state) => state.session);
   const {location} = useSelector((state) => state.toktokFood);
+  const [errorModal, setErrorModal] = useState({ error: {}, visible: false });
 
   const [createAccount, {loading, error}] = useMutation(CREATE_ACCOUNT, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
@@ -35,19 +39,14 @@ const TokTokFoodSplashScreen = () => {
       }
     },
   });
-  console.log(user.id)
+  
   const [getToktokUserInfo, {data: foodPerson, error: foodPersonError, loading: foodPersonLoading}] = useLazyQuery(
     GET_ACCOUNT,
     {
       client: TOKTOK_FOOD_GRAPHQL_CLIENT,
       fetchPolicy: 'network-only',
       onError: (error) => {
-        const {graphQLErrors, networkError} = error;
-        if (networkError || graphQLErrors) {
-          return Alert.alert('', 'Network error occured. Please check your internet connection', [
-            {text: 'Okay', onPress: () => navigation.goBack()},
-          ]);
-        }
+        setErrorModal({ error, visible: true })
       },
       onCompleted: ({getAccount}) => {
         console.log(JSON.stringify({getAccount}));
@@ -66,7 +65,7 @@ const TokTokFoodSplashScreen = () => {
   };
 
   useEffect(() => {
-    if(location) {
+    if(location != undefined) {
       if(user.toktokfoodUserId != null){
         getToktokUserInfo({
           variables: {
@@ -131,7 +130,7 @@ const TokTokFoodSplashScreen = () => {
         dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_INFO', payload: {...getAccount}});
         showHomPage();
       } else {
-        Alert.alert('', 'Something went wrong.', [{text: 'Okay', onPress: () => navigation.goBack()}]);
+        Alert.alert('', 'Something went wrong.', [{text: 'Okay', onPress: () => navigation.back()}]);
       }
     } catch (error) {
       console.log(error);
@@ -140,6 +139,11 @@ const TokTokFoodSplashScreen = () => {
 
   return (
     <>
+      <AlertModal
+        visible={errorModal.visible}
+        error={errorModal.error}
+        close={() => navigation.pop()}
+      />
       <ImageBackground style={styles.container} source={splash} resizeMode="cover">
         <ActivityIndicator style={{marginBottom: 30}} size="large" color={COLOR.WHITE} />
       </ImageBackground>

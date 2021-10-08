@@ -17,7 +17,7 @@ import {GET_ORDER_TRANSACTION_BY_REF_NUM, GET_RIDER_DETAILS} from 'toktokfood/gr
 import {useSelector, useDispatch} from 'react-redux';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import {useIsFocused} from '@react-navigation/native';
-import {removeRiderDetails} from 'toktokfood/helper/ShowRiderDetails';
+import {removeRiderDetails} from 'toktokfood/helper/showRiderDetails';
 import DialogMessage from 'toktokfood/components/DialogMessage';
 
 const CUSTOM_HEADER = {
@@ -221,8 +221,8 @@ const ToktokFoodDriver = ({route, navigation}) => {
         }
       } else {
         setShadowDialogMessage({
-          title: 'OOPS!',
-          message: 'Your order has been declined.',
+          title: transaction.declinedNote ? 'Order Cancelled by Merchant' : 'OOPS!',
+          message: transaction.declinedNote ? transaction.declinedNote : 'Your order has been declined.',
           show: true,
           type: 'warning'
         });
@@ -230,11 +230,24 @@ const ToktokFoodDriver = ({route, navigation}) => {
     }
   };
 
+  const selectedTab = (title) => {
+    switch(title){
+      case 'Order Complete': 
+        return 2
+      case 'OOPS!':
+      case 'Order Cancelled by Merchant':
+        return 3
+      default:
+        return 1
+    }
+  }
+
   const onCloseModal = () => {
     let { title } = showDialogMessage
     setShadowDialogMessage(prev => ({ ...prev, show: false }))
-    if(title == 'Order Complete' || title == 'OOPS!'){
-      navigation.navigate('ToktokFoodOrderTransactions')
+    if(title == 'Order Complete' || title == 'OOPS!' || title == 'Order Cancelled by Merchant'){
+      let tab = selectedTab(title)
+      navigation.navigate('ToktokFoodOrderTransactions', { tab })
     } else {
       setSeconds(300)
     }

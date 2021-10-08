@@ -66,7 +66,9 @@ const OrderTypeSelection = ({
         disabled={disabled}
       >
         <RoundedButton disabled={disabled} orderIsFor={orderIsFor} selected={value === title} />
-        <Text numberOfLines={1} style={[styles.itemText, disableStyle]}>{title}</Text>
+        <View style={{  flex: 1,  flexShrink: 1 }}>
+          <Text style={[styles.itemText, disableStyle]}>{title}</Text>
+        </View>
       </TouchableOpacity>
     )
   }
@@ -128,6 +130,8 @@ const styles = StyleSheet.create({
   },
   itemText: {
     fontSize: FONT_SIZE.L,
+    // flexShrink: 1,
+    // flexWrap: 'wrap'
   },
   itemTextSelected: {
     color: COLOR.ORANGE,
@@ -136,6 +140,7 @@ const styles = StyleSheet.create({
   modal: {
     justifyContent: 'flex-end',
     margin: 0,
+    flex: 1
   },
   content: {
     flex: 1,
@@ -161,11 +166,11 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   itemWrapper: {
-    display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    height: 30,
     padding: 5,
+    flexShrink: 1,
+    flex: 1
   },
   itemText: {
     fontSize: 16,

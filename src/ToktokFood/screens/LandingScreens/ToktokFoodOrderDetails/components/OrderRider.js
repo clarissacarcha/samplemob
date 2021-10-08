@@ -8,7 +8,7 @@ import { chat, phoneBlack } from 'toktokfood/assets/images';
 import RatingModal from 'toktokfood/components/RatingModal';
 // Utils
 import { moderateScale, verticalScale } from 'toktokfood/helper/scale';
-import { checkRiderDetails } from 'toktokfood/helper/ShowRiderDetails';
+import { checkRiderDetails } from 'toktokfood/helper/showRiderDetails';
 
 const OrderRider = ({ riderDetails, transaction, referenceNum }) => {
   const { user, vehicle } = riderDetails;

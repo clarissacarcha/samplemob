@@ -9,7 +9,7 @@ export const VerifyContextProvider = ({children}) => {
 
   const routes = useRoute();
 
-  const [focusTab, setFocusTab] = useState(1);
+  const [focusTab, setFocusTab] = useState(routes.params?.tab ? routes.params?.tab : 1);
   const [transactionList, setTransactionList] = useState(null);
 
   return (

@@ -6,7 +6,6 @@ import {StickyView} from './components';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
 import HeaderSearchBox from 'toktokfood/components/HeaderSearchBox';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
-import { clearTemporaryCart } from 'toktokfood/helper/TemporaryCart';
 
 // Hooks
 import {useUserLocation} from 'toktokfood/hooks';

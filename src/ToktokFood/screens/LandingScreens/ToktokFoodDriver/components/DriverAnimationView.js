@@ -10,7 +10,7 @@ import {scale, moderateScale, verticalScale} from 'toktokfood/helper/scale';
 
 import DialogMessage from 'toktokfood/components/DialogMessage';
 import RatingModal from 'toktokfood/components/RatingModal';
-import { saveRiderDetails, checkRiderDetails, getRiderDetails, clearRiderDetails } from 'toktokfood/helper/ShowRiderDetails';
+import { saveRiderDetails, checkRiderDetails, getRiderDetails, clearRiderDetails } from 'toktokfood/helper/showRiderDetails';
 
 const DriverAnimationView = ({orderStatus, riderDetails, orderIsfor, referenceNum}) => {
   const [showDriverModal, setShowDriverModal] = useState(false);

@@ -7,7 +7,6 @@ import {useNavigation} from '@react-navigation/native';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
 import HeaderSearchBox from 'toktokfood/components/HeaderSearchBox';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
-import { clearTemporaryCart } from 'toktokfood/helper/TemporaryCart';
 import {VerifyContext} from './VerifyContextProvider';
 import { GET_MY_ACCOUNT } from 'toktokwallet/graphql';
 import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql';

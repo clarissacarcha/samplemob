@@ -35,7 +35,6 @@ import {
 import {useSelector} from 'react-redux';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
-import CheckOutOrderHelper from 'toktokfood/helper/CheckOutOrderHelper';
 import {
   GET_SHIPPING_FEE,
   PATCH_PLACE_CUSTOMER_ORDER,
@@ -532,7 +531,7 @@ const MainComponent = () => {
               setShowOrderType(false);
               setOrderType(type);
             }}
-            shopname={shopname}
+            shopname={temporaryCart.items[0]?.shopName}
             allowPickup={checkShop?.allowPickup}
             handleModal={() => {
               setShowOrderType(!showOrderType);

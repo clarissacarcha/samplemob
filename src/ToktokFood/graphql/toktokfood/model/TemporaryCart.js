@@ -17,6 +17,7 @@ const tempCart = `
     shopLongitude
     parentProductId
     parentProductName
+    shopName
     addonsDetails {
       id
       optionName

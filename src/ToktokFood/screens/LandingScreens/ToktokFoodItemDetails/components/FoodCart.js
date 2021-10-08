@@ -10,7 +10,6 @@ import _ from 'lodash';
 // Utils
 import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
 import {scale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
-import {storeTemporaryCart, getTemporaryCart} from 'toktokfood/helper/TemporaryCart';
 import {
   POST_TEMPORARY_CART,
   PATCH_TEMPORARY_CART_ITEM,
