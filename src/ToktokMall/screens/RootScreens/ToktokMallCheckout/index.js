@@ -207,7 +207,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
         notes: "", 
         total: grandTotal, 
         // toktokid: parentSession.user.id
-        toktokid: 13
+        toktokid: 13,
+        transactionTypeId: ""
       })
       setIsLoading(false)
 

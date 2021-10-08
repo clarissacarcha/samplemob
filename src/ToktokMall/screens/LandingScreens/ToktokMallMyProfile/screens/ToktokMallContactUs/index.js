@@ -8,17 +8,37 @@ import {
   StatusBar,
   Image,
   TouchableOpacity,
-  TextInput, Linking
+  TextInput, Linking, ToastAndroid
 } from 'react-native';
 import {HeaderBack, HeaderTitle, HeaderRight, Card} from '../../../../../Components';
 import CustomIcon from '../../../../../Components/Icons';
 import {MessageModal} from '../../../../../Components'
 import {COLOR, FONT, FONT_SIZE} from '../../../../../../res/variables';
 import * as  qs from 'qs'
+import {contactus} from '../../../../../assets';
+
+import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../../graphql';
+import { POST_CONTACT_SUPPORT } from '../../../../../../graphql/toktokmall/model';
+import { useMutation } from '@apollo/react-hooks';
+import AsyncStorage from '@react-native-community/async-storage';
+import Toast from "react-native-simple-toast";
 
 export const ToktokMallContactUs = ({navigation}) => {
+
   const [messageModalShown, setMessageModalShown] = useState(false)
-  const [message, setMessage] =useState('')
+  const [message, setMessage] = useState('')
+
+  const [postInquiry, {loading}] = useMutation(POST_CONTACT_SUPPORT, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    onCompleted: ({postContactSupport}) => {
+      if(postContactSupport.success == 1){
+        setMessageModalShown(true)
+      }else{
+        ToastAndroid.show("Something went wrong.")
+      }
+    },
+    onError: (error) => console.log(`LOCATION LOG ERROR: ${error}`),
+  });
 
   const sendEmail = async ( subject, body, options= {}) => {
     const {cc, bcc} = options
@@ -45,7 +65,7 @@ export const ToktokMallContactUs = ({navigation}) => {
     return Linking.openURL(url)
   }
 
-  const onPress = () => {
+  const onPressx = () => {
     sendEmail(
       message,
       '',
@@ -53,6 +73,29 @@ export const ToktokMallContactUs = ({navigation}) => {
     ).then(() => {
       console.log('Your message was successfully sent')
     })
+  }
+
+  const onPress = async () => {
+
+    let raw = await AsyncStorage.getItem("ToktokMallUser")
+    let user = typeof raw == "string" ? JSON.parse(raw) : {}
+
+    if(user.userId){
+      if(message == ""){
+        Toast.show("Enter message to send.")
+      }else{
+        await postInquiry({
+          variables: {
+            input: {
+              name: `${user.firstName} ${user.lastName}`,
+              email: user.email,
+              message: message
+            }
+          }
+        })
+      }
+    }
+    
   }
 
   navigation.setOptions({
@@ -75,11 +118,63 @@ export const ToktokMallContactUs = ({navigation}) => {
           style={{
             flex: 1,
             paddingVertical: 30,
-            paddingHorizontal: 15,
+            paddingHorizontal: 15
           }}>
+
+          <View style={{alignItems: 'center'}}>
+            <Image source={contactus} style={{width: 130, height: 100, resizeMode: 'contain'}} />
+          </View>
+
+          <View style={{flex: 0, flexDirection:'row', alignContent: 'center', alignItems: 'center', paddingVertical: 15}}>
+            <View style={{flex: 0.8}} />
+            <View style={{flex: 4, flexDirection: 'row', alignItems: 'center', alignSelf: 'center'}}>
+              <Text style={{textAlign: 'center', color: "#FDBA1C", fontSize: 25, fontWeight: FONT.BOLD}}>How</Text>
+              <Text style={{textAlign: 'center', color: "#F6841F", fontSize: 25, fontWeight: FONT.BOLD}}> can we help you?</Text>
+            </View>
+            <View style={{flex: 1}} />
+          </View>
+
+          <View style={{alignItems: 'center'}}>
+            <Text style={{textAlign: 'center', fontSize: 12}}>Email us with any of your inquiries or contact us with the contact information provided below. We will
+                  gladly discuss with you the best possible solution to your needs.</Text>
+          </View>
+
+          <View style={{height: 15}} />
+          <View style={{backgroundColor: "#F7F7FA", height: 2}} />
+          <View style={{height: 15}} />
+
+          <View style={{flexDirection: 'row', paddingBottom: 8}}>
+            <View style={{flex: 0.25, justifyContent: 'center' }}>
+              <CustomIcon.FeIcon name="phone" size={16} color={COLOR.ORANGE} />
+            </View>
+            <View style={{flex: 3, justifyContent: 'center' }}>
+              <Text style={{color: "#525252", fontSize: 12}}>(632) 8424 8617</Text>
+            </View>
+          </View>
+          
+          <View style={{flexDirection: 'row', paddingBottom: 8}}>
+            <View style={{flex: 0.25, justifyContent: 'center' }}>
+              <CustomIcon.FeIcon name="mail" size={16} color={COLOR.ORANGE} />
+            </View>
+            <View style={{flex: 3, justifyContent: 'center' }}>
+              <Text style={{color: "#525252", fontSize: 12}}>mail@toktok.ph</Text>
+            </View>
+          </View>
+
+          <View style={{flexDirection: 'row', paddingBottom: 8}}>
+            <View style={{flex: 0.25, justifyContent: 'center' }}>
+              <CustomIcon.MCIcon name="web" size={16} color={COLOR.ORANGE} />
+            </View>
+            <View style={{flex: 3, justifyContent: 'center' }}>
+              <Text style={{color: "#525252", fontSize: 12}}>www.toktokmall.ph</Text>
+            </View>
+          </View>
+
+          <View style={{height: 8}} />
+
           <Card>
             <View style={{flex: 0, padding: 15}}>
-              <View
+              {/* <View
                 style={{
                   flex: 0,
                   alignItems: 'center',
@@ -105,7 +200,7 @@ export const ToktokMallContactUs = ({navigation}) => {
                   Email us with any of your inquiries or contact us with the contact information provided below. We will
                   gladly discuss with you the best possible solution to your needs.
                 </Text>
-              </View>
+              </View> */}
 
               <View
                 style={{
@@ -114,7 +209,7 @@ export const ToktokMallContactUs = ({navigation}) => {
                   paddingHorizontal: 10,
                 }}>
                 <View style={{flexDirection: 'row'}}>
-                  <View
+                  {/* <View
                     style={{
                       flex: 1,
                       flexDirection: 'row',
@@ -134,8 +229,8 @@ export const ToktokMallContactUs = ({navigation}) => {
                       }}>
                       <Text>(632) 8424 8617</Text>
                     </View>
-                  </View>
-                  <View
+                  </View> */}
+                  {/* <View
                     style={{
                       flex: 1,
                       flexDirection: 'row',
@@ -157,9 +252,9 @@ export const ToktokMallContactUs = ({navigation}) => {
                       }}>
                       <Text>mall@toktok.ph</Text>
                     </View>
-                  </View>
+                  </View> */}
                 </View>
-                <View style={styles.textinputContainer}>
+                {/* <View style={styles.textinputContainer}>
                   <TextInput
                     style={styles.textinput}
                     placeholder={'Name'}
@@ -172,9 +267,15 @@ export const ToktokMallContactUs = ({navigation}) => {
                     placeholder={'Email'}
                     // onChangeText ={(text) => {setlandmark(text)}}
                   />
+                </View> */}
+                <View>
+                  <Text style={{fontSize: 11, color: "#9E9E9E"}}>Message</Text>
                 </View>
                 <View style={styles.textinputLastContainer}>
-                  <TextInput style={styles.textinput} placeholder={'Message'} 
+                  <TextInput 
+                    style={styles.textinput} 
+                    // placeholder={'Message'} 
+                    multiline={true}
                     value = {message}
                     onChangeText = {(text) => {setMessage(text)}}
                   />
@@ -183,7 +284,7 @@ export const ToktokMallContactUs = ({navigation}) => {
               <View
                 style={{flex: 0, marginTop: 18, alignItems: 'center', justifyContent: 'center', paddingVertical: 10}}>
                 <TouchableOpacity onPress = {() => {onPress()}} style={styles.button}>
-                  <Text style={styles.buttonText}>Save</Text>
+                  <Text style={styles.buttonText}>Submit</Text>
                 </TouchableOpacity>
               </View>
 
@@ -199,7 +300,7 @@ export const ToktokMallContactUs = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: 'white',
   },
   textinputContainer: {
     backgroundColor: '#F8F8F8',
@@ -219,7 +320,7 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: '#F6841F',
     padding: 10,
-    width: '40%',
+    width: '90%',
     borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',
