@@ -457,7 +457,7 @@ const MainComponent = () => {
             type="warning"
             onCloseModal={() => {
               setPinAttempt({ show: false, message: '' })
-              navigation.goBack()
+              navigation.pop()
             }}
           />
         </EnterPinCode>

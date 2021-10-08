@@ -77,9 +77,7 @@ const MainComponent = () => {
       { loading || error ? (
           <LoadingIndicator isFlex isLoading={true} />
         ): (
-        <>
           <HelpCentre getMyAccount={() => { getMyAccount() }} />
-        </>
       )}
     </View>
   );
