@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useRef} from 'react';
 import {View, StyleSheet, Image} from 'react-native';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import {MAP_DELTA_LOW} from 'res/constants';
@@ -8,8 +8,6 @@ const RiderMapView = (props) => {
   const {customerCoordinates, riderCoordinates} = props;
   delete riderCoordinates.lastUpdate;
   const mafRef = useRef(null);
-
-  useEffect(() => {}, []);
 
   const triggerMapAnimateCamera = (coordinates) => {
     mafRef.current.animateCamera(
@@ -38,7 +36,10 @@ const RiderMapView = (props) => {
           <Marker identifier="rider" coordinate={riderCoordinates} showsTraffic={true}>
             <Image style={{width: 55, height: 55}} resizeMode="contain" source={rider_ic} />
           </Marker>
-          <Marker identifier="customer" coordinate={{latitude: customerCoordinates.latitude, longitude: customerCoordinates.longitude}} showsTraffic={true}>
+          <Marker
+            identifier="customer"
+            coordinate={{latitude: customerCoordinates.latitude, longitude: customerCoordinates.longitude}}
+            showsTraffic={true}>
             <Image style={{width: 55, height: 55}} resizeMode="contain" source={customer_map_ic} />
           </Marker>
         </MapView>

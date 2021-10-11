@@ -6,13 +6,17 @@ import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
 import HeaderSearchBox from 'toktokfood/components/HeaderSearchBox';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
-import { clearTemporaryCart } from 'toktokfood/helper/TemporaryCart';
+import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 
 // Hooks
 import {useUserLocation} from 'toktokfood/hooks';
 import {useSelector} from 'react-redux';
 import {moderateScale, getStatusbarHeight} from 'toktokfood/helper/scale';
 import {arrow_right, help_centre_ic} from 'toktokfood/assets/images';
+import { GET_MY_ACCOUNT } from 'toktokwallet/graphql';
+import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql';
+import { useLazyQuery } from '@apollo/react-hooks';
+import {useIsFocused} from '@react-navigation/native';
 
 // Fonts & Colors
 import {COLOR, FONT, FONT_SIZE} from 'res/variables';
@@ -23,19 +27,33 @@ const CUSTOM_HEADER = {
   bgImage: Platform.OS === 'android' ? moderateScale(70) + getStatusbarHeight : moderateScale(70),
 };
 
-const DATA = [
-  {
-    title: "Help Centre",
-    icon: ""
-  }
-]
-
 const MainComponent = () => {
 
   const {location} = useSelector((state) => state.toktokFood);
   const {user} = useSelector((state) => state.session);
-  const { showHelpCentreList, setShowHelpCentreList } = useContext(VerifyContext);
+  const { showHelpCentreList, setShowHelpCentreList, walletBalance, setWalletBalance } = useContext(VerifyContext);
+  const isFocus = useIsFocused();
 
+  const [ getMyAccount, {loading, error} ] = useLazyQuery(GET_MY_ACCOUNT , {
+    fetchPolicy: 'network-only',
+    client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+    onCompleted: ({ getMyAccount })=> {
+      setWalletBalance(getMyAccount.wallet.balance);
+    },
+    onError: (error) => {
+      // console.log(error)
+    }
+  });
+
+  useEffect(() => {
+    if(user && isFocus){
+      if(user.toktokWalletAccountId){
+        getMyAccount()
+      } else {
+        setWalletBalance(null);
+      }
+    } 
+  }, [user, isFocus])
 
   const onBack = () => {
     setShowHelpCentreList(false)
@@ -43,19 +61,24 @@ const MainComponent = () => {
 
   return (
     <View style={styles.container}>
-      <HeaderImageBackground styleContainer={{ justifyContent: 'center' }} customSize={CUSTOM_HEADER}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', paddingTop: getStatusbarHeight, paddingHorizontal: 16 }}>
-          <TouchableOpacity onPress={onBack} style={{  }}>
-            <FIcon5 name="chevron-left" size={15} />
-          </TouchableOpacity>
-          <View style={{ paddingHorizontal: 10  }}>
-            <Image source={{ uri: user.person.avatar }} style={{ height: 50, width: 50, borderRadius: 50, resizeMode: 'cover' }} />
-          </View>
-          <Text style={{ fontSize: FONT_SIZE.L, fontFamily: FONT.BOLD }}>{`${user.person.firstName} ${user.person.lastName}`}</Text>
+      <HeaderImageBackground searchBox={false}>
+        <View style={styles.header}>
+          { showHelpCentreList && (
+            <TouchableOpacity onPress={onBack}>
+              <FIcon5 name="chevron-left" size={15} />
+            </TouchableOpacity>
+          )}
+          <Image source={{ uri: user.person.avatar }} style={styles.avatar} />
+          <Text style={styles.name}>
+            {`${user.person.firstName} ${user.person.lastName}`}
+          </Text>
         </View>
       </HeaderImageBackground>
-      <Me />
-      <HelpCentre />
+      { loading || error ? (
+          <LoadingIndicator isFlex isLoading={true} />
+        ): (
+          <HelpCentre getMyAccount={() => { getMyAccount() }} />
+      )}
     </View>
   );
 };
@@ -73,25 +96,23 @@ export default ToktokFoodMe;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'whitesmoke',
+    backgroundColor: 'white',
   },
-  shadow: {
-    backgroundColor:"whitesmoke",
-    borderRadius: 5,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
+  avatar: {
+    height: moderateScale(50),
+    width: moderateScale(50),
+    borderRadius: moderateScale(50),
+    resizeMode: 'cover'
   },
-  boxContainer: {
-    paddingHorizontal: 15,
-    paddingVertical: 15,
-    justifyContent: 'space-between',
+  header: {
+    flexDirection: 'row',
     alignItems: 'center',
-    flexDirection: 'row'
+    paddingTop: getStatusbarHeight,
+    paddingHorizontal: 16
+  },
+  name: {
+    fontSize: FONT_SIZE.L,
+    fontFamily: FONT.BOLD,
+    paddingHorizontal: 15
   }
 });

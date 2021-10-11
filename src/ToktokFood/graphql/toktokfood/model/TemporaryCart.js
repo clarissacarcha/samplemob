@@ -1,29 +1,44 @@
 import gql from 'graphql-tag';
 
+const tempCart = `
+  totalAmount
+  items {
+    id
+    shopid
+    branchid
+    productid
+    quantity
+    basePrice
+    totalAmount
+    productName
+    productLogo
+    notes
+    shopLatitude
+    shopLongitude
+    parentProductId
+    parentProductName
+    shopName
+    addonsDetails {
+      id
+      optionName
+      optionPrice
+      status
+      optionDetailsId
+      optionDetailsName
+    }
+  }
+`
 export const GET_TEMPORARY_CART = gql`
   query getTemporaryCart($input: GetTemporaryCartInput) {
     getTemporaryCart(input: $input) {
-			totalAmount
-      items {
-        id
-        shopid
-        branchid
-        productid
-        quantity
-        basePrice
-        totalAmount
-        productName
-        productLogo
-        notes
-        addonsDetails {
-          id
-          optionName
-          optionPrice
-          status
-          optionDetailsId
-          optionDetailsName
-        }
-      }
+      ${tempCart}
+    }
+  }
+`;
+export const GET_ALL_TEMPORARY_CART = gql`
+  query getAllTemporaryCart($input: GetAllTemporaryCartInput) {
+    getAllTemporaryCart(input: $input) {
+      ${tempCart}
     }
   }
 `;

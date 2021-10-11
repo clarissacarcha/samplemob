@@ -4,7 +4,6 @@ import _ from 'lodash';
 import styles from '../styles';
 import {useRoute, useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
-import { getTemporaryCart, removeTemporaryCartItem } from 'toktokfood/helper/TemporaryCart';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { delete_ic } from 'toktokfood/assets/images';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
@@ -15,6 +14,7 @@ import {DELETE_TEMPORARY_CART_ITEM} from 'toktokfood/graphql/toktokfood';
 import {useMutation, useLazyQuery} from '@apollo/react-hooks';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import Loader from 'toktokfood/components/Loader';
+import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 
 const MyOrderList = () => {
   const route = useRoute();
@@ -49,9 +49,10 @@ const MyOrderList = () => {
     });
   };
 
-  const onPressEdit = async(Id, selectedAddons, selectedItemId, selectedPrice, selectedQty, selectedNotes) => {
+  const onPressEdit = async(Id, parentProductId, selectedAddons, selectedItemId, selectedPrice, selectedQty, selectedNotes) => {
     navigation.navigate('ToktokFoodItemDetails', {
       Id,
+      parentProductId,
       selectedAddons,
       selectedItemId,
       selectedPrice,
@@ -62,20 +63,37 @@ const MyOrderList = () => {
 
 
   const renderFoodItem = ({ item }) => {
-    const {productid, id, quantity, totalAmount, productLogo, productName, addonsDetails, notes} = item;
+    const {
+      productid,
+      id,
+      parentProductId,
+      quantity,
+      totalAmount,
+      productLogo,
+      productName,
+      addonsDetails,
+      notes,
+      parentProductName
+    } = item;
     const addons = arrangeAddons(addonsDetails);
+    console.log(parentProductName)
     return (
       <View style={styles.orderItemContainer}>
-        <Image style={styles.foodItemImage} source={{uri: productLogo}} />
+        { productLogo && (
+          <Image style={styles.foodItemImage} source={{uri: productLogo}} />
+        )}
         <View style={styles.orderInfoWrapper}>
-          <Text style={(styles.orderText, {fontWeight: '500'})}>{productName}</Text>
+          <Text style={(styles.orderText, {fontFamily: FONT.BOLD, fontSize: FONT_SIZE.L})}>
+            {parentProductId ? parentProductName : productName}
+          </Text>
           <Text style={[styles.orderText]}>{`x${quantity}`}</Text>
+          {parentProductId && <Text style={styles.orderText}>{`Variant: ${productName}`}</Text>}
           { addonsDetails.length > 0 && displayAddOns(addons)}
           {!!notes && <Text style={styles.orderText}>{`Notes: ${notes}`}</Text>}
         </View>
         <View style={styles.priceWrapper}>
           <Text
-            onPress={() => {onPressEdit(productid, addons, id, totalAmount, quantity, notes)}}
+            onPress={() => {onPressEdit(productid, parentProductId, addons, id, totalAmount, quantity, notes)}}
             style={styles.actionText}
           >
             Edit

@@ -4,6 +4,10 @@ import { Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import CustomStarRating from 'toktokfood/components/CustomStarRating';
 import { scale, getDeviceWidth } from 'toktokfood/helper/scale';
+import { time } from 'toktokfood/assets/images';
+
+// Fonts, Colors & Images
+import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 
 const RestaurantItem = ({ item }) => {
 
@@ -17,16 +21,16 @@ const RestaurantItem = ({ item }) => {
     <TouchableOpacity onPress={() => onRestaurantNavigate(item)} style={styles.restaurantList}>
       <Image style={styles.img} source={{ uri: item.logo }} resizeMode="cover" />
       <View style={styles.restaurantInfo}>
-        <Text numberOfLines={2} style={styles.restaurantName}>{`${item.shopname} (${item.address})`}</Text>
+        <Text numberOfLines={1} style={styles.restaurantName}>{`${item.shopname} (${item.address})`}</Text>
         <CustomStarRating
           rating={item.ratings ?? '0'}
           starImgStyle={{ width: scale(15), height: scale(15), marginVertical: 5 }}
           readOnly
         />
         <View style={styles.branchInfo}>
-          <MCIcon name="clock-outline" color={'#868686'} size={13} />
+          {/* <MCIcon name="clock-outline" color={'#868686'} size={13} /> */}
+          <Image resizeMode="contain" source={time} style={styles.timeImg} />
           <Text style={styles.branches}>{`${item.estimatedDeliveryTime} mins`}</Text>
-
           <MCIcon name="map-marker-outline" color={'#868686'} size={13} />
           <Text style={styles.branches}>{item.estimatedDistance}</Text>
         </View>
@@ -61,8 +65,14 @@ const styles = StyleSheet.create({
       width: (getDeviceWidth - 20) / 2
     },
     restaurantName: {
-      fontSize: 12,
-      fontWeight: '500',
+      fontSize: FONT_SIZE.M,
+      fontFamily: FONT.BOLD
+    },
+    timeImg: {
+      width: scale(13),
+      height: scale(13),
+      tintColor: COLOR.DARK,
+      resizeMode: 'contain'
     },
   });
   

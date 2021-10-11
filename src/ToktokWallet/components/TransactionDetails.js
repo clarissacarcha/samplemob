@@ -8,22 +8,46 @@ const { COLOR, FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
 
 const {width,height} = Dimensions.get("window")
 
-const renderExternalDetails = (externalDetails)=> {
-    
-    if(!externalDetails) return null
-    const data = JSON.parse(externalDetails)
-    if(!data) return null
 
-    return (
-        <>
-        {
-            data.map(({key,value},index)=>(
-                <Text key={`externalDetails_${index}`} style={styles.labelText}>{key}: {value}</Text>
-            ))
+const renderReferenceNumber = (externalReferenceNumber) => {
+    if(externalReferenceNumber && externalReferenceNumber != ""){
+        return (
+            <Text style={styles.labelText}>Reference Number: {externalReferenceNumber}</Text>
+        )
+    }
+    return null
+}
+
+const renderExternalDetails = (externalDetails,externalReferenceNumber)=> {
+
+    try {
+
+        if(!externalDetails || externalDetails === ""){
+            return renderReferenceNumber(externalReferenceNumber)
         }
+        let data = JSON.parse(externalDetails)
+        data = Object.entries(data)
+        if(!data) return null
 
-        </>
-    )
+        return (
+            <>
+            {
+                data.map((data,index)=> {
+                    if(!data[0] && !data[1]) return null
+                    const key = data[0]
+                    const value = data[1]
+                    return (
+                        <>
+                        <Text key={`externalDetails_${index}`} style={styles.labelText}>{key}: {value}</Text>
+                        </>
+                    )
+                })
+            }
+            </>
+        )
+    }catch(error){
+        return renderReferenceNumber(externalReferenceNumber);
+    }
 }
 
 const renderCashOutDisplayInformations = (cashOutDisplayInformations) => {
@@ -101,7 +125,7 @@ export const TransactionDetails = ({
                             {displayNumber != "" && <Text style={styles.labelText}>{displayNumber}</Text>}
                             { status && <Text style={styles.labelText}>Status: {status}</Text>}
                             {/* { deliveryId && <Text style={styles.labelText}>Delivery ID: {deliveryId}</Text>} */}
-                            { renderExternalDetails(externalDetails) }
+                            { renderExternalDetails(externalDetails, externalReferenceNumber) }
                             { cashInMobileNumber && <Text style={styles.labelText}>Account Number: {cashInMobileNumber}</Text>}
                             { renderCashOutDisplayInformations(cashOutDisplayInformations)}
                             <View style={{marginTop: 10}}>

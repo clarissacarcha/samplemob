@@ -19,7 +19,7 @@ import { getOrderStatus, getSubMessageStatus, sameDay, dayTitle } from '../funct
 const renderEmpty = () => (
   <View style={styles.emptyContainer}>
     <Image style={styles.emptyImg} resizeMode="contain" source={empty_orders} />
-    <Text style={styles.emptyText}>No notifications</Text>
+    <Text style={styles.emptyText}>You don't have orders yet</Text>
   </View>
 );
 export const TransactionList = (props) => {
@@ -118,7 +118,7 @@ export const TransactionList = (props) => {
   }
 
   const renderFooter = () => <LoadingIndicator isFlex isLoading={loadMore} />;
- 
+
   return (
     <View style={styles.listContainer}>
       { ((loading || error) || data == undefined) ? (
@@ -134,10 +134,13 @@ export const TransactionList = (props) => {
               focusTab={focusTab}
             />
           }
-          contentContainerStyle={{ paddingBottom: Platform.OS == 'android' ? verticalScale(20) : 0 }}
-          extraData={loadMore}
+          contentContainerStyle={{
+            paddingBottom: Platform.OS == 'android' ? verticalScale(20) : 0,
+            flexGrow: 1
+          }}
+          extraData={{ loadMore, data }}
           keyExtractor={(val, index) => index.toString()}
-          onEndReachedThreshold={1}
+          onEndReachedThreshold={.5}
           onEndReached={() => handleLoadMore()}
           ListEmptyComponent={renderEmpty}
           ListFooterComponent={() => ( <LoadingIndicator isLoading={loadMore} /> )}
@@ -157,8 +160,8 @@ const styles = StyleSheet.create({
   },
   emptyContainer: {
     alignItems: 'center',
+    justifyContent: 'center',
     flex: 1,
-    paddingTop: verticalScale(80),
   },
   emptyImg: {
     height: moderateScale(175),

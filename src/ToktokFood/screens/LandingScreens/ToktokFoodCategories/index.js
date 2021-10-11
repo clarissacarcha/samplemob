@@ -8,7 +8,9 @@ import HeaderTitle from 'toktokfood/components/HeaderTitle';
 import HeaderSearchBox from 'toktokfood/components/HeaderSearchBox';
 import {CategoryList} from '../ToktokFoodHome/components';
 import {ModalFilterSearch} from './components';
-
+import ChangeAddress from 'toktokfood/components/ChangeAddress';
+// Fonts, Colors & Images
+import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 // Constants
 import {searchData} from 'toktokfood/helper/strings';
 
@@ -30,12 +32,12 @@ const ToktokFoodCategories = () => {
   return (
     <View style={styles.container}>
       <HeaderImageBackground>
-        <HeaderTitle showAddress={true} />
+        <HeaderTitle />
         <HeaderSearchBox />
       </HeaderImageBackground>
+      <ChangeAddress />
       <RenderFilter />
       <CategoryList filterSearch={filterSearch} horizontal={false} />
-
       <ModalFilterSearch
         data={searchData}
         handleModal={handleFilter}
@@ -53,17 +55,17 @@ export default ToktokFoodCategories;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'whitesmoke'
+    backgroundColor: 'white'
   },
   filterContainer: {
     alignItems: 'center',
     flexDirection: 'row',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+    paddingHorizontal: 17,
+    paddingBottom: 10,
   },
   filterText: {
-    fontWeight: '400',
-    fontSize: 13,
+    fontFamily: FONT.BOLD,
+    fontSize: FONT_SIZE.M,
     marginRight: 5,
   },
 });

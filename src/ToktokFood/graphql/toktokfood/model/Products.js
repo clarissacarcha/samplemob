@@ -15,19 +15,35 @@ const products = `
   filename
   sysShop
   maxQtyIsset
-  variants {
+  options {
     id
     optionName
     isRequired
     noOfSelection
     status
-    options {
+    optionLogs {
       id
       optionName
       optionPrice
       status
       optionDetailsId
     }
+  }
+  variants {
+    Id
+    itemid
+    catId
+    itemname
+    price
+    stocks
+    maxQty
+    enabled
+    otherinfo
+    tags
+    summary
+    filename
+    sysShop
+    maxQtyIsset
   }
 `
 

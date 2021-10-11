@@ -7,7 +7,7 @@ import {FONT, FONT_SIZE, COLOR} from '../../res/variables';
 
 // State must be global to share with other components
 const HeaderSearchBox = (props) => {
-  const {onSearch} = props;
+  const {onSearch, search} = props;
 
   const routes = useRoute();
   const navigation = useNavigation();
@@ -41,13 +41,13 @@ const HeaderSearchBox = (props) => {
         <View style={[styles.textInputWrapper, styles.searchBoxShadow]}>
           <Image style={styles.searchBoxIcon} source={searchIcon} />
           <TextInput
-            value={foodQuery}
+            // defaultValue={search}
             multiline={false}
             autoFocus={true}
             placeholder="What would you like to eat?"
             onChangeText={(text) => {
               onSearch(text);
-              setFoodQuery(text); // array of food object
+              // setFoodQuery(text); // array of food object
             }}
             style={[styles.searchBox, styles.textInputFontStyles]}
           />

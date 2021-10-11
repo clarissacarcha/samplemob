@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 
 // Fonts/Colors
-import {FONT_SIZE} from 'res/variables';
+import {FONT_SIZE, FONT} from 'res/variables';
 
 // Utils
 import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
@@ -22,7 +22,7 @@ export default OrderNote;
 
 const styles = StyleSheet.create({
   note: {
-    fontWeight: '500',
+    fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.M,
   },
   notes: {

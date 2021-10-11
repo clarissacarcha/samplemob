@@ -20,16 +20,15 @@ import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import {GET_PRODUCT_DETAILS, GET_TEMPORARY_CART} from 'toktokfood/graphql/toktokfood';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
-
-const CUSTOM_HEADER = {
-  container: Platform.OS === 'android' ? moderateScale(83) : moderateScale(70),
-  bgImage: Platform.OS === 'android' ? moderateScale(83) : moderateScale(70),
-};
+import ChangeAddress from 'toktokfood/components/ChangeAddress';
+import { onErrorAlert } from 'src/util/ErrorUtility';
+import { useAlert } from 'src/hooks';
 
 const MainComponent = () => {
-  const routes = useRoute();
 
-  const {Id, selectedAddons, selectedPrice, selectedQty, selectedNotes} = routes.params;
+  const routes = useRoute();
+  const alert = useAlert();
+  const {Id, parentProductId, selectedItemId, selectedAddons, selectedPrice, selectedQty, selectedNotes} = routes.params;
   const {customerInfo} = useSelector((state) => state.toktokFood);
   const {
     totalPrice,
@@ -40,21 +39,27 @@ const MainComponent = () => {
     setCount,
     temporaryCart,
     setTemporaryCart,
-    setNotes
+    setNotes,
+    selectedVariants,
+    setBasePrice
   } = useContext(VerifyContext);
   const [bannerLoaded, setBannerLoaded] = useState(false);
-  const stickyHeaderIndices = bannerLoaded ? [1] : [2];
+  const stickyHeaderIndices = bannerLoaded ? [2] : [3];
 
   const [getProductDetails, {data, loading, error}] = useLazyQuery(GET_PRODUCT_DETAILS, {
     variables: {
       input: {
-        product_id: Id
+        product_id: parentProductId ? parentProductId : Id
       },
     },
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
+    onError: (error) => {
+      onErrorAlert({ alert, error })
+    },
     onCompleted: ({getProductDetails}) => {
       setProductDetails(getProductDetails)
+      console.log(+getProductDetails.sysShop, customerInfo.userId)
       getTemporaryCart({
         variables: {
           input: {
@@ -69,12 +74,13 @@ const MainComponent = () => {
   const [getTemporaryCart, {loading: getLoading, error: getError}] = useLazyQuery(GET_TEMPORARY_CART, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
-   
-    onError: (err) => {
-      console.log(err)
+    onError: (error) => {
+      onErrorAlert({ alert, error })
     },
     onCompleted: ({getTemporaryCart}) => {
       let { items, totalAmount } = getTemporaryCart
+      // console.log(getTemporaryCart)
+
       setTemporaryCart({
         cartItemsLength: items.length,
         totalAmount,
@@ -82,6 +88,20 @@ const MainComponent = () => {
       })
     },
   });
+
+  useEffect(() => {
+    if(productDetails && Object.keys(productDetails).length > 0){
+      let basePrice = 0
+      if(productDetails?.variants.length > 0){
+        if(selectedVariants && Object.keys(selectedVariants).length > 0){
+          basePrice = parseInt(selectedVariants?.price)
+        }
+      } else {
+        basePrice = productDetails.price
+      }
+      setBasePrice(basePrice)
+    }
+  }, [selectedVariants, productDetails])
 
   useEffect(() => {
     if(selectedAddons){ setSelected(selectedAddons) }
@@ -104,9 +124,11 @@ const MainComponent = () => {
         </View>
         <View style={styles.ratingsWrapper}>
           {/* <Rating startingValue={ratings} imageSize={16} readonly style={styles.ratings} /> */}
-          <Text style={styles.description} numberOfLines={3}>
-            {summary}
-          </Text>
+          { !!summary && (
+            <Text style={styles.description} numberOfLines={3}>
+              {summary}
+            </Text>
+          )}
         </View>
       </View>
     );
@@ -115,7 +137,7 @@ const MainComponent = () => {
   const BannerPlaceHolder = () => {
     return (
       <View style={{
-        marginTop: scale(10),
+        marginTop: scale(50),
         position: 'absolute',
         alignSelf: 'center',
         height: scale(140),
@@ -135,16 +157,17 @@ const MainComponent = () => {
   };
  
   return (
-    <View behavior={Platform.OS === 'ios' ? 'position' : null} style={styles.container}>
-      <HeaderImageBackground customSize={CUSTOM_HEADER}>
-        <HeaderTitle title="" />
+    <View style={styles.container}>
+      <HeaderImageBackground searchBox={false}>
+        <HeaderTitle />
       </HeaderImageBackground>
       {(Object.entries(productDetails).length == 0) || getLoading || getError ? (
-        <LoadingIndicator isLoading={true} style={{ height: moderateScale(500), justifyContent: 'center' }} />
+        <LoadingIndicator isLoading={true} isFlex />
         ) : (
         <>
           <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'position' : null} style={styles.container}>
             <ScrollView stickyHeaderIndices={stickyHeaderIndices} >
+              <ChangeAddress />
               {!bannerLoaded && <BannerPlaceHolder />}
               <Image
                 onLoadEnd={() => setBannerLoaded(true)}
@@ -152,10 +175,14 @@ const MainComponent = () => {
                 style={[styles.banner]}
               />
               <ItemDetails />
-              <Variations item={productDetails.variants} basePrice={productDetails?.price} />
+              <Variations
+                productId={selectedItemId ? Id : ''}
+                data={productDetails}
+                basePrice={productDetails?.price}
+              />
             </ScrollView>
           </KeyboardAvoidingView>
-          <FoodCart loading={loading} basePrice={productDetails?.price} />
+          <FoodCart loading={loading} basePrice={0} />
         </>
       )}
     </View>

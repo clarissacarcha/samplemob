@@ -35,3 +35,11 @@ export const PATCH_PERSON_HAS_TOKTOKFOOD = gql`
     }
   }
 `;
+export const POST_CONTACT_US = gql`
+  query postContactUs($input: ContactUsInput!) {
+    postContactUs(input: $input) {
+      success
+      message
+    }
+  }
+`;

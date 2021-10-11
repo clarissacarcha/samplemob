@@ -1,5 +1,5 @@
 import React from 'react';
-import {Platform, ScrollView, StyleSheet, TouchableOpacity, View, Text} from 'react-native';
+import {Platform, ScrollView, StyleSheet, TouchableOpacity, View, Text, Image} from 'react-native';
 import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
@@ -9,11 +9,13 @@ import {getDistance, convertDistance} from 'geolib';
 // Fonts/Colors
 import {COLORS} from 'res/constants';
 import {FONT_SIZE, FONT, SIZE, COLOR} from 'res/variables';
+import { time } from 'toktokfood/assets/images';
 
 // Utils
 import {moderateScale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
 import {orderStatusMessageDelivery} from 'toktokfood/helper/orderStatusMessage';
 import moment from 'moment';
+import DashedLine from 'react-native-dashed-line';
 
 const DriverDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) => {
   const navigation = useNavigation();
@@ -34,7 +36,7 @@ const DriverDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
       {latitude: riderLocation.latitude, longitude: riderLocation.longitude},
     );
     let distanceMiles = convertDistance(distance, 'mi');
-    let duration = distanceMiles / 60;
+    let duration = distanceMiles / 40;
     let hours = 20 / 60;
     let final = (duration + hours).toFixed(2);
 
@@ -52,11 +54,18 @@ const DriverDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
     navigation.navigate('ToktokFoodOrderDetails', {referenceNum});
   };
 
+  const renderDash = () => (
+    <View style={styles.dashedLine}>
+      <DashedLine axis="vertical" dashGap={2} dashColor="#DDDDDD" dashLength={3} />
+    </View>
+  );
+
   const renderAddress = () => (
     <View style={styles.addressContainer}>
       <View>
         <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
-        <View style={styles.divider} />
+        {/* <View style={styles.divider} /> */}
+        {renderDash()}
         {riderDetails != null && (orderStatus == 'f' || orderStatus == 's') ? (
           <MaterialIcon name="lens" size={16} color={COLORS.YELLOWTEXT} />
         ) : (
@@ -83,7 +92,7 @@ const DriverDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
         <Text style={styles.status}>{status.message}</Text>
         {riderDetails != null && (
           <View style={styles.timeContainer}>
-            <MaterialIcon name="schedule" size={16} color={COLORS.YELLOWTEXT} />
+            <Image resizeMode="contain" source={time} style={styles.timeImg} />
             <Text style={styles.time}>{`Estimated Delivery Time: ${startTime} - ${endTime}`}</Text>
           </View>
         )}
@@ -106,9 +115,11 @@ const DriverDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
 
   return (
     <View style={styles.container}>
-      {renderTitle()}
-      {renderAddress()}
-      {renderActions()}
+      <View style={styles.shadow}>
+        {renderTitle()}
+        {renderAddress()}
+        {renderActions()}
+      </View>
     </View>
   );
 };
@@ -117,10 +128,11 @@ export default DriverDetailsView;
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
+    paddingTop: verticalScale(10),
+    overflow: 'hidden',
+    flex: 1
   },
   actionContainer: {
-    paddingBottom: 12,
     alignItems: 'center',
     backgroundColor: 'white',
   },
@@ -137,8 +149,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: moderateScale(10),
   },
-  detailsContainer: {
-    alignItems: 'center',
+  shadow: {
     backgroundColor: 'white',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
@@ -149,10 +160,12 @@ const styles = StyleSheet.create({
       height: -3,
     },
     shadowColor: '#000',
-    elevation: 4,
+    elevation: 5,
     shadowOpacity: 0.1,
-    paddingHorizontal: 10,
-    textAlign: 'center',
+  },
+  detailsContainer: {
+    alignItems: 'center',
+    paddingBottom: moderateScale(15)
   },
   divider: {
     flex: 1,
@@ -170,44 +183,57 @@ const styles = StyleSheet.create({
   },
   orderDetailsText: {
     color: COLORS.YELLOWTEXT,
-    fontWeight: '400',
-    fontSize: 16,
+    fontSize: FONT_SIZE.L,
+    fontFamily: FONT.REGULAR,
     textAlign: 'center',
   },
   status: {
-    fontWeight: '300',
+    fontSize: FONT_SIZE.M,
     marginTop: verticalScale(5),
   },
   seeOrderDetails: {
     padding: moderateScale(20),
   },
   time: {
-    fontWeight: '400',
+    fontSize: FONT_SIZE.S,
+    fontFamily: FONT.REGULAR,
     marginLeft: moderateScale(5),
   },
   timeContainer: {
     flexDirection: 'row',
     marginTop: verticalScale(5),
+    alignItems: 'center'
   },
   title: {
-    fontWeight: '500',
-    fontSize: 16,
+    fontSize: FONT_SIZE.L,
+    fontFamily: FONT.BOLD
   },
   cancelButton: {
-    display: 'flex',
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
     height: SIZE.BUTTON_HEIGHT,
-    width: getDeviceWidth - 28,
+    width: '90%',
     backgroundColor: COLOR.YELLOW,
   },
   buttonText: {
-    color: COLOR.BLACK,
+    color: COLOR.WHITE,
     fontSize: FONT_SIZE.L,
     fontFamily: FONT.BOLD,
   },
   orderDetailsAction: {
     marginVertical: 16,
+  },
+  timeImg: {
+    width: moderateScale(13),
+    height: moderateScale(13),
+    tintColor: COLOR.DARK,
+    resizeMode: 'contain',
+    tintColor: '#F6A100'
+  },
+  dashedLine: {
+    paddingLeft: moderateScale(6),
+    flex: 1,
+    flexDirection: 'row'
   },
 });

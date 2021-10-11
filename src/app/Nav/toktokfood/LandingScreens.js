@@ -61,7 +61,7 @@ const ToktokFoodLanding = () => (
         ),
       }}
     />
-    <ToktokFoodLandingBottomTab.Screen
+    {/* <ToktokFoodLandingBottomTab.Screen
       name="ToktokFoodFavorites"
       component={ToktokFoodFavorites}
       options={{
@@ -72,7 +72,7 @@ const ToktokFoodLanding = () => (
           </>
         ),
       }}
-    />
+    /> */}
     <ToktokFoodLandingBottomTab.Screen
       name="ToktokFoodMe"
       component={ToktokFoodMe}

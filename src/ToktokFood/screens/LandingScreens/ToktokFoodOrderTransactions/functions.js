@@ -21,7 +21,7 @@ export const getSubMessageStatus = (item) => {
     case 's':
       return `Delivered at ${moment(item.dateFulfilled).format('lll')}`;
     case 'c':
-      return `Cancelled at ${moment(item.dateDeclined).format('lll')}`;
+      return `Cancelled at ${moment(item.dateCancelledDeclined).format('lll')}`;
     case 'rp':
       return 'Ready for Pickup';
     case 'po':

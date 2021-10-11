@@ -29,7 +29,7 @@ export default Loader;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1
   },
   content: {
     flex: 1,
@@ -64,10 +64,9 @@ const styles = StyleSheet.create({
   },
   messageContent: {
     fontSize: 18,
-    fontWeight: '600',
     textAlign: 'center',
     color: COLOR.ORANGE,
-    fontFamily: FONT.NORMAL,
+    fontFamily: FONT.BOLD,
   },
   paddingBottom: {
     marginBottom: moderateScale(20)

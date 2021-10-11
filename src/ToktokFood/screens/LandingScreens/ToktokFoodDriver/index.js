@@ -17,7 +17,7 @@ import {GET_ORDER_TRANSACTION_BY_REF_NUM, GET_RIDER_DETAILS} from 'toktokfood/gr
 import {useSelector, useDispatch} from 'react-redux';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import {useIsFocused} from '@react-navigation/native';
-import {removeRiderDetails} from 'toktokfood/helper/ShowRiderDetails';
+import {removeRiderDetails} from 'toktokfood/helper/showRiderDetails';
 import DialogMessage from 'toktokfood/components/DialogMessage';
 
 const CUSTOM_HEADER = {
@@ -178,7 +178,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
         setShadowDialogMessage({
           title: 'Order Complete',
           message,
-          show: false,
+          show: true,
           type: 'success'
         });
         return;
@@ -221,8 +221,8 @@ const ToktokFoodDriver = ({route, navigation}) => {
         }
       } else {
         setShadowDialogMessage({
-          title: 'OOPS!',
-          message: 'Your order has been declined.',
+          title: transaction.declinedNote ? 'Order Cancelled by Merchant' : 'OOPS!',
+          message: transaction.declinedNote ? transaction.declinedNote : 'Your order has been declined.',
           show: true,
           type: 'warning'
         });
@@ -230,20 +230,33 @@ const ToktokFoodDriver = ({route, navigation}) => {
     }
   };
 
+  const selectedTab = (title) => {
+    switch(title){
+      case 'Order Complete': 
+        return 2
+      case 'OOPS!':
+      case 'Order Cancelled by Merchant':
+        return 3
+      default:
+        return 1
+    }
+  }
+
   const onCloseModal = () => {
     let { title } = showDialogMessage
     setShadowDialogMessage(prev => ({ ...prev, show: false }))
-    if(title == 'Order Complete' || title == 'OOPS!'){
-      navigation.navigate('ToktokFoodOrderTransactions')
+    if(title == 'Order Complete' || title == 'OOPS!' || title == 'Order Cancelled by Merchant'){
+      let tab = selectedTab(title)
+      navigation.navigate('ToktokFoodOrderTransactions', { tab })
     } else {
       setSeconds(300)
     }
   }
 
   return (
-    <View style={{flex: 1, backgroundColor: '#FFFF'}}>
-      <HeaderImageBackground customSize={CUSTOM_HEADER}>
-        <HeaderTitle title="Place Order" />
+    <View style={{flex: 1, backgroundColor: '#F9F9F9'}}>
+      <HeaderImageBackground searchBox={false}>
+        <HeaderTitle />
       </HeaderImageBackground>
       <Loader visibility={showLoader} message="Canceling order..." />
       <DialogMessage
@@ -259,12 +272,17 @@ const ToktokFoodDriver = ({route, navigation}) => {
           setShowCancel(false);
           setSeconds(300);
         }}
-        failedCancel={() => console.log('Failed to cancel')}
+        failedCancel={() => {
+          setShowLoader(false)
+          setTimeout(() => {
+            Alert.alert('', 'Toktokwallet error. Unable to return the money.')
+          }, 100)
+        }}
         visibility={showCancel}
         referenceOrderNumber={referenceNum}
       />
-      {(transactionLoading && Object.entries(transaction).length == 0) ||
-      Object.entries(transaction).length == 0 ||
+      {(transactionLoading && transaction && Object.keys(transaction).length == 0) ||
+      transaction && Object.keys(transaction).length == 0 ||
       transactionError ? (
         <LoadingIndicator isFlex isLoading={true} />
       ) : (
@@ -279,7 +297,6 @@ const ToktokFoodDriver = ({route, navigation}) => {
               referenceNum={referenceNum}
             />
           )}
-
           <View style={styles.driverWrapper}>
             {transaction.orderIsfor == 1 ? (
               <DriverDetailsView
@@ -311,7 +328,6 @@ const ToktokFoodDriver = ({route, navigation}) => {
 
 const styles = StyleSheet.create({
   driverWrapper: {
-    flex: 1,
     alignItems: 'flex-end',
     flexDirection: 'row',
   },

@@ -11,12 +11,9 @@ export default styles = StyleSheet.create({
   },
   listContainer: {
     flex: 1,
-    paddingTop: 8,
-    paddingBottom: 15,
   },
   itemContainer: {
-    width: scale(350),
-    alignSelf: 'center',
+    marginHorizontal: moderateScale(16),
     borderBottomWidth: 1,
     flexDirection: 'row',
     borderColor: '#E6E6E6',
@@ -49,6 +46,11 @@ export default styles = StyleSheet.create({
     color: COLOR.BLACK,
     fontFamily: FONT.BOLD,
   },
+  restaurantTitle: {
+    color: COLOR.BLACK,
+    fontFamily: FONT.BOLD,
+    fontSize: FONT_SIZE.XL
+  },
   ratings: {
     marginTop: 4,
     alignItems: 'flex-start',
@@ -66,8 +68,7 @@ export default styles = StyleSheet.create({
     paddingHorizontal: 3,
   },
   tabContainer: {
-    marginTop: 18,
-    paddingHorizontal: 10,
+    paddingHorizontal: 16,
   },
   emptyContainer: {
     alignItems: 'center',
@@ -85,4 +86,67 @@ export default styles = StyleSheet.create({
     marginHorizontal: moderateScale(50),
     textAlign: 'center'
   },
+  ratingImg: {
+    width: moderateScale(15),
+    height: moderateScale(15),
+    marginVertical: 5
+  },
+  timeImg: {
+    width: scale(13),
+    height: scale(13),
+    tintColor: COLOR.DARK,
+    resizeMode: 'contain'
+  },
+  searchBoxContainer: {
+    left: 0,
+    bottom: 0,
+    width: '100%',
+    alignItems: 'center',
+    position: 'absolute',
+  },
+  searchBox: {
+    height: 49,
+    width: '100%',
+    paddingEnd: 10,
+    borderRadius: 13,
+    paddingStart: 42,
+    backgroundColor: '#FFF',
+  },
+  searchBoxShadow: {
+    shadowColor: '#949494',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  textInputFontStyles: {
+    color: COLOR.BLACK,
+    fontSize: FONT_SIZE.L,
+    fontFamily: FONT.REGULAR,
+  },
+  textInputWrapper: {
+    height: 50,
+    width: '93%',
+    display: 'flex',
+    borderRadius: 13,
+    position: 'relative',
+    flexDirection: 'row',
+  },
+  searchBoxIcon: {
+    left: 13,
+    width: 20,
+    height: 20,
+    zIndex: 99,
+    alignSelf: 'center',
+    position: 'absolute',
+  },
+  placeholderText: {
+    color: COLOR.DARK,
+    fontSize: FONT_SIZE.L,
+    fontFamily: FONT.REGULAR,
+    marginTop: Platform.OS === 'ios' ? 15 : 13,
+  }, 
 });

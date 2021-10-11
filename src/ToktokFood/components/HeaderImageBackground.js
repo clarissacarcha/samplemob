@@ -5,20 +5,33 @@ import {ImageBackground, StyleSheet, Platform} from 'react-native';
 import {headerBg} from 'toktokfood/assets/images';
 import {moderateScale, getStatusbarHeight} from 'toktokfood/helper/scale';
 
-const DEFAULT_IMAGE_HEIGHT = Platform.OS === 'android' ? moderateScale(110 + getStatusbarHeight) : moderateScale(125);
-const DEFAULT_CONTAINER_HEIGHT =
-  Platform.OS === 'android' ? moderateScale(135 + getStatusbarHeight) : moderateScale(145);
+const WITHOUT_SEARCH_IMAGE_HEIGHT = Platform.OS === 'android' ? moderateScale(70 + getStatusbarHeight) : moderateScale(70);
+const WITHOUT_SEARCH_CONTAINER_HEIGHT = Platform.OS === 'android' ? moderateScale(70 + getStatusbarHeight) : moderateScale(70);
+
+const WITH_SEARCH_CONTAINER_HEIGHT = Platform.OS === 'android' ? moderateScale(105 + getStatusbarHeight) : moderateScale(105);
+const WITH_SEARCH_IMAGE_HEIGHT = Platform.OS === 'android' ? moderateScale(80 + getStatusbarHeight) : moderateScale(80)
 
 const HeaderImageBackground = ({
   children,
-  customSize = {container: DEFAULT_CONTAINER_HEIGHT, bgImage: DEFAULT_IMAGE_HEIGHT},
-  styleContainer
+  // customSize = {container: DEFAULT_CONTAINER_HEIGHT, bgImage: DEFAULT_IMAGE_HEIGHT},
+  styleContainer,
+  searchBox = true
 }) => {
   return (
     <ImageBackground
       source={headerBg}
-      imageStyle={[styles.image, {height: customSize.bgImage}]}
-      style={[styles.container, {height: customSize.container}, styleContainer]}
+      imageStyle={[
+        styles.image,
+        { height: searchBox ? WITH_SEARCH_IMAGE_HEIGHT : WITHOUT_SEARCH_IMAGE_HEIGHT},
+      ]}
+      style={[
+        styles.container,
+        {
+          height: searchBox ? WITH_SEARCH_CONTAINER_HEIGHT : WITHOUT_SEARCH_CONTAINER_HEIGHT,
+          justifyContent: !searchBox ? 'center' : 'flex-start'
+        }, 
+        styleContainer
+      ]}
     >
       {children}
     </ImageBackground>

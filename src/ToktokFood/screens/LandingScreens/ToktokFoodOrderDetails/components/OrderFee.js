@@ -3,7 +3,7 @@ import {StyleSheet, Text, View} from 'react-native';
 
 // Fonts/Colors
 import {COLORS} from 'res/constants';
-import {FONT_SIZE} from 'res/variables';
+import {FONT_SIZE, FONT} from 'res/variables';
 
 // Utils
 import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
@@ -51,8 +51,8 @@ const styles = StyleSheet.create({
     paddingVertical: moderateScale(5),
   },
   subtotal: {
-    color: COLORS.ORANGE,
-    fontWeight: '500',
+    color: '#FF6200',
+    fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.M,
   },
   total: {
@@ -60,9 +60,9 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.L,
   },
   totalPrice: {
-    fontWeight: '500',
+    color: '#FF6200',
+    fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.L,
-    color: COLORS.ORANGE,
   },
   note: {
     fontWeight: '500',

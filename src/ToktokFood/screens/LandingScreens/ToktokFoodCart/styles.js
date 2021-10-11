@@ -11,7 +11,7 @@ export default styles = StyleSheet.create({
   },
   sectionContainer: {
     paddingVertical: 10,
-    paddingHorizontal: Platform.OS === 'android' ? 12 : 14,
+    paddingHorizontal: moderateScale(16),
   },
   scrollView: {paddingBottom: 150},
   deliverWrapper: {
@@ -45,19 +45,22 @@ export default styles = StyleSheet.create({
   },
   textAddress: {
     color: COLOR.BLACK,
-    fontSize: FONT_SIZE.M,
+    fontSize: FONT_SIZE.S,
     fontFamily: FONT.REGULAR,
   },
   addressMarkerIcon: {
-    width: 20,
-    height: 20,
+    width: moderateScale(15),
+    height: moderateScale(15),
     marginRight: 4,
+    resizeMode: 'contain',
+    tintColor: 'black'
   },
   foodItemImage: {
-    width: 80,
-    height: 75,
+    width: moderateScale(80),
+    height: moderateScale(80),
     marginRight: 8,
     borderRadius: 12,
+    resizeMode: 'contain'
   },
   orderItemContainer: {
     flexDirection: 'row',
@@ -78,14 +81,14 @@ export default styles = StyleSheet.create({
   },
   orderInfoWrapper: {
     flex: 1,
-    minHeight: 90,
     paddingHorizontal: scale(6),
+    flexShrink: 1
   },
   orderText: {
     color: COLOR.BLACK,
     fontFamily: FONT.REGULAR,
     fontSize: FONT_SIZE.M,
-    marginVertical: verticalScale(1),
+    marginVertical: verticalScale(2),
   },
   alsoOrderList: {
     flex: 1,
@@ -123,7 +126,7 @@ export default styles = StyleSheet.create({
     marginVertical: verticalScale(6),
   },
   totalContainer: {
-    paddingVertical: verticalScale(14),
+    paddingVertical: moderateScale(16),
   },
   total: {
     fontFamily: FONT.BOLD,
@@ -131,13 +134,13 @@ export default styles = StyleSheet.create({
   },
   subtotal: {
     fontFamily: FONT.BOLD,
-    color: COLOR.ORANGE,
+    color: '#FF6200',
     fontSize: FONT_SIZE.L,
   },
   totalPrice: {
     fontFamily: FONT.BOLD,
-    fontSize: FONT_SIZE.XL,
-    color: COLOR.ORANGE,
+    fontSize: FONT_SIZE.L,
+    color: '#FF6200',
   },
   paymentContainer: {
     flex: 1,
@@ -153,9 +156,9 @@ export default styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     height: moderateScale(50),
-    width: moderateScale(150),
-    paddingHorizontal: scale(6),
+    paddingHorizontal: scale(10),
     backgroundColor: COLOR.WHITE,
+
   },
   tokwaButtonTextWrapper: {
     flexDirection: 'row',
@@ -181,14 +184,14 @@ export default styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    width: moderateScale(80),
     height: moderateScale(50),
+    paddingHorizontal: scale(30),
     backgroundColor: COLOR.WHITE,
   },
   cashText: {
     color: COLOR.BLACK,
     fontSize: FONT_SIZE.L,
-    fontFamily: FONT.BOLD,
+    fontFamily: FONT.REGULAR,
   },
   input: {
     paddingTop: 15,
@@ -249,5 +252,17 @@ export default styles = StyleSheet.create({
   backRightBtnRight: {
     backgroundColor: '#F6841F',
     right: 0,
+  },
+  shadow: {
+    backgroundColor:"white",
+    borderRadius: 5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
 });

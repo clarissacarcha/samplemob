@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useMemo, useEffect} from 'react';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {useNavigation, useRoute} from '@react-navigation/native';
@@ -11,18 +11,26 @@ import {verticalScale, scale, getStatusbarHeight} from 'toktokfood/helper/scale'
 
 import {useDispatch} from 'react-redux';
 
+import {saveUserLocation} from 'toktokfood/helper/PersistentLocation';
+
 // Helpers
 import {getFormattedAddress} from 'toktokfood/helper';
 
 import {PickUpDetails} from './component';
 
-const ToktokFoodMapSearch = (props) => {
+const ToktokFoodMapSearch = () => {
   const route = useRoute();
-  const navigation = useNavigation();
   const dispatch = useDispatch();
+  const navigation = useNavigation();
 
-  const [address, setAddress] = useState('');
-  const [mapCoordinates, setMapCoordinates] = useState(route.params.coordinates);
+  const [mapInfo, setMapInfo] = useState({
+    coordinates: {
+      latitude: route.params.coordinates.latitude,
+      longitude: route.params.coordinates.longitude,
+    },
+    address: '',
+    fullInfo: {},
+  });
 
   const onMapMove = async (c) => {
     const {latitude, longitude} = c;
@@ -33,12 +41,22 @@ const ToktokFoodMapSearch = (props) => {
         longitude,
         address: result.formattedAddress,
       };
-      setAddress(result.formattedAddress);
-      setMapCoordinates({latitude, longitude});
-      dispatch({type: 'SET_TOKTOKFOOD_LOCATION', payload: {...payload}});
+      if (mapInfo.address !== result.formattedAddress) {
+        setMapInfo({
+          coordinates: {latitude, longitude},
+          address: result.formattedAddress,
+          fullInfo: payload,
+        });
+      }
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const onConfirmAddress = (details) => {
+    saveUserLocation({...mapInfo.fullInfo, details}).then(() => {
+      dispatch({type: 'SET_TOKTOKFOOD_LOCATION', payload: {...mapInfo.fullInfo, details}});
+    });
   };
 
   const closeMap = () => {
@@ -53,17 +71,22 @@ const ToktokFoodMapSearch = (props) => {
             style={styles.mapView}
             provider={PROVIDER_GOOGLE}
             region={{
-              ...mapCoordinates,
+              ...mapInfo.coordinates,
               ...MAP_DELTA_LOW,
             }}
-            onRegionChangeComplete={(r) => onMapMove(r)}></MapView>
+            onRegionChangeComplete={(r) => onMapMove(r)}
+          />
           <FA5Icon style={styles.mapMarker} name="map-pin" size={40} color={COLOR.BLACK} />
         </View>
         <TouchableOpacity onPress={() => closeMap()} style={[styles.floatingBackButton, styles.floatingBoxShadow]}>
           <FA5Icon name="chevron-left" size={25} color={COLOR.BLACK} />
         </TouchableOpacity>
       </View>
-      <PickUpDetails pinAddress={address} />
+      <PickUpDetails
+        isCart={route.params?.isCart}
+        pinAddress={mapInfo.address}
+        onConfirm={(d) => onConfirmAddress(d)}
+      />
     </>
   );
 };
@@ -110,7 +133,4 @@ const styles = StyleSheet.create({
   },
 });
 
-// ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
-// React.memo for memoizing the component.
-// Do not remove the memo function to avoid multiple unwanted GMAP API request
-export default React.memo(ToktokFoodMapSearch);
+export default ToktokFoodMapSearch;

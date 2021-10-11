@@ -7,8 +7,9 @@ import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import {VerifyContext} from '../components';
 // Fonts & Colors
-import {COLOR} from 'res/variables';
+import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 import {food1} from 'toktokfood/assets/images';
+import ContentLoader from 'react-native-easy-content-loader';
 
 import {
   verticalScale,
@@ -75,35 +76,54 @@ export const FoodList = (props) => {
     navigation.navigate('ToktokFoodItemDetails', { Id, temporaryCart: temporaryCart.items });
   };
 
-  const renderItem = ({item}) => {
+  const renderItem = ({item, index}) => {
     return (
-      <TouchableOpacity onPress={() => onNavigateToFoodItemDetails(item.Id)} style={styles.listContainer}>
-        <View>
+      <TouchableOpacity
+        onPress={() => onNavigateToFoodItemDetails(item.Id)}
+        style={[
+          styles.listContainer,
+          {
+            paddingBottom: index == 0 ? moderateScale(10) : 0,
+            marginVertical: index == 0 ?  0 : moderateScale(10),
+          }
+        ]}
+      >
+        <View style={{ flex: 1 }}>
           <Text style={styles.listText}>{item.itemname}</Text>
           <Text style={styles.listPrice}>PHP {item.price.toFixed(2)}</Text>
-          <Text numberOfLines={1}>{item.summary}</Text>
+          { !!item.summary && <Text numberOfLines={1} style={styles.summary}>{item.summary}</Text> }
         </View>
         <View>
-          <Image resizeMode="contain" source={{uri: item.filename}} style={styles.img} />
+          <Image resizeMode='contain' source={{uri: item.filename}} style={styles.img} />
         </View>
       </TouchableOpacity>
     );
   };
-
   if (productsLoading || tagsLoading || productsError || searchProductsLoading) {
+    let listSize = (getDeviceHeight / verticalScale(100)).toFixed(0);
+
     return (
-      <LoadingIndicator
-        style={[
-          styles.container,
-          {
-            minHeight,
-            paddingVertical: 20
-          }
-        ]}
-          isLoading={true}
+      <View style={{ paddingHorizontal: moderateScale(10), paddingTop: moderateScale(10) }}>
+        <ContentLoader
+          active
+          pRows={3}
+          pWidth={['50%', '30%', '70%']}
+          title={false}
+          primaryColor="#FFFFFF"
+          secondaryColor="rgba(256,186,28,0.4)"
+          aShape='square'
+          aSize='large'
+          listSize={parseInt(listSize)}
+          avatar
+          reverse
         />
+      </View>
     )
   }
+
+  const itemSepartor = () => (
+    <View style={styles.separtor} />
+  )
 
   return (
     <>
@@ -115,12 +135,11 @@ export const FoodList = (props) => {
           styles.container,
           { minHeight }
         ]}
+        ItemSeparatorComponent={itemSepartor}
         ListEmptyComponent={() => (
-          <View
-           
-          >
-            <Text style={{textAlign: 'center', marginVertical: 20}}>No products</Text>
-          </View>
+          <Text style={{textAlign: 'center', marginVertical: 20}}>
+            { searchProduct ? 'No product found' : 'This restaurant has no products yet.' }
+          </Text>
         )}
       />
     </>
@@ -129,11 +148,6 @@ export const FoodList = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-      // Platform.OS === 'ios' && isIphoneXorAbove()
-      //   ? 518
-      //   : getDeviceHeight -
-      //     ((Platform.OS === 'android' ? moderateScale(88 + getStatusbarHeight) : moderateScale(105)) +
-      //       moderateScale(180)),
     flex: 1,
     backgroundColor: COLOR.WHITE,
   },
@@ -142,24 +156,35 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   img: {
-    height: 55,
-    width: 60,
+    height: moderateScale(70),
+    width: moderateScale(70),
+    borderRadius: 5
   },
   listText: {
-    fontWeight: '500',
-    paddingVertical: 3,
+    fontFamily: FONT.BOLD,
+    fontSize: FONT_SIZE.M,
+  },
+  summary: {
+    fontFamily: FONT.REGULAR,
+    fontSize: FONT_SIZE.M,
+    flexShrink: 1,
+    paddingRight: 10
   },
   listPrice: {
     color: '#FF6200',
-    fontWeight: '500',
+    fontFamily: FONT.BOLD,
+    fontSize: FONT_SIZE.M,
     paddingVertical: 3,
   },
   listContainer: {
-    borderBottomWidth: 1,
-    borderColor: '#E6E6E6',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: verticalScale(15),
-    paddingHorizontal: verticalScale(20),
+    paddingHorizontal: verticalScale(18),
+    alignItems: 'center',
   },
+  separtor: {
+    borderBottomWidth: 1,
+    borderColor: '#E6E6E6',
+    marginHorizontal: verticalScale(20),
+  }
 });

@@ -25,14 +25,14 @@ const initialPickUpDetails = {
   pickUpAddressLatLong: {},
 };
 
-const ToktokFoodAddressDetails = () => {
+const ToktokFoodAddressDetails = ({ route }) => {
   const navigation = useNavigation();
 
   const {location} = useSelector((state) => state.toktokFood);
 
   const onSearchMapNavigate = (c) => {
     if (typeof c === 'object') {
-      navigation.replace('ToktokFoodMapSearch', {coordinates: c});
+      navigation.replace('ToktokFoodMapSearch', {coordinates: c, isCart: route.params?.isCart});
     }
   };
 
@@ -97,19 +97,19 @@ const ToktokFoodAddressDetails = () => {
         method: 'post',
         data: {
           query: `
-                query {
-                  getGooglePlaceAutocomplete(input:{
-                    searchString: "${searchString}"
-                    sessionToken:"${sessionToken}"
-                  }) {
-                    payload
-                    predictions {
-                      formattedAddress
-                      placeId
-                    }
-                  }
+            query {
+              getGooglePlaceAutocomplete(input:{
+                searchString: "${searchString}"
+                sessionToken:"${sessionToken}"
+              }) {
+                payload
+                predictions {
+                  formattedAddress
+                  placeId
                 }
-                `,
+              }
+            }
+          `,
         },
       });
       const {payload, predictions} = API_RESULT?.data.data?.getGooglePlaceAutocomplete;

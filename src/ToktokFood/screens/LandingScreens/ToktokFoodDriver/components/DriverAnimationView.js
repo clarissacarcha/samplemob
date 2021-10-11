@@ -10,7 +10,7 @@ import {scale, moderateScale, verticalScale} from 'toktokfood/helper/scale';
 
 import DialogMessage from 'toktokfood/components/DialogMessage';
 import RatingModal from 'toktokfood/components/RatingModal';
-import { saveRiderDetails, checkRiderDetails, getRiderDetails, clearRiderDetails } from 'toktokfood/helper/ShowRiderDetails';
+import { saveRiderDetails, checkRiderDetails, getRiderDetails, clearRiderDetails } from 'toktokfood/helper/showRiderDetails';
 
 const DriverAnimationView = ({orderStatus, riderDetails, orderIsfor, referenceNum}) => {
   const [showDriverModal, setShowDriverModal] = useState(false);
@@ -69,6 +69,7 @@ export default DriverAnimationView;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#F9F9F9'
   },
   contactSupportText: {
     fontSize: 15,
@@ -78,14 +79,13 @@ const styles = StyleSheet.create({
     paddingRight: moderateScale(20),
   },
   img: {
-    width: 250,
-    height: 150,
-    marginBottom: 20
+    width: moderateScale(180),
+    height: moderateScale(180),
   },
   imgContainer: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: verticalScale(10),
+    // paddingVertical: verticalScale(10),
   },
 });

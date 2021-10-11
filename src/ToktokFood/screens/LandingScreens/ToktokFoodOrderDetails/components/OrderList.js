@@ -10,6 +10,7 @@ import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
 
 // Data
 import {foodData} from 'toktokfood/helper/strings';
+import { FONT } from '../../../../../res/variables';
 
 
 const DisplayAddons = ({ addOns }) => {
@@ -24,19 +25,24 @@ const DisplayAddons = ({ addOns }) => {
 const OrderList = ({ orderDetails }) => {
 
   const renderItem = ({item}) => {
-    let parseAddOns = JSON.parse(item.addons);
+    let { parentProductId, filename, itemname, parentProductName} = item.productDetails
+    let parseAddOns = item.addons.length > 0 ? JSON.parse(item.addons) : item.addons;
+    let productName = parentProductId ? parentProductName : itemname
     return(
-      <View style={styles.listContainer}>
-        <Image style={styles.listImg} source={{ uri: item.productDetails.filename }} resizeMode="cover" />
+      <View style={styles.listContainer}> 
+        { item.productDetails.filename && (
+          <Image style={styles.listImg} source={{ uri: item.productDetails.filename }} />
+        )}
         <View style={styles.list}>
           <View style={styles.listInfo}>
-            <Text style={styles.listName}>{item.productDetails.itemname}</Text>
+            <Text style={styles.listName}>{productName}</Text>
             <Text style={styles.seeAll}>{`PHP ${item.amount.toFixed(2)}`}</Text>
           </View>
           <View>
-            <Text style={styles.notes}>{item.quantity}x</Text>
-            { parseAddOns && parseAddOns.length > 0 && <DisplayAddons addOns={parseAddOns} /> }
-            { !!item.notes && <Text style={styles.notes}>{`Notes: ${item.notes}`}</Text> }
+            <Text style={styles.notes}>x{item.quantity}</Text>
+            { parentProductId && <Text style={styles.notes}>{`Variant: ${itemname}`}</Text>}
+            { !!parseAddOns && parseAddOns.length > 0 && <DisplayAddons addOns={parseAddOns} /> }
+            { !!item.notes && <Text style={styles.notes}>{`Notes: ${JSON.parse(item.notes)}`}</Text> }
           </View>
         </View>
       </View>
@@ -71,8 +77,10 @@ const styles = StyleSheet.create({
     marginVertical: verticalScale(5),
   },
   listImg: {
-    width: 90,
-    height: 90,
+    width: moderateScale(90),
+    height: moderateScale(90),
+    borderRadius: 5,
+    resizeMode: 'contain'
   },
   listInfo: {
     flexDirection: 'row',
@@ -80,23 +88,23 @@ const styles = StyleSheet.create({
     paddingTop: verticalScale(3),
   },
   listName: {
-    fontWeight: '500',
+    fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.L,
     flexShrink: 1
   },
   note: {
-    fontWeight: '500',
+    fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.M,
+    paddingBottom: moderateScale(10)
   },
   notes: {
-    fontWeight: '300',
     fontSize: FONT_SIZE.S,
     marginTop: verticalScale(5),
     flexShrink: 1
   },
   seeAll: {
-    color: COLORS.ORANGE,
-    fontWeight: '500',
+    color: '#FF6200',
+    fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.M,
   },
   container: {

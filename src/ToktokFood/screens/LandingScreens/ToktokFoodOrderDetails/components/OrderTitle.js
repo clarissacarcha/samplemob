@@ -1,9 +1,11 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, Image} from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 // Fonts/Colors
 import {COLORS} from 'res/constants';
+import {FONT_SIZE, FONT, SIZE, COLOR} from 'res/variables';
+import { time } from 'toktokfood/assets/images';
 
 // Utils
 import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
@@ -13,7 +15,18 @@ import {useSelector} from 'react-redux';
 import { getDistance, convertDistance } from 'geolib';
 
 const OrderTitle = ({ transaction, riderDetails }) => {
-  const { shopDetails, orderStatus, isconfirmed, address, dateReadyPickup, dateOrderProcessed, dateBookingConfirmed, orderIsfor } = transaction;
+  const {
+    latitude,
+    longitude,
+    shopDetails,
+    orderStatus,
+    isconfirmed,
+    address,
+    dateReadyPickup,
+    dateOrderProcessed,
+    dateBookingConfirmed,
+    orderIsfor
+  } = transaction;
   const {location} = useSelector((state) => state.toktokFood);
   const status = orderIsfor == 1 ? orderStatusMessageDelivery(orderStatus, riderDetails, `${shopDetails?.shopname} (${shopDetails.address})`) 
     : orderStatusMessagePickUp(orderStatus, riderDetails, `${shopDetails?.shopname} (${shopDetails.address})`);
@@ -21,7 +34,7 @@ const OrderTitle = ({ transaction, riderDetails }) => {
   const calculateDistance = (startTime, riderLocation) => { 
    
     let distance = getDistance(
-      { latitude: location?.latitude, longitude: location?.longitude },
+      { latitude: latitude, longitude: longitude },
       // { latitude: 14.537752, longitude: 121.001381 }
       { latitude: riderLocation.latitude, longitude: riderLocation.longitude },
     );
@@ -38,7 +51,7 @@ const OrderTitle = ({ transaction, riderDetails }) => {
     let endTime = moment(dateOrderProcessed).add(20, 'minutes').format('hh:mm A')
     return (
       <View style={styles.timeContainer}>
-        <MaterialIcon name="schedule" size={16} color={COLORS.YELLOWTEXT} />
+        <Image resizeMode="contain" source={time} style={styles.timeImg} />
         <Text style={styles.time}>{`Estimated Pickup Time: ${startTime} - ${endTime}`}</Text>
       </View>
     )
@@ -50,7 +63,7 @@ const OrderTitle = ({ transaction, riderDetails }) => {
     let endTime = calculateDistance(date, riderDetails.location)
     return (
       <View style={styles.timeContainer}>
-        <MaterialIcon name="schedule" size={16} color={COLORS.YELLOWTEXT} />
+        <Image resizeMode="contain" source={time} style={styles.timeImg} />
         <Text style={styles.time}>{`Estimated Delivery Time: ${startTime} - ${endTime}`}</Text>
       </View>
     )
@@ -58,6 +71,7 @@ const OrderTitle = ({ transaction, riderDetails }) => {
 
   return (
     <View style={styles.detailsContainer}>
+      <Text style={styles.orderDetailsText}>Order Details</Text>
       <Text style={styles.title}>{status.title}</Text>
       { !!status.message && <Text style={styles.status}>{status.message}</Text> }
       { transaction.orderIsfor == 2 && (orderStatus != 'p' && orderStatus!== 'c' && orderStatus !== 's')
@@ -75,32 +89,37 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'white',
     paddingVertical: 20,
-    // Box Shadow
-    // borderTopLeftRadius: 20,
-    // borderTopRightRadius: 20,
-    // shadowRadius: 2,
-    // shadowOffset: {
-    //   width: 0,
-    //   height: -3,
-    // },
-    // shadowColor: '#000',
-    // elevation: 4,
-    // shadowOpacity: 0.1,
   },
   status: {
-    fontWeight: '300',
+    fontSize: FONT_SIZE.S,
+    fontFamily: FONT.REGULAR,
     marginTop: verticalScale(5),
   },
   time: {
-    fontWeight: '400',
+    fontSize: FONT_SIZE.S,
+    fontFamily: FONT.REGULAR,
     marginLeft: moderateScale(5),
   },
   timeContainer: {
     flexDirection: 'row',
     marginTop: verticalScale(5),
+    alignItems: 'center'
   },
   title: {
-    fontWeight: '500',
-    fontSize: 16,
+    fontSize: FONT_SIZE.L,
+    fontFamily: FONT.BOLD
   },
+  timeImg: {
+    width: moderateScale(13),
+    height: moderateScale(13),
+    tintColor: COLOR.DARK,
+    resizeMode: 'contain',
+    tintColor: '#F6A100'
+  },
+  orderDetailsText: {
+    fontSize: FONT_SIZE.L,
+    fontFamily: FONT.BOLD,
+    marginBottom: moderateScale(20),
+    marginTop: moderateScale(10)
+  }
 });

@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Image, Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 // Fonts/Colors
 import { COLORS } from 'res/constants';
-import { FONT_SIZE } from 'res/variables';
+import { FONT_SIZE, FONT } from 'res/variables';
 // Images
 import { chat, phoneBlack } from 'toktokfood/assets/images';
 import RatingModal from 'toktokfood/components/RatingModal';
 // Utils
 import { moderateScale, verticalScale } from 'toktokfood/helper/scale';
-import { checkRiderDetails } from 'toktokfood/helper/ShowRiderDetails';
+import { checkRiderDetails } from 'toktokfood/helper/showRiderDetails';
 
 const OrderRider = ({ riderDetails, transaction, referenceNum }) => {
   const { user, vehicle } = riderDetails;
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     paddingTop: moderateScale(5),
   },
   riderName: {
-    fontWeight: '500',
+    fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.M,
   },
   star: {

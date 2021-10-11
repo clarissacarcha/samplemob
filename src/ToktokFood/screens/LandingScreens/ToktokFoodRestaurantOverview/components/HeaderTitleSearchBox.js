@@ -12,9 +12,10 @@ import { VerifyContext } from '../components';
 import {moderateScale, verticalScale, getStatusbarHeight} from 'toktokfood/helper/scale';
 
 // State must be global to share with other components
-export const HeaderTitleSearchBox = ({}) => {
+export const HeaderTitleSearchBox = ({ onCallBackSearch }) => {
   const navigation = useNavigation();
   const { searchProduct, setSearchProduct } = useContext(VerifyContext)
+  // const [ searchProduct, setSearchProduct ] = useState('')
 
   return (
     <View style={styles.searchBoxContainer}>
@@ -24,10 +25,10 @@ export const HeaderTitleSearchBox = ({}) => {
       <View style={[styles.textInputWrapper, styles.searchBox]}>
         <Image style={styles.searchBoxIcon} source={searchIcon} />
         <TextInput
-          value={searchProduct}
-          onChangeText={(value) => setSearchProduct(value) }
+          defaultValue={searchProduct}
+          onChangeText={(val) => setSearchProduct(val)}
           placeholder="What would you like to eat?"
-          style={[styles.textInputFontStyles]}
+          style={[ styles.textInputFontStyles, { flexShrink: 1, width: '100%', paddingRight: 10 }]}
         />
       </View>
     </View>
@@ -45,6 +46,7 @@ const styles = StyleSheet.create({
   },
   searchBoxContainer: {
     flexDirection: 'row',
+    zIndex: 5,
     // marginTop: Platform.OS === 'android' ? verticalScale(37) : verticalScale(25),
     paddingRight: moderateScale(20),
     marginTop: Platform.OS === 'android' ? getStatusbarHeight + 15 : verticalScale(20),
@@ -62,12 +64,17 @@ const styles = StyleSheet.create({
   textInputWrapper: {
     alignItems: 'center',
     flexDirection: 'row',
-    height: Platform.OS === 'ios' ? moderateScale(48) : verticalScale(40),
-    // paddingVertical: 10,
+    paddingVertical: Platform.OS == 'android' ? 0 : 10
   },
   searchBoxIcon: {
     marginHorizontal: 10,
     width: 20,
     height: 20,
+  },
+  input: {
+    backgroundColor: '#F8F8F8',
+    padding: 15,
+    borderRadius: 5,
+    marginBottom: 15
   },
 });

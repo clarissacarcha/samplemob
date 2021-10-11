@@ -5,17 +5,13 @@ import {Platform, RefreshControl, ScrollView, StatusBar, StyleSheet, View} from 
 import {useSelector} from 'react-redux';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import HeaderTabs from 'toktokfood/components/HeaderTabs';
+import ChangeAddress from 'toktokfood/components/ChangeAddress';
 import {GET_SHOPS} from 'toktokfood/graphql/toktokfood';
 // Utils
 import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
 // Components
 import {AdvertisementSection, CategoryList, RestaurantList} from './index';
 
-// const {height: SCREEN_HEIGHT} = Dimensions.get('window');
-// const IS_IPHONE_X = SCREEN_HEIGHT === 812 || SCREEN_HEIGHT === 896;
-// const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? (IS_IPHONE_X ? 44 : 20) : 0;
-// const HEADER_HEIGHT = Platform.OS === 'ios' ? (IS_IPHONE_X ? 88 : 0) : 64;
-// const NAV_BAR_HEIGHT = HEADER_HEIGHT - STATUS_BAR_HEIGHT;
 
 const tabs = [
   {
@@ -89,7 +85,7 @@ const StickyView = () => {
   });
 
   useEffect(() => {
-    if (location !== undefined) {
+    if(location) {
       getShops();
     }
   }, [location]);
@@ -156,44 +152,8 @@ const StickyView = () => {
 
   return (
     <>
-      <StatusBar barStyle="dark-content" />
-      {/* <ReactNativeParallaxHeader
-        alwaysShowNavBar={false}
-        alwaysShowTitle={false}
-        headerMinHeight={headerMinHeight}
-        headerMaxHeight={headerMaxHeight}
-        headerTitleStyle={{zIndex: offset <= 50 ? 1 : -1}}
-        extraScrollHeight={10}
-        title={<RenderTitle />}
-        backgroundColor="transparent"
-        navbarColor="whitesmoke"
-        renderContent={() => <RestaurantList location={location} loading={loading} error={error} data={data} loadMore={loadMore} />}
-        renderNavBar={() => <RenderNavBar />}
-        containerStyle={styles.container}
-        contentContainerStyle={styles.contentContainer}
-        scrollEventThrottle={400}
-        scrollViewProps={{
-          // onScroll: (event) => setOffset(event.nativeEvent.contentOffset.y),
-          onScroll: ({nativeEvent}) => {
-            if (isCloseToBottom(nativeEvent)) {
-              handleLoadMore(nativeEvent)
-            }
-          },
-          refreshControl: (
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          )
-          // onScrollEndDrag: ({ nativeEvent }) => setOffset(nativeEvent.contentOffset.y - 100),
-          // onMomentumScrollEnd: ({ nativeEvent }) => {
-          //   // setOffset(nativeEvent.contentOffset.y - 100)
-          //   console.log(isCloseToBottom(nativeEvent), 'asdasd')
-          //   if (isCloseToBottom(nativeEvent)) {
-          //     handleLoadMore(nativeEvent)
-          //   }
-          // }
-        }}
-      /> */}
       <ScrollView
-        stickyHeaderIndices={[1]}
+        stickyHeaderIndices={[2]}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#FFA700']} tintColor="#FFA700" />
         }
@@ -203,11 +163,11 @@ const StickyView = () => {
           }
         }}
         scrollEventThrottle={15}
-        // showsVerticalScrollIndicator={false}
       >
         {/* <View style={styles.adsContainer}>
           <AdvertisementSection />
         </View> */}
+        <ChangeAddress />
         <CategoryList horizontal homeRefreshing={refreshing} rightText="See all" />
         <RenderNavBar />
         <RestaurantList location={location} loading={loading} error={error} data={data} loadMore={loadMore} />
@@ -221,11 +181,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   contentContainer: {
-    backgroundColor: 'whitesmoke',
+    backgroundColor: 'white',
     paddingBottom: Platform.OS === 'android' ? 10 : 30,
     marginTop: Platform.OS === 'ios' ? moderateScale(20) : moderateScale(14),
   },
-  headerWrapper: {paddingHorizontal: moderateScale(8), width: '100%', paddingTop: moderateScale(8), backgroundColor: 'whitesmoke'},
+  headerWrapper: {paddingHorizontal: moderateScale(8), width: '100%', paddingTop: moderateScale(8), backgroundColor: 'white'},
   navbarWrapper: {
     // marginBottom: Platform.OS === 'ios' ? verticalScale(12) : verticalScale(8),
   },

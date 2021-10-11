@@ -30,6 +30,7 @@ const transaction = `
   dateShipped
   dateReceived
   dateCancelled
+  dateCancelledDeclined
   tDeliveryId
   tShareLink
   isconfirmed
@@ -39,6 +40,7 @@ const transaction = `
   isdeclined
   latitude
   longitude
+  declinedNote
   shopDetails {
     id
     shopname
@@ -68,6 +70,8 @@ const transaction = `
       Id
       itemname
       filename
+      parentProductId
+      parentProductName
     }
   }
 `;

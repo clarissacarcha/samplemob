@@ -40,7 +40,7 @@ const RestaurantList = (props) => {
       ListEmptyComponent={listEmpty()}
       style={{flex: 1}}
       contentContainerStyle={{
-        backgroundColor: 'whitesmoke',
+        backgroundColor: 'white',
         paddingHorizontal: 20,
         paddingTop: 15,
         paddingBottom: Platform.OS == 'android' ? verticalScale(20) : 0,
@@ -95,8 +95,9 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   emptyContainer: {
+    height: verticalScale(300),
     alignItems: 'center',
-    flex: 1,
+    justifyContent: 'center',
   },
   emptyImg: {
     height: moderateScale(175),
@@ -107,5 +108,6 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.L,
     textAlign: 'center',
     marginTop: moderateScale(20),
+    marginHorizontal: moderateScale(20)
   },
 });

@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useContext} from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, Text, TouchableOpacity, Alert} from 'react-native';
 
 // Utils
 import {scale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
@@ -8,26 +8,26 @@ import {useIsFocused} from '@react-navigation/native';
 
 import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
 import {useSelector} from 'react-redux';
-// import { getTemporaryCart } from 'toktokfood/helper/TemporaryCart';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import {VerifyContext} from '../components';
-import {GET_TEMPORARY_CART} from 'toktokfood/graphql/toktokfood';
+import {GET_ALL_TEMPORARY_CART, CHECK_HAS_TEMPORARY_CART} from 'toktokfood/graphql/toktokfood';
 
 export const FoodCart = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const { id, shopname } = route.params.item;
+  const { id } = route.params.item;
   const {customerInfo} = useSelector((state) => state.toktokFood);
   const isFocus = useIsFocused();
   const {temporaryCart, setTemporaryCart, setFoodCartHeight} = useContext(VerifyContext);
 
-  const [getTemporaryCart, {loading: cartLoading, error: cartError}] = useLazyQuery(GET_TEMPORARY_CART, {
+  const [getAllTemporaryCart, {loading: cartLoading, error: cartError}] = useLazyQuery(GET_ALL_TEMPORARY_CART, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
-    onCompleted: ({ getTemporaryCart }) => {
-      let { items, totalAmount } = getTemporaryCart
+    onCompleted: ({ getAllTemporaryCart }) => {
+      let { items, totalAmount } = getAllTemporaryCart
+      console.log(getAllTemporaryCart)
       setTemporaryCart({
         cartItemsLength: items.length,
         totalAmount,
@@ -36,12 +36,21 @@ export const FoodCart = () => {
     },
   });
 
+  const [checkHasTemporaryCart, {data: hasTemporaryCart, loading: hasCartLoading, error: hasCartError}] = useLazyQuery(CHECK_HAS_TEMPORARY_CART, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onError: (err) => {
+      Alert.alert('', 'Something went wrong.')
+    }
+  });
+
+
   useEffect(() => {
-    if(isFocus){
-      getTemporaryCart({
+    if(isFocus && customerInfo){
+      checkHasTemporaryCart({ variables: { input: { userId: customerInfo.userId } } })
+      getAllTemporaryCart({
         variables: {
           input: {
-            shopId: +id,
             userId: customerInfo.userId
           },
         },
@@ -55,10 +64,10 @@ export const FoodCart = () => {
   };
 
   const onRestaurantNavigate = () => {
-    navigation.navigate('ToktokFoodCart', { shopId: id, userId: customerInfo.userId, shopname });
+    navigation.navigate('ToktokFoodCart', { shopId: id, userId: customerInfo.userId });
   };
 
-  if(temporaryCart.cartItemsLength == 0 || cartLoading){
+  if(temporaryCart.cartItemsLength == 0 || cartLoading || hasTemporaryCart?.checkHasTemporaryCart.shopid == 0){
     return null
   }
   return (
@@ -68,7 +77,9 @@ export const FoodCart = () => {
         style={[styles.container, styles.cartBorder]}
       >
         <View style={styles.foodItemTotalWrapper}>
-          <Text style={styles.total}>{temporaryCart.cartItemsLength} item</Text>
+          <Text style={styles.total}>{
+            `${temporaryCart.cartItemsLength} ${temporaryCart.cartItemsLength > 1 ? 'items' : 'item'}`
+          }</Text>
           <Text style={styles.total}>Total: {temporaryCart.totalAmount.toFixed(2)}</Text>
         </View>
         <TouchableOpacity

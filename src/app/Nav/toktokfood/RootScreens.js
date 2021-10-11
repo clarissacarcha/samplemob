@@ -12,10 +12,10 @@ import {
   ToktokFoodAddressDetails,
   ToktokFoodRestaurantOverview,
   ToktokRiderRating,
-  ToktokFoodEnterPinCode,
   ToktokFoodTermsAndConditions,
   ToktokFoodPrivacyPolicy,
-  ToktokFoodContactUs
+  ToktokFoodContactUs,
+  ToktokFoodEmptyCart
 } from 'toktokfood/screens';
 
 export default ({Navigator}) => (
@@ -41,11 +41,6 @@ export default ({Navigator}) => (
     />
     <Navigator.Screen
       options={{headerShown: false}}
-      name="ToktokFoodEnterPinCode"
-      component={ToktokFoodEnterPinCode}
-    />
-    <Navigator.Screen
-      options={{headerShown: false}}
       name="ToktokFoodTermsAndConditions"
       component={ToktokFoodTermsAndConditions}
     />
@@ -58,6 +53,11 @@ export default ({Navigator}) => (
       options={{headerShown: false}}
       name="ToktokFoodContactUs"
       component={ToktokFoodContactUs}
+    />
+    <Navigator.Screen
+      options={{headerShown: false}}
+      name="ToktokFoodEmptyCart"
+      component={ToktokFoodEmptyCart}
     />
   </>
 );
