@@ -8,6 +8,7 @@ const { COLOR, FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
 
 const {width,height} = Dimensions.get("window")
 
+
 const renderReferenceNumber = (externalReferenceNumber) => {
     if(externalReferenceNumber && externalReferenceNumber != ""){
         return (
@@ -56,36 +57,20 @@ const renderCashOutDisplayInformations = (cashOutDisplayInformations) => {
             <>
             <Text style={styles.labelText}>Account Name: {cashOutDisplayInformations.accountInfo.accountName}</Text>
             <Text style={styles.labelText}>Account Number: {cashOutDisplayInformations.accountInfo.accountNumber}</Text>
-            <Text style={styles.labelText}>Bank: {cashOutDisplayInformations?.accountInfo?.bank?.name}</Text>
+            {
+                cashOutDisplayInformations?.accountInfo?.bank
+                &&   <Text style={styles.labelText}>Bank: {cashOutDisplayInformations?.accountInfo?.bank?.name}</Text>
+            }  
             </>
         )
     }
-
-    if(cashOutDisplayInformations?.gcashInfo){
-        return (
-            <>
-            <Text style={styles.labelText}>Account Name: {cashOutDisplayInformations.gcashInfo.accountName}</Text>
-            <Text style={styles.labelText}>Account Number: {cashOutDisplayInformations.gcashInfo.accountNumber}</Text>
-            </>
-        )
-    }
-
-    if(cashOutDisplayInformations?.bdoInfo){
-        return (
-            <>
-           <Text style={styles.labelText}>Account Name: {cashOutDisplayInformations.bdoInfo.accountName}</Text>
-            <Text style={styles.labelText}>Account Number: {cashOutDisplayInformations.bdoInfo.accountNumber}</Text>
-            </>
-        )
-    }
-  
+    return null
 }
 
 export const TransactionDetails = ({
     visible,
     setVisible,
     transactionInfo,
-    cashOutDisplayInformations,
     cashInMobileNumber
 })=> {
 
@@ -99,7 +84,8 @@ export const TransactionDetails = ({
         displayNumber,
         externalReferenceNumber,
         deliveryId,
-        externalDetails
+        externalDetails,
+        cashOutDisplayInformations
     } = transactionInfo
 
     return (
@@ -124,7 +110,7 @@ export const TransactionDetails = ({
                             {displayNumber != "" && <Text style={styles.labelText}>{displayNumber}</Text>}
                             { status && <Text style={styles.labelText}>Status: {status}</Text>}
                             {/* { deliveryId && <Text style={styles.labelText}>Delivery ID: {deliveryId}</Text>} */}
-                            { renderExternalDetails(externalDetails,externalReferenceNumber) }
+                            { renderExternalDetails(externalDetails, externalReferenceNumber) }
                             { cashInMobileNumber && <Text style={styles.labelText}>Account Number: {cashInMobileNumber}</Text>}
                             { renderCashOutDisplayInformations(cashOutDisplayInformations)}
                             <View style={{marginTop: 10}}>
