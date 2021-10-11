@@ -1,4 +1,5 @@
 export * from './Address'
+export * from './Cart'
 export * from './Category'
 export * from './Checkout'
 export * from './Favorites'

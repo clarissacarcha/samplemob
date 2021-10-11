@@ -152,17 +152,18 @@ const Component =  ({
     // setMessageModalShown(true)
 
     let variables = {
-      userid: user.id,
+      userid: user.userId,
       shopid: store.id,
       branchid: 0,
       productid: product.Id,
       quantity: input.qty
     }
+    console.log(variables)
     const req = await ApiCall("insert_cart", variables, true)
 
     if(req.responseData && req.responseData.success == 1){
-      createMyCartSession('push', raw)
-      setCartItems(CountCartItems)
+      // createMyCartSession('push', raw)
+      // setCartItems(CountCartItems)
       setMessageModalShown(true)
     }else if(req.responseError && req.responseError.success == 0){
       Toast.show(req.responseError.message, Toast.LONG)
