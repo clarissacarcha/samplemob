@@ -4,7 +4,7 @@ import { HeaderBack , HeaderTitle} from 'src/revamp'
 import { onErrorAlert } from 'src/util/ErrorUtility'
 import { useAlert } from 'src/hooks'
 import { SomethingWentWrong } from 'src/components'
-import { Separator } from 'toktokwallet/components'
+import { Separator , CheckIdleState } from 'toktokwallet/components'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import { GET_ACCOUNT_RECOVERY } from 'toktokwallet/graphql'
 import { useQuery } from '@apollo/react-hooks'
@@ -41,23 +41,23 @@ export const ToktokWalletAccountRecoverySetup = ({navigation,route})=> {
 
 
     if(data?.getAccountRecovery){
-        return <>
+        return <CheckIdleState>
             <Separator/>
             <View style={styles.container}>
             <ViewAccountRecovery data={data.getAccountRecovery}/>
             </View>
-        </>
+        </CheckIdleState>
     }
 
     // SETUP ACCOUNT RECOVERY
 
     return (
-        <>
+        <CheckIdleState>
             <Separator/>
             <View style={styles.container}>
                 <SetupAnswers/>
             </View>
-        </>
+        </CheckIdleState>
     )
 }
 

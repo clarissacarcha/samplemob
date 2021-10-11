@@ -2,7 +2,7 @@ import React from 'react'
 import { View , Text , StyleSheet , ActivityIndicator , FlatList , RefreshControl , TouchableHighlight , Image , Dimensions } from 'react-native'
 import { useSelector } from 'react-redux'
 import { HeaderBack , HeaderTitle } from 'src/revamp'
-import { Separator } from 'toktokwallet/components'
+import { Separator, CheckIdleState } from 'toktokwallet/components'
 import {GET_NOTIFICATIONS_BY_CLASSIFICATION } from 'toktokwallet/graphql'
 import { onErrorAlert } from 'src/util/ErrorUtility'
 import { useAlert } from 'src/hooks'
@@ -104,7 +104,7 @@ export const ToktokWalletNotifications = ({navigation,route})=> {
 
     if(data?.getNotificationsByClassification?.length > 0){
         return (
-            <>
+            <CheckIdleState>
             <Separator/>
             <SwipeDownToRefresh/>
             <View style={styles.container}>
@@ -123,12 +123,12 @@ export const ToktokWalletNotifications = ({navigation,route})=> {
                     refreshControl={<RefreshControl onRefresh={refetch} refreshing={loading} colors={[COLOR.YELLOW]} />}
             />
             </View>
-            </>
+            </CheckIdleState>
         )
     }
 
     return (
-        <>
+        <CheckIdleState>
             <Separator/>
             <SwipeDownToRefresh/>
             <View style={styles.container}>
@@ -147,7 +147,7 @@ export const ToktokWalletNotifications = ({navigation,route})=> {
                         refreshControl={<RefreshControl onRefresh={refetch} refreshing={loading} colors={[COLOR.YELLOW]} />}
                     />
             </View>
-        </>
+        </CheckIdleState>
     )
 }
 

@@ -1,7 +1,7 @@
 import React from 'react'
 import { View , Text ,StyleSheet , ActivityIndicator } from 'react-native'
 import { HeaderBack , HeaderTitle} from 'src/revamp'
-import { Separator } from 'toktokwallet/components'
+import { Separator , CheckIdleState} from 'toktokwallet/components'
 
 //SELF IMPORTS
 import {
@@ -24,7 +24,7 @@ export const ToktokWalletAccountRecovery = ({navigation,route})=> {
     const answers = JSON.parse(data.answers)
 
     return (
-        <>
+        <CheckIdleState>
             <Separator/>
             <View style={styles.container}>
                 <QuestionsAnswers
@@ -32,7 +32,7 @@ export const ToktokWalletAccountRecovery = ({navigation,route})=> {
                     answers={answers}
                 />
             </View>
-        </>
+        </CheckIdleState>
     )
 }
 

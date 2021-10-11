@@ -1,7 +1,7 @@
 import React from 'react'
 import {View,Text,StyleSheet,ActivityIndicator,FlatList} from 'react-native'
 import { HeaderBack, HeaderTitle } from 'src/revamp'
-import { Separator } from 'toktokwallet/components'
+import { Separator , CheckIdleState } from 'toktokwallet/components'
 import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
 import { GET_ACCOUNT_TYPES } from 'toktokwallet/graphql'
 import {useQuery} from '@apollo/react-hooks'
@@ -101,7 +101,7 @@ export const ToktokWalletTransactionLimit = ({navigation})=> {
 
 
     return (
-        <>
+        <CheckIdleState>
         <Separator/>
         <View style={styles.container}>
                 <FlatList 
@@ -111,7 +111,7 @@ export const ToktokWalletTransactionLimit = ({navigation})=> {
                         renderItem={AccountTypeLimit}
                 />
         </View>
-        </>
+        </CheckIdleState>
     )
 }
 

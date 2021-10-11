@@ -90,8 +90,7 @@ export const ToktokWalletLoginPage = ({navigation,route})=> {
     
                     <CheckWalletAccountRestriction>
                         {
-                            // isRooted || isDebugMode 
-                            isRooted
+                            isRooted || isDebugMode 
                             ? <RootedDevice/>
                             : <LoginPage/>
                         }

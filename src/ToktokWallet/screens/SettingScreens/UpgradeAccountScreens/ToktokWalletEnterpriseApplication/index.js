@@ -1,6 +1,6 @@
 import React , {useRef, useState , useContext , useEffect} from 'react';
 import {StyleSheet,View,Text,ActivityIndicator} from 'react-native';
-import {Separator} from 'toktokwallet/components';
+import {Separator,CheckIdleState} from 'toktokwallet/components';
 import { HeaderBack, HeaderTitle , VectorIcon , ICON_SET , YellowButton} from 'src/revamp';
 import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql';
 import { GET_ENTERPRISE_UPGRADE_REQUEST } from 'toktokwallet/graphql';
@@ -111,11 +111,11 @@ export const ToktokWalletEnterpriseApplication = ({navigation})=> {
         headerTitle: ()=> <HeaderTitle label={['Enterprise','']}/>,
     })
     return (
-
-        <ContextProvider>
-            <MainComponent/>
-        </ContextProvider>
-
+        <CheckIdleState>
+            <ContextProvider>
+                <MainComponent/>
+            </ContextProvider>
+        </CheckIdleState>
     )
 }
 

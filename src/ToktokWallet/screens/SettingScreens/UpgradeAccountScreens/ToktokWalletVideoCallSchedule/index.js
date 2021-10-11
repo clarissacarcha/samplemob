@@ -2,7 +2,7 @@ import React, { useState, useContext, useRef } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, TextInput, Image, Animated, ActivityIndicator } from "react-native";
 import { HeaderBack , HeaderTitle} from 'src/revamp';
 import CONSTANTS from "common/res/constants";
-import {Separator} from 'toktokwallet/components';
+import {Separator,CheckIdleState} from 'toktokwallet/components';
 import { ChannelList, ContextProvider, Submit, ContextChannelForm, modifyPlaceholderAccordingToChannel } from "./components";
 import { YellowButton } from 'src/revamp';
 import { Transitioning, Transition } from 'react-native-reanimated';
@@ -55,9 +55,11 @@ export const ToktokWalletVideoCallSchedule = ({ navigation }) => {
     })
    
     return (
-       <ContextProvider>
-           <MainComponent />
-       </ContextProvider>
+        <CheckIdleState>
+            <ContextProvider>
+                <MainComponent />
+            </ContextProvider>
+       </CheckIdleState>
     )
 }
 

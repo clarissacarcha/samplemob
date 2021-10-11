@@ -3,7 +3,7 @@ import {View,Text,StyleSheet,ScrollView,TextInput,Alert,KeyboardAvoidingView,Dim
 import {useSelector} from 'react-redux'
 import { HeaderBack, YellowButton,HeaderTitle } from 'src/revamp';
 import {AlertOverlay, SomethingWentWrong} from 'src/components'
-import { Separator } from 'toktokwallet/components';
+import { Separator , CheckIdleState } from 'toktokwallet/components';
 import {useAlert} from 'src/hooks/useAlert'
 import {onErrorAlert,onError} from 'src/util/ErrorUtility'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
@@ -146,7 +146,7 @@ export const ToktokWalletBDORegistration = ({navigation,route})=> {
     }
 
     return (
-        <>
+        <CheckIdleState>
         <AlertOverlay visible={loading}/>
         <DatePickerModal
             visible={pickerVisible}
@@ -287,7 +287,7 @@ export const ToktokWalletBDORegistration = ({navigation,route})=> {
           
             </KeyboardAvoidingView>
         </View>
-        </>
+        </CheckIdleState>
      )
  }
 

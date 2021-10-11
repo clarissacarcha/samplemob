@@ -3,7 +3,7 @@ import {View,Text,StyleSheet,ScrollView,TextInput} from 'react-native'
 import {useSelector} from 'react-redux'
 import { HeaderBack, YellowButton } from 'src/revamp';
 import {HeaderTitle, SomethingWentWrong} from 'src/components'
-import { Separator } from 'toktokwallet/components';
+import { Separator , CheckIdleState } from 'toktokwallet/components';
 import {useAlert} from 'src/hooks/useAlert'
 import CONSTANTS from 'common/res/constants'
 
@@ -32,12 +32,12 @@ export const ToktokWalletGcashRegistration = ({navigation,route})=> {
 
 
     return (
-       <>
+       <CheckIdleState>
        <Separator/>
        <View style={styles.container}>
             <CreateForm provider={provider} navigation={navigation} session={session} mobile={mobile}/>    
        </View>
-       </>
+       </CheckIdleState>
     )
 }
 

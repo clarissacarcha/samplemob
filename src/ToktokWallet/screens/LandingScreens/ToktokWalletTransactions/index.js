@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import {View,StyleSheet,FlatList,RefreshControl} from 'react-native'
 import { onErrorAlert} from 'src/util/ErrorUtility'
-import {Separator,WalletLog } from 'toktokwallet/components'
+import {Separator,WalletLog,CheckIdleState } from 'toktokwallet/components'
 import { HeaderBack , HeaderTitle } from 'src/revamp'
 import { useAlert } from 'src/hooks'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
@@ -55,7 +55,7 @@ export const ToktokWalletTransactions = connect(null,mapDispatchtoProps)(({navig
     // },[pageIndex])
 
     return (
-        <>
+        <CheckIdleState>
         <Separator />
         <View style={styles.container}>        
                 <View style={styles.logs}>
@@ -77,7 +77,7 @@ export const ToktokWalletTransactions = connect(null,mapDispatchtoProps)(({navig
                 </View>
         </View>
             
-       </>
+       </CheckIdleState>
     )
 })
 

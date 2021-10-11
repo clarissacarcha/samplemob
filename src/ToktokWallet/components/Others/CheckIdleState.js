@@ -11,8 +11,8 @@ export const CheckIdleState = ({children})=> {
     const [durationInSeconds,setDurationInSeconds] = useState(60);
     const [showPrompt,setShowPrompt] = useState(false)
     const navigation = useNavigation();
-    const isOpen = useKeyboard();
-    const route = useRoute();
+    // const isOpen = useKeyboard();
+    // const route = useRoute();
     const panResponder = useRef(
         PanResponder.create({
             onStartShouldSetPanResponderCapture: ()=> {
@@ -44,13 +44,13 @@ export const CheckIdleState = ({children})=> {
         }
     },[]))
 
-    useEffect(()=>{
-        if(isOpen){
-            return clearTimeout(timerId.current)
-        }else{
-            resetInactivityTimeout() 
-        }
-    },[isOpen])
+    // useEffect(()=>{
+    //     if(isOpen){
+    //         return clearTimeout(timerId.current)
+    //     }else{
+    //         resetInactivityTimeout() 
+    //     }
+    // },[isOpen])
 
     return (
         <>

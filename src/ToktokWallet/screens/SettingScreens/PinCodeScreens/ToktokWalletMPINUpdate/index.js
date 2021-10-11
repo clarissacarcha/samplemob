@@ -5,7 +5,7 @@ import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
 import { PATCH_MPIN_CODE } from 'toktokwallet/graphql'
 import {useMutation} from '@apollo/react-hooks'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
-import { Separator , LeavePromptModal} from 'toktokwallet/components';
+import { Separator , LeavePromptModal , CheckIdleState} from 'toktokwallet/components';
 import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS
@@ -107,7 +107,7 @@ export const ToktokWalletMPINUpdate =  ({navigation , route})=> {
     }
 
     return (
-        <>
+        <CheckIdleState>
             <AlertOverlay visible={loading} />
             <LeavePromptModal
                 visible={LeaveModalvisible}
@@ -122,7 +122,7 @@ export const ToktokWalletMPINUpdate =  ({navigation , route})=> {
              >
             {DisplayComponent()}
             </KeyboardAvoidingView>
-        </>
+        </CheckIdleState>
     )
 }
 

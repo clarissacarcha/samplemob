@@ -1,7 +1,7 @@
 import React from 'react'
 import { View , Text, StyleSheet , Image } from 'react-native'
 import {HeaderBack, HeaderTitle} from 'src/revamp'
-import { BuildingBottom , Separator } from 'toktokwallet/components'
+import { BuildingBottom , Separator, CheckIdleState } from 'toktokwallet/components'
 import EmailLogo from 'toktokwallet/assets/images/contact-us/email.png'
 import PhoneLogo from 'toktokwallet/assets/images/contact-us/phone.png'
 import MessengerLogo from 'toktokwallet/assets/images/contact-us/messenger.png'
@@ -39,7 +39,7 @@ export const ToktokWalletHelpCentreContactUs = ({navigation,route})=> {
     });
 
     return (
-        <>
+        <CheckIdleState>
         <Separator/>
         <View style={styles.container}>
                 <View style={styles.content}>
@@ -60,7 +60,7 @@ export const ToktokWalletHelpCentreContactUs = ({navigation,route})=> {
                 </View>
         <BuildingBottom/>
         </View>
-        </>
+        </CheckIdleState>
     )
 }
 

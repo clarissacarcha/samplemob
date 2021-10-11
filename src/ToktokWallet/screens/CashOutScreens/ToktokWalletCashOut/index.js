@@ -4,7 +4,8 @@ import { numberFormat } from 'toktokwallet/helper';
 import { 
     HeaderImageBackground,
     HeaderTitle,
-    Separator
+    Separator,
+    CheckIdleState
 } from 'toktokwallet/components'
 import { SomethingWentWrong } from 'src/components'
 import {useSelector} from 'react-redux'
@@ -54,7 +55,7 @@ export const ToktokWalletCashOut = ({navigation, route})=> {
   
 
     return (
-     <>
+     <CheckIdleState>
       <View style={styles.container}>
             <View style={styles.headings}>
                 <HeaderImageBackground>
@@ -80,7 +81,7 @@ export const ToktokWalletCashOut = ({navigation, route})=> {
                         />
             </View>
       </View>
-      </>
+      </CheckIdleState>
     )
 }
 

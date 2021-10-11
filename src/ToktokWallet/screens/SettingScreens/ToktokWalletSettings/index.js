@@ -1,7 +1,7 @@
 import React from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,ScrollView} from 'react-native'
 import FIcon from 'react-native-vector-icons/Feather';
-import {Separator} from 'toktokwallet/components';
+import {Separator,CheckIdleState} from 'toktokwallet/components';
 import { HeaderBack , HeaderTitle} from 'src/revamp';
 import {useSelector} from 'react-redux'
 import CONSTANTS from 'common/res/constants'
@@ -40,7 +40,7 @@ export const ToktokWalletSettings = ({navigation , route })=> {
     )
 
     return (    
-        <>
+        <CheckIdleState>
         <Separator />
         <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
             <SettingHeaderTitle title="Manage PIN"/>
@@ -70,7 +70,7 @@ export const ToktokWalletSettings = ({navigation , route })=> {
             <SettingHeaderTitle title="Account Recovery"/>
             <SettingOption route="ToktokWalletAccountRecoverySetup" title="Account Recovery Setup"/>
         </ScrollView>
-        </>
+        </CheckIdleState>
     )
 }
 

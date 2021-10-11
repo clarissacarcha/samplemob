@@ -5,7 +5,7 @@ import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import { PATCH_PIN_CODE} from 'toktokwallet/graphql'
 import {useMutation} from '@apollo/react-hooks'
-import {Separator,LeavePromptModal} from 'toktokwallet/components'
+import {Separator,LeavePromptModal,CheckIdleState} from 'toktokwallet/components'
 import {useSelector} from 'react-redux'
 import { onErrorAlert } from 'src/util/ErrorUtility';
 import {useAlert  } from 'src/hooks'
@@ -118,7 +118,7 @@ export const ToktokWalletCreatePin = ({navigation,route})=> {
     
 
     return (
-      <>
+      <CheckIdleState>
         <AlertOverlay visible={loading} />
         <LeavePromptModal
             visible={LeaveModalvisible}
@@ -141,7 +141,7 @@ export const ToktokWalletCreatePin = ({navigation,route})=> {
         >
                 {DisplayComponent()}
         </KeyboardAvoidingView> 
-      </>
+      </CheckIdleState>
     )
 }
 

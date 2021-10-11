@@ -1,7 +1,7 @@
 import React from 'react'
 import {View,Text,StyleSheet,Platform,Dimensions,StatusBar,Image,ActivityIndicator,ScrollView} from 'react-native'
 import {YellowButton,HeaderBack, HeaderTitle, } from 'src/revamp';
-import { Separator } from 'toktokwallet/components';
+import { Separator, CheckIdleState } from 'toktokwallet/components';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import {GET_GLOBAL_SETTING} from 'toktokwallet/graphql'
 import {useQuery} from '@apollo/react-hooks'
@@ -46,14 +46,14 @@ export const ToktokWalletTermsConditions = ({navigation})=> {
     }
 
     return (
-        <>
+        <CheckIdleState>
         <Separator/>
         <View style={styles.container}>
             <ScrollView showsVerticalScrollIndicator={false} style={styles.body}>
                 <Text>{data.getGlobalSetting.keyValue}</Text>
             </ScrollView>
         </View>
-        </>
+        </CheckIdleState>
     )
 }
 

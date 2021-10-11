@@ -2,7 +2,7 @@ import React, {useEffect,useState} from 'react'
 import {View,Text,StyleSheet,ScrollView,TextInput,Alert,TouchableOpacity,Modal,StatusBar,TouchableOpacityBase,Image} from 'react-native'
 import { HeaderBack, YellowButton } from 'src/revamp';
 import {HeaderTitle} from 'src/components'
-import { Separator } from 'toktokwallet/components';
+import { Separator , CheckIdleState } from 'toktokwallet/components';
 import validator from 'validator';
 import {UPDATE_GCASH_ACCOUNT} from 'src/graphql';
 import {useMutation} from '@apollo/react-hooks';
@@ -142,7 +142,7 @@ export const ToktokWalletGcashUpdate = ({navigation,route})=> {
     }
 
     return (
-       <>
+       <CheckIdleState>
         <PromptMessage visible={promptVisible} setVisible={setPromptVisible} navigation={navigation}/>
         <DatePickerModal
             visible={pickerVisible}
@@ -235,7 +235,7 @@ export const ToktokWalletGcashUpdate = ({navigation,route})=> {
 
             
        </View>
-       </>
+       </CheckIdleState>
     )
 }
 

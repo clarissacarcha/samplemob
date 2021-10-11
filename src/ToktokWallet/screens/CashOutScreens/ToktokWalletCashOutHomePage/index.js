@@ -4,7 +4,8 @@ import { numberFormat } from 'toktokwallet/helper';
 import { 
     HeaderImageBackground,
     HeaderTitle,
-    Separator
+    Separator,
+    CheckIdleState
 } from 'toktokwallet/components'
 import { useSelector } from 'react-redux';
 import CONSTANTS from 'common/res/constants'
@@ -23,7 +24,7 @@ export const ToktokWalletCashOutHomePage = ({navigation,route})=> {
     const screenLabel = route.params ? route.params.screenLabel : null
 
     return (
-        <>
+        <CheckIdleState>
         <View style={styles.container}>
             <View style={styles.headings}>
                 <HeaderImageBackground>
@@ -40,7 +41,7 @@ export const ToktokWalletCashOutHomePage = ({navigation,route})=> {
                 <CashOutOption label="Other Banks" route="ToktokWalletCashOutOtherBanks" screenLabel={screenLabel} />
             </View>
       </View>
-        </>
+        </CheckIdleState>
     )
 }
 

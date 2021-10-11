@@ -7,7 +7,7 @@ import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
 import { GET_FORGOT_AND_RECOVER_OTP_CODE , VERIFY_FORGOT_AND_RECOVER_OTP_CODE} from 'toktokwallet/graphql'
 import { onError, onErrorAlert } from 'src/util/ErrorUtility'
 import {useAlert} from 'src/hooks'
-import {DisabledButton, Separator, BuildingBottom} from 'toktokwallet/components'
+import {DisabledButton, Separator, BuildingBottom , CheckIdleState} from 'toktokwallet/components'
 import { HeaderBack, YellowButton } from 'src/revamp'
 import { TransactionUtility } from 'toktokwallet/util'
 import CONSTANTS from 'common/res/constants'
@@ -137,7 +137,7 @@ export const ToktokWalletRecoverPin = ({navigation , route})=> {
     },[otpTimer])
 
     return (
-        <>
+        <CheckIdleState>
         <Separator />
         <AlertOverlay visible={loading}/>
         <KeyboardAvoidingView 
@@ -193,7 +193,7 @@ export const ToktokWalletRecoverPin = ({navigation , route})=> {
             </View>
             <BuildingBottom/>
         </KeyboardAvoidingView>
-        </>
+        </CheckIdleState>
     )
 }
 

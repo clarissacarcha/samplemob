@@ -6,7 +6,7 @@ import {GET_CASH_IN_LOGS ,TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
 import { GET_CASH_INS} from 'toktokwallet/graphql'
 import {useSelector} from 'react-redux'
 import { numberFormat } from 'toktokwallet/helper'
-import {Separator,TransactionDetails, ModalPaginationLoading} from 'toktokwallet/components'
+import {Separator,TransactionDetails, ModalPaginationLoading , CheckIdleState} from 'toktokwallet/components'
 import { HeaderBack , HeaderTitle} from 'src/revamp'
 import CONSTANTS from 'common/res/constants'
 import { onErrorAlert } from 'src/util/ErrorUtility'
@@ -126,7 +126,7 @@ export const ToktokWalletCashInLogs = ({navigation})=> {
     }
 
     return (
-        <>
+        <CheckIdleState>
         <TransactionDetails 
             visible={transactionVisible}
             setVisible={setTransactionVisible}
@@ -171,7 +171,7 @@ export const ToktokWalletCashInLogs = ({navigation})=> {
             </View>
         }
        
-        </>
+        </CheckIdleState>
     )
 }
 

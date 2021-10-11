@@ -2,7 +2,7 @@ import React , {useState,useEffect} from 'react'
 import {View,Text,StyleSheet,TouchableHighlight,Alert,BackHandler,KeyboardAvoidingView,Platform,Image,Dimensions} from 'react-native'
 import {useAccount} from 'toktokwallet/hooks'
 import { ICON_SET , VectorIcon } from 'src/revamp'
-import {Separator,LeavePromptModal} from 'toktokwallet/components'
+import {Separator,LeavePromptModal,CheckIdleState} from 'toktokwallet/components'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import { PATCH_MPIN_CODE} from 'toktokwallet/graphql'
 import {useMutation} from '@apollo/react-hooks'
@@ -114,7 +114,7 @@ export const ToktokWalletMPINCreate = ({navigation,route})=> {
     }
 
     return(
-        <>
+        <CheckIdleState>
             <AlertOverlay visible={loading} />
             <SuccessfulModal modalVisible={successModalVisible} tokwaAccount={tokwaAccount}/>
             <LeavePromptModal
@@ -131,7 +131,7 @@ export const ToktokWalletMPINCreate = ({navigation,route})=> {
             >   
                 {DisplayComponent()}
             </KeyboardAvoidingView>
-        </>
+        </CheckIdleState>
     )
 }
 

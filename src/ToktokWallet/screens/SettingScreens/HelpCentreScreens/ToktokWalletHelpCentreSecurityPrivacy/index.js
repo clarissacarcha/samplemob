@@ -1,7 +1,7 @@
 import React from 'react'
 import {View,Text,StyleSheet,Platform,Dimensions,StatusBar,Image, TouchableOpacity} from 'react-native'
 import {YellowButton ,HeaderBack, HeaderTitle, } from 'src/revamp';
-import {Separator} from 'toktokwallet/components'
+import {Separator,CheckIdleState} from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants'
 
 const { COLOR, FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
@@ -31,7 +31,7 @@ export const ToktokWalletHelpCentreSecurityPrivacy = ({navigation})=> {
     });
 
     return (
-        <>
+        <CheckIdleState>
         <View style={styles.container}>
             <View style={{flex: 1}}>    
                 <Card
@@ -55,7 +55,7 @@ export const ToktokWalletHelpCentreSecurityPrivacy = ({navigation})=> {
                 <Separator />
             </View>
         </View>
-        </>
+        </CheckIdleState>
     )
 }
 
