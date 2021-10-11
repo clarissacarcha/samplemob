@@ -7,12 +7,18 @@ import {COLOR, FONT, FONT_SIZE} from '../../../../res/variables';
 import CheckBox from 'react-native-check-box';
 import Toast from 'react-native-simple-toast';
 
-import {MessageModal} from '../../../Components';
+import {MessageModal, LoadingOverlay} from '../../../Components';
 import {DeleteFooter, CheckoutFooter, Item, Store, RenderDetails, RenderEmpty} from './components';
 import {MergeStoreProducts} from '../../../helpers';
 import { create } from 'lodash';
 import {useSelector} from 'react-redux';
 import {ApiCall, PaypandaApiCall, BuildPostCheckoutBody, BuildTransactionPayload, WalletApiCall} from "../../../helpers";
+
+import { useLazyQuery } from '@apollo/react-hooks';
+import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql';
+import { GET_MY_CART } from '../../../../graphql/toktokmall/model';
+import AsyncStorage from '@react-native-community/async-storage';
+
 const testdata = [
   {
     store_id: 1,
@@ -159,6 +165,36 @@ const Component =  ({
     headerTitle: () => <HeaderTitle label={['Shopping Cart', '']} />,
     headerRight: () => <HeaderRight hidden={true} />,
   });
+
+  const [getMyCartData, {loading, error}] = useLazyQuery(GET_MY_CART, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',    
+    onCompleted: (response) => {
+      console.log(response)
+      if(response.getMyCart){
+        setMyCartData(response.getMyCart)
+      }
+    },
+    onError: (err) => {
+      console.log(err)
+    }
+  })
+
+  useEffect(() => {    
+    AsyncStorage.getItem("ToktokMallUser").then((raw) => {
+      const data = JSON.parse(raw)
+      if(data.userId){
+        getMyCartData({
+          variables: {
+            input: {
+              userId: 8642
+              // userId: data.userId
+            }
+          }
+        })
+      }
+    })
+  }, []);
 
   useEffect(()=> {
     if(itemsToCheckoutArr && itemsToCheckoutArr.length !== 0){
