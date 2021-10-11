@@ -21,7 +21,21 @@ import {onErrorAlert} from 'src/util/ErrorUtility';
 import {useAlert} from 'src/hooks';
 
 const PickUpDetails = (props) => {
-  const initialState = {completeAddress: '', contactPerson: '', contactPersonNumber: ''};
+  const {pinAddress, onConfirm, isCart} = props;
+  const navigation = useNavigation();
+  const keyboardHeight = useKeyboard();
+  const dispatchToStore = useDispatch();
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  const {customerInfo} = useSelector((state) => state.toktokFood);
+  const alert = useAlert();
+  const {receiver, location} = useSelector((state) => state.toktokFood);
+
+  const initialState = {
+    completeAddress: '',
+    contactPerson: location ? location?.details?.contactPerson : '',
+    contactPersonNumber: location ? location?.details?.contactPersonNumber : '',
+  };
 
   const reducer = (state, action) => {
     switch (action.type) {
@@ -33,15 +47,6 @@ const PickUpDetails = (props) => {
         return {...state, contactPersonNumber: action.value};
     }
   };
-
-  const {pinAddress, onConfirm, isCart} = props;
-  const navigation = useNavigation();
-  const keyboardHeight = useKeyboard();
-  const dispatchToStore = useDispatch();
-  const [showSuccess, setShowSuccess] = useState(false);
-  const {receiver} = useSelector((state) => state.toktokFood);
-  const {customerInfo} = useSelector((state) => state.toktokFood);
-  const alert = useAlert();
 
   const initState = () => (Object.keys(receiver).length > 0 ? receiver : initialState);
   const [state, dispatch] = useReducer(reducer, initialState, initState);
@@ -68,23 +73,18 @@ const PickUpDetails = (props) => {
     },
     onCompleted: ({deleteShopTemporaryCart}) => {
       console.log(deleteShopTemporaryCart, 'DELETE');
-      onConfirm();
+      onConfirm(state);
       setShowSuccess(true);
     },
   });
 
   const onConfirmAddress = () => {
-    const {contactPerson, contactPersonNumber} = state;
-    if (contactPerson !== '' && contactPersonNumber !== '') {
-      dispatchToStore({type: 'SET_TOKTOKFOOD_ORDER_RECEIVER', payload: state});
-    } else {
-      dispatchToStore({type: 'SET_TOKTOKFOOD_ORDER_RECEIVER', payload: {}});
-    }
+    dispatchToStore({type: 'SET_TOKTOKFOOD_ORDER_RECEIVER', payload: state});
     if (temporaryCart?.checkHasTemporaryCart?.shopid !== 0) {
       deleteShopTemporaryCart();
     } else {
       setShowSuccess(true);
-      onConfirm();
+      onConfirm(state);
     }
   };
 

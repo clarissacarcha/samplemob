@@ -8,15 +8,18 @@ import {GET_SHOPS} from 'toktokfood/graphql/toktokfood';
 
 // Helpers
 import {getFormattedAddress, getLocation} from 'toktokfood/helper';
-import {GetUserLocation} from 'toktokfood/helper/PersistentLocation';
+import {getUserLocation} from 'toktokfood/helper/PersistentLocation';
 
 export const useUserLocation = () => {
   const dispatch = useDispatch();
 
   const initUserLocation = async () => {
-    const saveLocation = await GetUserLocation();
+    const saveLocation = await getUserLocation();
     if (saveLocation !== null) {
       dispatch({type: 'SET_TOKTOKFOOD_LOCATION', payload: {...saveLocation}});
+      if (Object.keys(saveLocation).length === 4) {
+        dispatch({type: 'SET_TOKTOKFOOD_ORDER_RECEIVER', payload: {...saveLocation?.details}});
+      }
     } else {
       // Get user initial location
       getLocation()

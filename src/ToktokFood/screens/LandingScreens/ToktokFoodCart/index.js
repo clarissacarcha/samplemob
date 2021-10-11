@@ -372,8 +372,14 @@ const MainComponent = () => {
 
   const placeCustomerOrderProcess = async (CUSTOMER_CART, WALLET) => {
     const CUSTOMER = {
-      name: receiver.contactPerson ? receiver.contactPerson : `${customerInfo.firstName} ${customerInfo.lastName}`,
-      contactnumber: receiver.contactPersonNumber ? receiver.contactPersonNumber : mobileNumberFormat(),
+      name:
+        receiver.contactPerson && receiver.contactPerson !== ''
+          ? receiver.contactPerson
+          : `${customerInfo.firstName} ${customerInfo.lastName}`,
+      contactnumber:
+        receiver.contactPersonNumber && receiver.contactPersonNumber !== ''
+          ? receiver.contactPersonNumber
+          : mobileNumberFormat(),
       email: customerInfo.email,
       address: location.address,
       user_id: customerInfo.userId,
@@ -395,11 +401,11 @@ const MainComponent = () => {
     };
     const data = WALLET ? {...WALLET, ...CUSTOMER, ...ORDER} : {...CUSTOMER, ...ORDER};
     console.log(JSON.stringify(data))
-    postCustomerOrder({
-      variables: {
-        input: data,
-      },
-    });
+    // postCustomerOrder({
+    //   variables: {
+    //     input: data,
+    //   },
+    // });
   };
 
   const onPressChange = (action) => {
