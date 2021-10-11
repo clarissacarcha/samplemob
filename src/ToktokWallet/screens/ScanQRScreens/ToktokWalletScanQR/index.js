@@ -9,7 +9,7 @@ import {GET_ACCOUNT} from 'toktokwallet/graphql'
 import {onError} from 'src/util/ErrorUtility'
 import {useSelector} from 'react-redux'
 import {useAlert} from 'src/hooks/useAlert';
-import { CheckIdleState } from 'toktokwallet/Components'
+import { CheckIdleState } from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants';
 
 //SELF IMPORTS
