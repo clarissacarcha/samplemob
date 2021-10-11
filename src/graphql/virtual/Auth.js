@@ -6,6 +6,7 @@ user {
   userId
   username
   status
+  toktokfoodUserId
   toktokWalletAccountId
   person {
     id
@@ -18,6 +19,7 @@ user {
     avatar
     avatarThumbnail
     status
+    mobileNumber
     address {
       line1
       line2

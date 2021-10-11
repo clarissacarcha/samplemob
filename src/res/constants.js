@@ -9,6 +9,9 @@ export const MAPS_API_KEY = 'AIzaSyDhlw6pbriuwr_Mb6KYkVlBar7KD1KTrOs';
 export const PROTOCOL = 'https';
 export const HOST_PORT = 'test.toktok.ph:2096'; // Test
 
+export const TOKTOK_FOOD_PROTOCOL = 'http';
+export const TOKTOK_FOOD_PROTOCOL_HOST_PORT = 'localhost:3002';
+
 // export const PROTOCOL = 'https';
 // export const HOST_PORT = 'graphql.toktok.ph:2096'; // Prod
 
@@ -17,6 +20,7 @@ export const TOKTOK_WALLET_PROTOCOL_HOST_PORT = '192.168.0.103:3100';
 
 export const COLORS = {
   YELLOW: '#FDBA1C',
+  YELLOWTEXT: '#FFA700',
   ORANGE: '#F5841F',
   LIGHT: '#D3D3D3',
   MEDIUM: '#808080',

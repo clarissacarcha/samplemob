@@ -62,6 +62,13 @@ export const Menu = ({setUserLocation}) => {
           navigation.push('ToktokProfile');
         }}
       />
+      <MenuIcon
+        label={'toktokfood'}
+        icon={ProfileIcon}
+        onPress={() => {
+          navigation.push('TokTokFoodSplashScreen');
+        }}
+      />
       {/* <MenuIcon
         label={'toktokfood'}
         icon={ProfileIcon}
