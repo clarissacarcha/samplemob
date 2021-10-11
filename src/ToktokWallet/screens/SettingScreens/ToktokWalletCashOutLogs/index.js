@@ -137,13 +137,7 @@ export const ToktokWalletCashOutLogs = ({navigation})=> {
         <TransactionDetails 
             visible={transactionVisible}
             setVisible={setTransactionVisible}
-            refNo={transactionInfo.refNo}
-            refDate={transactionInfo.refDate}
-            label={transactionInfo.label}
-            phrase={transactionInfo.phrase}
-            amount={transactionInfo.amount}
-            status={transactionInfo.status}
-            cashOutDisplayInformations={transactionInfo.cashOutDisplayInformations}
+            transactionInfo={transactionInfo}
             displayNumber=""
         />
         <Separator />

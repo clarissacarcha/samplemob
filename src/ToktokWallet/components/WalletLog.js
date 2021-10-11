@@ -93,16 +93,6 @@ export const WalletLog = ({item ,index , itemsLength }) => {
     }
 
     let deliveryId = null
-    // if(
-    //     item.externalName 
-    //     && item.externalName === "toktok" || item.externalName === "toktok rider" 
-    //     && item.externalPhrase
-    //     && (item.externalPhrase === "earnings" || item.externalPhrase === "payment" || item.externalPhrase === "cancelled"))
-    // {
-    //     const deliveryPayload = JSON.parse(item.externalPayload)
-    //     deliveryId = deliveryPayload.delivery.deliveryId
-    // }
-
     const externalDetails = item.externalDetails
 
     return (
@@ -111,7 +101,6 @@ export const WalletLog = ({item ,index , itemsLength }) => {
                 visible={transactionVisible}
                 setVisible={setTransactionVisible}
                 transactionInfo={transactionInfo}
-                cashOutDisplayInformations={cashOutDisplayInformations}
                 cashInMobileNumber={cashInMobileNumber}
             />
 

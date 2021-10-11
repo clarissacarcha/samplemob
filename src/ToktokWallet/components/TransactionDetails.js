@@ -57,36 +57,20 @@ const renderCashOutDisplayInformations = (cashOutDisplayInformations) => {
             <>
             <Text style={styles.labelText}>Account Name: {cashOutDisplayInformations.accountInfo.accountName}</Text>
             <Text style={styles.labelText}>Account Number: {cashOutDisplayInformations.accountInfo.accountNumber}</Text>
-            <Text style={styles.labelText}>Bank: {cashOutDisplayInformations?.accountInfo?.bank?.name}</Text>
+            {
+                cashOutDisplayInformations?.accountInfo?.bank
+                &&   <Text style={styles.labelText}>Bank: {cashOutDisplayInformations?.accountInfo?.bank?.name}</Text>
+            }  
             </>
         )
     }
-
-    if(cashOutDisplayInformations?.gcashInfo){
-        return (
-            <>
-            <Text style={styles.labelText}>Account Name: {cashOutDisplayInformations.gcashInfo.accountName}</Text>
-            <Text style={styles.labelText}>Account Number: {cashOutDisplayInformations.gcashInfo.accountNumber}</Text>
-            </>
-        )
-    }
-
-    if(cashOutDisplayInformations?.bdoInfo){
-        return (
-            <>
-           <Text style={styles.labelText}>Account Name: {cashOutDisplayInformations.bdoInfo.accountName}</Text>
-            <Text style={styles.labelText}>Account Number: {cashOutDisplayInformations.bdoInfo.accountNumber}</Text>
-            </>
-        )
-    }
-  
+    return null
 }
 
 export const TransactionDetails = ({
     visible,
     setVisible,
     transactionInfo,
-    cashOutDisplayInformations,
     cashInMobileNumber
 })=> {
 
@@ -100,7 +84,8 @@ export const TransactionDetails = ({
         displayNumber,
         externalReferenceNumber,
         deliveryId,
-        externalDetails
+        externalDetails,
+        cashOutDisplayInformations
     } = transactionInfo
 
     return (
