@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import {HeaderBack, HeaderTitle, HeaderRight, Card} from '../../../../../Components';
 import CustomIcon from '../../../../../Components/Icons';
-import {MessageModal} from '../../../../../Components'
+import {MessageModal, LoadingOverlay} from '../../../../../Components'
 import {COLOR, FONT, FONT_SIZE} from '../../../../../../res/variables';
 import * as  qs from 'qs'
 import {contactus} from '../../../../../assets';
@@ -23,8 +23,11 @@ import { useMutation } from '@apollo/react-hooks';
 import AsyncStorage from '@react-native-community/async-storage';
 import Toast from "react-native-simple-toast";
 
-export const ToktokMallContactUs = ({navigation}) => {
+import { useSelector } from 'react-redux';
 
+export const ToktokMallContactUs = ({navigation}) => {
+  
+  const session = useSelector(state => state.session)
   const [messageModalShown, setMessageModalShown] = useState(false)
   const [message, setMessage] = useState('')
 
@@ -77,10 +80,9 @@ export const ToktokMallContactUs = ({navigation}) => {
 
   const onPress = async () => {
 
-    let raw = await AsyncStorage.getItem("ToktokMallUser")
-    let user = typeof raw == "string" ? JSON.parse(raw) : {}
+    let user = session.user.person
 
-    if(user.userId){
+    if(session){
       if(message == ""){
         Toast.show("Enter message to send.")
       }else{
@@ -88,7 +90,8 @@ export const ToktokMallContactUs = ({navigation}) => {
           variables: {
             input: {
               name: `${user.firstName} ${user.lastName}`,
-              email: user.email,
+              email: user.emailAddress,
+              mobile: session.user.username,
               message: message
             }
           }
@@ -107,6 +110,7 @@ export const ToktokMallContactUs = ({navigation}) => {
   return (
     <>
       <View style={styles.container}>
+        {loading && <LoadingOverlay isVisible={loading} />}
         {messageModalShown && 
           <MessageModal 
             type="Success"
@@ -309,7 +313,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     justifyContent: 'flex-start',
   },
-  textinput: {marginLeft: 10},
+  textinput: {width: '100%', marginLeft: 10},
   textinputLastContainer: {
     backgroundColor: '#F8F8F8',
     marginTop: 10,
