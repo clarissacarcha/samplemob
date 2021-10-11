@@ -11,6 +11,8 @@ import {verticalScale, scale, getStatusbarHeight} from 'toktokfood/helper/scale'
 
 import {useDispatch} from 'react-redux';
 
+import {SaveUserLocation} from 'toktokfood/helper/PersistentLocation';
+
 // Helpers
 import {getFormattedAddress} from 'toktokfood/helper';
 
@@ -52,7 +54,9 @@ const ToktokFoodMapSearch = () => {
   };
 
   const onConfirmAddress = () => {
-    dispatch({type: 'SET_TOKTOKFOOD_LOCATION', payload: {...mapInfo.fullInfo}});
+    SaveUserLocation({...mapInfo.fullInfo}).then(() => {
+      dispatch({type: 'SET_TOKTOKFOOD_LOCATION', payload: {...mapInfo.fullInfo}});
+    });
   };
 
   const closeMap = () => {
