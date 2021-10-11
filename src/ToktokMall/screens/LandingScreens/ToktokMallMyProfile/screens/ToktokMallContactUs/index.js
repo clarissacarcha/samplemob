@@ -49,7 +49,7 @@ export const ToktokMallContactUs = ({navigation}) => {
     sendEmail(
       message,
       '',
-      {cc: 'sample text', }
+      {cc: '', }
     ).then(() => {
       console.log('Your message was successfully sent')
     })
@@ -64,133 +64,62 @@ export const ToktokMallContactUs = ({navigation}) => {
   return (
     <>
       <View style={styles.container}>
-        {messageModalShown && 
-          <MessageModal 
-            type="Success"
-            isVisible={messageModalShown}
-            setIsVisible={(val) => setMessageModalShown(val)}  
-            message={'Sent'}
-          />}
-        <View
-          style={{
-            flex: 1,
-            paddingVertical: 30,
-            paddingHorizontal: 15,
-          }}>
-          <Card>
-            <View style={{flex: 0, padding: 15}}>
-              <View
-                style={{
-                  flex: 0,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  paddingVertical: 10,
-                }}>
-                <Text
-                  style={{
-                    fontSize: 24,
-                    fontFamily: FONT.BOLD,
-                    color: COLOR.ORANGE,
-                  }}>
-                  Contact Us
-                </Text>
-              </View>
-              <View
-                style={{
-                  flex: 0,
-                  paddingVertical: 10,
-                  paddingHorizontal: 10,
-                }}>
-                <Text style={{fontSize: 12}}>
-                  Email us with any of your inquiries or contact us with the contact information provided below. We will
-                  gladly discuss with you the best possible solution to your needs.
-                </Text>
-              </View>
-
-              <View
-                style={{
-                  flex: 0,
-                  paddingVertical: 0,
-                  paddingHorizontal: 10,
-                }}>
-                <View style={{flexDirection: 'row'}}>
-                  <View
-                    style={{
-                      flex: 1,
-                      flexDirection: 'row',
-                      marginLeft: 15,
-                    }}>
-                    <View
-                      style={{
-                        flex: 1,
-                        justifyContent: 'center',
-                      }}>
-                      <CustomIcon.FeIcon name="phone" size={25} color={COLOR.ORANGE} />
-                    </View>
-                    <View
-                      style={{
-                        flex: 3,
-                        justifyContent: 'center',
-                      }}>
-                      <Text>(632) 8424 8617</Text>
-                    </View>
-                  </View>
-                  <View
-                    style={{
-                      flex: 1,
-                      flexDirection: 'row',
-                      marginRight: 15,
-                    }}>
-                    <View
-                      style={{
-                        flex: 1,
-                        justifyContent: 'center',
-                        alignItems: 'flex-end',
-                      }}>
-                      <CustomIcon.FeIcon name="mail" size={25} color={COLOR.ORANGE} />
-                    </View>
-                    <View
-                      style={{
-                        flex: 4,
-                        justifyContent: 'center',
-                        alignItems: 'flex-end',
-                      }}>
-                      <Text>mall@toktok.ph</Text>
-                    </View>
-                  </View>
-                </View>
-                <View style={styles.textinputContainer}>
-                  <TextInput
-                    style={styles.textinput}
-                    placeholder={'Name'}
-                    // onChangeText ={(text) => {setlandmark(text)}}
-                  />
-                </View>
-                <View style={styles.textinputContainer}>
-                  <TextInput
-                    style={styles.textinput}
-                    placeholder={'Email'}
-                    // onChangeText ={(text) => {setlandmark(text)}}
-                  />
-                </View>
-                <View style={styles.textinputLastContainer}>
-                  <TextInput style={styles.textinput} placeholder={'Message'} 
-                    value = {message}
-                    onChangeText = {(text) => {setMessage(text)}}
-                  />
-                </View>
-              </View>
-              <View
-                style={{flex: 0, marginTop: 18, alignItems: 'center', justifyContent: 'center', paddingVertical: 10}}>
+        <View style = {{alignItems: 'center', justifyContent: 'center',}}>
+          <Image 
+            source = {require('../../../../../assets/images/contact-us-img.png')}
+            style = {{height: 100, width: 135}}
+          />
+          <Image 
+            source = {require('../../../../../assets/images/contact-us-text.png')}
+          />
+          <Text style={{fontSize: 12, textAlign: 'center', marginTop: 10, marginBottom: 10}}>
+            Email us with any of your inquiries or contact us with the contact information provided below. We will
+            gladly discuss with you the best possible solution to your needs.
+          </Text>
+        </View>
+        <View style = {{borderBottomColor:  "#F7F7FA", borderBottomWidth: 3, padding: 1}} />
+        <View style={{ flexDirection: 'row' , marginTop: 15}}>
+          <View style={{ justifyContent: 'center', alignItems: 'flex-end', marginRight: 15 }}>
+            <CustomIcon.FeIcon name="phone" size={18} color={COLOR.ORANGE} />
+          </View>
+          <View  style={{ justifyContent: 'center',  alignItems: 'flex-end', }}>
+            <Text>(02) 84-248-617</Text>
+          </View>
+        </View>
+        <View style={{ flexDirection: 'row', marginTop: 8 }}>
+          <View style={{ justifyContent: 'center', alignItems: 'flex-end', marginRight: 15}}>
+            <CustomIcon.FeIcon name="mail" size={18} color={COLOR.ORANGE} />
+          </View>
+          <View  style={{ justifyContent: 'center',  alignItems: 'flex-end', }}>
+            <Text>mall@toktok.ph</Text>
+          </View>
+        </View>
+        <View style={{ flexDirection: 'row', marginTop: 8 }}>
+          <View style={{ justifyContent: 'center', alignItems: 'flex-end',marginRight: 15  }}>
+            <CustomIcon.FoIcon name="world-o" size={18} color={COLOR.ORANGE} />
+          </View>
+          <View  style={{ justifyContent: 'center',  alignItems: 'flex-end', marginBottom: 15 }}>
+            <Text>www.toktokmall.ph</Text>
+          </View>
+        </View>
+        <Card>
+          <View style = {{padding: 15}}>
+            
+            <Text style = {{fontSize: 12, color: '#9E9E9E'}}>Message</Text>
+            <View style={styles.textinputLastContainer}>
+              <TextInput style={styles.textinput} 
+                value = {message}
+                onChangeText = {(text) => {setMessage(text)}}
+              />
+            </View>
+          </View>
+          <View
+                style={{flex: 0, marginTop: 10, alignItems: 'center', justifyContent: 'center', paddingVertical: 10, marginBottom: 15}}>
                 <TouchableOpacity onPress = {() => {onPress()}} style={styles.button}>
                   <Text style={styles.buttonText}>Save</Text>
                 </TouchableOpacity>
               </View>
-
-              {/* <View style={{height: 120}}></View> */}
-            </View>
-          </Card>
-        </View>
+        </Card>
       </View>
     </>
   );
@@ -199,7 +128,8 @@ export const ToktokMallContactUs = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: 'white',
+    padding: 15
   },
   textinputContainer: {
     backgroundColor: '#F8F8F8',
@@ -214,12 +144,12 @@ const styles = StyleSheet.create({
     marginTop: 10,
     borderRadius: 5,
     justifyContent: 'flex-start',
-    height: 100,
+    height: 150,
   },
   button: {
     backgroundColor: '#F6841F',
     padding: 10,
-    width: '40%',
+    width: '93%',
     borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',

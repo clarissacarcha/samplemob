@@ -1,5 +1,5 @@
-import React from 'react';
-import {View, Text, Image, FlatList, SectionList, ImageBackground} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, Text, Image, FlatList, SectionList, ImageBackground, TouchableOpacity} from 'react-native';
 import { Header } from '../../../../Components';
 import {Price} from '../../../../helpers';
 import CustomIcon from '../../../../Components/Icons';
@@ -24,6 +24,9 @@ const DotList = ({data}) => {
 }
 
 export const RenderDescription = ({data, loading}) => {
+
+  const [seeMore, setSeeMore] = useState(false);
+  const maxChar = 4000
 	return (
 		<>
       {/* <ContentLoader 
@@ -39,7 +42,17 @@ export const RenderDescription = ({data, loading}) => {
             <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>Product Description</Text>
           </View>          
           <View style={{paddingBottom: 12}}>
-            <Text style={{fontSize: 13}}>{data?.summary || "Product description not available"}</Text>
+            <Text style={{fontSize: 13}}>{data ? data?.summary?.length > maxChar && !seeMore ?
+              (((data.summary).substring(0, maxChar - 3)) + ' .... ') 
+              : data.summary
+              :  "Product description not available"}
+            </Text>
+            {
+              data?.summary?.length > maxChar ?
+                <TouchableOpacity style = {{alignSelf: 'flex-end'}} onPress = {() => {setSeeMore(!seeMore)}}>
+                <Text style = {{color: "#F6841F"}}>{!seeMore ? 'See more' : 'See less'}</Text>
+               </TouchableOpacity> : null
+            }
           </View>
         </View>
         <View style={{height: 8, backgroundColor: '#F7F7FA'}} />      

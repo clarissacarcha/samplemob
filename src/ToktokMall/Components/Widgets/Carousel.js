@@ -49,6 +49,7 @@ export const AdsCarousel = (props) => {
 
     const getImage = (raw) => {
       if(typeof raw == "string"){
+        console.log(raw)
         return {uri: raw}
       }else{
         return SampleImage
@@ -103,8 +104,8 @@ export const AdsCarousel = (props) => {
         width = {screenWidth -30}
         height = {170}
         loop = {true}
-        autoplay = {true}
-        onIndexChanged={(index) => {setActiveSlide(index)} }
+        // autoplay = {true}
+        onIndexChanged={(index) => {setActiveSlide(index), console.log(entries[index])} }
         autoplayTimeout = {3}
         showsPagination = {true}
         // activeDot 

@@ -61,8 +61,11 @@ const RenderItem = ({navigation, item}) => {
             </View>
           </View> */}
           <View style={{flexDirection: 'row'}}>
-            <View style={{flex: 1}}>
+            <View style={{flex: 1.2}}>
               <Text style={{fontSize: 13, color: "#F6841F"}}><Price amount={item?.price} /></Text>
+            </View>
+            <View style={{flex: 1, justifyContent: 'center',}}>
+            {item.compareAtPrice && item.compareAtPrice != "0.00" ? <Text style={{color: "#9E9E9E", textDecorationLine: 'line-through', fontSize: 9, marginLeft: 3}}><Price amount={item.compareAtPrice} /></Text> : null}
             </View>
             <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end'}}>
               <Text style={{fontSize: 10}}>{item?.soldCount || 0} sold</Text>
