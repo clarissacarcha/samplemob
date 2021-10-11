@@ -1,6 +1,6 @@
 import React , {useEffect,useState, useContext} from 'react'
 import {View , Text , StyleSheet , TextInput,TouchableOpacity} from 'react-native'
-import { EnterPinCode , EnterOtpCode } from 'toktokwallet/components'
+import { ValidatorScreen } from 'toktokwallet/components'
 import { YellowButton ,VectorIcon ,ICON_SET} from 'src/revamp'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import {POST_CASH_OUT_OTHER_BANKS , POST_REQUEST_CASH_OUT } from 'toktokwallet/graphql'
@@ -352,24 +352,17 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
     return (
         <>
             <AlertOverlay visible={requestLoading}/>
-            <EnterPinCode 
-                visible={openPinCode} 
-                setVisible={setOpenPinCode} 
-                loading={loading}
-                pinCodeAttempt={pinCodeAttempt}
-                callBackFunc={ProceedTransaction}
-            >
-                <AlertOverlay visible={loading} />
-            </EnterPinCode>
-            <EnterOtpCode
-                visible={openOtpCode}
-                setVisible={setOpenOtpCode}
-                callBackFunc={ProceedTransaction}
+            <ValidatorScreen
+                TPINVisible={openPinCode}
+                setTPINVisible={setOpenPinCode}
+                tpinCodeAttempt={pinCodeAttempt}
+                OTPVisible={openOtpCode}
+                setOTPVisible={setOpenOtpCode}
                 otpCodeAttempt={otpCodeAttempt}
-                resend={onSwipeSuccess}
-            >
-                <AlertOverlay visible={loading} />
-            </EnterOtpCode>
+                otpResend={onSwipeSuccess}
+                callBackFunc={ProceedTransaction}
+                loading={loading}
+            />
             <SuccessfulCashOutModal 
                 visible={successModalVisible}
                 setVisible={setSuccessModalVisible}

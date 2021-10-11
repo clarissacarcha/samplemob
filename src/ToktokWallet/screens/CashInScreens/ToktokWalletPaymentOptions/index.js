@@ -5,7 +5,7 @@ import FIcon from 'react-native-vector-icons/Feather'
 import {useQuery} from '@apollo/react-hooks'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import {GET_CASH_IN_PROVIDERS } from 'toktokwallet/graphql'
-import { Separator, HeaderImageBackground, HeaderTitle } from 'toktokwallet/components'
+import { Separator, HeaderImageBackground, HeaderTitle , CheckIdleState } from 'toktokwallet/components'
 import { numberFormat } from 'toktokwallet/helper'
 import { useSelector } from 'react-redux'
 import CONSTANTS from 'common/res/constants'
@@ -105,7 +105,7 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
     }
 
     return (
-        <>
+        <CheckIdleState>
         <AlertOverlay visible={getMyAccountLoading}/>
         <View style={styles.container}>
             <View style={styles.headings}>
@@ -127,7 +127,7 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
                 renderItem={CashInMethod}
             />
         </View>
-        </>
+        </CheckIdleState>
     )
 }
 

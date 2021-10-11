@@ -20,7 +20,7 @@ export const ValidatorScreen = ({
 })=> {
 
     return (
-        <View style={{flex: 1}}>
+        <>
             <AlertOverlay visible={loading}/>
             <EnterPinCode 
                  visible={TPINVisible}
@@ -35,6 +35,6 @@ export const ValidatorScreen = ({
                   otpCodeAttempt={otpCodeAttempt}
                   resend={otpResend}
             />
-        </View>
+        </>
     )
 }

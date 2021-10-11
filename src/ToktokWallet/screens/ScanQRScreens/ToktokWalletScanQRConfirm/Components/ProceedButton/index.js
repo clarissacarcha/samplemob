@@ -10,7 +10,7 @@ import {useAlert} from 'src/hooks/useAlert'
 import {onErrorAlert} from 'src/util/ErrorUtility'
 import { YellowButton } from 'src/revamp'
 import { AlertOverlay } from 'src/components'
-import {DisabledButton , EnterPinCode , EnterOtpCode } from 'toktokwallet/components'
+import {DisabledButton , ValidatorScreen } from 'toktokwallet/components'
 
 //SELF IMPORTS
 import SuccessfulModal from './SuccessfulModal'
@@ -127,24 +127,17 @@ export const ProceedButton = ({
     return (
         <>
          <AlertOverlay visible={requestLoading}/>
-           <EnterPinCode 
-                visible={openPinCode} 
-                setVisible={setOpenPinCode} 
-                loading={loading}
-                pinCodeAttempt={pinCodeAttempt}
-                callBackFunc={Proceed}
-            >
-                 <AlertOverlay visible={loading} />
-            </EnterPinCode>
-            <EnterOtpCode
-                visible={openOtpCode}
-                setVisible={setOpenOtpCode}
-                callBackFunc={Proceed}
-                otpCodeAttempt={otpCodeAttempt}
-                resend={onSwipeSuccess}
-            >
-                <AlertOverlay visible={loading} />
-            </EnterOtpCode>
+         <ValidatorScreen
+            TPINVisible={openPinCode}
+            setTPINVisible={setOpenPinCode}
+            tpinCodeAttempt={pinCodeAttempt}
+            OTPVisible={openOtpCode}
+            setOTPVisible={setOpenOtpCode}
+            otpCodeAttempt={otpCodeAttempt}
+            otpResend={onSwipeSuccess}
+            callBackFunc={Proceed}
+            loading={loading}
+        />
             <SuccessfulModal 
                 successModalVisible={successModalVisible}
                 amount={amount} 

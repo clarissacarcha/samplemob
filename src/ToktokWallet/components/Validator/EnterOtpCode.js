@@ -4,8 +4,8 @@ import CONSTANTS from 'common/res/constants'
 import { ICON_SET, VectorIcon, YellowButton } from 'src/revamp'
 import { useAccount } from 'toktokwallet/hooks'
 import { useFocusEffect } from '@react-navigation/native'
-import { DisabledButton } from '../DisabledButton'
-import { BuildingBottom } from '../BuildingBottom'
+import { DisabledButton } from '../'
+import { BuildingBottom } from '../'
 
 const {width,height} = Dimensions.get("window")
 const { FONT_FAMILY: FONT , FONT_SIZE , COLOR } = CONSTANTS

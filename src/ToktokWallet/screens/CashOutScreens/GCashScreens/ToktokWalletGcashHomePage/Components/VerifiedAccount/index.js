@@ -10,7 +10,7 @@ import { POST_CASH_OUT , POST_REQUEST_CASH_OUT } from 'toktokwallet/graphql'
 import { useMutation } from '@apollo/react-hooks'
 import { useAlert } from 'src/hooks/useAlert'
 import { onErrorAlert } from 'src/util/ErrorUtility'
-import { DisabledButton, Separator, EnterPinCode , EnterOtpCode } from 'toktokwallet/components'
+import { DisabledButton, Separator, ValidatorScreen } from 'toktokwallet/components'
 import { AlertOverlay } from 'src/components'
 import CONSTANTS from 'common/res/constants'
 
@@ -150,24 +150,17 @@ export const VerifiedAccount = ({record,provider})=> {
     return (
         <>
         <AlertOverlay visible={requestLoading}/>
-        <EnterPinCode 
-                visible={openPinCode} 
-                setVisible={setOpenPinCode} 
-                loading={loading}
-                pinCodeAttempt={pinCodeAttempt}
-                callBackFunc={ProceedTransaction}
-        >
-             <AlertOverlay visible={loading} />
-        </EnterPinCode>
-        <EnterOtpCode
-            visible={openOtpCode}
-            setVisible={setOpenOtpCode}
-            callBackFunc={ProceedTransaction}
+        <ValidatorScreen
+            TPINVisible={openPinCode}
+            setTPINVisible={setOpenPinCode}
+            tpinCodeAttempt={pinCodeAttempt}
+            OTPVisible={openOtpCode}
+            setOTPVisible={setOpenOtpCode}
             otpCodeAttempt={otpCodeAttempt}
-            resend={onSwipeSuccess}
-        >
-            <AlertOverlay visible={loading} />
-        </EnterOtpCode>
+            otpResend={onSwipeSuccess}
+            callBackFunc={ProceedTransaction}
+            loading={loading}
+        />
         <Separator/>
         <SuccessfulCashOutModal 
              visible={successModalVisible}

@@ -2,8 +2,8 @@ import React, {useState,useRef} from 'react'
 import {View , Text , TextInput, StyleSheet , Modal , KeyboardAvoidingView, Platform, Dimensions , TouchableHighlight, TouchableOpacity} from 'react-native'
 import CONSTANTS from 'common/res/constants'
 import { ICON_SET, VectorIcon, YellowButton } from 'src/revamp'
-import { DisabledButton } from '../DisabledButton'
-import { BuildingBottom } from '../BuildingBottom'
+import { DisabledButton } from '../'
+import { BuildingBottom } from '../'
 
 const {width,height} = Dimensions.get("window")
 const { FONT_FAMILY: FONT , FONT_SIZE , COLOR } = CONSTANTS
