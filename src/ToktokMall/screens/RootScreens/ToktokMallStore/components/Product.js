@@ -64,11 +64,16 @@ const RenderItem = ({item}) => {
             </View>
           </View> */}
           <View style={{flexDirection: 'row'}}>
-            <View style={{flex: 1}}>
+            <View style={{flex: 2.3}}>
               <Text style={{fontSize: 13, color: "#F6841F"}}><Price amount={item?.price} /></Text>
             </View>
+            {item?.discountRate != "" && 
+            <View style={{flex: 2, justifyContent: 'center'}}>
+              <Text style={{fontSize: 9, color: "#9E9E9E", textDecorationLine: 'line-through'}}><Price amount={item?.compareAtPrice} /></Text>
+            </View>
+            }        
             <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end'}}>
-              <Text style={{fontSize: 10}}>{item?.soldCount || 0} sold</Text>
+              <Text style={{fontSize: 8}}>{item?.soldCount || 0} sold</Text>
             </View>
           </View>
         </View>
@@ -93,7 +98,9 @@ export const Product = ({data}) => {
   }
 
   useEffect(() => {
-    setProducts(products.slice(0, offset + 10))
+    let sliced = products.slice(0, offset + 10)
+    let sorted = sliced.sort((a, b) => a.soldCount < b.soldCount )
+    setProducts(sorted)
   }, [])
 
   return (

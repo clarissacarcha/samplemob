@@ -166,6 +166,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
               }
             }
 
+            setSearchedProducts([])
             searchProduct({
               variables: {
                 input: {

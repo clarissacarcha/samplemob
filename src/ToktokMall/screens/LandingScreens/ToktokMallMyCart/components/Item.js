@@ -148,7 +148,7 @@ export const Item = ({
                 style = {{alignItems: 'center', justifyContent: 'center',  height: 25,width: 25,
                   borderWidth: 1, borderColor: '#F8F8F8'
                 }}
-                disabled={data.noOfStocks === qty}
+                disabled={data.noOfStocks === qty || qty === 200}
                 onPress = {() => {
                   onChangeQuantity(qty + 1, data?.item_id)
                   setQty(qty + 1)
@@ -157,7 +157,7 @@ export const Item = ({
                 <AIcons
                   name = {'plus'}
                   size = {15}
-                  color = {qty == data.noOfStocks ? '#D7D7D7':  COLOR.ORANGE}
+                  color = {qty == data.noOfStocks || qty === 200 ? '#D7D7D7':  COLOR.ORANGE}
                 />
               </TouchableOpacity>
             </View>

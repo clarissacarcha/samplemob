@@ -61,14 +61,14 @@ const RenderItem = ({navigation, item}) => {
             </View>
           </View> */}
           <View style={{flexDirection: 'row'}}>
-            <View style={{flex: 1.2}}>
-              <Text style={{fontSize: 13, color: "#F6841F"}}><Price amount={item?.price} /></Text>
+            <View style={{flex: 2.3}}>
+              <Text style={{fontSize: 13, color: "#F6841F"}}><Price amount={item.price} /></Text>
             </View>
-            <View style={{flex: 1, justifyContent: 'center',}}>
-            {item.compareAtPrice && item.compareAtPrice != "0.00" ? <Text style={{color: "#9E9E9E", textDecorationLine: 'line-through', fontSize: 9, marginLeft: 3}}><Price amount={item.compareAtPrice} /></Text> : null}
+            <View style={{flex: 2, justifyContent: 'center'}}>
+              {item.discountRate && item.discountRate != "" ?  <Text style={{fontSize: 9, color: "#9E9E9E", textDecorationLine: 'line-through'}}><Price amount={item.compareAtPrice} /></Text> : <></>}
             </View>
-            <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end'}}>
-              <Text style={{fontSize: 10}}>{item?.soldCount || 0} sold</Text>
+            <View style={{flex: 1.3, justifyContent: 'center', alignItems: 'flex-end'}}>
+              <Text style={{fontSize: 9}}>{item.soldCount || 0} sold</Text>
             </View>
           </View>
         </TouchableOpacity>
@@ -81,7 +81,7 @@ export const Product = ({data, state, fetch, lazyload}) => {
 
   const [loading, setloading] = useState(state)
   const navigation = useNavigation()
-  const [products, setProducts] = useState(data)
+  const [products, setProducts] = useState([])
 
   const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
     const paddingBottom = 150;
@@ -89,7 +89,7 @@ export const Product = ({data, state, fetch, lazyload}) => {
   }
 
   useEffect(() => {
-    setProducts(data)
+    setProducts(data.sort((a, b) => a.soldCount < b.soldCount ))
   }, [data])
 
     return (
