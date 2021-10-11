@@ -19,6 +19,7 @@ import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import {useIsFocused} from '@react-navigation/native';
 import {removeRiderDetails} from 'toktokfood/helper/showRiderDetails';
 import DialogMessage from 'toktokfood/components/DialogMessage';
+import moment from 'moment';
 
 const CUSTOM_HEADER = {
   container: Platform.OS === 'android' ? moderateScale(83) : moderateScale(70),
@@ -29,6 +30,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
   const referenceNum = route.params ? route.params.referenceNum : '';
   const [seconds, setSeconds] = useState(0);
   const [riderSeconds, setRiderSeconds] = useState(0);
+  const [preparingOrderSeconds, setPreparingOrderSeconds] = useState(0);
   const [showCancel, setShowCancel] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
   const [transaction, setTransaction] = useState({});
@@ -41,6 +43,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
   });
   const checkOrderResponse5mins = useRef(null);
   const getRiderDetailsInterval = useRef(null);
+  const preparingOrderInterval = useRef(null);
   const isFocus = useIsFocused();
   const dispatch = useDispatch();
   const {location} = useSelector((state) => state.toktokFood);
@@ -64,64 +67,16 @@ const ToktokFoodDriver = ({route, navigation}) => {
     },
   );
 
-  const getToktokFoodRiderDetails = async () => {
-    try {
-      const API_RESULT = await axios({
-        url: 'https://dev.toktok.ph:2096/graphql',
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        data: {
-          query: `
-            query {
-              getDeliveryDriver(input: {
-                deliveryId: "${transaction?.tDeliveryId}"
-              }) {
-                driver {
-                  id
-                  status
-                  licenseNumber
-                  isOnline
-                  location {
-                    latitude
-                    longitude
-                    lastUpdate
-                  }
-                user {
-                  id
-                  username
-                  status
-                  person {
-                    firstName
-                    middleName
-                    lastName
-                    mobileNumber
-                    emailAddress
-                    avatar
-                    avatarThumbnail
-                  }
-                }
-                vehicle {
-                  plateNumber
-                  brand {
-                    brand
-                  }
-                  model {
-                    model
-                  }
-                }
-              }
-            }
-          }`,
-        },
-      });
-      const res = API_RESULT.data.data.getDeliveryDriver;
-      setRiderDetails(res.driver);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const [getToktokFoodRiderDetails, {error: riderError, loading: riderLoading, refetch: riderRefetch}] = useLazyQuery(
+    GET_RIDER_DETAILS,
+    {
+      client: CLIENT,
+      fetchPolicy: 'network-only',
+      onCompleted: ({getDeliveryDriver}) => {
+        setRiderDetails(getDeliveryDriver.driver);
+      },
+    },
+  );
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('blur', () => {
@@ -162,11 +117,34 @@ const ToktokFoodDriver = ({route, navigation}) => {
 
   const handleMapRider = () => {
     if (transaction.tDeliveryId && riderDetails != null) {
-      getToktokFoodRiderDetails();
+      riderRefetch({
+        variables: {
+          input: {
+            deliveryId: transaction.tDeliveryId ,
+          },
+        },
+      });
     }
     getRiderDetailsInterval.current = setInterval(() => setRiderSeconds(seconds - 20), 20000);
     console.log('Rider Details Updated ' + riderSeconds);
   };
+
+  const checkIfNoResponse = () => {
+    let start = moment(transaction.dateOrderProcessed).format('hh:mm');
+    let end = moment().format('hh:mm');
+    let duration = moment(transaction.dateOrderProcessed).add(30, 'minutes').format('hh:mm');
+    // let diff = end.diff(duration)
+    // var time3 = moment(diff).format('hh:mm:ss'); 
+    console.log(end, duration)
+    if(end >= duration){
+      setShadowDialogMessage({
+        title: `Delay`,
+        message: `We couldn't find you a driver as of this moment. Please try again.`,
+        show: true,
+        type: 'warning'
+      });
+    }
+  }
 
   const handleOrderProcess = async () => {
     if (transaction && Object.keys(transaction).length > 0) {
@@ -187,13 +165,20 @@ const ToktokFoodDriver = ({route, navigation}) => {
         if (seconds > 0) {
           if (transaction.orderStatus != 'p' && transaction?.orderIsfor == 1) {
             refetch({variables: {input: {referenceNum: referenceNum}}});
-            if (transaction.tDeliveryId && riderDetails == null) {
-              getToktokFoodRiderDetails();
+            if (transaction.tDeliveryId != null && riderDetails == null) {
+              getToktokFoodRiderDetails({
+                variables: {
+                  input: {
+                    deliveryId: transaction.tDeliveryId ,
+                  },
+                },
+              });
             }
           } else {
             refetch({variables: {input: {referenceNum: referenceNum}}});
           }
           checkOrderResponse5mins.current = setInterval(() => setSeconds(seconds - 5), 5000);
+          // checkIfNoResponse()
         } else {
           if (riderDetails == null) {
             clearInterval(checkOrderResponse5mins.current);
@@ -207,12 +192,12 @@ const ToktokFoodDriver = ({route, navigation}) => {
               });
             } else {
               if (transaction.orderIsfor == 1) {
-                setShadowDialogMessage({
-                  title: `Couldn't Find Driver`,
-                  message: `We couldn't find you a driver as of this moment. Please try again.`,
-                  show: true,
-                  type: 'warning'
-                });
+                // setShadowDialogMessage({
+                //   title: `Couldn't Find Driver`,
+                //   message: `We couldn't find you a driver as of this moment. Please try again.`,
+                //   show: true,
+                //   type: 'warning'
+                // });
               }
             }
           } else {
@@ -247,6 +232,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
     setShadowDialogMessage(prev => ({ ...prev, show: false }))
     if(title == 'Order Complete' || title == 'OOPS!' || title == 'Order Cancelled by Merchant'){
       let tab = selectedTab(title)
+      console.log(title, tab)
       navigation.navigate('ToktokFoodOrderTransactions', { tab })
     } else {
       setSeconds(300)
@@ -287,7 +273,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
         <LoadingIndicator isFlex isLoading={true} />
       ) : (
         <>
-          {riderDetails !== null && (transaction.orderStatus == 'f' || transaction.status == 's') ? (
+          {riderDetails != null && (transaction.orderStatus == 'f' || transaction.orderStatus == 's') ? (
             <RiderMapView riderCoordinates={riderDetails.location} customerCoordinates={transaction} />
           ) : (
             <DriverAnimationView

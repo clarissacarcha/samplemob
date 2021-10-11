@@ -1,5 +1,5 @@
 import React from 'react';
-import {Platform, ScrollView, StyleSheet, TouchableOpacity, View, Text} from 'react-native';
+import {Platform, ScrollView, StyleSheet, TouchableOpacity, View, Text, Image} from 'react-native';
 import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
@@ -9,6 +9,7 @@ import Separator from 'toktokfood/components/Separator';
 // Fonts/Colors
 import {COLORS} from 'res/constants';
 import {FONT_SIZE, FONT, SIZE, COLOR} from 'res/variables';
+import { time } from 'toktokfood/assets/images';
 
 // Utils
 import {moderateScale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
@@ -36,11 +37,10 @@ const PickUpDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
     let startTime = moment(dateOrderProcessed).format('LT');
     let endTime = moment(dateOrderProcessed).add(20, 'minutes').format('hh:mm A');
     return (
-      <View style={[styles.addressInfo, { paddingTop: moderateScale(10) }]}>
-        <Text numberOfLines={1} style={styles.bodyText}>
-          Estimated Pickup Time:
-        </Text>
-        <Text numberOfLines={1}>{`${startTime} - ${endTime}`}</Text>
+      <View style={styles.timeContainer}>
+        <Image resizeMode="contain" source={time} style={styles.timeImg} />
+        {/* <Text style={styles.time}>{`Estimated Delivery Time: ${startTime} - ${endTime}`}</Text> */}
+        <Text style={styles.time}>{`Estimated Pickup Time: ${moment(dateOrderProcessed).format('ll')} - ASAP`}</Text>
       </View>
     );
   };
@@ -60,11 +60,9 @@ const PickUpDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
   };
 
   const renderTitle = () => {
-    // let startTime = moment(date).format('LT')
-
     return (
       <View style={styles.detailsContainer}>
-        <Text style={styles.title}>{status.title}</Text>
+        {/* <Text style={styles.title}>{status.title}</Text> */}
         <Text style={styles.status}>{status.message}</Text>
       </View>
     );
@@ -93,7 +91,6 @@ const PickUpDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
         {renderActions()}
       </View>
     </View>
-   
   );
 };
 
@@ -106,7 +103,6 @@ const styles = StyleSheet.create({
     flex: 1
   },
   actionContainer: {
-    paddingBottom: 12,
     alignItems: 'center',
     backgroundColor: 'white',
   },
@@ -121,6 +117,7 @@ const styles = StyleSheet.create({
   addressInfo: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginHorizontal: moderateScale(20)
   },
   shadow: {
     backgroundColor: 'white',
@@ -138,7 +135,7 @@ const styles = StyleSheet.create({
   },
   detailsContainer: {
     alignItems: 'center',
-    paddingBottom: moderateScale(15)
+    paddingBottom: moderateScale(15),
   },
   divider: {
     flex: 1,
@@ -161,9 +158,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   status: {
-    fontSize: FONT_SIZE.S,
+    fontSize: FONT_SIZE.M,
     fontFamily: FONT.REGULAR,
-    marginTop: verticalScale(5),
+    marginVertical: verticalScale(5),
   },
   seeOrderDetails: {
     padding: moderateScale(20),
@@ -179,6 +176,7 @@ const styles = StyleSheet.create({
     height: SIZE.BUTTON_HEIGHT,
     width: '90%',
     backgroundColor: COLOR.YELLOW,
+    marginTop: moderateScale(16)
   },
   buttonText: {
     color: COLOR.WHITE,
@@ -186,10 +184,27 @@ const styles = StyleSheet.create({
     fontFamily: FONT.BOLD,
   },
   orderDetailsAction: {
-    marginVertical: 16,
+    marginTop: moderateScale(16),
   },
   bodyText: {
     fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.M
-  }
+  },
+  time: {
+    fontSize: FONT_SIZE.M,
+    fontFamily: FONT.REGULAR,
+    marginLeft: moderateScale(5),
+  },
+  timeContainer: {
+    flexDirection: 'row',
+    marginTop: verticalScale(10),
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  timeImg: {
+    width: moderateScale(13),
+    height: moderateScale(13),
+     resizeMode: 'contain',
+    tintColor: '#F6A100'
+  },
 });

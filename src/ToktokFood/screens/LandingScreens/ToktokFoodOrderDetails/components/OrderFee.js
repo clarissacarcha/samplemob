@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.M,
   },
   total: {
-    fontWeight: '500',
+    fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.L,
   },
   totalPrice: {
@@ -65,11 +65,10 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.L,
   },
   note: {
-    fontWeight: '500',
+    fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.M,
   },
   notes: {
-    fontWeight: '300',
     fontSize: FONT_SIZE.S,
     marginTop: verticalScale(5),
   },

@@ -33,6 +33,7 @@ const ReceiverLocation = () => {
           setShowConfirmation(false);
         }}
         onCloseBtn2={() => {
+          setShowConfirmation(false);
           onSetLocationDetails();
         }}
         hasTwoButtons

@@ -3,6 +3,7 @@ import {Image, StyleSheet, View, Text} from 'react-native';
 
 // Fonts/Colors
 import {COLORS} from 'res/constants';
+import {FONT_SIZE, FONT, SIZE, COLOR} from 'res/variables';
 import {timer, pot, toktok_rider, rider1} from 'toktokfood/assets/images';
 
 // Utils
@@ -11,9 +12,19 @@ import {scale, moderateScale, verticalScale} from 'toktokfood/helper/scale';
 import DialogMessage from 'toktokfood/components/DialogMessage';
 import RatingModal from 'toktokfood/components/RatingModal';
 import { saveRiderDetails, checkRiderDetails, getRiderDetails, clearRiderDetails } from 'toktokfood/helper/showRiderDetails';
+import {orderStatusMessageDelivery, orderStatusMessagePickUp} from 'toktokfood/helper/orderStatusMessage';
+
+const statusImage = (orderIsfor, orderStatus) => {
+  if(orderStatus == 'p'){
+    return timer
+  } else {
+    return pot
+  }
+}
 
 const DriverAnimationView = ({orderStatus, riderDetails, orderIsfor, referenceNum}) => {
   const [showDriverModal, setShowDriverModal] = useState(false);
+  const status = orderIsfor == 1 ? orderStatusMessageDelivery(orderStatus) : orderStatusMessagePickUp(orderStatus)
 
   useEffect(() => {
     if(riderDetails != null && orderStatus != 's'){
@@ -52,11 +63,16 @@ const DriverAnimationView = ({orderStatus, riderDetails, orderIsfor, referenceNu
         }</Text>
       </RatingModal> */}
       {/* Contact Support */}
-      <Text style={styles.contactSupportText}></Text>
       <View style={styles.imgContainer}>
+        {(orderStatus != 's' && orderStatus != 'c' &&  orderStatus != 'f' && orderIsfor == 1) && (
+          <Text style={styles.title}>{status.title}</Text>
+        )}
+        {(orderIsfor == 2) && (
+          <Text style={styles.title}>{status.title}</Text>
+        )}
         <Image
           style={styles.img}
-          source={orderIsfor == 1 ? riderDetails == null ? timer : toktok_rider : pot}
+          source={statusImage(orderIsfor, orderStatus)}
           resizeMode="contain"
         />
       </View>
@@ -87,5 +103,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     // paddingVertical: verticalScale(10),
+  },
+  title: {
+    fontSize: FONT_SIZE.L,
+    fontFamily: FONT.BOLD,
+    paddingBottom: verticalScale(30)
   },
 });

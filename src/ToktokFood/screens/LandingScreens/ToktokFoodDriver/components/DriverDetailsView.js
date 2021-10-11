@@ -5,6 +5,7 @@ import {useNavigation} from '@react-navigation/native';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import {getDistance, convertDistance} from 'geolib';
+import Separator from 'toktokfood/components/Separator';
 
 // Fonts/Colors
 import {COLORS} from 'res/constants';
@@ -14,31 +15,43 @@ import { time } from 'toktokfood/assets/images';
 // Utils
 import {moderateScale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
 import {orderStatusMessageDelivery} from 'toktokfood/helper/orderStatusMessage';
+
 import moment from 'moment';
 import DashedLine from 'react-native-dashed-line';
 
 const DriverDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) => {
   const navigation = useNavigation();
   const {location} = useSelector((state) => state.toktokFood);
-  const {shopDetails, orderStatus, isconfirmed, address, dateReadyPickup, dateBookingConfirmed, dateOrderProcessed, isdeclined} = transaction;
+  const {
+    shopDetails,
+    orderStatus,
+    isconfirmed,
+    address,
+    dateReadyPickup,
+    dateBookingConfirmed,
+    dateOrderProcessed,
+    isdeclined,
+    dateFulfilled,
+    latitude,
+    longitude
+  } = transaction;
   const status = orderStatusMessageDelivery(
     orderStatus,
     riderDetails,
     `${shopDetails.shopname} (${shopDetails.address})`,
     isdeclined
   );
-  const date = dateReadyPickup.toString() != 'Invalid date' ? dateReadyPickup : dateBookingConfirmed
-
+   
   const calculateDistance = (startTime, riderLocation) => {
     let distance = getDistance(
-      {latitude: location?.latitude, longitude: location?.longitude},
+      {latitude: latitude, longitude: longitude},
       // {latitude: 14.537752, longitude: 121.001381},
       {latitude: riderLocation.latitude, longitude: riderLocation.longitude},
     );
     let distanceMiles = convertDistance(distance, 'mi');
     let duration = distanceMiles / 40;
-    let hours = 20 / 60;
-    let final = (duration + hours).toFixed(2);
+    let additionalMins = 20 / 60;
+    let final = (duration + additionalMins).toFixed(2);
 
     return moment(startTime).add(final, 'hours').format('hh:mm A');
   };
@@ -61,6 +74,7 @@ const DriverDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
   );
 
   const renderAddress = () => (
+    <>
     <View style={styles.addressContainer}>
       <View>
         <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
@@ -80,20 +94,25 @@ const DriverDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
         <Text numberOfLines={1}>{address}</Text>
       </View>
     </View>
+    </>
   );
 
   const renderTitle = () => {
+    let date = dateReadyPickup.toString() != 'Invalid date' ? dateReadyPickup : dateBookingConfirmed;
     let startTime = moment(date).format('LT');
     let endTime = riderDetails != null ? calculateDistance(date, riderDetails.location) : '00:00'
-  
+
     return (
       <View style={styles.detailsContainer}>
-        <Text style={styles.title}>{status.title}</Text>
+        {(status.id == 'f' || status == 's') && (
+          <Text style={styles.title}>{status.title}</Text>
+        )}
         <Text style={styles.status}>{status.message}</Text>
         {riderDetails != null && (
           <View style={styles.timeContainer}>
             <Image resizeMode="contain" source={time} style={styles.timeImg} />
-            <Text style={styles.time}>{`Estimated Delivery Time: ${startTime} - ${endTime}`}</Text>
+            {/* <Text style={styles.time}>{`Estimated Delivery Time: ${startTime} - ${endTime}`}</Text> */}
+            <Text style={styles.time}>{`Estimated Delivery Time: ${moment(date).format('ll')} - ${endTime}`}</Text>
           </View>
         )}
       </View>
@@ -117,7 +136,9 @@ const DriverDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
     <View style={styles.container}>
       <View style={styles.shadow}>
         {renderTitle()}
+        <Separator />
         {renderAddress()}
+        <Separator />
         {renderActions()}
       </View>
     </View>
@@ -138,9 +159,6 @@ const styles = StyleSheet.create({
   },
   addressContainer: {
     backgroundColor: 'white',
-    borderTopWidth: 10,
-    borderBottomWidth: 10,
-    borderColor: 'whitesmoke',
     flexDirection: 'row',
     padding: moderateScale(20),
     paddingHorizontal: moderateScale(30),
@@ -189,13 +207,13 @@ const styles = StyleSheet.create({
   },
   status: {
     fontSize: FONT_SIZE.M,
-    marginTop: verticalScale(5),
+    marginVertical: verticalScale(5),
   },
   seeOrderDetails: {
     padding: moderateScale(20),
   },
   time: {
-    fontSize: FONT_SIZE.S,
+    fontSize: FONT_SIZE.M,
     fontFamily: FONT.REGULAR,
     marginLeft: moderateScale(5),
   },
@@ -215,6 +233,7 @@ const styles = StyleSheet.create({
     height: SIZE.BUTTON_HEIGHT,
     width: '90%',
     backgroundColor: COLOR.YELLOW,
+    marginTop: moderateScale(16)
   },
   buttonText: {
     color: COLOR.WHITE,
@@ -222,7 +241,7 @@ const styles = StyleSheet.create({
     fontFamily: FONT.BOLD,
   },
   orderDetailsAction: {
-    marginVertical: 16,
+    marginTop: moderateScale(16),
   },
   timeImg: {
     width: moderateScale(13),
