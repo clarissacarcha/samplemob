@@ -74,13 +74,13 @@ export const WalletLog = ({item ,index , itemsLength }) => {
         sourceName = ``
         destinationName = ``
         cashInMobileNumber = tokwaAccount.mobileNumber
-    }else if(item.sourceWalletId && item.destinationwalletId){
+    }else if(item.sourceWalletId && item.destinationWalletId){
         sourceName = `${item.sourcePerson.firstName} ${item.sourcePerson.lastName}`
         destinationName = `${item.destinationPerson.firstName} ${item.destinationPerson.lastName}`
     }
 
     let phrase = ""
-    if(item.souceWalletId && item.destinationwalletId){
+    if(item.sourceWalletId && item.destinationWalletId){
         if(item.sourceWalletId == tokwaAccount.wallet.id ){
             phrase = `${item.transactionType.sourcePhrase.replace("[:source]",destinationName)}`
             phrase = `${phrase.replace("[:amount]",`${tokwaAccount.wallet.currency.code} ${numberFormat(item.amount)}`)}`
