@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage';
 
-export const SaveUserLocation = async (obj = {}) => {
+export const saveUserLocation = async (obj = {}) => {
   try {
     if (Object.keys(obj).length > 0) {
       await AsyncStorage.setItem('CART_LOCATION', JSON.stringify(obj));
@@ -11,7 +11,7 @@ export const SaveUserLocation = async (obj = {}) => {
   }
 };
 
-export const GetUserLocation = async () => {
+export const getUserLocation = async () => {
   try {
     const location = await AsyncStorage.getItem('CART_LOCATION');
     if (typeof location === 'string') {
@@ -21,5 +21,6 @@ export const GetUserLocation = async () => {
     }
   } catch (err) {
     console.log('Error retrieving location.');
+    throw err;
   }
 };
