@@ -41,7 +41,7 @@ export const ApiCall = async (endpoint, body, debug = false) => {
 
 			await axios.post(`${api_url[env]}${endpoint}`, formData).then((response) => {
 				if(debug){
-					console.log("Response data", response.data)
+					console.log("Response data", body, response.data)
 				}
 				if(response.data.success == 1){
 					responseData = response.data

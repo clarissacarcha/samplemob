@@ -23,10 +23,16 @@ import {GET_CUSTOMER_ADDRESSES} from '../../../../../graphql/toktokmall/model';
 import {Loading} from '../../../../Components';
 import AsyncStorage from '@react-native-community/async-storage';
 import { GeolocationUtility } from '../../../../util';
+import CustomIcon from "../../../../Components/Icons";
+import Swipeable from 'react-native-swipeable';
+import { AddressModal } from '../ToktokMallAddressesForm/Components';
+import axios from 'axios';
 
 const Component = ({route, navigation, reduxStates: {user_address, defaultAddress}, reduxActions: {updateUserAddress, setDefaultUserAddress}}) => {
   const [data, setData] = useState([]);
   const [defaultId, setDefaultID] = useState(0);
+
+  const [confirmDeleteModal, setConfirmDeleteModal] = useState(false);
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack onBack={() => {
@@ -73,11 +79,46 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
       }
     })
   }, []);
+  const DeleteButton = ({onPress}) => {
+		return (
+		  <>
+			<TouchableOpacity
+			  onPress={onPress}
+			  activeOpacity={1}
+			  style={[styles.addressContainer,{flex: 1, marginHorizontal: 15,  width: 75, backgroundColor: '#F6841F', alignItems: 'center', justifyContent: 'center'}]}>
+			  {/* <Text style={{fontSize: 14, color: '#fff'}}>Delete</Text> */}
+				<CustomIcon.FoIcon name="trash" size={20} color={"white"} />
+			</TouchableOpacity>
+		  </>
+		);
+	};
 
   const renderAddresses = () => {
+    
     return user_address.map((item) => {
       // console.log(item.fullAddress)
       return (
+        <Swipeable 
+					rightActionActivationDistance={30}
+					rightButtonWidth={75}
+					rightButtons={[<DeleteButton onPress={() => {
+						setConfirmDeleteModal(true)
+						
+					}} />]}
+				>
+
+      {confirmDeleteModal && (
+        <AddressModal
+          type="Confirm"
+          isVisible={confirmDeleteModal}
+          setIsVisible={(val) => {
+            setConfirmDeleteModal(val);
+          }}
+          onConfirm={() => {
+            deleteAddress(item.id)
+          }}
+        />
+      )}
         <TouchableOpacity
           style={styles.addressContainer}
           onLongPress={() => {
@@ -102,8 +143,35 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
           </View>
           <Text style={styles.addresscontact_number}>{item.receiverContact}</Text>
           <Text style={styles.addressText}>{item.fullAddress || item.address}</Text>
-        </TouchableOpacity>
+        </TouchableOpacity></Swipeable>
       );
+    });
+  };
+
+  const deleteAddress = async (id) => {
+    AsyncStorage.getItem('ToktokMallUser').then(async (raw) => {
+      let data = JSON.parse(raw) || {};
+      if (data.appSignature) {
+
+        let body = {
+          address_id: `${id}`
+        };
+
+        let formData = new FormData();
+        formData.append('signature', data.appSignature);
+        formData.append('data', JSON.stringify(body));
+        updateUserAddress('remove', id);
+
+        await axios
+          .post(`http://ec2-18-176-178-106.ap-northeast-1.compute.amazonaws.com/toktokmall/delete_address`, formData)
+          .then(async (response) => {
+            console.log("response.data", response.data)
+            setDeletedModal(true)
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     });
   };
 
