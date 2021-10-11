@@ -370,12 +370,10 @@ const MainComponent = () => {
     return conno;
   };
 
-  const hasCustomReceiver = () => Object.keys(receiver).length > 0;
-
   const placeCustomerOrderProcess = async (CUSTOMER_CART, WALLET) => {
     const CUSTOMER = {
-      name: hasCustomReceiver() ? receiver.contactPerson : `${customerInfo.firstName} ${customerInfo.lastName}`,
-      contactnumber: hasCustomReceiver() ? receiver.contactPersonNumber : mobileNumberFormat(),
+      name: receiver.contactPerson ? receiver.contactPerson : `${customerInfo.firstName} ${customerInfo.lastName}`,
+      contactnumber: receiver.contactPersonNumber ? receiver.contactPersonNumber : mobileNumberFormat(),
       email: customerInfo.email,
       address: location.address,
       user_id: customerInfo.userId,

@@ -17,8 +17,8 @@ import {useMutation, useLazyQuery} from '@apollo/react-hooks';
 import {CHECK_HAS_TEMPORARY_CART} from 'toktokfood/graphql/toktokfood';
 import DialogMessage from 'toktokfood/components/DialogMessage';
 import Loader from 'toktokfood/components/Loader';
-import { onErrorAlert } from 'src/util/ErrorUtility';
-import { useAlert } from 'src/hooks';
+import {onErrorAlert} from 'src/util/ErrorUtility';
+import {useAlert} from 'src/hooks';
 
 const PickUpDetails = (props) => {
   const initialState = {completeAddress: '', contactPerson: '', contactPersonNumber: ''};
@@ -54,7 +54,7 @@ const PickUpDetails = (props) => {
     },
   });
 
-  const [deleteShopTemporaryCart, { loading }] = useMutation(DELETE_SHOP_TEMPORARY_CART, {
+  const [deleteShopTemporaryCart, {loading}] = useMutation(DELETE_SHOP_TEMPORARY_CART, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     variables: {
       input: {
@@ -64,7 +64,7 @@ const PickUpDetails = (props) => {
       },
     },
     onError: (error) => {
-      onErrorAlert({alert, error})
+      onErrorAlert({alert, error});
     },
     onCompleted: ({deleteShopTemporaryCart}) => {
       console.log(deleteShopTemporaryCart, 'DELETE');
@@ -77,9 +77,11 @@ const PickUpDetails = (props) => {
     const {contactPerson, contactPersonNumber} = state;
     if (contactPerson !== '' && contactPersonNumber !== '') {
       dispatchToStore({type: 'SET_TOKTOKFOOD_ORDER_RECEIVER', payload: state});
+    } else {
+      dispatchToStore({type: 'SET_TOKTOKFOOD_ORDER_RECEIVER', payload: {}});
     }
     if (temporaryCart?.checkHasTemporaryCart?.shopid !== 0) {
-      deleteShopTemporaryCart()
+      deleteShopTemporaryCart();
     } else {
       setShowSuccess(true);
       onConfirm();
@@ -100,7 +102,7 @@ const PickUpDetails = (props) => {
         type="success"
         btn1Title="OK"
         onCloseModal={() => {
-          setShowSuccess(false)
+          setShowSuccess(false);
           isCart ? navigation.navigate('ToktokFoodHome') : navigation.pop();
         }}
       />
