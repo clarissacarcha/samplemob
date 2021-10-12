@@ -2,7 +2,8 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {ScrollView, StyleSheet, View, Alert, Text} from 'react-native';
 import {useSelector} from 'react-redux';
-import {useLazyQuery} from '@apollo/react-hooks';
+import {useLazyQuery, useQuery} from '@apollo/react-hooks';
+import BackgroundTimer from 'react-native-background-timer';
 
 // Components
 import DialogMessage from 'toktokfood/components/DialogMessage';
@@ -17,11 +18,8 @@ import {TOKTOK_FOOD_GRAPHQL_CLIENT, CLIENT} from 'src/graphql';
 import {GET_ORDER_TRANSACTION_BY_REF_NUM, GET_RIDER, GET_RIDER_DETAILS} from 'toktokfood/graphql/toktokfood';
 
 // Utils
-import {useIsFocused} from '@react-navigation/native';
-import BackgroundTimer from 'react-native-background-timer';
-
-// Utils
 import {removeRiderDetails} from 'toktokfood/helper/showRiderDetails';
+import {moderateScale, getStatusbarHeight} from 'toktokfood/helper/scale';
 
 const ToktokFoodOrderDetails = ({route, navigation}) => {
   const {price} = useSelector((state) => state.toktokFood.totalAmount);
