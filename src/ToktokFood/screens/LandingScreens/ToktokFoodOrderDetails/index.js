@@ -19,7 +19,7 @@ import {GET_ORDER_TRANSACTION_BY_REF_NUM, GET_RIDER, GET_RIDER_DETAILS} from 'to
 
 // Utils
 import {removeRiderDetails} from 'toktokfood/helper/showRiderDetails';
-import {moderateScale, getStatusbarHeight} from 'toktokfood/helper/scale';
+import {useIsFocused} from '@react-navigation/native';
 
 const ToktokFoodOrderDetails = ({route, navigation}) => {
   const {price} = useSelector((state) => state.toktokFood.totalAmount);
