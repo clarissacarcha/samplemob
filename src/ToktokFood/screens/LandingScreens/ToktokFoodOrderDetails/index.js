@@ -2,12 +2,10 @@
 import axios from 'axios';
 import React, {useState, useEffect, useRef} from 'react';
 import {ScrollView, StyleSheet, View, Alert, Text} from 'react-native';
-import {useIsFocused} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {useLazyQuery, useQuery} from '@apollo/react-hooks';
 
 // Components
-import DialogMessage from 'toktokfood/components/DialogMessage';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
@@ -19,7 +17,7 @@ import {TOKTOK_FOOD_GRAPHQL_CLIENT, CLIENT} from 'src/graphql';
 import {GET_ORDER_TRANSACTION_BY_REF_NUM, GET_RIDER, GET_RIDER_DETAILS} from 'toktokfood/graphql/toktokfood';
 
 // Utils
-import {removeRiderDetails} from 'toktokfood/helper/showRiderDetails';
+import {removeRiderDetails} from 'toktokfood/helper/ShowRiderDetails';
 import {useIsFocused} from '@react-navigation/native';
 import DialogMessage from 'toktokfood/components/DialogMessage';
 import BackgroundTimer from 'react-native-background-timer';
