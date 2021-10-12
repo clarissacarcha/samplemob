@@ -346,7 +346,7 @@ const MainComponent = () => {
             setShowLoader(false);
             setLoadingWallet(false);
             setTimeout(() => {
-              Alert.alert(`${shopname} is not accepting orders right now...`, '');
+              Alert.alert(`${temporaryCart.items[0]?.shopName} is not accepting orders right now...`, '');
             }, 500);
           }
         })
@@ -399,12 +399,12 @@ const MainComponent = () => {
       order_logs: CUSTOMER_CART,
     };
     const data = WALLET ? {...WALLET, ...CUSTOMER, ...ORDER} : {...CUSTOMER, ...ORDER};
-    console.log(JSON.stringify(data));
-    // postCustomerOrder({
-    //   variables: {
-    //     input: data,
-    //   },
-    // });
+    console.log(JSON.stringify(data))
+    postCustomerOrder({
+      variables: {
+        input: data,
+      },
+    });
   };
 
   const onPressChange = (action) => {

@@ -31,8 +31,11 @@ const OrderFee = ({ status = 2, transaction }) => {
   const renderLogInfo = (title, date) => (
     <View style={styles.logContainer}>
       <View style={styles.logsTitle}>
-        { date != 'Invalid date' ? <View style={{ backgroundColor: COLORS.YELLOWTEXT, height: moderateScale(14), width: moderateScale(14), borderRadius: 10  }} />
-          : <FIcon5 name="circle" color={"#CECECE"} size={moderateScale(15)} /> }
+        { date != 'Invalid date' ? (
+          <View style={{ backgroundColor: COLORS.YELLOWTEXT, height: moderateScale(14), width: moderateScale(14), borderRadius: 10  }} />
+        ) : (
+          <FIcon5 name="circle" color={"#CECECE"} size={moderateScale(15)} />
+        )}
         <Text style={styles.logText}>{title}</Text>
       </View>
       {date != 'Invalid date' && <Text style={styles.dateText}>{date}</Text>}
@@ -47,8 +50,8 @@ const OrderFee = ({ status = 2, transaction }) => {
 
   const renderDashImage = (dash = true, image) => (
     <View style={styles.dashedImage}>
-      {dash && <DashedLine axis="vertical" dashGap={1} dashColor="#DDDDDD" dashLength={5} />}
-      <Image style={[styles.pickedUp, {borderRadius: 10, height: 130, marginTop: 8}]} source={{ uri: image }} resizeMode="cover" />
+      {dash && <DashedLine axis="vertical" dashGap={1} dashColor="#DDDDDD" dashLength={3} />}
+      <Image style={[styles.pickedUp, {borderRadius: 10, height: verticalScale(150)}]} source={{ uri: image }} resizeMode="cover" />
     </View>
   );
 
@@ -61,7 +64,9 @@ const OrderFee = ({ status = 2, transaction }) => {
           {renderLogInfo('On the way to restaurant', moment(otwRestaurantDate).format('lll'))}
           {renderDash()}
           {renderLogInfo('Food Picked Up', moment(dateFulfilled).format('lll'))}
-          {renderDash()}
+          {(moment(dateFulfilled).format('lll') == 'Invalid date' || deliveryImgurl == null )&& 
+            renderDash()
+          }
           {(moment(dateFulfilled).format('lll') != 'Invalid date' && deliveryImgurl != null )
             && renderDashImage(true, deliveryImgurl)}
           {renderLogInfo('On the Way to Recipient', moment(dateFulfilled).format('lll'))}
@@ -103,7 +108,6 @@ const styles = StyleSheet.create({
     paddingVertical: moderateScale(10),
   },
   dateText: {
-    fontWeight: '300',
     fontSize: FONT_SIZE.S,
   },
   deliverLogs: {
@@ -112,33 +116,33 @@ const styles = StyleSheet.create({
     marginBottom: verticalScale(10),
   },
   dashedLine: {
-    height: verticalScale(15),
     paddingLeft: moderateScale(6),
-    // paddingVertical: 3,
-    flexDirection: 'row',
+    height: verticalScale(16),
+    flexDirection: 'row'
   },
   dashedImage: {
-    height: verticalScale(145),
     flex: 1,
     paddingLeft: moderateScale(6),
     flexDirection: 'row',
+    height: verticalScale(170)
   },
   logContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center'
   },
   logText: {
-    fontWeight: '300',
     fontSize: FONT_SIZE.M,
     marginLeft: moderateScale(10),
   },
   logsTitle: {
     flexDirection: 'row',
+    alignItems: 'center'
   },
   pickedUp: {
     flex: 1,
     height: verticalScale(140),
-    marginTop: verticalScale(5),
     marginLeft: moderateScale(10),
+    marginTop: verticalScale(10)
   },
 });

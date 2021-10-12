@@ -25,26 +25,26 @@ const OrderTitle = ({ transaction, riderDetails }) => {
     dateReadyPickup,
     dateOrderProcessed,
     dateBookingConfirmed,
-    orderIsfor
+    orderIsfor,
+    dateFulfilled
   } = transaction;
   const {location} = useSelector((state) => state.toktokFood);
   const status = orderIsfor == 1 ? orderStatusMessageDelivery(orderStatus, riderDetails, `${shopDetails?.shopname} (${shopDetails.address})`) 
     : orderStatusMessagePickUp(orderStatus, riderDetails, `${shopDetails?.shopname} (${shopDetails.address})`);
   
-  const calculateDistance = (startTime, riderLocation) => { 
-   
+  const calculateDistance = (startTime, riderLocation) => {
     let distance = getDistance(
-      { latitude: latitude, longitude: longitude },
-      // { latitude: 14.537752, longitude: 121.001381 }
-      { latitude: riderLocation.latitude, longitude: riderLocation.longitude },
+      {latitude: latitude, longitude: longitude},
+      // {latitude: 14.537752, longitude: 121.001381},
+      {latitude: riderLocation.latitude, longitude: riderLocation.longitude},
     );
-    let distanceMiles = convertDistance(distance, 'mi')
-    let duration = distanceMiles / 60
-    let hours = 20 / 60
-    let final = (duration + hours).toFixed(2)
- 
-    return moment(startTime).add(final, 'hours').format('hh:mm A')
-  }
+    let distanceMiles = convertDistance(distance, 'mi');
+    let duration = distanceMiles / 40;
+    let additionalMins = 20 / 60;
+    let final = (duration + additionalMins).toFixed(2);
+
+    return moment(startTime).add(final, 'hours').format('hh:mm A');
+  };
 
   const renderEstimatedPickUpTime = () => {
     let startTime = moment(dateOrderProcessed).format('LT')
@@ -52,19 +52,26 @@ const OrderTitle = ({ transaction, riderDetails }) => {
     return (
       <View style={styles.timeContainer}>
         <Image resizeMode="contain" source={time} style={styles.timeImg} />
-        <Text style={styles.time}>{`Estimated Pickup Time: ${startTime} - ${endTime}`}</Text>
+        {/* <Text style={styles.time}>{`Estimated Pickup Time: ${startTime} - ${endTime}`}</Text> */}
+        <Text style={styles.time}>{`Estimated Pickup Time: ${moment(dateOrderProcessed).format('ll')} - ASAP`}</Text>
       </View>
     )
   }
 
   const renderEstimatedDeliveryTime = () => {
-    let date = dateReadyPickup.toString() != 'Invalid date' ? dateReadyPickup : dateBookingConfirmed
+    let date = dateReadyPickup.toString() != 'Invalid date' ? dateReadyPickup : dateBookingConfirmed;
     let startTime = moment(date).format('LT')
     let endTime = calculateDistance(date, riderDetails.location)
+    if(date.toString() == 'Invalid date'){
+      return null
+    }
     return (
       <View style={styles.timeContainer}>
         <Image resizeMode="contain" source={time} style={styles.timeImg} />
-        <Text style={styles.time}>{`Estimated Delivery Time: ${startTime} - ${endTime}`}</Text>
+        {/* <Text style={styles.time}>{`Estimated Delivery Time: ${startTime} - ${endTime}`}</Text> */}
+        <Text style={styles.time}>{
+          `Estimated Delivery Time: ${moment(date).format('ll')} - ${endTime}`
+        }</Text>
       </View>
     )
   }
@@ -91,12 +98,12 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   status: {
-    fontSize: FONT_SIZE.S,
+    fontSize: FONT_SIZE.M,
     fontFamily: FONT.REGULAR,
     marginTop: verticalScale(5),
   },
   time: {
-    fontSize: FONT_SIZE.S,
+    fontSize: FONT_SIZE.M,
     fontFamily: FONT.REGULAR,
     marginLeft: moderateScale(5),
   },

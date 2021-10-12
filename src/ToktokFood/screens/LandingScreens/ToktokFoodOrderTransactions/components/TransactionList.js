@@ -110,7 +110,6 @@ export const TransactionList = (props) => {
   }
 
   const handleLoadMore = () => {
-    console.log(loadMore, 'sds')
     if(!loadMore && pendingProcess){
       setPage((prev) => prev + 1)
       setLoadMore(true)

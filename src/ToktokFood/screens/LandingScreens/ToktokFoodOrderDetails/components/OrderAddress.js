@@ -126,7 +126,7 @@ const OrderAddress = ({ transaction, riderDetails }) => {
         <View style={styles.dividerContainer}>
           <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
           {renderDash()}
-          {(riderDetails != null || orderStatus == 'f' || orderStatus == 's') ? (
+          {(riderDetails != null && (orderStatus == 'f' || orderStatus == 's')) ? (
               <MaterialIcon name="lens" size={16} color={COLORS.YELLOWTEXT} />
             ) : (
               <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
@@ -155,7 +155,7 @@ const OrderAddress = ({ transaction, riderDetails }) => {
               <View style={styles.restauranContainer}>
                 <Image style={styles.icons} source={locationOutline} resizeMode="contain" />
                 <Text font style={styles.addressText} numberOfLines={1}>
-                {location ? location.address : ''}
+                {transaction?.address ? transaction.address : ''}
               </Text>
             </View>
             <View style={styles.restauranContainer}>

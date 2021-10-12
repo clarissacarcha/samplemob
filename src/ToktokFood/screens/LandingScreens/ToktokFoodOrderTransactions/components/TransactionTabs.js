@@ -21,18 +21,18 @@ export const TransactionTabs = () => {
     <View style={styles.filterContainer}>
       <View style={styles.filterWrapper}>
         <TouchableWithoutFeedback onPress={() => handleFocusTab(1)}>
-          <View style={[styles.filterButton, {borderBottomWidth: focusTab === 1 ? 2 : 0}]}>
+          <View style={[styles.filterButton, {borderBottomWidth: focusTab == 1 ? 2 : 0}]}>
             <Text style={styles.filterText}>Ongoing</Text>
           </View>
         </TouchableWithoutFeedback>
         <TouchableWithoutFeedback onPress={() => handleFocusTab(2)}>
           <View
-            style={[styles.filterButton, {marginHorizontal: scale(18), borderBottomWidth: focusTab === 2 ? 2 : 0}]}>
+            style={[styles.filterButton, {marginHorizontal: scale(18), borderBottomWidth: focusTab == 2 ? 2 : 0}]}>
             <Text style={styles.filterText}>Completed</Text>
           </View>
         </TouchableWithoutFeedback>
         <TouchableWithoutFeedback onPress={() => handleFocusTab(3)}>
-          <View style={[styles.filterButton, { borderBottomWidth: focusTab === 3 ? 2 : 0}]}>
+          <View style={[styles.filterButton, { borderBottomWidth: focusTab == 3 ? 2 : 0}]}>
             <Text style={styles.filterText}>Cancelled</Text>
           </View>
         </TouchableWithoutFeedback>
