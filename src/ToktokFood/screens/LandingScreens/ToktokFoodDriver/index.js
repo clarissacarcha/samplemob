@@ -19,12 +19,8 @@ import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import {useIsFocused} from '@react-navigation/native';
 import {removeRiderDetails} from 'toktokfood/helper/showRiderDetails';
 import DialogMessage from 'toktokfood/components/DialogMessage';
-import moment from 'moment';
-
-const CUSTOM_HEADER = {
-  container: Platform.OS === 'android' ? moderateScale(83) : moderateScale(70),
-  bgImage: Platform.OS === 'android' ? moderateScale(83) : moderateScale(70),
-};
+import TimerModal from 'toktokfood/components/TimerModal';
+import BackgroundTimer from 'react-native-background-timer';
 
 const ToktokFoodDriver = ({route, navigation}) => {
   const referenceNum = route.params ? route.params.referenceNum : '';
@@ -78,14 +74,14 @@ const ToktokFoodDriver = ({route, navigation}) => {
     },
   );
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('blur', () => {
-      clearInterval(checkOrderResponse5mins.current);
-      clearInterval(getRiderDetailsInterval.current);
-    });
+  // useEffect(() => {
+  //   const unsubscribe = navigation.addListener('blur', () => {
+  //     clearInterval(checkOrderResponse5mins.current);
+  //     clearInterval(getRiderDetailsInterval.current);
+  //   });
 
-    return unsubscribe;
-  }, [navigation]);
+  //   return unsubscribe;
+  // }, [navigation]);
 
   useEffect(() => {
     if (isFocus) {
@@ -104,14 +100,14 @@ const ToktokFoodDriver = ({route, navigation}) => {
   useEffect(() => {
     handleOrderProcess();
     return () => {
-      clearInterval(checkOrderResponse5mins.current);
+      BackgroundTimer.clearInterval(checkOrderResponse5mins.current);
     };
   }, [seconds, transaction]);
 
   useEffect(() => {
     handleMapRider();
     return () => {
-      clearInterval(getRiderDetailsInterval.current);
+      BackgroundTimer.clearInterval(getRiderDetailsInterval.current);
     };
   }, [riderSeconds]);
 
@@ -125,33 +121,16 @@ const ToktokFoodDriver = ({route, navigation}) => {
         },
       });
     }
-    getRiderDetailsInterval.current = setInterval(() => setRiderSeconds(seconds - 20), 20000);
+    getRiderDetailsInterval.current = BackgroundTimer.setInterval(() => setRiderSeconds(seconds - 20), 20000);
     console.log('Rider Details Updated ' + riderSeconds);
   };
-
-  const checkIfNoResponse = () => {
-    let start = moment(transaction.dateOrderProcessed).format('hh:mm');
-    let end = moment().format('hh:mm');
-    let duration = moment(transaction.dateOrderProcessed).add(30, 'minutes').format('hh:mm');
-    // let diff = end.diff(duration)
-    // var time3 = moment(diff).format('hh:mm:ss'); 
-    console.log(end, duration)
-    if(end >= duration){
-      setShadowDialogMessage({
-        title: `Delay`,
-        message: `We couldn't find you a driver as of this moment. Please try again.`,
-        show: true,
-        type: 'warning'
-      });
-    }
-  }
 
   const handleOrderProcess = async () => {
     if (transaction && Object.keys(transaction).length > 0) {
       if (transaction.orderStatus == 's') {
         let message = transaction.orderIsfor == 1 ? 'Your order has been delivered successfully.' : 'You have successfully picked up your order.'
-        clearInterval(checkOrderResponse5mins.current);
-        clearInterval(getRiderDetailsInterval.current);
+        BackgroundTimer.clearInterval(checkOrderResponse5mins.current);
+        BackgroundTimer.clearInterval(getRiderDetailsInterval.current);
         await removeRiderDetails(referenceNum);
         setShadowDialogMessage({
           title: 'Order Complete',
@@ -177,12 +156,11 @@ const ToktokFoodDriver = ({route, navigation}) => {
           } else {
             refetch({variables: {input: {referenceNum: referenceNum}}});
           }
-          checkOrderResponse5mins.current = setInterval(() => setSeconds(seconds - 5), 5000);
-          // checkIfNoResponse()
+          checkOrderResponse5mins.current = BackgroundTimer.setInterval(() => setSeconds(seconds - 5), 5000);
         } else {
           if (riderDetails == null) {
-            clearInterval(checkOrderResponse5mins.current);
-            clearInterval(getRiderDetailsInterval.current);
+            BackgroundTimer.clearInterval(checkOrderResponse5mins.current);
+            BackgroundTimer.clearInterval(getRiderDetailsInterval.current);
             if (transaction.orderStatus == 'p') {
               setShadowDialogMessage({
                 title: 'No Response from Merchant',
@@ -191,14 +169,15 @@ const ToktokFoodDriver = ({route, navigation}) => {
                 type: 'warning'
               });
             } else {
-              if (transaction.orderIsfor == 1) {
+              setSeconds(300);
+              // if (transaction.orderIsfor == 1) {
                 // setShadowDialogMessage({
                 //   title: `Couldn't Find Driver`,
                 //   message: `We couldn't find you a driver as of this moment. Please try again.`,
                 //   show: true,
                 //   type: 'warning'
                 // });
-              }
+              // }
             }
           } else {
             setSeconds(300);
@@ -232,7 +211,6 @@ const ToktokFoodDriver = ({route, navigation}) => {
     setShadowDialogMessage(prev => ({ ...prev, show: false }))
     if(title == 'Order Complete' || title == 'OOPS!' || title == 'Order Cancelled by Merchant'){
       let tab = selectedTab(title)
-      console.log(title, tab)
       navigation.navigate('ToktokFoodOrderTransactions', { tab })
     } else {
       setSeconds(300)
@@ -273,6 +251,8 @@ const ToktokFoodDriver = ({route, navigation}) => {
         <LoadingIndicator isFlex isLoading={true} />
       ) : (
         <>
+          {/* {((transaction.orderStatus == 'po' || transaction.orderStatus == 'rp') && riderDetails == null)
+            && ( <TimerModal title='Delay' message='Sorry for the delay' /> )} */}
           {riderDetails != null && (transaction.orderStatus == 'f' || transaction.orderStatus == 's') ? (
             <RiderMapView riderCoordinates={riderDetails.location} customerCoordinates={transaction} />
           ) : (
@@ -288,7 +268,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
               <DriverDetailsView
                 onCancel={() => {
                   setShowCancel(true);
-                  clearTimeout(checkOrderResponse5mins.current);
+                  BackgroundTimer.clearInterval(checkOrderResponse5mins.current);
                 }}
                 riderDetails={riderDetails}
                 transaction={transaction}
@@ -298,7 +278,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
               <PickUpDetailsView
                 onCancel={() => {
                   setShowCancel(true);
-                  clearTimeout(checkOrderResponse5mins.current);
+                  BackgroundTimer.clearInterval(checkOrderResponse5mins.current);
                 }}
                 riderDetails={riderDetails}
                 transaction={transaction}

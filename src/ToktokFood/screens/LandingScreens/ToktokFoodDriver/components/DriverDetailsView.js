@@ -80,7 +80,7 @@ const DriverDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
         <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
         {/* <View style={styles.divider} /> */}
         {renderDash()}
-        {riderDetails != null && (orderStatus == 'f' || orderStatus == 's') ? (
+        {(riderDetails != null && (orderStatus == 'f' || orderStatus == 's')) ? (
           <MaterialIcon name="lens" size={16} color={COLORS.YELLOWTEXT} />
         ) : (
           <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
@@ -108,7 +108,7 @@ const DriverDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
           <Text style={styles.title}>{status.title}</Text>
         )}
         <Text style={styles.status}>{status.message}</Text>
-        {riderDetails != null && (
+        {(riderDetails != null && date.toString() != 'Invalid date') && (
           <View style={styles.timeContainer}>
             <Image resizeMode="contain" source={time} style={styles.timeImg} />
             {/* <Text style={styles.time}>{`Estimated Delivery Time: ${startTime} - ${endTime}`}</Text> */}

@@ -41,7 +41,7 @@ const CancelOrder = ({visibility = false, onCloseSheet, failedCancel, referenceO
     onCompleted: ({cancelOrder}) => {
       console.log(cancelOrder)
       if (cancelOrder.status == 200) {
-        navigation.pop();
+        navigation.navigate('ToktokFoodOrderTransactions', { tab: 3 })
       } else {
         setShowReason(false);
         failedCancel();
