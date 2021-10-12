@@ -62,7 +62,9 @@ const OrderTitle = ({ transaction, riderDetails }) => {
     let date = dateReadyPickup.toString() != 'Invalid date' ? dateReadyPickup : dateBookingConfirmed;
     let startTime = moment(date).format('LT')
     let endTime = calculateDistance(date, riderDetails.location)
-  
+    if(date.toString() == 'Invalid date'){
+      return null
+    }
     return (
       <View style={styles.timeContainer}>
         <Image resizeMode="contain" source={time} style={styles.timeImg} />

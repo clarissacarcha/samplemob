@@ -17,6 +17,7 @@ import {rider1} from 'toktokfood/assets/images';
 import {removeRiderDetails} from 'toktokfood/helper/showRiderDetails';
 import {useIsFocused} from '@react-navigation/native';
 import DialogMessage from 'toktokfood/components/DialogMessage';
+import BackgroundTimer from 'react-native-background-timer';
 
 // Utils
 import {moderateScale, getStatusbarHeight} from 'toktokfood/helper/scale';
@@ -70,14 +71,14 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
     },
   );
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('blur', () => {
-      clearInterval(checkOrderResponse5mins.current);
-      clearInterval(getRiderDetailsInterval.current);
-    });
+  // useEffect(() => {
+  //   const unsubscribe = navigation.addListener('blur', () => {
+  //     clearInterval(checkOrderResponse5mins.current);
+  //     clearInterval(getRiderDetailsInterval.current);
+  //   });
 
-    return unsubscribe;
-  }, [navigation]);
+  //   return unsubscribe;
+  // }, [navigation]);
 
   useEffect(() => {
     getTransactionByRefNum();
@@ -92,14 +93,14 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
   useEffect(() => {
     handleOrderProcess();
     return () => {
-      clearInterval(checkOrderResponse5mins.current);
+      BackgroundTimer.clearInterval(checkOrderResponse5mins.current);
     };
   }, [seconds, transaction]);
 
   useEffect(() => {
     handleMapRider();
     return () => {
-      clearInterval(getRiderDetailsInterval.current);
+      BackgroundTimer.clearInterval(getRiderDetailsInterval.current);
     };
   }, [riderSeconds]);
 
@@ -113,7 +114,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
         },
       });
     }
-    getRiderDetailsInterval.current = setInterval(() => setRiderSeconds(seconds - 20), 20000);
+    getRiderDetailsInterval.current = BackgroundTimer.setInterval(() => setRiderSeconds(seconds - 20), 20000);
     console.log('Rider Details Updated ' + riderSeconds);
   };
 
@@ -122,8 +123,8 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
       if(orderStatus == undefined){
         if(transaction.orderStatus == 's'){
           let message = transaction.orderIsfor == 1 ? 'Your order has been delivered successfully.' : 'You have successfully picked up your order.'
-          clearInterval(checkOrderResponse5mins.current);
-          clearInterval(getRiderDetailsInterval.current);
+          BackgroundTimer.clearInterval(checkOrderResponse5mins.current);
+          BackgroundTimer.clearInterval(getRiderDetailsInterval.current);
           await removeRiderDetails(referenceNum)
           setShadowDialogMessage({
             title: 'Order Complete',
@@ -149,11 +150,11 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
             } else {
               refetch({variables: { input: { referenceNum: referenceNum }}});
             }
-            checkOrderResponse5mins.current = setInterval(() => setSeconds(seconds - 5), 5000);
+            checkOrderResponse5mins.current = BackgroundTimer.setInterval(() => setSeconds(seconds - 5), 5000);
           } else {
             if (riderDetails == null) {
-              clearInterval(checkOrderResponse5mins.current);
-              clearInterval(getRiderDetailsInterval.current);
+              BackgroundTimer.clearInterval(checkOrderResponse5mins.current);
+              BackgroundTimer.clearInterval(getRiderDetailsInterval.current);
               if (transaction.orderStatus == 'p') {
                 setShadowDialogMessage({
                   title: 'No Response from Merchant',
@@ -162,14 +163,15 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
                   type: 'warning'
                 });
               } else {
-                if (transaction.orderIsfor == 1) {
+                setSeconds(300);
+                // if (transaction.orderIsfor == 1) {
                   // setShadowDialogMessage({
                   //   title: `Couldn't Find Driver`,
                   //   message: `We couldn't find you a driver as of this moment. Please try again.`,
                   //   show: true,
                   //   type: 'warning'
                   // });
-                }
+                // }
               }
             } else {
               setSeconds(300);
@@ -229,7 +231,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
       setSeconds(300)
     }
   }
-
+ 
   return (
     <View style={styles.container}>
       <DialogMessage
@@ -252,9 +254,9 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
           <Separator />
           <OrderAddress transaction={transaction} riderDetails={riderDetails} />
           <Separator />
-          {transaction.deliveryNotes && (
+          {transaction.notes != '' && (
             <>
-              <OrderNote title="Note" label={transaction.deliveryNotes} />
+              <OrderNote title="Note" label={transaction.notes} />
               <Separator />
             </>
           )}

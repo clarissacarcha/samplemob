@@ -331,7 +331,6 @@ const MainComponent = () => {
                     hashAmount: data.postRequestTakeMoney.hash_amount
                   });
                 } else {
-
                   setLoadingWallet(false);
                   let parseError = JSON.parse(message);
                   let messageErr = parseError.errors[0].message;
@@ -347,7 +346,7 @@ const MainComponent = () => {
             setShowLoader(false);
             setLoadingWallet(false);
             setTimeout(() => {
-              Alert.alert(`${shopname} is not accepting orders right now...`, '');
+              Alert.alert(`${temporaryCart.items[0]?.shopName} is not accepting orders right now...`, '');
             }, 500);
           }
         })
