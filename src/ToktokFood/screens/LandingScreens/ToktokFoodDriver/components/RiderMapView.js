@@ -3,7 +3,7 @@ import {View, StyleSheet, Image} from 'react-native';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 
 import MapViewDirections from 'react-native-maps-directions';
-import {rider_ic, customer_map_ic} from 'toktokfood/assets/images';
+import {rider_ic} from 'toktokfood/assets/images';
 
 import {useSelector} from 'react-redux';
 import CONSTANTS from 'common/res/constants';
@@ -20,14 +20,18 @@ const RiderMapView = (props) => {
   const {user} = useSelector((state) => state.session);
 
   const fitMarkersViews = (coordinates) => {
-    mapRef.current.fitToCoordinates(coordinates, {
-      edgePadding: {
-        right: 20,
-        bottom: 100,
-        left: 20,
-        top: 90,
+    mapRef.current.fitToCoordinates(
+      coordinates,
+      {
+        edgePadding: {
+          right: 20,
+          bottom: 100,
+          left: 20,
+          top: 90,
+        },
       },
-    }, 3000);
+      3000,
+    );
   };
 
   return (
