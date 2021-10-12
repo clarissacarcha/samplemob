@@ -7,6 +7,7 @@ import BackgroundTimer from 'react-native-background-timer';
 
 // Components
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
+import DialogMessage from 'toktokfood/components/DialogMessage';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import Separator from 'toktokfood/components/Separator';
@@ -14,7 +15,7 @@ import {OrderAddress, OrderFee, OrderList, OrderLogs, OrderNote, OrderRider, Ord
 
 // Queries
 import {TOKTOK_FOOD_GRAPHQL_CLIENT, CLIENT} from 'src/graphql';
-import {GET_ORDER_TRANSACTION_BY_REF_NUM, GET_RIDER, GET_RIDER_DETAILS} from 'toktokfood/graphql/toktokfood';
+import {GET_ORDER_TRANSACTION_BY_REF_NUM, GET_RIDER_DETAILS} from 'toktokfood/graphql/toktokfood';
 
 // Utils
 import {removeRiderDetails} from 'toktokfood/helper/ShowRiderDetails';
