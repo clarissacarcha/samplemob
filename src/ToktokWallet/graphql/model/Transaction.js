@@ -107,14 +107,6 @@ cashOutDisplayInformations {
             name 
         }
     }
-    gcashInfo {
-        accountNumber
-        accountName
-    }
-    bdoInfo {
-        accountNumber
-        accountName
-    }
 }
 `
 

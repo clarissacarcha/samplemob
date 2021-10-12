@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect, useContext} from 'react';
 import {useRoute} from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/native';
@@ -25,6 +26,7 @@ import {
   ReceiverLocation,
   MyOrderList,
   OrderTotal,
+  OrderVoucher,
   PaymentDetails,
   RiderNotes,
   ShippingOption,
@@ -41,7 +43,7 @@ import {
   DELETE_SHOP_TEMPORARY_CART,
   CHECK_SHOP_VALIDATIONS,
   REQUEST_TAKE_MONEY,
-  VERIFY_PIN
+  VERIFY_PIN,
 } from 'toktokfood/graphql/toktokfood';
 
 import moment from 'moment';
@@ -51,8 +53,8 @@ import 'moment-timezone';
 import {moderateScale} from 'toktokfood/helper/scale';
 import EnterPinCode from 'toktokfood/components/EnterPinCode';
 import {FONT, FONT_SIZE} from '../../../../res/variables';
-import { onErrorAlert } from 'src/util/ErrorUtility';
-import { useAlert } from 'src/hooks';
+import {onErrorAlert} from 'src/util/ErrorUtility';
+import {useAlert} from 'src/hooks';
 
 const MainComponent = () => {
   const route = useRoute();
@@ -76,7 +78,7 @@ const MainComponent = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [loadingWallet, setLoadingWallet] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
-  const [pinAttempt, setPinAttempt] = useState({ show: false, message: '' });
+  const [pinAttempt, setPinAttempt] = useState({show: false, message: ''});
   const alert = useAlert();
 
   useEffect(() => {
@@ -101,7 +103,7 @@ const MainComponent = () => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: ({getShippingFee}) => {
-      console.log(getShippingFee)
+      console.log(getShippingFee);
       setDeliveryInfo(getShippingFee);
     },
   });
@@ -139,37 +141,33 @@ const MainComponent = () => {
         setShowLoader(false);
         setLoadingWallet(false);
         setTimeout(() => {
-          onErrorAlert({alert, error})
-        }, 500)
+          onErrorAlert({alert, error});
+        }, 500);
       },
     },
   );
 
-  const [postResquestTakeMoney] = useMutation(REQUEST_TAKE_MONEY,
-    {
-      client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-      onError: (error) => {
-        setShowLoader(false);
-        setTimeout(() => {
-          onErrorAlert({alert, error})
-        }, 500)
-      },
-      onCompleted: ({postResquestTakeMoney}) => {},
+  const [postResquestTakeMoney] = useMutation(REQUEST_TAKE_MONEY, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    onError: (error) => {
+      setShowLoader(false);
+      setTimeout(() => {
+        onErrorAlert({alert, error});
+      }, 500);
     },
-  ); 
+    onCompleted: ({postResquestTakeMoney}) => {},
+  });
 
-  const [verifyPin] = useMutation(VERIFY_PIN,
-    {
-      client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-      onError: (error) => {
-        setShowLoader(false);
-        setTimeout(() => {
-          onErrorAlert({alert, error})
-        }, 500)
-      },
-      onCompleted: ({verifyPin}) => {},
+  const [verifyPin] = useMutation(VERIFY_PIN, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    onError: (error) => {
+      setShowLoader(false);
+      setTimeout(() => {
+        onErrorAlert({alert, error});
+      }, 500);
     },
-  ); 
+    onCompleted: ({verifyPin}) => {},
+  });
 
   const [postCustomerOrder] = useMutation(PATCH_PLACE_CUSTOMER_ORDER, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
@@ -177,8 +175,8 @@ const MainComponent = () => {
     onError: (error) => {
       setShowLoader(false);
       setTimeout(() => {
-        onErrorAlert({alert, error})
-      }, 500)
+        onErrorAlert({alert, error});
+      }, 500);
     },
     onCompleted: async ({checkoutOrder}) => {
       console.log(checkoutOrder);
@@ -193,9 +191,9 @@ const MainComponent = () => {
           .catch(() => {
             setShowLoader(false);
             setTimeout(() => {
-              Alert.alert('', 'Something went wrong.')      
-            }, 500)
-          })
+              Alert.alert('', 'Something went wrong.');
+            }, 500);
+          });
       } else {
         // error prompt
         setShowLoader(false);
@@ -262,12 +260,12 @@ const MainComponent = () => {
         input: {
           request_money_id: toktokWalletCredit.requestTakeMoneyId,
           pin: +pinCode,
-          pin_type: toktokWalletCredit.validator
-        }
-      }
+          pin_type: toktokWalletCredit.validator,
+        },
+      },
     }).then(({data}) => {
-      let { success, message } = data.verifyPin;
-      console.log(success)
+      let {success, message} = data.verifyPin;
+      console.log(success);
       if (success == 1) {
         const {requestTakeMoneyId, validator, cart, orderRefNum, hashAmount} = toktokWalletCredit;
         const WALLET = {
@@ -275,20 +273,22 @@ const MainComponent = () => {
           request_id: requestTakeMoneyId,
           pin_type: validator,
           reference_num: orderRefNum,
-          hash_amount: hashAmount
+          hash_amount: hashAmount,
         };
         placeCustomerOrderProcess(cart, WALLET);
       } else {
         setShowLoader(false);
         let parseError = JSON.parse(message);
         let remainingAttempts = parseError.errors[0].payload?.remainingAttempts;
-        if(remainingAttempts > 0){
-          setErrorMessage(`Incorrent ${toktokWalletCredit.validator}. Please try again. You have ${remainingAttempts} attempt/s left.`);
+        if (remainingAttempts > 0) {
+          setErrorMessage(
+            `Incorrent ${toktokWalletCredit.validator}. Please try again. You have ${remainingAttempts} attempt/s left.`,
+          );
         } else {
-          setPinAttempt({ show: true, message: parseError.errors[0].message })
+          setPinAttempt({show: true, message: parseError.errors[0].message});
         }
       }
-    })
+    });
   };
 
   const placeCustomerOrder = async () => {
@@ -297,7 +297,7 @@ const MainComponent = () => {
       const CUSTOMER_CART = await fixOrderLogs();
       await refetch({variables: {input: {shopId: `${temporaryCart.items[0]?.shopid}`}}})
         .then(({data}) => {
-          let { isOpen } = data.checkShopValidations;
+          let {isOpen} = data.checkShopValidations;
           if (isOpen == 1) {
             if (paymentMethod == 'TOKTOKWALLET') {
               let totalPrice = 0;
@@ -314,12 +314,12 @@ const MainComponent = () => {
                     toktokuser_id: toktokWallet.toktokuser_id,
                     payment_method: paymentMethod,
                     name: toktokWallet.name,
-                    notes: toktokWallet.notes
-                  }
-                }
+                    notes: toktokWallet.notes,
+                  },
+                },
               }).then(({data}) => {
-                let { success, message } = data.postRequestTakeMoney
-                if(success == 1){
+                let {success, message} = data.postRequestTakeMoney;
+                if (success == 1) {
                   let {requestTakeMoneyId, validator} = data.postRequestTakeMoney.data;
                   setShowEnterPinCode(true);
                   setLoadingWallet(false);
@@ -328,17 +328,17 @@ const MainComponent = () => {
                     validator,
                     cart: CUSTOMER_CART,
                     orderRefNum: data.postRequestTakeMoney.orderRefNum,
-                    hashAmount: data.postRequestTakeMoney.hash_amount
+                    hashAmount: data.postRequestTakeMoney.hash_amount,
                   });
                 } else {
                   setLoadingWallet(false);
                   let parseError = JSON.parse(message);
                   let messageErr = parseError.errors[0].message;
                   setTimeout(() => {
-                    setPinAttempt({ show: true, message: messageErr })
-                  },100)
+                    setPinAttempt({show: true, message: messageErr});
+                  }, 100);
                 }
-              })
+              });
             } else {
               placeCustomerOrderProcess(CUSTOMER_CART);
             }
@@ -351,13 +351,13 @@ const MainComponent = () => {
           }
         })
         .catch((error) => {
-          console.log(error)
+          console.log(error);
           setShowLoader(false);
           setLoadingWallet(false);
           setTimeout(() => {
-            onErrorAlert({alert, error})
-          }, 500)
-        })
+            onErrorAlert({alert, error});
+          }, 500);
+        });
     }
   };
 
@@ -434,10 +434,8 @@ const MainComponent = () => {
         hasTwoButtons
       />
       <Loader hasImage={false} loadingIndicator visibility={loadingWallet} message="loading..." />
-      {paymentMethod == 'COD' && (
-        <Loader visibility={showLoader} message="Placing order..." />
-      )}
-      { showEnterPinCode ? (
+      {paymentMethod == 'COD' && <Loader visibility={showLoader} message="Placing order..." />}
+      {showEnterPinCode ? (
         <EnterPinCode
           visible={showEnterPinCode}
           setVisible={() => {
@@ -450,8 +448,7 @@ const MainComponent = () => {
           }}
           errorMessage={errorMessage}
           setErrorMessage={setErrorMessage}
-          title={toktokWalletCredit.validator}
-        >
+          title={toktokWalletCredit.validator}>
           <Loader visibility={showLoader} message="Placing order..." />
           <DialogMessage
             visibility={pinAttempt.show}
@@ -459,8 +456,8 @@ const MainComponent = () => {
             messages={pinAttempt.message}
             type="warning"
             onCloseModal={() => {
-              setPinAttempt({ show: false, message: '' })
-              navigation.pop()
+              setPinAttempt({show: false, message: ''});
+              navigation.pop();
             }}
           />
         </EnterPinCode>
@@ -471,7 +468,7 @@ const MainComponent = () => {
           messages={pinAttempt.message}
           type="warning"
           onCloseModal={() => {
-            setPinAttempt({ show: false, message: '' })
+            setPinAttempt({show: false, message: ''});
           }}
         />
       )}
@@ -505,8 +502,13 @@ const MainComponent = () => {
         <Separator />
         {orderType == 'Delivery' && <ReceiverLocation />}
         <Separator />
+
         <MyOrderList />
         <Separator />
+
+        <OrderVoucher />
+        <Separator />
+
         {/* <AlsoOrder /> */}
         {delivery === null ? (
           <View style={[styles.sectionContainer, styles.totalContainer]}>

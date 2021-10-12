@@ -1,23 +1,23 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect, useState, useContext} from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {View, StyleSheet, Text, TouchableOpacity, Alert} from 'react-native';
+import {useSelector} from 'react-redux';
+import {useLazyQuery} from '@apollo/react-hooks';
 
 // Utils
 import {scale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
 import {useIsFocused} from '@react-navigation/native';
 
 import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
-import {useSelector} from 'react-redux';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
-import {useLazyQuery, useMutation} from '@apollo/react-hooks';
-import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import {VerifyContext} from '../components';
 import {GET_ALL_TEMPORARY_CART, CHECK_HAS_TEMPORARY_CART} from 'toktokfood/graphql/toktokfood';
 
 export const FoodCart = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const { id } = route.params.item;
+  const {id} = route.params.item;
   const {customerInfo} = useSelector((state) => state.toktokFood);
   const isFocus = useIsFocused();
   const {temporaryCart, setTemporaryCart, setFoodCartHeight} = useContext(VerifyContext);
@@ -25,38 +25,37 @@ export const FoodCart = () => {
   const [getAllTemporaryCart, {loading: cartLoading, error: cartError}] = useLazyQuery(GET_ALL_TEMPORARY_CART, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
-    onCompleted: ({ getAllTemporaryCart }) => {
-      let { items, totalAmount } = getAllTemporaryCart
-      console.log(getAllTemporaryCart)
+    onCompleted: ({getAllTemporaryCart}) => {
+      let {items, totalAmount} = getAllTemporaryCart;
       setTemporaryCart({
         cartItemsLength: items.length,
         totalAmount,
-        items: items
-      })
+        items: items,
+      });
     },
   });
 
-  const [checkHasTemporaryCart, {data: hasTemporaryCart, loading: hasCartLoading, error: hasCartError}] = useLazyQuery(CHECK_HAS_TEMPORARY_CART, {
-    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-    fetchPolicy: 'network-only',
-    onError: (err) => {
-      Alert.alert('', 'Something went wrong.')
-    }
-  });
-
+  const [checkHasTemporaryCart, {data: hasTemporaryCart, loading: hasCartLoading, error: hasCartError}] = useLazyQuery(
+    CHECK_HAS_TEMPORARY_CART,
+    {
+      client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+      fetchPolicy: 'network-only',
+      onError: () => Alert.alert('', 'Something went wrong.'),
+    },
+  );
 
   useEffect(() => {
-    if(isFocus && customerInfo){
-      checkHasTemporaryCart({ variables: { input: { userId: customerInfo.userId } } })
+    if (isFocus && customerInfo) {
+      checkHasTemporaryCart({variables: {input: {userId: customerInfo.userId}}});
       getAllTemporaryCart({
         variables: {
           input: {
-            userId: customerInfo.userId
+            userId: customerInfo.userId,
           },
         },
-      })
+      });
     }
-  }, [isFocus, customerInfo])
+  }, [isFocus, customerInfo]);
 
   const getFoodCartHeight = (event) => {
     let height = event.nativeEvent.layout.height;
@@ -64,29 +63,28 @@ export const FoodCart = () => {
   };
 
   const onRestaurantNavigate = () => {
-    navigation.navigate('ToktokFoodCart', { shopId: id, userId: customerInfo.userId });
+    navigation.navigate('ToktokFoodCart', {shopId: id, userId: customerInfo.userId});
   };
 
-  if(temporaryCart.cartItemsLength == 0 || cartLoading || hasTemporaryCart?.checkHasTemporaryCart.shopid == 0){
-    return null
+  if (temporaryCart.cartItemsLength == 0 || cartLoading || hasTemporaryCart?.checkHasTemporaryCart.shopid == 0) {
+    return null;
   }
   return (
     <>
-      <View
-        onLayout={(event) => getFoodCartHeight(event)}
-        style={[styles.container, styles.cartBorder]}
-      >
+      <View onLayout={(event) => getFoodCartHeight(event)} style={[styles.container, styles.cartBorder]}>
         <View style={styles.foodItemTotalWrapper}>
-          <Text style={styles.total}>{
-            `${temporaryCart.cartItemsLength} ${temporaryCart.cartItemsLength > 1 ? 'items' : 'item'}`
-          }</Text>
+          <Text style={styles.total}>{`${temporaryCart.cartItemsLength} ${
+            temporaryCart.cartItemsLength > 1 ? 'items' : 'item'
+          }`}</Text>
           <Text style={styles.total}>Total: {temporaryCart.totalAmount.toFixed(2)}</Text>
         </View>
         <TouchableOpacity
           disabled={temporaryCart.cartItemsLength == 0}
-          style={[styles.cartButton, {backgroundColor: temporaryCart.cartItemsLength == 0 ? COLOR.LIGHT : COLOR.YELLOW}]}
-          onPress={() => onRestaurantNavigate()}
-        >
+          style={[
+            styles.cartButton,
+            {backgroundColor: temporaryCart.cartItemsLength == 0 ? COLOR.LIGHT : COLOR.YELLOW},
+          ]}
+          onPress={() => onRestaurantNavigate()}>
           <Text style={styles.buttonText}>View Cart</Text>
         </TouchableOpacity>
       </View>
