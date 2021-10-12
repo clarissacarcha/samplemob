@@ -401,11 +401,11 @@ const MainComponent = () => {
     };
     const data = WALLET ? {...WALLET, ...CUSTOMER, ...ORDER} : {...CUSTOMER, ...ORDER};
     console.log(JSON.stringify(data))
-    // postCustomerOrder({
-    //   variables: {
-    //     input: data,
-    //   },
-    // });
+    postCustomerOrder({
+      variables: {
+        input: data,
+      },
+    });
   };
 
   const onPressChange = (action) => {
