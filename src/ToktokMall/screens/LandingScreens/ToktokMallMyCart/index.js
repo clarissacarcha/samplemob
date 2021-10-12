@@ -180,18 +180,39 @@ const Component =  ({
     }
   })
 
+  const getMyCart = async () => {
+    
+    // createMyCartSession('push', raw)
+    // setCartItems(CountCartItems)
+    // setMessageModalShown(true)
+
+    let variables = {
+      userid: 8642,
+     
+    }          
+    console.log(variables)
+    const req = await ApiCall("get_cart_data", variables, true)
+    console.log('cart request is this', req)
+    // if(req.responseData && req.responseData.success == 1){
+    //   // createMyCartSession('push', raw)
+    //   // setCartItems(CountCartItems)
+    //   setMyCartData(req.responseData.data)
+    // }else if(req.responseError && req.responseError.success == 0){
+    //   Toast.show(req.responseError.message, Toast.LONG)
+    // }else if(req.responseError){
+    //   Toast.show("Something went wrong", Toast.LONG)
+    // }else if(req.responseError == null && req.responseData == null){
+    //   Toast.show("Something went wrong", Toast.LONG)
+    // }
+  }
+
   useEffect(() => {    
     AsyncStorage.getItem("ToktokMallUser").then((raw) => {
       const data = JSON.parse(raw)
+      console.log('from async', data)
       if(data.userId){
-        getMyCartData({
-          variables: {
-            input: {
-              userId: 8642
-              // userId: data.userId
-            }
-          }
-        })
+        getMyCart()
+        
       }
     })
   }, []);
