@@ -1,6 +1,7 @@
 export * from "./ApprovedRegistration";
 export * from "./BlockedAccount";
 export * from "./DeletedAccount";
+export * from "./HaveInactiveAccount";
 export * from "./NoAccount";
 export * from "./PendingKyc";
 export * from "./RejectedKyc";

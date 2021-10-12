@@ -6,6 +6,7 @@ import {
     ApprovedRegistration,
     BlockedAccount,
     DeletedAccount,
+    HaveInactiveAccount,
     NoAccount,
     PendingKyc,
     RejectedKyc,
@@ -45,6 +46,8 @@ export const ToktokWalletRestricted = ({navigation,route})=> {
                 return <BlockedAccount data={data} showPrompt={showPrompt}/>
             case "deletedAccount":
                 return <DeletedAccount/>
+            case "haveInactiveAccount":
+                return <HaveInactiveAccount/>
             default:
                 break
         }

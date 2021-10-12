@@ -8,7 +8,7 @@ import { useKeyboard } from 'toktokwallet/hooks'
 export const CheckIdleState = ({children})=> {
 
     const timerId = useRef(false);
-    const [durationInSeconds,setDurationInSeconds] = useState(60);
+    const [durationInSeconds,setDurationInSeconds] = useState((60 * 5));
     const [showPrompt,setShowPrompt] = useState(false)
     const navigation = useNavigation();
     // const isOpen = useKeyboard();

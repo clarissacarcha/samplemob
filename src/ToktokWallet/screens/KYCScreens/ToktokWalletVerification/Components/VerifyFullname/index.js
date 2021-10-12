@@ -5,6 +5,12 @@ import validator from 'validator';
 import {YellowButton , VectorIcon , ICON_SET } from 'src/revamp'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import moment from 'moment'
+import { TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT } from 'src/graphql'
+import { GET_CHECK_BLOCKED_ACCOUNT_RECORD } from 'toktokwallet/graphql'
+import { useLazyQuery } from '@apollo/react-hooks'
+import { useAlert } from 'src/hooks/useAlert'
+import { onErrorAlert } from 'src/util/ErrorUtility'
+import { useNavigation } from '@react-navigation/native';
 import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS
@@ -41,15 +47,30 @@ export const VerifyFullname = ()=> {
     const [mobile, setMobile] = useState(contactInfo.mobile_number.replace("+63", ""))
     const genderRef = useRef()
     const SourceOfIncomeRef = useRef()
+    const alert = useAlert();
+    const navigation = useNavigation()
 
-    // const {loading, error, data} = useQuery(GET_COUNTRIES, {
-    //     client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT
-    // })
-
-    // useEffect(() => {
-
-    //     console.log("Countries List", typeof data)
-    // }, [])
+    const [getCheckBlockedAccountRecord, {loading}] = useLazyQuery(GET_CHECK_BLOCKED_ACCOUNT_RECORD, {
+        client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT,
+        fetchPolicy: "network-only",
+        onError: (error) => {
+            const {graphQLErrors, networkError} = error;
+            graphQLErrors.map(({message, payload}) => {
+                if(payload.code == "EXISTING_BLOCKED_ACCOUNT"){
+                    // restricted here
+                    navigation.push("ToktokWalletRestricted", {component:"haveInactiveAccount"});
+                    //navigation.push("ToktokWalletHelpCentreContactUs");
+                }else{
+                    onErrorAlert({alert,error})
+                }
+            })
+           
+           
+        },
+        onCompleted: ({getCheckBlockedAccountRecord})=> {
+            return setCurrentIndex(oldval => oldval + 1)
+        }
+    })
 
     const NextPage = ()=> {
         if (validator.isEmpty(person.lastName, {ignore_whitespace: true})) {
@@ -83,7 +104,17 @@ export const VerifyFullname = ()=> {
         if(incomeInfo.source.id == "0" && incomeInfo.otherSource == "") return Alert.alert("","Source of Income is required.")
 
         changeContactInfo("mobile_number", "+63" + mobile)
-        setCurrentIndex(oldval => oldval + 1)
+        getCheckBlockedAccountRecord({
+            variables: {
+                input: {
+                    firstName: person.firstName,
+                    middleName: person.middleName,
+                    lastName: person.lastName,
+                    birthdate: birthInfo.birthdate,
+                }
+            }
+        })
+        // setCurrentIndex(oldval => oldval + 1)
     }
 
     const ViewPrivacyPolicy = ()=> {

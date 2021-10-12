@@ -102,3 +102,9 @@ export const GET_SOURCE_OF_INCOME = gql`
         }
     }
 `
+
+export const GET_CHECK_BLOCKED_ACCOUNT_RECORD = gql`
+    query getCheckBlockedAccountRecord($input: GetCheckBlockedAccountRecordInput){
+        getCheckBlockedAccountRecord(input: $input)
+    }
+`
