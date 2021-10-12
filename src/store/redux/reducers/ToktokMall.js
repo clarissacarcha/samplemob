@@ -113,7 +113,7 @@ export default (state = INITIAL_STATE, action) => {
       if (action.action === "remove") {
         new_user_address = state.user_address.filter((data) => (data.id !== action.payload));
       }
-      AsyncStorage.setItem('ToktokMallUserAddresses', JSON.stringify(new_user_address));
+      // AsyncStorage.setItem('ToktokMallUserAddresses', JSON.stringify(new_user_address));
       return {...state, user_address: new_user_address};
     case 'CREATE_MY_CART_SESSION':
       // let action = action.action

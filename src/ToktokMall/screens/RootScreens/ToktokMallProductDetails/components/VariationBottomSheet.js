@@ -249,10 +249,10 @@ export const VariationBottomSheet = forwardRef(({
               }} style={{flex: 1.5, paddingHorizontal: 8, alignItems: 'center', justifyContent: 'center', borderWidth: 0.8, borderColor: "#F8F8F8"}}>
                 <CustomIcon.FA5Icon name="minus" size={14} color={qty === 1 ? "#9E9E9E":"#F6841F"} />
               </TouchableOpacity>
-              <View style={{flex: 2, paddingHorizontal: 28, alignItems: 'center', justifyContent: 'center', backgroundColor: '#F8F8F8'}}>
+              <View style={{flex: 2, paddingHorizontal: 24, alignItems: 'center', justifyContent: 'center', backgroundColor: '#F8F8F8'}}>
                 <Text style={{fontSize: 16}}>{stock >= 1 ? qty : 0}</Text>
               </View>
-              <TouchableOpacity disabled={qty === stock || qty === 200} onPress={() => {
+              <TouchableOpacity disabled={qty === stock} onPress={() => {
                 let increment = qty + 1
                 if(increment <= stock){
                   setQty(increment) 

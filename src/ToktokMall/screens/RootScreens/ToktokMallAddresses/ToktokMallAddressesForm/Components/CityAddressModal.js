@@ -28,7 +28,7 @@ export const CityAddressModal = ({
 	setCity 
 }) => {
     
-	const [filteredCities, setFilteredCities] = useAsyncStorage("TOKTOKMALL_CITIES",[])
+	const [filteredCities, setFilteredCities] = useState([])
     const [provinces, setProvinces] = useState([])
     const [searchKey, setSearchKey] = useState('')
 

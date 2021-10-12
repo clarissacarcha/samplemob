@@ -252,9 +252,12 @@ const Component =  ({
 
     //Call to reset cart for debugging
     // createMyCartSession('set', [])
-    
-    const user = session?.user.person || {}
-    setUser(user)
+    AsyncStorage.getItem("ToktokMallUser").then((raw) => {
+      const data = JSON.parse(raw)
+      if(data.userId){
+        setUser(data)
+      }
+    })
   }, []);
 
   useEffect(() => {
