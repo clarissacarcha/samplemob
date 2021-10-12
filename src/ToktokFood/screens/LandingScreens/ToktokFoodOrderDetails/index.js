@@ -5,7 +5,6 @@ import {ScrollView, StyleSheet, View, Alert, Text} from 'react-native';
 import {useIsFocused} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {useLazyQuery, useQuery} from '@apollo/react-hooks';
-import BackgroundTimer from 'react-native-background-timer';
 
 // Components
 import DialogMessage from 'toktokfood/components/DialogMessage';
@@ -21,13 +20,12 @@ import {GET_ORDER_TRANSACTION_BY_REF_NUM, GET_RIDER, GET_RIDER_DETAILS} from 'to
 
 // Utils
 import {removeRiderDetails} from 'toktokfood/helper/showRiderDetails';
-import {moderateScale, getStatusbarHeight} from 'toktokfood/helper/scale';
+import {useIsFocused} from '@react-navigation/native';
+import DialogMessage from 'toktokfood/components/DialogMessage';
+import BackgroundTimer from 'react-native-background-timer';
 
-
-const CUSTOM_HEADER = {
-  container: Platform.OS === 'android' ? moderateScale(83) : moderateScale(70),
-  bgImage: Platform.OS === 'android' ? moderateScale(83) : moderateScale(70),
-};
+// Utils
+import {removeRiderDetails} from 'toktokfood/helper/showRiderDetails';
 
 const ToktokFoodOrderDetails = ({route, navigation}) => {
   const {price} = useSelector((state) => state.toktokFood.totalAmount);
