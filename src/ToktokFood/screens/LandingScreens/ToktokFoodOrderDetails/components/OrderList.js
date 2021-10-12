@@ -1,17 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {addons, FlatList, Image, StyleSheet, Text, View} from 'react-native';
 
-// Fonts/Colors
+// Fonts/Colors/Images
 import {COLORS} from 'res/constants';
-import {FONT_SIZE} from 'res/variables';
+import {FONT_SIZE, FONT} from 'res/variables';
+import {no_image} from 'toktokfood/assets/images';
 
 // Utils
 import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
 
 // Data
 import {foodData} from 'toktokfood/helper/strings';
-import { FONT } from '../../../../../res/variables';
-
 
 const DisplayAddons = ({ addOns }) => {
   let addOnsList = addOns.map(item => item.addon_name).join(', ');
@@ -24,14 +23,21 @@ const DisplayAddons = ({ addOns }) => {
 
 const OrderList = ({ orderDetails }) => {
 
+  const [validImg, setValidImg] = useState(true);
+
   const renderItem = ({item}) => {
     let { parentProductId, filename, itemname, parentProductName} = item.productDetails
     let parseAddOns = item.addons.length > 0 ? JSON.parse(item.addons) : item.addons;
     let productName = parentProductId ? parentProductName : itemname
+
     return(
       <View style={styles.listContainer}> 
         { item.productDetails.filename && (
-          <Image style={styles.listImg} source={{ uri: item.productDetails.filename }} />
+          <Image
+            style={styles.listImg}
+            source={validImg ? { uri: item.productDetails.filename } : no_image}
+            onError={() => setValidImg(false)}
+          />
         )}
         <View style={styles.list}>
           <View style={styles.listInfo}>

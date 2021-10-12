@@ -5,6 +5,7 @@ import {ScrollView, StyleSheet, View, Alert, Text} from 'react-native';
 import {useIsFocused} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {useLazyQuery, useQuery} from '@apollo/react-hooks';
+import BackgroundTimer from 'react-native-background-timer';
 
 // Components
 import DialogMessage from 'toktokfood/components/DialogMessage';
@@ -20,11 +21,6 @@ import {GET_ORDER_TRANSACTION_BY_REF_NUM, GET_RIDER, GET_RIDER_DETAILS} from 'to
 
 // Utils
 import {removeRiderDetails} from 'toktokfood/helper/showRiderDetails';
-import {useIsFocused} from '@react-navigation/native';
-import DialogMessage from 'toktokfood/components/DialogMessage';
-import BackgroundTimer from 'react-native-background-timer';
-
-// Utils
 import {moderateScale, getStatusbarHeight} from 'toktokfood/helper/scale';
 
 const ToktokFoodOrderDetails = ({route, navigation}) => {
