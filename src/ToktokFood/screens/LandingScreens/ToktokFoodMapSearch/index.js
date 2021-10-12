@@ -1,4 +1,4 @@
-import React, {useState, useMemo, useEffect} from 'react';
+import React, {useState} from 'react';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {useNavigation, useRoute} from '@react-navigation/native';
@@ -11,7 +11,7 @@ import {verticalScale, scale, getStatusbarHeight} from 'toktokfood/helper/scale'
 
 import {useDispatch} from 'react-redux';
 
-import {saveUserLocation} from 'toktokfood/helper/persistentLocation';
+import {saveUserLocation} from 'toktokfood/helper/PersistentLocation';
 
 // Helpers
 import {getFormattedAddress} from 'toktokfood/helper';
