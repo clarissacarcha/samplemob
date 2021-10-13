@@ -40,7 +40,6 @@ export const TransactionList = (props) => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: ({ getTransactions }) => {
-      console.log('ddf')
       setTransactionList(getTransactions)
     }
   });

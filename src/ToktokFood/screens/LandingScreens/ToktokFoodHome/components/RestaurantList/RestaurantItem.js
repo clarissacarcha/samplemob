@@ -1,10 +1,10 @@
 import { useNavigation } from '@react-navigation/native';
-import React from 'react';
+import React, {useState} from 'react';
 import { Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import CustomStarRating from 'toktokfood/components/CustomStarRating';
 import { scale, getDeviceWidth } from 'toktokfood/helper/scale';
-import { time } from 'toktokfood/assets/images';
+import { time, no_image } from 'toktokfood/assets/images';
 
 // Fonts, Colors & Images
 import {COLOR, FONT, FONT_SIZE} from 'res/variables';
@@ -12,6 +12,7 @@ import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 const RestaurantItem = ({ item }) => {
 
   const navigation = useNavigation();
+  const [validImg, setValidImg] = useState(true);
 
   const onRestaurantNavigate = (item) => {
     navigation.navigate('ToktokFoodRestaurantOverview', {item});
@@ -19,7 +20,12 @@ const RestaurantItem = ({ item }) => {
 
   return (
     <TouchableOpacity onPress={() => onRestaurantNavigate(item)} style={styles.restaurantList}>
-      <Image style={styles.img} source={{ uri: item.logo }} resizeMode="cover" />
+      <Image
+        style={styles.img}
+        source={validImg ? { uri: item.logo } : no_image}
+        resizeMode="cover"
+        onError={() => setValidImg(false)}
+      />
       <View style={styles.restaurantInfo}>
         <Text numberOfLines={1} style={styles.restaurantName}>{`${item.shopname} (${item.address})`}</Text>
         <CustomStarRating
