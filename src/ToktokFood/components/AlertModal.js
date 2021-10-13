@@ -1,7 +1,11 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, StyleSheet , Image} from 'react-native';
-// import {BlackButton} from './forms/BlackButton';
-import {COLOR, FONT_SIZE, FONT, SIZE} from 'src/res/variables';
+import {View, Modal, StyleSheet, Image, Text, TouchableOpacity} from 'react-native';
+
+// Fonts & Colors
+import {COLORS, FONTS, FONT_SIZE, NUMBERS, BUTTON_HEIGHT} from 'res/constants';
+
+// Utils
+import {verticalScale, moderateScale, scale} from 'toktokfood/helper/scale';
 
 const messageError = (error) => {
   try {
@@ -10,113 +14,125 @@ const messageError = (error) => {
     if (networkError) {
       return 'Network error occurred. Please check your internet connection.';
     } else if (graphQLErrors.length > 0) {
-      graphQLErrors.map(({message, locations, path, code}) => {
-        if (code === 'INTERNAL_SERVER_ERROR') {
-          return 'Something went wrong.'
-        } else if (code === 'USER_INPUT_ERROR') {
+      return graphQLErrors.map(({message, locations, path, code}) => {
+        if (code == 'INTERNAL_SERVER_ERROR') {
+        console.log(code == 'INTERNAL_SERVER_ERROR',message)
+          return 'Something went wrong...'
+        } else if (code == 'USER_INPUT_ERROR') {
           return message
-        } else if (code === 'BAD_USER_INPUT') {
+        } else if (code == 'BAD_USER_INPUT') {
           return message
-        } else if (code === 'AUTHENTICATION_ERROR') {
+        } else if (code == 'AUTHENTICATION_ERROR') {
           // Do Nothing. Error handling should be done on the screen
         } else {
           return 'Something went wrong...'
         }
       });
+    } else {
+      return 'Something went wrong.'
     }
   } catch (err) {
-    console.log('ON ERROR ALERT: ', err);
+    // console.log('ON ERROR ALERT: ', err);
   }
 };
 
-
-const aButtons = [
-  {
-    message: 'Something happened.',
-    buttonLabel: 'Okie Doks',
-    onPress: () => {},
-  },
-];
-
-const SingleButton = ({close, buttonLabel, actionButtons = []}) => {
-  let label = 'OK';
-
-  if (buttonLabel) {
-    label = buttonLabel;
-  }
-
-  if (actionButtons.length > 0) {
-    label = actionButtons[0].buttonLabel;
-  }
-
-  return (
-    <TouchableOpacity
-      onPress={close}
-      style={{
-        height: 40,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 40,
-        width: 100,
-        backgroundColor: COLOR.YELLOW,
-        borderRadius: SIZE.BORDER_RADIUS
-      }}>
-      <Text style={{fontFamily: FONT.BOLD}}>{label}</Text>
-    </TouchableOpacity>
-  );
-};
-
-export default AlertModal = (props) => {
+const AlertModal = (props) => {
+  // type:  success | error | warning | question
   const {visible, close, buttonLabel, error} = props;
 
-  const RenderButton = () => {
-    return <SingleButton {...props} />;
-  };
-
-  if (!visible) {
-    return null;
-  }
-
   return (
-    <View style={styles.transparent}>
-      <View style={styles.labelBox}>
-        <Image style={{height: 80,width: 80,marginBottom: 10,}} source={require('src/assets/toktokwallet-assets/error.png')}/>
-        <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.L,textAlign:"center"}}>{messageError(error)}</Text>
-        {RenderButton()}
-      </View>
-    </View>
+    <>
+      <Modal visible={visible} style={styles.modal} transparent={true}>
+        <View style={styles.content}>
+          <View style={[styles.prompContentWrapper, NUMBERS.SHADOW]}>
+            <Image style={styles.icon} source={require('src/assets/toktokwallet-assets/error.png')} resizeMode="contain" />
+            <View style={styles.messegeWrapper}>
+              <Text style={styles.messageTitle}>{messageError(error)}</Text>
+            </View>
+            <TouchableOpacity style={styles.confirmButton} onPress={close}>
+              <Text style={styles.buttonText}>OK</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-  transparent: {
-    // flex: 1,
-    zIndex: 999999,
-    backgroundColor: 'rgba(0,0,0,0.75)',
-    paddingHorizontal: 50,
-    justifyContent: 'center',
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
+  modal: {
+    flex: 1,
   },
-  labelBox: {
-    backgroundColor: 'white',
+  content: {
+    flex: 1,
     alignItems: 'center',
-    borderRadius: 5,
-    padding:20,
-  },
-  divider: {
-    height: 20,
-  },
-  loaderBox: {
-    marginLeft: 20,
-    width: 40,
-    height: 40,
-    backgroundColor: COLOR.DARK,
-    borderRadius: 10,
     justifyContent: 'center',
+    backgroundColor: 'rgba(34, 34, 34, 0.5)',
+  },
+  prompContentWrapper: {
+    borderRadius: 14,
     alignItems: 'center',
+    width: moderateScale(325),
+    backgroundColor: COLORS.WHITE,
+    paddingVertical: verticalScale(20),
+  },
+  icon: {
+    width: scale(100),
+    height: scale(100),
+  },
+  messegeWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    paddingHorizontal: scale(22),
+    paddingVertical: verticalScale(15),
+  },
+  messageTitle: {
+    fontSize: FONT_SIZE.XL,
+    fontFamily: FONTS.BOLD,
+    paddingBottom: moderateScale(10)
+  },
+  messageContent: {
+    textAlign: 'center',
+    fontSize: FONT_SIZE.M,
+    fontFamily: FONTS.REGULAR,
+    marginTop: moderateScale(8),
+    marginBottom: moderateScale(15)
+  },
+  buttonWrapper: {
+    marginHorizontal: 10,
+  },
+  confirmButton: {
+    width: '85%',
+    alignItems: 'center',
+    height: BUTTON_HEIGHT,
+    justifyContent: 'center',
+    backgroundColor: '#FFA700',
+    borderRadius: NUMBERS.BORDER_RADIUS,
+  },
+  btn1Style: {
+    flex: 1,
+    alignItems: 'center',
+    height: BUTTON_HEIGHT,
+    justifyContent: 'center',
+    backgroundColor: '#868686',
+    borderRadius: NUMBERS.BORDER_RADIUS,
+    marginRight: 20
+  },
+  btn2Style: {
+    flex: 1,
+    alignItems: 'center',
+    height: BUTTON_HEIGHT,
+    justifyContent: 'center',
+    backgroundColor: '#FFA700',
+    borderRadius: NUMBERS.BORDER_RADIUS,
+  },
+  cancelButton: {},
+  buttonText: {
+    color: COLORS.WHITE,
+    fontSize: FONT_SIZE.L,
+    fontFamily: FONTS.BOLD,
   },
 });
+
+export default AlertModal;
+

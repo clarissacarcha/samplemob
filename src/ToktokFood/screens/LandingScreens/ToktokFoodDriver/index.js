@@ -17,7 +17,7 @@ import {GET_ORDER_TRANSACTION_BY_REF_NUM, GET_RIDER_DETAILS} from 'toktokfood/gr
 import {useSelector, useDispatch} from 'react-redux';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import {useIsFocused} from '@react-navigation/native';
-import {removeRiderDetails} from 'toktokfood/helper/ShowRiderDetails';
+import {removeRiderDetails} from 'toktokfood/helper/showRiderDetails';
 import DialogMessage from 'toktokfood/components/DialogMessage';
 import TimerModal from 'toktokfood/components/TimerModal';
 import BackgroundTimer from 'react-native-background-timer';

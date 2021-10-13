@@ -21,18 +21,16 @@ const RestaurantList = (props) => {
       </Text>
     </View>
   );
-
+ 
   if (loading || error || location == undefined) {
     return <LoadingIndicator style={{marginVertical: 20}} isFlex isLoading={true} />;
   }
   return (
-    // <View style={styles.container}>
     <FlatList
       data={data ? data.getShops : []}
       extraData={loadMore}
       numColumns={2}
       renderItem={({item}) => <RestaurantItem item={item} />}
-      // columnWrapperStyle={styles.columnStyle}
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
       keyExtractor={(val, index) => index.toString()}
@@ -46,7 +44,6 @@ const RestaurantList = (props) => {
         paddingBottom: Platform.OS == 'android' ? verticalScale(20) : 0,
       }}
     />
-    // </View>
   );
 };
 

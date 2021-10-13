@@ -132,7 +132,7 @@ const ToktokFoodSearch = ({ route }) => {
             <Image resizeMode="contain" source={time} style={styles.timeImg} />
             <Text style={styles.subInfoText}>{item.estimatedDeliveryTime} mins</Text>
             <MCIcon name="map-marker-outline" color="#868686" size={13} />
-            <Text style={styles.subInfoText}>{item.estimatedDistance}</Text>
+            <Text style={styles.subInfoText}>{item.estimatedDistance} KM</Text>
           </View>
         </View>
       </View>

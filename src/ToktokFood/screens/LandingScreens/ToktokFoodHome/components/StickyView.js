@@ -71,12 +71,7 @@ const StickyView = () => {
 
   // data fetching for shops
   const [getShops, {data, error, loading, fetchMore, refetch}] = useLazyQuery(GET_SHOPS, {
-    variables: {
-      input: {
-        page: 0,
-        ...variableInput,
-      },
-    },
+    
     onError: () => {
       setRefreshing(false);
     },
@@ -86,7 +81,14 @@ const StickyView = () => {
 
   useEffect(() => {
     if(location) {
-      getShops();
+      getShops({
+        variables: {
+          input: {
+            page: 0,
+            ...variableInput,
+          },
+        },
+      });
     }
   }, [location]);
 
@@ -145,7 +147,14 @@ const StickyView = () => {
     setRefreshing(true);
     setPage(0);
     setTempCategories([]);
-    refetch().then(() => {
+    refetch({
+      variables: {
+        input: {
+          page: 0,
+          ...variableInput,
+        },
+      },
+    }).then(() => {
       setRefreshing(false);
     });
   };

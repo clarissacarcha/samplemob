@@ -19,6 +19,7 @@ import OrderTypeSelection from 'toktokfood/components/OrderTypeSelection';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 import Separator from 'toktokfood/components/Separator';
 import DialogMessage from 'toktokfood/components/DialogMessage';
+import AlertModal from 'toktokfood/components/AlertModal';
 
 import styles from './styles';
 import {COLOR} from 'res/variables';
@@ -79,6 +80,7 @@ const MainComponent = () => {
   const [loadingWallet, setLoadingWallet] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [pinAttempt, setPinAttempt] = useState({show: false, message: ''});
+  const [tokWaPlaceOrderErr, setTokWaPlaceOrderErr] = useState({ error: {}, visible: false });
   const alert = useAlert();
 
   useEffect(() => {
@@ -162,9 +164,7 @@ const MainComponent = () => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     onError: (error) => {
       setShowLoader(false);
-      setTimeout(() => {
-        onErrorAlert({alert, error});
-      }, 500);
+      setTokWaPlaceOrderErr({ error, visible: true })
     },
     onCompleted: ({verifyPin}) => {},
   });
@@ -174,9 +174,13 @@ const MainComponent = () => {
     fetchPolicy: 'no-cache',
     onError: (error) => {
       setShowLoader(false);
-      setTimeout(() => {
-        onErrorAlert({alert, error});
-      }, 500);
+      if(toktokWallet.paymentMethod == 'COD'){
+        setTimeout(() => {
+          onErrorAlert({alert, error});
+        }, 500);
+      } else {
+        setTokWaPlaceOrderErr({ error, visible: true })
+      }
     },
     onCompleted: async ({checkoutOrder}) => {
       console.log(checkoutOrder);
@@ -211,6 +215,8 @@ const MainComponent = () => {
       delivery_amount: delivery?.price ? delivery.price : 0,
       hash: delivery?.hash ? delivery.hash : '',
       hash_delivery_amount: delivery?.hash_price ? delivery.hash_price : '',
+      original_shipping_fee: delivery?.price ? delivery.price : 0,
+      handle_shipping_promo: 0,
       daystoship: 0,
       daystoship_to: 0,
       items: await fixItems(),
@@ -351,7 +357,6 @@ const MainComponent = () => {
           }
         })
         .catch((error) => {
-          console.log(error);
           setShowLoader(false);
           setLoadingWallet(false);
           setTimeout(() => {
@@ -448,7 +453,8 @@ const MainComponent = () => {
           }}
           errorMessage={errorMessage}
           setErrorMessage={setErrorMessage}
-          title={toktokWalletCredit.validator}>
+          title={toktokWalletCredit.validator}
+        >
           <Loader visibility={showLoader} message="Placing order..." />
           <DialogMessage
             visibility={pinAttempt.show}
@@ -459,6 +465,11 @@ const MainComponent = () => {
               setPinAttempt({show: false, message: ''});
               navigation.pop();
             }}
+          />
+         <AlertModal
+            visible={tokWaPlaceOrderErr.visible}
+            error={tokWaPlaceOrderErr.error}
+            close={() => setTokWaPlaceOrderErr({ error: {}, visible: false })}
           />
         </EnterPinCode>
       ) : (
