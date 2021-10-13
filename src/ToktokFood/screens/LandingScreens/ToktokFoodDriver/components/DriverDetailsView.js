@@ -97,18 +97,30 @@ const DriverDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
     </>
   );
 
-  const renderTitle = () => {
-    let date = dateReadyPickup.toString() != 'Invalid date' ? dateReadyPickup : dateBookingConfirmed;
-    let startTime = moment(date).format('LT');
-    let endTime = riderDetails != null ? calculateDistance(date, riderDetails.location) : '00:00'
+  const dateByOrderStatus = () => {
+    if(orderStatus == 'po'){
+      return dateOrderProcessed
+    } else if(orderStatus == 'rp'){
+      return dateReadyPickup.toString() != 'Invalid date' ? dateReadyPickup : dateBookingConfirmed;
+    } else {
+      return dateFulfilled
+    }
+  }
 
+  const renderTitle = () => {
+    let date = dateByOrderStatus();
+    let shopLocation = { latitude: shopDetails.latitude, longitude: shopDetails.longitude };
+    let location = riderDetails != null ? riderDetails.location : shopLocation
+    let startTime = moment(date).format('LT');
+    let endTime = calculateDistance(date, location)
+  
     return (
       <View style={styles.detailsContainer}>
         {(status.id == 'f' || status == 's') && (
           <Text style={styles.title}>{status.title}</Text>
         )}
         <Text style={styles.status}>{status.message}</Text>
-        {(riderDetails != null && date.toString() != 'Invalid date') && (
+        {(date.toString() != 'Invalid date') && (
           <View style={styles.timeContainer}>
             <Image resizeMode="contain" source={time} style={styles.timeImg} />
             {/* <Text style={styles.time}>{`Estimated Delivery Time: ${startTime} - ${endTime}`}</Text> */}

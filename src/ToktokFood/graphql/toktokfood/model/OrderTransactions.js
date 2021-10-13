@@ -46,6 +46,8 @@ const transaction = `
     shopname
     address
     logo
+    latitude
+    longitude
   }
   orderDetails {
     id

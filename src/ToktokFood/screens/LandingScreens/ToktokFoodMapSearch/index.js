@@ -11,7 +11,7 @@ import {verticalScale, scale, getStatusbarHeight} from 'toktokfood/helper/scale'
 
 import {useDispatch} from 'react-redux';
 
-import {saveUserLocation} from 'toktokfood/helper/PersistentLocation';
+import {saveUserLocation} from 'toktokfood/helper/persistentLocation';
 
 // Helpers
 import {getFormattedAddress} from 'toktokfood/helper';

@@ -18,7 +18,7 @@ import {TOKTOK_FOOD_GRAPHQL_CLIENT, CLIENT} from 'src/graphql';
 import {GET_ORDER_TRANSACTION_BY_REF_NUM, GET_RIDER_DETAILS} from 'toktokfood/graphql/toktokfood';
 
 // Utils
-import {removeRiderDetails} from 'toktokfood/helper/ShowRiderDetails';
+import {removeRiderDetails} from 'toktokfood/helper/showRiderDetails';
 import {useIsFocused} from '@react-navigation/native';
 
 const ToktokFoodOrderDetails = ({route, navigation}) => {

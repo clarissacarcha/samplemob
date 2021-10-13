@@ -17,12 +17,12 @@ const RestaurantItem = ({ item }) => {
   const onRestaurantNavigate = (item) => {
     navigation.navigate('ToktokFoodRestaurantOverview', {item});
   };
-
+ 
   return (
     <TouchableOpacity onPress={() => onRestaurantNavigate(item)} style={styles.restaurantList}>
       <Image
         style={styles.img}
-        source={validImg ? { uri: item.logo } : no_image}
+        source={validImg ? { uri: item.logo, cache: 'default' } : no_image}
         resizeMode="cover"
         onError={() => setValidImg(false)}
       />
@@ -34,11 +34,10 @@ const RestaurantItem = ({ item }) => {
           readOnly
         />
         <View style={styles.branchInfo}>
-          {/* <MCIcon name="clock-outline" color={'#868686'} size={13} /> */}
           <Image resizeMode="contain" source={time} style={styles.timeImg} />
           <Text style={styles.branches}>{`${item.estimatedDeliveryTime} mins`}</Text>
           <MCIcon name="map-marker-outline" color={'#868686'} size={13} />
-          <Text style={styles.branches}>{item.estimatedDistance}</Text>
+          <Text style={styles.branches}>{item.estimatedDistance} KM</Text>
         </View>
       </View>
     </TouchableOpacity>
