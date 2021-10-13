@@ -26,6 +26,7 @@ import {TOKTOK_MALL_GRAPHQL_CLIENT} from '../../../../../graphql';
 import {connect} from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
 import {useStateCallback} from '../../../../helpers/useStateCallback';
+import { ApiCall } from '../../../../helpers';
 
 const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefaultUserAddress}, reduxStates: {user_address,}}) => {
   const [newAddressForm, setNewAddressForm] = useState({
@@ -105,6 +106,30 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefa
     headerTitle: () => <HeaderTitle label={['New Address', '']} />,
     headerRight: () => <HeaderRight hidden={true} />,
   });
+
+  const ProcessSaving = async () => {
+    
+    const dataForm = {
+      ...newAddressForm,
+      fullAddress: newAddressForm.address + `, ${city}`,
+      regionId: parseInt(regCode) || 0,
+      provinceId: parseInt(provCode),
+      municipalityId: parseInt(munCode),
+      latitude: parseFloat(latitude),
+      longitude: parseFloat(longitude)
+    }
+
+    if(route.params?.update){
+      SaveDefaultAddress(() => {
+        navigation.goBack();
+      })
+    }else{
+      SavePostAddress(() => {        
+        navigation.goBack();
+      })
+    }
+
+  }
 
   const SaveToRedux = () => {
     const dataForm = {
@@ -223,6 +248,40 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefa
     });
   };
 
+  const SaveDefaultAddress = async () => {
+
+    setIsLoading(true)
+
+    const raw = await AsyncStorage.getItem("ToktokMallUser")
+    const userdata = JSON.parse(raw)
+
+    if(!userdata || !userdata?.userId) return
+
+    let body = {
+      address_id: newAddressForm.id,
+      customer_id: userdata.userId
+    };
+
+    console.log(body)
+
+    const req = await ApiCall("default_address", body, false, "inline")
+
+    if(req.responseData && req.responseData.success == 1){
+      setIsLoading(false)
+      navigation.goBack();
+    }else if(req.responseError && req.responseError.success == 0){
+      setIsLoading(false)
+      Toast.show(req.responseError.message, Toast.LONG)
+    }else if(req.responseError){
+      setIsLoading(false)
+      Toast.show("Something went wrong", Toast.LONG)
+    }else if(req.responseError == null && req.responseData == null){
+      setIsLoading(false)
+      Toast.show("Something went wrong", Toast.LONG)
+    }
+    
+  };
+
   const addError = (field) => {
     setValidation((prevState) => ({
       ...prevState,
@@ -272,7 +331,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefa
       }),
       (state) => {
         if (state.validated && state.errors.length === 0) {
-          SaveToRedux();
+          ProcessSaving();
         } else {
           Toast.show('Please fill up the required fields!');
         }

@@ -19,129 +19,86 @@ import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql';
 import { GET_MY_CART } from '../../../../graphql/toktokmall/model';
 import AsyncStorage from '@react-native-community/async-storage';
 
-const testdata = [
+let sampleData = [
   {
-    store_id: 1,
-    store: 'Face Mask PH',
-    cart: [
+    "shop": {
+      "shopname": "FleXkin",
+      "profileImages": {
+        "logo": "https://stgtokmall.s3-ap-northeast-1.amazonaws.com/assets/img/shops-60/c53582af8ee84c6abc7eeb9767b1b15e.jpg"
+      }
+    },
+    "data": [
       {
-        item_id: 1,
-        label: 'Improved Copper Mask 2.0 White or Bronze',
-        originalPrice: 380,
-        price: 100,
-        variation: 'Bronze',
-        qty: 1,
-        store_id: 1,
-        store: 'Face Mask PH',
-      },
-      {
-        item_id: 2,
-        label: 'Improved Copper Mask 2.0 White or Bronze',
-        originalPrice: 380,
-        price: 150,
-        variation: 'White',
-        qty: 1, 
-        store_id: 1,
-        store: 'Face Mask PH',
-      },
-    ],delivery_fee: 80, date_range_from: 'Jul 20', date_range_to: 'Jul 25'
+        "id": 36,
+        "quantity": 1,
+        "product": {
+          "itemname": "Skinnovation Kit",
+          "price": "450.00",
+          "compareAtPrice": "0.00",
+          "img": {
+            "filename": "https://stgtokmall.s3-ap-northeast-1.amazonaws.com/assets/img/XKIN/products/8bf8b146488e44a4b85a2eed1f35b7c1/0-8bf8b146488e44a4b85a2eed1f35b7c1.jpg"
+          }
+        }
+      }
+    ]
   },
   {
-    store_id: 2,
-    store: 'The Apparel',
-    cart: [
+    "shop": {
+      "shopname": "TechGear MNL",
+      "profileImages": {
+        "logo": "https://stgtokmall.s3-ap-northeast-1.amazonaws.com/assets/img/shops-60/6909739c0d4445feab0b9b28252d221c.png"
+      }
+    },
+    "data": [
       {
-        item_id: 1,
-        label: 'Graphic Tees',
-        originalPrice: 380,
-        price: 50,
-        variation: 'White, L',
-        qty: 2,
-        store_id: 2,
-        store: 'The Apparel',
-      },
-    ],delivery_fee: 80, date_range_from: 'Jul 20', date_range_to: 'Jul 25'
+        "id": 15,
+        "quantity": 1,
+        "product": {
+          "itemname": "Logitech H151 Stereo Headset",
+          "price": "785.00",
+          "compareAtPrice": "0.00",
+          "img": {
+            "filename": "https://stgtokmall.s3-ap-northeast-1.amazonaws.com/assets/img/GEAR/products/7decaa19d4054fbf93c38c9d520cba37/0-7decaa19d4054fbf93c38c9d520cba37.png"
+          }
+        }
+      }
+    ]
   },
   {
-    store_id: 3,
-    store: 'The Apparel 2',
-    cart: [
+    "shop": {
+      "shopname": "Cherry Mobile",
+      "profileImages": {
+        "logo": "https://stgtokmall.s3-ap-northeast-1.amazonaws.com/assets/img/shops-60/62f4be89bdb04cc4b1d05778d5808c1b.png"
+      }
+    },
+    "data": [
       {
-        item_id: 1,
-        label: 'Graphic Tees',
-        originalPrice: 380,
-        price: 350,
-        variation: 'White, L',
-        qty: 2,
-        store_id: 3,
-        store: 'The Apparel 2',
-      },
-    ],delivery_fee: 80, date_range_from: 'Jul 20', date_range_to: 'Jul 25'
-  },
-];
-
-let testData2 =  [
-  {
-    store_id: 1,
-    store: 'Face Mask PH',
-    cart: [
-      {
-        item_id: 1,
-        label: 'Improved Copper Mask 2.0 White or Bronze',
-        originalPrice: 380,
-        price: 100,
-        variation: 'Bronze',
-        qty: 1,
-        store_id: 1,
-        store: 'Face Mask PH',
+        "id": 33,
+        "quantity": 1,
+        "product": {
+          "itemname": "FLARE S8 PLUS ",
+          "price": "3999.00",
+          "compareAtPrice": "7999.00",
+          "img": {
+            "filename": "https://stgtokmall.s3-ap-northeast-1.amazonaws.com/assets/img/CMPH/products/5649878236bf454590d2752963fa890b/0-5649878236bf454590d2752963fa890b.jpg"
+          }
+        }
       },
       {
-        item_id: 2,
-        label: 'Improved Copper Mask 2.0 White or Bronze',
-        originalPrice: 380,
-        price: 150,
-        variation: 'White',
-        qty: 1, 
-        store_id: 1,
-        store: 'Face Mask PH',
-      },
-    ],
-    delivery_fee: 80, date_range_from: 'Jul 20', date_range_to: 'Jul 25'
-  },
-  {
-    store_id: 2,
-    store: 'The Apparel',
-    cart: [
-      {
-        item_id: 1,
-        label: 'Graphic Tees',
-        originalPrice: 380,
-        price: 50,
-        variation: 'White, L',
-        qty: 2,
-        store_id: 2,
-        store: 'The Apparel',
-      },
-    ],
-    delivery_fee: 80, date_range_from: 'Jul 20', date_range_to: 'Jul 25'
-  },
-  {
-    store_id: 3,
-    store: 'The Apparel 2',
-    cart: [
-      {
-        item_id: 1,
-        label: 'Graphic Tees',
-        originalPrice: 380,
-        price: 350,
-        variation: 'White, L',
-        qty: 2,
-        store_id: 3,
-        store: 'The Apparel 2',
-      },
-    ],delivery_fee: 80, date_range_from: 'Jul 20', date_range_to: 'Jul 25'
-  },
-];
+        "id": 14,
+        "quantity": 1,
+        "product": {
+          "itemname": "FLARE J6S ",
+          "price": "2499.00",
+          "compareAtPrice": "3999.00",
+          "img": {
+            "filename": "https://stgtokmall.s3-ap-northeast-1.amazonaws.com/assets/img/CMPH/products/743cb9b8123b43dc883953a5e185420c/0-743cb9b8123b43dc883953a5e185420c.jpg"
+          }
+        }
+      }
+    ]
+  }
+]
 
 const Component =  ({
   navigation,
@@ -180,43 +137,6 @@ const Component =  ({
     }
   })
 
-  const getMyCart = async () => {
-    
-    // createMyCartSession('push', raw)
-    // setCartItems(CountCartItems)
-    // setMessageModalShown(true)
-
-    let variables = {
-      userid: 8642,
-     
-    }          
-    console.log(variables)
-    const req = await ApiCall("get_cart_data", variables, true)
-    console.log('cart request is this', req)
-    // if(req.responseData && req.responseData.success == 1){
-    //   // createMyCartSession('push', raw)
-    //   // setCartItems(CountCartItems)
-    //   setMyCartData(req.responseData.data)
-    // }else if(req.responseError && req.responseError.success == 0){
-    //   Toast.show(req.responseError.message, Toast.LONG)
-    // }else if(req.responseError){
-    //   Toast.show("Something went wrong", Toast.LONG)
-    // }else if(req.responseError == null && req.responseData == null){
-    //   Toast.show("Something went wrong", Toast.LONG)
-    // }
-  }
-
-  useEffect(() => {    
-    AsyncStorage.getItem("ToktokMallUser").then((raw) => {
-      const data = JSON.parse(raw)
-      console.log('from async', data)
-      if(data.userId){
-        getMyCart()
-        
-      }
-    })
-  }, []);
-
   useEffect(()=> {
     if(itemsToCheckoutArr && itemsToCheckoutArr.length !== 0){
       getSubTotal(itemsToCheckoutArr)
@@ -224,6 +144,27 @@ const Component =  ({
       setSubTotal(0)
     }
   }, [itemsToCheckoutArr])
+
+  const init = async () => {
+    AsyncStorage.getItem("ToktokMallUser").then((raw) => {
+      const data = JSON.parse(raw)
+      console.log('from async', data)
+      if(data.userId){
+        setUser(data)
+        getMyCartData({
+          variables: {
+            input: {
+              userId: data.userId
+            }
+          }
+        })     
+      }
+    })
+  }
+
+  useEffect(() => {
+    init()
+  }, [])
 
   const onChangeQuantity = (id, qty) => {
     let currentItems = itemsToCheckoutArr
@@ -245,24 +186,6 @@ const Component =  ({
     }
     setSubTotal(a);
   };
-
-  useEffect(() => {
-    // console.log("My Cart", myCart)
-    // getSubTotal();
-
-    //Call to reset cart for debugging
-    // createMyCartSession('set', [])
-    AsyncStorage.getItem("ToktokMallUser").then((raw) => {
-      const data = JSON.parse(raw)
-      if(data.userId){
-        setUser(data)
-      }
-    })
-  }, []);
-
-  useEffect(() => {
-    setMyCartData(myCart)
-  }, [myCart])
 
   const deleteMultipleItems = () => {
     let currentItems = JSON.parse(JSON.stringify(itemsToCheckoutArr))
@@ -452,14 +375,16 @@ const Component =  ({
         <View style={{height: 8, backgroundColor: '#F7F7FA'}} />
         <View style={{flex: 1}}>
 
-          {myCart.length == 0 && <RenderEmpty />}
+          {loading && <LoadingOverlay isVisible={loading} />}
 
-          {myCart.length > 0 && 
+          {myCartData.length == 0 && <RenderEmpty />}
+
+          {myCartData.length > 0 && 
           <>
           <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
             <View style={{flex: 6, justifyContent: 'center'}}>
               <CheckBox
-                isChecked={!willDelete ? itemsToCheckoutArr.length === myCart.length : itemsToDelArr.length === myCart.length}
+                isChecked={!willDelete ? itemsToCheckoutArr.length === myCartData.length : itemsToDelArr.length === myCartData.length}
                 rightText="Select All"
                 rightTextStyle={{fontSize: 14, fontWeight: '500'}}
                 checkedCheckBoxColor="#F6841F"
@@ -470,7 +395,7 @@ const Component =  ({
                     setItemsToCheckoutArr([])
                   }else{
                     //to true
-                    setItemsToCheckoutArr(myCart)
+                    setItemsToCheckoutArr(myCartData)
                   }
                   setAllSelected(!allSelected);
                 }}
@@ -493,8 +418,7 @@ const Component =  ({
           <View style={{height: 2, backgroundColor: '#F7F7FA'}} />
           
           <FlatList
-            // data={testdata}
-            data={MergeStoreProducts(myCartData)}
+            data={myCartData}
             renderItem={({item, index}) => {
               return (
                 <>
@@ -503,7 +427,7 @@ const Component =  ({
                     storeIndex = {index}
                     allSelected={allSelected}
                     onPress={() => {
-                      navigation.navigate("ToktokMallStore", {id: item.store_id})
+                      navigation.navigate("ToktokMallStore", {id: item.shop.id})
                     }}
                     onStoreSelect={(raw) => {
                       let res = 0
@@ -559,9 +483,9 @@ const Component =  ({
           </>
           }
 
-          {myCart.length > 0 && <View style={{height: 80}}></View>}
+          {myCartData.length > 0 && <View style={{height: 80}}></View>}
 
-          {myCart.length > 0 && willDelete && 
+          {myCartData.length > 0 && willDelete && 
           <DeleteFooter 
             onDelete={() => {
               deleteMultipleItems()
@@ -571,7 +495,7 @@ const Component =  ({
             }} 
           />}
 
-          {myCart.length > 0 && !willDelete && 
+          {myCartData.length > 0 && !willDelete && 
           <CheckoutFooter 
             onSubmit={async () => {
               await OnSubmitForCheckout()
