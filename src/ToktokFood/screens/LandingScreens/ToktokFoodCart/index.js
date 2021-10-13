@@ -202,7 +202,10 @@ const MainComponent = () => {
         // error prompt
         setShowLoader(false);
         setTimeout(() => {
-          Alert.alert('', 'Network error occurred. Please check your internet connection.');
+          setTokWaPlaceOrderErr({
+            message: checkoutOrder.message,
+            visible: true
+          })
         }, 500);
       }
     },
@@ -271,7 +274,6 @@ const MainComponent = () => {
       },
     }).then(({data}) => {
       let {success, message} = data.verifyPin;
-      console.log(success);
       if (success == 1) {
         const {requestTakeMoneyId, validator, cart, orderRefNum, hashAmount} = toktokWalletCredit;
         const WALLET = {
@@ -440,7 +442,17 @@ const MainComponent = () => {
         hasTwoButtons
       />
       <Loader hasImage={false} loadingIndicator visibility={loadingWallet} message="loading..." />
-      {paymentMethod == 'COD' && <Loader visibility={showLoader} message="Placing order..." />}
+      {paymentMethod == 'COD' && 
+        <>
+          <AlertModal
+            message={tokWaPlaceOrderErr.message}
+            visible={tokWaPlaceOrderErr.visible}
+            error={tokWaPlaceOrderErr.error}
+            close={() => setTokWaPlaceOrderErr({ error: {}, visible: false })}
+          />
+          <Loader visibility={showLoader} message="Placing order..." />
+        </>
+      }
       {showEnterPinCode ? (
         <EnterPinCode
           visible={showEnterPinCode}
@@ -464,10 +476,11 @@ const MainComponent = () => {
             type="warning"
             onCloseModal={() => {
               setPinAttempt({show: false, message: ''});
-              navigation.pop();
+              setShowEnterPinCode(false);
             }}
           />
          <AlertModal
+            message={tokWaPlaceOrderErr.message}
             visible={tokWaPlaceOrderErr.visible}
             error={tokWaPlaceOrderErr.error}
             close={() => setTokWaPlaceOrderErr({ error: {}, visible: false })}

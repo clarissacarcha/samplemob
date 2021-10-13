@@ -76,7 +76,7 @@ const MyOrderList = () => {
       parentProductName
     } = item;
     const addons = arrangeAddons(addonsDetails);
-    console.log(parentProductName)
+   
     return (
       <View style={styles.orderItemContainer}>
         { productLogo && (

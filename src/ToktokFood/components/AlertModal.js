@@ -38,7 +38,7 @@ const messageError = (error) => {
 
 const AlertModal = (props) => {
   // type:  success | error | warning | question
-  const {visible, close, buttonLabel, error} = props;
+  const {visible, close, buttonLabel, error, message} = props;
 
   return (
     <>
@@ -47,7 +47,7 @@ const AlertModal = (props) => {
           <View style={[styles.prompContentWrapper, NUMBERS.SHADOW]}>
             <Image style={styles.icon} source={require('src/assets/toktokwallet-assets/error.png')} resizeMode="contain" />
             <View style={styles.messegeWrapper}>
-              <Text style={styles.messageTitle}>{messageError(error)}</Text>
+              <Text style={styles.messageTitle}>{message ? message : messageError(error)}</Text>
             </View>
             <TouchableOpacity style={styles.confirmButton} onPress={close}>
               <Text style={styles.buttonText}>OK</Text>
