@@ -413,6 +413,7 @@ const MainComponent = () => {
   };
 
   const onPressChange = (action) => {
+    setRiderNotes('');
     setRefreshing(action != undefined);
     checkShopValidations({variables: {input: {shopId: `${temporaryCart.items[0]?.shopid}`}}});
   };

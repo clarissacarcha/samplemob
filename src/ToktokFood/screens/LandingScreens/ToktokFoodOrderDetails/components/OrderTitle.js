@@ -101,6 +101,8 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.M,
     fontFamily: FONT.REGULAR,
     marginTop: verticalScale(5),
+    marginHorizontal: moderateScale(30),
+    textAlign: 'center'
   },
   time: {
     fontSize: FONT_SIZE.M,

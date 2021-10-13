@@ -61,11 +61,12 @@ export const cooking = require('./images/animations/cooking.gif');
 export const waiting_rider = require('./images/animations/waiting_rider.gif');
 export const rider = require('./images/animations/rider.gif');
 export const food_delivered = require('./images/animations/delivered.gif');
-
 export const timer = require('./images/animations/timer.gif');
 export const pot = require('./images/animations/pot.gif');
 export const toktok_rider = require('./images/animations/toktok_rider.gif');
 export const ordering = require('./images/animations/ordering_loader.gif');
+export const ready_for_pickup = require('./images/animations/ready_for_pickup.png');
+
 
 // Test Banners
 export const starbucks = require('./images/sample_banners/starbucks.png');

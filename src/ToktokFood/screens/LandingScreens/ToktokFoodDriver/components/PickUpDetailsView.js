@@ -161,6 +161,8 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.M,
     fontFamily: FONT.REGULAR,
     marginVertical: verticalScale(5),
+    marginHorizontal: moderateScale(30),
+    textAlign: 'center'
   },
   seeOrderDetails: {
     padding: moderateScale(20),

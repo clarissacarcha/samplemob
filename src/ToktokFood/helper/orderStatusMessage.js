@@ -30,7 +30,7 @@ export const orderStatusMessagePickUp = (orderStatus, riderDetails, shopname) =>
   if(orderStatus == 'po'){
     return { id: orderStatus,  title: 'Preparing Order', message: 'Give restaurant some time to prepare your order' }
   } else if(orderStatus == 'rp'){
-    return { id: orderStatus,  title: 'Ready for Pickup', message: 'Your order is ready for pickup' }
+    return { id: orderStatus,  title: 'Your order is ready for pickup', message: 'Restaurant has finished preparing your order and is now ready for pickup' }
   } else if(orderStatus == 's'){
     return { id: orderStatus,  title: 'Order Completed', message: '' }
   } else if(orderStatus == 'c'){
