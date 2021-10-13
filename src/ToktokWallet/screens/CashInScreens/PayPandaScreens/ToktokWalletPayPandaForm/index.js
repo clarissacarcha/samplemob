@@ -105,6 +105,11 @@ export const ToktokWalletPayPandaForm = ({navigation,route})=> {
     const onSwipeSuccess = ()=> {
         setPinCodeAttempt(6)
         setOpenPinCode(true)
+        // return navigation.navigate("ToktokWalletTPINValidator", {
+        //     callBackFunc: proceedToPaypandaPortal,
+        //     loading: loading,
+        //     pinCodeAttempt: pinCodeAttempt,
+        // })
     }
 
     const confirmAmount = ()=> {

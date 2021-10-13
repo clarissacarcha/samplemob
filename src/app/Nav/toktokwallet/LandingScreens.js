@@ -7,6 +7,7 @@ import {
   ToktokWalletNotifications,
   ToktokWalletRestricted,
   ToktokWalletReviewAndConfirm,
+  ToktokWalletTPINValidator,
   ToktokWalletTransactions,
 } from 'toktokwallet/screens';
 
@@ -18,6 +19,7 @@ export default ({Navigator}) => (
     <Navigator.Screen name="ToktokWalletNotifications" component={ToktokWalletNotifications}/>
     <Navigator.Screen name="ToktokWalletRestricted" component={ToktokWalletRestricted} />
     <Navigator.Screen name="ToktokWalletReviewAndConfirm" component={ToktokWalletReviewAndConfirm} />
+    <Navigator.Screen name="ToktokWalletTPINValidator" component={ToktokWalletTPINValidator}/>
     <Navigator.Screen name="ToktokWalletTransactions" component={ToktokWalletTransactions} />
   </>
 );

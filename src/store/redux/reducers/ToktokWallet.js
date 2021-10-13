@@ -26,6 +26,7 @@ const INITIAL_STATE = {
   loading: false,
   events: {
     upgradeAccount: false,
+    cashInTopUp: false,
   },
   constants: {}
 };

@@ -10,6 +10,7 @@ import {useAlert} from 'src/hooks'
 import {DisabledButton, Separator, BuildingBottom,CheckIdleState} from 'toktokwallet/components'
 import { HeaderBack, YellowButton } from 'src/revamp'
 import { TransactionUtility } from 'toktokwallet/util'
+import BackgroundTimer from 'react-native-background-timer';
 import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS
@@ -148,7 +149,7 @@ export const ToktokWalletAccountRecoveryOTP = ({navigation , route})=> {
 
     useEffect(()=>{
         if(otpTimer >= 0){
-            setTimeout(()=>{
+            BackgroundTimer.setTimeout(()=>{
                 setOtpTimer(state=>state - 1)
             },1000)
         }

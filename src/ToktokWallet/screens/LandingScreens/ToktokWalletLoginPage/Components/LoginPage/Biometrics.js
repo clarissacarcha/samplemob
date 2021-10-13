@@ -54,6 +54,7 @@ const Biometrics = ({setErrorMessage})=> {
     }
 
     useEffect(()=>{
+        console.log(bioRecord)
         if(bioRecord){
             checkIfKeyExist()
         }

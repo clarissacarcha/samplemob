@@ -1,6 +1,7 @@
 import React , {useState,useRef,useCallback,useEffect} from 'react'
 import { View ,ActivityIndicator,StatusBar,Text} from 'react-native'
 import {SomethingWentWrong} from 'src/components'
+import { useDispatch } from 'react-redux'
 import { useAccount } from 'toktokwallet/hooks'
 import { CheckIdleState } from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants'
@@ -20,6 +21,7 @@ export const ToktokWalletHomePage = ({navigation,route})=> {
 
     const [refreshing,setRefreshing] = useState(false)
     const { refreshWallet } = useAccount();
+    const dispatch = useDispatch();
 
     const onRefresh = useCallback(()=>{
        refreshWallet();
@@ -27,6 +29,13 @@ export const ToktokWalletHomePage = ({navigation,route})=> {
 
     useEffect(()=>{
         refreshWallet();
+        dispatch({
+            type: "SET_TOKWA_EVENTS_REDIRECT",
+            payload: {
+                event: "cashInTopUp",
+                value: false,
+            }
+        })
     },[])
 
     return (

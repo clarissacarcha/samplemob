@@ -7,7 +7,7 @@ import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import {GET_CASH_IN_PROVIDERS } from 'toktokwallet/graphql'
 import { Separator, HeaderImageBackground, HeaderTitle , CheckIdleState } from 'toktokwallet/components'
 import { numberFormat } from 'toktokwallet/helper'
-import { useSelector } from 'react-redux'
+import { useSelector , useDispatch } from 'react-redux'
 import CONSTANTS from 'common/res/constants'
 import { SomethingWentWrong } from 'src/components';
 import { onErrorAlert } from 'src/util/ErrorUtility'
@@ -27,6 +27,7 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
     const amount = route?.params?.amount ? route.params.amount : null
     const onCashIn = route?.params?.onCashIn ? route.params.onCashIn : null
     const { tokwaAccount , getMyAccountLoading , getMyAccount}  = useAccount();
+    const dispatch = useDispatch();
     const alert = useAlert()
     const { data: cashinmethods, error, loading } = useQuery(GET_CASH_IN_PROVIDERS, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
@@ -39,19 +40,32 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
     const checkStatus = async ()=> {
         if(!tokwaAccount.mobileNumber){
             await getMyAccount()
-        }   
-      
+            return
+        } 
+        
         if(!tokwaAccount.pinCode){
             return navigation.replace("ToktokWalletRestricted", {component: "noPin" , amount: amount , onCashIn: onCashIn})
         }
-       
     }
 
     useEffect(()=>{
         if(onCashIn){
-           checkStatus();
+            dispatch({
+                type: "SET_TOKWA_EVENTS_REDIRECT",
+                payload: {
+                    event: "cashInTopUp",
+                    value: true,
+                }
+            })
         }
-    },[onCashIn])
+    },[])
+
+    useEffect(()=>{
+        if(onCashIn){
+           checkStatus();
+           cashInTopUp = false;
+        }
+    },[onCashIn, tokwaAccount])
 
     if (loading) {
         return (

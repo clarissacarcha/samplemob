@@ -4,4 +4,5 @@ export * from "./ToktokWalletLoginPage";
 export * from "./ToktokWalletNotifications";
 export * from "./ToktokWalletRestricted";
 export * from "./ToktokWalletReviewAndConfirm";
+export * from "./ToktokWalletTPINValidator";
 export * from "./ToktokWalletTransactions";
