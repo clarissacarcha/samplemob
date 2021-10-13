@@ -58,10 +58,23 @@ const OrderTitle = ({ transaction, riderDetails }) => {
     )
   }
 
+  const dateByOrderStatus = () => {
+    if(orderStatus == 'po'){
+      return dateOrderProcessed
+    } else if(orderStatus == 'rp'){
+      return dateReadyPickup.toString() != 'Invalid date' ? dateReadyPickup : dateBookingConfirmed;
+    } else {
+      return dateFulfilled
+    }
+  }
+
   const renderEstimatedDeliveryTime = () => {
-    let date = dateReadyPickup.toString() != 'Invalid date' ? dateReadyPickup : dateBookingConfirmed;
-    let startTime = moment(date).format('LT')
-    let endTime = calculateDistance(date, riderDetails.location)
+    let date = dateByOrderStatus();
+    let shopLocation = { latitude: shopDetails.latitude, longitude: shopDetails.longitude };
+    let location = riderDetails != null ? riderDetails.location : shopLocation
+    let startTime = moment(date).format('LT');
+    let endTime = calculateDistance(date, location)
+ 
     if(date.toString() == 'Invalid date'){
       return null
     }
@@ -83,7 +96,7 @@ const OrderTitle = ({ transaction, riderDetails }) => {
       { !!status.message && <Text style={styles.status}>{status.message}</Text> }
       { transaction.orderIsfor == 2 && (orderStatus != 'p' && orderStatus!== 'c' && orderStatus !== 's')
         && renderEstimatedPickUpTime()}
-      {(riderDetails != null && transaction.orderIsfor == 1 && (orderStatus != 'p' && orderStatus!== 'c' && orderStatus !== 's'))
+      {(transaction.orderIsfor == 1 && (orderStatus != 'p' && orderStatus!== 'c' && orderStatus !== 's'))
         && renderEstimatedDeliveryTime() }
     </View>
   );
