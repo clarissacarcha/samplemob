@@ -48,7 +48,7 @@ const MainComponent = () => {
     selectedVariants,
     setBasePrice,
   } = useContext(VerifyContext);
-  const [bannerLoaded, setBannerLoaded] = useState(false);
+  const [bannerLoaded, setBannerLoaded] = useState(true);
   const stickyHeaderIndices = bannerLoaded ? [2] : [3];
 
   const [getProductDetails, {data, loading, error}] = useLazyQuery(GET_PRODUCT_DETAILS, {
