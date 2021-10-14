@@ -2,9 +2,7 @@ import React, {useState, useContext, useEffect} from 'react';
 import {useRoute} from '@react-navigation/native';
 import {Image, View, Text, ScrollView, KeyboardAvoidingView, Platform} from 'react-native';
 
-import MIcon from 'react-native-vector-icons/MaterialIcons';
-
-import {FoodCart, VerifyContextProvider, VerifyContext} from './components';
+import {FoodCart, VerifyContextProvider, VerifyContext, FoodImageSlider} from './components';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 
@@ -161,19 +159,22 @@ const MainComponent = () => {
       <HeaderImageBackground searchBox={false}>
         <HeaderTitle />
       </HeaderImageBackground>
-      {(Object.entries(productDetails).length == 0) || getLoading || getError ? (
+      {Object.entries(productDetails).length == 0 || getLoading || getError ? (
         <LoadingIndicator isLoading={true} isFlex />
-        ) : (
+      ) : (
         <>
           <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'position' : null} style={styles.container}>
-            <ScrollView stickyHeaderIndices={stickyHeaderIndices} >
+            <ScrollView stickyHeaderIndices={stickyHeaderIndices}>
               <ChangeAddress />
-              {!bannerLoaded && <BannerPlaceHolder />}
+              {/* {!bannerLoaded && <BannerPlaceHolder />}
               <Image
                 onLoadEnd={() => setBannerLoaded(true)}
                 source={{uri: productDetails.filename}}
                 style={[styles.banner]}
-              />
+              /> */}
+              <View style={{flex: 1}}>
+                <FoodImageSlider images={[productDetails.filename, productDetails.filename]} />
+              </View>
               <ItemDetails />
               <Variations
                 productId={selectedItemId ? Id : ''}
