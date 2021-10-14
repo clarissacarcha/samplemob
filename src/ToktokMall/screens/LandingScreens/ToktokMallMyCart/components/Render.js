@@ -24,7 +24,7 @@ export const RenderDetails = ({
 	const [superSelected, setSuperSelected] = useState(allSelected ? true : false)
 	const [uncheckedItems, setUncheckedItems] = useState([])
 	const [checkedItems, setCheckedItems] = useState([])	
-	const [itemsCheckIndex, setItemsCheckIndex] = useState(allSelected ? item.cart.length : 0)
+	const [itemsCheckIndex, setItemsCheckIndex] = useState(allSelected ? item.data.length : 0)
 
 	useEffect(() => {
 		setstoreitemselected(allSelected)
@@ -55,7 +55,7 @@ export const RenderDetails = ({
 				currentCheckedItems.push({id: raw.item.item_id})
 				setCheckedItems(currentCheckedItems)
 
-				if(currentCheckedItems.length == item.cart.length){
+				if(currentCheckedItems.length == item.data.length){
 					setstoreitemselected(true)
 				}else{
 					setstoreitemselected(false)
@@ -74,7 +74,7 @@ export const RenderDetails = ({
 				setstoreitemselected(false)
 			}
 
-			console.log(item.cart.length, currentCheckedItems.length)
+			console.log(item.data.length, currentCheckedItems.length)
 
 		}
 
@@ -85,7 +85,7 @@ export const RenderDetails = ({
 		<>
 			<Store
 				state={storeitemselected}
-				data={item || {}}
+				data={item?.shop || {}}
 				storeIndex = {storeIndex}
 				onSelect={(raw) => {
 					onStoreSelect(raw)
@@ -94,7 +94,7 @@ export const RenderDetails = ({
 
 					if(!storeitemselected == true){
 						//to true
-						let items = JSON.parse(JSON.stringify(item.cart))
+						let items = JSON.parse(JSON.stringify(item.data))
 						let allitems = items.map((data) => {
 							return {id: data.item_id}
 						})
@@ -111,40 +111,15 @@ export const RenderDetails = ({
 				uncheckedItems = {uncheckedItems}
 				setUncheckedItems = {setUncheckedItems}
 			/>
-				{/* <FlatList
-					data={item.cart || []}
-					removeClippedSubviews={true}
-					renderItem={({item, index}) => {
-						return (
-							<>
-				<SwipeableView
-					btnsArray={[
-						{
-							text: 'Delete',
-							component: (
-					  		<DeleteButton
-									onPress={() => {						
-									onItemDelete(item.item_id)
-									}}
-					  		/>
-							)
-				  	},
-					]}></SwipeableView>
-					
-							</>
-						)
-					}}
-				/> */}
-
-			{item && item.cart.length > 0 && item.cart.map((data, i) => {
+				
+			{item && item.data.length > 0 && item.data.map((data, i) => {
 
 				return (
 				<Swipeable 
 					rightActionActivationDistance={30}
 					rightButtonWidth={75}
 					rightButtons={[<DeleteButton onPress={() => {
-						onItemDelete(data)
-						
+						onItemDelete(data)						
 					}} />]}
 				>
 					<Item
@@ -157,12 +132,12 @@ export const RenderDetails = ({
 						onHold={(raw) => {
 							setToggleRoot("item")
 							onItemLongPress(raw)
-							HandleItemSelect(raw, item.cart.length)
+							HandleItemSelect(raw, item.data.length)
 						}}
 						onSelect={(raw) => {
 							setToggleRoot("item")
 							onItemSelect(raw)
-							HandleItemSelect(raw, item.cart.length)						
+							HandleItemSelect(raw, item.data.length)						
 						}}
 						item={item}
 						uncheckedItems={uncheckedItems}

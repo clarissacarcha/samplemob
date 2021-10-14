@@ -28,10 +28,14 @@ import Swipeable from 'react-native-swipeable';
 import { AddressModal } from '../ToktokMallAddressesForm/Components';
 import axios from 'axios';
 
+import { ApiCall } from '../../../../helpers';
+import Toast from 'react-native-simple-toast';
+
 const Component = ({route, navigation, reduxStates: {user_address, defaultAddress}, reduxActions: {updateUserAddress, setDefaultUserAddress}}) => {
+
   const [data, setData] = useState([]);
   const [defaultId, setDefaultID] = useState(0);
-
+  const [addresses, setAddresses] = useState([]);
   const [confirmDeleteModal, setConfirmDeleteModal] = useState(false);
 
   navigation.setOptions({
@@ -50,27 +54,30 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
 
   const [getAddresses, {error, loading}] = useLazyQuery(GET_CUSTOMER_ADDRESSES, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
-    fetchPolicy: 'network-only',
-    // variables: {
-    //   input: {
-    //     userId: 1024,
-    //   },
-    // },
-    onCompleted: async (response) => {
+    fetchPolicy: 'network-only',    
+    onCompleted: async ({getCustomerAddresses}) => {
       // const userAdressTemp = await JSON.parse(AsyncStorage.getItem("TOKTOKMALL_USER_ADDRESS"))
       // if(userAdressTemp){
       //   updateUserAddress('set', userAdressTemp)
       // } else if (!temp && response.getCustomerAddresses) {
-        updateAddress(response)
+        // updateAddress(response)
       // }
+      if(getCustomerAddresses){
+        setAddresses(getCustomerAddresses)
+      }
     },
     onError: (err) => console.log(err),
   });
+
   const updateAddress = (response) => {
     user_address.length === 0 && updateUserAddress('set', response.getCustomerAddresses);
   }
 
   useEffect(() => {
+    init()
+  }, []);
+
+  const init = async () => {
     AsyncStorage.getItem("ToktokMallUser").then((raw) => {
       let data = JSON.parse(raw) || {}
       if(data.userId){
@@ -78,7 +85,8 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
         getAddresses({variables: {input: {userId: data.userId}}})
       }
     })
-  }, []);
+  }
+
   const DeleteButton = ({onPress}) => {
 		return (
 		  <>
@@ -93,6 +101,32 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
 		);
 	};
 
+  const SetDefaultAddress = async (id) => {
+
+    const raw = await AsyncStorage.getItem("ToktokMallUser")
+    const userdata = JSON.parse(raw)
+
+    if(!userdata || !userdata?.userId) return
+
+    let body = {
+      address_id: id,
+      customer_id: userdata.userId
+    };
+
+    const req = await ApiCall("default_address", body, false, "inline")
+
+    if(req.responseData && req.responseData.success == 1){
+      init()
+    }else if(req.responseError && req.responseError.success == 0){
+      Toast.show(req.responseError.message, Toast.LONG)
+    }else if(req.responseError){
+      Toast.show("Something went wrong", Toast.LONG)
+    }else if(req.responseError == null && req.responseData == null){
+      Toast.show("Something went wrong", Toast.LONG)
+    }
+    
+  };
+
   const renderAddresses = () => {
     
     return user_address.map((item) => {
@@ -101,10 +135,12 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
         <Swipeable 
 					rightActionActivationDistance={30}
 					rightButtonWidth={75}
-					rightButtons={[<DeleteButton onPress={() => {
-						setConfirmDeleteModal(true)
-						
-					}} />]}
+					// rightButtons={item.defaultAdd == 1 ? [<View />] : 
+          //   [
+          //     <DeleteButton onPress={() => {
+          //       setConfirmDeleteModal(true)						
+          //     }} />
+          //   ]}
 				>
 
       {confirmDeleteModal && (
@@ -125,25 +161,17 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
             navigation.navigate('ToktokMallAddressesForm', {item, update: true});
           }}
           onPress={async () => {
-            console.log(item)
-            updateUserAddress("changeDefault", item.id);
-            setDefaultUserAddress("set", item);
-
-            console.log(item)
-            // const coords = await GeolocationUtility.getCoordinatesFromAddress(`${item.fullAddress} Philippines`)
-            // if(coords){
-            //   AsyncStorage.setItem("ToktokMallUserCoords", JSON.stringify(coords))
-            // }
-
+            SetDefaultAddress(item.id)
           }}>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <Text style={styles.addressfullName}>{item.receiverName}</Text>
-            {/* {item.defaultAdd == 1 ? <Text style={styles.addressdefaultText}>Default</Text> : null} */}
-            {defaultAddress && item.id == defaultAddress.id ? <Text style={styles.addressdefaultText}>Default</Text> : null}
+            {item.defaultAdd == 1 ? <Text style={styles.addressdefaultText}>Default</Text> : null}
+            {/* {defaultAddress && item.id == defaultAddress.id ? <Text style={styles.addressdefaultText}>Default</Text> : null} */}
           </View>
           <Text style={styles.addresscontact_number}>{item.receiverContact}</Text>
           <Text style={styles.addressText}>{item.fullAddress || item.address}</Text>
-        </TouchableOpacity></Swipeable>
+        </TouchableOpacity>
+        </Swipeable>
       );
     });
   };

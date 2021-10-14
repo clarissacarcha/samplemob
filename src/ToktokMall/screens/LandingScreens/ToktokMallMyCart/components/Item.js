@@ -24,9 +24,11 @@ export const Item = ({
 
   const [selected, setSelected] = useState(state)
   const [qty, setQty] = useState(1)
+  const [product, setproduct] = useState({})
 
   useEffect(() => {
-    setQty(data.qty)
+    setQty(data.quantity)
+    setproduct(data.product)
   },[data])
 
   useEffect(() => {
@@ -57,8 +59,8 @@ export const Item = ({
   }
 
   const getImageSource = (imgs) => {
-    if(typeof imgs == "object" && imgs.length > 0){
-      return {uri: imgs[0].filename}
+    if(imgs && typeof imgs == "string"){
+      return {uri: imgs}
     }else {
       return placeholder
     }
@@ -68,8 +70,8 @@ export const Item = ({
     <TouchableOpacity onLongPress={() => {
       onHold({
         checked: !selected,
-        item: data,
-        amount: data.price * data.qty,
+        item: product,
+        amount: product.price * data.quantity,
         qty: qty,
         index: index,
         storeIndex: storeIndex
@@ -85,8 +87,8 @@ export const Item = ({
 						onClick={() => {							
 							onSelect({
                 checked: !selected,
-                item: data,
-                amount: data.price * data.qty,
+                item: product,
+                amount: product.price * data.quantity,
                 qty: qty,
                 index: index,
                 storeIndex: storeIndex
@@ -99,17 +101,17 @@ export const Item = ({
 					/>
         </View>
 				<View style={{flex: 3, justifyContent: 'center', alignItems: 'center'}}>
-					<Image source={getImageSource(data?.images)} style={{width: 50, height: 65, resizeMode: 'stretch'}} />
+					<Image source={getImageSource(product?.img?.filename)} style={{width: 50, height: 65, resizeMode: 'stretch'}} />
 				</View>
         <View style={{flex: 9, justifyContent: 'center', flexDirection: 'row'}}>       
           <View style={{flex: 1, justifyContent: 'center'}}>
-							<Text style={{fontSize: 13, fontWeight: '100'}} numberOfLines={2}>{data?.label}</Text>
+							<Text style={{fontSize: 13, fontWeight: '100'}} numberOfLines={2}>{product?.itemname}</Text>
 						<View style={{flexDirection: 'row'}}>
               <View style={{flex: 0}}>
-								<Text style={{fontSize: 13, color: "#F6841F"}}><Price amount={data?.price} /></Text>
+								<Text style={{fontSize: 13, color: "#F6841F"}}><Price amount={product?.price} /></Text>
               </View>
-							<View style={{flex: 0, paddingHorizontal: 15}}>
-								<Text style={{color: "#9E9E9E", textDecorationLine: 'line-through', fontSize: 10}}>{data?.compareAtPrice ? <Price amount={data?.compareAtPrice} /> : ""}</Text>
+							<View style={{flex: 0, paddingHorizontal: 15, justifyContent: 'center'}}>
+								<Text style={{color: "#9E9E9E", textDecorationLine: 'line-through', fontSize: 10}}>{product?.compareAtPrice > 0 ? <Price amount={product?.compareAtPrice} /> : ""}</Text>
               </View>
             </View>
             <View style={{flexDirection: 'row'}}>
@@ -128,8 +130,8 @@ export const Item = ({
                 }}
                 disabled = {qty == 1}
                 onPress = {() => {
-                  onChangeQuantity(qty - 1, data?.item_id)
-                  setQty(qty - 1)                  
+                  onChangeQuantity(qty - 1, data?.id)
+                  setQty(qty - 1)
                 }}
               >
                 <AIcons
@@ -148,16 +150,16 @@ export const Item = ({
                 style = {{alignItems: 'center', justifyContent: 'center',  height: 25,width: 25,
                   borderWidth: 1, borderColor: '#F8F8F8'
                 }}
-                disabled={data.noOfStocks === qty || qty === 200}
+                disabled={product.noOfStocks === qty || qty === 200}
                 onPress = {() => {
-                  onChangeQuantity(qty + 1, data?.item_id)
+                  onChangeQuantity(qty + 1, data?.id)
                   setQty(qty + 1)
                 }}
               >
                 <AIcons
                   name = {'plus'}
                   size = {15}
-                  color = {qty == data.noOfStocks || qty === 200 ? '#D7D7D7':  COLOR.ORANGE}
+                  color = {qty == product.noOfStocks || qty === 200 ? '#D7D7D7':  COLOR.ORANGE}
                 />
               </TouchableOpacity>
             </View>

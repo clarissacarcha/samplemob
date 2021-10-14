@@ -22,7 +22,7 @@ export const paypanda_api_url = {
 	'production': ''
 }
 
-export const ApiCall = async (endpoint, body, debug = false) => {	
+export const ApiCall = async (endpoint, body, debug = false, datatype = "json") => {	
 
 	let responseData = null
 	let responseError = null
@@ -35,9 +35,16 @@ export const ApiCall = async (endpoint, body, debug = false) => {
 
 		//CHECK IF SESSION IS VALID
 		if(session.appSignature){
-			
-			formData.append("signature", session.appSignature)
-			formData.append("data", JSON.stringify(body))
+
+			if(datatype == "json"){
+				formData.append("signature", session.appSignature)
+				formData.append("data", JSON.stringify(body))
+			}else{
+				formData.append("signature", session.appSignature)
+				for(var x=0;x<Object.keys(body).length;x++){
+					formData.append(Object.keys(body)[x], Object.values(body)[x])					
+				}
+			}
 
 			await axios.post(`${api_url[env]}${endpoint}`, formData).then((response) => {
 				if(debug){

@@ -5,6 +5,7 @@ export const GET_MY_CART =  gql`
 	query getMyCart($input: GetMyCartInput) {
 		getMyCart(input: $input){
 			shop {
+				id
 				shopname
 				profileImages{
 					logo
@@ -14,9 +15,11 @@ export const GET_MY_CART =  gql`
 				id
 				quantity
 				product {
+					Id
 					itemname
 					price
 					compareAtPrice
+					noOfStocks
 					img {
 						filename
 					}
