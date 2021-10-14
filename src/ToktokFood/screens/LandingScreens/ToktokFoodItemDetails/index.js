@@ -1,34 +1,39 @@
 import React, {useState, useContext, useEffect} from 'react';
 import {useRoute} from '@react-navigation/native';
-import {Image, View, Text, ScrollView, KeyboardAvoidingView, Platform} from 'react-native';
+import {View, Text, ScrollView, KeyboardAvoidingView, Platform} from 'react-native';
 
-import MIcon from 'react-native-vector-icons/MaterialIcons';
-
-import {FoodCart, VerifyContextProvider, VerifyContext} from './components';
+import {FoodCart, VerifyContextProvider, VerifyContext, FoodImageSlider} from './components';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 
-import ContentLoader from 'react-native-easy-content-loader';
+// import ContentLoader from 'react-native-easy-content-loader';
 
 import {Variations} from './components';
 import {useSelector} from 'react-redux';
 
-import {scale, moderateScale} from 'toktokfood/helper/scale';
+import {scale} from 'toktokfood/helper/scale';
 import styles from './styles';
 
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
-import {useLazyQuery, useMutation} from '@apollo/react-hooks';
+import {useLazyQuery} from '@apollo/react-hooks';
 import {GET_PRODUCT_DETAILS, GET_TEMPORARY_CART} from 'toktokfood/graphql/toktokfood';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import ChangeAddress from 'toktokfood/components/ChangeAddress';
-import { onErrorAlert } from 'src/util/ErrorUtility';
-import { useAlert } from 'src/hooks';
+import {onErrorAlert} from 'src/util/ErrorUtility';
+import {useAlert} from 'src/hooks';
 
 const MainComponent = () => {
-
   const routes = useRoute();
   const alert = useAlert();
-  const {Id, parentProductId, selectedItemId, selectedAddons, selectedPrice, selectedQty, selectedNotes} = routes.params;
+  const {
+    Id,
+    parentProductId,
+    selectedItemId,
+    selectedAddons,
+    selectedPrice,
+    selectedQty,
+    selectedNotes,
+  } = routes.params;
   const {customerInfo} = useSelector((state) => state.toktokFood);
   const {
     totalPrice,
@@ -41,7 +46,7 @@ const MainComponent = () => {
     setTemporaryCart,
     setNotes,
     selectedVariants,
-    setBasePrice
+    setBasePrice,
   } = useContext(VerifyContext);
   const [bannerLoaded, setBannerLoaded] = useState(false);
   const stickyHeaderIndices = bannerLoaded ? [2] : [3];
@@ -49,25 +54,25 @@ const MainComponent = () => {
   const [getProductDetails, {data, loading, error}] = useLazyQuery(GET_PRODUCT_DETAILS, {
     variables: {
       input: {
-        product_id: parentProductId ? parentProductId : Id
+        product_id: parentProductId ? parentProductId : Id,
       },
     },
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onError: (error) => {
-      onErrorAlert({ alert, error })
+      onErrorAlert({alert, error});
     },
     onCompleted: ({getProductDetails}) => {
-      setProductDetails(getProductDetails)
-      console.log(+getProductDetails.sysShop, customerInfo.userId)
+      setProductDetails(getProductDetails);
+      console.log(+getProductDetails.sysShop, customerInfo.userId);
       getTemporaryCart({
         variables: {
           input: {
             shopId: +getProductDetails.sysShop,
-            userId: customerInfo.userId
+            userId: customerInfo.userId,
           },
         },
-      })
+      });
     },
   });
 
@@ -75,42 +80,48 @@ const MainComponent = () => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onError: (error) => {
-      onErrorAlert({ alert, error })
+      onErrorAlert({alert, error});
     },
     onCompleted: ({getTemporaryCart}) => {
-      let { items, totalAmount } = getTemporaryCart
-      // console.log(getTemporaryCart)
-
+      let {items, totalAmount} = getTemporaryCart;
       setTemporaryCart({
         cartItemsLength: items.length,
         totalAmount,
-        items: items
-      })
+        items: items,
+      });
     },
   });
 
   useEffect(() => {
-    if(productDetails && Object.keys(productDetails).length > 0){
-      let basePrice = 0
-      if(productDetails?.variants.length > 0){
-        if(selectedVariants && Object.keys(selectedVariants).length > 0){
-          basePrice = parseInt(selectedVariants?.price)
+    if (productDetails && Object.keys(productDetails).length > 0) {
+      let basePrice = 0;
+      if (productDetails?.variants.length > 0) {
+        if (selectedVariants && Object.keys(selectedVariants).length > 0) {
+          basePrice = parseInt(selectedVariants?.price);
         }
       } else {
-        basePrice = productDetails.price
+        basePrice = productDetails.price;
       }
-      setBasePrice(basePrice)
+      setBasePrice(basePrice);
     }
-  }, [selectedVariants, productDetails])
+  }, [selectedVariants, productDetails]);
 
   useEffect(() => {
-    if(selectedAddons){ setSelected(selectedAddons) }
-    if(selectedPrice){ setTotalPrice(selectedPrice) }
-    if(selectedQty){ setCount({ type: '', quantity: selectedQty }) }
-    if(selectedNotes){ setNotes(selectedNotes) }
-    getProductDetails()
+    if (selectedAddons) {
+      setSelected(selectedAddons);
+    }
+    if (selectedPrice) {
+      setTotalPrice(selectedPrice);
+    }
+    if (selectedQty) {
+      setCount({type: '', quantity: selectedQty});
+    }
+    if (selectedNotes) {
+      setNotes(selectedNotes);
+    }
+    getProductDetails();
   }, [routes.params]);
- 
+
   const ItemDetails = () => {
     const {itemname, price, summary} = productDetails;
     return (
@@ -124,7 +135,7 @@ const MainComponent = () => {
         </View>
         <View style={styles.ratingsWrapper}>
           {/* <Rating startingValue={ratings} imageSize={16} readonly style={styles.ratings} /> */}
-          { !!summary && (
+          {!!summary && (
             <Text style={styles.description} numberOfLines={3}>
               {summary}
             </Text>
@@ -134,46 +145,50 @@ const MainComponent = () => {
     );
   };
 
-  const BannerPlaceHolder = () => {
-    return (
-      <View style={{
-        marginTop: scale(50),
-        position: 'absolute',
-        alignSelf: 'center',
-        height: scale(140),
-        width: scale(350)
-      }}>
-        <ContentLoader
-          active
-          pRows={1}
-          pHeight="100%"
-          pWidth="100%"
-          title={false}
-          primaryColor="rgba(256,186,28,0.2)"
-          secondaryColor="rgba(256,186,28,0.7)"
-        />
-      </View>
-    );
-  };
- 
+  // const BannerPlaceHolder = () => {
+  //   return (
+  //     <View
+  //       style={{
+  //         marginTop: scale(50),
+  //         position: 'absolute',
+  //         alignSelf: 'center',
+  //         height: scale(140),
+  //         width: scale(350),
+  //       }}>
+  //       <ContentLoader
+  //         active
+  //         pRows={1}
+  //         pHeight="100%"
+  //         pWidth="100%"
+  //         title={false}
+  //         primaryColor="rgba(256,186,28,0.2)"
+  //         secondaryColor="rgba(256,186,28,0.7)"
+  //       />
+  //     </View>
+  //   );
+  // };
+
   return (
     <View style={styles.container}>
       <HeaderImageBackground searchBox={false}>
         <HeaderTitle />
       </HeaderImageBackground>
-      {(Object.entries(productDetails).length == 0) || getLoading || getError ? (
+      {Object.entries(productDetails).length == 0 || getLoading || getError ? (
         <LoadingIndicator isLoading={true} isFlex />
-        ) : (
+      ) : (
         <>
           <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'position' : null} style={styles.container}>
-            <ScrollView stickyHeaderIndices={stickyHeaderIndices} >
+            <ScrollView stickyHeaderIndices={stickyHeaderIndices}>
               <ChangeAddress />
-              {!bannerLoaded && <BannerPlaceHolder />}
+              {/* {!bannerLoaded && <BannerPlaceHolder />}
               <Image
                 onLoadEnd={() => setBannerLoaded(true)}
                 source={{uri: productDetails.filename}}
                 style={[styles.banner]}
-              />
+              /> */}
+              <View style={{flex: 1}}>
+                <FoodImageSlider images={productDetails.productImages} />
+              </View>
               <ItemDetails />
               <Variations
                 productId={selectedItemId ? Id : ''}

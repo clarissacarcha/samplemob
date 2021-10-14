@@ -1,14 +1,12 @@
 import React, {useEffect, useState, useContext} from 'react';
 import {View, StyleSheet, Text, TouchableOpacity, Image, Platform, FlatList} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {useLazyQuery, useQuery} from '@apollo/react-hooks';
+import {useLazyQuery} from '@apollo/react-hooks';
 import {GET_PRODUCTS_BY_SHOP_CATEGORY, GET_SEARCH_PRODUCTS_BY_SHOP} from 'toktokfood/graphql/toktokfood';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
-import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import {VerifyContext} from '../components';
 // Fonts & Colors
 import {COLOR, FONT, FONT_SIZE} from 'res/variables';
-import {food1} from 'toktokfood/assets/images';
 import ContentLoader from 'react-native-easy-content-loader';
 
 import {
