@@ -170,15 +170,23 @@ const Component =  ({
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',    
     onCompleted: (response) => {
-      console.log(response)
+      console.log('response', response.getMyCart[0].data[0].product)
+      // console.log('response', response.getMyCart[1].data[0].product)
+      // console.log('response', response.getMyCart[2].dat)
       if(response.getMyCart){
-        setMyCartData(response.getMyCart)
+        // setMyCartData(response.getMyCart)
+        setCart(response.getMyCart)
       }
     },
     onError: (err) => {
       console.log(err)
     }
   })
+
+  const setCart = (data) => {
+    console.log("get_cart_data", MergeStoreProducts(data))
+    createMyCartSession("set", MergeStoreProducts(data))
+  }
 
   const getMyCart = async () => {
     
@@ -209,9 +217,15 @@ const Component =  ({
   useEffect(() => {    
     AsyncStorage.getItem("ToktokMallUser").then((raw) => {
       const data = JSON.parse(raw)
-      console.log('from async', data)
       if(data.userId){
-        getMyCart()
+        // getMyCart()
+        getMyCartData({
+          variables: {
+            input: {
+              userId: data.userId
+            }
+          }
+        })
         
       }
     })
@@ -252,12 +266,9 @@ const Component =  ({
 
     //Call to reset cart for debugging
     // createMyCartSession('set', [])
-    AsyncStorage.getItem("ToktokMallUser").then((raw) => {
-      const data = JSON.parse(raw)
-      if(data.userId){
-        setUser(data)
-      }
-    })
+    
+    const user = session?.user.person || {}
+    setUser(user)
   }, []);
 
   useEffect(() => {
