@@ -4,11 +4,38 @@ import {StyleSheet, Image, View} from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import {getDeviceWidth, isIphoneXorAbove, scale} from 'toktokfood/helper/scale';
 
+import ContentLoader from 'react-native-easy-content-loader';
+
 export const FoodImageSlider = (props) => {
   const {images} = props;
 
+  console.log(images);
+
+  const BannerPlaceHolder = () => {
+    return (
+      <View
+        style={{
+          marginTop: scale(50),
+          position: 'absolute',
+          alignSelf: 'center',
+          height: scale(140),
+          width: scale(350),
+        }}>
+        <ContentLoader
+          active
+          pRows={1}
+          pHeight="100%"
+          pWidth="100%"
+          title={false}
+          primaryColor="rgba(256,186,28,0.2)"
+          secondaryColor="rgba(256,186,28,0.7)"
+        />
+      </View>
+    );
+  };
+
   const FoodImages = ({item, index}) => {
-    return <Image style={styles.imageBanner} source={{uri: item}} resizeMode="cover" />;
+    return <Image style={styles.imageBanner} source={{uri: item.filename}} resizeMode="cover" />;
   };
 
   return (
