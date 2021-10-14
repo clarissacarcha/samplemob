@@ -466,7 +466,8 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefa
               <TouchableOpacity
                 style={styles.button2}
                 onPress={()=> {
-                  setConfirmDeleteModal(true)
+                  // setConfirmDeleteModal(true)
+                  setClicked ? Toast.show('Cannot delete default address') : setConfirmDeleteModal(true)
                 }}>
                 <Text style={{color: '#F6841F'}}>Delete</Text>
               </TouchableOpacity>

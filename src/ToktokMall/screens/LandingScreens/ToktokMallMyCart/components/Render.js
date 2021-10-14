@@ -151,8 +151,8 @@ export const RenderDetails = ({
 						key={i}
 						index = {i}
 						storeIndex={storeIndex}
-						state={toggleRoot == "shop" && storeitemselected || superSelected}
-						// state = {storeitemselected}
+						// state={toggleRoot == "shop" && storeitemselected || superSelected}
+						state = {storeitemselected}
 						data={data}
 						onHold={(raw) => {
 							setToggleRoot("item")
