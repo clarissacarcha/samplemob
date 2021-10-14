@@ -193,7 +193,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefa
           default: clicked == true ? 1 : 0,
         };
 
-        console.log(body)
+        console.log(body, data.appSignature)
         let formData = new FormData();
         formData.append('signature', data.appSignature);
         formData.append('data', JSON.stringify(body));
@@ -523,12 +523,13 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefa
           {toUpdate && (
             <>
               <TouchableOpacity
-                style={styles.button2}
+                style={[styles.button2, {borderColor: route.params?.item?.defaultAdd === 1 ? '#D7D7D7':'#F6841F'}]}
+                disabled={route.params?.item?.defaultAdd === 1}
                 onPress={()=> {
                   // setConfirmDeleteModal(true)
                   setClicked ? Toast.show('Cannot delete default address') : setConfirmDeleteModal(true)
                 }}>
-                <Text style={{color: '#F6841F'}}>Delete</Text>
+                <Text style={{color: route.params?.item?.defaultAdd === 1 ? '#D7D7D7':'#F6841F'}}>Delete</Text>
               </TouchableOpacity>
               <View style={{flex: 0.2}} />
             </>
