@@ -10,7 +10,6 @@ import {coppermask} from '../../../../assets';
 import {Image as RNEImage} from 'react-native-elements'; 
 import Spinner from 'react-native-spinkit';
 
-const { width: screenWidth } = Dimensions.get('window')
 const HEIGHT = 250
 
 export const ProductCarousel = ({data, isOutOfStock, isLoading, setIsLoading, loading}) => {
@@ -31,7 +30,7 @@ export const ProductCarousel = ({data, isOutOfStock, isLoading, setIsLoading, lo
     return (
       <View style={{width: Dimensions.get("screen").width, height: HEIGHT}}>
         {isOutOfStock && 
-        <View style={{position: "absolute", zIndex: 1, top: 60, left: HEIGHT / 2.5, backgroundColor: 'transparent', alignItems: 'center', justifyContent: 'center'}}>
+        <View style={{position: "absolute", zIndex: 1, top: 60, left: (Dimensions.get("screen").width-150)/2}}>
           <View style={{width: 150, height: 150, borderRadius: 150/2, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.25)'}}>
             <Text style={{fontFamily: FONT.BOLD, fontSize: 18, color: "#fff"}}>OUT OF STOCK</Text>
           </View>
@@ -43,17 +42,19 @@ export const ProductCarousel = ({data, isOutOfStock, isLoading, setIsLoading, lo
             containerStyle={[styles.pxImageContainerStyle]}
             style={{
               ...StyleSheet.absoluteFillObject,
-              resizeMode: 'contain'
+              resizeMode: 'contain',
             }}
             parallaxFactor={0.05}
             {...parallaxProps}
           />
-          {isOutOfStock && 
-          <View style={{position: "absolute", zIndex: 1, top: 60, left: HEIGHT / 2.5, backgroundColor: 'transparent', alignItems: 'center', justifyContent: 'center'}}>
+          {/* {
+            isOutOfStock &&
+            <View style={{position: "absolute", zIndex: 1, top: 60, left: HEIGHT / 2.5, backgroundColor: 'transparent', alignItems: 'center', justifyContent: 'center'}}>
             <View style={{width: 150, height: 150, borderRadius: 150/2, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.25)'}}>
               <Image source = {placeholder} style = {{opacity: 0.2, tintColor: 'gray'}} />
             </View>
-          </View>  }
+          </View>
+          } */}
       </View>
     )
   }

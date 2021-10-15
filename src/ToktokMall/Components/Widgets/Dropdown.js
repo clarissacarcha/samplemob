@@ -47,7 +47,7 @@ const Item = ({data, onPress}) => {
   )
 }
 
-const DropdownItem = ({item, onItemPress}) => {
+const DropdownItem = ({item, onItemPress, loading}) => {
 
   const [category, setCategory] = useState( item.parentCategoryName)
   const [content, setContent] = useState([]) //["Cabinet", "Chairs", "Drawer"]
@@ -56,6 +56,13 @@ const DropdownItem = ({item, onItemPress}) => {
   useEffect(() => {
     setContent(item.subCategories.sort((a, b) => a.categoryName.localeCompare(b.categoryName)))
   }, [])
+
+  useEffect(() => {
+    if(loading){
+      console.log("test")
+      setToggle(false)
+    }
+  },[loading])
 
   const setIcon = (item) => {
 
@@ -115,6 +122,7 @@ const DropdownItem = ({item, onItemPress}) => {
 export const Dropdown = ({loading = false, data, onSelect, onRefresh}) => {
 
   const navigation = useNavigation()
+  const [refreshing, setRefreshing] = useState(false)
 
   const onItemPress = (value) => {
   	if(onSelect){
@@ -130,12 +138,17 @@ export const Dropdown = ({loading = false, data, onSelect, onRefresh}) => {
     <>
 		  <FlatList
         data={data || []}
-        renderItem={({item}) => <DropdownItem item={item} onItemPress={onItemPress} />}
+        renderItem={({item}) => <DropdownItem item={item} onItemPress={onItemPress} loading={refreshing} />}
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl
             refreshing={loading}
-            onRefresh={onRefresh}
+            onRefresh={() => {
+              setRefreshing(true)
+              setTimeout(() => {
+                setRefreshing(false)
+              }, 1000);
+            }}
             colors={["#F6841F"]}
           />
         }

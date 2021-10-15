@@ -29,6 +29,8 @@ export const GET_CUSTOMER_ADDRESSES = gql`
 	    receiverName
     	receiverContact
       regionId
+	  landmark
+	  postalCode
       provinceId
       municipalityId
 			defaultAdd

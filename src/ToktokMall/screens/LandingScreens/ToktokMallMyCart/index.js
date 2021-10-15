@@ -128,9 +128,12 @@ const Component =  ({
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',    
     onCompleted: (response) => {
-      console.log(response)
+      console.log('response', response.getMyCart[0].data[0].product)
+      // console.log('response', response.getMyCart[1].data[0].product)
+      // console.log('response', response.getMyCart[2].dat)
       if(response.getMyCart){
-        setMyCartData(response.getMyCart)
+        // setMyCartData(response.getMyCart)
+        setCart(response.getMyCart)
       }
     },
     onError: (err) => {
@@ -149,7 +152,6 @@ const Component =  ({
   const init = async () => {
     AsyncStorage.getItem("ToktokMallUser").then((raw) => {
       const data = JSON.parse(raw)
-      console.log('from async', data)
       if(data.userId){
         setUser(data)
         // getMyCartData({

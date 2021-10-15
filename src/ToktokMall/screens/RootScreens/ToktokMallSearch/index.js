@@ -26,6 +26,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
   const [isLoading, setIsLoading] = useState(false)
   const [searchValue, setSearchValue] = useState('')
   const [searchHist, setSearchHist] = useState([])
+  const [initialSearch, setInitialSearch] = useState(true)
   const [searchedProducts, setSearchedProducts] = useState([])
   const [suggestions, setSuggestions] = useState([])
   const [offset, setOffset] = useState(0)
@@ -57,7 +58,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
 
       }
       
-      if(!route.params?.origin){
+      if(!initialSearch){
         createSearchHistorySession("push", searchValue)
         setHistoryOrder()
       }
@@ -148,6 +149,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
 
   useEffect(() => {
 		if(route.params?.searchValue){
+      setInitialSearch(true)
 			setSearchValue(route.params.searchValue)
 			searchProduct({
         variables: {
@@ -179,6 +181,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
         placeholder="Search"
 				initialValue={searchValue}
         onSearch={(val) => {
+          setInitialSearch(false)
           setSearchValue(val)
 
           if(val == ""){
@@ -263,6 +266,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
           // }}
           renderItem={({item, index}) => 
             <TouchableOpacity key={index} onPress={() => {
+              setInitialSearch(false)
               setSearchValue(item)
               searchProduct({
                 variables: {
@@ -379,6 +383,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
                   <TouchableOpacity onPress={() => {
                     setSearchedProducts([])
                     setSuggestions([])
+                    setInitialSearch(false)
                     setSearchValue(item.tags)
                     searchProduct({
                       variables: {
