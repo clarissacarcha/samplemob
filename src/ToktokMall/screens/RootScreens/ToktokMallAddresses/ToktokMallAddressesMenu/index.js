@@ -67,6 +67,13 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',    
     onCompleted: async ({getCustomerAddresses}) => {
+      // const userAdressTemp = await JSON.parse(AsyncStorage.getItem("TOKTOKMALL_USER_ADDRESS"))
+      // if(userAdressTemp){
+      //   updateUserAddress('set', userAdressTemp)
+      // } else if (!temp && response.getCustomerAddresses) {
+        // updateAddress(response)
+      // }
+      console.log(getCustomerAddresses)
       if(getCustomerAddresses){
         console.log("getCustomerAddresses", getCustomerAddresses)
         setAddresses(getCustomerAddresses)
@@ -149,7 +156,6 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
   };
 
   const renderAddresses = () => {
-
     
     return addresses.map((item) => {
       const Wrapper = activeToDeleteItem.value ? View : Swipeable

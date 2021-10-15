@@ -268,9 +268,9 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefa
       customer_id: userdata.userId
     };
 
-    console.log(body)
+    // console.log(body)
 
-    const req = await ApiCall("default_address", body, false, "inline")
+    const req = await ApiCall("default_address", body, true, "inline")
 
     if(req.responseData && req.responseData.success == 1){
       setIsLoading(false)

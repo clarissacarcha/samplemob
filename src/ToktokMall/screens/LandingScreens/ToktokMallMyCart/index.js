@@ -116,7 +116,10 @@ const Component =  ({
   const [checkoutData, setCheckoutData] = useState([])
   const [myCartData, setMyCartData] = useState([])  
   const session = useSelector(state=> state.session)
+  const [apiloader, setapiloader] = useState(false)
   const [user, setUser] = useState({})
+  const [totalitems, settotalitems] = useState(0)
+  const [rawitems, setrawitems] = useState([])
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack hidden={true} />,
@@ -128,12 +131,11 @@ const Component =  ({
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',    
     onCompleted: (response) => {
-      console.log('response', response.getMyCart[0].data[0].product)
-      // console.log('response', response.getMyCart[1].data[0].product)
-      // console.log('response', response.getMyCart[2].dat)
+      // console.log('response', response.getMyCart[0].parsed.data[0].product)
       if(response.getMyCart){
-        // setMyCartData(response.getMyCart)
-        setCart(response.getMyCart)
+        setMyCartData(response.getMyCart.parsed)
+        setrawitems(response.getMyCart.raw)
+        settotalitems(response.getMyCart.total)        
       }
     },
     onError: (err) => {
@@ -154,14 +156,14 @@ const Component =  ({
       const data = JSON.parse(raw)
       if(data.userId){
         setUser(data)
-        // getMyCartData({
-        //   variables: {
-        //     input: {
-        //       userId: data.userId
-        //     }
-        //   }
-        // })   
-        setMyCartData(sampleData)  
+        setMyCartData([])
+        getMyCartData({
+          variables: {
+            input: {
+              userId: data.userId
+            }
+          }
+        })     
       }
     })
   }
@@ -191,55 +193,105 @@ const Component =  ({
     setSubTotal(a);
   };
 
-  const deleteMultipleItems = () => {
-    let currentItems = JSON.parse(JSON.stringify(itemsToCheckoutArr))
-    if(allSelected){
-      createMyCartSession("set", [])
-    }else{
-      createMyCartSession("DeleteMultiple", itemsToDelArr)
-      itemsToDelArr.map((item, i) => {
-        //Check if item already exist on current items
-        let index = currentItems.findIndex((a) => a.item_id == item.item_id)
-        currentItems.splice(index, 1)
-      })
-      setItemsToCheckoutArr(currentItems)
-    }
+  const deleteMultipleItems = async () => {
+
+    // let currentItems = JSON.parse(JSON.stringify(itemsToCheckoutArr))
+    // if(allSelected){
+    //   createMyCartSession("set", [])
+    // }else{
+    //   createMyCartSession("DeleteMultiple", itemsToDelArr)
+    //   itemsToDelArr.map((item, i) => {
+    //     //Check if item already exist on current items
+    //     let index = currentItems.findIndex((a) => a.item_id == item.item_id)
+    //     currentItems.splice(index, 1)
+    //   })
+    //   setItemsToCheckoutArr(currentItems)
+    // }
     // getSubTotal()
+
+    setapiloader(true)
+    console.log(itemsToDelArr)
+
+    let process = await Promise.all(itemsToDelArr.map(async (item, index) => {
+     
+      let variables = {
+        userid: user.userId,
+        shopid: item.shop.id,
+        branchid: 0,
+        productid: [item.product.Id]
+      }
+      const req = await ApiCall("remove_cart", variables, true)
+      
+      if(req.responseData && req.responseData.success == 1){   
+        console.log("Multiple Deletion Result #: " + index, req.responseData)
+        return true
+      }else{
+        return false
+      }
+
+    }));
+
+    setapiloader(false)
+    console.log("Process result", process)
+
   }
 
-  const deleteSingleItem = (id) => {
-    createMyCartSession("DeleteSingle", {item_id: id.item_id})
+  const deleteSingleItem = async (item) => {
 
-    let currentItems = JSON.parse(JSON.stringify(itemsToCheckoutArr))
-    let willDeleteItems = JSON.parse(JSON.stringify(itemsToDelArr))
+    // createMyCartSession("DeleteSingle", {item_id: id.item_id})
 
-    let index = willDeleteItems.findIndex((a) => a.item_id === id.item_id)
-    willDeleteItems.splice(index, 1)
-    setItemsToDelArr(willDeleteItems)
+    // let currentItems = JSON.parse(JSON.stringify(itemsToCheckoutArr))
+    // let willDeleteItems = JSON.parse(JSON.stringify(itemsToDelArr))
 
+    // let index = willDeleteItems.findIndex((a) => a.item_id === id.item_id)
+    // willDeleteItems.splice(index, 1)
+    // setItemsToDelArr(willDeleteItems)
 
-    let indexC = currentItems.findIndex((a) => a.item_id === id.item_id)
-    currentItems.splice(indexC, 1)
-    setItemsToCheckoutArr(currentItems)
-    setSingleDeletemsgModalShown(true)
+    // let indexC = currentItems.findIndex((a) => a.item_id === id.item_id)
+    // currentItems.splice(indexC, 1)
+    // setItemsToCheckoutArr(currentItems)
+    // setSingleDeletemsgModalShown(true)
     // getSubTotal()
+
+    let variables = {
+      userid: user.userId,
+      shopid: item.shop.id,
+      branchid: 0,
+      productid: [item.product.Id]
+    }
+    console.log(JSON.stringify(variables))
+    setapiloader(true)
+    const req = await ApiCall("remove_cart", variables, true)
+    setapiloader(false)
+    if(req.responseData && req.responseData.success == 1){   
+      console.log("Single Deletion Result: ", req.responseData)
+      setSingleDeletemsgModalShown(true)
+    }else if(req.responseError && req.responseError.success == 0){
+      Toast.show(req.responseError.message, Toast.LONG)
+    }else if(req.responseError){
+      Toast.show("Something went wrong", Toast.LONG)
+    }else if(req.responseError == null && req.responseData == null){
+      Toast.show("Something went wrong", Toast.LONG)
+    }
+
   }
 
   const deleteItems = async (type, singleItem) => {
+    
     let variables = {
       userid: user.id,
-      shopid: singleItem.store_id,
+      shopid: singleItem.shop.id,
       branchid: 0,
-      productid: [singleItem.item_id]
+      productid: [singleItem.product.Id]
     }
-    // data.pin = value
-    console.log(variables)
-    const req = await ApiCall("remove_cart", variables, true)
+
+    const req = await ApiCall("remove_cart", variables, false)
 
     if(req.responseData && req.responseData.success == 1){
       if(type == 'single'){
         //single item delete
-        deleteSingleItem(singleItem)
+        // deleteSingleItem(singleItem)
+
       }else {
         //multiple delete
       }
@@ -329,7 +381,7 @@ const Component =  ({
          //Map raw items
          raw.items.map((item, i) => {
           //Check if item already exist on current items
-          let exist = willDeleteItems.findIndex((a) => a.item_id == item.item_id)
+          let exist = willDeleteItems.findIndex((a) => a.Id == item.Id)
           if(exist > -1){
             //if already exist, skip
           }else{
@@ -343,7 +395,7 @@ const Component =  ({
         //Map raw items
         raw.items.map((item, i) => {
           //Check if item already exist on current items
-          let exist = currentItems.findIndex((a) => a.item_id == item.item_id)
+          let exist = currentItems.findIndex((a) => a.Id == item.Id)
           if(exist > -1){
             //if already exist, skip
           }else{
@@ -380,6 +432,7 @@ const Component =  ({
         <View style={{flex: 1}}>
 
           {loading && <LoadingOverlay isVisible={loading} />}
+          {apiloader && <LoadingOverlay isVisible={apiloader} />}
 
           {myCartData.length == 0 && <RenderEmpty />}
 
@@ -388,7 +441,7 @@ const Component =  ({
           <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
             <View style={{flex: 6, justifyContent: 'center'}}>
               <CheckBox
-                isChecked={!willDelete ? itemsToCheckoutArr.length === myCartData.length : itemsToDelArr.length === myCartData.length}
+                isChecked={!willDelete ? itemsToCheckoutArr.length === totalitems : itemsToDelArr.length === totalitems}
                 rightText="Select All"
                 rightTextStyle={{fontSize: 14, fontWeight: '500'}}
                 checkedCheckBoxColor="#F6841F"
@@ -445,7 +498,7 @@ const Component =  ({
                       // setSubTotal(res)
                     }}
                     onItemSelect={(raw) => {
-                      let res = 0
+                      let res = 0                      
                       if(raw.checked){
                         selectItem('item' , raw, false)
                       }else{
@@ -468,8 +521,10 @@ const Component =  ({
                       // if(raw.checked)
                       setSubTotal(res)
                     }}
-                    onItemDelete={(id) => {
-                      deleteItems('single', id)
+                    onItemDelete={(item) => {
+                      // deleteItems('single', id)
+                      deleteSingleItem(item)
+                      // alert("Will Delete")
                     }}
                     onChangeQuantity={(qty, id) => {
                       console.log("change quantity", id)
@@ -492,10 +547,11 @@ const Component =  ({
           {myCartData.length > 0 && willDelete && 
           <DeleteFooter 
             onDelete={() => {
+
               deleteMultipleItems()
-              setMessageModalShown(true)
-              setAllSelected(false)
-              setWillDelete(false)
+              // setMessageModalShown(true)
+              // setAllSelected(false)
+              // setWillDelete(false)
             }} 
           />}
 
@@ -519,7 +575,10 @@ const Component =  ({
           <MessageModal 
             type="Success"
             isVisible={singleDeletemsgModalShown}
-            setIsVisible={(val) => setSingleDeletemsgModalShown(val)}  
+            setIsVisible={(val) => {
+              setSingleDeletemsgModalShown(val)
+              init()
+            }}  
             message={`Item has been removed from your cart.`}
           />}
             

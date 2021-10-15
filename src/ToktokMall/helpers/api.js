@@ -46,6 +46,12 @@ export const ApiCall = async (endpoint, body, debug = false, datatype = "json") 
 				}
 			}
 
+			if(debug){
+				console.log("Session", session)
+				// console.log("Endpoint: ", `${api_url[env]}${endpoint}`)
+				console.log("Data", formData)
+			}
+
 			await axios.post(`${api_url[env]}${endpoint}`, formData).then((response) => {
 				if(debug){
 					console.log("Response data", body, response.data)

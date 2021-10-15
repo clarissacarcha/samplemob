@@ -48,11 +48,14 @@ export const RenderDetails = ({
 	const HandleItemSelect = (raw, total) => {
 		
 		let currentCheckedItems = JSON.parse(JSON.stringify(checkedItems))
+
 		if(raw.checked){
 								
-			let exist = currentCheckedItems.findIndex( x => x.id == raw.id)
+			let exist = currentCheckedItems.findIndex( x => x.id == raw.item.Id)
 			if(exist == -1){
-				currentCheckedItems.push({id: raw.id, storeId: raw.storeIndex })
+				currentCheckedItems.push({id: raw.item.Id})
+				setCheckedItems(currentCheckedItems)
+
 				if(currentCheckedItems.length == item.data.length){
 					setstoreitemselected(true)
 				}else{
@@ -67,7 +70,7 @@ export const RenderDetails = ({
 								
 		}else{
 								
-			let index = currentCheckedItems.findIndex( x => x.id == raw.id)
+			let index = currentCheckedItems.findIndex( x => x.id == raw.item.Id)
 			currentCheckedItems = currentCheckedItems.splice(index, 1)
 			setCheckedItems(currentCheckedItems)
 
@@ -118,7 +121,11 @@ export const RenderDetails = ({
 					rightActionActivationDistance={30}
 					rightButtonWidth={75}
 					rightButtons={[<DeleteButton onPress={() => {
-						onItemDelete(data)						
+						console.log("Product", data.product)
+						onItemDelete({
+							shop: item.shop,
+							product: data.product
+						})			
 					}} />]}
 				>
 					<Item
