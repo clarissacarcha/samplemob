@@ -6,11 +6,25 @@ const INITIAL_STATE = {
   myCart: [],
   notifications: [],
   myFollowing: [],
-  searchHistory: []
+  searchHistory: [],
+  myCartCount: 0
 };
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
+    case 'TOKTOK_MALL_CART_COUNT':
+      let count = state.myCartCount
+      if(action.action === "add"){
+        count = count + action.payload
+      }
+      if(action.action === "remove"){
+        count = count - action.payload
+      }
+      if(action.action === "set"){
+        count = action.payload
+      }
+      AsyncStorage.setItem('ToktokMallUserCartCount', count + "");
+      return {...state, myCartCount: count};
     case 'TOKTOK_MY_FOLLOWING':
       let newMyFollowing = state.myFollowing
       if(action.action === "follow"){

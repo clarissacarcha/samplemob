@@ -110,7 +110,7 @@ const RenderBadge = ({data}) => {
   }
 }
 
-const TabBarIcon = ({source, myCart, notifs, tab}) => {
+const TabBarIcon = ({source, myCart, count, notifs, tab}) => {
   return (
     <>
       <Image source={source} style={BottomTabImageIconStyle} />
@@ -131,7 +131,7 @@ const TabBarIcon = ({source, myCart, notifs, tab}) => {
           <Text style={{color: 'white', fontSize: 10}}>99+</Text>
         }
       </View> */}
-      {tab == 'cart' && countCartItems(myCart) ? <RenderBadge data={countCartItems(myCart)} /> : <></>}
+      {tab == 'cart' ? <RenderBadge data={count > 99 ? "99+" : count} /> : <></>}
       {tab == 'notifs' && countNotifications(notifs) ?<RenderBadge data={countNotifications(notifs)} />: <></>}
       {/* <Badge
         // value={tab == 'cart' ? countCartItems(myCart) : countNotifications(notifs)}
@@ -153,13 +153,14 @@ const TabBarIcon = ({source, myCart, notifs, tab}) => {
 
 const mapStateToProps = (state) => ({
   myCart: state.toktokMall.myCart,
-  notifications: state.toktokMall.notifications
+  notifications: state.toktokMall.notifications,
+  myCartCount: state.toktokMall.myCartCount
 })
 
 const ToktokMallLanding = connect(
   mapStateToProps,
   null,
-)(({myCart, notifications}) => {
+)(({myCart, myCartCount, notifications}) => {
 
   console.log("My Cart", myCart)
   console.log("notifications", notifications)
@@ -192,7 +193,7 @@ const ToktokMallLanding = connect(
         // tabBarIcon: ({color}) => <AIcon name="shoppingcart" color={COLOR.YELLOW} size={24} />
         // tabBarIcon: ({focused}) => focused ? <Image source={cartIconFill} style={BottomTabImageIconStyle} /> : <Image source={cartIconOutline} style={BottomTabImageIconStyle} />
         tabBarIcon: ({focused}) =>
-          focused ? <TabBarIcon source={cartIconFill} myCart={myCart} tab={'cart'} /> : <TabBarIcon source={cartIconOutline} myCart={myCart} tab={'cart'} />,
+          focused ? <TabBarIcon source={cartIconFill} myCart={myCart} count={myCartCount} tab={'cart'} /> : <TabBarIcon source={cartIconOutline} myCart={myCart} count={myCartCount} tab={'cart'} />,
       }}
     />
     <ToktokMallLandingBottomTab.Screen

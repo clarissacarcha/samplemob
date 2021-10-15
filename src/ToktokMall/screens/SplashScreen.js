@@ -29,7 +29,8 @@ const Splash = ({
   createMyCartSession, 
   createNotificationsSession, 
   createDefaultAddressSession,
-  createSearchHistorySession
+  createSearchHistorySession,
+  createMyCartCountSession
 }) => {
 
   const session = useSelector(state=> state.session)
@@ -55,7 +56,8 @@ const Splash = ({
 
           //Already exist
           await AsyncStorage.setItem("ToktokMallUser", JSON.stringify(response.getCustomerIfExist))
-          console.log("User already exist!", response.getCustomerIfExist)     
+          createMyCartCountSession("set", response.getCustomerIfExist.cartCount)
+          console.log("User already exist!", response.getCustomerIfExist)  
           await navigation.navigate("ToktokMallLanding")
 
         }else if(response.getCustomerIfExist.id == null){
@@ -173,7 +175,7 @@ const Splash = ({
       }else {
         createSearchHistorySession('set', [])
       }
-    })
+    })    
 
   }
 
@@ -245,6 +247,7 @@ const mapDispatchToProps = (dispatch) => ({
 	createNotificationsSession: (action, payload) => dispatch({type: 'CREATE_NOTIFICATIONS_SESSION', action,  payload}),  
   createDefaultAddressSession: (action, payload) => dispatch({type: 'CREATE_DEFAULT_ADDRESS_SESSION', action,  payload}),
   createSearchHistorySession: (action, payload) => dispatch({type: 'CREATE_SEARCH_HISTORY_SESSION', action,  payload}),
+  createMyCartCountSession: (action, payload) => dispatch({type: 'TOKTOK_MALL_CART_COUNT', action, payload})
 });
 
 export default connect(null, mapDispatchToProps)(Splash);

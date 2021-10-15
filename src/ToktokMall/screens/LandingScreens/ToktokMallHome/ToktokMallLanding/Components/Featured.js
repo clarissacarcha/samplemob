@@ -48,6 +48,14 @@ const Item = ({data}) => {
     }
   }
 
+  const truncateString = (string, length) => {
+    if(string.length >= length){
+      return `${string.slice(0, length)}...`
+    }else{
+      return string
+    }
+  }
+
   return (
     <>
       <TouchableOpacity 
@@ -80,7 +88,7 @@ const Item = ({data}) => {
 						</Text> : null}
             {data?.compareAtPrice == "0.00" && data?.otherinfo ?
 						<Text style={{fontSize: 8, alignSelf: 'flex-start', paddingHorizontal: 5, color: "#9E9E9E"}}>
-							{data?.otherinfo}	
+							{truncateString(data?.otherinfo, 25)}
             </Text> : null}
           </View>
           {/* <View style={{flex: 0, left: -12}}>

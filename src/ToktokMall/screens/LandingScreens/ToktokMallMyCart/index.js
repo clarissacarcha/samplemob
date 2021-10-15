@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet, Platform, Dimensions, StatusBar, Image, TouchableOpacity, FlatList} from 'react-native';
+import {View, Text, StyleSheet, Platform, Dimensions, StatusBar, Image, TouchableOpacity, FlatList, RefreshControl} from 'react-native';
 import {connect} from 'react-redux'
 import {HeaderBack, HeaderTitle, HeaderRight, Header} from '../../../Components';
 import CustomIcon from '../../../Components/Icons';
@@ -105,6 +105,7 @@ const Component =  ({
   navigation,
   myCart,
   createMyCartSession,
+  createMyCartCountSession
 }) => {
   const [allSelected, setAllSelected] = useState(false);
   const [willDelete, setWillDelete] = useState(false);
@@ -135,7 +136,8 @@ const Component =  ({
       if(response.getMyCart){
         setMyCartData(response.getMyCart.parsed)
         setrawitems(response.getMyCart.raw)
-        settotalitems(response.getMyCart.total)        
+        settotalitems(response.getMyCart.total)
+        createMyCartCountSession("set", response.getMyCart.count)
       }
     },
     onError: (err) => {
@@ -434,7 +436,7 @@ const Component =  ({
           {loading && <LoadingOverlay isVisible={loading} />}
           {apiloader && <LoadingOverlay isVisible={apiloader} />}
 
-          {myCartData.length == 0 && <RenderEmpty />}
+          {myCartData.length == 0 && !loading && !apiloader && <RenderEmpty />}
 
           {myCartData.length > 0 && 
           <>
@@ -537,7 +539,8 @@ const Component =  ({
               );
             }}
             keyExtractor={(item, index) => item + index}
-            showsVerticalScrollIndicator={false}            
+            showsVerticalScrollIndicator={false}
+            refreshControl={<RefreshControl refreshing={loading} onRefresh={() => init()} />}
           />
           </>
           }
@@ -590,11 +593,13 @@ const Component =  ({
 // );
 
 const mapStateToProps = (state) => ({
-  myCart: state.toktokMall.myCart
+  myCart: state.toktokMall.myCart,
+  cartNoOfItems: state.toktokMall.myCartCount
 })
 
 const mapDispatchToProps = (dispatch) => ({
   createMyCartSession: (action, payload) => dispatch({type: 'CREATE_MY_CART_SESSION', action,  payload}),
+  createMyCartCountSession: (action, payload) => dispatch({type: 'TOKTOK_MALL_CART_COUNT', action, payload})
 });
 
 export const ToktokMallMyCart = connect(mapStateToProps, mapDispatchToProps)(Component);

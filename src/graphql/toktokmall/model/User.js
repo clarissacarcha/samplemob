@@ -17,6 +17,7 @@ export const GET_CUSTOMER_IF_EXIST = gql`
       	landmark
       	defaultAdd
     	}
+			cartCount
     }
   }
 `

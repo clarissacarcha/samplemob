@@ -1,13 +1,13 @@
 import React, {useRef, useEffect, useState} from 'react';
 import { useLazyQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql';
-import { GET_PRODUCT_DETAILS } from '../../../../graphql/toktokmall/model';
+import { GET_PRODUCT_DETAILS, GET_VERIFY_ADD_TO_CART } from '../../../../graphql/toktokmall/model';
 import {View, SafeAreaView, Text, Image, FlatList, SectionList, ImageBackground, TouchableOpacity, Dimensions} from 'react-native';
 import {connect} from 'react-redux'
 import Spinner from 'react-native-spinkit';
 import Toast from 'react-native-simple-toast';
 import { FONT } from '../../../../res/variables';
-import { Header, AdsCarousel, MessageModal } from '../../../Components';
+import { Header, AdsCarousel, MessageModal, DynamicOptionModal, DynamicMessageModal } from '../../../Components';
 import CustomIcon from '../../../Components/Icons';
 import {ASAddToCart, ASClearCart} from '../../../helpers';
 import ContentLoader, {InstagramLoader, FacebookLoader} from 'react-native-easy-content-loader'
@@ -16,6 +16,8 @@ import {useSelector} from 'react-redux';
 import {ApiCall, PaypandaApiCall, BuildPostCheckoutBody, BuildTransactionPayload, WalletApiCall} from "../../../helpers";
 import AsyncStorage from '@react-native-community/async-storage';
 import { Badge, Tooltip } from 'react-native-elements';
+
+
 
 import {
 
@@ -41,6 +43,7 @@ const Component =  ({
   navigation,
   createMyFavorites,
   createMyCartSession,
+  createMyCartCountSession,
   myCart, route, cartNoOfItems
 }) => {
 
@@ -53,7 +56,11 @@ const Component =  ({
   const CartBottomSheetRef = useRef()
   const [scrolling, setScrolling] = useState(false)
   const [variationOptionType, setVariationOptionType] = useState(0)
+  
   const [messageModalShown, setMessageModalShown] = useState(false)
+  const [soldoutmodal, setsoldoutmodal] = useState(false)
+  const [cartexceeded, setcartexceeded] = useState(false)
+
   const [isOutOfStock, setisOutOfStock] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [isFetching, setIsFetching] = useState(false)
@@ -118,6 +125,48 @@ const Component =  ({
     }
   })
 
+  const [verifyBuyNow, {errorbuynow, loadingbuynow}] = useLazyQuery(GET_VERIFY_ADD_TO_CART, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',   
+    onCompleted: ({getVerifyAddToCart}) => {
+      const {quantity, variant, status, code} = getVerifyAddToCart
+      verificationCallback(status, code, () => {
+        setIsFetching(false)
+        navigation.push("ToktokMallCheckout", {
+          type: "single",
+          data: MergeStoreProducts([cartObject({qty: quantity, variation: variant})]),
+          newCart: [],
+          vouchers: [],
+        })
+      })
+    },
+    onError: (err) => {
+      console.log(err)
+    }
+  })
+
+  const [verifyAddToCart, {erroraddcart, loadingaddcart}] = useLazyQuery(GET_VERIFY_ADD_TO_CART, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',   
+    onCompleted: ({getVerifyAddToCart}) => {
+      const {quantity, variant, status, code} = getVerifyAddToCart
+      verificationCallback(status, code, () => processAddToCart({qty: quantity, variation: variant}))
+    },
+    onError: (err) => {
+      console.log(err)
+    }
+  })
+
+  const verificationCallback = async (status, code, onValid) => {    
+    if(status == 1 && code == "VALID"){
+      onValid()
+    }else if(status == 0 && code == "SOLDOUT"){
+      setsoldoutmodal(true)
+    }else if(status == 0 && code == "EXCEEDED"){
+      setcartexceeded(true)
+    }
+  }
+
   const cartObject = (input) => {
     return {
       item_id: product.Id,
@@ -135,18 +184,42 @@ const Component =  ({
   }
 
   const onBuyNow = (input) => {
-    navigation.push("ToktokMallCheckout", {
-      type: "single",
-      data: MergeStoreProducts([cartObject(input)]),
-      newCart: [],
-      vouchers: [],
+
+    setIsFetching(true)
+    verifyBuyNow({
+      variables: {
+        input: {
+          userId: user.userId,
+          productId: Id,
+          quantity: input.qty,
+          variant: selectedVariation
+        }
+      }
     })
+    
   }
   
 
   const onAddToCart = async (input) => {
-    
-    let raw = cartObject(input)
+
+    setIsFetching(true)
+    verifyAddToCart({
+      variables: {
+        input: {
+          userId: user.userId,
+          productId: Id,
+          quantity: input.qty,
+          // quantity: 200,
+          variant: selectedVariation
+        }
+      }
+    })
+
+  }
+
+  const processAddToCart = async (input) => {
+
+    // let raw = cartObject(input)
     // createMyCartSession('push', raw)
     // setCartItems(CountCartItems)
     // setMessageModalShown(true)
@@ -163,8 +236,10 @@ const Component =  ({
 
     if(req.responseData && req.responseData.success == 1){
       // createMyCartSession('push', raw)
-      // setCartItems(CountCartItems)
+      //setCartItems(CountCartItems)
+      createMyCartCountSession("add", input.qty)
       setMessageModalShown(true)
+      setIsFetching(false)
     }else if(req.responseError && req.responseError.success == 0){
       Toast.show(req.responseError.message, Toast.LONG)
     }else if(req.responseError){
@@ -172,6 +247,7 @@ const Component =  ({
     }else if(req.responseError == null && req.responseData == null){
       Toast.show("Something went wrong", Toast.LONG)
     }
+
   }
 
   const onScroll = Animated.event(
@@ -340,6 +416,72 @@ const Component =  ({
         message="Item has been added to your cart."
       />}
 
+      {cartexceeded && 
+      <DynamicMessageModal 
+        type="Warning"
+        isVisible={cartexceeded}
+        setIsVisible={(val) => setcartexceeded(val)}
+        title="Cart Exceeded!"
+        message="We’re sorry but you reached the maximum limit 200 items in your cart."
+        buttons={[
+          {
+            label: "OK",
+            onPress: () => {
+              setcartexceeded(false)
+            },
+            containerStyle: {
+              backgroundColor: '#F6841F', 
+              borderColor: "#F6841F",
+              paddingVertical: 20,
+              width: '50%',
+              alignSelf: 'center'
+            },
+            labelStyle: {
+              fontSize: 17,
+              color: "white",
+              fontFamily: FONT.BOLD
+            }
+          }
+        ]}
+      />}
+
+      {soldoutmodal && 
+        <DynamicOptionModal 
+          isVisible={soldoutmodal}
+          setIsVisible={(val) => setsoldoutmodal(val)}
+          title={`We’re sorry but this product is <bold>SOLD OUT.</bold>`}
+          description='Add this item to your favorites and we will notify you when new stocks has arrived!'
+          buttons={[
+            {
+              label: "Back to Home",
+              onPress: () => {
+                navigation.pop()
+              },
+              containerStyle: {
+                backgroundColor: 'white', 
+                borderColor: "#F6841F",
+              },
+              labelStyle: {
+                color: "#F6841F"
+              }
+            },
+            {
+              label: "Add to Favorites",
+              onPress: () => {
+                navigation.pop()
+              },
+              containerStyle: {
+                backgroundColor: '#F6841F', 
+                borderColor: "white",
+              },
+              labelStyle: {
+                color: "white"
+              }
+            }
+          ]}
+        />
+      }
+
     </SafeAreaView>
     
     </>
@@ -352,13 +494,14 @@ const mapStateToProps = (state) => {
 
   return {
     myCart: state.toktokMall.myCart,
-    cartNoOfItems: total > 99 ? "99+" : total,
+    cartNoOfItems: state.toktokMall.myCartCount,
   };
 };
 
 const mapDispatchToProps = (dispatch) => ({
   createMyCartSession: (action, payload) => dispatch({type: 'CREATE_MY_CART_SESSION', action,  payload}),
   createMyFavorites: (action, payload) => dispatch({type: 'TOKTOK_MY_FOLLOWING', action,  payload}),
+  createMyCartCountSession: (action, payload) => dispatch({type: 'TOKTOK_MALL_CART_COUNT', action, payload})
 });
 
 export const ToktokMallProductDetails = connect(mapStateToProps, mapDispatchToProps)(Component);

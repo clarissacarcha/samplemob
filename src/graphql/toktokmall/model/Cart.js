@@ -4,6 +4,7 @@ export const GET_MY_CART =  gql`
 	
 	query getMyCart($input: GetMyCartInput) {
 		getMyCart(input: $input){
+			count
 			total
 			raw {
 				shopid
@@ -36,6 +37,18 @@ export const GET_MY_CART =  gql`
 				}
 			}
 		}
-	}
+	}	
 
+`
+
+export const GET_VERIFY_ADD_TO_CART = gql`
+	query getVerifyAddToCart($input: GetVerifyAddToCartInput) {
+		getVerifyAddToCart(input: $input) {
+			quantity
+			variant
+			code
+			status
+			message
+		}
+	}
 `

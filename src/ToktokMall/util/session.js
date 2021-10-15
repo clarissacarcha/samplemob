@@ -7,6 +7,7 @@ const destroy = async () => {
 	AsyncStorage.removeItem("ToktokMallUserDefaultAddress")
 	AsyncStorage.removeItem("ToktokMallNotifications")
 	AsyncStorage.removeItem("ToktokMallSearchHistory")
+	AsyncStorage.removeItem("ToktokMallUserCartCount")
 }
 
 export const ToktokMallSession = {
