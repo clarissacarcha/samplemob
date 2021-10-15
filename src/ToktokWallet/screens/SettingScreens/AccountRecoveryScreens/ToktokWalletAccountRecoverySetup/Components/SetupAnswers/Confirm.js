@@ -59,8 +59,7 @@ const Confirm = ({
         postAccountRecovery({
             variables: {
                 input: {
-                    questions: JSON.stringify(questions),
-                    answers: JSON.stringify(answers)
+                    answers: answers
                 }
             }
         })
@@ -90,8 +89,8 @@ const Confirm = ({
                         {
                             questions.map((question,index)=>(
                                 <Question
-                                    question={question}
-                                    answer={answers[index]}
+                                    question={question.question}
+                                    answer={answers[index].answer}
                                     index={index}
                                 />
                             ))

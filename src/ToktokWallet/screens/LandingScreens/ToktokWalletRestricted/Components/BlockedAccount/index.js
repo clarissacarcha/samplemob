@@ -25,7 +25,7 @@ export const BlockedAccount = ({data,showPrompt})=> {
 
     useFocusEffect(useCallback(()=>{
         if(showPrompt) setVisible(true)
-    },[]))
+    },[showPrompt]))
   
     return (
         <>

@@ -7,6 +7,7 @@ import {useLazyQuery, useQuery} from '@apollo/react-hooks'
 import {useSelector,useDispatch} from 'react-redux'
 import AsyncStorage from '@react-native-community/async-storage'
 import { useAccount } from 'toktokwallet/hooks'
+import { useFocusEffect } from '@react-navigation/native'
 import JailMonkey from 'jail-monkey'
 
 //SELF IMPORTS
@@ -25,16 +26,22 @@ export const ToktokWalletLoginPage = ({navigation,route})=> {
     })
 
     const session = useSelector(state=> state.session)
-    const [isRooted,setIsRooted] = useState(false)
+    // const [isRooted,setIsRooted] = useState(false)
+    // const [canMockLocation,setCanMockLocation] = useState(false)
     const [isDebugMode,setIsDebugMode] = useState(false)
+    const [trustFall,setTrustFall] = useState(false)
     const { refreshWallet } = useAccount();
     const dispatch = useDispatch()
 
     const CheckIfDeviceIsRooted = async ()=> {
+        // const isRooted = await JailMonkey.isJailBroken()
+        // const canMockLocation = await JailMonkey.canMockLocation()
         const isDebugMode = await JailMonkey.isDebuggedMode()
-        const isRooted = await JailMonkey.isJailBroken()
+        const trustFall = await JailMonkey.trustFall()
+        // setIsRooted(isRooted)
+        // setCanMockLocation(canMockLocation)
         setIsDebugMode(isDebugMode)
-        setIsRooted(isRooted)
+        setTrustFall(trustFall)
     }
 
     CheckIfDeviceIsRooted();
@@ -43,7 +50,7 @@ export const ToktokWalletLoginPage = ({navigation,route})=> {
          refreshWallet();
      },[])
 
-    const  {data,error,loading} = useQuery(GET_USER_TOKTOK_WALLET_DATA , {
+    const  {data,error,loading,refetch} = useQuery(GET_USER_TOKTOK_WALLET_DATA , {
         fetchPolicy:"network-only",
         variables: {
             input: {
@@ -88,7 +95,7 @@ export const ToktokWalletLoginPage = ({navigation,route})=> {
             <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
             {
                 // isRooted || isDebugMode
-                isRooted
+                !trustFall
                 ? <RootedDevice/>
                 : <CheckTokwaKYCRegistration kycStatus={data.getUserToktokWalletData.kycStatus}>
     

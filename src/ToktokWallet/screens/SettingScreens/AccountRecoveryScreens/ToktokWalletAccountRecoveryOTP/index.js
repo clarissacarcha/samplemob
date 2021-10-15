@@ -70,7 +70,7 @@ export const ToktokWalletAccountRecoveryOTP = ({navigation , route})=> {
     const alert = useAlert();
     const [otpTimer,setOtpTimer] = useState(120)
     const [errorMessage,setErrorMessage] = useState("")
-    const [otpCodeAttempt , setOtpCodeAttempt] = useState(null)
+    const [otpCodeAttempt , setOtpCodeAttempt] = useState("")
 
     const [getForgotAndRecoverOTPCode] = useLazyQuery(GET_FORGOT_AND_RECOVER_OTP_CODE , {
         fetchPolicy: "network-only",
@@ -192,7 +192,7 @@ export const ToktokWalletAccountRecoveryOTP = ({navigation , route})=> {
                         } */}
 
                         {
-                            otpCodeAttempt && <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M,color: COLOR.RED,marginHorizontal: 16}}>
+                            otpCodeAttempt != "" && <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M,color: COLOR.RED,marginHorizontal: 16}}>
                                 Incorrect OTP. You can try {numWordArray[otpCodeAttempt]} ({otpCodeAttempt}) more {otpCodeAttempt == 1 ? "time" : "times"} before your account will be temporarily blocked.
                             </Text>
                         }

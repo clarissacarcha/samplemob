@@ -14,78 +14,25 @@ import { AlertOverlay } from 'src/components'
 
 //SELF IMPORTS
 import DateBirthModal from '../../../ToktokWalletAccountRecoverySetup/Components/SetupAnswers/DateBirthModal'
+import {DisplayQuestion} from '../../../ToktokWalletAccountRecoverySetup/Components/SetupAnswers/Questions'
 
 const {COLOR , FONT_FAMILY: FONT , FONT_SIZE, SIZE } = CONSTANTS
 const screen = Dimensions.get('window');
 
-const Question = ({questions, answers, setAnswers, index , dateModal , errorMessages , maxLength = null})=> {
-
-    const [visible,setVisible] = useState(false);
-
-    const onChangeText = (text)=> {
-        setAnswers(state=>{
-            state[index] = text
-            return [...state]
-        })
-        setVisible(false)
-    }
-
-    return (
-        <>
-            <DateBirthModal
-                visible={visible} 
-                hidePicker={()=>setVisible(false)}
-                onDateSelect={onChangeText}       
-            />
-         {
-             dateModal
-             ?  <View style={styles.ViewInput}>
-                    <Text style={styles.labelText}>{index + 1} ) {questions[index]}</Text>
-                    <TouchableOpacity onPress={()=>setVisible(true)} style={[styles.input , {justifyContent:'center'}]}>
-                        {
-                            answers[index] == ""
-                            ?  <Text style={styles.labelSmall}>Choose Date</Text>
-                            :  <Text style={{...styles.labelSmall,color:"black"}}>{moment(answers[1]).tz('Asia/Manila').format('MMM DD, YYYY')}</Text>
-                        }
-                    </TouchableOpacity>
-                </View>
-             :  <View style={styles.ViewInput}>
-                    <Text style={styles.labelText}>{index + 1} ) {questions[index]}</Text>
-                    <TextInput 
-                        style={styles.input} 
-                        placeholder="Enter your answer here."
-                        value={answers[index]}
-                        onChangeText={onChangeText}
-                        returnKeyType="done"
-                        maxLength={maxLength}
-                        // onSubmitEditing={Proceed}
-                    />
-                </View>
-         }
-         { errorMessages[index] != "" && <Text style={styles.errorMessage}>{errorMessages[index]}</Text>}
-      </>
-    )
-}
-
-
 export const QuestionsAnswers = ({
-    questions,
-    answers,
+    data,
 })=> {
     const alert = useAlert();
     const navigation = useNavigation();
     const [showPrompt,setShowPrompt] = useState(false)
 
-    const [answersForm, setAnswersForm] = useState([
-        "",
-        "",
-        ""
-    ])
-    const [errorMessages,setErrorMessages] = useState([
-        "",
-        "",
-        "",
-    ])
+    const [answers, setAnswers] = useState([])
+    const [errorMessages,setErrorMessages] = useState([])
+    const [btnEnabled,setBtnEnabled] = useState(false)
+
+    useEffect(()=>{
+        setBtnEnabled(+answers.length === +data.length)
+    },[answers,data])
 
     const [getForgotAndRecoverOTPCode , {loading}] = useLazyQuery(GET_FORGOT_AND_RECOVER_OTP_CODE , {
         fetchPolicy: "network-only",
@@ -98,31 +45,34 @@ export const QuestionsAnswers = ({
             onErrorAlert({alert,error})
         }
     })
-
     const onPress = ()=> {
-        answersForm.forEach((answer,index)=>{
+        let continueOtp = true;
+        for(let index = 0 ; index < answers.length ; index++){
+            const answer = answers[index];
+
             if(answer == ""){
                 setErrorMessages(state=>{
                     state[index] = "this field is required."
                     return [...state]
                 })
-            }else if(answer != answers[index]){
-                return setShowPrompt(true)
-                setErrorMessages(state=>{
-                    state[index] = "Answer is wrong."
-                    return [...state]
-                })
+            }else if(answer.answer != data[index].answer){
+                setShowPrompt(true)
+                continueOtp = false;
+                break;
+                // setErrorMessages(state=>{
+                //     state[index] = "Answer is wrong."
+                //     return [...state]
+                // })
             }else {
                 setErrorMessages(state=>{
                     state[index] = ""
                     return [...state]
                 })
             }
-        })
-        const [a,b,c] = [...answersForm]
-        if(a == "" || b == "" || c ==" ") return
-        if(a != answers[0] || b != answers[1] || c != answers[2]) return
-        getForgotAndRecoverOTPCode()
+        }
+
+        if(continueOtp) getForgotAndRecoverOTPCode()
+        
     }
 
     const closePrompt = ()=> {
@@ -142,36 +92,23 @@ export const QuestionsAnswers = ({
              />
             <View style={styles.container}>
                 <ScrollView showsVerticalScrollIndicator={false} style={styles.body}>
-                    <Question
-                        answers={answersForm}
-                        setAnswers={setAnswersForm}
-                        questions={questions}
-                        errorMessages={errorMessages}
-                        index={0}
-                        maxLength={30}
-                    />
-                    <Question
-                        answers={answersForm}
-                        setAnswers={setAnswersForm}
-                        questions={questions}
-                        errorMessages={errorMessages}
-                        dateModal
-                        index={1}
-                    />
-
-                    <Question
-                        answers={answersForm}
-                        setAnswers={setAnswersForm}
-                        questions={questions}
-                        errorMessages={errorMessages}
-                        index={2}
-                        maxLength={70}
-                    />
-
+        
+                {
+                        data.map((data,index)=>{
+                            return (
+                                <DisplayQuestion
+                                    question={data.accountRecoveryQuestion}
+                                    answers={answers}
+                                    setAnswers={setAnswers}
+                                    index={index}
+                                />
+                            )
+                        })
+                    }
                 </ScrollView>
                 <View style={styles.btn}>
                     {
-                        answersForm[0] == "" || answersForm[1] == "" || answersForm[2] == ""
+                        !btnEnabled
                         ? <DisabledButton label="Confirm"/>
                         :  <YellowButton label="Confirm" onPress={onPress}/>
                     }

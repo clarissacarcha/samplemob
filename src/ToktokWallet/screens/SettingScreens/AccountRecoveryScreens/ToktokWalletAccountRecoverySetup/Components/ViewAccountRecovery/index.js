@@ -11,7 +11,7 @@ const {COLOR , FONT_FAMILY: FONT , FONT_SIZE, SIZE } = CONSTANTS
 
 
 const Question = ({question, answer , index })=> {
-
+    
     let maskAsterisk = ""
     
     for(let x = 0 ; x < answer.length - 1 ; x++ ){
@@ -34,8 +34,6 @@ export const ViewAccountRecovery = ({
 })=> {
 
     const navigation = useNavigation();
-    const questions = JSON.parse(data.questions)
-    const answers = JSON.parse(data.answers)
 
     const onPress = ()=> {
         navigation.pop();
@@ -52,10 +50,10 @@ export const ViewAccountRecovery = ({
         <View style={{marginBottom: 20}}/>
 
         {
-            questions.map((question,index)=>(
+            data.map((data,index)=>(
                 <Question
-                    question={question}
-                    answer={answers[index]}
+                    question={data.accountRecoveryQuestion.question}
+                    answer={data.answer}
                     index={index}
                 />
             ))

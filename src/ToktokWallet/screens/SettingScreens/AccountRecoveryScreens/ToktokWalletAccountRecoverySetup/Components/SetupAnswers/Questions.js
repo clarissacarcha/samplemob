@@ -11,53 +11,67 @@ import DateBirthModal from './DateBirthModal'
 const {COLOR , FONT_FAMILY: FONT , FONT_SIZE, SIZE } = CONSTANTS
 const screen = Dimensions.get('window');
 
-const Question = ({questions, answers, setAnswers, index , dateModal , errorMessages , maxLength = null})=> {
+
+export const DisplayQuestion = ({question ,answers , setAnswers , index })=> {
 
     const [visible,setVisible] = useState(false);
 
     const onChangeText = (text)=> {
         setAnswers(state=>{
-            state[index] = text
+            if(text != ""){
+                state[index] = {
+                    accountRecoveryQuestionId: question.id,
+                    answer: text
+                }
+            }else{
+                answers.splice(index, 1)
+            }
+           
             return [...state]
         })
         setVisible(false)
     }
 
-    return (
+    return(
         <>
             <DateBirthModal
                 visible={visible} 
                 hidePicker={()=>setVisible(false)}
                 onDateSelect={onChangeText}       
             />
-         {
-             dateModal
-             ?  <View style={styles.ViewInput}>
-                    <Text style={styles.labelText}>{index + 1} ) {questions[index]}</Text>
+           {
+                question.isDatepicker
+                ?  <View style={styles.ViewInput}>
+                    <Text style={styles.labelText}>{index + 1} ) {question.question}</Text>
                     <TouchableOpacity onPress={()=>setVisible(true)} style={[styles.input , {justifyContent:'center'}]}>
                         {
-                            answers[index] == ""
+                            !answers[index]?.answer
                             ?  <Text style={styles.labelSmall}>Choose Date</Text>
-                            :  <Text style={[styles.labelSmall, {color:"black"}]}>{moment(answers[1]).tz('Asia/Manila').format('MMM DD, YYYY')}</Text>
+                            :  <Text style={[styles.labelSmall, {color:"black"}]}>{moment(answers[index].answer).tz('Asia/Manila').format('MMM DD, YYYY')}</Text>
                         }
                     </TouchableOpacity>
                 </View>
-             :  <View style={styles.ViewInput}>
-                    <Text style={styles.labelText}>{index + 1} ) {questions[index]}</Text>
-                    <TextInput 
-                        style={styles.input} 
-                        placeholder="Enter your answer here."
-                        value={answers[index]}
-                        onChangeText={onChangeText}
-                        returnKeyType="done"
-                        maxLength={maxLength}
-                        // onSubmitEditing={Proceed}
-                    />
-                </View>
-         }
-         { errorMessages[index] != "" && <Text style={styles.errorMessage}>{errorMessages[index]}</Text>}
-      </>
+                : <View style={styles.ViewInput}>
+                        <Text style={styles.labelText}>{index + 1} ) {question.question}</Text>
+                        <TextInput 
+                            style={styles.input} 
+                            placeholder="Enter your answer here."
+                            value={answers[index]?.answer ? answers[index].answer : ""}
+                            onChangeText={onChangeText}
+                            returnKeyType="done"
+                            maxLength={question.maxLength}
+                            // onSubmitEditing={Proceed}
+                        />
+                    </View>
+                }
+        </>
     )
+}
+
+export const RenderNextButton = ({questions,btnEnabled,onPress})=> {
+    if(questions.length == 0) return null
+    if(btnEnabled && questions.length > 0) return <YellowButton label="Next" onPress={onPress}/>
+    return <DisabledButton label="Next"/>
 }
 
 
@@ -70,11 +84,12 @@ const Questions = ({
 })=> {
 
 
-    const [errorMessages,setErrorMessages] = useState([
-        "",
-        "",
-        "",
-    ])
+    const [errorMessages,setErrorMessages] = useState([])
+    const [btnEnabled,setBtnEnabled] = useState(false)
+
+    useEffect(()=>{
+        setBtnEnabled(+answers.length === +questions.length)
+    },[answers,questions])
 
     const onPress = ()=> {
         answers.forEach((answer,index)=>{
@@ -91,7 +106,7 @@ const Questions = ({
             }
         })
         const [a,b,c] = [...answers]
-        if(a == "" || b == "" || c ==" ") return
+        if(a == "" || b == "" || c == "") return
         setCurrentIndex(value=>value+1)
     }
 
@@ -103,41 +118,29 @@ const Questions = ({
 deactivated or locked due to forgotten MPIN.</Text>
                 <Text style={styles.headerText}>Answer the following Security Questions that will be
 used for authentication in your account recovery process.</Text>
-                    <Question
-                        answers={answers}
-                        setAnswers={setAnswers}
-                        questions={questions}
-                        errorMessages={errorMessages}
-                        index={0}
-                        maxLength={30}
-                    />
-                    <Question
-                        answers={answers}
-                        setAnswers={setAnswers}
-                        questions={questions}
-                        errorMessages={errorMessages}
-                        dateModal
-                        index={1}
-                    />
 
-                    <Question
-                        answers={answers}
-                        setAnswers={setAnswers}
-                        questions={questions}
-                        errorMessages={errorMessages}
-                        index={2}
-                        maxLength={70}
-                    />
-
+                    {
+                        questions.map((question,index)=>{
+                            return (
+                                <DisplayQuestion
+                                    question={question}
+                                    answers={answers}
+                                    setAnswers={setAnswers}
+                                    index={index}
+                                />
+                            )
+                        })
+                    }
+    
                     <Text style={[styles.headerText,{fontSize: FONT_SIZE.S}]}>Answers cannot be changed once saved.</Text>
 
                 </ScrollView>
                 <View style={styles.btn}>
-                    {
-                        answers[0] == "" || answers[1] == "" || answers[2] == ""
-                        ?  <DisabledButton label="Next"/>
-                        :  <YellowButton label="Next" onPress={onPress}/>
-                    }
+                    <RenderNextButton
+                        questions={questions}
+                        btnEnabled={btnEnabled}
+                        onPress={onPress}
+                    />
                        
                 </View>
                 <BuildingBottom/>

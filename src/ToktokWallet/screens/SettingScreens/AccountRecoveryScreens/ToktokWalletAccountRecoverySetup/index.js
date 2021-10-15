@@ -40,7 +40,7 @@ export const ToktokWalletAccountRecoverySetup = ({navigation,route})=> {
     }
 
 
-    if(data?.getAccountRecovery){
+    if(data?.getAccountRecovery.length > 0){
         return <CheckIdleState>
             <Separator/>
             <View style={styles.container}>

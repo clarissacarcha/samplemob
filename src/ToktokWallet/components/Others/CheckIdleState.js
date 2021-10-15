@@ -9,7 +9,7 @@ import moment from 'moment';
 export const CheckIdleState = ({children})=> {
 
     const timerId = useRef(false);
-    const [durationInSeconds,_] = useState((10));
+    const [durationInSeconds,_] = useState((60 * 5));
     const idleDurationInSeconds = 10;
     const activeTime = useRef(new Date())
     const [showPrompt,setShowPrompt] = useState(false)
@@ -20,13 +20,13 @@ export const CheckIdleState = ({children})=> {
     const panResponder = useRef(
         PanResponder.create({
             onStartShouldSetPanResponderCapture: ()=> {
-                // resetInactivityTimeout()
+                resetInactivityTimeout()
             }
         })
     );
 
     const resetInactivityTimeout = ()=> {
-        console.log("RUNNING TIMER HERE" , tokwaAccount.events.cashInTopUp)
+        console.log("RUNNING TIMER HERE")
         BackgroundTimer.clearTimeout(timerId.current)
         timerId.current = null
         timerId.current = BackgroundTimer.setTimeout(()=>{
@@ -45,6 +45,10 @@ export const CheckIdleState = ({children})=> {
 
     const onPress = ()=> {
         setShowPrompt(false);
+        if(tokwaAccount.events.cashInTopUp){
+            navigation.navigate("ToktokWalletPaymentOptions");
+            return navigation.pop();
+        }
         return navigation.navigate("ToktokWalletLoginPage")
     }
 
@@ -56,14 +60,14 @@ export const CheckIdleState = ({children})=> {
     //     }
     // },[])
 
-    // useFocusEffect(useCallback(()=> {
-    //     resetInactivityTimeout();
-    //     return ()=> {
-    //         BackgroundTimer.clearTimeout(timerId.current)
-    //         timerId.current = null
-    //         console.log("CLEARING TIMER AND LEAVING SCREEN")
-    //     }
-    // },[]))
+    useFocusEffect(useCallback(()=> {
+        resetInactivityTimeout();
+        return ()=> {
+            BackgroundTimer.clearTimeout(timerId.current)
+            timerId.current = null
+            console.log("CLEARING TIMER AND LEAVING SCREEN")
+        }
+    },[]))
 
 
     return (

@@ -29,7 +29,7 @@ export const SuccessModal = ({modalVisible , setModalVisible , event})=> {
         if(event == "ACCOUNT RECOVERY"){
             getMyAccount();
             navigation.pop(3);
-            return navigation.navigate("ToktokWalletHomePage");
+            return navigation.navigate("ToktokWalletLoginPage");
         }
         navigation.navigate("ToktokWalletHomePage")
         navigation.replace("ToktokWalletHomePage")

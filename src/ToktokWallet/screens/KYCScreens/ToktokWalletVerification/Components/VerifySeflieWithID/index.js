@@ -12,7 +12,7 @@ const { COLOR, FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
 
 const {width,height} = Dimensions.get("window")
 
-const CROP_AREA_WIDTH = width * 1;
+const CROP_AREA_WIDTH = width * 0.90;
 const CROP_AREA_HEIGHT = CROP_AREA_WIDTH + 50;
 
 const ratio = Math.min(width / CROP_AREA_WIDTH , height / CROP_AREA_HEIGHT)

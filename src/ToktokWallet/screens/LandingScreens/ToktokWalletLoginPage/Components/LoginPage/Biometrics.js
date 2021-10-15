@@ -1,4 +1,4 @@
-import React, { useState , useEffect } from 'react'
+import React, { useState , useEffect , useCallback } from 'react'
 import {View,Text,StyleSheet,Switch,Platform,TouchableOpacity,ActivityIndicator} from 'react-native'
 import {AlertOverlay} from 'src/components'
 import { useDispatch } from 'react-redux'
@@ -9,7 +9,7 @@ import { onErrorAlert } from 'src/util/ErrorUtility'
 import {useAlert} from 'src/hooks'
 import ReactNativeBiometrics from 'react-native-biometrics'
 import { getUniqueId , getBrand, getModel } from 'react-native-device-info';
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation , useFocusEffect } from '@react-navigation/native'
 import moment from 'moment';
 import CONSTANTS from 'common/res/constants'
 
@@ -60,6 +60,9 @@ const Biometrics = ({setErrorMessage})=> {
         }
     },[bioRecord])
 
+    useFocusEffect(useCallback(()=>{
+        refetch();
+     },[]))
 
     const [getVerifySignature , {loading: verifyLoading}] = useLazyQuery(GET_VERIFY_SIGNATURE,{
         fetchPolicy:"network-only",
@@ -73,7 +76,7 @@ const Biometrics = ({setErrorMessage})=> {
         onError: (error) => onErrorAlert({alert,error})
     })
 
-    const {data ,error, loading} = useQuery(GET_REGISTERED_BIOMETRIC,{
+    const {data ,error, loading,refetch} = useQuery(GET_REGISTERED_BIOMETRIC,{
         fetchPolicy:"network-only",
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         variables: {

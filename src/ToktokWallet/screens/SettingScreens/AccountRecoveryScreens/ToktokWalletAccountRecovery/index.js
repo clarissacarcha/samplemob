@@ -18,18 +18,14 @@ export const ToktokWalletAccountRecovery = ({navigation,route})=> {
         headerTitle: ()=> <HeaderTitle label={['Account Recovery','']}/>,
     })
 
-
     const data = route.params.data
-    const questions = JSON.parse(data.questions)
-    const answers = JSON.parse(data.answers)
 
     return (
         <CheckIdleState>
             <Separator/>
             <View style={styles.container}>
                 <QuestionsAnswers
-                    questions={questions}
-                    answers={answers}
+                    data={data}
                 />
             </View>
         </CheckIdleState>
