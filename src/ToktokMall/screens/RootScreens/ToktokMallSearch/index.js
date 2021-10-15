@@ -90,6 +90,43 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
     }
   })
 
+  const [lazyLoading, {errorlazyload, loading3}] = useLazyQuery(SEARCH_PRODUCT, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: async (response) => {      
+
+      let temp = searchedProducts
+      if(!response){
+
+        setSearchedProducts(temp)
+        setEmptySearch(true)
+        setSuggest(false)
+
+      }else if(response && response.searchProduct.length > 0){
+
+        temp = temp.concat(response.searchProduct)
+        setSearchedProducts(temp)
+        setEmptySearch(false)
+        setSuggest(false)
+        
+      }else if(response && response.searchProduct.length == 0){
+
+        setSearchedProducts([])
+        setEmptySearch(true)
+        setSuggest(false)
+
+      }
+      setIsLoading(false)
+      console.log("Lazy load", response)
+    },
+    onError: (err) => {
+      console.log(err)
+      setSearchedProducts([])
+      setEmptySearch(true)
+      setIsLoading(false)
+    }
+  })
+
   const handleOnSearch = (val) => {    
 		setSearchValue(val)
     setOffset(0)
@@ -126,7 +163,13 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
       setIsLoading(true)
       console.log("Triggered on useEffect!", route.params)
 		}
-	}, [route.params])
+  }, [route.params])
+  
+  const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+    const paddingBottom = 20;
+    // console.log(layoutMeasurement.height + contentOffset.y, contentSize.height - paddingBottom)
+    return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingBottom;
+  }
 
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
@@ -202,6 +245,22 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
         <FlatList 
           data={searchHist.slice(0,5)}
           ItemSeparatorComponent={() => <View style={{ height: 1, backgroundColor: '#F7F7FA'}} />}
+          // onScroll= {({nativeEvent}) => {
+          //   console.log(nativeEvent)
+          //   // if(isCloseToBottom(nativeEvent)){
+          //   //   searchProduct({
+          //   //     variables: {
+          //   //       input: {
+          //   //         search: item,
+          //   //         origin: route.params?.origin ? route.params.origin : "all",
+          //   //         category: route.params?.categoryId ? route.params?.categoryId : null,
+          //   //         offset: offset,
+          //   //         limit: 10
+          //   //       }
+          //   //     }
+          //   //   })
+          //   // }
+          // }}
           renderItem={({item, index}) => 
             <TouchableOpacity key={index} onPress={() => {
               setSearchValue(item)
@@ -262,6 +321,22 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
               }
             })
           }} 
+          lazyload={() => {
+            setOffset(searchedProducts.length)
+            lazyLoading({
+              variables: {
+                input: {
+                  search: route.params?.origin ? "" : route.params.searchValue,
+                  origin: route.params?.origin ? route.params.origin : "all",
+                  category: route.params?.categoryId ? route.params?.categoryId : null,
+                  offset: searchedProducts.length,
+                  limit: 10
+                }
+              }
+            })
+           
+          }}
+          loading2 = {loading3}
         />}
 
         {loading && 
@@ -281,6 +356,23 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
           </View>
           <FlatList 
             data={suggestions}
+            onScroll= {({nativeEvent}) => {
+              console.log(nativeEvent)
+              // if(isCloseToBottom(nativeEvent)){
+              //   alert('close to bottom')
+              //   searchProduct({
+              //     variables: {
+              //       input: {
+              //         search: item.tags,
+              //         origin: route.params?.origin ? route.params.origin : "all",
+              //         category: route.params?.categoryId ? route.params?.categoryId : null,
+              //         offset: offset,
+              //         limit: 10
+              //       }
+              //     }
+              //   })
+              // }
+            }}
             renderItem={({item, index}) => {
               return (
                 <>

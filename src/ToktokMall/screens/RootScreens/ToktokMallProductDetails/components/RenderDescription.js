@@ -26,7 +26,7 @@ const DotList = ({data}) => {
 export const RenderDescription = ({data, loading}) => {
 
   const [seeMore, setSeeMore] = useState(false);
-  const maxChar = 4000
+  const maxChar = 200
 	return (
 		<>
       {/* <ContentLoader 
@@ -42,10 +42,10 @@ export const RenderDescription = ({data, loading}) => {
             <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>Product Description</Text>
           </View>          
           <View style={{paddingBottom: 12}}>
-            <Text style={{fontSize: 13}}>{data ? data?.summary?.length > maxChar && !seeMore ?
-              (((data.summary).substring(0, maxChar - 3)) + ' .... ') 
+            <Text style={{fontSize: 13}}>{data ? data?.summary?.length > maxChar && !seeMore ? 
+              (((data.summary).substring(0, maxChar - 3)) + ' .... ') // if description  is more than 200 char
               : data.summary
-              :  "Product description not available"}
+              : "Product description not available"}
             </Text>
             {
               data?.summary?.length > maxChar ?

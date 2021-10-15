@@ -48,6 +48,12 @@ export const ProductCarousel = ({data, isOutOfStock, isLoading, setIsLoading, lo
             parallaxFactor={0.05}
             {...parallaxProps}
           />
+          {isOutOfStock && 
+          <View style={{position: "absolute", zIndex: 1, top: 60, left: HEIGHT / 2.5, backgroundColor: 'transparent', alignItems: 'center', justifyContent: 'center'}}>
+            <View style={{width: 150, height: 150, borderRadius: 150/2, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.25)'}}>
+              <Image source = {placeholder} style = {{opacity: 0.2, tintColor: 'gray'}} />
+            </View>
+          </View>  }
       </View>
     )
   }

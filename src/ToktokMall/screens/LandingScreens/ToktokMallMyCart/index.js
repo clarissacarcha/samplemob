@@ -39,7 +39,8 @@ let sampleData = [
             "filename": "https://stgtokmall.s3-ap-northeast-1.amazonaws.com/assets/img/XKIN/products/8bf8b146488e44a4b85a2eed1f35b7c1/0-8bf8b146488e44a4b85a2eed1f35b7c1.jpg"
           }
         }
-      }
+      },
+      
     ]
   },
   {
@@ -151,13 +152,14 @@ const Component =  ({
       console.log('from async', data)
       if(data.userId){
         setUser(data)
-        getMyCartData({
-          variables: {
-            input: {
-              userId: data.userId
-            }
-          }
-        })     
+        // getMyCartData({
+        //   variables: {
+        //     input: {
+        //       userId: data.userId
+        //     }
+        //   }
+        // })   
+        setMyCartData(sampleData)  
       }
     })
   }

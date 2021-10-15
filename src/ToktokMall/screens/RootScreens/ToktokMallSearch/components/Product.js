@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList} from 'react-native';
+import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ActivityIndicator} from 'react-native';
 import { COLOR, FONT } from '../../../../../res/variables';
 import { ScrollView } from 'react-native-gesture-handler';
 import CustomIcon from '../../../../Components/Icons';
@@ -77,14 +77,14 @@ const RenderItem = ({navigation, item}) => {
   )
 }
 
-export const Product = ({data, state, fetch, lazyload}) => {
+export const Product = ({data, state, fetch, lazyload, loading2}) => {
 
   const [loading, setloading] = useState(state)
   const navigation = useNavigation()
   const [products, setProducts] = useState([])
 
   const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
-    const paddingBottom = 150;
+    const paddingBottom = 20;
     return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingBottom;
   }
 
@@ -117,7 +117,7 @@ export const Product = ({data, state, fetch, lazyload}) => {
               }}
               onScroll = {({nativeEvent}) => {
                 if(isCloseToBottom(nativeEvent)){
-                  lazyload?.()
+                  lazyload()
                 }
               }}
               keyExtractor={(item, index) => item + index}
@@ -125,8 +125,9 @@ export const Product = ({data, state, fetch, lazyload}) => {
               ListFooterComponent={() => {
                 return (
                   <>
-                    {/* <SwipeReloader state={false} onSwipeUp={fetch} />
-                    <View style={styles.separator} /> */}
+                    {/* <SwipeReloader state={loading2}  /> */}
+                    {loading && <ActivityIndicator animating={loading} color="#F6841F" size={28} />}
+                    {/* <View style={styles.separator} /> */}
                   </>
                 )
               }}

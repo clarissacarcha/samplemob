@@ -46,27 +46,28 @@ export const RenderDetails = ({
 	};
 
 	const HandleItemSelect = (raw, total) => {
-
+		
 		let currentCheckedItems = JSON.parse(JSON.stringify(checkedItems))
 		if(raw.checked){
 								
-			let exist = currentCheckedItems.findIndex( x => x.id == raw.item.item_id)
+			let exist = currentCheckedItems.findIndex( x => x.id == raw.id)
 			if(exist == -1){
-				currentCheckedItems.push({id: raw.item.item_id})
-				setCheckedItems(currentCheckedItems)
-
+				currentCheckedItems.push({id: raw.id, storeId: raw.storeIndex })
 				if(currentCheckedItems.length == item.data.length){
 					setstoreitemselected(true)
 				}else{
 					setstoreitemselected(false)
 				}
+				setCheckedItems(currentCheckedItems)
+
+				
 			}else{
 				setstoreitemselected(false)
 			}
 								
 		}else{
 								
-			let index = currentCheckedItems.findIndex( x => x.id == raw.item.item_id)
+			let index = currentCheckedItems.findIndex( x => x.id == raw.id)
 			currentCheckedItems = currentCheckedItems.splice(index, 1)
 			setCheckedItems(currentCheckedItems)
 
@@ -96,14 +97,12 @@ export const RenderDetails = ({
 						//to true
 						let items = JSON.parse(JSON.stringify(item.data))
 						let allitems = items.map((data) => {
-							return {id: data.item_id}
+							return {id: data.id}
 						})
 						setCheckedItems(allitems)
-						console.log('firing from here which is to to set status to true', toggleRoot,  storeitemselected)
 					}else{
 						setToggleRoot("shop")
 						setCheckedItems([])
-						console.log('firing from here which is to to set status to false', toggleRoot,  storeitemselected)
 					}
 
 				}}
@@ -126,8 +125,8 @@ export const RenderDetails = ({
 						key={i}
 						index = {i}
 						storeIndex={storeIndex}
-						state={toggleRoot == "shop" && storeitemselected || superSelected}
-						// state = {storeitemselected}
+						// state={toggleRoot == "shop" && storeitemselected || superSelected}
+						state = {storeitemselected}
 						data={data}
 						onHold={(raw) => {
 							setToggleRoot("item")

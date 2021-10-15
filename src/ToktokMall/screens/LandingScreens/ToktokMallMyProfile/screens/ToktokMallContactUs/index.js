@@ -37,7 +37,7 @@ export const ToktokMallContactUs = ({navigation}) => {
       if(postContactSupport.success == 1){
         setMessageModalShown(true)
       }else{
-        ToastAndroid.show("Something went wrong.")
+        Toast.show("Something went wrong.")
       }
     },
     onError: (error) => console.log(`LOCATION LOG ERROR: ${error}`),
@@ -69,13 +69,21 @@ export const ToktokMallContactUs = ({navigation}) => {
   }
 
   const onPressx = () => {
-    sendEmail(
-      message,
-      '',
-      {cc: '', }
-    ).then(() => {
-      console.log('Your message was successfully sent')
-    })
+    let user = session.user.person
+    if(session){
+      if(message == ""){
+        Toast.show("Enter message to send.")
+      }else{
+        sendEmail(
+          message,
+          '',
+          {cc: '', }
+        ).then(() => {
+          console.log('Your message was successfully sent')
+        })
+      }
+    }
+    
   }
 
   const onPress = async () => {
@@ -86,6 +94,8 @@ export const ToktokMallContactUs = ({navigation}) => {
       if(message == ""){
         Toast.show("Enter message to send.")
       }else{
+        
+        console.log(`${user.firstName} ${user.lastName}`, user.emailAddress, session.user.username, message)
         await postInquiry({
           variables: {
             input: {

@@ -56,6 +56,7 @@ export const Item = ({
     // }
     // console.log(uncheckedItems, index, uncheckedItems.length, item.cart.length)
     setSelected(!selected)
+
   }
 
   const getImageSource = (imgs) => {
@@ -91,7 +92,8 @@ export const Item = ({
                 amount: product.price * data.quantity,
                 qty: qty,
                 index: index,
-                storeIndex: storeIndex
+                storeIndex: storeIndex, 
+                id: data.id
               })
               // if()
               // setSelected(!selected)
