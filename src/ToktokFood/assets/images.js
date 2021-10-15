@@ -65,7 +65,7 @@ export const timer = require('./images/animations/timer.gif');
 export const pot = require('./images/animations/pot.gif');
 export const toktok_rider = require('./images/animations/toktok_rider.gif');
 export const ordering = require('./images/animations/ordering_loader.gif');
-export const ready_for_pickup = require('./images/animations/ready_for_pickup.png');
+export const ready_for_pickup = require('./images/animations/ready_for_pickup.gif');
 
 
 // Test Banners

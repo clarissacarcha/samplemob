@@ -1,16 +1,7 @@
 import axios from 'axios';
 import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {
-  Image,
-  View,
-  FlatList,
-  Text,
-  TouchableWithoutFeedback,
-  RefreshControl,
-  Platform,
-  TextInput,
-} from 'react-native';
+import {Image, View, FlatList, Text, TouchableWithoutFeedback, RefreshControl, Platform, TextInput} from 'react-native';
 
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import CustomStarRating from 'toktokfood/components/CustomStarRating';
@@ -37,7 +28,7 @@ import {empty_shop, empty_search, time} from 'toktokfood/assets/images';
 
 import styles from './styles';
 
-const ToktokFoodSearch = ({ route }) => {
+const ToktokFoodSearch = ({route}) => {
   const {location} = useSelector((state) => state.toktokFood);
   const [shopList, setShopList] = useState([]);
 
@@ -53,7 +44,7 @@ const ToktokFoodSearch = ({ route }) => {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('blur', () => {
-      setSearch('')
+      setSearch('');
     });
 
     return unsubscribe;
@@ -64,14 +55,22 @@ const ToktokFoodSearch = ({ route }) => {
   };
 
   useEffect(() => {
-    if(route.params?.searchByCategory){
-      searchFood(route.params?.searchByCategory)
+    if (route.params?.searchByCategory) {
+      searchFood(route.params?.searchByCategory);
     }
-  }, [route.params])
+  }, [route.params]);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('blur', () => {
+      searchFood('');
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   const searchFood = async (s = '', radius = 5) => {
     try {
-      setLoading(true)
+      setLoading(true);
       const API_RESULT = await axios({
         url: `${ENVIRONMENTS.TOKTOKFOOD_SERVER}/graphql`,
         method: 'POST',
@@ -101,7 +100,7 @@ const ToktokFoodSearch = ({ route }) => {
       });
       const {getSearchFood} = API_RESULT.data.data;
       setShopList(s != '' ? getSearchFood : []);
-      setLoading(false)
+      setLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -111,22 +110,14 @@ const ToktokFoodSearch = ({ route }) => {
     <TouchableWithoutFeedback onPress={() => onRestaurantNavigate(item)}>
       <View style={styles.itemContainer}>
         <View style={styles.imgWrapper}>
-          <Image
-            resizeMode="contain"
-            source={{ uri: item.logo }}
-            style={styles.img}
-          />
+          <Image resizeMode="contain" source={{uri: item.logo}} style={styles.img} />
         </View>
         <View style={styles.restaurantInfo}>
           <View style={styles.infoWrapper}>
             <Text numberOfLines={1} style={styles.restaurantName}>
-              {item.shopname} ({ item.address })
+              {item.shopname} ({item.address})
             </Text>
-            <CustomStarRating
-              rating={item.ratings ?? '0'}
-              starImgStyle={styles.ratingImg}
-              readOnly
-            />
+            <CustomStarRating rating={item.ratings ?? '0'} starImgStyle={styles.ratingImg} readOnly />
           </View>
           <View style={styles.subInfoWrapper}>
             <Image resizeMode="contain" source={time} style={styles.timeImg} />
@@ -141,24 +132,24 @@ const ToktokFoodSearch = ({ route }) => {
 
   const renderEmpty = () => {
     let withSearch = moderateScale(Platform.OS == 'android' ? getStatusbarHeight * 5 : getIphoneNotchSize * 5);
-    let withoutSearch = moderateScale(Platform.OS == 'android' ? getStatusbarHeight * 6 : getIphoneNotchSize * 6)
-    let paddingTop = search != '' ? withSearch : withoutSearch
-    return(
-      <View style={[ styles.emptyContainer, { paddingTop } ]}>
+    let withoutSearch = moderateScale(Platform.OS == 'android' ? getStatusbarHeight * 6 : getIphoneNotchSize * 6);
+    let paddingTop = search != '' ? withSearch : withoutSearch;
+    return (
+      <View style={[styles.emptyContainer, {paddingTop}]}>
         <Image style={styles.emptyImg} resizeMode="contain" source={search != '' ? empty_shop : empty_search} />
-        { search != '' && 
+        {search != '' && (
           <Text style={styles.emptyText}>
             It seems like there is no open restaurant near you. Refresh or try again later.
           </Text>
-        }
+        )}
       </View>
     );
-  }
+  };
 
   const onRefresh = () => {
-    searchFood(search)
-  }
-  
+    searchFood(search);
+  };
+
   return (
     <View style={styles.container}>
       <DialogMessage
@@ -180,7 +171,7 @@ const ToktokFoodSearch = ({ route }) => {
               onChangeText={(text) => {
                 setSearch(text);
                 searchFood(text);
-                console.log(text)
+                console.log(text);
               }}
               style={[styles.searchBox, styles.textInputFontStyles]}
             />
@@ -188,28 +179,23 @@ const ToktokFoodSearch = ({ route }) => {
         </View>
       </HeaderImageBackground>
       <ChangeAddress />
-      { shopList.length != 0 && (
+      {shopList.length != 0 && (
         <View style={styles.tabContainer}>
           <Text style={[styles.restaurantTitle]}>Restaurants</Text>
         </View>
       )}
-        { loading ? (
-          <LoadingIndicator isFlex isLoading={true} />
-        ) : (
-          <FlatList
-            data={shopList}
-            renderItem={renderItem}
-            ListEmptyComponent={renderEmpty}
-            refreshControl={
-              <RefreshControl
-                refreshing={loading}
-                onRefresh={onRefresh}
-                colors={['#FFA700']}
-                tintColor='#FFA700'
-             />
-            }
-          />
-        )}
+      {loading ? (
+        <LoadingIndicator isFlex isLoading={true} />
+      ) : (
+        <FlatList
+          data={shopList}
+          renderItem={renderItem}
+          ListEmptyComponent={renderEmpty}
+          refreshControl={
+            <RefreshControl refreshing={loading} onRefresh={onRefresh} colors={['#FFA700']} tintColor="#FFA700" />
+          }
+        />
+      )}
     </View>
   );
 };
