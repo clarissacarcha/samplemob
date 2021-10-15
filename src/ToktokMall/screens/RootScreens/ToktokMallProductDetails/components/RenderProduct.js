@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, Image, FlatList, SectionList, ImageBackground, TouchableOpacity} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import Share from 'react-native-share';
@@ -8,118 +8,227 @@ import {Price} from '../../../../helpers';
 import CustomIcon from '../../../../Components/Icons';
 import {coppermask, clothfacemask, voucherbg} from '../../../../assets';
 import { FONT } from '../../../../../res/variables';
-import Animated, {interpolate, Extrapolate, useCode, set, greaterThan} from 'react-native-reanimated'
+import Animated, {interpolate, Extrapolate, useCode, set} from 'react-native-reanimated'
+import { connect } from 'react-redux';
 
-const RenderStars = ({value}) => {
-  let orange = "#FFC833"
-  let gray = "rgba(33, 37, 41, 0.1)"
-  return (
-    <>
-      <CustomIcon.FoIcon name="star" size={14} color={value >= 1 ? orange : gray} />
-      <CustomIcon.FoIcon name="star" size={14} color={value >= 2 ? orange : gray} />
-      <CustomIcon.FoIcon name="star" size={14} color={value >= 3 ? orange : gray} />
-      <CustomIcon.FoIcon name="star" size={14} color={value >= 4 ? orange : gray} />
-      <CustomIcon.FoIcon name="star" size={14} color={value >= 5 ? orange : gray} />
-    </>
-  )
-}
+import { RenderStars, RenderVariations } from './subComponents';
+import ContentLoader from 'react-native-easy-content-loader';
+import {ApiCall, PaypandaApiCall, BuildPostCheckoutBody, BuildTransactionPayload, WalletApiCall} from "../../../../helpers";
+import { GET_MY_FAVORITES } from '../../../../../graphql/toktokmall/model';
+import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../graphql';
+import { useLazyQuery } from '@apollo/react-hooks';
+import AsyncStorage from '@react-native-community/async-storage';
 
-export const RenderProduct = ({onOpenVariations, animatedValue}) => {
+const Component = ({
+  data, 
+  onOpenVariations, 
+  animatedValue, 
+  shop, 
+  loading, 
+  user, 
+  reduxActions: {
+    updateMyFavorites
+  }, 
+  reduxStates: {
+    myFavorites
+  }
+}) => {
 
-  
   const [favorite, setFavorite] = useState(false)
+  const [favorites, setFavorites] = useState([])
   const opacity = animatedValue.interpolate({
     inputRange: [200, 250],
     outputRange: [1, 0],
     extrapolate: 'clamp'
   })
 
+  const [getMyFavorites, {error}] = useLazyQuery(GET_MY_FAVORITES, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',    
+    onCompleted: (response) => {
+      console.log(response)
+      if(response.getMyFavorites){
+        setFavorites(response.getMyFavorites)
+      }
+    },
+    onError: (err) => {
+      console.log(err)
+    }
+  })
+
+  const init = async () => {
+    AsyncStorage.getItem("ToktokMallUser").then((raw) => {
+      const data = JSON.parse(raw)
+      if(data.userId){
+        getMyFavorites({
+          variables: {
+            input: {
+              userId: data.userId
+            }
+          }
+        })
+      }
+    })
+  }
+
+  useEffect(() => {
+    init()
+  }, [])
+
+  useEffect(() => {
+   if(favorites && data?.Id){
+    favorites.map(({shop: {id}, items}) => {
+       if(shop.id === id){
+         let temp = false
+         items.map(item => {
+           if(item.product.Id === data.Id){
+             temp = true
+           }
+         })
+         setFavorite(temp)
+       }
+     })
+   }
+ },[favorites, shop, data])
+
+ const addToFavorites = async () => {
+
+    let variables = {
+      shopid: shop.id,
+      branchid: '',
+      userid: user.userId,
+      productid: data.Id
+    }
+
+    console.log(variables)
+    const req = await ApiCall("set_favorite_product", variables, true)
+
+    if(req.responseData && req.responseData.success == 1){
+      Toast.show('Added to Favorites')
+      updateMyFavorites('add', {shop, item: data })
+      setFavorite(true)
+    }else if(req.responseError && req.responseError.success == 0){
+      Toast.show(req.responseError.message, Toast.LONG)
+    }else if(req.responseError){
+      Toast.show("Something went wrong", Toast.LONG)
+    }else if(req.responseError == null && req.responseData == null){
+      Toast.show("Something went wrong", Toast.LONG)
+    }
+
+  }
+
+  const removeFromFavorites = async () => {
+    let variables = {
+      shopid: shop.id,
+      branchid: '',
+      userid: user.userId,
+      productid: data.Id
+    }
+    // data.pin = value
+    const req = await ApiCall("remove_favorite_product", variables, true)
+
+    if(req.responseData && req.responseData.success == 1){
+      Toast.show('Removed to Favorites')
+      updateMyFavorites('delete', {shop, item: data })
+      setFavorite(false)
+    }else if(req.responseError && req.responseError.success == 0){
+      Toast.show(req.responseError.message, Toast.LONG)
+    }else if(req.responseError){
+      Toast.show("Something went wrong", Toast.LONG)
+    }else if(req.responseError == null && req.responseData == null){
+      Toast.show("Something went wrong", Toast.LONG)
+    }
+  }
+
+  const HandleShare = async () => {
+    let options = {
+      message: data?.itemname,
+      // url: `http://ec2-18-178-242-131.ap-northeast-1.compute.amazonaws.com/products/${data?.Id}`,
+      url: `https://toktokmall.ph/products/${data?.Id}`
+    }
+    Share.open(options)
+    .then((res) => {
+      console.log(res);
+    })
+    .catch((err) => {
+      err && console.log(err);
+    });
+  }
+
+  const HandleToggleFavorites = () => {
+    if(!favorite){
+      addToFavorites()
+    }else{
+      removeFromFavorites()
+    }
+    if(favorite){
+      removeFromFavorites()
+    }
+    // console.log(shop)
+  }
+
 	return (
 		<>
 			<View style={{paddingVertical: 8, paddingHorizontal: 16}}>
-        <Animated.Text style={[{fontSize: 22, fontWeight: '500', fontFamily: FONT.BOLD}, {opacity: opacity}]}>Improved Copper Mask 2.0 White or Bronze</Animated.Text>
-        <View style={{flexDirection: 'row'}}>
-          <View style={{flex: 1}}>
-            <Text style={{color: "#F6841F", fontSize: 20}}><Price amount={190} /></Text>
-          </View>
-          <View style={{flex: 3, justifyContent: 'center'}}>
-            <Text style={{color: "#9E9E9E", textDecorationLine: 'line-through', fontSize: 14}}><Price amount={380} /></Text>
-          </View>
-        </View>
-        <View style={{flexDirection: 'row', paddingTop: 8}}>
-          <View style={{flex: 3, flexDirection: 'row', justifyContent: 'space-between', marginTop: 1}}>
-            <RenderStars value={4} />
-          </View>
-          <View style={{flex: 5, flexDirection: 'row', paddingHorizontal: 12}}>
-            <View>
-              <Text>4.0/5</Text>
-            </View>
-            <View style={{paddingHorizontal: 2}} >
-              <Text style={{color: "#9E9E9E"}}> | </Text>
-            </View>
-            <View>
-              <Text>187 sold</Text>
-            </View>
-          </View>
-          <View style={{flex: 1.8, flexDirection: 'row', justifyContent: 'space-between'}}>
-            <TouchableOpacity onPress={() => {
-              if(!favorite){
-                Toast.show('Added to Favorites')
-                setFavorite(true)
-              }
-              if(favorite){
-                Toast.show('Removed to Favorites')
-                setFavorite(false)
-              }
-            }}>
-              {favorite ? <CustomIcon.EIcon name="heart" size={22} color="#F6841F" /> : <CustomIcon.EIcon name="heart-outlined" size={22} color="#9E9E9E" />}
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => {
+        {/* <ContentLoader 
+          loading = {loading} 
+          avatar = {false}
+          pRows = {2}
+          titleStyles = {{height: 22, left: -10, }}
+          paragraphStyles = {{height: 13, left: -10 }}
+          pWidth = {'45%'}
+        ></ContentLoader> */}
+          <Animated.View style={{flexDirection: 'row', opacity: opacity}}>
+            <View style={{flex: 9}}>
+              <Text style={[{fontSize: 22, fontWeight: '500', fontFamily: FONT.BOLD}]} numberOfLines={2} ellipsizeMode="tail">{data.itemname}</Text>
+            </View>         
+            <View style={{flex: 0}}>
+              {data?.discountRate != "" && 
+              <View style={{position:'absolute', zIndex: 1, right: 0, top: -16, backgroundColor: '#F6841F', borderBottomLeftRadius: 30}}>
+                <Text style={{fontSize: 11, paddingHorizontal: 8, paddingLeft: 16, paddingTop: 1, paddingBottom: 3, color: "#fff", fontFamily: FONT.BOLD}}>{data?.discountRate}</Text>
+              </View>}
+            </View> 
+          </Animated.View>
+          <View style={{flexDirection: 'row', alignItems: "center"}}>
+              {data.price ? <Text style={{color: "#F6841F", fontSize: 20}}><Price amount={data.price} /></Text> : null}
+              {data.compareAtPrice && data.compareAtPrice != "0.00" ? <Text style={{color: "#9E9E9E", textDecorationLine: 'line-through', fontSize: 14, marginLeft: 10}}><Price amount={data.compareAtPrice} /></Text> : null}
+            
+              <Text style={{marginLeft: 10}}>{data.soldCount || 0} sold</Text>
 
-              let options = {
-                message: "Black King To-Go",
-                url: "https://toktokmall.ph/products/e7111d7d6bbd406a82ae6a515cb65ab2"
-              }
-
-              Share.open(options)
-              .then((res) => {
-                console.log(res);
-              })
-              .catch((err) => {
-                err && console.log(err);
-              });
-            }}>
-              <CustomIcon.FeIcon name="share" size={20} color="#9E9E9E" />
-            </TouchableOpacity>
+            <View style={{flex: 1.8, flexDirection: 'row', justifyContent: 'flex-end'}}>
+              {/* <TouchableOpacity style={{marginRight: 10}} onPress={() => HandleToggleFavorites()}>
+                {favorite ? <CustomIcon.EIcon name="heart" size={22} color="#F6841F" /> : <CustomIcon.EIcon name="heart-outlined" size={22} color="#9E9E9E" />}
+              </TouchableOpacity> */}
+              <TouchableOpacity onPress={() => HandleShare()}>
+                <CustomIcon.FeIcon name="share" size={20} color="#9E9E9E" />
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
+        
       </View>
       <View style={{height: 8, backgroundColor: '#F7F7FA'}} />
 
-      <View style={{paddingVertical: 8, paddingHorizontal: 8}}>
-        <View style={{flexDirection: 'row', marginTop: 8}}>
-          <View style={{flex: 2, flexDirection: 'row', paddingHorizontal: 8}}>
-            <View style={{flex: 1, justifyContent: 'center'}}>
-              <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>Select Variation</Text>
-            </View>
-            <View style={{flex: 1, justifyContent: 'center'}}>
-              <Text style={{fontSize: 14, color: "#9E9E9E"}}>( 2 color )</Text>
-            </View>
-          </View>
-          <View style={{flex: 1, flexDirection: 'row-reverse'}}>
-            <TouchableOpacity onPress={onOpenVariations} style={{flex: 0}}>
-              <CustomIcon.MCIcon name="chevron-right" size={24} color="#F6841F" />
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <View style={{paddingHorizontal: 8, flexDirection: 'row', paddingVertical: 8}}>        
-          <Image source={coppermask} style={{width: 55, height: 65, resizeMode: 'center', borderColor: "#9E9E9E", borderWidth: 1, marginRight: 4}} />
-          <Image source={coppermask} style={{width: 55, height: 65, resizeMode: 'center', borderColor: "#9E9E9E", borderWidth: 1, marginRight: 4}} />
-        </View>
-
-      </View>
-      <View style={{height: 8, backgroundColor: '#F7F7FA'}} />
+      <RenderVariations 
+        data={data?.variantSummary || []} 
+        navigate={onOpenVariations} 
+      />
+      
 		</>
 	)
 }
+
+const mapStateToProps = (state) => ({
+  reduxStates: {
+    myFavorites: state.toktokMall.myFavorites,
+  },
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  reduxActions: {
+    updateMyFavorites: (action, payload) => {
+      dispatch({type: 'TOKTOK_MY_FAVORITES', action, payload});
+    },
+  },
+});
+
+export const RenderProduct = connect(mapStateToProps, mapDispatchToProps)(Component);

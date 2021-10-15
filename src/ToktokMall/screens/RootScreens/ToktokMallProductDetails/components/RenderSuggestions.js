@@ -6,9 +6,8 @@ import {LandingHeader, AdsCarousel} from '../../../../Components';
 import { ScrollView } from 'react-native-gesture-handler';
 import CustomIcon from '../../../../Components/Icons';
 
-import {clothfacemask, medicalfacemask} from '../../../../assets'; 
+import {clothfacemask, medicalfacemask, placeholder} from '../../../../assets'; 
 import { useNavigation } from '@react-navigation/core';
-
 
 const testdata = [{
   image: clothfacemask,
@@ -58,28 +57,51 @@ const RenderItem = ({item}) => {
 
   const navigation = useNavigation()
 
+  const getImageSource = (data) => {
+    if(data && data?.length > 0){
+      return {uri: data[0].filename}
+    }else {
+      return placeholder
+    }
+  }
+
   return (
     <>
       <View style={{flex: 2, backgroundColor: '#fff', margin: 5}}>
                   
         <TouchableOpacity activeOpacity={1} onPress={() => {
-          navigation.navigate("ToktokMallProductDetails")
+          navigation.push("ToktokMallProductDetails", {Id: item.Id, itemname: item.itemname})
         }} style={{padding: 5}}>
+          {item?.discountRate != "" && 
+          <View style={{position:'absolute', zIndex: 1, right: 0, backgroundColor: '#F6841F', borderBottomLeftRadius: 30}}>
+            <Text style={{fontSize: 8, paddingHorizontal: 4, paddingLeft: 8, paddingTop: 1, paddingBottom: 3, color: "#fff", fontFamily: FONT.BOLD}}>{item?.discountRate}</Text>
+          </View>}
           <Image 
-            source={item.image} 
+            source={getImageSource(item.images)} 
             style={{resizeMode: 'cover', width: '100%', height: 120, borderRadius: 5}} 
           />
-          <Text style={{fontSize: 13, fontWeight: '500', paddingVertical: 5}}>{item.label}</Text>
-          <Text style={{fontSize: 13, color: "#F6841F"}}>&#8369;{parseFloat(item.price).toFixed(2)}</Text>    
+          <Text style={{fontSize: 13, fontWeight: '500', paddingVertical: 5}} numberOfLines={2} ellipsizeMode="tail">{item.itemname}</Text>
+          {/* <Text style={{fontSize: 13, color: "#F6841F"}}><Price amount={item.price} /></Text>    
           <View style={{flexDirection: 'row'}}>
             <View style={{flex: 7, flexDirection: 'row'}}>
-              <RenderStars value={item.rating} />
+              <RenderStars value={item.rating || 0} />
             </View>
             <View style={{flex: 2}}>
-              <Text style={{color: "#9E9E9E", fontSize: 10}}>({item.stock})</Text>
+              <Text style={{color: "#9E9E9E", fontSize: 10}}>({item.noOfStocks || 0})</Text>
             </View>
             <View style={{flex: 3}}>
-              <Text style={{fontSize: 10}}>{item.sold} sold</Text>
+              <Text style={{fontSize: 10}}>{item.soldCount || 0} sold</Text>
+            </View>
+          </View> */}
+          <View style={{flexDirection: 'row'}}>
+            <View style={{flex: 2.3}}>
+              <Text style={{fontSize: 12, color: "#F6841F"}}><Price amount={item.price} /></Text>
+            </View>
+            <View style={{flex: 2, justifyContent: 'center'}}>
+              {item.discountRate && item.discountRate != "" ?  <Text style={{fontSize: 9, color: "#9E9E9E", textDecorationLine: 'line-through'}}><Price amount={item.compareAtPrice} /></Text> : <></>}
+            </View>
+            <View style={{flex: 1.3, justifyContent: 'center', alignItems: 'flex-end'}}>
+              <Text style={{fontSize: 9}}>{item.soldCount || 0} sold</Text>
             </View>
           </View>
         </TouchableOpacity>
@@ -89,6 +111,13 @@ const RenderItem = ({item}) => {
 }
 
 export const RenderSuggestions = ({data}) => {
+
+  const [products, setProducts] = useState(data)
+
+  useEffect(() => {
+    setProducts(data)
+  }, [data])
+
     return (
       <>
         <View style={styles.container}>
@@ -103,12 +132,24 @@ export const RenderSuggestions = ({data}) => {
                 <CustomIcon.EIcon name="chevron-right" color="#F6841F" size={16} />
               </View>
             </View>
-
+            
             <FlatList
-              data={testdata}
+              data={products}
               numColumns={2}
               style={{paddingHorizontal: 10}}
-              renderItem={({item}) => {
+              renderItem={({item, index}) => {
+                const isEven = products?.length % 2 === 0
+                if(!isEven){
+                  //ODD
+                  if(index == products?.length - 1){
+                    return (
+                      <>
+                        <RenderItem item={item} />
+                        <View style={{flex: 2, backgroundColor: '#fff', margin: 5}}></View>
+                      </>
+                    )
+                  }                  
+                }
                 return <RenderItem item={item} />
               }}
               keyExtractor={(item, index) => item + index}

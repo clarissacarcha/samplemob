@@ -1,7 +1,8 @@
+import AsyncStorage from '@react-native-community/async-storage';
 import React, {useState, useEffect} from 'react';
 import {View, Text, TouchableOpacity, Image, FlatList} from 'react-native';
 import {HeaderTab} from '../../../Components';
-import {ToShip, ToRecieve, Completed, Cancelled} from './Components';
+import {Processing, ToShip, ToRecieve, Completed, Cancelled} from './Components';
 
 export const ToktokMallMyOrders = ({navigation, route}) => {
 
@@ -14,18 +15,21 @@ export const ToktokMallMyOrders = ({navigation, route}) => {
         index={activeTab}
         onTabChange={(index) => {
           setActiveTab(index)
-        }} 
+        }}
+        onBack={() => {
+          navigation.navigate("ToktokMallLanding", {screen: "ToktokMallMyProfile"})
+        }}
       />
 
-      {activeTab == 0 && <ToShip data={[]} />}
+      {activeTab == 0 && <Processing />}
 
-      {activeTab == 1 && <ToRecieve data={[]} />}
+      {activeTab == 1 && <ToShip />}
 
-      {activeTab == 2 && <Completed data={[]} />}
+      {activeTab == 2 && <ToRecieve />}
 
-      {activeTab == 3 && <Cancelled data={[]} />}
+      {activeTab == 3 && <Completed />}
 
-      
+      {/* {activeTab == 3 && <Cancelled />} */}
       
     </View>
   );

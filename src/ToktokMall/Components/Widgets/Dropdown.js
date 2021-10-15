@@ -1,7 +1,8 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {View, Text, ImageBackground, Image, TouchableOpacity, FlatList} from 'react-native';
+import {View, Text, ImageBackground, Image, TouchableOpacity, FlatList, RefreshControl} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import CustomIcon from '../Icons';
+import {placeholder} from '../../assets';
 
 const testdata = [{
   category: "Accessories",
@@ -31,13 +32,13 @@ const Item = ({data, onPress}) => {
     <>
       <TouchableOpacity 
 				onPress={() => { 
-					onPress(data)
+					onPress({id: data?.id, name: data?.categoryName})
         }} 
 				style={{flexDirection: 'row', paddingVertical: 20, paddingHorizontal: 15}}
 			>
         <View style={{flex: 1}}></View>
         <View style={{flex: 8, justifyContent: 'center', paddingHorizontal: 8}}>
-          <Text style={{fontSize: 14}}>{data}</Text>
+          <Text style={{fontSize: 14}}>{data?.categoryName}</Text>
         </View>
         <View style={{flex: 1}}></View>
       </TouchableOpacity>
@@ -46,27 +47,69 @@ const Item = ({data, onPress}) => {
   )
 }
 
-const DropdownItem = ({item, onItemPress}) => {
+const DropdownItem = ({item, onItemPress, loading}) => {
 
-  const [category, setCategory] = useState( item.category)
-  const [content, setContent] = useState(item.subCategories) //["Cabinet", "Chairs", "Drawer"]
+  const [category, setCategory] = useState( item.parentCategoryName)
+  const [content, setContent] = useState([]) //["Cabinet", "Chairs", "Drawer"]
   const [toggle, setToggle] = useState(false)
+
+  useEffect(() => {
+    setContent(item.subCategories.sort((a, b) => a.categoryName.localeCompare(b.categoryName)))
+  }, [])
+
+  useEffect(() => {
+    if(loading){
+      console.log("test")
+      setToggle(false)
+    }
+  },[loading])
+
+  const setIcon = (item) => {
+
+    return (
+      <>
+        <Image 
+          source={item.image ? {uri: item.image} : placeholder} 
+          style={{width: 50, height: 50, resizeMode: 'cover', borderRadius: 5}} 
+        />
+      </>
+    )
+
+    // if(item?.image){
+    //   //Image icon
+    //   return (
+    //     <>
+    //       <Image 
+    //         source={placeholder} 
+    //         style={{width: 50, height: 50, resizeMode: 'cover', borderRadius: 5}} 
+    //       />
+    //     </>
+    //   )
+    // }else {
+    //   return (
+    //     <>
+    //       <View>
+    //         <CustomIcon.FA5Icon name={item?.parentIcon?.name} size={22} color="#F6841F" />
+    //       </View>
+    //     </>
+    //   )
+    // }
+
+  }
 
   return (
   	<>
-    	<View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
+    	<TouchableOpacity onPress={() => setToggle(!toggle)} style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
         <View style={{flex: 2, borderRadius: 5, backgroundColor: 'transparent', justifyContent: 'center', alignItems: 'center'}}>
-          <Image 
-            source={item?.image || require("../../assets/images/Watch.png")} 
-            style={{width: 50, height: 50, resizeMode: 'cover', borderRadius: 5}} />
+          {setIcon(item)}
         </View>
         <View style={{flex: 8, justifyContent: 'center', paddingHorizontal: 8}}>
-          <Text style={{fontSize: 14}}>{category}</Text>
+          <Text style={{fontSize: 14, color: toggle ? "#F6841F" : "#000000"}}>{category}</Text>
         </View>
-        <TouchableOpacity onPress={() => setToggle(!toggle)} style={{flex: 1, justifyContent: 'center'}}>
+        <View style={{flex: 1, justifyContent: 'center'}}>
           <CustomIcon.FeIcon name={toggle ? "chevron-up" : "chevron-down"} size={22} color={toggle ? "#F6841F" : "#CCCCCC"} /> 
-        </TouchableOpacity>
-      </View>
+        </View>
+      </TouchableOpacity>
     	<View style={{ height: 2, backgroundColor: '#F7F7FA'}} />
 
       {/* DROPDOWN CONTENT */}
@@ -76,23 +119,39 @@ const DropdownItem = ({item, onItemPress}) => {
   )
 }
 
-export const Dropdown = ({data, onSelect}) => {
+export const Dropdown = ({loading = false, data, onSelect, onRefresh}) => {
 
   const navigation = useNavigation()
+  const [refreshing, setRefreshing] = useState(false)
 
-  const onItemPress = (data) => {
+  const onItemPress = (value) => {
   	if(onSelect){
-      onSelect(data)
+      onSelect(value)
     }else{
-      navigation.navigate("ToktokMallCategoriesList", {category: data, searchValue: data})
+      navigation.navigate("ToktokMallSearch", {categoryId: value.id, origin: "category", searchValue: value.name})
     }
   }
+
+  console.log(data)
 
   return (
     <>
 		  <FlatList
-        data={testdata}
-        renderItem={({item}) => <DropdownItem item={item} onItemPress={onItemPress} />}
+        data={data || []}
+        renderItem={({item}) => <DropdownItem item={item} onItemPress={onItemPress} loading={refreshing} />}
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={loading}
+            onRefresh={() => {
+              setRefreshing(true)
+              setTimeout(() => {
+                setRefreshing(false)
+              }, 1000);
+            }}
+            colors={["#F6841F"]}
+          />
+        }
       />
     </>
   )

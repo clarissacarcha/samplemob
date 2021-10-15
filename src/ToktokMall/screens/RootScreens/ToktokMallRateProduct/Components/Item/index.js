@@ -3,15 +3,21 @@ import {View, Image, Text, TextInput, TouchableOpacity, Platform} from 'react-na
 import {Rate, Uploads} from './Components'
 
 export const Item = ({index, setRating, rating: {star, feedback, images}, ...data}) => {
+
   const onChangeText = (text) => {
     setRating({index, feedback: text})
+  }
+
+  const getImage = (src) => {
+    if(typeof src == "string") return {uri: src}
+    else return require('../../../../../assets/images/coppermask.png')
   }
 
   return (
     <View style={{flex: 1, marginTop: 10, paddingBottom: 15, backgroundColor: '#FFF'}}>
       <View style={{flexDirection: 'row', paddingTop: 10, padding: 15}}>
         <Image
-          source={require('../../../../../assets/images/coppermask.png')}
+          source={getImage(data.image)}
           style={{width: 55, height: 60, resizeMode: 'stretch', borderRadius: 5}}
         />
         <View style={{marginLeft: 15}}>

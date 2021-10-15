@@ -28,42 +28,56 @@ const Confirm = ({onCancel, onConfirm}) => {
   )
 }
 
-export const AddressModal = ({navigation, isVisible, setIsVisible, type}) => {
+export const AddressModal = ({navigation, isVisible, setIsVisible, type, message, onConfirm, onCancel}) => {
   
   const [modalVisible, setModalVisible] = useState(isVisible || false)
 
   return (
     <>
       <View style={styles.centeredView}>
-      <Modal
-        animationType="none"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          // Alert.alert("Modal has been closed.");
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.25)'}}>
-          <View style={{backgroundColor: 'white', width: '90%', paddingVertical: 20, paddingHorizontal: 20, borderRadius: 5}}>
-            {type == "Confirm" && <Confirm onCancel={() => setIsVisible(false)} onConfirm={() => setIsVisible(false)} />}
-            {type == "Message" && 
-            <View style={{alignItems: 'center', justifyContent: 'center'}}>
-              <AntDesgin 
-                name = {'checkcircleo'}
-                size = {90}
-                color = {'#F6841F'}
-              />
-              <View style={{paddingVertical: 8}} />
-              <Text style={{fontSize: 22, color: "#F6841F"}}>Address Deleted!</Text>
-            </View>}            
+        <Modal
+          animationType="none"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(false);
+            setIsVisible(false)
+          }}>
+          <View
+            style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.25)'}}>
+            <View
+              style={{
+                backgroundColor: 'white',
+                width: '90%',
+                paddingVertical: 20,
+                paddingHorizontal: 20,
+                borderRadius: 5,
+              }}>
+              {type == 'Confirm' && (
+                <Confirm
+                  onCancel={() => {
+                    onCancel?.();
+                    setIsVisible(false);
+                  }}
+                  onConfirm={() => {
+                    onConfirm?.();
+                    setIsVisible(false);
+                  }}
+                />
+              )}
+              {type == 'Message' && (
+                <View style={{alignItems: 'center', justifyContent: 'center'}}>
+                  <AntDesgin name={'checkcircleo'} size={90} color={'#F6841F'} />
+                  <View style={{paddingVertical: 8}} />
+                  <Text style={{fontSize: 22, color: '#F6841F'}}>{message}</Text>
+                </View>
+              )}
+            </View>
           </View>
-        </View>
-      </Modal>
-      
-    </View>
+        </Modal>
+      </View>
     </>
-  )
+  );
 }
 
 const styles = StyleSheet.create({

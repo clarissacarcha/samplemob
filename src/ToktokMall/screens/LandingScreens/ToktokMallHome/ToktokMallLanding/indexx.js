@@ -9,7 +9,7 @@ import {throttle} from 'lodash';
 import FIcon5 from 'react-native-vector-icons/FontAwesome';
 import AIcon from 'react-native-vector-icons/MaterialIcons';
 import {banner, toktokmallH} from '../../../../assets';
-import Animated, {interpolate, Extrapolate, useCode, set, greaterThan} from 'react-native-reanimated'
+import Animated, {interpolate, Extrapolate, useCode, set} from 'react-native-reanimated'
 
 //Main Components
 import CustomIcon from '../../../../Components/Icons';
@@ -195,7 +195,7 @@ export const ToktokMallLandingScreen = () => {
             {
               width: "100%",
               resizeMode: "stretch",
-              width: '100%'
+              width: '100%',
             }, 
             {
               height: animateHeaderHeight
@@ -239,11 +239,13 @@ export const ToktokMallLandingScreen = () => {
               left: translateLeft
             }
           ]}>
+          <TouchableOpacity style={{flex: 1,}} onPress ={onPress}>
           <TouchableOpacity style={{flex: 0, paddingHorizontal: 8,  paddingVertical: 4}} onPress ={onPress}>
             <AIcon name="search" color={COLOR.ORANGE} size={22}/>
           </TouchableOpacity>
           <TouchableOpacity style={{flex: 0, justifyContent: 'center', paddingVertical: 4}} onPress ={onPress}>
             <Text style={{color: "darkgray", fontSize: 13}}>Search</Text>
+          </TouchableOpacity>
           </TouchableOpacity>
         </Animated.View>
 

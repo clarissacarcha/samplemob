@@ -2,7 +2,12 @@ import React, {useState, useEffect, useRef} from 'react';
 import {View, Text, ImageBackground, Image, StyleSheet, Platform, Dimensions} from 'react-native';
 import Carousel, { Pagination, ParallaxImage } from 'react-native-snap-carousel';
 import CustomIcon from '../Icons';
-
+import { useLazyQuery } from '@apollo/react-hooks';
+import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../graphql';
+import { GET_ADS } from '../../../graphql/toktokmall/model';
+import ContentLoader from 'react-native-easy-content-loader';
+import Swiper from 'react-native-swiper'
+import FastImage from 'react-native-fast-image'
 const SampleImage = require("../../assets/images/ads.png")
 
 const { width: screenWidth } = Dimensions.get('window')
@@ -11,39 +16,118 @@ export const AdsCarousel = (props) => {
 
   const [activeSlide, setActiveSlide] = useState(0)
   const [entries, setEntries] = useState([1, 2, 3])
+  const [autoPlay, setAutoPlay] = useState(true)
+
+  const [getAds, {error, loading}] = useLazyQuery(GET_ADS, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: (response) => {
+      if(response && response.getAdvertisements.length > 0){
+        setEntries(response.getAdvertisements)
+      }
+    },
+    onError: (err) => {
+      console.log(err)
+    }
+  })
+
+  const renderBanners = () => {
+    return entries.map((item, i) => {
+      return(
+        <FastImage 
+          style={{width: screenWidth - 30, height: 130, borderRadius: 5}}
+          source = {{
+            uri: item.image,
+            priority: FastImage.priority.high
+          }}
+          resizeMode = {FastImage.resizeMode.stretch}
+        />
+      )
+    })
+  }
 
   const renderItem = ({item, index}, parallaxProps) => {
+
+    const getImage = (raw) => {
+      if(typeof raw == "string"){
+        return {uri: raw}
+      }else{
+        return SampleImage
+      }
+    }
+
     return (
-      <View style={{width: 330, height: 130}}>
-        {/* <Image source={SampleImage} style={{width: '100%', height: 130, resizeMode: 'stretch'}} /> */}
-        <ParallaxImage
-          // source={{uri: "https://cdn.searchenginejournal.com/wp-content/uploads/2019/04/shutterstock_456779230.png"}}
-          source={SampleImage}
-          containerStyle={styles.pxImageContainerStyle}
-          style={{
-            ...StyleSheet.absoluteFillObject,
-            resizeMode: 'stretch'
-          }}
-          parallaxFactor={0}
-          {...parallaxProps}
-        />
-      </View>
+
+      // <ContentLoader active loading = {loading} avatar = {false}  title = {true} pRows = {0}
+      //   tHeight = {130}  tWidth= {'100%'} avatarStyles = {{ left: 0, borderRadius: 5}} 
+      // ></ContentLoader>
+      
+        <View style={{width: screenWidth - 30, height: 130}}>
+         {/* <Image source={SampleImage} style={{width: '100%', height: 130, resizeMode: 'stretch'}} /> */}
+          <ParallaxImage
+            // source={{uri: "https://cdn.searchenginejournal.com/wp-content/uploads/2019/04/shutterstock_456779230.png"}}
+            source={getImage(item?.image)}
+            containerStyle={styles.pxImageContainerStyle}
+            style={{
+              ...StyleSheet.absoluteFillObject,
+              resizeMode: 'stretch'
+            }}
+            parallaxFactor={0}
+            {...parallaxProps}
+          />
+        </View>
+      
     )
   }
 
+  useEffect(() => {
+    getAds()
+  }, [])
+
   return (
     <View style={{paddingHorizontal: 15, paddingTop: 5, backgroundColor: "transparent"}}>
-      <Carousel
+      {/* <Carousel
         data={entries}
         renderItem={renderItem}
-        onSnapToItem={(index) => setActiveSlide(index) }
-        sliderWidth={330}
-        itemWidth={330}
-        autoplay={true}
-        // autoplayDelay={700}
+        // onSnapToItem={(index) => {setActiveSlide(index), console.log(index)} }
+        sliderWidth={screenWidth -30}
+        itemWidth={screenWidth -30}
+        // autoplay={true}
+        // autoplayDelay={2500}
+        // enableSnap={true}
+        loop={true}
         hasParallaxImages={true}
-      />
-      <Pagination
+        useScrollView = {true}
+        // removeClippedSubviews={true}
+      /> */}
+      <Swiper
+        width = {screenWidth -30}
+        height = {170}
+        loop = {true}
+        autoplay = {autoPlay}
+        onScrollBeginDrag ={() => {
+          setAutoPlay(false)
+          setAutoPlay(true)
+        }}
+        onIndexChanged={(index) => setActiveSlide(index) }
+        autoplayTimeout = {3}
+        showsPagination = {true}
+        // activeDot 
+        // renderPagination = {({index}) => {
+        //   <View style={styles.paginationDotContainerStyle}>
+        //     {/* {entries.map((d, i) =>  */}
+        //     <View style={{paddingHorizontal: 8}}>
+        //       <CustomIcon.MCIcon name={index == activeSlide ? "circle" : "circle-outline"} color="#fff" size={10} />
+        //     </View>    
+        //   </View>
+        // }}
+        activeDotColor = {'#fff'}
+        dotStyle = {{borderColor: 'white', top: -20, borderWidth: 1, backgroundColor: 'rgba(0,0,0,0)', height: 10, width: 10, borderRadius: 5, left: 5}}
+        activeDotStyle = {{ top: -20,  height: 10, width: 10,  borderRadius: 5, left: 5}}
+      >
+        {renderBanners()}
+      </Swiper>
+      {/* <Pagination
         dotsLength={entries.length}
         activeDotIndex={activeSlide}
         renderDots={(activeIndex) => {
@@ -56,7 +140,7 @@ export const AdsCarousel = (props) => {
           )
         }}
         containerStyle={styles.paginationContainerStyle}        
-      />
+      /> */}
     </View>
   )
 

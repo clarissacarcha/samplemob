@@ -6,29 +6,56 @@ import {Price} from '../../../../helpers';
 import CustomIcon from '../../../../Components/Icons';
 import {coppermask, clothfacemask, voucherbg} from '../../../../assets';
 import { FONT } from '../../../../../res/variables';
+import ContentLoader from 'react-native-easy-content-loader';
 
-export const RenderStore = () => {
+export const RenderStore = ({data, loading}) => {
 
   const navigation = useNavigation()
+
+  const getStoreLogo = (raw) => {
+    if(typeof raw == "string") return {uri: raw}
+    else return clothfacemask
+  }
+
+  const margin = () => {
+    let x = parseInt(data.totalProducts)
+    if(x < 9){
+      return 18
+    }else if (x < 99){
+      return 15
+    }
+    else {
+      return 8
+    }
+  }
 
 	return (
 		<>
 			<View style={{paddingVertical: 16, paddingHorizontal: 16}}>
-        <TouchableOpacity onPress={() => {
-            navigation.navigate("ToktokMallStore", {})
+        {/* <ContentLoader 
+          loading = {loading} 
+          avatar = {false}
+          pRows = {1}
+          titleStyles = {{height: 30, left: -10, }}
+          tWidth = {'50%'}
+          paragraphStyles = {{height: 13, left: -10, paddingTop: 14 }}
+          pWidth = {'45%'}
+        ></ContentLoader> */}
+        <TouchableOpacity activeOpacity={1} onPress={() => {
+            navigation.navigate("ToktokMallStore", {id: data?.id, searchValue: ""})
           }} style={{flexDirection: 'row', justifyContent: 'center'}}>
           <View style={{flex: 2, alignItems: 'flex-start', justifyContent: 'center'}}>
-						<Image source={clothfacemask} style={{width: 50, height: 50, resizeMode: 'cover', borderRadius: 30}} />
+						<Image source={getStoreLogo(data?.profileImages?.logo)} style={{width: 50, height: 50, resizeMode: 'stretch', borderRadius: 30}} />
 					</View>
           <View style={{flex: 5, justifyContent: 'center'}}>
-            <Text style={{fontSize: 13}}>Face Mask PH</Text>
-            <Text style={{fontSize: 13, color: "#9E9E9E"}}>Malabon, Manila</Text>
+            <Text style={{fontSize: 13, fontFamily: FONT.BOLD}}>{data?.shopname}</Text>
+            <Text style={{fontSize: 13, color: "#9E9E9E"}}>{data?.address}</Text>
           </View>
           <View style={{flex: 3, alignItems: 'flex-end', justifyContent: 'center'}}>
             <Text style={{fontSize: 13, color: "#F6841F"}}>Visit Store</Text>
           </View>
         </TouchableOpacity>
-        <View style={{flexDirection: 'row', paddingVertical: 14}}>
+        {/* <View style={{flexDirection: 'row', paddingVertical: 14}}>
           <View style={{flex: 3, alignItems: 'flex-end'}}>
             <Text style={{fontSize: 18, color: "#F6841F", marginRight: 8}}>4.0</Text>
             <Text>Rating</Text>
@@ -37,16 +64,26 @@ export const RenderStore = () => {
             <View style={{width: 2, height: 20, backgroundColor: '#E9E9E9'}} />
           </View>
           <View style={{flex: 3, alignItems: 'flex-start'}}>
-            <Text style={{fontSize: 18, color: "#F6841F", marginLeft: 8}}>152</Text>
+            <Text style={{fontSize: 18, color: "#F6841F", marginLeft: margin(),}}>{data?.totalProducts || 0}</Text>
             <Text>Products</Text>
           </View>
-        </View>
+        </View> */}
+        
       </View>
       <View style={{height: 8, backgroundColor: '#F7F7FA'}} />
-
+{/* 
       <View style={{paddingHorizontal: 16, paddingVertical: 16}}>
+        <ContentLoader 
+          loading = {loading} 
+          avatar = {false}
+          pRows = {1}
+          titleStyles = {{height: 30, left: -10, }}
+          tWidth = {'50%'}
+          paragraphStyles = {{height: 13, left: -10, paddingTop: 14 }}
+          pWidth = {'45%'}
+        >
         <View style={{paddingBottom: 16}}>
-          <Text style={{fontSize: 14}}>Face Mask PH Vouchers</Text>
+          <Text style={{fontSize: 14}}>{data?.shopname || 'Shop'} Vouchers</Text>
         </View>
         <FlatList 
           data={[{
@@ -74,8 +111,9 @@ export const RenderStore = () => {
             )
           }}
         />
-      </View>
-      <View style={{height: 8, backgroundColor: '#F7F7FA'}} />
+        </ContentLoader>
+        
+      </View> */}
 		</>
 	)
 }

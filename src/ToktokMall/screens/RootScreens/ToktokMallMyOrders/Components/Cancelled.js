@@ -116,7 +116,7 @@ const testdata = [{
 }]
 
 
-export const Cancelled = ({data, route}) => {
+export const Cancelled = ({id}) => {
 
   const renderItem = ({item}) => {
     return (

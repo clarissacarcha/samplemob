@@ -1,5 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, } from 'react-native';
+import { Price, FormatToText } from '../../../../helpers/formats';
 // import { COLOR, FONT } from '../../../../../../res/variables';
 // import {LandingHeader, AdsCarousel} from '../../../../../Components';
 // import { ScrollView } from 'react-native-gesture-handler';
@@ -14,56 +15,72 @@ const testData = [
   }
 ]
 
-export  const Totals = ({data}) => {
+export const Totals = ({raw, shipping, shippingRates}) => {
+
+  const [data, setData] = useState(raw || [])
+
+  useEffect(() => {
+    setData(raw)
+  }, [raw])
 
   let shippingFeeTotal = 0
   let merchandiseTotal = 0
 
   const computeShippingFee = () => {
     let total = 0
-    let  totalArr = []
     for (let i = 0; i < data.length; i++){
-      total = total + data[i].delivery_fee
+      total = total + parseFloat(shipping?.rateAmount)
     }
     shippingFeeTotal = total
-    return total
+    if(!total) return FormatToText.currency(0)
+    else return FormatToText.currency(total)
+  }
+
+  const computeShippingRates = () => {
+    let total = 0
+    for (let i = 0; i < shippingRates.length; i++){
+      total = total + parseFloat(shippingRates[i].price)
+    }
+    shippingFeeTotal = total
+    if(!total) return FormatToText.currency(0)
+    else return FormatToText.currency(total)
   }
 
   const computeMerchandiseTotal = () => {
     let total = 0
-    let  totalArr = []
-    data.map((item, i) => {
-        for (let i = 0; i < item.cart.length; i++){
-          total = total + item.cart[i].price
-        }
+    data.length > 0 && data.map((item, i) => {
+      for (let i = 0; i < item.cart.length; i++){
+        total = total + (parseFloat(item.cart[i].price) * item.cart[i].qty)
+      }
     })
     merchandiseTotal = total
-    return total
+    return FormatToText.currency(total)
   } 
     
   return (
     <>
       <View style = {styles.container}>
         <View style = {styles.textContainer}>
-          <Text>Merchandise SubTotal:</Text>
-          <Text>Php {computeMerchandiseTotal()}.00</Text>
+          <Text style={{fontSize: 13}}>Merchandise SubTotal:</Text>
+          <Text>{computeMerchandiseTotal()}</Text>
         </View>
         <View style = {styles.textContainer}>
           <Text>Shipping Fee:</Text>
-          <Text>Php {computeShippingFee()}.00</Text>
+          <Text>{computeShippingRates()}</Text>
         </View>
         <View style = {styles.textContainer}>
           <Text style = {{fontWeight: 'bold'}}>Total Payment:</Text>
-          <Text  style = {{color: '#F61841'}}>Php {shippingFeeTotal + merchandiseTotal}.00</Text>
+          <Text  style = {{color: '#F61841'}}>{FormatToText.currency((shippingFeeTotal || 0) + (merchandiseTotal || 0))}</Text>
         </View>
       </View>
+      <View style={{height: 50}} />
     </>
     )
 }
 
 const styles = StyleSheet.create({
   body: {flex: 1, backgroundColor: '#F7F7FA', },
-  container: {padding: 15, backgroundColor: 'white', marginTop: 15, },
+  container: {padding: 15, backgroundColor: 'white', marginTop: 8, },
   textContainer: {flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 },
   textContainer2: {flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 20 }
 

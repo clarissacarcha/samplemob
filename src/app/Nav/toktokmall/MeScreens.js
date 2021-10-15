@@ -5,7 +5,10 @@ import {
   ToktokMallMyOrders,
   ToktokMallMyVouchers,
   ToktokMallMyWishlist,
-  ToktokMallHelp
+  ToktokMallHelp,
+  ToktokMallSecurity,
+  ToktokMallTermsAndConditions,
+  ToktokMallContactUs
 } from '../../../ToktokMall/screens';
 
 export default ({Navigator}) => (
@@ -16,5 +19,9 @@ export default ({Navigator}) => (
     <Navigator.Screen name="ToktokMallMyVouchers" component={ToktokMallMyVouchers} />
     <Navigator.Screen name="ToktokMallMyWishlist" component={ToktokMallMyWishlist} />
     <Navigator.Screen name="ToktokMallHelp" component={ToktokMallHelp} />
+    <Navigator.Screen name="ToktokMallSecurity" component={ToktokMallSecurity} />
+    <Navigator.Screen name="ToktokMallTermsAndConditions" component={ToktokMallTermsAndConditions} />
+    <Navigator.Screen name="ToktokMallContactUs" component={ToktokMallContactUs} />
+
   </>
 );

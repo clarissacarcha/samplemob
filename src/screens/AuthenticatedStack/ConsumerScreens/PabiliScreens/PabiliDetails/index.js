@@ -343,10 +343,10 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
             <AlertOverlay visible={loading} />
             <View style={{height: 20}} />
             {/* <PromoForm /> */}
-            <PaymentMethodForm
+            {/* <PaymentMethodForm
               value={paymentMethod === 'CASH' ? 'Cash' : 'toktokwallet'}
               bottomSheetRef={paymentMethodSheetRef}
-            />
+            /> */}
             {/* <PaymentForm value={collectPaymentFrom === 'SENDER' ? 'Sender' : 'Recipient'} bottomSheetRef={paymentSheetRef} /> */}
             {!partnerBranch && (
               <ItemDescriptionForm

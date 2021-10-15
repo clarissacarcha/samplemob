@@ -1,39 +1,36 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, } from 'react-native';
-// import { COLOR, FONT } from '../../../../../../res/variables';
+import { FONT } from '../../../../../res/variables';
+
 // import {LandingHeader, AdsCarousel} from '../../../../../Components';
 // import { ScrollView } from 'react-native-gesture-handler';
 // import CustomIcon from '../../../../../Components/Icons';
 // import {watch, electronics, mensfashion, furniture, petcare} from '../../../../../assets'
 import Address from '../../ToktokMallAddresses/ToktokMallAddressesMenu/components/Adress'
-const testData = [
-  {id: 1, full_name: 'Cloud Panda', contact_number: '09050000000',
-    address: '10F, Inoza Tower, 40th Street, Bonifacio Global City', default: 1
-  },
-  {id: 2, full_name: 'Rick Sanchez', contact_number: '09060000000',
-    address: 'B20 L1, Mahogany Street, San Isidro, Makati City', default: 0
-  }
-]
 
-export const AddressForm = ({navigation , data , addressData, setAddressData ,defaultAddress , setDefaultAddress, addressLengthChanged ,setAddressLengthChanged}) => {
-
+export const AddressForm = ({data, onEdit}) => {
     
   return (
     <>
       <View style = {styles.container}>
         <View style = {{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-          <Text>Delivery Address</Text>
-          <TouchableOpacity onPress={() => {
-              navigation.navigate("ToktokMallAddressesMenu", {
-                addressData: addressData,  setDefaultAddress:setDefaultAddress, defaultAddress: defaultAddress
-                , setAddressData: setAddressData,
-                addressLengthChanged: addressLengthChanged ,setAddressLengthChanged: setAddressLengthChanged, screen: 'checkout'
-              })
-          }}>
+          <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>Delivery Address</Text>
+          <TouchableOpacity onPress={onEdit}>
             <Text style={{color: '#F6841F'}}>Edit</Text>
           </TouchableOpacity>
         </View>
-        <Address item = {data} screen = {'checkout'}/>
+        <View  style={styles.addressContainer}>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+
+            {data && data?.receiverName ? 
+            <Text style={styles.addressfullName}>{data?.receiverName || ""}</Text>
+              :
+            <Text style={styles.addressdefaultText}>Please set your default address</Text>}            
+            
+          </View>
+          <Text style={styles.addresscontact_number}>{data?.receiverContact || ""}</Text>
+          <Text style={styles.addressText}>{data?.fullAddress || data?.address}</Text>
+        </View>
       </View>  
     </>
     )
@@ -41,9 +38,12 @@ export const AddressForm = ({navigation , data , addressData, setAddressData ,de
 
 const styles = StyleSheet.create({
   body: {flex: 1, backgroundColor: '#F7F7FA', },
-  container: {padding: 15, backgroundColor: 'white', marginTop: 15,  },
-  
-
+  container: {paddingVertical: 8, paddingHorizontal: 15, backgroundColor: 'white', marginTop: 0,  },
+  addressContainer: {borderRadius: 5, backgroundColor: '#F8F8F8', padding: 10, marginTop: 10, marginBottom: 10},
+  addressdefaultText: {color: '#F6841F'},
+  addressfullName: {textTransform: 'capitalize', fontSize: 14, fontFamily: FONT.REGULAR},
+  addresscontact_number: {color: '#9E9E9E'},
+  addressText: {marginTop: 10, fontSize: 13, textTransform: 'capitalize'}
 })
 
 // export default AddressForm

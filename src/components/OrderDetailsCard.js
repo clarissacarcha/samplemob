@@ -157,7 +157,7 @@ export const OrderDetailsCard = ({delivery}) => {
               {borderBottomWidth: 0, borderColor: LIGHT, borderTopWidth: StyleSheet.hairlineWidth},
             ]}>
             <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-              <YellowIcon set="Ionicon" name="ios-pricetag" size={20} />
+              <YellowIcon set="Ionicon" name="ios-pricetag" size={18} />
               <View style={{marginLeft: 10}}>
                 <Text style={{fontFamily: FONT.BOLD}}>Amount</Text>
                 <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
@@ -167,7 +167,7 @@ export const OrderDetailsCard = ({delivery}) => {
             </View>
             {delivery.discount !== 0 && (
               <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-                <YellowIcon set="Ionicon" name="ios-pricetags" size={20} />
+                <YellowIcon set="Ionicon" name="ios-pricetags" size={18} />
                 <View style={{marginLeft: 10}}>
                   <Text style={{fontFamily: FONT.BOLD}}>Discount</Text>
                   <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
@@ -176,6 +176,25 @@ export const OrderDetailsCard = ({delivery}) => {
                 </View>
               </View>
             )}
+          </View>
+        )}
+
+        {/*-------------------- VEHICLE TYPE --------------------*/}
+        {APP_FLAVOR === 'C' && (
+          <View
+            style={[
+              styles.directionsBox,
+              {borderBottomWidth: 0, borderColor: LIGHT, borderTopWidth: StyleSheet.hairlineWidth},
+            ]}>
+            <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+              <YellowIcon set="Fontisto" name="motorcycle" size={16} />
+              <View style={{marginLeft: 10}}>
+                <Text style={{fontFamily: FONT.BOLD}}>Vehicle Type</Text>
+                <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>
+                  <Text style={{color: MEDIUM, marginLeft: 10}}>{delivery.vehicleType.name}</Text>
+                </Text>
+              </View>
+            </View>
           </View>
         )}
 

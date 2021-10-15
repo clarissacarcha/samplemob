@@ -21,21 +21,22 @@ export const CheckoutModal = ({navigation, isVisible, setIsVisible}) => {
 
   return (
     <>
-      <View style= {{ flex:1, justifyContent: 'center', alignItems: 'center', marginTop: 22}}>
+      <View style= {{ flex:1, justifyContent: 'center', alignItems: 'center'}}>
           <Modal transparent = {true} visible = {isVisible} animationType = "none"  >
-            <View style = {{flex:1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.25)'}}>
-              <View style = {{backgroundColor: 'white', width: '90%',borderRadius: 10, alignItems: 'center', justifyContent: 'center',
-                paddingHorizontal: 20, 
+            <View style = {{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.65)'}}>
+              
+              <View style = {{
+                backgroundColor: 'white', 
+                width: '90%',
+                borderRadius: 10, 
+                alignItems: 'center', 
+                justifyContent: 'center',
+                // paddingHorizontal: 30, 
+                padding: 15
               }}>
-                {/* <AntDesgin 
-                  name = {'checkcircleo'}
-                  size = {90}
-                  color = {'#F6841F'}
-                /> */}
-                <Image 
+                {/* <Image 
                   source = {require('../../../../assets/icons/promptsuccess.png')}
-                  // style = {{height: '40%' , resizeMode: 'cover', width: '40%', alignSelf: 'center'}}
-                  style = {{height: '30%', width: '40%', alignSelf: 'center'}}
+                  style = {{height: '60%', width: '65%', alignSelf: 'center', resizeMode: 'stretch'}}
                 />
                 <Text style ={styles.title}>Your order has been placed!</Text>
                 <Text style ={styles.text}>Your order has been placed successfully. Please visit My Orders to check the progress and other details.</Text>
@@ -43,10 +44,37 @@ export const CheckoutModal = ({navigation, isVisible, setIsVisible}) => {
                   <TouchableOpacity style = {styles.whiteButton} onPress = {() => {setIsVisible(false), navigation.navigate("ToktokMallHome")}}>
                     <Text style = {styles.whiteButtonText}>Continue shopping</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style = {styles.button} onPress = {() => {setIsVisible(false), navigation.navigate("ToktokMallMyOrders", { tab: 0})}}>
+                  <TouchableOpacity 
+                    style={styles.button} 
+                    onPress={() => {
+                      setIsVisible(false)
+                      navigation.navigate("ToktokMallMyOrders", { tab: 0})
+                    }
+                  }>
+                    <Text style = {styles.buttonText}>Go to My Orders</Text>
+                  </TouchableOpacity>    
+                </View> */}
+                <Image 
+                  source = {require('../../../../assets/icons/promptsuccess.png')}
+                  style = {{height: '50%', width: '65%', alignSelf: 'center', resizeMode: 'contain'}}
+                />
+                <Text style ={styles.title}>Your order has been placed!</Text>
+                <Text style ={styles.text}>Your order has been placed successfully. Please visit My Orders to check the progress and other details.</Text>
+                <View style = {styles.row}>
+                  <TouchableOpacity style = {styles.whiteButton} onPress = {() => {setIsVisible(false), navigation.navigate("ToktokMallHome")}}>
+                    <Text style = {styles.whiteButtonText}>Continue shopping</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity 
+                    style={styles.button} 
+                    onPress={() => {
+                      setIsVisible(false)
+                      navigation.navigate("ToktokMallMyOrders", { tab: 0})
+                    }
+                  }>
                     <Text style = {styles.buttonText}>Go to My Orders</Text>
                   </TouchableOpacity>    
                 </View>
+                
               </View>
             </View>
             
@@ -69,13 +97,13 @@ const styles = StyleSheet.create({
     //     width: 0, height: 2
     // }
   },
-  title: { color: COLOR.ORANGE, fontFamily: FONT.BOLD, fontSize: 24, flex: 0, paddingVertical: 10, paddingHorizontal: 10, textAlign: 'center'},
+  title: { color: COLOR.ORANGE, fontFamily: FONT.BOLD, fontSize: 24, flex: 0, marginTop: 0, textAlign: 'center'},
   text: {color: '#9E9E9E', fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M, flex: 0, paddingVertical: 10, paddingHorizontal: 10, textAlign: 'center'},
-  row: {flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', top: 20 },
+  row: {flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 10 },
   button: { padding: 10, backgroundColor: COLOR.ORANGE, alignItems: 'center', justifyContent: 'center', borderRadius: 5 , width: '45%' },
   buttonText: {color: 'white', fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M},
-  whiteButton: { padding: 10, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center', 
-    borderRadius: 5, borderWidth: 1, borderColor: COLOR.ORANGE , width: '45%', marginRight: 20
+  whiteButton: { padding: 8, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center', 
+    borderRadius: 5, borderWidth: 1, borderColor: COLOR.ORANGE , width: '45%', marginRight: 20, fontSize: 11
   },
   whiteButtonText: {color: COLOR.ORANGE, fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M},
 })

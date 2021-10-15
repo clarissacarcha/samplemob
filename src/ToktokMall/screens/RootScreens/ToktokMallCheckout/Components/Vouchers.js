@@ -1,10 +1,13 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, } from 'react-native';
-// import { COLOR, FONT } from '../../../../../../res/variables';
-// import {LandingHeader, AdsCarousel} from '../../../../../Components';
-// import { ScrollView } from 'react-native-gesture-handler';
-// import CustomIcon from '../../../../../Components/Icons';
-// import {watch, electronics, mensfashion, furniture, petcare} from '../../../../../assets'
+import {StyleSheet, View, Text, Platform, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, } from 'react-native';
+import { FONT } from '../../../../../res/variables';
+import CustomIcon from '../../../../Components/Icons';
+import Spinner from 'react-native-spinkit';
+
+import { useLazyQuery, useQuery, useMutation } from '@apollo/react-hooks';
+import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../graphql';
+import { GET_APPLY_VOUCHER } from '../../../../../graphql/toktokmall/model';
+
 const testData = [
   {id: 1, full_name: 'Cloud Panda', contact_number: '09050000000',
     address: '10F, Inoza Tower, 40th Street, Bonifacio Global City', default: 1
@@ -14,7 +17,43 @@ const testData = [
   }
 ]
 
-export  const Vouchers = ({ navigation, vouchers, setVouchers}) => {
+export const Vouchers = ({ navigation, items, vouchers, setVouchers, setVoucher}) => {
+
+  const [isValid, setIsValid] = useState(0)
+  const [vcode, setvCode] = useState("")
+
+  useEffect(() => {
+    console.log(items)
+  }, [items])
+
+  const [applyVoucher, {error, loading}] = useLazyQuery(GET_APPLY_VOUCHER, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',    
+    onCompleted: (response) => {
+      console.log("Response", response)
+      if(response.applyVoucher){
+
+        //Check store id if exist on item list
+        let index = items.findIndex(x => x.store_id == response.applyVoucher.shopid)
+        if(index > -1){
+          //if exist, voucher is valid
+          setIsValid(2)
+          setVoucher(response.applyVoucher)
+        }else{
+          setIsValid(-1)
+          setVoucher(null)
+        }
+        
+      }else{
+        setIsValid(-1)
+        setVoucher(null)
+      }
+    },
+    onError: (err) => {
+      console.log(err)
+      setIsValid(-1)
+    }
+  })
 
   const renderVouchers = () => {
     // if (vouchers.length > 0){
@@ -43,14 +82,78 @@ export  const Vouchers = ({ navigation, vouchers, setVouchers}) => {
   return (
     <>
       <View style = {styles.container2}>
-        <TouchableOpacity style = {styles.container} onPress = {() => {navigation.navigate("ToktokMallVouchersClaim", {tab: 1, vouchers: vouchers, setVouchers: setVouchers})}}>
+        <TouchableOpacity activeOpacity={1} style = {styles.container} onPress = {() => {
+          // navigation.navigate("ToktokMallVouchersClaim", {tab: 1, vouchers: vouchers, setVouchers: setVouchers})
+        }}>
         {/* <TouchableOpacity style = {styles.container} onPress = {() => {navigation.navigate("ToktokMallMyVouchersClaim", {tab: 1})}}> */}
-            <Text>Select Voucher</Text>
-            <TouchableOpacity onPress = {() => {alert(JSON.stringify(vouchers))}}>
-            <Text style={{color: '#F6841F'}}>Edit</Text>
-            </TouchableOpacity>
+            <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>Voucher</Text>
+            {/* <TouchableOpacity onPress = {() => {alert(JSON.stringify(vouchers))}}>
+              <CustomIcon.FA5Icon name="chevron-right" size={11} color="#F6841F" />
+            </TouchableOpacity> */}
         </TouchableOpacity>
-        {renderVouchers()}
+        <View style={{ height: 2, backgroundColor: '#F7F7FA'}} />
+        {/* {renderVouchers()} */}
+    
+        {!loading && isValid == -1 && 
+        <View style={{backgroundColor: '#FFFCF4', padding:10}}>
+          <Text style={{color: '#F6841F', fontSize: 12, textAlign: 'center'}}>*Invalid voucher code. Please check your voucher code.</Text>
+        </View>}
+    
+        <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
+          <View style={{
+            flex: 1,
+            padding: Platform.OS === 'ios' ? 10 : 0,
+            backgroundColor: '#F8F8F8',
+            marginTop: 10,
+            borderRadius: 5,
+            alignItems: 'flex-start',
+            flexDirection: 'row'            
+          }}>
+            <TextInput
+              value={vcode}
+              style={{marginLeft: 10, flex: 1}}
+              placeholder="Input voucher (optional)"
+              autoCapitalize="characters"
+              onChangeText={(val) => {
+                setvCode(val)
+                setIsValid(0)
+              }}
+            />
+            <View style={{flex: 0.2, alignItems: 'center', justifyContent: 'center'}}>
+              <View style={{flex: 1, justifyContent: 'center'}}>
+                {loading && <Spinner 
+                  isVisible={loading}
+                  // isVisible={true}
+                  type={"FadingCircleAlt"}
+                  color={"#F6841F"}
+                  size={15}
+                />}
+                {!loading && isValid == 2 && <CustomIcon.FeIcon name="check-circle" size={15} color="#06A44E" />}
+                {!loading && isValid == -1 && <CustomIcon.FA5Icon name="times-circle" size={15} color="#F6841F" />}
+              </View>              
+            </View>
+            <TouchableOpacity 
+              disabled={vcode == ""}
+              onPress={() => {
+                if(vcode == "") return 
+                applyVoucher({variables: {
+                  input: {
+                    vcode: vcode
+                  }
+                }})
+              }}
+              style={{
+                flex: 0, 
+                paddingVertical: 15, 
+                paddingHorizontal: 15,
+                backgroundColor: 'white',
+                alignItems: 'flex-end'
+              }}
+            >
+              <Text style={{color: vcode == "" ? "#9E9E9E" : "#F6841F", textAlign: 'right'}}>Apply</Text>
+            </TouchableOpacity>
+          </View>          
+        </View>
       </View>
         
     </>
@@ -60,6 +163,6 @@ export  const Vouchers = ({ navigation, vouchers, setVouchers}) => {
 const styles = StyleSheet.create({
   body: {flex: 1, backgroundColor: '#F7F7FA', },
   container: {padding: 15, backgroundColor: 'white', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'  },
-  container2: { backgroundColor: 'white', marginTop: 15,  }
+  container2: { backgroundColor: 'white', marginTop: 8,  }
 
 })

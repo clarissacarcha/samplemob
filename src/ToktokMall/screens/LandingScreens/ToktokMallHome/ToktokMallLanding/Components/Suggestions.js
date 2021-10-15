@@ -1,12 +1,21 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList} from 'react-native';
+import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ActivityIndicator} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/core';
-import { COLOR, FONT } from '../../../../../../res/variables';
-import {LandingHeader, AdsCarousel} from '../../../../../Components';
-import CustomIcon from '../../../../../Components/Icons';
+import { useLazyQuery, useQuery } from '@apollo/react-hooks';
+import {Image as RNEImage} from 'react-native-elements'; 
 
-import {clothfacemask, medicalfacemask} from '../../../../../assets'; 
+import { COLOR, FONT } from '../../../../../../res/variables';
+import CustomIcon from '../../../../../Components/Icons';
+import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../../graphql';
+import { GET_TOP_PRODUCTS } from '../../../../../../graphql/toktokmall/model';
+
+import {clothfacemask, medicalfacemask, placeholder} from '../../../../../assets'; 
+import { Price } from '../../../../../helpers';
+import { SwipeReloader, Loading } from '../../../../../Components';
+import Spinner from 'react-native-spinkit';
+
+import ContentLoader from 'react-native-easy-content-loader'
 
 const testdata = [{
   image: clothfacemask,
@@ -52,33 +61,64 @@ const RenderStars = ({value}) => {
   )
 }
 
-const RenderItem = ({item}) => {
+const RenderItem = ({item, loading}) => {
 
   const navigation = useNavigation()
+
+  const getImageSource = (data) => {
+    if(data && data?.length > 0){
+      return {uri: data[0].filename}
+    }else {
+      return placeholder
+    }
+  }
+  const origPrice = (discountRate, currentPrice) => {
+    let total = 0
+    total = currentPrice * (discountRate / 100)
+    return total
+  }
 
   return (
     <>
       <View style={{flex: 2, backgroundColor: '#fff', margin: 5}}>
-                  
+      
         <TouchableOpacity activeOpacity={1} onPress={() => {
-          navigation.navigate("ToktokMallProductDetails")
+          navigation.navigate("ToktokMallProductDetails", item)
+          // console.log(item)
         }} style={{padding: 5}}>
-          <Image 
-            source={item.image} 
+          {item?.discountRate != "" && 
+          <View style={{position:'absolute', zIndex: 1, right: 0, backgroundColor: '#F6841F', borderBottomLeftRadius: 30}}>
+            <Text style={{fontSize: 8, paddingHorizontal: 4, paddingLeft: 8, paddingTop: 1, paddingBottom: 3, color: "#fff", fontFamily: FONT.BOLD}}>{item?.discountRate}</Text>
+          </View>}
+          <RNEImage 
+            source={getImageSource(item.images)} 
             style={{resizeMode: 'cover', width: '100%', height: 120, borderRadius: 5}} 
           />
-          <Text style={{fontSize: 13, fontWeight: '500', paddingVertical: 5}}>{item.label}</Text>
-          <Text style={{fontSize: 13, color: "#F6841F"}}>&#8369;{parseFloat(item.price).toFixed(2)}</Text>    
+          <Text style={{fontSize: 13, fontWeight: '500', paddingVertical: 5}} numberOfLines={2} ellipsizeMode="tail">{item.itemname}</Text>
+          {/* <Text style={{fontSize: 13, color: "#F6841F"}}><Price amount={item.price} /></Text>    
           <View style={{flexDirection: 'row'}}>
-            <View style={{flex: 7, flexDirection: 'row'}}>
+            {/* <View style={{flex: 7, flexDirection: 'row'}}>
               <RenderStars value={item.rating} />
             </View>
-            <View style={{flex: 2}}>
-              <Text style={{color: "#9E9E9E", fontSize: 10}}>({item.stock})</Text>
+            <View style={{flex: 9}}>
+              <Text style={{color: "#9E9E9E", fontSize: 10}}>({item.noOfStocks || 0})</Text>
             </View>
+            <View style={{flex: 1}} />
             <View style={{flex: 3}}>
-              <Text style={{fontSize: 10}}>{item.sold} sold</Text>
+              <Text style={{fontSize: 10}}>{item.soldCount || 0} sold</Text>
             </View>
+          </View> */}
+          <View style={{flexDirection: 'row'}}>
+          <View style={{flex: 2.3}}>
+              <Text style={{fontSize: 13, color: "#F6841F"}}><Price amount={item.price} /></Text>
+            </View>
+            <View style={{flex: 2, justifyContent: 'center'}}>
+              {item.discountRate && item.discountRate != "" ?  <Text style={{fontSize: 9, color: "#9E9E9E", textDecorationLine: 'line-through'}}><Price amount={item.compareAtPrice} /></Text> : <></>}
+            </View>
+            <View style={{flex: 1.3, justifyContent: 'center', alignItems: 'flex-end'}}>
+              <Text style={{fontSize: 9}}>{item.soldCount || 0} sold</Text>
+            </View>
+            
           </View>
         </TouchableOpacity>
       </View>
@@ -86,46 +126,137 @@ const RenderItem = ({item}) => {
   )
 }
 
-export const Suggestions = ({data}) => {
+export const Suggestions = ({lazyload}) => {
 
   const navigation = useNavigation()
 
-    return (
-      <>
-        <View style={styles.container}>
-            <View style={styles.heading}>
-              <View style={{flex: 8}}>
-                <Text style={styles.h1}>Suggestions for you</Text>
-              </View>
-              <TouchableOpacity onPress={() => {
-                navigation.navigate("ToktokMallCategoriesList", {searchValue: "Suggestions for you"})
-              }} style={{flex: 2, flexDirection: 'row'}}>
-                <View style={{flex: 2, alignItems: 'flex-end', justifyContent: 'center'}}>
-                  <Text style={styles.link}>See all </Text>
-                </View>
-                <View style={{flex: 0, alignItems: 'flex-end', justifyContent: 'center'}}>
-                  <CustomIcon.EIcon name="chevron-right" color="#F6841F" size={16} />
-                </View>
-              </TouchableOpacity>
-            </View>
+  const [products, setProducts] = useState([])
+  const [offset, setOffset] = useState(0)
+  const [isFetching, setIsFetching] = useState(true)
 
-            <FlatList
-              data={data}
-              numColumns={2}
-              style={{paddingHorizontal: 10}}
-              renderItem={({item}) => {
-                return <RenderItem item={item} />
-              }}
-              keyExtractor={(item, index) => item + index}
-              // on
-            />
-            
+  const [getProducts, {error, loading, fetchMore}] = useLazyQuery(GET_TOP_PRODUCTS, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    variables: {
+      input: {
+        offset: offset,
+        limit: 10
+      }
+    },
+    onCompleted: (response) => {
+      let temp = products
+      if(response){
+        temp = temp.concat(response.getTopProducts)
+        setProducts(temp.sort((a, b) => a.soldCount < b.soldCount ))
+      }else{
+        setProducts(temp.sort((a, b) => a.soldCount < b.soldCount ))
+      }
+      setIsFetching(false)
+    },
+    onError: (err) => {
+      console.log(err)
+      setIsFetching(false)
+    }
+  })
+
+  useEffect(() => {
+    getProducts()
+  }, [])
+
+  useEffect(() => {
+    if(!isFetching){
+      console.log("will lazy load products...")
+      setOffset(products.length)
+      console.log({offset})
+      getProducts()
+    }
+  }, [lazyload])
+
+  // const { loading, data, fetchMore } = useQuery(GET_PRODUCTS, {
+  //   client: TOKTOK_MALL_GRAPHQL_CLIENT,
+  //   variables: {
+  //     offset: 0,
+  //     limit: 10
+  //   }
+  // })
+
+  // if(loading) return <Loading state={loading} />
+
+
+  return (
+    <>
+      <View style={styles.container}>
+        <View style={styles.heading}>
+          <View style={{flex: 8}}>
+            <Text style={styles.h1}>Suggestions for you</Text>
           </View>
-          <View style={{height: 15}}></View>
-          <View style={styles.separator} />
-      </>
-    )
-  }
+          <TouchableOpacity onPress={() => {
+            navigation.navigate("ToktokMallSearch", {searchValue: "Suggestions for you", origin: "suggestion"})
+          }} style={{flex: 2, flexDirection: 'row'}}>
+            <View style={{flex: 2, alignItems: 'flex-end', justifyContent: 'center'}}>
+              <Text style={styles.link}>See all </Text>
+            </View>
+            <View style={{flex: 0, alignItems: 'flex-end', justifyContent: 'center'}}>
+              <CustomIcon.EIcon name="chevron-right" color="#F6841F" size={16} />
+            </View>
+          </TouchableOpacity>
+        </View>
+
+        <FlatList
+          data={products}
+          numColumns={2}
+          style={{paddingHorizontal: 10}}
+          nestedScrollEnabled = {true}
+          renderItem={({item, index}) => {
+            const isEven = products?.length % 2 === 0
+            if(!isEven){
+              //ODD
+              if(index == products?.length - 1){
+                return (
+                  <>
+                    <RenderItem navigation={navigation} item={item} />
+                    <View style={{flex: 2, backgroundColor: '#fff', margin: 5}}></View>
+                  </>
+                )
+              }                  
+            }
+            return <RenderItem navigation={navigation} item={item} />
+          }}
+          keyExtractor={(item, index) => item + index}
+          refreshing={loading}          
+          onEndReachedThreshold={1}
+          ListFooterComponent={() => {
+            return (
+              <>
+                {isFetching && 
+                <View style={{padding: 15, alignItems: 'center', justifyContent: 'center'}}>
+                  <Spinner 
+                    isVisible={true}
+                    type={"Circle"}
+                    color={"#F6841F"}
+                    size={20}
+                  />
+                </View>}
+                
+                {/* <SwipeReloader state={isFetching} 
+                  onSwipeUp={() => {
+                    setOffset(products.length)
+                    console.log({offset})
+                    getProducts()
+                  }}
+                /> */}
+                {/* <View style={styles.separator} /> */}
+              </>
+            )
+          }}
+        />
+            
+      </View>
+    <View style={{height: 15}}></View>
+    {/* <View style={styles.separator} /> */}
+  </>
+  )
+}
 
 const styles = StyleSheet.create({
   container: {flex: 1, paddingVertical: 0},
@@ -134,5 +265,5 @@ const styles = StyleSheet.create({
   link: {fontSize: 12, color: "#F6841F"},
   image: {width: 50, height: 50, resizeMode: 'cover', alignSelf: 'center', borderRadius: 8},
   label: {fontSize: 11, alignSelf: 'center'},
-  separator: {flex: 0.5, height: 8, backgroundColor: '#F7F7FA'}
+  separator: {height: 8, backgroundColor: '#F7F7FA'}
 })

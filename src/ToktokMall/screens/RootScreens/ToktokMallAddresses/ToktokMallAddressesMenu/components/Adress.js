@@ -17,7 +17,6 @@ const testData = [
 
 const AddressMenu = ({item, screen}) => {
 
-
     return(
         <View  style={styles.addressContainer}>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -30,9 +29,6 @@ const AddressMenu = ({item, screen}) => {
           <Text style={styles.addressText}>{item.address}</Text>
         </View>
       ) 
-
-    
- 
 }
 
 const styles = StyleSheet.create({
