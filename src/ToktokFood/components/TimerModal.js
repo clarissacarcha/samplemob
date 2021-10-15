@@ -1,35 +1,86 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {View, Modal, StyleSheet, Image, Text, TouchableOpacity} from 'react-native';
 import BackgroundTimer from 'react-native-background-timer';
+import moment from 'moment';
+import {useNavigation} from '@react-navigation/native';
 
-// Fonts & Colors
+// Fonts & Colors & Images
 import {COLORS, FONTS, FONT_SIZE, NUMBERS, BUTTON_HEIGHT} from 'res/constants';
+import {success_ic, error_ic, warning_ic, question_ic} from 'toktokfood/assets/images';
 
 // Utils
 import {verticalScale, moderateScale, scale} from 'toktokfood/helper/scale';
 
-import {success_ic, error_ic, warning_ic, question_ic} from 'toktokfood/assets/images';
+
 
 const TimerModal = (props) => {
-  const {title, message} = props;
+  const {title, message, estimatedDeliveryTime, onCallBack, orderStatus} = props;
   const [visible, setVisible] = useState(false);
   const [duration, setDuration] = useState(1800000);
+  const timer = useRef(null);
+  const navigation = useNavigation();
 
   useEffect(() => {
-    let timer;
-    if(duration > 0){
-      timer = BackgroundTimer.setInterval(() => { 
-        setDuration(prev => prev - 5000)
-      }, 5000);
+    const unsubscribe = navigation.addListener('blur', () => {
+      console.log('blur')
+      BackgroundTimer.clearInterval(timer.current)
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
+  useEffect(() => {
+    if(estimatedDeliveryTime){
+      timer.current = BackgroundTimer.setInterval(() => { 
+        checkTimeReached()
+      }, 30000);
     } else {
+      if(duration > 0){
+        timer.current = BackgroundTimer.setInterval(() => { 
+          setDuration(prev => prev - 5000)
+        }, 5000);
+      } else {
+        setVisible(true)
+      }
+     
+    }
+    return () => { BackgroundTimer.clearInterval(timer.current) }
+  }, [duration, estimatedDeliveryTime])
+
+  const checkTimeReached = () => {
+    let edt = moment(estimatedDeliveryTime, 'h:mm a')
+    console.log(estimatedDeliveryTime)
+    if(moment().isAfter(edt)){
+      BackgroundTimer.clearInterval(timer.current)
       setVisible(true)
     }
-    return () => { BackgroundTimer.clearInterval(timer) }
-  }, [duration])
+  }
 
   const onCloseModal = () => {
-    setDuration(1800000)
     setVisible(false)
+    onCallBack()
+  }
+
+  const checkMessage = () => {
+    switch(orderStatus){
+      case 'po':
+        return "Preparing your order took longer than expected. Let's wait for another 10 minutes for it to be ready."
+      case 'rp':
+        return "Aw. Seems like there is no rider yet. Please wait until we get you a rider!"
+      case 'f':
+        return "Sorry. Looks like your rider is stucked in traffic. Let's give him few minutes to arrive."
+     }
+  }
+
+  const checkTitle = () => {
+    switch(orderStatus){
+      case 'po':
+        return "Still Preparing Order"
+      case 'rp':
+        return "Cannot Find Rider"
+      case 'f':
+        return "Rider in Traffic"
+     }
   }
 
   return (
@@ -39,8 +90,8 @@ const TimerModal = (props) => {
           <View style={[styles.prompContentWrapper, NUMBERS.SHADOW]}>
             <Image style={styles.icon} source={warning_ic} resizeMode="contain" />
             <View style={styles.messegeWrapper}>
-              {title !== undefined && <Text style={styles.messageTitle}>{title}</Text>}
-              {message !== undefined && <Text style={styles.messageContent}>{message}</Text>}
+              <Text style={styles.messageTitle}>{checkTitle()}</Text>
+              <Text style={styles.messageContent}>{checkMessage()}</Text>
             </View>
             <TouchableOpacity style={styles.confirmButton} onPress={() => onCloseModal()}>
               <Text style={styles.buttonText}>OK</Text>

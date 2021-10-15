@@ -65,7 +65,7 @@ const MainComponent = () => {
   const {shopname} = route.params;
   const {location, customerInfo, shopLocation, receiver} = useSelector((state) => state.toktokFood);
   const {user} = useSelector((state) => state.session);
-  const {totalAmount, temporaryCart, toktokWallet, paymentMethod, pmLoading} = useContext(VerifyContext);
+  const {totalAmount, temporaryCart, toktokWallet, paymentMethod, pmLoading, setPaymentMethod} = useContext(VerifyContext);
 
   const [riderNotes, setRiderNotes] = useState('');
   const [delivery, setDeliveryInfo] = useState(null);
@@ -560,6 +560,7 @@ const MainComponent = () => {
             onValueChange={(type) => {
               setShowOrderType(false);
               setOrderType(type);
+              setPaymentMethod('TOKTOKWALLET')
             }}
             shopname={temporaryCart.items[0]?.shopName}
             allowPickup={checkShop?.allowPickup}

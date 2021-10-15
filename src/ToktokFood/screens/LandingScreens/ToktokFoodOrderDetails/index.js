@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, useMemo} from 'react';
 import {ScrollView, StyleSheet, View, Alert, Text} from 'react-native';
 import {useSelector} from 'react-redux';
 import {useLazyQuery, useQuery} from '@apollo/react-hooks';
@@ -18,7 +18,7 @@ import {TOKTOK_FOOD_GRAPHQL_CLIENT, CLIENT} from 'src/graphql';
 import {GET_ORDER_TRANSACTION_BY_REF_NUM, GET_RIDER_DETAILS} from 'toktokfood/graphql/toktokfood';
 
 // Utils
-import {removeRiderDetails} from 'toktokfood/helper/showRiderDetails';
+import {removeEstimatedDeliveryTime} from 'toktokfood/helper/estimatedDeliveryTime';
 import {useIsFocused} from '@react-navigation/native';
 
 const ToktokFoodOrderDetails = ({route, navigation}) => {
@@ -122,7 +122,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
               : 'You have successfully picked up your order.';
           BackgroundTimer.clearInterval(checkOrderResponse5mins.current);
           BackgroundTimer.clearInterval(getRiderDetailsInterval.current);
-          await removeRiderDetails(referenceNum);
+          await removeEstimatedDeliveryTime(referenceNum);
           setShadowDialogMessage({
             title: 'Order Complete',
             message,
@@ -175,12 +175,17 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
             }
           }
         } else {
+          BackgroundTimer.clearInterval(checkOrderResponse5mins.current);
+          BackgroundTimer.clearInterval(getRiderDetailsInterval.current);
+          let isValidDate = moment(transaction.dateOrderProcessed).isValid();
           setShadowDialogMessage({
-            title: transaction.declinedNote ? 'Order Cancelled by Merchant' : 'OOPS!',
-            message: transaction.declinedNote ? transaction.declinedNote : 'Your order has been declined.',
+            title: isValidDate ? 'Order Cancelled by Merchant' : 'OOPS!',
+            message: transaction.declinedNote ? transaction.declinedNote :
+              isValidDate ? 'Your order has been cancelled by merchant.' : 'Your order has been declined.',
             show: true,
             type: 'warning',
           });
+          await removeEstimatedDeliveryTime(referenceNum);
         }
       } else {
         if (transaction.tDeliveryId) {
@@ -229,6 +234,12 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
     }
   };
 
+  const displayOrderTitle = useMemo(() => {
+    return (
+      <OrderTitle transaction={transaction} riderDetails={riderDetails} referenceNum={referenceNum} />
+    )
+  }, [transaction, riderDetails])
+
   return (
     <View style={styles.container}>
       <DialogMessage
@@ -249,7 +260,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
         <LoadingIndicator isFlex isLoading={true} />
       ) : (
         <ScrollView bounces={false} contentContainerStyle={styles.scrollView} showsVerticalScrollIndicator={false}>
-          <OrderTitle transaction={transaction} riderDetails={riderDetails} />
+          { displayOrderTitle }
           <Separator />
           <OrderAddress transaction={transaction} riderDetails={riderDetails} />
           <Separator />
