@@ -11,14 +11,13 @@ import CustomStarRating from 'toktokfood/components/CustomStarRating';
 // import HeaderTabs from 'toktokfood/components/HeaderTabs';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
 import DialogMessage from 'toktokfood/components/DialogMessage';
-import HeaderSearchBox from 'toktokfood/components/HeaderSearchBox';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import ChangeAddress from 'toktokfood/components/ChangeAddress';
 import {searchIcon} from 'toktokfood/assets/images';
 
 // Strings
-import {restaurants, tabs} from 'toktokfood/helper/strings';
+import {tabs} from 'toktokfood/helper/strings';
 
 import {moderateScale, getStatusbarHeight, getIphoneNotchSize} from 'toktokfood/helper/scale';
 
