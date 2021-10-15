@@ -52,7 +52,7 @@ export const Button = ({enabled, loading, shipping, balance, shippingRates, tota
             <TouchableOpacity disabled={isDisabled()} style={isDisabled() ? styles.invalidButton : styles.activeButton} onPress={() => {
               if(enabled) onPress()
             }}>
-                {!loading && <Text style={styles.buttonText}>Checkout</Text>}
+                {!loading && <Text style={styles.buttonText}>Place Order</Text>}
                 {loading && <Spinner type="ThreeBounce" size={30} color="#fff" isVisible={loading} />}
             </TouchableOpacity>
           </View>

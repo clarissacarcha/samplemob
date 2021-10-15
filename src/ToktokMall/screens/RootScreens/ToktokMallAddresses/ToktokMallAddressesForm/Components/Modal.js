@@ -40,7 +40,8 @@ export const AddressModal = ({navigation, isVisible, setIsVisible, type, message
           transparent={true}
           visible={modalVisible}
           onRequestClose={() => {
-            setModalVisible(!modalVisible);
+            setModalVisible(false);
+            setIsVisible(false)
           }}>
           <View
             style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.25)'}}>

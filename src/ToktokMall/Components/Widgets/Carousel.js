@@ -16,6 +16,7 @@ export const AdsCarousel = (props) => {
 
   const [activeSlide, setActiveSlide] = useState(0)
   const [entries, setEntries] = useState([1, 2, 3])
+  const [autoPlay, setAutoPlay] = useState(true)
 
   const [getAds, {error, loading}] = useLazyQuery(GET_ADS, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
@@ -49,7 +50,6 @@ export const AdsCarousel = (props) => {
 
     const getImage = (raw) => {
       if(typeof raw == "string"){
-        console.log(raw)
         return {uri: raw}
       }else{
         return SampleImage
@@ -104,8 +104,12 @@ export const AdsCarousel = (props) => {
         width = {screenWidth -30}
         height = {170}
         loop = {true}
-        // autoplay = {true}
-        onIndexChanged={(index) => {setActiveSlide(index), console.log(entries[index])} }
+        autoplay = {autoPlay}
+        onScrollBeginDrag ={() => {
+          setAutoPlay(false)
+          setAutoPlay(true)
+        }}
+        onIndexChanged={(index) => setActiveSlide(index) }
         autoplayTimeout = {3}
         showsPagination = {true}
         // activeDot 

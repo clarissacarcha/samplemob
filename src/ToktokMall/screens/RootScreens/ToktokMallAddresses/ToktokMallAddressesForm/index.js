@@ -19,6 +19,7 @@ import Toast from 'react-native-simple-toast';
 import ToggleSwitch from 'toggle-switch-react-native';
 import CustomIcon from '../../../../Components/Icons';
 import axios from 'axios';
+import { EventRegister } from "react-native-event-listeners"
 
 import {useLazyQuery} from '@apollo/react-hooks';
 import {GET_CITIES, GET_CITY} from '../../../../../graphql/toktokmall/model/Address';
@@ -118,13 +119,18 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefa
       latitude: parseFloat(latitude),
       longitude: parseFloat(longitude)
     }
+    const refresh = () => setTimeout(() => {
+      EventRegister.emit("refreshAddress")
+    }, 1000);
 
     if(route.params?.update){
       SaveDefaultAddress(() => {
+        refresh()
         navigation.goBack();
       })
     }else{
-      SavePostAddress(() => {        
+      SavePostAddress(() => {   
+        refresh() 
         navigation.goBack();
       })
     }
@@ -248,7 +254,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefa
     });
   };
 
-  const SaveDefaultAddress = async () => {
+  const SaveDefaultAddress = async (callback) => {
 
     setIsLoading(true)
 
@@ -268,6 +274,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefa
 
     if(req.responseData && req.responseData.success == 1){
       setIsLoading(false)
+      callback()
       navigation.goBack();
     }else if(req.responseError && req.responseError.success == 0){
       setIsLoading(false)
