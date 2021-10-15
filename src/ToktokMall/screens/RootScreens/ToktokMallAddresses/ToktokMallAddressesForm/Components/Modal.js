@@ -6,6 +6,7 @@ import { COLOR, FONT, FONT_SIZE } from '../../../../../../res/variables';
 // import CustomIcon from '../../../../../Components/Icons';
 // import {watch, electronics, mensfashion, furniture, petcare} from '../../../../../assets'
 import AntDesgin from 'react-native-vector-icons/dist/AntDesign'
+import CustomIcon from "../../../../../Components/Icons"
 import { Touchable } from 'react-native';
 
 const Confirm = ({onCancel, onConfirm}) => {
@@ -41,7 +42,7 @@ export const AddressModal = ({navigation, isVisible, setIsVisible, type, message
           visible={modalVisible}
           onRequestClose={() => {
             setModalVisible(false);
-            setIsVisible(false)
+            setIsVisible(false);
           }}>
           <View
             style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.25)'}}>
@@ -64,6 +65,19 @@ export const AddressModal = ({navigation, isVisible, setIsVisible, type, message
                     setIsVisible(false);
                   }}
                 />
+              )}
+              {type !== 'Confirm' && (
+                <View style={{flexDirection: 'row', justifyContent: 'flex-end', marginBottom: 10}}>
+                  <CustomIcon.MCIcon
+                    onPress={() => {
+                      setModalVisible(false);
+                      setIsVisible(false);
+                    }}
+                    name="close"
+                    size={25}
+                    color="#F6841F"
+                  />
+                </View>
               )}
               {type == 'Message' && (
                 <View style={{alignItems: 'center', justifyContent: 'center'}}>

@@ -10,6 +10,7 @@ import {
   ScrollView,
   TextInput,
   Picker,
+  Platform,
   Dimensions
 } from 'react-native';
 import {connect} from 'react-redux';
@@ -46,6 +47,7 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
     value: false,
     ids: []
   })
+  const [singleItemDelete, setSingleItemDelete] = useState(null)
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack onBack={() => {
@@ -70,7 +72,10 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
         setAddresses(getCustomerAddresses)
       }
     },
-    onError: (err) => console.log(err),
+    onError: (err) => {
+      console.log(err)
+      getAddresses({variables: {input: {userId: user.userId}}})
+    },
   });
 
   useEffect(() => {
@@ -158,6 +163,7 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
               <DeleteButton
                 disabled={item.defaultAdd == 1}
                 onPress={() => {
+                  setSingleItemDelete(item.id)
                   setConfirmDeleteModal(true);
                 }}
               />,
@@ -239,11 +245,12 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
       ...prevState,
       ids: [],
     }));
-    setDeleteSuccessModal(true)
   }
   const disabledSelectAll =
     activeToDeleteItem.ids?.length !== 0 &&
     activeToDeleteItem.ids?.length === addresses.filter((address) => address.defaultAdd !== 1)?.length;
+
+    console.log("deleteSuccessModal", deleteSuccessModal)
 
   return (
     <>
@@ -271,9 +278,11 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
               if (activeToDeleteItem.value) {
                 await deleteMultipleAddress();
               } else {
-                await deleteAddress(item.id);
+                await deleteAddress(singleItemDelete);
               }
-              setDeleteSuccessModal(true);
+              setTimeout(() => {
+                setDeleteSuccessModal(true);
+              }, 1000)
             }}
           />
         )}
