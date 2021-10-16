@@ -164,7 +164,7 @@ export const ToktokWalletRecoverPin = ({navigation})=> {
 
                         {
                             otpCodeAttempt && <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M,color: COLOR.RED,marginHorizontal: 16}}>
-                                Incorrect OTP. You can try {numWordArray[otpCodeAttempt]} ({otpCodeAttempt}) more {otpCodeAttempt == 1 ? "time" : "times"} before your account will be temporarily blocked.
+                                Incorrect OTP. You can try {numWordArray[otpCodeAttempt]} ({otpCodeAttempt}) more {otpCodeAttempt == 1 ? "time" : "times"} before your account will be temporarily suspended.
                             </Text>
                         }
 

@@ -129,7 +129,7 @@ const NumberBoxes = ({pinCode, onNumPress , showPin}) => {
                             
                         </View>
                             {
-                                otpCodeAttempt < 6 && <Text style={{fontFamily: FONT.REGULAR,color:"red",alignSelf:"center",fontSize: 12,textAlign:'center'}}>Incorrect OTP. You can try {numWordArray[otpCodeAttempt]} ({otpCodeAttempt}) more {otpCodeAttempt == 1 ? "time" : "times"} before your account will be temporarily blocked.</Text>
+                                otpCodeAttempt < 6 && <Text style={{fontFamily: FONT.REGULAR,color:"red",alignSelf:"center",fontSize: 12,textAlign:'center'}}>Incorrect OTP. You can try {numWordArray[otpCodeAttempt]} ({otpCodeAttempt}) more {otpCodeAttempt == 1 ? "time" : "times"} before your account will be temporarily suspended.</Text>
                             }
                             <TouchableOpacity
                                     disabled={otpTimer > 0 ? true : false}
@@ -148,7 +148,7 @@ const NumberBoxes = ({pinCode, onNumPress , showPin}) => {
                                     otpCode.length < 6
                                     ? <DisabledButton label="Proceed" />
                                     : <YellowButton label="Proceed" onPress={()=>{
-                                        setOtpCode("")
+                                        // setOtpCode("")
                                         callBackFunc({Otp: otpCode})
                                     }} />
                                 }
