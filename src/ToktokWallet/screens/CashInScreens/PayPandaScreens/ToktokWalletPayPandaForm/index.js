@@ -4,7 +4,7 @@ import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import {useSelector} from 'react-redux'
 import {useMutation,useLazyQuery,useQuery} from '@apollo/react-hooks'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
-import {POST_CASH_IN_PAYPANDA_REQUEST,GET_GLOBAL_SETTINGS} from 'toktokwallet/graphql'
+import {POST_CASH_IN_PAYPANDA_REQUEST,GET_GLOBAL_SETTINGS,POST_REQUEST_CASH_IN} from 'toktokwallet/graphql'
 import {onError,onErrorAlert} from 'src/util/ErrorUtility';
 import {numberFormat} from 'toktokwallet/helper'
 import { useAlert } from 'src/hooks'
@@ -42,6 +42,16 @@ export const ToktokWalletPayPandaForm = ({navigation,route})=> {
     const [recipientDetails,setRecipientDetails] = useState(null)
     const [disablebtn,setDisablebtn] = useState(false)
     const [maxLimitMessage,setMaxLimitMessage] = useState("")
+
+    const [postRequestCashIn] = useMutation(POST_REQUEST_CASH_IN, {
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+        onCompleted: ({postRequestCashIn})=>{
+            return navigation.navigate("ToktokWalletTPINValidator", {
+                callBackFunc: proceedToPaypandaPortal,
+            })
+        },
+        onError: (error) => onErrorAlert({alert,error})
+    })
 
     const [postCashInPayPandaRequest , {data,error,loading}] = useMutation(POST_CASH_IN_PAYPANDA_REQUEST , {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
@@ -95,9 +105,7 @@ export const ToktokWalletPayPandaForm = ({navigation,route})=> {
     }
 
     const onSwipeSuccess = ()=> {
-        return navigation.navigate("ToktokWalletTPINValidator", {
-            callBackFunc: proceedToPaypandaPortal,
-        })
+        postRequestCashIn();
     }
 
     const confirmAmount = ()=> {
