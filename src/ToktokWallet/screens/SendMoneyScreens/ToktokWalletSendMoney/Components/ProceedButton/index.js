@@ -22,28 +22,21 @@ export const ProceedButton = ({swipeEnabled , navigation , amount , note , tokwa
         referenceNumber: "",
         createdAt: ""
     })
-    const [pinCodeAttempt,setPinCodeAttempt] = useState(6)
-    const [openPinCode,setOpenPinCode] = useState(false)
-    const [otpCodeAttempt,setOtpCodeAttempt] = useState(6)
-    const [openOtpCode,setOpenOtpCode] = useState(false)
-    const [requestSendMoneyId,setRequestSendMoneyId] = useState(null)
 
     const [postRequestSendMoney , {loading: requestLoading}] = useMutation(POST_REQUEST_SEND_MONEY, {
         client:TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({postRequestSendMoney})=>{
             const { validator , requestSendMoneyId } = postRequestSendMoney
-            setRequestSendMoneyId(requestSendMoneyId)
-            if(validator == "TPIN"){
-                setPinCodeAttempt(6)
-                return setOpenPinCode(true)
-            }else{
-                setOtpCodeAttempt(6)
-                return setOpenOtpCode(true)
-            }
+            const screen = validator == "TPIN" ? "ToktokWalletTPINValidator" : "ToktokWalletOTPValidator"
+            return navigation.navigate(screen, {
+                callBackFunc: Proceed,
+                resendRequest: onSwipeSuccess ,
+                data: {
+                    requestSendMoneyId: requestSendMoneyId
+                }
+            })
         },
         onError: (error)=>{
-            setOpenPinCode(false)
-            setOpenOtpCode(false)
             onErrorAlert({alert,error})
         }
     })
@@ -51,8 +44,7 @@ export const ProceedButton = ({swipeEnabled , navigation , amount , note , tokwa
     const [postSendMoney , {data ,error, loading }] = useMutation(POST_SEND_MONEY , {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({postSendMoney})=> {
-            setOpenPinCode(false)
-            setOpenOtpCode(false)
+            // navigation.pop(); // remove TPIN/OTP Validator Screen;
             setWalletinfoParams(postSendMoney)
             setSuccessModalVisible(true)
         },
@@ -61,11 +53,7 @@ export const ProceedButton = ({swipeEnabled , navigation , amount , note , tokwa
                 error,
                 navigation,
                 alert,
-                onErrorAlert,
-                setOpenPinCode,
-                setOpenOtpCode,  
-                setPinCodeAttempt,
-                setOtpCodeAttempt,       
+                onErrorAlert,  
             })
         }
     })
@@ -90,7 +78,8 @@ export const ProceedButton = ({swipeEnabled , navigation , amount , note , tokwa
         })
     }
 
-    const Proceed = ({pinCode = null , Otp = null })=> {
+    const Proceed = ({pinCode = null , Otp = null , data = null})=> {
+        const { requestSendMoneyId } = data
         postSendMoney({
             variables: {
                 input: {
@@ -121,18 +110,7 @@ export const ProceedButton = ({swipeEnabled , navigation , amount , note , tokwa
 
     return (
        <>
-        <AlertOverlay visible={requestLoading}/>
-        <ValidatorScreen
-            TPINVisible={openPinCode}
-            setTPINVisible={setOpenPinCode}
-            tpinCodeAttempt={pinCodeAttempt}
-            OTPVisible={openOtpCode}
-            setOTPVisible={setOpenOtpCode}
-            otpCodeAttempt={otpCodeAttempt}
-            otpResend={onSwipeSuccess}
-            callBackFunc={Proceed}
-            loading={loading}
-        />
+        <AlertOverlay visible={requestLoading || loading}/>
         <SuccessfulModal 
                 successModalVisible={successModalVisible}
                 amount={amount}

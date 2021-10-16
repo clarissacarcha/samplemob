@@ -173,12 +173,6 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
     const tokwaAccount = useSelector(state=>state.toktokWallet)
     const alert = useAlert()
     const navigation = useNavigation()
-    const [errorMessage,setErrorMessage] = useState("")
-    const [pinCodeAttempt,setPinCodeAttempt] = useState(6)
-    const [openPinCode,setOpenPinCode] = useState(false)
-    const [otpCodeAttempt,setOtpCodeAttempt] = useState(6)
-    const [openOtpCode,setOpenOtpCode] = useState(false)
-    const [requestFundTransferId,setRequestFundTransferId] = useState(null) 
     const [cashoutLogParams,setCashoutLogParams] = useState({
         status: 0
     })
@@ -226,14 +220,14 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({postRequestCashOut})=>{
             const { validator , requestFundTransferId } = postRequestCashOut
-            setRequestFundTransferId(requestFundTransferId)
-            if(validator == "TPIN"){
-                setPinCodeAttempt(6)
-                return setOpenPinCode(true)
-            }else{
-                setOtpCodeAttempt(6)
-                return setOpenOtpCode(true)
-            }
+            const screen = validator == "TPIN" ? "ToktokWalletTPINValidator" : "ToktokWalletOTPValidator"
+            return navigation.navigate(screen, {
+                callBackFunc: ProceedTransaction,
+                resendRequest: onSwipeSuccess ,
+                data: {
+                    requestFundTransferId: requestFundTransferId
+                }
+            })
            
         },
         onError: (error)=>{
@@ -245,7 +239,6 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
     const [postCashOutOtherBank , {data,error,loading}] = useMutation(POST_CASH_OUT_OTHER_BANKS, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({postCashOutOtherBank})=> {
-            setOpenPinCode(false)
             setCashoutLogParams({
                 accountName: accountName,
                 accountNumber: accountNumber,
@@ -262,16 +255,13 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
                 navigation,
                 alert,
                 onErrorAlert,
-                setOpenPinCode,
-                setOpenOtpCode,  
-                setPinCodeAttempt,
-                setOtpCodeAttempt       
             })
         }
     })
 
 
-    const ProceedTransaction = ({pinCode = null , Otp = null})=> {
+    const ProceedTransaction = ({pinCode = null , Otp = null, data = null })=> {
+        const {requestFundTransferId} = data
         postCashOutOtherBank({
             variables: {
                 input: {
@@ -351,18 +341,7 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
 
     return (
         <>
-            <AlertOverlay visible={requestLoading}/>
-            <ValidatorScreen
-                TPINVisible={openPinCode}
-                setTPINVisible={setOpenPinCode}
-                tpinCodeAttempt={pinCodeAttempt}
-                OTPVisible={openOtpCode}
-                setOTPVisible={setOpenOtpCode}
-                otpCodeAttempt={otpCodeAttempt}
-                otpResend={onSwipeSuccess}
-                callBackFunc={ProceedTransaction}
-                loading={loading}
-            />
+            <AlertOverlay visible={requestLoading || loading}/>
             <SuccessfulCashOutModal 
                 visible={successModalVisible}
                 setVisible={setSuccessModalVisible}

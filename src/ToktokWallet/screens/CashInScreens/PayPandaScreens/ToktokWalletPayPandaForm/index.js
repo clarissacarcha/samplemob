@@ -42,10 +42,6 @@ export const ToktokWalletPayPandaForm = ({navigation,route})=> {
     const [recipientDetails,setRecipientDetails] = useState(null)
     const [disablebtn,setDisablebtn] = useState(false)
     const [maxLimitMessage,setMaxLimitMessage] = useState("")
-    const [pinCodeAttempt,setPinCodeAttempt] = useState(6)
-    const [openPinCode,setOpenPinCode] = useState(false)
-    const [otpCodeAttempt,setOtpCodeAttempt] = useState(6)
-    const [openOtpCode,setOpenOtpCode] = useState(false)
 
     const [postCashInPayPandaRequest , {data,error,loading}] = useMutation(POST_CASH_IN_PAYPANDA_REQUEST , {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
@@ -55,14 +51,10 @@ export const ToktokWalletPayPandaForm = ({navigation,route})=> {
                 navigation,
                 alert,
                 onErrorAlert,
-                setOpenPinCode,
-                setOpenOtpCode,  
-                setPinCodeAttempt,
-                setOtpCodeAttempt
             })
         },
         onCompleted: ({postCashInPayPandaRequest})=>{
-            setOpenPinCode(false)
+            navigation.pop(); // remove TPIN/OTP Validator Screen;
             navigation.navigate("ToktokWalletPayPandaWebView", {
                 merchantId: postCashInPayPandaRequest.merchantId,
                 refNo: postCashInPayPandaRequest.refNo,
@@ -103,13 +95,9 @@ export const ToktokWalletPayPandaForm = ({navigation,route})=> {
     }
 
     const onSwipeSuccess = ()=> {
-        setPinCodeAttempt(6)
-        setOpenPinCode(true)
-        // return navigation.navigate("ToktokWalletTPINValidator", {
-        //     callBackFunc: proceedToPaypandaPortal,
-        //     loading: loading,
-        //     pinCodeAttempt: pinCodeAttempt,
-        // })
+        return navigation.navigate("ToktokWalletTPINValidator", {
+            callBackFunc: proceedToPaypandaPortal,
+        })
     }
 
     const confirmAmount = ()=> {
@@ -162,15 +150,7 @@ export const ToktokWalletPayPandaForm = ({navigation,route})=> {
 
     return (
       <CheckIdleState>
-    <EnterPinCode 
-            visible={openPinCode} 
-            setVisible={setOpenPinCode} 
-            loading={loading}
-            pinCodeAttempt={pinCodeAttempt}
-            callBackFunc={proceedToPaypandaPortal}
-    >
-            <AlertOverlay visible={loading} />
-    </EnterPinCode>
+      <AlertOverlay visible={loading}/>
       <Separator />
        <View  
             // keyboardVerticalOffset={Platform.OS == "ios" ? 90 : 90} 

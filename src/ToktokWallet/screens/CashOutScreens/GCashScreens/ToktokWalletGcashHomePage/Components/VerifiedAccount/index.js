@@ -31,25 +31,20 @@ export const VerifiedAccount = ({record,provider})=> {
     const inputRef = useRef()
     const navigation = useNavigation()
     const alert = useAlert()
-    const [pinCodeAttempt,setPinCodeAttempt] = useState(6)
-    const [openPinCode,setOpenPinCode] = useState(false)
-    const [otpCodeAttempt,setOtpCodeAttempt] = useState(6)
-    const [openOtpCode,setOpenOtpCode] = useState(false)
-    const [requestFundTransferId,setRequestFundTransferId] = useState(null)
+
 
     const [postRequestCashOut , {loading: requestLoading}] = useMutation(POST_REQUEST_CASH_OUT , {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({postRequestCashOut})=>{
             const { validator , requestFundTransferId } = postRequestCashOut
-            setRequestFundTransferId(requestFundTransferId)
-            if(validator == "TPIN"){
-                setPinCodeAttempt(6)
-                return setOpenPinCode(true)
-            }else{
-                setOtpCodeAttempt(6)
-                return setOpenOtpCode(true)
-            }
-           
+            const screen = validator == "TPIN" ? "ToktokWalletTPINValidator" : "ToktokWalletOTPValidator"
+            return navigation.navigate(screen, {
+                callBackFunc: ProceedTransaction,
+                resendRequest: onSwipeSuccess ,
+                data: {
+                    requestFundTransferId: requestFundTransferId
+                }
+            })
         },
         onError: (error)=>{
             onErrorAlert({alert,error})
@@ -59,8 +54,6 @@ export const VerifiedAccount = ({record,provider})=> {
     const [postCashOut , {data , error , loading}] = useMutation(POST_CASH_OUT , {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({postCashOut})=> {
-            setOpenPinCode(false)
-            setOpenOtpCode(false)
             setCashoutLogParams({
                 accountName: `${record.firstName} ${record.lastName}`,
                 accountNumber: record.mobile,
@@ -73,11 +66,7 @@ export const VerifiedAccount = ({record,provider})=> {
                 error,
                 navigation,
                 alert,
-                onErrorAlert,
-                setOpenPinCode,
-                setOpenOtpCode,  
-                setPinCodeAttempt,
-                setOtpCodeAttempt       
+                onErrorAlert,    
             })
         }
     })
@@ -101,7 +90,8 @@ export const VerifiedAccount = ({record,provider})=> {
         setErrorMessage("")
     }
 
-    const ProceedTransaction = ({pinCode = null ,Otp = null})=> {
+    const ProceedTransaction = ({pinCode = null ,Otp = null, data = null})=> {
+        const { requestFundTransferId } = data
         postCashOut({
             variables: {
                 input: {
