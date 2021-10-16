@@ -122,7 +122,7 @@ export const EnterPinCode = ({
                                 pinCode.length < 6
                                 ? <DisabledButton label="Proceed" />
                                 : <YellowButton label="Proceed" onPress={()=>{
-                                    // setPinCode("")
+                                    setPinCode("")
                                     callBackFunc({pinCode})
                                 }} />
                             }

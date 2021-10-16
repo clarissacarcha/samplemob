@@ -148,7 +148,7 @@ const NumberBoxes = ({pinCode, onNumPress , showPin}) => {
                                     otpCode.length < 6
                                     ? <DisabledButton label="Proceed" />
                                     : <YellowButton label="Proceed" onPress={()=>{
-                                        // setOtpCode("")
+                                        setOtpCode("")
                                         callBackFunc({Otp: otpCode})
                                     }} />
                                 }
