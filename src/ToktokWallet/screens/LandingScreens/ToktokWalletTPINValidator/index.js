@@ -1,5 +1,5 @@
 import React, { useState , useRef } from 'react';
-import {View,Text,StyleSheet,TouchableOpacity,KeyboardAvoidingView,Platform,TextInput,Dimensions} from 'react-native';
+import {View,Text,StyleSheet,TouchableOpacity,KeyboardAvoidingView,Platform,TextInput,Dimensions,StatusBar} from 'react-native';
 import { ICON_SET, VectorIcon, YellowButton , HeaderBack , HeaderTitle } from 'src/revamp'
 import { AlertOverlay } from 'src/components';
 import { CheckIdleState  , DisabledButton , NumberBoxes} from 'toktokwallet/components'
@@ -37,7 +37,7 @@ export const ToktokWalletTPINValidator = ({navigation,route})=> {
         <CheckIdleState>
             <KeyboardAvoidingView
                 behavior={Platform.OS == "ios" ? "padding" : "height"}
-                keyboardVerticalOffset={Platform.OS == "ios" ? 10 : 30} 
+                keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80} 
                 style={styles.container}
             >
                  <View style={styles.content}>

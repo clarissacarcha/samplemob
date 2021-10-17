@@ -78,6 +78,10 @@ const AccountRecovery = ({visible,setVisible,account})=> {
                         via Email. Please wait for the activation of your account
                         within 24hr.
                         </Text>
+                        <View style={{marginTop:16,width:"100%"}}>
+                            <YellowButton label="close" onPress={()=>setVisible(false)}/>
+                        </View>
+                        
                 </View>
             </View>
         </Modal>

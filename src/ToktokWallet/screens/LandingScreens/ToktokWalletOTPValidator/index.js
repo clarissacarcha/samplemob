@@ -46,7 +46,7 @@ export const ToktokWalletOTPValidator = ({navigation,route})=> {
         <CheckIdleState>
             <KeyboardAvoidingView
                 behavior={Platform.OS == "ios" ? "padding" : "height"}
-                keyboardVerticalOffset={Platform.OS == "ios" ? 10 : 30} 
+                keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80} 
                 style={styles.container}
             >
                  <View style={styles.content}>
@@ -134,6 +134,6 @@ const styles = StyleSheet.create({
     proceedBtn: {
         height: 70,
         width: "100%",
-        justifyContent:"flex-end"
+        justifyContent:"flex-end",
     },
 })

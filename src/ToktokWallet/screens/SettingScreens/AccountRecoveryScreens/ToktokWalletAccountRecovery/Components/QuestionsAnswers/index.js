@@ -55,7 +55,7 @@ export const QuestionsAnswers = ({
                     state[index] = "this field is required."
                     return [...state]
                 })
-            }else if(answer.answer != data[index].answer){
+            }else if(answer.answer.toLowerCase() != data[index].answer.toLowerCase()){
                 setShowPrompt(true)
                 continueOtp = false;
                 break;
