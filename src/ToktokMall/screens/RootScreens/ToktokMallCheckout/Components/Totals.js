@@ -50,7 +50,7 @@ export const Totals = ({raw, shipping, shippingRates}) => {
     let total = 0
     data.length > 0 && data.map((item, i) => {
       for (let i = 0; i < item.data.length; i++){
-        total = total + (parseFloat(item.data[i].amount) * item.data[i].qty)
+        total = total + (parseFloat(item.data[0][i].amount) * item.data[0][i].qty)
       }
     })
     merchandiseTotal = total

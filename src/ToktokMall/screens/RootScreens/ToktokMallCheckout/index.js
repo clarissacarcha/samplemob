@@ -28,10 +28,6 @@ const REAL_WIDTH = Dimensions.get('window').width;
 
 const Component = ({route, navigation, createMyCartSession}) => {
 
-  const parentSession = useSelector(state => state.session)
-  const userAddress = useSelector(state=> state.toktokMall.user_address)
-  const userDefaultAddress = useSelector(state=> state.toktokMall.defaultAddress)
-
   navigation.setOptions({
     headerLeft: () => <HeaderBack onBack = {setAlertTrue}/>,
     headerTitle: () => <HeaderTitle label={['Checkout', '']} />,
@@ -71,10 +67,6 @@ const Component = ({route, navigation, createMyCartSession}) => {
     fetchPolicy: 'network-only',    
     onCompleted: async (response) => {
       if(response.getCheckoutData){
-        // console.log(response.getCheckoutData.address)
-        // console.log(userDefaultAddress)
-        // console.log("Shipping Rates", response.getCheckoutData.shippingRates)
-        
         setAddressData(response.getCheckoutData.address);
         await setPaymentList(response.getCheckoutData.paymentMethods)
         await getShippingRates(response.getCheckoutData.shippingRates)
@@ -119,7 +111,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
     client: TOKTOK_WALLET_GRAPHQL_CLIENT,
     onCompleted: ({ getMyAccount })=> {
       if(getMyAccount){
-        console.log(getMyAccount)
+        // console.log(getMyAccount)
         setwalletmodal(false)
         setWalletAccount(getMyAccount)
         setCurrentBalance(getMyAccount?.wallet?.balance)
@@ -165,7 +157,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
           walletRequest: req.responseData.data,
           pin: "",
           items: paramsData, 
-          addressData: userDefaultAddress, 
+          addressData: addressData, 
           grandTotal: grandTotal, 
           vouchers: voucher,
           shippingRates: shippingRates,
@@ -220,46 +212,32 @@ const Component = ({route, navigation, createMyCartSession}) => {
     await getMyAccount()
 
     const savedUser = await AsyncStorage.getItem("ToktokMallUser")
-
     const userData = JSON.parse(savedUser) || {}
 
     if(userData.userId){
-      if(userDefaultAddress){
-        
-        const shops = route.params.data.map((a) => a.shop.id)
-        // console.log(route.params.data.map((a) => a.store_id))
 
-        console.log("Lat", userDefaultAddress.latitude)
+      const shops = route.params.data.map((a) => a.shop.id)
 
-        setInitialLoading(true)
-        setShippingRates([])
-        getCheckoutData({
-          variables: {
-            input: {
-              userId: userData.userId,
-              addressId: userDefaultAddress.id,
-              shops: shops,
-              customerLon: parseFloat(userDefaultAddress.longitude || 0),
-              customerLat: parseFloat(userDefaultAddress.latitude || 0),
-
-              //High Street South Taguig Metro Manila
-              // customerLat: 14.5463442,
-              // customerLon: 121.0501614
-            }
+      setInitialLoading(true)
+      setShippingRates([])
+      getCheckoutData({
+        variables: {
+          input: {
+            userId: userData.userId,
+            shops: shops            
           }
-        })
-
-      }
+        }
+      })
     }
 
   }
 
   const calculateGrandTotal = () => {
     let a = 0;
-    if(!userDefaultAddress) return
+    if(!addressData) return
     for (var x = 0; x < route.params.data.length; x++) {
       for (var y = 0; y < route.params.data[x].data.length; y++) {
-        let item = route.params.data[x].data[y];
+        let item = route.params.data[x].data[0][y];
         a += parseFloat(item.amount) * item.qty;
       }
       // let shipping = 0
@@ -274,6 +252,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
     for(var z=0;z<shippingRates.length;z++){
       shipping += parseFloat(shippingRates[z].price)
     }
+    console.log("Grand total...")
+    console.log(a, shipping)
     a += shipping
     setGrandTotal(a)
   }
@@ -291,9 +271,9 @@ const Component = ({route, navigation, createMyCartSession}) => {
     
   useEffect(() => {
     (async () => {
-      // await init()
+      await init()
     })();
-  },[userDefaultAddress])
+  },[addressData])
 
   useEffect(() => {
     console.log("Shipping Rates Value:", shippingRates.length)
@@ -308,7 +288,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
   useEffect(() => {
     calculateGrandTotal()
-  }, [userDefaultAddress, shippingRates])
+  }, [addressData, shippingRates])
 
   useEffect(() => {
     setParamsData(route?.params?.data)
@@ -349,7 +329,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
         />
         <View style ={{paddingBottom: 0}}>
           <AddressForm
-            data={userDefaultAddress}
+            data={addressData}
             onEdit={() => navigation.push("ToktokMallAddressesMenu", {
               onGoBack: (data) => {
                 // setAddressData(data)
@@ -359,7 +339,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
           />
           <Shops 
             raw={paramsData}
-            shipping={userDefaultAddress?.shippingSummary} 
+            shipping={addressData?.shippingSummary} 
             shippingRates={shippingRates}      
           />
           {/* <Vouchers 
@@ -385,7 +365,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
           />
           <Totals 
             raw={paramsData}
-            shipping={userDefaultAddress?.shippingSummary}
+            shipping={addressData?.shippingSummary}
             shippingRates={shippingRates}
           />
         </View>
@@ -396,7 +376,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
           loading={isLoading}
           balance={currentBalance}
           total={grandTotal}
-          shipping={userDefaultAddress}
+          shipping={addressData}
           shippingRates={shippingRates}
           onPress={async () => {
             if(!isLoading){

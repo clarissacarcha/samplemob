@@ -60,7 +60,7 @@ export const Shops = ({raw, shipping, shippingRates, retrieve}) => {
   const computeTotal = (item) => {
     let total = 0
     for (let i = 0; i < item.length; i++){
-      total = total + (parseFloat(item[i].price) * item[i].qty)
+      total = total + (parseFloat(item[i].amount) * item[i].qty)
     }
     return FormatToText.currency(total == NaN ? 0 : total)
   }
@@ -79,8 +79,6 @@ export const Shops = ({raw, shipping, shippingRates, retrieve}) => {
 
       const product = item.product || {}
 
-      console.log(product, items)
-
         return(
           <View style={styles.itemContainer}>
             <Image //source = {item.image} 
@@ -90,7 +88,7 @@ export const Shops = ({raw, shipping, shippingRates, retrieve}) => {
               <Text>{product?.itemname}</Text>
               <View style = {{flexDirection: 'row'}}>
                 <Text style ={styles.itemprice}>{FormatToText.currency(product?.price)}</Text>
-                <Text style ={styles.itemSaleOff}>{parseFloat(item.originalPrice) > 0 ? FormatToText.currency(item.originalPrice) : ""}</Text>
+                <Text style ={styles.itemSaleOff}>{parseFloat(product?.compareAtPrice) != "0.00" ? FormatToText.currency(product?.compareAtPrice) : ""}</Text>
               </View>
               <View style = {{flexDirection: 'row', justifyContent: 'space-between', marginTop: 10}}>
                 <Text style ={{ color: '#9E9E9E' }}>Variation: {product?.variation || "None"}</Text>
@@ -212,7 +210,7 @@ export const Shops = ({raw, shipping, shippingRates, retrieve}) => {
           </View>
           <View style={styles.deliveryfeeContainer}>
             <Text>Delivery Fee: {FormatToText.currency(shippingRates[i]?.price || 0)}</Text>
-            <Text>Order total ({item.data.length} {item.data.length > 1 ? `items` : 'item'}): {computeTotal(item.data) || 0} </Text>
+            <Text>Order total ({item.data.length} {item.data.length > 1 ? `items` : 'item'}): {computeTotal(item.data[0]) || 0} </Text>
             <Text style = {{marginTop: 7, color: '#929191'}}>Receive by: {shipping?.deliveryDate || "Add address to calculate"} </Text>
           </View>
 
