@@ -27,7 +27,8 @@ export const Advertisements = () => {
       });
 
       setBanner(bannerAd);
-      setGrid(gridAds);
+      // setGrid(gridAds);
+      setGrid(getAdvertisements)
     },
   });
 
