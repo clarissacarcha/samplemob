@@ -179,7 +179,7 @@ export const ToktokWalletRecoverPin = ({navigation})=> {
 
                 </View>
                        
-                 <View style={{height: SIZE.FORM_HEIGHT + 16,justifyContent:"flex-end"}}> 
+                 <View style={{height: SIZE.FORM_HEIGHT + 20,justifyContent:"flex-end",paddingVertical: 16}}> 
                     {
                         pinCode.length < 6
                         ? <DisabledButton label="Proceed"/>
