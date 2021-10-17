@@ -31,6 +31,7 @@ export const BuildPostCheckoutBody = async ({walletRequest, pin, items, addressD
 			account_type: 0,
 			disrate: [],
 			vouchers: vouchers,
+			shippingvouchers: [],
 			referral_code: "",
 			referral_account_type: "",
 			payment_method: paymentMethod
@@ -48,16 +49,16 @@ export const BuildOrderLogsList = ({data, shipping, shippingRates}) => {
 	data.map((val, index) => {
 
 		let items = []
-		if(val.cart.length == 0 || val.cart == undefined) return
-		val.cart.map((item, i) => {
+		if(val.data.length == 0 || val.data == undefined) return
+		val.data[0].map((item, i) => {
 			let total = parseFloat(item.price) * item.qty
 			items.push({
-				sys_shop: item.store_id,
-				product_id: item.item_id,
-				itemname: item.label,
+				sys_shop: item.shopid,
+				product_id: item.productid,
+				itemname: item.product.itemname,
 				quantity: item.qty,
-				amount: parseFloat(item.price),
-				srp_amount: parseFloat(item.price),
+				amount: parseFloat(item.amount),
+				srp_amount: parseFloat(item.amount),
 				srp_totalamount: total,
 				total_amount: total,
 				order_type: 2
@@ -65,7 +66,7 @@ export const BuildOrderLogsList = ({data, shipping, shippingRates}) => {
 		})
 
 		logs.push({
-			sys_shop: val.store_id,
+			sys_shop: val.shop.id,
 			branchid: 0,
 			// delivery_amount: shipping.rateAmount,
 			delivery_amount: parseFloat(shippingRates[index].price),

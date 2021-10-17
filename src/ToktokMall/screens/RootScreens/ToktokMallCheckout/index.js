@@ -142,12 +142,12 @@ const Component = ({route, navigation, createMyCartSession}) => {
         notes: "", 
         total: grandTotal, 
         // toktokid: parentSession.user.id
-        toktokid: 13,
-        transactionTypeId: ""
+        toktokid: walletAccount.id,
+        transactionTypeId: "TOKTOKWALLET PAYMENT"
       })
       setIsLoading(false)
 
-      console.log(JSON.stringify(transactionPayload))
+      console.log("request money body", JSON.stringify(transactionPayload))
            
       const req = await WalletApiCall("request_money", transactionPayload, true)
 
@@ -168,11 +168,6 @@ const Component = ({route, navigation, createMyCartSession}) => {
           transaction: "payment", 
           data: checkoutBody,
           onSuccess: async () => {
-
-            if(route?.params?.type == "from_cart"){
-              UpdateCart()
-            }
-
             setIsVisible(true)
           },
           onError: async (error) => {

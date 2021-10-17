@@ -2,6 +2,7 @@ import React, {useState, useEffect, useRef} from 'react';
 import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, Dimensions, AsyncStorage} from 'react-native';
 import { Price, FormatToText } from '../../../../helpers/formats';
 import Spinner from 'react-native-spinkit';
+import { FONT } from '../../../../../res/variables';
 // import { COLOR, FONT } from '../../../../../../res/variables';
 // import {LandingHeader, AdsCarousel} from '../../../../../Components';
 // import { ScrollView } from 'react-native-gesture-handler';
@@ -81,5 +82,5 @@ const styles = StyleSheet.create({
   },
   activeButton: { backgroundColor: '#F6841F', height: 47, width: 140, borderRadius: 5, alignItems: 'center', justifyContent: 'center'},
   invalidButton: { backgroundColor: '#D7D7D7', height: 47, width: 140, borderRadius: 5, alignItems: 'center', justifyContent: 'center'},
-  buttonText: {color: 'white'}
+  buttonText: {color: 'white', fontFamily: FONT.BOLD, fontSize: 13}
 })
