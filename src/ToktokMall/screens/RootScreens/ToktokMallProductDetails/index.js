@@ -134,7 +134,7 @@ const Component =  ({
         setIsFetching(false)
         navigation.push("ToktokMallCheckout", {
           type: "single",
-          data: MergeStoreProducts([cartObject({qty: quantity, variation: variant})]),
+          data: [cartObject({qty: quantity, variation: variant})],
           newCart: [],
           vouchers: [],
         })
@@ -168,18 +168,20 @@ const Component =  ({
   }
 
   const cartObject = (input) => {
+
+    //for images
+    product.img = images[0]
+
     return {
-      item_id: product.Id,
-      label: product.itemname,
-      originalPrice: product.compareAtPrice,
-      price: product.price,
-      variation: input.variation || "",
-      qty: input.qty || 1,
-      noOfStocks: product.noOfStocks || 0,
-      store_id: store.id,
-      storeLogo: store.profileImages?.logo,
-      storeName: store.shopname,
-      images: images
+      shop: store,
+      data: [[{
+        amount: parseFloat(product.price * input.qty),
+        id: product.Id,
+        product: product,
+        variation: input.variation,
+        qty: input.qty,
+        shopId: store.id
+      }]]
     }
   }
 

@@ -62,7 +62,7 @@ export const Shops = ({raw, shipping, shippingRates, retrieve}) => {
     for (let i = 0; i < item.length; i++){
       total = total + (parseFloat(item[i].price) * item[i].qty)
     }
-    return FormatToText.currency(total)
+    return FormatToText.currency(total == NaN ? 0 : total)
   }
 
   const getImageSource = (imgs) => {
@@ -212,7 +212,7 @@ export const Shops = ({raw, shipping, shippingRates, retrieve}) => {
           </View>
           <View style={styles.deliveryfeeContainer}>
             <Text>Delivery Fee: {FormatToText.currency(shippingRates[i]?.price || 0)}</Text>
-            <Text>Order total ({item.data.length} {item.data.length > 1 ? `items` : 'item'}): {computeTotal(item.data)} </Text>
+            <Text>Order total ({item.data.length} {item.data.length > 1 ? `items` : 'item'}): {computeTotal(item.data) || 0} </Text>
             <Text style = {{marginTop: 7, color: '#929191'}}>Receive by: {shipping?.deliveryDate || "Add address to calculate"} </Text>
           </View>
 
