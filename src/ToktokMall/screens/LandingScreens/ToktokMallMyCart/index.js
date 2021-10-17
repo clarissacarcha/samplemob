@@ -9,7 +9,7 @@ import Toast from 'react-native-simple-toast';
 
 import {MessageModal, LoadingOverlay} from '../../../Components';
 import {DeleteFooter, CheckoutFooter, Item, Store, RenderDetails, RenderEmpty} from './components';
-import {MergeStoreProducts} from '../../../helpers';
+import {MergeStoreProducts, ArrayCopy} from '../../../helpers';
 import { create } from 'lodash';
 import {useSelector} from 'react-redux';
 import {ApiCall, PaypandaApiCall, BuildPostCheckoutBody, BuildTransactionPayload, WalletApiCall} from "../../../helpers";
@@ -61,20 +61,12 @@ const Component =  ({
     }
   })
 
-  useEffect(()=> {
-    if(itemsToCheckoutArr && itemsToCheckoutArr.length !== 0){
-      getSubTotal(itemsToCheckoutArr)
-    }else if(itemsToCheckoutArr && itemsToCheckoutArr.length === 0){
-      setSubTotal(0)
-    }
-  }, [itemsToCheckoutArr])
-
   const init = async () => {
     AsyncStorage.getItem("ToktokMallUser").then((raw) => {
       const data = JSON.parse(raw)
       if(data.userId){
-        setUser(data)
-        setMyCartData([])
+        reset()
+        setUser(data)        
         getMyCartData({
           variables: {
             input: {
@@ -86,46 +78,42 @@ const Component =  ({
     })
   }
 
+  const reset = () => {
+    setAllSelected(false)
+    setSubTotal(0)
+    setMyCartData([])
+    setItemsToCheckoutArr([])
+    setItemsToDelArr([])
+  }
+
   useEffect(() => {
     init()
   }, [])
 
   const onChangeQuantity = (id, qty) => {
-    let currentItems = itemsToCheckoutArr
-    setItemsToCheckoutArr(currentItems.map(item => {
+    let items = ArrayCopy(itemsToCheckoutArr)
+    let updatedItems = items.map(item => {
       let newItem = item
-      if(item.item_id === id){
+      if(item.id === id){
         newItem.qty = qty
+        newItem.amount = parseFloat(newItem.product.price * qty)
       }
       return newItem
-    }))
+    })
+    setItemsToCheckoutArr(updatedItems)
+    getSubTotal(updatedItems)
   }
 
-  const getSubTotal = async (data) => {
-    let temp = data || myCart
+  const getSubTotal = (data) => {
+    let temp = data
     let a = 0;
     for (var x = 0; x < temp.length; x++) {
-        let _item = temp[x];
-        a += parseFloat(_item.price) * _item.qty;
+      a = a + temp[x].amount
     }
     setSubTotal(a);
   };
 
   const deleteMultipleItems = async () => {
-
-    // let currentItems = JSON.parse(JSON.stringify(itemsToCheckoutArr))
-    // if(allSelected){
-    //   createMyCartSession("set", [])
-    // }else{
-    //   createMyCartSession("DeleteMultiple", itemsToDelArr)
-    //   itemsToDelArr.map((item, i) => {
-    //     //Check if item already exist on current items
-    //     let index = currentItems.findIndex((a) => a.item_id == item.item_id)
-    //     currentItems.splice(index, 1)
-    //   })
-    //   setItemsToCheckoutArr(currentItems)
-    // }
-    // getSubTotal()
 
     setapiloader(true)
     console.log(itemsToDelArr)
@@ -156,21 +144,6 @@ const Component =  ({
 
   const deleteSingleItem = async (item) => {
 
-    // createMyCartSession("DeleteSingle", {item_id: id.item_id})
-
-    // let currentItems = JSON.parse(JSON.stringify(itemsToCheckoutArr))
-    // let willDeleteItems = JSON.parse(JSON.stringify(itemsToDelArr))
-
-    // let index = willDeleteItems.findIndex((a) => a.item_id === id.item_id)
-    // willDeleteItems.splice(index, 1)
-    // setItemsToDelArr(willDeleteItems)
-
-    // let indexC = currentItems.findIndex((a) => a.item_id === id.item_id)
-    // currentItems.splice(indexC, 1)
-    // setItemsToCheckoutArr(currentItems)
-    // setSingleDeletemsgModalShown(true)
-    // getSubTotal()
-
     let variables = {
       userid: user.userId,
       shopid: item.shop.id,
@@ -194,149 +167,107 @@ const Component =  ({
 
   }
 
-  const deleteItems = async (type, singleItem) => {
-    
-    let variables = {
-      userid: user.id,
-      shopid: singleItem.shop.id,
-      branchid: 0,
-      productid: [singleItem.product.Id]
-    }
-
-    const req = await ApiCall("remove_cart", variables, false)
-
-    if(req.responseData && req.responseData.success == 1){
-      if(type == 'single'){
-        //single item delete
-        // deleteSingleItem(singleItem)
-
-      }else {
-        //multiple delete
-      }
-    }else if(req.responseError && req.responseError.success == 0){
-      Toast.show(req.responseError.message, Toast.LONG)
-    }else if(req.responseError){
-      Toast.show("Something went wrong", Toast.LONG)
-    }else if(req.responseError == null && req.responseData == null){
-      Toast.show("Something went wrong", Toast.LONG)
-    }
-
+  const selectItem = (raw) => {
+    let items = ArrayCopy(itemsToCheckoutArr)
+    items.push({
+      id: raw.productId,
+      shopId: raw.shopId,
+      product: raw.product,
+      amount: parseFloat(raw.amount),
+      qty: raw.qty
+    })
+    setItemsToCheckoutArr(items)
+    getSubTotal(items)
   }
 
-  const unSelectItem = (type, raw, del) => {
+  const unSelectitem = (raw) => {
+    let items = ArrayCopy(itemsToCheckoutArr)
+    let itemIndex = items.findIndex((e) => e.id == raw.productId)
+    if(itemIndex > -1){
+      items.splice(itemIndex, 1)
+    }
+    setItemsToCheckoutArr(items)
+    getSubTotal(items)
+  }
 
-    //Must create a copy of itemstocheckout array with a new instance
-    //to prevent bugs
-    let currentItems = JSON.parse(JSON.stringify(itemsToCheckoutArr))
-    let willDeleteItems = JSON.parse(JSON.stringify(itemsToDelArr))
-    
-    if(type == "item"){
-      if(willDelete || del){
-        let indexC = currentItems.findIndex((a) => a.item_id == raw.item.item_id)
-        currentItems.splice(indexC, 1)
-        setItemsToCheckoutArr(currentItems)
-        let index = willDeleteItems.findIndex((a) => a.item_id == raw.item.item_id)
-        willDeleteItems.splice(index, 1)
-        setItemsToDelArr(willDeleteItems)
+  const selectAllItems = () => {
+    let allitems = rawitems.map((item) => {
+      let checkoutitems = ArrayCopy(itemsToCheckoutArr)
+      //CHECK IF ITEM IS ALREADY SELECTED
+      let itemIndex = checkoutitems.findIndex((e) => e.id == item.productid)
+      if(itemIndex > - 1){
+        //ITEM ALREADY EXIST
+        let existingitem = checkoutitems[itemIndex]
+        return {
+          id: item.productid,
+          shopId: item.shopid,
+          product: item.product,
+          amount: parseFloat(existingitem.product.price * existingitem.qty),
+          qty: existingitem.qty
+        }
       }else{
-        let index = currentItems.findIndex((a) => a.item_id == raw.item.item_id)
-        currentItems.splice(index, 1)
-        setItemsToCheckoutArr(currentItems)
+        //ITEM NOT EXIST, PUSH THE DATA FROM DATABASE
+        return {
+          id: item.productid,
+          shopId: item.shopid,
+          product: item.product,
+          amount: parseFloat(item.product.price * item.quantity),
+          qty: item.quantity
+        }
       }
-    }else if(type == "store"){
-      if(willDelete || del){
+    })
+    setItemsToCheckoutArr(allitems)
+    getSubTotal(allitems)
+  }
+
+  const unSelectAllitems = () => {
+    setItemsToCheckoutArr([])
+    setSubTotal(0)
+  }
+
+  const FormatCheckoutItems = () => {
+
+    let cartData = ArrayCopy(myCartData)
+    let checkoutItems = ArrayCopy(itemsToCheckoutArr)
+    let result = []
+    
+    cartData.map((cartitem) => {
+      
+      let findshopitems = checkoutItems.find((e) => e.shopId == cartitem.shop.id)
+
+      if(findshopitems){
+
+        let shopitems = checkoutItems.filter((e) => e.shopId == cartitem.shop.id)
+        let shopalreadyadded = result.findIndex((e) => e.shop.id == shopitems.shopId)
+
+        if(shopalreadyadded > -1){
+          result[shopalreadyadded].data.push(shopitems)
+        }else{
+          result.push({
+            shop: cartitem.shop,
+            data: [shopitems]
+          })
+        }
         
-        //Map raw items
-        raw.items.map((item, i) => {
-          //Check if item already exist on current items
-          let index = willDeleteItems.findIndex((a) => a.item_id == item.item_id)
-          willDeleteItems.splice(index, 1)
-        })
-        setItemsToDelArr(willDeleteItems)
-
-        raw.items.map((item, i) => {
-          //Check if item already exist on current items
-          let index = currentItems.findIndex((a) => a.item_id == item.item_id)
-          currentItems.splice(index, 1)
-        })
-        setItemsToCheckoutArr(currentItems)
-
-      }else{
-
-        //Map raw items
-        raw.items.map((item, i) => {
-          //Check if item already exist on current items
-          let index = currentItems.findIndex((a) => a.item_id == item.item_id)
-          currentItems.splice(index, 1)
-        })
-        getSubTotal(currentItems)
-        setItemsToCheckoutArr(currentItems)
       }
-    }
 
-    // console.log("Items to checkout", itemsToCheckoutArr.length)
-
-  }
-
-  const selectItem = (type, raw, del) => {
-
-    //Must create a copy of itemstocheckout array with a new instance
-    //to prevent bugs
-    let currentItems = JSON.parse(JSON.stringify(itemsToCheckoutArr))
-    let willDeleteItems = JSON.parse(JSON.stringify(itemsToDelArr))
-    
-    if(type == "item"){
-      if(willDelete || del){
-        willDeleteItems.push(raw.item)
-        setItemsToDelArr(willDeleteItems)
-      }else{
-        currentItems.push(raw.item)
-        setItemsToCheckoutArr(currentItems)
-      }
-    }else if(type == "store"){
-      if(willDelete || del){
-
-         //Map raw items
-         raw.items.map((item, i) => {
-          //Check if item already exist on current items
-          let exist = willDeleteItems.findIndex((a) => a.Id == item.Id)
-          if(exist > -1){
-            //if already exist, skip
-          }else{
-            willDeleteItems.push(item)
-          }
-        })
-        setItemsToCheckoutArr(willDeleteItems)
-
-      }else{
-
-        //Map raw items
-        raw.items.map((item, i) => {
-          //Check if item already exist on current items
-          let exist = currentItems.findIndex((a) => a.Id == item.Id)
-          if(exist > -1){
-            //if already exist, skip
-          }else{
-            currentItems.push(item)
-          }
-        })
-        setItemsToCheckoutArr(currentItems)
-      }
-    }
-
-    // console.log("Items to checkout", itemsToCheckoutArr.length)
-
-
+    })
+    return result
+    // console.log("Result", JSON.stringify(result))
   }
 
   const OnSubmitForCheckout = () => {
     if(itemsToCheckoutArr.length > 0){
+      
+      let data = FormatCheckoutItems()
       navigation.navigate("ToktokMallCheckout", {
         type: "from_cart",
-        data: MergeStoreProducts(itemsToCheckoutArr),
+        data: data,
+        subTotal: subTotal,
         newCart: [],
         vouchers: [],
       })
+
     }else{
       Toast.show("Please select items to checkout", Toast.LONG)
     }
@@ -367,10 +298,10 @@ const Component =  ({
                 onClick={() => {
                   if(allSelected){
                     //to false
-                    setItemsToCheckoutArr([])
+                    unSelectAllitems()
                   }else{
                     //to true
-                    setItemsToCheckoutArr(myCartData)
+                    selectAllItems()
                   }
                   setAllSelected(!allSelected);
                 }}
@@ -408,8 +339,12 @@ const Component =  ({
                       
                     }}
                     onItemSelect={(raw) => {
-                      
-                    }} 
+                      if(raw.checked){
+                        selectItem(raw)
+                      }else{
+                        unSelectitem(raw)
+                      }
+                    }}
                     onItemLongPress={(raw) => {
                       setWillDelete(true)
                     }}
@@ -417,7 +352,7 @@ const Component =  ({
                       deleteSingleItem(item)
                     }}
                     onChangeQuantity={(qty, id) => {
-                      
+                      onChangeQuantity(id, qty)
                     }}
                   />
                   <View style={{height: 6, backgroundColor: '#F7F7FA'}} />

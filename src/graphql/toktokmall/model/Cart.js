@@ -12,6 +12,15 @@ export const GET_MY_CART =  gql`
 				userid
 				quantity
 				productid
+				product {
+					itemname
+					price
+					compareAtPrice
+					noOfStocks
+					img {
+						filename
+					}
+				}
 			}
 			parsed {
 				shop {
@@ -23,6 +32,7 @@ export const GET_MY_CART =  gql`
 				}
 				data {
 					id
+					shopid
 					quantity
 					product {
 						Id

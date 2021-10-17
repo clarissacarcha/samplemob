@@ -44,7 +44,7 @@ export const RenderDetails = ({
 	}, [refreshing])
 
 	useEffect(() => {
-		console.log("Selected Count: ", selectedItemsCount)
+		// console.log("Selected Count: ", selectedItemsCount)
 	}, [selectedItemsCount])
 
 	const getCheckboxState = () => {
@@ -52,7 +52,7 @@ export const RenderDetails = ({
 		else if(!storeItemSelected && storeItemUnselected) return false
 	}
 
-	const handleStoreCheckboxState = () => {
+	const getStoreCheckboxState = () => {
 
 		let isStoreSelected = getCheckboxState()
 		let isAllSelected = selectedItemsCount == item.data.length		
@@ -89,7 +89,7 @@ export const RenderDetails = ({
 	return (
 		<>
 			<Store
-				state={handleStoreCheckboxState()}
+				state={getStoreCheckboxState()}
 				data={item?.shop || {}}
 				onSelect={(raw) => {
 					toggleCheckBox(raw.checked)
@@ -120,15 +120,15 @@ export const RenderDetails = ({
 
 						}}
 						onSelect={(raw) => {
-							if(raw.checked){
-								setSelectedItemsCount(selectedItemsCount + 1)
+							
+							if(raw.checked){								
+								setSelectedItemsCount(selectedItemsCount + 1)								
 							}else if(!raw.checked){
-								setSelectedItemsCount(selectedItemsCount - 1)
-								// if(selectedItemsCount - 1 == item.data.length - 1){
-								// 	setStoreItemSelected(false)
-								// 	setStoreitemUnselected(true)
-								// }
+								setSelectedItemsCount(selectedItemsCount - 1)								
 							}
+
+							onItemSelect(raw)
+
 						}}
 						item={item}
 						onChangeQuantity={onChangeQuantity}

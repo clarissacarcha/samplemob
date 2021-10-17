@@ -20,7 +20,7 @@ export const Item = ({
 }) => {
 
   const [selected, setSelected] = useState(state)
-  const [qty, setQty] = useState(1)
+  const [qty, setQty] = useState(data.quantity || 1)
   const [product, setproduct] = useState({})
 
   useEffect(() => {
@@ -61,8 +61,10 @@ export const Item = ({
 							setSelected(!selected)
               onSelect({
                 checked: !selected,
-                item: product,
-                amount: product.price * data.quantity,
+                productId: product.Id,
+                shopId: data.shopid,                
+                product: product,
+                amount: parseFloat(product.price * qty),
                 qty: qty,
                 index: index,
               })
@@ -115,8 +117,10 @@ export const Item = ({
                   }}
                   disabled = {qty == 1}
                   onPress = {() => {
-                    onChangeQuantity(qty - 1, data?.id)
-                    setQty(qty - 1)
+                    if(selected){
+                      onChangeQuantity(qty - 1, product?.Id)
+                      setQty(qty - 1)
+                    }
                   }}
                 >
                   <AIcons
@@ -137,8 +141,10 @@ export const Item = ({
                   }}
                   disabled={product.noOfStocks === qty || qty === 200}
                   onPress = {() => {
-                    onChangeQuantity(qty + 1, data?.id)
-                    setQty(qty + 1)
+                    if(selected){
+                      onChangeQuantity(qty + 1, product?.Id)
+                      setQty(qty + 1)
+                    }
                   }}
                 >
                   <AIcons

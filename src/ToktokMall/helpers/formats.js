@@ -38,3 +38,7 @@ export const MergeStoreProducts = (data) => {
   return result
 
 }
+
+export const ArrayCopy = (toCopy) => {
+  return JSON.parse(JSON.stringify(toCopy))
+}
