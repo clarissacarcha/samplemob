@@ -38,7 +38,7 @@ export const Advertisements = () => {
   return (
     <View>
       <View style={styles.separator} />
-      <View style={{marginTop: 16}}>
+      <View style={{marginVertical: 16}}>
         {/* <Banner ads={banner} />
         <Grid ads={grid} /> */}
         {
