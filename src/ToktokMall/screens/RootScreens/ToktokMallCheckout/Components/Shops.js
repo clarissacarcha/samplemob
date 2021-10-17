@@ -66,29 +66,34 @@ export const Shops = ({raw, shipping, shippingRates, retrieve}) => {
   }
 
   const getImageSource = (imgs) => {
-    if(typeof imgs == "object" && imgs.length > 0){
-      return {uri: imgs[0].filename}
+    if(imgs && typeof imgs == "string"){
+      return {uri: imgs}
     }else {
       return placeholder
     }
   }
 
   const renderItems = (items) => {
+
     return items.map((item, i) => {
+
+      const product = item.product || {}
+
+      console.log(product, items)
 
         return(
           <View style={styles.itemContainer}>
             <Image //source = {item.image} 
-            source = {getImageSource(item.images)} 
+            source = {getImageSource(product?.img?.filename)} 
             style ={styles.itemImage}/>
             <View style = {{ marginLeft: 15, flex: 1}}>
-              <Text>{item.label}</Text>
+              <Text>{product?.itemname}</Text>
               <View style = {{flexDirection: 'row'}}>
-                <Text style ={styles.itemprice}>{FormatToText.currency(item.price)}</Text>
+                <Text style ={styles.itemprice}>{FormatToText.currency(product?.price)}</Text>
                 <Text style ={styles.itemSaleOff}>{parseFloat(item.originalPrice) > 0 ? FormatToText.currency(item.originalPrice) : ""}</Text>
               </View>
               <View style = {{flexDirection: 'row', justifyContent: 'space-between', marginTop: 10}}>
-                <Text style ={{ color: '#9E9E9E' }}>Variation: {item.variation || "None"}</Text>
+                <Text style ={{ color: '#9E9E9E' }}>Variation: {product?.variation || "None"}</Text>
                 <Text style ={{ color: '#9E9E9E'}}>Qty: {item.qty}</Text>
               </View>
             </View>
@@ -111,7 +116,7 @@ export const Shops = ({raw, shipping, shippingRates, retrieve}) => {
             paddingVertical: 15, 
             borderBottomColor: '#F7F7FA'
           }}>
-            <Text style = {{marginLeft: 10, fontFamily: FONT.BOLD}}>{item.store} vouchers</Text>
+            <Text style = {{marginLeft: 10, fontFamily: FONT.BOLD}}>{item.shop.shopname} vouchers</Text>
           </View>
 
           <View style={{paddingHorizontal: 15, paddingVertical: 15}}>
@@ -161,7 +166,7 @@ export const Shops = ({raw, shipping, shippingRates, retrieve}) => {
                   validateShopVoucher({variables: {
                     input: {
                       vcode: vcode,
-                      shopId: item.store_id
+                      shopId: item.shop.id
                     }
                   }})
                 }}
@@ -187,24 +192,27 @@ export const Shops = ({raw, shipping, shippingRates, retrieve}) => {
 
     return data.map((item, i) => {
 
-      const getShopLogo = (logo) => {
-        if(typeof logo == "string") return {uri: logo}
-        else return require("../../../../assets/icons/store.png")
+      const shop = item.shop
+
+      const getStoreLogo = (raw) => {
+        let loc = require("../../../../assets/icons/store.png")
+        if(typeof raw == "string") return {uri: raw}
+        else return loc
       }
       
       return(
         <>
         <View style={styles.container}>
           <View style ={{flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, padding: 15, borderBottomColor: '#F7F7FA'}}>
-            <Image source={getShopLogo(item?.storeLogo || {})} style={{width: 18, height: 18, resizeMode: 'stretch'}} /> 
-            <Text style = {{marginLeft: 10, fontFamily: FONT.BOLD}}>{item.store}</Text>
+            <Image source={getStoreLogo(shop.profileImages.logo || {})} style={{width: 18, height: 18, resizeMode: 'stretch'}} /> 
+            <Text style = {{marginLeft: 10, fontFamily: FONT.BOLD}}>{shop.shopname}</Text>
           </View>
           <View style={{padding: 15}}>
-            {renderItems(item.cart)}
+            {renderItems(item.data[0])}
           </View>
           <View style={styles.deliveryfeeContainer}>
             <Text>Delivery Fee: {FormatToText.currency(shippingRates[i]?.price || 0)}</Text>
-            <Text>Order total ({item.cart.length} {item.cart.length > 1 ? `items` : 'item'}): {computeTotal(item.cart)} </Text>
+            <Text>Order total ({item.data.length} {item.data.length > 1 ? `items` : 'item'}): {computeTotal(item.data)} </Text>
             <Text style = {{marginTop: 7, color: '#929191'}}>Receive by: {shipping?.deliveryDate || "Add address to calculate"} </Text>
           </View>
 

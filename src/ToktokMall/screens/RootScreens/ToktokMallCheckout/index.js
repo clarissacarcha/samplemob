@@ -25,63 +25,6 @@ import {ApiCall, ShippingApiCall, BuildPostCheckoutBody, BuildTransactionPayload
 
 const REAL_WIDTH = Dimensions.get('window').width;
 
-const testData2 = [
-  {id: 1, shops: 'Facemask PH', 
-    items: [{id: 1, item_name: 'Improved Copper Mask 2.0 White or Bronze', price: 190, variation: 'bronze', quantity: 1, sale_off: 380, image: coppermask},
-      {id: 2, item_name: 'Improved Copper Mask 2.0 White or Bronze', price: 190, variation: 'white', quantity: 1, sale_off: 380,  image: coppermask}
-    ], delivery_fee: 80, date_range_from: 'Jul 20', date_range_to: 'Jul 25'
-  },
-  {id: 2, shops: 'The Apparel', 
-    items: [{id: 1, item_name: 'Graphic Tees', price: 190, variation: 'white', quantity: 1, sale_off: 380, image: suit},
-    ], delivery_fee: 80, date_range_from: 'Jul 20', date_range_to: 'Jul 25'
-  },
-
-]
-
-const postCheckoutBody = {
-  name: "",
-  contactnumber: "",
-  email: "",
-  address: "",
-  regCode: "",
-  provCode: "",
-  citymunCode: "",
-  total_amount: 0,
-  srp_totalamount: 0,
-  order_type: 2,
-  order_logs: [{
-    sys_shop: 1,
-    branchid: 0,
-    delivery_amount: 0,
-    daystoship: 1,
-    days_toship_to: 1,
-    items: [{
-      sys_shop: 1,
-      product_id: "",
-      quantity: 1,
-      amount: 0,
-      srp_amount: 0,
-      srp_totalamount: 0,
-      total_amount: 0,
-      order_type: 1
-    }]
-  }],
-  //Optional values
-  user_id: 9999,
-  notes: "",
-  latitude: "",
-  longitude: "",
-  postalcode: "",
-  account_type: 0,
-  // vouchers: [{
-  //   shopid: 1,
-  //   vcode: "",
-  //   vamount: ""
-  // }],
-  referral_code: "",
-  referral_account_type: "",
-  payment_method: "cod"
-}
 
 const Component = ({route, navigation, createMyCartSession}) => {
 
@@ -193,7 +136,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
   const UpdateCart = async () => {
     // let stringyfiedArr = JSON.stringify(newCartData)
     // await AsyncStorage.setItem('MyCart', stringyfiedArr)
-    createMyCartSession("set", newCartData)
+    // createMyCartSession("set", newCartData)
   }
 
   const postCheckoutSetting = async () => {    
@@ -283,7 +226,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
     if(userData.userId){
       if(userDefaultAddress){
         
-        const shops = route.params.data.map((a) => a.store_id)
+        const shops = route.params.data.map((a) => a.shop.id)
         // console.log(route.params.data.map((a) => a.store_id))
 
         console.log("Lat", userDefaultAddress.latitude)
@@ -315,9 +258,9 @@ const Component = ({route, navigation, createMyCartSession}) => {
     let a = 0;
     if(!userDefaultAddress) return
     for (var x = 0; x < route.params.data.length; x++) {
-      for (var y = 0; y < route.params.data[x].cart.length; y++) {
-        let item = route.params.data[x].cart[y];
-        a += parseFloat(item.price) * item.qty;
+      for (var y = 0; y < route.params.data[x].data.length; y++) {
+        let item = route.params.data[x].data[y];
+        a += parseFloat(item.amount) * item.qty;
       }
       // let shipping = 0
       // for(var z=0;z<shippingRates.length;z++){
@@ -348,7 +291,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
     
   useEffect(() => {
     (async () => {
-      await init()
+      // await init()
     })();
   },[userDefaultAddress])
 
