@@ -79,6 +79,7 @@ const Component =  ({
   }
 
   const reset = () => {
+    setWillDelete(false)
     setAllSelected(false)
     setSubTotal(0)
     setMyCartData([])
@@ -116,29 +117,25 @@ const Component =  ({
   const deleteMultipleItems = async () => {
 
     setapiloader(true)
-    console.log(itemsToDelArr)
-
-    let process = await Promise.all(itemsToDelArr.map(async (item, index) => {
-     
+    
+    for (const item of itemsToDelArr) {
+      
       let variables = {
         userid: user.userId,
-        shopid: item.shop.id,
+        shopid: item.shopid,
         branchid: 0,
-        productid: [item.product.Id]
+        productid: [item.productid]
       }
-      const req = await ApiCall("remove_cart", variables, true)
-      
-      if(req.responseData && req.responseData.success == 1){   
-        console.log("Multiple Deletion Result #: " + index, req.responseData)
-        return true
-      }else{
-        return false
+      const res = await ApiCall("remove_cart", variables)
+      if(res.responseData && res.responseData.success == 1){
+        console.log("Multiple Deletion Result #: ", res.responseData)
+      }else if(res.responseError){
+        console.log(res.responseError)
       }
-
-    }));
+    }
 
     setapiloader(false)
-    console.log("Process result", process)
+    setMessageModalShown(true)
 
   }
 
@@ -168,61 +165,170 @@ const Component =  ({
   }
 
   const selectItem = (raw) => {
-    let items = ArrayCopy(itemsToCheckoutArr)
-    items.push({
-      id: raw.productId,
-      shopId: raw.shopId,
-      product: raw.product,
-      amount: parseFloat(raw.amount),
-      qty: raw.qty
-    })
-    setItemsToCheckoutArr(items)
-    getSubTotal(items)
+
+    if(willDelete){
+      let items = ArrayCopy(itemsToDelArr)
+      let existing = items.findIndex((e) => e.id == raw.productId)
+      if(existing == -1){
+        items.push({
+          shopid: raw.shopId,
+          productid: raw.productId
+        })
+      }
+      setItemsToDelArr(items)
+    }else{
+      let items = ArrayCopy(itemsToCheckoutArr)
+      let existing = items.findIndex((e) => e.id == raw.productId)
+      if(existing == -1){
+        items.push({
+          id: raw.productId,
+          shopId: raw.shopId,
+          product: raw.product,
+          amount: parseFloat(raw.amount),
+          qty: raw.qty
+        })
+      }
+      setItemsToCheckoutArr(items)
+      getSubTotal(items)
+    }
+    
+  }
+
+  const selectStoreItems = (raw, storeitems) => {
+    if(willDelete){
+      let items = ArrayCopy(itemsToDelArr)
+      storeitems.map((storeitem) => {
+        items.push({          
+          shopid: storeitem.shopid,
+          productid: storeitem.product.Id
+        })
+      })
+      setItemsToDelArr(items)
+    }else{
+      let items = ArrayCopy(itemsToCheckoutArr)
+      storeitems.map((storeitem) => {
+        let existing = items.findIndex((e) => e.id == storeitem.product.Id)
+        if(existing == -1){
+          items.push({
+            id: storeitem.product.Id,
+            shopId: storeitem.shopid,
+            product: storeitem.product,
+            amount: parseFloat(storeitem.product.price * storeitem.quantity),
+            qty: storeitem.quantity
+          })
+        }
+      })
+      setItemsToCheckoutArr(items)
+      getSubTotal(items)
+    }
   }
 
   const unSelectitem = (raw) => {
-    let items = ArrayCopy(itemsToCheckoutArr)
-    let itemIndex = items.findIndex((e) => e.id == raw.productId)
-    if(itemIndex > -1){
-      items.splice(itemIndex, 1)
+    
+    if(willDelete){
+      let items = ArrayCopy(itemsToDelArr)
+      let itemIndex = items.findIndex((e) => e.productid == raw.productId)
+      if(itemIndex > -1){
+        items.splice(itemIndex, 1)
+      }
+      setItemsToDelArr(items)
+    }else{
+      let items = ArrayCopy(itemsToCheckoutArr)
+      let itemIndex = items.findIndex((e) => e.id == raw.productId)
+      if(itemIndex > -1){
+        items.splice(itemIndex, 1)
+      }
+      setItemsToCheckoutArr(items)
+      getSubTotal(items)
     }
-    setItemsToCheckoutArr(items)
-    getSubTotal(items)
+
+  }
+
+  const unSelectStoreItems = (raw, storeitems) => {
+    
+    if(willDelete){
+      let items = ArrayCopy(itemsToDelArr)
+      storeitems.map((storeitem) => {
+        console.log(storeitem)
+        let itemIndex = items.findIndex((e) => e.productid == storeitem.product.Id)
+        if(itemIndex > -1){
+          items.splice(itemIndex, 1)
+        }
+      })
+      setItemsToDelArr(items)
+    }else{
+      let items = ArrayCopy(itemsToCheckoutArr)
+      storeitems.map((storeitem) => {
+        console.log(storeitem)
+        let itemIndex = items.findIndex((e) => e.id == storeitem.product.Id)
+        if(itemIndex > -1){
+          items.splice(itemIndex, 1)
+        }
+      })
+      setItemsToCheckoutArr(items)
+      getSubTotal(items)
+    }
+
   }
 
   const selectAllItems = () => {
-    let allitems = rawitems.map((item) => {
-      let checkoutitems = ArrayCopy(itemsToCheckoutArr)
-      //CHECK IF ITEM IS ALREADY SELECTED
-      let itemIndex = checkoutitems.findIndex((e) => e.id == item.productid)
-      if(itemIndex > - 1){
-        //ITEM ALREADY EXIST
-        let existingitem = checkoutitems[itemIndex]
-        return {
-          id: item.productid,
-          shopId: item.shopid,
-          product: item.product,
-          amount: parseFloat(existingitem.product.price * existingitem.qty),
-          qty: existingitem.qty
+    
+    if(willDelete){
+      setItemsToDelArr(rawitems)
+    }else{
+      let allitems = rawitems.map((item) => {
+        let checkoutitems = ArrayCopy(itemsToCheckoutArr)
+        //CHECK IF ITEM IS ALREADY SELECTED
+        let itemIndex = checkoutitems.findIndex((e) => e.id == item.productid)
+        if(itemIndex > - 1){
+          //ITEM ALREADY EXIST
+          let existingitem = checkoutitems[itemIndex]
+          return {
+            id: item.productid,
+            shopId: item.shopid,
+            product: item.product,
+            amount: parseFloat(existingitem.product.price * existingitem.qty),
+            qty: existingitem.qty
+          }
+        }else{
+          //ITEM NOT EXIST, PUSH THE DATA FROM DATABASE
+          return {
+            id: item.productid,
+            shopId: item.shopid,
+            product: item.product,
+            amount: parseFloat(item.product.price * item.quantity),
+            qty: item.quantity
+          }
         }
-      }else{
-        //ITEM NOT EXIST, PUSH THE DATA FROM DATABASE
-        return {
-          id: item.productid,
-          shopId: item.shopid,
-          product: item.product,
-          amount: parseFloat(item.product.price * item.quantity),
-          qty: item.quantity
-        }
-      }
-    })
-    setItemsToCheckoutArr(allitems)
-    getSubTotal(allitems)
+      })
+      setItemsToCheckoutArr(allitems)
+      getSubTotal(allitems)
+    }
+
   }
 
   const unSelectAllitems = () => {
+    
+    if(willDelete){
+      setItemsToDelArr([])
+    }else{
+      setItemsToCheckoutArr([])
+      setSubTotal(0)
+    }
+  }
+
+  const onItemLongPress = (raw) => {
+    setWillDelete(raw.checked)
     setItemsToCheckoutArr([])
-    setSubTotal(0)
+    let items = ArrayCopy(itemsToDelArr)
+    let existing = items.findIndex((e) => e.id == raw.productId)
+    if(existing == -1){
+      items.push({
+        shopid: raw.shopId,
+        productid: raw.productId
+      })
+    }
+    setItemsToDelArr(items)
   }
 
   const FormatCheckoutItems = () => {
@@ -290,7 +396,7 @@ const Component =  ({
           <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
             <View style={{flex: 6, justifyContent: 'center'}}>
               <CheckBox
-                isChecked={allSelected}
+                isChecked={allSelected || itemsToCheckoutArr.length == totalitems}
                 rightText="Select All"
                 rightTextStyle={{fontSize: 14, fontWeight: '500'}}
                 checkedCheckBoxColor="#F6841F"
@@ -335,8 +441,12 @@ const Component =  ({
                     onPress={() => {
                       navigation.navigate("ToktokMallStore", {id: item.shop.id})
                     }}
-                    onStoreSelect={(raw) => {
-                      
+                    onStoreSelect={(raw, items) => {
+                      if(raw.checked){
+                        selectStoreItems(raw, items)
+                      }else{
+                        unSelectStoreItems(raw, items)
+                      }
                     }}
                     onItemSelect={(raw) => {
                       if(raw.checked){
@@ -346,7 +456,7 @@ const Component =  ({
                       }
                     }}
                     onItemLongPress={(raw) => {
-                      setWillDelete(true)
+                      onItemLongPress(raw)
                     }}
                     onItemDelete={(item) => {
                       deleteSingleItem(item)
@@ -371,9 +481,7 @@ const Component =  ({
           {myCartData.length > 0 && willDelete && 
           <DeleteFooter 
             onDelete={() => {
-
               deleteMultipleItems()
-
             }} 
           />}
 
@@ -389,8 +497,11 @@ const Component =  ({
           <MessageModal 
             type="Success"
             isVisible={messageModalShown}
-            setIsVisible={(val) => setMessageModalShown(val)}  
-            message={`${itemsToDelArr.length > 1 || willDelete ? "Items" : "Item"} has been removed from your cart.`}
+            setIsVisible={(val) => {
+              setMessageModalShown(val)
+              init()
+            }}  
+            message={`Items has been removed from your cart.`}
           />}
 
           {singleDeletemsgModalShown && 

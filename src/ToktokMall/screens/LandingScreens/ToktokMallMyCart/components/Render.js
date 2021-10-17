@@ -93,6 +93,7 @@ export const RenderDetails = ({
 				data={item?.shop || {}}
 				onSelect={(raw) => {
 					toggleCheckBox(raw.checked)
+					onStoreSelect(raw, item.data)
 				}}
 				onPress={onPress}
 			/>
@@ -117,7 +118,7 @@ export const RenderDetails = ({
 						forceSelect={selectedItemsCount == item.data.length}
 						data={data}
 						onHold={(raw) => {
-
+							onItemLongPress(raw)
 						}}
 						onSelect={(raw) => {
 							
