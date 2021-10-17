@@ -19,8 +19,92 @@ import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql';
 import { GET_MY_CART } from '../../../../graphql/toktokmall/model';
 import AsyncStorage from '@react-native-community/async-storage';
 
+let sampleData = [
+  {
+    "shop": {
+      "shopname": "FleXkin",
+      "profileImages": {
+        "logo": "https://stgtokmall.s3-ap-northeast-1.amazonaws.com/assets/img/shops-60/c53582af8ee84c6abc7eeb9767b1b15e.jpg"
+      }
+    },
+    "data": [
+      {
+        "id": 36,
+        "quantity": 1,
+        "product": {
+          "itemname": "Skinnovation Kit",
+          "price": "450.00",
+          "compareAtPrice": "0.00",
+          "img": {
+            "filename": "https://stgtokmall.s3-ap-northeast-1.amazonaws.com/assets/img/XKIN/products/8bf8b146488e44a4b85a2eed1f35b7c1/0-8bf8b146488e44a4b85a2eed1f35b7c1.jpg"
+          }
+        }
+      },
+      
+    ]
+  },
+  {
+    "shop": {
+      "shopname": "TechGear MNL",
+      "profileImages": {
+        "logo": "https://stgtokmall.s3-ap-northeast-1.amazonaws.com/assets/img/shops-60/6909739c0d4445feab0b9b28252d221c.png"
+      }
+    },
+    "data": [
+      {
+        "id": 15,
+        "quantity": 1,
+        "product": {
+          "itemname": "Logitech H151 Stereo Headset",
+          "price": "785.00",
+          "compareAtPrice": "0.00",
+          "img": {
+            "filename": "https://stgtokmall.s3-ap-northeast-1.amazonaws.com/assets/img/GEAR/products/7decaa19d4054fbf93c38c9d520cba37/0-7decaa19d4054fbf93c38c9d520cba37.png"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "shop": {
+      "shopname": "Cherry Mobile",
+      "profileImages": {
+        "logo": "https://stgtokmall.s3-ap-northeast-1.amazonaws.com/assets/img/shops-60/62f4be89bdb04cc4b1d05778d5808c1b.png"
+      }
+    },
+    "data": [
+      {
+        "id": 33,
+        "quantity": 1,
+        "product": {
+          "itemname": "FLARE S8 PLUS ",
+          "price": "3999.00",
+          "compareAtPrice": "7999.00",
+          "img": {
+            "filename": "https://stgtokmall.s3-ap-northeast-1.amazonaws.com/assets/img/CMPH/products/5649878236bf454590d2752963fa890b/0-5649878236bf454590d2752963fa890b.jpg"
+          }
+        }
+      },
+      {
+        "id": 14,
+        "quantity": 1,
+        "product": {
+          "itemname": "FLARE J6S ",
+          "price": "2499.00",
+          "compareAtPrice": "3999.00",
+          "img": {
+            "filename": "https://stgtokmall.s3-ap-northeast-1.amazonaws.com/assets/img/CMPH/products/743cb9b8123b43dc883953a5e185420c/0-743cb9b8123b43dc883953a5e185420c.jpg"
+          }
+        }
+      }
+    ]
+  }
+]
+
 const Component =  ({
   navigation,
+  myCart,
+  createMyCartSession,
   createMyCartCountSession
 }) => {
   const [allSelected, setAllSelected] = useState(false);
@@ -359,7 +443,7 @@ const Component =  ({
           <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
             <View style={{flex: 6, justifyContent: 'center'}}>
               <CheckBox
-                isChecked={allSelected}
+                isChecked={!willDelete ? itemsToCheckoutArr.length === totalitems : itemsToDelArr.length === totalitems}
                 rightText="Select All"
                 rightTextStyle={{fontSize: 14, fontWeight: '500'}}
                 checkedCheckBoxColor="#F6841F"
@@ -399,25 +483,55 @@ const Component =  ({
                 <>
                   <RenderDetails 
                     item={item}
+                    storeIndex = {index}
                     allSelected={allSelected}
-                    refreshing={loading}
                     onPress={() => {
                       navigation.navigate("ToktokMallStore", {id: item.shop.id})
                     }}
                     onStoreSelect={(raw) => {
-                      
+                      let res = 0
+                      if(raw.checked){
+                        // res = subTotal + raw.total
+                        selectItem('store' , raw, willDelete)
+                      }else{
+                        // res = subTotal - raw.total
+                        unSelectItem('store' , raw, willDelete)
+                      }
+                      // setSubTotal(res)
                     }}
                     onItemSelect={(raw) => {
-                      
+                      let res = 0                      
+                      if(raw.checked){
+                        selectItem('item' , raw, false)
+                      }else{
+                        unSelectItem('item', raw, false)
+                      }
+                      // if(raw.checked)
                     }} 
                     onItemLongPress={(raw) => {
+
                       setWillDelete(true)
+                      
+                      let res = 0
+                      if(raw.checked){
+                        res = subTotal + raw.amount
+                        selectItem('item' , raw, true)
+                      }else{
+                        res = subTotal - raw.amount
+                        unSelectItem('item', raw, true)
+                      }
+                      // if(raw.checked)
+                      setSubTotal(res)
                     }}
                     onItemDelete={(item) => {
+                      // deleteItems('single', id)
                       deleteSingleItem(item)
+                      // alert("Will Delete")
                     }}
                     onChangeQuantity={(qty, id) => {
-                      
+                      console.log("change quantity", id)
+                      onChangeQuantity(id, qty)
+                      createMyCartSession("UpdateQuantity", {item_id: id, qty: qty})
                     }}
                   />
                   <View style={{height: 6, backgroundColor: '#F7F7FA'}} />
@@ -438,7 +552,9 @@ const Component =  ({
             onDelete={() => {
 
               deleteMultipleItems()
-
+              // setMessageModalShown(true)
+              // setAllSelected(false)
+              // setWillDelete(false)
             }} 
           />}
 
@@ -477,10 +593,12 @@ const Component =  ({
 // );
 
 const mapStateToProps = (state) => ({
+  myCart: state.toktokMall.myCart,
   cartNoOfItems: state.toktokMall.myCartCount
 })
 
 const mapDispatchToProps = (dispatch) => ({
+  createMyCartSession: (action, payload) => dispatch({type: 'CREATE_MY_CART_SESSION', action,  payload}),
   createMyCartCountSession: (action, payload) => dispatch({type: 'TOKTOK_MALL_CART_COUNT', action, payload})
 });
 

@@ -1,117 +1,100 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {View, Text, StyleSheet, Platform, Dimensions, StatusBar, Image, TouchableOpacity, FlatList} from 'react-native';
-import CheckBox from 'react-native-check-box';
-import SwipeableView from 'react-native-swipeable-view';
 import Swipeable from 'react-native-swipeable';
 import CustomIcon from "../../../../Components/Icons";
 
 import {Item, Store} from './';
 
+const DeleteButton = ({onPress}) => {
+	return (
+		<>
+		<TouchableOpacity
+			onPress={onPress}
+			activeOpacity={1}
+			style={{flex: 1, width: 75, backgroundColor: '#F6841F', alignItems: 'center', justifyContent: 'center'}}>
+			{/* <Text style={{fontSize: 14, color: '#fff'}}>Delete</Text> */}
+			<CustomIcon.FoIcon name="trash" size={20} color={"white"} />
+		</TouchableOpacity>
+		</>
+	);
+};
+
 export const RenderDetails = ({
-	item, 
-	storeIndex, 
+	item,  
 	allSelected, 
 	onPress, 
 	onStoreSelect, 
 	onItemSelect, 
 	onItemLongPress,
 	onItemDelete,
-	onChangeQuantity
+	onChangeQuantity,
+	refreshing
 }) => {
 
-	const [storeitemselected, setstoreitemselected] = useState(allSelected ? true : false)
-	const [toggleRoot, setToggleRoot] = useState("")
-	const [superSelected, setSuperSelected] = useState(allSelected ? true : false)
-	const [uncheckedItems, setUncheckedItems] = useState([])
-	const [checkedItems, setCheckedItems] = useState([])	
-	const [itemsCheckIndex, setItemsCheckIndex] = useState(allSelected ? item.data.length : 0)
+	const [storeItemSelected, setStoreItemSelected] = useState(allSelected ? true : false)
+	const [storeItemUnselected, setStoreitemUnselected] = useState(!allSelected ? true : false)
+	const [selectedItemsCount, setSelectedItemsCount] = useState(0)
 
 	useEffect(() => {
-		setstoreitemselected(allSelected)
-		setSuperSelected(allSelected)
+		toggleCheckBox(allSelected)
 	}, [allSelected])
 
-	const DeleteButton = ({onPress}) => {
-		return (
-		  <>
-			<TouchableOpacity
-			  onPress={onPress}
-			  activeOpacity={1}
-			  style={{flex: 1, width: 75, backgroundColor: '#F6841F', alignItems: 'center', justifyContent: 'center'}}>
-			  {/* <Text style={{fontSize: 14, color: '#fff'}}>Delete</Text> */}
-				<CustomIcon.FoIcon name="trash" size={20} color={"white"} />
-			</TouchableOpacity>
-		  </>
-		);
-	};
+	useEffect(() => {
+		setSelectedItemsCount(0)
+	}, [refreshing])
 
-	const HandleItemSelect = (raw, total) => {
-		
-		let currentCheckedItems = JSON.parse(JSON.stringify(checkedItems))
+	useEffect(() => {
+		console.log("Selected Count: ", selectedItemsCount)
+	}, [selectedItemsCount])
 
-		if(raw.checked){
-								
-			let exist = currentCheckedItems.findIndex( x => x.id == raw.item.Id)
-			if(exist == -1){
-				currentCheckedItems.push({id: raw.item.Id})
-				setCheckedItems(currentCheckedItems)
+	const getCheckboxState = () => {
+		if(storeItemSelected && !storeItemUnselected) return true
+		else if(!storeItemSelected && storeItemUnselected) return false
+	}
 
-				if(currentCheckedItems.length == item.data.length){
-					setstoreitemselected(true)
-				}else{
-					setstoreitemselected(false)
-				}
-				setCheckedItems(currentCheckedItems)
+	const handleStoreCheckboxState = () => {
 
-				
-			}else{
-				setstoreitemselected(false)
-			}
-								
-		}else{
-								
-			let index = currentCheckedItems.findIndex( x => x.id == raw.item.Id)
-			currentCheckedItems = currentCheckedItems.splice(index, 1)
-			setCheckedItems(currentCheckedItems)
-
-			if(currentCheckedItems.length <= 1){
-				setstoreitemselected(false)
-			}
-
-			console.log(item.data.length, currentCheckedItems.length)
-
+		let isStoreSelected = getCheckboxState()
+		let isAllSelected = selectedItemsCount == item.data.length		
+		if(isAllSelected){
+			return true
 		}
+		else if(isStoreSelected){
+			if(!isAllSelected){
+				return false
+			}else{
+				return true
+			}
+		}
+		else if(isStoreSelected && !isAllSelected){
+			return false
+		}
+		else return false
+	}
 
-		// setstoreitemselected(!storeitemselected)
+	const toggleCheckBox = (val) => {
+		if(val){
+			setStoreItemSelected(true)
+			setStoreitemUnselected(false)
+			setSelectedItemsCount(item.data.length)
+			return true
+		}else if(!val){
+			setStoreItemSelected(false)
+			setStoreitemUnselected(true)
+			setSelectedItemsCount(0)
+			return false
+		}
 	}
 
 	return (
 		<>
 			<Store
-				state={storeitemselected}
+				state={handleStoreCheckboxState()}
 				data={item?.shop || {}}
-				storeIndex = {storeIndex}
 				onSelect={(raw) => {
-					onStoreSelect(raw)
-					setstoreitemselected(!storeitemselected)
-					setToggleRoot("shop")
-
-					if(!storeitemselected == true){
-						//to true
-						let items = JSON.parse(JSON.stringify(item.data))
-						let allitems = items.map((data) => {
-							return {id: data.id}
-						})
-						setCheckedItems(allitems)
-					}else{
-						setToggleRoot("shop")
-						setCheckedItems([])
-					}
-
+					toggleCheckBox(raw.checked)
 				}}
 				onPress={onPress}
-				uncheckedItems = {uncheckedItems}
-				setUncheckedItems = {setUncheckedItems}
 			/>
 				
 			{item && item.data.length > 0 && item.data.map((data, i) => {
@@ -121,33 +104,33 @@ export const RenderDetails = ({
 					rightActionActivationDistance={30}
 					rightButtonWidth={75}
 					rightButtons={[<DeleteButton onPress={() => {
-						console.log("Product", data.product)
 						onItemDelete({
 							shop: item.shop,
 							product: data.product
-						})			
+						})
 					}} />]}
 				>
 					<Item
 						key={i}
-						index = {i}
-						storeIndex={storeIndex}
-						// state={toggleRoot == "shop" && storeitemselected || superSelected}
-						state = {storeitemselected}
+						index={i}
+						state={getCheckboxState()}
+						forceSelect={selectedItemsCount == item.data.length}
 						data={data}
 						onHold={(raw) => {
-							setToggleRoot("item")
-							onItemLongPress(raw)
-							HandleItemSelect(raw, item.data.length)
+
 						}}
 						onSelect={(raw) => {
-							setToggleRoot("item")
-							onItemSelect(raw)
-							HandleItemSelect(raw, item.data.length)						
+							if(raw.checked){
+								setSelectedItemsCount(selectedItemsCount + 1)
+							}else if(!raw.checked){
+								setSelectedItemsCount(selectedItemsCount - 1)
+								// if(selectedItemsCount - 1 == item.data.length - 1){
+								// 	setStoreItemSelected(false)
+								// 	setStoreitemUnselected(true)
+								// }
+							}
 						}}
 						item={item}
-						uncheckedItems={uncheckedItems}
-						setstoreitemselected={setstoreitemselected}
 						onChangeQuantity={onChangeQuantity}
 					/>
 				</Swipeable>
