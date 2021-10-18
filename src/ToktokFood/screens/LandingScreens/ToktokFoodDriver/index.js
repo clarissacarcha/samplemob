@@ -1,26 +1,29 @@
 import axios from 'axios';
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useState, useRef, useMemo} from 'react';
 import {View, StyleSheet, Alert} from 'react-native';
+import BackgroundTimer from 'react-native-background-timer';
+import moment from 'moment';
 
 // Components
 import Loader from 'toktokfood/components/Loader';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
 import {DriverAnimationView, DriverDetailsView, PickUpDetailsView, CancelOrder, RiderMapView} from './components';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
+import DialogMessage from 'toktokfood/components/DialogMessage';
+import TimerModal from 'toktokfood/components/TimerModal';
+import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 
 // Utils
 import {moderateScale} from 'toktokfood/helper/scale';
+import {removeRiderDetails} from 'toktokfood/helper/showRiderDetails';
+import { removeEstimatedDeliveryTime } from 'toktokfood/helper/estimatedDeliveryTime';
 
 import {useLazyQuery} from '@apollo/react-hooks';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT, CLIENT} from 'src/graphql';
 import {GET_ORDER_TRANSACTION_BY_REF_NUM, GET_RIDER_DETAILS} from 'toktokfood/graphql/toktokfood';
 import {useSelector, useDispatch} from 'react-redux';
-import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import {useIsFocused} from '@react-navigation/native';
-import {removeRiderDetails} from 'toktokfood/helper/showRiderDetails';
-import DialogMessage from 'toktokfood/components/DialogMessage';
-import TimerModal from 'toktokfood/components/TimerModal';
-import BackgroundTimer from 'react-native-background-timer';
+
 
 const ToktokFoodDriver = ({route, navigation}) => {
   const referenceNum = route.params ? route.params.referenceNum : '';
@@ -131,7 +134,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
         let message = transaction.orderIsfor == 1 ? 'Your order has been delivered successfully.' : 'You have successfully picked up your order.'
         BackgroundTimer.clearInterval(checkOrderResponse5mins.current);
         BackgroundTimer.clearInterval(getRiderDetailsInterval.current);
-        await removeRiderDetails(referenceNum);
+        await removeEstimatedDeliveryTime(referenceNum);
         setShadowDialogMessage({
           title: 'Order Complete',
           message,
@@ -184,12 +187,17 @@ const ToktokFoodDriver = ({route, navigation}) => {
           }
         }
       } else {
+        BackgroundTimer.clearInterval(checkOrderResponse5mins.current);
+        BackgroundTimer.clearInterval(getRiderDetailsInterval.current);
+        let isValidDate = moment(transaction.dateOrderProcessed).isValid();
         setShadowDialogMessage({
-          title: transaction.declinedNote ? 'Order Cancelled by Merchant' : 'OOPS!',
-          message: transaction.declinedNote ? transaction.declinedNote : 'Your order has been declined.',
+          title: isValidDate ? 'Order Cancelled by Merchant' : 'OOPS!',
+          message: transaction.declinedNote ? transaction.declinedNote :
+            isValidDate ? 'Your order has been cancelled by merchant.' : 'Your order has been declined.',
           show: true,
           type: 'warning',
         });
+        await removeEstimatedDeliveryTime(referenceNum)
       }
     }
   };
@@ -216,6 +224,20 @@ const ToktokFoodDriver = ({route, navigation}) => {
       setSeconds(300);
     }
   };
+
+  const displayDeliveryDetailsView = useMemo(() => {
+    return(
+      <DriverDetailsView
+        onCancel={() => {
+          setShowCancel(true);
+          BackgroundTimer.clearInterval(checkOrderResponse5mins.current);
+        }}
+        riderDetails={riderDetails}
+        transaction={transaction}
+        referenceNum={referenceNum}
+      />
+    )
+  }, [transaction, riderDetails, referenceNum])
 
   return (
     <View style={{flex: 1, backgroundColor: '#F9F9F9'}}>
@@ -253,8 +275,6 @@ const ToktokFoodDriver = ({route, navigation}) => {
         <LoadingIndicator isFlex isLoading={true} />
       ) : (
         <>
-          {/* {((transaction.orderStatus == 'po' || transaction.orderStatus == 'rp') && riderDetails == null)
-            && ( <TimerModal title='Delay' message='Sorry for the delay' /> )} */}
           {riderDetails != null && (transaction.orderStatus == 'f' || transaction.orderStatus == 's') ? (
             <RiderMapView riderCoordinates={riderDetails.location} customerCoordinates={transaction} />
           ) : (
@@ -267,15 +287,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
           )}
           <View style={styles.driverWrapper}>
             {transaction.orderIsfor == 1 ? (
-              <DriverDetailsView
-                onCancel={() => {
-                  setShowCancel(true);
-                  BackgroundTimer.clearInterval(checkOrderResponse5mins.current);
-                }}
-                riderDetails={riderDetails}
-                transaction={transaction}
-                referenceNum={referenceNum}
-              />
+              displayDeliveryDetailsView
             ) : (
               <PickUpDetailsView
                 onCancel={() => {
