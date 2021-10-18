@@ -352,7 +352,7 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
       </ScrollView>
 
       {activeToDeleteItem.value && (
-        <View style={{position: 'absolute', bottom: 0, alignItems: 'center', width: Dimensions.get('screen').width}}>
+        <View style={{position: 'absolute', bottom: 10, alignItems: 'center', width: Dimensions.get('screen').width}}>
           <TouchableOpacity
             disabled={activeToDeleteItem.ids?.length === 0}
             onPress={() => {
