@@ -3,6 +3,8 @@ import {View,Text,StyleSheet,TextInput,TouchableOpacity,Dimensions} from 'react-
 import {useLazyQuery} from '@apollo/react-hooks'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import { GET_ACCOUNT } from 'toktokwallet/graphql'
+import { useContacts } from 'toktokwallet/hooks'
+import { ContactSuggestion } from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants'
 
 const {FONT_SIZE , SIZE , FONT_FAMILY: FONT , COLOR} = CONSTANTS
@@ -22,7 +24,9 @@ export const EnterMobileNo = ({
 })=> {
 
     const [errorMessage,setErrorMessage] = useState("")
+    const [suggestContact,setSuggestContact] = useState("")
     const inputMobileRef = useRef()
+    const { contacts } = useContacts();
 
     const [getAccount, {data: walletData,error: walletError,loading: walletLoading}] = useLazyQuery(GET_ACCOUNT , {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
@@ -56,13 +60,27 @@ export const EnterMobileNo = ({
     }
 
 
-    const changeMobileNo = (value)=> {
-        const mobile = value.replace(/[^0-9]/g,"")
+    const filterByContacts = (value)=> {
+        if(value.length >= 1){
+            const result = contacts.filter((contact)=>{
+                return contact.name.toLowerCase().includes(value.toLowerCase()) || contact.number.toLowerCase().includes(value.toLowerCase())
+            })
+    
+            return result[0]
+        }
+        return null
+    }
 
-        if(mobile.length > 11) return
+
+    const changeMobileNo = (text)=> {
+        const filteredContact = filterByContacts(text)
+        setSuggestContact(filteredContact)
+        const value = text.replace(/[^0-9 A-Za-z]/g,"")
+
+        if(value.length > 11) return
         
-        if(checkMobileFormat(mobile)) {
-            checkIFSameNumber(mobile)
+        if(checkMobileFormat(value)) {
+            checkIFSameNumber(value)
         }else{
             setErrorMessage("Mobile number must be valid.")
             setProceed(false)
@@ -71,7 +89,7 @@ export const EnterMobileNo = ({
         if(value[0] == "9"){
             setMobileNo("09")
         }else{
-            setMobileNo(mobile)
+            setMobileNo(value)
         }
        
     }
@@ -79,7 +97,7 @@ export const EnterMobileNo = ({
 
     const checkMobileFormat = (mobile)=> {
         if(mobile.length != 11) return false
-        if(mobile[1] != "9") return false
+        if(mobile.slice(0,2) != "09") return false
         return true
 }
 
@@ -130,19 +148,38 @@ export const EnterMobileNo = ({
     },[walletLoading])
 
     return (
+        <>
+         
        <View style={styles.container}>
+            <ContactSuggestion
+                contactInfo={suggestContact}
+                setContactInfo={setSuggestContact}
+                onPress={setRecipientMobileNo}
+            />
             <View style={styles.content}>
-
                 <TouchableOpacity onPress={()=>{
                     return inputMobileRef.current.focus()
-                }} style={{flex: 1,justifyContent:"center",paddingHorizontal: 10, height:50}}>
-                    <>
-                    { recipientDetails.id && proceed && <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>{`${recipientDetails.person.firstName} ${recipientDetails.person.lastName[0]}.`}</Text>}
-                    <Text style={{fontFamily: FONT.REGULAR,fontSize: recipientDetails.id && proceed ? FONT_SIZE.M : FONT_SIZE.M,color:"dimgray"}}>{mobileNo == "" ? "Enter Recipient Number" : mobileNo}</Text>
-                    { errorMessage != "" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.S,color:COLOR.RED,marginTop: 0}}>{errorMessage}</Text>}
-
+                }} style={{flex: 1,justifyContent:"center",paddingHorizontal: 10, height:50,position:"relative"}}>
                 
-                    </>
+                    <View style={{flex: 1,position:"relative"}}>
+                     { recipientDetails.id && proceed && <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M,position:"absolute",marginTop:5}}>{`${recipientDetails.person.firstName} ${recipientDetails.person.lastName[0]}.`}</Text>}
+                        <TextInput
+                            ref={inputMobileRef}
+                        
+                            // autoFocus={true}
+                            value={mobileNo}
+                            style={{ width: '100%',height: errorMessage ? 35 : 50,padding:0,fontSize: FONT_SIZE.M,marginTop: recipientDetails.id && proceed ? 5 : 0}}
+                            // keyboardType="number-pad"
+                            keyboardType="default"
+                            returnKeyType="done"
+                            onChangeText={(value)=>{
+                                    changeMobileNo(value)
+                            }}
+                            placeholder="Enter recipient name or number"
+                        />
+                          
+                       {errorMessage != "" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.XS,color:COLOR.RED,marginTop: -5}}>{errorMessage}</Text>}
+                     </View>
                 </TouchableOpacity>
 
            
@@ -152,20 +189,10 @@ export const EnterMobileNo = ({
                     </View>
                 </TouchableOpacity>
 
-                <TextInput
-                        ref={inputMobileRef}
-                        caretHidden
-                        // autoFocus={true}
-                        value={mobileNo}
-                        style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent'}}
-                        keyboardType="number-pad"
-                        returnKeyType="done"
-                        onChangeText={(value)=>{
-                                changeMobileNo(value)
-                        }}
-                    />
+               
             </View>
        </View>
+       </>
     )
 }
 
@@ -192,8 +219,6 @@ const styles = StyleSheet.create({
         flexDirection:"row",
         justifyContent:"center",
         alignItems:'center',
-        flexDirection: "row",
-      
     },
     contactAddress: {
         // width:65,

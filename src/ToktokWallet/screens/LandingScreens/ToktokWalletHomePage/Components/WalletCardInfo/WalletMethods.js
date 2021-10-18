@@ -16,7 +16,7 @@ const Method = ({icon,label,iconstyle,onPress})=> {
         <TouchableOpacity onPress={onPress} style={styles.walletMethod}>
                 <View style={{width:"100%",height:"100%",justifyContent:"center",alignItems:"center"}}>
                         <Image resizeMode="contain" style={{...iconstyle,flex: 1,marginTop: 10,}} source={icon} />
-                        <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.XS,height: 22}}>{label}</Text>
+                        <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.XS -1,height: 22}}>{label}</Text>
                 </View>
         </TouchableOpacity>
     )
@@ -59,6 +59,7 @@ const WalletMethods = ()=> {
                 <Method label="Scan QR" icon={require('toktokwallet/assets/images/qr-code-scan.png')} iconstyle={{height: 25,width: 25}} onPress={()=>onPressThrottled("ToktokWalletScanQR")}/>
                 <Method label="Cash In" icon={require('toktokwallet/assets/images/cash-in.png')} iconstyle={{height: 30,width: 30,marginBottom: 2}} onPress={()=>onPressThrottled("ToktokWalletPaymentOptions")}/>
                 <Method label="Fund Transfer" icon={require('toktokwallet/assets/images/send-money.png')} iconstyle={{height: 30,width: 30,marginBottom: 2}} onPress={()=>onPressThrottled("ToktokWalletCashOutHomePage")}/>
+                <Method label="Request Money" icon={require('toktokwallet/assets/images/send-money.png')} iconstyle={{height: 30,width: 30,marginBottom: 2}} onPress={()=>onPressThrottled("ToktokWalletCashOutHomePage")}/>
             </View>
         </View>
     )
@@ -91,7 +92,7 @@ const styles = StyleSheet.create({
     },  
     walletMethod: {
         height: "100%",
-        width: (width * 0.9) / 4,
+        width: (width * 0.9) / 5,
         justifyContent:"center",
         alignItems:"center",
         zIndex: 99999

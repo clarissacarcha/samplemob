@@ -149,6 +149,7 @@ export const ToktokWalletSendMoney = ({navigation,route})=> {
                 <View style={{height: 70,padding: MARGIN.M, justifyContent:"flex-end"}}>
                     <ProceedButton
                         swipeEnabled={swipeEnabled}
+                        proceed={proceed}
                         amount={amount}
                         navigation={navigation}
                         tokwaAccount={tokwaAccount}

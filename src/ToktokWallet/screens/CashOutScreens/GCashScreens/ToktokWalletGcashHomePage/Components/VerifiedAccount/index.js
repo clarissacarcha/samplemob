@@ -140,17 +140,6 @@ export const VerifiedAccount = ({record,provider})=> {
     return (
         <>
         <AlertOverlay visible={requestLoading}/>
-        <ValidatorScreen
-            TPINVisible={openPinCode}
-            setTPINVisible={setOpenPinCode}
-            tpinCodeAttempt={pinCodeAttempt}
-            OTPVisible={openOtpCode}
-            setOTPVisible={setOpenOtpCode}
-            otpCodeAttempt={otpCodeAttempt}
-            otpResend={onSwipeSuccess}
-            callBackFunc={ProceedTransaction}
-            loading={loading}
-        />
         <Separator/>
         <SuccessfulCashOutModal 
              visible={successModalVisible}

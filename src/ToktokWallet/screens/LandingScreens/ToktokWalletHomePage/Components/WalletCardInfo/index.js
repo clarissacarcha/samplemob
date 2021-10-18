@@ -51,7 +51,12 @@ const WalletCardInfo = ({loading})=> {
     return (
        <View style={styles.container}>
            <HeaderImageBackground>
-               <HeaderTitle isLogo={true} headerBackLabel="Home"/>
+               <HeaderTitle 
+                    isRightIcon 
+                    rightIconOnPress={()=>navigation.navigate("ToktokWalletNotifications")} 
+                    isLogo
+                    headerBackLabel="Home"
+                />
                <View style={{flex: 1,justifyContent:"flex-end",paddingBottom: 45}}>
                     <View>
                         <View style={{ flexDirection: "row" }}>
@@ -74,13 +79,6 @@ const WalletCardInfo = ({loading})=> {
                                     <View style={styles.topUpbtn}>
                                     <VectorIcon iconSet={ICON_SET.Entypo} name="plus" color="black" size={20}/>
                                     </View>
-                                </TouchableOpacity>
-
-                                <TouchableOpacity onPress={tokwaNotifications} style={styles.topUp}>
-                                    
-                                    {/* <VectorIcon iconSet={ICON_SET.MaterialCommunityIcons} name="user" color="black" size={30}/> */}
-                                    <MIcon name="notifications" color={"black"} size={33} />
-                               
                                 </TouchableOpacity>
                                 
 
