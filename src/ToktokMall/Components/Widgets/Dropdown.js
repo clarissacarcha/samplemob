@@ -55,6 +55,8 @@ const DropdownItem = ({item, onItemPress, loading}) => {
 
   useEffect(() => {
     setContent(item.subCategories.sort((a, b) => a.categoryName.localeCompare(b.categoryName)))
+
+    console.log(content)
   }, [])
 
   useEffect(() => {
@@ -107,7 +109,7 @@ const DropdownItem = ({item, onItemPress, loading}) => {
           <Text style={{fontSize: 14, color: toggle ? "#F6841F" : "#000000"}}>{category}</Text>
         </View>
         <View style={{flex: 1, justifyContent: 'center'}}>
-          <CustomIcon.FeIcon name={toggle ? "chevron-up" : "chevron-down"} size={22} color={toggle ? "#F6841F" : "#CCCCCC"} /> 
+          {content.length > 1 && content[0] != null && <CustomIcon.FeIcon name={toggle ? "chevron-up" : "chevron-down"} size={22} color={toggle ? "#F6841F" : "#CCCCCC"} /> }
         </View>
       </TouchableOpacity>
     	<View style={{ height: 2, backgroundColor: '#F7F7FA'}} />

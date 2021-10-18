@@ -145,6 +145,7 @@ export const GET_PRODUCT_DETAILS = gql`
     	price
     	compareAtPrice
 			discountRate
+			soldCount
     	images {
       	arrangement
       	filename

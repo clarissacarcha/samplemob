@@ -192,9 +192,7 @@ const Component = ({
           <View style={{flexDirection: 'row', alignItems: "center"}}>
               {data.price ? <Text style={{color: "#F6841F", fontSize: 20}}><Price amount={data.price} /></Text> : null}
               {data.compareAtPrice && data.compareAtPrice != "0.00" ? <Text style={{color: "#9E9E9E", textDecorationLine: 'line-through', fontSize: 14, marginLeft: 10}}><Price amount={data.compareAtPrice} /></Text> : null}
-            
-              <Text style={{marginLeft: 10}}>{data.soldCount || 0} sold</Text>
-
+              {/* <Text style={{marginLeft: 10}}>{data.soldCount || 0} sold</Text>  */}
             <View style={{flex: 1.8, flexDirection: 'row', justifyContent: 'flex-end'}}>
               {/* <TouchableOpacity style={{marginRight: 10}} onPress={() => HandleToggleFavorites()}>
                 {favorite ? <CustomIcon.EIcon name="heart" size={22} color="#F6841F" /> : <CustomIcon.EIcon name="heart-outlined" size={22} color="#9E9E9E" />}
@@ -203,6 +201,9 @@ const Component = ({
                 <CustomIcon.FeIcon name="share" size={20} color="#9E9E9E" />
               </TouchableOpacity>
             </View>
+          </View>
+          <View>
+            <Text style={{}}>{data.soldCount || 0} sold</Text>
           </View>
         
       </View>

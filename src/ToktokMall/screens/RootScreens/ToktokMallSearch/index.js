@@ -202,13 +202,11 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
           
         }}
 				onSubmit={async () => {
-					if(searchValue != ""){
+					if(searchValue != "" && searchValue != route.params?.searchValue){
 
             if(route.params?.searchValue){
               if(route.params?.searchValue == searchValue){
-
                 setSearchedProducts([])                
-
               }
             }
 
@@ -224,8 +222,21 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
                 }
               }
             })
-
             
+          }else if(searchValue != "" && searchValue == route.params?.searchValue){
+
+            setSearchedProducts([])
+            searchProduct({
+              variables: {
+                input: {
+                  search: route.params.origin ? "" : route.params.searchValue,
+                  origin: route.params?.origin ? `${route.params.origin}` : "all",
+                  category: route.params?.categoryId ? route.params?.categoryId : null,
+                  offset: offset,
+                  limit: 10
+                }
+              }
+            })
           }
 				}}
 			/>

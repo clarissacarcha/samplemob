@@ -10,7 +10,8 @@ export const GET_CHECKOUT_DATA = gql`
 				receiverContact
 				regionId
 				provinceId
-				municipalityId      
+				municipalityId     
+				fullAddress 
 				shippingSummary {
 					id
 					rateName

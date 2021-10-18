@@ -86,10 +86,10 @@ const Item = ({data}) => {
 						<Text style={{fontSize: 10, textDecorationLine: 'line-through', alignSelf: 'flex-start', paddingHorizontal: 5, color: "#9E9E9E"}}>
 							<Price amount={data?.compareAtPrice} />
 						</Text> : null}
-            {data?.compareAtPrice == "0.00" && data?.otherinfo ?
+            {/* {data?.compareAtPrice == "0.00" && data?.otherinfo ?
 						<Text style={{fontSize: 8, alignSelf: 'flex-start', paddingHorizontal: 5, color: "#9E9E9E"}}>
 							{truncateString(data?.otherinfo, 25)}
-            </Text> : null}
+            </Text> : null} */}
           </View>
           {/* <View style={{flex: 0, left: -12}}>
             <Text style={{fontSize: 9.5, alignSelf: 'center', color: "#FDBA1C"}}>{data?.discountRate}</Text>
