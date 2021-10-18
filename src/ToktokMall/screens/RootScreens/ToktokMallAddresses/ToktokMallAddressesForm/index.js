@@ -110,67 +110,16 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefa
 
   const ProcessSaving = async () => {
     
-    const dataForm = {
-      ...newAddressForm,
-      fullAddress: newAddressForm.address + `, ${city}`,
-      regionId: parseInt(regCode) || 0,
-      provinceId: parseInt(provCode),
-      municipalityId: parseInt(munCode),
-      latitude: parseFloat(latitude),
-      longitude: parseFloat(longitude)
-    }
     const refresh = () => setTimeout(() => {
       EventRegister.emit("refreshAddress")
     }, 1000);
 
-    if(route.params?.update){
-      SaveDefaultAddress(() => {
-        refresh()
-        navigation.goBack();
-      })
-    }else{
-      SavePostAddress(() => {   
-        refresh() 
-        navigation.goBack();
-      })
-    }
-
-  }
-
-  const SaveToRedux = () => {
-    const dataForm = {
-    ...newAddressForm,
-    fullAddress: newAddressForm.address + `, ${city}`,
-    regionId: parseInt(regCode) || 0,
-    provinceId: parseInt(provCode),
-    municipalityId: parseInt(munCode),
-    latitude: parseFloat(latitude),
-    longitude: parseFloat(longitude)
-  }
-    if (route.params?.update) {
-      updateUserAddress('update', dataForm);
-      if (clicked) {
-        setDefaultUserAddress("set", dataForm)
-        updateUserAddress('changeDefault', newAddressForm.id);
-      }
+    SavePostAddress(() => {   
+      refresh() 
       navigation.goBack();
-    } else {
-      SavePostAddress(() => {
-        updateUserAddress('add', {
-          id: user_address.length + 1,
-          ...dataForm
-        });
-        // if (clicked) {
-        //   setDefaultUserAddress("set", {
-        //     id: user_address.length + 1,
-        //     ...dataForm
-        //   })
-        //   updateUserAddress('changeDefault', user_address.length + 1);
-        // }
-        navigation.goBack();
-      })
-    }
-  };
+    })
+
+  }
 
   const onSelectCity = (data) => {
     setCity(data.city);
@@ -179,7 +128,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefa
     setRegCode(data.regCode);
   };
 
-  const SavePostAddress = async (callback) => {
+  const SavePostAddress = async (callback, id) => {
     setIsLoading(true)
     AsyncStorage.getItem('ToktokMallUser').then(async (raw) => {
       let data = JSON.parse(raw) || {};
@@ -199,13 +148,17 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefa
           default: clicked == true ? 1 : 0,
         };
 
+        if(route.params?.update) body.address_id = route.params?.item.id
+
+        const endpoint = route.params?.update ? `update_address` :  `save_address`
+
         console.log(body, data.appSignature)
         let formData = new FormData();
         formData.append('signature', data.appSignature);
         formData.append('data', JSON.stringify(body));
 
         await axios
-          .post(`http://ec2-18-176-178-106.ap-northeast-1.compute.amazonaws.com/toktokmall/save_address`, formData)
+          .post(`http://ec2-18-176-178-106.ap-northeast-1.compute.amazonaws.com/toktokmall/${endpoint}`, formData)
           .then((response) => {
             if (response.data && response.data.success == 1) {
               setIsLoading(false);
@@ -367,7 +320,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefa
           setIsVisible={(val) => {
             setMessageModal(val);
           }}
-          message={'Address Added!'}
+          message={route.params?.update ? 'Address Updated!' :'Address Added!'}
         />
       )}
       {deletedModal && (
@@ -506,7 +459,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefa
             <TextInput
               style={styles.textinput}
               placeholder={'Landmarks/Exact Address/ Note to rider (optional)'}
-              value={newAddressForm.landmark}
+              value={newAddressForm.landMark}
               onChangeText={(text) => {
                 onChangeText('landMark', text);
               }}
