@@ -28,7 +28,8 @@ export const RenderDetails = ({
 	onItemLongPress,
 	onItemDelete,
 	onChangeQuantity,
-	refreshing
+	refreshing,
+	willDelete
 }) => {
 
 	const [storeItemSelected, setStoreItemSelected] = useState(allSelected ? true : false)
@@ -86,59 +87,68 @@ export const RenderDetails = ({
 		}
 	}
 
+	const Wrapper = willDelete ? View : Swipeable
+	const props = willDelete
+    ? {}
+    : {
+        rightActionActivationDistance: 30,
+        rightButtonWidth: 75,
+        rightButtons: [
+          <DeleteButton
+            onPress={() => {
+              onItemDelete({
+                shop: item.shop,
+                product: data.product,
+              });
+            }}
+          />,
+        ],
+      };
+
+
 	return (
-		<>
-			<Store
-				state={getStoreCheckboxState()}
-				data={item?.shop || {}}
-				onSelect={(raw) => {
-					toggleCheckBox(raw.checked)
-					onStoreSelect(raw, item.data)
-				}}
-				onPress={onPress}
-			/>
-				
-			{item && item.data.length > 0 && item.data.map((data, i) => {
+    <>
+      <Store
+        state={getStoreCheckboxState()}
+        data={item?.shop || {}}
+        onSelect={(raw) => {
+          toggleCheckBox(raw.checked);
+          onStoreSelect(raw, item.data);
+        }}
+        onPress={onPress}
+      />
 
-				return (
-				<Swipeable 
-					rightActionActivationDistance={30}
-					rightButtonWidth={75}
-					rightButtons={[<DeleteButton onPress={() => {
-						onItemDelete({
-							shop: item.shop,
-							product: data.product
-						})
-					}} />]}
-				>
-					<Item
-						key={i}
-						index={i}
-						state={getCheckboxState()}
-						forceSelect={selectedItemsCount == item.data.length}
-						data={data}
-						onHold={(raw) => {
-							onItemLongPress(raw)
-						}}
-						onSelect={(raw) => {
-							
-							if(raw.checked){								
-								setSelectedItemsCount(selectedItemsCount + 1)								
-							}else if(!raw.checked){
-								setSelectedItemsCount(selectedItemsCount - 1)								
-							}
+      {item &&
+        item.data.length > 0 &&
+        item.data.map((data, i) => {
+          return (
+            <Wrapper {...props}>
+              <Item
+                key={i}
+                index={i}
+                state={getCheckboxState()}
+                forceSelect={selectedItemsCount == item.data.length}
+                data={data}
+                onHold={(raw) => {
+                  onItemLongPress(raw);
+                }}
+                onSelect={(raw) => {
+                  if (raw.checked) {
+                    setSelectedItemsCount(selectedItemsCount + 1);
+                  } else if (!raw.checked) {
+                    setSelectedItemsCount(selectedItemsCount - 1);
+                  }
 
-							onItemSelect(raw)
+                  onItemSelect(raw);
+                }}
+                item={item}
+                onChangeQuantity={onChangeQuantity}
+              />
+            </Wrapper>
+          );
+        })}
 
-						}}
-						item={item}
-						onChangeQuantity={onChangeQuantity}
-					/>
-				</Swipeable>
-				)}
-			)}
-			
-			{/* <View style={{height: 8, backgroundColor: '#F7F7FA'}} /> */}
-		</>
-	);
+      {/* <View style={{height: 8, backgroundColor: '#F7F7FA'}} /> */}
+    </>
+  );
 }

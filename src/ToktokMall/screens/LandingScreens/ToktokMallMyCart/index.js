@@ -438,6 +438,7 @@ const Component =  ({
                     item={item}
                     allSelected={allSelected}
                     refreshing={loading}
+                    willDelete={willDelete}
                     onPress={() => {
                       navigation.navigate("ToktokMallStore", {id: item.shop.id})
                     }}
