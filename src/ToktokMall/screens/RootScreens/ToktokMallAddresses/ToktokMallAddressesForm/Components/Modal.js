@@ -70,6 +70,7 @@ export const AddressModal = ({navigation, isVisible, setIsVisible, type, message
                 <View style={{flexDirection: 'row', justifyContent: 'flex-end', marginBottom: 10}}>
                   <CustomIcon.MCIcon
                     onPress={() => {
+                      console.log("test")
                       setModalVisible(false);
                       setIsVisible(false);
                     }}
