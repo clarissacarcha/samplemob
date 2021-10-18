@@ -249,6 +249,7 @@ const Component =  ({
     }else if(req.responseError == null && req.responseData == null){
       Toast.show("Something went wrong", Toast.LONG)
     }
+    setIsFetching(false)
 
   }
 

@@ -81,6 +81,7 @@ export const ToktokMallOTP =  ({navigation, route}) => {
       navigation.pop()
 
     }else if(req.responseError){
+      console.log(req.responseError)
       const regex = /(<([^>]+)>)/ig;
       Toast.show(req.responseError.message.replace(regex, ""), Toast.LONG)
     }else if(req.responseError == null && req.responseData == null){

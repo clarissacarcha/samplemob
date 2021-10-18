@@ -45,6 +45,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
   const [vcode, setvCode] = useState("")
   const [voucher, setVoucher] = useState([])
   const [grandTotal, setGrandTotal] = useState(0)
+  const [subTotal, setSubTotal] = useState(0)
   const [userId, setUserId] = useState(null)
   const [deliveryFees, setDeliveryFees] = useState([])
   const [receiveDates, setReceiveDates] = useState([])
@@ -142,7 +143,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
         notes: "", 
         total: grandTotal, 
         // toktokid: parentSession.user.id
-        toktokid: walletAccount.id,
+        // toktokid: walletAccount.id,
+        toktokid: 1,
         transactionTypeId: "TOKTOKWALLET PAYMENT"
       })
       setIsLoading(false)
@@ -158,10 +160,13 @@ const Component = ({route, navigation, createMyCartSession}) => {
           pin: "",
           items: paramsData, 
           addressData: addressData, 
+          subTotal: subTotal,
           grandTotal: grandTotal, 
           vouchers: voucher,
           shippingRates: shippingRates,
-          paymentMethod: payment
+          paymentMethod: "TOKTOKWALLET",
+          hashAmount: req.responseData.hash_amount,
+          referenceNum: req.responseData.orderRefNum
         })
 
         navigation.navigate("ToktokMallOTP", {
@@ -243,6 +248,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
       // console.log(shippingRates, shipping)
       // a += parseFloat(userDefaultAddress?.shippingSummary?.rateAmount)
     }
+    setSubTotal(a)
     let shipping = 0
     for(var z=0;z<shippingRates.length;z++){
       shipping += parseFloat(shippingRates[z].price)
@@ -268,7 +274,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
     (async () => {
       await init()
     })();
-  },[addressData])
+  }, [])
 
   useEffect(() => {
     console.log("Shipping Rates Value:", shippingRates.length)
@@ -281,11 +287,12 @@ const Component = ({route, navigation, createMyCartSession}) => {
   //   }
   // }, [movedScreens])
 
-  useEffect(() => {
-    calculateGrandTotal()
-  }, [addressData, shippingRates])
+  // useEffect(() => {
+  //   calculateGrandTotal()
+  // }, [addressData, shippingRates])
 
   useEffect(() => {
+
     setParamsData(route?.params?.data)
     setNewCartData(route?.params.newCart)
 

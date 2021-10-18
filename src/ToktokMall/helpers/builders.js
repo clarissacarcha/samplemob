@@ -1,6 +1,18 @@
 import AsyncStorage from '@react-native-community/async-storage';
 
-export const BuildPostCheckoutBody = async ({walletRequest, pin, items, addressData, shippingRates, grandTotal, paymentMethod, vouchers}) => {
+export const BuildPostCheckoutBody = async ({
+	walletRequest, 
+	pin, 
+	items, 
+	addressData, 
+	shippingRates, 
+	grandTotal, 
+	subTotal,
+	paymentMethod, 
+	vouchers,
+	hashAmount,
+	referenceNum
+}) => {
 
 	let rawsession = await AsyncStorage.getItem("ToktokMallUser")
 	let session = JSON.parse(rawsession)
@@ -18,8 +30,8 @@ export const BuildPostCheckoutBody = async ({walletRequest, pin, items, addressD
 			regCode: addressData.regionId,
 			provCode: addressData.provinceId || "0155",  //Pangasinan
 			citymunCode: addressData.municipalityId,
-			total_amount: parseFloat(grandTotal),
-			srp_totalamount: parseFloat(grandTotal),
+			total_amount: parseFloat(subTotal),
+			srp_totalamount: parseFloat(subTotal),
 			order_type: 2,
 			order_logs: BuildOrderLogsList({data: items, shipping: addressData.shippingSummary, shippingRates}),
 			//Optional values
@@ -34,7 +46,10 @@ export const BuildPostCheckoutBody = async ({walletRequest, pin, items, addressD
 			shippingvouchers: [],
 			referral_code: "",
 			referral_account_type: "",
-			payment_method: paymentMethod
+			payment_method: paymentMethod,
+			hash_amount: hashAmount,
+			reference_num: referenceNum,
+			orderRefNum: referenceNum
 		}
 			
 	}else{
@@ -51,10 +66,10 @@ export const BuildOrderLogsList = ({data, shipping, shippingRates}) => {
 		let items = []
 		if(val.data.length == 0 || val.data == undefined) return
 		val.data[0].map((item, i) => {
-			let total = parseFloat(item.price) * item.qty
+			let total = parseFloat(item.amount) * item.qty
 			items.push({
-				sys_shop: item.shopid,
-				product_id: item.productid,
+				sys_shop: val.shop.id,
+				product_id: item.product.Id,
 				itemname: item.product.itemname,
 				quantity: item.qty,
 				amount: parseFloat(item.amount),
@@ -70,6 +85,8 @@ export const BuildOrderLogsList = ({data, shipping, shippingRates}) => {
 			branchid: 0,
 			// delivery_amount: shipping.rateAmount,
 			delivery_amount: parseFloat(shippingRates[index].price),
+			original_shipping_fee: parseFloat(shippingRates[index].price),
+			handle_shipping_promo: 1,
 			hash: shippingRates[index].hash,
 			hash_delivery_amount: shippingRates[index].hash_price,
 			daystoship: shipping.fromDay,
