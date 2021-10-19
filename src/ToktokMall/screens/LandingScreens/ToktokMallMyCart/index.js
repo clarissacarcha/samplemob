@@ -136,6 +136,7 @@ const Component =  ({
       }
     }
 
+    init()
     setapiloader(false)
     setMessageModalShown(true)
 
@@ -152,6 +153,7 @@ const Component =  ({
     console.log(JSON.stringify(variables))
     setapiloader(true)
     const req = await ApiCall("remove_cart", variables, true)
+    init()
     setapiloader(false)
     if(req.responseData && req.responseData.success == 1){   
       console.log("Single Deletion Result: ", req.responseData)
