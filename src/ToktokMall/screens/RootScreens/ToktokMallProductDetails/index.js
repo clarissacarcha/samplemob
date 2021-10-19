@@ -1,7 +1,7 @@
 import React, {useRef, useEffect, useState} from 'react';
 import { useLazyQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql';
-import { GET_PRODUCT_DETAILS, GET_VERIFY_ADD_TO_CART } from '../../../../graphql/toktokmall/model';
+import { CHECK_ITEM_FROM_CART, GET_PRODUCT_DETAILS, GET_VERIFY_ADD_TO_CART } from '../../../../graphql/toktokmall/model';
 import {View, SafeAreaView, Text, Image, FlatList, SectionList, ImageBackground, TouchableOpacity, Dimensions} from 'react-native';
 import {connect} from 'react-redux'
 import Spinner from 'react-native-spinkit';
@@ -38,6 +38,7 @@ import {
 } from './components'
 
 import Animated, {interpolate, Extrapolate, useCode, set, greaterThan} from 'react-native-reanimated'
+import { EventRegister } from 'react-native-event-listeners';
 
 const Component =  ({
   navigation,
@@ -71,6 +72,8 @@ const Component =  ({
   const session = useSelector(state=> state.session)
   const [user, setUser] = useState({})
 
+  const [qtyOnCart, setQtyOnCart] = useState(0)
+
   const {
     params: { Id },
   } = route
@@ -99,6 +102,38 @@ const Component =  ({
     if(ypos > 50) setScrolling(true)
     else if (ypos <= 50) setScrolling(false)
   }
+
+
+  const [checkItemFromCart] = useLazyQuery(CHECK_ITEM_FROM_CART, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: (response) => {
+      console.log("CHECK_ITEM_FROM_CART", response.checkItemFromCart)
+      setQtyOnCart(response.checkItemFromCart?.quantity || 0)
+    },
+    onError: (err) => {
+      console.log(err)
+    }
+  })
+
+  
+  useEffect(() => {
+    if(product){
+      AsyncStorage.getItem("ToktokMallUser").then((raw) => {
+        const data = JSON.parse(raw)
+        if(data.userId){
+          checkItemFromCart({
+            variables: {
+              input: {
+                userId: data.userId,
+                productId: product.Id
+              }
+            }
+          })
+        }
+      })
+    }
+  },[product])
 
   const [getProductDetails, {error, loading}] = useLazyQuery(GET_PRODUCT_DETAILS, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
@@ -210,7 +245,7 @@ const Component =  ({
         input: {
           userId: user.userId,
           productId: Id,
-          quantity: input.qty,
+          quantity: input.qty + qtyOnCart,
           // quantity: 200,
           variant: selectedVariation
         }
@@ -239,6 +274,7 @@ const Component =  ({
     if(req.responseData && req.responseData.success == 1){
       // createMyCartSession('push', raw)
       //setCartItems(CountCartItems)
+      EventRegister.emit('refreshToktokmallShoppingCart')
       createMyCartCountSession("add", input.qty)
       setMessageModalShown(true)
       setIsFetching(false)

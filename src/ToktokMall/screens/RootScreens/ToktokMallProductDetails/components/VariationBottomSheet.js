@@ -194,8 +194,8 @@ export const VariationBottomSheet = forwardRef(({
               <View style={{flex: 1.5}}></View>
               <View style={{flex: 4}}>
                 <View style={{flexDirection:'row'}}>
-                  <Text style={{color: "#F6841F", fontSize: 14}}><Price amount={item?.price} /></Text>
-                  <Text style={{color: "#9E9E9E", textDecorationLine: 'line-through', fontSize: 11, marginTop: 2.5, marginLeft: 8}}>{item.compareAtPrice == 0 ? "" : <Price amount={item.compareAtPrice} />}</Text>                
+                  <Text style={{color: "#F6841F", fontSize: 14}}><Price amount={item?.price * qty} /></Text>
+                  <Text style={{color: "#9E9E9E", textDecorationLine: 'line-through', fontSize: 11, marginTop: 2.5, marginLeft: 8}}>{item.compareAtPrice == 0 ? "" : <Price amount={item.compareAtPrice*qty} />}</Text>                
                 </View>
                 <Text style={{color: "#9E9E9E", fontSize: 12, marginTop: 5}}>Stock: {stock}</Text>
               </View>
