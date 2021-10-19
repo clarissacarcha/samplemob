@@ -60,7 +60,7 @@ export default styles = StyleSheet.create({
     height: moderateScale(80),
     marginRight: 8,
     borderRadius: 12,
-    resizeMode: 'contain'
+    resizeMode: 'cover'
   },
   orderItemContainer: {
     flexDirection: 'row',

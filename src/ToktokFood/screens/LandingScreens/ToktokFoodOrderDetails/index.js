@@ -161,14 +161,6 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
                 });
               } else {
                 setSeconds(300);
-                // if (transaction.orderIsfor == 1) {
-                // setShadowDialogMessage({
-                //   title: `Couldn't Find Driver`,
-                //   message: `We couldn't find you a driver as of this moment. Please try again.`,
-                //   show: true,
-                //   type: 'warning'
-                // });
-                // }
               }
             } else {
               setSeconds(300);
