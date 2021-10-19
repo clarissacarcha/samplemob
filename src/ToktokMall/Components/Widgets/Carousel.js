@@ -109,7 +109,7 @@ export const AdsCarousel = (props) => {
           setAutoPlay(false)
           setAutoPlay(true)
         }}
-        onIndexChanged={(index) => setActiveSlide(index) }
+        // onIndexChanged={(index) => setActiveSlide(index) }
         autoplayTimeout = {3}
         showsPagination = {true}
         // activeDot 

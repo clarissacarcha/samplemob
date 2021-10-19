@@ -18,6 +18,7 @@ import { useLazyQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql';
 import { GET_MY_CART } from '../../../../graphql/toktokmall/model';
 import AsyncStorage from '@react-native-community/async-storage';
+import {EventRegister} from 'react-native-event-listeners'
 
 const Component =  ({
   navigation,
@@ -89,6 +90,7 @@ const Component =  ({
 
   useEffect(() => {
     init()
+    EventRegister.addEventListener('refreshToktokmallShoppingCart', init)
   }, [])
 
   const onChangeQuantity = (id, qty) => {
