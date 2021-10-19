@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     width: moderateScale(90),
     height: moderateScale(90),
     borderRadius: 5,
-    resizeMode: 'contain'
+    resizeMode: 'cover'
   },
   listInfo: {
     flexDirection: 'row',

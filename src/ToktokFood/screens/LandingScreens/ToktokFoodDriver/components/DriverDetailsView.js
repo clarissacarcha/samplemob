@@ -1,11 +1,14 @@
-import React from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {Platform, ScrollView, StyleSheet, TouchableOpacity, View, Text, Image} from 'react-native';
 import {useSelector} from 'react-redux';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useIsFocused} from '@react-navigation/native';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import {getDistance, convertDistance} from 'geolib';
+
+// Components
 import Separator from 'toktokfood/components/Separator';
+import TimerModal from 'toktokfood/components/TimerModal';
 
 // Fonts/Colors
 import {COLORS} from 'res/constants';
@@ -15,13 +18,26 @@ import { time } from 'toktokfood/assets/images';
 // Utils
 import {moderateScale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
 import {orderStatusMessageDelivery} from 'toktokfood/helper/orderStatusMessage';
+import {getDuration} from 'toktokfood/helper/index';
 
 import moment from 'moment';
 import DashedLine from 'react-native-dashed-line';
+import {
+  saveEstimatedDeliveryTime,
+  getEstimatedDeliveryTime,
+  removeEstimatedDeliveryTime,
+  changeDateToday,
+  processGetEDT,
+  convertEDT
+} from 'toktokfood/helper/estimatedDeliveryTime';
 
 const DriverDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) => {
   const navigation = useNavigation();
   const {location} = useSelector((state) => state.toktokFood);
+  const [estimatedDeliveryTime, setEstimatedDeliveryTime] = useState('');
+  const [additionalMins, setAdditionalMins] = useState(0);
+  const [newETA, setNewETA] = useState(false);
+  const [newStartDateTime, setNewStartDateTime] = useState(null);
   const {
     shopDetails,
     orderStatus,
@@ -41,27 +57,61 @@ const DriverDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
     `${shopDetails.shopname} (${shopDetails.address})`,
     isdeclined
   );
-   
-  const calculateDistance = (startTime, riderLocation) => {
-    let distance = getDistance(
-      {latitude: latitude, longitude: longitude},
-      // {latitude: 14.537752, longitude: 121.001381},
-      {latitude: riderLocation.latitude, longitude: riderLocation.longitude},
-    );
-    let distanceMiles = convertDistance(distance, 'mi');
-    let duration = distanceMiles / 40;
-    let additionalMins = 20 / 60;
-    let final = (duration + additionalMins).toFixed(2);
+  const minutesInHours = 60;
+  const isFocus = useIsFocused();
 
-    return moment(startTime).add(final, 'hours').format('hh:mm A');
+  useEffect(() => {
+    if(isFocus && estimatedDeliveryTime != ''){
+      let edt = moment(estimatedDeliveryTime, 'h:mm a')
+      if(moment().isAfter(edt)){
+        setNewETA(true)
+      }
+    }
+  }, [isFocus])
+
+  useEffect(() => {
+    if((orderStatus == 'po' || orderStatus == 'rp' || orderStatus == 'f') && estimatedDeliveryTime != ''){
+      if(orderStatus == 'rp' || orderStatus == 'f'){
+        setAdditionalMins(20)
+      }
+      setNewETA(true)
+    }
+  }, [transaction])
+
+  const handleProcessGetEDT = async(date, location) =>{ 
+    // await removeEstimatedDeliveryTime()
+    let result = await processGetEDT(date, referenceNum);
+    if(result != null){
+      setEstimatedDeliveryTime(result)
+    } else {
+      setAdditionalMins(20)
+      setNewETA(true)
+      calculateEstimatedDeliveryTime(date, location)
+    }
+  }
+
+  const calculateEstimatedDeliveryTime = (date, originLocation) => {
+    if(newETA){
+      getDuration(originLocation, {latitude, longitude})
+        .then(async(durationSecs) => {
+          setNewETA(false)
+          let durationHours = durationSecs != undefined ? Math.floor(durationSecs / (60 * 60)) : 0.0166667;
+          let addMins = additionalMins / minutesInHours;
+          let additionalHours = (durationHours + addMins).toFixed(2);
+          let edtDate = estimatedDeliveryTime ? convertEDT(date, estimatedDeliveryTime) : date
+          let hoursDifference = moment().diff(edtDate, 'hours', true)
+          let finalHrs = hoursDifference ? parseFloat(additionalHours) + parseFloat(hoursDifference) : additionalHours
+          let edt = moment(edtDate).add(finalHrs, 'hours').format('h:mm A')
+          console.log(durationHours, date, edt)
+          processSaveEDT(edt)
+          setEstimatedDeliveryTime(edt)
+        })
+    }
   };
 
-  const convertMinsToTime = (mins) => {
-    let hours = Math.floor(mins / 60);
-    let minutes = mins % 60;
-    minutes = minutes < 10 ? '0' + minutes : minutes;
-    return `${hours}hrs:${minutes}mins`;
-  };
+  const processSaveEDT = async(edt) => {
+    await saveEstimatedDeliveryTime(referenceNum, edt)
+  }
 
   const onSeeDetails = () => {
     navigation.navigate('ToktokFoodOrderDetails', {referenceNum});
@@ -99,34 +149,44 @@ const DriverDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
 
   const dateByOrderStatus = () => {
     if(orderStatus == 'po'){
-      return dateOrderProcessed
+      return moment(dateOrderProcessed).isSame(moment(), 'day') ? dateOrderProcessed : changeDateToday(dateOrderProcessed)
     } else if(orderStatus == 'rp'){
-      return dateReadyPickup.toString() != 'Invalid date' ? dateReadyPickup : dateBookingConfirmed;
+      let date = moment(dateReadyPickup).isValid() ? dateReadyPickup : dateBookingConfirmed;
+      return moment(date).isSame(moment(), 'day') ? date : changeDateToday(date)
     } else {
-      return dateFulfilled
+      let date = moment(dateFulfilled).isSame(moment(), 'day') ? dateFulfilled : changeDateToday(dateFulfilled)
+      return newStartDateTime != null ? newStartDateTime : date
     }
   }
 
-  const renderTitle = () => {
+  const displayEstimatedDeliveryTime = () => {
     let date = dateByOrderStatus();
     let shopLocation = { latitude: shopDetails.latitude, longitude: shopDetails.longitude };
-    let location = riderDetails != null ? riderDetails.location : shopLocation
+    let location = (riderDetails != null && orderStatus == 'f') ? riderDetails.location : shopLocation
     let startTime = moment(date).format('LT');
-    let endTime = calculateDistance(date, location)
-  
+    estimatedDeliveryTime == '' ? handleProcessGetEDT(date, location) : calculateEstimatedDeliveryTime(date, location)
+    if(!moment(date).isValid() && estimatedDeliveryTime == ''){
+      return null
+    }
+    return (
+      <View style={styles.timeContainer}>
+        <Image resizeMode="contain" source={time} style={styles.timeImg} />
+        {/* <Text style={styles.time}>{`Estimated Delivery Time: ${startTime} - ${endTime}`}</Text> */}
+        <Text style={styles.time}>
+          {`Estimated Delivery Time: ${moment(date).format('ll')} - ${estimatedDeliveryTime}`}
+        </Text>
+      </View>
+    )
+  }
+
+  const renderTitle = () => {
     return (
       <View style={styles.detailsContainer}>
-        {(status.id == 'f' || status == 's') && (
+        {(status.id == 'f' || status.id == 's') && (
           <Text style={styles.title}>{status.title}</Text>
         )}
         <Text style={styles.status}>{status.message}</Text>
-        {(date.toString() != 'Invalid date') && (
-          <View style={styles.timeContainer}>
-            <Image resizeMode="contain" source={time} style={styles.timeImg} />
-            {/* <Text style={styles.time}>{`Estimated Delivery Time: ${startTime} - ${endTime}`}</Text> */}
-            <Text style={styles.time}>{`Estimated Delivery Time: ${moment(date).format('ll')} - ${endTime}`}</Text>
-          </View>
-        )}
+        {(orderStatus != 'p' && orderStatus != 'c' && orderStatus != 's') && displayEstimatedDeliveryTime() }
       </View>
     );
   };
@@ -144,8 +204,27 @@ const DriverDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
     </View>
   );
 
+  const onCallBack = () => {
+    setNewETA(true)
+    if(orderStatus == 'po' || orderStatus == 'rp'){
+      setAdditionalMins(orderStatus == 'po' ? 10 : 15)
+    } else {
+      // setAdditionalMins(0.1)
+      let date = moment().format('YYYY-MM-DD HH:mm:ss')
+      setNewStartDateTime(date)
+    }
+  } 
+
   return (
     <View style={styles.container}>
+      {(orderStatus != 'p' && orderStatus != 's' && orderStatus != 'c') && (
+        <TimerModal
+          orderStatus={orderStatus}
+          estimatedDeliveryTime={estimatedDeliveryTime}
+          hasRider={riderDetails != null}
+          onCallBack={onCallBack}
+        />
+      )}
       <View style={styles.shadow}>
         {renderTitle()}
         <Separator />

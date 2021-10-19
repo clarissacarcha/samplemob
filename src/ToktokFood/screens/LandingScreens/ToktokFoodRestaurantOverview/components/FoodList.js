@@ -92,7 +92,7 @@ export const FoodList = (props) => {
           { !!item.summary && <Text numberOfLines={1} style={styles.summary}>{item.summary}</Text> }
         </View>
         <View>
-          <Image resizeMode='contain' source={{uri: item.filename}} style={styles.img} />
+          <Image resizeMode='cover' source={{uri: item.filename}} style={styles.img} />
         </View>
       </TouchableOpacity>
     );
