@@ -122,7 +122,20 @@ export const RenderDetails = ({
         item.data.length > 0 &&
         item.data.map((data, i) => {
           return (
-            <Wrapper {...props}>
+            <Wrapper {...{
+							rightActionActivationDistance: 30,
+							rightButtonWidth: willDelete ? 0 : 75,
+							rightButtons: [
+								<DeleteButton
+									onPress={() => {
+										onItemDelete({
+											shop: item.shop,
+											product: data.product,
+										});
+									}}
+								/>,
+							],
+						}}>
               <Item
                 key={i}
                 index={i}
@@ -138,7 +151,6 @@ export const RenderDetails = ({
                   } else if (!raw.checked) {
                     setSelectedItemsCount(selectedItemsCount - 1);
                   }
-
                   onItemSelect(raw);
                 }}
                 item={item}
