@@ -1,21 +1,12 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, useContext} from 'react';
 import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, } from 'react-native';
 import { Price, FormatToText } from '../../../../helpers/formats';
-// import { COLOR, FONT } from '../../../../../../res/variables';
-// import {LandingHeader, AdsCarousel} from '../../../../../Components';
-// import { ScrollView } from 'react-native-gesture-handler';
-// import CustomIcon from '../../../../../Components/Icons';
-// import {watch, electronics, mensfashion, furniture, petcare} from '../../../../../assets'
-const testData = [
-  {id: 1, full_name: 'Cloud Panda', contact_number: '09050000000',
-    address: '10F, Inoza Tower, 40th Street, Bonifacio Global City', default: 1
-  },
-  {id: 2, full_name: 'Rick Sanchez', contact_number: '09060000000',
-    address: 'B20 L1, Mahogany Street, San Isidro, Makati City', default: 0
-  }
-]
+
+import {CheckoutContext} from '../ContextProvider';
 
 export const Totals = ({raw, shipping, shippingRates}) => {
+
+  const CheckoutContextData = useContext(CheckoutContext)
 
   const [data, setData] = useState(raw || [])
 
@@ -24,6 +15,7 @@ export const Totals = ({raw, shipping, shippingRates}) => {
   }, [raw])
 
   let shippingFeeTotal = 0
+  let shippingDiscountTotal = 0
   let merchandiseTotal = 0
 
   const computeShippingFee = () => {
@@ -46,6 +38,16 @@ export const Totals = ({raw, shipping, shippingRates}) => {
     else return FormatToText.currency(total)
   }
 
+  const computeShippingDiscount = () => {
+    let total = 0
+    for (let i = 0; i < CheckoutContextData.shippingVouchers.length; i++){
+      total = total + parseFloat(CheckoutContextData.shippingVouchers[i].amount)
+    }
+    shippingDiscountTotal = total
+    if(!total) return FormatToText.currency(0)
+    else return FormatToText.currency(total)
+  }
+
   const computeMerchandiseTotal = () => {
     let total = 0
     data.length > 0 && data.map((item, i) => {
@@ -56,6 +58,12 @@ export const Totals = ({raw, shipping, shippingRates}) => {
     merchandiseTotal = total
     return FormatToText.currency(total)
   } 
+
+  const getDiscount = (type) => {
+    if(type == "shipping"){
+      return CheckoutContextData.shippingVouchers.length !== 0
+    }
+  }
     
   return (
     <>
@@ -66,7 +74,22 @@ export const Totals = ({raw, shipping, shippingRates}) => {
         </View>
         <View style = {styles.textContainer}>
           <Text>Shipping Fee:</Text>
-          <Text>{computeShippingRates()}</Text>
+          <View style={{flexDirection: 'row'}}>
+            {/* <View style={{flex: 0}}>
+              <Text style={{textDecorationLine: CheckoutContextData.shippingVouchers.length > 0 ? 'line-through' : 'none'}}>{computeShippingRates()} </Text>
+            </View>
+            <View>
+              {CheckoutContextData.shippingVouchers.length > 0 && <Text> {computeShippingDiscount()}</Text>}
+            </View> */}
+
+            <View style={{flex: 0}}>
+              <Text style={{textDecorationLine: getDiscount("shipping") ? "line-through" : "none",  color: getDiscount("shipping") ? "#929191" :'#000'}}>{computeShippingRates()}</Text>
+            </View>
+            <View style={{flex: 0}}>
+              {getDiscount("shipping") ? <Text> {computeShippingDiscount()}</Text> : null}              
+            </View>
+
+          </View>          
         </View>
         <View style = {styles.textContainer}>
           <Text style = {{fontWeight: 'bold'}}>Total Payment:</Text>
