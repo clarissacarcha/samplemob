@@ -19,7 +19,7 @@ export const HeaderTitleSearchBox = ({ onCallBackSearch }) => {
 
   return (
     <View style={styles.searchBoxContainer}>
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.headerBack}>
+      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.headerBack} hitSlop={styles.hitSlop}>
         <FIcon5 name="chevron-left" size={15} />
       </TouchableOpacity>
       <View style={[styles.textInputWrapper, styles.searchBox]}>
@@ -77,4 +77,10 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginBottom: 15
   },
+  hitSlop: {
+    top: moderateScale(40),
+    bottom: moderateScale(40),
+    left: moderateScale(40),
+    right: moderateScale(40)
+  }
 });
