@@ -9,6 +9,7 @@ export const EnterAmount = ({tokwaAccount , setSwipeEnabled , amount  ,setAmount
 
     const [errorAmountMessage,setErrorAmountMessage] = useState("")
     const [tempAmount,setTempAmount] = useState("")
+    const [isFocus,setIsFocus] = useState(false)
 
 
     const changeAmount = (value)=>{
@@ -43,17 +44,23 @@ export const EnterAmount = ({tokwaAccount , setSwipeEnabled , amount  ,setAmount
             <View style={[styles.input, {borderWidth: 1, borderColor: errorAmountMessage == "" ? "transparent" : COLOR.RED}]}>
                     <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,alignSelf:"center"}}>{tokwaAccount.wallet.currency.code} </Text>
                     <TextInput
-                            
+                            onFocus={()=>setIsFocus(true)}
+                            onBlur={()=>setIsFocus(false)}
                             value={amount}
+                            caretHidden={!isFocus}
                             onChangeText={changeAmount}
-                            style={{height: '100%', width: '100%'}}
+                            style={{height: '100%', width: '100%', ...(!isFocus ? {position: 'absolute', color: 'transparent',zIndex: 1} : {})}}
                             keyboardType="numeric"
                             returnKeyType="done"
                             placeholder="0.00"
                     />
-                    {/* <View style={{marginLeft: 5,alignSelf: "center",flex: 1}}>
-                        <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{amount ? numberFormat(amount) : "0.00"}</Text>
-                    </View> */}
+                    
+                    {
+                        !isFocus &&
+                        <View style={{marginLeft: 5,alignSelf: "center",flex: 1}}>
+                            <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{amount ? numberFormat(amount) : "0.00"}</Text>
+                        </View>
+                    }
             </View>
             <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.S,color:"#F93154"}}>{errorAmountMessage}</Text>
     </View>

@@ -76,6 +76,7 @@ export const EnterMobileNo = ({
         const filteredContact = filterByContacts(text)
         setSuggestContact(filteredContact)
         const value = text.replace(/[^0-9 A-Za-z]/g,"")
+        // const value = text.replace(/[^0-9]/g,"")
 
         if(value.length > 11) return
         
