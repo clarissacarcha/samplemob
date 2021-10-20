@@ -53,7 +53,10 @@ export const FoodCart = ({loading}) => {
   const {customerInfo} = useSelector((state) => state.toktokFood);
   const [showDialogMessage, setShowDialogMessage] = useState({show: false, items: []});
   const [tempData, setTempData] = useState({});
- 
+  const required = Object.keys(requiredOptions).filter((val) => {
+    return selected[val] == undefined;
+  });
+
   const [postTemporaryCart, {loading: postLoading, error: postError}] = useMutation(POST_TEMPORARY_CART, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     onError: (error) => {
@@ -115,7 +118,6 @@ export const FoodCart = ({loading}) => {
       client: TOKTOK_FOOD_GRAPHQL_CLIENT,
       fetchPolicy: 'network-only',
       onError: (err) => {
-        console.log('sjdjs')
         setLoader(false);
         setTimeout(() => {
           onErrorAlert({alert, error})
@@ -148,7 +150,6 @@ export const FoodCart = ({loading}) => {
             let exceededQty = currentQty == data.maxQty ? currentQty : isEditQtty;
             let disableMaxQtyCondition = selectedItemId == undefined ? exceededQty > data.maxQty : selectedQty + (data.maxQty - currentQty) == count.quantity;
             let disableAddCondition = selectedItemId == undefined ? exceededQty > data.maxQty - 1 : selectedQty + (data.maxQty - currentQty) == count.quantity;
-            console.log(disableAddCondition)
             setDisableMaxQty(
               (currentQty == data.maxQty && selectedItemId == undefined) ||
                 (selectedItemId == undefined && disableMaxQtyCondition),
@@ -414,12 +415,12 @@ export const FoodCart = ({loading}) => {
           <Text style={styles.total}>Total: {totalPrice.toFixed(2)}</Text>
         </View>
         <TouchableOpacity
-          disabled={loading || postLoading || patchLoading || deleteLoading || hasCartLoading || disabledMaxQty}
+          disabled={required.length > 0 || loading || postLoading || patchLoading || deleteLoading || hasCartLoading || disabledMaxQty}
           style={[
             styles.cartButton,
             {
               backgroundColor:
-                disabledMaxQty || loading || postLoading || patchLoading || deleteLoading || hasCartLoading
+                required.length > 0 || disabledMaxQty || loading || postLoading || patchLoading || deleteLoading || hasCartLoading
                   ? COLOR.LIGHT
                   : COLOR.YELLOW,
             },
