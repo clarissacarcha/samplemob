@@ -10,7 +10,7 @@ import AdModal from './AdModal';
 const { FONT_SIZE, COLOR , SIZE , FONT_FAMILY: FONT , MARGIN} = CONSTANTS
 const { width } = Dimensions.get("window");
 const SCREEN_WIDTH = width;
-const BANNER_WIDTH = SCREEN_WIDTH - MARGIN.M * 3;
+const BANNER_WIDTH = SCREEN_WIDTH - MARGIN.M * 2;
 const BANNER_HEIGHT = BANNER_WIDTH / 2;
 
 const RenderDots = ({entries, activeSlide})=> {
@@ -110,7 +110,7 @@ const Slider = ({ads})=>{
 const styles = StyleSheet.create({
     adv: {
         height: BANNER_HEIGHT,
-        width: width * 0.8,
+        width: width * 0.9,
     },
     box: {
         paddingHorizontal: MARGIN.M / 2,
