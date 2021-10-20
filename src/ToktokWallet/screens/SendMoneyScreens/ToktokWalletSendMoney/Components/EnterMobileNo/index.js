@@ -1,5 +1,5 @@
 import React , {useState, useEffect , useRef} from 'react'
-import {View,Text,StyleSheet,TextInput,TouchableOpacity,Dimensions} from 'react-native'
+import {View,Text,StyleSheet,TextInput,TouchableOpacity,Dimensions,Image} from 'react-native'
 import {useLazyQuery} from '@apollo/react-hooks'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import { GET_ACCOUNT } from 'toktokwallet/graphql'
@@ -171,7 +171,7 @@ export const EnterMobileNo = ({
                             value={mobileNo}
                             style={{ width: '100%',height: errorMessage ? 35 : 50,padding:0,fontSize: FONT_SIZE.M,marginTop: recipientDetails.id && proceed ? 5 : 0}}
                             // keyboardType="number-pad"
-                            keyboardType="default"
+                            keyboardType="decimal-pad"
                             returnKeyType="done"
                             onChangeText={(value)=>{
                                     changeMobileNo(value)
@@ -182,8 +182,13 @@ export const EnterMobileNo = ({
                        {errorMessage != "" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.XS,color:COLOR.RED,marginTop: -5}}>{errorMessage}</Text>}
                      </View>
                 </TouchableOpacity>
-
-           
+                {
+                    recipientDetails.id &&
+                    <TouchableOpacity style={styles.addFavorites}>
+                        <Image resizeMode="contain" style={styles.heart} source={require("toktokwallet/assets/images/heart.png")}/>
+                    </TouchableOpacity>
+                }
+            
                 <TouchableOpacity onPress={()=>navigation.navigate("ToktokWalletContacts", {setRecipientInfo: setRecipientMobileNo})} style={styles.contactAddress}>
                     <View style={styles.addressbtn}>
                             <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.XS,color: COLOR.YELLOW}}>Address Book</Text>
@@ -230,6 +235,15 @@ const styles = StyleSheet.create({
         borderRadius: 3,
         marginRight: 10,
         zIndex: 1,
+    },
+    addFavorites: {
+       justifyContent:"center",
+       alignItems:"center"
+    },
+    heart: {
+        height: FONT_SIZE.XS + 12,
+        width: FONT_SIZE.XS + 12,
+        marginHorizontal: 5
     },
     addressbtn: {
         flex: 1,

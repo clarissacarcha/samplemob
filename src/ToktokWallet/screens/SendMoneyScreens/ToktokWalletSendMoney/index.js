@@ -1,5 +1,5 @@
 import React, { useState , useEffect} from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,ActivityIndicator,KeyboardAvoidingView} from 'react-native'
+import {View,Text,StyleSheet,TouchableOpacity,ActivityIndicator,KeyboardAvoidingView,ScrollView} from 'react-native'
 import { numberFormat } from 'toktokwallet/helper'
 import {useSelector} from 'react-redux'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
@@ -11,10 +11,11 @@ import {
     EnterAmount,
     EnterMobileNo,
     EnterNote,
+    Favorites,
     ProceedButton
 } from "./Components";
 
-const { COLOR, FONT_FAMILY: FONT, FONT_SIZE , MARGIN } = CONSTANTS
+const { COLOR, FONT_FAMILY: FONT, FONT_SIZE , MARGIN , SIZE } = CONSTANTS
 
 
 export const ToktokWalletSendMoney = ({navigation,route})=> {
@@ -113,7 +114,10 @@ export const ToktokWalletSendMoney = ({navigation,route})=> {
                 />
 
               
-                <KeyboardAvoidingView style={{paddingHorizontal: MARGIN.M,flex:1 }}>
+                <ScrollView
+                contentContainerStyle={{ flexGrow: 1, paddingBottom: 16}}
+                style={{paddingHorizontal: MARGIN.M,flex:1 }}
+                >
                 { 
                         proceed
                         ? <> 
@@ -143,20 +147,25 @@ export const ToktokWalletSendMoney = ({navigation,route})=> {
                         </View>
                         : null
                     }
-                </KeyboardAvoidingView>
-                
-     
-                <View style={{height: 70,padding: MARGIN.M, justifyContent:"flex-end"}}>
-                    <ProceedButton
-                        swipeEnabled={swipeEnabled}
-                        proceed={proceed}
-                        amount={amount}
-                        navigation={navigation}
-                        tokwaAccount={tokwaAccount}
-                        note={note}
-                        recipientDetails={recipientDetails}
+
+                    <Favorites 
+                    
                     />
-                </View>
+
+                    <View style={{height: SIZE.FORM_HEIGHT,marginTop: 50,justifyContent:"flex-end"}}>
+                
+                        <ProceedButton
+                            swipeEnabled={swipeEnabled}
+                            proceed={proceed}
+                            amount={amount}
+                            navigation={navigation}
+                            tokwaAccount={tokwaAccount}
+                            note={note}
+                            recipientDetails={recipientDetails}
+                        />
+                    </View>
+                </ScrollView>
+                
         </View>
         </CheckIdleState>
     )

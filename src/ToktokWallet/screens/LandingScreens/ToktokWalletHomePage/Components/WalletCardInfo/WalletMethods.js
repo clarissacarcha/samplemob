@@ -1,7 +1,6 @@
 import React , {useContext} from 'react'
 import {View,Text,StyleSheet,Dimensions,Image,TouchableOpacity,Alert} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
-import {APP_FLAVOR , ACCOUNT_TYPE} from 'src/res/constants'
 import {useThrottle} from 'src/hooks'
 import { useDispatch } from 'react-redux'
 import { useAccount } from 'toktokwallet/hooks'
@@ -30,10 +29,6 @@ const WalletMethods = ()=> {
 
     const onPress = (route)=> {
         
-        if(APP_FLAVOR == "D" && ACCOUNT_TYPE == 2){
-            return Alert.alert("","Use the toktok customer app for toktokwallet full features.")
-        }
-
         const tpinIsSet = checkIfTpinIsSet();
         if(!tpinIsSet) return
     
@@ -59,7 +54,7 @@ const WalletMethods = ()=> {
                 <Method label="Scan QR" icon={require('toktokwallet/assets/images/qr-code-scan.png')} iconstyle={{height: 25,width: 25}} onPress={()=>onPressThrottled("ToktokWalletScanQR")}/>
                 <Method label="Cash In" icon={require('toktokwallet/assets/images/cash-in.png')} iconstyle={{height: 30,width: 30,marginBottom: 2}} onPress={()=>onPressThrottled("ToktokWalletPaymentOptions")}/>
                 <Method label="Fund Transfer" icon={require('toktokwallet/assets/images/send-money.png')} iconstyle={{height: 30,width: 30,marginBottom: 2}} onPress={()=>onPressThrottled("ToktokWalletCashOutHomePage")}/>
-                <Method label="Request Money" icon={require('toktokwallet/assets/images/send-money.png')} iconstyle={{height: 30,width: 30,marginBottom: 2}} onPress={()=>onPressThrottled("ToktokWalletCashOutHomePage")}/>
+                <Method label="Request Money" icon={require('toktokwallet/assets/images/request-money.png')} iconstyle={{height: 30,width: 30,marginBottom: 2}} onPress={()=>onPressThrottled("ToktokWalletCashOutHomePage")}/>
             </View>
         </View>
     )

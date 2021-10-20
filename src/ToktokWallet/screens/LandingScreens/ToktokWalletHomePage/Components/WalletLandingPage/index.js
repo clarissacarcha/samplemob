@@ -1,10 +1,8 @@
 import React , {useEffect,useState} from 'react'
 import {View,Text,StyleSheet,ScrollView,RefreshControl,Dimensions} from 'react-native'
 import { connect } from 'react-redux'
-import {APP_FLAVOR , ACCOUNT_TYPE} from 'src/res/constants'
 
 //SELF IMPORTS
-import DriverWalletCardInfo from '../DriverWalletCardInfo'
 import { Advertisements } from '../Advertisements'
 import WalletCardInfo from '../WalletCardInfo'
 import WalletRecentTransactions from '../WalletRecentTransactions'
@@ -35,11 +33,7 @@ export const WalletLandingPage = connect(null,mapDispatchtoProps)(({refreshing, 
                     }
                 >
                 <View style={{height:280}}>
-                   {
-                       APP_FLAVOR == "D" && ACCOUNT_TYPE == 2
-                       ? <DriverWalletCardInfo/>
-                       : <WalletCardInfo/>
-                   }
+                    <WalletCardInfo/>
                 </View>
                 <View>
                     <WalletRecentTransactions/>

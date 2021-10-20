@@ -4,7 +4,6 @@ import CONSTANTS from 'common/res/constants';
 import {useNavigation} from '@react-navigation/native';
 import {Separator, WalletLog} from 'toktokwallet/components';
 import { YellowButton } from 'src/revamp';
-import {APP_FLAVOR , ACCOUNT_TYPE} from 'src/res/constants';
 import { useAccount } from 'toktokwallet/hooks';
 
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS
@@ -15,9 +14,6 @@ const WalletRecentTransactions = () => {
   const {checkIfTpinIsSet,tokwaAccount} = useAccount();
 
   const TopUpNow = ()=> {
-      if(APP_FLAVOR == "D" && ACCOUNT_TYPE == 2){
-          return Alert.alert("","Use the toktok customer app for toktokwallet full features.")
-      }
 
       const tpinIsSet = checkIfTpinIsSet();
       if(!tpinIsSet) return
