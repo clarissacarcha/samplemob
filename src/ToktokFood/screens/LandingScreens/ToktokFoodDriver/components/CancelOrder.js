@@ -10,7 +10,16 @@ import {useMutation} from '@apollo/react-hooks';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {PATCH_CANCEL_CUSTOMER_ORDER} from 'toktokfood/graphql/toktokfood';
 
-const CancelOrder = ({visibility = false, onCloseSheet, failedCancel, referenceOrderNumber = '', onProcess}) => {
+import DialogMessage from 'toktokfood/components/DialogMessage';
+
+const CancelOrder = ({
+  visibility = false,
+  onCloseSheet,
+  failedCancel,
+  referenceOrderNumber = '',
+  setShowLoader,
+  onCallBackResult
+}) => {
   const reasonList = [
     {
       id: 1,
@@ -39,19 +48,14 @@ const CancelOrder = ({visibility = false, onCloseSheet, failedCancel, referenceO
     fetchPolicy: 'no-cache',
     onError: (error) => console.log(`LOCATION LOG ERROR: ${error}`),
     onCompleted: ({cancelOrder}) => {
-      console.log(cancelOrder)
-      if (cancelOrder.status == 200) {
-        navigation.navigate('ToktokFoodOrderTransactions', { tab: 3 })
-      } else {
-        setShowReason(false);
-        failedCancel();
-      }
+      setShowReason(false);
+      onCallBackResult(cancelOrder)
     },
   });
 
   const proccessCancelOrder = () => {
     setShowReason(false);
-    onProcess();
+    setShowLoader(true);
     onCloseSheet();
     console.log(referenceOrderNumber, selectedReason)
     postCancelOrder({

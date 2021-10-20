@@ -49,7 +49,7 @@ const OrderTitle = ({ transaction, riderDetails, referenceNum }) => {
 
   useEffect(() => {
     if((orderStatus == 'po' || orderStatus == 'rp' || orderStatus == 'f') && estimatedDeliveryTime != ''){
-      if(orderStatus == 'rp'){
+      if(orderStatus == 'rp' || orderStatus == 'f'){
         setAdditionalMins(20)
       }
       setNewETA(true)
@@ -58,7 +58,6 @@ const OrderTitle = ({ transaction, riderDetails, referenceNum }) => {
 
   const handleProcessGetEDT = async(date, location) =>{ 
     let result = await processGetEDT(date, referenceNum)
-    console.log(1)
     if(result != null){
       setEstimatedDeliveryTime(result)
     } else {
@@ -74,7 +73,7 @@ const OrderTitle = ({ transaction, riderDetails, referenceNum }) => {
         .then(async(durationSecs) => {
           setNewETA(false)
           let durationHours = Math.floor(durationSecs / (60 * 60));
-          let addMins = (riderDetails != null && orderStatus == 'f') ? 0 : (additionalMins / minutesInHours);
+          let addMins = additionalMins / minutesInHours;
           let additionalHours = (durationHours + addMins).toFixed(2);
           let edtDate = estimatedDeliveryTime ? convertEDT(date, estimatedDeliveryTime) : date
           let hoursDifference = moment().diff(edtDate, 'hours', true)

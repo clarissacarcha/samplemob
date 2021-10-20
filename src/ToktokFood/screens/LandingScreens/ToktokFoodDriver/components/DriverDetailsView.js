@@ -37,6 +37,7 @@ const DriverDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
   const [estimatedDeliveryTime, setEstimatedDeliveryTime] = useState('');
   const [additionalMins, setAdditionalMins] = useState(0);
   const [newETA, setNewETA] = useState(false);
+  const [newStartDateTime, setNewStartDateTime] = useState(null);
   const {
     shopDetails,
     orderStatus,
@@ -70,7 +71,7 @@ const DriverDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
 
   useEffect(() => {
     if((orderStatus == 'po' || orderStatus == 'rp' || orderStatus == 'f') && estimatedDeliveryTime != ''){
-      if(orderStatus == 'rp'){
+      if(orderStatus == 'rp' || orderStatus == 'f'){
         setAdditionalMins(20)
       }
       setNewETA(true)
@@ -94,13 +95,14 @@ const DriverDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
       getDuration(originLocation, {latitude, longitude})
         .then(async(durationSecs) => {
           setNewETA(false)
-          let durationHours = Math.floor(durationSecs / (60 * 60));
-          let addMins = (riderDetails != null && orderStatus == 'f') ? 0 : (additionalMins / minutesInHours);
+          let durationHours = durationSecs != undefined ? Math.floor(durationSecs / (60 * 60)) : 0.0166667;
+          let addMins = additionalMins / minutesInHours;
           let additionalHours = (durationHours + addMins).toFixed(2);
           let edtDate = estimatedDeliveryTime ? convertEDT(date, estimatedDeliveryTime) : date
           let hoursDifference = moment().diff(edtDate, 'hours', true)
           let finalHrs = hoursDifference ? parseFloat(additionalHours) + parseFloat(hoursDifference) : additionalHours
           let edt = moment(edtDate).add(finalHrs, 'hours').format('h:mm A')
+          console.log(durationHours, date, edt)
           processSaveEDT(edt)
           setEstimatedDeliveryTime(edt)
         })
@@ -152,7 +154,8 @@ const DriverDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
       let date = moment(dateReadyPickup).isValid() ? dateReadyPickup : dateBookingConfirmed;
       return moment(date).isSame(moment(), 'day') ? date : changeDateToday(date)
     } else {
-      return moment(dateFulfilled).isSame(moment(), 'day') ? dateFulfilled : changeDateToday(dateFulfilled)
+      let date = moment(dateFulfilled).isSame(moment(), 'day') ? dateFulfilled : changeDateToday(dateFulfilled)
+      return newStartDateTime != null ? newStartDateTime : date
     }
   }
 
@@ -179,7 +182,7 @@ const DriverDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
   const renderTitle = () => {
     return (
       <View style={styles.detailsContainer}>
-        {(status.id == 'f' || status == 's') && (
+        {(status.id == 'f' || status.id == 's') && (
           <Text style={styles.title}>{status.title}</Text>
         )}
         <Text style={styles.status}>{status.message}</Text>
@@ -206,7 +209,9 @@ const DriverDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
     if(orderStatus == 'po' || orderStatus == 'rp'){
       setAdditionalMins(orderStatus == 'po' ? 10 : 15)
     } else {
-      setAdditionalMins(0.1)
+      // setAdditionalMins(0.1)
+      let date = moment().format('YYYY-MM-DD HH:mm:ss')
+      setNewStartDateTime(date)
     }
   } 
 

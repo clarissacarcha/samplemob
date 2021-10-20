@@ -88,6 +88,7 @@ export const ProceedButton = ({
                     amount: +amount,
                     note: note,
                     destinationMobileNo: recipientInfo.mobileNumber,
+                    isScanQr: true
                 }
             }
         })

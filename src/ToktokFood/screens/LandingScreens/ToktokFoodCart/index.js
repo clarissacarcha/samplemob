@@ -441,7 +441,7 @@ const MainComponent = () => {
         }}
         hasTwoButtons
       />
-      <Loader hasImage={false} loadingIndicator visibility={loadingWallet} message="loading..." />
+      <Loader hasImage={false} loadingIndicator visibility={loadingWallet} message="Loading..." />
       {paymentMethod == 'COD' && 
         <>
           <AlertModal
