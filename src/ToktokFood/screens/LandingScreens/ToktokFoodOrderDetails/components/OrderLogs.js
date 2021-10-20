@@ -25,6 +25,10 @@ const OrderFee = ({ status = 2, transaction }) => {
     deliveryImgurl2,
     orderIsfor,
     dateBookingConfirmed,
+    orderStatus,
+    isdeclined,
+    dateCancelled,
+    dateDeclined
   } = transaction
   const otwRestaurantDate = dateReadyPickup.toString() != 'Invalid date' ? dateReadyPickup : dateBookingConfirmed
  
@@ -36,7 +40,7 @@ const OrderFee = ({ status = 2, transaction }) => {
         ) : (
           <FIcon5 name="circle" color={"#CECECE"} size={moderateScale(15)} />
         )}
-        <Text style={styles.logText}>{title}</Text>
+        <Text style={[styles.logText, { color: orderStatus == 'c' ? '#FFA700' : 'black' }]}>{title}</Text>
       </View>
       {date != 'Invalid date' && <Text style={styles.dateText}>{date}</Text>}
     </View>
@@ -56,7 +60,10 @@ const OrderFee = ({ status = 2, transaction }) => {
   );
 
   const displayComponent = () => {
-    if(orderIsfor == 1){
+    if(orderStatus == 'c'){
+      let date = isdeclined == 1 ? dateDeclined : dateCancelled;
+      return renderLogInfo('Cancelled', moment(date).format('lll'))
+    } else if(orderIsfor == 1){
       return (
         <>
           {renderLogInfo('Order Placed', moment(dateOrdered).format('lll'))}

@@ -8,7 +8,7 @@ import {FONT_SIZE, FONT, COLOR} from 'res/variables';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import CustomStarRating from 'toktokfood/components/CustomStarRating';
 import ChangeAddress from 'toktokfood/components/ChangeAddress';
-import {time} from 'toktokfood/assets/images';
+import {time, email_ic} from 'toktokfood/assets/images';
 import ContentLoader from 'react-native-easy-content-loader';
 
 // Components
@@ -178,7 +178,7 @@ export const StickyView = () => {
                   rightRating
                 />
                 <View style={styles.branchInfo}>
-                  <Image resizeMode="contain" source={time} style={styles.timeImg} />
+                  <Image source={time} style={styles.timeImg} />
                   <Text style={styles.branches}>{`${shopDetails.estimatedDeliveryTime} mins`}</Text>
                   <MCIcon name="map-marker-outline" color="#868686" size={13} />
                   <Text style={styles.branches}>{shopDetails.estimatedDistance}</Text>
@@ -186,12 +186,13 @@ export const StickyView = () => {
                 <Text style={{color: '#FFA700', fontSize: FONT_SIZE.S}}>
                   {shopDetails?.allowPickup ? 'Available for pick-up and delivery' : 'Available for delivery only'}
                 </Text>
-                <View style={{display: 'flex', flexDirection: 'row', paddingVertical: 3, marginTop: 2}}>
+                <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center', paddingVertical: 3, marginTop: 2}}>
                   <MCIcon name="phone" color="#868686" size={13} />
                   <Text style={{fontSize: FONT_SIZE.S, marginHorizontal: 4}}>
                     {shopDetails?.mobile ? shopDetails?.mobile : ''}
                   </Text>
-                  <MCIcon name="email" color="#868686" size={13} />
+                  {/* <MCIcon name="email" color="#FFA700" size={13} /> */}
+                  <Image source={email_ic} style={styles.emailImg} />
                   <Text style={{color: '#FFA700', fontSize: FONT_SIZE.S, marginStart: 4}}>
                     {shopDetails?.mobile ? shopDetails?.email : ''}
                   </Text>
@@ -335,5 +336,10 @@ const styles = StyleSheet.create({
     width: scale(70),
     height: scale(70),
     borderRadius: 5,
+  },
+  emailImg: {
+    width: scale(13),
+    height: scale(13),
+    resizeMode: 'contain',
   },
 });
