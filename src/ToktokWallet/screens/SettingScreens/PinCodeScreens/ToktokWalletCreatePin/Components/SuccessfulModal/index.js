@@ -68,22 +68,23 @@ export const SuccessfulModal = ({modalVisible,tokwaAccount,amount,onCashIn,setSu
     const { getMyAccount , tokwaAccount: tokwaAccountLatest } = useAccount()
 
     useEffect(()=>{
-      if(tokwaAccountLatest.pinCode && onCashIn){
-        navigation.pop();
-        navigation.push("ToktokWalletPaymentOptions", {
-            amount: amount ? amount : 0,
-            onCashIn: onCashIn
-        })
-        setSuccessModalVisible(false)
+        if(tokwaAccountLatest.pinCode && onCashIn){
+          navigation.pop();
+          navigation.push("ToktokWalletPaymentOptions", {
+              amount: amount ? amount : 0,
+              onCashIn: onCashIn
+          })
+        }
+      },[tokwaAccountLatest,onCashIn])
+  
+      const closeModal = async ()=> {
+          await getMyAccount();
+          if(onCashIn) return;
+          setSuccessModalVisible(false);
+          navigation.pop(2)
+          navigation.navigate("ToktokWalletHomePage")
+  
       }
-    },[tokwaAccountLatest,onCashIn])
-
-    const closeModal = async ()=> {
-        await getMyAccount();
-        if(onCashIn) return;
-        navigation.navigate("ToktokWalletHomePage")
-    
-    }
 
     return (
         <Modal
@@ -91,7 +92,10 @@ export const SuccessfulModal = ({modalVisible,tokwaAccount,amount,onCashIn,setSu
              onRequestClose={closeModal}
         >
              <View style={styles.container}>
-                { tokwaAccount.pinCode ? <UpdatePIN/> : <NewPIN/>}
+                { tokwaAccount.pinCode 
+                    ? onCashIn ? <NewPIN/> : <UpdatePIN/> 
+                    : <NewPIN/>
+                }
                 <View style={{flex: 1,alignItems:"center", justifyContent:"center"}}>
                         <Text style={{textAlign:"left",fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,marginBottom: 10,}}>Reminders</Text>
                         <View>
