@@ -35,12 +35,12 @@ const ToktokFoodTermsAndConditions = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => { navigation.goBack() }}>
-            <FIcon5 name="chevron-left" size={15} />
-          </TouchableOpacity>
-          <Text style={styles.headerLabel}>Terms And Conditions</Text>
-        </View>
+      <View style={styles.header}>
+        <TouchableOpacity hitSlop={styles.hitSlop} onPress={() => { navigation.goBack() }}>
+          <FIcon5 name="chevron-left" size={15} />
+        </TouchableOpacity>
+        <Text style={styles.headerLabel}>Terms And Conditions</Text>
+      </View>
       <Separator />
       <View style={[styles.shadow, { flex: 1 }]}>
         <Text style={styles.title}>
@@ -105,5 +105,11 @@ const styles = StyleSheet.create({
     fontFamily: FONT.BOLD,
     fontSize: 20,
     paddingVertical: 10
+  },
+  hitSlop: {
+    top: moderateScale(50),
+    bottom: moderateScale(50),
+    left: moderateScale(50),
+    right: moderateScale(50)
   }
 });

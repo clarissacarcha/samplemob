@@ -64,7 +64,6 @@ const MainComponent = () => {
     },
     onCompleted: ({getProductDetails}) => {
       setProductDetails(getProductDetails);
-      console.log(+getProductDetails.sysShop, customerInfo.userId);
       getTemporaryCart({
         variables: {
           input: {
