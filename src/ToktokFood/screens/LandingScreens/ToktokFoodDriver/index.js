@@ -252,8 +252,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
           if(cancelDialogMessage.type == 'success'){
             navigation.navigate('ToktokFoodOrderTransactions', { tab: 3 })
           }
-          setShowCancel(false)
-          // setCancelDialogMessage({ show: false, type: '', title: '', message: '' })
+          setCancelDialogMessage({ show: false, type: '', title: '', message: '' })
         }}
       />
       <DialogMessage
