@@ -1,4 +1,4 @@
-import React, { useState , useEffect} from 'react'
+import React, { useState , useEffect , useRef , createRef} from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,ActivityIndicator,KeyboardAvoidingView,ScrollView} from 'react-native'
 import { numberFormat } from 'toktokwallet/helper'
 import {useSelector} from 'react-redux'
@@ -26,6 +26,7 @@ export const ToktokWalletSendMoney = ({navigation,route})=> {
     
     const session = useSelector(state => state.session)
     const tokwaAccount = useSelector(state => state.toktokWallet)
+    const favoritesRef = createRef()
 
     const [mobileNo,setMobileNo] = useState("")
     const [amount,setAmount] = useState("")
@@ -74,6 +75,11 @@ export const ToktokWalletSendMoney = ({navigation,route})=> {
         }
     },[])
 
+    // check if fetch user is on the favorites list
+    useEffect(()=>{
+        console.log(recipientDetails)
+    },[recipientDetails])
+
     return (
         <CheckIdleState>
         <View style={{flex:1,backgroundColor:"white"}}>
@@ -111,6 +117,7 @@ export const ToktokWalletSendMoney = ({navigation,route})=> {
                         recipientDetails={recipientDetails}
                         tokwaAccount={tokwaAccount}
                         setGetAccountLoading={setGetAccountLoading}
+                        favoritesRef={favoritesRef}
                 />
 
               
@@ -149,8 +156,8 @@ export const ToktokWalletSendMoney = ({navigation,route})=> {
                     }
 
                     <Favorites 
-                    
-                    />
+                        ref={favoritesRef}
+                    />  
 
                     <View style={{height: SIZE.FORM_HEIGHT,marginTop: 50,justifyContent:"flex-end"}}>
                 

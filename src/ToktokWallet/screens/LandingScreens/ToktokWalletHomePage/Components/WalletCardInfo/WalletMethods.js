@@ -54,7 +54,7 @@ const WalletMethods = ()=> {
                 <Method label="Scan QR" icon={require('toktokwallet/assets/images/qr-code-scan.png')} iconstyle={{height: 25,width: 25}} onPress={()=>onPressThrottled("ToktokWalletScanQR")}/>
                 <Method label="Cash In" icon={require('toktokwallet/assets/images/cash-in.png')} iconstyle={{height: 30,width: 30,marginBottom: 2}} onPress={()=>onPressThrottled("ToktokWalletPaymentOptions")}/>
                 <Method label="Fund Transfer" icon={require('toktokwallet/assets/images/send-money.png')} iconstyle={{height: 30,width: 30,marginBottom: 2}} onPress={()=>onPressThrottled("ToktokWalletCashOutHomePage")}/>
-                <Method label="Request Money" icon={require('toktokwallet/assets/images/request-money.png')} iconstyle={{height: 30,width: 30,marginBottom: 2}} onPress={()=>onPressThrottled("ToktokWalletCashOutHomePage")}/>
+                <Method label="Request Money" icon={require('toktokwallet/assets/images/request-money.png')} iconstyle={{height: 30,width: 30,marginBottom: 2}} onPress={()=>onPressThrottled("ToktokWalletRequestMoney")}/>
             </View>
         </View>
     )

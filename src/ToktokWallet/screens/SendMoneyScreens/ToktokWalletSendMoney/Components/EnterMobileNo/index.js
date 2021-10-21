@@ -1,10 +1,12 @@
-import React , {useState, useEffect , useRef} from 'react'
+import React , {useState, useEffect , useRef, forwardRef} from 'react'
 import {View,Text,StyleSheet,TextInput,TouchableOpacity,Dimensions,Image} from 'react-native'
 import {useLazyQuery} from '@apollo/react-hooks'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import { GET_ACCOUNT } from 'toktokwallet/graphql'
 import { useContacts } from 'toktokwallet/hooks'
 import { ContactSuggestion } from 'toktokwallet/components'
+import heart from "toktokwallet/assets/images/heart.png"
+import heartFill from "toktokwallet/assets/images/heart-fill.png"
 import CONSTANTS from 'common/res/constants'
 
 const {FONT_SIZE , SIZE , FONT_FAMILY: FONT , COLOR} = CONSTANTS
@@ -20,14 +22,17 @@ export const EnterMobileNo = ({
     setMobileNo , 
     recipientDetails,
     tokwaAccount,
-    setGetAccountLoading
+    setGetAccountLoading,
+    favoritesRef
 })=> {
 
     const [errorMessage,setErrorMessage] = useState("")
     const [suggestContact,setSuggestContact] = useState("")
+    const [isFavorite,setIsFavorite] = useState(false);
     const inputMobileRef = useRef()
-    const { contacts } = useContacts();
+    // const { contacts } = useContacts();
 
+    
     const [getAccount, {data: walletData,error: walletError,loading: walletLoading}] = useLazyQuery(GET_ACCOUNT , {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         fetchPolicy: "network-only",
@@ -73,10 +78,11 @@ export const EnterMobileNo = ({
 
 
     const changeMobileNo = (text)=> {
-        const filteredContact = filterByContacts(text)
-        setSuggestContact(filteredContact)
-        const value = text.replace(/[^0-9 A-Za-z]/g,"")
-        // const value = text.replace(/[^0-9]/g,"")
+        // // enable if type name is an option
+        // const filteredContact = filterByContacts(text)
+        // setSuggestContact(filteredContact)
+        // const value = text.replace(/[^0-9 A-Za-z]/g,"")
+        const value = text.replace(/[^0-9]/g,"")
 
         if(value.length > 11) return
         
@@ -141,7 +147,10 @@ export const EnterMobileNo = ({
     },[mobileNo])
 
     useEffect(()=>{
-        console.log(recipientDetails)
+       if(recipientDetails.id){
+           const result = favoritesRef.current.checkIfFavorites(recipientDetails.id)
+           setIsFavorite(result)
+       }
     },[recipientDetails])
 
     useEffect(()=>{
@@ -152,11 +161,11 @@ export const EnterMobileNo = ({
         <>
          
        <View style={styles.container}>
-            <ContactSuggestion
+            {/* <ContactSuggestion
                 contactInfo={suggestContact}
                 setContactInfo={setSuggestContact}
                 onPress={setRecipientMobileNo}
-            />
+            /> */}
             <View style={styles.content}>
                 <TouchableOpacity onPress={()=>{
                     return inputMobileRef.current.focus()
@@ -171,21 +180,22 @@ export const EnterMobileNo = ({
                             value={mobileNo}
                             style={{ width: '100%',height: errorMessage ? 35 : 50,padding:0,fontSize: FONT_SIZE.M,marginTop: recipientDetails.id && proceed ? 5 : 0}}
                             // keyboardType="number-pad"
-                            keyboardType="decimal-pad"
+                            keyboardType="number-pad"
                             returnKeyType="done"
                             onChangeText={(value)=>{
                                     changeMobileNo(value)
                             }}
-                            placeholder="Enter recipient name or number"
+                            // placeholder="Enter recipient name or number"
+                            placeholder="Enter recipient number"
                         />
                           
                        {errorMessage != "" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.XS,color:COLOR.RED,marginTop: -5}}>{errorMessage}</Text>}
                      </View>
                 </TouchableOpacity>
                 {
-                    recipientDetails.id &&
-                    <TouchableOpacity style={styles.addFavorites}>
-                        <Image resizeMode="contain" style={styles.heart} source={require("toktokwallet/assets/images/heart.png")}/>
+                    recipientDetails.id && errorMessage == "" &&
+                    <TouchableOpacity onPress={()=>favoritesRef.current.refreshFavorites()} style={styles.addFavorites}>
+                        <Image resizeMode="contain" style={styles.heart} source={isFavorite ? heartFill : heart}/>
                     </TouchableOpacity>
                 }
             

@@ -1,4 +1,5 @@
 export * from "./Account";
+export * from "./AccountFavorite";
 export * from "./AccountBiometricLogin";
 export * from "./AccountRecovery";
 export * from "./AccountType";

@@ -153,7 +153,6 @@ const styles = StyleSheet.create({
     walletSettings: {
         flex: 1,
         alignItems:'flex-end',
-        marginRight: 10,
     }
 })
 
