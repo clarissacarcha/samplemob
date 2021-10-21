@@ -26,6 +26,9 @@ import ENVIRONMENTS from 'src/common/res/environments';
 import {empty_shop, empty_search, time} from 'toktokfood/assets/images';
 
 import styles from './styles';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+
+import {saveNewShopHistory, getShopHistory, clearShopHistory} from './history';
 
 const ToktokFoodSearch = ({route}) => {
   const {location} = useSelector((state) => state.toktokFood);
@@ -41,6 +44,8 @@ const ToktokFoodSearch = ({route}) => {
   const [isShowError, setShowError] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const [history, setHistory] = useState([]);
+
   useEffect(() => {
     const unsubscribe = navigation.addListener('blur', () => {
       setSearch('');
@@ -48,10 +53,6 @@ const ToktokFoodSearch = ({route}) => {
 
     return unsubscribe;
   }, [navigation]);
-
-  const onRestaurantNavigate = (item) => {
-    navigation.navigate('ToktokFoodRestaurantOverview', {item});
-  };
 
   useEffect(() => {
     if (route.params?.searchByCategory) {
@@ -66,6 +67,30 @@ const ToktokFoodSearch = ({route}) => {
 
     return unsubscribe;
   }, [navigation]);
+
+  useEffect(() => {
+    initSearchHistoryList();
+  }, []);
+
+  const onRestaurantNavigate = (item) => {
+    navigation.navigate('ToktokFoodRestaurantOverview', {item});
+  };
+
+  const initSearchHistoryList = async () => {
+    const historyList = await getShopHistory();
+    setHistory(historyList);
+  };
+
+  const updateHistoryList = (item) => {
+    const currentHistory = history;
+    currentHistory.push(item);
+    saveNewShopHistory(currentHistory).then(() => onRestaurantNavigate(item));
+  };
+
+  const clearHistoryList = async () => {
+    await clearShopHistory();
+    setHistory([]);
+  };
 
   const searchFood = async (s = '', radius = 5) => {
     try {
@@ -106,7 +131,7 @@ const ToktokFoodSearch = ({route}) => {
   };
 
   const renderItem = ({item}) => (
-    <TouchableWithoutFeedback onPress={() => onRestaurantNavigate(item)}>
+    <TouchableWithoutFeedback onPress={() => updateHistoryList(item)}>
       <View style={styles.itemContainer}>
         <View style={styles.imgWrapper}>
           <Image resizeMode="contain" source={{uri: item.logo}} style={styles.img} />
@@ -133,15 +158,41 @@ const ToktokFoodSearch = ({route}) => {
     let withSearch = moderateScale(Platform.OS == 'android' ? getStatusbarHeight * 5 : getIphoneNotchSize * 5);
     let withoutSearch = moderateScale(Platform.OS == 'android' ? getStatusbarHeight * 6 : getIphoneNotchSize * 6);
     let paddingTop = search != '' ? withSearch : withoutSearch;
+
+    if (history.length > 0 && search === '') {
+      return <RenderHistory />;
+    } else {
+      return (
+        <View style={[styles.emptyContainer, {paddingTop}]}>
+          <Image style={styles.emptyImg} resizeMode="contain" source={search != '' ? empty_shop : empty_search} />
+          {search != '' && (
+            <Text style={styles.emptyText}>
+              It seems like there is no open restaurant near you. Refresh or try again later.
+            </Text>
+          )}
+        </View>
+      );
+    }
+  };
+
+  const RenderHistory = () => {
     return (
-      <View style={[styles.emptyContainer, {paddingTop}]}>
-        <Image style={styles.emptyImg} resizeMode="contain" source={search != '' ? empty_shop : empty_search} />
-        {search != '' && (
-          <Text style={styles.emptyText}>
-            It seems like there is no open restaurant near you. Refresh or try again later.
-          </Text>
-        )}
-      </View>
+      <>
+        <View style={styles.historyContainer}>
+          <TouchableOpacity onPress={() => clearHistoryList()} style={styles.historyTextClearWrapper}>
+            <Text style={styles.historyTextClear}>Clear All</Text>
+          </TouchableOpacity>
+          <View style={styles.historyListWrapper}>
+            {history.map((v) => (
+              <TouchableOpacity style={styles.historyItem} onPress={() => onRestaurantNavigate(v)}>
+                <Text numberOfLines={1} style={styles.historyText}>
+                  {v.shopname}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+      </>
     );
   };
 
@@ -170,7 +221,6 @@ const ToktokFoodSearch = ({route}) => {
               onChangeText={(text) => {
                 setSearch(text);
                 searchFood(text);
-                console.log(text);
               }}
               style={[styles.searchBox, styles.textInputFontStyles]}
             />
@@ -186,14 +236,16 @@ const ToktokFoodSearch = ({route}) => {
       {loading ? (
         <LoadingIndicator isFlex isLoading={true} />
       ) : (
-        <FlatList
-          data={shopList}
-          renderItem={renderItem}
-          ListEmptyComponent={renderEmpty}
-          refreshControl={
-            <RefreshControl refreshing={loading} onRefresh={onRefresh} colors={['#FFA700']} tintColor="#FFA700" />
-          }
-        />
+        <>
+          <FlatList
+            data={shopList}
+            renderItem={renderItem}
+            ListEmptyComponent={renderEmpty}
+            refreshControl={
+              <RefreshControl refreshing={loading} onRefresh={onRefresh} colors={['#FFA700']} tintColor="#FFA700" />
+            }
+          />
+        </>
       )}
     </View>
   );
