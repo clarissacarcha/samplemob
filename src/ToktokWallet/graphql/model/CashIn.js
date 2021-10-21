@@ -41,3 +41,9 @@ export const GET_CASH_INS = gql`
         }
     }
 `
+
+export const POST_REQUEST_CASH_IN = gql`
+    mutation {
+        postRequestCashIn
+    }
+`

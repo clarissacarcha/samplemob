@@ -11,6 +11,8 @@ export default (state = INITIAL_STATE, action) => {
     case 'CREATE_SESSION':
       console.log('CREATE_SESSION: ', JSON.stringify(action.payload, null, 4));
       return {...state, ...action.payload};
+    case 'UPDATE_TOKWA_ACCOUNT_ID_SESSION':
+      return { ...state , user: { ...state.user , toktokWalletAccountId: action.payload}}
     case 'DESTROY_SESSION':
       AsyncStorage.removeItem('userId');
       AsyncStorage.removeItem('accessToken');

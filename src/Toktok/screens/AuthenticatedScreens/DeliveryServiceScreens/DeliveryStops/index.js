@@ -204,6 +204,8 @@ const ToktokDelivery = ({navigation, session, route}) => {
   const snapPoints = useMemo(() => [0, 135, 350], []);
 
   const onSenderConfirm = (value) => {
+    console.log('ON SENDER CONFIRM');
+    console.log(JSON.stringify(value, null, 4));
     setOrderData({
       ...orderData,
       senderStop: value,
