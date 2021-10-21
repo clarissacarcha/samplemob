@@ -70,7 +70,7 @@ const OrderFee = ({ status = 2, transaction }) => {
           {renderDash()}
           {renderLogInfo('On the way to restaurant', moment(otwRestaurantDate).format('lll'))}
           {renderDash()}
-          {renderLogInfo('Order Picked Up', moment(dateFulfilled).format('lll'))}
+          {renderLogInfo('Picked up order', moment(dateFulfilled).format('lll'))}
           {(moment(dateFulfilled).format('lll') == 'Invalid date' || deliveryImgurl == null )&& 
             renderDash()
           }
@@ -88,9 +88,9 @@ const OrderFee = ({ status = 2, transaction }) => {
         <>
           {renderLogInfo('Order Placed', moment(dateOrdered).format('lll'))}
           {renderDash()}
-          {renderLogInfo('Ready for Pick-Up', moment(dateReadyPickup).format('lll'))}
+          {renderLogInfo('Ready for Pickup', moment(dateReadyPickup).format('lll'))}
           {renderDash()}
-          {renderLogInfo('Order Picked Up', moment(dateShipped).format('lll'))}
+          {renderLogInfo('Picked up order', moment(dateShipped).format('lll'))}
         </>
       )
     }
