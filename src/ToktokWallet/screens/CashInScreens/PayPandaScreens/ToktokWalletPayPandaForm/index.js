@@ -4,7 +4,7 @@ import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import {useSelector} from 'react-redux'
 import {useMutation,useLazyQuery,useQuery} from '@apollo/react-hooks'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
-import {POST_CASH_IN_PAYPANDA_REQUEST,GET_GLOBAL_SETTINGS} from 'toktokwallet/graphql'
+import {POST_CASH_IN_PAYPANDA_REQUEST,GET_GLOBAL_SETTINGS, POST_REQUEST_CASH_IN} from 'toktokwallet/graphql'
 import {onError,onErrorAlert} from 'src/util/ErrorUtility';
 import {numberFormat} from 'toktokwallet/helper'
 import { useAlert } from 'src/hooks'
@@ -43,17 +43,31 @@ export const ToktokWalletPayPandaForm = ({navigation,route})=> {
     const [maxLimitMessage,setMaxLimitMessage] = useState("")
     const [pinCodeAttempt,setPinCodeAttempt] = useState(6)
     const [openPinCode,setOpenPinCode] = useState(false)
+    const [otpCodeAttempt,setOtpCodeAttempt] = useState(6)
+    const [openOtpCode,setOpenOtpCode] = useState(false)
+
+    const [postRequestCashIn] = useMutation(POST_REQUEST_CASH_IN, {
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+        onCompleted: ({postRequestCashIn})=>{
+            setPinCodeAttempt(6)
+            setOpenPinCode(true)
+            return;
+        },
+        onError: (error) => onErrorAlert({alert,error})
+    })
 
     const [postCashInPayPandaRequest , {data,error,loading}] = useMutation(POST_CASH_IN_PAYPANDA_REQUEST , {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onError: (error)=> {
             TransactionUtility.StandardErrorHandling({
-                alert,
                 error,
                 navigation,
+                alert,
                 onErrorAlert,
                 setOpenPinCode,
-                setPinCodeAttempt
+                setOpenOtpCode,  
+                setPinCodeAttempt,
+                setOtpCodeAttempt
             })
         },
         onCompleted: ({postCashInPayPandaRequest})=>{
@@ -79,7 +93,7 @@ export const ToktokWalletPayPandaForm = ({navigation,route})=> {
     })
 
 
-    const proceedToPaypandaPortal = (pinCode)=> {
+    const proceedToPaypandaPortal = ({pinCode = null , Otp = null})=> {
       postCashInPayPandaRequest({
           variables: {
               input: {
@@ -87,7 +101,7 @@ export const ToktokWalletPayPandaForm = ({navigation,route})=> {
                   amount: +amount,
                   currencyId: tokwaAccount.wallet.currency.id,
                   walletId: tokwaAccount.wallet.id,
-                  pinCode: pinCode.toString()
+                  pinCode: pinCode
               }
           }
       })
@@ -98,8 +112,7 @@ export const ToktokWalletPayPandaForm = ({navigation,route})=> {
     }
 
     const onSwipeSuccess = ()=> {
-        setPinCodeAttempt(6)
-        setOpenPinCode(true)
+        postRequestCashIn()
     }
 
     const confirmAmount = ()=> {

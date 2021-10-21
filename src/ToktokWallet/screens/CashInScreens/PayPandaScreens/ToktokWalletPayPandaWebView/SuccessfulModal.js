@@ -12,6 +12,7 @@ import { GET_WALLET } from 'toktokwallet/graphql'
 import { useLazyQuery } from '@apollo/react-hooks'
 import { useAlert } from 'src/hooks'
 import { onErrorAlert} from 'src/util/ErrorUtility'
+import { useAccount } from 'toktokwallet/hooks'
 
 const {COLOR , FONT_FAMILY: FONT, FONT_SIZE , SIZE } = CONSTANTS
 
@@ -32,7 +33,7 @@ const TransactionInfo = ({label,value})=> (
 
 const SuccessfulModal = ({successModalVisible , amount , cashInLogParams , onCashIn})=> {
     const navigation = useNavigation()
-    const tokwaAccount = useSelector(state=>state.toktokWallet)
+    const {tokwaAccount,refreshWallet} = useAccount();
     const alert = useAlert();
 
     let status
@@ -56,7 +57,7 @@ const SuccessfulModal = ({successModalVisible , amount , cashInLogParams , onCas
         fetchPolicy: "network-only",
         onError: (error) => onErrorAlert({alert,error}),
         onCompleted: ({getWallet})=> {
-            console.log(getWallet)
+            refreshWallet();
             onCashIn({
                 balance: getWallet.balance
             })

@@ -1,7 +1,7 @@
 import React , {useEffect,useState,useRef} from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,KeyboardAvoidingView,Platform,TextInput, TouchableHighlight} from 'react-native'
 import {useSelector} from 'react-redux'
-import { HeaderBackClose , HeaderTitle} from 'src/components'
+import { HeaderBackClose , HeaderTitle , AlertOverlay} from 'src/components'
 import {useQuery,useLazyQuery} from '@apollo/react-hooks'
 import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
 import { GET_FORGOT_AND_RECOVER_OTP_CODE , VERIFY_FORGOT_AND_RECOVER_OTP_CODE} from 'toktokwallet/graphql'
@@ -9,9 +9,23 @@ import { onError, onErrorAlert } from 'src/util/ErrorUtility'
 import {useAlert} from 'src/hooks'
 import {DisabledButton, Separator, BuildingBottom} from 'toktokwallet/components'
 import { HeaderBack, YellowButton } from 'src/revamp'
+import { TransactionUtility } from 'toktokwallet/util'
 import CONSTANTS from 'common/res/constants'
 
 const { FONT_FAMILY: FONT , COLOR , FONT_SIZE , SIZE } = CONSTANTS
+
+const numWordArray = {
+    "1": "one",
+    "2": "two",
+    "3": "three",
+    "4": "four",
+    "5": "five",
+    "6": "six",
+    "7": "seven",
+    "8": "eight",
+    "9": "nine",
+    "10": "ten"
+}
 
 const NumberBox = ({onPress, value , showPin}) => (
     <TouchableHighlight onPress={onPress} underlayColor={COLOR.YELLOW} style={{borderRadius: 10,marginHorizontal: 5,}}>
@@ -50,6 +64,7 @@ export const ToktokWalletRecoverPin = ({navigation})=> {
     const alert = useAlert();
     const [otpTimer,setOtpTimer] = useState(120)
     const [errorMessage,setErrorMessage] = useState("")
+    const [otpCodeAttempt , setOtpCodeAttempt] = useState(null)
 
     const [getForgotAndRecoverOTPCode] = useLazyQuery(GET_FORGOT_AND_RECOVER_OTP_CODE , {
         fetchPolicy: "network-only",
@@ -59,16 +74,11 @@ export const ToktokWalletRecoverPin = ({navigation})=> {
             setOtpTimer(120)
         },
         onError: (error)=>{
-            const {graphQLErrors, networkError} = error
-            if(graphQLErrors[0]?.payload?.code == "OTPMAXREQUEST"){
-                setPinCode("")
-                return setErrorMessage(graphQLErrors[0].message)
-            }
             onErrorAlert({alert,error})
         }
     })
 
-    const [verifyForgotAndRecoverOTP] = useLazyQuery(VERIFY_FORGOT_AND_RECOVER_OTP_CODE, {
+    const [verifyForgotAndRecoverOTP , {loading}] = useLazyQuery(VERIFY_FORGOT_AND_RECOVER_OTP_CODE, {
         fetchPolicy: "network-only",
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({verifyForgotAndRecoverOTP})=>{
@@ -76,14 +86,14 @@ export const ToktokWalletRecoverPin = ({navigation})=> {
             return navigation.replace("ToktokWalletUpdatePin")
         },
         onError: (error)=>{
-            const {graphQLErrors, networkError} = error
-            if(graphQLErrors[0].message == "Invalid verification code."){
-                return setErrorMessage("Invalid verification code.")
-            }
-            if(graphQLErrors[0].message == "Verification code already expired."){
-                return setErrorMessage("Verification code already expired.")
-            }
-            onErrorAlert({alert,error})
+            // onErrorAlert({alert, error})
+            TransactionUtility.StandardErrorHandling({
+                alert,
+                error,
+                navigation,
+                onErrorAlert,
+                setOtpCodeAttempt
+            })
         }
     })
    
@@ -124,6 +134,7 @@ export const ToktokWalletRecoverPin = ({navigation})=> {
     return (
         <>
         <Separator />
+        <AlertOverlay visible={loading}/>
         <KeyboardAvoidingView 
             style={styles.container}
             // keyboardVerticalOffset={Platform.OS == "ios" ? 100 : 90} 
@@ -133,16 +144,6 @@ export const ToktokWalletRecoverPin = ({navigation})=> {
                 <View style={{flex: 1,alignItems:"center",marginTop: 40}}>
                     <Text style={{fontFamily: FONT.BOLD,fontSize: 16}}>Enter OTP code sent to</Text>
                     <Text style={{fontFamily: FONT.REGULAR,fontSize: 16}}>{tokwaAccount.mobileNumber}</Text>
-                    {/* <TextInput 
-                        // autoFocus={true}
-                        style={styles.input}
-                        placeholder="0 0 0 0 0 0"
-                        keyboardType="number-pad"
-                        value={code}
-                        onChangeText={(value)=>{
-                            setCode(value)
-                        }}
-                        /> */}
 
                         <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={true}/>
                         <TextInput
@@ -160,8 +161,11 @@ export const ToktokWalletRecoverPin = ({navigation})=> {
                             }}
                             // onSubmitEditing={onSubmit}
                         />
+
                         {
-                            errorMessage != "" && <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M,color: COLOR.RED,marginHorizontal: 16}}>{errorMessage}</Text>
+                            otpCodeAttempt && <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M,color: COLOR.RED,marginHorizontal: 16}}>
+                                Incorrect OTP. You can try {numWordArray[otpCodeAttempt]} ({otpCodeAttempt}) more {otpCodeAttempt == 1 ? "time" : "times"} before your account will be temporarily suspended.
+                            </Text>
                         }
 
                         <TouchableOpacity
@@ -175,7 +179,7 @@ export const ToktokWalletRecoverPin = ({navigation})=> {
 
                 </View>
                        
-                 <View style={{height: SIZE.FORM_HEIGHT + 16,justifyContent:"flex-end"}}> 
+                 <View style={{height: SIZE.FORM_HEIGHT + 20,justifyContent:"flex-end",paddingVertical: 16}}> 
                     {
                         pinCode.length < 6
                         ? <DisabledButton label="Proceed"/>
