@@ -188,10 +188,12 @@ const ToktokFoodDriver = ({route, navigation}) => {
         BackgroundTimer.clearInterval(checkOrderResponse5mins.current);
         BackgroundTimer.clearInterval(getRiderDetailsInterval.current);
         let isValidDate = moment(transaction.dateOrderProcessed).isValid();
+        let noReason = isValidDate ? 'Your order was cancelled by merchant.' : 'Your order has been declined.'
+        let withReason = isValidDate ? `Your order was cancelled by merchant because ${transaction.declinedNote.toLowerCase()}.`
+          : `Your order has been declined because the item is ${transaction.declinedNote.toLowerCase()}.`
         setShowDialogMessage({
           title: isValidDate ? 'Order Cancelled by Merchant' : 'OOPS!',
-          message: transaction.declinedNote ? transaction.declinedNote :
-            isValidDate ? 'Your order was cancelled by merchant.' : 'Your order has been declined.',
+          message: transaction.declinedNote ? withReason : noReason,
           show: true,
           type: 'warning',
         });
@@ -242,7 +244,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
       <HeaderImageBackground searchBox={false}>
         <HeaderTitle />
       </HeaderImageBackground>
-      <Loader visibility={showLoader} message="Canceling order..." />
+      <Loader loadingIndicator visibility={showLoader} hasImage={false} message="Cancelling Order" />
       <DialogMessage
         visibility={cancelDialogMessage.show}
         title={cancelDialogMessage.title}

@@ -441,7 +441,7 @@ const MainComponent = () => {
         }}
         hasTwoButtons
       />
-      <Loader hasImage={false} loadingIndicator visibility={loadingWallet} message="Loading..." />
+      <Loader hasImage={false} loadingIndicator visibility={loadingWallet} message="Loading" />
       {paymentMethod == 'COD' && 
         <>
           <AlertModal
@@ -450,7 +450,7 @@ const MainComponent = () => {
             error={tokWaPlaceOrderErr.error}
             close={() => setTokWaPlaceOrderErr({ error: {}, visible: false })}
           />
-          <Loader visibility={showLoader} message="Placing order..." />
+          <Loader visibility={showLoader} hasImage={false} loadingIndicator message="Placing Order" />
         </>
       }
       {showEnterPinCode ? (
@@ -468,7 +468,7 @@ const MainComponent = () => {
           setErrorMessage={setErrorMessage}
           title={toktokWalletCredit.validator}
         >
-          <Loader visibility={showLoader} message="Placing order..." />
+          <Loader visibility={showLoader} hasImage={false} loadingIndicator message="Placing Order" />
           <DialogMessage
             visibility={pinAttempt.show}
             title={'OTP/TPIN Max Attempts Reached'}
