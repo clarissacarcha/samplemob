@@ -152,7 +152,7 @@ const MyOrderList = () => {
 
   return (
     <>
-      <Loader visibility={deleteLoading} message="Deleting item..." hasImage={false} loadingIndicator />
+      <Loader visibility={deleteLoading} message="Deleting Item" hasImage={false} loadingIndicator />
       <View style={styles.sectionContainer}>
         <View style={[styles.myOrderWrapper]}>
           <Text style={styles.sectionTitle}>My Orders</Text>
@@ -170,7 +170,6 @@ const MyOrderList = () => {
               renderItem={renderFoodItem}
               renderHiddenItem={renderHiddenItem}
               rightOpenValue={-80}
-              previewRowKey={'0'}
               previewOpenValue={-40}
               previewOpenDelay={1000}
               closeOnRowOpen={true}

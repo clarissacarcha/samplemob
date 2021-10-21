@@ -94,7 +94,7 @@ const PickUpDetails = (props) => {
 
   return (
     <>
-      <Loader visibility={loading} message="Saving..." hasImage={false} loadingIndicator />
+      <Loader visibility={loading} message="Saving" hasImage={false} loadingIndicator />
       <DialogMessage
         visibility={showSuccess}
         title="Change Location"

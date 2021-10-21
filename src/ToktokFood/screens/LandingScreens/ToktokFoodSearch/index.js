@@ -134,7 +134,7 @@ const ToktokFoodSearch = ({route}) => {
     <TouchableWithoutFeedback onPress={() => updateHistoryList(item)}>
       <View style={styles.itemContainer}>
         <View style={styles.imgWrapper}>
-          <Image resizeMode="contain" source={{uri: item.logo}} style={styles.img} />
+          <Image resizeMode="cover" source={{uri: item.logo}} style={styles.img} />
         </View>
         <View style={styles.restaurantInfo}>
           <View style={styles.infoWrapper}>

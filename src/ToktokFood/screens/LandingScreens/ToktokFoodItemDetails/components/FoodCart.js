@@ -365,7 +365,7 @@ export const FoodCart = ({loading}) => {
 
   return (
     <>
-      <Loader visibility={loader} message="Adding to cart..." hasImage={false} loadingIndicator />
+      <Loader visibility={loader} message="Adding to Cart" hasImage={false} loadingIndicator />
       <DialogMessage
         visibility={showDialogMessage.show}
         title={'OOPS!'}
