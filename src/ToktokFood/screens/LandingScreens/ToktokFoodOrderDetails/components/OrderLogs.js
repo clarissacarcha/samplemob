@@ -88,7 +88,7 @@ const OrderFee = ({ status = 2, transaction }) => {
         <>
           {renderLogInfo('Order Placed', moment(dateOrdered).format('lll'))}
           {renderDash()}
-          {renderLogInfo('Ready for Pick up', moment(dateReadyPickup).format('lll'))}
+          {renderLogInfo('Ready for Pickup', moment(dateReadyPickup).format('lll'))}
           {renderDash()}
           {renderLogInfo('Picked up order', moment(dateShipped).format('lll'))}
         </>
