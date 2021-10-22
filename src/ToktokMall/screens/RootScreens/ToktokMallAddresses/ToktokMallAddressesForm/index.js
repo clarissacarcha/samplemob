@@ -144,7 +144,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefa
           region_id: parseInt(regCode) || 0,
           province_id: parseInt(provCode),
           municipality_id: parseInt(munCode),
-          landmark: newAddressForm.landMark,
+          landmark: newAddressForm.landmark,
           postal_code: newAddressForm.postalCode,
           latitude: parseFloat(latitude),
           longitude: parseFloat(longitude),
@@ -462,9 +462,9 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefa
             <TextInput
               style={styles.textinput}
               placeholder={'Landmarks/Exact Address/ Note to rider (optional)'}
-              value={newAddressForm.landMark}
+              value={newAddressForm.landmark}
               onChangeText={(text) => {
-                onChangeText('landMark', text);
+                onChangeText('landmark', text);
               }}
             />
           </View>

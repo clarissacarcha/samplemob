@@ -139,7 +139,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
 
   const setHistoryOrder = () => {
     let temphist = JSON.parse(JSON.stringify(searchHistory))
-    setSearchHist(temphist.reverse())
+    setSearchHist(temphist)
   }
 
   useEffect(() => {
@@ -341,7 +341,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
             lazyLoading({
               variables: {
                 input: {
-                  search: route.params?.origin ? "" : route.params.searchValue,
+                  search: route.params?.origin ? "" : route.params?.searchValue,
                   origin: route.params?.origin ? route.params.origin : "all",
                   category: route.params?.categoryId ? route.params?.categoryId : null,
                   offset: searchedProducts.length,
