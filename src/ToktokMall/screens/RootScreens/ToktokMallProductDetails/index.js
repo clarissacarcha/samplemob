@@ -73,6 +73,7 @@ const Component =  ({
   const [user, setUser] = useState({})
 
   const [qtyOnCart, setQtyOnCart] = useState(0)
+  const [variantImages, setVariantImages] = useState([])
 
   const {
     params: { Id },
@@ -82,18 +83,10 @@ const Component =  ({
   const animatedHeaderValueRef = useRef(AnimatedHeaderValue)
 
   const getBottomSheetDynamicHeight = (variants) => {
-    if(variants.length == 0) return 260
-    else if(variants.length == 1){
-      let vars = variants[0].variantList.split(",").length
-      if(vars > 5){
-        return '70%'
-      }else if(vars < 5 && vars > 1){
-        return '60%'
-      }else{
-        return 400
-      }
+    if(variants && variants.length > 0){
+      return '75%' 
     }else{
-      return '60%'
+      return '40%'
     }
   }
 
@@ -122,14 +115,14 @@ const Component =  ({
       AsyncStorage.getItem("ToktokMallUser").then((raw) => {
         const data = JSON.parse(raw)
         if(data.userId){
-          checkItemFromCart({
-            variables: {
-              input: {
-                userId: data.userId,
-                productId: product.Id
-              }
-            }
-          })
+          // checkItemFromCart({
+          //   variables: {
+          //     input: {
+          //       userId: data.userId,
+          //       productId: product.Id
+          //     }
+          //   }
+          // })
         }
       })
     }
@@ -184,8 +177,9 @@ const Component =  ({
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',   
     onCompleted: ({getVerifyAddToCart}) => {
-      const {quantity, variant, status, code} = getVerifyAddToCart
-      verificationCallback(status, code, () => processAddToCart({qty: quantity, variation: variant}))
+      const {productId, quantity, variant, status, code} = getVerifyAddToCart
+      console.log(getVerifyAddToCart)
+      verificationCallback(status, code, () => processAddToCart({Id: productId, qty: quantity, variation: variant}))
     },
     onError: (err) => {
       console.log(err)
@@ -194,7 +188,7 @@ const Component =  ({
 
   const verificationCallback = async (status, code, onValid) => {   
     if(status == 1 && code == "VALID"){
-    setIsFetching(true)
+      setIsFetching(true)
       onValid()
     }else if(status == 0 && code == "SOLDOUT"){
       setsoldoutmodal(true)
@@ -206,7 +200,13 @@ const Component =  ({
   const cartObject = (input) => {
 
     //for images
-    product.img = images[0]
+    if(selectedVariation != "" && variantImages){
+      product.img = variantImages[0]
+      product.variant = input.variation
+
+    }else{
+      product.img = images[0]
+    }
 
     return {
       shop: store,
@@ -236,7 +236,6 @@ const Component =  ({
     })
     
   }
-  
 
   const onAddToCart = async (input) => {
     verifyAddToCart({
@@ -264,7 +263,7 @@ const Component =  ({
       userid: user.userId,
       shopid: store.id,
       branchid: 0,
-      productid: product.Id,
+      productid: selectedVariation != "" ? input.Id : product.Id,
       quantity: input.qty
     }
     console.log(variables)
@@ -433,9 +432,9 @@ const Component =  ({
       <VariationBottomSheet 
         ref={varBottomSheetRef} 
         type={variationOptionType}
-        initialSnapPoint={getBottomSheetDynamicHeight(product?.variantSummary || [])}
+        initialSnapPoint={getBottomSheetDynamicHeight(product?.variations)}
+        // initialSnapPoint={800}
         item={product}
-        image={images.length > 0 ? images[0] : {}}
         onPressAddToCart={(input) => {
           varBottomSheetRef.current.close()
           onAddToCart(input)
@@ -443,6 +442,10 @@ const Component =  ({
         onPressBuyNow={(input) => {
           varBottomSheetRef.current.close()
           onBuyNow(input)
+        }}
+        onSelectVariation={(value, images) => {
+          setSelectedVariation(value)
+          setVariantImages(images)
         }}
       />
 

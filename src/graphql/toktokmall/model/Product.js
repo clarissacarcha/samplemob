@@ -152,27 +152,43 @@ export const GET_PRODUCT_DETAILS = gql`
 				resized_520
     	}
     	shop {
-			id
-			shopcode
+				id
+				shopcode
      		shopname
-			address
-			totalProducts
-			profileImages {
-				logo
-			}
-    	}
-    	variantSummary {
-      	optionNo
-      	variantType
-      	variantList
-				variantProducts {
-					Id
-					itemname
-					images {
-						filename
-					}
+				address
+				totalProducts
+				profileImages {
+					logo
 				}
     	}
+    	
+			variations {
+				Id
+				itemname
+  	  	otherinfo
+    		summary
+    		tags
+    		noOfStocks
+    		price
+    		compareAtPrice
+				discountRate
+				soldCount
+    		images {
+      		arrangement
+      		filename
+					resized_520
+    		}
+    		shop {
+					id
+					shopcode
+     			shopname
+					address
+					totalProducts
+					profileImages {
+						logo
+					}
+    		}
+			}
 			relevantProducts {
 				Id
 				itemname

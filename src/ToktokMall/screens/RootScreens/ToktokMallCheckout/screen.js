@@ -58,7 +58,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
   const [movedScreens, setMovedScreens] = useState(false)
   const [currentBalance, setCurrentBalance] = useState(0)
   const [shippingRates, setShippingRates] = useState([])
-  const [initialLoading, setInitialLoading] = useState(false)
+  const [initialLoading, setInitialLoading] = useState(true)
   const [walletAccount, setWalletAccount] = useState(false)
   const [walletmodal, setwalletmodal] = useState(false)
   const [customerData, setCustomerData] = useState({})
@@ -76,7 +76,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
       if(response.getCheckoutData){
         setAddressData(response.getCheckoutData.address);
         await setPaymentList(response.getCheckoutData.paymentMethods)
-        await getShippingRates(response.getCheckoutData.shippingRates)
+        await getShippingRates(response.getCheckoutData.shippingRatePayload)
       }
     },
     onError: (err) => {
@@ -86,7 +86,17 @@ const Component = ({route, navigation, createMyCartSession}) => {
     }
   })
 
-  const getShippingRates = async (rates) => {
+  const getShippingRates = async (payload) => {    
+    const res = await ShippingApiCall("get_shipping_rate", payload, true)
+    if(res.responseData && res.responseData.success == 1){
+      CheckoutContextData.setShippingFeeRates(res.responseData.newCart)
+    }else if(res.responseError && res.responseError.success == 0){
+      CheckoutContextData.setUnserviceableShipping(res.responseError.removedCart)
+    }
+    setInitialLoading(false)
+  }
+
+  const getShippingRatesx = async (rates) => {
     if(rates && rates.length > 0){
       for (const shippingrate of rates) {
         console.log("Shipping Rate", shippingrate)
@@ -165,7 +175,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
           srpTotal: srpTotal,
           vouchers: voucher,
           shippingVouchers: CheckoutContextData.shippingVouchers,
-          shippingRates: shippingRates,
+          shippingRates: CheckoutContextData.shippingFeeRates,
           paymentMethod: "TOKTOKWALLET",
           hashAmount: req.responseData.hash_amount,
           referenceNum: req.responseData.orderRefNum
@@ -218,7 +228,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
     if(userData.userId){
 
-      const shops = route.params.data.map((a) => a.shop.id)
+      const shops = getShopItemPayload()
+
       setCustomerData(userData)
       setInitialLoading(true)
       setShippingRates([])
@@ -255,15 +266,15 @@ const Component = ({route, navigation, createMyCartSession}) => {
     let shipping = 0
     let originalShippingFee = 0
 
-    for(var z=0;z<shippingRates.length;z++){
+    for(var z=0;z<CheckoutContextData.shippingFeeRates.length;z++){
 
       if(CheckoutContextData.shippingVouchers[z]){
         shipping += parseFloat(CheckoutContextData.shippingVouchers[z].amount)
       }else{
-        shipping += parseFloat(shippingRates[z].price)
+        shipping += parseFloat(CheckoutContextData.shippingFeeRates[z].shippingfee)
       }
 
-      originalShippingFee += parseFloat(shippingRates[z].price)
+      originalShippingFee += parseFloat(CheckoutContextData.shippingFeeRates[z].original_shipping)
 
     }
     console.log("Grand total...")
@@ -274,6 +285,33 @@ const Component = ({route, navigation, createMyCartSession}) => {
     b += originalShippingFee
     setSrpTotal(b)
     setGrandTotal(a)
+  }
+
+  const getShopItemPayload = () => {
+    //CREATE SHIPPING RATES SHOPS PAYLOAD
+    let shopitems = []
+    for(var x=0;x<route.params.data.length;x++){
+      
+      let item = route.params.data[x]
+      let itemdata = item.data[0]
+      let productitems = []
+
+      for(var y=0;y<itemdata.length;y++){
+        productitems.push({
+          productid: itemdata[y].id,
+          quantity: itemdata[y].qty,
+          promo_type: 0,
+          order_type: 2
+        })
+      }
+
+      shopitems.push({
+        shopid: item.shop.id,
+        items: productitems
+      })
+
+    }
+    return shopitems
   }
 
   useFocusEffect(

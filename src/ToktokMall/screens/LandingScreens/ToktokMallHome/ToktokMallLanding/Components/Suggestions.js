@@ -191,7 +191,10 @@ export const Suggestions = ({lazyload}) => {
             <Text style={styles.h1}>Suggestions for you</Text>
           </View>
           <TouchableOpacity onPress={() => {
-            navigation.navigate("ToktokMallSearch", {searchValue: "Suggestions for you", origin: "suggestion"})
+            
+            navigation.push("ToktokMallProductDetails", {Id: "7a0c028ecd26437c8cb317294db5086f"})
+            // navigation.navigate("ToktokMallSearch", {searchValue: "Suggestions for you", origin: "suggestion"})
+
           }} style={{flex: 2, flexDirection: 'row'}}>
             <View style={{flex: 2, alignItems: 'flex-end', justifyContent: 'center'}}>
               <Text style={styles.link}>See all </Text>

@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, useContext} from 'react';
 import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, Dimensions, AsyncStorage} from 'react-native';
 import { Price, FormatToText } from '../../../../helpers/formats';
 import Spinner from 'react-native-spinkit';
@@ -8,17 +8,14 @@ import { FONT } from '../../../../../res/variables';
 // import { ScrollView } from 'react-native-gesture-handler';
 // import CustomIcon from '../../../../../Components/Icons';
 // import {watch, electronics, mensfashion, furniture, petcare} from '../../../../../assets'
-const testData = [
-  {id: 1, full_name: 'Cloud Panda', contact_number: '09050000000',
-    address: '10F, Inoza Tower, 40th Street, Bonifacio Global City', default: 1
-  },
-  {id: 2, full_name: 'Rick Sanchez', contact_number: '09060000000',
-    address: 'B20 L1, Mahogany Street, San Isidro, Makati City', default: 0
-  }
-]
+
+import {CheckoutContext} from '../ContextProvider';
+
 const REAL_WIDTH = Dimensions.get('window').width;
 
 export const Button = ({enabled, loading, shipping, balance, shippingRates, total, onPress}) => {
+
+  const CheckoutContextData = useContext(CheckoutContext)
 
   const onCheckout = () => {
     // let stringyfiedArr = JSON.stringify(unSelectedItemsArr)
@@ -36,7 +33,7 @@ export const Button = ({enabled, loading, shipping, balance, shippingRates, tota
     // else if(shippingRates.length == 0) return true
     // else if(shippingRates.length > 0) return false
 
-    if(total > 0 && !loading && shipping && shippingRates.length > 0 && balance >= total) return false
+    if(total > 0 && !loading && shipping && CheckoutContextData.shippingFeeRates.length > 0 && balance >= total) return false
     else return true
   }
     

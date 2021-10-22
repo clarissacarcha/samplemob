@@ -21,18 +21,22 @@ const SampleVariations = [{
 export const VariationBottomSheet = forwardRef(({ 
   initialSnapPoint, 
   item, 
-  image, 
   onPressBuyNow, 
   onPressAddToCart, 
+  onSelectVariation,
   type
 }, ref) => {
     
   const snapPoints = useMemo(() => [0, initialSnapPoint], [item]);
   const [stock, setStock] = useState(item?.noOfStocks)
+  const [itemprice, setItemPrice] = useState(item?.price)
+  const [originalPrice, setOriginalPrice] = useState(item?.compareAtPrice || 0)
   const [qty, setQty] = useState(1)
   const [variation, setVariation] = useState("")
   const [variationWithTypes, setVariationWithTypes] = useState({})
   const [variationArr, setVariationArr] = useState([])
+  const [image, setImage] = useState(item?.images ? item?.images[0] : null)
+  const [product, setProduct] = useState(item)
 
   const getImage = () => {
     if(image && typeof image == "object"){
@@ -44,23 +48,44 @@ export const VariationBottomSheet = forwardRef(({
     }
   }
 
-  useEffect(() => {
-    item?.variantSummary &&
-      item?.variantSummary.length > 0 &&
-      Object.keys(variationWithTypes).length > 0 &&
-      setVariation(
-        item?.variantSummary
-          .map((variant, i) => {
-            let variantslist = variant?.variantList || '';
-            const variants = variantslist.split(',');
-            if (Object.keys(variationWithTypes).includes(variant.variantType)) {
-              return variants[variationWithTypes[variant.variantType]];
-            }
-          })
-          .join(' '),
-      );
-  }, [item, variationWithTypes]);
-  console.log(variation)
+  const onSelectVariant = (variant, index) => {
+    setVariation(variant.Id)
+    setImage(variant.images[0] || null)
+    setStock(variant.noOfStocks)
+    setItemPrice(variant.price)
+    setOriginalPrice(variant.compareAtPrice)
+    setProduct(variant)
+    onSelectVariation(variant.Id, variant.images || [])
+  }
+
+  const reset = () => {
+    setVariation("")
+    setImage(item?.images ? item?.images[0] : null)
+    setStock(item?.noOfStocks)
+    setItemPrice(item?.price)
+    setOriginalPrice(item?.compareAtPrice)
+    setQty(1)
+    setProduct(item)
+    onSelectVariation("")
+  }
+
+  // useEffect(() => {
+  //   item?.variantSummary &&
+  //     item?.variantSummary.length > 0 &&
+  //     Object.keys(variationWithTypes).length > 0 &&
+  //     setVariation(
+  //       item?.variantSummary
+  //         .map((variant, i) => {
+  //           let variantslist = variant?.variantList || '';
+  //           const variants = variantslist.split(',');
+  //           if (Object.keys(variationWithTypes).includes(variant.variantType)) {
+  //             return variants[variationWithTypes[variant.variantType]];
+  //           }
+  //         })
+  //         .join(' '),
+  //     );
+  // }, [item, variationWithTypes]);
+  // console.log(variation)
 
   const RenderOptions = ({type, onBuyNow, onAddToCart}) => {
 
@@ -82,7 +107,7 @@ export const VariationBottomSheet = forwardRef(({
         <>
           <View style={{flex: 2}} />
           <TouchableOpacity onPress={() => {
-            onBuyNow({qty, variation})
+            onBuyNow({qty, variation, product})
             setQty(1)
           }} style={{flex: 10, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: "#F6841F", paddingHorizontal: 20, paddingVertical: 12, borderRadius: 5, backgroundColor: '#F6841F'}}>
             <Text style={{fontFamily: FONT.BOLD, fontSize: 14, color: "#FFF"}}>Buy now</Text>
@@ -114,52 +139,34 @@ export const VariationBottomSheet = forwardRef(({
       )
   }
 
-  const RenderVariation = ({variants, type}) => {
+  const RenderVariation = ({variant, index}) => {
 
     return (
       <>
-      <View style={{height: 2, backgroundColor: "#F7F7FA"}} />
-      <View style={{paddingHorizontal: 16, paddingVertical: 16}}>
-        <View>
-          <Text style={{fontFamily: FONT.BOLD, fontSize: 14}}>Select {type}</Text>
-        </View>
-        <View style={{flexDirection: 'row', paddingTop: 16}}>
-
-          <View style={{flexWrap: "wrap"}}>
-            <View style={{flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'flex-start'}}>
-            {variants.map((item, index) => {
-              return (
-                <>
-                  <TouchableOpacity 
-                    key={index} 
-                    onPress={() => {
-                      setVariationWithTypes(prevState => ({...prevState, [type]: index}))
-                    }} 
-                    style={{
-                      marginTop: 4,
-                      paddingVertical: 4, 
-                      paddingHorizontal: 16, 
-                      borderRadius: 5, 
-                      borderWidth: 0.5, 
-                      borderColor: variationWithTypes?.[type] === index ? "#F6841F" : "lightgray"
-                    }}>
-                    <Text style={{fontSize: 13, color: "#9E9E9E"}}>{item}</Text>
-                  </TouchableOpacity>
-                  <View style={{width: 5}} />
-                </>
-              )
-            })}
-            </View>
-          </View>
-
-          </View>
-        </View>
+        <TouchableOpacity 
+          key={index} 
+          onPress={() => {
+            // setVariationWithTypes(prevState => ({...prevState, [type]: index}))
+            onSelectVariant(variant, index)
+          }} 
+          style={{
+            marginTop: 4,
+            paddingVertical: 4, 
+            paddingHorizontal: 16, 
+            borderRadius: 5, 
+            borderWidth: 0.5, 
+            borderColor: variant.Id === variation ? "#F6841F" : "lightgray"
+            // borderColor: "lightgray"
+          }}>
+          <Text style={{fontSize: 13, color: "#9E9E9E"}}>{variant.itemname}</Text>
+        </TouchableOpacity>
+        <View style={{width: 5}} />
       </>
     );
   }
 
   useEffect(() => {
-    setStock(item?.noOfStocks)
+    reset()
   }, [item])
 
   return (
@@ -194,8 +201,8 @@ export const VariationBottomSheet = forwardRef(({
               <View style={{flex: 1.5}}></View>
               <View style={{flex: 4}}>
                 <View style={{flexDirection:'row'}}>
-                  <Text style={{color: "#F6841F", fontSize: 14}}><Price amount={item?.price * qty} /></Text>
-                  <Text style={{color: "#9E9E9E", textDecorationLine: 'line-through', fontSize: 11, marginTop: 2.5, marginLeft: 8}}>{item.compareAtPrice == 0 ? "" : <Price amount={item.compareAtPrice*qty} />}</Text>                
+                  <Text style={{color: "#F6841F", fontSize: 14}}><Price amount={itemprice * qty} /></Text>
+                  <Text style={{color: "#9E9E9E", textDecorationLine: 'line-through', fontSize: 11, marginTop: 2.5, marginLeft: 8}}>{originalPrice == 0 ? "" : <Price amount={originalPrice*qty} />}</Text>                
                 </View>
                 <Text style={{color: "#9E9E9E", fontSize: 12, marginTop: 5}}>Stock: {stock}</Text>
               </View>
@@ -206,31 +213,63 @@ export const VariationBottomSheet = forwardRef(({
             </View>
           </View>
           <TouchableOpacity activeOpacity={1} onPress={() => {
+            reset()
             ref.current.close()
           }} style={{flex: 0}}>
             <CustomIcon.EvIcon name="close" size={22} color="#F6841F" />
           </TouchableOpacity>
         </View>
       </View>
-      {item?.variantSummary && 
-        item?.variantSummary.length > 0 && 
-        item?.variantSummary.map((variant, i) => {
-          let variantslist = variant?.variantList || ""
-          const variants = variantslist.split(",")
-          if(variants.length == 0 || variant.variantType == "") return null
-          // return (
-          //   <ScrollView 
-          //     showsVerticalScrollIndicator={false} 
-          //     contentContainerStyle={{ flexGrow: 1 }}>
-          //     <RenderVariation type={variant.variantType} variants={variants} />
-          //   </ScrollView>
-          // )
-          return (
-            <View >
-              <RenderVariation type={variant.variantType} variants={variants} />
+      
+      {item.variations && item.variations.length > 0 &&
+        <>
+          <View style={{height: 2, backgroundColor: "#F7F7FA"}} />
+          <View style={{paddingHorizontal: 16, paddingVertical: 16}}>
+            <View>
+              <Text style={{fontFamily: FONT.BOLD, fontSize: 14}}>Select Variation</Text>
             </View>
-          )
-      })}
+            <View style={{flexDirection: 'row', paddingTop: 16}}>          
+              <View style={{flexWrap: "wrap"}}>
+                <View style={{flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'flex-start'}}>
+
+                {/* {
+                  item?.variations && 
+                  item?.variations.length > 0 && 
+                  item?.variations.map((variant, i) => {          
+                    return (
+                      <View style={{paddingHorizontal: 4}}>
+                        <RenderVariation variant={variant} index={i} />
+                      </View>
+                    )
+                  })
+                } */}
+
+                  <FlatList 
+                    data={item?.variations && item?.variations.sort((a, b) => a.itemname.localeCompare(b.itemname)) || []}
+                    keyExtractor={(item, index) => item + index}
+                    numColumns={2}
+                    style={{width: '100%', height: 180}}
+                    showsVerticalScrollIndicator={false}
+                    showsHorizontalScrollIndicator={false}
+                    renderItem={({item, index}) => {
+                      return (
+                        <View style={{
+                          flex: 0, 
+                          paddingHorizontal: 4
+                        }}>
+                          <RenderVariation variant={item} index={index} />
+                          {item?.variations && index >= item?.variations.length - 1 ? <View style={{height: 4}} /> : null}
+                        </View>
+                      )
+                    }}
+                  />
+
+                </View>
+              </View>
+            </View>
+          </View>
+        </>
+      }
 
       <View style={{height: 2, backgroundColor: "#F7F7FA"}} />
       <View style={{paddingHorizontal: 16, paddingVertical: 16}}>

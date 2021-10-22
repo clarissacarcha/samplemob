@@ -47,7 +47,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
 
   useEffect(() => {
     setData(raw)
-  }, [raw])
+  }, [raw])  
 
   const computeTotal = (item, raw = false) => {
     let total = 0
@@ -74,6 +74,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
     return items.map((item, i) => {
 
       const product = item.product || {}
+      console.log(item)
 
         return(
           <View style={styles.itemContainer}>
@@ -81,13 +82,13 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
             source = {getImageSource(product?.img?.filename)} 
             style ={styles.itemImage}/>
             <View style = {{ marginLeft: 15, flex: 1}}>
-              <Text>{product?.itemname}</Text>
+              <Text>{product?.name ? product?.name : product?.itemname}</Text>
               <View style = {{flexDirection: 'row'}}>
                 <Text style ={styles.itemprice}>{FormatToText.currency(product?.price)}</Text>
                 <Text style ={styles.itemSaleOff}>{parseFloat(product?.compareAtPrice) != "0.00" ? FormatToText.currency(product?.compareAtPrice) : ""}</Text>
               </View>
               <View style = {{flexDirection: 'row', justifyContent: 'space-between', marginTop: 10}}>
-                <Text style ={{ color: '#9E9E9E' }}>Variation: {product?.variation || "None"}</Text>
+                <Text style ={{ color: '#9E9E9E' }}>Variation: {product.variant || "None"}</Text>
                 <Text style ={{ color: '#9E9E9E'}}>Qty: {item.qty}</Text>
               </View>
             </View>
@@ -127,7 +128,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
           }else{
 
             items[index] = req.responseData.voucher
-            items[index].amount = parseFloat(shippingRates[index].price) - req.responseData.voucher.amount
+            items[index].discountedAmount = parseFloat(shippingRates[index].price) - req.responseData.voucher.amount
             items[index].discount = req.responseData.voucher.amount
             CheckoutContextData.setShippingVouchers(items)
           
@@ -260,6 +261,63 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
           return CheckoutContextData.shippingVouchers[index]?.amount
         }
       }
+
+      const getOriginalShippingFee = (index) => {
+        if(CheckoutContextData.shippingFeeRates.length > 0){
+          let rates = CheckoutContextData.shippingFeeRates[index]
+          return rates.original_shipping
+        }else{
+          return "Calculating"
+        }
+      }
+
+      const getIsShippingServiceAreaInvalid = (index) => {
+        if(CheckoutContextData.unserviceableShipping.length > 0){
+          return CheckoutContextData.unserviceableShipping[index] != null
+        }else{
+          return false
+        }
+      }
+
+      const renderValidShipping = (i, shipping, item) => {
+        return (
+          <>
+            <View style={{flexDirection: 'row'}}>
+              <View style={{flex: 0}}>
+                <Text>Delivery Fee: </Text>
+              </View>
+              <View style={{flex: 0}}>
+                <Text 
+                  style={{
+                    textDecorationLine: getDiscount(i, "shipping") != null ? "line-through" : "none",  
+                    color: getDiscount(i, "shipping") != null ? "#929191" :'#000'
+                  }}
+                >
+                  {FormatToText.currency(getOriginalShippingFee(i))}
+                </Text>
+              </View>
+              <View style={{flex: 0}}>
+                <Text> {getDiscount(i, "shipping") != null ? FormatToText.currency(getDiscount(i, "shipping")) : ""}</Text>
+              </View>
+            </View>
+
+            <View>
+              <Text>Order total ({item.data.length} {item.data.length > 1 ? `items` : 'item'}): {computeTotal(item.data[0]) || 0} </Text>
+              <Text style = {{marginTop: 7, color: '#929191'}}>Receive by: {shipping?.deliveryDate || "Add address to calculate"} </Text>
+            </View>
+          </>
+        )
+      }
+
+      const renderInvalidShipping = () => {
+        return (
+          <>
+            <View>
+              <Text>Unsupported Address</Text>
+            </View>
+          </>
+        )
+      }
       
       return(
         <>
@@ -271,26 +329,14 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
           <View style={{padding: 15}}>
             {renderItems(item.data[0])}
           </View>
-          <View style={styles.deliveryfeeContainer}>
+          <TouchableOpacity style={styles.deliveryfeeContainer} onPress={() => {
+            let test = getIsShippingServiceAreaInvalid(i)
+            console.log("testing...", test)
+          }}>
 
-            <View style={{flexDirection: 'row'}}>
-              <View style={{flex: 0}}>
-                <Text>Delivery Fee: </Text>
-              </View>
-              <View style={{flex: 0}}>
-                <Text style={{textDecorationLine: getDiscount(i, "shipping") != null ? "line-through" : "none",  color: getDiscount(i, "shipping") != null ? "#929191" :'#000'}}>{FormatToText.currency(shippingRates[i]?.price || 0)}</Text>
-              </View>
-              <View style={{flex: 0}}>
-                <Text> {getDiscount(i, "shipping") != null ? FormatToText.currency(getDiscount(i, "shipping")) : ""}</Text>
-              </View>
-            </View>
+            {getIsShippingServiceAreaInvalid(i) ? renderInvalidShipping() : renderValidShipping(i, shipping, item)}
 
-            <View>
-              <Text>Order total ({item.data.length} {item.data.length > 1 ? `items` : 'item'}): {computeTotal(item.data[0]) || 0} </Text>
-              <Text style = {{marginTop: 7, color: '#929191'}}>Receive by: {shipping?.deliveryDate || "Add address to calculate"} </Text>
-            </View>
-
-          </View>
+          </TouchableOpacity>
 
           {renderVoucherForm(i, item, computeTotal(item.data[0], true))}
 

@@ -35,7 +35,7 @@ export const BuildPostCheckoutBody = async ({
 			total_amount: parseFloat(subTotal),
 			srp_totalamount: parseFloat(srpTotal),
 			order_type: 2,
-			order_logs: BuildOrderLogsList({data: items, shipping: addressData.shippingSummary, shippingRates}),
+			order_logs: BuildOrderLogsList({data: items, shipping: addressData.shippingSummary, shippingRates, shippingVouchers}),
 			//Optional values
 			user_id: session.userId,
 			notes: "This is a test order from mobile",
@@ -60,7 +60,7 @@ export const BuildPostCheckoutBody = async ({
 	
 }
 
-export const BuildOrderLogsList = ({data, shipping, shippingRates}) => {
+export const BuildOrderLogsList = ({data, shipping, shippingRates, shippingVouchers}) => {
 
 	let logs = []
 	data.map((val, index) => {
@@ -84,10 +84,10 @@ export const BuildOrderLogsList = ({data, shipping, shippingRates}) => {
 
 		logs.push({
 			sys_shop: val.shop.id,
-			branchid: 0,
+			branchid: shippingRates[index].branchid,
 			// delivery_amount: shipping.rateAmount,
-			delivery_amount: parseFloat(shippingRates[index].price),
-			original_shipping_fee: parseFloat(shippingRates[index].price),
+			delivery_amount: shippingVouchers[index] ? shippingVouchers[index].discount : parseFloat(shippingRates[index].deliveryfee),
+			original_shipping_fee: parseFloat(shippingRates[index].original_shipping),
 			handle_shipping_promo: 1,
 			hash: shippingRates[index].hash,
 			hash_delivery_amount: shippingRates[index].hash_price,

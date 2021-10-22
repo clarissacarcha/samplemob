@@ -93,7 +93,7 @@ export const Item = ({
           </View>
           <View style={{flex: 9, justifyContent: 'center', flexDirection: 'row'}}>       
             <View style={{flex: 1, justifyContent: 'center'}}>
-                <Text style={{fontSize: 13, fontWeight: '100'}} numberOfLines={2}>{product?.itemname}</Text>
+                <Text style={{fontSize: 13, fontWeight: '100'}} numberOfLines={2}>{product?.name}</Text>
               <View style={{flexDirection: 'row'}}>
                 <View style={{flex: 0}}>
                   <Text style={{fontSize: 13, color: "#F6841F"}}><Price amount={product?.price} /></Text>
@@ -104,7 +104,7 @@ export const Item = ({
               </View>
               <View style={{flexDirection: 'row'}}>
                 <View style={{flex: 1}}>
-                  <Text style={{color: "#9E9E9E", fontSize: 13}}>Variation: {data?.variation || "None"}</Text>
+                  <Text style={{color: "#9E9E9E", fontSize: 13}}>Variation: {product?.variant || "None"}</Text>
                 </View>
                 {/* <View style={{flex: 0}}>
                   <Text style={{color: "#9E9E9E", fontSize: 13}}>Qty: {data?.qty}</Text>

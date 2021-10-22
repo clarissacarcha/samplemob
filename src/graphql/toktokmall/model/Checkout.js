@@ -39,6 +39,7 @@ export const GET_CHECKOUT_DATA = gql`
       	origin_lat
       	origin_lng
 			}
+			shippingRatePayload
     }
   }
 `
