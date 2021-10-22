@@ -87,23 +87,7 @@ export const RenderDetails = ({
 		}
 	}
 
-	const Wrapper = willDelete ? View : Swipeable
-	const props = willDelete
-    ? {}
-    : {
-        rightActionActivationDistance: 30,
-        rightButtonWidth: 75,
-        rightButtons: [
-          <DeleteButton
-            onPress={() => {
-              onItemDelete({
-                shop: item.shop,
-                product: data.product,
-              });
-            }}
-          />,
-        ],
-      };
+
 
 
 	return (
@@ -121,21 +105,25 @@ export const RenderDetails = ({
       {item &&
         item.data.length > 0 &&
         item.data.map((data, i) => {
+			const Wrapper = willDelete ? View : Swipeable
+			const props = willDelete
+			? {}
+			: {
+				rightActionActivationDistance: 30,
+				rightButtonWidth: 75,
+				rightButtons: [
+				  <DeleteButton
+					onPress={() => {
+					  onItemDelete({
+						shop: item.shop,
+						product: data.product,
+					  });
+					}}
+				  />,
+				],
+			  };
           return (
-            <Wrapper {...{
-							rightActionActivationDistance: 30,
-							rightButtonWidth: willDelete ? 0 : 75,
-							rightButtons: [
-								<DeleteButton
-									onPress={() => {
-										onItemDelete({
-											shop: item.shop,
-											product: data.product,
-										});
-									}}
-								/>,
-							],
-						}}>
+            <Wrapper {...props}>
               <Item
                 key={i}
                 index={i}

@@ -224,10 +224,11 @@ export default (state = INITIAL_STATE, action) => {
         AsyncStorage.setItem('ToktokMallSearchHistory', stringyfiedPayload);
         return {...state, searchHistory: action.payload};
       } else if (action.action == 'push') {
-        let hist = state.searchHistory; 
-        if(hist.indexOf(action.payload) == -1){
-          hist.push(action.payload);        
-        }
+        let hist = state.searchHistory;
+          if(hist.indexOf(action.payload) == -1){
+            hist = [ action.payload,...hist]     
+          }
+        
         let stringyfiedHist = JSON.stringify(hist);
         AsyncStorage.setItem('ToktokMallSearchHistory', stringyfiedHist);
         return {...state, searchHistory: hist};

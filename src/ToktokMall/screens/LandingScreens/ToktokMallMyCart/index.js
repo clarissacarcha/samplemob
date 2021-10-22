@@ -135,9 +135,12 @@ const Component =  ({
         console.log(res.responseError)
       }
     }
-
+    
+    init()
     setapiloader(false)
-    setMessageModalShown(true)
+    setTimeout(() => {
+      setMessageModalShown(true)
+    }, 200);
 
   }
 
@@ -152,10 +155,13 @@ const Component =  ({
     console.log(JSON.stringify(variables))
     setapiloader(true)
     const req = await ApiCall("remove_cart", variables, true)
+    init()
     setapiloader(false)
     if(req.responseData && req.responseData.success == 1){   
       console.log("Single Deletion Result: ", req.responseData)
-      setSingleDeletemsgModalShown(true)
+      setTimeout(() => {
+        setSingleDeletemsgModalShown(true)
+      }, 200);
     }else if(req.responseError && req.responseError.success == 0){
       Toast.show(req.responseError.message, Toast.LONG)
     }else if(req.responseError){
@@ -502,7 +508,6 @@ const Component =  ({
             isVisible={messageModalShown}
             setIsVisible={(val) => {
               setMessageModalShown(val)
-              init()
             }}  
             message={`Items has been removed from your cart.`}
           />}
@@ -513,7 +518,6 @@ const Component =  ({
             isVisible={singleDeletemsgModalShown}
             setIsVisible={(val) => {
               setSingleDeletemsgModalShown(val)
-              init()
             }}  
             message={`Item has been removed from your cart.`}
           />}

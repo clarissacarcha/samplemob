@@ -32,6 +32,8 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
         setEmptySearch(true)
         setSearchedProducts([])
       }
+      createSearchHistorySession("push", searchValue)
+      
     },
     onError: (err) => {
       console.log(err)
@@ -88,7 +90,6 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
   }
 
   useEffect(() => {
-    console.log("Search History", searchHistory)
     setHistoryOrder()
   }, [searchHistory])
 
@@ -139,6 +140,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
 
             if(searchValue != ""){
               setSuggestions([])
+              createSearchHistorySession("push", searchValue)
               searchShopProduct({
                 variables: {
                   input: {
@@ -232,7 +234,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
           </TouchableOpacity>
         </View> 
         <FlatList 
-          data={searchHist.slice(0,5)}
+          data={searchHistory.slice(0,5)}
           ItemSeparatorComponent={() => <View style={{ height: 1, backgroundColor: '#F7F7FA'}} />}
           renderItem={({item, index}) => 
             <TouchableOpacity key={index} onPress={() => {

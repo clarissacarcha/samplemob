@@ -192,8 +192,9 @@ const Component =  ({
     }
   })
 
-  const verificationCallback = async (status, code, onValid) => {    
+  const verificationCallback = async (status, code, onValid) => {   
     if(status == 1 && code == "VALID"){
+    setIsFetching(true)
       onValid()
     }else if(status == 0 && code == "SOLDOUT"){
       setsoldoutmodal(true)
@@ -238,8 +239,6 @@ const Component =  ({
   
 
   const onAddToCart = async (input) => {
-
-    setIsFetching(true)
     verifyAddToCart({
       variables: {
         input: {
@@ -470,14 +469,13 @@ const Component =  ({
             },
             containerStyle: {
               backgroundColor: '#F6841F', 
-              borderColor: "#F6841F",
               paddingVertical: 20,
               width: '50%',
               alignSelf: 'center'
             },
             labelStyle: {
               fontSize: 17,
-              color: "white",
+              color: "#fff",
               fontFamily: FONT.BOLD
             }
           }
