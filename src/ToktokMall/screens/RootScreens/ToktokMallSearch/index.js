@@ -140,7 +140,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
 
   const setHistoryOrder = () => {
     let temphist = JSON.parse(JSON.stringify(searchHistory))
-    setSearchHist(temphist.reverse())
+    setSearchHist(temphist)
   }
 
   useEffect(() => {

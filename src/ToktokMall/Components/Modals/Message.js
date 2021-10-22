@@ -59,7 +59,6 @@ export const DynamicMessageModal = ({navigation, isVisible, setIsVisible, type, 
             {buttons.length > 0 && buttons.map((btn) => {
 
               return (
-                <>
                 <TouchableOpacity 
                   onPress={btn.onPress} 
                   style={{
@@ -74,9 +73,8 @@ export const DynamicMessageModal = ({navigation, isVisible, setIsVisible, type, 
                     borderColor: "#F6841F",
                     ...btn.containerStyle
                   }}>
-                  <Text style={{fontSize: 13,  color: "#F6841F", ...btn.labelStyle}}>{btn.label}</Text> 
+                  <Text style={{fontSize: 13, height: 18,  color: "#F6841F", ...btn.labelStyle}}>{btn.label}</Text> 
                 </TouchableOpacity>
-                </>
               )
 
             })}
