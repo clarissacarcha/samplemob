@@ -74,17 +74,21 @@ export const SuccessfulModal = ({modalVisible,tokwaAccount,amount,onCashIn,setSu
               amount: amount ? amount : 0,
               onCashIn: onCashIn
           })
+          setSuccessModalVisible(false);
         }
       },[tokwaAccountLatest,onCashIn])
   
       const closeModal = async ()=> {
-          await getMyAccount();
-          if(onCashIn) return;
-          setSuccessModalVisible(false);
+          if(onCashIn) {
+            await getMyAccount();
+            return;
+          } 
           navigation.pop(2)
           navigation.navigate("ToktokWalletHomePage")
-  
+          setSuccessModalVisible(false);
+          await getMyAccount();
       }
+
 
     return (
         <Modal
