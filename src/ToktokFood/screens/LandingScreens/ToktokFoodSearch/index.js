@@ -28,7 +28,7 @@ import {empty_shop, empty_search, time} from 'toktokfood/assets/images';
 import styles from './styles';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 
-import {saveNewShopHistory, getShopHistory, clearShopHistory} from './history';
+import {saveNewShopHistory, getShopHistory, clearShopHistory} from 'toktokfood/helper/persistentHistory';
 
 const ToktokFoodSearch = ({route}) => {
   const {location} = useSelector((state) => state.toktokFood);
@@ -76,6 +76,12 @@ const ToktokFoodSearch = ({route}) => {
     navigation.navigate('ToktokFoodRestaurantOverview', {item});
   };
 
+  const shopAlreadyExist = (shopId) => {
+    return history.some(function (el) {
+      return el.id === shopId;
+    });
+  };
+
   const initSearchHistoryList = async () => {
     const historyList = await getShopHistory();
     setHistory(historyList);
@@ -83,8 +89,17 @@ const ToktokFoodSearch = ({route}) => {
 
   const updateHistoryList = (item) => {
     const currentHistory = history;
-    currentHistory.push(item);
-    saveNewShopHistory(currentHistory).then(() => onRestaurantNavigate(item));
+
+    if (!shopAlreadyExist(item.id)) {
+      if (currentHistory.length === 5) {
+        currentHistory.pop();
+      }
+
+      currentHistory.unshift(item);
+      saveNewShopHistory(currentHistory);
+    }
+
+    onRestaurantNavigate(item);
   };
 
   const clearHistoryList = async () => {

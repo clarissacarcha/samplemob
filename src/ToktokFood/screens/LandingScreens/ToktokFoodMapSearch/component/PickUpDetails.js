@@ -20,6 +20,8 @@ import Loader from 'toktokfood/components/Loader';
 import {onErrorAlert} from 'src/util/ErrorUtility';
 import {useAlert} from 'src/hooks';
 
+import {clearShopHistory} from 'toktokfood/helper/persistentHistory';
+
 const PickUpDetails = (props) => {
   const {pinAddress, onConfirm, isCart} = props;
   const navigation = useNavigation();
@@ -72,7 +74,6 @@ const PickUpDetails = (props) => {
       onErrorAlert({alert, error});
     },
     onCompleted: ({deleteShopTemporaryCart}) => {
-      console.log(deleteShopTemporaryCart, 'DELETE');
       onConfirm(state);
       setShowSuccess(true);
     },
@@ -86,6 +87,7 @@ const PickUpDetails = (props) => {
       setShowSuccess(true);
       onConfirm(state);
     }
+    clearShopHistory();
   };
 
   useEffect(() => {
