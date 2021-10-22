@@ -145,7 +145,7 @@ export const GET_ORDER_DETAILS = gql`
 			formattedDateOrdered
 			formattedDateReceived
 			shipping {
-				shop {
+				store {
 					id
 					shopname
 				}

@@ -1,5 +1,6 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, useContext} from 'react';
 import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, Platform } from 'react-native';
+
 import { FONT } from '../../../../../res/variables';
 import {placeholder} from '../../../../assets';
 import { Price, FormatToText } from '../../../../helpers/formats';
@@ -7,32 +8,23 @@ import { Price, FormatToText } from '../../../../helpers/formats';
 import { useLazyQuery, useQuery, useMutation } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../graphql';
 import { GET_APPLY_VOUCHER } from '../../../../../graphql/toktokmall/model';
-import CustomIcon from '../../../../Components/Icons';
+import {ApiCall, ArrayCopy} from '../../../../helpers';
 
+import CustomIcon from '../../../../Components/Icons';
 import Spinner from 'react-native-spinkit';
 
-// import { COLOR, FONT } from '../../../../../../res/variables';
-// import {LandingHeader, AdsCarousel} from '../../../../../Components';
-// import { ScrollView } from 'react-native-gesture-handler';
-// import CustomIcon from '../../../../../Components/Icons';
-// import {watch, electronics, mensfashion, furniture, petcare} from '../../../../../assets'
-const testData = [
-  {id: 1, full_name: 'Cloud Panda', contact_number: '09050000000',
-    address: '10F, Inoza Tower, 40th Street, Bonifacio Global City', default: 1
-  },
-  {id: 2, full_name: 'Rick Sanchez', contact_number: '09060000000',
-    address: 'B20 L1, Mahogany Street, San Isidro, Makati City', default: 0
-  }
-]
+import {CheckoutContext} from '../ContextProvider';
 
-export const Shops = ({raw, shipping, shippingRates, retrieve}) => {
+export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve}) => {
+
+  const CheckoutContextData = useContext(CheckoutContext)
 
   const [data, setData] = useState(raw || [])
   const [voucherIsValid, setVoucherIsValid] = useState(0)
-  const [shopVoucher, setShopVoucher] = useState(null)
   const [vcode, setvcode] = useState("")
+  const [loading, setloading] = useState(false)
 
-  const [validateShopVoucher, {error, loading}] = useLazyQuery(GET_APPLY_VOUCHER, {
+  const [validateShopVoucher, {error, loading2}] = useLazyQuery(GET_APPLY_VOUCHER, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',    
     onCompleted: (response) => {
@@ -57,12 +49,16 @@ export const Shops = ({raw, shipping, shippingRates, retrieve}) => {
     setData(raw)
   }, [raw])
 
-  const computeTotal = (item) => {
+  const computeTotal = (item, raw = false) => {
     let total = 0
     for (let i = 0; i < item.length; i++){
       total = total + (parseFloat(item[i].amount) * item[i].qty)
     }
-    return FormatToText.currency(total == NaN ? 0 : total)
+    if(raw){
+      return total == NaN ? 0 : total
+    }else{
+      return FormatToText.currency(total == NaN ? 0 : total)
+    }    
   }
 
   const getImageSource = (imgs) => {
@@ -100,7 +96,68 @@ export const Shops = ({raw, shipping, shippingRates, retrieve}) => {
       })
   }  
 
-  const renderVoucherForm = (item) => {
+  const renderVoucherForm = (index, item, subTotal) => {
+
+    const validate = async () => {
+      
+      let payload = {
+        shop: item.shop.id,
+        code: vcode,
+        region: address.regionId,
+        email: customer.email,
+        subtotal: subTotal,
+        promo_count: 1,
+        is_mystery: 0
+      }
+
+      setloading(true)
+      const req = await ApiCall("validate_voucher", payload, true)
+      if(req.responseData && req.responseData.success){
+
+        if(req.responseData.type == "shipping"){
+          
+          let items = ArrayCopy(CheckoutContextData.shippingVouchers)
+
+          if(req.responseData.voucher.amount == 0){
+            
+            //FREE SHIPPING
+            items[index] = req.responseData.voucher
+            CheckoutContextData.setShippingVouchers(items)
+
+          }else{
+
+            items[index] = req.responseData.voucher
+            items[index].amount = parseFloat(shippingRates[index].price) - req.responseData.voucher.amount
+            items[index].discount = req.responseData.voucher.amount
+            CheckoutContextData.setShippingVouchers(items)
+          
+          }
+
+        }else{
+
+          //DEFAULT
+          let items = ArrayCopy(CheckoutContextData.defaultVouchers)
+          items[index] = req.responseData.voucher
+          CheckoutContextData.setDefaultVouchers(items)
+        }
+
+        setVoucherIsValid(2)
+        console.log(req.responseData)
+
+      }else{
+
+        setVoucherIsValid(-1)
+        
+        let items1 = ArrayCopy(CheckoutContextData.shippingVouchers)
+        let items2 = ArrayCopy(CheckoutContextData.defaultVouchers)
+        items1.splice(index, 1)
+        items2.splice(index, 1)
+        CheckoutContextData.setShippingVouchers(items1)
+        CheckoutContextData.setDefaultVouchers(items2)
+
+      }
+      setloading(false)
+    }
   
     return (
       <>
@@ -129,7 +186,7 @@ export const Shops = ({raw, shipping, shippingRates, retrieve}) => {
               flex: 1,
               padding: Platform.OS === 'ios' ? 10 : 0,
               backgroundColor: '#F8F8F8',
-              marginTop: 10,
+              marginTop: voucherIsValid == -1 ? 10 : 0,
               borderRadius: 5,              
               alignItems: 'flex-start',
               flexDirection: 'row'            
@@ -138,7 +195,6 @@ export const Shops = ({raw, shipping, shippingRates, retrieve}) => {
                 value={vcode}
                 style={{marginLeft: 10, flex: 1}}
                 placeholder="Input voucher (optional)"
-                autoCapitalize="characters"
                 onChangeText={(val) => {
                   setvcode(val)
                   setVoucherIsValid(0)
@@ -161,12 +217,13 @@ export const Shops = ({raw, shipping, shippingRates, retrieve}) => {
                 disabled={vcode == ""}
                 onPress={() => {
                   if(vcode == "") return 
-                  validateShopVoucher({variables: {
-                    input: {
-                      vcode: vcode,
-                      shopId: item.shop.id
-                    }
-                  }})
+                  // validateShopVoucher({variables: {
+                  //   input: {
+                  //     vcode: vcode,
+                  //     shopId: item.shop.id
+                  //   }
+                  // }})
+                  validate()
                 }}
                 style={{
                   flex: 0, 
@@ -197,6 +254,12 @@ export const Shops = ({raw, shipping, shippingRates, retrieve}) => {
         if(typeof raw == "string") return {uri: raw}
         else return loc
       }
+
+      const getDiscount = (index, type) => {
+        if(type == "shipping"){
+          return CheckoutContextData.shippingVouchers[index]?.amount
+        }
+      }
       
       return(
         <>
@@ -209,12 +272,27 @@ export const Shops = ({raw, shipping, shippingRates, retrieve}) => {
             {renderItems(item.data[0])}
           </View>
           <View style={styles.deliveryfeeContainer}>
-            <Text>Delivery Fee: {FormatToText.currency(shippingRates[i]?.price || 0)}</Text>
-            <Text>Order total ({item.data.length} {item.data.length > 1 ? `items` : 'item'}): {computeTotal(item.data[0]) || 0} </Text>
-            <Text style = {{marginTop: 7, color: '#929191'}}>Receive by: {shipping?.deliveryDate || "Add address to calculate"} </Text>
+
+            <View style={{flexDirection: 'row'}}>
+              <View style={{flex: 0}}>
+                <Text>Delivery Fee: </Text>
+              </View>
+              <View style={{flex: 0}}>
+                <Text style={{textDecorationLine: getDiscount(i, "shipping") != null ? "line-through" : "none",  color: getDiscount(i, "shipping") != null ? "#929191" :'#000'}}>{FormatToText.currency(shippingRates[i]?.price || 0)}</Text>
+              </View>
+              <View style={{flex: 0}}>
+                <Text> {getDiscount(i, "shipping") != null ? FormatToText.currency(getDiscount(i, "shipping")) : ""}</Text>
+              </View>
+            </View>
+
+            <View>
+              <Text>Order total ({item.data.length} {item.data.length > 1 ? `items` : 'item'}): {computeTotal(item.data[0]) || 0} </Text>
+              <Text style = {{marginTop: 7, color: '#929191'}}>Receive by: {shipping?.deliveryDate || "Add address to calculate"} </Text>
+            </View>
+
           </View>
 
-          {renderVoucherForm(item)}
+          {renderVoucherForm(i, item, computeTotal(item.data[0], true))}
 
         </View>
         </>

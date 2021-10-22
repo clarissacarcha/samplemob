@@ -7,9 +7,11 @@ export const BuildPostCheckoutBody = async ({
 	addressData, 
 	shippingRates, 
 	grandTotal, 
+	srpTotal,
 	subTotal,
 	paymentMethod, 
 	vouchers,
+	shippingVouchers,
 	hashAmount,
 	referenceNum
 }) => {
@@ -31,7 +33,7 @@ export const BuildPostCheckoutBody = async ({
 			provCode: addressData.provinceId || "0155",  //Pangasinan
 			citymunCode: addressData.municipalityId,
 			total_amount: parseFloat(subTotal),
-			srp_totalamount: parseFloat(subTotal),
+			srp_totalamount: parseFloat(srpTotal),
 			order_type: 2,
 			order_logs: BuildOrderLogsList({data: items, shipping: addressData.shippingSummary, shippingRates}),
 			//Optional values
@@ -43,7 +45,7 @@ export const BuildPostCheckoutBody = async ({
 			account_type: 0,
 			disrate: [],
 			vouchers: vouchers,
-			shippingvouchers: [],
+			shippingvouchers: shippingVouchers,
 			referral_code: "",
 			referral_account_type: "",
 			payment_method: paymentMethod,

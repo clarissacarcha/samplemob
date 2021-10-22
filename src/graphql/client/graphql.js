@@ -17,6 +17,7 @@ const wsUrl = `ws://${HOST_PORT}/graphql`;
 // const toktokWalletBaseUrl = `${TOKTOK_WALLET_PROTOCOL}://${TOKTOK_WALLET_PROTOCOL_HOST_PORT}/`;
 const toktokWalletBaseUrl = `${ENVIRONMENTS.TOKTOKWALLET_SERVER}/`;
 const toktokMallBaseUrl = `${ENVIRONMENTS.TOKTOKMALL_SERVER}/`;
+const toktokFoodBaseUrl = `${ENVIRONMENTS.TOKTOKFOOD_SERVER}/`;
 
 // const errorLink = onError(({graphQLErrors, networkError}) => {
 //   if (graphQLErrors) {
@@ -43,6 +44,20 @@ const setTokenLink = setContext(async (_, {headers}) => {
       headers: {
         ...headers,
         authorization: accessToken ? `Bearer ${accessToken}` : '',
+      },
+    };
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+const setToktokFoodGraphqlTokenLink = setContext(async (_, {headers}) => {
+  try {
+    const accountToken = await AsyncStorage.getItem('toktokFoodAccountToken');
+    return {
+      headers: {
+        ...headers,
+        authorization: accountToken ? `Bearer ${accountToken}` : '',
       },
     };
   } catch (error) {
@@ -129,6 +144,10 @@ const authUploadLink = createUploadLink({
   uri: `${baseUrl}auth/graphql/`,
 });
 
+const toktokFoodGraphqlUploadLink = createUploadLink({
+  uri: `${toktokFoodBaseUrl}graphql/`,
+});
+
 const toktokWalletGraphqlUploadLink = createUploadLink({
   uri: `${toktokWalletBaseUrl}graphql/`,
 });
@@ -173,6 +192,12 @@ const toktokMallAuthGraphqlLink = ApolloLink.from([
   toktokMallAuthGraphqlUploadLink,
 ]);
 
+const toktokFoodGraphqlLink = ApolloLink.from([
+  errorLinkLogger,
+  setToktokFoodGraphqlTokenLink,
+  toktokFoodGraphqlUploadLink,
+]);
+
 export const CLIENT = new ApolloClient({
   cache: new InMemoryCache(),
   link,
@@ -201,4 +226,8 @@ export const TOKTOK_MALL_GRAPHQL_CLIENT = new ApolloClient({
 export const TOKTOK_MALL_AUTH_GRAPHQL_CLIENT = new ApolloClient({
   cache: new InMemoryCache(),
   link: toktokMallAuthGraphqlLink,
+});
+export const TOKTOK_FOOD_GRAPHQL_CLIENT = new ApolloClient({
+  cache: new InMemoryCache(),
+  link: toktokFoodGraphqlLink,
 });

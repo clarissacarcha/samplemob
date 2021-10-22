@@ -3,7 +3,7 @@ import {Alert} from 'react-native';
 import {ApolloError} from 'apollo-client';
 
 export const onError = (error) => {
-  console.log(JSON.stringify(error));
+  console.log(JSON.stringify(error), 'asdasd');
   const {graphQLErrors, networkError} = error;
 
   if (networkError) {

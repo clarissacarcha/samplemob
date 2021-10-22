@@ -45,6 +45,7 @@
 		B93D9B9A67564415B7A0AD0B /* Jost-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9AD6CD16B8AE4E8EA24474C2 /* Jost-Regular.ttf */; };
 		BE0BB2277E90432AB32C158D /* Jost-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 699DF7A7F29C416A9E54D104 /* Jost-Bold.ttf */; };
 		BE7A599A265C01E900426FE6 /* toktok_notification.wav in Resources */ = {isa = PBXBuildFile; fileRef = BE7A5999265C01E900426FE6 /* toktok_notification.wav */; };
+		BE8906EF27030B2B00F77A44 /* libswiftWebKit.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = BE8906EE27030B2B00F77A44 /* libswiftWebKit.tbd */; };
 		BE9FA7EA25AC5CBA00107ABB /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9FA7E925AC5CBA00107ABB /* NotificationService.swift */; };
 		BE9FA7EE25AC5CBA00107ABB /* OneSignalNotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = BE9FA7E725AC5CBA00107ABB /* OneSignalNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		BEEBF93672F249ED80A5D75E /* Jost-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C5B393ABF5C342BE92EEBE26 /* Jost-SemiBold.ttf */; };
@@ -166,6 +167,7 @@
 		BAD6027FDB054C6899F98E98 /* Jost-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Jost-ExtraBoldItalic.ttf"; path = "../src/assets/fonts/Jost-ExtraBoldItalic.ttf"; sourceTree = "<group>"; };
 		BB1771BE7A4E6F715B088F6F /* Pods-toktok.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-toktok.debug.xcconfig"; path = "Target Support Files/Pods-toktok/Pods-toktok.debug.xcconfig"; sourceTree = "<group>"; };
 		BE7A5999265C01E900426FE6 /* toktok_notification.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = toktok_notification.wav; sourceTree = "<group>"; };
+		BE8906EE27030B2B00F77A44 /* libswiftWebKit.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libswiftWebKit.tbd; path = usr/lib/swift/libswiftWebKit.tbd; sourceTree = SDKROOT; };
 		BE9FA7E725AC5CBA00107ABB /* OneSignalNotificationServiceExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = OneSignalNotificationServiceExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE9FA7E925AC5CBA00107ABB /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		BE9FA7EB25AC5CBA00107ABB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -206,6 +208,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BE8906EF27030B2B00F77A44 /* libswiftWebKit.tbd in Frameworks */,
 				E7369A7A264B95B400346BF4 /* ExternalAccessory.framework in Frameworks */,
 				E4D71CCF184B93FCFC865F47 /* libPods-toktok.a in Frameworks */,
 			);
@@ -273,6 +276,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				BE8906EE27030B2B00F77A44 /* libswiftWebKit.tbd */,
 				E7369A79264B95B400346BF4 /* ExternalAccessory.framework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
@@ -420,7 +424,7 @@
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
 				0A083D5F2FAF3D5550876A6B /* [CP] Copy Pods Resources */,
-				DA8A1C46D010EC69A4816482 /* [CP] Embed Pods Frameworks */,
+				A15A211337BA938C907E13BF /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -444,7 +448,7 @@
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				64E786FFE7726B606D926682 /* [CP] Copy Pods Resources */,
 				BE9FA7F225AC5CBA00107ABB /* Embed App Extensions */,
-				BFF0A524F63B0C784F89C68E /* [CP] Embed Pods Frameworks */,
+				5978420FD4F722C00562EB92 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -753,6 +757,24 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
 		};
+		5978420FD4F722C00562EB92 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-toktok/Pods-toktok-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/OpenSSL/OpenSSL.framework/OpenSSL",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OpenSSL.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-toktok/Pods-toktok-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		64E786FFE7726B606D926682 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -805,6 +827,24 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-toktok/Pods-toktok-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		A15A211337BA938C907E13BF /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-toktok-toktokTests/Pods-toktok-toktokTests-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/OpenSSL/OpenSSL.framework/OpenSSL",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OpenSSL.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-toktok-toktokTests/Pods-toktok-toktokTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		ADAA6B0352EDD7E2FC09D2BB /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -849,24 +889,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		BFF0A524F63B0C784F89C68E /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-toktok/Pods-toktok-frameworks.sh",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/OpenSSL/OpenSSL.framework/OpenSSL",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OpenSSL.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-toktok/Pods-toktok-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		C49A5F79BFDD8F3CF7008E83 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -887,24 +909,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		DA8A1C46D010EC69A4816482 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-toktok-toktokTests/Pods-toktok-toktokTests-frameworks.sh",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/OpenSSL/OpenSSL.framework/OpenSSL",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OpenSSL.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-toktok-toktokTests/Pods-toktok-toktokTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		EF2A08C015B3A322D250BD51 /* [CP] Check Pods Manifest.lock */ = {
@@ -1099,7 +1103,7 @@
 				CODE_SIGN_ENTITLEMENTS = toktok/toktok.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1170001;
+				CURRENT_PROJECT_VERSION = 1180000;
 				DEVELOPMENT_TEAM = GB5B4BE7QP;
 				ENABLE_BITCODE = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1108,7 +1112,11 @@
 				);
 				INFOPLIST_FILE = toktok/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.17.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SDKROOT)/usr/lib/swift",
+				);
+				MARKETING_VERSION = 1.18.0;
 				NEW_SETTING = "";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -1134,11 +1142,15 @@
 				CODE_SIGN_ENTITLEMENTS = toktok/toktok.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1170001;
+				CURRENT_PROJECT_VERSION = 1180000;
 				DEVELOPMENT_TEAM = GB5B4BE7QP;
 				INFOPLIST_FILE = toktok/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.17.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SDKROOT)/usr/lib/swift",
+				);
+				MARKETING_VERSION = 1.18.0;
 				NEW_SETTING = "";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -1393,18 +1405,19 @@
 				CODE_SIGN_ENTITLEMENTS = OneSignalNotificationServiceExtension/OneSignalNotificationServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1170001;
+				CURRENT_PROJECT_VERSION = 1180000;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = GB5B4BE7QP;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				MARKETING_VERSION = 1.17.0;
+				MARKETING_VERSION = 1.18.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = ph.cloudpanda.toktok.OneSignalNotificationServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1427,17 +1440,18 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1170001;
+				CURRENT_PROJECT_VERSION = 1180000;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = GB5B4BE7QP;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				MARKETING_VERSION = 1.17.0;
+				MARKETING_VERSION = 1.18.0;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = ph.cloudpanda.toktok.OneSignalNotificationServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 5.0;

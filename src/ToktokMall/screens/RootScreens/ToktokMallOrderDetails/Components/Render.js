@@ -13,6 +13,8 @@ import CustomIcon from "../../../../Components/Icons";
 
 const Store = ({data}) => {
 
+  console.log("store data", data)
+
   return (
     <>
       <View style={{flexDirection: 'row', paddingHorizontal: 15, paddingVertical: 20}}>
@@ -405,7 +407,7 @@ export const Renderer = ({id, email}) => {
   return (
     <>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <Store data={data?.shipping?.shop} />
+        <Store data={data?.shipping?.store} />
         {data && data?.orderData?.length > 0 && data?.orderData?.map((raw, i) => <Item key={i} data={raw} />)}
         <Summary data={data} />
         <History data={data} />

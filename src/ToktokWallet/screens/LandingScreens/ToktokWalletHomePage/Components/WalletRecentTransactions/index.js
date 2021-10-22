@@ -81,17 +81,13 @@ const RecentRecords = ()=> (
 
   return (
     <>
-    {
-      tokwaAccount.loading
-      ? <LoadingScreen/>
-      :  <View style={styles.container}>
+     <View style={styles.container}>
             {
-              tokwaAccount.wallet.recentTransactions.length == 0
+              tokwaAccount?.wallet?.recentTransactions?.length == 0
               ? <CashInNow/>
               : <RecentRecords/>
             }
-        </View>
-    }
+    </View>
     {/* {
       pageLoading
       ? <LoadingScreen/>

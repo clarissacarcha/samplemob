@@ -82,6 +82,8 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefa
         setProvCode(response.getCity.provCode);
         setMunCode(response.getCity.citymunCode);
         setRegCode(response.getCity.regDesc);
+        setLongitude(response.getCity.coordinates.lon);
+        setLatitude(response.getCity.coordinates.lat);
       }
     },
     onError: (err) => {
@@ -133,6 +135,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefa
     AsyncStorage.getItem('ToktokMallUser').then(async (raw) => {
       let data = JSON.parse(raw) || {};
       if (data.appSignature) {
+
         let body = {
           customer_id: data.userId,
           receiver_name: newAddressForm.receiverName,
