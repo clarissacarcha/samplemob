@@ -1,19 +1,15 @@
-import {useMutation, useLazyQuery} from '@apollo/react-hooks';
+import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
 import React, {useEffect, useState} from 'react';
-import {ActivityIndicator, ImageBackground, StyleSheet, Alert} from 'react-native';
-import {useSelector} from 'react-redux';
+import {ActivityIndicator, Alert, ImageBackground, StyleSheet, StatusBar} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
 import {COLOR} from 'res/variables';
-import ENVIRONMENTS from 'src/common/res/environments';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {splash} from 'toktokfood/assets/images';
+import AlertModal from 'toktokfood/components/AlertModal';
 import {CREATE_ACCOUNT, GET_ACCOUNT} from 'toktokfood/graphql/toktokfood';
 import {useUserLocation} from 'toktokfood/hooks';
-import {useDispatch} from 'react-redux';
-import { onErrorAlert } from 'src/util/ErrorUtility';
-import { useAlert } from 'src/hooks';
-import AlertModal from 'toktokfood/components/AlertModal';
 
 const TokTokFoodSplashScreen = () => {
   useUserLocation(); // user location hook
@@ -22,7 +18,7 @@ const TokTokFoodSplashScreen = () => {
   const navigation = useNavigation();
   const {user} = useSelector((state) => state.session);
   const {location} = useSelector((state) => state.toktokFood);
-  const [errorModal, setErrorModal] = useState({ error: {}, visible: false });
+  const [errorModal, setErrorModal] = useState({error: {}, visible: false});
 
   const [createAccount, {loading, error}] = useMutation(CREATE_ACCOUNT, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
@@ -39,14 +35,14 @@ const TokTokFoodSplashScreen = () => {
       }
     },
   });
-  
+
   const [getToktokUserInfo, {data: foodPerson, error: foodPersonError, loading: foodPersonLoading}] = useLazyQuery(
     GET_ACCOUNT,
     {
       client: TOKTOK_FOOD_GRAPHQL_CLIENT,
       fetchPolicy: 'network-only',
       onError: (error) => {
-        setErrorModal({ error, visible: true })
+        setErrorModal({error, visible: true});
       },
       onCompleted: ({getAccount}) => {
         console.log(JSON.stringify({getAccount}));
@@ -65,8 +61,9 @@ const TokTokFoodSplashScreen = () => {
   };
 
   useEffect(() => {
-    if(location != undefined) {
-      if(user.toktokfoodUserId != null){
+    StatusBar.setHidden(true, 'slide');
+    if (location != undefined) {
+      if (user.toktokfoodUserId != null) {
         getToktokUserInfo({
           variables: {
             input: {
@@ -139,11 +136,7 @@ const TokTokFoodSplashScreen = () => {
 
   return (
     <>
-      <AlertModal
-        visible={errorModal.visible}
-        error={errorModal.error}
-        close={() => navigation.pop()}
-      />
+      <AlertModal visible={errorModal.visible} error={errorModal.error} close={() => navigation.pop()} />
       <ImageBackground style={styles.container} source={splash} resizeMode="cover">
         <ActivityIndicator style={{marginBottom: 30}} size="large" color={COLOR.WHITE} />
       </ImageBackground>
