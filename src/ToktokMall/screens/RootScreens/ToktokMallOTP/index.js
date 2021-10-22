@@ -2,7 +2,7 @@ import React, {useState, useEffect, useRef} from 'react';
 import {View, Text, StyleSheet, Platform, ImageBackground, Dimensions, StatusBar, Image, TouchableOpacity, FlatList, TextInput, ScrollView} from 'react-native';
 import {HeaderBack, HeaderTitle, HeaderRight, Header, LoadingOverlay} from '../../../Components';
 import {COLOR, FONT, FONT_SIZE} from '../../../../res/variables';
-import {otpicon, otpbg} from '../../../assets';
+import {otpicon, otpbg, otpicon2} from '../../../assets';
 import CustomIcon from '../../../Components/Icons';
 import Toast from "react-native-simple-toast";
 import { FONT_REGULAR } from '../../../../res/constants';
@@ -21,7 +21,6 @@ import { TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT } from '../../../../graphql';
 import { POST_VERIFY_TOKTOKWALLET_PIN } from '../../../../graphql/toktokmall/virtual';
 
 export const ToktokMallOTP =  ({navigation, route}) => {
-
   const session = useSelector(state => state.session)
   const inputRef = useRef(null)
   const [value, setValue] = useState("")
@@ -81,7 +80,6 @@ export const ToktokMallOTP =  ({navigation, route}) => {
       navigation.pop()
 
     }else if(req.responseError){
-      console.log(req.responseError)
       const regex = /(<([^>]+)>)/ig;
       Toast.show(req.responseError.message.replace(regex, ""), Toast.LONG)
     }else if(req.responseError == null && req.responseData == null){
@@ -97,56 +95,71 @@ console.log("validating", processing, validating)
       <LoadingOverlay label="Verifying" isVisible={validating}/>
       <LoadingOverlay label="Processing" isVisible={processing} />
 
-      <ImageBackground 
+      {/* <ImageBackground 
         source={otpbg}
         style = {styles.container}
         imageStyle={{width: '100%', height: Dimensions.get("screen").height, resizeMode: 'cover'}}
-      >
+      > */}
+      <View style = {styles.container} >
         <View style = {{margin: 20, alignItems: 'center', height: Dimensions.get("window").height*0.7, paddingTop: Dimensions.get("window").height*0.2}}>
             <Image
-              source={otpicon}
+              source={otpicon2}
             />     
-            <Text style = {{fontFamily: FONT.BOLD, fontSize: 17, marginTop: 25, marginBottom:10}}>Enter OTP</Text>
-            <Text style = {{textAlign: 'center', paddingHorizontal: 15, fontSize: 13, fontFamily: FONT.REGULAR}}>Please enter the code that we will send via SMS to proceed with your transaction</Text>
-            <View style = {{flexDirection: 'row', marginTop: 25}}>
-              <TouchableOpacity 
-                onPress={() => {
-                  !isInvalid && inputRef.current.focus()
-                }} style = {styles.charContainer}>              
-                {value.length >= 1 && <CustomIcon.EIcon name="dot-single" size={40} />}
-              </TouchableOpacity>
-              <TouchableOpacity 
-                onPress={() => {
-                  !isInvalid && inputRef.current.focus()
-                }} style = {styles.charContainer}>              
-                {value.length >= 2 && <CustomIcon.EIcon name="dot-single" size={40} />}
-              </TouchableOpacity>
-              <TouchableOpacity 
-                onPress={() => {
-                  !isInvalid && inputRef.current.focus()
-                }} style = {styles.charContainer}>              
-                {value.length >= 3 && <CustomIcon.EIcon name="dot-single" size={40} />}
-              </TouchableOpacity>
-              <TouchableOpacity 
-                onPress={() => {
-                  !isInvalid && inputRef.current.focus()
-                }} style = {styles.charContainer}>              
-                {value.length >= 4 && <CustomIcon.EIcon name="dot-single" size={40} />}
-              </TouchableOpacity>
-              <TouchableOpacity 
-                onPress={() => {
-                  !isInvalid && inputRef.current.focus()
-                }} style = {styles.charContainer}>              
-                {value.length >= 5 && <CustomIcon.EIcon name="dot-single" size={40} />}
-              </TouchableOpacity>
-              <TouchableOpacity 
-                onPress={() => {
-                  !isInvalid && inputRef.current.focus()
-                }} style = {styles.charContainer}>              
-                {value.length >= 6 && <CustomIcon.EIcon name="dot-single" size={40} />}
-              </TouchableOpacity>
+            {
+              isInvalid && retries >= 5  ? //enter condition here for checking if user has available attempts left
+              <>
+                <Text style = {{fontFamily: FONT.BOLD, fontSize: 17, marginTop: 25, marginBottom:10}}>No Attempts Left</Text>
+                <Text style = {{textAlign: 'center', paddingHorizontal: 15, fontSize: 14, fontFamily: FONT.REGULAR}}>
+                  We're sorry but you dont have any attempts left, Please wait for 30 minutes to request an OTP again. Thank you!
+                </Text>
+              </> : 
+              // else
+              <>
+                <Text style = {{fontFamily: FONT.BOLD, fontSize: 17, marginTop: 25, marginBottom:10}}>Enter OTP</Text>
+                <Text style = {{textAlign: 'center', paddingHorizontal: 15, fontSize: 13, fontFamily: FONT.REGULAR}}>Please enter the code that we will send via SMS to proceed with your transaction</Text>
+                <View style = {{flexDirection: 'row', marginTop: 25}}>
+                  <TouchableOpacity 
+                    onPress={() => {
+                      !isInvalid && inputRef.current.focus()
+                    }} style = {[styles.charContainer, {borderWidth: isInvalid ? 1 : 0, borderColor: COLOR.ORANGE}]}>              
+                    {value.length >= 1 && <CustomIcon.EIcon name="dot-single" size={40} />}
+                  </TouchableOpacity>
+                  
+                  <TouchableOpacity 
+                    onPress={() => {
+                      !isInvalid && inputRef.current.focus()
+                    }} style = {[styles.charContainer, {borderWidth: isInvalid ? 1 : 0, borderColor: COLOR.ORANGE}]}>              
+                    {value.length >= 2 && <CustomIcon.EIcon name="dot-single" size={40} />}
+                  </TouchableOpacity>
+                  <TouchableOpacity 
+                    onPress={() => {
+                      !isInvalid && inputRef.current.focus()
+                    }} style = {[styles.charContainer, {borderWidth: isInvalid ? 1 : 0, borderColor: COLOR.ORANGE}]}>              
+                    {value.length >= 3 && <CustomIcon.EIcon name="dot-single" size={40} />}
+                  </TouchableOpacity>
+                  <TouchableOpacity 
+                    onPress={() => {
+                      !isInvalid && inputRef.current.focus()
+                    }} style = {[styles.charContainer, {borderWidth: isInvalid ? 1 : 0, borderColor: COLOR.ORANGE}]}>              
+                    {value.length >= 4 && <CustomIcon.EIcon name="dot-single" size={40} />}
+                  </TouchableOpacity>
+                  <TouchableOpacity 
+                    onPress={() => {
+                      !isInvalid && inputRef.current.focus()
+                    }} style = {[styles.charContainer, {borderWidth: isInvalid ?1 : 0, borderColor: COLOR.ORANGE}]}>              
+                    {value.length >= 5 && <CustomIcon.EIcon name="dot-single" size={40} />}
+                  </TouchableOpacity>
+                  <TouchableOpacity 
+                    onPress={() => {
+                      !isInvalid && inputRef.current.focus()
+                    }} style = {[styles.charContainer, {borderWidth: isInvalid ? 1 : 0, borderColor: COLOR.ORANGE}]}>              
+                    {value.length >= 6 && <CustomIcon.EIcon name="dot-single" size={40} />}
+                  </TouchableOpacity>
+                </View>
+              </>
+            }
             
-            </View>
+            
         </View>
 
         {isInvalid && retries < 5 &&
@@ -155,12 +168,23 @@ console.log("validating", processing, validating)
           <Text style={{color: '#F6841F'}}>You have {5 - retries} retries remaining.</Text>
         </View>}
 
-        {isInvalid && retries >= 5 && 
+        {/* { //true &&
+          isInvalid && retries >= 5 && 
         <View style={{alignItems: 'center', paddingHorizontal: 15, justifyContent: 'center', paddingBottom: 10}}>
           <Text style={{color: '#F6841F'}}>You have exceeded your retries to enter OTP.</Text>
-        </View>}
+        </View>} */}
 
-        {!isInvalid && <View style={{height: 40}}/>}
+        {!isInvalid && <View style={{height: 35}}/>}
+
+        {
+          false ? // put condition here not for invalid/expired 
+          <View style = {{flexDirection: 'row', marginBottom: 15}}>
+            <Text style = {{fontFamily: FONT.REGULAR}}>Didn't receive OTP code?</Text>
+            <TouchableOpacity>
+              <Text style = {{fontFamily: FONT.REGULAR, color: COLOR.ORANGE}} > Resend</Text>
+            </TouchableOpacity>
+          </View> : <></>
+        }
       
         {!isInvalid && <TouchableOpacity 
           activeOpacity={0.5} 
@@ -187,7 +211,19 @@ console.log("validating", processing, validating)
           </TouchableOpacity>
         }
 
-      </ImageBackground>
+        {isInvalid && retries >= 5 && // put condition here for 0 attempts available
+
+          <TouchableOpacity 
+            activeOpacity={1} 
+            onPress={async () => {
+              navigation.pop(2)
+            }} 
+            style={styles.activeButton}>
+            <Text style={styles.buttonText}>Back to Home</Text>
+          </TouchableOpacity> 
+        }
+      </View>
+      {/* </ImageBackground> */}
 
       <TextInput 
           ref={inputRef} 

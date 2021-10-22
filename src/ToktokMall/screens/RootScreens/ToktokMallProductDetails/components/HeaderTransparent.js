@@ -68,12 +68,12 @@ export const HeaderTransparent = ({value, outOfStock = false, animatedValue, car
                 /> : 
                 <Badge
                   status="warning"
-                  value={cartItems}
+                  value={cartItems >= 100 ? "99+" : cartItems}
                   badgeStyle={{backgroundColor: "#FDBA1C"}}
                   textStyle={{fontFamily: FONT.REGULAR, fontSize: 10}}
                   containerStyle={{ position: 'absolute', top: -5, right: 5 }}
                 />
-              }  
+              } 
           </View>
         </View>
         

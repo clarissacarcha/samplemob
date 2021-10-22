@@ -95,7 +95,8 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: async (response) => {      
-
+      
+      console.log("Lazy load", response)
       let temp = searchedProducts
       if(!response){
 
@@ -112,7 +113,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
         
       }else if(response && response.searchProduct.length == 0){
 
-        setSearchedProducts([])
+        // setSearchedProducts([])
         setEmptySearch(true)
         setSuggest(false)
 
@@ -341,7 +342,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
             lazyLoading({
               variables: {
                 input: {
-                  search: route.params?.origin ? "" : route.params.searchValue,
+                  search: route.params?.origin ? "" : searchValue,
                   origin: route.params?.origin ? route.params.origin : "all",
                   category: route.params?.categoryId ? route.params?.categoryId : null,
                   offset: searchedProducts.length,
