@@ -12,7 +12,6 @@ import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
 // Components
 import {AdvertisementSection, CategoryList, RestaurantList} from './index';
 
-
 const tabs = [
   {
     id: 1,
@@ -71,7 +70,6 @@ const StickyView = () => {
 
   // data fetching for shops
   const [getShops, {data, error, loading, fetchMore, refetch}] = useLazyQuery(GET_SHOPS, {
-    
     onError: () => {
       setRefreshing(false);
     },
@@ -80,7 +78,23 @@ const StickyView = () => {
   });
 
   useEffect(() => {
-    if(location) {
+    if (location) {
+      getShops({
+        variables: {
+          input: {
+            page: 0,
+            limit: 10,
+            radius: 5,
+            userLongitude: location?.longitude,
+            userLatitude: location?.latitude,
+          },
+        },
+      });
+    }
+  }, [location]);
+
+  useEffect(() => {
+    if (location) {
       getShops({
         variables: {
           input: {
@@ -171,8 +185,7 @@ const StickyView = () => {
             handleLoadMore(nativeEvent);
           }
         }}
-        scrollEventThrottle={15}
-      >
+        scrollEventThrottle={15}>
         {/* <View style={styles.adsContainer}>
           <AdvertisementSection />
         </View> */}
@@ -194,7 +207,12 @@ const styles = StyleSheet.create({
     paddingBottom: Platform.OS === 'android' ? 10 : 30,
     marginTop: Platform.OS === 'ios' ? moderateScale(20) : moderateScale(14),
   },
-  headerWrapper: {paddingHorizontal: moderateScale(8), width: '100%', paddingTop: moderateScale(8), backgroundColor: 'white'},
+  headerWrapper: {
+    paddingHorizontal: moderateScale(8),
+    width: '100%',
+    paddingTop: moderateScale(8),
+    backgroundColor: 'white',
+  },
   navbarWrapper: {
     // marginBottom: Platform.OS === 'ios' ? verticalScale(12) : verticalScale(8),
   },
