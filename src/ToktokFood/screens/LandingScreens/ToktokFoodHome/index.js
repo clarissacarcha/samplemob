@@ -1,22 +1,19 @@
-import React, {useState, useEffect} from 'react';
-import {Platform, StyleSheet, View} from 'react-native';
-
-// Components
-import {StickyView} from './components';
-import HeaderTitle from 'toktokfood/components/HeaderTitle';
-import HeaderSearchBox from 'toktokfood/components/HeaderSearchBox';
+import React, { useState } from 'react';
+import { StyleSheet, View, StatusBar } from 'react-native';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
-
+import HeaderSearchBox from 'toktokfood/components/HeaderSearchBox';
+import HeaderTitle from 'toktokfood/components/HeaderTitle';
 // Hooks
-import {useUserLocation} from 'toktokfood/hooks';
-
-import {moderateScale, getStatusbarHeight} from 'toktokfood/helper/scale';
+import { useUserLocation } from 'toktokfood/hooks';
+// Components
+import { StickyView } from './components';
 
 const ToktokFoodHome = () => {
   useUserLocation(); // user location hook
   const [viewHeight, setViewHeight] = useState(100);
 
   const getWindowDimension = (event) => {
+    StatusBar.setHidden(false, 'slide');
     let height = event.nativeEvent.layout.height;
     setViewHeight(height);
   };
