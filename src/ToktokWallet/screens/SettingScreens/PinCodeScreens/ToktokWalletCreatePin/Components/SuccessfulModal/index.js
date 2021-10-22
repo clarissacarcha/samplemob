@@ -74,13 +74,14 @@ export const SuccessfulModal = ({modalVisible,tokwaAccount,amount,onCashIn,setSu
             amount: amount ? amount : 0,
             onCashIn: onCashIn
         })
-        setSuccessModalVisible(false)
       }
     },[tokwaAccountLatest,onCashIn])
 
     const closeModal = async ()=> {
         await getMyAccount();
         if(onCashIn) return;
+        setSuccessModalVisible(false);
+        navigation.pop(2)
         navigation.navigate("ToktokWalletHomePage")
 
     }
@@ -92,7 +93,10 @@ export const SuccessfulModal = ({modalVisible,tokwaAccount,amount,onCashIn,setSu
              onRequestClose={closeModal}
         >
              <View style={styles.container}>
-                { tokwaAccount.pinCode ? <UpdatePIN/> : <NewPIN/>}
+                { tokwaAccount.pinCode 
+                    ? onCashIn ? <NewPIN/> : <UpdatePIN/> 
+                    : <NewPIN/>
+                }
                 <View style={{flex: 1,alignItems:"center", justifyContent:"center"}}>
                         <Text style={{textAlign:"left",fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,marginBottom: 10,}}>Reminders</Text>
                         <View>

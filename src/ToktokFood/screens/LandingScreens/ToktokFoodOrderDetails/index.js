@@ -170,14 +170,16 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
           BackgroundTimer.clearInterval(checkOrderResponse5mins.current);
           BackgroundTimer.clearInterval(getRiderDetailsInterval.current);
           let isValidDate = moment(transaction.dateOrderProcessed).isValid();
-          setShadowDialogMessage({
-            title: isValidDate ? 'Order Cancelled by Merchant' : 'OOPS!',
-            message: transaction.declinedNote ? transaction.declinedNote :
-              isValidDate ? 'Your order has been cancelled by merchant.' : 'Your order has been declined.',
+          let declineNote = `Sorry, your order has been declined and cannot be processed by ${transaction.shopDetails.shopname} due to the following reason/s:`
+          let cancelNote = `Your order has been cancelled and cannot be processed by ${transaction.shopDetails.shopname} due to the following reason/s:`
+          setShowDialogMessage({
+            title: isValidDate ? 'Order Cancelled' : 'OOPS! Order Declined!',
+            message: isValidDate ? cancelNote : declineNote,
+            reasons: transaction.declinedNote,
             show: true,
             type: 'warning',
           });
-          await removeEstimatedDeliveryTime(referenceNum);
+          await removeEstimatedDeliveryTime(referenceNum)
         }
       } else {
         if (transaction.tDeliveryId) {
@@ -206,8 +208,8 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
     switch (title) {
       case 'Order Complete':
         return 2;
-      case 'OOPS!':
-      case 'Order Cancelled by Merchant':
+      case 'OOPS! Order Declined!':
+      case 'Order Cancelled':
         return 3;
       default:
         return 1;
@@ -215,12 +217,11 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
   };
 
   const onCloseModal = () => {
-    let {title} = showDialogMessage;
-    setShadowDialogMessage((prev) => ({...prev, show: false}));
-    if (title == 'Order Complete' || title == 'OOPS!' || title == 'Order Cancelled by Merchant') {
-      let tab = selectedTab(title);
-      console.log(title, tab);
-      navigation.navigate('ToktokFoodOrderTransactions', {tab});
+    let { title } = showDialogMessage
+    setShowDialogMessage(prev => ({ ...prev, show: false }))
+    if(title == 'Order Complete' || title == 'OOPS! Order Declined!' || title == 'Order Cancelled'){
+      let tab = selectedTab(title)
+      navigation.navigate('ToktokFoodOrderTransactions', { tab })
     } else {
       setSeconds(300);
     }
@@ -238,10 +239,18 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
         type={showDialogMessage.type}
         title={showDialogMessage.title}
         messages={showDialogMessage.message}
+        reasons={showDialogMessage.reasons}
         visibility={showDialogMessage.show}
-        onCloseModal={() => {
+        onCloseBtn1={() => {
+          setShowDialogMessage(prev => ({ ...prev, show: false }))
+          navigation.navigate('ToktokFoodHome') }
+        }
+        onCloseBtn2={() => {
           onCloseModal();
         }}
+        btn1Title='Browse Restaurant'
+        btn2Title='OK'
+        hasTwoButtons
       />
       <HeaderImageBackground searchBox={false}>
         <HeaderTitle />

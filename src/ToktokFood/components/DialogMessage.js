@@ -12,7 +12,7 @@ import {success_ic, error_ic, warning_ic, question_ic} from 'toktokfood/assets/i
 const DialogMessage = (props) => {
   // type:  success | error | warning | question
   const {visibility, type, title, messages, onAccept, onCancel, onCloseModal, hasChildren,
-    children, hasTwoButtons, btn1Title, btn2Title, onCloseBtn1, onCloseBtn2} = props;
+    children, hasTwoButtons, btn1Title, btn2Title, onCloseBtn1, onCloseBtn2, reasons} = props;
 
   const getDialogIcon = () => {
     switch (type) {
@@ -27,6 +27,11 @@ const DialogMessage = (props) => {
     }
   };
 
+  const capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+  
+
   return (
     <>
       <Modal visible={visibility} style={styles.modal} transparent={true}>
@@ -38,14 +43,25 @@ const DialogMessage = (props) => {
                 <>
                   {title !== undefined && <Text style={styles.messageTitle}>{title}</Text>}
                   {messages !== undefined && <Text style={styles.messageContent}>{messages}</Text>}
+                  {reasons !== undefined && <Text style={styles.reasonsContent}>{capitalizeFirstLetter(reasons)}</Text>}
                 </>
               )}
               { children }
             </View>
             { hasTwoButtons ? (
               <View style={{ flexDirection: 'row', marginHorizontal: moderateScale(25), marginBottom: 10 }}>
-                <TouchableOpacity style={[styles.btn1Style]} onPress={() => onCloseBtn1()}>
-                  <Text style={styles.buttonText}>{btn1Title}</Text>
+                <TouchableOpacity
+                  style={[ reasons !== undefined ? styles.btnReasons : styles.btn1Style]}
+                  onPress={() => onCloseBtn1()}
+                >
+                  <Text
+                    style={[
+                      styles.buttonText,
+                      { color: reasons !== undefined  ? '#FFA700' : '#fff' }
+                    ]}
+                  >
+                    {btn1Title}
+                  </Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.btn2Style} onPress={() => onCloseBtn2()}>
                   <Text style={styles.buttonText}>{btn2Title}</Text>
@@ -119,7 +135,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#868686',
     borderRadius: NUMBERS.BORDER_RADIUS,
-    marginRight: 20
+    marginRight: moderateScale(20)
   },
   btn2Style: {
     flex: 1,
@@ -129,11 +145,30 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFA700',
     borderRadius: NUMBERS.BORDER_RADIUS,
   },
-  cancelButton: {},
   buttonText: {
     color: COLORS.WHITE,
     fontSize: FONT_SIZE.L,
     fontFamily: FONTS.BOLD,
+    textAlign: 'center'
+  },
+  btnReasons: {
+    flex: 1,
+    alignItems: 'center',
+    height: BUTTON_HEIGHT,
+    justifyContent: 'center',
+    borderColor: '#FFA700',
+    borderWidth: 1,
+    borderRadius: NUMBERS.BORDER_RADIUS,
+    marginRight: moderateScale(20),
+    paddingBottom: 5
+  },
+  reasonsContent: {
+    textAlign: 'center',
+    fontSize: FONT_SIZE.M,
+    fontFamily: FONTS.BOLD,
+    marginTop: moderateScale(8),
+    marginBottom: moderateScale(15),
+    color: '#FFA700',
   },
 });
 

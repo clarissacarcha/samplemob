@@ -39,6 +39,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
     message: '',
     show: false,
     type: '',
+    reasons: ''
   });
   const checkOrderResponse5mins = useRef(null);
   const getRiderDetailsInterval = useRef(null);
@@ -50,7 +51,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
     show: false,
     type: '',
     title: '',
-    message: ''
+    message: '',
   });
 
   // data fetching for tsransaction
@@ -188,10 +189,12 @@ const ToktokFoodDriver = ({route, navigation}) => {
         BackgroundTimer.clearInterval(checkOrderResponse5mins.current);
         BackgroundTimer.clearInterval(getRiderDetailsInterval.current);
         let isValidDate = moment(transaction.dateOrderProcessed).isValid();
+        let declineNote = `Sorry, your order has been declined and cannot be processed by ${transaction.shopDetails.shopname} due to the following reason/s:`
+        let cancelNote = `Your order has been cancelled and cannot be processed by ${transaction.shopDetails.shopname} due to the following reason/s:`
         setShowDialogMessage({
-          title: isValidDate ? 'Order Cancelled by Merchant' : 'OOPS!',
-          message: transaction.declinedNote ? transaction.declinedNote :
-            isValidDate ? 'Your order was cancelled by merchant.' : 'Your order has been declined.',
+          title: isValidDate ? 'Order Cancelled' : 'OOPS! Order Declined!',
+          message: isValidDate ? cancelNote : declineNote,
+          reasons: transaction.declinedNote,
           show: true,
           type: 'warning',
         });
@@ -204,8 +207,8 @@ const ToktokFoodDriver = ({route, navigation}) => {
     switch (title) {
       case 'Order Complete':
         return 2;
-      case 'OOPS!':
-      case 'Order Cancelled by Merchant':
+      case 'OOPS! Order Declined!':
+      case 'Order Cancelled':
         return 3;
       default:
         return 1;
@@ -215,7 +218,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
   const onCloseModal = () => {
     let { title } = showDialogMessage
     setShowDialogMessage(prev => ({ ...prev, show: false }))
-    if(title == 'Order Complete' || title == 'OOPS!' || title == 'Order Cancelled by Merchant'){
+    if(title == 'Order Complete' || title == 'OOPS! Order Declined!' || title == 'Order Cancelled'){
       let tab = selectedTab(title)
       navigation.navigate('ToktokFoodOrderTransactions', { tab })
     } else {
@@ -242,7 +245,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
       <HeaderImageBackground searchBox={false}>
         <HeaderTitle />
       </HeaderImageBackground>
-      <Loader visibility={showLoader} message="Canceling order..." />
+      <Loader loadingIndicator visibility={showLoader} hasImage={false} message="Cancelling Order" />
       <DialogMessage
         visibility={cancelDialogMessage.show}
         title={cancelDialogMessage.title}
@@ -259,10 +262,18 @@ const ToktokFoodDriver = ({route, navigation}) => {
         type={showDialogMessage.type}
         title={showDialogMessage.title}
         messages={showDialogMessage.message}
+        reasons={showDialogMessage.reasons}
         visibility={showDialogMessage.show}
-        onCloseModal={() => {
+        onCloseBtn1={() => {
+          setShowDialogMessage(prev => ({ ...prev, show: false }))
+          navigation.navigate('ToktokFoodHome') }
+        }
+        onCloseBtn2={() => {
           onCloseModal();
         }}
+        btn1Title='Browse Restaurant'
+        btn2Title='OK'
+        hasTwoButtons
       />
       <CancelOrder
         setShowLoader={setShowLoader}
@@ -279,7 +290,11 @@ const ToktokFoodDriver = ({route, navigation}) => {
           setShowLoader(false)
           setTimeout(() => {
             if (cancelOrder.status == 200) {
-              setCancelDialogMessage({ show: true, type: 'success', title: 'Successful!', message: 'Order has been cancelled.' })
+              setCancelDialogMessage({
+                show: true,
+                type: 'success',
+                title: 'Order Cancelled',
+                message: 'Your order has been successfully cancelled. Cancelling orders multiple times will cause your next orders longer to be accepted by the merchant.' })
             } else {
               setCancelDialogMessage({ show: true, type: 'warning', title: 'Something went wrong!' })
             }

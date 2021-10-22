@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     height: SIZE.BUTTON_HEIGHT,
-    backgroundColor: COLOR.ORANGE,
+    backgroundColor: '#FFA700',
     width: getDeviceWidth - 28,
   },
   buttonText: {
