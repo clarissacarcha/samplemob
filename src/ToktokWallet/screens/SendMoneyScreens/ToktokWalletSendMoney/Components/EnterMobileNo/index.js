@@ -1,4 +1,4 @@
-import React , {useState, useEffect , useRef, forwardRef} from 'react'
+import React , {useState, useEffect , useRef,useContext} from 'react'
 import {View,Text,StyleSheet,TextInput,TouchableOpacity,Dimensions,Image} from 'react-native'
 import {useLazyQuery} from '@apollo/react-hooks'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
@@ -7,6 +7,7 @@ import { useContacts } from 'toktokwallet/hooks'
 import { ContactSuggestion } from 'toktokwallet/components'
 import heart from "toktokwallet/assets/images/heart.png"
 import heartFill from "toktokwallet/assets/images/heart-fill.png"
+import {FavoritesContext } from "../ContextProvider"
 import CONSTANTS from 'common/res/constants'
 
 const {FONT_SIZE , SIZE , FONT_FAMILY: FONT , COLOR} = CONSTANTS
@@ -25,7 +26,7 @@ export const EnterMobileNo = ({
     setGetAccountLoading,
     favoritesRef
 })=> {
-
+    const { favorites } = useContext(FavoritesContext)
     const [errorMessage,setErrorMessage] = useState("")
     const [suggestContact,setSuggestContact] = useState("")
     const [isFavorite,setIsFavorite] = useState(false);
@@ -126,19 +127,23 @@ export const EnterMobileNo = ({
 
     }
 
+    const fetchRecipientInfo = ()=> {
+        getAccount({
+            variables: {
+                input: {
+                    mobileNumber: mobileNo
+                }
+            }
+        })
+    }
+
     useEffect(()=>{
         if(mobileNo == ""){
             setErrorMessage("")
             setProceed(false)
         }
         if(mobileNo.length == 11){
-            getAccount({
-                variables: {
-                    input: {
-                        mobileNumber: mobileNo
-                    }
-                }
-            })
+            fetchRecipientInfo()
         }
 
         return ()=> {
@@ -151,7 +156,7 @@ export const EnterMobileNo = ({
            const result = favoritesRef.current.checkIfFavorites(recipientDetails.id)
            setIsFavorite(result)
        }
-    },[recipientDetails])
+    },[recipientDetails,favorites])
 
     useEffect(()=>{
         setGetAccountLoading(walletLoading)
@@ -194,7 +199,7 @@ export const EnterMobileNo = ({
                 </TouchableOpacity>
                 {
                     recipientDetails.id && errorMessage == "" &&
-                    <TouchableOpacity onPress={()=>favoritesRef.current.refreshFavorites()} style={styles.addFavorites}>
+                    <TouchableOpacity onPress={()=>favoritesRef.current.addFavorites(recipientDetails.id)} style={styles.addFavorites}>
                         <Image resizeMode="contain" style={styles.heart} source={isFavorite ? heartFill : heart}/>
                     </TouchableOpacity>
                 }

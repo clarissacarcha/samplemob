@@ -53,7 +53,6 @@ export const useAccount = ()=> {
 
     const checkIfTpinIsSet = ()=> {
         const status = tokwaAccount.pinCode
-        console.log(status , "PINCODE IS ")
         if(!status){
             navigation.navigate("ToktokWalletRestricted" , {component: "noPin"})
             return false

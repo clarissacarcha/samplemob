@@ -8,6 +8,7 @@ import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS
 import {
+    ContextProvider,
     EnterAmount,
     EnterMobileNo,
     EnterNote,
@@ -82,6 +83,7 @@ export const ToktokWalletSendMoney = ({navigation,route})=> {
 
     return (
         <CheckIdleState>
+        <ContextProvider>
         <View style={{flex:1,backgroundColor:"white"}}>
                 <View style={styles.headings}>
                     <HeaderImageBackground>
@@ -157,6 +159,7 @@ export const ToktokWalletSendMoney = ({navigation,route})=> {
 
                     <Favorites 
                         ref={favoritesRef}
+                        setMobileNo={setMobileNo}
                     />  
 
                     <View style={{height: SIZE.FORM_HEIGHT,marginTop: 50,justifyContent:"flex-end"}}>
@@ -174,6 +177,7 @@ export const ToktokWalletSendMoney = ({navigation,route})=> {
                 </ScrollView>
                 
         </View>
+        </ContextProvider>
         </CheckIdleState>
     )
 }
