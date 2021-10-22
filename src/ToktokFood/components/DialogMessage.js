@@ -160,7 +160,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: NUMBERS.BORDER_RADIUS,
     marginRight: moderateScale(20),
-    paddingBottom: 5
   },
   reasonsContent: {
     textAlign: 'center',
