@@ -68,23 +68,26 @@ export const SuccessfulModal = ({modalVisible,tokwaAccount,amount,onCashIn,setSu
     const { getMyAccount , tokwaAccount: tokwaAccountLatest } = useAccount()
 
     useEffect(()=>{
-      if(tokwaAccountLatest.pinCode && onCashIn){
-        navigation.pop();
-        navigation.push("ToktokWalletPaymentOptions", {
-            amount: amount ? amount : 0,
-            onCashIn: onCashIn
-        })
+        if(tokwaAccountLatest.pinCode && onCashIn){
+          navigation.pop();
+          navigation.push("ToktokWalletPaymentOptions", {
+              amount: amount ? amount : 0,
+              onCashIn: onCashIn
+          })
+          setSuccessModalVisible(false);
+        }
+      },[tokwaAccountLatest,onCashIn])
+  
+      const closeModal = async ()=> {
+          if(onCashIn) {
+            await getMyAccount();
+            return;
+          } 
+          navigation.pop(2)
+          navigation.navigate("ToktokWalletHomePage")
+          setSuccessModalVisible(false);
+          await getMyAccount();
       }
-    },[tokwaAccountLatest,onCashIn])
-
-    const closeModal = async ()=> {
-        await getMyAccount();
-        if(onCashIn) return;
-        setSuccessModalVisible(false);
-        navigation.pop(2)
-        navigation.navigate("ToktokWalletHomePage")
-
-    }
 
 
     return (
