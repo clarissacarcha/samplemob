@@ -1,45 +1,55 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {FlatList, Image, View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 
 let scrollPosition = 0;
 
 const HeaderTabs = ({activeTab, setActiveTab, tabs, loading}) => {
-
   const flatListRef = useRef();
- 
+
   const handleScroll = (event) => {
-    scrollPosition = event.nativeEvent.contentOffset.x
-  }
+    scrollPosition = event.nativeEvent.contentOffset.x;
+  };
 
   useEffect(() => {
-    if(loading){ scrollPosition = 0 }
-  }, [loading])
+    if (flatListRef.current) {
+      flatListRef.current.scrollToOffset({offset: scrollPosition, animated: false});
+    }
+  }, [activeTab]);
 
   useEffect(() => {
-    flatListRef.current?.scrollToOffset({ offset: scrollPosition, animated: false })
-  }, [activeTab])
+    if (loading) {
+      scrollPosition = 0;
+    }
+  }, [loading]);
+
+  useEffect(() => {
+    flatListRef.current?.scrollToOffset({offset: scrollPosition, animated: false});
+  }, [activeTab]);
 
   const renderItem = ({item}) => {
     return (
       <TouchableOpacity
         onPress={() => setActiveTab(item)}
         style={[styles.tabContainer, activeTab.id == item.id && styles.activeTabContainer]}>
-        <Text style={[styles.tabText, activeTab.id == item.id && styles.activeTabText]}>{item.name ?? item.categoryName}</Text>
+        <Text style={[styles.tabText, activeTab.id == item.id && styles.activeTabText]}>
+          {item.name ?? item.categoryName}
+        </Text>
       </TouchableOpacity>
     );
   };
 
-  if(loading){
-    return <LoadingIndicator style={{ paddingVertical: 10 }} isLoading={true} size='small' />
+  if (loading) {
+    return <LoadingIndicator style={{paddingVertical: 10}} isLoading={true} size="small" />;
   }
   return (
     <View style={styles.container}>
       {/* showsHorizontalScrollIndicator={false} added for Android */}
-      <FlatList 
+      <FlatList
         horizontal
         data={tabs}
-        renderItem={renderItem} showsHorizontalScrollIndicator={false}
+        renderItem={renderItem}
+        showsHorizontalScrollIndicator={false}
         onScroll={handleScroll}
         ref={flatListRef}
         keyExtractor={(val, index) => index.toString()}
@@ -88,6 +98,6 @@ const styles = StyleSheet.create({
   },
   tabText: {
     fontWeight: '400',
-    textTransform: 'capitalize'
+    textTransform: 'capitalize',
   },
 });
