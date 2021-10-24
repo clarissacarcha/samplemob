@@ -11,7 +11,7 @@ import { useQuery, useLazyQuery } from '@apollo/react-hooks'
 import { onErrorAlert } from 'src/util/ErrorUtility'
 import { useAlert } from 'src/hooks'
 import {SomethingWentWrong} from 'src/components'
-import { SuccessfulModal } from "../../../../components";
+import { SuccessfulModal } from "toktokwallet/components";
 import { useDispatch } from 'react-redux'
 
 const { COLOR , FONT_SIZE , FONT_FAMILY: FONT, SHADOW  } = CONSTANTS

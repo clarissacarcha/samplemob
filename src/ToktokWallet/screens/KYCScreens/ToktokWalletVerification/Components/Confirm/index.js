@@ -12,7 +12,7 @@ import {useNavigation} from '@react-navigation/native'
 import moment from 'moment'
 import {connect} from 'react-redux'
 import { YellowButton } from 'src/revamp'
-import { DisabledButton } from 'toktokwallet/components'
+import { DisabledButton, Separator } from 'toktokwallet/components'
 import CheckBox from 'react-native-check-box'
 import CONSTANTS from 'common/res/constants'
 
@@ -145,6 +145,7 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
                 <ScrollView style={styles.mainInput} showsVerticalScrollIndicator={false}>
                         <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD}}>Review Information</Text>
                         <Text style={{fontFamily: FONT.REGULAR,marginBottom: 10,fontSize: FONT_SIZE.M,color:"#929191"}}>Make sure your details are all correct.</Text>  
+                        <Separator/>
                         <UserInfo label="Mobile Number" value={VerifyUserData.contactInfo.mobile_number}/>
                         <UserInfo label="Email Address" value={VerifyUserData.contactInfo.email}/>
                         <UserInfo label="First Name" value={VerifyUserData.person.firstName}/>
@@ -163,6 +164,7 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
                         <UserInfo label="Occupation" value={VerifyUserData.incomeInfo.occupation}/>
                         <UserInfo label="ID Type" value={VerifyUserData.verifyID.idType}/>
                         <UserInfo label="ID number" value={VerifyUserData.verifyID.idNumber}/>
+                <Separator/>
                 </ScrollView>
 
                 <View style={styles.proceedBtn}>
