@@ -30,8 +30,8 @@ export const Totals = ({raw, shipping, shippingRates}) => {
 
   const computeShippingRates = () => {
     let total = 0
-    for (let i = 0; i < shippingRates.length; i++){
-      total = total + parseFloat(shippingRates[i].price)
+    for (let i = 0; i < CheckoutContextData.shippingFeeRates.length; i++){
+      total = total + parseFloat(CheckoutContextData.shippingFeeRates[i].shippingfee)
     }
     shippingFeeTotal = total
     if(!total) return FormatToText.currency(0)
@@ -41,7 +41,7 @@ export const Totals = ({raw, shipping, shippingRates}) => {
   const computeShippingDiscount = () => {
     let total = 0
     for (let i = 0; i < CheckoutContextData.shippingVouchers.length; i++){
-      total = total + parseFloat(CheckoutContextData.shippingVouchers[i].amount)
+      total = total + parseFloat(CheckoutContextData.shippingVouchers[i].discountedAmount)
     }
     shippingDiscountTotal = total
     if(!total) return FormatToText.currency(0)

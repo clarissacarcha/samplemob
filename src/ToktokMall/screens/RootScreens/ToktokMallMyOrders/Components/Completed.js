@@ -74,7 +74,7 @@ const Item = ({data, fulldata}) => {
         <View style={{flex: 8}}>
           <View style={{flex: 1, justifyContent: 'center'}}>
             <View>
-              <Text style={{fontSize: 13, fontWeight: '100'}} numberOfLines={2} ellipsizeMode="tail">{product?.itemname}</Text>
+              <Text style={{fontSize: 13, fontWeight: '100'}} numberOfLines={2}>{product?.name ? product?.name : product?.itemname}</Text>
             </View>
             <View style={{flexDirection: 'row'}}>
               <View style={{flex: 0}}>
@@ -86,7 +86,7 @@ const Item = ({data, fulldata}) => {
            </View>
             <View style={{flexDirection: 'row', paddingVertical: 5}}>
               <View style={{flex: 2.5}}>
-                <Text style={{color: "#9E9E9E", fontSize: 13}}>Variation: {product?.variation || 'None'}</Text>
+                <Text style={{color: "#9E9E9E", fontSize: 13}}>Variation: {product?.variant || 'None'}</Text>
               </View>
               <View style={{flex: 1, flexDirection: 'row'}}>
                 <Text style={{color: "#9E9E9E", fontSize: 13}}>Qty: {data.quantity}</Text>

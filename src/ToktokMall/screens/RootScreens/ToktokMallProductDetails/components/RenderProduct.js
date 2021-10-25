@@ -210,7 +210,7 @@ const Component = ({
       <View style={{height: 8, backgroundColor: '#F7F7FA'}} />
 
       <RenderVariations 
-        data={data?.variantSummary || []} 
+        data={data?.variations || []} 
         navigate={onOpenVariations} 
       />
       

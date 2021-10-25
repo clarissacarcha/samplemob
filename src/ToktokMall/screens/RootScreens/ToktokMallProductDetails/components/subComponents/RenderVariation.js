@@ -22,6 +22,7 @@ export const RenderVariations = ({data, navigate}) => {
   }
 
   const getVariationTypes = () => {
+    return ""
     let res = ""
     if(!data || data.length == 0) return res
     data.map((item, i) => {
@@ -36,7 +37,7 @@ export const RenderVariations = ({data, navigate}) => {
             <View style={{flexDirection: 'row', marginTop: 8}}>
               <View style={{flex: 2, flexDirection: 'row', paddingHorizontal: 8}}>
                 <View style={{flex: 1, justifyContent: 'center'}}>
-                  <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>Select Variation <Text  style={{fontSize: 12, color: "#9E9E9E", fontWeight: 'normal'}}>({getVariationTypes()})</Text></Text>
+                  <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>Select Variation </Text>
                 </View>
                 {/* <View style={{flex: 1, justifyContent: 'center'}}>
                   <Text style={{fontSize: 14, color: "#9E9E9E"}}>({getVariationTypes()})</Text>
@@ -51,82 +52,32 @@ export const RenderVariations = ({data, navigate}) => {
             <View style={{flexDirection: 'column'}}>
             <View style={{paddingHorizontal: 8, flexDirection: 'row', paddingVertical: 8}}>        
 
-              {data && data.length > 0 && data.map((item, i) => {
-
-                if(i > 0) return null
-
-                if(item?.variantProducts?.length > 0){
-
+              {data && data.length > 0 && data.map((item, index) => {
+                if(index == 5){
                   return (
                     <>
-                      <View>
-                        <View style={{paddingVertical: 4}}>
-                          {/* <Text style={{fontSize: 13, color: "#9E9E9E"}}>{getVariationTypes()}</Text> */}
-                        </View>
-                        
-                        <View style={{flexDirection: 'row'}}>
-                          {item?.variantProducts.map((product, index) => {
-
-                            if(index == 5){
-                              return (
-                                <>
-                                  <ImageBackground 
-                                    source={getImageSource(product.images)}
-                                    style={{marginRight: 4}}
-                                    imageStyle={{width: 48, height: 48, resizeMode: 'cover', borderColor: "#D7D7D7", borderRadius: 2, borderWidth: 1}}
-                                  >
-                                    <TouchableOpacity style={{width: 48, height: 48, backgroundColor: "rgba(0, 0, 0, 0.6)", justifyContent: 'center', alignItems: 'center'}}>
-                                      <Text style={{fontSize: 9, textAlign: 'center', color: "#fff"}}>+{item?.variantProducts.length - index} more</Text>
-                                    </TouchableOpacity>
-                                  </ImageBackground>
-                                </>
-                              )
-                            }else if(index < 5){
-                              return (
-                                <>
-                                  <TouchableOpacity onPress={navigate} style={{marginRight: 4}}>
-                                    <Image source={getImageSource(product.images)} style={{width: 48, height: 48, resizeMode: 'cover', borderColor: "#D7D7D7", borderRadius: 2, borderWidth: 1}} />
-                                  </TouchableOpacity>
-                                </>
-                              )
-                            }
-                            
-                          })}
-                        </View>
-                      </View>
+                      <ImageBackground 
+                        source={getImageSource(item.images)}
+                        style={{marginRight: 4}}
+                        imageStyle={{width: 48, height: 48, resizeMode: 'cover', borderColor: "#D7D7D7", borderRadius: 2, borderWidth: 1}}
+                      >
+                        <TouchableOpacity style={{width: 48, height: 48, backgroundColor: "rgba(0, 0, 0, 0.6)", justifyContent: 'center', alignItems: 'center'}}>
+                          <Text style={{fontSize: 9, textAlign: 'center', color: "#fff"}}>+{data?.length - index} more</Text>
+                        </TouchableOpacity>
+                      </ImageBackground>
                     </>
                   )
-
-                }else if(item?.variantProducts.length == 0 && item?.variantList.length > 0){
-
-                  let variantslist = item?.variantList || ""
-                  const variants = variantslist.split(",")    
+                }else if(index < 5){
                   return (
                     <>
-                      <View>
-                        <View style={{paddingVertical: 4}}>
-                          <Text style={{fontSize: 13}}>{item?.variantType || ''}</Text>
-                        </View>
-                        <View style={{flexDirection: 'row'}}>
-                          {variants.map((variant, y) => {
-                            return (
-                              <>
-                                <TouchableOpacity onPress={() => setActiveIndex(y)} style={{paddingVertical: 4, paddingHorizontal: 15, borderRadius: 5, borderWidth: 0.5, borderColor: activeIndex == y ? "#F6841F" : "lightgray"}}>
-                                  <Text style={{fontSize: 11, color: "#9E9E9E"}}>{variant}</Text>
-                                </TouchableOpacity>
-                                <View style={{width: 5}} />
-                              </>
-                            )
-                          })}
-                        </View>
-                      </View>
+                      <TouchableOpacity onPress = {navigate} style={{marginRight: 4}}>
+                        <Image source={getImageSource(item.images)} style={{width: 48, height: 48, resizeMode: 'cover', borderColor: "#D7D7D7", borderRadius: 2, borderWidth: 1}} />
+                      </TouchableOpacity>
                     </>
                   )
-                }else{
-                  return null
-                }
-                                
+                }              
               })}
+
             </View>
             </View>
     

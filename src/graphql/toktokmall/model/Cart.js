@@ -14,6 +14,8 @@ export const GET_MY_CART =  gql`
 				productid
 				product {
 					itemname
+					name
+					variant
 					price
 					compareAtPrice
 					noOfStocks
@@ -37,6 +39,8 @@ export const GET_MY_CART =  gql`
 					product {
 						Id
 						itemname
+						name
+						variant
 						price
 						compareAtPrice
 						noOfStocks
@@ -54,6 +58,7 @@ export const GET_MY_CART =  gql`
 export const GET_VERIFY_ADD_TO_CART = gql`
 	query getVerifyAddToCart($input: GetVerifyAddToCartInput) {
 		getVerifyAddToCart(input: $input) {
+			productId
 			quantity
 			variant
 			code

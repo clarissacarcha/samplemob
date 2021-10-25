@@ -159,8 +159,9 @@ export const GET_ORDER_DETAILS = gql`
 				quantity
 				product {
 					itemname
+					name
 					compareAtPrice
-					variation
+					variant
 					img {
 						filename
 					}
