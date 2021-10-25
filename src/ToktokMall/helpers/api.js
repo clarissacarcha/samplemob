@@ -99,7 +99,7 @@ export const ShippingApiCall = async (endpoint, body, debug = false) => {
 			formData.append(key, Object.values(body)[index])
 		})
 
-		console.log(formData)
+		// console.log(formData)
 
 		await axios.post(`${api_url[env]}${endpoint}`, formData).then((response) => {
 			if(debug){

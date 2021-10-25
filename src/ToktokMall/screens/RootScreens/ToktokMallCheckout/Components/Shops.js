@@ -74,7 +74,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
     return items.map((item, i) => {
 
       const product = item.product || {}
-      console.log(item)
+      // console.log(item)
 
         return(
           <View style={styles.itemContainer}>

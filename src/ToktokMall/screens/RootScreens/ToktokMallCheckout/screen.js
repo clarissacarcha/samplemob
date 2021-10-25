@@ -86,7 +86,9 @@ const Component = ({route, navigation, createMyCartSession}) => {
     }
   })
 
-  const getShippingRates = async (payload) => {    
+  const getShippingRates = async (payload) => {   
+    console.log(payload)
+    console.log(JSON.stringify(payload.cart)) 
     const res = await ShippingApiCall("get_shipping_rate", payload, true)
     if(res.responseData && res.responseData.success == 1){
       CheckoutContextData.setShippingFeeRates(res.responseData.newCart)

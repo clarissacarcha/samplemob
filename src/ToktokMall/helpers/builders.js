@@ -86,7 +86,7 @@ export const BuildOrderLogsList = ({data, shipping, shippingRates, shippingVouch
 			sys_shop: val.shop.id,
 			branchid: shippingRates[index].branchid,
 			// delivery_amount: shipping.rateAmount,
-			delivery_amount: shippingVouchers[index] ? shippingVouchers[index].discount : parseFloat(shippingRates[index].deliveryfee),
+			delivery_amount: shippingVouchers[index] ? shippingVouchers[index].discount : parseFloat(shippingRates[index].shippingfee),
 			original_shipping_fee: parseFloat(shippingRates[index].original_shipping),
 			handle_shipping_promo: 1,
 			hash: shippingRates[index].hash,

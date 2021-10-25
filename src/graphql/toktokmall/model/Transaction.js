@@ -27,6 +27,8 @@ export const GET_CONFIRMED_TRANSACTIONS = gql`
             product {
               Id
               itemname
+              name
+              variant
               price
               compareAtPrice
               img {
@@ -67,6 +69,8 @@ export const GET_TOSHIP_TRANSACTIONS = gql`
             product {
               Id
               itemname
+              name
+              variant
               price
               compareAtPrice
               img {
@@ -107,6 +111,8 @@ export const GET_TORECEIVE_TRANSACTIONS = gql`
             product {
               Id
               itemname
+              name
+              variant
               price
               compareAtPrice
               img {
@@ -148,6 +154,8 @@ export const GET_COMPLETED_TRANSACTIONS = gql`
             product {
               Id
               itemname
+              name
+              variant
               price
               compareAtPrice
               img {
