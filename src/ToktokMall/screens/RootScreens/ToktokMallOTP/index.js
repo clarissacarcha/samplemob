@@ -116,7 +116,7 @@ console.log("validating", processing, validating)
               // else
               <>
                 <Text style = {{fontFamily: FONT.BOLD, fontSize: 17, marginTop: 25, marginBottom:10}}>Enter OTP</Text>
-                <Text style = {{textAlign: 'center', paddingHorizontal: 15, fontSize: 13, fontFamily: FONT.REGULAR}}>Please enter the code that we will send via SMS to proceed with your transaction</Text>
+                <Text style = {{textAlign: 'center', paddingHorizontal: 15, fontSize: 13, fontFamily: FONT.REGULAR}}>Please enter the code that we will send via SMS.</Text>
                 <View style = {{flexDirection: 'row', marginTop: 25}}>
                   <TouchableOpacity 
                     onPress={() => {

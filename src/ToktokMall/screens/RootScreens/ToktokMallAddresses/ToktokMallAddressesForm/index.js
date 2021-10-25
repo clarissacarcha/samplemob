@@ -131,51 +131,60 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefa
   };
 
   const SavePostAddress = async (callback, id) => {
-    setIsLoading(true)
-    AsyncStorage.getItem('ToktokMallUser').then(async (raw) => {
-      let data = JSON.parse(raw) || {};
-      if (data.appSignature) {
+    // const wordNum = newAddressForm.receiverContact;
+    // const get = wordNum.slice(0, 2);
+    if (newAddressForm.receiverContact.length != 11 || newAddressForm.receiverContact == '') {
+      return alert(
+        'Invalid contact number.',
+      );
+    }else{
+      setIsLoading(true)
+      AsyncStorage.getItem('ToktokMallUser').then(async (raw) => {
+        let data = JSON.parse(raw) || {};
+        if (data.appSignature) {
 
-        let body = {
-          customer_id: data.userId,
-          receiver_name: newAddressForm.receiverName,
-          receiver_contact: newAddressForm.receiverContact,
-          address: newAddressForm.address,
-          region_id: parseInt(regCode) || 0,
-          province_id: parseInt(provCode),
-          municipality_id: parseInt(munCode),
-          landmark: newAddressForm.landmark,
-          postal_code: newAddressForm.postalCode,
-          latitude: parseFloat(latitude),
-          longitude: parseFloat(longitude),
-          default: clicked == true ? 1 : 0,
-        };
+          let body = {
+            customer_id: data.userId,
+            receiver_name: newAddressForm.receiverName,
+            receiver_contact: newAddressForm.receiverContact,
+            address: newAddressForm.address,
+            region_id: parseInt(regCode) || 0,
+            province_id: parseInt(provCode),
+            municipality_id: parseInt(munCode),
+            landmark: newAddressForm.landmark,
+            postal_code: newAddressForm.postalCode,
+            latitude: parseFloat(latitude),
+            longitude: parseFloat(longitude),
+            default: clicked == true ? 1 : 0,
+          };
 
-        if(route.params?.update) body.address_id = route.params?.item.id
+          if(route.params?.update) body.address_id = route.params?.item.id
 
-        const endpoint = route.params?.update ? `update_address` :  `save_address`
+          const endpoint = route.params?.update ? `update_address` :  `save_address`
 
-        console.log(body, data.appSignature)
-        let formData = new FormData();
-        formData.append('signature', data.appSignature);
-        formData.append('data', JSON.stringify(body));
+          console.log(body, data.appSignature)
+          let formData = new FormData();
+          formData.append('signature', data.appSignature);
+          formData.append('data', JSON.stringify(body));
 
-        await axios
-          .post(`http://ec2-18-176-178-106.ap-northeast-1.compute.amazonaws.com/toktokmall/${endpoint}`, formData)
-          .then((response) => {
-            if (response.data && response.data.success == 1) {
-              setIsLoading(false);
-              setMessageModal(true);
-              callback();
-            } else {
-              console.log('Response', response.data);
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      }
-    });
+          await axios
+            .post(`http://ec2-18-176-178-106.ap-northeast-1.compute.amazonaws.com/toktokmall/${endpoint}`, formData)
+            .then((response) => {
+              if (response.data && response.data.success == 1) {
+                setIsLoading(false);
+                setMessageModal(true);
+                callback();
+              } else {
+                console.log('Response', response.data);
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        }
+      });
+    }
+    
   };
 
   const DeleteAddress = async () => {
@@ -382,8 +391,14 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefa
               }
               placeholder={'Contact Number'}
               onChangeText={(text) => {
-                onChangeText('receiverContact', text);
+                // if(newAddressForm.receiverContact.length <= 11){
+                  onChangeText('landmark', text);
+                  console.log(newAddressForm.receiverContact.length)
+                // }
               }}
+              keyboardType={'phone-pad'}
+              keyboardType="numeric"
+              maxLength={11}
             />
           </View>
           {/* <View style={styles.textinputContainer}>
@@ -456,6 +471,9 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefa
               onChangeText={(text) => {
                 onChangeText('postalCode', text);
               }}
+              keyboardType={'phone-pad'}
+              keyboardType="numeric"
+              maxLength={4}
             />
           </View>
           <View style={styles.textinputLastContainer}>
@@ -466,6 +484,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefa
               onChangeText={(text) => {
                 onChangeText('landmark', text);
               }}
+              maxLength={300}
             />
           </View>
         </View>

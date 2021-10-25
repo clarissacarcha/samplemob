@@ -84,7 +84,7 @@ export const RenderVariations = ({data, navigate}) => {
                             }else if(index < 5){
                               return (
                                 <>
-                                  <TouchableOpacity style={{marginRight: 4}}>
+                                  <TouchableOpacity onPress={navigate} style={{marginRight: 4}}>
                                     <Image source={getImageSource(product.images)} style={{width: 48, height: 48, resizeMode: 'cover', borderColor: "#D7D7D7", borderRadius: 2, borderWidth: 1}} />
                                   </TouchableOpacity>
                                 </>
