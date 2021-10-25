@@ -118,7 +118,7 @@ const Splash = ({setConstants}) => {
       }
 
       if (!isCurrent && !enabled) {
-        setcheckPoint('A');
+        setcheckPoint('B');
       }
     } catch (error) {
       setcheckPoint('MAINTENANCE');
