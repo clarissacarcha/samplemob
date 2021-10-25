@@ -116,7 +116,7 @@ const PaymentDetails = ({refreshing, orderType}) => {
                     <Text style={styles.walletText}>wallet</Text>
                   </View>
                   <Text style={{color: '#707070', fontSize: FONT_SIZE.S}}>
-                    Balance: PHP {toktokWallet?.balance.toLocaleString()}.00
+                    Balance: PHP {toktokWallet?.balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}.00
                   </Text>
                 </View>
                 <TouchableOpacity onPress={onPressTopUp}>

@@ -220,7 +220,6 @@ export const StickyView = () => {
 
   return (
     <>
-      <StatusBar barStyle="dark-content" />
       <ReactNativeParallaxHeader
         alwaysShowNavBar={false}
         alwaysShowTitle={false}
@@ -231,7 +230,9 @@ export const StickyView = () => {
         backgroundImageScale={1.1}
         title={renderTitle()}
         backgroundImage={{uri: shopDetails.banner}}
+        statusBarColor="transparent"
         navbarColor="white"
+        alwaysShowNavBar={false}
         backgroundColor="transparent"
         renderNavBar={() => renderNavBar}
         renderContent={() => renderContent}
