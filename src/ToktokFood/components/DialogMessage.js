@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Modal, StyleSheet, Image, Text, TouchableOpacity} from 'react-native';
+import {View, Modal, StyleSheet, Image, Text, TouchableOpacity, Platform} from 'react-native';
 
 // Fonts & Colors
 import {COLORS, FONTS, FONT_SIZE, NUMBERS, BUTTON_HEIGHT} from 'res/constants';
@@ -11,8 +11,23 @@ import {success_ic, error_ic, warning_ic, question_ic} from 'toktokfood/assets/i
 
 const DialogMessage = (props) => {
   // type:  success | error | warning | question
-  const {visibility, type, title, messages, onAccept, onCancel, onCloseModal, hasChildren,
-    children, hasTwoButtons, btn1Title, btn2Title, onCloseBtn1, onCloseBtn2, reasons} = props;
+  const {
+    visibility,
+    type,
+    title,
+    messages,
+    onAccept,
+    onCancel,
+    onCloseModal,
+    hasChildren,
+    children,
+    hasTwoButtons,
+    btn1Title,
+    btn2Title,
+    onCloseBtn1,
+    onCloseBtn2,
+    reasons,
+  } = props;
 
   const getDialogIcon = () => {
     switch (type) {
@@ -29,8 +44,7 @@ const DialogMessage = (props) => {
 
   const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
-  }
-  
+  };
 
   return (
     <>
@@ -39,27 +53,21 @@ const DialogMessage = (props) => {
           <View style={[styles.prompContentWrapper, NUMBERS.SHADOW]}>
             <Image style={styles.icon} source={getDialogIcon()} resizeMode="contain" />
             <View style={styles.messegeWrapper}>
-              { !hasChildren && (
+              {!hasChildren && (
                 <>
                   {title !== undefined && <Text style={styles.messageTitle}>{title}</Text>}
                   {messages !== undefined && <Text style={styles.messageContent}>{messages}</Text>}
                   {reasons !== undefined && <Text style={styles.reasonsContent}>{capitalizeFirstLetter(reasons)}</Text>}
                 </>
               )}
-              { children }
+              {children}
             </View>
-            { hasTwoButtons ? (
-              <View style={{ flexDirection: 'row', marginHorizontal: moderateScale(25), marginBottom: 10 }}>
+            {hasTwoButtons ? (
+              <View style={{flexDirection: 'row', marginHorizontal: moderateScale(25), marginBottom: 10}}>
                 <TouchableOpacity
-                  style={[ reasons !== undefined ? styles.btnReasons : styles.btn1Style]}
-                  onPress={() => onCloseBtn1()}
-                >
-                  <Text
-                    style={[
-                      styles.buttonText,
-                      { color: reasons !== undefined  ? '#FFA700' : '#fff' }
-                    ]}
-                  >
+                  style={[reasons !== undefined ? styles.btnReasons : styles.btn1Style]}
+                  onPress={() => onCloseBtn1()}>
+                  <Text style={[styles.buttonText, {color: reasons !== undefined ? '#FFA700' : '#fff'}]}>
                     {btn1Title}
                   </Text>
                 </TouchableOpacity>
@@ -115,7 +123,7 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.M,
     fontFamily: FONTS.REGULAR,
     marginTop: moderateScale(8),
-    marginBottom: moderateScale(15)
+    marginBottom: moderateScale(15),
   },
   buttonWrapper: {
     marginHorizontal: 10,
@@ -135,7 +143,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#868686',
     borderRadius: NUMBERS.BORDER_RADIUS,
-    marginRight: moderateScale(20)
+    marginRight: moderateScale(20),
   },
   btn2Style: {
     flex: 1,
@@ -149,7 +157,7 @@ const styles = StyleSheet.create({
     color: COLORS.WHITE,
     fontSize: FONT_SIZE.L,
     fontFamily: FONTS.BOLD,
-    textAlign: 'center'
+    textAlign: 'center',
   },
   btnReasons: {
     flex: 1,
@@ -160,6 +168,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: NUMBERS.BORDER_RADIUS,
     marginRight: moderateScale(20),
+    paddingBottom: Platform.OS == 'android' ? moderateScale(5) : 0,
   },
   reasonsContent: {
     textAlign: 'center',
