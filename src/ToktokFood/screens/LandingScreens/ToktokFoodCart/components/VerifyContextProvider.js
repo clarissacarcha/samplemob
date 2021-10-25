@@ -1,25 +1,32 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {createContext, useState, useEffect} from 'react';
-import {availableTips} from 'toktokfood/helper/strings';
+import {useLazyQuery} from '@apollo/react-hooks';
 import {useRoute} from '@react-navigation/native';
-import {TOKTOK_FOOD_GRAPHQL_CLIENT, TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
-import {useLazyQuery, useMutation} from '@apollo/react-hooks';
-import {GET_ALL_TEMPORARY_CART} from 'toktokfood/graphql/toktokfood';
-import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
-import { GET_MY_ACCOUNT } from 'toktokwallet/graphql';
 import {useSelector} from 'react-redux';
+
+// Components
+// import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
+
+// import {availableTips} from 'toktokfood/helper/strings';
+
+// Queries
+// import {GET_MY_ACCOUNT} from 'toktokwallet/graphql';
+import {GET_ALL_TEMPORARY_CART} from 'toktokfood/graphql/toktokfood';
+import {TOKTOK_FOOD_GRAPHQL_CLIENT, TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
+
 export const VerifyContext = createContext();
+
 const {Provider} = VerifyContext;
 
 export const VerifyContextProvider = ({children}) => {
-
   const routes = useRoute();
   const {user} = useSelector((state) => state.session);
-  const { userId } = routes.params;
+  const {userId} = routes.params;
   const [totalAmount, setTotalAmount] = useState(0);
   const [temporaryCart, setTemporaryCart] = useState({
     cartItemsLength: 0,
     totalAmount: 0,
-    items: []
+    items: [],
   });
   const [toktokWallet, setToktokWallet] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState('TOKTOKWALLET');
@@ -28,13 +35,14 @@ export const VerifyContextProvider = ({children}) => {
   const [getAllTemporaryCart, {data, loading, error}] = useLazyQuery(GET_ALL_TEMPORARY_CART, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
-    onCompleted: ({ getAllTemporaryCart }) => {
-      let { items, totalAmount } = getAllTemporaryCart
+    onCompleted: ({getAllTemporaryCart}) => {
+      let {items, totalAmount} = getAllTemporaryCart;
+      console.log(getAllTemporaryCart, 'temp cart');
       setTemporaryCart({
         cartItemsLength: items.length,
         totalAmount,
-        items: items
-      })
+        items: items,
+      });
     },
   });
 
@@ -42,11 +50,11 @@ export const VerifyContextProvider = ({children}) => {
     getAllTemporaryCart({
       variables: {
         input: {
-          userId: userId
+          userId: userId,
         },
       },
-    })
-  }, [])
+    });
+  }, []);
 
   return (
     <Provider
@@ -60,10 +68,9 @@ export const VerifyContextProvider = ({children}) => {
         paymentMethod,
         setPaymentMethod,
         setPMLoading,
-        pmLoading
-      }}
-    >
+        pmLoading,
+      }}>
       {children}
     </Provider>
-  )
-}
+  );
+};

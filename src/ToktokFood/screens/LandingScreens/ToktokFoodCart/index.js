@@ -39,6 +39,7 @@ import {useSelector} from 'react-redux';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import {
+  GET_AUTO_SHIPPING,
   GET_SHIPPING_FEE,
   PATCH_PLACE_CUSTOMER_ORDER,
   DELETE_SHOP_TEMPORARY_CART,
@@ -65,8 +66,11 @@ const MainComponent = () => {
   const {shopname} = route.params;
   const {location, customerInfo, shopLocation, receiver} = useSelector((state) => state.toktokFood);
   const {user} = useSelector((state) => state.session);
-  const {totalAmount, temporaryCart, toktokWallet, paymentMethod, pmLoading, setPaymentMethod} = useContext(VerifyContext);
+  const {totalAmount, temporaryCart, toktokWallet, paymentMethod, pmLoading, setPaymentMethod} = useContext(
+    VerifyContext,
+  );
 
+  const [autoShipping, setAutoShipping] = useState(0);
   const [riderNotes, setRiderNotes] = useState('');
   const [delivery, setDeliveryInfo] = useState(null);
   const [showLoader, setShowLoader] = useState(false);
@@ -80,7 +84,7 @@ const MainComponent = () => {
   const [loadingWallet, setLoadingWallet] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [pinAttempt, setPinAttempt] = useState({show: false, message: ''});
-  const [tokWaPlaceOrderErr, setTokWaPlaceOrderErr] = useState({ error: {}, visible: false });
+  const [tokWaPlaceOrderErr, setTokWaPlaceOrderErr] = useState({error: {}, visible: false});
   const alert = useAlert();
 
   useEffect(() => {
@@ -101,12 +105,32 @@ const MainComponent = () => {
     }
   }, [temporaryCart, location]);
 
-  const [getDeliverFee, {data}] = useLazyQuery(GET_SHIPPING_FEE, {
+  const [getAutoShipping] = useLazyQuery(GET_AUTO_SHIPPING, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: ({getAutoShipping}) => {
+      // console.log(getAutoShipping);
+      setAutoShipping(getAutoShipping);
+    },
+  });
+
+  const [getDeliverFee] = useLazyQuery(GET_SHIPPING_FEE, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: ({getShippingFee}) => {
-      console.log(getShippingFee);
+      const {items} = temporaryCart;
+      const {email} = customerInfo;
       setDeliveryInfo(getShippingFee);
+      getAutoShipping({
+        variables: {
+          input: {
+            region: items[0]?.shopRegion,
+            email,
+            subtotal: [{shopid: items[0]?.shopid, subtotal: temporaryCart.totalAmount}],
+            cartItems: [{shopid: items[0]?.shopid, shippingfee: getShippingFee?.price}],
+          },
+        },
+      });
     },
   });
 
@@ -122,7 +146,7 @@ const MainComponent = () => {
         },
       },
       onCompleted: ({deleteShopTemporaryCart}) => {
-        console.log(deleteShopTemporaryCart, 'DELETE');
+        // console.log(deleteShopTemporaryCart, 'DELETE');
       },
     },
   );
@@ -164,7 +188,7 @@ const MainComponent = () => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     onError: (error) => {
       setShowLoader(false);
-      setTokWaPlaceOrderErr({ error, visible: true })
+      setTokWaPlaceOrderErr({error, visible: true});
     },
     onCompleted: ({verifyPin}) => {},
   });
@@ -174,16 +198,16 @@ const MainComponent = () => {
     fetchPolicy: 'no-cache',
     onError: (error) => {
       setShowLoader(false);
-      if(toktokWallet.paymentMethod == 'COD'){
+      if (toktokWallet.paymentMethod == 'COD') {
         setTimeout(() => {
           onErrorAlert({alert, error});
         }, 500);
       } else {
-        setTokWaPlaceOrderErr({ error, visible: true })
+        setTokWaPlaceOrderErr({error, visible: true});
       }
     },
     onCompleted: async ({checkoutOrder}) => {
-      console.log(checkoutOrder);
+      // console.log(checkoutOrder);
       if (checkoutOrder.status == '200') {
         deleteShopTemporaryCart()
           .then(() => {
@@ -204,8 +228,8 @@ const MainComponent = () => {
         setTimeout(() => {
           setTokWaPlaceOrderErr({
             message: checkoutOrder.message,
-            visible: true
-          })
+            visible: true,
+          });
         }, 500);
       }
     },
@@ -406,7 +430,7 @@ const MainComponent = () => {
       order_logs: CUSTOMER_CART,
     };
     const data = WALLET ? {...WALLET, ...CUSTOMER, ...ORDER} : {...CUSTOMER, ...ORDER};
-    console.log(JSON.stringify(data))
+    // console.log(JSON.stringify(data));
     postCustomerOrder({
       variables: {
         input: data,
@@ -442,17 +466,17 @@ const MainComponent = () => {
         hasTwoButtons
       />
       <Loader hasImage={false} loadingIndicator visibility={loadingWallet} message="Loading" />
-      {paymentMethod == 'COD' && 
+      {paymentMethod == 'COD' && (
         <>
           <AlertModal
             message={tokWaPlaceOrderErr.message}
             visible={tokWaPlaceOrderErr.visible}
             error={tokWaPlaceOrderErr.error}
-            close={() => setTokWaPlaceOrderErr({ error: {}, visible: false })}
+            close={() => setTokWaPlaceOrderErr({error: {}, visible: false})}
           />
           <Loader visibility={showLoader} hasImage={false} loadingIndicator message="Placing Order" />
         </>
-      }
+      )}
       {showEnterPinCode ? (
         <EnterPinCode
           visible={showEnterPinCode}
@@ -466,8 +490,7 @@ const MainComponent = () => {
           }}
           errorMessage={errorMessage}
           setErrorMessage={setErrorMessage}
-          title={toktokWalletCredit.validator}
-        >
+          title={toktokWalletCredit.validator}>
           <Loader visibility={showLoader} hasImage={false} loadingIndicator message="Placing Order" />
           <DialogMessage
             visibility={pinAttempt.show}
@@ -479,11 +502,11 @@ const MainComponent = () => {
               setShowEnterPinCode(false);
             }}
           />
-         <AlertModal
+          <AlertModal
             message={tokWaPlaceOrderErr.message}
             visible={tokWaPlaceOrderErr.visible}
             error={tokWaPlaceOrderErr.error}
-            close={() => setTokWaPlaceOrderErr({ error: {}, visible: false })}
+            close={() => setTokWaPlaceOrderErr({error: {}, visible: false})}
           />
         </EnterPinCode>
       ) : (
@@ -540,7 +563,12 @@ const MainComponent = () => {
             <ActivityIndicator color={COLOR.ORANGE} />
           </View>
         ) : (
-          <OrderTotal subtotal={totalAmount} deliveryFee={delivery.price} forDelivery={orderType === 'Delivery'} />
+          <OrderTotal
+            autoShipping={autoShipping}
+            subtotal={totalAmount}
+            deliveryFee={delivery.price}
+            forDelivery={orderType === 'Delivery'}
+          />
         )}
         <Separator />
         <PaymentDetails orderType={orderType} refreshing={refreshing} />
@@ -560,7 +588,7 @@ const MainComponent = () => {
             onValueChange={(type) => {
               setShowOrderType(false);
               setOrderType(type);
-              setPaymentMethod('TOKTOKWALLET')
+              setPaymentMethod('TOKTOKWALLET');
             }}
             shopname={temporaryCart.items[0]?.shopName}
             allowPickup={checkShop?.allowPickup}

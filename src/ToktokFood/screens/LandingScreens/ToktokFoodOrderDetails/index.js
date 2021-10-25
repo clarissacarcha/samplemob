@@ -109,7 +109,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
       });
     }
     getRiderDetailsInterval.current = BackgroundTimer.setInterval(() => setRiderSeconds(seconds - 20), 20000);
-    console.log('Rider Details Updated ' + riderSeconds);
+    // console.log('Rider Details Updated ' + riderSeconds);
   };
 
   const handleOrderProcess = async () => {

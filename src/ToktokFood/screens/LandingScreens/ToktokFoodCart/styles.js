@@ -1,4 +1,4 @@
-import {StyleSheet, Platform} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
 
 // Utils
@@ -8,6 +8,16 @@ export default styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLOR.WHITE,
+  },
+  deliveryFee: {
+    flexDirection: 'row',
+  },
+  deliveryFeeText: {
+    color: '#9E9E9E',
+    fontSize: FONT_SIZE.L,
+    marginRight: moderateScale(5),
+    textDecorationLine: 'line-through',
+    textDecorationStyle: 'solid',
   },
   sectionContainer: {
     paddingVertical: 10,

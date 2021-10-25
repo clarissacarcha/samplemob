@@ -1,16 +1,12 @@
 import React from 'react';
-import {TextInput, View, StyleSheet, Text, TouchableOpacity, Platform} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {useSelector} from 'react-redux';
+import {TextInput, View, StyleSheet} from 'react-native';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
-import ContentLoader from 'react-native-easy-content-loader';
 
 import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
-import {markerIcon} from 'toktokfood/assets/images';
 
-import {getStatusbarHeight, verticalScale, moderateScale, getDeviceWidth} from 'toktokfood/helper/scale';
+import {moderateScale} from 'toktokfood/helper/scale';
 
-const StyledTextInput = ({onChangeText, label, value, error = true}) => {
+const StyledTextInput = ({onChangeText, label, value, error = null, hasIcon = false}) => {
   const renderIcon = () => {
     const iconColor = error ? '#F6841F' : '#06A44E';
     const iconName = error ? 'times-circle' : 'check-circle';
@@ -22,7 +18,7 @@ const StyledTextInput = ({onChangeText, label, value, error = true}) => {
     <View style={styles.container}>
       <TextInput value={value} onChangeText={onChangeText} style={styles.input} placeholder={label} />
 
-      {renderIcon()}
+      {hasIcon && renderIcon()}
     </View>
   );
 };

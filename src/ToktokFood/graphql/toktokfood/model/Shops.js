@@ -47,6 +47,8 @@ export const GET_SHOP_DETAILS = gql`
       id
       address
       shopname
+      shopRegion
+      shopCity
       banner
       logo
       latitude
