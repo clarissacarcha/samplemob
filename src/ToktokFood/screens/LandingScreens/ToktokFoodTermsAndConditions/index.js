@@ -1,17 +1,14 @@
-import React, {useState, useEffect, useContext} from 'react';
-import {Platform, StyleSheet, View, Image, Text, FlatList, TouchableOpacity, ScrollView} from 'react-native';
+import React from 'react';
+import {Platform, StyleSheet, View, Text, TouchableOpacity, ScrollView} from 'react-native';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 
 // Components
-import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 import Separator from 'toktokfood/components/Separator';
 
 // Hooks
-import {useUserLocation} from 'toktokfood/hooks';
 import {useSelector} from 'react-redux';
-import {moderateScale, getStatusbarHeight, verticalScale, getDeviceHeight} from 'toktokfood/helper/scale';
-import {SamplePolicy} from 'toktokfood/helper/strings';
-import {arrow_right, help_centre_ic} from 'toktokfood/assets/images';
+import {moderateScale, getStatusbarHeight, verticalScale} from 'toktokfood/helper/scale';
+import {SamplePolicy, TermsAndConditions} from 'toktokfood/helper/strings';
 
 // Fonts & Colors
 import {COLOR, FONT, FONT_SIZE} from 'res/variables';
@@ -23,33 +20,78 @@ const CUSTOM_HEADER = {
 
 const DATA = [
   {
-    title: "Help Centre",
-    icon: ""
-  }
-]
+    title: 'Help Centre',
+    icon: '',
+  },
+];
 
-const ToktokFoodTermsAndConditions = ({ navigation }) => {
-
+const ToktokFoodTermsAndConditions = ({navigation}) => {
   const {location} = useSelector((state) => state.toktokFood);
   const {user} = useSelector((state) => state.session);
+
+  const SectionContent = (props) => {
+    const {contents} = props;
+    return (
+      <View style={styles.sectionWrapper}>
+        <Text style={styles.sectionTitle}>{contents.title}</Text>
+        <Text style={styles.sectionText}>{contents.content}</Text>
+      </View>
+    );
+  };
+
+  const ListContent = (props) => {
+    const {contents, extented} = props;
+    return (
+      <View style={styles.sectionWrapper}>
+        <Text style={styles.sectionTitle}>{contents.title}</Text>
+        <Text style={styles.sectionText}>{contents.content}</Text>
+        {typeof contents.listContent !== 'undefined' &&
+          contents.listContent.map((v) => (
+            <Text style={[styles.sectionText, styles.listTextContent]}>{'● ' + v.content}</Text>
+          ))}
+        {extented && (
+          <Text style={[styles.sectionText, {marginTop: moderateScale(15)}]}>
+            {contents.extentedContent}
+          </Text>
+        )}
+      </View>
+    );
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity hitSlop={styles.hitSlop} onPress={() => { navigation.goBack() }}>
+        <TouchableOpacity
+          hitSlop={styles.hitSlop}
+          onPress={() => {
+            navigation.goBack();
+          }}>
           <FIcon5 name="chevron-left" size={15} />
         </TouchableOpacity>
         <Text style={styles.headerLabel}>Terms And Conditions</Text>
       </View>
       <Separator />
-      <View style={[styles.shadow, { flex: 1 }]}>
-        <Text style={styles.title}>
-          Terms And Conditions
-        </Text>
+      <View style={[styles.shadow, {flex: 1}]}>
+        <Text style={styles.title}>Terms And Conditions</Text>
         <ScrollView showsVerticalScrollIndicator={false}>
-            <Text style={{ textAlign: 'center' }}>
-              {SamplePolicy}
-            </Text>
+          <View style={styles.contentWrapper}>
+            <Text style={{textAlign: 'justify'}}>{SamplePolicy}</Text>
+            <SectionContent contents={TermsAndConditions.DEFINITIONS} />
+            <SectionContent contents={TermsAndConditions.USE_OF_THE_PLATFORM} />
+            <ListContent contents={TermsAndConditions.RESTRICTIONS} />
+            <SectionContent contents={TermsAndConditions.ORDERS} />
+            <ListContent contents={TermsAndConditions.PRODUCT_POLICY} />
+            <ListContent extented contents={TermsAndConditions.DELIVERY} />
+            <ListContent extented contents={TermsAndConditions.PAYMENT} />
+            <SectionContent contents={TermsAndConditions.CANCELLATION} />
+            <ListContent extented contents={TermsAndConditions.REFUND} />
+            <SectionContent contents={TermsAndConditions.COMPLAINTS} />
+            <SectionContent contents={TermsAndConditions.DISPUTES} />
+            <ListContent contents={TermsAndConditions.INDEMNIFICATION} />
+            <SectionContent contents={TermsAndConditions.LIMITATION_OF_LIABILITY} />
+            <SectionContent contents={TermsAndConditions.SEVERABILITY} />
+            <SectionContent contents={TermsAndConditions.GOVERNING_LAW} />
+          </View>
         </ScrollView>
       </View>
     </View>
@@ -66,7 +108,7 @@ const styles = StyleSheet.create({
   shadow: {
     margin: 16,
     padding: 10,
-    backgroundColor:"white",
+    backgroundColor: 'white',
     borderRadius: 5,
     shadowColor: '#000',
     shadowOffset: {
@@ -82,14 +124,14 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     justifyContent: 'space-between',
     alignItems: 'center',
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   header: {
     paddingHorizontal: 16,
     alignItems: 'center',
     height: Platform.OS === 'android' ? moderateScale(70) + getStatusbarHeight : moderateScale(70),
     flexDirection: 'row',
-    paddingTop: getStatusbarHeight
+    paddingTop: getStatusbarHeight,
   },
   headerLabel: {
     flex: 1,
@@ -97,19 +139,39 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: FONT.REGULAR,
     fontSize: FONT_SIZE.XL,
-    marginRight: 15
+    marginRight: 15,
   },
   title: {
     textAlign: 'center',
     color: '#FFA700',
     fontFamily: FONT.BOLD,
     fontSize: 20,
-    paddingVertical: 10
+    paddingVertical: 10,
   },
   hitSlop: {
     top: moderateScale(50),
     bottom: moderateScale(50),
     left: moderateScale(50),
-    right: moderateScale(50)
-  }
+    right: moderateScale(50),
+  },
+  contentWrapper: {
+    flex: 1,
+    margin: 6,
+    paddingVertical: verticalScale(20),
+  },
+  sectionWrapper: {
+    width: '100%',
+    marginTop: moderateScale(30),
+  },
+  sectionTitle: {
+    marginBottom: 8,
+    fontFamily: FONT.BOLD,
+  },
+  sectionText: {
+    textAlign: 'left',
+  },
+  listTextContent: {
+    marginTop: moderateScale(15),
+    marginLeft: moderateScale(18),
+  },
 });
