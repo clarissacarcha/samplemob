@@ -9,7 +9,7 @@ import {useMutation, useQuery,useLazyQuery} from '@apollo/react-hooks';
 import {onError, onErrorAlert} from 'src/util/ErrorUtility';
 import { useAlert } from 'src/hooks';
 import moment from 'moment'
-import {useSelector} from 'react-redux'
+import {useSelector,useDispatch} from 'react-redux'
 import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS
@@ -26,10 +26,24 @@ const PromptMessage = ({
     setVisible,
     navigation,
     provider,
+    tokwaAccount
 })=> {
 
+    const dispatch = useDispatch()
+    
     const redirect = ()=> {
         setVisible(false)
+        if(tokwaAccount.events.upgradeAccount){
+            dispatch({
+                type: "SET_TOKWA_EVENTS_REDIRECT",
+                payload: {
+                    event: "upgradeAccount",
+                    value: false,
+                }
+            })
+            navigation.navigate("ToktokWalletFullyVerifiedApplication")
+            return navigation.replace("ToktokWalletFullyVerifiedApplication")
+        }
         navigation.navigate("ToktokWalletGcashHomePage", {provider})
         return navigation.replace("ToktokWalletGcashHomePage", {provider})
     }
@@ -85,6 +99,7 @@ export const CreateForm = ({navigation,session,mobile,provider})=> {
     const [firstName, setfirstName] = useState("");
     const [middleName, setMiddleName] = useState("");
     const [lastName, setlastName] = useState(tokwaAccount.person.lastName);
+    const [email,setEmail] = useState(tokwaAccount.person.emailAddress);
     const [birthdate, setBirthdate] = useState("");
     const [streetAddress, setStreetAddress] = useState('');
     const [barangayTown, setBarangayTown] = useState('');
@@ -178,6 +193,11 @@ export const CreateForm = ({navigation,session,mobile,provider})=> {
             return;
           }
 
+          if (validator.isEmpty(email, {ignore_whitespace: true})) {
+            Alert.alert('', 'Please enter Email Address.');
+            return;
+          }
+
           if (validator.isEmpty(birthdate, {ignore_whitespace: true})) {
             Alert.alert('', 'Please select Birthdate.');
             return;
@@ -211,6 +231,7 @@ export const CreateForm = ({navigation,session,mobile,provider})=> {
                         firstName: firstName,
                         middleName: middleName,
                         lastName: lastName,
+                        email: email,
                         streetAddress: streetAddress,
                         barangayTown: barangayTown,
                         provinceCity: provinceCity,
@@ -225,7 +246,7 @@ export const CreateForm = ({navigation,session,mobile,provider})=> {
     return (
        <>
         <AlertOverlay visible={loading} />
-        <PromptMessage provider={provider} visible={promptVisible} setVisible={setPromptVisible} navigation={navigation}/>
+        <PromptMessage tokwaAccount={tokwaAccount} provider={provider} visible={promptVisible} setVisible={setPromptVisible} navigation={navigation}/>
         <ModalCountry visible={modalCountryVisible} setVisible={setModalCountryVisible} setCountry={setCountry}/>
         <DatePickerModal
             visible={pickerVisible}
@@ -295,6 +316,17 @@ export const CreateForm = ({navigation,session,mobile,provider})=> {
                         placeholder="Enter last name here"
                         onChangeText={(value)=>setlastName(value)}
                         value={lastName}
+                        returnKeyType="done"
+                    />
+                </View>
+
+                <View style={{marginTop: 20}}>
+                    <Text style={styles.label}>Email Address</Text>
+                    <TextInput 
+                        style={styles.input}
+                        placeholder="Enter last name here"
+                        onChangeText={(value)=>setEmail(value)}
+                        value={email}
                         returnKeyType="done"
                     />
                 </View>

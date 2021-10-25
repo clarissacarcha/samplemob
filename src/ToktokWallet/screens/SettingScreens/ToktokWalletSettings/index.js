@@ -1,12 +1,12 @@
 import React from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,Image} from 'react-native'
+import {View,Text,StyleSheet,TouchableOpacity,ScrollView} from 'react-native'
 import FIcon from 'react-native-vector-icons/Feather';
 import {Separator} from 'toktokwallet/components';
 import { HeaderBack , HeaderTitle} from 'src/revamp';
+import {useSelector} from 'react-redux'
 import CONSTANTS from 'common/res/constants'
 
 const { FONT_FAMILY: FONT , FONT_SIZE , COLOR } = CONSTANTS
-
 const SettingHeaderTitle = ({title})=> {
     return (
         <View style={{paddingHorizontal: 16, paddingVertical: 8,backgroundColor:"white"}}><Text style={{fontFamily:FONT.BOLD}}>{title}</Text></View>
@@ -18,7 +18,8 @@ export const ToktokWalletSettings = ({navigation , route })=> {
         headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
         headerTitle: ()=> <HeaderTitle label={['Settings','']}/>,
     })
-
+    const tokwaAccount = useSelector(state=>state.toktokWallet)
+    
     const SettingOption = ({route,params={},title})=> (
         <>
         <TouchableOpacity style={styles.settingoption} onPress={()=>navigation.navigate(route,params)}>
@@ -37,13 +38,17 @@ export const ToktokWalletSettings = ({navigation , route })=> {
     return (    
         <>
         <Separator />
-        <View style={styles.container}>
+        <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
             <SettingHeaderTitle title="Manage Pin"/>
             <SettingOption route="ToktokWalletCreatePin" title="Change Pin"/>
             <Separator/>
-            <SettingHeaderTitle title="Help centre"/>
+            <SettingHeaderTitle title="Help Centre"/>
             <SettingOption route="ToktokWalletPaymentChart" title="Payment Chart"/>
             <SettingOption route="ToktokWalletTransactionLimit" title="User Level and Transaction Limit"/>
+            {
+                +tokwaAccount.person.accountType.level < 3 &&
+                <SettingOption route="ToktokWalletUpgradeAccount" title="Upgrade Account"/>
+            }
             <Separator/>
             <SettingHeaderTitle title="Security and Privacy"/>
             <SettingOption route="ToktokWalletHelpCentreSecurityPrivacy" title="Security and Privacy"/>
@@ -52,7 +57,7 @@ export const ToktokWalletSettings = ({navigation , route })=> {
             <SettingHeaderTitle title="Logs"/>
             <SettingOption route="ToktokWalletCashInLogs" title="Cash In"/>
             <SettingOption route="ToktokWalletCashOutLogs" title="Cash Out"/>
-        </View>
+        </ScrollView>
         </>
     )
 }

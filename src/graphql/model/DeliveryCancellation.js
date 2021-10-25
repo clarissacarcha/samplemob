@@ -69,6 +69,9 @@ const Delivery = `
     feedback
     createdAt
   }
+  vehicleType {
+    name
+  }
 `;
 
 export const POST_DELIVERY_CANCELLATION = gql`

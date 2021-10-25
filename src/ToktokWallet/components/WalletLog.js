@@ -26,7 +26,7 @@ export const WalletLog = ({item ,index , itemsLength }) => {
         displayNumber: "",
     })
 
-    const ViewTransactionDetails = ({item , title, phrase , referenceDate , transactionAmount, displayNumber, externalReferenceNumber , deliveryId, cashOutDisplayInformations,cashInMobileNumber}) => {
+    const ViewTransactionDetails = ({item , title, phrase , referenceDate , transactionAmount, displayNumber, externalReferenceNumber , deliveryId, cashOutDisplayInformations,cashInMobileNumber,externalDetails}) => {
         setTransactionVisible(true)
         setTransactionInfo({
             refNo: MaskLeftZero(item.id),
@@ -39,10 +39,12 @@ export const WalletLog = ({item ,index , itemsLength }) => {
             deliveryId: deliveryId,
             cashOutDisplayInformations: cashOutDisplayInformations,
             cashInMobileNumber: cashInMobileNumber,
+            externalDetails: externalDetails
         })
     }
 
-    let title = item.externalName ? item.externalName : item.transactionType.name
+    // let title = item.externalName ? item.externalName : item.transactionType.name
+    let title = item.transactionType.name
     const amountcolor = item.sourceWalletId == tokwaAccount.wallet.id ? COLOR.RED : "green"
     const amountprefix = item.sourceWalletId == tokwaAccount.wallet.id ? "-" : "+"
     // const referenceDate = moment(item.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')
@@ -72,18 +74,13 @@ export const WalletLog = ({item ,index , itemsLength }) => {
         sourceName = ``
         destinationName = ``
         cashInMobileNumber = tokwaAccount.mobileNumber
-    }else if(item.externalName){
-        sourceName = ``
-        destinationName = ``
-    }else{
+    }else if(item.sourceWalletId && item.destinationWalletId){
         sourceName = `${item.sourcePerson.firstName} ${item.sourcePerson.lastName}`
         destinationName = `${item.destinationPerson.firstName} ${item.destinationPerson.lastName}`
     }
 
     let phrase = ""
-    if(item.externalPhrase){
-        phrase = `${item.externalPhrase}`
-    }else{
+    if(item.sourceWalletId && item.destinationWalletId){
         if(item.sourceWalletId == tokwaAccount.wallet.id ){
             phrase = `${item.transactionType.sourcePhrase.replace("[:source]",destinationName)}`
             phrase = `${phrase.replace("[:amount]",`${tokwaAccount.wallet.currency.code} ${numberFormat(item.amount)}`)}`
@@ -91,33 +88,19 @@ export const WalletLog = ({item ,index , itemsLength }) => {
             phrase = `${item.transactionType.destinationPhrase.replace("[:source]",sourceName)}`
             phrase = `${phrase.replace("[:amount]",`${tokwaAccount.wallet.currency.code} ${numberFormat(item.amount)}`)}`
         }
+    }else{
+        phrase = (item.sourceWalletId == tokwaAccount.wallet.id) ? item.transactionType.sourcePhrase : item.transactionType.destinationPhrase
     }
 
     let deliveryId = null
-    if(
-        item.externalName 
-        && item.externalName === "toktok" 
-        && item.externalPhrase
-        && (item.externalPhrase === "earnings" || item.externalPhrase === "payment" || item.externalPhrase === "cancelled"))
-    {
-        const deliveryPayload = JSON.parse(item.externalPayload)
-        deliveryId = deliveryPayload.delivery.deliveryId
-    }
+    const externalDetails = item.externalDetails
 
     return (
         <>
             <TransactionDetails 
                 visible={transactionVisible}
                 setVisible={setTransactionVisible}
-                refNo={transactionInfo.refNo}
-                refDate={transactionInfo.refDate}
-                label={transactionInfo.label}
-                phrase={transactionInfo.phrase}
-                amount={transactionInfo.amount}
-                displayNumber={transactionInfo.displayNumber}
-                externalReferenceNumber={transactionInfo.externalReferenceNumber}
-                deliveryId={transactionInfo.deliveryId}
-                cashOutDisplayInformations={cashOutDisplayInformations}
+                transactionInfo={transactionInfo}
                 cashInMobileNumber={cashInMobileNumber}
             />
 
@@ -131,7 +114,8 @@ export const WalletLog = ({item ,index , itemsLength }) => {
                 externalReferenceNumber , 
                 deliveryId ,
                 cashOutDisplayInformations,
-                cashInMobileNumber
+                cashInMobileNumber,
+                externalDetails
             })} style={styles.transaction}>
                 <View style={styles.transactionDetails}>
                     {/* <Text style={{fontSize: 12,fontFamily: FONT_MEDIUM}}>{title} <Text style={{fontFamily: FONT_LIGHT,fontSize: 10}}> ( {status} )</Text></Text> */}

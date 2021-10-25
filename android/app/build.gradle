@@ -151,8 +151,8 @@ android {
         applicationId "ph.cloudpanda.toktok"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1170000
-        versionName "1.17.0"
+        versionCode 1190000
+        versionName "1.19.0"
         missingDimensionStrategy 'react-native-camera', 'general' // react-native-camera option to use 'mlkit' for machine learning
         multiDexEnabled true // dex merger more than 64k
     }
@@ -222,6 +222,8 @@ dependencies {
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
+    implementation "com.facebook.fresco:fresco:2.5.0"
+    implementation "com.facebook.fresco:animated-gif:2.5.0"
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'

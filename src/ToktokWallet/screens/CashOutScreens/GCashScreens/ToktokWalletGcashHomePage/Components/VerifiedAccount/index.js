@@ -3,13 +3,14 @@ import {View,Text,StyleSheet,Image,TextInput} from 'react-native'
 import { ICON_SET, VectorIcon, YellowButton } from 'src/revamp'
 import {useSelector} from 'react-redux'
 import { numberFormat } from 'toktokwallet/helper'
+import { TransactionUtility } from 'toktokwallet/util'
 import { useNavigation } from '@react-navigation/native'
 import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
-import { POST_CASH_OUT } from 'toktokwallet/graphql'
+import { POST_CASH_OUT , POST_REQUEST_CASH_OUT } from 'toktokwallet/graphql'
 import { useMutation } from '@apollo/react-hooks'
 import { useAlert } from 'src/hooks/useAlert'
 import { onErrorAlert } from 'src/util/ErrorUtility'
-import { DisabledButton, Separator, EnterPinCode } from 'toktokwallet/components'
+import { DisabledButton, Separator, EnterPinCode , EnterOtpCode } from 'toktokwallet/components'
 import { AlertOverlay } from 'src/components'
 import CONSTANTS from 'common/res/constants'
 
@@ -32,11 +33,34 @@ export const VerifiedAccount = ({record,provider})=> {
     const alert = useAlert()
     const [pinCodeAttempt,setPinCodeAttempt] = useState(6)
     const [openPinCode,setOpenPinCode] = useState(false)
+    const [otpCodeAttempt,setOtpCodeAttempt] = useState(6)
+    const [openOtpCode,setOpenOtpCode] = useState(false)
+    const [requestFundTransferId,setRequestFundTransferId] = useState(null)
 
-    const [postCashOut , {data,error,loading}] = useMutation(POST_CASH_OUT, {
+    const [postRequestCashOut , {loading: requestLoading}] = useMutation(POST_REQUEST_CASH_OUT , {
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+        onCompleted: ({postRequestCashOut})=>{
+            const { validator , requestFundTransferId } = postRequestCashOut
+            setRequestFundTransferId(requestFundTransferId)
+            if(validator == "TPIN"){
+                setPinCodeAttempt(6)
+                return setOpenPinCode(true)
+            }else{
+                setOtpCodeAttempt(6)
+                return setOpenOtpCode(true)
+            }
+           
+        },
+        onError: (error)=>{
+            onErrorAlert({alert,error})
+        }
+    })
+
+    const [postCashOut , {data , error , loading}] = useMutation(POST_CASH_OUT , {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({postCashOut})=> {
             setOpenPinCode(false)
+            setOpenOtpCode(false)
             setCashoutLogParams({
                 accountName: `${record.firstName} ${record.lastName}`,
                 accountNumber: record.mobile,
@@ -45,21 +69,16 @@ export const VerifiedAccount = ({record,provider})=> {
             setSuccessModalVisible(true)
         },
         onError: (error)=> {
-            const {graphQLErrors, networkError} = error;
-            console.log(graphQLErrors)
-            if(graphQLErrors[0].message == "Wallet Hold"){
-                setOpenPinCode(false)
-                navigation.navigate("ToktokWalletHomePage")
-                navigation.replace("ToktokWalletHomePage")
-                return navigation.push("ToktokWalletRestricted", {component: "onHold"})
-            }
-
-            if(graphQLErrors[0].message == "Invalid Pincode"){
-                return setPinCodeAttempt(graphQLErrors[0].payload.remainingAttempts)
-            }
-            setOpenPinCode(false)
-            onErrorAlert({alert,error})
-            return navigation.pop()
+            TransactionUtility.StandardErrorHandling({
+                error,
+                navigation,
+                alert,
+                onErrorAlert,
+                setOpenPinCode,
+                setOpenOtpCode,  
+                setPinCodeAttempt,
+                setOtpCodeAttempt       
+            })
         }
     })
 
@@ -82,14 +101,13 @@ export const VerifiedAccount = ({record,provider})=> {
         setErrorMessage("")
     }
 
-    const ProceedTransaction = (pinCode)=> {
+    const ProceedTransaction = ({pinCode = null ,Otp = null})=> {
         postCashOut({
             variables: {
                 input: {
-                    amount: +amount,
-                    provider: provider.id,
-                    currencyId: tokwaAccount.wallet.currency.id,
-                    pinCode: pinCode
+                    requestFundTransferId: requestFundTransferId,
+                    OTP: Otp,
+                    TPIN: pinCode
                 }
             }
         })
@@ -100,8 +118,16 @@ export const VerifiedAccount = ({record,provider})=> {
     }
 
     const onSwipeSuccess = ()=> {
-        setPinCodeAttempt(6)
-        setOpenPinCode(true)
+        postRequestCashOut({
+            variables: {
+                input: {
+                    amount: +amount,
+                    provider: provider.id,
+                    currencyId: tokwaAccount.wallet.currency.id,
+                    type: "GCash"
+                }
+            }
+        })
     }
 
     const confirmAmount = ()=> {
@@ -118,15 +144,12 @@ export const VerifiedAccount = ({record,provider})=> {
             swipeTitle: `Confirm`,
             onSwipeFail: onSwipeFail,
             onSwipeSuccess: onSwipeSuccess,
-            // onConfirm: ()=>{
-            //     setPinCodeAttempt(6)
-            //     setOpenPinCode(true)
-            // },
         })
     }
 
     return (
         <>
+        <AlertOverlay visible={requestLoading}/>
         <EnterPinCode 
                 visible={openPinCode} 
                 setVisible={setOpenPinCode} 
@@ -136,6 +159,15 @@ export const VerifiedAccount = ({record,provider})=> {
         >
              <AlertOverlay visible={loading} />
         </EnterPinCode>
+        <EnterOtpCode
+            visible={openOtpCode}
+            setVisible={setOpenOtpCode}
+            callBackFunc={ProceedTransaction}
+            otpCodeAttempt={otpCodeAttempt}
+            resend={onSwipeSuccess}
+        >
+            <AlertOverlay visible={loading} />
+        </EnterOtpCode>
         <Separator/>
         <SuccessfulCashOutModal 
              visible={successModalVisible}

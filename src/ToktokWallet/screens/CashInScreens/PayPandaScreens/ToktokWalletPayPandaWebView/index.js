@@ -13,14 +13,14 @@ import SuccessfulModal from './SuccessfulModal'
 
 const {width,height} = Dimensions.get('window')
 
-export const ToktokWalletPayPandaWebView = ()=> {
-    const navigation = useNavigation()
-    const route = useRoute()
+export const ToktokWalletPayPandaWebView = ({navigation,route})=> {
+  
     const webviewRef = useRef()
     navigation.setOptions({
         headerShown: false,
     }); 
-
+    const cashInAmount = route.params.cashInAmount
+    const onCashIn = route.params.onCashIn
     const [mounted, setMounted] = useState(true)
     const [checkurl,setCheckurl] = useState("")
     const [donetransaction,setDoneTransaction] = useState(false)
@@ -29,7 +29,6 @@ export const ToktokWalletPayPandaWebView = ()=> {
     const session = useSelector(state=>state.session)
     const constants = useSelector(state=>state.constants)
 
-    console.log(route.params)
     const initialpaymentData = {
         merchant_id: route.params.merchantId,
         reference_number: route.params.refNo,
@@ -93,7 +92,7 @@ export const ToktokWalletPayPandaWebView = ()=> {
                     renderLoading={()=> <LoadingIndicator/>}
                     onNavigationStateChange={(event)=> {
 
-                        
+                        console.log(JSON.stringify(event))
                        const checkreturnurl = event.url.search(route.params.paypandaReturnUrl)
                         if(checkreturnurl != -1){
                             const {url} = event
@@ -125,6 +124,7 @@ export const ToktokWalletPayPandaWebView = ()=> {
                     amount={route.params.amount_to_pay}
                     successModalVisible={true}
                     cashInLogParams={cashInLogParams}
+                    onCashIn={onCashIn}
                 />
             }
             </View>

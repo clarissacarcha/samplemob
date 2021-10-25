@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import {connect} from 'react-redux';
 import {StyleSheet, SafeAreaView, StatusBar, ScrollView, RefreshControl} from 'react-native';
 import OneSignal from 'react-native-onesignal';
 import {COLOR} from '../../../../../res/variables';
@@ -6,7 +7,7 @@ import {COLOR} from '../../../../../res/variables';
 //SELF IMPORTS
 import {Header, Menu, Advertisements} from './Components';
 
-export const ToktokLandingHome = ({navigation}) => {
+const Screen = ({navigation, constants}) => {
   // const userLocation = {
   //   latitude,
   //   longitude,
@@ -72,13 +73,24 @@ export const ToktokLandingHome = ({navigation}) => {
           // }
         >
           <Header />
-          <Menu setUserLocation={setUserLocation} />
+          <Menu setUserLocation={setUserLocation} constants={constants} />
           <Advertisements />
         </ScrollView>
       </SafeAreaView>
     </>
   );
 };
+
+const mapStateToProps = (state) => ({
+  session: state.session,
+  constants: state.constants,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  createSession: (payload) => dispatch({type: 'CREATE_SESSION', payload}),
+});
+
+export const ToktokLandingHome = connect(mapStateToProps, mapDispatchToProps)(Screen);
 
 const styles = StyleSheet.create({
   screen: {

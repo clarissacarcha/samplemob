@@ -8,6 +8,7 @@ import { useQuery } from '@apollo/react-hooks'
 import { onErrorAlert } from 'src/util/ErrorUtility'
 import {useAlert} from 'src/hooks'
 import { ContextCashOut } from '../ContextProvider'
+import {moderateScale,scale} from 'toktokwallet/helper'
 import CONSTANTS from 'common/res/constants'
 
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE , SIZE } = CONSTANTS
@@ -151,7 +152,7 @@ export const MySavedAccounts = ({selectBanks , edit})=> {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        height: 125,
+        height: moderateScale(125),
         backgroundColor:"white",
         paddingVertical: 10,
         paddingHorizontal: 16,

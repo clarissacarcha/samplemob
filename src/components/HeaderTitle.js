@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import {View, StyleSheet, Text, Platform} from 'react-native';
 import {DARK, FONTS, ORANGE} from '../res/constants';
 import {COLOR, FONT, FONT_SIZE} from '../res/variables';
 
@@ -18,6 +18,7 @@ const styles = StyleSheet.create({
   box: {
     alignItems: 'center',
     marginRight: 66,
+    width: Platform.select({ios: '100%', android: null}),
   },
   title: {
     fontSize: FONT_SIZE.L,

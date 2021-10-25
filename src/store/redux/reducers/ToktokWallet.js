@@ -24,6 +24,9 @@ const INITIAL_STATE = {
   },
   globalSettings: null,
   loading: false,
+  events: {
+    upgradeAccount: false,
+  }
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -51,6 +54,14 @@ export default (state = INITIAL_STATE, action) => {
           balance: +payload.wallet.balance , 
           recentTransactions: payload.transactions.recentTransactions, 
           allTransactions: payload.transactions.allTransactions,
+        }
+      }
+    case 'SET_TOKWA_EVENTS_REDIRECT':
+      return {
+        ...state,
+        events: {
+          ...state.events,
+          [action.payload.event]: action.payload.value
         }
       }
     default:

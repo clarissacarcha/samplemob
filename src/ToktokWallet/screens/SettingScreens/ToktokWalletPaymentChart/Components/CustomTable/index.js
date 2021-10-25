@@ -1,147 +1,117 @@
-import React, {useState} from 'react'
-import {View, Text, StyleSheet} from 'react-native'
-import { ScrollView } from 'react-native-gesture-handler';
+import React from 'react'
+import {View,Text,StyleSheet,Platform,Dimensions,StatusBar,ScrollView} from 'react-native'
 import CONSTANTS from 'common/res/constants'
+import {moderateScale,scale} from 'toktokwallet/helper'
 
-const { FONT_FAMILY: FONT , FONT_SIZE , COLOR } = CONSTANTS
-export const CustomTable = (props) => {
+const { COLOR , FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
+const { width , height } = Dimensions.get("window")
 
-    const [rowsizes, setrowsizes] = useState([])
-    const headingAllowance = 70
+const Header = ({data})=> {
 
-    const heading = () => {
-        return (
-            <>
-                <View style={{flex: 1, flexDirection: 'row'}}>
-                    {props.heading.map((item, i) => {
-                        rowsizes[i] = item.size
-                        let last = props.heading.length -1 == i
-                        return (
-                            <>
-                                <View style={{
-                                    ...styles.cellhead, 
-                                    width: item.size,
-                                    height: headingAllowance,
-                                    borderRightColor: last ? COLOR.ORANGE : "",
-                                    borderRightWidth: last ? 0.4 : 0
-                                }}>
-                                    <Text style={{textAlign: 'center', fontFamily: FONT.BOLD,fontSize:FONT_SIZE.M}}>{item.value}</Text>
-                                </View>
-                            </>
-                        )
-                    })}
+    return (
+       <View style={styles.headings}>
+           {
+               data.map((header)=>(
+                <View style={styles.title}>
+                        <Text style={styles.headerTitle}>{header}</Text>
                 </View>
-            </>
-        )
-    }
+               ))
+           }
+         
+       </View>
+    )
+}
 
-    const col = (data, rowindex) => {
-        return (
-            <>
-                <View style={{flex: 1, flexDirection: 'row', backgroundColor: rowindex % 2 == 0 ? "#fafcff" : "#fff"}}>
-                    {rowsizes.map((size, i) => {
-                        let lastrow = rowindex == props.rows.length - 1
-                        let lastcol = i == rowsizes.length - 1
-                        if(data[i].length > 1){
-                            return (
-                                <>
-                                    <View style={{ width: size}}>
-                                            <View style={{flex: 1, flexDirection: 'column'}}>
-                                                {data[i].map((val, j) => {
-                                                    let bottom = j == data[i].length-1
-                                                    return (
-                                                        <View style={{
-                                                            ...styles.cell, 
-                                                            width: size || 150,
-                                                            borderRightColor: lastcol ? COLOR.ORANGE : "",
-                                                            borderRightWidth: lastcol ? 0.4 : 0,
-                                                            borderBottomColor: lastrow && bottom ? COLOR.ORANGE : "",
-                                                            borderBottomWidth: lastrow && bottom ? 0.4 : 0
-                                                        }}>
-                                                            <Text style={{textAlign: 'center', fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M}}>{val}</Text>
-                                                        </View>
-                                                    )
-                                                })}                                        
-                                            </View>
-                                    </View>
-                                </>
-                            )
-                        }else{
-                            return (
-                                <>
-                                <View style={{
-                                    ...styles.cell, 
-                                    width: size || 150,
-                                    borderRightColor: lastcol ? COLOR.ORANGE : "",
-                                    borderRightWidth: lastcol ? 0.4 : 0,
-                                    borderBottomColor: lastrow ? COLOR.ORANGE : "",
-                                    borderBottomWidth: lastrow ? 0.4 : 0
-                                }}>
-                                    <Text style={{textAlign: 'center', fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M}}>{data[i]}</Text>
-                                </View>
-                                </>
-                            )
-                        }
-                    })}
-                </View>
-            </>
-        )
-    }
+const Column = ({data, rowindex})=> {
 
     return (
         <>
-            <ScrollView horizontal={true}>
+        {
+            data.map((content)=> {
 
-                <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', paddingVertical: 12, paddingHorizontal: 12}}>
-                    <View style={{ flex: 1, alignSelf: 'stretch', flexDirection: 'column'}}>
-                        
-                        <View style={{ flex: 1, alignSelf: 'stretch' }}>
-                            
-                            {heading()}
+                let rowBody = []
+                for (const [key, value] of Object.entries(content)) {
+                    rowBody.push(value)    
+                }
+    
+                return (
+                    <View style={styles.rowCells}>
+                       {
+                           rowBody.map((row,index)=> {
+                               let cellwidth
 
-                            <ScrollView vertical={true} style={{marginTop: headingAllowance}}>
-                            {props.rows.map((row, i) => {
-                                return col(row, i)
-                            })}
-                            </ScrollView>
-                            
-                        </View>                        
-
-                    </View>                    
-                </View>
-
-            </ScrollView>
+                               if(index == 0){
+                                 cellwidth = "28%"
+                               }
+                               if(index == 1){
+                                  cellwidth = "25%"
+                               }
+                               if(index == 2){
+                                 cellwidth = "32%"
+                               }
+                               if(index == 3){
+                                  cellwidth = "18%"
+                               }
+                               return (
+                                   <View style={{width:cellwidth,justifyContent:"center",}}>
+                                        {
+                                            row.map((displayText)=>(
+                                                <Text style={[styles.headerTitle , {fontFamily: FONT.REGULAR}]}>{displayText}</Text>
+                                            ))
+                                        }
+                                   </View>
+                                  
+                               )
+                           })
+                       }
+                           
+                    </View>
+                )
+            })
+        }
         </>
     )
 }
 
 
+export const CustomTable = ({headerData = [], rowsData = []})=> {
+
+    return (
+        <>
+            <Header
+                data={headerData}
+            />
+            <Column
+                data={rowsData}
+            />
+        </>
+    )
+}
+
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: COLOR.WHITE
+    headings: {
+        flexDirection:"row",
+        // borderWidth: 1,
     },
-    cellhead: {
-        flex: 1, 
-        alignSelf: 'stretch', 
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderTopColor: COLOR.ORANGE, 
-        borderTopWidth: 0.4,
-        borderLeftColor: COLOR.ORANGE, 
-        borderLeftWidth: 0.4, 
-        backgroundColor: COLOR.TRANSPARENT_YELLOW,
-        padding: 8
-    }, 
-    cell: {
-        flex: 1, 
-        alignSelf: 'stretch', 
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderTopColor: COLOR.ORANGE, 
-        borderTopWidth: 0.25,
-        borderLeftColor: COLOR.ORANGE, 
-        borderLeftWidth: 0.25, 
-        padding: 8
+    title: {
+        width: width / 4,
+        justifyContent:'center',
+        alignItems:"flex-start",
+        flex: 1,
+        paddingVertical: 5,
+        backgroundColor:COLOR.YELLOW,
+    },
+    headerTitle: {
+        fontFamily: FONT.BOLD,
+        fontSize: scale(FONT_SIZE.S),
+        paddingHorizontal: 5,
+    },
+    rowCells: {
+        flex: 1,
+        flexDirection:"row",
+        borderBottomWidth: 1,
+        borderLeftWidth: 1,
+        borderRightWidth: 1,
+        padding: 2,
     }
 })
