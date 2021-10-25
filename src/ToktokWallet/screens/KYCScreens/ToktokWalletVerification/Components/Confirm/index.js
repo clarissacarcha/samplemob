@@ -127,9 +127,30 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
             identificationCardId: VerifyUserData.identificationId,
             sourceIncomeId: VerifyUserData.incomeInfo.source.id,
             otherSource: VerifyUserData.incomeInfo.otherSource,
-            occupation: VerifyUserData.incomeInfo.occupation
+            occupation: VerifyUserData.incomeInfo.occupation,
+            isPep: VerifyUserData.pepInfo.isPep,
+            pepRequest: {
+                videocall: {
+                    videoCallContactDetails: VerifyUserData.pepInfo.videocall.videoCallContactDetails,
+                    callChannelId: VerifyUserData.pepInfo.videocall.callChannelId,
+                    preferredVcsDayMin: VerifyUserData.pepInfo.videocall.preferredVcsDayMin,
+                    preferredVcsDayMax: VerifyUserData.pepInfo.videocall.preferredVcsDayMax,
+                    preferredVcsTimeMin: VerifyUserData.pepInfo.videocall.preferredVcsTimeMin,
+                    preferredVcsTimeMax: VerifyUserData.pepInfo.videocall.preferredVcsTimeMax,
+                },
+                questionnaire: {
+                    isPep:  VerifyUserData.pepInfo.questionnaire.isPep,
+                    pepPosition: VerifyUserData.pepInfo.questionnaire.pepPosition,
+                    isFamilyPep: VerifyUserData.pepInfo.questionnaire.isFamilyPep,
+                    familyPepPosition: VerifyUserData.pepInfo.questionnaire.familyPepPosition,
+                    sourceOfIncomeId:  VerifyUserData.pepInfo.questionnaire.sourceOfIncomeId,
+                    sourceOfIncome: VerifyUserData.pepInfo.questionnaire.sourceOfIncome,
+                    sourceOfWealthId: VerifyUserData.pepInfo.questionnaire.sourceOfWealthId,
+                    sourceOfWealth: VerifyUserData.pepInfo.questionnaire.sourceOfWealth,
+                }
+            }
         }
-
+        
         postKYCRegister({
             variables: {
                 input: input

@@ -26,7 +26,7 @@ export const ToktokWalletVerifyResult = ({navigation})=> {
             
             <View style={styles.actionBtn}>
                 <YellowButton label="Done" onPress={() => {
-                    navigation.replace("ToktokWalletHomePage")
+                    navigation.replace("ToktokWalletLoginPage")
                 }} />
             </View>
         </View>

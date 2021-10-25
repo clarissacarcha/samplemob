@@ -86,14 +86,25 @@ export const Submit = () => {
             preferredVcsTimeMax: timePicked.max
         }
 
+        setPepInfo(state=>{
+            return {
+                ...state,
+                videocall: {
+                    ...state.videocall,
+                    videoCallContactDetails: input.videoCallContactDetails,
+                    callChannelId: selectedCallChannel.id,
+                    callChannel: selectedCallChannel.channelName,
+                    preferredVcsDayMin: input.preferredVcsDayMin,
+                    preferredVcsDayMax: input.preferredVcsDayMax,
+                    preferredVcsTimeMin: input.preferredVcsTimeMin,
+                    preferredVcsTimeMax: input.preferredVcsTimeMax
+                }
+            }
+        })
+
         setCurrentIndex(state=>state+1);
         navigation.pop();
 
-        // postFullyVerifiedUpgradeRequest({
-        //     variables: {
-        //         input
-        //     }
-        // })
     }
 
     return (

@@ -128,10 +128,7 @@ export const VerifySelfieWithID = ()=> {
                         isPep: true,
                     }
                 })
-                if(pepInfo.questionnaire.isPep == "" || pepInfo.videocall.videoCallContactDetails == ""){
-                    return setShowPepQuestionnaire(true);
-                }
-                return setCurrentIndex(state=>state+1);
+                return setShowPepQuestionnaire(true);
             }
 
             return setCurrentIndex(oldval => oldval + 1)

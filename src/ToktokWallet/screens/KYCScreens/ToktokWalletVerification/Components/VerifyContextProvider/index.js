@@ -79,13 +79,16 @@ export const VerifyContextProvider = ({children})=> {
             isFamilyPep: "",
             familyPepPosition: "",
             sourceOfIncomeId: "",
+            sourceOfIncomeDes: "",
             sourceOfIncome: "",
             sourceOfWealthId: "",
+            sourceOfWealthDes: "",
             sourceOfWealth: ""
         },
         videocall: {
             videoCallContactDetails: "",
             callChannelId: "",
+            callChannel: "",
             preferredVcsDayMin: "",
             preferredVcsDayMax: "",
             preferredVcsTimeMin: "",

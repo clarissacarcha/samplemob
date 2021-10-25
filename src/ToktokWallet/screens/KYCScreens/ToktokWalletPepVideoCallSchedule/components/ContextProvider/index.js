@@ -7,9 +7,13 @@ import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import { GET_CALL_CHANNELS } from 'toktokwallet/graphql/model'
 import { onErrorAlert } from 'src/util/ErrorUtility'
 import { useAlert } from 'src/hooks'
+import { useRoute } from '@react-navigation/native'
 export const ContextProvider = ({ children })=> {
+    const route = useRoute()
+    const { pepInfo } = route?.params
+    const videocall = pepInfo.videocall
 
-    const [selectedCallChannel, setSelectedCallChannel] = useState({});
+    const [selectedCallChannel, setSelectedCallChannel] = useState({id: videocall.callChannelId , channelName: videocall.callChannel});
     const [callChannels, setCallChannels] = useState("");
     const [numberOrLink, setNumberOrLink] = useState("");
     const [dayPicked, setDayPicked] = useState({

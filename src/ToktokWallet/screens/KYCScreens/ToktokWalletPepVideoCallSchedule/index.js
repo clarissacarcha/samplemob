@@ -55,11 +55,9 @@ export const ToktokWalletPepVideoCallSchedule = ({ navigation }) => {
     })
    
     return (
-        <CheckIdleState>
-            <ContextProvider>
-                <MainComponent />
-            </ContextProvider>
-       </CheckIdleState>
+        <ContextProvider>
+            <MainComponent />
+        </ContextProvider>
     )
 }
 
