@@ -1,65 +1,42 @@
 import React, {useState, useEffect} from 'react';
-import {
-  StyleSheet,
-  Platform,
-  View,
-  Text,
-  ImageBackground,
-  Image,
-  TouchableOpacity,
-  FlatList,
-  ScrollView,
-  TextInput,
-  Picker,
-  Switch,
-} from 'react-native';
+import {StyleSheet, Platform, View, Text, TouchableOpacity, TextInput} from 'react-native';
 import {HeaderBack, HeaderTitle, HeaderRight, LoadingOverlay} from '../../../../Components';
-import {AddressFinderModal, CityAddressModal, CityAddressModalAndroid, AddressModal} from './Components';
+import {AddressFinderModal, CityAddressModalAndroid, AddressModal} from './Components';
 import Toast from 'react-native-simple-toast';
 import ToggleSwitch from 'toggle-switch-react-native';
 import CustomIcon from '../../../../Components/Icons';
 import axios from 'axios';
-import { EventRegister } from "react-native-event-listeners"
+import {EventRegister} from 'react-native-event-listeners';
 
 import {useLazyQuery} from '@apollo/react-hooks';
-import {GET_CITIES, GET_CITY} from '../../../../../graphql/toktokmall/model/Address';
+import {GET_CITY} from '../../../../../graphql/toktokmall/model/Address';
 import {TOKTOK_MALL_GRAPHQL_CLIENT} from '../../../../../graphql';
 import {connect} from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
 import {useStateCallback} from '../../../../helpers/useStateCallback';
-import { ApiCall } from '../../../../helpers';
 
-const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefaultUserAddress}, reduxStates: {user_address,}}) => {
+const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
   const [newAddressForm, setNewAddressForm] = useState({
     city: null,
   });
-  const [isLoading, setIsLoading] = useState(false)
-  const [cities, setCities] = useState([]);
-  const [defaultCity, setDefaultCity] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [clicked, setClicked] = useState(false);
   const [toUpdate, setToUpdate] = useState(false);
   const [confirmDeleteModal, setConfirmDeleteModal] = useState(false);
   const [messageModal, setMessageModal] = useState(false);
   const [deletedModal, setDeletedModal] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [newDefault, setNewDefault] = useState(false);
   const [modalProvinceVisible, setModalProvinceVisible] = useState(false);
-  const [fullname, setFullName] = useState('');
-  const [contact, setContact] = useState('');
-  const [address, setAddress] = useState('');
   const [city, setCity] = useState('Select City');
-  const [postalCode, setPostalCode] = useState('');
-  const [landmark, setLandmark] = useState('');
   const [provCode, setProvCode] = useState(0);
   const [munCode, setMunCode] = useState(0);
   const [regCode, setRegCode] = useState(0);
-  const [longitude, setLongitude] = useState(0)
-  const [latitude, setLatitude] = useState(0)
+  const [longitude, setLongitude] = useState(0);
+  const [latitude, setLatitude] = useState(0);
   const [validation, setValidation] = useStateCallback({
     validated: false,
     errors: [],
   });
-  const [addressFinderModal, setAddressFinderModal] = useState(false)
+  const [addressFinderModal, setAddressFinderModal] = useState(false);
 
   const onChangeText = (name, value) => {
     setNewAddressForm((prevState) => ({
@@ -73,7 +50,10 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefa
     fetchPolicy: 'network-only',
     variables: {
       input: {
-        citymunCode: route.params?.item.municipalityId.toString().length === 5 ? `0${route.params?.item.municipalityId}` : `${route.params?.item.municipalityId}`,
+        citymunCode:
+          route.params?.item.municipalityId.toString().length === 5
+            ? `0${route.params?.item.municipalityId}`
+            : `${route.params?.item.municipalityId}`,
       },
     },
     onCompleted: (response) => {
@@ -111,17 +91,16 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefa
   });
 
   const ProcessSaving = async () => {
-    
-    const refresh = () => setTimeout(() => {
-      EventRegister.emit("refreshAddress")
-    }, 1000);
+    const refresh = () =>
+      setTimeout(() => {
+        EventRegister.emit('refreshAddress');
+      }, 1000);
 
-    SavePostAddress(() => {   
-      refresh() 
+    SavePostAddress(() => {
+      refresh();
       navigation.goBack();
-    })
-
-  }
+    });
+  };
 
   const onSelectCity = (data) => {
     setCity(data.city);
@@ -131,18 +110,13 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefa
   };
 
   const SavePostAddress = async (callback, id) => {
-    // const wordNum = newAddressForm.receiverContact;
-    // const get = wordNum.slice(0, 2);
     if (newAddressForm.receiverContact.length != 11 || newAddressForm.receiverContact == '') {
-      return alert(
-        'Invalid contact number.',
-      );
-    }else{
-      setIsLoading(true)
+      return alert('Invalid contact number.');
+    } else {
+      setIsLoading(true);
       AsyncStorage.getItem('ToktokMallUser').then(async (raw) => {
         let data = JSON.parse(raw) || {};
         if (data.appSignature) {
-
           let body = {
             customer_id: data.userId,
             receiver_name: newAddressForm.receiverName,
@@ -158,11 +132,11 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefa
             default: clicked == true ? 1 : 0,
           };
 
-          if(route.params?.update) body.address_id = route.params?.item.id
+          if (route.params?.update) body.address_id = route.params?.item.id;
 
-          const endpoint = route.params?.update ? `update_address` :  `save_address`
+          const endpoint = route.params?.update ? `update_address` : `save_address`;
 
-          console.log(body, data.appSignature)
+          console.log(body, data.appSignature);
           let formData = new FormData();
           formData.append('signature', data.appSignature);
           formData.append('data', JSON.stringify(body));
@@ -184,18 +158,16 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefa
         }
       });
     }
-    
   };
 
   const DeleteAddress = async () => {
-    setConfirmDeleteModal(true)
-    setIsLoading(true)
+    setConfirmDeleteModal(true);
+    setIsLoading(true);
     AsyncStorage.getItem('ToktokMallUser').then(async (raw) => {
       let data = JSON.parse(raw) || {};
       if (data.appSignature) {
-
         let body = {
-          address_id: `${newAddressForm.id}`
+          address_id: `${newAddressForm.id}`,
         };
 
         let formData = new FormData();
@@ -205,53 +177,18 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefa
         await axios
           .post(`http://ec2-18-176-178-106.ap-northeast-1.compute.amazonaws.com/toktokmall/delete_address`, formData)
           .then(async (response) => {
-            console.log(response.data)
-            setIsLoading(false)            
-            setDeletedModal(true)
+            console.log(response.data);
+            setIsLoading(false);
+            setDeletedModal(true);
             updateUserAddress('remove', newAddressForm.id);
             navigation.goBack();
           })
           .catch((error) => {
-            setIsLoading(false)
+            setIsLoading(false);
             console.log(error);
           });
       }
     });
-  };
-
-  const SaveDefaultAddress = async (callback) => {
-
-    setIsLoading(true)
-
-    const raw = await AsyncStorage.getItem("ToktokMallUser")
-    const userdata = JSON.parse(raw)
-
-    if(!userdata || !userdata?.userId) return
-
-    let body = {
-      address_id: newAddressForm.id,
-      customer_id: userdata.userId
-    };
-
-    // console.log(body)
-
-    const req = await ApiCall("default_address", body, true, "inline")
-
-    if(req.responseData && req.responseData.success == 1){
-      setIsLoading(false)
-      callback()
-      navigation.goBack();
-    }else if(req.responseError && req.responseError.success == 0){
-      setIsLoading(false)
-      Toast.show(req.responseError.message, Toast.LONG)
-    }else if(req.responseError){
-      setIsLoading(false)
-      Toast.show("Something went wrong", Toast.LONG)
-    }else if(req.responseError == null && req.responseData == null){
-      setIsLoading(false)
-      Toast.show("Something went wrong", Toast.LONG)
-    }
-    
   };
 
   const addError = (field) => {
@@ -332,7 +269,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefa
           setIsVisible={(val) => {
             setMessageModal(val);
           }}
-          message={route.params?.update ? 'Address Updated!' :'Address Added!'}
+          message={route.params?.update ? 'Address Updated!' : 'Address Added!'}
         />
       )}
       {deletedModal && (
@@ -345,21 +282,14 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefa
           message={'Address Deleted!'}
         />
       )}
-      {/* {Platform.OS == "ios" && 
-      <CityAddressModal
-        modalProvinceVisible={modalProvinceVisible}
-        setModalProvinceVisible={setModalProvinceVisible}
-        city={city}
-        setCity={(data) => onSelectCity(data)}
-      />} */}
       <AddressFinderModal
         isVisible={addressFinderModal}
         setVisible={setAddressFinderModal}
         setLocation={(data) => {
-          onChangeText('address', data.name)
-          console.log(data.geometry.location)
-          setLatitude(parseFloat(data.geometry.location.lat))
-          setLongitude(parseFloat(data.geometry.location.lng))
+          onChangeText('address', data.name);
+          console.log(data.geometry.location);
+          setLatitude(parseFloat(data.geometry.location.lat));
+          setLongitude(parseFloat(data.geometry.location.lng));
         }}
       />
       <CityAddressModalAndroid
@@ -391,30 +321,13 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefa
               }
               placeholder={'Contact Number'}
               onChangeText={(text) => {
-                // if(newAddressForm.receiverContact.length <= 11){
-                  onChangeText('landmark', text);
-                  console.log(newAddressForm.receiverContact.length)
-                // }
+                onChangeText('receiverContact', text);
               }}
               keyboardType={'phone-pad'}
               keyboardType="numeric"
               maxLength={11}
             />
           </View>
-          {/* <View style={styles.textinputContainer}>
-            <TextInput
-              style={styles.textinput}
-              placeholder={'Address(House #, Street, Village)'}
-              value={newAddressForm.address}
-              placeholderTextColor={validation.validated && validation.errors?.includes('address') ? 'red' : 'gray'}
-              // onChangeText={(text) => {
-              //   onChangeText('address', text);
-              // }}
-              onFocus={() => {
-                setAddressFinderModal(true)
-              }}
-            />
-          </View> */}
           <TouchableOpacity
             onPress={() => {
               setAddressFinderModal(true);
@@ -425,26 +338,13 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefa
                   styles.text,
                   {
                     color: validation.validated && validation.errors?.includes('address') ? 'red' : 'gray',
-                    textTransform: 'capitalize'
+                    textTransform: 'capitalize',
                   },
                 ]}>
-                {!newAddressForm.address ? "Address(House #, Street, Village)" : newAddressForm.address}
+                {!newAddressForm.address ? 'Address(House #, Street, Village)' : newAddressForm.address}
               </Text>
-              {/* <CustomIcon.EIcon name={'chevron-down'} size={20} color={'#9E9E9E'} /> */}
             </View>
           </TouchableOpacity>
-          {/* <DropDownPicker
-            containerStyle={styles.dropdownpicker}
-            style={styles.dropdownpickerStyle}
-            defaultValue={defaultCity}
-            open={open}
-            items={cities}
-            setOpen={setOpen}
-            onChangeItem={(item) => {
-              console.log(item)
-              onChangeText('city', item);
-            }}
-          /> */}
           <TouchableOpacity
             onPress={() => {
               setModalProvinceVisible(true);
@@ -455,7 +355,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefa
                   styles.text,
                   {
                     color: validation.validated && validation.errors?.includes('city') ? 'red' : 'gray',
-                    textTransform: 'capitalize'
+                    textTransform: 'capitalize',
                   },
                 ]}>
                 {city}
@@ -505,13 +405,13 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefa
           {toUpdate && (
             <>
               <TouchableOpacity
-                style={[styles.button2, {borderColor: route.params?.item?.defaultAdd === 1 ? '#D7D7D7':'#F6841F'}]}
+                style={[styles.button2, {borderColor: route.params?.item?.defaultAdd === 1 ? '#D7D7D7' : '#F6841F'}]}
                 disabled={route.params?.item?.defaultAdd === 1}
-                onPress={()=> {
+                onPress={() => {
                   // setConfirmDeleteModal(true)
-                  setClicked ? Toast.show('Cannot delete default address') : setConfirmDeleteModal(true)
+                  setClicked ? Toast.show('Cannot delete default address') : setConfirmDeleteModal(true);
                 }}>
-                <Text style={{color: route.params?.item?.defaultAdd === 1 ? '#D7D7D7':'#F6841F'}}>Delete</Text>
+                <Text style={{color: route.params?.item?.defaultAdd === 1 ? '#D7D7D7' : '#F6841F'}}>Delete</Text>
               </TouchableOpacity>
               <View style={{flex: 0.2}} />
             </>
