@@ -43,9 +43,11 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
   const [getTransactionByRefNum, {error: transactionError, loading: transactionLoading, refetch}] = useLazyQuery(
     GET_ORDER_TRANSACTION_BY_REF_NUM,
     {
-      variables: {input: {referenceNum: referenceNum}},
       client: TOKTOK_FOOD_GRAPHQL_CLIENT,
       fetchPolicy: 'network-only',
+      onError: () => {
+        checkOrderResponse5mins.current = BackgroundTimer.setInterval(() => setSeconds(seconds - 5), 5000);
+      },
       onCompleted: ({getTransactionByRefNum}) => {
         if (JSON.stringify(getTransactionByRefNum) != JSON.stringify(transaction)) {
           setTransaction(getTransactionByRefNum);
@@ -65,17 +67,17 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
     },
   );
 
-  // useEffect(() => {
-  //   const unsubscribe = navigation.addListener('blur', () => {
-  //     clearInterval(checkOrderResponse5mins.current);
-  //     clearInterval(getRiderDetailsInterval.current);
-  //   });
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('blur', () => {
+      BackgroundTimer.clearInterval(checkOrderResponse5mins.current);
+      BackgroundTimer.clearInterval(getRiderDetailsInterval.current);
+    });
 
-  //   return unsubscribe;
-  // }, [navigation]);
+    return unsubscribe;
+  }, [navigation]);
 
   useEffect(() => {
-    getTransactionByRefNum();
+    handleGetTransactionByRefNum();
   }, []);
 
   useEffect(() => {
@@ -98,18 +100,32 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
     };
   }, [riderSeconds]);
 
+  const handleGetTransactionByRefNum = () => {
+    getTransactionByRefNum({
+      variables: {
+        input: {
+          referenceNum: referenceNum,
+        },
+      },
+    });
+  }
+
   const handleMapRider = () => {
     if (transaction.tDeliveryId && riderDetails != null) {
-      getToktokFoodRiderDetails({
-        variables: {
-          input: {
-            deliveryId: transaction.tDeliveryId,
+      if(riderSeconds > 0){
+        riderRefetch({
+          variables: {
+            input: {
+              deliveryId: transaction.tDeliveryId,
+            },
           },
-        },
-      });
-    }
-    getRiderDetailsInterval.current = BackgroundTimer.setInterval(() => setRiderSeconds(seconds - 20), 20000);
-    // console.log('Rider Details Updated ' + riderSeconds);
+        });
+        getRiderDetailsInterval.current = BackgroundTimer.setInterval(() => setRiderSeconds(riderSeconds - 20), 20000);
+      } else {
+        setRiderSeconds(300)
+      }
+    } 
+    console.log('Rider Details Updated ' + riderSeconds);
   };
 
   const handleOrderProcess = async () => {
@@ -134,7 +150,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
         if (transaction.isdeclined != 1) {
           if (seconds > 0) {
             if (transaction.orderStatus != 'p' && transaction.orderIsfor == 1) {
-              refetch({variables: {input: {referenceNum: referenceNum}}});
+              handleGetTransactionByRefNum();
               if (transaction.tDeliveryId != null && riderDetails == null) {
                 getToktokFoodRiderDetails({
                   variables: {
@@ -143,9 +159,11 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
                     },
                   },
                 });
+              } else {
+                if(riderSeconds == 0){ setRiderSeconds(300) }
               }
             } else {
-              refetch({variables: {input: {referenceNum: referenceNum}}});
+              handleGetTransactionByRefNum();
             }
             checkOrderResponse5mins.current = BackgroundTimer.setInterval(() => setSeconds(seconds - 5), 5000);
           } else {
@@ -192,6 +210,8 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
           });
         }
       }
+    } else {
+      checkOrderResponse5mins.current = BackgroundTimer.setInterval(() => setSeconds(seconds - 5), 5000);
     }
   };
 
@@ -241,16 +261,15 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
         messages={showDialogMessage.message}
         reasons={showDialogMessage.reasons}
         visibility={showDialogMessage.show}
+        onCloseModal={() => { onCloseModal() }}
         onCloseBtn1={() => {
-          setShowDialogMessage(prev => ({ ...prev, show: false }))
-          navigation.navigate('ToktokFoodHome') }
-        }
-        onCloseBtn2={() => {
-          onCloseModal();
+          setShowDialogMessage(prev => ({ ...prev, show: false }));
+          navigation.navigate('ToktokFoodHome');
         }}
+        onCloseBtn2={() => { onCloseModal() }}
         btn1Title='Browse Restaurant'
         btn2Title='OK'
-        hasTwoButtons
+        hasTwoButtons={showDialogMessage.title != 'Order Complete'}
       />
       <HeaderImageBackground searchBox={false}>
         <HeaderTitle />
