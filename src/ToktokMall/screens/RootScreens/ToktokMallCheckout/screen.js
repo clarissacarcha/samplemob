@@ -74,9 +74,10 @@ const Component = ({route, navigation, createMyCartSession}) => {
     fetchPolicy: 'network-only',    
     onCompleted: async (response) => {
       if(response.getCheckoutData){
-        setAddressData(response.getCheckoutData.address);
-        await setPaymentList(response.getCheckoutData.paymentMethods)
-        await getShippingRates(response.getCheckoutData.shippingRatePayload)
+        let data = response.getCheckoutData
+        setAddressData(data.address);
+        await setPaymentList(data.paymentMethods)
+        await getShippingRates(data.shippingRatePayload, data.cartrawdata)
       }
     },
     onError: (err) => {
@@ -86,43 +87,18 @@ const Component = ({route, navigation, createMyCartSession}) => {
     }
   })
 
-  const getShippingRates = async (payload) => {   
-    // console.log(payload)
+  const getShippingRates = async (payload, raw) => {
+    // console.log(JSON.stringify(payload))
     // console.log(JSON.stringify(payload.cart)) 
     const res = await ShippingApiCall("get_shipping_rate", payload, true)
     if(res.responseData && res.responseData.success == 1){
       CheckoutContextData.setShippingFeeRates(res.responseData.newCart)
     }else if(res.responseError && res.responseError.success == 0){
-      CheckoutContextData.setUnserviceableShipping(res.responseError.removedCart)
+      CheckoutContextData.setUnserviceableShipping(res.responseError.removedCart)      
+    }else{
+      CheckoutContextData.setUnserviceableShipping([raw])
     }
     setInitialLoading(false)
-  }
-
-  const getShippingRatesx = async (rates) => {
-    if(rates && rates.length > 0){
-      for (const shippingrate of rates) {
-        console.log("Shipping Rate", shippingrate)
-        const res = await ShippingApiCall("get_shipping", shippingrate)
-        if(res.responseData && res.responseData.success == 1){
-          let tempArr = shippingRates
-          let {price, hash_price, hash} = res.responseData
-          tempArr.push({price, hash_price, hash})
-          setShippingRates(tempArr)
-        }else if(res.responseError){
-          let contents = JSON.parse(res.responseError.message)
-          console.log(contents.errors)
-          if(contents.errors.length > 0){
-            for (const err of contents.errors) {
-              Alert.alert("Shipping\n", err.message)
-            }
-          }
-        }
-        calculateGrandTotal()
-      }
-      setInitialLoading(false)
-    }else{
-      setInitialLoading(false)
-    }    
   }
 
   const [ getMyAccount ] = useLazyQuery(GET_MY_ACCOUNT , {
@@ -262,8 +238,10 @@ const Component = ({route, navigation, createMyCartSession}) => {
       setInitialLoading(true)
       setShippingRates([])
       setShippingDiscounts([])
+      
       CheckoutContextData.setShippingFeeRates([])
       CheckoutContextData.setUnserviceableShipping([])
+      
       getCheckoutData({
         variables: {
           input: {

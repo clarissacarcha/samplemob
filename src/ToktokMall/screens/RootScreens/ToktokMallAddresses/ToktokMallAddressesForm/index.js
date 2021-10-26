@@ -9,7 +9,7 @@ import axios from 'axios';
 import {EventRegister} from 'react-native-event-listeners';
 
 import {useLazyQuery} from '@apollo/react-hooks';
-import {GET_CITY} from '../../../../../graphql/toktokmall/model/Address';
+import {GET_CITY, GET_CUSTOMER_ADDRESS_DETAILS} from '../../../../../graphql/toktokmall/model/Address';
 import {TOKTOK_MALL_GRAPHQL_CLIENT} from '../../../../../graphql';
 import {connect} from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -62,14 +62,33 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
         setProvCode(response.getCity.provCode);
         setMunCode(response.getCity.citymunCode);
         setRegCode(response.getCity.regDesc);
-        setLongitude(response.getCity.coordinates.lon);
-        setLatitude(response.getCity.coordinates.lat);
+        setIsLoading(false)
+      }else{
+        setIsLoading(false)
       }
     },
     onError: (err) => {
       console.log(err);
     },
   });
+
+  const [getAddressDetails, {error2, loading2}] = useLazyQuery(GET_CUSTOMER_ADDRESS_DETAILS, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: ({getCustomerAddressDetails}) => {
+      console.log(getCustomerAddressDetails)
+      if(getCustomerAddressDetails){
+        setLongitude(getCustomerAddressDetails.longitude);
+        setLatitude(getCustomerAddressDetails.latitude);
+        getCity()
+      }else{
+        setIsLoading(false)
+      }
+    },
+    onError: (err) => {
+      console.log(err);
+    }
+  })
 
   useEffect(() => {
     if (route.params?.update) {
@@ -78,7 +97,14 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
         setClicked(true);
       }
       if (route.params?.item?.municipalityId) {
-        getCity();
+        setIsLoading(true)
+        getAddressDetails({
+          variables: {
+            input: {
+              addressId: route.params?.item?.id
+            }
+          }
+        })
       }
       setToUpdate(true);
     }
@@ -365,9 +391,9 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
           </TouchableOpacity>
           <View style={styles.textinputContainer}>
             <TextInput
-              style={styles.textinput}
+              style={{...styles.textinput, width: '100%'}}
               placeholder={'Postal code (optional)'}
-              value={newAddressForm.postalCode}
+              value={newAddressForm.postalCode == 0 ? "" : newAddressForm.postalCode}
               onChangeText={(text) => {
                 onChangeText('postalCode', text);
               }}
@@ -474,7 +500,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'flex-start',
   },
-  textinput: {marginLeft: 10},
+  textinput: {marginLeft: 10, width: '100%'},
   dropdownpicker: {
     marginLeft: 10,
     marginLeft: 0,

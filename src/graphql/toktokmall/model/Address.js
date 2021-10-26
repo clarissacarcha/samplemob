@@ -36,3 +36,23 @@ export const GET_DEFAULT_ADDRESS = gql`
 		}
 	}
 `
+
+export const GET_CUSTOMER_ADDRESS_DETAILS = gql`
+  query getCustomerAddressDetails($input: GetAddressDetailsInput) {
+    getCustomerAddressDetails(input: $input) {
+      id
+      receiverName
+      receiverContact
+      address
+      landmark
+      postalCode
+      regionId
+      provinceId
+      municipalityId
+      brgyId
+      latitude
+      longitude
+      defaultAdd      
+    }
+  }
+`

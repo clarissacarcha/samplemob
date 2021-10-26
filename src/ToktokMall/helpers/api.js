@@ -114,6 +114,7 @@ export const ShippingApiCall = async (endpoint, body, debug = false) => {
 			if(debug){
 				console.log(error)
 			}
+			responseError = error
 		})
 
 		return {
