@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.M,
     fontFamily: FONTS.BOLD,
     marginTop: moderateScale(8),
-    marginBottom: moderateScale(15),
+    marginBottom: Platform.OS == 'ios' ? moderateScale(15) : 0,
     color: '#FFA700',
   },
 });
