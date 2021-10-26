@@ -123,13 +123,20 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
             
             //FREE SHIPPING
             items[index] = req.responseData.voucher
+            items[index].discountedAmount = 0
+            items[index].discount = 0
             CheckoutContextData.setShippingVouchers(items)
 
           }else{
 
+            //
+            let calculatedDiscount = parseFloat(CheckoutContextData.shippingFeeRates[index].shippingfee) - req.responseData.voucher.amount            
+
             items[index] = req.responseData.voucher
-            items[index].discountedAmount = parseFloat(shippingRates[index].price) - req.responseData.voucher.amount
-            items[index].discount = req.responseData.voucher.amount
+            items[index].discountedAmount = calculatedDiscount < 0 ? 0 : calculatedDiscount
+            items[index].discount = calculatedDiscount < 0 ? 0 : calculatedDiscount
+            // items[index].discount = calculatedDiscount
+            console.log("Shipping Item", items[index])
             CheckoutContextData.setShippingVouchers(items)
           
           }
@@ -258,7 +265,15 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
 
       const getDiscount = (index, type) => {
         if(type == "shipping"){
-          return CheckoutContextData.shippingVouchers[index]?.amount
+
+          let shippingfee = CheckoutContextData.shippingFeeRates[index]?.shippingfee
+          let voucheramount = CheckoutContextData.shippingVouchers[index]?.amount
+
+          if(shippingfee && voucheramount && shippingfee - voucheramount < 0){
+            return 0
+          }else{
+            return CheckoutContextData.shippingVouchers[index]?.discount
+          }
         }
       }
 

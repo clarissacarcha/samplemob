@@ -87,8 +87,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
   })
 
   const getShippingRates = async (payload) => {   
-    console.log(payload)
-    console.log(JSON.stringify(payload.cart)) 
+    // console.log(payload)
+    // console.log(JSON.stringify(payload.cart)) 
     const res = await ShippingApiCall("get_shipping_rate", payload, true)
     if(res.responseData && res.responseData.success == 1){
       CheckoutContextData.setShippingFeeRates(res.responseData.newCart)
@@ -153,7 +153,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
       let transactionPayload = await BuildTransactionPayload({
         method: "TOKTOKWALLET", 
         notes: "", 
-        total: srpTotal, 
+        total: grandTotal, 
         // toktokid: parentSession.user.id
         // toktokid: walletAccount.id,
         toktokid: 1,
@@ -175,7 +175,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
           subTotal: subTotal,
           grandTotal: grandTotal, 
           srpTotal: srpTotal,
-          vouchers: voucher,
+          vouchers: voucher, 
           shippingVouchers: CheckoutContextData.shippingVouchers,
           shippingRates: CheckoutContextData.shippingFeeRates,
           paymentMethod: "TOKTOKWALLET",
@@ -186,8 +186,12 @@ const Component = ({route, navigation, createMyCartSession}) => {
         navigation.navigate("ToktokMallOTP", {
           transaction: "payment", 
           data: checkoutBody,
-          onSuccess: async () => {
+          onSuccess: async (result) => {
+
+            console.log(paramsData)
+            console.log(result)
             setIsVisible(true)
+
           },
           onError: async (error) => {
             console.log(error)
@@ -215,6 +219,28 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
   }
 
+  const postOrderNotification = async (payload) => {
+
+    let notificationPayload = {
+      shopid: 0,
+      reference_num: payload.order_reference_num,
+      branchid: 0,
+      userid: userId,
+      data: [],
+      order_status: payload.order_status,
+      instructions: ""
+    }
+    const req = await ApiCall("", notificationPayload, true)
+    console.log(req)
+    if(req.responseData.success == 1){
+
+    }else{
+      console.log("Failed to post order notification")
+    }
+
+    setIsVisible(true)
+  }
+
   const onGoToOrders = () =>{
     setIsVisible(false)
     navigation.push("ToktokMallMyOrders", { tab: 0})
@@ -236,6 +262,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
       setInitialLoading(true)
       setShippingRates([])
       setShippingDiscounts([])
+      CheckoutContextData.setShippingFeeRates([])
+      CheckoutContextData.setUnserviceableShipping([])
       getCheckoutData({
         variables: {
           input: {
@@ -271,7 +299,14 @@ const Component = ({route, navigation, createMyCartSession}) => {
     for(var z=0;z<CheckoutContextData.shippingFeeRates.length;z++){
 
       if(CheckoutContextData.shippingVouchers[z]){
-        shipping += parseFloat(CheckoutContextData.shippingVouchers[z].amount)
+
+        let shippingfee = CheckoutContextData.shippingFeeRates[z]?.shippingfee
+        let voucheramount = CheckoutContextData.shippingVouchers[z]?.amount
+        if(shippingfee && voucheramount && shippingfee - voucheramount < 0){
+          shipping += 0
+        }else{
+          shipping += parseFloat(CheckoutContextData.shippingVouchers[z].discount) 
+        }
       }else{
         shipping += parseFloat(CheckoutContextData.shippingFeeRates[z].shippingfee)
       }

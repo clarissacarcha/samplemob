@@ -393,7 +393,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress, setDefa
               onChangeText={(text) => {
                 // if(newAddressForm.receiverContact.length <= 11){
                   onChangeText('landmark', text);
-                  console.log(newAddressForm.receiverContact.length)
+                  // console.log(newAddressForm.receiverContact.length)
                 // }
               }}
               keyboardType={'phone-pad'}
