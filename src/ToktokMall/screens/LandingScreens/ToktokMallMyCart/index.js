@@ -38,6 +38,7 @@ const Component =  ({
   const [user, setUser] = useState({})
   const [totalitems, settotalitems] = useState(0)
   const [rawitems, setrawitems] = useState([])
+  const [selectedItemsArr, setSelectedItemsArr] = useState([])
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack hidden={true} />,
@@ -86,6 +87,7 @@ const Component =  ({
     setMyCartData([])
     setItemsToCheckoutArr([])
     setItemsToDelArr([])
+    setSelectedItemsArr([])
   }
 
   useEffect(() => {
@@ -94,7 +96,8 @@ const Component =  ({
   }, [])
 
   const onChangeQuantity = (id, qty) => {
-    let items = ArrayCopy(itemsToCheckoutArr)
+    // let items = ArrayCopy(itemsToCheckoutArr)
+    let items = ArrayCopy(selectedItemsArr)
     let updatedItems = items.map(item => {
       let newItem = item
       if(item.id === id){
@@ -103,7 +106,8 @@ const Component =  ({
       }
       return newItem
     })
-    setItemsToCheckoutArr(updatedItems)
+    // setItemsToCheckoutArr(updatedItems)
+    setSelectedItemsArr(updatedItems)
     getSubTotal(updatedItems)
   }
 
@@ -120,7 +124,8 @@ const Component =  ({
 
     setapiloader(true)
     
-    for (const item of itemsToDelArr) {
+    // for (const item of itemsToDelArr) {
+    for (const item of selectedItemsArr){
       
       let variables = {
         userid: user.userId,
@@ -174,118 +179,173 @@ const Component =  ({
 
   const selectItem = (raw) => {
 
-    if(willDelete){
-      let items = ArrayCopy(itemsToDelArr)
-      let existing = items.findIndex((e) => e.id == raw.productId)
-      if(existing == -1){
-        items.push({
-          shopid: raw.shopId,
-          productid: raw.productId
-        })
-      }
-      setItemsToDelArr(items)
-    }else{
-      let items = ArrayCopy(itemsToCheckoutArr)
-      let existing = items.findIndex((e) => e.id == raw.productId)
-      if(existing == -1){
-        items.push({
-          id: raw.productId,
-          shopId: raw.shopId,
-          product: raw.product,
-          amount: parseFloat(raw.amount),
-          qty: raw.qty
-        })
-      }
-      setItemsToCheckoutArr(items)
+    // if(willDelete){
+    //   let items = ArrayCopy(itemsToDelArr)
+    //   let existing = items.findIndex((e) => e.id == raw.productId)
+    //   if(existing == -1){
+    //     items.push({
+    //       shopid: raw.shopId,
+    //       productid: raw.productId
+    //     })
+    //   }
+    //   setItemsToDelArr(items)
+    // }else{
+      // let items = ArrayCopy(itemsToCheckoutArr)
+      // let existing = items.findIndex((e) => e.id == raw.productId)
+      // if(existing == -1){
+      //   items.push({
+      //     id: raw.productId,
+      //     shopId: raw.shopId,
+      //     product: raw.product,
+      //     amount: parseFloat(raw.amount),
+      //     qty: raw.qty
+      //   })
+      // }
+      // setItemsToCheckoutArr(items)
+      // getSubTotal(items)
+    // }
+    let items = ArrayCopy(selectedItemsArr)
+    let existing = items.findIndex((e) => e.id == raw.productId)
+    if(existing == -1){
+      items.push({
+        id: raw.productId,
+        shopId: raw.shopId,
+        product: raw.product,
+        amount: parseFloat(raw.amount),
+        qty: raw.qty
+      })
+    }
+    setSelectedItemsArr(items)
+    if(!willDelete){
       getSubTotal(items)
     }
-    
   }
 
   const selectStoreItems = (raw, storeitems) => {
-    if(willDelete){
-      let items = ArrayCopy(itemsToDelArr)
-      storeitems.map((storeitem) => {
-        items.push({          
-          shopid: storeitem.shopid,
-          productid: storeitem.product.Id
+    // if(willDelete){
+    //   let items = ArrayCopy(itemsToDelArr)
+    //   storeitems.map((storeitem) => {
+    //     items.push({          
+    //       shopid: storeitem.shopid,
+    //       productid: storeitem.product.Id
+    //     })
+    //   })
+    //   setItemsToDelArr(items)
+    // }else{
+    //   let items = ArrayCopy(itemsToCheckoutArr)
+    //   storeitems.map((storeitem) => {
+    //     let existing = items.findIndex((e) => e.id == storeitem.product.Id)
+    //     if(existing == -1){
+    //       items.push({
+    //         id: storeitem.product.Id,
+    //         shopId: storeitem.shopid,
+    //         product: storeitem.product,
+    //         amount: parseFloat(storeitem.product.price * storeitem.quantity),
+    //         qty: storeitem.quantity
+    //       })
+    //     }
+    //   })
+    //   setItemsToCheckoutArr(items)
+    //   getSubTotal(items)
+    // }
+    let items = ArrayCopy(selectedItemsArr)
+    storeitems.map((storeitem) => {
+      let existing = items.findIndex((e) => e.id == storeitem.product.Id)
+      if(existing == -1){
+        items.push({
+          id: storeitem.product.Id,
+          shopId: storeitem.shopid,
+          product: storeitem.product,
+          amount: parseFloat(storeitem.product.price * storeitem.quantity),
+          qty: storeitem.quantity
         })
-      })
-      setItemsToDelArr(items)
-    }else{
-      let items = ArrayCopy(itemsToCheckoutArr)
-      storeitems.map((storeitem) => {
-        let existing = items.findIndex((e) => e.id == storeitem.product.Id)
-        if(existing == -1){
-          items.push({
-            id: storeitem.product.Id,
-            shopId: storeitem.shopid,
-            product: storeitem.product,
-            amount: parseFloat(storeitem.product.price * storeitem.quantity),
-            qty: storeitem.quantity
-          })
-        }
-      })
-      setItemsToCheckoutArr(items)
+      }
+    })
+    setSelectedItemsArr(items)
+    if(!willDelete){
       getSubTotal(items)
     }
   }
 
   const unSelectitem = (raw) => {
     
-    if(willDelete){
-      let items = ArrayCopy(itemsToDelArr)
-      let itemIndex = items.findIndex((e) => e.productid == raw.productId)
-      if(itemIndex > -1){
-        items.splice(itemIndex, 1)
-      }
-      setItemsToDelArr(items)
-    }else{
-      let items = ArrayCopy(itemsToCheckoutArr)
-      let itemIndex = items.findIndex((e) => e.id == raw.productId)
-      if(itemIndex > -1){
-        items.splice(itemIndex, 1)
-      }
-      setItemsToCheckoutArr(items)
+    // if(willDelete){
+    //   let items = ArrayCopy(itemsToDelArr)
+    //   let itemIndex = items.findIndex((e) => e.productid == raw.productId)
+    //   if(itemIndex > -1){
+    //     items.splice(itemIndex, 1)
+    //   }
+    //   setItemsToDelArr(items)
+    // }else{
+    //   let items = ArrayCopy(itemsToCheckoutArr)
+    //   let itemIndex = items.findIndex((e) => e.id == raw.productId)
+    //   if(itemIndex > -1){
+    //     items.splice(itemIndex, 1)
+    //   }
+    //   setItemsToCheckoutArr(items)
+    //   getSubTotal(items)
+    // }
+    let items = ArrayCopy(selectedItemsArr)
+    let itemIndex = items.findIndex((e) => e.id == raw.productId)
+    if(itemIndex > -1){
+      items.splice(itemIndex, 1)
+    }
+    setSelectedItemsArr(items)
+    if(!willDelete){
       getSubTotal(items)
     }
-
   }
 
   const unSelectStoreItems = (raw, storeitems) => {
     
-    if(willDelete){
-      let items = ArrayCopy(itemsToDelArr)
-      storeitems.map((storeitem) => {
-        console.log(storeitem)
-        let itemIndex = items.findIndex((e) => e.productid == storeitem.product.Id)
-        if(itemIndex > -1){
-          items.splice(itemIndex, 1)
-        }
-      })
-      setItemsToDelArr(items)
-    }else{
-      let items = ArrayCopy(itemsToCheckoutArr)
-      storeitems.map((storeitem) => {
-        console.log(storeitem)
-        let itemIndex = items.findIndex((e) => e.id == storeitem.product.Id)
-        if(itemIndex > -1){
-          items.splice(itemIndex, 1)
-        }
-      })
-      setItemsToCheckoutArr(items)
+    // if(willDelete){
+    //   let items = ArrayCopy(itemsToDelArr)
+    //   storeitems.map((storeitem) => {
+    //     console.log(storeitem)
+    //     let itemIndex = items.findIndex((e) => e.productid == storeitem.product.Id)
+    //     if(itemIndex > -1){
+    //       items.splice(itemIndex, 1)
+    //     }
+    //   })
+    //   setItemsToDelArr(items)
+    // }else{
+    //   let items = ArrayCopy(itemsToCheckoutArr)
+    //   storeitems.map((storeitem) => {
+    //     // console.log(storeitems)
+    //     let itemIndex = items.findIndex((e) => e.id == storeitem.product.Id)
+    //     // console.log(itemIndex)
+    //     if(itemIndex > -1){
+    //       items.splice(itemIndex, 1)
+    //     }
+    //     // console.log('produced result', items)
+    //   })
+    //   setItemsToCheckoutArr(items)
+    //   getSubTotal(items)
+    // }
+    let items = ArrayCopy(selectedItemsArr)
+    storeitems.map((storeitem) => {
+      // console.log(storeitems)
+      let itemIndex = items.findIndex((e) => e.id == storeitem.product.Id)
+      // console.log(itemIndex)
+      if(itemIndex > -1){
+        items.splice(itemIndex, 1)
+      }
+      // console.log('produced result', items)
+    })
+    setSelectedItemsArr(items)
+    if(!willDelete){
       getSubTotal(items)
     }
-
   }
 
   const selectAllItems = () => {
     
-    if(willDelete){
-      setItemsToDelArr(rawitems)
-    }else{
+    // if(willDelete){
+    //   setItemsToDelArr(rawitems)
+    // }else{
       let allitems = rawitems.map((item) => {
-        let checkoutitems = ArrayCopy(itemsToCheckoutArr)
+        // let checkoutitems = ArrayCopy(itemsToCheckoutArr)
+        let checkoutitems = ArrayCopy(selectedItemsArr)
         //CHECK IF ITEM IS ALREADY SELECTED
         let itemIndex = checkoutitems.findIndex((e) => e.id == item.productid)
         if(itemIndex > - 1){
@@ -309,40 +369,67 @@ const Component =  ({
           }
         }
       })
-      setItemsToCheckoutArr(allitems)
-      getSubTotal(allitems)
-    }
+      // setItemsToCheckoutArr(allitems)
+      // getSubTotal(allitems)
+      setSelectedItemsArr(allitems)
+      if(!willDelete){
+        getSubTotal(allitems)
+      }
+    // }
 
   }
 
   const unSelectAllitems = () => {
     
-    if(willDelete){
-      setItemsToDelArr([])
-    }else{
-      setItemsToCheckoutArr([])
+    // if(willDelete){
+    //   setItemsToDelArr([])
+    // }else{
+    //   setItemsToCheckoutArr([])
+    //   setSubTotal(0)
+    // }
+    setSelectedItemsArr([])
+    if(!willDelete){
       setSubTotal(0)
     }
   }
 
   const onItemLongPress = (raw) => {
     setWillDelete(raw.checked)
-    setItemsToCheckoutArr([])
-    let items = ArrayCopy(itemsToDelArr)
+    // setItemsToCheckoutArr([])
+    // let items = ArrayCopy(itemsToDelArr)
+    // let items = ArrayCopy(selectedItemsArr)
+    // let existing = items.findIndex((e) => e.id == raw.productId)
+    // if(existing == -1){
+    //   items.push({
+    //     shopid: raw.shopId,
+    //     productid: raw.productId
+    //   })
+    // }
+    // // setItemsToDelArr(items)
+    // setSelectedItemsArr(items)
+    let items = ArrayCopy(selectedItemsArr)
     let existing = items.findIndex((e) => e.id == raw.productId)
     if(existing == -1){
       items.push({
-        shopid: raw.shopId,
-        productid: raw.productId
+        id: raw.productId,
+        shopId: raw.shopId,
+        product: raw.product,
+        amount: parseFloat(raw.amount),
+        qty: raw.qty
       })
     }
-    setItemsToDelArr(items)
+    console.log(items)
+    setSelectedItemsArr(items)
+    if(!willDelete){
+      getSubTotal(items)
+    }
   }
 
   const FormatCheckoutItems = () => {
 
     let cartData = ArrayCopy(myCartData)
-    let checkoutItems = ArrayCopy(itemsToCheckoutArr)
+    // let checkoutItems = ArrayCopy(itemsToCheckoutArr)
+    let checkoutItems = ArrayCopy(selectedItemsArr)
     let result = []
     
     cartData.map((cartitem) => {
@@ -371,7 +458,9 @@ const Component =  ({
   }
 
   const OnSubmitForCheckout = () => {
-    if(itemsToCheckoutArr.length > 0){
+    // if(itemsToCheckoutArr.length > 0){
+      
+    if(selectedItemsArr.length > 0){
       
       let data = FormatCheckoutItems()
       navigation.navigate("ToktokMallCheckout", {
@@ -404,7 +493,8 @@ const Component =  ({
           <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
             <View style={{flex: 6, justifyContent: 'center'}}>
               <CheckBox
-                isChecked={allSelected || itemsToCheckoutArr.length == totalitems}
+                // isChecked={allSelected || itemsToCheckoutArr.length == totalitems}
+                isChecked={allSelected || selectedItemsArr.length == totalitems}
                 rightText="Select All"
                 rightTextStyle={{fontSize: 14, fontWeight: '500'}}
                 checkedCheckBoxColor="#F6841F"
