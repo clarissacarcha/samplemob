@@ -6,7 +6,7 @@ import CONSTANTS from 'common/res/constants'
 
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
 
-export const SendMoney = ({data})=>{
+export const RequestMoney = ({data})=>{
 
     const tokwaAccount = useSelector(state=> state.toktokWallet)
 
@@ -30,7 +30,7 @@ export const SendMoney = ({data})=>{
             </View>
             <View style={styles.information}>
                     <View style={{flex:1,alignItems:"flex-start"}}>
-                        <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Recipient Mobile No.</Text>  
+                        <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Mobile Number</Text>  
                     </View>
                     <View style={{flex:1,alignItems:"flex-end"}}>
                         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M,textAlign: 'right'}}>{data.recipient.mobileNo}</Text>
@@ -56,6 +56,7 @@ export const SendMoney = ({data})=>{
                         </View>
                 </View>
             }
+            
        </View>
     )
 }

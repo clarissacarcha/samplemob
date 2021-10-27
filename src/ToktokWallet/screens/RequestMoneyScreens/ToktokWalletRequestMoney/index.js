@@ -1,9 +1,15 @@
 import React , {useState , createRef} from 'react'
 import {View , Text , TouchableOpacity , StyleSheet, ScrollView,ActivityIndicator } from 'react-native'
-import {HeaderImageBackground,HeaderTitle,CheckIdleState,Separator,DisabledButton} from 'toktokwallet/components'
-import { YellowButton , VectorIcon, ICON_SET } from 'src/revamp'
+import {HeaderImageBackground,HeaderTitle,CheckIdleState,Separator,DisabledButton , PromptModal} from 'toktokwallet/components'
+import { YellowButton , } from 'src/revamp'
 import { useAccount } from 'toktokwallet/hooks'
 import { numberFormat } from 'toktokwallet/helper'
+import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
+import {  POST_REQUEST_MONEY } from 'toktokwallet/graphql'
+import { useMutation } from '@apollo/react-hooks'
+import {useAlert} from 'src/hooks/useAlert'
+import {onErrorAlert} from 'src/util/ErrorUtility'
+import { AlertOverlay } from 'src/components'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import CONSTANTS from 'common/res/constants'
 const { COLOR , FONT_FAMILY: FONT , SIZE , FONT_SIZE , MARGIN } = CONSTANTS
@@ -16,7 +22,8 @@ import {
     EnterNote 
 } from "../../SendMoneyScreens/ToktokWalletSendMoney/Components"
 import {
-    EnterAmount
+    EnterAmount,
+    PendingEnvelopeIcon
 } from './Components'
 
 export const ToktokWalletRequestMoney = ({navigation,route})=> {
@@ -40,17 +47,72 @@ export const ToktokWalletRequestMoney = ({navigation,route})=> {
         },
     })
     const [getAccountLoading,setGetAccountLoading] = useState(false)
+    const [showPrompt , setShowPrompt] = useState(false)
+    const alert = useAlert()
+
+    const [postRequestMoney , {loading}] = useMutation(POST_REQUEST_MONEY,{
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+        onCompleted: ({postRequestMoney})=>{
+            setShowPrompt(true)
+        },
+        onError: (error) => onErrorAlert({alert,error})
+    })
+
+    const onSwipeFail = ()=> {
+
+    }
+
+    const onSwipeSuccess = ()=> {
+        console.log(JSON.stringify(recipientDetails))
+        postRequestMoney({
+            variables: {
+                input: {
+                    sourceAccountId: recipientDetails.id,
+                    sourcePersonId: recipientDetails.person.id,
+                    sourceWalletId: recipientDetails.wallet.id,
+                    amount: +amount,
+                    note: note,
+                }
+            }
+        })
+    }
+
+    const onPress = ()=> {
+        setShowPrompt(false);
+        navigation.pop();
+        navigation.replace("ToktokWalletRequestMoney")
+    }
 
     const confirmRequest = ()=> {
-
+        return navigation.navigate("ToktokWalletReviewAndConfirm", {
+            label: "Request Money",
+            event: "Request Money",
+            isSwipe: true,
+            onSwipeFail: onSwipeFail,
+            onSwipeSuccess: onSwipeSuccess,
+            swipeTitle: `Request ${tokwaAccount.wallet.currency.code} ${amount != "" ? numberFormat(amount) : "0"}`,
+            data: {
+                amount: amount,
+                note: note,
+                recipient: {
+                    name: `${recipientDetails.person.firstName} ${recipientDetails.person.middleName ? recipientDetails.person.middleName + " " : ""}${recipientDetails.person.lastName}`,
+                    mobileNo: recipientDetails.mobileNumber,
+                },
+            }
+        })
     }
 
-    const openPendingHistory = ()=> {
-        navigation.navigate("ToktokWalletRequestMoneyPending")
-    }
 
     return (
         <CheckIdleState> 
+             <AlertOverlay visible={loading}/>
+              <PromptModal 
+                    visible={showPrompt}
+                    event="success"
+                    message="Your request has been sent."
+                    title="Successful!"
+                    onPress={onPress}
+                />
             <ContextProvider>
             <View style={styles.container}>
                 <View style={styles.headings}>
@@ -68,16 +130,9 @@ export const ToktokWalletRequestMoney = ({navigation,route})=> {
                                                     <FIcon5 name={'plus'} size={12}/> 
                                             </View>
                                     </TouchableOpacity>
-                                    <View style={{flex: 1,alignItems:"flex-end",paddingVertical: MARGIN.M}}>
-                                        <TouchableOpacity hitSlop={{top: 20,bottom: 20,left: 20,right: 20}} onPress={openPendingHistory}>
-                                            <View style={styles.pendingRequestCount}>
-                                                <Text style={styles.pendingRequestCountText}>
-                                                        20
-                                                </Text>
-                                            </View>
-                                            <VectorIcon color={"black"} iconSet={ICON_SET.FontAwesome} name="envelope" size={20}/>
-                                        </TouchableOpacity>
-                                    </View>
+                                    <PendingEnvelopeIcon
+                                        navigation={navigation}
+                                    />
                             </View>
                         </View>
                     </View>
@@ -182,21 +237,4 @@ const styles = StyleSheet.create({
         justifyContent:"center",
         alignItems:"center",
     },
-    pendingRequestCount: {
-        borderRadius: 7, 
-        height: 14,
-        width: 14,
-        backgroundColor:COLOR.RED,
-        position:"absolute",
-        top: -5,
-        right: -2,
-        justifyContent:"center",
-        alignItems:"center",
-        zIndex:1
-    },
-    pendingRequestCountText: {
-        color: "white",
-        fontSize: FONT_SIZE.XS,
-        fontFamily:FONT.REGULAR
-    }
 })

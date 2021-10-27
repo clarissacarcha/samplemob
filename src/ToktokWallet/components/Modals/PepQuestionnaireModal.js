@@ -147,6 +147,7 @@ const DropDownQuestion = ({question , sourceRef, pepInfoAnswer, index ,setPepInf
 export const PepQuestionnaireModal = ({
     visible,
     setVisible,
+    onRequestClose,
     pepInfo,
     setPepInfo,
     callback,
@@ -161,7 +162,7 @@ export const PepQuestionnaireModal = ({
     const SourceOfWealthRef = useRef(null)
 
     const closeModal = ()=> {
-        setVisible(false);
+        onRequestClose();
     }
 
     const onPress = ()=> {

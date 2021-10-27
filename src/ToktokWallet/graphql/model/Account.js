@@ -14,6 +14,9 @@ export const GET_ACCOUNT = gql`
                 middleName
                 lastName
             }
+            wallet {
+                id
+            }
         }
     }
 `

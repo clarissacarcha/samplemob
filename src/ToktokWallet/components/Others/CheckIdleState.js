@@ -26,6 +26,7 @@ export const CheckIdleState = ({children})=> {
     );
 
     const resetInactivityTimeout = ()=> {
+        console.log("RUNNING TIMER HERE")
         BackgroundTimer.clearTimeout(timerId.current)
         timerId.current = null
         timerId.current = BackgroundTimer.setTimeout(()=>{
