@@ -662,3 +662,87 @@ toktokfood also has the right to cancel any orders as well as suspend or termina
     content: `Any dispute or claim arising out of or in connection with the use of this Platform, shall be governed by, and construed in accordance with the laws of the Philippines.`,
   },
 };
+
+export const PrivacyPolicy = {
+  ACCOUNT_AND_DATA_PRIVACY: {
+    title: 'ACCOUNT AND DATA PRIVACY',
+    content: `Use of the Platform may require registration and the creation of an account. The user shall provide a unique username and password. Cloud Panda has the right to deny registration for the use of offensive or inappropriate usernames.
+
+You agree to safeguard your username and password. Cloud Panda shall not be liable for any damages arising from the use and access of your account.
+
+As a condition for use of the Platform, the user consents, agrees and permits Cloud Panda, including its subsidiaries, affiliates, lawyers, consultants and authorized subcontractors to process or disclose personal data, including data that may be classified as personal information and/or sensitive personal information under the Data Privacy Act of 2012 to Cloud Panda’s employees, agents, affiliates, lawyers, subsidiaries, and third party in order to conduct activities, such as, but not limited to:
+
+Processing and conducting analysis for research purposes Provision of customer care showing of relevant ads based on the user’s preference Conduct of statistical analysis based on the user’s usage and preference d) Other than as described in these Terms and Conditions, we will not give any information about you to others without your express permission. The Platform uses forms in which you give us contact information (including your name, address, telephone number, and email address) so you can use the application, request information and support, and make product suggestions. For certain services, we may also request a government identification number, or other financial information. We will then create an account for you.
+
+We receive and store any information you enter on our platform or give us in any other way, including through email, telephone, or other communications with our customer service department. If you contact us for support, we will keep an internal record of what support was given.
+
+We use your information to contact you regarding functionality changes to our products, services, and special offers we think you'll find valuable.
+
+Cloud Panda shall maintain and keep the user’s information with due diligence and strict confidence.`,
+  },
+  DATA_COLLECTED: {
+    title: 'DATA COLLECTED',
+    content: `In the course of accessing and using toktokfood, Cloud Panda may collect the following data:`,
+    listContent: [
+      {
+        content: `Personal data, such as your name, gender, age, legal status, citizenship and birthday;`,
+      },
+      {
+        content: `Contact data, such as billing address, shipping address, email address, and phone numbers;`,
+      },
+      {
+        content: `Payment data, such as debit card details, bank details, online wallet details, and credit card details;`,
+      },
+      {
+        content: `Transaction data, such as orders and item inventory;`,
+      },
+      {
+        content: `Internet protocol (IP) address, operating system and platform, international mobile equipment identity, device identifier, IMEI, MAC address, cookies (where applicable) and other information and technology on the devices you use to access toktokfood;`,
+      },
+      {
+        content: `Time and location data;`,
+      },
+      {
+        content: `Your preferences based on your recent transactions;`,
+      },
+    ],
+  },
+  USE_OF_INFORMATION: {
+    title: 'USE OF INFORMATION',
+    content: `Cloud Panda may use the information you provided for one or more of the following purposes:`,
+    listContent: [
+      {
+        content: `Processing of your account and application;`,
+      },
+      {
+        content: `Managing and control of your use and access to the site;`,
+      },
+      {
+        content: `Enforcement of the terms of use, as well as the conditions of your transaction within the platform;`,
+      },
+      {
+        content: `For identification and communication purposes;`,
+      },
+      {
+        content: `Processing, update, and recording of your past and present orders;`,
+      },
+      {
+        content: `To store and back up your personal data;`,
+      },
+      {
+        content: `Any other purposes which we notify you of at the time of obtaining your consent;`,
+      },
+    ],
+  },
+  WITHDRAWAL_OF_CONSENT: {
+    title: 'WITHDRAWAL OF CONSENT',
+    content: `You may withdraw your consent for the collection, processing, storing, use and/or disclosure of your personal data by contacting us or by sending a message or email through our help channels.`,
+  },
+  CONTACT_US: {
+    title: 'CONTACT US',
+    content: `If you have any questions about this Privacy Policy, please contact us:
+
+By email: food@toktok.ph
+`,
+  },
+};

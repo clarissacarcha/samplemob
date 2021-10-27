@@ -1,34 +1,18 @@
 import React from 'react';
-import {Platform, StyleSheet, View, Text, TouchableOpacity, ScrollView} from 'react-native';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
+import {Platform, StyleSheet, View, Text, TouchableOpacity, ScrollView} from 'react-native';
 
 // Components
 import Separator from 'toktokfood/components/Separator';
 
-// Hooks
-import {useSelector} from 'react-redux';
-import {moderateScale, getStatusbarHeight, verticalScale} from 'toktokfood/helper/scale';
+// Helpers
 import {SamplePolicy, TermsAndConditions} from 'toktokfood/helper/strings';
+import {moderateScale, getStatusbarHeight, verticalScale} from 'toktokfood/helper/scale';
 
 // Fonts & Colors
 import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 
-const CUSTOM_HEADER = {
-  container: Platform.OS === 'android' ? moderateScale(70) + getStatusbarHeight : moderateScale(70),
-  bgImage: Platform.OS === 'android' ? moderateScale(70) + getStatusbarHeight : moderateScale(70),
-};
-
-const DATA = [
-  {
-    title: 'Help Centre',
-    icon: '',
-  },
-];
-
 const ToktokFoodTermsAndConditions = ({navigation}) => {
-  const {location} = useSelector((state) => state.toktokFood);
-  const {user} = useSelector((state) => state.session);
-
   const SectionContent = (props) => {
     const {contents} = props;
     return (
@@ -50,9 +34,7 @@ const ToktokFoodTermsAndConditions = ({navigation}) => {
             <Text style={[styles.sectionText, styles.listTextContent]}>{'● ' + v.content}</Text>
           ))}
         {extented && (
-          <Text style={[styles.sectionText, {marginTop: moderateScale(15)}]}>
-            {contents.extentedContent}
-          </Text>
+          <Text style={[styles.sectionText, {marginTop: moderateScale(15)}]}>{contents.extentedContent}</Text>
         )}
       </View>
     );
