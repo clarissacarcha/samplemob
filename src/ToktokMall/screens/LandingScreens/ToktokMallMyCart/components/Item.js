@@ -16,7 +16,8 @@ export const Item = ({
   onSelect, 
   onHold,
   storeIndex, 
-  onChangeQuantity
+  onChangeQuantity,
+  forceSelectToZero
 }) => {
 
   const [selected, setSelected] = useState(state)
@@ -35,6 +36,10 @@ export const Item = ({
   useEffect(() => {
     if(forceSelect) setSelected(true)
   }, [forceSelect])
+
+  useEffect(() => {
+    if(forceSelectToZero) setSelected(false)
+  }, [forceSelectToZero])
 
   const onPress = () => {
     
@@ -74,6 +79,15 @@ export const Item = ({
         <TouchableOpacity 
           onLongPress={() => {
             setSelected(true)
+            // onHold({
+            //   checked: !selected,
+            //   productId: product.Id,
+            //   shopId: data.shopid,                
+            //   product: product,
+            //   amount: parseFloat(product.price * qty),
+            //   qty: qty,
+            //   index: index,
+            // })
             onHold({
               checked: !selected,
               productId: product.Id,

@@ -74,7 +74,8 @@ export const RenderDetails = ({
 	}
 
 	const toggleCheckBox = (val) => {
-		if(val){
+		console.log('set to state toggle checkbox store', val)
+		if(val){ // from which state
 			setStoreItemSelected(true)
 			setStoreitemUnselected(false)
 			setSelectedItemsCount(item.data.length)
@@ -105,7 +106,7 @@ export const RenderDetails = ({
       {item &&
         item.data.length > 0 &&
         item.data.map((data, i) => {
-			const Wrapper = willDelete ? View : Swipeable
+			const Wrapper = willDelete ? Swipeable : Swipeable
 			const props = willDelete
 			? {}
 			: {
@@ -127,10 +128,17 @@ export const RenderDetails = ({
               <Item
                 key={i}
                 index={i}
-                state={getCheckboxState()}
-                forceSelect={selectedItemsCount == item.data.length}
+								state={getCheckboxState()}
+								// state = {false}
+								forceSelect={selectedItemsCount == item.data.length}
+								forceSelectToZero = {selectedItemsCount == 0}
                 data={data}
                 onHold={(raw) => {
+									if (raw.checked) {
+                    setSelectedItemsCount(selectedItemsCount + 1);
+                  } else if (!raw.checked) {
+                    setSelectedItemsCount(selectedItemsCount - 1);
+                  }
                   onItemLongPress(raw);
                 }}
                 onSelect={(raw) => {
