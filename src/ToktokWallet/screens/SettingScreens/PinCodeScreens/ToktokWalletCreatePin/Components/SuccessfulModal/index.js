@@ -86,7 +86,7 @@ export const SuccessfulModal = ({modalVisible,tokwaAccount,amount,onCashIn,setSu
       },[tokwaAccountLatest,onCashIn,setUpTpinCallBack])
   
       const closeModal = async ()=> {
-          if(onCashIn) {
+          if(onCashIn || setUpTpinCallBack) {
             await getMyAccount();
             return;
           } 
