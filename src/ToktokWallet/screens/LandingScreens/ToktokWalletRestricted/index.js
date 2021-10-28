@@ -21,6 +21,7 @@ export const ToktokWalletRestricted = ({navigation,route})=> {
 
     const amount = route?.params?.amount ? route.params.amount : null
     const onCashIn = route?.params.onCashIn ? route.params.onCashIn : null
+    const setUpTpinCallBack = route?.params?.setUpTpinCallBack ? route.params.setUpTpinCallBack : null
 
     const DisplayComponent = ()=> {
         switch(route.params.component){
@@ -29,7 +30,13 @@ export const ToktokWalletRestricted = ({navigation,route})=> {
             case "approvedRegistration":
                 return <ApprovedRegistration/>
             case "noPin":
-                return <SecurewithPIN amount={amount} onCashIn={onCashIn} navigation={navigation} walletinfo={route.params.walletinfo}/>
+                return <SecurewithPIN 
+                            setUpTpinCallBack={setUpTpinCallBack}
+                            amount={amount} 
+                            onCashIn={onCashIn} 
+                            navigation={navigation} 
+                            walletinfo={route.params.walletinfo}
+                        />
             case "noAccount":
                 return <NoAccount />
             case "pendingKYC": 
