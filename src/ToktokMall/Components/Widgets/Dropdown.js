@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {View, Text, ImageBackground, Image, TouchableOpacity, FlatList, RefreshControl} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import CustomIcon from '../Icons';
 import {placeholder} from '../../assets';
 
@@ -47,11 +47,16 @@ const Item = ({data, onPress}) => {
   )
 }
 
-const DropdownItem = ({item, onItemPress, loading}) => {
+const DropdownItem = ({item, onItemPress, loading, active}) => {
 
   const [category, setCategory] = useState( item.parentCategoryName)
   const [content, setContent] = useState([]) //["Cabinet", "Chairs", "Drawer"]
   const [toggle, setToggle] = useState(false)
+  useEffect(() => {
+    if(active, item){
+      setToggle(item.parentCategoryName === active.parentCategoryName)
+    }
+  },[active, item])
 
   useEffect(() => {
     setContent(item.subCategories.sort((a, b) => a.categoryName.localeCompare(b.categoryName)))
@@ -124,6 +129,8 @@ const DropdownItem = ({item, onItemPress, loading}) => {
 export const Dropdown = ({loading = false, data, onSelect, onRefresh}) => {
 
   const navigation = useNavigation()
+  const {params} = useRoute()
+  console.log("params", params)
   const [refreshing, setRefreshing] = useState(false)
 
   const onItemPress = (value) => {
@@ -140,7 +147,7 @@ export const Dropdown = ({loading = false, data, onSelect, onRefresh}) => {
     <>
 		  <FlatList
         data={data || []}
-        renderItem={({item}) => <DropdownItem item={item} onItemPress={onItemPress} loading={refreshing} />}
+        renderItem={({item}) => <DropdownItem item={item} onItemPress={onItemPress} loading={refreshing} active={params?.data} />}
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl

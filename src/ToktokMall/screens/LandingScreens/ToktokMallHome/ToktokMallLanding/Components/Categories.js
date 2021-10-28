@@ -151,14 +151,14 @@ export const Categories = ({data}) => {
               {!loading && categoriesArr.length > 0 && categoriesArr.map((cat, i) => {
                   return (
                     <>
-                      <View style={{flex: 1}}>
+                      <TouchableOpacity onPress={() => navigation.navigate('ToktokMallCategories', {data: cat})} style={{flex: 1}}>
                         <View style={{alignItems: 'center', justifyContent: 'center'}}>
                           {setIcon(cat)}
                         </View>
                         <View style={{alignItems: 'center', justifyContent: 'center', marginTop: 4}}>
                           <Text style={styles.label}>{cat.parentCategoryName}</Text>
                         </View>
-                      </View>   
+                      </TouchableOpacity>   
                     </>
                   )
               })}
