@@ -54,7 +54,7 @@ export const SecurewithPIN = ({navigation,walletinfo,amount = null,onCashIn = nu
                    
                 </View>
             <View style={styles.btns}>
-                <YellowButton label="Setup TPIN" onPress={()=>navigation.replace("ToktokWalletCreatePin", {
+                <YellowButton label="Setup PIN" onPress={()=>navigation.replace("ToktokWalletCreatePin", {
                     walletinfo,
                     amount,
                     onCashIn,
