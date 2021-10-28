@@ -332,7 +332,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
     a += shipping
     b += originalShippingFee
     setSrpTotal(b)
-    setGrandTotal(a)
+    // setGrandTotal(a)
   }
 
   const getShopItemPayload = () => {
@@ -479,6 +479,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
           />
           <Totals 
             raw={paramsData}
+            setGrandTotal={setGrandTotal}
             shipping={addressData?.shippingSummary}
             shippingRates={shippingRates}
             shippingDiscounts={shippingDiscounts}
