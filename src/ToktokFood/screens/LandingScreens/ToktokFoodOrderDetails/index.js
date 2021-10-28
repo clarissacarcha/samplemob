@@ -33,7 +33,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
   const checkOrderResponse5mins = useRef(null);
   const getRiderDetailsInterval = useRef(null);
   const isFocus = useIsFocused();
-  const [showDialogMessage, setShadowDialogMessage] = useState({
+  const [showDialogMessage, setShowDialogMessage] = useState({
     title: '',
     message: '',
     show: false,
@@ -139,7 +139,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
           BackgroundTimer.clearInterval(checkOrderResponse5mins.current);
           BackgroundTimer.clearInterval(getRiderDetailsInterval.current);
           await removeEstimatedDeliveryTime(referenceNum);
-          setShadowDialogMessage({
+          setShowDialogMessage({
             title: 'Order Complete',
             message,
             show: true,
@@ -173,7 +173,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
               BackgroundTimer.clearInterval(checkOrderResponse5mins.current);
               BackgroundTimer.clearInterval(getRiderDetailsInterval.current);
               if (transaction.orderStatus == 'p') {
-                setShadowDialogMessage({
+                setShowDialogMessage({
                   title: 'No Response from Merchant',
                   message: `Merchant hasn't confirmed your order.\nPlease try again.`,
                   show: true,
@@ -274,7 +274,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
         btn1Title="Browse Restaurant"
         btn2Title="OK"
         hasTwoButtons={
-          showDialogMessage.title != 'Order Complete' || showDialogMessage.title != 'No Response from Merchant'
+          showDialogMessage.title !== 'Order Complete' && showDialogMessage.title !== 'No Response from Merchant'
         }
       />
       <HeaderImageBackground searchBox={false}>

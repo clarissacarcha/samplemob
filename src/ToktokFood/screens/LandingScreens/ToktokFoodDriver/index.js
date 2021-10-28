@@ -14,8 +14,6 @@ import TimerModal from 'toktokfood/components/TimerModal';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 
 // Utils
-import {moderateScale} from 'toktokfood/helper/scale';
-import {removeRiderDetails} from 'toktokfood/helper/showRiderDetails';
 import { removeEstimatedDeliveryTime } from 'toktokfood/helper/estimatedDeliveryTime';
 
 import {useLazyQuery} from '@apollo/react-hooks';
@@ -295,7 +293,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
         btn1Title="Browse Restaurant"
         btn2Title="OK"
         hasTwoButtons={
-          showDialogMessage.title != 'Order Complete' || showDialogMessage.title != 'No Response from Merchant'
+          showDialogMessage.title !== 'Order Complete' && showDialogMessage.title !== 'No Response from Merchant'
         }
       />
       <CancelOrder
