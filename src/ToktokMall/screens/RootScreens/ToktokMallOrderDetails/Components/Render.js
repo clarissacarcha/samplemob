@@ -290,7 +290,7 @@ const Item = ({data}) => {
                 <Text style={{fontSize: 13, color: "#F6841F"}}><Price amount={data?.totalAmount} /></Text>
               </View>
               <View style={{flex: 0, paddingHorizontal: 10}}>
-                <Text style={{color: "#9E9E9E", textDecorationLine: 'line-through', fontSize: 11}}>{parseFloat(data?.compareAtPrice) > 0 ? <Price amount={data?.compareAtPrice} /> : null}</Text>
+                <Text style={{color: "#9E9E9E", textDecorationLine: 'line-through', fontSize: 11}}>{parseFloat(data?.product?.compareAtPrice) > 0 ? <Price amount={data?.product?.compareAtPrice} /> : null}</Text>
               </View>
            </View>
             <View style={{flexDirection: 'row', paddingVertical: 5}}>
@@ -354,6 +354,7 @@ export const Renderer = ({id, email}) => {
     fetchPolicy: 'network-only',    
     onCompleted: (response) => {
       if(response.getOrderDetails){
+        console.log('order details',response.getOrderDetails)
         setData(response.getOrderDetails)
       }
     },

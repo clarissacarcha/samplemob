@@ -42,6 +42,7 @@ export const GET_TOP_PRODUCTS = gql`
 				itemname
 				price
 				soldCount
+				weeklySold
 			  noOfStocks
 			  discountRate
 				compareAtPrice

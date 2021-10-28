@@ -116,7 +116,7 @@ const RenderItem = ({item, loading}) => {
               {item.discountRate && item.discountRate != "" ?  <Text style={{fontSize: 9, color: "#9E9E9E", textDecorationLine: 'line-through'}}><Price amount={item.compareAtPrice} /></Text> : <></>}
             </View>
             <View style={{flex: 1.3, justifyContent: 'center', alignItems: 'flex-end'}}>
-              <Text style={{fontSize: 9}}>{item.soldCount || 0} sold</Text>
+              <Text style={{fontSize: 9}}>{item.weeklySold || 0} sold</Text>
             </View>
             
           </View>
@@ -147,9 +147,9 @@ export const Suggestions = ({lazyload}) => {
       let temp = products
       if(response){
         temp = temp.concat(response.getTopProducts)
-        setProducts(temp.sort((a, b) => a.soldCount < b.soldCount ))
+        setProducts(temp.sort((a, b) => a.weeklySold < b.weeklySold ))
       }else{
-        setProducts(temp.sort((a, b) => a.soldCount < b.soldCount ))
+        setProducts(temp.sort((a, b) => a.weeklySold < b.weeklySold ))
       }
       setIsFetching(false)
     },

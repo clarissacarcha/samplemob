@@ -126,12 +126,12 @@ const Component =  ({
     
     // for (const item of itemsToDelArr) {
     for (const item of selectedItemsArr){
-      
+      console.log(item)
       let variables = {
         userid: user.userId,
-        shopid: item.shopid,
+        shopid: item.shopId,
         branchid: 0,
-        productid: [item.productid]
+        productid: [item.id]
       }
       const res = await ApiCall("remove_cart", variables)
       if(res.responseData && res.responseData.success == 1){

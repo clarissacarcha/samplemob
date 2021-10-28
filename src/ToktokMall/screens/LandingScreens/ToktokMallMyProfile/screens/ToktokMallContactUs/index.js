@@ -142,8 +142,8 @@ export const ToktokMallContactUs = ({navigation}) => {
           <View style={{flex: 0, flexDirection:'row', alignContent: 'center', alignItems: 'center', paddingVertical: 15}}>
             <View style={{flex: 0.8}} />
             <View style={{flex: 4, flexDirection: 'row', alignItems: 'center', alignSelf: 'center'}}>
-              <Text style={{textAlign: 'center', color: "#FDBA1C", fontSize: 25, fontWeight: FONT.BOLD}}>How</Text>
-              <Text style={{textAlign: 'center', color: "#F6841F", fontSize: 25, fontWeight: FONT.BOLD}}> can we help you?</Text>
+              <Text style={{textAlign: 'center', color: "#FDBA1C", fontSize: 25, fontWeight: "bold"}}>How</Text>
+              <Text style={{textAlign: 'center', color: "#F6841F", fontSize: 25, fontWeight: "bold"}}> can we help you?</Text>
             </View>
             <View style={{flex: 1}} />
           </View>
@@ -188,33 +188,6 @@ export const ToktokMallContactUs = ({navigation}) => {
 
           <Card>
             <View style={{flex: 0, padding: 15}}>
-              {/* <View
-                style={{
-                  flex: 0,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  paddingVertical: 10,
-                }}>
-                <Text
-                  style={{
-                    fontSize: 24,
-                    fontFamily: FONT.BOLD,
-                    color: COLOR.ORANGE,
-                  }}>
-                  Contact Us
-                </Text>
-              </View>
-              <View
-                style={{
-                  flex: 0,
-                  paddingVertical: 10,
-                  paddingHorizontal: 10,
-                }}>
-                <Text style={{fontSize: 12}}>
-                  Email us with any of your inquiries or contact us with the contact information provided below. We will
-                  gladly discuss with you the best possible solution to your needs.
-                </Text>
-              </View> */}
 
               <View
                 style={{
@@ -223,78 +196,17 @@ export const ToktokMallContactUs = ({navigation}) => {
                   paddingHorizontal: 10,
                 }}>
                 <View style={{flexDirection: 'row'}}>
-                  {/* <View
-                    style={{
-                      flex: 1,
-                      flexDirection: 'row',
-                      marginLeft: 15,
-                    }}>
-                    <View
-                      style={{
-                        flex: 1,
-                        justifyContent: 'center',
-                      }}>
-                      <CustomIcon.FeIcon name="phone" size={25} color={COLOR.ORANGE} />
-                    </View>
-                    <View
-                      style={{
-                        flex: 3,
-                        justifyContent: 'center',
-                      }}>
-                      <Text>(632) 8424 8617</Text>
-                    </View>
-                  </View> */}
-                  {/* <View
-                    style={{
-                      flex: 1,
-                      flexDirection: 'row',
-                      marginRight: 15,
-                    }}>
-                    <View
-                      style={{
-                        flex: 1,
-                        justifyContent: 'center',
-                        alignItems: 'flex-end',
-                      }}>
-                      <CustomIcon.FeIcon name="mail" size={25} color={COLOR.ORANGE} />
-                    </View>
-                    <View
-                      style={{
-                        flex: 4,
-                        justifyContent: 'center',
-                        alignItems: 'flex-end',
-                      }}>
-                      <Text>mall@toktok.ph</Text>
-                    </View>
-                  </View> */}
                 </View>
-                {/* <View style={styles.textinputContainer}>
-                  <TextInput
-                    style={styles.textinput}
-                    placeholder={'Name'}
-                    // onChangeText ={(text) => {setlandmark(text)}}
-                  />
-                </View>
-                <View style={styles.textinputContainer}>
-                  <TextInput
-                    style={styles.textinput}
-                    placeholder={'Email'}
-                    // onChangeText ={(text) => {setlandmark(text)}}
-                  />
-                </View> */}
                 <View>
                   <Text style={{fontSize: 11, color: "#9E9E9E"}}>Message</Text>
                 </View>
-                <View style={styles.textinputLastContainer}>
                   <TextInput 
-                    style={styles.textinput} 
-                    // placeholder={'Message'} 
-                    multiline={true}
+                    style={[styles.textinputLastContainer]} 
+                    multiline
                     value = {message}
                     onChangeText = {(text) => {setMessage(text)}}
                   />
                 </View>
-              </View>
               <View
                 style={{flex: 0, marginTop: 18, alignItems: 'center', justifyContent: 'center', paddingVertical: 10}}>
                 <TouchableOpacity onPress = {() => {onPress()}} style={styles.button}>
@@ -317,7 +229,7 @@ const styles = StyleSheet.create({
   textinputContainer: {
     backgroundColor: '#F8F8F8',
     marginTop: 10,
-    padding: Platform.OS === 'ios' ? 10 : 0,
+    padding: Platform.OS === 'ios' ? 30 : 0,
     borderRadius: 5,
     justifyContent: 'flex-start',
   },
@@ -325,6 +237,7 @@ const styles = StyleSheet.create({
   textinputLastContainer: {
     backgroundColor: '#F8F8F8',
     marginTop: 10,
+    padding: Platform.OS === 'ios' ? 10 : 0,
     borderRadius: 5,
     justifyContent: 'flex-start',
     height: 150,

@@ -21,6 +21,7 @@ import { TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT } from '../../../../graphql';
 import { POST_VERIFY_TOKTOKWALLET_PIN } from '../../../../graphql/toktokmall/virtual';
 
 export const ToktokMallOTP =  ({navigation, route}) => {
+
   const session = useSelector(state => state.session)
   const inputRef = useRef(null)
   const [value, setValue] = useState("")
@@ -28,6 +29,15 @@ export const ToktokMallOTP =  ({navigation, route}) => {
   const [isInvalid, setIsInvalid] = useState(false)
   const [validating, setValidating] = useState(false)
   const [processing, setProcessing] = useState(false)
+  const [lockMessage, setlockMessage] = useState("We're sorry but you dont have any attempts left, Please wait for 30 minutes to request an OTP again. Thank you!")
+
+  useEffect(() => {
+    if(route?.params.error && route.params.errorCode == "VALIDATORMAXREQUEST"){
+      setIsInvalid(true)
+      setretries(5)
+      setlockMessage(route?.params.lockMessage)
+    }
+  }, [route])
 
   const ValidatePin = async () => {
 
@@ -55,6 +65,7 @@ export const ToktokMallOTP =  ({navigation, route}) => {
     }else if(req.responseError && req.responseError.success == 0){
       // Toast.show(req.responseError.message, Toast.LONG)
       setValue("")
+      setIsInvalid(true)
     }else if(req.responseError){
       Toast.show("Something went wrong", Toast.LONG)
     }else if(req.responseError == null && req.responseData == null){
@@ -111,7 +122,7 @@ console.log("validating", processing, validating)
               <>
                 <Text style = {{fontFamily: FONT.BOLD, fontSize: 17, marginTop: 25, marginBottom:10}}>No Attempts Left</Text>
                 <Text style = {{textAlign: 'center', paddingHorizontal: 15, fontSize: 14, fontFamily: FONT.REGULAR}}>
-                  We're sorry but you dont have any attempts left, Please wait for 30 minutes to request an OTP again. Thank you!
+                  {lockMessage}
                 </Text>
               </> : 
               // else

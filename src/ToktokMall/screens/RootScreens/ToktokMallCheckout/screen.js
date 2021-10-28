@@ -21,7 +21,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Toast from "react-native-simple-toast";
 import axios from "axios";
 import {AlertModal} from '../../../Components/Widgets'
-import {ApiCall, ShippingApiCall, BuildPostCheckoutBody, BuildTransactionPayload, WalletApiCall} from "../../../helpers"
+import {ApiCall, ShippingApiCall, BuildPostCheckoutBody, BuildTransactionPayload, WalletApiCall, BuildOrderLogsList, ArrayCopy} from "../../../helpers"
 
 import {CheckoutContext} from './ContextProvider';
 
@@ -88,7 +88,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
   })
 
   const getShippingRates = async (payload, raw) => {
-    // console.log(JSON.stringify(payload))
+    console.log(JSON.stringify(payload))
+    console.log(raw)
     // console.log(JSON.stringify(payload.cart)) 
     const res = await ShippingApiCall("get_shipping_rate", payload, true)
     if(res.responseData && res.responseData.success == 1){
@@ -120,7 +121,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
     }
   })  
 
-  const postCheckoutSetting = async () => {    
+  const postCheckoutSetting = async () => {
 
     setIsLoading(true)
 
@@ -166,7 +167,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
             console.log(paramsData)
             console.log(result)
-            setIsVisible(true)
+            // setIsVisible(true)
+            postOrderNotifications(result)
 
           },
           onError: async (error) => {
@@ -175,13 +177,34 @@ const Component = ({route, navigation, createMyCartSession}) => {
         })
 
 
+      }else if(req.responseData && req.responseData.success == 0){
+
+        const errors = JSON.parse(req.responseData.message)
+
+        if(req.responseData.message.includes("VALIDATORMAXREQUEST")){
+          navigation.navigate("ToktokMallOTP", {
+            transaction: "payment",
+            data: {},
+            error: true,
+            errorCode: "VALIDATORMAXREQUEST",
+            lockMessage: errors[0].message
+          })
+        }
+
       }else if(req.responseError){
 
         let json = JSON.parse(req.responseError.message)
         let errors = json.errors
         
         if(errors.length > 0){
-          Toast.show(errors[0].message, Toast.LONG)
+          // Toast.show(errors[0].message, Toast.LONG)
+          navigation.navigate("ToktokMallOTP", {
+            transaction: "payment",
+            data: {},
+            error: true,
+            errorCode: "VALIDATORMAXREQUEST",
+            lockMessage: errors[0].message
+          })
         }
         
       }else{
@@ -195,23 +218,33 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
   }
 
-  const postOrderNotification = async (payload) => {
+  const postOrderNotifications = async (payload) => {
 
-    let notificationPayload = {
-      shopid: 0,
-      reference_num: payload.order_reference_num,
-      branchid: 0,
-      userid: userId,
-      data: [],
-      order_status: payload.order_status,
-      instructions: ""
-    }
-    const req = await ApiCall("", notificationPayload, true)
-    console.log(req)
-    if(req.responseData.success == 1){
+    for (const shopbasket of paramsData) {
+      
+      let items = ArrayCopy(shopbasket.data[0])
 
-    }else{
-      console.log("Failed to post order notification")
+      let notificationPayload = {
+        shopid: shopbasket.shop.id,
+        reference_num: payload.order_reference_num,
+        branchid: 0,
+        userid: customerData.userId,
+        data: JSON.stringify(items),
+        // data: [{test: 123}],
+        order_status: payload.order_status,
+        instructions: ""
+      }
+
+      console.log(notificationPayload)
+
+      const req = await ApiCall("save_customer_notification", notificationPayload, true)
+      console.log(req)
+      if(req.responseData.success == 1){
+        console.log("Saved customer notification ")
+      }else{
+        console.log("Failed to post order notification")
+      }
+      
     }
 
     setIsVisible(true)
@@ -299,7 +332,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
     a += shipping
     b += originalShippingFee
     setSrpTotal(b)
-    setGrandTotal(a)
+    // setGrandTotal(a)
   }
 
   const getShopItemPayload = () => {
@@ -446,6 +479,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
           />
           <Totals 
             raw={paramsData}
+            setGrandTotal={setGrandTotal}
             shipping={addressData?.shippingSummary}
             shippingRates={shippingRates}
             shippingDiscounts={shippingDiscounts}
