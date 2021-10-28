@@ -23,7 +23,8 @@ export const ToktokWalletRestricted = ({navigation,route})=> {
 
     const data = route.params.data ? route.params.data : null
     const amount = route?.params?.amount ? route.params.amount : null
-    const onCashIn = route?.params.onCashIn ? route.params.onCashIn : null
+    const onCashIn = route?.params?.onCashIn ? route.params.onCashIn : null
+    const setUpTpinCallBack = route?.params?.setUpTpinCallBack ? route.params.setUpTpinCallBack : null
     const showPrompt = route?.params?.showPrompt ? true : null
 
     const DisplayComponent = ()=> {
@@ -33,7 +34,13 @@ export const ToktokWalletRestricted = ({navigation,route})=> {
             case "approvedRegistration":
                 return <ApprovedRegistration/>
             case "noPin":
-                return <SecurewithPIN amount={amount} onCashIn={onCashIn} navigation={navigation} walletinfo={route.params.walletinfo}/>
+                return <SecurewithPIN 
+                            setUpTpinCallBack={setUpTpinCallBack}
+                            amount={amount} 
+                            onCashIn={onCashIn} 
+                            navigation={navigation} 
+                            walletinfo={route.params.walletinfo}
+                        />
             case "noMpin":
                 return <SecureWithMPIN navigation={navigation} walletinfo={route.params.walletinfo}/>
             case "noAccount":

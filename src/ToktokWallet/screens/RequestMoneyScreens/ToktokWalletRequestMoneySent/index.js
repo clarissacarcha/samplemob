@@ -1,8 +1,8 @@
-import React from "react"
-import { View, Text , Image , StyleSheet , FlatList , ActivityIndicator , Dimensions , RefreshControl , TouchableOpacity} from 'react-native'
-import { Separator , CheckIdleState , SwipeDownToRefresh , NoData} from "toktokwallet/components"
+import React from 'react'
+import { Image , View , Text , StyleSheet , Dimensions , FlatList ,ActivityIndicator , RefreshControl , TouchableOpacity } from 'react-native'
+import { Separator , CheckIdleState , SwipeDownToRefresh , NoData } from "toktokwallet/components"
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
-import { GET_REQUEST_MONEY_PENDING_RECEIVED } from 'toktokwallet/graphql'
+import { GET_REQUEST_MONEY_PENDING_SENT } from 'toktokwallet/graphql'
 import { numberFormat } from 'toktokwallet/helper'
 import { useQuery } from '@apollo/react-hooks'
 import { SomethingWentWrong } from 'src/components'
@@ -26,9 +26,9 @@ const RenderItem = ({item,index , onPress})=> {
         <TouchableOpacity onPress={openRMDetails} style={[styles.card]}>
             <View style={styles.cardContent}>
                  <View style={{flex: 1,height:"100%",justifyContent:"flex-start"}}>
-                    <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>Receive request money from</Text>
+                    <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>Sent request money to</Text>
                     <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>{person}</Text>
-                    <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.S,color:COLOR.YELLOW}}>click to see details</Text>
+                    {/* <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.S,color:COLOR.YELLOW}}>click to see details</Text> */}
                 </View>
                 <View>
                     <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,color: COLOR.YELLOW}}>PHP {numberFormat(+item.amount)}</Text>
@@ -41,19 +41,19 @@ const RenderItem = ({item,index , onPress})=> {
 }
 
 
-export const ToktokWalletRequestMoneyPending = ({navigation,route})=> {
 
-    const {data,error,loading,refetch} = useQuery(GET_REQUEST_MONEY_PENDING_RECEIVED, {
+export const ToktokWalletRequestMoneySent = ()=> {
+
+    const {data,error,loading,refetch} = useQuery(GET_REQUEST_MONEY_PENDING_SENT, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         fetchPolicy:"network-only"
     })
-
-    const openRMDetails = (item)=> {
-        return navigation.navigate("ToktokWalletRequestMoneyViewDetails" , {
-            requestMoney: item
-        })
-    }
     
+
+    const openRMDetails = ()=> {
+
+    }
+
     if(loading){
         return <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                     <ActivityIndicator size={24} color={COLOR.YELLOW} />
@@ -65,20 +65,19 @@ export const ToktokWalletRequestMoneyPending = ({navigation,route})=> {
     }
 
 
-
     return (
         <CheckIdleState>
             <Separator/>
             <SwipeDownToRefresh/>
             <FlatList
                 ListHeaderComponent={() => {
-                    if(data.getRequestMoneyPendingReceived.length > 0) return null
+                    if(data.getRequestMoneyPendingSent.length > 0) return null
                     if(loading) return null
                     return <NoData/>
                 }}
                 style={styles.container}
                 showsVerticalScrollIndicator={false}
-                data={data.getRequestMoneyPendingReceived}
+                data={data.getRequestMoneyPendingSent}
                 keyExtractor={(item) => item.id}
                 renderItem={({item,index})=> ( <RenderItem item={item} index={index} onPress={openRMDetails}/>)}
                 ItemSeparatorComponent={() => (
@@ -86,14 +85,16 @@ export const ToktokWalletRequestMoneyPending = ({navigation,route})=> {
                     )}
                 refreshControl={<RefreshControl onRefresh={refetch} refreshing={loading} colors={[COLOR.YELLOW]} />}
             />
+
         </CheckIdleState>
     )
 }
 
-const styles = StyleSheet.create({
+
+export const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor:"white",
+        backgroundColor:"white"
     },
     card: {
         paddingVertical: 20,

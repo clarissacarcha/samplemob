@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { View , Text , StyleSheet ,TouchableOpacity} from 'react-native'
 import { Separator , CheckIdleState} from 'toktokwallet/components'
 import { HeaderBack , HeaderTitle } from 'src/revamp'
@@ -11,6 +11,13 @@ import { POST_REQUEST_APPROVE_REQUEST_MONEY,POST_APPROVED_REQUEST_MONEY } from '
 import { AlertOverlay } from 'src/components'
 import { TransactionUtility } from 'toktokwallet/util'
 import CONSTANTS from 'common/res/constants'
+
+// SELF IMPORTS
+import {
+    DeclineModal,
+    SuccessfulModal
+} from "./Components";
+
 const { COLOR , FONT_FAMILY: FONT , SIZE , FONT_SIZE , MARGIN } = CONSTANTS
 
 export const ToktokWalletRequestMoneyViewDetails = ({navigation,route})=> {
@@ -21,6 +28,15 @@ export const ToktokWalletRequestMoneyViewDetails = ({navigation,route})=> {
     })
     const alert = useAlert();
     const requestMoney = route.params.requestMoney;
+    const [amount,setAmount] = useState(requestMoney.amount)
+    const [successModalVisible, setSuccessModalVisible] = useState(false)
+    const [walletinfoParams,setWalletinfoParams] = useState({
+        id: "",
+        referenceNumber: "",
+        createdAt: "",
+        amount: ""
+    })
+    const [declineModal,setDeclineModal] = useState(false)
 
     const [postRequestApproveRequestMoney, {loading}] = useMutation(POST_REQUEST_APPROVE_REQUEST_MONEY, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
@@ -41,7 +57,8 @@ export const ToktokWalletRequestMoneyViewDetails = ({navigation,route})=> {
     const [postApprovedRequestMoney, {loading: approvedLoading}] = useMutation(POST_APPROVED_REQUEST_MONEY , {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({postApprovedRequestMoney})=> {
-            console.log(postApprovedRequestMoney)
+            setWalletinfoParams(postApprovedRequestMoney)
+            setSuccessModalVisible(true)
         },
         onError: (error)=>{
             TransactionUtility.StandardErrorHandling({
@@ -54,7 +71,7 @@ export const ToktokWalletRequestMoneyViewDetails = ({navigation,route})=> {
     })
 
     const decline = ()=> {
-
+        setDeclineModal(true)
     }
     const send = ()=> {
         postRequestApproveRequestMoney({
@@ -85,6 +102,17 @@ export const ToktokWalletRequestMoneyViewDetails = ({navigation,route})=> {
     return (
         <CheckIdleState>
             <AlertOverlay visible={loading || approvedLoading}/>
+            <SuccessfulModal
+                visible={successModalVisible}
+                requestMoney={requestMoney}
+                walletinfoParams={walletinfoParams}
+            />
+            <DeclineModal
+                visible={declineModal}
+                setVisible={setDeclineModal}
+                requestMoney={requestMoney}
+                amount={amount}
+            />
             <Separator/>
             <View style={styles.container}>
                 <View style={{flex: 1}}>

@@ -27,7 +27,8 @@ sourcePerson {
     lastName
 }
 amount
-note
+destinationRemarks
+sourceRemarks
 status
 isViewed
 createdAt
@@ -77,6 +78,21 @@ export const POST_REQUEST_APPROVE_REQUEST_MONEY = gql`
 
 export const POST_APPROVED_REQUEST_MONEY = gql`
     mutation postApprovedRequestMoney($input: PostApprovedRequestMoneyInput){
-        postApprovedRequestMoney(input: $input)
+        postApprovedRequestMoney(input: $input){
+            id
+            amount
+            status
+            sourceWalletId
+            destinationWalletId
+            sourcePersonId
+            destinationPersonId
+            transactionTypeId
+        }
+    }
+`
+
+export const POST_DENIED_REQUEST_MONEY = gql`
+    mutation postDeniedRequestMoney($input: PostDeniedRequestMoneyInput){
+        postDeniedRequestMoney(input: $input)
     }
 `

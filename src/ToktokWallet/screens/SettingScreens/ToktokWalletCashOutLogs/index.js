@@ -1,12 +1,12 @@
 import React , {useState , useEffect} from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,Image,ActivityIndicator , FlatList , RefreshControl} from 'react-native'
+import {View,Text,StyleSheet,TouchableOpacity,Image,ActivityIndicator , FlatList , RefreshControl , Dimensions} from 'react-native'
 import moment from 'moment'
 import {useLazyQuery,useQuery} from '@apollo/react-hooks'
 import {GET_CASH_IN_LOGS, GET_CASH_OUT_LOGS,TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import {GET_CASH_OUTS} from 'toktokwallet/graphql'
 import {useSelector} from 'react-redux'
 import { numberFormat ,MaskLeftZero } from 'toktokwallet/helper'
-import {Separator , FilterDateModal , TransactionDetails, CheckIdleState} from 'toktokwallet/components'
+import {Separator , FilterDateModal , TransactionDetails, CheckIdleState , SwipeDownToRefresh ,NoData} from 'toktokwallet/components'
 import { HeaderBack , HeaderTitle } from 'src/revamp'
 import CONSTANTS from 'common/res/constants'
 import { onErrorAlert } from 'src/util/ErrorUtility'
@@ -14,6 +14,7 @@ import { useAlert } from 'src/hooks'
 import { SomethingWentWrong } from 'src/components'
 
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
+const imageWidth = Dimensions.get('window').width - 200;
 
 const CashOutLog = ({
     item,
@@ -141,6 +142,7 @@ export const ToktokWalletCashOutLogs = ({navigation})=> {
             displayNumber=""
         />
         <Separator />
+        <SwipeDownToRefresh/>
         {
             // loading
             // ?  <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -150,6 +152,11 @@ export const ToktokWalletCashOutLogs = ({navigation})=> {
             <View style={styles.container}>
                 <View style={styles.content}>
                     <FlatList
+                        ListHeaderComponent={() => {
+                            if(records.length > 0) return null
+                            if(loading) return null
+                            return <NoData/>
+                        }}
                         refreshControl={<RefreshControl refreshing={loading} onRefresh={Refetch} colors={[COLOR.YELLOW]} tintColor={COLOR.YELLOW} />}
                         showsVerticalScrollIndicator={false}
                         data={records}

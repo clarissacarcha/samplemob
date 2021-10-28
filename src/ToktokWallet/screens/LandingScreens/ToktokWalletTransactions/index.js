@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import {View,StyleSheet,FlatList,RefreshControl} from 'react-native'
 import { onErrorAlert} from 'src/util/ErrorUtility'
-import {Separator,WalletLog,CheckIdleState } from 'toktokwallet/components'
+import {Separator,WalletLog,CheckIdleState , SwipeDownToRefresh , NoData } from 'toktokwallet/components'
 import { HeaderBack , HeaderTitle } from 'src/revamp'
 import { useAlert } from 'src/hooks'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
@@ -57,9 +57,15 @@ export const ToktokWalletTransactions = connect(null,mapDispatchtoProps)(({navig
     return (
         <CheckIdleState>
         <Separator />
+        <SwipeDownToRefresh/>
         <View style={styles.container}>        
                 <View style={styles.logs}>
                         <FlatList 
+                          ListHeaderComponent={() => {
+                                if(allTransactions.length > 0) return null
+                                if(loading) return null
+                                return <NoData/>
+                            }}
                             refreshControl={<RefreshControl refreshing={loading} onRefresh={Refetch} colors={[COLOR.YELLOW]} tintColor={COLOR.YELLOW} />}
                             showsVerticalScrollIndicator={false}
                             data={allTransactions}

@@ -6,6 +6,7 @@ import { HeaderBack , HeaderTitle} from 'src/revamp';
 import {
     ToktokWalletRequestMoney,
     ToktokWalletRequestMoneyPending,
+    ToktokWalletRequestMoneySent,
     ToktokWalletRequestMoneyViewDetails
 } from 'toktokwallet/screens'
 import CONSTANTS from 'common/res/constants'
@@ -44,8 +45,8 @@ const RenderPendingRequest = ({navigation})=> {
                   })}
             />
              <PendingRequestMoney.Screen 
-                name="ToktokWalletRequestMoneyPendings" 
-                component={ToktokWalletRequestMoneyPending}
+                name="ToktokWalletRequestMoneySent" 
+                component={ToktokWalletRequestMoneySent}
                 options={() => ({
                     tabBarLabel: ({focused}) => {
                      return <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Request Sent</Text>

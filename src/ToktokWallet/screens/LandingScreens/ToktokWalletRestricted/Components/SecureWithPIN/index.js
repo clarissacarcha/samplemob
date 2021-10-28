@@ -19,7 +19,7 @@ const Reminder = ({children})=> {
 }
 
 
-export const SecurewithPIN = ({navigation,walletinfo,amount = null,onCashIn = null})=> {
+export const SecurewithPIN = ({navigation,walletinfo,amount = null,onCashIn = null,setUpTpinCallBack = null})=> {
 
     return (
         <View style={styles.container}>
@@ -54,7 +54,12 @@ export const SecurewithPIN = ({navigation,walletinfo,amount = null,onCashIn = nu
                    
                 </View>
             <View style={styles.btns}>
-                <YellowButton label="Setup TPIN" onPress={()=>navigation.replace("ToktokWalletCreatePin", {walletinfo,amount,onCashIn})} />
+                <YellowButton label="Setup TPIN" onPress={()=>navigation.replace("ToktokWalletCreatePin", {
+                    walletinfo,
+                    amount,
+                    onCashIn,
+                    setUpTpinCallBack
+                })} />
             </View>
            <BuildingBottom/>
         </View>

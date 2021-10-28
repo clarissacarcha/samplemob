@@ -6,7 +6,7 @@ import {GET_CASH_IN_LOGS ,TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
 import { GET_CASH_INS} from 'toktokwallet/graphql'
 import {useSelector} from 'react-redux'
 import { numberFormat } from 'toktokwallet/helper'
-import {Separator,TransactionDetails, ModalPaginationLoading , CheckIdleState} from 'toktokwallet/components'
+import {Separator,TransactionDetails, ModalPaginationLoading , CheckIdleState, SwipeDownToRefresh ,NoData} from 'toktokwallet/components'
 import { HeaderBack , HeaderTitle} from 'src/revamp'
 import CONSTANTS from 'common/res/constants'
 import { onErrorAlert } from 'src/util/ErrorUtility'
@@ -134,6 +134,7 @@ export const ToktokWalletCashInLogs = ({navigation})=> {
             cashInMobileNumber={tokwaAccount.mobileNumber}
         />
         <Separator />
+        <SwipeDownToRefresh/>
         <ModalPaginationLoading visible={pageLoading}/>
         {
             // loading && pageIndex == 0
@@ -144,6 +145,11 @@ export const ToktokWalletCashInLogs = ({navigation})=> {
             <View style={styles.container}>
                     <View style={styles.content}>
                             <FlatList
+                                ListHeaderComponent={() => {
+                                    if(records.length > 0) return null
+                                    if(loading) return null
+                                    return <NoData/>
+                                }}
                                 refreshControl={<RefreshControl refreshing={loading} onRefresh={Refetch} colors={[COLOR.YELLOW]} tintColor={COLOR.YELLOW} />}
                                 showsVerticalScrollIndicator={false}
                                 data={records}
