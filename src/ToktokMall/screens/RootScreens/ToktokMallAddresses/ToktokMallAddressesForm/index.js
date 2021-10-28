@@ -325,7 +325,6 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
       />
       <View style={styles.container}>
         <View style={styles.partition1}>
-          <View style={styles.textinputContainer}>
             <TextInput
               style={styles.textinput}
               value={newAddressForm.receiverName}
@@ -337,8 +336,6 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
                 onChangeText('receiverName', text);
               }}
             />
-          </View>
-          <View style={styles.textinputContainer}>
             <TextInput
               style={styles.textinput}
               value={newAddressForm.receiverContact}
@@ -353,7 +350,6 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
               keyboardType="numeric"
               maxLength={11}
             />
-          </View>
           <TouchableOpacity
             onPress={() => {
               setAddressFinderModal(true);
@@ -389,10 +385,10 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
               <CustomIcon.EIcon name={'chevron-down'} size={20} color={'#9E9E9E'} />
             </View>
           </TouchableOpacity>
-          <View style={styles.textinputContainer}>
             <TextInput
               style={{...styles.textinput, width: '100%'}}
               placeholder={'Postal code (optional)'}
+              placeholderTextColor="gray"
               value={newAddressForm.postalCode == 0 ? "" : newAddressForm.postalCode}
               onChangeText={(text) => {
                 onChangeText('postalCode', text);
@@ -401,10 +397,10 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
               keyboardType="numeric"
               maxLength={4}
             />
-          </View>
-          <View style={styles.textinputLastContainer}>
             <TextInput
-              style={styles.textinput}
+              multiline
+              placeholderTextColor="gray"
+              style={[styles.textinputLastContainer]}
               placeholder={'Landmarks/Exact Address/ Note to rider (optional)'}
               value={newAddressForm.landmark}
               onChangeText={(text) => {
@@ -412,7 +408,6 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
               }}
               maxLength={300}
             />
-          </View>
         </View>
         <View style={styles.partition2}>
           <Text>Set as default address</Text>
@@ -493,14 +488,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
   },
-  textinputContainer: {
+  textinput: {
     padding: Platform.OS === 'ios' ? 10 : 0,
     backgroundColor: '#F8F8F8',
     marginTop: 10,
     borderRadius: 5,
-    alignItems: 'flex-start',
   },
-  textinput: {marginLeft: 10, width: '100%'},
   dropdownpicker: {
     marginLeft: 10,
     marginLeft: 0,
@@ -520,8 +513,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F8F8F8',
     marginTop: 10,
     borderRadius: 5,
-    alignItems: 'flex-start',
-    height: 130,
+    minHeight: 130,
   },
   button1: {
     flex: 1,
