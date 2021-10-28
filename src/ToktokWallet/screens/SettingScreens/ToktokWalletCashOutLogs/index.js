@@ -88,7 +88,7 @@ export const ToktokWalletCashOutLogs = ({navigation})=> {
 
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
-        headerTitle: ()=> <HeaderTitle label={['Cash Out','']}/>,
+        headerTitle: ()=> <HeaderTitle label={['Fund Transfer','']}/>,
     })
 
     const session = useSelector(state=>state.session)
