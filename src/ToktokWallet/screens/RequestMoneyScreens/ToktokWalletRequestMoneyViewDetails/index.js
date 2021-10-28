@@ -1,6 +1,7 @@
-import React, { useState } from "react";
-import { View , Text , StyleSheet ,TouchableOpacity} from 'react-native'
-import { Separator , CheckIdleState} from 'toktokwallet/components'
+import React, { useState , useEffect } from "react";
+import { View , Text , StyleSheet ,TouchableOpacity,ScrollView} from 'react-native'
+import { Separator , CheckIdleState , DisabledButton} from 'toktokwallet/components'
+import { numberFormat } from 'toktokwallet/helper'
 import { HeaderBack , HeaderTitle } from 'src/revamp'
 import { useThrottle } from 'src/hooks'
 import {useAlert} from 'src/hooks/useAlert'
@@ -10,12 +11,16 @@ import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import { POST_REQUEST_APPROVE_REQUEST_MONEY,POST_APPROVED_REQUEST_MONEY } from 'toktokwallet/graphql'
 import { AlertOverlay } from 'src/components'
 import { TransactionUtility } from 'toktokwallet/util'
+import { useAccount } from 'toktokwallet/hooks'
 import CONSTANTS from 'common/res/constants'
 
 // SELF IMPORTS
 import {
     DeclineModal,
-    SuccessfulModal
+    EnterAmount,
+    RequestInfo,
+    SuccessfulModal,
+    WalletBalance
 } from "./Components";
 
 const { COLOR , FONT_FAMILY: FONT , SIZE , FONT_SIZE , MARGIN } = CONSTANTS
@@ -27,8 +32,10 @@ export const ToktokWalletRequestMoneyViewDetails = ({navigation,route})=> {
         headerTitle: ()=> <HeaderTitle label={['','']}/>,
     })
     const alert = useAlert();
+    const { refreshWallet , tokwaAccount } = useAccount();
     const requestMoney = route.params.requestMoney;
-    const [amount,setAmount] = useState(requestMoney.amount)
+    const [amount,setAmount] = useState(requestMoney.amount.toString())
+    const [note,setNote] = useState("")
     const [successModalVisible, setSuccessModalVisible] = useState(false)
     const [walletinfoParams,setWalletinfoParams] = useState({
         id: "",
@@ -37,6 +44,11 @@ export const ToktokWalletRequestMoneyViewDetails = ({navigation,route})=> {
         amount: ""
     })
     const [declineModal,setDeclineModal] = useState(false)
+    const [enabled,setEnabled] = useState(false)
+
+    useEffect(()=>{
+        refreshWallet()
+    },[])
 
     const [postRequestApproveRequestMoney, {loading}] = useMutation(POST_REQUEST_APPROVE_REQUEST_MONEY, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
@@ -78,6 +90,7 @@ export const ToktokWalletRequestMoneyViewDetails = ({navigation,route})=> {
             variables: {
                 input: {
                     requestMoneyId: requestMoney.id,
+                    amount: +amount
                 }
             }
         })
@@ -115,16 +128,52 @@ export const ToktokWalletRequestMoneyViewDetails = ({navigation,route})=> {
             />
             <Separator/>
             <View style={styles.container}>
-                <View style={{flex: 1}}>
+                <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
+                    <RequestInfo
+                        label="Requester Name"
+                        value={`${requestMoney.destinationPerson.firstName} ${requestMoney.destinationPerson.lastName}`}
+                    />
+                     <RequestInfo
+                        label="Mobile Number"
+                        value={requestMoney.destinationAccount.mobileNumber}
+                    />
+                    <RequestInfo
+                        label="Amount Requested"
+                        value={`${tokwaAccount.wallet.currency.code} ${numberFormat(requestMoney.amount)}`}
+                    />
+                    {
+                        requestMoney.destinationRemarks &&
+                        <RequestInfo
+                            label="Note"
+                            value={requestMoney.destinationRemarks}
+                        />
+                    }
 
-                </View>
+                    <EnterAmount
+                            amount={amount}
+                            setAmount={setAmount}
+                            setEnabled={setEnabled}
+                            tokwaAccount={tokwaAccount}
+                    />
+
+                    <WalletBalance 
+                        tokwaAccount={tokwaAccount}
+                        navigation={navigation}
+                    />
+                </ScrollView>
                 <View style={styles.actionBtns}>
                     <TouchableOpacity onPress={throttledDeclined} style={[styles.btn, {backgroundColor:"#CBCBCB",marginRight: 10}]}>
                         <Text style={[ styles.label ]}>Decline</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={throttledSend} style={[styles.btn, {backgroundColor:COLOR.YELLOW,marginLeft: 10}]}>
-                        <Text style={[ styles.label ]}>Send</Text>
-                    </TouchableOpacity>
+                    {
+                        enabled 
+                        ? <TouchableOpacity onPress={throttledSend} style={[styles.btn, {backgroundColor:COLOR.YELLOW,marginLeft: 10}]}>
+                            <Text style={[ styles.label ]}>Send</Text>
+                        </TouchableOpacity>
+                    :    <View style={{justifyContent:"center",alignItems:"center",height: 50,backgroundColor: "#FDBA1C",opacity: 0.5, borderRadius: 5,flex: 1}}>
+                            <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,color:"gray"}}>Send</Text>
+                        </View>
+                    }
                 </View>
             </View>
         </CheckIdleState>

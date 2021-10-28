@@ -3,6 +3,7 @@ import { View , Text ,Modal , StyleSheet , Dimensions , TouchableOpacity  , Text
 import { useAccount } from 'toktokwallet/hooks'
 import { useThrottle } from 'src/hooks'
 import { numberFormat } from 'toktokwallet/helper'
+import { PromptModal } from 'toktokwallet/components'
 import {useAlert} from 'src/hooks/useAlert'
 import {onErrorAlert} from 'src/util/ErrorUtility'
 import {useMutation} from '@apollo/react-hooks'
@@ -27,12 +28,12 @@ export const DeclineModal = ({
     const [note,setNote] = useState("")
     const alert = useAlert();
     const navigation = useNavigation();
+    const [showPrompt,setShowPrompt] = useState(false)
 
     const [postDeniedRequestMoney , {loading}] = useMutation(POST_DENIED_REQUEST_MONEY,{
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({postDeniedRequestMoney})=> {
-            navigation.navigate("ToktokWalletRequestMoneyPending")
-            navigation.replace("ToktokWalletRequestMoneyPending")
+            setShowPrompt(true)
         },
         onError: (error) => onErrorAlert({alert,error})
     })
@@ -47,6 +48,13 @@ export const DeclineModal = ({
             }
         })
     }
+
+    const onPress = ()=> {
+        setVisible(false)
+        navigation.navigate("ToktokWalletRequestMoneyPending")
+        navigation.replace("ToktokWalletRequestMoneyPending")
+    }
+
     const throttledDeclined = useThrottle(decline,2000);
 
     return (
@@ -57,6 +65,13 @@ export const DeclineModal = ({
             transparent={true}
         >
             <AlertOverlay visible={loading}/>
+            <PromptModal 
+                    visible={showPrompt}
+                    event="success"
+                    message={`Request from ${person} has been declined.`}
+                    title="Declined!"
+                    onPress={onPress}
+            />
             <View style={styles.body}>
                 <View style={styles.content}>
                     <Text style={styles.labelTitle}>Decline Request Money</Text>

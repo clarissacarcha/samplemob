@@ -31,7 +31,7 @@ const RenderItem = ({item,index , onPress})=> {
                     {/* <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.S,color:COLOR.YELLOW}}>click to see details</Text> */}
                 </View>
                 <View>
-                    <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,color: COLOR.YELLOW}}>PHP {numberFormat(+item.amount)}</Text>
+                    <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M,color: COLOR.YELLOW}}>PHP {numberFormat(+item.amount)}</Text>
                     <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:COLOR.DARK}}>{moment(item.createdAt).format("MMM D, YYYY hh:mm a")}</Text>
                 </View>
             </View>
@@ -97,7 +97,7 @@ export const styles = StyleSheet.create({
         backgroundColor:"white"
     },
     card: {
-        paddingVertical: 20,
+        paddingVertical: 10,
         justifyContent:"center",
         paddingHorizontal: 16,
     },

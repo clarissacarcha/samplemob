@@ -60,6 +60,17 @@ export const GET_REQUEST_MONEY_PENDING_SENT = gql`
     }
 `
 
+export const GET_REQUEST_MONEY_HISTORY = gql`
+    query getRequestMoneyHistory($input: GetRequestMoneyHistoryInput){
+        getRequestMoneyHistory(input: $input){
+            ${RequestMoney}
+            transaction {
+                id
+            }
+        }
+    }
+`
+
 export const POST_REQUEST_MONEY = gql`
     mutation postRequestMoney($input: PostRequestMoneyInput){
         postRequestMoney(input: $input)
