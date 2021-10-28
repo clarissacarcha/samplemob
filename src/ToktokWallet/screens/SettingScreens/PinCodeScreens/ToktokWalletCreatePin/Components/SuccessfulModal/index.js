@@ -63,7 +63,7 @@ const UpdatePIN = ()=> {
 }
 
 
-export const SuccessfulModal = ({modalVisible,tokwaAccount,amount,onCashIn,setSuccessModalVisible})=> {
+export const SuccessfulModal = ({modalVisible,tokwaAccount,amount,onCashIn,setSuccessModalVisible,setUpTpinCallBack})=> {
     const navigation = useNavigation()
     const { getMyAccount , tokwaAccount: tokwaAccountLatest } = useAccount()
 
@@ -76,7 +76,14 @@ export const SuccessfulModal = ({modalVisible,tokwaAccount,amount,onCashIn,setSu
           })
           setSuccessModalVisible(false);
         }
-      },[tokwaAccountLatest,onCashIn])
+        if(tokwaAccountLatest.pinCode && setUpTpinCallBack){
+            setUpTpinCallBack()
+            navigation.pop();
+            setSuccessModalVisible(false);
+            return;
+        }
+
+      },[tokwaAccountLatest,onCashIn,setUpTpinCallBack])
   
       const closeModal = async ()=> {
           if(onCashIn) {
