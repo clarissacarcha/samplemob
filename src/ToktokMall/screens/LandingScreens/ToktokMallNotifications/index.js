@@ -19,45 +19,47 @@ import {connect} from "react-redux"
 import AsyncStorage from '@react-native-community/async-storage'
 import uuid from 'react-native-uuid'
 
-const testdata = [{
-    id: "00X003",
-    title: "Parcel is on it's way",
-    description: "Order &id is now on its way to deliver your item.",
-    date: "06-22-2021",
-    history: [],
-    imageSource: require("../../../assets/images/coppermask.png")
-}, {
-    id: "00X002",
-    title: "Parcel delivered",
-    description: "Order &id has been delivered. Thank you for shopping with us! Kindly leave us a rating or feedback.",
-    date: "06-22-2021",
-    history: [],
-    imageSource: require("../../../assets/images/coppermask.png")
-}, {
-    id: "00X001",
-    title: "Parcel delivered",
-    description: "Order &id has been delivered. Thank you for shopping with us! Kindly leave us a rating or feedback.",
-    date: "06-22-2021",
-    history: [{
-        title: "Confirm Receipt",
-        description: "Items for order &id has been delivered. Thank you for shopping with us! We’d like to hear your feedback. Kindly go to My Orders to leave a rating.",
-        date: "06-22-2021"
-    }, {
-        title: "Parcel is on its way",
-        description: "Order &id is now on its way to deliver your item. If you are not able to receive the item, kindly let the receiver provide an ID to our rider.",
-        date: "06-22-2021"
-    }, {
-        title: "Parcel is ready to be delivered",
-        description: "Order 000X001 is now being prepared to deliver your item.",
-        date: "06-22-2021"
-    }],
-    imageSource: require("../../../assets/images/coppermask.png")
-}]
+import {EventRegister} from 'react-native-event-listeners'
+
+// const testdata = [{
+//     id: "00X003",
+//     title: "Parcel is on it's way",
+//     description: "Order &id is now on its way to deliver your item.",
+//     date: "06-22-2021",
+//     history: [],
+//     imageSource: require("../../../assets/images/coppermask.png")
+// }, {
+//     id: "00X002",
+//     title: "Parcel delivered",
+//     description: "Order &id has been delivered. Thank you for shopping with us! Kindly leave us a rating or feedback.",
+//     date: "06-22-2021",
+//     history: [],
+//     imageSource: require("../../../assets/images/coppermask.png")
+// }, {
+//     id: "00X001",
+//     title: "Parcel delivered",
+//     description: "Order &id has been delivered. Thank you for shopping with us! Kindly leave us a rating or feedback.",
+//     date: "06-22-2021",
+//     history: [{
+//         title: "Confirm Receipt",
+//         description: "Items for order &id has been delivered. Thank you for shopping with us! We’d like to hear your feedback. Kindly go to My Orders to leave a rating.",
+//         date: "06-22-2021"
+//     }, {
+//         title: "Parcel is on its way",
+//         description: "Order &id is now on its way to deliver your item. If you are not able to receive the item, kindly let the receiver provide an ID to our rider.",
+//         date: "06-22-2021"
+//     }, {
+//         title: "Parcel is ready to be delivered",
+//         description: "Order 000X001 is now being prepared to deliver your item.",
+//         date: "06-22-2021"
+//     }],
+//     imageSource: require("../../../assets/images/coppermask.png")
+// }]
 
 const Component =  ({
   navigation,
   notifications,
-  createNotificationsSession,
+  notificationCountSession,
 }) => {
 
   // navigation.setOptions({
@@ -72,21 +74,13 @@ const Component =  ({
 		client: TOKTOK_MALL_GRAPHQL_CLIENT,
 		fetchPolicy: 'network-only',
 		onCompleted: (response) => {
-			if(response.getOrdersAndHistory){
-				
+			if(response.getOrdersAndHistory){				
         setOrderHistory(response.getOrdersAndHistory)
-        let notifs = []
-        response.getOrdersAndHistory.map((item, topIndex) => {
-          notifs.push({id: item.uuid, read: false})
-          item.history.map((item2, subIndex) => {
-            notifs.push({id: item2.uuid, read: 0})
-          })
-        })
 
-        if(notifs.length != notifications.length){
-          createNotificationsSession("set", notifs)
-        }
-
+        //count notifications
+        let count = 0
+        response.getOrdersAndHistory.map((item) => item.read == 0 ? count++ : count = count)
+        notificationCountSession('set', count)
 			}
     },
     onError: (err) => {
@@ -136,7 +130,8 @@ const Component =  ({
   }
 
 	useEffect(() => {
-    init()	
+    init()
+    EventRegister.addEventListener('refreshToktokmallNotifications', init)	
 	}, [])
 
 	if(loading){
@@ -200,7 +195,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  createNotificationsSession: (action, payload) => dispatch({type: 'CREATE_NOTIFICATIONS_SESSION', action,  payload}),
+  notificationCountSession: (action, payload) => dispatch({type: 'TOKTOK_MALL_NOTIFICATION_COUNT', action,  payload}),
 });
 
 export const ToktokMallNotifications = connect(mapStateToProps, mapDispatchToProps)(Component);

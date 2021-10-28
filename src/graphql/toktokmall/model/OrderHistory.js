@@ -30,6 +30,8 @@ export const GET_ORDER_HISTORY = gql`
 export const GET_ORDERS_AND_HISTORY = gql`
   query getOrdersAndHistory($input: GetOrdersAndHistoryInput) {
     getOrdersAndHistory(input: $input) {
+      read
+      notificationId
       uuid
       id
       referenceNum

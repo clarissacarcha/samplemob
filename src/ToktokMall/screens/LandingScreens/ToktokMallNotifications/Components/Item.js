@@ -8,7 +8,6 @@ import {useNavigation} from "@react-navigation/native";
 export const Item = ({active, data, onSelect}) => {
 
   const navigation = useNavigation()
-  const [clicks, setClicks] = useState(0)
 
   useEffect(() => {
     console.log(data)
@@ -74,7 +73,7 @@ export const Item = ({active, data, onSelect}) => {
           onSelect()
           navigation.navigate("ToktokMallOrderDetails", data)
         }}
-        style={{flexDirection: 'row', backgroundColor: clicks == 1 ? '#fff' : '#FFFCF4'}}>
+        style={{flexDirection: 'row', backgroundColor: data.read && data.read == 1 ? '#fff' : '#FFFCF4'}}>
         <View style={{flex: 2, alignItems: 'center', justifyContent: 'center', paddingVertical: 20, paddingHorizontal: 15}}>
           <Image 
             source={getImage(data?.product?.image)} 

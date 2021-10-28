@@ -22,6 +22,15 @@ export const GET_CUSTOMER_IF_EXIST = gql`
   }
 `
 
+export const GET_CUSTOMER_RECORDS = gql`
+	query getCustomerRecords($input: GetCustomerRecordInput) {
+		getCustomerRecords(input: $input) {
+			cart
+			notifications
+		}
+	}
+`
+
 export const GET_CUSTOMER_ADDRESSES = gql`
 	query getCustomerAddresses($input: GetCustomerAddressesInput) {
 		getCustomerAddresses(input: $input) {

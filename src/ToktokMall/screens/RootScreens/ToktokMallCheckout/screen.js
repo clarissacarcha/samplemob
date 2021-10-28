@@ -89,7 +89,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
   const getShippingRates = async (payload, raw) => {
     console.log(JSON.stringify(payload))
-    console.log(raw)
+    console.log(JSON.stringify(raw))
     // console.log(JSON.stringify(payload.cart)) 
     const res = await ShippingApiCall("get_shipping_rate", payload, true)
     if(res.responseData && res.responseData.success == 1){

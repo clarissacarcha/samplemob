@@ -132,7 +132,7 @@ const TabBarIcon = ({source, myCart, count, notifs, tab}) => {
         }
       </View> */}
       {tab == 'cart' ? <RenderBadge data={count > 99 ? "99+" : count} /> : <></>}
-      {tab == 'notifs' && countNotifications(notifs) ?<RenderBadge data={countNotifications(notifs)} />: <></>}
+      {tab == 'notifs' ? <RenderBadge data={parseInt(notifs) > 99 ? "99+": notifs} />: <></>}
       {/* <Badge
         // value={tab == 'cart' ? countCartItems(myCart) : countNotifications(notifs)}
 
@@ -153,17 +153,17 @@ const TabBarIcon = ({source, myCart, count, notifs, tab}) => {
 
 const mapStateToProps = (state) => ({
   myCart: state.toktokMall.myCart,
-  notifications: state.toktokMall.notifications,
+  notificationCount: state.toktokMall.notificationCount,
   myCartCount: state.toktokMall.myCartCount
 })
 
 const ToktokMallLanding = connect(
   mapStateToProps,
   null,
-)(({myCart, myCartCount, notifications}) => {
+)(({myCart, myCartCount, notificationCount}) => {
 
   console.log("My Cart", myCart)
-  console.log("notifications", notifications)
+  console.log("notifications", notificationCount)
 
   return (
   <ToktokMallLandingBottomTab.Navigator
@@ -233,7 +233,7 @@ const ToktokMallLanding = connect(
         // tabBarIcon: ({color}) => <AIcon name="mail" color={COLOR.YELLOW} size={24} />
         // tabBarIcon: ({focused}) => focused ? <Image source={messageIconFill} style={BottomTabImageIconStyle} /> : <Image source={messagesIconOutline} style={BottomTabImageIconStyle} />
         tabBarIcon: ({focused}) =>
-          focused ? <TabBarIcon source={notifIconFill} notifs={notifications} tab={'notifs'} /> : <TabBarIcon source={notifIconOutline} notifs={notifications} tab={'notifs'} />,
+          focused ? <TabBarIcon source={notifIconFill} notifs={notificationCount} tab={'notifs'} /> : <TabBarIcon source={notifIconOutline} notifs={notificationCount} tab={'notifs'} />,
       }}
     />
     <ToktokMallLandingBottomTab.Screen

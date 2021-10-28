@@ -12,10 +12,10 @@ import {connect} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import SplashImage from '../assets/images/toktokmall-splash-screen.png';
 import {useSelector} from 'react-redux';
-import { useLazyQuery } from '@apollo/react-hooks';
+import { useLazyQuery, useQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../graphql';
 import { TOKTOK_MALL_AUTH_GRAPHQL_CLIENT } from '../../graphql';
-import { GET_CUSTOMER_IF_EXIST } from '../../graphql/toktokmall/model';
+import { GET_CUSTOMER_IF_EXIST, GET_CUSTOMER_RECORDS } from '../../graphql/toktokmall/model';
 import {GET_SIGNATURE} from '../../graphql/toktokmall/virtual';
 import axios from 'axios';
 import moment from 'moment';
@@ -30,7 +30,8 @@ const Splash = ({
   createNotificationsSession, 
   createDefaultAddressSession,
   createSearchHistorySession,
-  createMyCartCountSession
+  createMyCartCountSession,
+  createNotificationCountSession
 }) => {
 
   const session = useSelector(state=> state.session)
@@ -131,6 +132,20 @@ const Splash = ({
 
   }
 
+  const [getCustomerRecords, {error2, loading2}] = useLazyQuery(GET_CUSTOMER_RECORDS, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+		fetchPolicy: "network-only",
+    onCompleted: async ({getCustomerRecords}) => {
+      if(getCustomerRecords){
+        createMyCartCountSession("set", getCustomerRecords.cart)
+        createNotificationCountSession("set", getCustomerRecords.notifications)
+      }
+    },
+    onError: (err) => {
+      console.log(err)
+    }
+  })
+
   const FetchAsyncStorageData = async () => {
 
     //CART
@@ -188,6 +203,13 @@ const Splash = ({
       const data = JSON.parse(raw) || null
       if(data && data.userId){
         console.log(data)
+        await getCustomerRecords({
+          variables: {
+            input: {
+              userId: data.userId
+            }
+          }
+        })
         navigation.navigate("ToktokMallLanding");
       }else{
         await authUser()
@@ -198,18 +220,10 @@ const Splash = ({
 
 	}
 
-  const bypass = async () => {
-    setFailed(false)
-    await FetchAsyncStorageData()    
-    await authUser()
-  }
-
 	useEffect(() => {
 		
     init()
-    // bypass()
-
-    // navigation.navigate("ToktokMallLanding");
+    
 	}, [])
 
 	useEffect(() => {
@@ -247,7 +261,8 @@ const mapDispatchToProps = (dispatch) => ({
 	createNotificationsSession: (action, payload) => dispatch({type: 'CREATE_NOTIFICATIONS_SESSION', action,  payload}),  
   createDefaultAddressSession: (action, payload) => dispatch({type: 'CREATE_DEFAULT_ADDRESS_SESSION', action,  payload}),
   createSearchHistorySession: (action, payload) => dispatch({type: 'CREATE_SEARCH_HISTORY_SESSION', action,  payload}),
-  createMyCartCountSession: (action, payload) => dispatch({type: 'TOKTOK_MALL_CART_COUNT', action, payload})
+  createMyCartCountSession: (action, payload) => dispatch({type: 'TOKTOK_MALL_CART_COUNT', action, payload}),
+  createNotificationCountSession: (action, payload) => dispatch({type: 'TOKTOK_MALL_NOTIFICATION_COUNT', action, payload}),
 });
 
 export default connect(null, mapDispatchToProps)(Splash);
