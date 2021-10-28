@@ -54,6 +54,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
     message: '',
   });
 
+
   // data fetching for tsransaction
   const [getTransactionByRefNum, {error: transactionError, loading: transactionLoading}] = useLazyQuery(
     GET_ORDER_TRANSACTION_BY_REF_NUM,
@@ -269,10 +270,10 @@ const ToktokFoodDriver = ({route, navigation}) => {
         messages={cancelDialogMessage.message}
         type={cancelDialogMessage.type}
         onCloseModal={() => {
-          if(cancelDialogMessage.type == 'success'){
-            navigation.navigate('ToktokFoodOrderTransactions', { tab: 3 })
+          if (cancelDialogMessage.type == 'success') {
+            navigation.navigate('ToktokFoodOrderTransactions', {tab: 3});
           }
-          setCancelDialogMessage({ show: false, type: '', title: '', message: '' })
+          setCancelDialogMessage({show: false, type: '', title: '', message: ''});
         }}
       />
       <DialogMessage
@@ -281,15 +282,21 @@ const ToktokFoodDriver = ({route, navigation}) => {
         messages={showDialogMessage.message}
         reasons={showDialogMessage.reasons}
         visibility={showDialogMessage.show}
-        onCloseModal={() => { onCloseModal() }}
+        onCloseModal={() => {
+          onCloseModal();
+        }}
         onCloseBtn1={() => {
-          setShowDialogMessage(prev => ({ ...prev, show: false }));
+          setShowDialogMessage((prev) => ({...prev, show: false}));
           navigation.navigate('ToktokFoodHome');
         }}
-        onCloseBtn2={() => { onCloseModal() }}
-        btn1Title='Browse Restaurant'
-        btn2Title='OK'
-        hasTwoButtons={showDialogMessage.title != 'Order Complete'}
+        onCloseBtn2={() => {
+          onCloseModal();
+        }}
+        btn1Title="Browse Restaurant"
+        btn2Title="OK"
+        hasTwoButtons={
+          showDialogMessage.title != 'Order Complete' || showDialogMessage.title != 'No Response from Merchant'
+        }
       />
       <CancelOrder
         setShowLoader={setShowLoader}
@@ -303,18 +310,20 @@ const ToktokFoodDriver = ({route, navigation}) => {
         cancelDialogMessage={cancelDialogMessage}
         setCancelDialogMessage={setCancelDialogMessage}
         onCallBackResult={(cancelOrder) => {
-          setShowLoader(false)
+          setShowLoader(false);
           setTimeout(() => {
             if (cancelOrder.status == 200) {
               setCancelDialogMessage({
                 show: true,
                 type: 'success',
                 title: 'Order Cancelled',
-                message: 'Your order has been successfully cancelled. Cancelling orders multiple times will cause your next orders longer to be accepted by the merchant.' })
+                message:
+                  'Your order has been successfully cancelled. Cancelling orders multiple times will cause your next orders longer to be accepted by the merchant.',
+              });
             } else {
-              setCancelDialogMessage({ show: true, type: 'warning', title: 'Something went wrong!' })
+              setCancelDialogMessage({show: true, type: 'warning', title: 'Something went wrong!'});
             }
-          }, 500)
+          }, 500);
         }}
       />
       {(transactionLoading && transaction && Object.keys(transaction).length == 0) ||
