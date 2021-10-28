@@ -17,10 +17,10 @@ const tabs = [
     id: 1,
     name: 'Near You',
   },
-  // {
-  //   id: 2,
-  //   name: 'Promos',
-  // },
+  {
+    id: 2,
+    name: 'Promos',
+  },
   // {
   //   id: 3,
   //   name: 'All',
