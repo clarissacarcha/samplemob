@@ -67,6 +67,7 @@ export const ToktokWalletCreatePin = ({navigation,route})=> {
     const alert = useAlert()
     const amount = route?.params?.amount ? route.params.amount : null
     const onCashIn = route?.params?.onCashIn ? route.params.onCashIn : null
+    const setUpTpinCallBack = route?.params?.setUpTpinCallBack ? route.params.setUpTpinCallBack : null
 
     const cancelSetup = ()=> {
       setLeaveModalVisible(true)
@@ -128,6 +129,7 @@ export const ToktokWalletCreatePin = ({navigation,route})=> {
         <SuccessfulModal 
           amount={amount} 
           onCashIn={onCashIn} 
+          setUpTpinCallBack={setUpTpinCallBack}
           modalVisible={successModalVisible} 
           tokwaAccount={tokwaAccount}
           setSuccessModalVisible={setSuccessModalVisible}
