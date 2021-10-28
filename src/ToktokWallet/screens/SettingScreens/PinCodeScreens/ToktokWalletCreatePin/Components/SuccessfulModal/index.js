@@ -82,7 +82,7 @@ export const SuccessfulModal = ({modalVisible,tokwaAccount,amount,onCashIn,setSu
             setSuccessModalVisible(false);
             return;
         }
-      },[tokwaAccountLatest,onCashIn])
+      },[tokwaAccountLatest,onCashIn,setUpTpinCallBack])
   
       const closeModal = async ()=> {
           if(onCashIn || setUpTpinCallBack) {
