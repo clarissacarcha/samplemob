@@ -35,6 +35,7 @@ export const RenderDetails = ({
 	const [storeItemSelected, setStoreItemSelected] = useState(allSelected ? true : false)
 	const [storeItemUnselected, setStoreitemUnselected] = useState(!allSelected ? true : false)
 	const [selectedItemsCount, setSelectedItemsCount] = useState(0)
+	const [heldItem, setHeldItem] = useState({})
 
 	useEffect(() => {
 		toggleCheckBox(allSelected)
@@ -106,12 +107,12 @@ export const RenderDetails = ({
       {item &&
         item.data.length > 0 &&
         item.data.map((data, i) => {
-			const Wrapper = willDelete ? Swipeable : Swipeable
+			const Wrapper = willDelete ? View : Swipeable
 			const props = willDelete
 			? {}
 			: {
 				rightActionActivationDistance: 30,
-				rightButtonWidth: 75,
+				rightButtonWidth: 0,
 				rightButtons: [
 				  <DeleteButton
 					onPress={() => {
@@ -124,22 +125,25 @@ export const RenderDetails = ({
 				],
 			  };
           return (
-            <Wrapper {...props}>
+            <Wrapper  {...props}>
               <Item
                 key={i}
                 index={i}
 								state={getCheckboxState()}
-								// state = {false}
+								heldItem = {heldItem}
 								forceSelect={selectedItemsCount == item.data.length}
 								forceSelectToZero = {selectedItemsCount == 0}
                 data={data}
                 onHold={(raw) => {
+									setHeldItem(raw)
 									if (raw.checked) {
                     setSelectedItemsCount(selectedItemsCount + 1);
                   } else if (!raw.checked) {
                     setSelectedItemsCount(selectedItemsCount - 1);
                   }
-                  onItemLongPress(raw);
+									console.log(raw)
+									onItemLongPress(raw);
+									// swipableRef.recenter()
                 }}
                 onSelect={(raw) => {
                   if (raw.checked) {
@@ -150,9 +154,11 @@ export const RenderDetails = ({
                   onItemSelect(raw);
                 }}
                 item={item}
-                onChangeQuantity={onChangeQuantity}
+								onChangeQuantity={onChangeQuantity}
+								willDelete = {willDelete}
+								setHeldItem = {setHeldItem}
               />
-            </Wrapper>
+           </Wrapper>
           );
         })}
 

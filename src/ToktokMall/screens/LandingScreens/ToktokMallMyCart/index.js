@@ -216,9 +216,9 @@ const Component =  ({
       })
     }
     setSelectedItemsArr(items)
-    if(!willDelete){
+    // if(!willDelete){
       getSubTotal(items)
-    }
+    // }
   }
 
   const selectStoreItems = (raw, storeitems) => {
@@ -262,9 +262,9 @@ const Component =  ({
       }
     })
     setSelectedItemsArr(items)
-    if(!willDelete){
+    // if(!willDelete){
       getSubTotal(items)
-    }
+    // }
   }
 
   const unSelectitem = (raw) => {
@@ -291,9 +291,9 @@ const Component =  ({
       items.splice(itemIndex, 1)
     }
     setSelectedItemsArr(items)
-    if(!willDelete){
+    // if(!willDelete){
       getSubTotal(items)
-    }
+    // }
   }
 
   const unSelectStoreItems = (raw, storeitems) => {
@@ -333,9 +333,9 @@ const Component =  ({
       // console.log('produced result', items)
     })
     setSelectedItemsArr(items)
-    if(!willDelete){
+    // if(!willDelete){
       getSubTotal(items)
-    }
+    // }
   }
 
   const selectAllItems = () => {
@@ -372,9 +372,9 @@ const Component =  ({
       // setItemsToCheckoutArr(allitems)
       // getSubTotal(allitems)
       setSelectedItemsArr(allitems)
-      if(!willDelete){
+      // if(!willDelete){
         getSubTotal(allitems)
-      }
+      // }
     // }
 
   }
@@ -388,13 +388,13 @@ const Component =  ({
     //   setSubTotal(0)
     // }
     setSelectedItemsArr([])
-    if(!willDelete){
+    // if(!willDelete){
       setSubTotal(0)
-    }
+    // }
   }
 
   const onItemLongPress = (raw) => {
-    setWillDelete(raw.checked)
+    // 
     // setItemsToCheckoutArr([])
     // let items = ArrayCopy(itemsToDelArr)
     // let items = ArrayCopy(selectedItemsArr)
@@ -418,11 +418,12 @@ const Component =  ({
         qty: raw.qty
       })
     }
-    console.log(items)
+    // console.log(items)
     setSelectedItemsArr(items)
-    if(!willDelete){
+    // if(!willDelete){
       getSubTotal(items)
-    }
+    // }
+    setWillDelete(raw.checked)
   }
 
   const FormatCheckoutItems = () => {
@@ -518,6 +519,8 @@ const Component =  ({
                   // setItemsToDelArr(itemsToCheckoutArr)
                   setItemsToCheckoutArr([])
                   setItemsToDelArr([])
+                  // setSelectedItemsArr([])
+                  // setSubTotal(0)
                 }
                 setWillDelete(!willDelete)
               }}
@@ -555,7 +558,12 @@ const Component =  ({
                       }
                     }}
                     onItemLongPress={(raw) => {
-                      onItemLongPress(raw)
+                      // setWillDelete(raw.checked)
+                      if(raw.checked){
+                        onItemLongPress(raw)
+                      }else{
+                        unSelectitem(raw)
+                      }
                     }}
                     onItemDelete={(item) => {
                       deleteSingleItem(item)

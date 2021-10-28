@@ -17,7 +17,10 @@ export const Item = ({
   onHold,
   storeIndex, 
   onChangeQuantity,
-  forceSelectToZero
+  forceSelectToZero,
+  willDelete,
+  heldItem,
+  setHeldItem
 }) => {
 
   const [selected, setSelected] = useState(state)
@@ -38,8 +41,16 @@ export const Item = ({
   }, [forceSelect])
 
   useEffect(() => {
-    if(forceSelectToZero) setSelected(false)
+    if(forceSelectToZero ) setSelected(false)
   }, [forceSelectToZero])
+
+  useEffect(() => {
+    
+    if(heldItem?.product?.Id == data.product.Id && heldItem?.shopId == data.shopid ) {
+      setSelected(true) 
+      console.log('fire this to set selected to true')
+    } 
+  }, [heldItem])
 
   const onPress = () => {
     
