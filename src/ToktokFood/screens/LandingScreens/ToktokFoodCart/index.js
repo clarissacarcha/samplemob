@@ -554,7 +554,7 @@ const MainComponent = () => {
         <MyOrderList />
         <Separator />
 
-        <OrderVoucher />
+        <OrderVoucher autoShipping={autoShipping} />
         <Separator />
 
         {/* <AlsoOrder /> */}
