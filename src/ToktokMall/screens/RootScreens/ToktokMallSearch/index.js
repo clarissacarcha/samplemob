@@ -149,7 +149,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
   }, [searchHistory])
 
   useEffect(() => {
-		if(route.params?.searchValue){
+		if(route.params?.searchValue && route.params?.origin !== "relevant"){
       setInitialSearch(true)
 			setSearchValue(route.params.searchValue)
 			searchProduct({
@@ -166,6 +166,12 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
       setIsLoading(true)
       console.log("Triggered on useEffect!", route.params)
 		}
+    if(route.params?.origin === "relevant"){
+      setInitialSearch(true)
+			setSearchValue(route.params.searchValue)
+      console.log("datra", route.params.data)
+      setSearchedProducts(route.params?.data)
+    }
   }, [route.params])
   
   const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
