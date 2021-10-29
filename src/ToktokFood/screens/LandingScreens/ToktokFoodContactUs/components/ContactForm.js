@@ -58,6 +58,7 @@ export const ContactForm = ({  }) => {
             name: `${firstName} ${lastName}`,
             email: email,
             message: message,
+            email_type: 'customer'
           }
         }
       })

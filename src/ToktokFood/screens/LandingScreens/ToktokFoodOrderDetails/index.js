@@ -33,7 +33,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
   const checkOrderResponse5mins = useRef(null);
   const getRiderDetailsInterval = useRef(null);
   const isFocus = useIsFocused();
-  const [showDialogMessage, setShadowDialogMessage] = useState({
+  const [showDialogMessage, setShowDialogMessage] = useState({
     title: '',
     message: '',
     show: false,
@@ -108,11 +108,11 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
         },
       },
     });
-  }
+  };
 
   const handleMapRider = () => {
     if (transaction.tDeliveryId && riderDetails != null) {
-      if(riderSeconds > 0){
+      if (riderSeconds > 0) {
         riderRefetch({
           variables: {
             input: {
@@ -122,9 +122,9 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
         });
         getRiderDetailsInterval.current = BackgroundTimer.setInterval(() => setRiderSeconds(riderSeconds - 20), 20000);
       } else {
-        setRiderSeconds(300)
+        setRiderSeconds(300);
       }
-    } 
+    }
     console.log('Rider Details Updated ' + riderSeconds);
   };
 
@@ -139,7 +139,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
           BackgroundTimer.clearInterval(checkOrderResponse5mins.current);
           BackgroundTimer.clearInterval(getRiderDetailsInterval.current);
           await removeEstimatedDeliveryTime(referenceNum);
-          setShadowDialogMessage({
+          setShowDialogMessage({
             title: 'Order Complete',
             message,
             show: true,
@@ -160,7 +160,9 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
                   },
                 });
               } else {
-                if(riderSeconds == 0){ setRiderSeconds(300) }
+                if (riderSeconds == 0) {
+                  setRiderSeconds(300);
+                }
               }
             } else {
               handleGetTransactionByRefNum();
@@ -171,7 +173,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
               BackgroundTimer.clearInterval(checkOrderResponse5mins.current);
               BackgroundTimer.clearInterval(getRiderDetailsInterval.current);
               if (transaction.orderStatus == 'p') {
-                setShadowDialogMessage({
+                setShowDialogMessage({
                   title: 'No Response from Merchant',
                   message: `Merchant hasn't confirmed your order.\nPlease try again.`,
                   show: true,
@@ -188,8 +190,8 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
           BackgroundTimer.clearInterval(checkOrderResponse5mins.current);
           BackgroundTimer.clearInterval(getRiderDetailsInterval.current);
           let isValidDate = moment(transaction.dateOrderProcessed).isValid();
-          let declineNote = `Sorry, your order has been declined and cannot be processed by ${transaction.shopDetails.shopname} due to the following reason/s:`
-          let cancelNote = `Your order has been cancelled and cannot be processed by ${transaction.shopDetails.shopname} due to the following reason/s:`
+          let declineNote = `Sorry, your order has been declined and cannot be processed by ${transaction.shopDetails.shopname} due to the following reason/s:`;
+          let cancelNote = `Your order has been cancelled and cannot be processed by ${transaction.shopDetails.shopname} due to the following reason/s:`;
           setShowDialogMessage({
             title: isValidDate ? 'Order Cancelled' : 'OOPS! Order Declined!',
             message: isValidDate ? cancelNote : declineNote,
@@ -197,7 +199,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
             show: true,
             type: 'warning',
           });
-          await removeEstimatedDeliveryTime(referenceNum)
+          await removeEstimatedDeliveryTime(referenceNum);
         }
       } else {
         if (transaction.tDeliveryId) {
@@ -237,21 +239,19 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
   };
 
   const onCloseModal = () => {
-    let { title } = showDialogMessage
-    setShowDialogMessage(prev => ({ ...prev, show: false }))
-    if(title == 'Order Complete' || title == 'OOPS! Order Declined!' || title == 'Order Cancelled'){
-      let tab = selectedTab(title)
-      navigation.navigate('ToktokFoodOrderTransactions', { tab })
+    let {title} = showDialogMessage;
+    setShowDialogMessage((prev) => ({...prev, show: false}));
+    if (title == 'Order Complete' || title == 'OOPS! Order Declined!' || title == 'Order Cancelled') {
+      let tab = selectedTab(title);
+      navigation.navigate('ToktokFoodOrderTransactions', {tab});
     } else {
       setSeconds(300);
     }
   };
 
   const displayOrderTitle = useMemo(() => {
-    return (
-      <OrderTitle transaction={transaction} riderDetails={riderDetails} referenceNum={referenceNum} />
-    )
-  }, [transaction, riderDetails])
+    return <OrderTitle transaction={transaction} riderDetails={riderDetails} referenceNum={referenceNum} />;
+  }, [transaction, riderDetails]);
 
   return (
     <View style={styles.container}>
@@ -261,15 +261,21 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
         messages={showDialogMessage.message}
         reasons={showDialogMessage.reasons}
         visibility={showDialogMessage.show}
-        onCloseModal={() => { onCloseModal() }}
+        onCloseModal={() => {
+          onCloseModal();
+        }}
         onCloseBtn1={() => {
-          setShowDialogMessage(prev => ({ ...prev, show: false }));
+          setShowDialogMessage((prev) => ({...prev, show: false}));
           navigation.navigate('ToktokFoodHome');
         }}
-        onCloseBtn2={() => { onCloseModal() }}
-        btn1Title='Browse Restaurant'
-        btn2Title='OK'
-        hasTwoButtons={showDialogMessage.title != 'Order Complete'}
+        onCloseBtn2={() => {
+          onCloseModal();
+        }}
+        btn1Title="Browse Restaurant"
+        btn2Title="OK"
+        hasTwoButtons={
+          showDialogMessage.title !== 'Order Complete' && showDialogMessage.title !== 'No Response from Merchant'
+        }
       />
       <HeaderImageBackground searchBox={false}>
         <HeaderTitle />
@@ -280,7 +286,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
         <LoadingIndicator isFlex isLoading={true} />
       ) : (
         <ScrollView bounces={false} contentContainerStyle={styles.scrollView} showsVerticalScrollIndicator={false}>
-          { displayOrderTitle }
+          {displayOrderTitle}
           <Separator />
           <OrderAddress transaction={transaction} riderDetails={riderDetails} />
           <Separator />
