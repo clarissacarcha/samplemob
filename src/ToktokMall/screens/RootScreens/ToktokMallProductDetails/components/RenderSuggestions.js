@@ -112,6 +112,7 @@ const RenderItem = ({item}) => {
 
 export const RenderSuggestions = ({data}) => {
 
+  const {navigate} = useNavigation()
   const [products, setProducts] = useState(data)
 
   useEffect(() => {
@@ -125,7 +126,8 @@ export const RenderSuggestions = ({data}) => {
               <View style={{flex: 8}}>
                 <Text style={styles.h1}>Suggestions for you</Text>
               </View>
-              <TouchableOpacity style={{flex: 2, alignItems: 'flex-end', justifyContent: 'center'}}>
+              <TouchableOpacity onPress={() => 
+            navigate("ToktokMallSearch", {searchValue: "Suggestions for you", origin: "relevant", data: data })}style={{flex: 2, alignItems: 'flex-end', justifyContent: 'center'}}>
                 <Text style={styles.link}>See all </Text>
               </TouchableOpacity>
               <View style={{flex: 0, alignItems: 'flex-end', justifyContent: 'center'}}>
