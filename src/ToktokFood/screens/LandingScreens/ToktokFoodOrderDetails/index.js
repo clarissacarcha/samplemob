@@ -21,6 +21,8 @@ import {GET_ORDER_TRANSACTION_BY_REF_NUM, GET_RIDER_DETAILS} from 'toktokfood/gr
 import {removeEstimatedDeliveryTime} from 'toktokfood/helper/estimatedDeliveryTime';
 import {useIsFocused} from '@react-navigation/native';
 
+import moment from 'moment';
+
 const ToktokFoodOrderDetails = ({route, navigation}) => {
   const {price} = useSelector((state) => state.toktokFood.totalAmount);
   const referenceNum = route.params ? route.params.referenceNum : '';
