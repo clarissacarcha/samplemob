@@ -111,6 +111,8 @@ export const GET_VOUCHER_CODE = gql`
       message
       type
       voucher {
+        id
+        shopid
         amount
         minimum
         minimum_price
@@ -118,6 +120,8 @@ export const GET_VOUCHER_CODE = gql`
         valid
         valid_until
         vcode
+        vname
+        is_percentage
       }
     }
   }

@@ -91,15 +91,15 @@ export const StickyView = () => {
     if (isFocus && location) {
       dispatch({type: 'SET_TOKTOKFOOD_SHOP_COORDINATES', payload: {latitude, longitude}});
       getProductCategories();
-      console.log(
-        JSON.stringify({
-          input: {
-            shopId: id,
-            userLongitude: location?.longitude,
-            userLatitude: location?.latitude,
-          },
-        }),
-      );
+      // console.log(
+      //   JSON.stringify({
+      //     input: {
+      //       shopId: id,
+      //       userLongitude: location?.longitude,
+      //       userLatitude: location?.latitude,
+      //     },
+      //   }),
+      // );
       getShopDetails({
         variables: {
           input: {

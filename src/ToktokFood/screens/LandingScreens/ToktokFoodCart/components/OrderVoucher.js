@@ -19,8 +19,8 @@ import {moderateScale} from 'toktokfood/helper/scale';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {GET_VOUCHER_CODE} from 'toktokfood/graphql/toktokfood';
 
-const OrderVoucher = () => {
-  const {temporaryCart} = useContext(VerifyContext);
+const OrderVoucher = ({autoShipping}) => {
+  const {shippingVoucher, setShippingVoucher, temporaryCart} = useContext(VerifyContext);
   const {customerInfo} = useSelector((state) => state.toktokFood);
 
   // State
@@ -28,7 +28,7 @@ const OrderVoucher = () => {
   const [voucherError, setVoucherError] = useState(null);
   const [showError, setShowError] = useState(false);
 
-  // console.log(temporaryCart, totalAmount);
+  // console.log(shippingVoucher);
 
   const [getVoucherCode] = useLazyQuery(GET_VOUCHER_CODE, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
@@ -40,11 +40,22 @@ const OrderVoucher = () => {
     //   },
     // },
     onCompleted: ({getVoucherCode}) => {
-      // console.log(getVoucherCode);
-      const {success} = getVoucherCode;
+      const {success, message, type} = getVoucherCode;
+      // console.log(getVoucherCode, shippingVoucher);
+
       if (!success) {
         setShowError(!showError);
-        setVoucherError('* Invalid voucher code. Please check your voucher code.');
+        setVoucherError(message);
+      } else {
+        if (type !== 'shipping') {
+          setShippingVoucher([getVoucherCode]);
+        }
+        if (type === 'shipping' && !autoShipping.success) {
+          setShippingVoucher([getVoucherCode]);
+        } else {
+          setShowError(!showError);
+          setVoucherError('* Invalid voucher code. Please check your voucher code.');
+        }
       }
     },
   });
@@ -52,7 +63,7 @@ const OrderVoucher = () => {
   const onApplyVoucher = () => {
     const {cartItemsLength, items} = temporaryCart;
     const {email} = customerInfo;
-    const promoCount = 1;
+    const promoCount = 0;
     const isMystery = 0;
 
     if (cartItemsLength) {
@@ -78,6 +89,16 @@ const OrderVoucher = () => {
     setVoucher(value);
   };
 
+  const renderVoucher = () => {
+    const {valid_until, vname} = shippingVoucher[0].voucher;
+    return (
+      <View style={styles.voucherContainer}>
+        <Text style={styles.voucherText}>{vname}</Text>
+        <Text style={styles.validText}>Valid until: {valid_until}</Text>
+      </View>
+    );
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -91,17 +112,23 @@ const OrderVoucher = () => {
       )}
 
       <View style={styles.formContainer}>
-        <StyledTextInput
-          hasIcon={showError}
-          error={voucherError}
-          onChangeText={onChangeText}
-          label="Voucher"
-          value={voucher}
-        />
+        {shippingVoucher.length ? (
+          renderVoucher()
+        ) : (
+          <>
+            <StyledTextInput
+              hasIcon={showError}
+              error={voucherError}
+              onChangeText={onChangeText}
+              label="Voucher"
+              value={voucher}
+            />
 
-        <TouchableOpacity onPress={onApplyVoucher} style={styles.apply}>
-          <Text style={styles.subText}>Apply</Text>
-        </TouchableOpacity>
+            <TouchableOpacity onPress={onApplyVoucher} style={styles.apply}>
+              <Text style={styles.subText}>Apply</Text>
+            </TouchableOpacity>
+          </>
+        )}
       </View>
     </View>
   );
@@ -117,6 +144,7 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     marginTop: moderateScale(10),
     paddingHorizontal: moderateScale(20),
   },
@@ -141,5 +169,20 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
     paddingVertical: moderateScale(10),
+  },
+  voucherContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: moderateScale(10),
+  },
+  voucherText: {
+    fontWeight: '500',
+    fontSize: FONT_SIZE.L,
+    color: '#FFA700',
+  },
+  validText: {
+    fontSize: FONT_SIZE.M,
+    color: '#9E9E9E',
   },
 });
