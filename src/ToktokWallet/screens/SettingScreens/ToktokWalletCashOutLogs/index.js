@@ -76,7 +76,7 @@ const CashOutLog = ({
     return (
         <TouchableOpacity onPress={()=>ViewTransactionDetails({requestNo, refNo,refDate, transactionAmount , status , provider,cashOutDisplayInformations})} style={styles.transaction}>
             <View style={styles.transactionDetails}>
-                <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Request # {refNo}</Text>
+                <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Request # {requestNo}</Text>
                 <Text style={{color: "#909294",fontSize: FONT_SIZE.M,marginTop: 0,fontFamily: FONT.REGULAR}}>{status}</Text>
             </View>
             <View style={styles.transactionAmount}>
