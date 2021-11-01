@@ -6,6 +6,9 @@ import {Separator, WalletLog} from 'toktokwallet/components';
 import { YellowButton } from 'src/revamp';
 import { useAccount } from 'toktokwallet/hooks';
 
+//SELF IMPORTS
+import Log from './Log';
+
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS
 const {height,width} = Dimensions.get("window")
 
@@ -57,9 +60,9 @@ const RecentRecords = ()=> (
           keyExtractor={(item) => item.id}
           renderItem={({item, index}) => {
             return (
-              <WalletLog
+              <Log
                 key={`recentLog${index}`}
-                item={item}
+                transaction={item}
                 itemsLength={tokwaAccount.wallet.recentTransactions}
                 index={index}
               />

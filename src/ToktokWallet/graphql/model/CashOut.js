@@ -47,15 +47,8 @@ export const GET_CASH_OUTS = gql`
                     id
                     name
                 }
-                cashOutDisplayInformations {
-                    accountInfo {
-                            accountNumber
-                            accountName
-                            bank {
-                                name 
-                            }
-                    }
-                }
+                details
+                refNo
         }
     }
 ` 

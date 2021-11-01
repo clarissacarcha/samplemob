@@ -1,6 +1,6 @@
 import React , {useEffect,useState, useContext} from 'react'
 import {View , Text , StyleSheet , TextInput,TouchableOpacity} from 'react-native'
-import { ValidatorScreen } from 'toktokwallet/components'
+import { ValidatorScreen, InputAmount } from 'toktokwallet/components'
 import { YellowButton ,VectorIcon ,ICON_SET} from 'src/revamp'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import {POST_CASH_OUT_OTHER_BANKS , POST_REQUEST_CASH_OUT } from 'toktokwallet/graphql'
@@ -24,6 +24,7 @@ const Amount = ({changeErrorMessagge ,errorListMessage})=> {
     const tokwaAccount = useSelector(state=>state.toktokWallet)
     const { amount ,setAmount , note , setNote ,bank } = useContext(ContextCashOut)
     const [maxAmount , setMaxAmount] = useState(null)
+    const [isFocus,setIsFocus] = useState(false)
 
 
     const changeAmount = (value)=> {
@@ -61,16 +62,23 @@ const Amount = ({changeErrorMessagge ,errorListMessage})=> {
             <View style={[styles.input, {borderWidth: 1, borderColor: errorListMessage.amount == "" ? "transparent" : COLOR.RED,flexDirection:"row"}]}>
                         <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,alignSelf:"center"}}>{tokwaAccount.wallet.currency.code} </Text>
                         <TextInput
-                                caretHidden
+                                onFocus={()=>setIsFocus(true)}
+                                onBlur={()=>setIsFocus(false)}
+                                caretHidden={!isFocus}
                                 value={amount}
                                 onChangeText={changeAmount}
-                                style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent',zIndex: 1}}
+                                // style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent',zIndex: 1}}
+                                style={{height: '100%', width: '100%', ...(!isFocus && amount != "" ? {position: 'absolute', color: 'transparent',zIndex: 1} : {})}}
                                 keyboardType="numeric"
                                 returnKeyType="done"
+                                placeholder="0.00"
                         />
-                    <View style={{marginLeft: 5,alignSelf: "center",flex: 1}}>
-                            <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{amount ? numberFormat(amount) : "0.00"}</Text>
-                    </View>
+                         {
+                             !isFocus && amount != "" &&
+                            <View style={{marginLeft: 5,alignSelf: "center",flex: 1}}>
+                                    <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{amount ? numberFormat(amount) : "0.00"}</Text>
+                            </View>
+                        }
             </View>
             {errorListMessage.amount != "" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.XS,color:"#F93154"}}>{errorListMessage.amount}</Text>}
         </View>

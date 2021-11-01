@@ -1,77 +1,22 @@
 import React , {useState , useEffect} from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,Image,ActivityIndicator , FlatList,RefreshControl} from 'react-native'
-import moment from 'moment'
+import {View,StyleSheet, FlatList,RefreshControl} from 'react-native'
 import {useLazyQuery , useQuery} from '@apollo/react-hooks'
-import {GET_CASH_IN_LOGS ,TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
+import {TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
 import { GET_CASH_INS} from 'toktokwallet/graphql'
 import {useSelector} from 'react-redux'
-import { numberFormat } from 'toktokwallet/helper'
-import {Separator,TransactionDetails, ModalPaginationLoading , CheckIdleState, SwipeDownToRefresh ,NoData} from 'toktokwallet/components'
+import {Separator, ModalPaginationLoading , CheckIdleState, SwipeDownToRefresh ,NoData} from 'toktokwallet/components'
 import { HeaderBack , HeaderTitle} from 'src/revamp'
 import CONSTANTS from 'common/res/constants'
 import { onErrorAlert } from 'src/util/ErrorUtility'
 import { useAlert } from 'src/hooks'
 import { SomethingWentWrong } from 'src/components'
 
+//SELF IMPORTS
+import {
+    CashInLog
+} from "./Components";
+
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
-
-const CashInLog = ({
-    item,
-    index , 
-    itemsLength,
-    tokwaAccount,
-    setTransactionInfo,
-    setTransactionVisible
-})=> {
-
-
-    const ViewTransactionDetails = ({refNo,refDate, transactionAmount , status,provider})=> {
-        setTransactionInfo({
-            refNo: refNo,
-            refDate: refDate,
-            label: "Cash In",
-            phrase: `Cash in through ${provider}`,
-            amount: transactionAmount,
-            status: status,
-        })
-        setTransactionVisible(true)
-    }
-
-    let status
-    switch (item.status) {
-        case "0":
-            status = "Requested"
-            break;
-        case "1":
-            status = "Success"
-            break
-        case "2":
-            status = "Pending"
-            break
-        default:
-            status = "Failed"
-            break;
-    }
-
-    const refNo = item.referenceNumber
-    const refDate = moment(item.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')
-    const transactionAmount = `${tokwaAccount.wallet.currency.code} ${numberFormat(item.amount)}`
-    const provider = item.provider.name
-
-
-    return (
-        <TouchableOpacity onPress={()=>ViewTransactionDetails({refNo,refDate, transactionAmount , status , provider})} style={styles.transaction}>
-            <View style={styles.transactionDetails}>
-                <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Ref # {refNo}</Text>
-                <Text style={{color: "#909294",fontSize: FONT_SIZE.M,marginTop: 0,fontFamily: FONT.REGULAR}}>{status}</Text>
-            </View>
-            <View style={styles.transactionAmount}>
-                <Text style={{color: "#FCB91A",fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{transactionAmount}</Text>
-                <Text style={{color: "#909294",fontSize: FONT_SIZE.S,alignSelf: "flex-end",marginTop: 0,fontFamily: FONT.REGULAR}}>{refDate}</Text>
-            </View>
-       </TouchableOpacity>
-    )
-}
 
 export const ToktokWalletCashInLogs = ({navigation})=> {
 
@@ -81,19 +26,9 @@ export const ToktokWalletCashInLogs = ({navigation})=> {
     })
 
     const tokwaAccount = useSelector(state=>state.toktokWallet)
-    const [transactionVisible,setTransactionVisible] = useState(false)
     const [pageIndex,setPageIndex] = useState(0)
     const [pageLoading,setPageLoading] = useState(false)
     const [records,setRecords] = useState([])
-    const [transactionInfo,setTransactionInfo] = useState({
-        refNo: "",
-        refDate: "",
-        label: "",
-        phrase: "",
-        amount: "",
-        status: "",
-    })
-
     const alert = useAlert()
 
     const [getCashIns, {data, error, loading}] = useLazyQuery(GET_CASH_INS, {
@@ -127,12 +62,6 @@ export const ToktokWalletCashInLogs = ({navigation})=> {
 
     return (
         <CheckIdleState>
-        <TransactionDetails 
-            visible={transactionVisible}
-            setVisible={setTransactionVisible}
-            transactionInfo={transactionInfo}
-            cashInMobileNumber={tokwaAccount.mobileNumber}
-        />
         <Separator />
         <SwipeDownToRefresh/>
         <ModalPaginationLoading visible={pageLoading}/>
@@ -159,10 +88,7 @@ export const ToktokWalletCashInLogs = ({navigation})=> {
                                         key={`cashin-log${index}`} 
                                         item={item}
                                         index={index} 
-                                        itemsLength={records.length}
                                         tokwaAccount={tokwaAccount}
-                                        setTransactionInfo={setTransactionInfo}
-                                        setTransactionVisible={setTransactionVisible}
                                     />
                                 )}
                                 // onEndReached={()=>{

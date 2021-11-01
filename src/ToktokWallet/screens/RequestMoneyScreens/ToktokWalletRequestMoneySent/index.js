@@ -1,4 +1,4 @@
-import React from 'react'
+import React , {useState} from 'react'
 import { Image , View , Text , StyleSheet , Dimensions , FlatList ,ActivityIndicator , RefreshControl , TouchableOpacity } from 'react-native'
 import { Separator , CheckIdleState , SwipeDownToRefresh , NoData } from "toktokwallet/components"
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
@@ -11,18 +11,37 @@ import moment from 'moment'
 import { useNavigation } from '@react-navigation/native'
 import CONSTANTS from 'common/res/constants';
 
+//SELF IMPORTS 
+import Details from './Details'
+
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE , SIZE } = CONSTANTS
 const imageWidth = Dimensions.get('window').width - 200;
 
-const RenderItem = ({item,index , onPress})=> {
+const RenderItem = ({item,index})=> {
 
-    const openRMDetails = ()=>{
-        onPress(item)
+    const [openModal,setOpenModal] = useState(false)
+    const [info,SetInfo] = useState({})
+
+    const openRMDetails = ()=> {
+        SetInfo({
+            ...item,
+            amount: `PHP ${numberFormat(+item.amount)}`,
+            refDate: moment(item.createdAt).format("MMM D, YYYY hh:mm a"),
+            name: "Request Money",
+            phrase: `Sent request money to ${person}`,
+        })
+        setOpenModal(true)
     }
 
     const person = `${item.destinationPerson.firstName} ${item.destinationPerson.lastName}`
     
     return (
+        <>
+        <Details
+            visible={openModal}
+            setVisible={setOpenModal}
+            transaction={info}
+        />
         <TouchableOpacity onPress={openRMDetails} style={[styles.card]}>
             <View style={styles.cardContent}>
                  <View style={{flex: 1,height:"100%",justifyContent:"flex-start"}}>
@@ -37,6 +56,7 @@ const RenderItem = ({item,index , onPress})=> {
             </View>
               
         </TouchableOpacity>
+        </>
     )
 }
 
@@ -48,11 +68,6 @@ export const ToktokWalletRequestMoneySent = ()=> {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         fetchPolicy:"network-only"
     })
-    
-
-    const openRMDetails = ()=> {
-
-    }
 
     if(loading){
         return <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -79,7 +94,7 @@ export const ToktokWalletRequestMoneySent = ()=> {
                 showsVerticalScrollIndicator={false}
                 data={data.getRequestMoneyPendingSent}
                 keyExtractor={(item) => item.id}
-                renderItem={({item,index})=> ( <RenderItem item={item} index={index} onPress={openRMDetails}/>)}
+                renderItem={({item,index})=> ( <RenderItem item={item} index={index}/>)}
                 ItemSeparatorComponent={() => (
                     <View style={{borderBottomWidth: 1.5, marginHorizontal: SIZE.MARGIN, borderColor: COLOR.LIGHT}} />
                     )}

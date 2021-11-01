@@ -2,6 +2,7 @@ import gql from 'graphql-tag';
 
 const RequestMoney = `
 id
+refNo
 destinationAccountId
 destinationPersonId
 destinationWalletId
@@ -66,6 +67,8 @@ export const GET_REQUEST_MONEY_HISTORY = gql`
             ${RequestMoney}
             transaction {
                 id
+                # details
+                refNo
             }
         }
     }

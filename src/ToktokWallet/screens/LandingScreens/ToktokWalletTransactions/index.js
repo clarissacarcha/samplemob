@@ -8,6 +8,7 @@ import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import { GET_TRANSACTIONS } from 'toktokwallet/graphql'
 import {useLazyQuery} from '@apollo/react-hooks'
 import { connect } from 'react-redux'
+import Log from 'toktokwallet/screens/LandingScreens/ToktokWalletHomePage/Components/WalletRecentTransactions/Log'
 import CONSTANTS from 'common/res/constants'
 const { COLOR } = CONSTANTS
 
@@ -71,7 +72,11 @@ export const ToktokWalletTransactions = connect(null,mapDispatchtoProps)(({navig
                             data={allTransactions}
                             keyExtractor={(item)=>item.id}
                             renderItem={({item,index})=>(
-                                <WalletLog key={`recentLog${index}`} item={item} itemsLength={allTransactions} index={index}/>
+                                <Log
+                                    key={`walletLogs${index}`}
+                                    transaction={item}
+                                    index={index}
+                                />
                             )}
                             // onEndReached={()=>{
                             //     setPageLoading(true)
