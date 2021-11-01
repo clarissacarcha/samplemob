@@ -29,7 +29,7 @@ const Details = ({
             <View>
                  <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>{name}</Text>
                  <Text style={styles.labelText}>{phrase}</Text>
-                 <Text style={styles.labelText}>Mobile Number: {sourceAccount.mobileNumber}</Text>
+                 <Text style={styles.labelText}>Mobile Number: {sourceAccount?.mobileNumber}</Text>
                  <Text style={styles.labelText}>Amount: {amount}</Text>
                  <Text style={styles.labelText}>Date & Time: {refDate}</Text>
             </View>
