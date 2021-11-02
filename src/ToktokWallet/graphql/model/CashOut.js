@@ -56,6 +56,11 @@ export const GET_CASH_OUTS = gql`
                             }
                     }
                 }
+                transaction {
+                    id
+                    refNo
+                    createdAt
+                }
         }
     }
 ` 
