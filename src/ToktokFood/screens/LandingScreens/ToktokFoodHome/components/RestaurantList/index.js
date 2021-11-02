@@ -1,12 +1,12 @@
 import React from 'react';
-import {FlatList, Platform, StyleSheet, Text, View, Image} from 'react-native';
+import { FlatList, Image, Platform, StyleSheet, Text, View } from 'react-native';
+// Fonts & Colors
+import { FONT_SIZE } from 'res/variables';
+import { empty_shop_2 } from 'toktokfood/assets/images';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 // Utils
-import {scale, verticalScale, moderateScale} from 'toktokfood/helper/scale';
+import { moderateScale, scale, verticalScale } from 'toktokfood/helper/scale';
 import RestaurantItem from './RestaurantItem';
-import {empty_shop} from 'toktokfood/assets/images';
-// Fonts & Colors
-import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 
 const RestaurantList = (props) => {
   const {loading, error, data, loadMore, location} = props;
@@ -15,7 +15,7 @@ const RestaurantList = (props) => {
 
   const listEmpty = () => (
     <View style={styles.emptyContainer}>
-      <Image style={styles.emptyImg} resizeMode="contain" source={empty_shop} />
+      <Image style={styles.emptyImg} resizeMode="contain" source={empty_shop_2} />
       <Text style={styles.emptyText}>
         It seems like there is no open restaurant near you. Refresh or try again later.
       </Text>

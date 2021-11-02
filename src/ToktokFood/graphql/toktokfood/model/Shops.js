@@ -13,6 +13,7 @@ export const GET_SHOPS = gql`
       ratings
       estimatedDistance
       estimatedDeliveryTime
+      promoName
     }
   }
 `;

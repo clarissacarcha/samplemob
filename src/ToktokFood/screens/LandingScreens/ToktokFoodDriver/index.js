@@ -1,33 +1,27 @@
-import axios from 'axios';
-import React, {useEffect, useState, useRef, useMemo} from 'react';
-import {View, StyleSheet, Alert} from 'react-native';
-import BackgroundTimer from 'react-native-background-timer';
+import { useLazyQuery } from '@apollo/react-hooks';
+import { useIsFocused } from '@react-navigation/native';
 import moment from 'moment';
-
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import BackgroundTimer from 'react-native-background-timer';
+import { useDispatch, useSelector } from 'react-redux';
+import { CLIENT, TOKTOK_FOOD_GRAPHQL_CLIENT } from 'src/graphql';
+import DialogMessage from 'toktokfood/components/DialogMessage';
+import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
+import HeaderTitle from 'toktokfood/components/HeaderTitle';
 // Components
 import Loader from 'toktokfood/components/Loader';
-import HeaderTitle from 'toktokfood/components/HeaderTitle';
-import {DriverAnimationView, DriverDetailsView, PickUpDetailsView, CancelOrder, RiderMapView} from './components';
-import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
-import DialogMessage from 'toktokfood/components/DialogMessage';
-import TimerModal from 'toktokfood/components/TimerModal';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
-
+import { GET_ORDER_TRANSACTION_BY_REF_NUM, GET_RIDER_DETAILS } from 'toktokfood/graphql/toktokfood';
 // Utils
 import { removeEstimatedDeliveryTime } from 'toktokfood/helper/estimatedDeliveryTime';
-
-import {useLazyQuery} from '@apollo/react-hooks';
-import {TOKTOK_FOOD_GRAPHQL_CLIENT, CLIENT} from 'src/graphql';
-import {GET_ORDER_TRANSACTION_BY_REF_NUM, GET_RIDER_DETAILS} from 'toktokfood/graphql/toktokfood';
-import {useSelector, useDispatch} from 'react-redux';
-import {useIsFocused} from '@react-navigation/native';
+import { CancelOrder, DriverAnimationView, DriverDetailsView, PickUpDetailsView, RiderMapView } from './components';
 
 
 const ToktokFoodDriver = ({route, navigation}) => {
   const referenceNum = route.params ? route.params.referenceNum : '';
   const [seconds, setSeconds] = useState(0);
   const [riderSeconds, setRiderSeconds] = useState(0);
-  const [preparingOrderSeconds, setPreparingOrderSeconds] = useState(0);
   const [showCancel, setShowCancel] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
   const [transaction, setTransaction] = useState({});

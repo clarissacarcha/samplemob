@@ -23,7 +23,7 @@ import {moderateScale, getStatusbarHeight, getIphoneNotchSize} from 'toktokfood/
 
 import {useSelector} from 'react-redux';
 import ENVIRONMENTS from 'src/common/res/environments';
-import {empty_shop, empty_search, time} from 'toktokfood/assets/images';
+import {empty_shop_2, empty_search, time} from 'toktokfood/assets/images';
 
 import styles from './styles';
 import {TouchableOpacity} from 'react-native-gesture-handler';
@@ -179,7 +179,7 @@ const ToktokFoodSearch = ({route}) => {
     } else {
       return (
         <View style={[styles.emptyContainer, {paddingTop}]}>
-          <Image style={styles.emptyImg} resizeMode="contain" source={search != '' ? empty_shop : empty_search} />
+          <Image style={styles.emptyImg} resizeMode="contain" source={search != '' ? empty_shop_2 : empty_search} />
           {search != '' && (
             <Text style={styles.emptyText}>
               It seems like there is no open restaurant near you. Refresh or try again later.

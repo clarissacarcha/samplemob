@@ -1,16 +1,15 @@
 import {useLazyQuery} from '@apollo/react-hooks';
-import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useRef, useState} from 'react';
-import {Platform, RefreshControl, ScrollView, StatusBar, StyleSheet, View} from 'react-native';
+import {Platform, RefreshControl, ScrollView, StyleSheet, View} from 'react-native';
 import {useSelector} from 'react-redux';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
-import HeaderTabs from 'toktokfood/components/HeaderTabs';
 import ChangeAddress from 'toktokfood/components/ChangeAddress';
+import HeaderTabs from 'toktokfood/components/HeaderTabs';
 import {GET_SHOPS} from 'toktokfood/graphql/toktokfood';
 // Utils
-import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
+import {moderateScale} from 'toktokfood/helper/scale';
 // Components
-import {AdvertisementSection, CategoryList, RestaurantList} from './index';
+import {CategoryList, RestaurantList} from './index';
 
 const tabs = [
   {
@@ -28,10 +27,7 @@ const tabs = [
 ];
 
 const StickyView = () => {
-  const [offset, setOffset] = useState(0);
   const [activeTab, setActiveTab] = useState(tabs[0]);
-  const headerMaxHeight = Platform.OS === 'ios' ? moderateScale(295) : moderateScale(325);
-  const headerMinHeight = Platform.OS === 'ios' ? verticalScale(50) : moderateScale(65);
   const {location} = useSelector((state) => state.toktokFood);
 
   const RenderNavBar = () => {
@@ -42,17 +38,17 @@ const StickyView = () => {
     );
   };
 
-  const RenderTitle = () => (
-    <>
-      <View style={styles.adsContainer}>
-        <AdvertisementSection />
-      </View>
-      <CategoryList horizontal={true} rightText="See all" />
-      <RenderNavBar />
-    </>
-  );
+  // const RenderTitle = () => (
+  //   <>
+  //     <View style={styles.adsContainer}>
+  //       <AdvertisementSection />
+  //     </View>
+  //     <CategoryList horizontal={true} rightText="See all" />
+  //     <RenderNavBar />
+  //   </>
+  // );
 
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
   const [tempCategories, setTempCategories] = useState([]);
   const [page, setPage] = useState(0);
   const [loadMore, setLoadMore] = useState(false);
@@ -63,13 +59,15 @@ const StickyView = () => {
     radius: 5,
     userLongitude: location?.longitude,
     userLatitude: location?.latitude,
+    tabId: activeTab.id,
   };
 
   // console.log(variableInput);
-  const scrollRef = useRef();
+  // const scrollRef = useRef();
 
   // data fetching for shops
   const [getShops, {data, error, loading, fetchMore, refetch}] = useLazyQuery(GET_SHOPS, {
+    onCompleted: () => console.log('DATA: ' + JSON.stringify(data)),
     onError: () => {
       setRefreshing(false);
     },
@@ -87,11 +85,12 @@ const StickyView = () => {
             radius: 5,
             userLongitude: location?.longitude,
             userLatitude: location?.latitude,
+            tabId: activeTab.id,
           },
         },
       });
     }
-  }, [location]);
+  }, [location, activeTab]);
 
   useEffect(() => {
     if (location) {
@@ -104,7 +103,7 @@ const StickyView = () => {
         },
       });
     }
-  }, [location]);
+  }, [location, activeTab]);
 
   useEffect(() => {
     if (page != 0 && data && data.getShops.length > 0) {
@@ -141,9 +140,9 @@ const StickyView = () => {
     }
   }, [data, page]);
 
-  const onNavigateCategories = () => {
-    navigation.navigate('ToktokFoodCategories');
-  };
+  // const onNavigateCategories = () => {
+  //   navigation.navigate('ToktokFoodCategories');
+  // };
 
   const handleLoadMore = (nativeEvent) => {
     if (!loadMore && pendingProcess) {
@@ -212,9 +211,6 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingTop: moderateScale(8),
     backgroundColor: 'white',
-  },
-  navbarWrapper: {
-    // marginBottom: Platform.OS === 'ios' ? verticalScale(12) : verticalScale(8),
   },
   adsContainer: {
     height: 130,
