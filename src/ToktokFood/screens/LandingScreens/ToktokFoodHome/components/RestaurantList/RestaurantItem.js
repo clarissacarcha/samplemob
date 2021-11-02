@@ -13,8 +13,6 @@ const RestaurantItem = ({item}) => {
   const navigation = useNavigation();
   const [validImg, setValidImg] = useState(true);
 
-  const hasPromo = true;
-
   const onRestaurantNavigate = (item) => {
     navigation.navigate('ToktokFoodRestaurantOverview', {item});
   };
@@ -40,7 +38,7 @@ const RestaurantItem = ({item}) => {
           <MCIcon name="map-marker-outline" color={'#868686'} size={13} />
           <Text style={styles.branches}>{item.estimatedDistance} KM</Text>
         </View>
-        {hasPromo && (
+        {item.promoName && (
           <View style={styles.promoChip}>
             <Text style={styles.promoText}>Free Delivery</Text>
           </View>
