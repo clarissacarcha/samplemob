@@ -6,7 +6,7 @@ import { numberFormat , moderateScale } from 'toktokwallet/helper'
 import CONSTANTS from 'common/res/constants'
 const { COLOR , FONT_FAMILY: FONT , SIZE , FONT_SIZE , MARGIN , SHADOW } = CONSTANTS
 
-export const WalletBalance = ({tokwaAccount,navigation})=> {
+export const WalletBalance = ({tokwaAccount,navigation, amount})=> {
 
     return (
        <>
@@ -25,21 +25,24 @@ export const WalletBalance = ({tokwaAccount,navigation})=> {
                 </View>
             </View>
         </View>
-        <View style={styles.cashIn}>
-            <TouchableOpacity 
-                onPress={()=>{
-                    navigation.navigate("ToktokWalletPaymentOptions", {
-                        onCashIn: null,
-                        amount: 0
-                    })
-                }} 
-                hitSlop={{top: 20,bottom: 20,right: 20,left: 20}}
-            >
-                <Text style={{color: COLOR.YELLOW,fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>
-                    Click here to Cash In
-                </Text>
-            </TouchableOpacity>
-        </View>
+       {
+           +amount > +tokwaAccount.wallet.balance &&
+           <View style={styles.cashIn}>
+           <TouchableOpacity 
+               onPress={()=>{
+                   navigation.navigate("ToktokWalletPaymentOptions", {
+                       onCashIn: null,
+                       amount: 0
+                   })
+               }} 
+               hitSlop={{top: 20,bottom: 20,right: 20,left: 20}}
+           >
+               <Text style={{color: COLOR.YELLOW,fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>
+                   Click here to Cash In
+               </Text>
+           </TouchableOpacity>
+       </View>
+       }
        <Separator/>
        </>
     )
@@ -73,10 +76,11 @@ const styles = StyleSheet.create({
         flexDirection:"row",
         padding: 10,
         borderRadius: 5,
+        marginRight: 2
     },
     cashIn: {
         alignItems:"flex-end",
         marginTop: 0,
-        marginBottom: 20
+        marginBottom: 25,
     }
 })

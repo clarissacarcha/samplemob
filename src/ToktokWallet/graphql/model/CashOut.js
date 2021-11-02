@@ -49,6 +49,11 @@ export const GET_CASH_OUTS = gql`
                 }
                 details
                 refNo
+                transaction {
+                    id
+                    refNo
+                    createdAt
+                }
         }
     }
 ` 

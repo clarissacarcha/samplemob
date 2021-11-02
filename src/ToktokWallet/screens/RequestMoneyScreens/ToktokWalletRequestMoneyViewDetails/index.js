@@ -33,7 +33,7 @@ export const ToktokWalletRequestMoneyViewDetails = ({navigation,route})=> {
     })
     const alert = useAlert();
     const { refreshWallet , tokwaAccount } = useAccount();
-    const requestMoney = route.params.requestMoney;
+    const requestMoney = route?.params?.requestMoney;
     const [amount,setAmount] = useState(requestMoney.amount.toString())
     const [note,setNote] = useState("")
     const [successModalVisible, setSuccessModalVisible] = useState(false)
@@ -129,20 +129,24 @@ export const ToktokWalletRequestMoneyViewDetails = ({navigation,route})=> {
             <Separator/>
             <View style={styles.container}>
                 <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
+
                     <RequestInfo
                         label="Requester Name"
                         value={`${requestMoney.destinationPerson.firstName} ${requestMoney.destinationPerson.lastName}`}
                     />
-                     <RequestInfo
+
+                    <RequestInfo
                         label="Mobile Number"
                         value={requestMoney.destinationAccount.mobileNumber}
                     />
+
                     <RequestInfo
                         label="Amount Requested"
                         value={`${tokwaAccount.wallet.currency.code} ${numberFormat(requestMoney.amount)}`}
                     />
+
                     {
-                        requestMoney.destinationRemarks &&
+                        requestMoney.destinationRemarks != "" &&
                         <RequestInfo
                             label="Note"
                             value={requestMoney.destinationRemarks}
@@ -159,6 +163,7 @@ export const ToktokWalletRequestMoneyViewDetails = ({navigation,route})=> {
                     <WalletBalance 
                         tokwaAccount={tokwaAccount}
                         navigation={navigation}
+                        amount={amount}
                     />
                 </ScrollView>
                 <View style={styles.actionBtns}>

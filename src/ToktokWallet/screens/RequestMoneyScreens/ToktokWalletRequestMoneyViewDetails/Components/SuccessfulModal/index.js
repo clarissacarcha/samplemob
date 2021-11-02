@@ -19,14 +19,14 @@ const RecipientInfo = ({label,value})=> (
 )
 export const SuccessfulModal = ({visible , requestMoney , walletinfoParams})=> {
     const navigation = useNavigation()
-
+    const person = `${requestMoney.destinationPerson.firstName} ${requestMoney.destinationPerson.lastName}`
 
     const Proceed = ()=>  {
         //navigation.pop(3)
         navigation.navigate("ToktokWalletHomePage")
         navigation.replace("ToktokWalletHomePage")
     }
-
+    
 
     return (
         <Modal
@@ -42,11 +42,11 @@ export const SuccessfulModal = ({visible , requestMoney , walletinfoParams})=> {
                 // btnLabel=""
             >
                   <View style={styles.recipientInfo}>
-                        {/* <RecipientInfo label="Payment Method" value="toktokwallet"/>
-                        <RecipientInfo label="Recipient Name" value={recipient.name}/>
-                        <RecipientInfo label="Recipient Mobile No." value={recipient.mobileNo}/>
-                        <RecipientInfo label="Fund Transfered" value={`PHP ${numberFormat(amount)}`}/>
-                        <RecipientInfo label="Note" value={note}/> */}
+                    <RecipientInfo label="Requester Name" value={person}/>
+                    <RecipientInfo label="Mobile No." value={requestMoney.destinationAccount.mobileNumber}/>
+                    <RecipientInfo label="Request Amount" value={`PHP ${numberFormat(requestMoney.amount)}`}/>
+                    <RecipientInfo label="Sent Amount" value={`PHP ${numberFormat(walletinfoParams.amount)}`}/>
+                    { requestMoney.sourceRemarks && <RecipientInfo label="Note" value={requestMoney.sourceRemarks}/> }
                 </View>
             </Receipt>
         </Modal>

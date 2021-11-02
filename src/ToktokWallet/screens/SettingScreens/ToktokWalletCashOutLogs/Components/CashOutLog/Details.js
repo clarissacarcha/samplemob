@@ -39,7 +39,8 @@ const Details = ({
         amount,
         refNo,
         refDate,
-        status
+        status,
+        requestNo
     } = transaction
 
     return (
@@ -54,8 +55,9 @@ const Details = ({
                  {renderDetails({details})}
                  <View style={{marginTop: 15}}>
                     <Text style={styles.labelText}>Amount: {amount}</Text>
-                    <Text style={styles.labelText}>Ref No: {refNo}</Text>
-                    <Text style={styles.labelText}>Date & Time: {refDate}</Text>
+                    { requestNo && <Text style={styles.labelText}>Request No: {requestNo}</Text>}
+                    { refNo && <Text style={styles.labelText}>Ref No: {refNo}</Text>}
+                    { refDate && <Text style={styles.labelText}>Date & Time: {refDate}</Text>}
                 </View>
             </View>
         </TransactionModal>

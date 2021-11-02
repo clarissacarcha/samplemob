@@ -37,8 +37,10 @@ export const CashOutLog = ({
     }
 
     // const refNo = MaskLeftZero(item.id)
-    const refNo = item.refNo
-    const refDate = moment(item.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')
+    const transaction = item.transaction
+    const requestNo = item.refNo
+    const refNo = transaction.refNo
+    const refDate = moment(transaction.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')
     const transactionAmount = `${tokwaAccount.wallet.currency.code} ${numberFormat(item.amount)}`
     const provider = item.provider.name
     let phrase = provider
@@ -55,6 +57,7 @@ export const CashOutLog = ({
             amount: transactionAmount,
             status,
             details: item.details,
+            requestNo
         })
         setOpenModal(true);
     }
@@ -74,7 +77,7 @@ export const CashOutLog = ({
             onPress={onthrottledPress}
         >
             <View style={styles.transactionDetails}>
-                <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Ref # {refNo}</Text>
+                <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Request # {requestNo}</Text>
                 <Text style={{color: "#909294",fontSize: FONT_SIZE.M,marginTop: 0,fontFamily: FONT.REGULAR}}>{status}</Text>
             </View>
             <View style={styles.transactionAmount}>

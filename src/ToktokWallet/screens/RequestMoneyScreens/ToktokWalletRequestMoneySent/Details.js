@@ -18,7 +18,7 @@ const Details = ({
         amount,
         refNo,
         refDate,
-        sourceAccount
+        sourceAccount,
     } = transaction
 
     return (
@@ -31,6 +31,7 @@ const Details = ({
                  <Text style={styles.labelText}>{phrase}</Text>
                  <Text style={styles.labelText}>Mobile Number: {sourceAccount?.mobileNumber}</Text>
                  <Text style={styles.labelText}>Amount: {amount}</Text>
+                 { refNo && <Text style={styles.labelText}>Request No: {refNo}</Text>}
                  <Text style={styles.labelText}>Date & Time: {refDate}</Text>
             </View>
         </TransactionModal>

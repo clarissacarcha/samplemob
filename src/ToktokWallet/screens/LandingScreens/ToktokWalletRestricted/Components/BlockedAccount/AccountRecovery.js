@@ -91,7 +91,7 @@ const AccountRecovery = ({visible,setVisible,account})=> {
         return (
             <MainComponent>
                  {
-                    account.disabledType == "2" &&
+                    account.disabledType == "2" && account.disabledType == "2" &&
                     <TouchableOpacity onPress={AccountRecovery} style={styles.option}>
                             <Image 
                                 resizeMode="contain"

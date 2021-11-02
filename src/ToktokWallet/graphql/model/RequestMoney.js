@@ -69,6 +69,7 @@ export const GET_REQUEST_MONEY_HISTORY = gql`
                 id
                 # details
                 refNo
+                amount
             }
         }
     }

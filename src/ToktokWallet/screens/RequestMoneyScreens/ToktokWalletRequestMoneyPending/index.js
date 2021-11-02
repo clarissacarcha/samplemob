@@ -25,14 +25,15 @@ const RenderItem = ({item,index , onPress})=> {
     return (
         <TouchableOpacity onPress={openRMDetails} style={[styles.card]}>
             <View style={styles.cardContent}>
-                 <View style={{flex: 1,height:"100%",justifyContent:"flex-start"}}>
+                 <View style={{flex: 1,height:"100%"}}>
+                    <Text style={{fontFamily:FONT.REGULAR,fontSize:FONT_SIZE.M}}>Request No: {item.refNo}</Text>
                     <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>Receive request money from</Text>
                     <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>{person}</Text>
-                    <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.S,color:COLOR.YELLOW}}>click to see details</Text>
                 </View>
                 <View>
-                    <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,color: COLOR.YELLOW}}>PHP {numberFormat(+item.amount)}</Text>
+                    <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M,color: COLOR.YELLOW}}>PHP {numberFormat(+item.amount)}</Text>
                     <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:COLOR.DARK}}>{moment(item.createdAt).format("MMM D, YYYY hh:mm a")}</Text>
+                    <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.S,color:COLOR.YELLOW}}>click to see details</Text>
                 </View>
             </View>
               

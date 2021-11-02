@@ -58,17 +58,20 @@ export const RenderItem = ({item,index,tokwaAccount})=> {
             break
     }
     const refDate = moment(item.updatedAt).format("MMM D, YYYY hh:mm a")
-    const transactionAmount = `${indicator} ${tokwaAccount.wallet.currency.code} ${numberFormat(+item.amount)}`
-
+    const transactionAmount = item.transaction  ?  `${indicator} ${tokwaAccount.wallet.currency.code} ${numberFormat(+item.transaction.amount)}` : null
+    const requestedAmount = `${tokwaAccount.wallet.currency.code} ${numberFormat(+item.amount)}`
     const openRMDetails = ()=>{
         SetInfo({
             ...item,
-            amount: transactionAmount,
+            transactionAmount,
+            requestedAmount,
             refDate,
             name: "Request Money",
             phrase: `${status} ${person}`,
             refNo: item.transaction ? item.transaction.refNo : null,
-            mobileNumber
+            requestNo: item.refNo,
+            mobileNumber,
+            indicator
         })
         setOpenModal(true)
     }
@@ -84,12 +87,14 @@ export const RenderItem = ({item,index,tokwaAccount})=> {
         <TouchableOpacity key={`RM_${index}`} onPress={openRMDetails} style={[styles.card]}>
             <View style={styles.cardContent}>
                 <View style={{flex: 1,height:"100%",justifyContent:"flex-start"}}>
+                    <Text style={{fontFamily:FONT.REGULAR,fontSize:FONT_SIZE.M}}>Request No: {item.refNo}</Text>
                     <Text style={{fontFamily:FONT.REGULAR,fontSize:FONT_SIZE.M}}>{status}</Text>
                     <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>{person}</Text>
                 </View>
                 <View style={{flex: 1,alignItems:"flex-end"}}>
-                    <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M,color: color}}>{transactionAmount}</Text>
+                    <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M,color: color}}>{transactionAmount ? transactionAmount : requestedAmount}</Text>
                     <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:COLOR.DARK}}>{refDate}</Text>
+                    <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.S,color:COLOR.YELLOW}}>click to see details</Text>
                 </View>
             </View>
             

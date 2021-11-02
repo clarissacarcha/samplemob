@@ -36,10 +36,13 @@ const Details = ({
         name,
         phrase,
         // details,
-        amount,
+        transactionAmount,
+        requestedAmount,
         refNo,
+        requestNo,
         refDate,
-        mobileNumber
+        mobileNumber,
+        indicator
         // status
     } = transaction
 
@@ -54,7 +57,9 @@ const Details = ({
                  { mobileNumber != "" && <Text style={styles.labelText}>Mobile Number: {mobileNumber}</Text>}
                  {/*{renderDetails({details})} */}
                  <View style={{marginTop: 15}}>
-                    <Text style={styles.labelText}>Amount: {amount}</Text>
+                    <Text style={styles.labelText}>Requested Amount: {requestedAmount}</Text>
+                    { transactionAmount && <Text style={styles.labelText}>Amount {indicator == "- " ? "Sent" : "Received"}: {transactionAmount}</Text>}
+                    { requestNo && <Text style={styles.labelText}>Request No: {requestNo}</Text>}
                     { refNo && <Text style={styles.labelText}>Ref No: {refNo}</Text>}
                     <Text style={styles.labelText}>Date & Time: {refDate}</Text>
                 </View>
