@@ -19,11 +19,7 @@ export const GET_ACCOUNT_RECOVERY = gql`
 
 export const POST_ACCOUNT_RECOVERY = gql`
     mutation postAccountRecovery($input: PostAccountRecoveryInput){
-        postAccountRecovery(input: $input){
-            id
-            accountId
-            status
-        }
+        postAccountRecovery(input: $input)
     }
 `
 

@@ -85,7 +85,8 @@ export const TransactionDetails = ({
         externalReferenceNumber,
         deliveryId,
         externalDetails,
-        cashOutDisplayInformations
+        cashOutDisplayInformations,
+        requestNo
     } = transactionInfo
 
     return (
@@ -115,8 +116,9 @@ export const TransactionDetails = ({
                             { renderCashOutDisplayInformations(cashOutDisplayInformations)}
                             <View style={{marginTop: 10}}>
                                 <Text style={styles.labelText}>Amount: {amount}</Text>
-                                <Text style={styles.labelText}>Ref No: {refNo}</Text>
-                                <Text style={styles.labelText}>Date & Time: {refDate}</Text>
+                                { requestNo && <Text style={styles.labelText}>Request No: {requestNo}</Text>}
+                                { refNo && <Text style={styles.labelText}>Ref No: {refNo}</Text>}
+                                { refDate && <Text style={styles.labelText}>Date & Time: {refDate}</Text>}
                             </View>
                        </View>
                        <View style={{justifyContent:"flex-end", width: "50%",alignSelf:"center",marginTop: 16}}>

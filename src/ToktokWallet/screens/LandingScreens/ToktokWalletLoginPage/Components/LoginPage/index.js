@@ -55,6 +55,7 @@ export const LoginPage = ()=> {
             }
         },
         onError: (error)=> {
+            setPinCode("")
             const {graphQLErrors, networkError} = error;
             if(graphQLErrors[0]?.message == "Account Blocked"){
                 onErrorAlert({alert,error})
@@ -87,8 +88,14 @@ export const LoginPage = ()=> {
         })
     }
 
+    useEffect(()=>{
+        if(pinCode.length == 4){
+            onPress()
+        }
+    },[pinCode])
+
     const forgotPIN = ()=> {
-        navigation.navigate("ToktokWalletRecoveryMethods" , {type: "MPIN"})
+        navigation.navigate("ToktokWalletRecoveryMethods" , {type: "MPIN",event: "ACCOUNT RECOVERY"})
     }
 
     return (
@@ -124,6 +131,7 @@ export const LoginPage = ()=> {
                         }
                         <Biometrics
                             setErrorMessage={setErrorMessage}
+                            setPinCode={setPinCode}
                         />
                         <TouchableOpacity
                                 style={{marginTop: 18,paddingVertical: 10,alignItems: "center"}}
@@ -131,23 +139,23 @@ export const LoginPage = ()=> {
                         >
                                 <Text style={{color: COLOR.ORANGE,fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>{showPin ? "HIDE MPIN" : "SHOW MPIN"}</Text>
                         </TouchableOpacity>
-                        {/* <TouchableOpacity
+                        <TouchableOpacity
                                 style={{paddingVertical: 10,alignItems: "center"}}
                                 onPress={forgotPIN}
                         >
                                 <Text style={{color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>FORGOT MPIN?</Text>
-                        </TouchableOpacity> */}
+                        </TouchableOpacity>
                        
                     </View>
                 </View>
-                <View style={styles.btn}>
+                {/* <View style={styles.btn}>
                     {
                         pinCode.length == 4
                         ? <YellowButton label="Proceed" onPress={onPress}/>
                         : <DisabledButton label="Proceed"/>
                     }
                 
-                </View>
+                </View> */}
                 
                 <BuildingBottom/>
             </View>
