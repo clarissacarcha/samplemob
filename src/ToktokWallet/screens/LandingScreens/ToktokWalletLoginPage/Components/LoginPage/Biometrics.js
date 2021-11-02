@@ -15,7 +15,7 @@ import CONSTANTS from 'common/res/constants'
 
 const { FONT_FAMILY: FONT , FONT_SIZE , COLOR } = CONSTANTS
 
-const Biometrics = ({setErrorMessage})=> {
+const Biometrics = ({setErrorMessage , setPinCode})=> {
     const alert = useAlert();
     const navigation = useNavigation();
     const [bioRecord,setBioRecord] = useState(null)
@@ -97,6 +97,7 @@ const Biometrics = ({setErrorMessage})=> {
     if(!data || !data?.getRegisteredBiometric?.status) return null
 
     const bioLogin = async ()=> {
+       setPinCode("")
        const epochTimeSeconds = parseInt(moment().valueOf().toString, 10).toString()
        const payload = epochTimeSeconds + getUniqueId()
 
