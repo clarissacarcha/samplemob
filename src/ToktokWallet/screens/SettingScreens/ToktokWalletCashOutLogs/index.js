@@ -25,7 +25,7 @@ const CashOutLog = ({
 })=> {
 
 
-    const ViewTransactionDetails = ({refNo,refDate, transactionAmount , status,provider,cashOutDisplayInformations})=> {
+    const ViewTransactionDetails = ({requestNo ,refNo,refDate, transactionAmount , status,provider,cashOutDisplayInformations})=> {
         let phrase = `${provider}`
         if(provider == "InstaPay" || provider == "PesoNet"){
             phrase = "Other Banks"
@@ -38,6 +38,7 @@ const CashOutLog = ({
             amount: transactionAmount,
             status: status,
             cashOutDisplayInformations: cashOutDisplayInformations,
+            requestNo
         })
         setTransactionVisible(true)
     }
@@ -61,8 +62,10 @@ const CashOutLog = ({
             break;
     }
 
-    const refNo = MaskLeftZero(item.id)
-    const refDate = moment(item.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')
+    const transaction = item.transaction
+    const requestNo = MaskLeftZero(item.id)
+    const refNo = transaction.refNo
+    const refDate = moment(transaction.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')
     const transactionAmount = `${tokwaAccount.wallet.currency.code} ${numberFormat(item.amount)}`
     const provider = item.provider.name
     const cashOutDisplayInformations = item.cashOutDisplayInformations
@@ -71,9 +74,9 @@ const CashOutLog = ({
 
 
     return (
-        <TouchableOpacity onPress={()=>ViewTransactionDetails({refNo,refDate, transactionAmount , status , provider,cashOutDisplayInformations})} style={styles.transaction}>
+        <TouchableOpacity onPress={()=>ViewTransactionDetails({requestNo, refNo,refDate, transactionAmount , status , provider,cashOutDisplayInformations})} style={styles.transaction}>
             <View style={styles.transactionDetails}>
-                <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Ref # {refNo}</Text>
+                <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Request # {requestNo}</Text>
                 <Text style={{color: "#909294",fontSize: FONT_SIZE.M,marginTop: 0,fontFamily: FONT.REGULAR}}>{status}</Text>
             </View>
             <View style={styles.transactionAmount}>
