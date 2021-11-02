@@ -67,7 +67,8 @@ export const CheckWalletAccountRestriction = connect(null,mapDispatchtoProps)(({
 
     // if Account is Dormant
     if(data.getMyAccount.isDormant){
-        navigation.replace("ToktokWalletRestricted" , {component: "dormantAccount"})
+        navigation.replace("ToktokWalletRestricted" , {component: "blockedAccount", data: { account: data.getMyAccount}})
+        // navigation.replace("ToktokWalletRestricted" , {component: "dormantAccount"})
         return null
     }
 
