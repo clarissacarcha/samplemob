@@ -66,9 +66,15 @@ const MainComponent = () => {
   const {shopname} = route.params;
   const {location, customerInfo, shopLocation, receiver} = useSelector((state) => state.toktokFood);
   const {user} = useSelector((state) => state.session);
-  const {totalAmount, temporaryCart, toktokWallet, paymentMethod, pmLoading, setPaymentMethod} = useContext(
-    VerifyContext,
-  );
+  const {
+    totalAmount,
+    temporaryCart,
+    toktokWallet,
+    paymentMethod,
+    pmLoading,
+    setAutoShippingVoucher,
+    setPaymentMethod,
+  } = useContext(VerifyContext);
 
   const [autoShipping, setAutoShipping] = useState(0);
   const [riderNotes, setRiderNotes] = useState('');
@@ -110,6 +116,9 @@ const MainComponent = () => {
     fetchPolicy: 'network-only',
     onCompleted: ({getAutoShipping}) => {
       // console.log(getAutoShipping);
+      if (getAutoShipping.success) {
+        setAutoShippingVoucher([getAutoShipping]);
+      }
       setAutoShipping(getAutoShipping);
     },
   });
