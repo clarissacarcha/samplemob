@@ -156,7 +156,7 @@ export const Categories = ({data}) => {
                           {setIcon(cat)}
                         </View>
                         <View style={{alignItems: 'center', justifyContent: 'center', marginTop: 4}}>
-                          <Text style={styles.label}>{cat.parentCategoryName}</Text>
+                          <Text numberOfLines={2} ellipsizeMode="tail" style={styles.label}>{cat.parentCategoryName}</Text>
                         </View>
                       </TouchableOpacity>   
                     </>

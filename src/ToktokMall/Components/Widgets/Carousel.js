@@ -85,7 +85,7 @@ export const AdsCarousel = (props) => {
   }, [])
 
   return (
-    <View style={{paddingHorizontal: 15, paddingTop: 5, backgroundColor: "transparent"}}>
+    <View style={{paddingHorizontal: 15, marginBottom: -40, backgroundColor: "transparent"}}>
       {/* <Carousel
         data={entries}
         renderItem={renderItem}

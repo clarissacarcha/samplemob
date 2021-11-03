@@ -54,7 +54,7 @@ const DropdownItem = ({item, onItemPress, loading, active}) => {
   const [toggle, setToggle] = useState(false)
   useEffect(() => {
     if(active, item){
-      setToggle(item.parentCategoryName === active.parentCategoryName)
+      setToggle(item.parentCategoryName === active?.parentCategoryName)
     }
   },[active, item])
 
@@ -106,7 +106,10 @@ const DropdownItem = ({item, onItemPress, loading, active}) => {
 
   return (
   	<>
-    	<TouchableOpacity onPress={() => setToggle(!toggle)} style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
+    	<TouchableOpacity onPress={() => {
+        content.length > 1 && content[0] != null && setToggle(!toggle)
+        content[0] === null && onItemPress({id: item?.id, name: category})
+        }} style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
         <View style={{flex: 2, borderRadius: 5, backgroundColor: 'transparent', justifyContent: 'center', alignItems: 'center'}}>
           {setIcon(item)}
         </View>

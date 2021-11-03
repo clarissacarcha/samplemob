@@ -110,10 +110,10 @@ const RenderBadge = ({data}) => {
   }
 }
 
-const TabBarIcon = ({source, myCart, count, notifs, tab}) => {
+const TabBarIcon = ({source, myCart, count, notifs, tab, style}) => {
   return (
     <>
-      <Image source={source} style={BottomTabImageIconStyle} />
+      <Image source={source} style={[BottomTabImageIconStyle, style]} />
       {/* <View
         style={{
           position: 'absolute',
@@ -233,7 +233,7 @@ const ToktokMallLanding = connect(
         // tabBarIcon: ({color}) => <AIcon name="mail" color={COLOR.YELLOW} size={24} />
         // tabBarIcon: ({focused}) => focused ? <Image source={messageIconFill} style={BottomTabImageIconStyle} /> : <Image source={messagesIconOutline} style={BottomTabImageIconStyle} />
         tabBarIcon: ({focused}) =>
-          focused ? <TabBarIcon source={notifIconFill} notifs={notificationCount} tab={'notifs'} /> : <TabBarIcon source={notifIconOutline} notifs={notificationCount} tab={'notifs'} />,
+          focused ? <TabBarIcon source={notifIconFill} style={{width: 15}} notifs={notificationCount} tab={'notifs'} /> : <TabBarIcon source={notifIconOutline} style={{width: 15}} notifs={notificationCount} tab={'notifs'} />,
       }}
     />
     <ToktokMallLandingBottomTab.Screen

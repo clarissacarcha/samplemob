@@ -170,85 +170,92 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
     return (
       <>
         <View>
-
-          <View style={{
-            flexDirection: 'row', 
-            alignItems: 'center', 
-            borderBottomWidth: 1, 
-            paddingHorizontal: 5, 
-            paddingVertical: 15, 
-            borderBottomColor: '#F7F7FA'
-          }}>
-            <Text style = {{marginLeft: 10, fontFamily: FONT.BOLD}}>{item.shop.shopname} vouchers</Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              borderBottomWidth: 1,
+              paddingHorizontal: 5,
+              paddingVertical: 15,
+              borderBottomColor: '#F7F7FA',
+            }}>
+            <Text style={{marginLeft: 10, fontFamily: FONT.BOLD}}>{item.shop.shopname} vouchers</Text>
           </View>
 
           <View style={{paddingHorizontal: 15, paddingVertical: 15}}>
-
-            {!loading && voucherIsValid == -1 && 
-              <View style={{backgroundColor: '#FFFCF4', padding:10}}>
-                <Text style={{color: '#F6841F', fontSize: 12, textAlign: 'center'}}>*Invalid voucher code. Please check your voucher code.</Text>
+            {!loading && voucherIsValid == -1 && (
+              <View style={{backgroundColor: '#FFFCF4', padding: 10}}>
+                <Text style={{color: '#F6841F', fontSize: 12, textAlign: 'center'}}>
+                  *Invalid voucher code. Please check your voucher code.
+                </Text>
               </View>
-            }
+            )}
 
-            <View style={{
-              flex: 1,
-              padding: Platform.OS === 'ios' ? 10 : 0,
-              backgroundColor: '#F8F8F8',
-              marginTop: voucherIsValid == -1 ? 10 : 0,
-              borderRadius: 5,              
-              alignItems: 'flex-start',
-              flexDirection: 'row'            
-            }}>
-              <TextInput
-                value={vcode}
-                style={{marginLeft: 10, flex: 1}}
-                placeholder="Input voucher (optional)"
-                onChangeText={(val) => {
-                  setvcode(val)
-                  setVoucherIsValid(0)
-                }}
-              />
-              <View style={{flex: 0.2, alignItems: 'center', justifyContent: 'center'}}>
-                <View style={{flex: 1, justifyContent: 'center'}}>
-                  {loading && <Spinner 
-                    isVisible={loading}
-                    // isVisible={true}
-                    type={"FadingCircleAlt"}
-                    color={"#F6841F"}
-                    size={15}
-                  />}
-                  {!loading && voucherIsValid == 2 && <CustomIcon.FeIcon name="check-circle" size={15} color="#06A44E" />}
-                  {!loading && voucherIsValid == -1 && <CustomIcon.FA5Icon name="times-circle" size={15} color="#F6841F" />}
-                </View>              
+            <View style={{flexDirection: 'row'}}>
+              <View
+                style={{
+                  flex: 1,
+                  padding: Platform.OS === 'ios' ? 10 : 0,
+                  backgroundColor: '#F8F8F8',
+                  marginTop: voucherIsValid == -1 ? 10 : 0,
+                  borderRadius: 5,
+                  flexDirection: 'row',
+                }}>
+                <TextInput
+                  value={vcode}
+                  style={{marginLeft: 10, flex: 1}}
+                  placeholder="Input voucher (optional)"
+                  placeholderTextColor="gray"
+                  onChangeText={(val) => {
+                    setvcode(val);
+                    setVoucherIsValid(0);
+                  }}
+                />
+                <View style={{flex: 0.2, alignItems: 'center', justifyContent: 'center'}}>
+                  <View style={{flex: 1, justifyContent: 'center'}}>
+                    {loading && (
+                      <Spinner
+                        isVisible={loading}
+                        // isVisible={true}
+                        type={'FadingCircleAlt'}
+                        color={'#F6841F'}
+                        size={15}
+                      />
+                    )}
+                    {!loading && voucherIsValid == 2 && (
+                      <CustomIcon.FeIcon name="check-circle" size={15} color="#06A44E" />
+                    )}
+                    {!loading && voucherIsValid == -1 && (
+                      <CustomIcon.FA5Icon name="times-circle" size={15} color="#F6841F" />
+                    )}
+                  </View>
+                </View>
               </View>
-              <TouchableOpacity 
-                disabled={vcode == ""}
+              <TouchableOpacity
+                disabled={vcode == ''}
                 onPress={() => {
-                  if(vcode == "") return 
+                  if (vcode == '') return;
                   // validateShopVoucher({variables: {
                   //   input: {
                   //     vcode: vcode,
                   //     shopId: item.shop.id
                   //   }
                   // }})
-                  validate()
+                  validate();
                 }}
                 style={{
-                  flex: 0, 
-                  paddingVertical: 15, 
+                  flex: 0,
+                  paddingVertical: 15,
                   paddingHorizontal: 15,
                   backgroundColor: 'white',
-                  alignItems: 'flex-end'
-                }}
-              >
-                <Text style={{color: vcode == "" ? "#9E9E9E" : "#F6841F", textAlign: 'right'}}>Apply</Text>
+                }}>
+                <Text style={{color: vcode == '' ? '#9E9E9E' : '#F6841F', marginTop: 5}}>Apply</Text>
               </TouchableOpacity>
             </View>
           </View>
-
         </View>
       </>
-    )
+    );
   }
 
   const renderShops = () => {
