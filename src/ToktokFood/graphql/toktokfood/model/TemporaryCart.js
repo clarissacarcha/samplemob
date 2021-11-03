@@ -92,6 +92,8 @@ export const GET_AUTO_SHIPPING = gql`
       message
       type
       voucher {
+        id
+        shopid
         amount
         minimum
         minimum_price
@@ -99,6 +101,8 @@ export const GET_AUTO_SHIPPING = gql`
         valid
         valid_until
         vcode
+        vname
+        is_percentage
       }
     }
   }

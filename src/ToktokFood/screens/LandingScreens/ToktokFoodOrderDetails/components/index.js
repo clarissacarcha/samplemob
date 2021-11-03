@@ -5,3 +5,4 @@ export OrderRider from './OrderRider';
 export OrderList from './OrderList';
 export OrderFee from './OrderFee';
 export OrderLogs from './OrderLogs';
+export OrderShippingVoucher from './OrderShippingVoucher';

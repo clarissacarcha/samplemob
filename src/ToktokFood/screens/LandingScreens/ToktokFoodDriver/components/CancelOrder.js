@@ -46,7 +46,9 @@ const CancelOrder = ({
   const [postCancelOrder] = useMutation(PATCH_CANCEL_CUSTOMER_ORDER, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'no-cache',
-    onError: (error) => console.log(`LOCATION LOG ERROR: ${error}`),
+    onError: (error) => {
+      failedCancel()
+    },
     onCompleted: ({cancelOrder}) => {
       setShowReason(false);
       onCallBackResult(cancelOrder)
