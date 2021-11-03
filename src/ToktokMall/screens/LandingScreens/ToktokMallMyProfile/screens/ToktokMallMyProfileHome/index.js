@@ -102,10 +102,9 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
     <View style={{flex: 1, backgroundColor: '#fff'}}>
       <ImageBackground 
         source={banner}
-        imageStyle={{ resizeMode: "cover", width: '100%'}}
-        style={{width: "100%", height: 160}}
+        imageStyle={{ resizeMode: "stretch", width: '100%'}}
+        style={{width: "100%", height: 120}}
       >
-        <View style={{flex: 1}}></View>
         <View style={{flex: 2, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingHorizontal: 10}}>
           <View style={{flex: 3, alignItems: 'center'}}>
             <Image source={profileImage != "" ? {uri: profileImage} : userIcon} style={{width: 80, height: 80, borderRadius: 40, resizeMode: 'cover'}} />
