@@ -301,6 +301,12 @@ const ToktokFoodDriver = ({route, navigation}) => {
         referenceOrderNumber={referenceNum}
         cancelDialogMessage={cancelDialogMessage}
         setCancelDialogMessage={setCancelDialogMessage}
+        failedCancel={() => {
+          setShowLoader(false);
+          setTimeout(() => {
+            setCancelDialogMessage({show: true, type: 'warning', title: 'Something went wrong!'}); 
+          }, 500);
+        }}
         onCallBackResult={(cancelOrder) => {
           setShowLoader(false);
           setTimeout(() => {

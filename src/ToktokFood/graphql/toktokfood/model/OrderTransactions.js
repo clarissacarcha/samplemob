@@ -76,6 +76,21 @@ const transaction = `
       parentProductName
     }
   }
+  promoDetails {
+    id
+    shopId
+    shippingDiscountName
+    shippingDiscountCode
+    email
+    orderRefnum
+    paypandaRef
+    isPercentage
+    amount
+    orderDate
+    paymentDate
+    status
+    validUntil
+  }
 `;
 export const GET_ORDER_TRANSACTIONS = gql`
   query getTransactions($input: GetTransactionInput){

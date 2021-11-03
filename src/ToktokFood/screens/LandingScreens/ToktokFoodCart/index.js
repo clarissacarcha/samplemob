@@ -34,6 +34,7 @@ import {
   VerifyContextProvider,
   VerifyContext,
 } from './components';
+import {tokwaErrorBtnTitle, tokwaErrorMessage, tokwaErrorTitle} from './functions';
 
 import {useSelector} from 'react-redux';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
@@ -74,6 +75,7 @@ const MainComponent = () => {
     pmLoading,
     setAutoShippingVoucher,
     setPaymentMethod,
+    shippingVoucher
   } = useContext(VerifyContext);
 
   const [autoShipping, setAutoShipping] = useState(0);
@@ -243,8 +245,9 @@ const MainComponent = () => {
       }
     },
   });
-
+  
   const fixOrderLogs = async () => {
+    console.log(delivery?.price)
     let orderLogs = {
       sys_shop: temporaryCart.items[0]?.shopid,
       branchid: temporaryCart.items[0]?.branchid,
@@ -252,7 +255,7 @@ const MainComponent = () => {
       hash: delivery?.hash ? delivery.hash : '',
       hash_delivery_amount: delivery?.hash_price ? delivery.hash_price : '',
       original_shipping_fee: delivery?.price ? delivery.price : 0,
-      handle_shipping_promo: 0,
+      handle_shipping_promo: shippingVoucher.length > 0 || autoShipping?.success ? 1 : 0,
       daystoship: 0,
       daystoship_to: 0,
       items: await fixItems(),
@@ -409,6 +412,47 @@ const MainComponent = () => {
     return conno;
   };
 
+  const handleShippingVouchers = async() => {
+    let sVoucher = []
+    return Promise.all(
+      shippingVoucher.map((item) => {
+        const { is_percentage, id, shopid, vname, vcode, amount } = item.voucher;
+        sVoucher.push({
+          is_percentage: parseInt(is_percentage),
+          id: null,
+          shopid,
+          vname,
+          vcode,
+          amount 
+        })
+      })
+    ).then(() => {
+      return { shippingvouchers: sVoucher }
+    });
+  }
+
+  const handleAutoShippingVouchers = async() => {
+    const { is_percentage, id, shopid, vname, vcode, amount } = autoShipping.voucher;
+    let sVoucher = {
+      is_percentage: parseInt(is_percentage),
+      id: parseInt(id),
+      shopid,
+      vname,
+      vcode,
+      amount 
+    }
+    return { shippingvouchers: [sVoucher] }
+  }
+
+  const processData = (WALLET, CUSTOMER, ORDER, SHIPPING_VOUCHERS) => {
+    console.log(shippingVoucher)
+    if(shippingVoucher.length > 0 || autoShipping?.success){
+      return WALLET ? {...WALLET, ...CUSTOMER, ...ORDER, ...SHIPPING_VOUCHERS} : {...CUSTOMER, ...ORDER, ...SHIPPING_VOUCHERS};
+    } else {
+      return WALLET ? {...WALLET, ...CUSTOMER, ...ORDER } : {...CUSTOMER, ...ORDER };
+    }
+  }
+
   const placeCustomerOrderProcess = async (CUSTOMER_CART, WALLET) => {
     const CUSTOMER = {
       name:
@@ -428,6 +472,7 @@ const MainComponent = () => {
       provCode: '0',
       citymunCode: '0',
     };
+    const SHIPPING_VOUCHERS = autoShipping?.success ?  await handleAutoShippingVouchers() : await handleShippingVouchers();
 
     const ORDER = {
       total_amount: temporaryCart.totalAmount,
@@ -438,8 +483,10 @@ const MainComponent = () => {
       payment_method: paymentMethod,
       order_logs: CUSTOMER_CART,
     };
-    const data = WALLET ? {...WALLET, ...CUSTOMER, ...ORDER} : {...CUSTOMER, ...ORDER};
-    // console.log(JSON.stringify(data));
+
+    const data = processData(WALLET, CUSTOMER, ORDER, SHIPPING_VOUCHERS)
+    console.log(JSON.stringify(data));
+    // setShowLoader(false);
     postCustomerOrder({
       variables: {
         input: data,
@@ -452,6 +499,20 @@ const MainComponent = () => {
     setRefreshing(action != undefined);
     checkShopValidations({variables: {input: {shopId: `${temporaryCart.items[0]?.shopid}`}}});
   };
+
+  const setUpTpinCallBack = ()=> {
+    console.log("Call again your function here");
+    placeCustomerOrder();
+  }
+
+
+  const handleNavigationTokWaSetupPin = () => {
+    // redirect to this route
+    navigation.navigate("ToktokWalletRestricted", {
+      component: "noPin",
+      setUpTpinCallBack: setUpTpinCallBack,
+    })
+  }
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'position' : null} style={styles.container}>
@@ -503,13 +564,17 @@ const MainComponent = () => {
           <Loader visibility={showLoader} hasImage={false} loadingIndicator message="Placing Order" />
           <DialogMessage
             visibility={pinAttempt.show}
-            title={'OTP/TPIN Max Attempts Reached'}
-            messages={pinAttempt.message}
+            title={tokwaErrorTitle(pinAttempt)}
+            messages={tokwaErrorMessage(pinAttempt)}
             type="warning"
             onCloseModal={() => {
               setPinAttempt({show: false, message: ''});
               setShowEnterPinCode(false);
+              if(pinAttempt.message == 'Please set up your TPIN first in toktokwallet settings.'){
+                handleNavigationTokWaSetupPin();
+              }
             }}
+            btnTitle={tokwaErrorBtnTitle(pinAttempt)}
           />
           <AlertModal
             message={tokWaPlaceOrderErr.message}
@@ -521,12 +586,17 @@ const MainComponent = () => {
       ) : (
         <DialogMessage
           visibility={pinAttempt.show}
-          title={'OTP/TPIN Max Attempts Reached'}
-          messages={pinAttempt.message}
+          title={tokwaErrorTitle(pinAttempt)}
+          messages={tokwaErrorMessage(pinAttempt)}
           type="warning"
           onCloseModal={() => {
             setPinAttempt({show: false, message: ''});
+            setShowEnterPinCode(false);
+            if(pinAttempt.message == 'Please set up your TPIN first in toktokwallet settings.'){
+              handleNavigationTokWaSetupPin();
+            }
           }}
+          btnTitle={tokwaErrorBtnTitle(pinAttempt)}
         />
       )}
       <ScrollView
