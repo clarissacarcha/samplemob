@@ -155,7 +155,7 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
     
   };
 
-  const renderAddresses = () => {
+  const renderAddressesx = () => {
     
     return addresses.map((item) => {
       const Wrapper = activeToDeleteItem.value ? View : Swipeable
@@ -215,6 +215,76 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
     });
   };
 
+  const renderAddresses = () => {
+    return (
+      <>
+        <FlatList 
+          data={addresses}
+          showsVerticalScrollIndicator={false}
+          renderItem={({item, index}) => {
+
+            const Wrapper = activeToDeleteItem.value ? View : Swipeable
+            const props = activeToDeleteItem.value
+              ? {}
+              : {
+                  rightActionActivationDistance: 25,
+                  onRightActionRelease: () => setActiveToDeleteItem(item.id),
+                  rightButtonWidth: 75,
+                  rightButtons: [
+                    <DeleteButton
+                      disabled={item.defaultAdd == 1}
+                      onPress={() => {
+                        setSingleItemDelete(item.id)
+                        setConfirmDeleteModal(true);
+                      }}
+                    />,
+                  ],
+            };
+
+
+            const onClickCheckbox = () => {
+              if(activeToDeleteItem.ids?.includes(item.id)){
+                setActiveToDeleteItem(prevState => ({...prevState, ids: prevState.ids.filter(id => id !== item.id)}))
+              }else{
+                setActiveToDeleteItem(prevState => ({...prevState, ids: [...prevState.ids || [], item.id]}))
+              }
+            }
+
+            return (
+              <Wrapper {...props}>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  {activeToDeleteItem.value && (
+                    <CheckBox
+                      disabled={item.defaultAdd === 1}
+                      isChecked={activeToDeleteItem.ids?.includes(item.id)}
+                      onClick={onClickCheckbox}
+                      checkedCheckBoxColor="#F6841F"
+                      uncheckedCheckBoxColor={item.defaultAdd === 1 ? '#D7D7D7' : '#F6841F'}
+                    />
+                  )}
+                  <TouchableOpacity
+                    style={[styles.addressContainer, {flexGrow: 1, marginLeft: 5}]}
+                    onLongPress={() => setActiveToDeleteItem((prevState) => ({...prevState, value: true}))}
+                    onPress={() => {
+                      navigation.navigate('ToktokMallAddressesForm', {item, update: true});
+                    }}>
+                    <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                      <Text style={styles.addressfullName}>{item.receiverName}</Text>
+                      {item.defaultAdd == 1 ? <Text style={styles.addressdefaultText}>Default</Text> : null}
+                    </View>
+                    <Text style={styles.addresscontact_number}>{item.receiverContact}</Text>
+                    <Text style={styles.addressText}>{item.fullAddress || item.address}</Text>
+                  </TouchableOpacity>
+                </View>
+              </Wrapper>
+            );
+
+          }}
+        />
+      </>
+    )
+  }
+
   const deleteAddress = async (id) => {
     AsyncStorage.getItem('ToktokMallUser').then(async (raw) => {
       let data = JSON.parse(raw) || {};
@@ -260,7 +330,7 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
 
   return (
     <>
-      <ScrollView>
+      <View style={{flex: 1}}>
         {deleteSuccessModal && (
           <AddressModal
             type="Message"
@@ -349,7 +419,7 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
             )}
           </View>
         </View>
-      </ScrollView>
+      </View>
 
       {activeToDeleteItem.value && (
         <View style={{position: 'absolute', bottom: 10, alignItems: 'center', width: Dimensions.get('screen').width}}>
