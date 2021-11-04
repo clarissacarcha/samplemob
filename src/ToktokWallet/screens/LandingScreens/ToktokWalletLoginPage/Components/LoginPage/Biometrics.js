@@ -146,7 +146,8 @@ const Biometrics = ({setErrorMessage , setPinCode})=> {
                 })
             }
        }catch(error){
-           if(error.message == "Error generating signature: Key permanently invalidated"){
+           const compareMessage = "Too many attempts. Try again later."
+           if(error.message != compareMessage.trim()){
             // disable bio record here
             setShowPrompt(true)
             setErrorMessage("")

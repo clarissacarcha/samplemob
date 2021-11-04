@@ -10,7 +10,7 @@ import CONSTANTS from 'common/res/constants';
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE , SIZE } = CONSTANTS;
 const { width , height } = Dimensions.get("window");
 
-export const PromptModal = ({visible , title , message , onPress , event , children})=> {
+export const PromptModal = ({visible , title , message , onPress , event , children , closeModal = null})=> {
 
     const onPressThrottled = useThrottle(onPress , 2000);
     let imageIcon = SuccessIcon;
@@ -33,7 +33,7 @@ export const PromptModal = ({visible , title , message , onPress , event , child
         <Modal 
             visible={visible}
             transparent={true}
-            onRequestClose={onPressThrottled}
+            onRequestClose={closeModal ? closeModal : onPressThrottled}
             style={styles.container}
         >
             <View style={styles.modalBody}>

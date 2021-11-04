@@ -11,6 +11,7 @@ import { onErrorAlert } from 'src/util/ErrorUtility'
 import {useAlert} from 'src/hooks'
 import ReactNativeBiometrics from 'react-native-biometrics'
 import { getUniqueId , getBrand, getModel ,isPinOrFingerprintSet , getFingerprint} from 'react-native-device-info';
+import AndroidOpenSettings from 'react-native-android-open-settings';
 import CONSTANTS from 'common/res/constants'
 
 const { FONT_FAMILY: FONT , FONT_SIZE , COLOR } = CONSTANTS
@@ -72,9 +73,9 @@ export const Biometrics = ()=> {
           setIsSensorAvailable(false)
         }
 
-        const deviceBio = await isPinOrFingerprintSet();
-        const fingerPrint = await getFingerprint()
-        setDeviceHasBio((deviceBio && fingerPrint && fingerPrint != "") ? true : false)
+        // const deviceBio = await isPinOrFingerprintSet();
+        // const fingerPrint = await getFingerprint()
+        // setDeviceHasBio((deviceBio && fingerPrint && fingerPrint != "") ? true : false)
       }
     
       useEffect(()=>{
@@ -111,10 +112,8 @@ export const Biometrics = ()=> {
     
 
     const changeSettings = async ()=> {
-        console.log(await isPinOrFingerprintSet())
         checkSensor()
         if(!isSensorAvailable){
-            // Linking.openSettings()
            setShowPrompt(true);
            return;
         }
@@ -135,8 +134,12 @@ export const Biometrics = ()=> {
         })
     }
 
-    const closeModal = ()=> {
-        setShowPrompt(false)
+    const redirectToSettings = ()=> {
+       setShowPrompt(false)
+        // Linking.openSettings()
+       Platform.OS == "android"
+       ? AndroidOpenSettings.generalSettings()
+       : Linking.openURL('App-Prefs:Settings')
     }
 
 
@@ -144,9 +147,9 @@ export const Biometrics = ()=> {
     //     return null
     // }
 
-    if(!deviceHasBio){
-        return null
-    }
+    // if(!deviceHasBio){
+    //     return null
+    // }
 
     return (
         <>
@@ -156,7 +159,8 @@ export const Biometrics = ()=> {
                 event="warning"
                 message="Please register at least one fingerprint on your phone settings."
                 title="Attention"
-                onPress={closeModal}
+                closeModal={()=>setShowPrompt(false)}
+                onPress={redirectToSettings}
         />
          <View style={styles.settingoption}>
                     <View style={styles.name}>
