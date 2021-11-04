@@ -47,10 +47,10 @@ const WalletCardInfo = ({loading})=> {
        <View style={styles.container}>
            <HeaderImageBackground>
                <HeaderTitle 
-                    isRightIcon 
-                    rightIconOnPress={()=>navigation.navigate("ToktokWalletNotifications")} 
-                    isLogo
-                    headerBackLabel="Home"
+                    isRightIcon
+                    isLogo={true} 
+                    rightIconOnPress={()=>navigation.navigate("ToktokWalletNotifications")}
+                    headerBackLabel="Back"
                 />
                <View style={{flex: 1,justifyContent:"flex-end",paddingBottom: 45}}>
                     <View>
