@@ -82,15 +82,17 @@ export const BuildOrderLogsList = ({data, shipping, shippingRates, shippingVouch
 			})
 		})
 
+		let shippingfeeindex = shippingRates.findIndex((e) => e.shopid == val.shop.id)
+
 		logs.push({
 			sys_shop: val.shop.id,
-			branchid: shippingRates[index].branchid,
+			branchid: shippingRates[shippingfeeindex].branchid,
 			// delivery_amount: shipping.rateAmount,
-			delivery_amount: shippingVouchers[index] ? shippingVouchers[index].discount : parseFloat(shippingRates[index].shippingfee),
-			original_shipping_fee: parseFloat(shippingRates[index].original_shipping),
+			delivery_amount: shippingVouchers[index] ? shippingVouchers[index].discount : parseFloat(shippingRates[shippingfeeindex].shippingfee),
+			original_shipping_fee: parseFloat(shippingRates[shippingfeeindex].original_shipping),
 			handle_shipping_promo: 1,
-			hash: shippingRates[index].hash,
-			hash_delivery_amount: shippingRates[index].hash_price,
+			hash: shippingRates[shippingfeeindex].hash,
+			hash_delivery_amount: shippingRates[shippingfeeindex].hash_price,
 			daystoship: shipping.fromDay,
 			daystoship_to: shipping.toDay,
 			items: items

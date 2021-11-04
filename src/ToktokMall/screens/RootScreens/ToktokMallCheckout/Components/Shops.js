@@ -270,24 +270,33 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
         else return loc
       }
 
-      const getDiscount = (index, type) => {
+      const getDiscount = (id, type) => {
         if(type == "shipping"){
 
-          let shippingfee = CheckoutContextData.shippingFeeRates[index]?.shippingfee
-          let voucheramount = CheckoutContextData.shippingVouchers[index]?.amount
-
-          if(shippingfee && voucheramount && shippingfee - voucheramount < 0){
-            return 0
-          }else{
-            return CheckoutContextData.shippingVouchers[index]?.discount
+          let index = CheckoutContextData.shippingFeeRates.findIndex((e) => e.shopid == shop.id)
+          console.log(index)
+          if(index > -1){
+            let shippingfee = CheckoutContextData.shippingFeeRates[index]?.shippingfee
+            let voucheramount = CheckoutContextData.shippingVouchers[index]?.amount
+  
+            if(shippingfee && voucheramount && shippingfee - voucheramount < 0){
+              return 0
+            }else{
+              return CheckoutContextData.shippingVouchers[index]?.discount
+            }
           }
         }
       }
 
-      const getOriginalShippingFee = (index) => {
+      const getOriginalShippingFee = (id) => {
         if(CheckoutContextData.shippingFeeRates.length > 0){
-          let rates = CheckoutContextData.shippingFeeRates[index]
-          return rates.original_shipping
+          let index = CheckoutContextData.shippingFeeRates.findIndex((e) => e.shopid == shop.id)
+
+          if(index > -1){
+            let rates = CheckoutContextData.shippingFeeRates[index]
+            // console.log("Rates shopid: " + shop.id, rates)
+            return rates.original_shipping
+          }         
         }else{
           return "Calculating"
         }
@@ -301,7 +310,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
         }
       }
 
-      const renderValidShipping = (i, shipping, item) => {
+      const renderValidShipping = (i, shipping, item, shopid) => {
         return (
           <>
             <View style={{flexDirection: 'row'}}>
@@ -311,15 +320,15 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
               <View style={{flex: 0}}>
                 <Text 
                   style={{
-                    textDecorationLine: getDiscount(i, "shipping") != null ? "line-through" : "none",  
-                    color: getDiscount(i, "shipping") != null ? "#929191" :'#000'
+                    textDecorationLine: getDiscount(shopid, "shipping") != null ? "line-through" : "none",  
+                    color: getDiscount(shopid, "shipping") != null ? "#929191" :'#000'
                   }}
                 >
-                  {FormatToText.currency(getOriginalShippingFee(i))}
+                  {FormatToText.currency(getOriginalShippingFee(shopid))}
                 </Text>
               </View>
               <View style={{flex: 0}}>
-                <Text> {getDiscount(i, "shipping") != null ? FormatToText.currency(getDiscount(i, "shipping")) : ""}</Text>
+                <Text> {getDiscount(shopid, "shipping") != null ? FormatToText.currency(getDiscount(shopid, "shipping")) : ""}</Text>
               </View>
             </View>
 
@@ -351,12 +360,9 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
           <View style={{padding: 15}}>
             {renderItems(item.data[0])}
           </View>
-          <TouchableOpacity style={styles.deliveryfeeContainer} onPress={() => {
-            let test = getIsShippingServiceAreaInvalid(i)
-            console.log("testing...", test)
-          }}>
+          <TouchableOpacity style={styles.deliveryfeeContainer} >
 
-            {getIsShippingServiceAreaInvalid(i) ? renderInvalidShipping() : renderValidShipping(i, shipping, item)}
+            {getIsShippingServiceAreaInvalid(i) ? renderInvalidShipping() : renderValidShipping(i, shipping, item, shop.id)}
 
           </TouchableOpacity>
 
