@@ -55,7 +55,7 @@ const WalletCardInfo = ({loading})=> {
                     isRightIcon
                     isLogo={true} 
                     rightIconOnPress={()=>navigation.navigate("ToktokWalletNotifications")}
-                    headerBackLabel="Home"
+                    headerBackLabel="Back"
                 />
                <View style={{flex: 1,justifyContent:"flex-end",paddingBottom: 45}}>
                     <View>
@@ -157,7 +157,6 @@ const styles = StyleSheet.create({
     walletSettings: {
         flex: 1,
         alignItems:'flex-end',
-        marginRight: 10,
     }
 })
 

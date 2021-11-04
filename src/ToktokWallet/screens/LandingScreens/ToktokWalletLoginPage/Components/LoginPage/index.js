@@ -2,8 +2,9 @@ import React , {useEffect,useState,useRef} from 'react'
 import {View,Text,StyleSheet,TextInput,TouchableOpacity,Image} from 'react-native'
 import tokwaLogo from 'toktokwallet/assets/images/tokwaLogo.png'
 import {useAccount} from 'toktokwallet/hooks'
+import { getStatusbarHeight } from 'toktokwallet/helper'
 import { BuildingBottom , NumberBoxes ,DisabledButton } from 'toktokwallet/components'
-import { YellowButton } from 'src/revamp'
+import { YellowButton , VectorIcon , ICON_SET } from 'src/revamp'
 import { AlertOverlay } from 'src/components'
 import { useNavigation } from '@react-navigation/native'
 import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
@@ -102,6 +103,13 @@ export const LoginPage = ()=> {
         <>
         <AlertOverlay visible={loading} />
             <View style={styles.container}>
+                <TouchableOpacity
+                   onPress={()=>navigation.pop()} 
+                   style={{marginTop: getStatusbarHeight,flexDirection:"row",alignItems:"center",width:80}}
+                >
+                    <VectorIcon iconSet={ICON_SET.FontAwesome5} name="chevron-left" size={20}/>
+                    <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M , color: COLOR.YELLOW, marginLeft: 10}}>Home</Text>
+                </TouchableOpacity>
                 <View style={styles.content}>
                     <Image
                         style={styles.tokwaLogo}
