@@ -38,9 +38,12 @@ export const useContacts = ()=> {
                   }
                 })
                 .map((contact) => {
+                  let number = contact.phoneNumbers[0].number
+                  number = number.replace("+63","0")
+                  number = number.replace(" ", "")
                   return {
                     name: `${contact.givenName} ${contact.familyName}`,
-                    number: contact.phoneNumbers[0].number,
+                    number
                     // image: contact.thumbnailPath
                   };
                 });

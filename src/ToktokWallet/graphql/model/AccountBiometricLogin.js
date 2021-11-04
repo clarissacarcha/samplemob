@@ -27,3 +27,9 @@ export const POST_REGISTER_BIOMETRICS = gql`
     }
 `
 
+export const POST_FORCE_DISABLE = gql`
+    mutation postForceDisable($input: PostForceDisableInput){
+        postForceDisable(input: $input)
+    }
+`
+

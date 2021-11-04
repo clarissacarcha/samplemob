@@ -31,7 +31,7 @@ export const EnterMobileNo = ({
     const [suggestContact,setSuggestContact] = useState("")
     const [isFavorite,setIsFavorite] = useState(false);
     const inputMobileRef = useRef()
-    // const { contacts } = useContacts();
+    const { contacts } = useContacts();
 
     
     const [getAccount, {data: walletData,error: walletError,loading: walletLoading}] = useLazyQuery(GET_ACCOUNT , {
@@ -67,11 +67,10 @@ export const EnterMobileNo = ({
 
 
     const filterByContacts = (value)=> {
-        if(value.length >= 1){
+        if(value.length >= 4){
             const result = contacts.filter((contact)=>{
                 return contact.name.toLowerCase().includes(value.toLowerCase()) || contact.number.toLowerCase().includes(value.toLowerCase())
             })
-    
             return result[0]
         }
         return null
@@ -79,9 +78,9 @@ export const EnterMobileNo = ({
 
 
     const changeMobileNo = (text)=> {
-        // // enable if type name is an option
-        // const filteredContact = filterByContacts(text)
-        // setSuggestContact(filteredContact)
+        // enable if type name is an option
+        const filteredContact = filterByContacts(text)
+        setSuggestContact(filteredContact)
         // const value = text.replace(/[^0-9 A-Za-z]/g,"")
         const value = text.replace(/[^0-9]/g,"")
 
@@ -94,8 +93,8 @@ export const EnterMobileNo = ({
             setProceed(false)
         }
 
-        if(value[0] == "9"){
-            setMobileNo("09")
+        if(value[0] == "9" && value.length >= 3){
+            setMobileNo("0"+value)
         }else{
             setMobileNo(value)
         }
@@ -166,11 +165,11 @@ export const EnterMobileNo = ({
         <>
          
        <View style={styles.container}>
-            {/* <ContactSuggestion
+            <ContactSuggestion
                 contactInfo={suggestContact}
                 setContactInfo={setSuggestContact}
                 onPress={setRecipientMobileNo}
-            /> */}
+            />
             <View style={styles.content}>
                 <TouchableOpacity onPress={()=>{
                     return inputMobileRef.current.focus()
