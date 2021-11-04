@@ -42,9 +42,9 @@ export const BlockedAccount = ({data,showPrompt})=> {
             </View>
             <Separator/>
             <View style={styles.content}>
-                <View style={{alignItems:"center",marginTop: 10}}>
-                    <Text style={[styles.verifyWalletText , {color: COLOR.ORANGE}]}>STOP!</Text>
-                    <Text style={styles.clickVerifyText}>Your toktokwallet account has been blocked or put on-hold. To know more details, contact support@toktokwallet.ph and (02) 84-248-617.</Text>
+            <View style={{alignItems:"center",marginTop: 10}}>
+                    <Text style={[styles.verifyWalletText , {color: COLOR.ORANGE}]}>Your account is deactivated</Text>
+                    <Text style={styles.clickVerifyText}>Please contact our Customer Service Representative for support</Text>
                 </View>
 
                 <TouchableOpacity onPress={HelpCenter} style={styles.helpCenter}>
