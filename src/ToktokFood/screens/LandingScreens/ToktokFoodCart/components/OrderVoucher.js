@@ -45,7 +45,7 @@ const OrderVoucher = ({autoShipping}) => {
 
       if (!success) {
         setShowError(!showError);
-        setVoucherError(message);
+        setVoucherError(`* ${message}`);
       } else {
         if (type !== 'shipping') {
           setShippingVoucher([getVoucherCode]);

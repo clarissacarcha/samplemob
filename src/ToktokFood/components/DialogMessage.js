@@ -27,6 +27,7 @@ const DialogMessage = (props) => {
     onCloseBtn1,
     onCloseBtn2,
     reasons,
+    btnTitle = 'OK'
   } = props;
 
   const getDialogIcon = () => {
@@ -77,7 +78,7 @@ const DialogMessage = (props) => {
               </View>
             ) : (
               <TouchableOpacity style={styles.confirmButton} onPress={() => onCloseModal()}>
-                <Text style={styles.buttonText}>OK</Text>
+                <Text style={styles.buttonText}>{btnTitle}</Text>
               </TouchableOpacity>
             )}
           </View>

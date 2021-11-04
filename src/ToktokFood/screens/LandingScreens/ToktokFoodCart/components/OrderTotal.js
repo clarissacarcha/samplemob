@@ -52,7 +52,9 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
           <View style={styles.header}>
             <Text>Delivery Fee</Text>
             <View style={styles.deliveryFee}>
-              {autoShipping?.success && <Text style={styles.deliveryFeeText}>{`\u20B1${deliveryFee.toFixed(2)}`}</Text>}
+              {(autoShipping?.success || shippingVoucher.length > 0) && (
+                <Text style={styles.deliveryFeeText}>{`\u20B1${deliveryFee.toFixed(2)}`}</Text>
+              )}
               <Text style={styles.subtotal}>{`PHP ${totalShipping.toFixed(2)}`}</Text>
             </View>
           </View>

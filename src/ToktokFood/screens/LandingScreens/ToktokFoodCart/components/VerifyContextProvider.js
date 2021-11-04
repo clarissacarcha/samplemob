@@ -31,6 +31,7 @@ export const VerifyContextProvider = ({children}) => {
   const [toktokWallet, setToktokWallet] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState('TOKTOKWALLET');
   const [pmLoading, setPMLoading] = useState(false);
+  const [autoShippingVoucher, setAutoShippingVoucher] = useState([]);
   const [shippingVoucher, setShippingVoucher] = useState([]);
 
   const [getAllTemporaryCart, {data, loading, error}] = useLazyQuery(GET_ALL_TEMPORARY_CART, {
@@ -72,6 +73,8 @@ export const VerifyContextProvider = ({children}) => {
         pmLoading,
         shippingVoucher,
         setShippingVoucher,
+        autoShippingVoucher,
+        setAutoShippingVoucher,
       }}>
       {children}
     </Provider>
