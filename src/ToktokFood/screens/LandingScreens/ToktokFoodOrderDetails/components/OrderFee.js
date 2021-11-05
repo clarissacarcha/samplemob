@@ -9,9 +9,11 @@ import {FONT_SIZE, FONT} from 'res/variables';
 import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
 
 const getShippingDiscount = (promoDetails, deliveryFee) => {
-  let { amount } = promoDetails;
-  if(amount > 0){
-    return amount > deliveryFee ? amount - deliveryFee : deliveryFee - amount;
+  const {amount, isPercentage} = promoDetails;
+  if (amount > 0) {
+    let pAmount = isPercentage != 0 ? (amount / 100) * deliveryFee : amount
+    let totalSF = deliveryFee - pAmount;
+    return totalSF > 0 ? totalSF : 0;
   } else {
     return 0
   }
