@@ -40,7 +40,7 @@ const RestaurantItem = ({item}) => {
         </View>
         {item.promoName && (
           <View style={styles.promoChip}>
-            <Text style={styles.promoText}>Free Delivery</Text>
+            <Text style={styles.promoText}>{item.promoName}</Text>
           </View>
         )}
       </View>
