@@ -111,3 +111,11 @@ export const GET_CHECK_PENDING_DISBURSEMENT_ACCOUNT = gql`
         }
     }
 `
+
+export const POST_GENERATE_ACCOUNT_QR_CODE = gql`
+    mutation {
+        postGenerateAccountQrCode {
+            encryptedQRToken
+        }
+    }
+`

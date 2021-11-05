@@ -3,13 +3,12 @@ import {StyleSheet,View,Text,TouchableOpacity,Dimensions,Image,TouchableHighligh
 import { RNCamera } from 'react-native-camera';
 import FIcon from 'react-native-vector-icons/Feather';
 import {useFocusEffect} from '@react-navigation/native'
-import {useLazyQuery} from '@apollo/react-hooks'
+import {useLazyQuery,useMutation} from '@apollo/react-hooks'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
-import {GET_ACCOUNT} from 'toktokwallet/graphql'
+import {GET_ACCOUNT,POST_VERIFY_TRANSACTION_QR_CODE} from 'toktokwallet/graphql'
 import {onError} from 'src/util/ErrorUtility'
 import {useSelector} from 'react-redux'
 import {useAlert} from 'src/hooks/useAlert';
-import { CheckIdleState } from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants';
 
 //SELF IMPORTS
@@ -45,31 +44,23 @@ export const ToktokWalletScanQR = ({navigation,route})=> {
         return ()=> setFocusCamera(false)
     },[]))
 
-
-    const [getAccount, {data , error ,loading}] = useLazyQuery(GET_ACCOUNT,{
+    const [postVerifyTransactionQrCode , {loading}] = useMutation(POST_VERIFY_TRANSACTION_QR_CODE, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
-        fetchPolicy: "network-only",
-        onError: (err)=>{
-            if(err.graphQLErrors.length > 0){
-                err.graphQLErrors.map((error)=> {
-                    if(error.message == "Person doesn't registered in toktokwallet") {
-                        return alertHook({message:"QR code must be valid"})
-                    }
-                   
-                })
-                return
-            }
+        onError: (error)=>{
             return alertHook({message:"Qr code must be valid"})
         },
-        onCompleted: ({getAccount})=> {
-            if(getAccount.mobileNumber === tokwaAccount.mobileNumber){
-                return alertHook({message: "You cannot send money to yourself"})
-            }
+        onCompleted: ({postVerifyTransactionQrCode})=>{
             setTorch(false)
-            return  navigation.navigate("ToktokWalletScanQRConfirm", {recipientInfo: getAccount})
+            const { account } = postVerifyTransactionQrCode
+            if(account){
+                if(account.mobileNumber === tokwaAccount.mobileNumber){
+                    return alertHook({message: "You cannot send money to yourself"})
+                }
+               
+                return navigation.navigate("ToktokWalletScanQRConfirm", {recipientInfo: account})
+            }
         }
     })
-
 
     const barcodeRead = (e)=> {
         const barcode = Platform.OS === "android" ? e.barcodes[0] : e
@@ -83,10 +74,10 @@ export const ToktokWalletScanQR = ({navigation,route})=> {
         const checkifOutside = checkifOutsideBox(boundaryArea , resultBounds)
 
         if(!checkifOutside){
-            getAccount({
+            postVerifyTransactionQrCode({
                 variables: {
                     input: {
-                        mobileNumber: barcode.data
+                        encryptedQRToken: barcode.data
                     }
                 }
             })
@@ -104,7 +95,7 @@ export const ToktokWalletScanQR = ({navigation,route})=> {
     } 
 
     return (
-        <CheckIdleState>
+        <>
         <View style={{flex: 1}}>
             <RNCamera
                 style={{
@@ -167,10 +158,10 @@ export const ToktokWalletScanQR = ({navigation,route})=> {
                 <Actions 
                     tokwaAccount={tokwaAccount}
                     onUploadSuccess={(qrCode)=>{
-                        getAccount({
+                        postVerifyTransactionQrCode({
                             variables: {
                                 input: {
-                                    mobileNumber: qrCode
+                                    encryptedQRToken: qrCode
                                 }
                             }
                         })
@@ -178,7 +169,7 @@ export const ToktokWalletScanQR = ({navigation,route})=> {
 
             </RNCamera>
         </View>
-        </CheckIdleState>
+        </>
     )
 }
 

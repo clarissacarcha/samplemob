@@ -1,5 +1,5 @@
-import React , {useRef} from 'react'
-import {Modal,View,Text,StyleSheet,TouchableOpacity,Image} from 'react-native'
+import React , {useRef , useState , useEffect } from 'react'
+import {Modal,View,Text,StyleSheet,TouchableOpacity,Image,ActivityIndicator,Linking} from 'react-native'
 import { YellowButton } from 'src/revamp'
 import QRCode from 'react-native-qrcode-svg'
 import {useSelector} from 'react-redux'
@@ -11,6 +11,12 @@ import RNFS from 'react-native-fs'
 import CameraRoll from "@react-native-community/cameraroll";
 import Toast from 'react-native-simple-toast';
 import moment from 'moment'
+import {TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
+import {POST_GENERATE_ACCOUNT_QR_CODE} from 'toktokwallet/graphql'
+import {useLazyQuery, useMutation} from '@apollo/react-hooks'
+import { SomethingWentWrong } from 'src/components'
+import toktokwalletLogo from 'toktokwallet/assets/images/toktokwallet.png'
+import tokwaLogo from 'toktokwallet/assets/images/tokwa.png'
 import CONSTANTS from 'common/res/constants'
 
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE} = CONSTANTS
@@ -18,8 +24,21 @@ const { COLOR , FONT_FAMILY: FONT , FONT_SIZE} = CONSTANTS
 const MyQRCode = ({visible,setVisible,tokwaAccount})=> {
 
     const session = useSelector(state=>state.session)
+    const [qrcode,setQrcode] = useState(null)
 
     const viewshotRef = useRef()
+
+    const [postGenerateAccountQrCode , {error,loading}] = useMutation(POST_GENERATE_ACCOUNT_QR_CODE, {
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+        onCompleted: ({postGenerateAccountQrCode})=> {
+            const { encryptedQRToken } = postGenerateAccountQrCode
+            setQrcode(encryptedQRToken)
+        }
+    })
+
+    useEffect(()=>{
+        postGenerateAccountQrCode()
+    },[])
 
     const checkAndRequest = Platform.select({
         android: async ()=>{
@@ -100,7 +119,6 @@ const MyQRCode = ({visible,setVisible,tokwaAccount})=> {
     })
 
     const DownloadReceipt = async ()=> {
-
         const result = await checkAndRequest();
         
         const pathCache = RNFS.CachesDirectoryPath
@@ -128,22 +146,36 @@ const MyQRCode = ({visible,setVisible,tokwaAccount})=> {
             animationType="fade"
         >
             <View style={styles.content}>
+         
                         <View style={styles.qrContainer}>
-                           
+                            {
+                                loading &&
+                                <View style={{flex: 1,justifyContent:"center",alignItems:"center"}}>
+                                    <ActivityIndicator color={COLOR.YELLOW} size={50}/>
+                                </View>
+                            }
+                        {
+                            qrcode && !loading &&
+                            <>
                             <ViewShot 
                                 ref={viewshotRef} 
                                 style={{flex: 1,justifyContent:"center",alignItems:"center",backgroundColor:"white",borderRadius: 5,}}
                                 options={{ format: "jpg", quality: 0.9,width: 400,height: 400 ,result: 'tmpfile' }}
                             >
-                                     <Image resizeMode="contain" style={{height: 23,width: 130,marginBottom: 15}} source={require('../../../../../../assets/toktokwallet-assets/toktokwallet.png')}/>
-                                     <QRCode
-                                        value={tokwaAccount.mobileNumber} //Give value when there's no session as it will throw an error if value is empty.
-                                        // size={width * 0.7}
-                                        size={250}
-                                        color="black"
-                                        backgroundColor="transparent"
-                                        // onPress={() => alert('Pressed')}
-                                    />
+                                     {/* <Image resizeMode="contain" style={{height: 23,width: 130,marginBottom: 15}} source={toktokwalletLogo}/> */}
+                                    
+                                         <QRCode
+                                                value={qrcode} //Give value when there's no session as it will throw an error if value is empty.
+                                                // size={width * 0.7}
+                                                logo={tokwaLogo}
+                                                logoSize={50}
+                                                logoBackgroundColor='transparent'
+                                                size={250}
+                                                color="black"
+                                                backgroundColor="transparent"
+                                                // onPress={() => alert('Pressed')}
+                                         />
+                                   
                                     <View style={{marginTop: 10,}}>
                                      <Text style={{fontFamily: FONT.BOLD,fontSize:FONT_SIZE.M}}>{tokwaAccount.mobileNumber}</Text>
                                     </View>
@@ -155,11 +187,14 @@ const MyQRCode = ({visible,setVisible,tokwaAccount})=> {
                                     <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginLeft: 5,color:"#FF8A48"}}>Download</Text>
                                 </TouchableOpacity>
                             </View>
+                            </>
+                        }
 
-                            <View style={{height: 80,padding: 10,justifyContent:"flex-end"}}>
+                            <View style={{flex: qrcode ? 0 : 1, height: 80,padding: 10,justifyContent:"flex-end"}}>
                                 <YellowButton label="Close" onPress={()=>setVisible(false)}/>
                             </View>
                         </View>
+               
             </View>
 
         </Modal>
