@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, ImageBackground, TouchableOpacity, Image} from 'react-native';
+import {View, Text, ImageBackground, TouchableOpacity, Image, Platform} from 'react-native';
 import MCIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AIcons from 'react-native-vector-icons/dist/AntDesign';
 import {useSelector} from 'react-redux';
@@ -103,9 +103,9 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
       <ImageBackground 
         source={banner}
         imageStyle={{ resizeMode: "stretch", width: '100%'}}
-        style={{width: "100%", height: 120}}
+        style={{width: "100%", height: Platform.OS == "android" ? 150 : 120}}
       >
-        <View style={{flex: 2, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingHorizontal: 10}}>
+        <View style={{flex: 2, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingTop: Platform.OS == "android" ? 15 : 0, paddingHorizontal: 10}}>
           <View style={{flex: 3, alignItems: 'center'}}>
             <Image source={profileImage != "" ? {uri: profileImage} : userIcon} style={{width: 80, height: 80, borderRadius: 40, resizeMode: 'cover'}} />
           </View>

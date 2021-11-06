@@ -279,7 +279,7 @@ const Item = ({data}) => {
   let product = data?.product
 
   const getImageSource = (img) => {
-    if(typeof img == "object" && img.filename != null){
+    if(typeof img == "object" && img?.filename != null){
       return {uri: img.filename}
     }else {
       return placeholder
