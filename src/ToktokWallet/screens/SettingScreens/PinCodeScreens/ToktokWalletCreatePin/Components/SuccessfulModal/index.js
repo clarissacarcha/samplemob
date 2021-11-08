@@ -69,7 +69,7 @@ export const SuccessfulModal = ({modalVisible,tokwaAccount,amount,onCashIn,setSu
 
     useEffect(()=>{
         if(tokwaAccountLatest.pinCode && onCashIn){
-          navigation.pop();
+          if(navigation.canGoBack()) navigation.pop();
           navigation.push("ToktokWalletPaymentOptions", {
               amount: amount ? amount : 0,
               onCashIn: onCashIn
@@ -78,7 +78,7 @@ export const SuccessfulModal = ({modalVisible,tokwaAccount,amount,onCashIn,setSu
         }
         if(tokwaAccountLatest.pinCode && setUpTpinCallBack){
             setUpTpinCallBack()
-            navigation.pop();
+            if(navigation.canGoBack()) navigation.pop();
             setSuccessModalVisible(false);
             return;
         }
