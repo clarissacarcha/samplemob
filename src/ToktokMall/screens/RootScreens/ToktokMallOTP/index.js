@@ -188,15 +188,16 @@ console.log("validating", processing, validating)
 
         {!isInvalid && <View style={{height: 35}}/>}
 
-        {
-          false ? // put condition here not for invalid/expired 
+        
+          {/* // isInvalid && retries < 5 ? // put condition here not for invalid/expired  */}
           <View style = {{flexDirection: 'row', marginBottom: 15}}>
             <Text style = {{fontFamily: FONT.REGULAR}}>Didn't receive OTP code?</Text>
             <TouchableOpacity>
               <Text style = {{fontFamily: FONT.REGULAR, color: COLOR.ORANGE}} > Resend</Text>
             </TouchableOpacity>
-          </View> : <></>
-        }
+          </View> 
+          {/* ?: <></> */}
+        
       
         {!isInvalid && <TouchableOpacity 
           activeOpacity={0.5} 

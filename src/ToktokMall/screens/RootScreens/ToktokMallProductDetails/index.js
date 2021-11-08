@@ -75,6 +75,10 @@ const Component =  ({
   const [qtyOnCart, setQtyOnCart] = useState(0)
   const [variantImages, setVariantImages] = useState([])
 
+  const [headerValue, setHeaderValue] = useState(0)
+  const [scrollendreached, setscrollendreached] = useState(false)
+  const [showTransparent, setshowtransparent] = useState(true)
+
   const {
     params: { Id },
   } = route
@@ -289,8 +293,30 @@ const Component =  ({
 
   const onScroll = Animated.event(
     [{nativeEvent: {contentOffset: {y: AnimatedHeaderValue}}}],
-    { useNativeDriver: false}
+    { listener: (event) => {console.log(event)}, useNativeDriver: true}
   )
+
+  const handleHeaderScroll = (event) => {
+    // const {animatedOpacity}
+    console.log(event.contentOffset.y)
+    const scrollPosition = event.contentOffset.y
+    if( scrollPosition > 100 && ! showTransparent){
+      Animated.timing(AnimatedHeaderValue, {
+        toValue: 1,
+      }).start(() => setshowtransparent(true))
+    }
+    if( scrollPosition < 100 && showTransparent){
+      Animated.timing(AnimatedHeaderValue, {
+        toValue: 1,
+      }).start(() => setshowtransparent(false))
+    }
+  }
+
+  const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+    const paddingBottom = 50;
+    // console.log(layoutMeasurement.height + contentOffset.y, contentSize.height - paddingBottom)
+    return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingBottom;
+  }
 
   const CountCartItems = () => {
     // return myCart.length
@@ -342,15 +368,27 @@ const Component =  ({
     <>
     <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
       
-      { isFetching ? <></> : <HeaderPlain animatedValue={animatedHeaderValueRef} cartItems={cartNoOfItems} itemName = {route.params.itemname} /> }
-      { isFetching ? <></> : <HeaderTransparent animatedValue={animatedHeaderValueRef} cartItems={cartNoOfItems} /> }
+      {/* { isFetching ? <></> : <HeaderPlain animatedValue={animatedHeaderValueRef} cartItems={cartNoOfItems} itemName = {route.params.itemname} /> }
+      { isFetching ? <></> : <HeaderTransparent animatedValue={animatedHeaderValueRef} cartItems={cartNoOfItems} /> } */}
+      { headerValue >= 250 ? <HeaderPlain animatedValue={animatedHeaderValueRef} cartItems={cartNoOfItems} itemName = {route.params.itemname} /> : <></>}
+      { headerValue < 250 ?  <HeaderTransparent animatedValue={animatedHeaderValueRef} cartItems={cartNoOfItems} />: <></>  }
       <LoadingOverlay isVisible={isFetching} />
       
      <Animated.ScrollView
         scrollEventThrottle = {270}
-        onScroll={onScroll}
+        // onScroll={onScroll}
+        onScroll = {({nativeEvent}) => {
+          // onScroll
+          // handleHeaderScroll(nativeEvent)
+          setHeaderValue(nativeEvent.contentOffset.y)
+          if(isCloseToBottom(nativeEvent)){
+            setscrollendreached(true)
+          }else{
+            setscrollendreached(false)
+          }
+        }}
         showsVerticalScrollIndicator={false}
-        {...{onScroll}}
+        // {...{onScroll}}
         scrollEnabled = {!isFetching}
       >
         {/* <ContentLoader active loading = {loading} avatar aShape = {'square'} title = {false} pRows = {0}
@@ -402,7 +440,7 @@ const Component =  ({
           />
         }
 
-        {isFetching ? <></> : <RenderSuggestions data={relevantProducts || []} /> }
+        {isFetching ? <></> : <RenderSuggestions data={relevantProducts || []} lazyload={scrollendreached} /> }
         
         {/* <RenderReviews /> */}
         

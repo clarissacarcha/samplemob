@@ -344,6 +344,12 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
             })
           }} 
           lazyload={() => {
+            console.log('VARIABLES',
+              'search params', route.params?.origin ? "" : searchValue,
+              'origin:', route.params?.origin ? route.params.origin : "all",
+              'category:', route.params?.categoryId ? route.params?.categoryId : "null",
+            
+            )
             setOffset(searchedProducts.length)
             lazyLoading({
               variables: {

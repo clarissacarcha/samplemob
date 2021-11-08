@@ -6,6 +6,10 @@ import {LandingHeader, AdsCarousel} from '../../../../Components';
 import { ScrollView } from 'react-native-gesture-handler';
 import CustomIcon from '../../../../Components/Icons';
 
+import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../graphql';
+import { GET_TOP_PRODUCTS, SEARCH_PRODUCT } from '../../../../../graphql/toktokmall/model';
+import { useLazyQuery, useQuery } from '@apollo/react-hooks';
+
 import {clothfacemask, medicalfacemask, placeholder} from '../../../../assets'; 
 import { useNavigation } from '@react-navigation/core';
 
@@ -110,14 +114,64 @@ const RenderItem = ({item}) => {
   )
 }
 
-export const RenderSuggestions = ({data}) => {
+export const RenderSuggestions = ({data, lazyload}) => {
 
   const {navigate} = useNavigation()
   const [products, setProducts] = useState(data)
+  const [offset, setOffset] =useState(0)
+
+  const [lazyLoading, {errorlazyload, loading3}] = useLazyQuery(SEARCH_PRODUCT, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: async (response) => {      
+      
+      console.log("Lazy load", response)
+      let temp = products
+      if(!response){
+
+        setProducts(temp)
+
+      }else if(response && response.searchProduct.length > 0){
+
+        temp = temp.concat(response.searchProduct)
+        setProducts(temp)
+        
+      }else if(response && response.searchProduct.length == 0){
+
+        // setSearchedProducts([])
+
+      }
+    },
+    onError: (err) => {
+      console.log(err)
+    }
+  })
 
   useEffect(() => {
     setProducts(data)
-  }, [data])
+    // let temp = products
+    // temp = temp.concat(data)
+    // setProducts(temp)
+  }, [])
+
+  useEffect(() => {
+    if(lazyload){
+      console.log("will lazy load products...")
+      setOffset(products.length)
+      console.log({offset})
+      lazyLoading({
+        variables: {
+          input: {
+            search:  "" ,
+            origin: "suggestion",
+            category:  null,
+            offset: products.length,
+            limit: 10
+          }
+        }
+      })
+    }
+  }, [lazyload])
 
     return (
       <>

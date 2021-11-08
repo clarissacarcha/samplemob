@@ -16,7 +16,8 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 export const HeaderTransparent = ({value, outOfStock = false, animatedValue, cartItems}) => {
 
   const translateOpacity = animatedValue.current.interpolate({
-    inputRange: [250, 270],
+    // inputRange: [250, 270],
+    inputRange: [0, 1],
     outputRange: [1,  0],
     // extrapolateLeft: Extrapolate.CLAMP
     extrapolate: 'clamp'

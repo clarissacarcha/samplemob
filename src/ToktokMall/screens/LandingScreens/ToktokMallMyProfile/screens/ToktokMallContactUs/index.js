@@ -205,11 +205,12 @@ export const ToktokMallContactUs = ({navigation}) => {
                     multiline
                     value = {message}
                     onChangeText = {(text) => {setMessage(text)}}
+                    maxLength={300}
                   />
                 </View>
               <View
                 style={{flex: 0, marginTop: 18, alignItems: 'center', justifyContent: 'center', paddingVertical: 10}}>
-                <TouchableOpacity onPress = {() => {onPress()}} style={styles.button}>
+                <TouchableOpacity disabled = {message.length > 300} onPress = {() => {onPress()}} style={message.length > 300 ?styles.disabled :styles.button}>
                   <Text style={styles.buttonText}>Submit</Text>
                 </TouchableOpacity>
               </View>
@@ -251,4 +252,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   buttonText: {color: 'white', fontSize: 14},
+  disabled: {
+    backgroundColor: 'grey',
+    padding: 10,
+    width: '90%',
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
 });

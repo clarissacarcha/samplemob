@@ -138,7 +138,11 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
   const SavePostAddress = async (callback, id) => {
     if (newAddressForm.receiverContact.length != 11 || newAddressForm.receiverContact == '') {
       return alert('Invalid contact number.');
-    } else {
+    } 
+    else if (newAddressForm.postalCode.length > 0 && newAddressForm.postalCode.length < 4){
+      return alert('Invalid postal code.');
+    }
+    else {
       setIsLoading(true);
       AsyncStorage.getItem('ToktokMallUser').then(async (raw) => {
         let data = JSON.parse(raw) || {};

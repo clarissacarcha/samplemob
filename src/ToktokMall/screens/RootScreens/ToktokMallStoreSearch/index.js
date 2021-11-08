@@ -8,7 +8,7 @@ import { GET_SHOP_DETAILS, SEARCH_SHOP_PRODUCT, GET_SHOP_SEARCH_SUGGESTIONS } fr
 import { useLazyQuery } from '@apollo/react-hooks';
 import Spinner from 'react-native-spinkit';
 import { FONT } from '../../../../res/variables';
-import {emptysearch} from "../../../assets";
+import {emptysearch, placeholder} from "../../../assets";
 import { connect } from 'react-redux';
 
 const Component = ({navigation, route, searchHistory, createSearchHistorySession}) => {
@@ -53,7 +53,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
         console.log(searchedProducts.length, response.searchShopProduct.length)
         setSearchedProducts(temp)
       }else if(response && response.searchShopProduct.length == 0){
-        setSearchedProducts(temp)
+        // setSearchedProducts(temp)
       }
     },
     onError: (err) => {
@@ -74,6 +74,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
       }
     },
     onCompleted: (response) => {
+      console.log(response.getSearchSuggestions)
       if(response.getSearchSuggestions){
         setSuggestions(response.getSearchSuggestions)
       }
@@ -87,6 +88,14 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
   const setHistoryOrder = () => {
     let temphist = JSON.parse(JSON.stringify(searchHistory))
     setSearchHist(temphist.reverse())
+  }
+
+  const getImageSource = (data) => {
+    if(data.length > 0){
+      return {uri: data[0].filename}
+    }else {
+      return placeholder
+    }
   }
 
   useEffect(() => {
@@ -189,8 +198,11 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
 
         {suggestions.length > 0 && 
         <>
-          <View style={{paddingHorizontal: 20, paddingVertical: 15}}>
+          {/* <View style={{paddingHorizontal: 20, paddingVertical: 15}}>
             <Text style={{fontFamily: FONT.BOLD}}>Suggestions</Text>
+          </View> */}
+          <View style={{paddingHorizontal: 20, paddingVertical: 10}}>
+            <Text style={{fontFamily: FONT.REGULAR, color: COLOR.ORANGE}}>Product</Text>
           </View>
           <FlatList 
             data={suggestions}
@@ -210,8 +222,13 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
                         }
                       }
                     })
-                  }} style={{paddingHorizontal: 20, paddingVertical: 8}}>
-                    <Text style={{color: "#9E9E9E", fontSize: 13, textTransform: 'capitalize'}}>{item.tags}</Text>
+                  }} style={{paddingHorizontal: 20, paddingVertical: 8, flexDirection: 'row', alignItems: 'center'}}>
+                     {/* <View style = {{height: 33, width: 33, borderRadius: 8, backgroundColor: 'black', marginRight: 10}} /> */}
+                    <Image
+                      style = {{height: 33, width: 33, borderRadius: 8,  marginRight: 10}}
+                      source={getImageSource(item?.images || [])}
+                    />
+                    <Text style={{color: "black", fontSize: 13, textTransform: 'capitalize'}}>{item.tags}</Text>
                   </TouchableOpacity>
                   {index < suggestions.length - 1 && <View style={{height: 1, backgroundColor: "#F7F7FA"}} />}
                 </>
