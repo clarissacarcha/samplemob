@@ -465,7 +465,7 @@ export const ToktokMallAddressesMenu = connect(mapStateToProps, mapDispatchToPro
 
 const styles = StyleSheet.create({
   body: {flex: 1, backgroundColor: '#F7F7FA'},
-  container: {padding: 15, backgroundColor: 'white', marginTop: 8, flex: 1},
+  container: {padding: 15, backgroundColor: 'white', marginTop: 8},
   addressContainer: {borderRadius: 5, backgroundColor: '#F8F8F8', padding: 10, marginTop: 10, marginBottom: 10},
   defaultText: {color: '#F6841F'},
   fullName: {},
