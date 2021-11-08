@@ -90,7 +90,14 @@ const Biometrics = ({setErrorMessage , setPinCode})=> {
                 navigation.navigate("ToktokWalletHomePage");
             }
         },
-        onError: (error) => onErrorAlert({alert,error})
+        onError: (error) => {
+            const {graphQLErrors, networkError} = error;
+            if(graphQLErrors[0].message == "Account Biometric Record not found"){
+                // disable bio record here
+                return setShowPrompt(true)
+            }
+            onErrorAlert({alert,error})
+        }
     })
 
     const [postForceDisable , {}] = useMutation(POST_FORCE_DISABLE, {

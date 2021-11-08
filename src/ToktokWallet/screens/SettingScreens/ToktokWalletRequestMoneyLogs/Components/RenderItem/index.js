@@ -89,10 +89,10 @@ export const RenderItem = ({item,index,tokwaAccount})=> {
                 <View style={{flex: 1,height:"100%",justifyContent:"flex-start"}}>
                     <Text style={{fontFamily:FONT.REGULAR,fontSize:FONT_SIZE.M}}>Request No: {item.refNo}</Text>
                     <Text style={{fontFamily:FONT.REGULAR,fontSize:FONT_SIZE.M}}>{status}</Text>
-                    <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>{person}</Text>
+                    <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>{person}</Text>
                 </View>
                 <View style={{flex: 1,alignItems:"flex-end"}}>
-                    <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M,color: color}}>{transactionAmount ? transactionAmount : requestedAmount}</Text>
+                    <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M,color: color}}>{transactionAmount ? transactionAmount : requestedAmount}</Text>
                     <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:COLOR.DARK}}>{refDate}</Text>
                     <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.S,color:COLOR.YELLOW}}>click to see details</Text>
                 </View>

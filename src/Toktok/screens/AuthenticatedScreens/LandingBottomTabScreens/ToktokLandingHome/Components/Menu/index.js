@@ -52,7 +52,7 @@ export const Menu = ({setUserLocation}) => {
         label={'toktokwallet'}
         icon={WalletIcon}
         onPress={() => {
-          navigation.push('ToktokWalletHomePage');
+          navigation.push('ToktokWalletLoginPage');
         }}
       />
       <MenuIcon
