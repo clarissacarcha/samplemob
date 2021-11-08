@@ -4,6 +4,7 @@ import {useNavigation} from '@react-navigation/native'
 import { BlackButton, ICON_SET, VectorIcon, YellowButton } from 'src/revamp'
 import {BuildingBottom} from 'toktokwallet/components'
 import { useAccount } from 'toktokwallet/hooks'
+import { AlertOverlay } from 'src/components'
 import CONSTANTS from 'common/res/constants'
 
 const { FONT_FAMILY: FONT , FONT_SIZE , COLOR } = CONSTANTS
@@ -90,12 +91,14 @@ export const SuccessfulModal = ({modalVisible,tokwaAccount,amount,onCashIn,setSu
             return;
           } 
 
-          await getMyAccount();
-          if(!getMyAccountLoading){
-            navigation.navigate("ToktokWalletHomePage")
-            setSuccessModalVisible(false);
-          }
+          refreshAccountInfo()
           
+      }
+
+      const refreshAccountInfo = ()=>{
+          navigation.navigate("ToktokWalletHomePage")
+          getMyAccount()
+          setSuccessModalVisible(false)
       }
 
     return (
@@ -103,6 +106,7 @@ export const SuccessfulModal = ({modalVisible,tokwaAccount,amount,onCashIn,setSu
              visible={modalVisible}
              onRequestClose={closeModal}
         >
+            <AlertOverlay visible={getMyAccountLoading}/>
              <View style={styles.container}>
                 { tokwaAccount.pinCode 
                     ? onCashIn ? <NewPIN/> : <UpdatePIN/> 
