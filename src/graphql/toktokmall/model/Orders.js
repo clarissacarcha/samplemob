@@ -142,6 +142,11 @@ export const GET_ORDER_DETAILS = gql`
 			id
 			referenceNum
 			totalAmount
+			dateOrdered
+			dateOrderprocessed
+			dateFulfilled
+			dateShipped
+			dateReceived
 			formattedDateOrdered
 			formattedDateReceived
 			shipping {

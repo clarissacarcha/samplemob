@@ -3,7 +3,7 @@ import {View, Text, TouchableOpacity, Image, FlatList, RefreshControl, Dimension
 
 import { useLazyQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../graphql';
-import { GET_TORECEIVE_ORDERS } from '../../../../../graphql/toktokmall/model';
+import { GET_TORECEIVE_ORDERS, GET_TORECEIVE_TRANSACTIONS } from '../../../../../graphql/toktokmall/model';
 import {Loading} from '../../../../Components';
 import {placeholder, storeIcon, emptyorders} from '../../../../assets';
 import { Price } from '../../../../helpers';
@@ -138,7 +138,7 @@ export const ToRecieve = ({id, email}) => {
 
   const [data, setData] = useState([])
 
-  const [getOrders, {loading, error}] = useLazyQuery(GET_TORECEIVE_ORDERS, {
+  const [getOrders, {loading, error}] = useLazyQuery(GET_TORECEIVE_TRANSACTIONS, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',    
     onCompleted: (response) => {

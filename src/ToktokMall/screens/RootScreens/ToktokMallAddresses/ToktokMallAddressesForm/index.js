@@ -330,7 +330,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
       <View style={styles.container}>
         <View style={styles.partition1}>
             <TextInput
-              style={styles.textinput}
+              style={{...styles.textinput, width: '100%'}}
               value={newAddressForm.receiverName}
               placeholderTextColor={
                 validation.validated && validation.errors?.includes('receiverName') ? 'red' : 'gray'
@@ -341,7 +341,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
               }}
             />
             <TextInput
-              style={styles.textinput}
+              style={{...styles.textinput, width: '100%'}}
               value={newAddressForm.receiverContact}
               placeholderTextColor={
                 validation.validated && validation.errors?.includes('receiverContact') ? 'red' : 'gray'
@@ -494,6 +494,8 @@ const styles = StyleSheet.create({
   },
   textinput: {
     padding: Platform.OS === 'ios' ? 10 : 0,
+    paddingVertical: Platform.OS === 'ios' ? 10 : 10,
+    paddingHorizontal: Platform.OS === 'ios' ? 10 : 15,
     backgroundColor: '#F8F8F8',
     marginTop: 10,
     borderRadius: 5,
@@ -513,7 +515,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F8F8F8',
   },
   textinputLastContainer: {
-    padding: Platform.OS === 'ios' ? 10 : 0,
+    padding: Platform.OS === 'ios' ? 10 : 15,
     backgroundColor: '#F8F8F8',
     marginTop: 10,
     borderRadius: 5,

@@ -10,6 +10,7 @@ import { FormatToText, Price } from '../../../../helpers';
 import AsyncStorage from '@react-native-community/async-storage';
 import { FONT } from '../../../../../res/variables';
 import CustomIcon from "../../../../Components/Icons";
+import moment from 'moment';
 
 const Store = ({data}) => {
 
@@ -41,7 +42,7 @@ const Summary = ({data}) => {
           <Text style={{fontSize: 13, fontFamily: FONT.BOLD}}>Order #: {data?.referenceNum}</Text>
         </View>
         <View styl={{flex: 1}}>
-        <Text style={{color: "#9E9E9E", fontSize: 12}}>Order Placed: {data?.shipping?.orderPlaced} </Text>
+        <Text style={{color: "#9E9E9E", fontSize: 12}}>Order Placed: {data?.formattedDateOrdered} </Text>
         </View>
       </View>
       <View style={{ height: 2, backgroundColor: '#F7F7FA'}} />
@@ -73,34 +74,45 @@ const History = ({data}) => {
 
   const history = data?.orderHistory
 
-  const getColor = (index) => {
-    // if(index == 0) return "#F6841F"
-    if(!history || history.length == 0) return "#929191"
-    if(history[index] != undefined || history[index] != null){
-      return "#F6841F"
-    }else{
-      return "#929191"
-    }
+  console.log("Data", data)
+
+  const getColor = (status) => {
+    return getHistoryByStatus(status, "#F6841F", "#929191")
   }
 
-  const getIconColor = (index) => {
+  const getIconColor = (status) => {
     // if(index == 0) return "#F6841F"
-    if(index == -1) return "white"
-    if(!history || history.length == 0) return "#CCCCCC"
-    if(history[index] != undefined || history[index] != null){
-      return "#F6841F"
-    }else{
-      return "#CCCCCC"
-    }
+    if(status == -1) return "white"
+    return getHistoryByStatus(status, "#F6841F", "#CCCCCC")
   }
 
-  const getDateTime = (index) => {
+  const getDateTime = (status) => {
     // if(index == 0) return "--:--:-- 00:00 --"
-    if(!history || history.length == 0) return ""
-    if(history[index] != undefined || history[index] != null){
-      return `${history[index].formatDate}, ${history[index].formatTime}`
+    return getHistoryByStatus(status, "date", "")
+  }
+
+  const getHistoryByStatus = (status, found, notFound) => {
+    
+    if(!history || history.length == 0) return notFound
+
+    if(status == null){
+      if(found == "date"){
+        let parsed = moment(data.dateOrdered, "YYYY-MM-DD h:m:s")
+        return moment(parsed).format("MM-DD-YYYY, hh:mm a")
+      }else{
+        return found
+      }
+    }
+
+    let index = history.findIndex((e) => e.action == status)
+    if(index > -1){
+      if(found == "date"){
+        return `${history[0].formatDate}, ${history[0].formatTime}`
+      }else{
+        return found
+      }
     }else{
-      return ""
+      return notFound
     }
   }
 
@@ -188,12 +200,12 @@ const History = ({data}) => {
 
         <View style={{flex: 0.6}}>
 
-          {dottedLine(0, "top")}
-          {dottedLine(0, "blank")}
-          {dottedLine(2, "fill")}
-          {dottedLine(3, "blank")}
-          {dottedLine(4, "fill")}
-          {dottedLine(4, "bottom")}
+          {dottedLine(null, "top")}
+          {dottedLine("Process Order", "blank")}
+          {dottedLine("Ready for Pickup", "fill")}
+          {dottedLine("Item picked up", "blank")}
+          {dottedLine("Mark as Fulfilled", "fill")}
+          {dottedLine("Mark as Shipped", "bottom")}
 
           {/* <View style={{paddingVertical: 12, alignItems: 'flex-start', justifyContent: 'flex-start'}}>
             <CustomIcon.MCIcon name="circle" size={11} color={getIconColor(0)} style={{}} />
@@ -218,42 +230,42 @@ const History = ({data}) => {
         <View style={{flex: 0.2}} />
         <View style={{flex: 8}}>
           <View style={{paddingVertical: 8}}>
-            <Text style={{color: getColor(0), fontSize: 13}}>Order confirmed</Text>
+            <Text style={{color: getColor(null), fontSize: 13}}>Order confirmed</Text>
           </View>
           <View style={{paddingVertical: 8}}>
-            <Text style={{color: getColor(0), fontSize: 13}}>Preparing order</Text>
+            <Text style={{color: getColor("Process Order"), fontSize: 13}}>Preparing order</Text>
           </View>
           <View style={{paddingVertical: 8}}>
-            <Text style={{color: getColor(2), fontSize: 13}}>Order is ready to be picked up</Text>
+            <Text style={{color: getColor("Ready for Pickup"), fontSize: 13}}>Order is ready to be picked up</Text>
           </View>
           <View style={{paddingVertical: 8}}>
-            <Text style={{color: getColor(3), fontSize: 13}}>Order has been picked up</Text>
+            <Text style={{color: getColor("Item picked up"), fontSize: 13}}>Order has been picked up</Text>
           </View>
           <View style={{paddingVertical: 8}}>
-            <Text style={{color: getColor(4), fontSize: 13}}>Order is ready to be delivered</Text>
+            <Text style={{color: getColor("Mark as Fulfilled"), fontSize: 13}}>Order is ready to be delivered</Text>
           </View>
           <View style={{paddingVertical: 8}}>
-            <Text style={{color: getColor(4), fontSize: 13}}>Order delivered</Text>
+            <Text style={{color: getColor("Mark as Shipped"), fontSize: 13}}>Order delivered</Text>
           </View>
         </View>
         <View styl={{flex: 1}}>
           <View style={{paddingVertical: 8}}>
-            <Text style={{color: "#929191", fontSize: 13}}>{getDateTime(0)}</Text>
+            <Text style={{color: "#929191", fontSize: 13}}>{getDateTime(null)}</Text>
           </View>
           <View style={{paddingVertical: 8}}>
-            <Text style={{color: "#929191", fontSize: 13}}>{getDateTime(0)}</Text>
+            <Text style={{color: "#929191", fontSize: 13}}>{getDateTime("Process Order")}</Text>
           </View>
           <View style={{paddingVertical: 8}}>
-            <Text style={{color: "#929191", fontSize: 13}}>{getDateTime(1)}</Text>
+            <Text style={{color: "#929191", fontSize: 13}}>{getDateTime("Ready for Pickup")}</Text>
           </View>
           <View style={{paddingVertical: 8}}>
-            <Text style={{color: "#929191", fontSize: 13}}>{getDateTime(2)}</Text>
+            <Text style={{color: "#929191", fontSize: 13}}>{getDateTime("Item picked up")}</Text>
           </View>
           <View style={{paddingVertical: 8}}>
-            <Text style={{color: "#929191", fontSize: 13}}>{getDateTime(3)}</Text>
+            <Text style={{color: "#929191", fontSize: 13}}>{getDateTime("Mark as Fulfilled")}</Text>
           </View>
           <View style={{paddingVertical: 8}}>
-            <Text style={{color: "#929191", fontSize: 13}}>{getDateTime(4)}</Text>
+            <Text style={{color: "#929191", fontSize: 13}}>{getDateTime("Mark as Shipped")}</Text>
           </View>
         </View>
       </View>      
@@ -267,7 +279,7 @@ const Item = ({data}) => {
   let product = data?.product
 
   const getImageSource = (img) => {
-    if(typeof img == "object" && img.filename != null){
+    if(typeof img == "object" && img?.filename != null){
       return {uri: img.filename}
     }else {
       return placeholder

@@ -436,7 +436,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
           isVisible={walletmodal} 
           setIsVisible={setwalletmodal} 
         />
-        <View style ={{paddingBottom: 0}}>
+        <View style ={{paddingBottom: 30}}>
           <AddressForm
             data={addressData}
             onEdit={() => navigation.push("ToktokMallAddressesMenu", {

@@ -112,7 +112,7 @@ export const RenderDetails = ({
 			? {}
 			: {
 				rightActionActivationDistance: 30,
-				rightButtonWidth: 0,
+				rightButtonWidth: 75,
 				rightButtons: [
 				  <DeleteButton
 					onPress={() => {

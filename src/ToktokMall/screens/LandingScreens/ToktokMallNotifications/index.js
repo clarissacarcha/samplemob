@@ -97,7 +97,7 @@ const Component =  ({
           active={dropshown}
           data={item} 
           onSelect={() => {
-            createNotificationsSession("read", item.uuid)
+            // createNotificationsSession("read", item.uuid)
             // setDropShown(!dropshown)
           }} 
         />

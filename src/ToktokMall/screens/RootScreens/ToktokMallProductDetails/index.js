@@ -506,6 +506,8 @@ const Component =  ({
           {
             label: "OK",
             onPress: () => {
+              setIsFetching(false)
+              setIsLoading(false)
               setcartexceeded(false)
             },
             containerStyle: {
@@ -533,6 +535,8 @@ const Component =  ({
             {
               label: "Back to Home",
               onPress: () => {
+                setIsFetching(false)
+                setIsLoading(false)
                 navigation.pop()
               },
               containerStyle: {
@@ -546,6 +550,8 @@ const Component =  ({
             {
               label: "Add to Favorites",
               onPress: () => {
+                setIsFetching(false)
+                setIsLoading(false)
                 navigation.pop()
               },
               containerStyle: {
