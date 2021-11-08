@@ -362,7 +362,7 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
             }}
           />
         )}
-        <View style={styles.body}>
+        <View style={{...styles.body, flex: 2}}>
           {activeToDeleteItem.value && (
             <View
               style={[
@@ -401,7 +401,8 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
             style={[
               styles.container,
               {
-                paddingBottom: activeToDeleteItem.value
+                flex: 0,
+                paddingBottom: activeToDeleteItem?.value
                   ? 70
                   : 130,
               },

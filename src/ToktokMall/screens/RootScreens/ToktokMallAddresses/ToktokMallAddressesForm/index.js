@@ -402,7 +402,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
               maxLength={4}
             />
             <TextInput
-              multiline
+              multiline={true}
               placeholderTextColor="gray"
               style={[styles.textinputLastContainer]}
               placeholder={'Landmarks/Exact Address/ Note to rider (optional)'}
@@ -410,6 +410,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
               onChangeText={(text) => {
                 onChangeText('landmark', text);
               }}
+              textAlignVertical="top"
               maxLength={300}
             />
         </View>
