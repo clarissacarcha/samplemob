@@ -1,6 +1,6 @@
 import React , {useState,useRef,useCallback,useEffect} from 'react'
 import { View ,ActivityIndicator,StatusBar,Text} from 'react-native'
-import {SomethingWentWrong} from 'src/components'
+import {SomethingWentWrong,AlertOverlay} from 'src/components'
 import { useDispatch } from 'react-redux'
 import { useAccount } from 'toktokwallet/hooks'
 import { CheckIdleState } from 'toktokwallet/components'
@@ -20,7 +20,7 @@ export const ToktokWalletHomePage = ({navigation,route})=> {
     })
 
     const [refreshing,setRefreshing] = useState(false)
-    const { refreshWallet } = useAccount();
+    const { refreshWallet , getMyAccountLoading} = useAccount();
     const dispatch = useDispatch();
 
     const onRefresh = useCallback(()=>{
@@ -39,9 +39,12 @@ export const ToktokWalletHomePage = ({navigation,route})=> {
     },[])
 
     return (
+        <>
+        <AlertOverlay visible={getMyAccountLoading}/>
         <CheckIdleState>
             <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
             <WalletLandingPage onRefresh={onRefresh} refreshing={refreshing}/>
         </CheckIdleState>
+        </>
     )
 }
