@@ -40,14 +40,6 @@ const MenuIcon = ({label, icon, onPress}) => {
 export const Menu = ({setUserLocation}) => {
   const navigation = useNavigation();
 
-  const onCashIn = ({balance})=>{
-    console.log(balance)
-  }
-
-  const setUpTpinCallBack = ()=>{
-    console.log("SETUP CALLBACK")
-  }
-
   return (
     <View style={styles.menuBox}>
       <MenuIcon
@@ -67,23 +59,7 @@ export const Menu = ({setUserLocation}) => {
         label={'profile'}
         icon={ProfileIcon}
         onPress={() => {
-          // navigation.push('ToktokProfile');
-          navigation.navigate("ToktokWalletPaymentOptions", {
-            onCashIn,
-            amount: 20
-          })
-        }}
-      />
-       <MenuIcon
-        label={'profile'}
-        icon={ProfileIcon}
-        onPress={() => {
-          // navigation.push('ToktokProfile');
-          navigation.navigate("ToktokWalletRestricted", {
-                component: "noPin",
-                setUpTpinCallBack,
-      })
-
+          navigation.push('ToktokProfile');
         }}
       />
       <MenuIcon
