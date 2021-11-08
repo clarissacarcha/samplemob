@@ -65,7 +65,7 @@ const UpdatePIN = ()=> {
 
 export const SuccessfulModal = ({modalVisible,tokwaAccount,amount,onCashIn,setSuccessModalVisible,setUpTpinCallBack})=> {
     const navigation = useNavigation()
-    const { getMyAccount , tokwaAccount: tokwaAccountLatest } = useAccount()
+    const { getMyAccount , tokwaAccount: tokwaAccountLatest,getMyAccountLoading } = useAccount()
 
     useEffect(()=>{
         if(tokwaAccountLatest.pinCode && onCashIn){
@@ -89,10 +89,11 @@ export const SuccessfulModal = ({modalVisible,tokwaAccount,amount,onCashIn,setSu
             await getMyAccount();
             return;
           } 
-          navigation.pop(2)
-          navigation.navigate("ToktokWalletHomePage")
-          setSuccessModalVisible(false);
           await getMyAccount();
+          if(!getMyAccountLoading){
+            navigation.navigate("ToktokWalletHomePage")
+            setSuccessModalVisible(false);
+          }
       }
 
 
