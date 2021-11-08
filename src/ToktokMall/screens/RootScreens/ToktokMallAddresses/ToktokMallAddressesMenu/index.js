@@ -401,9 +401,9 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
             style={[
               styles.container,
               {
-                height: activeToDeleteItem.value
-                  ? Dimensions.get('screen').height - 200
-                  : Dimensions.get('screen').height - 140,
+                paddingBottom: activeToDeleteItem.value
+                  ? 70
+                  : 130,
               },
             ]}>
             {renderAddresses()}
@@ -422,7 +422,7 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
       </View>
 
       {activeToDeleteItem.value && (
-        <View style={{position: 'absolute', bottom: 10, alignItems: 'center', width: Dimensions.get('screen').width}}>
+        <View style={{position: 'absolute', bottom: 0, alignItems: 'center', width: Dimensions.get('screen').width, backgroundColor: "#fff", paddingTop: 10}}>
           <TouchableOpacity
             disabled={activeToDeleteItem.ids?.length === 0}
             onPress={() => {
