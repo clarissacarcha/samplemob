@@ -139,7 +139,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
     if (newAddressForm.receiverContact.length != 11 || newAddressForm.receiverContact == '') {
       return alert('Invalid contact number.');
     } 
-    else if (newAddressForm.postalCode.length > 0 && newAddressForm.postalCode.length < 4){
+    else if (newAddressForm.postalCode && newAddressForm.postalCode.length > 0 && newAddressForm.postalCode.length < 4){
       return alert('Invalid postal code.');
     }
     else {
@@ -156,7 +156,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
             province_id: parseInt(provCode),
             municipality_id: parseInt(munCode),
             landmark: newAddressForm.landmark,
-            postal_code: newAddressForm.postalCode,
+            postal_code: newAddressForm.postalCode ? newAddressForm.postalCode : "",
             latitude: parseFloat(latitude),
             longitude: parseFloat(longitude),
             default: clicked == true ? 1 : 0,

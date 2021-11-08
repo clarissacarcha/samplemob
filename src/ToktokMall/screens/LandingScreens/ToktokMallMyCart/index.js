@@ -521,6 +521,9 @@ const Component =  ({
                   setItemsToDelArr([])
                   // setSelectedItemsArr([])
                   // setSubTotal(0)
+                }else {
+                  setAllSelected(false)
+                  init()
                 }
                 setWillDelete(!willDelete)
               }}
