@@ -83,22 +83,16 @@ export const SuccessfulModal = ({modalVisible,tokwaAccount,amount,onCashIn,setSu
             setSuccessModalVisible(false);
             return;
         }
+
+        if(tokwaAccountLatest.pinCode && !onCashIn && !setUpTpinCallBack){
+            navigation.navigate("ToktokWalletHomePage")
+            setSuccessModalVisible(false);
+            return;
+        }
       },[tokwaAccountLatest,onCashIn,setUpTpinCallBack])
   
       const closeModal = async ()=> {
-          if(onCashIn || setUpTpinCallBack) {
-            await getMyAccount();
-            return;
-          } 
-
-          refreshAccountInfo()
-          
-      }
-
-      const refreshAccountInfo = ()=>{
-          navigation.navigate("ToktokWalletHomePage")
-          getMyAccount()
-          setSuccessModalVisible(false)
+          getMyAccount();
       }
 
     return (
