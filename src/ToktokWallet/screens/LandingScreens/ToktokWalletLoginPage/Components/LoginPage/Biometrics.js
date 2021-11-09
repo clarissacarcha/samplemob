@@ -91,6 +91,7 @@ const Biometrics = ({setErrorMessage , setPinCode})=> {
             }
         },
         onError: (error) => {
+            const {graphQLErrors, networkError} = error;
             if(graphQLErrors[0].message == "Account Biometric Record not found"){
                 // disable bio record here
                 return setShowPrompt(true)
