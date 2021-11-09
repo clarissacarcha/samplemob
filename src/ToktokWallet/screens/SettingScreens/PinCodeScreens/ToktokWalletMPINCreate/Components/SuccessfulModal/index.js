@@ -67,11 +67,8 @@ export const SuccessfulModal = ({modalVisible,tokwaAccount})=> {
 
     const closeModal = ()=> {
         navigation.pop(2)
-        navigation.navigate("ToktokWalletHomePage")
-        // navigation.pop()
-        // // navigation.navigate("ToktokWalletHomePage")
-        // navigation.push("ToktokWalletHomePage")
-        // console.log("gg")
+        navigation.navigate("ToktokWalletLoginPage")
+        navigation.push("ToktokWalletHomePage")
     }
 
     return (
