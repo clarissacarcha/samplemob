@@ -150,6 +150,7 @@ export const VariationBottomSheet = forwardRef(({
             onSelectVariant(variant, index)
           }} 
           style={{
+            width: '100%',
             marginTop: 4,
             paddingVertical: 4, 
             paddingHorizontal: 16, 
@@ -160,7 +161,7 @@ export const VariationBottomSheet = forwardRef(({
           }}>
           <Text style={{fontSize: 13, color: "#9E9E9E"}}>{variant.itemname}</Text>
         </TouchableOpacity>
-        <View style={{width: 5}} />
+        {/* <View style={{width: 5}} /> */}
       </>
     );
   }
@@ -245,17 +246,21 @@ export const VariationBottomSheet = forwardRef(({
                 } */}
 
                   <FlatList 
+                    vertical={true}
                     data={item?.variations && item?.variations.sort((a, b) => a.itemname.localeCompare(b.itemname)) || []}
                     keyExtractor={(item, index) => item + index}
                     numColumns={2}
                     style={{width: '100%', height: 180}}
+                    contentContainerStyle={{flex: 0, flexDirection: 'column', justifyContent: 'space-around'}}
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
                     renderItem={({item, index}) => {
                       return (
                         <View style={{
-                          flex: 0, 
-                          paddingHorizontal: 4
+                          flex: 1, 
+                          paddingHorizontal: 4,
+                          flexWrap: 'wrap',
+                          alignItems: 'center'
                         }}>
                           <RenderVariation variant={item} index={index} />
                           {item?.variations && index >= item?.variations.length - 1 ? <View style={{height: 4}} /> : null}
