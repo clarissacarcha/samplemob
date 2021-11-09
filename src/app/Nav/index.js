@@ -22,6 +22,7 @@ import ToktokScreens from './toktok';
 import ToktokFoodScreens from './toktokfood';
 import ToktokWalletScreens from './toktokwallet';
 import ToktokMallScreens from './toktokmall';
+import ToktokBillScreens from './toktokbills';
 
 /*---------- CONSUMER SCREENS ----------*/
 
@@ -242,6 +243,7 @@ const AuthenticatedStack = () => (
     {ToktokFoodScreens({Navigator: Authenticated})}
     {ToktokMallScreens({Navigator: Authenticated})}
     {ToktokWalletScreens({Navigator: Authenticated})}
+    {ToktokBillScreens({Navigator: Authenticated})}
 
     <Authenticated.Screen name="PostRegistration" component={PostRegistration} />
 
