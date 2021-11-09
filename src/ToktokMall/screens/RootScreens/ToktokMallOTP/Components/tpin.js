@@ -144,7 +144,7 @@ export const TPIN =  ({onValidate}) => {
           keyboardType="number-pad"
           maxLength = {6}
           style={{width: 0, height: 0}} 
-          value={value}
+          value={Context.value}
           onChangeText={(val) => {
             Context.setValue(val)
           }}
