@@ -91,20 +91,12 @@ const Biometrics = ({setErrorMessage , setPinCode})=> {
             }
         },
         onError: (error) => {
-<<<<<<< HEAD
-            const {graphQLErrors, networkError} = error;
-=======
->>>>>>> feature/toktokwallet/Release3
             if(graphQLErrors[0].message == "Account Biometric Record not found"){
                 // disable bio record here
                 return setShowPrompt(true)
             }
             onErrorAlert({alert,error})
-<<<<<<< HEAD
-        }
-=======
         } 
->>>>>>> feature/toktokwallet/Release3
     })
 
     const [postForceDisable , {}] = useMutation(POST_FORCE_DISABLE, {
