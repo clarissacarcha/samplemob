@@ -97,6 +97,7 @@ export const ToktokMallStore = ({navigation, route}) => {
   const RenderContent = () => {
     return (
       <>
+        <View style={{height: 15}} />
         <Tab 
           index={activeTab} 
           onTabChange={(index) => {

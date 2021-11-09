@@ -9,6 +9,8 @@ import { useNavigation } from '@react-navigation/core';
 import { SwipeReloader } from '../../../../Components';
 import { Price } from '../../../../helpers';
 
+import { Avatar } from 'react-native-elements';
+
 const RenderStars = ({value}) => {
   let orange = "#FFC833"
   let gray = "rgba(33, 37, 41, 0.1)"
@@ -39,18 +41,40 @@ const RenderItem = ({item}) => {
     <>
       <View style={{flex: 2, backgroundColor: '#fff', margin: 5}}>
                   
-        <View style={{padding: 5}}>
+        <TouchableOpacity 
+          onPress={() => {
+            if(item?.noOfStocks > 0){
+              navigation.navigate("ToktokMallProductDetails", item)
+            }
+          }} 
+          style={{padding: 5}}
+        >
           {item?.discountRate != "" && 
           <View style={{position:'absolute', zIndex: 1, right: 0, backgroundColor: '#F6841F', borderBottomLeftRadius: 30}}>
             <Text style={{fontSize: 8, paddingHorizontal: 4, paddingLeft: 8, paddingTop: 1, paddingBottom: 3, color: "#fff", fontFamily: FONT.BOLD}}>{item?.discountRate}</Text>
           </View>}
-          <Image 
-            source={getImageSource(item?.images || [])} 
-            style={{resizeMode: 'cover', width: '100%', height: 120, borderRadius: 5}} 
-          />
-          <TouchableOpacity onPress={() => navigation.navigate("ToktokMallProductDetails", item)}>
+          {item?.noOfStocks <= 0 &&
+            <ImageBackground 
+              source={getImageSource(item?.images || [])} 
+              imageStyle={{resizeMode: 'contain'}} 
+              style={{width: '100%', height: 120, borderRadius: 5}}
+            >
+              <View style={{backgroundColor: 'transparent', width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center'}}>
+                <View style={{width: 90, height: 90, backgroundColor: 'rgba(0, 0, 0, 0.3)', borderRadius: 45, justifyContent: 'center', alignItems: 'center'}}>
+                  <Text style={{color: '#f2f2f2', fontSize: 12}}>OUT OF STOCK</Text>
+                </View>
+              </View>
+            </ImageBackground>
+          }
+          {item?.noOfStocks > 0 &&
+            <Image 
+              source={getImageSource(item?.images || [])} 
+              style={{resizeMode: 'cover', width: '100%', height: 120, borderRadius: 5}} 
+            />
+          }
+          <View>
             <Text style={{fontSize: 13, fontWeight: '500', paddingVertical: 5}}  numberOfLines={2} ellipsizeMode="tail">{item?.itemname || ""}</Text>
-          </TouchableOpacity>
+          </View>
           {/* <Text style={{fontSize: 13, color: "#F6841F"}}>&#8369;{parseFloat(item?.price).toFixed(2)}</Text>    
           <View style={{flexDirection: 'row'}}>
             <View style={{flex: 7, flexDirection: 'row'}}>
@@ -76,7 +100,7 @@ const RenderItem = ({item}) => {
               <Text style={{fontSize: 8}}>{item?.soldCount || 0} sold</Text>
             </View>
           </View>
-        </View>
+        </TouchableOpacity>
       </View>
     </>
   )

@@ -15,6 +15,7 @@ export const GET_SHOP_DETAILS = gql`
 				discountRate
 				soldCount
 				compareAtPrice
+				noOfStocks
 				images {
 					arrangement
 					filename
@@ -38,6 +39,7 @@ export const SEARCH_SHOP_PRODUCT = gql`
 		discountRate
 		compareAtPrice
 		soldCount
+		noOfStocks
     	images {
       	filename
     	}
@@ -54,6 +56,7 @@ export const GET_SHOP_SEARCH_SUGGESTIONS = gql`
 			tags
 			price
 			discountRate
+			noOfStocks
 			images {
 				filename
 			}
