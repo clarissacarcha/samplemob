@@ -31,6 +31,7 @@ export const GET_CONFIRMED_TRANSACTIONS = gql`
               variant
               price
               compareAtPrice
+              enabled
               img {
                 filename
               }
@@ -73,6 +74,7 @@ export const GET_TOSHIP_TRANSACTIONS = gql`
               variant
               price
               compareAtPrice
+              enabled
               img {
                 filename
               }
@@ -115,6 +117,7 @@ export const GET_TORECEIVE_TRANSACTIONS = gql`
               variant
               price
               compareAtPrice
+              enabled
               img {
                 filename
               }
@@ -158,6 +161,7 @@ export const GET_COMPLETED_TRANSACTIONS = gql`
               variant
               price
               compareAtPrice
+              enabled
               img {
                 filename
               }

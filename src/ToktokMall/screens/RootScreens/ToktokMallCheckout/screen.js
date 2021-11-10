@@ -30,6 +30,7 @@ const REAL_WIDTH = Dimensions.get('window').width;
 const Component = ({route, navigation, createMyCartSession}) => {
 
   const CheckoutContextData = useContext(CheckoutContext)
+  const toktokSession = useSelector(state => state.session)
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack onBack = {setAlertTrue}/>,
@@ -126,13 +127,12 @@ const Component = ({route, navigation, createMyCartSession}) => {
     setIsLoading(true)
 
     if(payment == 'toktokwallet'){
-      
+            
       let transactionPayload = await BuildTransactionPayload({
         method: "TOKTOKWALLET", 
         notes: "", 
         total: grandTotal, 
-        // toktokid: parentSession.user.id
-        toktokid: walletAccount.id,
+        toktokid: toktokSession.user.id,
         // toktokid: 1,
         transactionTypeId: "TOKTOKWALLET PAYMENT"
       })

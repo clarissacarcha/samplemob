@@ -40,6 +40,7 @@ export const GET_TOP_PRODUCTS = gql`
 			getTopProducts(input: $input){
 				Id
 				itemname
+				name
 				price
 				soldCount
 				weeklySold
