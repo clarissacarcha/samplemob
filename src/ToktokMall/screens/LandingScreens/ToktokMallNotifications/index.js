@@ -20,6 +20,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 import uuid from 'react-native-uuid'
 
 import {EventRegister} from 'react-native-event-listeners'
+import throttle from 'lodash.throttle'
 
 // const testdata = [{
 //     id: "00X003",
@@ -68,6 +69,7 @@ const Component =  ({
   //   headerRight: () => <HeaderRight hidden={true} />
   // });
 
+  const [scrollendreached, setscrollendreached] = useState(false)
 	const [orderHistory, setOrderHistory] = useState([])
 
 	const [getOrderHistory, {loading, error}] = useLazyQuery(GET_ORDERS_AND_HISTORY, {
@@ -75,11 +77,13 @@ const Component =  ({
 		fetchPolicy: 'network-only',
 		onCompleted: (response) => {
 			if(response.getOrdersAndHistory){				
-        setOrderHistory(response.getOrdersAndHistory)
+        let temp = orderHistory
+        let latest = temp.concat(response.getOrdersAndHistory)
+        setOrderHistory(latest)
 
         //count notifications
         let count = 0
-        response.getOrdersAndHistory.map((item) => item.read == 0 ? count++ : count = count)
+        latest.map((item) => item.read == 0 ? count++ : count = count)
         notificationCountSession('set', count)
 			}
     },
@@ -122,7 +126,9 @@ const Component =  ({
         getOrderHistory({variables: {
           input: {
             // userId: 9999
-            userId: data.userId
+            userId: data.userId,
+            offset: orderHistory.length,
+            limit: 10
           }
         }})
       }
@@ -131,8 +137,30 @@ const Component =  ({
 
 	useEffect(() => {
     init()
-    EventRegister.addEventListener('refreshToktokmallNotifications', init)	
+    return () => {
+      setOrderHistory([])
+      EventRegister.addEventListener('refreshToktokmallNotifications', init)	    
+    }
 	}, [])
+
+  const loadmore = throttle(
+    () => {
+      if(scrollendreached){
+        console.log("end", scrollendreached)
+        init()
+      }else{
+        console.log("end", scrollendreached)
+      }
+    },
+    2000,
+    {trailing: false},
+  )
+
+  const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+    const paddingBottom = 20;
+    // console.log(layoutMeasurement.height + contentOffset.y, contentSize.height - paddingBottom)
+    return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingBottom;
+  }
 
 	if(loading){
 		return (
@@ -146,7 +174,7 @@ const Component =  ({
 		)
 	}
 
-  if(!loading && orderHistory && orderHistory.length == 0){
+  if(!loading && orderHistory && orderHistory.length == 0 && !scrollendreached){
     return (
       <>
         <View style={styles.container}>
@@ -174,6 +202,7 @@ const Component =  ({
             <FlatList
               showsVerticalScrollIndicator={false} 
               data={orderHistory}
+              scrollEventThrottle={16}
               renderItem={({item}) => <RenderItem item={item} />}
               refreshControl={
                 <RefreshControl 
@@ -182,6 +211,16 @@ const Component =  ({
                     init()
                   }}
                 />
+              }
+              onScroll={
+                ({nativeEvent}) => {
+                  if(isCloseToBottom(nativeEvent)){
+                    setscrollendreached(true)
+                    loadmore()
+                  }else{
+                    setscrollendreached(false)
+                  }                  
+                }
               }
             />
           </View>

@@ -10,7 +10,7 @@ export const Item = ({active, data, onSelect}) => {
   const navigation = useNavigation()
 
   useEffect(() => {
-    console.log(data)
+    // console.log(data)
   }, [])
 
 	const getImage = (raw) => {
