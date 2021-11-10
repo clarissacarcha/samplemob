@@ -81,7 +81,7 @@ const Item = ({data, fulldata}) => {
            </View>
             <View style={{flexDirection: 'row', paddingVertical: 5}}>
               <View style={{flex: 1.5}}>
-                <Text style={{color: "#9E9E9E", fontSize: 13}}>Variation: {data?.variant || 'None'}</Text>
+                <Text style={{color: "#9E9E9E", fontSize: 13}}>Variation: {product?.variant || 'None'}</Text>
               </View>
               <View style={{flex: 1, flexDirection: 'row-reverse'}}>
                 <Text style={{color: "#9E9E9E", fontSize: 13}}>Qty: {data.quantity}</Text>
