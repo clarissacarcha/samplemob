@@ -132,8 +132,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
         notes: "", 
         total: grandTotal, 
         // toktokid: parentSession.user.id
-        // toktokid: walletAccount.id,
-        toktokid: 1,
+        toktokid: walletAccount.id,
+        // toktokid: 1,
         transactionTypeId: "TOKTOKWALLET PAYMENT"
       })
       setIsLoading(false)
