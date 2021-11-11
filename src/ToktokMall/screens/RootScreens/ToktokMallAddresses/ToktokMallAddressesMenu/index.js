@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 import {connect} from 'react-redux';
 import {COLOR, FONT} from '../../../../../res/variables';
-import {HeaderBack, HeaderTitle, HeaderRight} from '../../../../Components';
+import {HeaderBack, HeaderTitle, HeaderRight, Card} from '../../../../Components';
 import Address from './components/Adress';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 
@@ -221,6 +221,17 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
         <FlatList 
           data={addresses}
           showsVerticalScrollIndicator={false}
+          contentContainerStyle={{padding: 15}}
+          ListFooterComponent={addresses.length < 10 && (
+            <Card
+              containerStyle={styles.button}
+              onPress={() => {
+                navigation.navigate('ToktokMallAddressesForm');
+              }}>
+              <Text>Add new address</Text>
+              <AntDesign name={'plus'} color={'#F6841F'} size={20} />
+            </Card>
+          )}
           renderItem={({item, index}) => {
 
             const Wrapper = activeToDeleteItem.value ? View : Swipeable
@@ -263,7 +274,7 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
                     />
                   )}
                   <TouchableOpacity
-                    style={[styles.addressContainer, {flexGrow: 1, marginLeft: 5}]}
+                    style={[styles.addressContainer, {flexGrow: 1, marginLeft: -2}]}
                     onLongPress={() => setActiveToDeleteItem((prevState) => ({...prevState, value: true}))}
                     onPress={() => {
                       navigation.navigate('ToktokMallAddressesForm', {item, update: true});
@@ -367,7 +378,7 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
             <View
               style={[
                 styles.container,
-                {flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: -5},
+                {flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: -5, padding: 15},
               ]}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <CheckBox
@@ -408,22 +419,12 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
               },
             ]}>
             {renderAddresses()}
-            {addresses.length < 10 && (
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => {
-                  navigation.navigate('ToktokMallAddressesForm');
-                }}>
-                <Text>Add new address</Text>
-                <AntDesign name={'plus'} color={'#F6841F'} size={20} />
-              </TouchableOpacity>
-            )}
           </View>
         </View>
       </View>
 
       {activeToDeleteItem.value && (
-        <View style={{position: 'absolute', bottom: 0, alignItems: 'center', width: Dimensions.get('screen').width, backgroundColor: "#fff", paddingTop: 10}}>
+        <Card containerStyle={{position: 'absolute', bottom: 0, alignItems: 'center', width: Dimensions.get('screen').width, backgroundColor: "#fff", paddingTop: 10}}>
           <TouchableOpacity
             disabled={activeToDeleteItem.ids?.length === 0}
             onPress={() => {
@@ -438,7 +439,7 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
             }}>
             <Text style={{color: 'white', fontWeight: '700'}}>Delete</Text>
           </TouchableOpacity>
-        </View>
+        </Card>
       )}
     </>
   );
@@ -466,7 +467,7 @@ export const ToktokMallAddressesMenu = connect(mapStateToProps, mapDispatchToPro
 
 const styles = StyleSheet.create({
   body: {flex: 1, backgroundColor: '#F7F7FA'},
-  container: {padding: 15, backgroundColor: 'white', marginTop: 8},
+  container: {backgroundColor: 'white', marginTop: 8},
   addressContainer: {borderRadius: 5, backgroundColor: '#F8F8F8', padding: 10, marginTop: 10, marginBottom: 10},
   defaultText: {color: '#F6841F'},
   fullName: {},

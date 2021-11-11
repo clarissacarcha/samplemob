@@ -119,7 +119,7 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
         </View>            
       </ImageBackground>
 
-      <View style={{flex: 1, padding: 15}}>
+      <View style={{flex: 1, padding: 15, zIndex: 1}}>
 
         <Card>
           <View style={{flexDirection: 'row', padding: 20}}>
