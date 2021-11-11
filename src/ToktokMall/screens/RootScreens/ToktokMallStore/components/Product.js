@@ -44,7 +44,7 @@ const RenderItem = ({item}) => {
         <TouchableOpacity 
           onPress={() => {
             if(item?.noOfStocks > 0){
-              navigation.navigate("ToktokMallProductDetails", item)
+              navigation.push("ToktokMallProductDetails", item)
             }
           }} 
           style={{padding: 5}}

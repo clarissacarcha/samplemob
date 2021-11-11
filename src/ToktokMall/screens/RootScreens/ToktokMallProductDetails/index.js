@@ -148,6 +148,7 @@ const Component =  ({
         setRelevantProducts(response.getProductDetails.relevantProducts)
         setIsFetching(false)
         if(response.getProductDetails.noOfStocks <= 0) setisOutOfStock(true)
+        console.log("Stock", response.getProductDetails.noOfStocks)
       }
       // console.log(response, route.params.Id)
       console.log(product)
@@ -331,8 +332,7 @@ const Component =  ({
     }
   }
 
-  useEffect(() => {
-
+  const init = async () => {
     AsyncStorage.getItem("ToktokMallUser").then((raw) => {
       const data = JSON.parse(raw)
       if(data.userId){
@@ -344,6 +344,15 @@ const Component =  ({
     getProductDetails()
     setCartItems(CountCartItems)
     console.log('dataaaaaaaaaaaaaaa', route.params)
+
+    return () => {
+      setisOutOfStock(false)
+    }
+  }
+
+  useEffect(() => {
+    init()
+    EventRegister.emit("ToktokMallProductDetails", init)
   }, [])  
 
   if(error) {
