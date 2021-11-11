@@ -162,12 +162,12 @@ const Component =  ({
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',   
     onCompleted: ({getVerifyAddToCart}) => {
-      const {quantity, variant, status, code} = getVerifyAddToCart
+      const {productId, quantity, variant, status, code} = getVerifyAddToCart
       verificationCallback(status, code, () => {
         setIsFetching(false)
         navigation.push("ToktokMallCheckout", {
           type: "single",
-          data: [cartObject({qty: quantity, variation: variant})],
+          data: [cartObject({productId: productId, qty: quantity, variation: variant})],
           newCart: [],
           vouchers: [],
         })
@@ -212,6 +212,8 @@ const Component =  ({
     }else{
       product.img = images[0]
     }
+
+    product.Id = input.productId ? input.productId : product.Id
 
     return {
       shop: store,

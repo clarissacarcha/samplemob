@@ -89,8 +89,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
   })
 
   const getShippingRates = async (payload, raw) => {
-    console.log(JSON.stringify(payload))
-    console.log(JSON.stringify(raw))
+    // console.log(JSON.stringify(payload))
+    // console.log(JSON.stringify(raw))
     // console.log(JSON.stringify(payload.cart)) 
     const res = await ShippingApiCall("get_shipping_rate", payload, true)
     if(res.responseData && res.responseData.success == 1){
@@ -103,6 +103,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
     setInitialLoading(false)
   }
 
+  //TOKTOK WALLET
   const [ getMyAccount ] = useLazyQuery(GET_MY_ACCOUNT , {
     fetchPolicy: "network-only",
     client: TOKTOK_WALLET_GRAPHQL_CLIENT,
