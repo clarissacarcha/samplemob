@@ -14,6 +14,7 @@ export const TPIN =  ({onValidate}) => {
 
   const Context = useContext(TPINOTPContext)
   const inputRef = useRef(null)  
+  const maximumAttempts = 3
 
   return (
     <KeyboardAwareScrollView style={{backgroundColor: "#FFF"}}>
@@ -29,7 +30,7 @@ export const TPIN =  ({onValidate}) => {
               source={otpicon2}
             />     
             {
-              Context.isInvalid && Context.retries >= 5  ? //enter condition here for checking if user has available attempts left
+              Context.isInvalid && Context.retries >= maximumAttempts  ? //enter condition here for checking if user has available attempts left
               <>
                 <Text style = {{fontFamily: FONT.BOLD, fontSize: 17, marginTop: 25, marginBottom:10}}>No Attempts Left</Text>
                 <Text style = {{textAlign: 'center', paddingHorizontal: 15, fontSize: 14, fontFamily: FONT.REGULAR}}>
@@ -81,15 +82,20 @@ export const TPIN =  ({onValidate}) => {
                 </View>
               </>
             }
-            
+          
+          {Context.isInvalid && Context.retries < maximumAttempts &&
+          <>
+          <View style={{flex: 1, alignItems: 'center', paddingHorizontal: 15, justifyContent: 'center', paddingBottom: 10}}>
+            <Text style={{color: '#F6841F'}}>Sorry, the TPIN you've entered is incorrect. </Text>
+            <Text style={{color: '#F6841F'}}>You only have ({maximumAttempts - Context.retries}) attempts left.</Text>
+          </View>
+          <View style={{height: 35}} />
+          </>
+          }
             
         </View>
 
-        {Context.isInvalid && Context.retries < 5 &&
-        <View style={{alignItems: 'center', paddingHorizontal: 15, justifyContent: 'center', paddingBottom: 10}}>
-          <Text style={{color: '#F6841F'}}>The OTP you entered is invalid. </Text>
-          <Text style={{color: '#F6841F'}}>You have {5 - Context.retries} retries remaining.</Text>
-        </View>}
+        
 
         {/* { //true &&
           isInvalid && retries >= 5 && 
@@ -97,7 +103,7 @@ export const TPIN =  ({onValidate}) => {
           <Text style={{color: '#F6841F'}}>You have exceeded your retries to enter OTP.</Text>
         </View>} */}
 
-        {!Context.isInvalid && <View style={{height: 35}}/>}
+        <View style={{height: 35}}/>
 
       
         {!Context.isInvalid && <TouchableOpacity 
@@ -112,20 +118,20 @@ export const TPIN =  ({onValidate}) => {
           <Text style={styles.buttonText}>Proceed</Text>
         </TouchableOpacity>}
 
-        {Context.isInvalid && Context.value == "" && Context.retries < 5 &&
+        {Context.isInvalid && Context.value == "" && Context.retries < maximumAttempts &&
 
           <TouchableOpacity 
             activeOpacity={0.5} 
             onPress={async () => {
-              setIsInvalid(false)  
-              setretries(Context.retries + 1)
+              Context.setIsInvalid(false)  
+              Context.setretries(Context.retries + 1)
             }} 
             style={styles.activeButton}>
             <Text style={styles.buttonText}>Retry</Text>
           </TouchableOpacity>
         }
 
-        {Context.isInvalid && Context.retries >= 5 && // put condition here for 0 attempts available
+        {Context.isInvalid && Context.retries >= maximumAttempts && // put condition here for 0 attempts available
 
           <TouchableOpacity 
             activeOpacity={1} 
