@@ -210,7 +210,9 @@ const Splash = ({
             }
           }
         })
-        navigation.navigate("ToktokMallLanding");
+        setTimeout(() => {
+          navigation.navigate("ToktokMallLanding");
+        }, 2000);
       }else{
         await authUser()
       }

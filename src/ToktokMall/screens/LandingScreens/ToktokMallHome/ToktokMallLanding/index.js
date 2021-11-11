@@ -28,6 +28,7 @@ import {LandingHeader, AdsCarousel, StickyHomeHeader, LandingSubHeader} from '..
 
 import {Categories, Offers, FlashSale, Vouchers, Suggestions, Featured} from './Components';
 import AsyncStorage from '@react-native-community/async-storage';
+import { Platform } from 'react-native';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -271,7 +272,17 @@ const Component = ({ myCart, createMyCartSession,}) => {
               alignItems: "center",
               padding: 8, 
               elevation: 8,
-              borderRadius: 6
+              borderRadius: 6,
+              borderRadius: 4,
+              shadowColor: '#000',
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 3.84,
+              elevation: 4,
+              overflow: Platform.OS === "ios" ? 'visible' : 'hidden',
             }, 
             {
               top: translatey,
