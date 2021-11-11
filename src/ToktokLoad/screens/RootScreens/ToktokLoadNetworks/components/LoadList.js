@@ -9,7 +9,7 @@ import { LoadDetails } from "./LoadDetails";
 import { VerifyContext } from "./VerifyContextProvider";
 import { OrangeButton } from "src/ToktokLoad/components";
 
-export const LoadList = ({ network }) => {
+export const LoadList = ({ network, navigation, mobileNo }) => {
   const { selectedLoad, setSelectedLoad, favorites, setFavorites, loads, setLoads } = useContext(VerifyContext);
   
   useEffect(() => {
@@ -37,6 +37,12 @@ export const LoadList = ({ network }) => {
     setLoads(prev => ({ ...prev, [network]: data  }))
   }
 
+  const onPressNext = () => {
+    if(selectedLoad[network]){
+      navigation.navigate("ToktokLoadSummary", { loads: selectedLoad[network], mobileNo })
+    }
+  }
+
   return (
     <View style={styles.container}>
       <FlatList
@@ -52,7 +58,11 @@ export const LoadList = ({ network }) => {
         keyExtractor={(item, index) => index.toString()}
       />
       <View style={{ padding: moderateScale(16) }}>
-        <OrangeButton disabled={!selectedLoad[network]} label='Next' />
+        <OrangeButton
+          disabled={!selectedLoad[network]}
+          label='Next'
+          onPress={onPressNext}
+        />
       </View>
     </View>
   );
