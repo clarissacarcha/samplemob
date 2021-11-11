@@ -63,9 +63,12 @@ const Item = ({data, fulldata}) => {
 
   return (
     <>
-      <TouchableOpacity 
+      <TouchableOpacity
+        activeOpacity={product?.enabled > 0 ? 0.5 : 1} 
         onPress={() => {
-          navigation.navigate("ToktokMallOrderDetails", fulldata)
+          if(product?.enabled == 1){
+            navigation.navigate("ToktokMallOrderDetails", fulldata)
+          }
         }}
         style={{flexDirection: 'row', paddingTop: 10, paddingBottom: 0, paddingHorizontal: 15}}>
         <View style={{flex: 2, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 5, borderRadius: 5}}>
