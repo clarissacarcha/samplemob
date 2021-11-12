@@ -8,7 +8,7 @@ import { moderateScale, numberFormat } from "toktokload/helper";
 
 //COMPONENTS
 import { OrangeButton, HeaderBack, HeaderTitle, HeaderTabs, LoadingIndicator } from "src/ToktokLoad/components";
-import { PaymentMethod, SummaryDetails, VerifyContext, VerifyContextProvider } from "./components";
+import { PaymentMethod, PayNowButton, SummaryDetails, VerifyContext, VerifyContextProvider } from "./components";
 import { SomethingWentWrong } from 'src/components'
 
 //FONTS & COLORS & IMAGES
@@ -32,7 +32,6 @@ export const MainComponent = ({ navigation, route }) => {
     client: TOKTOK_WALLET_GRAPHQL_CLIENT,
     onCompleted: ({getMyAccount}) => {
       let {wallet, person} = getMyAccount;
-      console.log(person.firstName);
       setToktokWallet({
         balance: numberFormat(wallet.balance),
         toktokuser_id: user.id,
@@ -77,14 +76,7 @@ export const MainComponent = ({ navigation, route }) => {
         <View style={styles.separator} />
         <PaymentMethod amount={amount} getMyAccount={getMyAccount} />
       </ScrollView>
-      <View style={{ justifyContent: "flex-end", backgroundColor: "#F7F7FA", paddingHorizontal: moderateScale(30), paddingVertical: moderateScale(20) }}>
-        <Text style={{ marginBottom: moderateScale(15), textAlign: "center" }}>
-          <Text>Please read our </Text>
-          <Text style={{ color: "#F6841F" }}>Payment Policy </Text>
-          <Text>before you proceed with your transaction</Text>
-        </Text>
-        <OrangeButton disabled={amount > toktokWallet?.balance} label="Pay Now" />
-      </View>
+      <PayNowButton amount={amount} />
     </View>
   );
 };
