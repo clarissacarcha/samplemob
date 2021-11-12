@@ -8,11 +8,18 @@ const INITIAL_STATE = {
   myFollowing: [],
   searchHistory: [],
   myCartCount: 0,
-  notificationCount: 0
+  notificationCount: 0,
+  customModal: {
+    visible: false
+  }
 };
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
+    case 'TOKTOK_MALL_OPEN_MODAL':
+    return {...state, customModal: {visible: true, ...action.payload}};
+    case 'TOKTOK_MALL_CLOSE_MODAL':
+    return {...state, customModal: {visible: false}};
     case 'TOKTOK_MALL_CART_COUNT':
       let count = state.myCartCount
       if(action.action === "add"){

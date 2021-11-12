@@ -23,8 +23,7 @@ const Component = ({data, onToggleFollow, reduxActions: {updateMyFollowing}, red
 
 	return (
 		<>
-			<View style={{paddingTop: 15, paddingHorizontal: 15}}>
-        <Card>
+			<View style={{marginTop: 15, marginHorizontal: 15, borderColor: "#ECECEC", borderWidth: 1, borderRadius: 5}}>
           <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
             <View style={{flex: 3.5, justifyContent: 'center'}}>
               <Image 
@@ -63,7 +62,6 @@ const Component = ({data, onToggleFollow, reduxActions: {updateMyFollowing}, red
               <Text style={{fontSize: 13}}>Products <Text style={{fontSize: 13, color: "#F6841F"}}>{data.totalProducts}</Text></Text>
             </View>
           </View> */}
-        </Card>
       </View>
 		</>
 	)
