@@ -10,10 +10,10 @@ import { heart_fill_icon, heart_no_fill_icon, heart_selected_fill_icon } from "s
 export const LoadDetails = ({ item, index, network, onPressFavorite }) => {
   
   const { selectedLoad, setSelectedLoad, loads, setLoads } = useContext(VerifyContext);
-  const { price, description, isFavorite } = item;
+  const { amount, description, isFavorite } = item;
 
   const isSelected = selectedLoad[network]?.id == item.id;
-  const colorPrice = isSelected ? "#fff" : "#F6841F";
+  const colorAmount = isSelected ? "#fff" : "#F6841F";
   const colorDesc = isSelected ? "#fff" : "#707070";
 
   const imgSelected = () => {
@@ -39,11 +39,11 @@ export const LoadDetails = ({ item, index, network, onPressFavorite }) => {
         { backgroundColor: isSelected ? "rgba(246,132,31,0.8)" : "#fff"}
       ]}
     >
-      <View style={[styles.priceContainer, { borderColor: colorPrice }]}>
-        <Text style={[ styles.price, { color: colorPrice }]}>₱{price}</Text>
+      <View style={[styles.amountContainer, { borderColor: colorAmount }]}>
+        <Text style={[ styles.amount, { color: colorAmount }]}>₱{amount}</Text>
       </View>
       <View style={{ paddingHorizontal: moderateScale(20) }}>
-        <Text style={[ styles.price, { color: colorDesc }]}>PHP {price}</Text>
+        <Text style={[ styles.amount, { color: colorDesc }]}>PHP {amount}</Text>
         <Text style={{ fontSize: FONT_SIZE.M, color: colorDesc }}>{description}</Text>
       </View> 
       <TouchableOpacity onPress={onPressFavorite} style={styles.heartIconContainer}>
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center"
   },
-  priceContainer: {
+  amountContainer: {
     borderWidth: 1,
     borderRadius: moderateScale(100),
     paddingHorizontal: Platform.OS == "ios" ? moderateScale(10) : moderateScale(8),
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center"
   },
-  price: {
+  amount: {
     fontSize: FONT_SIZE.L,
     fontFamily: FONT.BOLD,
     marginTop: Platform.OS == "ios" ? 0 : -2

@@ -20,15 +20,15 @@ const MainComponent = ({ navigation, route }) => {
     setTabs([
       {
         name: "Globe",
-        screen: <LoadList navigation={navigation} network="Globe" />
+        screen: <LoadList navigation={navigation} network="Globe" mobileNo={route.params?.mobileNumber} />
       },
       {
         name: "TM",
-        screen: <LoadList navigation={navigation} network="TM" />
+        screen: <LoadList navigation={navigation} network="TM" mobileNo={route.params?.mobileNumber} />
       },
       {
         name: "Smart",
-        screen: <LoadList navigation={navigation} network="Smart" />
+        screen: <LoadList navigation={navigation} network="Smart" mobileNo={route.params?.mobileNumber} />
       }
     ])
   }, [])
