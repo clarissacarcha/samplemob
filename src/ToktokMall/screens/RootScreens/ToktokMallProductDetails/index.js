@@ -3,11 +3,11 @@ import { useLazyQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql';
 import { CHECK_ITEM_FROM_CART, GET_PRODUCT_DETAILS, GET_VERIFY_ADD_TO_CART } from '../../../../graphql/toktokmall/model';
 import {View, SafeAreaView, Text, Image, FlatList, SectionList, ImageBackground, TouchableOpacity, Dimensions} from 'react-native';
-import {connect} from 'react-redux'
+import {connect, useDispatch} from 'react-redux'
 import Spinner from 'react-native-spinkit';
 import Toast from 'react-native-simple-toast';
 import { FONT } from '../../../../res/variables';
-import { Header, AdsCarousel, MessageModal, DynamicOptionModal, DynamicMessageModal } from '../../../Components';
+import { Header, AdsCarousel, MessageModal, DynamicOptionModal, DynamicMessageModal, CustomModal } from '../../../Components';
 import CustomIcon from '../../../Components/Icons';
 import {ASAddToCart, ASClearCart} from '../../../helpers';
 import ContentLoader, {InstagramLoader, FacebookLoader} from 'react-native-easy-content-loader'
@@ -78,6 +78,7 @@ const Component =  ({
   const [headerValue, setHeaderValue] = useState(0)
   const [scrollendreached, setscrollendreached] = useState(false)
   const [showTransparent, setshowtransparent] = useState(true)
+  const dispatch = useDispatch()
 
   const {
     params: { Id },
@@ -282,6 +283,11 @@ const Component =  ({
       EventRegister.emit('refreshToktokmallShoppingCart')
       createMyCartCountSession("add", input.qty)
       setMessageModalShown(true)
+
+      dispatch({type:'TOKTOK_MALL_OPEN_MODAL', payload: {
+        type: 'Success',
+        message: 'Item has been added to your cart.'
+      }})
       setIsFetching(false)
     }else if(req.responseError && req.responseError.success == 0){
       Toast.show(req.responseError.message, Toast.LONG)
@@ -378,6 +384,12 @@ const Component =  ({
   return (
     <>
     <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
+      {/* {messageModalShown && 
+      <CustomModal 
+        type="Success"
+        setIsVisible={(val) => setMessageModalShown(val)}
+        message="Item has been added to your cart."
+      />} */}
       
       {/* { isFetching ? <></> : <HeaderPlain animatedValue={animatedHeaderValueRef} cartItems={cartNoOfItems} itemName = {route.params.itemname} /> }
       { isFetching ? <></> : <HeaderTransparent animatedValue={animatedHeaderValueRef} cartItems={cartNoOfItems} /> } */}
@@ -498,13 +510,6 @@ const Component =  ({
         }}
       />
 
-      {messageModalShown && 
-      <MessageModal 
-        type="Success"
-        isVisible={messageModalShown}
-        setIsVisible={(val) => setMessageModalShown(val)}
-        message="Item has been added to your cart."
-      />}
 
       {cartexceeded && 
       <DynamicMessageModal 

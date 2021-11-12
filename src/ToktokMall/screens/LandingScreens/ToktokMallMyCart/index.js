@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, Platform, Dimensions, StatusBar, Image, TouchableOpacity, FlatList, RefreshControl} from 'react-native';
-import {connect} from 'react-redux'
-import {HeaderBack, HeaderTitle, HeaderRight, Header} from '../../../Components';
+import {connect, useDispatch} from 'react-redux'
+import {HeaderBack, HeaderTitle, HeaderRight, Header, CustomModal} from '../../../Components';
 import CustomIcon from '../../../Components/Icons';
 import {COLOR, FONT, FONT_SIZE} from '../../../../res/variables';
 import CheckBox from 'react-native-check-box';
@@ -39,6 +39,7 @@ const Component =  ({
   const [totalitems, settotalitems] = useState(0)
   const [rawitems, setrawitems] = useState([])
   const [selectedItemsArr, setSelectedItemsArr] = useState([])
+  const dispatch = useDispatch()
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack hidden={true} />,
@@ -143,10 +144,10 @@ const Component =  ({
     
     init()
     setapiloader(false)
-    setTimeout(() => {
-      setMessageModalShown(true)
-    }, 200);
-
+    dispatch({type:'TOKTOK_MALL_OPEN_MODAL', payload: {
+      type: 'Success',
+      message: 'Items has been removed from your cart.'
+    }})
   }
 
   const deleteSingleItem = async (item) => {
@@ -165,7 +166,11 @@ const Component =  ({
     if(req.responseData && req.responseData.success == 1){   
       console.log("Single Deletion Result: ", req.responseData)
       setTimeout(() => {
-        setSingleDeletemsgModalShown(true)
+        // setSingleDeletemsgModalShown(true)
+        dispatch({type:'TOKTOK_MALL_OPEN_MODAL', payload: {
+          type: 'Success',
+          message: 'Item has been removed from your cart.'
+        }})
       }, 200);
     }else if(req.responseError && req.responseError.success == 0){
       Toast.show(req.responseError.message, Toast.LONG)
@@ -480,149 +485,148 @@ const Component =  ({
   return (
     <>
       <View style={styles.container}>
+        {/* {singleDeletemsgModalShown && (
+          <CustomModal
+            type="Success"
+            setIsVisible={(val) => {
+              setSingleDeletemsgModalShown(val);
+            }}
+            message={`Item has been removed from your cart.`}
+          />
+        )}
+
+        {messageModalShown && (
+          <CustomModal
+            type="Success"
+            setIsVisible={(val) => {
+              setMessageModalShown(val);
+            }}
+            message={`Items has been removed from your cart.`}
+          />
+        )} */}
         <Header label="Shopping Cart" />
         <View style={{height: 8, backgroundColor: '#F7F7FA'}} />
         <View style={{flex: 1}}>
-
           {loading && <LoadingOverlay isVisible={loading} />}
           {apiloader && <LoadingOverlay isVisible={apiloader} />}
 
           {myCartData.length == 0 && !loading && !apiloader && <RenderEmpty />}
 
-          {myCartData.length > 0 && 
-          <>
-          <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
-            <View style={{flex: 6, justifyContent: 'center'}}>
-              <CheckBox
-                // isChecked={allSelected || itemsToCheckoutArr.length == totalitems}
-                isChecked={allSelected || selectedItemsArr.length == totalitems}
-                rightText="Select All"
-                rightTextStyle={{fontSize: 14, fontWeight: '500'}}
-                checkedCheckBoxColor="#F6841F"
-                uncheckedCheckBoxColor="#F6841F"
-                onClick={() => {
-                  if(allSelected){
-                    //to false
-                    unSelectAllitems()
-                  }else{
-                    //to true
-                    selectAllItems()
-                  }
-                  setAllSelected(!allSelected);
-                }}
-              />
-            </View>
-            <TouchableOpacity
-              onPress={() => {
-                if(!willDelete == true){
-                  //Copy items selected by user from to checkout array
-                  // setItemsToDelArr(itemsToCheckoutArr)
-                  setItemsToCheckoutArr([])
-                  setItemsToDelArr([])
-                  // setSelectedItemsArr([])
-                  // setSubTotal(0)
-                }else {
-                  setAllSelected(false)
-                  init()
-                }
-                setWillDelete(!willDelete)
-              }}
-              style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center'}}>
-              <Text style={{fontSize: 14, color: '#F6841F'}}>{willDelete ? 'Cancel' : ''}</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={{height: 2, backgroundColor: '#F7F7FA'}} />
-          
-          <FlatList
-            data={myCartData}
-            renderItem={({item, index}) => {
-              return (
-                <>
-                  <RenderDetails 
-                    item={item}
-                    allSelected={allSelected}
-                    refreshing={loading}
-                    willDelete={willDelete}
-                    onPress={() => {
-                      navigation.navigate("ToktokMallStore", {id: item.shop.id})
-                    }}
-                    onStoreSelect={(raw, items) => {
-                      if(raw.checked){
-                        selectStoreItems(raw, items)
-                      }else{
-                        unSelectStoreItems(raw, items)
+          {myCartData.length > 0 && (
+            <>
+              <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
+                <View style={{flex: 6, justifyContent: 'center'}}>
+                  <CheckBox
+                    // isChecked={allSelected || itemsToCheckoutArr.length == totalitems}
+                    isChecked={allSelected || selectedItemsArr.length == totalitems}
+                    rightText="Select All"
+                    rightTextStyle={{fontSize: 14, fontWeight: '500'}}
+                    checkedCheckBoxColor="#F6841F"
+                    uncheckedCheckBoxColor="#F6841F"
+                    onClick={() => {
+                      if (allSelected) {
+                        //to false
+                        unSelectAllitems();
+                      } else {
+                        //to true
+                        selectAllItems();
                       }
-                    }}
-                    onItemSelect={(raw) => {
-                      if(raw.checked){
-                        selectItem(raw)
-                      }else{
-                        unSelectitem(raw)
-                      }
-                    }}
-                    onItemLongPress={(raw) => {
-                      // setWillDelete(raw.checked)
-                      if(raw.checked){
-                        onItemLongPress(raw)
-                      }else{
-                        unSelectitem(raw)
-                      }
-                    }}
-                    onItemDelete={(item) => {
-                      deleteSingleItem(item)
-                    }}
-                    onChangeQuantity={(qty, id) => {
-                      onChangeQuantity(id, qty)
+                      setAllSelected(!allSelected);
                     }}
                   />
-                  <View style={{height: 6, backgroundColor: '#F7F7FA'}} />
-                </>
-              );
-            }}
-            keyExtractor={(item, index) => item + index}
-            showsVerticalScrollIndicator={false}
-            refreshControl={<RefreshControl refreshing={loading} onRefresh={() => init()} />}
-          />
-          </>
-          }
+                </View>
+                <TouchableOpacity
+                  onPress={() => {
+                    if (!willDelete == true) {
+                      //Copy items selected by user from to checkout array
+                      // setItemsToDelArr(itemsToCheckoutArr)
+                      setItemsToCheckoutArr([]);
+                      setItemsToDelArr([]);
+                      // setSelectedItemsArr([])
+                      // setSubTotal(0)
+                    } else {
+                      setAllSelected(false);
+                      init();
+                    }
+                    setWillDelete(!willDelete);
+                  }}
+                  style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center'}}>
+                  <Text style={{fontSize: 14, color: '#F6841F'}}>{willDelete ? 'Cancel' : ''}</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={{height: 2, backgroundColor: '#F7F7FA'}} />
+
+              <FlatList
+                data={myCartData}
+                renderItem={({item, index}) => {
+                  return (
+                    <>
+                      <RenderDetails
+                        item={item}
+                        allSelected={allSelected}
+                        refreshing={loading}
+                        willDelete={willDelete}
+                        onPress={() => {
+                          navigation.navigate('ToktokMallStore', {id: item.shop.id});
+                        }}
+                        onStoreSelect={(raw, items) => {
+                          if (raw.checked) {
+                            selectStoreItems(raw, items);
+                          } else {
+                            unSelectStoreItems(raw, items);
+                          }
+                        }}
+                        onItemSelect={(raw) => {
+                          if (raw.checked) {
+                            selectItem(raw);
+                          } else {
+                            unSelectitem(raw);
+                          }
+                        }}
+                        onItemLongPress={(raw) => {
+                          // setWillDelete(raw.checked)
+                          if (raw.checked) {
+                            onItemLongPress(raw);
+                          } else {
+                            unSelectitem(raw);
+                          }
+                        }}
+                        onItemDelete={(item) => {
+                          deleteSingleItem(item);
+                        }}
+                        onChangeQuantity={(qty, id) => {
+                          onChangeQuantity(id, qty);
+                        }}
+                      />
+                      <View style={{height: 6, backgroundColor: '#F7F7FA'}} />
+                    </>
+                  );
+                }}
+                keyExtractor={(item, index) => item + index}
+                showsVerticalScrollIndicator={false}
+                refreshControl={<RefreshControl refreshing={loading} onRefresh={() => init()} />}
+              />
+            </>
+          )}
 
           {myCartData.length > 0 && <View style={{height: 80}}></View>}
 
-          {myCartData.length > 0 && willDelete && 
-          <DeleteFooter 
-            onDelete={() => {
-              deleteMultipleItems()
-            }} 
-          />}
+          {myCartData.length > 0 && willDelete && (
+            <DeleteFooter
+              onDelete={() => {
+                deleteMultipleItems();
+              }}
+            />
+          )}
 
-          {myCartData.length > 0 && !willDelete && 
-          <CheckoutFooter 
-            onSubmit={async () => {
-              await OnSubmitForCheckout()
-            }} 
-            subtotal={subTotal}
-          />}
-
-          {messageModalShown && 
-          <MessageModal 
-            type="Success"
-            isVisible={messageModalShown}
-            setIsVisible={(val) => {
-              setMessageModalShown(val)
-            }}  
-            message={`Items has been removed from your cart.`}
-          />}
-
-          {singleDeletemsgModalShown && 
-          <MessageModal 
-            type="Success"
-            isVisible={singleDeletemsgModalShown}
-            setIsVisible={(val) => {
-              setSingleDeletemsgModalShown(val)
-            }}  
-            message={`Item has been removed from your cart.`}
-          />}
-            
+          {myCartData.length > 0 && !willDelete && (
+            <CheckoutFooter
+              onSubmit={async () => {
+                await OnSubmitForCheckout();
+              }}
+              subtotal={subTotal}
+            />
+          )}
         </View>
       </View>
     </>
