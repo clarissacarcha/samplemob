@@ -1,5 +1,6 @@
 import React, {useContext, useEffect, useState} from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from "react-native";
+import { useNavigation } from '@react-navigation/native'
 
 //UTIL
 import { moderateScale } from "toktokload/helper";
@@ -13,6 +14,7 @@ import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
 
 export const PayNowButton = ({ amount }) => {
 
+  const navigation = useNavigation();
   const { toktokWallet } = useContext(VerifyContext);
   const [showPrompt, setShowPrompt] = useState({ show: false, title: "", message: "", event: "" });
 
@@ -37,7 +39,10 @@ export const PayNowButton = ({ amount }) => {
     <View style={styles.container}>
       <PromptModal
         visible={showPrompt.show}
-        onPress={() => setShowPrompt({ show: false })}
+        onPress={() => {
+          setShowPrompt({ show: false });
+          navigation.navigate("ToktokLoadReceipt");
+        }}
         title={showPrompt.title}
         message={showPrompt.message}
         event={showPrompt.event}
