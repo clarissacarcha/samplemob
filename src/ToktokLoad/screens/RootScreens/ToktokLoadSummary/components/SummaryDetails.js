@@ -1,21 +1,11 @@
 import React, {useContext, useEffect, useState} from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from "react-native";
-import { useLazyQuery } from '@apollo/react-hooks';
-import { useSelector } from 'react-redux';
 
 //UTIL
-import { moderateScale, numberFormat } from "toktokload/helper";
-
-//COMPONENTS
-import { OrangeButton, HeaderBack, HeaderTitle, HeaderTabs } from "src/ToktokLoad/components";
+import { moderateScale } from "toktokload/helper";
 
 //FONTS & COLORS & IMAGES
 import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
-import { wallet_icon } from "src/ToktokLoad/assets/icons";
-
-//GRAPHQL
-import {GET_MY_ACCOUNT} from 'toktokwallet/graphql';
-import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
 
 export const SummaryDetails = ({ amount, mobileNo }) => {
 
