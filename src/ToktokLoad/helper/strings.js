@@ -60,3 +60,24 @@ export const smartLoads = [
     isFavorite: false
   }
 ]
+
+export const favoriteList = [
+  {
+    id: 1,
+    amount: 10,
+    name: "Juan Dela Cruz",
+    mobileNo: "09087654321"
+  },
+  {
+    id: 2,
+    amount: 20,
+    name: "Juan Dela Cruz",
+    mobileNo: "09087654321"
+  },
+  {
+    id: 3,
+    amount: 30,
+    name: "Juan Dela Cruz",
+    mobileNo: "09087654321"
+  }
+]

@@ -13,10 +13,12 @@ import {
 } from 'react-native';
 import Contacts from 'react-native-contacts';
 import _ from 'lodash';
+import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
+import { useContacts } from 'toktokload/hooks'
 
 //COMPONENTS
-import {HeaderBack, HeaderTitle} from 'src/ToktokLoad/components';
-import ContactInfoRender from "./ContactInfoRender";
+import { HeaderBack, HeaderTitle } from 'src/ToktokLoad/components';
+import { ContactInfoRender } from "./components";
 
 //UTIL / FONTS / COLOR
 import { moderateScale } from "toktokload/helper";
@@ -27,7 +29,7 @@ export const ToktokLoadContacts = ({navigation, route}) => {
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={['Search Contacts']} />,
+    headerTitle: () => <HeaderTitle label={'Search Contacts'} />,
     headerStyle: { height: Platform.OS == 'ios' ? moderateScale(60) : moderateScale(80) }
   });
 
@@ -35,46 +37,14 @@ export const ToktokLoadContacts = ({navigation, route}) => {
   const [fetchError, setFetchError] = useState(false);
   const [filteredData, setFilteredData] = useState(null);
   const [searchString, setSearchString] = useState('');
+  const { contacts } = useContacts();
 
-  const getContacts = async () => {
-    try {
-      Contacts.getAllWithoutPhotos((error, contacts) => {
-        if (error) {
-          setFetchError(true);
-        }
-
-        const mappedContacts = contacts
-          .filter((contact) => {
-            if (Platform.OS === 'android') {
-              if (contact.phoneNumbers.length === 0 || !contact.displayName) {
-                return false;
-              }
-              return true;
-            }
-
-            if (Platform.OS === 'ios') {
-              if (contact.phoneNumbers.length === 0 || !contact.givenName) {
-                return false;
-              }
-              return true;
-            }
-          })
-          .map((contact) => {
-            return {
-              name: `${contact.givenName} ${contact.familyName}`,
-              number: contact.phoneNumbers[0].number,
-            };
-          });
-
-        const sortedContacts = _.sortBy(mappedContacts, (contact) => contact.name);
-
-        setData(sortedContacts);
-        setFilteredData(sortedContacts);
-      });
-    } catch (error) {
-      console.log(error);
+  useEffect(() => {
+    if(contacts && contacts.length > 0){
+      setData(contacts);
+      setFilteredData(contacts)
     }
-  };
+  }, [contacts])
 
   const onSearchChange = (value) => {
     setSearchString(value);
@@ -106,9 +76,9 @@ export const ToktokLoadContacts = ({navigation, route}) => {
     return navigation.pop()
   }
 
-  useEffect(() => {
-    getContacts();
-  }, []);
+  // useEffect(()=>{
+  //   goToContacts();
+  // },[])
 
   if (!filteredData) {
     return (
