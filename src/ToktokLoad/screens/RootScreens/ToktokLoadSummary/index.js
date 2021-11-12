@@ -19,7 +19,7 @@ import { wallet_icon } from "src/ToktokLoad/assets/icons";
 import {GET_MY_ACCOUNT} from 'toktokwallet/graphql';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
 
-export const MainComponent = ({ navigation, route }) => {
+const MainComponent = ({ navigation, route }) => {
 
   const { amount } = route.params?.loads;
   const mobileNo = route.params?.mobileNo;

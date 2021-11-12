@@ -84,6 +84,7 @@
     "react-native-simple-toast": "^1.1.2",
     "react-native-sms-retriever": "^1.1.1",
     "react-native-snap-carousel": "^3.9.1",
+    "react-native-status-bar-height": "^2.6.0",
     "react-native-svg": "^12.1.0",
     "react-native-tab-view": "^2.16.0",
     "react-native-timer": "^1.3.6",
