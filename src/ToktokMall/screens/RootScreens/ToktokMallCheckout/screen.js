@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useContext} from 'react';
-import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, Dimensions, BackHandler, Alert } from 'react-native';
+import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, Dimensions, BackHandler, Alert, EventEmitter } from 'react-native';
 import { COLOR, FONT } from '../../../../res/variables';
 import {HeaderBack, HeaderTitle, HeaderRight} from '../../../Components';
 import { AddressForm, Button, Payment, Shops, Totals, Vouchers, CheckoutModal, MessageModal } from './Components';
@@ -24,6 +24,7 @@ import {AlertModal} from '../../../Components/Widgets'
 import {ApiCall, ShippingApiCall, BuildPostCheckoutBody, BuildTransactionPayload, WalletApiCall, BuildOrderLogsList, ArrayCopy} from "../../../helpers"
 
 import {CheckoutContext} from './ContextProvider';
+import { EventRegister } from 'react-native-event-listeners';
 
 const REAL_WIDTH = Dimensions.get('window').width;
 
@@ -253,7 +254,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
   const onGoToOrders = () =>{
     setIsVisible(false)
-    navigation.push("ToktokMallMyOrders", { tab: 0})
+    EventRegister.emit('refreshToktokmallShoppingCart')
+    navigation.replace("ToktokMallMyOrders", { tab: 0})
     // BackHandler.removeEventListener("hardwareBackPress", backAction)
   }
 

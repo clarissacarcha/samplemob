@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, ImageBackground, TouchableOpacity, Image, Platform} from 'react-native';
+import {View, Text, ImageBackground, TouchableOpacity, Image, Platform, BackHandler} from 'react-native';
 import MCIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AIcons from 'react-native-vector-icons/dist/AntDesign';
 import {useSelector} from 'react-redux';
@@ -18,6 +18,8 @@ import { GET_DEFAULT_ADDRESS } from '../../../../../../graphql/toktokmall/model'
 
 import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
 import { GET_MY_ACCOUNT, GET_WALLET } from 'toktokwallet/graphql'
+
+import {useFocusEffect} from '@react-navigation/native'
 
 const testData = [
   {id: 1, full_name: 'Cloud Panda', contact_number: '09050000000',
@@ -97,6 +99,17 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
 
 
   }, [])
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        navigation.navigate("ToktokMallLanding", {screen: "ToktokMallMyProfile"})
+        return true
+      }
+      BackHandler.addEventListener('hardwareBackPress', onBackPress)
+      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress)
+    }, [])
+  )
 
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
