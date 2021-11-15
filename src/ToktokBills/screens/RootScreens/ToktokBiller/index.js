@@ -4,31 +4,32 @@ import { HeaderBack , HeaderTitle , Separator, SearchInput } from 'toktokbills/c
 import { moderateScale } from 'toktokbills/helper'
 import { usePrompt , useThrottle } from 'src/hooks'
 import { Biller } from "./Components"
+import toktokwalletlogo from 'toktokwallet/assets/images/tokwa.png'
 
 const sampleData = [
   {
     name: "Philippine Long Distance and Telephone",
-    logo: "toktokwallet/assets/image/tokwa.png"
+    logo: toktokwalletlogo
   },
   {
     name: "Cable/Internet",
-    logo: "toktokwallet/assets/image/tokwa.png"
+    logo: toktokwalletlogo
   },
   {
     name: "Cable/Internet",
-    logo: "toktokwallet/assets/image/tokwa.png"
+    logo: toktokwalletlogo
   },
   {
     name: "Cable/Internet sfsd sdfd",
-    logo: "toktokwallet/assets/image/tokwa.png"
+    logo: toktokwalletlogo
   },
   {
     name: "Cable/Internet",
-    logo: "toktokwallet/assets/image/tokwa.png"
+    logo: toktokwalletlogo
   },
   {
     name: "Cable/Internet",
-    logo: "toktokwallet/assets/image/tokwa.png"
+    logo: toktokwalletlogo
   },
 ]
 
@@ -55,7 +56,6 @@ export const ToktokBiller = ({navigation, route})=> {
       setFilteredData([])
     }
   }, [search])
-
 
   return (
     <>
