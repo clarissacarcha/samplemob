@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text, Dimensions, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import { moderateScale } from 'toktokbills/helper'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 import { useThrottle } from 'src/hooks'
 import CONSTANTS from 'common/res/constants'
 const {COLOR , FONT_FAMILY: FONT , FONT_SIZE , SHADOW} = CONSTANTS
@@ -14,8 +14,13 @@ export const Biller = ({
   index
 })=> {
   const navigation = useNavigation();
+  const route = useRoute();
+
   const onPress = ()=> {
-    navigation.navigate("ToktokBiller" , {biller: item})
+    navigation.navigate("ToktokBillsPaymentProcess" , {
+      billerTypes: item,
+      billerName: route.params.biller.name
+    })
   }
 
   const onThrottledPress = useThrottle(onPress , 2000)
