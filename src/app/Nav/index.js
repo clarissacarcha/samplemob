@@ -21,6 +21,7 @@ import Landing from '../../screens/Landing';
 import ToktokScreens from './toktok';
 import ToktokFoodScreens from './toktokfood';
 import ToktokWalletScreens from './toktokwallet';
+import ToktokLoadScreens from './toktokload';
 import ToktokMallScreens from './toktokmall';
 import ToktokBillScreens from './toktokbills';
 
@@ -241,6 +242,7 @@ const AuthenticatedStack = () => (
   <Authenticated.Navigator>
     {ToktokScreens({Navigator: Authenticated})}
     {ToktokFoodScreens({Navigator: Authenticated})}
+    {ToktokLoadScreens({Navigator: Authenticated})}
     {ToktokMallScreens({Navigator: Authenticated})}
     {ToktokWalletScreens({Navigator: Authenticated})}
     {ToktokBillScreens({Navigator: Authenticated})}
