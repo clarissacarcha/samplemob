@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { TPINOTPContext } from '../ContextProvider';
 
-export const OTP =  ({onValidate, options, update}) => {
+export const OTP =  ({onValidate, onReset, options, update}) => {
 
   const Context = useContext(TPINOTPContext)
   const inputRef = useRef(null)  
@@ -103,7 +103,12 @@ export const OTP =  ({onValidate, options, update}) => {
           {/* // isInvalid && retries < 5 ? // put condition here not for invalid/expired  */}
           <View style = {{flexDirection: 'row', marginBottom: 15}}>
             <Text style = {{fontFamily: FONT.REGULAR}}>Didn't receive OTP code?</Text>
-            <TouchableOpacity>
+            <TouchableOpacity 
+              onPress = {() => {async () => {
+
+              await onReset()
+
+              }}}>
               <Text style = {{fontFamily: FONT.REGULAR, color: COLOR.ORANGE}} > Resend</Text>
             </TouchableOpacity>
           </View> 
