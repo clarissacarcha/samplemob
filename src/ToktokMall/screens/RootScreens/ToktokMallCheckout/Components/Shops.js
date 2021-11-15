@@ -23,6 +23,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
   const [voucherIsValid, setVoucherIsValid] = useState(0)
   const [vcode, setvcode] = useState("")
   const [loading, setloading] = useState(false)
+  const [errormessage, seterrormessage] = useState("*Invalid voucher code. Please check your voucher code.")
 
   const [validateShopVoucher, {error, loading2}] = useLazyQuery(GET_APPLY_VOUCHER, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
@@ -112,7 +113,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
       }
 
       setloading(true)
-      const req = await ApiCall("validate_voucher", payload, true)
+      const req = await ApiCall("validate_voucher", payload, false)
       if(req.responseData && req.responseData.success){
 
         if(req.responseData.type == "shipping"){
@@ -163,6 +164,21 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
         CheckoutContextData.setShippingVouchers(items1)
         CheckoutContextData.setDefaultVouchers(items2)
 
+        console.log("asdasdasdasdasd")
+        console.log(req.responseError)
+
+        if(req.responseError && req.responseError.field_errors){
+          let message = req.responseError.field_errors[`shop_${item.shop.id}_vcode`]
+          if(message.includes("not valid")){
+            seterrormessage("Invalid voucher code. Please check your voucher code.")
+          }else{
+            seterrormessage(req.responseError.field_errors[`shop_${item.shop.id}_vcode`])
+          }
+          
+        }else{
+          seterrormessage("Invalid voucher code. Please check your voucher code.")
+        }
+
       }
       setloading(false)
     }
@@ -186,7 +202,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
             {!loading && voucherIsValid == -1 && (
               <View style={{backgroundColor: '#FFFCF4', padding: 10}}>
                 <Text style={{color: '#F6841F', fontSize: 12, textAlign: 'center'}}>
-                  *Invalid voucher code. Please check your voucher code.
+                  *{errormessage}
                 </Text>
               </View>
             )}

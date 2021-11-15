@@ -9,6 +9,7 @@ import  {FormatToText} from '../../../../helpers/formats';
 import {CheckoutContext} from '../ContextProvider';
 
 export const Totals = ({raw, shipping, setGrandTotal}) => {
+  
   const CheckoutContextData = useContext(CheckoutContext);
 
   const [data, setData] = useState(raw || []);
