@@ -1,0 +1,1 @@
+export const search_ic = require("./search_ic.png")

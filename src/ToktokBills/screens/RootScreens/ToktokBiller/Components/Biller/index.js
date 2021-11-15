@@ -1,6 +1,5 @@
 import React from 'react'
-import { View , Text , Dimensions, StyleSheet , Image , TouchableHighlight } from 'react-native'
-import {  } from 'toktokbills/components'
+import { View, Text, Dimensions, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import { moderateScale } from 'toktokbills/helper'
 import { useNavigation } from '@react-navigation/native'
 import { useThrottle } from 'src/hooks'
@@ -10,7 +9,7 @@ const {width,height} = Dimensions.get("window")
 
 import toktokwalletlogo from 'toktokwallet/assets/images/tokwa.png'
 
-export const BillerType = ({
+export const Biller = ({
   item,
   index
 })=> {
@@ -22,11 +21,9 @@ export const BillerType = ({
   const onThrottledPress = useThrottle(onPress , 2000)
 
   return (
-    <TouchableHighlight
+    <TouchableOpacity
       onPress={onThrottledPress}
-      underlayColor={COLOR.YELLOW}
       style={styles.container}
-      key={`billerType_${index}`}
     >
       <View style={styles.item}>
         <Image
@@ -35,32 +32,32 @@ export const BillerType = ({
         />
         <Text style={styles.itemName}>{item.name}</Text>
       </View>
-    </TouchableHighlight>
+    </TouchableOpacity>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    height: moderateScale(118.5),
-    width: moderateScale(118.5),
-    justifyContent:"center",
-  },
-  item: {
     flex: 1,
-    justifyContent:"center",
-    alignItems: "center",
-    margin: 5,
+    marginVertical: 5,
     ...SHADOW,
     backgroundColor: "white",
-    borderRadius: 5
+    borderRadius: 5,
+  },
+  item: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: moderateScale(5)
   },
   itemLogo: {
-    height: moderateScale(60),
-    width: moderateScale(60)
+    height: moderateScale(70),
+    width: moderateScale(70),
+    resizeMode: "cover"
   },
   itemName: {
     fontFamily: FONT.REGULAR,
     fontSize: moderateScale(FONT_SIZE.M),
-    textAlign:"center"
+    flexShrink: 1,
+    marginRight: moderateScale(15),
   }
 })
