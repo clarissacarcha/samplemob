@@ -99,6 +99,40 @@ export const ToktokMallOTPScreen =  ({navigation, route}) => {
     setProcessing(false)
   }
 
+  const resendPin = async () => {
+    let transactionPayload = await BuildTransactionPayload({
+      method: "TOKTOKWALLET", 
+      notes: "", 
+      total: route?.params.grandTotal, 
+      toktokid: session.user.id,
+      // toktokid: 1,
+      transactionTypeId: "TOKTOKWALLET PAYMENT"
+    })
+
+    if(req.responseData && req.responseData.success == 1){
+
+      const checkoutBody = await BuildPostCheckoutBody({
+        walletRequest: req.responseData.data,
+        pin: "",
+        items: route.params?.data?.paramsData, 
+        addressData: route.params?.data?.addressData, 
+        subTotal: route.params?.data?.subTotal,
+        grandTotal: route.params?.data?.grandTotal, 
+        srpTotal: route.params?.data?.srpTotal,
+        vouchers: route.params?.data?.voucher, 
+        shippingVouchers: route.params?.data?.shippingVouchers,
+        shippingRates: route.params?.data?.shippingFeeRates,
+        paymentMethod: "TOKTOKWALLET",
+        hashAmount: req.responseData.hash_amount,
+        referenceNum: req.responseData.orderRefNum
+      })
+
+      Toast.show("New pin is available")
+    }else{
+      Toast.show("Something went wrong")
+    }
+  }
+
   return (
     <>
       <LoadingOverlay label="Verifying" isVisible={validating}/>
@@ -106,7 +140,8 @@ export const ToktokMallOTPScreen =  ({navigation, route}) => {
       
       {route.params?.data?.pin_type == "OTP" && 
         <OTP 
-          onValidate={ValidatePin}           
+          onValidate={ValidatePin}     
+          onReset={resendPin}      
         />
       }
       {route.params?.data?.pin_type == "TPIN" && 
