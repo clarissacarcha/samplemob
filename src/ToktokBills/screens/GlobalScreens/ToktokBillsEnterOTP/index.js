@@ -17,6 +17,7 @@ export const ToktokBillsEnterOTP = ({navigation, route})=> {
     headerStyle: { height: Platform.OS == 'ios' ? moderateScale(60) : moderateScale(80) }
   });
   
+  const { paymentData } = route.params
   const prompt = usePrompt();
   const [pinCode, setPinCode] = useState("")
   const [otpCode, setOtpCode] = useState("")
@@ -42,7 +43,7 @@ export const ToktokBillsEnterOTP = ({navigation, route})=> {
       type: "success",
       title: "Payment Successful",
       message: `Your payment to PLDT amounting to ₱ 2100.00 has been successfully processed with ref no. 0987654321 on September 15, 2021, 5:00 pm.`,
-      onPress: ()=> { console.log('sjjs') }
+      onPress: ()=> { navigation.navigate("ToktokBillsReceipt", { paymentData }) }
     })
   }
 

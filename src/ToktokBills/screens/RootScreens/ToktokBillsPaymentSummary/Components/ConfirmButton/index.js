@@ -23,6 +23,7 @@ export const ConfirmButton = ({ paymentData, convenienceFee = 0 }) => {
   const totalAmount = parseInt(amount) + convenienceFee;
 
   const onPressConfirm = () => {
+    paymentData = { ...paymentData, convenienceFee }
     navigation.navigate("ToktokBillsEnterOTP", { paymentData })
   }
  
