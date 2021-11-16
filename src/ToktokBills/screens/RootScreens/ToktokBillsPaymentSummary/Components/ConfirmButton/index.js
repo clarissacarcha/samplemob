@@ -4,42 +4,30 @@ import { useNavigation } from '@react-navigation/native'
 
 //UTIL
 import { moderateScale, numberFormat } from "toktokbills/helper";
+
+//HOOKS
 import { usePrompt } from 'src/hooks'
+import { useAccount } from 'toktokbills/hooks'
 
 //COMPONENTS
 import { OrangeButton } from "toktokbills/components";
 
 //FONTS & COLORS & IMAGES
 import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
-import { VerifyContext } from "../VerifyContextProvider";
 
-export const ConfirmButton = ({ billerType, tokwaBalance = 0 }) => {
+export const ConfirmButton = ({ paymentData, convenienceFee = 0 }) => {
 
-  const prompt = usePrompt();
+  const { tokwaAccount } = useAccount();
   const navigation = useNavigation();
-  const {
-    accountNo,
-    accountName,
-    amount,
-    email,
-    emailError,
-    accountNoError,
-    amountError
-  } = useContext(VerifyContext);
+  const { accountNo, accountName, amount, email, billerType } = paymentData;
+  const totalAmount = parseInt(amount) + convenienceFee;
 
   const onPressConfirm = () => {
-    let paymentData = {
-      accountNo,
-      accountName,
-      amount,
-      email,
-      billerType
-    }
-    navigation.navigate("ToktokBillsPaymentSummary", { paymentData })
+    navigation.navigate("ToktokBillsEnterOTP", { paymentData })
   }
  
   const checkIsDisabled = () => {
-    return !accountName || !accountNo || emailError || accountNoError || amountError
+    return (parseFloat(totalAmount) > parseFloat(tokwaAccount?.wallet?.balance))
   }
 
   return (

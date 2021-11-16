@@ -4,32 +4,32 @@ import { HeaderBack , HeaderTitle , Separator, SearchInput } from 'toktokbills/c
 import { moderateScale } from 'toktokbills/helper'
 import { usePrompt , useThrottle } from 'src/hooks'
 import { Biller } from "./Components"
-import toktokwalletlogo from 'toktokwallet/assets/images/tokwa.png'
+import { pldt_img, bayan_img } from 'toktokbills/assets/images'
 
 const sampleData = [
   {
     name: "Philippine Long Distance and Telephone",
-    logo: toktokwalletlogo
+    logo: pldt_img
   },
   {
     name: "Cable/Internet",
-    logo: toktokwalletlogo
+    logo: bayan_img
   },
   {
     name: "Cable/Internet",
-    logo: toktokwalletlogo
+    logo: pldt_img
   },
   {
     name: "Cable/Internet sfsd sdfd",
-    logo: toktokwalletlogo
+    logo: pldt_img
   },
   {
     name: "Cable/Internet",
-    logo: toktokwalletlogo
+    logo: pldt_img
   },
   {
     name: "Cable/Internet",
-    logo: toktokwalletlogo
+    logo: pldt_img
   },
 ]
 
