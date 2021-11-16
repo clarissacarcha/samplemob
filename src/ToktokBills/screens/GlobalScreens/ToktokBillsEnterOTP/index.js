@@ -51,36 +51,35 @@ export const ToktokBillsEnterOTP = ({navigation, route})=> {
     <Separator/>
     <KeyboardAvoidingView 
       style={styles.container}
-      // keyboardVerticalOffset={Platform.OS == "ios" ? 100 : 90} 
       keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80} 
       behavior={Platform.OS === "ios" ? "padding" : "height"} 
     >
-      <View style={{flex: 1,alignItems:"center", marginTop: moderateScale(100)}}>
-        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L, marginBottom: moderateScale(30)}}>Enter OTP</Text>
-        <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={true}/>
-        <TextInput
-          caretHidden
-          value={pinCode}
-          ref={inputRef}
-          style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent'}}
-          keyboardType="number-pad"
-          returnKeyType="done"
-          onChangeText={(value) => {
-          if (value.length <= 6) {
-            const code = value.replace(/[^0-9]/,"")
-            setPinCode(code);
-          }
-          }}
+      <View style={styles.subContainer}>
+        <View style={styles.inputContainer}>
+          <Text style={styles.otpText}>Enter OTP</Text>
+          <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={true} isError={errorMessage != ""} />
+          <TextInput
+            caretHidden
+            value={pinCode}
+            ref={inputRef}
+            style={styles.input}
+            keyboardType="number-pad"
+            returnKeyType="done"
+            onChangeText={(value) => {
+              if (value.length <= 6) {
+                const code = value.replace(/[^0-9]/,"")
+                setPinCode(code);
+              }
+            }}
+          />
+          { errorMessage != "" && <Text style={styles.errorText}>{errorMessage}</Text> }
+        </View>
+        <OrangeButton
+          disabled={pinCode.length < 6}
+          label="Confirm"
+          onPress={onPressConfirm}
         />
-        {
-          errorMessage != "" && <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M,color: COLOR.RED,marginHorizontal: 16}}>{errorMessage}</Text>
-        }
       </View>
-      <OrangeButton
-        disabled={pinCode.length < 6}
-        label="Confirm"
-        onPress={onPressConfirm}
-      />
     </KeyboardAvoidingView>
     </>
   )
@@ -90,6 +89,31 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
-    padding: 16,
+  },
+  subContainer: {
+    flex: 1,
+    padding: moderateScale(16)
+  },
+  inputContainer: {
+    flex: 1,
+    alignItems:"center",
+    marginTop: moderateScale(100)
+  },
+  otpText: {
+    fontFamily: FONT.BOLD,
+    fontSize: FONT_SIZE.L,
+    marginBottom: moderateScale(30)
+  },
+  input: {
+    height: '100%',
+    width: '100%',
+    position: 'absolute',
+    color: 'transparent'
+  },
+  errorText: {
+    fontFamily: FONT.REGULAR,
+    fontSize: FONT_SIZE.M,
+    color: COLOR.RED,
+    marginHorizontal: moderateScale(16)
   }
 })

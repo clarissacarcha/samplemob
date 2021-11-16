@@ -6,8 +6,6 @@ const {Provider} = VerifyContext
 
 export const VerifyContextProvider = ({children})=> {
 
-  const [toktokWallet, setToktokWallet] = useState(null);
-  const [hasToktokWallet, setHasToktokWallet] = useState(false);
   const [accountNo, setAccountNo] = useState("");
   const [accountName, setAccountName] = useState("");
   const [amount, setAmount] = useState("");
@@ -19,10 +17,6 @@ export const VerifyContextProvider = ({children})=> {
   return (
     <Provider
       value={{
-        toktokWallet,
-        setToktokWallet,
-        hasToktokWallet,
-        setHasToktokWallet,
         accountNo,
         setAccountNo,
         accountName,

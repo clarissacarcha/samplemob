@@ -2,7 +2,8 @@ import React from 'react';
 import {
   ToktokBiller,
   ToktokBillsHome,
-  ToktokBillsPaymentProcess
+  ToktokBillsPaymentProcess,
+  ToktokBillsPaymentSummary
 } from 'toktokbills/screens'
 
 export default ({Navigator}) => {
@@ -25,6 +26,13 @@ export default ({Navigator}) => {
       <Navigator.Screen 
         name="ToktokBillsPaymentProcess" 
         component={ToktokBillsPaymentProcess}
+        options={{
+          headerTitleAlign: 'center' 
+        }}
+      />
+      <Navigator.Screen 
+        name="ToktokBillsPaymentSummary" 
+        component={ToktokBillsPaymentSummary}
         options={{
           headerTitleAlign: 'center' 
         }}
