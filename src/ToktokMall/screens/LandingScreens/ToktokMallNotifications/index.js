@@ -92,6 +92,26 @@ const Component =  ({
     }
 	})
 
+  const [loadMoreOrderHistory, {loading2, error2}] = useLazyQuery(GET_ORDERS_AND_HISTORY, {
+		client: TOKTOK_MALL_GRAPHQL_CLIENT,
+		fetchPolicy: 'network-only',
+		onCompleted: (response) => {
+			if(response.getOrdersAndHistory){				
+        let temp = orderHistory
+        let latest = temp.concat(response.getOrdersAndHistory)
+        setOrderHistory(latest)
+
+        //count notifications
+        let count = 0
+        latest.map((item) => item.read == 0 ? count++ : count = count)
+        notificationCountSession('set', count)
+			}
+    },
+    onError: (err) => {
+      console.log(err)
+    }
+	})
+
   const RenderItem = ({item, index}) => {
     const [dropshown, setDropShown] = useState(false)
 
@@ -101,8 +121,8 @@ const Component =  ({
           active={dropshown}
           data={item} 
           onSelect={() => {
-            // createNotificationsSession("read", item.uuid)
-            // setDropShown(!dropshown)
+            setOrderHistory([])
+            init()
           }} 
         />
         {/* {dropshown && item.history.map((raw, i) => 
@@ -147,7 +167,16 @@ const Component =  ({
     () => {
       if(scrollendreached){
         console.log("end", scrollendreached)
-        init()
+        loadMoreOrderHistory({
+          variables: {
+            input: {
+              // userId: 9999
+              userId: data.userId,
+              offset: orderHistory.length,
+              limit: 10
+            }
+          }
+        })
       }else{
         console.log("end", scrollendreached)
       }
