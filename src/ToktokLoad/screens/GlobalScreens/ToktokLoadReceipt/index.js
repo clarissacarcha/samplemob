@@ -70,7 +70,7 @@ export const ToktokLoadReceipt = ({ navigation, route }) => {
       <ViewShot 
         style={styles.container} 
         ref={viewshotRef}
-        options={{ format: "jpg", quality: 0.9, width, height: imageHeight, result: 'tmpfile' }}
+        options={{ format: "jpg", quality: 0.9, result: 'tmpfile' }}
       >
         <MainComponent navigation={navigation} route={route} />
       </ViewShot>

@@ -17,6 +17,7 @@ export const useContacts = ()=> {
   const getContacts = async ()=>{
     try {
       Contacts.getAllWithoutPhotos((error, contacts) => {
+       
         if (error) {
           setFetchError(true);
         }
@@ -106,7 +107,7 @@ export const useContacts = ()=> {
       },
       ios: async () => {
         const checkResult = await check(PERMISSIONS.IOS.CONTACTS);
-
+   
         if (checkResult === RESULTS.GRANTED) {
           return true;
         }
@@ -141,7 +142,7 @@ export const useContacts = ()=> {
       },
     });
     const result = await checkAndRequest();
-    if(result) getContacts()
+    if(result){ getContacts() }
   }
 
   useEffect(()=>{
