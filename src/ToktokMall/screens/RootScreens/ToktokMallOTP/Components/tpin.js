@@ -9,12 +9,14 @@ import { FONT_REGULAR } from '../../../../../res/constants';
 import { useSelector } from 'react-redux';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { TPINOTPContext } from '../ContextProvider';
+import {TpinMaxAttemptModal} from '../../../../Components/Widgets'
 
 export const TPIN =  ({onValidate}) => {
 
   const Context = useContext(TPINOTPContext)
   const inputRef = useRef(null)  
   const maximumAttempts = 3
+  const [isVisible, setIsVisible] = useState(Context.isInvalid && Context.retries >= maximumAttempts ? true : false)
 
   return (
     <KeyboardAwareScrollView style={{backgroundColor: "#FFF"}}>
@@ -24,6 +26,12 @@ export const TPIN =  ({onValidate}) => {
         style = {styles.container}
         imageStyle={{width: '100%', height: Dimensions.get("screen").height, resizeMode: 'cover'}}
       > */}
+      <TpinMaxAttemptModal
+        // navigation = {navigation}
+        isVisible = {isVisible}
+        setIsVisible = {setIsVisible}
+        minutes = {30} // minutes params / remaning time until user can enter tpin again
+      />
       <View style = {styles.container} >
         <View style = {{margin: 20, alignItems: 'center', height: Dimensions.get("window").height*0.8, paddingTop: Dimensions.get("window").height*0.15}}>
             <Image
@@ -40,7 +48,7 @@ export const TPIN =  ({onValidate}) => {
               // else
               <>
                 <Text style = {{fontFamily: FONT.BOLD, fontSize: 17, marginTop: 25, marginBottom:10}}>Enter TPIN</Text>
-                <Text style = {{textAlign: 'center', paddingHorizontal: 15, fontSize: 13, fontFamily: FONT.REGULAR}}>Please enter your TPIN below to proceed with your toktokwallet transaction.</Text>
+                <Text style = {{textAlign: 'center', paddingHorizontal: 15, fontSize: 13, fontFamily: FONT.REGULAR}}>Please enter the code that we will send via SMS.</Text>
                 <View style = {{flexDirection: 'row', marginTop: 25}}>
                   <TouchableOpacity 
                     onPress={() => {

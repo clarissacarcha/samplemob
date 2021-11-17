@@ -89,7 +89,7 @@ const Component =  ({
 
   const getBottomSheetDynamicHeight = (variants) => {
     if(variants && variants.length > 0){
-      return '75%' 
+      return '60%'
     }else{
       return '40%'
     }

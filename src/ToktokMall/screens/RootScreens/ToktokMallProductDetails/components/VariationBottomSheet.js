@@ -175,6 +175,7 @@ export const VariationBottomSheet = forwardRef(({
       ref={ref}
       index={0}
       snapPoints={snapPoints}
+      // snapPoints = {[0, item?.variations && item?.variations.length > 0 ? '60%' :'50%']}
       enableHandlePanningGesture={false}
       enableContentPanningGesture={false}
       handleComponent={() => (
@@ -250,7 +251,7 @@ export const VariationBottomSheet = forwardRef(({
                     data={item?.variations && item?.variations.sort((a, b) => a.itemname.localeCompare(b.itemname)) || []}
                     keyExtractor={(item, index) => item + index}
                     numColumns={2}
-                    style={{width: '100%', height: 180}}
+                    style={{width: '100%', height: 110}}
                     contentContainerStyle={{flex: 0, flexDirection: 'column', justifyContent: 'space-around'}}
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}

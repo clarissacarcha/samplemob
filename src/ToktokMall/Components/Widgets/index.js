@@ -11,3 +11,4 @@ export * from './Voucher'
 export * from "./UploadModal"
 export * from './AlertModal'
 export * from './CustomModal'
+export * from './TpinMaxAttemptModal'

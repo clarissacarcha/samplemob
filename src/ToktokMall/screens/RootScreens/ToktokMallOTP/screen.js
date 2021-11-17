@@ -137,7 +137,11 @@ export const ToktokMallOTPScreen =  ({navigation, route}) => {
     <>
       <LoadingOverlay label="Verifying" isVisible={validating}/>
       <LoadingOverlay label="Processing" isVisible={processing} />
-      
+      {/* <AlertModal
+        // navigation = {navigation}
+        isVisible = {true}
+        // setIsVisible = {setAlertModal}
+      /> */}
       {route.params?.data?.pin_type == "OTP" && 
         <OTP 
           onValidate={ValidatePin}     
