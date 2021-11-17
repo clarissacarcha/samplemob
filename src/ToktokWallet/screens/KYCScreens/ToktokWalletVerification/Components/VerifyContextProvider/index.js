@@ -21,6 +21,7 @@ export const VerifyContextProvider = ({children})=> {
         middleName: session.user.person.middleName ? session.user.person.middleName : "",
         lastName: session.user.person.lastName,
         gender: "",
+        hasMiddleName: true
     })
     const [contactInfo, setContactInfo] = useState({
         mobile_number: session.user.username,
@@ -72,37 +73,37 @@ export const VerifyContextProvider = ({children})=> {
     const [provinceCities, setProvinceCities] = useState([])
 
     const changePersonInfo = (key,value)=> {
-        person[key] = value
         setPerson(oldstate=>({
             ...oldstate,
+            [key]: value
         }))
     }
 
     const changeContactInfo = (key,value)=> {
-        contactInfo[key] = value
         setContactInfo(oldstate=>({
             ...oldstate,
+            [key]: value
         }))
     }
 
     const changeBirthInfo = (key,value)=> {
-        birthInfo[key] = value
         setBirthInfo(oldstate=>({
             ...oldstate,
+            [key]: value
         }))
     }
 
     const changeAddress = (key,value)=> {
-        address[key] = value
         setAddress(oldstate=>({
             ...oldstate,
+            [key]: value
         }))
     }
 
     const changeVerifyID = (key,value) => {
-        verifyID[key] = value
         setVerifyID(oldstate=>({
-            ...oldstate
+            ...oldstate,
+            [key]: value
         }))
     }
 

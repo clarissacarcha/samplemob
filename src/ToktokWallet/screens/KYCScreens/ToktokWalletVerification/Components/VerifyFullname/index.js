@@ -220,7 +220,7 @@ export const VerifyFullname = ()=> {
                     </View>
 
                     <View style={{marginTop: 20,}}>
-                    <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Middle Name</Text>
+                    <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Middle Name <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S}}>(If no middle name, write MNU)</Text></Text>
                         <TextInput 
                             style={styles.input}
                             value={person.middleName}
@@ -327,6 +327,7 @@ export const VerifyFullname = ()=> {
                                 style={styles.input}
                                 value={incomeInfo.occupation}
                                 onChangeText={(value)=>changeIncomeInfo("occupation",value)}
+                                maxLength={30}
                             />
                     </View>
 
