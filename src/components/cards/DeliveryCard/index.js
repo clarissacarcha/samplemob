@@ -134,7 +134,7 @@ export default ({delivery, onPress, lastItem = false}) => {
           {/*-------------------- ORDER PRICE AND CREDIT COST --------------------*/}
           <View style={[styles.directionsBox, {borderBottomWidth: 0, borderColor: LIGHT, borderTopWidth: 0}]}>
             <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-              <YellowIcon set="Ionicon" name="md-pricetag" />
+              <YellowIcon set="Ionicon" name="pricetag" />
               <View style={{marginLeft: 10}}>
                 <Text style={{fontFamily: 'Rubik-Medium'}}>Amount</Text>
                 <Text style={{paddingRight: 10, color: MEDIUM, fontSize: 11}}>

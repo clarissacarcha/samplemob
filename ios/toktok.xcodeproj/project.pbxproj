@@ -32,11 +32,11 @@
 		5DF82E20605045268133C6FC /* Jost-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3EDD890412F14AEFA0ABA0A0 /* Jost-Light.ttf */; };
 		6B4B3099EC954F2CBEC4C7C2 /* Jost-ExtraLightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 40886CC3397B49AAB1B800AA /* Jost-ExtraLightItalic.ttf */; };
 		719E4AC926514BCFB7B2779B /* Jost-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B9DDC796A2684F44864D6D2C /* Jost-SemiBoldItalic.ttf */; };
-		7B1DB1C62E52407F44014B50 /* libPods-toktok-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 87B2466C3F6DF8D5D3138DB3 /* libPods-toktok-tvOSTests.a */; };
 		869B7ED20BFD4137B023FC07 /* Jost-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BAD6027FDB054C6899F98E98 /* Jost-ExtraBoldItalic.ttf */; };
 		8A40AA2E6CD74F449163883E /* Rubik-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6567E73D3AE44F7E9AD051CC /* Rubik-BoldItalic.ttf */; };
 		8DCA398E402D4388B10B2DE8 /* Jost-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2D8D7886C9F24AC8B4DB0979 /* Jost-BoldItalic.ttf */; };
 		967B7FD981BB4C27AF423B6C /* Rubik-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D22EE8F8A01C4BAB907BC29C /* Rubik-LightItalic.ttf */; };
+		97304C9A6BBA446789910E4F /* Akrobat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DB69349A9D084E02B2BE3E73 /* Akrobat-Regular.ttf */; };
 		991F4733565F460FB736076B /* Jost-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 74272DE63E01472C927DDC3C /* Jost-ExtraBold.ttf */; };
 		9ACBD6E58476408DA5D615CC /* Satisfy-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CF1371E7922C4FD6840D4906 /* Satisfy-Regular.ttf */; };
 		AA5D22FC17104B8CB4AA6F52 /* FiraSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F9FD6E347EC84AC6A43C96C1 /* FiraSans-Bold.ttf */; };
@@ -45,10 +45,8 @@
 		B93D9B9A67564415B7A0AD0B /* Jost-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9AD6CD16B8AE4E8EA24474C2 /* Jost-Regular.ttf */; };
 		BE0BB2277E90432AB32C158D /* Jost-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 699DF7A7F29C416A9E54D104 /* Jost-Bold.ttf */; };
 		BE7A599A265C01E900426FE6 /* toktok_notification.wav in Resources */ = {isa = PBXBuildFile; fileRef = BE7A5999265C01E900426FE6 /* toktok_notification.wav */; };
-		BE8906EF27030B2B00F77A44 /* libswiftWebKit.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = BE8906EE27030B2B00F77A44 /* libswiftWebKit.tbd */; };
 		BE9FA7EA25AC5CBA00107ABB /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9FA7E925AC5CBA00107ABB /* NotificationService.swift */; };
 		BE9FA7EE25AC5CBA00107ABB /* OneSignalNotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = BE9FA7E725AC5CBA00107ABB /* OneSignalNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		BEDA6F982715F9A30062D6C4 /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7369A79264B95B400346BF4 /* ExternalAccessory.framework */; };
 		BEEBF93672F249ED80A5D75E /* Jost-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C5B393ABF5C342BE92EEBE26 /* Jost-SemiBold.ttf */; };
 		BF5DB1CACC8842DF820E1601 /* Rubik-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF9F317F86B045D3950D47D2 /* Rubik-Regular.ttf */; };
 		C191ADF438C04D2596758E34 /* Jost-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C89B4AC3BD2A44AEB7BE6002 /* Jost-Thin.ttf */; };
@@ -56,12 +54,12 @@
 		C441BC814B1B4ABB8C1F50A7 /* Rubik-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0DF3D6A4EA76479B9C60F6DC /* Rubik-Medium.ttf */; };
 		D0307773885D42A9A8C4B1EA /* Rubik-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D191732480534B979FF26DD1 /* Rubik-MediumItalic.ttf */; };
 		E4D71CCF184B93FCFC865F47 /* libPods-toktok.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DB9A39CD09238EE31633D634 /* libPods-toktok.a */; };
+		E7369A7A264B95B400346BF4 /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7369A79264B95B400346BF4 /* ExternalAccessory.framework */; };
 		E7EA463D2651F5C300D60944 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E7EA463C2651F5C200D60944 /* GoogleService-Info.plist */; };
 		E8446D4C7B624B8B9205DF05 /* Jost-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2DDB916F4F77461F9E6385E9 /* Jost-Medium.ttf */; };
 		E9FBBC1DD37B494CBF427694 /* Rubik-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 800A015A200E4872BC47B19B /* Rubik-SemiBold.ttf */; };
 		EB1B18B6ADC343018CF19359 /* Jost-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1EE64892DABA4006BD3F1814 /* Jost-MediumItalic.ttf */; };
 		EB7E15BEDD9D486DB99C8BD5 /* Jost-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 08EADD7CBAB0454A89BB1962 /* Jost-ExtraLight.ttf */; };
-		F7951C68FBE3E6D68968DA20 /* libPods-toktok-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AFEA49430A81623465CD7DD9 /* libPods-toktok-tvOS.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -110,7 +108,6 @@
 		08EADD7CBAB0454A89BB1962 /* Jost-ExtraLight.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Jost-ExtraLight.ttf"; path = "../src/assets/fonts/Jost-ExtraLight.ttf"; sourceTree = "<group>"; };
 		0CF2B3DB46654800A596A6A6 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		0DF3D6A4EA76479B9C60F6DC /* Rubik-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Medium.ttf"; path = "../src/assets/fonts/Rubik-Medium.ttf"; sourceTree = "<group>"; };
-		0EE14C09524E8A57642ABFBC /* Pods-toktok-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-toktok-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-toktok-tvOS/Pods-toktok-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* toktok.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = toktok.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = toktok/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = toktok/AppDelegate.m; sourceTree = "<group>"; };
@@ -128,7 +125,6 @@
 		2DDB916F4F77461F9E6385E9 /* Jost-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Jost-Medium.ttf"; path = "../src/assets/fonts/Jost-Medium.ttf"; sourceTree = "<group>"; };
 		2F7C587EEFA74933A809127D /* Jost-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Jost-Italic.ttf"; path = "../src/assets/fonts/Jost-Italic.ttf"; sourceTree = "<group>"; };
 		2FFE2FBFCEFA4B0E90CC954F /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
-		33516931D0465B75F4466309 /* Pods-toktok-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-toktok-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-toktok-tvOSTests/Pods-toktok-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		3EDD890412F14AEFA0ABA0A0 /* Jost-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Jost-Light.ttf"; path = "../src/assets/fonts/Jost-Light.ttf"; sourceTree = "<group>"; };
 		3EFD295A4F4C35769D4978A0 /* Pods-toktok-toktokTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-toktok-toktokTests.release.xcconfig"; path = "Target Support Files/Pods-toktok-toktokTests/Pods-toktok-toktokTests.release.xcconfig"; sourceTree = "<group>"; };
 		40886CC3397B49AAB1B800AA /* Jost-ExtraLightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Jost-ExtraLightItalic.ttf"; path = "../src/assets/fonts/Jost-ExtraLightItalic.ttf"; sourceTree = "<group>"; };
@@ -136,7 +132,6 @@
 		50CA3E8424B73BC00017B60C /* toktok.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = toktok.entitlements; path = toktok/toktok.entitlements; sourceTree = "<group>"; };
 		5BC4CD3E711344AF95533B2F /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		5D2628C549D54DC991656EF2 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
-		5E08FD95B3ABD967F535C172 /* Pods-toktok-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-toktok-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-toktok-tvOSTests/Pods-toktok-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5E275F99C3B141538B9C5E7B /* Rubik-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-ExtraBold.ttf"; path = "../src/assets/fonts/Rubik-ExtraBold.ttf"; sourceTree = "<group>"; };
 		5FF4B0511A9A413B8628AA76 /* Jost-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Jost-Black.ttf"; path = "../src/assets/fonts/Jost-Black.ttf"; sourceTree = "<group>"; };
 		6373E049A72443E084A4EEB2 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
@@ -151,7 +146,6 @@
 		819D39CBD55A4AF7B62A8943 /* Rubik-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Light.ttf"; path = "../src/assets/fonts/Rubik-Light.ttf"; sourceTree = "<group>"; };
 		84CF7F93D02D4283BEC1FF3F /* Rubik-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Bold.ttf"; path = "../src/assets/fonts/Rubik-Bold.ttf"; sourceTree = "<group>"; };
 		84FA3FFCED4545CDA9AD6FAD /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
-		87B2466C3F6DF8D5D3138DB3 /* libPods-toktok-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-toktok-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8FCBB909868F41E3A6996C66 /* FiraSans-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSans-Regular.ttf"; path = "../src/assets/fonts/FiraSans-Regular.ttf"; sourceTree = "<group>"; };
 		939E3009171A4981A1B88BDB /* Jost-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Jost-LightItalic.ttf"; path = "../src/assets/fonts/Jost-LightItalic.ttf"; sourceTree = "<group>"; };
 		97DC8883B33F4A3B9EDD7AF7 /* Rubik-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Black.ttf"; path = "../src/assets/fonts/Rubik-Black.ttf"; sourceTree = "<group>"; };
@@ -159,15 +153,13 @@
 		A4D8F889652D4C4BB327B994 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		AF9F317F86B045D3950D47D2 /* Rubik-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Regular.ttf"; path = "../src/assets/fonts/Rubik-Regular.ttf"; sourceTree = "<group>"; };
 		AFABA08D9EED457CBBE6CED7 /* Rubik-SemiBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-SemiBoldItalic.ttf"; path = "../src/assets/fonts/Rubik-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
-		AFB88D3C5D53FDDC0532BB09 /* Pods-toktok-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-toktok-tvOS.release.xcconfig"; path = "Target Support Files/Pods-toktok-tvOS/Pods-toktok-tvOS.release.xcconfig"; sourceTree = "<group>"; };
-		AFEA49430A81623465CD7DD9 /* libPods-toktok-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-toktok-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B2A24D02662A44A5A9A2CD5C /* Rubik-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-BlackItalic.ttf"; path = "../src/assets/fonts/Rubik-BlackItalic.ttf"; sourceTree = "<group>"; };
 		B33675D045B2981FAFCA41FA /* libPods-toktok-toktokTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-toktok-toktokTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9DDC796A2684F44864D6D2C /* Jost-SemiBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Jost-SemiBoldItalic.ttf"; path = "../src/assets/fonts/Jost-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
 		BAD6027FDB054C6899F98E98 /* Jost-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Jost-ExtraBoldItalic.ttf"; path = "../src/assets/fonts/Jost-ExtraBoldItalic.ttf"; sourceTree = "<group>"; };
 		BB1771BE7A4E6F715B088F6F /* Pods-toktok.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-toktok.debug.xcconfig"; path = "Target Support Files/Pods-toktok/Pods-toktok.debug.xcconfig"; sourceTree = "<group>"; };
 		BE7A5999265C01E900426FE6 /* toktok_notification.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = toktok_notification.wav; sourceTree = "<group>"; };
-		BE8906EE27030B2B00F77A44 /* libswiftWebKit.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libswiftWebKit.tbd; path = usr/lib/swift/libswiftWebKit.tbd; sourceTree = SDKROOT; };
+		BE8E68682731969D0052D3E5 /* libswiftWebKit.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libswiftWebKit.tbd; path = usr/lib/swift/libswiftWebKit.tbd; sourceTree = SDKROOT; };
 		BE9FA7E725AC5CBA00107ABB /* OneSignalNotificationServiceExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = OneSignalNotificationServiceExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE9FA7E925AC5CBA00107ABB /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		BE9FA7EB25AC5CBA00107ABB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -183,6 +175,7 @@
 		D191732480534B979FF26DD1 /* Rubik-MediumItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-MediumItalic.ttf"; path = "../src/assets/fonts/Rubik-MediumItalic.ttf"; sourceTree = "<group>"; };
 		D22EE8F8A01C4BAB907BC29C /* Rubik-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-LightItalic.ttf"; path = "../src/assets/fonts/Rubik-LightItalic.ttf"; sourceTree = "<group>"; };
 		D9E9232DE968F30C17676E73 /* Pods-toktok-toktokTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-toktok-toktokTests.debug.xcconfig"; path = "Target Support Files/Pods-toktok-toktokTests/Pods-toktok-toktokTests.debug.xcconfig"; sourceTree = "<group>"; };
+		DB69349A9D084E02B2BE3E73 /* Akrobat-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Akrobat-Regular.ttf"; path = "../src/assets/fonts/Akrobat-Regular.ttf"; sourceTree = "<group>"; };
 		DB9A39CD09238EE31633D634 /* libPods-toktok.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-toktok.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD1A434126A647689BDC7BCE /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		E39F4784C19E4702A73F195E /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
@@ -208,8 +201,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BEDA6F982715F9A30062D6C4 /* ExternalAccessory.framework in Frameworks */,
-				BE8906EF27030B2B00F77A44 /* libswiftWebKit.tbd in Frameworks */,
+				E7369A7A264B95B400346BF4 /* ExternalAccessory.framework in Frameworks */,
 				E4D71CCF184B93FCFC865F47 /* libPods-toktok.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -218,7 +210,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F7951C68FBE3E6D68968DA20 /* libPods-toktok-tvOS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -226,7 +217,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7B1DB1C62E52407F44014B50 /* libPods-toktok-tvOSTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -276,14 +266,12 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				BE8906EE27030B2B00F77A44 /* libswiftWebKit.tbd */,
+				BE8E68682731969D0052D3E5 /* libswiftWebKit.tbd */,
 				E7369A79264B95B400346BF4 /* ExternalAccessory.framework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
 				DB9A39CD09238EE31633D634 /* libPods-toktok.a */,
 				B33675D045B2981FAFCA41FA /* libPods-toktok-toktokTests.a */,
-				AFEA49430A81623465CD7DD9 /* libPods-toktok-tvOS.a */,
-				87B2466C3F6DF8D5D3138DB3 /* libPods-toktok-tvOSTests.a */,
 				7E2185F94223A93CC25B8E2D /* libPods-OneSignalNotificationServiceExtension.a */,
 			);
 			name = Frameworks;
@@ -343,6 +331,7 @@
 				72810EE0A992469DB9D07601 /* Jost-ThinItalic.ttf */,
 				F9FD6E347EC84AC6A43C96C1 /* FiraSans-Bold.ttf */,
 				8FCBB909868F41E3A6996C66 /* FiraSans-Regular.ttf */,
+				DB69349A9D084E02B2BE3E73 /* Akrobat-Regular.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -354,10 +343,6 @@
 				23394FCCEDB04CFD79077A44 /* Pods-toktok.release.xcconfig */,
 				D9E9232DE968F30C17676E73 /* Pods-toktok-toktokTests.debug.xcconfig */,
 				3EFD295A4F4C35769D4978A0 /* Pods-toktok-toktokTests.release.xcconfig */,
-				0EE14C09524E8A57642ABFBC /* Pods-toktok-tvOS.debug.xcconfig */,
-				AFB88D3C5D53FDDC0532BB09 /* Pods-toktok-tvOS.release.xcconfig */,
-				5E08FD95B3ABD967F535C172 /* Pods-toktok-tvOSTests.debug.xcconfig */,
-				33516931D0465B75F4466309 /* Pods-toktok-tvOSTests.release.xcconfig */,
 				C864CE2B4ED0234261AAB323 /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */,
 				45B5C295CB7D541D612CE671 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */,
 			);
@@ -424,7 +409,7 @@
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
 				0A083D5F2FAF3D5550876A6B /* [CP] Copy Pods Resources */,
-				A15A211337BA938C907E13BF /* [CP] Embed Pods Frameworks */,
+				DA8A1C46D010EC69A4816482 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -448,7 +433,7 @@
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				64E786FFE7726B606D926682 /* [CP] Copy Pods Resources */,
 				BE9FA7F225AC5CBA00107ABB /* Embed App Extensions */,
-				5978420FD4F722C00562EB92 /* [CP] Embed Pods Frameworks */,
+				BFF0A524F63B0C784F89C68E /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -464,7 +449,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "toktok-tvOS" */;
 			buildPhases = (
-				ADAA6B0352EDD7E2FC09D2BB /* [CP] Check Pods Manifest.lock */,
 				FD10A7F122414F3F0027D42C /* Start Packager */,
 				2D02E4771E0B4A5D006451C7 /* Sources */,
 				2D02E4781E0B4A5D006451C7 /* Frameworks */,
@@ -484,7 +468,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "toktok-tvOSTests" */;
 			buildPhases = (
-				BD3EC5D0AAE1228EFA5136E6 /* [CP] Check Pods Manifest.lock */,
 				2D02E48C1E0B4A5D006451C7 /* Sources */,
 				2D02E48D1E0B4A5D006451C7 /* Frameworks */,
 				2D02E48E1E0B4A5D006451C7 /* Resources */,
@@ -527,7 +510,7 @@
 					New,
 				);
 				LastSwiftUpdateCheck = 1230;
-				LastUpgradeCheck = 1250;
+				LastUpgradeCheck = 1130;
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
@@ -627,6 +610,7 @@
 				4C7AEFD7022D4FA4A814A186 /* Jost-ThinItalic.ttf in Resources */,
 				AA5D22FC17104B8CB4AA6F52 /* FiraSans-Bold.ttf in Resources */,
 				03F357427E67434B925EFC69 /* FiraSans-Regular.ttf in Resources */,
+				97304C9A6BBA446789910E4F /* Akrobat-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -694,6 +678,7 @@
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Octicons.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Zocial.ttf",
+				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
@@ -715,6 +700,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Octicons.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SimpleLineIcons.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Zocial.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -757,24 +743,6 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
 		};
-		5978420FD4F722C00562EB92 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-toktok/Pods-toktok-frameworks.sh",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/OpenSSL/OpenSSL.framework/OpenSSL",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OpenSSL.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-toktok/Pods-toktok-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		64E786FFE7726B606D926682 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -800,6 +768,7 @@
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Octicons.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Zocial.ttf",
+				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
@@ -821,72 +790,33 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Octicons.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SimpleLineIcons.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Zocial.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-toktok/Pods-toktok-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		A15A211337BA938C907E13BF /* [CP] Embed Pods Frameworks */ = {
+		BFF0A524F63B0C784F89C68E /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-toktok-toktokTests/Pods-toktok-toktokTests-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-toktok/Pods-toktok-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/double-conversion/double-conversion.framework/double-conversion",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/OneSignal/OneSignal.framework/OneSignal",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/OpenSSL/OpenSSL.framework/OpenSSL",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/double-conversion.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OneSignal.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OpenSSL.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-toktok-toktokTests/Pods-toktok-toktokTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		ADAA6B0352EDD7E2FC09D2BB /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-toktok-tvOS-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		BD3EC5D0AAE1228EFA5136E6 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-toktok-tvOSTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-toktok/Pods-toktok-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		C49A5F79BFDD8F3CF7008E83 /* [CP] Check Pods Manifest.lock */ = {
@@ -909,6 +839,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DA8A1C46D010EC69A4816482 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-toktok-toktokTests/Pods-toktok-toktokTests-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/double-conversion/double-conversion.framework/double-conversion",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/OneSignal/OneSignal.framework/OneSignal",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/OpenSSL/OpenSSL.framework/OpenSSL",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/double-conversion.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OneSignal.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OpenSSL.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-toktok-toktokTests/Pods-toktok-toktokTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		EF2A08C015B3A322D250BD51 /* [CP] Check Pods Manifest.lock */ = {
@@ -1053,14 +1005,13 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D9E9232DE968F30C17676E73 /* Pods-toktok-toktokTests.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = toktokTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1077,11 +1028,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3EFD295A4F4C35769D4978A0 /* Pods-toktok-toktokTests.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = toktokTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1103,7 +1053,7 @@
 				CODE_SIGN_ENTITLEMENTS = toktok/toktok.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1190000;
+				CURRENT_PROJECT_VERSION = 1160000;
 				DEVELOPMENT_TEAM = GB5B4BE7QP;
 				ENABLE_BITCODE = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1117,7 +1067,7 @@
 					"$(inherited)",
 					"$(SDKROOT)/usr/lib/swift",
 				);
-				MARKETING_VERSION = 1.19.0;
+				MARKETING_VERSION = 1.16.0;
 				NEW_SETTING = "";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -1143,7 +1093,7 @@
 				CODE_SIGN_ENTITLEMENTS = toktok/toktok.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1190000;
+				CURRENT_PROJECT_VERSION = 1160000;
 				DEVELOPMENT_TEAM = GB5B4BE7QP;
 				INFOPLIST_FILE = toktok/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -1152,7 +1102,7 @@
 					"$(inherited)",
 					"$(SDKROOT)/usr/lib/swift",
 				);
-				MARKETING_VERSION = 1.19.0;
+				MARKETING_VERSION = 1.16.0;
 				NEW_SETTING = "";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -1170,7 +1120,6 @@
 		};
 		2D02E4971E0B4A5E006451C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0EE14C09524E8A57642ABFBC /* Pods-toktok-tvOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -1192,13 +1141,12 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 12.0;
+				TVOS_DEPLOYMENT_TARGET = 9.2;
 			};
 			name = Debug;
 		};
 		2D02E4981E0B4A5E006451C7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AFB88D3C5D53FDDC0532BB09 /* Pods-toktok-tvOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -1220,13 +1168,12 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 12.0;
+				TVOS_DEPLOYMENT_TARGET = 9.2;
 			};
 			name = Release;
 		};
 		2D02E4991E0B4A5E006451C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5E08FD95B3ABD967F535C172 /* Pods-toktok-tvOSTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
@@ -1247,13 +1194,12 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/toktok-tvOS.app/toktok-tvOS";
-				TVOS_DEPLOYMENT_TARGET = 12.0;
+				TVOS_DEPLOYMENT_TARGET = 10.1;
 			};
 			name = Debug;
 		};
 		2D02E49A1E0B4A5E006451C7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 33516931D0465B75F4466309 /* Pods-toktok-tvOSTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
@@ -1274,7 +1220,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/toktok-tvOS.app/toktok-tvOS";
-				TVOS_DEPLOYMENT_TARGET = 12.0;
+				TVOS_DEPLOYMENT_TARGET = 10.1;
 			};
 			name = Release;
 		};
@@ -1301,7 +1247,6 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1311,6 +1256,7 @@
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 ";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -1326,7 +1272,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "/usr/lib/swift $(inherited)";
 				LIBRARY_SEARCH_PATHS = (
 					"\"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)\"",
@@ -1362,7 +1308,6 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1372,6 +1317,7 @@
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 ";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -1380,7 +1326,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "/usr/lib/swift $(inherited)";
 				LIBRARY_SEARCH_PATHS = (
 					"\"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)\"",
@@ -1389,7 +1335,6 @@
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
-				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -1407,19 +1352,18 @@
 				CODE_SIGN_ENTITLEMENTS = OneSignalNotificationServiceExtension/OneSignalNotificationServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1190000;
+				CURRENT_PROJECT_VERSION = 1160000;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = GB5B4BE7QP;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				MARKETING_VERSION = 1.19.0;
+				MARKETING_VERSION = 1.16.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = ph.cloudpanda.toktok.OneSignalNotificationServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1442,18 +1386,17 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1190000;
+				CURRENT_PROJECT_VERSION = 1160000;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = GB5B4BE7QP;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				MARKETING_VERSION = 1.19.0;
+				MARKETING_VERSION = 1.16.0;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = ph.cloudpanda.toktok.OneSignalNotificationServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 5.0;
