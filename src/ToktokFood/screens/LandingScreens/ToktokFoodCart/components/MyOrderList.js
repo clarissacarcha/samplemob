@@ -58,7 +58,8 @@ const MyOrderList = () => {
       selectedPrice,
       selectedQty,
       selectedNotes,
-    })
+      action: 'edit',
+    });
   };
 
 
