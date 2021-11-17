@@ -6,47 +6,33 @@ import { useNavigation } from '@react-navigation/native'
 import { moderateScale } from "toktokload/helper";
 
 //COMPONENTS
-import { OrangeButton, PromptModal } from "src/ToktokLoad/components";
+import { OrangeButton } from "src/ToktokLoad/components";
 import { VerifyContext } from "./VerifyContextProvider";
 
 //FONTS & COLORS & IMAGES
 import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
 
+//HOOKS
+import { usePrompt } from 'src/hooks';
+
 export const PayNowButton = ({ amount }) => {
 
+  const prompt = usePrompt();
   const navigation = useNavigation();
   const { toktokWallet } = useContext(VerifyContext);
-  const [showPrompt, setShowPrompt] = useState({ show: false, title: "", message: "", event: "" });
 
   const onPressPayNow = () => {
     //success
-    setShowPrompt({
-      show: true,
+    prompt({
+      type: "success",
       title: "Thank you",
       message: `₱ ${amount.toFixed(2)} prepaid credit was loaded to your mobile number`,
-      event: "success"
+      onPress: ()=> { navigation.navigate("ToktokLoadReceipt") }
     });
-    // error
-    // setShowPrompt({
-    //   show: true,
-    //   title: "Transaction Failed",
-    //   message: "Please try again",
-    //   event: "error"
-    // });
   }
 
   return (
     <View style={styles.container}>
-      <PromptModal
-        visible={showPrompt.show}
-        onPress={() => {
-          setShowPrompt({ show: false });
-          navigation.navigate("ToktokLoadReceipt");
-        }}
-        title={showPrompt.title}
-        message={showPrompt.message}
-        event={showPrompt.event}
-      />
       <Text style={styles.terms}>
         <Text>Please read our </Text>
         <Text style={styles.paymentPolicy}>Payment Policy </Text>

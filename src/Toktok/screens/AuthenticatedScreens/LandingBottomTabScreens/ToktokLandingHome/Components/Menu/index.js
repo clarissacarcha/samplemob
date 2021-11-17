@@ -64,10 +64,10 @@ export const Menu = ({setUserLocation}) => {
         }}
       />
       <MenuIcon
-        label={'toktokfood'}
+        label={'toktokbills'}
         icon={ProfileIcon}
         onPress={() => {
-          navigation.push('TokTokFoodSplashScreen');
+          navigation.push('ToktokBillsHome');
         }}
       />
       <MenuIcon

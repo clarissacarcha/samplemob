@@ -8,6 +8,7 @@ import {
   // ElementsProvider,
   // KeyboardProvider,
   // OneSignalProvider,
+  PromptProvider,
   ReduxProvider,
   // SubscriptionProvider,
 } from '../provider';
@@ -23,7 +24,9 @@ const App = () => {
         <ReduxProvider>
           <ApolloProvider>
             <AlertProvider>
-              <Splash />
+              <PromptProvider>
+                  <Splash />
+              </PromptProvider>
             </AlertProvider>
           </ApolloProvider>
         </ReduxProvider>

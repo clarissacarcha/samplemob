@@ -40,7 +40,7 @@ export const ToktokLoadContacts = ({navigation, route}) => {
   const { contacts } = useContacts();
 
   useEffect(() => {
-    if(contacts && contacts.length > 0){
+    if(contacts){
       setData(contacts);
       setFilteredData(contacts)
     }
@@ -75,10 +75,6 @@ export const ToktokLoadContacts = ({navigation, route}) => {
     route.params.setMobileNumber(recipient.replace("+63", "0"))
     return navigation.pop()
   }
-
-  // useEffect(()=>{
-  //   goToContacts();
-  // },[])
 
   if (!filteredData) {
     return (
