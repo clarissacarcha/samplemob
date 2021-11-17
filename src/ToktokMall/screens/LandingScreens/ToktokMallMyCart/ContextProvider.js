@@ -7,12 +7,15 @@ const {Provider} = CartContext
 export const CartContextProvider = ({children})=> {
 
 	const [selectAll, setSelectAll] = useState(false)
+	const [swipeRefIndex, setSwipeRefIndex] = useState(0)
 
 	return (
 		<Provider 
 			value={{
 				selectAll,
-				setSelectAll				
+				setSelectAll,
+				swipeRefIndex,
+				setSwipeRefIndex		
 			}}
 		>
 			{children}

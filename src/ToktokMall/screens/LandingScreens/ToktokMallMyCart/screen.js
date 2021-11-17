@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext, useRef, createRef} from 'react';
 import {View, Text, StyleSheet, Platform, Dimensions, StatusBar, Image, TouchableOpacity, FlatList, RefreshControl} from 'react-native';
 import {connect, useDispatch} from 'react-redux'
 import {HeaderBack, HeaderTitle, HeaderRight, Header, CustomModal} from '../../../Components';
@@ -18,34 +18,39 @@ import { useLazyQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql';
 import { GET_MY_CART } from '../../../../graphql/toktokmall/model';
 import AsyncStorage from '@react-native-community/async-storage';
-import {EventRegister} from 'react-native-event-listeners'
+import {EventRegister} from 'react-native-event-listeners';
 
-const Component =  ({
+import { CartContext } from './ContextProvider';
+
+const Component = ({
   navigation,
   createMyCartCountSession
 }) => {
-  const [allSelected, setAllSelected] = useState(false);
-  const [willDelete, setWillDelete] = useState(false);
-  const [messageModalShown, setMessageModalShown] = useState(false);
-  const [singleDeletemsgModalShown, setSingleDeletemsgModalShown] = useState(false);
-  const [subTotal, setSubTotal] = useState(0);
-  const [itemsToDelArr, setItemsToDelArr] = useState([])
-  const [itemsToCheckoutArr, setItemsToCheckoutArr] = useState([])
-  const [checkoutData, setCheckoutData] = useState([])
-  const [myCartData, setMyCartData] = useState([])  
-  const session = useSelector(state=> state.session)
-  const [apiloader, setapiloader] = useState(false)
-  const [user, setUser] = useState({})
-  const [totalitems, settotalitems] = useState(0)
-  const [rawitems, setrawitems] = useState([])
-  const [selectedItemsArr, setSelectedItemsArr] = useState([])
-  const dispatch = useDispatch()
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack hidden={true} />,
     headerTitle: () => <HeaderTitle label={['Shopping Cart', '']} />,
     headerRight: () => <HeaderRight hidden={true} />,
   });
+
+  const CartContextData = useContext(CartContext)
+  const session = useSelector(state=> state.session)
+
+  const [itemsToDelArr, setItemsToDelArr] = useState([])
+  const [itemsToCheckoutArr, setItemsToCheckoutArr] = useState([])
+  const [checkoutData, setCheckoutData] = useState([])
+  const [willDelete, setWillDelete] = useState(false);
+  const [subTotal, setSubTotal] = useState(0);
+  const [myCartData, setMyCartData] = useState([])  
+  const [apiloader, setapiloader] = useState(false)
+  const [user, setUser] = useState({})
+  const [totalitems, settotalitems] = useState(0)
+  const [rawitems, setrawitems] = useState([])
+  const [selectedItemsArr, setSelectedItemsArr] = useState([])
+  const [swiperReferences, setSwiperReferences] = useState([])
+  const dispatch = useDispatch()
+
+  const swiperRefs = useRef([])
 
   const [getMyCartData, {loading, error}] = useLazyQuery(GET_MY_CART, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
@@ -57,6 +62,18 @@ const Component =  ({
         setrawitems(response.getMyCart.raw)
         settotalitems(response.getMyCart.total)
         createMyCartCountSession("set", response.getMyCart.count)
+
+        //GENERATE ARRAY OF REFERENCES FOR MANIPULATING SWIPEABLE VIEW BASED ON TOTAL CART ITEMS
+        swiperRefs.current = Array(response.getMyCart.total - 1).fill().map((_, i) => swiperRefs.current[i] || createRef());        
+        let swiperrefcopy = ArrayCopy(swiperReferences)
+        for(var x=0;x<response.getMyCart.raw.length;x++){
+          let item = response.getMyCart.raw[x]
+          //TRACKING AND USING EACH REFERENCES WILL BE PROCESSED BY CHECKING PRODUCT ID
+          //INDEX WILL BE USED FOR REFERENCING
+          swiperrefcopy.push({id: item.productid, index: x})
+        }
+        setSwiperReferences(swiperrefcopy)
+
       }
     },
     onError: (err) => {
@@ -83,7 +100,7 @@ const Component =  ({
 
   const reset = () => {
     setWillDelete(false)
-    setAllSelected(false)
+    CartContextData.setSelectAll(false)
     setSubTotal(0)
     setMyCartData([])
     setItemsToCheckoutArr([])
@@ -416,20 +433,20 @@ const Component =  ({
                 <View style={{flex: 6, justifyContent: 'center'}}>
                   <CheckBox
                     // isChecked={allSelected || itemsToCheckoutArr.length == totalitems}
-                    isChecked={allSelected || selectedItemsArr.length == totalitems}
+                    isChecked={CartContextData.selectAll || selectedItemsArr.length == totalitems}
                     rightText="Select All"
                     rightTextStyle={{fontSize: 14, fontWeight: '500'}}
                     checkedCheckBoxColor="#F6841F"
                     uncheckedCheckBoxColor="#F6841F"
                     onClick={() => {
-                      if (allSelected) {
+                      if (CartContextData.selectAll) {
                         //to false
                         unSelectAllitems();
                       } else {
                         //to true
                         selectAllItems();
                       }
-                      setAllSelected(!allSelected);
+                      CartContextData.setSelectAll(!CartContextData.selectAll)
                     }}
                   />
                 </View>
@@ -443,7 +460,7 @@ const Component =  ({
                       // setSelectedItemsArr([])
                       // setSubTotal(0)
                     } else {
-                      setAllSelected(false);
+                      CartContextData.setSelectAll(false);
                       init();
                     }
                     setWillDelete(!willDelete);
@@ -460,8 +477,9 @@ const Component =  ({
                   return (
                     <>
                       <RenderDetails
+                        ref={swiperRefs}
+                        references={swiperReferences}
                         item={item}
-                        allSelected={allSelected}
                         refreshing={loading}
                         willDelete={willDelete}
                         onPress={() => {

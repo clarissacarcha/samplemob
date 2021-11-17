@@ -1,7 +1,10 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, useContext, createRef, forwardRef} from 'react';
 import {View, Text, StyleSheet, Platform, Dimensions, StatusBar, Image, TouchableOpacity, FlatList} from 'react-native';
 import Swipeable from 'react-native-swipeable';
 import CustomIcon from "../../../../Components/Icons";
+import { ArrayCopy } from '../../../../helpers';
+
+import { CartContext } from '../ContextProvider';
 
 import {Item, Store} from './';
 
@@ -19,9 +22,9 @@ const DeleteButton = ({onPress}) => {
 	);
 };
 
-export const RenderDetails = ({
+export const RenderDetails = forwardRef(({
+	references,
 	item,  
-	allSelected, 
 	onPress, 
 	onStoreSelect, 
 	onItemSelect, 
@@ -30,16 +33,18 @@ export const RenderDetails = ({
 	onChangeQuantity,
 	refreshing,
 	willDelete
-}) => {
+}, ref) => {
 
-	const [storeItemSelected, setStoreItemSelected] = useState(allSelected ? true : false)
-	const [storeItemUnselected, setStoreitemUnselected] = useState(!allSelected ? true : false)
+	const CartContextData = useContext(CartContext)
+
+	const [storeItemSelected, setStoreItemSelected] = useState(CartContextData.selectAll ? true : false)
+	const [storeItemUnselected, setStoreitemUnselected] = useState(!CartContextData.selectAll ? true : false)
 	const [selectedItemsCount, setSelectedItemsCount] = useState(0)
 	const [heldItem, setHeldItem] = useState({})
 
 	useEffect(() => {
-		toggleCheckBox(allSelected)
-	}, [allSelected])
+		toggleCheckBox(CartContextData.selectAll)
+	}, [CartContextData.selectAll])
 
 	useEffect(() => {
 		setSelectedItemsCount(0)
@@ -48,6 +53,7 @@ export const RenderDetails = ({
 	useEffect(() => {
 		// console.log("Selected Count: ", selectedItemsCount)
 	}, [selectedItemsCount])
+
 
 	const getCheckboxState = () => {
 		if(storeItemSelected && !storeItemUnselected) return true
@@ -89,9 +95,6 @@ export const RenderDetails = ({
 		}
 	}
 
-
-
-
 	return (
     <>
       <Store
@@ -104,28 +107,54 @@ export const RenderDetails = ({
         onPress={onPress}
       />
 
-      {item &&
+      {
+				item &&
         item.data.length > 0 &&
         item.data.map((data, i) => {
-			const Wrapper = willDelete ? View : Swipeable
-			const props = willDelete
-			? {}
-			: {
-				rightActionActivationDistance: 30,
-				rightButtonWidth: 75,
-				rightButtons: [
-				  <DeleteButton
-					onPress={() => {
-					  onItemDelete({
-						shop: item.shop,
-						product: data.product,
-					  });
-					}}
-				  />,
-				],
-			  };
+
+					//TRACK THE REFERENCE BY PRODUCT ID
+					let trackingIndex = references.findIndex((e) => e.id == data.product.Id)
+					
+					const Wrapper = willDelete ? View : Swipeable
+					const props = willDelete
+											? {}
+											: {
+												//ASSIGN THIS SWIPEABLE TO REFERENCES INDEXED BY THE TRACKED INDEX
+												onRef: (_ref) => {ref.current[trackingIndex] = _ref}, 
+												onSwipeComplete: () => {
+													
+													//LOOP THROUGH REFERENCES AND HIDE ALL ACTIVE SWIPEABLE VIEWS
+													if(ref.current.length > 0){
+														ref.current.map((item, index) => {
+															//IF TRACKED REFERENCE IS THE CURRENT SWIPEABLE, SKIP 
+															if(trackingIndex == index){
+																return
+															}else{
+																//HIDE ACTIVE SWIPEABLE VIEWS NOW
+																if(item.recenter){
+																item.recenter()
+																}
+															}
+														})
+													}
+
+												},
+												swiperReference: data.product.Id,
+												rightActionActivationDistance: 30,
+												rightButtonWidth: 75,
+												rightButtons: [
+													<DeleteButton
+														onPress={() => {
+															onItemDelete({
+															shop: item.shop,
+															product: data.product,
+															});
+														}}
+													/>,
+												],
+												};
           return (
-            <Wrapper  {...props}>
+            <Wrapper {...props}>
               <Item
                 key={i}
                 index={i}
@@ -165,4 +194,4 @@ export const RenderDetails = ({
       {/* <View style={{height: 8, backgroundColor: '#F7F7FA'}} /> */}
     </>
   );
-}
+})

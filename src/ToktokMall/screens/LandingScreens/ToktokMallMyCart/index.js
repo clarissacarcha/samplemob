@@ -1,5 +1,5 @@
 import React, {useState, useEffect,} from 'react';
-import {CheckoutContextProvider} from './ContextProvider';
+import { CartContextProvider } from './ContextProvider';
 import { ToktokMallMyCartScreen } from './screen';
 
 export const ToktokMallMyCart = ({route, navigation}) => {
@@ -7,9 +7,9 @@ export const ToktokMallMyCart = ({route, navigation}) => {
   return (
     
     <>
-      <CheckoutContextProvider>
+      <CartContextProvider>
         <ToktokMallMyCartScreen route={route} navigation={navigation} />
-      </CheckoutContextProvider>
+      </CartContextProvider>
     </>
     
   );
