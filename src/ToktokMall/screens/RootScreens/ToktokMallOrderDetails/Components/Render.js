@@ -11,6 +11,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { FONT } from '../../../../../res/variables';
 import CustomIcon from "../../../../Components/Icons";
 import moment from 'moment';
+import DashedLine from 'react-native-dashed-line';
 
 const Store = ({data}) => {
 
@@ -70,7 +71,7 @@ const Summary = ({data}) => {
   )
 }
 
-const History = ({data}) => {
+const Historyx = ({data}) => {
 
   const history = data?.orderHistory
 
@@ -201,31 +202,12 @@ const History = ({data}) => {
         <View style={{flex: 0.6}}>
 
           {dottedLine(null, "top")}
-          {dottedLine("Process Order", "blank")}
+          {/* {dottedLine("Process Order", "blank")}
           {dottedLine("Ready for Pickup", "fill")}
           {dottedLine("Item picked up", "blank")}
           {dottedLine("Mark as Fulfilled", "fill")}
-          {dottedLine("Mark as Shipped", "bottom")}
-
-          {/* <View style={{paddingVertical: 12, alignItems: 'flex-start', justifyContent: 'flex-start'}}>
-            <CustomIcon.MCIcon name="circle" size={11} color={getIconColor(0)} style={{}} />
-          </View>
-          <View style={{paddingVertical: 12, alignItems: 'flex-start', justifyContent: 'flex-start'}}>
-            <CustomIcon.MCIcon name="circle" size={11} color={getIconColor(0)} style={{}} />
-          </View>
-          <View style={{paddingVertical: 12, alignItems: 'flex-start', justifyContent: 'flex-start'}}>
-            <CustomIcon.MCIcon name="circle" size={11} color={getIconColor(2)} style={{}} />
-          </View>
-          <View style={{paddingVertical: 12, alignItems: 'flex-start', justifyContent: 'flex-start'}}>
-            <CustomIcon.MCIcon name="circle" size={11} color={getIconColor(3)} style={{}} />
-          </View>
-          <View style={{paddingVertical: 12, alignItems: 'flex-start', justifyContent: 'flex-start'}}>
-            <CustomIcon.MCIcon name="circle" size={11} color={getIconColor(4)} style={{}} />
-          </View>
-          <View style={{paddingVertical: 12, alignItems: 'flex-start', justifyContent: 'flex-start'}}>
-            <CustomIcon.MCIcon name="circle" size={11} color={getIconColor(5)} style={{}} />
-          </View>           */}
-
+          {dottedLine("Mark as Shipped", "bottom")} */}
+         
         </View>
         <View style={{flex: 0.2}} />
         <View style={{flex: 8}}>
@@ -272,6 +254,124 @@ const History = ({data}) => {
       <View style={{ height: 8, backgroundColor: '#F7F7FA'}} />
     </>
   )
+}
+
+const History = ({data}) => {
+
+  console.log("HIstory", data.orderHistory)
+
+  const statuses = [
+    {state: "Preparing Order", action: "Process Order"},
+    {state: "Order is ready to be picked up", action: "Ready for Pickup"},
+    {state: "Order has been picked up", action: "item picked up"},
+    {state: "Order is ready to be delivered", action: "Mark as Fulfilled"},
+    {state: "Order delivered", action: "Order Delivered"}
+  ]
+
+  const RenderRow = ({rows, item, index, active, value}) => {
+
+    const stateColor = active ? "#F6841F" : "#CCCCCC"
+    
+    return (
+      <>
+        <View style={{flexDirection: 'row'}}>
+          <View style={{flex: 0.5, flexDirection: 'column'}}>          
+            <View style={{alignItems: 'center'}}>
+              <CustomIcon.FA5Icon name="stop" size={2} color={"#ccc"} style={{marginVertical: 1, marginHorizontal: 2}} />
+              <CustomIcon.FA5Icon name="stop" size={2} color={"#ccc"} style={{marginVertical: 1, marginHorizontal: 2}} />
+              <CustomIcon.FA5Icon name="stop" size={2} color={"#ccc"} style={{marginVertical: 1, marginHorizontal: 2}} />
+              <CustomIcon.FA5Icon name="stop" size={2} color={"#ccc"} style={{marginVertical: 1, marginHorizontal: 2}} />
+            </View>
+            <View style={{justifyContent: 'center', alignItems: 'center'}}>
+              <CustomIcon.MCIcon name="circle" size={9} color={stateColor} style={{}} />
+            </View>
+            <View style={{alignItems: 'center'}}>
+              {index < rows - 1 ?
+                <>
+                  <CustomIcon.FA5Icon name="stop" size={2} color={"#ccc"} style={{marginVertical: 1, marginHorizontal: 2}} />
+                  <CustomIcon.FA5Icon name="stop" size={2} color={"#ccc"} style={{marginVertical: 1, marginHorizontal: 2}} />
+                  <CustomIcon.FA5Icon name="stop" size={2} color={"#ccc"} style={{marginVertical: 1, marginHorizontal: 2}} />
+                </> :
+                <>
+                  <CustomIcon.FA5Icon name="stop" size={2} color={"#fff"} style={{marginVertical: 1, marginHorizontal: 2}} />
+                  <CustomIcon.FA5Icon name="stop" size={2} color={"#fff"} style={{marginVertical: 1, marginHorizontal: 2}} />
+                  <CustomIcon.FA5Icon name="stop" size={2} color={"#fff"} style={{marginVertical: 1, marginHorizontal: 2}} />
+                </>
+              }
+            </View>
+          </View>
+          <View style={{flex: 3, justifyContent: 'center'}}>
+            <Text style={{fontSize: 13, color: active ? "#F6841F" : "#929191"}}>{item.state}</Text>
+          </View>
+          <View style={{flex: 2, paddingHorizontal: 15, justifyContent: 'center', alignItems: 'flex-end'}}>
+            <Text style={{fontSize: 12, color: "#929191"}}>{value}</Text>
+          </View>
+        </View>
+      </>
+    )
+  }
+
+  return (
+    <>
+      <View style={{flexDirection: 'row', paddingVertical: 20, paddingHorizontal: 15}}>
+        <View style={{flex: 1}}>
+          <Text style={{fontSize: 13, fontFamily: FONT.BOLD}}>Delivery Status</Text>
+        </View>
+      </View>
+      <View style={{ height: 2, backgroundColor: '#F7F7FA'}} />
+      <View style={{height: 20}} />
+      <View style={{flexDirection: 'row'}}>
+        <View style={{flex: 0.5, flexDirection: 'column'}}>
+          <View style={{alignItems: 'center'}}>
+            <CustomIcon.FA5Icon name="stop" size={2} color={"#fff"} style={{marginVertical: 1, marginHorizontal: 2}} />
+            <CustomIcon.FA5Icon name="stop" size={2} color={"#fff"} style={{marginVertical: 1, marginHorizontal: 2}} />
+          </View>    
+          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            <CustomIcon.MCIcon name="circle" size={9} color={"#F6841F"} style={{}} />
+          </View>
+          <View style={{alignItems: 'center'}}>
+            <CustomIcon.FA5Icon name="stop" size={2} color={"#ccc"} style={{marginVertical: 1, marginHorizontal: 2}} />
+            <CustomIcon.FA5Icon name="stop" size={2} color={"#ccc"} style={{marginVertical: 1, marginHorizontal: 2}} />
+          </View>
+        </View>
+        <View style={{flex: 3, justifyContent: 'center'}}>
+          <Text style={{fontSize: 13, color: "#F6841F"}}>Order Confirmed</Text>
+        </View>
+        <View style={{flex: 2, justifyContent: 'center', paddingHorizontal: 15, alignItems: 'flex-end'}}>
+          <Text style={{fontSize: 12, color: "#929191"}}>{moment(data.dateOrdered, "YYYY-MM-DD h:m:s").format("MM-DD-YYYY, hh:mm a")}</Text>
+        </View>
+      </View>
+      <FlatList 
+        data={statuses}
+        renderItem={({item, index}) => {
+
+          let value = ""
+          let dataIndex = -1
+          
+          if(data.orderHistory && data.orderHistory.length > 0){
+            dataIndex = data.orderHistory.findIndex((a) => a.action == item.action)
+          }          
+
+          if(dataIndex > -1){
+            let history = data.orderHistory[dataIndex]
+            value = `${history.formatDate}, ${history.formatTime}`
+          }
+
+          return (
+            <RenderRow 
+              rows={statuses.length} 
+              item={item} 
+              index={index} 
+              active={dataIndex > -1}
+              value={value}
+            />
+          )
+        }}
+      />
+      
+    </>
+  )
+  
 }
 
 const Item = ({data}) => {

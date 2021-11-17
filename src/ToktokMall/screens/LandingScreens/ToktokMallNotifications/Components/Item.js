@@ -69,9 +69,8 @@ export const Item = ({active, data, onSelect}) => {
   return (
   	<>
       <TouchableOpacity 
-        onPress={() => {
-          onSelect()
-          navigation.navigate("ToktokMallOrderDetails", data)
+        onPress={() => {          
+          navigation.push("ToktokMallOrderDetails", {...data, onBack: onSelect})
         }}
         style={{flexDirection: 'row', backgroundColor: data.read && data.read == 1 ? '#fff' : '#FFFCF4'}}>
         <View style={{flex: 2, alignItems: 'center', justifyContent: 'center', paddingVertical: 20, paddingHorizontal: 15}}>

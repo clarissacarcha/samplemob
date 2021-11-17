@@ -4,14 +4,16 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {HeaderBack, HeaderTitle, HeaderRight} from '../../../Components';
 import {Renderer} from './Components';
 import { ApiCall } from '../../../helpers';
-
+import {connect} from "react-redux"
 import {EventRegister} from 'react-native-event-listeners'
 
-export const ToktokMallOrderDetails = ({navigation, route}) => {
+const Component = ({navigation, route, notificationCountSession}) => {
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack onBack={() => {
-      EventRegister.emit('refreshToktokmallNotifications')
+      EventRegister.emit('refreshToktokmallNotifications')      
+      notificationCountSession("remove", 1)
+      route.params.onBack()
       navigation.pop()
     }} />,
     headerTitle: () => <HeaderTitle label={['Order Details', '']} />,
@@ -45,3 +47,13 @@ export const ToktokMallOrderDetails = ({navigation, route}) => {
     </View>
   );
 };
+
+const mapStateToProps = (state) => ({
+  notifications: state.toktokMall.notifications
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  notificationCountSession: (action, payload) => dispatch({type: 'TOKTOK_MALL_NOTIFICATION_COUNT', action,  payload}),
+});
+
+export const ToktokMallOrderDetails = connect(mapStateToProps, mapDispatchToProps)(Component);
