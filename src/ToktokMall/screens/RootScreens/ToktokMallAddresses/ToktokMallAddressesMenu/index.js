@@ -47,7 +47,9 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
     value: false,
     ids: []
   })
-  const [singleItemDelete, setSingleItemDelete] = useState(null)
+  const [singleItemDelete, setSingleItemDelete] = useState(null)  
+
+  const swiperRefs = useRef([])
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack onBack={() => {
@@ -77,6 +79,7 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
       if(getCustomerAddresses){
         console.log("getCustomerAddresses", getCustomerAddresses)
         setAddresses(getCustomerAddresses)
+        swiperRefs.current = Array(getCustomerAddresses.length - 1).fill().map((_, i) => swiperRefs.current[i] || createRef());
       }
     },
     onError: (err) => {
@@ -239,7 +242,24 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
               ? {}
               : {
                   rightActionActivationDistance: 25,
-                  onRightActionRelease: () => setActiveToDeleteItem(item.id),
+                  onRef: (_ref) => {swiperRefs.current[index] = _ref}, 
+									onRightActionRelease: () => setActiveToDeleteItem(item.id),
+                  onSwipeComplete: () => {
+                    //LOOP THROUGH REFERENCES AND HIDE ALL ACTIVE SWIPEABLE VIEWS
+										if(swiperRefs.current.length > 0){
+											swiperRefs.current.map((item, i) => {
+												//IF INDEXED REFERENCE IS THE CURRENT SWIPEABLE, SKIP 
+												if(i == index){
+													return
+												}else{
+												  //HIDE ACTIVE SWIPEABLE VIEWS NOW
+													if(item.recenter){
+														item.recenter()
+													}
+												}
+											})
+										}
+                  },
                   rightButtonWidth: 75,
                   rightButtons: [
                     <DeleteButton
@@ -415,7 +435,7 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
                 flex: 0,
                 paddingBottom: activeToDeleteItem?.value
                   ? 70
-                  : 130,
+                  : Platform.OS == "android" ? 0 : 130,
               },
             ]}>
             {renderAddresses()}

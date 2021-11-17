@@ -68,7 +68,6 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
   const setAlertTrue = () => {
     setAlertModal(true)
-    console.log("test")
   }
 
   const [getCheckoutData, {error, loading}] = useLazyQuery(GET_CHECKOUT_DATA, {
@@ -294,8 +293,9 @@ const Component = ({route, navigation, createMyCartSession}) => {
     let a = 0;
     if(!addressData) return
     for (var x = 0; x < route.params.data.length; x++) {
-      for (var y = 0; y < route.params.data[x].data.length; y++) {
+      for (var y = 0; y < route.params.data[x].data[0].length; y++) {
         let item = route.params.data[x].data[0][y];
+        console.log("Hahay", route.params.data[x].data[0][y], y)
         a += parseFloat(item.amount) * item.qty;
       }
       // let shipping = 0
@@ -306,6 +306,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
       // console.log(shippingRates, shipping)
       // a += parseFloat(userDefaultAddress?.shippingSummary?.rateAmount)
     }
+    // console.log("subtotal", a)
     setSubTotal(a)
     let shipping = 0
     let originalShippingFee = 0
@@ -316,6 +317,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
         let shippingfee = CheckoutContextData.shippingFeeRates[z]?.shippingfee
         let voucheramount = CheckoutContextData.shippingVouchers[z]?.amount
+
         if(shippingfee && voucheramount && shippingfee - voucheramount < 0){
           shipping += 0
         }else{
@@ -328,14 +330,14 @@ const Component = ({route, navigation, createMyCartSession}) => {
       originalShippingFee += parseFloat(CheckoutContextData.shippingFeeRates[z].original_shipping)
 
     }
-    console.log("Grand total...")
-    console.log(a, shipping)
+    // console.log("Grand total...")
+    // console.log(a, shipping)
 
     let b = a
     a += shipping
     b += originalShippingFee
     setSrpTotal(b)
-    // setGrandTotal(a)
+    setGrandTotal(a)
   }
 
   const getShopItemPayload = () => {
@@ -378,12 +380,13 @@ const Component = ({route, navigation, createMyCartSession}) => {
     
   useEffect(() => {
     (async () => {
+      // console.log(JSON.stringify(route.params.data))
       await init()
     })();
   }, [])
 
   useEffect(() => {
-    console.log("Shipping Rates Value:", shippingRates.length)
+    // console.log("Shipping Rates Value:", shippingRates.length)
   }, [shippingRates])
 
   useEffect(() => {
