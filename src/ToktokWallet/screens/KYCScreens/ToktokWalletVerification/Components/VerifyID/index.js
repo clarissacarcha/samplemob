@@ -144,6 +144,7 @@ export const VerifyID = ()=> {
     }
 
     const onSelectIdType = (card) => {
+        changeVerifyID("idNumber","")
         setFrontImage(null)
         setBackImage(null)
         setIsbackRequired(card.isBackRequired == 1)
