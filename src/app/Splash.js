@@ -35,7 +35,7 @@ const mapKeyValueToObject = (keyValueArray) => {
 };
 
 const Splash = ({setConstants}) => {
-  const [checkPoint, setcheckPoint] = useState(''); // A-Allow, S-Suggest, B-Block, M-Maintenance
+  const [checkPoint, setcheckPoint] = useState('A'); // A-Allow, S-Suggest, B-Block, M-Maintenance
   const [deepLink, setDeepLink] = useState('');
 
   const oneSignalInit = async (oneSignalAppId) => {
@@ -138,7 +138,7 @@ const Splash = ({setConstants}) => {
   };
 
   useEffect(() => {
-    checkNetworkConnection();
+    // checkNetworkConnection();
   }, []);
 
   // Updated Version = ALLOW

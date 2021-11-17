@@ -26,7 +26,7 @@ import Loader from 'toktokfood/components/Loader';
 import DialogMessage from 'toktokfood/components/DialogMessage';
 import { onErrorAlert } from 'src/util/ErrorUtility';
 import { useAlert } from 'src/hooks';
-export const FoodCart = ({loading}) => {
+export const FoodCart = ({loading, action}) => {
 
   const alert = useAlert();
   const dispatch = useDispatch();
@@ -426,7 +426,7 @@ export const FoodCart = ({loading}) => {
             },
           ]}
           onPress={() => onRestaurantNavigate()}>
-          <Text style={styles.buttonText}>Add to Cart</Text>
+          <Text style={styles.buttonText}>{action === 'edit' ? 'Save' : 'Add to Cart'}</Text>
         </TouchableOpacity>
       </View>
     </>
@@ -459,7 +459,7 @@ const styles = StyleSheet.create({
     width: getDeviceWidth - 28,
   },
   buttonText: {
-    color: COLOR.BLACK,
+    color: COLOR.WHITE,
     fontSize: FONT_SIZE.L,
     fontFamily: FONT.BOLD,
   },

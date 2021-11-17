@@ -33,6 +33,7 @@ const MainComponent = () => {
     selectedPrice,
     selectedQty,
     selectedNotes,
+    action,
   } = routes.params;
   const {customerInfo} = useSelector((state) => state.toktokFood);
   const {
@@ -196,7 +197,7 @@ const MainComponent = () => {
               />
             </ScrollView>
           </KeyboardAvoidingView>
-          <FoodCart loading={loading} basePrice={0} />
+          <FoodCart loading={loading} basePrice={0} action={action} />
         </>
       )}
     </View>
