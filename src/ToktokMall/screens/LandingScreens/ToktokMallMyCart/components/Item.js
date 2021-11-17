@@ -143,10 +143,10 @@ export const Item = ({
                   }}
                   disabled = {qty == 1}
                   onPress = {() => {
-                    if(selected){
+                    // if(selected){
                       onChangeQuantity(qty - 1, product?.Id)
                       setQty(qty - 1)
-                    }
+                    // }
                   }}
                 >
                   <AIcons
@@ -167,10 +167,10 @@ export const Item = ({
                   }}
                   disabled={product.noOfStocks === qty || qty === 200}
                   onPress = {() => {
-                    if(selected){
+                    // if(selected){
                       onChangeQuantity(qty + 1, product?.Id)
                       setQty(qty + 1)
-                    }
+                    // }
                   }}
                 >
                   <AIcons
