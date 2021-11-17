@@ -17,12 +17,11 @@ import {COLORS} from 'res/constants';
 import {FONT_SIZE, FONT, COLOR} from 'res/variables';
 
 // Images
-import {locationOutline, phoneBlack, store, user, rider1} from 'toktokfood/assets/images';
+import {locationOutline, phoneBlack, store, user} from 'toktokfood/assets/images';
 
 // Utils
 import {moderateScale, verticalScale, isIphoneXorAbove} from 'toktokfood/helper/scale';
 import DialogMessage from 'toktokfood/components/DialogMessage';
-import { Platform } from 'react-native';
 
 const OrderAddress = ({ transaction, riderDetails }) => {
   
