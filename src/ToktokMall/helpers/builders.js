@@ -92,7 +92,7 @@ export const BuildOrderLogsList = ({data, shipping, shippingRates, shippingVouch
 			original_shipping_fee: parseFloat(shippingRates[shippingfeeindex].original_shipping),
 			handle_shipping_promo: 1,
 			hash: shippingRates[shippingfeeindex].hash,
-			hash_delivery_amount: shippingRates[shippingfeeindex].hash_price,
+			hash_delivery_amount:  shippingVouchers[index] ? shippingVouchers[index].hash_delivery_amount : shippingRates[shippingfeeindex].hash_price,
 			daystoship: shipping.fromDay,
 			daystoship_to: shipping.toDay,
 			items: items

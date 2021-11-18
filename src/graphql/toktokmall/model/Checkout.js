@@ -44,6 +44,17 @@ export const GET_CHECKOUT_DATA = gql`
     }
   }
 `
+
+export const GET_HASH_AMOUNT = gql`
+	query getHashDeliveryAmount($input: GetHashDeliveryAmountInput) {
+		getHashDeliveryAmount(input: $input) {
+			hash
+			index
+			value
+		}
+	}
+`
+
 export const POST_CHECKOUT = gql`
 	mutation postCheckout($input: PostCheckoutInput) {
 		postCheckout(input: $input){
