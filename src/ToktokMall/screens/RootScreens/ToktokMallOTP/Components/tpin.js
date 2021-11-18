@@ -10,10 +10,11 @@ import { useSelector } from 'react-redux';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { TPINOTPContext } from '../ContextProvider';
 import {TpinMaxAttemptModal} from '../../../../Components/Widgets'
-import { useFocusEffect } from '@react-navigation/core';
+import { useFocusEffect, useNavigation } from '@react-navigation/core';
 
 export const TPIN =  ({onValidate}) => {
 
+  const navigation = useNavigation();
   const Context = useContext(TPINOTPContext)
   const inputRef = useRef(null)  
   const maximumAttempts = 3
