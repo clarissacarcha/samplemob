@@ -109,6 +109,7 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
             firstName: VerifyUserData.person.firstName,
             middleName: VerifyUserData.person.middleName,
             lastName: VerifyUserData.person.lastName,
+            hasMiddleName: VerifyUserData.person.hasMiddleName,
             gender: VerifyUserData.person.gender,
             birthdate: moment(VerifyUserData.birthInfo.birthdate).format("YYYY-MM-DD"),
             // birthdate: VerifyUserData.birthInfo.birthdate,
