@@ -35,7 +35,7 @@ export const PayNowButton = ({ amount }) => {
     <View style={styles.container}>
       <Text style={styles.terms}>
         <Text>Please read our </Text>
-        <Text style={styles.paymentPolicy}>Payment Policy </Text>
+        <Text style={styles.paymentPolicy}>Terms and Conditions </Text>
         <Text>before you proceed with your transaction</Text>
       </Text>
       <OrangeButton

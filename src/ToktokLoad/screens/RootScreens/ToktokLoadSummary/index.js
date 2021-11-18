@@ -22,7 +22,7 @@ import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
 const MainComponent = ({ navigation, route }) => {
 
   const { amount } = route.params?.loads;
-  const mobileNo = route.params?.mobileNo;
+  const mobileNumber = route.params?.mobileNumber;
 
   const {user} = useSelector((state) => state.session);
   const { toktokWallet, setToktokWallet, hasToktokWallet, setHasToktokWallet } = useContext(VerifyContext);
@@ -72,7 +72,7 @@ const MainComponent = ({ navigation, route }) => {
         <Text style={styles.headerText}>Load Summary</Text>
       </View>
       <ScrollView style={{ flex: 1 }}>
-        <SummaryDetails amount={amount} mobileNo={mobileNo} />
+        <SummaryDetails amount={amount} mobileNumber={mobileNumber} />
         <View style={styles.separator} />
         <PaymentMethod amount={amount} getMyAccount={getMyAccount} />
       </ScrollView>
