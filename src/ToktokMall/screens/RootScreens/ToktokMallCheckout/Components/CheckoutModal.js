@@ -16,7 +16,7 @@ const testData = [
 ]
 const REAL_WIDTH = Dimensions.get('window').width;
 
-export const CheckoutModal = ({navigation, isVisible, setIsVisible}) => {
+export const CheckoutModal = ({navigation, isVisible, setIsVisible, goToOrders}) => {
   
 
   return (
@@ -67,8 +67,7 @@ export const CheckoutModal = ({navigation, isVisible, setIsVisible}) => {
                   <TouchableOpacity 
                     style={styles.button} 
                     onPress={() => {
-                      setIsVisible(false)
-                      navigation.navigate("ToktokMallMyOrders", { tab: 0})
+                      goToOrders()
                     }
                   }>
                     <Text style = {styles.buttonText}>Go to My Orders</Text>
