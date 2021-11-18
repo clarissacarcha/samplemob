@@ -52,27 +52,13 @@ export const ToktokLoadContacts = ({navigation, route}) => {
     setFilteredData(filteredContacts);
   };
 
-  const onSelectContact = ({name, number}) => {
+  const onSelectContact = (number) => {
     let mobileNumber = number.replace(/\s/g, '').replace(/[()]/g, '');
-    // For 11 digit number starting with 0
-    if (mobileNumber.length === 11 && mobileNumber[0] === '0') {
-      mobileNumber = mobileNumber.slice(1, 11);
-    }
-
-    if (mobileNumber.length === 13 && mobileNumber.slice(0, 3) === '+63') {
-      mobileNumber = mobileNumber.slice(3, 13);
-    }
-
-    if (mobileNumber.length !== 10) {
-      Alert.alert('', 'Invalid mobile number format.');
-      return;
-    }
-   
-    setRecipient(mobileNumber);
+    return mobileNumber.replace("+63", "0");
   };
 
-  const setRecipient = (recipient) => {
-    route.params.setMobileNumber(recipient.replace("+63", "0"))
+  const setRecipient = (number) => {
+    route.params.setMobileNumber(onSelectContact(number))
     return navigation.pop()
   }
 
@@ -134,7 +120,14 @@ export const ToktokLoadContacts = ({navigation, route}) => {
         data={filteredData}
         keyExtractor={(item, index) => index}
         renderItem={({item, index}) => {
-          return <ContactInfoRender item={item} index={index} setSearchString={setSearchString} checkAccount={setRecipient}/>
+          return (
+            <ContactInfoRender
+              item={item}
+              index={index}
+              setSearchString={setSearchString}
+              checkAccount={setRecipient}
+            />
+          )
         }}
       />
     </View>

@@ -1,23 +1,30 @@
 import React, {useState, useContext} from "react";
 import {View, Text, StyleSheet, FlatList, Platform, TouchableOpacity, Image} from "react-native";
+
 //UTIL
 import { moderateScale } from "toktokload/helper";
+import { useThrottle } from 'src/hooks';
+
 //FONTS & COLORS & IMAGES
 import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
 import { VerifyContext } from "./VerifyContextProvider";
 import { heart_fill_icon, heart_no_fill_icon, heart_selected_fill_icon } from "src/ToktokLoad/assets/icons";
 
-export const LoadDetails = ({ item, index, networkId, onPressFavorite }) => {
+//COMPONENTS
+import { LoadingIndicator } from "src/ToktokLoad/components";
+export const LoadDetails = ({ item, index, networkId, onPressFavorite, patchFavoriteLoading, postFavoriteLoading }) => {
   
   const { selectedLoad, setSelectedLoad, loads, setLoads } = useContext(VerifyContext);
-  const { amount, name, isFavorite } = item;
+  const { amount, name, favorite } = item;
 
   const isSelected = selectedLoad[networkId]?.id == item.id;
   const colorAmount = isSelected ? "#fff" : "#F6841F";
   const colorDesc = isSelected ? "#fff" : "#707070";
 
+  const onPressThrottled = useThrottle(onPressFavorite, 1000);
+
   const imgSelected = () => {
-    if(isFavorite){
+    if(favorite){
       return isSelected ? heart_selected_fill_icon : heart_fill_icon
     } else {
       return isSelected ? heart_no_fill_icon : heart_selected_fill_icon
@@ -47,12 +54,16 @@ export const LoadDetails = ({ item, index, networkId, onPressFavorite }) => {
         <Text style={[ styles.loadName, { color: colorDesc }]}>{name}</Text>
       </View> 
       <View style={styles.heartIconContainer}>
-        <TouchableOpacity
-          onPress={onPressFavorite}
-          hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}
-        >
-          <Image source={imgSelected()} style={styles.heartIcon} />
-        </TouchableOpacity>
+        { patchFavoriteLoading || postFavoriteLoading ? (
+          <LoadingIndicator isLoading={true} size="small" />
+        ) : (
+          <TouchableOpacity
+            onPress={onPressThrottled}
+            hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}
+          >
+            <Image source={imgSelected()} style={styles.heartIcon} />
+          </TouchableOpacity>
+        )}
       </View>
     </TouchableOpacity>
   );

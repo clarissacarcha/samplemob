@@ -9,7 +9,7 @@ import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
 const Tab = createMaterialTopTabNavigator();
 const width = Dimensions.get('window').width ;
 
-export const HeaderTabs = ({ tabs, scrollEnabled = false, onTabPress }) => {
+export const HeaderTabs = ({ tabs, scrollEnabled = false }) => {
 
   return (
     <Tab.Navigator
@@ -37,15 +37,6 @@ export const HeaderTabs = ({ tabs, scrollEnabled = false, onTabPress }) => {
                       </Text>
                     </View>
                   )
-                },
-              }}
-              listeners={{
-                tabPress: (e) => {
-                  // Prevent default action
-                  // e.preventDefault();
-            
-                  //Any custom code here
-                  onTabPress()
                 },
               }}
             >
