@@ -107,7 +107,7 @@ const ToktokFoodSearch = ({route}) => {
     setHistory([]);
   };
 
-  const searchFood = async (s = '', radius = 5) => {
+  const searchFood = async (s = '', radius = 3) => {
     try {
       setLoading(true);
       const API_RESULT = await axios({
