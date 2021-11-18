@@ -463,7 +463,7 @@ const Component =  ({
           />
         }
 
-        {isFetching ? <></> : <RenderSuggestions data={relevantProducts || []} lazyload={scrollendreached} /> }
+        {isFetching ? <></> : <RenderSuggestions category={product.catId} data={relevantProducts || []} lazyload={scrollendreached} /> }
         
         {/* <RenderReviews /> */}
         
