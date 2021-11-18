@@ -7,12 +7,12 @@ import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
 import { VerifyContext } from "./VerifyContextProvider";
 import { heart_fill_icon, heart_no_fill_icon, heart_selected_fill_icon } from "src/ToktokLoad/assets/icons";
 
-export const LoadDetails = ({ item, index, network, onPressFavorite }) => {
+export const LoadDetails = ({ item, index, networkId, onPressFavorite }) => {
   
   const { selectedLoad, setSelectedLoad, loads, setLoads } = useContext(VerifyContext);
-  const { amount, description, isFavorite } = item;
+  const { amount, name, isFavorite } = item;
 
-  const isSelected = selectedLoad[network]?.id == item.id;
+  const isSelected = selectedLoad[networkId]?.id == item.id;
   const colorAmount = isSelected ? "#fff" : "#F6841F";
   const colorDesc = isSelected ? "#fff" : "#707070";
 
@@ -28,10 +28,10 @@ export const LoadDetails = ({ item, index, network, onPressFavorite }) => {
     <TouchableOpacity
       onPress={() => {
         if(isSelected){
-          const {[network]: item, ...data} = selectedLoad;
+          const {[networkId]: item, ...data} = selectedLoad;
           setSelectedLoad(data);
         } else {
-          setSelectedLoad(prev => ({ ...prev, [network]: item }));
+          setSelectedLoad(prev => ({ ...prev, [networkId]: item }));
         }
       }}
       style={[
@@ -44,14 +44,16 @@ export const LoadDetails = ({ item, index, network, onPressFavorite }) => {
       </View>
       <View style={{ paddingHorizontal: moderateScale(20) }}>
         <Text style={[ styles.amount, { color: colorDesc }]}>PHP {amount}</Text>
-        <Text style={{ fontSize: FONT_SIZE.M, color: colorDesc }}>{description}</Text>
+        <Text style={[ styles.loadName, { color: colorDesc }]}>{name}</Text>
       </View> 
-      <TouchableOpacity onPress={onPressFavorite} style={styles.heartIconContainer}>
-        <Image
-          source={imgSelected()}
-          style={styles.heartIcon}
-        />
-      </TouchableOpacity>
+      <View style={styles.heartIconContainer}>
+        <TouchableOpacity
+          onPress={onPressFavorite}
+          hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}
+        >
+          <Image source={imgSelected()} style={styles.heartIcon} />
+        </TouchableOpacity>
+      </View>
     </TouchableOpacity>
   );
 };
@@ -84,6 +86,10 @@ const styles = StyleSheet.create({
   heartIconContainer: {
     flex: 1,
     alignItems: "flex-end"
+  },
+  loadName: {
+    fontSize: FONT_SIZE.M,
+    marginTop: 5
   }
 })
 

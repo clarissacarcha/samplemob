@@ -7,14 +7,14 @@ import { moderateScale } from "toktokload/helper";
 //FONTS & COLORS & IMAGES
 import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
 
-export const SummaryDetails = ({ amount, mobileNo }) => {
+export const SummaryDetails = ({ amount, mobileNumber }) => {
 
   return (
     <>
       <View style={{ paddingHorizontal: moderateScale(30), marginTop: moderateScale(15) }}>
         <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
           <Text style={styles.title}>Mobile Number</Text>
-          <Text style={styles.description}>{mobileNo}</Text>
+          <Text style={styles.description}>{mobileNumber}</Text>
         </View>
         <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
           <Text style={styles.title}>Load Amount</Text>
@@ -22,7 +22,7 @@ export const SummaryDetails = ({ amount, mobileNo }) => {
         </View>
         <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
           <Text style={styles.title}>Discount</Text>
-          <Text style={styles.description}>PHP 00.00</Text>
+          <Text style={styles.description}>PHP 0.00</Text>
         </View>
       </View>
       <View style={styles.line} />
