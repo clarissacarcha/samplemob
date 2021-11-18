@@ -33,7 +33,7 @@ const MainComponent = ({ navigation, route }) => {
       <Header />
       <ReceiptDetails />
       <View style={styles.buttonContainer}>
-        <OrangeButton label="Ok" onPress={() => navigation.navigate("ToktokLoadHome")} />
+        <OrangeButton label="Ok" onPress={() => navigation.pop("ToktokLoadHome")} />
       </View>
     </View>
   );

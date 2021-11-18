@@ -21,7 +21,7 @@ import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
 
 const MainComponent = ({ navigation, route }) => {
 
-  const { amount } = route.params?.loads;
+  const loads = route.params?.loads;
   const mobileNumber = route.params?.mobileNumber;
 
   const {user} = useSelector((state) => state.session);
@@ -72,11 +72,11 @@ const MainComponent = ({ navigation, route }) => {
         <Text style={styles.headerText}>Load Summary</Text>
       </View>
       <ScrollView style={{ flex: 1 }}>
-        <SummaryDetails amount={amount} mobileNumber={mobileNumber} />
+        <SummaryDetails amount={loads?.amount ? loads.amount : loads.loadDetails.amount} mobileNumber={mobileNumber} />
         <View style={styles.separator} />
-        <PaymentMethod amount={amount} getMyAccount={getMyAccount} />
+        <PaymentMethod amount={loads?.amount ? loads.amount : loads.loadDetails.amount} getMyAccount={getMyAccount} />
       </ScrollView>
-      <PayNowButton amount={amount} />
+      <PayNowButton amount={loads?.amount ? loads.amount : loads.loadDetails.amount} />
     </View>
   );
 };

@@ -1,20 +1,34 @@
 import React, {useState, useContext} from "react";
 import {View, Text, StyleSheet, FlatList, Platform, TouchableOpacity, Image} from "react-native";
+
 //UTIL
 import { moderateScale } from "toktokload/helper";
+import { useContacts } from 'toktokload/hooks';
+
 //FONTS & COLORS & IMAGES
 import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
-import { VerifyContext } from "./VerifyContextProvider";
 import { heart_fill_icon, heart_no_fill_icon, heart_selected_fill_icon } from "src/ToktokLoad/assets/icons";
 
-export const FavoriteDetails = ({ item, index }) => {
-  
-  const { selectedLoad, setSelectedLoad } = useContext(VerifyContext);
-  const { amount, name, mobileNo } = item;
+const checkContact = (number) => {
+  let mobileNumber = number.replace(/\s/g, '').replace(/[()]/g, '');
+  return mobileNumber.replace("+63", "0");
+};
 
+const processName = (contacts, mobileNumber) => {
+  if(contacts.length > 0){
+    let contact = contacts.find((val) => { return checkContact(val.number) === mobileNumber })
+    return contact?.name ? contact.name : ""
+  }
+}
+export const FavoriteDetails = ({ item, index, setSelectedLoad, selectedLoad }) => {
+
+  const { contacts } = useContacts();
+  const { loadDetails, mobileNumber } = item;
+  const { amount } = loadDetails;
   const isSelected = selectedLoad.id == item.id;
   const colorAmount = isSelected ? "#fff" : "#F6841F";
   const colorDesc = isSelected ? "#fff" : "#707070";
+  const contactName = processName(contacts, mobileNumber);
 
   return (
     <TouchableOpacity
@@ -31,8 +45,8 @@ export const FavoriteDetails = ({ item, index }) => {
       </View>
       <View style={{ paddingHorizontal: moderateScale(20) }}>
         <Text style={[ styles.amount, { color: colorDesc }]}>PHP {amount}</Text>
-        <Text style={{ fontSize: FONT_SIZE.M, color: colorDesc }}>{name}</Text>
-        <Text style={{ fontSize: FONT_SIZE.M, color: colorDesc }}>{mobileNo}</Text>
+        { !!contactName && <Text style={{ fontSize: FONT_SIZE.M, color: colorDesc }}>{contactName}</Text> }
+        <Text style={{ fontSize: FONT_SIZE.M, color: colorDesc }}>{mobileNumber}</Text>
       </View> 
     </TouchableOpacity>
   );
