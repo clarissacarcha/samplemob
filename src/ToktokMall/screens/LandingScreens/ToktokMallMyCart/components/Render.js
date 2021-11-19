@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/core';
 import React, {useState, useEffect, useRef, useContext, createRef, forwardRef} from 'react';
 import {View, Text, StyleSheet, Platform, Dimensions, StatusBar, Image, TouchableOpacity, FlatList} from 'react-native';
 import Swipeable from 'react-native-swipeable';
@@ -35,6 +36,7 @@ export const RenderDetails = forwardRef(({
 	willDelete
 }, ref) => {
 
+	const navigation = useNavigation()
 	const CartContextData = useContext(CartContext)
 
 	const [storeItemSelected, setStoreItemSelected] = useState(CartContextData.selectAll ? true : false)
@@ -53,6 +55,17 @@ export const RenderDetails = forwardRef(({
 	useEffect(() => {
 		// console.log("Selected Count: ", selectedItemsCount)
 	}, [selectedItemsCount])
+
+	useEffect(() => {
+
+    const unsubscribe = navigation.addListener('blur', () => {
+      ref.current.map((item, index) => {
+        item.recenter()
+      })
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
 
 	const getCheckboxState = () => {
@@ -103,6 +116,7 @@ export const RenderDetails = forwardRef(({
         onSelect={(raw) => {
           toggleCheckBox(raw.checked);
           onStoreSelect(raw, item.data);
+					CartContextData.setSelectAll(false);
         }}
         onPress={onPress}
       />
@@ -164,6 +178,11 @@ export const RenderDetails = forwardRef(({
 								forceSelectToZero = {selectedItemsCount == 0}
                 data={data}
                 onHold={(raw) => {
+									
+									ref.current.map((item, index) => {
+										item.recenter()
+									})
+
 									setHeldItem(raw)
 									if (raw.checked) {
                     setSelectedItemsCount(selectedItemsCount + 1);
@@ -174,13 +193,16 @@ export const RenderDetails = forwardRef(({
 									onItemLongPress(raw);
 									// swipableRef.recenter()
                 }}
-                onSelect={(raw) => {
+                onSelect={(raw) => {									
+
                   if (raw.checked) {
                     setSelectedItemsCount(selectedItemsCount + 1);
                   } else if (!raw.checked) {
+										CartContextData.setSelectAll(false);
                     setSelectedItemsCount(selectedItemsCount - 1);
                   }
                   onItemSelect(raw);
+
                 }}
                 item={item}
 								onChangeQuantity={onChangeQuantity}

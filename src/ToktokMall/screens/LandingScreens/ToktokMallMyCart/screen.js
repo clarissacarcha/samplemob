@@ -21,6 +21,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {EventRegister} from 'react-native-event-listeners';
 
 import { CartContext } from './ContextProvider';
+import { useFocusEffect } from '@react-navigation/core';
 
 const Component = ({
   navigation,
@@ -111,6 +112,7 @@ const Component = ({
   useEffect(() => {
     init()
     EventRegister.addEventListener('refreshToktokmallShoppingCart', init)
+    
   }, [])
 
   const onChangeQuantity = (id, qty) => {
