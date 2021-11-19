@@ -143,7 +143,9 @@ export const GET_ORDER_DETAILS = gql`
 			referenceNum
 			totalAmount
 			dateOrdered
-			dateOrderprocessed
+			dateOrderProcessed
+			dateReadyPickup
+			dateBookingConfirmed
 			dateFulfilled
 			dateShipped
 			dateReceived

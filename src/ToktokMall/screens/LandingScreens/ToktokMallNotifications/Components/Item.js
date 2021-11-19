@@ -29,6 +29,32 @@ export const Item = ({active, data, onSelect}) => {
     }
 	}
 
+  const getDescription = (string) => {
+
+    let ref = ""
+    let shop = ""
+    let content = ""
+
+    if(string.includes("<ref>") && string.includes("<shop>")){
+      ref = string.split("<ref>")[1].split("</ref>")[0]
+      shop = string.split("<shop>")[1].split("</shop>")[0]
+      content = string.split("</shop>")[1]
+    }
+
+    return (
+      <>
+        <Text>
+          <Text style={{fontSize: 12, color: "#9E9E9E"}}>Your order </Text>
+          <Text style={{fontSize: 12, color: "#F6841F"}}>{ref}</Text>
+          <Text style={{fontSize: 12, color: "#9E9E9E"}}> from </Text>
+          <Text style={{fontSize: 12, color: "#F6841F"}}>{shop}</Text>
+          <Text style={{fontSize: 12, color: "#9E9E9E"}}>{content}</Text>
+        </Text>
+        
+      </>
+    )
+  }
+
   return (
   	<>
       <TouchableOpacity 
@@ -44,7 +70,7 @@ export const Item = ({active, data, onSelect}) => {
         </View>
         <View style={{flex: 8, paddingVertical: 20, paddingHorizontal: 0}}>
           <Text style={{fontSize: 13, fontFamily: FONT.BOLD}}>{orderStatus?.content?.title}</Text>
-          <Text style={{fontSize: 11, color: "#9E9E9E"}}>{orderStatus?.content?.description}</Text>
+          {getDescription(orderStatus?.content?.description || "")}
         </View>
         <View style={{flex: 2.5, paddingVertical: 20, paddingHorizontal: 15}}>
           <View style={{alignItems: 'center'}}>
