@@ -33,25 +33,26 @@ export const ToktokBillsHome = ({navigation,route})=> {
   const [refreshing, setRefreshing] = useState(false);
 
   const [getBillTypes, {data, loading, error, refetch}] = useLazyQuery(GET_BILL_TYPES, {
-    fetchPolicy: "network-only",
+    fetchPolicy: "cache-and-network",
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
+    onError: () => { setRefreshing(false) },
+    onCompleted: ({ getBillTypes }) => {
+      setRefreshing(false);
+      setBillTypes(getBillTypes)
+    }
   })
 
   useEffect(() => {
     getMyAccount();
-  }, [])
-
-  useEffect(() => {
-    if(isFocused){
-      getBillTypes();
-    }
-  }, [isFocused])
+    getBillTypes();
+  }, []);
 
   const onRefresh = () => {
+    setRefreshing(true);
     refetch();
   }
 
-  if(loading || getMyAccountLoading){
+  if((loading || getMyAccountLoading) && billTypes.length === 0){
     return(
       <View style={styles.container}>
         <LoadingIndicator isLoading={true} isFlex />
@@ -73,7 +74,7 @@ export const ToktokBillsHome = ({navigation,route})=> {
         contentContainerStyle={styles.flatlistContainer}
         showsVerticalScrollIndicator={false}
         numColumns={3}
-        data={data?.getBillTypes}
+        data={billTypes}
         keyExtractor={(item)=>item.name}
         renderItem={({item,index})=><BillerType item={item} index={index}/>}
         refreshControl={

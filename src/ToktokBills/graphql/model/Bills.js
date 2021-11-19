@@ -9,3 +9,23 @@ export const GET_BILL_TYPES = gql`
     }
   }
 `
+export const GET_BILL_ITEMS = gql`
+  query getBillItems($input: GetBillItemsInput) {
+    getBillItems(input: $input) {
+      id
+      name
+      descriptions
+      logo
+    }
+  }
+`
+export const GET_SEARCH_BILL_ITEMS = gql`
+  query getSearchBillItems($input: GetSearchBillItemsInput) {
+    getSearchBillItems(input: $input) {
+      id
+      name
+      descriptions
+      logo
+    }
+  }
+`

@@ -22,17 +22,14 @@ export const Biller = ({
   }
 
   const onThrottledPress = useThrottle(onPress , 2000)
-
+  
   return (
     <TouchableOpacity
       onPress={onThrottledPress}
       style={styles.container}
     >
       <View style={styles.item}>
-        <Image
-          source={item.logo}
-          style={styles.itemLogo}
-        />
+        <Image source={{ uri: item.logo }} style={styles.itemLogo} />
         <Text style={styles.itemName}>{item.name}</Text>
       </View>
     </TouchableOpacity>
