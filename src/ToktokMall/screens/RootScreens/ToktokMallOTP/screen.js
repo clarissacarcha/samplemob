@@ -20,7 +20,7 @@ import { useLazyQuery, useMutation } from '@apollo/react-hooks';
 import { TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT } from '../../../../graphql';
 import { POST_VERIFY_TOKTOKWALLET_PIN } from '../../../../graphql/toktokmall/virtual';
 
-import {OTP, TPIN} from './Components'
+import {OTP, TPIN, ValidatorMaxRequest} from './Components'
 import { TPINOTPContext } from './ContextProvider';
 
 export const ToktokMallOTPScreen =  ({navigation, route}) => {
@@ -142,6 +142,11 @@ export const ToktokMallOTPScreen =  ({navigation, route}) => {
         isVisible = {true}
         // setIsVisible = {setAlertModal}
       /> */}
+
+      {route.params?.error && route.params?.errorCode == "VALIDATORMAXREQUEST" &&
+        <ValidatorMaxRequest />
+      }
+
       {route.params?.data?.pin_type == "OTP" && 
         <OTP 
           onValidate={ValidatePin}     

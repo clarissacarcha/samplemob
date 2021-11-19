@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef, useContext} from 'react';
-import {View, Text, StyleSheet, Platform, ImageBackground, Dimensions, StatusBar, Image, TouchableOpacity, FlatList, TextInput, ScrollView} from 'react-native';
+import {View, Text, StyleSheet, Platform, ImageBackground, Dimensions, StatusBar, Image, TouchableOpacity, FlatList, TextInput, ScrollView, BackHandler} from 'react-native';
 import {HeaderBack, HeaderTitle, HeaderRight, Header, LoadingOverlay} from '../../../../Components';
 import {COLOR, FONT, FONT_SIZE} from '../../../../../res/variables';
 import {otpicon, otpbg, otpicon2} from '../../../../assets';
@@ -10,13 +10,25 @@ import { useSelector } from 'react-redux';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { TPINOTPContext } from '../ContextProvider';
 import {TpinMaxAttemptModal} from '../../../../Components/Widgets'
+import { useFocusEffect, useNavigation } from '@react-navigation/core';
 
 export const TPIN =  ({onValidate}) => {
 
+  const navigation = useNavigation();
   const Context = useContext(TPINOTPContext)
   const inputRef = useRef(null)  
   const maximumAttempts = 3
   const [isVisible, setIsVisible] = useState(false)
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        return true
+      }
+      BackHandler.addEventListener('hardwareBackPress', onBackPress)
+      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress)
+    }, [])
+  )
 
   return (
     <KeyboardAwareScrollView style={{backgroundColor: "#FFF"}}>
@@ -48,7 +60,7 @@ export const TPIN =  ({onValidate}) => {
               // else
               <>
                 <Text style = {{fontFamily: FONT.BOLD, fontSize: 17, marginTop: 25, marginBottom:10}}>Enter TPIN</Text>
-                <Text style = {{textAlign: 'center', paddingHorizontal: 15, fontSize: 13, fontFamily: FONT.REGULAR}}>Please enter the code that we will send via SMS.</Text>
+                <Text style = {{textAlign: 'center', paddingHorizontal: 15, fontSize: 13, fontFamily: FONT.REGULAR}}>Please enter your TPIN below to proceed with your toktokwallet transaction. </Text>
                 <View style = {{flexDirection: 'row', marginTop: 25}}>
                   <TouchableOpacity 
                     onPress={() => {

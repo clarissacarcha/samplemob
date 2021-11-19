@@ -32,8 +32,9 @@ const Component = ({navigation, route, notificationCountSession}) => {
     AsyncStorage.getItem("ToktokMallUser").then((raw) => {
       let data = JSON.parse(raw)
       if(data.userId){
-        if(route.params.notificationId){
-          readNotification({id: route.params.notificationId, userid: data.userId})
+        console.log(route.params.id)
+        if(route.params.id){
+          readNotification({id: route.params.id, userid: data.userId})
         }
       }
     })
@@ -42,7 +43,7 @@ const Component = ({navigation, route, notificationCountSession}) => {
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
     
-			<Renderer id={route.params.id} />
+			<Renderer id={route.params.orderId} />
       
     </View>
   );

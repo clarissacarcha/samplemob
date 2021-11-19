@@ -140,6 +140,7 @@ export const GET_PRODUCT_DETAILS = gql`
 		getProductDetails(input: $input){
 			Id
 			itemname
+			catId
     	otherinfo
     	summary
     	tags

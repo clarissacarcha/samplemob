@@ -7,7 +7,7 @@ import { Price, FormatToText } from '../../../../helpers/formats';
 
 import { useLazyQuery, useQuery, useMutation } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../graphql';
-import { GET_APPLY_VOUCHER } from '../../../../../graphql/toktokmall/model';
+import { GET_APPLY_VOUCHER, GET_HASH_AMOUNT } from '../../../../../graphql/toktokmall/model';
 import {ApiCall, ArrayCopy} from '../../../../helpers';
 
 import CustomIcon from '../../../../Components/Icons';
@@ -25,24 +25,34 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
   const [loading, setloading] = useState(false)
   const [errormessage, seterrormessage] = useState("*Invalid voucher code. Please check your voucher code.")
 
-  const [validateShopVoucher, {error, loading2}] = useLazyQuery(GET_APPLY_VOUCHER, {
+  const [getShippingHashDeliveryAmount, {error, loading2}] = useLazyQuery(GET_HASH_AMOUNT, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',    
     onCompleted: (response) => {
-      console.log("Response", response)
-      if(response.applyVoucher){
-
-        setVoucherIsValid(2)
-        setShopVoucher(response.applyVoucher)
-        
-      }else{
-        setVoucherIsValid(-1)
-        setVoucher(null)
+      if(response.getHashDeliveryAmount){
+        console.log(response.getHashDeliveryAmount)
+        let items = ArrayCopy(CheckoutContextData.shippingVouchers)
+        items[response.getHashDeliveryAmount.index].hash_delivery_amount = response.getHashDeliveryAmount.hash
+        CheckoutContextData.setShippingVouchers(items)
       }
     },
     onError: (err) => {
       console.log(err)
-      setVoucherIsValid(-1)
+    }
+  })
+
+  const [getDefaultHashDeliveryAmount, {error2, loading3}] = useLazyQuery(GET_HASH_AMOUNT, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',    
+    onCompleted: (response) => {
+      if(response.getHashDeliveryAmount){
+        let items = ArrayCopy(CheckoutContextData.defaultVouchers)
+        items[response.getHashDeliveryAmount.index].hash_delivery_amount = response.getHashDeliveryAmount.hash
+        CheckoutContextData.setDefaultVouchers(items)
+      }
+    },
+    onError: (err) => {
+      console.log(err)
     }
   })
 
@@ -100,6 +110,8 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
 
   const renderVoucherForm = (index, item, subTotal) => {
 
+    
+
     const validate = async () => {
       
       let payload = {
@@ -127,6 +139,12 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
             items[index].discountedAmount = 0
             items[index].discount = 0
             CheckoutContextData.setShippingVouchers(items)
+            getShippingHashDeliveryAmount({variables: {
+              input: {
+                value: 0,
+                index: index
+              }
+            }})
 
           }else{
 
@@ -136,9 +154,18 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
             items[index] = req.responseData.voucher
             items[index].discountedAmount = calculatedDiscount < 0 ? 0 : calculatedDiscount
             items[index].discount = calculatedDiscount < 0 ? 0 : calculatedDiscount
-            // items[index].discount = calculatedDiscount
-            console.log("Shipping Item", items[index])
             CheckoutContextData.setShippingVouchers(items)
+            getShippingHashDeliveryAmount({variables: {
+              input: {
+                value: calculatedDiscount < 0 ? 0 : calculatedDiscount,
+                index: index
+              }
+            }})
+
+            // items[index].discount = calculatedDiscount
+            // console.log("Shipping Item", items[index])
+            
+            // CheckoutContextData.setShippingVouchers(items)
           
           }
 
@@ -148,6 +175,12 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
           let items = ArrayCopy(CheckoutContextData.defaultVouchers)
           items[index] = req.responseData.voucher
           CheckoutContextData.setDefaultVouchers(items)
+          getDefaultHashDeliveryAmount({variables: {
+            input: {
+              value: req.responseData.voucher.amount,
+              index: index
+            }
+          }})
         }
 
         setVoucherIsValid(2)

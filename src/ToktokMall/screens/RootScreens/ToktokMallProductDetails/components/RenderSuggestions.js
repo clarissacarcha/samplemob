@@ -114,7 +114,7 @@ const RenderItem = ({item}) => {
   )
 }
 
-export const RenderSuggestions = ({data, lazyload}) => {
+export const RenderSuggestions = ({data, lazyload, category}) => {
 
   const {navigate} = useNavigation()
   const [products, setProducts] = useState(data)
@@ -127,19 +127,13 @@ export const RenderSuggestions = ({data, lazyload}) => {
       
       console.log("Lazy load", response)
       let temp = products
-      if(!response){
-
+      if(!response || response.searchProduct == null){
         setProducts(temp)
-
-      }else if(response && response.searchProduct.length > 0){
-
+      }else if(response && response.searchProduct != null && response.searchProduct.length > 0){
         temp = temp.concat(response.searchProduct)
-        setProducts(temp)
-        
-      }else if(response && response.searchProduct.length == 0){
-
+        setProducts(temp)        
+      }else if(response && response.searchProduct != null && response.searchProduct.length == 0){
         // setSearchedProducts([])
-
       }
     },
     onError: (err) => {
@@ -162,9 +156,9 @@ export const RenderSuggestions = ({data, lazyload}) => {
       lazyLoading({
         variables: {
           input: {
-            search:  "" ,
-            origin: "suggestion",
-            category:  null,
+            search: "",
+            origin: "category",
+            category:  category,
             offset: products.length,
             limit: 10
           }

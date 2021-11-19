@@ -38,12 +38,20 @@ const Summary = ({data}) => {
 
   return (
     <>
-      <View style={{flexDirection: 'row', paddingVertical: 20, paddingHorizontal: 15}}>
-        <View style={{flex: 1}}>
-          <Text style={{fontSize: 13, fontFamily: FONT.BOLD}}>Order #: {data?.referenceNum}</Text>
+      <View style={{flex: 1, flexDirection: 'row', paddingTop: 20, paddingHorizontal: 15}}>
+        <View style={{flex: 1.5}}>
+          <Text style={{fontSize: 13, fontFamily: FONT.BOLD}}>Order #:</Text>
         </View>
-        <View styl={{flex: 1}}>
-        <Text style={{color: "#9E9E9E", fontSize: 12}}>Order Placed: {data?.formattedDateOrdered} </Text>
+        <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'flex-start'}}>
+          <Text style={{color: "#9E9E9E", fontSize: 12}}>Order Placed: </Text>
+        </View>
+      </View>
+      <View style={{flex: 1, flexDirection: 'row', paddingTop: 0, paddingBottom: 20, paddingHorizontal: 15}}>
+        <View style={{flex: 1.5}}>
+          <Text style={{fontSize: 13, fontFamily: FONT.BOLD}}>{data?.referenceNum}</Text>
+        </View>
+        <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'flex-start'}}>
+          <Text style={{color: "#9E9E9E", fontSize: 12}}>{data?.formattedDateOrdered} </Text>
         </View>
       </View>
       <View style={{ height: 2, backgroundColor: '#F7F7FA'}} />
@@ -71,201 +79,16 @@ const Summary = ({data}) => {
   )
 }
 
-const Historyx = ({data}) => {
-
-  const history = data?.orderHistory
-
-  console.log("Data", data)
-
-  const getColor = (status) => {
-    return getHistoryByStatus(status, "#F6841F", "#929191")
-  }
-
-  const getIconColor = (status) => {
-    // if(index == 0) return "#F6841F"
-    if(status == -1) return "white"
-    return getHistoryByStatus(status, "#F6841F", "#CCCCCC")
-  }
-
-  const getDateTime = (status) => {
-    // if(index == 0) return "--:--:-- 00:00 --"
-    return getHistoryByStatus(status, "date", "")
-  }
-
-  const getHistoryByStatus = (status, found, notFound) => {
-    
-    if(!history || history.length == 0) return notFound
-
-    if(status == null){
-      if(found == "date"){
-        let parsed = moment(data.dateOrdered, "YYYY-MM-DD h:m:s")
-        return moment(parsed).format("MM-DD-YYYY, hh:mm a")
-      }else{
-        return found
-      }
-    }
-
-    let index = history.findIndex((e) => e.action == status)
-    if(index > -1){
-      if(found == "date"){
-        return `${history[0].formatDate}, ${history[0].formatTime}`
-      }else{
-        return found
-      }
-    }else{
-      return notFound
-    }
-  }
-
-  const dottedLine = (colorIndex, start) => {
-
-    const lineWidth = "12%"
-
-    if(start == "fill"){
-      return (
-        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 0}}>
-          <View style={{flex: 1, backgroundColor: getIconColor(colorIndex), width: lineWidth}}></View>
-          <View style={{flex: 1, backgroundColor: getIconColor(-1), width: lineWidth}}></View>
-          <View style={{flex: 1, backgroundColor: getIconColor(colorIndex), width: lineWidth}}></View>
-          <View style={{flex: 1, backgroundColor: getIconColor(-1), width: lineWidth}}></View>
-          <View style={{flex: 1, backgroundColor: getIconColor(colorIndex), width: lineWidth}}></View>
-          <CustomIcon.MCIcon name="circle" size={9} color={getIconColor(colorIndex)} style={{position: 'absolute'}} />
-          <View style={{flex: 1, backgroundColor: getIconColor(colorIndex), width: lineWidth}}></View>
-          <View style={{flex: 1, backgroundColor: getIconColor(-1), width: lineWidth}}></View>
-          <View style={{flex: 1, backgroundColor: getIconColor(colorIndex), width: lineWidth}}></View>
-          <View style={{flex: 1, backgroundColor: getIconColor(-1), width: lineWidth}}></View>
-          <View style={{flex: 1, backgroundColor: getIconColor(colorIndex), width: lineWidth}}></View>
-        </View>
-      )
-    }else if(start == "blank"){
-      return (
-        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 0}}>
-          <View style={{flex: 1, backgroundColor: getIconColor(-1), width: lineWidth}}></View>
-          <View style={{flex: 1, backgroundColor: getIconColor(colorIndex), width: lineWidth}}></View>
-          <View style={{flex: 1, backgroundColor: getIconColor(-1), width: lineWidth}}></View>
-          <View style={{flex: 1, backgroundColor: getIconColor(colorIndex), width: lineWidth}}></View>
-          <View style={{flex: 1, backgroundColor: getIconColor(-1), width: lineWidth}}></View>
-          <CustomIcon.MCIcon name="circle" size={9} color={getIconColor(colorIndex)} style={{position: 'absolute', zIndex: 1}} />
-          <View style={{flex: 1, backgroundColor: getIconColor(-1), width: lineWidth}}></View>
-          <View style={{flex: 1, backgroundColor: getIconColor(colorIndex), width: lineWidth}}></View>
-          <View style={{flex: 1, backgroundColor: getIconColor(-1), width: lineWidth}}></View>
-          <View style={{flex: 1, backgroundColor: getIconColor(colorIndex), width: lineWidth}}></View>
-          <View style={{flex: 1, backgroundColor: getIconColor(-1), width: lineWidth}}></View>
-        </View>
-      )
-    }else if(start == "top"){
-      return (
-        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 0}}>
-            <View style={{flex: 1}} />
-            <View style={{flex: 1}} />
-            <View style={{flex: 1}} />
-            <View style={{flex: 1}} />
-            <View style={{flex: 1}} />
-            <CustomIcon.MCIcon name="circle" size={9} color={getIconColor(colorIndex)} style={{position: 'absolute', zIndex: 1}} />
-            <View style={{flex: 1, backgroundColor: getIconColor(colorIndex), width: lineWidth}}></View>
-            <View style={{flex: 1, backgroundColor: getIconColor(-1), width: lineWidth}}></View>
-            <View style={{flex: 1, backgroundColor: getIconColor(colorIndex), width: lineWidth}}></View>
-            <View style={{flex: 1, backgroundColor: getIconColor(-1), width: lineWidth}}></View>
-            <View style={{flex: 1, backgroundColor: getIconColor(colorIndex), width: lineWidth}}></View>
-          </View>
-      )
-    }else if(start == "bottom"){
-      return (
-          <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 0}}>
-            <View style={{flex: 1, backgroundColor: getIconColor(-1), width: lineWidth}}></View>
-            <View style={{flex: 1, backgroundColor: getIconColor(colorIndex), width: lineWidth}}></View>
-            <View style={{flex: 1, backgroundColor: getIconColor(-1), width: lineWidth}}></View>
-            <View style={{flex: 1, backgroundColor: getIconColor(colorIndex), width: lineWidth}}></View>
-            <View style={{flex: 1, backgroundColor: getIconColor(-1), width: lineWidth}}></View>
-            <CustomIcon.MCIcon name="circle" size={9} color={getIconColor(colorIndex)} style={{position: 'absolute'}} />
-            <View style={{flex: 1}} />
-            <View style={{flex: 1}} />
-            <View style={{flex: 1}} />
-            <View style={{flex: 1}} />
-            <View style={{flex: 1}} />
-          </View>
-      )
-    }
-    
-  }
-
-  return (
-    <>
-      <View style={{flexDirection: 'row', paddingVertical: 20, paddingHorizontal: 15}}>
-        <View style={{flex: 1}}>
-          <Text style={{fontSize: 13, fontFamily: FONT.BOLD}}>Delivery Status</Text>
-        </View>
-      </View>
-      <View style={{ height: 2, backgroundColor: '#F7F7FA'}} />
-      <View style={{flexDirection: 'row', paddingVertical: 12, paddingHorizontal: 15}}>
-
-        <View style={{flex: 0.6}}>
-
-          {dottedLine(null, "top")}
-          {/* {dottedLine("Process Order", "blank")}
-          {dottedLine("Ready for Pickup", "fill")}
-          {dottedLine("Item picked up", "blank")}
-          {dottedLine("Mark as Fulfilled", "fill")}
-          {dottedLine("Mark as Shipped", "bottom")} */}
-         
-        </View>
-        <View style={{flex: 0.2}} />
-        <View style={{flex: 8}}>
-          <View style={{paddingVertical: 8}}>
-            <Text style={{color: getColor(null), fontSize: 13}}>Order confirmed</Text>
-          </View>
-          <View style={{paddingVertical: 8}}>
-            <Text style={{color: getColor("Process Order"), fontSize: 13}}>Preparing order</Text>
-          </View>
-          <View style={{paddingVertical: 8}}>
-            <Text style={{color: getColor("Ready for Pickup"), fontSize: 13}}>Order is ready to be picked up</Text>
-          </View>
-          <View style={{paddingVertical: 8}}>
-            <Text style={{color: getColor("Item picked up"), fontSize: 13}}>Order has been picked up</Text>
-          </View>
-          <View style={{paddingVertical: 8}}>
-            <Text style={{color: getColor("Mark as Fulfilled"), fontSize: 13}}>Order is ready to be delivered</Text>
-          </View>
-          <View style={{paddingVertical: 8}}>
-            <Text style={{color: getColor("Mark as Shipped"), fontSize: 13}}>Order delivered</Text>
-          </View>
-        </View>
-        <View styl={{flex: 1}}>
-          <View style={{paddingVertical: 8}}>
-            <Text style={{color: "#929191", fontSize: 13}}>{getDateTime(null)}</Text>
-          </View>
-          <View style={{paddingVertical: 8}}>
-            <Text style={{color: "#929191", fontSize: 13}}>{getDateTime("Process Order")}</Text>
-          </View>
-          <View style={{paddingVertical: 8}}>
-            <Text style={{color: "#929191", fontSize: 13}}>{getDateTime("Ready for Pickup")}</Text>
-          </View>
-          <View style={{paddingVertical: 8}}>
-            <Text style={{color: "#929191", fontSize: 13}}>{getDateTime("Item picked up")}</Text>
-          </View>
-          <View style={{paddingVertical: 8}}>
-            <Text style={{color: "#929191", fontSize: 13}}>{getDateTime("Mark as Fulfilled")}</Text>
-          </View>
-          <View style={{paddingVertical: 8}}>
-            <Text style={{color: "#929191", fontSize: 13}}>{getDateTime("Mark as Shipped")}</Text>
-          </View>
-        </View>
-      </View>      
-      <View style={{ height: 8, backgroundColor: '#F7F7FA'}} />
-    </>
-  )
-}
-
 const History = ({data}) => {
 
   console.log("HIstory", data.orderHistory)
 
   const statuses = [
-    {state: "Preparing Order", action: "Process Order"},
-    {state: "Order is ready to be picked up", action: "Ready for Pickup"},
-    {state: "Order has been picked up", action: "item picked up"},
-    {state: "Order is ready to be delivered", action: "Mark as Fulfilled"},
-    {state: "Order delivered", action: "Order Delivered"}
+    {state: "Preparing Order", value: data.dateOrderProcessed},
+    {state: "Order is ready to be picked up", value: data.dateReadyPickup},
+    {state: "Order has been picked up", value: data.dateBookingConfirmed},
+    {state: "Order is ready to be delivered", value: data.dateFulFilled},
+    {state: "Order delivered", value: data.dateShipped}
   ]
 
   const RenderRow = ({rows, item, index, active, value}) => {
@@ -346,15 +169,11 @@ const History = ({data}) => {
         renderItem={({item, index}) => {
 
           let value = ""
-          let dataIndex = -1
-          
-          if(data.orderHistory && data.orderHistory.length > 0){
-            dataIndex = data.orderHistory.findIndex((a) => a.action == item.action)
-          }          
 
-          if(dataIndex > -1){
-            let history = data.orderHistory[dataIndex]
-            value = `${history.formatDate}, ${history.formatTime}`
+          if(item.value == "Invalid date" || item.value == undefined){
+            value = ""
+          }else{
+            value = `${moment(item.value).format('MM-DD-YYYY, hh:mm a')}`
           }
 
           return (
@@ -362,10 +181,11 @@ const History = ({data}) => {
               rows={statuses.length} 
               item={item} 
               index={index} 
-              active={dataIndex > -1}
+              active={value != ""}
               value={value}
             />
           )
+
         }}
       />
       
@@ -466,7 +286,7 @@ export const Renderer = ({id, email}) => {
     fetchPolicy: 'network-only',    
     onCompleted: (response) => {
       if(response.getOrderDetails){
-        console.log('order details',response.getOrderDetails)
+        // console.log('order details',response.getOrderDetails)
         setData(response.getOrderDetails)
       }
     },
@@ -486,7 +306,7 @@ export const Renderer = ({id, email}) => {
   }
 
   useEffect(() => {    
-
+    console.log("order id", id)
     getOrderDetails({variables: {
       input: {
         orderId: id
@@ -498,24 +318,6 @@ export const Renderer = ({id, email}) => {
   if(loading) {
     return <Loading state={loading} />
   }
-
-  // return (
-  //   <>
-  //     <FlatList 
-  //       data={data}
-  //       renderItem={renderItem}
-  //       refreshControl={
-  //         <RefreshControl 
-  //           refreshing={loading}
-  //           onRefresh={() => {
-  //             Fetch()
-  //           }}
-  //         />
-  //       }
-  //       showsVerticalScrollIndicator={false}
-  //     />
-  //   </>
-  // );
 
   return (
     <>

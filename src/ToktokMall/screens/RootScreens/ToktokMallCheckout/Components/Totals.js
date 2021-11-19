@@ -61,7 +61,7 @@ export const Totals = ({raw, shipping, setGrandTotal}) => {
   useEffect(() => {
     if (CheckoutContextData) {
       computeShippingTotal();
-      setShippingDiscountTotal();
+      computeShippingDiscount();
     }
   }, [CheckoutContextData]);
 
@@ -81,9 +81,13 @@ export const Totals = ({raw, shipping, setGrandTotal}) => {
 
   useEffect(() => {
     if (merchandiseTotal && shippingFeeTotal) {
-      setGrandTotal(merchandiseTotal + shippingFeeTotal);
+      if(getDiscount("shipping")){
+        setGrandTotal(merchandiseTotal + shippingDiscountTotal);
+      }else{
+        setGrandTotal(merchandiseTotal + shippingFeeTotal);
+      }
     }
-  }, [merchandiseTotal, shippingFeeTotal]);
+  }, [merchandiseTotal, shippingFeeTotal, shippingDiscountTotal]);
 
   return (
     <>
@@ -105,14 +109,22 @@ export const Totals = ({raw, shipping, setGrandTotal}) => {
                 {FormatToText.currency(shippingFeeTotal)}
               </Text>
             </View>
-            <View style={{flex: 0}}>{getDiscount('shipping') ? <Text> {computeShippingDiscount()}</Text> : null}</View>
+            <View style={{flex: 0}}>{getDiscount('shipping') ? <Text> {shippingDiscountTotal}</Text> : null}</View>
           </View>
         </View>
         <View style={styles.textContainer}>
           <Text style={{fontWeight: 'bold'}}>Total Payment:</Text>
-          <Text style={{color: '#F61841'}}>
+          {
+            getDiscount('shipping') ? 
+            <Text style={{color: '#F61841'}}>
+            {FormatToText.currency((shippingDiscountTotal || 0) + (merchandiseTotal || 0))}
+            </Text>
+            :
+            <Text style={{color: '#F61841'}}>
             {FormatToText.currency((shippingFeeTotal || 0) + (merchandiseTotal || 0))}
-          </Text>
+            </Text>
+          }
+          
         </View>
       </View>
       <View style={{height: 50}} />
