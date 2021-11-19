@@ -9,6 +9,7 @@ const INITIAL_STATE = {
   searchHistory: [],
   myCartCount: 0,
   notificationCount: 0,
+  otpAttempts: 1,
   customModal: {
     visible: false
   }
@@ -33,6 +34,19 @@ export default (state = INITIAL_STATE, action) => {
       }
       AsyncStorage.setItem('ToktokMallUserCartCount', count + "");
       return {...state, myCartCount: count};
+    case 'TOKTOK_MALL_OTP_ATTEMPTS':
+      let attempts = state.otpAttempts
+      if(action.action === "add"){
+        attempts = attempts + action.payload
+      }
+      if(action.action === "remove"){
+        attempts = attempts - action.payload
+      }
+      if(action.action === "set"){
+        attempts = action.payload
+      }
+      AsyncStorage.setItem('ToktokMallOTPAttempts', attempts + "");
+      return {...state, otpAttempts: count};
     case 'TOKTOK_MALL_NOTIFICATION_COUNT':
         let ncount = state.notificationCount
         if(action.action === "add"){

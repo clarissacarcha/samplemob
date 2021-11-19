@@ -14,7 +14,7 @@ import {
   WalletApiCall,
   ToktokWalletRawApiCall
 } from "../../../helpers";
-import { useSelector } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useLazyQuery, useMutation } from '@apollo/react-hooks';
 import { TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT } from '../../../../graphql';
@@ -22,8 +22,9 @@ import { POST_VERIFY_TOKTOKWALLET_PIN } from '../../../../graphql/toktokmall/vir
 
 import {OTP, TPIN, ValidatorMaxRequest} from './Components'
 import { TPINOTPContext } from './ContextProvider';
+import AsyncStorage from '@react-native-community/async-storage';
 
-export const ToktokMallOTPScreen =  ({navigation, route}) => {
+const Component = ({navigation, route, otpAttempts, setAttempts}) => {
 
   const session = useSelector(state => state.session)
 	const Context = useContext(TPINOTPContext)
@@ -36,6 +37,8 @@ export const ToktokMallOTPScreen =  ({navigation, route}) => {
       Context.setretries(5)
       Context.setlockMessage(route?.params.lockMessage)
     }
+    AsyncStorage.getItem("ToktokMallOTPAttempts").then((raw) => Context.setretries(raw))
+
   }, [route])
 
   const ValidatePin = async () => {
@@ -54,17 +57,27 @@ export const ToktokMallOTPScreen =  ({navigation, route}) => {
     const req = await WalletApiCall("verify_pin", body, false)
     
     setProcessing(false)
-    setValidating(false)
+    setValidating(false)  
 
     if(req.responseData && req.responseData.success == 1){
-    setValidating(false)
+      setValidating(false)
       if(transactionType && transactionType == "payment"){
-        await ProcessPayment()
+        // await ProcessPayment()
       }
     }else if(req.responseError && req.responseError.success == 0){
       // Toast.show(req.responseError.message, Toast.LONG)
+
       Context.setValue("")
       Context.setIsInvalid(true)
+
+      let errordata = JSON.parse(req.responseError.message)
+      if(errordata.errors[0]){
+        let payload = errordata.errors[0].payload
+        if(payload.remainingAttempts){
+          Context.setretries(payload.remainingAttempts)
+        }
+      }
+
     }else if(req.responseError){
       Toast.show("Something went wrong", Toast.LONG)
     }else if(req.responseError == null && req.responseData == null){
@@ -164,3 +177,14 @@ export const ToktokMallOTPScreen =  ({navigation, route}) => {
   
 }
 // );
+
+
+const mapStateToProps = (state) => ({
+  otpAttempts: state.toktokMall.otpAttempts
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  setAttempts: (action, payload) => dispatch({type: 'TOKTOK_MALL_OTP_ATTEMPTS', action,  payload}),
+});
+
+export const ToktokMallOTPScreen = connect(mapStateToProps, mapDispatchToProps)(Component);

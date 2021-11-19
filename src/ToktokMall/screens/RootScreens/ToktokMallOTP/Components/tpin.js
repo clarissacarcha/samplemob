@@ -11,6 +11,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { TPINOTPContext } from '../ContextProvider';
 import {TpinMaxAttemptModal} from '../../../../Components/Widgets'
 import { useFocusEffect, useNavigation } from '@react-navigation/core';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export const TPIN =  ({onValidate}) => {
 
@@ -22,8 +23,8 @@ export const TPIN =  ({onValidate}) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      const onBackPress = () => {
-        return true
+      const onBackPress = () => {        
+        return false
       }
       BackHandler.addEventListener('hardwareBackPress', onBackPress)
       return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress)
@@ -107,7 +108,7 @@ export const TPIN =  ({onValidate}) => {
           <>
           <View style={{flex: 1, alignItems: 'center', paddingHorizontal: 15, justifyContent: 'center', paddingBottom: 10}}>
             <Text style={{color: '#F6841F'}}>Sorry, the TPIN you've entered is incorrect. </Text>
-            <Text style={{color: '#F6841F'}}>You only have ({maximumAttempts - Context.retries}) attempts left.</Text>
+            <Text style={{color: '#F6841F'}}>You only have ({Context.retries}) attempts left.</Text>
           </View>
           <View style={{height: 35}} />
           </>
@@ -180,7 +181,6 @@ export const TPIN =  ({onValidate}) => {
   );
 }
 // );
-
 
 
 const styles = StyleSheet.create({
