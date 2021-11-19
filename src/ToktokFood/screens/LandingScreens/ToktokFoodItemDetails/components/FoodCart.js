@@ -308,7 +308,7 @@ export const FoodCart = ({loading, action}) => {
       if (status == 200) {
         setTimeout(() => {
           setLoader(false);
-          Toast.show('Added to cart', Toast.SHORT);
+          Toast.show('Cart Updated', Toast.SHORT);
           navigation.navigate('ToktokFoodRestaurantOverview', { item: { id: productDetails.sysShop } });
         }, 1000);
       } else {
@@ -365,7 +365,7 @@ export const FoodCart = ({loading, action}) => {
 
   return (
     <>
-      <Loader visibility={loader} message="Adding to Cart" hasImage={false} loadingIndicator />
+      <Loader visibility={loader} message={action === 'edit' ? 'Updating Cart' : 'Adding to Cart'} hasImage={false} loadingIndicator />
       <DialogMessage
         visibility={showDialogMessage.show}
         title={'OOPS!'}
@@ -426,7 +426,7 @@ export const FoodCart = ({loading, action}) => {
             },
           ]}
           onPress={() => onRestaurantNavigate()}>
-          <Text style={styles.buttonText}>{action === 'edit' ? 'Save' : 'Add to Cart'}</Text>
+          <Text style={styles.buttonText}>{action === 'edit' ? 'Update' : 'Add to Cart'}</Text>
         </TouchableOpacity>
       </View>
     </>
