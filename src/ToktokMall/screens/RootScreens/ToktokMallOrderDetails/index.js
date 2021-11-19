@@ -13,7 +13,7 @@ const Component = ({navigation, route, notificationCountSession}) => {
     headerLeft: () => <HeaderBack onBack={() => {
       EventRegister.emit('refreshToktokmallNotifications')      
       notificationCountSession("remove", 1)
-      route.params.onBack()
+      // route.params.onBack()
       navigation.pop()
     }} />,
     headerTitle: () => <HeaderTitle label={['Order Details', '']} />,

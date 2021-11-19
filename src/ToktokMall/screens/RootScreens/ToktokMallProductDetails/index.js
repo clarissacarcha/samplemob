@@ -120,14 +120,14 @@ const Component =  ({
       AsyncStorage.getItem("ToktokMallUser").then((raw) => {
         const data = JSON.parse(raw)
         if(data.userId){
-          // checkItemFromCart({
-          //   variables: {
-          //     input: {
-          //       userId: data.userId,
-          //       productId: product.Id
-          //     }
-          //   }
-          // })
+          checkItemFromCart({
+            variables: {
+              input: {
+                userId: data.userId,
+                productId: product.Id
+              }
+            }
+          })
         }
       })
     }
@@ -463,7 +463,7 @@ const Component =  ({
           />
         }
 
-        {isFetching ? <></> : <RenderSuggestions data={relevantProducts || []} lazyload={scrollendreached} /> }
+        {isFetching ? <></> : <RenderSuggestions category={product.catId} data={relevantProducts || []} lazyload={scrollendreached} /> }
         
         {/* <RenderReviews /> */}
         

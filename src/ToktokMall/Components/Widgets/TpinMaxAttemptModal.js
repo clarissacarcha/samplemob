@@ -63,7 +63,7 @@ export const TpinMaxAttemptModal = ({navigation, isVisible, setIsVisible, type, 
               <Text style={styles.label}>Please try again after {text()}</Text>
               <View style={{paddingVertical: 10}} />
               <View style = {{flexDirection: 'row', alignItems: 'center' }}>
-                <TouchableOpacity style = {styles.filledButton} onPress = {() => {setIsVisible(false)}}>
+                <TouchableOpacity style = {styles.filledButton} onPress = {() => { setModalVisible(!modalVisible)}}>
                     <Text style = {styles.filledButtonText}>OK</Text>
                 </TouchableOpacity>
               </View>

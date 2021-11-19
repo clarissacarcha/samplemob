@@ -16,7 +16,7 @@ export const TPIN =  ({onValidate}) => {
   const Context = useContext(TPINOTPContext)
   const inputRef = useRef(null)  
   const maximumAttempts = 3
-  const [isVisible, setIsVisible] = useState(Context.isInvalid && Context.retries >= maximumAttempts ? true : false)
+  const [isVisible, setIsVisible] = useState(false)
 
   return (
     <KeyboardAwareScrollView style={{backgroundColor: "#FFF"}}>
@@ -28,7 +28,7 @@ export const TPIN =  ({onValidate}) => {
       > */}
       <TpinMaxAttemptModal
         // navigation = {navigation}
-        isVisible = {isVisible}
+        isVisible = {Context.isInvalid && Context.retries >= maximumAttempts ? true : false}
         setIsVisible = {setIsVisible}
         minutes = {30} // minutes params / remaning time until user can enter tpin again
       />
