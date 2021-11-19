@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef} from 'react'
 import {View,Text,StyleSheet,Platform,Dimensions,StatusBar,Image, TouchableOpacity, FlatList} from 'react-native'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import RNFS from 'react-native-fs'
@@ -8,7 +8,7 @@ import { COLOR, FONT, FONT_SIZE } from '../../../../res/variables';
 
 import { useLazyQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql';
-import { GET_ORDER_HISTORY, GET_ORDERS_AND_HISTORY } from '../../../../graphql/toktokmall/model';
+import { GET_ORDER_HISTORY, GET_ORDERS_AND_HISTORY, GET_ORDERS_NOTIFICATION } from '../../../../graphql/toktokmall/model';
 
 import {Item, SubItem} from './Components'
 import {emptynotification} from '../../../assets'
@@ -69,10 +69,26 @@ const Component =  ({
   //   headerRight: () => <HeaderRight hidden={true} />
   // });
 
+  var flatlistRef = useRef()
   const [scrollendreached, setscrollendreached] = useState(false)
 	const [orderHistory, setOrderHistory] = useState([])
+  const [offset, setOffset] = useState(0)
+  const [limit, setLimit] = useState(10)
 
-	const [getOrderHistory, {loading, error}] = useLazyQuery(GET_ORDERS_AND_HISTORY, {
+  const [getOrderNotifications, {loading, error}] = useLazyQuery(GET_ORDERS_NOTIFICATION, {
+		client: TOKTOK_MALL_GRAPHQL_CLIENT,
+		fetchPolicy: 'network-only',
+		onCompleted: (response) => {
+			if(response.getOrdersNotification){				
+        setOrderHistory(response.getOrdersNotification)        
+			}
+    },
+    onError: (err) => {
+      console.log(err)
+    }
+	})
+
+	const [getOrderHistory, {loadingx, errorx}] = useLazyQuery(GET_ORDERS_AND_HISTORY, {
 		client: TOKTOK_MALL_GRAPHQL_CLIENT,
 		fetchPolicy: 'network-only',
 		onCompleted: (response) => {
@@ -143,17 +159,32 @@ const Component =  ({
     AsyncStorage.getItem("ToktokMallUser").then((raw) => {
       const data = JSON.parse(raw)
       if(data.userId){
-        getOrderHistory({variables: {
+        setOrderHistory([])
+        setOffset(0)
+        setLimit(10)
+        getOrderNotifications({variables: {
           input: {
-            // userId: 9999
             userId: data.userId,
-            offset: orderHistory.length,
-            limit: 10
+            // offset: orderHistory.length,
+            // limit: 10
           }
         }})
       }
     })
   }
+
+  useEffect(() => {
+    //count notifications
+    let count = 0
+    if(orderHistory.length > 0){
+      for(var x=0;x<orderHistory.length;x++){
+        let order = orderHistory[x];
+        if(order.read == 0) count++
+        else count = count
+      }
+      notificationCountSession('set', count)
+    }
+  }, [orderHistory, offset])
 
 	useEffect(() => {
     init()
@@ -186,7 +217,7 @@ const Component =  ({
   )
 
   const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
-    const paddingBottom = 20;
+    const paddingBottom = 1;
     // console.log(layoutMeasurement.height + contentOffset.y, contentSize.height - paddingBottom)
     return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingBottom;
   }
@@ -229,8 +260,10 @@ const Component =  ({
         <View style={{flex: 1}}>                    
           <View style={{ height: 8, backgroundColor: '#F7F7FA'}} />               
             <FlatList
+              ref={ref => flatlistRef = ref}
+              keyExtractor={item => item.id}
               showsVerticalScrollIndicator={false} 
-              data={orderHistory}
+              data={orderHistory.slice(0, offset + limit)}
               scrollEventThrottle={16}
               renderItem={({item}) => <RenderItem item={item} />}
               refreshControl={
@@ -241,16 +274,16 @@ const Component =  ({
                   }}
                 />
               }
-              onScroll={
-                ({nativeEvent}) => {
-                  if(isCloseToBottom(nativeEvent)){
-                    setscrollendreached(true)
-                    loadmore()
-                  }else{
-                    setscrollendreached(false)
-                  }                  
+              onEndReachedThreshold={0.1}
+              onEndReached={() => {
+                let newoffset = offset + limit
+                if(newoffset == orderHistory.length || offset == orderHistory.length) return
+                else if(newoffset > orderHistory.length){
+                  setOffset(orderHistory.length - offset)
+                }else{
+                  setOffset(newoffset)
                 }
-              }
+              }}
             />
           </View>
       </View>

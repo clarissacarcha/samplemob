@@ -486,7 +486,7 @@ export const Renderer = ({id, email}) => {
   }
 
   useEffect(() => {    
-
+    console.log("order id", id)
     getOrderDetails({variables: {
       input: {
         orderId: id
