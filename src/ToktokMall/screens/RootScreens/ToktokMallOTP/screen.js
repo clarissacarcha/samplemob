@@ -62,7 +62,7 @@ const Component = ({navigation, route, otpAttempts, setAttempts}) => {
     if(req.responseData && req.responseData.success == 1){
       setValidating(false)
       if(transactionType && transactionType == "payment"){
-        // await ProcessPayment()
+        await ProcessPayment()
       }
     }else if(req.responseError && req.responseError.success == 0){
       // Toast.show(req.responseError.message, Toast.LONG)

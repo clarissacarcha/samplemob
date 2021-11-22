@@ -7,12 +7,16 @@ import { ApiCall } from '../../../helpers';
 import {connect} from "react-redux"
 import {EventRegister} from 'react-native-event-listeners'
 
-const Component = ({navigation, route, notificationCountSession}) => {
+const Component = ({navigation, route, notificationCountSession, notifications}) => {
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack onBack={() => {
-      EventRegister.emit('refreshToktokmallNotifications')      
-      notificationCountSession("remove", 1)
+      EventRegister.emit('refreshToktokmallNotifications')
+      if(notifications > 0){
+        notificationCountSession("remove", 1)
+      }else{
+        notificationCountSession("set", 0)
+      }
       // route.params.onBack()
       navigation.pop()
     }} />,
