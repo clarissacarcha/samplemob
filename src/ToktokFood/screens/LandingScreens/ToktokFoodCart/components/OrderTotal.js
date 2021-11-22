@@ -43,6 +43,10 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
     }
   }, [autoShipping, shippingVoucher]);
 
+  useEffect(() => {
+    setTotalBasket(temporaryCart.totalAmount);
+  }, [temporaryCart]);
+
   return (
     <View style={[styles.sectionContainer, styles.totalContainer]}>
       {forDelivery && (
