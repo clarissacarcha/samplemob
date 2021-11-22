@@ -224,7 +224,7 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
         <FlatList 
           data={addresses}
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{padding: 15}}
+          contentContainerStyle={{paddingTop: 15, paddingHorizontal: 15}}
           ListFooterComponent={addresses.length < 10 && (
             <Card
               containerStyle={styles.button}
@@ -435,7 +435,7 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
                 flex: 0,
                 paddingBottom: activeToDeleteItem?.value
                   ? 70
-                  : Platform.OS == "android" ? 0 : 130,
+                  : 0,
               },
             ]}>
             {renderAddresses()}
