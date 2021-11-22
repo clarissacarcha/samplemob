@@ -13,7 +13,7 @@ import toktokwalletlogo from 'toktokwallet/assets/images/tokwa.png'
 export const BillerType = ({ item, index })=> {
   const navigation = useNavigation();
   const onPress = ()=> {
-    navigation.navigate("ToktokBiller" , {biller: item})
+    navigation.navigate("ToktokBiller" , {billType: item})
   }
 
   const onThrottledPress = useThrottle(onPress , 2000)

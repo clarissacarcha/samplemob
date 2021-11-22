@@ -16,8 +16,8 @@ export const Biller = ({
 
   const onPress = ()=> {
     navigation.navigate("ToktokBillsPaymentProcess" , {
-      billerType: item,
-      biller: route.params.biller
+      billItemId: item.id,
+      billType: route.params.billType
     })
   }
 

@@ -19,12 +19,12 @@ import { GET_BILL_ITEMS, GET_SEARCH_BILL_ITEMS } from "toktokbills/graphql/model
 import { usePrompt, useThrottle } from "src/hooks";
 
 export const ToktokBiller = ({navigation, route})=> {
-  const { biller } = route.params
+  const { billType } = route.params
   const prompt = usePrompt()
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={biller.name} isRightIcon/>,
+    headerTitle: () => <HeaderTitle label={billType.name} isRightIcon/>,
     headerStyle: { height: Platform.OS == "ios" ? moderateScale(60) : moderateScale(80) }
   });
 
@@ -38,7 +38,7 @@ export const ToktokBiller = ({navigation, route})=> {
     {
       variables: {
         input: {
-          billTypeId: biller.id
+          billTypeId: billType.id
         }
       },
       fetchPolicy: "cache-and-network",
@@ -75,7 +75,7 @@ export const ToktokBiller = ({navigation, route})=> {
       getSearchBillItems({
         variables: {
           input: {
-            billTypeId: biller.id,
+            billTypeId: billType.id,
             searchKey: search
           }
         },

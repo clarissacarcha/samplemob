@@ -29,3 +29,40 @@ export const GET_SEARCH_BILL_ITEMS = gql`
     }
   }
 `
+export const GET_BILL_ITEM_SETTINGS = gql`
+  query getBillItemSettings($input: GetBillSettingsInput) {
+    getBillItemSettings(input: $input) {
+      id
+      name
+      descriptions
+      logo
+      firstFieldName
+      firstFieldFormat
+      firstFieldWidth
+      firstFieldWidthType
+      secondFieldName
+      secondFieldFormat
+      secondFieldWidth
+      secondFieldWidthType
+      commissionRateStatus
+      providerId
+      billTypeId
+      itemDocumentId
+      commissionRateDetails {
+        id
+        referralCommissionItemId
+        merchantCommissionRate
+        startup
+        mcjr
+        mcsuper
+        jc
+        mc
+        mcmeg
+        others
+        providerOnTopValue
+        systemOnTopValue
+        providerDiscountRate
+      }
+    }
+  }
+`

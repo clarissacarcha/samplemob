@@ -12,26 +12,26 @@ import CONSTANTS from 'common/res/constants';
 const {COLOR , FONT_FAMILY: FONT , FONT_SIZE , SHADOW, SIZE} = CONSTANTS
 const {width,height} = Dimensions.get("window")
 
-export const PaymentDetails = ({ paymentData, convenienceFee = 0 })=> {
+export const PaymentDetails = ({ paymentData })=> {
 
   const navigation = useNavigation();
-  const { accountNo, accountName, amount, email, billerType } = paymentData;
+  const { firstField, secondField, amount, email, billType, convenienceFee, billItemSettings } = paymentData;
   const totalAmount = parseInt(amount) + convenienceFee;
-
+  console.log(billType)
   return (
     <>
       <View style={styles.detailsContainer}>
         <Text style={styles.label}>Account number: </Text>
-        <Text style={styles.description}>{accountNo}</Text>
+        <Text style={styles.description}>{firstField}</Text>
       </View>
       <View style={styles.detailsContainer}>
         <Text style={styles.label}>Account name: </Text>
-        <Text style={styles.description}>{accountName}</Text>
+        <Text style={styles.description}>{secondField}</Text>
       </View>
       <View style={styles.detailsContainer}>
         <Text style={styles.label}>Biller: </Text>
         <View style={{ justifyContent: "flex-end" }}>
-          <Image source={billerType.logo} style={styles.logo} />
+          <Image source={{ uri: billItemSettings.logo }} style={styles.logo} />
         </View>
       </View>
       <View style={styles.detailsContainer}>
