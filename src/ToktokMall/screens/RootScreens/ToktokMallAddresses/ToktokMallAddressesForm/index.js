@@ -136,13 +136,12 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
   };
 
   const SavePostAddress = async (callback, id) => {
+    console.log("TEST")
     if (newAddressForm.receiverContact.length != 11 || newAddressForm.receiverContact == '') {
-      return alert('Invalid contact number.');
+      return Toast.show('Invalid contact number.');
     } 
-    else if (newAddressForm.postalCode.length > 0 && newAddressForm.postalCode.length < 4){
-      return alert('Invalid postal code.');
-    }
     else {
+      console.log("TEST")
       setIsLoading(true);
       AsyncStorage.getItem('ToktokMallUser').then(async (raw) => {
         let data = JSON.parse(raw) || {};
@@ -174,6 +173,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
           await axios
             .post(`http://ec2-18-176-178-106.ap-northeast-1.compute.amazonaws.com/toktokmall/${endpoint}`, formData)
             .then((response) => {
+              console.log("TEST", response)
               if (response.data && response.data.success == 1) {
                 setIsLoading(false);
                 setMessageModal(true);
@@ -242,7 +242,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
     if (newAddressForm.receiverName) {
       removeError('receiverName');
     }
-    if (!newAddressForm.receiverContact) {
+    if (!newAddressForm.receiverContact || newAddressForm.receiverContact) {
       addError('receiverContact');
     }
     if (newAddressForm.receiverContact) {
