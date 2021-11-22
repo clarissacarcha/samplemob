@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef} from 'react'
+import React, { useState, useEffect, useRef, useCallback} from 'react'
 import {View,Text,StyleSheet,Platform,Dimensions,StatusBar,Image, TouchableOpacity, FlatList} from 'react-native'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import RNFS from 'react-native-fs'
@@ -21,6 +21,7 @@ import uuid from 'react-native-uuid'
 
 import {EventRegister} from 'react-native-event-listeners'
 import throttle from 'lodash.throttle'
+import { useFocusEffect } from '@react-navigation/core'
 
 // const testdata = [{
 //     id: "00X003",
@@ -162,6 +163,7 @@ const Component =  ({
         setOrderHistory([])
         setOffset(0)
         setLimit(10)
+        console.log(data.userId)
         getOrderNotifications({variables: {
           input: {
             userId: data.userId,
@@ -182,7 +184,12 @@ const Component =  ({
         if(order.read == 0) count++
         else count = count
       }
-      notificationCountSession('set', count)
+      console.log(count)
+      if(count > 0){
+        notificationCountSession('set', count)
+      }else{
+        notificationCountSession('set', 0)
+      }      
     }
   }, [orderHistory, offset])
 
@@ -193,6 +200,12 @@ const Component =  ({
       EventRegister.addEventListener('refreshToktokmallNotifications', init)	    
     }
 	}, [])
+
+  useFocusEffect(
+    useCallback(() => {
+      init()
+    }, [])
+  )
 
   const loadmore = throttle(
     () => {
