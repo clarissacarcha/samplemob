@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {connect} from 'react-redux';
-import {StyleSheet, SafeAreaView, StatusBar, ScrollView, RefreshControl} from 'react-native';
+import {View, StyleSheet, SafeAreaView, StatusBar, ScrollView, RefreshControl} from 'react-native';
 import OneSignal from 'react-native-onesignal';
 import {COLOR} from '../../../../../res/variables';
 
@@ -59,35 +59,35 @@ const Screen = ({navigation, constants}) => {
   return (
     <>
       <StatusBar barStyle="dark-content" backgroundColor={'transparent'} translucent />
-      <SafeAreaView style={styles.screen}>
-        <ScrollView
+      <View style={styles.screen}>
+        {/* <ScrollView
           showsVerticalScrollIndicator={false}
-          // refreshControl={
-          //   <RefreshControl
-          //     colors={[COLOR.YELLOW]}
-          //     refreshing={false}
-          //     onRefresh={() => {
-          //       console.log('REFRESHED');
-          //     }}
-          //   />
-          // }
-        >
-          <Header />
-          <Menu setUserLocation={setUserLocation} constants={constants} />
-          <Advertisements />
-        </ScrollView>
-      </SafeAreaView>
+          refreshControl={
+            <RefreshControl
+              colors={[COLOR.YELLOW]}
+              refreshing={false}
+              onRefresh={() => {
+                console.log('REFRESHED');
+              }}
+            />
+          }
+        > */}
+        {/* <Header /> */}
+        {/* <Menu setUserLocation={setUserLocation} constants={constants} /> */}
+        <Advertisements Header={Header} Menu={Menu} setUserLocation={setUserLocation} constants={constants} />
+        {/* </ScrollView> */}
+      </View>
     </>
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   session: state.session,
   constants: state.constants,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  createSession: (payload) => dispatch({type: 'CREATE_SESSION', payload}),
+const mapDispatchToProps = dispatch => ({
+  createSession: payload => dispatch({type: 'CREATE_SESSION', payload}),
 });
 
 export const ToktokLandingHome = connect(mapStateToProps, mapDispatchToProps)(Screen);
