@@ -234,8 +234,8 @@ export const VerifyFullname = ()=> {
                             <CheckBox
                                 isChecked={!person.hasMiddleName}
                                 onClick={()=>{
+                                     changePersonInfo("middleName",person.hasMiddleName ? "MNU" : "")
                                      changePersonInfo("hasMiddleName",!person.hasMiddleName)
-                                     changePersonInfo("middleName","")
                                      return
                                 }}
                                 style={{
