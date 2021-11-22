@@ -4,6 +4,7 @@ import CustomIcon from '../../../../Components/Icons'
 import { COLOR, FONT, FONT_SIZE } from '../../../../../res/variables';
 import {placeholder} from '../../../../assets';
 import {useNavigation} from "@react-navigation/native";
+import {NewTouchableOpacity} from '../../../../Components/Widgets'
 
 export const Item = ({active, data, onSelect}) => {
 
@@ -57,7 +58,7 @@ export const Item = ({active, data, onSelect}) => {
 
   return (
   	<>
-      <TouchableOpacity 
+      <NewTouchableOpacity 
         onPress={() => {          
           navigation.push("ToktokMallOrderDetails", {...data, onBack: onSelect})
         }}
@@ -88,7 +89,7 @@ export const Item = ({active, data, onSelect}) => {
             <CustomIcon.FeIcon name="chevron-down" size={25} color="#9E9E9E" />
           </TouchableOpacity> */}
         </View>
-      </TouchableOpacity>
+      </NewTouchableOpacity>
       <View style={{ height: 2, backgroundColor: '#F7F7FA'}} />
     </>
   )

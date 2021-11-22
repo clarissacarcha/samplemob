@@ -12,3 +12,4 @@ export * from "./UploadModal"
 export * from './AlertModal'
 export * from './CustomModal'
 export * from './TpinMaxAttemptModal'
+export * from './NewTouchableOpacity'

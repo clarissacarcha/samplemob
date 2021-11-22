@@ -19,7 +19,7 @@ export const CustomModal = ({setIsVisible, type, message}) => {
 
   return (
       <View style={styles.centeredView}>
-        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.25)'}}>
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.25)', top: -100}}>
           <View style={{backgroundColor: 'white', width: '80%', paddingVertical: 16, paddingHorizontal: 12, borderRadius: 5}}>
             <View style={{flexDirection: 'row', paddingHorizontal: 0}}>
               <TouchableOpacity onPress={() => {
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     zIndex: 999,
     width: width,
-    height: height,
+    height: height + 300,
     overflow: 'visible'
   }
 });
