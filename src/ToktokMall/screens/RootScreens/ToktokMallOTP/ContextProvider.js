@@ -9,7 +9,7 @@ export const TPINOTPContextProvider = ({children})=> {
 
 	const session = useSelector(state => state.session)
   const [value, setValue] = useState("")
-  const [retries, setretries] = useState(1)
+  const [retries, setretries] = useState(3)
   const [isInvalid, setIsInvalid] = useState(false)
   const [lockMessage, setlockMessage] = useState("We're sorry but you dont have any attempts left, Please wait for 30 minutes to request an OTP again. Thank you!")
 
