@@ -38,6 +38,7 @@ export default styles = StyleSheet.create({
     borderRadius: 7,
   },
   restaurantInfo: {
+    justifyContent: 'center',
     paddingEnd: 8,
     paddingStart: 10,
     color: COLOR.BLACK,
@@ -45,6 +46,7 @@ export default styles = StyleSheet.create({
   restaurantName: {
     color: COLOR.BLACK,
     fontFamily: FONT.BOLD,
+    marginBottom: 2
   },
   restaurantTitle: {
     color: COLOR.BLACK,

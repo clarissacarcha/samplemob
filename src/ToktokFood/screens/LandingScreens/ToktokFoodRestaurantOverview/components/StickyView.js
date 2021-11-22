@@ -169,14 +169,14 @@ export const StickyView = () => {
                 <Text numberOfLines={1} style={styles.titleText}>
                   {`${shopDetails.shopname} (${shopDetails.address})`}
                 </Text>
-                <CustomStarRating
+                {/* <CustomStarRating
                   rating={shopDetails.ratings ?? '0'}
                   starImgStyle={{width: scale(15), height: scale(15), marginVertical: 5}}
                   ratingStyle={{color: 'black', fontSize: FONT_SIZE.S}}
                   readOnly
                   showRating
                   rightRating
-                />
+                /> */}
                 <View style={styles.branchInfo}>
                   <Image source={time} style={styles.timeImg} />
                   <Text style={styles.branches}>{`${shopDetails.estimatedDeliveryTime} mins`}</Text>
