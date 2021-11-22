@@ -156,8 +156,8 @@ export const TPIN =  ({onValidate}) => {
 
           <TouchableOpacity 
             activeOpacity={1} 
-            onPress={async () => {
-              navigation.pop(2)
+            onPress={() => {
+              navigation.navigate("ToktokMallHome")
             }} 
             style={styles.activeButton}>
             <Text style={styles.buttonText}>Back to Home</Text>

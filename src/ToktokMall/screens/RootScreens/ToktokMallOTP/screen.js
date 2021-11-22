@@ -72,10 +72,9 @@ const Component = ({navigation, route, otpAttempts, setAttempts}) => {
 
       let errordata = JSON.parse(req.responseError.message)
       if(errordata.errors[0]){
-        let payload = errordata.errors[0].payload
-        if(payload.remainingAttempts){
-          Context.setretries(payload.remainingAttempts)
-        }
+        const {remainingAttempts, remainingTime} = errordata.errors[0].payload
+          Context.setretries(remainingAttempts || 0)
+          Context.setTimeRemaining(remainingTime || 30)
       }
 
     }else if(req.responseError){
@@ -156,7 +155,7 @@ const Component = ({navigation, route, otpAttempts, setAttempts}) => {
         // setIsVisible = {setAlertModal}
       /> */}
 
-      {route.params?.error && route.params?.errorCode == "VALIDATORMAXREQUEST" &&
+      {(route.params?.error || Context.retries === 0 ) &&
         <ValidatorMaxRequest />
       }
 
@@ -166,7 +165,7 @@ const Component = ({navigation, route, otpAttempts, setAttempts}) => {
           onReset={resendPin}      
         />
       }
-      {route.params?.data?.pin_type == "TPIN" && 
+      {route.params?.data?.pin_type == "TPIN" && Context.retries !== 0 && 
         <TPIN 
           onValidate={ValidatePin}           
         />
