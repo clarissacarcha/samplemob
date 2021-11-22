@@ -10,13 +10,10 @@ const {width,height} = Dimensions.get("window")
 
 import toktokwalletlogo from 'toktokwallet/assets/images/tokwa.png'
 
-export const BillerType = ({
-  item,
-  index
-})=> {
+export const BillerType = ({ item, index })=> {
   const navigation = useNavigation();
   const onPress = ()=> {
-    navigation.navigate("ToktokBiller" , {biller: item})
+    navigation.navigate("ToktokBiller" , {billType: item})
   }
 
   const onThrottledPress = useThrottle(onPress , 2000)
@@ -30,7 +27,7 @@ export const BillerType = ({
     >
       <View style={styles.item}>
         <Image
-          source={toktokwalletlogo}
+          source={{ uri: item.icon }}
           style={styles.itemLogo}
         />
         <Text style={styles.itemName}>{item.name}</Text>
@@ -61,6 +58,7 @@ const styles = StyleSheet.create({
   itemName: {
     fontFamily: FONT.REGULAR,
     fontSize: moderateScale(FONT_SIZE.M),
-    textAlign:"center"
+    textAlign:"center",
+    marginTop: moderateScale(5)
   }
 })

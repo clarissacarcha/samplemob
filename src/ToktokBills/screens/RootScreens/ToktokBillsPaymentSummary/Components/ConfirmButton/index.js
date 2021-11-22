@@ -15,11 +15,11 @@ import { OrangeButton } from "toktokbills/components";
 //FONTS & COLORS & IMAGES
 import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
 
-export const ConfirmButton = ({ paymentData, convenienceFee = 0 }) => {
+export const ConfirmButton = ({ paymentData }) => {
 
   const { tokwaAccount } = useAccount();
   const navigation = useNavigation();
-  const { accountNo, accountName, amount, email, billerType } = paymentData;
+  const { accountNo, accountName, amount, email, billerType, convenienceFee } = paymentData;
   const totalAmount = parseInt(amount) + convenienceFee;
 
   const onPressConfirm = () => {

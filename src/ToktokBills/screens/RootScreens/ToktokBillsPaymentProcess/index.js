@@ -15,13 +15,44 @@ import CONSTANTS from 'common/res/constants'
 const {COLOR , FONT_FAMILY: FONT , FONT_SIZE} = CONSTANTS
 const {width,height} = Dimensions.get("window")
 
-//HOOKS
-import { useAccount } from 'toktokbills/hooks';
+//GRAPHQL & HOOKS
+import { useLazyQuery, useMutation, useQuery } from '@apollo/react-hooks';
+import { TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT } from 'src/graphql';
+import { GET_BILL_ITEM_SETTINGS } from 'toktokbills/graphql/model';
 
 const MainComponent = ({navigation, route})=> {
 
-  const { billerType, biller } = route.params;
- 
+  const { billItemId, billType } = route.params;
+  const [billItemSettings, setBillItemSettings] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const {loading, error} = useQuery(GET_BILL_ITEM_SETTINGS, {
+    variables: {
+      input: {
+        billItemId
+      }
+    },
+    fetchPolicy: "cache-and-network",
+    client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
+    onCompleted: ({ getBillItemSettings }) => {
+      setBillItemSettings(getBillItemSettings);
+    }
+  });
+
+  if(loading){
+    return(
+      <View style={styles.container}>
+        <LoadingIndicator isLoading={true} isFlex />
+      </View>
+    )
+  }
+  if(error){
+    return (
+      <View style={styles.container}>
+        <SomethingWentWrong onRefetch={onFetch} />
+      </View>
+    )
+  }
   return (
     <>
       <KeyboardAvoidingView
@@ -32,22 +63,22 @@ const MainComponent = ({navigation, route})=> {
         <ScrollView keyboardShouldPersistTaps="handled">
           <Separator/>
           <View style={styles.headerContainer}>
-            <Image source={billerType.logo} style={styles.logo} />
-            <Text style={styles.billerName}>{billerType.name}</Text>
+            <Image source={{ uri: billItemSettings.logo}} style={styles.logo} />
+            <Text style={styles.billerName}>{billType.name}</Text>
           </View>
-          <PaymentForm />
-          <ConfirmButton billerType={billerType} />
+          <PaymentForm billItemSettings={billItemSettings} />
+          <ConfirmButton billItemSettings={billItemSettings} billType={billType} />
         </ScrollView>
       </KeyboardAvoidingView>
     </>
   )
 }
 export const ToktokBillsPaymentProcess = ({ navigation, route }) => {
-  const { biller } = route.params;
+  const { billType } = route.params;
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={biller.name} />,
+    headerTitle: () => <HeaderTitle label={billType.name} />,
     headerStyle: { height: Platform.OS == 'ios' ? moderateScale(60) : moderateScale(80) }
   });
 
@@ -65,7 +96,8 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     alignItems: "center",
-    marginVertical: moderateScale(30)
+    marginTop: moderateScale(30),
+    marginBottom: moderateScale(15)
   },
   logo: {
     width: moderateScale(130),

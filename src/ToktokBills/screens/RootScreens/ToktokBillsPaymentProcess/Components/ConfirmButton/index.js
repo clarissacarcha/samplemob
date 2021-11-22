@@ -13,33 +13,38 @@ import { OrangeButton } from "toktokbills/components";
 import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
 import { VerifyContext } from "../VerifyContextProvider";
 
-export const ConfirmButton = ({ billerType, tokwaBalance = 0 }) => {
+export const ConfirmButton = ({ billType, billItemSettings = {}, tokwaBalance = 0 }) => {
 
   const prompt = usePrompt();
   const navigation = useNavigation();
   const {
-    accountNo,
-    accountName,
+    firstField,
+    firstFieldError,
+    secondField,
+    secondFieldError,
     amount,
     email,
     emailError,
-    accountNoError,
     amountError
   } = useContext(VerifyContext);
+  const { commissionRateDetails } = billItemSettings;
+  const convenienceFee = commissionRateDetails?.providerOnTopValue + commissionRateDetails?.systemOnTopValue; //CONVENIENCE FEE
 
   const onPressConfirm = () => {
     let paymentData = {
-      accountNo,
-      accountName,
+      firstField,
+      secondField,
       amount,
       email,
-      billerType
+      billType,
+      convenienceFee,
+      billItemSettings
     }
     navigation.navigate("ToktokBillsPaymentSummary", { paymentData })
   }
  
   const checkIsDisabled = () => {
-    return !accountName || !accountNo || emailError || accountNoError || amountError
+    return !firstField || !secondField || firstFieldError || secondFieldError || emailError || !amount ||amountError
   }
 
   return (
