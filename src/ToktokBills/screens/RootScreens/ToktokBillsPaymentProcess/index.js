@@ -55,21 +55,21 @@ const MainComponent = ({navigation, route})=> {
   }
   return (
     <>
+      <Separator/>
       <KeyboardAvoidingView
         style={styles.container}
         behavior={Platform.OS === "ios" ? "padding" : "position"}
         keyboardVerticalOffset={Platform.OS === "ios" ? moderateScale(80) : moderateScale(-100)}
       >
         <ScrollView keyboardShouldPersistTaps="handled">
-          <Separator/>
           <View style={styles.headerContainer}>
             <Image source={{ uri: billItemSettings.logo}} style={styles.logo} />
             <Text style={styles.billerName}>{billType.name}</Text>
           </View>
           <PaymentForm billItemSettings={billItemSettings} />
-          <ConfirmButton billItemSettings={billItemSettings} billType={billType} />
         </ScrollView>
       </KeyboardAvoidingView>
+      <ConfirmButton billItemSettings={billItemSettings} billType={billType} />
     </>
   )
 }
