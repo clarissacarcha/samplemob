@@ -11,14 +11,13 @@ import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 import {Variations} from './components';
 import {useSelector} from 'react-redux';
 
-import {scale} from 'toktokfood/helper/scale';
 import styles from './styles';
 
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {useLazyQuery} from '@apollo/react-hooks';
 import {GET_PRODUCT_DETAILS, GET_TEMPORARY_CART} from 'toktokfood/graphql/toktokfood';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
-import ChangeAddress from 'toktokfood/components/ChangeAddress';
+// import ChangeAddress from 'toktokfood/components/ChangeAddress';
 import {onErrorAlert} from 'src/util/ErrorUtility';
 import {useAlert} from 'src/hooks';
 
@@ -179,7 +178,7 @@ const MainComponent = () => {
         <>
           <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'position' : null} style={styles.container}>
             <ScrollView stickyHeaderIndices={stickyHeaderIndices}>
-              <ChangeAddress />
+              {/* <ChangeAddress /> */}
               {/* {!bannerLoaded && <BannerPlaceHolder />}
               <Image
                 onLoadEnd={() => setBannerLoaded(true)}

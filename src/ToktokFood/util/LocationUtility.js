@@ -52,7 +52,7 @@ export const reverseGeocode = async ({latitude, longitude}) => {
     const result = await axios.get(url);
     const addressBreakdown = mapAddressComponentsToObject(result.data.results[0].address_components);
     return {
-      formattedAddress: result.data.results[0].formatted_address,
+      formattedAddress: result.data.results[2].formatted_address,
       addressBreakdown,
     };
   } catch (error) {
