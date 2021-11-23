@@ -35,15 +35,11 @@ export const WalletLandingPage = connect(null,mapDispatchtoProps)(({refreshing, 
                     }
                 >
                 <View style={{height:280}}>
-                   {
-                       APP_FLAVOR == "D" && ACCOUNT_TYPE == 2
-                       ? <DriverWalletCardInfo/>
-                       : <WalletCardInfo/>
-                   }
+                    <WalletCardInfo/>
                 </View>
                 <View>
                     <WalletRecentTransactions/>
-                    <Advertisements/>
+                     <Advertisements/> 
                 </View>
          
             </ScrollView>

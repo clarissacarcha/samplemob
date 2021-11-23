@@ -2,13 +2,27 @@ import {StyleSheet, Platform} from 'react-native';
 import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 
 // Utils
-import {getStatusbarHeight, verticalScale} from 'toktokfood/helper/scale';
+import {getStatusbarHeight, moderateScale, verticalScale} from 'toktokfood/helper/scale';
 
-export default styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLOR.WHITE,
     paddingTop: Platform.OS === 'android' ? getStatusbarHeight : 0,
+  },
+  emptyContainer: {
+    alignItems: 'center',
+    flex: 1,
+    paddingTop: verticalScale(80),
+  },
+  emptyImg: {
+    height: moderateScale(175),
+    width: moderateScale(250),
+  },
+  emptyText: {
+    color: '#9E9E9E',
+    fontSize: FONT_SIZE.XL,
+    marginTop: moderateScale(20),
   },
   listContainer: {
     flex: 1,
@@ -16,13 +30,12 @@ export default styles = StyleSheet.create({
     paddingHorizontal: 18,
   },
   header: {
-    display: 'flex',
-    flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'center',
     borderBottomWidth: 3,
     paddingHorizontal: 20,
-    borderBottomColor: '#F7F7FA',
-    height: Platform.OS === 'ios' ? verticalScale(45) : verticalScale(60),
+    borderBottomColor: COLOR.LIGHT,
+    height: verticalScale(60),
   },
   headerLabel: {
     color: COLOR.BLACK,
@@ -39,7 +52,7 @@ export default styles = StyleSheet.create({
     flex: 1,
     marginStart: 12,
     borderBottomWidth: 1,
-    borderColor: '#E6E6E6',
+    borderBottomColor: COLOR.LIGHT,
     paddingVertical: verticalScale(14),
   },
   notificationInfo: {
@@ -57,12 +70,13 @@ export default styles = StyleSheet.create({
     fontFamily: FONT.REGULAR,
   },
   notificationIcon: {
-    width: 32,
-    height: 32,
-    display: 'flex',
+    width: 30,
+    height: 30,
     borderRadius: 50,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: COLOR.ORANGE,
   },
 });
+
+export default styles;
