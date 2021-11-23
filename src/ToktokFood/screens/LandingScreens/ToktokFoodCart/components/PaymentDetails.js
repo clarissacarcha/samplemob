@@ -10,6 +10,7 @@ import {wallet} from 'toktokfood/assets/images';
 import {COLORS, FONT, FONT_SIZE} from 'res/constants';
 import {VerifyContext} from './VerifyContextProvider';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
+import CONSTANTS from 'common/res/constants';
 
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import {GET_MY_ACCOUNT} from 'toktokwallet/graphql';
@@ -18,13 +19,21 @@ import {GET_MY_ACCOUNT} from 'toktokwallet/graphql';
 
 const PaymentDetails = ({refreshing, orderType}) => {
   const navigation = useNavigation();
-  const {toktokWallet, setToktokWallet, paymentMethod, setPaymentMethod, setPMLoading, pmLoading} = useContext(
-    VerifyContext,
-  );
+  const {
+    toktokWallet,
+    setToktokWallet,
+    paymentMethod,
+    setPaymentMethod,
+    setPMLoading,
+    pmLoading,
+    temporaryCart,
+  } = useContext(VerifyContext);
   const {user} = useSelector((state) => state.session);
   const {location, customerInfo, shopLocation} = useSelector((state) => state.toktokFood);
   const [hasToktokWallet, setHasToktokWallet] = useState(false);
   const disabled = true;
+
+  const isDisabled = paymentMethod == 'TOKTOKWALLET' ? temporaryCart?.totalAmount > toktokWallet?.balance : false;
 
   const [getMyAccount, {loading, error}] = useLazyQuery(GET_MY_ACCOUNT, {
     fetchPolicy: 'network-only',
@@ -48,7 +57,7 @@ const PaymentDetails = ({refreshing, orderType}) => {
 
   useEffect(() => {
     setPMLoading(loading || error);
-  }, [loading, error]);
+  }, [loading, error, setPMLoading]);
 
   useEffect(() => {
     if (customerInfo && user) {
@@ -61,7 +70,7 @@ const PaymentDetails = ({refreshing, orderType}) => {
         setPaymentMethod('COD');
       }
     }
-  }, [customerInfo, user, refreshing]);
+  }, [customerInfo, user, refreshing, setPaymentMethod, getMyAccount]);
 
   const onCashIn = ({balance}) => {
     // do something here
@@ -73,6 +82,12 @@ const PaymentDetails = ({refreshing, orderType}) => {
     navigation.navigate('ToktokWalletPaymentOptions', {
       amount: 0,
       onCashIn: onCashIn,
+    });
+  };
+
+  const onToktokWalletCashInNavigate = () => {
+    navigation.navigate('ToktokWalletHomePage', {
+      screen: 'ToktokWalletPaymentOptions',
     });
   };
 
@@ -98,46 +113,55 @@ const PaymentDetails = ({refreshing, orderType}) => {
         {loading || error ? (
           <LoadingIndicator size="small" style={{paddingHorizontal: 40}} isLoading={true} />
         ) : (
-          <View style={styles.paymentContainer}>
-            <TouchableOpacity
-              disabled={!hasToktokWallet}
-              onPress={() => setPaymentMethod('TOKTOKWALLET')}
-              style={[
-                styles.tokwaButton,
-                styles.shadow,
-                {backgroundColor: loading || hasToktokWallet ? COLORS.WHITE : COLORS.LIGHT},
-                {borderColor: paymentMethod === 'TOKTOKWALLET' ? COLORS.YELLOW : COLORS.WHITE},
-              ]}>
-              <Image style={styles.walletIcon} source={wallet} />
-              <View style={{justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
-                <View>
-                  <View style={styles.tokwaButtonTextWrapper}>
-                    <Text style={styles.toktokText}>toktok</Text>
-                    <Text style={styles.walletText}>wallet</Text>
-                  </View>
-                  <Text style={{color: '#707070', fontSize: FONT_SIZE.S}}>
-                    Balance: PHP {toktokWallet?.balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}.00
-                  </Text>
-                </View>
-                <TouchableOpacity onPress={onPressTopUp}>
-                  <Text style={{color: '#FCB81A', fontSize: FONT_SIZE.M, paddingLeft: 15}}>Top up</Text>
-                </TouchableOpacity>
-              </View>
-            </TouchableOpacity>
-            {orderType == 'Delivery' && (
+          <React.Fragment>
+            <View style={styles.paymentContainer}>
               <TouchableOpacity
-                onPress={() => setPaymentMethod('COD')}
+                disabled={!hasToktokWallet}
+                onPress={() => setPaymentMethod('TOKTOKWALLET')}
                 style={[
-                  styles.cashButton,
+                  styles.tokwaButton,
                   styles.shadow,
-                  {borderColor: paymentMethod === 'COD' ? COLORS.YELLOW : COLORS.WHITE},
+                  {backgroundColor: loading || hasToktokWallet ? COLORS.WHITE : COLORS.LIGHT},
+                  {borderColor: paymentMethod === 'TOKTOKWALLET' ? COLORS.YELLOW : COLORS.WHITE},
                 ]}>
-                <Text style={[styles.cashText, {color: paymentMethod === 'COD' ? COLORS.YELLOW : COLORS.BLACK}]}>
-                  Cash
+                <Image style={styles.walletIcon} source={wallet} />
+                <View style={{justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
+                  <View>
+                    <View style={styles.tokwaButtonTextWrapper}>
+                      <Text style={styles.toktokText}>toktok</Text>
+                      <Text style={styles.walletText}>wallet</Text>
+                    </View>
+                    <Text style={{color: '#707070', fontSize: FONT_SIZE.S}}>
+                      Balance: PHP {toktokWallet?.balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}.00
+                    </Text>
+                  </View>
+                  <TouchableOpacity onPress={onPressTopUp}>
+                    <Text style={{color: '#FCB81A', fontSize: FONT_SIZE.M, paddingLeft: 15}}>Top up</Text>
+                  </TouchableOpacity>
+                </View>
+              </TouchableOpacity>
+              {orderType == 'Delivery' && (
+                <TouchableOpacity
+                  onPress={() => setPaymentMethod('COD')}
+                  style={[
+                    styles.cashButton,
+                    styles.shadow,
+                    {borderColor: paymentMethod === 'COD' ? COLORS.YELLOW : COLORS.WHITE},
+                  ]}>
+                  <Text style={[styles.cashText, {color: paymentMethod === 'COD' ? COLORS.YELLOW : COLORS.BLACK}]}>
+                    Cash
+                  </Text>
+                </TouchableOpacity>
+              )}
+            </View>
+            {isDisabled && (
+              <TouchableOpacity activeOpacity={0.9} onPress={() => onToktokWalletCashInNavigate()}>
+                <Text style={{fontSize: FONT_SIZE.M, textAlign: 'center', color: '#F6841F', marginVertical: 10, fontWeight: '500'}}>
+                  Insufficient balance. Please click here to cash in.
                 </Text>
               </TouchableOpacity>
             )}
-          </View>
+          </React.Fragment>
         )}
       </>
     );
