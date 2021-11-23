@@ -61,7 +61,7 @@ const Item = ({data, fulldata}) => {
     <>
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate("ToktokMallOrderDetails", fulldata)
+          navigation.navigate("ToktokMallOrderDetails", {...fulldata, orderId: fulldata.id})
         }}
         style={{flexDirection: 'row', paddingVertical: 10, paddingHorizontal: 15}}
       >

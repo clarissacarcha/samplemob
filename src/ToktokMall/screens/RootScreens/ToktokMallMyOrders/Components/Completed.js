@@ -67,7 +67,7 @@ const Item = ({data, fulldata}) => {
         activeOpacity={product?.enabled > 0 ? 0.5 : 1} 
         onPress={() => {
           if(product?.enabled == 1){
-            navigation.navigate("ToktokMallOrderDetails", fulldata)
+            navigation.navigate("ToktokMallOrderDetails", {...fulldata, orderId: fulldata.id})
           }
         }}
         style={{flexDirection: 'row', paddingTop: 10, paddingBottom: 0, paddingHorizontal: 15}}>

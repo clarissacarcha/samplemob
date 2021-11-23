@@ -64,16 +64,18 @@ const Component = ({
         settotalitems(response.getMyCart.total)
         createMyCartCountSession("set", response.getMyCart.count)
 
-        //GENERATE ARRAY OF REFERENCES FOR MANIPULATING SWIPEABLE VIEW BASED ON TOTAL CART ITEMS
-        swiperRefs.current = Array(response.getMyCart.total - 1).fill().map((_, i) => swiperRefs.current[i] || createRef());        
-        let swiperrefcopy = ArrayCopy(swiperReferences)
-        for(var x=0;x<response.getMyCart.raw.length;x++){
-          let item = response.getMyCart.raw[x]
-          //TRACKING AND USING EACH REFERENCES WILL BE PROCESSED BY CHECKING PRODUCT ID
-          //INDEX WILL BE USED FOR REFERENCING
-          swiperrefcopy.push({id: item.productid, index: x})
+        if(response.getMyCart.total > 0){
+          //GENERATE ARRAY OF REFERENCES FOR MANIPULATING SWIPEABLE VIEW BASED ON TOTAL CART ITEMS
+          swiperRefs.current = Array(response.getMyCart.total - 1).fill().map((_, i) => swiperRefs.current[i] || createRef());        
+          let swiperrefcopy = ArrayCopy(swiperReferences)
+          for(var x=0;x<response.getMyCart.raw.length;x++){
+            let item = response.getMyCart.raw[x]
+            //TRACKING AND USING EACH REFERENCES WILL BE PROCESSED BY CHECKING PRODUCT ID
+            //INDEX WILL BE USED FOR REFERENCING
+            swiperrefcopy.push({id: item.productid, index: x})
+          }
+          setSwiperReferences(swiperrefcopy)
         }
-        setSwiperReferences(swiperrefcopy)
 
       }
     },

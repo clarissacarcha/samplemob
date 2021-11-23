@@ -8,7 +8,7 @@ import {coppermask, clothfacemask, voucherbg} from '../../../../assets';
 import { FONT } from '../../../../../res/variables';
 import ContentLoader from 'react-native-easy-content-loader';
 
-export const RenderStore = ({data, loading}) => {
+export const RenderStore = ({data, loading, isOutOfStock}) => {
 
   const navigation = useNavigation()
 
@@ -41,7 +41,7 @@ export const RenderStore = ({data, loading}) => {
           paragraphStyles = {{height: 13, left: -10, paddingTop: 14 }}
           pWidth = {'45%'}
         ></ContentLoader> */}
-        <TouchableOpacity activeOpacity={1} onPress={() => {
+        <TouchableOpacity disabled={isOutOfStock} activeOpacity={1} onPress={() => {
             navigation.navigate("ToktokMallStore", {id: data?.id, searchValue: ""})
           }} style={{flexDirection: 'row', justifyContent: 'center'}}>
           <View style={{flex: 2, alignItems: 'flex-start', justifyContent: 'center'}}>
@@ -52,7 +52,7 @@ export const RenderStore = ({data, loading}) => {
             <Text style={{fontSize: 13, color: "#9E9E9E"}}>{data?.address}</Text>
           </View>
           <View style={{flex: 3, alignItems: 'flex-end', justifyContent: 'center'}}>
-            <Text style={{fontSize: 13, color: "#F6841F"}}>Visit Store</Text>
+            <Text style={{fontSize: 13, color: "#F6841F"}}>{isOutOfStock ? "" : "Visit Store"}</Text>
           </View>
         </TouchableOpacity>
         {/* <View style={{flexDirection: 'row', paddingVertical: 14}}>

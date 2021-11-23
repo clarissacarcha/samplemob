@@ -453,6 +453,7 @@ const Component =  ({
           <RenderStore 
             data={store} 
             loading = {isFetching}
+            isOutOfStock={isOutOfStock}
           />
         }
 
