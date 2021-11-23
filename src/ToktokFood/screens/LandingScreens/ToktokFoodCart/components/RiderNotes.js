@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useContext} from 'react';
-import {Text, View, TextInput} from 'react-native';
+import {Text, View, TextInput, TouchableOpacity} from 'react-native';
 import styles from '../styles';
 import YellowButton from 'toktokfood/components/YellowButton';
 import {VerifyContext} from './VerifyContextProvider';
@@ -38,12 +38,6 @@ const RiderNotes = ({onNotesChange, notes = '', onPlaceOrder, showPlaceOrder = f
               />
             </View>
           </>
-        )}
-
-        {isDisabled && (
-          <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S, textAlign: 'center', color: '#FF322A'}}>
-            Insufficient balance
-          </Text>
         )}
         <View style={{paddingVertical: 10}}>
           <YellowButton
