@@ -50,7 +50,7 @@ export const reverseGeocode = async ({latitude, longitude}) => {
   try {
     const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${MAPS_API_KEY}`;
     const result = await axios.get(url);
-    const addressBreakdown = mapAddressComponentsToObject(result.data.results[0].address_components);
+    const addressBreakdown = mapAddressComponentsToObject(result.data.results[2].address_components);
     return {
       formattedAddress: result.data.results[2].formatted_address,
       addressBreakdown,
