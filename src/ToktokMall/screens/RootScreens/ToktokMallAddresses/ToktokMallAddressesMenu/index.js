@@ -294,7 +294,7 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
                     />
                   )}
                   <TouchableOpacity
-                    style={[styles.addressContainer, {flexGrow: 1, marginLeft: -2}]}
+                    style={[styles.addressContainer, {flexGrow: 1, marginLeft: 4, width: '80%'}]}
                     onLongPress={() => setActiveToDeleteItem((prevState) => ({...prevState, value: true}))}
                     onPress={() => {
                       navigation.navigate('ToktokMallAddressesForm', {item, update: true});
@@ -304,7 +304,7 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
                       {item.defaultAdd == 1 ? <Text style={styles.addressdefaultText}>Default</Text> : null}
                     </View>
                     <Text style={styles.addresscontact_number}>{item.receiverContact}</Text>
-                    <Text style={styles.addressText}>{item.fullAddress || item.address}</Text>
+                    <Text style={{...styles.addressText}}>{item.fullAddress || item.address}</Text>
                   </TouchableOpacity>
                 </View>
               </Wrapper>
@@ -435,7 +435,7 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
                 flex: 0,
                 paddingBottom: activeToDeleteItem?.value
                   ? 70
-                  : 0,
+                  : 0                
               },
             ]}>
             {renderAddresses()}
