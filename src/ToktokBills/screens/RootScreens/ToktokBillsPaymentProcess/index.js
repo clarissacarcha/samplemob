@@ -26,7 +26,7 @@ const MainComponent = ({navigation, route})=> {
   const [billItemSettings, setBillItemSettings] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
 
-  const {loading, error} = useQuery(GET_BILL_ITEM_SETTINGS, {
+  const {loading, error, refetch} = useQuery(GET_BILL_ITEM_SETTINGS, {
     variables: {
       input: {
         billItemId
@@ -49,7 +49,7 @@ const MainComponent = ({navigation, route})=> {
   if(error){
     return (
       <View style={styles.container}>
-        <SomethingWentWrong onRefetch={onFetch} />
+        <SomethingWentWrong onRefetch={refetch} />
       </View>
     )
   }

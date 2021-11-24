@@ -50,6 +50,7 @@ export const ToktokBillsHome = ({navigation,route})=> {
   const onRefresh = () => {
     setRefreshing(true);
     refetch();
+    getMyAccount();
   }
 
   if((loading || getMyAccountLoading) && billTypes.length === 0){

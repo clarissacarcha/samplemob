@@ -1,7 +1,6 @@
 import React from 'react';
 import {
-  ToktokBillsEnterOTP,
-  ToktokBillsEnterTPIN,
+  ToktokBillsEnterPinCode,
   ToktokBillsReceipt,
   ToktokBillsTransactionLogs
 } from 'toktokbills/screens'
@@ -10,15 +9,8 @@ export default ({Navigator}) => {
   return (
     <>   
       <Navigator.Screen 
-        name="ToktokBillsEnterOTP" 
-        component={ToktokBillsEnterOTP}
-        options={{
-          headerTitleAlign: 'center' 
-        }}
-      />
-      <Navigator.Screen 
-        name="ToktokBillsEnterTPIN" 
-        component={ToktokBillsEnterTPIN}
+        name="ToktokBillsEnterPinCode" 
+        component={ToktokBillsEnterPinCode}
         options={{
           headerTitleAlign: 'center' 
         }}

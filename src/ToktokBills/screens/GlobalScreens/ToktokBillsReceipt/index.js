@@ -29,12 +29,11 @@ import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
 
 const MainComponent = ({ navigation, route, viewRef }) => {
 
-  const { paymentData } = route.params;
 
   return (
     <>
       <Header />
-      <ReceiptDetails paymentData={paymentData} />
+      <ReceiptDetails route={route} />
       <View style={styles.buttonContainer}>
         <Text style={styles.emailText}>You will receive a copy of your receipt in the email address you have entered</Text>
         <OrangeButton label="Ok" onPress={() => navigation.navigate("ToktokBillsHome")} />
