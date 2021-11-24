@@ -17,7 +17,7 @@ export const PaymentDetails = ({ paymentData })=> {
   const navigation = useNavigation();
   const { firstField, secondField, amount, email, billType, convenienceFee, billItemSettings } = paymentData;
   const totalAmount = parseInt(amount) + convenienceFee;
-  console.log(billType)
+
   return (
     <>
       <View style={styles.detailsContainer}>

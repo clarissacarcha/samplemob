@@ -6,10 +6,13 @@ import { moderateScale, numberFormat } from "toktokload/helper";
 
 //FONTS & COLORS & IMAGES
 import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
+import moment from "moment";
 
-export const ReceiptDetails = ({ paymentData, refNum = 12345678910 }) => {
+export const ReceiptDetails = ({ route }) => {
 
-  const { accountNo, accountName, amount, email, billerType, convenienceFee } = paymentData;
+  const { receipt, paymentData } = route.params;
+  const { destinationNumber, destinationIdentifier, amount, email, billerDetails, convenienceFee, referenceNumber, createdAt } = receipt;
+  const { firstFieldName, secondFieldName } = paymentData.billItemSettings;
   const totalAmount = parseInt(amount) + convenienceFee;
 
   return (
@@ -18,24 +21,24 @@ export const ReceiptDetails = ({ paymentData, refNum = 12345678910 }) => {
       <View style={{ paddingHorizontal: moderateScale(30), marginTop: moderateScale(15) }}>
         <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
           <Text style={styles.title}>Service Reference Number: </Text>
-          <Text style={styles.description}>{refNum}</Text>
+          <Text style={styles.description}>{referenceNumber}</Text>
         </View>
         <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
           <Text style={styles.title}>Transaction Date and Time: </Text>
-          <Text style={styles.description}>Oct 20, 2021 - 11:00 AM</Text>
+          <Text style={styles.description}>{moment(createdAt).format('lll')}</Text>
         </View>
         <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
-          <Text style={styles.title}>Account number: </Text>
-          <Text style={styles.description}>{accountNo}</Text>
+          <Text style={styles.title}>{firstFieldName}: </Text>
+          <Text style={styles.description}>{destinationNumber}</Text>
         </View>
         <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
-          <Text style={styles.title}>Account name: </Text>
-          <Text style={styles.description}>{accountName}</Text>
+          <Text style={styles.title}>{secondFieldName}: </Text>
+          <Text style={styles.description}>{destinationIdentifier}</Text>
         </View>
         <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
           <Text style={styles.title}>Biller: </Text>
           <View style={{ justifyContent: "flex-end" }}>
-            <Image source={billerType.logo} style={styles.logo} />
+            <Image source={{ uri: billerDetails.logo }} style={styles.logo} />
           </View>
         </View>
       </View>

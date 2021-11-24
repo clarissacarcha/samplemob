@@ -14,28 +14,26 @@ const {Provider} = PromptProviderContext;
 
 export const PromptProvider = ({children})=> {
 
-    const [promptState,setPromptstate] = useState(initialState)
+  const [promptState,setPromptstate] = useState(initialState)
 
+  const prompt = ({type , title, message , onPress = null })=> {
+    setPromptstate({
+      type,
+      title,
+      message,
+      visible: true,
+      setVisible: ()=>  setPromptstate(initialState),
+      onPress: ()=> {
+        setPromptstate(initialState)
+        if(onPress){ onPress() }
+      }
+    })
+  }
 
-    const prompt = ({type , title, message , onPress = null })=> {
-        setPromptstate({
-            type,
-            title,
-            message,
-            visible: true,
-            setVisible: ()=>  setPromptstate(initialState),
-            onPress: ()=> {
-                setPromptstate(initialState)
-                onPress();
-            }
-        })
-    }
-
-    return (
-        <Provider value={prompt}>
-            <PromptModal {...promptState}/>
-            {children}
-        </Provider>
-    )
-
+  return (
+    <Provider value={prompt}>
+      <PromptModal {...promptState}/>
+      {children}
+    </Provider>
+  )
 }
