@@ -48,6 +48,12 @@ export const GET_BILL_ITEM_SETTINGS = gql`
       providerId
       billTypeId
       itemDocumentId
+      itemDocumentDetails{
+        id
+        paymentPolicy1
+        paymentPolocy2
+        termsAndConditions
+      }
       commissionRateDetails {
         id
         referralCommissionItemId
