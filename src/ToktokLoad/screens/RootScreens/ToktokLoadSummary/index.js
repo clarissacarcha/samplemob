@@ -22,11 +22,11 @@ import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
 const MainComponent = ({ navigation, route }) => {
 
   const loads = route.params?.loads;
-  const mobileNumber = route.params?.mobileNumber;
-
+  const mobileNumber = route.params?.mobileNumber ? route.params.mobileNumber : loads?.mobileNumber ;
+  
   const { user } = useSelector((state) => state.session);
   const { toktokWallet, setToktokWallet, hasToktokWallet, setHasToktokWallet } = useContext(VerifyContext);
-
+ 
   const [getMyAccount, {loading, error}] = useLazyQuery(GET_MY_ACCOUNT, {
     fetchPolicy: 'network-only',
     client: TOKTOK_WALLET_GRAPHQL_CLIENT,

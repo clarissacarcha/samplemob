@@ -31,13 +31,12 @@ export const PayNowButton = ({ loadDetails, mobileNumber }) => {
   const [postToktokWalletRequestMoney, {loading, error}] = useMutation(POST_TOKTOKWALLET_REQUEST_MONEY, {
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
     onError: (error) => {
-      console.log(error)
-      // ErrorUtility.StandardErrorHandling({
-      //   error,
-      //   navigation,
-      //   prompt,
-      //   title: ""
-      // });
+      ErrorUtility.StandardErrorHandling({
+        error,
+        navigation,
+        prompt,
+        title: ""
+      });
     },
     onCompleted: ({ postToktokWalletRequestMoney }) => {
       let paymentSummary = { 
@@ -46,8 +45,6 @@ export const PayNowButton = ({ loadDetails, mobileNumber }) => {
         mobileNumber,
         requestMoneyDetails: postToktokWalletRequestMoney.data
       }
-      console.log(paymentSummary)
-
       navigation.navigate("ToktokLoadEnterPinCode", { paymentSummary })
     }
   });
@@ -72,14 +69,21 @@ export const PayNowButton = ({ loadDetails, mobileNumber }) => {
     onPressPayNow();
   }, 1000);
 
+  const onPressTermsAndContidions = () => {
+    let { termsAndConditions } = loadDetails
+    navigation.navigate("ToktokWalletTermsConditions", { termsAndConditions })
+  }
+
   return (
     <>
       <AlertOverlay visible={loading}/>
       <View style={styles.container}>
         <Text style={styles.terms}>
           <Text>Please read our </Text>
-          <Text style={styles.paymentPolicy}>Terms and Conditions </Text>
-          <Text>before you proceed with your transaction</Text>
+          <Text style={styles.paymentPolicy} onPress={onPressTermsAndContidions} >
+            Terms and Conditions
+          </Text>
+          <Text> before you proceed with your transaction</Text>
         </Text>
         <OrangeButton
           onPress={onPressThrottled}

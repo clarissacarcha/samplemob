@@ -15,6 +15,11 @@ const transaction = `
   loadDetails {
     id
     name
+    networkDetails {
+      id
+      name
+      comRateId
+    }
   }
   senderWalletBalance
   amount
