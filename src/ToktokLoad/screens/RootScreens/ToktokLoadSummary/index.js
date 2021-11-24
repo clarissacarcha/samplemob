@@ -22,11 +22,11 @@ import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
 const MainComponent = ({ navigation, route }) => {
 
   const loads = route.params?.loads;
-  const mobileNumber = route.params?.mobileNumber;
-
-  const {user} = useSelector((state) => state.session);
+  const mobileNumber = route.params?.mobileNumber ? route.params.mobileNumber : loads?.mobileNumber ;
+  
+  const { user } = useSelector((state) => state.session);
   const { toktokWallet, setToktokWallet, hasToktokWallet, setHasToktokWallet } = useContext(VerifyContext);
-
+ 
   const [getMyAccount, {loading, error}] = useLazyQuery(GET_MY_ACCOUNT, {
     fetchPolicy: 'network-only',
     client: TOKTOK_WALLET_GRAPHQL_CLIENT,
@@ -56,7 +56,7 @@ const MainComponent = ({ navigation, route }) => {
     }
   }, [user]);
 
-  if(loading){
+  if(loading && toktokWallet == null){
     return(
       <View style={styles.container}>
         <LoadingIndicator isLoading={true} isFlex />
@@ -72,11 +72,11 @@ const MainComponent = ({ navigation, route }) => {
         <Text style={styles.headerText}>Load Summary</Text>
       </View>
       <ScrollView style={{ flex: 1 }}>
-        <SummaryDetails amount={loads?.amount ? loads.amount : loads.loadDetails.amount} mobileNumber={mobileNumber} />
+        <SummaryDetails loadDetails={loads?.loadDetails ? loads.loadDetails : loads} mobileNumber={mobileNumber} />
         <View style={styles.separator} />
-        <PaymentMethod amount={loads?.amount ? loads.amount : loads.loadDetails.amount} getMyAccount={getMyAccount} />
+        <PaymentMethod loadDetails={loads?.loadDetails ? loads.loadDetails : loads} getMyAccount={getMyAccount} />
       </ScrollView>
-      <PayNowButton amount={loads?.amount ? loads.amount : loads.loadDetails.amount} />
+      <PayNowButton loadDetails={loads?.loadDetails ? loads.loadDetails : loads } mobileNumber={mobileNumber} />
     </View>
   );
 };

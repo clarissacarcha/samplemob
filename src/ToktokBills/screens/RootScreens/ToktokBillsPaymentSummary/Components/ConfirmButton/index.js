@@ -61,8 +61,8 @@ export const ConfirmButton = ({ paymentData }) => {
           note: "Bills payment",
           transactionType: "bills",
           details: {
-            biller: paymentData.billItemSettings.name,
-            category: paymentData.billType.name,
+            Biller: paymentData.billItemSettings.name,
+            Category: paymentData.billType.name,
           }
         }
       }
@@ -77,17 +77,21 @@ export const ConfirmButton = ({ paymentData }) => {
     onPressConfirm();
   }, 1000);
 
+  const onPressTermsAndContidions = () => {
+    let { termsAndConditions } = billItemSettings.itemDocumentDetails
+    navigation.navigate("ToktokWalletTermsConditions", { termsAndConditions })
+  }
+  
   return (
     <>
       <AlertOverlay visible={loading}/>
       <View style={styles.container}>
-        <Text style={styles.terms}>
-          <Text>Please read our </Text>
-          <Text style={styles.paymentPolicy}>Payment Policy</Text>
-          <Text> and </Text>
-          <Text style={styles.paymentPolicy}>Terms and Condition </Text>
-          <Text>before you proceed with your transaction</Text>
-        </Text>
+      <Text style={styles.terms}>
+        <Text>Please read our </Text>
+        <Text style={styles.tnc} onPress={onPressTermsAndContidions}>Terms and Condition </Text>
+        <Text>before you proceed with your transaction</Text>
+      </Text>
+      <Text style={styles.paymentPolicy}>*Payments made beyond 8:00 PM will be posted the next day</Text>
         <OrangeButton
           onPress={onPressThrottled}
           disabled={checkIsDisabled()}
@@ -106,10 +110,15 @@ const styles = StyleSheet.create({
     paddingVertical: moderateScale(20)
   },
   terms: {
-    marginBottom: moderateScale(15),
     textAlign: "center"
   },
-  paymentPolicy: {
+  tnc: {
     color: "#F6841F"
+  },
+  paymentPolicy: {
+    color: "#F6841F",
+    fontSize: FONT_SIZE.S,
+    textAlign: "center",
+    marginVertical: moderateScale(15),
   }
 })

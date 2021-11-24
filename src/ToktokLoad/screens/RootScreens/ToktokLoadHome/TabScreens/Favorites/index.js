@@ -15,7 +15,7 @@ import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
 import { empty_favorite } from 'toktokload/assets/images';
 
 //GRAPHQL & HOOKS
-import { useLazyQuery, useMutation } from '@apollo/react-hooks';
+import { useLazyQuery, useMutation, useQuery } from '@apollo/react-hooks';
 import { TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT } from 'src/graphql';
 import { GET_FAVORITE_LOADS } from 'toktokload/graphql/model';
 
@@ -26,8 +26,8 @@ export const Favorites = ({ navigation, route }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [selectedLoad, setSelectedLoad] = useState({});
 
-  const [getFavoriteLoads, {loading, error}] = useLazyQuery(GET_FAVORITE_LOADS, {
-    fetchPolicy: "network-only",
+  const {loading, error, refetch} = useQuery(GET_FAVORITE_LOADS, {
+    fetchPolicy: "cache-and-network",
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
     onCompleted:({ getFavoriteLoads })=> {
       setFavorites(getFavoriteLoads)
@@ -36,13 +36,12 @@ export const Favorites = ({ navigation, route }) => {
 
   useEffect(() => {
     if(isFocused){
-      setSelectedLoad({})
-      getFavoriteLoads();
+      setSelectedLoad({});
+      onRefresh();
     }
   }, [isFocused])
 
   const onPressNext = () => {
-    console.log(selectedLoad.loadDetails.amount)
     if(selectedLoad && Object.keys(selectedLoad).length > 0){
       navigation.navigate("ToktokLoadSummary", { loads: selectedLoad })
     }
@@ -59,7 +58,7 @@ export const Favorites = ({ navigation, route }) => {
   }
 
   const onRefresh = () => {
-    getFavoriteLoads();
+    refetch();
   }
 
   if(loading){
