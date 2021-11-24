@@ -15,11 +15,11 @@ import { wallet_img } from "src/ToktokBills/assets/images";
 //HOOKS
 import { useAccount } from 'toktokbills/hooks';
 
-export const PaymentMethod = ({ paymentData, convenienceFee = 0 }) => {
+export const PaymentMethod = ({ paymentData }) => {
 
 	const navigation = useNavigation();
   const { tokwaAccount, getMyAccount } = useAccount();
-  const { amount } = paymentData;
+  const { amount, convenienceFee } = paymentData;
   const totalAmount = parseInt(amount) + convenienceFee;
 
 	const onCashIn = ({balance}) => {

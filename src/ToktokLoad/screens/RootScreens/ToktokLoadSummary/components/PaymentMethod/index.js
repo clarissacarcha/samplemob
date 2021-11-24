@@ -7,17 +7,18 @@ import { moderateScale, numberFormat } from "toktokload/helper";
 
 //COMPONENTS
 import { LoadingIndicator } from "src/ToktokLoad/components";
-import { VerifyContext } from "./VerifyContextProvider";
+import { VerifyContext } from "../VerifyContextProvider";
 
 //FONTS & COLORS & IMAGES
 import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
 import { wallet_icon } from "src/ToktokLoad/assets/icons";
 
 
-export const PaymentMethod = ({ amount, getMyAccount }) => {
+export const PaymentMethod = ({ loadDetails, getMyAccount }) => {
 
 	const navigation = useNavigation();
   const { toktokWallet } = useContext(VerifyContext);
+  const { amount }  = loadDetails;
 
 	const onCashIn = ({balance}) => {
     // do something here

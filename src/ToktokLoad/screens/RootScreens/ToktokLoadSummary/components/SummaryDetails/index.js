@@ -7,7 +7,8 @@ import { moderateScale } from "toktokload/helper";
 //FONTS & COLORS & IMAGES
 import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
 
-export const SummaryDetails = ({ amount, mobileNumber }) => {
+export const SummaryDetails = ({ loadDetails, mobileNumber }) => {
+  const { amount }  = loadDetails;
 
   return (
     <>

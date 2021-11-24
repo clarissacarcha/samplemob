@@ -20,9 +20,9 @@ export const PromptModal = ({
   onPress,
   children
 }) => {
-
+  console.log()
   const closeModal = ()=> setVisible(false)
-  const onThrottledPress = useThrottle(onPress ? onPress : closeModal, 2000)
+  const onThrottledPress = useThrottle(onPress? onPress : closeModal, 2000)
 
   let icon = Error
   switch(type){
@@ -46,13 +46,13 @@ export const PromptModal = ({
     <Modal 
       visible={visible}
       transparent={true}
-      onRequestClose={closeModal ? closeModal : onPressThrottled}
+      onRequestClose={closeModal ? closeModal : onThrottledPress}
       style={styles.container}
     >
       <View style={styles.modalBody}>
         <View style={styles.content}>
           <Image source={icon} style={styles.imageIcon} />
-          <Text style={styles.successText}>{title}</Text>
+          { !!title && <Text style={styles.successText}>{title}</Text> }
           <Text style={styles.messageText}>{message}</Text>
           {children}
           <TouchableOpacity onPress={onThrottledPress} style={styles.btn}>
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.XL, 
     textAlign:"center",
-    marginVertical: 10,
+    marginTop: 10,
     marginHorizontal: moderateScale(20),
     color: "#F6841F"
   },
@@ -95,11 +95,12 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.M,
     textAlign:"center",
     marginHorizontal: moderateScale(20),
+    marginTop: 10,
   },
   imageIcon: {
     width: moderateScale(160),
     height: moderateScale(160),
-    resizeMode: "contain"
+    resizeMode: "contain",
   },
   button: {
     justifyContent:"flex-end",
