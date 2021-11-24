@@ -14,6 +14,7 @@ import {connect} from 'react-redux'
 import { YellowButton } from 'src/revamp'
 import { DisabledButton } from 'toktokwallet/components'
 import CheckBox from 'react-native-check-box'
+import RNFS from 'react-native-fs'
 import CONSTANTS from 'common/res/constants'
 
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE , SIZE } = CONSTANTS
@@ -57,6 +58,9 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
         },
         onCompleted: (response)=> {
             let result = response.postKycRegister
+            removeCacheImages({
+                VerifyUserData
+            })
             if(result.status == 2){
                 navigation.pop(2)
                 navigation.navigate("ToktokWalletVerifyResult")
@@ -64,6 +68,18 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
             }
         }
     })
+
+    const removeCacheImages = async ({VerifyUserData})=> {
+        const { selfieImage , selfieImageWithID , frontImage ,  backImage } = VerifyUserData
+        try {
+            if(selfieImage) await RNFS.unlink(selfieImage.uri)
+            if(selfieImageWithID) await RNFS.unlink(selfieImageWithID.uri)
+            if(frontImage) await RNFS.unlink(frontImage.uri)
+            if(backImage) await RNFS.unlink(backImage.uri)
+        }catch (error){
+            throw error;
+        }
+    }
 
     const confirm = ()=> {
         const rnValidIDFile = new ReactNativeFile({
@@ -99,8 +115,6 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
             type: 'image/jpeg'
         })
         : null
-
-        console.log(rnBackIDFile)
 
         const input = {
             userId: session.user.id,

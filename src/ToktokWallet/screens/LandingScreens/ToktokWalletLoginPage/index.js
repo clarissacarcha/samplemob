@@ -26,20 +26,20 @@ export const ToktokWalletLoginPage = ({navigation,route})=> {
     })
 
     const session = useSelector(state=> state.session)
-    // const [isRooted,setIsRooted] = useState(false)
-    // const [canMockLocation,setCanMockLocation] = useState(false)
+    const [isRooted,setIsRooted] = useState(false)
+    const [canMockLocation,setCanMockLocation] = useState(false)
     const [isDebugMode,setIsDebugMode] = useState(false)
     const [trustFall,setTrustFall] = useState(false)
     const { refreshWallet } = useAccount();
     const dispatch = useDispatch()
 
     const CheckIfDeviceIsRooted = async ()=> {
-        // const isRooted = await JailMonkey.isJailBroken()
-        // const canMockLocation = await JailMonkey.canMockLocation()
+        const isRooted = await JailMonkey.isJailBroken()
+        const canMockLocation = await JailMonkey.canMockLocation()
         const isDebugMode = await JailMonkey.isDebuggedMode()
         const trustFall = await JailMonkey.trustFall()
-        // setIsRooted(isRooted)
-        // setCanMockLocation(canMockLocation)
+        setIsRooted(isRooted)
+        setCanMockLocation(canMockLocation)
         setIsDebugMode(isDebugMode)
         setTrustFall(trustFall)
     }
@@ -95,7 +95,7 @@ export const ToktokWalletLoginPage = ({navigation,route})=> {
             <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
             {
                 // isRooted || isDebugMode
-                trustFall
+                isRooted
                 ? <RootedDevice/>
                 : <CheckTokwaKYCRegistration kycStatus={data.getUserToktokWalletData.kycStatus}>
     

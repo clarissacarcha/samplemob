@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
     proceedBtn: {
         height: 70,
         width: "100%",
-        marginBottom: 16,
+        marginBottom: 32,
         marginTop: 40,
         justifyContent:"flex-end"
     },
@@ -242,6 +242,7 @@ const styles = StyleSheet.create({
         height: Platform.OS === "ios" ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 100 + 10, 
         width: Platform.OS === "ios" ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 110 + 10, 
         alignSelf:"center",
+        justifyContent:"center",
         marginTop: 7,
         padding: 2,
         borderStyle: "dashed",
