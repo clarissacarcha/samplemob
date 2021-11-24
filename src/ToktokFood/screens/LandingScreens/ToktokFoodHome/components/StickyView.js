@@ -56,7 +56,7 @@ const StickyView = () => {
   const [refreshing, setRefreshing] = useState(false);
   let variableInput = {
     limit: 10,
-    radius: 5,
+    radius: 3,
     userLongitude: location?.longitude,
     userLatitude: location?.latitude,
     tabId: activeTab.id,
@@ -82,7 +82,7 @@ const StickyView = () => {
           input: {
             page: 0,
             limit: 10,
-            radius: 5,
+            radius: 3,
             userLongitude: location?.longitude,
             userLatitude: location?.latitude,
             tabId: activeTab.id,

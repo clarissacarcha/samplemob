@@ -107,7 +107,7 @@ const ToktokFoodSearch = ({route}) => {
     setHistory([]);
   };
 
-  const searchFood = async (s = '', radius = 5) => {
+  const searchFood = async (s = '', radius = 3) => {
     try {
       setLoading(true);
       const API_RESULT = await axios({
@@ -156,7 +156,7 @@ const ToktokFoodSearch = ({route}) => {
             <Text numberOfLines={1} style={styles.restaurantName}>
               {item.shopname} ({item.address})
             </Text>
-            <CustomStarRating rating={item.ratings ?? '0'} starImgStyle={styles.ratingImg} readOnly />
+            {/* <CustomStarRating rating={item.ratings ?? '0'} starImgStyle={styles.ratingImg} readOnly /> */}
           </View>
           <View style={styles.subInfoWrapper}>
             <Image resizeMode="contain" source={time} style={styles.timeImg} />

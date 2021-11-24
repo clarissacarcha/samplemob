@@ -27,11 +27,12 @@ const RestaurantItem = ({item}) => {
       />
       <View style={styles.restaurantInfo}>
         <Text numberOfLines={1} style={styles.restaurantName}>{`${item.shopname} (${item.address})`}</Text>
-        <CustomStarRating
+        {/* <CustomStarRating
           rating={item.ratings ?? '0'}
           starImgStyle={{width: scale(15), height: scale(15), marginVertical: 5}}
           readOnly
-        />
+        /> */}
+        <View style={{marginVertical: 5}}></View>
         <View style={styles.branchInfo}>
           <Image resizeMode="contain" source={time} style={styles.timeImg} />
           <Text style={styles.branches}>{`${item.estimatedDeliveryTime} mins`}</Text>
