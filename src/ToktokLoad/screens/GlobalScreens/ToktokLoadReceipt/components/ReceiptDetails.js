@@ -6,8 +6,13 @@ import { moderateScale } from "toktokload/helper";
 
 //FONTS & COLORS & IMAGES
 import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
+import moment from "moment";
 
-export const ReceiptDetails = ({ amount = 0, refNum = 12345678910 }) => {
+export const ReceiptDetails = ({ route }) => {
+
+  const { receipt } = route.params;
+  const { amount, referenceNumber, destinationNumber, createdAt } = receipt;
+  const transactionDateTime = moment(createdAt).format("lll");
 
   return (
     <>
@@ -15,26 +20,26 @@ export const ReceiptDetails = ({ amount = 0, refNum = 12345678910 }) => {
       <View style={{ paddingHorizontal: moderateScale(30), marginTop: moderateScale(15) }}>
         <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
           <Text style={styles.title}>Service Reference Number </Text>
-          <Text style={styles.description}>{refNum}</Text>
+          <Text style={styles.description}>{referenceNumber}</Text>
         </View>
         <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
-          <Text style={styles.title}>Transaction Date and Time:</Text>
-          <Text style={styles.description}>Oct 20, 2021 - 11:00 AM</Text>
+          <Text style={styles.title}>Transaction Date and Time </Text>
+          <Text style={styles.description}>{transactionDateTime}</Text>
         </View>
         <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
-          <Text style={styles.title}>Mobile Number</Text>
-          <Text style={styles.description}>09123456789</Text>
+          <Text style={styles.title}>Mobile Number </Text>
+          <Text style={styles.description}>{destinationNumber}</Text>
         </View>
         <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
-          <Text style={styles.title}>Load Amount</Text>
+          <Text style={styles.title}>Load Amount </Text>
           <Text style={styles.description}>{amount.toFixed(2)}</Text>
         </View>
         <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
-          <Text style={styles.title}>Discount</Text>
+          <Text style={styles.title}>Discount </Text>
           <Text style={styles.description}>0.00</Text>
         </View>
         <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
-          <Text style={styles.title}>Status</Text>
+          <Text style={styles.title}>Status </Text>
           <Text style={styles.description}>Success</Text>
         </View>
       </View>

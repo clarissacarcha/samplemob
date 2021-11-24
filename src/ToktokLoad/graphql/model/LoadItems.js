@@ -6,6 +6,15 @@ export const GET_LOAD_ITEMS = gql`
       id
       name
       amount
+      comRateId
+      termsAndConditions
+      providerId
+      networkId
+      networkDetails {
+        id
+        name
+        comRateId
+      }
       favorite {
         id
         loadItemId

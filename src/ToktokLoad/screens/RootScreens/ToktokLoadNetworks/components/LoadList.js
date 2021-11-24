@@ -102,7 +102,7 @@ export const LoadList = ({ networkId, navigation, mobileNumber }) => {
 
   const onPressNext = () => {
     if(selectedLoad[networkId]){
-      navigation.navigate("ToktokLoadSummary", { loads: selectedLoad[networkId], mobileNumber })
+      navigation.navigate("ToktokLoadSummary", { loads: selectedLoad[networkId], mobileNumber  })
     }
   }
 
