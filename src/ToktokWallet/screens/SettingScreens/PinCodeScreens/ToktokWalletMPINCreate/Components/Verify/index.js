@@ -26,7 +26,7 @@ const numWordArray = {
     "9": "nine",
     "10": "ten"
 }
-export const Verify = ({pageIndex,setPageIndex})=> {
+export const Verify = ({pageIndex,setPageIndex,setOldMPIN})=> {
 
     const navigation = useNavigation();
     const [showPin,setShowPin] = useState(false)
@@ -41,6 +41,7 @@ export const Verify = ({pageIndex,setPageIndex})=> {
         onCompleted: ({getVerifyMPIN})=>{
             setErrorMessage("")
             setPageIndex(state=>state+1)
+            setOldMPIN(pinCode)
         },
         onError: (error)=> {
             const {graphQLErrors, networkError} = error;

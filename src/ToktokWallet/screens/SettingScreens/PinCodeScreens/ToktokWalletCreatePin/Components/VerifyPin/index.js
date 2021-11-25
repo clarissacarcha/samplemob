@@ -28,7 +28,7 @@ const numWordArray = {
     "10": "ten"
 }
 
-export const VerifyPin = ({pageIndex,setPageIndex})=> {
+export const VerifyPin = ({pageIndex,setPageIndex,setOldTPIN})=> {
 
     const [showPin,setShowPin] = useState(false)
     const [pinCode,setPinCode] = useState("")
@@ -43,6 +43,7 @@ export const VerifyPin = ({pageIndex,setPageIndex})=> {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({verifyPinCode})=>{
             setPageIndex(state=>state+1)
+            setOldTPIN(pinCode)
         },
         onError: (error)=> {
             // onErrorAlert({alert, error})

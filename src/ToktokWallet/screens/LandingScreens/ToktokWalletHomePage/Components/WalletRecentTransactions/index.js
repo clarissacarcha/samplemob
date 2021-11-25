@@ -54,7 +54,7 @@ const RecentRecords = ()=> (
 
       <View style={styles.transactions}>
         {
-          tokwaAccount.wallet.recentTransactions.map((item,index)=>{
+          tokwaAccount?.wallet?.recentTransactions?.map((item,index)=>{
             return (
               <WalletLog
                 key={`recentLog${index}`}

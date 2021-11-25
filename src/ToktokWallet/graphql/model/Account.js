@@ -71,7 +71,7 @@ export const PATCH_PIN_CODE = gql`
 `
 
 export const PATCH_MPIN_CODE = gql`
-    mutation patchMPinCode($input: PatchPinCodeInput){
+    mutation patchMPinCode($input: PatchMPinCodeInput){
         patchMPinCode(input: $input)
     }
 `
