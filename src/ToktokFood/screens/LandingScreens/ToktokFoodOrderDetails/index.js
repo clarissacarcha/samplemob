@@ -11,7 +11,16 @@ import DialogMessage from 'toktokfood/components/DialogMessage';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import Separator from 'toktokfood/components/Separator';
-import {OrderAddress, OrderFee, OrderList, OrderLogs, OrderNote, OrderRider, OrderTitle, OrderShippingVoucher} from './components';
+import {
+  OrderAddress,
+  OrderFee,
+  OrderList,
+  OrderLogs,
+  OrderNote,
+  OrderRider,
+  OrderTitle,
+  OrderShippingVoucher,
+} from './components';
 
 // Queries
 import {TOKTOK_FOOD_GRAPHQL_CLIENT, CLIENT} from 'src/graphql';
@@ -177,7 +186,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
               if (transaction.orderStatus == 'p') {
                 setShowDialogMessage({
                   title: 'No Response from Merchant',
-                  message: `Merchant hasn't confirmed your order.\nPlease try again.`,
+                  message: "Merchant hasn't confirmed your order.\nPlease try again.",
                   show: true,
                   type: 'warning',
                 });
@@ -306,13 +315,13 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
           )}
           <OrderList orderDetails={transaction.orderDetails} />
           <Separator />
-          {transaction.promoDetails && (
+          {transaction?.promoDetails && transaction?.orderIsfor === 1 && (
             <>
-              <OrderShippingVoucher data={transaction} forDelivery={transaction.orderIsfor == 1} />
+              <OrderShippingVoucher data={transaction} forDelivery={transaction.orderIsfor === 1} />
               <Separator />
             </>
           )}
-          <OrderFee data={transaction} forDelivery={transaction.orderIsfor == 1} />
+          <OrderFee data={transaction} forDelivery={transaction.orderIsfor === 1} />
           <Separator />
           <OrderNote
             title="Payment Method"
