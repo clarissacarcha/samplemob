@@ -3,7 +3,8 @@ import {View,Text,StyleSheet,ScrollView,TextInput,Alert,KeyboardAvoidingView,Dim
 import {useSelector} from 'react-redux'
 import { HeaderBack, YellowButton,HeaderTitle } from 'src/revamp';
 import {AlertOverlay, SomethingWentWrong} from 'src/components'
-import { Separator , CheckIdleState , FlagSecureScreen} from 'toktokwallet/components';
+import { Separator , CheckIdleState } from 'toktokwallet/components';
+import { FormatTextUtility } from 'toktokwallet/util'
 import {useAlert} from 'src/hooks/useAlert'
 import {onErrorAlert,onError} from 'src/util/ErrorUtility'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
@@ -146,7 +147,6 @@ export const ToktokWalletBDORegistration = ({navigation,route})=> {
     }
 
     return (
-        <FlagSecureScreen>
         <CheckIdleState>
         <AlertOverlay visible={loading}/>
         <DatePickerModal
@@ -185,7 +185,10 @@ export const ToktokWalletBDORegistration = ({navigation,route})=> {
                         <TextInput 
                             style={styles.input}
                             placeholder="Enter first name here"
-                            onChangeText={(value)=>setfirstName(value)}
+                            onChangeText={(value)=>{
+                                const finalString = FormatTextUtility.removeSpecialCharacters(value)
+                                setfirstName(finalString)
+                            }}
                             value={firstName}
                             returnKeyType="done"
                         />
@@ -196,7 +199,10 @@ export const ToktokWalletBDORegistration = ({navigation,route})=> {
                         <TextInput 
                             style={styles.input}
                             placeholder="Enter middle name here"
-                            onChangeText={(value)=>setMiddleName(value)}
+                            onChangeText={(value)=>{
+                                const finalString = FormatTextUtility.removeSpecialCharacters(value)
+                                setMiddleName(finalString)
+                            }}
                             value={middleName}
                             returnKeyType="done"
                         />
@@ -207,7 +213,10 @@ export const ToktokWalletBDORegistration = ({navigation,route})=> {
                         <TextInput 
                             style={styles.input}
                             placeholder="Enter last name here"
-                            onChangeText={(value)=>setlastName(value)}
+                            onChangeText={(value)=>{
+                                const finalString = FormatTextUtility.removeSpecialCharacters(value)
+                                setlastName(finalString)
+                            }}
                             value={lastName}
                             returnKeyType="done"
                         />
@@ -289,7 +298,6 @@ export const ToktokWalletBDORegistration = ({navigation,route})=> {
             </KeyboardAvoidingView>
         </View>
         </CheckIdleState>
-        </FlagSecureScreen>
      )
  }
 
