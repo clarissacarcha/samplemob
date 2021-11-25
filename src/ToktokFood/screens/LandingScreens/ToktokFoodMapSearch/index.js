@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {useNavigation, useRoute} from '@react-navigation/native';
@@ -23,33 +23,37 @@ const ToktokFoodMapSearch = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
+  const [isLoaded, setIsLoaded] = useState(false);
+
   const [mapInfo, setMapInfo] = useState({
     coordinates: {
       latitude: route.params.coordinates.latitude,
       longitude: route.params.coordinates.longitude,
     },
-    address: '',
+    address: route.params.address,
     fullInfo: {},
   });
 
   const onMapMove = async (c) => {
-    const {latitude, longitude} = c;
-    try {
-      const result = await getFormattedAddress(latitude, longitude);
-      const payload = {
-        latitude,
-        longitude,
-        address: result.formattedAddress,
-      };
-      if (mapInfo.address !== result.formattedAddress) {
-        setMapInfo({
-          coordinates: {latitude, longitude},
+    if (isLoaded) {
+      const {latitude, longitude} = c;
+      try {
+        const result = await getFormattedAddress(latitude, longitude);
+        const payload = {
+          latitude,
+          longitude,
           address: result.formattedAddress,
-          fullInfo: payload,
-        });
+        };
+        if (mapInfo.address !== result.formattedAddress) {
+          setMapInfo({
+            coordinates: {latitude, longitude},
+            address: result.formattedAddress,
+            fullInfo: payload,
+          });
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
     }
   };
 
@@ -68,6 +72,7 @@ const ToktokFoodMapSearch = () => {
       <View style={styles.container}>
         <View style={styles.mapViewContainer}>
           <MapView
+            onMapReady={() => setIsLoaded(true)}
             style={styles.mapView}
             provider={PROVIDER_GOOGLE}
             region={{
@@ -133,4 +138,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ToktokFoodMapSearch;
+export default React.memo(ToktokFoodMapSearch);

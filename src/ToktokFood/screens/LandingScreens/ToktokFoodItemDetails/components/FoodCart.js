@@ -397,14 +397,14 @@ export const FoodCart = ({loading, action}) => {
         hasTwoButtons
       />
       <View style={[styles.container, styles.cartBorder]}>
-        {tempData?.maxQtyIsset == 1 && (
+        {/* {tempData?.maxQtyIsset == 1 && (
           <Text
             style={{
               color: '#FFA700',
               fontSize: FONT_SIZE.M,
               fontFamily: FONT.BOLD,
             }}>{`Max quantity per checkout: ${tempData?.maxQty}`}</Text>
-        )}
+        )} */}
         <View style={styles.foodItemTotalWrapper}>
           <View style={styles.countWrapper}>
             <TouchableOpacity
@@ -424,7 +424,7 @@ export const FoodCart = ({loading, action}) => {
               <MIcon name="add" color={COLOR.WHITE} size={20} />
             </TouchableOpacity>
           </View>
-          <Text style={styles.total}>Total: {totalPrice.toFixed(2)}</Text>
+          <Text style={styles.total}>Total: PHP {totalPrice.toFixed(2)}</Text>
         </View>
         <TouchableOpacity
           disabled={isEnabled()}

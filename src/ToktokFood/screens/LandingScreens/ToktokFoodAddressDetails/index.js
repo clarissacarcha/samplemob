@@ -25,16 +25,10 @@ const initialPickUpDetails = {
   pickUpAddressLatLong: {},
 };
 
-const ToktokFoodAddressDetails = ({ route }) => {
+const ToktokFoodAddressDetails = ({route}) => {
   const navigation = useNavigation();
 
   const {location} = useSelector((state) => state.toktokFood);
-
-  const onSearchMapNavigate = (c) => {
-    if (typeof c === 'object') {
-      navigation.replace('ToktokFoodMapSearch', {coordinates: c, isCart: route.params?.isCart});
-    }
-  };
 
   const reducer = (state, action) => {
     switch (action.type) {
@@ -51,9 +45,20 @@ const ToktokFoodAddressDetails = ({ route }) => {
     }
   };
 
+  const [state, dispatch] = useReducer(reducer, initialPickUpDetails);
+
+  const onSearchMapNavigate = (c) => {
+    if (typeof c === 'object') {
+      navigation.replace('ToktokFoodMapSearch', {
+        coordinates: c,
+        address: state.pickUpCompleteAddress,
+        isCart: route.params?.isCart,
+      });
+    }
+  };
+
   const [addressList, setAddressList] = useState([]);
   const [sessionToken, setSessionToken] = useState(uuid.v4());
-  const [state, dispatch] = useReducer(reducer, initialPickUpDetails);
 
   const useIsMounted = () => {
     const isMountedRef = useRef(true);
@@ -142,7 +147,12 @@ const ToktokFoodAddressDetails = ({ route }) => {
     },
   });
 
-  const onResultSelect = (prediction) => {
+  const onResultSelect = (prediction, fullAddress) => {
+    dispatch({
+      type: 'SET_PICKUP_COMPLETE_ADDRESS',
+      value: fullAddress,
+    });
+
     getGooglePlaceDetails({
       variables: {
         input: {
@@ -157,7 +167,7 @@ const ToktokFoodAddressDetails = ({ route }) => {
     const formattedAddressParts = item.formattedAddress.split(',');
     return (
       <>
-        <TouchableWithoutFeedback onPress={() => onResultSelect(item)}>
+        <TouchableWithoutFeedback onPress={() => onResultSelect(item, formattedAddressParts.toString())}>
           <View style={styles.placeItem}>
             <MIcon style={styles.placeIcon} name="place" size={23} color={COLOR.ORANGE} />
             <View style={styles.addressContainer}>
