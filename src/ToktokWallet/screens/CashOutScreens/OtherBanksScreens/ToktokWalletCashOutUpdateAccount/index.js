@@ -1,6 +1,6 @@
 import React , {useState,useEffect} from 'react'
 import {View,Text,StyleSheet,TextInput,Alert,TouchableOpacity,Dimensions,KeyboardAvoidingView,ScrollView} from 'react-native'
-import {Separator,CheckIdleState} from 'toktokwallet/components'
+import {Separator,CheckIdleState,FlagSecureScreen} from 'toktokwallet/components'
 import {HeaderBack,HeaderTitle,YellowButton} from 'src/revamp'
 import { useSelector } from 'react-redux'
 import { AlertOverlay } from 'src/components'
@@ -111,6 +111,7 @@ export const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
     }
     
     return (
+        <FlagSecureScreen>
         <CheckIdleState>
         <AlertOverlay visible={loading}/>
         <SuccessfulModal visible={showSuccessModal} setVisible={setShowSuccessModal}/>
@@ -199,6 +200,7 @@ export const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
              </KeyboardAvoidingView>
         </View>
         </CheckIdleState>
+        </FlagSecureScreen>
     )
 }
 

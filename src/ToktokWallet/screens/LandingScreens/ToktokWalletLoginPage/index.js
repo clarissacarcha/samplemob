@@ -7,6 +7,7 @@ import {useLazyQuery, useQuery} from '@apollo/react-hooks'
 import {useSelector,useDispatch} from 'react-redux'
 import AsyncStorage from '@react-native-community/async-storage'
 import { useAccount } from 'toktokwallet/hooks'
+import { FlagSecureScreen } from 'toktokwallet/components'
 import { useFocusEffect } from '@react-navigation/native'
 import JailMonkey from 'jail-monkey'
 
@@ -91,13 +92,14 @@ export const ToktokWalletLoginPage = ({navigation,route})=> {
 
 
     return (
-        <>
+        <FlagSecureScreen>
             <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
             {
                 // isRooted || isDebugMode
-                isRooted
-                ? <RootedDevice/>
-                : <CheckTokwaKYCRegistration kycStatus={data.getUserToktokWalletData.kycStatus}>
+                // isRooted
+                // ? <RootedDevice/>
+                // : 
+                <CheckTokwaKYCRegistration kycStatus={data.getUserToktokWalletData.kycStatus}>
     
                         <CheckWalletAccountRestriction>
                         <LoginPage/>
@@ -106,6 +108,6 @@ export const ToktokWalletLoginPage = ({navigation,route})=> {
                 </CheckTokwaKYCRegistration>
             }
             
-        </>
+        </FlagSecureScreen>
     )
 }

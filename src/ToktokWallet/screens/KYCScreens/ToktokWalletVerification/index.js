@@ -3,7 +3,7 @@ import {StyleSheet,View,BackHandler,TouchableHighlight,Text,KeyboardAvoidingView
 import {useNavigation} from '@react-navigation/native'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import {useFocusEffect} from '@react-navigation/native'
-import {Separator,LeavePromptModal} from 'toktokwallet/components'
+import {Separator,LeavePromptModal,FlagSecureScreen} from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants';
 
 //SELF IMPORTS 
@@ -142,9 +142,11 @@ const MainSetupComponent = ()=> {
 
 export const ToktokWalletVerification = ()=> {
     return (
-        <VerifyContextProvider>
-             <MainSetupComponent/>
-        </VerifyContextProvider>
+        <FlagSecureScreen>
+            <VerifyContextProvider>
+                <MainSetupComponent/>
+            </VerifyContextProvider>
+        </FlagSecureScreen>
     )
 }
 

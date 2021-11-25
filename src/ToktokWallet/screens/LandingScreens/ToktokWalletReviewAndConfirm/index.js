@@ -1,7 +1,7 @@
 import React from 'react'
 import {View,Text,StyleSheet} from 'react-native'
 import { HeaderBack, YellowButton, HeaderTitle } from 'src/revamp'
-import { Separator, SwipeProceedButton, CheckIdleState } from 'toktokwallet/components'
+import { Separator, SwipeProceedButton, CheckIdleState , FlagSecureScreen } from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS
@@ -49,6 +49,7 @@ export const ToktokWalletReviewAndConfirm = ({navigation,route})=> {
         }
     }
     return (
+        <FlagSecureScreen>
         <CheckIdleState>
         <Separator/>
         <View style={styles.container}>
@@ -70,6 +71,7 @@ export const ToktokWalletReviewAndConfirm = ({navigation,route})=> {
             </View>
         </View>
         </CheckIdleState>
+        </FlagSecureScreen>
     )
 }
 

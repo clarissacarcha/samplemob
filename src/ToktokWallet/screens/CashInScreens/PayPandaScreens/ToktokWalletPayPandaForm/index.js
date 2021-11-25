@@ -10,7 +10,7 @@ import {numberFormat} from 'toktokwallet/helper'
 import { useAlert } from 'src/hooks'
 import { HeaderBack, YellowButton, HeaderTitle } from 'src/revamp'
 import { AlertOverlay } from 'src/components'
-import { CheckIdleState } from 'toktokwallet/components'
+import { CheckIdleState , FlagSecureScreen} from 'toktokwallet/components'
 import { TransactionUtility } from 'toktokwallet/util/TransactionUtility'
 import {
     DisabledButton,
@@ -157,6 +157,7 @@ export const ToktokWalletPayPandaForm = ({navigation,route})=> {
     },[amount])
 
     return (
+        <FlagSecureScreen>
       <CheckIdleState>
       <AlertOverlay visible={loading}/>
       <Separator />
@@ -224,6 +225,7 @@ export const ToktokWalletPayPandaForm = ({navigation,route})=> {
 
 
        </CheckIdleState>
+       </FlagSecureScreen>
     )
 }
 

@@ -1,7 +1,7 @@
 import React , {useState,useRef,useEffect} from 'react'
 import {View,Text,StyleSheet,TextInput,TouchableOpacity,KeyboardAvoidingView,Platform} from 'react-native'
 import { HeaderBack, HeaderTitle, ICON_SET, VectorIcon, YellowButton } from 'src/revamp'
-import { DisabledButton, NumberBoxes, Separator, BuildingBottom , CheckIdleState } from 'toktokwallet/components'
+import { DisabledButton, NumberBoxes, Separator, BuildingBottom , CheckIdleState , FlagSecureScreen } from 'toktokwallet/components'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import { PATCH_LINK_ACCOUNT , GET_GCASH_LINK_OTP } from 'toktokwallet/graphql'
 import { useLazyQuery , useMutation } from '@apollo/react-hooks'
@@ -105,6 +105,7 @@ export const ToktokWalletGcashLinkAccount = ({navigation,route})=> {
     },[otpTimer])
 
     return (
+        <FlagSecureScreen>
         <CheckIdleState>
          <AlertOverlay visible={loading} />
         <Separator/>
@@ -156,6 +157,7 @@ export const ToktokWalletGcashLinkAccount = ({navigation,route})=> {
             <BuildingBottom/>
         </KeyboardAvoidingView>
         </CheckIdleState>
+        </FlagSecureScreen>
     )
 }
 
