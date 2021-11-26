@@ -18,7 +18,7 @@ console.disableYellowBox = true;
 const App = () => {
   return (
     <>
-      <StatusBar barStyle="dark-content" />
+      <StatusBar barStyle="dark-content" translucent backgroundColor="transparent" />
       <SafeAreaView style={styles.safeArea}>
         <ReduxProvider>
           <ApolloProvider>
