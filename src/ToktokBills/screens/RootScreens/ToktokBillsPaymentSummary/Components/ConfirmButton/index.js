@@ -31,6 +31,7 @@ export const ConfirmButton = ({ paymentData }) => {
   const { firstField, secondField, amount, email, billType, convenienceFee, billItemSettings } = paymentData;
   const totalAmount = parseFloat(amount) + parseFloat(convenienceFee);
   const tokwaBalance = tokwaAccount?.wallet?.balance;
+  const { termsAndConditions, paymentPolicy1, paymentPolicy2 } = billItemSettings.itemDocumentDetails;
  
   const [postToktokWalletRequestMoney, {loading, error}] = useMutation(POST_TOKTOKWALLET_REQUEST_MONEY, {
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
@@ -78,7 +79,6 @@ export const ConfirmButton = ({ paymentData }) => {
   }, 1000);
 
   const onPressTermsAndContidions = () => {
-    let { termsAndConditions } = billItemSettings.itemDocumentDetails
     navigation.navigate("ToktokWalletTermsConditions", { termsAndConditions })
   }
   
@@ -91,12 +91,13 @@ export const ConfirmButton = ({ paymentData }) => {
         <Text style={styles.tnc} onPress={onPressTermsAndContidions}>Terms and Condition </Text>
         <Text>before you proceed with your transaction</Text>
       </Text>
-      <Text style={styles.paymentPolicy}>*Payments made beyond 8:00 PM will be posted the next day</Text>
-        <OrangeButton
-          onPress={onPressThrottled}
-          disabled={checkIsDisabled()}
-          label="Confirm"
-        />
+      { !!paymentPolicy1 && <Text style={styles.paymentPolicy1}>*{paymentPolicy1}</Text> }
+      { !!paymentPolicy2 && <Text style={styles.paymentPolicy2}>*{paymentPolicy2}</Text> }
+      <OrangeButton
+        onPress={onPressThrottled}
+        disabled={checkIsDisabled()}
+        label="Confirm"
+      />
       </View>
     </>
   );
@@ -110,15 +111,22 @@ const styles = StyleSheet.create({
     paddingVertical: moderateScale(20)
   },
   terms: {
-    textAlign: "center"
+    textAlign: "center",
+    marginBottom: moderateScale(15),
   },
   tnc: {
     color: "#F6841F"
   },
-  paymentPolicy: {
+  paymentPolicy1: {
     color: "#F6841F",
     fontSize: FONT_SIZE.S,
     textAlign: "center",
-    marginVertical: moderateScale(15),
-  }
+  },
+  paymentPolicy2: {
+    color: "#F6841F",
+    fontSize: FONT_SIZE.S,
+    textAlign: "center",
+    marginBottom: moderateScale(30),
+    marginTop: moderateScale(10)
+  },
 })

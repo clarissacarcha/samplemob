@@ -43,14 +43,12 @@ export const ToktokBillsHome = ({navigation,route})=> {
   })
 
   useEffect(() => {
-    getMyAccount();
     getBillTypes();
   }, []);
 
   const onRefresh = () => {
     setRefreshing(true);
     refetch();
-    getMyAccount();
   }
 
   if((loading || getMyAccountLoading) && billTypes.length === 0){

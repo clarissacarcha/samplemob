@@ -23,20 +23,16 @@ import { GET_BILL_ITEM_SETTINGS } from 'toktokbills/graphql/model';
 const MainComponent = ({navigation, route})=> {
 
   const { billItemId, billType } = route.params;
-  const [billItemSettings, setBillItemSettings] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
 
-  const {loading, error, refetch} = useQuery(GET_BILL_ITEM_SETTINGS, {
+  const {data: billItemSettings, loading, error, refetch} = useQuery(GET_BILL_ITEM_SETTINGS, {
     variables: {
       input: {
         billItemId
       }
     },
     fetchPolicy: "cache-and-network",
-    client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
-    onCompleted: ({ getBillItemSettings }) => {
-      setBillItemSettings(getBillItemSettings);
-    }
+    client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT
   });
 
   if(loading){
@@ -63,13 +59,13 @@ const MainComponent = ({navigation, route})=> {
       >
         <ScrollView keyboardShouldPersistTaps="handled">
           <View style={styles.headerContainer}>
-            <Image source={{ uri: billItemSettings.logo}} style={styles.logo} />
+            <Image source={{ uri: billItemSettings?.getBillItemSettings.logo }} style={styles.logo} />
             <Text style={styles.billerName}>{billType.name}</Text>
           </View>
-          <PaymentForm billItemSettings={billItemSettings} />
+          <PaymentForm billItemSettings={billItemSettings?.getBillItemSettings} />
+          <ConfirmButton billItemSettings={billItemSettings?.getBillItemSettings} billType={billType} />
         </ScrollView>
       </KeyboardAvoidingView>
-      <ConfirmButton billItemSettings={billItemSettings} billType={billType} />
     </>
   )
 }

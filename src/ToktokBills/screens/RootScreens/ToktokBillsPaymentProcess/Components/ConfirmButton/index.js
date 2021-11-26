@@ -28,7 +28,10 @@ export const ConfirmButton = ({ billType, billItemSettings = {}, tokwaBalance = 
     amountError
   } = useContext(VerifyContext);
   const { commissionRateDetails, itemDocumentDetails } = billItemSettings;
-  const convenienceFee = commissionRateDetails?.providerOnTopValue + commissionRateDetails?.systemOnTopValue; //CONVENIENCE FEE
+  const { termsAndConditions, paymentPolicy1, paymentPolicy2 } = itemDocumentDetails;
+
+  //CONVENIENCE FEE
+  const convenienceFee = parseFloat(commissionRateDetails?.providerServiceFee) + parseFloat(commissionRateDetails?.systemServiceFee); 
 
   const onPressConfirm = () => {
     let paymentData = {
@@ -48,7 +51,6 @@ export const ConfirmButton = ({ billType, billItemSettings = {}, tokwaBalance = 
   }
 
   const onPressTermsAndContidions = () => {
-    let { termsAndConditions } = itemDocumentDetails
     navigation.navigate("ToktokWalletTermsConditions", { termsAndConditions })
   }
 
@@ -59,7 +61,8 @@ export const ConfirmButton = ({ billType, billItemSettings = {}, tokwaBalance = 
         <Text style={styles.tnc} onPress={onPressTermsAndContidions}>Terms and Condition </Text>
         <Text>before you proceed with your transaction</Text>
       </Text>
-      <Text style={styles.paymentPolicy}>*Payments made beyond 8:00 PM will be posted the next day</Text>
+      { !!paymentPolicy1 && <Text style={styles.paymentPolicy1}>*{paymentPolicy1}</Text> }
+      { !!paymentPolicy2 && <Text style={styles.paymentPolicy2}>*{paymentPolicy2}</Text> }
       <OrangeButton
         onPress={onPressConfirm}
         disabled={checkIsDisabled()}
@@ -77,15 +80,22 @@ const styles = StyleSheet.create({
     paddingVertical: moderateScale(20)
   },
   terms: {
-    textAlign: "center"
+    textAlign: "center",
+    marginBottom: moderateScale(15),
   },
   tnc: {
     color: "#F6841F"
   },
-  paymentPolicy: {
+  paymentPolicy1: {
     color: "#F6841F",
     fontSize: FONT_SIZE.S,
     textAlign: "center",
-    marginVertical: moderateScale(15),
-  }
+  },
+  paymentPolicy2: {
+    color: "#F6841F",
+    fontSize: FONT_SIZE.S,
+    textAlign: "center",
+    marginBottom: moderateScale(30),
+    marginTop: moderateScale(10)
+  },
 })

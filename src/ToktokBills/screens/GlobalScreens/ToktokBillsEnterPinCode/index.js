@@ -102,7 +102,9 @@ export const ToktokBillsEnterPinCode = ({navigation, route})=> {
       convenienceFee: parseFloat(paymentData.convenienceFee),
       discount: 0,
       type: 1,
-      comRateId: paymentData.billItemSettings.id
+      comRateId: paymentData.billItemSettings.commissionRateDetails.id,
+      referralCommissionItemId: paymentData.billItemSettings.referralCommissionItemId,
+      email: paymentData.email.toLowerCase()
     }
   
     postTransaction({

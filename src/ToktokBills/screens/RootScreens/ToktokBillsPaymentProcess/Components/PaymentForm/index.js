@@ -57,8 +57,10 @@ export const PaymentForm = ({ billItemSettings })=> {
     secondFieldWidthType,
     commissionRateDetails
   } = billItemSettings;
-  const convenienceFee = commissionRateDetails?.providerOnTopValue + commissionRateDetails?.systemOnTopValue; //CONVENIENCE FEE
   
+  //CONVENIENCE FEE
+  const convenienceFee = parseFloat(commissionRateDetails?.providerServiceFee) + parseFloat(commissionRateDetails?.systemServiceFee); 
+ 
   const navigation = useNavigation();
   const {
     firstField,
@@ -113,8 +115,13 @@ export const PaymentForm = ({ billItemSettings })=> {
 
   const changeAmount = (value) => {
     let pattern = /^\d+(\.\d{2})?$/;
+    if(value[0] == "0"){
+      value.replace(0, "");
+      return setAmount(value.replace(0, ""));
+    }
+   
     value ? setAmountError(!pattern.test(value) ? "Amount format is invalid." : "")
-    : setAmountError(`Payment amount is required.`)
+      : setAmountError(`Payment amount is required.`)
     formatAmount(value, setAmount)
   }
 
@@ -154,7 +161,6 @@ export const PaymentForm = ({ billItemSettings })=> {
           onChangeText={changeAmount}
           value={amount}
           keyboardType="numeric"
-          onValidation={isValid => console.log(isValid, "dfsd")}
           returnKeyType="next"
           ref={(input) => { amountRef.current = input; }}
           onSubmitEditing={() => { emailRef.current.focus(); }}

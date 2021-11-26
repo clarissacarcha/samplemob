@@ -35,7 +35,7 @@ const MainComponent = ({ navigation, route, viewRef }) => {
       <Header />
       <ReceiptDetails route={route} />
       <View style={styles.buttonContainer}>
-        <Text style={styles.emailText}>You will receive a copy of your receipt in the email address you have entered</Text>
+        <Text style={styles.emailText}>A copy of this receipt will be delivered on the email provided.</Text>
         <OrangeButton label="Ok" onPress={() => navigation.navigate("ToktokBillsHome")} />
       </View>
     </>
