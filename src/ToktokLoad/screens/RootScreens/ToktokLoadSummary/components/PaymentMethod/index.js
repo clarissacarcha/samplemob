@@ -2,26 +2,28 @@ import React, {useContext, useEffect, useState} from "react";
 import {View, Text, StyleSheet, TouchableOpacity, Image, ScrollView} from "react-native";
 import {useNavigation} from '@react-navigation/native';
 
-//UTIL
-import { moderateScale, numberFormat } from "toktokload/helper";
+//HELPER
+import { moderateScale, numberFormat } from 'toktokload/helper';
 
 //COMPONENTS
 import { LoadingIndicator } from "src/ToktokLoad/components";
-import { VerifyContext } from "../VerifyContextProvider";
 
 //FONTS & COLORS & IMAGES
 import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
 import { wallet_icon } from "src/ToktokLoad/assets/icons";
 
+//HOOKS
+import { useAccount } from 'toktokwallet/hooks';
+import { useSelector } from 'react-redux';
 
-export const PaymentMethod = ({ loadDetails, getMyAccount }) => {
+export const PaymentMethod = ({ loadDetails }) => {
 
+  const { user } = useSelector((state) => state.session);
 	const navigation = useNavigation();
-  const { toktokWallet } = useContext(VerifyContext);
-  const { amount }  = loadDetails;
-
+  const { tokwaAccount, getMyAccount } = useAccount();
+  const { amount } = loadDetails;
+ 
 	const onCashIn = ({balance}) => {
-    // do something here
     console.log(balance);
     getMyAccount();
   };
@@ -33,39 +35,69 @@ export const PaymentMethod = ({ loadDetails, getMyAccount }) => {
     });
   };
 
+  const onPressCreateAccount = () => {
+    navigation.navigate('ToktokWalletVerification');
+  }
+
+  const displayInsufficientBalance = () => {
+    if(parseFloat(amount) > parseFloat(tokwaAccount?.wallet?.balance)) {
+      return (
+        <View style={styles.errorContainer}>
+          <TouchableOpacity onPress={onPressTopUp}>
+            <Text style={styles.errorText}>
+              {`Insufficient balance.\nPlease click here to cash in.`}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )
+    }
+    return
+  }
+
+  const displayNoToktokWalletAccount = () => (
+    <>
+      <View style={{ padding: moderateScale(20) }}>
+        <Text style={{ textAlign: "center", fontSize: FONT_SIZE.M }}>
+          Sorry, you don’t have a toktokwallet yet. Please create an account to proceed with payment.
+        </Text>
+      </View>
+      <Text style={styles.createAccount} onPress={onPressCreateAccount}>
+        Create my toktokwallet account
+      </Text>
+    </>
+  )
+
   return (
-		<View style={{ paddingHorizontal: moderateScale(30), paddingVertical: moderateScale(20) }}>
-			<View style={[ styles.bodyContainer, { alignItems: "center" } ]}>
-				<Text style={styles.title}>Payment Method</Text>
-				<View style={[ styles.tokwaButton, styles.shadow ]}>
-					<Image style={styles.walletIcon} source={wallet_icon} />
-					<View style={{justifyContent: "center", alignItems: "center", flexDirection: "row"}}>
-						<View style={{ alignItems: "center", paddingLeft: moderateScale(10) }}>
-							<View style={styles.tokwaButtonTextWrapper}>
-								<Text style={styles.toktokText}>toktok</Text>
-								<Text style={styles.walletText}>wallet</Text>
-							</View>
-							<Text style={{color: "#707070", fontSize: FONT_SIZE.XS}}>
-								Balance: PHP {numberFormat(toktokWallet?.balance)}
-							</Text>
-						</View>
-					</View>
-				</View>
-			</View>
-			<View style={{ flex: 1, justifyContent: "flex-end", flexDirection: "row", marginTop: moderateScale(10) }}>
-			{(amount > numberFormat(toktokWallet?.balance)) && (
-				<TouchableOpacity onPress={onPressTopUp}>
-					<Text style={{color: "#F6841F", fontSize: FONT_SIZE.S, textAlign: "center"}}>
-						{`Insufficient balance.\nPlease click here to cash in.`}
-					</Text>
-				</TouchableOpacity>
-			)}
-			</View>
-		</View>
+    <>
+    	<View style={styles.container}>
+        <View style={[ styles.bodyContainer, { alignItems: "center" } ]}>
+          <Text style={styles.title}>Payment Method</Text>
+          <View style={[ styles.tokwaButton, styles.shadow ]}>
+            <Image style={styles.walletIcon} source={wallet_icon} />
+            <View style={styles.pmContainer}>
+              <View style={styles.pmWrapper}>
+                <View style={styles.tokwaButtonTextWrapper}>
+                  <Text style={styles.toktokText}>toktok</Text>
+                  <Text style={styles.walletText}>wallet</Text>
+                </View>
+                <Text style={styles.balance}>
+                  Balance: PHP {numberFormat(tokwaAccount?.wallet?.balance)}
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+		  </View>
+      { user.toktokWalletAccountId ? displayInsufficientBalance() : displayNoToktokWalletAccount() }
+    </>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    paddingHorizontal: moderateScale(30),
+    paddingVertical: moderateScale(20)
+  },
   title: {
     color: "#F6841F",
     fontFamily: FONT.BOLD,
@@ -120,4 +152,37 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 3,
   },
+  pmContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row"
+  },
+  pmWrapper: {
+    alignItems: "center",
+    paddingLeft: moderateScale(10)
+  },
+  balance: {
+    color: "#707070",
+    fontSize: FONT_SIZE.XS
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: "flex-end",
+    flexDirection: "row",
+    paddingHorizontal: moderateScale(30),
+    marginBottom: moderateScale(20)
+  },
+  errorText: {
+    color: "#F6841F",
+    fontSize: FONT_SIZE.S,
+    textAlign: "center"
+  },
+  createAccount: {
+    color: "#F6841F",
+    textAlign: "center",
+    fontSize: FONT_SIZE.L,
+    textDecorationLine: "underline",
+    marginTop: moderateScale(10),
+    marginBottom: moderateScale(50)
+  }
 })

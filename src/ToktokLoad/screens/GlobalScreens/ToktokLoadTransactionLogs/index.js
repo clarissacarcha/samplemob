@@ -35,16 +35,13 @@ export const ToktokLoadTransactionLogs = ({navigation})=> {
   const [records,setRecords] = useState([])
   const alert = useAlert()
 
-  const [getCashIns, {data, error, loading}] = useLazyQuery(GET_LOAD_TRANSACTIONS, {
+  const [getTransactionLogs, {data, error, loading}] = useLazyQuery(GET_LOAD_TRANSACTIONS, {
     fetchPolicy: "network-only",
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
     variables: {
       input: {
         type: 2
       }
-    },
-    onError: (error) => {
-      onErrorAlert({ alert, error })
     },
     onCompleted: ({ getTransactions })=> {
       console.log(getTransactions)
@@ -53,12 +50,12 @@ export const ToktokLoadTransactionLogs = ({navigation})=> {
   })
 
   const Refetch = ()=> {
-    getCashIns()
+    getTransactionLogs()
     setPageLoading(loading)
   }
 
   useEffect(()=>{
-    getCashIns()
+    getTransactionLogs()
     setPageLoading(loading)
   },[]);
 
@@ -67,12 +64,15 @@ export const ToktokLoadTransactionLogs = ({navigation})=> {
   );
 
   if(error){
-    return <SomethingWentWrong onRefetch={Refetch} />
+    return (
+      <View style={styles.container}>
+        <SomethingWentWrong onRefetch={Refetch} />
+      </View>
+    )
   }
 
   return (
     <CheckIdleState>
-      <Separator />
       <ModalPaginationLoading visible={pageLoading}/>
       <View style={styles.container}>
         <FlatList
@@ -94,7 +94,11 @@ export const ToktokLoadTransactionLogs = ({navigation})=> {
             />
           )}
           ItemSeparatorComponent={renderSeparator}
-          ListFooterComponent={() => (<Separator />)}
+          ListFooterComponent={() => {
+            if(records.length === 0) return null
+            if(loading) return null
+            return <Separator />
+          }}
         />
       </View>
     </CheckIdleState>

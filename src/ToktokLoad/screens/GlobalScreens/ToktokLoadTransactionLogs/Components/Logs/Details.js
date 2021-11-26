@@ -21,7 +21,7 @@ const Details = ({ transaction, visible, setVisible })=> {
 
   const dateOfPayment = moment(refDate).format('ll');
   const timeOfPayment = moment(refDate).format('h:mm a');
-  
+ 
   return (
     <TransactionModal
       visible={visible}
@@ -29,7 +29,7 @@ const Details = ({ transaction, visible, setVisible })=> {
     >
       <View>
         <Text style={{ fontSize: FONT_SIZE.M }}>Status of Payment: {statusName}</Text>
-        <Text style={{ fontSize: FONT_SIZE.M }}>Name of Biller: {transaction?.loadDetails?.networkDetails.name}</Text>
+        <Text style={{ fontSize: FONT_SIZE.M }}>Network: {loadDetails?.networkDetails?.name}</Text>
         <Text style={{ fontSize: FONT_SIZE.M }}>Amount Paid: ₱ {transactionAmount}</Text>
         <Text style={{ fontSize: FONT_SIZE.M }}>Transaction No.: {id}</Text>
         <Text style={{ fontSize: FONT_SIZE.M }}>Service Reference No.: {referenceNumber}</Text>

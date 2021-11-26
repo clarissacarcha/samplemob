@@ -18,7 +18,6 @@ const transaction = `
     networkDetails {
       id
       name
-      comRateId
     }
   }
   senderWalletBalance
@@ -30,7 +29,7 @@ const transaction = `
   status
   tokUserId
   referralCommissionItemId
-  merchantCommissionRate
+  ofps
   toktokServiceCommission
   startUp
   mcjr
@@ -39,9 +38,11 @@ const transaction = `
   mc
   mcmeg
   others
-  providerOnTopValue
-  systemOnTopValue
-  providerDiscountRate
+  providerComValue
+  systemServiceFee
+  providerServiceFee
+  providerComRate
+  comType
   createdAt
 `
 
