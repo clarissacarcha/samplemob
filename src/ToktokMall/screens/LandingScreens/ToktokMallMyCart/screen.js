@@ -543,6 +543,8 @@ const Component = ({
               onDelete={() => {
                 deleteMultipleItems();
               }}
+              disabled={selectedItemsArr.length === 0}
+              style={{backgroundColor: selectedItemsArr.length === 0 ? '#D7D7D7' : '#F6841F'}}
             />
           )}
 

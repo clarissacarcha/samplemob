@@ -11,7 +11,7 @@ import {
   TextInput,
   Picker,
   Platform,
-  Dimensions
+  Dimensions, BackHandler
 } from 'react-native';
 import {connect, useDispatch, useSelector} from 'react-redux';
 import {COLOR, FONT} from '../../../../../res/variables';
@@ -167,13 +167,11 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
         // alert(JSON.stringify(customModal.visible))
         if(customModal.visible){
           dispatch({type:'TOKTOK_MALL_CLOSE_MODAL'})
-          setMessageModalShown(false)
           return true
         }
         else{
           // alert('not true')
           dispatch({type:'TOKTOK_MALL_CLOSE_MODAL'})
-          setMessageModalShown(false)
           return false
         }
         return true
