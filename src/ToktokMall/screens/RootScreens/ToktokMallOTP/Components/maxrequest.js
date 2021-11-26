@@ -17,14 +17,6 @@ export const ValidatorMaxRequest =  ({onValidate}) => {
   const navigation = useNavigation();
   const Context = useContext(TPINOTPContext)
   const [isVisible, setIsVisible] = useState(true)
-	const [timeRemaining, setTimeRemaining] = useState(0)
-
-	useEffect(() => {
-		if(Context.lockMessage && Context.lockMessage.includes("reached maximum TPIN/OTP attempts")){
-			// console.log(Context.lockMessage?.split("after "))
-			setTimeRemaining(Context.lockMessage?.split("after ")[1].split(" minutes")[0])
-		}		
-	}, [Context])
 
   useFocusEffect(
     React.useCallback(() => {
@@ -48,7 +40,7 @@ export const ValidatorMaxRequest =  ({onValidate}) => {
         // navigation = {navigation}
         isVisible = {isVisible}
         setIsVisible = {setIsVisible}
-        minutes = {timeRemaining} // minutes params / remaning time until user can enter tpin again
+        minutes = {Context.timeRemaining} // minutes params / remaning time until user can enter tpin again
       />
 
       <View style = {styles.container} >

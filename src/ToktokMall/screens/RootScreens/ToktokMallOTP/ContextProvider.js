@@ -12,6 +12,7 @@ export const TPINOTPContextProvider = ({children})=> {
   const [retries, setretries] = useState(3)
   const [isInvalid, setIsInvalid] = useState(false)
   const [lockMessage, setlockMessage] = useState("We're sorry but you dont have any attempts left, Please wait for 30 minutes to request an OTP again. Thank you!")
+  const [timeRemaining, setTimeRemaining] = useState(30)
 
 	return (
 		<Provider 
@@ -27,7 +28,10 @@ export const TPINOTPContextProvider = ({children})=> {
 				setIsInvalid,
 
 				lockMessage,
-				setlockMessage
+				setlockMessage,
+
+				timeRemaining,
+				setTimeRemaining
 			}}
 		>
 			{children}

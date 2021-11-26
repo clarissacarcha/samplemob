@@ -39,12 +39,6 @@ export const TPIN =  ({onValidate}) => {
         style = {styles.container}
         imageStyle={{width: '100%', height: Dimensions.get("screen").height, resizeMode: 'cover'}}
       > */}
-      <TpinMaxAttemptModal
-        // navigation = {navigation}
-        isVisible = {Context.isInvalid && Context.retries >= maximumAttempts}
-        setIsVisible = {setIsVisible}
-        minutes = {30} // minutes params / remaning time until user can enter tpin again
-      />
       <View style = {styles.container} >
         <View style = {{margin: 20, alignItems: 'center', height: Dimensions.get("window").height*0.8, paddingTop: Dimensions.get("window").height*0.15}}>
             <Image
