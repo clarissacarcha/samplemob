@@ -84,7 +84,9 @@ export const VERIFY_PIN_CODE = gql`
 
 export const GET_VERIFY_MPIN = gql`
     query getVerifyMPIN($input: GetVerifyMPINInput){
-        getVerifyMPIN(input: $input)
+        getVerifyMPIN(input: $input){
+            verifiedToken
+        }
     }
 `
 

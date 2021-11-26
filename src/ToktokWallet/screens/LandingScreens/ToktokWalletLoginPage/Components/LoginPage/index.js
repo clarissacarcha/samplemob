@@ -12,6 +12,7 @@ import { GET_VERIFY_MPIN } from 'toktokwallet/graphql'
 import { useLazyQuery } from '@apollo/react-hooks'
 import { useAlert } from 'src/hooks'
 import { onErrorAlert } from 'src/util/ErrorUtility'
+import AsyncStorage from '@react-native-community/async-storage'
 import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS
@@ -48,12 +49,12 @@ export const LoginPage = ()=> {
     const [getVerifyMPIN , {data,error,loading}] = useLazyQuery(GET_VERIFY_MPIN, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         fetchPolicy:"network-only",
-        onCompleted: ({getVerifyMPIN})=>{
-            if(getVerifyMPIN){
-                setPinCode("")
-                // navigation.pop();
-                navigation.navigate("ToktokWalletHomePage");
-            }
+        onCompleted: async ({getVerifyMPIN})=>{
+            const { verifiedToken } = getVerifyMPIN
+            await AsyncStorage.setItem('toktokWalletAuthenticationToken', verifiedToken);
+            setPinCode("")
+            // navigation.pop();
+            navigation.navigate("ToktokWalletHomePage"); 
         },
         onError: (error)=> {
             setPinCode("")

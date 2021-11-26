@@ -70,10 +70,12 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
     })
 
     const removeCacheImages = async ({VerifyUserData})=> {
-        const { selfieImage , selfieImageWithID , frontImage ,  backImage } = VerifyUserData
+        const { selfieImage , selfieImageWithID , frontImage ,  backImage , tempSelfieImage , tempSelfieImageWithID } = VerifyUserData
         try {
             if(selfieImage) await RNFS.unlink(selfieImage.uri)
             if(selfieImageWithID) await RNFS.unlink(selfieImageWithID.uri)
+            if(tempSelfieImage) await RNFS.unlink(tempSelfieImage.uri)
+            if(tempSelfieImageWithID) await RNFS.unlink(tempSelfieImageWithID.uri)
             if(frontImage) await RNFS.unlink(frontImage.uri)
             if(backImage) await RNFS.unlink(backImage.uri)
         }catch (error){
