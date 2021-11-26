@@ -48,16 +48,16 @@ export const GET_BILL_ITEM_SETTINGS = gql`
       providerId
       billTypeId
       itemDocumentId
-      itemDocumentDetails{
+      referralCommissionItemId
+      itemDocumentDetails {
         id
         paymentPolicy1
-        paymentPolocy2
+        paymentPolicy2
         termsAndConditions
       }
       commissionRateDetails {
         id
-        referralCommissionItemId
-        merchantCommissionRate
+        ofps
         startup
         mcjr
         mcsuper
@@ -65,9 +65,10 @@ export const GET_BILL_ITEM_SETTINGS = gql`
         mc
         mcmeg
         others
-        providerOnTopValue
-        systemOnTopValue
-        providerDiscountRate
+        providerComValue
+        systemServiceFee
+        providerServiceFee
+        providerComRate
       }
     }
   }

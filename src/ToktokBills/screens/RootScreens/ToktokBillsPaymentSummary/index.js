@@ -34,8 +34,10 @@ export const ToktokBillsPaymentSummary = ({ navigation, route }) => {
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
-    getMyAccount();
-  },[]);
+    if(user.toktokWalletAccountId){
+      getMyAccount();
+    }
+  },[user]);
 
   useEffect(() => {
     setRefreshing(getMyAccountLoading);
