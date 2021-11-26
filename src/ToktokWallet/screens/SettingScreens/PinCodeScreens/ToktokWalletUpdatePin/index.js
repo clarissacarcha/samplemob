@@ -6,6 +6,8 @@ import { PATCH_PIN_CODE } from 'toktokwallet/graphql'
 import {useMutation} from '@apollo/react-hooks'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import { Separator , LeavePromptModal , CheckIdleState } from 'toktokwallet/components';
+import { onErrorAlert } from 'src/util/ErrorUtility';
+import {useAlert  } from 'src/hooks'
 import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS
@@ -46,7 +48,7 @@ const HeaderBack = ({pageIndex,setPageIndex,navigation})=> {
     )
 }
 
-export const ToktokWalletUpdatePin =  ({navigation})=> {
+export const ToktokWalletUpdatePin =  ({navigation,route})=> {
 
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack pageIndex={pageIndex} setPageIndex={setPageIndex} navigation={navigation}/>,
@@ -59,6 +61,8 @@ export const ToktokWalletUpdatePin =  ({navigation})=> {
                             </TouchableHighlight>
     })
 
+    const {otp} = route.params
+
     const cancelSetup = ()=> {
         console.log("Cancelling")
         setLeaveModalVisible(true)
@@ -69,7 +73,7 @@ export const ToktokWalletUpdatePin =  ({navigation})=> {
     const [pinCode,setPinCode] = useState("")
     const [successModalVisible,setSuccessModalVisible] = useState(false)
     const [LeaveModalvisible,setLeaveModalVisible] = useState(false)
-
+    const alert = useAlert();
 
     const [patchPinCode, {data, error, loading}] = useMutation(PATCH_PIN_CODE, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
@@ -86,7 +90,8 @@ export const ToktokWalletUpdatePin =  ({navigation})=> {
         patchPinCode({
             variables: {
             input: {
-                pinCode: pinCode
+                pinCode: pinCode,
+                otp: otp
             }
             }
         })
