@@ -34,10 +34,13 @@ const Component = ({navigation, route, otpAttempts, setAttempts}) => {
   useEffect(() => {
     if(route?.params.error && route.params.errorCode == "VALIDATORMAXREQUEST"){
       Context.setIsInvalid(true)
-      Context.setretries(5)
+      Context.setretries(0)
       Context.setlockMessage(route?.params.lockMessage)
+
+      if(route?.params?.lockMessage?.includes("reached maximum TPIN/OTP attempts")){
+        Context.setTimeRemaining(route.params.lockMessage.split("after ")[1].split(" minutes")[0])
+      }
     }
-    AsyncStorage.getItem("ToktokMallOTPAttempts").then((raw) => Context.setretries(raw))
 
   }, [route])
 
@@ -155,7 +158,7 @@ const Component = ({navigation, route, otpAttempts, setAttempts}) => {
         // setIsVisible = {setAlertModal}
       /> */}
 
-      {(route.params?.error || Context.retries === 0 ) &&
+      {Context.retries === 0 &&
         <ValidatorMaxRequest />
       }
 

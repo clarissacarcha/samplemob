@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, Platform, View, Text, TouchableOpacity, TextInput} from 'react-native';
+import {StyleSheet, Platform, View, Text, TouchableOpacity, TextInput, BackHandler} from 'react-native';
 import {HeaderBack, HeaderTitle, HeaderRight, LoadingOverlay} from '../../../../Components';
 import {AddressFinderModal, CityAddressModalAndroid, AddressModal} from './Components';
 import Toast from 'react-native-simple-toast';
@@ -7,11 +7,12 @@ import ToggleSwitch from 'toggle-switch-react-native';
 import CustomIcon from '../../../../Components/Icons';
 import axios from 'axios';
 import {EventRegister} from 'react-native-event-listeners';
+import {useFocusEffect} from '@react-navigation/native'
 
 import {useLazyQuery} from '@apollo/react-hooks';
 import {GET_CITY, GET_CUSTOMER_ADDRESS_DETAILS} from '../../../../../graphql/toktokmall/model/Address';
 import {TOKTOK_MALL_GRAPHQL_CLIENT} from '../../../../../graphql';
-import {connect} from 'react-redux';
+import {connect, useDispatch} from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
 import {useStateCallback} from '../../../../helpers/useStateCallback';
 
@@ -37,6 +38,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
     errors: [],
   });
   const [addressFinderModal, setAddressFinderModal] = useState(false);
+  const dispatch = useDispatch()
 
   const onChangeText = (name, value) => {
     setNewAddressForm((prevState) => ({
@@ -173,10 +175,12 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
           await axios
             .post(`http://ec2-18-176-178-106.ap-northeast-1.compute.amazonaws.com/toktokmall/${endpoint}`, formData)
             .then((response) => {
-              console.log("TEST", response)
               if (response.data && response.data.success == 1) {
                 setIsLoading(false);
-                setMessageModal(true);
+                dispatch({type:'TOKTOK_MALL_OPEN_MODAL', payload: {
+                  type: 'Success',
+                  message: route.params?.update ? 'Address Updated!' : 'Address Added!'
+                }})
                 callback();
               } else {
                 console.log('Response', response.data);
@@ -209,7 +213,10 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
           .then(async (response) => {
             console.log(response.data);
             setIsLoading(false);
-            setDeletedModal(true);
+            dispatch({type:'TOKTOK_MALL_OPEN_MODAL', payload: {
+              type: 'Success',
+              message: 'Address Added!'
+            }})
             updateUserAddress('remove', newAddressForm.id);
             navigation.goBack();
           })
@@ -290,26 +297,6 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
             setConfirmDeleteModal(val);
           }}
           onConfirm={DeleteAddress}
-        />
-      )}
-      {messageModal && (
-        <AddressModal
-          type="Message"
-          isVisible={messageModal}
-          setIsVisible={(val) => {
-            setMessageModal(val);
-          }}
-          message={route.params?.update ? 'Address Updated!' : 'Address Added!'}
-        />
-      )}
-      {deletedModal && (
-        <AddressModal
-          type="Message"
-          isVisible={deletedModal}
-          setIsVisible={(val) => {
-            setDeletedModal(val);
-          }}
-          message={'Address Deleted!'}
         />
       )}
       <AddressFinderModal
