@@ -93,7 +93,11 @@ export const ToktokBillsTransactionLogs = ({navigation})=> {
             />
           )}
           ItemSeparatorComponent={renderSeparator}
-          ListFooterComponent={() => (<Separator />)}
+          ListFooterComponent={() => {
+            if(records.length === 0) return null
+            if(loading) return null
+            return <Separator />
+          }}
         />
       </View>
     </CheckIdleState>
