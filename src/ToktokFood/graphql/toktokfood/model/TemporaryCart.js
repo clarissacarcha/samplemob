@@ -6,6 +6,7 @@ const tempCart = `
     id
     shopid
     branchid
+    companyId
     productid
     quantity
     basePrice

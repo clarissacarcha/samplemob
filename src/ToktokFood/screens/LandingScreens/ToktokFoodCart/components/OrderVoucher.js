@@ -41,7 +41,6 @@ const OrderVoucher = ({autoShipping}) => {
     // },
     onCompleted: ({getVoucherCode}) => {
       const {success, message, type} = getVoucherCode;
-      // console.log(getVoucherCode, shippingVoucher);
 
       if (!success) {
         setShowError(!showError);

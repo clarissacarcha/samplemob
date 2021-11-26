@@ -40,7 +40,6 @@ const PaymentDetails = ({refreshing, orderType}) => {
     client: TOKTOK_WALLET_GRAPHQL_CLIENT,
     onCompleted: ({getMyAccount}) => {
       let {wallet, person} = getMyAccount;
-      console.log(user.id);
       setToktokWallet({
         balance: wallet.balance,
         toktokuser_id: user.id,
@@ -50,7 +49,6 @@ const PaymentDetails = ({refreshing, orderType}) => {
       });
     },
     onError: (error) => {
-      console.log(error);
       setToktokWallet(null);
     },
   });
