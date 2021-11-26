@@ -75,7 +75,7 @@ const MainComponent = () => {
     pmLoading,
     setAutoShippingVoucher,
     setPaymentMethod,
-    shippingVoucher
+    shippingVoucher,
   } = useContext(VerifyContext);
 
   const [autoShipping, setAutoShipping] = useState(0);
@@ -116,8 +116,8 @@ const MainComponent = () => {
   const [getAutoShipping] = useLazyQuery(GET_AUTO_SHIPPING, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
+    onError: (error) => console.log('getAutoShipping', error.response),
     onCompleted: ({getAutoShipping}) => {
-      // console.log(getAutoShipping);
       if (getAutoShipping.success) {
         setAutoShippingVoucher([getAutoShipping]);
       }
@@ -139,6 +139,7 @@ const MainComponent = () => {
             email,
             subtotal: [{shopid: items[0]?.shopid, subtotal: temporaryCart.totalAmount}],
             cartItems: [{shopid: items[0]?.shopid, shippingfee: getShippingFee?.price}],
+            brandId: items[0].companyId,
           },
         },
       });
@@ -245,9 +246,8 @@ const MainComponent = () => {
       }
     },
   });
-  
+
   const fixOrderLogs = async () => {
-    console.log(delivery?.price)
     let orderLogs = {
       sys_shop: temporaryCart.items[0]?.shopid,
       branchid: temporaryCart.items[0]?.branchid,
@@ -445,7 +445,6 @@ const MainComponent = () => {
   }
 
   const processData = (WALLET, CUSTOMER, ORDER, SHIPPING_VOUCHERS) => {
-    console.log(shippingVoucher)
     if(shippingVoucher.length > 0 || autoShipping?.success){
       return WALLET ? {...WALLET, ...CUSTOMER, ...ORDER, ...SHIPPING_VOUCHERS} : {...CUSTOMER, ...ORDER, ...SHIPPING_VOUCHERS};
     } else {
@@ -485,7 +484,6 @@ const MainComponent = () => {
     };
 
     const data = processData(WALLET, CUSTOMER, ORDER, SHIPPING_VOUCHERS)
-    console.log(JSON.stringify(data));
     // setShowLoader(false);
     postCustomerOrder({
       variables: {
