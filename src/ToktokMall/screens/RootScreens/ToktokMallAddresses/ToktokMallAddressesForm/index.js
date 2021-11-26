@@ -12,7 +12,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import {useLazyQuery} from '@apollo/react-hooks';
 import {GET_CITY, GET_CUSTOMER_ADDRESS_DETAILS} from '../../../../../graphql/toktokmall/model/Address';
 import {TOKTOK_MALL_GRAPHQL_CLIENT} from '../../../../../graphql';
-import {connect, useDispatch, useSelector} from 'react-redux';
+import {connect, useDispatch} from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
 import {useStateCallback} from '../../../../helpers/useStateCallback';
 
@@ -39,7 +39,6 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
   });
   const [addressFinderModal, setAddressFinderModal] = useState(false);
   const dispatch = useDispatch()
-  const {customModal} = useSelector(state => state.toktokMall)
 
   const onChangeText = (name, value) => {
     setNewAddressForm((prevState) => ({
@@ -118,28 +117,6 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
     headerTitle: () => <HeaderTitle label={['New Address', '']} />,
     headerRight: () => <HeaderRight hidden={true} />,
   });
-  useFocusEffect(
-    React.useCallback(() => {
-      const onBackPress = () => {
-        // navigation.pop(2)
-        // alert(JSON.stringify(customModal.visible))
-        if(customModal.visible){
-          dispatch({type:'TOKTOK_MALL_CLOSE_MODAL'})
-          setMessageModalShown(false)
-          return true
-        }
-        else{
-          // alert('not true')
-          dispatch({type:'TOKTOK_MALL_CLOSE_MODAL'})
-          setMessageModalShown(false)
-          return false
-        }
-        return true
-      }
-      BackHandler.addEventListener('hardwareBackPress', onBackPress)
-      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress)
-    }, [])
-  )
 
   const ProcessSaving = async () => {
     const refresh = () =>
