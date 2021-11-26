@@ -219,6 +219,7 @@ const Component = ({
     setSelectedItemsArr(items)
     // if(!willDelete){
       getSubTotal(items)
+      CartContextData.setSelectedFrom('item')
     // }
   }
 
@@ -241,6 +242,7 @@ const Component = ({
     // if(!willDelete){
       getSubTotal(items)
     // }
+    CartContextData.setSelectedFrom('store')
   }
 
   const unSelectitem = (raw) => {
@@ -254,6 +256,7 @@ const Component = ({
     // if(!willDelete){
       getSubTotal(items)
     // }
+    CartContextData.setSelectedFrom('item')
   }
 
   const unSelectStoreItems = (raw, storeitems) => {
@@ -272,6 +275,7 @@ const Component = ({
     // if(!willDelete){
       getSubTotal(items)
     // }
+    CartContextData.setSelectedFrom('store')
   }
 
   const selectAllItems = () => {
@@ -348,6 +352,7 @@ const Component = ({
       getSubTotal(items)
     // }
     setWillDelete(raw.checked)
+    CartContextData.setSelectedFrom('item')
   }
 
   const FormatCheckoutItems = () => {
@@ -438,6 +443,7 @@ const Component = ({
                   <CheckBox
                     // isChecked={allSelected || itemsToCheckoutArr.length == totalitems}
                     isChecked={CartContextData.selectAll || selectedItemsArr.length == totalitems}
+                    // isChecked = {CartContext.sele}
                     rightText="Select All"
                     rightTextStyle={{fontSize: 14, fontWeight: '500'}}
                     checkedCheckBoxColor="#F6841F"
@@ -451,6 +457,7 @@ const Component = ({
                         selectAllItems();
                       }
                       CartContextData.setSelectAll(!CartContextData.selectAll)
+                      CartContextData.setSelectedFrom('all')
                     }}
                   />
                 </View>

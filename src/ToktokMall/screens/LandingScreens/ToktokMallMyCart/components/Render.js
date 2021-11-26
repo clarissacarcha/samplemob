@@ -43,10 +43,18 @@ export const RenderDetails = forwardRef(({
 	const [storeItemUnselected, setStoreitemUnselected] = useState(!CartContextData.selectAll ? true : false)
 	const [selectedItemsCount, setSelectedItemsCount] = useState(0)
 	const [heldItem, setHeldItem] = useState({})
+	const [storecheckboxState, setstorecheckboxstate] = useState(false)
 
 	useEffect(() => {
-		toggleCheckBox(CartContextData.selectAll)
+		if(CartContextData.selectAll){
+			toggleCheckBox(true)
+		}else{
+			if(CartContextData.selectedFrom == 'all'){ // prevent setting items to false unless clicked from selected all
+				toggleCheckBox(false)
+			}
+		}
 	}, [CartContextData.selectAll])
+	// },[])
 
 	useEffect(() => {
 		setSelectedItemsCount(0)
@@ -117,6 +125,7 @@ export const RenderDetails = forwardRef(({
           toggleCheckBox(raw.checked);
           onStoreSelect(raw, item.data);
 					CartContextData.setSelectAll(false);
+					CartContextData.setSelectedFrom('store')
         }}
         onPress={onPress}
       />
@@ -175,7 +184,7 @@ export const RenderDetails = forwardRef(({
 								state={getCheckboxState()}
 								heldItem = {heldItem}
 								forceSelect={selectedItemsCount == item.data.length}
-								forceSelectToZero = {selectedItemsCount == 0}
+								forceSelectToZero = {selectedItemsCount == 0  }
                 data={data}
                 onHold={(raw) => {
 									

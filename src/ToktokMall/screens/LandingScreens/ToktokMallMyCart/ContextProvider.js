@@ -8,6 +8,7 @@ export const CartContextProvider = ({children})=> {
 
 	const [selectAll, setSelectAll] = useState(false)
 	const [swipeRefIndex, setSwipeRefIndex] = useState(0)
+	const [selectedFrom, setSelectedFrom] = useState('')
 
 	return (
 		<Provider 
@@ -15,7 +16,9 @@ export const CartContextProvider = ({children})=> {
 				selectAll,
 				setSelectAll,
 				swipeRefIndex,
-				setSwipeRefIndex		
+				setSwipeRefIndex,
+				selectedFrom,
+				setSelectedFrom		
 			}}
 		>
 			{children}
