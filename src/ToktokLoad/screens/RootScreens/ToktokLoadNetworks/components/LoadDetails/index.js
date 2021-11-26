@@ -7,7 +7,7 @@ import { useThrottle } from 'src/hooks';
 
 //FONTS & COLORS & IMAGES
 import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
-import { VerifyContext } from "./VerifyContextProvider";
+import { VerifyContext } from "../VerifyContextProvider";
 import { heart_fill_icon, heart_no_fill_icon, heart_selected_fill_icon } from "src/ToktokLoad/assets/icons";
 
 //COMPONENTS

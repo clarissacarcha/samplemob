@@ -14,6 +14,22 @@ export const ReceiptDetails = ({ route }) => {
   const { destinationNumber, destinationIdentifier, amount, email, billerDetails, convenienceFee, referenceNumber, createdAt } = receipt;
   const { firstFieldName, secondFieldName } = paymentData.billItemSettings;
   const totalAmount = parseInt(amount) + convenienceFee;
+  const [ logo, setLogo ] = useState({ height: 0, width: 0 });
+
+  useEffect(() => {
+    Image.getSize(billerDetails.logo, (width, height) => {
+      let size = height > width ? height - width : width - height;
+      if(size > 10){
+        if(width > moderateScale(80) || height > moderateScale(40)){
+          setLogo({ width: 80, height: 50 });
+        } else {
+          setLogo({ width, height });
+        }
+      } else {
+        setLogo({ width: 50, height: 50 });
+      }
+    })
+  }, [])
 
   return (
     <>
@@ -38,7 +54,10 @@ export const ReceiptDetails = ({ route }) => {
         <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
           <Text style={styles.title}>Biller: </Text>
           <View style={{ justifyContent: "flex-end" }}>
-            <Image source={{ uri: billerDetails.logo }} style={styles.logo} />
+            <Image
+              source={{ uri: billerDetails.logo }}
+              style={{ width: moderateScale(logo.width), height: moderateScale(logo.height), resizeMode: "contain" }}
+            />
           </View>
         </View>
       </View>

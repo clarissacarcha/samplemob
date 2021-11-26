@@ -8,7 +8,6 @@ import { ErrorUtility } from 'toktokload/util';
 
 //COMPONENTS
 import { OrangeButton } from "src/ToktokLoad/components";
-import { VerifyContext } from "../VerifyContextProvider";
 import { AlertOverlay } from 'src/components';
 
 //FONTS & COLORS & IMAGES
@@ -20,13 +19,15 @@ import { TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT } from 'src/graphql';
 import { POST_TOKTOKWALLET_REQUEST_MONEY } from 'toktokload/graphql/model';
 import { usePrompt, useAlert, useThrottle } from 'src/hooks';
 import { onErrorAlert } from 'src/util/ErrorUtility';
+import { useAccount } from 'toktokwallet/hooks';
+
 export const PayNowButton = ({ loadDetails, mobileNumber }) => {
 
   const prompt = usePrompt();
   const navigation = useNavigation();
-  const { toktokWallet } = useContext(VerifyContext);
+  const { tokwaAccount, getMyAccount } = useAccount();
   const { amount }  = loadDetails;
-  const tokwaBalance = parseFloat(toktokWallet?.balance);
+  const tokwaBalance = parseFloat(tokwaAccount?.wallet?.balance);
 
   const [postToktokWalletRequestMoney, {loading, error}] = useMutation(POST_TOKTOKWALLET_REQUEST_MONEY, {
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,

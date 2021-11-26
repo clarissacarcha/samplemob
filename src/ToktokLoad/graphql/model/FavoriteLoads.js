@@ -10,10 +10,13 @@ export const GET_FAVORITE_LOADS = gql`
         id
         name
         amount
+        itemCode
+        description
         comRateId
         termsAndConditions
         providerId
         networkId
+        referralCommissionItemId
         networkDetails {
           id
           name
