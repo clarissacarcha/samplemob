@@ -40,6 +40,8 @@ const MainComponent = ({ navigation, route }) => {
 };
 
 export const ToktokLoadReceipt = ({ navigation, route }) => {
+
+  const { receipt } = route.params;
   const viewshotRef = useRef();
   const headerHeight = useHeaderHeight();
   const imageHeight = height - headerHeight - ( Platform.OS == 'ios' ? getStatusbarHeight : 0);
@@ -47,7 +49,7 @@ export const ToktokLoadReceipt = ({ navigation, route }) => {
   navigation.setOptions({
     headerLeft: () => null,
     headerTitle: () => <HeaderTitle label={"toktokload Receipt"} />,
-    headerRight: () => <HeaderDownloadReceipt viewshotRef={viewshotRef} refNo={"10292"} />,
+    headerRight: () => <HeaderDownloadReceipt viewshotRef={viewshotRef} refNo={receipt.referenceNumber} />,
     headerStyle: { height: Platform.OS == 'ios' ? moderateScale(60) : moderateScale(80) }
   });
 

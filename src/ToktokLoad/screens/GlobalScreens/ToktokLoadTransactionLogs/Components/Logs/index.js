@@ -48,7 +48,7 @@ export const Logs = ({ item, index })=> {
   const [info,setInfo] = useState({})
   const [openModal,setOpenModal] = useState(false)
   const refDate = item ? moment(createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a') : moment(createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')
-  const transactionAmount = numberFormat(parseFloat(amount) + parseFloat(convenienceFee));
+  const transactionAmount = numberFormat(parseFloat(amount));
 
   let statusName
   switch (status) {
@@ -65,8 +65,9 @@ export const Logs = ({ item, index })=> {
       statusName = "Failed"
       break;
   }
-
+ 
   const showDetails = ()=>{
+    console.log(loadDetails)
     setInfo({
       id,
       statusName,

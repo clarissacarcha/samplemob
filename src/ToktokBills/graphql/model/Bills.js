@@ -34,6 +34,7 @@ export const GET_BILL_ITEM_SETTINGS = gql`
     getBillItemSettings(input: $input) {
       id
       name
+      itemCode
       descriptions
       logo
       firstFieldName
@@ -69,6 +70,7 @@ export const GET_BILL_ITEM_SETTINGS = gql`
         systemServiceFee
         providerServiceFee
         providerComRate
+        comType
       }
     }
   }

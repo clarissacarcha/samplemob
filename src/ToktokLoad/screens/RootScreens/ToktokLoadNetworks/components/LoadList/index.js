@@ -5,8 +5,8 @@ import {View, Text, StyleSheet, FlatList, TouchableOpacity, RefreshControl} from
 import { moderateScale, globeLoads, tmLoads, smartLoads } from "toktokload/helper";
 
 //COMPONENTS
-import { LoadDetails } from "./LoadDetails";
-import { VerifyContext } from "./VerifyContextProvider";
+import { LoadDetails } from "../LoadDetails";
+import { VerifyContext } from "../VerifyContextProvider";
 import { OrangeButton, LoadingIndicator } from "src/ToktokLoad/components";
 import { SomethingWentWrong } from "src/components";
 

@@ -1,14 +1,12 @@
-import React from 'react'
-import { View , Text , Dimensions, StyleSheet , Image , TouchableHighlight } from 'react-native'
-import {  } from 'toktokbills/components'
-import { moderateScale } from 'toktokbills/helper'
-import { useNavigation } from '@react-navigation/native'
-import { useThrottle } from 'src/hooks'
-import CONSTANTS from 'common/res/constants'
-const {COLOR , FONT_FAMILY: FONT , FONT_SIZE , SHADOW} = CONSTANTS
-const {width,height} = Dimensions.get("window")
+import React from 'react';
+import { View, Text, Dimensions, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { moderateScale } from 'toktokbills/helper';
+import { useNavigation } from '@react-navigation/native';
+import { useThrottle } from 'src/hooks';
 
-import toktokwalletlogo from 'toktokwallet/assets/images/tokwa.png'
+import CONSTANTS from 'common/res/constants';
+const {COLOR , FONT_FAMILY: FONT , FONT_SIZE , SHADOW} = CONSTANTS;
+const {width,height} = Dimensions.get("window");
 
 export const BillerType = ({ item, index })=> {
   const navigation = useNavigation();
@@ -19,11 +17,9 @@ export const BillerType = ({ item, index })=> {
   const onThrottledPress = useThrottle(onPress , 2000)
 
   return (
-    <TouchableHighlight
+    <TouchableOpacity
       onPress={onThrottledPress}
-      underlayColor={COLOR.YELLOW}
       style={styles.container}
-      key={`billerType_${index}`}
     >
       <View style={styles.item}>
         <Image
@@ -32,7 +28,7 @@ export const BillerType = ({ item, index })=> {
         />
         <Text style={styles.itemName}>{item.name}</Text>
       </View>
-    </TouchableHighlight>
+    </TouchableOpacity>
   )
 }
 
