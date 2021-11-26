@@ -1,8 +1,9 @@
-import React, {useRef, useEffect, useState} from 'react';
+import React, {useRef, useEffect, useState,} from 'react';
+import {useFocusEffect} from '@react-navigation/native'
 import { useLazyQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql';
 import { CHECK_ITEM_FROM_CART, GET_PRODUCT_DETAILS, GET_VERIFY_ADD_TO_CART } from '../../../../graphql/toktokmall/model';
-import {View, SafeAreaView, Text, Image, FlatList, SectionList, ImageBackground, TouchableOpacity, Dimensions} from 'react-native';
+import {View, SafeAreaView, Text, Image, FlatList, SectionList, ImageBackground, TouchableOpacity, Dimensions, BackHandler} from 'react-native';
 import {connect, useDispatch} from 'react-redux'
 import Spinner from 'react-native-spinkit';
 import Toast from 'react-native-simple-toast';
@@ -45,7 +46,7 @@ const Component =  ({
   createMyFavorites,
   createMyCartSession,
   createMyCartCountSession,
-  myCart, route, cartNoOfItems
+  myCart, route, cartNoOfItems, customModal
 }) => {
 
   const [product, setProduct] = useState({})
@@ -132,6 +133,29 @@ const Component =  ({
       })
     }
   },[product])
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        // navigation.pop(2)
+        // alert(JSON.stringify(customModal.visible))
+        if(customModal.visible){
+          dispatch({type:'TOKTOK_MALL_CLOSE_MODAL'})
+          setMessageModalShown(false)
+          return true
+        }
+        else{
+          // alert('not true')
+          dispatch({type:'TOKTOK_MALL_CLOSE_MODAL'})
+          setMessageModalShown(false)
+          return false
+        }
+        return true
+      }
+      BackHandler.addEventListener('hardwareBackPress', onBackPress)
+      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress)
+    }, [])
+  )
 
   const [getProductDetails, {error, loading}] = useLazyQuery(GET_PRODUCT_DETAILS, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
@@ -282,13 +306,13 @@ const Component =  ({
       //setCartItems(CountCartItems)
       EventRegister.emit('refreshToktokmallShoppingCart')
       createMyCartCountSession("add", input.qty)
-      setMessageModalShown(true)
 
       dispatch({type:'TOKTOK_MALL_OPEN_MODAL', payload: {
         type: 'Success',
         message: 'Item has been added to your cart.'
       }})
       setIsFetching(false)
+      setMessageModalShown(true)
     }else if(req.responseError && req.responseError.success == 0){
       Toast.show(req.responseError.message, Toast.LONG)
     }else if(req.responseError){
@@ -596,6 +620,7 @@ const mapStateToProps = (state) => {
   return {
     myCart: state.toktokMall.myCart,
     cartNoOfItems: state.toktokMall.myCartCount,
+    customModal: state.toktokMall.customModal
   };
 };
 

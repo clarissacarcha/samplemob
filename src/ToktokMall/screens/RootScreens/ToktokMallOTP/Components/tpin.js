@@ -41,7 +41,7 @@ export const TPIN =  ({onValidate}) => {
       > */}
       <TpinMaxAttemptModal
         // navigation = {navigation}
-        isVisible = {Context.retries >= maximumAttempts}
+        isVisible = {Context.isInvalid && Context.retries >= maximumAttempts}
         setIsVisible = {setIsVisible}
         minutes = {30} // minutes params / remaning time until user can enter tpin again
       />
