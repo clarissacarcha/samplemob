@@ -78,7 +78,7 @@ export const VerifyFullname = ()=> {
             return Alert.alert("","Last Name is required.")
         }
 
-        if (validator.isEmpty(person.middleName, {ignore_whitespace: true})) {
+        if (validator.isEmpty(person.middleName, {ignore_whitespace: true}) && person.hasMiddleName) {
             return Alert.alert("","Middle Name is required.")
         }
         if (validator.isEmpty(person.firstName, {ignore_whitespace: true})) {

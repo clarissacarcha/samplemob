@@ -71,7 +71,7 @@ export const ProceedButton = ({swipeEnabled , navigation , amount , note , tokwa
                 amount: amount,
                 note: note,
                 recipient: {
-                    name: `${recipientDetails.person.firstName} ${recipientDetails.person.middleName ? recipientDetails.person.middleName + " " : ""}${recipientDetails.person.lastName}`,
+                    name: `${recipientDetails.person}`,
                     mobileNo: recipientDetails.mobileNumber,
                 },
             }
@@ -116,7 +116,7 @@ export const ProceedButton = ({swipeEnabled , navigation , amount , note , tokwa
                 amount={amount}
                 note={note} 
                 recipient={{
-                    name: `${recipientDetails.person.firstName} ${recipientDetails.person.middleName ? recipientDetails.person.middleName + " " : ""}${recipientDetails.person.lastName}`,
+                    name: `${recipientDetails.person}`,
                     mobileNo: recipientDetails.mobileNumber
                 }}
                 walletinfoParams={walletinfoParams}

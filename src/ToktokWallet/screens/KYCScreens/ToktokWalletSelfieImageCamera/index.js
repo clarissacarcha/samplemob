@@ -298,7 +298,7 @@ export const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
                 }
         </View> */}
 
-                {/* <View
+                <View
                     style={{
                         flexDirection: 'row',
                         justifyContent: 'center',
@@ -308,11 +308,11 @@ export const ToktokWalletSelfieImageCamera = ({navigation,route})=> {
                         marginBottom: 20,
                     }}>
                     <TouchableOpacity onPress={() => takePicture()} style={styles.capture}>
-                        <View style={styles.inCapture}>
+                        {/* <View style={styles.inCapture}>
                             <EIcon name="camera" color={COLOR.YELLOW} size={40} />
-                        </View>
+                        </View> */}
                     </TouchableOpacity>
-                </View> */}
+                </View>
 
     </View>
     )

@@ -48,6 +48,7 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
     const VerifyUserData = useContext(VerifyContext)
     const navigation = useNavigation()
     const alert = useAlert()
+    const [cacheImages,setCacheImages] = useState(null)
 
     const [isCertify, setCertify] = useState(false)
 
@@ -69,21 +70,37 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
         }
     })
 
+    const deleteFile = (path)=> {
+        RNFS.exists(path)
+            .then(()=>RNFS.unlink(path))
+            .then(()=>RNFS.scanFile(path))
+            .catch(err=>console.log(err))
+            .finally(()=>console.log(path , " is deleted"))
+        return
+    }
+
     const removeCacheImages = async ({VerifyUserData})=> {
         const { selfieImage , selfieImageWithID , frontImage ,  backImage , tempSelfieImage , tempSelfieImageWithID } = VerifyUserData
+        const { rnSelfieFile, rnSelfieFileWithID, rnFrontIDFile, rnBackIDFile } = cacheImages
+
         try {
-            if(selfieImage) await RNFS.unlink(selfieImage.uri)
-            if(selfieImageWithID) await RNFS.unlink(selfieImageWithID.uri)
-            if(tempSelfieImage) await RNFS.unlink(tempSelfieImage.uri)
-            if(tempSelfieImageWithID) await RNFS.unlink(tempSelfieImageWithID.uri)
-            if(frontImage) await RNFS.unlink(frontImage.uri)
-            if(backImage) await RNFS.unlink(backImage.uri)
+            if(rnSelfieFile)  await deleteFile(rnSelfieFile.uri)
+            if(rnSelfieFileWithID)  await deleteFile(rnSelfieFileWithID.uri)
+            if(rnFrontIDFile)  await deleteFile(rnFrontIDFile.uri)
+            if(rnBackIDFile)  await deleteFile(rnBackIDFile.uri)
+            if(tempSelfieImage)  await deleteFile(tempSelfieImage.uri)
+            if(tempSelfieImageWithID) await deleteFile(tempSelfieImageWithID.uri)
+            if(frontImage) await deleteFile(frontImage.uri)
+            if(backImage) await deleteFile(backImage.uri)
+            if(selfieImage) await deleteFile(selfieImage.uri)
+            if(selfieImageWithID) await deleteFile(selfieImageWithID.uri)
+            return;
         }catch (error){
             throw error;
         }
     }
 
-    const confirm = ()=> {
+    const confirm = async ()=> {
         const rnValidIDFile = new ReactNativeFile({
             ...VerifyUserData.verifyID.idImage,
             name: 'documentValidID.jpg',
@@ -117,6 +134,15 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
             type: 'image/jpeg'
         })
         : null
+        // removing / delete cache files
+       //removeCacheImages({VerifyUserData})
+
+       setCacheImages({
+        rnSelfieFile,
+        rnSelfieFileWithID,
+        rnFrontIDFile,
+        rnBackIDFile,
+       })
 
         const input = {
             userId: session.user.id,
