@@ -187,10 +187,15 @@ export const RenderDetails = forwardRef(({
 								forceSelectToZero = {selectedItemsCount == 0  }
                 data={data}
                 onHold={(raw) => {
-									
-									ref.current.map((item, index) => {
-										item?.recenter()
-									})
+
+									if(ref.current && ref.current.length > 0){
+										ref.current.map((item, index) => {
+											console.log(item)
+											if(item.current != null){
+												item?.recenter()
+											}
+										})
+									}									
 
 									setHeldItem(raw)
 									if (raw.checked) {
