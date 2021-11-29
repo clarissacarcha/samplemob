@@ -80,7 +80,7 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
     }
 
     const removeCacheImages = async ({VerifyUserData})=> {
-        const { selfieImage , selfieImageWithID , frontImage ,  backImage , tempSelfieImage , tempSelfieImageWithID } = VerifyUserData
+        const { cacheImagesList, selfieImage , selfieImageWithID , frontImage ,  backImage , tempSelfieImage , tempSelfieImageWithID } = VerifyUserData
         const { rnSelfieFile, rnSelfieFileWithID, rnFrontIDFile, rnBackIDFile } = cacheImages
 
         try {
@@ -94,6 +94,11 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
             if(backImage) await deleteFile(backImage.uri)
             if(selfieImage) await deleteFile(selfieImage.uri)
             if(selfieImageWithID) await deleteFile(selfieImageWithID.uri)
+            if(cacheImagesList.length > 0){
+                cacheImagesList.map(async (image)=>{
+                    await deleteFile(image)
+                })
+            }
             return;
         }catch (error){
             throw error;
@@ -134,15 +139,15 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
             type: 'image/jpeg'
         })
         : null
-        // removing / delete cache files
-       //removeCacheImages({VerifyUserData})
-
+   
        setCacheImages({
         rnSelfieFile,
         rnSelfieFileWithID,
         rnFrontIDFile,
         rnBackIDFile,
        })
+        // removing / delete cache files
+       //removeCacheImages({VerifyUserData})
 
         const input = {
             userId: session.user.id,

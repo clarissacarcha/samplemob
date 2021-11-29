@@ -90,7 +90,7 @@ taking a selfie </Text>
 export const VerifySelfieWithID = ()=> {
 
     const VerifyUserData = useContext(VerifyContext)
-    const {setCurrentIndex , selfieImageWithID, setSelfieImageWithID , setTempSelfieImageWithID, tempSelfieImageWithID} = VerifyUserData
+    const {setCacheImagesList, setCurrentIndex , selfieImageWithID, setSelfieImageWithID , setTempSelfieImageWithID, tempSelfieImageWithID} = VerifyUserData
     const [cropperParams, setCropperParams] = useState({});
     const navigation = useNavigation()
     const cropSize = {
@@ -108,6 +108,9 @@ export const VerifySelfieWithID = ()=> {
 
     const setImage = (data)=> {
        // setSelfieImageWithID(data);
+        setCacheImagesList(state=> {
+            return [...state, data.uri]
+        })
         setTempSelfieImageWithID(data);
         // setCurrentIndex(oldval => oldval + 1)
     }

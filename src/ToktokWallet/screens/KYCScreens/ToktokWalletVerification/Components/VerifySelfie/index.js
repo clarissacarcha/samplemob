@@ -72,7 +72,7 @@ const MainComponent = ({children , onPress })=> {
 export const VerifySelfie = ()=> {
 
     const VerifyUserData = useContext(VerifyContext)
-    const {setCurrentIndex , selfieImage, setSelfieImage , setTempSelfieImage , tempSelfieImage} = VerifyUserData
+    const {setCacheImagesList, setCurrentIndex , selfieImage, setSelfieImage , setTempSelfieImage , tempSelfieImage} = VerifyUserData
     const [cropperParams, setCropperParams] = useState({});
     const navigation = useNavigation()
     const cropSize = {
@@ -90,6 +90,9 @@ export const VerifySelfie = ()=> {
 
     const setImage = (data)=> {
         // setSelfieImage(data);
+        setCacheImagesList(state=> {
+            return [...state, data.uri]
+        })
         setTempSelfieImage(data);
         // setCurrentIndex(oldval => oldval + 1)
     }
