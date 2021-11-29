@@ -68,7 +68,9 @@ export const RenderDetails = forwardRef(({
 
     const unsubscribe = navigation.addListener('blur', () => {
       ref.current.map((item, index) => {
-        item?.recenter()
+				if(item.current != null){
+					item?.recenter()
+				}
       })
     });
 
@@ -190,7 +192,7 @@ export const RenderDetails = forwardRef(({
 
 									if(ref.current && ref.current.length > 0){
 										ref.current.map((item, index) => {
-											console.log(item)
+											// console.log(item)
 											if(item.current != null){
 												item?.recenter()
 											}
