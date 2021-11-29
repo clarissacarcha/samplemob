@@ -46,13 +46,13 @@ const styles = StyleSheet.create({
         textAlign:"center"
     },
     proceedImage: {
-        height: 100,
+        height: height * 0.15,
         width: width * 0.6,
         marginTop: 5,
-        marginBottom: 30,
+        marginBottom: 5,
     },
     tpinImage: {
-        height: 80,
+        height: height * 0.15,
         width: width * 0.8,
         marginTop: 5,
     },
