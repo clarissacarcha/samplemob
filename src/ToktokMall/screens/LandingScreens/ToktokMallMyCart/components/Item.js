@@ -88,17 +88,8 @@ export const Item = ({
 					/>
         </View>
         <TouchableOpacity 
-          onLongPress={() => {
-            setSelected(true)
-            // onHold({
-            //   checked: !selected,
-            //   productId: product.Id,
-            //   shopId: data.shopid,                
-            //   product: product,
-            //   amount: parseFloat(product.price * qty),
-            //   qty: qty,
-            //   index: index,
-            // })
+          onLongPress={() => {	
+            setSelected(!selected)
             onHold({
               checked: !selected,
               productId: product.Id,

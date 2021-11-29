@@ -68,7 +68,7 @@ export const RenderDetails = forwardRef(({
 
     const unsubscribe = navigation.addListener('blur', () => {
       ref.current.map((item, index) => {
-        item.recenter()
+        item?.recenter()
       })
     });
 
@@ -189,7 +189,7 @@ export const RenderDetails = forwardRef(({
                 onHold={(raw) => {
 									
 									ref.current.map((item, index) => {
-										item.recenter()
+										item?.recenter()
 									})
 
 									setHeldItem(raw)
