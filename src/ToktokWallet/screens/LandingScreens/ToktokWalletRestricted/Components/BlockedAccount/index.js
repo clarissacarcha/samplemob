@@ -1,7 +1,7 @@
 import React, { useState , useEffect , useCallback } from 'react'
 import {View,Text,StyleSheet,TouchableOpacity} from 'react-native'
 import {useNavigation,useFocusEffect} from '@react-navigation/native'
-import { HeaderImageBackground , HeaderTitle , Separator } from 'toktokwallet/components'
+import { HeaderImageBackground , HeaderTitle , Separator, BuildingBottom } from 'toktokwallet/components'
 import { YellowButton , VectorIcon , ICON_SET } from 'src/revamp'
 import CONSTANTS from 'common/res/constants'
 
@@ -43,7 +43,7 @@ export const BlockedAccount = ({data,showPrompt})=> {
             <Separator/>
             <View style={styles.content}>
             <View style={{alignItems:"center",marginTop: 10}}>
-                    <Text style={[styles.verifyWalletText , {color: COLOR.ORANGE}]}>Your account is deactivated</Text>
+                    <Text style={[styles.verifyWalletText]}>Your account is deactivated</Text>
                     <Text style={styles.clickVerifyText}>Please contact our Customer Service Representative for support</Text>
                 </View>
 
@@ -57,7 +57,7 @@ export const BlockedAccount = ({data,showPrompt})=> {
                     navigation.pop()
                 }}/>
             </View>
-        
+            <BuildingBottom/>
         </View>
         </>
     )
@@ -76,6 +76,8 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 10,
         paddingTop: 30,
+        alignItems: "center",
+        justifyContent: "center"
     },
     verifyWalletText: {
         fontFamily: FONT.BOLD,
