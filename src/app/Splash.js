@@ -21,13 +21,14 @@ import SplashImage from '../assets/images/Splash.png';
 import Maintenance from '../assets/images/Maintenance.png';
 import NoNetworkConnection from '../assets/images/NoNetworkConnection.png';
 import ToktokMotorcycle from '../assets/images/ToktokMotorcycle.png';
+import ToktokSuperApp from '../assets/images/ToktokSuperApp.png';
 import ServerDown from '../assets/images/ServerDown.png';
 
 const imageWidth = Dimensions.get('window').width - 80;
 
-const mapKeyValueToObject = (keyValueArray) => {
+const mapKeyValueToObject = keyValueArray => {
   const result = {};
-  keyValueArray.map((kv) => {
+  keyValueArray.map(kv => {
     result[kv.settingKey] = kv.keyValue;
   });
 
@@ -38,11 +39,11 @@ const Splash = ({setConstants}) => {
   const [checkPoint, setcheckPoint] = useState('A'); // A-Allow, S-Suggest, B-Block, M-Maintenance
   const [deepLink, setDeepLink] = useState('');
 
-  const oneSignalInit = async (oneSignalAppId) => {
+  const oneSignalInit = async oneSignalAppId => {
     console.log('Setting OneSignal APP ID ', oneSignalAppId);
 
     if (Platform.OS === 'ios') {
-      OneSignal.promptForPushNotificationsWithUserResponse((allowed) => {
+      OneSignal.promptForPushNotificationsWithUserResponse(allowed => {
         if (allowed) {
           OneSignal.setAppId(oneSignalAppId);
         }
@@ -118,7 +119,7 @@ const Splash = ({setConstants}) => {
       }
 
       if (!isCurrent && !enabled) {
-        setcheckPoint('A');
+        setcheckPoint('B');
       }
     } catch (error) {
       setcheckPoint('MAINTENANCE');
@@ -210,13 +211,13 @@ const Splash = ({setConstants}) => {
 
   return (
     <ImageBackground style={styles.splash} source={SplashImage} resizeMode={'cover'}>
-      <Image source={ToktokMotorcycle} style={styles.image} resizeMode="contain" />
+      <Image source={ToktokSuperApp} style={styles.image} resizeMode="contain" />
     </ImageBackground>
   );
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  setConstants: (payload) => dispatch({type: 'SET_CONSTANTS', payload}),
+const mapDispatchToProps = dispatch => ({
+  setConstants: payload => dispatch({type: 'SET_CONSTANTS', payload}),
 });
 
 export default connect(null, mapDispatchToProps)(Splash);

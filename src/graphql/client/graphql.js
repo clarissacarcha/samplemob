@@ -133,7 +133,7 @@ const splitLink = split(({query}) => {
 
 // const link = ApolloLink.from([errorLink, setTokenLink, splitLink, uploadLink]);
 const link = ApolloLink.from([errorLinkLogger, setTokenLink, splitLink, uploadLink]);
-const authClientlink = ApolloLink.from([setTokenLink, authUploadLink]);
+const authClientlink = ApolloLink.from([errorLinkLogger, setTokenLink, authUploadLink]);
 const toktokWalletGraphqlLink = ApolloLink.from([
   errorLinkLogger,
   setToktokWalletGraphqlTokenLink,

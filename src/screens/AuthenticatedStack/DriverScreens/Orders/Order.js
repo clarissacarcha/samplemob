@@ -31,7 +31,7 @@ import LocationRequest from '../../../../assets/images/LocationRequest.png';
 import NoData from '../../../../assets/images/NoData.png';
 import {connect} from 'react-redux';
 import {currentLocation} from '../../../../helper';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
 
 const imageWidth = Dimensions.get('window').width - 200;
@@ -148,7 +148,7 @@ const SearchOverlay = ({visible, setIsSearching, onSearchPress, searchFilter, se
     setIsSearching(false);
   };
 
-  const onSelectLocationCallback = (value) => {
+  const onSelectLocationCallback = value => {
     setLocationFilter(value);
     setIsSearching(true);
   };
@@ -194,7 +194,7 @@ const SearchOverlay = ({visible, setIsSearching, onSearchPress, searchFilter, se
               <Text style={styles.label}>Sender's name</Text>
               <TextInput
                 value={senderName}
-                onChangeText={(value) => {
+                onChangeText={value => {
                   setSenderName(value);
                 }}
                 style={styles.input}
@@ -206,7 +206,7 @@ const SearchOverlay = ({visible, setIsSearching, onSearchPress, searchFilter, se
               <Text style={styles.label}>Recipient's name</Text>
               <TextInput
                 value={recipientName}
-                onChangeText={(value) => {
+                onChangeText={value => {
                   setRecipientName(value);
                 }}
                 style={styles.input}
@@ -450,7 +450,7 @@ const AvailableOrders = ({navigation, session, constants}) => {
             ...MAP_DELTA,
           };
 
-    const deliveryMarkers = data.getDeliveriesAvailable.map((delivery) => {
+    const deliveryMarkers = data.getDeliveriesAvailable.map(delivery => {
       return (
         <>
           <Marker
@@ -573,7 +573,7 @@ const AvailableOrders = ({navigation, session, constants}) => {
       <FlatList
         showsVerticalScrollIndicator={false}
         data={data.getDeliveriesAvailable}
-        keyExtractor={(item) => item.id}
+        keyExtractor={item => item.id}
         refreshControl={
           <RefreshControl refreshing={loading} onRefresh={getLocation} colors={[COLOR]} tintColor={COLOR} />
         }
@@ -624,7 +624,7 @@ const AvailableOrders = ({navigation, session, constants}) => {
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   session: state.session,
   constants: state.constants,
 });

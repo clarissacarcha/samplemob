@@ -1,13 +1,16 @@
 import gql from 'graphql-tag';
 
+// TODO: ASS IN USER
+//  toktokfoodUserId
+// toktokWalletAccountId
+
 const Session = `
 user {
   id
   userId
   username
   status
-  toktokfoodUserId
-  toktokWalletAccountId
+
   person {
     id
     firstName

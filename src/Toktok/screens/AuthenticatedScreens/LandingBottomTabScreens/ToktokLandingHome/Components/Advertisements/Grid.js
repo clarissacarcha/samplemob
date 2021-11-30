@@ -3,6 +3,7 @@ import {View, Text, StyleSheet, Dimensions, Image, TouchableHighlight, FlatList}
 import {useNavigation} from '@react-navigation/native';
 import {throttle} from 'lodash';
 import {FONT, FONT_SIZE, COLOR, SIZE} from '../../../../../../../res/variables';
+import {Header} from '../../../../../../../../../../../Source Code/Toktok/toktok-mobile/src/screens/AuthenticatedStack/ConsumerScreens/ConsumerLanding/Components/Header/index';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const BANNER_WIDTH = SCREEN_WIDTH - SIZE.MARGIN * 3;
@@ -54,20 +55,30 @@ const GridAd = ({ad}) => {
   );
 };
 
-const BannerAds = ({ads}) => {
+const GridAds = ({ads, Header, Menu, Banner, setUserLocation, constants}) => {
   return (
-    <View style={styles.box}>
+    <View>
       <FlatList
         data={ads}
         renderItem={({item, index}) => <GridAd ad={item} />}
         showsVerticalScrollIndicator={false}
         numColumns={2}
+        ListHeaderComponent={
+          <>
+            <Header />
+            <View style={styles.box}>
+              <Menu setUserLocation={setUserLocation} constants={constants} />
+              <Banner />
+              <View style={styles.separator} />
+            </View>
+          </>
+        }
       />
     </View>
   );
 };
 
-export default BannerAds;
+export default GridAds;
 
 const styles = StyleSheet.create({
   box: {
@@ -95,4 +106,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   date: {color: COLOR.DARK, marginLeft: 5},
+  separator: {
+    height: SIZE.MARGIN / 2,
+    backgroundColor: COLOR.LIGHT,
+  },
 });
