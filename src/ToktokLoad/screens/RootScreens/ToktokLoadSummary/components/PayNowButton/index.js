@@ -73,8 +73,8 @@ export const PayNowButton = ({ loadDetails, mobileNumber }) => {
   }, 1000);
 
   const onPressTermsAndContidions = () => {
-    let { termsAndConditions } = loadDetails
-    navigation.navigate("ToktokWalletTermsConditions", { termsAndConditions })
+    let { termsAndConditions } = loadDetails;
+    navigation.navigate("ToktokLoadTermsAndConditions", { termsAndConditions });
   }
 
   return (
