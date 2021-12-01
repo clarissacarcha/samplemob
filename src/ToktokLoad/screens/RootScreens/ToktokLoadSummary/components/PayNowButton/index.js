@@ -20,14 +20,16 @@ import { POST_TOKTOKWALLET_REQUEST_MONEY } from 'toktokload/graphql/model';
 import { usePrompt, useAlert, useThrottle } from 'src/hooks';
 import { onErrorAlert } from 'src/util/ErrorUtility';
 import { useAccount } from 'toktokwallet/hooks';
+import { useSelector } from 'react-redux';
 
 export const PayNowButton = ({ loadDetails, mobileNumber }) => {
 
+  const { user } = useSelector((state) => state.session);
   const prompt = usePrompt();
   const navigation = useNavigation();
   const { tokwaAccount, getMyAccount } = useAccount();
   const { amount }  = loadDetails;
-  const tokwaBalance = parseFloat(tokwaAccount?.wallet?.balance);
+  const tokwaBalance = user.toktokWalletAccountId ? parseFloat(tokwaAccount?.wallet?.balance) : 0;
 
   const [postToktokWalletRequestMoney, {loading, error}] = useMutation(POST_TOKTOKWALLET_REQUEST_MONEY, {
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,

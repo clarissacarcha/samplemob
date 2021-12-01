@@ -22,7 +22,8 @@ export const PaymentMethod = ({ loadDetails }) => {
 	const navigation = useNavigation();
   const { tokwaAccount, getMyAccount } = useAccount();
   const { amount } = loadDetails;
- 
+  const tokwaBalance = user.toktokWalletAccountId ? tokwaAccount?.wallet?.balance : "0.00";
+
 	const onCashIn = ({balance}) => {
     console.log(balance);
     getMyAccount();
@@ -38,9 +39,9 @@ export const PaymentMethod = ({ loadDetails }) => {
   const onPressCreateAccount = () => {
     navigation.navigate('ToktokWalletVerification');
   }
-
+ 
   const displayInsufficientBalance = () => {
-    if(parseFloat(amount) > parseFloat(tokwaAccount?.wallet?.balance)) {
+    if(parseFloat(amount) > parseFloat(tokwaBalance)) {
       return (
         <View style={styles.errorContainer}>
           <TouchableOpacity onPress={onPressTopUp}>
@@ -81,7 +82,7 @@ export const PaymentMethod = ({ loadDetails }) => {
                   <Text style={styles.walletText}>wallet</Text>
                 </View>
                 <Text style={styles.balance}>
-                  Balance: PHP {numberFormat(tokwaAccount?.wallet?.balance)}
+                  Balance: PHP {numberFormat(tokwaBalance)}
                 </Text>
               </View>
             </View>

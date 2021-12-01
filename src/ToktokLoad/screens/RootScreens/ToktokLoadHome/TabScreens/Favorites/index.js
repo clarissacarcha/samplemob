@@ -61,13 +61,6 @@ export const Favorites = ({ navigation, route }) => {
     refetch();
   }
 
-  if(loading){
-    return(
-      <View style={styles.container}>
-        <LoadingIndicator isLoading={true} isFlex />
-      </View>
-    )
-  }
   if(error){
     return (
       <View style={styles.container}>
@@ -75,7 +68,7 @@ export const Favorites = ({ navigation, route }) => {
       </View>
     )
   }
- 
+  
   return (
     <View style={styles.container}>
        <FlatList
@@ -94,7 +87,7 @@ export const Favorites = ({ navigation, route }) => {
         ListEmptyComponent={ListEmptyComponent}
         refreshControl={
           <RefreshControl
-            refreshing={refreshing}
+            refreshing={loading}
             onRefresh={onRefresh}
           />
         }

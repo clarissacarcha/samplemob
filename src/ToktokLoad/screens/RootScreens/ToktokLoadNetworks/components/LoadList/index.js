@@ -26,9 +26,12 @@ export const LoadList = ({ networkId, navigation, mobileNumber }) => {
   const [getLoadItems, {loading: getLoadItemsLoading, error: getLoadItemsError}] = useLazyQuery(GET_LOAD_ITEMS, {
     fetchPolicy: "network-only",
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
-    
-    onCompleted:({ getLoadItems })=> {
+    onError: () => {
+      setRefreshing(false);
+    },
+    onCompleted: ({ getLoadItems }) => {
       setLoads(prev => ({ ...prev, [networkId]: getLoadItems }));
+      setRefreshing(false);
     }
   });
 
@@ -55,6 +58,7 @@ export const LoadList = ({ networkId, navigation, mobileNumber }) => {
 
   useEffect(() => {
     processGetLoadItems();
+    setRefreshing(getLoadItemsLoading);
   }, [])
 
   const processGetLoadItems = () => {
@@ -65,7 +69,8 @@ export const LoadList = ({ networkId, navigation, mobileNumber }) => {
           mobileNumber
         }
       }
-    })
+    });
+    setRefreshing(true);
   }
 
   const onPressFavorite = (item, index) => {
@@ -114,13 +119,6 @@ export const LoadList = ({ networkId, navigation, mobileNumber }) => {
     )
   }
 
-  if(getLoadItemsLoading){
-    return(
-      <View style={styles.container}>
-        <LoadingIndicator isLoading={true} isFlex />
-      </View>
-    )
-  }
   if(getLoadItemsError){
     return (
       <View style={styles.container}>
