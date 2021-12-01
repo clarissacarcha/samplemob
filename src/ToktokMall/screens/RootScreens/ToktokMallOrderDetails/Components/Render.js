@@ -6,7 +6,7 @@ import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../graphql';
 import { GET_ORDER_DETAILS } from '../../../../../graphql/toktokmall/model';
 import {Loading} from '../../../../Components';
 import {placeholder, storeIcon} from '../../../../assets';
-import { FormatToText, Price } from '../../../../helpers';
+import { FormatDateTime, FormatToText, Price } from '../../../../helpers';
 import AsyncStorage from '@react-native-community/async-storage';
 import { FONT } from '../../../../../res/variables';
 import CustomIcon from "../../../../Components/Icons";
@@ -161,7 +161,7 @@ const History = ({data}) => {
           <Text style={{fontSize: 13, color: "#F6841F"}}>Order Confirmed</Text>
         </View>
         <View style={{flex: 2, justifyContent: 'center', paddingHorizontal: 15, alignItems: 'flex-end'}}>
-          <Text style={{fontSize: 12, color: "#929191"}}>{moment(data.dateOrdered, "YYYY-MM-DD h:m:s").format("MM-DD-YYYY, hh:mm a")}</Text>
+          <Text style={{fontSize: 12, color: "#929191"}}>{FormatDateTime(data.dateOrdered)}</Text>
         </View>
       </View>
       <FlatList 
@@ -173,7 +173,7 @@ const History = ({data}) => {
           if(item.value == "Invalid date" || item.value == undefined){
             value = ""
           }else{
-            value = `${moment(item.value).format('MM-DD-YYYY, hh:mm a')}`
+            value = `${FormatDateTime(item.value)}`
           }
 
           return (
