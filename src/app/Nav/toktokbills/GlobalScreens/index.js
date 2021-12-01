@@ -2,6 +2,7 @@ import React from 'react';
 import {
   ToktokBillsEnterPinCode,
   ToktokBillsReceipt,
+  ToktokBillsTermsAndConditions,
   ToktokBillsTransactionLogs
 } from 'toktokbills/screens'
 
@@ -18,6 +19,13 @@ export default ({Navigator}) => {
       <Navigator.Screen 
         name="ToktokBillsReceipt" 
         component={ToktokBillsReceipt}
+        options={{
+          headerTitleAlign: 'center' 
+        }}
+      />
+      <Navigator.Screen 
+        name="ToktokBillsTermsAndConditions" 
+        component={ToktokBillsTermsAndConditions}
         options={{
           headerTitleAlign: 'center' 
         }}

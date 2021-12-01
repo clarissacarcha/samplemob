@@ -81,7 +81,7 @@ export const ConfirmButton = ({ paymentData }) => {
   }, 1000);
 
   const onPressTermsAndContidions = () => {
-    navigation.navigate("ToktokWalletTermsConditions", { termsAndConditions })
+    navigation.navigate("ToktokBillsTermsAndConditions", { termsAndConditions })
   }
   
   return (
@@ -90,7 +90,7 @@ export const ConfirmButton = ({ paymentData }) => {
       <View style={styles.container}>
       <Text style={styles.terms}>
         <Text>Please read our </Text>
-        <Text style={styles.tnc} onPress={onPressTermsAndContidions}>Terms and Condition </Text>
+        <Text style={styles.tnc} onPress={onPressTermsAndContidions}>Terms and Conditions </Text>
         <Text>before you proceed with your transaction</Text>
       </Text>
       { !!paymentPolicy1 && <Text style={styles.paymentPolicy1}>*{paymentPolicy1}</Text> }
