@@ -51,7 +51,7 @@ const SearchInput = ({onChangeText}) => {
 };
 
 export const Header = ({setSearchResult, setSearchLoading, setSearchText, searchText}) => {
-  const session = useSelector((state) => state.session);
+  const session = useSelector(state => state.session);
   const sessionToken = 'ABC123123';
 
   const navigation = useNavigation();
@@ -116,6 +116,8 @@ export const Header = ({setSearchResult, setSearchLoading, setSearchText, search
           },
         });
 
+        console.log('SEARCH RESULT-------------------------');
+
         setSearchResult(apiResult.data.data.getGooglePlaceAutocomplete);
         setSearchLoading(false);
       } catch (error) {
@@ -126,11 +128,11 @@ export const Header = ({setSearchResult, setSearchLoading, setSearchText, search
   };
 
   const debouncedGetGooglePlaceAutocomplete = useDebounce(
-    (value) => getGooglePlaceAutocomplete({searchString: value}),
+    value => getGooglePlaceAutocomplete({searchString: value}),
     1000,
   );
 
-  const onChangeText = async (value) => {
+  const onChangeText = async value => {
     setSearchText(value);
     if (value.length >= 3) {
       debouncedGetGooglePlaceAutocomplete(value);

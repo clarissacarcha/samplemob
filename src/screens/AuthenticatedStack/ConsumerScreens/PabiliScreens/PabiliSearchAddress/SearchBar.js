@@ -119,6 +119,9 @@ const SearchBar = ({
                 `,
         },
       });
+
+      console.log({APIRESULT: apiResult});
+
       //   setResult(apiResult.data.data.getGooglePlaceAutocomplete);
       onSearchResultChange(apiResult.data.data.getGooglePlaceAutocomplete);
       console.log({result: apiResult.data.data.getGooglePlaceAutocomplete});
@@ -131,11 +134,11 @@ const SearchBar = ({
   };
 
   const debouncedGetGooglePlaceAutocomplete = useDebounce(
-    (value) => getGooglePlaceAutocomplete({searchString: value}),
+    value => getGooglePlaceAutocomplete({searchString: value}),
     1000,
   );
 
-  const onChangeText = async (value) => {
+  const onChangeText = async value => {
     console.log({value});
 
     onSearchTextChange(value);
