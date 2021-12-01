@@ -316,8 +316,8 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
   				  />
             <View style={{height: 20}} />
             <View style={{alignItems: 'center', justifyContent: 'center'}}>
-		    			<Text style={{fontSize: 16, color: "#9E9E9E"}}>No products found</Text>
-              <Text style={{fontSize: 11, color: "#9E9E9E"}}>Try different or more general keywords</Text>              
+		    			<Text style={{fontSize: 16, color: "#9E9E9E", fontWeight: 'bold'}}>No results found</Text>
+              <Text style={{fontSize: 11, color: "#9E9E9E"}}>Try to search something similar</Text>              
 	    			</View>
           </View>
           <View style={{flex: 0.2}} />
