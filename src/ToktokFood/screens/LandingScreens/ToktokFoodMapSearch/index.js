@@ -34,6 +34,7 @@ const ToktokFoodMapSearch = () => {
     fullInfo: {},
   });
 
+  // Add work around for this
   const onMapMove = async (c) => {
     if (isLoaded) {
       const {latitude, longitude} = c;

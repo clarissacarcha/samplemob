@@ -8,7 +8,7 @@ import {moderateScale, scale, verticalScale} from 'toktokfood/helper/scale';
 import {VerifyContext} from '.';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import Separator from 'toktokfood/components/Separator';
-export const Variations = ({ data, productId }) => {
+export const Variations = ({data, productId}) => {
   const {
     totalPrice,
     setTotalPrice,
@@ -24,15 +24,19 @@ export const Variations = ({ data, productId }) => {
     selectedVariants,
     setSelectedVariants,
     productDetails,
-    basePrice
+    basePrice,
   } = useContext(VerifyContext);
 
   useEffect(() => {
-    if(data.variants.length > 0){
-      let selectedVar = productId ? data.variants.find((val) => { return productId == val.Id }) : data.variants[0]
-      setSelectedVariants(selectedVar)
+    if (data.variants.length > 0) {
+      let selectedVar = productId
+        ? data.variants.find((val) => {
+            return productId == val.Id;
+          })
+        : data.variants[0];
+      setSelectedVariants(selectedVar);
     }
-  }, [data.variants])
+  }, [data.variants]);
 
   useEffect(() => {
     if (optionsAmount) {
@@ -59,63 +63,66 @@ export const Variations = ({ data, productId }) => {
     }
   }, [selected]);
 
-  const onValueChange = useCallback(({item, optionLogs, index, temp}) => {
-    let opt = {
-      addon_id: parseInt(optionLogs.id),
-      addon_name: optionLogs.optionName,
-      addon_price: optionLogs.optionPrice,
-    };
-    let hasSelected = selected[item.optionName];
-    if (hasSelected) {
-      if (selected[item.optionName][index]) {
-        if (selected[item.optionName].length > 1) {
-          selected[item.optionName].splice(index, 1);
-          setSelected((prev) => {
-            return {...prev, [item.optionName]: selected[item.optionName]};
-          });
+  const onValueChange = useCallback(
+    ({item, optionLogs, index, temp}) => {
+      let opt = {
+        addon_id: parseInt(optionLogs.id),
+        addon_name: optionLogs.optionName,
+        addon_price: optionLogs.optionPrice,
+      };
+      let hasSelected = selected[item.optionName];
+      if (hasSelected) {
+        if (selected[item.optionName][index]) {
+          if (selected[item.optionName].length > 1) {
+            selected[item.optionName].splice(index, 1);
+            setSelected((prev) => {
+              return {...prev, [item.optionName]: selected[item.optionName]};
+            });
+          } else {
+            const {[item.optionName]: val, ...data} = selected;
+            setSelected(data);
+          }
         } else {
-          const {[item.optionName]: val, ...data} = selected;
-          setSelected(data);
+          if (selected[item.optionName].length != item.noOfSelection) {
+            temp = [...selected[item.optionName], opt];
+            setSelected((prev) => {
+              return {...prev, [item.optionName]: temp};
+            });
+          } else {
+            selected[item.optionName].splice(selected[item.optionName].length - 1, 1);
+            temp = [...selected[item.optionName], opt];
+            setSelected((prev) => {
+              return {...prev, [item.optionName]: temp};
+            });
+          }
         }
       } else {
-        if (selected[item.optionName].length != item.noOfSelection) {
-          temp = [...selected[item.optionName], opt];
-          setSelected((prev) => {
-            return {...prev, [item.optionName]: temp};
-          });
-        } else {
-          selected[item.optionName].splice(selected[item.optionName].length - 1, 1);
-          temp = [...selected[item.optionName], opt];
-          setSelected((prev) => {
-            return {...prev, [item.optionName]: temp};
-          });
-        }
+        temp = [...temp, opt];
+        setSelected((prev) => {
+          return {...prev, [item.optionName]: temp};
+        });
       }
-    } else {
-      temp = [...temp, opt];
-      setSelected((prev) => {
-        return {...prev, [item.optionName]: temp};
-      });
-    }
-  }, [selected])
+    },
+    [selected],
+  );
 
   const renderOptions = ({item}) => {
     let temp = [];
-    if(!(requiredOptions[item.optionName]) && item.isRequired){
-      setRequiredOptions(prev => { return { ...prev, [item.optionName]: item.isRequired }})
+    if (!requiredOptions[item.optionName] && item.isRequired) {
+      setRequiredOptions((prev) => {
+        return {...prev, [item.optionName]: item.isRequired};
+      });
     }
-   
+
     return (
       <View style={styles.variations}>
         <View style={styles.flexCenter}>
-          <Text style={styles.variationTitle}>
-            {item.optionName.toLowerCase()} (Choose at least 1)
-          </Text>
+          <Text style={styles.variationTitle}>{item.optionName.toLowerCase()} (Choose at least 1)</Text>
           <View style={styles.requiredContainer}>
             <Text style={styles.requiredText}>{item.isRequired ? 'Required' : 'Optional'}</Text>
           </View>
         </View>
-       
+
         {item.optionLogs.map((optionLogs, i) => {
           let index = -1;
           if (selected[item.optionName]) {
@@ -141,39 +148,35 @@ export const Variations = ({ data, productId }) => {
     );
   };
 
-  const renderVariants = ({ item }) => {
+  const renderVariants = ({item}) => {
     return (
       <View style={styles.variantWrapper}>
         <View style={styles.variantSubWrapper}>
           <RadioButton
             onValueChange={(c) => {
-              setSelectedVariants(item)
+              setSelectedVariants(item);
             }}
             name={item.itemname}
             selected={item.Id == selectedVariants?.Id}
           />
         </View>
-          <Text style={styles.variationPrice}>PHP {item.price.toFixed(2)}</Text>
+        <Text style={styles.variationPrice}>PHP {item.price.toFixed(2)}</Text>
       </View>
-    )
-  }
-  
+    );
+  };
+
   return (
     <>
-      { data.variants && data.variants.length > 0 && (
+      {data.variants && data.variants.length > 0 && (
         <>
-        <View style={styles.variantContainer}>
-          <Text style={styles.variantTitle}>Variants</Text>
-          <FlatList data={data.variants} renderItem={renderVariants} style={{flex: 1}}/>
-        </View>
-        <Separator />
+          <View style={styles.variantContainer}>
+            <Text style={styles.variantTitle}>Variations</Text>
+            <FlatList data={data.variants} renderItem={renderVariants} style={{flex: 1}} />
+          </View>
+          <Separator />
         </>
       )}
-      <FlatList
-        data={data.options}
-        renderItem={renderOptions}
-        style={{flex: 1}}
-      />
+      <FlatList data={data.options} renderItem={renderOptions} style={{flex: 1}} />
       <View style={styles.variations}>
         <View style={styles.instructionContainer}>
           <Text style={styles.variationTitle}>Special Instructions</Text>
@@ -209,7 +212,7 @@ const styles = StyleSheet.create({
   variationsWrapper: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingTop: verticalScale(10)
+    paddingTop: verticalScale(10),
   },
   checkBox: {
     transform: Platform.OS === 'android' ? [{scaleX: 1}, {scaleY: 1}] : [{scaleX: 0.8}, {scaleY: 0.8}],
@@ -229,7 +232,7 @@ const styles = StyleSheet.create({
     color: COLOR.BLACK,
     fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.L,
-    textTransform: 'capitalize'
+    textTransform: 'capitalize',
   },
   variantTitle: {
     color: COLOR.BLACK,
@@ -256,37 +259,37 @@ const styles = StyleSheet.create({
   flexCenter: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   requiredContainer: {
     borderWidth: 1,
     borderColor: '#FFA700',
     padding: 5,
-    borderRadius: 5
+    borderRadius: 5,
   },
   requiredText: {
     color: '#FFA700',
-    fontSize: FONT_SIZE.S
+    fontSize: FONT_SIZE.S,
   },
   variantContainer: {
     paddingHorizontal: verticalScale(15),
-    paddingVertical: verticalScale(15)
+    paddingVertical: verticalScale(15),
   },
   variantWrapper: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingTop: 10
+    paddingTop: 10,
   },
   instructionContainer: {
-    flexDirection: 'row', 
+    flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingBottom: 10
+    paddingBottom: 10,
   },
   variantSubWrapper: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    flexShrink: 1
-  }
+    flexShrink: 1,
+  },
 });

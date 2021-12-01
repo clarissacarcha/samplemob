@@ -153,16 +153,18 @@ const MyOrderList = () => {
 
   return (
     <>
-      <Loader visibility={deleteLoading} message="Deleting Item" hasImage={false} loadingIndicator />
+      <Loader visibility={deleteLoading} message="Removing from Cart" hasImage={false} loadingIndicator />
       <View style={styles.sectionContainer}>
         <View style={[styles.myOrderWrapper]}>
           <Text style={styles.sectionTitle}>My Orders</Text>
           {/* Add Items */}
-          <Text onPress={() => navigation.goBack()} style={styles.actionText}>Add Items</Text>
+          <Text onPress={() => navigation.goBack()} style={styles.actionText}>
+            Add Items
+          </Text>
         </View>
         <View>
-          { temporaryCart.items.length == 0 ? (
-            <LoadingIndicator isLoading={true} size='small' style={{ paddingVertical: 20 }} />
+          {temporaryCart.items.length == 0 ? (
+            <LoadingIndicator isLoading={true} size="small" style={{paddingVertical: 20}} />
           ) : (
             <SwipeListView
               useFlatList
@@ -175,7 +177,7 @@ const MyOrderList = () => {
               previewOpenDelay={1000}
               closeOnRowOpen={true}
               keyExtractor={(item, index) => index.toString()}
-              ItemSeparatorComponent={() => ( <View style={{ borderTopWidth: 1, borderTopColor: '#E6E6E6' }} /> )}
+              ItemSeparatorComponent={() => <View style={{borderTopWidth: 1, borderTopColor: '#E6E6E6'}} />}
               ref={swipeListViewRef}
             />
           )}

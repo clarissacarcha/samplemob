@@ -199,10 +199,10 @@ const ToktokFoodAddressDetails = ({route}) => {
           <View style={styles.searchBoxContainer}>
             <View style={[styles.textInputWrapper, styles.searchBoxShadow]}>
               <MIcon
-                onPress={() => dispatch({type: 'SET_PICKUP_ADDRESS', value: ''})}
+                onPress={() => navigation.pop()}
                 style={styles.searchBoxIcon}
-                name="close"
-                size={22}
+                name="chevron-left"
+                size={32}
                 color={COLOR.ORANGE}
               />
               <TextInput
@@ -213,6 +213,13 @@ const ToktokFoodAddressDetails = ({route}) => {
                 style={[styles.searchBox, styles.textInputFontStyles]}
                 onFocus={() => debouncedGetGooglePlaceAutocomplete()}
                 onChangeText={(query) => dispatch({type: 'SET_PICKUP_ADDRESS', value: query})}
+              />
+              <MIcon
+                onPress={() => dispatch({type: 'SET_PICKUP_ADDRESS', value: ''})}
+                style={styles.closeBoxIcon}
+                name="close"
+                size={22}
+                color={COLOR.DARK}
               />
             </View>
           </View>
@@ -246,9 +253,8 @@ const styles = StyleSheet.create({
   searchBox: {
     height: 49,
     width: '100%',
-    paddingEnd: 10,
     borderRadius: 13,
-    paddingStart: 42,
+    paddingHorizontal: 38,
     backgroundColor: '#FFF',
   },
   searchBoxShadow: {
@@ -275,8 +281,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   searchBoxIcon: {
-    left: 13,
-    width: 20,
+    left: 5,
+    zIndex: 99,
+    alignSelf: 'center',
+    position: 'absolute',
+  },
+  closeBoxIcon: {
+    right: 10,
     zIndex: 99,
     alignSelf: 'center',
     position: 'absolute',
