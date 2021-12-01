@@ -59,10 +59,10 @@ const SearchInput = () => {
 };
 
 export const Header = () => {
-  const session = useSelector((state) => state.session);
+  const session = useSelector(state => state.session);
 
   return (
-    <View style={{height: 160, backgroundColor: 'white'}}>
+    <View style={styles.headerBox}>
       <ImageBackground style={{height: 130}} source={HeaderImage} resizeMode="cover">
         <View style={styles.greetingBox}>
           <Text style={styles.greetingText}>
@@ -76,6 +76,10 @@ export const Header = () => {
 };
 
 const styles = StyleSheet.create({
+  headerBox: {
+    height: 160,
+    backgroundColor: 'white',
+  },
   inputBox: {
     flexDirection: 'row',
     alignItems: 'center',

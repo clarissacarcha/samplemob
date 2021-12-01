@@ -18,11 +18,10 @@ import {
 } from 'react-native';
 import {COLOR, DARK, MEDIUM, ORANGE, LIGHT, COLOR_UNDERLAY} from '../res/constants';
 import {FONT, FONT_SIZE} from '../res/variables';
+import {YellowIcon} from '../components/ui';
 
-import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
-import Fontisto from 'react-native-vector-icons/Fontisto';
 
 const imageWidth = Dimensions.get('window').width - 40;
 
@@ -50,11 +49,6 @@ export const DriverCard = ({driver}) => {
   const {firstName, lastName} = driver.user.person;
   const mobileNumber = driver.user.username;
 
-  const icons = [
-    <FA5Icon name="map-pin" size={16} color={DARK} style={styles.iconBox} />,
-    <FA5Icon name="map-marker-alt" size={16} color={DARK} style={styles.iconBox} />,
-  ];
-
   return (
     <View style={styles.card}>
       <View style={styles.cardShadow}>
@@ -67,7 +61,7 @@ export const DriverCard = ({driver}) => {
             borderBottomWidth: StyleSheet.hairlineWidth,
             borderColor: MEDIUM,
           }}>
-          <Fontisto name="motorcycle" size={18} color={DARK} style={styles.iconBox} />
+          <YellowIcon set="Fontisto" name="motorcycle" size={16} darkIcon />
           <Text style={{marginLeft: 10, color: DARK, fontFamily: FONT.BOLD}}>
             {labels[0]} <Text style={{color: ORANGE}}>{labels[1]}</Text>
           </Text>

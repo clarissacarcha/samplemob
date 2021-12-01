@@ -214,7 +214,7 @@ const ToktokMallLanding = connect(
       name="ToktokMallHome"
       component={ToktokMallLandingScreen}
       options={{
-        tabBarBadge: '99+',
+        // tabBarBadge: '99+',
         tabBarLabel: 'toktokmall',
         // tabBarIcon: ({color}) => <FoIcon name="shopping-bag-1" color={COLOR.YELLOW} size={24} />
         tabBarIcon: ({focused}) =>

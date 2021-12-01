@@ -1,12 +1,13 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, SafeAreaView, StatusBar, ScrollView, RefreshControl} from 'react-native';
+import {connect} from 'react-redux';
+import {View, StyleSheet, SafeAreaView, StatusBar, ScrollView, RefreshControl} from 'react-native';
 import OneSignal from 'react-native-onesignal';
 import {COLOR} from '../../../../../res/variables';
 
 //SELF IMPORTS
 import {Header, Menu, Advertisements} from './Components';
 
-export const ToktokLandingHome = ({navigation}) => {
+const Screen = ({navigation, constants}) => {
   // const userLocation = {
   //   latitude,
   //   longitude,
@@ -66,27 +67,38 @@ export const ToktokLandingHome = ({navigation}) => {
   return (
     <>
       <StatusBar barStyle="dark-content" backgroundColor={'transparent'} translucent />
-      <SafeAreaView style={styles.screen}>
-        <ScrollView
+      <View style={styles.screen}>
+        {/* <ScrollView
           showsVerticalScrollIndicator={false}
-          // refreshControl={
-          //   <RefreshControl
-          //     colors={[COLOR.YELLOW]}
-          //     refreshing={false}
-          //     onRefresh={() => {
-          //       console.log('REFRESHED');
-          //     }}
-          //   />
-          // }
-        >
-          <Header />
-          <Menu setUserLocation={setUserLocation} />
-          <Advertisements />
-        </ScrollView>
-      </SafeAreaView>
+          refreshControl={
+            <RefreshControl
+              colors={[COLOR.YELLOW]}
+              refreshing={false}
+              onRefresh={() => {
+                console.log('REFRESHED');
+              }}
+            />
+          }
+        > */}
+        {/* <Header /> */}
+        {/* <Menu setUserLocation={setUserLocation} constants={constants} /> */}
+        <Advertisements Header={Header} Menu={Menu} setUserLocation={setUserLocation} constants={constants} />
+        {/* </ScrollView> */}
+      </View>
     </>
   );
 };
+
+const mapStateToProps = state => ({
+  session: state.session,
+  constants: state.constants,
+});
+
+const mapDispatchToProps = dispatch => ({
+  createSession: payload => dispatch({type: 'CREATE_SESSION', payload}),
+});
+
+export const ToktokLandingHome = connect(mapStateToProps, mapDispatchToProps)(Screen);
 
 const styles = StyleSheet.create({
   screen: {
