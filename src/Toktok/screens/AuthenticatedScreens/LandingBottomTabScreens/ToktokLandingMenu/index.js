@@ -3,8 +3,9 @@ import {APP_FLAVOR, DARK, LIGHT, MEDIUM} from '../../../../../res/constants';
 import {COLOR, FONT, SIZE, FONT_SIZE} from '../../../../../res/variables';
 import {VectorIcon, ICON_SET} from '../../../../../revamp/';
 
-import {Image, ScrollView, StyleSheet, Text, TouchableHighlight, View, StatusBar} from 'react-native';
+import {Image, ScrollView, StyleSheet, Text, TouchableHighlight, View, StatusBar, Alert} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
+import RNFS from 'react-native-fs'
 
 import OneSignal from 'react-native-onesignal';
 import ToktokWashed from '../../../../../assets/images/ToktokWashed.png';
@@ -51,6 +52,7 @@ export const ToktokLandingMenu = ({navigation}) => {
   }
 
   const onSignOut = () => {
+    RNFS.unlink(RNFS.CachesDirectoryPath)
     OneSignal.deleteTag('userId');
     dispatch({type: 'DESTROY_SESSION'});
     navigation.replace('UnauthenticatedStack', {

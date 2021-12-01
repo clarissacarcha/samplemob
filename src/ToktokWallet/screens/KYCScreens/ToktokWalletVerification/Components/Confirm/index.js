@@ -59,9 +59,10 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
         },
         onCompleted: (response)=> {
             let result = response.postKycRegister
-            removeCacheImages({
-                VerifyUserData
-            })
+            // removeCacheImages({
+            //     VerifyUserData
+            // })
+            RNFS.unlink(RNFS.CachesDirectoryPath)
             if(result.status == 2){
                 navigation.pop(2)
                 navigation.navigate("ToktokWalletVerifyResult")
@@ -139,13 +140,29 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
             type: 'image/jpeg'
         })
         : null
+
+        // RNFS.unlink(RNFS.CachesDirectoryPath).then(()=>{
+        //     console.log("Deleted")
+        // }).catch(err=>console.log(err))
+        // RNFS.unlink(RNFS.TemporaryDirectoryPath)
+
+        // RNFS.readDir(RNFS.CachesDirectoryPath)
+        // .then(arr => RNFS.readDir(arr[0].path)) // The Camera directory
+        //     .then(arr => arr.forEach(item => {
+        //        console.log(item.path)
+        //         // Linking.canOpenURL(contentURI)
+        //         // .then(able => able ? Linking.openURL(contentURI) : console.log('No application available'))
+        //         // .catch(console.log)
+        //     }))
+        // return;
    
-       setCacheImages({
-        rnSelfieFile,
-        rnSelfieFileWithID,
-        rnFrontIDFile,
-        rnBackIDFile,
-       })
+    //    setCacheImages({
+    //     rnSelfieFile,
+    //     rnSelfieFileWithID,
+    //     rnFrontIDFile,
+    //     rnBackIDFile,
+    //    })
+
         // removing / delete cache files
        //removeCacheImages({VerifyUserData})
 
