@@ -1,5 +1,5 @@
 import React from 'react';
-import moment from 'moment';
+import moment from 'moment'
 
 export const Price = ({amount}) => {
   // return (
@@ -44,4 +44,5 @@ export const ArrayCopy = (toCopy) => {
   return JSON.parse(JSON.stringify(toCopy))
 }
 
-export const FormatDateTime = (value) => moment(value, "YYYY-MM-DD h:m:s").format("MMM DD, YYYY hh:mm a") 
+
+export const FormatDateTime = (value) => moment(value, "YYYY-MM-DD h:m:s").format("MMM DD, YYYY hh:mm A") 

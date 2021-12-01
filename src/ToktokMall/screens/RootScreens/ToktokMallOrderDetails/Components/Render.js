@@ -51,7 +51,7 @@ const Summary = ({data}) => {
           <Text style={{fontSize: 13, fontFamily: FONT.BOLD}}>{data?.referenceNum}</Text>
         </View>
         <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'flex-start'}}>
-          <Text style={{color: "#9E9E9E", fontSize: 12}}>{data?.formattedDateOrdered} </Text>
+          <Text style={{color: "#9E9E9E", fontSize: 12}}>{FormatDateTime(data?.formattedDateOrdered)} </Text>
         </View>
       </View>
       <View style={{ height: 2, backgroundColor: '#F7F7FA'}} />
