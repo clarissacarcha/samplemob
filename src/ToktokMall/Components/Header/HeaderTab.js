@@ -7,7 +7,8 @@ import {COLOR, FONT} from '../../../res/variables';
 import {Hairline} from '../../../components/widgets/Hairline';
 
 const Tab = ({index, label, active, onPress}) => {
-  const textStyle = Platform.OS === 'ios' ? {height: 14} : {};
+
+  const textStyle = Platform.OS === 'ios' ? {height: 14} : {height: 16};
   let bgcolor = active == index ? '#FFEBBC' : '#F8F8F8';
   let txtcolor = active == index ? '#F6841F' : '#929191';
 
