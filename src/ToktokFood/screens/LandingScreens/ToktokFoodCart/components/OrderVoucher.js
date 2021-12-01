@@ -10,7 +10,7 @@ import {VerifyContext} from './VerifyContextProvider';
 
 // Fonts/Colors
 // import {COLORS, COLOR} from 'res/constants';
-import {FONT_SIZE, FONT} from 'res/variables';
+import {FONT_SIZE} from 'res/variables';
 
 // Utils
 import {moderateScale} from 'toktokfood/helper/scale';
@@ -41,7 +41,6 @@ const OrderVoucher = ({autoShipping}) => {
     // },
     onCompleted: ({getVoucherCode}) => {
       const {success, message, type} = getVoucherCode;
-      // console.log(getVoucherCode, shippingVoucher);
 
       if (!success) {
         setShowError(!showError);
@@ -70,6 +69,7 @@ const OrderVoucher = ({autoShipping}) => {
       getVoucherCode({
         variables: {
           input: {
+            brandId: items[0].companyId,
             shopid: items[0]?.shopid,
             code: voucher,
             region: items[0]?.shopRegion,

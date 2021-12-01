@@ -8,7 +8,7 @@ import {View, Text, StyleSheet, TouchableWithoutFeedback, Dimensions, Platform} 
 import DropDownPicker from 'react-native-dropdown-picker';
 import FIcon from 'react-native-vector-icons/Feather';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import moment from 'moment';
+import moment from 'moment-timezone';
 
 import {COLOR, DARK, MEDIUM, LIGHT} from '../res/constants';
 
@@ -102,7 +102,7 @@ const createDays = () => {
 };
 
 const createdFilteredTimes = () => {
-  const filteredFromSchedules = FROM_SCHEDULES.filter((sched) => {
+  const filteredFromSchedules = FROM_SCHEDULES.filter(sched => {
     if (sched.label == 'Anytime') {
       return true;
     }
@@ -112,7 +112,7 @@ const createdFilteredTimes = () => {
     return false;
   });
 
-  const filteredToSchedules = TO_SCHEDULES.filter((sched) => {
+  const filteredToSchedules = TO_SCHEDULES.filter(sched => {
     if (sched.label == 'Anytime') {
       return true;
     }
@@ -135,7 +135,7 @@ const PickerRow = ({initialData, setscheduledFrom, setscheduledTo, setScheduledD
   const [fromSchedules, setFromSchedules] = useState(FROM_SCHEDULES);
   const [toSchedules, settoSchedules] = useState(TO_SCHEDULES);
 
-  const onOpenPicker = (state) => {
+  const onOpenPicker = state => {
     // Hides all picker dropdowns and shows selected
     setVisibility({
       ...INITIAL_VISIBILITY,
