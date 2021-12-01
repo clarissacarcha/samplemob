@@ -96,7 +96,7 @@ export const LoginPage = ()=> {
     },[pinCode])
 
     const forgotPIN = ()=> {
-        navigation.navigate("ToktokWalletRecoveryMethods" , {type: "MPIN",event: "ACCOUNT RECOVERY"})
+        navigation.navigate("ToktokWalletRecoveryMethods" , {type: "MPIN",event: "ACCOUNT RECOVERY", category: "FORGOT MPIN" })
     }
 
     return (

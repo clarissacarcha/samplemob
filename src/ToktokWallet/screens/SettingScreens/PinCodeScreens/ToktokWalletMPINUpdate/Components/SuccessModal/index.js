@@ -19,7 +19,7 @@ const Reminder = ({children})=> {
   )
 }
 
-export const SuccessModal = ({modalVisible , setModalVisible , event})=> {
+export const SuccessModal = ({modalVisible , setModalVisible , event, category})=> {
   const navigation = useNavigation()
   const { getMyAccount } = useAccount();
 
@@ -37,12 +37,16 @@ export const SuccessModal = ({modalVisible , setModalVisible , event})=> {
   }
 
   if(event == "ACCOUNT RECOVERY"){
+    let title = category === "FORGOT MPIN" ? "MPIN Changed" : "Account Recovery Successful";
+    let message = category === "FORGOT MPIN" ? "You have successfully changed your MPIN. Click Ok to go back to home."
+      : "You have successfully recovered your account. Please do not forget your new MPIN and do not share this with anyone."
+    
     return (
       <PromptModal 
         visible={modalVisible} 
         onPress={closeModal}
-        message="You have successfully recovered your account. Please do not forget your new MPIN and do not share this with anyone."
-        title="Account Recovery Successful"
+        message={message}
+        title={title}
         event="success"
       />
     )

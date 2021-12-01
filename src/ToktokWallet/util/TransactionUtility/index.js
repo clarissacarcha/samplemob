@@ -43,7 +43,7 @@ export class TransactionUtility {
         if(graphQLErrors[0]?.payload?.code == "INVALIDOTP"){
             const remainingAttempt = graphQLErrors[0].payload.remainingAttempts
             const times = remainingAttempt == "1" ? "time" : "times"
-            const message = `Incorrect OTP. You can try ${numWordArray[remainingAttempt]} (${remainingAttempt}) more ${times} before your account will be temporarily suspended.`
+            const message = `Incorrect OTP. You can try ${numWordArray[remainingAttempt]} (${remainingAttempt}) more ${times} before your account will be temporarily blocked.`
             if(setErrorMessage){
                 setErrorMessage(message)
                 return;

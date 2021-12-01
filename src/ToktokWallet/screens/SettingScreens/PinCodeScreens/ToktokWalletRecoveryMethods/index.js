@@ -35,6 +35,7 @@ export const ToktokWalletRecoveryMethods = ({navigation , route})=> {
     })
     const type = route.params.type
     const event = route?.params?.event ? route.params.event : null
+    const category = route?.params?.category ? route.params.category : null
     const session = useSelector(state=>state.session)
     const emails = session.user.person.emailAddress.split("@")
     const maskedchar = (length)=> {
@@ -59,7 +60,7 @@ export const ToktokWalletRecoveryMethods = ({navigation , route})=> {
         fetchPolicy: "network-only",
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({getForgotAndRecoverOTPCode})=>{
-            return navigation.navigate("ToktokWalletRecoverPin" , {type,event})
+            return navigation.navigate("ToktokWalletRecoverPin" , {type, event, category})
         },
         onError: (error)=>{
             onErrorAlert({alert,error})

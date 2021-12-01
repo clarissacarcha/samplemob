@@ -40,39 +40,40 @@ export const CreateConfirmPin = ({pinCode,setPageIndex,walletinfo,patchPincodeTo
     return (
        <View style={styles.container}>
             <ScrollView style={styles.content}>
-                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 20,alignSelf:"center"}}>Confirm {tokwaAccount.pinCode ? "new ": ""}TPIN</Text>
-                    <View style={{position: 'relative',marginTop: 50,}}>
-                        <NumberBoxes pinCode={confirmpinCode} onNumPress={onNumPress} showPin={showPin}/>
-                        <TextInput
-                            autoFocus={true}
-                            caretHidden
-                            value={confirmpinCode}
-                            ref={inputRef}
-                            style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent'}}
-                            keyboardType="number-pad"
-                            returnKeyType="done"
-                            onChangeText={(value) => {
-                            if (value.length <= 6) {
-                                const num = value.replace(/[^0-9]/g, '')
-                                setConfirmPinCode(num);
-                            }
-                            }}
-                            onSubmitEditing={onSubmit}
-                        />
-
-                        {
-                            message != "" &&  <Text style={{fontFamily: FONT.REGULAR,fontSize: 12,color:"red",alignSelf:"center"}}>{message}</Text>   
+                { !tokwaAccount.pinCode && (
+                    <Text style={{ textAlign: "center", fontSize: FONT_SIZE.S, marginVertical: 40, marginHorizontal: 20 }}>
+                        You will use your TPIN in every transaction you make with Toktokwallet. Please keep it to yourself and do not share with anyone.
+                    </Text>
+                )}
+                <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 20,alignSelf:"center"}}>Confirm {tokwaAccount.pinCode ? "new ": ""}TPIN</Text>
+                <View style={{position: 'relative',marginTop: 50,}}>
+                    <NumberBoxes pinCode={confirmpinCode} onNumPress={onNumPress} showPin={showPin}/>
+                    <TextInput
+                        autoFocus={true}
+                        caretHidden
+                        value={confirmpinCode}
+                        ref={inputRef}
+                        style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent'}}
+                        keyboardType="number-pad"
+                        returnKeyType="done"
+                        onChangeText={(value) => {
+                        if (value.length <= 6) {
+                            const num = value.replace(/[^0-9]/g, '')
+                            setConfirmPinCode(num);
                         }
-
-                            <TouchableOpacity
-                                    style={{marginTop: 18,paddingVertical: 10, alignItems: "center"}}
-                                    onPress={()=>setShowPin(!showPin)}
-                            >
-                                    <Text style={{color: COLOR.ORANGE,fontSize:FONT_SIZE.M,fontFamily: FONT.BOLD}}>{showPin ? "HIDE TPIN" : "SHOW TPIN"}</Text>
-                            </TouchableOpacity>
-
-                      
-                    </View>
+                        }}
+                        onSubmitEditing={onSubmit}
+                    />
+                    {
+                        message != "" &&  <Text style={{fontFamily: FONT.REGULAR,fontSize: 12,color:"red",alignSelf:"center"}}>{message}</Text>   
+                    }
+                    <TouchableOpacity
+                        style={{marginTop: 18,paddingVertical: 10, alignItems: "center"}}
+                        onPress={()=>setShowPin(!showPin)}
+                    >
+                        <Text style={{color: COLOR.ORANGE,fontSize:FONT_SIZE.M,fontFamily: FONT.BOLD}}>{showPin ? "HIDE TPIN" : "SHOW TPIN"}</Text>
+                    </TouchableOpacity>
+                </View>
             </ScrollView>
            <BuildingBottom/>
        </View>

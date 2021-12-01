@@ -61,6 +61,7 @@ export const ToktokWalletRecoverPin = ({navigation , route})=> {
     const session = useSelector(state=>state.session)
     const type = route.params.type
     const event = route?.params?.event ? route.params.event : null
+    const category = route?.params?.category ? route.params.category : null
     const tokwaAccount = useSelector(state=>state.toktokWallet)
     const [pinCode,setPinCode] = useState("")
     const inputRef = useRef();
@@ -89,7 +90,7 @@ export const ToktokWalletRecoverPin = ({navigation , route})=> {
                 return navigation.replace("ToktokWalletUpdatePin")
             }
             // type is MPIN
-            return navigation.replace("ToktokWalletMPINUpdate" , {event})
+            return navigation.replace("ToktokWalletMPINUpdate" , {event, category})
         },
         onError: (error)=>{
             // onErrorAlert({alert, error})
@@ -169,7 +170,7 @@ export const ToktokWalletRecoverPin = ({navigation , route})=> {
                         />
 
                         {
-                            errorMessage != "" && <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M,color: COLOR.RED,marginHorizontal: 16}}>{errorMessage}</Text>
+                            errorMessage != "" && <Text style={styles.errorMessage}>{errorMessage}</Text>
                         }
 
                         <TouchableOpacity
@@ -226,4 +227,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    errorMessage: {
+        fontFamily: FONT.REGULAR,
+        fontSize: FONT_SIZE.M,
+        color: COLOR.RED,
+        marginHorizontal: 16,
+        textAlign: "center"
+    }
 })
