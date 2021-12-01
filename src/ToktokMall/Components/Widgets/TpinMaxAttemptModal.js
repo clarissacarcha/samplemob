@@ -57,8 +57,7 @@ export const TpinMaxAttemptModal = ({navigation, isVisible, setIsVisible, type, 
               <View style={{paddingVertical: 10}} />
               <Text style={{fontSize: 28, color: "#FFbF00", fontFamily: FONT.REGULAR, textAlign: 'center'}}>TPIN Max Attempts Reached</Text>
               <View style={{paddingVertical: 3}} />
-              <Text style={styles.label}>You have reached the 
-              maximum number of attempts to enter the correct attempts to enter correct TPIN.
+              <Text style={styles.label}>You have reached the maximum number of attempts to enter the correct TPIN.
               </Text>
               <Text style={styles.label}>Please try again after {text()}</Text>
               <View style={{paddingVertical: 10}} />
