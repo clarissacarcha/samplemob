@@ -28,8 +28,6 @@ import { Header, ReceiptDetails } from "./components";
 import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
 
 const MainComponent = ({ navigation, route, viewRef }) => {
-
-
   return (
     <>
       <Header />

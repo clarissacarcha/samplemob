@@ -121,7 +121,6 @@ export const ToktokBiller = ({navigation, route})=> {
 
   return (
     <>
-    <Separator/>
     <View style={styles.container}>
       <View style={styles.searchContainer}>
         <SearchInput search={search} setSearch={setSearch} />

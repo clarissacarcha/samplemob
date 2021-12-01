@@ -72,7 +72,6 @@ export const ToktokBillsPaymentSummary = ({ navigation, route }) => {
           />
         }
       >
-        <Separator/>
         <PaymentDetails paymentData={paymentData} />
         <PaymentMethod paymentData={paymentData} />
         <ConfirmButton paymentData={paymentData} />

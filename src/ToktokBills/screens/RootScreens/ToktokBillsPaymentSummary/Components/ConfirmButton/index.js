@@ -14,6 +14,7 @@ import { POST_TOKTOKWALLET_REQUEST_MONEY } from 'toktokbills/graphql/model';
 import { usePrompt } from 'src/hooks'
 import { onErrorAlert } from 'src/util/ErrorUtility'
 import { useAlert, useThrottle } from 'src/hooks'
+import { useSelector } from 'react-redux';
 
 //COMPONENTS
 import { OrangeButton, SplashLoading } from "toktokbills/components";
@@ -24,14 +25,15 @@ import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
 
 export const ConfirmButton = ({ paymentData }) => {
 
+  const { user } = useSelector((state) => state.session);
   const { tokwaAccount } = useAccount();
   const alert = useAlert();
   const prompt = usePrompt();
   const navigation = useNavigation();
   const { firstField, secondField, amount, email, billType, convenienceFee, billItemSettings } = paymentData;
-  const totalAmount = parseFloat(amount) + parseFloat(convenienceFee);
-  const tokwaBalance = tokwaAccount?.wallet?.balance;
   const { termsAndConditions, paymentPolicy1, paymentPolicy2 } = billItemSettings.itemDocumentDetails;
+  const totalAmount = parseFloat(amount) + parseFloat(convenienceFee);
+  const tokwaBalance = user?.toktokWalletAccountId ? tokwaAccount?.wallet?.balance : "0.00";
  
   const [postToktokWalletRequestMoney, {loading, error}] = useMutation(POST_TOKTOKWALLET_REQUEST_MONEY, {
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,

@@ -67,7 +67,6 @@ export const ToktokBillsHome = ({navigation,route})=> {
   }
   return (
     <View style={styles.container}>
-      <Separator/>
       <FlatList
         style={{flex: 1}}
         contentContainerStyle={styles.flatlistContainer}

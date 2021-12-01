@@ -51,7 +51,6 @@ const MainComponent = ({navigation, route})=> {
   }
   return (
     <>
-      <Separator/>
       <KeyboardAvoidingView
         style={styles.container}
         behavior={Platform.OS === "ios" ? "padding" : "position"}

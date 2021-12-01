@@ -117,7 +117,6 @@ export const ToktokBillsEnterPinCode = ({navigation, route})=> {
   return (
     <>
     <AlertOverlay visible={loading}/>
-    <Separator/>
     <KeyboardAvoidingView 
       style={styles.container}
       keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80} 

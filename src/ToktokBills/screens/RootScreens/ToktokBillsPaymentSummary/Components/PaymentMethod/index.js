@@ -23,7 +23,8 @@ export const PaymentMethod = ({ paymentData }) => {
   const { tokwaAccount, getMyAccount } = useAccount();
   const { amount, convenienceFee } = paymentData;
   const totalAmount = parseInt(amount) + convenienceFee;
- 
+  const tokwaBalance = user?.toktokWalletAccountId ? tokwaAccount?.wallet?.balance : "0.00";
+
 	const onCashIn = ({balance}) => {
     console.log(balance);
     getMyAccount();
@@ -41,7 +42,7 @@ export const PaymentMethod = ({ paymentData }) => {
   }
 
   const displayInsufficientBalance = () => {
-    if(parseFloat(totalAmount) > parseFloat(tokwaAccount?.wallet?.balance)) {
+    if(parseFloat(totalAmount) > parseFloat(tokwaBalance)) {
       return (
         <View style={styles.errorContainer}>
           <TouchableOpacity onPress={onPressTopUp}>
@@ -82,7 +83,7 @@ export const PaymentMethod = ({ paymentData }) => {
                   <Text style={styles.walletText}>wallet</Text>
                 </View>
                 <Text style={styles.balance}>
-                  Balance: PHP {numberFormat(tokwaAccount?.wallet?.balance)}
+                  Balance: PHP {numberFormat(tokwaBalance)}
                 </Text>
               </View>
             </View>
@@ -184,6 +185,6 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.L,
     textDecorationLine: "underline",
     marginTop: moderateScale(10),
-    marginBottom: moderateScale(50)
+    marginBottom: moderateScale(30)
   }
 })
