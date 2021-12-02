@@ -14,6 +14,7 @@ import {connect} from 'react-redux'
 import { YellowButton } from 'src/revamp'
 import { DisabledButton } from 'toktokwallet/components'
 import CheckBox from 'react-native-check-box'
+import AsyncStorage from '@react-native-community/async-storage';
 import RNFS from 'react-native-fs'
 import CONSTANTS from 'common/res/constants'
 
@@ -167,7 +168,8 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
        //removeCacheImages({VerifyUserData})
 
         const input = {
-            userId: session.user.id,
+            // userId: session.user.id,
+            userId: await AsyncStorage.getItem('accessToken'),
             mobileNumber: VerifyUserData.contactInfo.mobile_number,
             emailAddress: VerifyUserData.contactInfo.email,
             firstName: VerifyUserData.person.firstName,
