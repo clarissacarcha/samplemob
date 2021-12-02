@@ -6,7 +6,6 @@ import { PATCH_PIN_CODE } from 'toktokwallet/graphql'
 import {useMutation} from '@apollo/react-hooks'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import { Separator , LeavePromptModal , CheckIdleState } from 'toktokwallet/components';
-import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS
 import {
@@ -15,6 +14,7 @@ import {
     SuccessModal,
 } from "./Components"
 
+import CONSTANTS from 'common/res/constants'
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
 
 const HeaderBack = ({pageIndex,setPageIndex,navigation})=> {

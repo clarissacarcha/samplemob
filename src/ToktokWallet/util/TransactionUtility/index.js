@@ -29,7 +29,7 @@ export class TransactionUtility {
         if(graphQLErrors[0]?.payload?.code == "INVALIDTPIN"){
             const remainingAttempt = graphQLErrors[0].payload.remainingAttempts
             const times = remainingAttempt == "1" ? "time" : "times"
-            const message = `Incorrect TPIN. You can try ${numWordArray[remainingAttempt]} (${remainingAttempt}) more ${times} before your account will be temporarily suspended.`
+            const message = `Incorrect TPIN. You can try ${numWordArray[remainingAttempt]} (${remainingAttempt}) more ${times} before your account will be temporarily blocked.`
             if(setErrorMessage){
                 setErrorMessage(message)
                 return;

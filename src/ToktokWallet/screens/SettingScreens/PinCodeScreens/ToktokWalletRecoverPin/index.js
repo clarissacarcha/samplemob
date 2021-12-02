@@ -7,7 +7,7 @@ import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
 import { GET_FORGOT_AND_RECOVER_OTP_CODE , VERIFY_FORGOT_AND_RECOVER_OTP_CODE} from 'toktokwallet/graphql'
 import { onError, onErrorAlert } from 'src/util/ErrorUtility'
 import {useAlert} from 'src/hooks'
-import {DisabledButton, Separator, BuildingBottom , CheckIdleState} from 'toktokwallet/components'
+import {DisabledButton, Separator, BuildingBottom , CheckIdleState, HeaderCancel} from 'toktokwallet/components'
 import { HeaderBack, YellowButton } from 'src/revamp'
 import { TransactionUtility } from 'toktokwallet/util'
 import BackgroundTimer from 'react-native-background-timer';
@@ -56,6 +56,7 @@ export const ToktokWalletRecoverPin = ({navigation , route})=> {
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
         headerTitle: ()=> <HeaderTitle label={['','']}/>,
+        headerRight: ()=> <HeaderCancel navigation={navigation} screenPopNo={3} />
     })
 
     const session = useSelector(state=>state.session)
@@ -68,7 +69,6 @@ export const ToktokWalletRecoverPin = ({navigation , route})=> {
     const alert = useAlert();
     const [otpTimer,setOtpTimer] = useState(120)
     const [errorMessage,setErrorMessage] = useState("")
-
 
     const [getForgotAndRecoverOTPCode] = useLazyQuery(GET_FORGOT_AND_RECOVER_OTP_CODE , {
         fetchPolicy: "network-only",
@@ -187,8 +187,8 @@ export const ToktokWalletRecoverPin = ({navigation , route})=> {
                  <View style={{height: SIZE.FORM_HEIGHT + 20,justifyContent:"flex-end",paddingVertical:16}}> 
                     {
                         pinCode.length < 6
-                        ? <DisabledButton label="Proceed"/>
-                        : <YellowButton onPress={ConfirmVerificationCode} label="Proceed"/>
+                        ? <DisabledButton label="Confirm"/>
+                        : <YellowButton onPress={ConfirmVerificationCode} label="Confirm"/>
                     }   
             </View>
             <BuildingBottom/>
