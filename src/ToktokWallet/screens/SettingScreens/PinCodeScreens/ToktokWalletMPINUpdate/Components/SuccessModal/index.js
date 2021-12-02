@@ -35,11 +35,10 @@ export const SuccessModal = ({modalVisible , setModalVisible , event, category})
     navigation.navigate("ToktokWalletHomePage")
     navigation.replace("ToktokWalletHomePage")
   }
-
-  if(event == "ACCOUNT RECOVERY"){
-    let title = category === "FORGOT MPIN" ? "MPIN Changed" : "Account Recovery Successful";
-    let message = category === "FORGOT MPIN" ? "You have successfully changed your MPIN. Click Ok to go back to home."
-      : "You have successfully recovered your account. Please do not forget your new MPIN and do not share this with anyone."
+  
+  if(event == "ACCOUNT RECOVERY" && !category){
+    let title = "Account Recovery Successful";
+    let message = "You have successfully recovered your account. Please do not forget your new MPIN and do not share this with anyone."
     
     return (
       <PromptModal 

@@ -67,27 +67,28 @@ const UpdatePIN = ()=> {
 export const SuccessfulModal = ({modalVisible,tokwaAccount,amount,onCashIn,setSuccessModalVisible,setUpTpinCallBack})=> {
     const navigation = useNavigation()
     const { getMyAccount , tokwaAccount: tokwaAccountLatest , getMyAccountLoading } = useAccount()
-
+    console.log(tokwaAccountLatest.pinCode && !onCashIn && !setUpTpinCallBack)
     useEffect(()=>{
-        if(tokwaAccountLatest.pinCode && onCashIn){
-          if(navigation.canGoBack()) navigation.pop();
-          navigation.push("ToktokWalletPaymentOptions", {
-              amount: amount ? amount : 0,
-              onCashIn: onCashIn
-          })
-          setSuccessModalVisible(false);
-        }
-        if(tokwaAccountLatest.pinCode && setUpTpinCallBack){
-            setUpTpinCallBack()
-            if(navigation.canGoBack()) navigation.pop();
-            setSuccessModalVisible(false);
-            return;
-        }
-
-        if(tokwaAccountLatest.pinCode && !onCashIn && !setUpTpinCallBack){
-            navigation.navigate("ToktokWalletHomePage")
-            setSuccessModalVisible(false);
-            return;
+        if(modalVisible){
+            if(tokwaAccountLatest.pinCode && onCashIn){
+                if(navigation.canGoBack()) navigation.pop();
+                navigation.push("ToktokWalletPaymentOptions", {
+                    amount: amount ? amount : 0,
+                    onCashIn: onCashIn
+                })
+                setSuccessModalVisible(false);
+            }
+            if(tokwaAccountLatest.pinCode && setUpTpinCallBack){
+                setUpTpinCallBack()
+                if(navigation.canGoBack()) navigation.pop();
+                setSuccessModalVisible(false);
+                return;
+            }
+            if(tokwaAccountLatest.pinCode && !onCashIn && !setUpTpinCallBack){
+                navigation.navigate("ToktokWalletHomePage")
+                setSuccessModalVisible(false);
+                return;
+            }
         }
       },[tokwaAccountLatest,onCashIn,setUpTpinCallBack])
   

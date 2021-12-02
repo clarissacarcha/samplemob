@@ -45,7 +45,7 @@ export const CreateConfirmPin = ({pinCode,setPageIndex,walletinfo,patchPincodeTo
                         You will use your TPIN in every transaction you make with Toktokwallet. Please keep it to yourself and do not share with anyone.
                     </Text>
                 )}
-                <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 20,alignSelf:"center"}}>Confirm {tokwaAccount.pinCode ? "new ": ""}TPIN</Text>
+                <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 20,alignSelf:"center"}}>Confirm {tokwaAccount.pinCode ? "New ": ""}TPIN</Text>
                 <View style={{position: 'relative',marginTop: 50,}}>
                     <NumberBoxes pinCode={confirmpinCode} onNumPress={onNumPress} showPin={showPin}/>
                     <TextInput

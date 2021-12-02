@@ -106,7 +106,7 @@ share this with anyone</Text>
                             onSubmitEditing={pinCode.length == 4 ? onPress: null}
                         />
                         {
-                            errorMessage != "" &&  <Text style={{paddingHorizontal: 16,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:COLOR.RED,alignSelf:"center"}}>{errorMessage}</Text>   
+                            errorMessage != "" &&  <Text style={{paddingHorizontal: 16,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:COLOR.RED,textAlign:"center"}}>{errorMessage}</Text>   
                         }
 
                         <TouchableOpacity
