@@ -54,11 +54,15 @@ export const ToktokWalletRecoveryMethods = ({navigation , route})=> {
     const alert = useAlert()
 
     useEffect(()=>{
+        checkTokwaAccount()
+    },[])
+
+    const checkTokwaAccount = async ()=>{
         if(!tokwaAccount.mobileNumber){
             await getMyAccount()
             return
-        } 
-    },[])
+        }
+    }
 
     const recoverWallet = ()=> {
         getForgotAndRecoverOTPCode()
