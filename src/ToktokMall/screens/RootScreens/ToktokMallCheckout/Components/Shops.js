@@ -110,8 +110,6 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
 
   const renderVoucherForm = (index, item, subTotal) => {
 
-    
-
     const validate = async () => {
       
       let payload = {
@@ -127,6 +125,8 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
       setloading(true)
       const req = await ApiCall("validate_voucher", payload, false)
       if(req.responseData && req.responseData.success){
+
+        console.log(req.responseData.voucher)
 
         if(req.responseData.type == "shipping"){
           

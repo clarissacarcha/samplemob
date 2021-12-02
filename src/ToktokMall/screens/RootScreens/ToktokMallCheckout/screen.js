@@ -4,14 +4,12 @@ import { COLOR, FONT } from '../../../../res/variables';
 import {HeaderBack, HeaderTitle, HeaderRight} from '../../../Components';
 import { AddressForm, Button, Payment, Shops, Totals, Vouchers, CheckoutModal, MessageModal } from './Components';
 import {connect} from 'react-redux'
-import coppermask from '../../../assets/images/coppermask.png'
-import suit from '../../../assets/images/coppermask.png'
 import { useSelector } from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native'
 
 import { useLazyQuery, useQuery, useMutation } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql';
-import { GET_CHECKOUT_DATA, POST_CHECKOUT } from '../../../../graphql/toktokmall/model';
+import { GET_CHECKOUT_DATA, POST_CHECKOUT, GET_HASH_AMOUNT } from '../../../../graphql/toktokmall/model';
 
 import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
 import { GET_WALLET, GET_MY_ACCOUNT } from 'toktokwallet/graphql'
@@ -78,7 +76,12 @@ const Component = ({route, navigation, createMyCartSession}) => {
         let data = response.getCheckoutData
         setAddressData(data.address);
         await setPaymentList(data.paymentMethods)
-        await getShippingRates(data.shippingRatePayload, data.cartrawdata)
+        let shippingrates = await getShippingRates(data.shippingRatePayload, data.cartrawdata)
+        if(shippingrates.length > 0){
+          data.autoShippingPayload.cartitems = shippingrates
+          await getAutoShipping(data.autoShippingPayload)
+        }
+        
       }
     },
     onError: (err) => {
@@ -88,19 +91,80 @@ const Component = ({route, navigation, createMyCartSession}) => {
     }
   })
 
+  const [getShippingHashDeliveryAmount, {error2, loading2}] = useLazyQuery(GET_HASH_AMOUNT, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',    
+    onCompleted: (response) => {
+      if(response.getHashDeliveryAmount){
+        let items = ArrayCopy(CheckoutContextData.shippingVouchers)
+        items[response.getHashDeliveryAmount.index].hash_delivery_amount = response.getHashDeliveryAmount.hash
+        CheckoutContextData.setShippingVouchers(items)
+      }
+    },
+    onError: (err) => {
+      console.log(err)
+    }
+  })
+
   const getShippingRates = async (payload, raw) => {
     // console.log(JSON.stringify(payload))
     // console.log(JSON.stringify(raw))
     // console.log(JSON.stringify(payload.cart)) 
-    const res = await ShippingApiCall("get_shipping_rate", payload, true)
+    let result = []
+    const res = await ShippingApiCall("get_shipping_rate", payload, false)
     if(res.responseData && res.responseData.success == 1){
+      result = res.responseData.newCart
       CheckoutContextData.setShippingFeeRates(res.responseData.newCart)
     }else if(res.responseError && res.responseError.success == 0){
       CheckoutContextData.setUnserviceableShipping(res.responseError.removedCart)      
     }else{
       CheckoutContextData.setUnserviceableShipping([raw])
     }
+    return result
+    // setInitialLoading(false)
+  }
+
+  const getAutoShipping = async (payload) => {
+
+    setInitialLoading(true)
+    console.log("Auto Shipping Payload", JSON.stringify(payload))
+    const res = await ApiCall("get_autoshipping_discount", payload, true)
+
+    if(res.responseData && res.responseData.success){
+
+      let items = ArrayCopy(CheckoutContextData.shippingVouchers)
+
+      if(res.responseData.type == "shipping"){
+        res.responseData.voucher.map((item, indexx) => {
+          if(item.type == "shipping"){
+            item.vouchers.map(async (voucher, index) => {
+
+              if(voucher.amount == 0){
+
+                items[index] = voucher
+                items[index].discountedAmount = 0
+                items[index].discount = 0
+                CheckoutContextData.setShippingVouchers(items)
+                getShippingHashDeliveryAmount({variables: {
+                  input: {
+                    value: 0,
+                    index: index
+                  }
+                }})
+
+              }
+              
+            })         
+          }
+        })
+      }
+
+    }else if(res.responseError){
+      // Toast.show(res.responseError.message)
+    }
+
     setInitialLoading(false)
+
   }
 
   //TOKTOK WALLET
@@ -295,7 +359,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
     for (var x = 0; x < route.params.data.length; x++) {
       for (var y = 0; y < route.params.data[x].data[0].length; y++) {
         let item = route.params.data[x].data[0][y];
-        console.log("Hahay", route.params.data[x].data[0][y], y)
+        // console.log("Hahay", route.params.data[x].data[0][y], y)
         a += parseFloat(item.amount) * item.qty;
       }
       // let shipping = 0
@@ -385,9 +449,17 @@ const Component = ({route, navigation, createMyCartSession}) => {
     })();
   }, [])
 
-  useEffect(() => {
-    // console.log("Shipping Rates Value:", shippingRates.length)
-  }, [shippingRates])
+  // useEffect(() => { 
+  //   //AUTO SHIPPING
+  //   (async () => {
+  //     if(CheckoutContextData.shippingFeeRates.length > 0){
+  //       if(CheckoutContextData.autoShippingPayload){
+  //         console.log("Auto shipping initialized!")
+  //         getAutoShipping(CheckoutContextData.autoShippingPayload)
+  //       }
+  //     }
+  //   })();
+  // }, [CheckoutContextData?.shippingFeeRates, CheckoutContextData.autoShippingPayload])
 
   useEffect(() => {
     calculateGrandTotal()

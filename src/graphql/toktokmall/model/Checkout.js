@@ -41,6 +41,7 @@ export const GET_CHECKOUT_DATA = gql`
 			}
 			shippingRatePayload
 			cartrawdata
+			autoShippingPayload
     }
   }
 `
