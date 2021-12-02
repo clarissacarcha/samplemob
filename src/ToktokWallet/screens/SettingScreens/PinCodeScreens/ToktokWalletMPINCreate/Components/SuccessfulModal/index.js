@@ -34,7 +34,7 @@ const NewPIN = ()=> {
             }}>
                 <Image style={{height: 89,width: 89}} source={require('toktokwallet/assets/icons/walletVerify.png')}/>
             </View>
-            <Text style={{fontSize: FONT_SIZE.XL,fontFamily: FONT.BOLD}}>Setup MPIN Successful!</Text>
+            <Text style={{fontSize: FONT_SIZE.XL,fontFamily: FONT.BOLD}}>Set Up MPIN Successful!</Text>
             <Text style={{color: "#212529",marginTop:5,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M,textAlign:"center"}}>You have secured your toktokwallet. Make sure to remember your MPIN and do not share it with anyone.</Text>
         </View>
     )
@@ -66,12 +66,9 @@ export const SuccessfulModal = ({modalVisible,tokwaAccount})=> {
     const navigation = useNavigation()
 
     const closeModal = ()=> {
-        navigation.pop(2)
-        navigation.navigate("ToktokWalletHomePage")
-        // navigation.pop()
-        // // navigation.navigate("ToktokWalletHomePage")
-        // navigation.push("ToktokWalletHomePage")
-        // console.log("gg")
+        navigation.pop(3)
+        navigation.navigate("ToktokWalletLoginPage")
+        navigation.push("ToktokWalletHomePage")
     }
 
     return (

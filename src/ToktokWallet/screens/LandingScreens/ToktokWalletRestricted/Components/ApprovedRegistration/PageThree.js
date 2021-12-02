@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     cashInImage: {
         height: height / 2,
         width: width * 0.6,
-        marginVertical: 5,
+        marginTop: -10,
     },
 
     message: {
