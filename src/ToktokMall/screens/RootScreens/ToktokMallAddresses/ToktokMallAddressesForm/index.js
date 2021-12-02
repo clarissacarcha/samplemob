@@ -141,7 +141,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
     console.log("TEST")
     if (newAddressForm.receiverContact.length != 11 || newAddressForm.receiverContact == '') {
       return Toast.show('Invalid contact number.');
-    } if (newAddressForm.postalCode?.length > 0 && newAddressForm.postalCode?.length < 4) {
+    } if (newAddressForm.postalCode?.length > 0 && newAddressForm.postalCode?.length <= 4) {
       return Toast.show('Invalid postal code.');
     } 
     else {
