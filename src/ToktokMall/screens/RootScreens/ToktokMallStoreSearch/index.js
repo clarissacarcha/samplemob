@@ -7,7 +7,7 @@ import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql';
 import { GET_SHOP_DETAILS, SEARCH_SHOP_PRODUCT, GET_SHOP_SEARCH_SUGGESTIONS } from '../../../../graphql/toktokmall/model';
 import { useLazyQuery } from '@apollo/react-hooks';
 import Spinner from 'react-native-spinkit';
-import { FONT } from '../../../../res/variables';
+import { FONT, COLOR } from '../../../../res/variables';
 import {emptysearch, placeholder} from "../../../assets";
 import { connect } from 'react-redux';
 
