@@ -71,6 +71,7 @@ const ToktokFoodTermsAndConditions = ({navigation}) => {
             <SectionContent contents={TermsAndConditions.DISPUTES} />
             <ListContent contents={TermsAndConditions.INDEMNIFICATION} />
             <SectionContent contents={TermsAndConditions.LIMITATION_OF_LIABILITY} />
+            <SectionContent contents={TermsAndConditions.MERCHANT_LIABILITY} />
             <SectionContent contents={TermsAndConditions.SEVERABILITY} />
             <SectionContent contents={TermsAndConditions.GOVERNING_LAW} />
           </View>

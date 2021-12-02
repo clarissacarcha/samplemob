@@ -10,12 +10,12 @@ import { StickyView } from './components';
 
 const ToktokFoodHome = () => {
   useUserLocation(); // user location hook
-  const [viewHeight, setViewHeight] = useState(100);
+  // const [viewHeight, setViewHeight] = useState(100);
 
   const getWindowDimension = (event) => {
     StatusBar.setHidden(false, 'slide');
     let height = event.nativeEvent.layout.height;
-    setViewHeight(height);
+    // setViewHeight(height);
   };
 
   return (

@@ -28,7 +28,7 @@ const tabs = [
 
 const StickyView = () => {
   const [activeTab, setActiveTab] = useState(tabs[0]);
-  const {location} = useSelector((state) => state.toktokFood);
+  const {location} = useSelector(state => state.toktokFood);
 
   const RenderNavBar = () => {
     return (
@@ -144,9 +144,9 @@ const StickyView = () => {
   //   navigation.navigate('ToktokFoodCategories');
   // };
 
-  const handleLoadMore = (nativeEvent) => {
+  const handleLoadMore = nativeEvent => {
     if (!loadMore && pendingProcess) {
-      setPage((prev) => prev + 1);
+      setPage(prev => prev + 1);
       setLoadMore(isCloseToBottom(nativeEvent));
     }
   };
@@ -170,6 +170,18 @@ const StickyView = () => {
     }).then(() => {
       setRefreshing(false);
     });
+  };
+
+  const VirtualizedScroll = ({children}) => {
+    return (
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        scrollEnabled={false}
+        contentContainerStyle={{width: '100%'}}>
+        {children}
+      </ScrollView>
+    );
   };
 
   return (
