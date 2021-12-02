@@ -86,7 +86,7 @@ export const ToktokWalletRecoverPin = ({navigation , route})=> {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({verifyForgotAndRecoverOTP})=>{
             if(type == "TPIN"){
-                return navigation.replace("ToktokWalletUpdatePin")
+                return navigation.replace("ToktokWalletUpdatePin", {event})
             }
             // type is MPIN
             return navigation.replace("ToktokWalletMPINUpdate" , {event})

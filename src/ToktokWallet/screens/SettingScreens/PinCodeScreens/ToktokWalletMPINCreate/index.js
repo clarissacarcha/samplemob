@@ -120,7 +120,13 @@ export const ToktokWalletMPINCreate = ({navigation,route})=> {
             <LeavePromptModal
                 visible={LeaveModalvisible}
                 setVisible={setLeaveModalVisible}
-                onConfirm={()=>navigation.goBack()}
+                onConfirm={()=>{
+                  if(!tokwaAccount.mpinCode){
+                      return navigation.pop(3)
+                  }
+
+                  navigation.goBack()
+                }}
             />
             <Separator/>
             <KeyboardAvoidingView
