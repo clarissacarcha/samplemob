@@ -131,8 +131,8 @@ export const ProceedButton = ({
             <View style={styles.container}>
                     {
                         swipeEnabled
-                        ? <YellowButton label="Proceed" onPress={reviewAndConfirm}/>
-                        : <DisabledButton label="Proceed"/>
+                        ? <YellowButton label="Confirm" onPress={reviewAndConfirm}/>
+                        : <DisabledButton label="Confirm"/>
                     }
             </View>
         </>

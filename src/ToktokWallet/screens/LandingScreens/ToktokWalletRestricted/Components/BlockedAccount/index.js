@@ -3,21 +3,18 @@ import {View,Text,StyleSheet,TouchableOpacity} from 'react-native'
 import {useNavigation,useFocusEffect} from '@react-navigation/native'
 import { HeaderImageBackground , HeaderTitle , Separator, BuildingBottom } from 'toktokwallet/components'
 import { YellowButton , VectorIcon , ICON_SET } from 'src/revamp'
-import CONSTANTS from 'common/res/constants'
+import { moderateScale } from 'toktokwallet/helper'
 
 //SELF IMPORTS
 import AccountRecovery from "./AccountRecovery"
 
-const  { COLOR , FONT_SIZE , FONT_FAMILY: FONT } = CONSTANTS
+import CONSTANTS from 'common/res/constants';
+const  { COLOR , FONT_SIZE , FONT_FAMILY: FONT } = CONSTANTS;
 
 export const BlockedAccount = ({data,showPrompt})=> {
     const navigation = useNavigation()
     const { account } = data
     const [visible,setVisible] = useState(false)
-
-    navigation.setOptions({
-        headerShown:false,
-    })
 
     const HelpCenter = ()=> {
         setVisible(true)
@@ -35,23 +32,21 @@ export const BlockedAccount = ({data,showPrompt})=> {
             account={account}
         />
         <View style={styles.container}>
-             <View style={styles.headings}>
+            <View style={styles.headings}>
                 <HeaderImageBackground>
-                        <HeaderTitle isLogo={true} />
+                    <HeaderTitle isLogo={true} />
                 </HeaderImageBackground>
             </View>
             <Separator/>
             <View style={styles.content}>
-            <View style={{alignItems:"center",marginTop: 10}}>
+                <View style={{marginTop: 10, paddingHorizontal: moderateScale(30)}}>
                     <Text style={[styles.verifyWalletText]}>Your account is deactivated</Text>
                     <Text style={styles.clickVerifyText}>Please contact our Customer Service Representative for support</Text>
                 </View>
-
                 <TouchableOpacity onPress={HelpCenter} style={styles.helpCenter}>
                     <Text style={styles.labelHC}>Help Center</Text>
                  </TouchableOpacity>
             </View>
-
             <View style={{height: 70,padding: 16,justifyContent:'flex-end'}}>
                 <YellowButton label="Ok" onPress={()=> {
                     navigation.pop()
@@ -74,10 +69,8 @@ const styles = StyleSheet.create({
     },  
     content: {
         flex: 1,
-        padding: 10,
-        paddingTop: 30,
-        alignItems: "center",
-        justifyContent: "center"
+        paddingVertical: moderateScale(20),
+        paddingTop: moderateScale(100),
     },
     verifyWalletText: {
         fontFamily: FONT.BOLD,
@@ -85,7 +78,7 @@ const styles = StyleSheet.create({
         textAlign:'center'
     },
     clickVerifyText: {
-        marginTop: 5,
+        marginTop: 10,
         fontFamily: FONT.REGULAR,
         fontSize: FONT_SIZE.M,
         textAlign:'center'

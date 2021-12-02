@@ -97,7 +97,6 @@ export const ToktokWalletMPINUpdate =  ({navigation , route})=> {
 
 
     const DisplayComponent = () => {
-        console.log(pageIndex, "asdasd")
         switch(pageIndex){
             case 0:
                 return <New pinCode={pinCode} setPinCode={setPinCode} pageIndex={pageIndex} setPageIndex={setPageIndex}/>

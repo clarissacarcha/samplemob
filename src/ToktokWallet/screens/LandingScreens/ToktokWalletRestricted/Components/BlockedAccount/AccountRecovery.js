@@ -69,34 +69,31 @@ const AccountRecovery = ({visible,setVisible,account})=> {
       transparent={true}
       style={styles.modal}
     >
-      <TouchableOpacity style={styles.container} activeOpacity={1} onPress={closeModal}>
-        <TouchableWithoutFeedback>
-          <View style={styles.content}>
-            <Text style={styles.headerText}>
-              Recover your toktokwallet account via:
-            </Text>
-            <TouchableOpacity onPress={EmailCustomerService} style={styles.option}>
-              <Image 
-                resizeMode="contain"
-                source={EmailIcon}
-                style={styles.image}
-              />
-              <Text style={styles.label}>Email Customer Service</Text>
-            </TouchableOpacity>
-            {children}
-            <Text style={styles.reminder}>
-              You can have your account back Katoktok! Our Customer
-              Service Representative will assess your request
-              via Email. Please wait for the activation of your account
-              within 24hrs.
-            </Text>
-            {/* <View style={{marginTop:16,width:"100%"}}>
-                <YellowButton label="Close" onPress={()=>setVisible(false)}/>
-            </View>
-              */}
+      <View style={styles.container}>
+        <View style={styles.content}>
+          <Text style={styles.headerText}>
+            Recover your toktokwallet account via:
+          </Text>
+          <TouchableOpacity onPress={EmailCustomerService} style={styles.option}>
+            <Image 
+              resizeMode="contain"
+              source={EmailIcon}
+              style={styles.image}
+            />
+            <Text style={styles.label}>Email Customer Service</Text>
+          </TouchableOpacity>
+          {children}
+          <Text style={styles.reminder}>
+            You can have your account back Katoktok! Our Customer
+            Service Representative will assess your request
+            via Email. Please wait for the activation of your account
+            within 24hrs.
+          </Text>
+          <View style={{marginTop:16,width:"100%"}}>
+              <YellowButton label="Close" onPress={()=>setVisible(false)}/>
           </View>
-        </TouchableWithoutFeedback>
-      </TouchableOpacity>
+        </View>
+      </View>
     </Modal>
   )
 

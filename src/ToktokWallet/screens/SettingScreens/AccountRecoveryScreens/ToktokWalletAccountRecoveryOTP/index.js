@@ -211,8 +211,8 @@ export const ToktokWalletAccountRecoveryOTP = ({navigation , route})=> {
                  <View style={{height: SIZE.FORM_HEIGHT + 16,justifyContent:"flex-end"}}> 
                     {
                         pinCode.length < 6
-                        ? <DisabledButton label="Proceed"/>
-                        : <YellowButton onPress={ConfirmVerificationCode} label="Proceed"/>
+                        ? <DisabledButton label="Confirm"/>
+                        : <YellowButton onPress={ConfirmVerificationCode} label="Confirm"/>
                     }   
             </View>
             <BuildingBottom/>
