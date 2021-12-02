@@ -97,7 +97,7 @@ const Biometrics = ({setErrorMessage , setPinCode})=> {
                 return setShowPrompt(true)
             }
             onErrorAlert({alert,error})
-        }
+        } 
     })
 
     const [postForceDisable , {}] = useMutation(POST_FORCE_DISABLE, {

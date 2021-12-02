@@ -95,7 +95,7 @@ export const ToktokBillsEnterPinCode = ({navigation, route})=> {
       senderMobileNumber: formattedMobile,
       destinationNumber: paymentData.firstField,
       destinationIdentifier: paymentData.secondField,
-      billerItemId: paymentData.billItemSettings.id,
+      billItemId: paymentData.billItemSettings.id,
       senderWalletBalance: parseFloat(paymentSummary.tokwaBalance),
       amount: parseFloat(paymentData.amount),
       senderWalletEndingBalance: parseFloat(paymentSummary.tokwaBalance) - parseFloat(totalAmount),
@@ -112,6 +112,10 @@ export const ToktokBillsEnterPinCode = ({navigation, route})=> {
         input
       }
     });
+  }
+
+  const onPressForgotTPIN = () => {
+    navigation.navigate("ToktokWalletRecoveryMethods", {type: "TPIN", event: "enterprise"})
   }
 
   return (
@@ -142,6 +146,11 @@ export const ToktokBillsEnterPinCode = ({navigation, route})=> {
             }}
           />
           { errorMessage != "" && <Text style={styles.errorText}>{errorMessage}</Text> }
+          { requestMoneyDetails?.validator === "TPIN" && (
+            <TouchableOpacity style={{ marginVertical: moderateScale(50) }} onPress={onPressForgotTPIN}>
+              <Text style={styles.forgotTPIN}>Forgot TPIN</Text>
+            </TouchableOpacity>
+          )}
         </View>
         <OrangeButton
           disabled={pinCode.length < 6}
@@ -185,5 +194,9 @@ const styles = StyleSheet.create({
     color: COLOR.RED,
     marginHorizontal: moderateScale(16),
     textAlign: "center"
+  },
+  forgotTPIN: {
+    color: "#FF8A48",
+    fontSize: FONT_SIZE.M
   }
 })

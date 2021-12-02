@@ -134,6 +134,7 @@ export const PaymentForm = ({ billItemSettings })=> {
           onChangeText={changeFirstField}
           value={firstField}
           keyboardType={firstFieldFormat == 1 ? "numeric" : "default"}
+          maxLength={firstFieldWidthType == 1 || firstFieldWidthType == 2 ? firstFieldWidth : null}
           returnKeyType="next"
           onSubmitEditing={() => { accountNameRef.current.focus(); }}
           blurOnSubmit={false}
@@ -147,6 +148,7 @@ export const PaymentForm = ({ billItemSettings })=> {
           onChangeText={changeSecondField}
           value={secondField}
           keyboardType={secondFieldFormat == 1 ? "numeric" : "default"}
+          maxLength={secondFieldWidthType == 1 || secondFieldWidthType == 2 ? secondFieldWidth : null}
           returnKeyType="next"
           ref={(input) => { accountNameRef.current = input; }}
           onSubmitEditing={() => { amountRef.current.focus(); }}

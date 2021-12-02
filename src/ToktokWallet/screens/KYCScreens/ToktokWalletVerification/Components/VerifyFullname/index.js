@@ -11,6 +11,7 @@ import { useLazyQuery } from '@apollo/react-hooks'
 import { useAlert } from 'src/hooks/useAlert'
 import { onErrorAlert } from 'src/util/ErrorUtility'
 import { useNavigation } from '@react-navigation/native';
+import CheckBox from 'react-native-check-box';
 import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS
@@ -222,13 +223,30 @@ export const VerifyFullname = ()=> {
                     <View style={{marginTop: 20,}}>
                     <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Middle Name</Text>
                         <TextInput 
+                            editable={person.hasMiddleName}
                             style={styles.input}
                             value={person.middleName}
                             onChangeText={(value)=>changePersonInfo("middleName",value)}
                             placeholder="Enter middle name here"
                             returnKeyType="done"
                         />
+                        <View style={{flexDirection:"row",marginTop: 5}}>
+                            <CheckBox
+                                isChecked={!person.hasMiddleName}
+                                onClick={()=>{
+                                     changePersonInfo("middleName",person.hasMiddleName ? "MNU" : "")
+                                     changePersonInfo("hasMiddleName",!person.hasMiddleName)
+                                     return
+                                }}
+                                style={{
+                                    alignSelf: "center",
+                                    marginRight: 5,
+                                }}
+                            />
+                            <Text style={{alignSelf:"center", fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color: COLOR.YELLOW}}>Click checkbox if Middle Name is unknown</Text>
+                        </View>
                     </View>
+
 
 
                     <View style={{marginTop: 20,}}>
@@ -327,6 +345,7 @@ export const VerifyFullname = ()=> {
                                 style={styles.input}
                                 value={incomeInfo.occupation}
                                 onChangeText={(value)=>changeIncomeInfo("occupation",value)}
+                                maxLength={30}
                             />
                     </View>
 

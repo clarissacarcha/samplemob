@@ -45,14 +45,15 @@ const styles = StyleSheet.create({
         textAlign:"center"
     },
     cashInImage: {
-        height: 165,
+        height: 150,
         width: width * 0.8,
-        marginVertical: 5,
+        marginTop: -10,
+        marginBottom: 20,
     },
     paypandaImage: {
-        height: 70,
+        height: 140,
         width: width * 0.8,
-        marginVertical: 5,
+        marginTop: -10,
     },
     message: {
         fontFamily: FONT.REGULAR,
