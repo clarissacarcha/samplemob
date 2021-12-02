@@ -24,7 +24,12 @@ const Landing = ({createSession, destroySession, navigation}) => {
         Alert.alert('', 'Network error occurred. Please check your internet connection.');
       } else if (graphQLErrors.length > 0) {
         graphQLErrors.map(({message, locations, path, code}) => {
-          if (code === 'INTERNAL_SERVER_ERROR') {
+          if (message === 'Session expired. Please log in again.') {
+            Alert.alert('', message);
+            AsyncStorage.removeItem('accessToken');
+            destroySession();
+            navigation.replace('UnauthenticatedStack');
+          } else if (code === 'INTERNAL_SERVER_ERROR') {
             Alert.alert('', 'Something went wrong.');
           } else if (code === 'USER_INPUT_ERROR') {
             Alert.alert('', message);
@@ -44,7 +49,7 @@ const Landing = ({createSession, destroySession, navigation}) => {
     onCompleted: ({getUserSession}) => {
       try {
         const {user, accessToken} = getUserSession;
-        // AsyncStorage.setItem('accessToken', accessToken);
+        AsyncStorage.setItem('accessToken', accessToken);
 
         if (user.status == 3) {
           destroySession();

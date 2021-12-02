@@ -110,3 +110,11 @@ export const FORGOT_PASSWORD_RESET = gql`
     forgotPasswordReset(input: $input)
   }
 `;
+
+export const END_USER_SESSION = gql`
+  mutation {
+    endUserSession {
+      message
+    }
+  }
+`;

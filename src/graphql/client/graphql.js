@@ -31,9 +31,7 @@ const toktokFoodBaseUrl = `${ENVIRONMENTS.TOKTOKFOOD_SERVER}/`;
 //   }
 // });
 
-const errorLinkLogger = onError((err) => {
- // console.log({ERROR_LINK: JSON.stringify(err, 0, 4)});
-});
+const errorLinkLogger = onError(err => {});
 
 const setTokenLink = setContext(async (_, {headers}) => {
   try {
@@ -67,12 +65,12 @@ const setToktokWalletGraphqlTokenLink = setContext(async (_, {headers}) => {
   try {
     // const accountToken = await AsyncStorage.getItem('toktokWalletAccountToken');
     const accountToken = await AsyncStorage.getItem('accessToken');
-    const verifiedToken = await AsyncStorage.getItem('toktokWalletAuthenticationToken')
+    const verifiedToken = await AsyncStorage.getItem('toktokWalletAuthenticationToken');
     return {
       headers: {
         ...headers,
         authorization: accountToken ? `Bearer ${accountToken}` : '',
-        verifiedlogintoken: verifiedToken ? verifiedToken : ''
+        verifiedlogintoken: verifiedToken ? verifiedToken : '',
       },
     };
   } catch (error) {
