@@ -40,7 +40,7 @@ export const NewPin = ({pinCode,setPinCode , pageIndex, setPageIndex})=> {
     return (
         <View style={styles.container}>
         <View style={styles.content}>
-                <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 20,alignSelf:"center"}}>Enter your new TPIN</Text>
+                <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 20,alignSelf:"center"}}>Enter New TPIN</Text>
                 <View style={{position: 'relative',marginTop: 50,}}>
                     <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={showPin}/>
                     <TextInput

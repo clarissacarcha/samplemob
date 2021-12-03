@@ -47,7 +47,7 @@ export const DisplayQuestion = ({question ,answers , setAnswers , index })=> {
             <TouchableOpacity onPress={()=>setVisible(true)} style={[styles.input, styles.secondContainer]}>
               {
                 !answers[index]?.answer
-                ?  <Text style={styles.labelSmall}>Enter your answer..</Text>
+                ?  <Text style={styles.labelSmall}>Choose your answer..</Text>
                 :  <Text style={[styles.labelSmall, {color:"black"}]}>{moment(answers[index].answer).tz('Asia/Manila').format('MMM DD, YYYY')}</Text>
               }
               <Image source={calendar_icon} style={{ width: 20, height: 20 }} />
