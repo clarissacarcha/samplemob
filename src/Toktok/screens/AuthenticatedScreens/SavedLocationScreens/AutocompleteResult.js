@@ -1,15 +1,18 @@
-import React, {useState} from 'react';
-import {View, StyleSheet, FlatList} from 'react-native';
+import React, {useState, useRef, useEffect, useCallback} from 'react';
+import {Text, View, TextInput, StyleSheet, FlatList, ScrollView} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {throttle, debounce} from 'lodash';
 import {useLazyQuery} from '@apollo/react-hooks';
 import uuid from 'react-native-uuid';
-import {GET_GOOGLE_PLACE_DETAILS} from '../../../../../graphql';
-import {WhiteButton} from '../../../../../revamp';
-import {DIRTY_WHITE} from '../../../../../res/constants';
-import {COLOR} from '../../../../../res/variables';
+import {GET_GOOGLE_PLACE_DETAILS} from '../../../../graphql';
+import {WhiteButton, TouchableIcon} from '../../../../revamp';
+import {DIRTY_WHITE} from '../../../../res/constants';
+import {COLOR} from '../../../../res/variables';
+import CONSTANTS from 'common/res/constants';
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
-const AutocompleteResult = ({searchResult, sessionToken, setSessionToken, onLocationSelect, setSearchText}) => {
+export const AutocompleteResult = ({searchResult, sessionToken, setSessionToken, onLocationSelect}) => {
   const [selectedFormattedAddress, setSelectedFormattedAddress] = useState('');
 
   const [getGooglePlaceDetails, {loading}] = useLazyQuery(GET_GOOGLE_PLACE_DETAILS, {
@@ -37,7 +40,7 @@ const AutocompleteResult = ({searchResult, sessionToken, setSessionToken, onLoca
     });
   };
 
-  const renderItem = ({item}) => {
+  const renderItemDelivery = ({item}) => {
     const formattedAddressParts = item.formattedAddress.split(',');
 
     return (
@@ -48,32 +51,32 @@ const AutocompleteResult = ({searchResult, sessionToken, setSessionToken, onLoca
         prefixName="map-marker-alt"
         prefixSize={18}
         prefixColor={COLOR.ORANGE}
-        suffixSet="Entypo"
-        suffixName="chevron-thin-right"
-        suffixColor={'black'}
-        suffixSize={18}
+        // suffixSet="Entypo"
+        // suffixName="chevron-thin-right"
+        // suffixColor={'black'}
+        // suffixSize={18}
         borderless
-        onPress={() => onResultSelect({prediction: item})}
+        onPress={() => {
+          onResultSelect({prediction: item});
+        }}
         style={{marginHorizontal: 16}}
       />
     );
   };
 
   return (
-    <View>
+    <View showsVerticalScrollIndicator={false}>
       <FlatList
         data={searchResult.predictions}
-        renderItem={renderItem}
+        renderItem={renderItemDelivery}
         keyExtractor={(item, index) => index}
         ItemSeparatorComponent={ItemSeparator}
         keyboardShouldPersistTaps={'handled'}
-        style={{maxHeight: 254}}
+        style={{maxHeight: 284}}
       />
     </View>
   );
 };
-
-export default AutocompleteResult;
 
 const styles = StyleSheet.create({
   screenBox: {

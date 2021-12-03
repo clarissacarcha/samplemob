@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Text, View, ActivityIndicator, FlatList, TouchableHighlight, StatusBar} from 'react-native';
-import {useLazyQuery} from '@apollo/react-hooks';
-import {GET_GOOGLE_PLACE_DETAILS} from '../../../../../graphql/virtual/Google';
-import {GoogleUtility} from '../../../../../util';
+import {useLazyQuery, useQuery} from '@apollo/react-hooks';
+import {GET_GOOGLE_PLACE_DETAILS, GET_GOOGLE_PLACE_SEARCH_NEARBY} from '../../../../../graphql';
 import {COLOR, FONT, FONT_SIZE, SIZE} from '../../../../../res/variables';
 import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../../../components';
 
@@ -42,9 +41,23 @@ const NearbyStores = ({navigation, route}) => {
     headerTitle: () => <HeaderTitle label={['Nearby', plural]} />,
   });
 
+  const {
+    data: fetchData,
+    loading: fetchLoading,
+    error: fetchError,
+  } = useQuery(GET_GOOGLE_PLACE_SEARCH_NEARBY, {
+    fetchPolicy: 'network-only',
+    variables: {
+      input: {
+        coordinates,
+        type: placeType,
+      },
+    },
+  });
+
   const [getGooglePlaceDetails, {loading}] = useLazyQuery(GET_GOOGLE_PLACE_DETAILS, {
     fetchPolicy: 'network-only',
-    onCompleted: (data) => {
+    onCompleted: data => {
       console.log({result: data.getGooglePlaceDetails});
 
       onNearbySelect({
@@ -55,7 +68,7 @@ const NearbyStores = ({navigation, route}) => {
     },
   });
 
-  const onStoreSelect = (value) => {
+  const onStoreSelect = value => {
     setSelectedStore(value);
     getGooglePlaceDetails({
       variables: {
@@ -67,34 +80,13 @@ const NearbyStores = ({navigation, route}) => {
     });
   };
 
-  const [nearbyStores, setNearbyStores] = useState(null);
-  const [error, setError] = useState(false);
-
-  const fetchNearbyStores = async () => {
-    const nearbyResponse = await GoogleUtility.placeNearbySearch({
-      latitude: coordinates.latitude,
-      longitude: coordinates.longitude,
-      type: placeType,
-      radius: 5000,
-    });
-
-    if (nearbyResponse.responseError) {
-      setError(true);
-    }
-    setNearbyStores(nearbyResponse.responseData.results);
-  };
-
-  useEffect(() => {
-    fetchNearbyStores();
-  }, []);
-
-  if (error) {
+  if (fetchError) {
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white'}}>
       <Text>Something went wrong.</Text>
     </View>;
   }
 
-  if (!nearbyStores) {
+  if (fetchLoading) {
     return (
       <View style={{flex: 1, justifyContent: 'center', backgroundColor: 'white'}}>
         <ActivityIndicator color={COLOR.YELLOW} />
@@ -102,7 +94,7 @@ const NearbyStores = ({navigation, route}) => {
     );
   }
 
-  if (nearbyStores.length === 0) {
+  if (fetchData.getGooglePlaceSearchNearby.length === 0) {
     return (
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white'}}>
         <Text>No stores open near you.</Text>
@@ -114,10 +106,10 @@ const NearbyStores = ({navigation, route}) => {
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <AlertOverlay visible={loading} />
       <FlatList
-        data={nearbyStores}
+        data={fetchData.getGooglePlaceSearchNearby}
         renderItem={({item, index}) => <NearbyStore store={item} onStoreSelect={onStoreSelect} />}
         showsVerticalScrollIndicator={false}
-        keyExtractor={(item) => item.place_id}
+        keyExtractor={item => item.place_id}
         ItemSeparatorComponent={() => (
           <View style={{borderBottomWidth: 1, marginHorizontal: 20, borderColor: COLOR.LIGHT}} />
         )}

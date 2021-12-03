@@ -6,7 +6,7 @@ import {useLazyQuery} from '@apollo/react-hooks';
 import uuid from 'react-native-uuid';
 import {GET_GOOGLE_PLACE_DETAILS} from '../../../../../graphql';
 import {WhiteButton, TouchableIcon} from '../../../../../revamp';
-import {LIGHT, PROTOCOL, HOST_PORT, DIRTY_WHITE} from '../../../../../res/constants';
+import {LIGHT, DIRTY_WHITE} from '../../../../../res/constants';
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
@@ -17,7 +17,7 @@ const AutocompleteResult = ({searchResult, sessionToken, setSessionToken, onLoca
 
   const [getGooglePlaceDetails, {loading}] = useLazyQuery(GET_GOOGLE_PLACE_DETAILS, {
     fetchPolicy: 'network-only',
-    onCompleted: (data) => {
+    onCompleted: data => {
       console.log({result: data.getGooglePlaceDetails.location});
       setSessionToken(uuid.v4()); // Use new sessionToken after Place Details Request
       onLocationSelect({
@@ -46,7 +46,7 @@ const AutocompleteResult = ({searchResult, sessionToken, setSessionToken, onLoca
     // navigation.push('StopDetails');
   };
 
-  const onPredictionSelect = async (prediction) => {
+  const onPredictionSelect = async prediction => {
     console.log({prediction});
     setText(prediction.formattedAddress);
     setResult(INITIAL_RESULT);

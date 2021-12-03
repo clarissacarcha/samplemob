@@ -1,12 +1,12 @@
-import React, {useState, useRef, useEffect, useCallback} from 'react';
-import {Text, View, TextInput, StyleSheet, TouchableOpacity} from 'react-native';
+import React, {useRef, useEffect, useCallback} from 'react';
+import {TextInput, TouchableOpacity} from 'react-native';
 import {debounce} from 'lodash';
-
 import axios from 'axios';
-
+import AsyncStorage from '@react-native-community/async-storage';
+import ENVIRONMENTS from '../../../../../common/res/environments';
 import {LIGHT, PROTOCOL, HOST_PORT, FONT_REGULAR} from '../../../../../res/constants';
 import {HeaderBack} from '../../../../../components';
-import {COLOR, FONT} from '../../../../../res/variables';
+import {COLOR} from '../../../../../res/variables';
 import {VectorIcon, ICON_SET} from '../../../../../revamp';
 
 const INITIAL_RESULT = {
@@ -95,13 +95,18 @@ const SearchBar = ({
   };
 
   const getGooglePlaceAutocomplete = async ({searchString}) => {
-    console.log({searchString});
-
     try {
       onSearchLoadingChange(true);
+
+      const accessToken = await AsyncStorage.getItem('accessToken');
+      const authorizationHeader = `Bearer ${accessToken}`;
+
       const apiResult = await axios({
-        url: `${PROTOCOL}://${HOST_PORT}/graphql`,
+        url: `${ENVIRONMENTS.TOKTOK_SERVER}/graphql`,
         method: 'post',
+        headers: {
+          Authorization: authorizationHeader,
+        },
         data: {
           query: `
                 query {
@@ -120,11 +125,9 @@ const SearchBar = ({
         },
       });
 
-      console.log({APIRESULT: apiResult});
-
-      //   setResult(apiResult.data.data.getGooglePlaceAutocomplete);
-      onSearchResultChange(apiResult.data.data.getGooglePlaceAutocomplete);
-      console.log({result: apiResult.data.data.getGooglePlaceAutocomplete});
+      if (apiResult.data.data.getGooglePlaceAutocomplete) {
+        onSearchResultChange(apiResult.data.data.getGooglePlaceAutocomplete);
+      }
 
       onSearchLoadingChange(false);
     } catch (error) {
