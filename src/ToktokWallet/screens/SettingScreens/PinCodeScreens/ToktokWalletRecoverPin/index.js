@@ -6,7 +6,7 @@ import {useQuery,useLazyQuery} from '@apollo/react-hooks'
 import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
 import { GET_FORGOT_AND_RECOVER_OTP_CODE , VERIFY_FORGOT_AND_RECOVER_OTP_CODE} from 'toktokwallet/graphql'
 import { onError, onErrorAlert } from 'src/util/ErrorUtility'
-import {useAlert} from 'src/hooks'
+import {useAlert, usePrompt} from 'src/hooks'
 import {DisabledButton, Separator, BuildingBottom , CheckIdleState, HeaderCancel} from 'toktokwallet/components'
 import { HeaderBack, YellowButton } from 'src/revamp'
 import { TransactionUtility } from 'toktokwallet/util'
@@ -59,6 +59,7 @@ export const ToktokWalletRecoverPin = ({navigation , route})=> {
         headerRight: ()=> <HeaderCancel navigation={navigation} screenPopNo={3} />
     })
 
+    const prompt = usePrompt()
     const session = useSelector(state=>state.session)
     const type = route.params.type
     const event = route?.params?.event ? route.params.event : null
@@ -95,10 +96,9 @@ export const ToktokWalletRecoverPin = ({navigation , route})=> {
         onError: (error)=>{
             // onErrorAlert({alert, error})
             TransactionUtility.StandardErrorHandling({
-                alert,
                 error,
                 navigation,
-                onErrorAlert,
+                prompt,
                 setErrorMessage
             })
         }

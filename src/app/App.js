@@ -5,6 +5,7 @@ import Splash from './Splash';
 
 import {
   ApolloProvider,
+  PromptProvider,
   // ElementsProvider,
   // KeyboardProvider,
   // OneSignalProvider,
@@ -23,7 +24,9 @@ const App = () => {
         <ReduxProvider>
           <ApolloProvider>
             <AlertProvider>
-              <Splash />
+              <PromptProvider>
+                <Splash />
+              </PromptProvider>
             </AlertProvider>
           </ApolloProvider>
         </ReduxProvider>

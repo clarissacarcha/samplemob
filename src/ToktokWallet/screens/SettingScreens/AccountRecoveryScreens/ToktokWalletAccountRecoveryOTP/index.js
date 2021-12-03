@@ -6,7 +6,7 @@ import { useMutation ,useLazyQuery} from '@apollo/react-hooks'
 import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
 import { GET_FORGOT_AND_RECOVER_OTP_CODE , VERIFY_FORGOT_AND_RECOVER_OTP_CODE , PATCH_RECOVER_ACCOUNT } from 'toktokwallet/graphql'
 import { onError, onErrorAlert } from 'src/util/ErrorUtility'
-import {useAlert} from 'src/hooks'
+import {useAlert, usePrompt} from 'src/hooks'
 import {DisabledButton, Separator, BuildingBottom,CheckIdleState} from 'toktokwallet/components'
 import { HeaderBack, YellowButton } from 'src/revamp'
 import { TransactionUtility } from 'toktokwallet/util'
@@ -63,6 +63,7 @@ export const ToktokWalletAccountRecoveryOTP = ({navigation , route})=> {
         headerTitle: ()=> <HeaderTitle label={['','']}/>,
     })
 
+    const prompt = usePrompt()
     const [visible ,setVisible] = useState(false)
     const tokwaAccount = useSelector(state=>state.toktokWallet)
     const [pinCode,setPinCode] = useState("")
@@ -113,11 +114,10 @@ export const ToktokWalletAccountRecoveryOTP = ({navigation , route})=> {
             // }
             // onErrorAlert({alert,error})
             TransactionUtility.StandardErrorHandling({
-                alert,
                 error,
                 navigation,
-                onErrorAlert,
-                setOtpCodeAttempt
+                prompt,
+                setErrorMessage
             })
         }
     })
@@ -192,8 +192,8 @@ export const ToktokWalletAccountRecoveryOTP = ({navigation , route})=> {
                         } */}
 
                         {
-                            otpCodeAttempt != "" && <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M,color: COLOR.RED,marginHorizontal: 16}}>
-                                Incorrect OTP. You can try {numWordArray[otpCodeAttempt]} ({otpCodeAttempt}) more {otpCodeAttempt == 1 ? "time" : "times"} before your account will be temporarily blocked.
+                            errorMessage != "" && <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M,color: COLOR.RED,marginHorizontal: 16}}>
+                               {errorMessage}
                             </Text>
                         }
 

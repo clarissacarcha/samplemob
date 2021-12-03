@@ -7,7 +7,7 @@ import {onError, onErrorAlert} from 'src/util/ErrorUtility'
 import {useNavigation} from '@react-navigation/native'
 import {BuildingBottom, DisabledButton, NumberBoxes} from 'toktokwallet/components'
 import { YellowButton } from 'src/revamp';
-import { useAlert } from 'src/hooks';
+import { useAlert, usePrompt } from 'src/hooks';
 import { AlertOverlay } from 'src/components';
 import CONSTANTS from 'common/res/constants'
 import { TransactionUtility } from '../../../../../../util/TransactionUtility';
@@ -30,6 +30,7 @@ const numWordArray = {
 
 export const VerifyPin = ({pageIndex,setPageIndex})=> {
 
+    const prompt = usePrompt()
     const [showPin,setShowPin] = useState(false)
     const [pinCode,setPinCode] = useState("")
     const inputRef = useRef();
@@ -48,10 +49,9 @@ export const VerifyPin = ({pageIndex,setPageIndex})=> {
         onError: (error)=> {
             // onErrorAlert({alert, error})
             TransactionUtility.StandardErrorHandling({
-                alert,
                 error,
                 navigation,
-                onErrorAlert,
+                prompt,
                 setErrorMessage
             });
         }

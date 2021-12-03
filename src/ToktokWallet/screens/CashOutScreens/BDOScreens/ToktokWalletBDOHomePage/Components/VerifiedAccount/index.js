@@ -7,7 +7,7 @@ import { numberFormat } from 'toktokwallet/helper'
 import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
 import { POST_CASH_OUT_BDO , POST_REQUEST_CASH_OUT } from 'toktokwallet/graphql'
 import { useMutation } from '@apollo/react-hooks'
-import { useAlert } from 'src/hooks/useAlert'
+import { useAlert, usePrompt } from 'src/hooks/useAlert'
 import { onErrorAlert } from 'src/util/ErrorUtility'
 import { AlertOverlay } from 'src/components'
 import { DisabledButton, Separator , ValidatorScreen } from 'toktokwallet/components'
@@ -21,6 +21,7 @@ const { FONT_FAMILY: FONT , FONT_SIZE , COLOR , SIZE } = CONSTANTS
 
 export const VerifiedAccount = ({record,provider})=> {
 
+    const prompt = usePrompt()
     const tokwaAccount = useSelector(state=>state.toktokWallet)
     const inputRef = useRef()
     const navigation = useNavigation()
@@ -65,8 +66,7 @@ export const VerifiedAccount = ({record,provider})=> {
             TransactionUtility.StandardErrorHandling({
                 error,
                 navigation,
-                alert,
-                onErrorAlert, 
+                prompt 
             })
         }
     })
