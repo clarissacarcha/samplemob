@@ -27,7 +27,7 @@ const RestaurantList = (props) => {
   }
   return (
     <FlatList
-      data={data ? data.getShops : []}
+      data={data}
       extraData={loadMore}
       numColumns={2}
       renderItem={({item}) => <RestaurantItem item={item} />}
@@ -36,12 +36,13 @@ const RestaurantList = (props) => {
       keyExtractor={(val, index) => index.toString()}
       ListFooterComponent={renderFooter()}
       ListEmptyComponent={listEmpty()}
-      style={{flex: 1}}
-      contentContainerStyle={{
-        backgroundColor: 'white',
+      style={{
+        flex: 1,
+        paddingTop: moderateScale(15),
         paddingHorizontal: 20,
+        backgroundColor: 'white',
         paddingTop: 15,
-        paddingBottom: Platform.OS == 'android' ? verticalScale(20) : 0,
+        paddingBottom: Platform.OS == 'android' ? verticalScale(20) : 0
       }}
     />
   );

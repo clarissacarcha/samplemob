@@ -1,6 +1,6 @@
 import {useLazyQuery} from '@apollo/react-hooks';
 import React, {useEffect, useRef, useState} from 'react';
-import {Platform, RefreshControl, ScrollView, StyleSheet, View} from 'react-native';
+import {Platform, RefreshControl, ScrollView, StyleSheet, View, SectionList, Text} from 'react-native';
 import {useSelector} from 'react-redux';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import ChangeAddress from 'toktokfood/components/ChangeAddress';
@@ -10,6 +10,7 @@ import {GET_SHOPS} from 'toktokfood/graphql/toktokfood';
 import {moderateScale} from 'toktokfood/helper/scale';
 // Components
 import {CategoryList, RestaurantList} from './index';
+import RestaurantItem from './RestaurantList/RestaurantItem';
 
 const tabs = [
   {
@@ -67,7 +68,6 @@ const StickyView = () => {
 
   // data fetching for shops
   const [getShops, {data, error, loading, fetchMore, refetch}] = useLazyQuery(GET_SHOPS, {
-    onCompleted: () => console.log('DATA: ' + JSON.stringify(data)),
     onError: () => {
       setRefreshing(false);
     },
@@ -178,16 +178,63 @@ const StickyView = () => {
         horizontal
         showsHorizontalScrollIndicator={false}
         scrollEnabled={false}
+        listMode="SCROLLVIEW"
         contentContainerStyle={{width: '100%'}}>
         {children}
       </ScrollView>
     );
   };
 
+  const sample = [
+    {type: 'ADDRESS', data: []}, // Static sections.
+    {type: 'CATEGORIES', data: []},
+    {type: 'RESTAURANTS', data: data ? data.getShops : []},
+  ];
+
   return (
     <>
-      <ScrollView
+     <SectionList
+      sections={sample}
+      keyExtractor={(item, index) => item + index}
+      stickyHeaderIndices={[2]}
+      stickySectionHeadersEnabled
+      contentContainerStyle={{ justifyContent: "center" }}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#FFA700']} tintColor="#FFA700" />
+      }
+      onScroll={({nativeEvent}) => {
+        if (isCloseToBottom(nativeEvent)) {
+          handleLoadMore(nativeEvent);
+        }
+      }}
+      scrollEventThrottle={15}
+      renderItem={(props) => {
+        if(props.index < 1){
+          return(
+            <RestaurantList location={location} loading={loading} error={error} data={props.section.data} loadMore={loadMore} />
+          )
+        }
+        return null
+      }}
+      renderSectionHeader={({section: { type }}) => {
+        if(type == "ADDRESS"){
+          return (
+            <>
+              <ChangeAddress />
+              <CategoryList horizontal homeRefreshing={refreshing} rightText="See all" />
+            </>
+          )
+        } else if(type == "RESTAURANTS"){
+          return <RenderNavBar />;
+        } else {
+          return null;
+        }
+         
+      }}
+    />
+      {/* <ScrollView
         stickyHeaderIndices={[2]}
+        nestedScrollEnabled
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#FFA700']} tintColor="#FFA700" />
         }
@@ -196,15 +243,15 @@ const StickyView = () => {
             handleLoadMore(nativeEvent);
           }
         }}
-        scrollEventThrottle={15}>
+        scrollEventThrottle={15}> */}
         {/* <View style={styles.adsContainer}>
           <AdvertisementSection />
         </View> */}
-        <ChangeAddress />
+        {/* <ChangeAddress />
         <CategoryList horizontal homeRefreshing={refreshing} rightText="See all" />
-        <RenderNavBar />
-        <RestaurantList location={location} loading={loading} error={error} data={data} loadMore={loadMore} />
-      </ScrollView>
+        <RenderNavBar /> */}
+        {/* <RestaurantList location={location} loading={loading} error={error} data={data} loadMore={loadMore} /> */}
+      {/* </ScrollView> */}
     </>
   );
 };
