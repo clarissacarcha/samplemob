@@ -224,7 +224,7 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
             )}
             <TouchableOpacity
               style={[styles.addressContainer, {flexGrow: 1, marginLeft: 5}]}
-              onLongPress={() => setActiveToDeleteItem((prevState) => ({...prevState, value: true}))}
+              onLongPress={() => setActiveToDeleteItem((prevState) => ({...prevState, value: true, ids: [...prevState.ids || [], item.id]}))}
               onPress={() => {
                 navigation.navigate('ToktokMallAddressesForm', {item, update: true});
               }}>
@@ -248,7 +248,7 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
           data={addresses}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{paddingTop: 15, paddingHorizontal: 15}}
-          ListFooterComponent={addresses.length < 10 && (
+          ListHeaderComponent={addresses.length < 10 && (
             <Card
               containerStyle={styles.button}
               onPress={() => {
@@ -318,7 +318,7 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
                   )}
                   <TouchableOpacity
                     style={[styles.addressContainer, {flexGrow: 1, marginLeft: 4, width: '80%'}]}
-                    onLongPress={() => setActiveToDeleteItem((prevState) => ({...prevState, value: true}))}
+                    onLongPress={() => setActiveToDeleteItem((prevState) => ({...prevState, value: true, ids: [...prevState.ids || [], item.id]}))}
                     onPress={() => {
                       navigation.navigate('ToktokMallAddressesForm', {item, update: true});
                     }}>
@@ -446,7 +446,7 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
                 />
                 <Text style={{marginLeft: 5, fontWeight: '700'}}>Select All</Text>
               </View>
-              <TouchableOpacity onPress={() => setActiveToDeleteItem((prevState) => ({...prevState, value: false}))}>
+              <TouchableOpacity onPress={() => setActiveToDeleteItem((prevState) => ({...prevState, value: false, ids: []}))}>
                 <Text style={{color: '#F6841F'}}>Cancel</Text>
               </TouchableOpacity>
             </View>

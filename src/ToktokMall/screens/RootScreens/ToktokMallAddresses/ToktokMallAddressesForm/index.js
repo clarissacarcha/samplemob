@@ -136,6 +136,9 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
     setMunCode(data.munCode);
     setRegCode(data.regCode);
   };
+  
+  var hasNumber = /\d/;
+  var hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
 
   const SavePostAddress = async (callback, id) => {
     console.log("TEST")
@@ -144,6 +147,12 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
     } if (newAddressForm.postalCode?.length > 0 && newAddressForm.postalCode?.length < 4) {
       return Toast.show('Invalid postal code.');
     } 
+    if(hasNumber.test(newAddressForm.receiverName)){
+      return Toast.show('Cannot input numbers to name')
+    }
+    if(hasSpecialChar.test(newAddressForm.receiverName)){
+      return Toast.show('Cannot input special character to name')
+    }
     else {
       setIsLoading(true);
       AsyncStorage.getItem('ToktokMallUser').then(async (raw) => {

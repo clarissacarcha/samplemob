@@ -116,11 +116,11 @@ export const Totals = ({raw, shipping, setGrandTotal}) => {
           <Text style={{fontWeight: 'bold'}}>Total Payment:</Text>
           {
             getDiscount('shipping') ? 
-            <Text style={{color: '#F61841'}}>
+            <Text style={{color: '#F6841F'}}>
             {FormatToText.currency((shippingDiscountTotal || 0) + (merchandiseTotal || 0))}
             </Text>
             :
-            <Text style={{color: '#F61841'}}>
+            <Text style={{color: '#F6841F'}}>
             {FormatToText.currency((shippingFeeTotal || 0) + (merchandiseTotal || 0))}
             </Text>
           }

@@ -80,6 +80,14 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
     }
   }
 
+  const countItems = (item) => {
+    let count = 0
+    for (let i = 0; i < item.length; i++){
+      count = count + item[i].qty
+    }
+    return count
+  }
+
   const renderItems = (items) => {
 
     return items.map((item, i) => {
@@ -99,8 +107,8 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
                 <Text style ={styles.itemSaleOff}>{parseFloat(product?.compareAtPrice) != "0.00" ? FormatToText.currency(product?.compareAtPrice) : ""}</Text>
               </View>
               <View style = {{flexDirection: 'row', justifyContent: 'space-between', marginTop: 10}}>
-                <Text style ={{ color: '#9E9E9E' }}>Variation: {product.variant || "None"}</Text>
-                <Text style ={{ color: '#9E9E9E'}}>Qty: {item.qty}</Text>
+                <Text style ={{ color: '#9E9E9E', flex: 4.7 }}>Variation: {product.variant || "None"}</Text>
+                <Text style ={{ color: '#9E9E9E', flex: 1.2}}>Qty: {item.qty}</Text>
               </View>
             </View>
           </View>
@@ -234,8 +242,8 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
           <View style={{paddingHorizontal: 15, paddingVertical: 15}}>
             {!loading && voucherIsValid == -1 && (
               <View style={{backgroundColor: '#FFFCF4', padding: 10}}>
-                <Text style={{color: '#F6841F', fontSize: 12, textAlign: 'center'}}>
-                  *{errormessage}
+                <Text style={{color: '#F6841F', fontSize: 12}}>
+                  {errormessage}
                 </Text>
               </View>
             )}
@@ -382,7 +390,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
             </View>
 
             <View>
-              <Text>Order total ({item.data.length} {item.data.length > 1 ? `items` : 'item'}): {computeTotal(item.data[0]) || 0} </Text>
+              <Text>Order total ({countItems(item.data[0]) || 0} {countItems(item.data[0]) > 1 ? `items` : 'item'}): {computeTotal(item.data[0]) || 0} </Text>
               <Text style = {{marginTop: 7, color: '#929191'}}>Receive by: {shipping?.deliveryDate || "Add address to calculate"} </Text>
             </View>
           </>

@@ -34,7 +34,7 @@ export const Payment = ({ list, payment, total, setPaymentMethod, currentBalance
         <View style={{paddingTop: 15}} />
         {parseFloat(currentBalance) < parseFloat(total) ? 
           <View style={{backgroundColor: '#FFFCF4', padding:10}}>
-            <Text style={{color: '#F6841F', fontSize: 12, textAlign: 'center'}}>*insufficient funds! Kindly top up to add funds in your toktokwallet.</Text>
+            <Text style={{color: '#F61841', fontSize: 12, textAlign: 'center'}}>*insufficient funds! Kindly top up to add funds in your toktokwallet.</Text>
           </View> :
           <View style={{height: 8}} />
         }
