@@ -13,39 +13,56 @@ import { OrangeButton } from "toktokbills/components";
 import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
 import { VerifyContext } from "../VerifyContextProvider";
 
-export const ConfirmButton = ({ }) => {
+export const ConfirmButton = ({ billType, billItemSettings = {}, tokwaBalance = 0 }) => {
 
   const prompt = usePrompt();
   const navigation = useNavigation();
   const {
-    toktokWallet,
-    accountNo,
-    accountName,
+    firstField,
+    firstFieldError,
+    secondField,
+    secondFieldError,
     amount,
     email,
     emailError,
-    accountNoError,
     amountError
   } = useContext(VerifyContext);
+  const { commissionRateDetails, itemDocumentDetails } = billItemSettings;
+  const { termsAndConditions, paymentPolicy1, paymentPolicy2 } = itemDocumentDetails;
+
+  //CONVENIENCE FEE
+  const convenienceFee = parseFloat(commissionRateDetails?.providerServiceFee) + parseFloat(commissionRateDetails?.systemServiceFee); 
 
   const onPressConfirm = () => {
-    navigation.navigate("ToktokBillsEnterOTP")
+    let paymentData = {
+      firstField,
+      secondField,
+      amount,
+      email,
+      billType,
+      convenienceFee,
+      billItemSettings
+    }
+    navigation.navigate("ToktokBillsPaymentSummary", { paymentData })
   }
  
   const checkIsDisabled = () => {
-    return (parseFloat(amount) > parseFloat(toktokWallet?.balance))
-      || !accountName || !accountNo || emailError || accountNoError || amountError
+    return !firstField || !secondField || firstFieldError || secondFieldError || emailError || !amount ||amountError
+  }
+
+  const onPressTermsAndContidions = () => {
+    navigation.navigate("ToktokBillsTermsAndConditions", { termsAndConditions })
   }
 
   return (
     <View style={styles.container}>
       <Text style={styles.terms}>
         <Text>Please read our </Text>
-        <Text style={styles.paymentPolicy}>Payment Policy</Text>
-        <Text> and </Text>
-        <Text style={styles.paymentPolicy}>Terms and Condition </Text>
+        <Text style={styles.tnc} onPress={onPressTermsAndContidions}>Terms and Conditions </Text>
         <Text>before you proceed with your transaction</Text>
       </Text>
+      { !!paymentPolicy1 && <Text style={styles.paymentPolicy1}>*{paymentPolicy1}</Text> }
+      { !!paymentPolicy2 && <Text style={styles.paymentPolicy2}>*{paymentPolicy2}</Text> }
       <OrangeButton
         onPress={onPressConfirm}
         disabled={checkIsDisabled()}
@@ -63,10 +80,22 @@ const styles = StyleSheet.create({
     paddingVertical: moderateScale(20)
   },
   terms: {
+    textAlign: "center",
     marginBottom: moderateScale(15),
-    textAlign: "center"
   },
-  paymentPolicy: {
+  tnc: {
     color: "#F6841F"
-  }
+  },
+  paymentPolicy1: {
+    color: "#F6841F",
+    fontSize: FONT_SIZE.S,
+    textAlign: "center",
+  },
+  paymentPolicy2: {
+    color: "#F6841F",
+    fontSize: FONT_SIZE.S,
+    textAlign: "center",
+    marginBottom: moderateScale(30),
+    marginTop: moderateScale(10)
+  },
 })

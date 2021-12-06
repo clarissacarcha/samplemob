@@ -46,14 +46,15 @@ const styles = StyleSheet.create({
         textAlign:"center"
     },
     proceedImage: {
-        height: 40,
+        height: 100,
         width: width * 0.6,
-        marginVertical: 5,
+        marginTop: 5,
+        marginBottom: 30,
     },
     tpinImage: {
         height: 80,
         width: width * 0.8,
-        marginVertical: 5,
+        marginTop: 5,
     },
     message: {
         fontFamily: FONT.REGULAR,

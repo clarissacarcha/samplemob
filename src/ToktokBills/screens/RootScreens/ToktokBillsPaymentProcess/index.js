@@ -1,15 +1,13 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { View, Text, StyleSheet, Platform, FlatList, Dimensions, Image, ScrollView, KeyboardAvoidingView } from 'react-native'
 import { useHeaderHeight } from '@react-navigation/stack';
-import { useLazyQuery } from '@apollo/react-hooks';
-import { useSelector } from 'react-redux';
 
 //HELPER
 import { moderateScale, numberFormat } from 'toktokbills/helper'
 
 //COMPONENTS
 import { HeaderBack, HeaderTitle, Separator, LoadingIndicator } from 'toktokbills/components'
-import { ConfirmButton, PaymentForm, VerifyContextProvider, VerifyContext, PaymentMethod } from './Components';
+import { ConfirmButton, PaymentForm, VerifyContextProvider, VerifyContext } from './Components';
 import { SomethingWentWrong } from 'src/components'
 
 // FONTS AND COLORS
@@ -17,43 +15,25 @@ import CONSTANTS from 'common/res/constants'
 const {COLOR , FONT_FAMILY: FONT , FONT_SIZE} = CONSTANTS
 const {width,height} = Dimensions.get("window")
 
-//GRAPHQL
-import {GET_MY_ACCOUNT} from 'toktokwallet/graphql';
-import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
+//GRAPHQL & HOOKS
+import { useLazyQuery, useMutation, useQuery } from '@apollo/react-hooks';
+import { TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT } from 'src/graphql';
+import { GET_BILL_ITEM_SETTINGS } from 'toktokbills/graphql/model';
 
 const MainComponent = ({navigation, route})=> {
 
-  const { billerTypes, billerName } = route.params;
-  const { user } = useSelector((state) => state.session);
-  const { toktokWallet, setToktokWallet, hasToktokWallet, setHasToktokWallet } = useContext(VerifyContext);
+  const { billItemId, billType } = route.params;
+  const [refreshing, setRefreshing] = useState(false);
 
-  const [getMyAccount, {loading, error}] = useLazyQuery(GET_MY_ACCOUNT, {
-    fetchPolicy: 'network-only',
-    client: TOKTOK_WALLET_GRAPHQL_CLIENT,
-    onCompleted: ({getMyAccount}) => {
-      let {wallet, person} = getMyAccount;
-      setToktokWallet({
-        balance: numberFormat(wallet.balance),
-        toktokuser_id: user.id,
-        currency: wallet.currency.code,
-        name: `${person.firstName} ${person.lastName}`,
-      });
-    },
-    onError: (error) => {
-      setToktokWallet(null);
-    },
-  });
-
-  useEffect(() => {
-    if (user) {
-      if (user.toktokWalletAccountId) {
-        setHasToktokWallet(true);
-        getMyAccount();
-      } else {
-        setHasToktokWallet(false);
+  const {data: billItemSettings, loading, error, refetch} = useQuery(GET_BILL_ITEM_SETTINGS, {
+    variables: {
+      input: {
+        billItemId
       }
-    }
-  }, [user]);
+    },
+    fetchPolicy: "cache-and-network",
+    client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT
+  });
 
   if(loading){
     return(
@@ -63,7 +43,11 @@ const MainComponent = ({navigation, route})=> {
     )
   }
   if(error){
-    return ( <SomethingWentWrong /> )
+    return (
+      <View style={styles.container}>
+        <SomethingWentWrong onRefetch={refetch} />
+      </View>
+    )
   }
   return (
     <>
@@ -73,27 +57,23 @@ const MainComponent = ({navigation, route})=> {
         keyboardVerticalOffset={Platform.OS === "ios" ? moderateScale(80) : moderateScale(-100)}
       >
         <ScrollView keyboardShouldPersistTaps="handled">
-          <Separator/>
-          <View style={{ alignItems: "center" }}>
-            <Image source={billerTypes.logo} style={{ width: moderateScale(100), height: moderateScale(100), resizeMode: "contain" }} />
-            <Text style={{ fontSize: FONT_SIZE.M }}>{billerTypes.name}</Text>
+          <View style={styles.headerContainer}>
+            <Image source={{ uri: billItemSettings?.getBillItemSettings.logo }} style={styles.logo} />
+            <Text style={styles.billerName}>{billType.name}</Text>
           </View>
-
-          <PaymentForm />
-
-          <PaymentMethod />
-          <ConfirmButton />
+          <PaymentForm billItemSettings={billItemSettings?.getBillItemSettings} />
+          <ConfirmButton billItemSettings={billItemSettings?.getBillItemSettings} billType={billType} />
         </ScrollView>
       </KeyboardAvoidingView>
     </>
   )
 }
 export const ToktokBillsPaymentProcess = ({ navigation, route }) => {
-  const { billerName } = route.params;
+  const { billType } = route.params;
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={billerName} />,
+    headerTitle: () => <HeaderTitle label={billType.name} />,
     headerStyle: { height: Platform.OS == 'ios' ? moderateScale(60) : moderateScale(80) }
   });
 
@@ -108,5 +88,19 @@ const styles = StyleSheet.create({
   container : {
     flex: 1,
     backgroundColor:"white",
+  },
+  headerContainer: {
+    alignItems: "center",
+    marginTop: moderateScale(30),
+    marginBottom: moderateScale(15)
+  },
+  logo: {
+    width: moderateScale(130),
+    height: moderateScale(50),
+    resizeMode: "contain"
+  },
+  billerName: {
+    fontSize: FONT_SIZE.M,
+    marginTop: moderateScale(10)
   }
 })

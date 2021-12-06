@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,Modal,Image,Dimensions} from 'react-native'
+import {View,Text,StyleSheet,TouchableOpacity,Modal,Image,Dimensions,Alert} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
 import { BlackButton, ICON_SET, VectorIcon, YellowButton } from 'src/revamp'
 import {BuildingBottom} from 'toktokwallet/components'
@@ -66,7 +66,7 @@ const UpdatePIN = ()=> {
 
 export const SuccessfulModal = ({modalVisible,tokwaAccount,amount,onCashIn,setSuccessModalVisible,setUpTpinCallBack})=> {
     const navigation = useNavigation()
-    const { getMyAccount , tokwaAccount: tokwaAccountLatest,getMyAccountLoading } = useAccount()
+    const { getMyAccount , tokwaAccount: tokwaAccountLatest , getMyAccountLoading } = useAccount()
 
     useEffect(()=>{
         if(tokwaAccountLatest.pinCode && onCashIn){
@@ -83,21 +83,17 @@ export const SuccessfulModal = ({modalVisible,tokwaAccount,amount,onCashIn,setSu
             setSuccessModalVisible(false);
             return;
         }
+
+        if(tokwaAccountLatest.pinCode && !onCashIn && !setUpTpinCallBack){
+            navigation.navigate("ToktokWalletHomePage")
+            setSuccessModalVisible(false);
+            return;
+        }
       },[tokwaAccountLatest,onCashIn,setUpTpinCallBack])
   
       const closeModal = async ()=> {
-          if(onCashIn || setUpTpinCallBack) {
-            await getMyAccount();
-            return;
-          } 
-          refreshAccountInfo()
+          getMyAccount();
       }
-
-        const refreshAccountInfo = ()=>{
-            navigation.navigate("ToktokWalletHomePage")
-            getMyAccount()
-            setSuccessModalVisible(false)
-        }
 
 
     return (
@@ -105,7 +101,7 @@ export const SuccessfulModal = ({modalVisible,tokwaAccount,amount,onCashIn,setSu
              visible={modalVisible}
              onRequestClose={closeModal}
         >
-             <AlertOverlay visible={getMyAccountLoading}/>
+            <AlertOverlay visible={getMyAccountLoading}/>
              <View style={styles.container}>
                 { tokwaAccount.pinCode 
                     ? onCashIn ? <NewPIN/> : <UpdatePIN/> 

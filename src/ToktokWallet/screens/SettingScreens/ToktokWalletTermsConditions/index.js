@@ -12,13 +12,14 @@ import { SomethingWentWrong } from 'src/components';
 
 const { FONT_FAMILY: FONT , FONT_SIZE , MARGIN , COLOR } = CONSTANTS
 
-export const ToktokWalletTermsConditions = ({navigation})=> {
+export const ToktokWalletTermsConditions = ({navigation, route})=> {
 
     navigation.setOptions({
         headerLeft: () => <HeaderBack color={COLOR.YELLOW}/>,
         headerTitle: () => <HeaderTitle label={['Terms and Conditions', '']} />,
     });
 
+    const termsAndConditions = route?.params?.termsAndConditions;
     const alert = useAlert()
     const {data,error,loading} = useQuery(GET_GLOBAL_SETTING, {
         fetchPolicy: "network-only",
@@ -50,7 +51,9 @@ export const ToktokWalletTermsConditions = ({navigation})=> {
         <Separator/>
         <View style={styles.container}>
             <ScrollView showsVerticalScrollIndicator={false} style={styles.body}>
-                <Text style={styles.textValue}>{data.getGlobalSetting.keyValue}</Text>
+                <Text style={styles.textValue}>
+                    {termsAndConditions ? termsAndConditions :data.getGlobalSetting.keyValue}
+                </Text>
             </ScrollView>
         </View>
         </CheckIdleState>

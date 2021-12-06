@@ -1,8 +1,8 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {View, Text, StyleSheet, Platform} from "react-native";
 
 //components
-import { HeaderBack, HeaderTitle, HeaderTabs } from "src/ToktokLoad/components";
+import { HeaderBack, HeaderTitle, HeaderTabs, LoadingIndicator } from "src/ToktokLoad/components";
 import { BuyLoad, Favorites } from "./TabScreens";
 
 //util

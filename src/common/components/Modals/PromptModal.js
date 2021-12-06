@@ -12,103 +12,113 @@ const { width } = Dimensions.get("window")
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE , SIZE  , SHADOW } = CONSTANTS
 
 export const PromptModal = ({
-    type,
-    title,
-    message,
-    visible,
-    setVisible,
-    onPress,
+  type,
+  title,
+  message,
+  visible,
+  setVisible,
+  onPress,
+  children
 }) => {
+  console.log()
+  const closeModal = ()=> setVisible(false)
+  const onThrottledPress = useThrottle(onPress? onPress : closeModal, 2000)
 
-    const closeModal = ()=> setVisible(false)
-    const onThrottledPress = useThrottle(onPress ? onPress : closeModal, 2000)
+  let icon = Error
+  switch(type){
+    case "success":
+      icon = Success;
+      break;
+    case "error":
+      icon = Error;
+      break;
+    case "warning":
+      icon = Warning;
+      break;
+    case "question":
+      icon = Question;
+      break;
+    default: 
+      break;
+  }
 
-    let icon = Error
-    switch(type){
-        case "success":
-            icon = Success;
-            break;
-        case "error":
-            icon = Error;
-            break;
-        case "warning":
-            icon = Warning;
-            break;
-        case "question":
-            icon = Question;
-            break;
-        default: 
-            break;
-    }
-
-    return (
-        <Modal
-            visible={visible}
-            style={styles.container}
-            transparent={true}
-            onRequestClose={onThrottledPress}
-        >
-                <View style={styles.content}>
-                       <View style={styles.body}>
-                            <Image resizeMode="contain" style={styles.image} source={icon}/>
-                            <Text style={styles.title}>{title}</Text>
-                            <Text style={styles.message}>{message}</Text>
-                            <TouchableOpacity onPress={onThrottledPress} style={styles.btn}>
-                                    <Text style={styles.btnText}>OK</Text>
-                            </TouchableOpacity>
-                        </View>
-                </View>
-        </Modal>
-    )
+  return (
+    <Modal 
+      visible={visible}
+      transparent={true}
+      onRequestClose={closeModal ? closeModal : onThrottledPress}
+      style={styles.container}
+    >
+      <View style={styles.modalBody}>
+        <View style={styles.content}>
+          <Image source={icon} style={styles.imageIcon} />
+          { !!title && <Text style={styles.successText}>{title}</Text> }
+          <Text style={styles.messageText}>{message}</Text>
+          {children}
+          <TouchableOpacity onPress={onThrottledPress} style={styles.btn}>
+            <Text style={styles.btnText}>OK</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </Modal>
+  )
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1
-    },
-    content: {
-        flex: 1,
-        backgroundColor:"rgba(0,0,0,0.3)",
-        justifyContent:"center",
-        alignItems:'center'
-    },
-    body: {
-        width: width * 0.7,
-        backgroundColor:"white",
-        borderRadius: 5,
-        padding: 16,
-        justifyContent:"center",
-        alignItems:'center',
-    },
-    image: {
-        height: moderateScale(130),
-        width: moderateScale(130)
-    },
-    title: {
-        fontFamily: FONT.BOLD,
-        fontSize: moderateScale(FONT_SIZE.XL),
-        color: COLOR.ORANGE,
-        marginVertical: 5,
-    },
-    message: {
-        fontFamily: FONT.REGULAR,
-        fontSize: moderateScale(FONT_SIZE.M),
-        marginVertical: 5,
-        marginHorizontal: moderateScale(2),
-        textAlign:"center",
-    },
-    btn: {
-        height: moderateScale(50),
-        width: moderateScale(100),
-        borderRadius: 5,
-        backgroundColor: COLOR.ORANGE,
-        justifyContent:"center",
-        alignItems:'center',
-        marginTop: 30,
-    },
-    btnText: {
-        fontFamily: FONT.BOLD,
-        fontSize: moderateScale(FONT_SIZE.L),
-        color: "white",
-    }
+  container: {
+    flex: 1,
+  },
+  modalBody: {
+    flex: 1,
+    backgroundColor:"rgba(0,0,0, 0.7)",
+    justifyContent:"center",
+    alignItems:"center",
+  },
+  content: {
+    width: width * 0.8,
+    backgroundColor:"white",
+    borderRadius: SIZE.BORDER_RADIUS,
+    paddingHorizontal: moderateScale(15),
+    paddingVertical: moderateScale(20),
+    alignItems:'center'
+  },
+  successText: {
+    fontFamily: FONT.BOLD,
+    fontSize: FONT_SIZE.XL, 
+    textAlign:"center",
+    marginTop: 10,
+    marginHorizontal: moderateScale(20),
+    color: "#F6841F"
+  },
+  messageText: {
+    fontFamily: FONT.REGULAR,
+    fontSize: FONT_SIZE.M,
+    textAlign:"center",
+    marginHorizontal: moderateScale(20),
+    marginTop: 10,
+  },
+  imageIcon: {
+    width: moderateScale(160),
+    height: moderateScale(160),
+    resizeMode: "contain",
+  },
+  button: {
+    justifyContent:"flex-end",
+    width: "50%",
+    marginTop: moderateScale(20)
+  },
+  btn: {
+    height: moderateScale(40),
+    width: moderateScale(100),
+    borderRadius: 5,
+    backgroundColor: COLOR.ORANGE,
+    justifyContent:"center",
+    alignItems:'center',
+    marginTop: moderateScale(20),
+  },
+  btnText: {
+    fontFamily: FONT.BOLD,
+    fontSize: moderateScale(FONT_SIZE.L),
+    color: "white",
+  }
 })

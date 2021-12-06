@@ -6,35 +6,32 @@ const {Provider} = VerifyContext
 
 export const VerifyContextProvider = ({children})=> {
 
-  const [toktokWallet, setToktokWallet] = useState(null);
-  const [hasToktokWallet, setHasToktokWallet] = useState(false);
-  const [accountNo, setAccountNo] = useState("");
-  const [accountName, setAccountName] = useState("");
+  const [firstField, setFirstField] = useState("");
+  const [firstFieldError, setFirstFieldError] = useState("");
+  const [secondField, setSecondField] = useState("");
+  const [secondFieldError, setSecondFieldError] = useState("");
   const [amount, setAmount] = useState("");
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
-  const [accountNoError, setAccountNoError] = useState("");
   const [amountError, setAmountError] = useState("");
 
   return (
     <Provider
       value={{
-        toktokWallet,
-        setToktokWallet,
-        hasToktokWallet,
-        setHasToktokWallet,
-        accountNo,
-        setAccountNo,
-        accountName,
-        setAccountName,
+        firstField,
+        setFirstField,
+        firstFieldError,
+        setFirstFieldError,
+        secondField,
+        setSecondField,
+        secondFieldError,
+        setSecondFieldError,
         amount,
         setAmount,
         email,
         setEmail,
         emailError,
         setEmailError,
-        accountNoError,
-        setAccountNoError,
         amountError,
         setAmountError
       }}

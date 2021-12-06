@@ -1,13 +1,15 @@
 import React from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { StyleSheet, Platform, Image, View, Text } from "react-native";
+import { StyleSheet, Platform, Image, View, Text, Dimensions } from "react-native";
+import { moderateScale } from "toktokload/helper";
 
 //FONTS & COLORS
 import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
 
 const Tab = createMaterialTopTabNavigator();
+const width = Dimensions.get('window').width ;
 
-export const HeaderTabs = ({ tabs }) => {
+export const HeaderTabs = ({ tabs, scrollEnabled = false }) => {
 
   return (
     <Tab.Navigator
@@ -17,6 +19,8 @@ export const HeaderTabs = ({ tabs }) => {
         indicatorStyle: [ styles.indicator ],
         activeTintColor: "#F6841F",
         inactiveTintColor: "#707070",
+        scrollEnabled: scrollEnabled,
+        tabStyle: { width: scrollEnabled ? moderateScale(125) : width / tabs.length },
       }}
     >
       { tabs.map((tab) => {
