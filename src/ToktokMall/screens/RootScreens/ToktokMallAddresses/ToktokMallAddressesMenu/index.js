@@ -318,7 +318,15 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
                   )}
                   <TouchableOpacity
                     style={[styles.addressContainer, {flexGrow: 1, marginLeft: 4, width: '80%'}]}
-                    onLongPress={() => setActiveToDeleteItem((prevState) => ({...prevState, value: true, ids: [...prevState.ids || [], item.id]}))}
+                    onLongPress={() =>
+                      item.defaultAdd !== 1
+                        ? setActiveToDeleteItem(prevState => ({
+                            ...prevState,
+                            value: true,
+                            ids: [...(prevState.ids || []), item.id],
+                          }))
+                        : setActiveToDeleteItem(prevState => ({...prevState, value: true}))
+                    }
                     onPress={() => {
                       navigation.navigate('ToktokMallAddressesForm', {item, update: true});
                     }}>

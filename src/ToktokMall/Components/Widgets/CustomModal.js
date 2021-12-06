@@ -19,11 +19,10 @@ export const CustomModal = ({setIsVisible, type, message}) => {
 
   return (
       <View style={styles.centeredView}>
-        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.25)', top: -100}}>
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.25)'}}>
           <View style={{backgroundColor: 'white', width: '80%', paddingVertical: 16, paddingHorizontal: 12, borderRadius: 5}}>
             <View style={{flexDirection: 'row', paddingHorizontal: 0}}>
               <TouchableOpacity onPress={() => {
-                  console.log("pasok dito")
                 dispatch({type: 'TOKTOK_MALL_CLOSE_MODAL'})
               }} style={{flex: 1, flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'flex-end'}}>
                 <CustomIcon.EvIcon name="close" size={24} color="#F6841F" />
@@ -52,7 +51,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     zIndex: 999,
     width: width,
-    height: height + 300,
+    height: height,
     overflow: 'visible'
   }
 });

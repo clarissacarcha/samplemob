@@ -336,6 +336,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
               onChangeText={(text) => {
                 onChangeText('receiverName', text);
               }}
+              returnKeyType="done"
             />
             <TextInput
               style={{...styles.textinput, width: '100%'}}
@@ -350,6 +351,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
               keyboardType={'phone-pad'}
               keyboardType="numeric"
               maxLength={11}
+              returnKeyType="done"
             />
           <TouchableOpacity
             onPress={() => {
@@ -395,7 +397,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
                 onChangeText('postalCode', text);
               }}
               keyboardType={'phone-pad'}
-              keyboardType="numeric"
+              returnKeyType="done"
               maxLength={4}
             />
             <TextInput
@@ -407,6 +409,8 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
               onChangeText={(text) => {
                 onChangeText('landmark', text);
               }}
+              blurOnSubmit={true}
+              returnKeyType="done"
               textAlignVertical="top"
               maxLength={300}
             />

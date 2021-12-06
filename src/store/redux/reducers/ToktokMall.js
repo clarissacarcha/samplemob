@@ -12,6 +12,11 @@ const INITIAL_STATE = {
   otpAttempts: 1,
   customModal: {
     visible: false
+  },
+  customConfirmModal: {
+    visible: false,
+    onConfirmAction: () => {},
+    message: "Are you sure you want to delete this address?"
   }
 };
 
@@ -21,6 +26,10 @@ export default (state = INITIAL_STATE, action) => {
     return {...state, customModal: {visible: true, ...action.payload}};
     case 'TOKTOK_MALL_CLOSE_MODAL':
     return {...state, customModal: {visible: false}};
+    case 'TOKTOK_MALL_OPEN_CONFIRM_MODAL':
+    return {...state, customConfirmModal: { ...state.customConfirmModal, visible: true, ...action.payload}};
+    case 'TOKTOK_MALL_CLOSE_CONFIRM_MODAL':
+    return {...state, customConfirmModal: INITIAL_STATE.customConfirmModal};
     case 'TOKTOK_MALL_CART_COUNT':
       let count = state.myCartCount
       if(action.action === "add"){

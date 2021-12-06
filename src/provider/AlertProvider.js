@@ -1,7 +1,7 @@
 import React, {useState, createContext} from 'react';
 import { useSelector } from 'react-redux';
 import {AlertModal} from '../components';
-import { CustomModal } from '../ToktokMall/Components';
+import { CustomConfirmModal, CustomModal } from '../ToktokMall/Components';
 
 const initialState = {
   visible: false,
@@ -15,7 +15,7 @@ const {Provider} = AlertContext;
 
 const AlertProvider = ({children}) => {
   const [alertState, setAlertState] = useState(initialState);
-  const {customModal} = useSelector((state) => state.toktokMall);
+  const {customModal, customConfirmModal} = useSelector((state) => state.toktokMall);
 
   const alert = ({message, buttonLabel, actionButtons}) => {
     setAlertState({
@@ -34,7 +34,8 @@ const AlertProvider = ({children}) => {
     <>
       <Provider value={alert}>{children}</Provider>
       <AlertModal {...alertState} close={close} />
-          {customModal?.visible && <CustomModal {...customModal} />}
+      {customModal?.visible && <CustomModal {...customModal} />}
+      {customConfirmModal?.visible && <CustomConfirmModal {...customConfirmModal} />}
     </>
   );
 };

@@ -22,6 +22,7 @@ import {EventRegister} from 'react-native-event-listeners';
 
 import { CartContext } from './ContextProvider';
 import { useFocusEffect } from '@react-navigation/core';
+import { BackHandler } from 'react-native';
 
 const Component = ({
   navigation,
@@ -35,7 +36,7 @@ const Component = ({
   });
 
   const CartContextData = useContext(CartContext)
-  const session = useSelector(state=> state.session)
+  const {customModal, customConfirmModal} = useSelector(state=> state.toktokMall)
 
   const [itemsToDelArr, setItemsToDelArr] = useState([])
   const [itemsToCheckoutArr, setItemsToCheckoutArr] = useState([])
@@ -116,6 +117,29 @@ const Component = ({
     EventRegister.addEventListener('refreshToktokmallShoppingCart', init)
     
   }, [])
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        // navigation.pop(2)
+        // alert(JSON.stringify(customModal.visible))
+        if(customModal.visible || customConfirmModal.visible){
+          dispatch({type:'TOKTOK_MALL_CLOSE_MODAL'})
+          dispatch({type:'TOKTOK_MALL_CLOSE_CONFIRM_MODAL'})
+          return true
+        }
+        else{
+          // alert('not true')
+          dispatch({type:'TOKTOK_MALL_CLOSE_MODAL'})
+          dispatch({type:'TOKTOK_MALL_CLOSE_CONFIRM_MODAL'})
+          return false
+        }
+        return true
+      }
+      BackHandler.addEventListener('hardwareBackPress', onBackPress)
+      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress)
+    }, [])
+  )
 
   const onChangeQuantity = (id, qty) => {
     // let items = ArrayCopy(itemsToCheckoutArr)
@@ -519,7 +543,12 @@ const Component = ({
                           }
                         }}
                         onItemDelete={(item) => {
-                          deleteSingleItem(item);
+                              dispatch({
+                                type: 'TOKTOK_MALL_OPEN_CONFIRM_MODAL',
+                                payload: {
+                                  onConfirmAction: () => deleteSingleItem(item),
+                                },
+                              });
                         }}
                         onChangeQuantity={(qty, id) => {
                           onChangeQuantity(id, qty);
@@ -541,7 +570,13 @@ const Component = ({
           {myCartData.length > 0 && willDelete && (
             <DeleteFooter
               onDelete={() => {
-                deleteMultipleItems();
+                  dispatch({
+                    type: 'TOKTOK_MALL_OPEN_CONFIRM_MODAL',
+                    payload: {
+                      onConfirmAction: deleteMultipleItems,
+                      message: 'Are you sure you want to delete the selected item(s)?',
+                    },
+                  });
               }}
               disabled={selectedItemsArr.length === 0}
               style={{backgroundColor: selectedItemsArr.length === 0 ? '#D7D7D7' : '#F6841F'}}
