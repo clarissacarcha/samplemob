@@ -34,7 +34,7 @@ const MainComponent = ({navigation, route})=> {
     fetchPolicy: "cache-and-network",
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT
   });
-
+ 
   if(loading){
     return(
       <View style={styles.container}>
@@ -59,7 +59,7 @@ const MainComponent = ({navigation, route})=> {
         <ScrollView keyboardShouldPersistTaps="handled">
           <View style={styles.headerContainer}>
             <Image source={{ uri: billItemSettings?.getBillItemSettings.logo }} style={styles.logo} />
-            <Text style={styles.billerName}>{billType.name}</Text>
+            <Text style={styles.billerName}>{billItemSettings?.getBillItemSettings?.name}</Text>
           </View>
           <PaymentForm billItemSettings={billItemSettings?.getBillItemSettings} />
           <ConfirmButton billItemSettings={billItemSettings?.getBillItemSettings} billType={billType} />

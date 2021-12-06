@@ -11,6 +11,9 @@ import CONSTANTS from 'common/res/constants';
 const { width } = Dimensions.get("window")
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE , SIZE  , SHADOW } = CONSTANTS
 
+const TOKWA_ERROR_ICON = require('../../../assets/toktokwallet-assets/error.png');
+const TOKWA_SUCCESS_ICON = require('../../../assets/toktokwallet-assets/success.png');
+
 export const PromptModal = ({
   type,
   title,
@@ -18,19 +21,20 @@ export const PromptModal = ({
   visible,
   setVisible,
   onPress,
-  children
+  children,
+  event
 }) => {
-  console.log()
+  
   const closeModal = ()=> setVisible(false)
   const onThrottledPress = useThrottle(onPress? onPress : closeModal, 2000)
 
   let icon = Error
   switch(type){
     case "success":
-      icon = Success;
+      icon = event === "TOKTOKWALLET" ? TOKWA_SUCCESS_ICON : Success;
       break;
     case "error":
-      icon = Error;
+      icon = event === "TOKTOKWALLET" ? TOKWA_ERROR_ICON : Error;
       break;
     case "warning":
       icon = Warning;
