@@ -8,7 +8,7 @@ import Grid from './Grid';
 import Slider from './Slider';
 import CONSTANTS from 'common/res/constants'
 
-const { MARGIN , COLOR } = CONSTANTS
+const { MARGIN , COLOR , FONT_SIZE , FONT_FAMILY: FONT } = CONSTANTS
 
 export const Advertisements = () => {
   const [banner, setBanner] = useState(null);
@@ -43,7 +43,16 @@ export const Advertisements = () => {
         {/* <Banner ads={banner} />
         <Grid ads={grid} /> */}
         {
-          grid && <Slider ads={grid}/>
+          grid && <>
+          <View style={{paddingHorizontal: 16,}}>
+          <Text style={{
+            fontSize: FONT_SIZE.M,
+            color: '#212529',
+            fontFamily: FONT.BOLD,
+          }}>Upcoming events</Text>
+          </View>
+          <Slider ads={grid}/>
+          </>
         }
       </View>
     </View>

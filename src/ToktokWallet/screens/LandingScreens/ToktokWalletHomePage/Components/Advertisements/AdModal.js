@@ -24,7 +24,7 @@ const AdModal = ({visible,setVisible,ad})=> {
                        <Image
                         style={styles.image}
                         source={{
-                            uri: ad.rectangleImage
+                            uri: ad.squareImage
                         }}
                        />
                        <TouchableOpacity 

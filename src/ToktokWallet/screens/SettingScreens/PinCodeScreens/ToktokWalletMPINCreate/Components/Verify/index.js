@@ -46,7 +46,9 @@ export const Verify = ({pageIndex,setPageIndex})=> {
             const {graphQLErrors, networkError} = error;
             if(graphQLErrors[0]?.message == "Account Blocked"){
                 onErrorAlert({alert,error})
-                return navigation.replace("ToktokWalletLoginPage")
+                navigation.navigate("ToktokWalletLoginPage")
+                navigation.replace("ToktokWalletLoginPage")
+                return
             }
             if(graphQLErrors[0]?.message == "Invalid MPincode"){
                 const attempt = graphQLErrors[0].payload.remainingAttempts

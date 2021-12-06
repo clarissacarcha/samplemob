@@ -1,6 +1,7 @@
 // import React, {useEffect, useState} from 'react';
 import {Alert} from 'react-native';
 import {ApolloError} from 'apollo-client';
+import { navigate,replace } from 'src/app/Nav/RootNavigation';
 
 export const onError = (error) => {
   console.log(JSON.stringify(error));
@@ -35,6 +36,11 @@ export const onErrorAlert = ({alert, error}) => {
       alert({message: 'Network error occurred. Please check your internet connection.'});
     } else if (graphQLErrors.length > 0) {
       graphQLErrors.map(({message, locations, path, code}) => {
+        if(code === "FORBIDDEN" && message === "toktokwallet account not active"){
+          alert({message: 'toktokwallet account has been deactivated.'});
+          navigate("ToktokLandingHome");
+          return;
+        }
         if (code === 'INTERNAL_SERVER_ERROR') {
           alert({message: 'Something went wrong.'});
         } else if (code === 'USER_INPUT_ERROR') {

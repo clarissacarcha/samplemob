@@ -49,7 +49,9 @@ export const CheckIdleState = ({children})=> {
             navigation.navigate("ToktokWalletPaymentOptions");
             return navigation.pop();
         }
-        return navigation.navigate("ToktokWalletLoginPage")
+        navigation.navigate("ToktokWalletLoginPage")
+        navigation.replace("ToktokWalletLoginPage")
+        return
     }
 
     // useEffect(()=>{
@@ -75,7 +77,7 @@ export const CheckIdleState = ({children})=> {
             <PromptModal 
                 visible={showPrompt}
                 event="warning"
-                message="You have been logout from toktokwallet due to inactivity."
+                message="You have been logged out from toktokwallet due to inactivity."
                 title="Logged Out!"
                 onPress={onPress}
             />

@@ -136,7 +136,7 @@ const Biometrics = ({setErrorMessage , setPinCode})=> {
        try{
             setErrorMessage("")
             const { success, signature  } = await ReactNativeBiometrics.createSignature({
-                promptMessage: 'Sign in',
+                promptMessage: 'Verify Biometric',
                 payload: payload
             })
         
