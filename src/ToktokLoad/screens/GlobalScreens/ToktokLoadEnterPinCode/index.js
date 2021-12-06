@@ -98,7 +98,6 @@ export const ToktokLoadEnterPinCode = ({navigation, route})=> {
       senderWalletEndingBalance: parseFloat(tokwaBalance) - parseFloat(loadDetails.amount),
       type: 2,
       comRateId: loadDetails.comRateId,
-      referralCommissionItemId: loadDetails.referralCommissionItemId,
     }
 
     postTransaction({
