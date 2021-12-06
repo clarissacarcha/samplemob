@@ -44,7 +44,7 @@ export const PaymentMethod = ({ loadDetails }) => {
     if(parseFloat(amount) > parseFloat(tokwaBalance)) {
       return (
         <View style={styles.errorContainer}>
-          <TouchableOpacity onPress={onPressTopUp}>
+          <TouchableOpacity activeOpacity={1} onPress={onPressTopUp}>
             <Text style={styles.errorText}>
               {`Insufficient balance.\nPlease click here to cash in.`}
             </Text>
@@ -57,8 +57,8 @@ export const PaymentMethod = ({ loadDetails }) => {
 
   const displayNoToktokWalletAccount = () => (
     <>
-      <View style={{ padding: moderateScale(20) }}>
-        <Text style={{ textAlign: "center", fontSize: FONT_SIZE.M }}>
+      <View style={{ paddingHorizontal: moderateScale(20) }}>
+        <Text style={styles.noTokWaMessage}>
           Sorry, you don’t have a toktokwallet yet. Please create an account to proceed with payment.
         </Text>
       </View>
@@ -181,9 +181,12 @@ const styles = StyleSheet.create({
   createAccount: {
     color: "#F6841F",
     textAlign: "center",
-    fontSize: FONT_SIZE.L,
+    fontSize: FONT_SIZE.M,
     textDecorationLine: "underline",
-    marginTop: moderateScale(10),
-    marginBottom: moderateScale(50)
+    marginVertical: moderateScale(15),
+  },
+  noTokWaMessage: {
+    textAlign: "center",
+    fontSize: FONT_SIZE.M
   }
 })

@@ -7,7 +7,7 @@ import {useSelector} from 'react-redux';
 import { moderateScale, numberFormat } from "toktokload/helper";
 
 //COMPONENTS
-import { OrangeButton, HeaderBack, HeaderTitle, HeaderTabs, LoadingIndicator } from "src/ToktokLoad/components";
+import { OrangeButton, HeaderBack, HeaderTitle, HeaderTabs, LoadingIndicator, Separator } from "src/ToktokLoad/components";
 import { PaymentMethod, PayNowButton, SummaryDetails } from "./components";
 import { SomethingWentWrong } from 'src/components'
 
@@ -65,9 +65,6 @@ export const ToktokLoadSummary = ({ navigation, route }) => {
   }
   return (
     <View style={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Load Summary</Text>
-      </View>
       <ScrollView
         style={{ flex: 1 }}
         refreshControl={
@@ -77,9 +74,13 @@ export const ToktokLoadSummary = ({ navigation, route }) => {
           />
         }
       >
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerText}>Load Summary</Text>
+        </View>
         <SummaryDetails loadDetails={loads?.loadDetails ? loads.loadDetails : loads} mobileNumber={mobileNumber} />
-        <View style={styles.separator} />
+        <Separator />
         <PaymentMethod loadDetails={loads?.loadDetails ? loads.loadDetails : loads} getMyAccount={getMyAccount} />
+        <Separator />
       </ScrollView>
       <PayNowButton loadDetails={loads?.loadDetails ? loads.loadDetails : loads } mobileNumber={mobileNumber} />
     </View>
