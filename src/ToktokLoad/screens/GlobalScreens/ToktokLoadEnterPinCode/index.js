@@ -65,10 +65,13 @@ export const ToktokLoadEnterPinCode = ({navigation, route})=> {
   })
 
   useEffect(()=>{
-    if(!tokwaAccount.mobileNumber){
-      getMyAccount();
-    }
-  },[])
+    const unsubscribe = navigation.addListener('blur', (e) => {
+      setPinCode("");
+      setErrorMessage("");
+    });
+
+    return unsubscribe;
+  },[navigation])
 
   const onNumPress = () => {
     setTimeout(() => {
@@ -105,6 +108,10 @@ export const ToktokLoadEnterPinCode = ({navigation, route})=> {
     });
   }
 
+  const onPressForgotTPIN = () => {
+    navigation.navigate("ToktokWalletRecoveryMethods", {type: "TPIN", event: "enterprise"})
+  }
+
   return (
     <>
     <AlertOverlay visible={loading}/>
@@ -116,23 +123,30 @@ export const ToktokLoadEnterPinCode = ({navigation, route})=> {
       <View style={styles.subContainer}>
         <View style={styles.inputContainer}>
           <Text style={styles.otpText}>Enter {requestMoneyDetails?.validator} </Text>
-          <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={showPin} isError={errorMessage != ""} />
-          <TextInput
-            caretHidden
-            value={pinCode}
-            ref={inputRef}
-            style={styles.input}
-            keyboardType="number-pad"
-            returnKeyType="done"
-            onChangeText={(value) => {
-              if (value.length <= 6) {
-                const code = value.replace(/[^0-9]/,"")
-                setPinCode(code);
-                setErrorMessage("")
-              }
-            }}
-          />
+          <View style={{flexDirection:"row"}}>
+            <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={showPin} isError={errorMessage != ""} />
+            <TextInput
+              caretHidden
+              value={pinCode}
+              ref={inputRef}
+              style={styles.input}
+              keyboardType="number-pad"
+              returnKeyType="done"
+              onChangeText={(value) => {
+                if (value.length <= 6) {
+                  const code = value.replace(/[^0-9]/,"")
+                  setPinCode(code);
+                  setErrorMessage("")
+                }
+              }}
+            />
+          </View>
           { errorMessage != "" && <Text style={styles.errorText}>{errorMessage}</Text> }
+          { requestMoneyDetails?.validator === "TPIN" && (
+            <TouchableOpacity style={{ marginVertical: moderateScale(50) }} onPress={onPressForgotTPIN}>
+              <Text style={styles.forgotTPIN}>Forgot TPIN</Text>
+            </TouchableOpacity>
+          )}
         </View>
         <OrangeButton
           disabled={pinCode.length < 6}
@@ -176,5 +190,9 @@ const styles = StyleSheet.create({
     color: COLOR.RED,
     marginHorizontal: moderateScale(16),
     textAlign: "center"
+  },
+  forgotTPIN: {
+    color: "#FF8A48",
+    fontSize: FONT_SIZE.M
   }
 })
