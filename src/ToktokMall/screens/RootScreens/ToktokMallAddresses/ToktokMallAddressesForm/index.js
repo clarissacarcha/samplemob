@@ -435,7 +435,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
                 disabled={route.params?.item?.defaultAdd === 1}
                 onPress={() => {
                   // setConfirmDeleteModal(true)
-                  setClicked ? Toast.show('Cannot delete default address') : setConfirmDeleteModal(true);
+                  route.params?.item?.defaultAdd === 1 ? Toast.show('Cannot delete default address') : setConfirmDeleteModal(true);
                 }}>
                 <Text style={{color: route.params?.item?.defaultAdd === 1 ? '#D7D7D7' : '#F6841F'}}>Delete</Text>
               </TouchableOpacity>
