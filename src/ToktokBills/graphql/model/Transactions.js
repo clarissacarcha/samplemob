@@ -28,7 +28,6 @@ const transaction = `
   type
   status
   tokUserId
-  referralCommissionItemId
   ofps
   toktokServiceCommission
   startUp
