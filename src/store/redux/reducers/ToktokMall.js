@@ -16,7 +16,7 @@ const INITIAL_STATE = {
   customConfirmModal: {
     visible: false,
     onConfirmAction: () => {},
-    message: "Are you sure you want to delete this address?"
+    message: "Are you sure you want to delete this item?"
   }
 };
 

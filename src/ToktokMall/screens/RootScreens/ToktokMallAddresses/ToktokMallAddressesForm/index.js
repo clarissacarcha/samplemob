@@ -141,10 +141,9 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
   var hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
 
   const SavePostAddress = async (callback, id) => {
-    console.log("TEST")
     if (newAddressForm.receiverContact.length != 11 || newAddressForm.receiverContact == '') {
       return Toast.show('Invalid contact number.');
-    } if (newAddressForm.postalCode?.length > 0 && newAddressForm.postalCode?.length < 4) {
+    } if ((newAddressForm.postalCode?.length > 0 && newAddressForm.postalCode?.length < 4 ) && newAddressForm.postalCode !== "0") {
       return Toast.show('Invalid postal code.');
     } 
     if(hasNumber.test(newAddressForm.receiverName)){
