@@ -24,9 +24,10 @@ export class ErrorUtility {
   
     if(networkError){
       prompt({
-        type: "warning",
+        type: "error",
         title: "No Internet Connection",
         message: "Network error occurred. Please check your internet connection.",
+        event: "TOKTOKBILLSLOAD"
       });
       return;
     }
@@ -71,9 +72,10 @@ export class ErrorUtility {
     }
    
     prompt({
-      type: title ? "error" : "warning",
+      type: "error",
       title,
       message: graphQLErrors[0]?.message,
+      event: "TOKTOKBILLSLOAD"
     });
 
     if(title){
