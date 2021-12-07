@@ -11,7 +11,7 @@ import { OrangeButton, LoadingIndicator } from "src/ToktokLoad/components";
 import { SomethingWentWrong } from "src/components";
 
 //GRAPHQL & HOOKS
-import { useLazyQuery, useMutation } from '@apollo/react-hooks';
+import { useLazyQuery, useMutation, useQuery } from '@apollo/react-hooks';
 import { TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT } from 'src/graphql';
 import { GET_LOAD_ITEMS, POST_FAVORITE_LOAD, PATCH_REMOVE_FAVORITE_LOAD } from 'toktokload/graphql/model';
 import { useAlert } from 'src/hooks';
@@ -21,17 +21,18 @@ export const LoadList = ({ networkId, navigation, mobileNumber }) => {
 
   const alert = useAlert();
   const { selectedLoad, setSelectedLoad, favorites, setFavorites, loads, setLoads } = useContext(VerifyContext);
-  const [refreshing, setRefreshing] = useState(false);
   
-  const [getLoadItems, {loading: getLoadItemsLoading, error: getLoadItemsError}] = useLazyQuery(GET_LOAD_ITEMS, {
-    fetchPolicy: "network-only",
+  const {loading: getLoadItemsLoading, error: getLoadItemsError, refetch} = useQuery(GET_LOAD_ITEMS, {
+    fetchPolicy: "cache-and-network",
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
-    onError: () => {
-      setRefreshing(false);
+    variables: {
+      input: {
+        networkId,
+        mobileNumber
+      }
     },
     onCompleted: ({ getLoadItems }) => {
       setLoads(prev => ({ ...prev, [networkId]: getLoadItems }));
-      setRefreshing(false);
     }
   });
 
@@ -56,21 +57,8 @@ export const LoadList = ({ networkId, navigation, mobileNumber }) => {
     }
   });
 
-  useEffect(() => {
-    processGetLoadItems();
-    setRefreshing(getLoadItemsLoading);
-  }, [])
-
   const processGetLoadItems = () => {
-    getLoadItems({
-      variables: {
-        input: {
-          networkId,
-          mobileNumber
-        }
-      }
-    });
-    setRefreshing(true);
+    refetch();
   }
 
   const onPressFavorite = (item, index) => {
@@ -101,10 +89,6 @@ export const LoadList = ({ networkId, navigation, mobileNumber }) => {
     });
   }
 
-  const processFavoriteLoad = () => {
-
-  }
-
   const onPressNext = () => {
     if(selectedLoad[networkId]){
       navigation.navigate("ToktokLoadSummary", { loads: selectedLoad[networkId], mobileNumber  })
@@ -130,7 +114,7 @@ export const LoadList = ({ networkId, navigation, mobileNumber }) => {
     <View style={styles.container}>
       <FlatList
         extraData={{loads, selectedLoad}}
-        data={loads[networkId]}
+        data={loads ? loads[networkId] : []}
         renderItem={({ item, index }) => (
           <LoadDetails
             item={item}
@@ -145,7 +129,7 @@ export const LoadList = ({ networkId, navigation, mobileNumber }) => {
         ListEmptyComponent={ListEmptyComponent}
         refreshControl={
           <RefreshControl
-            refreshing={refreshing}
+            refreshing={getLoadItemsLoading}
             onRefresh={processGetLoadItems}
           />
         }
