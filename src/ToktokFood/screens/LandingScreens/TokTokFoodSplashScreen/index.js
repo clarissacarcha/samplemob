@@ -20,7 +20,7 @@ const TokTokFoodSplashScreen = () => {
   const {location} = useSelector(state => state.toktokFood);
   const [errorModal, setErrorModal] = useState({error: {}, visible: false});
 
-  const [createAccount, {createAccountLoading, createAccountLoadingError}] = useMutation(CREATE_ACCOUNT, {
+  const [createAccount] = useMutation(CREATE_ACCOUNT, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     onCompleted: ({createAccount}) => {
       let {status} = createAccount;
@@ -36,25 +36,22 @@ const TokTokFoodSplashScreen = () => {
     },
   });
 
-  const [updateToktokUser, {updateToktokUserLoading, updateToktokUserError}] = useMutation(
-    PATCH_PERSON_HAS_TOKTOKFOOD,
-    {
-      client: CLIENT,
-      onCompleted: ({patchToktokFoodUserId}) => {
-        console.log(JSON.stringify(patchToktokFoodUserId));
+  const [updateToktokUser, {data: updateToktokSuccess}] = useMutation(PATCH_PERSON_HAS_TOKTOKFOOD, {
+    client: CLIENT,
+    onCompleted: ({patchToktokFoodUserId}) => {
+      console.log(JSON.stringify(patchToktokFoodUserId));
 
-        // const res = API_RESULT.data.data;
-        // console.log(JSON.stringify(res));
+      // // const res = API_RESULT.data.data;
+      // // console.log(JSON.stringify(res));
 
-        if (patchToktokFoodUserId.status == 200) {
-          dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_INFO', payload: {...patchToktokFoodUserId}});
-          showHomPage();
-        } else {
-          Alert.alert('', 'Something went wrong.', [{text: 'Okay', onPress: () => navigation.pop()}]);
-        }
-      },
+      // if (patchToktokFoodUserId.status == 200) {
+      //   dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_INFO', payload: {...patchToktokFoodUserId}});
+      //   showHomPage();
+      // } else {
+      //   Alert.alert('', 'Something went wrong.', [{text: 'Okay', onPress: () => navigation.pop()}]);
+      // }
     },
-  );
+  });
 
   const [getToktokUserInfo, {data: foodPerson, error: foodPersonError, loading: foodPersonLoading}] = useLazyQuery(
     GET_ACCOUNT,
@@ -65,25 +62,29 @@ const TokTokFoodSplashScreen = () => {
         setErrorModal({error, visible: true});
       },
       onCompleted: ({getAccount}) => {
-        console.log(JSON.stringify({getAccount}));
+        console.log(JSON.stringify({foodPerson}));
         if (user.toktokfoodUserId != null) {
           dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_INFO', payload: {...getAccount}});
           showHomPage();
         } else {
-          console.log('CALL patchToktokFoodUserId');
-
-          updateToktokUser({
-            variables: {
-              input: {
-                toktokUserId: `"${user.id}"`,
-                toktokfoodUserId: `"${getAccount.userId}"`,
-              },
-            },
-          });
+          addToktokFoodId(getAccount);
         }
       },
     },
   );
+
+  const addToktokFoodId = account => {
+    updateToktokUser({
+      variables: {
+        input: {
+          toktokUserId: `"${user.id}"`,
+          toktokfoodUserId: `"${account.userId}"`,
+        },
+      },
+    });
+
+    console.log();
+  };
 
   const showHomPage = () => {
     navigation.replace('ToktokFoodLanding');
