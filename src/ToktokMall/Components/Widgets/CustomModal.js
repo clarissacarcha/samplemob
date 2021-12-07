@@ -6,9 +6,9 @@ import {successIcon, errorIcon, warningIcon, questionIcon} from '../../assets'
 import CustomIcon from '../Icons'
 const {width, height} = Dimensions.get('window')
 
-export const CustomModal = ({setIsVisible, type, message}) => {
-    const dispatch = useDispatch()
+export const CustomModal = ({setIsVisible, type, message, onCloseCallback = null}) => {
   
+  const dispatch = useDispatch()
 
   const getIconByType = () => {
     if(type == "Success") return successIcon
@@ -23,6 +23,9 @@ export const CustomModal = ({setIsVisible, type, message}) => {
           <View style={{backgroundColor: 'white', width: '80%', paddingVertical: 16, paddingHorizontal: 12, borderRadius: 5}}>
             <View style={{flexDirection: 'row', paddingHorizontal: 0}}>
               <TouchableOpacity onPress={() => {
+                if(onCloseCallback){
+                  onCloseCallback()
+                }
                 dispatch({type: 'TOKTOK_MALL_CLOSE_MODAL'})
               }} style={{flex: 1, flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'flex-end'}}>
                 <CustomIcon.EvIcon name="close" size={24} color="#F6841F" />
@@ -51,7 +54,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     zIndex: 999,
     width: width,
-    height: height,
+    height: Dimensions.get("screen").height,
     overflow: 'visible'
   }
 });

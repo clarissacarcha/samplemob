@@ -207,11 +207,13 @@ const Component = ({
       }
     }
     
-    init()
     setapiloader(false)
     dispatch({type:'TOKTOK_MALL_OPEN_MODAL', payload: {
       type: 'Success',
-      message: 'Items has been removed from your cart.'
+      message: 'Items has been removed from your cart.',
+      onCloseCallback: () => {
+        init()
+      }
     }})
   }
 
@@ -226,7 +228,6 @@ const Component = ({
     console.log(JSON.stringify(variables))
     setapiloader(true)
     const req = await ApiCall("remove_cart", variables, true)
-    init()
     setapiloader(false)
     if(req.responseData && req.responseData.success == 1){   
       console.log("Single Deletion Result: ", req.responseData)
@@ -234,7 +235,10 @@ const Component = ({
         // setSingleDeletemsgModalShown(true)
         dispatch({type:'TOKTOK_MALL_OPEN_MODAL', payload: {
           type: 'Success',
-          message: 'Item has been removed from your cart.'
+          message: 'Item has been removed from your cart.',
+          onCloseCallback: () => {
+            init()
+          }
         }})
       }, 200);
     }else if(req.responseError && req.responseError.success == 0){
