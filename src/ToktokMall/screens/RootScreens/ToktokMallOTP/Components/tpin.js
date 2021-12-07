@@ -32,7 +32,7 @@ export const TPIN =  ({onValidate}) => {
   )
 
   return (
-    <KeyboardAwareScrollView style={{backgroundColor: "#FFF"}}>
+    <ScrollView style={{backgroundColor: "#FFF"}}>
 
       {/* <ImageBackground 
         source={otpbg}
@@ -171,7 +171,7 @@ export const TPIN =  ({onValidate}) => {
           }}
         />
      
-    </KeyboardAwareScrollView>
+    </ScrollView>
   );
 }
 // );

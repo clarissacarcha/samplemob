@@ -224,7 +224,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
             setIsLoading(false);
             dispatch({type:'TOKTOK_MALL_OPEN_MODAL', payload: {
               type: 'Success',
-              message: 'Address Added!'
+              message: 'Address Deleted!'
             }})
             updateUserAddress('remove', newAddressForm.id);
             navigation.goBack();

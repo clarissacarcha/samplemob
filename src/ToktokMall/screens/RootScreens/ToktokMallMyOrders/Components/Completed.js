@@ -101,7 +101,7 @@ const Item = ({data, fulldata}) => {
       </TouchableOpacity>
       
       {/* Comment this View for disabling rating */}
-      <View style={{flexDirection: 'row-reverse', paddingHorizontal: 15, paddingBottom: 15}}>
+      {/* <View style={{flexDirection: 'row-reverse', paddingHorizontal: 15, paddingBottom: 15}}>
         {!rated && 
         <TouchableOpacity 
           onPress={()=> {                    
@@ -125,7 +125,7 @@ const Item = ({data, fulldata}) => {
             <Text style={{color: "#fff", fontSize: 13}}>Buy Again</Text>
           </View>
         </TouchableOpacity>}
-      </View>
+      </View> */}
 
       <View style={{ height: 2, backgroundColor: '#F7F7FA'}} />
 
