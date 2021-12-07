@@ -22,6 +22,7 @@ export const GET_MY_CART =  gql`
 					img {
 						filename
 					}
+					enabled
 				}
 			}
 			parsed {
@@ -47,6 +48,7 @@ export const GET_MY_CART =  gql`
 						img {
 							filename
 						}
+						enabled
 					}
 				}
 			}

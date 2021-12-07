@@ -94,6 +94,8 @@ const Component = ({
 
         if(response.getVerifyCheckout.isValid == 1){
           await OnSubmitForCheckout();
+        }else{
+          init()
         }
 
       }
@@ -271,13 +273,15 @@ const Component = ({
     storeitems.map((storeitem) => {
       let existing = items.findIndex((e) => e.id == storeitem.product.Id)
       if(existing == -1){
-        items.push({
-          id: storeitem.product.Id,
-          shopId: storeitem.shopid,
-          product: storeitem.product,
-          amount: parseFloat(storeitem.product.price * storeitem.quantity),
-          qty: storeitem.quantity
-        })
+        if(storeitem.product?.enabled == 1){
+          items.push({
+            id: storeitem.product.Id,
+            shopId: storeitem.shopid,
+            product: storeitem.product,
+            amount: parseFloat(storeitem.product.price * storeitem.quantity),
+            qty: storeitem.quantity
+          })
+        }
       }
     })
     setSelectedItemsArr(items)
@@ -333,26 +337,39 @@ const Component = ({
         if(itemIndex > - 1){
           //ITEM ALREADY EXIST
           let existingitem = checkoutitems[itemIndex]
-          return {
-            id: item.productid,
-            shopId: item.shopid,
-            product: item.product,
-            amount: parseFloat(existingitem.product.price * existingitem.qty),
-            qty: existingitem.qty
+
+          if(item.product?.enabled == 1){
+            return {
+              id: item.productid,
+              shopId: item.shopid,
+              product: item.product,
+              amount: parseFloat(existingitem.product.price * existingitem.qty),
+              qty: existingitem.qty
+            }
+          }else{
+            return null
           }
+          
         }else{
           //ITEM NOT EXIST, PUSH THE DATA FROM DATABASE
-          return {
-            id: item.productid,
-            shopId: item.shopid,
-            product: item.product,
-            amount: parseFloat(item.product.price * item.quantity),
-            qty: item.quantity
+          
+          if(item.product?.enabled == 1){
+            return {
+              id: item.productid,
+              shopId: item.shopid,
+              product: item.product,
+              amount: parseFloat(item.product.price * item.quantity),
+              qty: item.quantity
+            }
+          }else{
+            return null
           }
+
         }
-      })
+      }).filter(Boolean)
       // setItemsToCheckoutArr(allitems)
       // getSubTotal(allitems)
+      console.log(allitems.length)
       setSelectedItemsArr(allitems)
       // if(!willDelete){
         getSubTotal(allitems)
@@ -519,6 +536,7 @@ const Component = ({
                       init();
                     }
                     setWillDelete(!willDelete);
+                    CartContextData.setWillDelete(!willDelete);
                   }}
                   style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center'}}>
                   <Text style={{fontSize: 14, color: '#F6841F'}}>{willDelete ? 'Cancel' : ''}</Text>
