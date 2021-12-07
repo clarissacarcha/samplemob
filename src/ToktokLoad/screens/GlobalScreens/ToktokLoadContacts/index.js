@@ -30,7 +30,6 @@ export const ToktokLoadContacts = ({navigation, route}) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={'Search Contacts'} />,
-    headerStyle: { height: Platform.OS == 'ios' ? moderateScale(60) : moderateScale(80) }
   });
 
   const [data, setData] = useState(null);

@@ -44,13 +44,11 @@ export const ToktokLoadReceipt = ({ navigation, route }) => {
   const { receipt } = route.params;
   const viewshotRef = useRef();
   const headerHeight = useHeaderHeight();
-  const imageHeight = height - headerHeight - ( Platform.OS == 'ios' ? getStatusbarHeight : 0);
 
   navigation.setOptions({
     headerLeft: () => null,
     headerTitle: () => <HeaderTitle label={"toktokload Receipt"} />,
     headerRight: () => <HeaderDownloadReceipt viewshotRef={viewshotRef} refNo={receipt.referenceNumber} />,
-    headerStyle: { height: Platform.OS == 'ios' ? moderateScale(60) : moderateScale(80) }
   });
 
   useEffect(() => {

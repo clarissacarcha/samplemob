@@ -5,15 +5,11 @@ import {View, Text, StyleSheet, Platform} from "react-native";
 import { HeaderBack, HeaderTitle, HeaderTabs, LoadingIndicator } from "src/ToktokLoad/components";
 import { BuyLoad, Favorites } from "./TabScreens";
 
-//util
-import { moderateScale } from "toktokload/helper";
-
 export const ToktokLoadHome = ({ navigation }) => {
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={"toktokload"} isRightIcon/>,
-    headerStyle: { height: Platform.OS == 'ios' ? moderateScale(60) : moderateScale(80) }
   });
 
   const TABS = [
