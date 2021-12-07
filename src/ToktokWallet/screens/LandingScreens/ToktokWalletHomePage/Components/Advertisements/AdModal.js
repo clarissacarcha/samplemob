@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     },
     image: {
         height: BANNER_HEIGHT,
-        width: BANNER_HEIGHT * 2,
+        width: BANNER_HEIGHT,
         borderRadius: SIZE.BORDER_RADIUS,
         overflow: 'hidden',
       },
