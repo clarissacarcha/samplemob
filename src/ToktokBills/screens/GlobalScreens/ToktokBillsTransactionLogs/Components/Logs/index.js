@@ -17,6 +17,7 @@ export const Logs = ({ item, index })=> {
     id,
     referenceNumber,
     billerDetails,
+    convenienceFee,
     amount,
     status,
     createdAt

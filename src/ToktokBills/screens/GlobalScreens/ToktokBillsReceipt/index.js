@@ -49,7 +49,6 @@ export const ToktokBillsReceipt = ({ navigation, route }) => {
     headerLeft: () => null,
     headerTitle: () => <HeaderTitle label={"toktokload Receipt"} />,
     headerRight: () => <HeaderDownloadReceipt viewshotRef={viewshotRef} refNo={"10292"} />,
-    headerStyle: { height: Platform.OS == 'ios' ? moderateScale(60) : moderateScale(80) }
   });
 
   useEffect(() => {

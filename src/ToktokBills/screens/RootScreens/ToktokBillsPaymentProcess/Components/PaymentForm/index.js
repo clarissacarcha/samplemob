@@ -60,7 +60,10 @@ export const PaymentForm = ({ billItemSettings })=> {
   
   //CONVENIENCE FEE
   const convenienceFee = parseFloat(commissionRateDetails?.providerServiceFee) + parseFloat(commissionRateDetails?.systemServiceFee); 
- 
+  const convenienceFeeText = convenienceFee > 0 ? (
+    `Additional ₱ ${numberFormat(convenienceFee)} convenience fee will be charged in this transaction`
+  ) : ("Convenience fee is waived for this transaction");
+
   const navigation = useNavigation();
   const {
     firstField,
@@ -170,7 +173,7 @@ export const PaymentForm = ({ billItemSettings })=> {
         />
         { !!amountError && <Text style={styles.error}>{amountError}</Text>}
         <Text style={{ fontSize: FONT_SIZE.S, marginTop: 5 }}>
-          {`Additional ₱ ${numberFormat(convenienceFee)} convenience fee will be charged in this transaction`}
+          {convenienceFeeText}
           </Text>
       </View>
       <View>

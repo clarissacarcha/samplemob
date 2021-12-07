@@ -29,7 +29,6 @@ export const ToktokBillsEnterPinCode = ({navigation, route})=> {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={"toktokbills"} isRightIcon/>,
-    headerStyle: { height: Platform.OS == 'ios' ? moderateScale(60) : moderateScale(80) }
   });
   
   const { user } = useSelector((state) => state.session);
