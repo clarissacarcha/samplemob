@@ -49,7 +49,7 @@ export const BlockedAccount = ({data,showPrompt})=> {
             </View>
             <View style={{height: 70,padding: 16,justifyContent:'flex-end'}}>
                 <YellowButton label="Ok" onPress={()=> {
-                    navigation.pop()
+                    navigation.navigate("ToktokLandingHome")
                 }}/>
             </View>
             <BuildingBottom/>
