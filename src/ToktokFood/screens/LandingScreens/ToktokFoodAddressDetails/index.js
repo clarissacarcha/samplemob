@@ -25,16 +25,10 @@ const initialPickUpDetails = {
   pickUpAddressLatLong: {},
 };
 
-const ToktokFoodAddressDetails = ({ route }) => {
+const ToktokFoodAddressDetails = ({route}) => {
   const navigation = useNavigation();
 
   const {location} = useSelector((state) => state.toktokFood);
-
-  const onSearchMapNavigate = (c) => {
-    if (typeof c === 'object') {
-      navigation.replace('ToktokFoodMapSearch', {coordinates: c, isCart: route.params?.isCart});
-    }
-  };
 
   const reducer = (state, action) => {
     switch (action.type) {
@@ -51,9 +45,20 @@ const ToktokFoodAddressDetails = ({ route }) => {
     }
   };
 
+  const [state, dispatch] = useReducer(reducer, initialPickUpDetails);
+
+  const onSearchMapNavigate = (c) => {
+    if (typeof c === 'object') {
+      navigation.replace('ToktokFoodMapSearch', {
+        coordinates: c,
+        address: state.pickUpCompleteAddress,
+        isCart: route.params?.isCart,
+      });
+    }
+  };
+
   const [addressList, setAddressList] = useState([]);
   const [sessionToken, setSessionToken] = useState(uuid.v4());
-  const [state, dispatch] = useReducer(reducer, initialPickUpDetails);
 
   const useIsMounted = () => {
     const isMountedRef = useRef(true);
@@ -142,7 +147,12 @@ const ToktokFoodAddressDetails = ({ route }) => {
     },
   });
 
-  const onResultSelect = (prediction) => {
+  const onResultSelect = (prediction, fullAddress) => {
+    dispatch({
+      type: 'SET_PICKUP_COMPLETE_ADDRESS',
+      value: fullAddress,
+    });
+
     getGooglePlaceDetails({
       variables: {
         input: {
@@ -157,7 +167,7 @@ const ToktokFoodAddressDetails = ({ route }) => {
     const formattedAddressParts = item.formattedAddress.split(',');
     return (
       <>
-        <TouchableWithoutFeedback onPress={() => onResultSelect(item)}>
+        <TouchableWithoutFeedback onPress={() => onResultSelect(item, formattedAddressParts.toString())}>
           <View style={styles.placeItem}>
             <MIcon style={styles.placeIcon} name="place" size={23} color={COLOR.ORANGE} />
             <View style={styles.addressContainer}>
@@ -189,10 +199,10 @@ const ToktokFoodAddressDetails = ({ route }) => {
           <View style={styles.searchBoxContainer}>
             <View style={[styles.textInputWrapper, styles.searchBoxShadow]}>
               <MIcon
-                onPress={() => dispatch({type: 'SET_PICKUP_ADDRESS', value: ''})}
+                onPress={() => navigation.pop()}
                 style={styles.searchBoxIcon}
-                name="close"
-                size={22}
+                name="chevron-left"
+                size={32}
                 color={COLOR.ORANGE}
               />
               <TextInput
@@ -203,6 +213,13 @@ const ToktokFoodAddressDetails = ({ route }) => {
                 style={[styles.searchBox, styles.textInputFontStyles]}
                 onFocus={() => debouncedGetGooglePlaceAutocomplete()}
                 onChangeText={(query) => dispatch({type: 'SET_PICKUP_ADDRESS', value: query})}
+              />
+              <MIcon
+                onPress={() => dispatch({type: 'SET_PICKUP_ADDRESS', value: ''})}
+                style={styles.closeBoxIcon}
+                name="close"
+                size={22}
+                color={COLOR.DARK}
               />
             </View>
           </View>
@@ -236,9 +253,8 @@ const styles = StyleSheet.create({
   searchBox: {
     height: 49,
     width: '100%',
-    paddingEnd: 10,
     borderRadius: 13,
-    paddingStart: 42,
+    paddingHorizontal: 38,
     backgroundColor: '#FFF',
   },
   searchBoxShadow: {
@@ -265,8 +281,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   searchBoxIcon: {
-    left: 13,
-    width: 20,
+    left: 5,
+    zIndex: 99,
+    alignSelf: 'center',
+    position: 'absolute',
+  },
+  closeBoxIcon: {
+    right: 10,
     zIndex: 99,
     alignSelf: 'center',
     position: 'absolute',

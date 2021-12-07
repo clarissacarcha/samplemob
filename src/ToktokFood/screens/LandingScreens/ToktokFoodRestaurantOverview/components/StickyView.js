@@ -6,8 +6,8 @@ import ReactNativeParallaxHeader from 'react-native-parallax-header';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {FONT_SIZE, FONT, COLOR} from 'res/variables';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
-import CustomStarRating from 'toktokfood/components/CustomStarRating';
-import ChangeAddress from 'toktokfood/components/ChangeAddress';
+// import CustomStarRating from 'toktokfood/components/CustomStarRating';
+// import ChangeAddress from 'toktokfood/components/ChangeAddress';
 import {time, email_ic} from 'toktokfood/assets/images';
 import ContentLoader from 'react-native-easy-content-loader';
 
@@ -149,7 +149,7 @@ export const StickyView = () => {
       <View style={styles.title}>
         <HeaderTitle backOnly searchBox={false} />
         <View style={styles.titleInfo}>
-          <ChangeAddress styleContainer={{paddingTop: moderateScale(10)}} />
+          {/* <ChangeAddress styleContainer={{paddingTop: moderateScale(10)}} /> */}
           {shopDetailsLoading || shopDetailsError || (shopDetails && Object.keys(shopDetails).length == 0) ? (
             <ContentLoader
               active
@@ -324,6 +324,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
   },
   titleText: {
+    marginBottom: 6,
     fontSize: FONT_SIZE.L,
     fontFamily: FONT.BOLD,
   },

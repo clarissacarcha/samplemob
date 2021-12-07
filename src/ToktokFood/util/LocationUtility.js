@@ -59,3 +59,16 @@ export const reverseGeocode = async ({latitude, longitude}) => {
     console.log('reverseGeocode(): ' + error);
   }
 };
+
+export const reverseGeocodeViaText = async (address) => {
+  try {
+    const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&result_type=street_address&components=country:PH&key=${MAPS_API_KEY}`;
+    const result = await axios.get(url);
+    return {
+      formattedAddress: result.data.results[0].formatted_address,
+      coordinates: result.data.results[0].geometry.location,
+    };
+  } catch (error) {
+    console.log('reverseGeocode(): ' + error);
+  }
+};

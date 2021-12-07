@@ -542,7 +542,7 @@ const MainComponent = () => {
             error={tokWaPlaceOrderErr.error}
             close={() => setTokWaPlaceOrderErr({error: {}, visible: false})}
           />
-          <Loader visibility={showLoader} hasImage={false} loadingIndicator message="Placing Order" />
+          <Loader visibility={showLoader} hasImage={false} loadingIndicator message="Processing Order" />
         </>
       )}
       {showEnterPinCode ? (
@@ -559,7 +559,7 @@ const MainComponent = () => {
           errorMessage={errorMessage}
           setErrorMessage={setErrorMessage}
           title={toktokWalletCredit.validator}>
-          <Loader visibility={showLoader} hasImage={false} loadingIndicator message="Placing Order" />
+          <Loader visibility={showLoader} hasImage={false} loadingIndicator message="Processing Order" />
           <DialogMessage
             visibility={pinAttempt.show}
             title={tokwaErrorTitle(pinAttempt)}
@@ -568,7 +568,7 @@ const MainComponent = () => {
             onCloseModal={() => {
               setPinAttempt({show: false, message: ''});
               setShowEnterPinCode(false);
-              if(pinAttempt.message == 'Please set up your TPIN first in toktokwallet settings.'){
+              if (pinAttempt.message == 'Please set up your TPIN first in toktokwallet settings.') {
                 handleNavigationTokWaSetupPin();
               }
             }}
@@ -590,7 +590,7 @@ const MainComponent = () => {
           onCloseModal={() => {
             setPinAttempt({show: false, message: ''});
             setShowEnterPinCode(false);
-            if(pinAttempt.message == 'Please set up your TPIN first in toktokwallet settings.'){
+            if (pinAttempt.message == 'Please set up your TPIN first in toktokwallet settings.') {
               handleNavigationTokWaSetupPin();
             }
           }}

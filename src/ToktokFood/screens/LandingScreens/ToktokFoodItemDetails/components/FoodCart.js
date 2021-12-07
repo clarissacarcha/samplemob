@@ -24,10 +24,9 @@ import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import {useDispatch, useSelector} from 'react-redux';
 import Loader from 'toktokfood/components/Loader';
 import DialogMessage from 'toktokfood/components/DialogMessage';
-import { onErrorAlert } from 'src/util/ErrorUtility';
-import { useAlert } from 'src/hooks';
+import {onErrorAlert} from 'src/util/ErrorUtility';
+import {useAlert} from 'src/hooks';
 export const FoodCart = ({loading, action}) => {
-
   const alert = useAlert();
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -48,7 +47,7 @@ export const FoodCart = ({loading, action}) => {
     requiredOptions,
     temporaryCart,
     selectedVariants,
-    basePrice
+    basePrice,
   } = useContext(VerifyContext);
   const {customerInfo} = useSelector((state) => state.toktokFood);
   const [showDialogMessage, setShowDialogMessage] = useState({show: false, items: []});
@@ -62,8 +61,8 @@ export const FoodCart = ({loading, action}) => {
     onError: (error) => {
       setLoader(false);
       setTimeout(() => {
-        onErrorAlert({alert, error})
-      }, 100)
+        onErrorAlert({alert, error});
+      }, 100);
     },
     onCompleted: ({postTemporaryCart}) => {
       // console.log(postTemporaryCart)
@@ -75,8 +74,8 @@ export const FoodCart = ({loading, action}) => {
     onError: (error) => {
       setLoader(false);
       setTimeout(() => {
-        onErrorAlert({alert, error})
-      }, 100)
+        onErrorAlert({alert, error});
+      }, 100);
     },
     onCompleted: ({patchTemporaryCartItem}) => {
       // console.log(patchTemporaryCartItem)
@@ -120,14 +119,14 @@ export const FoodCart = ({loading, action}) => {
       onError: (err) => {
         setLoader(false);
         setTimeout(() => {
-          onErrorAlert({alert, error})
-        }, 100)
+          onErrorAlert({alert, error});
+        }, 100);
       },
     },
   );
 
   useEffect(() => {
-    if(customerInfo.userId != undefined) {
+    if (customerInfo.userId != undefined) {
       checkHasTemporaryCart({variables: {input: {userId: customerInfo.userId}}});
     }
   }, [customerInfo]);
@@ -135,7 +134,7 @@ export const FoodCart = ({loading, action}) => {
   useEffect(() => {
     if (productDetails && Object.keys(productDetails).length > 0) {
       let data = productDetails.variants.length > 0 ? selectedVariants : productDetails;
-      setTempData(data)
+      setTempData(data);
       if (data?.maxQtyIsset == 1) {
         if (temporaryCart.items.length > 0) {
           const hasItem = temporaryCart.items.filter((item) => {
@@ -148,8 +147,14 @@ export const FoodCart = ({loading, action}) => {
             });
             let isEditQtty = selectedItemId == undefined ? count.quantity + currentQty : count.quantity;
             let exceededQty = currentQty == data.maxQty ? currentQty : isEditQtty;
-            let disableMaxQtyCondition = selectedItemId == undefined ? exceededQty > data.maxQty : selectedQty + (data.maxQty - currentQty) == count.quantity;
-            let disableAddCondition = selectedItemId == undefined ? exceededQty > data.maxQty - 1 : selectedQty + (data.maxQty - currentQty) == count.quantity;
+            let disableMaxQtyCondition =
+              selectedItemId == undefined
+                ? exceededQty > data.maxQty
+                : selectedQty + (data.maxQty - currentQty) == count.quantity;
+            let disableAddCondition =
+              selectedItemId == undefined
+                ? exceededQty > data.maxQty - 1
+                : selectedQty + (data.maxQty - currentQty) == count.quantity;
             setDisableMaxQty(
               (currentQty == data.maxQty && selectedItemId == undefined) ||
                 (selectedItemId == undefined && disableMaxQtyCondition),
@@ -167,15 +172,15 @@ export const FoodCart = ({loading, action}) => {
   }, [productDetails, temporaryCart, count, selectedVariants]);
 
   const isEqual = (obj1, obj2) => {
-    if(obj2.length > 0 && obj1.length > 0){
-      let filter = []
-      for(let x = 0; x < obj1.length; x++){
-        filter.push(obj2[x] == obj1[x].id)
+    if (obj2.length > 0 && obj1.length > 0) {
+      let filter = [];
+      for (let x = 0; x < obj1.length; x++) {
+        filter.push(obj2[x] == obj1[x].id);
       }
-     
-      return !filter.includes(false) && obj1.length == obj2.length
+
+      return !filter.includes(false) && obj1.length == obj2.length;
     } else {
-      return obj2.length == obj1.length
+      return obj2.length == obj1.length;
     }
   };
 
@@ -199,7 +204,7 @@ export const FoodCart = ({loading, action}) => {
         });
       });
     }
-    return addons.sort()
+    return addons.sort();
   };
 
   //PROCESS ADD TO CART
@@ -213,14 +218,14 @@ export const FoodCart = ({loading, action}) => {
       addons: extractAddons(),
       notes: notes,
     };
-  
+
     let filterItemByProductId = await temporaryCart.items.filter((item) => {
       // console.log(item.productid)
       return item.productid == items.productid;
     });
     // return null
     let duplicateItem = await filterItemByProductId.filter((item) => {
-      let sortedData = item.addonsDetails.sort((a,b) => ( a.id - b.id ));
+      let sortedData = item.addonsDetails.sort((a, b) => a.id - b.id);
       return isEqual(sortedData, items.addons);
     });
 
@@ -238,7 +243,7 @@ export const FoodCart = ({loading, action}) => {
         setLoader(true);
         return addToCart(items);
       }
-      if(hasTemporaryCart.checkHasTemporaryCart.shopid != 0) {
+      if (hasTemporaryCart.checkHasTemporaryCart.shopid != 0) {
         setShowDialogMessage({
           show: true,
           items,
@@ -309,7 +314,7 @@ export const FoodCart = ({loading, action}) => {
         setTimeout(() => {
           setLoader(false);
           Toast.show('Cart Updated', Toast.SHORT);
-          navigation.navigate('ToktokFoodRestaurantOverview', { item: { id: productDetails.sysShop } });
+          navigation.navigate('ToktokFoodRestaurantOverview', {item: {id: productDetails.sysShop}});
         }, 1000);
       } else {
         setLoader(false);
@@ -327,7 +332,7 @@ export const FoodCart = ({loading, action}) => {
         setTimeout(() => {
           setLoader(false);
           Toast.show('Added to cart', Toast.SHORT);
-          navigation.navigate('ToktokFoodRestaurantOverview', { item: { id: productDetails.sysShop } });
+          navigation.navigate('ToktokFoodRestaurantOverview', {item: {id: productDetails.sysShop}});
         }, 1000);
       } else {
         setLoader(false);
@@ -363,9 +368,17 @@ export const FoodCart = ({loading, action}) => {
     updateCartStates();
   }, [count]);
 
+  const isEnabled = () =>
+    required.length > 0 || disabledMaxQty || loading || postLoading || patchLoading || deleteLoading || hasCartLoading;
+
   return (
     <>
-      <Loader visibility={loader} message={action === 'edit' ? 'Updating Cart' : 'Adding to Cart'} hasImage={false} loadingIndicator />
+      <Loader
+        visibility={loader}
+        message={action === 'edit' ? 'Updating Cart' : 'Adding to Cart'}
+        hasImage={false}
+        loadingIndicator
+      />
       <DialogMessage
         visibility={showDialogMessage.show}
         title={'OOPS!'}
@@ -384,49 +397,53 @@ export const FoodCart = ({loading, action}) => {
         hasTwoButtons
       />
       <View style={[styles.container, styles.cartBorder]}>
-        {tempData?.maxQtyIsset == 1 && (
+        {/* {tempData?.maxQtyIsset == 1 && (
           <Text
             style={{
               color: '#FFA700',
               fontSize: FONT_SIZE.M,
               fontFamily: FONT.BOLD,
             }}>{`Max quantity per checkout: ${tempData?.maxQty}`}</Text>
-        )}
+        )} */}
         <View style={styles.foodItemTotalWrapper}>
           <View style={styles.countWrapper}>
             <TouchableOpacity
               disabled={count.quantity < 2}
               style={[styles.countButtons, {backgroundColor: count.quantity < 2 ? COLOR.LIGHT : COLOR.MEDIUM}]}
-              onPress={_.debounce(() => updateCartTotal('REMOVE'), 100, { leading: true, trailing: false })}>
+              onPress={_.debounce(() => updateCartTotal('REMOVE'), 100, {leading: true, trailing: false})}>
               <MIcon name="remove" color={COLOR.BLACK} size={25} />
             </TouchableOpacity>
             <Text style={styles.countText}>{count.quantity}</Text>
             <TouchableOpacity
-              disabled={(disableAdd || count.quantity >= tempData?.stocks)}
+              disabled={disableAdd || count.quantity >= tempData?.stocks}
               style={[
                 styles.countButtons,
-                {backgroundColor: COLOR.ORANGE, opacity: (disableAdd || count.quantity >= tempData?.stocks) ? 0.5 : 1}
+                {backgroundColor: COLOR.ORANGE, opacity: disableAdd || count.quantity >= tempData?.stocks ? 0.5 : 1},
               ]}
-              onPress={_.debounce(() => updateCartTotal(), 100, { leading: true, trailing: false })}
-            >
+              onPress={_.debounce(() => updateCartTotal(), 100, {leading: true, trailing: false})}>
               <MIcon name="add" color={COLOR.WHITE} size={20} />
             </TouchableOpacity>
           </View>
-          <Text style={styles.total}>Total: {totalPrice.toFixed(2)}</Text>
+          <Text style={styles.total}>Total: PHP {totalPrice.toFixed(2)}</Text>
         </View>
         <TouchableOpacity
-          disabled={required.length > 0 || loading || postLoading || patchLoading || deleteLoading || hasCartLoading || disabledMaxQty}
+          disabled={isEnabled()}
           style={[
             styles.cartButton,
             {
-              backgroundColor:
-                required.length > 0 || disabledMaxQty || loading || postLoading || patchLoading || deleteLoading || hasCartLoading
-                  ? COLOR.LIGHT
-                  : COLOR.YELLOW,
+              backgroundColor: isEnabled() ? COLOR.LIGHT : COLOR.YELLOW,
             },
           ]}
           onPress={() => onRestaurantNavigate()}>
-          <Text style={styles.buttonText}>{action === 'edit' ? 'Update' : 'Add to Cart'}</Text>
+          <Text
+            style={[
+              styles.buttonText,
+              {
+                color: isEnabled() ? COLOR.DARK : COLOR.WHITE,
+              },
+            ]}>
+            {action === 'edit' ? 'Update' : 'Add to Cart'}
+          </Text>
         </TouchableOpacity>
       </View>
     </>

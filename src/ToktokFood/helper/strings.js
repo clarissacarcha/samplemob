@@ -650,8 +650,8 @@ toktokfood also has the right to cancel any orders as well as suspend or termina
     content: `The use of the Account, Services and the toktokfood Platform may be subject to limitations, delays, security issues, and other problems inherent in the use of the internet and electronic communications, including the device used by you being faulty, not connected, out of range of mobile signals or functioning incorrectly. toktokfood and Paypanda are not responsible for any delays, delivery failures, damages or losses resulting from such problems. You agree that all risks arising from online transactions will be borne by you. To the extent that toktokfood and PayPanda confirmed to incur any liability, toktokfood and PayPanda's liability shall in no event exceed the amount paid by you for the use of the Services giving rise to the cause of action.`,
   },
   MERCHANT_LIABILITY: {
-    title: 'LIMITATION_OF_LIABILITY',
-    content: `The use of the Account, Services and the toktokfood Platform may be subject to limitations, delays, security issues, and other problems inherent in the use of the internet and electronic communications, including the device used by you being faulty, not connected, out of range of mobile signals or functioning incorrectly. toktokfood and Paypanda are not responsible for any delays, delivery failures, damages or losses resulting from such problems. You agree that all risks arising from online transactions will be borne by you. To the extent that toktokfood and PayPanda confirmed to incur any liability, toktokfood and PayPanda's liability shall in no event exceed the amount paid by you for the use of the Services giving rise to the cause of action.`,
+    title: 'MERCHANT LIABILITY',
+    content: `All merchant partners of toktokfood are responsible for the condition and quality of goods being delivered. In cases of merchant Delivery, merchants are responsible for delivery of the Goods and/or Orders. toktokfood shall not be liable for any loss or damage arising from your contractual relationship with the merchant.`,
   },
   SEVERABILITY: {
     title: 'SEVERABILITY',
