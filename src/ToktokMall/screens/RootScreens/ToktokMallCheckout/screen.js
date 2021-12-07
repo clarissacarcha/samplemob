@@ -360,7 +360,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
       for (var y = 0; y < route.params.data[x].data[0].length; y++) {
         let item = route.params.data[x].data[0][y];
         // console.log("Hahay", route.params.data[x].data[0][y], y)
-        a += parseFloat(item.amount) * item.qty;
+        a += parseFloat(item.amount)
       }
       // let shipping = 0
       // for(var z=0;z<shippingRates.length;z++){

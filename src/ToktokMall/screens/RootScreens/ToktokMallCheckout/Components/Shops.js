@@ -63,7 +63,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
   const computeTotal = (item, raw = false) => {
     let total = 0
     for (let i = 0; i < item.length; i++){
-      total = total + (parseFloat(item[i].amount) * item[i].qty)
+      total = total + parseFloat(item[i].amount)
     }
     if(raw){
       return total == NaN ? 0 : total

@@ -435,6 +435,8 @@ const Component = ({
     if(selectedItemsArr.length > 0){
       
       let data = FormatCheckoutItems()
+      // console.log(JSON.stringify(data))
+      // return
       navigation.navigate("ToktokMallCheckout", {
         type: "from_cart",
         data: data,
