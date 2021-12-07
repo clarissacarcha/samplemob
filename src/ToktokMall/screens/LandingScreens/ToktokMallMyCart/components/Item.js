@@ -147,10 +147,10 @@ export const Item = ({
                   />
                 </TouchableOpacity>
                 <View 
-                  style = {{backgroundColor: '#F8F8F8', padding: 5, height: 25,width: 35, alignItems: 'center', justifyContent: 'center',
+                  style = {{backgroundColor: '#F8F8F8', padding: 2, height: 25,width: 35, alignItems: 'center', justifyContent: 'center',
                   borderWidth: 1, borderColor: '#F8F8F8'
                 }}>
-                  <Text>{qty}</Text>
+                  <Text style={{fontSize: 12}}>{qty}</Text>
                 </View>
                 <TouchableOpacity
                   style = {{alignItems: 'center', justifyContent: 'center',  height: 25,width: 25,

@@ -69,10 +69,20 @@ export const GET_VERIFY_ADD_TO_CART = gql`
 `
 
 export const CHECK_ITEM_FROM_CART = gql`
-query checkItemFromCart($input: CheckItemFromCartInput) {
-	checkItemFromCart(input: $input) {
-		id
-		quantity
+	query checkItemFromCart($input: CheckItemFromCartInput) {
+		checkItemFromCart(input: $input) {
+			id
+			quantity
+		}
 	}
-}
+`
+
+export const GET_VERIFY_CHECKOUT = gql`
+	query getVerifyCheckout($input: GetVerifyCheckoutInput) {
+		getVerifyCheckout(input: $input){
+			isValid
+			validItems
+			invalidItems
+		}
+	}
 `

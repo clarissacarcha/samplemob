@@ -16,7 +16,7 @@ import {ApiCall, PaypandaApiCall, BuildPostCheckoutBody, BuildTransactionPayload
 
 import { useLazyQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql';
-import { GET_MY_CART } from '../../../../graphql/toktokmall/model';
+import { GET_MY_CART, GET_VERIFY_CHECKOUT } from '../../../../graphql/toktokmall/model';
 import AsyncStorage from '@react-native-community/async-storage';
 import {EventRegister} from 'react-native-event-listeners';
 
@@ -76,6 +76,24 @@ const Component = ({
             swiperrefcopy.push({id: item.productid, index: x})
           }
           setSwiperReferences(swiperrefcopy)
+        }
+
+      }
+    },
+    onError: (err) => {
+      console.log(err)
+    }
+  })
+
+  const [getVerifyCheckout, {loading2, error2}] = useLazyQuery(GET_VERIFY_CHECKOUT, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',    
+    onCompleted: async (response) => {
+      setapiloader(false)
+      if(response.getVerifyCheckout){
+
+        if(response.getVerifyCheckout.isValid == 1){
+          await OnSubmitForCheckout();
         }
 
       }
@@ -586,7 +604,12 @@ const Component = ({
           {myCartData.length > 0 && !willDelete && (
             <CheckoutFooter
               onSubmit={async () => {
-                await OnSubmitForCheckout();
+                setapiloader(true)
+                await getVerifyCheckout({variables: {
+                  input: {
+                    items: selectedItemsArr
+                  }
+                }})
               }}
               subtotal={subTotal}
             />
