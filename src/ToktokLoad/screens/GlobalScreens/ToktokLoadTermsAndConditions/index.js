@@ -16,7 +16,6 @@ export const ToktokLoadTermsAndConditions = ({ navigation, route }) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={"Terms and Conditions"} />,
-    headerStyle: { height: Platform.OS == "ios" ? moderateScale(60) : moderateScale(80) }
   });
 
   const { termsAndConditions } = route.params;

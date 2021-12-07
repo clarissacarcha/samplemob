@@ -28,7 +28,6 @@ export const ToktokLoadEnterPinCode = ({navigation, route})=> {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={"toktokload"} isRightIcon/>,
-    headerStyle: { height: Platform.OS == 'ios' ? moderateScale(60) : moderateScale(80) }
   });
   
   const { user } = useSelector((state) => state.session);
