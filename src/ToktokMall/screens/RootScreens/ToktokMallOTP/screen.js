@@ -76,8 +76,8 @@ const Component = ({navigation, route, otpAttempts, setAttempts}) => {
       let errordata = JSON.parse(req.responseError.message)
       if(errordata.errors[0]){
         const {remainingAttempts, remainingTime} = errordata.errors[0].payload
-          Context.setretries(remainingAttempts || 0)
-          Context.setTimeRemaining(remainingTime || 30)
+        Context.setretries(remainingAttempts || 0)
+        Context.setTimeRemaining(remainingTime || 30)
       }
 
     }else if(req.responseError){

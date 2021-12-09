@@ -28,6 +28,12 @@ export const ValidatorMaxRequest =  ({onValidate}) => {
     }, [])
   )
 
+  const text = (minutes) => {
+    return(
+        <Text style = {{fontSize: 13, color: "#F6841F", fontFamily: FONT.REGULAR, textAlign: 'center'}}>{minutes} minutes.</Text>
+    )
+  }
+
   return (
     <View style={{flex: 1, backgroundColor: "#FFF"}}>
 
@@ -50,9 +56,12 @@ export const ValidatorMaxRequest =  ({onValidate}) => {
             />     
             <>
               <Text style = {{fontFamily: FONT.BOLD, fontSize: 17, marginTop: 25, marginBottom:10}}>No Attempts Left</Text>
-              <Text style = {{textAlign: 'center', paddingHorizontal: 15, fontSize: 14, fontFamily: FONT.REGULAR}}>
+              {/* <Text style = {{textAlign: 'center', paddingHorizontal: 15, fontSize: 14, fontFamily: FONT.REGULAR}}>
                 {Context.lockMessage}
-              </Text>
+              </Text> */}
+              <Text style={styles.label}>You have reached the maximum number of </Text>
+              <Text style={styles.label}>attempts to enter the correct TPIN.</Text>
+              <Text style={styles.label}>Please try again after {text(Context.timeRemaining)}</Text>
             </>
             
         </View>
@@ -118,5 +127,8 @@ const styles = StyleSheet.create({
     color: 'white',
     fontFamily: FONT.REGULAR,
     fontSize: 14
+  },
+  label: {
+    fontSize: 13, color: "#000", fontFamily: FONT.REGULAR, textAlign: 'center'
   }
 });
