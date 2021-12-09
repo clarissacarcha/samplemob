@@ -22,7 +22,7 @@ import { POST_CONTACT_SUPPORT } from '../../../../../../graphql/toktokmall/model
 import { useMutation } from '@apollo/react-hooks';
 import AsyncStorage from '@react-native-community/async-storage';
 import Toast from "react-native-simple-toast";
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useSelector } from 'react-redux';
 
 export const ToktokMallContactUs = ({navigation}) => {
@@ -119,6 +119,7 @@ export const ToktokMallContactUs = ({navigation}) => {
 
   return (
     <>
+    <KeyboardAwareScrollView>
       <View style={styles.container}>
         {loading && <LoadingOverlay isVisible={loading} />}
         {messageModalShown && 
@@ -214,10 +215,12 @@ export const ToktokMallContactUs = ({navigation}) => {
                   <Text style={styles.buttonText}>Submit</Text>
                 </TouchableOpacity>
               </View>
-              </View>
+              <View style={{height: 30}} />
+            </View>
         </Card>
       </View>
       </View>
+      </KeyboardAwareScrollView>
     </>
   );
 };

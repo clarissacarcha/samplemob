@@ -32,7 +32,7 @@ export const TPIN =  ({onValidate}) => {
   )
 
   return (
-    <ScrollView style={{backgroundColor: "#FFF"}}>
+    <KeyboardAwareScrollView style={{backgroundColor: "#FFF"}}>
 
       {/* <ImageBackground 
         source={otpbg}
@@ -118,7 +118,7 @@ export const TPIN =  ({onValidate}) => {
           <Text style={{color: '#F6841F'}}>You have exceeded your retries to enter OTP.</Text>
         </View>} */}
 
-        <View style={{height: 35}}/>
+        {/* <View style={{height: 25}}/> */}
 
       
         {!Context.isInvalid && <TouchableOpacity 
@@ -171,7 +171,7 @@ export const TPIN =  ({onValidate}) => {
           }}
         />
      
-    </ScrollView>
+    </KeyboardAwareScrollView>
   );
 }
 // );
