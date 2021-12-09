@@ -40,7 +40,6 @@ export const LoadList = ({ networkId, navigation, mobileNumber }) => {
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
     onError: (error) => {
       onErrorAlert({alert,error});
-      processFavoriteLoad();
     },
     onCompleted:({ postFavoriteLoad })=> {
       console.log(postFavoriteLoad, "ADD")
@@ -64,29 +63,30 @@ export const LoadList = ({ networkId, navigation, mobileNumber }) => {
   const onPressFavorite = (item, index) => {
     let data = [...loads[networkId]];
     let favData = {
-      loadItemId: item.id,
-      mobileNumber
+      variables: {
+        input: {
+          loadItemId: item.id,
+          mobileNumber
+        }
+      }
     }
 
-    item.favorite ? processPatchFavoriteLoad(favData) : processPostFavoriteLoad(favData); // ADD OR REMOVE
-    data[index].favorite = item.favorite ? null : favData
-    setLoads(prev => ({ ...prev, [networkId]: data  }));
-  }
-
-  const processPostFavoriteLoad = (favData) => {
-    postFavoriteLoad({
-      variables: {
-        input: favData
-      }
-    });
-  }
-
-  const processPatchFavoriteLoad = (favData) => {
-    patchRemoveFavoriteLoad({
-      variables: {
-        input: favData
-      }
-    });
+    // ADD OR REMOVE FAVORITE
+    if(item.favorite){
+      patchRemoveFavoriteLoad(favData).then((res) => {
+        if(res !== undefined){
+          data[index].favorite = null
+          setLoads(prev => ({ ...prev, [networkId]: data  }));
+        }
+      });
+    } else {
+      postFavoriteLoad(favData).then((res) => {
+        if(res !== undefined){
+          data[index].favorite = favData
+          setLoads(prev => ({ ...prev, [networkId]: data  }));
+        }
+      });
+    }
   }
 
   const onPressNext = () => {

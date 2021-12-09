@@ -21,7 +21,7 @@ export const LoadDetails = ({ item, index, networkId, onPressFavorite, patchFavo
   const colorAmount = isSelected ? "#fff" : "#F6841F";
   const colorDesc = isSelected ? "#fff" : "#707070";
 
-  const onPressThrottled = useThrottle(onPressFavorite, 1000);
+  const onPressThrottled = useThrottle(onPressFavorite, 500);
 
   const imgSelected = () => {
     if(favorite){
