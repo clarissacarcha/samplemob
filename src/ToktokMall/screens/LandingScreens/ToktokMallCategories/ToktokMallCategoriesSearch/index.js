@@ -1,5 +1,5 @@
 import React from 'react'
-import {View,Text,StyleSheet,Platform,Dimensions,StatusBar,Image, TouchableOpacity, FlatList} from 'react-native'
+import {View,Text,StyleSheet,Platform,Dimensions,StatusBar,Image, TouchableOpacity, FlatList, BackHandler} from 'react-native'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import RNFS from 'react-native-fs'
 import { useLazyQuery, useQuery } from '@apollo/react-hooks'
@@ -13,6 +13,8 @@ import { COLOR, FONT, FONT_SIZE } from '../../../../../res/variables';
 import CustomIcon from '../../../../Components/Icons';
 import { Dropdown } from '../../../../Components';
 import {emptysearch} from '../../../../assets';
+import { useFocusEffect } from '@react-navigation/native'
+
 
 export const ToktokMallCategoriesSearch = ({navigation})=> {
 
@@ -34,6 +36,16 @@ export const ToktokMallCategoriesSearch = ({navigation})=> {
   //     setIsLoading(false)
   //   }
   // })
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        return true
+      }
+      BackHandler.addEventListener('hardwareBackPress', onBackPress)
+      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress)
+    }, [])
+  )
 
   const {data, loading, error} = useQuery(GET_FULL_CATEGORIES, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,

@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useContext, useRef, createRef} from 'react';
-import {View, Text, StyleSheet, Platform, Dimensions, StatusBar, Image, TouchableOpacity, FlatList, RefreshControl} from 'react-native';
+import {View, Text, StyleSheet, Platform, Dimensions, StatusBar, Image, TouchableOpacity, FlatList, RefreshControl, BackHandler} from 'react-native';
 import {connect, useDispatch} from 'react-redux'
 import {HeaderBack, HeaderTitle, HeaderRight, Header, CustomModal} from '../../../Components';
 import CustomIcon from '../../../Components/Icons';
@@ -22,7 +22,6 @@ import {EventRegister} from 'react-native-event-listeners';
 
 import { CartContext } from './ContextProvider';
 import { useFocusEffect } from '@react-navigation/core';
-import { BackHandler } from 'react-native';
 
 const Component = ({
   navigation,
@@ -470,6 +469,16 @@ const Component = ({
       Toast.show("Please select items to checkout", Toast.LONG)
     }
   }
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        return true
+      }
+      BackHandler.addEventListener('hardwareBackPress', onBackPress)
+      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress)
+    }, [])
+  )
 
   return (
     <>

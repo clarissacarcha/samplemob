@@ -78,7 +78,6 @@ const Component = ({ myCart, createMyCartSession,}) => {
   useFocusEffect(
     React.useCallback(() => {
       const onBackPress = () => {
-        navigation.pop(2)
         return true
       }
       BackHandler.addEventListener('hardwareBackPress', onBackPress)

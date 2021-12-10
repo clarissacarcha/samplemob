@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback} from 'react'
-import {View,Text,StyleSheet,Platform,Dimensions,StatusBar,Image, TouchableOpacity, FlatList} from 'react-native'
+import {View,Text,StyleSheet,Platform,Dimensions,StatusBar,Image, TouchableOpacity, FlatList, BackHandler} from 'react-native'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import RNFS from 'react-native-fs'
 import { HeaderBack, HeaderTitle, HeaderRight, Dropdown, Header, Loading } from '../../../Components'
@@ -204,6 +204,16 @@ const Component =  ({
   useFocusEffect(
     useCallback(() => {
       init()
+    }, [])
+  )
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        return true
+      }
+      BackHandler.addEventListener('hardwareBackPress', onBackPress)
+      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress)
     }, [])
   )
 
