@@ -258,6 +258,6 @@ export default ({Navigator}) => (
   <Navigator.Screen 
     name="ToktokMallLanding" 
     component={ToktokMallLanding} 
-    options={{headerShown: false}} 
+    options={{headerShown: false, gestureEnabled: false}} 
   />
 );
