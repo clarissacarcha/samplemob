@@ -15,9 +15,7 @@ const CreateButton = ({setShowModal}) => {
 
   const onNavigateToktokWalletAccount = () => {
     setShowModal(false);
-    navigation.navigate('ToktokWalletRestricted', {
-      component: 'noAccount',
-    });
+    navigation.navigate('ToktokWalletVerification');
   };
 
   return (
