@@ -58,7 +58,7 @@ const Component =  ({
   const [variationOptionType, setVariationOptionType] = useState(0)
   
   const [messageModalShown, setMessageModalShown] = useState(false)
-  const [soldoutmodal, setsoldoutmodal] = useState(true)
+  const [soldoutmodal, setsoldoutmodal] = useState(false)
   const [cartexceeded, setcartexceeded] = useState(false)
 
   const [isOutOfStock, setisOutOfStock] = useState(false)
