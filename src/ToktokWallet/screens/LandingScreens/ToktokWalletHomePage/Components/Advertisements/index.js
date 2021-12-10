@@ -44,7 +44,7 @@ export const Advertisements = () => {
         <Grid ads={grid} /> */}
         {
           grid && <>
-          <View style={{paddingHorizontal: 16,}}>
+          <View style={{paddingHorizontal: 16,marginBottom: 16}}>
           <Text style={{
             fontSize: FONT_SIZE.M,
             color: '#212529',

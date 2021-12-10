@@ -21,6 +21,7 @@ export const ToktokLandingHome = ({navigation}) => {
       if (notification.additionalData.classification === 'toktokwallet') {
         setTimeout(() => {
           navigation.navigate('ToktokWalletLoginPage');
+          navigation.replace('ToktokWalletLoginPage');
         }, 10);
         return;
       }
