@@ -104,7 +104,6 @@ export const TPIN =  ({onValidate}) => {
             <Text style={{color: '#F6841F'}}>Sorry, the TPIN you've entered is incorrect. </Text>
             <Text style={{color: '#F6841F'}}>You only have ({Context.retries}) attempts left.</Text>
           </View>
-          <View style={{height: 35}} />
           </>
           }
             
