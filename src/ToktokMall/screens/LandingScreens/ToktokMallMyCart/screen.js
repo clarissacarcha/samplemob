@@ -526,7 +526,7 @@ const Component = ({
                     }}
                   />
                 </View>
-                <TouchableOpacity
+                {willDelete && <TouchableOpacity
                   onPress={() => {
                     if (!willDelete == true) {
                       //Copy items selected by user from to checkout array
@@ -543,8 +543,8 @@ const Component = ({
                     CartContextData.setWillDelete(!willDelete);
                   }}
                   style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center'}}>
-                  <Text style={{fontSize: 14, color: '#F6841F'}}>{willDelete ? 'Cancel' : ''}</Text>
-                </TouchableOpacity>
+                  <Text style={{fontSize: 14, color: '#F6841F'}}>Cancel</Text>
+                </TouchableOpacity>}
               </View>
               <View style={{height: 2, backgroundColor: '#F7F7FA'}} />
 
