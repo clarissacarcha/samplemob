@@ -18,8 +18,6 @@ import {ApiCall, PaypandaApiCall, BuildPostCheckoutBody, BuildTransactionPayload
 import AsyncStorage from '@react-native-community/async-storage';
 import { Badge, Tooltip } from 'react-native-elements';
 
-
-
 import {
 
   HeaderPlain,
@@ -60,7 +58,7 @@ const Component =  ({
   const [variationOptionType, setVariationOptionType] = useState(0)
   
   const [messageModalShown, setMessageModalShown] = useState(false)
-  const [soldoutmodal, setsoldoutmodal] = useState(false)
+  const [soldoutmodal, setsoldoutmodal] = useState(true)
   const [cartexceeded, setcartexceeded] = useState(false)
 
   const [isOutOfStock, setisOutOfStock] = useState(false)
@@ -306,13 +304,16 @@ const Component =  ({
       //setCartItems(CountCartItems)
       EventRegister.emit('refreshToktokmallShoppingCart')
       createMyCartCountSession("add", input.qty)
+      setIsFetching(false)
 
       dispatch({type:'TOKTOK_MALL_OPEN_MODAL', payload: {
         type: 'Success',
-        message: 'Item has been added to your cart.'
+        message: 'Item has been added to your cart.',
+        onCloseCallback: () => {
+          setMessageModalShown(true)
+        }
       }})
-      setIsFetching(false)
-      setMessageModalShown(true)
+
     }else if(req.responseError && req.responseError.success == 0){
       Toast.show(req.responseError.message, Toast.LONG)
     }else if(req.responseError){
@@ -365,6 +366,7 @@ const Component =  ({
   }
 
   const init = async () => {
+
     AsyncStorage.getItem("ToktokMallUser").then((raw) => {
       const data = JSON.parse(raw)
       if(data.userId){

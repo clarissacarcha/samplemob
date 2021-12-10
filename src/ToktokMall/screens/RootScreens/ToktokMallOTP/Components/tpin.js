@@ -118,7 +118,7 @@ export const TPIN =  ({onValidate}) => {
           <Text style={{color: '#F6841F'}}>You have exceeded your retries to enter OTP.</Text>
         </View>} */}
 
-        <View style={{height: 35}}/>
+        {/* <View style={{height: 25}}/> */}
 
       
         {!Context.isInvalid && <TouchableOpacity 

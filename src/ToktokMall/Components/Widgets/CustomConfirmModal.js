@@ -3,7 +3,7 @@ import {StyleSheet, View, Text, TouchableOpacity, Dimensions, Image} from 'react
 import {useDispatch, useSelector} from 'react-redux';
 import CustomIcon from '../Icons';
 import {successIcon, errorIcon, warningIcon, questionIcon} from '../../assets';
-const {width, height} = Dimensions.get('window');
+const {width, height} = Dimensions.get('screen');
 
 export const CustomConfirmModal = () => {
   const dispatch = useDispatch();
@@ -52,7 +52,7 @@ export const CustomConfirmModal = () => {
                 backgroundColor: 'white',
                 alignItems: 'center',
                 justifyContent: 'center',
-                paddingVertical: 8,
+                paddingVertical: 15,
                 borderRadius: 5,
                 borderWidth: 1,
                 borderColor: '#F6841F',
@@ -67,7 +67,7 @@ export const CustomConfirmModal = () => {
                 backgroundColor: '#F6841F',
                 alignItems: 'center',
                 justifyContent: 'center',
-                paddingVertical: 8,
+                paddingVertical: 15,
                 borderRadius: 5,
               }}>
               <Text style={{fontSize: 13, color: '#fff'}}>Confirm</Text>

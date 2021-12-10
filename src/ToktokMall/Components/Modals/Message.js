@@ -66,14 +66,14 @@ export const DynamicMessageModal = ({navigation, isVisible, setIsVisible, type, 
                     backgroundColor: 'white', 
                     alignItems: 'center', 
                     justifyContent: 'center', 
-                    paddingVertical: 8, 
+                    paddingVertical: 12, 
                     marginHorizontal: 8,
                     borderRadius: 5, 
                     borderWidth: 1, 
                     borderColor: "#F6841F",
                     ...btn.containerStyle
                   }}>
-                  <Text style={{fontSize: 13, height: 18,  color: "#F6841F", ...btn.labelStyle}}>{btn.label}</Text> 
+                  <Text style={{fontSize: 13, height: 26,  color: "#F6841F", paddingVertical: 0, ...btn.labelStyle}}>{btn.label}</Text> 
                 </TouchableOpacity>
               )
 

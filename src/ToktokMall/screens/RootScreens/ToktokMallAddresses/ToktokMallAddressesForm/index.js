@@ -222,12 +222,22 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
           .then(async (response) => {
             console.log(response.data);
             setIsLoading(false);
+
+            const refresh = () =>
+              setTimeout(() => {
+                EventRegister.emit('refreshAddress');
+              }, 1000);
+
             dispatch({type:'TOKTOK_MALL_OPEN_MODAL', payload: {
               type: 'Success',
-              message: 'Address Added!'
+              message: 'Address Deleted!',
+              onCloseCallback: () => {
+                updateUserAddress('remove', newAddressForm.id);
+                refresh()
+                navigation.goBack();
+              }
             }})
-            updateUserAddress('remove', newAddressForm.id);
-            navigation.goBack();
+            
           })
           .catch((error) => {
             setIsLoading(false);

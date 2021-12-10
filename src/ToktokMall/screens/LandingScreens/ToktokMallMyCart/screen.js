@@ -16,7 +16,7 @@ import {ApiCall, PaypandaApiCall, BuildPostCheckoutBody, BuildTransactionPayload
 
 import { useLazyQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql';
-import { GET_MY_CART } from '../../../../graphql/toktokmall/model';
+import { GET_MY_CART, GET_VERIFY_CHECKOUT } from '../../../../graphql/toktokmall/model';
 import AsyncStorage from '@react-native-community/async-storage';
 import {EventRegister} from 'react-native-event-listeners';
 
@@ -76,6 +76,26 @@ const Component = ({
             swiperrefcopy.push({id: item.productid, index: x})
           }
           setSwiperReferences(swiperrefcopy)
+        }
+
+      }
+    },
+    onError: (err) => {
+      console.log(err)
+    }
+  })
+
+  const [getVerifyCheckout, {loading2, error2}] = useLazyQuery(GET_VERIFY_CHECKOUT, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',    
+    onCompleted: async (response) => {
+      setapiloader(false)
+      if(response.getVerifyCheckout){
+
+        if(response.getVerifyCheckout.isValid == 1){
+          await OnSubmitForCheckout();
+        }else{
+          init()
         }
 
       }
@@ -187,11 +207,13 @@ const Component = ({
       }
     }
     
-    init()
     setapiloader(false)
     dispatch({type:'TOKTOK_MALL_OPEN_MODAL', payload: {
       type: 'Success',
-      message: 'Items has been removed from your cart.'
+      message: 'Items has been removed from your cart.',
+      onCloseCallback: () => {
+        init()
+      }
     }})
   }
 
@@ -206,7 +228,6 @@ const Component = ({
     console.log(JSON.stringify(variables))
     setapiloader(true)
     const req = await ApiCall("remove_cart", variables, true)
-    init()
     setapiloader(false)
     if(req.responseData && req.responseData.success == 1){   
       console.log("Single Deletion Result: ", req.responseData)
@@ -214,7 +235,10 @@ const Component = ({
         // setSingleDeletemsgModalShown(true)
         dispatch({type:'TOKTOK_MALL_OPEN_MODAL', payload: {
           type: 'Success',
-          message: 'Item has been removed from your cart.'
+          message: 'Item has been removed from your cart.',
+          onCloseCallback: () => {
+            init()
+          }
         }})
       }, 200);
     }else if(req.responseError && req.responseError.success == 0){
@@ -253,13 +277,15 @@ const Component = ({
     storeitems.map((storeitem) => {
       let existing = items.findIndex((e) => e.id == storeitem.product.Id)
       if(existing == -1){
-        items.push({
-          id: storeitem.product.Id,
-          shopId: storeitem.shopid,
-          product: storeitem.product,
-          amount: parseFloat(storeitem.product.price * storeitem.quantity),
-          qty: storeitem.quantity
-        })
+        if(storeitem.product?.enabled == 1){
+          items.push({
+            id: storeitem.product.Id,
+            shopId: storeitem.shopid,
+            product: storeitem.product,
+            amount: parseFloat(storeitem.product.price * storeitem.quantity),
+            qty: storeitem.quantity
+          })
+        }
       }
     })
     setSelectedItemsArr(items)
@@ -315,26 +341,39 @@ const Component = ({
         if(itemIndex > - 1){
           //ITEM ALREADY EXIST
           let existingitem = checkoutitems[itemIndex]
-          return {
-            id: item.productid,
-            shopId: item.shopid,
-            product: item.product,
-            amount: parseFloat(existingitem.product.price * existingitem.qty),
-            qty: existingitem.qty
+
+          if(item.product?.enabled == 1){
+            return {
+              id: item.productid,
+              shopId: item.shopid,
+              product: item.product,
+              amount: parseFloat(existingitem.product.price * existingitem.qty),
+              qty: existingitem.qty
+            }
+          }else{
+            return null
           }
+          
         }else{
           //ITEM NOT EXIST, PUSH THE DATA FROM DATABASE
-          return {
-            id: item.productid,
-            shopId: item.shopid,
-            product: item.product,
-            amount: parseFloat(item.product.price * item.quantity),
-            qty: item.quantity
+          
+          if(item.product?.enabled == 1){
+            return {
+              id: item.productid,
+              shopId: item.shopid,
+              product: item.product,
+              amount: parseFloat(item.product.price * item.quantity),
+              qty: item.quantity
+            }
+          }else{
+            return null
           }
+
         }
-      })
+      }).filter(Boolean)
       // setItemsToCheckoutArr(allitems)
       // getSubTotal(allitems)
+      console.log(allitems.length)
       setSelectedItemsArr(allitems)
       // if(!willDelete){
         getSubTotal(allitems)
@@ -417,6 +456,8 @@ const Component = ({
     if(selectedItemsArr.length > 0){
       
       let data = FormatCheckoutItems()
+      // console.log(JSON.stringify(data))
+      // return
       navigation.navigate("ToktokMallCheckout", {
         type: "from_cart",
         data: data,
@@ -499,6 +540,7 @@ const Component = ({
                       init();
                     }
                     setWillDelete(!willDelete);
+                    CartContextData.setWillDelete(!willDelete);
                   }}
                   style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center'}}>
                   <Text style={{fontSize: 14, color: '#F6841F'}}>{willDelete ? 'Cancel' : ''}</Text>
@@ -586,7 +628,12 @@ const Component = ({
           {myCartData.length > 0 && !willDelete && (
             <CheckoutFooter
               onSubmit={async () => {
-                await OnSubmitForCheckout();
+                setapiloader(true)
+                await getVerifyCheckout({variables: {
+                  input: {
+                    items: selectedItemsArr
+                  }
+                }})
               }}
               subtotal={subTotal}
             />

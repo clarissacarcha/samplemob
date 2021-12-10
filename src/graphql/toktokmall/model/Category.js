@@ -29,16 +29,16 @@ export const GET_RAW_CATEGORIES = gql`
 `
 
 export const GET_TOP_CATEGORIES  = gql`
-query getTopCategories {
-  getTopCategories {
-    parentImg
-    parentIcon
-    parentCategoryName
-    image
-    subCategories {
-      id
-      categoryName
+  query getTopCategories {
+    getTopCategories {
+      parentImg
+      parentIcon
+      parentCategoryName
+      image
+      subCategories {
+        id
+        categoryName
+      }
     }
   }
-}
 `

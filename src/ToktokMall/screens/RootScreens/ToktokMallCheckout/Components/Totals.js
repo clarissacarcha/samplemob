@@ -72,7 +72,7 @@ export const Totals = ({raw, shipping, setGrandTotal}) => {
         data?.map((item, i) => {
           console.log(item.data);
           for (let i = 0; i < item.data[0].length; i++) {
-            total = total + parseFloat(item.data[0][i].amount) * item.data[0][i].qty;
+            total = total + parseFloat(item.data[0][i].amount);
           }
         });
       setMerchandiseTotal(total);
