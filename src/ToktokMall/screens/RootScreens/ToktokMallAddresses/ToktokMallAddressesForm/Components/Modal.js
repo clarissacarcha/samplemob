@@ -7,6 +7,7 @@ import { COLOR, FONT, FONT_SIZE } from '../../../../../../res/variables';
 // import {watch, electronics, mensfashion, furniture, petcare} from '../../../../../assets'
 import AntDesgin from 'react-native-vector-icons/dist/AntDesign'
 import CustomIcon from "../../../../../Components/Icons"
+import {successIcon} from '../../../../../assets'
 import { Touchable } from 'react-native';
 
 const Confirm = ({onCancel, onConfirm}) => {
@@ -50,8 +51,8 @@ export const AddressModal = ({navigation, isVisible, setIsVisible, type, message
               style={{
                 backgroundColor: 'white',
                 width: '90%',
-                paddingVertical: 20,
-                paddingHorizontal: 20,
+                paddingVertical:  20 ,
+                paddingHorizontal: 20 ,
                 borderRadius: 5,
               }}>
               {type == 'Confirm' && (
@@ -82,7 +83,11 @@ export const AddressModal = ({navigation, isVisible, setIsVisible, type, message
               )}
               {type == 'Message' && (
                 <View style={{alignItems: 'center', justifyContent: 'center'}}>
-                  <AntDesgin name={'checkcircleo'} size={90} color={'#F6841F'} />
+                  {/* <AntDesgin name={'checkcircleo'} size={90} color={'#F6841F'} /> */}
+                   <Image 
+                    source={successIcon}
+                    style={{width: 130, height: 120, resizeMode: 'stretch', overflow: 'hidden'}}
+                  />
                   <View style={{paddingVertical: 8}} />
                   <Text style={{fontSize: 22, color: '#F6841F'}}>{message}</Text>
                 </View>

@@ -34,7 +34,7 @@ import {useFocusEffect} from '@react-navigation/native'
 
 import CheckBox from 'react-native-check-box';
 
-import { ApiCall } from '../../../../helpers';
+import { ApiCall, ArrayCopy } from '../../../../helpers';
 import Toast from 'react-native-simple-toast';
 
 const Component = ({route, navigation, reduxStates: {user_address, defaultAddress}, reduxActions: {updateUserAddress, setDefaultUserAddress}}) => {
@@ -68,6 +68,7 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
     headerRight: () => <HeaderRight hidden={true} />,
   });
 
+
   const [getAddresses, {error, loading}] = useLazyQuery(GET_CUSTOMER_ADDRESSES, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',    
@@ -81,7 +82,24 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
       console.log(getCustomerAddresses)
       if(getCustomerAddresses){
         console.log("getCustomerAddresses", getCustomerAddresses)
-        setAddresses(getCustomerAddresses)
+        // let items = ArrayCopy(selectedItemsArr)
+        // let itemIndex = items.findIndex((e) => e.id == raw.productId)
+        // if(itemIndex > -1){
+        //   items.splice(0, 0, items.length - 1)
+        // }
+        // if(getCustomerAddresses.length > 1){
+          let index = 0
+          getCustomerAddresses.map((item, i) =>{
+            if(item.defaultAdd === 1){
+              index = i
+            }
+          })
+          let copyArr = ArrayCopy(getCustomerAddresses)
+          copyArr.splice(0, 0, copyArr.splice(index, 1)[0])
+          setAddresses(copyArr)
+        // }
+        
+        // setAddresses(getCustomerAddresses)
         swiperRefs.current = Array(getCustomerAddresses.length - 1).fill().map((_, i) => swiperRefs.current[i] || createRef());
       }
     },
@@ -258,6 +276,7 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
               <AntDesign name={'plus'} color={'#F6841F'} size={20} />
             </Card>
           )}
+          
           renderItem={({item, index}) => {
 
             const Wrapper = activeToDeleteItem.value ? View : Swipeable
@@ -529,6 +548,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginTop: 10,
+    marginBottom: 12,
     height: 50,
     borderRadius: 5,
     paddingLeft: 10,
