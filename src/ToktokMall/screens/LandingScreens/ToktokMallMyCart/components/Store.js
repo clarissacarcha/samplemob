@@ -5,7 +5,7 @@ import { AlertOverlay} from '../../../../../components';
 import { COLOR, FONT, FONT_SIZE } from '../../../../../res/variables';
 import CheckBox from 'react-native-check-box';
 
-export const Store = ({data, storeIndex,  state = false, onSelect, onPress, setUncheckedItems}) => {
+export const Store = ({data, storeIndex,  state = false, onSelect, onPress, disabled, setUncheckedItems}) => {
 
   const [selected, setSelected] = useState(state)
 	const [items, setItems] = useState(data.cart || [])
@@ -30,14 +30,27 @@ export const Store = ({data, storeIndex,  state = false, onSelect, onPress, setU
     else return loc
   }
 
+  const checkIfDisabled = (type) => {
+
+    if(!disabled){
+      if(type == "state") return false
+      else if(type == "color") return "#F6841F"
+    }else{
+      if(type == "state") return true
+      else if(type == "color") return "#ECECEC"
+    }
+
+  }
+
   return (
     <>
       <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
         <View style={{flex: 1, justifyContent: 'center'}}>
           <CheckBox
+            disabled={checkIfDisabled("state")}
             isChecked={selected}
             checkedCheckBoxColor="#F6841F"
-            uncheckedCheckBoxColor="#F6841F"
+            uncheckedCheckBoxColor={checkIfDisabled("color")}
             onClick={() => {
 							onSelect({
 								checked: !selected,

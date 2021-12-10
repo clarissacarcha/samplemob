@@ -85,6 +85,12 @@ export const RenderDetails = forwardRef(({
 
 	const getStoreCheckboxState = () => {
 
+		if(item.data.length == 1){
+			if(item.data[0].product.enabled != 1){
+				return false
+			}
+		}
+
 		let isStoreSelected = getCheckboxState()
 		let isAllSelected = selectedItemsCount == item.data.length		
 		if(isAllSelected){
@@ -118,11 +124,24 @@ export const RenderDetails = forwardRef(({
 		}
 	}
 
+	const storeCheckboxIsDisabled = () => {
+		if(item.data.length == 1){
+			if(item.data[0].product.enabled != 1){
+				return true
+			}else{
+				return false
+			}
+		}else{
+			return false
+		}
+	}
+
 	return (
     <>
       <Store
         state={getStoreCheckboxState()}
         data={item?.shop || {}}
+				disabled={storeCheckboxIsDisabled()}
         onSelect={(raw) => {
           toggleCheckBox(raw.checked);
           onStoreSelect(raw, item.data);
