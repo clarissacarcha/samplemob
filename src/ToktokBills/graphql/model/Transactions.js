@@ -11,6 +11,7 @@ const transaction = `
     id
     name
     logo
+    descriptions
   }
   loadDetails {
     id
@@ -71,6 +72,21 @@ export const POST_TRANSACTION = gql`
       status
       data {
         ${transaction}
+      }
+    }
+  }
+`
+export const POST_BILLS_VALIDATE_TRANSACTION = gql`
+  mutation postBillsValidateTransaction($input: PostBillsValidateTransactionInput!) {
+    postBillsValidateTransaction(input: $input) {
+      Status
+      Success
+      Message
+      Data {
+        FirstField
+        SecondField
+        Amount
+        BillerTag
       }
     }
   }

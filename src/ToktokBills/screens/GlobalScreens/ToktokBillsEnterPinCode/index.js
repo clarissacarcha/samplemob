@@ -51,7 +51,8 @@ export const ToktokBillsEnterPinCode = ({navigation, route})=> {
         error,
         navigation,
         setErrorMessage,
-        prompt
+        prompt,
+        isPop: true
       });
     },
     onCompleted: ({ postTransaction }) => {
@@ -62,7 +63,7 @@ export const ToktokBillsEnterPinCode = ({navigation, route})=> {
       prompt({
         type: "success",
         title: "Payment Successful",
-        message: `Your payment to ${billerDetails.name} amounting to ₱${numberFormat(totalAmount)} has been successfully processed with ref no. ${referenceNumber} on ${paymentDate}.`,
+        message: `Your payment to ${billerDetails.descriptions} amounting to ₱${numberFormat(totalAmount)} has been successfully processed with ref no. ${referenceNumber} on ${paymentDate}.`,
         onPress: () => { navigation.navigate("ToktokBillsReceipt", { receipt: postTransaction.data, paymentData }) }
       });
     }
@@ -105,7 +106,7 @@ export const ToktokBillsEnterPinCode = ({navigation, route})=> {
       discount: 0,
       type: 1,
       comRateId: paymentData.billItemSettings.commissionRateDetails.id,
-      email: paymentData.email.toLowerCase()
+      email: paymentData.email.toLowerCase(),
     }
   
     postTransaction({

@@ -59,7 +59,7 @@ const MainComponent = ({navigation, route})=> {
         <ScrollView keyboardShouldPersistTaps="handled">
           <View style={styles.headerContainer}>
             <Image source={{ uri: billItemSettings?.getBillItemSettings.logo }} style={styles.logo} />
-            <Text style={styles.billerName}>{billItemSettings?.getBillItemSettings?.name}</Text>
+            <Text style={styles.billerName}>{billItemSettings?.getBillItemSettings?.descriptions}</Text>
           </View>
           <PaymentForm billItemSettings={billItemSettings?.getBillItemSettings} />
           <ConfirmButton billItemSettings={billItemSettings?.getBillItemSettings} billType={billType} />
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: moderateScale(130),
-    height: moderateScale(50),
+    height: moderateScale(70),
     resizeMode: "contain"
   },
   billerName: {

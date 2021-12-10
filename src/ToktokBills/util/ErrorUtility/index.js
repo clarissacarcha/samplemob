@@ -17,7 +17,8 @@ export class ErrorUtility {
     navigation,
     setErrorMessage = null,
     prompt,
-    title = "Transaction Failed"
+    title = "Transaction Failed",
+    isPop = false
   })=> {
     
     const {graphQLErrors, networkError} = error;
@@ -72,13 +73,13 @@ export class ErrorUtility {
     }
    
     prompt({
-      type: "error",
+      type: title ? "error" : "warning",
       title,
       message: graphQLErrors[0]?.message,
       event: "TOKTOKBILLSLOAD"
     });
 
-    if(title){
+    if(isPop){
       return navigation.pop();
     }
   }
