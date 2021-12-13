@@ -12,6 +12,7 @@ export const GET_LOAD_ITEMS = gql`
       networkId
       itemCode
       referralCommissionItemId
+      planCode
       networkDetails {
         id
         name

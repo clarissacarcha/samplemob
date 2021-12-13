@@ -97,7 +97,7 @@ export const PaymentMethod = ({ loadDetails }) => {
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: moderateScale(30),
-    paddingVertical: moderateScale(20)
+    paddingVertical: moderateScale(30)
   },
   title: {
     color: "#F6841F",

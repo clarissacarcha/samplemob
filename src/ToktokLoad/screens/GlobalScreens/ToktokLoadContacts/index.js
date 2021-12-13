@@ -10,6 +10,7 @@ import {
   TouchableHighlight,
   Alert,
   Platform,
+  Image
 } from 'react-native';
 import Contacts from 'react-native-contacts';
 import _ from 'lodash';
@@ -17,25 +18,28 @@ import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import { useContacts } from 'toktokload/hooks'
 
 //COMPONENTS
-import { HeaderBack, HeaderTitle } from 'src/ToktokLoad/components';
-import { ContactInfoRender } from "./components";
+import { HeaderBack, HeaderTitle, OrangeButton, SearchInput } from 'src/ToktokLoad/components';
+import { ContactInformation } from "./components";
+import { empty_search } from 'toktokload/assets/images';
+import { search_icon } from 'toktokload/assets/icons';
 
 //UTIL / FONTS / COLOR
 import { moderateScale } from "toktokload/helper";
 import {DARK, LIGHT, MEDIUM} from 'src/res/constants';
-import {COLOR, FONT} from 'src/res/variables';
+import {COLOR, FONT, FONT_SIZE} from 'src/res/variables';
 
 export const ToktokLoadContacts = ({navigation, route}) => {
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={'Search Contacts'} />,
+    headerTitle: () => <HeaderTitle label={'All Contacts'} />,
   });
 
   const [data, setData] = useState(null);
   const [fetchError, setFetchError] = useState(false);
   const [filteredData, setFilteredData] = useState(null);
   const [searchString, setSearchString] = useState('');
+  const [selectedContact, setSelectedContact] = useState("");
   const { contacts } = useContacts();
 
   useEffect(() => {
@@ -56,9 +60,18 @@ export const ToktokLoadContacts = ({navigation, route}) => {
     return mobileNumber.replace("+63", "0");
   };
 
-  const setRecipient = (number) => {
-    route.params.setMobileNumber(onSelectContact(number))
+  const setRecipient = () => {
+    route.params.setMobileNumber(onSelectContact(selectedContact.item.number))
     return navigation.pop()
+  }
+
+  const ListEmptyComponent = () => {
+    return (
+      <View style={styles.center}>
+        <Image source={empty_search} style={styles.emptySearchIcon} />
+        <Text style={styles.emptyText}>We can't find any contact matching your search</Text>
+      </View>
+    )
   }
 
   if (!filteredData) {
@@ -85,50 +98,40 @@ export const ToktokLoadContacts = ({navigation, route}) => {
     );
   }
 
-  if (filteredData.length === 0 && searchString !== '') {
-    return (
-      <View style={styles.screen}>
-        <TextInput
-          value={searchString}
-          onChangeText={onSearchChange}
-          style={styles.input}
-          placeholder="Address Book"
-          placeholderTextColor={COLOR.MEDIUM}
-          returnKeyType="done"
-        />
-        <View style={styles.center}>
-          <Text>No matching contact found.</Text>
-        </View>
-      </View>
-    );
-  }
-
   return (
     <View style={styles.screen}>
-      <TextInput
-        value={searchString}
-        onChangeText={onSearchChange}
-        style={styles.input}
-        placeholder="Search Contacts"
-        placeholderTextColor={COLOR.MEDIUM}
-        returnKeyType="done"
-      />
+      <View style={{ padding: 16 }}>
+        <SearchInput
+          onChangeText={onSearchChange}
+          value={searchString}
+        />
+      </View>
       <FlatList
         showsVerticalScrollIndicator={false}
-        ItemSeparatorComponent={() => <View style={{borderBottomWidth: 1, borderBottomColor: COLOR.LIGHT}} />}
         data={filteredData}
+        extraData={{selectedContact, filteredData}}
         keyExtractor={(item, index) => index}
         renderItem={({item, index}) => {
           return (
-            <ContactInfoRender
+            <ContactInformation
               item={item}
               index={index}
               setSearchString={setSearchString}
-              checkAccount={setRecipient}
+              setSelectedContact={setSelectedContact}
+              selectedContact={selectedContact}
             />
           )
         }}
+        ListEmptyComponent={ListEmptyComponent}
+        contentContainerStyle={{ flexGrow: 1 }}
       />
+      <View style={{ padding: 16 }}>
+        <OrangeButton
+          onPress={setRecipient}
+          disabled={Object.keys(selectedContact).length === 0}
+          label="Ok"
+        />
+      </View>
     </View>
   );
 };
@@ -139,11 +142,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'white',
+    padding: moderateScale(16)
   },
   screen: {
-    padding: 16,
     flex: 1,
-    paddingBottom: 0,
     backgroundColor: 'white',
   },
   contact: {
@@ -154,10 +156,29 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   input: {
-    backgroundColor: COLOR.LIGHT,
+    backgroundColor: "#F8F8F8",
     borderRadius: 5,
-    paddingLeft: 16,
     height: 50,
     color: COLOR.BLACK,
+    margin: 16,
+    padding: 16,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  emptySearchIcon: {
+    width: moderateScale(200),
+    height: moderateScale(200),
+    resizeMode: "contain"
+  },
+  emptyText: {
+    color: "#9E9E9E",
+    fontSize: FONT_SIZE.L
+  },
+  searchIcon: {
+    width: moderateScale(20),
+    height: moderateScale(20),
+    resizeMode: "contain",
+    tintColor: "#F6841F",
+    marginRight: moderateScale(10)
   },
 });

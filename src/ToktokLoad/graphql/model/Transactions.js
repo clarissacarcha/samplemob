@@ -15,6 +15,7 @@ const transaction = `
   loadDetails {
     id
     name
+    planCode
     networkDetails {
       id
       name

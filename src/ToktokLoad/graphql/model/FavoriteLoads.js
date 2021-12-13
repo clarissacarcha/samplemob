@@ -16,6 +16,7 @@ export const GET_FAVORITE_LOADS = gql`
         termsAndConditions
         providerId
         networkId
+        planCode
         referralCommissionItemId
         networkDetails {
           id

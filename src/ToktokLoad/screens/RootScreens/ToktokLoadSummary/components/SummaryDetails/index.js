@@ -14,10 +14,6 @@ export const SummaryDetails = ({ loadDetails, mobileNumber }) => {
     <>
       <View style={styles.detailsContainer}>
         <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
-          <Text style={styles.title}>Mobile Number</Text>
-          <Text style={styles.description}>{mobileNumber}</Text>
-        </View>
-        <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
           <Text style={styles.title}>Load Amount</Text>
           <Text style={styles.description}>PHP {amount.toFixed(2)}</Text>
         </View>
@@ -41,7 +37,7 @@ const styles = StyleSheet.create({
   title: {
     color: "#F6841F",
     fontFamily: FONT.BOLD,
-    fontSize: FONT_SIZE.M
+    fontSize: FONT_SIZE.M,
   },
   description: {
     color: "#707070",
@@ -60,8 +56,7 @@ const styles = StyleSheet.create({
   },
   totalAmountContainer: {
     paddingHorizontal: moderateScale(30),
-    paddingVertical: moderateScale(20),
-    marginBottom: moderateScale(15)
+    paddingVertical: moderateScale(30),
   },
   detailsContainer: {
     paddingHorizontal: moderateScale(30),

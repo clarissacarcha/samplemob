@@ -74,7 +74,7 @@ export const ToktokLoadSummary = ({ navigation, route }) => {
         }
       >
         <View style={styles.headerContainer}>
-          <Text style={styles.headerText}>Load Summary</Text>
+          <Text style={styles.headerText}>Payment Summary</Text>
         </View>
         <SummaryDetails loadDetails={loads?.loadDetails ? loads.loadDetails : loads} mobileNumber={mobileNumber} />
         <Separator />
