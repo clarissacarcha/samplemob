@@ -16,7 +16,7 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
     if (autoShipping?.success) {
       const {amount, is_percentage} = autoShipping.voucher;
       if (amount > 0) {
-        let pAmount = is_percentage != 0 ? (amount / 100) * deliveryFee : amount
+        let pAmount = is_percentage !== 0 ? (amount / 100) * deliveryFee : amount;
         let totalSF = deliveryFee - pAmount;
         totalSF = totalSF > 0 ? totalSF : 0;
         setTotalShipping(totalSF);

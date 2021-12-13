@@ -1,17 +1,20 @@
 import React from 'react';
-import {TextInput, View, StyleSheet} from 'react-native';
-import FIcon5 from 'react-native-vector-icons/FontAwesome5';
+import {Text, TextInput, TouchableOpacity, View, StyleSheet} from 'react-native';
+// import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 
-import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
+import {FONT_SIZE} from 'res/variables';
 
 import {moderateScale} from 'toktokfood/helper/scale';
 
-const StyledTextInput = ({onChangeText, label, value, error = null, hasIcon = false}) => {
+const StyledTextInput = ({onChangeText, onRemoveVoucher, label, value, error = null, hasIcon = false}) => {
   const renderIcon = () => {
-    const iconColor = error ? '#F6841F' : '#06A44E';
-    const iconName = error ? 'times-circle' : 'check-circle';
-
-    return <FIcon5 name={iconName} size={17} color={iconColor} />;
+    // const iconColor = error ? '#F6841F' : '#06A44E';
+    // const iconName = error ? 'times-circle' : 'check-circle';
+    return (
+      <TouchableOpacity onPress={onRemoveVoucher}>
+        <Text style={styles.removeText}>Remove</Text>
+      </TouchableOpacity>
+    );
   };
 
   return (
@@ -24,6 +27,8 @@ const StyledTextInput = ({onChangeText, label, value, error = null, hasIcon = fa
 };
 
 export default StyledTextInput;
+
+/* <FIcon5 name={iconName} size={17} color={iconColor} /> */
 
 const styles = StyleSheet.create({
   container: {
@@ -46,5 +51,9 @@ const styles = StyleSheet.create({
     height: moderateScale(40),
     // color: DARK,
     fontSize: FONT_SIZE.M,
+  },
+  removeText: {
+    color: '#868686',
+    marginHorizontal: 10,
   },
 });

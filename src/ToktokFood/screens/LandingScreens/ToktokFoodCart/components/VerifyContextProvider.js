@@ -20,7 +20,7 @@ const {Provider} = VerifyContext;
 
 export const VerifyContextProvider = ({children}) => {
   const routes = useRoute();
-  const {user} = useSelector((state) => state.session);
+  const {user} = useSelector(state => state.session);
   const {userId} = routes.params;
   const [totalAmount, setTotalAmount] = useState(0);
   const [temporaryCart, setTemporaryCart] = useState({

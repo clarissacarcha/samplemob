@@ -160,9 +160,9 @@ const PaymentDetails = ({refreshing, orderType}) => {
                       <Text style={styles.toktokText}>toktok</Text>
                       <Text style={styles.walletText}>wallet</Text>
                     </View>
-                    {!customerWallet || !customerWallet?.account ? (
+                    {customerWallet && customerWallet?.account ? (
                       <Text style={{color: '#707070', fontSize: FONT_SIZE.S}}>
-                        Status: {getKycStatus(customerWallet.status)}
+                        Status: {getKycStatus(customerWallet?.status)}
                       </Text>
                     ) : (
                       <Text style={{color: '#707070', fontSize: FONT_SIZE.S}}>
