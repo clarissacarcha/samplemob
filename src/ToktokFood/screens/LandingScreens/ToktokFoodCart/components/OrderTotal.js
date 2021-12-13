@@ -16,7 +16,7 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
     if (autoShipping?.success) {
       const {amount, is_percentage} = autoShipping.voucher;
       if (amount > 0) {
-        let pAmount = is_percentage !== 0 ? (amount / 100) * deliveryFee : amount;
+        let pAmount = is_percentage > 0 ? (amount / 100) * deliveryFee : amount;
         let totalSF = deliveryFee - pAmount;
         totalSF = totalSF > 0 ? totalSF : 0;
         setTotalShipping(totalSF);
@@ -28,9 +28,11 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
     if (shippingVoucher.length) {
       console.log(shippingVoucher);
       const {type} = shippingVoucher[0];
-      const {amount} = shippingVoucher[0].voucher;
+      const {amount, is_percentage} = shippingVoucher[0].voucher;
       if (type === 'shipping' && amount > 0) {
-        const totalSF = amount > deliveryFee ? amount - deliveryFee : deliveryFee - amount;
+        let pAmount = is_percentage > 0 ? (amount / 100) * deliveryFee : amount;
+        let totalSF = pAmount > deliveryFee ? pAmount - deliveryFee : deliveryFee - pAmount;
+        totalSF = totalSF > 0 ? totalSF : 0;
         setTotalShipping(totalSF);
       }
       if (type === 'shipping' && amount === 0) {
@@ -58,11 +60,17 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
           <View style={styles.header}>
             <Text>Delivery Fee</Text>
             <View style={styles.deliveryFee}>
-              {(autoShipping?.success || shippingVoucher.length > 0) && (
+              {/* {(autoShipping?.success || shippingVoucher.length > 0) && (
                 <Text style={styles.deliveryFeeText}>{`\u20B1${deliveryFee.toFixed(2)}`}</Text>
-              )}
-              <Text style={styles.subtotal}>{`PHP ${totalShipping.toFixed(2)}`}</Text>
+              )} */}
+              <Text style={styles.subtotal}>{`PHP ${deliveryFee.toFixed(2)}`}</Text>
             </View>
+          </View>
+          <View style={styles.header}>
+            <Text>Shipping Voucher Applied</Text>
+            {(autoShipping?.success || shippingVoucher.length > 0) && (
+              <Text style={styles.subtotal}>{`-PHP ${totalShipping.toFixed(2)}`}</Text>
+            )}
           </View>
           <View style={styles.divider} />
         </>
