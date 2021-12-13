@@ -82,6 +82,7 @@ export const POST_BILLS_VALIDATE_TRANSACTION = gql`
       Status
       Success
       Message
+      ReferenceNumber
       Data {
         FirstField
         SecondField

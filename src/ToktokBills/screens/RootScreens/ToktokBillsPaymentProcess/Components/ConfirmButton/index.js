@@ -55,7 +55,7 @@ export const ConfirmButton = ({ billType, billItemSettings = {}, tokwaBalance = 
       });
     },
     onCompleted: ({ postBillsValidateTransaction }) => {
-      let { referenceNumber } = postBillsValidateTransaction;
+      let { ReferenceNumber } = postBillsValidateTransaction;
       let paymentData = {
         firstField,
         secondField,
@@ -64,7 +64,7 @@ export const ConfirmButton = ({ billType, billItemSettings = {}, tokwaBalance = 
         billType,
         convenienceFee,
         billItemSettings,
-        referenceNumber
+        referenceNumber: ReferenceNumber
       }
       navigation.navigate("ToktokBillsPaymentSummary", { paymentData })
     }

@@ -73,7 +73,7 @@ export class ErrorUtility {
     }
    
     prompt({
-      type: title ? "error" : "warning",
+      type: "error",
       title,
       message: graphQLErrors[0]?.message,
       event: "TOKTOKBILLSLOAD"
