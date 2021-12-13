@@ -160,7 +160,7 @@ const PaymentDetails = ({refreshing, orderType}) => {
                       <Text style={styles.toktokText}>toktok</Text>
                       <Text style={styles.walletText}>wallet</Text>
                     </View>
-                    {customerWallet && customerWallet?.account ? (
+                    {customerWallet && !customerWallet?.account ? (
                       <Text style={{color: '#707070', fontSize: FONT_SIZE.S}}>
                         Status: {getKycStatus(customerWallet?.status)}
                       </Text>
@@ -170,7 +170,7 @@ const PaymentDetails = ({refreshing, orderType}) => {
                       </Text>
                     )}
                   </View>
-                  <TouchableOpacity disabled={!hasToktokWallet} onPress={onPressTopUp}>
+                  <TouchableOpacity disabled={!customerWallet || customerWallet?.status !== 1} onPress={onPressTopUp}>
                     <Text style={{color: '#FCB81A', fontSize: FONT_SIZE.M, paddingLeft: 15}}>Top up</Text>
                   </TouchableOpacity>
                 </View>
