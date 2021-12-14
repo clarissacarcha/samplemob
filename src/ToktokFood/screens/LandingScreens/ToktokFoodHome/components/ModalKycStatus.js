@@ -39,10 +39,10 @@ const ModalKycStatus = () => {
   const [showModal, setShowModal] = useState(customerWallet);
 
   return (
-    <View>
+    <View style={{flex: 1}}>
       <Modal isVisible={showModal === null} onBackdropPress={() => setShowModal(false)}>
         <View style={styles.container}>
-          <ScrollView contentContainerStyle={{alignItems: 'center'}} style={styles.content}>
+          <ScrollView contentContainerStyle={styles.contentContainerStyle} style={styles.content}>
             <Image source={wallet} style={styles.walletIcon} />
 
             <Text style={styles.header}>Use toktokwallet as payment method for faster transaction</Text>
@@ -77,8 +77,8 @@ export default ModalKycStatus;
 
 const styles = StyleSheet.create({
   actions: {
-    flex: 3,
     paddingHorizontal: moderateScale(20),
+    marginVertical: moderateScale(10),
   },
   container: {
     backgroundColor: 'white',
@@ -89,6 +89,10 @@ const styles = StyleSheet.create({
   content: {
     paddingVertical: moderateScale(30),
     paddingHorizontal: moderateScale(20),
+  },
+  contentContainerStyle: {
+    alignItems: 'center',
+    paddingBottom: 50,
   },
   browseButton: {
     alignItems: 'center',
