@@ -6,6 +6,7 @@ export const GET_LOAD_ITEMS = gql`
       id
       name
       amount
+      descriptions
       comRateId
       termsAndConditions
       providerId
@@ -21,7 +22,6 @@ export const GET_LOAD_ITEMS = gql`
       favorite {
         id
         loadItemId
-        mobileNumber
       }
     }
   }

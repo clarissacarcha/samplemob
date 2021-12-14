@@ -21,14 +21,14 @@ export const LoadList = ({ networkId, navigation, mobileNumber }) => {
 
   const alert = useAlert();
   const { selectedLoad, setSelectedLoad, favorites, setFavorites, loads, setLoads } = useContext(VerifyContext);
+  const [loadFavorite, setLoadFavorite] = useState(null);
   
   const {loading: getLoadItemsLoading, error: getLoadItemsError, refetch} = useQuery(GET_LOAD_ITEMS, {
     fetchPolicy: "cache-and-network",
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
     variables: {
       input: {
-        networkId,
-        mobileNumber
+        networkId
       }
     },
     onCompleted: ({ getLoadItems }) => {
@@ -61,12 +61,12 @@ export const LoadList = ({ networkId, navigation, mobileNumber }) => {
   }
 
   const onPressFavorite = (item, index) => {
+    setLoadFavorite(item.id);
     let data = [...loads[networkId]];
     let favData = {
       variables: {
         input: {
           loadItemId: item.id,
-          mobileNumber
         }
       }
     }
@@ -91,7 +91,7 @@ export const LoadList = ({ networkId, navigation, mobileNumber }) => {
 
   const onPressNext = () => {
     if(selectedLoad[networkId]){
-      navigation.navigate("ToktokLoadSummary", { loads: selectedLoad[networkId], mobileNumber  })
+      navigation.navigate("ToktokLoadSummary", { loads: selectedLoad[networkId], mobileNumber })
     }
   }
 
@@ -122,6 +122,7 @@ export const LoadList = ({ networkId, navigation, mobileNumber }) => {
             onPressFavorite={() => onPressFavorite(item, index)}
             patchFavoriteLoading={patchFavoriteLoading}
             postFavoriteLoading={postFavoriteLoading}
+            loadFavorite={loadFavorite}
           />
         )}
         contentContainerStyle={{ flexGrow: 1 }}

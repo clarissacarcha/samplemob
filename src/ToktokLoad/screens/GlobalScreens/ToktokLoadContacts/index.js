@@ -55,13 +55,13 @@ export const ToktokLoadContacts = ({navigation, route}) => {
     setFilteredData(filteredContacts);
   };
 
-  const onSelectContact = (number) => {
-    let mobileNumber = number.replace(/\s/g, '').replace(/[()]/g, '');
+  const onSelectContact = (item) => {
+    let mobileNumber = item.number.replace(/\s/g, '').replace(/[()]/g, '');
     return mobileNumber.replace("+63", "0");
   };
 
   const setRecipient = () => {
-    route.params.setMobileNumber(onSelectContact(selectedContact.item.number))
+    route.params.setMobileNumber(onSelectContact(selectedContact.item))
     return navigation.pop()
   }
 
@@ -129,7 +129,7 @@ export const ToktokLoadContacts = ({navigation, route}) => {
         <OrangeButton
           onPress={setRecipient}
           disabled={Object.keys(selectedContact).length === 0}
-          label="Ok"
+          label="Next"
         />
       </View>
     </View>

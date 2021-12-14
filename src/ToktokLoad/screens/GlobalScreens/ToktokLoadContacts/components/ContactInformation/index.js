@@ -18,21 +18,21 @@ export const ContactInformation= ({ item, index, checkAccount, setSelectedContac
   }
 
   const onThrottledPress = useThrottle(chooseRecipient, 500)
-
+ 
   return (
     <>
-    <TouchableOpacity
-      style={[styles.contactInfo, { backgroundColor: isSelected ? "#F89D4C" : "white" }]}
-      onPress={onThrottledPress}
-    >
-      <Text style={[styles.contactInfoName, { color: isSelected ? "white" : "black" } ]}>
-        {item.name}
-      </Text>
-      <Text style={[styles.contactInfoNumber, { color: isSelected ? "white" : "black" }]}>
-        {item.number.replace('+63', '0')}
-      </Text>
-    </TouchableOpacity>
-    <View style={styles.divider}/>
+      <TouchableOpacity
+        style={[styles.contactInfo, { backgroundColor: isSelected ? "#F89D4C" : "white" }]}
+        onPress={onThrottledPress}
+      >
+        <Text style={[styles.contactInfoName, { color: isSelected ? "white" : "black" } ]}>
+          {item.name}
+        </Text>
+        {/* <Text style={[styles.contactInfoNumber, { color: isSelected ? "white" : "black" }]}>
+          {item.number.replace('+63', '0')}
+        </Text> */}
+      </TouchableOpacity>
+      <View style={styles.divider}/>
     </>
   )
 }

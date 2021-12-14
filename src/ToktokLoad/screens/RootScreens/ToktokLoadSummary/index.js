@@ -27,9 +27,8 @@ export const ToktokLoadSummary = ({ navigation, route }) => {
     headerTitle: () => <HeaderTitle label={"toktokload"} />,
   });
 
-  const loads = route.params?.loads;
-  const mobileNumber = route.params?.mobileNumber ? route.params.mobileNumber : loads?.mobileNumber ;
-  
+  const { loads, mobileNumber } = route.params;
+
   const { user } = useSelector((state) => state.session);
   const {getMyAccountLoading, getMyAccount, getMyAccountError} = useAccount();
   const [refreshing, setRefreshing] = useState(false);
@@ -94,7 +93,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     alignItems: "center",
     marginTop: moderateScale(20),
-    marginBottom: moderateScale(10)
+    marginBottom: moderateScale(30)
   },
   headerText: {
     color: "#F6841F",

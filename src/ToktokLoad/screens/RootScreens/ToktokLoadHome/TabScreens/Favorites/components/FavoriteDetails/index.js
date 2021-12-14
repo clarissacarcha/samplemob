@@ -17,6 +17,7 @@ export const FavoriteDetails = ({ item, index, setSelectedLoad, selectedLoad }) 
   const isSelected = selectedLoad.id == item.id;
   const colorAmount = isSelected ? "#fff" : "#F6841F";
   const colorDesc = isSelected ? "#fff" : "#707070";
+  const numberOfLines = isSelected ? null : 1;
 
   return (
     <TouchableOpacity
@@ -31,10 +32,17 @@ export const FavoriteDetails = ({ item, index, setSelectedLoad, selectedLoad }) 
       <View style={[styles.amountContainer, { borderColor: colorAmount }]}>
         <Text style={[ styles.amount, { color: colorAmount }]}>₱{amount}</Text>
       </View>
-      <View style={{ paddingHorizontal: moderateScale(20) }}>
+      <View style={{ paddingLeft: moderateScale(20), flex: 1 }}>
         <Text style={[ styles.amount, { color: colorDesc }]}>PHP {amount}</Text>
-        <Text style={{ fontSize: FONT_SIZE.M, color: colorDesc }}>{item.loadDetails.networkDetails.name}</Text>
-        <Text style={{ fontSize: FONT_SIZE.M, color: colorDesc }}>{mobileNumber}</Text>
+        <Text style={{ fontSize: FONT_SIZE.M, color: colorDesc }}>
+          {item.loadDetails.networkDetails.name}
+        </Text>
+        <Text style={{ fontSize: FONT_SIZE.M, color: colorDesc}} numberOfLines={numberOfLines}>
+          {item.loadDetails.descriptions}
+        </Text>
+        {/* <Text style={{ fontSize: FONT_SIZE.M, color: colorDesc }}>
+          {mobileNumber}
+        </Text> */}
       </View> 
     </TouchableOpacity>
   );
@@ -45,7 +53,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: moderateScale(16),
     paddingVertical: moderateScale(15),
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "center",
   },
   amountContainer: {
     borderWidth: 1,
