@@ -86,7 +86,7 @@ export const ToktokWalletAccountRecoveryOTP = ({navigation , route})=> {
             //     setPinCode("")
             //     return setErrorMessage(graphQLErrors[0].message)
             // }
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation})
         }
     })
 
@@ -95,7 +95,7 @@ export const ToktokWalletAccountRecoveryOTP = ({navigation , route})=> {
         onCompleted: ({patchRecoverAccount})=>{
             setVisible(true)
         },
-        onError: (error) => onErrorAlert({alert,error})
+        onError: (error) => onErrorAlert({alert,error,navigation})
     })
 
     const [verifyForgotAndRecoverOTP , {loading}] = useLazyQuery(VERIFY_FORGOT_AND_RECOVER_OTP_CODE, {

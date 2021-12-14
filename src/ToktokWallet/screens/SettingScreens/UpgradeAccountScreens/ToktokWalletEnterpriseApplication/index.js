@@ -48,7 +48,7 @@ const MainComponent = ()=> {
         onCompleted: ({getEnterpriseUpgradeRequest})=> {
             console.log(JSON.stringify(getEnterpriseUpgradeRequest))
         },
-        onError: (error)=> onErrorAlert({alert,error})
+        onError: (error)=> onErrorAlert({alert,error,navigation})
     })
 
     useEffect(()=>{

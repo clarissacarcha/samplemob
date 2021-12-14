@@ -51,7 +51,7 @@ export const ToktokWalletBDORegistration = ({navigation,route})=> {
         fetchPolicy: 'network-only',
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onError: (error)=> {
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation})
         },
         onCompleted: ({getMyAccount})=> {
             setfirstName(getMyAccount.person.firstName)
@@ -71,7 +71,7 @@ export const ToktokWalletBDORegistration = ({navigation,route})=> {
     const [postCashOutEnrollmentBdo, {data, error ,loading}] = useMutation(POST_CASH_OUT_ENROLLMENT_BDO, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onError: (error)=> {
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation})
         },
         onCompleted: (res) => {
             setShowModal(true)

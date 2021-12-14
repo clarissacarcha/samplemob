@@ -48,7 +48,7 @@ export const VerifiedAccount = ({record,provider})=> {
             })
         },
         onError: (error)=>{
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation,title: "Transaction Void"})
         }
     })
 

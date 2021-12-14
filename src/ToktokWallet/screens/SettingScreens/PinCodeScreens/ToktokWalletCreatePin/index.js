@@ -89,7 +89,7 @@ export const ToktokWalletCreatePin = ({navigation,route})=> {
         setSuccessModalVisible(true)
       },
       onError: (error)=> {
-        onErrorAlert({alert,error})
+        onErrorAlert({alert,error,navigation})
       }
     })
 

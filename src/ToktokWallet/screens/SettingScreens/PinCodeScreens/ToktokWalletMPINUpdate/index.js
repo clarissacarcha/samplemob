@@ -6,6 +6,7 @@ import { PATCH_MPIN_CODE } from 'toktokwallet/graphql'
 import {useMutation} from '@apollo/react-hooks'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import { Separator , LeavePromptModal , CheckIdleState} from 'toktokwallet/components';
+import { useAlert } from 'src/hooks'
 import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS
@@ -67,7 +68,7 @@ export const ToktokWalletMPINUpdate =  ({navigation , route})=> {
         setLeaveModalVisible(true)
     }
 
-
+    const alert = useAlert();
     const [pageIndex,setPageIndex] = useState(0)
     const [pinCode,setPinCode] = useState("")
     const [successModalVisible,setSuccessModalVisible] = useState(false)
@@ -79,7 +80,7 @@ export const ToktokWalletMPINUpdate =  ({navigation , route})=> {
           setSuccessModalVisible(true)
         },
         onError: (error)=> {
-          onErrorAlert({alert,error})
+          onErrorAlert({alert,error,navigation})
         }
       })
   

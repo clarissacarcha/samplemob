@@ -35,7 +35,7 @@ const QuestionThree = ({
             return navigation.navigate("ToktokWalletRecoverPin" , {type: "MPIN" , event: "ACCOUNT RECOVERY"})
         },
         onError: (error)=>{
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation})
         }
     })
 

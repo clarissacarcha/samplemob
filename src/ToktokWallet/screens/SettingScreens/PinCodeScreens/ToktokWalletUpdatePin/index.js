@@ -15,6 +15,8 @@ import {
 } from "./Components"
 
 import CONSTANTS from 'common/res/constants'
+import { useAlert } from 'src/hooks'
+
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
 
 const HeaderBack = ({pageIndex,setPageIndex,navigation})=> {
@@ -64,7 +66,7 @@ export const ToktokWalletUpdatePin =  ({navigation})=> {
         setLeaveModalVisible(true)
     }
 
-
+    const alert = useAlert();
     const [pageIndex,setPageIndex] = useState(0)
     const [pinCode,setPinCode] = useState("")
     const [successModalVisible,setSuccessModalVisible] = useState(false)
@@ -77,7 +79,7 @@ export const ToktokWalletUpdatePin =  ({navigation})=> {
         setSuccessModalVisible(true)
         },
         onError: (error)=> {
-        onErrorAlert({alert,error})
+        onErrorAlert({alert,error,navigation})
         }
     })
 

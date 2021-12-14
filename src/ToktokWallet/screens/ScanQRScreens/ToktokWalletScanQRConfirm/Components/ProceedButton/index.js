@@ -46,7 +46,7 @@ export const ProceedButton = ({
             })
         },
         onError: (error)=>{
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation,title: "Transaction Void"})
         }
     })
 

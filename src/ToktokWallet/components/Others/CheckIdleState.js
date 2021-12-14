@@ -44,14 +44,21 @@ export const CheckIdleState = ({children})=> {
     }
 
     const onPress = ()=> {
-        setShowPrompt(false);
+       
         if(tokwaAccount.events.cashInTopUp){
             navigation.navigate("ToktokWalletPaymentOptions");
-            return navigation.pop();
+            navigation.pop();
+            setShowPrompt(false);
+            return;
         }
-        navigation.navigate("ToktokWalletLoginPage")
-        navigation.replace("ToktokWalletLoginPage")
-        return
+        setTimeout(()=>{
+            navigation.navigate("ToktokWalletLoginPage")
+            navigation.replace("ToktokWalletLoginPage")
+            setShowPrompt(false);
+            return;
+        },1000)
+
+        return;
     }
 
     // useEffect(()=>{

@@ -1,6 +1,6 @@
 import React , {createContext , useState , useEffect} from 'react'
 import {useSelector} from 'react-redux'
-
+import { useNavigation } from '@react-navigation/native'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import {GET_BANKS,POST_CASH_OUT_OTHER_BANKS} from 'toktokwallet/graphql'
 import {useLazyQuery,useMutation} from '@apollo/react-hooks'
@@ -17,6 +17,7 @@ export const ContextProvider = ({children})=> {
         id: null,
         name: "",
     })
+    const navigation = useNavigation();
 
 
     const [accountName,setAccountName] = useState(`${tokwaAccount.person.firstName} ${tokwaAccount.person.lastName}`)
@@ -34,7 +35,7 @@ export const ContextProvider = ({children})=> {
         fetchPolicy:"network-only",
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onError: (error)=> {
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation})
         },
         onCompleted:({getBanks})=> {
         console.log("GETTING BANKS")

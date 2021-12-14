@@ -232,7 +232,7 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
            
         },
         onError: (error)=>{
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation,title: "Transaction Void"})
         }
     })
 

@@ -79,7 +79,7 @@ export const ToktokWalletRecoverPin = ({navigation , route})=> {
             setOtpTimer(120)
         },
         onError: (error)=>{
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation})
         }
     })
 
