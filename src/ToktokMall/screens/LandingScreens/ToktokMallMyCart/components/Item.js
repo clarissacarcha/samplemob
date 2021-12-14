@@ -22,7 +22,8 @@ export const Item = ({
   forceSelectToZero,
   willDelete,
   heldItem,
-  setHeldItem
+  setHeldItem,
+  recenter
 }) => {
 
   const CartContextData = useContext(CartContext)
@@ -132,6 +133,7 @@ export const Item = ({
           style={{
             flex: 1, flexDirection: 'row'
           }}
+          onPress = {() => {recenter()}}
         >
           <View style={{flex: 3, justifyContent: 'center', alignItems: 'center'}}>
             <Image source={getImageSource(product?.img?.filename)} style={{width: 50, height: 65, resizeMode: 'stretch'}} />

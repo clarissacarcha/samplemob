@@ -206,7 +206,22 @@ export const RenderDetails = forwardRef(({
 								heldItem = {heldItem}
 								forceSelect={selectedItemsCount == item.data.length}
 								forceSelectToZero = {selectedItemsCount == 0  }
-                data={data}
+								data={data}
+								recenter = {() => {
+									if(ref.current.length > 0){
+										ref.current.map((item, index) => {
+											//IF TRACKED REFERENCE IS THE CURRENT SWIPEABLE, SKIP 
+											if(trackingIndex == index){
+												return
+											}else{
+												//HIDE ACTIVE SWIPEABLE VIEWS NOW
+												if(item.recenter){
+												item.recenter()
+												}
+											}
+										})
+									}
+								}}
                 onHold={(raw) => {
 
 									if(ref.current && ref.current.length > 0){
@@ -228,7 +243,15 @@ export const RenderDetails = forwardRef(({
 									onItemLongPress(raw);
 									// swipableRef.recenter()
                 }}
-                onSelect={(raw) => {									
+                onSelect={(raw) => {		
+									if(ref.current && ref.current.length > 0){
+										ref.current.map((item, index) => {
+											// console.log(item)
+											if(item.current != null){
+												item?.recenter()
+											}
+										})
+									}									
 
                   if (raw.checked) {
                     setSelectedItemsCount(selectedItemsCount + 1);

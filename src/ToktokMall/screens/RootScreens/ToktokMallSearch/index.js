@@ -186,7 +186,13 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
       <LandingSubHeader 
 				// onSearch={debounce((val) => handleOnSearch(val), 500)}
         placeholder="Search"
-				initialValue={searchValue}
+        initialValue={searchValue}
+        onClearText = {() => {
+          setInitialSearch(false)
+          setSearchValue('')
+          setSearchedProducts([])
+          setSuggestions([])
+        }}
         onSearch={(val) => {
           setInitialSearch(false)
           setSearchValue(val)

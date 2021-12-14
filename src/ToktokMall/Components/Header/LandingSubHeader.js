@@ -106,7 +106,7 @@ export const LandingSubHeader = (props) => {
               </View>
               {
                 searchValue?.length > 0 ?
-                <TouchableOpacity style={{flex: 0, justifyContent: 'center', paddingRight: 8}} onPress = {() => {setSearchValue('')}}>
+                <TouchableOpacity style={{flex: 0, justifyContent: 'center', paddingRight: 8}} onPress = {() => {setSearchValue(''), props.onClearText()}}>
                   <AntIcon name="close" color={COLOR.ORANGE} size={18}/>
                 </TouchableOpacity>
                 : <></>
