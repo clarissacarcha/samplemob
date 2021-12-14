@@ -15,7 +15,7 @@ const PageOne = ({scale,tokwaAccount})=> {
                 </Text>
                 <Image resizeMode="contain" style={styles.welcomeImage} source={require("toktokwallet/assets/images/welcome/welcome.jpg")}/>
                 <Text style={styles.message}>
-                    Welcome Ka-toktok {tokwaAccount.person.firstName}! thank you for
+                    Welcome Ka-toktok, {tokwaAccount.person.firstName}! Thank you for
                     choosing toktokwallet, your daily partner
                     on all cashless transactions such as fund
                     transfers to any participating bank and
@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
         fontFamily: FONT.BOLD,
         fontSize: FONT_SIZE.XL,
+        color: COLOR.YELLOW,
         textAlign:"center"
     },
     welcomeImage: {
@@ -50,8 +51,9 @@ const styles = StyleSheet.create({
     message: {
         fontFamily: FONT.REGULAR,
         fontSize: FONT_SIZE.M,
-        // textAlign:"justify",
+        textAlign:"center",
         marginHorizontal: 10,
+        color: COLOR.YELLOW,
     }
 })
 

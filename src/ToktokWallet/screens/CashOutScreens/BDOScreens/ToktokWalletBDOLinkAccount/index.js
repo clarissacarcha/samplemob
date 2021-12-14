@@ -40,7 +40,7 @@ export const ToktokWalletBDOLinkAccount = ({navigation,route})=> {
             if(graphQLErrors[0].message == "Verification code already expired."){
                 return setErrorMessage("Verification code already expired.")
             }
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation})
         }
     })
 
@@ -58,7 +58,7 @@ export const ToktokWalletBDOLinkAccount = ({navigation,route})=> {
                 setPinCode("")
                 return setErrorMessage(graphQLErrors[0].message)
             }
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation})
         }
     })
 

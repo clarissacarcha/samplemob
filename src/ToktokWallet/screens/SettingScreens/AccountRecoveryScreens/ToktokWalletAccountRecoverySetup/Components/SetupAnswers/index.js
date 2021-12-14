@@ -33,7 +33,7 @@ export const SetupAnswers = ()=> {
         },
         onError: (error) => onErrorAlert({alert,error})
     })
-
+    
     useEffect(()=>{
         getAccountRecoveryQuestions();
     },[])

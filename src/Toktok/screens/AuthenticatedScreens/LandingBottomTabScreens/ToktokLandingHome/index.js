@@ -26,7 +26,8 @@ const Screen = ({navigation, constants}) => {
     try {
       if (notification.additionalData.classification === 'toktokwallet') {
         setTimeout(() => {
-          navigation.navigate('ToktokWalletHomePage');
+          navigation.navigate('ToktokWalletLoginPage');
+          navigation.replace('ToktokWalletLoginPage');
         }, 10);
         return;
       }

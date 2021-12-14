@@ -20,15 +20,15 @@ const Reminder = ({children})=> {
 
 
 export const SecureWithMPIN = ({navigation,walletinfo})=> {
-
+  
     return (
         <View style={styles.container}>
             <View style={{alignItems:"center",marginTop: 10,flex:1 ,}}>
                 <View style={styles.lockIcon}>
                         <Image style={{height: 89,width: 89}} source={require('toktokwallet/assets/icons/walletVerify.png')}/>
                 </View>
-                <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.XL,marginTop: 20, textAlign:'center'}}>Setup your toktokwallet MPIN</Text>
-                <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,marginTop: 5, textAlign:'center'}}>Click the "Setup MPIN" button to create your toktokwallet MPIN.</Text>
+                <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.XL,marginTop: 20, textAlign:'center'}}>Set Up your toktokwallet MPIN</Text>
+                <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,marginTop: 5, textAlign:'center'}}>Click the "Set Up MPIN" button to create your toktokwallet MPIN.</Text>
             </View>
             <View style={{flex: 1,alignItems:"center",justifyContent:"flex-start"}}>
                         <Text style={{textAlign:"left",fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,marginBottom: 10,}}>Reminders</Text>
@@ -55,7 +55,7 @@ export const SecureWithMPIN = ({navigation,walletinfo})=> {
                    
                 </View>
             <View style={styles.btns}>
-                <YellowButton label="Setup MPIN" onPress={()=>navigation.replace("ToktokWalletMPINCreate", {walletinfo})} />
+                <YellowButton label="Set Up MPIN" onPress={()=>navigation.push("ToktokWalletMPINCreate", {walletinfo})} />
             </View>
            <BuildingBottom/>
         </View>

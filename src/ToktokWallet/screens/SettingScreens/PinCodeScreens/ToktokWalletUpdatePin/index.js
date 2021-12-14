@@ -17,6 +17,7 @@ import {
     SuccessModal,
 } from "./Components"
 
+
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
 
 const HeaderBack = ({pageIndex,setPageIndex,navigation})=> {
@@ -68,7 +69,6 @@ export const ToktokWalletUpdatePin =  ({navigation,route})=> {
         setLeaveModalVisible(true)
     }
 
-
     const [pageIndex,setPageIndex] = useState(0)
     const [pinCode,setPinCode] = useState("")
     const [successModalVisible,setSuccessModalVisible] = useState(false)
@@ -81,7 +81,7 @@ export const ToktokWalletUpdatePin =  ({navigation,route})=> {
         setSuccessModalVisible(true)
         },
         onError: (error)=> {
-        onErrorAlert({alert,error})
+        onErrorAlert({alert,error,navigation})
         }
     })
 

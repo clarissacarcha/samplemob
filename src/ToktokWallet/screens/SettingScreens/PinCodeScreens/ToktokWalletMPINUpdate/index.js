@@ -50,7 +50,9 @@ const HeaderBack = ({pageIndex,setPageIndex,navigation})=> {
 
 export const ToktokWalletMPINUpdate =  ({navigation , route})=> {
 
-    const {event,otp} = route.params
+    const otp = route.params.otp
+    const event = route.params.event
+    const category = route.params?.category ? route.params?.category : null
 
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack pageIndex={pageIndex} setPageIndex={setPageIndex} navigation={navigation}/>,
@@ -68,7 +70,6 @@ export const ToktokWalletMPINUpdate =  ({navigation , route})=> {
         setLeaveModalVisible(true)
     }
 
-
     const [pageIndex,setPageIndex] = useState(0)
     const [pinCode,setPinCode] = useState("")
     const [successModalVisible,setSuccessModalVisible] = useState(false)
@@ -81,7 +82,7 @@ export const ToktokWalletMPINUpdate =  ({navigation , route})=> {
           setSuccessModalVisible(true)
         },
         onError: (error)=> {
-          onErrorAlert({alert,error})
+          onErrorAlert({alert,error,navigation})
         }
       })
   
@@ -118,7 +119,12 @@ export const ToktokWalletMPINUpdate =  ({navigation , route})=> {
                 setVisible={setLeaveModalVisible}
                 onConfirm={()=>navigation.pop(2)}
             />
-            <SuccessModal modalVisible={successModalVisible} setModalVisible={setSuccessModalVisible} event={event}/>
+            <SuccessModal
+                modalVisible={successModalVisible}
+                setModalVisible={setSuccessModalVisible}
+                event={event}
+                category={category}
+            />
             <Separator />
             <KeyboardAvoidingView style={{flex: 1,}}
              keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80}  

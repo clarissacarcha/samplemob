@@ -44,7 +44,7 @@ export const ToktokWalletLinkAccount = ({navigation, route})=> {
                 setPinCode("")
                 return setErrorMessage(graphQLErrors[0].message)
             }
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation})
         }
     })
 
@@ -70,7 +70,7 @@ export const ToktokWalletLinkAccount = ({navigation, route})=> {
             })
         },
         onError: (error)=>{
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation})
         }
     })
 
@@ -83,7 +83,7 @@ export const ToktokWalletLinkAccount = ({navigation, route})=> {
             //  return navigation.replace("ToktokWalletHomePage")
         },
         onError: (error)=>{
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation})
         }
     })
 

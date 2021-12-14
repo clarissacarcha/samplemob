@@ -31,7 +31,9 @@ const toktokFoodBaseUrl = `${ENVIRONMENTS.TOKTOKFOOD_SERVER}/`;
 //   }
 // });
 
-const errorLinkLogger = onError(err => {});
+const errorLinkLogger = onError((err) => {
+ console.log({ERROR_LINK: JSON.stringify(err, 0, 4)});
+});
 
 const setTokenLink = setContext(async (_, {headers}) => {
   try {

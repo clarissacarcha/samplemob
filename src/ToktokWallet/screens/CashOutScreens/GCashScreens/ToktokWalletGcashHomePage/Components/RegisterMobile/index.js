@@ -69,7 +69,7 @@ export const RegisterMobile = ({provider,rejected})=> {
             }
         },
         onError: (error)=> {
-            onErrorAlert({alert, error});
+            onErrorAlert({alert, error,navigation});
         }
     })
 

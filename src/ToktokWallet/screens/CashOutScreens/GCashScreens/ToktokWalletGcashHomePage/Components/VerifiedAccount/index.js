@@ -8,7 +8,7 @@ import { useNavigation } from '@react-navigation/native'
 import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
 import { POST_CASH_OUT , POST_REQUEST_CASH_OUT } from 'toktokwallet/graphql'
 import { useMutation } from '@apollo/react-hooks'
-import { useAlert } from 'src/hooks/useAlert'
+import { useAlert, usePrompt } from 'src/hooks'
 import { onErrorAlert } from 'src/util/ErrorUtility'
 import { DisabledButton, Separator, ValidatorScreen } from 'toktokwallet/components'
 import { AlertOverlay } from 'src/components'
@@ -21,6 +21,7 @@ const { FONT_FAMILY: FONT , FONT_SIZE , COLOR , SIZE } = CONSTANTS
 
 export const VerifiedAccount = ({record,provider})=> {
 
+    const prompt = usePrompt()
     const [amount,setAmount] = useState(0)
     const [errorMessage,setErrorMessage] = useState("")
     const [successModalVisible,setSuccessModalVisible] = useState(false)
@@ -47,7 +48,7 @@ export const VerifiedAccount = ({record,provider})=> {
             })
         },
         onError: (error)=>{
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation,title: "Transaction Void"})
         }
     })
 
@@ -65,8 +66,7 @@ export const VerifiedAccount = ({record,provider})=> {
             TransactionUtility.StandardErrorHandling({
                 error,
                 navigation,
-                alert,
-                onErrorAlert,    
+                prompt 
             })
         }
     })

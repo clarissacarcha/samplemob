@@ -1,4 +1,4 @@
-import React from 'react'
+import React , {useRef} from 'react'
 import {View,Text,StyleSheet,Platform,Dimensions,StatusBar,Image,ActivityIndicator,ScrollView} from 'react-native'
 import {YellowButton,HeaderBack, HeaderTitle, } from 'src/revamp';
 import { Separator, CheckIdleState } from 'toktokwallet/components';
@@ -9,6 +9,7 @@ import { onErrorAlert } from 'src/util/ErrorUtility'
 import {useAlert} from 'src/hooks'
 import CONSTANTS from 'common/res/constants'
 import { SomethingWentWrong } from 'src/components';
+import WebView from 'react-native-webview'
 
 const { FONT_FAMILY: FONT , FONT_SIZE , MARGIN , COLOR } = CONSTANTS
 
@@ -19,6 +20,7 @@ export const ToktokWalletTermsConditions = ({navigation})=> {
         headerTitle: () => <HeaderTitle label={['Terms and Conditions', '']} />,
     });
 
+    const webviewRef = useRef()
     const alert = useAlert()
     const {data,error,loading} = useQuery(GET_GLOBAL_SETTING, {
         fetchPolicy: "network-only",
@@ -29,7 +31,7 @@ export const ToktokWalletTermsConditions = ({navigation})=> {
             }
         },
         onError: (error)=> {
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation})
         }
     })
 
@@ -49,9 +51,17 @@ export const ToktokWalletTermsConditions = ({navigation})=> {
         <CheckIdleState>
         <Separator/>
         <View style={styles.container}>
-            <ScrollView showsVerticalScrollIndicator={false} style={styles.body}>
+            {/* <ScrollView showsVerticalScrollIndicator={false} style={styles.body}>
                 <Text>{data.getGlobalSetting.keyValue}</Text>
-            </ScrollView>
+            </ScrollView> */}
+
+                    <WebView
+                    style={{flex: 1}}
+                    ref={webviewRef}
+                    source={{
+
+                    }}
+                    />
         </View>
         </CheckIdleState>
     )

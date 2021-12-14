@@ -90,7 +90,7 @@ export const ToktokWalletCreatePin = ({navigation,route})=> {
         setSuccessModalVisible(true)
       },
       onError: (error)=> {
-        onErrorAlert({alert,error})
+        onErrorAlert({alert,error,navigation})
       }
     })
 
@@ -128,18 +128,14 @@ export const ToktokWalletCreatePin = ({navigation,route})=> {
             setVisible={setLeaveModalVisible}
             onConfirm={()=>navigation.goBack()}
         />
-        {
-          successModalVisible &&
-          <SuccessfulModal 
-            amount={amount} 
-            onCashIn={onCashIn} 
-            setUpTpinCallBack={setUpTpinCallBack}
-            modalVisible={successModalVisible} 
-            tokwaAccount={tokwaAccount}
-            setSuccessModalVisible={setSuccessModalVisible}
-          />
-        }
-        
+        <SuccessfulModal 
+          amount={amount} 
+          onCashIn={onCashIn} 
+          setUpTpinCallBack={setUpTpinCallBack}
+          modalVisible={successModalVisible} 
+          tokwaAccount={tokwaAccount}
+          setSuccessModalVisible={setSuccessModalVisible}
+        />
         <Separator />
         <KeyboardAvoidingView
             // keyboardVerticalOffset={Platform.OS == "ios" ? 50 : 90} 

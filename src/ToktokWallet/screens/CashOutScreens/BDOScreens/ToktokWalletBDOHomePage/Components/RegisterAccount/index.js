@@ -49,7 +49,7 @@ export const RegisterAccount = ({rejected,provider})=> {
             }
         },
         onError: (error)=> {
-            onErrorAlert({alert, error});
+            onErrorAlert({alert, error, navigation});
         }
     })
 

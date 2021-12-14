@@ -103,9 +103,9 @@ export const ToktokWalletLoginPage = ({navigation,route})=> {
     }
 
     const RenderRestricted = ()=> {
-        // if(isRooted || isDebugMode){
-        //     return <RootedDevice/>
-        // }
+        if(isRooted){
+            return <RootedDevice/>
+        }
 
         if(!pinSet){
             return <PinNotSet/>

@@ -1,4 +1,4 @@
-import React, { useState , useRef , useEffect } from 'react';
+import React, { useState , useRef , useEffect , useCallback } from 'react';
 import {View,Text,StyleSheet,TouchableOpacity,KeyboardAvoidingView,Platform,TextInput,Dimensions} from 'react-native';
 import { ICON_SET, VectorIcon, YellowButton , HeaderBack , HeaderTitle } from 'src/revamp'
 import { AlertOverlay } from 'src/components';
@@ -6,6 +6,7 @@ import { CheckIdleState  , DisabledButton , NumberBoxes} from 'toktokwallet/comp
 import CONSTANTS from 'common/res/constants'
 import { BuildingBottom } from '../../../components';
 import { useAccount } from 'toktokwallet/hooks'
+import { useFocusEffect } from '@react-navigation/native';
 import BackgroundTimer from 'react-native-background-timer'
 
 
@@ -29,6 +30,7 @@ export const ToktokWalletOTPValidator = ({navigation,route})=> {
     const inputRef = useRef();
     const {tokwaAccount} = useAccount()
     const [otpTimer,setOtpTimer] = useState(120)
+    const [startCount,setStartCount] = useState(false)
 
     const onNumPress = () => {
         setTimeout(() => {
@@ -36,11 +38,28 @@ export const ToktokWalletOTPValidator = ({navigation,route})=> {
         }, 10);
     };
 
+    // useFocusEffect(useCallback(()=>{
+    //     BackgroundTimer.setTimeout(()=>{
+    //         setOtpTimer(state=>state-1)
+    //     },1000)
+    // },[otpTimer]))
+
     useEffect(()=>{
-        BackgroundTimer.setTimeout(()=>{
-            setOtpTimer(state=>state-1)
-        },1000)
-    },[otpTimer])
+        if(startCount && otpTimer >= 0){
+            if(otpTimer >= 0){
+                BackgroundTimer.setTimeout(()=>{
+                    setOtpTimer(state=>state-1)
+                },1000)
+                return
+            }
+            setStartCount(false) 
+        }
+    },[otpTimer,startCount])
+
+    useEffect(()=>{
+        setOtpTimer(120)
+        setStartCount(true)
+    },[callBackFunc])
 
     return(
         <CheckIdleState>
@@ -68,7 +87,8 @@ export const ToktokWalletOTPValidator = ({navigation,route})=> {
                                 returnKeyType="done"
                                 onChangeText={(value) => {
                                 if (value.length <= 6) {
-                                    setOtpCode(value);
+                                    const replaceValue = value.replace(/[^0-9]/g,"")
+                                    setOtpCode(replaceValue);
                                 }
                                 }}
                                

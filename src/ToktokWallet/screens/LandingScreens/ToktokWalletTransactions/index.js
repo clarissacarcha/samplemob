@@ -39,7 +39,7 @@ export const ToktokWalletTransactions = connect(null,mapDispatchtoProps)(({navig
             setPageLoading(false)
         },
         onError: (error)=> {
-            onErrorAlert({alert ,error})
+            onErrorAlert({alert ,error , navigation})
         }
     })
 

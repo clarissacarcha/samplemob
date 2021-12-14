@@ -95,7 +95,7 @@ export const Submit = ()=> {
     const [postEnterpriseUpgradeRequest, {data , error ,loading }] = useMutation(POST_ENTERPRISE_UPGRADE_REQUEST, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onError: (error)=> {
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation})
         },
         onCompleted: ({postEnterpriseUpgradeRequest})=> {
             // console.log(JSON.stringify(postEnterpriseUpgradeRequest))

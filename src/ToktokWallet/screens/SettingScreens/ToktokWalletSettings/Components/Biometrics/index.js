@@ -143,9 +143,9 @@ export const Biometrics = ()=> {
     }
 
 
-    // if(!isSensorAvailable){
-    //     return null
-    // }
+    if(!isSensorAvailable){
+        return null
+    }
 
     // if(!deviceHasBio){
     //     return null

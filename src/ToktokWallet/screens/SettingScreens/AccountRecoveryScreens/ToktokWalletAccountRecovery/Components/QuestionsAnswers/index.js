@@ -42,7 +42,7 @@ export const QuestionsAnswers = ({
             return navigation.navigate("ToktokWalletRecoverPin" , {type: "MPIN" , event: "ACCOUNT RECOVERY"})
         },
         onError: (error)=>{
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation})
         }
     })
 
@@ -78,8 +78,8 @@ export const QuestionsAnswers = ({
              <AlertOverlay visible={loading || verifyLoading}/>
              <PromptModal
                     visible={showPrompt}
-                    title="Incorrect answers!"
-                    message="Sorry, you have entered incorrect answers, please email Customer Service for your account recovery"
+                    title="You have entered incorrect answer(s)"
+                    message="Please contact our Customer Service Representative for your Account Recovery"
                     event="error"
                     onPress={closePrompt}
              />

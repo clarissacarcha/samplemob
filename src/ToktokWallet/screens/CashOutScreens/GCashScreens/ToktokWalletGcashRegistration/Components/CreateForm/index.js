@@ -117,7 +117,7 @@ export const CreateForm = ({navigation,session,mobile,provider})=> {
         fetchPolicy: 'network-only',
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onError: (error)=> {
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation})
         },
         onCompleted: ({getMyAccount})=> {
             setfirstName(getMyAccount.person.firstName)
@@ -138,7 +138,7 @@ export const CreateForm = ({navigation,session,mobile,provider})=> {
     const [postCashOutEnrollmentGcash, {data, error ,loading}] = useMutation(POST_CASH_OUT_ENROLLMENG_GCASH, {
             client: TOKTOK_WALLET_GRAPHQL_CLIENT,
             onError: (error)=> {
-                onErrorAlert({alert,error})
+                onErrorAlert({alert,error,navigation})
             },
             onCompleted: (res) => {
             setPromptVisible(true)

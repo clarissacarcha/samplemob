@@ -65,7 +65,7 @@ const Confirm = ({
           setVisible(true)
         },
         onError: (error)=> {
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation})
         }
     })
 

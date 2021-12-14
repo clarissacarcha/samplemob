@@ -47,7 +47,9 @@ export const Verify = ({pageIndex,setPageIndex,setOldMPIN})=> {
             const {graphQLErrors, networkError} = error;
             if(graphQLErrors[0]?.message == "Account Blocked"){
                 onErrorAlert({alert,error})
-                return navigation.replace("ToktokWalletLoginPage")
+                navigation.navigate("ToktokWalletLoginPage")
+                navigation.replace("ToktokWalletLoginPage")
+                return
             }
             if(graphQLErrors[0]?.message == "Invalid MPincode"){
                 const attempt = graphQLErrors[0].payload.remainingAttempts
@@ -86,7 +88,9 @@ export const Verify = ({pageIndex,setPageIndex,setOldMPIN})=> {
         <AlertOverlay visible={loading} />
         <View style={styles.container}>
             <ScrollView style={styles.content}>
-                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 20,alignSelf:"center"}}>Enter old MPIN</Text>
+            <Text style={{marginVertical: 20, marginHorizontal: 10 ,textAlign:"center",fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S}}>Ka-toktok, do not forget your MPIN, keep it to yourself and do not
+share this with anyone</Text>
+                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 20,alignSelf:"center"}}>Enter Old MPIN</Text>
                     <View style={{position: 'relative',marginTop: 40,padding: 16,}}>
                     <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={showPin} numberOfBox={4}/>
                         <TextInput
@@ -105,7 +109,7 @@ export const Verify = ({pageIndex,setPageIndex,setOldMPIN})=> {
                             onSubmitEditing={pinCode.length == 4 ? onPress: null}
                         />
                         {
-                            errorMessage != "" &&  <Text style={{paddingHorizontal: 16,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:COLOR.RED,alignSelf:"center"}}>{errorMessage}</Text>   
+                            errorMessage != "" &&  <Text style={{paddingHorizontal: 16,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:COLOR.RED,textAlign:"center"}}>{errorMessage}</Text>   
                         }
 
                         <TouchableOpacity
