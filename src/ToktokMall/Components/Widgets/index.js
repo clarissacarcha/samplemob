@@ -14,3 +14,4 @@ export * from './CustomModal'
 export * from './TpinMaxAttemptModal'
 export * from './NewTouchableOpacity'
 export * from "./CustomConfirmModal"
+export * from "./CustomMessageModal"

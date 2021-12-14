@@ -34,7 +34,7 @@ export const CustomModal = ({setIsVisible, type, message, onCloseCallback = null
             <View style={{alignItems: 'center', justifyContent: 'center', paddingHorizontal: 12}}>              
               <View>
                 <Image 
-                  source={successIcon}
+                  source={getIconByType()}
                   style={{width: 130, height: 120, resizeMode: 'stretch', overflow: 'hidden'}}
                 />
               </View>

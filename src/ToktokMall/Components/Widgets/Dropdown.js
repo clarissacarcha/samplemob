@@ -26,6 +26,8 @@ const testdata = [{
   image: require("../../assets/images/Pet-Care.png")
 }]
 
+const formatText = (val) => val.replace("&amp;", "&")
+
 const Item = ({data, onPress}) => {
 
   return (
@@ -38,7 +40,7 @@ const Item = ({data, onPress}) => {
 			>
         <View style={{flex: 1}}></View>
         <View style={{flex: 8, justifyContent: 'center', paddingHorizontal: 8}}>
-          <Text style={{fontSize: 14}}>{data?.categoryName}</Text>
+          <Text style={{fontSize: 14}}>{formatText(data?.categoryName)}</Text>
         </View>
         <View style={{flex: 1}}></View>
       </TouchableOpacity>
