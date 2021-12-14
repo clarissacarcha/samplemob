@@ -17,6 +17,11 @@ const INITIAL_STATE = {
     visible: false,
     onConfirmAction: () => {},
     message: "Are you sure you want to delete this item?"
+  },
+  customMessageModal: {
+    visible: false,
+    title: ["We're sorry but this product is ", "SOLD OUT."],
+    message: "This item is currently out of stock."
   }
 };
 
@@ -30,6 +35,10 @@ export default (state = INITIAL_STATE, action) => {
     return {...state, customConfirmModal: { ...state.customConfirmModal, visible: true, ...action.payload}};
     case 'TOKTOK_MALL_CLOSE_CONFIRM_MODAL':
     return {...state, customConfirmModal: INITIAL_STATE.customConfirmModal};
+    case 'TOKTOK_MALL_OPEN_MESSAGE_MODAL':
+      return {...state, customMessageModal: { ...state.customMessageModal, visible: true, ...action.payload}};
+    case 'TOKTOK_MALL_CLOSE_MESSAGE_MODAL':
+    return {...state, customMessageModal: INITIAL_STATE.customMessageModal};
     case 'TOKTOK_MALL_CART_COUNT':
       let count = state.myCartCount
       if(action.action === "add"){

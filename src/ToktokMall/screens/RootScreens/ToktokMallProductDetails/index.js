@@ -44,7 +44,7 @@ const Component =  ({
   createMyFavorites,
   createMyCartSession,
   createMyCartCountSession,
-  myCart, route, cartNoOfItems, customModal
+  myCart, route, cartNoOfItems,
 }) => {
 
   const [product, setProduct] = useState({})
@@ -78,6 +78,7 @@ const Component =  ({
   const [scrollendreached, setscrollendreached] = useState(false)
   const [showTransparent, setshowtransparent] = useState(true)
   const dispatch = useDispatch()
+  const {customModal, customMessageModal} = useSelector(state => state.toktokMall)
 
   const {
     params: { Id },
@@ -137,14 +138,16 @@ const Component =  ({
       const onBackPress = () => {
         // navigation.pop(2)
         // alert(JSON.stringify(customModal.visible))
-        if(customModal.visible){
+        if(customModal.visible || customMessageModal.visible){
           dispatch({type:'TOKTOK_MALL_CLOSE_MODAL'})
+          dispatch({type:'TOKTOK_MALL_CLOSE_MESSAGE_MODAL'})
           setMessageModalShown(false)
           return true
         }
         else{
           // alert('not true')
           dispatch({type:'TOKTOK_MALL_CLOSE_MODAL'})
+          dispatch({type:'TOKTOK_MALL_CLOSE_MESSAGE_MODAL'})
           setMessageModalShown(false)
           return false
         }
@@ -170,7 +173,10 @@ const Component =  ({
         setStore(response.getProductDetails.shop)
         setRelevantProducts(response.getProductDetails.relevantProducts)
         setIsFetching(false)
-        if(response.getProductDetails.noOfStocks <= 0) setisOutOfStock(true)
+        if(response.getProductDetails.noOfStocks <= 0) {
+          setisOutOfStock(true)
+          dispatch({type:'TOKTOK_MALL_OPEN_MESSAGE_MODAL'})
+        }
         console.log("Stock", response.getProductDetails.noOfStocks)
       }
       // console.log(response, route.params.Id)
