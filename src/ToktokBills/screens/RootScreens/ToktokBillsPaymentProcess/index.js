@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     resizeMode: "contain"
   },
   billerName: {
-    fontSize: FONT_SIZE.M,
+    fontSize: FONT_SIZE.L,
     marginTop: moderateScale(10)
   }
 })

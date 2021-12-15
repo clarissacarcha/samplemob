@@ -9,7 +9,7 @@ import { moderateScale } from 'toktokbills/helper'
 import CONSTANTS from 'common/res/constants'
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE , SIZE , MARGIN } = CONSTANTS
 
-export const SearchInput = ({search = "", setSearch}) => {
+export const SearchInput = ({search = "", setSearch, placeholder}) => {
 
   const filterSearch = (val) => {
     setSearch(val);
@@ -21,7 +21,7 @@ export const SearchInput = ({search = "", setSearch}) => {
         <Image style={styles.icon} resizeMode="center" source={search_ic}/>
         <TextInput 
           style={styles.input}
-          placeholder="Search cable/internet provider"
+          placeholder={placeholder}
           onChangeText={filterSearch}
           value={search}
         />
