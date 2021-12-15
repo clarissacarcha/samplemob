@@ -27,7 +27,7 @@ export const Item = ({
 }) => {
 
   const CartContextData = useContext(CartContext)
-  const [selected, setSelected] = useState(state)
+  const [selected, setSelected] = useState(data.product.enabled === 1 ? state : false)
   const [qty, setQty] = useState(data.quantity || 1)
   const [product, setproduct] = useState({})
 
@@ -100,7 +100,7 @@ export const Item = ({
         <View style={{flex: 0, justifyContent: 'center'}}>
           <CheckBox
             disabled={getCheckboxState(product, "disabled")}
-            isChecked={product?.enabled == 1 && selected}
+            isChecked={selected}
             checkedCheckBoxColor="#F6841F"
 						uncheckedCheckBoxColor={getCheckboxState(product, "boxcolor")}
 						onClick={() => {

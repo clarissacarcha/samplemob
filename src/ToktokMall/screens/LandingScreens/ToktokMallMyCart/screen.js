@@ -59,10 +59,12 @@ const Component = ({
     onCompleted: (response) => {
       // console.log('response', response.getMyCart[0].parsed.data[0].product)
       if(response.getMyCart){
+        let count = 0;
+        response.getMyCart.parsed.map(({data}) => data.map(item => item.product.enabled === 1 && count++))
+        dispatch({ type: "TOKTOK_MALL_CART_COUNT", action: "set", payload: count})
         setMyCartData(response.getMyCart.parsed)
         setrawitems(response.getMyCart.raw)
         settotalitems(response.getMyCart.total)
-        createMyCartCountSession("set", response.getMyCart.count)
 
         if(response.getMyCart.total > 0){
           //GENERATE ARRAY OF REFERENCES FOR MANIPULATING SWIPEABLE VIEW BASED ON TOTAL CART ITEMS
@@ -105,6 +107,7 @@ const Component = ({
   })
 
   const init = async () => {
+    CartContextData.setWillDelete(false);
     AsyncStorage.getItem("ToktokMallUser").then((raw) => {
       const data = JSON.parse(raw)
       if(data.userId){
@@ -587,6 +590,7 @@ const Component = ({
                         }}
                         onItemLongPress={(raw) => {
                           // setWillDelete(raw.checked)
+                          CartContextData.setWillDelete(true);
                           if (raw.checked) {
                             onItemLongPress(raw);
                           } else {
@@ -597,7 +601,9 @@ const Component = ({
                               dispatch({
                                 type: 'TOKTOK_MALL_OPEN_CONFIRM_MODAL',
                                 payload: {
-                                  onConfirmAction: () => deleteSingleItem(item),
+                                  onConfirmAction: () => {
+                                    deleteSingleItem(item)
+                                  },
                                 },
                               });
                         }}
