@@ -105,9 +105,14 @@ export const RenderDetails = forwardRef(({
 
 	const getStoreCheckboxState = () => {
 
-		if(item.data.length == 1){
-			if(item.data[0].product.enabled != 1){
-				return false
+		if(CartContext.willDelete){
+			if(item.data.length > 0){
+				for(var i in item.data){
+	
+					if(item.data[i].product.enabled != 1){
+						return false
+					}
+				}
 			}
 		}
 
@@ -127,6 +132,7 @@ export const RenderDetails = forwardRef(({
 			return false
 		}
 		else return false
+		
 	}
 
 	const toggleCheckBox = (val) => {
@@ -134,7 +140,7 @@ export const RenderDetails = forwardRef(({
 		if(val){ // from which state
 			setStoreItemSelected(true)
 			setStoreitemUnselected(false)
-			setSelectedItemsCount(item.data.length)
+			setSelectedItemsCount(CartContext.willDelete ? item.data : item.data.filter(item => item.product.enabled === 1).length)
 			return true
 		}else if(!val){
 			setStoreItemSelected(false)
@@ -145,16 +151,19 @@ export const RenderDetails = forwardRef(({
 	}
 
 	const storeCheckboxIsDisabled = () => {
-		if(item.data.length == 1){
-			if(item.data[0].product.enabled != 1){
-				return true
-			}else{
-				return false
-			}
-		}else{
+		if(CartContextData.willDelete){
 			return false
 		}
+		if(item.data.length > 0){
+			for(var i in item.data){
+
+				if(item.data[i].product.enabled != 1){
+					return true
+				}
+			}
+			return false
 	}
+}
 
 	return (
     <>
@@ -164,7 +173,7 @@ export const RenderDetails = forwardRef(({
 				disabled={storeCheckboxIsDisabled()}
         onSelect={(raw) => {
           toggleCheckBox(raw.checked);
-          onStoreSelect(raw, item.data);
+          onStoreSelect(raw, CartContext.willDelete ? item.data : item.data.filter(item => item.product.enabled === 1));
 					CartContextData.setSelectAll(false);
 					CartContextData.setSelectedFrom('store')
         }}

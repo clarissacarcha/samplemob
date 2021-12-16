@@ -20,10 +20,6 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
   const CheckoutContextData = useContext(CheckoutContext)
 
   const [data, setData] = useState(raw || [])
-  const [voucherIsValid, setVoucherIsValid] = useState(0)
-  const [vcode, setvcode] = useState("")
-  const [loading, setloading] = useState(false)
-  const [errormessage, seterrormessage] = useState("*Invalid voucher code. Please check your voucher code.")
 
   const [getShippingHashDeliveryAmount, {error, loading2}] = useLazyQuery(GET_HASH_AMOUNT, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
@@ -118,6 +114,11 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
 
   const renderVoucherForm = (index, item, subTotal) => {
 
+    const [voucherIsValid, setVoucherIsValid] = useState(0)
+    const [vcode, setvcode] = useState("")
+    const [loading, setloading] = useState(false)
+    const [errormessage, seterrormessage] = useState("*Invalid voucher code. Please check your voucher code.")
+
     const validate = async () => {
       
       let payload = {
@@ -204,6 +205,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
         items2.splice(index, 1)
         CheckoutContextData.setShippingVouchers(items1)
         CheckoutContextData.setDefaultVouchers(items2)
+        CheckoutContextData.setVoucherErrors(prevState => [...prevState, item.shop.id])
 
         console.log("asdasdasdasdasd")
         console.log(req.responseError)
@@ -223,7 +225,8 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
       }
       setloading(false)
     }
-  
+
+    console.log("test", CheckoutContextData.voucherErrors)
     return (
       <>
         <View>
@@ -264,6 +267,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
                   placeholder="Input voucher (optional)"
                   placeholderTextColor="gray"
                   onChangeText={(val) => {
+                    CheckoutContextData.setVoucherErrors(prevState => prevState.filter(id => item.shop.id !== id))
                     setvcode(val);
                     setVoucherIsValid(0);
                   }}

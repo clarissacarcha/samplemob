@@ -33,7 +33,7 @@ export const Button = ({enabled, loading, shipping, balance, shippingRates, tota
     // else if(shippingRates.length == 0) return true
     // else if(shippingRates.length > 0) return false
 
-    if(total > 0 && !loading && shipping && CheckoutContextData.shippingFeeRates.length > 0 && balance >= total) return false
+    if(total > 0 && !loading && shipping && CheckoutContextData.shippingFeeRates.length > 0 && balance >= total && CheckoutContextData.voucherErrors.length === 0) return false
     else return true
   }
     

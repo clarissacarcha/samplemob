@@ -15,6 +15,7 @@ export const CheckoutContextProvider = ({children})=> {
 
 	const [shippingVouchers, setShippingVouchers] = useState([])
 	const [defaultVouchers, setDefaultVouchers] = useState([])
+	const [voucherErrors, setVoucherErrors] = useState([])
 
 	const [autoShippingPayload, setAutoShippingPayload] = useState({})
 
@@ -50,7 +51,10 @@ export const CheckoutContextProvider = ({children})=> {
 				setAutoShippingPayload,
 
 				getShippingHashDeliveryAmount,
-				hashDeliveryData: data
+				hashDeliveryData: data,
+
+				voucherErrors,
+				setVoucherErrors
 			}}
 		>
 			{children}

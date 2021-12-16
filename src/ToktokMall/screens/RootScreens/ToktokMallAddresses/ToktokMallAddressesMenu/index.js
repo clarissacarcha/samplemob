@@ -87,20 +87,22 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
         // if(itemIndex > -1){
         //   items.splice(0, 0, items.length - 1)
         // }
-        // if(getCustomerAddresses.length > 1){
+          let copyArr = ArrayCopy(getCustomerAddresses)
+        if(getCustomerAddresses.length > 0){
           let index = 0
           getCustomerAddresses.map((item, i) =>{
             if(item.defaultAdd === 1){
               index = i
             }
           })
-          let copyArr = ArrayCopy(getCustomerAddresses)
           copyArr.splice(0, 0, copyArr.splice(index, 1)[0])
           setAddresses(copyArr)
-        // }
+        }else{
+          setAddresses(copyArr)
+        }
         
         // setAddresses(getCustomerAddresses)
-        swiperRefs.current = Array(getCustomerAddresses.length - 1).fill().map((_, i) => swiperRefs.current[i] || createRef());
+        swiperRefs.current = Array(copyArr.length - 1).fill().map((_, i) => swiperRefs.current[i] || createRef());
       }
     },
     onError: (err) => {
@@ -265,7 +267,7 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
         <FlatList 
           data={addresses}
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{paddingTop: 15, paddingHorizontal: 15}}
+          contentContainerStyle={{paddingVertical: 15, paddingHorizontal: 15}}
           ListHeaderComponent={addresses.length < 10 && (
             <Card
               containerStyle={styles.button}
@@ -348,6 +350,19 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
                     }
                     onPress={() => {
                       navigation.navigate('ToktokMallAddressesForm', {item, update: true});
+                      if(swiperRefs.current.length > 0){
+                        swiperRefs.current.map((item, i) => {
+                          //IF INDEXED REFERENCE IS THE CURRENT SWIPEABLE, SKIP 
+                          if(i == index){
+                            return
+                          }else{
+                            //HIDE ACTIVE SWIPEABLE VIEWS NOW
+                            if(item.recenter){
+                              item.recenter()
+                            }
+                          }
+                        })
+                      }
                     }}>
                     <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                       <Text style={styles.addressfullName}>{item.receiverName}</Text>
@@ -547,8 +562,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 12,
+    paddingVertical: 10,
     height: 50,
     borderRadius: 5,
     paddingLeft: 10,
