@@ -1,9 +1,10 @@
 import { useNavigation } from '@react-navigation/core';
 import React, {useState, useEffect, useRef, useContext, createRef, forwardRef} from 'react';
-import {View, Text, StyleSheet, Platform, Dimensions, StatusBar, Image, TouchableOpacity, FlatList} from 'react-native';
+import {View, Text, StyleSheet, Platform, Dimensions, StatusBar, Image, TouchableOpacity, FlatList, BackHandler} from 'react-native';
 import Swipeable from 'react-native-swipeable';
 import CustomIcon from "../../../../Components/Icons";
 import { ArrayCopy } from '../../../../helpers';
+import {useFocusEffect} from '@react-navigation/native'
 
 import { CartContext } from '../ContextProvider';
 
@@ -75,7 +76,26 @@ export const RenderDetails = forwardRef(({
     });
 
     return unsubscribe;
-  }, [navigation]);
+	}, [navigation]);
+
+	useEffect(() => {
+		console.log('item swiped state',CartContextData.itemSwiped)
+	}, [CartContextData.itemSwiped])
+	
+	useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+					ref.current.map((item, index) => {
+						if(item.recenter){
+							item?.recenter()
+							return true
+						}
+					})
+      }
+      BackHandler.addEventListener('hardwareBackPress', onBackPress)
+      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress)
+    }, [])
+  )
 
 
 	const getCheckboxState = () => {

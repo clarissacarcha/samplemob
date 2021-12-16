@@ -10,7 +10,6 @@ export const CartContextProvider = ({children})=> {
 	const [swipeRefIndex, setSwipeRefIndex] = useState(0)
 	const [selectedFrom, setSelectedFrom] = useState('')
 	const [willDelete, setWillDelete] = useState(false)
-
 	return (
 		<Provider 
 			value={{
@@ -21,7 +20,7 @@ export const CartContextProvider = ({children})=> {
 				selectedFrom,
 				setSelectedFrom,
 				willDelete,
-				setWillDelete
+				setWillDelete,
 			}}
 		>
 			{children}

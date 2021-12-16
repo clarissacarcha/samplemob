@@ -124,11 +124,13 @@ const Component = ({
   const reset = () => {
     setWillDelete(false)
     CartContextData.setSelectAll(false)
+    CartContextData.setSelectedFrom('')
     setSubTotal(0)
     setMyCartData([])
     setItemsToCheckoutArr([])
     setItemsToDelArr([])
     setSelectedItemsArr([])
+    // set
   }
 
   useEffect(() => {
@@ -469,6 +471,8 @@ const Component = ({
       Toast.show("Please select items to checkout", Toast.LONG)
     }
   }
+
+  
 
   useFocusEffect(
     React.useCallback(() => {
