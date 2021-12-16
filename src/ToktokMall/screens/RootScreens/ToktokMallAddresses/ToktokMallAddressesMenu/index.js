@@ -44,6 +44,7 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
   const [addresses, setAddresses] = useState([]);
   const [confirmDeleteModal, setConfirmDeleteModal] = useState(false);
   const [deleteSuccessModal, setDeleteSuccessModal] = useState(false);
+  const [deleting, setDeleting] = useState(false)
   const [activeToDeleteItem, setActiveToDeleteItem] = useState({
     value: false,
     ids: []
@@ -289,6 +290,7 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
                   onRef: (_ref) => {swiperRefs.current[index] = _ref}, 
 									onRightActionRelease: () => setActiveToDeleteItem(item.id),
                   onSwipeComplete: () => {
+                    setDeleting(true)
                     //LOOP THROUGH REFERENCES AND HIDE ALL ACTIVE SWIPEABLE VIEWS
 										if(swiperRefs.current.length > 0){
 											swiperRefs.current.map((item, i) => {
@@ -349,7 +351,7 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
                         : setActiveToDeleteItem(prevState => ({...prevState, value: true}))
                     }
                     onPress={() => {
-                      navigation.navigate('ToktokMallAddressesForm', {item, update: true});
+                      !deleting && navigation.navigate('ToktokMallAddressesForm', {item, update: true});
                       if(swiperRefs.current.length > 0){
                         swiperRefs.current.map((item, i) => {
                           //IF INDEXED REFERENCE IS THE CURRENT SWIPEABLE, SKIP 
@@ -358,6 +360,7 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
                           }else{
                             //HIDE ACTIVE SWIPEABLE VIEWS NOW
                             if(item.recenter){
+                              setDeleting(false)
                               item.recenter()
                             }
                           }
