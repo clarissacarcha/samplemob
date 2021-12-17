@@ -39,7 +39,7 @@ export const VerifyContextProvider = ({children}) => {
     fetchPolicy: 'network-only',
     onCompleted: ({getAllTemporaryCart}) => {
       let {items, totalAmount} = getAllTemporaryCart;
-      console.log(getAllTemporaryCart, 'temp cart');
+      // console.log(getAllTemporaryCart, 'temp cart');
       setTemporaryCart({
         cartItemsLength: items.length,
         totalAmount,

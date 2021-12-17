@@ -59,7 +59,7 @@ const CancelOrder = ({
     setShowReason(false);
     setShowLoader(true);
     onCloseSheet();
-    console.log(referenceOrderNumber, selectedReason)
+    // console.log(referenceOrderNumber, selectedReason)
     postCancelOrder({
       variables: {
         input: {

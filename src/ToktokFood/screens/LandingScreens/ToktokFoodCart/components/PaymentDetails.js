@@ -64,7 +64,7 @@ const PaymentDetails = ({refreshing, orderType}) => {
 
   const onCashIn = ({balance}) => {
     // do something here
-    console.log(balance);
+    // console.log(balance);
     getMyAccount();
   };
 
