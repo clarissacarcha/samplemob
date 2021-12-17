@@ -83,6 +83,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
         }
         
       }
+      setInitialLoading(false)
     },
     onError: (err) => {
       console.log(err)
@@ -447,7 +448,11 @@ const Component = ({route, navigation, createMyCartSession}) => {
       // console.log(JSON.stringify(route.params.data))
       await init()
     })();
+
+    EventRegister.addEventListener("refreshCheckoutData", init)
   }, [])
+
+  console.log("addressData", addressData)
 
   // useEffect(() => { 
   //   //AUTO SHIPPING
@@ -488,7 +493,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
   }, [grandTotal])
 
   if(loading || initialLoading) {
-    return <Loading state={loading} />
+    return <Loading state={loading || initialLoading} />
   }
 
   return (

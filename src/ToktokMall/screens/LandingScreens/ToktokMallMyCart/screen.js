@@ -60,7 +60,7 @@ const Component = ({
       // console.log('response', response.getMyCart[0].parsed.data[0].product)
       if(response.getMyCart){
         let count = 0;
-        response.getMyCart.parsed.map(({data}) => data.map(item => item.product.enabled === 1 && count++))
+        response.getMyCart.parsed.map(({data}) => data.map(item => (item.product.enabled === 1 && item.product.noOfStocks !== 0) && (count+=item.quantity)))
         dispatch({ type: "TOKTOK_MALL_CART_COUNT", action: "set", payload: count})
         setMyCartData(response.getMyCart.parsed)
         setrawitems(response.getMyCart.raw)
@@ -377,10 +377,9 @@ const Component = ({
       }).filter(Boolean)
       // setItemsToCheckoutArr(allitems)
       // getSubTotal(allitems)
-      console.log(allitems.length)
-      setSelectedItemsArr(allitems)
+      setSelectedItemsArr(allitems.filter(item => (item.product.enabled === 1 && item.product.noOfStocks !== 0)))
       // if(!willDelete){
-        getSubTotal(allitems)
+        getSubTotal(allitems.filter(item => (item.product.enabled === 1 && item.product.noOfStocks !== 0)))
       // }
     // }
 

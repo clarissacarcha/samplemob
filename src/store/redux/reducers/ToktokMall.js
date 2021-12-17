@@ -21,7 +21,11 @@ const INITIAL_STATE = {
   customMessageModal: {
     visible: false,
     title: ["We're sorry but this product is ", "SOLD OUT."],
-    message: "This item is currently out of stock."
+    message: "This item is currently out of stock.",
+    action: {
+      onPress: () => {},
+      title: "Back to Home."
+    }
   }
 };
 

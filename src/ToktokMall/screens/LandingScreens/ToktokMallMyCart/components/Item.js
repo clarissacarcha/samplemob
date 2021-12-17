@@ -27,7 +27,7 @@ export const Item = ({
 }) => {
 
   const CartContextData = useContext(CartContext)
-  const [selected, setSelected] = useState(data.product.enabled === 1 ? state : false)
+  const [selected, setSelected] = useState((data.product.enabled === 1 && data.product.noOfStocks !== 0)? state : false)
   const [qty, setQty] = useState(data.quantity || 1)
   const [product, setproduct] = useState({})
 
@@ -37,12 +37,12 @@ export const Item = ({
   },[data])
 
   useEffect(() => {
-    setSelected(state)
+    setSelected((data.product.enabled === 1 && data.product.noOfStocks !== 0)? state : false)
   }, [state])
 
-  useEffect(() => {
-    if(forceSelect) setSelected(true)
-  }, [forceSelect])
+  // useEffect(() => {
+  //   if(forceSelect && data.product.enabled !== 1 ) setSelected(true)
+  // }, [forceSelect])
 
   useEffect(() => {
     if(forceSelectToZero ) setSelected(false)
@@ -75,7 +75,9 @@ export const Item = ({
       if(CartContextData.willDelete){
         return false
       }else{
-        if(item.enabled == 1){
+        if(item.noOfStocks === 0){
+          return true
+        }else if(item.enabled == 1){
           return false
         }else{
           return true
@@ -85,7 +87,9 @@ export const Item = ({
       if(CartContextData.willDelete){
         return "#F6841F"
       }else{
-        if(item.enabled == 1){
+        if(item.noOfStocks === 0){
+          return "#ECECEC"
+        }else if(item.enabled == 1){
           return "#F6841F"
         }else{
           return "#ECECEC"
@@ -157,7 +161,7 @@ export const Item = ({
                   <Text style={{color: "#9E9E9E", fontSize: 13}}>Qty: {data?.qty}</Text>
                 </View> */}
               </View>
-              {product.enabled == 1 &&
+              {product.enabled == 1 && product.noOfStocks !== 0 &&
                 <View style={{flexDirection: 'row', marginTop: 7, alignItems: 'center', height: 40}}>
                   <Text style = {{fontFamily: FONT.REGULAR, fontSize: 12}}>Qty</Text>
                   <TouchableOpacity 
@@ -209,6 +213,14 @@ export const Item = ({
                 <View style={{paddingVertical: 15}}>
                   <View style={{borderWidth: 0.5, borderColor: '#F6841F', width: '50%', alignItems: 'center', borderRadius: 2}}>
                     <Text style={{fontSize: 11, color: "#F6841F"}}>Product not available</Text>
+                  </View>
+                </View>              
+              }
+
+              {product?.noOfStocks === 0 &&
+                <View style={{paddingVertical: 15}}>
+                  <View style={{borderWidth: 0.5, borderColor: '#F6841F', width: '35%', alignItems: 'center', borderRadius: 2}}>
+                    <Text style={{fontSize: 11, color: "#F6841F"}}>Out of Stock</Text>
                   </View>
                 </View>              
               }

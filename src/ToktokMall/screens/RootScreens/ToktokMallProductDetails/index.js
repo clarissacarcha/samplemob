@@ -175,7 +175,15 @@ const Component =  ({
         setIsFetching(false)
         if(response.getProductDetails.noOfStocks <= 0) {
           setisOutOfStock(true)
-          dispatch({type:'TOKTOK_MALL_OPEN_MESSAGE_MODAL'})
+          dispatch({type:'TOKTOK_MALL_OPEN_MESSAGE_MODAL', payload: {
+            action: {
+              onPress:() => {
+                navigation.navigate("ToktokMallHome")
+                dispatch({type: "TOKTOK_MALL_CLOSE_MESSAGE_MODAL"})
+              },
+              title: "Back to Home."
+            }
+          }})
         }
         console.log("Stock", response.getProductDetails.noOfStocks)
       }

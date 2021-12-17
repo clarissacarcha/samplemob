@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import {StyleSheet, View, Text, TouchableOpacity, Dimensions} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
@@ -59,7 +60,7 @@ export const CustomMessageModal = () => {
             </Text>
 
             <TouchableOpacity
-              onPress={() => {}}
+              onPress={customMessageModal.action?.onPress}
               style={{
                 borderColor: '#F6841F',
                 borderWidth: 1,
@@ -70,7 +71,7 @@ export const CustomMessageModal = () => {
                 paddingHorizontal: 30,
                 borderRadius: 5,
               }}>
-              <Text style={{fontSize: 16, color: '#F6841F'}}>Back to Home</Text>
+              <Text style={{fontSize: 16, color: '#F6841F'}}>{customMessageModal.action?.title}</Text>
             </TouchableOpacity>
           </View>
         </View>

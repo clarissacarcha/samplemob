@@ -186,6 +186,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
             .then((response) => {
               if (response.data && response.data.success == 1) {
                 setIsLoading(false);
+                clicked && EventRegister.emit("refreshCheckoutData")
                 dispatch({type:'TOKTOK_MALL_OPEN_MODAL', payload: {
                   type: 'Success',
                   message: route.params?.update ? 'Address Updated!' : 'Address Added!'
