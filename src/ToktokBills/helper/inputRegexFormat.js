@@ -1,5 +1,5 @@
 export const alphanumericRegex = (input) => {
-  const regex = /^(?!\s)(?![\s\S]*\s$)[a-zA-Z\s]+$/g;
+  const regex = /^(?!\s)(?![\s\S]*\s$)[a-zA-Z\s0-9-]+$/g;
   const result = regex.test(input);
   const replaceValue = input.length > 1 ? input : input.substring(0,input.length - 1)
   const finalInput = !result ? replaceValue : input;
