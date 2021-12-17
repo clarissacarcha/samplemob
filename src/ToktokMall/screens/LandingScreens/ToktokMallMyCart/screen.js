@@ -64,7 +64,9 @@ const Component = ({
         dispatch({ type: "TOKTOK_MALL_CART_COUNT", action: "set", payload: count})
         setMyCartData(response.getMyCart.parsed)
         setrawitems(response.getMyCart.raw)
-        settotalitems(response.getMyCart.total)
+        let total = 0
+        response.getMyCart.parsed.map(({data}) => data.map(item => (item.product.enabled === 1 && item.product.noOfStocks !== 0) && total++))
+        settotalitems(total)
 
         if(response.getMyCart.total > 0){
           //GENERATE ARRAY OF REFERENCES FOR MANIPULATING SWIPEABLE VIEW BASED ON TOTAL CART ITEMS
