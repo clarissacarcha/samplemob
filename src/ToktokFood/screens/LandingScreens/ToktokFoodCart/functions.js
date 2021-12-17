@@ -15,7 +15,7 @@ export const arrangeAddons = (addons) => {
   }
 }
 export const tokwaErrorTitle = (pinAttempt) => {
-  console.log(pinAttempt.message)
+  // console.log(pinAttempt.message)
   if(pinAttempt.message == 'Please set up your TPIN first in toktokwallet settings.'){
     return 'Set up your TPIN'
   } else {

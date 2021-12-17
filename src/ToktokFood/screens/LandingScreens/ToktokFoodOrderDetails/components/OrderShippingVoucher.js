@@ -9,22 +9,22 @@ import {FONT_SIZE, FONT} from 'res/variables';
 // Utils
 import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
 
-const validDateFormat = (validUntil) => {
+const validDateFormat = validUntil => {
   let isValid = moment(validUntil).isValid();
-  if(isValid){
+  if (isValid) {
     let date = moment(validUntil, 'YYYY/MM/DD');
     let month = date.format('M');
-    let day   = date.format('D');
-    let year  = date.format('YYYY');
-    return `${month}.${day}.${year}`
+    let day = date.format('D');
+    let year = date.format('YYYY');
+    return `${month}.${day}.${year}`;
   }
-  return isValid
-}
+  return isValid;
+};
 
 const OrderShippingVoucher = ({data, forDelivery}) => {
   let {promoDetails} = data;
   let validDate = validDateFormat(promoDetails.validUntil);
-  
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -33,9 +33,7 @@ const OrderShippingVoucher = ({data, forDelivery}) => {
       <View style={styles.divider} />
       <View style={styles.header}>
         <Text style={styles.voucherTitle}>{promoDetails.shippingDiscountName}</Text>
-        { validDate && (
-          <Text style={styles.validDate}>Valid Until: {validDate}</Text>
-        )}
+        {validDate && <Text style={styles.validDate}>Valid Until: {validDate}</Text>}
       </View>
     </View>
   );
@@ -53,7 +51,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingVertical: moderateScale(5),
-    paddingHorizontal: moderateScale(20)
+    paddingHorizontal: moderateScale(20),
   },
   title: {
     fontFamily: FONT.BOLD,
@@ -62,7 +60,7 @@ const styles = StyleSheet.create({
   voucherTitle: {
     fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.L,
-    color: '#FFA700'
+    color: '#FFA700',
   },
   validDate: {
     color: '#9E9E9E',

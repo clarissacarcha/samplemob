@@ -13,10 +13,12 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
   const [totalShipping, setTotalShipping] = useState(deliveryFee);
 
   useEffect(() => {
+    // console.log(autoShipping, shippingVoucher);
+
     if (autoShipping?.success) {
       const {amount, is_percentage} = autoShipping.voucher;
       if (amount > 0) {
-        let pAmount = is_percentage > 0 ? (amount / 100) * deliveryFee : amount;
+        let pAmount = is_percentage !== '0' ? (amount / 100) * deliveryFee : amount;
         let totalSF = deliveryFee - pAmount;
         totalSF = totalSF > 0 ? totalSF : 0;
         setTotalShipping(totalSF);
@@ -25,12 +27,11 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
       }
     }
 
-    if (shippingVoucher.length) {
-      console.log(shippingVoucher);
+    if (shippingVoucher.length > 0) {
       const {type} = shippingVoucher[0];
       const {amount, is_percentage} = shippingVoucher[0].voucher;
       if (type === 'shipping' && amount > 0) {
-        let pAmount = is_percentage > 0 ? (amount / 100) * deliveryFee : amount;
+        let pAmount = is_percentage !== '0' ? (amount / 100) * deliveryFee : amount;
         let totalSF = pAmount > deliveryFee ? pAmount - deliveryFee : deliveryFee - pAmount;
         totalSF = totalSF > 0 ? totalSF : 0;
         setTotalShipping(totalSF);

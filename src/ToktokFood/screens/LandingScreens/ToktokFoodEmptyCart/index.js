@@ -24,7 +24,7 @@ const ToktokFoodEmptyCart = () => {
     let height = event.nativeEvent.layout.height;
     setHeaderHeight(height);
   };
-  console.log(headerHeight)
+  // console.log(headerHeight)
   return (
     <View style={styles.container}>
       <View onLayout={(event) => getHeaderHeight(event)}>
