@@ -5,43 +5,106 @@ import { useThrottle } from 'src/hooks'
 import validator from 'validator'
 
 //HELPER
-import { moderateScale, formatAmount, numberFormat } from 'toktokbills/helper'
+import {
+  moderateScale,
+  formatAmount,
+  numberFormat,
+  numericRegex,
+  alphanumericRegex,
+  maxLengthRegex,
+  minLengthRegex
+} from 'toktokbills/helper'
 
 //COMPONENTS
 import { VerifyContext } from "../VerifyContextProvider";
 
 // COLORS AND FONTS
 import CONSTANTS from 'common/res/constants';
+
 const {COLOR , FONT_FAMILY: FONT , FONT_SIZE , SHADOW, SIZE} = CONSTANTS
 const {width,height} = Dimensions.get("window")
 
-export const PaymentForm = ({})=> {
+const processErrorMessage = (fieldValue, fieldName, fieldWidth, fieldType) => {
+  // 0 = min | 1 = exact | 2 = max 
+  switch(fieldType){
+    case 0:
+      return fieldValue.length < fieldWidth ? `${fieldName} must be at least ${fieldWidth} characters in length` : "";
+    case 1:
+      return fieldValue.length < fieldWidth ? `${fieldName} must be ${fieldWidth} characters in length` : "";
+    case 2:
+      return fieldValue.length > fieldWidth ? `${fieldName} length must be ${fieldWidth} characters or less` : "";
+  
+    default:
+      return "";
+  }
+}
+
+const processFieldValue = (fieldValue, fieldWidth, fieldType) => {
+  // 0 = min | 1 = exact | 2 = max 
+  return fieldType != 0 ? maxLengthRegex(fieldValue, fieldWidth) : fieldValue;
+}
+
+export const PaymentForm = ({ billItemSettings })=> {
+
+  const {
+    firstFieldName,
+    firstFieldFormat,
+    firstFieldWidth,
+    firstFieldWidthType,
+    secondFieldName,
+    secondFieldFormat,
+    secondFieldWidth,
+    secondFieldWidthType,
+    commissionRateDetails
+  } = billItemSettings;
+  
+  //CONVENIENCE FEE
+  const convenienceFee = parseFloat(commissionRateDetails?.providerServiceFee) + parseFloat(commissionRateDetails?.systemServiceFee); 
+  const convenienceFeeText = convenienceFee > 0 ? (
+    `Additional ₱ ${numberFormat(convenienceFee)} convenience fee will be charged in this transaction`
+  ) : ("Convenience fee is waived for this transaction");
 
   const navigation = useNavigation();
   const {
-    accountNo,
-    setAccountNo,
-    accountName,
-    setAccountName,
+    firstField,
+    setFirstField,
+    firstFieldError,
+    setFirstFieldError,
+    secondField,
+    setSecondField,
+    secondFieldError,
+    setSecondFieldError,
     amount,
     setAmount,
     email,
     setEmail,
     emailError,
     setEmailError,
-    accountNoError,
-    setAccountNoError,
     amountError,
     setAmountError
   } = useContext(VerifyContext);
   const accountNameRef = useRef(null);
   const amountRef = useRef(null);
   const emailRef = useRef(null);
+  
+  const changeFirstField = (value)=> {
+    const fieldFormatValue = firstFieldFormat === 1 ? numericRegex(value) : alphanumericRegex(value);
+    const fieldValue = processFieldValue(fieldFormatValue, firstFieldWidth, firstFieldWidthType) 
+    setFirstField(fieldValue);
+    
+    //error
+    const errorMessage = processErrorMessage(fieldValue, firstFieldName, firstFieldWidth, firstFieldWidthType);
+    fieldValue ? setFirstFieldError(errorMessage) : setFirstFieldError(`${firstFieldName} is required.`)
+  }
 
-  const changeAccountNumber = (value)=> {
-    const num = value.replace(/[^0-9]/g, '')
-    setAccountNo(num)
-    setAccountNoError(value.length < 11 ? "Account Number maximum length must be 11" : "")
+  const changeSecondField = (value) => {
+    const fieldFormatValue = secondFieldFormat === 1 ? numericRegex(value) : alphanumericRegex(value);
+    const fieldValue = processFieldValue(fieldFormatValue, secondFieldWidth, secondFieldWidthType) 
+    setSecondField(fieldValue);
+
+    //error
+    const errorMessage = processErrorMessage(fieldValue, secondFieldName, secondFieldWidth, secondFieldWidthType);
+    fieldValue ? setSecondFieldError(errorMessage) : setSecondFieldError(`${secondFieldName} is required.`)
   }
 
   const changeEmail = (value) => {
@@ -55,56 +118,69 @@ export const PaymentForm = ({})=> {
 
   const changeAmount = (value) => {
     let pattern = /^\d+(\.\d{2})?$/;
-    setAmountError(!pattern.test(value) ? "Amount format is invalid." : "")
+    if(value[0] == "0"){
+      value.replace(0, "");
+      return setAmount(value.replace(0, ""));
+    }
+   
+    value ? setAmountError(!pattern.test(value) ? "Amount format is invalid." : "")
+      : setAmountError(`Payment amount is required.`)
     formatAmount(value, setAmount)
   }
 
   return (
     <View style={styles.searchField}>
-      <View style={[{ marginBottom: moderateScale(30) }]}>
+      <View style={[{ marginBottom: moderateScale(20) }]}>
+        <Text style={styles.label}>{firstFieldName}</Text>
         <TextInput 
           style={styles.input}
-          placeholder="Enter 11-digit account number"
-          onChangeText={changeAccountNumber}
-          value={accountNo}
-          keyboardType="decimal-pad"
-          maxLength={11}
+          placeholder={`Enter ${firstFieldName.toLowerCase()}`}
+          onChangeText={changeFirstField}
+          value={firstField}
+          keyboardType={firstFieldFormat == 1 ? "numeric" : "default"}
+          maxLength={firstFieldWidthType == 1 || firstFieldWidthType == 2 ? firstFieldWidth : null}
           returnKeyType="next"
           onSubmitEditing={() => { accountNameRef.current.focus(); }}
           blurOnSubmit={false}
         />
-        { !!accountNoError && <Text style={styles.error}>{accountNoError}</Text>}
+        { !!firstFieldError && <Text style={styles.error}>{firstFieldError}</Text>}
       </View>
-      <View style={[{ marginBottom: moderateScale(30) }]}>
+      <View style={[{ marginBottom: moderateScale(20) }]}>
+        <Text style={styles.label}>{secondFieldName}</Text>
         <TextInput 
           style={styles.input}
-          placeholder="Enter account name"
-          onChangeText={(val) => setAccountName(val)}
-          value={accountName}
+          placeholder={`Enter ${secondFieldName.toLowerCase()}`}
+          onChangeText={changeSecondField}
+          value={secondField}
+          keyboardType={secondFieldFormat == 1 ? "numeric" : "default"}
+          maxLength={secondFieldWidthType == 1 || secondFieldWidthType == 2 ? secondFieldWidth : null}
           returnKeyType="next"
           ref={(input) => { accountNameRef.current = input; }}
           onSubmitEditing={() => { amountRef.current.focus(); }}
           blurOnSubmit={false}
         />
+        { !!secondFieldError && <Text style={styles.error}>{secondFieldError}</Text>}
       </View>
-      <View style={[{ marginBottom: moderateScale(30) }]}>
+      <View style={[{ marginBottom: moderateScale(20) }]}>
+        <Text style={styles.label}>Payment Amount</Text>
         <TextInput 
           style={styles.input}
           placeholder="Enter payment amount"
           onChangeText={changeAmount}
           value={amount}
-          keyboardType="decimal-pad"
-          pattern={ "^\d+(\.\d{2})?$"}
-          onValidation={isValid => console.log(isValid, "dfsd")}
+          keyboardType="numeric"
           returnKeyType="next"
           ref={(input) => { amountRef.current = input; }}
           onSubmitEditing={() => { emailRef.current.focus(); }}
           blurOnSubmit={false}
         />
         { !!amountError && <Text style={styles.error}>{amountError}</Text>}
-        <Text style={{ fontSize: FONT_SIZE.S, marginTop: 5 }}>Additional ₱ 100.00 convenience fee will be charged in this transaction</Text>
+        <Text style={{ fontSize: FONT_SIZE.S, marginTop: 5 }}>
+          {convenienceFeeText}
+          </Text>
       </View>
       <View>
+        <Text style={styles.label}>Email Address</Text>
         <TextInput 
           style={styles.input}
           placeholder="Enter email address (optional)"
@@ -122,7 +198,7 @@ export const PaymentForm = ({})=> {
 const styles = StyleSheet.create({
   searchField: {
     backgroundColor:"white",
-    margin: moderateScale(16), flex: 1
+    margin: moderateScale(16),
   },
   input: {
     paddingHorizontal: moderateScale(15),
@@ -142,5 +218,9 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.S,
     marginTop: 5,
     color: COLOR.RED
+  },
+  label: {
+    fontSize: FONT_SIZE.M,
+    marginBottom: moderateScale(5)
   }
 })

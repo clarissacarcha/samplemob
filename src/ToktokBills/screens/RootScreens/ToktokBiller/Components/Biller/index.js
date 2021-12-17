@@ -7,8 +7,6 @@ import CONSTANTS from 'common/res/constants'
 const {COLOR , FONT_FAMILY: FONT , FONT_SIZE , SHADOW} = CONSTANTS
 const {width,height} = Dimensions.get("window")
 
-import toktokwalletlogo from 'toktokwallet/assets/images/tokwa.png'
-
 export const Biller = ({
   item,
   index
@@ -18,24 +16,21 @@ export const Biller = ({
 
   const onPress = ()=> {
     navigation.navigate("ToktokBillsPaymentProcess" , {
-      billerTypes: item,
-      billerName: route.params.biller.name
+      billItemId: item.id,
+      billType: route.params.billType
     })
   }
 
   const onThrottledPress = useThrottle(onPress , 2000)
-
+  
   return (
     <TouchableOpacity
       onPress={onThrottledPress}
       style={styles.container}
     >
       <View style={styles.item}>
-        <Image
-          source={toktokwalletlogo}
-          style={styles.itemLogo}
-        />
-        <Text style={styles.itemName}>{item.name}</Text>
+        <Image source={{ uri: item.logo }} style={styles.itemLogo} />
+        <Text style={styles.itemName}>{item.descriptions}</Text>
       </View>
     </TouchableOpacity>
   )
@@ -52,17 +47,17 @@ const styles = StyleSheet.create({
   item: {
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: moderateScale(5)
+    padding: moderateScale(15),
   },
   itemLogo: {
-    height: moderateScale(70),
+    height: moderateScale(50),
     width: moderateScale(70),
-    resizeMode: "cover"
+    resizeMode: "contain"
   },
   itemName: {
     fontFamily: FONT.REGULAR,
     fontSize: moderateScale(FONT_SIZE.M),
     flexShrink: 1,
-    marginRight: moderateScale(15),
+    marginLeft: moderateScale(15),
   }
 })

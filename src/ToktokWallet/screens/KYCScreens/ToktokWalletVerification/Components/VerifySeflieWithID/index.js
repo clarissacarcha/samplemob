@@ -4,13 +4,8 @@ import EIcon from 'react-native-vector-icons/EvilIcons'
 import {VerifyContext} from '../VerifyContextProvider'
 import {useNavigation} from '@react-navigation/native'
 import { ICON_SET, VectorIcon, YellowButton } from 'src/revamp'
-import { AlertOverlay } from 'src/components'
-import { TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT} from 'src/graphql'
-import {POST_VERIFY_IF_PEP} from 'toktokwallet/graphql'
-import {useMutation} from '@apollo/react-hooks'
-import { useAlert } from 'src/hooks/useAlert'
-import { onErrorAlert } from 'src/util/ErrorUtility'
-import { BuildingBottom , PepQuestionnaireModal } from 'toktokwallet/components'
+import { BuildingBottom } from 'toktokwallet/components'
+import { moderateScale } from 'toktokwallet/helper'
 import CONSTANTS from 'common/res/constants'
 import ImageCropper from 'react-native-simple-image-cropper'
 
@@ -25,11 +20,15 @@ const ratio = Math.min(width / CROP_AREA_WIDTH , height / CROP_AREA_HEIGHT)
 
 const Reminder = ({children})=> {
     return (
-        <View style={{flexDirection: "row",marginVertical: 5}}>
-            <View style={{padding: 2, borderRadius: 100, borderColor: COLOR.YELLOW, borderWidth: 1,marginRight: 10}}>
-                <VectorIcon size={12} iconSet={ICON_SET.Feather} name="check"/>
+        <View style={{flexDirection: "row",marginVertical: 5,paddingHorizontal: 16}}>
+            <View>
+                <View style={{padding: 2, borderRadius: 100, borderColor: COLOR.YELLOW, borderWidth: 1,marginRight: 10}}>
+                    <VectorIcon size={12} iconSet={ICON_SET.Feather} name="check"/>
+                </View>
             </View>
-           {children}
+            <View style={{paddingRight: 20}}>
+                  {children}
+           </View>
     </View>
     )
 }
@@ -38,7 +37,7 @@ const Reminder = ({children})=> {
 const MainComponent = ({children , onPress })=> {
     return (
         <>
-        <ScrollView style={styles.content}>
+        <ScrollView contentContainerStyle={{flexGrow: 1}} style={styles.content}>
         <View style={styles.mainInput}>
                 {/* <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD}}>One last step before you get a verified toktokwallet</Text>
                 <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:"#929191"}}>Take a photo to verify your identity.</Text>  
@@ -54,16 +53,23 @@ const MainComponent = ({children , onPress })=> {
                         <Text style={{textAlign:"left",fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,marginBottom: 10,}}>Reminders</Text>
                         <View>
                             <Reminder>
-                                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}><Text style={{color: COLOR.YELLOW}}>Position</Text> your face within the frame</Text>
+                                <Text style={{fontFamily: FONT.REGULAR, fontSize: moderateScale(FONT_SIZE.M)}}><Text style={{color: COLOR.YELLOW}}>Position</Text> your face within the frame</Text>
                             </Reminder>
                             <Reminder>
-                                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}><Text style={{color: COLOR.YELLOW}}>Take selfie</Text> with your Valid ID</Text>
+                                <Text style={{fontFamily: FONT.REGULAR, fontSize: moderateScale(FONT_SIZE.M)}}><Text style={{color: COLOR.YELLOW}}>Take selfie</Text> with your valid government ID</Text>
                             </Reminder>
                             <Reminder>
-                                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}><Text style={{color: COLOR.YELLOW}}>Don't</Text> wear anything covering your face</Text>
+                                <Text style={{fontFamily: FONT.REGULAR, fontSize: moderateScale(FONT_SIZE.M)}}><Text style={{color: COLOR.YELLOW}}>Same valid government ID</Text> uploaded in the system</Text>
                             </Reminder>
                             <Reminder>
-                                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}><Text style={{color: COLOR.YELLOW}}>Follow</Text> instructions</Text>
+                                <Text style={{fontFamily: FONT.REGULAR, fontSize: moderateScale(FONT_SIZE.M)}}><Text style={{color: COLOR.YELLOW}}>Show front side</Text> of the ID and do not cover while
+taking a selfie </Text>
+                            </Reminder>
+                            <Reminder>
+                                <Text style={{fontFamily: FONT.REGULAR, fontSize: moderateScale(FONT_SIZE.M)}}><Text style={{color: COLOR.YELLOW}}>Don't</Text> wear anything covering your face</Text>
+                            </Reminder>
+                            <Reminder>
+                                <Text style={{fontFamily: FONT.REGULAR, fontSize: moderateScale(FONT_SIZE.M)}}><Text style={{color: COLOR.YELLOW}}>Follow</Text> instructions</Text>
                             </Reminder>
                         </View>
                    
@@ -71,10 +77,11 @@ const MainComponent = ({children , onPress })=> {
                
               
             </View>
-        </ScrollView>
-        <View style={styles.proceedBtn}>
+            <View style={styles.proceedBtn}>
                     <YellowButton label="Next" onPress={onPress}/>
-                </View>
+            </View>
+        </ScrollView>
+       
         <BuildingBottom/>
         </>
     )
@@ -240,8 +247,9 @@ const styles = StyleSheet.create({
     proceedBtn: {
         height: 70,
         width: "100%",
-        padding: 16,
         marginBottom: 16,
+        marginTop: 40,
+        justifyContent:"flex-end"
     },
     input: {
         padding: 10,

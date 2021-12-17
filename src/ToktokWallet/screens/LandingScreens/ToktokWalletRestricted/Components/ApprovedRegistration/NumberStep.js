@@ -15,11 +15,15 @@ const NumberStep = ({ number, label}) => {
                 </Text>
             </View>
 
-            <View style={styles.label}>
+            <Text style={styles.labelText}>
+                    {label}
+            </Text>
+
+            {/* <View style={styles.label}>
                 <Text style={styles.numberLabel}>
                     {label}
                 </Text>
-            </View>
+            </View> */}
         </View>
     )
 
@@ -42,7 +46,13 @@ const styles = StyleSheet.create({
     },
     numberLabel: {
         fontFamily: FONT.REGULAR,
-        fontSize: FONT_SIZE.L
+        fontSize: FONT_SIZE.L,
+    },
+    labelText: {
+        fontFamily: FONT.REGULAR,
+        fontSize: FONT_SIZE.L,
+        alignSelf:"center",
+        marginLeft: 20,
     },
     label: {
         flex: 1,
