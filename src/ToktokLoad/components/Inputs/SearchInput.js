@@ -1,29 +1,25 @@
 import React , {useState , useEffect} from 'react'
-import {View,Text,StyleSheet,TextInput,TouchableOpacity,Platform,FlatList,ActivityIndicator,Image} from 'react-native'
+import { View, Text, StyleSheet, TextInput, Image} from 'react-native'
 import { sortBy } from 'lodash'
-import { Separator } from 'toktokbills/components'
-import { search_ic } from 'toktokbills/assets/icons'
+import { search_icon } from 'toktokload/assets/icons'
 import { HeaderBack , HeaderTitle } from 'src/revamp'
-import { moderateScale } from 'toktokbills/helper'
+import { moderateScale } from 'toktokload/helper'
 
 import CONSTANTS from 'common/res/constants'
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE , SIZE , MARGIN } = CONSTANTS
 
-export const SearchInput = ({search = "", setSearch, placeholder}) => {
-
-  const filterSearch = (val) => {
-    setSearch(val);
-  }
+export const SearchInput = ({value = "", onChangeText}) => {
 
   return (
     <View style={styles.searchField}>
       <View style={[styles.inputContainer,{flexDirection: "row"}]}>
-        <Image style={styles.icon} resizeMode="center" source={search_ic}/>
+        <Image style={styles.icon} resizeMode="center" source={search_icon}/>
         <TextInput 
           style={styles.input}
-          placeholder={placeholder}
-          onChangeText={filterSearch}
-          value={search}
+          placeholder="Search Contacts"
+          placeholderTextColor={"#9E9E9E"}
+          onChangeText={onChangeText}
+          value={value}
         />
       </View>
     </View>
@@ -58,7 +54,7 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.M,
     fontFamily: FONT.REGULAR,
     padding: 0,
-    marginLeft: 5,
+    marginHorizontal: 5,
     alignSelf: "center",
     flex: 1
   },

@@ -30,7 +30,7 @@ export const Biller = ({
     >
       <View style={styles.item}>
         <Image source={{ uri: item.logo }} style={styles.itemLogo} />
-        <Text style={styles.itemName}>{item.name}</Text>
+        <Text style={styles.itemName}>{item.descriptions}</Text>
       </View>
     </TouchableOpacity>
   )

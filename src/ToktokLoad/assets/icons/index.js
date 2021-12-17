@@ -1,6 +1,7 @@
 export const contact_icon = require('./contact-icon.png');
 export const wallet_icon = require('./wallet-icon.png');
 export const download_icon = require('./download-icon.png');
+export const search_icon = require('./search-icon.png');
 
 // FAVORITE ICONS
 export const heart_fill_icon = require('./heart-fill.png');

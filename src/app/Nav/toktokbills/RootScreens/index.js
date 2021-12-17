@@ -4,7 +4,9 @@ import {
   ToktokBillsHome,
   ToktokBillsPaymentProcess,
   ToktokBillsPaymentSummary
-} from 'toktokbills/screens'
+} from 'toktokbills/screens';
+import { Platform } from 'react-native';
+import { moderateScale } from "toktokload/helper";
 
 export default ({Navigator}) => {
   return (
@@ -13,28 +15,40 @@ export default ({Navigator}) => {
         name="ToktokBiller" 
         component={ToktokBiller}
         options={{
-          headerTitleAlign: 'center' 
+          headerTitleAlign: "center",
+          headerStyle: {
+            height: Platform.OS == "ios" ? moderateScale(60) : moderateScale(80)
+          },
         }}
       />
       <Navigator.Screen 
         name="ToktokBillsHome" 
         component={ToktokBillsHome}
         options={{
-          headerTitleAlign: 'center' 
+          headerTitleAlign: "center",
+          headerStyle: {
+            height: Platform.OS == "ios" ? moderateScale(60) : moderateScale(80)
+          },
         }}
       />
       <Navigator.Screen 
         name="ToktokBillsPaymentProcess" 
         component={ToktokBillsPaymentProcess}
         options={{
-          headerTitleAlign: 'center' 
+          headerTitleAlign: "center",
+          headerStyle: {
+            height: Platform.OS == "ios" ? moderateScale(60) : moderateScale(80)
+          },
         }}
       />
       <Navigator.Screen 
         name="ToktokBillsPaymentSummary" 
         component={ToktokBillsPaymentSummary}
         options={{
-          headerTitleAlign: 'center' 
+          headerTitleAlign: "center",
+          headerStyle: {
+            height: Platform.OS == "ios" ? moderateScale(60) : moderateScale(80)
+          },
         }}
       />
     </>

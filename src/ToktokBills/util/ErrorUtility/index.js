@@ -17,16 +17,18 @@ export class ErrorUtility {
     navigation,
     setErrorMessage = null,
     prompt,
-    title = "Transaction Failed"
+    title = "Transaction Failed",
+    isPop = false
   })=> {
     
     const {graphQLErrors, networkError} = error;
   
     if(networkError){
       prompt({
-        type: "warning",
+        type: "error",
         title: "No Internet Connection",
         message: "Network error occurred. Please check your internet connection.",
+        event: "TOKTOKBILLSLOAD"
       });
       return;
     }
@@ -71,12 +73,13 @@ export class ErrorUtility {
     }
    
     prompt({
-      type: title ? "error" : "warning",
+      type: "error",
       title,
       message: graphQLErrors[0]?.message,
+      event: "TOKTOKBILLSLOAD"
     });
 
-    if(title){
+    if(isPop){
       return navigation.pop();
     }
   }

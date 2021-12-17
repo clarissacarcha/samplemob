@@ -15,7 +15,7 @@ export const BillerType = ({ item, index })=> {
   }
 
   const onThrottledPress = useThrottle(onPress , 2000)
-
+ 
   return (
     <TouchableOpacity
       onPress={onThrottledPress}

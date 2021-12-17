@@ -6,7 +6,6 @@ import { OrangeButton } from "src/ToktokLoad/components";
 
 //UTIL
 import { moderateScale } from "toktokload/helper";
-import { useSelector } from 'react-redux';
 
 //FONTS & COLORS
 import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
@@ -14,11 +13,8 @@ import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
 //IMAGES
 import { contact_icon } from "toktokload/assets/icons";
 
-export const BuyLoad = ({ navigation }) => {
+export const BuyLoad = ({ navigation, setMobileNumber, mobileNumber }) => {
 
-  const { user } = useSelector((state) => state.session);
-  const formattedMobile = user?.username.replace("+63", "0");
-  const [mobileNumber, setMobileNumber] = useState(formattedMobile);
   const [errorMessage, setErrorMessage] = useState("");
 
   const onChangeText = (value) => {
@@ -42,7 +38,7 @@ export const BuyLoad = ({ navigation }) => {
 
   const onPressContacts = () => {
     setErrorMessage("");
-    navigation.navigate('ToktokLoadContacts',  {setMobileNumber});
+    navigation.navigate("ToktokLoadContacts",  { setMobileNumber });
   }
 
   return (

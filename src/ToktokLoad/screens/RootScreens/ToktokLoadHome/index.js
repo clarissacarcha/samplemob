@@ -1,29 +1,30 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {View, Text, StyleSheet, Platform} from "react-native";
+import { useSelector } from 'react-redux';
 
 //components
 import { HeaderBack, HeaderTitle, HeaderTabs, LoadingIndicator } from "src/ToktokLoad/components";
 import { BuyLoad, Favorites } from "./TabScreens";
 
-//util
-import { moderateScale } from "toktokload/helper";
-
 export const ToktokLoadHome = ({ navigation }) => {
+
+  const { user } = useSelector((state) => state.session);
+  const formattedMobile = user?.username.replace("+63", "0");
+  const [mobileNumber, setMobileNumber] = useState(formattedMobile);
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={"toktokload"} isRightIcon/>,
-    headerStyle: { height: Platform.OS == 'ios' ? moderateScale(60) : moderateScale(80) }
   });
 
   const TABS = [
     {
       name: "Buy Load",
-      screen: <BuyLoad navigation={navigation} />
+      screen: <BuyLoad navigation={navigation} setMobileNumber={setMobileNumber} mobileNumber={mobileNumber} />
     },
     {
       name: "Favorites",
-      screen: <Favorites navigation={navigation} />
+      screen: <Favorites navigation={navigation} mobileNumber={mobileNumber} />
     }
   ]
 

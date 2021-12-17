@@ -7,7 +7,7 @@ import {useSelector} from 'react-redux';
 import { moderateScale, numberFormat } from "toktokload/helper";
 
 //COMPONENTS
-import { OrangeButton, HeaderBack, HeaderTitle, HeaderTabs, LoadingIndicator } from "src/ToktokLoad/components";
+import { OrangeButton, HeaderBack, HeaderTitle, HeaderTabs, LoadingIndicator, Separator } from "src/ToktokLoad/components";
 import { PaymentMethod, PayNowButton, SummaryDetails } from "./components";
 import { SomethingWentWrong } from 'src/components'
 
@@ -25,12 +25,10 @@ export const ToktokLoadSummary = ({ navigation, route }) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={"toktokload"} />,
-    headerStyle: { height: Platform.OS == 'ios' ? moderateScale(60) : moderateScale(80) }
   });
 
-  const loads = route.params?.loads;
-  const mobileNumber = route.params?.mobileNumber ? route.params.mobileNumber : loads?.mobileNumber ;
-  
+  const { loads, mobileNumber } = route.params;
+
   const { user } = useSelector((state) => state.session);
   const {getMyAccountLoading, getMyAccount, getMyAccountError} = useAccount();
   const [refreshing, setRefreshing] = useState(false);
@@ -65,9 +63,6 @@ export const ToktokLoadSummary = ({ navigation, route }) => {
   }
   return (
     <View style={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Load Summary</Text>
-      </View>
       <ScrollView
         style={{ flex: 1 }}
         refreshControl={
@@ -77,9 +72,13 @@ export const ToktokLoadSummary = ({ navigation, route }) => {
           />
         }
       >
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerText}>Payment Summary</Text>
+        </View>
         <SummaryDetails loadDetails={loads?.loadDetails ? loads.loadDetails : loads} mobileNumber={mobileNumber} />
-        <View style={styles.separator} />
+        <Separator />
         <PaymentMethod loadDetails={loads?.loadDetails ? loads.loadDetails : loads} getMyAccount={getMyAccount} />
+        <Separator />
       </ScrollView>
       <PayNowButton loadDetails={loads?.loadDetails ? loads.loadDetails : loads } mobileNumber={mobileNumber} />
     </View>
@@ -94,7 +93,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     alignItems: "center",
     marginTop: moderateScale(20),
-    marginBottom: moderateScale(10)
+    marginBottom: moderateScale(30)
   },
   headerText: {
     color: "#F6841F",

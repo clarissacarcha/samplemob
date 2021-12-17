@@ -5,17 +5,17 @@ export const GET_FAVORITE_LOADS = gql`
     getFavoriteLoads {
       id
       loadItemId
-      mobileNumber
       loadDetails {
         id
         name
         amount
         itemCode
-        description
+        descriptions
         comRateId
         termsAndConditions
         providerId
         networkId
+        planCode
         referralCommissionItemId
         networkDetails {
           id

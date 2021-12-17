@@ -12,16 +12,25 @@ import { heart_fill_icon, heart_no_fill_icon, heart_selected_fill_icon } from "s
 
 //COMPONENTS
 import { LoadingIndicator } from "src/ToktokLoad/components";
-export const LoadDetails = ({ item, index, networkId, onPressFavorite, patchFavoriteLoading, postFavoriteLoading }) => {
+export const LoadDetails = ({
+  item,
+  index,
+  networkId,
+  onPressFavorite,
+  patchFavoriteLoading,
+  postFavoriteLoading,
+  loadFavorite
+}) => {
   
   const { selectedLoad, setSelectedLoad, loads, setLoads } = useContext(VerifyContext);
-  const { amount, name, favorite } = item;
+  const { amount, name, favorite, descriptions } = item;
 
   const isSelected = selectedLoad[networkId]?.id == item.id;
   const colorAmount = isSelected ? "#fff" : "#F6841F";
   const colorDesc = isSelected ? "#fff" : "#707070";
+  const numberOfLines = isSelected ? null : 1;
 
-  const onPressThrottled = useThrottle(onPressFavorite, 1000);
+  const onPressThrottled = useThrottle(onPressFavorite, 500);
 
   const imgSelected = () => {
     if(favorite){
@@ -49,12 +58,15 @@ export const LoadDetails = ({ item, index, networkId, onPressFavorite, patchFavo
       <View style={[styles.amountContainer, { borderColor: colorAmount }]}>
         <Text style={[ styles.amount, { color: colorAmount }]}>₱{amount}</Text>
       </View>
-      <View style={{ paddingHorizontal: moderateScale(20) }}>
+      <View style={{ paddingHorizontal: moderateScale(20), flex: 1}}>
         <Text style={[ styles.amount, { color: colorDesc }]}>PHP {amount}</Text>
         <Text style={[ styles.loadName, { color: colorDesc }]}>{name}</Text>
+        <Text style={[ styles.loadName, { color: colorDesc }]} numberOfLines={numberOfLines}>
+          {descriptions}
+        </Text>
       </View> 
       <View style={styles.heartIconContainer}>
-        { patchFavoriteLoading || postFavoriteLoading ? (
+        { (patchFavoriteLoading || postFavoriteLoading) && loadFavorite == item.id ? (
           <LoadingIndicator isLoading={true} size="small" />
         ) : (
           <TouchableOpacity
@@ -74,7 +86,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: moderateScale(16),
     paddingVertical: moderateScale(15),
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "center",
+    flex: 1,
   },
   amountContainer: {
     borderWidth: 1,
@@ -95,7 +108,6 @@ const styles = StyleSheet.create({
     resizeMode: "contain"
   },
   heartIconContainer: {
-    flex: 1,
     alignItems: "flex-end"
   },
   loadName: {

@@ -1,1 +1,1 @@
-export * from "./ContactInfoRender";
+export * from "./ContactInformation";

@@ -60,7 +60,10 @@ export const PaymentForm = ({ billItemSettings })=> {
   
   //CONVENIENCE FEE
   const convenienceFee = parseFloat(commissionRateDetails?.providerServiceFee) + parseFloat(commissionRateDetails?.systemServiceFee); 
- 
+  const convenienceFeeText = convenienceFee > 0 ? (
+    `Additional ₱ ${numberFormat(convenienceFee)} convenience fee will be charged in this transaction`
+  ) : ("Convenience fee is waived for this transaction");
+
   const navigation = useNavigation();
   const {
     firstField,
@@ -127,10 +130,11 @@ export const PaymentForm = ({ billItemSettings })=> {
 
   return (
     <View style={styles.searchField}>
-      <View style={[{ marginBottom: moderateScale(30) }]}>
+      <View style={[{ marginBottom: moderateScale(20) }]}>
+        <Text style={styles.label}>{firstFieldName}</Text>
         <TextInput 
           style={styles.input}
-          placeholder={firstFieldName}
+          placeholder={`Enter ${firstFieldName.toLowerCase()}`}
           onChangeText={changeFirstField}
           value={firstField}
           keyboardType={firstFieldFormat == 1 ? "numeric" : "default"}
@@ -141,10 +145,11 @@ export const PaymentForm = ({ billItemSettings })=> {
         />
         { !!firstFieldError && <Text style={styles.error}>{firstFieldError}</Text>}
       </View>
-      <View style={[{ marginBottom: moderateScale(30) }]}>
+      <View style={[{ marginBottom: moderateScale(20) }]}>
+        <Text style={styles.label}>{secondFieldName}</Text>
         <TextInput 
           style={styles.input}
-          placeholder={secondFieldName}
+          placeholder={`Enter ${secondFieldName.toLowerCase()}`}
           onChangeText={changeSecondField}
           value={secondField}
           keyboardType={secondFieldFormat == 1 ? "numeric" : "default"}
@@ -156,7 +161,8 @@ export const PaymentForm = ({ billItemSettings })=> {
         />
         { !!secondFieldError && <Text style={styles.error}>{secondFieldError}</Text>}
       </View>
-      <View style={[{ marginBottom: moderateScale(30) }]}>
+      <View style={[{ marginBottom: moderateScale(20) }]}>
+        <Text style={styles.label}>Payment Amount</Text>
         <TextInput 
           style={styles.input}
           placeholder="Enter payment amount"
@@ -170,10 +176,11 @@ export const PaymentForm = ({ billItemSettings })=> {
         />
         { !!amountError && <Text style={styles.error}>{amountError}</Text>}
         <Text style={{ fontSize: FONT_SIZE.S, marginTop: 5 }}>
-          {`Additional ₱ ${numberFormat(convenienceFee)} convenience fee will be charged in this transaction`}
+          {convenienceFeeText}
           </Text>
       </View>
       <View>
+        <Text style={styles.label}>Email Address</Text>
         <TextInput 
           style={styles.input}
           placeholder="Enter email address (optional)"
@@ -211,5 +218,9 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.S,
     marginTop: 5,
     color: COLOR.RED
+  },
+  label: {
+    fontSize: FONT_SIZE.M,
+    marginBottom: moderateScale(5)
   }
 })

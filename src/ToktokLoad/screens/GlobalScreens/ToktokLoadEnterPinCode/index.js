@@ -28,7 +28,6 @@ export const ToktokLoadEnterPinCode = ({navigation, route})=> {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={"toktokload"} isRightIcon/>,
-    headerStyle: { height: Platform.OS == 'ios' ? moderateScale(60) : moderateScale(80) }
   });
   
   const { user } = useSelector((state) => state.session);
@@ -98,7 +97,6 @@ export const ToktokLoadEnterPinCode = ({navigation, route})=> {
       senderWalletEndingBalance: parseFloat(tokwaBalance) - parseFloat(loadDetails.amount),
       type: 2,
       comRateId: loadDetails.comRateId,
-      referralCommissionItemId: loadDetails.referralCommissionItemId,
     }
 
     postTransaction({

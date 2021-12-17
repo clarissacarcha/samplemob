@@ -101,9 +101,8 @@ export const PayNowButton = ({ loadDetails, mobileNumber }) => {
 const styles = StyleSheet.create({
   container: {
     justifyContent: "flex-end",
-    backgroundColor: "#F7F7FA",
-    paddingHorizontal: moderateScale(30),
-    paddingVertical: moderateScale(20)
+    paddingHorizontal: moderateScale(16),
+    paddingVertical: moderateScale(16)
   },
   terms: {
     marginBottom: moderateScale(15),

@@ -7,7 +7,7 @@ import { SomethingWentWrong } from "src/components";
 import { Biller } from "./Components";
 
 //IMAGES
-import { pldt_img, bayan_img } from "toktokbills/assets/images";
+import { empty_search } from "toktokbills/assets/images";
 
 //HELPER
 import { moderateScale } from "toktokbills/helper";
@@ -18,6 +18,10 @@ import { TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT } from "src/graphql";
 import { GET_BILL_ITEMS, GET_SEARCH_BILL_ITEMS } from "toktokbills/graphql/model";
 import { usePrompt, useThrottle } from "src/hooks";
 
+//FONTS & COLORS
+import CONSTANTS from 'common/res/constants';
+const {COLOR , FONT_FAMILY: FONT , FONT_SIZE , SHADOW} = CONSTANTS;
+
 export const ToktokBiller = ({navigation, route})=> {
   const { billType } = route.params
   const prompt = usePrompt()
@@ -25,7 +29,6 @@ export const ToktokBiller = ({navigation, route})=> {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={billType.name} isRightIcon/>,
-    headerStyle: { height: Platform.OS == "ios" ? moderateScale(60) : moderateScale(80) }
   });
 
   const [search, setSearch] = useState("");
@@ -94,8 +97,9 @@ export const ToktokBiller = ({navigation, route})=> {
  
   const ListEmptyComponent = () => {
     return (
-      <View style={styles.emptyContainer}>
-        <Text>No results found.</Text>
+      <View style={[styles.emptyContainer]}>
+        <Image source={empty_search} style={{ width: moderateScale(200), height: moderateScale(200), resizeMode: "contain" }} />
+        <Text style={{ color: "#9E9E9E", fontSize: FONT_SIZE.L }}>We can't find any biller matching your search</Text>
       </View>
     )
   }
@@ -123,7 +127,7 @@ export const ToktokBiller = ({navigation, route})=> {
     <>
     <View style={styles.container}>
       <View style={styles.searchContainer}>
-        <SearchInput search={search} setSearch={setSearch} />
+        <SearchInput search={search} setSearch={setSearch} placeholder="Search Biller" />
       </View>
       {( searchLoading && filteredData.length === 0) ? (
         <LoadingIndicator isLoading={true} isFlex />
@@ -164,6 +168,7 @@ const styles = StyleSheet.create({
   emptyContainer: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    marginTop: moderateScale(-50)
   }
 })

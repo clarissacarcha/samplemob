@@ -19,13 +19,13 @@ import { useLazyQuery, useMutation, useQuery } from '@apollo/react-hooks';
 import { TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT } from 'src/graphql';
 import { GET_FAVORITE_LOADS } from 'toktokload/graphql/model';
 
-export const Favorites = ({ navigation, route }) => {
+export const Favorites = ({ navigation, route, mobileNumber }) => {
 
   const isFocused = useIsFocused();
   const [favorites, setFavorites] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [selectedLoad, setSelectedLoad] = useState({});
-
+  
   const {loading, error, refetch} = useQuery(GET_FAVORITE_LOADS, {
     fetchPolicy: "cache-and-network",
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
@@ -43,7 +43,7 @@ export const Favorites = ({ navigation, route }) => {
 
   const onPressNext = () => {
     if(selectedLoad && Object.keys(selectedLoad).length > 0){
-      navigation.navigate("ToktokLoadSummary", { loads: selectedLoad })
+      navigation.navigate("ToktokLoadSummary", { loads: selectedLoad, mobileNumber })
     }
   }
 
@@ -92,7 +92,7 @@ export const Favorites = ({ navigation, route }) => {
           />
         }
       />
-      {(favorites && favorites.length > 0) && (
+      {/* {(favorites && favorites.length > 0) && ( */}
         <View style={{ padding: moderateScale(16) }}>
           <OrangeButton
             disabled={!(selectedLoad && Object.keys(selectedLoad).length > 0)}
@@ -100,7 +100,7 @@ export const Favorites = ({ navigation, route }) => {
             onPress={onPressNext}
           />
         </View>
-      )}
+      {/* )} */}
     </View>
   );
 };

@@ -11,7 +11,7 @@ import { OrangeButton, LoadingIndicator } from "src/ToktokLoad/components";
 import { SomethingWentWrong } from "src/components";
 
 //GRAPHQL & HOOKS
-import { useLazyQuery, useMutation } from '@apollo/react-hooks';
+import { useLazyQuery, useMutation, useQuery } from '@apollo/react-hooks';
 import { TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT } from 'src/graphql';
 import { GET_LOAD_ITEMS, POST_FAVORITE_LOAD, PATCH_REMOVE_FAVORITE_LOAD } from 'toktokload/graphql/model';
 import { useAlert } from 'src/hooks';
@@ -21,17 +21,18 @@ export const LoadList = ({ networkId, navigation, mobileNumber }) => {
 
   const alert = useAlert();
   const { selectedLoad, setSelectedLoad, favorites, setFavorites, loads, setLoads } = useContext(VerifyContext);
-  const [refreshing, setRefreshing] = useState(false);
+  const [loadFavorite, setLoadFavorite] = useState(null);
   
-  const [getLoadItems, {loading: getLoadItemsLoading, error: getLoadItemsError}] = useLazyQuery(GET_LOAD_ITEMS, {
-    fetchPolicy: "network-only",
+  const {loading: getLoadItemsLoading, error: getLoadItemsError, refetch} = useQuery(GET_LOAD_ITEMS, {
+    fetchPolicy: "cache-and-network",
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
-    onError: () => {
-      setRefreshing(false);
+    variables: {
+      input: {
+        networkId
+      }
     },
     onCompleted: ({ getLoadItems }) => {
       setLoads(prev => ({ ...prev, [networkId]: getLoadItems }));
-      setRefreshing(false);
     }
   });
 
@@ -39,7 +40,6 @@ export const LoadList = ({ networkId, navigation, mobileNumber }) => {
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
     onError: (error) => {
       onErrorAlert({alert,error});
-      processFavoriteLoad();
     },
     onCompleted:({ postFavoriteLoad })=> {
       console.log(postFavoriteLoad, "ADD")
@@ -56,58 +56,42 @@ export const LoadList = ({ networkId, navigation, mobileNumber }) => {
     }
   });
 
-  useEffect(() => {
-    processGetLoadItems();
-    setRefreshing(getLoadItemsLoading);
-  }, [])
-
   const processGetLoadItems = () => {
-    getLoadItems({
-      variables: {
-        input: {
-          networkId,
-          mobileNumber
-        }
-      }
-    });
-    setRefreshing(true);
+    refetch();
   }
 
   const onPressFavorite = (item, index) => {
+    setLoadFavorite(item.id);
     let data = [...loads[networkId]];
     let favData = {
-      loadItemId: item.id,
-      mobileNumber
+      variables: {
+        input: {
+          loadItemId: item.id,
+        }
+      }
     }
 
-    item.favorite ? processPatchFavoriteLoad(favData) : processPostFavoriteLoad(favData); // ADD OR REMOVE
-    data[index].favorite = item.favorite ? null : favData
-    setLoads(prev => ({ ...prev, [networkId]: data  }));
-  }
-
-  const processPostFavoriteLoad = (favData) => {
-    postFavoriteLoad({
-      variables: {
-        input: favData
-      }
-    });
-  }
-
-  const processPatchFavoriteLoad = (favData) => {
-    patchRemoveFavoriteLoad({
-      variables: {
-        input: favData
-      }
-    });
-  }
-
-  const processFavoriteLoad = () => {
-
+    // ADD OR REMOVE FAVORITE
+    if(item.favorite){
+      patchRemoveFavoriteLoad(favData).then((res) => {
+        if(res !== undefined){
+          data[index].favorite = null
+          setLoads(prev => ({ ...prev, [networkId]: data  }));
+        }
+      });
+    } else {
+      postFavoriteLoad(favData).then((res) => {
+        if(res !== undefined){
+          data[index].favorite = favData
+          setLoads(prev => ({ ...prev, [networkId]: data  }));
+        }
+      });
+    }
   }
 
   const onPressNext = () => {
     if(selectedLoad[networkId]){
-      navigation.navigate("ToktokLoadSummary", { loads: selectedLoad[networkId], mobileNumber  })
+      navigation.navigate("ToktokLoadSummary", { loads: selectedLoad[networkId], mobileNumber })
     }
   }
 
@@ -130,7 +114,7 @@ export const LoadList = ({ networkId, navigation, mobileNumber }) => {
     <View style={styles.container}>
       <FlatList
         extraData={{loads, selectedLoad}}
-        data={loads[networkId]}
+        data={loads ? loads[networkId] : []}
         renderItem={({ item, index }) => (
           <LoadDetails
             item={item}
@@ -138,6 +122,7 @@ export const LoadList = ({ networkId, navigation, mobileNumber }) => {
             onPressFavorite={() => onPressFavorite(item, index)}
             patchFavoriteLoading={patchFavoriteLoading}
             postFavoriteLoading={postFavoriteLoading}
+            loadFavorite={loadFavorite}
           />
         )}
         contentContainerStyle={{ flexGrow: 1 }}
@@ -145,7 +130,7 @@ export const LoadList = ({ networkId, navigation, mobileNumber }) => {
         ListEmptyComponent={ListEmptyComponent}
         refreshControl={
           <RefreshControl
-            refreshing={refreshing}
+            refreshing={getLoadItemsLoading}
             onRefresh={processGetLoadItems}
           />
         }

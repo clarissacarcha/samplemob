@@ -34,7 +34,7 @@ const MainComponent = ({navigation, route})=> {
     fetchPolicy: "cache-and-network",
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT
   });
-
+ 
   if(loading){
     return(
       <View style={styles.container}>
@@ -59,7 +59,7 @@ const MainComponent = ({navigation, route})=> {
         <ScrollView keyboardShouldPersistTaps="handled">
           <View style={styles.headerContainer}>
             <Image source={{ uri: billItemSettings?.getBillItemSettings.logo }} style={styles.logo} />
-            <Text style={styles.billerName}>{billType.name}</Text>
+            <Text style={styles.billerName}>{billItemSettings?.getBillItemSettings?.descriptions}</Text>
           </View>
           <PaymentForm billItemSettings={billItemSettings?.getBillItemSettings} />
           <ConfirmButton billItemSettings={billItemSettings?.getBillItemSettings} billType={billType} />
@@ -74,7 +74,6 @@ export const ToktokBillsPaymentProcess = ({ navigation, route }) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={billType.name} />,
-    headerStyle: { height: Platform.OS == 'ios' ? moderateScale(60) : moderateScale(80) }
   });
 
   return (
@@ -96,11 +95,11 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: moderateScale(130),
-    height: moderateScale(50),
+    height: moderateScale(70),
     resizeMode: "contain"
   },
   billerName: {
-    fontSize: FONT_SIZE.M,
+    fontSize: FONT_SIZE.L,
     marginTop: moderateScale(10)
   }
 })

@@ -15,6 +15,7 @@ const transaction = `
   loadDetails {
     id
     name
+    planCode
     networkDetails {
       id
       name
@@ -28,7 +29,6 @@ const transaction = `
   type
   status
   tokUserId
-  referralCommissionItemId
   ofps
   toktokServiceCommission
   startUp

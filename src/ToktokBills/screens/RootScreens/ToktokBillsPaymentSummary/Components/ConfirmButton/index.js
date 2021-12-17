@@ -30,7 +30,16 @@ export const ConfirmButton = ({ paymentData }) => {
   const alert = useAlert();
   const prompt = usePrompt();
   const navigation = useNavigation();
-  const { firstField, secondField, amount, email, billType, convenienceFee, billItemSettings } = paymentData;
+  const {
+    firstField,
+    secondField,
+    amount,
+    email,
+    billType,
+    convenienceFee,
+    billItemSettings,
+    referenceNumber
+  } = paymentData;
   const { termsAndConditions, paymentPolicy1, paymentPolicy2 } = billItemSettings.itemDocumentDetails;
   const totalAmount = parseFloat(amount) + parseFloat(convenienceFee);
   const tokwaBalance = user?.toktokWalletAccountId ? tokwaAccount?.wallet?.balance : "0.00";
@@ -42,7 +51,6 @@ export const ConfirmButton = ({ paymentData }) => {
         error,
         navigation,
         prompt,
-        title: ""
       });
     },
     onCompleted: ({ postToktokWalletRequestMoney }) => {
@@ -60,6 +68,7 @@ export const ConfirmButton = ({ paymentData }) => {
     postToktokWalletRequestMoney({
       variables: {
         input: {
+          referenceNumber,
           amount: parseFloat(totalAmount),
           note: "Bills payment",
           transactionType: "bills",
