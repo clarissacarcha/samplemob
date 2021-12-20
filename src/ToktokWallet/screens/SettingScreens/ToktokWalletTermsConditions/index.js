@@ -51,17 +51,9 @@ export const ToktokWalletTermsConditions = ({navigation})=> {
         <CheckIdleState>
         <Separator/>
         <View style={styles.container}>
-            {/* <ScrollView showsVerticalScrollIndicator={false} style={styles.body}>
+            <ScrollView showsVerticalScrollIndicator={false} style={styles.body}>
                 <Text>{data.getGlobalSetting.keyValue}</Text>
-            </ScrollView> */}
-
-                    <WebView
-                    style={{flex: 1}}
-                    ref={webviewRef}
-                    source={{
-
-                    }}
-                    />
+            </ScrollView>
         </View>
         </CheckIdleState>
     )
