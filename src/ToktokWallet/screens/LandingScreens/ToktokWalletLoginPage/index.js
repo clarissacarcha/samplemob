@@ -95,9 +95,9 @@ export const ToktokWalletLoginPage = ({navigation,route})=> {
             <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
             {
                 // isRooted || isDebugMode
-                // isRooted
-                // ? <RootedDevice/>
-                // : 
+                isRooted
+                ? <RootedDevice/>
+                : 
                 <CheckTokwaKYCRegistration kycStatus={data.getUserToktokWalletData.kycStatus}>
     
                         <CheckWalletAccountRestriction>
