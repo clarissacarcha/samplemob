@@ -27,7 +27,7 @@ export const VariationBottomSheet = forwardRef(({
   type
 }, ref) => {
     
-  const snapPoints = useMemo(() => [0, initialSnapPoint], [item]);
+  const snapPoints = useMemo(() => [0, item?.variations.length > 0 ? 400 : 300], [item]);
   const [stock, setStock] = useState(item?.noOfStocks)
   const [itemprice, setItemPrice] = useState(item?.price)
   const [originalPrice, setOriginalPrice] = useState(item?.compareAtPrice || 0)
@@ -251,7 +251,7 @@ export const VariationBottomSheet = forwardRef(({
                     data={item?.variations && item?.variations.sort((a, b) => a.itemname.localeCompare(b.itemname)) || []}
                     keyExtractor={(item, index) => item + index}
                     numColumns={2}
-                    style={{width: '100%', height: 110}}
+                    style={{width: '100%', height: 60}}
                     contentContainerStyle={{flex: 0, flexDirection: 'column', justifyContent: 'space-around'}}
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
