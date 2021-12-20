@@ -27,7 +27,7 @@ export const VariationBottomSheet = forwardRef(({
   type
 }, ref) => {
     
-  const snapPoints = useMemo(() => [0, item?.variations.length > 0 ? 400 : 300], [item]);
+  const snapPoints = useMemo(() => [0, item?.variations?.length > 0 ? 400 : 300], [item]);
   const [stock, setStock] = useState(item?.noOfStocks)
   const [itemprice, setItemPrice] = useState(item?.price)
   const [originalPrice, setOriginalPrice] = useState(item?.compareAtPrice || 0)
