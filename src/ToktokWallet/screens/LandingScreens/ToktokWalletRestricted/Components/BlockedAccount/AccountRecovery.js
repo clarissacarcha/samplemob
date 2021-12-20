@@ -97,7 +97,7 @@ const AccountRecovery = ({visible,setVisible,account})=> {
     </Modal>
   )
 
-  if(data?.getAccountRecovery){
+  if(data?.getAccountRecovery.length > 0){
     return (
       <MainComponent>
         { account.disabledType == "2" && (
