@@ -73,9 +73,9 @@ export const Biometrics = ()=> {
           setIsSensorAvailable(false)
         }
 
-        // const deviceBio = await isPinOrFingerprintSet();
-        // const fingerPrint = await getFingerprint()
-        // setDeviceHasBio((deviceBio && fingerPrint && fingerPrint != "") ? true : false)
+        const deviceBio = await isPinOrFingerprintSet();
+        const fingerPrint = await getFingerprint()
+        setDeviceHasBio((deviceBio && fingerPrint && fingerPrint != "") ? true : false)
       }
     
       useEffect(()=>{
@@ -143,13 +143,13 @@ export const Biometrics = ()=> {
     }
 
 
-    if(!isSensorAvailable){
-        return null
-    }
-
-    // if(!deviceHasBio){
+    // if(!isSensorAvailable){
     //     return null
     // }
+
+    if(!deviceHasBio){
+        return null
+    }
 
     return (
         <>
