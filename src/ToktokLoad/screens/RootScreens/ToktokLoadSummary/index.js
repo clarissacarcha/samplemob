@@ -47,6 +47,11 @@ export const ToktokLoadSummary = ({ navigation, route }) => {
     getMyAccount();
   }
 
+  const onCashIn = ({balance}) => {
+    console.log(balance);
+    getMyAccount();
+  };
+
   if(getMyAccountLoading){
     return(
       <View style={styles.container}>
@@ -75,9 +80,16 @@ export const ToktokLoadSummary = ({ navigation, route }) => {
         <View style={styles.headerContainer}>
           <Text style={styles.headerText}>Payment Summary</Text>
         </View>
-        <SummaryDetails loadDetails={loads?.loadDetails ? loads.loadDetails : loads} mobileNumber={mobileNumber} />
+        <SummaryDetails
+          loadDetails={loads?.loadDetails ? loads.loadDetails : loads}
+          mobileNumber={mobileNumber}
+        />
         <Separator />
-        <PaymentMethod loadDetails={loads?.loadDetails ? loads.loadDetails : loads} getMyAccount={getMyAccount} />
+        <PaymentMethod
+          loadDetails={loads?.loadDetails ? loads.loadDetails : loads}
+          getMyAccount={getMyAccount}
+          onCashIn={onCashIn}
+        />
         <Separator />
       </ScrollView>
       <PayNowButton loadDetails={loads?.loadDetails ? loads.loadDetails : loads } mobileNumber={mobileNumber} />

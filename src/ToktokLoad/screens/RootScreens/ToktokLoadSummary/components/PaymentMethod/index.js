@@ -16,18 +16,13 @@ import { wallet_icon } from "src/ToktokLoad/assets/icons";
 import { useAccount } from 'toktokwallet/hooks';
 import { useSelector } from 'react-redux';
 
-export const PaymentMethod = ({ loadDetails }) => {
+export const PaymentMethod = ({ loadDetails, onCashIn }) => {
 
   const { user } = useSelector((state) => state.session);
 	const navigation = useNavigation();
-  const { tokwaAccount, getMyAccount } = useAccount();
+  const { tokwaAccount, getMyAccount,  } = useAccount();
   const { amount } = loadDetails;
   const tokwaBalance = user.toktokWalletAccountId ? tokwaAccount?.wallet?.balance : "0.00";
-
-	const onCashIn = ({balance}) => {
-    console.log(balance);
-    getMyAccount();
-  };
 
   const onPressTopUp = () => {
     navigation.navigate('ToktokWalletPaymentOptions', {

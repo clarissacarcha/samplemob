@@ -1,5 +1,5 @@
 import React, {useState, useContext} from "react";
-import {View, Text, StyleSheet, FlatList, Platform, TouchableOpacity, Image} from "react-native";
+import {View, Text, StyleSheet, FlatList, Platform, TouchableOpacity, Image, Dimensions} from "react-native";
 
 //UTIL
 import { moderateScale } from "toktokload/helper";
@@ -12,6 +12,8 @@ import { heart_fill_icon, heart_no_fill_icon, heart_selected_fill_icon } from "s
 
 //COMPONENTS
 import { LoadingIndicator } from "src/ToktokLoad/components";
+
+const { width, height } = Dimensions.get("screen");
 export const LoadDetails = ({
   item,
   index,
@@ -59,11 +61,12 @@ export const LoadDetails = ({
         <Text style={[ styles.amount, { color: colorAmount }]}>₱{amount}</Text>
       </View>
       <View style={{ paddingHorizontal: moderateScale(20), flex: 1}}>
-        <Text style={[ styles.amount, { color: colorDesc }]}>PHP {amount}</Text>
         <Text style={[ styles.loadName, { color: colorDesc }]}>{name}</Text>
-        <Text style={[ styles.loadName, { color: colorDesc }]} numberOfLines={numberOfLines}>
-          {descriptions}
-        </Text>
+        { !!descriptions && (
+          <Text style={[ styles.descriptions, { color: colorDesc }]} numberOfLines={numberOfLines}>
+            {descriptions}
+          </Text>
+        )}
       </View> 
       <View style={styles.heartIconContainer}>
         { (patchFavoriteLoading || postFavoriteLoading) && loadFavorite == item.id ? (
@@ -92,15 +95,16 @@ const styles = StyleSheet.create({
   amountContainer: {
     borderWidth: 1,
     borderRadius: moderateScale(100),
-    paddingHorizontal: Platform.OS == "ios" ? moderateScale(10) : moderateScale(8),
-    paddingVertical: Platform.OS == "ios" ? moderateScale(15) : moderateScale(10),
+    height: (height * .06) + FONT_SIZE.L,
+    width: (height * .06) + FONT_SIZE.L,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   amount: {
     fontSize: FONT_SIZE.L,
     fontFamily: FONT.BOLD,
-    marginTop: Platform.OS == "ios" ? 0 : -2
+    marginTop: Platform.OS == "ios" ? 0 : -2,
+    textAlign: "center",
   },
   heartIcon: {
     width: moderateScale(20),
@@ -111,6 +115,10 @@ const styles = StyleSheet.create({
     alignItems: "flex-end"
   },
   loadName: {
+    fontSize: FONT_SIZE.L,
+    fontFamily: FONT.BOLD,
+  },
+  descriptions: {
     fontSize: FONT_SIZE.M,
     marginTop: 5
   }
