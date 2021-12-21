@@ -279,7 +279,21 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
               <AntDesign name={'plus'} color={'#F6841F'} size={20} />
             </Card>
           )}
-          
+          ListHeaderComponentStyle = {addresses.length < 10 && (
+            {
+              backgroundColor: 'white',
+              borderRadius: 4,
+              shadowColor: '#000',
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 3.84,
+              elevation: 4,
+              overflow: Platform.OS === "ios" ? 'visible' : 'hidden',    
+            }
+          )}
           renderItem={({item, index}) => {
 
             const Wrapper = activeToDeleteItem.value ? View : Swipeable
