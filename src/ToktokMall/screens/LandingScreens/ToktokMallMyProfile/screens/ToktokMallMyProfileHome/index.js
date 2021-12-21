@@ -20,6 +20,7 @@ import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
 import { GET_MY_ACCOUNT, GET_WALLET } from 'toktokwallet/graphql'
 
 import {useFocusEffect} from '@react-navigation/native'
+import { EventRegister } from 'react-native-event-listeners';
 
 const testData = [
   {id: 1, full_name: 'Cloud Panda', contact_number: '09050000000',
@@ -85,6 +86,7 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
     setConNo(session?.user.username)
 
     getWallet()
+    EventRegister.addEventListener("ToktokWalletRefreshAccountBalance", getWallet)
 
     // AsyncStorage.getItem("ToktokMallUser").then((raw) => {
     //   let data = JSON.parse(raw)

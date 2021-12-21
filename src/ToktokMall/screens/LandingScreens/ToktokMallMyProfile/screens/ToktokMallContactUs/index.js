@@ -35,6 +35,7 @@ export const ToktokMallContactUs = ({navigation}) => {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     onCompleted: ({postContactSupport}) => {
       if(postContactSupport.success == 1){
+        setMessage('')
         setMessageModalShown(true)
       }else{
         Toast.show("Something went wrong.")

@@ -235,6 +235,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
             console.log(result)
             // setIsVisible(true)
             postOrderNotifications(result)
+            EventRegister.emit("ToktokWalletRefreshAccountBalance")
 
           },
           onError: async (error) => {

@@ -20,6 +20,7 @@ import {GET_SIGNATURE} from '../../graphql/toktokmall/virtual';
 import axios from 'axios';
 import moment from 'moment';
 import AsyncStorage from '@react-native-community/async-storage';
+import { EventRegister } from 'react-native-event-listeners';
 
 
 const imageWidth = Dimensions.get('screen').width;
@@ -210,6 +211,8 @@ const Splash = ({
             }
           }
         })
+        EventRegister.emit("refreshToktokmallShoppingCart")
+        EventRegister.emit("refreshToktokmallNotifications")
         setTimeout(() => {
           navigation.navigate("ToktokMallLanding");
         }, 2000);
