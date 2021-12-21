@@ -66,8 +66,9 @@ const TokTokFoodSplashScreen = () => {
     },
     onCompleted: ({getKycStatus}) => {
       if (getKycStatus) {
-        dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_WALLET_ACCOUNT', payload: {...getKycStatus}});
+        return dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_WALLET_ACCOUNT', payload: {...getKycStatus}});
       }
+      return dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_WALLET_ACCOUNT', payload: null});
     },
     onError: error => console.log(error),
   });
@@ -110,8 +111,11 @@ const TokTokFoodSplashScreen = () => {
   };
 
   useEffect(() => {
+    getKycStatus(); // get kyc status on load
+  }, []);
+
+  useEffect(() => {
     StatusBar.setHidden(true, 'slide');
-    getKycStatus();
 
     if (location != undefined) {
       if (user.toktokfoodUserId != null) {

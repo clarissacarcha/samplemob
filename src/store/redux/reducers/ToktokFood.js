@@ -16,7 +16,7 @@ const INITIAL_STATE = {
   totalAmount: {},
   orderStatus: {status: 1},
   customerInfo: {},
-  customerWallet: null,
+  customerWallet: {},
   location: {},
   receiver: {},
 };
