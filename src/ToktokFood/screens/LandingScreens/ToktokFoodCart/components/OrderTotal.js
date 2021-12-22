@@ -32,10 +32,10 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
       const {amount, is_percentage} = shippingVoucher[0].voucher;
       if (type === 'shipping' && amount > 0) {
         let pAmount = is_percentage !== '0' ? (amount / 100) * deliveryFee : amount;
-        let totalSF = pAmount > deliveryFee ? pAmount - deliveryFee : deliveryFee - pAmount;
-        totalSF = totalSF > 0 ? totalSF : 0;
-        console.log(totalSF);
-        setTotalShipping(totalSF);
+        // let totalSF = pAmount > deliveryFee ? pAmount - deliveryFee : deliveryFee - pAmount;
+        pAmount = pAmount > 0 ? pAmount : 0;
+        // console.log(pAmount);
+        setTotalShipping(pAmount);
       }
       if (type === 'shipping' && amount === 0) {
         setTotalShipping(0);
@@ -82,7 +82,9 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
       <View style={styles.header}>
         <Text style={styles.total}>Total</Text>
         {forDelivery ? (
-          <Text style={styles.totalPrice}>{`PHP ${(temporaryCart.totalAmount - totalShipping).toFixed(2)}`}</Text>
+          <Text style={styles.totalPrice}>{`PHP ${(temporaryCart.totalAmount + deliveryFee - totalShipping).toFixed(
+            2,
+          )}`}</Text>
         ) : (
           <Text style={styles.totalPrice}>{`PHP ${temporaryCart.totalAmount.toFixed(2)}`}</Text>
         )}
