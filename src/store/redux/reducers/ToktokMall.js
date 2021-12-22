@@ -18,6 +18,13 @@ const INITIAL_STATE = {
     onConfirmAction: () => {},
     message: "Are you sure you want to delete this item?"
   },
+  customPlaceOrderModal: {
+    visible: false,
+    onConfirmAction: () => {},
+    onCancelAction: () => {},
+    title: "Your order has been placed!",
+    message: "Your order has been placed successfully. Please visit My Orders to check the progress and other details."
+  },
   customMessageModal: {
     visible: false,
     title: ["We're sorry but this product is ", "SOLD OUT."],
@@ -43,6 +50,10 @@ export default (state = INITIAL_STATE, action) => {
       return {...state, customMessageModal: { ...state.customMessageModal, visible: true, ...action.payload}};
     case 'TOKTOK_MALL_CLOSE_MESSAGE_MODAL':
     return {...state, customMessageModal: INITIAL_STATE.customMessageModal};
+    case 'TOKTOK_MALL_OPEN_PLACE_ORDER_MODAL':
+      return {...state, customPlaceOrderModal: { ...state.customPlaceOrderModal, visible: true, ...action.payload}};
+    case 'TOKTOK_MALL_CLOSE_PLACE_ORDER_MODAL':
+    return {...state, customPlaceOrderModal: INITIAL_STATE.customPlaceOrderModal};
     case 'TOKTOK_MALL_CART_COUNT':
       let count = state.myCartCount
       if(action.action === "add"){

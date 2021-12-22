@@ -3,7 +3,7 @@ import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatLi
 import { COLOR, FONT } from '../../../../res/variables';
 import {HeaderBack, HeaderTitle, HeaderRight} from '../../../Components';
 import { AddressForm, Button, Payment, Shops, Totals, Vouchers, CheckoutModal, MessageModal } from './Components';
-import {connect} from 'react-redux'
+import {connect, useDispatch} from 'react-redux'
 import { useSelector } from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native'
 
@@ -63,6 +63,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
   const [walletmodal, setwalletmodal] = useState(false)
   const [customerData, setCustomerData] = useState({})
   const [shippingDiscounts, setShippingDiscounts] = useState([])
+
+  const dispatch = useDispatch()
 
   const setAlertTrue = () => {
     setAlertModal(true)
@@ -314,7 +316,14 @@ const Component = ({route, navigation, createMyCartSession}) => {
       
     }
 
-    setIsVisible(true)
+    dispatch({type: "TOKTOK_MALL_OPEN_PLACE_ORDER_MODAL", payload: {
+      onConfirmAction: onGoToOrders,
+      onCancelAction: () => {
+        navigation.navigate("ToktokMallHome")
+        EventRegister.emit('refreshToktokmallShoppingCart')
+      }
+    }})
+    // setIsVisible(true)
   }
 
   const onGoToOrders = () =>{
@@ -436,6 +445,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
   useFocusEffect(
     React.useCallback(() => {
       const onBackPress = () => {
+        dispatch({type: "TOKTOK_MALL_CLOSE_PLACE_ORDER_MODAL"})
         setAlertModal(true)
         return true
       }
