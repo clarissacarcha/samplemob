@@ -1,5 +1,5 @@
 import React , {useState,useRef,useCallback,useEffect} from 'react'
-import { View ,ActivityIndicator,StatusBar,Text,TouchableOpacity, Alert,Platform} from 'react-native'
+import { View ,ActivityIndicator,StatusBar,Text,TouchableOpacity, Alert} from 'react-native'
 import {SomethingWentWrong} from 'src/components'
 import CONSTANTS from 'common/res/constants'
 import {GET_USER_TOKTOK_WALLET_DATA} from 'toktokwallet/graphql'
