@@ -11,7 +11,7 @@ import RestaurantItem from './RestaurantItem';
 const RestaurantList = (props) => {
   const {loading, error, data, loadMore, location} = props;
 
-  const renderFooter = () => <LoadingIndicator style={{}} isLoading={loadMore} />;
+  const renderFooter = () => <LoadingIndicator isLoading={loadMore} />;
 
   const listEmpty = () => (
     <View style={styles.emptyContainer}>
