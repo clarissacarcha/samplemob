@@ -24,7 +24,6 @@ export const PromptModal = ({
   children,
   event
 }) => {
-  
   const closeModal = ()=> setVisible(false)
   const onThrottledPress = useThrottle(onPress? onPress : closeModal, 2000)
 
@@ -55,12 +54,24 @@ export const PromptModal = ({
     >
       <View style={styles.modalBody}>
         <View style={styles.content}>
-          <Image source={icon} style={styles.imageIcon} />
-          { !!title && <Text style={styles.successText}>{title}</Text> }
+          <Image source={icon} style={event === "TOKTOKWALLET" ? styles.smallIcon : styles.largeIcon} />
+          { !!title && (
+            <Text
+              style={[
+                styles.successText,
+                { color: event === "TOKTOKWALLET" ? "black" : COLOR.ORANGE }
+              ]}
+            >
+              {title}
+            </Text>
+          )}
           <Text style={styles.messageText}>{message}</Text>
           {children}
-          <TouchableOpacity onPress={onThrottledPress} style={styles.btn}>
-            <Text style={styles.btnText}>OK</Text>
+          <TouchableOpacity
+            onPress={onThrottledPress}
+            style={[styles.btn, { backgroundColor: event === "TOKTOKWALLET" ? "#FDBA1C" : COLOR.ORANGE}]}
+          >
+            <Text style={[styles.btnText, { color: event === "TOKTOKWALLET" ? "black" : "white" }]}>OK</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -101,7 +112,7 @@ const styles = StyleSheet.create({
     marginHorizontal: moderateScale(20),
     marginTop: 10,
   },
-  imageIcon: {
+  largeIcon: {
     width: moderateScale(160),
     height: moderateScale(160),
     resizeMode: "contain",
@@ -124,5 +135,10 @@ const styles = StyleSheet.create({
     fontFamily: FONT.BOLD,
     fontSize: moderateScale(FONT_SIZE.L),
     color: "white",
+  },
+  smallIcon: {
+    width: moderateScale(100),
+    height: moderateScale(100),
+    resizeMode: "contain",
   }
 })

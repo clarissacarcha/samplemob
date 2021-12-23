@@ -23,6 +23,14 @@ export const POST_ACCOUNT_RECOVERY = gql`
     }
 `
 
+export const POST_REQUEST_ACCOUNT_RECOVERY_OTP = gql`
+    mutation {
+        postRequestAccountRecoveryOTP {
+            message
+        }
+    }
+`
+
 export const PATCH_RECOVER_ACCOUNT = gql`
     mutation {
         patchRecoverAccount {

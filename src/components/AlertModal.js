@@ -40,7 +40,7 @@ const SingleButton = ({close, buttonLabel, actionButtons = []}) => {
 };
 
 export const AlertModal = (props) => {
-  const {visible, close, buttonLabel, message, actionButtons = []} = props;
+  const {visible, close, buttonLabel, message, actionButtons = [], title } = props;
 
   const RenderButton = () => {
     return <SingleButton {...props} />;
@@ -54,6 +54,7 @@ export const AlertModal = (props) => {
     <View style={styles.transparent}>
       <View style={styles.labelBox}>
         <Image style={{height: 80,width: 80,marginBottom: 10,}} source={require('../assets/toktokwallet-assets/error.png')}/>
+        { title && <Text style={{marginVertical: 10, fontFamily: FONT.BOLD, fontSize: FONT_SIZE.XL,textAlign:"center"}}>{title}</Text>}
         <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.L,textAlign:"center"}}>{message}</Text>
         {RenderButton()}
       </View>

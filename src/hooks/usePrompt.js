@@ -1,5 +1,5 @@
 import React from 'react';
-import {PromptProviderContext} from 'src/provider/PromptProvider';
+import {PromptProviderContext} from '../provider/PromptProvider';
 
 export const usePrompt = () => {
   const prompt = React.useContext(PromptProviderContext);

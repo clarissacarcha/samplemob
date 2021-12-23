@@ -6,6 +6,7 @@ import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import {GET_BANK_ACCOUNTS} from 'toktokwallet/graphql'
 import { useQuery } from '@apollo/react-hooks'
 import { onErrorAlert } from 'src/util/ErrorUtility'
+import { useNavigation } from '@react-navigation/native'
 import {useAlert} from 'src/hooks'
 import { ContextCashOut } from '../ContextProvider'
 import {moderateScale,scale} from 'toktokwallet/helper'
@@ -64,12 +65,13 @@ export const MySavedAccounts = ({selectBanks , edit})=> {
         setAccountNumber,
         setAddress
     } = useContext(ContextCashOut)
+    const navigation = useNavigation();
 
     const {data,error,loading} = useQuery(GET_BANK_ACCOUNTS, {
         fetchPolicy:"network-only",
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onError: (error)=> {
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation})
         },
         onCompleted: ({getBankAccounts})=> {
             setSaveAccounts(getBankAccounts)

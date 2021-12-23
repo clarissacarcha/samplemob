@@ -5,8 +5,8 @@ import { BuildingBottom , DisabledButton , PromptModal } from 'toktokwallet/comp
 import CONSTANTS from 'common/res/constants'
 import moment from 'moment'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
-import { GET_FORGOT_AND_RECOVER_OTP_CODE } from 'toktokwallet/graphql'
-import { useLazyQuery } from '@apollo/react-hooks'
+import { GET_FORGOT_AND_RECOVER_OTP_CODE , POST_VERIFY_ANSWERS } from 'toktokwallet/graphql'
+import { useLazyQuery , useMutation } from '@apollo/react-hooks'
 import { onErrorAlert } from 'src/util/ErrorUtility'
 import { useAlert } from 'src/hooks'
 import { useNavigation } from '@react-navigation/native'
@@ -42,37 +42,30 @@ export const QuestionsAnswers = ({
             return navigation.navigate("ToktokWalletRecoverPin" , {type: "MPIN" , event: "ACCOUNT RECOVERY"})
         },
         onError: (error)=>{
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation})
+        }
+    })
+
+    const [postVerifyAnswers , {loading: verifyLoading}] = useMutation(POST_VERIFY_ANSWERS , {
+        client:TOKTOK_WALLET_GRAPHQL_CLIENT,
+        onCompleted: ({postVerifyAnswers})=> {
+            getForgotAndRecoverOTPCode()
+        },
+        onError: (error)=> {
+             setShowPrompt(true)
+           // onErrorAlert({alert,error})
         }
     })
     const onPress = ()=> {
-        let continueOtp = true;
-        for(let index = 0 ; index < answers.length ; index++){
-            const answer = answers[index];
 
-            if(answer == ""){
-                setErrorMessages(state=>{
-                    state[index] = "this field is required."
-                    return [...state]
-                })
-            }else if(answer.answer.toLowerCase() != data[index].answer.toLowerCase()){
-                setShowPrompt(true)
-                continueOtp = false;
-                break;
-                // setErrorMessages(state=>{
-                //     state[index] = "Answer is wrong."
-                //     return [...state]
-                // })
-            }else {
-                setErrorMessages(state=>{
-                    state[index] = ""
-                    return [...state]
-                })
+        const finalAnswers = answers.map((answer)=> answer.answer)
+        postVerifyAnswers({
+            variables: {
+                input: {
+                    answers: finalAnswers
+                }
             }
-        }
-
-        if(continueOtp) getForgotAndRecoverOTPCode()
-        
+        })
     }
 
     const closePrompt = ()=> {
@@ -82,11 +75,11 @@ export const QuestionsAnswers = ({
 
     return(
         <>
-             <AlertOverlay visible={loading}/>
+             <AlertOverlay visible={loading || verifyLoading}/>
              <PromptModal
                     visible={showPrompt}
-                    title="Incorrect answers!"
-                    message="Sorry, you have entered incorrect answers, please email Customer Service for your account recovery"
+                    title="You have entered incorrect answer(s)"
+                    message="Please contact our Customer Service Representative for your Account Recovery"
                     event="error"
                     onPress={closePrompt}
              />

@@ -42,7 +42,7 @@ export const ToktokWalletTPINValidator = ({navigation,route})=> {
             >
                  <View style={styles.content}>
                     <View style={styles.tpinBody}>
-                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,marginVertical: 30}}>Enter your TPIN</Text>
+                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,marginVertical: 30}}>Enter TPIN</Text>
                         <View style={{flexDirection:"row"}}>
                         <NumberBoxes 
                             pinCode={pinCode} 
@@ -58,7 +58,8 @@ export const ToktokWalletTPINValidator = ({navigation,route})=> {
                                 returnKeyType="done"
                                 onChangeText={(value) => {
                                 if (value.length <= 6) {
-                                    setPinCode(value);
+                                    const replaceValue = value.replace(/[^0-9]/g,"")
+                                    setPinCode(replaceValue);
                                 }
                                 }}
                                

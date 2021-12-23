@@ -53,10 +53,9 @@ export const ToktokWalletHelpCentreContactUs = ({navigation,route})=> {
                         paddingHorizontal:15,
                         fontSize: FONT_SIZE.M,
                         fontFamily: FONT.REGULAR,
-                    }}>Email us with any of your inquiries or contact us with
-                    the contact information provided below. We will gladly
-                    discuss with you the best possible solution
-                    to your needs.</Text>
+                    }}>
+                        Email or contact us with any of your inquiries. We will gladly discuss with you the best possible solution to your needs.
+                    </Text>
                 </View>
                 <View style={{marginTop:30}}>
                     <ItemList url="mailto:support@toktokwallet.ph?subject=Talk%20To%20Us&body=How%20can%20we%20help%20you%20ka-toktok?" logo={EmailLogo} label="support@toktokwallet.ph"/>

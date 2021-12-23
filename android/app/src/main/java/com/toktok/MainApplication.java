@@ -1,5 +1,6 @@
 package com.toktok;
 
+import com.staltz.flagsecure.FlagSecurePackage;
 import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;

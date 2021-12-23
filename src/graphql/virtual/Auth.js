@@ -1,12 +1,16 @@
 import gql from 'graphql-tag';
 
+// TODO: ASS IN USER
+//  toktokfoodUserId
+// toktokWalletAccountId
+
 const Session = `
 user {
   id
   userId
   username
   status
-  toktokWalletAccountId
+
   person {
     id
     firstName
@@ -18,6 +22,7 @@ user {
     avatar
     avatarThumbnail
     status
+    mobileNumber
     address {
       line1
       line2
@@ -103,5 +108,13 @@ export const FORGOT_PASSWORD_VERIFICATION = gql`
 export const FORGOT_PASSWORD_RESET = gql`
   mutation forgotPasswordReset($input: ForgotPasswordResetInput!) {
     forgotPasswordReset(input: $input)
+  }
+`;
+
+export const END_USER_SESSION = gql`
+  mutation {
+    endUserSession {
+      message
+    }
   }
 `;

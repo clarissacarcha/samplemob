@@ -60,7 +60,7 @@ export const Submit = () => {
     const [postFullyVerifiedUpgradeRequest,{ data, error, loading}] = useMutation(POST_FULL_VERIFIED_UPGRADE_REQUEST, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onError: (error) => {
-            onErrorAlert({alert , error});
+            onErrorAlert({alert , error , navigation});
         },
         onCompleted: (response)=> {
             let result = response.postFullyVerifiedUpgradeRequest
