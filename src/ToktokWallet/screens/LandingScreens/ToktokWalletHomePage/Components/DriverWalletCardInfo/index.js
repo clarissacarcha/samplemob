@@ -10,7 +10,6 @@ import CONSTANTS from 'common/res/constants'
 //SELF IMPORTS
 import DriverWalletMethods from './DriverWalletMethods'
 import { ICON_SET, VectorIcon } from 'src/revamp';
-import { CheckWalletAccountRestrictionContext } from '../CheckWalletAccountRestriction';
 
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE} = CONSTANTS
 const titleAccountTypeColor = ['','#929191','#00C851','#2699FB']
@@ -22,7 +21,6 @@ const DriverWalletCardInfo = ({loading})=> {
     const navigation = useNavigation()
     const rotateY = new Animated.Value(0)
     const tokwaAccount = useSelector(state=>state.toktokWallet)
-    const checkWallet = useContext(CheckWalletAccountRestrictionContext)
 
     const animation = Animated.timing(rotateY,{
         toValue: 200,
@@ -39,9 +37,9 @@ const DriverWalletCardInfo = ({loading})=> {
         if(APP_FLAVOR == "D" && ACCOUNT_TYPE == 2){
             return Alert.alert("","Use the toktok customer app for toktokwallet full features.")
         }
-        if(checkWallet.checkIfAllowed()){
-            return navigation.navigate("ToktokWalletPaymentOptions")
-        }
+      
+        return navigation.navigate("ToktokWalletPaymentOptions")
+        
     }
 
     const redirectLinking = () => {
@@ -71,12 +69,12 @@ const DriverWalletCardInfo = ({loading})=> {
                             </View>
                             <TouchableOpacity style={styles.walletSettings} onPress={()=>{
                                 // rotateY.setValue(0)
-                                if(checkWallet.checkIfAllowed()){
+         
                                     animation.start(()=> {
                                         animation.reset()
                                         navigation.navigate("ToktokWalletSettings")
                                     })
-                                }
+                                
                             }}>
                                         <Animated.View style={[{transform: [{rotate: rotateanimation}]}]}>
                                             <VectorIcon iconSet={ICON_SET.FontAwesome5} name="cog" color="black" size={30}/>

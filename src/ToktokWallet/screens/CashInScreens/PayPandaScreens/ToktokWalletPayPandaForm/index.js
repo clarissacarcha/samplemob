@@ -4,12 +4,13 @@ import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import {useSelector} from 'react-redux'
 import {useMutation,useLazyQuery,useQuery} from '@apollo/react-hooks'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
-import {POST_CASH_IN_PAYPANDA_REQUEST,GET_GLOBAL_SETTINGS, POST_REQUEST_CASH_IN} from 'toktokwallet/graphql'
+import {POST_CASH_IN_PAYPANDA_REQUEST,GET_GLOBAL_SETTINGS,POST_REQUEST_CASH_IN} from 'toktokwallet/graphql'
 import {onError,onErrorAlert} from 'src/util/ErrorUtility';
 import {numberFormat} from 'toktokwallet/helper'
-import { useAlert } from 'src/hooks'
+import { useAlert, usePrompt } from 'src/hooks'
 import { HeaderBack, YellowButton, HeaderTitle } from 'src/revamp'
 import { AlertOverlay } from 'src/components'
+import { CheckIdleState , FlagSecureScreen} from 'toktokwallet/components'
 import { TransactionUtility } from 'toktokwallet/util/TransactionUtility'
 import {
     DisabledButton,
@@ -30,6 +31,7 @@ export const ToktokWalletPayPandaForm = ({navigation,route})=> {
         headerTitle: ()=> <HeaderTitle label={['Cash In','']}/>,
     })
 
+    const prompt = usePrompt()
     const cashInAmount = route.params.amount
     const onCashIn = route.params.onCashIn
     const alert = useAlert()
@@ -41,19 +43,21 @@ export const ToktokWalletPayPandaForm = ({navigation,route})=> {
     const [recipientDetails,setRecipientDetails] = useState(null)
     const [disablebtn,setDisablebtn] = useState(false)
     const [maxLimitMessage,setMaxLimitMessage] = useState("")
-    const [pinCodeAttempt,setPinCodeAttempt] = useState(6)
-    const [openPinCode,setOpenPinCode] = useState(false)
-    const [otpCodeAttempt,setOtpCodeAttempt] = useState(6)
-    const [openOtpCode,setOpenOtpCode] = useState(false)
 
     const [postRequestCashIn] = useMutation(POST_REQUEST_CASH_IN, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({postRequestCashIn})=>{
-            setPinCodeAttempt(6)
-            setOpenPinCode(true)
-            return;
+            return navigation.navigate("ToktokWalletTPINValidator", {
+                callBackFunc: proceedToPaypandaPortal,
+            })
         },
-        onError: (error) => onErrorAlert({alert,error})
+        onError: (error) => {
+            TransactionUtility.StandardErrorHandling({
+                error,
+                navigation,
+                prompt
+            })
+        }
     })
 
     const [postCashInPayPandaRequest , {data,error,loading}] = useMutation(POST_CASH_IN_PAYPANDA_REQUEST , {
@@ -62,16 +66,11 @@ export const ToktokWalletPayPandaForm = ({navigation,route})=> {
             TransactionUtility.StandardErrorHandling({
                 error,
                 navigation,
-                alert,
-                onErrorAlert,
-                setOpenPinCode,
-                setOpenOtpCode,  
-                setPinCodeAttempt,
-                setOtpCodeAttempt
+                prompt
             })
         },
         onCompleted: ({postCashInPayPandaRequest})=>{
-            setOpenPinCode(false)
+            navigation.pop(); // remove TPIN/OTP Validator Screen;
             navigation.navigate("ToktokWalletPayPandaWebView", {
                 merchantId: postCashInPayPandaRequest.merchantId,
                 refNo: postCashInPayPandaRequest.refNo,
@@ -112,7 +111,7 @@ export const ToktokWalletPayPandaForm = ({navigation,route})=> {
     }
 
     const onSwipeSuccess = ()=> {
-        postRequestCashIn()
+        postRequestCashIn();
     }
 
     const confirmAmount = ()=> {
@@ -164,16 +163,9 @@ export const ToktokWalletPayPandaForm = ({navigation,route})=> {
     },[amount])
 
     return (
-      <>
-    <EnterPinCode 
-            visible={openPinCode} 
-            setVisible={setOpenPinCode} 
-            loading={loading}
-            pinCodeAttempt={pinCodeAttempt}
-            callBackFunc={proceedToPaypandaPortal}
-    >
-            <AlertOverlay visible={loading} />
-    </EnterPinCode>
+        <FlagSecureScreen>
+      <CheckIdleState>
+      <AlertOverlay visible={loading}/>
       <Separator />
        <View  
             // keyboardVerticalOffset={Platform.OS == "ios" ? 90 : 90} 
@@ -238,7 +230,8 @@ export const ToktokWalletPayPandaForm = ({navigation,route})=> {
        </View>
 
 
-       </>
+       </CheckIdleState>
+       </FlagSecureScreen>
     )
 }
 

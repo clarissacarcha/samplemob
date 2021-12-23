@@ -6,10 +6,12 @@ import {
     ApprovedRegistration,
     BlockedAccount,
     DeletedAccount,
+    HaveInactiveAccount,
     NoAccount,
     PendingKyc,
     RejectedKyc,
     SecurewithPIN,
+    SecureWithMPIN,
     WalletOnHold
 } from "./Components"
 
@@ -19,9 +21,11 @@ export const ToktokWalletRestricted = ({navigation,route})=> {
         headerShown: false
     })
 
+    const data = route.params.data ? route.params.data : null
     const amount = route?.params?.amount ? route.params.amount : null
     const onCashIn = route?.params.onCashIn ? route.params.onCashIn : null
     const setUpTpinCallBack = route?.params?.setUpTpinCallBack ? route.params.setUpTpinCallBack : null
+    const showPrompt = route?.params?.showPrompt ? true : null
 
     const DisplayComponent = ()=> {
         switch(route.params.component){
@@ -37,6 +41,8 @@ export const ToktokWalletRestricted = ({navigation,route})=> {
                             navigation={navigation} 
                             walletinfo={route.params.walletinfo}
                         />
+            case "noMpin":
+                return <SecureWithMPIN navigation={navigation} walletinfo={route.params.walletinfo}/>
             case "noAccount":
                 return <NoAccount />
             case "pendingKYC": 
@@ -44,9 +50,11 @@ export const ToktokWalletRestricted = ({navigation,route})=> {
             case "rejectedKYC":
                 return <RejectedKyc />
             case "blockedAccount":
-                return <BlockedAccount />
+                return <BlockedAccount data={data} showPrompt={showPrompt}/>
             case "deletedAccount":
                 return <DeletedAccount/>
+            case "haveInactiveAccount":
+                return <HaveInactiveAccount/>
             default:
                 break
         }

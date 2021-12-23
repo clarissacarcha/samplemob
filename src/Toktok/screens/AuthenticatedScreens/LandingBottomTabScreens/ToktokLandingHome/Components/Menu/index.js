@@ -58,7 +58,7 @@ export const Menu = ({setUserLocation, constants}) => {
         label={'toktokwallet'}
         icon={WalletIcon}
         onPress={() => {
-          navigation.push('ToktokWalletHomePage');
+          navigation.push('ToktokWalletLoginPage');
         }}
       /> */}
 
@@ -78,14 +78,14 @@ export const Menu = ({setUserLocation, constants}) => {
         label={'profile'}
         icon={ProfileIcon}
         onPress={() => {
-          navigation.push('ToktokProfile');
+           navigation.push('ToktokProfile');
         }}
       />
       <MenuIcon
-        label={'toktokfood'}
-        icon={ProfileIcon}
+        label={'toktokwallet'}
+        icon={WalletIcon}
         onPress={() => {
-          navigation.push('TokTokFoodSplashScreen');
+          navigation.push('ToktokWalletLoginPage');
         }}
       />
       {/* <MenuIcon

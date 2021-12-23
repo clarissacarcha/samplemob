@@ -93,9 +93,10 @@ const SearchBar = ({
   };
 
   const getGooglePlaceAutocomplete = async ({searchString}) => {
-    console.log({searchString});
-
     try {
+      console.log('OLA');
+      console.log({searchString});
+
       const apiResult = await axios({
         url: `${PROTOCOL}://${HOST_PORT}/graphql`,
         method: 'post',
@@ -122,17 +123,18 @@ const SearchBar = ({
       onSearchResultChange(apiResult.data.data.getGooglePlaceAutocomplete);
       console.log({result: apiResult.data.data.getGooglePlaceAutocomplete});
     } catch (error) {
-      console.log({error});
+      console.log('AUTOCOMPLETE ERROR');
+      console.log(JSON.stringify({error}, null, 4));
       onSearchResultChange(ERROR_RESULT);
     }
   };
 
   const debouncedGetGooglePlaceAutocomplete = useDebounce(
-    (value) => getGooglePlaceAutocomplete({searchString: value}),
+    value => getGooglePlaceAutocomplete({searchString: value}),
     1000,
   );
 
-  const onChangeText = async (value) => {
+  const onChangeText = async value => {
     // setText(value);
     onSearchTextChange(value);
     if (value.length >= 3) {

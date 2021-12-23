@@ -1,13 +1,13 @@
 import React , {useState,useEffect} from 'react'
 import {View,Text,StyleSheet,TextInput,Alert,TouchableOpacity} from 'react-native'
-import {Separator} from 'toktokwallet/components'
+import {Separator,CheckIdleState,FlagSecureScreen} from 'toktokwallet/components'
 import {HeaderBack,HeaderTitle,YellowButton} from 'src/revamp'
 import { useSelector } from 'react-redux'
 import { AlertOverlay } from 'src/components'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import {PATCH_REMOVE_ACCOUNT} from 'toktokwallet/graphql'
 import { useMutation } from '@apollo/react-hooks'
-import { onErrorAlert } from 'src/util/ErrorUtility'
+import {  } from 'src/util/ErrorUtility'
 import {useAlert} from 'src/hooks'
 import CONSTANTS from 'common/res/constants'
 
@@ -37,7 +37,7 @@ export const ToktokWalletCashOutViewAccount = ({navigation,route})=> {
     const [patchRemoveAccount,{loading: removeLoading}] = useMutation(PATCH_REMOVE_ACCOUNT, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onError: (error)=> {
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation})
         },
         onCompleted: ({patchRemoveAccount})=> {
             // console.log(patchCashOutBankAccount)
@@ -59,7 +59,8 @@ export const ToktokWalletCashOutViewAccount = ({navigation,route})=> {
 
 
     return (
-        <>
+        <FlagSecureScreen>
+        <CheckIdleState>
         <AlertOverlay visible={removeLoading}/>
         <RemoveModal visible={showRemoveModal} setVisible={setShowRemoveModal} bankAccount={bankAccount} removeAccount={removeAccount}/>
         <RemoveSuccessfulModal visible={showRemoveSuccessModal} setVisible={setShowRemoveSuccessModal}/>
@@ -131,7 +132,8 @@ export const ToktokWalletCashOutViewAccount = ({navigation,route})=> {
                
              </View>
         </View>
-        </>
+        </CheckIdleState>
+        </FlagSecureScreen>
     )
 }
 

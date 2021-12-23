@@ -14,7 +14,7 @@ const CROP_AREA_HEIGHT = height * 0.40;
 const ImageIDSet = ({validID, placement, setImage, index}) => {
     const navigation = useNavigation();
     const onPress = ()=> {
-        navigation.push("ToktokWalletValidIDCamera",{setImage, placement: placement})
+        navigation.push("ToktokWalletValidIDCamera",{setImage, placement: placement, checkTimeout: true})
     }
 
     return (

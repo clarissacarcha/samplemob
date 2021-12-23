@@ -23,7 +23,7 @@ export const WalletOnHold = ({navigation,walletinfo})=> {
                         <Text style={{fontFamily: FONT.BOLD,fontSize:FONT_SIZE.L,color:"gray"}}>Do it later</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={()=>navigation.replace("ToktokWalletRecoveryMethods")} style={[styles.btn,{backgroundColor:COLOR.YELLOW,marginLeft: 10}]}>
+                    <TouchableOpacity onPress={()=>navigation.replace("ToktokWalletRecoveryMethods" , {type: "TPIN"})} style={[styles.btn,{backgroundColor:COLOR.YELLOW,marginLeft: 10}]}>
                     <Text style={{fontFamily: FONT.BOLD,fontSize:FONT_SIZE.L}}>Recover</Text>
                     </TouchableOpacity>
                 </View>

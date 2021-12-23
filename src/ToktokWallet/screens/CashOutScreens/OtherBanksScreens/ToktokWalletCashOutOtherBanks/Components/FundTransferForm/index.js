@@ -1,12 +1,12 @@
 import React , {useEffect,useState, useContext} from 'react'
 import {View , Text , StyleSheet , TextInput,TouchableOpacity} from 'react-native'
-import { EnterPinCode , EnterOtpCode } from 'toktokwallet/components'
+import { ValidatorScreen } from 'toktokwallet/components'
 import { YellowButton ,VectorIcon ,ICON_SET} from 'src/revamp'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import {POST_CASH_OUT_OTHER_BANKS , POST_REQUEST_CASH_OUT } from 'toktokwallet/graphql'
 import { useMutation } from '@apollo/react-hooks'
 import { onErrorAlert } from 'src/util/ErrorUtility'
-import { useAlert } from 'src/hooks'
+import { useAlert, usePrompt } from 'src/hooks'
 import { numberFormat } from 'toktokwallet/helper'
 import { useSelector } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
@@ -170,15 +170,10 @@ const AccountInfo = ({selectBanks, errorListMessage })=> {
 
 export const FundTransferForm = ({selectBanks, screenLabel})=> {
 
+    const prompt = usePrompt()
     const tokwaAccount = useSelector(state=>state.toktokWallet)
     const alert = useAlert()
     const navigation = useNavigation()
-    const [errorMessage,setErrorMessage] = useState("")
-    const [pinCodeAttempt,setPinCodeAttempt] = useState(6)
-    const [openPinCode,setOpenPinCode] = useState(false)
-    const [otpCodeAttempt,setOtpCodeAttempt] = useState(6)
-    const [openOtpCode,setOpenOtpCode] = useState(false)
-    const [requestFundTransferId,setRequestFundTransferId] = useState(null) 
     const [cashoutLogParams,setCashoutLogParams] = useState({
         status: 0
     })
@@ -226,18 +221,18 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({postRequestCashOut})=>{
             const { validator , requestFundTransferId } = postRequestCashOut
-            setRequestFundTransferId(requestFundTransferId)
-            if(validator == "TPIN"){
-                setPinCodeAttempt(6)
-                return setOpenPinCode(true)
-            }else{
-                setOtpCodeAttempt(6)
-                return setOpenOtpCode(true)
-            }
+            const screen = validator == "TPIN" ? "ToktokWalletTPINValidator" : "ToktokWalletOTPValidator"
+            return navigation.navigate(screen, {
+                callBackFunc: ProceedTransaction,
+                resendRequest: onSwipeSuccess ,
+                data: {
+                    requestFundTransferId: requestFundTransferId
+                }
+            })
            
         },
         onError: (error)=>{
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation,title: "Transaction Void"})
         }
     })
 
@@ -245,7 +240,6 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
     const [postCashOutOtherBank , {data,error,loading}] = useMutation(POST_CASH_OUT_OTHER_BANKS, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({postCashOutOtherBank})=> {
-            setOpenPinCode(false)
             setCashoutLogParams({
                 accountName: accountName,
                 accountNumber: accountNumber,
@@ -260,18 +254,14 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
             TransactionUtility.StandardErrorHandling({
                 error,
                 navigation,
-                alert,
-                onErrorAlert,
-                setOpenPinCode,
-                setOpenOtpCode,  
-                setPinCodeAttempt,
-                setOtpCodeAttempt       
+                prompt
             })
         }
     })
 
 
-    const ProceedTransaction = ({pinCode = null , Otp = null})=> {
+    const ProceedTransaction = ({pinCode = null , Otp = null, data = null })=> {
+        const {requestFundTransferId} = data
         postCashOutOtherBank({
             variables: {
                 input: {
@@ -351,25 +341,7 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
 
     return (
         <>
-            <AlertOverlay visible={requestLoading}/>
-            <EnterPinCode 
-                visible={openPinCode} 
-                setVisible={setOpenPinCode} 
-                loading={loading}
-                pinCodeAttempt={pinCodeAttempt}
-                callBackFunc={ProceedTransaction}
-            >
-                <AlertOverlay visible={loading} />
-            </EnterPinCode>
-            <EnterOtpCode
-                visible={openOtpCode}
-                setVisible={setOpenOtpCode}
-                callBackFunc={ProceedTransaction}
-                otpCodeAttempt={otpCodeAttempt}
-                resend={onSwipeSuccess}
-            >
-                <AlertOverlay visible={loading} />
-            </EnterOtpCode>
+            <AlertOverlay visible={requestLoading || loading}/>
             <SuccessfulCashOutModal 
                 visible={successModalVisible}
                 setVisible={setSuccessModalVisible}

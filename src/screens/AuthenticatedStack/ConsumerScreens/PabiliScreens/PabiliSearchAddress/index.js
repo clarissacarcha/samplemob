@@ -1,5 +1,15 @@
 import React, {useState, useRef, useMemo, useEffect, useCallback} from 'react';
-import {Text, View, TextInput, StyleSheet, TouchableHighlight, TouchableOpacity, StatusBar} from 'react-native';
+import {
+  Text,
+  View,
+  TextInput,
+  StyleSheet,
+  TouchableHighlight,
+  TouchableOpacity,
+  StatusBar,
+  Alert,
+  Platform,
+} from 'react-native';
 import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet';
 import InputScrollView from 'react-native-input-scroll-view';
@@ -47,7 +57,7 @@ const StopDetails = ({navigation, route}) => {
 
   const AlertHook = useAlert();
 
-  const onLocationSelect = (value) => {
+  const onLocationSelect = value => {
     setShowMap(true);
     setStopData({
       ...stopData,
@@ -164,7 +174,7 @@ const StopDetails = ({navigation, route}) => {
 
     if (result) {
       navigation.push('SearchContact', {
-        onContactSelectCallback: (value) => {
+        onContactSelectCallback: value => {
           console.log({value});
 
           setPerson(value.name);
@@ -174,7 +184,7 @@ const StopDetails = ({navigation, route}) => {
     }
   };
 
-  const onMobileChange = (value) => {
+  const onMobileChange = value => {
     if (value.length === 1 && value === '0') {
       setMobile('');
       return;
@@ -241,8 +251,8 @@ const StopDetails = ({navigation, route}) => {
           sessionToken={sessionToken}
           placeholder={route.params.searchPlaceholder}
           searchText={searchText}
-          onSearchTextChange={(value) => setSearchText(value)}
-          onSearchResultChange={(value) => setSearchResult(value)}
+          onSearchTextChange={value => setSearchText(value)}
+          onSearchResultChange={value => setSearchResult(value)}
           searchEnabled={!showMap}
           onSearchLoadingChange={setSearchLoading}
         />

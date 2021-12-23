@@ -1,6 +1,6 @@
 import React from 'react'
 import {View,Text,StyleSheet,Platform,Dimensions,StatusBar,Image, TouchableOpacity, ScrollView} from 'react-native'
-import {Separator} from 'toktokwallet/components'
+import {Separator,CheckIdleState} from 'toktokwallet/components'
 import {HeaderBack, HeaderTitle} from 'src/revamp'
 import CONSTANTS from 'common/res/constants'
 
@@ -33,7 +33,7 @@ export const ToktokWalletHelpCentreLayeredSecurity = ({navigation}) => {
     });
 
     return (
-        <>
+        <CheckIdleState>
             <View style={styles.container}>
                 <Separator />
                 <ScrollView showsVerticalScrollIndicator={false}>
@@ -54,8 +54,8 @@ export const ToktokWalletHelpCentreLayeredSecurity = ({navigation}) => {
                             <View style={{flex: 1, marginTop: 12, marginBottom: 10}}>
 
                                 <ListItem
-                                    title="toktokwallet PIN authentication"
-                                    content="We protect your wallet by offering toktokwallet PIN authentication. They help prevent unauthorized access to your account."
+                                    title="toktokwallet MPIN & TPIN authentication"
+                                    content="We protect your wallet by offering toktokwallet MPIN & TPIN authentication. They help prevent unauthorized access to your account."
                                     imageSource={require('toktokwallet/assets/images/SecurityAndPrivacy/fingerprint.png')}
                                     resizeMode="stretch"
                                 />
@@ -85,7 +85,7 @@ export const ToktokWalletHelpCentreLayeredSecurity = ({navigation}) => {
                 </ScrollView>
                 
             </View>
-        </>
+        </CheckIdleState>
     )
 }
 

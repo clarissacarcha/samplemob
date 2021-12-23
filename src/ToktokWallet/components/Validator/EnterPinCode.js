@@ -2,8 +2,7 @@ import React, {useState,useRef} from 'react'
 import {View , Text , TextInput, StyleSheet , Modal , KeyboardAvoidingView, Platform, Dimensions , TouchableHighlight, TouchableOpacity} from 'react-native'
 import CONSTANTS from 'common/res/constants'
 import { ICON_SET, VectorIcon, YellowButton } from 'src/revamp'
-import { DisabledButton } from '../DisabledButton'
-import { BuildingBottom } from '../BuildingBottom'
+import { DisabledButton , BuildingBottom } from '../'
 
 const {width,height} = Dimensions.get("window")
 const { FONT_FAMILY: FONT , FONT_SIZE , COLOR } = CONSTANTS
@@ -87,7 +86,7 @@ export const EnterPinCode = ({
                 </TouchableOpacity>
                     <View style={styles.pincodeContent}>
                         <View style={{marginTop: 165, height: 200,width:width,alignItems:"center",paddingHorizontal: 16,}}>
-                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L}}>Enter your TPIN</Text>
+                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L}}>Enter TPIN</Text>
                         <View style={{marginTop: 30,flexDirection:"row"}}>
                             <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={showPin}/>
                             <TextInput

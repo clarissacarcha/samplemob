@@ -1,4 +1,5 @@
 import React from 'react';
+import {View,PanResponder} from 'react-native';
 import CashInScreens from "./CashInScreens";
 import CashOutScreens from "./CashOutScreens";
 import KYCScreens from './KYCScreens';

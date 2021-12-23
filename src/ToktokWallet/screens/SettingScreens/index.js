@@ -1,3 +1,4 @@
+export * from "./AccountRecoveryScreens";
 export * from "./HelpCentreScreens";
 export * from "./PinCodeScreens";
 export * from "./ToktokWalletCashInLogs";

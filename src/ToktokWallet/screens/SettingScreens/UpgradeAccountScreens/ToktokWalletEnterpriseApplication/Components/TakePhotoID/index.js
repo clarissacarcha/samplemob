@@ -39,7 +39,7 @@ const ChooseIDType = ({index , onPress})=> {
         <TouchableOpacity onPress={onPressThrottled} style={styles.chooseIDType}>
             <Text style={styles.formName}>{displayText(index)}</Text>
             <View style={{flex: 1,}}>
-                 <VectorIcon style={{textAlign:"right"}} iconSet={ICON_SET.Feather} name="chevron-right" size={14} color={'#9E9E9E'}/>
+                 <VectorIcon style={{textAlign:"right"}} iconSet={ICON_SET.Feather} name="chevron-down" size={14} color={COLOR.ORA}/>
             </View>
         </TouchableOpacity>
         { displayErrorMessage(index) != "" && <Text style={styles.errorMessage}>{displayErrorMessage(index)}</Text>}

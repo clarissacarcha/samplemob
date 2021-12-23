@@ -1,6 +1,6 @@
 import React , {useState,useEffect} from 'react'
 import {View,Text,StyleSheet,TextInput,Alert,ScrollView,KeyboardAvoidingView,Dimensions} from 'react-native'
-import {Separator} from 'toktokwallet/components'
+import {Separator,CheckIdleState} from 'toktokwallet/components'
 import {HeaderBack,HeaderTitle,YellowButton} from 'src/revamp'
 import { useSelector } from 'react-redux'
 import { AlertOverlay } from 'src/components'
@@ -59,7 +59,7 @@ export const ToktokWalletCashOutSaveAccount = ({navigation,route})=> {
     const [postCashOutBankAccount , {data,error,loading}] = useMutation(POST_CASH_OUT_BANK_ACCOUNT, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onError: (error)=> {
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation})
         },
         onCompleted: ({postCashOutBankAccount})=> {
             console.log(postCashOutBankAccount)
@@ -117,7 +117,7 @@ export const ToktokWalletCashOutSaveAccount = ({navigation,route})=> {
 
 
     return (
-        <>
+        <CheckIdleState>
         <AlertOverlay visible={loading}/>
         <SuccessfulModal visible={showSuccessModal} setVisible={setShowSuccessModal}/>
         <Separator/>
@@ -209,7 +209,7 @@ export const ToktokWalletCashOutSaveAccount = ({navigation,route})=> {
                     </View>   
              </KeyboardAvoidingView>
         </View>
-        </>
+        </CheckIdleState>
     )
 }
 

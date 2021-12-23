@@ -3,6 +3,7 @@ import {StyleSheet,View,ActivityIndicator , Dimensions} from 'react-native'
 import {useNavigation,useRoute} from '@react-navigation/native'
 import WebView from 'react-native-webview'
 import {useSelector} from 'react-redux'
+import { CheckIdleState, FlagSecureScreen } from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants'
 
 const {COLOR , FONT_FAMILY: FONT, FONT_SIZE , SIZE } = CONSTANTS
@@ -73,7 +74,8 @@ export const ToktokWalletPayPandaWebView = ({navigation,route})=> {
 
 
     return (
-        <>
+        <FlagSecureScreen>
+        <CheckIdleState>
             <View style={styles.container}> 
             {
                 mounted & !donetransaction ? 
@@ -128,7 +130,8 @@ export const ToktokWalletPayPandaWebView = ({navigation,route})=> {
                 />
             }
             </View>
-        </>
+        </CheckIdleState>
+        </FlagSecureScreen>
     )
 }
 

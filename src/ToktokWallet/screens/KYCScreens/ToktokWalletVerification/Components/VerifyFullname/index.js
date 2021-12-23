@@ -2,13 +2,21 @@ import React, {useContext, useEffect, useState,useRef} from 'react'
 import {Text,View,StyleSheet,Alert,Image,TextInput,TouchableOpacity,Linking,ScrollView,KeyboardAvoidingView,Dimensions,Platform} from 'react-native'
 import {VerifyContext} from '../VerifyContextProvider'
 import validator from 'validator';
-import {YellowButton } from 'src/revamp'
+import {YellowButton , VectorIcon , ICON_SET } from 'src/revamp'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import moment from 'moment'
+import { TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT } from 'src/graphql'
+import { GET_CHECK_BLOCKED_ACCOUNT_RECORD } from 'toktokwallet/graphql'
+import { useLazyQuery } from '@apollo/react-hooks'
+import { useAlert } from 'src/hooks/useAlert'
+import { onErrorAlert } from 'src/util/ErrorUtility'
+import { useNavigation } from '@react-navigation/native';
+import CheckBox from 'react-native-check-box';
 import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS
 import BottomSheetGender from './BottomSheetGender'
+import BottomSheetSourceOfIncome from './BottomSheetSourceOfIncome'
 import DateBirthModal from './DateBirthModal'
 import ModalNationality from './ModalNationality'
 
@@ -29,7 +37,9 @@ export const VerifyFullname = ()=> {
         changeContactInfo,
         birthInfo , 
         changeBirthInfo, 
-        setModalCountryVisible
+        setModalCountryVisible,
+        incomeInfo,
+        changeIncomeInfo
      } = useContext(VerifyContext)
 
     const [modalVisible,setModalVisible] = useState(false)
@@ -37,25 +47,40 @@ export const VerifyFullname = ()=> {
     const [modaltype,setModaltype] = useState("")
     const [mobile, setMobile] = useState(contactInfo.mobile_number.replace("+63", ""))
     const genderRef = useRef()
+    const SourceOfIncomeRef = useRef()
+    const alert = useAlert();
+    const navigation = useNavigation()
 
-    // const {loading, error, data} = useQuery(GET_COUNTRIES, {
-    //     client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT
-    // })
-
-    // useEffect(() => {
-
-    //     console.log("Countries List", typeof data)
-    // }, [])
+    const [getCheckBlockedAccountRecord, {loading}] = useLazyQuery(GET_CHECK_BLOCKED_ACCOUNT_RECORD, {
+        client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT,
+        fetchPolicy: "network-only",
+        onError: (error) => {
+            const {graphQLErrors, networkError} = error;
+            graphQLErrors.map(({message, payload}) => {
+                if(payload.code == "EXISTING_BLOCKED_ACCOUNT"){
+                    // restricted here
+                    navigation.push("ToktokWalletRestricted", {component:"haveInactiveAccount"});
+                    //navigation.push("ToktokWalletHelpCentreContactUs");
+                }else{
+                    onErrorAlert({alert,error})
+                }
+            })
+           
+           
+        },
+        onCompleted: ({getCheckBlockedAccountRecord})=> {
+            return setCurrentIndex(oldval => oldval + 1)
+        }
+    })
 
     const NextPage = ()=> {
         if (validator.isEmpty(person.lastName, {ignore_whitespace: true})) {
             return Alert.alert("","Last Name is required.")
         }
 
-        if (validator.isEmpty(person.middleName, {ignore_whitespace: true})) {
+        if (person.hasMiddleName && validator.isEmpty(person.middleName, {ignore_whitespace: true})) {
             return Alert.alert("","Middle Name is required.")
         }
-
         if (validator.isEmpty(person.firstName, {ignore_whitespace: true})) {
             return Alert.alert("","First Name is required.")
         }
@@ -73,9 +98,24 @@ export const VerifyFullname = ()=> {
         if(birthInfo.birthdate == "") return Alert.alert("","Date of Birth is required.")
         if(birthInfo.birthPlace == "") return Alert.alert("","Place of Birth is required.")
         if(nationalityId == "") return Alert.alert("","Nationality is required.")
+        if (validator.isEmpty(incomeInfo.occupation, {ignore_whitespace: true})) {
+            return Alert.alert("","Occupation is required.")
+        }
+        if(incomeInfo.source == "") return Alert.alert("","Source of Income is required.")
+        if(incomeInfo.source.id == "0" && incomeInfo.otherSource == "") return Alert.alert("","Source of Income is required.")
 
         changeContactInfo("mobile_number", "+63" + mobile)
-        setCurrentIndex(oldval => oldval + 1)
+        getCheckBlockedAccountRecord({
+            variables: {
+                input: {
+                    firstName: person.firstName,
+                    middleName: person.middleName,
+                    lastName: person.lastName,
+                    birthdate: birthInfo.birthdate,
+                }
+            }
+        })
+        // setCurrentIndex(oldval => oldval + 1)
     }
 
     const ViewPrivacyPolicy = ()=> {
@@ -183,13 +223,30 @@ export const VerifyFullname = ()=> {
                     <View style={{marginTop: 20,}}>
                     <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Middle Name</Text>
                         <TextInput 
+                            editable={person.hasMiddleName}
                             style={styles.input}
                             value={person.middleName}
                             onChangeText={(value)=>changePersonInfo("middleName",value)}
                             placeholder="Enter middle name here"
                             returnKeyType="done"
                         />
+                        <View style={{flexDirection:"row",marginTop: 5}}>
+                            <CheckBox
+                                isChecked={!person.hasMiddleName}
+                                onClick={()=>{
+                                     changePersonInfo("middleName", "")
+                                     changePersonInfo("hasMiddleName",!person.hasMiddleName)
+                                     return
+                                }}
+                                style={{
+                                    alignSelf: "center",
+                                    marginRight: 5,
+                                }}
+                            />
+                            <Text style={{alignSelf:"center", fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color: COLOR.YELLOW}}>Click checkbox if Middle Name is unknown</Text>
+                        </View>
                     </View>
+
 
 
                     <View style={{marginTop: 20,}}>
@@ -207,20 +264,15 @@ export const VerifyFullname = ()=> {
                     <View style={{marginTop: 20,}}>
                     <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Gender</Text>
                         <TouchableOpacity 
-                            style={[styles.input, {flex: 1,justifyContent:'center'}]}
+                            style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center"}]}
                             onPress={()=>genderRef.current.expand()}
                         >
-                               {/* {
-                                     person.gender == ""
-                                     ? <Text style={{flex: 1,fontFamily: FONT.REGULAR,color: COLOR.DARK,fontSize: FONT_SIZE.M}}>-Select Gender-</Text>
-                                     : <Text style={{flex: 1,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{person.gender}</Text>
-                               } */}
-                                {/* <Text>gg</Text> */}
                                 {
                                     person.gender == ""
-                                    ? <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M,color: COLOR.DARK}}>-Select Gender-</Text>
-                                    : <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{person.gender}</Text>
+                                    ? <Text style={{flex:1 ,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M,color: COLOR.DARK}}>-Select Gender-</Text>
+                                    : <Text style={{flex: 1,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{person.gender}</Text>
                                 }
+                                  <VectorIcon iconSet={ICON_SET.Feather} name="chevron-right"/>
                         </TouchableOpacity>
 
                     </View>
@@ -285,6 +337,41 @@ export const VerifyFullname = ()=> {
                                 </TouchableOpacity>
                             </View>
                     </View>
+
+                    <View style={{marginTop: 20,}}>
+                    <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Occupation</Text>
+                            <TextInput 
+                                placeholder="Enter Occupation here"
+                                style={styles.input}
+                                value={incomeInfo.occupation}
+                                onChangeText={(value)=>changeIncomeInfo("occupation",value)}
+                                maxLength={30}
+                            />
+                    </View>
+
+                    <View style={{marginTop: 20,}}>
+                    <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Source of Income</Text>
+                            <TouchableOpacity onPress={()=>SourceOfIncomeRef.current.expand()} style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center"}]}>
+                             {
+                                incomeInfo.source == ""
+                                ? <Text style={{flex: 1,color: COLOR.DARK,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>- Select -</Text>
+                                : <Text style={{flex: 1,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{incomeInfo.source.description}</Text>
+                             }
+                                <VectorIcon iconSet={ICON_SET.Feather} name="chevron-right"/>
+                             </TouchableOpacity>
+                    </View>
+                    {
+                            incomeInfo.source.id == "0" &&
+                            <View style={{marginTop: 10,}}>
+                                <TextInput 
+                                    placeholder="Enter Source of Income here"
+                                    style={styles.input}
+                                    value={incomeInfo.otherSource}
+                                    onChangeText={(value)=>changeIncomeInfo("otherSource",value)}
+                                />
+                            </View>
+                        }
+
                     <View style={{marginBottom: 16,marginTop: 20,height: 70}}>
                     <YellowButton label="Next" onPress={NextPage}/>
                     </View>
@@ -294,6 +381,7 @@ export const VerifyFullname = ()=> {
             </KeyboardAvoidingView>
 
             <BottomSheetGender ref={genderRef} onChange={setGender}/>
+            <BottomSheetSourceOfIncome ref={SourceOfIncomeRef} changeIncomeInfo={changeIncomeInfo}/>
        
         </>
     )
