@@ -3,7 +3,7 @@ import {View,Text,StyleSheet,TouchableOpacity,ActivityIndicator,KeyboardAvoiding
 import { numberFormat } from 'toktokwallet/helper'
 import {useSelector} from 'react-redux'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
-import {HeaderImageBackground,HeaderTitle} from 'toktokwallet/components'
+import {HeaderImageBackground,HeaderTitle,CheckIdleState} from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS
@@ -74,6 +74,7 @@ export const ToktokWalletSendMoney = ({navigation,route})=> {
     },[])
 
     return (
+        <CheckIdleState>
         <View style={{flex:1,backgroundColor:"white"}}>
                 <View style={styles.headings}>
                     <HeaderImageBackground>
@@ -156,6 +157,7 @@ export const ToktokWalletSendMoney = ({navigation,route})=> {
                     />
                 </View>
         </View>
+        </CheckIdleState>
     )
 }
 

@@ -17,3 +17,18 @@ export const PATCH_LINK_TOKWA_ACCOUNT = gql`
         }
     }
 `
+
+export const GET_NOTIFICATIONS_BY_CLASSIFICATION = gql`
+    query getNotificationsByClassification($input: GetNotificationsByClassification!){
+        getNotificationsByClassification(input: $input){
+            id
+            title
+            body
+            classification
+            type
+            payload
+            status
+            createdAt
+        }
+    }
+`

@@ -34,12 +34,12 @@ const MainComponent = ({children , onPress })=> {
         <>
         <ScrollView style={styles.content}>
         <View style={styles.mainInput}>
-                <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD}}>One last step before you get a verified toktokwallet</Text>
+                <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD}}>Take a Selfie</Text>
                 <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:"#929191"}}>Take a photo to verify your identity.</Text>  
                 
                
                 <View style={{marginTop: 20,flex: 1}}>
-                <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD}}>Take a selfie</Text>
+                {/* <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD}}>Take a selfie</Text> */}
                         {children}
                 </View>
                 <View style={{flex: 1,alignItems:"center",justifyContent:"center"}}>
@@ -72,7 +72,7 @@ const MainComponent = ({children , onPress })=> {
 export const VerifySelfie = ()=> {
 
     const VerifyUserData = useContext(VerifyContext)
-    const {setCurrentIndex , selfieImage, setSelfieImage} = VerifyUserData
+    const {setCacheImagesList, setCurrentIndex , selfieImage, setSelfieImage , setTempSelfieImage , tempSelfieImage} = VerifyUserData
     const [cropperParams, setCropperParams] = useState({});
     const navigation = useNavigation()
     const cropSize = {
@@ -89,18 +89,23 @@ export const VerifySelfie = ()=> {
     }
 
     const setImage = (data)=> {
-        setSelfieImage(data);
+        // setSelfieImage(data);
+        setCacheImagesList(state=> {
+            return [...state, data.uri]
+        })
+        setTempSelfieImage(data);
         // setCurrentIndex(oldval => oldval + 1)
     }
 
     const Proceed = async ()=> {
-        if(selfieImage == null){
+        if(tempSelfieImage == null){
             return navigation.push("ToktokWalletSelfieImageCamera", {setImage})
         }
         try {
             const croppedResult = await ImageCropper.crop({
                 ...cropperParams,
-                imageUri: selfieImage.uri,
+                // imageUri: selfieImage.uri,
+                imageUri: tempSelfieImage.uri,
                 cropSize,
                 cropAreaSize,
             });
@@ -116,12 +121,12 @@ export const VerifySelfie = ()=> {
 
     }
 
-    if(selfieImage){
+    if(tempSelfieImage){
         return(
             <MainComponent onPress={Proceed}>
                 <View style={styles.PreviewImage}>
                     <ImageCropper
-                        imageUri={selfieImage.uri}
+                        imageUri={tempSelfieImage.uri}
                         cropAreaWidth={Platform.OS === "ios" ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 110}
                         cropAreaHeight={Platform.OS === "ios" ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 100}
                         containerColor="transparent"
@@ -219,6 +224,7 @@ const styles = StyleSheet.create({
         height: Platform.OS === "ios" ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 100 + 10, 
         width: Platform.OS === "ios" ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 110 + 10, 
         alignSelf:"center",
+        justifyContent:"center",
         marginTop: 7,
         padding: 2,
         borderStyle: "dashed",

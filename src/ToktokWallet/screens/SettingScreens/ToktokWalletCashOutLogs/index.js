@@ -6,7 +6,7 @@ import {GET_CASH_IN_LOGS, GET_CASH_OUT_LOGS,TOKTOK_WALLET_GRAPHQL_CLIENT} from '
 import {GET_CASH_OUTS} from 'toktokwallet/graphql'
 import {useSelector} from 'react-redux'
 import { numberFormat ,MaskLeftZero } from 'toktokwallet/helper'
-import {Separator , FilterDateModal , TransactionDetails} from 'toktokwallet/components'
+import {Separator , FilterDateModal , TransactionDetails, CheckIdleState} from 'toktokwallet/components'
 import { HeaderBack , HeaderTitle } from 'src/revamp'
 import CONSTANTS from 'common/res/constants'
 import { onErrorAlert } from 'src/util/ErrorUtility'
@@ -25,7 +25,7 @@ const CashOutLog = ({
 })=> {
 
 
-    const ViewTransactionDetails = ({requestNo ,refNo,refDate, transactionAmount , status,provider,cashOutDisplayInformations})=> {
+    const ViewTransactionDetails = ({requestNo, refNo,refDate, transactionAmount , status,provider,cashOutDisplayInformations})=> {
         let phrase = `${provider}`
         if(provider == "InstaPay" || provider == "PesoNet"){
             phrase = "Other Banks"
@@ -114,7 +114,7 @@ export const ToktokWalletCashOutLogs = ({navigation})=> {
         fetchPolicy: "network-only",
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onError: (error) => {
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation})
         },
         onCompleted: ({getCashOuts})=> {
             // setRecords(state=> [...state , ...getCashOuts])
@@ -136,7 +136,7 @@ export const ToktokWalletCashOutLogs = ({navigation})=> {
     }
 
     return (
-        <>
+        <CheckIdleState>
         <TransactionDetails 
             visible={transactionVisible}
             setVisible={setTransactionVisible}
@@ -182,7 +182,7 @@ export const ToktokWalletCashOutLogs = ({navigation})=> {
                 </View>
             </View>
         }
-        </>
+        </CheckIdleState>
     )
 }
 

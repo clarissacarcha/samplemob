@@ -1,40 +1,58 @@
-import React from 'react'
-import {View,Text,StyleSheet} from 'react-native'
-import {useNavigation} from '@react-navigation/native'
-import { HeaderImageBackground , HeaderTitle , Separator } from 'toktokwallet/components'
+import React, { useState , useEffect , useCallback } from 'react'
+import {View,Text,StyleSheet,TouchableOpacity} from 'react-native'
+import {useNavigation,useFocusEffect} from '@react-navigation/native'
+import { HeaderImageBackground , HeaderTitle , Separator, BuildingBottom } from 'toktokwallet/components'
 import { YellowButton , VectorIcon , ICON_SET } from 'src/revamp'
-import CONSTANTS from 'common/res/constants'
+import { moderateScale } from 'toktokwallet/helper'
 
-const  { COLOR , FONT_SIZE , FONT_FAMILY: FONT } = CONSTANTS
+//SELF IMPORTS
+import AccountRecovery from "./AccountRecovery"
 
-export const BlockedAccount = ()=> {
+import CONSTANTS from 'common/res/constants';
+const  { COLOR , FONT_SIZE , FONT_FAMILY: FONT } = CONSTANTS;
+
+export const BlockedAccount = ({data,showPrompt})=> {
     const navigation = useNavigation()
+    const { account } = data
+    const [visible,setVisible] = useState(false)
 
-    navigation.setOptions({
-        headerShown:false,
-    })
+    const HelpCenter = ()=> {
+        setVisible(true)
+    }
+
+    useFocusEffect(useCallback(()=>{
+        if(showPrompt) setVisible(true)
+    },[showPrompt]))
+  
     return (
         <>
+        <AccountRecovery
+            visible={visible}
+            setVisible={setVisible}
+            account={account}
+        />
         <View style={styles.container}>
-             <View style={styles.headings}>
+            <View style={styles.headings}>
                 <HeaderImageBackground>
-                        <HeaderTitle isLogo={true} />
+                    <HeaderTitle isLogo={true} />
                 </HeaderImageBackground>
             </View>
             <Separator/>
             <View style={styles.content}>
-                <View style={{alignItems:"center",marginTop: 10}}>
-                    <Text style={[styles.verifyWalletText , {color: COLOR.ORANGE}]}>STOP !</Text>
-                    <Text style={styles.clickVerifyText}>Your toktokwallet account has been blocked or put on-hold. To know more details, contact support@toktokwallet.ph and (02) 84-248-617.</Text>
+                <View style={{marginTop: 10, paddingHorizontal: moderateScale(30)}}>
+                    <Text style={[styles.verifyWalletText]}>Your account is deactivated</Text>
+                    <Text style={styles.clickVerifyText}>Please contact our Customer Service Representative for support</Text>
                 </View>
+                <TouchableOpacity onPress={HelpCenter} style={styles.helpCenter}>
+                    <Text style={styles.labelHC}>Help Center</Text>
+                 </TouchableOpacity>
             </View>
-
             <View style={{height: 70,padding: 16,justifyContent:'flex-end'}}>
                 <YellowButton label="Ok" onPress={()=> {
-                    navigation.pop()
+                    navigation.navigate("ToktokLandingHome")
                 }}/>
             </View>
-        
+            <BuildingBottom/>
         </View>
         </>
     )
@@ -51,8 +69,8 @@ const styles = StyleSheet.create({
     },  
     content: {
         flex: 1,
-        padding: 10,
-        paddingTop: 30,
+        paddingVertical: moderateScale(20),
+        paddingTop: moderateScale(100),
     },
     verifyWalletText: {
         fontFamily: FONT.BOLD,
@@ -60,9 +78,9 @@ const styles = StyleSheet.create({
         textAlign:'center'
     },
     clickVerifyText: {
-        marginTop: 5,
+        marginTop: 10,
         fontFamily: FONT.REGULAR,
-        fontSize: FONT_SIZE.S,
+        fontSize: FONT_SIZE.M,
         textAlign:'center'
     },
     listItem: {
@@ -70,4 +88,16 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         fontSize: FONT_SIZE.S
     },
+    helpCenter: {
+        justifyContent:'center',
+        alignItems:'center',
+        marginVertical: 10,
+        marginTop: 20
+    },
+    labelHC: {
+        fontFamily: FONT.BOLD,
+        fontSize: FONT_SIZE.L,
+        color: COLOR.ORANGE,
+        textDecorationLine:"underline"
+    }
 })

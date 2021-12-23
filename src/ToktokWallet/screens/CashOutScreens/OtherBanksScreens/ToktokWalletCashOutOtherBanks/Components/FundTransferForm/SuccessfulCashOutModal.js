@@ -41,7 +41,6 @@ const SuccessfulCashOutModal = ({visible, setVisible, cashoutLogParams, tokwaAcc
 
     const Proceed = ()=>  {
         // navigation.pop(3)
-        console.log(screenLabel, "Asdasd")
         if(screenLabel){
             navigation.navigate("ToktokWalletFullyVerifiedApplication")
             navigation.replace("ToktokWalletFullyVerifiedApplication")

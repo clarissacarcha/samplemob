@@ -14,6 +14,8 @@ import {connect} from 'react-redux'
 import { YellowButton } from 'src/revamp'
 import { DisabledButton } from 'toktokwallet/components'
 import CheckBox from 'react-native-check-box'
+import AsyncStorage from '@react-native-community/async-storage';
+import RNFS from 'react-native-fs'
 import CONSTANTS from 'common/res/constants'
 
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE , SIZE } = CONSTANTS
@@ -47,6 +49,7 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
     const VerifyUserData = useContext(VerifyContext)
     const navigation = useNavigation()
     const alert = useAlert()
+    const [cacheImages,setCacheImages] = useState(null)
 
     const [isCertify, setCertify] = useState(false)
 
@@ -57,6 +60,10 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
         },
         onCompleted: (response)=> {
             let result = response.postKycRegister
+            // removeCacheImages({
+            //     VerifyUserData
+            // })
+            RNFS.unlink(RNFS.CachesDirectoryPath)
             if(result.status == 2){
                 navigation.pop(2)
                 navigation.navigate("ToktokWalletVerifyResult")
@@ -65,7 +72,42 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
         }
     })
 
-    const confirm = ()=> {
+    const deleteFile = (path)=> {
+        RNFS.exists(path)
+            .then(()=>RNFS.unlink(path))
+            .then(()=>RNFS.scanFile(path))
+            .catch(err=>console.log(err))
+            .finally(()=>console.log(path , " is deleted"))
+        return
+    }
+
+    const removeCacheImages = async ({VerifyUserData})=> {
+        const { cacheImagesList, selfieImage , selfieImageWithID , frontImage ,  backImage , tempSelfieImage , tempSelfieImageWithID } = VerifyUserData
+        const { rnSelfieFile, rnSelfieFileWithID, rnFrontIDFile, rnBackIDFile } = cacheImages
+
+        try {
+            if(rnSelfieFile)  await deleteFile(rnSelfieFile.uri)
+            if(rnSelfieFileWithID)  await deleteFile(rnSelfieFileWithID.uri)
+            if(rnFrontIDFile)  await deleteFile(rnFrontIDFile.uri)
+            if(rnBackIDFile)  await deleteFile(rnBackIDFile.uri)
+            if(tempSelfieImage)  await deleteFile(tempSelfieImage.uri)
+            if(tempSelfieImageWithID) await deleteFile(tempSelfieImageWithID.uri)
+            if(frontImage) await deleteFile(frontImage.uri)
+            if(backImage) await deleteFile(backImage.uri)
+            if(selfieImage) await deleteFile(selfieImage.uri)
+            if(selfieImageWithID) await deleteFile(selfieImageWithID.uri)
+            if(cacheImagesList.length > 0){
+                cacheImagesList.map(async (image)=>{
+                    await deleteFile(image)
+                })
+            }
+            return;
+        }catch (error){
+            throw error;
+        }
+    }
+
+    const confirm = async ()=> {
         const rnValidIDFile = new ReactNativeFile({
             ...VerifyUserData.verifyID.idImage,
             name: 'documentValidID.jpg',
@@ -75,6 +117,12 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
         const rnSelfieFile = new ReactNativeFile({
             ...VerifyUserData.selfieImage,
             name: 'documentSelfie.jpg',
+            type: 'image/jpeg'
+        })
+
+        const rnSelfieFileWithID =  new ReactNativeFile({
+            ...VerifyUserData.selfieImageWithID,
+            name: 'documentSelfieWithID.jpg',
             type: 'image/jpeg'
         })
 
@@ -94,20 +142,46 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
         })
         : null
 
-        console.log(rnBackIDFile)
+        // RNFS.unlink(RNFS.CachesDirectoryPath).then(()=>{
+        //     console.log("Deleted")
+        // }).catch(err=>console.log(err))
+        // RNFS.unlink(RNFS.TemporaryDirectoryPath)
+
+        // RNFS.readDir(RNFS.CachesDirectoryPath)
+        // .then(arr => RNFS.readDir(arr[0].path)) // The Camera directory
+        //     .then(arr => arr.forEach(item => {
+        //        console.log(item.path)
+        //         // Linking.canOpenURL(contentURI)
+        //         // .then(able => able ? Linking.openURL(contentURI) : console.log('No application available'))
+        //         // .catch(console.log)
+        //     }))
+        // return;
+   
+    //    setCacheImages({
+    //     rnSelfieFile,
+    //     rnSelfieFileWithID,
+    //     rnFrontIDFile,
+    //     rnBackIDFile,
+    //    })
+
+        // removing / delete cache files
+       //removeCacheImages({VerifyUserData})
 
         const input = {
-            userId: session.user.id,
+            // userId: session.user.id,
+            userId: await AsyncStorage.getItem('accessToken'),
             mobileNumber: VerifyUserData.contactInfo.mobile_number,
             emailAddress: VerifyUserData.contactInfo.email,
             firstName: VerifyUserData.person.firstName,
             middleName: VerifyUserData.person.middleName,
             lastName: VerifyUserData.person.lastName,
+            hasMiddleName: VerifyUserData.person.hasMiddleName,
             gender: VerifyUserData.person.gender,
             birthdate: moment(VerifyUserData.birthInfo.birthdate).format("YYYY-MM-DD"),
             // birthdate: VerifyUserData.birthInfo.birthdate,
             birthPlace: VerifyUserData.birthInfo.birthPlace,
             ...( rnSelfieFile ? {selfieImage: rnSelfieFile} : {} ),
+            ...( rnSelfieFileWithID ? {selfieImageWithID: rnSelfieFileWithID} : {} ),
             nationality:  VerifyUserData.nationalityId.toString(),
             line1: VerifyUserData.address.line1,
             line2: VerifyUserData.address.line2,
@@ -118,6 +192,9 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
             ...( rnBackIDFile ? {backImage: rnBackIDFile} : {} ),
             identificationCardNumber: VerifyUserData.verifyID.idNumber,
             identificationCardId: VerifyUserData.identificationId,
+            sourceIncomeId: VerifyUserData.incomeInfo.source.id,
+            otherSource: VerifyUserData.incomeInfo.otherSource,
+            occupation: VerifyUserData.incomeInfo.occupation
         }
 
         postKYCRegister({
@@ -141,10 +218,16 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
                         <UserInfo label="Middle Name" value={VerifyUserData.person.middleName}/>
                         <UserInfo label="Last Name" value={VerifyUserData.person.lastName}/>
                         <UserInfo label="Gender" value={VerifyUserData.person.gender}/>
-                        <UserInfo label="Date of Birth" value={moment(VerifyUserData.birthInfo.birthdate).format("MMM DD YYYY")}/>
+                        <UserInfo label="Date of Birth" value={moment(VerifyUserData.birthInfo.birthdate).format("MMM DD, YYYY")}/>
                         <UserInfo label="Place of Birth" value={VerifyUserData.birthInfo.birthPlace}/>
                         <UserInfo label="Nationality" value={VerifyUserData.nationality}/>
                         <UserInfo label="Address" value={`${VerifyUserData.address.line1} ${VerifyUserData.address.line2} ${VerifyUserData.city} ${VerifyUserData.province}, ${VerifyUserData.address.country} ${VerifyUserData.address.postalCode}`}/>
+                        <UserInfo label="Source of Income" value={VerifyUserData.incomeInfo.source.description}/>
+                        {
+                            VerifyUserData.incomeInfo.source.description == "others" &&
+                            <UserInfo label="" value={VerifyUserData.incomeInfo.otherSource}/>
+                        }
+                        <UserInfo label="Occupation" value={VerifyUserData.incomeInfo.occupation}/>
                         <UserInfo label="ID Type" value={VerifyUserData.verifyID.idType}/>
                         <UserInfo label="ID number" value={VerifyUserData.verifyID.idNumber}/>
                 </ScrollView>

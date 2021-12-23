@@ -1,6 +1,7 @@
 import React , {useState , useEffect} from 'react'
 import {View,Text,StyleSheet,TextInput,TouchableOpacity,Platform,FlatList,ActivityIndicator,Image} from 'react-native'
 import {check,request,PERMISSIONS,RESULTS} from 'react-native-permissions'
+import { CheckIdleState } from 'toktokwallet/components'
 import {useSelector} from 'react-redux'
 import Contacts from 'react-native-contacts'
 import {sortBy} from 'lodash'
@@ -191,7 +192,7 @@ export const ToktokWalletContacts = ({navigation,route})=> {
 
 
     return (
-      <>
+      <CheckIdleState>
       <Separator />
       <View style={styles.container}>
         <View style={styles.searchField}>
@@ -218,7 +219,7 @@ export const ToktokWalletContacts = ({navigation,route})=> {
                       />
           </View>
       </View>
-      </>
+      </CheckIdleState>
     )
 }
 

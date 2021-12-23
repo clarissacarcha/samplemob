@@ -6,7 +6,8 @@ import {useAlert} from 'src/hooks/useAlert'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import {
     HeaderImageBackground,
-    HeaderTitle
+    HeaderTitle,
+    CheckIdleState
 } from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants'
 
@@ -34,7 +35,7 @@ export const ToktokWalletScanQRConfirm = ({navigation,route})=> {
     const [swipeEnabled,setSwipeEnabled] = useState(false)
  
     return (
-        <>
+        <CheckIdleState>
         <View style={styles.container}>
             <View style={styles.headings}>
                 <HeaderImageBackground>
@@ -73,7 +74,7 @@ export const ToktokWalletScanQRConfirm = ({navigation,route})=> {
             </View>   
 
         </View>
-      </>
+      </CheckIdleState>
     )
 }
 

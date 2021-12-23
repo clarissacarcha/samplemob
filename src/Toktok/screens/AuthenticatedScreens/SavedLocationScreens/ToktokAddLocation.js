@@ -1,77 +1,21 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect, useRef, useCallback} from 'react';
 import {View, Text, StyleSheet, TouchableHighlight, TextInput, Alert} from 'react-native';
 import {connect} from 'react-redux';
-import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
-import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
-import {
-  COLOR,
-  DARK,
-  ORANGE,
-  MEDIUM,
-  LIGHT,
-  MAPS_API_KEY,
-  MAP_DELTA_LOW,
-  COLOR_UNDERLAY,
-} from '../../../../res/constants';
+import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
+import {debounce} from 'lodash';
+import axios from 'axios';
+import AsyncStorage from '@react-native-community/async-storage';
+import {COLOR, DARK, MEDIUM, LIGHT, MAP_DELTA_LOW} from '../../../../res/constants';
 import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../../components';
+import ENVIRONMENTS from '../../../../common/res/environments';
 import {POST_SAVED_LOCATION} from '../../../../graphql';
 import {onError} from '../../../../util/ErrorUtility';
 import {useMutation} from '@apollo/react-hooks';
-
+import uuid from 'react-native-uuid';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 
-// const homePlace = {
-//   description: 'Home',
-//   formattedAddress: 'Formatted Home Address',
-//   geometry: {location: {lat: 48.8152937, lng: 2.4597668}},
-// };
-// const workPlace = {
-//   description: 'Work',
-//   formattedAddress: 'Formatted Work Address',
-//   geometry: {location: {lat: 48.8496818, lng: 2.2940881}},
-// };
-
-const GooglePlacesInput = ({onLocationSelect}) => {
-  return (
-    <GooglePlacesAutocomplete
-      // predefinedPlaces={[homePlace, workPlace]}
-      placeholder="Search Location"
-      minLength={2} // minimum length of text to search
-      // autoFocus={true}
-      // returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
-      keyboardAppearance={'light'} // Can be left out for default keyboardAppearance https://facebook.github.io/react-native/docs/textinput.html#keyboardappearance
-      listViewDisplayed="true" // true/false/undefined
-      fetchDetails={true}
-      renderDescription={(row) => row.description} // custom description render
-      onPress={onLocationSelect}
-      getDefaultValue={() => ''}
-      query={{
-        key: MAPS_API_KEY,
-        components: 'country:PH',
-      }}
-      styles={{
-        textInputContainer: {
-          width: '100%',
-          borderRadius: 10,
-        },
-        description: {
-          fontFamily: 'Rubik-Medium',
-        },
-        listView: {
-          backgroundColor: '#FFF',
-        },
-        textInput: {
-          color: DARK,
-        },
-        predefinedPlacesDescription: {
-          color: ORANGE,
-        },
-      }}
-      nearbyPlacesAPI="GooglePlacesSearch"
-      debounce={500}
-    />
-  );
-};
+import {AutocompleteResult} from './AutocompleteResult';
+import {SearchLoadingIndicator} from './SearchLoadingIndicator';
 
 const AddLocation = ({navigation, route, session}) => {
   navigation.setOptions({
@@ -89,25 +33,37 @@ const AddLocation = ({navigation, route, session}) => {
     },
   });
 
+  const [searchText, setSearchText] = useState('');
   const [locationName, setLocationName] = useState('');
   const [locationData, setLocationData] = useState({
     latitude: null,
     longitude: null,
     formattedAddress: null,
   });
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [searchResult, setSearchresult] = useState([]);
+  const [sessionToken, setSessionToken] = useState(uuid.v4());
 
-  const onLocationSelect = (data, details) => {
-    // console.log(JSON.stringify(details, null, 4));
+  const setMapData = data => {
+    setLocationData(data);
+    setSearchText(data.formattedAddress);
+  };
+
+  const onLocationSelect = data => {
+    console.log(JSON.stringify(data, null, 4));
     // console.log(JSON.stringify(details.geometry.location.lat, null, 4));
     // console.log(JSON.stringify(details.geometry.location.lng, null, 4));
     // console.log(JSON.stringify(data.description, null, 4));
     // console.log(JSON.stringify(data.formattedAddress, null, 4));
 
+    setSearchText(data.formattedAddress);
     setLocationData({
-      latitude: details.geometry.location.lat,
-      longitude: details.geometry.location.lng,
-      formattedAddress: data.formattedAddress ? data.formattedAddress : data.description,
+      latitude: data.location.latitude,
+      longitude: data.location.longitude,
+      formattedAddress: data.formattedAddress,
     });
+
+    setSearchresult([]);
   };
 
   const onSave = () => {
@@ -134,8 +90,111 @@ const AddLocation = ({navigation, route, session}) => {
     });
   };
 
+  const useIsMounted = () => {
+    const isMountedRef = useRef(true);
+    useEffect(() => {
+      return () => {
+        isMountedRef.current = false;
+      };
+    }, []);
+    return () => isMountedRef.current;
+  };
+
+  const useDebounce = (cb, delay) => {
+    const options = {
+      leading: false,
+      trailing: true,
+    };
+    const inputsRef = useRef(cb);
+    const isMounted = useIsMounted();
+    useEffect(() => {
+      inputsRef.current = {cb, delay};
+    });
+
+    return useCallback(
+      debounce(
+        (...args) => {
+          // Don't execute callback, if (1) component in the meanwhile
+          // has been unmounted or (2) delay has changed
+          if (inputsRef.current.delay === delay && isMounted()) inputsRef.current.cb(...args);
+        },
+        delay,
+        options,
+      ),
+      [delay, debounce],
+    );
+  };
+
   const onSearchMap = () => {
-    navigation.navigate('SearchMap', {data: {...locationData, ...MAP_DELTA_LOW}, setData: setLocationData});
+    navigation.navigate('SearchMap', {data: {...locationData, ...MAP_DELTA_LOW}, setData: setMapData});
+  };
+
+  const getGooglePlaceAutocomplete = async ({searchString}) => {
+    try {
+      setSearchLoading(true);
+
+      const accessToken = await AsyncStorage.getItem('accessToken');
+      const authorizationHeader = `Bearer ${accessToken}`;
+
+      const apiResult = await axios({
+        url: `${ENVIRONMENTS.TOKTOK_SERVER}/graphql`,
+        method: 'post',
+        headers: {
+          Authorization: authorizationHeader,
+        },
+        data: {
+          query: `
+                query {
+                  getGooglePlaceAutocomplete(input:{
+                    searchString: "${searchString}"
+            
+                    sessionToken: "${sessionToken}"
+                  }) {
+                    payload
+                    predictions {
+                      formattedAddress
+                      placeId
+                    }
+                  }
+                }
+                `,
+        },
+      });
+
+      if (apiResult.data.data.getGooglePlaceAutocomplete) {
+        setSearchresult(apiResult.data.data.getGooglePlaceAutocomplete);
+      }
+      setSearchLoading(false);
+    } catch (error) {
+      console.log({error});
+      setSearchLoading(false);
+    }
+  };
+
+  const debouncedGetGooglePlaceAutocomplete = useDebounce(
+    value => getGooglePlaceAutocomplete({searchString: value}),
+    1000,
+  );
+
+  const onChangeText = value => {
+    console.log({value});
+
+    setSearchText(value);
+
+    // if (value.length < 3) {
+    //   onSearchResultChange({
+    //     payload: {
+    //       success: null, // Means no result yet. Show Loading
+    //     },
+    //     predictions: [],
+    //   });
+
+    //   return;
+    // }
+
+    if (value.length >= 3) {
+      debouncedGetGooglePlaceAutocomplete(value);
+    }
   };
 
   return (
@@ -169,41 +228,47 @@ const AddLocation = ({navigation, route, session}) => {
       <Text style={styles.label}>Location Name</Text>
       <TextInput
         value={locationName}
-        onChangeText={(value) => setLocationName(value)}
+        onChangeText={value => setLocationName(value)}
         style={styles.input}
         placeholder="Location name"
         placeholderTextColor={LIGHT}
         returnKeyType="done"
       />
-      <View style={{height: 20}} />
-      <View style={{flex: 1, marginHorizontal: 20}}>
-        <GooglePlacesInput onLocationSelect={onLocationSelect} />
-      </View>
-
+      <Text style={styles.label}>Search Location</Text>
+      <TextInput
+        value={searchText}
+        placeholder="Search Location"
+        onChangeText={onChangeText}
+        placeholderTextColor={LIGHT}
+        style={styles.input}
+      />
+      <View style={{height: 10}} />
+      {!searchLoading && searchText !== '' && (
+        <AutocompleteResult
+          searchResult={searchResult}
+          sessionToken={sessionToken}
+          setSessionToken={setSessionToken}
+          onLocationSelect={onLocationSelect}
+          setSearchText={setSearchText}
+        />
+      )}
+      {searchLoading && searchText !== '' && <SearchLoadingIndicator />}
+      <View style={{flex: 1}} />
       <TouchableHighlight onPress={onSave} underlayColor={COLOR} style={{borderRadius: 10, margin: 20}}>
         <View style={styles.submit}>
           <Text style={{color: COLOR, fontSize: 16}}>Save</Text>
         </View>
       </TouchableHighlight>
-
-      {/* <ScrollView contentContainerStyle={{marginTop: 20}} showsVerticalScrollIndicator={false}>
-        <SavedLocation />
-        <SavedLocation />
-        <SavedLocation />
-        <SavedLocation />
-        <SavedLocation />
-        <SavedLocation />
-      </ScrollView> */}
     </View>
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   session: state.session,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  createSession: (payload) => dispatch({type: 'CREATE_SESSION', payload}),
+const mapDispatchToProps = dispatch => ({
+  createSession: payload => dispatch({type: 'CREATE_SESSION', payload}),
 });
 
 export const ToktokAddLocation = connect(mapStateToProps, mapDispatchToProps)(AddLocation);

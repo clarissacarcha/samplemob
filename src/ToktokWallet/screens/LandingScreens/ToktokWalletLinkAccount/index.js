@@ -1,7 +1,7 @@
 import React , {useState,useRef,useEffect} from 'react'
 import {View,Text,StyleSheet,Platform,KeyboardAvoidingView,TextInput,TouchableOpacity,Image,Dimensions} from 'react-native'
 import { HeaderBack, HeaderTitle, YellowButton } from 'src/revamp'
-import { DisabledButton, NumberBoxes, Separator , BuildingBottom} from 'toktokwallet/components'
+import { DisabledButton, NumberBoxes, Separator , BuildingBottom,CheckIdleState} from 'toktokwallet/components'
 import { TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT } from 'src/graphql/'
 import { PATCH_LINK_TOKWA_ACCOUNT , GET_LINK_ACCOUNT_OTP , VERIFY_LINK_ACCOUNT_OTP } from 'toktokwallet/graphql'
 import { useMutation , useLazyQuery } from '@apollo/react-hooks'
@@ -44,7 +44,7 @@ export const ToktokWalletLinkAccount = ({navigation, route})=> {
                 setPinCode("")
                 return setErrorMessage(graphQLErrors[0].message)
             }
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation})
         }
     })
 
@@ -70,7 +70,7 @@ export const ToktokWalletLinkAccount = ({navigation, route})=> {
             })
         },
         onError: (error)=>{
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation})
         }
     })
 
@@ -83,7 +83,7 @@ export const ToktokWalletLinkAccount = ({navigation, route})=> {
             //  return navigation.replace("ToktokWalletHomePage")
         },
         onError: (error)=>{
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation})
         }
     })
 
@@ -129,7 +129,7 @@ export const ToktokWalletLinkAccount = ({navigation, route})=> {
     },[otpTimer])
 
     return (
-        <>
+        <CheckIdleState>
         <AlertOverlay visible={loading} />
         <SuccessfulModal visible={successModalVisible} setVisible={setSuccessModalVisible}/>
         <Separator/>
@@ -183,7 +183,7 @@ export const ToktokWalletLinkAccount = ({navigation, route})=> {
 
         </KeyboardAvoidingView>
       
-        </>
+        </CheckIdleState>
     )
 }
 
