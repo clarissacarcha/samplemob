@@ -7,7 +7,7 @@ import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import { POST_ACCOUNT_RECOVERY , POST_REQUEST_ACCOUNT_RECOVERY_OTP } from 'toktokwallet/graphql'
 import { useMutation } from '@apollo/react-hooks'
 import { onErrorAlert } from 'src/util/ErrorUtility'
-import { useAlert } from 'src/hooks'
+import { useAlert , usePrompt } from 'src/hooks'
 import { useNavigation } from '@react-navigation/native'
 import { AlertOverlay } from 'src/components'
 import { TransactionUtility } from 'toktokwallet/util'
@@ -43,6 +43,7 @@ const Confirm = ({
 })=> {
 
     const alert = useAlert();
+    const prompt = usePrompt();
     const navigation = useNavigation();
     const [visible,setVisible] = useState(false)
 
@@ -55,7 +56,7 @@ const Confirm = ({
             })
         },
         onError: (error)=> {
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation,title: "Transaction Void"})
         }
 
     })
