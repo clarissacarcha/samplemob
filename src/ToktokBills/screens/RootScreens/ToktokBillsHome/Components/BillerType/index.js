@@ -45,11 +45,12 @@ const styles = StyleSheet.create({
     margin: 5,
     ...SHADOW,
     backgroundColor: "white",
-    borderRadius: 5
+    borderRadius: 5,
+    padding: moderateScale(10)
   },
   itemLogo: {
-    height: moderateScale(60),
-    width: moderateScale(60)
+    height: moderateScale(50),
+    width: moderateScale(50)
   },
   itemName: {
     fontFamily: FONT.REGULAR,
