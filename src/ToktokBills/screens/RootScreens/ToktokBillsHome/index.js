@@ -31,7 +31,7 @@ export const ToktokBillsHome = ({navigation,route})=> {
   const [billTypes, setBillTypes] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
 
-  const [getBillTypes, {data, loading, error, refetch}] = useLazyQuery(GET_BILL_TYPES, {
+  const [getBillTypes, {loading, error, refetch}] = useLazyQuery(GET_BILL_TYPES, {
     fetchPolicy: "cache-and-network",
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
     onError: () => { setRefreshing(false) },

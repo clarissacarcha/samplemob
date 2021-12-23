@@ -54,12 +54,13 @@ export const ToktokLoadEnterPinCode = ({navigation, route})=> {
       });
     },
     onCompleted: ({ postTransaction }) => {
-      prompt({
-        type: "success",
-        title: "Thank you",
-        message: `₱ ${numberFormat(loadDetails.amount)} prepaid credit was loaded to your mobile number`,
-        onPress: () => { navigation.navigate("ToktokLoadReceipt", { receipt: postTransaction.data  }) }
-      });
+      // prompt({
+      //   type: "success",
+      //   title: "Thank you",
+      //   message: `₱ ${numberFormat(loadDetails.amount)} prepaid credit was loaded to your mobile number`,
+      //   onPress: () => { navigation.navigate("ToktokLoadReceipt", { receipt: postTransaction.data  }) }
+      // });
+      navigation.navigate("ToktokLoadReceipt", { receipt: postTransaction.data  })
     }
   })
 

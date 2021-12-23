@@ -25,6 +25,19 @@ export const ToktokLandingHome = ({navigation}) => {
         return;
       }
 
+      if (notification.additionalData.classification === 'toktokbills') {
+        setTimeout(() => {
+          navigation.navigate('ToktokBillsHome');
+        }, 10);
+        return;
+      }
+
+      if (notification.additionalData.classification === 'toktokload') {
+        setTimeout(() => {
+          navigation.navigate('ToktokLoadHome');
+        }, 10);
+        return;
+      }
       const type = notification.additionalData.type;
 
       if (type) {

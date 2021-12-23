@@ -98,11 +98,13 @@ export const LoadList = ({ networkId, navigation, mobileNumber }) => {
   const ListEmptyComponent = () => {
     return (
       <View style={styles.emptyContainer}>
-        <Text>Empty List</Text>
+        {!getLoadItemsLoading && (
+          <Text>No load item available</Text>
+        )}
       </View>
     )
   }
-
+ 
   if(getLoadItemsError){
     return (
       <View style={styles.container}>
@@ -156,6 +158,7 @@ const styles = StyleSheet.create({
   emptyContainer: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    backgroundColor: "white"
   }
 })

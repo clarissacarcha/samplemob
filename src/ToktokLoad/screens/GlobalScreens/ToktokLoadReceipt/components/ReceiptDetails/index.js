@@ -12,7 +12,7 @@ export const ReceiptDetails = ({ route }) => {
 
   const { receipt } = route.params;
   const { amount, referenceNumber, destinationNumber, createdAt } = receipt;
-  const transactionDateTime = moment(createdAt).format("lll");
+  const transactionDateTime = `${moment(createdAt).format("ll")} - ${moment(createdAt).format("LT")}`;
 
   return (
     <>
@@ -32,17 +32,18 @@ export const ReceiptDetails = ({ route }) => {
         </View>
         <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
           <Text style={styles.title}>Load Amount </Text>
-          <Text style={styles.description}>{amount.toFixed(2)}</Text>
+          <Text style={styles.description}>PHP {amount.toFixed(2)}</Text>
         </View>
         <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
           <Text style={styles.title}>Discount </Text>
-          <Text style={styles.description}>0.00</Text>
+          <Text style={styles.description}>PHP 0.00</Text>
         </View>
         <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
           <Text style={styles.title}>Status </Text>
           <Text style={styles.description}>Success</Text>
         </View>
       </View>
+      <View style={styles.line} />
     </>
   );
 };
