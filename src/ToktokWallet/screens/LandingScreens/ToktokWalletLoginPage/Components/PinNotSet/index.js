@@ -16,7 +16,7 @@ export const PinNotSet = ()=> {
                 <Image source={require("toktokwallet/assets/images/error.png")}/>
                 <Text style={styles.title}>Sorry your toktokwallet can't be used in this device.</Text>
                 <Text style={styles.message}>
-                        Either the Password/PIN/Pattern lock screen has not been set in your phone's settings or this device does not support the specified lock screen options
+                        Either the Password/PIN/Pattern lock screen has not been set in your phone's settings or this device does not support the specified lock screen options.
                 </Text>
                 </View>
                 <View style={{height: 50}}>
