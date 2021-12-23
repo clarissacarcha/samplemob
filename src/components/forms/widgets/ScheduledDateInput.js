@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
-import moment from 'moment';
+import moment from 'moment-timezone';
 
 import {COLOR, MEDIUM, COLOR_UNDERLAY} from '../../../res/constants';
 

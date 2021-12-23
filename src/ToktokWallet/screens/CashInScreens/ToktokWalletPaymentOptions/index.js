@@ -33,7 +33,7 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         fetchPolicy: 'network-only',
         onError: (error)=> {
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error, navigation})
         }
     })
 

@@ -1,22 +1,29 @@
 import gql from 'graphql-tag'
 
 
+// export const GET_ACCOUNT = gql`
+//     query getAccount($input: GetAccountInput){
+//         getAccount(input: $input){
+//             id
+//             mobileNumber
+//             status
+//             motherId
+//             person {
+//                 id
+//                 firstName
+//                 middleName
+//                 lastName
+//             }
+//         }
+//     }
+// `
+
 export const GET_ACCOUNT = gql`
     query getAccount($input: GetAccountInput){
         getAccount(input: $input){
             id
             mobileNumber
-            status
-            motherId
-            person {
-                id
-                firstName
-                middleName
-                lastName
-            }
-            wallet {
-                id
-            }
+            person
         }
     }
 `
@@ -74,7 +81,7 @@ export const PATCH_PIN_CODE = gql`
 `
 
 export const PATCH_MPIN_CODE = gql`
-    mutation patchMPinCode($input: PatchPinCodeInput){
+    mutation patchMPinCode($input: PatchMPinCodeInput){
         patchMPinCode(input: $input)
     }
 `
@@ -87,7 +94,9 @@ export const VERIFY_PIN_CODE = gql`
 
 export const GET_VERIFY_MPIN = gql`
     query getVerifyMPIN($input: GetVerifyMPINInput){
-        getVerifyMPIN(input: $input)
+        getVerifyMPIN(input: $input){
+            verifiedToken
+        }
     }
 `
 

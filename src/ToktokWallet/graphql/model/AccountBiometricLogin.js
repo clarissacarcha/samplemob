@@ -16,7 +16,7 @@ export const GET_REGISTERED_BIOMETRIC = gql`
 export const GET_VERIFY_SIGNATURE = gql`
     query getVerifySignature($input: GetVerifySignatureInput!){
         getVerifySignature(input: $input){
-            result
+            verifiedToken
         }
     }
 `
@@ -33,3 +33,9 @@ export const POST_FORCE_DISABLE = gql`
     }
 `
 
+
+export const POST_VERIFY_ANSWERS = gql`
+    mutation postVerifyAnswers($input: PostVerifyAnswersInput){
+        postVerifyAnswers(input: $input)
+    }
+`

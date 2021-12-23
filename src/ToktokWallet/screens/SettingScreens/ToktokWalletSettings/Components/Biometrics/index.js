@@ -1,5 +1,5 @@
 import React, { useState , useEffect } from 'react'
-import {View,Text,StyleSheet,Switch,Platform,Linking} from 'react-native'
+import {View,Text,StyleSheet,Switch,Platform,Linking, Alert} from 'react-native'
 import {AlertOverlay} from 'src/components'
 import { useDispatch } from 'react-redux'
 import { PromptModal } from 'toktokwallet/components'
@@ -58,6 +58,8 @@ export const Biometrics = ()=> {
 
     const checkSensor = async ()=> {
         const { available, biometryType } = await ReactNativeBiometrics.isSensorAvailable()
+
+
         if (available && biometryType === ReactNativeBiometrics.TouchID) {
           setSensorType("TouchID")
           setIsSensorAvailable(true)
@@ -73,9 +75,9 @@ export const Biometrics = ()=> {
           setIsSensorAvailable(false)
         }
 
-        // const deviceBio = await isPinOrFingerprintSet();
-        // const fingerPrint = await getFingerprint()
-        // setDeviceHasBio((deviceBio && fingerPrint && fingerPrint != "") ? true : false)
+        const deviceBio = await isPinOrFingerprintSet();
+        const fingerPrint = await getFingerprint()
+        setDeviceHasBio((deviceBio && fingerPrint && fingerPrint != "") ? true : false)
       }
     
       useEffect(()=>{
@@ -147,9 +149,9 @@ export const Biometrics = ()=> {
     //     return null
     // }
 
-    // if(!deviceHasBio){
-    //     return null
-    // }
+    if(!deviceHasBio){
+        return null
+    }
 
     return (
         <>

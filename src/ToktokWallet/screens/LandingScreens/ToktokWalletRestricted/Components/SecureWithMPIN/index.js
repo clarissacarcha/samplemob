@@ -20,7 +20,7 @@ const Reminder = ({children})=> {
 
 
 export const SecureWithMPIN = ({navigation,walletinfo})=> {
-
+  
     return (
         <View style={styles.container}>
             <View style={{alignItems:"center",marginTop: 10,flex:1 ,}}>

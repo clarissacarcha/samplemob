@@ -46,7 +46,7 @@ const PabiliPartners = ({orderData, setOrderData}) => {
   //#endregion
 
   //#region FUNCTIONS
-  const onBranchSelect = (selectedBranch) => {
+  const onBranchSelect = selectedBranch => {
     navigation.pop();
 
     const updatedOrderData = {
@@ -77,13 +77,13 @@ const PabiliPartners = ({orderData, setOrderData}) => {
   return (
     <View style={{flex: 1}}>
       <Text style={styles.title}>Pabili Partners</Text>
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{marginHorizontal: 10}}>
-        <FlatList
-          data={data.getPartners}
-          renderItem={({item, index}) => <Partner partner={item} onBranchSelect={onBranchSelect} />}
-          numColumns={3}
-        />
-      </ScrollView>
+      <FlatList
+        contentContainerStyle={{marginHorizontal: 10}}
+        disableVirtualization={true}
+        data={data.getPartners}
+        renderItem={({item, index}) => <Partner partner={item} onBranchSelect={onBranchSelect} />}
+        numColumns={3}
+      />
     </View>
   );
 };

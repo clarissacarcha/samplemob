@@ -4,8 +4,12 @@ import {Separator,CheckIdleState,PepQuestionnaireModal} from 'toktokwallet/compo
 import { HeaderBack, HeaderTitle , VectorIcon , ICON_SET , YellowButton} from 'src/revamp';
 import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql';
 import { GET_ENTERPRISE_UPGRADE_REQUEST } from 'toktokwallet/graphql';
-import { useQuery } from '@apollo/react-hooks';
+import { useQuery , useLazyQuery } from '@apollo/react-hooks';
 import { SomethingWentWrong } from 'src/components';
+import { useNavigation } from '@react-navigation/native';
+import { useAlert } from 'src/hooks';
+import { onErrorAlert } from 'src/util/ErrorUtility';
+import {AlertOverlay} from 'src/components';
 import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS
@@ -30,51 +34,51 @@ const MainComponent = ({navigation})=> {
     const { setForms , validID1, validID2 , pepInfo , setPepInfo } = useContext(ContextEnterpriseApplication)
     const IDTypeRef = useRef()
     const [idIndex,setIDIndex] = useState(1)
-    const [showPepQuestionnaire,setShowPepQuestionnaire] = useState(true)
-
+    const alert = useAlert();
+    const [data,setData] = useState(null)
     const onPress = (index)=> {
         setIDIndex(index)
         IDTypeRef.current.expand()
     }
 
-    const {data ,error , loading } = useQuery(GET_ENTERPRISE_UPGRADE_REQUEST , {
+    const [getEnterpriseUpgradeRequest, { loading }] = useLazyQuery(GET_ENTERPRISE_UPGRADE_REQUEST , {
         fetchPolicy:"network-only",
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+        onCompleted: ({getEnterpriseUpgradeRequest})=> {
+            console.log(JSON.stringify(getEnterpriseUpgradeRequest))
+        },
+        onError: (error)=> onErrorAlert({alert,error,navigation})
     })
 
+    useEffect(()=>{
+        getEnterpriseUpgradeRequest()
+    },[])
+
     if(loading){
-        return (
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            <ActivityIndicator size={24} color={COLOR.YELLOW} />
-        </View>
-        );
+        return <AlertOverlay visible={loading}/>
     }
 
-    if(error){
-        return <SomethingWentWrong/>
-    }
-
-    if(data?.getEnterpriseUpgradeRequest?.status == 2 || data?.getEnterpriseUpgradeRequest?.status == 5){
+    if(data?.status == 2 || data?.status == 5){
         return (
             <>
                 <Separator/>
-                <PendingRequest enterpriseRequest={data.getEnterpriseUpgradeRequest}/>
+                <PendingRequest enterpriseRequest={data}/>
             </>
         )
     }
 
-    if(data?.getEnterpriseUpgradeRequest?.status == 3){
+    if(data?.status == 3){
         // Status is for compliance
         return (
             <>
             <Separator/>
-            <SetRequestRecords data={data.getEnterpriseUpgradeRequest}/>
+            <SetRequestRecords data={data}/>
             <ScrollView style={styles.container}>
                 <HeaderReminders/>
                 <UploadForms/>
                 <TakePhotoID onPress={onPress}/>
                 </ScrollView>
-                <Resubmit id={data.getEnterpriseUpgradeRequest.id}/>
+                <Resubmit id={data.id}/>
                 <BottomSheetIDType 
                     ref={IDTypeRef} 
                     idIndex={idIndex} 
@@ -85,6 +89,7 @@ const MainComponent = ({navigation})=> {
             </>
         )
     }
+
 
     return (
         <>
@@ -114,6 +119,7 @@ const MainComponent = ({navigation})=> {
         />
         </>
     )
+
 }
 
 export const ToktokWalletEnterpriseApplication = ({navigation})=> {
@@ -123,11 +129,11 @@ export const ToktokWalletEnterpriseApplication = ({navigation})=> {
         headerTitle: ()=> <HeaderTitle label={['Enterprise','']}/>,
     })
     return (
-        <CheckIdleState>
+        <>
             <ContextProvider>
                 <MainComponent navigation={navigation}/>
             </ContextProvider>
-        </CheckIdleState>
+        </>
     )
 }
 

@@ -5,10 +5,10 @@ import Splash from './Splash';
 
 import {
   ApolloProvider,
+  PromptProvider,
   // ElementsProvider,
   // KeyboardProvider,
   // OneSignalProvider,
-  PromptProvider,
   ReduxProvider,
   // SubscriptionProvider,
 } from '../provider';
@@ -19,13 +19,13 @@ console.disableYellowBox = true;
 const App = () => {
   return (
     <>
-      <StatusBar barStyle="dark-content" backgroundColor="white" />
+      <StatusBar barStyle="dark-content" />
       <SafeAreaView style={styles.safeArea}>
         <ReduxProvider>
           <ApolloProvider>
             <AlertProvider>
               <PromptProvider>
-                  <Splash />
+                <Splash />
               </PromptProvider>
             </AlertProvider>
           </ApolloProvider>

@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import ContentLoader from 'react-native-easy-content-loader';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import {COLORS, FONTS, NUMBERS, SIZES, MEDIUM} from '../../../../../res/constants';
 import {FONT, COLOR, SIZE, FONT_SIZE} from '../../../../../res/variables';
 import {WhiteButton, BlackButton, VectorIcon, ICON_SET, Shadow, ImageHeader} from '../../../../../revamp';
@@ -82,7 +82,7 @@ const SCHEDULES = [
   {label: '11:30 PM', value: '23:30:00'},
 ];
 
-const SCHEDULE_TIME = SCHEDULES.map((item) => {
+const SCHEDULE_TIME = SCHEDULES.map(item => {
   return item.label;
 });
 
@@ -93,7 +93,7 @@ const AFTER_SCHEDULES = SCHEDULES.filter(({value}) => {
   return timeMoment.isAfter(TIME_NOW);
 });
 
-const SCHEDULE_TIME_AFTER = AFTER_SCHEDULES.map((item) => {
+const SCHEDULE_TIME_AFTER = AFTER_SCHEDULES.map(item => {
   return item.label;
 });
 
@@ -123,7 +123,7 @@ const createDays = () => {
 
 const SCHEDULESB = createDays();
 
-const SCHEDULE_DAYS = createDays().map((item) => {
+const SCHEDULE_DAYS = createDays().map(item => {
   return item.label;
 });
 
@@ -174,7 +174,7 @@ const Pabili = ({navigation, session, route}) => {
 
   const AlertHook = useAlert();
 
-  const onSenderConfirm = (value) => {
+  const onSenderConfirm = value => {
     setOrderData({
       ...orderData,
       senderStop: value,
@@ -190,7 +190,7 @@ const Pabili = ({navigation, session, route}) => {
     });
   };
 
-  const onRecipientConfirm = (value) => {
+  const onRecipientConfirm = value => {
     setOrderData({
       ...orderData,
       recipientStop: [value],
@@ -214,7 +214,7 @@ const Pabili = ({navigation, session, route}) => {
     });
   };
 
-  const setRecipientStop = (value) => {
+  const setRecipientStop = value => {
     setOrderData({
       ...orderData,
       recipientStop: value,
@@ -351,7 +351,7 @@ const Pabili = ({navigation, session, route}) => {
           onSenderPress={onSenderPress}
           onRecipientPress={onRecipientPress}
           setRecipientStop={setRecipientStop}
-          onLocationDetected={(coordinates) => {
+          onLocationDetected={coordinates => {
             setUserCoordinates(coordinates);
           }}
           routeParams={route.params}
@@ -510,11 +510,11 @@ const Pabili = ({navigation, session, route}) => {
                 }
               }
 
-              const formattedDate = SCHEDULESB.find((date) => {
+              const formattedDate = SCHEDULESB.find(date => {
                 return date.label === scheduledDate;
               });
 
-              const formattedTime = SCHEDULES.find((date) => {
+              const formattedTime = SCHEDULES.find(date => {
                 return date.label === scheduledTime;
               });
 
@@ -682,7 +682,7 @@ const Pabili = ({navigation, session, route}) => {
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   session: state.session,
 });
 

@@ -1,0 +1,1 @@
+export PickUpDetails from './PickUpDetails';

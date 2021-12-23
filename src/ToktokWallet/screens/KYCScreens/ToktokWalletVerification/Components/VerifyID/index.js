@@ -29,7 +29,8 @@ export const VerifyID = ()=> {
         backImage, 
         setBackImage,
         isBackRequired, 
-        setIsbackRequired
+        setIsbackRequired,
+        setCacheImagesList
     } = useContext(VerifyContext)
 
     const navigation = useNavigation()
@@ -37,6 +38,9 @@ export const VerifyID = ()=> {
 
     const setImage = (data, placement)=> {
         console.log(data, placement)
+        setCacheImagesList(state=> {
+            return [...state, data.uri]
+        })
         if(placement == "front") setFrontImage(data)
         else if(placement == "back") setBackImage(data)
     }

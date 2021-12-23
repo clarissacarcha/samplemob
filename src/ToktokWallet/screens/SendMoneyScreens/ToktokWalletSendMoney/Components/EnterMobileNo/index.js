@@ -1,5 +1,5 @@
-import React , {useState, useEffect , useRef,useContext} from 'react'
-import {View,Text,StyleSheet,TextInput,TouchableOpacity,Dimensions,Image} from 'react-native'
+import React , {useState, useEffect , useRef} from 'react'
+import {View,Text,StyleSheet,TextInput,TouchableOpacity,Dimensions, Alert} from 'react-native'
 import {useLazyQuery} from '@apollo/react-hooks'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import { GET_ACCOUNT } from 'toktokwallet/graphql'
@@ -173,7 +173,12 @@ export const EnterMobileNo = ({
             <View style={styles.content}>
                 <TouchableOpacity onPress={()=>{
                     return inputMobileRef.current.focus()
-                }} style={{flex: 1,justifyContent:"center",paddingHorizontal: 10, height:50,position:"relative"}}>
+                }} style={{flex: 1,justifyContent:"center",paddingHorizontal: 10, height:50}}>
+                    <>
+                    { recipientDetails.id && proceed && <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>{`${recipientDetails.person}`}</Text>}
+                    <Text style={{fontFamily: FONT.REGULAR,fontSize: recipientDetails.id && proceed ? FONT_SIZE.M : FONT_SIZE.M,color:"dimgray"}}>{mobileNo == "" ? "Enter Recipient Number" : mobileNo}</Text>
+                    { errorMessage != "" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.S,color:COLOR.RED,marginTop: 0}}>{errorMessage}</Text>}
+
                 
                     <View style={{flex: 1,position:"relative"}}>
                      { recipientDetails.id && proceed && <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M,position:"absolute",marginTop:5}}>{`${recipientDetails.person.firstName} ${recipientDetails.person.lastName[0]}.`}</Text>}
@@ -195,6 +200,7 @@ export const EnterMobileNo = ({
                           
                        {errorMessage != "" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.XS,color:COLOR.RED,marginTop: -5}}>{errorMessage}</Text>}
                      </View>
+                     </>
                 </TouchableOpacity>
                 {
                     recipientDetails.id && errorMessage == "" &&

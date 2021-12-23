@@ -6,7 +6,7 @@ import { TransactionUtility } from 'toktokwallet/util'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import { POST_REQUEST_SEND_MONEY , POST_SEND_MONEY } from 'toktokwallet/graphql'
 import {useNavigation} from '@react-navigation/native'
-import {useAlert} from 'src/hooks/useAlert'
+import {useAlert, usePrompt} from 'src/hooks'
 import {onErrorAlert} from 'src/util/ErrorUtility'
 import { YellowButton } from 'src/revamp'
 import { AlertOverlay } from 'src/components'
@@ -22,6 +22,7 @@ export const ProceedButton = ({
     recipientInfo
 })=> {
 
+    const prompt = usePrompt()
     const navigation = useNavigation()
     const alert = useAlert()
     const [successModalVisible, setSuccessModalVisible] = useState(false)
@@ -45,7 +46,7 @@ export const ProceedButton = ({
             })
         },
         onError: (error)=>{
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation,title: "Transaction Void"})
         }
     })
 
@@ -59,8 +60,7 @@ export const ProceedButton = ({
             TransactionUtility.StandardErrorHandling({
                 error,
                 navigation,
-                alert,
-                onErrorAlert,      
+                prompt      
             })
         }
     })
@@ -131,8 +131,8 @@ export const ProceedButton = ({
             <View style={styles.container}>
                     {
                         swipeEnabled
-                        ? <YellowButton label="Proceed" onPress={reviewAndConfirm}/>
-                        : <DisabledButton label="Proceed"/>
+                        ? <YellowButton label="Confirm" onPress={reviewAndConfirm}/>
+                        : <DisabledButton label="Confirm"/>
                     }
             </View>
         </>

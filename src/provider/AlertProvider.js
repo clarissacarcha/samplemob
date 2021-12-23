@@ -6,6 +6,7 @@ const initialState = {
   message: '',
   buttonLabel: '',
   actionButtons: [],
+  title: null,
 };
 
 export const AlertContext = createContext(initialState);
@@ -14,12 +15,13 @@ const {Provider} = AlertContext;
 const AlertProvider = ({children}) => {
   const [alertState, setAlertState] = useState(initialState);
 
-  const alert = ({message, buttonLabel, actionButtons}) => {
+  const alert = ({message, buttonLabel, actionButtons , title}) => {
     setAlertState({
       visible: true,
       message,
       buttonLabel,
       actionButtons,
+      title
     });
   };
 

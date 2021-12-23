@@ -6,7 +6,7 @@ import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import {POST_CASH_OUT_OTHER_BANKS , POST_REQUEST_CASH_OUT } from 'toktokwallet/graphql'
 import { useMutation } from '@apollo/react-hooks'
 import { onErrorAlert } from 'src/util/ErrorUtility'
-import { useAlert } from 'src/hooks'
+import { useAlert, usePrompt } from 'src/hooks'
 import { numberFormat } from 'toktokwallet/helper'
 import { useSelector } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
@@ -178,6 +178,7 @@ const AccountInfo = ({selectBanks, errorListMessage })=> {
 
 export const FundTransferForm = ({selectBanks, screenLabel})=> {
 
+    const prompt = usePrompt()
     const tokwaAccount = useSelector(state=>state.toktokWallet)
     const alert = useAlert()
     const navigation = useNavigation()
@@ -239,7 +240,7 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
            
         },
         onError: (error)=>{
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation,title: "Transaction Void"})
         }
     })
 
@@ -261,8 +262,7 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
             TransactionUtility.StandardErrorHandling({
                 error,
                 navigation,
-                alert,
-                onErrorAlert,
+                prompt
             })
         }
     })

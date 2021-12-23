@@ -1,24 +1,20 @@
-import React, {useState, useRef, useEffect, useCallback} from 'react';
-import {Text, View, TextInput, StyleSheet, FlatList} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {throttle, debounce} from 'lodash';
+import React, {useState} from 'react';
+import {View, StyleSheet, FlatList} from 'react-native';
 import {useLazyQuery} from '@apollo/react-hooks';
 import uuid from 'react-native-uuid';
 import {GET_GOOGLE_PLACE_DETAILS} from '../../../../../graphql';
-import {WhiteButton, TouchableIcon} from '../../../../../revamp';
-import {LIGHT, PROTOCOL, HOST_PORT, DIRTY_WHITE} from '../../../../../res/constants';
+import {WhiteButton} from '../../../../../revamp';
+import {DIRTY_WHITE} from '../../../../../res/constants';
 import {COLOR} from '../../../../../res/variables';
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
 const AutocompleteResult = ({searchResult, sessionToken, setSessionToken, onLocationSelect, setSearchText}) => {
-  const navigation = useNavigation();
-
   const [selectedFormattedAddress, setSelectedFormattedAddress] = useState('');
 
   const [getGooglePlaceDetails, {loading}] = useLazyQuery(GET_GOOGLE_PLACE_DETAILS, {
     fetchPolicy: 'network-only',
-    onCompleted: (data) => {
+    onCompleted: data => {
       console.log({result: data.getGooglePlaceDetails.location});
       setSessionToken(uuid.v4()); // Use new sessionToken after Place Details Request
       onLocationSelect({
@@ -26,31 +22,11 @@ const AutocompleteResult = ({searchResult, sessionToken, setSessionToken, onLoca
         addressBreakdownHash: data.getGooglePlaceDetails.addressBreakdownHash,
         formattedAddress: selectedFormattedAddress,
       });
-
-      // navigation.setOptions({
-      //   headerShown: false,
-      // });
     },
   });
 
   const onResultSelect = ({prediction}) => {
     setSelectedFormattedAddress(prediction.formattedAddress);
-    getGooglePlaceDetails({
-      variables: {
-        input: {
-          placeId: prediction.placeId,
-          sessionToken: sessionToken,
-        },
-      },
-    });
-
-    // navigation.push('StopDetails');
-  };
-
-  const onPredictionSelect = async (prediction) => {
-    console.log({prediction});
-    setText(prediction.formattedAddress);
-    setResult(INITIAL_RESULT);
     getGooglePlaceDetails({
       variables: {
         input: {

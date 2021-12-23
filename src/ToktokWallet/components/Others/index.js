@@ -1,6 +1,6 @@
 export * from "./BuildingBottom";
 export * from "./CheckIdleState";
-export * from "./NoData";
+export * from "./FlagSecureScreen";
 export * from "./Receipt";
 export * from "./Separator";
 export * from "./SwipeDownToRefresh";

@@ -7,7 +7,7 @@ import {onError, onErrorAlert} from 'src/util/ErrorUtility'
 import {useNavigation} from '@react-navigation/native'
 import {BuildingBottom, DisabledButton, NumberBoxes} from 'toktokwallet/components'
 import { YellowButton } from 'src/revamp';
-import { useAlert } from 'src/hooks';
+import { useAlert, usePrompt } from 'src/hooks';
 import { AlertOverlay } from 'src/components';
 import CONSTANTS from 'common/res/constants'
 import { TransactionUtility } from '../../../../../../util/TransactionUtility';
@@ -28,31 +28,33 @@ const numWordArray = {
     "10": "ten"
 }
 
-export const VerifyPin = ({pageIndex,setPageIndex})=> {
+export const VerifyPin = ({pageIndex,setPageIndex,setOldTPIN})=> {
 
+    const prompt = usePrompt()
     const [showPin,setShowPin] = useState(false)
     const [pinCode,setPinCode] = useState("")
     const inputRef = useRef();
     const navigation = useNavigation()
     const alert = useAlert()
 
-    const [pinCodeAttempt,setPinCodeAttempt] = useState(0)
+    const [pinCodeAttempt, setPinCodeAttempt] = useState(0);
+    const [errorMessage, setErrorMessage] = useState("");
 
     const [verifyPinCode, {data ,error , loading }] = useLazyQuery(VERIFY_PIN_CODE, {
         fetchPolicy: "network-only",
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({verifyPinCode})=>{
             setPageIndex(state=>state+1)
+            setOldTPIN(pinCode)
         },
         onError: (error)=> {
             // onErrorAlert({alert, error})
             TransactionUtility.StandardErrorHandling({
-                alert,
                 error,
                 navigation,
-                onErrorAlert,
-                setPinCodeAttempt
-            })
+                prompt,
+                setErrorMessage
+            });
         }
     })
 
@@ -75,13 +77,13 @@ export const VerifyPin = ({pageIndex,setPageIndex})=> {
     const forgotPIN = ()=>{
         navigation.navigate("ToktokWalletRecoveryMethods" , {type: "TPIN"})
     }
-
+   
     return (
         <>
          <AlertOverlay visible={loading} />
         <View style={styles.container}>
             <ScrollView style={styles.content}>
-                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 20,alignSelf:"center"}}>Enter old TPIN</Text>
+                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 20,alignSelf:"center"}}>Enter Old TPIN</Text>
                     <View style={{position: 'relative',marginTop: 40,padding: 16,}}>
                         <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={showPin}/>
                         <TextInput
@@ -99,8 +101,10 @@ export const VerifyPin = ({pageIndex,setPageIndex})=> {
                             }}
                             onSubmitEditing={pinCode.length == 6 ? onSubmit: null}
                         />
-                         {
-                            pinCodeAttempt > 0 && <Text style={{fontFamily: FONT.REGULAR,color:"red",alignSelf:"center",fontSize: 12,textAlign:'center'}}>Incorrect TPIN. You can try {numWordArray[pinCodeAttempt]} ({pinCodeAttempt}) more {pinCodeAttempt == 1 ? "time" : "times"} before your account will be temporarily blocked.</Text>
+                        {
+                            !!errorMessage && <Text style={{fontFamily: FONT.REGULAR,color:"red",alignSelf:"center",fontSize: 12,textAlign:'center'}}>
+                                    {errorMessage}
+                                </Text>
                         }
 
                         <TouchableOpacity

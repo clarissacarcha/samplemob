@@ -35,7 +35,7 @@ const ModalLinkMobile = ({visible,setVisible,mobile,provider})=> {
         },
         onError: (error)=>{
             setVisible(false)
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation})
         }
     })
 

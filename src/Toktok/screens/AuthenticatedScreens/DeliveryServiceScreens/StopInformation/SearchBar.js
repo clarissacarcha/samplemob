@@ -1,12 +1,11 @@
-import React, {useState, useRef, useEffect, useCallback} from 'react';
-import {Text, View, TextInput, StyleSheet, TouchableOpacity} from 'react-native';
+import React, {useRef, useEffect, useCallback} from 'react';
+import {TextInput, TouchableOpacity} from 'react-native';
 import {debounce} from 'lodash';
-
 import axios from 'axios';
-
-import {LIGHT, PROTOCOL, HOST_PORT, FONT_REGULAR} from '../../../../../res/constants';
+import AsyncStorage from '@react-native-community/async-storage';
+import ENVIRONMENTS from '../../../../../common/res/environments';
 import {HeaderBack} from '../../../../../components';
-import {COLOR, FONT} from '../../../../../res/variables';
+import {COLOR} from '../../../../../res/variables';
 import {VectorIcon, ICON_SET} from '../../../../../revamp';
 
 const INITIAL_RESULT = {
@@ -97,9 +96,16 @@ const SearchBar = ({
   const getGooglePlaceAutocomplete = async ({searchString}) => {
     try {
       onSearchLoadingChange(true);
+
+      const accessToken = await AsyncStorage.getItem('accessToken');
+      const authorizationHeader = `Bearer ${accessToken}`;
+
       const apiResult = await axios({
-        url: `${PROTOCOL}://${HOST_PORT}/graphql`,
+        url: `${ENVIRONMENTS.TOKTOK_SERVER}/graphql`,
         method: 'post',
+        headers: {
+          Authorization: authorizationHeader,
+        },
         data: {
           query: `
                 query {
@@ -117,12 +123,11 @@ const SearchBar = ({
                 `,
         },
       });
-      // console.log({apiResult});
-      // console.log('LALA');
-      onSearchResultChange(apiResult.data.data.getGooglePlaceAutocomplete);
-      onSearchLoadingChange(false);
 
-      console.log({result: apiResult.data.data.getGooglePlaceAutocomplete});
+      if (apiResult.data.data.getGooglePlaceAutocomplete) {
+        onSearchResultChange(apiResult.data.data.getGooglePlaceAutocomplete);
+      }
+      onSearchLoadingChange(false);
     } catch (error) {
       console.log({error});
       onSearchResultChange(ERROR_RESULT);
@@ -131,11 +136,11 @@ const SearchBar = ({
   };
 
   const debouncedGetGooglePlaceAutocomplete = useDebounce(
-    (value) => getGooglePlaceAutocomplete({searchString: value}),
+    value => getGooglePlaceAutocomplete({searchString: value}),
     1000,
   );
 
-  const onChangeText = async (value) => {
+  const onChangeText = async value => {
     console.log({value});
 
     onSearchTextChange(value);

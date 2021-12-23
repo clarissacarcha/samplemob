@@ -52,7 +52,19 @@ const RecentRecords = ()=> (
       </View>
 
       <View style={styles.transactions}>
-        <FlatList
+        {
+          tokwaAccount?.wallet?.recentTransactions?.map((item,index)=>{
+            return (
+              <WalletLog
+                key={`recentLog${index}`}
+                item={item}
+                itemsLength={tokwaAccount.wallet.recentTransactions}
+                index={index}
+              />
+            )
+          })
+        }
+        {/* <FlatList
           style={{flex: 1, backgroundColor: 'white'}}
           showsVerticalScrollIndicator={false}
           scrollEnabled={true}
@@ -68,7 +80,7 @@ const RecentRecords = ()=> (
               />
             );
           }}
-        />
+        /> */}
       </View>
   </>
 )

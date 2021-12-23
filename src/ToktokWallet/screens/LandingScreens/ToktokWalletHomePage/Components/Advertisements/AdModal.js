@@ -5,8 +5,8 @@ import CONSTANTS from 'common/res/constants'
 const { FONT_SIZE, COLOR , SIZE , FONT_FAMILY: FONT , MARGIN} = CONSTANTS
 const { width } = Dimensions.get("window");
 const SCREEN_WIDTH = width;
-const BANNER_WIDTH = SCREEN_WIDTH - MARGIN.M * 3;
-const BANNER_HEIGHT = BANNER_WIDTH / 2;
+const BANNER_WIDTH = SCREEN_WIDTH;
+const BANNER_HEIGHT = BANNER_WIDTH / 1.5;
 
 const AdModal = ({visible,setVisible,ad})=> {
 
@@ -24,7 +24,7 @@ const AdModal = ({visible,setVisible,ad})=> {
                        <Image
                         style={styles.image}
                         source={{
-                            uri: ad.rectangleImage
+                            uri: ad.squareImage
                         }}
                        />
                        <TouchableOpacity 
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     },
     image: {
         height: BANNER_HEIGHT,
-        width: BANNER_HEIGHT * 2,
+        width: BANNER_HEIGHT,
         borderRadius: SIZE.BORDER_RADIUS,
         overflow: 'hidden',
       },
