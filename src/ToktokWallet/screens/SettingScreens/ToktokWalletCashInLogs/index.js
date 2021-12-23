@@ -6,7 +6,7 @@ import {GET_CASH_IN_LOGS ,TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
 import { GET_CASH_INS} from 'toktokwallet/graphql'
 import {useSelector} from 'react-redux'
 import { numberFormat } from 'toktokwallet/helper'
-import {Separator,TransactionDetails, ModalPaginationLoading} from 'toktokwallet/components'
+import {Separator,TransactionDetails, ModalPaginationLoading , CheckIdleState} from 'toktokwallet/components'
 import { HeaderBack , HeaderTitle} from 'src/revamp'
 import CONSTANTS from 'common/res/constants'
 import { onErrorAlert } from 'src/util/ErrorUtility'
@@ -25,7 +25,7 @@ const CashInLog = ({
 })=> {
 
 
-    const ViewTransactionDetails = ({refNo,refDate, transactionAmount , status,provider , requestNo})=> {
+    const ViewTransactionDetails = ({refNo,refDate, transactionAmount , status,provider,requestNo})=> {
         setTransactionInfo({
             refNo: refNo,
             refDate: refDate,
@@ -33,7 +33,7 @@ const CashInLog = ({
             phrase: `Cash in through ${provider}`,
             amount: transactionAmount,
             status: status,
-            requestNo,
+            requestNo
         })
         setTransactionVisible(true)
     }
@@ -62,7 +62,7 @@ const CashInLog = ({
 
 
     return (
-        <TouchableOpacity
+        <TouchableOpacity 
             onPress={()=>ViewTransactionDetails({
                 refNo,
                 refDate,
@@ -112,7 +112,7 @@ export const ToktokWalletCashInLogs = ({navigation})=> {
         fetchPolicy: "network-only",
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onError: (error) => {
-            onErrorAlert({ alert, error })
+            onErrorAlert({ alert, error , navigation})
         },
         onCompleted: ({getCashIns})=> {
             // setRecords(state=> {
@@ -138,7 +138,7 @@ export const ToktokWalletCashInLogs = ({navigation})=> {
     }
 
     return (
-        <>
+        <CheckIdleState>
         <TransactionDetails 
             visible={transactionVisible}
             setVisible={setTransactionVisible}
@@ -183,7 +183,7 @@ export const ToktokWalletCashInLogs = ({navigation})=> {
             </View>
         }
        
-        </>
+        </CheckIdleState>
     )
 }
 

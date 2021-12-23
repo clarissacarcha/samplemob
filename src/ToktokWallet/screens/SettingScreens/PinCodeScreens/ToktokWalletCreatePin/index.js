@@ -5,7 +5,7 @@ import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import { PATCH_PIN_CODE} from 'toktokwallet/graphql'
 import {useMutation} from '@apollo/react-hooks'
-import {Separator,LeavePromptModal} from 'toktokwallet/components'
+import {Separator,LeavePromptModal,CheckIdleState} from 'toktokwallet/components'
 import {useSelector} from 'react-redux'
 import { onErrorAlert } from 'src/util/ErrorUtility';
 import {useAlert  } from 'src/hooks'
@@ -61,6 +61,7 @@ export const ToktokWalletCreatePin = ({navigation,route})=> {
     // const walletinfo = route.params.walletinfo
     const tokwaAccount = useSelector(state=>state.toktokWallet)
     const [pinCode,setPinCode] = useState("")
+    const [oldTPIN,setOldTPIN] = useState("")
     const [pageIndex,setPageIndex] = useState(tokwaAccount.pinCode ? 0 : 1)
     const [successModalVisible,setSuccessModalVisible] = useState(false)
     const [LeaveModalvisible,setLeaveModalVisible] = useState(false)
@@ -89,7 +90,7 @@ export const ToktokWalletCreatePin = ({navigation,route})=> {
         setSuccessModalVisible(true)
       },
       onError: (error)=> {
-        onErrorAlert({alert,error})
+        onErrorAlert({alert,error,navigation})
       }
     })
 
@@ -97,7 +98,8 @@ export const ToktokWalletCreatePin = ({navigation,route})=> {
       patchPinCode({
         variables: {
           input: {
-            pinCode: pinCode
+            pinCode: pinCode,
+            oldTPIN: oldTPIN
           }
         }
       })
@@ -107,7 +109,7 @@ export const ToktokWalletCreatePin = ({navigation,route})=> {
     const DisplayComponent = ()=> {
         switch(pageIndex){
             case 0:
-                return <VerifyPin pageIndex={pageIndex} setPageIndex={setPageIndex}/>
+                return <VerifyPin pageIndex={pageIndex} setPageIndex={setPageIndex} setOldTPIN={setOldTPIN}/>
             case 1:
                 return <CreatePin pinCode={pinCode} tokwaAccount={tokwaAccount} setPinCode={setPinCode} pageIndex={pageIndex} setPageIndex={setPageIndex}/>
             case 2:
@@ -119,7 +121,7 @@ export const ToktokWalletCreatePin = ({navigation,route})=> {
     
 
     return (
-      <>
+      <CheckIdleState>
         <AlertOverlay visible={loading} />
         <LeavePromptModal
             visible={LeaveModalvisible}
@@ -130,6 +132,7 @@ export const ToktokWalletCreatePin = ({navigation,route})=> {
           amount={amount} 
           setUpTpinCallBack={setUpTpinCallBack}
           onCashIn={onCashIn} 
+          setUpTpinCallBack={setUpTpinCallBack}
           modalVisible={successModalVisible} 
           tokwaAccount={tokwaAccount}
           setSuccessModalVisible={setSuccessModalVisible}
@@ -143,7 +146,7 @@ export const ToktokWalletCreatePin = ({navigation,route})=> {
         >
                 {DisplayComponent()}
         </KeyboardAvoidingView> 
-      </>
+      </CheckIdleState>
     )
 }
 

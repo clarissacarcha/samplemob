@@ -27,8 +27,8 @@ export const SecurewithPIN = ({navigation,walletinfo,amount = null,onCashIn = nu
                 <View style={styles.lockIcon}>
                         <Image style={{height: 89,width: 89}} source={require('toktokwallet/assets/icons/walletVerify.png')}/>
                 </View>
-                <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.XL,marginTop: 20, textAlign:'center'}}>Setup your toktokwallet PIN</Text>
-                <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,marginTop: 5, textAlign:'center'}}>Click the "Setup PIN" button to create your toktokwallet PIN.</Text>
+                <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.XL,marginTop: 20, textAlign:'center'}}>Setup your toktokwallet TPIN</Text>
+                <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,marginTop: 5, textAlign:'center'}}>Click the "Setup TPIN" button to create your toktokwallet TPIN.</Text>
             </View>
             <View style={{flex: 1,alignItems:"center",justifyContent:"flex-start"}}>
                         <Text style={{textAlign:"left",fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,marginBottom: 10,}}>Reminders</Text>
@@ -36,25 +36,25 @@ export const SecurewithPIN = ({navigation,walletinfo,amount = null,onCashIn = nu
                             <Reminder>
                                 <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}><Text style={{color: COLOR.ORANGE}}>Cashless transactions</Text> will be enabled after</Text>
                             </Reminder>
-                            <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M,marginLeft: 28}}>updating your PIN</Text>
+                            <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M,marginLeft: 28}}>updating your TPIN</Text>
                             <Reminder>
-                                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>Use a <Text style={{color: COLOR.ORANGE}}>secure</Text> PIN combination</Text>
+                                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>Use a <Text style={{color: COLOR.ORANGE}}>secure</Text> TPIN combination</Text>
                             </Reminder>
                             <Reminder>
-                                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}><Text style={{color: COLOR.ORANGE}}>Remember</Text> your PIN</Text>
+                                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}><Text style={{color: COLOR.ORANGE}}>Remember</Text> your TPIN</Text>
                             </Reminder>
                             <Reminder>
-                                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}><Text style={{color: COLOR.ORANGE}}>Never share</Text> your PIN with anyone</Text>
+                                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}><Text style={{color: COLOR.ORANGE}}>Never share</Text> your TPIN with anyone</Text>
                             </Reminder>
                             <Reminder>
-                                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>If you think your PIN is no longer a secret, </Text>      
+                                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>If you think your TPIN is no longer a secret, </Text>      
                             </Reminder>
-                            <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M,marginLeft: 28}}><Text style={{color: COLOR.ORANGE}}>change your</Text> PIN immediately</Text>
+                            <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M,marginLeft: 28}}><Text style={{color: COLOR.ORANGE}}>change your</Text> TPIN immediately</Text>
                         </View>
                    
                 </View>
             <View style={styles.btns}>
-                <YellowButton label="Setup PIN" onPress={()=>navigation.replace("ToktokWalletCreatePin", {
+                <YellowButton label="Setup TPIN" onPress={()=>navigation.replace("ToktokWalletCreatePin", {
                     walletinfo,
                     amount,
                     onCashIn,

@@ -1,7 +1,7 @@
 import React , {useEffect,useState} from 'react'
 import {View , Text , StyleSheet , TouchableOpacity ,Image} from 'react-native'
 import { HeaderBack, HeaderTitle , VectorIcon , ICON_SET , YellowButton} from 'src/revamp'
-import { Separator } from 'toktokwallet/components'
+import { Separator , CheckIdleState } from 'toktokwallet/components'
 import imageLogo from 'toktokwallet/assets/images/AccountUpgrade/Tokwa.png'
 import {verticalScale} from 'toktokwallet/helper'
 import {useAccount} from 'toktokwallet/hooks'
@@ -42,7 +42,7 @@ export const ToktokWalletUpgradeAccount = ({navigation})=> {
     }   
     
     return (
-        <>
+        <CheckIdleState>
             <Separator/>
             <View style={styles.container}>
                 <View style={styles.imageDiv}>
@@ -72,7 +72,7 @@ export const ToktokWalletUpgradeAccount = ({navigation})=> {
                     <YellowButton label="Upgrade Now" onPress={upgradeAccount}/>
                 </View>
             </View>
-        </>
+        </CheckIdleState>
     )
 }
 

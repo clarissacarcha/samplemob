@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, View, Text, TouchableOpacity, ActivityIndicator } from 'react-native'
-import { Separator } from 'toktokwallet/components'
+import { Separator , CheckIdleState} from 'toktokwallet/components'
 import { HeaderBack, HeaderTitle , VectorIcon , ICON_SET , YellowButton} from 'src/revamp'
 import CONSTANTS from 'common/res/constants'
 import {useSelector} from 'react-redux'
@@ -108,7 +108,7 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route})=> {
     }
 
     return (
-        <>
+        <CheckIdleState>
         <SuccessfulModal
             visible={showSuccessModal}
             title="Success!"
@@ -147,7 +147,7 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route})=> {
                 }
             />
         </View>
-        </>
+        </CheckIdleState>
     )
 }
 

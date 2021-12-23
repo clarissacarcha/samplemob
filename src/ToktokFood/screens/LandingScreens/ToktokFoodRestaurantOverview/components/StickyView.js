@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {useLazyQuery} from '@apollo/react-hooks';
 import {useRoute} from '@react-navigation/native';
 import React, {useEffect, useState, useContext, useRef, useMemo} from 'react';
@@ -40,20 +41,10 @@ export const StickyView = () => {
   const [shopDetails, setShopDetails] = useState({});
   const searchProduct = useRef('');
   const {setNavBarHeight, temporaryCart, setTemporaryCart} = useContext(VerifyContext);
-  const {customerInfo, location} = useSelector((state) => state.toktokFood);
+  const {customerInfo, location} = useSelector(state => state.toktokFood);
 
-  const {
-    id,
-    address,
-    shopname,
-    ratings,
-    banner,
-    estimatedDeliveryTime,
-    estimatedDistance,
-    logo,
-    latitude,
-    longitude,
-  } = routes.params.item;
+  const {id, address, shopname, ratings, banner, estimatedDeliveryTime, estimatedDistance, logo, latitude, longitude} =
+    routes.params.item;
 
   const headerMaxHeight = verticalScale(450);
   const headerMinHeight = verticalScale(110);
@@ -78,13 +69,11 @@ export const StickyView = () => {
     },
   });
 
-  const [
-    checkShopValidations,
-    {data: checkShop, loading: shopValidationLoading, error: shopValidationError},
-  ] = useLazyQuery(CHECK_SHOP_VALIDATIONS, {
-    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-    fetchPolicy: 'network-only',
-  });
+  const [checkShopValidations, {data: checkShop, loading: shopValidationLoading, error: shopValidationError}] =
+    useLazyQuery(CHECK_SHOP_VALIDATIONS, {
+      client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+      fetchPolicy: 'network-only',
+    });
 
   useEffect(() => {
     // checkShopValidations({ variables: { input: { shopId: id } }})
@@ -123,14 +112,14 @@ export const StickyView = () => {
     }
   }, [data]);
 
-  const getNavBarHeight = (event) => {
+  const getNavBarHeight = event => {
     let height = event.nativeEvent.layout.height;
     setNavBarHeight(height);
   };
 
   const renderNavBar = useMemo(() => {
     return (
-      <View onLayout={(event) => getNavBarHeight(event)} style={[styles.headerWrapper, styles.navbarWrapper]}>
+      <View onLayout={event => getNavBarHeight(event)} style={[styles.headerWrapper, styles.navbarWrapper]}>
         <HeaderTitleSearchBox />
         <View style={styles.tabContainer}>
           <CategoryTabs
@@ -164,7 +153,7 @@ export const StickyView = () => {
             />
           ) : (
             <View style={styles.content}>
-              <Image source={{ uri: shopDetails.logo }} style={styles.logo} resizeMode="cover" />
+              <Image source={{uri: shopDetails.logo}} style={styles.logo} resizeMode="cover" />
               <View style={{flexShrink: 1, marginHorizontal: 10}}>
                 <Text numberOfLines={1} style={styles.titleText}>
                   {`${shopDetails.shopname} (${shopDetails.address})`}
@@ -186,7 +175,14 @@ export const StickyView = () => {
                 <Text style={{color: '#FFA700', fontSize: FONT_SIZE.S}}>
                   {shopDetails?.allowPickup ? 'Available for pick-up and delivery' : 'Available for delivery only'}
                 </Text>
-                <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center', paddingVertical: 3, marginTop: 2}}>
+                <View
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    paddingVertical: 3,
+                    marginTop: 2,
+                  }}>
                   <MCIcon name="phone" color="#868686" size={13} />
                   <Text style={{fontSize: FONT_SIZE.S, marginHorizontal: 4}}>
                     {shopDetails?.mobile ? shopDetails?.mobile : ''}
@@ -232,15 +228,14 @@ export const StickyView = () => {
         backgroundImage={{uri: shopDetails.banner}}
         statusBarColor="transparent"
         navbarColor="white"
-        alwaysShowNavBar={false}
         backgroundColor="transparent"
         renderNavBar={() => renderNavBar}
         renderContent={() => renderContent}
         containerStyle={styles.container}
         contentContainerStyle={styles.contentContainer}
         scrollViewProps={{
-          onScrollEndDrag: (event) => setOffset(event.nativeEvent.contentOffset.y),
-          onMomentumScrollEnd: (event) => setOffset(event.nativeEvent.contentOffset.y),
+          onScrollEndDrag: event => setOffset(event.nativeEvent.contentOffset.y),
+          onMomentumScrollEnd: event => setOffset(event.nativeEvent.contentOffset.y),
         }}
       />
     </>

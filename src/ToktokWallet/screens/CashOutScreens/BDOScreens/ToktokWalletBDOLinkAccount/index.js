@@ -1,7 +1,7 @@
 import React , {useState,useRef,useEffect} from 'react'
 import {View,Text,StyleSheet,TextInput,TouchableOpacity,KeyboardAvoidingView,Platform} from 'react-native'
 import { HeaderBack, HeaderTitle, ICON_SET, VectorIcon, YellowButton } from 'src/revamp'
-import { DisabledButton, NumberBoxes, Separator, BuildingBottom } from 'toktokwallet/components'
+import { DisabledButton, NumberBoxes, Separator, BuildingBottom , CheckIdleState, FlagSecureScreen } from 'toktokwallet/components'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import { PATCH_LINK_BDO_ACCOUNT , GET_BDO_LINK_OTP } from 'toktokwallet/graphql'
 import { useLazyQuery , useMutation } from '@apollo/react-hooks'
@@ -40,7 +40,7 @@ export const ToktokWalletBDOLinkAccount = ({navigation,route})=> {
             if(graphQLErrors[0].message == "Verification code already expired."){
                 return setErrorMessage("Verification code already expired.")
             }
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation})
         }
     })
 
@@ -58,7 +58,7 @@ export const ToktokWalletBDOLinkAccount = ({navigation,route})=> {
                 setPinCode("")
                 return setErrorMessage(graphQLErrors[0].message)
             }
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation})
         }
     })
 
@@ -108,7 +108,8 @@ export const ToktokWalletBDOLinkAccount = ({navigation,route})=> {
     },[otpTimer])
 
     return (
-        <>
+        <FlagSecureScreen>
+        <CheckIdleState>
          <AlertOverlay visible={loading} />
         <Separator/>
         <KeyboardAvoidingView 
@@ -158,7 +159,8 @@ export const ToktokWalletBDOLinkAccount = ({navigation,route})=> {
             </View>
             <BuildingBottom/>
         </KeyboardAvoidingView>
-        </>
+        </CheckIdleState>
+        </FlagSecureScreen>
     )
 }
 

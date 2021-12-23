@@ -26,7 +26,9 @@ const INITIAL_STATE = {
   loading: false,
   events: {
     upgradeAccount: false,
-  }
+    cashInTopUp: false,
+  },
+  constants: {}
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -62,6 +64,14 @@ export default (state = INITIAL_STATE, action) => {
         events: {
           ...state.events,
           [action.payload.event]: action.payload.value
+        }
+      }
+    case 'SET_CONSTANTS':
+      return {
+        ...state,
+        constants: {
+          ...state.constants,
+          ...action.payload
         }
       }
     default:

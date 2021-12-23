@@ -5,6 +5,7 @@ import FIcon from 'react-native-vector-icons/Feather'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import ImageCropper from 'react-native-simple-image-cropper';
 import EIcon from 'react-native-vector-icons/EvilIcons'
+import { CheckIdleState } from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants'
 
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE , SIZE } = CONSTANTS
@@ -13,6 +14,23 @@ const {width,height} = Dimensions.get("window")
 
 const CROP_AREA_WIDTH = width * 0.90;
 const CROP_AREA_HEIGHT = height * 0.40;
+
+const MainComponent = ({checkTimeout , children})=> {
+
+    if(checkTimeout){
+        return (
+            <CheckIdleState>
+                {children}
+            </CheckIdleState>
+        )
+    }
+
+    return (
+        <>
+            {children}
+        </>
+    )
+}
 
 export const ToktokWalletValidIDCamera = ({navigation,route})=> {
 
@@ -24,6 +42,7 @@ export const ToktokWalletValidIDCamera = ({navigation,route})=> {
     const cameraRef = useRef(null)
     const [tempImage,setTempImage] = useState(null)
     const [cropperParams, setCropperParams] = useState({});
+    const checkTimeout = route?.params?.checkTimeout ? true : false
 
     const takePicture = async () => {
         try {
@@ -89,57 +108,63 @@ export const ToktokWalletValidIDCamera = ({navigation,route})=> {
 
       if(tempImage){
           return (
-        <View style={{flex: 1}}>
-            <View style={{flex: 1,justifyContent:"center", alignItems: "center"}}>
-                {/* <View style={{height: CROP_AREA_HEIGHT - 100, width: CROP_AREA_WIDTH - 110, borderRadius: 10}}>
-                    <ImageCropper
-                    imageUri={tempImage.uri}
-                    cropAreaWidth={CROP_AREA_WIDTH - 110}
-                    cropAreaHeight={CROP_AREA_HEIGHT - 100}
-                    containerColor="black"
-                    areaColor="black"
-                    setCropperParams={cropperParams =>{
-                        setCropperParams(cropperParams)
-                    }}
-                    />
-                </View> */}
+            <MainComponent
+                checkTimeout={checkTimeout}
+            >
+            <View style={{flex: 1}}>
+                <View style={{flex: 1,justifyContent:"center", alignItems: "center"}}>
+                    {/* <View style={{height: CROP_AREA_HEIGHT - 100, width: CROP_AREA_WIDTH - 110, borderRadius: 10}}>
+                        <ImageCropper
+                        imageUri={tempImage.uri}
+                        cropAreaWidth={CROP_AREA_WIDTH - 110}
+                        cropAreaHeight={CROP_AREA_HEIGHT - 100}
+                        containerColor="black"
+                        areaColor="black"
+                        setCropperParams={cropperParams =>{
+                            setCropperParams(cropperParams)
+                        }}
+                        />
+                    </View> */}
 
-                <View style={{height: Platform.OS === "ios" ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 100, width: Platform.OS === "ios" ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 110, borderRadius: 10}}>
-                    <ImageCropper
-                    imageUri={tempImage.uri}
-                    cropAreaWidth={Platform.OS === "ios" ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 110}
-                    cropAreaHeight={Platform.OS === "ios" ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 100}
-                    containerColor="black"
-                    areaColor="black"
-                    setCropperParams={cropperParams =>{
-                        setCropperParams(cropperParams)
-                    }}
-                    />
+                    <View style={{height: Platform.OS === "ios" ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 100, width: Platform.OS === "ios" ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 110, borderRadius: 10}}>
+                        <ImageCropper
+                        imageUri={tempImage.uri}
+                        cropAreaWidth={Platform.OS === "ios" ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 110}
+                        cropAreaHeight={Platform.OS === "ios" ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 100}
+                        containerColor="black"
+                        areaColor="black"
+                        setCropperParams={cropperParams =>{
+                            setCropperParams(cropperParams)
+                        }}
+                        />
+                    </View>
+
+
+                    <View style={{marginTop: 20}}>
+                        <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M }}><FIcon5 color="orange" name="check" /> Make sure the picture has no glare and not blur.</Text>
+                        <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M }}><FIcon5 color="orange" name="check" /> Make sure your Valid ID is not expired.</Text>
+                    </View>
+                    
                 </View>
 
+                <View style={{alignItems:"flex-end",flexDirection:"row",padding: 16,height: 70}}>
+                    <TouchableOpacity style={[styles.actionbtn, {marginRight: 10,backgroundColor:"#F7F7FA"}]} onPress={()=>setTempImage(null)}>
+                        <Text style={{fontFamily: FONT.BOLD,color: "gray", fontSize: FONT_SIZE.M}}>Retake</Text>
+                    </TouchableOpacity>
 
-                <View style={{marginTop: 20}}>
-                    <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M }}><FIcon5 color="orange" name="check" /> Make sure the picture has no glare and not blur.</Text>
-                    <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M }}><FIcon5 color="orange" name="check" /> Make sure your Valid ID is not expired.</Text>
+                    <TouchableOpacity style={[styles.actionbtn,{marginLeft: 10,backgroundColor: COLOR.YELLOW}]} onPress={confirmPicture}>
+                        <Text style={{fontFamily: FONT.BOLD , fontSize: FONT_SIZE.M}}>Submit</Text>
+                    </TouchableOpacity>
                 </View>
-                
             </View>
-
-            <View style={{alignItems:"flex-end",flexDirection:"row",padding: 16,height: 70}}>
-                <TouchableOpacity style={[styles.actionbtn, {marginRight: 10,backgroundColor:"#F7F7FA"}]} onPress={()=>setTempImage(null)}>
-                    <Text style={{fontFamily: FONT.BOLD,color: "gray", fontSize: FONT_SIZE.M}}>Retake</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={[styles.actionbtn,{marginLeft: 10,backgroundColor: COLOR.YELLOW}]} onPress={confirmPicture}>
-                    <Text style={{fontFamily: FONT.BOLD , fontSize: FONT_SIZE.M}}>Submit</Text>
-                </TouchableOpacity>
-            </View>
-        </View>
-
+        </MainComponent>
           )
       }
 
       return (
+        <MainComponent
+            checkTimeout={checkTimeout}
+        >
         <View style={styles.container}>
              <TouchableOpacity onPress={()=>navigation.pop()} style={styles.backBtn}>
                 <FIcon name="chevron-left" size={20} color={'#222222'} /> 
@@ -193,6 +218,7 @@ export const ToktokWalletValidIDCamera = ({navigation,route})=> {
 
              </View>
         </View>
+        </MainComponent>
       )
 
 }

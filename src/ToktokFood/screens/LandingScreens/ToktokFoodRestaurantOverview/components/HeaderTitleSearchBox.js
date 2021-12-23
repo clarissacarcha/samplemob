@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, {useState, useContext} from 'react';
 import {View, StyleSheet, StatusBar, TextInput, TouchableOpacity, Image, Platform} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
@@ -6,15 +6,15 @@ import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import {FONT, FONT_SIZE, COLOR} from 'res/variables';
 import {searchIcon} from 'toktokfood/assets/images';
 
-import { VerifyContext } from '../components';
+import {VerifyContext} from '../components';
 
 // Utils
 import {moderateScale, verticalScale, getStatusbarHeight} from 'toktokfood/helper/scale';
 
 // State must be global to share with other components
-export const HeaderTitleSearchBox = ({ onCallBackSearch }) => {
+export const HeaderTitleSearchBox = ({onCallBackSearch}) => {
   const navigation = useNavigation();
-  const { searchProduct, setSearchProduct } = useContext(VerifyContext)
+  const {searchProduct, setSearchProduct} = useContext(VerifyContext);
   // const [ searchProduct, setSearchProduct ] = useState('')
 
   return (
@@ -26,9 +26,9 @@ export const HeaderTitleSearchBox = ({ onCallBackSearch }) => {
         <Image style={styles.searchBoxIcon} source={searchIcon} />
         <TextInput
           defaultValue={searchProduct}
-          onChangeText={(val) => setSearchProduct(val)}
+          onChangeText={val => setSearchProduct(val)}
           placeholder="What would you like to eat?"
-          style={[ styles.textInputFontStyles, { flexShrink: 1, width: '100%', paddingRight: 10 }]}
+          style={styles.textInputFontStyles}
         />
       </View>
     </View>
@@ -46,8 +46,7 @@ const styles = StyleSheet.create({
   },
   searchBoxContainer: {
     flexDirection: 'row',
-    zIndex: 5,
-    // marginTop: Platform.OS === 'android' ? verticalScale(37) : verticalScale(25),
+    // zIndex: 5,
     paddingRight: moderateScale(20),
     marginTop: Platform.OS === 'android' ? getStatusbarHeight + 15 : verticalScale(20),
   },
@@ -60,11 +59,14 @@ const styles = StyleSheet.create({
     color: COLOR.BLACK,
     fontSize: FONT_SIZE.L,
     fontFamily: FONT.REGULAR,
+    flex: 1,
+    // width: '100%',
+    paddingRight: 10,
   },
   textInputWrapper: {
     alignItems: 'center',
     flexDirection: 'row',
-    paddingVertical: Platform.OS == 'android' ? 0 : 10
+    paddingVertical: Platform.OS == 'android' ? 0 : 10,
   },
   searchBoxIcon: {
     marginHorizontal: 10,
@@ -75,12 +77,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#F8F8F8',
     padding: 15,
     borderRadius: 5,
-    marginBottom: 15
+    marginBottom: 15,
   },
   hitSlop: {
     top: moderateScale(40),
     bottom: moderateScale(40),
     left: moderateScale(40),
-    right: moderateScale(40)
-  }
+    right: moderateScale(40),
+  },
 });

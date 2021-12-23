@@ -4,3 +4,5 @@ export * from "./VerifyContextProvider";
 export * from "./VerifyFullname";
 export * from "./VerifyID";
 export * from "./VerifySelfie";
+export * from "./VerifySeflieWithID";
+export * from "./VerifySourceOfIncome";

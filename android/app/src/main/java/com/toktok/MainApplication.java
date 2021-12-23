@@ -1,10 +1,13 @@
 package com.toktok;
 
+import com.staltz.flagsecure.FlagSecurePackage;
 import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.oblador.vectoricons.VectorIconsPackage;
+import com.levelasquez.androidopensettings.AndroidOpenSettingsPackage;
+import com.gantix.JailMonkey.JailMonkeyPackage;
 import com.reactnativecommunity.checkbox.ReactCheckBoxPackage;
 import com.reactnativecommunity.checkbox.ReactCheckBoxPackage;
 import com.reactnativecommunity.cameraroll.CameraRollPackage;
