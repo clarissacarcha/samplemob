@@ -10,6 +10,7 @@ import { onErrorAlert } from 'src/util/ErrorUtility'
 import { useAlert } from 'src/hooks'
 import { useNavigation } from '@react-navigation/native'
 import { AlertOverlay } from 'src/components'
+import { TransactionUtility } from 'toktokwallet/util'
 import moment from 'moment'
 
 
@@ -65,7 +66,12 @@ const Confirm = ({
           setVisible(true)
         },
         onError: (error)=> {
-            onErrorAlert({alert,error,navigation})
+            // onErrorAlert({alert,error,navigation})
+            TransactionUtility.StandardErrorHandling({
+                error,
+                navigation,
+                prompt 
+            })
         }
     })
 
