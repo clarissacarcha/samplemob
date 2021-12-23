@@ -58,9 +58,7 @@ const Splash = ({
 
           //Already exist
           await AsyncStorage.setItem("ToktokMallUser", JSON.stringify(response.getCustomerIfExist))
-          EventRegister.emit("refreshToktokmallShoppingCart")
-          EventRegister.emit("refreshToktokmallNotifications")
-
+          createMyCartCountSession("set", response.getCustomerIfExist.cartCount)
           console.log("User already exist!", response.getCustomerIfExist)  
           await navigation.navigate("ToktokMallLanding")
 
@@ -152,15 +150,15 @@ const Splash = ({
   const FetchAsyncStorageData = async () => {
 
     //CART
-    // await AsyncStorage.getItem('ToktokMallMyCart').then((value) => {
-    //   // console.log('cart async storage',value)
-    //   const parsedValue = JSON.parse(value)
-    //   if(value != null){
-    //     createMyCartSession('set', parsedValue)
-    //   }else {
-    //     createMyCartSession('set', [])
-    //   }
-    // })
+    await AsyncStorage.getItem('ToktokMallMyCart').then((value) => {
+      // console.log('cart async storage',value)
+      const parsedValue = JSON.parse(value)
+      if(value != null){
+        createMyCartSession('set', parsedValue)
+      }else {
+        createMyCartSession('set', [])
+      }
+    })
 
     //DEFAULT ADDRESS
     await AsyncStorage.getItem('ToktokMallUserDefaultAddress').then((value) => {
@@ -174,15 +172,15 @@ const Splash = ({
     })
 
     //NOTIFICATION
-    // await AsyncStorage.getItem('ToktokMallNotifications').then((value) => {
-    //   // console.log('Notifications async storage', value)
-    //   const parsedValue = JSON.parse(value)
-    //   if(value != null){
-    //     createNotificationsSession('set', parsedValue)
-    //   }else {
-    //     createNotificationsSession('set', [])
-    //   }
-    // })
+    await AsyncStorage.getItem('ToktokMallNotifications').then((value) => {
+      // console.log('Notifications async storage', value)
+      const parsedValue = JSON.parse(value)
+      if(value != null){
+        createNotificationsSession('set', parsedValue)
+      }else {
+        createNotificationsSession('set', [])
+      }
+    })
 
     //SEARCH HISTORY
     await AsyncStorage.getItem('ToktokMallSearchHistory').then((value) => {
@@ -198,21 +196,21 @@ const Splash = ({
   }
 
 	const init = async () => {
+
     setFailed(false)
     await FetchAsyncStorageData()
     
     await AsyncStorage.getItem("ToktokMallUser").then(async (raw) => {
       const data = JSON.parse(raw) || null
-      console.log("user data", data)
       if(data && data.userId){
-        // await getCustomerRecords({
-        //   variables: {
-        //     input: {
-        //       userId: data.userId
-        //     }
-        //   }
-        // })
-
+        console.log(data)
+        await getCustomerRecords({
+          variables: {
+            input: {
+              userId: data.userId
+            }
+          }
+        })
         EventRegister.emit("refreshToktokmallShoppingCart")
         EventRegister.emit("refreshToktokmallNotifications")
         setTimeout(() => {
