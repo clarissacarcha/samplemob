@@ -43,6 +43,7 @@ export const ReceiptDetails = ({ route }) => {
           <Text style={styles.description}>Success</Text>
         </View>
       </View>
+      <View style={styles.line} />
     </>
   );
 };

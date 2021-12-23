@@ -3,7 +3,6 @@ import {View, Text, StyleSheet, FlatList, Platform, TouchableOpacity, Image, Dim
 
 //UTIL
 import { moderateScale } from "toktokload/helper";
-import { useContacts } from 'toktokload/hooks';
 
 //FONTS & COLORS & IMAGES
 import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
@@ -12,7 +11,6 @@ import { heart_fill_icon, heart_no_fill_icon, heart_selected_fill_icon } from "s
 const { width, height } = Dimensions.get("screen");
 export const FavoriteDetails = ({ item, index, setSelectedLoad, selectedLoad }) => {
 
-  const { contacts } = useContacts();
   const { loadDetails, mobileNumber } = item;
   const { amount } = loadDetails;
   const isSelected = selectedLoad.id == item.id;

@@ -67,6 +67,5 @@ const styles = StyleSheet.create({
   tabText: {
     fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.M,
-    textTransform: "capitalize"
   }
 })
