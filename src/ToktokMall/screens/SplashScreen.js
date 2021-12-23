@@ -8,14 +8,14 @@ import {
   ImageBackground, 
   TouchableOpacity
 } from 'react-native';
-import {connect} from 'react-redux';
+import {connect, useDispatch} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import SplashImage from '../assets/images/toktokmall-splash-screen.png';
 import {useSelector} from 'react-redux';
 import { useLazyQuery, useQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../graphql';
 import { TOKTOK_MALL_AUTH_GRAPHQL_CLIENT } from '../../graphql';
-import { GET_CUSTOMER_IF_EXIST, GET_CUSTOMER_RECORDS } from '../../graphql/toktokmall/model';
+import { GET_CUSTOMER_IF_EXIST, GET_CUSTOMER_RECORDS, GET_MY_CART, GET_ORDERS_NOTIFICATION } from '../../graphql/toktokmall/model';
 import {GET_SIGNATURE} from '../../graphql/toktokmall/virtual';
 import axios from 'axios';
 import moment from 'moment';
@@ -40,6 +40,8 @@ const Splash = ({
 	const [loading, setloading] = useState(true);
   const [failed, setFailed] = useState(false);
   const [registerRetries, setRegisterRetries] = useState(0);
+	const [orderHistory, setOrderHistory] = useState([])
+  const dispatch = useDispatch()
 
   const [authUser, { error}] = useLazyQuery(GET_CUSTOMER_IF_EXIST, {
 		client: TOKTOK_MALL_GRAPHQL_CLIENT,
@@ -58,7 +60,23 @@ const Splash = ({
 
           //Already exist
           await AsyncStorage.setItem("ToktokMallUser", JSON.stringify(response.getCustomerIfExist))
-          createMyCartCountSession("set", response.getCustomerIfExist.cartCount)
+
+        getMyCartData({
+          variables: {
+            input: {
+              userId: response.getCustomerIfExist.userId
+            }
+          }
+        })
+
+        getOrderNotifications({
+          variables: {
+            input: {
+              userId: response.getCustomerIfExist.userId
+            }
+          }
+        })
+
           console.log("User already exist!", response.getCustomerIfExist)  
           await navigation.navigate("ToktokMallLanding")
 
@@ -195,24 +213,77 @@ const Splash = ({
 
   }
 
-	const init = async () => {
+  const [getMyCartData] = useLazyQuery(GET_MY_CART, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',    
+    onCompleted: (response) => {
+      if(response.getMyCart){
+        let count = 0;
+        response.getMyCart.parsed.map(({data}) => data.map(item => (item.product.enabled === 1 && item.product.noOfStocks !== 0) && (count+=item.quantity)))
+        dispatch({ type: "TOKTOK_MALL_CART_COUNT", action: "set", payload: count})
 
+      }
+    },
+    onError: (err) => {
+      console.log(err)
+    }
+  })
+
+  const [getOrderNotifications] = useLazyQuery(GET_ORDERS_NOTIFICATION, {
+		client: TOKTOK_MALL_GRAPHQL_CLIENT,
+		fetchPolicy: 'network-only',
+		onCompleted: (response) => {
+			if(response.getOrdersNotification){				
+        setOrderHistory(response.getOrdersNotification)        
+			}
+    },
+    onError: (err) => {
+      console.log(err)
+    }
+	})
+  useEffect(() => {
+    //count notifications
+    let count = 0
+    if(orderHistory.length > 0){
+      for(var x=0;x<orderHistory.length;x++){
+        let order = orderHistory[x];
+        if(order.read == 0) count++
+        else count = count
+      }
+      
+      dispatch({ type: "TOKTOK_MALL_NOTIFICATION_COUNT", action: "set", payload: count})    
+    }
+  }, [orderHistory])
+
+	const init = async () => {
     setFailed(false)
     await FetchAsyncStorageData()
     
     await AsyncStorage.getItem("ToktokMallUser").then(async (raw) => {
       const data = JSON.parse(raw) || null
+      console.log("user data", data)
       if(data && data.userId){
-        console.log(data)
-        await getCustomerRecords({
+        // await getCustomerRecords({
+        //   variables: {
+        //     input: {
+        //       userId: data.userId
+        //     }
+        //   }
+        // })
+        getMyCartData({
           variables: {
             input: {
               userId: data.userId
             }
           }
         })
-        EventRegister.emit("refreshToktokmallShoppingCart")
-        EventRegister.emit("refreshToktokmallNotifications")
+        getOrderNotifications({
+          variables: {
+            input: {
+              userId: data.userId
+            }
+          }
+        })
         setTimeout(() => {
           navigation.navigate("ToktokMallLanding");
         }, 2000);
