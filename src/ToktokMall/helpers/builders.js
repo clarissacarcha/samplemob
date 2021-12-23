@@ -15,6 +15,7 @@ export const BuildPostCheckoutBody = async ({
 	hashAmount,
 	referenceNum
 }) => {
+	console.log(parseFloat(subTotal))
 
 	let rawsession = await AsyncStorage.getItem("ToktokMallUser")
 	let session = JSON.parse(rawsession)

@@ -109,7 +109,7 @@ export const Totals = ({raw, shipping, setGrandTotal}) => {
                 {FormatToText.currency(shippingFeeTotal)}
               </Text>
             </View>
-            <View style={{flex: 0}}>{getDiscount('shipping') ? <Text> {shippingDiscountTotal}</Text> : null}</View>
+            <View style={{flex: 0}}>{getDiscount('shipping') ? <Text> {FormatToText.currency(shippingDiscountTotal)}</Text> : null}</View>
           </View>
         </View>
         <View style={styles.textContainer}>
