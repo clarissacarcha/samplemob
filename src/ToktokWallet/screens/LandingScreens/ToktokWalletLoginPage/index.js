@@ -124,9 +124,9 @@ export const ToktokWalletLoginPage = ({navigation,route})=> {
             <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
             {
                 //isRooted || isDebugMode ||
-                // !pinSet || (!minApiLevel && Platform.OS == "android") || (!minAndroidOS && Platform.OS == "android")
-                // ? <RenderRestricted />
-                // : 
+                !pinSet || (!minApiLevel && Platform.OS == "android") || (!minAndroidOS && Platform.OS == "android")
+                ? <RenderRestricted />
+                : 
                 <CheckTokwaKYCRegistration kycStatus={data.getUserToktokWalletData.kycStatus}>
     
                         <CheckWalletAccountRestriction>
