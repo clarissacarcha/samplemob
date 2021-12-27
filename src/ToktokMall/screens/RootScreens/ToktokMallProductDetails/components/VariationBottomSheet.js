@@ -196,7 +196,7 @@ export const VariationBottomSheet = forwardRef(({
       <View style={styles.sheet}>
         <View style={{flexDirection: 'row'}}>
           <View style={{flex: 3}}>
-            <Image source={getImage()} style={{width: 100, height: 120, resizeMode: 'cover', borderRadius: 5}} />
+            <Image source={getImage()} style={{width: 100, height: 120, resizeMode: 'cover', borderRadius: 5, marginBottom: 15}} />
           </View>
           <View style={{flex: 8, justifyContent: 'center'}}>
             <View style={{flexDirection: 'row'}}>
