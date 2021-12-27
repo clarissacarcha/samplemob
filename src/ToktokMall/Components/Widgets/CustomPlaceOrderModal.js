@@ -12,12 +12,12 @@ export const CustomPlaceOrderModal = () => {
 
   const onConfirm = () => {
     dispatch({type: 'TOKTOK_MALL_CLOSE_PLACE_ORDER_MODAL'});
-    customPlaceOrderModal.onConfirmAction();
+    customPlaceOrderModal?.onConfirmAction();
   };
 
   const onCancel = () => {
     dispatch({type: 'TOKTOK_MALL_CLOSE_PLACE_ORDER_MODAL'});
-    customPlaceOrderModal.onCancel();
+    customPlaceOrderModal?.onCancelAction();
   };
 
   return (

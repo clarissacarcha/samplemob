@@ -133,6 +133,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
 
       setloading(true)
       const req = await ApiCall("validate_voucher", payload, false)
+      CheckoutContextData.setVoucherErrors(prevState => prevState.filter(id => item.shop.id !== id))
       if(req.responseData && req.responseData.success){
 
         console.log(req.responseData.voucher)
