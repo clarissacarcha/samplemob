@@ -12,7 +12,7 @@ import {useNavigation} from '@react-navigation/native'
 import moment from 'moment'
 import {connect} from 'react-redux'
 import { YellowButton } from 'src/revamp'
-import { DisabledButton } from 'toktokwallet/components'
+import { DisabledButton, Separator } from 'toktokwallet/components'
 import CheckBox from 'react-native-check-box'
 import AsyncStorage from '@react-native-community/async-storage';
 import RNFS from 'react-native-fs'
@@ -194,9 +194,30 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
             identificationCardId: VerifyUserData.identificationId,
             sourceIncomeId: VerifyUserData.incomeInfo.source.id,
             otherSource: VerifyUserData.incomeInfo.otherSource,
-            occupation: VerifyUserData.incomeInfo.occupation
+            occupation: VerifyUserData.incomeInfo.occupation,
+            isPep: VerifyUserData.pepInfo.isPep,
+            pepRequest: {
+                videocall: {
+                    videoCallContactDetails: VerifyUserData.pepInfo.videocall.videoCallContactDetails,
+                    callChannelId: VerifyUserData.pepInfo.videocall.callChannelId,
+                    preferredVcsDayMin: VerifyUserData.pepInfo.videocall.preferredVcsDayMin,
+                    preferredVcsDayMax: VerifyUserData.pepInfo.videocall.preferredVcsDayMax,
+                    preferredVcsTimeMin: VerifyUserData.pepInfo.videocall.preferredVcsTimeMin,
+                    preferredVcsTimeMax: VerifyUserData.pepInfo.videocall.preferredVcsTimeMax,
+                },
+                questionnaire: {
+                    isPep:  VerifyUserData.pepInfo.questionnaire.isPep,
+                    pepPosition: VerifyUserData.pepInfo.questionnaire.pepPosition,
+                    isFamilyPep: VerifyUserData.pepInfo.questionnaire.isFamilyPep,
+                    familyPepPosition: VerifyUserData.pepInfo.questionnaire.familyPepPosition,
+                    sourceOfIncomeId:  VerifyUserData.pepInfo.questionnaire.sourceOfIncomeId,
+                    sourceOfIncome: VerifyUserData.pepInfo.questionnaire.sourceOfIncome,
+                    sourceOfWealthId: VerifyUserData.pepInfo.questionnaire.sourceOfWealthId,
+                    sourceOfWealth: VerifyUserData.pepInfo.questionnaire.sourceOfWealth,
+                }
+            }
         }
-
+        
         postKYCRegister({
             variables: {
                 input: input
@@ -212,6 +233,7 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
                 <ScrollView style={styles.mainInput} showsVerticalScrollIndicator={false}>
                         <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD}}>Review Information</Text>
                         <Text style={{fontFamily: FONT.REGULAR,marginBottom: 10,fontSize: FONT_SIZE.M,color:"#929191"}}>Make sure your details are all correct.</Text>  
+                        <Separator/>
                         <UserInfo label="Mobile Number" value={VerifyUserData.contactInfo.mobile_number}/>
                         <UserInfo label="Email Address" value={VerifyUserData.contactInfo.email}/>
                         <UserInfo label="First Name" value={VerifyUserData.person.firstName}/>
@@ -230,6 +252,7 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
                         <UserInfo label="Occupation" value={VerifyUserData.incomeInfo.occupation}/>
                         <UserInfo label="ID Type" value={VerifyUserData.verifyID.idType}/>
                         <UserInfo label="ID number" value={VerifyUserData.verifyID.idNumber}/>
+                <Separator/>
                 </ScrollView>
 
                 <View style={styles.proceedBtn}>

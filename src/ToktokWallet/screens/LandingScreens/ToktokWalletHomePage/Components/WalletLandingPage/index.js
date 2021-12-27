@@ -1,10 +1,8 @@
 import React , {useEffect,useState} from 'react'
 import {View,Text,StyleSheet,ScrollView,RefreshControl,Dimensions} from 'react-native'
 import { connect } from 'react-redux'
-import {APP_FLAVOR , ACCOUNT_TYPE} from 'src/res/constants'
 
 //SELF IMPORTS
-import DriverWalletCardInfo from '../DriverWalletCardInfo'
 import { Advertisements } from '../Advertisements'
 import WalletCardInfo from '../WalletCardInfo'
 import WalletRecentTransactions from '../WalletRecentTransactions'

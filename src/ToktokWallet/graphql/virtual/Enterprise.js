@@ -103,6 +103,21 @@ export const GET_SOURCE_OF_INCOME = gql`
     }
 `
 
+export const GET_SOURCE_OF_WEALTH = gql`
+    query {
+        getSourceOfWealth {
+            id
+            description
+        }
+    }
+`
+
+export const POST_VERIFY_IF_PEP = gql`
+    mutation postVerifyIfPep($input: PostVerifyIfPepInput){
+        postVerifyIfPep(input: $input)
+    }
+`
+
 export const GET_CHECK_BLOCKED_ACCOUNT_RECORD = gql`
     query getCheckBlockedAccountRecord($input: GetCheckBlockedAccountRecordInput){
         getCheckBlockedAccountRecord(input: $input)

@@ -1,4 +1,4 @@
-import React from 'react'
+import React , {useEffect} from 'react'
 import {View,Text,StyleSheet,TouchableOpacity} from 'react-native'
 import FIcon from 'react-native-vector-icons/Feather'
 import {useSelector} from 'react-redux'
@@ -9,6 +9,8 @@ import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
 import { GET_FORGOT_AND_RECOVER_OTP_CODE , VERIFY_FORGOT_AND_RECOVER_OTP_CODE} from 'toktokwallet/graphql'
 import { onError, onErrorAlert } from 'src/util/ErrorUtility'
 import {useAlert, usePrompt} from 'src/hooks'
+import { useAccount } from 'toktokwallet/hooks'
+import { AlertOverlay } from 'src/components'
 import CONSTANTS from 'common/res/constants'
 import { TransactionUtility } from 'toktokwallet/util'
 
@@ -36,6 +38,7 @@ export const ToktokWalletRecoveryMethods = ({navigation , route})=> {
     })
     
     const prompt = usePrompt()
+    const { tokwaAccount , getMyAccountLoading , getMyAccount}  = useAccount();
     const type = route.params.type
     const event = route?.params?.event ? route.params.event : null
     const category = route?.params?.category ? route.params.category : null
@@ -53,6 +56,18 @@ export const ToktokWalletRecoveryMethods = ({navigation , route})=> {
     const maskedchars = maskedchar(emailLeft.length - 1 )
     const email = `${emailLeft[0]}${maskedchars}@${emails[1]}`
     const alert = useAlert()
+
+    const refreshTokwaAccount = async ()=> {
+        await getMyAccount()
+        return
+    }
+
+    useEffect(()=>{
+        if(!tokwaAccount.mobileNumber){
+            refreshTokwaAccount();
+            return
+        } 
+    },[])
 
     const recoverWallet = ()=> {
         getForgotAndRecoverOTPCode()
@@ -77,6 +92,7 @@ export const ToktokWalletRecoveryMethods = ({navigation , route})=> {
 
     return (
         <CheckIdleState>
+        <AlertOverlay visible={getMyAccountLoading}/>
         <Separator />
         <View style={styles.container}>
             <RecoveryMethod title={"Registered Mobile No."} message={`Use your verified mobile no. ${session.user.username}`} onPress={recoverWallet}/>

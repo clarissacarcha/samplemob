@@ -24,6 +24,17 @@ export const GET_ACCOUNT = gql`
             id
             mobileNumber
             person
+            status
+            motherId
+            person {
+                id
+                firstName
+                middleName
+                lastName
+            }
+            wallet {
+                id
+            }
         }
     }
 `
