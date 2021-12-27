@@ -12,7 +12,7 @@ import { GET_TOP_PRODUCTS } from '../../../../../../graphql/toktokmall/model';
 
 import {clothfacemask, medicalfacemask, placeholder} from '../../../../../assets'; 
 import { Price } from '../../../../../helpers';
-import { SwipeReloader, Loading } from '../../../../../Components';
+import { SwipeReloader, Loading, PromotionBanner } from '../../../../../Components';
 import Spinner from 'react-native-spinkit';
 
 import ContentLoader from 'react-native-easy-content-loader'
@@ -78,6 +78,10 @@ const RenderItem = ({item, loading}) => {
     return total
   }
 
+  useEffect(() => {
+    console.log(item.promotions)
+  }, [])
+
   return (
     <>
       <View style={{flex: 2, backgroundColor: '#fff', margin: 5}}>
@@ -87,9 +91,17 @@ const RenderItem = ({item, loading}) => {
           // console.log(item)
         }} style={{padding: 5}}>
           {item?.discountRate != "" && 
-          <View style={{position:'absolute', zIndex: 1, right: 0, backgroundColor: '#F6841F', borderBottomLeftRadius: 30}}>
-            <Text style={{fontSize: 8, paddingHorizontal: 4, paddingLeft: 8, paddingTop: 1, paddingBottom: 3, color: "#fff", fontFamily: FONT.BOLD}}>{item?.discountRate}</Text>
-          </View>}
+            <View style={{position:'absolute', zIndex: 1, right: 0, backgroundColor: '#F6841F', borderBottomLeftRadius: 30}}>
+              <Text style={{fontSize: 8, paddingHorizontal: 4, paddingLeft: 8, paddingTop: 1, paddingBottom: 3, color: "#fff", fontFamily: FONT.BOLD}}>{item?.discountRate}</Text>
+            </View>
+          }
+          {
+            item?.promoIsset == 1 && item.promotions != null &&
+            <PromotionBanner 
+              label={item.promotions.name}
+              content={item.promotions.duration}
+            />
+          }
           <RNEImage 
             source={getImageSource(item.images)} 
             style={{resizeMode: 'cover', width: '100%', height: 120, borderRadius: 5}} 

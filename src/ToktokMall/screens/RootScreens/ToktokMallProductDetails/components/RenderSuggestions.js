@@ -2,7 +2,7 @@ import React, {useState, useEffect, useRef} from 'react';
 import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList} from 'react-native';
 import {Price} from '../../../../helpers';
 import { COLOR, FONT } from '../../../../../res/variables';
-import {LandingHeader, AdsCarousel} from '../../../../Components';
+import {LandingHeader, AdsCarousel, PromotionBanner} from '../../../../Components';
 import { ScrollView } from 'react-native-gesture-handler';
 import CustomIcon from '../../../../Components/Icons';
 
@@ -80,6 +80,10 @@ const RenderItem = ({item}) => {
           <View style={{position:'absolute', zIndex: 1, right: 0, backgroundColor: '#F6841F', borderBottomLeftRadius: 30}}>
             <Text style={{fontSize: 8, paddingHorizontal: 4, paddingLeft: 8, paddingTop: 1, paddingBottom: 3, color: "#fff", fontFamily: FONT.BOLD}}>{item?.discountRate}</Text>
           </View>}
+          {
+            item.promotions && item.promotions != null && 
+            <PromotionBanner label={item.promotions.name} content={item.promotions.duration} />
+          }
           <Image 
             source={getImageSource(item.images)} 
             style={{resizeMode: 'cover', width: '100%', height: 120, borderRadius: 5}} 

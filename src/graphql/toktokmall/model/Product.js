@@ -51,6 +51,15 @@ export const GET_TOP_PRODUCTS = gql`
 					arrangement
 					filename
 				}
+				promoIsset
+				promotions {
+					promoType
+	  	    promoPrice
+  	  	  promoRate
+      		name
+      		lossPromo
+      		duration
+				}
 			}
 		}
 `
@@ -131,6 +140,15 @@ export const GET_PRODUCT_BY_CATEGORY = gql`
       	arrangement
      		filename
     	}
+			promoIsset
+				promotions {
+					promoType
+	  	    promoPrice
+  	  	  promoRate
+      		name
+      		lossPromo
+      		duration
+				}
 		}
 	}
 `
@@ -205,6 +223,15 @@ export const GET_PRODUCT_DETAILS = gql`
 					filename
 				}
 			}
+			promoIsset
+				promotions {
+					promoType
+	  	    promoPrice
+  	  	  promoRate
+      		name
+      		lossPromo
+      		duration
+				}
 		}
 	}
 `
@@ -222,6 +249,15 @@ export const SEARCH_PRODUCT = gql`
       	arrangement
       	filename
     	}
+			promoIsset
+				promotions {
+					promoType
+	  	    promoPrice
+  	  	  promoRate
+      		name
+      		lossPromo
+      		duration
+				}
 		}
 	}
 `
