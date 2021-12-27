@@ -7,12 +7,7 @@ import { moderateScale } from 'toktokwallet/helper'
 import { Separator } from 'toktokwallet/components'
 import {useAlert} from 'src/hooks/useAlert'
 import {FavoritesContext } from "../ContextProvider"
-import { SwipeListView } from 'react-native-swipe-list-view';
 import CONSTANTS from 'common/res/constants'
-
-//SELF IMPORTS
-import RenderShowItem from './RenderShowItem';
-import RenderHiddenItem from './RenderHiddenItem';
 
 const {FONT_SIZE , SIZE , FONT_FAMILY: FONT , COLOR} = CONSTANTS
 const {width} = Dimensions.get("window")
@@ -118,30 +113,9 @@ export const Favorites = forwardRef(({setMobileNo},ref)=> {
                 <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Favorites</Text>
             </View>
             <Separator/>
-            <SwipeListView
-                data={favorites}
-                renderItem={ (data, rowMap) => (
-                    <RenderShowItem
-                        selectFromList={selectFromList}
-                        removeFromList={removeFromList} 
-                        item={data} 
-                        index={rowMap}
-                    />
-                )}
-                renderHiddenItem={ (data, rowMap) => (
-                    <RenderHiddenItem
-                        selectFromList={selectFromList}
-                        removeFromList={removeFromList} 
-                        item={data} 
-                        index={rowMap}
-                    />
-                )}
-                leftOpenValue={75}
-                rightOpenValue={-75}
-            />
-             {/* {
+             {
                  favorites.map((item,index)=>(<RenderItem selectFromList={selectFromList} removeFromList={removeFromList} item={item} index={index}/>))
-             } */}
+             }
         </View>
     )
 })
