@@ -69,7 +69,7 @@ export const BuildOrderLogsList = ({data, shipping, shippingRates, shippingVouch
 		let items = []
 		if(val.data.length == 0 || val.data == undefined) return
 		val.data[0].map((item, i) => {
-			let total = parseFloat(item.amount) * item.qty
+			// let total = parseFloat(item.amount) * item.qty
 			items.push({
 				sys_shop: val.shop.id,
 				product_id: item.product.Id,
@@ -77,8 +77,8 @@ export const BuildOrderLogsList = ({data, shipping, shippingRates, shippingVouch
 				quantity: item.qty,
 				amount: parseFloat(item.amount),
 				srp_amount: parseFloat(item.amount),
-				srp_totalamount: total,
-				total_amount: total,
+				srp_totalamount: parseFloat(item.amount),
+				total_amount: parseFloat(item.amount),
 				order_type: 2
 			})
 		})
