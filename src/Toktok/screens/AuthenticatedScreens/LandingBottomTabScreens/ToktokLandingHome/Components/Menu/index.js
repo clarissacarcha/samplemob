@@ -54,13 +54,13 @@ export const Menu = ({setUserLocation, constants}) => {
         onPress={() => navigation.push('ToktokDelivery', {setUserLocation})}
       />
       <MenuIcon label={'pabili'} icon={PabiliIcon} onPress={() => navigation.push('Pabili')} />
-      {/* <MenuIcon
+      <MenuIcon
         label={'toktokwallet'}
         icon={WalletIcon}
         onPress={() => {
           navigation.push('ToktokWalletLoginPage');
         }}
-      /> */}
+      />
 
       {/* TOKTOKFOOD COMING SOON */}
       {constants.isToktokfoodComingSoonDisplayed == 1 && (
@@ -81,29 +81,21 @@ export const Menu = ({setUserLocation, constants}) => {
            navigation.push('ToktokProfile');
         }}
       />
-      <MenuIcon
+      {/* <MenuIcon
         label={'toktokwallet'}
         icon={WalletIcon}
         onPress={() => {
           navigation.push('ToktokWalletLoginPage');
         }}
-      />
-
+      /> */}
       <MenuIcon
         label={'toktokfood'}
         icon={ProfileIcon}
         onPress={() => {
-          navigation.push('ToktokFoodLanding');
+          navigation.push('TokTokFoodSplashScreen');
         }}
       />
       {/* <MenuIcon
-        label={'toktokfood'}
-        icon={ProfileIcon}
-        onPress={() => {
-          navigation.push('ToktokFoodLanding');
-        }}
-      />
-      <MenuIcon
         label={'toktokmall'}
         icon={ToktokMallIcon}
         onPress={() => {

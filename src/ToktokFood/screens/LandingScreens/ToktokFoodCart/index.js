@@ -219,7 +219,6 @@ const MainComponent = () => {
       }
     },
     onCompleted: async ({checkoutOrder}) => {
-      // console.log(checkoutOrder);
       if (checkoutOrder.status == '200') {
         deleteShopTemporaryCart()
           .then(() => {
@@ -483,7 +482,8 @@ const MainComponent = () => {
       order_logs: CUSTOMER_CART,
     };
 
-    const data = processData(WALLET, CUSTOMER, ORDER, SHIPPING_VOUCHERS)
+    const data = processData(WALLET, CUSTOMER, ORDER, SHIPPING_VOUCHERS);
+
     // setShowLoader(false);
     postCustomerOrder({
       variables: {

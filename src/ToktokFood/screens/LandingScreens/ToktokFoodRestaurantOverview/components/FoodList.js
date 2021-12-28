@@ -15,16 +15,16 @@ import {
   getStatusbarHeight,
   moderateScale,
   isIphoneXorAbove,
-  getIphoneNotchSize
+  getIphoneNotchSize,
 } from 'toktokfood/helper/scale';
 
-export const FoodList = (props) => {
+export const FoodList = props => {
   const {activeTab, id, tagsLoading} = props;
   const navigation = useNavigation();
   const {searchProduct, setSearchProduct, temporaryCart, foodCartHeight, navBartHeight} = useContext(VerifyContext);
-  const navBar = Platform.OS == 'ios' ? navBartHeight + (getIphoneNotchSize * 2) : navBartHeight
-  const minHeight = (getDeviceHeight - navBar) - foodCartHeight 
- 
+  const navBar = Platform.OS == 'ios' ? navBartHeight + getIphoneNotchSize * 2 : navBartHeight;
+  const minHeight = getDeviceHeight - navBar - foodCartHeight;
+
   // data fetching for product under specific category
   const [getProductsByShopCategory, {data: products, error: productsError, loading: productsLoading}] = useLazyQuery(
     GET_PRODUCTS_BY_SHOP_CATEGORY,
@@ -42,13 +42,11 @@ export const FoodList = (props) => {
   );
 
   // data fetching for product
-  const [
-    getSearchProductsByShop,
-    {data: searchProducts, error: searchProductsError, loading: searchProductsLoading},
-  ] = useLazyQuery(GET_SEARCH_PRODUCTS_BY_SHOP, {
-    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-    fetchPolicy: 'network-only',
-  });
+  const [getSearchProductsByShop, {data: searchProducts, error: searchProductsError, loading: searchProductsLoading}] =
+    useLazyQuery(GET_SEARCH_PRODUCTS_BY_SHOP, {
+      client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+      fetchPolicy: 'network-only',
+    });
 
   useEffect(() => {
     if (activeTab?.id) {
@@ -70,8 +68,8 @@ export const FoodList = (props) => {
     }
   }, [searchProduct]);
 
-  const onNavigateToFoodItemDetails = (Id) => {
-    navigation.navigate('ToktokFoodItemDetails', { Id, temporaryCart: temporaryCart.items });
+  const onNavigateToFoodItemDetails = Id => {
+    navigation.navigate('ToktokFoodItemDetails', {Id, temporaryCart: temporaryCart.items});
   };
 
   const renderItem = ({item, index}) => {
@@ -82,17 +80,20 @@ export const FoodList = (props) => {
           styles.listContainer,
           {
             paddingBottom: index == 0 ? moderateScale(10) : 0,
-            marginVertical: index == 0 ?  0 : moderateScale(10),
-          }
-        ]}
-      >
-        <View style={{ flex: 1 }}>
+            marginVertical: index == 0 ? 0 : moderateScale(10),
+          },
+        ]}>
+        <View style={{flex: 1}}>
           <Text style={styles.listText}>{item.itemname}</Text>
           <Text style={styles.listPrice}>PHP {item.price.toFixed(2)}</Text>
-          { !!item.summary && <Text numberOfLines={1} style={styles.summary}>{item.summary}</Text> }
+          {!!item.summary && (
+            <Text numberOfLines={1} style={styles.summary}>
+              {item.summary}
+            </Text>
+          )}
         </View>
         <View>
-          <Image resizeMode='cover' source={{uri: item.filename}} style={styles.img} />
+          <Image resizeMode="cover" source={{uri: item.filename}} style={styles.img} />
         </View>
       </TouchableOpacity>
     );
@@ -101,7 +102,7 @@ export const FoodList = (props) => {
     let listSize = (getDeviceHeight / verticalScale(100)).toFixed(0);
 
     return (
-      <View style={{ paddingHorizontal: moderateScale(10), paddingTop: moderateScale(10) }}>
+      <View style={{paddingHorizontal: moderateScale(10), paddingTop: moderateScale(10)}}>
         <ContentLoader
           active
           pRows={3}
@@ -109,22 +110,31 @@ export const FoodList = (props) => {
           title={false}
           primaryColor="#FFFFFF"
           secondaryColor="rgba(256,186,28,0.4)"
-          aShape='square'
-          aSize='large'
+          aShape="square"
+          aSize="large"
           listSize={parseInt(listSize)}
           avatar
           reverse
         />
       </View>
-    )
+    );
   }
 
-  const itemSepartor = () => (
-    <View style={styles.separtor} />
-  )
+  const itemSepartor = () => <View style={styles.separtor} />;
+
+  const ItemList = () => {
+    const dataSet = searchProduct
+      ? searchProducts?.getSearchProductsByShop
+      : products
+      ? products.getProductsByShopCategory
+      : [];
+
+    return dataSet.map((v, i) => renderItem(v, i));
+  };
 
   return (
     <>
+      {/* <ItemList /> */}
       <FlatList
         data={searchProduct ? searchProducts?.getSearchProductsByShop : products ? products.getProductsByShopCategory : []}
         extraData={props}
@@ -156,7 +166,7 @@ const styles = StyleSheet.create({
   img: {
     height: moderateScale(70),
     width: moderateScale(70),
-    borderRadius: 5
+    borderRadius: 5,
   },
   listText: {
     fontFamily: FONT.BOLD,
@@ -166,7 +176,7 @@ const styles = StyleSheet.create({
     fontFamily: FONT.REGULAR,
     fontSize: FONT_SIZE.M,
     flexShrink: 1,
-    paddingRight: 10
+    paddingRight: 10,
   },
   listPrice: {
     color: '#FF6200',
@@ -184,5 +194,5 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: '#E6E6E6',
     marginHorizontal: verticalScale(20),
-  }
+  },
 });

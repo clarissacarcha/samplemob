@@ -31,7 +31,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import {saveNewShopHistory, getShopHistory, clearShopHistory} from 'toktokfood/helper/persistentHistory';
 
 const ToktokFoodSearch = ({route}) => {
-  const {location} = useSelector((state) => state.toktokFood);
+  const {location} = useSelector(state => state.toktokFood);
   const [shopList, setShopList] = useState([]);
 
   tabs[3] = {
@@ -72,11 +72,16 @@ const ToktokFoodSearch = ({route}) => {
     initSearchHistoryList();
   }, []);
 
-  const onRestaurantNavigate = (item) => {
-    navigation.navigate('ToktokFoodRestaurantOverview', {item});
+  const onRestaurantNavigate = (item, forHistory = true) => {
+    if (forHistory) {
+      setSearch(item.shopname);
+      searchFood(item.shopname);
+    } else {
+      navigation.navigate('ToktokFoodRestaurantOverview', {item});
+    }
   };
 
-  const shopAlreadyExist = (shopId) => {
+  const shopAlreadyExist = shopId => {
     return history.some(function (el) {
       return el.id === shopId;
     });
@@ -87,7 +92,7 @@ const ToktokFoodSearch = ({route}) => {
     setHistory(historyList);
   };
 
-  const updateHistoryList = (item) => {
+  const updateHistoryList = item => {
     const currentHistory = history;
 
     if (!shopAlreadyExist(item.id)) {
@@ -99,7 +104,7 @@ const ToktokFoodSearch = ({route}) => {
       saveNewShopHistory(currentHistory);
     }
 
-    onRestaurantNavigate(item);
+    onRestaurantNavigate(item, false);
   };
 
   const clearHistoryList = async () => {
@@ -198,8 +203,8 @@ const ToktokFoodSearch = ({route}) => {
             <Text style={styles.historyTextClear}>Clear All</Text>
           </TouchableOpacity>
           <View style={styles.historyListWrapper}>
-            {history.map((v) => (
-              <TouchableOpacity style={styles.historyItem} onPress={() => onRestaurantNavigate(v)}>
+            {history.map(v => (
+              <TouchableOpacity style={styles.historyItem} onPress={() => onRestaurantNavigate(v, true)}>
                 <Text numberOfLines={1} style={styles.historyText}>
                   {v.shopname}
                 </Text>
@@ -233,7 +238,7 @@ const ToktokFoodSearch = ({route}) => {
               multiline={false}
               autoFocus={true}
               placeholder="What would you like to eat?"
-              onChangeText={(text) => {
+              onChangeText={text => {
                 setSearch(text);
                 searchFood(text);
               }}
