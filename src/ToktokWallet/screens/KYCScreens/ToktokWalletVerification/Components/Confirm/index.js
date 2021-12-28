@@ -63,7 +63,7 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
             // removeCacheImages({
             //     VerifyUserData
             // })
-            RNFS.unlink(RNFS.CachesDirectoryPath)
+            if(RNFS.CachesDirectoryPath) RNFS.unlink(RNFS.CachesDirectoryPath)
             if(result.status == 2){
                 navigation.pop(2)
                 navigation.navigate("ToktokWalletVerifyResult")

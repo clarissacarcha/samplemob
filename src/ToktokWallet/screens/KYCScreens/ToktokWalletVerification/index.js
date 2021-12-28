@@ -119,7 +119,7 @@ const MainSetupComponent = ()=> {
             visible={visible}
             setVisible={setVisible}
             onConfirm={()=>{
-                RNFS.unlink(RNFS.CachesDirectoryPath)
+                if(RNFS.CachesDirectoryPath) RNFS.unlink(RNFS.CachesDirectoryPath)
                 navigation.goBack()
             }}
         />
