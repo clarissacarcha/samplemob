@@ -152,7 +152,8 @@ export const Suggestions = ({lazyload}) => {
     variables: {
       input: {
         offset: offset,
-        limit: 10
+        limit: 10,
+        refCom: ""
       }
     },
     onCompleted: (response) => {

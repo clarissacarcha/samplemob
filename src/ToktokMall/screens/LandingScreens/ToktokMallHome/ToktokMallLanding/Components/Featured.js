@@ -134,7 +134,8 @@ export const Featured = () => {
     variables: {
       input: {
         offset: 0,
-        limit: 8
+        limit: 8,
+        refCom: ""
       }
     },
     onCompleted: (response) => {

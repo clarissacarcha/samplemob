@@ -165,7 +165,8 @@ const Component =  ({
     fetchPolicy: 'network-only',
     variables: {
       input: {
-        id: Id
+        id: Id,
+        refCom: ""
       }
     },
     onCompleted: (response) => {
