@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>446050056546-ebljul4b9funba9a2in5g485ge72lvs4.apps.googleusercontent.com</string>
+	<string>524028558670-odvakh1pouvkgcrvjkup6pc7jk7c1v2u.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.446050056546-ebljul4b9funba9a2in5g485ge72lvs4</string>
+	<string>com.googleusercontent.apps.524028558670-odvakh1pouvkgcrvjkup6pc7jk7c1v2u</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDJFxSyQwi8fT59n1j3BL9K-EiIKmU81HI</string>
+	<string>AIzaSyApM2VBVlqsKxreKt7VY9amZGRc4QVGKCM</string>
 	<key>GCM_SENDER_ID</key>
-	<string>446050056546</string>
+	<string>524028558670</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>ph.cloudpanda.toktok</string>
 	<key>PROJECT_ID</key>
-	<string>tokwa-ios-mlkit</string>
+	<string>toktok-gcp</string>
 	<key>STORAGE_BUCKET</key>
-	<string>tokwa-ios-mlkit.appspot.com</string>
+	<string>toktok-gcp.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:446050056546:ios:f686579d6a619ed3fad43b</string>
+	<string>1:524028558670:ios:34684ea73014add7a2b21f</string>
 </dict>
 </plist>
