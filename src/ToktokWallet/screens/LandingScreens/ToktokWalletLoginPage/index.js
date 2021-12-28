@@ -3,7 +3,6 @@ import { View ,ActivityIndicator,StatusBar,Text,TouchableOpacity, Alert} from 'r
 import {SomethingWentWrong} from 'src/components'
 import CONSTANTS from 'common/res/constants'
 import {GET_USER_TOKTOK_WALLET_DATA} from 'toktokwallet/graphql'
-import { SplashLoading } from 'toktokwallet/components'
 import {useLazyQuery, useQuery} from '@apollo/react-hooks'
 import {useSelector,useDispatch} from 'react-redux'
 import AsyncStorage from '@react-native-community/async-storage'

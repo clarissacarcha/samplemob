@@ -9,7 +9,6 @@ import {
     CashIn,
     CashOut,
     CashOutOtherBank,
-    RequestMoney,
     SendMoney
 } from "./Components"
 
@@ -45,8 +44,6 @@ export const ToktokWalletReviewAndConfirm = ({navigation,route})=> {
                 return <SendMoney data={data}/>
             case "Fund Transfer":
                 return <CashOutOtherBank data={data}/>
-            case "Request Money":
-                return <RequestMoney data={data}/>
             default:
                 return
         }

@@ -5,6 +5,8 @@ import { useNavigation } from '@react-navigation/native'
 import {Separator , HeaderImageBackground, HeaderTitle} from 'toktokwallet/components';
 import { numberFormat , getDeviceWidth as width  } from 'toktokwallet/helper';
 import {useAccount} from 'toktokwallet/hooks'
+import {APP_FLAVOR , ACCOUNT_TYPE} from 'src/res/constants'
+import MIcon from 'react-native-vector-icons/MaterialIcons';
 
 
 //SELF IMPORTS
@@ -31,6 +33,9 @@ const WalletCardInfo = ({loading})=> {
     })
 
     const cashIn = ()=> {
+        if(APP_FLAVOR == "D" && ACCOUNT_TYPE == 2){
+            return Alert.alert("","Use the toktok customer app for toktokwallet full features.")
+        }
         const tpinIsSet = checkIfTpinIsSet();
         if(!tpinIsSet) return
         return navigation.navigate("ToktokWalletPaymentOptions")
@@ -75,7 +80,6 @@ const WalletCardInfo = ({loading})=> {
                                     <VectorIcon iconSet={ICON_SET.Entypo} name="plus" color="black" size={20}/>
                                     </View>
                                 </TouchableOpacity>
-                                
 
                                 <TouchableOpacity style={styles.walletSettings} onPress={()=>{
                               

@@ -1,4 +1,4 @@
-import React , {useEffect} from 'react'
+import React from 'react'
 import {View,Text,StyleSheet,TouchableOpacity} from 'react-native'
 import FIcon from 'react-native-vector-icons/Feather'
 import {useSelector} from 'react-redux'
@@ -91,7 +91,6 @@ export const ToktokWalletRecoveryMethods = ({navigation , route})=> {
 
     return (
         <CheckIdleState>
-        <AlertOverlay visible={getMyAccountLoading}/>
         <Separator />
         <View style={styles.container}>
             <RecoveryMethod title={"Registered Mobile No."} message={`Use your verified mobile no. ${session.user.username}`} onPress={recoverWallet}/>

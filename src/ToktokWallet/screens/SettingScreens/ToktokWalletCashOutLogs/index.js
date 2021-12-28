@@ -1,24 +1,91 @@
 import React , {useState , useEffect} from 'react'
-import {View,StyleSheet,ActivityIndicator , FlatList , RefreshControl , Dimensions} from 'react-native'
-import {useLazyQuery} from '@apollo/react-hooks'
-import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
+import {View,Text,StyleSheet,TouchableOpacity,Image,ActivityIndicator , FlatList , RefreshControl} from 'react-native'
+import moment from 'moment'
+import {useLazyQuery,useQuery} from '@apollo/react-hooks'
+import {GET_CASH_IN_LOGS, GET_CASH_OUT_LOGS,TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import {GET_CASH_OUTS} from 'toktokwallet/graphql'
 import {useSelector} from 'react-redux'
-import {Separator , CheckIdleState , SwipeDownToRefresh ,NoData} from 'toktokwallet/components'
+import { numberFormat ,MaskLeftZero } from 'toktokwallet/helper'
+import {Separator , FilterDateModal , TransactionDetails, CheckIdleState} from 'toktokwallet/components'
 import { HeaderBack , HeaderTitle } from 'src/revamp'
 import CONSTANTS from 'common/res/constants'
 import { onErrorAlert } from 'src/util/ErrorUtility'
 import { useAlert } from 'src/hooks'
 import { SomethingWentWrong } from 'src/components'
 
-//SELF IMPORT
-import {
-    CashOutLog
-} from "./Components"
-
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
-const imageWidth = Dimensions.get('window').width - 200;
 
+const CashOutLog = ({
+    item,
+    index , 
+    itemsLength ,
+    tokwaAccount,
+    setTransactionInfo,
+    setTransactionVisible 
+})=> {
+
+
+    const ViewTransactionDetails = ({requestNo, refNo,refDate, transactionAmount , status,provider,cashOutDisplayInformations})=> {
+        let phrase = `${provider}`
+        if(provider == "InstaPay" || provider == "PesoNet"){
+            phrase = "Other Banks"
+        }
+        setTransactionInfo({
+            refNo: refNo,
+            refDate: refDate,
+            label: "Cash Out",
+            phrase: phrase,
+            amount: transactionAmount,
+            status: status,
+            cashOutDisplayInformations: cashOutDisplayInformations,
+            requestNo
+        })
+        setTransactionVisible(true)
+    }
+
+    let status
+    switch (item.status) {
+        case "0":
+            status = "Pending"
+            break;
+        case "1":
+            status = "Processed"
+            break
+        case "2":
+            status = "Pending"
+            break
+        case "3":
+            status = "Rejected"
+            break
+        default:
+            status = "Rejected"
+            break;
+    }
+
+    const transaction = item.transaction
+    const requestNo = MaskLeftZero(item.id)
+    const refNo = transaction.refNo
+    const refDate = moment(transaction.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')
+    const transactionAmount = `${tokwaAccount.wallet.currency.code} ${numberFormat(item.amount)}`
+    const provider = item.provider.name
+    const cashOutDisplayInformations = item.cashOutDisplayInformations
+
+    // console.log(item.cashOutDisplayInformations)
+
+
+    return (
+        <TouchableOpacity onPress={()=>ViewTransactionDetails({requestNo, refNo,refDate, transactionAmount , status , provider,cashOutDisplayInformations})} style={styles.transaction}>
+            <View style={styles.transactionDetails}>
+                <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Request # {requestNo}</Text>
+                <Text style={{color: "#909294",fontSize: FONT_SIZE.M,marginTop: 0,fontFamily: FONT.REGULAR}}>{status}</Text>
+            </View>
+            <View style={styles.transactionAmount}>
+                <Text style={{color: "#FCB91A",fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{transactionAmount}</Text>
+                <Text style={{color: "#909294",fontSize: FONT_SIZE.S,alignSelf: "flex-end",marginTop: 0,fontFamily: FONT.REGULAR}}>{refDate}</Text>
+            </View>
+        </TouchableOpacity>
+    )
+}
 
 export const ToktokWalletCashOutLogs = ({navigation})=> {
 
@@ -27,13 +94,22 @@ export const ToktokWalletCashOutLogs = ({navigation})=> {
         headerTitle: ()=> <HeaderTitle label={['Fund Transfer','']}/>,
     })
 
+    const session = useSelector(state=>state.session)
+
     const tokwaAccount = useSelector(state=>state.toktokWallet)
     const [records,setRecords] = useState([])
     const [pageIndex,setPageIndex] = useState(0)
     const [pageLoading,setPageLoading] = useState(false)
+    const [transactionVisible,setTransactionVisible] = useState(false)
+    const [transactionInfo,setTransactionInfo] = useState({
+        refNo: "",
+        refDate: "",
+        label: "",
+        phrase: "",
+        amount: "",
+        status: "",
+    })
     const alert = useAlert()
-
-    
     const [getCashOuts, { data, error, loading }] = useLazyQuery(GET_CASH_OUTS , {
         fetchPolicy: "network-only",
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
@@ -61,8 +137,13 @@ export const ToktokWalletCashOutLogs = ({navigation})=> {
 
     return (
         <CheckIdleState>
+        <TransactionDetails 
+            visible={transactionVisible}
+            setVisible={setTransactionVisible}
+            transactionInfo={transactionInfo}
+            displayNumber=""
+        />
         <Separator />
-        <SwipeDownToRefresh/>
         {
             // loading
             // ?  <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -72,11 +153,6 @@ export const ToktokWalletCashOutLogs = ({navigation})=> {
             <View style={styles.container}>
                 <View style={styles.content}>
                     <FlatList
-                        ListHeaderComponent={() => {
-                            if(records.length > 0) return null
-                            if(loading) return null
-                            return <NoData/>
-                        }}
                         refreshControl={<RefreshControl refreshing={loading} onRefresh={Refetch} colors={[COLOR.YELLOW]} tintColor={COLOR.YELLOW} />}
                         showsVerticalScrollIndicator={false}
                         data={records}
@@ -86,7 +162,10 @@ export const ToktokWalletCashOutLogs = ({navigation})=> {
                                 key={`cashin-log${index}`} 
                                 item={item}
                                 index={index} 
+                                itemsLength={records.length}
                                 tokwaAccount={tokwaAccount}
+                                setTransactionInfo={setTransactionInfo}
+                                setTransactionVisible={setTransactionVisible}
                             />
                         )}
                         // onEndReached={()=>{

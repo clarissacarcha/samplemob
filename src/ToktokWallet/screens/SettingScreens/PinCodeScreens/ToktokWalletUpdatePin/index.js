@@ -62,7 +62,7 @@ export const ToktokWalletUpdatePin =  ({navigation,route})=> {
                             </TouchableHighlight>
     })
 
-    const {otp ,event} = route.params
+    const {otp} = route.params
 
     const cancelSetup = ()=> {
         console.log("Cancelling")
@@ -117,7 +117,7 @@ export const ToktokWalletUpdatePin =  ({navigation,route})=> {
                 setVisible={setLeaveModalVisible}
                 onConfirm={()=>navigation.pop(2)}
             />
-            <SuccessModal modalVisible={successModalVisible} setModalVisible={setSuccessModalVisible} event={event}/>
+            <SuccessModal modalVisible={successModalVisible} setModalVisible={setSuccessModalVisible}/>
             <Separator />
             <KeyboardAvoidingView style={{flex: 1,}}
              keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80}  

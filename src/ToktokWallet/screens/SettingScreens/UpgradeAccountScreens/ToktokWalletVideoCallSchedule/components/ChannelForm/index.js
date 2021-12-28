@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, TextInput, Image } from "react-native";
 import CONSTANTS from "common/res/constants";
 import { ContextChannelForm } from "../../components";
-import { CustomRadioButton } from "toktokwallet/components";
+import { CustomRadioButton } from "../../../../../../components";
 import { YellowButton } from 'src/revamp';
 const { FONT_FAMILY: FONT , FONT_SIZE , COLOR, SHADOW, SIZE } = CONSTANTS;
 
