@@ -219,7 +219,6 @@ const MainComponent = () => {
       }
     },
     onCompleted: async ({checkoutOrder}) => {
-      console.log(checkoutOrder);
       if (checkoutOrder.status == '200') {
         deleteShopTemporaryCart()
           .then(() => {
